@@ -109,17 +109,17 @@ class Files extends Controller
                             $this->fileList->filterByType($type);
                             break;
                         case "date_added":
-                            $dateFrom = $req['date_from'];
-                            $dateTo = $req['date_to'];
-                            if ($dateFrom != '') {
-                                $dateFrom = date('Y-m-d', strtotime($dateFrom));
+                            $wdt = Loader::helper('form/date_time');
+                            /* @var $wdt \Concrete\Core\Form\Service\Widget\DateTime */
+                            $dateFrom = $wdt->translate('date_added_from', $req);
+                            if ($dateFrom) {
                                 $this->fileList->filterByDateAdded($dateFrom, '>=');
-                                $dateFrom .= ' 00:00:00';
                             }
-                            if ($dateTo != '') {
-                                $dateTo = date('Y-m-d', strtotime($dateTo));
-                                $dateTo .= ' 23:59:59';
-
+                            $dateTo = $wdt->translate('date_added_to', $req);
+                            if ($dateTo) {
+                                if (preg_match('/^(.+\\d+:\\d+):00$/', $dateTo, $m)) {
+                                    $dateTo = $m[1] . ':59';
+                                }
                                 $this->fileList->filterByDateAdded($dateTo, '<=');
                             }
                             break;
@@ -171,6 +171,8 @@ class Files extends Controller
         $r = new stdClass();
         $r->field = $field;
         $searchRequest = $this->searchRequest->getSearchRequest();
+        $wdt = Loader::helper('form/date_time');
+        /* @var $wdt \Concrete\Core\Form\Service\Widget\DateTime */
         $html = '';
         switch ($field) {
             case 'size':
@@ -199,10 +201,7 @@ class Files extends Controller
                 $html .= $form->select('extension', $extensions, $searchRequest['extensions'], array('style' => 'width: 120px'));
                 break;
             case 'date_added':
-                $form = Loader::helper('form');
-                $html .= $form->text('date_from', $searchRequest['date_from'], array('style' => 'width: 86px'));
-                $html .= t('to');
-                $html .= $form->text('date_to', $searchRequest['date_to'], array('style' => 'width: 86px'));
+                $html .= $wdt->datetime('date_added_from', $wdt->translate('date_added_from', $searchRequest)) . t('to') . $wdt->datetime('date_added_to', $wdt->translate('date_added_to', $searchRequest));
                 break;
             case 'added_to':
                 $ps = Loader::helper("form/page_selector");
