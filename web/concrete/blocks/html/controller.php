@@ -54,7 +54,7 @@ class Controller extends BlockController
         parent::save($args);
     }
 
-    public function xml_highlight($s)
+    public static function xml_highlight($s)
     {
         $s = htmlspecialchars($s);
         $s = preg_replace(
