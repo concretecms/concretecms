@@ -339,6 +339,7 @@
                     url: CCM_DISPATCHER_FILENAME + '/ccm/system/page/arrange_blocks?cID=' + block.getCID(),
                     data: send,
                     success: function (r) {
+                        ConcreteToolbar.disableDirectExit();
                         $.fn.dialog.hideLoader();
                         clearTimeout(timeout);
                     }
