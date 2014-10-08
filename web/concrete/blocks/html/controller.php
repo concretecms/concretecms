@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Block\Html;
 
 use Loader;
@@ -54,7 +54,7 @@ class Controller extends BlockController
         parent::save($args);
     }
 
-    public function xml_highlight($s)
+    public static function xml_highlight($s)
     {
         $s = htmlspecialchars($s);
         $s = preg_replace(
@@ -87,8 +87,7 @@ class Controller extends BlockController
             "&lt;\\1<font color=\"#800080\">\\2\\3\\4</font>&gt;",
             $s
         );
+
         return nl2br($s);
     }
 }
-
-?>

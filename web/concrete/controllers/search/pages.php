@@ -215,7 +215,7 @@ class Pages extends Controller
             case 'last_modified':
                 $html .= $wdt->datetime('last_modified_from', $wdt->translate('last_modified_from', $searchRequest)) . t('to') . $wdt->datetime('last_modified_to', $wdt->translate('last_modified_to', $searchRequest));
                 break;
-            case 'owner': 
+            case 'owner':
                 $html .= $form->text('owner', array('class'=>'span5'));
                 break;
             case 'permissions_inheritance':
@@ -225,11 +225,11 @@ class Pages extends Controller
                     $html .= '<option value="OVERRIDE"' . ($searchRequest['cInheritPermissionsFrom'] == 'OVERRIDE' ? ' selected' : '') . '>' . t('Itself (Override)') . '</option>';
                 $html .= '</select>';
                 break;
-            case 'version_status': 
+            case 'version_status':
                 $html .= '<div class="radio"><label>' . $form->radio('cvIsApproved', 0, false) . '<span>' . t('Unapproved') . '</span></label></div>';
                 $html .= '<div class="radio"><label>' . $form->radio('cvIsApproved', 1, false) . '<span>' . t('Approved') . '</span></label></div>';
                 break;
-            case 'parent': 
+            case 'parent':
                 $ps = Loader::helper("form/page_selector");
                 $html .= $ps->selectPage('cParentIDSearchField');
                 $html .= '<div>';
@@ -238,7 +238,7 @@ class Pages extends Controller
                     $html .= '<label class="radio-inline">' . $form->radio('cParentAll', 1, false) . ' ' . t('Yes') . '</label>';
                 $html .= '</div>';
                 break;
-            case 'num_children': 
+            case 'num_children':
                 $html .= '<select name="cChildrenSelect" class="form-control">';
                     $html .= '<option value="gt"' . ($searchRequest['cChildrenSelect'] == 'gt' ? ' selected' : '') . '>' . t('More Than') . '</option>';
                     $html .= '<option value="eq"' . ($searchRequest['cChildrenSelect'] == 'eq' ? ' selected' : '') . '>' . t('Equal To') . '</option>';
@@ -246,10 +246,10 @@ class Pages extends Controller
                 $html .= '</select>';
                 $html .= '<input type="text" name="cChildren" class="form-control" value="' . $searchRequest['cChildren'] . '" />';
                 break;
-            case 'theme': 
+            case 'theme':
                 $html .= '<select name="pThemeID" class="form-control">';
                 $themes = PageTheme::getList();
-                foreach ($themes as $pt) { 
+                foreach ($themes as $pt) {
                     $html .= '<option value="' . $pt->getThemeID() . '" ' . ($pt->getThemeID() == $searchRequest['pThemeID'] ? ' selected' : '') . '>' . $pt->getThemeName() . '</option>';
                 }
                 $html .= '</select>';
@@ -257,7 +257,7 @@ class Pages extends Controller
             default:
                 if (Loader::helper('validation/numbers')->integer($field)) {
                     $ak = CollectionAttributeKey::getByID($field);
-                    $html .= $ak->render('search', NULL, TRUE);
+                    $html .= $ak->render('search', null, true);
                 }
                 break;
         }
@@ -277,8 +277,9 @@ class Pages extends Controller
     {
         return $this->fields;
     }
-    
-    public static function getSearchFields() {
+
+    public static function getSearchFields()
+    {
         $r = array(
             'parent' => t('Parent Page'),
             'keywords' => t('Full Page Index'),
@@ -294,6 +295,8 @@ class Pages extends Controller
         foreach ($sfa as $ak) {
             $r[$ak->getAttributeKeyID()] = $ak->getAttributeKeyDisplayName();
         }
+        natcasesort($r);
+
         return $r;
     }
 
