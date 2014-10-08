@@ -4,7 +4,7 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Permissions;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use Config;
 use Loader;
-use \Concrete\Core\User\UserBannedIP;
+use \Concrete\Core\User\UserBannedIp;
 use Exception;
 
 class Blacklist extends DashboardPageController {
@@ -93,7 +93,7 @@ class Blacklist extends DashboardPageController {
 						break;
 				}
 
-				$utility			= new UserBannedIP();
+				$utility			= new UserBannedIp();
 				foreach($ip_ban_changes as $key){
 					$q .= '(ipFrom = ? AND ipTo = ?) OR';
 					$ids = $utility->parseUniqueID($key);
@@ -112,14 +112,14 @@ class Blacklist extends DashboardPageController {
 			//no batch insert in adodb? :(
 
 			foreach ($ip_ranges as $ip_range) {
-				$ip = new UserBannedIP();
+				$ip = new UserBannedIp();
 
 				$ip->ipFrom 	= ip2long($ip_range['ipFrom']);
 				$ip->ipTo		= $ip_range['ipTo'];
 				if ($ip->ipTo != 0) {
 					$ip->ipTo		= ip2long($ip_range['ipTo']);
 				}
-				$ip->banCode	= UserBannedIP::IP_BAN_CODE_REGISTRATION_THROTTLE;
+				$ip->banCode	= UserBannedIp::IP_BAN_CODE_REGISTRATION_THROTTLE;
 				$ip->expires	= 0;
 				$ip->isManual	= 1;
 				try{
@@ -157,7 +157,7 @@ class Blacklist extends DashboardPageController {
 			$ip_ban_lock_ip_how_long_type = self::IP_BAN_LOCK_IP_HOW_LONG_TYPE_TIMED;
 		}
 
-		$user_banned_ip 				= new UserBannedIP();
+		$user_banned_ip 				= new UserBannedIp();
 		//pull all once filter various lists using code
 		$user_banned_ips 				= $user_banned_ip->Find('1=1');
 		$user_banned_manual_ips 		= Array();
