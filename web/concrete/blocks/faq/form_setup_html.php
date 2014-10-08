@@ -19,16 +19,36 @@
           }
         });
 
-        $('.ccm-faq-block-container').sortable({
-            stop: function( event, ui ) {
-                doSortCount();  // recount every time icon divs are resorted.
-            }
-        });
+        var attachSortDesc = function($obj) {
+            $obj.click(function(){
+                var myContainer = $(this).closest($('.ccm-faq-entry'));
+                myContainer.insertAfter(myContainer.next('.ccm-faq-entry'));
+                doSortCount();
+            });
+        }
 
+        var attachSortAsc = function($obj) {
+            $obj.click(function(){
+                var myContainer = $(this).closest($('.ccm-faq-entry'));
+                myContainer.insertBefore(myContainer.prev('.ccm-faq-entry'));
+                doSortCount();
+            });
+        }
+        $('.ccm-faq-block-container i.fa-sort-desc').each(function(){
+            attachSortDesc($(this));
+        });
+        $('.ccm-faq-block-container i.fa-sort-asc').each(function(){
+            attachSortAsc($(this));
+        });
         $('.ccm-add-faq-entry').click(function(){
             var newClone = cloneTemplate.clone(true);
             newClone.show();
             $('.ccm-faq-block-container').append(newClone);
+            attachSortAsc(newClone.find('i.fa-sort-asc'));
+            attachSortDesc(newClone.find('i.fa-sort-desc'));
+            var thisModal = $(this).closest('.ui-dialog-content');
+            var newSlide = $('.ccm-faq-entry').last();
+            thisModal.scrollTop(newSlide.offset().top);
             doSortCount();
         });
     });
@@ -47,9 +67,21 @@
         position: relative;
     }
 
-    .ccm-faq-block-container i.fa-arrows {
+    .ccm-faq-block-container i.fa-sort-asc {
         position: absolute;
         top: 10px;
+        right: 10px;
+        cursor: pointer;
+    }
+
+    .ccm-faq-block-container i:hover {
+        color: #5cb85c;
+    }
+
+    .ccm-faq-block-container i.fa-sort-desc {
+        position: absolute;
+        top: 15px;
+        cursor: pointer;
         right: 10px;
     }
 </style>
@@ -58,9 +90,10 @@
     <?php if($rows) {
     foreach ($rows as $row) { ?>
         <div class="ccm-faq-entry well">
-            <i class="fa fa-arrows"></i>
+            <i class="fa-sort-asc fa"></i>
+            <i class="fa-sort-desc fa"></i>
             <div class="form-group">
-                <label><?php echo t('Anchor Link Text') ?></label>
+                <label><?php echo t('Navigation Link Text') ?></label>
                 <input type="text" name="linkTitle[]" value="<?php echo $row['linkTitle'] ?>" />
             </div>
             <div class="form-group">
@@ -77,11 +110,18 @@
             </div>
         </div>
     <?php }
-    }?>
+    } else {?>
+    <script>
+        $(document).ready(function(){
+            $('.ccm-add-faq-entry').click();  // throw out a blank entry for context if none exist.
+        });
+    </script>
+    <?php } ?>
     <div class="ccm-faq-entry well ccm-faq-entry-template"style="display: none;">
-        <i class="fa-arrows fa"></i>
+        <i class="fa-sort-asc fa"></i>
+        <i class="fa-sort-desc fa"></i>
         <div class="form-group">
-            <label><?php echo t('Anchor Link Text') ?></label>
+            <label><?php echo t('Navigation Link Text') ?></label>
             <input type="text" name="linkTitle[]" value="" />
         </div>
         <div class="form-group">
