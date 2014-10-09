@@ -203,7 +203,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
                     <div class="ccm-ui">
                         <?php echo Loader::element('dashboard/install_post', false, $installedPKG->getPackageHandle()); ?>
                         <div class="dialog-buttons">
-                            <a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeAll()" class="btn pull-right"><?php echo t('Ok'); ?></a>
+                            <a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeAll()" class="btn btn-primary pull-right"><?php echo t('Ok'); ?></a>
                         </div>
                     </div>
                 </div>
