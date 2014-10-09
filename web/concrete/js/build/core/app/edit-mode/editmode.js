@@ -26,7 +26,6 @@
                 dragAreaBlacklist: []
             });
 
-
             my.bindEvent('PanelLoad', function editModePanelOpenEventHandler(event, data) {
                 my.panelOpened(data.panel, data.element);
             });

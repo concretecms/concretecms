@@ -138,12 +138,6 @@ class Login extends PageController
         $db = Loader::db();
         $u = new User();
 
-        $allowed_types = (array) \Config::get('concrete.auth.superuser_allowed_types');
-        if ($u->getUserID() == 1 && !in_array($type->getAuthenticationTypeHandle(), $allowed_types)) {
-            $u->logout();
-            throw new LoginException(t('You can only identify as the admin user using the allowed authentication types.'));
-        }
-
         $ui = UserInfo::getByID($u->getUserID());
         $aks = UserAttributeKey::getRegistrationList();
 
