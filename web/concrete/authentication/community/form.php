@@ -25,3 +25,36 @@ if ($user->isLoggedIn()) {
     </a>
     <?php
 }
+
+
+?>
+<script>
+    (function() {
+        var svg = $('.ccm-concrete-authentication-type-svg > svg');
+
+
+        if (svg) {
+            var img = new Image();
+            img.onerror = function() {
+                svg.parent().replaceWith('<i class="fa fa-user"></i>');
+            };
+            img.src = svg.parent().data('src');
+
+            if (svg.closest('.active')) {
+                svg.attr('fill', 'white');
+            } else {
+                svg.attr('fill', '#333');
+            }
+            $(function() {
+                Concrete.event.bind('AuthenticationTypeSelected', function(e, handle) {
+                    if (handle === 'community') {
+                        svg.attr('fill', 'white');
+                    } else {
+                        svg.attr('fill', 'rgb(155,155,155)');
+                    }
+                });
+
+            });
+        }
+    }());
+</script>

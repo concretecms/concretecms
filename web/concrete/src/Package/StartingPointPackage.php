@@ -214,7 +214,7 @@ class StartingPointPackage extends BasePackage {
 	public function add_users() {
 		// Firstly, install the core authentication types
 		$cba = AuthenticationType::add('concrete',  'Standard');
-        $coa = AuthenticationType::add('community', 'Community');
+        $coa = AuthenticationType::add('community', 'concrete5.org');
 		$fba = AuthenticationType::add('facebook',  'Facebook');
         $twa = AuthenticationType::add('twitter',   'Twitter');
 

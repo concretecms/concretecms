@@ -151,12 +151,7 @@ class Controller extends AuthenticationTypeController
             $error->add($e);
         }
 
-        if (!$error->has()) {
-            $this->redirect('/login', $this->getAuthenticationType()->getAuthenticationTypeHandle(), 'password_sent');
-        } else {
-            $this->set('authType', $this->getAuthenticationType());
-            $this->set('authTypeElement', 'forgot_password');
-        }
+        $this->redirect('/login', $this->getAuthenticationType()->getAuthenticationTypeHandle(), 'password_sent');
     }
 
     public function change_password($uHash = '')

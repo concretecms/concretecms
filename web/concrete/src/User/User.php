@@ -55,18 +55,7 @@ class User extends Object
             $nu->superUser = ($nu->getUserID() == USER_SUPER_ID);
             $nu->uLastPasswordChange = $row['uLastPasswordChange'];
             if ($login) {
-                $session = Core::make('session');
-                $session->set('uID', $row['uID']);
-                $session->set('uName', $row['uName']);
-                $session->set('uBlockTypesSet', false);
-                $session->set('uGroups', $nu->uGroups);
-                $session->set('uLastOnline', $row['uLastOnline']);
-                $session->set('uTimezone', $row['uTimezone']);
-                $session->set('uDefaultLanguage', $row['uDefaultLanguage']);
-                $session->set('uLastPasswordChange', $row['uLastPasswordChange']);
-                if ($cacheItemsOnLogin) {
-                    Loader::helper('concrete/ui')->cacheInterfaceItems();
-                }
+                $nu->persist($cacheItemsOnLogin);
                 $nu->recordLogin();
             }
         }
@@ -172,16 +161,7 @@ class User extends Object
                     }
                     $this->recordLogin();
                     if (!$args[2]) {
-                        $session = Core::make('session');
-                        $session->set('uID', $row['uID']);
-                        $session->set('uName', $row['uName']);
-                        $session->set('superUser', $this->superUser);
-                        $session->set('uBlockTypesSet', false);
-                        $session->set('uGroups', $this->uGroups);
-                        $session->set('uTimezone', $this->uTimezone);
-                        $session->set('uDefaultLanguage', $row['uDefaultLanguage']);
-                        $session->set('uLastPasswordChange', $row['uLastPasswordChange']);
-                        Loader::helper('concrete/ui')->cacheInterfaceItems();
+                        $this->persist();
                     }
                 } elseif ($row['uID'] && !$row['uIsActive']) {
                     $this->loadError(USER_INACTIVE);
@@ -424,6 +404,14 @@ class User extends Object
     public function getUserDefaultLanguage()
     {
         return $this->uDefaultLanguage;
+    }
+
+    /**
+     * Gets the default language for the logged-in user
+     */
+    public function getLastPasswordChange()
+    {
+        return $this->uLastPasswordChange;
     }
 
     /**
@@ -694,6 +682,33 @@ class User extends Object
         $this->hasher = new PasswordHash(Config::get('concrete.user.password.hash_cost_log2'), Config::get('concrete.user.password.hash_portable'));
 
         return $this->hasher;
+    }
+
+    /**
+     * Manage user session writing
+     * @param bool $cache_interface
+     */
+    public function persist($cache_interface = true)
+    {
+        /** @var Session $session */
+        $session = Core::make('session');
+        $session->set('uID', $this->getUserID());
+        $session->set('uName', $this->getUserName());
+        $session->set('uBlockTypesSet', false);
+        $session->set('uGroups', $this->getUserGroups());
+        $session->set('uLastOnline', $this->getLastOnline());
+        $session->set('uTimezone', $this->getUserTimezone());
+        $session->set('uDefaultLanguage', $this->getUserDefaultLanguage());
+        $session->set('uLastPasswordChange', $this->getLastPasswordChange());
+
+        if ($cache_interface) {
+            Loader::helper('concrete/ui')->cacheInterfaceItems();
+        }
+    }
+
+    public function logIn($cache_interface = true)
+    {
+        $this->persist($cache_interface);
     }
 
 }
