@@ -1,7 +1,11 @@
 <?php
 namespace Concrete\Core\Package;
 
+use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Config\Repository\Liaison;
+use Concrete\Core\File\FileList;
+use Concrete\Core\Page\PageList;
+use Concrete\Core\Page\Stack\StackList;
 use Page;
 use Stack;
 use SinglePage;
@@ -521,7 +525,7 @@ class Package extends Object
 
     protected function validateClearSiteContents($options)
     {
-        $u = new User();
+        $u = new \User();
         if ($u->isSuperUser()) {
             // this can ONLY be used through the post. We will use the token to ensure that
             $valt = Loader::helper('validation/token');
@@ -538,13 +542,13 @@ class Package extends Object
         if ($this->validateClearSiteContents($options)) {
 
             $pl = new PageList();
-            $pages = $pl->get();
+            $pages = $pl->getResults();
             foreach ($pages as $c) {
                 $c->delete();
             }
 
             $fl = new FileList();
-            $files = $fl->get();
+            $files = $fl->getResults();
             foreach ($files as $f) {
                 $f->delete();
             }
@@ -581,7 +585,6 @@ class Package extends Object
 
             $ci = new ContentImporter();
             $ci->importContentFile($this->getPackagePath() . '/content.xml');
-
         }
     }
 

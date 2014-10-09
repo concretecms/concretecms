@@ -11,45 +11,37 @@ $pkgArray = Package::getInstalledList(); ?>
 
 <?php
 if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScreen && $tp->canInstallPackages()) {
-    echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Install %s', $pkg->getPackageName()), false, 'span10 offset1', false);
     ?>
-    <form method="post" action="<?php echo $view->action('install_package', $pkg->getPackageHandle()); ?>">
-        <?php echo Loader::helper('validation/token')->output('install_options_selected'); ?>
-        <div class="ccm-pane-body">
-            <?php echo Loader::packageElement('dashboard/install', $pkg->getPackageHandle()); ?>
-            <?php if ($pkg->allowsFullContentSwap()) { ?>
-                <h4><?php echo t('Clear this Site?'); ?></h4>
-                <p><?php echo t('%s can fully clear you website of all existing content and install its own custom content in its place. If you\'re installing a theme for the first time you may want to do this. Clear all site content?', $pkg->getPackageName()); ?></p>
-                <?php
-                $u = new User();
-                if ($u->isSuperUser()) {
-                    $disabled = '';
-                    ?><div class="alert-message warning"><p><?php echo t('This will clear your home page, uploaded files and any content pages out of your site completely. It will completely reset your site and any content you have added will be lost.'); ?></p></div><?php
-                } else {
-                    $disabled = 'disabled';
-                    ?><div class="alert-message info"><p><?php echo t('Only the %s user may reset the site\'s content.', USER_SUPER); ?></p></div><?php
-                }
-                ?>
-                <div class="clearfix">
-                    <label><?php echo t("Swap Site Contents"); ?></label>
-                    <div class="input">
-                        <ul class="inputs-list">
-                            <li><label><input type="radio" name="pkgDoFullContentSwap" value="0" checked="checked" <?php echo $disabled; ?> /> <span><?php echo t('No. Do <strong>not</strong> remove any content or files from this website.'); ?></span></label></li>
-                            <li><label><input type="radio" name="pkgDoFullContentSwap" value="1" <?php echo $disabled; ?> /> <span><?php echo t('Yes. Reset site content with the content found in this package'); ?></span></label></li>
-                        </ul>
-                    </div>
-                </div>
-                <?php
-            } ?>
+    <form method="post" action="<?=$this->action('install_package', $pkg->getPackageHandle())?>">
+    <?=Loader::helper('validation/token')->output('install_options_selected')?>
+    <?=Loader::packageElement('dashboard/install', $pkg->getPackageHandle())?>
+    <? if ($pkg->allowsFullContentSwap()) { ?>
+        <h4><?=t('Clear this Site?')?></h4>
+        <p><?=t('%s can fully clear you website of all existing content and install its own custom content in its place. If you\'re installing a theme for the first time you may want to do this. Clear all site content?', $pkg->getPackageName())?></p>
+        <? $u = new User(); ?>
+        <? if ($u->isSuperUser()) {
+            $disabled = ''; ?>
+        <div class="alert-message warning"><p><?=t('This will clear your home page, uploaded files and any content pages out of your site completely. It will completely reset your site and any content you have added will be lost.')?></p></div>
+        <? } else {
+            $disabled = 'disabled';?>
+        <div class="alert-message info"><p><?=t('Only the %s user may reset the site\'s content.', USER_SUPER)?></p></div>
+        <? } ?>
+        <div class="form-group">
+            <label class="control-label"><?=t("Swap Site Contents")?></label>
+            <div class="radio"><label><input type="radio" name="pkgDoFullContentSwap" value="0" checked="checked" <?=$disabled?> /> <?=t('No. Do <strong>not</strong> remove any content or files from this website.')?></label></div>
+            <div class="radio"><label><input type="radio" name="pkgDoFullContentSwap" value="1" <?=$disabled?> /> <?=t('Yes. Reset site content with the content found in this package')?></label></div>
         </div>
-        <div class="ccm-pane-footer">
-            <a href="<?php echo $view->url('/dashboard/extend/install'); ?>" class="btn btn-default pull-left"><?php echo t('Cancel'); ?></a>
-            <input type="submit" value="<?php echo t('Install %s', $pkg->getPackageName()); ?>" class="btn btn-primary pull-right" />
-        </div>
-    </form>
-    <?php
-    echo Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false);
+    <? } ?>
 
+    <div class="ccm-dashboard-form-actions-wrapper">
+        <div class="ccm-dashboard-form-actions">
+    <a href="<?=$this->url('/dashboard/extend/install')?>" class="btn btn-default pull-left"><?=t('Cancel')?></a>
+    <input type="submit" value="<?=t('Install %s', $pkg->getPackageName())?>" class="btn btn-primary pull-right" />
+        </div>
+    </div>
+
+    </form>
+<?
 } elseif ($this->controller->getTask() == 'uninstall' && $tp->canUninstallPackages()) {
     $removeBTConfirm = t('This will remove all elements associated with the %s package. This cannot be undone. Are you sure?', $pkg->getPackageHandle());
     ?>
