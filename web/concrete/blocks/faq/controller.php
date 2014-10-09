@@ -23,7 +23,7 @@ class Controller extends BlockController
 
     public function getBlockTypeName()
     {
-        return t("Frequently Asked Questions");
+        return t("FAQ");
     }
 
     public function getSearchableContent()
