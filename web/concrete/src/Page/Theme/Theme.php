@@ -579,7 +579,7 @@ class Theme extends Object
                     $instance = new $className();
                     $extensionOf = '\\Concrete\\Core\\Page\\Theme\\Theme';
                     if (!is_a($instance, $extensionOf)) {
-                        $res->pError = t(/*i18n: %1$s is a filename, %2$s and %3$s are PHP class names */'The theme file %1$s should define a %1$s class that extends the class %2$s', FILENAME_THEMES_CLASS, ltrim($className, '\\'), ltrim($extensionOf, '\\'));
+                        $res->pError = t(/*i18n: %1$s is a filename, %2$s and %3$s are PHP class names */'The theme file %1$s should define a %2$s class that extends the class %3$s', FILENAME_THEMES_CLASS, ltrim($className, '\\'), ltrim($extensionOf, '\\'));
                     } else {
                         if (method_exists($instance, 'getThemeName')) {
                             $s = $instance->getThemeName();
