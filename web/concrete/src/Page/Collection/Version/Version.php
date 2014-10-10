@@ -4,6 +4,8 @@ use Loader;
 use \Concrete\Core\Foundation\Object;
 use Block;
 use Page;
+use PageType;
+use PageTemplate;
 use Permissions;
 use User;
 use Events;
@@ -269,8 +271,9 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
 
 		if ($c->getCollectionInheritance() == 'TEMPLATE') {
 			// we make sure to update the cInheritPermissionsFromCID value
-			$ct = PageType::getByID($c->getPageTypeID());
-			$masterC = $ct->getMasterTemplate();
+			$pType = PageType::getByID($c->getPageTypeID());
+			$pTemplate = PageTemplate::getByID($c->getPageTemplateID());
+			$masterC = $pType->getPageTypePageTemplateDefaultPageObject($pTemplate);
 			$db->Execute('update Pages set cInheritPermissionsFromCID = ? where cID = ?', array($masterC->getCollectionID(), $c->getCollectioniD()));
 		}
 
