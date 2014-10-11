@@ -71,7 +71,7 @@ class ServiceLocatorTest extends \PHPUnit_Framework_TestCase {
 
 		$this->assertTrue($class1 == '\Concrete\Core\Page\Theme\Theme', 'class1 == ' . $class1);
 		$this->assertTrue($class2 == '\Concrete\Package\RiverTheme\Src\Page\Theme\RiverTheme', 'class2 == ' . $class2);
-		$this->assertTrue($class3 == '\Application\Core\Page\Theme\Theme', 'class3 == ' . $class3);
+		$this->assertTrue($class3 == '\Application\Src\Page\Theme\Theme', 'class3 == ' . $class3);
 	}
 
 	public function testServiceProviders() {
