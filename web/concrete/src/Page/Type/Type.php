@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Page\Type;
 
+use Concrete\Core\Page\Type\Composer\Control\CorePageProperty\NameCorePageProperty;
 use Loader;
 use \Concrete\Core\Foundation\Object;
 use PageTemplate;
@@ -170,7 +171,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         // now we see if there's a page name field in there
         $containsPageNameControl = false;
         foreach ($outputControls as $cn) {
-            if ($cn instanceof NameCorePagePropertyPageTypeComposerControl) {
+            if ($cn instanceof NameCorePageProperty) {
                 $containsPageNameControl = true;
                 break;
             }
@@ -773,6 +774,11 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         $db->Execute('delete from PageTypes where ptID = ?', array($this->ptID));
         $db->Execute('delete from PageTypePageTemplates where ptID = ?', array($this->ptID));
         $db->Execute('delete from PageTypeComposerOutputControls where ptID = ?', array($this->ptID));
+
+		foreach($this->getPageTypePageTemplateObjects() as $pt) {
+			$c = $this->getPageTypePageTemplateDefaultPageObject($pt);
+            $c->delete();
+		}
     }
 
     public function setConfiguredPageTypePublishTargetObject(PageTypePublishTargetConfiguration $configuredTarget)

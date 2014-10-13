@@ -354,6 +354,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-newer');
 
     // Now let's build the final configuration for Grunt.
 
@@ -365,7 +366,7 @@ module.exports = function(grunt) {
     for(var concatKey in concat) {
         if(concat[concatKey].beforeJS) {
             jsTargets.release.push('concat:' + concatKey);
-            jsTargets.debug.push('concat:' + concatKey);
+            jsTargets.debug.push('newer:concat:' + concatKey);
         }
     }
 
@@ -395,7 +396,7 @@ module.exports = function(grunt) {
         target.options.sourceMapRoot = '<%= DIR_REL %>/';
         target.options.sourceMapPrefix = 1 + config.DIR_BASE.replace(/\/\/+/g, '/').replace(/[^\/]/g, '').length;
         config.uglify[key + '_debug'] = target;
-        jsTargets.debug.push('uglify:' + key + '_debug');
+        jsTargets.debug.push('newer:uglify:' + key + '_debug');
     }
 
     // Let's define the less section (for generating CSS files)

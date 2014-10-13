@@ -2441,7 +2441,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $cDatePublic = ($data['cDatePublic']) ? $data['cDatePublic'] : null;
 
         $ptID = 0;
-        if ($pt instanceof PageType) {
+        if ($pt instanceof \Concrete\Core\Page\Type\Type) {
             if ($pt->getPageTypeHandle() == STACKS_PAGE_TYPE) {
                 $data['cvIsNew'] = 0;
             }

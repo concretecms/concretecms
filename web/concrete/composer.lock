@@ -1,8 +1,7 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
-        "This file is @generated automatically"
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
     "hash": "35f324089668d6c71bd79c80f37f28bd",
     "packages": [
@@ -279,7 +278,7 @@
                 {
                     "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -353,9 +352,9 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes Schmitt",
+                    "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -486,7 +485,7 @@
                 {
                     "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -540,7 +539,7 @@
                 {
                     "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -612,16 +611,16 @@
         },
         {
             "name": "doctrine/orm",
-            "version": "v2.4.5",
+            "version": "v2.4.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/doctrine2.git",
-                "reference": "c0d3cdbdfbf873871167050ab077e49b1ad02ab0"
+                "reference": "bebacf79d8d4dae9168f0f9bc6811e6c2cb6a4d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/c0d3cdbdfbf873871167050ab077e49b1ad02ab0",
-                "reference": "c0d3cdbdfbf873871167050ab077e49b1ad02ab0",
+                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/bebacf79d8d4dae9168f0f9bc6811e6c2cb6a4d9",
+                "reference": "bebacf79d8d4dae9168f0f9bc6811e6c2cb6a4d9",
                 "shasum": ""
             },
             "require": {
@@ -681,7 +680,7 @@
                 "database",
                 "orm"
             ],
-            "time": "2014-09-22 21:58:51"
+            "time": "2014-10-06 13:22:50"
         },
         {
             "name": "egulias/email-validator",
@@ -1567,7 +1566,7 @@
                     "homepage": "https://github.com/agar"
                 },
                 {
-                    "name": "Martin Jantošovič",
+                    "name": "Martin Janto\u0161ovi\u010d",
                     "homepage": "https://github.com/Mordred"
                 },
                 {
@@ -1640,7 +1639,7 @@
             ],
             "authors": [
                 {
-                    "name": "Pablo Díez",
+                    "name": "Pablo D\u00edez",
                     "email": "pablodip@gmail.com",
                     "homepage": "http://github.com/pablodip"
                 }
@@ -2411,12 +2410,12 @@
             "version": "v0.5.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/tedious/JShrink.git",
+                "url": "https://github.com/tedivm/JShrink.git",
                 "reference": "4b48e3d051cf0ab145db9df20d3292d91485bb60"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tedious/JShrink/zipball/4b48e3d051cf0ab145db9df20d3292d91485bb60",
+                "url": "https://api.github.com/repos/tedivm/JShrink/zipball/4b48e3d051cf0ab145db9df20d3292d91485bb60",
                 "reference": "4b48e3d051cf0ab145db9df20d3292d91485bb60",
                 "shasum": ""
             },
@@ -3219,7 +3218,7 @@
             "license": [
                 "BSD-3-Clause"
             ],
-            "description": "a component that aids in manipulating and validating » Uniform Resource Identifiers (URIs)",
+            "description": "a component that aids in manipulating and validating \u00bb Uniform Resource Identifiers (URIs)",
             "keywords": [
                 "uri",
                 "zf2"
@@ -3302,7 +3301,6 @@
         "primal/color": 20,
         "zendframework/zend-queue": 20
     },
-    "prefer-stable": false,
     "platform": {
         "php": ">=5.3.3"
     },

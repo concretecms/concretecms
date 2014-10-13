@@ -100,8 +100,8 @@
 //            ConcreteMenuManager.disable();
                 ConcreteToolbar.disable();
                 $('div.ccm-area').addClass('ccm-area-inline-edit-disabled');
+                block.getElem().addClass('ccm-block-edit-inline-active');
 
-                $container.addClass('ccm-block-edit-inline-active');
 
                 $.ajax({
                     type: 'GET',
@@ -109,7 +109,10 @@
                     data: postData,
                     success: function (r) {
                         var elem = $(r);
-                        $container.empty().append(elem);
+                        $container.empty()
+                                  .append(elem)
+                                  .find('.ccm-block-edit')
+                                  .addClass('ccm-block-edit-inline-active');
                         my.loadInlineEditModeToolbars($container);
                         $.fn.dialog.hideLoader();
                         Concrete.event.fire('EditModeInlineEditLoaded', {
@@ -336,6 +339,7 @@
                     url: CCM_DISPATCHER_FILENAME + '/ccm/system/page/arrange_blocks?cID=' + block.getCID(),
                     data: send,
                     success: function (r) {
+                        ConcreteToolbar.disableDirectExit();
                         $.fn.dialog.hideLoader();
                         clearTimeout(timeout);
                     }
