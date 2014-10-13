@@ -163,4 +163,9 @@ class IPAddress {
     {
         return (strlen($this->ipHex) == 32);
     }
-} 
+
+    public function __toString()
+    {
+	    return $this->getIp(self::FORMAT_IP_STRING);
+    }
+}
