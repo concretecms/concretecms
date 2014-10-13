@@ -23,7 +23,7 @@ class ApplicationUpdate {
 	}
 
 	/**
-	 * Writes the core pointer into config/site.php
+	 * Writes the core pointer into config/update.php
 	 */
 	public function apply() {
 

@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Sharing\ShareThisPage;
 use Concrete\Core\Sharing\SocialNetwork\Service as SocialNetworkService;
+use Config;
 
 class Service extends SocialNetworkService
 {
@@ -31,8 +32,8 @@ class Service extends SocialNetworkService
                 case 'reddit':
                     return "https://www.reddit.com/submit?url={$url}";
                 case 'email':
-                    $body = urlencode(t("Check out this article on %s:\n\n%s\n%s", SITE, $title, urldecode($url)));
-                    $subject = urlencode(t('Thought you\'d enjoy this article.'));
+                    $body = rawurlencode(t("Check out this article on %s:\n\n%s\n%s", Config::get('concrete.site'), $c->getCollectionName(), urldecode($url)));
+                    $subject = rawurlencode(t('Thought you\'d enjoy this article.'));
                     return "mailto:?body={$body}&subject={$subject}";
             }
         }
