@@ -34,9 +34,12 @@ if (!$editmode) {
                     ?><tr
                         data-authID="<?=$at->getAuthenticationTypeID()?>"
                         data-editURL="<?=h($view->action('edit', $at->getAuthenticationTypeID()))?>"
-                        class="<?=$at->isEnabled() ? 'success' : 'error'?>"
-                    >
-                        <td style="text-align: center; width: 50px"><?=$at->getAuthenticationTypeIconHTML()?></td>
+                        class="<?=$at->isEnabled() ? 'success' : 'error'?>">
+                        <td style="overflow:hidden; text-align: center; width: 50px">
+                            <div style='height:15px'>
+                                <?=$at->getAuthenticationTypeIconHTML()?>
+                            </div>
+                        </td>
                         <td style="width: 100px"><?=$at->getAuthenticationTypeID()?></td>
                         <td><?=$at->getAuthenticationTypeHandle()?></td>
                         <td><?=$at->getAuthenticationTypeName()?></td>
