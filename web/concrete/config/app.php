@@ -257,6 +257,12 @@ return array(
         "/ccm/system/attribute/attribute_sort/user"                                     => array('\Concrete\Controller\Backend\AttributeSort::user'),
 
         /**
+         * Marketplace
+         */
+        "/ccm/system/marketplace/connect"                                        => array('\Concrete\Controller\Backend\Marketplace\Connect::view'),
+        "/ccm/system/dialogs/marketplace/download"                               => array('\Concrete\Controller\Dialog\Marketplace\Download::view'),
+
+        /**
          * Search Routes
          */
         "/ccm/system/search/pages/submit"                                               => array('\Concrete\Controller\Search\Pages::submit'),

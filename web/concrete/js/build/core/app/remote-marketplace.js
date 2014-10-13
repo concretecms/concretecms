@@ -67,13 +67,13 @@
             // first, we check our local install to ensure that we're connected to the
             // marketplace, etc..
             var params = {'mpID': mpID};
-            $.getJSON(CCM_TOOLS_PATH + '/marketplace/connect', params, function(resp) {
+            $.getJSON(CCM_DISPATCHER_FILENAME + '/ccm/system/marketplace/connect', params, function(resp) {
                 jQuery.fn.dialog.hideLoader();
                 if (resp.isConnected) {
                     if (!resp.purchaseRequired) {
                         $.fn.dialog.open({
                             title: ccmi18n.community,
-                            href:  CCM_TOOLS_PATH + '/marketplace/download?install=1&mpID=' + mpID,
+                            href:  CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/marketplace/download?mpID=' + mpID,
                             width: 500,
                             appendButtons: true,
                             modal: false,
@@ -83,7 +83,7 @@
                         $.fn.dialog.open({
                             title: ccmi18n.communityCheckout,
                             iframe: true,
-                            href:  CCM_TOOLS_PATH + '/marketplace/checkout?mpID=' + mpID,
+                            href:  CCM_TOOLS_PATH + '/ccm/system/dialogs/marketplace/checkout?mpID=' + mpID,
                             width: '560px',
                             modal: false,
                             height: '400px'
@@ -93,7 +93,7 @@
                 } else {
                     $.fn.dialog.open({
                         title: ccmi18n.community,
-                        href:  CCM_TOOLS_PATH + '/marketplace/frame?task=get&mpID=' + mpID,
+                        href:  CCM_TOOLS_PATH + '/ccm/system/dialogs/marketplace/frame?mpID=' + mpID,
                         width: '90%',
                         modal: false,
                         height: '70%'
