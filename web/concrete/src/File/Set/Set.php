@@ -20,6 +20,7 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
     const TYPE_PUBLIC = 1;
     const TYPE_STARRED = 2;
     const TYPE_SAVED_SEARCH = 3;
+    const GLOBAL_FILESET_USER_ID = 0;
     protected $fileSetFiles;
 
     /**
@@ -36,7 +37,7 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
 
     public static function getMySets($u = false)
     {
-        if ($u == false) {
+        if ($u === false) {
             $u = new User();
         }
         $db = Loader::db();
@@ -70,7 +71,7 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
      */
     public static function createAndGetSet($fs_name, $fs_type, $fs_uid = false)
     {
-        if (!$fs_uid) {
+        if ($fs_uid === false) {
             $u = new User();
             $fs_uid = $u->uID;
         }
@@ -162,13 +163,14 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
     /**
      * Static method to return an array of File objects by the set name
      *
-     * @param  string $fsName
+     * @param  string   $fsName
+     * @param  int|bool $uID
      * @return array
      */
-    public static function getFilesBySetName($fsName)
+    public static function getFilesBySetName($fsName, $uID = false)
     {
         if (!empty($fsName)) {
-            $fileset = self::getByName($fsName);
+            $fileset = self::getByName($fsName, $uID);
             if ($fileset instanceof \Concrete\Core\File\Set\Set) {
                 return $fileset->getFiles();
             }
@@ -178,13 +180,18 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
     /**
      * Get a file set object by a file name
      *
-     * @param string $fsName
+     * @param  string   $fsName
+     * @param  int|bool $uID
      * @return FileSet
      */
-    public static function getByName($fsName)
+    public static function getByName($fsName, $uID = false)
     {
         $db = Loader::db();
-        $row = $db->GetRow('SELECT * FROM FileSets WHERE fsName = ?', array($fsName));
+        if ($uID !== false) {
+            $row = $db->GetRow('SELECT * FROM FileSets WHERE fsName = ? AND uID = ?', array($fsName, $uID));
+        } else {
+            $row = $db->GetRow('SELECT * FROM FileSets WHERE fsName = ?', array($fsName));
+        }
         if (is_array($row) && count($row)) {
             $fs = new static();
             $fs = array_to_object($fs, $row);
