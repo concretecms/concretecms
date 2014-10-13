@@ -127,12 +127,17 @@
             });
 
             my.refreshStyles(resp);
-
-            editor.destroyInlineEditModeToolbars();
-
+            ConcreteEvent.fire('EditModeExitInline', {
+                action: 'save_inline',
+                block: newBlock
+            });
             ConcreteEvent.fire('EditModeExitInlineComplete', {
                 block: newBlock
             });
+            $.fn.dialog.hideLoader();
+            editor.destroyInlineEditModeToolbars();
+            editor.scanBlocks();
+
         });
     }
 
