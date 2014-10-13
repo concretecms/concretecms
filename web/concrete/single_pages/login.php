@@ -189,7 +189,7 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
             }, 0);
 
 
-            <?php if(!Config::get('concrete.white_label.background_image') !== 'none') { ?>
+            <?php if(Config::get('concrete.white_label.background_image') !== 'none') { ?>
             $(function () {
                 var shown = false, info;
                 $.getJSON('<?= BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '/tools/required/dashboard/get_image_data' ?>', { image: '<?= $image ?>' }, function (data) {
