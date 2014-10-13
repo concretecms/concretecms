@@ -31,7 +31,7 @@ class Color
         $options['showInput'] = true;
         $options['cancelText'] = t('Cancel');
         $options['chooseText'] = t('Choose');
-        $options['preferredFormat'] = 'rgb';
+        $options['preferredFormat'] = isset($options['preferredFormat'])?$options['preferredFormat']:'rgb';
         $options['clearText'] = t('Clear Color Selection');
         $strOptions = json_encode($options);
 
