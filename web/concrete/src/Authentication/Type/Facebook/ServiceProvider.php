@@ -39,8 +39,8 @@ class ServiceProvider extends \Concrete\Core\Foundation\Service\Provider
                 return $factory->createService(
                     'facebook',
                     new Credentials(
-                        \Config::get('authentication::facebook.appid'),
-                        \Config::get('authentication::facebook.secret'),
+                        \Config::get('auth.facebook.appid'),
+                        \Config::get('auth.facebook.secret'),
                         BASE_URL . DIR_REL . \URL::to($callback)
                     ),
                     new SymfonySession(\Session::getFacadeRoot(), false));

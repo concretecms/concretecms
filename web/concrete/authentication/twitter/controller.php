@@ -31,7 +31,7 @@ class Controller extends GenericOauth1aTypeController
      */
     public function supportsRegistration()
     {
-        return true;
+        return \Config::get('auth.twitter.registration_enabled', false);
     }
 
     /**
@@ -67,15 +67,16 @@ class Controller extends GenericOauth1aTypeController
 
     public function saveAuthenticationType($args)
     {
-        \Config::save('authentication::twitter.appid', $args['apikey']);
-        \Config::save('authentication::twitter.secret', $args['apisecret']);
+        \Config::save('auth.twitter.appid', $args['apikey']);
+        \Config::save('auth.twitter.secret', $args['apisecret']);
+        \Config::save('auth.twitter.registration_enabled', $args['registration_enabled']);
     }
 
     public function edit()
     {
         $this->set('form', \Loader::helper('form'));
-        $this->set('apikey', \Config::get('authentication::twitter.appid', ''));
-        $this->set('apisecret', \Config::get('authentication::twitter.secret', ''));
+        $this->set('apikey', \Config::get('auth.twitter.appid', ''));
+        $this->set('apisecret', \Config::get('auth.twitter.secret', ''));
     }
 
     /**

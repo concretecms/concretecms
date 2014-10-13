@@ -9,12 +9,7 @@ class Controller extends GenericOauth2TypeController
 
     public function supportsRegistration()
     {
-        return true;
-    }
-
-    public function supportsEmailResolution()
-    {
-        return true;
+        return \Config::get('auth.community.registration_enabled', false);
     }
 
     public function getAuthenticationTypeIconHTML()
@@ -42,15 +37,16 @@ class Controller extends GenericOauth2TypeController
 
     public function saveAuthenticationType($args)
     {
-        \Config::save('authentication::community.appid', $args['apikey']);
-        \Config::save('authentication::community.secret', $args['apisecret']);
+        \Config::save('auth.community.appid', $args['apikey']);
+        \Config::save('auth.community.secret', $args['apisecret']);
+        \Config::save('auth.community.registration_enabled', $args['registration_enabled']);
     }
 
     public function edit()
     {
         $this->set('form', \Loader::helper('form'));
-        $this->set('apikey', \Config::get('authentication::community.appid', ''));
-        $this->set('apisecret', \Config::get('authentication::community.secret', ''));
+        $this->set('apikey', \Config::get('auth.community.appid', ''));
+        $this->set('apisecret', \Config::get('auth.community.secret', ''));
     }
 
     /**

@@ -46,8 +46,8 @@ class ServiceProvider extends \Concrete\Core\Foundation\Service\Provider
                 return $factory->createService(
                     'community',
                     new Credentials(
-                        \Config::get('authentication::community.appid'),
-                        \Config::get('authentication::community.secret'),
+                        \Config::get('auth.community.appid'),
+                        \Config::get('auth.community.secret'),
                         BASE_URL . DIR_REL . \URL::to($callback)
                     ),
                     new SymfonySession(\Session::getFacadeRoot(), false));
