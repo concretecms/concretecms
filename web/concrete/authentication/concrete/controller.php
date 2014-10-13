@@ -79,7 +79,7 @@ class Controller extends AuthenticationTypeController
     private function genString($a = 16)
     {
         if (function_exists('mcrypt_create_iv')) {
-            return bin2hex(mcrypt_create_iv($a, MCRYPT_DEV_URANDOM);
+            return bin2hex(mcrypt_create_iv($a, MCRYPT_DEV_URANDOM));
         } elseif (function_exists('openssl_random_pseudo_bytes')) {
             return bin2hex(openssl_random_pseudo_bytes($a));
         }
