@@ -39,13 +39,13 @@ if ($user->isLoggedIn()) {
                 svg.parent().replaceWith('<i class="fa fa-user"></i>');
             };
             img.src = svg.parent().data('src');
-
-            if (svg.closest('.active')) {
-                svg.attr('fill', 'white');
-            } else {
-                svg.attr('fill', '#333');
-            }
             $(function() {
+
+                if (svg.closest('li').hasClass('active')) {
+                    svg.attr('fill', 'white');
+                } else {
+                    svg.attr('fill', 'rgb(155,155,155)');
+                }
                 Concrete.event.bind('AuthenticationTypeSelected', function(e, handle) {
                     if (handle === 'community') {
                         svg.attr('fill', 'white');

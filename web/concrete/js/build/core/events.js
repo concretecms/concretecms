@@ -1,6 +1,6 @@
-var eventing = (function (global, $) {
+(function (global, $) {
     'use strict';
-    global.c5 = global.c5 || {};
+    global.Concrete = global.Concrete || {};
     global.console = global.console || {};
 
     global.ConcreteEvent = (function (ns, $) {
@@ -144,6 +144,6 @@ var eventing = (function (global, $) {
 
         ns.event = ConcreteEvent;
         return ConcreteEvent;
-    }(global.c5, jQuery));
+    }(global.Concrete, jQuery));
 
 }(window, jQuery));
