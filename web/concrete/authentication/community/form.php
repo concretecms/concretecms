@@ -32,7 +32,6 @@ if ($user->isLoggedIn()) {
     (function() {
         var svg = $('.ccm-concrete-authentication-type-svg > svg');
 
-
         if (svg) {
             var img = new Image();
             img.onerror = function() {

@@ -11,12 +11,7 @@ class Controller extends GenericOauth2TypeController
 
     public function supportsRegistration()
     {
-        return true;
-    }
-
-    public function supportsEmailResolution()
-    {
-        return true;
+        return \Config::get('auth.facebook.registration_enabled', false);
     }
 
     public function getAuthenticationTypeIconHTML()
@@ -42,15 +37,16 @@ class Controller extends GenericOauth2TypeController
 
     public function saveAuthenticationType($args)
     {
-        \Config::save('authentication::facebook.appid', $args['apikey']);
-        \Config::save('authentication::facebook.secret', $args['apisecret']);
+        \Config::save('auth.facebook.appid', $args['apikey']);
+        \Config::save('auth.facebook.secret', $args['apisecret']);
+        \Config::save('auth.facebook.registration_enabled', $args['registration_enabled']);
     }
 
     public function edit()
     {
         $this->set('form', \Loader::helper('form'));
-        $this->set('apikey', \Config::get('authentication::facebook.appid', ''));
-        $this->set('apisecret', \Config::get('authentication::facebook.secret', ''));
+        $this->set('apikey', \Config::get('auth.facebook.appid', ''));
+        $this->set('apisecret', \Config::get('auth.facebook.secret', ''));
     }
 
 }

@@ -58,13 +58,6 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
     abstract public function supportsRegistration();
 
     /**
-     * Whether or not we will attempt to resolve the user from the email address.
-     *
-     * @return bool
-     */
-    abstract public function supportsEmailResolution();
-
-    /**
      * @return Array
      */
     public function getAdditionalRequestParameters()

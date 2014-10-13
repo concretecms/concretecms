@@ -18,6 +18,15 @@
       </span>
     </div>
 </div>
+<div class='form-group'>
+    <div class="input-group">
+        <label type="checkbox">
+            <input type="checkbox" name="registration_enabled" value="1" <?= \Config::get('auth.community.registration_enabled', false) ? 'checked' : '' ?>>
+            <span style="font-weight:normal"><?= t('Allow automatic registration') ?></span>
+        </label>
+      </span>
+    </div>
+</div>
 
 <script type="text/javascript">
     var button = $('#showsecret');

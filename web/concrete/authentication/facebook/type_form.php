@@ -13,6 +13,15 @@
       </span>
     </div>
 </div>
+<div class='form-group'>
+    <div class="input-group">
+        <label type="checkbox">
+            <input type="checkbox" name="registration_enabled" value="1" <?= \Config::get('auth.facebook.registration_enabled', false) ? 'checked' : '' ?>>
+            <span style="font-weight:normal"><?= t('Allow automatic registration') ?></span>
+        </label>
+        </span>
+    </div>
+</div>
 
 <div class="alert alert-info">
     <?php echo t('<a href="%s" target="_blank">Click here</a> to obtain your access keys.', 'https://developers.facebook.com/apps/'); ?>
