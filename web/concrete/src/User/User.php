@@ -690,6 +690,8 @@ class User extends Object
      */
     public function persist($cache_interface = true)
     {
+        $this->refreshUserGroups();
+
         /** @var Session $session */
         $session = Core::make('session');
         $session->set('uID', $this->getUserID());
