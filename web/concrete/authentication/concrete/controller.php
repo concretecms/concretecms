@@ -76,8 +76,13 @@ class Controller extends AuthenticationTypeController
         return $token;
     }
 
-    private function genString($a = 20)
+    private function genString($a = 16)
     {
+        if (function_exists('mcrypt_create_iv')) {
+            return bin2hex(mcrypt_create_iv($a, MCRYPT_DEV_URANDOM);
+        } elseif (function_exists('openssl_random_pseudo_bytes')) {
+            return bin2hex(openssl_random_pseudo_bytes($a));
+        }
         $o = '';
         $chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+{}|":<>?\'\\';
         $l = strlen($chars);
