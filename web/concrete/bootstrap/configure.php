@@ -28,6 +28,7 @@ defined('DISPATCHER_FILENAME_CORE') or define('DISPATCHER_FILENAME_CORE', 'dispa
 defined('DIRNAME_APPLICATION') or define('DIRNAME_APPLICATION', 'application');
 defined('DIRNAME_UPDATES') or define('DIRNAME_UPDATES', 'updates');
 defined('DIRNAME_CORE') or define('DIRNAME_CORE', 'concrete');
+defined('DIR_CONFIG_CORE') or define('DIR_CONFIG_CORE', DIRNAME_CORE . '/config');
 defined('DIR_BASE') or define('DIR_BASE', dirname($_SERVER['SCRIPT_FILENAME']));
 defined('DIR_APPLICATION') or define('DIR_APPLICATION', DIR_BASE . '/' . DIRNAME_APPLICATION);
 defined('DIR_CONFIG_SITE') or define('DIR_CONFIG_SITE', DIR_APPLICATION . '/config');
@@ -437,9 +438,12 @@ require dirname(__FILE__) . '/helpers.php';
  * Set the timezone
  * ----------------------------------------------------------------------------
  */
-if (defined('APP_TIMEZONE')) {
+$config_file = DIR_CONFIG_CORE . '/concrete.php';
+if (isset($config_file['timezone'])) {
     define('APP_TIMEZONE_SERVER', @date_default_timezone_get());
-    date_default_timezone_set(APP_TIMEZONE);
+    define('APP_TIMEZONE', $config_file['timezone']);
+    date_default_timezone_set($config_file['timezone']);
 } else {
     date_default_timezone_set(@date_default_timezone_get());
 }
+unset($config_file);
