@@ -1,4 +1,9 @@
 <?php defined('C5_EXECUTE') or die('Access denied.'); ?>
+<div class="alert alert-info">
+    <h4><?php echo t('Community Authentication Configuration'); ?></h4>
+    <p><?php echo t('<a href="%s" target="_blank">Click here</a> to obtain your access keys.', \Config::get('concrete.urls.concrete5_secure') . '/profile/apps/'); ?></p>
+    <p><?php echo t('Set the "Callback URL" to: %s.', '<code>' . BASE_URL . DIR_REL . \URL::to('/system/authentication/community/callback') . '</code>'); ?></p>
+</div>
 
 <div class='form-group'>
     <?=$form->label('apikey', t('App ID'))?>
