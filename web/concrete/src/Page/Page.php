@@ -2449,6 +2449,12 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
                 $pkgID = $pt->getPackageID();
             }
 
+            // if we have a page type and we don't have a template,
+            // then we use the page type's default template
+            if (intval($pt->ptDefaultPageTemplateID)>0 && !$template) {
+                $template = \Concrete\Core\Page\Template::getByID($pt->ptDefaultPageTemplateID);
+            }
+
             $ptID = $pt->getPageTypeID();
             if ($template) {
                 $mc = $pt->getPageTypePageTemplateDefaultPageObject($template);
