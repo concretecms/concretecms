@@ -72,6 +72,21 @@ $cms->instance('config', $config = new ConfigRepository($file_loader, $file_save
 
 /**
  * ----------------------------------------------------------------------------
+ * Timezone Config
+ * ----------------------------------------------------------------------------
+ */
+if (!$config->has('app.timezone')) {
+    // There is no timezone set.
+    $config->set('app.timezone', @date_default_timezone_get());
+}
+
+if (!$config->has('app.server_timezone')) {
+    // There is no server timezone set.
+    $config->set('app.server_timezone', @date_default_timezone_get());
+}
+
+/**
+ * ----------------------------------------------------------------------------
  * Legacy Definitions
  * ----------------------------------------------------------------------------
  */
