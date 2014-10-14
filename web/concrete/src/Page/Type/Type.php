@@ -31,6 +31,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
 {
 
     protected $ptDraftVersionsToSave = 10;
+    protected $ptDefaultPageTemplateID = 0;
 
     public function getPageTypeID()
     {
