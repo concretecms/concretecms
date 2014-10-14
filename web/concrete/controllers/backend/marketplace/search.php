@@ -15,6 +15,7 @@ class Search extends UserInterface
         $mri = new RemoteItemList();
         $mri->setItemsPerPage(5);
         $mri->setIncludeInstalledItems(false);
+  		$mri->filterByCompatibility(1);
         $mri->setType('addons');
         $keywords = $_REQUEST['q'];
         $mri->filterByKeywords($keywords);
