@@ -291,7 +291,6 @@ define('REL_DIR_PACKAGES', DIR_REL . '/packages');
 define('REL_DIR_PACKAGES_CORE', ASSETS_URL . '/packages');
 define('REL_DIR_FILES_PAGE_TEMPLATE_ICONS', ASSETS_URL_IMAGES . '/icons/page_templates');
 define('REL_DIR_FILES_UPLOADED_STANDARD', REL_DIR_APPLICATION . '/files');
-define('REL_DIR_FILES_TRASH_STANDARD', REL_DIR_FILES_UPLOADED_STANDARD . '/trash');
 define('REL_DIR_FILES_CACHE', REL_DIR_FILES_UPLOADED_STANDARD . '/cache');
 define('REL_DIR_AL_ICONS', ASSETS_URL_IMAGES . '/icons/filetypes');
 define('REL_DIR_FILES_AVATARS', '/avatars');

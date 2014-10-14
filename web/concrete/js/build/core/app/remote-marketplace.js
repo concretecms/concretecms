@@ -54,11 +54,13 @@
             var mpID = args.mpID;
             var closeTop = args.closeTop;
 
-            this.onComplete = function() { }
-
-            if (args.onComplete) {
-                ccm_getMarketplaceItem.onComplete = args.onComplete;
+            if (!args.onComplete) {
+                args.onComplete = function(e, data) {
+                    jQuery.fn.dialog.closeTop();
+                }
             }
+
+            ConcreteEvent.subscribe('MarketplaceRequestComplete', args.onComplete);
 
             if (closeTop) {
                 jQuery.fn.dialog.closeTop(); // this is here due to a weird safari behavior
@@ -72,7 +74,7 @@
                 if (resp.isConnected) {
                     if (!resp.purchaseRequired) {
                         $.fn.dialog.open({
-                            title: ccmi18n.community,
+                            title: ccmi18n.communityDownload,
                             href:  CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/marketplace/download?mpID=' + mpID,
                             width: 500,
                             appendButtons: true,
@@ -91,13 +93,7 @@
                     }
 
                 } else {
-                    $.fn.dialog.open({
-                        title: ccmi18n.community,
-                        href:  CCM_TOOLS_PATH + '/ccm/system/dialogs/marketplace/frame?mpID=' + mpID,
-                        width: '90%',
-                        modal: false,
-                        height: '70%'
-                    });
+                    window.location.href = CCM_DISPATCHER_FILENAME + '/dashboard/extend/connect';
                 }
             });
         }

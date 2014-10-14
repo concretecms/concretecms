@@ -127,7 +127,7 @@ class Marketplace
         if (is_array($objects)) {
             try {
                 foreach ($objects as $addon) {
-                    $mi = new MarketplaceRemoteItem();
+                    $mi = new RemoteItem();
                     $mi->setPropertiesFromJSONObject($addon);
                     $remoteCID = $mi->getRemoteCollectionID();
                     if (!empty($remoteCID)) {
