@@ -85,6 +85,8 @@ if (!$config->has('app.server_timezone')) {
     $config->set('app.server_timezone', @date_default_timezone_get());
 }
 
+@date_default_timezone_set($config->get('app.timezone'));
+
 /**
  * ----------------------------------------------------------------------------
  * Legacy Definitions
