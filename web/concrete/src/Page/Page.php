@@ -2491,7 +2491,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             $pc = Page::getByID($newCID, 'RECENT');
 
             // run any internal event we have for page addition
-            $pe = new Event($this);
+            $pe = new Event($pc);
             Events::dispatch('on_page_add', $pe);
 
             $pc->rescanCollectionPath();
