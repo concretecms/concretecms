@@ -1,8 +1,11 @@
 <?php
 namespace Concrete\Core\Marketplace;
+use Concrete\Core\Package\Package;
+use Concrete\Core\Package\PackageArchive;
 use Loader;
 use Config;
 use \Concrete\Core\Foundation\Object;
+use Exception;
 class RemoteItem extends Object {
 
 	protected $price=0.00;
@@ -164,20 +167,6 @@ class RemoteItem extends Object {
 			$am->install($file, true);
 		} catch (Exception $e) {
 			return array($e->getMessage());
-		}
-
-		if ($install) {
-			$tests = Package::testForInstall($this->getHandle());
-			if (is_array($tests)) {
-				return $tests;
-			} else {
-				$p = Loader::package($this->getHandle());
-				try {
-					$p->install();
-				} catch(Exception $e) {
-					return array(Package::E_PACKAGE_INSTALL);
-				}
-			}
 		}
 	}
 

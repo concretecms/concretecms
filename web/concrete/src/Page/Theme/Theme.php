@@ -443,19 +443,24 @@ class Theme extends Object
         );
         $env = Environment::get();
         if ($row['pThemeID']) {
+            $standardClass = '\\Concrete\Core\\Page\\Theme\\Theme';
             if ($row['pThemeHasCustomClass']) {
                 $pkgHandle = PackageList::getHandle($row['pkgID']);
                 $r = $env->getRecord(DIRNAME_THEMES . '/' . $row['pThemeHandle'] . '/' . FILENAME_THEMES_CLASS, $pkgHandle);
                 $prefix = $r->override ? true : $pkgHandle;
-                $class = core_class(
+                $customClass = core_class(
                     'Theme\\' .
                     Loader::helper('text')->camelcase($row['pThemeHandle']) .
                     '\\PageTheme',
                 $prefix);
+                try {
+                    $pl = Core::make($customClass);
+                } catch(\ReflectionException $e) {
+                    $pl = Core::make($standardClass);
+                }
             } else {
-                $class = '\\Concrete\Core\\Page\\Theme\\Theme';
+                $pl = Core::make($standardClass);
             }
-            $pl = Core::make($class);
             $pl->setPropertiesFromArray($row);
             $pkgHandle = $pl->getPackageHandle();
             $pl->pThemeDirectory = $env->getPath(DIRNAME_THEMES . '/' . $row['pThemeHandle'], $pkgHandle);
