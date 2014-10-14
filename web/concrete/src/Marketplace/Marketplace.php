@@ -267,22 +267,21 @@ class Marketplace
                 $csToken = $this->getSiteToken();
                 $url = $url . '/' . $mp->getProductBlockID() . '?ts=' . time() . '&csiBaseURL=' . $csiBaseURL . '&csiURL=' . $csiURL . '&csToken=' . $csToken;
             }
+
             $time = time();
-            $ifr = '<script type="text/javascript">$(function() { $.receiveMessage(function(e) {
-				jQuery.fn.dialog.hideLoader();
-
-				if (e.data == "loading") {
-					jQuery.fn.dialog.showLoader();
-				} else {
-					var eh = e.data;
-					eh = parseInt(eh) + 20;
-					$("#ccm-marketplace-frame-' . $time . '").attr("height", eh);
-				}
-
-				}, \'' . Config::get('concrete.urls.concrete5_secure') . '\');
-			});
-			</script>';
-            $ifr .= '<iframe class="ccm-marketplace-frame" id="ccm-marketplace-frame-' . $time . '" class="ccm-marketplace-frame" frameborder="0" width="' . $width . '" height="' . $height . '" src="' . $url . '"></iframe>';
+            $ifr = '<script type="text/javascript">
+                window.addEventListener("message", function(e) {
+                    jQuery.fn.dialog.hideLoader();
+                    if (e.data == "loading") {
+                        jQuery.fn.dialog.showLoader();
+                    } else {
+                        var eh = e.data;
+                        eh = parseInt(eh) + 100;
+                        $("#ccm-marketplace-frame-' . $time . '").attr("height", eh);
+                    }
+                    });
+                </script>';
+            $ifr .= '<iframe class="ccm-marketplace-frame" id="ccm-marketplace-frame-' . $time . '" frameborder="0" width="' . $width . '" height="' . $height . '" src="' . $url . '"></iframe>';
             return $ifr;
         } else {
             return '<div class="ccm-error">' . t(
