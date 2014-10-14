@@ -53,23 +53,30 @@ class ValidationService {
 
 	/**
 	* Parses the file extension for a given file name, checks it to see if it's in the the extension array if provided
-	* if not, it checks to see if it's in the UPLOAD_FILE_EXTENSIONS_ALLOWED constant
+	* if not, it checks to see if it's in the configuration, under the "upload.extensions" key
 	* @param string $filename
 	* @param array $extensions
 	* @return boolean
 	*/
-
 	public function extension($filename, $extensions = NULL) {
 		$f = Loader::helper('file');
 		$ext = strtolower($f->getExtension($filename));
 		if(isset($extensions) && is_array($extensions) && count($extensions)) {
 			$allowed_extensions = $extensions;
-		} else { // pull from constants
-			$extensions_string = strtolower(str_replace(array("*","."), "", Config::get('concrete.upload.extensions')));
+		} else { // pull from config
+			if (Config::get('app.upload.extensions')!==null) {
+				// user provided config exists - use that
+				$extensions = Config::get('app.upload.extensions');
+			} else {
+				// fall-back to default
+				$extensions = Config::get('concrete.upload.extensions');
+			}
+			$extensions_string = strtolower(str_replace(array("*","."), "", $extensions));
 			$allowed_extensions = explode(";",$extensions_string);
 		}
 		return in_array($ext,$allowed_extensions);
 	}
+
 
 	/**
 	 * @access private
