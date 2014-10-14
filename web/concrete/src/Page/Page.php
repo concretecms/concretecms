@@ -2454,6 +2454,9 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
                 $mc = $pt->getPageTypePageTemplateDefaultPageObject($template);
                 $masterCID = $mc->getCollectionID();
             }
+
+            // when provided a page type, use its default page template
+            $data['pTemplateID'] = $pt->ptDefaultPageTemplateID;
         }
 
         if ($template instanceof PageTemplate) {
