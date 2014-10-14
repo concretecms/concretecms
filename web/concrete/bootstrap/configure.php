@@ -428,17 +428,3 @@ ini_set('include_path', DIR_BASE_CORE . DIRECTORY_SEPARATOR . DIRNAME_VENDOR . P
  * ----------------------------------------------------------------------------
  */
 require dirname(__FILE__) . '/helpers.php';
-
-
-
-/**
- * ----------------------------------------------------------------------------
- * Set the timezone
- * ----------------------------------------------------------------------------
- */
-if (defined('APP_TIMEZONE')) {
-    define('APP_TIMEZONE_SERVER', @date_default_timezone_get());
-    date_default_timezone_set(APP_TIMEZONE);
-} else {
-    date_default_timezone_set(@date_default_timezone_get());
-}
