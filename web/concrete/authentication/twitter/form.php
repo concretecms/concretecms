@@ -17,7 +17,7 @@ if (isset($message)) {
 if (isset($show_email) && $show_email) {
     ?>
     <form action="<?= \URL::to('/login/callback/twitter/handle_register') ?>">
-        <span>Register an account for "@<?= $username ?>"</span>
+        <span><?= t('Register an account for "%s"', "@{$username}") ?></span>
         <hr />
         <div class="input-group">
             <input type="email" name="uEmail" placeholder="email" class="form-control" />
@@ -34,15 +34,48 @@ if (isset($show_email) && $show_email) {
 
     if ($user->isLoggedIn()) {
         ?>
-        <a href="<?= \URL::to('/system/authentication/twitter/attempt_attach'); ?>">
-            <?php echo t('Attach a twitter account') ?>
-        </a>
+        <div class="form-group">
+            <span>
+                <?= t('Attach a %s account', t('twitter')) ?>
+            </span>
+            <hr>
+        </div>
+        <div class="form-group">
+            <a href="<?= \URL::to('/system/authentication/twitter/attempt_attach'); ?>"
+               class="btn btn-primary btn-twitter btn-block">
+                <i class="fa fa-twitter"></i>
+                <?= t('Attach a %s account', t('twitter')) ?>
+            </a>
+        </div>
     <?php
     } else {
         ?>
-        <a href="<?= \URL::to('/system/authentication/twitter/attempt_auth'); ?>">
-            <?php echo t('Log in With Twitter') ?>
-        </a>
+        <div class="form-group">
+            <span>
+                <?= t('Sign in with %s', t('twitter')) ?>
+            </span>
+            <hr>
+        </div>
+        <div class="form-group">
+            <a href="<?= \URL::to('/system/authentication/twitter/attempt_auth'); ?>"
+               class="btn btn-primary btn-twitter btn-block">
+                <i class="fa fa-twitter"></i>
+                <?= t('Log in with %s', 'twitter') ?>
+            </a>
+        </div>
     <?php
     }
+    ?>
+    <style>
+        .ccm-ui .btn-twitter {
+            border-width: 0px;
+            background: #00aced;
+        }
+
+        .btn-twitter .fa-twitter {
+            margin: 0 6px 0 3px;
+        }
+    </style>
+<?php
 }
+?>
