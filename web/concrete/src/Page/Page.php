@@ -2397,7 +2397,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     * "cName": The name of the page
     * "cHandle": The handle of the page as used in the path
     * "cDatePublic": The date assigned to the page
-    * @param collectiontype $ct
+    * @param \Concrete\Core\Page\Type\Type $pt
     * @param array $data
     * @return page
     **/
@@ -2451,8 +2451,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
             // if we have a page type and we don't have a template,
             // then we use the page type's default template
-            if (intval($pt->ptDefaultPageTemplateID)>0 && !$template) {
-                $template = \Concrete\Core\Page\Template::getByID($pt->ptDefaultPageTemplateID);
+            if ($pt->getPageTypeDefaultPageTemplateID() > 0 && !$template) {
+                $template = $pt->getPageTypeDefaultPageTemplateObject();
             }
 
             $ptID = $pt->getPageTypeID();
