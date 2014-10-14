@@ -119,12 +119,12 @@ if ($controller->getTask() == 'view_detail') { ?>
     <? foreach($items as $mi) { ?>
 
         <div class="ccm-marketplace-list-item">
-            <div class="ccm-marketplace-list-item-theme-thumbnail"><a href="<?=$this->action('view_detail', $mi->getMarketplaceItemID())?>"><?
+            <div class="ccm-marketplace-list-item-theme-thumbnail"><a href="<?=$mi->getLocalURL()?>"><?
                 $thumb = $mi->getLargeThumbnail();
                 printf('<img src="%s">', $thumb->src);
                 ?></a></div>
             <div class="ccm-marketplace-list-item-theme-description">
-                <h2><a href="<?=$this->action('view_detail', $mi->getMarketplaceItemID())?>"><?=$mi->getName()?></a></h2>
+                <h2><a href="<?=$mi->getLocalURL()?>"><?=$mi->getName()?></a></h2>
                     <p><?=$mi->getDescription()?></p>
             </div>
             <div class="ccm-marketplace-list-item-theme-price">

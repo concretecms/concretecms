@@ -16,6 +16,7 @@ class Version571 extends AbstractMigration
     {
         /** @todo Remove key from Config table */
         /** @todo Add marketplace single pages */
+        /** @todo delete customize page themes dashboard single page */
     }
 
     public function down(Schema $schema)

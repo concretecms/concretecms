@@ -101,7 +101,6 @@ module.exports = function(grunt) {
                 '<%= DIR_BASE %>/concrete/js/build/core/app/custom-style.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/tabs.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/toolbar.js',
-                '<%= DIR_BASE %>/concrete/js/build/core/app/themes.js',
 
                 // Edit Mode
                 '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode/editmode.js',

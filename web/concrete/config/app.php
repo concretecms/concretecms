@@ -260,6 +260,7 @@ return array(
          * Marketplace
          */
         "/ccm/system/marketplace/connect"                                        => array('\Concrete\Controller\Backend\Marketplace\Connect::view'),
+        "/ccm/system/marketplace/search"                                        => array('\Concrete\Controller\Backend\Marketplace\Search::view'),
         "/ccm/system/dialogs/marketplace/download"                               => array('\Concrete\Controller\Dialog\Marketplace\Download::view'),
         "/ccm/system/dialogs/marketplace/checkout"                               => array('\Concrete\Controller\Dialog\Marketplace\Checkout::view'),
 
