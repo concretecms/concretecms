@@ -67,7 +67,7 @@ if (!$tp->canInstallPackages()) { ?>
 								<?=$versionHistory?>
 							</div>
 							<div class="ccm-marketplace-item-information-more">
-								<a href="javascript:void(0)" onclick="ccm_marketplaceUpdatesShowMore(this)"><?=t('More Details')?></a>
+								<a href="javascript:void(0)" onclick="ConcreteMarketplace.updatesShowMore(this)"><?=t('More Details')?></a>
 							</div>
 						<? } ?>
 					</td>
@@ -99,7 +99,7 @@ if (!$tp->canInstallPackages()) { ?>
 								<?=$versionHistory?>
 							</div>
 							<div class="ccm-marketplace-item-information-more">
-								<a href="javascript:void(0)" onclick="ccm_marketplaceUpdatesShowMore(this)"><?=t('More Details')?></a>
+								<a href="javascript:void(0)" onclick="ConcreteMarketplace.updatesShowMore(this)"><?=t('More Details')?></a>
 							</div>
 						<? } ?>
 					</td>

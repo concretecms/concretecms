@@ -49,9 +49,7 @@ if (isset($activate_confirm)) {
                             } else {
                                 echo $bt->button(t('Activate'), $view->url('/dashboard/pages/themes','activate', $t->getThemeID()), 'left', 'primary');
                             }
-                            // $bt->button_js(t('Preview'), "ccm_previewInternalTheme(1, " . intval($t->getThemeID()) . ",'" . addslashes(str_replace(array("\r","\n",'\n'),'',$t->getThemeDisplayName())) . "')", 'left');
                             echo $bt->button(t('Inspect'), $view->url('/dashboard/pages/themes/inspect', $t->getThemeID()), 'left');
-                            // $bt->button(t("Customize"), $view->url('/dashboard/pages/themes/customize', $t->getThemeID()), 'left');
                             if ($siteThemeID == $t->getThemeID()) {
                                 echo $bt->button(t('Remove'), $view->url('/dashboard/pages/themes', 'remove', $t->getThemeID(), $valt->generate('remove')), 'right', 'btn-danger', array('disabled'=>'disabled'));
                             } else {

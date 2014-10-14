@@ -15,6 +15,7 @@ class Connect extends MarketplaceItem
         $r->setAdditionalDataAttribute('connectionError', $this->marketplace->getConnectionError());
         $r->setAdditionalDataAttribute('purchaseRequired', $this->item->purchaseRequired());
         $r->setAdditionalDataAttribute('remoteURL', $this->item->getRemoteURL());
+        $r->setAdditionalDataAttribute('localURL', $this->item->getLocalURL());
         if (!$this->item->purchaseRequired()) {
             $this->item->enableFreeLicense();
         }

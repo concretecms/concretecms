@@ -55,6 +55,15 @@ class RemoteItem extends Object {
         }
     }
 
+    public function getLocalURL()
+    {
+        if ($this->getMarketplaceItemType() == 'theme') {
+            return \URL::to('/dashboard/extend/themes/', 'view_detail', $this->getMarketplaceItemID());
+        } else {
+            return \URL::to('/dashboard/extend/addons/', 'view_detail', $this->getMarketplaceItemID());
+        }
+    }
+
 	public function getDisplayPrice(){
 		if ($this->price == '' || $this->price == '0' || $this->price == '0.00') {
             return t('Free');

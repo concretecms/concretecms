@@ -4,6 +4,30 @@
 
     var ConcreteMarketplace = {
 
+        updatesShowMore: function(obj) {
+            $(obj).parent().hide();
+            $(obj).parent().parent().find('.ccm-marketplace-update-changelog').css('max-height', 'none');
+        },
+
+        getMoreInformation: function(mpID)
+        {
+            jQuery.fn.dialog.showLoader();
+            var params = {'mpID': mpID};
+            $.concreteAjax({
+                method: 'get',
+                url: CCM_DISPATCHER_FILENAME + '/ccm/system/marketplace/connect',
+                data: params,
+                success: function(resp) {
+                    jQuery.fn.dialog.hideLoader();
+                    if (resp.isConnected) {
+                        window.location.href = resp.localURL;
+                    } else {
+                        window.location.href = CCM_DISPATCHER_FILENAME + '/dashboard/extend/connect';
+                    }
+                 }
+            });
+        },
+
         purchaseOrDownload: function(args)
         {
             var mpID = args.mpID;
