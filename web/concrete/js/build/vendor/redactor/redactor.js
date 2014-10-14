@@ -153,7 +153,7 @@
 				sitemap: false,
 				lightbox: false
 			},
-			
+
             s3: false,
             uploadFields: false,
 
@@ -306,6 +306,9 @@
                     horizontalrule: 'Insert Horizontal Rule',
                     deleted: 'Deleted',
                     anchor: 'Anchor',
+                    link_type: "Link Type",
+                    link_type_image: "Image",
+                    link_type_ajax: "AJAX",
                     open_link: "Open link",
                     default_behavior: "Default Behavior",
                     in_lightbox: "In a Lightbox",
@@ -6421,7 +6424,7 @@
 
                 var sel = this.getSelection();
                 /* concrete5 */
-                var url = '', text = '', target = '', lightbox = false;
+                var url = '', text = '', target = '', lightbox = false, type = ajax;
                 /* end concrete5 */
 
                 var elem = this.getParent();
@@ -6438,6 +6441,7 @@
                     target = elem.target;
                     /* concrete5 */
                     lightbox = $(elem).attr('data-concrete5-link-launch') == 'lightbox-image';
+                    type = $(elem).attr('data-concrete5-link-type') === 'image';
                     /* end concret5 */
 
                     this.insert_link_node = elem;
@@ -6448,6 +6452,11 @@
                 /* concrete5 */
                 if (lightbox) {
                     $('#redactor_link_lightbox').prop('checked', true);
+                }
+                if (type) {
+                    $('#redactor_link_image').prop('checked', true);
+                } else {
+                    $('#redactor_link_ajax').prop('checked', true);
                 }
                 /* end concrete5 */
 
@@ -6491,17 +6500,18 @@
                                 jQuery.fn.dialog.hideLoader();
                                 var file = r.files[0];
                                 $('#redactor_link_url').val(file.urlDownload);
+                                $('#redactor_link_image').prop('checked', true);
                             });
                         });
                     });
                 } else {
                     $('a[data-action=choose-file-from-file-manager]').parent().remove();
                 }
-				
+
 				if (!this.opts.concrete5.lightbox) {
 					$('div.form-group[data-option-feature=lightbox]').hide();
 				}
-				
+
                 /* concrete5 */
 				if (this.opts.concrete5.sitemap) {
                     $('a[data-action=choose-link-from-sitemap]').on('click', function(e) {
@@ -6518,13 +6528,14 @@
                             jQuery.fn.dialog.closeTop();
                             var url = CCM_BASE_URL + CCM_DISPATCHER_FILENAME + '?cID=' + data.cID;
                             $('#redactor_link_url').val(url);
+                            $('#redactor_link_ajax').prop('checked', true);
                         });
 
                     });
                 } else {
                     $('a[data-action=choose-link-from-sitemap]').parent().remove();
                 }
-	
+
 				if (!this.opts.concrete5.sitemap && !this.opts.concrete5.filemanager) {
 					$('#redactor_link_url').parent().removeClass();
                 }
@@ -6544,14 +6555,15 @@
             var target = '', targetBlank = '';
 
             var link = $('#redactor_link_url').val();
+            var link_type = $('#redactor_link_image').is(':checked') ? 'image' : 'ajax';
             var text = $('#redactor_link_url_text').val();
             /* concrete5 */
             var lightbox = $('#redactor_link_lightbox').is(':checked');
 
             if (lightbox) {
-                var lightboxStr = 'data-concrete5-link-launch="lightbox-image"';
+                var lightboxStr = 'data-concrete5-link-type="' + link_type + '" data-concrete5-link-launch="lightbox-image"';
             } else {
-                var lightboxStr = '';
+                var lightboxStr = 'data-concrete5-link-type="' + link_type + '"';
             }
 
             // mailto
@@ -6884,6 +6896,7 @@
                             jQuery.fn.dialog.hideLoader();
                             var file = r.files[0];
                             $('#redactor_file_link').val(file.urlInline);
+                            $('#redactor_link_image').prop('checked', true);
                         });
                     });
                 });
@@ -6928,6 +6941,11 @@
                     } else if ($(parent).attr('data-concrete5-link-launch')) {
                         $('#redactor_link_lightbox').prop('checked', true);
                     }
+                    if ($(parent).data('concrete5-link-type') === 'image') {
+                        $('#redactor_link_image').prop('checked', true);
+                    } else {
+                        $('#redactor_link_ajax').prop('checked', true);
+                    }
                 }
 
                 $('#redactor_image_delete_btn').click($.proxy(function()
@@ -6951,6 +6969,7 @@
                             jQuery.fn.dialog.hideLoader();
                             var file = r.files[0];
                             $('#redactor_file_link').val(file.urlDownload);
+                            $('#redactor_link_image').prop('checked', true);
                         });
                     });
                 });
@@ -6969,6 +6988,7 @@
                         jQuery.fn.dialog.closeTop();
                         var url = CCM_BASE_URL + CCM_DISPATCHER_FILENAME + '?cID=' + data.cID;
                         $('#redactor_file_link').val(url);
+                        $('#redactor_link_ajax').prop('checked', true);
                     });
 
                 });
@@ -7060,6 +7080,8 @@
                 {
                     lightbox = true;
                 }
+
+                var type = $('#redactor_link_image').is(':checked') ? 'image' : 'ajax';
                 /* end concrete5 */
 
                 if (parent.get(0).tagName !== 'A')
@@ -7073,6 +7095,11 @@
                     else if (lightbox) {
                         a.attr('data-concrete5-link-launch', 'lightbox-image');
                     }
+
+
+                    /* concrete5 */
+                    a.attr('data-concrete5-link-type', type);
+                    /* end concrete5 */
 
                     $el.replaceWith(a);
                 }
@@ -7097,7 +7124,9 @@
                         parent.removeAttr('data-concrete5-link-launch');
                     }
 
-
+                    /* concrete5 */
+                    parent.attr('data-concrete5-link-type', type);
+                    /* end concrete5 */
                  }
             }
             else
@@ -7466,17 +7495,22 @@
                     + '<input type="text" id="redactor_file_alt" class="form-control" />'
                     + '</div>'
                     + '<div class="form-group">'
-                    + '<label class="control-label">' + this.opts.curLang.link + '</label>'
-                    + '<div class="input-group">'
-                    + '<input type="text" name="redactor_file_link" id="redactor_file_link" class="form-control"  />'
-                    + '<span class="input-group-addon"><a href="#" data-action="choose-file-from-file-manager" class="icon-link"><i class="fa fa-file"></i></a></span>'
-                    + '<span class="input-group-addon"><a href="#" data-action="choose-link-from-sitemap" class="icon-link"><i class="fa fa-search"></i></a></span>'
+                        + '<label class="control-label">' + this.opts.curLang.link + '</label>'
+                        + '<div class="input-group">'
+                            + '<input type="text" name="redactor_file_link" id="redactor_file_link" class="form-control" />'
+                            + '<a href="#" data-action="choose-file-from-file-manager" class="btn btn-default input-group-addon"><i class="fa fa-file"></i></a>'
+                            + '<a href="#" data-action="choose-link-from-sitemap" class="btn btn-default input-group-addon"><i class="fa fa-search"></i></a>'
                     + '</div></div>'
                     + '<div class="form-group">'
-                    + '<label class="control-label"> ' + this.opts.curLang.open_link + '</label>'
-                    + '<div class="radio"><label><input type="radio" id="redactor_link_default" name="redactor_open_link_behavior" value="default"> ' + this.opts.curLang.default_behavior + ' </label></div>'
-                    + '<div class="radio"><label><input type="radio" id="redactor_link_lightbox" name="redactor_open_link_behavior" value="lightbox"> ' + this.opts.curLang.in_lightbox + ' </label></div>'
-                    + '<div class="radio"><label><input type="radio" id="redactor_link_blank" name="redactor_open_link_behavior" value="blank"> ' + this.opts.curLang.link_new_tab + '</label></div>'
+                        + '<label class="control-label"> ' + this.opts.curLang.link_type + '</label>'
+                        + '<div class="radio"><label><input type="radio" id="redactor_link_image" name="redactor_link_type" value="image"> ' + this.opts.curLang.link_type_image + ' </label></div>'
+                        + '<div class="radio"><label><input type="radio" id="redactor_link_ajax" name="redactor_link_type" value="ajax" checked> ' + this.opts.curLang.link_type_ajax + ' </label></div>'
+                    + '</div>'
+                    + '<div class="form-group">'
+                        + '<label class="control-label"> ' + this.opts.curLang.open_link + '</label>'
+                        + '<div class="radio"><label><input type="radio" id="redactor_link_default" name="redactor_open_link_behavior" value="default"> ' + this.opts.curLang.default_behavior + ' </label></div>'
+                        + '<div class="radio"><label><input type="radio" id="redactor_link_lightbox" name="redactor_open_link_behavior" value="lightbox"> ' + this.opts.curLang.in_lightbox + ' </label></div>'
+                        + '<div class="radio"><label><input type="radio" id="redactor_link_blank" name="redactor_open_link_behavior" value="blank"> ' + this.opts.curLang.link_new_tab + '</label></div>'
                     + '</div>'
                     + '<div class="form-group">'
                     + '<label>' + this.opts.curLang.image_position + '</label>'
@@ -7531,7 +7565,7 @@
                         + '<label>' + this.opts.curLang.image_web_link + '</label>'
                         + '<div class="input-group">'
                         + '<input type="text" name="redactor_file_link" id="redactor_file_link" class="form-control"  />'
-                        + '<span class="input-group-addon"><a href="#" data-action="choose-image-from-file-manager" class="icon-link"><i class="fa fa-search"></i></a></span>'
+                        + '<a href="#" data-action="choose-image-from-file-manager" class="btn btn-default "input-group-addon""><i class="fa fa-search"></i></a>'
                         + '</div></div>'
                         /* end concrete5 */
                     + '</div>'
@@ -7554,8 +7588,8 @@
                     + '<label>' + this.opts.curLang.web + '</label>'
                     + '<div class="input-group">'
                     + '<input type="text" class="form-control" id="redactor_link_url" />'
-                    + '<span class="input-group-addon"><a href="#" data-action="choose-link-from-sitemap" class="icon-link"><i class="fa fa-sitemap"></i></a></span>'
-                    + '<span class="input-group-addon"><a href="#" data-action="choose-file-from-file-manager" class="icon-link"><i class="fa fa-file"></i></a></span>'
+                    + '<a href="#" data-action="choose-link-from-sitemap" class="btn btn-default input-group-addon"><i class="fa fa-sitemap"></i></a>'
+                    + '<a href="#" data-action="choose-file-from-file-manager" class="btn btn-default input-group-addon"><i class="fa fa-file"></i></a>'
                     + '</div></div>'
                     + '<div class="form-group">'
                     + '<label>' + this.opts.curLang.text + '</label>'
