@@ -59,8 +59,8 @@ class Sitemap {
 		if ($cID == 1) {
 			$results = $pl->getResults();
 		} else {
+            $pl->setItemsPerPage(Config::get('concrete.limits.sitemap_pages'));
             $pagination = $pl->getPagination();
-            $pagination->setMaxPerPage(Config::get('concrete.limits.sitemap_pages'));
             $total = $pagination->getTotalResults();
             $results = $pagination->getCurrentPageResults();
 		}
