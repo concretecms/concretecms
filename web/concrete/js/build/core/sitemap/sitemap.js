@@ -245,10 +245,10 @@
 
     	setupNodePagination: function($tree, nodeKey) {
     		//var tree = $tree.dynatree('getTree');
-    		var pg = $tree.find('span.ccm-sitemap-explore-paging');
+    		var pg = $tree.find('div.ccm-pagination-wrapper');
     		$tree.find('div.ccm-pagination-bound').remove();
     		if (pg.length) {
-    			pg.find('a').on('click', function() {
+    			pg.find('a').unbind('click').on('click', function() {
     				// load under node
     				var href = $(this).attr('href');
     				$tree.dynatree('option', 'initAjax', {
@@ -257,9 +257,9 @@
     				$tree.dynatree('getTree').reload();
     				return false;
     			});
-	    		pg.find('div.ccm-pagination').addClass('ccm-pagination-bound').appendTo($tree);
-	    		var node = $.ui.dynatree.getNode(pg);
-	    		node.remove();
+                var node = $.ui.dynatree.getNode(pg);
+                node.remove();
+	    		pg.addClass('ccm-pagination-bound').appendTo($tree);
 
 				$tree.dynatree('option', 'onActivate', function(node) {
 					if ($(node.span).hasClass('ccm-sitemap-explore-paging')) {
