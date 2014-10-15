@@ -7,15 +7,15 @@
     position: relative;
     padding-top: 10px;
     padding-bottom: 0px; /* the ccm-search-fields-row has a margin on the bottom */
-    margin-left: 95px;
 
     &.ccm-search-fields-none {
       margin-left: 0px;
+      padding-top: 0px;
       border-bottom: 1px solid #efefef;
       margin-bottom: 20px;
       div.ccm-search-main-lookup-field {
         border-left: 0px;
-        margin-left: 95px;
+        margin-left: 97px;
       }
     }
 
@@ -28,6 +28,7 @@
       color: #999;
       height: auto;
       width: 200px;
+      display: inline-block;
       outline: none !important;
       .border-radius(0px);
       padding-right: 15px;
@@ -104,15 +105,17 @@ div.ccm-search-fields-row {
 
   min-height: 34px;
 
-  position: relative;
   margin-bottom: 10px;
+  padding: 0px 0px 10px 97px;
+  border-bottom: 1px solid #efefef;
+
+  position: relative;
+
   div.form-group {
 
     label.control-label {
+      width: 200px;
       color: #999;
-      top: 5px;
-      left: 0px;
-      position: absolute;
       font-size: @font-size-base !important;
       font-weight: normal;
     }
@@ -124,9 +127,8 @@ div.ccm-search-fields-row {
   }
 
   div.ccm-search-field-content {
-    border-left: 1px solid #efefef;
-    margin-left: 244px;
     padding-left: 10px;
+    display: inline-block;
     div.ccm-search-main-lookup-field {
       border-left: 0px;
     }
