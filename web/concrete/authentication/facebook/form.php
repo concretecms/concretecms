@@ -52,7 +52,4 @@ if ($user->isLoggedIn()) {
     .btn-facebook .fa-facebook {
         margin: 0 6px 0 3px;
     }
-    .ccm-ui .btn-facebook:hover {
-        background: #8b9dc3;
-    }
 </style>
