@@ -48,9 +48,9 @@ class PageSelector
         $html .= "<script type=\"text/javascript\">
                    $(function() {
                         var ccmActivePageField;
-                        var launcher = $('a[data-page-selector-launch=\"{$fieldName}\"]'), name = '{$fieldName}', openEvent, openEvent2;
+                        var launcher = $('a[data-page-selector-launch=\"{$fieldName}\"]'), name = '{$fieldName}'.replace(/[\[\]']+/g,''), openEvent, openEvent2;
                         var container = $('div[data-page-selector=\"' + name + '\"]');
-                        launcher.dialog();
+                        launcher.unbind().dialog();
                         ConcreteEvent.bind('fileselectorclose', function(field_name) {
                             ConcreteEvent.unbind('ConcreteSitemap.' + name);
                             ConcreteEvent.unbind('SitemapSelectPage.' + name);
@@ -61,6 +61,7 @@ class PageSelector
                                 handle_select = function(e, data) {
                                     ConcreteEvent.unbind(e);
                                     var handle = selector.attr('data-page-selector-launch');
+                                    container = selector.parent();
                                     container.find('.ccm-summary-selected-item-label').html(data.title);
                                     container.find('.ccm-sitemap-clear-selected-page').show();
                                     container.find('input[data-page-selector=cID]').val(data.cID);
@@ -85,8 +86,8 @@ class PageSelector
                             });
                         });
 
-                        $('a[data-page-selector-clear={$fieldName}]').click(function () {
-                            var container = $('div[data-page-selector={$fieldName}]');
+                        $('a[data-page-selector-clear=\"{$fieldName}\"]').unbind().click(function () {
+                            var container = $(this).parent();
                             container.find('.ccm-summary-selected-item-label').html('');
                             container.find('.ccm-sitemap-clear-selected-page').hide();
                             container.find('input[data-page-selector=cID]').val('');
