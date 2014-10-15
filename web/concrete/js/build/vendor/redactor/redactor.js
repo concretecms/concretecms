@@ -6424,7 +6424,7 @@
 
                 var sel = this.getSelection();
                 /* concrete5 */
-                var url = '', text = '', target = '', lightbox = false, type = ajax;
+                var url = '', text = '', target = '', lightbox = false, type = 'ajax';
                 /* end concrete5 */
 
                 var elem = this.getParent();
