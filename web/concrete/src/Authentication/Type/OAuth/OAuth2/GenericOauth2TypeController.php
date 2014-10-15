@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Authentication\Type\OAuth\OAuth2;
 
+use Concrete\Core\Authentication\LoginException;
 use Concrete\Core\Authentication\Type\OAuth\GenericOauthTypeController;
 use Concrete\Core\Routing\RedirectResponse;
 use OAuth\Common\Exception\Exception;
@@ -32,6 +33,7 @@ abstract class GenericOauth2TypeController extends GenericOauthTypeController
         try {
             $code = \Request::getInstance()->get('code');
             $token = $this->getService()->requestAccessToken($code);
+            $this->setToken($token);
         } catch (TokenResponseException $e) {
             $this->showError('Failed authentication: ' . $e->getMessage());
             exit;

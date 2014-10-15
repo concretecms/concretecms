@@ -27,6 +27,7 @@ abstract class GenericOauth1aTypeController extends GenericOauthTypeController
         $verifier = \Request::getInstance()->get('oauth_verifier');
 
         $token = $this->getService()->requestAccessToken($token, $verifier);
+        $this->setToken($token);
 
         if ($token) {
             try {

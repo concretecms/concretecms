@@ -5,6 +5,8 @@ use Concrete\Core\Http\ResponseAssetGroup;
 defined('C5_EXECUTE') or die('Access denied.');
 
 $r = ResponseAssetGroup::get();
+$r->requireAsset('javascript', 'underscore');
+$r->requireAsset('javascript', 'core/events');
 $r->requireAsset('core/legacy');
 
 $activeAuths = AuthenticationType::getList(true, true);
@@ -139,6 +141,10 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
                     form = forms.filter('[data-handle="' + me.data('handle') + '"]');
                 me.click(function () {
                     select.val(me.data('handle'));
+                    if (typeof Concrete !== 'undefined') {
+                        Concrete.event.fire('AuthenticationTypeSelected', me.data('handle'));
+                    }
+
                     if (form.hasClass('active')) return;
                     types.removeClass('active');
                     me.addClass('active');

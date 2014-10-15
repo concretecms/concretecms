@@ -4,6 +4,7 @@ namespace Concrete\Core\Authentication\Type\OAuth;
 use Concrete\Core\Authentication\AuthenticationTypeController;
 use OAuth\Common\Exception\Exception;
 use OAuth\Common\Service\AbstractService;
+use OAuth\Common\Token\TokenInterface;
 use OAuth\UserData\Extractor\Extractor;
 
 abstract class GenericOauthTypeController extends AuthenticationTypeController
@@ -21,6 +22,11 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
      */
     protected $extractor;
 
+    /**
+     * @var \OAuth\Common\Token\TokenInterface
+     */
+    protected $token;
+
     public function __construct()
     {
         $manager = \Database::connection()->getSchemaManager();
@@ -34,7 +40,6 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
 
             $table->setPrimaryKey(array('user_id', 'namespace'));
             $table->addUniqueIndex(array('binding', 'namespace'), 'oauth_binding');
-
 
             $manager->createTable($table);
         }
@@ -53,16 +58,10 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
     abstract public function supportsRegistration();
 
     /**
-     * Whether or not we will attempt to resolve the user from the email address.
-     *
-     * @return bool
-     */
-    abstract public function supportsEmailResolution();
-
-    /**
      * @return Array
      */
-    public function getAdditionalRequestParameters() {
+    public function getAdditionalRequestParameters()
+    {
         return array();
     }
 
@@ -122,17 +121,15 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
 
         if ($user_id && $user_id > 0) {
             $user = \User::loginByUserID($user_id);
-            return $user;
+            if ($user && !$user->isError()) {
+                return $user;
+            }
         }
 
         if ($extractor->supportsEmail() && $user = \UserInfo::getByEmail($extractor->getEmail())) {
             if ($user && !$user->isError()) {
-                if ($this->supportsEmailResolution()) {
-                    $user = \User::loginByUserID($user->getUserID());
-                    return $user;
-                } else {
-                    throw new Exception('Email is already in use.');
-                }
+                throw new Exception(
+                    'A user account already exists for this email, please log in and attach from your account page.');
             }
         }
 
@@ -144,21 +141,89 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
         return null;
     }
 
+    public function supportsEmail()
+    {
+        return $this->getExtractor()->supportsEmail();
+    }
+
+    public function supportsVerifiedEmail()
+    {
+        return $this->getExtractor()->supportsVerifiedEmail();
+    }
+
+    public function supportsFirstName()
+    {
+        return $this->getExtractor()->supportsFirstName();
+    }
+
+    public function supportsLastName()
+    {
+        return $this->getExtractor()->supportsLastName();
+    }
+
+    public function supportsFullName()
+    {
+        return $this->getExtractor()->supportsFullName();
+    }
+
+    public function supportsUsername()
+    {
+        return $this->getExtractor()->supportsUsername();
+    }
+
+    public function supportsUniqueId()
+    {
+        return $this->getExtractor()->supportsUniqueId();
+    }
+
+    public function isEmailVerified()
+    {
+        return $this->getExtractor()->isEmailVerified();
+    }
+
+    public function getEmail()
+    {
+        return $this->getExtractor()->getEmail();
+    }
+
+    public function getFirstName()
+    {
+        return $this->getExtractor()->getFirstName();
+    }
+
+    public function getLastName()
+    {
+        return $this->getExtractor()->getLastName();
+    }
+
+    public function getFullName()
+    {
+        return $this->getExtractor()->getFullName();
+    }
+
+    public function getUsername()
+    {
+        return $this->getExtractor()->getUsername();
+    }
+
+    public function getUniqueId()
+    {
+        return $this->getExtractor()->getUniqueId();
+    }
+
     protected function createUser()
     {
-        $extractor = $this->getExtractor();
-
         // Make sure that this extractor supports everything we need.
-        if (!$extractor->supportsEmail() && $extractor->supportsUniqueId()) {
+        if (!$this->supportsEmail() && $this->supportsUniqueId()) {
             throw new Exception('Email and unique ID support are required for user creation.');
         }
 
         // Make sure that email is verified if the extractor supports it.
-        if ($extractor->supportsVerifiedEmail() && !$extractor->isEmailVerified()) {
+        if ($this->supportsVerifiedEmail() && !$this->isEmailVerified()) {
             throw new Exception('Please verify your email with this service before attempting to log in.');
         }
 
-        $email = $extractor->getEmail();
+        $email = $this->getEmail();
         if (\UserInfo::getByEmail($email)) {
             throw new Exception('Email is already in use.');
         }
@@ -167,24 +232,24 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
         $last_name = "";
 
         $name_support = array(
-            'full'  => $extractor->supportsFullName(),
-            'first' => $extractor->supportsFirstName(),
-            'last'  => $extractor->supportsLastName()
+            'full'  => $this->supportsFullName(),
+            'first' => $this->supportsFirstName(),
+            'last'  => $this->supportsLastName()
         );
 
         if ($name_support['first'] && $name_support['last']) {
-            $first_name = $extractor->getFirstName();
-            $last_name = $extractor->getLastName();
+            $first_name = $this->getFirstName();
+            $last_name = $this->getLastName();
         } elseif ($name_support['full']) {
-            $reversed_full_name = strrev($extractor->getFullName());
+            $reversed_full_name = strrev($this->getFullName());
             list($reversed_last_name, $reversed_first_name) = explode(' ', $reversed_full_name, 2);
 
             $first_name = strrev($reversed_first_name);
             $last_name = strrev($reversed_last_name);
         }
 
-        if ($extractor->supportsUsername()) {
-            $username = $extractor->getUsername();
+        if ($this->supportsUsername()) {
+            $username = $this->getUsername();
         } elseif ($first_name || $last_name) {
             $username = preg_replace('/[^a-z0-9\_]/', '_', strtolower($first_name . ' ' . $last_name));
             $username = trim('_', preg_replace('/_{2,}/', '_', $username));
@@ -227,7 +292,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
 
         \User::loginByUserID($user_info->getUserID());
 
-        $this->bindUser($user = \User::getByUserID($user_info->getUserID()), $extractor->getUniqueId());
+        $this->bindUser($user = \User::getByUserID($user_info->getUserID()), $this->getUniqueId());
         return $user;
     }
 
@@ -338,6 +403,22 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
     public function verifyHash(\User $u, $hash)
     {
         return false;
+    }
+
+    /**
+     * @return \OAuth\Common\Token\TokenInterface
+     */
+    public function getToken()
+    {
+        return $this->token;
+    }
+
+    /**
+     * @param \OAuth\Common\Token\TokenInterface $token
+     */
+    public function setToken(TokenInterface $token)
+    {
+        $this->token = $token;
     }
 
 }
