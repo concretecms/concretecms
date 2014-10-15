@@ -62,6 +62,7 @@ class Permissions extends BackendInterfacePageController {
 			
 			$gl = new GroupList();
 			$gl->sortBy('gID', 'asc');
+            $gl->includeAllGroups();
 			$groups = $gl->getResults();
 
 			$this->set('editAccess', $editAccess);
