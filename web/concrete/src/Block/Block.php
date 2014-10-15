@@ -563,6 +563,23 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
                        $issID
                    ));
             }
+
+            // custom cache
+            if ($this->overrideBlockTypeCacheSettings()) {
+                $db->Execute(
+                   'insert into CollectionVersionBlocksCacheSettings (cID, cvID, bID, arHandle, btCacheBlockOutput, btCacheBlockOutputOnPost, btCacheBlockOutputForRegisteredUsers, btCacheBlockOutputLifetime) values (?, ?, ?, ?, ?, ?, ?, ?)',
+                   array(
+                       $cID,
+                       $cvID,
+                       $this->bID,
+                       $this->getAreaHandle(),
+                       intval($this->cacheBlockOutput()),
+                       intval($this->cacheBlockOutputOnPost()),
+                       intval($this->cacheBlockOutputForRegisteredUsers()),
+                       intval($this->getBlockOutputCacheLifetime())
+                   )
+                );
+            }
             if ($res) {
                 // now we grab the permissions from the block we're aliasing from
                 $oc = $this->getBlockCollectionObject();
@@ -620,6 +637,9 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
 
     public function overrideBlockTypeCacheSettings()
     {
+        if (!$this->cbOverrideBlockTypeCacheSettings) {
+            $this->cbOverrideBlockTypeCacheSettings = 0;
+        }
         return $this->cbOverrideBlockTypeCacheSettings;
     }
 
@@ -814,8 +834,8 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
             $newBlockDisplayOrder = $this->cbDisplayOrder;
         }
         //$v = array($ncID, $nvID, $newBID, $this->areaName, $newBlockDisplayOrder, 1);
-        $v = array($ncID, $nvID, $newBID, $this->arHandle, $newBlockDisplayOrder, 1, $this->overrideAreaPermissions());
-        $q = "insert into CollectionVersionBlocks (cID, cvID, bID, arHandle, cbDisplayOrder, isOriginal, cbOverrideAreaPermissions) values (?, ?, ?, ?, ?, ?, ?)";
+        $v = array($ncID, $nvID, $newBID, $this->arHandle, $newBlockDisplayOrder, 1, $this->overrideAreaPermissions(), $this->overrideBlockTypeCacheSettings());
+        $q = "insert into CollectionVersionBlocks (cID, cvID, bID, arHandle, cbDisplayOrder, isOriginal, cbOverrideAreaPermissions, cbOverrideBlockTypeCacheSettings) values (?, ?, ?, ?, ?, ?, ?, ?)";
         $r = $db->prepare($q);
         $res = $db->execute($r, $v);
 
@@ -886,10 +906,10 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
                 'cvID'     => $cvID,
                 'arHandle' => $this->getAreaHandle(),
                 'bID'      => $this->bID,
-                'btCacheBlockOutput'    => $enabled,
-                'btCacheBlockOutputOnPost' => $enabledOnPost,
-                'btCacheBlockOutputForRegisteredUsers' => $enabledForRegistered,
-                'btCacheBlockOutputLifetime' => $lifetime),
+                'btCacheBlockOutput'    => intval($enabled),
+                'btCacheBlockOutputOnPost' => intval($enabledOnPost),
+                'btCacheBlockOutputForRegisteredUsers' => intval($enabledForRegistered),
+                'btCacheBlockOutputLifetime' => intval($lifetime)),
             array(
                 'cID',
                 'cvID',
@@ -1112,7 +1132,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
 
         // if this block is located in a master collection, we're going to delete all the instances of the block,
         // regardless
-        if (($c instanceof Page && $c->isMasterCollection() && !$this->isAlias()) || $forceDelete) {
+        if (($c instanceof \Concrete\Core\Page\Page && $c->isMasterCollection() && !$this->isAlias()) || $forceDelete) {
             // forceDelete is used by the administration console
 
             // this is an original. We're deleting it, and everything else having to do with it
@@ -1125,6 +1145,9 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
             $q = "delete from CollectionVersionBlockStyles where bID = ?";
             $r = $db->query($q, array($bID));
 
+            $q = "delete from CollectionVersionBlocksCacheSettings where bID = ?";
+            $r = $db->query($q, array($bID));
+
         } else {
             $q = "delete from CollectionVersionBlocks where cID = ? and (cvID = ? or cbIncludeAll=1) and bID = ? and arHandle = ?";
             $r = $db->query($q, array($cID, $cvID, $bID, $arHandle));
@@ -1134,6 +1157,9 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
             $r = $db->query($q, array($bID, $cvID, $cID));
 
             $q = "delete from CollectionVersionBlockStyles where cID = ? and cvID = ? and bID = ? and arHandle = ?";
+            $r = $db->query($q, array($cID, $cvID, $bID, $arHandle));
+
+            $q = "delete from CollectionVersionBlocksCacheSettings where cID = ? and cvID = ? and bID = ? and arHandle = ?";
             $r = $db->query($q, array($cID, $cvID, $bID, $arHandle));
         }
 

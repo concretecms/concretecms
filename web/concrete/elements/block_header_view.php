@@ -171,7 +171,7 @@ if ($showMenu) {
                                     <li><a href="#" data-menu-action="block_design"><?=t("Design &amp; Custom Template")?></a></li>
                                 <? } ?>
                                 <? if ($canEditBlockName || $canEditCacheSettings) { ?>
-                                    <li><a dialog-title="<?=t('Advanced Block Settings')?>" dialog-modal="false" dialog-width="500" dialog-height="420" data-menu-action="block_dialog" data-menu-href="<?=URL::to('/ccm/system/dialogs/block/cache')?>" ><?=t("Advanced")?></a></li>
+                                    <li><a dialog-title="<?=t('Advanced Block Settings')?>" dialog-modal="false" dialog-width="500" dialog-height="320" data-menu-action="block_dialog" data-menu-href="<?=URL::to('/ccm/system/dialogs/block/cache')?>" ><?=t("Advanced")?></a></li>
                                 <? } ?>
                             <? } ?>
 
