@@ -449,9 +449,6 @@
         }
         $('#' + obj.options.gridrowtmpid).remove();
 
-
-        console.log(breaks, validStartPoints, validEndPoints);
-
         obj.$slider.slider({
             min: 0,
             max: tw,
