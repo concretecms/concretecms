@@ -19,7 +19,7 @@ $helpText = <<<EOT
         --default-locale=<locale id>       The default site locale (eg en_US)
         --reinstall=<no/yes>               If already installed at the target location
                                            Delete current install and reinstall
-        --demo-usernameinvalid =<username>         Additional user username
+        --demo-username=<username>         Additional user username
         --demo-password=<password>         Additional user password
         --demo-email=<email>               Additional user email
         --config=<file>                    Use configuration file for installation
