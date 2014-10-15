@@ -16,6 +16,7 @@ class Version571 extends AbstractMigration
     {
         /** @todo Remove key from Config table */
         /** @todo Add marketplace single pages */
+        /** @todo Install the community authentication type */
         /** @todo delete customize page themes dashboard single page */
     }
 
