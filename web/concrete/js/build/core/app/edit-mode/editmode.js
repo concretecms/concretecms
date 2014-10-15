@@ -400,7 +400,10 @@
                 return null;
             }
 
-            $(element).find('a.ccm-panel-add-block-draggable-block-type').each(function () {
+        	$(element).find('input[data-input=search-blocks]').liveUpdate('ccm-panel-add-blocktypes-list', 'blocktypes');
+        	$(element).find('input[data-input=search-blocks]').focus();
+
+            (element).find('a.ccm-panel-add-block-draggable-block-type').each(function () {
                 var block, me = $(this), dragger = $('<a/>').addClass('ccm-panel-add-block-draggable-block-type-dragger').appendTo(me);
                 block = new Concrete.BlockType($(this), my, dragger);
 
