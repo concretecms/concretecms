@@ -11,10 +11,6 @@ class Connect extends DashboardPageController {
 
 	public $helpers = array('form');
 
-	public function on_start() {
-		$this->addFooterItem(Loader::helper('html')->javascript('jquery-postmessage.js'));
-	}
-
 	public function view($startStep = 'view') {
 		$this->set('startStep', $startStep);
 	}
@@ -25,8 +21,9 @@ class Connect extends DashboardPageController {
 			if (!$_POST['csToken']) {
 				$this->set('error', array(t('An unexpected error occurred when connecting your site to the marketplace.')));
 			} else {
-                Config::save('concrete.marketplace.token', $_POST['csToken']);
-                Config::save('concrete.marketplace.url_token', $_POST['csURLToken']);
+                $config = \Core::make('config/database');
+                $config->save('concrete.marketplace.token', $_POST['csToken']);
+                $config->save('concrete.marketplace.url_token', $_POST['csURLToken']);
 				print '<script type="text/javascript">parent.window.location.href=\'' . View::url('/dashboard/extend/connect', 'community_connect_success') . '\';</script>';
 				exit;
 			}

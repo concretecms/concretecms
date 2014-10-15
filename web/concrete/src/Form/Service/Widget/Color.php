@@ -25,15 +25,16 @@ class Color
         }
         $strOptions = '';
         $i = 0;
-        $options['value'] = $value;
-        $options['className'] = 'ccm-widget-colorpicker';
-        $options['showInitial'] = true;
-        $options['showInput'] = true;
-        $options['cancelText'] = t('Cancel');
-        $options['chooseText'] = t('Choose');
-        $options['preferredFormat'] = 'rgb';
-        $options['clearText'] = t('Clear Color Selection');
-        $strOptions = json_encode($options);
+        $defaults = array();
+        $defaults['value'] = $value;
+        $defaults['className'] = 'ccm-widget-colorpicker';
+        $defaults['showInitial'] = true;
+        $defaults['showInput'] = true;
+        $defaults['cancelText'] = t('Cancel');
+        $defaults['chooseText'] = t('Choose');
+        $defaults['preferredFormat'] = 'rgb';
+        $defaults['clearText'] = t('Clear Color Selection');
+        $strOptions = json_encode(array_merge($defaults, $options));
 
         print "<input type=\"text\" name=\"{$inputName}\" value=\"{$value}\" id=\"ccm-colorpicker-{$inputName}\" />";
         print "<script type=\"text/javascript\">";

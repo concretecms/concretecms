@@ -263,6 +263,14 @@ return array(
         "/ccm/system/attribute/attribute_sort/user"                                     => array('\Concrete\Controller\Backend\AttributeSort::user'),
 
         /**
+         * Marketplace
+         */
+        "/ccm/system/marketplace/connect"                                        => array('\Concrete\Controller\Backend\Marketplace\Connect::view'),
+        "/ccm/system/marketplace/search"                                        => array('\Concrete\Controller\Backend\Marketplace\Search::view'),
+        "/ccm/system/dialogs/marketplace/download"                               => array('\Concrete\Controller\Dialog\Marketplace\Download::view'),
+        "/ccm/system/dialogs/marketplace/checkout"                               => array('\Concrete\Controller\Dialog\Marketplace\Checkout::view'),
+
+        /**
          * Search Routes
          */
         "/ccm/system/search/pages/submit"                                               => array('\Concrete\Controller\Search\Pages::submit'),
@@ -452,10 +460,6 @@ return array(
         'picturefill'              => array(
             array('javascript', 'js/picturefill.js', array('minify' => false))
         ),
-        'jquery/rating'            => array(
-            array('javascript', 'js/jquery.rating.js'),
-            array('css', 'css/jquery-rating.css')
-        ),
         'spectrum'                 => array(
             array('javascript', 'js/spectrum.js', array('minify' => false)),
             array('css', 'css/spectrum.css', array('minify' => false))
@@ -469,6 +473,10 @@ return array(
         'core/style-customizer'    => array(
             array('javascript', 'js/style-customizer.js', array('minify' => false)),
             array('css', 'css/style-customizer.css', array('minify' => false))
+        ),
+        'jquery/awesome-rating'                 => array(
+            array('javascript', 'js/jquery-awesome-rating.js', array('minify' => false)),
+            array('css', 'css/jquery-awesome-rating.css', array('minify' => false))
         ),
         'jquery/fileupload'        => array(
             array('javascript', 'js/jquery-fileupload.js')
@@ -630,13 +638,6 @@ return array(
                 array('css', 'select2')
             )
         ),
-        'jquery/rating'            => array(
-            array(
-                array('javascript', 'jquery/metadata'),
-                array('javascript', 'jquery/rating'),
-                array('css', 'jquery/rating')
-            )
-        ),
         'ace'         => array(
             array(
                 array('javascript', 'ace')
@@ -653,6 +654,14 @@ return array(
         'font-awesome'             => array(
             array(
                 array('css', 'font-awesome')
+            )
+        ),
+        'core/rating'            => array(
+            array(
+                array('javascript', 'jquery'),
+                array('javascript', 'jquery/awesome-rating'),
+                array('css', 'font-awesome'),
+                array('css', 'jquery/awesome-rating')
             )
         ),
         'core/style-customizer'    => array(

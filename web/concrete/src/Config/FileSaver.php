@@ -69,7 +69,7 @@ class FileSaver implements SaverInterface
             "/**",
             " * -----------------------------------------------------------------------------",
             " * Generated " . date(DATE_ATOM),
-            "",
+            " *",
             " * @item      {$item}",
             " * @group     {$group}",
             " * @namespace {$ns_string}",

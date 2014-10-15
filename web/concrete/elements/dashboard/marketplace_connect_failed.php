@@ -8,12 +8,12 @@ if ($mi->hasConnectionError() && $mi->getConnectionError() == Marketplace::E_MAR
 
 	$h = Loader::helper('concrete/ui');
 	?>
-	
-	<p><?=t('Your site is <strong>not</strong> connected to the concrete5 community.')?></p>
+
+    <hr/>
 	
 	<?
 	if ($mi->hasConnectionError()) { ?>
-		<div class="ccm-error block-message alert-message error"><p>
+		<div class="alert alert-danger"><p>
 		<?
 		switch($mi->getConnectionError()) {
 			case Marketplace::E_INVALID_BASE_URL:
@@ -29,7 +29,13 @@ if ($mi->hasConnectionError() && $mi->getConnectionError() == Marketplace::E_MAR
 	}
 		?>
 		</p>
+
 		</div>
+
+   			<h4><?=t("Project Page")?></h4>
+			<p><?=t('Your project page URL is:')?><br/>
+			<a href="<?=$mi->getSitePageURL()?>"><?=$mi->getSitePageURL()?></a></p>
+
 		<?
 	} else { ?>
 		
@@ -49,5 +55,5 @@ if ($mi->hasConnectionError() && $mi->getConnectionError() == Marketplace::E_MAR
 	<? } ?>
 	
 	
-	<? print $h->button(t('Connect to Community'), View::url('/dashboard/extend/connect'), '', 'primary')?>
+	<? print $h->button(t('Re-connect to Community'), View::url('/dashboard/extend/connect'), '', 'primary')?>
 <? } ?>

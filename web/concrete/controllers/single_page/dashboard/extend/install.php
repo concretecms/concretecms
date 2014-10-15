@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\Extend;
 
+use Concrete\Core\Package\BrokenPackage;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use Loader;
 use TaskPermission;
@@ -13,11 +14,6 @@ use User;
 
 class Install extends DashboardPageController
 {
-    public function on_start()
-    {
-        $this->error = Loader::helper('validation/error');
-    }
-
     public function uninstall($pkgID)
     {
         $tp = new TaskPermission();
@@ -73,9 +69,6 @@ class Install extends DashboardPageController
             }
         }
 
-        if ($this->error->has()) {
-            $this->set('error', $this->error);
-        }
         $this->inspect_package($pkgID);
 
     }
@@ -103,7 +96,9 @@ class Install extends DashboardPageController
         $tp = new TaskPermission();
         if ($tp->canInstallPackages()) {
             $p = Package::getClass($package);
-            if (is_object($p)) {
+            if ($p instanceof BrokenPackage) {
+                $this->error->add($p->getInstallErrorMessage());
+            } else if (is_object($p)) {
                 if (
                     (!$p->showInstallOptionsScreen()) ||
                     Loader::helper('validation/token')->validate('install_options_selected')
@@ -114,7 +109,6 @@ class Install extends DashboardPageController
                         foreach ($tests as $test) {
                             $this->error->add($test);
                         }
-                        $this->set('error', $tests);
                     } else {
                         $currentLocale = Localization::activeLocale();
                         if ($currentLocale != 'en_US') {
@@ -132,7 +126,7 @@ class Install extends DashboardPageController
                             }
                             $pkg = Package::getByHandle($p->getPackageHandle());
                             $this->redirect('/dashboard/extend/install', 'package_installed', $pkg->getPackageID());
-                        } catch (Exception $e) {
+                        } catch (\Exception $e) {
                             if ($currentLocale != 'en_US') {
                                 Localization::changeLocale($currentLocale);
                             }
@@ -149,7 +143,6 @@ class Install extends DashboardPageController
                 }
             } else {
                 $this->error->add(t('Package controller file not found.'));
-                $this->set('error', $this->error);
             }
         } else {
             $this->error->add(t('You do not have permission to install add-ons.'));
@@ -169,25 +162,25 @@ class Install extends DashboardPageController
             $mri = MarketplaceRemoteItem::getByID($remoteMPID);
 
             if (!is_object($mri)) {
-                $this->set('error', array(t('Invalid marketplace item ID.')));
-
+                $this->error->add(t('Invalid marketplace item ID.'));
                 return;
             }
 
             $r = $mri->download();
             if ($r != false) {
                 if (!is_array($r)) {
-                    $this->set('error', array($r));
+                    $this->error->add($r);
                 } else {
                     $errors = Package::mapError($r);
-                    $this->set('error', $errors);
+                    foreach($errors as $error) {
+                        $this->error->add($error);
+                    }
                 }
             } else {
                 $this->set('message', t('Marketplace item %s downloaded successfully.', $mri->getName()));
             }
         } else {
             $this->error->add(t('You do not have permission to download add-ons.'));
-            $this->set('error', $this->error);
         }
     }
 

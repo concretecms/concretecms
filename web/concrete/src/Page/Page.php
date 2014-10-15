@@ -2397,7 +2397,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     * "cName": The name of the page
     * "cHandle": The handle of the page as used in the path
     * "cDatePublic": The date assigned to the page
-    * @param collectiontype $ct
+    * @param \Concrete\Core\Page\Type\Type $pt
     * @param array $data
     * @return page
     **/
@@ -2441,12 +2441,18 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $cDatePublic = ($data['cDatePublic']) ? $data['cDatePublic'] : null;
 
         $ptID = 0;
-        if ($pt instanceof PageType) {
+        if ($pt instanceof \Concrete\Core\Page\Type\Type) {
             if ($pt->getPageTypeHandle() == STACKS_PAGE_TYPE) {
                 $data['cvIsNew'] = 0;
             }
             if ($pt->getPackageID() > 0) {
                 $pkgID = $pt->getPackageID();
+            }
+
+            // if we have a page type and we don't have a template,
+            // then we use the page type's default template
+            if ($pt->getPageTypeDefaultPageTemplateID() > 0 && !$template) {
+                $template = $pt->getPageTypeDefaultPageTemplateObject();
             }
 
             $ptID = $pt->getPageTypeID();
@@ -2491,7 +2497,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             $pc = Page::getByID($newCID, 'RECENT');
 
             // run any internal event we have for page addition
-            $pe = new Event($this);
+            $pe = new Event($pc);
             Events::dispatch('on_page_add', $pe);
 
             $pc->rescanCollectionPath();

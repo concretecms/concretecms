@@ -1,13 +1,14 @@
 /* Magnific Popup CSS */
 
 @import "effects.less";
+@import "../../core/include/variables.less";
 
 .mfp-bg {
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 502;
+  z-index: @lightbox-overlay;
   overflow: hidden;
   position: fixed;
   background: #0b0b0b;
@@ -19,7 +20,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 503;
+  z-index: @lightbox-overlay-wrap;
   position: fixed;
   outline: none !important;
   -webkit-backface-visibility: hidden; }
@@ -52,7 +53,7 @@
   vertical-align: middle;
   margin: 0 auto;
   text-align: left;
-  z-index: 505; }
+  z-index: @lightbox-content; }
 
 .mfp-inline-holder .mfp-content,
 .mfp-ajax-holder .mfp-content {
@@ -100,7 +101,7 @@
   margin-top: -0.8em;
   left: 8px;
   right: 8px;
-  z-index: 504; }
+  z-index: @lightbox-loader; }
 
 .mfp-preloader a {
   color: #cccccc; }
@@ -123,7 +124,7 @@ button.mfp-arrow {
   -webkit-appearance: none;
   display: block;
   padding: 0;
-  z-index: 506; }
+  z-index: @lightbox-arrows; }
 
 button::-moz-focus-inner {
   padding: 0;
