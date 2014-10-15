@@ -14,7 +14,7 @@ class Controller extends GenericOauth2TypeController
 
     public function getAuthenticationTypeIconHTML()
     {
-        return '<div class="ccm-concrete-authentication-type-svg" style="width:20px;display:inline-block" data-src="/concrete/images/authentication/community/concrete.svg">' .
+        return '<div class="ccm-concrete-authentication-type-svg" data-src="/concrete/images/authentication/community/concrete.svg">' .
                     file_get_contents(DIR_BASE_CORE . '/images/authentication/community/concrete.svg') .
                '</div>';
     }
