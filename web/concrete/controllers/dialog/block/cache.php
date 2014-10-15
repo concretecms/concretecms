@@ -11,18 +11,40 @@ class Cache extends BackendInterfaceBlockController
     public function view()
     {
         $this->set('bName', $this->block->getBlockName());
+        $this->set('form', \Core::make('helper/form'));
+        $this->set('cbOverrideBlockTypeCacheSettings', $this->block->overrideBlockTypeCacheSettings());
+        $this->set('btCacheBlockOutput', $this->block->cacheBlockOutput());
+        $this->set('btCacheBlockOutputOnPost', $this->block->cacheBlockOutputOnPost());
+        $this->set('btCacheBlockOutputForRegisteredUsers', $this->block->cacheBlockOutputForRegisteredUsers());
+        $this->set('btCacheBlockOutputLifetime', $this->block->getBlockOutputCacheLifetime());
     }
 
     public function submit()
     {
         if ($this->validateAction()) {
+
+            $b = $this->getBlockToEdit();
             if ($this->permissions->canEditBlockName()) {
-                $b = $this->getBlockToEdit();
                 $b->setName($this->request->request->get('bName'));
+            }
+
+            if ($this->permissions->canEditBlockCacheSettings()) {
+                $b->resetCustomCacheSettings();
+                if ($this->request->request->get('cbOverrideBlockTypeCacheSettings')) {
+                    $b->setCustomCacheSettings(
+                        $this->request->request->get('btCacheBlockOutput'),
+                        $this->request->request->get('btCacheBlockOutputOnPost'),
+                        $this->request->request->get('btCacheBlockOutputForRegisteredUsers'),
+                        $this->request->request->get('btCacheBlockOutputLifetime')
+                    );
+                }
             }
 
             $pr = new EditResponse();
             $pr->setPage($this->page);
+            $pr->setAdditionalDataAttribute('aID', $this->area->getAreaID());
+            $pr->setAdditionalDataAttribute('arHandle', $this->area->getAreaHandle());
+            $pr->setAdditionalDataAttribute('bID', $b->getBlockID());
             $pr->setMessage(t('Advanced block settings saved successfully.'));
             $pr->outputJSON();
         }
