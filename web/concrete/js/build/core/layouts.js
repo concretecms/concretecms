@@ -418,12 +418,12 @@
         var maxColumns = obj.options.maxcolumns;
         var minColumnClass = obj.options.gridColumnClasses[0];
 
-        $('<div />', {'id': obj.options.gridrowtmpid}).appendTo('#ccm-theme-grid-edit-mode-row-wrapper');
+        $('<div />', {'id': obj.options.gridrowtmpid}).appendTo($('#ccm-theme-grid-edit-mode-row-wrapper').closest('.ccm-block-edit-layout'));
         var columnHTML = '';
         for (i = 1; i <= maxColumns; i++) {
             columnHTML += '<div class="' + minColumnClass + '"></div>'
         }
-        $('#' + obj.options.gridrowtmpid).append(
+        var tmp_row = $('#' + obj.options.gridrowtmpid).append(
             $(
                 obj.options.containerstart
                     + obj.options.rowstart
@@ -434,7 +434,7 @@
         );
         var marginModifier = 0;
         for (i = 0; i < maxColumns; i++) {
-            var $column = $($('#' + obj.options.gridrowtmpid + ' .' + minColumnClass).get(i));
+            var $column = tmp_row.find('.' + minColumnClass).eq(i);
             if (i == 0) {
                 var pl = $column.position().left;
                 if (pl < 0) {

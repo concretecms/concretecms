@@ -8,8 +8,8 @@ __MACOSX
 # ignore composer files
 composer.phar
 
-# ignore the site.php
-/web/application/config/site.php
+# ignore the config
+/web/application/config/*
 
 # ignore everything but the index.html
 /web/application/files/*
