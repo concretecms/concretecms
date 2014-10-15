@@ -1111,4 +1111,34 @@ div.preview-frame-container {
   }
 }
 
+/**
+ * Search at the top of attributes and add block
+ */
+div.ccm-panel-header-search {
+
+  position: relative;
+  i.fa-search {
+    position: absolute;
+    top: 22px;
+    left: 40px;
+    color: #111;
+  }
+
+  input {
+    display: block;
+    padding: 20px 20px 20px 70px;
+    border: 0px;
+    outline: none;
+    width: 100%;
+
+    &:focus {
+      outline: none;
+      .box-shadow(none);
+      border: 0px;
+    }
+
+  }
+}
+
+
 
