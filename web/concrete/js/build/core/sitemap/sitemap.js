@@ -72,6 +72,9 @@
 						my.setupNodePagination(my.$element, my.options.cParentID);
 					}
 				},
+                onRender: function() {
+                    my.$element.children('.ccm-pagination-bound').remove();
+                },
 				selectMode: 1,
 				minExpandLevel:  minExpandLevel,
 				clickFolderMode: 2,
@@ -258,7 +261,9 @@
     				return false;
     			});
                 var node = $.ui.dynatree.getNode(pg);
-                node.remove();
+                if (node && typeof node.remove === 'function') {
+                    node.remove();
+                }
 	    		pg.addClass('ccm-pagination-bound').appendTo($tree);
 
 				$tree.dynatree('option', 'onActivate', function(node) {
