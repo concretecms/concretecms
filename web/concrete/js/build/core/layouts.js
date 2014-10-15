@@ -418,12 +418,12 @@
         var maxColumns = obj.options.maxcolumns;
         var minColumnClass = obj.options.gridColumnClasses[0];
 
-        $('<div />', {'id': obj.options.gridrowtmpid}).appendTo('#ccm-theme-grid-edit-mode-row-wrapper');
+        $('<div />', {'id': obj.options.gridrowtmpid, 'style':'position:absolute'}).appendTo('#ccm-theme-grid-edit-mode-row-wrapper');
         var columnHTML = '';
         for (i = 1; i <= maxColumns; i++) {
             columnHTML += '<div class="' + minColumnClass + '"></div>'
         }
-        $('#' + obj.options.gridrowtmpid).append(
+        var tmp_row = $('#' + obj.options.gridrowtmpid).append(
             $(
                 obj.options.containerstart
                     + obj.options.rowstart
@@ -434,7 +434,7 @@
         );
         var marginModifier = 0;
         for (i = 0; i < maxColumns; i++) {
-            var $column = $($('#' + obj.options.gridrowtmpid + ' .' + minColumnClass).get(i));
+            var $column = tmp_row.find('.' + minColumnClass).eq(i);
             if (i == 0) {
                 var pl = $column.position().left;
                 if (pl < 0) {
@@ -448,6 +448,9 @@
             validEndPoints.push(Math.floor(Math.floor($column.width()) + Math.floor($column.position().left) + marginModifier));
         }
         $('#' + obj.options.gridrowtmpid).remove();
+
+
+        console.log(breaks, validStartPoints, validEndPoints);
 
         obj.$slider.slider({
             min: 0,
