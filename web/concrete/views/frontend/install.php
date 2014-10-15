@@ -370,6 +370,12 @@ $(function() {
     <td><? if (!$finfoTest) { ?><i class="fa fa-question-circle launch-tooltip" title="<?=t('You must enable PHP\'s Fileinfo Extension.')?>"></i><? } ?></td>
 </tr>
 
+<tr>
+    <td><? if ($aspTagsTest) { ?><i class="fa fa-check"></i><? } else { ?><i class="fa fa-exclamation-circle"></i><? } ?></td>
+    <td width="100%"><?=t('ASP Style Tags Disabled')?></td>
+    <td><? if (!$aspTagsTest) { ?><i class="fa fa-question-circle launch-tooltip" title="<?=t('You must disable PHP\'s ASP Style Tags.')?>"></i><? } ?></td>
+</tr>
+
 </table>
 
 </div>
