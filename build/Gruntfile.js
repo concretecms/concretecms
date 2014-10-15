@@ -390,6 +390,7 @@ module.exports = function(grunt) {
 
         jsTargets.release.push('uglify:' + key + '_release');
         target.options = {compress: {warnings: true}};
+        target.options.mangle = false;
         target.options.sourceMap = js[key].dest + '.map';
         target.options.sourceMappingURL = target.options.sourceMap.replace(/<%=\s*DIR_BASE\s*%>/g, '<%= DIR_REL %>');
         target.options.sourceMapRoot = '<%= DIR_REL %>/';
