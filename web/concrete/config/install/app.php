@@ -1,7 +1,7 @@
 <?php
 
 return array(
-    'installed' => false,
+
     'routes'    => array(
         '/install'                                   => array('\Concrete\Controller\Install::view'),
         '/install/select_language'                   => array('\Concrete\Controller\Install::select_language'),

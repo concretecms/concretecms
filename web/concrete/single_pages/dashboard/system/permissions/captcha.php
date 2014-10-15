@@ -6,10 +6,9 @@
 <?=$this->controller->token->output('update_captcha')?>
 	<? if (count($captchas) > 0) { ?>
 
-		<div class="clearfix">
+		<div class="form-group">
 		<?=$form->label('activeCaptcha', t('Active Captcha'))?>
-		<div class="input">
-		<? 
+		<?
 		$activeHandle = '';
 		if (is_object($activeCaptcha)) {
 			$activeHandle = $activeCaptcha->getSystemCaptchaLibraryHandle();
@@ -17,7 +16,6 @@
 		?>
 		
 		<?=$form->select('activeCaptcha', $captchas, $activeHandle, array('class' => 'span4'))?>
-		</div>
 		</div>
 		
 		<? if (is_object($activeCaptcha)) {

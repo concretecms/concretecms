@@ -42,6 +42,7 @@ class PageView extends View
     public function setCustomPageTheme(PageTheme $pt)
     {
         $this->themeObject = $pt;
+        $this->pkgHandle = $pt->getPackageHandle();
     }
 
     public function setupRender()
@@ -62,7 +63,7 @@ class PageView extends View
                 } else {
                     $this->setViewTemplate(
                         $env->getPath(
-                            DIRNAME_THEMES . '/' . $this->themeHandle . '/' . FILENAME_THEMES_VIEW,
+                            DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $this->controller->getThemeViewTemplate(),
                             $this->pkgHandle));
                 }
                 $this->setInnerContentFile(
@@ -92,7 +93,7 @@ class PageView extends View
                             $this->pkgHandle));
                     $this->setViewTemplate(
                         $env->getPath(
-                            DIRNAME_THEMES . '/' . $this->themeHandle . '/' . FILENAME_THEMES_VIEW,
+                            DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $this->controller->getThemeViewTemplate(),
                             $this->pkgHandle));
                 } else {
                     $this->setViewTemplate(

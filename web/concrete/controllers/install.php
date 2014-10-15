@@ -78,8 +78,7 @@ class Install extends Controller
                     'successMessage',
                     t(
                         'Congratulations. concrete5 has been installed. You have been logged in as <b>%s</b> with the password you chose. If you wish to change this password, you may do so from the users area of the dashboard.',
-                        USER_SUPER,
-                        $uPassword));
+                        USER_SUPER));
             }
         }
     }

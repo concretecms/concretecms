@@ -11,54 +11,46 @@ $pkgArray = Package::getInstalledList(); ?>
 
 <?php
 if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScreen && $tp->canInstallPackages()) {
-    echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Install %s', $pkg->getPackageName()), false, 'span10 offset1', false);
     ?>
-    <form method="post" action="<?php echo $view->action('install_package', $pkg->getPackageHandle()); ?>">
-        <?php echo Loader::helper('validation/token')->output('install_options_selected'); ?>
-        <div class="ccm-pane-body">
-            <?php echo Loader::packageElement('dashboard/install', $pkg->getPackageHandle()); ?>
-            <?php if ($pkg->allowsFullContentSwap()) { ?>
-                <h4><?php echo t('Clear this Site?'); ?></h4>
-                <p><?php echo t('%s can fully clear you website of all existing content and install its own custom content in its place. If you\'re installing a theme for the first time you may want to do this. Clear all site content?', $pkg->getPackageName()); ?></p>
-                <?php
-                $u = new User();
-                if ($u->isSuperUser()) {
-                    $disabled = '';
-                    ?><div class="alert-message warning"><p><?php echo t('This will clear your home page, uploaded files and any content pages out of your site completely. It will completely reset your site and any content you have added will be lost.'); ?></p></div><?php
-                } else {
-                    $disabled = 'disabled';
-                    ?><div class="alert-message info"><p><?php echo t('Only the %s user may reset the site\'s content.', USER_SUPER); ?></p></div><?php
-                }
-                ?>
-                <div class="clearfix">
-                    <label><?php echo t("Swap Site Contents"); ?></label>
-                    <div class="input">
-                        <ul class="inputs-list">
-                            <li><label><input type="radio" name="pkgDoFullContentSwap" value="0" checked="checked" <?php echo $disabled; ?> /> <span><?php echo t('No. Do <strong>not</strong> remove any content or files from this website.'); ?></span></label></li>
-                            <li><label><input type="radio" name="pkgDoFullContentSwap" value="1" <?php echo $disabled; ?> /> <span><?php echo t('Yes. Reset site content with the content found in this package'); ?></span></label></li>
-                        </ul>
-                    </div>
-                </div>
-                <?php
-            } ?>
+    <form method="post" action="<?=$this->action('install_package', $pkg->getPackageHandle())?>">
+    <?=Loader::helper('validation/token')->output('install_options_selected')?>
+    <?=Loader::packageElement('dashboard/install', $pkg->getPackageHandle())?>
+    <? if ($pkg->allowsFullContentSwap()) { ?>
+        <h4><?=t('Clear this Site?')?></h4>
+        <p><?=t('%s can fully clear you website of all existing content and install its own custom content in its place. If you\'re installing a theme for the first time you may want to do this. Clear all site content?', $pkg->getPackageName())?></p>
+        <? $u = new User(); ?>
+        <? if ($u->isSuperUser()) {
+            $disabled = ''; ?>
+        <div class="alert-message warning"><p><?=t('This will clear your home page, uploaded files and any content pages out of your site completely. It will completely reset your site and any content you have added will be lost.')?></p></div>
+        <? } else {
+            $disabled = 'disabled';?>
+        <div class="alert-message info"><p><?=t('Only the %s user may reset the site\'s content.', USER_SUPER)?></p></div>
+        <? } ?>
+        <div class="form-group">
+            <label class="control-label"><?=t("Swap Site Contents")?></label>
+            <div class="radio"><label><input type="radio" name="pkgDoFullContentSwap" value="0" checked="checked" <?=$disabled?> /> <?=t('No. Do <strong>not</strong> remove any content or files from this website.')?></label></div>
+            <div class="radio"><label><input type="radio" name="pkgDoFullContentSwap" value="1" <?=$disabled?> /> <?=t('Yes. Reset site content with the content found in this package')?></label></div>
         </div>
-        <div class="ccm-pane-footer">
-            <a href="<?php echo $view->url('/dashboard/extend/install'); ?>" class="btn btn-default pull-left"><?php echo t('Cancel'); ?></a>
-            <input type="submit" value="<?php echo t('Install %s', $pkg->getPackageName()); ?>" class="btn btn-primary pull-right" />
-        </div>
-    </form>
-    <?php
-    echo Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false);
+    <? } ?>
 
+    <div class="ccm-dashboard-form-actions-wrapper">
+        <div class="ccm-dashboard-form-actions">
+    <a href="<?=$this->url('/dashboard/extend/install')?>" class="btn btn-default pull-left"><?=t('Cancel')?></a>
+    <input type="submit" value="<?=t('Install %s', $pkg->getPackageName())?>" class="btn btn-primary pull-right" />
+        </div>
+    </div>
+
+    </form>
+<?
 } elseif ($this->controller->getTask() == 'uninstall' && $tp->canUninstallPackages()) {
     $removeBTConfirm = t('This will remove all elements associated with the %s package. This cannot be undone. Are you sure?', $pkg->getPackageHandle());
     ?>
     <form method="post" class="form-stacked" id="ccm-uninstall-form" action="<?php echo $view->action('do_uninstall_package'); ?>" onsubmit="<?php echo h('return confirm(' . json_encode($removeBTConfirm) . ')'); ?>">
-        <?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Uninstall Package'), false, 'span10 offset1', false); ?>
-        <div class="ccm-pane-body">
-            <?php echo $valt->output('uninstall'); ?>
-            <input type="hidden" name="pkgID" value="<?php echo $pkg->getPackageID(); ?>" />
-            <h3><?php echo t('Items To Uninstall'); ?></h3>
+        <?php echo $valt->output('uninstall'); ?>
+        <input type="hidden" name="pkgID" value="<?php echo $pkg->getPackageID(); ?>" />
+        <fieldset>
+            <legend><?php echo t('Uninstall Package'); ?></legend>
+
             <p><?php echo t('Uninstalling %s will remove the following data from your system.', $pkg->getPackageName()); ?></p>
             <?php
             foreach ($items as $k => $itemArray) {
@@ -73,20 +65,24 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
             }
             ?>
             <br/>
-            <div class="form-group">
-                <h3><?php echo t('Move package to trash directory on server?'); ?></h3>
-                <div class="checkbox">
-                    <label><?php echo Loader::helper('form')->checkbox('pkgMoveToTrash', 1); ?>
-                    <span><?php echo t('Yes, remove the package\'s directory from the installation directory.'); ?></span></label>
-                </div>
+        </fieldset>
+
+        <?php @Loader::packageElement('dashboard/uninstall', $pkg->getPackageHandle()); ?>
+
+        <div class="form-group">
+            <label class="control-label"><?php echo t('Move package to trash directory on server?'); ?></label>
+            <div class="checkbox">
+                <label><?php echo Loader::helper('form')->checkbox('pkgMoveToTrash', 1); ?>
+                <span><?php echo t('Yes, remove the package\'s directory from the installation directory.'); ?></span></label>
             </div>
-            <?php @Loader::packageElement('dashboard/uninstall', $pkg->getPackageHandle()); ?>
         </div>
-        <div class="ccm-pane-footer">
+
+        <div class="ccm-dashboard-form-actions-wrapper">
+            <div class="ccm-dashboard-form-actions">
             <?php print $ch->submit(t('Uninstall'), 'ccm-uninstall-form', 'right', 'btn-danger'); ?>
             <?php print $ch->button(t('Cancel'), $view->url('/dashboard/extend/install', 'inspect_package', $pkg->getPackageID()), ''); ?>
+            </div>
         </div>
-        <?php echo Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(); ?>
     </form>
     <?php
 
@@ -161,38 +157,36 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 
     if (is_object($pkg)) {
         ?>
-        <?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Inspect Package'), false, 'span10 offset1', false); ?>
-        <div class="ccm-pane-body">
-            <table class="table table-bordered table-striped">
-                <tr>
-                    <td class="ccm-marketplace-list-thumbnail"><img src="<?php echo $ci->getPackageIconURL($pkg); ?>" /></td>
-                    <td class="ccm-addon-list-description" style="width: 100%"><h3><?php echo $pkg->getPackageName(); ?> - <?php echo $pkg->getPackageVersion(); ?></h3><?php echo $pkg->getPackageDescription(); ?></td>
-                </tr>
-            </table>
+        <table class="table table-bordered table-striped">
+            <tr>
+                <td class="ccm-marketplace-list-thumbnail"><img src="<?php echo $ci->getPackageIconURL($pkg); ?>" /></td>
+                <td class="ccm-addon-list-description" style="width: 100%"><h3><?php echo $pkg->getPackageName(); ?> - <?php echo $pkg->getPackageVersion(); ?></h3><?php echo $pkg->getPackageDescription(); ?></td>
+            </tr>
+        </table>
+        <?php
+        $items = $pkg->getPackageItems();
+        $blocks = array();
+        if (isset($items['block_types']) && is_array($items['block_types'])) {
+            $blocks = $items['block_types'];
+        }
+        if (count($blocks) > 0) { ?>
+            <h5><?php echo $pkg->getPackageItemsCategoryDisplayName('block_types'); ?></h5>
+            <div class="form-group">
             <?php
-            $items = $pkg->getPackageItems();
-            $blocks = array();
-            if (isset($items['block_types']) && is_array($items['block_types'])) {
-                $blocks = $items['block_types'];
-            }
-            if (count($blocks) > 0) { ?>
-                <h5><?php echo $pkg->getPackageItemsCategoryDisplayName('block_types'); ?></h5>
-                <div class="form-group">
-                <?php
-                foreach ($blocks as $bt) {
-                    $btIcon = $ci->getBlockTypeIconURL($bt);
-                    ?>
-                    <a href="<?php echo $view->url('/dashboard/blocks/types', 'inspect', $bt->getBlockTypeID()); ?>"><?php echo t($bt->getBlockTypeName()); ?></a>
-                    <div class="ccm-block-type-description"  id="ccm-bt-help<?php echo $bt->getBlockTypeID(); ?>"><?php echo t($bt->getBlockTypeDescription()); ?></div>
-                    <?php
-                }
+            foreach ($blocks as $bt) {
+                $btIcon = $ci->getBlockTypeIconURL($bt);
                 ?>
-                </div>
+                <a href="<?php echo $view->url('/dashboard/blocks/types', 'inspect', $bt->getBlockTypeID()); ?>"><?php echo t($bt->getBlockTypeName()); ?></a>
+                <div class="ccm-block-type-description"  id="ccm-bt-help<?php echo $bt->getBlockTypeID(); ?>"><?php echo t($bt->getBlockTypeDescription()); ?></div>
                 <?php
             }
             ?>
-        </div>
-        <div class="ccm-pane-footer">
+            </div>
+            <?php
+        }
+        ?>
+        <div class="ccm-dashboard-form-actions-wrapper">
+            <div class="ccm-dashboard-form-actions">
             <?php
             $tp = new TaskPermission();
             if ($tp->canUninstallPackages()) {
@@ -201,7 +195,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
             ?>
             <a href="<?php echo $view->url('/dashboard/extend/install'); ?>" class=" btn btn-default"><?php echo t('Back to Add Functionality'); ?></a>
         </div>
-        <?php echo Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false); ?>
+        </div>
         <?php
      } else {
         if (is_object($installedPKG) && $installedPKG->hasInstallPostScreen()) {
@@ -211,7 +205,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
                     <div class="ccm-ui">
                         <?php echo Loader::element('dashboard/install_post', false, $installedPKG->getPackageHandle()); ?>
                         <div class="dialog-buttons">
-                            <a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeAll()" class="btn pull-right"><?php echo t('Ok'); ?></a>
+                            <a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeAll()" class="btn btn-primary pull-right"><?php echo t('Ok'); ?></a>
                         </div>
                     </div>
                 </div>
@@ -298,7 +292,13 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
                     <div class="media">
                         <div class="pull-left"><img style="width: 49px" src="<?php echo $ci->getPackageIconURL($obj); ?>" class"media-object" /></div>
                         <div class="media-body">
-                            <a href="<?php echo URL::to('/dashboard/extend/install', 'install_package', $obj->getPackageHandle()); ?>" class="btn pull-right btn-sm btn-default"><?php echo t('Install'); ?></a>
+                            <? if ($obj instanceof \Concrete\Core\Package\BrokenPackage) { ?>
+                                <div style="display: inline-block" class="launch-tooltip pull-right" title="<?=t('This package is corrupted. Make sure it has a valid controller.php file and that it has been updated for concrete5.7 and later.')?>">
+                                    <button type="button" disabled="disabled" class="btn btn-sm btn-default"><i class="fa fa-exclamation-circle"></i> <?php echo t('Can\'t Install!'); ?></button>
+                                </div>
+                            <? } else { ?>
+                                <a href="<?php echo URL::to('/dashboard/extend/install', 'install_package', $obj->getPackageHandle()); ?>" class="btn pull-right btn-sm btn-default"><?php echo t('Install'); ?></a>
+                            <? } ?>
                             <h4 class="media-heading"><?php echo $obj->getPackageName(); ?> <span class="badge badge-info" style="margin-right: 10px"><?php echo tc('AddonVersion', 'v.%s', $obj->getPackageVersion()); ?></span></h4>
                             <p><?php echo $obj->getPackageDescription(); ?></p>
                         </div>
@@ -309,7 +309,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
             if (is_object($mi) && $mi->isConnected()) {
                 ?>
                 <hr/>
-                <h3><?php echo t("Project Page"); ?></h3>
+                <h4><?php echo t("Project Page"); ?></h4>
                 <p><?php echo t('Your site is currently connected to the concrete5 community. Your project page URL is:'); ?><br/><a href="<?php echo $mi->getSitePageURL(); ?>"><?php echo $mi->getSitePageURL(); ?></a></p>
                 <?php
             } elseif (is_object($mi) && $mi->hasConnectionError()) {
