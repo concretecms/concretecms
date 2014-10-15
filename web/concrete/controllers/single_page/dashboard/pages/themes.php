@@ -142,7 +142,6 @@ class Themes extends DashboardPageController {
 		} else {
 			$l->applyToSite();
             $this->redirect('/dashboard/pages/themes/inspect', $l->getThemeID(), 'activate');
-
 		}
 		$this->view();
 	}
