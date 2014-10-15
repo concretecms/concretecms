@@ -39,8 +39,8 @@ class ServiceProvider extends \Concrete\Core\Foundation\Service\Provider
                 return $factory->createService(
                     'twitter',
                     new Credentials(
-                        \Config::get('authentication::twitter.appid'),
-                        \Config::get('authentication::twitter.secret'),
+                        \Config::get('auth.twitter.appid'),
+                        \Config::get('auth.twitter.secret'),
                         BASE_URL . DIR_REL . \URL::to($callback)
                     ),
                     new SymfonySession(\Session::getFacadeRoot(), false));
