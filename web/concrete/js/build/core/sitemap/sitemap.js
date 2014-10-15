@@ -64,7 +64,7 @@
 						'cParentID': my.options.cParentID,
 						'displaySingleLevel': my.options.displaySingleLevel ? 1 : 0,
 						'includeSystemPages': my.options.includeSystemPages ? 1 : 0
-					},
+					}
 
 				},
 				onPostInit: function() {
@@ -246,7 +246,7 @@
     	setupNodePagination: function($tree, nodeKey) {
     		//var tree = $tree.dynatree('getTree');
     		var pg = $tree.find('div.ccm-pagination-wrapper');
-    		$tree.find('div.ccm-pagination-bound').remove();
+    		$tree.children('.ccm-pagination-bound').remove();
     		if (pg.length) {
     			pg.find('a').unbind('click').on('click', function() {
     				// load under node
