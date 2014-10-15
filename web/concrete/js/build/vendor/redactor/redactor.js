@@ -7618,10 +7618,14 @@
 
                 modal_table: String()
                 + '<section id="redactor-modal-table-insert">'
-                    + '<label>' + this.opts.curLang.rows + '</label>'
-                    + '<input type="text" size="5" value="2" id="redactor_table_rows" />'
-                    + '<label>' + this.opts.curLang.columns + '</label>'
-                    + '<input type="text" size="5" value="3" id="redactor_table_columns" />'
+                    + '<div class="form-group">'
+                        + '<label class="control-label">' + this.opts.curLang.rows + '</label>'
+                        + '<input class="form-control" type="text" size="5" value="2" id="redactor_table_rows" />'
+                    + '</div>'
+                    + '<div class="form-group">'
+                        + '<label class="control-label">' + this.opts.curLang.columns + '</label>'
+                        + '<input class="form-control" type="text" size="5" value="3" id="redactor_table_columns" />'
+                    + '</div>'
                 + '</section>'
                 + '<footer>'
                 /* concrete5
