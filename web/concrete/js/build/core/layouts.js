@@ -418,7 +418,12 @@
         var maxColumns = obj.options.maxcolumns;
         var minColumnClass = obj.options.gridColumnClasses[0];
 
-        $('<div />', {'id': obj.options.gridrowtmpid}).appendTo($('#ccm-theme-grid-edit-mode-row-wrapper').closest('.ccm-block-edit-layout'));
+        var test_container = $('#ccm-theme-grid-edit-mode-row-wrapper').closest('.ccm-block-edit-layout');
+        if (!test_container.length) {
+            test_container = $('#ccm-theme-grid-edit-mode-row-wrapper');
+        }
+
+        $('<div />', {'id': obj.options.gridrowtmpid}).appendTo(test_container);
         var columnHTML = '';
         for (i = 1; i <= maxColumns; i++) {
             columnHTML += '<div class="' + minColumnClass + '"></div>'
