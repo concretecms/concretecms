@@ -153,7 +153,7 @@ if ($showMenu) {
 
                         <? } ?>
 
-                        <? if ($b->getBlockTypeHandle() != BLOCK_HANDLE_LAYOUT_PROXY) { ?>
+                        <? if ($b->getBlockTypeHandle() != BLOCK_HANDLE_LAYOUT_PROXY && $b->getBlockTypeHandle() != BLOCK_HANDLE_PAGE_TYPE_OUTPUT_PROXY) { ?>
                             <li><a href="javascript:void(0)" data-menu-action="block_scrapbook"><?=t("Copy to Clipboard")?></a></li>
                         <? } ?>
 
@@ -162,7 +162,7 @@ if ($showMenu) {
                             <li><a href="javascript:void(0)" data-menu-action="delete_block" data-menu-delete-message="<?=$deleteMessage?>"><?=t("Delete")?></a></li>
                         <? } ?>
 
-                        <? if ($b->getBlockTypeHandle() != BLOCK_HANDLE_LAYOUT_PROXY) { ?>
+                        <? if ($b->getBlockTypeHandle() != BLOCK_HANDLE_LAYOUT_PROXY && $b->getBlockTypeHandle() != BLOCK_HANDLE_PAGE_TYPE_OUTPUT_PROXY) { ?>
 
                             <? if ($canDesign || $canEditCustomTemplate || $canEditBlockName || $canEditCacheSettings) { ?>
                                 <li class="divider"></li>
