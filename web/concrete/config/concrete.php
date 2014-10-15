@@ -363,6 +363,11 @@ return array(
         'app_version_display_in_header' => true
     ),
 
+    'theme' => array(
+
+        'compress_preprocessor_output' => true
+    ),
+
     'updates' => array(
 
         'enable_auto_update_core'       => false,
