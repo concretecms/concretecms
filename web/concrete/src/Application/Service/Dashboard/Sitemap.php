@@ -72,7 +72,7 @@ class Sitemap {
 				$nodes[] = $n;
 			}
 		}
-		if (is_object($pagination) && $pagination->hasNextPage()) {
+		if (is_object($pagination) && $pagination->getNbPages() > 1) {
             if ($this->displayNodePagination && isset($pagination)) {
 				$n = new stdClass;
 				$n->icon = false;
