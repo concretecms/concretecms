@@ -11,8 +11,14 @@ class Inspect extends DashboardPageController {
 
 	protected $helpers = array('html');
 
+    public function on_before_render()
+    {
+        parent::on_before_render();
+        $this->set('pageTitle', t('Page Templates in Theme'));
+    }
+
 	// grab all the page types from within a theme	
-	public function view($pThemeID = null, $isOnInstall = false) {
+	public function view($pThemeID = null, $message = false) {
 		if (!$pThemeID) {
 			$this->redirect('/dashboard/pages/themes/');
 		}
@@ -28,8 +34,13 @@ class Inspect extends DashboardPageController {
 			$v->add('Invalid Theme');
 		}	
 		
-		if ($isOnInstall) {
-			$this->set('message', t("Theme installed. You may automatically create page types from template files contained in your theme using the form below."));
+        switch($message) {
+            case 'install':
+    			$this->set('message', t("Theme installed. You may automatically create page templates from template files contained in your theme using the form below."));
+                break;
+            case 'activate':
+    			$this->set('message', t("Theme activated. You may automatically create page templates from template files contained in your theme using the form below."));
+                break;
 		}
 		
 		if ($v->has()) {

@@ -107,7 +107,7 @@ class Themes extends DashboardPageController {
 		try {
 			if (is_object($th)) {
 				$t = PageTheme::add($pThemeHandle);
-				$this->redirect('/dashboard/pages/themes/inspect', $t->getThemeID(), 1);
+				$this->redirect('/dashboard/pages/themes/inspect', $t->getThemeID(), 'install');
 
 			} else {
 				throw new Exception('Invalid Theme');
@@ -141,7 +141,8 @@ class Themes extends DashboardPageController {
 			$this->set('error', $val);
 		} else {
 			$l->applyToSite();
-			$this->set('message', t('Theme activated'));
+            $this->redirect('/dashboard/pages/themes/inspect', $l->getThemeID(), 'activate');
+
 		}
 		$this->view();
 	}
