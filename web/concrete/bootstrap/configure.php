@@ -191,7 +191,7 @@ define('FILENAME_COLLECTION_VIEW', 'view.php');
 define('FILENAME_COLLECTION_ACCESS', 'access.xml');
 define('FILENAME_COLLECTION_EDIT', 'edit.php');
 define('FILENAME_COLLECTION_DEFAULT_THEME', 'default');
-define('FILENAME_PAGE_TEMPLATE_DEFAULT_ICON', 'main.png');
+define('FILENAME_PAGE_TEMPLATE_DEFAULT_ICON', 'full.png');
 define('FILENAME_PAGE_ICON', 'icon.png');
 define('FILENAME_PACKAGE_CONTROLLER', 'controller.php');
 define('FILENAME_PACKAGE_DB', 'db.xml');

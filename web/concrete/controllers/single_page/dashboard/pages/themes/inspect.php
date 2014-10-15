@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Controller\SinglePage\Dashboard\Pages\Themes;
 use \Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Theme\Theme;
 use Loader;
 use PageTheme;
 use Package;
@@ -67,7 +68,10 @@ class Inspect extends DashboardPageController {
 
 			foreach($this->post('pageTemplates') as $pTemplateHandle) {
 				$pTemplateName = $txt->unhandle($pTemplateHandle);
-				$pTemplateIcon = FILENAME_PAGE_TEMPLATE_DEFAULT_ICON;
+                $pTemplateIcon = $pTemplateHandle . '.png';
+                if (!file_exists(DIR_FILES_PAGE_TEMPLATE_ICONS . '/' . $pTemplateIcon)) {
+				    $pTemplateIcon = Theme::FILENAME_PAGE_TEMPLATE_DEFAULT_ICON;
+                }
 				$ct = PageTemplate::add($pTemplateHandle, $pTemplateName, $pTemplateIcon, $pkg);
 			}
 			$this->set('success', t('Files in the theme were activated successfully.'));
