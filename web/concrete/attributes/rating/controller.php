@@ -23,7 +23,7 @@ class Controller extends AttributeTypeController
 
     public function getDisplayValue()
     {
-        $value = $this->getValue();
+        $value = $this->getValue() / 20;
         $rt = Loader::helper('rating');
         return $rt->output($this->attributeKey->getAttributeKeyHandle() . time(), $value);
     }
@@ -32,7 +32,7 @@ class Controller extends AttributeTypeController
     {
         $caValue = 0;
         if ($this->getAttributeValueID() > 0) {
-            $caValue = $this->getValue();
+            $caValue = $this->getValue() / 20;
         }
         $rt = Loader::helper('form/rating');
         print $rt->rating($this->field('value'), $caValue);
@@ -66,13 +66,13 @@ class Controller extends AttributeTypeController
 
     public function saveForm($data)
     {
-        $this->saveValue($data['value']);
+        $this->saveValue($data['value'] * 20);
     }
 
     public function search()
     {
         $rt = Loader::helper('form/rating');
-        print $rt->rating($this->field('value'), $this->request('value'), false);
+        print $rt->rating($this->field('value'), $this->request('value'));
     }
 
     public function deleteValue()

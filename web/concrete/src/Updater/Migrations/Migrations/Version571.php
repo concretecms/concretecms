@@ -16,6 +16,10 @@ class Version571 extends AbstractMigration
     {
         /** @todo refresh CollectionVersionBlocks, CollectionVersionBlocksCacheSettings tables */
         /** @todo add permissions lines for edit_block_name and edit_block_cache_settings */
+        /** @todo Remove key from Config table */
+        /** @todo Add marketplace single pages */
+        /** @todo Install the community authentication type */
+        /** @todo delete customize page themes dashboard single page */
     }
 
     public function down(Schema $schema)

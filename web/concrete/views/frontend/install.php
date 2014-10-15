@@ -490,8 +490,7 @@ $(function() {
                             Your memory limit is currently %sMB. You may experience problems uploading and resizing large images, and may have to install concrete5 without sample content.', round(Core::make('helper/number')->formatSize($memoryBytes, 'MB'), 2))?></span>
                         <? } ?>
                         <? if ($memoryTest === 1) { ?>
-                            <span class="text-success"><?=t('concrete5 runs best with at least 64MB of RAM.
-                            Your memory limit is currently %sMB.', round(Core::make('helper/number')->formatSize($memoryBytes, 'MB'), 2))?></span>
+                            <span class="text-success"><?=t('Memory limit %sMB.', round(Core::make('helper/number')->formatSize($memoryBytes, 'MB'), 2))?></span>
                         <? } ?>
 
                     </td>

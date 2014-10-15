@@ -1,8 +1,11 @@
 <?php
 namespace Concrete\Core\Marketplace;
+use Concrete\Core\Package\Package;
+use Concrete\Core\Package\PackageArchive;
 use Loader;
 use Config;
 use \Concrete\Core\Foundation\Object;
+use Exception;
 class RemoteItem extends Object {
 
 	protected $price=0.00;
@@ -24,10 +27,60 @@ class RemoteItem extends Object {
 	public function getName(){ return $this->name; }
 	public function getDescription() {return $this->description;}
 	public function getBody() {return $this->bodyContent;}
-	public function getPrice(){ return sprintf("%.2f",floatval($this->price)); }
+    public function getPrice() {return $this->price;}
+    public function getSkillLevel() {return $this->skillLevel;}
+    public function getExampleURL() {return $this->exampleURL;}
+    public function getSkillLevelClassName() {
+        switch($this->getSkillLevel()) {
+            case 'beginner':
+                return 'fa fa-cog ccm-marketplace-skill-level-beginner';
+            case 'intermediate':
+                return 'fa fa-cog ccm-marketplace-skill-level-intermediate';
+            case 'advanced':
+                return 'fa fa-cog ccm-marketplace-skill-level-advanced';
+            case 'bleeding_edge':
+                return 'fa fa-cogs ccm-marketplace-skill-level-bleeding-edge';
+        }
+    }
+    public function getSkillLevelDisplayName() {
+        switch($this->getSkillLevel()) {
+            case 'beginner':
+                return t('Beginner');
+            case 'intermediate':
+                return t('Intermediate');
+            case 'advanced':
+                return t('Advanced');
+            case 'bleeding_edge':
+                return t('Bleeding Edge/Developer');
+        }
+    }
+
+    public function getLocalURL()
+    {
+        if ($this->getMarketplaceItemType() == 'theme') {
+            return \URL::to('/dashboard/extend/themes/', 'view_detail', $this->getMarketplaceItemID());
+        } else {
+            return \URL::to('/dashboard/extend/addons/', 'view_detail', $this->getMarketplaceItemID());
+        }
+    }
+
+	public function getDisplayPrice(){
+		if ($this->price == '' || $this->price == '0' || $this->price == '0.00') {
+            return t('Free');
+        } else {
+            return sprintf("$%.2f",floatval($this->price));
+        }
+    }
 	public function getScreenshots() {
 		if (is_array($this->screenshots)) {
 			return $this->screenshots;
+		} else {
+			return array();
+		}
+	}
+	public function getSlideshow() {
+		if (is_array($this->slideshowImages)) {
+			return $this->slideshowImages;
 		} else {
 			return array();
 		}
@@ -57,6 +110,7 @@ class RemoteItem extends Object {
 		}
 	}
 	public function getRemoteURL(){ return $this->url; }
+	public function getRemoteHelpURL(){ return $this->helpURL; }
 	public function getProductBlockID() {return $this->productBlockID;}
 	public function getFivePackProductBlockID() {return $this->fivePackProductBlockID;}
 	public function getRemoteFileURL(){ return $this->file; }
@@ -123,25 +177,12 @@ class RemoteItem extends Object {
 		} catch (Exception $e) {
 			return array($e->getMessage());
 		}
-
-		if ($install) {
-			$tests = Package::testForInstall($this->getHandle());
-			if (is_array($tests)) {
-				return $tests;
-			} else {
-				$p = Loader::package($this->getHandle());
-				try {
-					$p->install();
-				} catch(Exception $e) {
-					return array(Package::E_PACKAGE_INSTALL);
-				}
-			}
-		}
 	}
 
 	public function enableFreeLicense() {
 		$fh = Loader::helper('file');
-		$csToken = Config::get('concrete.marketplace.token');
+        $dbConfig = \Core::make('config/database');
+		$csToken = $dbConfig->get('concrete.marketplace.token');
 		$csiURL = urlencode(BASE_URL . DIR_REL);
         $url = Config::get('concrete.urls.concrete5') . Config::get('concrete.urls.paths.marketplace.item_free_license');
 		$url .= "?mpID=" . $this->mpID . "&csToken={$csToken}&csiURL=" . $csiURL . "&csiVersion=" . APP_VERSION;
@@ -152,7 +193,8 @@ class RemoteItem extends Object {
 		$fh = Loader::helper('file');
 
 		// Retrieve the URL contents
-		$csToken = Config::get('concrete.marketplace.token');
+        $dbConfig = \Core::make('config/database');
+		$csToken = $dbConfig->get('concrete.marketplace.token');
 		$csiURL = urlencode(BASE_URL . DIR_REL);
 
         $url = Config::get('concrete.urls.concrete5') . Config::get('concrete.urls.paths.marketplace.item_information');
@@ -174,10 +216,20 @@ class RemoteItem extends Object {
 		}
 	}
 
+    /**
+     * @return \Concrete\Core\Marketplace\RemoteItem;
+     * @param $mpID
+     * @throws Exception
+     */
 	public static function getByHandle($mpHandle) {
 		return RemoteItem::getRemotePackageObject('mpHandle', $mpHandle);
 	}
 
+    /**
+     * @return \Concrete\Core\Marketplace\RemoteItem;
+     * @param $mpID
+     * @throws Exception
+     */
 	public static function getByID($mpID) {
 		return RemoteItem::getRemotePackageObject('mpID', $mpID);
 	}

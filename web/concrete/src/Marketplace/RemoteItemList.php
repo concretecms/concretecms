@@ -3,6 +3,7 @@ namespace Concrete\Core\Marketplace;
 
 use Loader;
 use Config;
+use Log;
 use \Concrete\Core\Legacy\ItemList;
 use \Concrete\Core\Package\Package;
 
@@ -15,23 +16,31 @@ class RemoteItemList extends ItemList
 
     public static function getItemSets($type)
     {
-        $url = Config::get('concrete.urls.concrete5') . Config::get('concrete.urls.paths.marketplace.remote_item_list');
-        $url .= $type . '/-/get_remote_item_sets';
-        $contents = Loader::helper("file")->getContents($url);
-        $sets = array();
-        if ($contents != '') {
-            $objects = @Loader::helper('json')->decode($contents);
-            if (is_array($objects)) {
-                foreach ($objects as $obj) {
-                    $mr = new RemoteItemSet();
-                    $mr->id = $obj->marketplaceItemSetID;
-                    $mr->name = $obj->marketplaceItemSetName;
-                    $sets[] = $mr;
+        $cache = \Core::make('cache/expensive');
+        $r = $cache->getItem('concrete.marketplace.remote_item_sets.' . $type);
+        if ($r->isMiss()) {
+            $r->lock();
+            $url = Config::get('concrete.urls.concrete5') . Config::get('concrete.urls.paths.marketplace.remote_item_list');
+            $url .= $type . '/-/get_remote_item_sets';
+            if (Config::get('concrete.marketplace.log_requests')) {
+                Log::info($url);
+            }
+            $contents = Loader::helper("file")->getContents($url);
+            $sets = array();
+            if ($contents != '') {
+                $objects = @Loader::helper('json')->decode($contents);
+                if (is_array($objects)) {
+                    foreach ($objects as $obj) {
+                        $mr = new RemoteItemSet();
+                        $mr->id = $obj->marketplaceItemSetID;
+                        $mr->name = $obj->marketplaceItemSetName;
+                        $sets[] = $mr;
+                    }
                 }
             }
+            $r->set($sets);
         }
-
-        return $sets;
+        return $r->get();
     }
 
     public function setIncludeInstalledItems($pp)
@@ -100,6 +109,9 @@ class RemoteItemList extends ItemList
 
         $url = Config::get('concrete.urls.concrete5') . Config::get('concrete.urls.paths.marketplace.remote_item_list');
         $url = $uh->buildQuery($url . $this->type . '/-/get_remote_list', $params);
+        if (Config::get('concrete.marketplace.log_requests')) {
+            Log::info($url);
+        }
         $r = Loader::helper('file')->getContents($url);
         $r2 = @Loader::helper('json')->decode($r);
 
