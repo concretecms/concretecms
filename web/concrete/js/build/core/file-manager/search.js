@@ -49,7 +49,7 @@
     ConcreteFileManager.prototype.setupFileUploads = function() {
         var my = this,
             $fileUploader = $('#ccm-file-manager-upload'),
-            arguments = {
+            args = {
                 url: CCM_DISPATCHER_FILENAME + '/ccm/system/file/upload',
                 dataType: 'json',
                 formData: {'ccm_token': CCM_SECURITY_TOKEN},
@@ -61,7 +61,7 @@
                     } catch (e) {}
                     ConcreteAlert.dialog('Error', message);
                 },
-                progress: function(e, data) {
+                progressall: function(e, data) {
                     var progress = parseInt(data.loaded / data.total * 100, 10);
                     $('#ccm-file-upload-progress-wrapper').html(my._templateFileProgress({'progress': progress}));
                 },
@@ -76,7 +76,7 @@
                         modal: true
                     });
                 },
-                success: function(r) {
+                stop: function() {
                     jQuery.fn.dialog.closeTop();
                     my.refreshResults();
                 }
@@ -84,8 +84,12 @@
 
         $fileUploader.on('click', function() {
             $(this).find('input').trigger('click');
+            return false;
+        }).children('a').click(function() {
+            $(this).parent().find('input').trigger('click');
+            return false;
         });
-        $fileUploader.fileupload(arguments);
+        $fileUploader.fileupload(args);
 
     };
 
