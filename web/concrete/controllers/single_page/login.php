@@ -3,6 +3,7 @@ namespace Concrete\Controller\SinglePage;
 
 use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Core\Authentication\AuthenticationTypeFailureException;
+use Concrete\Core\Authentication\LoginException;
 use Concrete\Core\Routing\RedirectResponse;
 use Config;
 use Events;
@@ -64,18 +65,21 @@ class Login extends PageController
      * @throws \Concrete\Core\Authentication\AuthenticationTypeFailureException
      * @throws \Exception
      */
-    public function callback($type, $method = 'callback', $a = null, $b = null, $c = null, $d = null, $e = null, $f = null, $g = null, $h = null, $i = null, $j = null)
+    public function callback($type=null, $method = 'callback', $a = null, $b = null, $c = null, $d = null, $e = null, $f = null, $g = null, $h = null, $i = null, $j = null)
     {
+        if (!$type) {
+            return $this->view();
+        }
         $at = AuthenticationType::getByHandle($type);
         if ($at) {
             $this->set('authType', $at);
         }
         if (!method_exists($at->controller, $method)) {
-            throw new \Exception(t('Invalid method.'));
+            return $this->view();
         }
         if ($method != 'callback') {
             if (!is_array($at->controller->apiMethods) || !in_array($method, $at->controller->apiMethods)) {
-                throw new \Exception(t("Invalid method."));
+                return $this->view();
             }
         }
         try {
@@ -109,8 +113,10 @@ class Login extends PageController
         } else {
             try {
                 $at = AuthenticationType::getByHandle($type);
-                $at->controller->authenticate();
-                $this->finishAuthentication($at);
+                $user = $at->controller->authenticate();
+                if ($user && $user->isLoggedIn()) {
+                    $this->finishAuthentication($at);
+                }
             } catch (\exception $e) {
                 $this->error->add($e->getMessage());
             }
@@ -131,10 +137,6 @@ class Login extends PageController
         }
         $db = Loader::db();
         $u = new User();
-        if ($u->getUserID() == 1 && $type->getAuthenticationTypeHandle() != 'concrete') {
-            $u->logout();
-            throw new \Exception(t('You can only identify as the admin user using the concrete login.'));
-        }
 
         $ui = UserInfo::getByID($u->getUserID());
         $aks = UserAttributeKey::getRegistrationList();

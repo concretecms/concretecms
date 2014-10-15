@@ -185,7 +185,7 @@ class Application extends Container
             $p->registerConfigNamespace();
             if ($p->isPackageInstalled()) {
                 $pkg = Package::getClass($p->getPackageHandle());
-                if (is_object($pkg)) {
+                if (is_object($pkg) && (!$pkg instanceof \Concrete\Core\Package\BrokenPackage)) {
                     $cl->registerPackage($pkg);
                     // handle updates
                     if (Config::get('concrete.updates.enable_auto_update_packages')) {

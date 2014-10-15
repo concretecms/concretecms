@@ -19,7 +19,7 @@ class CustomStyle extends AbstractCustomStyle
     public function getCSS()
     {
         $set = $this->set;
-        $css = '.' . $this->getContainerClass() . '{';
+        $css = '.' . $this->getContainerClass('.') . '{';
         if ($set->getBackgroundColor()) {
             $css .= 'background-color:' . $set->getBackgroundColor() . ';';
         }
@@ -84,13 +84,13 @@ class CustomStyle extends AbstractCustomStyle
         return $css;
     }
 
-    public function getContainerClass()
+    public function getContainerClass($separator = ' ')
     {
         $class = 'ccm-custom-style-';
         $txt = Core::make('helper/text');
         $class .= strtolower($txt->filterNonAlphaNum($this->arHandle));
         if (is_object($this->set) && $this->set->getCustomClass()) {
-            $class .= ' ' . $this->set->getCustomClass();
+            $class .= $separator . $this->set->getCustomClass();
         }
         return $class;
     }
