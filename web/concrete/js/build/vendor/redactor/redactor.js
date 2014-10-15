@@ -7565,7 +7565,7 @@
                         + '<label>' + this.opts.curLang.image_web_link + '</label>'
                         + '<div class="input-group">'
                         + '<input type="text" name="redactor_file_link" id="redactor_file_link" class="form-control"  />'
-                        + '<a href="#" data-action="choose-image-from-file-manager" class="btn btn-default "input-group-addon""><i class="fa fa-search"></i></a>'
+                        + '<a href="#" data-action="choose-image-from-file-manager" class="btn btn-default input-group-addon"><i class="fa fa-search"></i></a>'
                         + '</div></div>'
                         /* end concrete5 */
                     + '</div>'
