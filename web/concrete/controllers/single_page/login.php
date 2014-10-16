@@ -23,7 +23,6 @@ class Login extends PageController
 
     public $helpers = array('form');
     protected $locales = array();
-    protected $supportsPageCache = true;
 
     public function on_before_render()
     {
