@@ -265,12 +265,16 @@ DynaTreeNode.prototype = {
 		}
 		// folder or doctype icon
 		if ( data.icon ) {
-			if (data.icon.charAt(0) === "/"){
-				imageSrc = data.icon;
-			}else{
-				imageSrc = opts.imagePath + data.icon;
-			}
-			res += "<img src='" + imageSrc + "' alt='' />";
+            if (data.iconHTML) {
+                res += data.iconHTML;
+            } else {
+                if (data.icon.charAt(0) === "/") {
+                    imageSrc = data.icon;
+                } else {
+                    imageSrc = opts.imagePath + data.icon;
+                }
+                res += "<img src='" + imageSrc + "' alt='' />";
+            }
 		} else if ( data.icon === false ) {
 			// icon == false means 'no icon'
 //			noop(); // keep JSLint happy

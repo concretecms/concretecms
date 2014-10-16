@@ -43,7 +43,8 @@ if ($_REQUEST['displaySingleLevel']) {
     $parent = Page::getByID($c->getCollectionParentID());
     if (is_object($parent) && !$parent->isError()) {
         $n = $dh->getNode($parent->getCollectionID());
-        $n->icon = ASSETS_URL_IMAGES . '/dashboard/sitemap/up.png';
+        $n->iconHTML = '<i class="fa fa-angle-double-up"></i>';
+        $n->icon = true;
         $n->displaySingleLevel = true;
 
         $p = $dh->getNode($cParentID);
