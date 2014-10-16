@@ -2,7 +2,6 @@
 namespace Concrete\Core\Authentication\Type\OAuth;
 
 use Concrete\Core\Authentication\AuthenticationTypeController;
-use Concrete\Core\Validation\CSRF\Token;
 use OAuth\Common\Exception\Exception;
 use OAuth\Common\Service\AbstractService;
 use OAuth\Common\Token\TokenInterface;
@@ -11,7 +10,7 @@ use OAuth\UserData\Extractor\Extractor;
 abstract class GenericOauthTypeController extends AuthenticationTypeController
 {
 
-    public $apiMethods = array('handle_error', 'handle_success', 'handle_detach');
+    public $apiMethods = array('handle_error', 'handle_success');
 
     /**
      * @var \OAuth\Common\Service\AbstractService
@@ -66,59 +65,6 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
         return array();
     }
 
-    public function hook()
-    {
-        $this->set('attached', $this->isBoundUser(new \User()));
-    }
-
-    /**
-     * @param \User $user
-     * @return bool
-     */
-    public function isBoundUser(\User $user)
-    {
-        return $this->isBoundUserID($user->getUserID());
-    }
-
-    public function isBoundUserID($user_id)
-    {
-
-        $qb = \Database::connection()->createQueryBuilder();
-
-        $and = $qb->expr()->andX();
-        $and->add($qb->expr()->comparison('namespace', '=', ':namespace'));
-        $and->add($qb->expr()->eq('user_id', intval($user_id, 10)));
-
-        $result = $qb->select('count(binding)')->from('OauthUserMap', 'map')
-                     ->where($and)
-                     ->setParameter(':namespace', $this->getHandle())
-                     ->execute();
-
-        foreach ($result as $row) {
-            return !!intval(array_shift($row), 10);
-        }
-
-        return false;
-    }
-
-    public function unbindUser(\User $user)
-    {
-        $this->unbindUserID($user->getUserID());
-    }
-
-    public function unbindUserID($user_id)
-    {
-        $qb = \Database::connection()->createQueryBuilder();
-
-        $and = $qb->expr()->andX();
-        $and->add($qb->expr()->comparison('namespace', '=', ':namespace'));
-        $and->add($qb->expr()->eq('user_id', intval($user_id, 10)));
-
-        $qb->delete('OauthUserMap')->where($and)
-           ->setParameter(':namespace', $this->getHandle())
-           ->execute();
-    }
-
     /**
      * @param \User $user
      * @param       $binding
@@ -136,10 +82,10 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
      */
     public function bindUserID($user_id, $binding)
     {
+
         if (!$binding || !$user_id) {
             return null;
         }
-
         $qb = \Database::connection()->createQueryBuilder();
 
         $or = $qb->expr()->orX();
@@ -378,15 +324,6 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
         }
 
         $this->set('error', $error);
-    }
-
-    public function handle_detach($token=null) {
-        if (!id(new Token)->validate('oauth_detach', $token)) {
-            $this->showError('Invalid token.');
-        } else {
-            $this->unbindUser(new \User);
-            $this->showSuccess('Successfully detached user.');
-        }
     }
 
     public function showError($error = null)

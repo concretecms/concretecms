@@ -15,8 +15,8 @@ class Controller extends GenericOauth2TypeController
     public function getAuthenticationTypeIconHTML()
     {
         return '<div class="ccm-concrete-authentication-type-svg" data-src="/concrete/images/authentication/community/concrete.svg">' .
-        file_get_contents(DIR_BASE_CORE . '/images/authentication/community/concrete.svg') .
-        '</div>';
+                    file_get_contents(DIR_BASE_CORE . '/images/authentication/community/concrete.svg') .
+               '</div>';
     }
 
     public function getHandle()
@@ -52,13 +52,11 @@ class Controller extends GenericOauth2TypeController
     /**
      * @return Array
      */
-    public function getAdditionalRequestParameters()
-    {
+    public function getAdditionalRequestParameters() {
         return array('state' => time());
     }
 
-    public function getExtractor()
-    {
+    public function getExtractor() {
         try {
             return parent::getExtractor();
         } catch (\Exception $e) {
