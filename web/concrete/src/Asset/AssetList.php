@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Asset;
 use Concrete\Core\Foundation\Object as Object;
+use Concrete\Core\Package\Package;
 
 class AssetList {
 	private static $loc = null;
@@ -32,7 +33,12 @@ class AssetList {
 
 		$class = '\\Concrete\\Core\\Asset\\' . Object::camelcase($assetType) . 'Asset';
 		$o = new $class($assetHandle);
-		$o->setPackageObject($pkg);
+        if ($pkg != false) {
+            if (!($pkg instanceof Package)) {
+                $pkg = Package::getByHandle($pkg);
+            }
+    		$o->setPackageObject($pkg);
+        }
 		$o->setAssetIsLocal($args['local']);
 		$o->mapAssetLocation($filename);
 		if ($args['minify'] === true || $args['minify'] === false) {

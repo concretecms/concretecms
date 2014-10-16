@@ -41,7 +41,8 @@
 			if (this.field.val() != searchValue) {
 				if ($.trim(this.field.val()) == '') { 
 					if (this.lutype == 'blocktypes') {
-
+						this.list.find('li').show();
+                        this.list.find('.ccm-panel-add-block-set').show();
 					} else if (this.lutype == 'attributes') {
 						this.list.find('h5').show();
 						this.list.find('li').show();
@@ -104,8 +105,12 @@
 		displayResults: function(scores) {
 			var self = this;
 			if (this.lutype == 'blocktypes') {
-				this.list.children('li').hide();
-				$.each(scores, function(i, score) { self.rows[score[1]].show(); });
+				this.list.find('.ccm-panel-add-block-set').hide();
+				this.list.find('li').hide();
+				$.each(scores, function(i, score) {
+                    self.rows[score[1]].show();
+                    self.rows[score[1]].closest('.ccm-panel-add-block-set').show();
+                });
 			} else if (this.lutype == 'attributes') {
 				/*
 				this.list.children('li').removeClass('ccm-attribute-available');

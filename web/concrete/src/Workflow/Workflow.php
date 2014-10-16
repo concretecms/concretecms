@@ -22,6 +22,26 @@ abstract class Workflow extends Object implements \Concrete\Core\Permission\Obje
 
 	public function getWorkflowID() {return $this->wfID;}
 	public function getWorkflowName() {return $this->wfName;}
+
+	/**
+	* Returns the display name for this workflow (localized and escaped accordingly to $format)
+	* @param string $format = 'html'
+	*	Escape the result in html format (if $format is 'html').
+	*	If $format is 'text' or any other value, the display name won't be escaped.
+	* @return string
+	*/
+    public function getWorkflowDisplayName($format = 'html')
+    {
+        $value = tc('WorkflowName', $this->getWorkflowName());
+        switch ($format) {
+            case 'html':
+                return h($value);
+            case 'text':
+            default:
+                return $value;
+        }
+    }
+
 	public function getWorkflowTypeObject() {
 		return Type::getByID($this->wftID);
 	}

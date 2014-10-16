@@ -225,18 +225,6 @@
                 </attributekey>
             </attributes>
         </page>
-        <page name="Customize" path="/dashboard/pages/themes/customize" filename="/dashboard/pages/themes/customize.php"
-              pagetype="" description="" package="">
-            <attributes>
-                <attributekey handle="meta_keywords">
-                    <value>custom theme, change theme, custom css, css</value>
-                </attributekey>
-                <attributekey handle="exclude_nav">
-                    <value><![CDATA[1]]></value>
-                </attributekey>
-            </attributes>
-        </page>
-
 
         <page name="Page Types" path="/dashboard/pages/types" filename="/dashboard/pages/types/view.php" pagetype=""
               description="" package="">
@@ -421,12 +409,15 @@
                 </attributekey>
             </attributes>
         </page>
-        <!--
+
         <page name="Connect to the Community" path="/dashboard/extend/connect" filename="/dashboard/extend/connect.php"
               pagetype="" description="Connect to the concrete5 community." package="">
             <attributes>
                 <attributekey handle="meta_keywords">
                     <value>concrete5.org, my account, marketplace</value>
+                </attributekey>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
                 </attributekey>
             </attributes>
         </page>
@@ -438,7 +429,7 @@
                 </attributekey>
             </attributes>
         </page>
-        <page name="Get More Add-Ons" path="/dashboard/extend/add-ons" filename="/dashboard/extend/add_ons.php"
+        <page name="Get More Add-Ons" path="/dashboard/extend/addons" filename="/dashboard/extend/addons.php"
               pagetype="" description="Download add-ons from concrete5.org." package="">
             <attributes>
                 <attributekey handle="meta_keywords">
@@ -446,7 +437,7 @@
                 </attributekey>
             </attributes>
         </page>
-        //-->
+
         <page name="System &amp; Settings" path="/dashboard/system" filename="/dashboard/system/view.php" pagetype=""
               description="Secure and setup your site." package="">
             <attributes>

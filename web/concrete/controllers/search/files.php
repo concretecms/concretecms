@@ -171,50 +171,50 @@ class Files extends Controller
         $r = new stdClass();
         $r->field = $field;
         $searchRequest = $this->searchRequest->getSearchRequest();
-        $form = Loader::helper('form');
         $wdt = Loader::helper('form/date_time');
         /* @var $wdt \Concrete\Core\Form\Service\Widget\DateTime */
-        ob_start();
+        $html = '';
         switch ($field) {
-            case 'size': ?>
-                <?=$form->text('size_from', $searchRequest['size_from'], array('style' => 'width:  60px'))?>
-                <?=t('to')?>
-                <?=$form->text('size_to', $searchRequest['size_to'], array('style' => 'width: 60px'))?>
-                <?=t('KB')?>
-                <?php break;
+            case 'size':
+                $form = Loader::helper('form');
+                $html .= $form->text('size_from', $searchRequest['size_from'], array('style' => 'width:  60px'));
+                $html .= t('to');
+                $html .= $form->text('size_to', $searchRequest['size_to'], array('style' => 'width: 60px'));
+                $html .= t('KB');
+                break;
             case 'type':
+                $form = Loader::helper('form');
                 $t1 = FileType::getUsedTypeList();
                 $types = array();
                 foreach ($t1 as $value) {
                     $types[$value] = FileType::getGenericTypeText($value);
                 }
-                print $form->select('type', $types, $searchRequest['type'], array('style' => 'width: 120px'));
+                $html .= $form->select('type', $types, $searchRequest['type'], array('style' => 'width: 120px'));
                 break;
             case 'extension':
+                $form = Loader::helper('form');
                 $ext1 = FileType::getUsedExtensionList();
                 $extensions = array();
                 foreach ($ext1 as $value) {
                     $extensions[$value] = $value;
                 }
-                print $form->select('extension', $extensions, $searchRequest['extensions'], array('style' => 'width: 120px'));
+                $html .= $form->select('extension', $extensions, $searchRequest['extensions'], array('style' => 'width: 120px'));
                 break;
             case 'date_added':
-                echo $wdt->datetime('date_added_from', $wdt->translate('date_added_from', $searchRequest)) . t('to') . $wdt->datetime('date_added_to', $wdt->translate('date_added_to', $searchRequest));
+                $html .= $wdt->datetime('date_added_from', $wdt->translate('date_added_from', $searchRequest)) . t('to') . $wdt->datetime('date_added_to', $wdt->translate('date_added_to', $searchRequest));
                 break;
-            case 'added_to': ?>
-                <?php $ps = Loader::helper("form/page_selector");
-                print $ps->selectPage('ocIDSearchField');
+            case 'added_to':
+                $ps = Loader::helper("form/page_selector");
+                $html .= $ps->selectPage('ocIDSearchField');
                 break;
             default:
                 if (Loader::helper('validation/numbers')->integer($field)) {
                     $ak = FileAttributeKey::getByID($field);
-                    $ak->render('search');
+                    $html .= $ak->render('search', null, true);
                 }
                 break;
         }
-        $contents = ob_get_contents();
-        ob_end_clean();
-        $r->html = $contents;
+        $r->html = $html;
 
         return $r;
     }
@@ -229,6 +229,24 @@ class Files extends Controller
     public function getFields()
     {
         return $this->fields;
+    }
+
+    public static function getSearchFields()
+    {
+        $r = array(
+            'size' => t('Size'),
+            'type' => t('Type'),
+            'extension' => t('Extension'),
+            'date_added' => t('Added Between'),
+            'added_to' => t('Added to Page')
+        );
+        $sfa = FileAttributeKey::getSearchableList();
+        foreach ($sfa as $ak) {
+            $r[$ak->getAttributeKeyID()] = $ak->getAttributeKeyDisplayName();
+        }
+        natcasesort($r);
+
+        return $r;
     }
 
 }

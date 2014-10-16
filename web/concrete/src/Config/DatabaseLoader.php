@@ -28,7 +28,11 @@ class DatabaseLoader implements LoaderInterface
             ->where('configGroup = ?')
             ->setParameter(0, $group);
 
-        $query->andWhere('configNamespace = ?')->setParameter(1, $namespace ?: '');
+        if ($namespace) {
+            $query->andWhere('configNamespace = ?')->setParameter(1, $namespace);
+        } else {
+            $query->andWhere('configNamespace = ? OR configNamespace IS NULL')->setParameter(1, '');
+        }
 
         $results = $query->execute();
 
@@ -58,7 +62,11 @@ class DatabaseLoader implements LoaderInterface
             ->setParameter(0, $group)
             ->setMaxResults(1);
 
-        $query->andWhere('configNamespace = ?')->setParameter(1, $namespace ?: '');
+        if ($namespace) {
+            $query->andWhere('configNamespace = ?')->setParameter(1, $namespace);
+        } else {
+            $query->andWhere('configNamespace = ? OR configNamespace IS NULL')->setParameter(1, '');
+        }
 
         $count = array_shift($query->execute()->fetch());
         return !!$count;

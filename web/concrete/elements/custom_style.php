@@ -307,10 +307,6 @@ $form = Core::make('helper/form');
             <hr/>
 
             <? if ($style instanceof \Concrete\Core\Block\CustomStyle && $canEditCustomTemplate) { ?>
-                <div>
-                    <?=t('Block Name')?>
-                    <?=$form->text('bName', $bName);?>
-                </div>
                 <div class="ccm-inline-select-container">
                     <?=t('Custom Template')?>
                     <select id="bFilename" name="bFilename" class="form-control">

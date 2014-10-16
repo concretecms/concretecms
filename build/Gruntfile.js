@@ -101,7 +101,6 @@ module.exports = function(grunt) {
                 '<%= DIR_BASE %>/concrete/js/build/core/app/custom-style.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/tabs.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/toolbar.js',
-                '<%= DIR_BASE %>/concrete/js/build/core/app/themes.js',
 
                 // Edit Mode
                 '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode/editmode.js',
@@ -282,6 +281,10 @@ module.exports = function(grunt) {
             dest: '<%= DIR_BASE %>/concrete/js/dashboard.js',
             src: '<%= DIR_BASE %>/concrete/js/build/core/dashboard.js'
         },
+        ccm_awesome_rating: {
+            dest: '<%= DIR_BASE %>/concrete/js/jquery-awesome-rating.js',
+            src: '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-awesome-rating/jquery-awesome-rating.js'
+        },
         dynatree: {
             dest: '<%= DIR_BASE %>/concrete/js/dynatree.js',
             src: '<%= DIR_BASE %>/concrete/js/build/vendor/dynatree/dynatree.js'
@@ -322,7 +325,7 @@ module.exports = function(grunt) {
         '<%= DIR_BASE %>/concrete/css/select2.css': '<%= DIR_BASE %>/concrete/css/build/core/select2.less',
         '<%= DIR_BASE %>/concrete/css/jquery-ui.css': '<%= DIR_BASE %>/concrete/css/build/vendor/jquery-ui/jquery-ui.less',
         '<%= DIR_BASE %>/concrete/css/jquery-magnific-popup.css': '<%= DIR_BASE %>/concrete/css/build/vendor/jquery-magnific-popup/jquery-magnific-popup.less',
-        '<%= DIR_BASE %>/concrete/css/jquery-rating.css': '<%= DIR_BASE %>/concrete/css/build/vendor/jquery-rating/jquery-rating.less',
+        '<%= DIR_BASE %>/concrete/css/jquery-awesome-rating.css': '<%= DIR_BASE %>/concrete/css/build/vendor/jquery-awesome-rating/jquery-awesome-rating.less',
         '<%= DIR_BASE %>/concrete/themes/dashboard/main.css': '<%= DIR_BASE %>/concrete/css/build/themes/dashboard/main.less',
         '<%= DIR_BASE %>/concrete/css/style-customizer.css': '<%= DIR_BASE %>/concrete/css/build/core/style-customizer.less',
         '<%= DIR_BASE %>/concrete/css/font-awesome.css': '<%= DIR_BASE %>/concrete/css/build/vendor/font-awesome/font-awesome.less',
@@ -350,6 +353,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-newer');
 
     // Now let's build the final configuration for Grunt.
 
@@ -361,7 +365,7 @@ module.exports = function(grunt) {
     for(var concatKey in concat) {
         if(concat[concatKey].beforeJS) {
             jsTargets.release.push('concat:' + concatKey);
-            jsTargets.debug.push('concat:' + concatKey);
+            jsTargets.debug.push('newer:concat:' + concatKey);
         }
     }
 
@@ -386,12 +390,13 @@ module.exports = function(grunt) {
 
         jsTargets.release.push('uglify:' + key + '_release');
         target.options = {compress: {warnings: true}};
+        target.options.mangle = false;
         target.options.sourceMap = js[key].dest + '.map';
         target.options.sourceMappingURL = target.options.sourceMap.replace(/<%=\s*DIR_BASE\s*%>/g, '<%= DIR_REL %>');
         target.options.sourceMapRoot = '<%= DIR_REL %>/';
         target.options.sourceMapPrefix = 1 + config.DIR_BASE.replace(/\/\/+/g, '/').replace(/[^\/]/g, '').length;
         config.uglify[key + '_debug'] = target;
-        jsTargets.debug.push('uglify:' + key + '_debug');
+        jsTargets.debug.push('newer:uglify:' + key + '_debug');
     }
 
     // Let's define the less section (for generating CSS files)
