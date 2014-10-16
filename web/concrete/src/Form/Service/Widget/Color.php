@@ -30,6 +30,7 @@ class Color
         $defaults['className'] = 'ccm-widget-colorpicker';
         $defaults['showInitial'] = true;
         $defaults['showInput'] = true;
+        $defaults['allowEmpty'] = true;
         $defaults['cancelText'] = t('Cancel');
         $defaults['chooseText'] = t('Choose');
         $defaults['preferredFormat'] = 'rgb';
