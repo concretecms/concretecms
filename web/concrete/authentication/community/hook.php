@@ -1,4 +1,3 @@
-
 <div class="form-group">
         <span>
             <?= t('Attach a community account') ?>
@@ -6,27 +5,48 @@
     <hr>
 </div>
 <div class="form-group">
-    <a href="<?= \URL::to('/system/authentication/community/attempt_attach'); ?>" class="btn btn-primary btn-community">
-        <img src="<?= BASE_URL . DIR_REL ?>/concrete/images/logo.png" class="concrete5-icon"></i>
-        <?= t('Attach a concrete5.org account') ?>
-    </a>
+    <?php
+    if ($attached) {
+        ?>
+        <div class="btn-group">
+            <a href="<?= \URL::to('/system/authentication/community/attempt_attach'); ?>"
+               class="btn btn-primary btn-community" target="_blank">
+                <img src="<?= BASE_URL . DIR_REL ?>/concrete/images/logo.png" class="concrete5-icon"></i>
+                <?= t('Attach a concrete5.org account') ?>
+            </a>
+            <a href="<?= \URL::to(
+                '/login/callback/community/handle_detach',
+                id(new \Concrete\Core\Validation\CSRF\Token)->generate('oauth_detach')); ?>"
+               class="btn btn-danger" target="_blank">
+                <?= t('Detach') ?>
+            </a>
+        </div>
+    <?php
+    } else {
+        ?>
+        <a href="<?= \URL::to('/system/authentication/community/attempt_attach'); ?>"
+           class="btn btn-primary btn-community" target="_blank">
+            <img src="<?= BASE_URL . DIR_REL ?>/concrete/images/logo.png" class="concrete5-icon"></i>
+            <?= t('Attach a concrete5.org account') ?>
+        </a>
+    <?php
+    }
+    ?>
 </div>
 
 <style>
     .ccm-ui .btn-community {
-        border-width: 0px;
-        background: rgb(31,186,232);
-        background: -moz-linear-gradient(top, rgba(31,186,232,1) 0%, rgba(18,155,211,1) 100%); /* FF3.6+ */
-        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(31,186,232,1)), color-stop(100%,rgba(18,155,211,1)));
-        background: -webkit-linear-gradient(top, rgba(31,186,232,1) 0%,rgba(18,155,211,1) 100%);
-        background: -o-linear-gradient(top, rgba(31,186,232,1) 0%,rgba(18,155,211,1) 100%);
-        background: -ms-linear-gradient(top, rgba(31,186,232,1) 0%,rgba(18,155,211,1) 100%);
-        background: linear-gradient(to bottom, rgba(31,186,232,1) 0%,rgba(18,155,211,1) 100%);
-        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1fbae8', endColorstr='#129bd3',GradientType=0 );
+        border-color: transparent;
+        background: rgb(31, 186, 232);
+    }
+
+    .ccm-ui .btn-community:hover {
+        background: rgb(28, 163, 205);
+        border-color: transparent;
     }
 
     img.concrete5-icon {
-        width: 20px;
-        margin-right:5px;
+        height: 18px;
+        margin-right: 5px;
     }
 </style>
