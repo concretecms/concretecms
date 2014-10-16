@@ -243,7 +243,10 @@ $(function() {
 			title: '<?=t('Change Password')?>',
 			width: '280',
 			height: '220',
-			modal: true
+			modal: true,
+            close: function() {
+                $(this).find('input[type=password]').val('');
+            }
 		});
 		return false;
 	});
