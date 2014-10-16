@@ -49,8 +49,8 @@ $req = $flr->getSearchRequest();
     <div class="ccm-search-fields-row">
         <div class="form-group form-group-full">
         <?php echo $form->label('fsID', t('File Set'))?>
-        <div class="ccm-search-field-content">
-        <select multiple name="fsID[]" class="select2-select" style="width: 100%">
+			<div class="ccm-search-field-content ccm-search-field-content-select2">
+        <select multiple name="fsID[]" class="select2-select" style="width: 360px">
             <optgroup label="<?php echo t('Sets')?>">
             <?php foreach ($s1 as $s) { ?>
                 <option value="<?php echo $s->getFileSetID()?>"  <?php if (is_array($req['fsID']) && in_array($s->getFileSetID(), $req['fsID'])) { ?> selected="selected" <?php } ?>><?php echo wordwrap($s->getFileSetName(), '23', '&shy;', true)?></option>
@@ -65,6 +65,9 @@ $req = $flr->getSearchRequest();
     </div>
     <?php } ?>
     <div class="ccm-search-fields-advanced"></div>
+    <div class="ccm-search-fields-submit">
+        <button type="submit" class="btn btn-primary pull-right"><?=t('Search')?></button>
+    </div>
 </form>
 </script>
 
