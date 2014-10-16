@@ -31,7 +31,8 @@ class PageSelector
         }
 
         // prevent that fieldnames such as 'field[2]' throw errors
-        $safeFieldName = preg_replace('/[^\w\.\-_]/', "", $fieldName);
+        $identifier = new \Concrete\Core\Utility\Service\Identifier();
+        $safeFieldName = $identifier->getString(32);
 
         $html = '';
         $clearStyle = 'display: none';
