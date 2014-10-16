@@ -169,7 +169,7 @@ if ($cms->isRunThroughCommandLineInterface()) {
  * ----------------------------------------------------------------------------
  * If not through CLI, load up the application/bootstrap/app.php
  */
-@include DIR_APPLICATION . '/bootstrap/app.php';
+include DIR_APPLICATION . '/bootstrap/app.php';
 
 
 /**

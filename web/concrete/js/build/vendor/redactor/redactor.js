@@ -7604,6 +7604,11 @@
                     + '</label>'
                     + '</div>'
                     + '</div>'
+                    + '<div class="form-group">'
+                        + '<label class="control-label"> ' + this.opts.curLang.link_type + '</label>'
+                        + '<div class="radio"><label><input type="radio" id="redactor_link_image" name="redactor_link_type" value="image"> ' + this.opts.curLang.link_type_image + ' </label></div>'
+                        + '<div class="radio"><label><input type="radio" id="redactor_link_ajax" name="redactor_link_type" value="ajax" checked> ' + this.opts.curLang.link_type_ajax + ' </label></div>'
+                    + '</div>'
                     /* end concrete5 */
                 + '</section>'
                 + '<footer>'
