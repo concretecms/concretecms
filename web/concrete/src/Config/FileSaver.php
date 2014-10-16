@@ -46,7 +46,17 @@ class FileSaver implements SaverInterface
 
         $current = array();
         if ($this->files->exists($file)) {
-            $current = $this->files->getRequire($file);
+            if (\Config::get('concrete.config.temp_save', true)) {
+                // Make sure that we miss cache.
+                $temp_file = tempnam($path, $group . '_');
+                $contents = $this->files->get($file);
+                $this->files->put($temp_file, $contents);
+
+                $current = $this->files->getRequire($temp_file);
+                $this->files->delete($temp_file);
+            } else {
+                $current = $this->files->getRequire($file);
+            }
         }
 
         array_set($current, $item, $value);
@@ -59,7 +69,7 @@ class FileSaver implements SaverInterface
             "/**",
             " * -----------------------------------------------------------------------------",
             " * Generated " . date(DATE_ATOM),
-            "",
+            " *",
             " * @item      {$item}",
             " * @group     {$group}",
             " * @namespace {$ns_string}",

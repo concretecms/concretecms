@@ -3,12 +3,16 @@
 $json = Loader::helper('json');
 ?>
 <style>
-i.handle {
-    cursor:move;
-}
-tbody tr {
-    cursor:pointer;
-}
+    .table.authentication-types i.handle {
+        cursor:move;
+    }
+    .table.authentication-types tbody tr {
+        cursor:pointer;
+    }
+    .table.authentication-types .ccm-concrete-authentication-type-svg > svg {
+        width:20px;
+        display:inline-block;
+    }
 </style>
 <?php
 
@@ -19,7 +23,7 @@ if ($editmode) {
 if (!$editmode) {
     ?>
     <fieldset>
-        <table class="table">
+        <table class="table authentication-types">
             <thead>
                 <tr>
                     <th></th>
@@ -34,9 +38,12 @@ if (!$editmode) {
                     ?><tr
                         data-authID="<?=$at->getAuthenticationTypeID()?>"
                         data-editURL="<?=h($view->action('edit', $at->getAuthenticationTypeID()))?>"
-                        class="<?=$at->isEnabled() ? 'success' : 'error'?>"
-                    >
-                        <td style="text-align: center; width: 50px"><?=$at->getAuthenticationTypeIconHTML()?></td>
+                        class="<?=$at->isEnabled() ? 'success' : 'error'?>">
+                        <td style="overflow:hidden; text-align: center; width: 50px">
+                            <div style='height:15px'>
+                                <?=$at->getAuthenticationTypeIconHTML()?>
+                            </div>
+                        </td>
                         <td style="width: 100px"><?=$at->getAuthenticationTypeID()?></td>
                         <td><?=$at->getAuthenticationTypeHandle()?></td>
                         <td><?=$at->getAuthenticationTypeName()?></td>

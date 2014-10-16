@@ -43,12 +43,16 @@ $th = Loader::helper('text');
             </div>
 
             <div class="ccm-search-fields-row">
-                <div class="form-group form-group-full">
+                <div class="form-group">
                     <?=$form->label('level', t('Level'))?>
                     <div class="ccm-search-field-content">
-                        <?=$form->selectMultiple('level', $levels, array_keys($levels), array('style'=>"width:100%"))?>
+                        <?=$form->selectMultiple('level', $levels, array_keys($levels), array('style' => 'width: 360px'))?>
                     </div>
                 </div>
+            </div>
+
+            <div class="ccm-search-fields-submit">
+                <button type="submit" class="btn btn-primary pull-right"><?=t('Search')?></button>
             </div>
 
         </form>
