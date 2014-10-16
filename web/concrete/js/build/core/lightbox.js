@@ -3,7 +3,7 @@
  */
 !function(global, $) {
     'use strict';
-    $('a[data-concrete5-link-launch="lightbox-image"]').each(function() {
+    $('a[data-concrete5-link-launch="lightbox-image"],a[data-concrete5-link-launch="lightbox"]').each(function() {
         var me = $(this),
             type = me.data('concrete5-link-type') || 'ajax';
         me.magnificPopup({
