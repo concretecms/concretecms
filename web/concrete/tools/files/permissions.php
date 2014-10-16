@@ -70,8 +70,8 @@ if ($_POST['task'] == 'set_location') {
 <?=$form->text('fPassword', $f->getPassword(), array('style' => 'width: 250px'))?>
 
 <div id="ccm-file-password-buttons"  style="display: none">
-	<button onclick="jQuery.fn.dialog.closeTop()" class="btn btn-default pull-left"><?=t('Cancel')?></button>
-	<button onclick="$('form[data-dialog-form=file-password]').submit()" class="btn btn-primary pull-right"><?=t('Save Password')?></i></button>
+	<button type="button" onclick="jQuery.fn.dialog.closeTop()" class="btn btn-default pull-left"><?=t('Cancel')?></button>
+	<button type="button" onclick="$('form[data-dialog-form=file-password]').submit()" class="btn btn-primary pull-right"><?=t('Save Password')?></i></button>
 </div>
 
 </form>
@@ -99,8 +99,8 @@ foreach($locations as $fsl) { ?>
 </form>
 
 <div id="ccm-file-storage-buttons" style="display: none">
-	<button onclick="jQuery.fn.dialog.closeTop()" class="btn btn-default pull-left"><?=t('Cancel')?></button>
-	<button onclick="$('form[data-dialog-form=file-storage]').submit()" class="btn btn-primary pull-right"><?=t('Save Location')?></i></button>
+	<button type="button" onclick="jQuery.fn.dialog.closeTop()" class="btn btn-default pull-left"><?=t('Cancel')?></button>
+	<button type="button" onclick="$('form[data-dialog-form=file-storage]').submit()" class="btn btn-primary pull-right"><?=t('Save Location')?></i></button>
 
 </div>
 
@@ -144,7 +144,7 @@ $(function() {
 <? } ?>
 
 	ccm_filePermissionsSetupButtons();
-	$('form[data-dialog-form=file-storage],form[data-dialog-form=file-password]').concreteAjaxForm();
+	//$('form[data-dialog-form=file-storage],form[data-dialog-form=file-password]').concreteAjaxForm();
 });
 	
 </script>
