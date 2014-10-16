@@ -76,7 +76,11 @@
             // move the toolbar back into the form so it submits. so great.
             obj.$toolbar.hide().prependTo('#ccm-block-form');
             $('#ccm-block-form').submit();
-            obj.$cancelbtn.click();
+            ConcreteEvent.unsubscribe('EditModeExitInlineComplete.layouts');
+            ConcreteEvent.on('EditModeExitInlineComplete.layouts', function (e, data) {
+                obj._rescanAreasInPage(e, data);
+            });
+            ConcreteEvent.fire('EditModeExitInline');
         });
     };
 
