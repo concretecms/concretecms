@@ -3,12 +3,16 @@
 $json = Loader::helper('json');
 ?>
 <style>
-i.handle {
-    cursor:move;
-}
-tbody tr {
-    cursor:pointer;
-}
+    .table.authentication-types i.handle {
+        cursor:move;
+    }
+    .table.authentication-types tbody tr {
+        cursor:pointer;
+    }
+    .table.authentication-types .ccm-concrete-authentication-type-svg > svg {
+        width:20px;
+        display:inline-block;
+    }
 </style>
 <?php
 
@@ -19,7 +23,7 @@ if ($editmode) {
 if (!$editmode) {
     ?>
     <fieldset>
-        <table class="table">
+        <table class="table authentication-types">
             <thead>
                 <tr>
                     <th></th>

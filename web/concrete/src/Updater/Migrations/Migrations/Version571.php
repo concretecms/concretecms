@@ -20,6 +20,7 @@ class Version571 extends AbstractMigration
         /** @todo Add marketplace single pages */
         /** @todo Install the community authentication type */
         /** @todo delete customize page themes dashboard single page */
+        /** @todo Add auth types ("handle|name") "twitter|Twitter" and "community|concrete5.org" */
     }
 
     public function down(Schema $schema)
