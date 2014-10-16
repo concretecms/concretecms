@@ -45,6 +45,10 @@ $req = $flr->getSearchRequest();
 	</ul>
 	</div>
 	<div class="ccm-search-fields-advanced"></div>
+    <div class="ccm-search-fields-submit">
+        <button type="submit" class="btn btn-primary pull-right"><?=t('Search')?></button>
+    </div>
+
 </form>
 </script>
 

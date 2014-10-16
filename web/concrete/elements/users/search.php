@@ -62,7 +62,7 @@ $searchRequest = $flr->getSearchRequest();
             $g1 = $gl->getResults();
             ?>
 			<div class="ccm-search-field-content">
-			<select multiple name="gID[]" class="select2-select" style="width: 100%">
+			<select multiple name="gID[]" class="select2-select" style="width: 360px">
 				<?php foreach ($g1 as $g) {
                     $gp = new Permissions($g);
                     if ($gp->canSearchUsersInGroup($g)) {
@@ -76,6 +76,9 @@ $searchRequest = $flr->getSearchRequest();
 		</div>
 	</div>
 	<div class="ccm-search-fields-advanced"></div>
+    <div class="ccm-search-fields-submit">
+        <button type="submit" class="btn btn-primary pull-right"><?=t('Search')?></button>
+    </div>
 </form>
 </script>
 
