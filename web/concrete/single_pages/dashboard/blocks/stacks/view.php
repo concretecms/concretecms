@@ -286,11 +286,7 @@ if ($controller->getTask() == 'view_details') {
                     url: "<?=$sortURL?>",
                     data: pagelist,
                     success: function(r) {
-                        if (r.success) {
-                            ccmAlert.hud(r.message, 2000, "success");
-                        } else {
-                            ccmAlert.hud(r.message, 2000, "error");
-                        }
+
                     }
                 });
             }
