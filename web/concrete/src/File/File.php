@@ -193,6 +193,10 @@ class File implements \Concrete\Core\Permission\ObjectInterface
     {
         $fh = Loader::helper('concrete/file');
         $currentLocation = $this->getFileStorageLocationObject();
+        if ($newLocation->getID() == $currentLocation->getID()) {
+            return false;
+        }
+
         $currentFilesystem = $currentLocation->getFileSystemObject();
 
         $newFileSystem = $newLocation->getFileSystemObject();
