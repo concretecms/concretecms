@@ -30,25 +30,28 @@ class PageSelector
             }
         }
 
+        // prevent that fieldnames such as 'field[2]' throw errors
+        $safeFieldName = preg_replace('/[^\w\.\-_]/', "", $fieldName);
+
         $html = '';
         $clearStyle = 'display: none';
-        $html .= '<div class="ccm-summary-selected-item" data-page-selector="' . $fieldName . '"><div class="ccm-summary-selected-item-inner"><strong class="ccm-summary-selected-item-label">';
+        $html .= '<div class="ccm-summary-selected-item" data-page-selector="' . $safeFieldName . '"><div class="ccm-summary-selected-item-inner"><strong class="ccm-summary-selected-item-label">';
         if ($selectedCID > 0) {
             $oc = Page::getByID($selectedCID);
             $html .= $oc->getCollectionName();
             $clearStyle = '';
         }
         $html .= '</strong></div>';
-        $html .= '<a class="ccm-sitemap-select-page" data-page-selector-launch="' . $fieldName . '" dialog-width="90%" dialog-height="70%" dialog-append-buttons="true" dialog-modal="false" dialog-title="' . t(
+        $html .= '<a class="ccm-sitemap-select-page" data-page-selector-launch="' . $safeFieldName . '" dialog-width="90%" dialog-height="70%" dialog-append-buttons="true" dialog-modal="false" dialog-title="' . t(
                 'Choose Page') . '" href="' . REL_DIR_FILES_TOOLS_REQUIRED . '/sitemap_search_selector?cID=' . $selectedCID . '" dialog-on-close="Concrete.event.fire(\'fileselectorclose\', \'{$fieldName}\');">' . t(
                 'Select Page') . '</a>';
-        $html .= '&nbsp;<a href="javascript:void(0)" dialog-sender="' . $fieldName . '" data-page-selector-clear="' . $fieldName . '" class="ccm-sitemap-clear-selected-page" style="float: right; margin-top: -8px;' . $clearStyle . '"><img src="' . ASSETS_URL_IMAGES . '/icons/remove.png" style="vertical-align: middle; margin-left: 3px" /></a>';
-        $html .= '<input type="hidden" data-page-selector="cID" name="' . $fieldName . '" value="' . $selectedCID . '"/>';
+        $html .= '&nbsp;<a href="javascript:void(0)" dialog-sender="' . $safeFieldName . '" data-page-selector-clear="' . $safeFieldName . '" class="ccm-sitemap-clear-selected-page" style="float: right; margin-top: -8px;' . $clearStyle . '"><img src="' . ASSETS_URL_IMAGES . '/icons/remove.png" style="vertical-align: middle; margin-left: 3px" /></a>';
+        $html .= '<input type="hidden" data-page-selector="cID" name="' . $fieldName . '" value="' . $selectedCID . '"/>'; // << don't use $safeFieldName here, but use the original one
         $html .= '</div>';
         $html .= "<script type=\"text/javascript\">
                    $(function() {
                         var ccmActivePageField;
-                        var launcher = $('a[data-page-selector-launch=\"{$fieldName}\"]'), name = '{$fieldName}', openEvent, openEvent2;
+                        var launcher = $('a[data-page-selector-launch=\"{$safeFieldName}\"]'), name = '{$safeFieldName}', openEvent, openEvent2;
                         var container = $('div[data-page-selector=\"' + name + '\"]');
                         launcher.dialog();
                         ConcreteEvent.bind('fileselectorclose', function(field_name) {
@@ -85,8 +88,8 @@ class PageSelector
                             });
                         });
 
-                        $('a[data-page-selector-clear={$fieldName}]').click(function () {
-                            var container = $('div[data-page-selector={$fieldName}]');
+                        $('a[data-page-selector-clear={$safeFieldName}]').click(function () {
+                            var container = $('div[data-page-selector={$safeFieldName}]');
                             container.find('.ccm-summary-selected-item-label').html('');
                             container.find('.ccm-sitemap-clear-selected-page').hide();
                             container.find('input[data-page-selector=cID]').val('');
