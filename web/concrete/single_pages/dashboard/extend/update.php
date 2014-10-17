@@ -42,7 +42,7 @@ if (!$tp->canInstallPackages()) { ?>
 			<table class="table update-addons-table">
 			<? foreach($pkgRemote as $pkg) {
 
-				$rpkg = MarketplaceRemoteItem::getByHandle($pkg->getPackageHandle());
+				$rpkg = \Concrete\Core\Marketplace\RemoteItem::getByHandle($pkg->getPackageHandle());
 			?>
 
 				<tr>
