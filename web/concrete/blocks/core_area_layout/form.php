@@ -10,7 +10,7 @@
 	$presets = AreaLayoutPreset::getList();
 ?>
 
-<ul id="ccm-layouts-toolbar" data-bid="<?= $bID ?>" class="ccm-inline-toolbar ccm-ui">
+<ul id="ccm-layouts-toolbar" class="ccm-inline-toolbar ccm-ui">
 	<li class="ccm-sub-toolbar-text-cell">
 		<label for="useThemeGrid"><?=t("Grid:")?></label>
 		<select name="gridType" id="gridType" style="width: auto !important">
@@ -61,7 +61,7 @@
 		if ($bp->canDeleteBlock()) {
 			$deleteMessage = t('Do you want to delete this layout? This will remove all blocks inside it.');
 			?>
-			<li class="ccm-inline-toolbar-icon-cell"><a href="#" data-menu-action="delete-layout" data-message="<?=$deleteMessage?>"><i class="fa fa-trash-o"></i></a></li>
+			<li class="ccm-inline-toolbar-icon-cell"><a href="#" data-menu-action="delete-layout"><i class="fa fa-trash-o"></i></a></li>
 		<? } ?>
 	<? } ?>
 
@@ -91,6 +91,23 @@ if ($controller->getTask() == 'edit') {
 ?>
 
 $(function() {
+
+	<?
+	if ($controller->getTask() == 'edit') { ?>
+	$('#ccm-layouts-toolbar').on('click', 'a[data-menu-action=delete-layout]', function(e) {
+		var editor = new Concrete.getEditMode(),
+			area = editor.getAreaByID(<?=$a->getAreaID()?>),
+			block = area.getBlockByID(<?=$b->getBlockID()?>);
+
+		ConcreteEvent.subscribe('EditModeBlockDeleteComplete', function() {
+			editor.destroyInlineEditModeToolbars();
+			ConcreteEvent.unsubscribe('EditModeBlockDeleteComplete');
+		});
+
+		Concrete.event.fire('EditModeBlockDelete', {message: '<?=$deleteMessage?>', block: block, event: e});
+		return false;
+	});
+	<? } ?>
 	$('[data-input=number]').each(function() {
 		var $spin = $(this);
 		$(this).spinner({

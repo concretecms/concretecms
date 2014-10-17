@@ -45,29 +45,20 @@
             var my = this, options = my.options, global = ConcreteMenuManager;
 
             if (!global.$clickProxy) {
-                (function () {
-                    var disabled = false;
-                    Concrete.event.bind('EditModeBlockEditInline', function (event, data) {
-                        disabled = true;
-                    }).bind('EditModeExitInline', function (event, data) {
-                        disabled = false;
-                    });
-
-                    global.$clickProxy = $("<div />", {'id': 'ccm-menu-click-proxy'});
-                    global.$clickProxy.on('mouseout.concreteMenuProxy', function (e) {
-                        var menu = global.hoverMenu;
-                        !disabled && menu.mouseout(e);
-                    });
-                    global.$clickProxy.on('mouseover.concreteMenuProxy', function (e) {
-                        var menu = global.hoverMenu;
-                        !disabled && menu.mouseover(e);
-                    });
-                    global.$clickProxy.on('click.concreteMenuProxy', function (e) {
-                        var menu = global.hoverMenu;
-                        !disabled && menu.show(e);
-                    });
-                    $(document.body).append(global.$clickProxy);
-                }());
+                global.$clickProxy = $("<div />", {'id': 'ccm-menu-click-proxy'});
+                global.$clickProxy.on('mouseout.concreteMenuProxy', function (e) {
+                    var menu = global.hoverMenu;
+                    menu.mouseout(e);
+                });
+                global.$clickProxy.on('mouseover.concreteMenuProxy', function (e) {
+                    var menu = global.hoverMenu;
+                    menu.mouseover(e);
+                });
+                global.$clickProxy.on('click.concreteMenuProxy', function (e) {
+                    var menu = global.hoverMenu;
+                    menu.show(e);
+                });
+                $(document.body).append(global.$clickProxy);
             }
             if (!global.$highlighter) {
                 global.$highlighter = $("<div />", {'id': 'ccm-menu-highlighter'});
