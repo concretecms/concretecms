@@ -449,14 +449,9 @@
             return panel;
         },
 
-        getAreaByID: function editmodeGetAreaByID(area_id) {
+        getAreaByID: function areaGetByID(arID) {
             var areas = this.getAreas();
-            return _.findWhere(areas, {id: parseInt(area_id, 10)});
-        },
-
-        getBlockByID: function editmodeGetBlockByID(block_id) {
-            var blocks = this.getBlocks();
-            return _.findWhere(blocks, {id: parseInt(block_id, 10)});
+            return _.findWhere(areas, {id: parseInt(arID)});
         },
 
         /**
