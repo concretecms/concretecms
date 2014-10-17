@@ -49,18 +49,22 @@ if ($controller->getTask() == 'view_details') {
         </li>
 
         <li><a dialog-width="640" dialog-height="340" class="dialog-launch" id="stackVersions" dialog-title="<?=t('Version History')?>" href="<?=URL::to('/ccm/system/panels/page/versions')?>?cID=<?=$stack->getCollectionID()?>"><?=t('Version History')?></a></li>
-        <? if ($cpc->canEditPageProperties()) { ?>
+        <? if ($cpc->canEditPageProperties() && $stack->getStackType() != \Concrete\Core\Page\Stack\Stack::ST_TYPE_GLOBAL_AREA) { ?>
             <li><a href="<?=$view->action('rename', $stack->getCollectionID())?>"><?=t('Rename')?></a></li>
         <? } ?>
         <? if ($cpc->canEditPagePermissions() && Config::get('concrete.permissions.model') == 'advanced') { ?>
             <li><a dialog-width="580" class="dialog-launch" dialog-append-buttons="true" dialog-height="420" dialog-title="<?=t('Stack Permissions')?>" id="stackPermissions" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup?cID=<?=$stack->getCollectionID()?>&arHandle=<?=STACKS_AREA_NAME?>&atask=groups"><?=t('Permissions')?></a></li>
         <? } ?>
 
-        <? if ($cpc->canMoveOrCopyPage()) { ?>
+        <? if ($cpc->canMoveOrCopyPage() && $stack->getStackType() != \Concrete\Core\Page\Stack\Stack::ST_TYPE_GLOBAL_AREA) { ?>
             <li><a href="<?=$view->action('duplicate', $stack->getCollectionID())?>" style="margin-right: 4px;"><?=t('Duplicate Stack')?></a></li>
         <? } ?>
         <? if ($cpc->canDeletePage()) { ?>
-            <li><a href="javascript:void(0)" data-dialog="delete-stack"><span class="text-danger"><?=t('Delete Stack')?></span></a></li>
+            <? if ($stack->getStackType() == \Concrete\Core\Page\Stack\Stack::ST_TYPE_GLOBAL_AREA) { ?>
+                <li><a href="javascript:void(0)" data-dialog="delete-stack"><span class="text-danger"><?=t('Clear Global Area')?></span></a></li>
+            <? } else { ?>
+                <li><a href="javascript:void(0)" data-dialog="delete-stack"><span class="text-danger"><?=t('Delete Stack')?></span></a></li>
+            <? } ?>
         <? } ?>
     </ul>
     <? if ($showApprovalButton) { ?>

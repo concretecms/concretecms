@@ -32,6 +32,9 @@ class AreaAssignment extends Assignment {
 		if ($a->isGlobalArea()) {
 			$cx = Stack::getByName($a->getAreaHandle());
 			$a = Area::get($cx, STACKS_AREA_NAME);
+            if (!is_object($a)) {
+                return false;
+            }
 		}
 
 		if ($a instanceof SubArea && !$a->overrideCollectionPermissions()) {
