@@ -6458,6 +6458,12 @@
                 } else {
                     $('#redactor_link_ajax').prop('checked', true);
                 }
+
+                if ($('#redactor_link_lightbox').is(':checked')) {
+                    $('.ccm-redactor-link-type').show();
+                } else {
+                    $('.ccm-redactor-link-type').hide();
+                }
                 /* end concrete5 */
 
                 var thref = self.location.href.replace(/\/$/i, '');
@@ -7081,6 +7087,12 @@
                     lightbox = true;
                 }
 
+                if (lightbox) {
+                    $('.ccm-redactor-link-type').show();
+                } else {
+                    $('.ccm-redactor-link-type').hide();
+                }
+
                 var type = $('#redactor_link_image').is(':checked') ? 'image' : 'ajax';
                 /* end concrete5 */
 
@@ -7502,15 +7514,15 @@
                             + '<a href="#" data-action="choose-link-from-sitemap" class="btn btn-default input-group-addon"><i class="fa fa-search"></i></a>'
                     + '</div></div>'
                     + '<div class="form-group">'
-                        + '<label class="control-label"> ' + this.opts.curLang.link_type + '</label>'
-                        + '<div class="radio"><label><input type="radio" id="redactor_link_image" name="redactor_link_type" value="image"> ' + this.opts.curLang.link_type_image + ' </label></div>'
-                        + '<div class="radio"><label><input type="radio" id="redactor_link_ajax" name="redactor_link_type" value="ajax" checked> ' + this.opts.curLang.link_type_ajax + ' </label></div>'
-                    + '</div>'
-                    + '<div class="form-group">'
                         + '<label class="control-label"> ' + this.opts.curLang.open_link + '</label>'
                         + '<div class="radio"><label><input type="radio" id="redactor_link_default" name="redactor_open_link_behavior" value="default"> ' + this.opts.curLang.default_behavior + ' </label></div>'
                         + '<div class="radio"><label><input type="radio" id="redactor_link_lightbox" name="redactor_open_link_behavior" value="lightbox"> ' + this.opts.curLang.in_lightbox + ' </label></div>'
                         + '<div class="radio"><label><input type="radio" id="redactor_link_blank" name="redactor_open_link_behavior" value="blank"> ' + this.opts.curLang.link_new_tab + '</label></div>'
+                    + '</div>'
+                    + '<div class="form-group ccm-redactor-link-type" style="display:none">'
+                        + '<label class="control-label"> ' + this.opts.curLang.link_type + '</label>'
+                        + '<div class="radio"><label><input type="radio" id="redactor_link_image" name="redactor_link_type" value="image"> ' + this.opts.curLang.link_type_image + ' </label></div>'
+                        + '<div class="radio"><label><input type="radio" id="redactor_link_ajax" name="redactor_link_type" value="ajax" checked> ' + this.opts.curLang.link_type_ajax + ' </label></div>'
                     + '</div>'
                     + '<div class="form-group">'
                     + '<label>' + this.opts.curLang.image_position + '</label>'
@@ -7604,7 +7616,7 @@
                     + '</label>'
                     + '</div>'
                     + '</div>'
-                    + '<div class="form-group">'
+                    + '<div class="form-group ccm-redactor-link-type" style="display:none">'
                         + '<label class="control-label"> ' + this.opts.curLang.link_type + '</label>'
                         + '<div class="radio"><label><input type="radio" id="redactor_link_image" name="redactor_link_type" value="image"> ' + this.opts.curLang.link_type_image + ' </label></div>'
                         + '<div class="radio"><label><input type="radio" id="redactor_link_ajax" name="redactor_link_type" value="ajax" checked> ' + this.opts.curLang.link_type_ajax + ' </label></div>'
@@ -7736,6 +7748,15 @@
                     e.preventDefault();
                 }
             }, this));
+
+            var lightbox_link = $('#redactor_link_lightbox');
+            var all_links = $('#redactor_link_lightbox, input[name=redactor_open_link_behavior]').change(function() {
+                if (lightbox_link.prop('checked') || all_links.filter(':checked').is(lightbox_link)) {
+                    $('.ccm-redactor-link-type').show();
+                } else {
+                    $('.ccm-redactor-link-type').hide();
+                }
+            });
 
             return this.$redactorModal;
 
