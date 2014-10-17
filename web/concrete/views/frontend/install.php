@@ -370,6 +370,12 @@ $(function() {
     <td><? if (!$finfoTest) { ?><i class="fa fa-question-circle launch-tooltip" title="<?=t('You must enable PHP\'s Fileinfo Extension.')?>"></i><? } ?></td>
 </tr>
 
+<tr>
+    <td><? if ($aspTagsTest) { ?><i class="fa fa-check"></i><? } else { ?><i class="fa fa-exclamation-circle"></i><? } ?></td>
+    <td width="100%"><?=t('ASP Style Tags Disabled')?></td>
+    <td><? if (!$aspTagsTest) { ?><i class="fa fa-question-circle launch-tooltip" title="<?=t('You must disable PHP\'s ASP Style Tags.')?>"></i><? } ?></td>
+</tr>
+
 </table>
 
 </div>
@@ -405,6 +411,11 @@ $(function() {
     <td width="100%"><?=t('Internationalization Support')?>
     </td>
     <td><? if (!$i18nTest) { ?><i class="fa fa-question-circle launch-tooltip" title="<?=t('You must enable ctype support in your copy of PHP.')?>"></i><? } ?></td>
+</tr>
+<tr>
+    <td><? if ($docCommentTest) { ?><i class="fa fa-check"></i><? } else { ?><i class="fa fa-exclamation-circle"></i><? } ?></td>
+    <td width="100%"><?=t('PHP Comments Preserved')?>
+    <td><? if (!$docCommentTest) { ?><i class="fa fa-question-circle launch-tooltip" title="<?=t('concrete5 is not compatible with opcode caches that strip PHP comments. Certain configurations of eAccelerator and Zend opcode caching may use this behavior, and it must be disabled.')?>"></td><? } ?></td>
 </tr>
 </table>
 
@@ -485,8 +496,7 @@ $(function() {
                             Your memory limit is currently %sMB. You may experience problems uploading and resizing large images, and may have to install concrete5 without sample content.', round(Core::make('helper/number')->formatSize($memoryBytes, 'MB'), 2))?></span>
                         <? } ?>
                         <? if ($memoryTest === 1) { ?>
-                            <span class="text-success"><?=t('concrete5 runs best with at least 64MB of RAM.
-                            Your memory limit is currently %sMB.', round(Core::make('helper/number')->formatSize($memoryBytes, 'MB'), 2))?></span>
+                            <span class="text-success"><?=t('Memory limit %sMB.', round(Core::make('helper/number')->formatSize($memoryBytes, 'MB'), 2))?></span>
                         <? } ?>
 
                     </td>
@@ -515,7 +525,8 @@ $(function() {
 </div>
 
 <div class="alert alert-info">
-<?=t('Having trouble? Check the <a href="%s">installation help forums</a>, or <a href="%s">have us host a copy</a> for you.', 'http://www.concrete5.org/community/forums/installation', 'http://www.concrete5.org/services/hosting')?>
+<? $install_forum_url = tc('InstallationHelpForums', 'http://www.concrete5.org/community/forums/installation')?>
+<?=t('Having trouble? Check the <a href="%s">installation help forums</a>, or <a href="%s">have us host a copy</a> for you.', $install_forum_url, 'http://www.concrete5.org/services/hosting')?>
 </div>
 </div>
 </div>

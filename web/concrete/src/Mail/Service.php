@@ -450,6 +450,7 @@ class Service
 
             $text = new MimePart($this->body);
             $text->type = "text/plain";
+            $text->charset = APP_CHARSET;
 
             $body = new MimeMessage();
             $body->setParts(array($text));
@@ -457,6 +458,7 @@ class Service
             if ($this->bodyHTML != false) {
                 $html = new MimePart($this->bodyHTML);
                 $html->type = "text/html";
+                $html->charset = APP_CHARSET;
                 $body->addPart($html);
             }
 

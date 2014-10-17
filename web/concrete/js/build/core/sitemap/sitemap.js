@@ -12,7 +12,7 @@
 			displayNodePagination: false,
 			cParentID: 0,
 			includeSystemPages: false,
-			displaySingleLevel: false,
+            displaySingleLevel: false
 		}, options);
 		my.options = options;
 		my.$element = $element;
@@ -48,6 +48,9 @@
 			}
     		$(my.$element).addClass('ccm-tree-sitemap');
     		$(my.$element).dynatree({
+                onQueryExpand: function () {
+                    (my.options.onQueryExpand || $.noop).apply(this, arguments);
+                },
 				autoFocus: false,
 				cookieId: 'ConcreteSitemap',
 				cookie: {
@@ -61,7 +64,7 @@
 						'cParentID': my.options.cParentID,
 						'displaySingleLevel': my.options.displaySingleLevel ? 1 : 0,
 						'includeSystemPages': my.options.includeSystemPages ? 1 : 0
-					},
+					}
 
 				},
 				onPostInit: function() {
@@ -69,6 +72,9 @@
 						my.setupNodePagination(my.$element, my.options.cParentID);
 					}
 				},
+                onRender: function() {
+                    my.$element.children('.ccm-pagination-bound').remove();
+                },
 				selectMode: 1,
 				minExpandLevel:  minExpandLevel,
 				clickFolderMode: 2,
@@ -107,7 +113,9 @@
 						}
 					} else if (node.data.href) {
 						window.location.href = node.data.href;
-					}
+                    } else if (node.data.displaySingleLevel) {
+                        my.displaySingleLevel(node);
+                    }
 				},
 				fx: {height: 'toggle', duration: 200},
 				dnd: {
@@ -240,10 +248,10 @@
 
     	setupNodePagination: function($tree, nodeKey) {
     		//var tree = $tree.dynatree('getTree');
-    		var pg = $tree.find('span.ccm-sitemap-explore-paging');
-    		$tree.find('div.ccm-pagination-bound').remove();
+    		var pg = $tree.find('div.ccm-pagination-wrapper');
+    		$tree.children('.ccm-pagination-bound').remove();
     		if (pg.length) {
-    			pg.find('a').on('click', function() {
+    			pg.find('a').unbind('click').on('click', function() {
     				// load under node
     				var href = $(this).attr('href');
     				$tree.dynatree('option', 'initAjax', {
@@ -252,9 +260,11 @@
     				$tree.dynatree('getTree').reload();
     				return false;
     			});
-	    		pg.find('div.ccm-pagination').addClass('ccm-pagination-bound').appendTo($tree);
-	    		var node = $.ui.dynatree.getNode(pg);
-	    		node.remove();
+                var node = $.ui.dynatree.getNode(pg);
+                if (node && typeof node.remove === 'function') {
+                    node.remove();
+                }
+	    		pg.addClass('ccm-pagination-bound').appendTo($tree);
 
 				$tree.dynatree('option', 'onActivate', function(node) {
 					if ($(node.span).hasClass('ccm-sitemap-explore-paging')) {
@@ -268,6 +278,8 @@
     		var my = this,
     			options = my.options,
     			minExpandLevel = (node.data.cID == 1) ? 2 : 3;
+
+            (my.options.onDisplaySingleLevel || $.noop).call(this, node);
 
     		var root = my.$element.dynatree('getRoot');
 			$(node.li).closest('[data-sitemap=container]').dynatree('option', 'minExpandLevel', minExpandLevel);

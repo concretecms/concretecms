@@ -2,18 +2,10 @@
 
 $form = Loader::helper('form');
 
-$searchFields = array(
-    'date_added' => t('Registered Between'),
-    'is_active' => t('Activated Users')
-);
+$searchFields = $controller->getSearchFields();
 
 if (Config::get('concrete.permissions.model') == 'advanced') {
     $searchFields['group_set'] = t('Group Set');
-}
-
-$searchFieldAttributes = UserAttributeKey::getSearchableList();
-foreach ($searchFieldAttributes as $ak) {
-    $searchFields[$ak->getAttributeKeyID()] = $ak->getAttributeKeyDisplayName();
 }
 
 $ek = PermissionKey::getByHandle('edit_user_properties');
@@ -26,15 +18,15 @@ $searchRequest = $flr->getSearchRequest();
 ?>
 
 <script type="text/template" data-template="search-form">
-<form role="form" data-search-form="users" action="<?=URL::to('/ccm/system/search/users/submit')?>" class="form-inline ccm-search-fields">
+<form role="form" data-search-form="users" action="<?php echo URL::to('/ccm/system/search/users/submit')?>" class="form-inline ccm-search-fields">
 	<div class="ccm-search-fields-row">
 	<div class="form-group">
 		<select data-bulk-action="users" disabled class="ccm-search-bulk-action form-control">
-			<option value=""><?=t('Items Selected')?></option>
+			<option value=""><?php echo t('Items Selected')?></option>
 			<?php if ($ek->validate()) { ?>
-				<option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Edit Properties')?>" data-bulk-action-url="<?=URL::to('/ccm/system/dialogs/user/bulk/properties')?>" data-bulk-action-dialog-width="630" data-bulk-action-dialog-height="450"><?=t('Edit Properties')?></option>
+				<option data-bulk-action-type="dialog" data-bulk-action-title="<?php echo t('Edit Properties')?>" data-bulk-action-url="<?php echo URL::to('/ccm/system/dialogs/user/bulk/properties')?>" data-bulk-action-dialog-width="630" data-bulk-action-dialog-height="450"><?php echo t('Edit Properties')?></option>
 			<?php } ?>
-			<? /*
+			<?php /*
 			<?php if ($ik->validate()) { ?>
 				<option value="activate"><?=t('Activate')?></option>
 				<option value="deactivate"><?=t('Deactivate')?></option>
@@ -46,36 +38,36 @@ $searchRequest = $flr->getSearchRequest();
 			<?php } ?>
  */ ?>
 			<?php if ($mode == 'choose_multiple') { ?>
-				<option value="choose"><?=t('Choose')?></option>
+				<option value="choose"><?php echo t('Choose')?></option>
 			<?php } ?>
 		</select>
 	</div>
 	<div class="form-group">
 		<div class="ccm-search-main-lookup-field">
 			<i class="fa fa-search"></i>
-			<?=$form->search('keywords', $searchRequest['keywords'], array('placeholder' => t('Username or Email')))?>
-			<button type="submit" class="ccm-search-field-hidden-submit" tabindex="-1"><?=t('Search')?></button>
+			<?php echo $form->search('keywords', $searchRequest['keywords'], array('placeholder' => t('Username or Email')))?>
+			<button type="submit" class="ccm-search-field-hidden-submit" tabindex="-1"><?php echo t('Search')?></button>
 		</div>
 	</div>
 	<ul class="ccm-search-form-advanced list-inline">
-		<li><a href="#" data-search-toggle="advanced"><?=t('Advanced Search')?></a>
-		<li><a href="#" data-search-toggle="customize" data-search-column-customize-url="<?=URL::to('/ccm/system/dialogs/user/search/customize')?>"><?=t('Customize Results')?></a>
+		<li><a href="#" data-search-toggle="advanced"><?php echo t('Advanced Search')?></a>
+		<li><a href="#" data-search-toggle="customize" data-search-column-customize-url="<?php echo URL::to('/ccm/system/dialogs/user/search/customize')?>"><?php echo t('Customize Results')?></a>
 	</ul>
 	</div>
 	<div class="ccm-search-fields-row">
 		<div class="form-group form-group-full">
-			<?=$form->label('gID', t('In Group'))?>
+			<?php echo $form->label('gID', t('In Group'))?>
 			<?php
             $gl = new GroupList();
             $g1 = $gl->getResults();
             ?>
 			<div class="ccm-search-field-content">
-			<select multiple name="gID[]" class="select2-select" style="width: 100%">
+			<select multiple name="gID[]" class="select2-select" style="width: 360px">
 				<?php foreach ($g1 as $g) {
                     $gp = new Permissions($g);
                     if ($gp->canSearchUsersInGroup($g)) {
                         ?>
-					<option value="<?=$g->getGroupID()?>"  <?php if (is_array($searchRequest['gID']) && in_array($g->getGroupID(), $searchRequest['gID'])) { ?> selected="selected" <?php } ?>><?=$g->getGroupDisplayName()?></option>
+					<option value="<?php echo $g->getGroupID()?>"  <?php if (is_array($searchRequest['gID']) && in_array($g->getGroupID(), $searchRequest['gID'])) { ?> selected="selected" <?php } ?>><?php echo $g->getGroupDisplayName()?></option>
 				<?php
                     }
                 } ?>
@@ -84,17 +76,21 @@ $searchRequest = $flr->getSearchRequest();
 		</div>
 	</div>
 	<div class="ccm-search-fields-advanced"></div>
+    <div class="ccm-search-fields-submit">
+        <button type="submit" class="btn btn-primary pull-right"><?=t('Search')?></button>
+    </div>
 </form>
 </script>
 
 <script type="text/template" data-template="search-field-row">
 <div class="ccm-search-fields-row">
 	<select name="field[]" class="ccm-search-choose-field" data-search-field="users">
-		<option value=""><?=t('Choose Field')?></option>
+		<option value=""><?php echo t('Choose Field')?></option>
 		<?php foreach ($searchFields as $key => $value) { ?>
-			<option value="<?=$key?>" <% if (typeof(field) != 'undefined' && field.field == '<?=$key?>') { %>selected<% } %> data-search-field-url="<?=URL::to('/ccm/system/search/users/field', $key)?>"><?=$value?></option>
+			<option value="<?php echo $key?>" <% if (typeof(field) != 'undefined' && field.field == '<?php echo $key?>') { %>selected<% } %> data-search-field-url="<?php echo URL::to('/ccm/system/search/users/field', $key)?>"><?php echo $value?></option>
 		<?php } ?>
 	</select>
+
 	<div class="ccm-search-field-content"><% if (typeof(field) != 'undefined') { %><%=field.html%><% } %></div>
 	<a data-search-remove="search-field" class="ccm-search-remove-field" href="#"><i class="fa fa-minus-circle"></i></a>
 </div>

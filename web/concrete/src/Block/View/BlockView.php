@@ -26,6 +26,7 @@ class BlockView extends AbstractView
     protected $viewToRender = false;
     protected $viewPerformed = false;
     protected $showControls = true;
+    protected $didPullFromOutputCache = false;
 
     protected function constructView($mixed)
     {
@@ -157,21 +158,20 @@ class BlockView extends AbstractView
                     if ($this->block) {
                         $bFilename = $this->block->getBlockFilename();
                         $bvt = new BlockViewTemplate($this->block);
-                        if ($bFilename) {
-                            $bvt->setBlockCustomTemplate(
-                                $bFilename
-                            ); // this is PROBABLY already set by the method above, but in the case that it's passed by area we have to set it here
-                        } else {
-                            if ($customFilenameToRender) {
-                                $bvt->setBlockCustomRender($customFilenameToRender);
-                            }
-                        }
-                        $this->setViewTemplate($bvt->getTemplate());
                     } else {
-                        $template = DIRNAME_BLOCKS . '/' . $this->blockType->getBlockTypeHandle(
-                            ) . '/' . $view . '.php';
-                        $this->setViewTemplate($env->getPath($template, $this->blockTypePkgHandle));
+                        $bvt = new BlockViewTemplate($this->blockType);
                     }
+                    if ($bFilename) {
+                        $bvt->setBlockCustomTemplate(
+                            $bFilename
+                        ); // this is PROBABLY already set by the method above, but in the case that it's passed by area we have to set it here
+                    } else {
+                        if ($customFilenameToRender) {
+                            $bvt->setBlockCustomRender($customFilenameToRender);
+                        }
+                    }
+
+                    $this->setViewTemplate($bvt->getTemplate());
                 }
                 break;
             case 'add':
@@ -291,7 +291,7 @@ class BlockView extends AbstractView
      */
     public function getBlockURL($filename = null)
     {
-        $obj = $this->block;
+        $obj = $this->blockType;
         if ($obj->getPackageID() > 0) {
             if (is_dir(DIR_PACKAGES_CORE . '/' . $obj->getPackageHandle())) {
                 $base = ASSETS_URL . '/' . DIRNAME_PACKAGES . '/' . $obj->getPackageHandle(
@@ -334,11 +334,11 @@ class BlockView extends AbstractView
     protected function useBlockCache()
     {
         $u = new User();
-        if ($this->viewToRender == 'view' && Config::get('concrete.cache.blocks') && $this->controller->cacheBlockOutput(
-            ) && ($this->block instanceof Block)
+        if ($this->viewToRender == 'view' && Config::get('concrete.cache.blocks') && $this->block instanceof Block
+            && $this->block->cacheBlockOutput()
         ) {
-            if ((!$u->isRegistered() || ($this->controller->cacheBlockOutputForRegisteredUsers())) &&
-                (($_SERVER['REQUEST_METHOD'] != 'POST' || ($this->controller->cacheBlockOutputOnPost() == true)))
+            if ((!$u->isRegistered() || ($this->block->cacheBlockOutputForRegisteredUsers())) &&
+                (($_SERVER['REQUEST_METHOD'] != 'POST' || ($this->block->cacheBlockOutputOnPost() == true)))
             ) {
                 return true;
             }
@@ -353,10 +353,10 @@ class BlockView extends AbstractView
 
     public function finishRender($contents)
     {
-        if ($this->useBlockCache()) {
+        if ($this->useBlockCache() && !$this->didPullFromOutputCache) {
             $this->block->setBlockCachedOutput(
                 $this->outputContent,
-                $this->controller->getBlockTypeCacheOutputLifetime(),
+                $this->block->getBlockOutputCacheLifetime(),
                 $this->area
             );
         }
@@ -367,11 +367,13 @@ class BlockView extends AbstractView
     {
 
         if ($this->useBlockCache()) {
+            $this->didPullFromOutputCache = true;
             $this->outputContent = $this->block->getBlockCachedOutput($this->area);
             $this->controller->registerViewAssets($this->outputContent);
         }
 
         if (!$this->outputContent) {
+            $this->didPullFromOutputCache = false;
             if (in_array($this->viewToRender, array('view', 'add', 'edit', 'composer'))) {
                 $method = $this->viewToRender;
             } else {

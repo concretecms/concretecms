@@ -251,8 +251,8 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
         }
 
         $db = Loader::db();
-        $cnt = $db->GetOne('select count(cnvMessageID) from ConversationMessageRatings where uID = ? and cnvRatingTypeID = ?', array(
-            $uID, $ratingType->getRatingTypeID()
+        $cnt = $db->GetOne('select count(cnvMessageID) from ConversationMessageRatings where uID = ? and cnvRatingTypeID = ? and cnvMessageID = ?', array(
+            $uID, $ratingType->getRatingTypeID(), $this->getConversationMessageID()
         ));
         return $cnt > 0;
     }

@@ -6,6 +6,7 @@ use Concrete\Core\Cache\Page\PageCache;
 use Concrete\Core\Cache\Page\PageCacheRecord;
 use Concrete\Core\Foundation\ClassLoader;
 use Concrete\Core\Foundation\EnvironmentDetector;
+use Concrete\Core\Localization\Localization;
 use Concrete\Core\Routing\DispatcherRouteCallback;
 use Config;
 use Core;
@@ -77,6 +78,9 @@ class Application extends Container
         // clear the environment overrides cache
         $env = \Environment::get();
         $env->clearOverrideCache();
+
+        // Clear localization cache
+        Localization::clearCache();
 
         // clear block type cache
         BlockType::clearCache();
@@ -181,7 +185,7 @@ class Application extends Container
             $p->registerConfigNamespace();
             if ($p->isPackageInstalled()) {
                 $pkg = Package::getClass($p->getPackageHandle());
-                if (is_object($pkg)) {
+                if (is_object($pkg) && (!$pkg instanceof \Concrete\Core\Package\BrokenPackage)) {
                     $cl->registerPackage($pkg);
                     // handle updates
                     if (Config::get('concrete.updates.enable_auto_update_packages')) {

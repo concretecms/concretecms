@@ -58,6 +58,7 @@ class GlobalArea extends Area {
 		} else {
 			$stack = Stack::getByName($this->arHandle, 'ACTIVE');
 		}
+        $blocksTmp = array();
 		if (is_object($stack)) {
 			$blocksTmp = $stack->getBlocks(STACKS_AREA_NAME);
 			$globalArea = self::get($stack, STACKS_AREA_NAME);

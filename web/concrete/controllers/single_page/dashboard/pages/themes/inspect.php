@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Controller\SinglePage\Dashboard\Pages\Themes;
 use \Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Theme\Theme;
 use Loader;
 use PageTheme;
 use Package;
@@ -11,8 +12,14 @@ class Inspect extends DashboardPageController {
 
 	protected $helpers = array('html');
 
+    public function on_before_render()
+    {
+        parent::on_before_render();
+        $this->set('pageTitle', t('Page Templates in Theme'));
+    }
+
 	// grab all the page types from within a theme	
-	public function view($pThemeID = null, $isOnInstall = false) {
+	public function view($pThemeID = null, $message = false) {
 		if (!$pThemeID) {
 			$this->redirect('/dashboard/pages/themes/');
 		}
@@ -28,8 +35,13 @@ class Inspect extends DashboardPageController {
 			$v->add('Invalid Theme');
 		}	
 		
-		if ($isOnInstall) {
-			$this->set('message', t("Theme installed. You may automatically create page types from template files contained in your theme using the form below."));
+        switch($message) {
+            case 'install':
+    			$this->set('message', t("Theme installed. You may automatically create page templates from template files contained in your theme using the form below."));
+                break;
+            case 'activate':
+    			$this->set('message', t("Theme activated. You may automatically create page templates from template files contained in your theme using the form below."));
+                break;
 		}
 		
 		if ($v->has()) {
@@ -56,7 +68,10 @@ class Inspect extends DashboardPageController {
 
 			foreach($this->post('pageTemplates') as $pTemplateHandle) {
 				$pTemplateName = $txt->unhandle($pTemplateHandle);
-				$pTemplateIcon = FILENAME_PAGE_TEMPLATE_DEFAULT_ICON;
+                $pTemplateIcon = $pTemplateHandle . '.png';
+                if (!file_exists(DIR_FILES_PAGE_TEMPLATE_ICONS . '/' . $pTemplateIcon)) {
+				    $pTemplateIcon = Theme::FILENAME_PAGE_TEMPLATE_DEFAULT_ICON;
+                }
 				$ct = PageTemplate::add($pTemplateHandle, $pTemplateName, $pTemplateIcon, $pkg);
 			}
 			$this->set('success', t('Files in the theme were activated successfully.'));

@@ -117,15 +117,18 @@ class Design extends BackendUIPageController {
 			$cp = $this->permissions;
 			$c = $this->page;
 
-			$pl = false;
-			if ($_POST['pThemeID']) {
-				$pl = PageTheme::getByID($_POST['pThemeID']);
-			}
-			$nvc = $c->getVersionToModify();
-			$data = array();
-			if (is_object($pl)) {
-				$nvc->setTheme($pl);
-			}
+  			$nvc = $c->getVersionToModify();
+
+			if ($this->permissions->canEditPageTheme()) {
+                $pl = false;
+                if ($_POST['pThemeID']) {
+                    $pl = PageTheme::getByID($_POST['pThemeID']);
+                }
+                $data = array();
+                if (is_object($pl)) {
+                    $nvc->setTheme($pl);
+                }
+            }
 
 			if (!$c->isGeneratedCollection()) {
 

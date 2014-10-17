@@ -14,6 +14,11 @@ class Controller extends AuthenticationTypeController
 
     public $apiMethods = array('forgot_password', 'change_password');
 
+    public function getHandle()
+    {
+        return 'concrete';
+    }
+
     public function deauthenticate(User $u)
     {
         list($uID, $authType, $hash) = explode(':', $_COOKIE['ccmAuthUserHash']);
@@ -71,8 +76,13 @@ class Controller extends AuthenticationTypeController
         return $token;
     }
 
-    private function genString($a = 20)
+    private function genString($a = 16)
     {
+        if (function_exists('mcrypt_create_iv')) {
+            return bin2hex(mcrypt_create_iv($a, MCRYPT_DEV_URANDOM));
+        } elseif (function_exists('openssl_random_pseudo_bytes')) {
+            return bin2hex(openssl_random_pseudo_bytes($a));
+        }
         $o = '';
         $chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+{}|":<>?\'\\';
         $l = strlen($chars);
@@ -146,12 +156,7 @@ class Controller extends AuthenticationTypeController
             $error->add($e);
         }
 
-        if (!$error->has()) {
-            $this->redirect('/login', $this->getAuthenticationType()->getAuthenticationTypeHandle(), 'password_sent');
-        } else {
-            $this->set('authType', $this->getAuthenticationType());
-            $this->set('authTypeElement', 'forgot_password');
-        }
+        $this->redirect('/login', $this->getAuthenticationType()->getAuthenticationTypeHandle(), 'password_sent');
     }
 
     public function change_password($uHash = '')
@@ -245,7 +250,8 @@ class Controller extends AuthenticationTypeController
         if ($post['uMaintainLogin']) {
             $user->setAuthTypeCookie('concrete');
         }
-        $this->completeAuthentication($user);
+
+        return $user;
     }
 
 }

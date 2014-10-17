@@ -21,12 +21,13 @@ class Marketplace
 
     public function __construct()
     {
-        if (Config::get('concrete.marketplace.enabled')) {
+        if (!Config::get('concrete.marketplace.enabled')) {
             $this->connectionError = Marketplace::E_MARKETPLACE_SUPPORT_MANUALLY_DISABLED;
             return;
         }
 
-        $csToken = Config::get('concrete.marketplace.token');
+        $dbConfig = \Core::make('config/database');
+        $csToken = $dbConfig->get('concrete.marketplace.token');
         if ($csToken != '') {
 
             $fh = Loader::helper('file');
@@ -42,8 +43,8 @@ class Marketplace
                     $this->connectionError = $r;
 
                     if ($this->connectionError == Marketplace::E_DELETED_SITE_TOKEN) {
-                        Config::clear('concrete.marketplace.token');
-                        Config::clear('concrete.marketplace.site_token');
+                        $dbConfig->clear('concrete.marketplace.token');
+                        $dbConfig->clear('concrete.marketplace.url_token');
                     }
                 } else {
                     $this->isConnected = false;
@@ -66,7 +67,7 @@ class Marketplace
     public static function downloadRemoteFile($file)
     {
         $fh = Loader::helper('file');
-        $file .= '?csiURL=' . urlencode(BASE_URL . DIR_REL);
+        $file .= '?csiURL=' . urlencode(BASE_URL . DIR_REL) . "&csiVersion=" . APP_VERSION;
         $pkg = $fh->getContents($file);
         if (empty($pkg)) {
             return Package::E_PACKAGE_DOWNLOAD;
@@ -111,8 +112,10 @@ class Marketplace
             return array();
         }
 
+        $dbConfig = \Core::make('config/database');
+
         // Retrieve the URL contents
-        $csToken = Config::get('concrete.marketplace.token');
+        $csToken = $dbConfig->get('concrete.marketplace.token');
         $csiURL = urlencode(BASE_URL . DIR_REL);
         $url = Config::get('concrete.urls.concrete5') . Config::get('concrete.urls.paths.marketplace.purchases');
         $url .= "?csToken={$csToken}&csiURL=" . $csiURL . "&csiVersion=" . APP_VERSION;
@@ -124,7 +127,7 @@ class Marketplace
         if (is_array($objects)) {
             try {
                 foreach ($objects as $addon) {
-                    $mi = new MarketplaceRemoteItem();
+                    $mi = new RemoteItem();
                     $mi->setPropertiesFromJSONObject($addon);
                     $remoteCID = $mi->getRemoteCollectionID();
                     if (!empty($remoteCID)) {
@@ -159,7 +162,8 @@ class Marketplace
 
     public function getSitePageURL()
     {
-        $token = Config::get('concrete.marketplace.site_token');
+        $dbConfig = \Core::make('config/database');
+        $token = $dbConfig->get('concrete.marketplace.url_token');
         $url = Config::get('concrete.urls.concrete5') . Config::get('concrete.urls.paths.site_page');
         return $url . '/' . $token;
     }
@@ -191,7 +195,7 @@ class Marketplace
                 }
                 $url = Config::get('concrete.urls.concrete5') . Config::get('concrete.urls.paths.marketplace.connect') . '/-/' . $connectMethod;
                 $url = $url . '?ts=' . time() . '&csiBaseURL=' . $csiBaseURL . '&csiURL=' . $csiURL . '&csToken=' . $csToken . '&csReferrer=' . $csReferrer . '&csName=' . htmlspecialchars(
-                        SITE,
+                        Config::get('concrete.site'),
                         ENT_QUOTES,
                         APP_CHARSET);
             } else {
@@ -203,20 +207,18 @@ class Marketplace
                     'Unable to generate a marketplace token. Please ensure that allow_url_fopen is turned on, or that cURL is enabled on your server. If these are both true, It\'s possible your site\'s IP address may be blacklisted for some reason on our server. Please ask your webhost what your site\'s outgoing cURL request IP address is, and email it to us at <a href="mailto:help@concrete5.org">help@concrete5.org</a>.') . '</div>';
             } else {
                 $time = time();
-                $ifr = '<script type="text/javascript">$(function() { $.receiveMessage(function(e) {
-					jQuery.fn.dialog.hideLoader();
-
-					if (e.data == "loading") {
-						jQuery.fn.dialog.showLoader();
-					} else {
-						var eh = e.data;
-						eh = parseInt(eh) + 20;
-						$("#ccm-marketplace-frame-' . $time . '").attr("height", eh);
-					}
-
-					}, \'' . Config::get('concrete.urls.concrete5') . '\');
-				});
-				</script>';
+                $ifr = '<script type="text/javascript">
+                    window.addEventListener("message", function(e) {
+                        jQuery.fn.dialog.hideLoader();
+                        if (e.data == "loading") {
+                            jQuery.fn.dialog.showLoader();
+                        } else {
+                            var eh = e.data;
+                            eh = parseInt(eh) + 100;
+                            $("#ccm-marketplace-frame-' . $time . '").attr("height", eh);
+                        }
+                        });
+                    </script>';
                 $ifr .= '<iframe class="ccm-marketplace-frame-connect" id="ccm-marketplace-frame-' . $time . '" frameborder="0" width="' . $width . '" height="' . $height . '" src="' . $url . '"></iframe>';
                 return $ifr;
             }
@@ -245,7 +247,8 @@ class Marketplace
 
     public function getSiteToken()
     {
-        $token = Config::get('concrete.marketplace.token');
+        $dbConfig = \Core::make('config/database');
+        $token = $dbConfig->get('concrete.marketplace.token');
         return $token;
     }
 
@@ -264,22 +267,21 @@ class Marketplace
                 $csToken = $this->getSiteToken();
                 $url = $url . '/' . $mp->getProductBlockID() . '?ts=' . time() . '&csiBaseURL=' . $csiBaseURL . '&csiURL=' . $csiURL . '&csToken=' . $csToken;
             }
+
             $time = time();
-            $ifr = '<script type="text/javascript">$(function() { $.receiveMessage(function(e) {
-				jQuery.fn.dialog.hideLoader();
-
-				if (e.data == "loading") {
-					jQuery.fn.dialog.showLoader();
-				} else {
-					var eh = e.data;
-					eh = parseInt(eh) + 20;
-					$("#ccm-marketplace-frame-' . $time . '").attr("height", eh);
-				}
-
-				}, \'' . Config::get('concrete.urls.concrete5_secure') . '\');
-			});
-			</script>';
-            $ifr .= '<iframe class="ccm-marketplace-frame" id="ccm-marketplace-frame-' . $time . '" class="ccm-marketplace-frame" frameborder="0" width="' . $width . '" height="' . $height . '" src="' . $url . '"></iframe>';
+            $ifr = '<script type="text/javascript">
+                window.addEventListener("message", function(e) {
+                    jQuery.fn.dialog.hideLoader();
+                    if (e.data == "loading") {
+                        jQuery.fn.dialog.showLoader();
+                    } else {
+                        var eh = e.data;
+                        eh = parseInt(eh) + 100;
+                        $("#ccm-marketplace-frame-' . $time . '").attr("height", eh);
+                    }
+                    });
+                </script>';
+            $ifr .= '<iframe class="ccm-marketplace-frame" id="ccm-marketplace-frame-' . $time . '" frameborder="0" width="' . $width . '" height="' . $height . '" src="' . $url . '"></iframe>';
             return $ifr;
         } else {
             return '<div class="ccm-error">' . t(
