@@ -67,7 +67,7 @@ class Marketplace
     public static function downloadRemoteFile($file)
     {
         $fh = Loader::helper('file');
-        $file .= '?csiURL=' . urlencode(BASE_URL . DIR_REL);
+        $file .= '?csiURL=' . urlencode(BASE_URL . DIR_REL) . "&csiVersion=" . APP_VERSION;
         $pkg = $fh->getContents($file);
         if (empty($pkg)) {
             return Package::E_PACKAGE_DOWNLOAD;
