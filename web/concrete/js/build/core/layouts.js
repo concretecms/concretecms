@@ -80,7 +80,6 @@
             ConcreteEvent.on('EditModeExitInlineComplete.layouts', function (e, data) {
                 obj._rescanAreasInPage(e, data);
             });
-            ConcreteEvent.fire('EditModeExitInline');
         });
     };
 
