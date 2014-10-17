@@ -1,14 +1,11 @@
 <?php
 
-class StringsTest extends ConcreteDatabaseTestCase
+class StringsTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @var \Concrete\Core\Utility\Service\Validation\Strings
      */
     protected $object;
-
-    protected $fixtures = array();
-    protected $tables = array();
 
     /**
      * Sets up the fixture, for example, opens a network connection.

@@ -100,6 +100,14 @@ class Axmls extends XmlParser
                 $options['length'] = $size;
             }
         }
+        switch ($type) {
+            case 'X':
+                $options['length'] = 65535; // this means 'X' will result in a 'TEXT' column
+                break;
+            case 'X2':
+                // no length limitation -> this means 'X2' will result in a 'LONGTEXT' column
+                break;
+        }
         if ($column->unsigned || $column->UNSIGNED) {
             $options['unsigned'] = true;
         }
@@ -176,10 +184,19 @@ class Axmls extends XmlParser
         if ($type == 'X') {
             return 'text';
         }
+        if ($type == 'XL') {
+            return 'text';
+        }
+        if ($type == 'C2') {
+            return 'string';
+        }
         if ($type == 'X2') {
             return 'text';
         }
         if ($type == 'T') {
+            return 'datetime';
+        }
+        if ($type == 'TS') {
             return 'datetime';
         }
         if ($type == 'D') {

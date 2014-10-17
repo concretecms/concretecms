@@ -4,7 +4,6 @@ $form = Loader::helper('form');
 $ih = Loader::helper("concrete/ui");
 $valt = Loader::helper('validation/token');
 
-$wfName = $workflow->getWorkflowName();
 $type = $workflow->getWorkflowTypeObject();
 
 ?>
@@ -36,7 +35,7 @@ $type = $workflow->getWorkflowTypeObject();
 </div>
 <input type="hidden" name="wfID" value="<?=$workflow->getWorkflowID()?>" />
 
-<h3><?=h($wfName)?> <small><?=$type->getWorkflowTypeName()?></small></h3>
+<h3><?=$workflow->getWorkflowDisplayName()?> <small><?=$type->getWorkflowTypeName()?></small></h3>
 
 <? 
 if ($type->getPackageID() > 0) { 

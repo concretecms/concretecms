@@ -10,6 +10,7 @@ Disallow: /application/elements
 Disallow: /application/helpers
 Disallow: /application/jobs
 Disallow: /application/js
+Disallow: /application/languages
 Disallow: /application/mail
 Disallow: /application/models
 Disallow: /application/page_types

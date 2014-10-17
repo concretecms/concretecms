@@ -10,6 +10,10 @@ use \Punic\Data as PunicData;
 class Localization
 {
     private static $loc = null;
+    /**
+     * @var ZendCacheDriver|null
+     */
+    private static $cache = null;
 
     public static function getInstance()
     {
@@ -69,7 +73,7 @@ class Localization
         $this->translate = new Translator();
         $this->translate->addTranslationFilePattern('gettext', $languageDir, 'LC_MESSAGES/messages.mo');
         $this->translate->setLocale($locale);
-        $this->translate->setCache(new ZendCacheDriver('cache/expensive'));
+        $this->translate->setCache(self::getCache());
         PunicData::setDefaultLocale($locale);
 
         $event = new \Symfony\Component\EventDispatcher\GenericEvent();
@@ -91,7 +95,7 @@ class Localization
     {
         if (!is_object($this->translate)) {
             $this->translate = new Translator();
-            $this->translate->setCache(new ZendCacheDriver('cache/expensive'));
+            $this->translate->setCache(self::getCache());
         }
         $this->translate->addTranslationFilePattern('gettext', DIR_LANGUAGES_SITE_INTERFACE, $language . '.mo');
     }
@@ -171,4 +175,23 @@ class Localization
         return \Punic\Language::getName($locale, is_null($displayLocale) ? $locale : $displayLocale);
     }
 
+    /**
+     * @return ZendCacheDriver
+     */
+    protected static function getCache()
+    {
+        if (is_null(self::$cache)) {
+            self::$cache = new ZendCacheDriver('cache/expensive');
+        }
+
+        return self::$cache;
+    }
+
+    /**
+     * Clear the translations cache
+     */
+    public static function clearCache()
+    {
+        self::getCache()->flush();
+    }
 }

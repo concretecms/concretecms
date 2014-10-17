@@ -370,6 +370,13 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
             $set = StyleSet::import($blockNode->style);
             $b->setCustomStyleSet($set);
         }
+
+        // now we handle block caching
+        $cache = (int) $blockNode['cache-output'];
+        if ($cache) {
+            $b->setCustomCacheSettings(true, $blockNode['cache-output-on-post'], $blockNode['cache-output-for-registered-users'],
+                $blockNode['cache-output-lifetime']);
+        }
     }
 
     protected function getImportData($blockNode, $page)

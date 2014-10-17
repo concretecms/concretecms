@@ -41,13 +41,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
         <div id="ccm-panel-page-design-themes" class="list-group" data-panel-menu-id="themes" data-panel-menu="collapsible-list-group">
             <input type="hidden" name="pThemeID" value="<?=$selectedTheme->getThemeID()?>" />
 
-            <div class="list-group-item list-group-item-header"><?=t('Theme')?>
-            <? if (Config::get('concrete.marketplace.enabled')) { ?>
-                <div class="ccm-marketplace-btn-wrapper">
-                <button onclick="ccm_openThemeLauncher()" class="btn-ccm-marketplace btn btn-large"><?=t("Install More Themes")?></button>
-                </div>
-            <? } ?>
-            </div>
+            <div class="list-group-item list-group-item-header"><?=t('Theme')?></div>
             <?
             foreach($themes as $th) {
                 $selected = false;
@@ -80,6 +74,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
             <? } ?>
             <a class="list-group-item list-group-item-collapse" href="#"><span><?=t('Expand')?></span></a>
         </div>
+
+        <? if (Config::get('concrete.marketplace.enabled')) { ?>
+            <div class="ccm-marketplace-btn-wrapper">
+            <button type="button" onclick="window.location.href='<?=URL::to('/dashboard/extend/themes')?>'" class="btn-info btn-block btn btn-large"><?=t("Get More Themes")?></button>
+            </div>
+        <? } ?>
+
     <? } ?>
 
     </div>
