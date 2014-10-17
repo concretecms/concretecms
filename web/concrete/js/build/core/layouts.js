@@ -20,6 +20,7 @@
             'toolbar': '#ccm-layouts-toolbar',
             'btnsave': '#ccm-layouts-save-button',
             'btncancel': '#ccm-layouts-cancel-button',
+            'btndelete': 'a[data-menu-action=delete-layout]',
             'editing': false,
             'supportsgrid': false,
             'gridrowtmpid': 'ccm-theme-grid-temp'
@@ -59,6 +60,7 @@
         // all
         this.$savebtn = this.$toolbar.find(this.options.btnsave);
         this.$cancelbtn = this.$toolbar.find(this.options.btncancel);
+        this.$deletebtn = this.$toolbar.find(this.options.btndelete);
         this.$slider = false;
     };
 
@@ -68,6 +70,7 @@
             obj.$toolbar.remove();
             ConcreteEvent.unsubscribe('EditModeExitInlineComplete.layouts');
             ConcreteEvent.on('EditModeExitInlineComplete.layouts', function (e, data) {
+                ConcreteEvent.unsubscribe(e);
                 obj._rescanAreasInPage(e, data);
             });
             ConcreteEvent.fire('EditModeExitInline');
@@ -78,9 +81,33 @@
             $('#ccm-block-form').submit();
             ConcreteEvent.unsubscribe('EditModeExitInlineComplete.layouts');
             ConcreteEvent.on('EditModeExitInlineComplete.layouts', function (e, data) {
+                ConcreteEvent.unsubscribe(e);
                 obj._rescanAreasInPage(e, data);
             });
             ConcreteEvent.fire('EditModeExitInline');
+        });
+        this.$deletebtn.unbind().on('click', function(e) {
+            obj.$toolbar.remove();
+
+            var editmode = new Concrete.getEditMode(),
+                block = editmode.getBlockByID($(this).closest('[data-bid]').data('bid'));
+
+            ConcreteEvent.unsubscribe('EditModeExitInlineComplete.layouts');
+            ConcreteEvent.on('EditModeExitInlineComplete.layouts', function (e, data) {
+                ConcreteEvent.unsubscribe(e);
+
+                ConcreteEvent.unsubscribe('EditModeBlockDeleteComplete.layouts');
+                ConcreteEvent.subscribe('EditModeBlockDeleteComplete.layouts', function(e, data) {
+                    ConcreteEvent.unsubscribe(e);
+
+                    obj._rescanAreasInPage(e, data);
+                });
+
+                Concrete.event.fire('EditModeBlockDelete', {message: $(this).data('message'), block: block, event: e});
+            });
+            ConcreteEvent.fire('EditModeExitInline');
+
+            return false;
         });
     };
 

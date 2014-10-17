@@ -54,9 +54,14 @@
 
                 if (my.options.task == 'add') {
                     var $area = area.getElem(), $elem = $(r);
-                    block = new Concrete.Block($elem, Concrete.getEditMode());
 
-                    if (my.options.btHandle === 'core_area_layout') {
+                    if ($elem.hasClass('ccm-block-edit')) {
+                        block = new Concrete.Block($elem, Concrete.getEditMode());
+                    } else {
+                        block = new Concrete.Block($elem.find('.ccm-block-edit'), Concrete.getEditMode());
+                    }
+
+                    if ((my.options.btHandle || block.getHandle()) === 'core_area_layout') {
                         $area.children('.ccm-area-block-list').append($elem);
                     } else {
                         var placeholder = $(my.options.placeholder);
