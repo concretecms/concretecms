@@ -158,26 +158,20 @@ class BlockView extends AbstractView
                     if ($this->block) {
                         $bFilename = $this->block->getBlockFilename();
                         $bvt = new BlockViewTemplate($this->block);
-                        if ($bFilename) {
-                            $bvt->setBlockCustomTemplate(
-                                $bFilename
-                            ); // this is PROBABLY already set by the method above, but in the case that it's passed by area we have to set it here
-                        } else {
-                            if ($customFilenameToRender) {
-                                $bvt->setBlockCustomRender($customFilenameToRender);
-                            }
-                        }
-                        $this->setViewTemplate($bvt->getTemplate());
                     } else {
-                        $file = $view . ".php";
-                        if ($customFilenameToRender) {
-                            $file = $customFilenameToRender;
-                        }
-
-                        $template = DIRNAME_BLOCKS . '/' . $this->blockType->getBlockTypeHandle(
-                            ) . '/' . $file;
-                        $this->setViewTemplate($env->getPath($template, $this->blockTypePkgHandle));
+                        $bvt = new BlockViewTemplate($this->blockType);
                     }
+                    if ($bFilename) {
+                        $bvt->setBlockCustomTemplate(
+                            $bFilename
+                        ); // this is PROBABLY already set by the method above, but in the case that it's passed by area we have to set it here
+                    } else {
+                        if ($customFilenameToRender) {
+                            $bvt->setBlockCustomRender($customFilenameToRender);
+                        }
+                    }
+
+                    $this->setViewTemplate($bvt->getTemplate());
                 }
                 break;
             case 'add':
@@ -297,7 +291,7 @@ class BlockView extends AbstractView
      */
     public function getBlockURL($filename = null)
     {
-        $obj = $this->block;
+        $obj = $this->blockType;
         if ($obj->getPackageID() > 0) {
             if (is_dir(DIR_PACKAGES_CORE . '/' . $obj->getPackageHandle())) {
                 $base = ASSETS_URL . '/' . DIRNAME_PACKAGES . '/' . $obj->getPackageHandle(
