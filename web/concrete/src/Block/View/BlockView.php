@@ -169,8 +169,13 @@ class BlockView extends AbstractView
                         }
                         $this->setViewTemplate($bvt->getTemplate());
                     } else {
+                        $file = $view . ".php";
+                        if ($customFilenameToRender) {
+                            $file = $customFilenameToRender;
+                        }
+
                         $template = DIRNAME_BLOCKS . '/' . $this->blockType->getBlockTypeHandle(
-                            ) . '/' . $view . '.php';
+                            ) . '/' . $file;
                         $this->setViewTemplate($env->getPath($template, $this->blockTypePkgHandle));
                     }
                 }
