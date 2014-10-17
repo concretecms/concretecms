@@ -235,7 +235,7 @@ class Package extends Object
             }
             $item->set($cl);
         }
-        return $cl;
+        return clone $cl;
     }
 
     /**
