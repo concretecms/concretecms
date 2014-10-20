@@ -184,7 +184,7 @@ class DatabaseManager
      * @param Connection $connection
      * @return Connection
      */
-    protected function prepare(Connection $connection)
+    protected function prepare($connection)
     {
         return $connection;
     }
