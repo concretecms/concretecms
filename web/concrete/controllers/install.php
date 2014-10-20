@@ -111,6 +111,11 @@ class Install extends Controller
                                 'There are already %s tables in this database. concrete5 must be installed in an empty database.',
                                 count($num)));
                     }
+
+                    $support = $db->GetOne('SELECT SUPPORT FROM INFORMATION_SCHEMA.ENGINES WHERE ENGINE = \'InnoDB\'');
+                    if (!in_array($support, array('YES', 'DEFAULT'))) {
+                        $e->add(t('Your MySQL database does not support InnoDB database tables. These are required.'));
+                    }
                 }
             }
         }
