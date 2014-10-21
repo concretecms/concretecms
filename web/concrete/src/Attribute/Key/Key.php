@@ -225,8 +225,7 @@ class Key extends Object
         $list = array();
         $txt = Loader::helper('text');
 
-        $prefix = $pkgHandle;
-        $className = core_class('Core\\Attribute\\Key\\' . $txt->camelcase($akCategoryHandle) . 'Key', $prefix);
+        $className = '\\Concrete\\Core\\Attribute\\Key\\' . $txt->camelcase($akCategoryHandle) . 'Key';
         while ($row = $r->FetchRow()) {
             $c1a = call_user_func(array($className, 'getByID'), $row['akID']);
             if (is_object($c1a)) {
@@ -421,9 +420,7 @@ class Key extends Object
             //certain adodb drivers (like mysqli) will fail and return 0
             $akID = $db->Insert_ID();
             $category = AttributeKeyCategory::getByID($akCategoryID);
-            $pkgID = $category->getPackageID();
-            $prefix = ($pkgID > 0) ? $category->getPackageHandle() : false;
-            $className = core_class('Core\\Attribute\\Key\\' . $txt->camelcase($akCategoryHandle) . 'Key', $prefix);
+            $className = '\\Concrete\\Core\\Attribute\\Key\\' . $txt->camelcase($akCategoryHandle) . 'Key';
             $ak = Core::make($className);
             $ak->load($akID);
             switch ($category->allowAttributeSets()) {
