@@ -54,7 +54,7 @@ abstract class MarketplaceDashboardPageController extends DashboardPageControlle
 
 			$mri = new MarketplaceRemoteItemList();
 			$mri->setItemsPerPage(9);
-			$sets = MarketplaceRemoteItemList::getItemSets('themes');
+			$sets = MarketplaceRemoteItemList::getItemSets($this->getMarketplaceType());
 
 			$setsel = array('' => t('All Items'), 'FEATURED' => t('Featured Items'));
             $req = $this->request->query;
@@ -95,6 +95,10 @@ abstract class MarketplaceDashboardPageController extends DashboardPageControlle
 				$mri->filterByKeywords($keywords);
                 $this->set('keywords', $keywords);
 			}
+
+            if ($set) {
+                $mri->filterBySet($set);
+            }
 
 			$mri->setType($this->getMarketplaceType());
 			$mri->execute();
