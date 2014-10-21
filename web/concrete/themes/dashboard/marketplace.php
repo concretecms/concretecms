@@ -27,6 +27,7 @@ $this->inc('elements/header.php'); ?>
                 <i class="fa fa-search"></i>
                 <input type="search" name="keywords" value="<?=$keywords?>" />
             </div>
+            <button type="submit" class="btn btn-primary btn-sm"><?=t('Search')?></button>
         </div>
         </form>
     <? } ?>

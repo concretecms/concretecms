@@ -638,7 +638,7 @@ class Theme extends Object
             $db = Loader::db();
             $cnt = $db->getOne("select count(pThemeID) from PageThemes where pThemeHandle = ?", array($pThemeHandle));
             if ($cnt > 0) {
-                throw new Exception(static::E_THEME_INSTALLED);
+                throw new \Exception(static::E_THEME_INSTALLED);
             }
             $res = static::getThemeNameAndDescription($dir, $pThemeHandle, is_object($pkg) ? $pkg->getPackageHandle() : '');
             if (strlen($res->pError) === 0) {
