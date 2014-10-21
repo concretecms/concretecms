@@ -49,26 +49,16 @@ class Category extends Object {
 
 	public function getAttributeKeyByHandle($akHandle) {
 		$txt = Loader::helper('text');
-		$prefix = ($this->pkgID > 0) ? PackageList::getHandle($this->pkgID) : false;
-        $akCategoryHandle = $txt->camelcase($this->akCategoryHandle);
-        $className = core_class('Core\\Attribute\\Key\\' . $akCategoryHandle . 'Key', $prefix);
-        $ak = call_user_func(array(
-            $className,
-            'getByHandle'
-        ), $akHandle);
-        return $ak;
+		$className = '\\Concrete\\Core\\Attribute\\Key\\' . $txt->camelcase($this->akCategoryHandle) . 'Key';
+		$ak = call_user_func(array($className, 'getByHandle'), $akHandle);
+		return $ak;
 	}
 
 	public function getAttributeKeyByID($akID) {
 		$txt = Loader::helper('text');
-        $prefix = ($this->pkgID > 0) ? PackageList::getHandle($this->pkgID) : false;
-        $akCategoryHandle = $txt->camelcase($this->akCategoryHandle);
-        $className = core_class('Core\\Attribute\\Key\\' . $akCategoryHandle . 'Key', $prefix);
-        $ak = call_user_func(array(
-            $className,
-            'getByID'
-        ), $akID);
-        return $ak;
+		$className = '\\Concrete\\Core\\Attribute\\Key\\' . $txt->camelcase($this->akCategoryHandle) . 'Key';
+		$ak = call_user_func(array($className, 'getByID'), $akID);
+		return $ak;
 	}
 
 	public function getUnassignedAttributeKeys() {
@@ -167,8 +157,7 @@ class Category extends Object {
 		$id = $db->Insert_ID();
 
 		$txt = Loader::helper("text");
-		$prefix = ($pkgID > 0) ? $pkg->getPackageHandle() : false;
-		$class = core_class('Core\\Attribute\\Key\\' . $txt->camelcase($akCategoryHandle) . 'Key', $prefix);
+		$class = '\\Concrete\\Core\\Attribute\\Key\\' . $txt->camelcase($akCategoryHandle). 'Key';
 		$obj = new $class;
 		$obj->createIndexedSearchTable();
 
