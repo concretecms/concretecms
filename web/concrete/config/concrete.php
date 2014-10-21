@@ -7,9 +7,9 @@ return array(
      *
      * @var string
      */
-    'version'           => '5.7.1',
-    'version_installed' => '5.7.1',
-    'version_db' => '20141017000000', // the key of the migration - corresponds to 5.7.1
+    'version'           => '5.7.1.1',
+    'version_installed' => '5.7.1.1',
+    'version_db' => '20141017000000', // the key of the latest database migration - corresponds to 5.7.1
 
     /**
      * Installation status
