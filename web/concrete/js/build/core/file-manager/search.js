@@ -82,13 +82,6 @@
                 }
             };
 
-        $fileUploader.on('click', function() {
-            $(this).find('input').trigger('click');
-            return false;
-        }).children('a').click(function() {
-            $(this).parent().find('input').trigger('click');
-            return false;
-        });
         $fileUploader.fileupload(args);
 
     };
