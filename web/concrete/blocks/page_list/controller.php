@@ -109,7 +109,7 @@ class Controller extends BlockController
 
         $db = Loader::db();
         $columns = $db->MetaColumnNames(CollectionAttributeKey::getIndexedSearchTable());
-        if (isset($columns['ak_exclude_page_list'])) {
+        if (in_array('ak_exclude_page_list', $columns)) {
             $this->list->filter(false, '(ak_exclude_page_list = 0 or ak_exclude_page_list is null)');
         }
 
