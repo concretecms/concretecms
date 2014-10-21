@@ -33,4 +33,6 @@ var ConcreteSocialLinksAttribute = {
         });
         $('.ccm-social-link-attribute-wrapper select').trigger('change');
     }
-}
+};
+
+
