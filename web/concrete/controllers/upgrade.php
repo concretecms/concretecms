@@ -76,6 +76,8 @@ class Upgrade extends BackendUserInterfaceController
 
         if (!$sav) {
             $message = t('Unable to determine your current version of concrete5. Upgrading cannot continue.');
+        }elseif($this->request->query->get('force', 0) == 1){
+            $this->set('do_upgrade', true);
         } else {
             if (version_compare($sav, APP_VERSION, '>')) {
                 $message = t('Upgrading from <b>%s</b>', $sav) . '<br/>';
