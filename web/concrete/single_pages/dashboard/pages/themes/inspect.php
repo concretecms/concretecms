@@ -104,7 +104,7 @@ $ci = Loader::helper('concrete/ui');
         <?
         print $ci->button(t('Return to Themes'), $view->url('/dashboard/pages/themes'), 'left');
         if ($pf > 0) { 
-            print $ci->submit(t('Ok'), 'ccm-inspect-form', 'right', 'primary'); ?>
+            print $ci->submit(t('Ok'), 'ccm-inspect-form', 'right', 'btn-primary'); ?>
         <? }?>
         </div>
     </div>
