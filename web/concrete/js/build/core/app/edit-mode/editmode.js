@@ -429,20 +429,27 @@
                 new Concrete.DuplicateBlock(me, my);
             });
 
-            $(element).find('.ccm-panel-content').on('mousewheel', function (e) {
-                e.stopImmediatePropagation();
+            $(element).find('.ccm-panel-content').mousewheel(function (e) {
+
+                if (!e.deltaY) {
+                    return;
+                }
+
+                var change = -1 * e.deltaY;
 
                 var me = $(this),
                     distance_from_top = me.scrollTop(),
                     distance_from_bottom = (me.get(0).scrollHeight - (me.scrollTop() + me.height()) - me.css('paddingTop').replace('px', ''));
 
-                if ((e.originalEvent.deltaY < 0 && !distance_from_top) ||
-                    (e.originalEvent.deltaY > 0 && !distance_from_bottom)
+                e.stopImmediatePropagation();
+
+                if ((change < 0 && !distance_from_top) ||
+                    (change > 0 && !distance_from_bottom)
                 ) {
                     return false;
                 }
 
-                me.scrollTop(me.scrollTop() + e.originalEvent.deltaY);
+                me.scrollTop(me.scrollTop() + change);
                 return false;
             });
 
