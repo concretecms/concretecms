@@ -747,7 +747,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
     public static function getByID($ptID)
     {
         $cache = \Core::make('cache/request');
-        $item = $cache->getItem('pagetype/%s', $ptID);
+        $item = $cache->getItem(sprintf('pagetype/%s', $ptID));
         if (!$item->isMiss()) {
             return $item->get();
         }

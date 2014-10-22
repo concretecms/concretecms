@@ -681,18 +681,6 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         $db = Loader::db();
         if (!isset($this->issID)) {
             $co = $this->getBlockCollectionObject();
-            $csrCheck = CacheLocal::getEntry('csrCheck', $co->getCollectionID() . ':' . $co->getVersionID());
-            $csrObject = CacheLocal::getEntry(
-                                   'csrObject',
-                                   $co->getCollectionID() . ':' . $co->getVersionID() . ':' . $this->getAreaHandle() . ':' . $this->getBlockID());
-            if (is_object($csrObject)) {
-                $this->issID = $csrObject->getCustomStyleSetID();
-                return $csrObject->getCustomStyleSetID();
-            } else {
-                if ($csrCheck) {
-                    return false;
-                }
-            }
 
             $arHandle = $this->getAreaHandle();
             if ($arHandle) {

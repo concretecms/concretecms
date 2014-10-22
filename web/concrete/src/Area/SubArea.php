@@ -16,8 +16,15 @@ class SubArea extends Area {
 		return $area;
 	}
 
-	public function getSubAreaParentPermissionsObject() {
-		$db = Loader::db();
+	public function getSubAreaParentPermissionsObject()
+    {
+		$cache = \Core::make('cache/request');
+        $item = $cache->getItem(sprintf('subarea/parent/permissions/%s', $this->getAreaID()));
+        if (!$item->isMiss()) {
+            return $item->get();
+        }
+
+        $db = Loader::db();
 		$arParentID = $this->arParentID;
 		if ($arParentID == 0) {
 			return false;
@@ -32,6 +39,7 @@ class SubArea extends Area {
 		}
 
 		$a = Area::get($this->c, $row['arHandle']);
+        $item->set($a);
 		return $a;
 	}
 

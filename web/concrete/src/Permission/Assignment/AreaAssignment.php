@@ -30,7 +30,7 @@ class AreaAssignment extends Assignment {
 	public function setPermissionObject(Area $a) {
 		$ax = $a;
 		if ($a->isGlobalArea()) {
-			$cx = Stack::getByName($a->getAreaHandle());
+			$cx = Stack::getByName($a->getAreaHandle(), 'ACTIVE');
 			$a = Area::get($cx, STACKS_AREA_NAME);
             if (!is_object($a)) {
                 return false;

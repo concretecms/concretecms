@@ -46,21 +46,24 @@ class Application extends Container
 
             $logger = new Logger();
             $r = Request::getInstance();
-            foreach (\Database::getConnections() as $connection) {
-                if (Config::get('concrete.log.queries.log')) {
-                    if ($logger->shouldLogQueries($r)) {
-                        $configuration = $connection->getConfiguration();
-                        $queries = $configuration->getSQLLogger();
-                        $configuration->setSQLLogger(null);
 
-                        if (Config::get('concrete.log.queries.clear_on_reload')) {
-                            $logger->clearQueryLog();
-                        }
-
-                        $logger->write($queries);
-
+            if (Config::get('concrete.log.queries.log')) {
+                $connection = Database::getActiveConnection();
+                if ($logger->shouldLogQueries($r)) {
+                    $loggers = array();
+                    $configuration = $connection->getConfiguration();
+                    $loggers[] = $configuration->getSQLLogger();
+                    $configuration->setSQLLogger(null);
+                    if (Config::get('concrete.log.queries.clear_on_reload')) {
+                        $logger->clearQueryLog();
                     }
+
+                    $logger->write($loggers);
+
                 }
+            }
+
+            foreach (\Database::getConnections() as $connection) {
                 $connection->close();
             }
         }
