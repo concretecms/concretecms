@@ -159,7 +159,7 @@ class Controller extends BlockController
         $i = 0;
         foreach($blockNode->arealayout->columns->column as $columnNode) {
             $column = $columns[$i];
-            $as = new SubArea($column->getAreaLayoutColumnDisplayID(), $layoutArea);
+            $as = new SubArea($column->getAreaLayoutColumnDisplayID(), $layoutArea->getAreaHandle(), $layoutArea->getAreaID());
             $as->load($page);
             $column->setAreaID($as->getAreaID());
             $area = $column->getAreaObject();
