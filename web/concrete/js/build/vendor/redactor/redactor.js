@@ -1395,6 +1395,10 @@
         {
             if (this.rtePaste) return false;
 
+            /* concrete5 */
+                // Keep sel out of the global scope
+            var sel;
+            /* end concrete5 */
             var key = e.which;
             var ctrl = e.ctrlKey || e.metaKey;
             var parent = this.getParent();
@@ -4803,6 +4807,11 @@
             }
 
             var sel = this.getSelection();
+
+            /* concrete5 */
+            // keep range out of global scope
+            var range;
+            /* end concrete5 */
             if (sel.getRangeAt && sel.rangeCount)
             {
                 // with delete contents
@@ -6243,6 +6252,12 @@
             {
                 var tr = $table.find('tr').first().clone();
                 tr.find('td').html(this.opts.invisibleSpace);
+
+                /* concrete5 */
+                // Keep thead out of global scope
+                var $thead;
+                /* end concrete5 */
+
                 $thead = $('<thead></thead>');
                 $thead.append(tr);
                 $table.prepend($thead);
@@ -6511,7 +6526,7 @@
                         });
                     });
                 } else {
-                    $('a[data-action=choose-file-from-file-manager]').parent().remove();
+                    $('a[data-action=choose-file-from-file-manager]').remove();
                 }
 
 				if (!this.opts.concrete5.lightbox) {
@@ -6539,7 +6554,7 @@
 
                     });
                 } else {
-                    $('a[data-action=choose-link-from-sitemap]').parent().remove();
+                    $('a[data-action=choose-link-from-sitemap]').remove();
                 }
 
 				if (!this.opts.concrete5.sitemap && !this.opts.concrete5.filemanager) {
@@ -7597,12 +7612,13 @@
                 /* concrete5 */
                     + '<select id="redactor-predefined-links" class="form-control" style="width: 99.5%; display: none;"></select>'
                     + '<div class="form-group">'
-                    + '<label>' + this.opts.curLang.web + '</label>'
-                    + '<div class="input-group">'
-                    + '<input type="text" class="form-control" id="redactor_link_url" />'
-                    + '<a href="#" data-action="choose-link-from-sitemap" class="btn btn-default input-group-addon"><i class="fa fa-sitemap"></i></a>'
-                    + '<a href="#" data-action="choose-file-from-file-manager" class="btn btn-default input-group-addon"><i class="fa fa-file"></i></a>'
-                    + '</div></div>'
+                        + '<label>' + this.opts.curLang.web + '</label>'
+                        + '<div class="input-group">'
+                            + '<input type="text" class="form-control" id="redactor_link_url" />'
+                            + '<a href="#" data-action="choose-link-from-sitemap" class="btn btn-default input-group-addon"><i class="fa fa-sitemap"></i></a>'
+                            + '<a href="#" data-action="choose-file-from-file-manager" class="btn btn-default input-group-addon"><i class="fa fa-file"></i></a>'
+                        + '</div>'
+                    + '</div>'
                     + '<div class="form-group">'
                     + '<label>' + this.opts.curLang.text + '</label>'
                     + '<input type="text" class="form-control" id="redactor_link_url_text" />'
@@ -7684,6 +7700,8 @@
             {
                 this.$redactorModal = $('<div id="redactor_modal" style="display: none;" />');
                 /* concrete5 */
+                // Add class so that jquery-ui doesn't disable focus.
+                this.$redactorModal.addClass('ui-dialog');
                 //this.$redactorModal.append($('<div id="redactor_modal_close">&times;</div>'));
                 this.$redactorModal.append($('<div id="redactor_modal_close"><button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only ui-dialog-titlebar-close" role="button"><span class="ui-button-icon-primary ui-icon ui-icon-closethick"></span><span class="ui-button-text">close</span></button></div>'));
                 /* end concrete5 */
