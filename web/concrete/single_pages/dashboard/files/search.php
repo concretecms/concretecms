@@ -1,6 +1,6 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<? 
+<?
 $c = Page::getCurrentPage();
 $ocID = $c->getCollectionID();
 $fp = FilePermissions::getGlobal();
@@ -11,7 +11,7 @@ if ($fp->canAddFile() || $fp->canSearchFiles()) { ?>
 </div>
 
     <? if ($fp->canAddFile()) { ?>
-	<div id="ccm-file-manager-upload">
+	<div id="ccm-file-manager-upload" class="ccm-file-manager-upload">
         <?=t("<strong>Upload Files</strong> / Click to Choose or Drag &amp; Drop. / ")?>
         <a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/import"
            class="dialog-launch"
@@ -25,7 +25,7 @@ if ($fp->canAddFile() || $fp->canSearchFiles()) { ?>
 <? } else { ?>
 <div class="ccm-pane-body">
 	<p><?=t("You do not have access to the file manager.");?></p>
-</div>	
+</div>
 <div class="ccm-pane-footer"></div>
 
 <? } ?>

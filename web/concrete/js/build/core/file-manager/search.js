@@ -16,11 +16,7 @@
 
         my.options = options;
         my._templateFileProgress = _.template('<div id="ccm-file-upload-progress" class="ccm-ui"><div id="ccm-file-upload-progress-bar">' +
-            '<% if (progress == \'-1\') { %>' +
-                '<div class="progress progress-striped active"><div class="progress-bar" style="width: 100%;"></div></div>' +
-            '<% } else { %>' +
-                '<div class="progress"><div class="progress-bar" style="width: <%=progress%>%;"></div></div>' +
-                '<% } %>' +
+            '<div class="progress progress-striped active"><div class="progress-bar" style="width: <%=progress%>%;"></div></div>' +
             '</div></div>');
         my._templateSearchResultsMenu = _.template(ConcreteFileManagerMenu.get());
 
@@ -48,7 +44,7 @@
 
     ConcreteFileManager.prototype.setupFileUploads = function() {
         var my = this,
-            $fileUploader = $('#ccm-file-manager-upload'),
+            $fileUploader = $('.ccm-file-manager-upload'),
             args = {
                 url: CCM_DISPATCHER_FILENAME + '/ccm/system/file/upload',
                 dataType: 'json',
@@ -67,7 +63,7 @@
                 },
                 start: function() {
                     $('#ccm-file-upload-progress-wrapper').remove();
-                    $('<div />', {'id': 'ccm-file-upload-progress-wrapper'}).html(my._templateFileProgress({'progress': -1})).appendTo(document.body);
+                    $('<div />', {'id': 'ccm-file-upload-progress-wrapper'}).html(my._templateFileProgress({'progress': 100})).appendTo(document.body);
                     $.fn.dialog.open({
                         title: ccmi18n_filemanager.uploadProgress,
                         width: 400,
@@ -79,18 +75,19 @@
                 stop: function() {
                     jQuery.fn.dialog.closeTop();
                     my.refreshResults();
+
+                    ConcreteAlert.notify({
+                        'message': ccmi18n_filemanager.uploadComplete,
+                        'title': ccmi18n_filemanager.title
+                    });
                 }
             };
 
         $fileUploader.on('click', function() {
             $(this).find('input').trigger('click');
-            return false;
-        }).children('a').click(function() {
-            $(this).parent().find('input').trigger('click');
-            return false;
         });
-        $fileUploader.fileupload(args);
 
+        $fileUploader.fileupload(args);
     };
 
     ConcreteFileManager.prototype.setupEvents = function() {
