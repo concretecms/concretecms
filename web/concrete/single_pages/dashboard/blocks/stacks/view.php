@@ -37,7 +37,7 @@ if ($controller->getTask() == 'view_details') {
         <a href="<?=URL::to('/dashboard/blocks/stacks')?>" data-dialog="add-stack" class="btn btn-default"><i class="fa fa-angle-double-left"></i> <?=t("Back to Stacks")?></a>
     </div>
 
-    <h3><?php echo $stack->getCollectionName()?></h3>
+    <p class="lead"><?php echo $stack->getCollectionName()?></p>
 
     <nav class="navbar navbar-default">
     <div class="container-fluid">
