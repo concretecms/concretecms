@@ -310,10 +310,19 @@ abstract class Key extends Object {
 			return true;
 		}
 
-		$r = PermissionCache::validate($this);
-		if ($r !== -1) {
-			return $r;
+        $cache = Core::make('cache/request');
+		$object = $this->getPermissionObject();
+		if (is_object($object)) {
+            $identifier = sprintf('permission/key/%s/%s', $this->getPermissionKeyHandle(), $object->getPermissionObjectIdentifier());
+		} else {
+            $identifier = sprintf('permission/key/%s', $this->getPermissionKeyHandle());
 		}
+
+        $item = $cache->getItem($identifier);
+        if (!$item->isMiss()) {
+            return $item->get();
+        }
+
 		$pae = $this->getPermissionAccessObject();
 
 		if (is_object($pae)) {
@@ -322,7 +331,7 @@ abstract class Key extends Object {
 			$valid = false;
 		}
 
-		PermissionCache::addValidate($this, $valid);
+        $item->set($valid);
 		return $valid;
 	}
 

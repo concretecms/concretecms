@@ -2,42 +2,54 @@
 namespace Concrete\Core\Permission\Assignment;
 use PermissionAccess;
 use \Concrete\Core\Permission\Cache as PermissionCache;
-
+use Core;
 use Loader;
 class PageAssignment extends Assignment {
 
 	public function getPermissionAccessObject() {
-		$pa = PermissionCache::getAccessObject($this->pk, $this->getPermissionObject());
-		if ($pa === -1) {
-			return false;
-		}
+        $cache = Core::make('cache/request');
+        $identifier = sprintf('permission/assignment/access/%s/%s',
+            $this->pk->getPermissionKeyHandle(),
+            $this->getPermissionObject()->getPermissionObjectIdentifier()
+        );
+        $item = $cache->getItem($identifier);
+        if (!$item->isMiss()) {
+            return $item->get();
+        }
 
-		if (!is_object($pa)) {
-			$db = Loader::db();
-			$r = $db->GetOne('select paID from PagePermissionAssignments where cID = ? and pkID = ?', array($this->getPermissionObject()->getPermissionsCollectionID(), $this->pk->getPermissionKeyID()));
-			if ($r) {
-				$pa = PermissionAccess::getByID($r, $this->pk, false);
-			}
-			if (is_object($pa)) {
-				PermissionCache::addAccessObject($this->pk, $this->getPermissionObject(), $pa);
-			} else {
-				PermissionCache::addAccessObject($this->pk, $this->getPermissionObject(), -1);
-			}
-		}
+        $db = Loader::db();
+        $r = $db->GetOne('select paID from PagePermissionAssignments where cID = ? and pkID = ?', array($this->getPermissionObject()->getPermissionsCollectionID(), $this->pk->getPermissionKeyID()));
+        if ($r) {
+            $pa = PermissionAccess::getByID($r, $this->pk, false);
+        }
+
+        $item->set($pa);
 		return $pa;
 	}
 
 	public function clearPermissionAssignment() {
 		$db = Loader::db();
 		$db->Execute('update PagePermissionAssignments set paID = 0 where pkID = ? and cID = ?', array($this->pk->getPermissionKeyID(), $this->getPermissionObject()->getPermissionsCollectionID()));
-		PermissionCache::clearAccessObject($this->pk, $this->getPermissionObject());
+
+        $cache = Core::make('cache/request');
+        $identifier = sprintf('permission/assignment/access/%s/%s',
+            $this->pk->getPermissionKeyHandle(),
+            $this->getPermissionObject()->getPermissionObjectIdentifier()
+        );
+        $cache->delete($identifier);
 	}
 
 	public function assignPermissionAccess(PermissionAccess $pa) {
 		$db = Loader::db();
 		$db->Replace('PagePermissionAssignments', array('cID' => $this->getPermissionObject()->getPermissionsCollectionID(), 'paID' => $pa->getPermissionAccessID(), 'pkID' => $this->pk->getPermissionKeyID()), array('cID', 'pkID'), true);
 		$pa->markAsInUse();
-		PermissionCache::clearAccessObject($this->pk, $this->getPermissionObject());
+
+        $cache = Core::make('cache/request');
+        $identifier = sprintf('permission/assignment/access/%s/%s',
+            $this->pk->getPermissionKeyHandle(),
+            $this->getPermissionObject()->getPermissionObjectIdentifier()
+        );
+        $cache->delete($identifier);
 	}
 
 	public function getPermissionKeyToolsURL($task = false) {

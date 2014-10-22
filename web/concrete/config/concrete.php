@@ -9,7 +9,7 @@ return array(
      */
     'version'           => '5.7.1.1',
     'version_installed' => '5.7.1.1',
-    'version_db' => '20141017000000', // the key of the latest database migration - corresponds to 5.7.1
+    'version_db' => '20141023000000', // the key of the latest database migration - corresponds to 5.7.1
 
     /**
      * Installation status
@@ -248,7 +248,24 @@ return array(
          *
          * @var bool
          */
-        'spam'   => false
+        'spam'   => false,
+
+
+        'queries' => array(
+
+            /**
+             * Whether to log database queries or not.
+             *
+             * @var bool
+             */
+            'log' => false,
+
+
+            'clear_on_reload' => false
+
+
+
+        )
     ),
     'jobs'              => array(
 
