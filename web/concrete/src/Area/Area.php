@@ -335,7 +335,7 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
             return false;
         }
 
-        $identifier = sprintf('/area/%s/%s', $c->getCollectionID(), $arHandle);
+        $identifier = sprintf('/page/area/%s/%s', $c->getCollectionID(), $arHandle);
         $cache = \Core::make('cache/request');
         $item = $cache->getItem($identifier);
         if (!$item->isMiss()) {
@@ -364,7 +364,6 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
             }
             $obj->setPropertiesFromArray($arRow);
             $obj->c = $c;
-
             $item->set($obj);
             return $obj;
         }
@@ -678,6 +677,7 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
 
         $blocksToDisplay = ($alternateBlockArray) ? $alternateBlockArray : $this->getAreaBlocksArray();
+
 
         $u = new User();
 

@@ -31,20 +31,27 @@ class Logger
         return true;
     }
 
-    public function write(DebugStack $stack)
+    /**
+     * @\Doctrine\DBAL\Logging\DebugStack[] $loggers
+     */
+    public function write($loggers)
     {
         $db = Database::get();
-        foreach($stack->queries as $query) {
-            $params = '';
-            if (is_array($query['params'])) {
-                $params = implode(',', $query['params']);
+        foreach($loggers as $stack) {
+            if (isset($stack->queries)) {
+                foreach($stack->queries as $query) {
+                    $params = '';
+                    if (is_array($query['params'])) {
+                        $params = implode(',', $query['params']);
+                    }
+                    $db->insert('SystemDatabaseQueryLog', array(
+                        'query' => $query['sql'],
+                        'params' => $params,
+                        'executionMS' => $query['executionMS']
+                        )
+                    );
+                }
             }
-            $db->insert('SystemDatabaseQueryLog', array(
-                'query' => $query['sql'],
-                'params' => $params,
-                'executionMS' => $query['executionMS']
-                )
-            );
         }
     }
 
