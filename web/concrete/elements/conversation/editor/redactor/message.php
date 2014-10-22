@@ -6,13 +6,18 @@ print $form->textarea($editor->getConversationEditorInputName(), $editor->getCon
 $(function() {
     var textarea = $('textarea.unbound.redactor_conversation_editor_<?=$editor->getConversationObject()->getConversationID()?>').removeClass('unbound');
     $(textarea).redactor({
+        'concrete5': {
+            filemanager: <?=$fp->canAccessFileManager()?>,
+            sitemap: <?=$tp->canAccessSitemap()?>,
+            lightbox: true
+        },
         autoresize: false,
         buttons: [ 'bold','italic','deleted','|','fontcolor','|','link' ],
         callback: function(obj) {
             ConcreteEvent.publish('ConversationRedactorEditorLoaded',obj);
             ConcreteEvent.bind('ConversationSubmitForm',function(){
                 obj.setCode("");
-    			$('.preview.processing').each(function(){ 
+    			$('.preview.processing').each(function(){
     				$('input[rel="'+ $(this).attr('rel') +'"]').remove();
     				$(this).remove();
     			});
