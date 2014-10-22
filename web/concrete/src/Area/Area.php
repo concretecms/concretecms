@@ -321,6 +321,13 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
         return $str;
     }
 
+    public function refreshCache($c)
+    {
+        $identifier = sprintf('/page/area/%s', $c->getCollectionID());
+        $cache = \Core::make('cache/request');
+        $cache->delete($identifier);
+    }
+
 	/**
      * Gets the Area object for the given page and area handle
      * @param Page|Collection $c
@@ -335,38 +342,43 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
             return false;
         }
 
-        $identifier = sprintf('/page/area/%s/%s', $c->getCollectionID(), $arHandle);
+        $identifier = sprintf('/page/area/%s', $c->getCollectionID());
         $cache = \Core::make('cache/request');
         $item = $cache->getItem($identifier);
         if (!$item->isMiss()) {
-            return $item->get();
+            $areas = $item->get();
+            return $areas[$arHandle];
         }
-
+        $areas = array();
         $db = Loader::db();
         // First, we verify that this is a legitimate area
-        $v = array($c->getCollectionID(), $arHandle);
-        $q = "select arID, arHandle, cID, arOverrideCollectionPermissions, arInheritPermissionsFromAreaOnCID, arIsGlobal, arParentID from Areas where cID = ? and arHandle = ?";
-        $arRow = $db->getRow($q, $v);
-        if ($arRow['arID'] > 0) {
-            if ($arRow['arIsGlobal']) {
-                $obj = new GlobalArea($arHandle);
-            } else {
-                if ($arRow['arParentID']) {
-                    $arParentHandle = $db->GetOne(
-                        'select arHandle from Areas where arID = ?',
-                        array($arRow['arParentID'])
-                    );
-                    $parent = Area::get($c, $arParentHandle);
-                    $obj = new SubArea($arHandle, $parent);
+        $v = array($c->getCollectionID());
+        $q = "select arID, arHandle, cID, arOverrideCollectionPermissions, arInheritPermissionsFromAreaOnCID, arIsGlobal, arParentID from Areas where cID = ?";
+        $r = $db->Execute($q, $v);
+        while ($arRow = $r->FetchRow()) {
+            if ($arRow['arID'] > 0) {
+                if ($arRow['arIsGlobal']) {
+                    $obj = new GlobalArea($arHandle);
                 } else {
-                    $obj = new Area($arHandle);
+                    if ($arRow['arParentID']) {
+                        $arParentHandle = $db->GetOne(
+                            'select arHandle from Areas where arID = ?',
+                            array($arRow['arParentID'])
+                        );
+                        $obj = new SubArea($arHandle, $arParentHandle, $arRow['arParentID']);
+                    } else {
+                        $obj = new Area($arHandle);
+                    }
                 }
+                $obj->setPropertiesFromArray($arRow);
+                $obj->c = $c;
+                $arRowHandle = $arRow['arHandle'];
+                $areas[$arRowHandle] = $obj;
             }
-            $obj->setPropertiesFromArray($arRow);
-            $obj->c = $c;
-            $item->set($obj);
-            return $obj;
         }
+
+        $item->set($areas);
+        return $areas[$arHandle];
     }
 
 	/**
@@ -381,6 +393,7 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
             array('arHandle', 'cID'),
             true
         );
+        $this->refreshCache($c);
         $area = self::get($c, $arHandle);
         $area->rescanAreaPermissionsChain();
 
