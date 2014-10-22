@@ -140,7 +140,7 @@
                     after = selected.getElem();
                     dragAreaBlock = selected.getBlock();
                 } else {
-                    after = area.getElem().children().last();
+                    after = area.getBlockContainer().children().last();
                     dragAreaBlock = data.dragAreaBlock;
                 }
 

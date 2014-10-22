@@ -418,28 +418,28 @@
         var maxColumns = obj.options.maxcolumns;
         var minColumnClass = obj.options.gridColumnClasses[0];
 
-        var test_container = $('#ccm-theme-grid-edit-mode-row-wrapper').closest('.ccm-block-edit-layout');
+        var test_container = $('#ccm-theme-grid-edit-mode-row-wrapper').closest('.ccm-block-edit-layout, .ccm-layouts-edit-mode-add');
         if (!test_container.length) {
             test_container = $('#ccm-theme-grid-edit-mode-row-wrapper');
         }
 
-        $('<div />', {'id': obj.options.gridrowtmpid}).appendTo(test_container);
+        var test_container_div = $('<div />', {'id': obj.options.gridrowtmpid}).appendTo(test_container);
         var columnHTML = '';
         for (i = 1; i <= maxColumns; i++) {
             columnHTML += '<div class="' + minColumnClass + '"></div>'
         }
-        var tmp_row = $('#' + obj.options.gridrowtmpid).append(
-            $(
-                obj.options.containerstart
-                    + obj.options.rowstart
-                    + columnHTML
-                    + obj.options.rowend
-                    + obj.options.containerend
-            )
+
+
+        var grid_elem = obj.options.rowstart
+            + columnHTML
+            + obj.options.rowend;
+
+        test_container_div.append(
+            $(grid_elem)
         );
         var marginModifier = 0;
         for (i = 0; i < maxColumns; i++) {
-            var $column = tmp_row.find('.' + minColumnClass).eq(i);
+            var $column = test_container_div.find('.' + minColumnClass).eq(i);
             if (i == 0) {
                 var pl = $column.position().left;
                 if (pl < 0) {
@@ -452,7 +452,7 @@
             // handle the END of every column
             validEndPoints.push(Math.floor(Math.floor($column.width()) + Math.floor($column.position().left) + marginModifier));
         }
-        $('#' + obj.options.gridrowtmpid).remove();
+        test_container_div.remove();
 
         obj.$slider.slider({
             min: 0,
