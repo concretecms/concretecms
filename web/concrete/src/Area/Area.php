@@ -335,13 +335,13 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
             return false;
         }
 
-        // Right now we are splitting the cache to deal with times when Areas
-        // get converted to GlobalAreas and back the other way
-        $globalCache = $arIsGlobal ? ':1' : '';
-        $a = CacheLocal::getEntry('area', $c->getCollectionID() . ':' . $arHandle . $globalCache);
-        if ($a instanceof Area) {
-            return $a;
+        $identifier = sprintf('/area/%s/%s', $c->getCollectionID(), $arHandle);
+        $cache = \Core::make('cache/request');
+        $item = $cache->getItem($identifier);
+        if (!$item->isMiss()) {
+            return $item->get();
         }
+
         $db = Loader::db();
         // First, we verify that this is a legitimate area
         $v = array($c->getCollectionID(), $arHandle);
@@ -364,6 +364,8 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
             }
             $obj->setPropertiesFromArray($arRow);
             $obj->c = $c;
+
+            $item->set($obj);
             return $obj;
         }
     }
@@ -383,9 +385,6 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
         $area = self::get($c, $arHandle);
         $area->rescanAreaPermissionsChain();
 
-        // we need to update the local cache
-        $globalCache = $arIsGlobal ? ':1' : '';
-        CacheLocal::set('area', $c->getCollectionID() . ':' . $arHandle . $globalCache, $area);
 
         return $area;
     }

@@ -46,6 +46,7 @@ class Controller extends BlockController
     public function on_start()
     {
         $this->list = new PageList();
+        $this->list->disableAutomaticSorting();
         //$pl->setNameSpace('b' . $this->bID);
 
         $cArray = array();
@@ -211,8 +212,7 @@ class Controller extends BlockController
     protected function loadKeys()
     {
         $attributeKeys = array();
-        
-        $keys = CollectionKey::getList();
+        $keys = CollectionKey::getList(array('atHandle' => 'topics'));
         foreach ($keys as $ak) {
             if ($ak->getAttributeTypeHandle() == 'topics') {
                 $attributeKeys[] = $ak;

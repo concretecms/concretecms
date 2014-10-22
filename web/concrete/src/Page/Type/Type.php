@@ -306,7 +306,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
             }
         }
         $defaultTemplate = PageTemplate::getByID($this->getPageTypeDefaultPageTemplateID());
-        if (is_object($defaultPageTemplate) && (!in_array($defaultTemplate, $_templates))) {
+        if (is_object($defaultTemplate) && (!in_array($defaultTemplate, $_templates))) {
             $_templates[] = $defaultTemplate;
         }
 
@@ -746,12 +746,19 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
 
     public static function getByID($ptID)
     {
+        $cache = \Core::make('cache/request');
+        $item = $cache->getItem('pagetype/%s', $ptID);
+        if (!$item->isMiss()) {
+            return $item->get();
+        }
+
         $db = Loader::db();
         $r = $db->GetRow('select * from PageTypes where ptID = ?', array($ptID));
         if (is_array($r) && $r['ptID']) {
             $cm = new static();
             $cm->setPropertiesFromArray($r);
             $cm->ptPublishTargetObject = unserialize($r['ptPublishTargetObject']);
+            $item->set($cm);
             return $cm;
         }
     }

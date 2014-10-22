@@ -7,6 +7,7 @@ use Concrete\Core\Cache\Page\PageCacheRecord;
 use Concrete\Core\Foundation\ClassLoader;
 use Concrete\Core\Foundation\EnvironmentDetector;
 use Concrete\Core\Localization\Localization;
+use Concrete\Core\Logging\Query\Logger;
 use Concrete\Core\Routing\DispatcherRouteCallback;
 use Config;
 use Core;
@@ -43,7 +44,23 @@ class Application extends Container
         if ($this->isInstalled()) {
             $this->handleScheduledJobs();
 
+            $logger = new Logger();
+            $r = Request::getInstance();
             foreach (\Database::getConnections() as $connection) {
+                if (Config::get('concrete.log.queries.log')) {
+                    if ($logger->shouldLogQueries($r)) {
+                        $configuration = $connection->getConfiguration();
+                        $queries = $configuration->getSQLLogger();
+                        $configuration->setSQLLogger(null);
+
+                        if (Config::get('concrete.log.queries.clear_on_reload')) {
+                            $logger->clearQueryLog();
+                        }
+
+                        $logger->write($queries);
+
+                    }
+                }
                 $connection->close();
             }
         }

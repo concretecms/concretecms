@@ -3468,6 +3468,13 @@
         <col>pkgID</col>
     </index>
   </table>
+  <table name="SystemDatabaseQueryLog">
+    <field name="query" type="X">
+    </field>
+    <field name="params" type="X" />
+    <field name="executionMS" type="C">
+    </field>
+  </table>
 
   <table name="SystemContentEditorSnippets">
     <field name="scsHandle" type="C" size="64">

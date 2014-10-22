@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\Page;
+use Concrete\Core\Page\Type\Type;
 use Loader;
 use CacheLocal;
 use Collection;
@@ -1068,8 +1069,13 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     function getPageTypeHandle() {
         if (!isset($this->ptHandle)) {
-            $db = Loader::db();
-            $this->ptHandle = $db->GetOne('select ptHandle from PageTypes where ptID = ?', array($this->ptID));
+            $this->ptHandle = false;
+            if ($this->ptID) {
+                $pt = Type::getByID($this->ptID);
+                if (is_object($pt)) {
+                    $this->ptHandle = $pt->getPageTypeHandle();
+                }
+            }
         }
 
         return $this->ptHandle;

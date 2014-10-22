@@ -58,6 +58,7 @@ class Upgrade extends BackendUserInterfaceController
                 $cms->clearCaches();
 
                 $configuration = new \Concrete\Core\Updater\Migrations\Configuration();
+                $configuration->registerPreviousMigratedVersions();
                 $migrations = $configuration->getMigrationsToExecute('up', $configuration->getLatestVersion());
                 foreach($migrations as $migration) {
                     $migration->execute('up');
