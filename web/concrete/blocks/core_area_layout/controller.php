@@ -15,7 +15,6 @@ use Page;
 class Controller extends BlockController
 {
 
-    protected $btCacheBlockRecord = false;
     protected $btSupportsInlineAdd = true;
     protected $btSupportsInlineEdit = true;
     protected $btTable = 'btCoreAreaLayout';

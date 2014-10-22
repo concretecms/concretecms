@@ -361,10 +361,7 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
                     $obj = new GlobalArea($arHandle);
                 } else {
                     if ($arRow['arParentID']) {
-                        $arParentHandle = $db->GetOne(
-                            'select arHandle from Areas where arID = ?',
-                            array($arRow['arParentID'])
-                        );
+                        $arParentHandle = self::getAreaHandleFromID($arRow['arParentID']);
                         $obj = new SubArea($arHandle, $arParentHandle, $arRow['arParentID']);
                     } else {
                         $obj = new Area($arHandle);
@@ -403,8 +400,18 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
 
 	public static function getAreaHandleFromID($arID)
     {
-        $db = Loader::db();
-        return $db->GetOne('select arHandle from Areas where arID = ?', array($arID));
+        $identifier = sprintf('/page/area/handle/%s', $arID);
+        $cache = \Core::make('cache/request');
+        $item = $cache->getItem($identifier);
+        if (!$item->isMiss()) {
+            return $item->get();
+        } else {
+            $item->lock();
+            $db = Loader::db();
+            $arHandle = $db->GetOne('select arHandle from Areas where arID = ?', array($arID));
+            $item->set($arHandle);
+            return $arHandle;
+        }
     }
 
 	/**
