@@ -6526,7 +6526,7 @@
                         });
                     });
                 } else {
-                    $('a[data-action=choose-file-from-file-manager]').parent().remove();
+                    $('a[data-action=choose-file-from-file-manager]').remove();
                 }
 
 				if (!this.opts.concrete5.lightbox) {
@@ -6554,7 +6554,7 @@
 
                     });
                 } else {
-                    $('a[data-action=choose-link-from-sitemap]').parent().remove();
+                    $('a[data-action=choose-link-from-sitemap]').remove();
                 }
 
 				if (!this.opts.concrete5.sitemap && !this.opts.concrete5.filemanager) {
