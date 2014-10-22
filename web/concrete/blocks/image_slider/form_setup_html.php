@@ -1,4 +1,7 @@
 <?php  defined('C5_EXECUTE') or die("Access Denied.");
+
+$fp = FilePermissions::getGlobal();
+$tp = new TaskPermission();
 ?>
 <script>
     var CCM_EDITOR_SECURITY_TOKEN = "<?=Loader::helper('validation/token')->generate('editor')?>";
@@ -85,7 +88,12 @@
             var newSlide = $('.ccm-image-slider-entry').last();
             thisModal.scrollTop(newSlide.offset().top);
             newSlide.find('.redactor-content').redactor({
-                minHeight: '200'
+                minHeight: '200',
+                'concrete5': {
+                    filemanager: <?=$fp->canAccessFileManager()?>,
+                    sitemap: <?=$tp->canAccessSitemap()?>,
+                    lightbox: true
+                }
             });
             attachDelete(newSlide.find('.ccm-delete-image-slider-entry'));
             attachFileManagerLaunch(newSlide.find('.ccm-pick-slide-image'));
@@ -99,7 +107,12 @@
         attachFileManagerLaunch($('.ccm-pick-slide-image'));
         $(function() {  // activate redactors
             $('.redactor-content').redactor({
-                minHeight: '200'
+                minHeight: '200',
+                'concrete5': {
+                    filemanager: <?=$fp->canAccessFileManager()?>,
+                    sitemap: <?=$tp->canAccessSitemap()?>,
+                    lightbox: true
+                }
             });
         });
     });
