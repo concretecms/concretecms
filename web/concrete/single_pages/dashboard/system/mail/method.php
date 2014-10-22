@@ -12,13 +12,13 @@ $form = Loader::helper('form');
 	<fieldset>
 	<div class="control-group">
 	<div class="controls">
-	<div class="radio"><label><?=$form->radio('MAIL_SEND_METHOD', 'PHP_MAIL', Config::get('concrete.mail.method'))?> <span><?=t('Default PHP Mail Function')?></span></label></div>
-    <div class="radio"><label><?=$form->radio('MAIL_SEND_METHOD', 'SMTP', Config::get('concrete.mail.method'))?> <span><?=t('External SMTP Server')?></span></label></div>
+	<div class="radio"><label><?=$form->radio('MAIL_SEND_METHOD', 'PHP_MAIL', strtoupper(Config::get('concrete.mail.method')))?> <span><?=t('Default PHP Mail Function')?></span></label></div>
+    <div class="radio"><label><?=$form->radio('MAIL_SEND_METHOD', 'SMTP', strtoupper(Config::get('concrete.mail.method')))?> <span><?=t('External SMTP Server')?></span></label></div>
 	</div>
 	</div>
 	</fieldset>
     <div class="spacer-row-2"></div>
-	<fieldset id="ccm-settings-mail-smtp">
+	<fieldset id="ccm-settings-mail-smtp" style="display:none">
             <div class="row">
                 <div class="col-md-6">
                     <legend><?=t('SMTP Settings')?></legend>
@@ -64,13 +64,12 @@ $form = Loader::helper('form');
 		} else {
 			$("#ccm-settings-mail-smtp").hide();
 		}
-	}
+	};
 
-	$(function() {
-		$("input[name=MAIL_SEND_METHOD]").click(function() {
-			ccm_checkMailSettings();
-		});
-		ccm_checkMailSettings();
-	});
+
+    $("input[name=MAIL_SEND_METHOD]").click(function() {
+        ccm_checkMailSettings();
+    });
+    ccm_checkMailSettings();
 
 	</script>
