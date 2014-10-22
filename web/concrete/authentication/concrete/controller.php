@@ -110,53 +110,58 @@ class Controller extends AuthenticationTypeController
         $error = Loader::helper('validation/error');
         $vs = Loader::helper('validation/strings');
         $em = $this->post('uEmail');
-        try {
-            if (!$vs->email($em)) {
-                throw new \Exception(t('Invalid email address.'));
-            }
 
-            $oUser = UserInfo::getByEmail($em);
-            if (!$oUser) {
-                throw new \Exception(t('We have no record of that email address.'));
-            }
-
-            $mh = Loader::helper('mail');
-            //$mh->addParameter('uPassword', $oUser->resetUserPassword());
-            if (Config::get('concrete.user.registration.email_registration')) {
-                $mh->addParameter('uName', $oUser->getUserEmail());
-            } else {
-                $mh->addParameter('uName', $oUser->getUserName());
-            }
-            $mh->to($oUser->getUserEmail());
-
-            //generate hash that'll be used to authenticate user, allowing them to change their password
-            $h = new \Concrete\Core\User\ValidationHash;
-            $uHash = $h->add($oUser->uID, intval(UVTYPE_CHANGE_PASSWORD), true);
-            $changePassURL = BASE_URL . View::url(
-                                            '/login',
-                                            'callback',
-                                            $this->getAuthenticationType()->getAuthenticationTypeHandle(),
-                                            'change_password',
-                                            $uHash);
-
-            $mh->addParameter('changePassURL', $changePassURL);
-
-            if (defined('EMAIL_ADDRESS_FORGOT_PASSWORD')) {
-                $mh->from(EMAIL_ADDRESS_FORGOT_PASSWORD, t('Forgot Password'));
-            } else {
-                $adminUser = UserInfo::getByID(USER_SUPER_ID);
-                if (is_object($adminUser)) {
-                    $mh->from($adminUser->getUserEmail(), t('Forgot Password'));
+        if ($em) {
+            try {
+                if (!$vs->email($em)) {
+                    throw new \Exception(t('Invalid email address.'));
                 }
+
+                $oUser = UserInfo::getByEmail($em);
+                if (!$oUser) {
+                    throw new \Exception(t('We have no record of that email address.'));
+                }
+
+                $mh = Loader::helper('mail');
+                //$mh->addParameter('uPassword', $oUser->resetUserPassword());
+                if (Config::get('concrete.user.registration.email_registration')) {
+                    $mh->addParameter('uName', $oUser->getUserEmail());
+                } else {
+                    $mh->addParameter('uName', $oUser->getUserName());
+                }
+                $mh->to($oUser->getUserEmail());
+
+                //generate hash that'll be used to authenticate user, allowing them to change their password
+                $h = new \Concrete\Core\User\ValidationHash;
+                $uHash = $h->add($oUser->uID, intval(UVTYPE_CHANGE_PASSWORD), true);
+                $changePassURL = BASE_URL . View::url(
+                        '/login',
+                        'callback',
+                        $this->getAuthenticationType()->getAuthenticationTypeHandle(),
+                        'change_password',
+                        $uHash);
+
+                $mh->addParameter('changePassURL', $changePassURL);
+
+                if (defined('EMAIL_ADDRESS_FORGOT_PASSWORD')) {
+                    $mh->from(EMAIL_ADDRESS_FORGOT_PASSWORD, t('Forgot Password'));
+                } else {
+                    $adminUser = UserInfo::getByID(USER_SUPER_ID);
+                    if (is_object($adminUser)) {
+                        $mh->from($adminUser->getUserEmail(), t('Forgot Password'));
+                    }
+                }
+                $mh->load('forgot_password');
+                @$mh->sendMail();
+
+            } catch (\Exception $e) {
+                $error->add($e);
             }
-            $mh->load('forgot_password');
-            @$mh->sendMail();
 
-        } catch (\Exception $e) {
-            $error->add($e);
+            $this->redirect('/login', $this->getAuthenticationType()->getAuthenticationTypeHandle(), 'password_sent');
+        } else {
+            $this->set('authType', $this->getAuthenticationType());
         }
-
-        $this->redirect('/login', $this->getAuthenticationType()->getAuthenticationTypeHandle(), 'password_sent');
     }
 
     public function change_password($uHash = '')
