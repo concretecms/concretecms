@@ -265,6 +265,8 @@
         removeBlock: function areaRemoveBlock(block) {
             var my = this, totalBlocks = my.getTotalBlocks();
 
+            my.getElem().removeClass('ccm-parent-menu-item-active');
+
             block.getContainer().remove();
             my.setBlocks(_(my.getBlocks()).without(block));
 
