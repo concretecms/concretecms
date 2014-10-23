@@ -476,6 +476,13 @@ return array(
             array('javascript', 'js/style-customizer.js', array('minify' => false)),
             array('css', 'css/style-customizer.css', array('minify' => false))
         ),
+        'core/locale' => array(
+            array(
+                'javascript',
+                REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js',
+                array('combine' => false, 'minify' => false, 'local' => false)
+            )
+        ),
         'jquery/awesome-rating'                 => array(
             array('javascript', 'js/jquery-awesome-rating.js', array('minify' => false)),
             array('css', 'css/jquery-awesome-rating.css', array('minify' => false))
@@ -649,6 +656,7 @@ return array(
             array(
                 array('javascript', 'jquery'),
                 array('javascript', 'core/events'),
+                array('javascript', 'core/locale'),
                 array('javascript', 'spectrum'),
                 array('css', 'spectrum')
             )
@@ -674,6 +682,7 @@ return array(
                 array('javascript', 'underscore'),
                 array('javascript', 'core/colorpicker'),
                 array('javascript', 'core/app'),
+                array('javascript', 'core/locale'),
                 array('javascript', 'core/legacy'),
                 array('javascript', 'core/file-manager'),
                 array('javascript', 'core/style-customizer'),
@@ -718,6 +727,7 @@ return array(
                 array('javascript', 'bootstrap/tooltip'),
                 array('javascript', 'bootstrap/popover'),
                 array('javascript', 'jquery/ui'),
+                array('javascript', 'core/locale'),
                 array('javascript', 'core/app'),
                 array('javascript', 'core/legacy'),
                 array('css', 'core/app'),
@@ -761,6 +771,7 @@ return array(
                 array('javascript', 'bootstrap/popover'),
                 array('javascript', 'bootstrap/transition'),
                 array('javascript', 'bootstrap/alert'),
+                array('javascript', 'core/locale'),
                 array('javascript', 'core/app'),
                 array('javascript', 'redactor'),
                 array('css', 'core/app'),
@@ -772,13 +783,16 @@ return array(
         'core/file-manager'        => array(
             array(
                 array('css', 'core/app'),
+                array('css', 'jquery/ui'),
                 array('css', 'core/file-manager'),
                 array('css', 'select2'),
                 array('javascript', 'core/events'),
+                array('javascript', 'bootstrap/tooltip'),
                 array('javascript', 'underscore'),
                 array('javascript', 'jquery/ui'),
                 array('javascript', 'select2'),
                 array('javascript', 'select2_locale'),
+                array('javascript', 'core/locale'),
                 array('javascript', 'core/app'),
                 array('javascript', 'core/file-manager')
             )
@@ -791,6 +805,7 @@ return array(
                 array('javascript', 'dynatree'),
                 array('javascript', 'dynatree_locale'),
                 array('javascript', 'core/app'),
+                array('javascript', 'core/locale'),
                 array('javascript', 'core/sitemap'),
                 array('css', 'dynatree'),
                 array('css', 'core/sitemap')
