@@ -217,7 +217,6 @@ if ($response) {
  */
 require DIR_BASE_CORE . '/bootstrap/preprocess.php';
 
-
 /**
  * ----------------------------------------------------------------------------
  * Set the active language for the site, based either on the site locale, or the
@@ -238,6 +237,11 @@ $loc->setLocale($lan);
  */
 $cms->handleBaseURLRedirection();
 $cms->handleURLSlashes();
+
+/**
+ * Handle automatic updating
+ */
+$cms->handleAutomaticUpdates();
 
 /**
  * ----------------------------------------------------------------------------
