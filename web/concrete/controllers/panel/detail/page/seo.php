@@ -13,8 +13,8 @@ class Seo extends BackendInterfacePageController {
 		return $this->permissions->canEditPageContents() || $this->asl->allowEditPaths();
 	}
 
-	public function __construct() {
-		parent::__construct();
+	public function on_start() {
+		parent::on_start();
 		$pk = PermissionKey::getByHandle('edit_page_properties');
 		$pk->setPermissionObject($this->page);
 		$this->asl = $pk->getMyAssignment();

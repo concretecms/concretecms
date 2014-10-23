@@ -63,6 +63,12 @@ abstract class AbstractController
         return $this->sets;
     }
 
+    public function shouldRunControllerTask()
+    {
+        // this assumes the task has already been checked for validity.
+        return true;
+    }
+
     public function getHelperObjects()
     {
         $helpers = array();
@@ -146,7 +152,9 @@ abstract class AbstractController
         $this->action = $action;
         $this->parameters = $parameters;
         if (is_callable(array($this, $action))) {
-            return call_user_func_array(array($this, $action), $parameters);
+            if ($this->shouldRunControllerTask()) {
+                return call_user_func_array(array($this, $action), $parameters);
+            }
         }
     }
 

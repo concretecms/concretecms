@@ -22,9 +22,9 @@ class Attributes extends BackendInterfacePageController
         return $this->permissions->canEditPageProperties();
     }
 
-    public function __construct()
+    public function on_start()
     {
-        parent::__construct();
+        parent::on_start();
         $pk = PermissionKey::getByHandle('edit_page_properties');
         $pk->setPermissionObject($this->page);
         $this->assignment = $pk->getMyAssignment();

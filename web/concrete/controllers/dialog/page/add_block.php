@@ -19,9 +19,9 @@ class AddBlock extends BackendInterfacePageController
 
     protected $viewPath = '/dialogs/page/add_block';
 
-    public function __construct()
+    public function on_start()
     {
-        parent::__construct();
+        parent::on_start();
         $request = $this->request;
 
         if (!Loader::helper('validation/numbers')->integer($_REQUEST['btID'])) {

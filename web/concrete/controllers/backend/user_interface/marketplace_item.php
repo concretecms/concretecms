@@ -12,9 +12,9 @@ abstract class MarketplaceItem extends UserInterface
     protected $marketplace;
     protected $item;
 
-    public function __construct()
+    public function on_start()
     {
-        parent::__construct();
+        parent::on_start();
         $this->marketplace = Marketplace::getInstance();
         $this->item = RemoteItem::getByID($this->request->query->get('mpID'));
     }

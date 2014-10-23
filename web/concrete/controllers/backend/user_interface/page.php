@@ -11,15 +11,18 @@ abstract class Page extends \Concrete\Controller\Backend\UserInterface
     /** @var ConcretePage A page object */
     protected $page;
 
-    public function __construct()
+    public function on_start()
     {
-        parent::__construct();
         $request = $this->request;
         $cID = $request->query->get('cID');
         if ($cID) {
             $page = ConcretePage::getByID($cID);
+        }
+        if (is_object($page) && !$page->isError()) {
             $this->setPageObject($page);
             $request->setCurrentPage($this->page);
+        } else {
+            throw new \Exception(t('Access Denied'));
         }
     }
 
@@ -29,14 +32,6 @@ abstract class Page extends \Concrete\Controller\Backend\UserInterface
         $this->permissions = new Permissions($this->page);
         $this->set('c', $this->page);
         $this->set('cp', $this->permissions);
-    }
-
-    public function getViewObject()
-    {
-        if ($this->permissions->canViewPage()) {
-            return parent::getViewObject();
-        }
-        throw new Exception(t('Access Denied'));
     }
 
     public function action()

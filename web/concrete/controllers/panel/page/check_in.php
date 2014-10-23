@@ -25,9 +25,9 @@ class CheckIn extends BackendInterfacePageController
         return $this->permissions->canApprovePageVersions() || $this->permissions->canEditPageContents();
     }
 
-    public function __construct()
+    public function on_start()
     {
-        parent::__construct();
+        parent::on_start();
         if ($this->page) {
             $this->set('publishErrors', $this->checkForPublishing());
         }
