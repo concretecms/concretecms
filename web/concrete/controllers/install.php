@@ -195,14 +195,20 @@ class Install extends Controller
         $rp = $rf->getProperty('docCommentCanary');
         $this->set('docCommentTest', (bool) $rp->getDocComment());
 
-        $val = $this->getBytes(ini_get('memory_limit'));
-        $this->set('memoryBytes', $val);
-        if ($val < 25165824) {
-            $this->set('memoryTest', -1);
-        } else if ($val >= 67108864) {
+        $memoryLimit = ini_get('memory_limit');
+        if ($memoryLimit == -1) {
             $this->set('memoryTest', 1);
+            $this->set('memoryBytes', 0);
         } else {
-            $this->set('memoryTest', 0);
+            $val = $this->getBytes($memoryLimit);
+            $this->set('memoryBytes', $val);
+            if ($val < 25165824) {
+                $this->set('memoryTest', -1);
+            } else if ($val >= 67108864) {
+                $this->set('memoryTest', 1);
+            } else {
+                $this->set('memoryTest', 0);
+            }
         }
 
         $phpVmin = '5.3.3';
