@@ -110,7 +110,13 @@ return array(
         'core_events'       => '\Concrete\Core\Events\EventsServiceProvider',
         'core_whoops'       => '\Concrete\Core\Error\Provider\WhoopsServiceProvider',
         'core_logging'      => '\Concrete\Core\Logging\LoggingServiceProvider',
-        'core_cache'        => '\Concrete\Core\Cache\CacheServiceProvider'
+        'core_cache'        => '\Concrete\Core\Cache\CacheServiceProvider',
+
+        // Authentication
+        'core_oauth'          => '\Concrete\Core\Authentication\Type\OAuth\ServiceProvider',
+        'core_auth_facebook'   => '\Concrete\Core\Authentication\Type\Facebook\ServiceProvider',
+        'core_auth_twitter'   => '\Concrete\Core\Authentication\Type\Twitter\ServiceProvider',
+        'core_auth_community' => '\Concrete\Core\Authentication\Type\Community\ServiceProvider'
     ),
 
     /**
@@ -196,6 +202,8 @@ return array(
         "/ccm/system/dialogs/block/permissions/guest_access/"                           => array('\Concrete\Controller\Dialog\Block\Permissions\GuestAccess::__construct'),
         "/ccm/system/dialogs/block/aliasing/"                                           => array('\Concrete\Controller\Dialog\Block\Aliasing::view'),
         "/ccm/system/dialogs/block/aliasing/submit"                                     => array('\Concrete\Controller\Dialog\Block\Aliasing::submit'),
+        "/ccm/system/dialogs/block/cache/"                                              => array('\Concrete\Controller\Dialog\Block\Cache::view'),
+        "/ccm/system/dialogs/block/cache/submit"                                        => array('\Concrete\Controller\Dialog\Block\Cache::submit'),
         "/ccm/system/dialogs/block/design/"                                             => array('\Concrete\Controller\Dialog\Block\Design::view'),
         "/ccm/system/dialogs/block/design/submit"                                       => array('\Concrete\Controller\Dialog\Block\Design::submit'),
         "/ccm/system/dialogs/block/design/reset"                                        => array('\Concrete\Controller\Dialog\Block\Design::reset'),
@@ -253,8 +261,16 @@ return array(
         /**
          * General Attribute
          */
-        "/ccm/system/attribute/attribute_sort/set"                                      => array('\Concrete\Controller\Backend\AttributeSort::set'),
-        "/ccm/system/attribute/attribute_sort/user"                                     => array('\Concrete\Controller\Backend\AttributeSort::user'),
+        "/ccm/system/attribute/attribute_sort/set"                                      => array('\Concrete\Controller\Backend\UserAttributes::sortInSet'),
+        "/ccm/system/attribute/attribute_sort/user"                                     => array('\Concrete\Controller\Backend\UserAttributes::sort'),
+
+        /**
+         * Marketplace
+         */
+        "/ccm/system/marketplace/connect"                                        => array('\Concrete\Controller\Backend\Marketplace\Connect::view'),
+        "/ccm/system/marketplace/search"                                        => array('\Concrete\Controller\Backend\Marketplace\Search::view'),
+        "/ccm/system/dialogs/marketplace/download"                               => array('\Concrete\Controller\Dialog\Marketplace\Download::view'),
+        "/ccm/system/dialogs/marketplace/checkout"                               => array('\Concrete\Controller\Dialog\Marketplace\Checkout::view'),
 
         /**
          * Search Routes
@@ -418,6 +434,9 @@ return array(
             array('javascript', 'js/jquery-ui.js', array('minify' => false, 'combine' => false)),
             array('css', 'css/jquery-ui.css', array('minify' => false))
         ),
+        'jquery/touch-punch'              => array(
+            array('javascript', 'js/jquery-ui-touch-punch.js')
+        ),
         'select2'                  => array(
             array('javascript', 'js/select2.js', array('minify' => false, 'combine' => false)),
             array('css', 'css/select2.css', array('minify' => false))
@@ -443,10 +462,6 @@ return array(
         'picturefill'              => array(
             array('javascript', 'js/picturefill.js', array('minify' => false))
         ),
-        'jquery/rating'            => array(
-            array('javascript', 'js/jquery.rating.js'),
-            array('css', 'css/jquery-rating.css')
-        ),
         'spectrum'                 => array(
             array('javascript', 'js/spectrum.js', array('minify' => false)),
             array('css', 'css/spectrum.css', array('minify' => false))
@@ -460,6 +475,10 @@ return array(
         'core/style-customizer'    => array(
             array('javascript', 'js/style-customizer.js', array('minify' => false)),
             array('css', 'css/style-customizer.css', array('minify' => false))
+        ),
+        'jquery/awesome-rating'                 => array(
+            array('javascript', 'js/jquery-awesome-rating.js', array('minify' => false)),
+            array('css', 'css/jquery-awesome-rating.css', array('minify' => false))
         ),
         'jquery/fileupload'        => array(
             array('javascript', 'js/jquery-fileupload.js')
@@ -621,13 +640,6 @@ return array(
                 array('css', 'select2')
             )
         ),
-        'jquery/rating'            => array(
-            array(
-                array('javascript', 'jquery/metadata'),
-                array('javascript', 'jquery/rating'),
-                array('css', 'jquery/rating')
-            )
-        ),
         'ace'         => array(
             array(
                 array('javascript', 'ace')
@@ -644,6 +656,14 @@ return array(
         'font-awesome'             => array(
             array(
                 array('css', 'font-awesome')
+            )
+        ),
+        'core/rating'            => array(
+            array(
+                array('javascript', 'jquery'),
+                array('javascript', 'jquery/awesome-rating'),
+                array('css', 'font-awesome'),
+                array('css', 'jquery/awesome-rating')
             )
         ),
         'core/style-customizer'    => array(
@@ -732,6 +752,7 @@ return array(
             array(
                 array('javascript', 'jquery'),
                 array('javascript', 'jquery/ui'),
+                array('javascript', 'jquery/touch-punch'),
                 array('javascript', 'underscore'),
                 array('javascript', 'dashboard'),
                 array('javascript', 'core/events'),

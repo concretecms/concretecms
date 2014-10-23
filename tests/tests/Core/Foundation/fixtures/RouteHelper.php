@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Package\Testing;
+namespace Concrete\Package\Testing\Src;
 class RouteHelper
 {
 

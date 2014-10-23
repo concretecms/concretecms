@@ -57,6 +57,23 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase {
 		$this->assertTrue($callback[0] instanceof \Concrete\Controller\Panel\Page\Design);
 	}
 
+    public function testCoreClassFunction()
+    {
+        $class = core_class('\Block\TestBlock\Controller');
+        $this->assertEquals('\Concrete\Block\TestBlock\Controller', $class);
+
+        $class = core_class('\Block\TestBlock\Controller', 'foo_bar');
+        $this->assertEquals('\Concrete\Package\FooBar\Block\TestBlock\Controller', $class);
+
+        $class = overrideable_core_class('\Src\Captcha\AkismetController', '/foo', 'akismet');
+        $this->assertEquals('\Concrete\Package\Akismet\Src\Captcha\AkismetController', $class);
+
+        // now for the weird one.
+        $class = overrideable_core_class('\Core\Captcha\AkismetController', '/foo', 'akismet');
+        $this->assertEquals('\Concrete\Package\Akismet\Src\Captcha\AkismetController', $class);
+
+    }
+
 	public function testRouteControllerOverride() {
 		$root = dirname(DIR_BASE_CORE . '../');
 		mkdir($root . '/application/controllers/panel/page/', 0777, true);
@@ -130,8 +147,8 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase {
         @mkdir($root . '/packages/testing/src/', 0777, true);
         @copy(dirname(__FILE__) . '/fixtures/RouteHelper.php', $root . '/packages/testing/src/RouteHelper.php');
 
-        $class = new \Concrete\Package\Testing\RouteHelper();
-        $this->assertInstanceOf('\Concrete\Package\Testing\RouteHelper', $class);
+        $class = new \Concrete\Package\Testing\Src\RouteHelper();
+        $this->assertInstanceOf('\Concrete\Package\Testing\Src\RouteHelper', $class);
 
         @unlink($root . '/packages/testing/src/RouteHelper.php');
         @rmdir($root . '/packages/testing/src');

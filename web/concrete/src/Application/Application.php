@@ -6,7 +6,10 @@ use Concrete\Core\Cache\Page\PageCache;
 use Concrete\Core\Cache\Page\PageCacheRecord;
 use Concrete\Core\Foundation\ClassLoader;
 use Concrete\Core\Foundation\EnvironmentDetector;
+use Concrete\Core\Localization\Localization;
+use Concrete\Core\Logging\Query\Logger;
 use Concrete\Core\Routing\DispatcherRouteCallback;
+use Concrete\Core\Updater\Update;
 use Config;
 use Core;
 use Database;
@@ -41,6 +44,25 @@ class Application extends Container
 
         if ($this->isInstalled()) {
             $this->handleScheduledJobs();
+
+            $logger = new Logger();
+            $r = Request::getInstance();
+
+            if (Config::get('concrete.log.queries.log')) {
+                $connection = Database::getActiveConnection();
+                if ($logger->shouldLogQueries($r)) {
+                    $loggers = array();
+                    $configuration = $connection->getConfiguration();
+                    $loggers[] = $configuration->getSQLLogger();
+                    $configuration->setSQLLogger(null);
+                    if (Config::get('concrete.log.queries.clear_on_reload')) {
+                        $logger->clearQueryLog();
+                    }
+
+                    $logger->write($loggers);
+
+                }
+            }
 
             foreach (\Database::getConnections() as $connection) {
                 $connection->close();
@@ -77,6 +99,9 @@ class Application extends Container
         // clear the environment overrides cache
         $env = \Environment::get();
         $env->clearOverrideCache();
+
+        // Clear localization cache
+        Localization::clearCache();
 
         // clear block type cache
         BlockType::clearCache();
@@ -168,6 +193,17 @@ class Application extends Container
         return false;
     }
 
+    public function handleAutomaticUpdates()
+    {
+        if (Config::get('concrete.updates.enable_auto_update_core')) {
+            $installed = Config::get('concrete.version_installed');
+            $core = Config::get('concrete.version');
+            if ($core && $installed && version_compare($installed, $core, '<')) {
+                Update::updateToCurrentVersion();
+            }
+        }
+    }
+
     /**
      * Run startup and localization events on any installed packages.
      */
@@ -181,7 +217,7 @@ class Application extends Container
             $p->registerConfigNamespace();
             if ($p->isPackageInstalled()) {
                 $pkg = Package::getClass($p->getPackageHandle());
-                if (is_object($pkg)) {
+                if (is_object($pkg) && (!$pkg instanceof \Concrete\Core\Package\BrokenPackage)) {
                     $cl->registerPackage($pkg);
                     // handle updates
                     if (Config::get('concrete.updates.enable_auto_update_packages')) {

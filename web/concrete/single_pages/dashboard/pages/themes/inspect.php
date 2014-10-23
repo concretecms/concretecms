@@ -7,28 +7,18 @@ $ci = Loader::helper('concrete/ui');
 
 ?>
 
-		<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Inspect Theme'), false, 'span10 offset1', false);?>
-    
+
     <form method="post" id="ccm-inspect-form" action="<?=$view->url('/dashboard/pages/themes/inspect/', 'activate_files', $pThemeID)?>">
     
-	<div class="ccm-pane-body" style="padding-top:10px;">
-    
-    	<h3><?=t("Theme name: ").$pageTheme->getThemeDisplayName()?></h3>
-        
+    	<p class="lead"><?=t("%s Theme", $pageTheme->getThemeDisplayName())?></p>
+
         <div class="row">
-        
-            <div class="span3">
-            	<h5><?=t('Thumbnail')?></h5>
-                <div class="well" style="padding:14px;">
-                	<div class="ccm-themes-thumbnail" style="padding:4px;background-color:#FFF;border-radius:3px;border:1px solid #DDD;">
-                    	<?=$pageTheme->getThemeThumbnail()?>
-                    </div>
-                </div>
+            <div class="col-sm-2">
+                <?=$pageTheme->getThemeThumbnail()?>
             </div>
-        
-            <div class="span6">
-                <h5><?=t('Files in Theme')?></h5>
-                <table border="0" cellspacing="0" cellpadding="0" class="table table-striped table-bordered">            
+
+            <div class="col-sm-10">
+                <table border="0" cellspacing="0" cellpadding="0" class="table table-striped table-bordered">
                     <thead>
                         <tr>
                             <th><?=t('File')?></th>
@@ -108,16 +98,15 @@ $ci = Loader::helper('concrete/ui');
         
         </div>
 	
-	</div>
-    
-    <div class="ccm-pane-footer">
+
+    <div class="ccm-dashboard-form-actions-wrapper">
+        <div class="ccm-dashboard-form-actions">
         <?
         print $ci->button(t('Return to Themes'), $view->url('/dashboard/pages/themes'), 'left');
         if ($pf > 0) { 
-            print $ci->submit(t('Ok'), 'ccm-inspect-form', 'right', 'primary'); ?>
+            print $ci->submit(t('Ok'), 'ccm-inspect-form', 'right', 'btn-primary'); ?>
         <? }?>
+        </div>
     </div>
-    
+
     </form>
-    
-    <?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false)?>

@@ -91,7 +91,7 @@ class Html
         } else {
             if (substr($file, 0, 1) == '/') {
                 $asset->setAssetURL($file);
-                $asset->setAssetPath(DIR_APPLICATION . $file);
+                $asset->setAssetPath(DIR_BASE . $file);
             } else {
                 if (file_exists(DIR_APPLICATION . '/' . DIRNAME_JAVASCRIPT . '/' . $file)) {
                     $asset->setAssetURL(REL_DIR_APPLICATION . '/' . DIRNAME_JAVASCRIPT . '/' . $file);

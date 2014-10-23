@@ -11,13 +11,21 @@ class SubArea extends Area {
 	public function create($c, $arHandle) {
 		$db = Loader::db();
 		$db->Replace('Areas', array('cID' => $c->getCollectionID(), 'arHandle' => $arHandle, 'arParentID' => $this->arParentID), array('arHandle', 'cID'), true);
+        $this->refreshCache($c);
 		$area = self::get($c, $arHandle);
 		$area->rescanAreaPermissionsChain();
 		return $area;
 	}
 
-	public function getSubAreaParentPermissionsObject() {
-		$db = Loader::db();
+	public function getSubAreaParentPermissionsObject()
+    {
+		$cache = \Core::make('cache/request');
+        $item = $cache->getItem(sprintf('subarea/parent/permissions/%s', $this->getAreaID()));
+        if (!$item->isMiss()) {
+            return $item->get();
+        }
+
+        $db = Loader::db();
 		$arParentID = $this->arParentID;
 		if ($arParentID == 0) {
 			return false;
@@ -30,8 +38,8 @@ class SubArea extends Area {
 				break;
 			}
 		}
-
 		$a = Area::get($this->c, $row['arHandle']);
+        $item->set($a);
 		return $a;
 	}
 
@@ -45,9 +53,9 @@ class SubArea extends Area {
 		}
 	}
 
-	public function __construct($arHandle, Area $parent) {
-		$arHandle = $parent->getAreaHandle() . self::AREA_SUB_DELIMITER . $arHandle;
-		$this->arParentID = $parent->getAreaID();
+	public function __construct($arHandle, $arParentHandle, $arParentID) {
+        $this->arParentID = $arParentID;
+		$arHandle = $arParentHandle . self::AREA_SUB_DELIMITER . $arHandle;
 		parent::__construct($arHandle);
 	}
 

@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\Page;
+use Concrete\Core\Page\Type\Type;
 use Loader;
 use CacheLocal;
 use Collection;
@@ -1068,8 +1069,13 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     function getPageTypeHandle() {
         if (!isset($this->ptHandle)) {
-            $db = Loader::db();
-            $this->ptHandle = $db->GetOne('select ptHandle from PageTypes where ptID = ?', array($this->ptID));
+            $this->ptHandle = false;
+            if ($this->ptID) {
+                $pt = Type::getByID($this->ptID);
+                if (is_object($pt)) {
+                    $this->ptHandle = $pt->getPageTypeHandle();
+                }
+            }
         }
 
         return $this->ptHandle;
@@ -1656,7 +1662,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
                         if (!in_array($b->getBlockID(), $oldMCBlockIDs)) {
                             $newBlockDisplayOrder = $this->getCollectionAreaDisplayOrder($b->getAreaHandle());
                             $db->Execute('insert into CollectionVersionBlocks (cID, cvID, bID, arHandle, cbDisplayOrder, isOriginal, cbOverrideAreaPermissions, cbIncludeAll) values (?, ?, ?, ?, ?, ?, ?, ?)', array(
-                                $this->getCollectionID(), $cvID, $b->getBlockID(), $b->getAreaHandle(), $newBlockDisplayOrder, $b->isAlias(), $b->overrideAreaPermissions(), $b->disableBlockVersioning()
+                                $this->getCollectionID(), $cvID, $b->getBlockID(), $b->getAreaHandle(), $newBlockDisplayOrder, intval($b->isAlias()), $b->overrideAreaPermissions(), $b->disableBlockVersioning()
                             ));
                         }
                     }
@@ -2397,7 +2403,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     * "cName": The name of the page
     * "cHandle": The handle of the page as used in the path
     * "cDatePublic": The date assigned to the page
-    * @param collectiontype $ct
+    * @param \Concrete\Core\Page\Type\Type $pt
     * @param array $data
     * @return page
     **/
@@ -2441,12 +2447,18 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $cDatePublic = ($data['cDatePublic']) ? $data['cDatePublic'] : null;
 
         $ptID = 0;
-        if ($pt instanceof PageType) {
+        if ($pt instanceof \Concrete\Core\Page\Type\Type) {
             if ($pt->getPageTypeHandle() == STACKS_PAGE_TYPE) {
                 $data['cvIsNew'] = 0;
             }
             if ($pt->getPackageID() > 0) {
                 $pkgID = $pt->getPackageID();
+            }
+
+            // if we have a page type and we don't have a template,
+            // then we use the page type's default template
+            if ($pt->getPageTypeDefaultPageTemplateID() > 0 && !$template) {
+                $template = $pt->getPageTypeDefaultPageTemplateObject();
             }
 
             $ptID = $pt->getPageTypeID();
@@ -2491,7 +2503,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             $pc = Page::getByID($newCID, 'RECENT');
 
             // run any internal event we have for page addition
-            $pe = new Event($this);
+            $pe = new Event($pc);
             Events::dispatch('on_page_add', $pe);
 
             $pc->rescanCollectionPath();

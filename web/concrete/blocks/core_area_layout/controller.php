@@ -15,7 +15,6 @@ use Page;
 class Controller extends BlockController
 {
 
-    protected $btCacheBlockRecord = false;
     protected $btSupportsInlineAdd = true;
     protected $btSupportsInlineEdit = true;
     protected $btTable = 'btCoreAreaLayout';
@@ -159,7 +158,7 @@ class Controller extends BlockController
         $i = 0;
         foreach($blockNode->arealayout->columns->column as $columnNode) {
             $column = $columns[$i];
-            $as = new SubArea($column->getAreaLayoutColumnDisplayID(), $layoutArea);
+            $as = new SubArea($column->getAreaLayoutColumnDisplayID(), $layoutArea->getAreaHandle(), $layoutArea->getAreaID());
             $as->load($page);
             $column->setAreaID($as->getAreaID());
             $area = $column->getAreaObject();
@@ -220,7 +219,16 @@ class Controller extends BlockController
         if (is_object($this->arLayout)) {
             $this->arLayout->setAreaObject($a);
             $this->set('columns', $this->arLayout->getAreaLayoutColumns());
+            $c = Page::getCurrentPage();
+            $this->set('c', $c);
+
             if ($this->arLayout->isAreaLayoutUsingThemeGridFramework()) {
+                $pt = $c->getCollectionThemeObject();
+                $gf = $pt->getThemeGridFrameworkObject();
+            }
+
+            if (isset($gf) && (is_object($gf))) {
+                $this->set('gf', $gf);
                 $this->render('view_grid');
             } else {
                 $asset = new CSSAsset();
@@ -240,16 +248,19 @@ class Controller extends BlockController
         $this->addHeaderItem(Loader::helper('html')->javascript('layouts.js'));
         $this->view();
         // since we set a render override in view() we have to explicitly declare edit
-        $this->set('enableThemeGrid', $this->arLayout->isAreaLayoutUsingThemeGridFramework());
         if ($this->arLayout->isAreaLayoutUsingThemeGridFramework()) {
             $c = Page::getCurrentPage();
             $pt = $c->getCollectionThemeObject();
             $gf = $pt->getThemeGridFrameworkObject();
+        }
+        if (isset($gf) && (is_object($gf))) {
+            $this->set('enableThemeGrid', true);
             $this->set('themeGridFramework', $gf);
             $this->set('themeGridMaxColumns', $this->arLayout->getAreaLayoutMaxColumns());
             $this->set('themeGridName', $gf->getPageThemeGridFrameworkName());
             $this->render("edit_grid");
         } else {
+            $this->set('enableThemeGrid', false);
             $this->set('spacing', $this->arLayout->getAreaLayoutSpacing());
             $this->set('iscustom', $this->arLayout->hasAreaLayoutCustomColumnWidths());
             $this->set('maxColumns', 12);

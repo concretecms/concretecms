@@ -10,7 +10,7 @@ class Service {
 
 	function loadBannedWords(){
 		if ($this->bannedWords) return;
-		$bw = new static();
+		$bw = new BannedWordList();
 		$bannedWords = $bw->get();
 		$this->bannedWords = array();
 		foreach ($bannedWords as $word) {
@@ -61,7 +61,7 @@ class Service {
 	}
 
 	function isBannedWord(&$word){
-		$case = ValidationBannedWordsHelper::wordCase($word);
+		$case = self::wordCase($word);
 		$nword = strtolower($word);
 		$this->loadBannedWords();
 		if (in_array($nword, $this->bannedWords)) {

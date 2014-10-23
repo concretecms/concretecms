@@ -250,10 +250,10 @@ class Date
     {
         switch ($timezone) {
             case 'system':
-                $timezone = defined('APP_TIMEZONE_SERVER') ? APP_TIMEZONE_SERVER : date_default_timezone_get();
+                $timezone = \Config::get('app.server_timezone', date_default_timezone_get());
                 break;
             case 'app':
-                $timezone = defined('APP_TIMEZONE') ? APP_TIMEZONE : date_default_timezone_get();
+                $timezone = \Config::get('app.timezone', date_default_timezone_get());
                 break;
             case 'user':
                 $tz = null;
@@ -638,11 +638,18 @@ class Date
         }
         $datetime = new \DateTime($userDateTime);
 
-        if (defined('APP_TIMEZONE')) {
-            $tz = new \DateTimeZone(APP_TIMEZONE_SERVER);
-            $datetime = new \DateTime($userDateTime, $tz); // create the in the user's timezone
-            $stz = new \DateTimeZone(date_default_timezone_get()); // grab the default timezone
-            $datetime->setTimeZone($stz); // convert the datetime object to the current timezone
+        $timezone = \Config::get('app.timezone');
+        if ($timezone) {
+            $tz = new \DateTimeZone($timezone);
+
+            // create the in the user's timezone
+            $datetime = new \DateTime($userDateTime, $tz);
+
+            // grab the default timezone
+            $stz = new \DateTimeZone(\Config::get('app.server_timezone', date_default_timezone_get()));
+
+            // convert the datetime object to the current timezone
+            $datetime->setTimeZone($stz);
         }
 
         if (defined('ENABLE_USER_TIMEZONES') && ENABLE_USER_TIMEZONES) {
@@ -651,10 +658,15 @@ class Date
                 $utz = $u->getUserTimezone();
                 if ($utz) {
                     $tz = new \DateTimeZone($utz);
-                    $datetime = new \DateTime($userDateTime, $tz); // create the in the user's timezone
 
-                    $stz = new \DateTimeZone(date_default_timezone_get()); // grab the default timezone
-                    $datetime->setTimeZone($stz); // convert the datetime object to the current timezone
+                    // create the `DateTime` in the user's timezone
+                    $datetime = new \DateTime($userDateTime, $tz);
+
+                    // grab the default timezone
+                    $stz = new \DateTimeZone(\Config::get('app.server_timezone', date_default_timezone_get()));
+
+                    // convert the datetime object to the server timezone
+                    $datetime->setTimeZone($stz);
                 }
             }
         }

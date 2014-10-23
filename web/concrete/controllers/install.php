@@ -78,8 +78,7 @@ class Install extends Controller
                     'successMessage',
                     t(
                         'Congratulations. concrete5 has been installed. You have been logged in as <b>%s</b> with the password you chose. If you wish to change this password, you may do so from the users area of the dashboard.',
-                        USER_SUPER,
-                        $uPassword));
+                        USER_SUPER));
             }
         }
     }
@@ -111,6 +110,11 @@ class Install extends Controller
                             t(
                                 'There are already %s tables in this database. concrete5 must be installed in an empty database.',
                                 count($num)));
+                    }
+
+                    $support = $db->GetOne('SELECT SUPPORT FROM INFORMATION_SCHEMA.ENGINES WHERE ENGINE = \'InnoDB\'');
+                    if (!in_array($support, array('YES', 'DEFAULT'))) {
+                        $e->add(t('Your MySQL database does not support InnoDB database tables. These are required.'));
                     }
                 }
             }
@@ -178,13 +182,15 @@ class Install extends Controller
 
     private function setRequiredItems()
     {
-        $this->set('imageTest', function_exists('imagecreatetruecolor') || class_exists('Imagick'));
+//        $this->set('imageTest', function_exists('imagecreatetruecolor') || class_exists('Imagick'));
+        $this->set('imageTest', function_exists('imagecreatetruecolor'));
         $this->set('mysqlTest', extension_loaded('pdo_mysql'));
         $this->set('i18nTest', function_exists('ctype_lower'));
         $this->set('jsonTest', extension_loaded('json'));
         $this->set('xmlTest', function_exists('xml_parse') && function_exists('simplexml_load_file'));
         $this->set('fileWriteTest', $this->testFileWritePermissions());
         $this->set('finfoTest', function_exists('finfo_open'));
+        $this->set('aspTagsTest', ini_get('asp_tags') == false);
         $rf = new \ReflectionObject($this);
         $rp = $rf->getProperty('docCommentCanary');
         $this->set('docCommentTest', (bool) $rp->getDocComment());
@@ -244,7 +250,7 @@ class Install extends Controller
     {
         if ($this->get('imageTest') && $this->get('mysqlTest') && $this->get('fileWriteTest') && $this->get(
                 'xmlTest') && $this->get('phpVtest') && $this->get('i18nTest') && $this->get('finfoTest')
-            && $this->get('memoryTest') !== -1 && $this->get('docCommentTest')
+            && $this->get('memoryTest') !== -1 && $this->get('docCommentTest') && $this->get('aspTagsTest')
         ) {
             return true;
         }

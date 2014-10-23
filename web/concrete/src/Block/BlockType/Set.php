@@ -2,17 +2,29 @@
 namespace Concrete\Core\Block\BlockType;
 use \Concrete\Core\Foundation\Object;
 use Loader;
+use Core;
 use Environment;
 use CacheLocal;
 use \Concrete\Core\Package\PackageList;
 class Set extends Object {
 
 	public static function getByID($btsID) {
+
+        $cache = Core::make('cache/request');
+    	$identifier = sprintf('block/type/set/%s', $btsID);
+        $item = $cache->getItem($identifier);
+        if (!$item->isMiss()) {
+            return $item->get();
+        }
+
+        $item->lock();
+
 		$db = Loader::db();
 		$row = $db->GetRow('select btsID, btsHandle, pkgID, btsName from BlockTypeSets where btsID = ?', array($btsID));
 		if (isset($row['btsID'])) {
 			$akc = new static();
 			$akc->setPropertiesFromArray($row);
+            $item->set($akc);
 			return $akc;
 		}
 	}

@@ -245,6 +245,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
     foreach ($items as $ih) {
         $cnt = $ih->getController();
         if ($cnt->displayItem()) {
+            $cnt->registerViewAssets();
             ?>
             <li class="pull-left"><?= $cnt->getMenuItemLinkElement() ?></li>
         <?
@@ -299,6 +300,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
         foreach ($items as $ih) {
             $cnt = $ih->getController();
             if ($cnt->displayItem()) {
+                $cnt->registerViewAssets();
                 ?>
                 <li class="pull-right"><?= $cnt->getMenuItemLinkElement() ?></li>
             <?

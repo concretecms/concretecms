@@ -163,10 +163,18 @@ $(function() {
 
 ccm_refreshPagePermissions = function() {
 	var panel = ConcretePanelManager.getByIdentifier('page');
-	panel.openPanelDetail({
-		'identifier': 'page-permissions',
-		'url': '<?=URL::to("/ccm/system/panels/details/page/permissions")?>'
-	});
+    if (panel) {
+        panel.openPanelDetail({
+            'identifier': 'page-permissions',
+            'url': '<?=URL::to("/ccm/system/panels/details/page/permissions")?>'
+        });
+    } else {
+		jQuery.fn.dialog.showLoader();
+		$.get('<?=URL::to('/ccm/system/panels/details/page/permissions?cID=' . $c->getCollectionID())?>', function(r) {
+			jQuery.fn.dialog.replaceTop(r);
+			jQuery.fn.dialog.hideLoader();
+		});
+    }
 }
 
 ccm_permissionLaunchDialog = function(link) {

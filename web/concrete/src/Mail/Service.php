@@ -60,7 +60,7 @@ class Service
         $response['mail'] = new Message();
         $response['mail']->setEncoding(APP_CHARSET);
 
-        if (Config::get('concrete.mail.method') == "SMTP") {
+        if (strcasecmp(Config::get('concrete.mail.method'), 'smtp') == 0) {
             $config = array(
                 'host' => Config::get('concrete.mail.methods.smtp.server'),
             );
@@ -81,7 +81,7 @@ class Service
 
             $encr = Config::get('concrete.mail.methods.smtp.encryption', '');
             if ($encr != '') {
-                $config['ssl'] = $encr;
+                $config['connection_config']['ssl'] = $encr;
             }
             $transport = new SmtpTransport();
             $options = new SmtpOptions($config);
@@ -450,6 +450,7 @@ class Service
 
             $text = new MimePart($this->body);
             $text->type = "text/plain";
+            $text->charset = APP_CHARSET;
 
             $body = new MimeMessage();
             $body->setParts(array($text));
@@ -457,6 +458,7 @@ class Service
             if ($this->bodyHTML != false) {
                 $html = new MimePart($this->bodyHTML);
                 $html->type = "text/html";
+                $html->charset = APP_CHARSET;
                 $body->addPart($html);
             }
 

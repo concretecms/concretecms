@@ -38,9 +38,12 @@ $ip = Loader::helper('validation/ip'); ?>
                     <?=$form->label('cmpMessageSort', t('Sort By'))?>
                     <div class="ccm-search-field-content">
                         <?=$form->select('cmpMessageSort', $cmpSortTypes)?>
-                        <button class="btn btn-primary" type="submit"><?php echo t('Search') ?></button>
                     </div>
                 </div>
+            </div>
+
+            <div class="ccm-search-fields-submit">
+            <button type="submit" class="btn btn-primary pull-right"><?=t('Search')?></button>
             </div>
 
         </form>

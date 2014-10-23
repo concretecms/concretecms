@@ -39,6 +39,25 @@
     </fieldset>
 
     <fieldset style="margin-bottom: 15px">
+        <legend style="display: inline-block; margin-bottom: 0; width: auto; font-size: 14px; font-weight: bold" class="launch-tooltip" data-placement="right" title="<?=t('Determines whether ')?>"><?=t('Compress LESS Output.')?></legend>
+
+        <div class="radio">
+            <label>
+                <input type="radio" name="COMPRESS_THEME_PREPROCESSOR_OUTPUT" value="0" <?php if (!Config::get('concrete.theme.compress_preprocessor_output')) { ?> checked <?php  } ?> />
+                <span><?=t('Off - Good for debugging generated CSS output.')?></span>
+            </label>
+        </div>
+
+        <div class="radio">
+            <label>
+                <input type="radio" name="COMPRESS_THEME_PREPROCESSOR_OUTPUT" value="1" <?php  if (Config::get('concrete.theme.compress_preprocessor_output')) { ?> checked <?php  } ?> />
+                <span><?=t('On - Helps speed up a live site.')?></span>
+            </label>
+        </div>
+    </fieldset>
+
+
+    <fieldset style="margin-bottom: 15px">
         <legend style="display: inline-block; margin-bottom: 0; width: auto; font-size: 14px; font-weight: bold" class="launch-tooltip" data-placement="right" title="<?=t('Stores the generation of CSS and JavaScript assets')?>"><?=t('CSS and JavaScript Cache')?></legend>
 
         <div class="radio">

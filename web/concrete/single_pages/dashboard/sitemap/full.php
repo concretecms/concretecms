@@ -27,7 +27,6 @@ div#ccm-full-sitemap-container {
 </style>
 
 <form action="<?=URL::to('/dashboard/sitemap/search')?>"  class="form-inline ccm-search-fields-none ccm-search-fields">
-	<div class="ccm-search-fields-row">
 	<div class="form-group">
 		<div class="ccm-search-main-lookup-field">
 			<i class="fa fa-search"></i>
@@ -38,7 +37,6 @@ div#ccm-full-sitemap-container {
 	<ul class="ccm-search-form-advanced list-inline">
 		<li><a href="<?=URL::to('/dashboard/sitemap/search')?>"><?=t('Advanced Search')?></a>
 	</ul>
-	</div>
 </form>
 
 

@@ -50,9 +50,22 @@ class Assignment {
 	}
 
 	public function getPermissionAccessObject() {
+
+        $cache = \Core::make('cache/request');
+    	$identifier = sprintf('permission/key/assignment/%s', $this->pk->getPermissionKeyID());
+        $item = $cache->getItem($identifier);
+        if (!$item->isMiss()) {
+            return $item->get();
+        }
+
+        $item->lock();
+
 		$db = Loader::db();
 		$paID = $db->GetOne('select paID from PermissionAssignments where pkID = ?', array($this->pk->getPermissionKeyID()));
-		return PermissionAccess::getByID($paID, $this->pk);
+		$pa = PermissionAccess::getByID($paID, $this->pk);
+
+        $item->set($pa);
+        return $pa;
 	}
 	
 }

@@ -16,10 +16,17 @@ if (is_object($selectedTemplate)) {
 
     <input type="hidden" name="sitemap" value="1" />
     
-	<div class="form-group">
-		<?=$form->label('pTemplateID', t('Page Template'))?>
-		<?=$form->select('pTemplateID', $templatesSelect, $selectedTemplateID)?>
-	</div>
+    <? if ($cp->canEditPageTemplate()) { ?>
+        <?=$form->label('pTemplateID', t('Page Template'))?>
+
+        <? if ($c->isGeneratedCollection()) { ?>
+            <div class="alert alert-info"><?=t('This is a single page. It does not have a page template.')?></div>
+        <? } else { ?>
+            <div class="form-group">
+                <?=$form->select('pTemplateID', $templatesSelect, $selectedTemplateID)?>
+            </div>
+        <? } ?>
+    <? } ?>
 
 	<div class="form-group">
 		<?=$form->label('pThemeID', t('Theme'))?>

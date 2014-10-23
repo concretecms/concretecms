@@ -126,6 +126,9 @@ function core_class($class, $prefix = false)
 {
     $class = trim($class, '\\');
     if ($prefix) {
+        if (substr($class, 0, 5) == "Core\\") {
+            $class = "Src\\" . substr($class, 5);
+        }
         if ($prefix === true) {
             $prefix = Config::get('app.namespace');
         } else {

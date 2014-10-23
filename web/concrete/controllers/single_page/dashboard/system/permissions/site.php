@@ -134,7 +134,8 @@ class Site extends DashboardPageController {
 				}
 				$pt->assignPermissionAccess($pa);
 
-                Core::make('cache')->flush();
+                $cms = Core::make('app');
+                $cms->clearCaches();
 				$this->redirect('/dashboard/system/permissions/site/', 'saved');
 			} else {
 				$this->error->add($this->token->getErrorMessage());
