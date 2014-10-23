@@ -12,7 +12,7 @@ class Edit extends BackendInterfaceFileController {
 
 	protected function canAccess() {
         $type = $this->file->getTypeObject();
-		return $this->permissions->canEditFile() && $type->getGenericType() == Type::T_IMAGE;
+		return $this->permissions->canEditFileContents() && $type->getGenericType() == Type::T_IMAGE;
 	}
 
 	public function view() {
