@@ -47,7 +47,6 @@ $(function() {
 			par.html(data.uName);
 			pari.val(data.uID);
 			e.stopPropagation();
-			jQuery.fn.dialog.closeTop();
 		});
 		ConcreteEvent.subscribe('UserSearchDialogAfterSelectUser', function(e) {
 			jQuery.fn.dialog.closeTop();

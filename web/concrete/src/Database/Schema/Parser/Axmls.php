@@ -208,6 +208,12 @@ class Axmls extends XmlParser
         if ($type == 'B') {
             return 'blob';
         }
+
+        // This is not strict AXMLS but it will be useful for those who want to use
+        // certain Doctrine type features that AXMLS doesn't support
+        if ($type == 'TIME') {
+            return 'time';
+        }
     }
 
 }

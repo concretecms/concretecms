@@ -287,10 +287,7 @@ return array(
          */
         'enabled' => true,
         'default' => array(
-            'address' => 'concrete5-noreply@' . str_replace(
-                    array('http://www.', 'https://www.', 'http://', 'https://'),
-                    '',
-                    BASE_URL),
+            'address' => 'concrete5-noreply@' . $_SERVER['SERVER_NAME'],
             'name'    => ''
         )
     ),
