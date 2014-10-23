@@ -45,7 +45,6 @@ if (!$dh->inDashboard()) {
 	$panelCheckIn = URL::to('/ccm/system/panels/page/check_in');
 
 	$js = <<<EOL
-<script type="text/javascript" src="{$tools}/i18n_js"></script>
 <script type="text/javascript">$(function() {
 	$('html').addClass('ccm-toolbar-visible');
 	ConcretePanelManager.register({'identifier': 'dashboard', 'position': 'right', url: '{$panelDashboard}'});

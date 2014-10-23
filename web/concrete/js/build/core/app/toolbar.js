@@ -9,7 +9,9 @@ var ConcreteToolbar = function() {
 	var $searchResults = $('#ccm-intelligent-search-results');
 	var remotesearchquery, ajaxtimer;
 
-    $searchResults.css('right', $(window).width() - $searchInput.offset().left - $searchResults.width() - 1);
+    if ($searchInput.length) {
+        $searchResults.css('right', $(window).width() - $searchInput.offset().left - $searchResults.width() - 1);
+    }
 
 	setupHelpNotifications = function() {
         $('.ccm-notification .dialog-launch').dialog();
