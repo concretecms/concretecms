@@ -110,11 +110,11 @@ class View extends AbstractView {
 	        $this->setInnerContentFile($env->getPath($this->viewRootDirectoryName . '/' . trim($this->viewPath, '/') . '.php', $this->pkgHandle));
         }
         if ($this->themeHandle) {
-            if (file_exists(DIR_FILES_THEMES_CORE . '/' . DIRNAME_THEMES_CORE . '/' . $this->themeHandle . '.php')) {
-                $this->setViewTemplate($env->getPath(DIRNAME_THEMES . '/' . DIRNAME_THEMES_CORE . '/' . $this->themeHandle . '.php'));
-            } else {
-                $this->setViewTemplate($env->getPath(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $this->controller->getThemeViewTemplate(), $this->pkgHandle));
+            $templateFile = FILENAME_THEMES_VIEW;
+            if (is_object($this->controller)) {
+                $templateFile = $this->controller->getThemeViewTemplate();
             }
+            $this->setViewTemplate($env->getPath(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $templateFile, $this->pkgHandle));
         }
     }
 
