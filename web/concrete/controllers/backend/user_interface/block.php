@@ -12,9 +12,9 @@ abstract class Block extends Page
     protected $area;
     protected $block;
 
-    public function __construct()
+    public function on_start()
     {
-        parent::__construct();
+        parent::on_start();
         $request = $this->request;
         $arHandle = $request->query->get('arHandle');
         $bID = $request->query->get('bID');

@@ -9,6 +9,11 @@ abstract class UserInterface extends Controller {
 	abstract protected function canAccess();
 	protected $error;
 
+    public function shouldRunControllerTask()
+    {
+        return $this->canAccess();
+    }
+
 	public function __construct() {
 		$this->error = Loader::helper('validation/error');
 		$this->view = new DialogView($this->viewPath);
@@ -21,12 +26,13 @@ abstract class UserInterface extends Controller {
 		});
 	}
 
-	public function getViewObject() {
-		if ($this->canAccess()) {
-			return parent::getViewObject();
-		}
-		throw new \Exception(t('Access Denied'));
-	}
+    public function getViewObject()
+    {
+        if ($this->canAccess()) {
+            return parent::getViewObject();
+        }
+        throw new \Exception(t('Access Denied'));
+    }
 
 	protected function validateAction() {
 		if (!Loader::helper('validation/token')->validate(get_class($this))) {

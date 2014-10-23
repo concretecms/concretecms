@@ -9,9 +9,9 @@ class Design extends BackendPageController {
 
     protected $viewPath = '/dialogs/area/design';
 
-    public function __construct()
+    public function on_start()
     {
-        parent::__construct();
+        parent::on_start();
         $this->area = \Area::getOrCreate($this->page, $_REQUEST['arHandle']);
         $this->permissions = new \Permissions($this->area);
         $this->set('a', $this->area);

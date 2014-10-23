@@ -19,9 +19,9 @@ class Upgrade extends BackendUserInterfaceController
         return $p->canUpgrade();
     }
 
-    public function __construct()
+    public function on_start()
     {
-        parent::__construct();
+        parent::on_start();
 
         $this->view = new View('/frontend/upgrade');
         $this->setTheme('concrete');
