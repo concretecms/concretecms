@@ -433,16 +433,22 @@
                 e.stopImmediatePropagation();
 
                 var me = $(this),
+                    deltaY = e.originalEvent.deltaY || 0,
                     distance_from_top = me.scrollTop(),
                     distance_from_bottom = (me.get(0).scrollHeight - (me.scrollTop() + me.height()) - me.css('paddingTop').replace('px', ''));
 
-                if ((e.originalEvent.deltaY < 0 && !distance_from_top) ||
-                    (e.originalEvent.deltaY > 0 && !distance_from_bottom)
+                // If we don't have deltaY, just use default behavior.
+                if (!deltaY) {
+                    return;
+                }
+
+                if ((deltaY < 0 && !distance_from_top) ||
+                    (deltaY > 0 && !distance_from_bottom)
                 ) {
                     return false;
                 }
 
-                me.scrollTop(me.scrollTop() + e.originalEvent.deltaY);
+                me.scrollTop(me.scrollTop() + deltaY);
                 return false;
             });
 
