@@ -102,7 +102,8 @@ var ccmi18n = {
     uppercase: "<?=t('Uppercase')?>",
     fontSize: "<?=t('Font Size')?>",
     letterSpacing: "<?=t('Letter spacing')?>",
-    lineHeight: "<?=t('Line Height')?>"
+    lineHeight: "<?=t('Line Height')?>",
+    emptyArea: "<?= t('Empty %s Area', '<%- area_handle %>') ?>"
 };
 
 var ccmi18n_editor = {
@@ -236,5 +237,5 @@ var ccmi18n_topics = {
     deleteTopic: "<?=t('Delete Topic')?>",
     cloneTopic: "<?=t('Clone Topic')?>",
     editPermissions: "<?=t('Edit Permissions')?>"
-    
+
 };
