@@ -432,6 +432,8 @@ div.ccm-area-drag-area {
   -webkit-transition: outline-width 0.5s cubic-bezier(0.190, 1.000, 0.220, 1.000), outline-color 0.5s cubic-bezier(0.190, 1.000, 0.220, 1.000);
   outline-color: transparent;
   outline-style: solid;
+  text-indent: -10000em;
+  line-height: 0px;
 
   &.ccm-area-drag-area-contender {
     background-color: rgba(221, 255, 221, 0.5);
@@ -461,7 +463,12 @@ div.ccm-global-area {
  */
 div.ccm-area[data-total-blocks="0"] {
   div.ccm-area-drag-area {
-    height: 50px;
+    text-indent: 0;
+    text-align: center;
+    padding: 18px;
+    font-size: 14px;
+    line-height: 14px;
+    color: #bbb;
   }
 }
 
