@@ -30,8 +30,8 @@
                 my.panelOpened(data.panel, data.element);
             });
 
-            my.bindEvent('EditModeAddBlockComplete', function() {
-                _.defer(function() {
+            my.bindEvent('EditModeAddBlockComplete', function () {
+                _.defer(function () {
                     my.scanBlocks();
                 });
             });
@@ -109,9 +109,9 @@
                     success: function (r) {
                         var elem = $(r);
                         $container.empty()
-                                  .append(elem)
-                                  .find('.ccm-block-edit')
-                                  .addClass('ccm-block-edit-inline-active');
+                            .append(elem)
+                            .find('.ccm-block-edit')
+                            .addClass('ccm-block-edit-inline-active');
                         my.loadInlineEditModeToolbars($container);
                         $.fn.dialog.hideLoader();
                         Concrete.event.fire('EditModeInlineEditLoaded', {
@@ -400,8 +400,8 @@
                 return null;
             }
 
-        	$(element).find('input[data-input=search-blocks]').liveUpdate('ccm-panel-add-blocktypes-list', 'blocktypes');
-        	$(element).find('input[data-input=search-blocks]').focus();
+            $(element).find('input[data-input=search-blocks]').liveUpdate('ccm-panel-add-blocktypes-list', 'blocktypes');
+            $(element).find('input[data-input=search-blocks]').focus();
 
             $(element).find('a.ccm-panel-add-block-draggable-block-type').each(function () {
                 var block, me = $(this), dragger = $('<a/>').addClass('ccm-panel-add-block-draggable-block-type-dragger').appendTo(me);
