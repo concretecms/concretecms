@@ -3,6 +3,7 @@ namespace Concrete\Controller\Backend;
 use Controller;
 use PageType, Permissions, Loader, Redirect;
 use Page as ConcretePage;
+use User;
 
 class Page extends Controller {
 
@@ -33,5 +34,22 @@ class Page extends Controller {
 			}
 		}
 	}
+
+    public function exitEditMode($cID, $token)
+    {
+        if (Loader::helper('validation/token')->validate('', $token)) {
+            $c = ConcretePage::getByID($cID);
+            $cp = new Permissions($c);
+            if ($cp->canViewToolbar()) {
+                $u = new User();
+                $u->unloadCollectionEdit();
+            }
+            return Redirect::page($c);
+        }
+
+        return new Response(t('Access Denied'));
+    }
+
+
 }
 
