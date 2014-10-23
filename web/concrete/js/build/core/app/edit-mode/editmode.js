@@ -109,9 +109,9 @@
                     success: function (r) {
                         var elem = $(r);
                         $container.empty()
-                                  .append(elem)
-                                  .find('.ccm-block-edit')
-                                  .addClass('ccm-block-edit-inline-active');
+                            .append(elem)
+                            .find('.ccm-block-edit')
+                            .addClass('ccm-block-edit-inline-active');
                         my.loadInlineEditModeToolbars($container);
                         $.fn.dialog.hideLoader();
                         Concrete.event.fire('EditModeInlineEditLoaded', {
@@ -400,8 +400,8 @@
                 return null;
             }
 
-        	$(element).find('input[data-input=search-blocks]').liveUpdate('ccm-panel-add-blocktypes-list', 'blocktypes');
-        	$(element).find('input[data-input=search-blocks]').focus();
+            $(element).find('input[data-input=search-blocks]').liveUpdate('ccm-panel-add-blocktypes-list', 'blocktypes');
+            $(element).find('input[data-input=search-blocks]').focus();
 
             $(element).find('a.ccm-panel-add-block-draggable-block-type').each(function () {
                 var block, me = $(this), dragger = $('<a/>').addClass('ccm-panel-add-block-draggable-block-type-dragger').appendTo(me);
@@ -429,20 +429,31 @@
                 new Concrete.DuplicateBlock(me, my);
             });
 
-            $(element).find('.ccm-panel-content').on('mousewheel', function (e) {
-                e.stopImmediatePropagation();
+            $(element).find('.ccm-panel-content').mousewheel(function (e) {
+
+                if (!e.deltaY) {
+                    return;
+                }
+
+                var change = -1 * e.deltaY;
 
                 var me = $(this),
+                    deltaY = e.originalEvent.deltaY || 0,
                     distance_from_top = me.scrollTop(),
                     distance_from_bottom = (me.get(0).scrollHeight - (me.scrollTop() + me.height()) - me.css('paddingTop').replace('px', ''));
 
-                if ((e.originalEvent.deltaY < 0 && !distance_from_top) ||
-                    (e.originalEvent.deltaY > 0 && !distance_from_bottom)
+                // If we don't have deltaY, just use default behavior.
+                if (!deltaY) {
+                    return;
+                }
+
+                if ((deltaY < 0 && !distance_from_top) ||
+                    (deltaY > 0 && !distance_from_bottom)
                 ) {
                     return false;
                 }
 
-                me.scrollTop(me.scrollTop() + e.originalEvent.deltaY);
+                me.scrollTop(me.scrollTop() + deltaY);
                 return false;
             });
 
