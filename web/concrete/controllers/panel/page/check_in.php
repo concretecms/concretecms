@@ -125,21 +125,6 @@ class CheckIn extends BackendInterfacePageController
         }
     }
 
-    public function exitEditMode($cID, $token)
-    {
-        if (Loader::helper('validation/token')->validate('', $token)) {
-            $c = Page::getByID($cID);
-            $cp = new Permissions($c);
-            if ($cp->canViewToolbar()) {
-                $u = new User();
-                $u->unloadCollectionEdit();
-            }
-            return Redirect::page($c);
-        }
-
-        return new Response(t('Access Denied'));
-    }
-
     protected function validateAction()
     {
         if (parent::validateAction()) {

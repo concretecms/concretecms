@@ -239,7 +239,7 @@ return array(
         /**
          * Page actions - non UI
          */
-        "/ccm/system/page/check_in/{cID}/{token}"                                       => array('\Concrete\Controller\Panel\Page\CheckIn::exitEditMode'),
+        "/ccm/system/page/check_in/{cID}/{token}"                                       => array('\Concrete\Controller\Backend\Page::exitEditMode'),
         "/ccm/system/page/create/{ptID}"                                                => array('\Concrete\Controller\Backend\Page::create'),
         "/ccm/system/page/create/{ptID}/{parentID}"                                     => array('\Concrete\Controller\Backend\Page::create'),
         "/ccm/system/page/arrange_blocks/"                                              => array('\Concrete\Controller\Backend\Page\ArrangeBlocks::arrange'),

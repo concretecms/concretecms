@@ -21,6 +21,7 @@ class Attributes extends BackendInterfacePageController {
 		$this->set('menu', $list->getViewObject());
 
 		$detail = new PageAttributesPanelDetailController();
+        $detail->on_start();
 		$detail->setPageObject($this->page);
 		$detail->view();
 		$this->set('detail', $detail->getViewObject());
