@@ -451,16 +451,25 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
 
 	public function getListOnPage(Page $c)
     {
-        $db = Loader::db();
-        $r = $db->Execute('select arHandle from Areas where cID = ?', array($c->getCollectionID()));
-        $areas = array();
-        while ($row = $r->FetchRow()) {
-            $area = Area::get($c, $row['arHandle']);
-            if (is_object($area)) {
-                $areas[] = $area;
+        $identifier = sprintf('/page/area/list/%s', $c->getCollectionID());
+        $cache = \Core::make('cache/request');
+        $item = $cache->getItem($identifier);
+        if (!$item->isMiss()) {
+            return $item->get();
+        } else {
+            $item->lock();
+            $db = Loader::db();
+            $r = $db->Execute('select arHandle from Areas where cID = ?', array($c->getCollectionID()));
+            $areas = array();
+            while ($row = $r->FetchRow()) {
+                $area = Area::get($c, $row['arHandle']);
+                if (is_object($area)) {
+                    $areas[] = $area;
+                }
             }
+            $item->set($areas);
+            return $areas;
         }
-        return $areas;
     }
 
 	/**
