@@ -71,7 +71,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         }
 
         $where = "where Pages.cID = ?";
-        $c = Core::make('\Concrete\Core\Page\Page');
+        $c = new $class;
         $c->populatePage($cID, $where, $version);
 
         // must use cID instead of c->getCollectionID() because cID may be the pointer to another page
