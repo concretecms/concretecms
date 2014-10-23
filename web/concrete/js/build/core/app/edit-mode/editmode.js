@@ -30,8 +30,8 @@
                 my.panelOpened(data.panel, data.element);
             });
 
-            my.bindEvent('EditModeAddBlockComplete', function() {
-                _.defer(function() {
+            my.bindEvent('EditModeAddBlockComplete', function () {
+                _.defer(function () {
                     my.scanBlocks();
                 });
             });
@@ -109,9 +109,9 @@
                     success: function (r) {
                         var elem = $(r);
                         $container.empty()
-                                  .append(elem)
-                                  .find('.ccm-block-edit')
-                                  .addClass('ccm-block-edit-inline-active');
+                            .append(elem)
+                            .find('.ccm-block-edit')
+                            .addClass('ccm-block-edit-inline-active');
                         my.loadInlineEditModeToolbars($container);
                         $.fn.dialog.hideLoader();
                         Concrete.event.fire('EditModeInlineEditLoaded', {
@@ -140,7 +140,7 @@
                     after = selected.getElem();
                     dragAreaBlock = selected.getBlock();
                 } else {
-                    after = area.getElem().children().last();
+                    after = area.getBlockContainer().children().last();
                     dragAreaBlock = data.dragAreaBlock;
                 }
 
@@ -400,8 +400,8 @@
                 return null;
             }
 
-        	$(element).find('input[data-input=search-blocks]').liveUpdate('ccm-panel-add-blocktypes-list', 'blocktypes');
-        	$(element).find('input[data-input=search-blocks]').focus();
+            $(element).find('input[data-input=search-blocks]').liveUpdate('ccm-panel-add-blocktypes-list', 'blocktypes');
+            $(element).find('input[data-input=search-blocks]').focus();
 
             $(element).find('a.ccm-panel-add-block-draggable-block-type').each(function () {
                 var block, me = $(this), dragger = $('<a/>').addClass('ccm-panel-add-block-draggable-block-type-dragger').appendTo(me);
@@ -438,18 +438,22 @@
                 var change = -1 * e.deltaY;
 
                 var me = $(this),
+                    deltaY = e.originalEvent.deltaY || 0,
                     distance_from_top = me.scrollTop(),
                     distance_from_bottom = (me.get(0).scrollHeight - (me.scrollTop() + me.height()) - me.css('paddingTop').replace('px', ''));
 
-                e.stopImmediatePropagation();
+                // If we don't have deltaY, just use default behavior.
+                if (!deltaY) {
+                    return;
+                }
 
-                if ((change < 0 && !distance_from_top) ||
-                    (change > 0 && !distance_from_bottom)
+                if ((deltaY < 0 && !distance_from_top) ||
+                    (deltaY > 0 && !distance_from_bottom)
                 ) {
                     return false;
                 }
 
-                me.scrollTop(me.scrollTop() + change);
+                me.scrollTop(me.scrollTop() + deltaY);
                 return false;
             });
 
