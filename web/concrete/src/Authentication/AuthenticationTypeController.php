@@ -11,11 +11,17 @@ abstract class AuthenticationTypeController extends Controller implements Authen
     abstract public function getAuthenticationTypeIconHTML();
     abstract public function view();
 
-	public function __construct(AuthenticationType $type) {
+    /**
+     * @param AuthenticationType $type This type may be null only for access points that do not rely on the type.
+     */
+	public function __construct(AuthenticationType $type=null) {
 		$this->authenticationType = $type;
 	}
 
 	public function getAuthenticationType() {
+        if (!$this->authenticationType) {
+            $this->authenticationType = \AuthenticationType::getByHandle($this->getHandle());
+        }
 		return $this->authenticationType;
 	}
 
@@ -24,5 +30,10 @@ abstract class AuthenticationTypeController extends Controller implements Authen
 		$controller = $c->getPageController();
 		$controller->finishAuthentication($this->getAuthenticationType());
 	}
+
+    /**
+     * @return string
+     */
+    abstract function getHandle();
 
 }

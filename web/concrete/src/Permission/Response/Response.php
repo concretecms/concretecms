@@ -58,9 +58,11 @@ class Response
      */
     public static function getResponse($object)
     {
-        $r = PermissionCache::getResponse($object);
-        if (is_object($r)) {
-            return $r;
+        $cache = Core::make('cache/request');
+        $identifier = sprintf('permission/response/%s/%s', get_class($object), $object->getPermissionObjectIdentifier());
+        $item = $cache->getItem($identifier);
+        if (!$item->isMiss()) {
+            return $item->get();
         }
 
         $className = $object->getPermissionResponseClassName();
@@ -71,7 +73,7 @@ class Response
             $pr->setPermissionCategoryObject($category);
         }
         $pr->setPermissionObject($object);
-        PermissionCache::addResponse($object, $pr);
+        $item->set($pr);
         return $pr;
     }
 

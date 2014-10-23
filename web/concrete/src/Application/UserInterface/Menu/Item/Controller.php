@@ -4,6 +4,9 @@ namespace Concrete\Core\Application\UserInterface\Menu\Item;
 use Concrete\Core\Controller\AbstractController;
 use HtmlObject\Element;
 use HtmlObject\Link;
+use Concrete\Core\Asset\CssAsset;
+use Concrete\Core\Asset\JavascriptAsset;
+
 
 class Controller extends AbstractController
 {
@@ -43,6 +46,35 @@ class Controller extends AbstractController
     public function setMenuItem($obj)
     {
         $this->menuItem = $obj;
+    }
+
+    public function registerViewAssets()
+    {
+        $al = \AssetList::getInstance();
+        $v = \View::getInstance();
+        $env = \Environment::get();
+        $identifier = 'menuitem/' . $this->menuItem->getHandle() . '/view';
+        foreach(array('CSS' => 'view.css', 'JAVASCRIPT' => 'view.js') as $t => $i) {
+            $r = $env->getRecord(DIRNAME_MENU_ITEMS . '/' . $this->menuItem->getHandle() . '/' . $i, $this->menuItem->getPackageHandle());
+            if ($r->exists()) {
+                switch($t) {
+                    case 'CSS':
+                        $asset = new CSSAsset($identifier);
+                        $asset->setAssetURL($r->url);
+                        $asset->setAssetPath($r->file);
+                        $al->registerAsset($asset);
+                        $v->requireAsset('css', $identifier);
+                        break;
+                    case 'JAVASCRIPT':
+                        $asset = new JavascriptAsset($identifier);
+                        $asset->setAssetURL($r->url);
+                        $asset->setAssetPath($r->file);
+                        $al->registerAsset($asset);
+                        $v->requireAsset('javascript', $identifier);
+                        break;
+                }
+            }
+        }
     }
 
 

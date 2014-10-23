@@ -1,9 +1,6 @@
 <?
 	defined('C5_EXECUTE') or die("Access Denied.");
 	$a = $b->getBlockAreaObject();
-	$c = Page::getCurrentPage();
-	$pt = $c->getCollectionThemeObject();
-	$gf = $pt->getThemeGridFrameworkObject();
 ?>
 
 <?=$gf->getPageThemeGridFrameworkRowStartHTML()?>

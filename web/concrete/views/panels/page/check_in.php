@@ -39,7 +39,7 @@ $v = $c->getVersionObject();
     <? if (is_object($publishErrors) && $publishErrors->has()) { ?>
         <div class="small">
         <? foreach($publishErrors->getList() as $error) { ?>
-            <div class="text-danger"><strong><i class="fa fa-exclamation-circle"></i> <?=$error?></strong></div>
+            <div class="text-warning"><strong><i class="fa fa-warning"></i> <?=$error?></strong></div>
             <br/>
         <? } ?>
         </div>
@@ -49,7 +49,7 @@ $v = $c->getVersionObject();
         if (is_object($pagetype)) { ?>
             <div class="small">
            <div class="text-info"><strong><i class="fa fa-question-circle"></i>
-            <?=t('Fix common page errors from the <a href="#" data-launch-panel-detail="page-composer" data-panel-detail-url="%s" data-panel-transition="fade">Page Compose interface</a>.', URL::to('/ccm/system/panels/details/page/composer'))?>
+            <?=t('You can specify page name, page location and attributes from the <a href="#" data-launch-panel-detail="page-composer" data-panel-detail-url="%s" data-panel-transition="fade">Page Compose interface</a>.', URL::to('/ccm/system/panels/details/page/composer'))?>
             </strong></div>
             <br/>
             </div>

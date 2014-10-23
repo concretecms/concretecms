@@ -26,7 +26,6 @@
                 dragAreaBlacklist: []
             });
 
-
             my.bindEvent('PanelLoad', function editModePanelOpenEventHandler(event, data) {
                 my.panelOpened(data.panel, data.element);
             });
@@ -100,8 +99,8 @@
 //            ConcreteMenuManager.disable();
                 ConcreteToolbar.disable();
                 $('div.ccm-area').addClass('ccm-area-inline-edit-disabled');
+                block.getElem().addClass('ccm-block-edit-inline-active');
 
-                $container.addClass('ccm-block-edit-inline-active');
 
                 $.ajax({
                     type: 'GET',
@@ -109,7 +108,10 @@
                     data: postData,
                     success: function (r) {
                         var elem = $(r);
-                        $container.empty().append(elem);
+                        $container.empty()
+                                  .append(elem)
+                                  .find('.ccm-block-edit')
+                                  .addClass('ccm-block-edit-inline-active');
                         my.loadInlineEditModeToolbars($container);
                         $.fn.dialog.hideLoader();
                         Concrete.event.fire('EditModeInlineEditLoaded', {
@@ -138,7 +140,7 @@
                     after = selected.getElem();
                     dragAreaBlock = selected.getBlock();
                 } else {
-                    after = area.getElem().children().last();
+                    after = area.getBlockContainer().children().last();
                     dragAreaBlock = data.dragAreaBlock;
                 }
 
@@ -336,6 +338,7 @@
                     url: CCM_DISPATCHER_FILENAME + '/ccm/system/page/arrange_blocks?cID=' + block.getCID(),
                     data: send,
                     success: function (r) {
+                        ConcreteToolbar.disableDirectExit();
                         $.fn.dialog.hideLoader();
                         clearTimeout(timeout);
                     }
@@ -397,6 +400,9 @@
                 return null;
             }
 
+        	$(element).find('input[data-input=search-blocks]').liveUpdate('ccm-panel-add-blocktypes-list', 'blocktypes');
+        	$(element).find('input[data-input=search-blocks]').focus();
+
             $(element).find('a.ccm-panel-add-block-draggable-block-type').each(function () {
                 var block, me = $(this), dragger = $('<a/>').addClass('ccm-panel-add-block-draggable-block-type-dragger').appendTo(me);
                 block = new Concrete.BlockType($(this), my, dragger);
@@ -421,6 +427,23 @@
             $(element).find('div.ccm-panel-add-clipboard-block-item').each(function () {
                 var block, me = $(this);
                 new Concrete.DuplicateBlock(me, my);
+            });
+
+            $(element).find('.ccm-panel-content').on('mousewheel', function (e) {
+                e.stopImmediatePropagation();
+
+                var me = $(this),
+                    distance_from_top = me.scrollTop(),
+                    distance_from_bottom = (me.get(0).scrollHeight - (me.scrollTop() + me.height()) - me.css('paddingTop').replace('px', ''));
+
+                if ((e.originalEvent.deltaY < 0 && !distance_from_top) ||
+                    (e.originalEvent.deltaY > 0 && !distance_from_bottom)
+                ) {
+                    return false;
+                }
+
+                me.scrollTop(me.scrollTop() + e.originalEvent.deltaY);
+                return false;
             });
 
             return panel;

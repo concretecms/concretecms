@@ -36,7 +36,7 @@ class NameCorePageProperty extends CorePageProperty
     {
         $e = Loader::helper('validation/error');
         if (!$this->getPageTypeComposerControlDraftValue()) {
-            $e->add(t('You must specify a page name.'));
+            $e->add(t('You haven\'t chosen a page name.'));
 
             return $e;
         }

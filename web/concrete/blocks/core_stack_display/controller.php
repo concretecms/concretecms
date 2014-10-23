@@ -66,7 +66,7 @@ class Controller extends BlockController {
 					}
 					$csr = $b->getCustomStyle();
 					if (is_object($csr)) {
-                        $styleHeader = '<style type="text/css" data-style-set="' . $st->getStyleSet()->getID() . '">' . $st->getCSS() . '</style>';
+                        $styleHeader = '<style type="text/css" data-style-set="' . $csr->getStyleSet()->getID() . '">' . $csr->getCSS() . '</style>';
 						$btc->addHeaderItem($styleHeader);
 					}
 					$btc->runTask('on_page_view', array($page));

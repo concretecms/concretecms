@@ -11,7 +11,13 @@ abstract class ItemList
     protected $paginationPageParameter = 'ccm_paging_p';
     protected $sortBy;
     protected $sortByDirection;
+
+    // This still checks the auto sort columns if set to true –
+    // we just turn it off to save processing in the attributed item list (so it doesn't have to instantiate
+    // all those objects if it's not necessary)
+    protected $enableAutomaticSorting = true;
     protected $autoSortColumns = array();
+
     protected $itemsPerPage = -1; // determined by the pagination object.
     protected $debug = false;
 
@@ -72,7 +78,44 @@ abstract class ItemList
     public function isActiveSortColumn($field)
     {
         return $this->sortBy == $field;
-    }    /** @var \Concrete\Core\Search\Pagination\Pagination  */
+    }
+
+    public function disableAutomaticSorting()
+    {
+        $this->enableAutomaticSorting = false;
+    }
+
+    public function getSortClassName($column)
+    {
+        $class = false;
+        if ($this->isActiveSortColumn($column)) {
+            $class = 'ccm-results-list-active-sort-';
+            if ($this->getActiveSortDirection() == 'desc') {
+                $class .= 'desc';
+            } else {
+                $class .= 'asc';
+            }
+        }
+        return $class;
+    }
+
+    public function getSortURL($column, $dir = 'asc', $url = false)
+    {
+        $uh = \Core::make("helper/url");
+        if ($this->isActiveSortColumn($column) && $this->getActiveSortDirection() == $dir) {
+            $dir = ($dir == 'asc') ? 'desc' : 'asc';
+        }
+
+        $args = array(
+            $this->getQuerySortColumnParameter() => $column,
+            $this->getQuerySortDirectionParameter() => $dir
+        );
+
+        $url = $uh->setVariable($args, false, $url);
+        return strip_tags($url);
+    }
+
+    /** @var \Concrete\Core\Search\Pagination\Pagination  */
     protected $pagination;
 
 
@@ -134,19 +177,21 @@ abstract class ItemList
      */
     public function setupAutomaticSorting(StickyRequest $request = null)
     {
-        if ($request) {
-            $data = $request->getSearchRequest();
-        } else {
-            $data = \Request::getInstance()->query->all();
-        }
-        $direction = 'asc';
-        if (isset($data[$this->getQuerySortDirectionParameter()])) {
-            $direction = $data[$this->getQuerySortDirectionParameter()];
-        }
-        if (isset($data[$this->getQuerySortColumnParameter()])) {
-            $value = $data[$this->getQuerySortColumnParameter()];
-            if (in_array($value, $this->autoSortColumns)) {
-                $this->sortBy($value, $direction);
+        if ($this->enableAutomaticSorting) {
+            if ($request) {
+                $data = $request->getSearchRequest();
+            } else {
+                $data = \Request::getInstance()->query->all();
+            }
+            $direction = 'asc';
+            if (isset($data[$this->getQuerySortDirectionParameter()])) {
+                $direction = $data[$this->getQuerySortDirectionParameter()];
+            }
+            if (isset($data[$this->getQuerySortColumnParameter()])) {
+                $value = $data[$this->getQuerySortColumnParameter()];
+                if (in_array($value, $this->autoSortColumns)) {
+                    $this->sortBy($value, $direction);
+                }
             }
         }
     }

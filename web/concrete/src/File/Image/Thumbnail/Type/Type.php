@@ -220,10 +220,19 @@ class Type
      */
     public static function getByHandle($ftTypeHandle)
     {
+        // ugh doctrine doesn't cache when searching by ftTypeHandle
+        $item = \Core::make('cache/request')->getItem('file/image/thumbnail/' . $ftTypeHandle);
+        if (!$item->isMiss()) {
+            return $item->get();
+        }
+
         $db = Database::get();
         $em = $db->getEntityManager();
         $r = $em->getRepository('\Concrete\Core\File\Image\Thumbnail\Type\Type')
             ->findOneBy(array('ftTypeHandle' => $ftTypeHandle));
+
+        $item->set($r);
+
         return $r;
     }
 

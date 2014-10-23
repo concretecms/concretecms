@@ -46,6 +46,7 @@ class Controller extends BlockController
     public function on_start()
     {
         $this->list = new PageList();
+        $this->list->disableAutomaticSorting();
         //$pl->setNameSpace('b' . $this->bID);
 
         $cArray = array();
@@ -109,7 +110,7 @@ class Controller extends BlockController
 
         $db = Loader::db();
         $columns = $db->MetaColumnNames(CollectionAttributeKey::getIndexedSearchTable());
-        if (isset($columns['ak_exclude_page_list'])) {
+        if (in_array('ak_exclude_page_list', $columns)) {
             $this->list->filter(false, '(ak_exclude_page_list = 0 or ak_exclude_page_list is null)');
         }
 
@@ -211,8 +212,7 @@ class Controller extends BlockController
     protected function loadKeys()
     {
         $attributeKeys = array();
-        
-        $keys = CollectionKey::getList();
+        $keys = CollectionKey::getList(array('atHandle' => 'topics'));
         foreach ($keys as $ak) {
             if ($ak->getAttributeTypeHandle() == 'topics') {
                 $attributeKeys[] = $ak;

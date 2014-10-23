@@ -44,15 +44,12 @@ class Pagination extends Pagerfanta
     public function renderDefaultView()
     {
         $v = Core::make('pagination/view');
-        $c = Page::getCurrentPage();
-        $url = $c->getCollectionLink();
         $list = $this->list;
         $html = $v->render(
             $this,
-            function ($page) use ($list, $url) {
+            function ($page) use ($list) {
                 $qs = Core::make('helper/url');
                 $url = $qs->setVariable($list->getQueryPaginationPageParameter(), $page);
-
                 return $url;
             },
             array(
@@ -61,7 +58,6 @@ class Pagination extends Pagerfanta
                 'active_suffix' => '<span class="sr-only">' . tc('Pagination', '(current)') . '</span>'
             )
         );
-
         return $html;
     }
 

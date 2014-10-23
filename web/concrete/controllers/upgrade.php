@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Controller;
 
+use Concrete\Core\Updater\Update;
 use Concrete\Core\View\View;
 use Concrete\Controller\Backend\UserInterface as BackendUserInterfaceController;
 use Config;
@@ -53,17 +54,8 @@ class Upgrade extends BackendUserInterfaceController
         if ($this->validateAction()) {
 
             try {
-
-                $cms = Core::make('app');
-                $cms->clearCaches();
-
-                $configuration = new \Concrete\Core\Updater\Migrations\Configuration();
-                $migrations = $configuration->getMigrationsToExecute('up', $configuration->getLatestVersion());
-                foreach($migrations as $migration) {
-                    $migration->execute('up');
-                }
+                Update::updateToCurrentVersion();
                 $this->set('success', t('Upgrade to <b>%s</b> complete!', APP_VERSION));
-                \Config::save('concrete.version_installed', APP_VERSION);
             } catch (\Exception $e) {
                 $this->set('error', $e);
             }
@@ -76,6 +68,8 @@ class Upgrade extends BackendUserInterfaceController
 
         if (!$sav) {
             $message = t('Unable to determine your current version of concrete5. Upgrading cannot continue.');
+        }elseif($this->request->query->get('force', 0) == 1){
+            $this->set('do_upgrade', true);
         } else {
             if (version_compare($sav, APP_VERSION, '>')) {
                 $message = t('Upgrading from <b>%s</b>', $sav) . '<br/>';

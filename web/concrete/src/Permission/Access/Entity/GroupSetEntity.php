@@ -4,6 +4,7 @@ use Loader;
 use PermissionAccess;
 use URL;
 use Config;
+use Concrete\Core\User\Group\GroupSet;
 class GroupSetEntity extends Entity {
 
 	protected $groupset;
@@ -28,7 +29,7 @@ class GroupSetEntity extends Entity {
 		$peIDs = $db->GetCol('select peID from PermissionAccessEntityGroupSets paegs inner join GroupSetGroups gsg on paegs.gsID = gsg.gsID where gsg.gID in (' . $instr . ')');
 		if (is_array($peIDs)) {
 			foreach($peIDs as $peID) {
-				$entity = PermissionAccessEntity::getByID($peID);
+				$entity = Entity::getByID($peID);
 				if (is_object($entity)) {
 					$entities[] = $entity;
 				}

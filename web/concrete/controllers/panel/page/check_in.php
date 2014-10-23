@@ -40,7 +40,7 @@ class CheckIn extends BackendInterfacePageController
         $e = Loader::helper('validation/error');
         if ($c->isPageDraft()) {
             if (!$c->getPageDraftTargetParentPageID()) {
-                $e->add(t('You must choose a page to publish this page beneath.'));
+                $e->add(t('You haven\'t chosen where to publish this page.'));
             }
         }
         $pagetype = $c->getPageTypeObject();

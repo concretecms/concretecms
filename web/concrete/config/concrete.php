@@ -7,9 +7,9 @@ return array(
      *
      * @var string
      */
-    'version'           => '5.7.0.4',
-    'version_installed' => '5.7.0.4',
-    'version_db' => '20140930000000', // the key of the migration - corresponds to 5.7.0.4
+    'version'           => '5.7.1.1',
+    'version_installed' => '5.7.1.1',
+    'version_db' => '20141023000000', // the key of the latest database migration - corresponds to 5.7.1
 
     /**
      * Installation status
@@ -248,7 +248,24 @@ return array(
          *
          * @var bool
          */
-        'spam'   => false
+        'spam'   => false,
+
+
+        'queries' => array(
+
+            /**
+             * Whether to log database queries or not.
+             *
+             * @var bool
+             */
+            'log' => false,
+
+
+            'clear_on_reload' => false
+
+
+
+        )
     ),
     'jobs'              => array(
 
@@ -270,10 +287,7 @@ return array(
          */
         'enabled' => true,
         'default' => array(
-            'address' => 'concrete5-noreply@' . str_replace(
-                    array('http://www.', 'https://www.', 'http://', 'https://'),
-                    '',
-                    BASE_URL),
+            'address' => 'concrete5-noreply@' . $_SERVER['SERVER_NAME'],
             'name'    => ''
         )
     ),
@@ -289,7 +303,7 @@ return array(
          *
          * @var bool
          */
-        'enabled'            => false,
+        'enabled'            => true,
 
         /**
          * Marketplace Token
@@ -308,7 +322,12 @@ return array(
         /**
          * Enable intelligent search integration
          */
-        'intelligent_search' => false
+        'intelligent_search' => true,
+
+        /**
+         * Log requests
+         */
+        'log_requests' => false
     ),
 
     /**
@@ -347,6 +366,7 @@ return array(
      */
     'misc'              => array(
         'user_timezones'                => false,
+        'package_backup_directory'      => DIR_FILES_UPLOADED_STANDARD . '/trash',
         'enable_progressive_page_reindex'      => true,
         'mobile_theme_id'               => 0,
         'seen_introduction'             => false,
@@ -355,6 +375,11 @@ return array(
         'page_search_index_lifetime'    => 259200,
         'enable_trash_can'              => true,
         'app_version_display_in_header' => true
+    ),
+
+    'theme' => array(
+
+        'compress_preprocessor_output' => true
     ),
 
     'updates' => array(

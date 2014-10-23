@@ -193,6 +193,10 @@ class File implements \Concrete\Core\Permission\ObjectInterface
     {
         $fh = Loader::helper('concrete/file');
         $currentLocation = $this->getFileStorageLocationObject();
+        if ($newLocation->getID() == $currentLocation->getID()) {
+            return false;
+        }
+
         $currentFilesystem = $currentLocation->getFileSystemObject();
 
         $newFileSystem = $newLocation->getFileSystemObject();
@@ -468,10 +472,22 @@ class File implements \Concrete\Core\Permission\ObjectInterface
 
     public function getApprovedVersion()
     {
+        // Ideally, doctrine's caching would handle this. Unfortunately, something is wrong with the $file
+        // object going into the query, so none of them are ever marked as cacheable, which means we always
+        // run the query even though we've run it multiple times in the same request. So we're going to
+        // step between doctrine this time.
+        $item = \Core::make('cache/request')->getItem('file/version/approved/' . $this->getFileID());
+        if (!$item->isMiss()) {
+            return $item->get();
+        }
+
         $db = Loader::db();
         $em = $db->getEntityManager();
         $r = $em->getRepository('\Concrete\Core\File\Version');
         $fv = $r->findOneBy(array('file' => $this, 'fvIsApproved' => true));
+
+        $item->set($fv);
+
         return $fv;
     }
 

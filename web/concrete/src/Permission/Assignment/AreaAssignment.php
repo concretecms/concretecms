@@ -4,6 +4,8 @@ use PermissionAccess;
 use Loader;
 use \Concrete\Core\Area\Area;
 use Stack;
+use Page;
+use \Concrete\Core\Area\SubArea;
 use PermissionKey;
 
 class AreaAssignment extends Assignment {
@@ -28,8 +30,11 @@ class AreaAssignment extends Assignment {
 	public function setPermissionObject(Area $a) {
 		$ax = $a;
 		if ($a->isGlobalArea()) {
-			$cx = Stack::getByName($a->getAreaHandle());
+			$cx = Stack::getByName($a->getAreaHandle(), 'ACTIVE');
 			$a = Area::get($cx, STACKS_AREA_NAME);
+            if (!is_object($a)) {
+                return false;
+            }
 		}
 
 		if ($a instanceof SubArea && !$a->overrideCollectionPermissions()) {
