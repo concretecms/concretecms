@@ -76,7 +76,7 @@ if ($showMenu) {
     $canEditCacheSettings = $p->canEditBlockCacheSettings();
     $canEditCustomTemplate = $p->canEditBlockCustomTemplate();
     $canScheduleGuestAccess = (Config::get('concrete.permissions.model') != 'simple' && $p->canGuestsViewThisBlock() && $p->canScheduleGuestAccess() && (!$a->isGlobalArea()));
-    $canAliasBlockOut = ($c->isMasterCollection());
+    $canAliasBlockOut = ($c->isMasterCollection() && !$a->isGlobalArea());
     if ($canAliasBlockOut) {
         $ct = PageType::getByID($c->getPageTypeID());
     }
