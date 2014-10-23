@@ -30,7 +30,7 @@
                 my.panelOpened(data.panel, data.element);
             });
 
-            my.bindEvent('EditModeAddBlockComplete', function() {
+            my.bindEvent('EditModeAddBlockComplete EditModeUpdateBlockComplete', function(e) {
                 _.defer(function() {
                     my.scanBlocks();
                 });
