@@ -33,6 +33,12 @@
             });
             my.id = my.getId();
             my.setTotalBlocks(0); // we also need to update the DOM which this does.
+
+            my.bindEvent('EditModeBlockAddInline.area', function(e, data) {
+                if (data.area === my) {
+                    my.setTotalBlocks(my.getTotalBlocks() + 1);
+                }
+            });
         },
 
         /**
@@ -259,6 +265,8 @@
         removeBlock: function areaRemoveBlock(block) {
             var my = this, totalBlocks = my.getTotalBlocks();
 
+            my.getElem().removeClass('ccm-parent-menu-item-active');
+
             block.getContainer().remove();
             my.setBlocks(_(my.getBlocks()).without(block));
 
@@ -300,6 +308,8 @@
                 drag_area = new Concrete.DragArea(elem, my, block);
                 block.getContainer().after(elem);
             }
+
+            elem.text(_(ccmi18n.emptyArea).template({ area_handle: my.getElem().data('area-display-name') }));
             my.getDragAreas().push(drag_area);
             return drag_area;
         },
