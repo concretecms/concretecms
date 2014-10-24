@@ -5,6 +5,7 @@ use \Concrete\Core\Block\BlockController;
 use User;
 use Page;
 use UserInfo;
+use Exception;
 class Controller extends BlockController {
 	public $btTable = 'btForm';
 	public $btQuestionsTablename = 'btFormQuestions';
