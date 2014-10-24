@@ -476,7 +476,7 @@ class User extends Object
                     if ($g->isUserExpired($this)) {
                         $this->exitGroup($g);
                     } else {
-                        $ug[$row['gID']] = $row['gName'];
+                        $ug[$row['gID']] = $row['gID'];
                     }
                 }
             }
