@@ -29,6 +29,9 @@
             my.bindEvent('PanelLoad', function editModePanelOpenEventHandler(event, data) {
                 my.panelOpened(data.panel, data.element);
             });
+            my.bindEvent('PanelClose', function editModePanelCloseEventHandler(event, data) {
+                html.removeClass('ccm-panel-add-block');
+            });
 
             my.bindEvent('EditModeAddBlockComplete EditModeUpdateBlockComplete', function(e) {
                 _.defer(function() {
@@ -399,6 +402,8 @@
             if (panel.getIdentifier() !== 'add-block') {
                 return null;
             }
+
+            html.addClass('ccm-panel-add-block');
 
             $(element).find('input[data-input=search-blocks]').liveUpdate('ccm-panel-add-blocktypes-list', 'blocktypes');
             $(element).find('input[data-input=search-blocks]').focus();
