@@ -89,7 +89,7 @@
 				initAjax: {
 					url: CCM_TOOLS_PATH + '/tree/load',
 					type: 'post',
-					data: ajaxData,
+					data: ajaxData
 				},
 				onLazyRead: function(node) {
 					my.reloadNode(node);
@@ -119,7 +119,7 @@
 
 					if (options.chooseNodeInForm) {
 						var selectedNodes = $tree.dynatree('getTree');
-						var selectedNodes = selectedNodes.getSelectedNodes();
+						selectedNodes = selectedNodes.getSelectedNodes();
 						if (selectedNodes[0]) {
 							var node = selectedNodes[0];
 							options.onSelect(true, node);
@@ -229,7 +229,7 @@
 			node.appendAjax(params);
     	}
 
-	}
+	};
 
 	/** 
 	 * Static methods
@@ -245,14 +245,14 @@
 				'<li><a class="dialog-launch" dialog-width="480" dialog-height="380" dialog-modal="true" dialog-title="Edit Permissions" href="' + CCM_TOOLS_PATH + '/tree/node/permissions?treeNodeID=<%=data.key%>">' + ccmi18n_groups.editPermissions + '</a></li>' + 
 			'<% } %>' +
 		'</ul></div></div>';
-	}
+	};
 
 	// jQuery Plugin
 	$.fn.concreteGroupsTree = function(options) {
 		return $.each($(this), function(i, obj) {
 			new ConcreteGroupsTree($(this), options);
 		});
-	}
+	};
 
 	global.ConcreteGroupsTree = ConcreteGroupsTree;
 

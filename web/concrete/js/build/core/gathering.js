@@ -134,7 +134,7 @@
 				];
 				var items = [];
 				var elements = pkr.getItemElements();
-				for (i = 0; i < elements.length; i++) {
+				for (var i = 0; i < elements.length; i++) {
 					var $obj = $(elements[i]);
 					data.push({'name': 'gaiID[]', 'value': $obj.attr('data-gathering-item-id')});
 				}
@@ -181,7 +181,7 @@
    
     updateItemTemplate: function(options) {
 		jQuery.fn.dialog.showLoader();
-		var options = $.extend({
+		options = $.extend({
 			reloadItemTile: false
 		}, options);
 		$.ajax({
@@ -251,7 +251,7 @@
 
 	init: function(options) {
 
-		var options = $.extend({
+		options = $.extend({
 			totalPages: 0,
 			columnWidth: 120,
 			itemsPerPage: 24,
@@ -281,7 +281,7 @@
 			methods.private.enableOverlay($gathering, options);
 
 			$loadButton.on('click', function() {
-				page = parseInt($gathering.attr('data-gathering-current-page')),
+				var page = parseInt($gathering.attr('data-gathering-current-page')),
 					newPage = page + 1;
 
 				$loadButton.prop('disabled', true);
@@ -321,7 +321,7 @@
 			}
 		});	
     }
-  }
+  };
 
   $.fn.ccmgathering = function(method) {
 
