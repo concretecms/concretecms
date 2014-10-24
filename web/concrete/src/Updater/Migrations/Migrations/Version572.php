@@ -7,10 +7,11 @@ use Concrete\Core\Page\Page;
 use Concrete\Core\Permission\Key\Key;
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
+use Doctrine\DBAL\Schema\Table;
 use SinglePage;
 use Exception;
 
-class Version5711 extends AbstractMigration
+class Version572 extends AbstractMigration
 {
 
     public function getName()
@@ -22,10 +23,13 @@ class Version5711 extends AbstractMigration
     {
 
         /** Add query log db table */
-        $ql = $schema->createTable('SystemDatabaseQueryLog');
-        $ql->addColumn('query', 'text');
-        $ql->addColumn('params', 'text', array('notnull' => false));
-        $ql->addColumn('executionMS', 'string');
+        $table = $schema->getTable('SystemDatabaseQueryLog');
+        if (!($table instanceof Table)) {
+            $ql = $schema->createTable('SystemDatabaseQueryLog');
+            $ql->addColumn('query', 'text');
+            $ql->addColumn('params', 'text', array('notnull' => false));
+            $ql->addColumn('executionMS', 'string');
+        }
 
         /** Add query log single pages */
 		$sp = Page::getByPath('/dashboard/system/optimization/query_log');
