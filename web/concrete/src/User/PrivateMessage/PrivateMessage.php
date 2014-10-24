@@ -1,7 +1,10 @@
 <?php
 namespace Concrete\Core\User\PrivateMessage;
 use \Concrete\Core\Foundation\Object;
+use Concrete\Core\User\PrivateMessage\Mailbox as UserPrivateMessageMailbox;
 use Loader;
+use UserInfo;
+use Events;
 class PrivateMessage extends Object {
 
 	protected $authorName = false;
@@ -18,7 +21,7 @@ class PrivateMessage extends Object {
 			return false;
 		}
 
-		$upm = new UserPrivateMessage();
+		$upm = new static();
 		$upm->setPropertiesFromArray($row);
 
 		if ($mailbox) {
@@ -66,7 +69,7 @@ class PrivateMessage extends Object {
 			$ue = new Event($this);
 			Events::dispatch('on_private_message_marked_as_read', $ue);
 
-			$db->Execute('update UserPrivateMessagesTo set msgIsUnread = 0 where msgID = ?', array($this->msgID, $this->msgMailboxID, $this->uID));
+			$db->Execute('update UserPrivateMessagesTo set msgIsUnread = 0 where msgID = ? and msgMailboxID = ? and uID = ?', array($this->msgID, $this->msgMailboxID, $this->uID));
 		}
 	}
 
