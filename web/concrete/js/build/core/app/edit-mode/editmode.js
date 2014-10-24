@@ -310,6 +310,7 @@
             my.bindEvent('EditModeBlockDragStop', function editModeEditModeBlockDragStopEventHandler(e, data) {
                 Concrete.event.fire('EditModeContenders', []);
                 Concrete.event.fire('EditModeSelectableContender');
+                $('html').removeClass('ccm-block-dragging');
 
                 if (data.block instanceof Concrete.BlockType) return;
                 my.scanBlocks();
@@ -350,6 +351,7 @@
             });
 
             my.bindEvent('EditModeBlockDragStart', function editModeEditModeBlockDragStartEventHandler() {
+                $('html').addClass('ccm-block-dragging');
                 my.setDragging(true);
             });
 
