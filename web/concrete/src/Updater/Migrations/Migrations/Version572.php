@@ -2,6 +2,7 @@
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Authentication\AuthenticationType;
+use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Permission\Key\Key;
 use Doctrine\DBAL\Migrations\AbstractMigration;
@@ -14,7 +15,7 @@ class Version5711 extends AbstractMigration
 
     public function getName()
     {
-        return '20141023000000';
+        return '20141024000000';
     }
 
     public function up(Schema $schema)
@@ -33,6 +34,12 @@ class Version5711 extends AbstractMigration
 			$sp->update(array('cName' => 'Database Query Log'));
 			$sp->setAttribute('meta_keywords', 'queries, database, mysql');
 		}
+
+        /** Refresh image block */
+        $bt = BlockType::getByHandle('image');
+        if (is_object($bt)) {
+            $bt->refresh();
+        }
     }
 
     public function down(Schema $schema)

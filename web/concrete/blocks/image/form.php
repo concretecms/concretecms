@@ -14,14 +14,18 @@ if ($controller->getFileOnstateID() > 0) {
 ?>
 
 <fieldset>
+
+    <legend><?=t('Files')?></legend>
 <?
 $args = array();
-if ($forceImageToMatchDimensions && $maxWidth && $maxHeight) {
-	$args['maxWidth'] = $maxWidth;
-	$args['maxHeight'] = $maxHeight;
-	$args['minWidth'] = $maxWidth;
-	$args['minHeight'] = $maxHeight;
+$constrain = $maxWidth > 0 || $maxHeight > 0;
+if ($maxWidth == 0) {
+    $maxWidth = '';
 }
+if ($maxHeight == 0) {
+    $maxHeight = '';
+}
+
 ?>
 
 <div class="form-group">
@@ -37,22 +41,23 @@ if ($forceImageToMatchDimensions && $maxWidth && $maxHeight) {
 <hr/>
 
 <fieldset>
+    <legend><?=t('HTML')?></legend>
 
 <div class="form-group">
-	<?=$form->label('linkType', t('Image Link'))?>
-	<select name="linkType" id="linkType" class="form-control" style="width: 60%;">
+	<?=$form->label('imageLinkType', t('Image Link'))?>
+	<select name="linkType" id="imageLinkType" class="form-control" style="width: 60%;">
 		<option value="0" <?=(empty($externalLink) && empty($internalLinkCID) ? 'selected="selected"' : '')?>><?=t('None')?></option>
 		<option value="1" <?=(empty($externalLink) && !empty($internalLinkCID) ? 'selected="selected"' : '')?>><?=t('Another Page')?></option>
 		<option value="2" <?=(!empty($externalLink) ? 'selected="selected"' : '')?>><?=t('External URL')?></option>
 	</select>
 </div>
 
-<div id="linkTypePage" style="display: none;" class="form-group">
+<div id="imageLinkTypePage" style="display: none;" class="form-group">
 	<?=$form->label('internalLinkCID', t('Choose Page:'))?>
 	<?= Loader::helper('form/page_selector')->selectPage('internalLinkCID', $internalLinkCID); ?>
 </div>
 
-<div id="linkTypeExternal" style="display: none;" class="form-group">
+<div id="imageLinkTypeExternal" style="display: none;" class="form-group">
 	<?=$form->label('externalLink', t('URL'))?>
 	<?= $form->text('externalLink', $externalLink, array('style'=>'width: 60%;')); ?>
 </div>
@@ -71,33 +76,47 @@ if ($forceImageToMatchDimensions && $maxWidth && $maxHeight) {
 </fieldset>
 
 <fieldset>
-<hr/>
+    <legend><?=t('Resize Image')?></legend>
 
-	<? if ($maxWidth == 0) { 
-		$maxWidth = '';
-	} 
-	if ($maxHeight == 0) {
-		$maxHeight = '';
-	}
-	?>
+    <div class="form-group">
+        <div class="checkbox" data-checkbox-wrapper="constrain-image">
+            <label><?=$form->checkbox('constrainImage', 1, $constrain)?>
+            <?=t('Constrain Image Size')?></label>
+        </div>
+    </div>
 
-<label><?php echo t('Constrain Image Size'); ?></label>
-<div class="form-group">
-	<?=$form->label('maxWidth', t('Max Width'))?>
-	<?= $form->text('maxWidth', $maxWidth, array('style' => 'width: 60px')); ?>
-</div>
+    <div data-fields="constrain-image" style="display: none">
+        <div class="form-group">
+        <?=$form->label('maxWidth', t('Max Width'))?>
+        <?= $form->text('maxWidth', $maxWidth, array('style' => 'width: 60px')); ?>
+        </div>
 
-<div class="form-group">
-	<?=$form->label('maxHeight', t('Max Height'))?>
-	<?= $form->text('maxHeight', $maxHeight, array('style' => 'width: 60px')); ?>
-</div>
-
-<div class="form-group">
-	<?=$form->label('forceImageToMatchDimensions', t('Scale Image'))?>
-	<select name="forceImageToMatchDimensions" class="form-control" id="forceImageToMatchDimensions">
-		<option value="0" <? if (!$forceImageToMatchDimensions) { ?> selected="selected" <? } ?>><?=t('Automatically')?></option>
-		<option value="1" <? if ($forceImageToMatchDimensions == 1) { ?> selected="selected" <? } ?>><?=t('Force Exact Image Match')?></option>
-	</select>
-</div>
+        <div class="form-group">
+            <?=$form->label('maxHeight', t('Max Height'))?>
+            <?= $form->text('maxHeight', $maxHeight, array('style' => 'width: 60px')); ?>
+        </div>
+    </div>
 
 </fieldset>
+
+
+<script type="text/javascript">
+refreshImageLinkTypeControls = function() {
+	var linkType = $('#imageLinkType').val();
+	$('#imageLinkTypePage').toggle(linkType == 1);
+	$('#imageLinkTypeExternal').toggle(linkType == 2);
+}
+
+$(document).ready(function() {
+	$('#imageLinkType').change(refreshImageLinkTypeControls);
+
+    $('div[data-checkbox-wrapper=constrain-image] input').on('change', function() {
+        if ($(this).is(':checked')) {
+            $('div[data-fields=constrain-image]').show();
+        } else {
+            $('div[data-fields=constrain-image]').hide();
+        }
+    }).trigger('change');
+	refreshImageLinkTypeControls();
+});
+</script>
