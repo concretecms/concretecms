@@ -23,7 +23,12 @@ class Version572 extends AbstractMigration
     {
 
         /** Add query log db table */
-        $table = $schema->getTable('SystemDatabaseQueryLog');
+
+        try {
+            $table = $schema->getTable('SystemDatabaseQueryLog');
+        } catch (Exception $e) {
+            $table = null;
+        }
         if (!($table instanceof Table)) {
             $ql = $schema->createTable('SystemDatabaseQueryLog');
             $ql->addColumn('query', 'text');
