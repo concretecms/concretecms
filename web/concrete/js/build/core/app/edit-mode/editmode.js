@@ -390,7 +390,9 @@
             my.reset();
 
             $('div.ccm-area').each(function () {
-                area = new Concrete.Area($(this), my);
+                var me = $(this);
+                if (me.parent().hasClass('ccm-block-stack')) return;
+                area = new Concrete.Area(me, my);
                 area.scanBlocks();
                 my.addArea(area);
             });

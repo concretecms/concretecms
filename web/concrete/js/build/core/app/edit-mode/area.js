@@ -309,7 +309,11 @@
                 block.getContainer().after(elem);
             }
 
-            elem.text(_(ccmi18n.emptyArea).template({ area_handle: my.getElem().data('area-display-name') }));
+            if (!my.getElem().parent().is('#ccm-stack-container')) {
+                elem.text(_(ccmi18n.emptyArea).template({
+                    area_handle: my.getElem().data('area-display-name')
+                }));
+            }
             my.getDragAreas().push(drag_area);
             return drag_area;
         },
