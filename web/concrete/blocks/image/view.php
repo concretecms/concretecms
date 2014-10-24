@@ -2,7 +2,19 @@
 
 $c = Page::getCurrentPage();
 if (is_object($f)) {
-    $tag = Core::make('html/image', array($f))->getTag();
+    if ($maxWidth > 0 || $maxHeight > 0) {
+        $im = Core::make('helper/image');
+        $thumb = $im->getThumbnail(
+            $f,
+            $maxWidth,
+            $maxHeight
+        ); //<-- set these 2 numbers to max width and height of thumbnails
+        $tag = new \HtmlObject\Image();
+        $tag->src($thumb->src)->width($thumb->width)->height($thumb->height);
+    } else {
+        $image = Core::make('html/image', array($f));
+        $tag = $image->getTag();
+    }
     $tag->addClass('ccm-image-block img-responsive bID-'.$bID);
     if ($altText) {
         $tag->alt($altText);
