@@ -8,6 +8,8 @@
     BlockType.prototype = _.extend(Object.create(Concrete.Block.prototype), {
 
         pepStart: function blockTypePepStart(context, event, pep) {
+            html.addClass('ccm-blocktype-drag');
+
             var my = this, panel;
             Concrete.Block.prototype.pepStart.call(this, context, event, pep);
 
@@ -21,6 +23,7 @@
         },
 
         pepStop: function blockTypePepStop(context, event, pep) {
+            html.removeClass('ccm-blocktype-drag');
             var my = this, drag_area, panel;
 
             if ((drag_area = my.getSelected())) {

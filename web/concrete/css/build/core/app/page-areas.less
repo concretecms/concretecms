@@ -438,10 +438,10 @@ div.ccm-area-drag-area {
 
   &.ccm-area-drag-area-contender {
     background-color: rgba(221, 255, 221, 0.5);
-    outline: solid 5px rgba(221, 255, 221, .7);
+    outline: solid 5px rgba(221, 255, 221, .7) !important;
   }
   &.ccm-area-drag-area-selectable {
-    outline-width: 10px;
+    outline-width: 10px !important;
   }
 }
 
@@ -456,7 +456,7 @@ div.ccm-global-area {
 }
 
 
-html.ccm-panel-add-block {
+html.ccm-panel-add-block, html.ccm-blocktype-drag {
   div.ccm-area-drag-area {
     outline-width: 2px;
   }
