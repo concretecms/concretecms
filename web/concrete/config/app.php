@@ -261,8 +261,8 @@ return array(
         /**
          * General Attribute
          */
-        "/ccm/system/attribute/attribute_sort/set"                                      => array('\Concrete\Controller\Backend\UserAttributes::sortInSet'),
-        "/ccm/system/attribute/attribute_sort/user"                                     => array('\Concrete\Controller\Backend\UserAttributes::sort'),
+        "/ccm/system/attribute/attribute_sort/set"                                      => array('\Concrete\Controller\Backend\Attributes::sortInSet'),
+        "/ccm/system/attribute/attribute_sort/user"                                     => array('\Concrete\Controller\Backend\Attributes::sortUser'),
 
         /**
          * Marketplace
