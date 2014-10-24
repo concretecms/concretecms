@@ -551,6 +551,9 @@ class Version
 
         $fo = $this->getFile();
         $fo->reindex();
+
+        \Core::make('cache/request')->delete('file/version/approved/' . $this->getFileID());
+
     }
 
 
