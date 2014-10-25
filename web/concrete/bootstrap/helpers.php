@@ -62,6 +62,7 @@ function t2($singular, $plural, $number)
     if ($arg) {
         return vsprintf($translated, $arg);
     }
+
     return vsprintf($translated, $number);
 }
 
@@ -97,6 +98,7 @@ function tc($context, $text)
     for ($i = 2; $i < func_num_args(); $i++) {
         $arg[] = func_get_arg($i);
     }
+
     return vsprintf($text, $arg);
 }
 
@@ -108,7 +110,7 @@ function tc($context, $text)
  */
 function h($input)
 {
-    return id(new Text)->specialchars($input);
+    return id(new Text())->specialchars($input);
 }
 
 /**
@@ -150,6 +152,7 @@ function core_class($class, $prefix = false)
     }
 
     $class = '\\' . $prefix . '\\' . $class;
+
     return $class;
 }
 
@@ -158,6 +161,7 @@ function overrideable_core_class($class, $path, $pkgHandle = null)
     $env = \Environment::get();
     $r = $env->getRecord($path);
     $prefix = $r->override ? true : $pkgHandle;
+
     return core_class($class, $prefix);
 }
 
@@ -214,6 +218,7 @@ function uncamelcase($string)
             }
         }
     }
+
     return str_replace('__', '_', implode('_', $a));
 }
 
@@ -230,5 +235,6 @@ function array_to_object($o, $array)
     foreach ($array as $property => $value) {
         $o->$property = $value;
     }
+
     return $o;
 }
