@@ -14,6 +14,9 @@ use \Concrete\Core\Localization\Localization;
  */
 function t($text)
 {
+    if (!is_string($text)) {
+        return '';
+    }
     $zt = Localization::getTranslate();
     if (func_num_args() == 1) {
         if (is_object($zt)) {
@@ -46,6 +49,9 @@ function t($text)
  */
 function t2($singular, $plural, $number)
 {
+    if (!(is_string($singular) && is_string($plural))) {
+        return '';
+    }
     $zt = Localization::getTranslate();
     if (is_object($zt)) {
         $translated = $zt->translatePlural($singular, $plural, $number);
@@ -73,6 +79,9 @@ function t2($singular, $plural, $number)
  */
 function tc($context, $text)
 {
+    if (!(is_string($context) && is_string($text))) {
+        return '';
+    }
     $zt = Localization::getTranslate();
     if (is_object($zt)) {
         $msgid = $context . "\x04" . $text;
