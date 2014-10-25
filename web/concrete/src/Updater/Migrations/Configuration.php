@@ -29,7 +29,12 @@ class Configuration extends DoctrineMigrationConfiguration
     public function registerPreviousMigratedVersions()
     {
         $db = \Database::get();
-        $minimum = $db->GetOne('select min(version) from SystemDatabaseMigrations');
+        try {
+
+            $minimum = $db->GetOne('select min(version) from SystemDatabaseMigrations');
+        } catch (\Exception $e) {
+            return;
+        }
         $migrations = $this->getMigrations();
         $keys = array_keys($migrations);
 

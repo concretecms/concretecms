@@ -2,6 +2,8 @@
 namespace Concrete\Core\User\PrivateMessage;
 use \Concrete\Core\Legacy\DatabaseItemList;
 use Loader;
+use Concrete\Core\User\PrivateMessage\PrivateMessage as UserPrivateMessage;
+
 class PrivateMessageList extends DatabaseItemList {
 
 	protected $itemsPerPage = 10;

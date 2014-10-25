@@ -430,29 +430,35 @@ ul.ccm-edit-mode-inline-commands:hover {
  */
 div.ccm-area-drag-area {
   -webkit-transition: outline-width 0.5s cubic-bezier(0.190, 1.000, 0.220, 1.000), outline-color 0.5s cubic-bezier(0.190, 1.000, 0.220, 1.000);
-  outline-color: transparent;
+  outline-width: 0;
   outline-style: solid;
+  text-indent: -10000em;
+  line-height: 0px;
+  outline-color: rgb(170, 255, 170);
 
   &.ccm-area-drag-area-contender {
     background-color: rgba(221, 255, 221, 0.5);
-    outline: solid 5px rgba(221, 255, 221, .7);
+    outline: solid 5px rgba(221, 255, 221, .7) !important;
   }
   &.ccm-area-drag-area-selectable {
-    outline-color: rgb(170, 255, 170);
-    outline-width: 10px;
+    outline-width: 10px !important;
   }
 }
 
 /* Global area color */
 div.ccm-global-area {
-
-  div.ccm-area-drag-area {
-    &.ccm-area-drag-area-selectable {
-      // 105 206 65
-      //outline-color: rgb(255, 165, 91);
-      border: rgb(128, 208, 236);
+  > .ccm-area-block-list {
+    > div.ccm-area-drag-area {
+      border-color: rgb(128, 208, 236);
       outline-color: rgb(203, 234, 255);
     }
+  }
+}
+
+
+html.ccm-panel-add-block, html.ccm-block-dragging {
+  div.ccm-area-drag-area {
+    outline-width: 2px;
   }
 }
 
@@ -461,7 +467,12 @@ div.ccm-global-area {
  */
 div.ccm-area[data-total-blocks="0"] {
   div.ccm-area-drag-area {
-    height: 50px;
+    text-indent: 0;
+    text-align: center;
+    padding: 18px;
+    font-size: 14px;
+    line-height: 14px;
+    color: #bbb;
   }
 }
 
