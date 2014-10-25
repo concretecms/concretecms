@@ -40,7 +40,7 @@
             opacity: 0.5,
             stop: function() {
                 var ualist = $(this).sortable('serialize');
-                ualist += '&ccm_token=' + '<?=$controller->token->generate('user_attribute_sort')?>';
+                ualist += '&ccm_token=' + '<?=$controller->token->generate('attribute_sort')?>';
                 $.post('<?=URL::to('/ccm/system/attribute/attribute_sort/user')?>', ualist, function(r) {});
             }
         });

@@ -63,8 +63,8 @@ class Controller extends BlockController
                 break;
             default:
                 $content = $c->getAttribute($this->attributeHandle);
-                if (is_object($content) && get_class($content) === 'File') {
-                    $im = Loader::helper('image');
+                if (is_object($content) && $content instanceof \Concrete\Core\File\File) {
+                    $im = \Loader::helper('image');
                     $thumb = $im->getThumbnail(
                         $content,
                         $this->thumbnailWidth,

@@ -162,17 +162,8 @@ class MiniSurvey {
 				$surveyBlockInfo = $this->getMiniSurveyBlockInfoByQuestionId($qsID,intval($bID));
 
 				if($surveyBlockInfo['displayCaptcha']) {
-				  echo '<div class="form-group">';
-   				$captcha = Loader::helper('validation/captcha');
-				echo $captcha->label();
-   				echo '<div>';
-
-   				$captcha->showInput();
-   				$captcha->display();
-
-   				//echo isset($errors['captcha'])?'<span class="error">' . $errors['captcha'] . '</span>':'';
-				  echo '</div></div>';
-      			}
+		            print '<div class="ccm-edit-mode-disabled-item">' . t('Form Captcha') . '</div><br/>';
+                }
 
 				if($editmode) {
 					echo '<div class="form-group"><input class="btn btn-primary" name="Submit" type="button" value="'.t('Submit').'" /></div>';//make this a button

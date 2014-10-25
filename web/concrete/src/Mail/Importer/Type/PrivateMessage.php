@@ -2,6 +2,8 @@
 
 namespace Concrete\Core\Mail\Importer\Type;
 use Concrete\Core\Mail\Importer\MailImporter;
+use Concrete\Core\User\PrivateMessage\PrivateMessage as UserPrivateMessage;
+use UserInfo;
 
 class PrivateMessage extends MailImporter {
 

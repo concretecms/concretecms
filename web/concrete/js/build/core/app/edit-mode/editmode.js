@@ -29,6 +29,9 @@
             my.bindEvent('PanelLoad', function editModePanelOpenEventHandler(event, data) {
                 my.panelOpened(data.panel, data.element);
             });
+            my.bindEvent('PanelClose', function editModePanelCloseEventHandler(event, data) {
+                html.removeClass('ccm-panel-add-block');
+            });
 
             my.bindEvent('EditModeAddBlockComplete EditModeUpdateBlockComplete', function(e) {
                 _.defer(function() {
@@ -307,6 +310,7 @@
             my.bindEvent('EditModeBlockDragStop', function editModeEditModeBlockDragStopEventHandler(e, data) {
                 Concrete.event.fire('EditModeContenders', []);
                 Concrete.event.fire('EditModeSelectableContender');
+                $('html').removeClass('ccm-block-dragging');
 
                 if (data.block instanceof Concrete.BlockType) return;
                 my.scanBlocks();
@@ -347,6 +351,7 @@
             });
 
             my.bindEvent('EditModeBlockDragStart', function editModeEditModeBlockDragStartEventHandler() {
+                $('html').addClass('ccm-block-dragging');
                 my.setDragging(true);
             });
 
@@ -385,7 +390,9 @@
             my.reset();
 
             $('div.ccm-area').each(function () {
-                area = new Concrete.Area($(this), my);
+                var me = $(this);
+                if (me.parent().hasClass('ccm-block-stack')) return;
+                area = new Concrete.Area(me, my);
                 area.scanBlocks();
                 my.addArea(area);
             });
@@ -399,6 +406,8 @@
             if (panel.getIdentifier() !== 'add-block') {
                 return null;
             }
+
+            html.addClass('ccm-panel-add-block');
 
             $(element).find('input[data-input=search-blocks]').liveUpdate('ccm-panel-add-blocktypes-list', 'blocktypes');
             $(element).find('input[data-input=search-blocks]').focus();

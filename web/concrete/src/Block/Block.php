@@ -536,6 +536,8 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         $q = "select count(bID) from CollectionVersionBlocks where cID = ? and cvID = ? and bID = ? and arHandle = ?";
         $total = $db->getOne($q, $v);
         if ($total == 0) {
+            // I don't like this -AE. Let's see what happens when we don't do this.
+            /*
             if ($this->a && $this->a instanceof SubArea) {
                 // hackish - we do this because if we don't do it now, it'll automatically get created
                 // with no arParentID.
@@ -544,7 +546,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
                     $this->a->getAreaHandle(),
                     $this->a->getAreaParentID()
                 ));
-            }
+            }*/
             array_push($v, $newBlockDisplayOrder, 0, $this->overrideAreaPermissions(), $this->overrideBlockTypeCacheSettings());
             $q = "insert into CollectionVersionBlocks (cID, cvID, bID, arHandle, cbDisplayOrder, isOriginal, cbOverrideAreaPermissions, cbOverrideBlockTypeCacheSettings) values (?, ?, ?, ?, ?, ?, ?, ?)";
             $r = $db->prepare($q);
