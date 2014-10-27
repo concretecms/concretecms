@@ -75,7 +75,8 @@ class Controller extends BlockController
                 break;
         }
 
-        if (!strlen($content) && $c->isMasterCollection()) {
+        $is_stack = $c->getController() instanceof \Concrete\Controller\SinglePage\Dashboard\Blocks\Stacks;
+        if (!strlen(trim(strip_tags($content))) && ($c->isMasterCollection() || $is_stack)) {
             $content = $this->getPlaceHolderText($this->attributeHandle);
         }
         return $content;
