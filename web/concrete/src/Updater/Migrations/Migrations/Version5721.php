@@ -28,6 +28,7 @@ class Version5721 extends AbstractMigration
 		if (!is_object($sp) || $sp->isError()) {
 			$sp = SinglePage::add('/dashboard/pages/themes/inspect');
 			$sp->setAttribute('meta_keywords', 'inspect, templates');
+			$sp->setAttribute('exclude_nav', 1);
         }
     }
 
