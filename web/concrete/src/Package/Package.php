@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Package;
 
+use AuthenticationType;
 use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Config\Repository\Liaison;
 use Concrete\Core\File\FileList;
@@ -303,6 +304,7 @@ class Package extends Object
         $items['community_point_actions'] = UserPointAction::getListByPackage($this);
         $items['jobs'] = Job::getListByPackage($this);
         $items['workflow_types'] = WorkflowType::getListByPackage($this);
+        $items['authentication_types'] = AuthenticationType::getListByPackage($this);
         ksort($items);
 
         return $items;
@@ -440,6 +442,8 @@ class Package extends Object
             return $item->getConversationRatingTypeDisplayName();
         } elseif ($item instanceof SystemContentEditorSnippet) {
             return $item->getSystemContentEditorSnippetName();
+        } elseif ($item instanceof AuthenticationType) {
+            return $item->getAuthenticationTypeName();
         } elseif (is_a($item, 'PermissionKey')) {
             return $item->getPermissionKeyDisplayName();
         } elseif (is_a($item, 'Job')) {
@@ -481,6 +485,7 @@ class Package extends Object
                         case 'PageTypePublishTargetType':
                         case 'PageTypeComposerControlType':
                         case 'PageTemplate':
+                        case 'AuthenticationType':
                             $item->delete();
                             break;
                         case 'PageTheme':
