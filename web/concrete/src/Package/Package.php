@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Package;
 
-use AuthenticationType;
+use Concrete\Core\Authentication\AuthenticationType as AuthenticationType;
 use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Config\Repository\Liaison;
 use Concrete\Core\File\FileList;
@@ -468,6 +468,10 @@ class Package extends Object
             }
 
             foreach ($array as $item) {
+                if ($item instanceof AuthenticationType) {
+                    $item->delete();
+                }
+
                 if (is_a($item, 'Job')) {
                     $item->uninstall();
                 } elseif (is_a($item, 'AttributeKey') || is_a($item, 'MailImporter')) {
@@ -485,7 +489,6 @@ class Package extends Object
                         case 'PageTypePublishTargetType':
                         case 'PageTypeComposerControlType':
                         case 'PageTemplate':
-                        case 'AuthenticationType':
                             $item->delete();
                             break;
                         case 'PageTheme':
