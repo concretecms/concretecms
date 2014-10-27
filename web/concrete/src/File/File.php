@@ -6,7 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Util\Debug;
 use Doctrine\DBAL\Logging\EchoSQLLogger;
 use FileSet;
-use League\Flysystem\AdapterInterface;
+use Concrete\Flysystem\AdapterInterface;
 use Loader;
 use CacheLocal;
 use Core;

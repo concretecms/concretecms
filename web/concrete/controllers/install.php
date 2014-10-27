@@ -189,7 +189,6 @@ class Install extends Controller
         $this->set('jsonTest', extension_loaded('json'));
         $this->set('xmlTest', function_exists('xml_parse') && function_exists('simplexml_load_file'));
         $this->set('fileWriteTest', $this->testFileWritePermissions());
-        $this->set('finfoTest', function_exists('finfo_open'));
         $this->set('aspTagsTest', ini_get('asp_tags') == false);
         $rf = new \ReflectionObject($this);
         $rp = $rf->getProperty('docCommentCanary');
