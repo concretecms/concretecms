@@ -132,12 +132,12 @@ class StorageLocation
     /**
      * Returns the proper file system object for the current storage location, by mapping
      * it through Flysystem
-     * @return \League\Flysystem\Filesystem
+     * @return \Concrete\Flysystem\Filesystem
      */
     public function getFileSystemObject()
     {
         $adapter = $this->fslConfiguration->getAdapter();
-        $filesystem = new \League\Flysystem\Filesystem($adapter);
+        $filesystem = new \Concrete\Flysystem\Filesystem($adapter);
         return $filesystem;
     }
 
