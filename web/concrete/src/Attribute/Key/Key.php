@@ -501,8 +501,10 @@ class Key extends Object
 
         if ($r) {
             $txt = Loader::helper('text');
-            $className = $txt->camelcase($akCategoryHandle) . 'AttributeKey';
-            $ak = new $className();
+            $pkgID = $category->getPackageID();
+            $prefix = ($pkgID > 0) ? $category->getPackageHandle() : false;
+            $className = core_class('Core\\Attribute\\Key\\' . $txt->camelcase($akCategoryHandle) . 'Key', $prefix);
+            $ak = Core::make($className);
             $ak->load($this->getAttributeKeyID());
             $at = $ak->getAttributeType();
             $cnt = $at->getController();

@@ -1,11 +1,14 @@
 <?php
 namespace Concrete\Core\Package;
 
+use Concrete\Core\Authentication\AuthenticationType as AuthenticationType;
 use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Config\Repository\Liaison;
 use Concrete\Core\File\FileList;
 use Concrete\Core\Page\PageList;
 use Concrete\Core\Page\Stack\StackList;
+use Concrete\Core\Sharing\SocialNetwork\Link;
+use Concrete\Core\Tree\Type\Topic;
 use Page;
 use Stack;
 use SinglePage;
@@ -303,6 +306,7 @@ class Package extends Object
         $items['community_point_actions'] = UserPointAction::getListByPackage($this);
         $items['jobs'] = Job::getListByPackage($this);
         $items['workflow_types'] = WorkflowType::getListByPackage($this);
+        $items['authentication_types'] = AuthenticationType::getListByPackage($this);
         ksort($items);
 
         return $items;
@@ -440,6 +444,8 @@ class Package extends Object
             return $item->getConversationRatingTypeDisplayName();
         } elseif ($item instanceof SystemContentEditorSnippet) {
             return $item->getSystemContentEditorSnippetName();
+        } elseif ($item instanceof AuthenticationType) {
+            return $item->getAuthenticationTypeName();
         } elseif (is_a($item, 'PermissionKey')) {
             return $item->getPermissionKeyDisplayName();
         } elseif (is_a($item, 'Job')) {
@@ -464,6 +470,10 @@ class Package extends Object
             }
 
             foreach ($array as $item) {
+                if ($item instanceof AuthenticationType) {
+                    $item->delete();
+                }
+
                 if (is_a($item, 'Job')) {
                     $item->uninstall();
                 } elseif (is_a($item, 'AttributeKey') || is_a($item, 'MailImporter')) {
@@ -547,6 +557,8 @@ class Package extends Object
     {
         if ($this->validateClearSiteContents($options)) {
 
+            \Core::make('cache/request')->disable();
+
             $pl = new PageList();
             $pages = $pl->getResults();
             foreach ($pages as $c) {
@@ -591,6 +603,8 @@ class Package extends Object
 
             $ci = new ContentImporter();
             $ci->importContentFile($this->getPackagePath() . '/content.xml');
+
+            \Core::make('cache/request')->enable();
         }
     }
 
