@@ -32,7 +32,7 @@ class FileManager {
 		$vh = Loader::helper('validation/numbers');
 		if (isset($_POST[$postname]) && $vh->integer($_POST[$postname])) {
 			$postFile = File::getByID($_POST[$postname]);
-			if (!$postFile->isError() && $postFile->getFileID() > 0) {
+			if (is_object($postFile) && $postFile->getFileID() > 0) {
 				$bf = $postFile;
 			}
 		}
