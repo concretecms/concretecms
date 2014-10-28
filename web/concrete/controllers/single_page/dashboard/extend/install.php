@@ -14,6 +14,13 @@ use User;
 
 class Install extends DashboardPageController
 {
+
+    public function on_start()
+    {
+        parent::on_start();
+        @set_time_limit(0);
+    }
+
     public function uninstall($pkgID)
     {
         $tp = new TaskPermission();
