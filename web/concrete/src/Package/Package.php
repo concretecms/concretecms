@@ -555,6 +555,8 @@ class Package extends Object
     {
         if ($this->validateClearSiteContents($options)) {
 
+            \Core::make('cache/request')->disable();
+
             $pl = new PageList();
             $pages = $pl->getResults();
             foreach ($pages as $c) {
@@ -599,6 +601,8 @@ class Package extends Object
 
             $ci = new ContentImporter();
             $ci->importContentFile($this->getPackagePath() . '/content.xml');
+
+            \Core::make('cache/request')->enable();
         }
     }
 
