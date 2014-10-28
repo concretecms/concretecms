@@ -7,6 +7,8 @@ use Concrete\Core\Config\Repository\Liaison;
 use Concrete\Core\File\FileList;
 use Concrete\Core\Page\PageList;
 use Concrete\Core\Page\Stack\StackList;
+use Concrete\Core\Sharing\SocialNetwork\Link;
+use Concrete\Core\Tree\Type\Topic;
 use Page;
 use Stack;
 use SinglePage;
@@ -584,6 +586,16 @@ class Package extends Object
             $pageTypes = PageType::getList();
             foreach ($pageTypes as $ct) {
                 $ct->delete();
+            }
+
+            $socialLinks = Link::getList();
+            foreach($socialLinks as $link) {
+                $link->delete();
+            }
+
+            $trees = Topic::getList();
+            foreach($trees as $topicTree) {
+                $topicTree->delete();
             }
 
             // now we add in any files that this package has
