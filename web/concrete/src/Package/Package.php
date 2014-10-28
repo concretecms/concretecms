@@ -588,16 +588,6 @@ class Package extends Object
                 $ct->delete();
             }
 
-            $socialLinks = Link::getList();
-            foreach($socialLinks as $link) {
-                $link->delete();
-            }
-
-            $trees = Topic::getList();
-            foreach($trees as $topicTree) {
-                $topicTree->delete();
-            }
-
             // now we add in any files that this package has
             if (is_dir($this->getPackagePath() . '/content_files')) {
 

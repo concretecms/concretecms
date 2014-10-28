@@ -91,8 +91,20 @@ class Topic extends Tree
             return static::getDefault();
         } else {
             $name = (string) $sx['name'];
-
-            return static::add($name);
+            $tree = static::getByName($name);
+            if (is_object($tree)) {
+                // We already have a tree. But we know we're going to have sub-nodes of this tree in the import, so let's keep the same
+                // tree so that pointers to attributes work, but let's clear it out.
+                $root = $tree->getRootTreeNodeObject();
+                $root->populateChildren();
+                $children = $root->getChildNodes();
+                foreach($children as $child) {
+                    $child->delete();
+                }
+                return static::getByName($name);
+            } else {
+                return static::add($name);
+            }
         }
     }
 
