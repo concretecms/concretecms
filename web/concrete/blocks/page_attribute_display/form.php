@@ -17,7 +17,7 @@ print Core::make('helper/concrete/ui')->tabs(array(
             <option value="p" <?php echo ($this->controller->displayTag=="p"?"selected":"")?>>p (paragraph)</option>
             <option value="b" <?php echo ($this->controller->displayTag=="b"?"selected":"")?>>b (bold)</option>
             <option value="address" <?php echo ($this->controller->displayTag=="address"?"selected":"")?>>address</option>
-            <option value="pre" <?php echo ($this->controller->displayTag=="pre"?"selected":"")?>>pre (preformated)</option>
+            <option value="pre" <?php echo ($this->controller->displayTag=="pre"?"selected":"")?>>pre (preformatted)</option>
             <option value="blockquote" <?php echo ($this->controller->displayTag=="blockquote"?"selected":"")?>>blockquote</option>
             <option value="div" <?php echo ($this->controller->displayTag=="div"?"selected":"")?>>div</option>
         </select>
