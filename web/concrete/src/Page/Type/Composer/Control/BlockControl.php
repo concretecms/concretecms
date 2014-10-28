@@ -189,12 +189,7 @@ class BlockControl extends Control {
 			$template = FILENAME_BLOCK_COMPOSER;
 		}
 
-		if($obj->getPackageID() > 0) {
-			$pkg = Package::getByID($obj->getPackageID());
-			$pkgHandle = $pkg->getPackageHandle();
-		}
-
-		$this->inc($template, array('view' => $this, 'control' => $this, 'obj' => $obj, 'description' => $description, 'pkgHandle' => $pkgHandle));
+		$this->inc($template, array('view' => $this, 'control' => $this, 'obj' => $obj, 'description' => $description));
 	}
 
 	public function inc($file, $args = array()) {
@@ -210,6 +205,11 @@ class BlockControl extends Control {
 		extract($controller->getHelperObjects());
 		$label = $this->getPageTypeComposerFormLayoutSetControlObject()->getPageTypeComposerControlDisplayLabel();
 		$env = Environment::get();
+		
+		if($obj->getPackageID() > 0) {
+			$pkg = Package::getByID($obj->getPackageID());
+			$pkgHandle = $pkg->getPackageHandle();
+		}
 		if($pkgHandle){
 			include($env->getPath( '../' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/'. DIRNAME_BLOCKS .'/' . $obj->getBlockTypeHandle() . '/' . $file));
 		}else{
