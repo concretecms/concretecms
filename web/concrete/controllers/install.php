@@ -253,9 +253,9 @@ class Install extends Controller
 
     public function passedRequiredItems()
     {
-        if ($this->get('imageTest') && $this->get('mysqlTest') && $this->get('fileWriteTest') && $this->get(
-                'xmlTest') && $this->get('phpVtest') && $this->get('i18nTest') && $this->get('finfoTest')
-            && $this->get('memoryTest') !== -1 && $this->get('docCommentTest') && $this->get('aspTagsTest')
+        if ($this->get('imageTest') && $this->get('mysqlTest') && $this->get('fileWriteTest') &&
+            $this->get('xmlTest') && $this->get('phpVtest') && $this->get('i18nTest') &&
+            $this->get('memoryTest') !== -1 && $this->get('docCommentTest') && $this->get('aspTagsTest')
         ) {
             return true;
         }
