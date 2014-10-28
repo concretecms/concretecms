@@ -205,7 +205,16 @@ class BlockControl extends Control {
 		extract($controller->getHelperObjects());
 		$label = $this->getPageTypeComposerFormLayoutSetControlObject()->getPageTypeComposerControlDisplayLabel();
 		$env = Environment::get();
-		include($env->getPath(DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . $file));
+		
+		if($obj->getPackageID() > 0) {
+			$pkg = Package::getByID($obj->getPackageID());
+			$pkgHandle = $pkg->getPackageHandle();
+		}
+		if($pkgHandle){
+			include($env->getPath( '../' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/'. DIRNAME_BLOCKS .'/' . $obj->getBlockTypeHandle() . '/' . $file));
+		}else{
+			include($env->getPath(DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . $file));
+		}
 	}
 
 	public function getPageTypeComposerControlDraftValue() {
