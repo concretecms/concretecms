@@ -47,16 +47,16 @@
         },
         {
             "name": "concrete5/flysystem",
-            "version": "0.4.10",
+            "version": "0.4.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/concrete5/flysystem.git",
-                "reference": "dd680358e1ebb05b725283d8116857f659f97164"
+                "reference": "9c74bca26d606735f660314d2d4e2799d0c44953"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/concrete5/flysystem/zipball/dd680358e1ebb05b725283d8116857f659f97164",
-                "reference": "dd680358e1ebb05b725283d8116857f659f97164",
+                "url": "https://api.github.com/repos/concrete5/flysystem/zipball/9c74bca26d606735f660314d2d4e2799d0c44953",
+                "reference": "9c74bca26d606735f660314d2d4e2799d0c44953",
                 "shasum": ""
             },
             "require-dev": {
@@ -114,9 +114,9 @@
                 "webdav"
             ],
             "support": {
-                "source": "https://github.com/concrete5/flysystem/tree/master"
+                "source": "https://github.com/concrete5/flysystem/tree/0.4.11"
             },
-            "time": "2014-10-27 21:23:55"
+            "time": "2014-10-28 00:48:02"
         },
         {
             "name": "dapphp/securimage",
