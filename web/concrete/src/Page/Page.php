@@ -29,12 +29,9 @@ use Queue;
 use Log;
 use Environment;
 /**
-*
-* The page object in Concrete encapsulates all the functionality used by a typical page and their contents
-* including blocks, page metadata, page permissions.
-* @package Pages
-*
-*/
+ * The page object in Concrete encapsulates all the functionality used by a typical page and their contents
+ * including blocks, page metadata, page permissions.
+ */
 class Page extends Collection implements \Concrete\Core\Permission\ObjectInterface {
 
     protected $controller;
