@@ -2,10 +2,6 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/mlocati/zendframework2-i18n"
-        },
-        {
-            "type": "vcs",
             "url": "https://github.com/concrete5/flysystem"
         }
     ],
