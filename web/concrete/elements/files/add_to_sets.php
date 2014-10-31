@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?> 
+<? defined('C5_EXECUTE') or die("Access Denied."); ?>
 <div class="ccm-ui">
 <? $form = Loader::helper('form'); ?>
 <?
@@ -13,7 +13,7 @@ function checkbox($field, $value, $state, $miscFields = array()) {
 	}
 
 	$src = ASSETS_URL_IMAGES . '/checkbox_state_' . $state . '.png';
-					
+
 	$str = '<input type="hidden" value="' . $state . '" name="' . $field . ':' . $value . '" /><a href="javascript:void(0)" ccm-tri-state-startup="' . $state . '" ccm-tri-state-selected="' . $state . '" ><img width="16" height="16" src="' . $src . '" ' . $mf . ' /></a>';
 	return $str;
 }
@@ -50,7 +50,7 @@ $sets = array();
 // state 2 - ALL files are in the set
 
 foreach($s1 as $fs) {
-	
+
 	$foundInSets = 0;
 
 	foreach($files as $f) {
@@ -66,24 +66,24 @@ foreach($s1 as $fs) {
 	} else {
 		$state = 1;
 	}
-	
+
 	$fs->state = $state;
 	$sets[] = $fs;
 }
 
 
 if ($_POST['task'] == 'add_to_sets') {
-	
+
 	$r = new \Concrete\Core\File\EditResponse();
 	$r->setFiles($files);
 	$r->setMessage(t('File sets saved successfully.'));
 
 	foreach($_POST as $key => $value) {
-	
+
 		if (preg_match('/fsID:/', $key)) {
 			$fsIDst = explode(':', $key);
 			$fsID = $fsIDst[1];
-			
+
 			// so the affected file set is $fsID, the state of the thing is $value
 			$fs = FileSet::getByID($fsID);
 			$fsp = new Permissions($fs);
@@ -102,8 +102,8 @@ if ($_POST['task'] == 'add_to_sets') {
 							$fs->addFileToSet($f);
 						}
 						break;
-				}		
-			}			
+				}
+			}
 		}
 	}
 
@@ -123,7 +123,7 @@ if ($_POST['task'] == 'add_to_sets') {
 
 <script type="text/javascript">
 $(function() {
-	$('#fsAddToSearchName').liveUpdate('ccm-file-search-add-to-sets-list', 'fileset');
+	$('#fsAddToSearchName').liveUpdate('ccm-file-search-add-to-sets-list', 'fileset').closest('form').unbind('submit.liveupdate');
 
 	$("#ccm-add-to-set-form input[name=fsNew]").click(function() {
 		if (!$(this).prop('checked')) {
@@ -198,13 +198,13 @@ $(function() {
 
         <div class="form-group">
 			<ul id="ccm-file-search-add-to-sets-list" class="list-unstyled">
-		
-		
-		<? foreach($sets as $s) { 
+
+
+		<? foreach($sets as $s) {
 			$displaySet = true;
-			
+
 			$pf = new Permissions($s);
-			if (!$pf->canAddFiles()) { 
+			if (!$pf->canAddFiles()) {
 				$displaySet = false;
 			} else {
 				foreach($extensions as $ext) {
@@ -213,7 +213,7 @@ $(function() {
 					}
 				}
 			}
-			
+
 			if ($displaySet) {
 			?>
 				<li class="ccm-file-set-add-cb">
@@ -222,9 +222,9 @@ $(function() {
 					<span><?=$s->getFileSetName()?></span>
 				</label>
 				</li>
-		<? } 
+		<? }
 		} ?>
-		
+
 			</ul>
 		</div>
 		<? } else { ?>
@@ -235,7 +235,7 @@ $(function() {
 <? if (count($extensions) > 1) { ?>
 
 	<div class="alert-message info"><p><?=t('If a file set does not appear above, you either have no access to add files to it, or it does not accept the file types %s.', implode(', ', $extensions));?></p></div>
-	
+
 <? } ?>
 
 
@@ -246,6 +246,6 @@ $(function() {
 </div>
 
 	</form>
-	
+
 <? } ?>
 </div>
