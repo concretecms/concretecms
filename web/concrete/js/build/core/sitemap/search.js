@@ -106,7 +106,7 @@
                 '<li><a class="dialog-launch" dialog-width="360" dialog-height="150" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.deleteExternalLink + '" href="' + CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/delete_alias?cID=<%=item.cID%>">' + ccmi18n_sitemap.deleteExternalLink + '</a></li>' +
                 '<% } %>' +
                 '<% } else { %>' +
-                '<li><a href="#" data-action="visit">' + ccmi18n_sitemap.visitPage + '</a></li>' +
+                '<li><a href="' + CCM_DISPATCHER_FILENAME + '?cID=<%=item.cID%>">' + ccmi18n_sitemap.visitPage + '</a></li>' +
                 '<% if (item.canEditPageProperties || item.canEditPageSpeedSettings || item.canEditPagePermissions || item.canEditPageDesign || item.canViewPageVersions || item.canDeletePage) { %>' +
                 '<li class="divider"></li>' +
                 '<% } %>' +
