@@ -11,7 +11,6 @@ return array(
      * Core Aliases
      */
     'aliases'             => array(
-        'Request'                              => '\Concrete\Core\Http\Request',
         'Environment'                          => '\Concrete\Core\Foundation\Environment',
         'Localization'                         => '\Concrete\Core\Localization\Localization',
         'Response'                             => '\Concrete\Core\Http\Response',
@@ -93,6 +92,7 @@ return array(
      * Core Providers
      */
     'providers'           => array(
+        'core_http'         => '\Concrete\Core\Http\HttpServiceProvider',
         'core_file'         => '\Concrete\Core\File\FileServiceProvider',
         'core_encryption'   => '\Concrete\Core\Encryption\EncryptionServiceProvider',
         'core_validation'   => '\Concrete\Core\Validation\ValidationServiceProvider',
@@ -106,7 +106,6 @@ return array(
         'core_database'     => '\Concrete\Core\Database\DatabaseServiceProvider',
         'core_form'         => '\Concrete\Core\Form\FormServiceProvider',
         'core_session'      => '\Concrete\Core\Session\SessionServiceProvider',
-        'core_http'         => '\Concrete\Core\Http\HttpServiceProvider',
         'core_events'       => '\Concrete\Core\Events\EventsServiceProvider',
         'core_whoops'       => '\Concrete\Core\Error\Provider\WhoopsServiceProvider',
         'core_logging'      => '\Concrete\Core\Logging\LoggingServiceProvider',
@@ -124,6 +123,7 @@ return array(
      */
     'facades'             => array(
         'Core'     => '\Concrete\Core\Support\Facade\Application',
+        'Request'  => '\Concrete\Core\Support\Facade\Request',
         'Session'  => '\Concrete\Core\Support\Facade\Session',
         'Database' => '\Concrete\Core\Support\Facade\Database',
         'Events'   => '\Concrete\Core\Support\Facade\Events',
