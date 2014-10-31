@@ -4,6 +4,7 @@ namespace Concrete\Core\Block;
 use Area;
 use BlockType;
 use CacheLocal;
+use Collection;
 use Concrete\Core\Area\SubArea;
 use Concrete\Core\Backup\ContentExporter;
 use Concrete\Core\Block\View\BlockView;
@@ -717,27 +718,36 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
     }
 
     /**
-     * Moves a block onto a new page and into a new area. Does not change any data about the block otherwise
+     * Move block to a new collection
+     *
+     * @param Collection $collection
+     * @param Area       $area
+     * @return bool
      */
-    function move($nc, $area)
+    public function move(Collection $collection, Area $area)
     {
-        $db = Loader::db();
-        $bID = $this->getBlockID();
-        $cID = $this->getBlockCollectionID();
+        $old_collection = $this->getBlockCollectionID();
+        $new_collection = $collection->getCollectionID();
 
-        $newBlockDisplayOrder = $nc->getCollectionAreaDisplayOrder($area->getAreaHandle());
+        $old_version = $this->getBlockCollectionObject()->getVersionToModify()->getVersionID();
+        $new_version = $collection->getVersionToModify()->getVersionID();
 
-        $v = array(
-            $nc->getCollectionID(),
-            $nc->getVersionID(),
-            $area->getAreaHandle(),
-            $newBlockDisplayOrder,
-            $cID,
-            $bID,
-            $this->arHandle);
-        $db->Execute(
-           'update CollectionVersionBlocks set cID = ?, cvID = ?, arHandle = ?, cbDisplayOrder = ? where cID = ? and bID = ? and arHandle = ? and isOriginal = 1',
-           $v);
+        $old_area_handle = $this->getAreaHandle();
+        $new_area_handle = $area->getAreaHandle();
+
+        return !!\Database::connection()->update(
+            'CollectionVersionBlocks',
+            array(
+                'cID' => $new_collection,
+                'cvID' => $new_version,
+                'arHandle' => $new_area_handle
+            ),
+            array(
+                'cID' => $old_collection,
+                'cvID' => $old_version,
+                'arHandle' => $old_area_handle,
+                'bID' => $this->getBlockID()
+            ));
     }
 
     function duplicate($nc, $isCopyFromMasterCollectionPropagation = false)
