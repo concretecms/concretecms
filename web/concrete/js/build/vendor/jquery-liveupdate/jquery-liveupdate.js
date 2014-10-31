@@ -1,18 +1,18 @@
-/** 
+/**
  * Much thanks to http://static.railstips.org/orderedlist
  */
- 
-(function($) {  
+
+(function($) {
 	var self = null;
  	var lutype = 'blocktypes';
  	var searchValue = null;
- 	
-	$.fn.liveUpdate = function(list, type) {	
+
+	$.fn.liveUpdate = function(list, type) {
 		return this.each(function() {
 			new $.liveUpdate(this, list, type);
 		});
 	};
-	
+
 	$.liveUpdate = function (e, list, type) {
 		this.field = $(e);
 		$(e).data('liveUpdate', this);
@@ -27,19 +27,19 @@
 			this.init();
 		}
 	};
-	
+
 	$.liveUpdate.prototype = {
 		init: function() {
 			var self = this;
 			this.setupCache();
-			this.field.parents('form').submit(function() { return false; });
+			this.field.parents('form').on('submit.liveupdate', function() { return false; });
 			this.field.keyup(function() { self.filter(); });
 			self.filter();
 		},
 
 		filter: function() {
 			if (this.field.val() != searchValue) {
-				if ($.trim(this.field.val()) == '') { 
+				if ($.trim(this.field.val()) == '') {
 					if (this.lutype == 'blocktypes') {
 						this.list.find('li').show();
                         this.list.find('.ccm-panel-add-block-set').show();
@@ -47,8 +47,8 @@
 						this.list.find('h5').show();
 						this.list.find('li').show();
 					} else if (this.lutype == 'stacks') {
-						this.list.children('li').addClass('ccm-stack-available'); 
-						this.list.children('li').removeClass('ccm-stack-selected'); 
+						this.list.children('li').addClass('ccm-stack-available');
+						this.list.children('li').removeClass('ccm-stack-selected');
 					} else if (this.lutype == 'intelligent-search') {
 						if (this.list.is(':visible')) {
 							this.list.hide();
@@ -56,7 +56,7 @@
 					} else {
 						this.list.children('li').show();
 					}
-					return; 
+					return;
 				}
 				if (this.lutype != 'intelligent-search' || this.field.val().length > 2) {
 					this.displayResults(this.getScores(this.field.val().toLowerCase()));
@@ -74,7 +74,7 @@
 			}
 
 		},
-		
+
 		setupCache: function() {
 			var self = this;
 			this.cache = [];
@@ -101,7 +101,7 @@
 			});
 			this.cache_length = this.cache.length;
 		},
-		
+
 		displayResults: function(scores) {
 			var self = this;
 			if (this.lutype == 'blocktypes') {
@@ -122,7 +122,7 @@
 				*/
 				this.list.find('h5').hide();
 				this.list.find('li').hide();
-				$.each(scores, function(i, score) { 
+				$.each(scores, function(i, score) {
 					self.rows[score[1]].show();
 				});
 
@@ -140,7 +140,7 @@
 				this.list.find('.ccm-intelligent-search-results-module-onsite').hide();
 				this.list.find('li').hide();
 				var shown = 0;
-				$.each(scores, function(i, score) { 
+				$.each(scores, function(i, score) {
 					$li = self.rows[score[1]];
 					if (score[0] > 0.75) {
 						shown++;
@@ -157,7 +157,7 @@
 				$.each(scores, function(i, score) { self.rows[score[1]].show(); });
 			}
 		},
-		
+
 		getScores: function(term) {
 			var scores = [];
 			for (var i=0; i < this.cache_length; i++) {
