@@ -27,22 +27,10 @@ use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 class Request extends SymfonyRequest
 {
 
-    static $_request = null;
     protected $hasCustomRequestUser;
     protected $customRequestUser;
     protected $customRequestDateTime;
     protected $c;
-
-    /**
-     * @return Request
-     */
-    public static function getInstance()
-    {
-        if (null === static::$_request) {
-            static::$_request = static::createFromGlobals();
-        }
-        return static::$_request;
-    }
 
     public function getCurrentPage()
     {
@@ -99,44 +87,81 @@ class Request extends SymfonyRequest
     }
 
     /**
-     * If no arguments are passed, returns the post array. If a key is passed, it returns the value as it exists in the post array.
-     * If a default value is provided and the key does not exist in the POST array, the default value is returned
+     * Get a parameter from the request body `$_POST`
      *
      * @param string $key
-     * @param mixed  $defaultValue
-     * @return mixed $value
+     * @param null   $default
+     * @param bool   $deep
+     * @return mixed
      */
-    public function post($key = null, $defaultValue = null)
+    public function post($key, $default = null, $deep = false)
     {
-        if ($key == null) {
-            return $_POST;
-        }
-        if (isset($_POST[$key])) {
-            return (is_string($_POST[$key])) ? trim($_POST[$key]) : $_POST[$key];
-        }
-        return $defaultValue;
+        return $this->request->get($key, $default, $deep);
     }
 
     /**
-     * @param null $key
-     * @param null $default_value
-     * @return mixed|null
+     * Get a parameter from the query string `$_GET`
+     *
+     * @param string $key
+     * @param null   $default
+     * @param bool   $deep
+     * @return mixed
      */
-    public function request($key = null, $default_value = null)
+    public function get($key, $default = null, $deep = false)
     {
-        if ($key == null) {
-            return $_REQUEST;
-        }
-        $req = Request::createFromGlobals();
-        if ($req->query->has($key)) {
-            return $req->query->get($key);
-        } else {
-            if ($req->request->has($key)) {
-                return $req->request->get($key);
-            }
-        }
+        return $this->query->get($key, $default, $deep);
+    }
 
-        return $default_value;
+    /**
+     * Get a parameter from either get or post
+     * This is a convenience method, it should only be used if the incoming request type is unknowable.
+     *
+     * @param      $key
+     * @param null $default
+     * @param bool $deep
+     * @return mixed
+     */
+    public function request($key, $default = null, $deep = false)
+    {
+        $result = $this->get($key, $this, $deep);
+
+        return $result === $this ? $this->post($key, $default, $deep) : $result;
+    }
+
+    /**
+     * Gets a "parameter" value.
+     *
+     * This method is mainly useful for libraries that want to provide some flexibility.
+     *
+     * Order of precedence: GET, PATH, POST
+     *
+     * Avoid using this method in controllers:
+     *
+     *  * slow
+     *  * prefer to get from a "named" source
+     *
+     * It is better to explicitly get request parameters from the appropriate
+     * public property instead (query, attributes, request).
+     *
+     * @param string $key     the key
+     * @param mixed  $default the default value
+     * @param bool   $deep    is parameter deep in multidimensional array
+     *
+     * @return mixed
+     */
+    public function query($key, $default = null, $deep = false)
+    {
+        $result = $this->query->get($key, $this, $deep);
+        if ($result === $this) {
+            $result = $this->attributes->get($key, $this, $deep);
+        }
+        if ($result === $this) {
+            $result = $this->request->get($key, $this, $deep);
+        }
+        if ($result === $this) {
+            return $default;
+        }
+        return $result;
     }
 
     public function isPost()
