@@ -61,11 +61,9 @@ class Controller extends AttributeTypeController
     {
         $avn = $akn->addChild('topics');
         $nodes = $this->getSelectedOptions();
-        foreach ($nodes as $node)
-        {
+        foreach ($nodes as $node) {
             $topic = Node::getByID($node);
-            if(is_object($topic))
-            {
+            if(is_object($topic)) {
                 $avn->addChild('topic', $topic->getTreeNodeDisplayPath());
             }
         }
@@ -74,10 +72,8 @@ class Controller extends AttributeTypeController
     public function importValue($akn)
     {
         $selected = array();
-        if (isset($akn->topics))
-        {
-            foreach ($akn->topics->topic as $topicPath)
-            {
+        if (isset($akn->topics)) {
+            foreach ($akn->topics->topic as $topicPath) {
                 $selected[] = (string) $topicPath;
             }
         }
@@ -178,9 +174,9 @@ class Controller extends AttributeTypeController
         $nodeKeys = $this->getSelectedOptions();
         foreach ($nodeKeys as $nodeKey) {
             $nodeObj = TreeNode::getByID($nodeKey);
-                if(is_object($nodeObj)) {
-                    $str .= $nodeObj->getTreeNodeDisplayPath() . "||";
-                }
+            if(is_object($nodeObj)) {
+                $str .= $nodeObj->getTreeNodeDisplayPath() . "||";
+            }
         }
         // remove line break for empty list
         if ($str == "\n") {
@@ -229,11 +225,9 @@ class Controller extends AttributeTypeController
     {
         $nodes = $this->getSelectedOptions();
         $topics = array();
-        foreach ($nodes as $node)
-        {
+        foreach ($nodes as $node) {
             $topic = Node::getByID($node);
-            if(is_object($topic))
-            {
+            if(is_object($topic))  {
                 $topics[] = $topic;
             }
         }
