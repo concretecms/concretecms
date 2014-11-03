@@ -13,7 +13,7 @@
 			var params = [{'name': 'sourceTreeNodeID', 'value': sourceNode.data.key}, {'name': 'treeNodeParentID', 'value': treeNodeParentID}];
 			var childNodes = node.parent.getChildren();
 			if (childNodes) {
-				for (i = 0; i < childNodes.length; i++) {
+				for (var i = 0; i < childNodes.length; i++) {
 					var childNode = childNodes[i];
 					params.push({'name': 'treeNodeID[]', 'value': childNode.data.key});
 				}
@@ -123,7 +123,7 @@
     	methods.private.setupDialogForm($(this), function(r) {
     		var $tree = $('[data-topic-tree=' + treeID + ']');
     		if (r.length) {
-    			for (i = 0; i < r.length; i++) {
+    			for (var i = 0; i < r.length; i++) {
 		    		var node = $tree.dynatree('getTree').getNodeByKey(r[i].treeNodeParentID);
     				node.addChild(r[i]);
     			}
@@ -194,7 +194,7 @@
     },
 
 	init: function(options) {
-		var options = $.extend({
+		options = $.extend({
 			readonly: false,
 			chooseNodeInForm: false,
 			onSelect: false,
@@ -292,7 +292,7 @@
 
 					if (options.chooseNodeInForm) {
 						var selectedNodes = $tree.dynatree('getTree');
-						var selectedNodes = selectedNodes.getSelectedNodes();
+						selectedNodes = selectedNodes.getSelectedNodes();
 						if (selectedNodes[0]) {
 							var node = selectedNodes[0];
 							options.onSelect(true, node);
