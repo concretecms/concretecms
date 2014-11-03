@@ -115,7 +115,7 @@ class Topic extends Tree
         if (is_array($row) && $row['treeID']) {
             $this->setPropertiesFromArray($row);
 
-            return $tree;
+            return $this;
         }
     }
 
