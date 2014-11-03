@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "7ac1395268f3dffa6dbf6e7d5cc56d68",
+    "hash": "1ac877ebc146492b24e432a88314765f",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -628,12 +628,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/migrations.git",
-                "reference": "1a9dffa64e33fdc10f4b4c3f5d7230b74d4a1021"
+                "reference": "f4fe9d9cc21a711d89d91d29c4a4e7945289cdd0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/migrations/zipball/1a9dffa64e33fdc10f4b4c3f5d7230b74d4a1021",
-                "reference": "1a9dffa64e33fdc10f4b4c3f5d7230b74d4a1021",
+                "url": "https://api.github.com/repos/doctrine/migrations/zipball/f4fe9d9cc21a711d89d91d29c4a4e7945289cdd0",
+                "reference": "f4fe9d9cc21a711d89d91d29c4a4e7945289cdd0",
                 "shasum": ""
             },
             "require": {
@@ -678,7 +678,7 @@
                 "database",
                 "migrations"
             ],
-            "time": "2014-08-18 18:03:07"
+            "time": "2014-10-30 14:49:25"
         },
         {
             "name": "doctrine/orm",
@@ -2951,13 +2951,13 @@
             "target-dir": "Zend/I18n",
             "source": {
                 "type": "git",
-                "url": "https://github.com/zendframework/Component_ZendI18n.git",
-                "reference": "10f56e0869761d62699782e4dd04eb77262cc353"
+                "url": "https://github.com/mlocati/zendframework2-i18n-v2.git",
+                "reference": "935ecced317b5f4c38c10163415f31d2d90ed295"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/Component_ZendI18n/zipball/10f56e0869761d62699782e4dd04eb77262cc353",
-                "reference": "10f56e0869761d62699782e4dd04eb77262cc353",
+                "url": "https://api.github.com/repos/mlocati/zendframework2-i18n-v2/zipball/935ecced317b5f4c38c10163415f31d2d90ed295",
+                "reference": "935ecced317b5f4c38c10163415f31d2d90ed295",
                 "shasum": ""
             },
             "require": {
@@ -2984,15 +2984,19 @@
                     "Zend\\I18n\\": ""
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
+            "description": " ",
             "keywords": [
                 "i18n",
                 "zf2"
             ],
-            "time": "2014-01-04 13:00:19"
+            "support": {
+                "source": "https://github.com/mlocati/zendframework2-i18n-v2/tree/release-2.2.6",
+                "issues": "https://github.com/mlocati/zendframework2-i18n-v2/issues"
+            },
+            "time": "2014-11-03 18:14:32"
         },
         {
             "name": "zendframework/zend-loader",
