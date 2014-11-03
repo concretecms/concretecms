@@ -356,7 +356,7 @@
     ConcreteLayout.prototype._getThemeGridColumnSpan = function (totalColumns) {
         var rowspan = Math.ceil(this.maxcolumns / totalColumns);
         // create the starting array
-        var spanArray = [];
+        var spanArray = [], i;
         for (i = 0; i < totalColumns; i++) {
             spanArray[i] = rowspan;
         }
@@ -438,7 +438,7 @@
             $(grid_elem)
         );
         var marginModifier = 0;
-        for (i = 0; i < maxColumns; i++) {
+        for (var i = 0; i < maxColumns; i++) {
             var $column = test_container_div.find('.' + minColumnClass).eq(i);
             if (i == 0) {
                 var pl = $column.position().left;
@@ -508,7 +508,7 @@
                 if (proceed) {
                     obj.$slider.slider('values', index, newValue);
                     if ((index % 2) == 0) {
-                        var i = Math.floor(index / 2);
+                        i = Math.floor(index / 2);
                         // we are a righthand handle
                         $innercolumn = $('#ccm-edit-layout-column-' + i);
                         var span = parseInt($innercolumn.attr('data-span'));
@@ -588,7 +588,8 @@
         var breaks = [],
             sw = 0,
             tw = this.$slider.width(),
-            $columns = this.$element.find('.ccm-layout-column');
+            $columns = this.$element.find('.ccm-layout-column'),
+            i;
 
         if (this.columnwidths.length > 0) {
             // we have custom column widths
@@ -616,14 +617,14 @@
                 var breakwidths = [];
 
                 $.each($columns, function (i, col) {
-                    var bw = breaks[i];
+                    var bw = breaks[i], value;
                     if ((i + 1) == $columns.length) {
                         // last column
-                        var value = tw - createoffset;
+                        value = tw - createoffset;
                     } else {
-                        var value = bw - createoffset;
+                        value = bw - createoffset;
                     }
-                    var value = Math.floor(value);
+                    value = Math.floor(value);
                     $(col).find('#ccm-edit-layout-column-width-' + i).val(value);
                     createoffset = bw;
                 });
