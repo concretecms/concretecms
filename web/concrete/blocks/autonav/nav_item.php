@@ -88,7 +88,7 @@ use Loader;
 		 */
 		function getURL() {
 			if ($this->cPointerExternalLink != '') {
-				$link = Loader::helper('text')->encodePath($this->cPointerExternalLink);
+				$link = $this->cPointerExternalLink;
 			} else if ($this->cPath) {
 			    $link = $this->cPath;
 			} else if ($this->cID == HOME_CID) {
