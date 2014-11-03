@@ -4208,7 +4208,7 @@
       <col>msgIsNew</col>
     </index>
   </table>
-  <table name="UserBannedIPs">
+    <table name="UserBannedIPs">
     <field name="id" type="I" size="11">
         <key/>
         <autoincrement/>
@@ -4469,7 +4469,7 @@
         <col>uEmail</col>
     </index>
   </table>
-  <table name="SignupRequests">
+    <table name="SignupRequests">
     <field name="id" type="I" size="11">
       <key/>
       <autoincrement/>
