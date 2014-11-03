@@ -53,7 +53,13 @@ class ArrangeBlocks extends Page
                     } else {
                         // we're not done yet. Now we have to check to see whether this user has permission to add
                         // a block of this type to the destination area.
-                        $b = Block::getByID($_REQUEST['block'], $nvc, $arHandle);
+
+                        if ($ar->isGlobalArea()) {
+                            $stack = Stack::getByName($arHandle);
+                            $b = Block::getByID($_REQUEST['block'], $stack, STACKS_AREA_NAME);
+                        } else {
+                            $b = Block::getByID($_REQUEST['block'], $nvc, $arHandle);
+                        }
                         $bt = $b->getBlockTypeObject();
                         if (!$destAP->canAddBlock($bt)) {
                             $e->add(t('You may not add %s to area %s.', t($bt->getBlockTypeName()), $destAreaHandle));
