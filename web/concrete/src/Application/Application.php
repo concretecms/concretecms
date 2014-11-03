@@ -293,7 +293,7 @@ class Application extends Container
             if ($pathInfo != $redirect) {
                 $dispatcher = Config::get('concrete.seo.url_rewriting') ? '' : '/' . DISPATCHER_FILENAME;
                 Redirect::url(
-                        BASE_URL . DIR_REL . $dispatcher . '/' . $path . ($r->getQueryString(
+                        BASE_URL . DIR_REL . $dispatcher . $redirect . ($r->getQueryString(
                         ) ? '?' . $r->getQueryString() : '')
                 )->send();
             }
