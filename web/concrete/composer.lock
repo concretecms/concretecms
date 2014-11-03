@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "e53025a597d7a565a1aee22b537d6cf4",
+    "hash": "7ac1395268f3dffa6dbf6e7d5cc56d68",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -352,7 +352,7 @@
                 {
                     "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "http://jmsyst.com",
+                    "homepage": "https://github.com/schmittjoh",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -426,9 +426,9 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes M. Schmitt",
+                    "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "http://jmsyst.com",
+                    "homepage": "https://github.com/schmittjoh",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -556,7 +556,7 @@
                 {
                     "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "http://jmsyst.com",
+                    "homepage": "https://github.com/schmittjoh",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -610,7 +610,7 @@
                 {
                     "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "http://jmsyst.com",
+                    "homepage": "https://github.com/schmittjoh",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -949,7 +949,7 @@
                 "password",
                 "security"
             ],
-            "time": "2014-07-18 03:04:01"
+            "time": "2012-08-31 00:00:00"
         },
         {
             "name": "htmlawed/htmlawed",
@@ -2533,12 +2533,12 @@
             "version": "v0.5.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/tedivm/JShrink.git",
+                "url": "https://github.com/tedious/JShrink.git",
                 "reference": "4b48e3d051cf0ab145db9df20d3292d91485bb60"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tedivm/JShrink/zipball/4b48e3d051cf0ab145db9df20d3292d91485bb60",
+                "url": "https://api.github.com/repos/tedious/JShrink/zipball/4b48e3d051cf0ab145db9df20d3292d91485bb60",
                 "reference": "4b48e3d051cf0ab145db9df20d3292d91485bb60",
                 "shasum": ""
             },
@@ -2951,13 +2951,13 @@
             "target-dir": "Zend/I18n",
             "source": {
                 "type": "git",
-                "url": "https://github.com/mlocati/zendframework2-i18n.git",
-                "reference": "ae6652214b7e6ab3f9a1f597ddb8926bd05d3b06"
+                "url": "https://github.com/zendframework/Component_ZendI18n.git",
+                "reference": "10f56e0869761d62699782e4dd04eb77262cc353"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mlocati/zendframework2-i18n/zipball/ae6652214b7e6ab3f9a1f597ddb8926bd05d3b06",
-                "reference": "ae6652214b7e6ab3f9a1f597ddb8926bd05d3b06",
+                "url": "https://api.github.com/repos/zendframework/Component_ZendI18n/zipball/10f56e0869761d62699782e4dd04eb77262cc353",
+                "reference": "10f56e0869761d62699782e4dd04eb77262cc353",
                 "shasum": ""
             },
             "require": {
@@ -2984,19 +2984,15 @@
                     "Zend\\I18n\\": ""
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
-            "description": " ",
             "keywords": [
                 "i18n",
                 "zf2"
             ],
-            "support": {
-                "source": "https://github.com/mlocati/zendframework2-i18n/tree/release-2.2.6",
-                "issues": "https://github.com/mlocati/zendframework2-i18n/issues"
-            },
-            "time": "2014-08-27 18:35:23"
+            "time": "2014-01-04 13:00:19"
         },
         {
             "name": "zendframework/zend-loader",

@@ -92,6 +92,8 @@ class Controller extends AttributeTypeController
         }
 
         $db = Loader::db();
+        $db->Execute('delete from atSelectedTopics where avID = ?', array($this->getAttributeValueID()));
+        
         foreach ($selected as $optionID) {
             $db->execute('INSERT INTO atSelectedTopics (avID, TopicNodeID) VALUES (?, ?)',
                 array($this->getAttributeValueID(), $optionID)
