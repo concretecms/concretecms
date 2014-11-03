@@ -1,6 +1,9 @@
 <?php
 
 namespace Concrete\Block\Feature;
+use Page;
+use Loader;
+
 defined('C5_EXECUTE') or die("Access Denied.");
 
 use Concrete\Core\Block\BlockController;
@@ -17,7 +20,7 @@ class Controller extends BlockController
     protected $btCacheBlockOutput = true;
     protected $btCacheBlockOutputOnPost = true;
     protected $btCacheBlockOutputForRegisteredUsers = true;
-    protected $btInterfaceHeight = 360;
+    protected $btInterfaceHeight = 520;
     protected $btTable = 'btFeature';
 
     public function getBlockTypeDescription()
@@ -28,6 +31,22 @@ class Controller extends BlockController
     public function getBlockTypeName()
     {
         return t("Feature");
+    }
+
+    function getLinkURL()
+    {
+        if (!empty($this->externalLink)) {
+            return $this->externalLink;
+        } else {
+            if (!empty($this->internalLinkCID)) {
+                $linkToC = Page::getByID($this->internalLinkCID);
+                return (empty($linkToC) || $linkToC->error) ? '' : Loader::helper('navigation')->getLinkToCollection(
+                    $linkToC
+                );
+            } else {
+                return '';
+            }
+        }
     }
 
     public function registerViewAssets()
@@ -46,6 +65,11 @@ class Controller extends BlockController
         $this->edit();
     }
 
+    public function view()
+    {
+        $this->set('linkURL', $this->getLinkURL());
+    }
+
     protected function getIconClasses()
     {
         $iconLessFile = DIR_BASE_CORE . '/css/build/vendor/font-awesome/variables.less';
@@ -55,7 +79,7 @@ class Controller extends BlockController
         $parser = $l->parseFile($iconLessFile, false, true);
         $rules = $parser->rules;
 
-        foreach($rules as $rule) {
+        foreach ($rules as $rule) {
             if ($rule instanceof Less_Tree_Rule) {
                 if (strpos($rule->name, '@fa-var') === 0) {
                     $name = str_replace('@fa-var-', '', $rule->name);
@@ -75,7 +99,7 @@ class Controller extends BlockController
         // let's clean them up
         $icons = array('' => t('Choose Icon'));
         $txt = Core::make('helper/text');
-        foreach($classes as $class) {
+        foreach ($classes as $class) {
             $icons[$class] = $txt->unhandle($class);
         }
         $this->set('icons', $icons);
@@ -84,6 +108,24 @@ class Controller extends BlockController
     public function getSearchableContent()
     {
         return $this->title . ' ' . $this->paragraph;
+    }
+
+    public function save($args)
+    {
+        switch (intval($args['linkType'])) {
+            case 1:
+                $args['externalLink'] = '';
+                break;
+            case 2:
+                $args['internalLinkCID'] = 0;
+                break;
+            default:
+                $args['externalLink'] = '';
+                $args['internalLinkCID'] = 0;
+                break;
+        }
+        unset($args['linkType']);
+        parent::save($args);
     }
 
 

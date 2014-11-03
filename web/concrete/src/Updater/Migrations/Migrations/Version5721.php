@@ -5,6 +5,7 @@ use Concrete\Core\Page\Page;
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 use SinglePage;
+use Concrete\Core\Block\BlockType\BlockType;
 
 class Version5721 extends AbstractMigration
 {
@@ -29,6 +30,11 @@ class Version5721 extends AbstractMigration
 			$sp = SinglePage::add('/dashboard/pages/themes/inspect');
 			$sp->setAttribute('meta_keywords', 'inspect, templates');
 			$sp->setAttribute('exclude_nav', 1);
+        }
+
+        $bt = BlockType::getByHandle('feature');
+        if (is_object($bt)) {
+            $bt->refresh();
         }
     }
 

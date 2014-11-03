@@ -17,6 +17,12 @@
             </div>
         <? endif; ?>
 
+        <? if ($position && !$company && $companyURL): ?>
+            <div class="ccm-block-testimonial-position">
+                <?=t('<a href="%s">%s</a>', $companyURL, $position)?>
+            </div>
+        <? endif; ?>
+
         <? if ($position && $company && !$companyURL): ?>
             <div class="ccm-block-testimonial-position">
                 <?=t('%s, %s', $position, $company)?>
@@ -28,6 +34,7 @@
                 <?=$position?>
             </div>
         <? endif; ?>
+
 
         <? if ($paragraph): ?>
             <div class="ccm-block-testimonial-paragraph"><?=$paragraph?></div>

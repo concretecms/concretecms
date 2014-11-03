@@ -1,5 +1,6 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
+use Concrete\Core\Tree\Node\Node as TreeNode;
 $sourceNode = TreeNode::getByID(Loader::helper('security')->sanitizeInt($_REQUEST['sourceTreeNodeID']));
 $destNode = TreeNode::getByID(Loader::helper('security')->sanitizeInt($_REQUEST['treeNodeParentID']));
 if (is_object($sourceNode) && is_object($destNode)) {
