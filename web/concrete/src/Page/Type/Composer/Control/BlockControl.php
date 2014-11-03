@@ -4,6 +4,7 @@ namespace Concrete\Core\Page\Type\Composer\Control;
 use Loader;
 use \Concrete\Core\Foundation\Object;
 use Controller;
+use Package;
 use Block;
 use BlockType;
 use Environment;

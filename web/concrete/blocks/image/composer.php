@@ -18,6 +18,6 @@ $al = Loader::helper('concrete/asset_library');
 	<i class="fa fa-question-circle launch-tooltip" title="" data-original-title="<?=$description?>"></i>
 	<? endif; ?>
 	<div class="controls">
-		<?php echo $al->image('ccm-b-image-'.$setcontrol->getPageTypeComposerFormLayoutSetControlID(), $this->field('fID'), t('Choose Image'), $bf); ?>
+		<?php echo $al->image('ccm-b-image-'.$setcontrol->getPageTypeComposerFormLayoutSetControlID(), $view->field('fID'), t('Choose Image'), $bf); ?>
 	</div>
 </div>
