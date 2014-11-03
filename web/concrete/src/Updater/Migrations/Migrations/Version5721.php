@@ -5,6 +5,7 @@ use Concrete\Core\Page\Page;
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 use SinglePage;
+use Database;
 use Concrete\Core\Block\BlockType\BlockType;
 
 class Version5721 extends AbstractMigration
@@ -35,6 +36,16 @@ class Version5721 extends AbstractMigration
         $bt = BlockType::getByHandle('feature');
         if (is_object($bt)) {
             $bt->refresh();
+        }
+
+        $db = Database::get();
+        $sm = $db->getSchemaManager();
+        $schemaTables = $sm->listTableNames();
+        if (in_array('signuprequests', $schemaTables)) {
+            $db->query('alter table signuprequests rename SignupRequests');
+        }
+        if (in_array('userbannedips', $schemaTables)) {
+            $db->query('alter table userbannedips rename UserBannedIPs');
         }
     }
 
