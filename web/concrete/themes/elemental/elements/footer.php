@@ -1,8 +1,17 @@
 <?php use Concrete\Core\Validation\CSRF\Token;
 
-defined('C5_EXECUTE') or die("Access Denied."); ?>
+defined('C5_EXECUTE') or die("Access Denied.");
+
+$footerSiteTitle = new GlobalArea('Footer Site Title');
+$footerSocial = new GlobalArea('Footer Social');
+$footerSiteTitleBlocks = $footerSiteTitle->getTotalBlocksInArea();
+$footerSocialBlocks = $footerSocial->getTotalBlocksInArea();
+$displayFirstSection = $footerSiteTitleBlocks > 0 || $footerSocialBlocks > 0 || $c->isEditMode();
+
+?>
 
 <footer id="footer-theme">
+    <? if ($displayFirstSection) { ?>
     <section>
     <div class="container">
         <div class="row">
@@ -21,6 +30,7 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
         </div>
     </div>
     </section>
+    <? } ?>
     <section>
     <div class="container">
         <div class="row">
