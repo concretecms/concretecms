@@ -11,7 +11,7 @@ $form = Loader::helper('form');
 	<? endif; ?>
 	<div class="controls">
 		<?
-		print $form->textarea($control->field('content'), $controller->getContentEditMode(), array(
+		print $form->textarea($view->field('content'), $controller->getContentEditMode(), array(
 			'class' => $class
 		));
 		?>
