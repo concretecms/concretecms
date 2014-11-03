@@ -90,11 +90,11 @@ class ImageHelper
             $fr = $obj->getFileResource();
             $image = \Image::load($fr->read());
             $fID = $obj->getFileID();
-            $filename = md5(implode(':', array($fID, $maxWidth, $maxHeight, $fr->getTimestamp())))
+            $filename = md5(implode(':', array($fID, $maxWidth, $maxHeight, $crop, $fr->getTimestamp())))
                 . '.' . $fh->getExtension($fr->getPath());
         } else {
             $image = \Image::open($obj);
-            $filename = md5(implode(':', array($obj, $maxWidth, $maxHeight, filemtime($obj))))
+            $filename = md5(implode(':', array($obj, $maxWidth, $maxHeight, $crop, filemtime($obj))))
                 . '.' . $fh->getExtension($obj);
         }
 
