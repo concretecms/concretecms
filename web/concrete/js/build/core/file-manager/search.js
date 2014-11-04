@@ -44,7 +44,8 @@
 
     ConcreteFileManager.prototype.setupFileUploads = function() {
         var my = this,
-            $fileUploader = $('.ccm-file-manager-upload').filter(':visible').first(),
+            $fileUploaders = $('.ccm-file-manager-upload'),
+            $fileUploader = $fileUploaders.filter('#ccm-file-manager-upload'),
             args = {
                 url: CCM_DISPATCHER_FILENAME + '/ccm/system/file/upload',
                 dataType: 'json',
@@ -83,6 +84,7 @@
                 }
             };
 
+        $fileUploader = $fileUploader.length ? $fileUploader : $fileUploaders.eq(0);
         $fileUploader.on('click', function() {
             $(this).find('input').trigger('click');
         });
