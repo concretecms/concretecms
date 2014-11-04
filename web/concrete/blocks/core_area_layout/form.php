@@ -128,6 +128,7 @@ $(function() {
 		'rowstart':  '<?=addslashes($themeGridFramework->getPageThemeGridFrameworkRowStartHTML())?>',
 		'rowend': '<?=addslashes($themeGridFramework->getPageThemeGridFrameworkRowEndHTML())?>',
         'additionalGridColumnClasses': '<?=$themeGridFramework->getPageThemeGridFrameworkColumnAdditionalClasses()?>',
+        'additionalGridColumnOffsetClasses': '<?=$themeGridFramework->getPageThemeGridFrameworkColumnOffsetAdditionalClasses()?>',
 		<? if ($controller->getTask() == 'add') { ?>
 		'maxcolumns': '<?=$controller->getAreaObject()->getAreaGridMaximumColumns()?>',
 		<? } else { ?>

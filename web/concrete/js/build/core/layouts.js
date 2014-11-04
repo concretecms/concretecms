@@ -578,13 +578,17 @@
                     $col.addClass(obj.options.additionalGridColumnClasses);
                 }
                 // change the span value inside
-                $('#ccm-edit-layout-column-span-' + i).val(parseInt($col.attr('data-span')));
             }
-            if ($col.attr('data-offset')) {
+            if (parseInt($col.attr('data-offset')) > 0) {
                 var offdex = parseInt($col.attr('data-offset')) - 1;
-                $('<div />', {'data-offset-column': true}).addClass('ccm-theme-grid-offset-column').addClass(obj.options.gridColumnClasses[offdex]).insertBefore($col);
-                $('#ccm-edit-layout-column-offset-' + i).val(parseInt($col.attr('data-offset')));
+                var offsetColumnClass = obj.options.gridColumnClasses[offdex] + ' ccm-theme-grid-offset-column';
+                if (obj.options.additionalGridColumnOffsetClasses) {
+                    offsetColumnClass = offsetColumnClass + ' ' + obj.options.additionalGridColumnOffsetClasses;
+                }
+                $('<div />', {'data-offset-column': true}).html('&nbsp;').addClass(offsetColumnClass).insertBefore($col);
             }
+            $('#ccm-edit-layout-column-offset-' + i).val(parseInt($col.attr('data-offset')));
+            $('#ccm-edit-layout-column-span-' + i).val(parseInt($col.attr('data-span')));
             $col.addClass('ccm-theme-grid-column');
             if (obj.options.editing) {
                 $col.addClass('ccm-theme-grid-column-edit-mode');
