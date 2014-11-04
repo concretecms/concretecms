@@ -1,48 +1,19 @@
 (function (window, $, _, Concrete) {
     'use strict';
 
-
+    /**
+     * ClipBoard block used in panels
+     * @type {Function}
+     */
     var DuplicateBlock = Concrete.DuplicateBlock = function DuplicateBlock(elem, edit_mode) {
         this.init.apply(this, _.toArray(arguments));
     };
 
-    DuplicateBlock.prototype = _.extend(Object.create(Concrete.Block.prototype), {
+    DuplicateBlock.prototype = _.extend(Object.create(Concrete.BlockType.prototype), {
 
         init: function duplicateBlockInit(elem, edit_mode) {
             var my = this;
-            Concrete.Block.prototype.init.call(my, elem, edit_mode, elem.find('.block-content'));
-        },
-
-        pepStart: function duplicateBlockPepStart(context, event, pep) {
-            var my = this, panel;
-            Concrete.Block.prototype.pepStart.call(this, context, event, pep);
-
-            my.setAttr('closedPanel', _(ConcretePanelManager.getPanels()).find(function (panel) {
-                return panel.isOpen;
-            }));
-
-            if ((panel = my.getAttr('closedPanel'))) {
-                panel.hide();
-            }
-        },
-
-        pepStop: function duplicateBlockPepStop(context, event, pep) {
-            var my = this, drag_area, panel;
-
-            if ((drag_area = my.getSelected())) {
-                my.addToDragArea(drag_area);
-            } else {
-                if ((panel = my.getAttr('closedPanel'))) {
-                    panel.show();
-                }
-            }
-
-            _.defer(function () {
-                Concrete.event.fire('EditModeBlockDragStop', { block: my, pep: pep, event: event });
-            });
-
-            my.getDragger().remove();
-            my.setAttr('dragger', null);
+            Concrete.BlockType.prototype.init.call(my, elem, edit_mode, elem.find('.block-content'));
         },
 
         addToDragArea: function DuplicateBlockAddToDragArea(drag_area) {
