@@ -11,7 +11,7 @@ class PageThemeGridFrameworkTest extends \PHPUnit_Framework_TestCase {
 
     public function testGridFrameworkManagerLoading()
     {
-        $gf = Core::make('grid_framework');
+        $gf = Core::make('manager/grid_framework');
         $this->assertInstanceOf('\Concrete\Core\Page\Theme\GridFramework\Manager', $gf);
         $this->assertInstanceOf('\Concrete\Core\Page\Theme\GridFramework\Type\NineSixty', $gf->driver('nine_sixty'));
         $this->assertInstanceOf('\Concrete\Core\Page\Theme\GridFramework\Type\Bootstrap2', $gf->driver('bootstrap2'));
