@@ -70,5 +70,14 @@ class Bootstrap3 extends GridFramework
         return $offsets;
     }
 
+    public function getPageThemeGridFrameworkColumnAdditionalClasses()
+    {
+        return '';
+    }
+
+    public function getPageThemeGridFrameworkColumnOffsetAdditionalClasses()
+    {
+        return '';
+    }
 
 }

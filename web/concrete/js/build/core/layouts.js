@@ -22,7 +22,8 @@
             'btncancel': '#ccm-layouts-cancel-button',
             'editing': false,
             'supportsgrid': false,
-            'gridrowtmpid': 'ccm-theme-grid-temp'
+            'gridrowtmpid': 'ccm-theme-grid-temp',
+            'additionalGridColumnClasses': ''
         }, options);
 
         this.$element = $(element);
@@ -370,6 +371,9 @@
         for (i = 0; i < spanArray.length; i++) {
             cssclasses[i] = {};
             cssclasses[i].cssClass = this.options.gridColumnClasses[spanArray[i] - 1];
+            if (this.options.additionalGridColumnClasses) {
+                cssclasses[i].cssClass = cssclasses[i].cssClass + ' ' + this.options.additionalGridColumnClasses;
+            }
             cssclasses[i].value = spanArray[i];
         }
         return cssclasses;
@@ -407,6 +411,7 @@
                 breaks.push(Math.floor($column.position().left));
                 breaks.push(Math.floor($column.width()) + Math.floor($column.position().left));
             }
+
         }
 
         // set the valid widths
@@ -426,7 +431,11 @@
         var test_container_div = $('<div />', {'id': obj.options.gridrowtmpid}).appendTo(test_container);
         var columnHTML = '';
         for (i = 1; i <= maxColumns; i++) {
-            columnHTML += '<div class="' + minColumnClass + '"></div>'
+            if (obj.options.additionalGridColumnClasses) {
+                columnHTML += '<div class="' + minColumnClass + ' ' + obj.options.additionalGridColumnClasses + '"><br><br></div>'
+            } else {
+                columnHTML += '<div class="' + minColumnClass + '"><br><br></div>'
+            }
         }
 
 
@@ -565,6 +574,9 @@
             if ($col.attr('data-span')) {
                 var spandex = parseInt($col.attr('data-span')) - 1;
                 $col.addClass(obj.options.gridColumnClasses[spandex]);
+                if (obj.options.additionalGridColumnClasses) {
+                    $col.addClass(obj.options.additionalGridColumnClasses);
+                }
                 // change the span value inside
                 $('#ccm-edit-layout-column-span-' + i).val(parseInt($col.attr('data-span')));
             }

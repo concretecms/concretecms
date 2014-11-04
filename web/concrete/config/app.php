@@ -103,6 +103,7 @@ return array(
         'core_mail'         => '\Concrete\Core\Mail\MailServiceProvider',
         'core_application'  => '\Concrete\Core\Application\ApplicationServiceProvider',
         'core_utility'      => '\Concrete\Core\Utility\UtilityServiceProvider',
+        'core_grid_framework' => '\Concrete\Core\Page\Theme\GridFramework\GridFrameworkServiceProvider',
         'core_database'     => '\Concrete\Core\Database\DatabaseServiceProvider',
         'core_form'         => '\Concrete\Core\Form\FormServiceProvider',
         'core_session'      => '\Concrete\Core\Session\SessionServiceProvider',

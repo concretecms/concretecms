@@ -109,4 +109,14 @@ class NineSixty extends GridFramework
         return 120; // not sure
     }
 
+    public function getPageThemeGridFrameworkColumnAdditionalClasses()
+    {
+        return '';
+    }
+
+    public function getPageThemeGridFrameworkColumnOffsetAdditionalClasses()
+    {
+        return '';
+    }
+
 }
