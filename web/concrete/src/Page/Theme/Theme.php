@@ -15,6 +15,7 @@ use Concrete\Core\Page\Theme\GridFramework\GridFramework;
 use \Concrete\Core\Page\Single as SinglePage;
 use \Concrete\Core\StyleCustomizer\Preset;
 use \Concrete\Core\StyleCustomizer\CustomCssRecord;
+use Concrete\Core\Page\Theme\GridFramework\Manager as GridFrameworkManager;
 
 /**
  *
@@ -874,9 +875,8 @@ class Theme extends Object
     public function getThemeGridFrameworkObject()
     {
         if ($this->pThemeGridFrameworkHandle) {
-            $pTheme = GridFramework::getByHandle($this->pThemeGridFrameworkHandle);
-
-            return $pTheme;
+            $framework = Core::make('grid_framework')->driver($this->pThemeGridFrameworkHandle);
+            return $framework;
         }
     }
 

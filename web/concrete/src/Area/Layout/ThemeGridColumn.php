@@ -43,28 +43,36 @@ class ThemeGridColumn extends Column {
 	public function getAreaLayoutColumnClass() {
 		$gf = $this->arLayout->getThemeGridFrameworkObject();
 		if (is_object($gf)) {
+            $class = $gf->getPageThemeGridFrameworkColumnAdditionalClasses();
+            if ($class) {
+                $class .= ' ';
+            }
+
 			// the width parameter of the column becomes the span
-			return $gf->getPageThemeGridFrameworkColumnClassForSpan($this->arLayoutColumnSpan);
+			$class .= $gf->getPageThemeGridFrameworkColumnClassForSpan($this->arLayoutColumnSpan);
+            return $class;
 		}
 	}
 
 	// this returns offsets in the form of spans
 	public function getAreaLayoutColumnOffsetEditClass() {
-		$gf = $this->arLayout->getThemeGridFrameworkObject();
-		if (is_object($gf)) {
-			return $gf->getPageThemeGridFrameworkColumnClassForSpan($this->arLayoutColumnOffset);
-		}
+        return $this->getAreaLayoutColumnClass();
 	}
 
 	public function getAreaLayoutColumnOffsetClass() {
 		$gf = $this->arLayout->getThemeGridFrameworkObject();
 		if (is_object($gf)) {
 			// the width parameter of the column becomes the span
+            $class = $gf->getPageThemeGridFrameworkColumnOffsetAdditionalClasses();
+            if ($class) {
+                $class .= ' ';
+            }
 			if ($gf->hasPageThemeGridFrameworkOffsetClasses()) { 
-				return $gf->getPageThemeGridFrameworkColumnClassForOffset($this->arLayoutColumnOffset);
+				$class .= $gf->getPageThemeGridFrameworkColumnClassForOffset($this->arLayoutColumnOffset);
 			} else {
-				return $gf->getPageThemeGridFrameworkColumnClassForSpan($this->arLayoutColumnOffset);
+				$class .= $gf->getPageThemeGridFrameworkColumnClassForSpan($this->arLayoutColumnOffset);
 			}
+            return $class;
 		}
 	}
 
