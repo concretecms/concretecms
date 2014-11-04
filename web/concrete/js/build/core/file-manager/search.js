@@ -46,23 +46,32 @@
         var my = this,
             $fileUploaders = $('.ccm-file-manager-upload'),
             $fileUploader = $fileUploaders.filter('#ccm-file-manager-upload-prompt'),
+            errors = [],
+            error_template = _.template(
+                '<span><%- message %></span>' +
+                '<ul><% _(errors).each(function(error) { %>' +
+                '<li><strong><%- error.name %></strong><p><%- error.error %></p></li>' +
+                '<% }) %></ul>'),
             args = {
                 url: CCM_DISPATCHER_FILENAME + '/ccm/system/file/upload',
                 dataType: 'json',
                 formData: {'ccm_token': CCM_SECURITY_TOKEN},
                 error: function(r) {
-                    jQuery.fn.dialog.closeTop();
                     var message = r.responseText;
                     try {
-                        message = jQuery.parseJSON(message).errors.join('<br/>');
+                        message = jQuery.parseJSON(message).errors;
+                        var name = this.files[0].name;
+                        _(message).each(function(error) {
+                            errors.push({ name:name, error:error });
+                        });
                     } catch (e) {}
-                    ConcreteAlert.dialog('Error', message);
                 },
                 progressall: function(e, data) {
                     var progress = parseInt(data.loaded / data.total * 100, 10);
                     $('#ccm-file-upload-progress-wrapper').html(my._templateFileProgress({'progress': progress}));
                 },
                 start: function() {
+                    errors = [];
                     $('#ccm-file-upload-progress-wrapper').remove();
                     $('<div />', {'id': 'ccm-file-upload-progress-wrapper'}).html(my._templateFileProgress({'progress': 100})).appendTo(document.body);
                     $.fn.dialog.open({
@@ -77,10 +86,18 @@
                     jQuery.fn.dialog.closeTop();
                     my.refreshResults();
 
-                    ConcreteAlert.notify({
-                        'message': ccmi18n_filemanager.uploadComplete,
-                        'title': ccmi18n_filemanager.title
-                    });
+                    if (errors.length) {
+                        ConcreteAlert.error({
+                            message: error_template({message: ccmi18n_filemanager.uploadFailed, errors: errors}),
+                            title: ccmi18n_filemanager.title,
+                            delay: 10000
+                        });
+                    } else {
+                        ConcreteAlert.notify({
+                            'message': ccmi18n_filemanager.uploadComplete,
+                            'title': ccmi18n_filemanager.title
+                        });
+                    }
                 }
             };
 
