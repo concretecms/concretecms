@@ -13,6 +13,38 @@
             Concrete.Block.prototype.init.call(my, elem, edit_mode, elem.find('.block-content'));
         },
 
+        pepStart: function duplicateBlockPepStart(context, event, pep) {
+            var my = this, panel;
+            Concrete.Block.prototype.pepStart.call(this, context, event, pep);
+
+            my.setAttr('closedPanel', _(ConcretePanelManager.getPanels()).find(function (panel) {
+                return panel.isOpen;
+            }));
+
+            if ((panel = my.getAttr('closedPanel'))) {
+                panel.hide();
+            }
+        },
+
+        pepStop: function duplicateBlockPepStop(context, event, pep) {
+            var my = this, drag_area, panel;
+
+            if ((drag_area = my.getSelected())) {
+                my.addToDragArea(drag_area);
+            } else {
+                if ((panel = my.getAttr('closedPanel'))) {
+                    panel.show();
+                }
+            }
+
+            _.defer(function () {
+                Concrete.event.fire('EditModeBlockDragStop', { block: my, pep: pep, event: event });
+            });
+
+            my.getDragger().remove();
+            my.setAttr('dragger', null);
+        },
+
         addToDragArea: function DuplicateBlockAddToDragArea(drag_area) {
             var my = this, elem = my.getElem(),
                 block_type_id = elem.data('btid'),

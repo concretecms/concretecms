@@ -6,6 +6,39 @@
     };
 
     Stack.prototype = _.extend(Object.create(Concrete.Block.prototype), {
+
+        pepStart: function stackPepStart(context, event, pep) {
+            var my = this, panel;
+            Concrete.Block.prototype.pepStart.call(this, context, event, pep);
+
+            my.setAttr('closedPanel', _(ConcretePanelManager.getPanels()).find(function (panel) {
+                return panel.isOpen;
+            }));
+
+            if ((panel = my.getAttr('closedPanel'))) {
+                panel.hide();
+            }
+        },
+
+        pepStop: function stackPepStop(context, event, pep) {
+            var my = this, drag_area, panel;
+
+            if ((drag_area = my.getSelected())) {
+                my.addToDragArea(drag_area);
+            } else {
+                if ((panel = my.getAttr('closedPanel'))) {
+                    panel.show();
+                }
+            }
+
+            _.defer(function () {
+                Concrete.event.fire('EditModeBlockDragStop', { block: my, pep: pep, event: event });
+            });
+
+            my.getDragger().remove();
+            my.setAttr('dragger', null);
+        },
+
         addToDragArea: function StackAddToDragArea(drag_area) {
             var my = this, elem = my.getElem(),
                 area = drag_area.getArea(),
@@ -43,6 +76,7 @@
                 'title': ccmi18n.addBlockStack
             });
         }
+
     });
 
 
