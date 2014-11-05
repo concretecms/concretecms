@@ -33,12 +33,13 @@ class FileLoader extends \Illuminate\Config\FileLoader implements LoaderInterfac
             $paths = array(
                 "{$path}/generated_overrides/{$group}.php",
                 "{$path}/{$group}.php",
-                "{$path}/{$environment}/{$group}.php");
+                "{$path}/{$environment}.{$group}.php");
         } else {
             $paths = array(
                 "{$this->defaultPath}/generated_overrides/{$namespace}/{$group}.php",
                 "{$path}/{$group}.php",
-                "{$this->defaultPath}/{$environment}/{$namespace}/{$group}.php");
+                "{$path}/{$environment}.{$group}.php",
+                "{$this->defaultPath}/{$environment}.{$group}.php");
         }
 
         foreach ($paths as $file) {
