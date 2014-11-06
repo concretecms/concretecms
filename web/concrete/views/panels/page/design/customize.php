@@ -39,7 +39,7 @@ $pk = PermissionKey::getByHandle('customize_themes');
     </div>
 
     <? } ?>
-        
+
     <?
     // output basic values –these are ones we don't have any
     // kind of special mapping for and that don't appear in our customizer style sets.

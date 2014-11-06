@@ -20,6 +20,7 @@ class Controller extends BlockController
     protected $btCacheBlockOutput = true;
     protected $btCacheBlockOutputOnPost = true;
     protected $btCacheBlockOutputForRegisteredUsers = true;
+    protected $btExportPageColumns = array('internalLinkCID');
     protected $btInterfaceHeight = 520;
     protected $btTable = 'btFeature';
 
