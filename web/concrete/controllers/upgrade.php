@@ -2,10 +2,9 @@
 namespace Concrete\Controller;
 
 use Concrete\Core\Updater\Update;
-use Concrete\Core\View\View;
+use View;
 use Concrete\Controller\Backend\UserInterface as BackendUserInterfaceController;
 use Config;
-use Core;
 
 class Upgrade extends BackendUserInterfaceController
 {
