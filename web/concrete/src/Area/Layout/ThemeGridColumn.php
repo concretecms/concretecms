@@ -56,7 +56,16 @@ class ThemeGridColumn extends Column {
 
 	// this returns offsets in the form of spans
 	public function getAreaLayoutColumnOffsetEditClass() {
-        return $this->getAreaLayoutColumnClass();
+		$gf = $this->arLayout->getThemeGridFrameworkObject();
+		if (is_object($gf)) {
+            $class = $gf->getPageThemeGridFrameworkColumnAdditionalClasses();
+            if ($class) {
+                $class .= ' ';
+            }
+
+			$class .= $gf->getPageThemeGridFrameworkColumnClassForSpan($this->arLayoutColumnOffset);
+            return $class;
+		}
 	}
 
 	public function getAreaLayoutColumnOffsetClass() {

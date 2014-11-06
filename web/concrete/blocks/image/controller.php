@@ -15,6 +15,7 @@ class Controller extends BlockController {
     protected $btCacheBlockOutputForRegisteredUsers = true;
     protected $btWrapperClass = 'ccm-ui';
     protected $btExportFileColumns = array('fID','fOnstateID');
+    protected $btExportPageColumns = array('internalLinkCID');
     protected $btFeatures = array(
         'image'
     );

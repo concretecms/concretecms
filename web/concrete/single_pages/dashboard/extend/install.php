@@ -17,7 +17,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
     <?=Loader::packageElement('dashboard/install', $pkg->getPackageHandle())?>
     <? if ($pkg->allowsFullContentSwap()) { ?>
         <h4><?=t('Clear this Site?')?></h4>
-        <p><?=t('%s can fully clear you website of all existing content and install its own custom content in its place. If you\'re installing a theme for the first time you may want to do this. Clear all site content?', $pkg->getPackageName())?></p>
+        <p><?=t('%s can fully clear your website of all existing content and install its own custom content in its place. If you\'re installing a theme for the first time you may want to do this. Clear all site content?', $pkg->getPackageName())?></p>
         <? $u = new User(); ?>
         <? if ($u->isSuperUser()) {
             $disabled = ''; ?>
