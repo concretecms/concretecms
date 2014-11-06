@@ -315,7 +315,7 @@ class Application extends Container
                 }
             }
 
-            $uri = $this->make('security')->sanitizeURL($_SERVER['REQUEST_URI']);
+            $uri = $this->make('helper/security')->sanitizeURL($_SERVER['REQUEST_URI']);
             if (strpos($uri, '%7E') !== false) {
                 $uri = str_replace('%7E', '~', $uri);
             }
