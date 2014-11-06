@@ -84,6 +84,8 @@
 
                 if (handle === 'core_area_layout') {
                     type = Concrete.Layout;
+                } else if (handle === 'core_stack_display') {
+                    type = Concrete.StackDisplay;
                 } else {
                     type = Concrete.Block;
                 }
