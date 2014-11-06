@@ -875,7 +875,7 @@ class Theme extends Object
     public function getThemeGridFrameworkObject()
     {
         if ($this->pThemeGridFrameworkHandle) {
-            $framework = Core::make('grid_framework')->driver($this->pThemeGridFrameworkHandle);
+            $framework = Core::make('manager/grid_framework')->driver($this->pThemeGridFrameworkHandle);
             return $framework;
         }
     }
