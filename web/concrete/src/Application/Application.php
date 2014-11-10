@@ -249,19 +249,9 @@ class Application extends Container
      */
     public function setupFilesystem()
     {
-        if (!defined('FILE_PERMISSIONS_MODE')) {
-            $perm = $this->make('helper/file')->getCreateFilePermissions()->file;
-            $perm ? define('FILE_PERMISSIONS_MODE', $perm) : define('FILE_PERMISSIONS_MODE', 0664);
-        }
-        if (!defined('DIRECTORY_PERMISSIONS_MODE')) {
-            $perm = $this->make('helper/file')->getCreateFilePermissions()->dir;
-            $perm ? define('DIRECTORY_PERMISSIONS_MODE', $perm) : define('DIRECTORY_PERMISSIONS_MODE', 0775);
-        }
         if (!is_dir(Config::get('concrete.cache.directory'))) {
-            @mkdir(Config::get('concrete.cache.directory'));
-            @chmod(Config::get('concrete.cache.directory'), DIRECTORY_PERMISSIONS_MODE);
-            @touch(Config::get('concrete.cache.directory') . '/index.html');
-            @chmod(Config::get('concrete.cache.directory') . '/index.html', FILE_PERMISSIONS_MODE);
+            mkdir(Config::get('concrete.cache.directory'), Config::get('concrete.filesystem.permissions.directory'));
+            touch(Config::get('concrete.cache.directory') . '/index.html', Config::get('concrete.filesystem.permissions.file'));
         }
     }
 

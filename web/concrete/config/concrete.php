@@ -200,7 +200,9 @@ return array(
                     array(
                         'class' => '\Stash\Driver\FileSystem',
                         'options' => array(
-                            'path' => DIR_FILES_UPLOADED_STANDARD . '/cache'
+                            'path' => DIR_FILES_UPLOADED_STANDARD . '/cache',
+                            'dirPermissions' => DIRECTORY_PERMISSIONS_MODE_COMPUTED,
+                            'filePermissions' => FILE_PERMISSIONS_MODE_COMPUTED
                         )
                     ),
                 )
@@ -271,6 +273,14 @@ return array(
 
         'enable_scheduling' => true
 
+    ),
+
+    'filesystem'        => array(
+
+        'permissions'   => array(
+            'file' => FILE_PERMISSIONS_MODE_COMPUTED,
+            'directory' => DIRECTORY_PERMISSIONS_MODE_COMPUTED
+        )
     ),
 
     /**
