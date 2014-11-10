@@ -245,6 +245,9 @@ class Login extends PageController
                 //should administrator be redirected to dashboard?  defaults to yes if not set.
                 $adminToDash = intval(Config::get('concrete.misc.login_admin_to_dashboard'));
                 if ($dbp->canRead() && $adminToDash) {
+                    if(!$rc instanceof Page || $rc->isError()){
+                        $rc = $dash;
+                    }
                     $rUrl = $navigation->getLinkToCollection($rc);
                     break;
                 }
