@@ -38,6 +38,12 @@ class Version5721 extends AbstractMigration
             $bt->refresh();
         }
 
+
+        $bt = BlockType::getByHandle('image_slider');
+        if (is_object($bt)) {
+            $bt->refresh();
+        }
+
         $db = Database::get();
         $sm = $db->getSchemaManager();
         $schemaTables = $sm->listTableNames();
