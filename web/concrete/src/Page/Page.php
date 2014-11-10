@@ -150,37 +150,36 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      * @return PageController
      */
     public function getPageController() {
-        if (isset($this->controller)) {
-            return $this->controller;
-        }
+        if (!isset($this->controller)) {
+            $env = Environment::get();
+            if ($this->getPageTypeID() > 0) {
+                $ptHandle = $this->getPageTypeHandle();
+                $r = $env->getRecord(DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES . '/' . $ptHandle . '.php', $this->getPackageHandle());
+                $prefix = $r->override ? true : $this->getPackageHandle();
+                $class = core_class('Controller\\PageType\\' . camelcase($ptHandle), $prefix);
+            } else if ($this->isGeneratedCollection()) {
+                $file = $this->getCollectionFilename();
+                $r = $env->getRecord(DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS . $file, $this->getPackageHandle());
+                $prefix = $r->override ? true : $this->getPackageHandle();
 
-        $env = Environment::get();
+                if (strpos($file, '/' . FILENAME_COLLECTION_VIEW) !== false) {
+                    $path = substr($file, 0, strpos($file, '/'. FILENAME_COLLECTION_VIEW));
+                } else {
+                    $path = substr($file, 0, strpos($file, '.php'));
+                }
 
-        if ($this->getPageTypeID() > 0) {
-            $ptHandle = $this->getPageTypeHandle();
-            $r = $env->getRecord(DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES . '/' . $ptHandle . '.php', $this->getPackageHandle());
-            $prefix = $r->override ? true : $this->getPackageHandle();
-            $class = core_class('Controller\\PageType\\' . camelcase($ptHandle), $prefix);
-        } else if ($this->isGeneratedCollection()) {
-            $file = $this->getCollectionFilename();
-            $r = $env->getRecord(DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS . $file, $this->getPackageHandle());
-            $prefix = $r->override ? true : $this->getPackageHandle();
+                $class = core_class('Controller\\SinglePage\\' . str_replace('/','\\', camelcase($path, true)), $prefix);
 
-            if (strpos($file, '/' . FILENAME_COLLECTION_VIEW) !== false) {
-                $path = substr($file, 0, strpos($file, '/'. FILENAME_COLLECTION_VIEW));
-            } else {
-                $path = substr($file, 0, strpos($file, '.php'));
             }
 
-            $class = core_class('Controller\\SinglePage\\' . str_replace('/','\\', camelcase($path, true)), $prefix);
+            if (isset($class) && class_exists($class)) {
+                $this->controller = Core::make($class, array($this));
+            } else {
+                $this->controller = Core::make('controller/page/default', array($this));
+            }
 
         }
-
-        if (isset($class) && class_exists($class)) {
-            return Core::make($class, array($this));
-        } else {
-            return Core::make('\\Concrete\\Core\\Page\\Controller\\PageController', array($this));
-        }
+        return $this->controller;
     }
 
     public function getPermissionObjectIdentifier() {
