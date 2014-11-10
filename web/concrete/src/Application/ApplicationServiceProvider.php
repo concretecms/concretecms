@@ -26,6 +26,9 @@ class ApplicationServiceProvider extends ServiceProvider {
 		foreach($singletons as $key => $value) {
 			$this->app->singleton($key, $value);
 		}
+
+        $this->app->bind('controller/page/default', 'Concrete\Core\Page\Controller\PageController');
+
 	}
 
 }

@@ -30,6 +30,11 @@ class AssetTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($asset3->isAssetLocal());
         $this->assertEquals('//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js', $asset3->getAssetURL());
 
+        // overrides test
+        $al->register('javascript', 'jquery', '//ajax.googleapis.com/ajax/libs/jquery/2.0/jquery.min.js', array('local' => false, 'version' => '2.0'));
+        $asset3 = $al->getAsset('javascript', 'jquery');
+        $this->assertEquals('//ajax.googleapis.com/ajax/libs/jquery/2.0/jquery.min.js', $asset3->getAssetURL());
+
     }
 
 }
