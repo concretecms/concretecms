@@ -33,7 +33,19 @@ class Version5721 extends AbstractMigration
 			$sp->setAttribute('exclude_nav', 1);
         }
 
+        $sp = Page::getByPath('/members/directory');
+		if (!is_object($sp) || $sp->isError()) {
+			$sp = SinglePage::add('/members/directory');
+			$sp->setAttribute('exclude_nav', 1);
+        }
+
         $bt = BlockType::getByHandle('feature');
+        if (is_object($bt)) {
+            $bt->refresh();
+        }
+
+
+        $bt = BlockType::getByHandle('image_slider');
         if (is_object($bt)) {
             $bt->refresh();
         }
