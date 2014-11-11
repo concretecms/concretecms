@@ -127,7 +127,7 @@ class CssAsset extends Asset {
 
 	public function minify($assets) {
 		return self::process($assets, function($css, $assetPath, $targetPath) {
-			return \CssMin::minify($css);
+			return \CssMin::minify(CSSAsset::changePaths($css, $assetPath, $targetPath));
 		});
 	}
 
