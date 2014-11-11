@@ -13,7 +13,7 @@ class Version5721 extends AbstractMigration
 
     public function getName()
     {
-        return '20141028000000';
+        return '20141113000000';
     }
 
     public function up(Schema $schema)
