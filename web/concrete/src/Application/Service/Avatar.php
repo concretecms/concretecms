@@ -25,19 +25,18 @@ class Avatar {
                     . 'alt="' . $uo->getUserName() . '" />';
 
                 return $str;
-			} else {
+			} else if(Config::get('concrete.user.gravatar.enabled')) {
+                return $this->get_gravatar( $uo->getUserEmail(),
+                    Config::get('concrete.icons.user_avatar.width'),
+                    Config::get('concrete.user.gravatar.image_set'),
+                    Config::get('concrete.user.gravatar.max_level'),
+                    true, $atts = array('alt' => $uo->getUserName())
+                );
+            } else {
 				if ($ati) {
 					return "<img class='u-authType-avatar' src='$ati'>";
 				}
 			}
-		}
-
-		if(Config::get('concrete.user.gravatar.enabled')) {
-		  return $this->get_gravatar( $uo->getUserEmail(),
-                                      Config::get('concrete.icons.user_avatar.width'),
-                                      Config::get('concrete.user.gravatar.image_set'),
-                                      Config::get('concrete.user.gravatar.max_level'),
-                                      true, $atts = array('alt' => $uo->getUserName()) );
 		}
 
 		if (!$suppressNone) {
