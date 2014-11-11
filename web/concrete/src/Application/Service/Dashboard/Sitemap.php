@@ -183,6 +183,7 @@ class Sitemap {
 
 		$node = new stdClass;
 		$node->title = $cvName;
+        $node->link = $c->getCollectionLink();
 		if ($numSubpages > 0) {
 			$node->isLazy = true;
 		}
