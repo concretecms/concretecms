@@ -3,16 +3,16 @@ namespace Concrete\Core\Application\UserInterface\Menu\Item;
 use Concrete\Core\Package\Package;
 use Core;
 
-class Item
+class Item implements ItemInterface
 {
+
+    protected $controller;
 
     public function __construct($handle, $pkgHandle = false)
     {
         $this->handle = $handle;
         $this->pkgHandle = $pkgHandle;
     }
-
-    protected $controller;
 
     public function getHandle()
     {
@@ -89,10 +89,15 @@ class Item
                 DIRNAME_MENU_ITEMS . '/' . $this->handle . '/' . FILENAME_CONTROLLER,
                 $this->pkgHandle
             );
-            $this->controller = \Core::make($class, array($this));
-            $this->controller->setMenuItem($this);
+            $this->setController(\Core::make($class, array($this)));
             return $this->controller;
         }
+    }
+
+    public function setController(ControllerInterface $controller)
+    {
+        $this->controller = $controller;
+        $this->controller->setMenuItem($this);
     }
 
 }
