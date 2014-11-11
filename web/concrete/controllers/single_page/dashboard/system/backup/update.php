@@ -35,7 +35,7 @@ class Update extends DashboardPageController
 
     public function check_for_updates()
     {
-        Config::clear('APP_VERSION_LATEST', false);
+        Config::clear('concrete.misc.latest_version');
         \Concrete\Core\Updater\Update::getLatestAvailableVersionNumber();
         $this->redirect('/dashboard/system/backup/update');
     }
