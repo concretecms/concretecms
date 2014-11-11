@@ -213,6 +213,7 @@ class Stack extends Page
     public function display()
     {
         $ax = Area::get($this, STACKS_AREA_NAME);
+        $ax->disableControls();
         $ax->display($this);
         return true;
     }
