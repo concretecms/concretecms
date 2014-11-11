@@ -236,9 +236,9 @@ class Dashboard {
 	public function getIntelligentSearchMenu() {
 		$dashboardMenus = Session::get('dashboardMenus', array());
 		$dashboardMenusKey = Localization::activeLocale();
-		/*if (array_key_exists($dashboardMenusKey, $dashboardMenus)) {
+		if (array_key_exists($dashboardMenusKey, $dashboardMenus)) {
 			return $dashboardMenus[$dashboardMenusKey];
-		}*/
+		}
 
 		ob_start(); ?>
 			<div id="ccm-intelligent-search-results">
