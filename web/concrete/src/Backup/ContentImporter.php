@@ -592,7 +592,10 @@ class ContentImporter
     {
         if (isset($sx->pagefeeds)) {
             foreach ($sx->pagefeeds->feed as $f) {
-                $feed = new Feed();
+                $feed = Feed::getByHandle((string) $f->handle);
+                if (!is_object($feed)) {
+                    $feed = new Feed();
+                }
                 if ($f->parent) {
                     $feed->setParentID(self::getValue((string) $f->parent));
                 }
