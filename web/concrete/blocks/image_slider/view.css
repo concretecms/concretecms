@@ -1,5 +1,9 @@
 /*! http://responsiveslides.com v1.54 by @viljamis */
 
+.ccm-image-slider {
+    position: relative;
+}
+
 .rslides {
     position: relative;
     list-style: none;
