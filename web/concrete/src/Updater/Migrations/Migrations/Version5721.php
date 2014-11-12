@@ -59,6 +59,12 @@ class Version5721 extends AbstractMigration
         if (in_array('userbannedips', $schemaTables)) {
             $db->query('alter table userbannedips rename UserBannedIPs');
         }
+
+        // Clean up File stupidity
+        $r = $db->Execute('select Files.fID from Files left join FileVersions on (Files.fID = FileVersions.fID) where FileVersions.fID is null');
+        while ($row = $r->FetchRow()) {
+            $db->Execute('delete from Files where fID = ?', array($row['fID']));
+        }
     }
 
     public function down(Schema $schema)

@@ -524,6 +524,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         // now from the DB
         $em = $db->getEntityManager();
         $em->remove($this);
+        $em->flush();
         $db->Execute("delete from FileSetFiles where fID = ?", array($this->fID));
         $db->Execute("delete from FileSearchIndexAttributes where fID = ?", array($this->fID));
         $db->Execute("delete from DownloadStatistics where fID = ?", array($this->fID));
