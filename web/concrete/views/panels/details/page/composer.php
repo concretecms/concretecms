@@ -5,7 +5,7 @@ $cID = $c->getCollectionID();
 ?>
 
 <section class="ccm-ui">
-	<header><?=t('Composer - %s', $pagetype->getPageTypeName())?></header>
+	<header><?=t('Composer - %s', $pagetype->getPageTypeDisplayName())?></header>
 	<form method="post" data-panel-detail-form="compose">
 		<?=Loader::helper('concrete/ui/help')->notify('panel', '/page/composer')?>
 

@@ -130,7 +130,7 @@ class Sitemap {
 		$numSubpages = ($c->getNumChildren()  > 0) ? $c->getNumChildren()  : '';
 
 		$cvName = ($c->getCollectionName()) ? $c->getCollectionName() : '(No Title)';
-		$cvName = ($c->isSystemPage()) ? t($cvName) : $cvName;
+		$cvName = ($c->isSystemPage() || $cID == 1) ? t($cvName) : $cvName;
 
 		$ct = PageType::getByID($c->getPageTypeID());
 		$isInTrash = $c->isInTrash();
