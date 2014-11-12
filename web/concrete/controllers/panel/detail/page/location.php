@@ -20,6 +20,7 @@ class Location extends BackendInterfacePageController {
 
 	protected $viewPath = '/panels/details/page/location';
     protected $controllerActionPath = '/ccm/system/panels/details/page/location';
+    protected $validationToken = '/panels/details/page/location';
 
 	protected function canAccess() {
 		return ($this->page->getCollectionID() != HOME_CID && is_object($this->asl) && $this->asl->allowEditPaths());
@@ -75,7 +76,7 @@ class Location extends BackendInterfacePageController {
 					$pkr->setRequesterUserID($u->getUserID());
 					$u->unloadCollectionEdit($oc);
 			        $response = $pkr->trigger();
-                    if ($response instanceof WorkflowProgressResponse) {
+                    if ($response instanceof WorkflowProgressResponse && !$this->request->request->get('sitemap')) {
                         $nc = Page::getByID($oc->getCollectionID());
                         $r->setRedirectURL(Loader::helper('navigation')->getLinkToCollection($nc));
                     }
@@ -100,21 +101,6 @@ class Location extends BackendInterfacePageController {
 			$r->setPage($this->page);
 			$nc = Page::getByID($this->page->getCollectionID(), 'ACTIVE');
 			$r->outputJSON();
-
-            if ($this->request->request->get('sitemap')
-                && $this->permissions->canApprovePageVersions()
-                && Config::get('concrete.misc.sitemap_approve_immediately')) {
-
-                $pkr = new ApprovePageRequest();
-                $u = new User();
-                $pkr->setRequestedPage($this->page);
-                $v = Version::get($this->page, "RECENT");
-                $pkr->setRequestedVersionID($v->getVersionID());
-                $pkr->setRequesterUserID($u->getUserID());
-                $response = $pkr->trigger();
-                $u->unloadCollectionEdit();
-            }
-
 		}
 	}
 

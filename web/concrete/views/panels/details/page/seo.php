@@ -6,6 +6,15 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	<header><?=t('SEO')?></header>
 	<form method="post" action="<?=$controller->action('submit')?>" class="ccm-panel-detail-content-form" data-dialog-form="seo" data-panel-detail-form="seo">
 
+	<?php if ($allowEditName) { ?>
+	<div class="form-group">
+		<label class="control-label" for="cName"><?=t('Name')?></label>
+		<div>
+			<input type="text" class="form-control" name="cName" id="cName" value="<?php echo $c->getCollectionName()?>">
+    	</div>
+	</div>
+	<?php } ?>
+
 	<?php if ($allowEditPaths && !$c->isGeneratedCollection()) { ?>
 	<div class="form-group">
 		<label class="control-label launch-tooltip" data-placement="bottom" title="<?=t('This page must always be available from at least one URL. This is that URL.')?>" class="launch-tooltip"><?=t('URL Slug')?></label>
@@ -14,6 +23,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		</div>
 	</div>
 	<?php } ?>
+
+    <hr/>
 
 	<?php foreach ($attributes as $ak) { ?>
 		<?php $av = $c->getAttributeValueObject($ak); ?>
