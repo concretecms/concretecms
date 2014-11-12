@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Controller\Panel\Detail\Page;
 use \Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
+use Concrete\Core\Workflow\Request\ApprovePageRequest;
 use PageEditResponse;
 use PermissionKey;
 use Exception;
@@ -10,6 +11,7 @@ use Permissions;
 use User;
 use Page;
 use Request;
+use Concrete\Core\Page\Collection\Version\Version;
 use Database;
 use \Concrete\Core\Workflow\Request\MovePageRequest as MovePagePageWorkflowRequest;
 use \Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
@@ -17,6 +19,7 @@ use \Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
 class Location extends BackendInterfacePageController {
 
 	protected $viewPath = '/panels/details/page/location';
+    protected $controllerActionPath = '/ccm/system/panels/details/page/location';
 
 	protected function canAccess() {
 		return ($this->page->getCollectionID() != HOME_CID && is_object($this->asl) && $this->asl->allowEditPaths());
@@ -97,6 +100,21 @@ class Location extends BackendInterfacePageController {
 			$r->setPage($this->page);
 			$nc = Page::getByID($this->page->getCollectionID(), 'ACTIVE');
 			$r->outputJSON();
+
+            if ($this->request->request->get('sitemap')
+                && $this->permissions->canApprovePageVersions()
+                && Config::get('concrete.misc.sitemap_approve_immediately')) {
+
+                $pkr = new ApprovePageRequest();
+                $u = new User();
+                $pkr->setRequestedPage($this->page);
+                $v = Version::get($this->page, "RECENT");
+                $pkr->setRequestedVersionID($v->getVersionID());
+                $pkr->setRequesterUserID($u->getUserID());
+                $response = $pkr->trigger();
+                $u->unloadCollectionEdit();
+            }
+
 		}
 	}
 

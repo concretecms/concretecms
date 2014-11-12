@@ -25,6 +25,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		</div>
 	<?php } ?>
 
+        <? if (isset($sitemap) && $sitemap) { ?>
+            <input type="hidden" name="sitemap" value="1" />
+        <? } ?>
+
 	</form>
 	<div class="ccm-panel-detail-form-actions dialog-buttons">
 		<button class="pull-left btn btn-default" type="button" data-dialog-action="cancel" data-panel-detail-action="cancel"><?=t('Cancel')?></button>

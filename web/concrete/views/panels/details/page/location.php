@@ -47,6 +47,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 
 	<? } ?>
+        <? if (isset($sitemap) && $sitemap) { ?>
+            <input type="hidden" name="sitemap" value="1" />
+        <? } ?>
 
 	</form>
 	<div class="ccm-panel-detail-form-actions dialog-buttons">

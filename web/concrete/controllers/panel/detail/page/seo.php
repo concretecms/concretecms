@@ -1,13 +1,17 @@
 <?
 namespace Concrete\Controller\Panel\Detail\Page;
 use \Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
+use Concrete\Core\Workflow\Request\ApprovePageRequest;
 use PageEditResponse;
 use \Concrete\Core\Attribute\Set as AttributeSet;
 use PermissionKey;
+use User;
+use Concrete\Core\Page\Collection\Version;
 
 class Seo extends BackendInterfacePageController {
 
 	protected $viewPath = '/panels/details/page/seo';
+    protected $controllerActionPath = '/ccm/system/panels/details/page/seo';
 
 	protected function canAccess() {
 		return $this->permissions->canEditPageContents() || $this->asl->allowEditPaths();
@@ -41,11 +45,27 @@ class Seo extends BackendInterfacePageController {
 			foreach($attributes as $ak) {
 				$ak->saveAttributeForm($nvc);
 			}
+
+            if ($this->request->request->get('sitemap')
+                && $this->permissions->canApprovePageVersions()
+                && Config::get('concrete.misc.sitemap_approve_immediately')) {
+
+                $pkr = new ApprovePageRequest();
+                $u = new User();
+                $pkr->setRequestedPage($this->page);
+                $v = Version::get($this->page, "RECENT");
+                $pkr->setRequestedVersionID($v->getVersionID());
+                $pkr->setRequesterUserID($u->getUserID());
+                $response = $pkr->trigger();
+                $u->unloadCollectionEdit();
+            }
+
 			$r = new PageEditResponse($e);
 			$r->setPage($this->page);
 			$r->setTitle(t('Page Updated'));
 			$r->setMessage(t('The SEO information has been saved.'));
 			$r->outputJSON();
+
 		}
 		exit;
 	}
