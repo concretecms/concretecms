@@ -174,6 +174,8 @@ return array(
         "/ccm/system/dialogs/page/design/css/submit"                                    => array('\Concrete\Controller\Dialog\Page\Design\Css::submit'),
         "/ccm/system/dialogs/page/search"                                               => array('\Concrete\Controller\Dialog\Page\Search::view'),
         "/ccm/system/dialogs/page/attributes"                                           => array('\Concrete\Controller\Dialog\Page\Attributes::view'),
+        "/ccm/system/dialogs/page/seo"                                                  => array('\Concrete\Controller\Dialog\Page\Seo::view'),
+        "/ccm/system/dialogs/page/location"                                             => array('\Concrete\Controller\Dialog\Page\Location::view'),
         "/ccm/system/dialogs/user/bulk/properties"                                      => array('\Concrete\Controller\Dialog\User\Bulk\Properties::view'),
         "/ccm/system/dialogs/user/bulk/properties/update_attribute"                     => array('\Concrete\Controller\Dialog\User\Bulk\Properties::updateAttribute'),
         "/ccm/system/dialogs/user/bulk/properties/clear_attribute"                      => array('\Concrete\Controller\Dialog\User\Bulk\Properties::clearAttribute'),
