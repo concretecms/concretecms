@@ -3,10 +3,13 @@ namespace Concrete\Controller\Panel\Detail\Page;
 
 use \Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
 use Concrete\Core\Http\ResponseAssetGroup;
+use Concrete\Core\Workflow\Request\ApprovePageRequest;
 use PageEditResponse;
 use PermissionKey;
 use stdClass;
 use Loader;
+use User;
+use Concrete\Core\Page\Collection\Version\Version;
 use CollectionAttributeKey;
 use \Concrete\Core\Attribute\View as AttributeTypeView;
 
@@ -121,6 +124,20 @@ class Attributes extends BackendInterfacePageController
                     $ak = CollectionAttributeKey::getByID($akID);
                     $ak->saveAttributeForm($nvc);
                 }
+            }
+
+            if ($this->request->request->get('sitemap')
+                && $this->permissions->canApprovePageVersions()
+                && \Config::get('concrete.misc.sitemap_approve_immediately')) {
+
+                $pkr = new ApprovePageRequest();
+                $u = new User();
+                $pkr->setRequestedPage($this->page);
+                $v = Version::get($this->page, "RECENT");
+                $pkr->setRequestedVersionID($v->getVersionID());
+                $pkr->setRequesterUserID($u->getUserID());
+                $response = $pkr->trigger();
+                $u->unloadCollectionEdit();
             }
 
             $r = new PageEditResponse();

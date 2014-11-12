@@ -5,13 +5,14 @@ use Concrete\Core\Workflow\Request\ApprovePageRequest;
 use PageEditResponse;
 use \Concrete\Core\Attribute\Set as AttributeSet;
 use PermissionKey;
+use Concrete\Core\Page\Collection\Version\Version;
 use User;
-use Concrete\Core\Page\Collection\Version;
 
 class Seo extends BackendInterfacePageController {
 
 	protected $viewPath = '/panels/details/page/seo';
     protected $controllerActionPath = '/ccm/system/panels/details/page/seo';
+    protected $validationToken = '/panels/details/page/seo';
 
 	protected function canAccess() {
 		return $this->permissions->canEditPageContents() || $this->asl->allowEditPaths();
@@ -29,6 +30,7 @@ class Seo extends BackendInterfacePageController {
 		$attributes = $as->getAttributeKeys();
 		$this->set('attributes', $attributes);
 		$this->set('allowEditPaths', $this->asl->allowEditPaths());
+		$this->set('allowEditName', $this->asl->allowEditName());
 	}
 
 	public function submit() {
@@ -40,6 +42,11 @@ class Seo extends BackendInterfacePageController {
 				$nvc->update($data);
 			}
 
+			if ($this->asl->allowEditName()) {
+				$data = array('cName' => $_POST['cName']);
+				$nvc->update($data);
+			}
+
 			$as = AttributeSet::getByHandle('seo');
 			$attributes = $as->getAttributeKeys();
 			foreach($attributes as $ak) {
@@ -48,7 +55,7 @@ class Seo extends BackendInterfacePageController {
 
             if ($this->request->request->get('sitemap')
                 && $this->permissions->canApprovePageVersions()
-                && Config::get('concrete.misc.sitemap_approve_immediately')) {
+                && \Config::get('concrete.misc.sitemap_approve_immediately')) {
 
                 $pkr = new ApprovePageRequest();
                 $u = new User();
@@ -67,7 +74,6 @@ class Seo extends BackendInterfacePageController {
 			$r->outputJSON();
 
 		}
-		exit;
 	}
 
 }
