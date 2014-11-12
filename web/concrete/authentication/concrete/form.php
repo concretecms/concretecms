@@ -16,7 +16,7 @@ $form = Loader::helper('form');
     <div class="form-group">
         <label>&nbsp;</label>
         <input name="uPassword" class="form-control" type="password"
-               placeholder="<?=t(Password)?>" />
+               placeholder="<?=t('Password')?>" />
     </div>
 
     <div class="checkbox">
