@@ -42,6 +42,18 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
     {
         return $this->ptName;
     }
+    
+    public function getPageTypeDisplayName($format = 'html')
+    {
+        $value = t($this->getPageTypeName());
+        switch ($format) {
+            case 'html':
+                return h($value);
+            case 'text':
+            default:
+                return $value;
+        }
+    }
 
     public function getPageTypeHandle()
     {

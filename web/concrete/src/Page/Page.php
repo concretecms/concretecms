@@ -1028,7 +1028,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             $this->pageType = $this->getPageTypeObject();
         }
         if (is_object($this->pageType)) {
-            return $this->pageType->getPageTypeName();
+            return $this->pageType->getPageTypeDisplayName();
         }
     }
 
