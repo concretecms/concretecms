@@ -98,7 +98,7 @@
                 '<% } else if (item.isInTrash) { %>' +
                 '<li><a data-action="delete-forever" href="javascript:void(0)">' + ccmi18n_sitemap.deletePageForever + '</a></li>' +
                 '<% } else if (item.cAlias == \'LINK\' || item.cAlias == \'POINTER\') { %>' +
-                '<li><a onclick="window.location.href=\'' + CCM_DISPATCHER_FILENAME + '?cID=<%=item.cID%>\'" href="javascript:void(0)">' + ccmi18n_sitemap.visitExternalLink + '</a></li>' +
+                '<li><a href="<%=item.link%>">' + ccmi18n_sitemap.visitExternalLink + '</a></li>' +
                 '<% if (item.cAlias == \'LINK\' && item.canEditPageProperties) { %>' +
                 '<li><a class="dialog-launch" dialog-width="350" dialog-height="260" dialog-title="' + ccmi18n_sitemap.editExternalLink + '" dialog-modal="false" dialog-append-buttons="true" href="' + CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/edit_external?cID=<%=item.cID%>">' + ccmi18n_sitemap.editExternalLink + '</a></li>' +
                 '<% } %>' +
@@ -106,14 +106,14 @@
                 '<li><a class="dialog-launch" dialog-width="360" dialog-height="150" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.deleteExternalLink + '" href="' + CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/delete_alias?cID=<%=item.cID%>">' + ccmi18n_sitemap.deleteExternalLink + '</a></li>' +
                 '<% } %>' +
                 '<% } else { %>' +
-                '<li><a href="#" data-action="visit">' + ccmi18n_sitemap.visitPage + '</a></li>' +
+                '<li><a href="<%=item.link%>">' + ccmi18n_sitemap.visitPage + '</a></li>' +
                 '<% if (item.canEditPageProperties || item.canEditPageSpeedSettings || item.canEditPagePermissions || item.canEditPageDesign || item.canViewPageVersions || item.canDeletePage) { %>' +
                 '<li class="divider"></li>' +
                 '<% } %>' +
                 '<% if (item.canEditPageProperties) { %>' +
-                '<li><a class="dialog-launch" dialog-on-close="ConcreteSitemap.exitEditMode(<%=item.cID%>)" dialog-width="640" dialog-height="360" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.seo + '" href="' + CCM_DISPATCHER_FILENAME + '/ccm/system/panels/details/page/seo?cID=<%=item.cID%>">' + ccmi18n_sitemap.seo + '</a></li>' +
+                '<li><a class="dialog-launch" dialog-on-close="ConcreteSitemap.exitEditMode(<%=item.cID%>)" dialog-width="640" dialog-height="360" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.seo + '" href="' + CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/seo?cID=<%=item.cID%>">' + ccmi18n_sitemap.seo + '</a></li>' +
                 '<% if (item.cID > 1) { %>' +
-                '<li><a class="dialog-launch" dialog-on-close="ConcreteSitemap.exitEditMode(<%=item.cID%>)" dialog-width="500" dialog-height="500" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.pageLocationTitle + '" href="' + CCM_DISPATCHER_FILENAME + '/ccm/system/panels/details/page/location?cID=<%=item.cID%>">' + ccmi18n_sitemap.pageLocation + '</a></li>' +
+                '<li><a class="dialog-launch" dialog-on-close="ConcreteSitemap.exitEditMode(<%=item.cID%>)" dialog-width="500" dialog-height="500" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.pageLocationTitle + '" href="' + CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/location?cID=<%=item.cID%>">' + ccmi18n_sitemap.pageLocation + '</a></li>' +
                 '<% } %>' +
                 '<li class="divider"></li>' +
                 '<li><a class="dialog-launch" dialog-on-close="ConcreteSitemap.exitEditMode(<%=item.cID%>)" dialog-width="90%" dialog-height="70%" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.pageAttributesTitle + '" href="' + CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/attributes?cID=<%=item.cID%>">' + ccmi18n_sitemap.pageAttributes + '</a></li>' +

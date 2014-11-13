@@ -363,13 +363,6 @@ $(function() {
 	</td>
 	<td><? if (!$jsonTest) { ?><i class="fa fa-question-circle launch-tooltip" title="<?=t('You must enable PHP\'s JSON support. This should be enabled by default in PHP 5.2 and above.')?>"></i><? } ?></td>
 </tr>
-
-<tr>
-    <td><? if ($finfoTest) { ?><i class="fa fa-check"></i><? } else { ?><i class="fa fa-exclamation-circle"></i><? } ?></td>
-    <td width="100%"><?=t('File Info Extension')?></td>
-    <td><? if (!$finfoTest) { ?><i class="fa fa-question-circle launch-tooltip" title="<?=t('You must enable PHP\'s Fileinfo Extension.')?>"></i><? } ?></td>
-</tr>
-
 <tr>
     <td><? if ($aspTagsTest) { ?><i class="fa fa-check"></i><? } else { ?><i class="fa fa-exclamation-circle"></i><? } ?></td>
     <td width="100%"><?=t('ASP Style Tags Disabled')?></td>
@@ -440,7 +433,7 @@ $(function() {
 	<td><? if ($remoteFileUploadTest) { ?><i class="fa fa-check"></i><? } else { ?><i class="fa fa-warning"></i><? } ?></td>
 	<td width="100%"><?=t('Remote File Importing Available')?>
 	</td>
-	<td><? if (!$remoteFileUploadTest) { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/tooltip.png" class="launch-tooltip" title="<?=t('Remote file importing through the file manager requires the iconv PHP extension.')?>" /><? } ?></td>
+	<td><? if (!$remoteFileUploadTest) { ?><i class="fa fa-question-circle launch-tooltip" title="<?=t('Remote file importing through the file manager requires the iconv PHP extension.')?>"></i><? } ?></td>
 </tr>
 </table>
 
@@ -454,7 +447,7 @@ $(function() {
             <td><? if ($fileZipTest) { ?><i class="fa fa-check"></i><? } else { ?><i class="fa fa-warning"></i><? } ?></td>
             <td width="100%"><?=t('Zip Support')?>
             </td>
-            <td><? if (!fileZipTest) { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/tooltip.png" class="launch-tooltip" title="<?=t('Downloading zipped files from the file manager and remote updating requires the Zip extension.')?>" /><? } ?></td>
+            <td><? if (!$fileZipTest) { ?><i class="fa fa-question-circle launch-tooltip" title="<?=t('Downloading zipped files from the file manager, remote updating and marketplace integration requires the Zip extension.')?>"></i><? } ?></td>
         </tr>
     </table>
 
@@ -520,7 +513,8 @@ $(function() {
 	<?=t('There are problems with your installation environment. Please correct them and click the button below to re-run the pre-installation tests.')?>
     <br/><br/>
 	<form method="post" action="<?=$view->url('/install')?>">
-	<button class="btn btn-default" type="submit"><?=t('Run Tests')?> <i class="fa fa-refresh"></i></button>
+    	<input type="hidden" name="locale" value="<?=$locale?>" />
+    	<button class="btn btn-default" type="submit"><?=t('Run Tests')?> <i class="fa fa-refresh"></i></button>
 	</form>
 </div>
 

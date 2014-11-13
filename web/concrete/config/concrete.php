@@ -7,9 +7,9 @@ return array(
      *
      * @var string
      */
-    'version'           => '5.7.2',
-    'version_installed' => '5.7.2',
-    'version_db' => '20141024000000', // the key of the latest database migration - corresponds to 5.7.2
+    'version'           => '5.7.2.1',
+    'version_installed' => '5.7.2.1',
+    'version_db' => '20141113000000', // the key of the latest database migration - corresponds to 5.7.2.1
 
     /**
      * Installation status
@@ -200,7 +200,9 @@ return array(
                     array(
                         'class' => '\Stash\Driver\FileSystem',
                         'options' => array(
-                            'path' => DIR_FILES_UPLOADED_STANDARD . '/cache'
+                            'path' => DIR_FILES_UPLOADED_STANDARD . '/cache',
+                            'dirPermissions' => DIRECTORY_PERMISSIONS_MODE_COMPUTED,
+                            'filePermissions' => FILE_PERMISSIONS_MODE_COMPUTED
                         )
                     ),
                 )
@@ -271,6 +273,14 @@ return array(
 
         'enable_scheduling' => true
 
+    ),
+
+    'filesystem'        => array(
+
+        'permissions'   => array(
+            'file' => FILE_PERMISSIONS_MODE_COMPUTED,
+            'directory' => DIRECTORY_PERMISSIONS_MODE_COMPUTED
+        )
     ),
 
     /**

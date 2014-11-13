@@ -71,6 +71,7 @@ abstract class MarketplaceDashboardPageController extends DashboardPageControlle
             switch($this->request->query->get('ccm_order_by')) {
                 case 'rating':
                 case 'skill_level':
+                case 'recent':
                     $mri->sortBy($this->request->query->get('ccm_order_by'));
                     $this->set('sort', $this->request->query->get('ccm_order_by'));
                     break;
@@ -79,8 +80,8 @@ abstract class MarketplaceDashboardPageController extends DashboardPageControlle
                     $this->set('sort', 'price');
                     break;
                 default:
-                    $mri->sortBy('recent');
-                    $this->set('sort', 'recent');
+                    $mri->sortBy('popularity');
+                    $this->set('sort', 'popularity');
                     break;
             }
 

@@ -230,15 +230,6 @@ $loc = Localization::getInstance();
 $loc->setLocale($lan);
 
 /**
- * ----------------------------------------------------------------------------
- * Redirect user based on their trailing or non-trailing slash. Must come after
- * preferences because we use the pretty URLs preference.
- * ----------------------------------------------------------------------------
- */
-$cms->handleBaseURLRedirection();
-$cms->handleURLSlashes();
-
-/**
  * Handle automatic updating
  */
 $cms->handleAutomaticUpdates();

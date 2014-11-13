@@ -204,8 +204,8 @@ class StartingPointPackage extends BasePackage {
 
         $db->Execute('alter table PagePaths add index (`cPath` (255))');
         $db->Execute('alter table Groups add index (`gPath` (255))');
-        $db->Execute('CREATE INDEX ipFrom ON SignupRequests (ipFrom(32))');
-        $db->Execute('CREATE UNIQUE INDEX ips ON UserBannedIPs (ipFrom(32), ipTo(32))');
+        $db->Execute('alter table SignupRequests add index (`ipFrom` (32))');
+        $db->Execute('alter table UserBannedIPs add unique index (ipFrom (32), ipTo(32))');
         $db->Execute(
             'alter table QueueMessages add FOREIGN KEY (`queue_id`) REFERENCES `Queues` (`queue_id`) ON DELETE CASCADE ON UPDATE CASCADE'
         );
@@ -256,13 +256,13 @@ class StartingPointPackage extends BasePackage {
         Core::make('cache')->flush();
 
         if (!is_dir(Config::get('concrete.cache.directory'))) {
-            mkdir(Config::get('concrete.cache.directory'), DIRECTORY_PERMISSIONS_MODE);
-            chmod(Config::get('concrete.cache.directory'), DIRECTORY_PERMISSIONS_MODE);
+            mkdir(Config::get('concrete.cache.directory'), Config::get('concrete.filesystem.permissions.directory'));
+            chmod(Config::get('concrete.cache.directory'), Config::get('concrete.filesystem.permissions.directory'));
         }
 
         if (!is_dir(DIR_FILES_UPLOADED_STANDARD . REL_DIR_FILES_INCOMING)) {
-			mkdir(DIR_FILES_UPLOADED_STANDARD . REL_DIR_FILES_INCOMING, DIRECTORY_PERMISSIONS_MODE);
-			chmod(DIR_FILES_UPLOADED_STANDARD . REL_DIR_FILES_INCOMING, DIRECTORY_PERMISSIONS_MODE);
+			mkdir(DIR_FILES_UPLOADED_STANDARD . REL_DIR_FILES_INCOMING, Config::get('concrete.filesystem.permissions.directory'));
+			chmod(DIR_FILES_UPLOADED_STANDARD . REL_DIR_FILES_INCOMING, Config::get('concrete.filesystem.permissions.directory'));
 		}
 
 	}
@@ -280,13 +280,13 @@ class StartingPointPackage extends BasePackage {
 
         @unlink(DIR_CONFIG_SITE . '/database.php');
         file_put_contents(DIR_CONFIG_SITE . '/database.php', $renderer->render());
-        @chmod(DIR_CONFIG_SITE . '/database.php', FILE_PERMISSIONS_MODE);
+        @chmod(DIR_CONFIG_SITE . '/database.php', Config::get('concrete.filesystem.permissions.file'));
 
         $renderer = new Renderer($site_install);
 
         @unlink(DIR_CONFIG_SITE . '/app.php');
         file_put_contents(DIR_CONFIG_SITE . '/app.php', $renderer->render());
-        @chmod(DIR_CONFIG_SITE . '/app.php', FILE_PERMISSIONS_MODE);
+        @chmod(DIR_CONFIG_SITE . '/app.php', Config::get('concrete.filesystem.permissions.file'));
 
 
         @unlink(DIR_CONFIG_SITE . '/site_install.php');

@@ -189,7 +189,6 @@ class Install extends Controller
         $this->set('jsonTest', extension_loaded('json'));
         $this->set('xmlTest', function_exists('xml_parse') && function_exists('simplexml_load_file'));
         $this->set('fileWriteTest', $this->testFileWritePermissions());
-        $this->set('finfoTest', function_exists('finfo_open'));
         $this->set('aspTagsTest', ini_get('asp_tags') == false);
         $rf = new \ReflectionObject($this);
         $rp = $rf->getProperty('docCommentCanary');
@@ -254,9 +253,9 @@ class Install extends Controller
 
     public function passedRequiredItems()
     {
-        if ($this->get('imageTest') && $this->get('mysqlTest') && $this->get('fileWriteTest') && $this->get(
-                'xmlTest') && $this->get('phpVtest') && $this->get('i18nTest') && $this->get('finfoTest')
-            && $this->get('memoryTest') !== -1 && $this->get('docCommentTest') && $this->get('aspTagsTest')
+        if ($this->get('imageTest') && $this->get('mysqlTest') && $this->get('fileWriteTest') &&
+            $this->get('xmlTest') && $this->get('phpVtest') && $this->get('i18nTest') &&
+            $this->get('memoryTest') !== -1 && $this->get('docCommentTest') && $this->get('aspTagsTest')
         ) {
             return true;
         }

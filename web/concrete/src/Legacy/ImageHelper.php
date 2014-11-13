@@ -57,19 +57,20 @@ class ImageHelper
         } else {
             $image = Image::open($mixed);
         }
-        if ($height < 1) {
-            $height = 1;
-        }
-        if ($width < 1) {
-            $width = 1;
-        }
-
         if ($fit) {
             return $image->thumbnail(new Box($width, $height), ImageInterface::THUMBNAIL_OUTBOUND)->save($newPath);
+
         } else {
-            return $image->thumbnail(new Box($width, $height))->save($newPath);
+
+            if ($height < 1) {
+                $image->thumbnail($image->getSize()->widen($width))->save($newPath);
+            } else if ($width < 1) {
+                $image->thumbnail($image->getSize()->heighten($height))->save($newPath);
+            } else {
+                $image->thumbnail(new Box($width, $height))->save($newPath);
+            }
         }
-    }
+     }
 
     /**
      * Deprecated
@@ -90,11 +91,11 @@ class ImageHelper
             $fr = $obj->getFileResource();
             $image = \Image::load($fr->read());
             $fID = $obj->getFileID();
-            $filename = md5(implode(':', array($fID, $maxWidth, $maxHeight, $fr->getTimestamp())))
+            $filename = md5(implode(':', array($fID, $maxWidth, $maxHeight, $crop, $fr->getTimestamp())))
                 . '.' . $fh->getExtension($fr->getPath());
         } else {
             $image = \Image::open($obj);
-            $filename = md5(implode(':', array($obj, $maxWidth, $maxHeight, filemtime($obj))))
+            $filename = md5(implode(':', array($obj, $maxWidth, $maxHeight, $crop, filemtime($obj))))
                 . '.' . $fh->getExtension($obj);
         }
 

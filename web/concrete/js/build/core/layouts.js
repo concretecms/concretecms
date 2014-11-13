@@ -22,7 +22,8 @@
             'btncancel': '#ccm-layouts-cancel-button',
             'editing': false,
             'supportsgrid': false,
-            'gridrowtmpid': 'ccm-theme-grid-temp'
+            'gridrowtmpid': 'ccm-theme-grid-temp',
+            'additionalGridColumnClasses': ''
         }, options);
 
         this.$element = $(element);
@@ -356,7 +357,7 @@
     ConcreteLayout.prototype._getThemeGridColumnSpan = function (totalColumns) {
         var rowspan = Math.ceil(this.maxcolumns / totalColumns);
         // create the starting array
-        var spanArray = [];
+        var spanArray = [], i;
         for (i = 0; i < totalColumns; i++) {
             spanArray[i] = rowspan;
         }
@@ -370,6 +371,9 @@
         for (i = 0; i < spanArray.length; i++) {
             cssclasses[i] = {};
             cssclasses[i].cssClass = this.options.gridColumnClasses[spanArray[i] - 1];
+            if (this.options.additionalGridColumnClasses) {
+                cssclasses[i].cssClass = cssclasses[i].cssClass + ' ' + this.options.additionalGridColumnClasses;
+            }
             cssclasses[i].value = spanArray[i];
         }
         return cssclasses;
@@ -407,6 +411,7 @@
                 breaks.push(Math.floor($column.position().left));
                 breaks.push(Math.floor($column.width()) + Math.floor($column.position().left));
             }
+
         }
 
         // set the valid widths
@@ -426,7 +431,11 @@
         var test_container_div = $('<div />', {'id': obj.options.gridrowtmpid}).appendTo(test_container);
         var columnHTML = '';
         for (i = 1; i <= maxColumns; i++) {
-            columnHTML += '<div class="' + minColumnClass + '"></div>'
+            if (obj.options.additionalGridColumnClasses) {
+                columnHTML += '<div class="' + minColumnClass + ' ' + obj.options.additionalGridColumnClasses + '"><br><br></div>'
+            } else {
+                columnHTML += '<div class="' + minColumnClass + '"><br><br></div>'
+            }
         }
 
 
@@ -438,7 +447,7 @@
             $(grid_elem)
         );
         var marginModifier = 0;
-        for (i = 0; i < maxColumns; i++) {
+        for (var i = 0; i < maxColumns; i++) {
             var $column = test_container_div.find('.' + minColumnClass).eq(i);
             if (i == 0) {
                 var pl = $column.position().left;
@@ -508,7 +517,7 @@
                 if (proceed) {
                     obj.$slider.slider('values', index, newValue);
                     if ((index % 2) == 0) {
-                        var i = Math.floor(index / 2);
+                        i = Math.floor(index / 2);
                         // we are a righthand handle
                         $innercolumn = $('#ccm-edit-layout-column-' + i);
                         var span = parseInt($innercolumn.attr('data-span'));
@@ -565,14 +574,21 @@
             if ($col.attr('data-span')) {
                 var spandex = parseInt($col.attr('data-span')) - 1;
                 $col.addClass(obj.options.gridColumnClasses[spandex]);
+                if (obj.options.additionalGridColumnClasses) {
+                    $col.addClass(obj.options.additionalGridColumnClasses);
+                }
                 // change the span value inside
-                $('#ccm-edit-layout-column-span-' + i).val(parseInt($col.attr('data-span')));
             }
-            if ($col.attr('data-offset')) {
+            if (parseInt($col.attr('data-offset')) > 0) {
                 var offdex = parseInt($col.attr('data-offset')) - 1;
-                $('<div />', {'data-offset-column': true}).addClass('ccm-theme-grid-offset-column').addClass(obj.options.gridColumnClasses[offdex]).insertBefore($col);
-                $('#ccm-edit-layout-column-offset-' + i).val(parseInt($col.attr('data-offset')));
+                var offsetColumnClass = obj.options.gridColumnClasses[offdex] + ' ccm-theme-grid-offset-column';
+                if (obj.options.additionalGridColumnOffsetClasses) {
+                    offsetColumnClass = offsetColumnClass + ' ' + obj.options.additionalGridColumnOffsetClasses;
+                }
+                $('<div />', {'data-offset-column': true}).html('&nbsp;').addClass(offsetColumnClass).insertBefore($col);
             }
+            $('#ccm-edit-layout-column-offset-' + i).val(parseInt($col.attr('data-offset')));
+            $('#ccm-edit-layout-column-span-' + i).val(parseInt($col.attr('data-span')));
             $col.addClass('ccm-theme-grid-column');
             if (obj.options.editing) {
                 $col.addClass('ccm-theme-grid-column-edit-mode');
@@ -588,7 +604,8 @@
         var breaks = [],
             sw = 0,
             tw = this.$slider.width(),
-            $columns = this.$element.find('.ccm-layout-column');
+            $columns = this.$element.find('.ccm-layout-column'),
+            i;
 
         if (this.columnwidths.length > 0) {
             // we have custom column widths
@@ -616,14 +633,14 @@
                 var breakwidths = [];
 
                 $.each($columns, function (i, col) {
-                    var bw = breaks[i];
+                    var bw = breaks[i], value;
                     if ((i + 1) == $columns.length) {
                         // last column
-                        var value = tw - createoffset;
+                        value = tw - createoffset;
                     } else {
-                        var value = bw - createoffset;
+                        value = bw - createoffset;
                     }
-                    var value = Math.floor(value);
+                    value = Math.floor(value);
                     $(col).find('#ccm-edit-layout-column-width-' + i).val(value);
                     createoffset = bw;
                 });

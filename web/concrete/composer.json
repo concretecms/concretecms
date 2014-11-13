@@ -2,7 +2,11 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/mlocati/zendframework2-i18n"
+            "url": "https://github.com/mlocati/zendframework2-i18n-v2"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/concrete5/flysystem"
         }
     ],
     "config": {
@@ -17,7 +21,7 @@
         "symfony/http-kernel": "2.5.*",
         "doctrine/orm": "2.4.*",
         "doctrine/migrations": "1.0.*@dev",
-        "league/flysystem": "0.4.*",
+        "concrete5/flysystem": "0.4.*",
         "symfony/event-dispatcher": "2.5.*",
         "symfony/serializer": "2.5.*",
         "illuminate/container": "4.1.*",

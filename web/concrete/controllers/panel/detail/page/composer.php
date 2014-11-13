@@ -58,7 +58,8 @@ class Composer extends BackendInterfacePageController {
 		} else {
             $target = \Page::getByID($c->getPageDraftTargetParentPageID());
             $ppc = new \Permissions($target);
-            if (!$ppc->canAddSubCollection($target)) {
+            $pagetype = $c->getPageTypeObject();
+            if (!$ppc->canAddSubCollection($pagetype)) {
                 $e->add(t('You do not have permission to publish a page in this location.'));
             }
         }

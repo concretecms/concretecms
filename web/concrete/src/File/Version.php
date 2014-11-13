@@ -5,8 +5,8 @@ use Carbon\Carbon;
 use Concrete\Core\File\Image\Thumbnail\Thumbnail;
 use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use Concrete\Core\File\Image\Thumbnail\Type\Version as ThumbnailTypeVersion;
-use League\Flysystem\AdapterInterface;
-use League\Flysystem\FileNotFoundException;
+use Concrete\Flysystem\AdapterInterface;
+use Concrete\Flysystem\FileNotFoundException;
 use Loader;
 use \File as ConcreteFile;
 use \Concrete\Core\File\Type\TypeList as FileTypeList;
@@ -85,12 +85,12 @@ class Version
      * @Column(type="string")
      */
     protected $fvTitle = null;
-    
+
     /**
      * @Column(type="text")
      */
     protected $fvDescription = null;
-    
+
     /**
      * @Column(type="string")
      */
@@ -614,7 +614,7 @@ class Version
 
     /**
      * Returns an abstracted File object for the resource. NOT a concrete5 file object.
-     * @return \League\Flysystem\File
+     * @return \Concrete\Flysystem\File
      */
     public function getFileResource()
     {

@@ -8,6 +8,8 @@ $pk = PermissionKey::getByHandle('customize_themes');
     <form data-form="panel-page-design-customize" target="ccm-page-preview-frame" method="post" action="<?=$controller->action("preview", $theme->getThemeID())?>">
     <header><a href="" data-panel-navigation="back" class="ccm-panel-back"><span class="fa fa-chevron-left"></span></a> <a href="" data-panel-navigation="back"><?=t('Customize Theme')?></a></header>
 
+    <? if (count($presets) > 1) { ?>
+
     <div class="ccm-panel-content-inner">
 
     <div class="list-group" data-panel-menu-id="page-design-presets"  data-panel-menu="collapsible-list-group">
@@ -35,6 +37,8 @@ $pk = PermissionKey::getByHandle('customize_themes');
     </div>
 
     </div>
+
+    <? } ?>
 
     <?
     // output basic values –these are ones we don't have any

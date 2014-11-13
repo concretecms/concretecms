@@ -203,6 +203,7 @@ var ccmi18n_filemanager = {
     rescan: "<?=t('Rescan')?>",
     pending: "<?=t('Pending')?>",
     uploadComplete: "<?=t('Upload Complete')?>",
+    uploadFailed: "<?=t('One or more files failed to upload')?>",
     uploadProgress: "<?=t('Upload Progress')?>",
 
     PTYPE_CUSTOM: "<?//=FilePermissions::PTYPE_CUSTOM?>",

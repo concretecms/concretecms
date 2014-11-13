@@ -148,7 +148,7 @@ if ($showMenu) {
                                     <li><a href="javascript:void(0)" data-menu-action="edit_inline" data-area-enable-grid-container="<?=$a->isGridContainerEnabled()?>" data-area-grid-maximum-columns="<?=$a->getAreaGridMaximumColumns()?>"><?=t("Edit Block")?></a></li>
                                 <? } ?>
                             <? } else { ?>
-                                <li><a data-menu-action="block_dialog" data-menu-href="<?=URL::to('/ccm/system/dialogs/block/edit')?>" dialog-title="<?=t('Edit %s', $btOriginal->getBlockTypeName())?>" dialog-modal="false" dialog-width="<?=$btOriginal->getBlockTypeInterfaceWidth()?>" dialog-height="<?=$btOriginal->getBlockTypeInterfaceHeight() + $heightPlus?>" ><?=t("Edit Block")?></a></li>
+                                <li><a data-menu-action="block_dialog" data-menu-href="<?=URL::to('/ccm/system/dialogs/block/edit')?>" dialog-title="<?=t('Edit %s', t($btOriginal->getBlockTypeName()))?>" dialog-modal="false" dialog-width="<?=$btOriginal->getBlockTypeInterfaceWidth()?>" dialog-height="<?=$btOriginal->getBlockTypeInterfaceHeight() + $heightPlus?>" ><?=t("Edit Block")?></a></li>
                             <? } ?>
 
                         <? } ?>
