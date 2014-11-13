@@ -20,7 +20,7 @@ class PageController extends Controller {
         return $this->supportsPageCache;
     }
 
-    public function __construct(Page $c) {
+    public function __construct(\Concrete\Core\Page\Page $c) {
         parent::__construct();
         $this->c = $c;
         $this->view = new PageView($this->c);

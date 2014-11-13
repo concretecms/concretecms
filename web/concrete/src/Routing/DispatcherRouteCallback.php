@@ -121,6 +121,12 @@ class DispatcherRouteCallback extends RouteCallback
             }
         }
 
+        // Now that we've passed all permissions checks, and we have a page, we check to see if we
+        // ought to redirect based on base url or trailing slash settings
+        $cms = \Core::make("app");
+        $cms->handleBaseURLRedirection();
+        $cms->handleURLSlashes();
+
         $request->setCurrentPage($c);
         require(DIR_BASE_CORE . '/bootstrap/process.php');
         $u = new User();

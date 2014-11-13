@@ -39,6 +39,7 @@ $this->inc('elements/header.php'); ?>
     <h1><?=$heading?></h1>
     <div class="ccm-marketplace-sort">
         <nav>
+        <li><a href="<?=$list->getSortByURL('popularity')?>" <? if ($sort == 'popularity') { ?>class="active"<? } ?>><?=t('Most Popular')?></a></li>
         <li><a href="<?=$list->getSortByURL('recent')?>" <? if ($sort == 'recent') { ?>class="active"<? } ?>><?=t('Recent')?></a></li>
         <li><a href="<?=$list->getSortByURL('price')?>" <? if ($sort == 'price') { ?>class="active"<? } ?>><?=t('Price')?></a></li>
         <li><a href="<?=$list->getSortByURL('rating')?>" <? if ($sort == 'rating') { ?>class="active"<? } ?>><?=t('Rating')?></a></li>

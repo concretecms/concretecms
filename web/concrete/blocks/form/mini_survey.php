@@ -110,7 +110,7 @@ class MiniSurvey {
 
 		function deleteQuestion($qsID,$msqID){
 			$sql='DELETE FROM btFormQuestions WHERE questionSetId='.intval($qsID).' AND msqID='.intval($msqID).' AND bID=0';
-			$this->db->query($sql,$dataValues);
+			$this->db->query($sql);
 		}
 
 		function loadQuestions($qsID, $bID=0, $showPending=0 ){

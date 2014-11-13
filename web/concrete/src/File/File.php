@@ -6,7 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Util\Debug;
 use Doctrine\DBAL\Logging\EchoSQLLogger;
 use FileSet;
-use League\Flysystem\AdapterInterface;
+use Concrete\Flysystem\AdapterInterface;
 use Loader;
 use CacheLocal;
 use Core;
@@ -524,6 +524,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         // now from the DB
         $em = $db->getEntityManager();
         $em->remove($this);
+        $em->flush();
         $db->Execute("delete from FileSetFiles where fID = ?", array($this->fID));
         $db->Execute("delete from FileSearchIndexAttributes where fID = ?", array($this->fID));
         $db->Execute("delete from DownloadStatistics where fID = ?", array($this->fID));

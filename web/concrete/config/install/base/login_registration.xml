@@ -40,9 +40,8 @@
         <page name="Members" path="/members" filename="/members/view.php" pagetype="" description="" package="">
         </page>
         <page name="View Profile" path="/members/profile" filename="/members/profile.php" pagetype="" description="" package="" />
-        <!--
+
         <page name="Directory" path="/members/directory" filename="/members/directory.php" pagetype="" description="" package=""/>
-        //-->
 
         <page name="Page Not Found" path="/page_not_found" filename="/page_not_found.php" pagetype="" description="" package="" root="true" >
             <area name="Main"/>

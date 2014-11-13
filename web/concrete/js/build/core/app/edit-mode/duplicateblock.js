@@ -1,16 +1,19 @@
 (function (window, $, _, Concrete) {
     'use strict';
 
-
+    /**
+     * ClipBoard block used in panels
+     * @type {Function}
+     */
     var DuplicateBlock = Concrete.DuplicateBlock = function DuplicateBlock(elem, edit_mode) {
         this.init.apply(this, _.toArray(arguments));
     };
 
-    DuplicateBlock.prototype = _.extend(Object.create(Concrete.Block.prototype), {
+    DuplicateBlock.prototype = _.extend(Object.create(Concrete.BlockType.prototype), {
 
         init: function duplicateBlockInit(elem, edit_mode) {
             var my = this;
-            Concrete.Block.prototype.init.call(my, elem, edit_mode, elem.find('.block-content'));
+            Concrete.BlockType.prototype.init.call(my, elem, edit_mode, elem.find('.block-content'));
         },
 
         addToDragArea: function DuplicateBlockAddToDragArea(drag_area) {

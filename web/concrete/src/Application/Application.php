@@ -249,19 +249,9 @@ class Application extends Container
      */
     public function setupFilesystem()
     {
-        if (!defined('FILE_PERMISSIONS_MODE')) {
-            $perm = $this->make('helper/file')->getCreateFilePermissions()->file;
-            $perm ? define('FILE_PERMISSIONS_MODE', $perm) : define('FILE_PERMISSIONS_MODE', 0664);
-        }
-        if (!defined('DIRECTORY_PERMISSIONS_MODE')) {
-            $perm = $this->make('helper/file')->getCreateFilePermissions()->dir;
-            $perm ? define('DIRECTORY_PERMISSIONS_MODE', $perm) : define('DIRECTORY_PERMISSIONS_MODE', 0775);
-        }
         if (!is_dir(Config::get('concrete.cache.directory'))) {
-            @mkdir(Config::get('concrete.cache.directory'));
-            @chmod(Config::get('concrete.cache.directory'), DIRECTORY_PERMISSIONS_MODE);
-            @touch(Config::get('concrete.cache.directory') . '/index.html');
-            @chmod(Config::get('concrete.cache.directory') . '/index.html', FILE_PERMISSIONS_MODE);
+            mkdir(Config::get('concrete.cache.directory'), Config::get('concrete.filesystem.permissions.directory'));
+            touch(Config::get('concrete.cache.directory') . '/index.html', Config::get('concrete.filesystem.permissions.file'));
         }
     }
 
@@ -293,7 +283,7 @@ class Application extends Container
             if ($pathInfo != $redirect) {
                 $dispatcher = Config::get('concrete.seo.url_rewriting') ? '' : '/' . DISPATCHER_FILENAME;
                 Redirect::url(
-                        BASE_URL . DIR_REL . $dispatcher . '/' . $path . ($r->getQueryString(
+                        BASE_URL . DIR_REL . $dispatcher . $redirect . ($r->getQueryString(
                         ) ? '?' . $r->getQueryString() : '')
                 )->send();
             }
@@ -315,7 +305,7 @@ class Application extends Container
                 }
             }
 
-            $uri = $this->make('security')->sanitizeURL($_SERVER['REQUEST_URI']);
+            $uri = $this->make('helper/security')->sanitizeURL($_SERVER['REQUEST_URI']);
             if (strpos($uri, '%7E') !== false) {
                 $uri = str_replace('%7E', '~', $uri);
             }

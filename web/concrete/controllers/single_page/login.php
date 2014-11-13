@@ -245,6 +245,9 @@ class Login extends PageController
                 //should administrator be redirected to dashboard?  defaults to yes if not set.
                 $adminToDash = intval(Config::get('concrete.misc.login_admin_to_dashboard'));
                 if ($dbp->canRead() && $adminToDash) {
+                    if(!$rc instanceof Page || $rc->isError()){
+                        $rc = $dash;
+                    }
                     $rUrl = $navigation->getLinkToCollection($rc);
                     break;
                 }
@@ -360,18 +363,5 @@ class Login extends PageController
             Session::set('rcID', intval($cID));
         }
     }
-
-    /* @TODO this functionality needs to be ported to the concrete5 auth type
-     * // responsible for validating a user's email address
-     * public function v($hash = '') {
-     * $ui = UserInfo::getByValidationHash($hash);
-     * if (is_object($ui)) {
-     * $ui->markValidated();
-     * $this->set('uEmail', $ui->getUserEmail());
-     * $this->set('validated', true);
-     * }
-     * }
-
-     */
 
 }

@@ -10,7 +10,7 @@ $form = Loader::helper('form');
 	<? endif; ?>
 	<div class="controls">
 		<?
-		print $form->textarea($this->field('content'), $content, array(
+		print $form->textarea($view->field('content'), $content, array(
 			'class' => $class,
 			'style' => 'width: 580px; height: 380px'
 		));

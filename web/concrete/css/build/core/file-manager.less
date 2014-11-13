@@ -67,11 +67,11 @@ div#ccm-popover-menu-container {
     visibility: hidden;
 }
 
-.ccm-ui form.ccm-search-fields ul.ccm-search-form-advanced li#ccm-file-manager-upload {
+.ccm-ui form.ccm-search-fields ul.ccm-search-form-advanced li.ccm-file-manager-upload {
     display: none;
 }
 
-.ui-dialog-content form.ccm-search-fields ul.ccm-search-form-advanced li#ccm-file-manager-upload {
+.ui-dialog-content form.ccm-search-fields ul.ccm-search-form-advanced li.ccm-file-manager-upload {
     display: inline-block;
     position: relative;
     input[type=file] {
@@ -86,7 +86,7 @@ div#ccm-popover-menu-container {
     }
 }
 
-div#ccm-file-manager-upload {
+div#ccm-file-manager-upload-prompt {
     top: 30px;
     right: 10px;
     border: 1px solid #e1e1e1;
@@ -188,7 +188,7 @@ div.ccm-file-manager-image-thumbnail {
 
 
 @media (max-width: @screen-xs-max) {
-  div#ccm-file-manager-upload {
+  div#ccm-file-manager-upload-prompt {
     position: static;
   }
 }

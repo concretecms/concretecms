@@ -84,7 +84,7 @@ class Version571 extends AbstractMigration
         }
 
         /** delete customize page themes dashboard single page */
-        $customize = Page::getByPath('/dashboard/pages/themes/inspect');
+        $customize = Page::getByPath('/dashboard/pages/themes/customize');
         if (is_object($customize) && !$customize->isError()) {
             $customize->delete();
         }

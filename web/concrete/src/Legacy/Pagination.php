@@ -105,10 +105,6 @@ class Pagination {
 		return str_replace("%pageNum%",$this->current_page, $this->URL);
 	}
 
-	public function getQueryStringPagingVariable() {
-		return $this->queryStringPagingVariable;
-	}
-
 	public function getCurrentPage() {
 		return $this->current_page;
 	}

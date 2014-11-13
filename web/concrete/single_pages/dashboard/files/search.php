@@ -11,7 +11,7 @@ if ($fp->canAddFile() || $fp->canSearchFiles()) { ?>
 </div>
 
     <? if ($fp->canAddFile()) { ?>
-	<div id="ccm-file-manager-upload" class="ccm-file-manager-upload">
+	<div id="ccm-file-manager-upload-prompt" class="ccm-file-manager-upload">
         <?=t("<strong>Upload Files</strong> / Click to Choose or Drag &amp; Drop. / ")?>
         <a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/import"
            class="dialog-launch"

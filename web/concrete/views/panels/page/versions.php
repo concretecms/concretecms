@@ -112,6 +112,9 @@ var ConcretePageVersionList = {
 
 	previewSelectedVersions: function(checkboxes) {
 		var panel = ConcretePanelManager.getByIdentifier('page');
+        if (!panel) {
+            return;
+        }
 		if (checkboxes.length > 0) {
 			var src = '<?=URL::to("/ccm/system/panels/details/page/versions")?>';
 			var data = '';

@@ -24,14 +24,6 @@ class ItemList {
 		$this->enableStickySearchRequest = true;
 	}
 
-    public function __construct() {
-        $this->queryStringPagingVariable = \Config::get('concrete.seo.paging_string');
-    }
-
-	public function getQueryStringPagingVariable() {
-		return $this->queryStringPagingVariable;
-	}
-
 	public function getQueryStringSortVariable() {
 		return $this->queryStringSortVariable;
 	}
@@ -91,7 +83,15 @@ class ItemList {
 		$this->items = $items;
 	}
 
+    protected function loadQueryStringPagingVariable()
+    {
+        $this->queryStringPagingVariable = \Config::get('concrete.seo.paging_string');
+    }
+
 	public function setNameSpace($ns) {
+        if (!isset($this->queryStringPagingVariable)) {
+            $this->loadQueryStringPagingVariable();
+        }
 		$this->queryStringPagingVariable .= '_' . $ns;
 		$this->queryStringSortVariable .= '_' . $ns;
 		$this->queryStringSortDirectionVariable .= '_' . $ns;
@@ -132,6 +132,9 @@ class ItemList {
 		$this->currentPage = $page;
 		if ($page == false) {
 			$pagination = Loader::helper('pagination');
+            if (!isset($this->queryStringPagingVariable)) {
+                $this->loadQueryStringPagingVariable();
+            }
 			$pagination->queryStringPagingVariable = $this->queryStringPagingVariable;
 			$this->currentPage = $pagination->getRequestedPage();
 		}
@@ -210,6 +213,9 @@ class ItemList {
 		if (count($additionalVars) > 0) {
 			$pagination->setAdditionalQueryStringVariables($additionalVars);
 		}
+        if (!isset($this->queryStringPagingVariable)) {
+            $this->loadQueryStringPagingVariable();
+        }
 		$pagination->queryStringPagingVariable = $this->queryStringPagingVariable;
 		$pagination->init($this->currentPage, $this->getTotal(), $url, $this->itemsPerPage);
 		return $pagination;

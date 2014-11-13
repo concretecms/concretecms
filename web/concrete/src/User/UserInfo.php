@@ -6,7 +6,7 @@ use \Concrete\Core\Foundation\Object;
 use Concrete\Core\User\PrivateMessage\Limit;
 use Concrete\Core\User\PrivateMessage\Mailbox as UserPrivateMessageMailbox;
 use Imagine\Image\ImageInterface;
-use League\Flysystem\AdapterInterface;
+use Concrete\Flysystem\AdapterInterface;
 use Concrete\Core\Mail\Importer\MailImporter;
 use Loader;
 use View;

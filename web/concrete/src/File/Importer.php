@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\File;
 use Concrete\Core\File\StorageLocation\StorageLocation;
-use League\Flysystem\AdapterInterface;
+use Concrete\Flysystem\AdapterInterface;
 use Loader;
 use \File as ConcreteFile;
 use Core;

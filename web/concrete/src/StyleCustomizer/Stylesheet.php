@@ -53,7 +53,7 @@ class Stylesheet
         $css = $this->getCss();
         $path = dirname($this->getOutputPath());
         if (!file_exists($path)) {
-            @mkdir($path, DIRECTORY_PERMISSIONS_MODE, true);
+            @mkdir($path, Config::get('concrete.filesystem.permissions.directory'), true);
         }
         file_put_contents($this->getOutputPath(), $css);
     }

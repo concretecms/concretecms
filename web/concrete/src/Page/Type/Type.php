@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Page\Type;
 
+use Concrete\Core\Page\Template;
 use Concrete\Core\Page\Type\Composer\Control\CorePageProperty\NameCorePageProperty;
 use Loader;
 use \Concrete\Core\Foundation\Object;
@@ -41,6 +42,18 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
     public function getPageTypeName()
     {
         return $this->ptName;
+    }
+    
+    public function getPageTypeDisplayName($format = 'html')
+    {
+        $value = t($this->getPageTypeName());
+        switch ($format) {
+            case 'html':
+                return h($value);
+            case 'text':
+            default:
+                return $value;
+        }
     }
 
     public function getPageTypeHandle()
@@ -685,6 +698,28 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
             }
         }
         $this->rescanPageTypeComposerOutputControlObjects();
+        $this->rescanPageTypePageTemplateDefaultPages();
+    }
+
+    protected function rescanPageTypePageTemplateDefaultPages()
+    {
+        $db = Loader::db();
+        $templates = $this->getPageTypePageTemplateObjects();
+        $templateIDs = array();
+        foreach($templates as $template) {
+            $templateIDs[] = $template->getPageTemplateID();
+        }
+        $existingDefaultTemplateIDs = $db->GetCol('select pTemplateID from PageTypePageTemplateDefaultPages where ptID = ?', array($this->getPageTypeID()));
+        foreach($existingDefaultTemplateIDs as $existingPageTemplateID) {
+            if (!in_array($existingPageTemplateID, $templateIDs)) {
+                $existingPageTemplate = Template::getByID($existingPageTemplateID);
+       			$c = $this->getPageTypePageTemplateDefaultPageObject($existingPageTemplate);
+                if (is_object($c)) {
+                    $c->delete();
+                }
+                $db->Execute('delete from PageTypePageTemplateDefaultPages where pTemplateID = ? and ptID = ?', array($existingPageTemplateID, $this->getPageTypeID()));
+            }
+        }
     }
 
     public static function getList($includeInternal = false)
@@ -781,6 +816,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         $db = Loader::db();
         $db->Execute('delete from PageTypes where ptID = ?', array($this->ptID));
         $db->Execute('delete from PageTypePageTemplates where ptID = ?', array($this->ptID));
+        $db->Execute('delete from PageTypePageTemplateDefaultPages where ptID = ?', array($this->ptID));
         $db->Execute('delete from PageTypeComposerOutputControls where ptID = ?', array($this->ptID));
 
 		foreach($this->getPageTypePageTemplateObjects() as $pt) {

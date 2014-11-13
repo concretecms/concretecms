@@ -203,7 +203,7 @@ switch ($tab) {
                      data-block-id="<?= intval($block->getBlockID()) ?>">
                     <div class="block-content">
                         <div class="block-name">
-                            <span class="handle"><?= h($type->getBlockTypeName()) ?></span>
+                            <span class="handle"><?= h(t($type->getBlockTypeName())) ?></span>
                         </div>
                         <div class="blocks">
                             <div class="block"
