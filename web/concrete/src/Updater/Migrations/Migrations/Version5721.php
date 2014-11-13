@@ -54,10 +54,12 @@ class Version5721 extends AbstractMigration
         $sm = $db->getSchemaManager();
         $schemaTables = $sm->listTableNames();
         if (in_array('signuprequests', $schemaTables)) {
-            $db->query('alter table signuprequests rename SignupRequests');
+            $db->query('alter table signuprequests rename SignupRequestsTmp');
+            $db->query('alter table SignupRequestsTmp rename SignupRequests');
         }
         if (in_array('userbannedips', $schemaTables)) {
-            $db->query('alter table userbannedips rename UserBannedIPs');
+            $db->query('alter table userbannedips rename UserBannedIPsTmp');
+            $db->query('alter table UserBannedIPsTmp rename UserBannedIPs');
         }
 
         // Clean up File stupidity
