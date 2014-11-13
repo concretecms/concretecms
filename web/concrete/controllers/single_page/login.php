@@ -364,17 +364,4 @@ class Login extends PageController
         }
     }
 
-    /* @TODO this functionality needs to be ported to the concrete5 auth type
-     * // responsible for validating a user's email address
-     * public function v($hash = '') {
-     * $ui = UserInfo::getByValidationHash($hash);
-     * if (is_object($ui)) {
-     * $ui->markValidated();
-     * $this->set('uEmail', $ui->getUserEmail());
-     * $this->set('validated', true);
-     * }
-     * }
-
-     */
-
 }
