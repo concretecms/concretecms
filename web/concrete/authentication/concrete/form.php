@@ -46,4 +46,10 @@ $form = Loader::helper('form');
         document.querySelector('input[name=uName]').focus();
     </script>
     <?php Loader::helper('validation/token')->output('login_' . $this->getAuthenticationTypeHandle()); ?>
+
+    <? if (Config::get('concrete.user.registration.enabled')) { ?>
+        <br/>
+        <hr/>
+        <a href="<?=URL::to('/register')?>" class="btn btn-block btn-success"><?=t('Not a member? Register')?></a>
+    <? } ?>
 </form>
