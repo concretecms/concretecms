@@ -201,7 +201,6 @@ class Controller extends AuthenticationTypeController
                     } else {
                         $this->set('uHash', $uHash);
                         $this->set('authTypeElement', 'change_password');
-                        $this->set('errorMsg', join('<br>', $e->getList()));
                         $this->set('error', $e);
                     }
                 } else {
