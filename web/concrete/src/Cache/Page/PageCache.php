@@ -19,11 +19,9 @@ abstract class PageCache {
 		$response = new Response();
         $headers = array();
         if (defined('APP_CHARSET')) {
-            $headers[] = "Content-Type: text/html; charset=" . APP_CHARSET;
+            $headers["Content-Type"] = "text/html; charset=" . APP_CHARSET;
 		}
-		foreach ($record->getCacheRecordHeaders() as $header) {
-            $headers[] = $header;
-		}
+        $headers = array_merge($headers, $record->getCacheRecordHeaders());
 
         $response->headers->add($headers);
         $response->setContent($record->getCacheRecordContent());
@@ -59,10 +57,9 @@ abstract class PageCache {
 		$expires  = gmdate('D, d M Y H:i:', time() + $lifetime) . ' GMT';
 
 		$headers  = array(
-			'Pragma: public',
-			'Cache-Control: s-maxage=' . $lifetime,
-			'Cache-Control: max-age='  . $lifetime,
-			'Expires: '                . $expires
+			'Pragma' => 'public',
+			'Cache-Control' => 'max-age=' . $lifetime . ',s-maxage=' . $lifetime,
+			'Expires' => $expires
 		);
 
 		return $headers;
