@@ -111,10 +111,14 @@ class PageView extends View
             return $this->themeObject->getStylesheet($stylesheet);
         }
 
-        if ($this->cp->canViewPageVersions() && $this->c->hasPageThemeCustomizations() && !$this->c->getVersionObject()->isApproved()) {
-            // this means that we're potentially viewing customizations that haven't been approved yet. So we're going to
-            // pipe them all through a handler script, basically uncaching them.
-            return URL::to('/ccm/system/css/page', $this->c->getCollectionID(), $this->c->getVersionID(), $stylesheet);
+        if ($this->c->hasPageThemeCustomizations()) {
+            if ($this->c->getVersionObject()->isApproved()) {
+                return URL::to('/ccm/system/css/page', $this->c->getCollectionID(), $stylesheet);
+            } else {
+                // this means that we're potentially viewing customizations that haven't been approved yet. So we're going to
+                // pipe them all through a handler script, basically uncaching them.
+                return URL::to('/ccm/system/css/page', $this->c->getCollectionID(), $stylesheet, $this->c->getVersionID());
+            }
         }
 
         $env = Environment::get();
