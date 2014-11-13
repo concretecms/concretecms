@@ -17,7 +17,8 @@ class Controller extends BlockController {
 	public $location = "";
 	public $latitude = "";
 	public $longitude = "";
-	public $zoom = 14;								
+	public $scrollwheel = true;
+	public $zoom = 14;
 	
 	/** 
 	 * Used for localization. If we want to localize the name/description we have to include this
@@ -60,6 +61,7 @@ class Controller extends BlockController {
 		$this->set('latitude', $this->latitude);
 		$this->set('longitude', $this->longitude);
 		$this->set('zoom', $this->zoom);			
+		$this->set('scrollwheel', $this->scrollwheel);
 	}
 	
 	public function save($data) { 
@@ -70,6 +72,7 @@ class Controller extends BlockController {
         $args['longitude'] = is_numeric($data['longitude']) ? $data['longitude'] : 0;
         $args['width'] = $data['width'];
         $args['height'] = $data['height'];
+        $args['scrollwheel'] = $data['scrollwheel'];
 		parent::save($args);
 	}
 

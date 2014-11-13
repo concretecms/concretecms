@@ -45,7 +45,7 @@
     </div>
 
     <div class="col-xs-4">
-        <div class="form-group"> 
+        <div class="form-group">
             <? echo $form->label('height', t('Map Height'));?>
             <div class="input-group">
                 <span class="input-group-addon"><i class="fa fa-arrows-v"></i></span>
@@ -55,6 +55,15 @@
         </div>
     </div>
 
+    <div class="col-xs-4">
+      <div class="form-group">
+        <? echo $form->label('scrollwheel', t('Enable Scrollwheel'));?>
+        <div class="input-group">
+          <span class="input-group-addon"><i class="fa fa-binoculars"></i></span>
+          <? echo $form->checkbox('scrollwheel', $scrollwheel); ?>
+        </div>
+      </div>
+    </div>
 </div>
 
 <script type="text/javascript">
