@@ -1,12 +1,10 @@
 <?php
 namespace Concrete\Core\Error\Handler;
 
-use Config;
 use Concrete\Core\Logging\Logger;
-use Concrete\Core\Package\PackageList;
 use Concrete\Core\Support\Facade\Database;
+use Config;
 use Core;
-use Whoops\Example\Exception;
 use Whoops\Handler\PrettyPageHandler;
 
 /**
@@ -37,7 +35,7 @@ class ErrorHandler extends PrettyPageHandler
                 $e = $this->getInspector()->getException();
                 Core::make('helper/concrete/ui')->renderError(
                     t('An unexpected error occurred.'),
-                    $e->getMessage()
+                    h($e->getMessage())
                 );
             }
         } else {
@@ -60,10 +58,12 @@ class ErrorHandler extends PrettyPageHandler
                             $e->getLine(),
                             $e->getMessage(),
                             $e->getCode()
-                        ), array($e)
+                        ),
+                        array($e)
                     );
                 }
-            } catch (Exception $e) {}
+            } catch (\Exception $e) {
+            }
         }
 
         return $result;
@@ -78,11 +78,11 @@ class ErrorHandler extends PrettyPageHandler
          * General
          */
         $this->addDataTable(
-             'Concrete5',
-             array(
-                 'Version'           => APP_VERSION,
-                 'Installed Version' => Config::get('concrete.version_installed')
-             )
+            'Concrete5',
+            array(
+                'Version'           => APP_VERSION,
+                'Installed Version' => Config::get('concrete.version_installed')
+            )
         );
 
         /**
@@ -91,7 +91,8 @@ class ErrorHandler extends PrettyPageHandler
         $this->addDataTable('Concrete Configuration', $this->flatConfig(Config::get('concrete'), 'concrete'));
     }
 
-    protected function flatConfig(array $config, $group) {
+    protected function flatConfig(array $config, $group)
+    {
         $flat = array();
         foreach ($config as $key => $value) {
             if (is_array($value)) {
