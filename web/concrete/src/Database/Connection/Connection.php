@@ -77,7 +77,7 @@ class Connection extends \Doctrine\DBAL\Connection
                 $result = parent::query($args[0]);
                 break;
             case 2:
-                if (is_string($args[1]) || is_array($args[1])) {
+                if (is_array($args[1])) {
                     $result = $this->executeQuery($args[0], $args[1]);
                 } else {
                     $result = parent::query($args[0], $args[1]);
