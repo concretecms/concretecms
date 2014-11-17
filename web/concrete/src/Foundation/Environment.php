@@ -89,7 +89,8 @@ class Environment {
 			DIR_FILES_THEMES, 
 			DIR_FILES_TOOLS, 
 			DIR_APPLICATION . '/' . DIRNAME_PAGE_TYPES, 
-			DIR_APPLICATION . '/' . DIRNAME_CLASSES);
+			DIR_APPLICATION . '/' . DIRNAME_CLASSES,
+			DIR_APPLICATION . '/' . DIRNAME_VIEWS);
 		foreach($check as $loc) {
 			if (is_dir($loc)) {
 				$contents = $this->getDirectoryContents($loc, array(), true);

@@ -224,7 +224,15 @@ abstract class Job extends Object
             //load the file & class, then run the job
             $path=$jobClassLocation.'/'.$jHandle.'.php';
             if ( file_exists($path) ) {
-                $className = static::getClassName($jHandle, $pkgHandle);
+
+	            if( $pkgID > 0 ) {
+		            $classNameSpace = $pkgHandle;
+	            } else {
+		            $classNameSpace = ($jobClassLocation == DIR_FILES_JOBS);
+	            }
+
+                $className = static::getClassName($jHandle, $classNameSpace);
+
                 $j = Core::make($className);
                 $j->jHandle=$jHandle;
                 if (intval($jobData['jID'])>0) {
@@ -277,7 +285,12 @@ abstract class Job extends Object
                         if($alreadyInstalled) continue;
 
                         $jHandle = substr($file,0,strlen($file)-4);
-                        $className = static::getClassName($jHandle);
+
+	                    $className = static::getClassName(
+		                    $jHandle,
+		                    $jobClassLocation == DIR_FILES_JOBS ? true : null
+	                    );
+
                         $jobObjs[$jHandle] = Core::make($className);
                         $jobObjs[$jHandle]->jHandle = $jHandle;
                     }
