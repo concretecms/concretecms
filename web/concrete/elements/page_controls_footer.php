@@ -287,7 +287,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                                             data-launch-panel="sitemap">
                 <i class="fa fa-files-o"></i>
                 <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add-page">
-                    <?= tc('toolbar', 'Add Page') ?>
+                    <?= tc('toolbar', 'Sitemap') ?>
                 </span>
             </a>
 
