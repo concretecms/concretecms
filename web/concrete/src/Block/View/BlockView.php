@@ -12,6 +12,7 @@ use Page;
 use \Concrete\Core\Block\Block;
 use BlockType;
 use URL;
+use View;
 
 class BlockView extends AbstractView
 {
