@@ -280,7 +280,7 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
 
             return true;
         }
-        throw new \Exception('Invalid flag type.');
+        throw new \Exception(t('Invalid flag type.'));
     }
 
     public function unflag($flagtype)
@@ -292,7 +292,7 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
 
             return true;
         }
-        throw new \Exception('Invalid flag type.');
+        throw new \Exception(t('Invalid flag type.'));
     }
 
     public static function getByID($cnvMessageID)
