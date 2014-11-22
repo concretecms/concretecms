@@ -2,6 +2,7 @@
 namespace Concrete\Core\Conversation\Editor;
 
 use \Michelf\Markdown;
+use Core;
 
 class MarkdownEditor extends Editor
 {
@@ -18,7 +19,7 @@ class MarkdownEditor extends Editor
 
     public function formatConversationMessageBody($cnv, $cnvMessageBody, $config = array())
     {
-        $md = Markdown::defaultTransform(htmlentities($cnvMessageBody));
+        $md = Markdown::defaultTransform(Core::make('helper/text')->entities($cnvMessageBody));
         $formatted = str_replace(array('&amp;lt', '&amp;gt'), array('&lt', '&gt'), $md);
         return parent::formatConversationMessageBody($cnv, $formatted, $config);
     }

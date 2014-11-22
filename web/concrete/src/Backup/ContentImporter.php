@@ -655,7 +655,7 @@ class ContentImporter
     {
         if (isset($sx->flag_types)) {
             foreach ($sx->flag_types->flag_type as $p) {
-                $bw = ConversationFlagType::add($p);
+                $bw = ConversationFlagType::add((string) $p);
             }
         }
     }
