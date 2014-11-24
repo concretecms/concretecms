@@ -6,7 +6,7 @@ use Doctrine\DBAL\Schema\Schema;
 use \Concrete\Core\Conversation\FlagType\FlagType;
 
 
-class Version5721 extends AbstractMigration
+class Version5722 extends AbstractMigration
 {
 
     public function getName()
