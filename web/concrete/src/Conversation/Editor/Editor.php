@@ -242,10 +242,12 @@ abstract class Editor extends Object
         $htmlHelper = Core::make('helper/html');
         $cnvMessageBody = $htmlHelper->noFollowHref($cnvMessageBody);
         if (isset($config['htmlawed'])) {
-
+            // htmLawed does not support numbers in the attribute name
+            $cnvMessageBody = str_replace('data-concrete5-link', 'data-concrete-link', $cnvMessageBody);
             $default = array('safe' => 1, 'elements' => 'p, br, strong, em, strike, a');
             $conf = array_merge($default, (array)$config['htmlawed']);
-            $lawed = htmLawed($cnvMessageBody, $conf);
+            $spec = 'a=data-concrete-link-type(oneof=image|ajax), data-concrete-link-launch(oneof=lightbox-image)';
+            $lawed = htmLawed($cnvMessageBody, $conf, $spec);
         } else {
             $lawed = $cnvMessageBody;
         }
