@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Block\CoreConversation;
+use FilePermissions;
 use Loader;
 use \Concrete\Core\Block\BlockController;
 use Concrete\Core\Conversation\Conversation;
@@ -76,7 +77,12 @@ use Page;
         {
             $this->requireAsset('core/conversation');
             $this->requireAsset('core/lightbox');
-        }
+
+			$fp = FilePermissions::getGlobal();
+			if ($fp->canAccessFileManager()) {
+				$this->requireAsset('core/file-manager');
+			}
+		}
 		public function view() {
 			$fileSettings = $this->getFileSettings();
 			$conversation = $this->getConversationObject();
