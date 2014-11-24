@@ -8,6 +8,7 @@ use Concrete\Core\Feature\ConversationFeatureInterface;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Config;
 use Page;
+use TaskPermission;
 
 /**
  * The controller for the conversation block. This block is used to display conversations in a page.
@@ -82,6 +83,11 @@ use Page;
             if ($fp->canAccessFileManager()) {
                 $this->requireAsset('core/file-manager');
             }
+
+			$tp = new TaskPermission();
+			if ($tp->canAccessSitemap()) {
+				$this->requireAsset('core/sitemap');
+			}
         }
         public function view() {
             $fileSettings = $this->getFileSettings();
