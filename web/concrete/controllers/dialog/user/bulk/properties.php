@@ -73,7 +73,7 @@ class Properties extends BackendInterfaceController {
 			$this->populateUsers();
 			if ($this->canEdit && in_array($ak->getAttributeKeyID(), $this->allowedEditAttributes)) {
 				foreach($this->users as $ui) {
-					$ak->saveAttributeForm($ui);
+                    $ui->saveUserAttributesForm(array($ak));
 					$ui->reindex();
 				}
 				$ur->setUsers($this->users);

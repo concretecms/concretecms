@@ -1,6 +1,4 @@
 <?php
-define('FILE_PERMISSIONS_MODE', 0777);
-define('DIRECTORY_PERMISSIONS_MODE', 0777);
 define('C5_ENVIRONMENT_ONLY', true);
 
 error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);

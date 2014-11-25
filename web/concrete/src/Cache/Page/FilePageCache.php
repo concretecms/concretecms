@@ -25,7 +25,7 @@ class FilePageCache extends PageCache {
 			$filename = $key . '.cache';
 			$dir = Config::get('concrete.cache.page.directory') . '/' . $key[0] . '/' . $key[1] . '/' . $key[2];
 			if ($dir && (!is_dir($dir))) {
-				@mkdir($dir, DIRECTORY_PERMISSIONS_MODE, true);
+				@mkdir($dir, Config::get('concrete.filesystem.permissions.directory'), true);
 			}
 			$path = $dir . '/' . $filename;
 			return $path;

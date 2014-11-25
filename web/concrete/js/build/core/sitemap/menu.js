@@ -26,9 +26,6 @@
 			container = my.options.container;
 
 		parent.setupMenuOptions($menu);
-		$menu.find('a[data-action=visit]').on('click', function() {
-			window.location.href = CCM_DISPATCHER_FILENAME + '?cID=' + cID;
-		});
 		if (!my.options.sitemap || my.options.sitemap.options.displaySingleLevel == false) {
 			$menu.find('[data-sitemap-mode=explore]').remove();
 		}

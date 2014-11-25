@@ -4,7 +4,7 @@ $form = Loader::helper('form');
 $ctArray = PageType::getList();
 $types = array();
 foreach($ctArray as $cta) {
-    $types[$cta->getPageTypeID()] = $cta->getPageTypeName();
+    $types[$cta->getPageTypeID()] = $cta->getPageTypeDisplayName();
 }
 $ptID = 0;
 if (is_object($pagetype) && $pagetype->getPageTypePublishTargetTypeID() == $type->getPageTypePublishTargetTypeID()) {

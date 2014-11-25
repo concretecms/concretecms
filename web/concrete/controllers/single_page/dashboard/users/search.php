@@ -275,7 +275,7 @@ class Search extends DashboardPageController
                     throw new Exception(t('You do not have permission to modify this attribute.'));
                 }
 
-                $ak->saveAttributeForm($this->user);
+                $this->user->saveUserAttributesForm(array($ak));
                 $val = $this->user->getAttributeValueObject($ak);
             }
         } else {

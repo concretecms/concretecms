@@ -13,7 +13,7 @@ class Version5721 extends AbstractMigration
 
     public function getName()
     {
-        return '20141028000000';
+        return '20141113000000';
     }
 
     public function up(Schema $schema)
@@ -33,6 +33,12 @@ class Version5721 extends AbstractMigration
 			$sp->setAttribute('exclude_nav', 1);
         }
 
+        $sp = Page::getByPath('/members/directory');
+		if (!is_object($sp) || $sp->isError()) {
+			$sp = SinglePage::add('/members/directory');
+			$sp->setAttribute('exclude_nav', 1);
+        }
+
         $bt = BlockType::getByHandle('feature');
         if (is_object($bt)) {
             $bt->refresh();
@@ -48,10 +54,18 @@ class Version5721 extends AbstractMigration
         $sm = $db->getSchemaManager();
         $schemaTables = $sm->listTableNames();
         if (in_array('signuprequests', $schemaTables)) {
-            $db->query('alter table signuprequests rename SignupRequests');
+            $db->query('alter table signuprequests rename SignupRequestsTmp');
+            $db->query('alter table SignupRequestsTmp rename SignupRequests');
         }
         if (in_array('userbannedips', $schemaTables)) {
-            $db->query('alter table userbannedips rename UserBannedIPs');
+            $db->query('alter table userbannedips rename UserBannedIPsTmp');
+            $db->query('alter table UserBannedIPsTmp rename UserBannedIPs');
+        }
+
+        // Clean up File stupidity
+        $r = $db->Execute('select Files.fID from Files left join FileVersions on (Files.fID = FileVersions.fID) where FileVersions.fID is null');
+        while ($row = $r->FetchRow()) {
+            $db->Execute('delete from Files where fID = ?', array($row['fID']));
         }
     }
 

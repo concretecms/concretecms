@@ -423,6 +423,26 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
         // discard's my most recent edit that is pending
         $u = new User();
         if ($this->isNew()) {
+            $db = Loader::db();
+            // check for related version edits. This only gets applied when we edit global areas.
+            $r = $db->Execute('select cRelationID, cvRelationID from CollectionVersionRelatedEdits where cID = ? and cvID = ?', array(
+                $this->cID,
+                $this->cvID
+            ));
+            while ($row = $r->FetchRow()) {
+                $cn = Page::getByID($row['cRelationID'], $row['cvRelationID']);
+                $cnp = new Permissions($cn);
+                if ($cnp->canApprovePageVersions()) {
+                    $v = $cn->getVersionObject();
+                    $v->delete();
+                    $db->Execute('delete from CollectionVersionRelatedEdits where cID = ? and cvID = ? and cRelationID = ? and cvRelationID = ?', array(
+                        $this->cID,
+                        $this->cvID,
+                        $row['cRelationID'],
+                        $row['cvRelationID']
+                    ));
+                }
+            }
             $this->delete();
         }
         $this->refreshCache();

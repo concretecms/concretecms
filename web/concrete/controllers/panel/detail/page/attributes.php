@@ -3,10 +3,13 @@ namespace Concrete\Controller\Panel\Detail\Page;
 
 use \Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
 use Concrete\Core\Http\ResponseAssetGroup;
+use Concrete\Core\Workflow\Request\ApprovePageRequest;
 use PageEditResponse;
 use PermissionKey;
 use stdClass;
 use Loader;
+use User;
+use Concrete\Core\Page\Collection\Version\Version;
 use CollectionAttributeKey;
 use \Concrete\Core\Attribute\View as AttributeTypeView;
 
@@ -123,6 +126,20 @@ class Attributes extends BackendInterfacePageController
                 }
             }
 
+            if ($this->request->request->get('sitemap')
+                && $this->permissions->canApprovePageVersions()
+                && \Config::get('concrete.misc.sitemap_approve_immediately')) {
+
+                $pkr = new ApprovePageRequest();
+                $u = new User();
+                $pkr->setRequestedPage($this->page);
+                $v = Version::get($this->page, "RECENT");
+                $pkr->setRequestedVersionID($v->getVersionID());
+                $pkr->setRequesterUserID($u->getUserID());
+                $response = $pkr->trigger();
+                $u->unloadCollectionEdit();
+            }
+
             $r = new PageEditResponse();
             $r->setPage($c);
             $r->setTitle(t('Page Updated'));
@@ -145,7 +162,10 @@ class Attributes extends BackendInterfacePageController
             $ag = ResponseAssetGroup::get();
             foreach ($ag->getAssetsToOutput() as $position => $assets) {
                 foreach ($assets as $asset) {
-                    $obj->assets[$asset->getAssetType()][] = $asset->getAssetURL();
+                    if (is_object($asset)) {
+                        // have to do a check here because we might be included a dumb javascript call like i18n_js
+                        $obj->assets[$asset->getAssetType()][] = $asset->getAssetURL();
+                    }
                 }
             }
             Loader::helper('ajax')->sendResult($obj);

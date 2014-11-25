@@ -3,7 +3,7 @@
 $ctArray = PageType::getList();
 $types = array();
 foreach($ctArray as $ct) {
-	$types[$ct->getPageTypeID()] = $ct->getPageTypeName();
+	$types[$ct->getPageTypeID()] = $ct->getPageTypeDisplayName();
 }
 
 if (is_object($configuration)) { 

@@ -7,12 +7,12 @@ if (is_object($configuration)) {
 <? $form = Loader::helper('form'); ?>
 <div class="form-group">
     <label for="path"><?=t('Root Path')?></label>
-    <?=$form->text('fslType[path]', $path)?>
+    <div class="input-group">
+        <?=$form->text('fslType[path]', $path)?>
+        <span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
+    </div>
 </div>
 <div class="form-group">
     <label for="path"><?=t('Relative Path')?></label>
-    <div class="input-group">
-        <?=$form->text('fslType[relativePath]', $relativePath)?>
-        <span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
-    </div>
+    <?=$form->text('fslType[relativePath]', $relativePath)?>
 </div>

@@ -12,6 +12,7 @@ use Page;
 use \Concrete\Core\Block\Block;
 use BlockType;
 use URL;
+use View;
 
 class BlockView extends AbstractView
 {
@@ -369,7 +370,6 @@ class BlockView extends AbstractView
         if ($this->useBlockCache()) {
             $this->didPullFromOutputCache = true;
             $this->outputContent = $this->block->getBlockCachedOutput($this->area);
-            $this->controller->registerViewAssets($this->outputContent);
         }
 
         if (!$this->outputContent) {
