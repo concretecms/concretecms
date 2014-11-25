@@ -22,7 +22,7 @@
 	<?=$form->select('pageTypesIncluded[' . $entity->getAccessEntityID() . ']', array('A' => t('All Page Types'), 'C' => t('Custom')), $assignment->getPageTypesAllowedPermission())?><br/><br/>
 	<ul class="page-type-list inputs-list" <? if ($assignment->getPageTypesAllowedPermission() != 'C') { ?>style="display: none"<? } ?>>
 		<? foreach($pageTypes as $ct) { ?>
-			<li><label><input type="checkbox" name="ptIDInclude[<?=$entity->getAccessEntityID()?>][]" value="<?=$ct->getPageTypeID()?>" <? if (in_array($ct->getPageTypeID(), $assignment->getPageTypesAllowedArray())) { ?> checked="checked" <? } ?> /> <span><?=$ct->getPageTypeName()?></span></label></li>
+			<li><label><input type="checkbox" name="ptIDInclude[<?=$entity->getAccessEntityID()?>][]" value="<?=$ct->getPageTypeID()?>" <? if (in_array($ct->getPageTypeID(), $assignment->getPageTypesAllowedArray())) { ?> checked="checked" <? } ?> /> <span><?=$ct->getPageTypeDisplayName()?></span></label></li>
 		<? } ?>
 	</ul>
 	<ul class="inputs-list">
@@ -53,7 +53,7 @@
 	<?=$form->select('pageTypesExcluded[' . $entity->getAccessEntityID() . ']', array('N' => t('No Page Types'), 'C' => t('Custom')), $assignment->getPageTypesAllowedPermission())?><br/><br/>
 	<ul class="page-type-list inputs-list" <? if ($assignment->getPageTypesAllowedPermission() != 'C') { ?>style="display: none"<? } ?>>
 		<? foreach($pageTypes as $ct) { ?>
-			<li><label><input type="checkbox" name="ptIDExclude[<?=$entity->getAccessEntityID()?>][]" value="<?=$ct->getPageTypeID()?>" <? if (in_array($ct->getPageTypeID(), $assignment->getPageTypesAllowedArray())) { ?> checked="checked" <? } ?> /> <span><?=$ct->getPageTypeName()?></span></label></li>
+			<li><label><input type="checkbox" name="ptIDExclude[<?=$entity->getAccessEntityID()?>][]" value="<?=$ct->getPageTypeID()?>" <? if (in_array($ct->getPageTypeID(), $assignment->getPageTypesAllowedArray())) { ?> checked="checked" <? } ?> /> <span><?=$ct->getPageTypeDisplayName()?></span></label></li>
 		<? } ?>
 	</ul>
 	<ul class="inputs-list">

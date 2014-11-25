@@ -57,8 +57,8 @@ class File
     {
         if (is_dir($source)) {
             if ($mode == null) {
-                @mkdir($target, DIRECTORY_PERMISSIONS_MODE);
-                @chmod($target, DIRECTORY_PERMISSIONS_MODE);
+                @mkdir($target, Config::get('concrete.filesystem.permissions.directory'));
+                @chmod($target, Config::get('concrete.filesystem.permissions.directory'));
             } else {
                 @mkdir($target, $mode);
                 @chmod($target, $mode);
@@ -115,7 +115,7 @@ class File
             $perms = @fileperms($path);
 
             if (!$perms) {
-                throw new Exception(t('An error occured while attempting to determine file permissions.'));
+                throw new Exception(t('An error occurred while attempting to determine file permissions.'));
             }
             clearstatcache();
             $dir_perms = substr(decoct($perms), 1);
@@ -226,8 +226,8 @@ class File
         }
 
         if (!is_dir(DIR_FILES_UPLOADED . '/tmp')) {
-            @mkdir(DIR_FILES_UPLOADED . '/tmp', DIRECTORY_PERMISSIONS_MODE);
-            @chmod(DIR_FILES_UPLOADED . '/tmp', DIRECTORY_PERMISSIONS_MODE);
+            @mkdir(DIR_FILES_UPLOADED . '/tmp', Config::get('concrete.filesystem.permissions.directory'));
+            @chmod(DIR_FILES_UPLOADED . '/tmp', Config::get('concrete.filesystem.permissions.directory'));
             @touch(DIR_FILES_UPLOADED . '/tmp/index.html');
         }
 

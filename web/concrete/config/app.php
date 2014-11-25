@@ -174,6 +174,8 @@ return array(
         "/ccm/system/dialogs/page/design/css/submit"                                    => array('\Concrete\Controller\Dialog\Page\Design\Css::submit'),
         "/ccm/system/dialogs/page/search"                                               => array('\Concrete\Controller\Dialog\Page\Search::view'),
         "/ccm/system/dialogs/page/attributes"                                           => array('\Concrete\Controller\Dialog\Page\Attributes::view'),
+        "/ccm/system/dialogs/page/seo"                                                  => array('\Concrete\Controller\Dialog\Page\Seo::view'),
+        "/ccm/system/dialogs/page/location"                                             => array('\Concrete\Controller\Dialog\Page\Location::view'),
         "/ccm/system/dialogs/user/bulk/properties"                                      => array('\Concrete\Controller\Dialog\User\Bulk\Properties::view'),
         "/ccm/system/dialogs/user/bulk/properties/update_attribute"                     => array('\Concrete\Controller\Dialog\User\Bulk\Properties::updateAttribute'),
         "/ccm/system/dialogs/user/bulk/properties/clear_attribute"                      => array('\Concrete\Controller\Dialog\User\Bulk\Properties::clearAttribute'),
@@ -253,7 +255,8 @@ return array(
         /**
          * Misc
          */
-        "/ccm/system/css/page/{cID}/{cvID}/{stylesheet}"                                => array('\Concrete\Controller\Frontend\Stylesheet::page'),
+        "/ccm/system/css/page/{cID}/{stylesheet}/{cvID}"                                => array('\Concrete\Controller\Frontend\Stylesheet::page_version'),
+        "/ccm/system/css/page/{cID}/{stylesheet}"                                       => array('\Concrete\Controller\Frontend\Stylesheet::page'),
         "/ccm/system/css/layout/{bID}"                                                  => array('\Concrete\Controller\Frontend\Stylesheet::layout'),
         "/ccm/system/backend/editor_data/"                                              => array('\Concrete\Controller\Backend\EditorData::view'),
         "/ccm/system/upgrade/"                                                          => array('\Concrete\Controller\Upgrade::view'),

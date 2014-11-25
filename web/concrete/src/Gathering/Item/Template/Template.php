@@ -222,7 +222,7 @@ abstract class Template extends Object {
 		$agt = $axml->addChild('gatheringitemtemplate');
 		$type = $this->getGatheringItemTemplateTypeObject();
 		$agt->addAttribute('handle',$this->getGatheringItemTemplateHandle());
-		$agt->addAttribute('name', htmlentities($this->getGatheringItemTemplateName()));
+		$agt->addAttribute('name', Core::make('helper/text')->entities($this->getGatheringItemTemplateName()));
 		$agt->addAttribute('type', $type->getGatheringItemTemplateTypeHandle());
 		if ($this->gatheringItemTemplateHasCustomClass()) {
 			$agt->addAttribute('has-custom-class', true);

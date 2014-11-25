@@ -4,24 +4,17 @@
 
 <script type="text/javascript">
     (function() {
-        var ccm_triggerSelectUser = function(uID, uName) {
-            /* retrieve the peID for the selected group from ajax */
+        Concrete.event.unbind('UserSearchDialogSelectUser.core');
+        Concrete.event.bind('UserSearchDialogSelectUser.core', function(event, data) {
+            Concrete.event.unbind(event);
             $('#ccm-permissions-access-entity-form .btn-group').removeClass('open');
             $.getJSON('<?=$url?>', {
-                'uID': uID
+                'uID': data.uID
             }, function(r) {
                 $.fn.dialog.closeTop();
                 $('#ccm-permissions-access-entity-form input[name=peID]').val(r.peID);
                 $('#ccm-permissions-access-entity-label').html('<div class="alert alert-info">' + r.label + '</div>');
-                Concrete.event.bind('UserSearchDialogSelectUser', function(event, data) {
-                    ccm_triggerSelectUser(data.uID, data.uName);
-                });
             });
-        };
-        Concrete.event.unbind('UserSearchDialogSelectUser.core');
-        Concrete.event.bind('UserSearchDialogSelectUser.core', function(event, data) {
-            Concrete.event.unbind(event);
-            ccm_triggerSelectUser(data.uID, data.uName);
         });
     }());
 </script>

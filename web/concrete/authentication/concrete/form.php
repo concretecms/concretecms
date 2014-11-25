@@ -16,7 +16,7 @@ $form = Loader::helper('form');
     <div class="form-group">
         <label>&nbsp;</label>
         <input name="uPassword" class="form-control" type="password"
-               placeholder="Password" />
+               placeholder="<?=t('Password')?>" />
     </div>
 
     <div class="checkbox">
@@ -46,4 +46,10 @@ $form = Loader::helper('form');
         document.querySelector('input[name=uName]').focus();
     </script>
     <?php Loader::helper('validation/token')->output('login_' . $this->getAuthenticationTypeHandle()); ?>
+
+    <? if (Config::get('concrete.user.registration.enabled')) { ?>
+        <br/>
+        <hr/>
+        <a href="<?=URL::to('/register')?>" class="btn btn-block btn-success"><?=t('Not a member? Register')?></a>
+    <? } ?>
 </form>

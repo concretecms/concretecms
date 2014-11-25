@@ -729,8 +729,8 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         $old_collection = $this->getBlockCollectionID();
         $new_collection = $collection->getCollectionID();
 
-        $old_version = $this->getBlockCollectionObject()->getVersionToModify()->getVersionID();
-        $new_version = $collection->getVersionToModify()->getVersionID();
+        $old_version = $this->getBlockCollectionObject()->getVersionObject()->getVersionID();
+        $new_version = $collection->getVersionObject()->getVersionID();
 
         $old_area_handle = $this->getAreaHandle();
         $new_area_handle = $area->getAreaHandle();

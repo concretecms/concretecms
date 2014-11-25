@@ -413,6 +413,26 @@ define('LOG_TYPE_EXCEPTIONS', 'exceptions');
 error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
 
 
+/**
+ * ----------------------------------------------------------------------------
+ * Define computed permissions for files and directories
+ * ----------------------------------------------------------------------------
+ *
+ */
+// Set directory permissions to that of DIR_FILES_UPLOADED_STANDARD. Or if that can't be found, 0775.
+$DIRECTORY_PERMISSIONS_MODE = (($p = @fileperms(DIR_FILES_UPLOADED_STANDARD) & 0777) > 0) ? $p : 0775;
+$FILE_PERMISSIONS_MODE = '';
+foreach(str_split(decoct($DIRECTORY_PERMISSIONS_MODE), 1) as $p) {
+    if (intval($p) % 2 == 0) {
+        $FILE_PERMISSIONS_MODE .= $p;
+        continue;
+    }
+    $FILE_PERMISSIONS_MODE .= intval($p) - 1;
+}
+$FILE_PERMISSIONS_MODE = octdec($FILE_PERMISSIONS_MODE);
+define('DIRECTORY_PERMISSIONS_MODE_COMPUTED', $DIRECTORY_PERMISSIONS_MODE);
+define('FILE_PERMISSIONS_MODE_COMPUTED', $FILE_PERMISSIONS_MODE);
+
 
 /**
  * ----------------------------------------------------------------------------

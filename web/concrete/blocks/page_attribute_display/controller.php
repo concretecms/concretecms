@@ -71,8 +71,6 @@ class Controller extends BlockController
                         $this->thumbnailHeight
                     ); //<-- set these 2 numbers to max width and height of thumbnails
                     $content = "<img src=\"{$thumb->src}\" width=\"{$thumb->width}\" height=\"{$thumb->height}\" alt=\"\" />";
-                } else if(is_string($content)) {
-                    $content = h($content);
                 }
                 break;
         }

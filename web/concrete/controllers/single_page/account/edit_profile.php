@@ -117,11 +117,8 @@ class EditProfile extends AccountPageController {
 				$data['uTimezone'] = $this->post('uTimezone');
 			}
 
+            $ui->saveUserAttributesForm($aks);
 			$ui->update($data);
-
-			foreach($aks as $uak) {
-				$uak->saveAttributeForm($ui);
-			}
 			$this->redirect("/account", "save_complete");
 		}
 	}

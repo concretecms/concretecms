@@ -4,7 +4,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $pagetypes = PageType::getList();
 $types = array();
 foreach($pagetypes as $pt) {
-	$types[$pt->getPageTypeID()] = $pt->getPageTypeName();
+	$types[$pt->getPageTypeID()] = $pt->getPageTypeDisplayName();
 }
 
 ?>

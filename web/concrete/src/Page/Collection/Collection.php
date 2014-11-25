@@ -1055,6 +1055,14 @@ class Collection extends Object
                 $db->query($ql, $vl);
             }
 
+            $ql = "select * from CollectionVersionThemeCustomStyles where cID = '{$this->cID}'";
+            $rl = $db->query($ql);
+            while ($row = $rl->fetchRow()) {
+                $vl = array($newCID, $row['cvID'], $row['pThemeID'], $row['scvlID'], $row['preset'], $row['sccRecordID']);
+                $ql = "insert into CollectionVersionThemeCustomStyles (cID, cvID, pThemeID, scvlID, preset, sccRecordID) values (?, ?, ?, ?, ?, ?)";
+                $db->query($ql, $vl);
+            }
+
             // now we grab all the blocks we're going to need
             $cvList = implode(',', $cvList);
             $q = "select bID, cvID, arHandle, cbDisplayOrder, cbOverrideAreaPermissions, cbIncludeAll from CollectionVersionBlocks where cID = '{$this->cID}' and cvID in ({$cvList})";

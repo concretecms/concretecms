@@ -14,33 +14,34 @@ $(function() {
 	<form method="post" action="<?php echo $view->action('save')?>" enctype="multipart/form-data">
 	<?php  $attribs = UserAttributeKey::getEditableInProfileList();
 	$valt->output('profile_edit');
-	if(is_array($attribs) && count($attribs)) {
 	?>
-		<fieldset>
-		<legend><?=t('Basic Information')?></legend>
+	<fieldset>
+	<legend><?=t('Basic Information')?></legend>
+	<div class="form-group">
+		<?php echo $form->label('uEmail', t('Email'))?>
+		<?php echo $form->text('uEmail',$profile->getUserEmail())?>
+	</div>
+	<?php  if(ENABLE_USER_TIMEZONES) { ?>
 		<div class="form-group">
-			<?php echo $form->label('uEmail', t('Email'))?>
-    		<?php echo $form->text('uEmail',$profile->getUserEmail())?>
+			<?php echo  $form->label('uTimezone', t('Time Zone'))?>
+			<?php echo  $form->select('uTimezone',
+				Core::make('helper/date')->getTimezones(),
+				($profile->getUserTimezone()?$profile->getUserTimezone():date_default_timezone_get())
+		); ?>
 		</div>
-		<?php  if(ENABLE_USER_TIMEZONES) { ?>
-            <div class="form-group">
-				<?php echo  $form->label('uTimezone', t('Time Zone'))?>
-				<?php echo  $form->select('uTimezone',
-					Core::make('helper/date')->getTimezones(),
-					($profile->getUserTimezone()?$profile->getUserTimezone():date_default_timezone_get())
-			); ?>
-			</div>
-		<?php  } ?>
-		<?php
+	<?php  } ?>
+	<?php
+	if(is_array($attribs) && count($attribs)) {
 		$af = Loader::helper('form/attribute');
 		$af->setAttributeObject($profile);
 		foreach($attribs as $ak) {
 			print '<div class="ccm-profile-attribute">';
 			print $af->display($ak, $ak->isAttributeKeyRequiredOnProfile());
 			print '</div>';
-		} ?>
-		</fieldset>
-	<?php  } ?>
+		}
+	}
+	?>
+	</fieldset>
 	<?php
 	$ats = AuthenticationType::getList(true, true);
 

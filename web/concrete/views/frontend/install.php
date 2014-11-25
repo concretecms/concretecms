@@ -513,7 +513,8 @@ $(function() {
 	<?=t('There are problems with your installation environment. Please correct them and click the button below to re-run the pre-installation tests.')?>
     <br/><br/>
 	<form method="post" action="<?=$view->url('/install')?>">
-	<button class="btn btn-default" type="submit"><?=t('Run Tests')?> <i class="fa fa-refresh"></i></button>
+    	<input type="hidden" name="locale" value="<?=$locale?>" />
+    	<button class="btn btn-default" type="submit"><?=t('Run Tests')?> <i class="fa fa-refresh"></i></button>
 	</form>
 </div>
 

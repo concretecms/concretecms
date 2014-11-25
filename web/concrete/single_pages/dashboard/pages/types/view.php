@@ -37,7 +37,7 @@
 	<tbody>
 		<? foreach($pagetypes as $cm) {  ?>
 		<tr>
-			<td class="page-type-name"><?=$cm->getPageTypeName()?></td>
+			<td class="page-type-name"><?=$cm->getPageTypeDisplayName()?></td>
 			<td class="page-type-tasks">
 				<a href="<?=$view->action('edit', $cm->getPageTypeID())?>" class="btn btn-default btn-xs"><?=t('Basic Details')?></a>
 				<a href="<?=$view->url('/dashboard/pages/types/form', $cm->getPageTypeID())?>" class="btn btn-default btn-xs"><?=t('Edit Form')?></a>
