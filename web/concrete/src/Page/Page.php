@@ -147,6 +147,17 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
+     * Return a representation of the Page object as something easily serializable.
+     */
+    public function getJSONObject()
+    {
+        $r = new \stdClass;
+        $r->name = $this->getCollectionName();
+        $r->cID = $this->getCollectionID();
+        return $r;
+    }
+
+    /**
      * @return PageController
      */
     public function getPageController() {
