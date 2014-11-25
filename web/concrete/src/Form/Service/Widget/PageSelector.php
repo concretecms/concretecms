@@ -16,7 +16,7 @@ class PageSelector
      *
      * @param int $cID
      */
-
+    /*
     public function selectPage($fieldName, $cID = false)
     {
         $r = ResponseAssetGroup::get();
@@ -99,33 +99,31 @@ class PageSelector
                   </script>";
         return $html;
     }
+    */
 
-    /* Embed a sitemap in javascript dialog.  Supports the following args:
-     *  'node_action'   - path to script containing code to be execute when user clicks on a node in the sitemap
-     *  'dialog_title'  - dialog title
-     *  'dialog_height' - dialog height (default: 350px)
-     *  'dialog_width'  - dialog width (default: 350px)
-     *  'target_id'     - id of the (hidden) field on the parent page that is to receive the CID of the chosen page
-     *                    (do not include the '#')
-     *  (any other arguments the dashboard/sitemap element supports)
-     */
-    public function sitemap($args)
+    public function selectPage($fieldName, $cID = false, $autoInitialize = true)
     {
-        /*
-        if (!isset($args['select_mode'])) {
-            $args['select_mode'] = 'move_copy_delete';
+        $v = \View::getInstance();
+        $v->requireAsset('core/sitemap');
+        $cID = intval($cID);
+
+        if ($cID) {
+            $args = "{'inputName': '{$fieldName}', 'cID': {$cID}}";
+        } else {
+            $args = "{'inputName': '{$fieldName}'}";
         }
-        if (empty($args['node_action'])) {
-            $args['node_action'] = '<none>';
-        }
-        if (empty($args['display_mode'])) {
-            $args['display_mode'] = 'full';
-        }
-        if (empty($args['instance_id'])) {
-            $args['instance_id'] = time();
-        }
-        Loader::element('dashboard/sitemap', $args);
-        */
+
+        $identifier = new \Concrete\Core\Utility\Service\Identifier();
+        $identifier = $identifier->getString(32);
+        $html = <<<EOL
+        <div data-page-selector="{$identifier}"></div>
+        <script type="text/javascript">
+        $(function() {
+            $('[data-page-selector={$identifier}]').concretePageSelector({$args});
+        });
+        </script>
+EOL;
+        return $html;
     }
 
     public function quickSelect($key, $cID = false, $args = array())

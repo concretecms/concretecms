@@ -4,6 +4,7 @@ use Controller;
 use PageType, Permissions, Loader, Redirect;
 use Page as ConcretePage;
 use User;
+use Concrete\Core\Page\EditResponse as PageEditResponse;
 
 class Page extends Controller {
 
@@ -50,6 +51,18 @@ class Page extends Controller {
         return new Response(t('Access Denied'));
     }
 
+	public function getJSON() {
+        $h = \Core::make('helper/concrete/dashboard/sitemap');
+        if ($h->canRead()) {
+            $c = ConcretePage::getByID(intval($_POST['cID']));
+            $cp = new Permissions($c);
+            if ($cp->canViewPage()) {
+                $r = new PageEditResponse();
+                $r->setPage($c);
+                $r->outputJSON();
+            }
+        }
+	}
 
 }
 
