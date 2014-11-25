@@ -13,7 +13,7 @@
     margin: 0;
 }
 
-.rslides li {
+.rslides > li {
     -webkit-backface-visibility: hidden;
     position: absolute;
     display: none;
@@ -22,7 +22,7 @@
     top: 0;
 }
 
-.rslides li:first-child {
+.rslides > li:first-child {
     position: relative;
     display: block;
     float: left;
