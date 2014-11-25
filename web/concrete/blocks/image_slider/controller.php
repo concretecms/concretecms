@@ -45,12 +45,14 @@ class Controller extends BlockController
     public function add()
     {
         $this->requireAsset('core/file-manager');
+        $this->requireAsset('core/sitemap');
         $this->requireAsset('redactor');
     }
 
     public function edit()
     {
         $this->requireAsset('core/file-manager');
+        $this->requireAsset('core/sitemap');
         $this->requireAsset('redactor');
         $db = Loader::db();
         $query = $db->GetAll('SELECT * from btImageSliderEntries WHERE bID = ? ORDER BY sortOrder', array($this->bID));
@@ -103,15 +105,32 @@ class Controller extends BlockController
         $count = count($args['sortOrder']);
         $i = 0;
         parent::save($args);
+
         while ($i < $count) {
-            $db->execute('INSERT INTO btImageSliderEntries (bID, fID, linkURL, title, description, sortOrder) values(?,?,?,?,?,?)',
+            $linkURL = $args['linkURL'][$i];
+            $internalLinkCID = $args['internalLinkCID'][$i];
+            switch (intval($args['linkType'][$i])) {
+                case 1:
+                    $linkURL = '';
+                    break;
+                case 2:
+                    $internalLinkCID = 0;
+                    break;
+                default:
+                    $linkURL = '';
+                    $internalLinkCID = 0;
+                    break;
+            }
+
+            $db->execute('INSERT INTO btImageSliderEntries (bID, fID, title, description, sortOrder, linkURL, internalLinkCID) values(?, ?, ?, ?,?,?,?)',
                 array(
                     $this->bID,
                     intval($args['fID'][$i]),
-                    $args['linkURL'][$i],
                     $args['title'][$i],
                     $args['description'][$i],
-                    $args['sortOrder'][$i]
+                    $args['sortOrder'][$i],
+                    $linkURL,
+                    $internalLinkCID
                 )
             );
             $i++;

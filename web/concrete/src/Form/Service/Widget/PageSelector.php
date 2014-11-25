@@ -16,99 +16,22 @@ class PageSelector
      *
      * @param int $cID
      */
-    /*
     public function selectPage($fieldName, $cID = false)
     {
-        $r = ResponseAssetGroup::get();
-        $r->requireAsset('core/sitemap');
+        $v = \View::getInstance();
+        $v->requireAsset('core/sitemap');
+
         $selectedCID = 0;
         if (isset($_REQUEST[$fieldName])) {
-            $selectedCID = Loader::helper('security')->sanitizeInt($_REQUEST[$fieldName]);
+            $selectedCID = intval($_REQUEST[$fieldName]);
         } else {
             if ($cID > 0) {
                 $selectedCID = $cID;
             }
         }
 
-        // prevent that fieldnames such as 'field[2]' throw errors
-        $identifier = new \Concrete\Core\Utility\Service\Identifier();
-        $safeFieldName = $identifier->getString(32);
-
-        $html = '';
-        $clearStyle = 'display: none';
-        $html .= '<div class="ccm-summary-selected-item" data-page-selector="' . $safeFieldName . '"><div class="ccm-summary-selected-item-inner"><strong class="ccm-summary-selected-item-label">';
-        if ($selectedCID > 0) {
-            $oc = Page::getByID($selectedCID);
-            $html .= $oc->getCollectionName();
-            $clearStyle = '';
-        }
-        $html .= '</strong></div>';
-        $html .= '<a class="ccm-sitemap-select-page" data-page-selector-launch="' . $safeFieldName . '" dialog-width="90%" dialog-height="70%" dialog-append-buttons="true" dialog-modal="false" dialog-title="' . t(
-                'Choose Page') . '" href="' . REL_DIR_FILES_TOOLS_REQUIRED . '/sitemap_search_selector?cID=' . $selectedCID . '" dialog-on-close="Concrete.event.fire(\'fileselectorclose\', \'{$fieldName}\');">' . t(
-                'Select Page') . '</a>';
-        $html .= '&nbsp;<a href="javascript:void(0)" dialog-sender="' . $safeFieldName . '" data-page-selector-clear="' . $safeFieldName . '" class="ccm-sitemap-clear-selected-page" style="float: right; margin-top: -8px;' . $clearStyle . '"><img src="' . ASSETS_URL_IMAGES . '/icons/remove.png" style="vertical-align: middle; margin-left: 3px" /></a>';
-        $html .= '<input type="hidden" data-page-selector="cID" name="' . $fieldName . '" value="' . $selectedCID . '"/>'; // << don't use $safeFieldName here, but use the original one
-        $html .= '</div>';
-        $html .= "<script type=\"text/javascript\">
-                   $(function() {
-                        var ccmActivePageField;
-                        var launcher = $('a[data-page-selector-launch=\"{$safeFieldName}\"]'), name = '{$safeFieldName}', openEvent, openEvent2;
-                        var container = $('div[data-page-selector=\"' + name + '\"]');
-                        launcher.dialog();
-                        ConcreteEvent.bind('fileselectorclose', function(field_name) {
-                            ConcreteEvent.unbind('ConcreteSitemap.' + name);
-                            ConcreteEvent.unbind('SitemapSelectPage.' + name);
-                            ConcreteEvent.unbind('ConcreteSitemapPageSearch.' + name);
-                        });
-                        launcher.on('click', function () {
-                            var selector = $(this),
-                                handle_select = function(e, data) {
-                                    ConcreteEvent.unbind(e);
-                                    var handle = selector.attr('data-page-selector-launch');
-                                    container.find('.ccm-summary-selected-item-label').html(data.title);
-                                    container.find('.ccm-sitemap-clear-selected-page').show();
-                                    container.find('input[data-page-selector=cID]').val(data.cID);
-                                    $.fn.dialog.closeTop();
-                                };
-
-                            ConcreteEvent.bind('ConcreteSitemap.' + name, function (event, sitemap) {
-                                ConcreteEvent.subscribe('SitemapSelectPage.' + name, function (e, data) {
-                                    if (data.instance === sitemap) {
-                                        handle_select(e, data);
-                                    }
-                                });
-                            });
-
-                            ConcreteEvent.bind('ConcreteSitemapPageSearch.' + name, function (event, search) {
-
-                                ConcreteEvent.subscribe('SitemapSelectPage.' + name, function (e, data) {
-                                    if (data.instance === search) {
-                                        handle_select(e, data);
-                                    }
-                                });
-                            });
-                        });
-
-                        $('a[data-page-selector-clear={$safeFieldName}]').click(function () {
-                            var container = $('div[data-page-selector={$safeFieldName}]');
-                            container.find('.ccm-summary-selected-item-label').html('');
-                            container.find('.ccm-sitemap-clear-selected-page').hide();
-                            container.find('input[data-page-selector=cID]').val('');
-                        });
-                  });
-                  </script>";
-        return $html;
-    }
-    */
-
-    public function selectPage($fieldName, $cID = false, $autoInitialize = true)
-    {
-        $v = \View::getInstance();
-        $v->requireAsset('core/sitemap');
-        $cID = intval($cID);
-
-        if ($cID) {
-            $args = "{'inputName': '{$fieldName}', 'cID': {$cID}}";
+        if ($selectedCID) {
+            $args = "{'inputName': '{$fieldName}', 'cID': {$selectedCID}}";
         } else {
             $args = "{'inputName': '{$fieldName}'}";
         }
