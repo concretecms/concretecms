@@ -3,6 +3,7 @@ namespace Concrete\Block\ImageSlider;
 
 use Concrete\Core\Block\BlockController;
 use Loader;
+use Page;
 
 class Controller extends BlockController
 {
@@ -67,8 +68,17 @@ class Controller extends BlockController
     public function view()
     {
         $db = Loader::db();
-        $query = $db->GetAll('SELECT * from btImageSliderEntries WHERE bID = ? ORDER BY sortOrder', array($this->bID));
-        $this->set('rows', $query);
+        $r = $db->GetAll('SELECT * from btImageSliderEntries WHERE bID = ? ORDER BY sortOrder', array($this->bID));
+        // in view mode, linkURL takes us to where we need to go whether it's on our site or elsewhere
+        $rows = array();
+        foreach($r as $q) {
+            if (!$q['linkURL'] && $q['internalLinkCID']) {
+                $c = Page::getByID($q['internalLinkCID'], 'ACTIVE');
+                $q['linkURL'] = $c->getCollectionLink();
+            }
+            $rows[] = $q;
+        }
+        $this->set('rows', $rows);
     }
 
     public function duplicate($newBID) {

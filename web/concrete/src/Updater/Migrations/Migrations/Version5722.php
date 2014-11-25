@@ -4,7 +4,7 @@ namespace Concrete\Core\Updater\Migrations\Migrations;
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 use \Concrete\Core\Conversation\FlagType\FlagType;
-
+use Concrete\Core\Block\BlockType\BlockType;
 
 class Version5722 extends AbstractMigration
 {
@@ -20,6 +20,9 @@ class Version5722 extends AbstractMigration
         if (!is_object($ft)) {
             FlagType::add('spam');
         }
+
+        $bt = BlockType::getByHandle('image_slider');
+        $bt->refresh();
     }
 
     public function down(Schema $schema)
