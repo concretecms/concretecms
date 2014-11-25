@@ -50,6 +50,7 @@
                 var page = r.pages[0];
                 my.$element.html(my._pageLoadedTemplate({'inputName': my.options.inputName, 'page': page}));
                 my.$element.on('click', 'a[data-page-selector-action=clear]', function(e) {
+                    e.preventDefault();
                     my.$element.html(my._chooseTemplate);
                 });
             });

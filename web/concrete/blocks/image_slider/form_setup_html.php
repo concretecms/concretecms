@@ -94,6 +94,9 @@ $tp = new TaskPermission();
                 description: '<?php echo str_replace(array("\t", "\r", "\n"), "", addslashes($row['description']))?>',
                 sort_order: '<?php echo $row['sortOrder'] ?>'
             }));
+            sliderEntriesContainer.find('.ccm-image-slider-entry:last-child div[data-field=entry-link-page-selector]').concretePageSelector({
+                'inputName': 'internalLinkCID[]', 'cID': <? if ($linkType == 1) { ?><?=intval($row['internalLinkCID'])?><? } else { ?>false<? } ?>
+            });
         <?php }
         }?>
 
@@ -108,6 +111,7 @@ $tp = new TaskPermission();
                 link_url: '',
                 cID: '',
                 description: '',
+                link_type: 0,
                 sort_order: '',
                 image_url: ''
             }));
@@ -123,6 +127,9 @@ $tp = new TaskPermission();
             });
             attachDelete(newSlide.find('.ccm-delete-image-slider-entry'));
             attachFileManagerLaunch(newSlide.find('.ccm-pick-slide-image'));
+            newSlide.find('div[data-field=entry-link-page-selector-select]').concretePageSelector({
+                'inputName': 'internalLinkCID[]'
+            });
             attachSortDesc(newSlide.find('i.fa-sort-desc'));
             attachSortAsc(newSlide.find('i.fa-sort-asc'));
             doSortCount();
@@ -242,7 +249,7 @@ $tp = new TaskPermission();
         </div>
         <div class="form-group">
            <label><?php echo t('Link') ?></label>
-            <select data-field="entry-link-select" class="form-control" style="width: 60%;">
+            <select data-field="entry-link-select" name="linkType[]" class="form-control" style="width: 60%;">
                 <option value="0" <% if (!link_type) { %>selected<% } %>><?=t('None')?></option>
                 <option value="1" <% if (link_type == 1) { %>selected<% } %>><?=t('Another Page')?></option>
                 <option value="2" <% if (link_type == 2) { %>selected<% } %>><?=t('External URL')?></option>
@@ -256,7 +263,7 @@ $tp = new TaskPermission();
 
         <div style="display: none;" data-field="entry-link-page-selector" class="form-group">
            <label><?php echo t('Choose Page:') ?></label>
-            <?= Loader::helper('form/page_selector')->selectPage('internalLinkCID[]'); ?>
+            <div data-field="entry-link-page-selector-select"></div>
         </div>
 
         <input class="ccm-image-slider-entry-sort" type="hidden" name="<?=$view->field('sortOrder')?>[]" value="<%=sort_order%>"/>
