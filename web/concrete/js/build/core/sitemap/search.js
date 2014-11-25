@@ -88,6 +88,45 @@
         });
     }
 
+    /**
+     * Static Methods
+     */
+    ConcretePageAjaxSearch.launchDialog = function(callback) {
+        var w = $(window).width() - 53;
+
+        $.fn.dialog.open({
+            width: w,
+            height: '100%',
+            href: CCM_TOOLS_PATH + '/sitemap_search_selector',
+            modal: true,
+            title: ccmi18n_filemanager.title,
+            onClose: function() {
+                ConcreteEvent.fire('PageSelectorClose');
+            },
+            onOpen: function() {
+                ConcreteEvent.unsubscribe('SitemapSelectPage');
+                ConcreteEvent.subscribe('SitemapSelectPage', function(e, data) {
+                    jQuery.fn.dialog.closeTop();
+                    callback(data);
+                });
+            }
+        });
+    };
+
+    ConcretePageAjaxSearch.getPageDetails = function(cID, callback) {
+        $.ajax({
+            type: 'post',
+            dataType: 'json',
+            url: CCM_DISPATCHER_FILENAME + '/ccm/system/page/get_json',
+            data: {'cID': cID},
+            error: function(r) {
+                ConcreteAlert.dialog('Error', r.responseText);
+            },
+            success: function(r) {
+                callback(r);
+            }
+        });
+    };
     var ConcretePageAjaxSearchMenu = {
 
         get: function () {
