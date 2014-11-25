@@ -208,7 +208,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
             $currentFilesystem->delete($fh->prefix($fv->getPrefix(), $fv->getFilename()));
         }
 
-        $this->location = $newLocation;
+        $this->storageLocation = $newLocation;
         $this->save();
     }
 
