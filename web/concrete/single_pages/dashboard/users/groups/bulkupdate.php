@@ -109,7 +109,8 @@ $(function() {
        $('[data-groups-tree=<?=$tree->getTreeID()?>]').concreteGroupsTree({
           'treeID': '<?=$tree->getTreeID()?>',
           'chooseNodeInForm': 'single',
-          <? if ($this->controller->isPost()) { ?> 
+		  'enableDragAndDrop': false,
+          <? if ($this->controller->isPost()) { ?>
              'selectNodesByKey': [<?=intval($_POST['gParentNodeID'])?>],
           <? } ?>
           'removeNodesByID': ['<?=$guestGroupNode->getTreeNodeID()?>','<?=$registeredGroupNode->getTreeNodeID()?>'],

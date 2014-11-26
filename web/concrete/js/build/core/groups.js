@@ -189,11 +189,23 @@
 						return true;
 					},
 					onDragOver: function(node, sourceNode, hitMode) {
-						// can't drag this thing out of the tree.
-				        if (node.data.treeNodeParentID == '0' && hitMode != 'over') {
-				        	return false;
-				        }
-				        // Prevent dropping a parent below its own child
+						if ((!node.parent.data.treeNodeID) && (node.data.treeNodeID !== '1')) { // Home page has no parents, but we still want to be able to hit it.
+							return false;
+						}
+
+                        if((hitMode != 'over') && (node.data.treeNodeID == 1)) {  // Home gets no siblings
+                            return false;
+                        }
+
+                        if (sourceNode.data.treeNodeID == node.data.treeNodeID) {
+                            return false; // can't drag node onto itself.
+                        }
+
+						if (!node.data.treeNodeID && hitMode == 'after') {
+							return false;
+						}
+
+				        // Prevent dropping a parent below it's own child
 				        if(node.isDescendantOf(sourceNode)){
 				          return false;
 				        }

@@ -343,6 +343,22 @@
 						return true;
 					},
 					onDragOver: function(node, sourceNode, hitMode) {
+						if ((!node.parent.data.treeNodeID) && (node.data.treeNodeID !== '1')) { // Home page has no parents, but we still want to be able to hit it.
+							return false;
+						}
+
+                        if((hitMode != 'over') && (node.data.treeNodeID == 1)) {  // Home gets no siblings
+                            return false;
+                        }
+
+                        if (sourceNode.data.treeNodeID == node.data.treeNodeID) {
+                            return false; // can't drag node onto itself.
+                        }
+
+						if (!node.data.treeNodeID && hitMode == 'after') {
+							return false;
+						}
+
 						// you can only drag shit into other categories.
 						var nodeTypeHandle = node.data.treeNodeType;
 						if (hitMode === 'over' && jQuery.inArray(node.data.treeNodeTypeHandle, ['topic']) > -1) {
