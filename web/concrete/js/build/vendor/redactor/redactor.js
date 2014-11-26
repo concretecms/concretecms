@@ -6456,7 +6456,7 @@
                     text = $(elem).text();
                     target = elem.target;
                     /* concrete5 */
-                    lightbox = $(elem).attr('data-concrete5-link-launch') == 'lightbox-image';
+                    lightbox = $(elem).attr('data-concrete5-link-launch') == 'lightbox' || $(elem).attr('data-concrete5-link-launch') == 'lightbox-image';
                     type = $(elem).attr('data-concrete5-link-type');
                     /* end concret5 */
 
@@ -6585,7 +6585,7 @@
             var lightbox = $('#redactor_link_lightbox').is(':checked');
 
             if (lightbox) {
-                var lightboxStr = 'data-concrete5-link-type="' + link_type + '" data-concrete5-link-launch="lightbox-image"';
+                var lightboxStr = 'data-concrete5-link-type="' + link_type + '" data-concrete5-link-launch="lightbox"';
             } else {
                 var lightboxStr = 'data-concrete5-link-type="' + link_type + '"';
             }
@@ -6645,11 +6645,8 @@
                     {
                         $(this.insert_link_node).removeAttr('target');
                     }
-
                     /* concrete5 */
-                    if (lightbox != '') {
-                        $(this.insert_link_node).attr('data-concrete5-link-launch', 'lightbox');
-                    } else {
+                    if (lightbox == '') {
                         $(this.insert_link_node).removeAttr('data-concrete5-link-launch');
                     }
                     /* end concrete5 */
@@ -7126,7 +7123,9 @@
                         a.attr('target', '_blank');
                     }
                     else if (lightbox) {
-                        a.attr('data-concrete5-link-launch', 'lightbox-image');
+                        /* concrete5 */
+                        a.attr('data-concrete5-link-launch', 'lightbox');
+                        /* end concrete5 */
                     }
 
 
@@ -7150,7 +7149,9 @@
 
                     if (lightbox)
                     {
-                        parent.attr('data-concrete5-link-launch', 'lightbox-image');
+                        /* concrete5 */
+                        parent.attr('data-concrete5-link-launch', 'lightbox');
+                        /* end concrete5 */
                     }
                     else
                     {
