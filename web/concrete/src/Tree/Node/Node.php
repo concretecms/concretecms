@@ -89,6 +89,7 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
             $node = new stdClass;
             $node->title = $this->getTreeNodeDisplayName();
             $node->key = $this->getTreeNodeID();
+            $node->treeNodeID = $this->getTreeNodeID();
             $node->isFolder = false;
             $node->select = $this->treeNodeIsSelected;
             $node->canEditTreeNodePermissions = $p->canEditTreeNodePermissions();
