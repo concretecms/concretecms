@@ -890,7 +890,7 @@ class Package extends Object
         if ($this->pkgHandle != '' && is_dir(DIR_PACKAGES . '/' . $this->pkgHandle)) {
             $trash = \Config::get('concrete.misc.package_backup_directory');
             if (!is_dir($trash)) {
-                mkdir($trash, Config::get('concrete.filesystem.permissions.directory'));
+                mkdir($trash, \Config::get('concrete.filesystem.permissions.directory'));
             }
             $trashName = $trash . '/' . $this->pkgHandle . '_' . date('YmdHis');
             $ret = rename(DIR_PACKAGES . '/' . $this->pkgHandle, $trashName);
