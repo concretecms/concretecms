@@ -10,7 +10,13 @@
 		?>
 	<div class="ccm-ui">
 		<div class="alert alert-info">
-			<?=t('The %s page type composer form element will output its contents here (Block ID %s)', $cc->getPageTypeComposerControlDisplayName(), $b->getBlockID())?>
+			<? if($fls->getPageTypeComposerFormLayoutSetControlCustomLabel()) {
+				$displayname = $fls->getPageTypeComposerFormLayoutSetControlCustomLabel();
+			} else {
+				$displayname = $cc->getPageTypeComposerControlDisplayName();
+			}
+			echo t('The %s page type composer form element will output its contents here (Block ID %s)', $displayname, $b->getBlockID());
+			?>
 		</div>
 	</div>
 	<? } ?>
