@@ -11,8 +11,13 @@ use \Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFo
 	$values = array();
 	foreach($controls as $control) {
 		$fls = PageTypeComposerFormLayoutSetControl::getByID($control->getPageTypeComposerFormLayoutSetControlID());
-		$cc = $fls->getPageTypeComposerControlObject();
-		$values[$control->getPageTypeComposerOutputControlID()] = $cc->getPageTypeComposerControlDisplayName();
+		if($fls->getPageTypeComposerFormLayoutSetControlCustomLabel()) {
+			$displayname = $fls->getPageTypeComposerFormLayoutSetControlCustomLabel();
+		} else {
+			$cc = $fls->getPageTypeComposerControlObject();
+			$displayname = $cc->getPageTypeComposerControlDisplayName();	
+		}
+		$values[$control->getPageTypeComposerOutputControlID()] = $displayname;
 	}
 	$form = Loader::helper('form');
 ?>
