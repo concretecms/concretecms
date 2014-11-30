@@ -1071,6 +1071,26 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
+     * Returns the Page Template Object
+     * @return PageTemplate
+     */
+    function getPageTemplateObject() {
+        return PageTemplate::getByID($this->getPageTemplateID());
+    }
+
+    /**
+     * Returns the Page Template handle
+     * @return string
+     */
+    function getPageTemplateHandle() {
+        $pt = $this->getPageTemplateObject();
+        if ($pt instanceof PageTemplate) {
+            return $pt->getPageTemplateHandle();
+        }
+        return false;
+    }
+
+    /**
      * Returns the Collection Type handle
      * @return string
      */
