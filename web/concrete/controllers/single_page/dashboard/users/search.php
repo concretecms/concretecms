@@ -105,7 +105,6 @@ class Search extends DashboardPageController
                     $this->user->activate();
                     $mh = Loader::helper('mail');
                     $mh->to($this->user->getUserEmail());
-                    $mh->load('user_registered_approval_complete');
                     if (Config::get('concrete.user.registration.notification_email')) {
                         $mh->from(Config::get('concrete.user.registration.notification_email'), t('Website Registration Notification'));
                     } else {
@@ -116,6 +115,8 @@ class Search extends DashboardPageController
                     $mh->addParameter('user',   $this->user);
                     $mh->addParameter('uName',  $this->user->getUserName());
                     $mh->addParameter('uEmail', $this->user->getUserEmail());
+                    $mh->addParameter('siteName', Config::get('concrete.site'));
+                    $mh->load('user_registered_approval_complete');
                     $mh->sendMail();
                     $this->redirect('/dashboard/users/search', 'view', $this->user->getUserID(), 'activated');
                 }
