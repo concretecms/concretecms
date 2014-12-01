@@ -139,7 +139,7 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
         /** @var \Concrete\Core\Conversation\Editor\Editor $editor */
         $editor = ConversationEditor::getActive();
         if ($dashboardOverride) {
-            return $this->cnvMessageBody;
+            return $editor->formatConversationMessageBody($this->getConversationObject(),$this->cnvMessageBody);
         } elseif ($this->cnvIsMessageDeleted) {
             return $editor->formatConversationMessageBody($this->getConversationObject(),t('This message has been deleted.'));
             //return t('This message has been deleted.');
