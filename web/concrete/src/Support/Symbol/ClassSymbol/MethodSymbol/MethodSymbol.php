@@ -137,7 +137,9 @@ class MethodSymbol
         $rendered .= implode(', ', $params) . "){$eol}{{$eol}";
         $class_name = $method->getDeclaringClass()->getName();
         if ($method->isStatic()) {
-            $rendered .= "{$padding}return {$class_name}::{$method->getName()}(" . implode(', ', $calling_params) . ");";
+            $rendered .= "{$padding}return {$class_name}::{$method->getName()}(" . implode(
+                    ', ',
+                    $calling_params) . ");";
         } else {
             $rendered .= "{$padding}/** @var {$class_name} \$instance */{$eol}";
             $rendered .= "{$padding}return \$instance->{$method->getName()}(" . implode(', ', $calling_params) . ");";
