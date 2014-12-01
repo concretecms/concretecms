@@ -46,16 +46,16 @@ class Controller extends GenericOauth2TypeController
 
         $whitelist = array();
         foreach (explode(PHP_EOL, $args['whitelist']) as $entry) {
-            $whitelist[] = $entry;
+            $whitelist[] = trim($entry);
         }
 
         $blacklist = array();
         foreach (explode(PHP_EOL, $args['blacklist']) as $entry) {
-            $blacklist[] = json_decode($entry, true);
+            $blacklist[] = json_decode(trim($entry), true);
         }
 
-        \Config::save('auth.google.email_filters.whitelist', $whitelist);
-        \Config::save('auth.google.email_filters.blacklist', $blacklist);
+        \Config::save('auth.google.email_filters.whitelist', array_values(array_filter($whitelist)));
+        \Config::save('auth.google.email_filters.blacklist', array_values(array_filter($blacklist)));
     }
 
     public function edit()
