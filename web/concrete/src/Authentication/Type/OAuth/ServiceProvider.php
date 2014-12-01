@@ -11,20 +11,27 @@ class ServiceProvider extends Provider
 
     public function register()
     {
-        $this->app->bindShared('oauth_service_factory', function() {
-            $factory = new ServiceFactory();
-            $factory->setHttpClient(new CurlClient());
+        $this->app->bind(
+            'oauth_service_factory',
+            function ($app, $params = array()) {
+                $factory = new ServiceFactory();
+                $factory->setHttpClient($client = new CurlClient());
+                $client->setCurlParameters((array) $params);
 
-            return $factory;
-        });
-        $this->app->bindShared('oauth_extractor_factory', function() {
-            return new ExtractorFactory();
-        });
+                return $factory;
+            });
+        $this->app->bindShared(
+            'oauth_extractor_factory',
+            function () {
+                return new ExtractorFactory();
+            });
 
-        $this->app->bind('oauth_extractor', function($app, $service) {
-            $extractor_factory = $app->make('oauth_extractor_factory');
-            return $extractor_factory->get($service);
-        });
+        $this->app->bind(
+            'oauth_extractor',
+            function ($app, $service) {
+                $extractor_factory = $app->make('oauth_extractor_factory');
+                return $extractor_factory->get($service);
+            });
     }
 
 }
