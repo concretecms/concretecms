@@ -35,7 +35,7 @@ abstract class GenericOauth2TypeController extends GenericOauthTypeController
             $token = $this->getService()->requestAccessToken($code);
             $this->setToken($token);
         } catch (TokenResponseException $e) {
-            $this->showError('Failed authentication: ' . $e->getMessage());
+            $this->showError(t('Failed authentication: %s', $e->getMessage()));
             exit;
         }
 
@@ -46,7 +46,7 @@ abstract class GenericOauth2TypeController extends GenericOauthTypeController
                     $this->completeAuthentication($user);
                 } else {
                     $this->showError(
-                        'No local user account associated with this user, please log in with a local account and connect your account from your user profile.');
+                        t('No local user account associated with this user, please log in with a local account and connect your account from your user profile.'));
                 }
             } catch (LoginException $e) {
                 $this->showError($e->getMessage());
@@ -54,10 +54,10 @@ abstract class GenericOauth2TypeController extends GenericOauthTypeController
                 $this->showError($e->getMessage());
             } catch (\Exception $e) {
                 \Log::addError($e->getMessage(), array($e));
-                $this->showError('An unexpected error occurred.');
+                $this->showError(t('An unexpected error occurred.'));
             }
         } else {
-            $this->showError('Failed to complete authentication.');
+            $this->showError(t('Failed to complete authentication.'));
         }
         exit;
     }
@@ -82,16 +82,16 @@ abstract class GenericOauth2TypeController extends GenericOauthTypeController
             $code = \Request::getInstance()->get('code');
             $token = $this->getService()->requestAccessToken($code);
         } catch (TokenResponseException $e) {
-            $this->showError('Failed authentication: ' . $e->getMessage());
+            $this->showError(t('Failed authentication: %s', $e->getMessage()));
             exit;
         }
         if ($token) {
             if ($this->bindUser($user, $this->getExtractor(true)->getUniqueId())) {
-                $this->showSuccess('Successfully attached.');
+                $this->showSuccess(t('Successfully attached.'));
                 exit;
             }
         }
-        $this->showError('Unable to attach user.');
+        $this->showError(t('Unable to attach user.'));
         exit;
     }
 
