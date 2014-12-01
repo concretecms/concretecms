@@ -32,7 +32,7 @@
     <label for="whitelist">
         <?= t('Domain Whitelist regex') ?>
     </label>
-    <span class="help-block"><?= t('One per line, to whitelist all %s domains: %s', '<code>concrete5.org</code>', '<code>~^concrete5.org$~</code>') ?></span>
+    <span class="help-block"><?= t('One per line, to whitelist all %s domains: %s', '<code>concrete5.org</code>', '<code>~^concrete5\\.org$i~</code>') ?></span>
     <textarea type="text" name="whitelist" class="form-control"><?= implode(PHP_EOL, (array) $whitelist) ?></textarea>
 </div>
 
@@ -42,7 +42,7 @@
     </label>
     <span class="help-block"><?= t('One per line') ?></span>
     <span class="help-block"><?= t('Format: %s.', sprintf('<code>[ "~%s~i", "%s" ]</code>', t('Regex'), t('Error Message'))) ?></span>
-    <span class="help-block"><?= t('To disallow everything other than whitelist: %s.', sprintf('<code>[ "~*~", "%s" ]</code>', t('Invalid domain.'))) ?></span>
+    <span class="help-block"><?= t('To disallow everything other than whitelist: %s.', sprintf('<code>[ "~.*~", "%s" ]</code>', t('Invalid domain.'))) ?></span>
     <textarea type="text" name="blacklist" class="form-control"><?= implode(PHP_EOL, $blacklist) ?></textarea>
 </div>
 
