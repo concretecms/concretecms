@@ -18,6 +18,9 @@
         border-width: 0px;
         background: #dd4b39;
     }
+    .ccm-ui .btn-google:focus {
+        background: #dd4b39;
+    }
     .ccm-ui .btn-google:hover {
         background: #f04f3d;
     }
