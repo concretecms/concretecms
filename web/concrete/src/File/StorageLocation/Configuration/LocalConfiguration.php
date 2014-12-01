@@ -46,7 +46,11 @@ class LocalConfiguration extends Configuration implements ConfigurationInterface
 
     public function getPublicURLToFile($file)
     {
-        return BASE_URL . $this->getRelativePathToFile($file);
+        $rel = $this->getRelativePathToFile($file);
+        if(strpos($rel, '://')) {
+            return $rel;
+        }
+        return BASE_URL . $rel;
     }
 
     public function loadFromRequest(\Concrete\Core\Http\Request $req)
