@@ -9,7 +9,7 @@ if (is_object($configuration)) {
 <div class="form-group">
     <label for="path"><?=t('Root Path')?></label>
     <div class="input-group">
-        <?=$form->text('fslType[path]', $path, array('placeholder' => t('Example: %s', $_SERVER['DOCUMENT_ROOT'])))?>
+        <?=$form->text('fslType[path]', $path, array('placeholder' => t('Example: %ssome/path', $_SERVER['DOCUMENT_ROOT'])))?>
         <span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
     </div>
 </div>
