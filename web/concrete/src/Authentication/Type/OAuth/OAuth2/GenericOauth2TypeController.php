@@ -94,6 +94,13 @@ abstract class GenericOauth2TypeController extends GenericOauthTypeController
         exit;
     }
 
+    /**
+     * @return \OAuth\OAuth2\Service\AbstractService
+     */
+    public function getService() {
+        return parent::getService();
+    }
+
     public function view()
     {
         // Nothing here.

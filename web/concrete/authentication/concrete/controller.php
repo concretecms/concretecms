@@ -151,6 +151,8 @@ class Controller extends AuthenticationTypeController
                         $mh->from($adminUser->getUserEmail(), t('Forgot Password'));
                     }
                 }
+                
+                $mh->addParameter('siteName', Config::get('concrete.site'));
                 $mh->load('forgot_password');
                 @$mh->sendMail();
 
