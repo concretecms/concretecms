@@ -348,6 +348,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
             $mh->addParameter('profileURL', BASE_URL . View::url('/members/profile', 'view', $this->getUserID()));
             $mh->addParameter('profilePreferencesURL', BASE_URL . View::url('/account/profile/edit'));
             $mh->to($recipient->getUserEmail());
+            $mh->addParameter('siteName', Config::get('concrete.site'));
 
             $mi = MailImporter::getByHandle("private_message");
             if (is_object($mi) && $mi->isMailImporterEnabled()) {

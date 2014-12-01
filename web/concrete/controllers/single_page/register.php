@@ -154,6 +154,7 @@ class Register extends PageController {
 						$attribValues[] = $ak->getAttributeKeyDisplayName('text') . ': ' . $process->getAttribute($ak->getAttributeKeyHandle(), 'display');
 					}
 					$mh->addParameter('attribs', $attribValues);
+					$mh->addParameter('siteName', Config::get('concrete.site'));
 
 					if (Config::get('concrete.user.registration.notification_email')) {
 						$mh->from(Config::get('concrete.user.registration.notification_email'),  t('Website Registration Notification'));
