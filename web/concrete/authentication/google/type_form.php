@@ -23,19 +23,26 @@
     </div>
 </div>
 
+<h4><?= t('Domain Filtering') ?></h4>
+<p><?= t('Google allows accounts be created against custom domains like "example.com". ' .
+         'These lists allow you to use standard PHP regular expressions to filter against the domain name or the google app domain account domain.' .
+         'For example user@example.com would filter against "example.com".') ?></p>
+
 <div class="form-group">
     <label for="whitelist">
-        <?= t('Whitelist regex') ?>
+        <?= t('Domain Whitelist regex') ?>
     </label>
-    <span class="help-block"><?= t('One per line, whitelist entries are run before blacklist entries.') ?></span>
+    <span class="help-block"><?= t('One per line, to whitelist all %s domains: %s', '<code>concrete5.org</code>', '<code>~^concrete5.org$~</code>') ?></span>
     <textarea type="text" name="whitelist" class="form-control"><?= implode(PHP_EOL, (array) $whitelist) ?></textarea>
 </div>
 
 <div class="form-group">
     <label for="whitelist">
-        <?= t('Blacklist regex') ?>
+        <?= t('Domain Blacklist regex') ?>
     </label>
-    <span class="help-block"><?= t('One per line, Format: %s.', sprintf('<code>[ "~%s~i", "%s" ]</code>', t('Regex'), t('Error Message'))) ?></span>
+    <span class="help-block"><?= t('One per line') ?></span>
+    <span class="help-block"><?= t('Format: %s.', sprintf('<code>[ "~%s~i", "%s" ]</code>', t('Regex'), t('Error Message'))) ?></span>
+    <span class="help-block"><?= t('To disallow everything other than whitelist: %s.', sprintf('<code>[ "~*~", "%s" ]</code>', t('Invalid domain.'))) ?></span>
     <textarea type="text" name="blacklist" class="form-control"><?= implode(PHP_EOL, $blacklist) ?></textarea>
 </div>
 
