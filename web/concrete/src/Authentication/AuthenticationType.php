@@ -218,6 +218,18 @@ class AuthenticationType extends Object
     }
 
     /**
+     * Update the name
+     * @param string $authTypeName
+     */
+    public function setAuthenticationTypeName($authTypeName)
+    {
+        $db = Loader::db();
+        $db->Execute(
+           'UPDATE AuthenticationTypes SET authTypeName=? WHERE authTypeID=?',
+           array($authTypeName, $this->getAuthenticationTypeID()));
+    }
+
+    /**
      * AuthenticationType::setAuthenticationTypeDisplayOrder
      * Update the order for display.
      *

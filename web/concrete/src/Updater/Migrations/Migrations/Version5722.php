@@ -7,13 +7,15 @@ use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 use \Concrete\Core\Conversation\FlagType\FlagType;
 use Concrete\Core\Block\BlockType\BlockType;
+use AuthenticationType;
+use Exception;
 
 class Version5722 extends AbstractMigration
 {
 
     public function getName()
     {
-        return '20141126000000';
+        return '20141201000000';
     }
 
     public function up(Schema $schema)
@@ -33,6 +35,15 @@ class Version5722 extends AbstractMigration
                 if (is_object($category) && is_object($pe)) {
                     $category->associateAccessEntityType($pe);
                 }
+            }
+        }
+
+        try {
+            $gat = AuthenticationType::getByHandle('google');
+        } catch(Exception $e) {
+            $gat = AuthenticationType::add('google', 'Google');
+            if (is_object($gat)) {
+                $gat->disable();
             }
         }
     }
