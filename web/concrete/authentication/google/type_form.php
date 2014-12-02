@@ -25,7 +25,7 @@
 
 <h4><?= t('Domain Filtering') ?></h4>
 <p><?= t('Google allows accounts be created against custom domains like "example.com". ' .
-         'These lists allow you to use standard PHP regular expressions to filter against the domain name or the google app domain account domain.' .
+         'These lists allow you to use standard PHP regular expressions to filter against the domain name or the google app domain account. ' .
          'For example user@example.com would filter against "example.com".') ?></p>
 
 <div class="form-group">
