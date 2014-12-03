@@ -4,7 +4,7 @@
     <h4><?php echo t('Twitter Login Configuration'); ?></h4>
     <p><?php echo t('<a href="%s" target="_blank">Click here</a> to obtain your access keys.', 'https://apps.twitter.com/'); ?></p>
     <p><?php echo t('Check the box labeled "Allow this application to be used to Sign in with Twitter".'); ?></p>
-    <p><?php echo t('Set the "Callback URL" to:%s.', ' <code>'.BASE_URL.DIR_REL.\URL::to('/system/authentication/twitter/callback').'</code>'); ?></p>
+    <p><?php echo t('Set the "Callback URL" to:%s.', ' <code>'.BASE_URL.DIR_REL.\URL::to('/ccm/system/authentication/oauth2/twitter/callback').'</code>'); ?></p>
 </div>
 
 <div class='form-group'>
@@ -32,7 +32,7 @@
 <div class='form-group registration-group'>
     <label for="registration_group" class="control-label"><?= t('Group to enter on registration') ?></label>
     <select name="registration_group" class="form-control">
-        <option value="0">None</option>
+        <option value="0"><?= t("None") ?></option>
         <?php
         /** @var \Group $group */
         foreach ($groups as $group) {
