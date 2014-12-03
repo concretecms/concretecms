@@ -13,7 +13,11 @@ class Controller extends GenericOauth2TypeController
 
     public function supportsRegistration()
     {
-        return \Config::get('auth.google.registration_enabled', false);
+        return \Config::get('auth.google.registration.enabled', false);
+    }
+
+    public function registrationGroupID() {
+        return \Config::get('auth.google.registration.group');
     }
 
     public function getAuthenticationTypeIconHTML()
@@ -41,8 +45,8 @@ class Controller extends GenericOauth2TypeController
     {
         \Config::save('auth.google.appid', $args['apikey']);
         \Config::save('auth.google.secret', $args['apisecret']);
-        \Config::save('auth.google.registration_enabled', $args['registration_enabled']);
-
+        \Config::save('auth.google.registration.enabled', !!$args['registration_enabled']);
+        \Config::save('auth.google.registration.group', intval($args['registration_group'], 10));
 
         $whitelist = array();
         foreach (explode(PHP_EOL, $args['whitelist']) as $entry) {
@@ -63,6 +67,10 @@ class Controller extends GenericOauth2TypeController
         $this->set('form', \Loader::helper('form'));
         $this->set('apikey', \Config::get('auth.google.appid', ''));
         $this->set('apisecret', \Config::get('auth.google.secret', ''));
+
+        $list = new \GroupList();
+        $list->includeAllGroups();
+        $this->set('groups', $list->getResults());
 
         $this->set('whitelist', \Config::get('auth.google.email_filters.whitelist', array()));
         $blacklist = array_map(function($entry) {
