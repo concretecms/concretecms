@@ -154,4 +154,19 @@ class Type
     }
 
 
+    /**
+     * Return an array of AuthenticationTypes that are associated with a specific package.
+     * @param \Package $pkg
+     * @return \Concrete\Core\File\StorageLocation\Type\Type[]
+     */
+    public static function getListByPackage(\Package $pkg)
+    {
+        $db = Database::get();
+        $em = $db->getEntityManager();
+        return $em->getRepository('\Concrete\Core\File\StorageLocation\Type\Type')->findBy(
+            array('pkgID' => $pkg->getPackageID()), array('fslTypeID' => 'asc')
+        );
+    }
+
+
 }
