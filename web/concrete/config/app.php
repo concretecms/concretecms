@@ -97,6 +97,7 @@ return array(
         'core_encryption'   => '\Concrete\Core\Encryption\EncryptionServiceProvider',
         'core_validation'   => '\Concrete\Core\Validation\ValidationServiceProvider',
         'core_localization' => '\Concrete\Core\Localization\LocalizationServiceProvider',
+        'core_multilingual' => '\Concrete\Core\Multilingual\MultilingualServiceProvider',
         'core_feed'         => '\Concrete\Core\Feed\FeedServiceProvider',
         'core_html'         => '\Concrete\Core\Html\HtmlServiceProvider',
         'core_pagination'   => '\Concrete\Core\Search\PaginationServiceProvider',

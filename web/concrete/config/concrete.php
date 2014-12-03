@@ -219,6 +219,12 @@ return array(
 
     ),
 
+    'multilingual' =>   array(
+        'redirect_home_to_default_language' => false,
+        'use_browser_detected_language' => false,
+        'default_language' => false
+    ),
+
     'design'            => array(
         'enable_custom' => true,
         'enable_layouts' => true

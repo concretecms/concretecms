@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Multilingual\Service\UserInterface;
+namespace Concrete\Core\Multilingual\Service\UserInterface;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
