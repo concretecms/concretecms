@@ -39,20 +39,27 @@ class File extends Controller {
 		$successCount = 0;
 
 		foreach($files as $f) {
-			$fv = $f->getApprovedVersion();
-			$resp = $fv->refreshAttributes();
-			switch($resp) {
-                case \Concrete\Core\File\Importer::E_FILE_INVALID:
-                    $errorMessage .= t('File %s could not be found.', $fv->getFilename()) . '<br/>';
-					break;
-				default:
-					$successCount++;
-					$successMessage = t2('%s file rescanned successfully.', '%s files rescanned successfully.', $successCount);
-					break;
-			}
+            try {
+                $fv = $f->getApprovedVersion();
+                $resp = $fv->refreshAttributes();
+                switch ($resp) {
+                    case \Concrete\Core\File\Importer::E_FILE_INVALID:
+                        $errorMessage .= t('File %s could not be found.', $fv->getFilename()) . '<br/>';
+                        break;
+                    default:
+                        $successCount++;
+                        $successMessage = t2('%s file rescanned successfully.', '%s files rescanned successfully.',
+                            $successCount);
+                        break;
+                }
+            } catch(\Concrete\Flysystem\FileNotFoundException $e) {
+                $errorMessage .= t('File %s could not be found.', $fv->getFilename()) . '<br/>';
+            }
 		}
 		if ($errorMessage && !$successMessage) {
-			throw new Exception($errorMessage);
+            $e = new \Concrete\Core\Error\Error;
+            $e->add($errorMessage);
+			$r->setError($e);
 		} else {
 			$r->setMessage($errorMessage . $successMessage);
 		}
