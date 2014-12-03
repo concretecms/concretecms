@@ -173,13 +173,8 @@ class Type
     public function delete()
     {
         $list = \Concrete\Core\File\StorageLocation\StorageLocation::getList();
-        if ($this->getPackageID()) {
-            $class = '\\Concrete\\Package\\' . camelcase($this->getPackageHandle()) . '\\Core\\File\\StorageLocation\\Configuration\\' . camelcase($this->getHandle()) . 'Configuration';
-        } else {
-            $class = '\\Concrete\\Core\\File\\StorageLocation\\Configuration\\' . camelcase($this->getHandle()) . 'Configuration';
-        }
         foreach($list as $item) {
-            if($item->getConfigurationObject() instanceof $class) {
+            if($item->getTypeObject() == $this->getHandle()) {
                 throw new \Exception(t('Please remove all storage locations using this storage type.'));
             }
         }
