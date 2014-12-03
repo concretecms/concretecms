@@ -232,6 +232,13 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
      */
     abstract public function supportsRegistration();
 
+    /**
+     * Whether or not we will attempt to register the user.
+     *
+     * @return bool
+     */
+    abstract public function registrationGroupID();
+
     protected function createUser()
     {
         // Make sure that this extractor supports everything we need.
@@ -299,6 +306,14 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
 
         if (!$user_info) {
             throw new Exception('Unable to create new account.');
+        }
+
+        if ($group_id = intval($this->registrationGroupID(), 10)) {
+            $group = \Group::getByID($group_id);
+            if ($group && is_object($group) && !$group->isError()) {
+                $user = \User::getByUserID($user_info->getUserID());
+                $user->enterGroup($group);
+            }
         }
 
         $key = \UserAttributeKey::getByHandle('first_name');
