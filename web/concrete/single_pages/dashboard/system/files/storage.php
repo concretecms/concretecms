@@ -12,7 +12,7 @@
         $fslIsDefault = $location->isDefault();
         $method = 'update';
 
-        if (!$fslIsDefault) { ?>
+        if (!$fslIsDefault && $type->getHandle() != 'default') { ?>
 
         <div class="ccm-dashboard-header-buttons">
             <form method="post" action="<?=$this->action('delete')?>">
