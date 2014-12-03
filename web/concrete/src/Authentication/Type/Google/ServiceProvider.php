@@ -35,15 +35,15 @@ class ServiceProvider extends \Concrete\Core\Foundation\Service\Provider
             'Concrete\Authentication\Google\Controller::handle_attach_callback');
 
         /** @var ExtractorFactory $factory */
-        $factory = $this->app->make('oauth_extractor_factory');
+        $factory = $this->app->make('oauth/factory/extractor');
         $factory->addExtractorMapping('OAuth\\OAuth2\\Service\\Google',
                                       'Concrete\\Core\\Authentication\\Type\\Google\\Extractor\\Google');
 
         $this->app->bindShared(
-            'google_service',
+            'authentication/google',
             function (Application $app, $callback = '/system/authentication/google/callback/') {
                 /** @var ServiceFactory $factory */
-                $factory = $app->make('oauth_service_factory', array(CURLOPT_SSL_VERIFYPEER => false));
+                $factory = $app->make('oauth/factory/service', array(CURLOPT_SSL_VERIFYPEER => false));
 
                 return $factory->createService(
                     'google',

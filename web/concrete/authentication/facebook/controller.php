@@ -30,7 +30,7 @@ class Controller extends GenericOauth2TypeController
     public function getService()
     {
         if (!$this->service) {
-            $this->service = \Core::make('facebook_service');
+            $this->service = \Core::make('authentication/facebook');
         }
         return $this->service;
     }
