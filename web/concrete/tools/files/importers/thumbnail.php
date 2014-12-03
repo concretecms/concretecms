@@ -2,7 +2,6 @@
 
 use Concrete\Core\File\Image\Thumbnail\Thumbnail;
 use Concrete\Core\File\Version;
-use Concrete\Core\File\StorageLocation\StorageLocation;
 
 defined("C5_EXECUTE") or die("Access Denied.");
 $fID = isset($_REQUEST['fID']) ? intval($_REQUEST['fID']) : 0;
@@ -40,9 +39,6 @@ foreach ($thumbnails as $thumb) {
 if ($thumbnail) {
     /** @var StorageLocation $fsl */
     $fsl = $f->getFileStorageLocationObject();
-    if (!($fsl instanceof StorageLocation)) {
-        die('{"error":1,"code":401,"message":"Invalid file storage location"}');
-    }
 
     /**
      * Clear out the old image, and replace it with this data. This is destructive and not versioned, it definitely needs to
