@@ -205,6 +205,18 @@
                 </attributekey>
             </attributes>
         </page>
+
+        <page name="Multilingual" path="/dashboard/multilingual" filename="/dashboard/multilingual/view.php" pagetype="" description="Run your site in multiliple languages." package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>multilingual, localization, internationalization, i18n</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Setup" path="/dashboard/multilingual/setup" filename="/dashboard/multilingual/setup.php" pagetype=""
+              description="" package="" />
+        <page name="Page Report" path="/dashboard/multilingual/page_report" filename="/dashboard/multilingual/page_report.php" pagetype=""
+              description="" package="" />
         <page name="Pages &amp; Themes" path="/dashboard/pages" filename="/dashboard/pages/view.php" pagetype="" description="Reskin your site." package="" />
         <page name="Themes" path="/dashboard/pages/themes" filename="/dashboard/pages/themes/view.php" pagetype=""
               description="Reskin your site." package="">

@@ -44,6 +44,7 @@
         <blocktype handle="search" package=""/>
         <blocktype handle="image_slider" package=""/>
         <blocktype handle="survey" package=""/>
+        <blocktype handle="switch_language" package=""/>
         <blocktype handle="tags" package=""/>
         <blocktype handle="video" package=""/>
         <blocktype handle="youtube" package=""/>
