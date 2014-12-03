@@ -174,7 +174,7 @@ class Type
     {
         $list = \Concrete\Core\File\StorageLocation\StorageLocation::getList();
         foreach($list as $item) {
-            if($item->getTypeObject() == $this->getHandle()) {
+            if($item->getTypeObject()->getHandle() == $this->getHandle()) {
                 throw new \Exception(t('Please remove all storage locations using this storage type.'));
             }
         }
