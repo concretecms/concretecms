@@ -16,33 +16,22 @@ class ServiceProvider extends \Concrete\Core\Foundation\Service\Provider
      */
     public function register()
     {
-        // Authentication
-        \Route::register(
-            '/system/authentication/community/attempt_auth',
-            'Concrete\\Authentication\\Community\\Controller::handle_authentication_attempt');
-        \Route::register(
-            '/system/authentication/community/callback',
-            'Concrete\\Authentication\\Community\\Controller::handle_authentication_callback');
-
-        // Attaching
-        \Route::register(
-            '/system/authentication/community/attempt_attach',
-            'Concrete\\Authentication\\Community\\Controller::handle_attach_attempt');
-        \Route::register(
-            '/system/authentication/community/attach_callback',
-            'Concrete\\Authentication\\Community\\Controller::handle_attach_callback');
-
         /** @var ExtractorFactory $factory */
         $factory = $this->app->make('oauth/factory/extractor');
         $factory->addExtractorMapping('Concrete\\Core\\Authentication\\Type\\Community\\Service\\Community',
                                       'Concrete\\Core\\Authentication\\Type\\Community\\Extractor\\Community');
 
+        $factory = $this->app->make('oauth/factory/service');
+        $factory->registerService('community', '\\Concrete\\Core\\Authentication\\Type\\Community\\Service\\Community');
+
+        unset($factory);
+
         $this->app->bindShared(
             'authentication/community',
-            function ($app, $callback = '/system/authentication/community/callback/') {
+            function ($app, $callback = '/ccm/system/authentication/oauth2/community/callback/') {
                 /** @var ServiceFactory $factory */
                 $factory = $app->make('oauth/factory/service');
-                $factory->registerService('community', '\\Concrete\\Core\\Authentication\\Type\\Community\\Service\\Community');
+
                 return $factory->createService(
                     'community',
                     new Credentials(

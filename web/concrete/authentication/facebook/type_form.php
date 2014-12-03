@@ -25,7 +25,7 @@
 <div class='form-group registration-group'>
     <label for="registration_group" class="control-label"><?= t('Group to enter on registration') ?></label>
     <select name="registration_group" class="form-control">
-        <option value="0">None</option>
+        <option value="0"><?= t("None") ?></option>
         <?php
         /** @var \Group $group */
         foreach ($groups as $group) {
