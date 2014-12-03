@@ -12,7 +12,7 @@ class ServiceProvider extends Provider
     public function register()
     {
         $this->app->bind(
-            'oauth_service_factory',
+            'oauth/factory/service',
             function ($app, $params = array()) {
                 $factory = new ServiceFactory();
                 $factory->setHttpClient($client = new CurlClient());
@@ -21,7 +21,7 @@ class ServiceProvider extends Provider
                 return $factory;
             });
         $this->app->bindShared(
-            'oauth_extractor_factory',
+            'oauth/factory/extractor',
             function () {
                 return new ExtractorFactory();
             });
@@ -29,7 +29,7 @@ class ServiceProvider extends Provider
         $this->app->bind(
             'oauth_extractor',
             function ($app, $service) {
-                $extractor_factory = $app->make('oauth_extractor_factory');
+                $extractor_factory = $app->make('oauth/factory/extractor');
                 return $extractor_factory->get($service);
             });
     }

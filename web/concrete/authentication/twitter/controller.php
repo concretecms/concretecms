@@ -60,7 +60,7 @@ class Controller extends GenericOauth1aTypeController
     public function getService()
     {
         if (!$this->service) {
-            $this->service = \Core::make('twitter_service');
+            $this->service = \Core::make('authentication/twitter');
         }
         return $this->service;
     }

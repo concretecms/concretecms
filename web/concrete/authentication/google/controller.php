@@ -32,7 +32,7 @@ class Controller extends GenericOauth2TypeController
     public function getService()
     {
         if (!$this->service) {
-            $this->service = \Core::make('google_service');
+            $this->service = \Core::make('authentication/google');
         }
         return $this->service;
     }
