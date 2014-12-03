@@ -153,7 +153,6 @@ class Type
         ), $this->getPackageHandle());
     }
 
-
     /**
      * Return an array of AuthenticationTypes that are associated with a specific package.
      * @param \Package $pkg
@@ -166,6 +165,30 @@ class Type
         return $em->getRepository('\Concrete\Core\File\StorageLocation\Type\Type')->findBy(
             array('pkgID' => $pkg->getPackageID()), array('fslTypeID' => 'asc')
         );
+    }
+
+    /**
+     * Removes the storage type. Also removes other stuff.
+     */
+    public function delete()
+    {
+        $list = \Concrete\Core\File\StorageLocation\StorageLocation::getList();
+        if ($this->getPackageID()) {
+            $class = '\\Concrete\\Package\\' . camelcase($this->getPackageHandle()) . '\\Core\\File\\StorageLocation\\Configuration\\' . camelcase($this->getHandle()) . 'Configuration';
+        } else {
+            $class = '\\Concrete\\Core\\File\\StorageLocation\\Configuration\\' . camelcase($this->getHandle()) . 'Configuration';
+        }
+        foreach($list as $item) {
+            if($item->getConfigurationObject() instanceof $class) {
+                throw new \Exception(t('Please remove all storage locations using this storage type.'));
+            }
+        }
+
+        $db = \Database::get();
+        $em = $db->getEntityManager();
+        $em->remove($this);
+        $em->flush();
+        return true;
     }
 
 
