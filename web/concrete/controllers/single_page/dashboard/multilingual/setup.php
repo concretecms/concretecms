@@ -2,6 +2,12 @@
 
 namespace Concrete\Controller\SinglePage\Dashboard\Multilingual;
 use \Concrete\Core\Page\Controller\DashboardPageController;
+use Core;
+use Concrete\Core\Multilingual\Page\Section;
+use Config;
+use Localization;
+use Loader;
+use Page;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -13,28 +19,18 @@ class Setup extends DashboardPageController
 
     public function view()
     {
-        Loader::library('3rdparty/Zend/Locale');
-        Loader::library('content_localization', 'multilingual');
-        $localesx = MultilingualContentLocalization::getLanguages();
-        $locales = array('' => t('** Choose a Language'));
-        foreach ($localesx as $key => $value) {
-            // remove languages like klingon
-            //if (strlen($key) < 3) {
-            $locales[$key] = $value;
-            //}
-        }
-        asort($locales);
-        $this->set('ch', Loader::helper('interface/flag', 'multilingual'));
-        $this->set('pages', MultilingualSection::getList());
-        $this->set('locales', $locales);
+        $ll = Core::make('localization/languages');
+        $languages = $ll->getLanguageList();
+        $this->set('pages', Section::getList());
+        $this->set('languages', $languages);
+        $this->set('ch', Core::make('multilingual/interface/flag'));
 
-        $pkg = Package::getByHandle('multilingual');
-        $this->set('defaultLanguage', $pkg->config('DEFAULT_LANGUAGE'));
-        $this->set('redirectHomeToDefaultLanguage', $pkg->config('REDIRECT_HOME_TO_DEFAULT_LANGUAGE'));
-        $this->set('useBrowserDetectedLanguage', $pkg->config('TRY_BROWSER_LANGUAGE'));
+        $this->set('defaultLanguage', Config::get('concrete.multilingual.default_language'));
+        $this->set('redirectHomeToDefaultLanguage', Config::get('concrete.multilingual.redirect_home_to_default_language'));
+        $this->set('useBrowserDetectedLanguage', Config::get('concrete.multilingual.use_browser_detected_language'));
     }
 
-    function populateCopyArray($startingPage)
+    protected function populateCopyArray($startingPage)
     {
         $db = Loader::db();
         if ($startingPage->isAlias()) {
@@ -54,106 +50,18 @@ class Setup extends DashboardPageController
         }
     }
 
-    public function copy_tree()
-    {
-        set_time_limit(0);
-        if (Loader::helper('validation/token')->validate('copy_tree')) {
-            if ($this->post('copyTreeFrom') && $this->post('copyTreeTo') && $this->post('copyTreeFrom') != $this->post(
-                    'copyTreeTo'
-                )
-            ) {
-                $dc = Page::getByID($this->post('copyTreeTo'));
-                $oc = Page::getByID($this->post('copyTreeFrom'));
-                $dcp = new Permissions($dc);
-                $ocp = new Permissions($oc);
-                if (!$dcp->canAdminPage()) {
-                    $this->error->add(
-                        t('You must have admin privileges on the destination page to perform this action.')
-                    );
-                }
-                if (!$ocp->canRead()) {
-                    $this->error->add(t('You cannot read the original page.'));
-                }
-
-                if (!$this->error->has()) {
-                    // duplicate all into the new node
-                    $ms = MultilingualSection::getByID($this->post('copyTreeTo'));
-                    $this->populateCopyArray($oc);
-
-                    $aliases = array();
-                    $created = array();
-                    foreach ($this->pagesToCopy as $cc) {
-                        $trcID = $ms->getTranslatedPageID($cc);
-                        if (!$trcID) {
-                            // this page doesn't exist in the new tree. So we need to duplicate it over there
-                            // find where this page is going
-
-                            $ccp = Page::getByID($cc->getCollectionParentID(), 'RECENT');
-                            $trpcID = $ms->getTranslatedPageID($ccp);
-                            $dest = Page::getByID($trpcID);
-                            if ($cc->isAlias()) {
-                                $aliases[] = array($cc->getCollectionID(), $dest->getCollectionID());
-                            } else {
-                                $newPage = $cc->duplicate($dest);
-                                $ceated[$cc->getCollectionID()] = $newPage->getCollectionID();
-                            }
-                        } else {
-                            if ($cc->isAlias()) {
-                                $aliases[] = array($cc->getCollectionID(), false);
-                            } else {
-                                $created[$cc->getCollectionID()] = $trcID;
-                            }
-                        }
-                    }
-                    foreach ($aliases as $data) {
-                        list($cID, $dest) = $data;
-                        $cc = Page::getByID($cID);
-                        if ($dest === false) {
-                            $ccp = Page::getByID($cc->getCollectionParentID(), 'RECENT');
-                            $dest = $ms->getTranslatedPageID($ccp);
-                        }
-                        if (isset($created[$cID])) {
-                            $dest = $created[$cID];
-                        }
-                        $aliasID = $cc->addCollectionAlias(Page::getByID($dest));
-                    }
-                    $this->redirect('/dashboard/multilingual/setup', 'tree_copied');
-                }
-
-            } else {
-                $this->error->add(t('You must choose two separate, valid language sections.'));
-            }
-        } else {
-            $this->error->add(Loader::helper('validation/token')->getErrorMessage());
-        }
-        $this->view();
-    }
-
     public function load_icons()
     {
-        if (!$this->post('msLanguage')) {
+
+        $ll = Core::make('localization/languages');
+        $ch = Core::make('multilingual/interface/flag');
+        $msLanguage = $this->post('msLanguage');
+
+        if (!$msLanguage) {
             return false;
         }
-        $ch = Loader::helper('interface/flag', 'multilingual');
-        Loader::library('3rdparty/Zend/Locale');
-        // here's what we do. We load all locales, then we filter through all those that match the posted language code
-        // and we return html for all regions in that language
-        $locales = Zend_Locale::getLocaleList();
-        $countries = array();
-        $html = '';
 
-        foreach ($locales as $locale => $none) {
-            $zl = new Zend_Locale($locale);
-            if ($zl->getLanguage() == $this->post('msLanguage') || $zl->toString() == $this->post('msLanguage')) {
-                if ($zl->getRegion()) {
-                    $countries[$zl->getRegion()] = Zend_Locale::getTranslation(
-                        $zl->getRegion(),
-                        'country',
-                        ACTIVE_LOCALE
-                    );
-                }
-            }
-        }
+        $countries = $ll->getLanguageCountries($msLanguage);
 
         asort($countries);
         $i = 1;
@@ -168,13 +76,13 @@ class Setup extends DashboardPageController
                         $checked = "checked=\"checked\"";
                     }
                 }
-                $html .= '<li><label><input type="radio" name="msIcon" ' . $checked . ' id="languageIcon' . $i . '" value="' . $region . '" onchange="ccm_multilingualUpdateLocale(\'' . $region . '\')" /><span class="image-wrapper">' . $flag . '' . $value . '</span></label></li>';
+                $html .= '<div class="radio"><label><input type="radio" name="msIcon" ' . $checked . ' id="languageIcon' . $i . '" value="' . $region . '" onchange="ccm_multilingualUpdateLocale(\'' . $region . '\')" /> ' . $flag . ' ' . $value . '</label></div>';
                 $i++;
             }
         }
 
         if ($i == 1) {
-            $html = "<li><label><span><strong>" . t('None') . "</strong></span></label></li>";
+            $html = "<div><strong>" . t('None') . "</strong></div>";
         }
 
 
@@ -215,14 +123,12 @@ class Setup extends DashboardPageController
     public function set_default()
     {
         if (Loader::helper('validation/token')->validate('set_default')) {
-            $lc = MultilingualSection::getByLocale($this->post('defaultLanguage'));
+            $lc = Section::getByLocale($this->post('defaultLanguage'));
             if (is_object($lc)) {
-                $pkg = Package::getByHandle('multilingual');
-                $pkg->saveConfig('DEFAULT_LANGUAGE', $this->post('defaultLanguage'));
-                $pkg->saveConfig('REDIRECT_HOME_TO_DEFAULT_LANGUAGE', $this->post('redirectHomeToDefaultLanguage'));
-                $pkg->saveConfig('TRY_BROWSER_LANGUAGE', $this->post('useBrowserDetectedLanguage'));
+                Config::save('concrete.multilingual.default_language', $this->post('defaultLanguage'));
+                Config::save('concrete.multilingual.redirect_home_to_default_language', $this->post('redirectHomeToDefaultLanguage'));
+                Config::save('concrete.multilingual.use_browser_detected_language', $this->post('useBrowserDetectedLanguage'));
                 $this->redirect('/dashboard/multilingual/setup', 'default_language_updated');
-
             } else {
                 $this->error->add(t('Invalid language section'));
             }
@@ -235,7 +141,7 @@ class Setup extends DashboardPageController
     public function remove_language_section($sectionID = false, $token = false)
     {
         if (Loader::helper('validation/token')->validate('', $token)) {
-            $lc = MultilingualSection::getByID($sectionID);
+            $lc = Section::getByID($sectionID);
             if (is_object($lc)) {
 
                 $lc->unassign();
@@ -260,7 +166,7 @@ class Setup extends DashboardPageController
             }
 
             if (!$this->error->has()) {
-                $lc = MultilingualSection::getByID($this->post('pageID'));
+                $lc = Section::getByID($this->post('pageID'));
                 if (is_object($lc)) {
                     $this->error->add(t('A language section page at this location already exists.'));
                 }
@@ -269,7 +175,7 @@ class Setup extends DashboardPageController
             if (!$this->error->has()) {
                 if ($this->post('msIcon')) {
                     $combination = $this->post('msLanguage') . '_' . $this->post('msIcon');
-                    $locale = MultilingualSection::getByLocale($combination);
+                    $locale = Section::getByLocale($combination);
                     if (is_object($locale)) {
                         $this->error->add(t('This language/region combination already exists.'));
                     }
@@ -277,7 +183,7 @@ class Setup extends DashboardPageController
             }
 
             if (!$this->error->has()) {
-                MultilingualSection::assign($pc, $this->post('msLanguage'), $this->post('msIcon'));
+                Section::assign($pc, $this->post('msLanguage'), $this->post('msIcon'));
                 $this->redirect('/dashboard/multilingual/setup', 'multilingual_content_updated');
             }
         } else {

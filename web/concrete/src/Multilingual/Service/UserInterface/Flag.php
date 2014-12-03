@@ -1,6 +1,7 @@
 <?php
 
-namespace Concrete\Multilingual\Service\UserInterface;
+namespace Concrete\Core\Multilingual\Service\UserInterface;
+use Database;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -20,20 +21,14 @@ class Flag
             )) {
                 $icon = DIR_REL . '/' . DIRNAME_IMAGES . '/' . DIRNAME_IMAGES_LANGUAGES . '/' . $region . '.png';
             } else {
-                if (file_exists(
-                    DIR_PACKAGES_CORE . '/multilingual/' . DIRNAME_IMAGES . '/' . DIRNAME_IMAGES_LANGUAGES . '/' . $region . '.png'
-                )) {
-                    $icon = ASSETS_URL . '/' . DIRNAME_PACKAGES . '/multilingual/' . DIRNAME_IMAGES . '/' . DIRNAME_IMAGES_LANGUAGES . '/' . $region . '.png';
-                } else {
-                    $icon = DIR_REL . '/' . DIRNAME_PACKAGES . '/multilingual/' . DIRNAME_IMAGES . '/' . DIRNAME_IMAGES_LANGUAGES . '/' . $region . '.png';
-                }
+                $icon = ASSETS_URL . '/' . DIRNAME_IMAGES . '/' . DIRNAME_IMAGES_LANGUAGES . '/' . $region . '.png';
             }
 
             if (isset($icon)) {
                 if ($filePathOnly) {
                     return $icon;
                 } else {
-                    return '<img class="ccm-region-flag" id="ccm-region-flag-' . $region . '" width="' . MULTILINGUAL_FLAGS_WIDTH . '" height="' . MULTILINGUAL_FLAGS_HEIGHT . '" src="' . $icon . '" alt="' . $region . '" />';
+                    return '<img class="ccm-region-flag img-reponsive" id="ccm-region-flag-' . $region . '" src="' . $icon . '" alt="' . $region . '" />';
                 }
             }
         }
@@ -41,7 +36,7 @@ class Flag
 
     public function getSectionFlagIcon($page, $filePathOnly = false)
     {
-        $db = Loader::db();
+        $db = Database::get();
         $icon = $db->GetOne('select msIcon from MultilingualSections where cID = ?', array($page->getCollectionID()));
         return self::getFlagIcon($icon, $filePathOnly);
     }

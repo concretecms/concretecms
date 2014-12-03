@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Multilingual\Page;
+namespace Concrete\Core\Multilingual\Page;
 
 use Concrete\Core\Page\PageList as CorePageList;
 

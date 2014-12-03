@@ -1,11 +1,12 @@
 <?php
 
-namespace Concrete\Multilingual\Page;
-use Concrete\Core\Page\Page as CorePage;
-
+namespace Concrete\Core\Multilingual\Page;
+use Concrete\Core\Page\Page;
+use Database;
+use Punic\Language;
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class Page extends CorePage
+class Section extends Page
 {
 
     /**
@@ -25,7 +26,7 @@ class Page extends CorePage
 
     public static function assign($c, $language, $icon)
     {
-        $db = Loader::db();
+        $db = Database::get();
 
         $locale = $language . (strlen($icon) ? '_' . $icon : '');
 
@@ -39,7 +40,7 @@ class Page extends CorePage
 
     public function unassign()
     {
-        $db = Loader::db();
+        $db = Database::get();
         $db->Execute('delete from MultilingualSections where cID = ?', array($this->getCollectionID()));
     }
 
@@ -53,7 +54,7 @@ class Page extends CorePage
     {
         $r = self::isMultilingualSection($cID);
         if ($r) {
-            $obj = parent::getByID($cID, $cvID, 'MultilingualSection');
+            $obj = parent::getByID($cID, $cvID, '\Concrete\Core\Multilingual\Page\Section');
             $obj->msLanguage = $r['msLanguage'];
             $obj->msIcon = $r['msIcon'];
             $obj->msLocale = $r['msLocale'];
@@ -70,13 +71,13 @@ class Page extends CorePage
      */
     public static function getByLanguage($language)
     {
-        $db = Loader::db();
+        $db = Database::get();
         $r = $db->GetRow(
             'select cID, msLanguage, msIcon, msLocale from MultilingualSections where msLanguage = ?',
             array($language)
         );
         if ($r && is_array($r) && $r['msLanguage']) {
-            $obj = parent::getByID($r['cID'], 'RECENT', 'MultilingualSection');
+            $obj = parent::getByID($r['cID'], 'RECENT', '\Concrete\Core\Multilingual\Page\Section');
             $obj->msLanguage = $r['msLanguage'];
             $obj->msIcon = $r['msIcon'];
             $obj->msLocale = $r['msLocale'];
@@ -91,13 +92,13 @@ class Page extends CorePage
      */
     public static function getByLocale($locale)
     {
-        $db = Loader::db();
+        $db = Database::get();
         $r = $db->GetRow(
             'select cID, msLanguage, msIcon, msLocale from MultilingualSections where msLocale = ?',
             array($locale)
         );
         if ($r && is_array($r) && $r['msLocale']) {
-            $obj = parent::getByID($r['cID'], 'RECENT', 'MultilingualSection');
+            $obj = parent::getByID($r['cID'], 'RECENT', '\Concrete\Core\Multilingual\Page\Section');
             $obj->msLanguage = $r['msLanguage'];
             $obj->msIcon = $r['msIcon'];
             $obj->msLocale = $r['msLocale'];
@@ -130,7 +131,7 @@ class Page extends CorePage
     public static function getBySectionOfSite($page)
     {
         // looks at the page, traverses its parents until it finds the proper language
-        $nav = Loader::helper('navigation');
+        $nav = Core::make('helper/navigation');
         $pages = $nav->getTrailToCollection($page);
         $pages = array_reverse($pages);
         $pages[] = $page;
@@ -156,13 +157,13 @@ class Page extends CorePage
         return $this->msLocale;
     }
 
-    public function getLanguageText($locale = ACTIVE_LOCALE)
+    public function getLanguageText($locale = null)
     {
-        if (!class_exists('Zend_Locale')) {
-            Loader::library('3rdparty/Zend/Locale');
-        }
         try {
-            $text = Zend_Locale::getTranslation($this->msLanguage, 'language', $locale);
+            if (!$locale) {
+                $locale = \Localization::activeLocale();
+            }
+            $text = Language::getName($this->msLanguage, $locale);
         } catch (Exception $e) {
             $text = $this->msLanguage;
         }
@@ -176,14 +177,14 @@ class Page extends CorePage
 
     public static function assignDelete($page)
     {
-        $db = Loader::db();
+        $db = Database::get();
         $db->Execute('delete from MultilingualSections where cID = ?', array($page->getCollectionID()));
         $db->Execute('delete from MultilingualPageRelations where cID = ?', array($page->getCollectionID()));
     }
 
     public static function relatePage($oldPage, $newPage, $locale)
     {
-        $db = Loader::db();
+        $db = Database::get();
         $mpRelationID = $db->GetOne(
             'select mpRelationID from MultilingualPageRelations where cID = ?',
             array($oldPage->getCollectionID())
@@ -202,7 +203,7 @@ class Page extends CorePage
 
     public static function isAssigned($page)
     {
-        $db = Loader::db();
+        $db = Database::get();
         $mpRelationID = $db->GetOne(
             'select mpRelationID from MultilingualPageRelations where cID = ?',
             array($page->getCollectionID())
@@ -212,7 +213,7 @@ class Page extends CorePage
 
     public static function assignDuplicate($newPage, $oldPage)
     {
-        $db = Loader::db();
+        $db = Database::get();
         $mpRelationID = $db->GetOne(
             'select mpRelationID from MultilingualPageRelations where cID = ?',
             array($oldPage->getCollectionID())
@@ -281,7 +282,7 @@ class Page extends CorePage
     // make sure there is a relations entry in the multilingual table
     public static function assignAdd($page)
     {
-        $db = Loader::db();
+        $db = Database::get();
         $ms = MultilingualSection::getBySectionOfSite($page);
         if (is_object($ms)) {
             $mpRelationID = $db->GetOne('select max(mpRelationID) as mpRelationID from MultilingualPageRelations');
@@ -312,7 +313,7 @@ class Page extends CorePage
         } else {
             $msx = MultilingualSection::getBySectionOfSite($oldParent);
         }
-        $db = Loader::db();
+        $db = Database::get();
         if (is_object($ms)) {
             $cID = $db->GetOne(
                 'select cID from MultilingualPageRelations where cID = ?',
@@ -354,7 +355,7 @@ class Page extends CorePage
         if (is_object($cID)) {
             $cID = $cID->getCollectionID();
         }
-        $db = Loader::db();
+        $db = Database::get();
         $r = $db->GetRow(
             'select cID, msLanguage, msIcon, msLocale from MultilingualSections where cID = ?',
             array($cID)
@@ -368,7 +369,7 @@ class Page extends CorePage
 
     public static function ignorePageRelation($page, $locale)
     {
-        $db = Loader::db();
+        $db = Database::get();
         $mpRelationID = $db->GetOne(
             'select mpRelationID from MultilingualPageRelations where cID = ?',
             array($page->getCollectionID())
@@ -388,7 +389,7 @@ class Page extends CorePage
             return $ids;
         }
 
-        $db = Loader::db();
+        $db = Database::get();
         $ids = $db->GetCol(
             'select MultilingualSections.cID from MultilingualSections inner join Pages on MultilingualSections.cID = Pages.cID order by cDisplayOrder asc'
         );
@@ -418,7 +419,7 @@ class Page extends CorePage
      */
     public function getTranslatedPageID($page)
     {
-        $db = Loader::db();
+        $db = Database::get();
         $ids = MultilingualSection::getIDList();
         if (in_array($page->getCollectionID(), $ids)) {
             $cID = $db->GetOne('select cID from MultilingualSections where msLocale = ?', array($this->getLocale()));
