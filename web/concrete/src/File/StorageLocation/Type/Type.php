@@ -34,26 +34,41 @@ class Type
      */
     protected $pkgID = 0;
 
+    /**
+     * @return string
+     */
     public function getHandle()
     {
         return $this->fslTypeHandle;
     }
 
+    /**
+     * @return int
+     */
     public function getID()
     {
         return $this->fslTypeID;
     }
 
+    /**
+     * @return string
+     */
     public function getName()
     {
         return $this->fslTypeName;
     }
 
+    /**
+     * @return int
+     */
     public function getPackageID()
     {
         return $this->pkgID;
     }
 
+    /**
+     * @return null|string
+     */
     public function getPackageHandle()
     {
         return PackageList::getHandle($this->pkgID);
@@ -74,9 +89,9 @@ class Type
     }
 
     /**
-     * @param $fslTypeHandle
-     * @param $fslTypeName
-     * @param int $pkgID
+     * @param string $fslTypeHandle
+     * @param string $fslTypeName
+     * @param int|\Package $pkg
      * @return \Concrete\Core\File\StorageLocation\Type\Type
      */
     public static function add($fslTypeHandle, $fslTypeName, $pkg = false)
@@ -94,6 +109,10 @@ class Type
         return $o;
     }
 
+    /**
+     * @param int $id
+     * @return null|\Concrete\Core\File\StorageLocation\Type\Type
+     */
     public static function getByID($id)
     {
         $db = Database::get();
@@ -120,7 +139,7 @@ class Type
 
     /**
      * Returns an array of \Concrete\Core\File\StorageLocation\Type\Type objects.
-     * @return array
+     * @return \Concrete\Core\File\StorageLocation\Type\Type[]
      */
     public static function getList()
     {
@@ -131,6 +150,9 @@ class Type
         );
     }
 
+    /**
+     * @return bool
+     */
     public function hasOptionsForm() {
         $env = Environment::get();
         $rec = $env->getRecord(DIRNAME_ELEMENTS .
@@ -140,6 +162,9 @@ class Type
         return $rec->exists();
     }
 
+    /**
+     * @param bool|StorageLocation $location
+     */
     public function includeOptionsForm($location = false) {
         $configuration = $this->getConfigurationObject();
         if ($location instanceof StorageLocation) {
@@ -168,7 +193,9 @@ class Type
     }
 
     /**
-     * Removes the storage type. Also removes other stuff.
+     * Removes the storage type if no configurations exist.
+     * @throws \Exception
+     * @return bool
      */
     public function delete()
     {
