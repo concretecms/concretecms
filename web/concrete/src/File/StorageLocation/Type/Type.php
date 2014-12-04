@@ -199,7 +199,7 @@ class Type
      */
     public function delete()
     {
-        $list = \Concrete\Core\File\StorageLocation\StorageLocation::getList();
+        $list = StorageLocation::getList();
         foreach($list as $item) {
             if($item->getTypeObject()->getHandle() == $this->getHandle()) {
                 throw new \Exception(t('Please remove all storage locations using this storage type.'));
