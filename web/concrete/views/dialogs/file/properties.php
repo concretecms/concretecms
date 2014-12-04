@@ -336,11 +336,11 @@ ConcreteFilePropertiesDialog.prototype = {
 		if (callback) {
 			callback(r);
 		} else {
-			ConcreteAlert.notify({
-			'message': '<?=t("File rescanned successfully.")?>',
-			'appendTo': '#ccm-file-properties-response'
-			});
-		}
+            ConcreteAlert.notify({
+                'message': r.message,
+                'appendTo': '#ccm-file-properties-response'
+            });
+        }
 	},
 
 	setupFileRescan: function() {
