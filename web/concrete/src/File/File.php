@@ -209,11 +209,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
                 $currentFilesystem->delete($fh->prefix($fv->getPrefix(), $fv->getFilename()));
             }
         } catch(\Exception $e) {
-            $json = new \Concrete\Core\Application\EditResponse;
-            $err = new \Concrete\Core\Error\Error;
-            $err->add($e->getMessage());
-            $json->setError($err);
-            $json->outputJSON();
+            throw new \Exception($e->getMessage());
         }
 
         $this->storageLocation = $newLocation;
