@@ -202,10 +202,18 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         $newFileSystem = $newLocation->getFileSystemObject();
 
         $list = $this->getVersionList();
-        foreach ($list as $fv) {
-            $contents = $fv->getFileContents();
-            $newFileSystem->put($fh->prefix($fv->getPrefix(), $fv->getFilename()), $contents);
-            $currentFilesystem->delete($fh->prefix($fv->getPrefix(), $fv->getFilename()));
+        try {
+            foreach ($list as $fv) {
+                $contents = $fv->getFileContents();
+                $newFileSystem->put($fh->prefix($fv->getPrefix(), $fv->getFilename()), $contents);
+                $currentFilesystem->delete($fh->prefix($fv->getPrefix(), $fv->getFilename()));
+            }
+        } catch(\Exception $e) {
+            $json = new \Concrete\Core\Application\EditResponse;
+            $err = new \Concrete\Core\Error\Error;
+            $err->add($e->getMessage());
+            $json->setError($err);
+            $json->outputJSON();
         }
 
         $this->storageLocation = $newLocation;
