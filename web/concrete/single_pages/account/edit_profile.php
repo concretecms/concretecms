@@ -30,8 +30,7 @@ $(function() {
 		); ?>
 		</div>
 	<?php  } ?>
-	<?php  if (defined('ENABLE_USER_TIMEZONES') && ENABLE_USER_TIMEZONES) { ?>
-	<?php  if (is_array($locales) && count($locales)) {
+	<?php  if (is_array($locales) && count($locales)) { ?>
 		<div class="form-group">
 			<?php echo $form->label('uDefaultLanguage', t('Language'))?>
 			<?php echo $form->select('uDefaultLanguage', $locales, Localization::activeLocale())?>
