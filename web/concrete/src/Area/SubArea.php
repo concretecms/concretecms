@@ -8,6 +8,13 @@ class SubArea extends Area {
 
 	const AREA_SUB_DELIMITER = ' : ';
 
+    protected $parentBlock;
+
+    public function setSubAreaBlockObject($block)
+    {
+        $this->parentBlock = $block;
+    }
+
 	public function create($c, $arHandle) {
 		$db = Loader::db();
 		$db->Replace('Areas', array('cID' => $c->getCollectionID(), 'arHandle' => $arHandle, 'arParentID' => $this->arParentID), array('arHandle', 'cID'), true);
@@ -44,13 +51,7 @@ class SubArea extends Area {
 	}
 
 	public function getSubAreaBlockObject() {
-		$db = Loader::db();
-		$bID = $db->GetOne('select cvb.bID from btCoreAreaLayout bta inner join AreaLayoutColumns alc on bta.arLayoutID = alc.arLayoutID inner join CollectionVersionBlocks cvb on bta.bID = cvb.bID where cvb.cID = ? and cvb.cvID = ? and alc.arID = ?', array($this->c->getCollectionID(), $this->c->getVersionID(), $this->arID));
-		$arHandle = $db->GetOne('select arHandle from Areas where arID = ?', array($this->arParentID));
-		if ($bID) {
-			$b = Block::getByID($bID, $this->c, $arHandle);
-			return $b;
-		}
+        return $this->parentBlock;
 	}
 
 	public function __construct($arHandle, $arParentHandle, $arParentID) {
