@@ -56,7 +56,11 @@ abstract class Editor extends Object
 
     public function getConversationObject()
     {
-        return $this->cnvObject;
+        if (!is_object($this->cnvObject)) {
+            return $this->cnvMessage->getConversationObject();
+        } else {
+            return $this->cnvObject;
+        }
     }
 
     /**

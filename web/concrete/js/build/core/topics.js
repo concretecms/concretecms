@@ -40,12 +40,12 @@
 				menu += '<li><a class="dialog-launch" dialog-width="550" dialog-on-open="$(\'[data-topic-form=add-topic-node]\').ccmtopicstree(\'initAddNodeForm\', ' + options.treeID + ');" dialog-height="auto" dialog-modal="false" dialog-title="' + ccmi18n_topics.addTopic + '" href="' + CCM_DISPATCHER_FILENAME + '/tools/required/tree/node/add/topic?treeNodeParentID=' + data.key + '">' + ccmi18n_topics.addTopic + '<\/a><\/li>';
 			}
 
-			if (data.canEditTreeNode && data.treeNodeTypeHandle == 'topic_category') {
+			if (data.canDuplicateTreeNode && data.treeNodeTypeHandle == 'topic_category') {
 				menu += '<li><a class="dialog-launch" dialog-width="550" dialog-on-open="$(\'[data-topic-form=update-category-node]\').ccmtopicstree(\'initUpdateCategoryNodeForm\', ' + options.treeID + ');" dialog-height="auto" dialog-modal="false" dialog-title="' + ccmi18n_topics.editCategory + '" href="' + CCM_DISPATCHER_FILENAME + '/tools/required/tree/node/edit/topic_category?treeNodeID=' + data.key + '">' + ccmi18n_topics.editCategory + '<\/a><\/li>';
 				menu += '<li><a href="#" onclick="$.fn.ccmtopicstree(\'cloneNode\', \'node\', ' + options.treeID + ',' + data.key + ')">' + ccmi18n_topics.cloneCategory + '<\/a><\/li>';
 			}
 
-			if (data.canEditTreeNode && data.treeNodeTypeHandle == 'topic') {
+			if (data.canDuplicateTreeNode && data.treeNodeTypeHandle == 'topic') {
 				menu += '<li><a class="dialog-launch" dialog-width="550" dialog-on-open="$(\'[data-topic-form=update-topic-node]\').ccmtopicstree(\'initUpdateTopicNodeForm\', ' + options.treeID + ');" dialog-height="auto" dialog-modal="false" dialog-title="' + ccmi18n_topics.editTopic + '" href="' + CCM_DISPATCHER_FILENAME + '/tools/required/tree/node/edit/topic?treeNodeID=' + data.key + '">' + ccmi18n_topics.editTopic + '<\/a><\/li>';
 				menu += '<li><a href="#" onclick="$.fn.ccmtopicstree(\'cloneNode\', \'node\', ' + options.treeID + ',' + data.key + ')">' + ccmi18n_topics.cloneTopic + '<\/a><\/li>';
 			}
@@ -343,6 +343,22 @@
 						return true;
 					},
 					onDragOver: function(node, sourceNode, hitMode) {
+						if ((!node.parent.data.treeNodeID) && (node.data.treeNodeID !== '1')) { // Home page has no parents, but we still want to be able to hit it.
+							return false;
+						}
+
+                        if((hitMode != 'over') && (node.data.treeNodeID == 1)) {  // Home gets no siblings
+                            return false;
+                        }
+
+                        if (sourceNode.data.treeNodeID == node.data.treeNodeID) {
+                            return false; // can't drag node onto itself.
+                        }
+
+						if (!node.data.treeNodeID && hitMode == 'after') {
+							return false;
+						}
+
 						// you can only drag shit into other categories.
 						var nodeTypeHandle = node.data.treeNodeType;
 						if (hitMode === 'over' && jQuery.inArray(node.data.treeNodeTypeHandle, ['topic']) > -1) {

@@ -163,6 +163,7 @@ var ccmi18n_sitemap = {
     max: "<?=t('max')?>",
     noResults: "<?=t('No results found.')?>",
     areYouSure: "<?=t('Are you sure?')?>",
+    loadingText: "<?=t('Loading')?>",
     loadError: "<?=t('Unable to load sitemap data. Response received: ')?>",
     loadErrorTitle: "<?=t('Unable to load sitemap data.')?>",
     on: "<?=t('on')?>"

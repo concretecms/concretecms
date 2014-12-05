@@ -293,6 +293,8 @@
                 <category handle="group_tree_node" />
                 <category handle="topic_category_tree_node" />
                 <category handle="topic_tree_node" />
+                <category handle="conversation" />
+                <category handle="conversation_message" />
 			</categories>
         </permissionaccessentitytype>
         <permissionaccessentitytype handle="user" name="User" package="">
@@ -313,6 +315,8 @@
                 <category handle="group_tree_node" />
                 <category handle="topic_category_tree_node" />
                 <category handle="topic_tree_node" />
+                <category handle="conversation" />
+                <category handle="conversation_message" />
 			</categories>
         </permissionaccessentitytype>
         <permissionaccessentitytype handle="group_set" name="Group Set" package="">
@@ -333,6 +337,8 @@
                 <category handle="group_tree_node" />
                 <category handle="topic_category_tree_node" />
                 <category handle="topic_tree_node" />
+                <category handle="conversation" />
+                <category handle="conversation_message" />
 			</categories>
         </permissionaccessentitytype>
         <permissionaccessentitytype handle="group_combination" name="Group Combination" package="">
@@ -353,6 +359,8 @@
                 <category handle="group_tree_node" />
                 <category handle="topic_category_tree_node" />
                 <category handle="topic_tree_node" />
+                <category handle="conversation" />
+                <category handle="conversation_message" />
 			</categories>
 
         </permissionaccessentitytype>

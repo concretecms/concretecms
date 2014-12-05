@@ -141,7 +141,7 @@ class Type
             $url = AL_ICON_DEFAULT;
         }
         if ($fullImageTag == true) {
-            return '<img src="' . $url . '" class="ccm-generic-thumbnail" />';
+            return '<img src="' . $url . '" class="img-responsive ccm-generic-thumbnail" />';
         } else {
             return $url;
         }

@@ -1,7 +1,7 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 
-$subject = SITE.' '.t("Registration - Approval Required");
+$subject = $siteName.' '.t("Registration - Approval Required");
 
 /**
  * HTML BODY START

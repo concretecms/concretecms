@@ -32,10 +32,10 @@ class ServiceProvider extends \Concrete\Core\Foundation\Service\Provider
             'Concrete\Authentication\Facebook\Controller::handle_attach_callback');
 
         $this->app->bindShared(
-            'facebook_service',
+            'authentication/facebook',
             function ($app, $callback = '/system/authentication/facebook/callback/') {
                 /** @var ServiceFactory $factory */
-                $factory = $app->make('oauth_service_factory');
+                $factory = $app->make('oauth/factory/service');
                 return $factory->createService(
                     'facebook',
                     new Credentials(

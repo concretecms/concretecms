@@ -32,10 +32,10 @@ class ServiceProvider extends \Concrete\Core\Foundation\Service\Provider
             'Concrete\Authentication\Twitter\Controller::handle_attach_callback');
 
         $this->app->bindShared(
-            'twitter_service',
+            'authentication/twitter',
             function ($app, $callback = '/system/authentication/twitter/callback/') {
                 /** @var ServiceFactory $factory */
-                $factory = $app->make('oauth_service_factory');
+                $factory = $app->make('oauth/factory/service');
                 return $factory->createService(
                     'twitter',
                     new Credentials(

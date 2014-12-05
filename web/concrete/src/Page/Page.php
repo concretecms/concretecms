@@ -147,6 +147,17 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
+     * Return a representation of the Page object as something easily serializable.
+     */
+    public function getJSONObject()
+    {
+        $r = new \stdClass;
+        $r->name = $this->getCollectionName();
+        $r->cID = $this->getCollectionID();
+        return $r;
+    }
+
+    /**
      * @return PageController
      */
     public function getPageController() {
@@ -1060,6 +1071,26 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
+     * Returns the Page Template Object
+     * @return PageTemplate
+     */
+    function getPageTemplateObject() {
+        return PageTemplate::getByID($this->getPageTemplateID());
+    }
+
+    /**
+     * Returns the Page Template handle
+     * @return string
+     */
+    function getPageTemplateHandle() {
+        $pt = $this->getPageTemplateObject();
+        if ($pt instanceof PageTemplate) {
+            return $pt->getPageTemplateHandle();
+        }
+        return false;
+    }
+
+    /**
      * Returns the Collection Type handle
      * @return string
      */
@@ -1510,10 +1541,15 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public function getPageWrapperClass()
     {
         $pt = $this->getPageTypeObject();
+        $ptm = $this->getPageTemplateObject();
         $classes = array('ccm-page');
         if (is_object($pt)) {
             $classes[] = 'page-type-' . str_replace('_', '-', $pt->getPageTypeHandle());
         }
+        if (is_object($ptm)) {
+            $classes[] = 'page-template-' . str_replace('_', '-', $ptm->getPageTemplateHandle());
+        }
+
         return implode(' ', $classes);
     }
 

@@ -40,11 +40,11 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
         return false;
     }
 
-    /*
+    /**
      * Takes the numeric id of a group and returns a group object
-     * @parem string $gID
-     * @return object Group
-    */
+     * @param string $gID
+     * @return Group
+     */
     public static function getByID($gID)
     {
         $db = Loader::db();
@@ -62,11 +62,11 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
     }
 
-    /*
+    /**
      * Takes the name of a group and returns a group object
-     * @parem string $gName
-     * @return object Group
-    */
+     * @param string $gName
+     * @return Group
+     */
     public static function getByName($gName)
     {
         $db = Loader::db();
@@ -78,6 +78,10 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
     }
 
+    /**
+     * @param string $gPath The group path
+     * @return Group
+     */
     public static function getByPath($gPath)
     {
         $db = Loader::db();
