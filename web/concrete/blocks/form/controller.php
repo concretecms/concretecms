@@ -6,6 +6,11 @@ use User;
 use Page;
 use UserInfo;
 use Exception;
+use FileImporter;
+use FileSet;
+use File;
+use \Concrete\Core\File\Version;
+
 class Controller extends BlockController {
 	public $btTable = 'btForm';
 	public $btQuestionsTablename = 'btFormQuestions';
@@ -319,7 +324,7 @@ class Controller extends BlockController {
 			}
 			$fi = new FileImporter();
 			$resp = $fi->import($_FILES[$questionName]['tmp_name'], $_FILES[$questionName]['name']);
-			if (!($resp instanceof FileVersion)) {
+			if (!($resp instanceof Version)) {
 				switch($resp) {
 					case FileImporter::E_FILE_INVALID_EXTENSION:
 						$errors['fileupload'] = t('Invalid file extension.');

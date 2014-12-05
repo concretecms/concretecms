@@ -63,7 +63,7 @@ class Settings extends DashboardPageController {
 
     public function success() {
 		$this->view();
-		$this->set('message','Updated conversations settings.');
+		$this->set('message', t('Updated conversations settings.'));
 	}
 
 	public function save() {

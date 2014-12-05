@@ -106,7 +106,9 @@ class StorageLocation
         $r = $em->find('\Concrete\Core\File\StorageLocation\StorageLocation', intval($id));
         return $r;
     }
-
+    /**
+     * @return StorageLocation[]
+     */
     public static function getList()
     {
         $db = Database::get();

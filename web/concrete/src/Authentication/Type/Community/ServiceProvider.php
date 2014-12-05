@@ -33,15 +33,15 @@ class ServiceProvider extends \Concrete\Core\Foundation\Service\Provider
             'Concrete\\Authentication\\Community\\Controller::handle_attach_callback');
 
         /** @var ExtractorFactory $factory */
-        $factory = $this->app->make('oauth_extractor_factory');
+        $factory = $this->app->make('oauth/factory/extractor');
         $factory->addExtractorMapping('Concrete\\Core\\Authentication\\Type\\Community\\Service\\Community',
                                       'Concrete\\Core\\Authentication\\Type\\Community\\Extractor\\Community');
 
         $this->app->bindShared(
-            'community_service',
+            'authentication/community',
             function ($app, $callback = '/system/authentication/community/callback/') {
                 /** @var ServiceFactory $factory */
-                $factory = $app->make('oauth_service_factory');
+                $factory = $app->make('oauth/factory/service');
                 $factory->registerService('community', '\\Concrete\\Core\\Authentication\\Type\\Community\\Service\\Community');
                 return $factory->createService(
                     'community',

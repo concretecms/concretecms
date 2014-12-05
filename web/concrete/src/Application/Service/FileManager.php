@@ -22,8 +22,6 @@ class FileManager
      */
     public function file($id, $postname, $chooseText, $bf = null, $filterArgs = array())
     {
-        $selectedDisplay = 'none';
-        $resetDisplay = 'block';
         $fileID = 0;
         $v = View::getInstance();
         $v->requireAsset('core/file-manager');
@@ -45,7 +43,6 @@ class FileManager
             $fileID = $bf->getFileID();
         }
 
-        $loader = ASSETS_URL_IMAGES . '/throbber_white_16.gif';
         if ($fileID) {
             $args = "{'inputName': '{$postname}', 'fID': {$fileID}}";
         } else {

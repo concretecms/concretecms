@@ -217,10 +217,12 @@ class StartingPointPackage extends BasePackage {
         $coa = AuthenticationType::add('community', 'concrete5.org');
 		$fba = AuthenticationType::add('facebook',  'Facebook');
         $twa = AuthenticationType::add('twitter',   'Twitter');
+        $gat = AuthenticationType::add('google',   'Google');
 
 		$fba->disable();
         $twa->disable();
         $coa->disable();
+        $gat->disable();
 
 		\Concrete\Core\Tree\TreeType::add('group');
 		\Concrete\Core\Tree\Node\NodeType::add('group');

@@ -123,11 +123,16 @@ class Add extends DashboardPageController {
 					}
 				}
 
+                $saveAttributes = array();
 				foreach($aks as $uak) {
 					if (in_array($uak->getAttributeKeyID(), $assignment->getAttributesAllowedArray())) {
-						$uak->saveAttributeForm($uo);
+                        $saveAttributes[] = $uak;
 					}
 				}
+
+                if (count($saveAttributes) > 0) {
+                    $uo->saveUserAttributesForm($saveAttributes);
+                }
 
 				$gIDs = array();
 				if (is_array($_POST['gID'])) {

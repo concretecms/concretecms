@@ -19,7 +19,11 @@ class Info extends DashboardPageController
         $maxExecutionTime = ini_get('max_execution_time');
         set_time_limit(5);
 
-        $environmentMessage = "# concrete5 Version\n" . APP_VERSION . "\n\n";
+        $environmentMessage = "# concrete5 Version\n";
+        $environmentMessage .= "Core Version - " . \Config::get('concrete.version') . "\n";
+        $environmentMessage .= "Version Installed - " . \Config::get('concrete.version_installed') . "\n";
+        $environmentMessage .= "Database Version - " . \Config::get('concrete.version_db') . "\n\n";
+
         $environmentMessage .= "# concrete5 Packages\n";
         $pla = PackageList::get();
         $pl = $pla->getPackages();

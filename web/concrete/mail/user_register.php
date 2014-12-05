@@ -1,7 +1,7 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 
-$subject = SITE.' '.t("Registration - A New User Has Registered");
+$subject = $siteName.' '.t("Registration - A New User Has Registered");
 
 /**
  * HTML BODY START
