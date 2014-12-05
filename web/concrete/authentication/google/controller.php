@@ -84,8 +84,10 @@ class Controller extends GenericOauth2TypeController
     {
         $ui = \UserInfo::getByID($u->getUserID());
         if (!$ui->hasAvatar()) {
-            $image = \Image::open($this->getExtractor()->getImageURL());
-            $ui->updateUserAvatar($image);
+            try {
+                $image = \Image::open($this->getExtractor()->getImageURL());
+                $ui->updateUserAvatar($image);
+            } catch(\Exception $e) {}
         }
 
         parent::completeAuthentication($u);
