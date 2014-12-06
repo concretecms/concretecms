@@ -183,9 +183,14 @@ class Install extends Controller
     private function setRequiredItems()
     {
 //        $this->set('imageTest', function_exists('imagecreatetruecolor') || class_exists('Imagick'));
-        $this->set('imageTest', function_exists('imagecreatetruecolor'));
+        $this->set('imageTest', function_exists('imagecreatetruecolor')
+            && function_exists('imagepng')
+            && function_exists('imagegif')
+            && function_exists('imagejpeg'));
         $this->set('mysqlTest', extension_loaded('pdo_mysql'));
-        $this->set('i18nTest', function_exists('ctype_lower'));
+        $this->set('i18nTest', function_exists('ctype_lower')
+            && function_exists('iconv')
+            && function_exists('mb_strlen'));
         $this->set('jsonTest', extension_loaded('json'));
         $this->set('xmlTest', function_exists('xml_parse') && function_exists('simplexml_load_file'));
         $this->set('fileWriteTest', $this->testFileWritePermissions());
