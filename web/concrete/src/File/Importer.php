@@ -29,6 +29,7 @@ class Importer {
 	 * Returns a text string explaining the error that was passed
 	 */
 	public function getErrorMessage($code) {
+        $defaultStorage = StorageLocation::getDefault()->getName();
 		$msg = '';
 		switch($code) {
 			case Importer::E_PHP_NO_FILE:
@@ -49,7 +50,7 @@ class Importer {
 				$msg = t('Uploaded file is too large. The current value of upload_max_filesize is %s', ini_get('upload_max_filesize'));
 				break;
 			case Importer::E_FILE_UNABLE_TO_STORE:
-				$msg = t('Unable to copy file to storage directory. Please check permissions on your upload directory and ensure they can be written to by your web server.');
+				$msg = t('Unable to copy file to storage location "%s". Please check the settings for the storage location.', $defaultStorage);
 				break;
 			case Importer::E_PHP_FILE_ERROR_DEFAULT:
 			default:
