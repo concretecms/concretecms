@@ -2648,6 +2648,10 @@
                     /* concrete5 */
                     //$item = $('<a href="#" class="' + btnObject.className + ' redactor_dropdown_' + btnName + '">' + btnObject.title + '</a>');
                     $item = $('<li><a href="#" class="' + btnObject.className + ' redactor_dropdown_' + btnName + '">' + btnObject.title + '</a></li>');
+                    $item.on('mousedown', function(e){ // Prevent focus loss on mousedown before the click event has a chance to fire.
+                        e.preventDefault();
+                        e.stopPropagation();
+                    });
                     /* end concrete5 */
                     $item.on('click', $.proxy(function(e)
                     {
