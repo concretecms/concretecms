@@ -33,7 +33,7 @@
             <option value="<?= $group->getGroupID() ?>" <?= intval($group->getGroupID(), 10) === intval(
                 \Config::get('auth.facebook.registration.group', false),
                 10) ? 'selected' : '' ?>>
-                <?= $group->getGroupName() ?>
+                <?= $group->getGroupDisplayName(false) ?>
             </option>
         <?php
         }
