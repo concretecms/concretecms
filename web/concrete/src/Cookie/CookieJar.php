@@ -4,23 +4,10 @@ namespace Concrete\Core\Cookie;
 use Symfony\Component\HttpFoundation\Cookie as CookieObject;
 use Request;
 
-class Cookie
+class CookieJar
 {
 
-    static $pantry;
     protected $cookies = array();
-
-    /**
-     * Returns the cookie pantry (the cookie singleton object)
-     * @return static
-     */
-    public static function getInstance()
-    {
-        if (!isset(static::$pantry)) {
-            static::$pantry = new static();
-        }
-        return static::$pantry;
-    }
 
     /**
      * Adds a CookieObject to the cookie pantry
@@ -33,7 +20,7 @@ class Cookie
      * @param bool $httpOnly Whether the cookie will be made accessible only through the HTTP protocol
      * @return void
      */
-    public static function set(
+    public function set(
         $name,
         $value = null,
         $expire = 0,
@@ -42,10 +29,9 @@ class Cookie
         $secure = false,
         $httpOnly = true
     ) {
-        $cl = Cookie::getInstance();
         $expire = ($expire > 0) ? $expire * 60 : 0;
         $cookie = new CookieObject($name, $value, $expire, $path, $domain, $secure, $httpOnly);
-        $cl->add($cookie);
+        $this->add($cookie);
     }
 
     /**

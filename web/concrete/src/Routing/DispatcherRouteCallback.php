@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Routing;
 
+use Concrete\Core\Multilingual\Page\Section;
+use Concrete\Core\Multilingual\Service\DefaultLanguage;
 use \Concrete\Core\Page\Event as PageEvent;
 use Request;
 use User;
@@ -127,14 +129,32 @@ class DispatcherRouteCallback extends RouteCallback
         $cms->handleBaseURLRedirection();
         $cms->handleURLSlashes();
 
+        // Now we check to see if we're on the home page, and if it multilingual is enabled,
+        // and if so, whether we should redirect to the default language page.
+        if (Config::get('concrete.multilingual.enabled')) {
+            if ($c->getCollectionID() == HOME_CID && Config::get('concrete.multilingual.redirect_home_to_default_language')) {
+                // Let's retrieve the default language
+                $ms = Section::getByLocale(DefaultLanguage::getSessionDefaultLocale($c));
+                if (is_object($ms)) {
+                    Redirect::page($ms)->send();
+                    exit;
+                }
+            }
+
+            DefaultLanguage::setupSiteInterfaceLocalization();
+        }
+
         $request->setCurrentPage($c);
         require(DIR_BASE_CORE . '/bootstrap/process.php');
         $u = new User();
 
-        ## Fire the on_page_view Eventclass
+
+        // On page view event.
         $pe = new PageEvent($c);
         $pe->setUser($u);
         Events::dispatch('on_page_view', $pe);
+
+
 
         $controller = $c->getPageController();
         $controller->on_start();
