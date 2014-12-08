@@ -9,7 +9,7 @@ class WonBadgeActionDescription extends ActionDescription {
 
 	public function getUserPointActionDescription() {
 		$group = Group::getByID($this->gID);
-		return t('Won the <strong>%s</strong> Badge', $group->getGroupName());
+		return t('Won the <strong>%s</strong> Badge', $group->getGroupDisplayName(false));
 	}
 
 }
