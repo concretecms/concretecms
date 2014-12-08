@@ -13,7 +13,11 @@ class Controller extends GenericOauth2TypeController
 
     public function supportsRegistration()
     {
-        return \Config::get('auth.google.registration_enabled', false);
+        return \Config::get('auth.google.registration.enabled', false);
+    }
+
+    public function registrationGroupID() {
+        return \Config::get('auth.google.registration.group');
     }
 
     public function getAuthenticationTypeIconHTML()
@@ -32,7 +36,7 @@ class Controller extends GenericOauth2TypeController
     public function getService()
     {
         if (!$this->service) {
-            $this->service = \Core::make('google_service');
+            $this->service = \Core::make('authentication/google');
         }
         return $this->service;
     }
@@ -41,8 +45,8 @@ class Controller extends GenericOauth2TypeController
     {
         \Config::save('auth.google.appid', $args['apikey']);
         \Config::save('auth.google.secret', $args['apisecret']);
-        \Config::save('auth.google.registration_enabled', $args['registration_enabled']);
-
+        \Config::save('auth.google.registration.enabled', !!$args['registration_enabled']);
+        \Config::save('auth.google.registration.group', intval($args['registration_group'], 10));
 
         $whitelist = array();
         foreach (explode(PHP_EOL, $args['whitelist']) as $entry) {
@@ -64,6 +68,10 @@ class Controller extends GenericOauth2TypeController
         $this->set('apikey', \Config::get('auth.google.appid', ''));
         $this->set('apisecret', \Config::get('auth.google.secret', ''));
 
+        $list = new \GroupList();
+        $list->includeAllGroups();
+        $this->set('groups', $list->getResults());
+
         $this->set('whitelist', \Config::get('auth.google.email_filters.whitelist', array()));
         $blacklist = array_map(function($entry) {
             return json_encode($entry);
@@ -76,8 +84,12 @@ class Controller extends GenericOauth2TypeController
     {
         $ui = \UserInfo::getByID($u->getUserID());
         if (!$ui->hasAvatar()) {
-            $image = \Image::open($this->getExtractor()->getImageURL());
-            $ui->updateUserAvatar($image);
+            try {
+                $image = \Image::open($this->getExtractor()->getImageURL());
+                $ui->updateUserAvatar($image);
+            } catch(\Imagine\Exception\InvalidArgumentException $e) {
+                \Log::addNotice("Unable to fetch user images in Google Authentication Type, is allow_url_fopen disabled?");
+            } catch(\Exception $e) {}
         }
 
         parent::completeAuthentication($u);

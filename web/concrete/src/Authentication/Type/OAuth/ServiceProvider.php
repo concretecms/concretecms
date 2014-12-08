@@ -1,10 +1,12 @@
 <?php
 namespace Concrete\Core\Authentication\Type\OAuth;
 
+use Concrete\Core\Authentication\Type\OAuth\OAuth2\GenericOauth2TypeController;
 use Concrete\Core\Foundation\Service\Provider;
 use OAuth\Common\Http\Client\CurlClient;
 use OAuth\ServiceFactory;
 use OAuth\UserData\ExtractorFactory;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ServiceProvider extends Provider
 {
@@ -12,7 +14,7 @@ class ServiceProvider extends Provider
     public function register()
     {
         $this->app->bind(
-            'oauth_service_factory',
+            'oauth/factory/service',
             function ($app, $params = array()) {
                 $factory = new ServiceFactory();
                 $factory->setHttpClient($client = new CurlClient());
@@ -21,7 +23,7 @@ class ServiceProvider extends Provider
                 return $factory;
             });
         $this->app->bindShared(
-            'oauth_extractor_factory',
+            'oauth/factory/extractor',
             function () {
                 return new ExtractorFactory();
             });
@@ -29,8 +31,38 @@ class ServiceProvider extends Provider
         $this->app->bind(
             'oauth_extractor',
             function ($app, $service) {
-                $extractor_factory = $app->make('oauth_extractor_factory');
+                $extractor_factory = $app->make('oauth/factory/extractor');
                 return $extractor_factory->get($service);
+            });
+
+        \Route::register(
+            '/ccm/system/authentication/oauth2/{type}/{action}',
+            function($type, $action) {
+                try {
+                    $type = \AuthenticationType::getByHandle($type);
+                    if ($type && is_object($type) && !$type->isError()) {
+                        /** @var GenericOauth2TypeController $controller */
+                        $controller = $type->getController();
+                        if ($controller instanceof GenericOauth2TypeController) {
+
+                            switch ($action) {
+                                case 'attempt_auth':
+                                    $controller->handle_authentication_attempt();
+                                    break;
+                                case 'callback':
+                                    $controller->handle_authentication_callback();
+                                    break;
+                                case 'attempt_attach':
+                                    $controller->handle_attach_attempt();
+                                    break;
+                                case 'attach_callback':
+                                    $controller->handle_attach_callback();
+                                    break;
+                            }
+                        }
+                    }
+                } catch (\Exception $e) {
+                }
             });
     }
 

@@ -15,27 +15,11 @@ class ServiceProvider extends \Concrete\Core\Foundation\Service\Provider
      */
     public function register()
     {
-        // Authentication
-        \Route::register(
-            '/system/authentication/twitter/attempt_auth',
-            'Concrete\Authentication\Twitter\Controller::handle_authentication_attempt');
-        \Route::register(
-            '/system/authentication/twitter/callback',
-            'Concrete\Authentication\Twitter\Controller::handle_authentication_callback');
-
-        // Attaching
-        \Route::register(
-            '/system/authentication/twitter/attempt_attach',
-            'Concrete\Authentication\Twitter\Controller::handle_attach_attempt');
-        \Route::register(
-            '/system/authentication/twitter/attach_callback',
-            'Concrete\Authentication\Twitter\Controller::handle_attach_callback');
-
         $this->app->bindShared(
-            'twitter_service',
-            function ($app, $callback = '/system/authentication/twitter/callback/') {
+            'authentication/twitter',
+            function ($app, $callback = '/ccm/system/authentication/oauth2/twitter/callback/') {
                 /** @var ServiceFactory $factory */
-                $factory = $app->make('oauth_service_factory');
+                $factory = $app->make('oauth/factory/service');
                 return $factory->createService(
                     'twitter',
                     new Credentials(

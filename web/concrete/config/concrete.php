@@ -305,6 +305,9 @@ return array(
         'default' => array(
             'address' => 'concrete5-noreply@' . $_SERVER['SERVER_NAME'],
             'name'    => ''
+        ),
+        'form_block' => array(
+            'address' => false
         )
     ),
 

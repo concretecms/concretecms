@@ -190,6 +190,8 @@ return array(
         "/ccm/system/dialogs/file/bulk/properties"                                      => array('\Concrete\Controller\Dialog\File\Bulk\Properties::view'),
         "/ccm/system/dialogs/file/bulk/properties/update_attribute"                     => array('\Concrete\Controller\Dialog\File\Bulk\Properties::updateAttribute'),
         "/ccm/system/dialogs/file/bulk/properties/clear_attribute"                      => array('\Concrete\Controller\Dialog\File\Bulk\Properties::clearAttribute'),
+        "/ccm/system/dialogs/file/bulk/delete"                                          => array('\Concrete\Controller\Dialog\File\Bulk\Delete::view'),
+        "/ccm/system/dialogs/file/bulk/delete/delete_files"                             => array('\Concrete\Controller\Dialog\File\Bulk\Delete::deleteFiles'),
         "/ccm/system/dialogs/page/add_block_list"                                       => array('\Concrete\Controller\Dialog\Page\AddBlockList::view'),
         "/ccm/system/dialogs/page/clipboard"                                            => array('\Concrete\Controller\Dialog\Page\Clipboard::view'),
         "/ccm/system/dialogs/page/add_block"                                            => array('\Concrete\Controller\Dialog\Page\AddBlock::view'),
