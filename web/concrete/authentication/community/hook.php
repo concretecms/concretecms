@@ -6,7 +6,7 @@
     <hr>
 </div>
 <div class="form-group">
-    <a href="<?= \URL::to('/system/authentication/community/attempt_attach'); ?>" class="btn btn-primary btn-community">
+    <a href="<?= \URL::to('/ccm/system/authentication/oauth2/community/attempt_attach'); ?>" class="btn btn-primary btn-community">
         <img src="<?= BASE_URL . DIR_REL ?>/concrete/images/logo.png" class="concrete5-icon"></i>
         <?= t('Attach a concrete5.org account') ?>
     </a>

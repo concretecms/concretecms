@@ -41,7 +41,7 @@ if (isset($show_email) && $show_email) {
             <hr>
         </div>
         <div class="form-group">
-            <a href="<?= \URL::to('/system/authentication/twitter/attempt_attach'); ?>"
+            <a href="<?= \URL::to('/ccm/system/authentication/oauth2/twitter/attempt_attach'); ?>"
                class="btn btn-primary btn-twitter btn-block">
                 <i class="fa fa-twitter"></i>
                 <?= t('Attach a %s account', t('twitter')) ?>
@@ -57,7 +57,7 @@ if (isset($show_email) && $show_email) {
             <hr>
         </div>
         <div class="form-group">
-            <a href="<?= \URL::to('/system/authentication/twitter/attempt_auth'); ?>"
+            <a href="<?= \URL::to('/ccm/system/authentication/oauth2/twitter/attempt_auth'); ?>"
                class="btn btn-primary btn-twitter btn-block">
                 <i class="fa fa-twitter"></i>
                 <?= t('Log in with %s', 'twitter') ?>
