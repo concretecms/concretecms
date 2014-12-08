@@ -69,6 +69,7 @@
                     dragAreaBlockID: dragAreaBlockID
                 }, function (response) {
                     $.fn.dialog.showLoader();
+                    ConcreteToolbar.disableDirectExit();
                     $.get(CCM_DISPATCHER_FILENAME + '/ccm/system/block/render',
                         {
                             arHandle: area.getHandle(),

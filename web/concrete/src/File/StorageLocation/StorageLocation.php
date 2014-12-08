@@ -41,6 +41,24 @@ class StorageLocation
     {
         return $this->fslName;
     }
+    
+    /** Returns the display name for this storage location (localized and escaped accordingly to $format)
+    * @param string $format = 'html'
+    *    Escape the result in html format (if $format is 'html').
+    *    If $format is 'text' or any other value, the display name won't be escaped.
+    * @return string
+    */
+    public function getDisplayName($format = 'html')
+    {
+        $value = tc('StorageLocationName', $this->getName());
+        switch($format) {
+            case 'html':
+                return h($value);
+            case 'text':
+            default:
+                return $value;
+        }
+    }
 
     public function setName($fslName)
     {

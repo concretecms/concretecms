@@ -99,7 +99,7 @@
     <h3><?=t('Storage Locations')?></h3>
     <ul class="item-select-list">
     <? foreach($locations as $location) { ?>
-        <li><a href="<?=$this->action('edit', $location->getID())?>"><i class="fa fa-hdd-o"></i> <?=$location->getName()?></a></li>
+        <li><a href="<?=$this->action('edit', $location->getID())?>"><i class="fa fa-hdd-o"></i> <?=$location->getDisplayName()?></a></li>
     <? } ?>
     </ul>
 
