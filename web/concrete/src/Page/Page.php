@@ -705,6 +705,10 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             return $icon;
         }
 
+        if (Config::get('concrete.multilingual.enabled')) {
+            $icon = \Concrete\Core\Multilingual\Service\UserInterface\Flag::getDashboardSitemapIconSRC($this);
+        }
+
         if ($this->isGeneratedCollection()) {
             if ($this->getPackageID() > 0) {
                 if (is_dir(DIR_PACKAGES . '/' . $this->getPackageHandle())) {

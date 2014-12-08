@@ -4,6 +4,8 @@ namespace Concrete\Core\Multilingual\Page;
 use Concrete\Core\Page\Page;
 use Database;
 use Punic\Language;
+use Config;
+
 defined('C5_EXECUTE') or die("Access Denied.");
 
 class Section extends Page
@@ -36,12 +38,20 @@ class Section extends Page
             array('cID'),
             true
         );
+
+        // Now we make sure we have multilingual enabled
+        Config::save('concrete.multilingual.enabled', true);
     }
 
     public function unassign()
     {
         $db = Database::get();
-        $db->Execute('delete from MultilingualSections where cID = ?', array($this->getCollectionID()));
+        $db->delete('MultilingualSections', array('cID' => $this->getCollectionID()));
+
+        $total = $db->GetOne('select count(*) from MultilingualSections');
+        if ($total < 1) {
+            Config::save('concrete.multilingual.enabled', false);
+        }
     }
 
     /**

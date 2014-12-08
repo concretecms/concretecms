@@ -220,6 +220,7 @@ return array(
     ),
 
     'multilingual' =>   array(
+        'enabled' => false, // note this will automatically be set to true if needed
         'redirect_home_to_default_language' => false,
         'use_browser_detected_language' => false,
         'default_language' => false

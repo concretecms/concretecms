@@ -108,6 +108,7 @@ return array(
         'core_database'     => '\Concrete\Core\Database\DatabaseServiceProvider',
         'core_form'         => '\Concrete\Core\Form\FormServiceProvider',
         'core_session'      => '\Concrete\Core\Session\SessionServiceProvider',
+        'core_cookie'      => '\Concrete\Core\Cookie\CookieServiceProvider',
         'core_http'         => '\Concrete\Core\Http\HttpServiceProvider',
         'core_events'       => '\Concrete\Core\Events\EventsServiceProvider',
         'core_whoops'       => '\Concrete\Core\Error\Provider\WhoopsServiceProvider',
@@ -128,6 +129,7 @@ return array(
     'facades'             => array(
         'Core'     => '\Concrete\Core\Support\Facade\Application',
         'Session'  => '\Concrete\Core\Support\Facade\Session',
+        'Cookie'  => '\Concrete\Core\Support\Facade\Cookie',
         'Database' => '\Concrete\Core\Support\Facade\Database',
         'Events'   => '\Concrete\Core\Support\Facade\Events',
         'Route'    => '\Concrete\Core\Support\Facade\Route',

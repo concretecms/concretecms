@@ -1,6 +1,7 @@
 <?php
 
 namespace Concrete\Core\Multilingual\Service\UserInterface;
+use Concrete\Core\Multilingual\Page\Section;
 use Database;
 
 defined('C5_EXECUTE') or die("Access Denied.");
@@ -43,7 +44,7 @@ class Flag
 
     public function getDashboardSitemapIconSRC($page)
     {
-        $ids = MultilingualSection::getIDList();
+        $ids = Section::getIDList();
         if (in_array($page->getCollectionID(), $ids)) {
             return self::getSectionFlagIcon($page, true);
         }

@@ -22,7 +22,7 @@ use Concrete\Core\Multilingual\Page\Section as MultilingualSection;
                 <td><a href="<?php echo $nav->getLinkToCollection($pc)?>"><?php echo $pc->getCollectionName()?></a></td>
                 <td><?php echo $pcl->getLanguageText()?> (<?php echo $pcl->getLocale();?>)</td>
                 <td><?php echo $pc->getCollectionPath()?></td>
-                <td><a href="<?php echo $this->action('remove_language_section', $pc->getCollectionID(), Loader::helper('validation/token')->generate())?>" class="icon-link"><i class="fa fa-trash"></i>copy_tree</a></td>
+                <td><a href="<?php echo $this->action('remove_language_section', $pc->getCollectionID(), Loader::helper('validation/token')->generate())?>" class="icon-link"><i class="fa fa-trash"></i></a></td>
             </tr>
         <?php } ?>
         </table>
