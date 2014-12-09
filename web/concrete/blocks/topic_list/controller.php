@@ -91,7 +91,10 @@ class Controller extends BlockController
             $c = \Page::getCurrentPage();
         }
         if ($topic) {
-            return \URL::page($c, 'topic', strtolower($topic->getTreeNodeDisplayName()));
+            $nodeName = $topic->getTreeNodeName();
+            $nodeName = strtolower($nodeName); // convert to lowercase
+            $nodeName = Core::make('helper/text')->encodePath($nodeName); // urlencode
+            return \URL::page($c, 'topic', $nodeName);
         } else {
             return \URL::page($c);
         }
