@@ -23,9 +23,9 @@ class Topic extends TreeNode {
 		return $this->treeNodeTopicName;
 	}
 
-	public function getTreeNodeDisplayName($format = 'html')
-	{
-		$name = Core::make('helper/text')->unhandle($this->getTreeNodeName());
+    public function getTreeNodeDisplayName($format = 'html')
+    {
+        $name = Core::make('helper/text')->unhandle($this->getTreeNodeName());
         $name = tc('TopicName', $name);
         switch ($format) {
             case 'html':
@@ -34,7 +34,7 @@ class Topic extends TreeNode {
             default:
                 return $name;
         }
-	}
+    }
 
 	public function loadDetails() {
 		$db = Loader::db();

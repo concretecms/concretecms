@@ -9,7 +9,7 @@ class TopicCategory extends Category {
     public function getTreeNodeDisplayName($format = 'html')
     {
         if ($this->getTreeNodeName()) {
-	        $name = Core::make('helper/text')->unhandle($this->getTreeNodeName());
+            $name = Core::make('helper/text')->unhandle($this->getTreeNodeName());
             $name = tc('TopicCategoryName', $name);
             switch ($format) {
                 case 'html':
