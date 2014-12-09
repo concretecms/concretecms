@@ -72,7 +72,7 @@ abstract class ItemList extends AbstractItemList
         ) {
             $this->query->orderBy($column, $direction);
         } else {
-            throw new \Exception(t('Sql Injection Detected'));
+            throw new \Exception(t('Invalid SQL in order by'));
         }
     }
 
