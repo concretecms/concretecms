@@ -5,6 +5,7 @@ use \Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Tree\Tree;
 use Config;
 use Loader;
+use Core;
 use \Concrete\Core\Tree\Type\Topic as TopicTree;
 use \Concrete\Core\Tree\Node\Node as TreeNode;
 use \Concrete\Core\Tree\Node\Type\Topic as TopicTreeNode;
@@ -45,7 +46,7 @@ class Topics extends DashboardPageController {
 		if ($this->token->validate('add_category_node')) {
 			$parent = TreeNode::getByID($treeNodeParentID);
 			$tree = $parent->getTreeObject();
-			$title = Loader::helper('security')->sanitizeString($_POST['treeNodeCategoryName']);
+			$title = Core::make('helper/text')->slugSafeString($_POST['treeNodeCategoryName']);
 			if (!$title) {
 				$this->error->add(t('Invalid title for category'));
 			}
@@ -80,7 +81,7 @@ class Topics extends DashboardPageController {
 			if (!($node instanceof TopicTreeNode)) {
 				$this->error->add(t('Invalid node.'));
 			}
-			$title = Loader::helper('security')->sanitizeString($_POST['treeNodeTopicName']);
+			$title = Core::make('helper/text')->slugSafeString($_POST['treeNodeTopicName']);
 			if (!$title) {
 				$this->error->add(t('Invalid title for topic'));
 			}
@@ -110,7 +111,7 @@ class Topics extends DashboardPageController {
 			if (!($node instanceof TopicCategoryTreeNode)) {
 				$this->error->add(t('Invalid node.'));
 			}
-			$title = Loader::helper('security')->sanitizeString($_POST['treeNodeCategoryName']);
+			$title = Core::make('helper/text')->slugSafeString($_POST['treeNodeCategoryName']);
 			if (!$title) {
 				$this->error->add(t('Invalid title for category'));
 			}
@@ -139,7 +140,7 @@ class Topics extends DashboardPageController {
 		if ($this->token->validate('add_topic_node')) {
 			$parent = TreeNode::getByID($treeNodeParentID);
 			$tree = $parent->getTreeObject();
-			$title = Loader::helper('security')->sanitizeString($_POST['treeNodeTopicName']);
+			$title = Core::make('helper/text')->slugSafeString($_POST['treeNodeTopicName']);
 			if (!$title) {
 				$this->error->add(t('Invalid title for topic'));
 			}

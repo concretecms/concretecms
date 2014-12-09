@@ -101,14 +101,14 @@
 	    			'url': $form.attr('action'),
 	    			success: function(r) {
 	    				if (r.error == true) {
-	    					ConcreteAlert.dialog('Error', '<div class="alert alert-danger">' + r.messages.join("<br>") + '</div>');
+	    					ConcreteAlert.dialog(ccmi18n.error, r.errors.join("<br>"));
 	    				} else {
 	    					jQuery.fn.dialog.closeTop();
 	    					onSuccess(r);
 	    				}
 	    			},
 	    			error: function(r) {
-    					ConcreteAlert.dialog('Error', '<div class="alert alert-danger">' + r.responseText + '</div>');
+    					ConcreteAlert.dialog(ccmi18n.error, r.responseText);
 	    			},
 	    			complete: function() {
 	    				jQuery.fn.dialog.hideLoader();
@@ -146,7 +146,7 @@
 			'url': CCM_TOOLS_PATH + '/tree/node/duplicate/' + cloneType,
 			success: function(r) {
 				if (r.error == true) {
-					ConcreteAlert.dialog('Error', '<div class="alert alert-danger">' + r.messages.join("<br>") + '</div>');
+					ConcreteAlert.dialog(ccmi18n.error, r.errors.join("<br>"));
 				} else {
 					jQuery.fn.dialog.closeTop();
 		    		var node = $tree.dynatree('getTree').getNodeByKey(r.treeNodeParentID);
@@ -157,7 +157,7 @@
 				}
 			},
 			error: function(r) {
-				ConcreteAlert.dialog('Error', '<div class="alert alert-danger">' + r.responseText + '</div>');
+				ConcreteAlert.dialog(ccmi18n.error, '<div class="alert alert-danger">' + r.responseText + '</div>');
 			},
 			complete: function() {
 				jQuery.fn.dialog.hideLoader();
