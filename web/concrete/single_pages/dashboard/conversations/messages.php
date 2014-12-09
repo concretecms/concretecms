@@ -121,7 +121,9 @@ $ip = Loader::helper('validation/ip'); ?>
                                 <? } ?>
                             </td>
                             <td>
-                                <a href="<?=Loader::helper('navigation')->getLinkToCollection($page)?>#cnv<?php echo $cnvID ?>Message<?php echo $msgID ?>" data-open-text="<?php echo t('View full message.') ?>" data-close-text="<?php echo t('Minimize message') ?>" class="read-all truncated btn"><i class="fa fa-share"></i></a>
+                                <?php if (is_object($page)) { ?>
+                                    <a href="<?=Loader::helper('navigation')->getLinkToCollection($page)?>#cnv<?php echo $cnvID ?>Message<?php echo $msgID ?>" data-open-text="<?php echo t('View full message.') ?>" data-close-text="<?php echo t('Minimize message') ?>" class="read-all truncated btn"><i class="fa fa-share"></i></a>
+                                <?php } ?>
                             </td>
                             <td class="hidden-actions">
                                 <div class="message-actions message-actions<?php echo $msgID ?>" data-id="<?php echo $msgID ?>">
