@@ -107,7 +107,7 @@ abstract class Tree extends Object
             $node->populateDirectChildrenOnly();
 
             if ($node->getTreeNodeID() != $tree->getRootTreeNodeID()) {
-                $name = $node->getTreeNodeDisplayName();
+                $name = $node->getTreeNodeName();
                 $computedPath .= '/' . $name;
             }
 
