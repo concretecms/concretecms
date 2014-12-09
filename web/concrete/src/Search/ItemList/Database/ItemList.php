@@ -67,10 +67,12 @@ abstract class ItemList extends AbstractItemList
 
     protected function executeSortBy($column, $direction = 'asc')
     {
-        if(preg_match('/[\'";]+/', $column) === 0 
+        if(preg_match('[^0-9a-zA-Z\$\.\_\x{0080}-\x{ffff}]+/u', $column) === 0 
             && in_array(strtolower($direction), array('asc','desc'))
         ) {
             $this->query->orderBy($column, $direction);
+        } else {
+            throw new \Exception(t('Sql Injection Detected'));
         }
     }
 
