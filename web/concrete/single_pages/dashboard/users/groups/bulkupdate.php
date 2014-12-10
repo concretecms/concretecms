@@ -18,13 +18,13 @@ $form = Loader::helper('form');?>
 </ul>
 
 <form method="post" action="<?=$view->action('confirm')?>" role="form">
-    <input type="hidden" name="gParentNodeID" value="<?=$_REQUEST['gParentNodeID']?>" />
+    <input type="hidden" name="gParentNodeID" value="<?=h($_REQUEST['gParentNodeID'])?>" />
     
 	<? foreach($_REQUEST['gID'] as $gID) { ?>
-		<input type="hidden" name="gID[]" value="<?=$gID?>" />
+		<input type="hidden" name="gID[]" value="<?=h($gID)?>" />
 	<? } ?>
 	<br/>
-	<input type="hidden" name="gName" value="<?=$_REQUEST['gName']?>" />
+	<input type="hidden" name="gName" value="<?=h($_REQUEST['gName'])?>" />
 	
 	<div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
@@ -88,7 +88,7 @@ $form = Loader::helper('form');?>
         </div>
     </div>
 
-	<input type="hidden" name="gName" value="<?=$_REQUEST['gName']?>" />
+	<input type="hidden" name="gName" value="<?=h($_REQUEST['gName'])?>" />
 </form>
 
 <script type="text/javascript">
