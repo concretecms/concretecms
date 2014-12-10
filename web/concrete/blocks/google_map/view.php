@@ -28,7 +28,7 @@ if ($c->isEditMode()) { ?>
                 center: latlng,
                 mapTypeId: google.maps.MapTypeId.ROADMAP,
                 streetViewControl: false,
-                scrollwheel: <?=$scrollwheel?>,
+                scrollwheel: <?= !!$scrollwheel ? "true" : "false" ?>,
                 mapTypeControl: false
             };
             var map = new google.maps.Map(document.getElementById('googleMapCanvas<?=$bID?>'), mapOptions);
