@@ -1,5 +1,7 @@
 <?php
 namespace Concrete\Core\Page;
+use Concrete\Core\Multilingual\Page\Event;
+use Concrete\Core\Multilingual\Page\Section;
 use Concrete\Core\Page\Type\Type;
 use Loader;
 use CacheLocal;
@@ -1954,6 +1956,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $pe->setNewParentPageObject($newParent);
         Events::dispatch('on_page_move', $pe);
 
+        Section::registerMove($this, $oldParent, $newParent);
+
         // now that we've moved the collection, we rescan its path
         $this->rescanCollectionPath();
     }
@@ -2053,6 +2057,9 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             // 2. old page
             $pe = new DuplicatePageEvent($this);
             $pe->setNewPageObject($nc2);
+
+            Section::registerDuplicate($nc2, $this);
+
             Events::dispatch('on_page_duplicate', $pe);
 
             $nc2->rescanCollectionPath();
@@ -2125,6 +2132,10 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             }
         }
 
+        if (Config::get('concrete.multilingual.enabled')) {
+            Section::unregisterPage($this);
+        }
+
         $cache = PageCache::getLibrary();
         $cache->purge($this);
 
@@ -2135,10 +2146,6 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         // run any internal event we have for page trashing
         $pe = new Event($this);
         Events::dispatch('on_page_move_to_trash', $pe);
-
-        if ($ret < 0) {
-            return false;
-        }
 
         $trash = Page::getByPath(Config::get('concrete.paths.trash'));
         Log::addEntry(t('Page "%s" at path "%s" Moved to trash', $this->getCollectionName(), $this->getCollectionPath()),t('Page Action'));
@@ -2537,6 +2544,11 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             }
 
             $pc = Page::getByID($newCID, 'RECENT');
+            // if we are in the drafts area of the site, then we don't check multilingual status. Otherwise
+            // we do
+            if ($this->getCollectionPath() != Config::get('concrete.paths.drafts')) {
+                Section::registerPage($pc);
+            }
 
             // run any internal event we have for page addition
             $pe = new Event($pc);
