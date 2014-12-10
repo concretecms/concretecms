@@ -8,7 +8,7 @@ $form = Loader::helper('form');?>
 <? if ($gParent instanceof Group) { ?>
 <p><?=t('Move the following group(s) beneath <strong>%s</strong>.', $gParent->getGroupDisplayName())?></p>
 <? } else { ?> 
-<p><?=t('Move the following group(s) <strong>to the top level of groups</strong>.', $gParent->getGroupDisplayName())?></p>
+<p><?=t('Move the following group(s) <strong>to the top level of groups</strong>.')?></p>
 <? } ?>
 
 <ul>
