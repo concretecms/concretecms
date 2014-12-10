@@ -26,7 +26,7 @@ div#ccm-toolbar {
       width: auto !important;
       padding: 14px 16px;
     }
-    li > a i {
+    li > a i, li > a img {
       position: static;
     }
   }
@@ -63,10 +63,12 @@ div#ccm-toolbar {
         margin-left: -1px; /* we have to do this tomfoolery because of user-added menus */
         text-decoration: none;
 
-        i {
+        i, img {
           position: absolute;
           top: 17px;
-          left: 24px;
+          left: 23px;
+          width: 14px;
+          height: 14px;
         }
 
         .spinner {
