@@ -31,7 +31,7 @@ class Cookie
      * @param null|string $domain The domain the cookie is available to
      * @param bool $secure whether the cookie should only be transmitted over a HTTPS connection from the client
      * @param bool $httpOnly Whether the cookie will be made accessible only through the HTTP protocol
-     * @return void
+     * @return Cookie
      */
     public static function set(
         $name,
@@ -46,6 +46,7 @@ class Cookie
         $expire = ($expire > 0) ? $expire * 60 : 0;
         $cookie = new CookieObject($name, $value, $expire, $path, $domain, $secure, $httpOnly);
         $cl->add($cookie);
+        return $cookie;
     }
 
     /**
