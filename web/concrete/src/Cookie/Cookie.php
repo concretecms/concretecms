@@ -31,7 +31,7 @@ class Cookie
      * @param null|string $domain The domain the cookie is available to
      * @param bool $secure whether the cookie should only be transmitted over a HTTPS connection from the client
      * @param bool $httpOnly Whether the cookie will be made accessible only through the HTTP protocol
-     * @return Cookie
+     * @return \Concrete\Core\Cookie\Cookie
      */
     public static function set(
         $name,
