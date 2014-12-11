@@ -27,7 +27,7 @@ foreach($parents as $pc) {
 			<? } ?>
 			</menu>
 		<? } else { ?>
-			<? $nav->render(); ?>
+			<? $nav->render('dashboard_navigation'); ?>
 		<? } ?>
 
 	

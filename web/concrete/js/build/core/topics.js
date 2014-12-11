@@ -40,13 +40,17 @@
 				menu += '<li><a class="dialog-launch" dialog-width="550" dialog-on-open="$(\'[data-topic-form=add-topic-node]\').ccmtopicstree(\'initAddNodeForm\', ' + options.treeID + ');" dialog-height="auto" dialog-modal="false" dialog-title="' + ccmi18n_topics.addTopic + '" href="' + CCM_DISPATCHER_FILENAME + '/tools/required/tree/node/add/topic?treeNodeParentID=' + data.key + '">' + ccmi18n_topics.addTopic + '<\/a><\/li>';
 			}
 
-			if (data.canDuplicateTreeNode && data.treeNodeTypeHandle == 'topic_category') {
+			if (data.canEditTreeNode && data.treeNodeTypeHandle == 'topic_category') {
 				menu += '<li><a class="dialog-launch" dialog-width="550" dialog-on-open="$(\'[data-topic-form=update-category-node]\').ccmtopicstree(\'initUpdateCategoryNodeForm\', ' + options.treeID + ');" dialog-height="auto" dialog-modal="false" dialog-title="' + ccmi18n_topics.editCategory + '" href="' + CCM_DISPATCHER_FILENAME + '/tools/required/tree/node/edit/topic_category?treeNodeID=' + data.key + '">' + ccmi18n_topics.editCategory + '<\/a><\/li>';
+			}
+			if (data.canDuplicateTreeNode && data.treeNodeTypeHandle == 'topic_category') {
 				menu += '<li><a href="#" onclick="$.fn.ccmtopicstree(\'cloneNode\', \'node\', ' + options.treeID + ',' + data.key + ')">' + ccmi18n_topics.cloneCategory + '<\/a><\/li>';
 			}
 
-			if (data.canDuplicateTreeNode && data.treeNodeTypeHandle == 'topic') {
+			if (data.canEditTreeNode && data.treeNodeTypeHandle == 'topic') {
 				menu += '<li><a class="dialog-launch" dialog-width="550" dialog-on-open="$(\'[data-topic-form=update-topic-node]\').ccmtopicstree(\'initUpdateTopicNodeForm\', ' + options.treeID + ');" dialog-height="auto" dialog-modal="false" dialog-title="' + ccmi18n_topics.editTopic + '" href="' + CCM_DISPATCHER_FILENAME + '/tools/required/tree/node/edit/topic?treeNodeID=' + data.key + '">' + ccmi18n_topics.editTopic + '<\/a><\/li>';
+			}
+			if (data.canDuplicateTreeNode && data.treeNodeTypeHandle == 'topic') {
 				menu += '<li><a href="#" onclick="$.fn.ccmtopicstree(\'cloneNode\', \'node\', ' + options.treeID + ',' + data.key + ')">' + ccmi18n_topics.cloneTopic + '<\/a><\/li>';
 			}
 
@@ -101,14 +105,14 @@
 	    			'url': $form.attr('action'),
 	    			success: function(r) {
 	    				if (r.error == true) {
-	    					ConcreteAlert.dialog('Error', '<div class="alert alert-danger">' + r.messages.join("<br>") + '</div>');
+	    					ConcreteAlert.dialog(ccmi18n.error, r.errors.join("<br>"));
 	    				} else {
 	    					jQuery.fn.dialog.closeTop();
 	    					onSuccess(r);
 	    				}
 	    			},
 	    			error: function(r) {
-    					ConcreteAlert.dialog('Error', '<div class="alert alert-danger">' + r.responseText + '</div>');
+    					ConcreteAlert.dialog(ccmi18n.error, r.responseText);
 	    			},
 	    			complete: function() {
 	    				jQuery.fn.dialog.hideLoader();
@@ -146,7 +150,7 @@
 			'url': CCM_TOOLS_PATH + '/tree/node/duplicate/' + cloneType,
 			success: function(r) {
 				if (r.error == true) {
-					ConcreteAlert.dialog('Error', '<div class="alert alert-danger">' + r.messages.join("<br>") + '</div>');
+					ConcreteAlert.dialog(ccmi18n.error, r.errors.join("<br>"));
 				} else {
 					jQuery.fn.dialog.closeTop();
 		    		var node = $tree.dynatree('getTree').getNodeByKey(r.treeNodeParentID);
@@ -157,7 +161,7 @@
 				}
 			},
 			error: function(r) {
-				ConcreteAlert.dialog('Error', '<div class="alert alert-danger">' + r.responseText + '</div>');
+				ConcreteAlert.dialog(ccmi18n.error, '<div class="alert alert-danger">' + r.responseText + '</div>');
 			},
 			complete: function() {
 				jQuery.fn.dialog.hideLoader();

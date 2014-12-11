@@ -6,6 +6,7 @@ use \Monolog\Logger as MonologLogger;
 use \Monolog\Formatter\LineFormatter;
 use Database;
 use Events;
+use Core;
 
 class Logger extends MonologLogger
 {

@@ -154,7 +154,6 @@ if ($successMessage) {
 	$json['error'] = false;
 	$json['message'] = $successMessage;
 	$json['cID'] = $newCID;
-	$json['instance_id'] = $_REQUEST['instance_id'];
 	$js = Loader::helper('json');
 	print $js->encode($json);
 	exit;
@@ -187,13 +186,12 @@ if ($successMessage) {
 		<input type="hidden" name="origCID" id="origCID" value="<?=h($_REQUEST['origCID'])?>" />
 		<input type="hidden" name="destParentID" id="destParentID" value="<?=$dc->getCollectionParentID()?>" />
 		<input type="hidden" name="destCID" id="destCID" value="<?=$dc->getCollectionID()?>" />
-		<input type="hidden" name="instance_id" id="instance_id" value="<?=$_REQUEST['instance_id']?>" />
-		<input type="hidden" name="dragMode" id="dragMode" value="<?=$_REQUEST['dragMode']?>" />
+		<input type="hidden" name="dragMode" id="dragMode" value="<?=h($_REQUEST['dragMode'])?>" />
 		<? if (isset($destSibling)) { ?>
 			<input type="hidden" name="destSibling" id="destSibling" value="<?=$destSibling->getCollectionID()?>" />
 		<? } ?>
-		<input type="hidden" name="select_mode" id="select_mode" value="<?=$_REQUEST['select_mode']?>" />
-		<input type="hidden" name="display_mode" id="display_mode" value="<?=$_REQUEST['display_mode']?>" />
+		<input type="hidden" name="select_mode" id="select_mode" value="<?=h($_REQUEST['select_mode'])?>" />
+		<input type="hidden" name="display_mode" id="display_mode" value="<?=h($_REQUEST['display_mode'])?>" />
 
 		<input type="radio" checked style="vertical-align: middle" id="ctaskMove" name="ctask" value="MOVE" />
 		<strong><?=t('Move')?></strong> <? if (count($originalPages) == 1) { ?>"<?=$oc->getCollectionName()?>"<? } ?> <?=t('beneath')?> "<?=$dc->getCollectionName()?>"

@@ -15,7 +15,7 @@ if ($canEdit) { ?>
 			<input type="hidden" name="treeNodeID" value="<?=$node->getTreeNodeID()?>" />
 			<div class="form-group">
 				<?=$form->label('treeNodeCategoryName', t('Category Name'))?>
-				<?=$form->text('treeNodeCategoryName', $node->getTreeNodeDisplayName(), array('class' => 'span4'))?>
+				<?=$form->text('treeNodeCategoryName', $node->getTreeNodeName(), array('class' => 'span4'))?>
 			</div>
 			<div class="dialog-buttons">
 				<button class="btn btn-default" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
