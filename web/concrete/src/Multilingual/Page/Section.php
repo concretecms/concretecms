@@ -14,27 +14,19 @@ class Section extends Page
     /**
      * @var string
      */
-    public $msLocale;
-
-    /**
-     * @var string
-     */
-    public $msIcon;
+    protected $msCountry;
 
     /**
      * @var string
      */
     public $msLanguage;
 
-    public static function assign($c, $language, $icon)
+    public static function assign($c, $language, $country)
     {
         $db = Database::get();
-
-        $locale = $language . (strlen($icon) ? '_' . $icon : '');
-
         $db->Replace(
             'MultilingualSections',
-            array('cID' => $c->getCollectionID(), 'msLanguage' => $language, 'msIcon' => $icon, 'msLocale' => $locale),
+            array('cID' => $c->getCollectionID(), 'msLanguage' => $language, 'msCountry' => $country),
             array('cID'),
             true
         );
@@ -66,8 +58,7 @@ class Section extends Page
         if ($r) {
             $obj = parent::getByID($cID, $cvID, '\Concrete\Core\Multilingual\Page\Section');
             $obj->msLanguage = $r['msLanguage'];
-            $obj->msIcon = $r['msIcon'];
-            $obj->msLocale = $r['msLocale'];
+            $obj->msCountry = $r['msCountry'];
             return $obj;
         }
 
@@ -83,14 +74,13 @@ class Section extends Page
     {
         $db = Database::get();
         $r = $db->GetRow(
-            'select cID, msLanguage, msIcon, msLocale from MultilingualSections where msLanguage = ?',
+            'select cID, msLanguage, msCountry from MultilingualSections where msLanguage = ?',
             array($language)
         );
         if ($r && is_array($r) && $r['msLanguage']) {
             $obj = parent::getByID($r['cID'], 'RECENT', '\Concrete\Core\Multilingual\Page\Section');
             $obj->msLanguage = $r['msLanguage'];
-            $obj->msIcon = $r['msIcon'];
-            $obj->msLocale = $r['msLocale'];
+            $obj->msCountry = $r['msCountry'];
             return $obj;
         }
         return false;
@@ -102,16 +92,16 @@ class Section extends Page
      */
     public static function getByLocale($locale)
     {
+        $locale = explode('_', $locale);
         $db = Database::get();
         $r = $db->GetRow(
-            'select cID, msLanguage, msIcon, msLocale from MultilingualSections where msLocale = ?',
-            array($locale)
+            'select cID, msLanguage, msCountry from MultilingualSections where msLanguage = ? and msCountry = ?',
+            array($locale[0], $locale[1])
         );
-        if ($r && is_array($r) && $r['msLocale']) {
+        if ($r && is_array($r) && $r['msLanguage']) {
             $obj = parent::getByID($r['cID'], 'RECENT', '\Concrete\Core\Multilingual\Page\Section');
             $obj->msLanguage = $r['msLanguage'];
-            $obj->msIcon = $r['msIcon'];
-            $obj->msLocale = $r['msLocale'];
+            $obj->msCountry = $r['msCountry'];
             return $obj;
         }
         return false;
@@ -164,7 +154,11 @@ class Section extends Page
 
     public function getLocale()
     {
-        return $this->msLocale;
+        $locale = $this->getLanguage();
+        if ($this->getCountry()) {
+            $locale .= '_' . $this->getCountry();
+        }
+        return $locale;
     }
 
     public function getLanguageText($locale = null)
@@ -182,7 +176,12 @@ class Section extends Page
 
     public function getIcon()
     {
-        return $this->msIcon;
+        return $this->getCountry();
+    }
+
+    public function getCountry()
+    {
+        return $this->msCountry;
     }
 
     public static function registerPage($page)
@@ -358,10 +357,10 @@ class Section extends Page
         }
         $db = Database::get();
         $r = $db->GetRow(
-            'select cID, msLanguage, msIcon, msLocale from MultilingualSections where cID = ?',
+            'select cID, msLanguage, msCountry from MultilingualSections where cID = ?',
             array($cID)
         );
-        if ($r && is_array($r) && $r['msLocale']) {
+        if ($r && is_array($r) && $r['msLanguage']) {
             return $r;
         } else {
             return false;
@@ -422,8 +421,9 @@ class Section extends Page
     {
         $db = Database::get();
         $ids = MultilingualSection::getIDList();
+        $locale = explode('_' , $this->getLocale());
         if (in_array($page->getCollectionID(), $ids)) {
-            $cID = $db->GetOne('select cID from MultilingualSections where msLocale = ?', array($this->getLocale()));
+            $cID = $db->GetOne('select cID from MultilingualSections where msLanguage = ? and msCountry = ?', array($locale[0], $locale[1]));
             return $cID;
         }
         $mpRelationID = $db->GetOne(

@@ -48,9 +48,7 @@ class Controller extends BlockController
             $locale = $al->getLanguage();
         }
         foreach ($ml as $m) {
-            $languages[$m->getCollectionID()] = $m->getLanguageText($locale) . ' ' . (strlen(
-                    $m->msIcon
-                ) ? '(' . $m->msIcon . ')' : '');
+            $languages[$m->getCollectionID()] = $m->getLanguageText($locale);
         }
         $this->set('languages', $languages);
         $this->set('languageSections', $ml);

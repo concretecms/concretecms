@@ -41,9 +41,16 @@ use Concrete\Core\Multilingual\Page\Section as MultilingualSection;
             <?php echo $form->select('msLanguage', $languages);?>
         </div>
         <div class="form-group">
+            <?php echo $form->label('msCountry', t('Choose Country'))?>
+            <?php echo $form->select('msCountry', $countries);?>
+        </div>
+
+        <div class="form-group">
             <label class="control-label"><?php echo t('Language Icon')?></label>
             <div id="ccm-multilingual-language-icon"><?php echo t('None')?></div>
         </div>
+        <div class="alert alert-info"><?=t('Your locale will be computed from your choice of language and country. Your language icon will be chosen based on the country.')?></div>
+
         <div class="form-group">
             <?php echo Loader::helper('validation/token')->output('add_content_section')?>
             <button class="btn btn-default pull-left" type="submit" name="add"><?=t('Add Content Section')?></button>
@@ -55,15 +62,15 @@ use Concrete\Core\Multilingual\Page\Section as MultilingualSection;
 
 <script type="text/javascript">
 $(function() {
-	$("select[name=msLanguage]").change(function() {
-		ccm_multilingualPopulateIcons($(this).val(), '');
+	$("select[name=msCountry]").change(function() {
+		ccm_multilingualPopulateIcons($(this).val());
 	});
-	ccm_multilingualPopulateIcons($("select[name=msLanguage]").val(), '<?php echo $_POST["msIcon"]?>');
+	ccm_multilingualPopulateIcons($("select[name=msCountry]").val());
 });
 
-ccm_multilingualPopulateIcons = function(lang, icon) {
-	if (lang && lang != '') {
-	    $("#ccm-multilingual-language-icon").load('<?php echo $view->action("load_icons")?>', {'msLanguage': lang, 'selectedLanguageIcon': icon});
+ccm_multilingualPopulateIcons = function(country) {
+    if (country && country != '') {
+	    $("#ccm-multilingual-language-icon").load('<?php echo $view->action("load_icon")?>', {'msCountry': country});
 	}
 };
 
