@@ -20,9 +20,12 @@ class Setup extends DashboardPageController
     public function view()
     {
         $ll = Core::make('localization/languages');
+        $cl = Core::Make('lists/countries');
         $languages = $ll->getLanguageList();
+
         $this->set('pages', Section::getList());
         $this->set('languages', $languages);
+        $this->set('countries', $cl->getCountries());
         $this->set('ch', Core::make('multilingual/interface/flag'));
 
         $this->set('defaultLanguage', Config::get('concrete.multilingual.default_language'));
@@ -50,41 +53,23 @@ class Setup extends DashboardPageController
         }
     }
 
-    public function load_icons()
+    public function load_icon()
     {
 
         $ll = Core::make('localization/languages');
         $ch = Core::make('multilingual/interface/flag');
-        $msLanguage = $this->post('msLanguage');
+        $msCountry = $this->post('msCountry');
 
-        if (!$msLanguage) {
+        if (!$msCountry) {
             return false;
         }
 
-        $countries = $ll->getLanguageCountries($msLanguage);
-
-        asort($countries);
-        $i = 1;
-        foreach ($countries as $region => $value) {
-            $flag = $ch->getFlagIcon($region);
-            if ($flag) {
-                $checked = "";
-                if ($this->post('selectedLanguageIcon') == $region) {
-                    $checked = "checked=\"checked\"";
-                } else {
-                    if ($i == 1 && (!$this->post('selectedLanguageIcon'))) {
-                        $checked = "checked=\"checked\"";
-                    }
-                }
-                $html .= '<div class="radio"><label><input type="radio" name="msIcon" ' . $checked . ' id="languageIcon' . $i . '" value="' . $region . '" onchange="ccm_multilingualUpdateLocale(\'' . $region . '\')" /> ' . $flag . ' ' . $value . '</label></div>';
-                $i++;
-            }
-        }
-
-        if ($i == 1) {
+        $flag = $ch->getFlagIcon($msCountry);
+        if ($flag) {
+            $html = $flag;
+        } else {
             $html = "<div><strong>" . t('None') . "</strong></div>";
         }
-
 
         print $html;
         exit;
@@ -173,8 +158,8 @@ class Setup extends DashboardPageController
             }
 
             if (!$this->error->has()) {
-                if ($this->post('msIcon')) {
-                    $combination = $this->post('msLanguage') . '_' . $this->post('msIcon');
+                if ($this->post('msLanguage')) {
+                    $combination = $this->post('msLanguage') . '_' . $this->post('msCountry');
                     $locale = Section::getByLocale($combination);
                     if (is_object($locale)) {
                         $this->error->add(t('This language/region combination already exists.'));
@@ -183,7 +168,7 @@ class Setup extends DashboardPageController
             }
 
             if (!$this->error->has()) {
-                Section::assign($pc, $this->post('msLanguage'), $this->post('msIcon'));
+                Section::assign($pc, $this->post('msLanguage'), $this->post('msCountry'));
                 $this->redirect('/dashboard/multilingual/setup', 'multilingual_content_updated');
             }
         } else {
