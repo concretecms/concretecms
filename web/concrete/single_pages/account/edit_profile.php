@@ -21,7 +21,7 @@ $(function() {
 		<?php echo $form->label('uEmail', t('Email'))?>
 		<?php echo $form->text('uEmail',$profile->getUserEmail())?>
 	</div>
-	<?php  if (defined('ENABLE_USER_TIMEZONES') && ENABLE_USER_TIMEZONES) { ?>
+	<?php  if (Config::get('concrete.misc.user_timezones')) { ?>
 		<div class="form-group">
 			<?php echo  $form->label('uTimezone', t('Time Zone'))?>
 			<?php echo  $form->select('uTimezone',
