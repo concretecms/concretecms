@@ -31,7 +31,7 @@ class Cookie
      * @param null|string $domain The domain the cookie is available to
      * @param bool $secure whether the cookie should only be transmitted over a HTTPS connection from the client
      * @param bool $httpOnly Whether the cookie will be made accessible only through the HTTP protocol
-     * @return \Concrete\Core\Cookie\Cookie
+     * @return \Symfony\Component\HttpFoundation\Cookie
      */
     public static function set(
         $name,
