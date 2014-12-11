@@ -3,6 +3,7 @@ namespace Concrete\Core\Area\Layout;
 use Loader;
 use \Concrete\Core\Foundation\Object;
 use Area;
+use Concrete\Core\Block\Block;
 
 abstract class Layout extends Object {
 
@@ -26,7 +27,15 @@ abstract class Layout extends Object {
 		$this->area = $a;
 	}
 
-	public function getAreaObject() {
+    public function setBlockObject(Block $b) {
+        $this->block = $b;
+    }
+
+    public function getBlockObject() {
+        return $this->block;
+    }
+
+    public function getAreaObject() {
 		return $this->area;
 	}
 

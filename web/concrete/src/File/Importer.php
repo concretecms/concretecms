@@ -6,7 +6,8 @@ use Loader;
 use \File as ConcreteFile;
 use Core;
 
-class Importer {
+class Importer
+{
 
 	/**
 	 * PHP error constants - these match those founds in $_FILES[$field]['error] if it exists
@@ -27,8 +28,12 @@ class Importer {
 
 	/**
 	 * Returns a text string explaining the error that was passed
+     * @param int $code
+     * @return string
 	 */
-	public function getErrorMessage($code) {
+	public function getErrorMessage($code)
+    {
+        $defaultStorage = StorageLocation::getDefault()->getName();
 		$msg = '';
 		switch($code) {
 			case Importer::E_PHP_NO_FILE:
@@ -49,7 +54,7 @@ class Importer {
 				$msg = t('Uploaded file is too large. The current value of upload_max_filesize is %s', ini_get('upload_max_filesize'));
 				break;
 			case Importer::E_FILE_UNABLE_TO_STORE:
-				$msg = t('Unable to copy file to storage directory. Please check permissions on your upload directory and ensure they can be written to by your web server.');
+				$msg = t('Unable to copy file to storage location "%s". Please check the settings for the storage location.', $defaultStorage);
 				break;
 			case Importer::E_PHP_FILE_ERROR_DEFAULT:
 			default:
@@ -59,6 +64,9 @@ class Importer {
 		return $msg;
 	}
 
+    /**
+     * @return string
+     */
 	public function generatePrefix()
     {
 		$prefix = rand(10, 99) . time();
@@ -71,11 +79,12 @@ class Importer {
 	 * If a $fr (FileRecord) object is passed, we assign the newly imported FileVersion
 	 * object to that File. If not, we make a new filerecord.
 	 * @param string $pointer path to file
-	 * @param string $filename
-	 * @param ConcreteFile $fr
+	 * @param string|bool $filename
+	 * @param ConcreteFile|bool $fr
 	 * @return number Error Code | \Concrete\Core\File\Version
 	 */
-	public function import($pointer, $filename = false, $fr = false) {
+	public function import($pointer, $filename = false, $fr = false)
+    {
 
 		if ($filename == false) {
 			// determine filename from $pointer
@@ -136,8 +145,8 @@ class Importer {
 
     /**
      * Imports a file in the default file storage location's incoming directory
-     * @param $filename
-     * @param ConcreteFile $fr
+     * @param string $filename
+     * @param ConcreteFile|bool $fr
      * @return number Error Code | \Concrete\Core\File\Version
      */
     public function importIncomingFile($filename, $fr = false)

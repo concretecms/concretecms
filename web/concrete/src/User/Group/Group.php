@@ -12,6 +12,7 @@ use Environment;
 use UserList;
 use Events;
 use \Concrete\Core\Package\PackageList;
+use File;
 
 class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
 {
@@ -528,7 +529,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
         $results = $gs->getResults();
         $badges = array();
         foreach ($results as $gr) {
-            $badges[] = Group::getByID($gr['gID']);
+            $badges[] = $gr;
         }
         return $badges;
     }

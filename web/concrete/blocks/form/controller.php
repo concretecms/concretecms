@@ -9,6 +9,7 @@ use Exception;
 use FileImporter;
 use FileSet;
 use File;
+use Config;
 use \Concrete\Core\File\Version;
 
 class Controller extends BlockController {
@@ -364,8 +365,8 @@ class Controller extends BlockController {
 			
 			$questionAnswerPairs=array();
 
-			if( strlen(FORM_BLOCK_SENDER_EMAIL)>1 && strstr(FORM_BLOCK_SENDER_EMAIL,'@') ){
-				$formFormEmailAddress = FORM_BLOCK_SENDER_EMAIL;
+			if (Config::get('concrete.email.form_block.address') && strstr(Config::get('concrete.email.form_block.address'),'@') ){
+				$formFormEmailAddress = Config::get('concrete.email.form_block.address');
 			}else{
 				$adminUserInfo=UserInfo::getByID(USER_SUPER_ID);
 				$formFormEmailAddress = $adminUserInfo->getUserEmail();
@@ -447,8 +448,8 @@ class Controller extends BlockController {
 			}
 			
 			if(intval($this->notifyMeOnSubmission)>0 && !$foundSpam){	
-				if( strlen(FORM_BLOCK_SENDER_EMAIL)>1 && strstr(FORM_BLOCK_SENDER_EMAIL,'@') ){
-					$formFormEmailAddress = FORM_BLOCK_SENDER_EMAIL;  
+				if( Config::get('concrete.email.form_block.address') && strstr(Config::get('concrete.email.form_block.address'),'@') ){
+					$formFormEmailAddress = Config::get('concrete.email.form_block.address');
 				}else{ 
 					$adminUserInfo=UserInfo::getByID(USER_SUPER_ID);
 					$formFormEmailAddress = $adminUserInfo->getUserEmail(); 

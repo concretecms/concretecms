@@ -89,7 +89,7 @@ $fsl = $f->getFileStorageLocationObject();
 if (is_object($fsl)) { ?>
     <div class="row">
         <div class="col-md-3"><p><?=t('Storage Location')?></p></div>
-        <div class="col-md-9"><p><?=$fsl->getName()?></div>
+        <div class="col-md-9"><p><?=$fsl->getDisplayName()?></div>
     </div>
 <? } ?>
 <div class="row">
