@@ -23,11 +23,11 @@ do {
 
 <div style="display: none">
 <div class="btn-group" id="ccm-account-menu">
-  <button class="btn" data-toggle="dropdown"><?=t('My Account')?></button>
-  <button class="btn dropdown-toggle" data-toggle="dropdown">
+  <a class="btn btn-default" href="<?=Core::make('helper/navigation')->getLinkToCollection($account)?>"><i class="fa fa-user"></i> <?=t('My Account')?></a>
+  <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
 	<span class="caret"></span>
   </button>
-  <ul class="dropdown-menu pull-right">
+  <ul class="dropdown-menu pull-right" role="menu">
   <?
 	$children = $account->getCollectionChildrenArray(true);
 	foreach($children as $cID) {
@@ -39,26 +39,12 @@ do {
 	}
 
 	foreach($categories as $cc) { ?>
-		<li class="nav-header"><?=$cc->getCollectionName()?></li>
-<?
-		$subchildren = $cc->getCollectionChildrenArray(true);
-		foreach($subchildren as $cID) {
-			$nc = Page::getByID($cID, 'ACTIVE');
-			$ncp = new Permissions($nc);
-			if ($ncp->canRead() && (!$nc->getAttribute('exclude_nav'))) { ?>
-
-				<li><a href="<?=Loader::helper('navigation')->getLinkToCollection($nc)?>"><?=$nc->getCollectionName()?></a></li>
-
-			<?
-
-			}
-		}
+		<li><a href="<?=Core::make('helper/navigation')->getLinkToCollection($cc)?>"><?=h(t($cc->getCollectionName()))?></a></li><?
 	}
 	?>
-
 	<li class="divider"></li>
-	<li><a href="<?=DIR_REL?>/"><i class="icon-home"></i> <?=t("Home")?></a></li>
-	<li><a href="<?=$view->url('/login', 'logout', Loader::helper('validation/token')->generate('logout'))?>"><i class="icon-remove"></i> <?=t("Sign Out")?></a></li>
+	<li><a href="<?=URL::to('/')?>"><i class="fa fa-home"></i> <?=t("Home")?></a></li>
+	<li><a href="<?=URL::to('/login', 'logout', Loader::helper('validation/token')->generate('logout'))?>"><i class="fa fa-sign-out"></i> <?=t("Sign Out")?></a></li>
  </ul>
 </div>
 </div>

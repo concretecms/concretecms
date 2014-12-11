@@ -21,13 +21,19 @@ $(function() {
 		<?php echo $form->label('uEmail', t('Email'))?>
 		<?php echo $form->text('uEmail',$profile->getUserEmail())?>
 	</div>
-	<?php  if(ENABLE_USER_TIMEZONES) { ?>
+	<?php  if (Config::get('concrete.misc.user_timezones')) { ?>
 		<div class="form-group">
 			<?php echo  $form->label('uTimezone', t('Time Zone'))?>
 			<?php echo  $form->select('uTimezone',
 				Core::make('helper/date')->getTimezones(),
 				($profile->getUserTimezone()?$profile->getUserTimezone():date_default_timezone_get())
 		); ?>
+		</div>
+	<?php  } ?>
+	<?php  if (is_array($locales) && count($locales)) { ?>
+		<div class="form-group">
+			<?php echo $form->label('uDefaultLanguage', t('Language'))?>
+			<?php echo $form->select('uDefaultLanguage', $locales, Localization::activeLocale())?>
 		</div>
 	<?php  } ?>
 	<?php
