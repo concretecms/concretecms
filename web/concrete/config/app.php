@@ -254,6 +254,7 @@ return array(
         "/ccm/system/page/create/{ptID}"                                                => array('\Concrete\Controller\Backend\Page::create'),
         "/ccm/system/page/create/{ptID}/{parentID}"                                     => array('\Concrete\Controller\Backend\Page::create'),
         "/ccm/system/page/arrange_blocks/"                                              => array('\Concrete\Controller\Backend\Page\ArrangeBlocks::arrange'),
+        "/ccm/system/page/multilingual/create_new"                                      => array('\Concrete\Controller\Backend\Page\Multilingual::create_new'),
         "/ccm/system/page/get_json"                                                     => array('\Concrete\Controller\Backend\Page::getJSON'),
 
         /**
@@ -301,6 +302,7 @@ return array(
          */
         "/ccm/system/panels/dashboard"                                                  => array('\Concrete\Controller\Panel\Dashboard::view'),
         "/ccm/system/panels/sitemap"                                                    => array('\Concrete\Controller\Panel\Sitemap::view'),
+        "/ccm/system/panels/multilingual"                                               => array('\Concrete\Controller\Panel\Multilingual::view'),
         "/ccm/system/panels/add"                                                        => array('\Concrete\Controller\Panel\Add::view'),
         "/ccm/system/panels/page"                                                       => array('\Concrete\Controller\Panel\Page::view'),
         "/ccm/system/panels/page/attributes"                                            => array('\Concrete\Controller\Panel\Page\Attributes::view'),
