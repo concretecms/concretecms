@@ -11,7 +11,7 @@ use Concrete\Core\Multilingual\Page\Section as MultilingualSection;
         <tr>
             <th>&nbsp;</th>
             <th style="width: 45%"><?php echo t("Name")?></th>
-            <th style="width: auto"><?php echo t('Language')?></th>
+            <th style="width: auto"><?php echo t('Locale')?></th>
             <th style="width: 30%"><?php echo t('Path')?></th>
             <th>&nbsp;</th>
         </tr>
@@ -22,7 +22,7 @@ use Concrete\Core\Multilingual\Page\Section as MultilingualSection;
                 <td><a href="<?php echo $nav->getLinkToCollection($pc)?>"><?php echo $pc->getCollectionName()?></a></td>
                 <td><?php echo $pcl->getLanguageText()?> (<?php echo $pcl->getLocale();?>)</td>
                 <td><?php echo $pc->getCollectionPath()?></td>
-                <td><a href="<?php echo $this->action('remove_language_section', $pc->getCollectionID(), Loader::helper('validation/token')->generate())?>" class="icon-link"><i class="fa fa-trash"></i></a></td>
+                <td><a href="<?php echo $this->action('remove_locale_section', $pc->getCollectionID(), Loader::helper('validation/token')->generate())?>" class="icon-link"><i class="fa fa-trash"></i></a></td>
             </tr>
         <?php } ?>
         </table>
@@ -31,7 +31,7 @@ use Concrete\Core\Multilingual\Page\Section as MultilingualSection;
         <p><?php echo t('You have not created any multilingual content sections yet.')?></p>
     <?php } ?>
     <form method="post" action="<?php echo $this->action('add_content_section')?>">
-        <h4><?php echo t('Add a Language')?></h4>
+        <h4><?php echo t('Add a Locale')?></h4>
         <div class="form-group">
             <label class="control-label"><?php echo t('Choose a Parent Page')?></label>
             <?php echo Loader::helper('form/page_selector')->selectPage('pageID', '')?>
@@ -78,44 +78,39 @@ ccm_multilingualPopulateIcons = function(country) {
 
 
 <fieldset>
-    <legend><?php echo t('Copy Language Tree')?></legend>
+    <legend><?php echo t('Copy Locale Tree')?></legend>
 <?
 $u = new User();
-$copyLanguages = array();
+$copyLocales = array();
 $includesHome = false;
 foreach($pages as $pc) {
 	$pcl = MultilingualSection::getByID($pc->getCollectionID());
 	if ($pc->getCollectionID() == HOME_CID) {
 		$includesHome = true;
 	}
-	$copyLanguages[$pc->getCollectionID()] = $pc->getCollectionName() . ' - ' . $pcl->getLanguageText();
+	$copyLocales[$pc->getCollectionID()] = t('%s (%s, %s)', $pc->getCollectionName(), $pcl->getLanguageText(), $pcl->getLocale());
 }
 
 if ($u->isSuperUser() && !$includesHome) { ?>
 <form method="post" id="ccm-internationalization-copy-tree" action="#">
 	<?php if (count($pages) > 1) {
-		$copyLanguageSelect1 = $form->select('copyTreeFrom', $copyLanguages);
-		$copyLanguageSelect2 = $form->select('copyTreeTo', $copyLanguages);
+		$copyLocaleSelect1 = $form->select('copyTreeFrom', $copyLocales);
+		$copyLocaleSelect2 = $form->select('copyTreeTo', $copyLocales);
 		
 		?>
-		<p><?php echo t('Copy all pages from a language to another section. This will only copy pages that have not been associated. It will not replace or remove any pages from the destination section.')?></p>
-		<div class="clearfix">
-		<label><?php echo t('Copy From')?></label>
-		<div class="input"><?php echo $copyLanguageSelect1?></div>
+		<p><?php echo t('Copy all pages from a locale to another section. This will only copy pages that have not been associated. It will not replace or remove any pages from the destination section.')?></p>
+		<div class="form-group">
+    		<label class="control-label"><?php echo t('Copy From')?></label>
+		    <?php echo $copyLocaleSelect1?>
 		</div>
-		
-		<div class="clearfix">
-		<label><?php echo tc('Destination', 'To')?></label>
-		<div class="input"><?php echo $copyLanguageSelect2?></div>
+
+        <div class="form-group">
+		    <label class="control-label"><?php echo tc('Destination', 'To')?></label>
+		    <?php echo $copyLocaleSelect2?>
 		</div>
-	
-		<div class="clearfix">
-		<label></label>
-		<div class="input">
-			<?php echo Loader::helper('validation/token')->output('copy_tree')?>
-            <button class="btn btn-default pull-left" type="submit" name="copy"><?=t('Copy Tree')?></button>
-		</div>
-		</div>
+
+        <?php echo Loader::helper('validation/token')->output('copy_tree')?>
+        <button class="btn btn-default pull-left" type="submit" name="copy"><?=t('Copy Tree')?></button>
 
 	<?php } else if (count($pages) == 1) { ?>
 		<p><?php echo t("You must have more than one multilingual section to use this tool.")?></p>
@@ -135,7 +130,7 @@ if ($u->isSuperUser() && !$includesHome) { ?>
 					ccm_triggerProgressiveOperation(
 						CCM_TOOLS_PATH + '/dashboard/sitemap_copy_all', 
 						[{'name': 'origCID', 'value': ctf}, {'name': 'destCID', 'value': ctt}, {'name': 'copyChildrenOnly', 'value': true}],
-						"<?=t('Copy Language Tree')?>", function() {
+						"<?=t('Copy Locale Tree')?>", function() {
 							window.location.href= "<?=$this->action('tree_copied')?>";
 						}
 					);
@@ -151,54 +146,56 @@ if ($u->isSuperUser() && !$includesHome) { ?>
 
 </form>
 <? } else if (!$u->isSuperUser()) { ?>
-	<p><?=t('Only the super user may copy language trees.')?></p>
+	<p><?=t('Only the super user may copy locale trees.')?></p>
 <? } else if ($includesHome) { ?>
 	<p><?=t('Since one of your multilingual sections is the home page, you may not duplicate your site tree using this tool. You must manually assign pages using the page report.')?></p>
 <? } ?>
 </fieldset>
 
+<div class="spacer-row-6"></div>
 
 <?php if (count($pages) > 0) {
-	$defaultLanguages = array('' => t('** None Set'));
+	$defaultLocales = array('' => t('** None Set'));
 	foreach($pages as $pc) {
 		$pcl = MultilingualSection::getByID($pc->getCollectionID());
-		$defaultLanguages[$pcl->getLocale()] = $pcl->getLanguageText();
+		$defaultLocales[$pcl->getLocale()] = t('%s (%s, %s)', $pc->getCollectionName(), $pcl->getLanguageText(), $pcl->getLocale());
 	}
-	$defaultLanguagesSelect = $form->select('defaultLanguage', $defaultLanguages, $defaultLanguage);
+	$defaultLocalesSelect = $form->select('defaultLocale', $defaultLocales, $defaultLocale);
 	
 
 	?>
 
-    <br/>
+    <fieldset>
+        <legend><?php echo t('Multilingual Settings')?></legend>
 
-    <h3><?php echo t('Multilingual Settings')?></h3>
-
-	<form method="post" action="<?php echo $this->action('set_default')?>">
-        <div class="form-group">
-            <label class="control-label"><?php echo t('Default Language');?></label>
-            <?php print $defaultLanguagesSelect; ?>
-        </div>
-
-        <div class="form-group">
-            <div class="checkbox">
-            <label>
-                <?php echo $form->checkbox('useBrowserDetectedLanguage', 1, $useBrowserDetectedLanguage)?>
-                <span><?php echo t('Attempt to use visitor\'s language based on their browser information.') ?></span>
-            </label>
+        <form method="post" action="<?php echo $this->action('set_default')?>">
+            <div class="form-group">
+                <label class="control-label"><?php echo t('Default Locale');?></label>
+                <?php print $defaultLocalesSelect; ?>
             </div>
-            <div class="checkbox">
-            <label>
-                <?php echo $form->checkbox('redirectHomeToDefaultLanguage', 1, $redirectHomeToDefaultLanguage)?>
-                <span><?php echo t('Redirect home page to default language section.') ?></span>
-            </label>
-            </div>
-        </div>
 
-        <div class="form-group">
-            <?php echo Loader::helper('validation/token')->output('set_default')?>
-            <button class="btn btn-default pull-left" type="submit" name="save"><?=t('Save Settings')?></button>
-        </div>
-	</form>
+            <div class="form-group">
+                <div class="checkbox">
+                <label>
+                    <?php echo $form->checkbox('useBrowserDetectedLocale', 1, $useBrowserDetectedLocale)?>
+                    <span><?php echo t('Attempt to use visitor\'s locale based on their browser information.') ?></span>
+                </label>
+                </div>
+                <div class="checkbox">
+                <label>
+                    <?php echo $form->checkbox('redirectHomeToDefaultLocale', 1, $redirectHomeToDefaultLocale)?>
+                    <span><?php echo t('Redirect home page to default locale.') ?></span>
+                </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <?php echo Loader::helper('validation/token')->output('set_default')?>
+                <button class="btn btn-default pull-left" type="submit" name="save"><?=t('Save Settings')?></button>
+            </div>
+        </form>
+
+    </fieldset>
 	<?php } ?>
 
 <?php echo Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper();?>

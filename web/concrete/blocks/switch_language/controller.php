@@ -58,8 +58,7 @@ class Controller extends BlockController
         }
 
         $pkg = Package::getByHandle('multilingual');
-        $mdl = Loader::helper('default_language', 'multilingual');
-        $this->set('defaultLanguage', $mdl->getSessionDefaultLocale());
+        $this->set('defaultLocale', DefaultLanguage::getPreferredLocale());
         $this->set('cID', $c->getCollectionID());
 
     }

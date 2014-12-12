@@ -67,8 +67,7 @@ class Section extends Page
 
     /**
      * @param string $language
-     * @return MultilingualSection|false
-     * @deprecated
+     * @return Section|false
      */
     public static function getByLanguage($language)
     {
@@ -88,7 +87,7 @@ class Section extends Page
 
     /**
      * @param string $language
-     * @return MultilingualSection|false
+     * @return Section|false
      */
     public static function getByLocale($locale)
     {
@@ -110,7 +109,7 @@ class Section extends Page
 
     /**
      * gets the MultilingualSection object for the current section of the site
-     * @return MultilingualSection
+     * @return Section
      */
     public static function getCurrentSection()
     {
@@ -124,9 +123,23 @@ class Section extends Page
         return $lang;
     }
 
+    public static function getByLocaleOrLanguage($locale)
+    {
+        $explode = preg_split('/-|_/', $locale);
+        if (count($explode) == 2) {
+            // we have a language first, and a country second
+            $section = static::getByLocale($explode[0] . '_' . $explode[1]);
+            if ($home) {
+                break;
+            }
+        }
+        $section = static::getByLanguage($explode[0]);
+        return $section;
+    }
+
     /**
      * @param Page $page
-     * @return MultilingualSection
+     * @return Section
      */
     public static function getBySectionOfSite($page)
     {

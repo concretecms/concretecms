@@ -2,7 +2,6 @@
 namespace Concrete\Core\Routing;
 
 use Concrete\Core\Multilingual\Page\Section;
-use Concrete\Core\Multilingual\Service\DefaultLanguage;
 use \Concrete\Core\Page\Event as PageEvent;
 use Request;
 use User;
@@ -13,6 +12,7 @@ use Config;
 use View;
 use Permissions;
 use Response;
+use Core;
 
 class DispatcherRouteCallback extends RouteCallback
 {
@@ -132,16 +132,17 @@ class DispatcherRouteCallback extends RouteCallback
         // Now we check to see if we're on the home page, and if it multilingual is enabled,
         // and if so, whether we should redirect to the default language page.
         if (Config::get('concrete.multilingual.enabled')) {
+            $dl = Core::make('multilingual/detector');
             if ($c->getCollectionID() == HOME_CID && Config::get('concrete.multilingual.redirect_home_to_default_language')) {
                 // Let's retrieve the default language
-                $ms = Section::getByLocale(DefaultLanguage::getSessionDefaultLocale($c));
+                $ms = $dl->getPreferredSection();
                 if (is_object($ms)) {
                     Redirect::page($ms)->send();
                     exit;
                 }
             }
 
-            DefaultLanguage::setupSiteInterfaceLocalization();
+            $dl->setupSiteInterfaceLocalization();
         }
 
         $request->setCurrentPage($c);
