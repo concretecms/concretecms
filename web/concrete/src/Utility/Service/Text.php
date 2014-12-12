@@ -87,11 +87,11 @@ class Text {
 		$text = strtolower ($text);							// convert to lowercase
 		return trim(substr($text, 0, $maxlength), '-');	// trim to first $maxlength chars
 	}
-	
-	
+
+
     /**
      * Remove unsafe characters for URL slug
-     * 
+     *
      * @param string $handle
      * @param int $maxlength= Max number of characters of the return value
      * @return string $handle
@@ -105,7 +105,7 @@ class Text {
 
     /**
      * URL-encodes collection path
-     * 
+     *
      * @param string $path
      * @return string $path
      */
@@ -172,7 +172,7 @@ class Text {
 	 * @return string
 	 */
 	public function entities($v){
-		return htmlentities( $v, ENT_COMPAT, APP_CHARSET);
+		return htmlentities( $v, ENT_COMPAT | ENT_QUOTES, APP_CHARSET);
 	}
 
 	/** Decodes html-encoded entities (for instance: from '&gt;' to '>')
@@ -180,14 +180,14 @@ class Text {
 	* @return string
 	*/
 	public function decodeEntities($v) {
-		return html_entity_decode($v, ENT_QUOTES, APP_CHARSET);
+		return html_entity_decode($v, ENT_COMPAT | ENT_QUOTES, APP_CHARSET);
 	}
 
 	/**
 	 * A concrete5 specific version of htmlspecialchars(). Double encoding is OFF, and the character set is set to your site's.
 	 */
 	public function specialchars($v) {
-		return htmlspecialchars($v, ENT_COMPAT, APP_CHARSET, false);
+		return htmlspecialchars($v, ENT_COMPAT | ENT_QUOTES, APP_CHARSET, false);
 	}
 
 
