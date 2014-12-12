@@ -141,7 +141,7 @@ class Controller extends BlockController {
 		if( intval($total)==0 ){
 			$q = "insert into {$this->btTable} (questionSetId, surveyName, notifyMeOnSubmission, recipientEmail, thankyouMsg, displayCaptcha, redirectCID, addFilesToSet, bID) values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		}else{
-            $v[] = $data['qsID'];
+			$v[] = $data['qsID'];
 			$q = "update {$this->btTable} set questionSetId = ?, surveyName=?, notifyMeOnSubmission=?, recipientEmail=?, thankyouMsg=?, displayCaptcha=?, redirectCID=?, addFilesToSet=? where bID = ? AND questionSetId= ?";
 		}
 		
