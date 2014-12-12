@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "1ac877ebc146492b24e432a88314765f",
+    "hash": "33199f81698a361e7f016b685b4ddcc6",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -949,7 +949,7 @@
                 "password",
                 "security"
             ],
-            "time": "2012-08-31 00:00:00"
+            "time": "2014-07-18 03:04:01"
         },
         {
             "name": "htmlawed/htmlawed",
@@ -1918,16 +1918,16 @@
         },
         {
             "name": "punic/punic",
-            "version": "1.1.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/punic/punic.git",
-                "reference": "b4a06d4ad15040b18ec5db4491fc8ed8aa42874c"
+                "reference": "f763813e8df85dfa79149c71e1da84d53f82e280"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/punic/punic/zipball/b4a06d4ad15040b18ec5db4491fc8ed8aa42874c",
-                "reference": "b4a06d4ad15040b18ec5db4491fc8ed8aa42874c",
+                "url": "https://api.github.com/repos/punic/punic/zipball/f763813e8df85dfa79149c71e1da84d53f82e280",
+                "reference": "f763813e8df85dfa79149c71e1da84d53f82e280",
                 "shasum": ""
             },
             "require": {
@@ -1938,7 +1938,8 @@
                 "punic/common": "*"
             },
             "require-dev": {
-                "apigen/apigen": "~2.8.2",
+                "apigen/apigen": "2.8.0",
+                "nette/nette": "~2.1.3",
                 "satooshi/php-coveralls": "dev-master"
             },
             "type": "library",
@@ -1980,7 +1981,7 @@
                 "translations",
                 "unicode"
             ],
-            "time": "2014-09-25 08:53:54"
+            "time": "2014-12-11 17:47:16"
         },
         {
             "name": "sunra/php-simple-html-dom-parser",
