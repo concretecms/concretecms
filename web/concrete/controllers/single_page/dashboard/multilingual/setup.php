@@ -28,9 +28,9 @@ class Setup extends DashboardPageController
         $this->set('countries', $cl->getCountries());
         $this->set('ch', Core::make('multilingual/interface/flag'));
 
-        $this->set('defaultLanguage', Config::get('concrete.multilingual.default_language'));
-        $this->set('redirectHomeToDefaultLanguage', Config::get('concrete.multilingual.redirect_home_to_default_language'));
-        $this->set('useBrowserDetectedLanguage', Config::get('concrete.multilingual.use_browser_detected_language'));
+        $this->set('defaultLocale', Config::get('concrete.multilingual.default_locale'));
+        $this->set('redirectHomeToDefaultLocale', Config::get('concrete.multilingual.redirect_home_to_default_locale'));
+        $this->set('useBrowserDetectedLocale', Config::get('concrete.multilingual.use_browser_detected_locale'));
     }
 
     protected function populateCopyArray($startingPage)
@@ -93,29 +93,29 @@ class Setup extends DashboardPageController
         $this->view();
     }
 
-    public function language_section_removed()
+    public function locale_section_removed()
     {
-        $this->set('message', t('Language section removed.'));
+        $this->set('message', t('Section removed.'));
         $this->view();
     }
 
-    public function default_language_updated()
+    public function default_locale_updated()
     {
-        $this->set('message', t('Default language settings updated.'));
+        $this->set('message', t('Default Section settings updated.'));
         $this->view();
     }
 
     public function set_default()
     {
         if (Loader::helper('validation/token')->validate('set_default')) {
-            $lc = Section::getByLocale($this->post('defaultLanguage'));
+            $lc = Section::getByLocale($this->post('defaultLocale'));
             if (is_object($lc)) {
-                Config::save('concrete.multilingual.default_language', $this->post('defaultLanguage'));
-                Config::save('concrete.multilingual.redirect_home_to_default_language', $this->post('redirectHomeToDefaultLanguage'));
-                Config::save('concrete.multilingual.use_browser_detected_language', $this->post('useBrowserDetectedLanguage'));
-                $this->redirect('/dashboard/multilingual/setup', 'default_language_updated');
+                Config::save('concrete.multilingual.default_locale', $this->post('defaultLocale'));
+                Config::save('concrete.multilingual.redirect_home_to_default_locale', $this->post('redirectHomeToDefaultLocale'));
+                Config::save('concrete.multilingual.use_browser_detected_locale', $this->post('useBrowserDetectedLocale'));
+                $this->redirect('/dashboard/multilingual/setup', 'default_locale_updated');
             } else {
-                $this->error->add(t('Invalid language section'));
+                $this->error->add(t('Invalid Section'));
             }
         } else {
             $this->error->add(Loader::helper('validation/token')->getErrorMessage());
@@ -123,17 +123,17 @@ class Setup extends DashboardPageController
         $this->view();
     }
 
-    public function remove_language_section($sectionID = false, $token = false)
+    public function remove_locale_section($sectionID = false, $token = false)
     {
         if (Loader::helper('validation/token')->validate('', $token)) {
             $lc = Section::getByID($sectionID);
             if (is_object($lc)) {
 
                 $lc->unassign();
-                $this->redirect('/dashboard/multilingual/setup', 'language_section_removed');
+                $this->redirect('/dashboard/multilingual/setup', 'locale_section_removed');
 
             } else {
-                $this->error->add(t('Invalid language section'));
+                $this->error->add(t('Invalid section'));
             }
         } else {
             $this->error->add(Loader::helper('validation/token')->getErrorMessage());
@@ -153,7 +153,7 @@ class Setup extends DashboardPageController
             if (!$this->error->has()) {
                 $lc = Section::getByID($this->post('pageID'));
                 if (is_object($lc)) {
-                    $this->error->add(t('A language section page at this location already exists.'));
+                    $this->error->add(t('A multilingual section page at this location already exists.'));
                 }
             }
 

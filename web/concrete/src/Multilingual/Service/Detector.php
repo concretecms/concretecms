@@ -12,50 +12,63 @@ use Config;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class DefaultLanguage
+class Detector
 {
 
-    public function getSessionDefaultLocale(Page $c = null)
+    /**
+     *
+     * Returns the preferred locale based on session, cookie,
+     * user object, default browser (if allowed), and finally
+     * site preferences. Returns a string, not a section.
+     * Since the user's language is not a locale but a language,
+     * attempts to determine best locale for the given language.
+     * @return Section
+     */
+    public static function getPreferredSection()
     {
-        if (!$c) {
-            $c = Page::getCurrentPage();
-        }
+
+        $locale = false;
         // they have a language in a certain session going already
         if (Session::has('multilingual.default_locale')) {
-            return Session::get('multilingual.default_locale');
+            $locale = Session::get('multilingual.default_locale');
+        } else if (Cookie::has('multilingual.default_locale')) {
+            $locale = Cookie::get('multilingual.default_locale');
         }
 
-        // if they've specified their own default locale to remember
-        if (Cookie::has('multilingual.default_locale')) {
-            return Cookie::get('multilingual.default_locale');
+        if ($locale) {
+            $home = Section::getByLocale($locale);
+            if ($home) {
+                return $home;
+            }
         }
 
         $u = new \User();
         if ($u->isRegistered()) {
             $userDefaultLanguage = $u->getUserDefaultLanguage();
-            if ($userDefaultLanguage != '') {
-                if (is_object(
-                        Section::getByLocale($userDefaultLanguage)
-                    ) || ($userDefaultLanguage == 'en_US' && is_object($c) && $c->getCollectionID() != 1)
-                ) {
-                    return $userDefaultLanguage;
+            if ($userDefaultLanguage) {
+                $home = Section::getByLocaleOrLanguage($userDefaultLanguage);
+                if ($home) {
+                    return $home;
                 }
             }
         }
 
         if (Config::get('concrete.multilingual.use_browser_detected_language')) {
-            /*$locale = 'en_US'; // need to accurately detect here.
-            if (is_object(Section::getByLocale((string)$locale))) {
-                return (string)$locale;
-            } else {
-                $section = Section::getByLanguage((string)$locale->getLanguage());
-                if (is_object($section)) {
-                    return (string)$section->getLocale();
+            $home = false;
+            $locales =  \Punic\Misc::getBrowserLocales();
+            foreach($locales as $locale => $value) {
+                $home = Section::getByLocaleOrLanguage($value);
+                if ($home) {
+                    break;
                 }
-            }*/
+            }
+
+            if ($home) {
+                return $home;
+            }
         }
 
-        return Config::get('concrete.multilingual.default_language');
+        return Section::getByLocale(Config::get('concrete.multilingual.default_locale'));
     }
 
     public static function setupSiteInterfaceLocalization(Page $c = null)
@@ -70,11 +83,11 @@ class DefaultLanguage
         }
 
         $ms = Section::getCurrentSection();
-        if (is_object($ms)) {
-            $locale = $ms->getLocale();
-        } else {
-            $locale = self::getSessionDefaultLocale();
+        if (!is_object($ms)) {
+            $ms = static::getPreferredSection();
         }
+
+        $locale = $ms->getLocale();
 
         // change core language to translate e.g. core blocks/themes
         if (strlen($locale)) {
