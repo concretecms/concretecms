@@ -11,6 +11,9 @@ use \Concrete\Core\Page\Type\Composer\Control\Type\Type as PageTypeComposerContr
 
 class FormLayoutSetControl extends Object
 {
+
+    protected $ptTargetParentPageID = 0;
+
     public function getPageTypeComposerFormLayoutSetControlID() {return $this->ptComposerFormLayoutSetControlID;}
     public function getPageTypeComposerFormLayoutSetID() {return $this->ptComposerFormLayoutSetID;}
     public function getPageTypeComposerControlTypeID() {return $this->ptComposerControlTypeID;}
@@ -49,11 +52,17 @@ class FormLayoutSetControl extends Object
         $this->page = $page;
     }
 
+    public function setTargetParentPageID($ptTargetParentPageID)
+    {
+        $this->ptTargetParentPageID = $ptTargetParentPageID;
+    }
+
     public function render()
     {
         $control = $this->getPageTypeComposerControlObject();
         $control->setPageTypeComposerFormLayoutSetControlObject($this);
         $control->setPageObject($this->page);
+        $control->setTargetParentPageID($this->ptTargetParentPageID);
         $control->render($this->getPageTypeComposerControlDisplayLabel(), $this->getPageTypeComposerFormLayoutSetControlCustomTemplate(), $this->getPageTypeComposerFormLayoutSetControlDisplayDescription());
     }
 

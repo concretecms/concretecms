@@ -35,9 +35,14 @@ class NameCorePageProperty extends CorePageProperty
     public function validate()
     {
         $e = Loader::helper('validation/error');
-        if (!$this->getPageTypeComposerControlDraftValue()) {
+        $val = $this->getRequestValue();
+        if ($val['name']) {
+            $name = $val['name'];
+        } else {
+            $name = $this->getPageTypeComposerControlDraftValue();
+        }
+        if (!$name) {
             $e->add(t('You haven\'t chosen a page name.'));
-
             return $e;
         }
     }
@@ -54,7 +59,6 @@ class NameCorePageProperty extends CorePageProperty
     {
         if (is_object($this->page)) {
             $c = $this->page;
-
             return $c->getCollectionName();
         }
     }

@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Page\Type\Composer\Control;
 
+use Concrete\Core\Page\Type\Type;
 use Loader;
 use \Concrete\Core\Foundation\Object;
 use Page;
@@ -53,6 +54,16 @@ abstract class Control extends Object
     public function getPageObject()
     {
         return $this->page;
+    }
+
+    public function setTargetParentPageID($ptTargetParentPageID)
+    {
+        $this->ptTargetParentPageID = $ptTargetParentPageID;
+    }
+
+    public function getTargetParentPageID()
+    {
+        return $this->ptTargetParentPageID;
     }
 
     public function isPageTypeComposerFormControlRequiredOnThisRequest()
@@ -163,7 +174,7 @@ abstract class Control extends Object
         return false;
     }
 
-    public static function getList(PageType $pagetype)
+    public static function getList(Type $pagetype)
     {
         $sets = PageTypeComposerFormLayoutSet::getList($pagetype);
         $controls = array();

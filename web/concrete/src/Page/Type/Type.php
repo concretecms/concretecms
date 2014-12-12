@@ -938,7 +938,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         return $p;
     }
 
-    public function renderComposerOutputForm($page = null)
+    public function renderComposerOutputForm($page = null, $targetPage = null)
     {
 
         $env = \Environment::get();
@@ -952,7 +952,8 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         } else {
             Loader::element('page_types/composer/form/output/form', array(
                 'pagetype' => $this,
-                'page' => $page
+                'page' => $page,
+                'targetPage' => $targetPage
             ));
         }
     }
