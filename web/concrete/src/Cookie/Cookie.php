@@ -43,7 +43,6 @@ class Cookie
         $httpOnly = true
     ) {
         $cl = Cookie::getInstance();
-        $expire = ($expire > 0) ? $expire * 60 : 0;
         $cookie = new CookieObject($name, $value, $expire, $path, $domain, $secure, $httpOnly);
         $cl->add($cookie);
         return $cookie;
@@ -87,4 +86,5 @@ class Cookie
     {
         return $this->cookies;
     }
+
 }
