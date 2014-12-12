@@ -220,6 +220,8 @@ return array(
         "/ccm/system/dialogs/area/design/submit"                                        => array('\Concrete\Controller\Dialog\Area\Design::submit'),
         "/ccm/system/dialogs/area/design/reset"                                         => array('\Concrete\Controller\Dialog\Area\Design::reset'),
         "/ccm/system/dialogs/page/add"                                                  => array('\Concrete\Controller\Dialog\Page\Add::view'),
+        "/ccm/system/dialogs/page/add/compose/submit"                                   => array('\Concrete\Controller\Dialog\Page\Add\Compose::submit'),
+        "/ccm/system/dialogs/page/add/compose/{ptID}/{cParentID}"                       => array('\Concrete\Controller\Dialog\Page\Add\Compose::view'),
         "/ccm/system/dialogs/page/add/submit"                                           => array('\Concrete\Controller\Dialog\Page\Add::submit'),
         "/ccm/system/dialogs/page/add_external"                                         => array('\Concrete\Controller\Dialog\Page\AddExternal::view'),
         "/ccm/system/dialogs/page/add_external/submit"                                  => array('\Concrete\Controller\Dialog\Page\AddExternal::submit'),

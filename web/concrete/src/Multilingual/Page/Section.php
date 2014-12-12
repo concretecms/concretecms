@@ -253,7 +253,7 @@ class Section extends Page
                 );
             }
         } else {
-            self::assignDelete($page);
+            self::unregisterPage($page);
         }
     }
 
