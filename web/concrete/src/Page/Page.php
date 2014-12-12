@@ -473,11 +473,11 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     }
     
     public function removePermissions($userOrGroup, $permissions = array()) {
-		if ($this->cInheritPermissionsFrom != 'OVERRIDE') {
-			return;
-		}
+        if ($this->cInheritPermissionsFrom != 'OVERRIDE') {
+            return;
+        }
 		
-		if (is_array($userOrGroup)) {
+        if (is_array($userOrGroup)) {
             $pe = GroupCombinationPermissionAccessEntity::getOrCreate($userOrGroup);
             // group combination
         } else if ($userOrGroup instanceof User || $userOrGroup instanceof UserInfo) {
@@ -492,15 +492,15 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             $pk->setPermissionObject($this);
             $pa = $pk->getPermissionAccessObject();
             if (is_object($pa)) {
-				if ($pa->isPermissionAccessInUse()) {
-					$pa = $pa->duplicate();
-				}
-				$pa->removeListItem($pe);
-				$pt = $pk->getPermissionAssignmentObject();
-				$pt->assignPermissionAccess($pa);
-			}
+                if ($pa->isPermissionAccessInUse()) {
+                    $pa = $pa->duplicate();
+                }
+                $pa->removeListItem($pe);
+                $pt = $pk->getPermissionAssignmentObject();
+                $pt->assignPermissionAccess($pa);
+            }
         }
-	}
+    }
 
     public static function getDrafts() {
         $db = Loader::db();
