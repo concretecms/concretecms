@@ -296,9 +296,9 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
             $ch = Core::make('multilingual/interface/flag');
             if (is_object($section)) { ?>
                 <li class="pull-right hidden-xs">
-                <a href="#" data-panel-url="<?= URL::to('/ccm/system/panels/sitemap') ?>"
-                   title="<?= t('Add Pages and Navigate Your Site') ?>"
-                   data-launch-panel="sitemap">
+                <a href="#" data-panel-url="<?= URL::to('/ccm/system/panels/multilingual') ?>"
+                   title="<?= t('Navigate this page in other languages') ?>"
+                   data-launch-panel="multilingual">
                     <? print $ch->getFlagIcon($section->getIcon()); ?>
                     <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add-page">
                         <?=$section->getLanguageText()?>

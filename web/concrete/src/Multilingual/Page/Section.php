@@ -433,7 +433,7 @@ class Section extends Page
     public function getTranslatedPageID($page)
     {
         $db = Database::get();
-        $ids = MultilingualSection::getIDList();
+        $ids = static::getIDList();
         $locale = explode('_' , $this->getLocale());
         if (in_array($page->getCollectionID(), $ids)) {
             $cID = $db->GetOne('select cID from MultilingualSections where msLanguage = ? and msCountry = ?', array($locale[0], $locale[1]));
