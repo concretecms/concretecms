@@ -119,7 +119,7 @@ $translatedSubmitLabel = t('Submit');
 			$captchaLabel = $captcha->label();
 			if (!empty($captchaLabel)) {
 				?>
-				<label class="control-label"><?php $captchaLabel; ?></label>
+				<label class="control-label"><?php echo $captchaLabel; ?></label>
 				<?php
 			}
 			?>
