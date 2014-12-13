@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Controller\SinglePage\Dashboard\Multilingual;
+namespace Concrete\Controller\SinglePage\Dashboard\System\Multilingual;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use Core;
 use Concrete\Core\Multilingual\Page\Section;
@@ -113,7 +113,7 @@ class Setup extends DashboardPageController
                 Config::save('concrete.multilingual.default_locale', $this->post('defaultLocale'));
                 Config::save('concrete.multilingual.redirect_home_to_default_locale', $this->post('redirectHomeToDefaultLocale'));
                 Config::save('concrete.multilingual.use_browser_detected_locale', $this->post('useBrowserDetectedLocale'));
-                $this->redirect('/dashboard/multilingual/setup', 'default_locale_updated');
+                $this->redirect('/dashboard/system/multilingual/setup', 'default_locale_updated');
             } else {
                 $this->error->add(t('Invalid Section'));
             }
@@ -130,7 +130,7 @@ class Setup extends DashboardPageController
             if (is_object($lc)) {
 
                 $lc->unassign();
-                $this->redirect('/dashboard/multilingual/setup', 'locale_section_removed');
+                $this->redirect('/dashboard/system/multilingual/setup', 'locale_section_removed');
 
             } else {
                 $this->error->add(t('Invalid section'));
@@ -169,7 +169,7 @@ class Setup extends DashboardPageController
 
             if (!$this->error->has()) {
                 Section::assign($pc, $this->post('msLanguage'), $this->post('msCountry'));
-                $this->redirect('/dashboard/multilingual/setup', 'multilingual_content_updated');
+                $this->redirect('/dashboard/system/multilingual/setup', 'multilingual_content_updated');
             }
         } else {
             $this->error->add(Loader::helper('validation/token')->getErrorMessage());
