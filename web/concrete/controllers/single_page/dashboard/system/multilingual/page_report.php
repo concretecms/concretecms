@@ -1,9 +1,11 @@
 <?php
 
-namespace Concrete\Controller\SinglePage\Dashboard\Multilingual;
+namespace Concrete\Controller\SinglePage\Dashboard\System\Multilingual;
 
 use \Concrete\Core\Page\Controller\DashboardPageController;
-
+use Loader;
+use Concrete\Core\Multilingual\Page\Section as MultilingualSection;
+use Concrete\Core\Multilingual\Page\PageList as MultilingualPageList;
 defined('C5_EXECUTE') or die("Access Denied.");
 
 class PageReport extends DashboardPageController
@@ -12,7 +14,6 @@ class PageReport extends DashboardPageController
 
     public function view()
     {
-        Loader::model('section', 'multilingual');
         $list = MultilingualSection::getList();
         $sections = array();
         foreach ($list as $pc) {
@@ -53,11 +54,10 @@ class PageReport extends DashboardPageController
         $this->set('targets', $targets);
         $this->set('targetList', $targetList);
         $this->set('sectionID', $sectionID);
+        $this->set('fh', \Core::make('multilingual/interface/flag'));
         if (isset($sectionID) && $sectionID > 0) {
-            Loader::model('multilingual_page_list', 'multilingual');
             $pl = new MultilingualPageList();
-            $pl->filterByIsAlias(false);
-            $pc = Page::getByID($sectionID);
+            $pc = \Page::getByID($sectionID);
             $path = $pc->getCollectionPath();
             if (strlen($path) > 1) {
                 $pl->filterByPath($path);
@@ -73,8 +73,9 @@ class PageReport extends DashboardPageController
                 $pl->filterByMissingTargets($targetList);
             }
 
-            $pages = $pl->getPage();
-            $this->set('pages', $pages);
+            $pagination = $pl->getPagination();
+            $this->set('pagination', $pagination);
+            $this->set('pages', $pagination->getCurrentPageResults());
             $this->set('section', MultilingualSection::getByID($sectionID));
             $this->set('pl', $pl);
         }
@@ -82,7 +83,6 @@ class PageReport extends DashboardPageController
 
     public function assign_page()
     {
-        Loader::model('section', 'multilingual');
         if (Loader::helper('validation/token')->validate('assign_page', $_POST['token'])) {
             if ($_REQUEST['destID'] == $_REQUEST['sourceID']) {
                 print '<span class="ccm-error">' . t("You cannot assign this page to itself.") . '</span>';
@@ -117,55 +117,10 @@ class PageReport extends DashboardPageController
 
     public function ignore_page()
     {
-        Loader::model('section', 'multilingual');
         if (Loader::helper('validation/token')->validate('ignore_page', $_POST['token'])) {
             $page = Page::getByID($_POST['sourceID']);
             MultilingualSection::ignorePageRelation($page, $_POST['locale']);
             print t('Ignored');
-        }
-        exit;
-    }
-
-    public function create_page()
-    {
-        Loader::model('section', 'multilingual');
-        if (Loader::helper('validation/token')->validate('create_page', $_POST['token'])) {
-            $ms = MultilingualSection::getByLocale($_POST['locale']);
-
-            $page = Page::getByID($_POST['sourceID']);
-            if (is_object($page) && !$page->isError()) {
-                // we get the related parent id
-                $cParentID = $page->getCollectionParentID();
-                $cParent = Page::getByID($cParentID);
-                $cParentRelatedID = $ms->getTranslatedPageID($cParent);
-                if ($cParentRelatedID > 0) {
-                    // we copy the page underneath it and store it
-                    $newParent = Page::getByID($cParentRelatedID);
-                    $ct = CollectionType::getByID($page->getCollectionTypeID());
-                    $cp = new Permissions($newParent);
-                    if ($cp->canAddSubCollection($ct) && $page->canMoveCopyTo($newParent)) {
-                        $newPage = $page->duplicate($newParent);
-                        if (is_object($newPage)) {
-                            // grab the approved version and unapprove it
-                            $v = CollectionVersion::get($newPage, 'ACTIVE');
-                            if (is_object($v)) {
-                                $v->deny();
-                                $pkr = new ApprovePagePageWorkflowRequest();
-                                $pkr->setRequestedPage($newPage);
-                                $u = new User();
-                                $pkr->setRequestedVersionID($v->getVersionID());
-                                $pkr->setRequesterUserID($u->getUserID());
-                                $pkr->trigger();
-                            }
-
-                            print '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $newPage->getCollectionID(
-                                ) . '">' . $newPage->getCollectionName() . '</a>';
-                        }
-                    } else {
-                        print '<span class="ccm-error">' . t("Insufficient permissions.") . '</span>';
-                    }
-                }
-            }
         }
         exit;
     }
