@@ -87,7 +87,12 @@ class Detector
             $ms = static::getPreferredSection();
         }
 
+        if (!$ms) {
+            return;
+        }
+
         $locale = $ms->getLocale();
+
 
         // change core language to translate e.g. core blocks/themes
         if (strlen($locale)) {

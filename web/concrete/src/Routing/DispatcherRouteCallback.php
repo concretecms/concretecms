@@ -142,7 +142,7 @@ class DispatcherRouteCallback extends RouteCallback
                 }
             }
 
-            $dl->setupSiteInterfaceLocalization();
+            $dl->setupSiteInterfaceLocalization($c);
         }
 
         $request->setCurrentPage($c);

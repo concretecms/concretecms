@@ -3,6 +3,7 @@
 namespace Concrete\Controller\SinglePage\Dashboard\System\Multilingual;
 
 use \Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\EditResponse;
 use Loader;
 use Concrete\Core\Multilingual\Page\Section as MultilingualSection;
 use Concrete\Core\Multilingual\Page\PageList as MultilingualPageList;
@@ -62,6 +63,7 @@ class PageReport extends DashboardPageController
         $this->set('targetList', $targetList);
         $this->set('sectionID', $sectionID);
         $this->set('fh', \Core::make('multilingual/interface/flag'));
+
         if (isset($sectionID) && $sectionID > 0) {
             $pl = new MultilingualPageList();
             $pc = \Page::getByID($sectionID);
@@ -122,13 +124,16 @@ class PageReport extends DashboardPageController
         exit;
     }
 
-    public function ignore_page()
+    public function ignore()
     {
-        if (Loader::helper('validation/token')->validate('ignore_page', $_POST['token'])) {
-            $page = Page::getByID($_POST['sourceID']);
-            MultilingualSection::ignorePageRelation($page, $_POST['locale']);
-            print t('Ignored');
+        if (Loader::helper('validation/token')->validate('ignore', $_POST['token'])) {
+            $page = \Page::getByID($_POST['cID']);
+            $section = MultilingualSection::getByID($_POST['section']);
+            MultilingualSection::ignorePageRelation($page, $section->getLocale());
+            $r = new EditResponse();
+            $r->setPage($page);
+            $r->setMessage(t('Page ignored.'));
+            $r->outputJSON();
         }
-        exit;
     }
 }

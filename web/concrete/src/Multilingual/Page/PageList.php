@@ -29,35 +29,21 @@ class PageList extends CorePageList
                 ->andWhere(
                     $section->expr()->comparison('mpLocale', '=', $query->createNamedParameter($ms->getLocale()))
                 );
-            $query->addSelect('(' . $section . ')');
+            $query->addSelect('(' . $section . ') as relationCount' . $ms->getCollectionID());
         }
         return $query;
     }
 
     public function filterByMissingTargets($targets)
     {
-        /*
-        $haveStr = '';
-
-        if (count($targets) > 0) {
-            $haveStr .= '(';
-        }
-
-        for ($i = 0; $i < count($targets); $i++) {
-            $t = $targets[$i];
-            $haveStr .= 'relationCount' . $t->getCollectionID() . ' = 0';
-            if (count($targets) > ($i + 1)) {
-                $haveStr .= ' or ';
+        if (count($targets)) {
+            for ($i = 0; $i < count($targets); $i++) {
+                $having = Database::get()->createQueryBuilder();
+                $t = $targets[$i];
+                $this->query->having(
+                    $having->expr()->orX('relationCount' . $t->getCollectionID() . ' = 0')
+                );
             }
         }
-
-        if (count($targets) > 0) {
-            $haveStr .= ')';
-        }
-
-        if ($haveStr) {
-            $this->having(false, $haveStr);
-        }
-        */
     }
 }

@@ -203,6 +203,17 @@ class Section extends Page
             $db = Database::get();
             $ms = static::getBySectionOfSite($page);
             if (is_object($ms)) {
+                $mpRelationID = $db->GetOne(
+                    'select mpRelationID from MultilingualPageRelations where cID = ?',
+                    array($page->getCollectionID())
+                );
+                if ($mpRelationID) {
+                    // already exists. We quit and return
+                    return $mpRelationID;
+                }
+
+                // otherwise, we create a new one.
+
                 $mpRelationID = $db->GetOne('select max(mpRelationID) as mpRelationID from MultilingualPageRelations');
                 if (!$mpRelationID) {
                     $mpRelationID = 1;
@@ -217,6 +228,7 @@ class Section extends Page
                 $pde = new Event($page);
                 $pde->setLocale($ms->getLocale());
                 \Events::dispatch('on_multilingual_page_relate', $pde);
+                return $mpRelationID;
             }
         }
     }
@@ -383,16 +395,15 @@ class Section extends Page
     public static function ignorePageRelation($page, $locale)
     {
         $db = Database::get();
-        $mpRelationID = $db->GetOne(
-            'select mpRelationID from MultilingualPageRelations where cID = ?',
-            array($page->getCollectionID())
-        );
-        if ($mpRelationID) {
-            $v = array($mpRelationID, 0, $locale);
-            $db->Execute('insert into MultilingualPageRelations (mpRelationID, cID, mpLocale) values (?, ?, ?)', $v);
-            Events::fire('on_multilingual_page_ignore', $page, $locale);
 
-        }
+        // first, we retrieve the relation for the page in the default locale.
+        $mpRelationID = static::registerPage($page);
+
+        $v = array($mpRelationID, 0, $locale);
+        $db->Execute('insert into MultilingualPageRelations (mpRelationID, cID, mpLocale) values (?, ?, ?)', $v);
+        $pde = new Event($page);
+        $pde->setLocale($locale);
+        \Events::dispatch('on_multilingual_page_ignore', $pde);
     }
 
     public static function getIDList()
