@@ -255,6 +255,7 @@ return array(
         "/ccm/system/page/create/{ptID}/{parentID}"                                     => array('\Concrete\Controller\Backend\Page::create'),
         "/ccm/system/page/arrange_blocks/"                                              => array('\Concrete\Controller\Backend\Page\ArrangeBlocks::arrange'),
         "/ccm/system/page/multilingual/create_new"                                      => array('\Concrete\Controller\Backend\Page\Multilingual::create_new'),
+        "/ccm/system/page/multilingual/ignore"                                          => array('\Concrete\Controller\Backend\Page\Multilingual::ignore'),
         "/ccm/system/page/get_json"                                                     => array('\Concrete\Controller\Backend\Page::getJSON'),
 
         /**

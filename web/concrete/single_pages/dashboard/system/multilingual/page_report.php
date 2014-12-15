@@ -108,9 +108,15 @@ $nav = Loader::helper('navigation');
                         <a href="<?php echo $pc->getCollectionLink()?>"><?=$pc->getCollectionName()?></a>
                         <div><small><?=$pc->getCollectionPath()?></small></div>
                     </td>
-                    <? foreach($targetList as $sc) { ?>
+                    <? foreach($targetList as $sc) {
+
+                        $multilingualController = Core::make('\Concrete\Controller\Backend\Page\Multilingual');
+                        $multilingualController->setPageObject($pc);
+                        ?>
                         <? if ($section->getCollectionID() != $sc->getCollectionID()) { ?>
-                            <td><div>
+                            <td><div data-multilingual-page-section="<?=$sc->getCollectionID()?>" data-multilingual-page-source="<?=$pc->getCollectionID()?>">
+
+                                    <div data-wrapper="page">
                                     <? 						$cID = $sc->getTranslatedPageID($pc);
                                 if ($cID) {
                                     $p = \Page::getByID($cID);
@@ -119,30 +125,47 @@ $nav = Loader::helper('navigation');
                                     print t('Ignored');
 
                                 } ?>
+                                    </div>
+                                    <div data-wrapper="buttons">
+                                    <?
+
+                                    $cParentID = $pc->getCollectionParentID();
+                                    $cParent = Page::getByID($cParentID);
+                                    $cParentRelatedID = $sc->getTranslatedPageID($cParent);
+                                    if ($cParentRelatedID) {
+
+                                        $assignLang = t('Re-Map');
+                                        if (!$cID) {
+                                            $assignLang = t('Map');
+                                        }
+                                        ?>
+                                        <?php if (!$cID) { ?>
+                                            <button class="btn btn-success btn-xs" type="button"
+                                                    data-btn-action="create"
+                                                    data-btn-url="<?=$multilingualController->action('create_new')?>"
+                                                    data-btn-multilingual-page-source="<?php echo $pc->getCollectionID()?>"
+                                                    data-btn-multilingual-section="<?php echo $sc->getCollectionID()?>"
+                                            ><?=t('Create Page')?></button>
+                                        <?php } ?>
+                                        <button class="btn btn-info btn-xs" type="button"
+                                                data-btn-url="<?=$multilingualController->action('assign')?>"
+                                                data-btn-multilingual-page-source="<?php echo $pc->getCollectionID()?>"
+                                                data-btn-multilingual-section="<?php echo $sc->getCollectionID()?>"
+                                            ><?php echo $assignLang?></button>
+                                        <?php if ($cID !== '0' && !$cID) { ?>
+                                           <button class="btn btn-warning btn-xs" type="button"
+                                               data-btn-action="ignore"
+                                               data-btn-url="<?=$controller->action('ignore')?>"
+                                               data-btn-multilingual-page-source="<?php echo $pc->getCollectionID()?>"
+                                               data-btn-multilingual-section="<?php echo $sc->getCollectionID()?>"
+                                           ><?=t('Ignore')?></button>
+                                        <?php } ?>
+
+                                    <?php } else { ?>
+                                        <div class="ccm-note"><?php echo t("Create the parent page first.")?></div>
+                                    <?php } ?>
+                                    </div>
                                 </div>
-                                <?
-
-                                $cParentID = $pc->getCollectionParentID();
-                                $cParent = Page::getByID($cParentID);
-                                $cParentRelatedID = $sc->getTranslatedPageID($cParent);
-                                if ($cParentRelatedID) {
-
-                                    $assignLang = t('Re-Map');
-                                    if (!$cID) {
-                                        $assignLang = t('Map');
-                                    }
-                                    ?>
-                                    <?php if (!$cID) { ?>
-                                        <button class="btn btn-success btn-xs" type="button" data-source-page-id="<?php echo $pc->getCollectionID()?>" data-destination-language="<?php echo $sc->getLocale()?>"><?=t('Create Page')?></button>
-                                    <?php } ?>
-                                    <button class="btn btn-info btn-xs" type="button" data-source-page-id="<?php echo $pc->getCollectionID()?>" data-destination-language="<?php echo $sc->getLocale()?>"><?php echo $assignLang?></button>
-                                    <?php if ($cID !== '0' && !$cID) { ?>
-                                       <button class="btn btn-warning btn-xs" type="button" data-source-page-id="<?php echo $pc->getCollectionID()?>" data-destination-language="<?php echo $sc->getLocale()?>"><?=t('Ignore')?></button>
-                                    <?php } ?>
-
-                                <?php } else { ?>
-                                    <div class="ccm-note"><?php echo t("Create the parent page first.")?></div>
-                                <?php } ?>
                             </td>
                         <?php } ?>
                     <?php } ?>
@@ -158,6 +181,13 @@ $nav = Loader::helper('navigation');
 
     <script type="text/javascript">
 
+        replaceLinkWithPage = function(cID, sectionID, link, icon, name) {
+            var $wrapper = $('div[data-multilingual-page-section=' + sectionID + '][data-multilingual-page-source=' + cID + ']');
+            var newLink = '<a href="' + link + '">' + name + '<\/a>';
+            $wrapper.find('div[data-wrapper=page]').html(newLink);
+            $wrapper.find('div[data-wrapper=buttons]').hide();
+        }
+
         $(function() {
 
             $("select[name=sectionIDSelect]").change(function() {
@@ -166,6 +196,52 @@ $nav = Loader::helper('navigation');
                 $("input[name=sectionID]").val($(this).val());
                 $("form[data-form=multilingual-search-pages]").submit();
             });
+
+            $('button[data-btn-action=create]').on('click', function(e) {
+                var sectionID = $(this).attr('data-btn-multilingual-section'),
+                    cID = $(this).attr('data-btn-multilingual-page-source');
+                e.preventDefault();
+
+                $.concreteAjax({
+                    url: $(this).attr('data-btn-url'),
+                    method: 'post',
+                    data: {
+                        'section': sectionID,
+                        'cID': cID
+                    },
+                    success: function(r) {
+                        ConcreteAlert.notify({
+                            'message': r.message,
+                            'title': r.title
+                        });
+                        if (r.pages[0]) {
+                            replaceLinkWithPage(cID, sectionID, r.link, r.icon, r.name);
+                        }
+
+                    }
+                });
+            });
+
+            $('button[data-btn-action=ignore]').on('click', function(e) {
+                var sectionID = $(this).attr('data-btn-multilingual-section'),
+                    cID = $(this).attr('data-btn-multilingual-page-source');
+                e.preventDefault();
+                $.concreteAjax({
+                    url: $(this).attr('data-btn-url'),
+                    method: 'post',
+                    data: {
+                        'section': sectionID,
+                        'cID': cID,
+                        'token': '<?=Loader::helper('validation/token')->generate('ignore')?>'
+                    },
+                    success: function(r) {
+                        var $wrapper = $('div[data-multilingual-page-section=' + sectionID + '][data-multilingual-page-source=' + cID + ']');
+                        $wrapper.find('div[data-wrapper=page]').html('<?=t('Ignored')?>');
+                        $wrapper.find('div[data-wrapper=buttons]').hide();
+                    }
+                });
+            });
+
         });
 
     </script>
