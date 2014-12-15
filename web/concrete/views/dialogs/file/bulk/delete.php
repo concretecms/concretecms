@@ -23,7 +23,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
                         <tr>
                             <td><?=$fv->getType()?></td>
-                            <td class="ccm-file-list-filename" width="100%"><div style="word-wrap: break-word; width: 150px"><?=$fv->getTitle()?></div></td>
+                            <td class="ccm-file-list-filename" width="100%"><div style="word-wrap: break-word; width: 150px"><?=h($fv->getTitle())?></div></td>
                             <td><?=$dh->formatDateTime($f->getDateAdded()->getTimestamp())?></td>
                             <td><?=$fv->getSize()?></td>
                             <td><?=$fv->getAuthorName()?></td>

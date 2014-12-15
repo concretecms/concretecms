@@ -195,13 +195,13 @@ if (count($attribs) > 0) { ?>
 			<td width="100">
 				<div style="width: 150px; word-wrap: break-word">
 				<a href="<?=URL::to('/ccm/system/dialogs/file/properties')?>?fID=<?=$f->getFileID()?>&amp;fvID=<?=$fvv->getFileVersionID()?>" dialog-modal="false" dialog-width="630" dialog-height="450" dialog-title="<?=t('Preview File')?>" class="dialog-launch">
-					<?=$fvv->getFilename()?>
+					<?=h($fvv->getFilename())?>
 				</a>
 				</div>
 			</td>
 			<td>
 				<div style="width: 150px; word-wrap: break-word">
-					<?=$fvv->getTitle()?>
+					<?=h($fvv->getTitle())?>
 				</div>
 			</td>
 			<td><?
