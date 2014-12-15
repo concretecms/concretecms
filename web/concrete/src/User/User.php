@@ -342,6 +342,11 @@ class User extends Object
         $this->unloadCollectionEdit();
         $this->unloadAuthenticationTypes();
 
+        $this->invalidateSession($hard);
+        Events::dispatch('on_user_logout');
+    }
+
+    public function invalidateSession($hard = true) {
         // @todo remove this hard option if `Session::clear()` does what we need.
         if (!$hard) {
             Session::clear();
@@ -349,13 +354,11 @@ class User extends Object
             Session::invalidate();
         }
 
-        Events::dispatch('on_user_logout');
-
         if (isset($_COOKIE['ccmUserHash']) && $_COOKIE['ccmUserHash']) {
             setcookie("ccmUserHash", "", 315532800, DIR_REL . '/',
-            Config::get('concrete.session.cookie.domain'),
-            Config::get('concrete.session.cookie.secure'),
-            Config::get('concrete.session.cookie.httponly'));
+                      Config::get('concrete.session.cookie.domain'),
+                      Config::get('concrete.session.cookie.secure'),
+                      Config::get('concrete.session.cookie.httponly'));
         }
     }
 

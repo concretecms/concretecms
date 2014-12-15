@@ -18,7 +18,7 @@ class CookieJar
      * @param null|string $domain The domain the cookie is available to
      * @param bool $secure whether the cookie should only be transmitted over a HTTPS connection from the client
      * @param bool $httpOnly Whether the cookie will be made accessible only through the HTTP protocol
-     * @return void
+     * @return \Symfony\Component\HttpFoundation\Cookie
      */
     public function set(
         $name,
@@ -32,6 +32,7 @@ class CookieJar
         $expire = ($expire > 0) ? $expire * 60 : 0;
         $cookie = new CookieObject($name, $value, $expire, $path, $domain, $secure, $httpOnly);
         $this->add($cookie);
+        return $cookie;
     }
 
     /**
@@ -72,4 +73,5 @@ class CookieJar
     {
         return $this->cookies;
     }
+
 }
