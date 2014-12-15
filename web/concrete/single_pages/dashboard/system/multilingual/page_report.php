@@ -6,7 +6,8 @@ $nav = Loader::helper('navigation');
 
 <div class="ccm-dashboard-content-full">
 
-    <form role="form" action="<?=$controller->action('view')?>" class="form-inline ccm-search-fields">
+    <form role="form" action="<?=$controller->action('view')?>" data-form="search-multilingual-pages" class="form-inline ccm-search-fields">
+        <input type="hidden" name="sectionID" value="<?=$sectionID?>" />
         <div class="ccm-search-fields-row">
             <div class="form-group">
                 <?=$form->label('keywords', t('Search'))?>
@@ -28,7 +29,7 @@ $nav = Loader::helper('navigation');
             </div>
         </div>
 
-        <div class="ccm-search-fields-row">
+        <div class="ccm-search-fields-row" data-list="multilingual-targets">
             <div class="form-group">
                 <label class="control-label"><?=t('Choose Targets')?></label>
                 <div class="ccm-search-field-content">
@@ -100,11 +101,74 @@ $nav = Loader::helper('navigation');
             </tr>
             </thead>
             <tbody>
+            <? if (count($pages) > 0) { ?>
+                <? foreach($pages as $pc) { ?>
+                    <tr>
+                    <td>
+                        <a href="<?php echo $pc->getCollectionLink()?>"><?=$pc->getCollectionName()?></a>
+                        <div><small><?=$pc->getCollectionPath()?></small></div>
+                    </td>
+                    <? foreach($targetList as $sc) { ?>
+                        <? if ($section->getCollectionID() != $sc->getCollectionID()) { ?>
+                            <td><div>
+                                    <? 						$cID = $sc->getTranslatedPageID($pc);
+                                if ($cID) {
+                                    $p = \Page::getByID($cID);
+                                    print '<a href="' . $nav->getLinkToCollection($p) . '">' . $p->getCollectionName() . '</a>';
+                                } else if ($cID === '0') {
+                                    print t('Ignored');
 
+                                } ?>
+                                </div>
+                                <?
+
+                                $cParentID = $pc->getCollectionParentID();
+                                $cParent = Page::getByID($cParentID);
+                                $cParentRelatedID = $sc->getTranslatedPageID($cParent);
+                                if ($cParentRelatedID) {
+
+                                    $assignLang = t('Re-Map');
+                                    if (!$cID) {
+                                        $assignLang = t('Map');
+                                    }
+                                    ?>
+                                    <?php if (!$cID) { ?>
+                                        <button class="btn btn-success btn-xs" type="button" data-source-page-id="<?php echo $pc->getCollectionID()?>" data-destination-language="<?php echo $sc->getLocale()?>"><?=t('Create Page')?></button>
+                                    <?php } ?>
+                                    <button class="btn btn-info btn-xs" type="button" data-source-page-id="<?php echo $pc->getCollectionID()?>" data-destination-language="<?php echo $sc->getLocale()?>"><?php echo $assignLang?></button>
+                                    <?php if ($cID !== '0' && !$cID) { ?>
+                                       <button class="btn btn-warning btn-xs" type="button" data-source-page-id="<?php echo $pc->getCollectionID()?>" data-destination-language="<?php echo $sc->getLocale()?>"><?=t('Ignore')?></button>
+                                    <?php } ?>
+
+                                <?php } else { ?>
+                                    <div class="ccm-note"><?php echo t("Create the parent page first.")?></div>
+                                <?php } ?>
+                            </td>
+                        <?php } ?>
+                    <?php } ?>
+                <? } ?>
+            <? } else {?>
+                <tr>
+                    <td colspan="4"><?php echo t('No pages found.')?></td>
+                </tr>
+            <? } ?>
             </tbody>
         </table>
     </div>
 
+    <script type="text/javascript">
+
+        $(function() {
+
+            $("select[name=sectionIDSelect]").change(function() {
+                $("div[data-list=multilingual-targets] input").attr('disabled', false);
+                $("div[data-list=multilingual-targets] input[value=" + $(this).val() + "]").attr('disabled', true).attr('checked', false);
+                $("input[name=sectionID]").val($(this).val());
+                $("form[data-form=multilingual-search-pages]").submit();
+            });
+        });
+
+    </script>
 
     <? /*
 		<table class="ccm-results-list" cellspacing="0" cellpadding="0" border="0" id="ccm-multilingual-page-report-results">

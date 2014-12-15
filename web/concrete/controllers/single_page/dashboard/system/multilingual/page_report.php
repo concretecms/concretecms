@@ -16,6 +16,13 @@ class PageReport extends DashboardPageController
     {
         $list = MultilingualSection::getList();
         $sections = array();
+        usort($list, function($item) {
+           if ($item->getLocale() == \Config::get('concrete.multilingual.default_locale')) {
+               return -1;
+           }  else {
+               return 1;
+           }
+        });
         foreach ($list as $pc) {
             $sections[$pc->getCollectionID()] = $pc->getLanguageText() . " (" . $pc->getLocale() . ")";
         }
