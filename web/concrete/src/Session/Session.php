@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Core\Session;
 
-use Concrete\Core\Permission\IPService;
 use Concrete\Core\Utility\IPAddress;
 use Config;
 use \Symfony\Component\HttpFoundation\Session\Session as SymfonySession;
