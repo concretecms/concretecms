@@ -15,6 +15,7 @@ class PageReport extends DashboardPageController
 
     public function view()
     {
+        $this->requireAsset('core/sitemap');
         $list = MultilingualSection::getList();
         $sections = array();
         usort($list, function($item) {
@@ -77,63 +78,14 @@ class PageReport extends DashboardPageController
             }
 
             $pl->setItemsPerPage(25);
-            $pl->ignoreAliases();
             if (!$_REQUEST['showAllPages']) {
                 $pl->filterByMissingTargets($targetList);
             }
-
             $pagination = $pl->getPagination();
             $this->set('pagination', $pagination);
             $this->set('pages', $pagination->getCurrentPageResults());
             $this->set('section', MultilingualSection::getByID($sectionID));
             $this->set('pl', $pl);
-        }
-    }
-
-    public function assign_page()
-    {
-        if (Loader::helper('validation/token')->validate('assign_page', $_POST['token'])) {
-            if ($_REQUEST['destID'] == $_REQUEST['sourceID']) {
-                print '<span class="ccm-error">' . t("You cannot assign this page to itself.") . '</span>';
-                exit;
-            }
-            $destPage = Page::getByID($_POST['destID']);
-            if (MultilingualSection::isMultilingualSection($destPage)) {
-                $ms = MultilingualSection::getByID($destPage->getCollectionID());
-            } else {
-                $ms = MultilingualSection::getBySectionOfSite($destPage);
-            }
-            if (is_object($ms)) {
-                $page = Page::getByID($_POST['sourceID']);
-
-                // we need to assign/relate the source ID too, if it doesn't exist
-                if (!MultilingualSection::isAssigned($page)) {
-                    MultilingualSection::assignAdd($page);
-                }
-
-                MultilingualSection::relatePage($page, $destPage, $ms->getLocale());
-                print '<a href="' . Loader::helper("navigation")->getLinkToCollection(
-                        $destPage
-                    ) . '">' . $destPage->getCollectionName() . '</a>';
-            } else {
-                print '<span class="ccm-error">' . t(
-                        "The destination page doesn't appear to be in a valid multilingual section."
-                    ) . '</span>';
-            }
-        }
-        exit;
-    }
-
-    public function ignore()
-    {
-        if (Loader::helper('validation/token')->validate('ignore', $_POST['token'])) {
-            $page = \Page::getByID($_POST['cID']);
-            $section = MultilingualSection::getByID($_POST['section']);
-            MultilingualSection::ignorePageRelation($page, $section->getLocale());
-            $r = new EditResponse();
-            $r->setPage($page);
-            $r->setMessage(t('Page ignored.'));
-            $r->outputJSON();
         }
     }
 }

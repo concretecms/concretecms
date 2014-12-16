@@ -41,6 +41,7 @@
         <permissionkey handle="add_subpage" has-custom-class="true" name="Add Sub-Page" package="" description="Can add a page beneath the current page." category="page"/>
         <permissionkey handle="move_or_copy_page" name="Move or Copy Page" description="Can move or copy this page to another location." package="" category="page" can-trigger-workflow="true" />
         <permissionkey handle="schedule_page_contents_guest_access" name="Schedule Guest Access" description="Can control scheduled guest access to this page." package="" category="page"/>
+        <permissionkey handle="edit_page_multilingual_settings" name="Edit Multilingual Settings" description="Controls whether a user can see the multilingual settings menu, re-map a page or set a page as ignored in multilingual settings." package="" category="page"/>
         <!-- block types //-->
         <permissionkey handle="add_block" has-custom-class="true" name="Add Block" description="Can add a block to any area on the site. If someone is added here they can add blocks to any area (unless that area has permissions that override these global permissions.)" package="" category="block_type">
             <access>
