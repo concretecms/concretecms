@@ -195,7 +195,6 @@ class PageController extends Controller {
                     }
                 }
             }
-            exit;
         }
         return $valid;
     }
