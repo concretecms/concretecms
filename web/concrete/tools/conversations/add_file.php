@@ -22,7 +22,7 @@ if($conversation->getConversationAttachmentOverridesEnabled() > 0) { // check in
         echo Loader::helper('json')->encode($file);
         exit;
     }
-} else if(!Config::get('concrete.conversations.attachments_enabled')) { // check global config settings for whether or not file attachments should be allowed.
+} else if(!Config::get('conversations.attachments_enabled')) { // check global config settings for whether or not file attachments should be allowed.
     $error[] = t('This conversation does not allow file attachments.');
     $file->error = $error;
     echo Loader::helper('json')->encode($file);

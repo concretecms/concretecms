@@ -2,10 +2,6 @@
 <?
 
 $helperFile = Loader::helper('concrete/file');
-if($fileExtensions) {  // format file extensions for viewing and editing.
-	$fileExtensions = $helperFile->unserializeUploadFileExtensions($fileExtensions);
-	$fileExtensions = implode(',', $fileExtensions);
-}
 if ($controller->getTask() == 'add') {
 	$enablePosting = 1;
 	$paginate = 1;
@@ -18,7 +14,22 @@ if ($controller->getTask() == 'add') {
 	$addMessageLabel = t('Add Message');
     $attachmentOverridesEnabled = 0;
     $attachmentsEnabled = 1;
+    $fileAccessFileTypes = Config::get('conversations.files.allowed_types');
+    //is nothing's been defined, display the constant value
+    if (!$fileAccessFileTypes) {
+        $fileAccessFileTypes = $helperFile->unserializeUploadFileExtensions(Config::get('concrete.upload.extensions'));
+    }
+    else {
+        $fileAccessFileTypes = $helperFile->unserializeUploadFileExtensions($fileAccessFileTypes);
+    }
+    $maxFileSizeGuest = Config::get('conversations.files.guest.max_size');
+    $maxFileSizeRegistered = Config::get('conversations.files.registered.max_size');
+    $maxFilesGuest = Config::get('conversations.files.guest.max');
+    $maxFilesRegistered = Config::get('conversations.files.registered.max');
+    $fileExtensions = implode(',', $fileAccessFileTypes);
+    $attachmentsEnabled = intval(Config::get('conversations.attachments_enabled'));
 }
+
 if(!$dateFormat) {
 	$dateFormat = 'default';
 }
