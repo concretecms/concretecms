@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Block\SwitchLanguage;
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Multilingual\Page\Section;
+use Concrete\Core\Routing\Redirect;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -23,9 +25,27 @@ class Controller extends BlockController
         return t("Switch Language");
     }
 
-    public function on_page_view()
+    public function action_switch_language()
     {
-        $this->addHeaderItem(Loader::helper('html')->javascript('jquery.js'));
+        $lang = Section::getByID($_REQUEST['language']);
+        if (is_object($lang)) {
+            if ($this->post('currentPageID')) {
+                $page = \Page::getByID($this->post('ccmMultilingualCurrentPageID'));
+                if (!$page->isError()) {
+                    $relatedID = $lang->getTranslatedPageID($page);
+                    if ($relatedID) {
+                        $pc = \Page::getByID($relatedID);
+                        Redirect::page($pc)->send();
+                        exit;
+                    }
+                }
+            }
+            Redirect::page($lang)->send();
+            exit;
+        }
+
+        Redirect::to('/');
+        exit;
     }
 
     public function add()
@@ -35,15 +55,12 @@ class Controller extends BlockController
 
     public function view()
     {
-        $uh = Loader::helper('concrete/urls');
-        $bt = BlockType::getByHandle('switch_language');
-
-        Loader::model('section', 'multilingual');
-        $ml = MultilingualSection::getList();
-        $c = Page::getCurrentPage();
-        $al = MultilingualSection::getBySectionOfSite($c);
+        $this->requireAsset('javascript', 'jquery');
+        $ml = Section::getList();
+        $c = \Page::getCurrentPage();
+        $al = Section::getBySectionOfSite($c);
         $languages = array();
-        $locale = ACTIVE_LOCALE;
+        $locale = \Localization::activeLocale();
         if (is_object($al)) {
             $locale = $al->getLanguage();
         }
@@ -52,15 +69,12 @@ class Controller extends BlockController
         }
         $this->set('languages', $languages);
         $this->set('languageSections', $ml);
-        $this->set('action', $uh->getBlockTypeToolsURL($bt) . '/switch');
         if (is_object($al)) {
             $this->set('activeLanguage', $al->getCollectionID());
         }
-
-        $pkg = Package::getByHandle('multilingual');
-        $this->set('defaultLocale', DefaultLanguage::getPreferredLocale());
+        $dl = \Core::make('multilingual/detector');
+        $this->set('defaultLocale', $dl->getPreferredSection());
         $this->set('cID', $c->getCollectionID());
-
     }
 
 }

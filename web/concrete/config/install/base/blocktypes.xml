@@ -78,6 +78,7 @@
             <blocktype handle="tags"/>
             <blocktype handle="topic_list"/>
             <blocktype handle="rss_displayer"/>
+            <blocktype handle="switch_language"/>
         </blocktypeset>
         <blocktypeset handle="form" name="Forms" package="">
             <blocktype handle="form"/>
