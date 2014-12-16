@@ -77,14 +77,40 @@ defined('C5_EXECUTE') or die("Access Denied.");
                         'message': r.message,
                         'title': r.title
                     });
-                    if (r.pages[0]) {
+                    if (r.link) {
                         ConcreteMenuManager.reset();
                         replaceLinkWithPage(cID, r.link, r.icon, r.name);
                     }
-
                 }
             });
         });
+
+        $('a[data-multilingual-map-page]').on('click', function(e) {
+            e.preventDefault();
+            var cID = $(this).attr('data-multilingual-map-page');
+            ConcretePageAjaxSearch.launchDialog(function(data) {
+                $.concreteAjax({
+                    url: '<?=$multilingualController->action('assign')?>',
+                    method: 'post',
+                    data: {
+                        'destID': data.cID,
+                        'cID': cID
+                    },
+                    success: function(r) {
+                        ConcreteAlert.notify({
+                            'message': r.message,
+                            'title': r.title
+                        });
+                        if (r.link) {
+                            ConcreteMenuManager.reset();
+                            replaceLinkWithPage(cID, r.link, r.icon, r.name);
+                        }
+
+                    }
+                });
+            });
+        });
+
     });
 </script>
 

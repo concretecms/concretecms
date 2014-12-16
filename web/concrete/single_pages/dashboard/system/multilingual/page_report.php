@@ -148,6 +148,7 @@ $nav = Loader::helper('navigation');
                                             ><?=t('Create Page')?></button>
                                         <?php } ?>
                                         <button class="btn btn-info btn-xs" type="button"
+                                                data-btn-action="map"
                                                 data-btn-url="<?=$multilingualController->action('assign')?>"
                                                 data-btn-multilingual-page-source="<?php echo $pc->getCollectionID()?>"
                                                 data-btn-multilingual-section="<?php echo $sc->getCollectionID()?>"
@@ -155,7 +156,7 @@ $nav = Loader::helper('navigation');
                                         <?php if ($cID !== '0' && !$cID) { ?>
                                            <button class="btn btn-warning btn-xs" type="button"
                                                data-btn-action="ignore"
-                                               data-btn-url="<?=$controller->action('ignore')?>"
+                                               data-btn-url="<?=$multilingualController->action('ignore')?>"
                                                data-btn-multilingual-page-source="<?php echo $pc->getCollectionID()?>"
                                                data-btn-multilingual-section="<?php echo $sc->getCollectionID()?>"
                                            ><?=t('Ignore')?></button>
@@ -222,6 +223,28 @@ $nav = Loader::helper('navigation');
                 });
             });
 
+            $('button[data-btn-action=map]').on('click', function(e) {
+                var sectionID = $(this).attr('data-btn-multilingual-section'),
+                    cID = $(this).attr('data-btn-multilingual-page-source'),
+                    url = $(this).attr('data-btn-url');
+
+                e.preventDefault();
+                ConcretePageAjaxSearch.launchDialog(function(data) {
+                    $.concreteAjax({
+                        url: url,
+                        method: 'post',
+                        data: {
+                            'destID': data.cID,
+                            'cID': cID
+                        },
+                        success: function(r) {
+                            replaceLinkWithPage(cID, sectionID, r.link, r.icon, r.name);
+                        }
+                    });
+
+                });
+            });
+
             $('button[data-btn-action=ignore]').on('click', function(e) {
                 var sectionID = $(this).attr('data-btn-multilingual-section'),
                     cID = $(this).attr('data-btn-multilingual-page-source');
@@ -231,8 +254,7 @@ $nav = Loader::helper('navigation');
                     method: 'post',
                     data: {
                         'section': sectionID,
-                        'cID': cID,
-                        'token': '<?=Loader::helper('validation/token')->generate('ignore')?>'
+                        'cID': cID
                     },
                     success: function(r) {
                         var $wrapper = $('div[data-multilingual-page-section=' + sectionID + '][data-multilingual-page-source=' + cID + ']');

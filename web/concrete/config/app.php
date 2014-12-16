@@ -256,6 +256,7 @@ return array(
         "/ccm/system/page/arrange_blocks/"                                              => array('\Concrete\Controller\Backend\Page\ArrangeBlocks::arrange'),
         "/ccm/system/page/multilingual/create_new"                                      => array('\Concrete\Controller\Backend\Page\Multilingual::create_new'),
         "/ccm/system/page/multilingual/ignore"                                          => array('\Concrete\Controller\Backend\Page\Multilingual::ignore'),
+        "/ccm/system/page/multilingual/assign"                                          => array('\Concrete\Controller\Backend\Page\Multilingual::assign'),
         "/ccm/system/page/get_json"                                                     => array('\Concrete\Controller\Backend\Page::getJSON'),
 
         /**

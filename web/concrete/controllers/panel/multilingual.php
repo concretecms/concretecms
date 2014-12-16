@@ -13,6 +13,7 @@ class Multilingual extends BackendInterfacePageController
 
     public function view()
     {
+        $this->requireAsset('core/sitemap');
         $mlist = Section::getList();
         $currentSection = Section::getCurrentSection();
         foreach($mlist as $m) {
@@ -31,7 +32,7 @@ class Multilingual extends BackendInterfacePageController
 
     protected function canAccess()
     {
-        return $this->permissions->canViewToolbar() && Config::get('concrete.multilingual.enabled');
+        return $this->permissions->canEditPageMultilingualSettings() && Config::get('concrete.multilingual.enabled');
     }
 
 }
