@@ -1,5 +1,6 @@
 $(function() {
-	$('select[name=ccmMultilingualChooseLanguage]').change(function() {
+
+	$('select[data-select=multilingual-switch-language]').change(function() {
 		$(this).parent().submit();
 	});
 });
