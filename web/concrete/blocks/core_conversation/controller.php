@@ -140,7 +140,7 @@ use Page;
             if($conversation->getConversationAttachmentOverridesEnabled() > 0) {
                 $attachmentsEnabled = $conversation->getConversationAttachmentsEnabled();
             } else {
-                $attachmentsEnabled = is_numeric(Config::get('concrete.conversations.attachments_enabled')) ? Config::get('concrete.conversations.attachments_enabled') : 1;
+                $attachmentsEnabled = is_numeric(Config::get('conversations.attachments_enabled')) ? Config::get('conversations.attachments_enabled') : 1;
             }
 
 			$fileExtensions = implode(',', $helperFile->unserializeUploadFileExtensions($fileExtensions)); //unserialize and implode extensions into comma separated string
@@ -219,7 +219,8 @@ use Page;
 
 			if ($values['fileExtensions']) {
 				$receivedExtensions = preg_split('{,}',strtolower($values['fileExtensions']),null,PREG_SPLIT_NO_EMPTY);
-				$conversation->setConversationFileExtensions($helperFile->serializeUploadFileExtensions($receivedExtensions));
+                $fileExtensions = $helperFile->serializeUploadFileExtensions($receivedExtensions);
+				$conversation->setConversationFileExtensions($fileExtensions);
 			}
 
 			$values['cnvID'] = $conversation->getConversationID();

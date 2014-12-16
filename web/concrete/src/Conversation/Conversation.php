@@ -17,7 +17,7 @@ class Conversation extends Object implements \Concrete\Core\Permission\ObjectInt
     public function getConversationMaxFileSizeRegistered() { return intval($this->cnvMaxFileSizeRegistered);}
     public function getConversationMaxFilesGuest() { return intval($this->cnvMaxFilesGuest);}
     public function getConversationMaxFilesRegistered() { return intval($this->cnvMaxFilesRegistered);}
-    public function getConversationFileExtensions() { return intval($this->cnvFileExtensions);}
+    public function getConversationFileExtensions() { return $this->cnvFileExtensions;}
     public function getConversationAttachmentOverridesEnabled() { return intval($this->cnvAttachmentOverridesEnabled);}
     public function getConversationAttachmentsEnabled() { return intval($this->cnvAttachmentsEnabled);}
 
@@ -148,7 +148,7 @@ class Conversation extends Object implements \Concrete\Core\Permission\ObjectInt
 
     public function setConversationFileExtensions($cnvFileExtensions) {
         $db = Loader::db();
-        $db->Execute('update Conversations set cnvFileExtensions = ? where cnvID = ?', array(intval($cnvFileExtensions), $this->getConversationID()));
+        $db->Execute('update Conversations set cnvFileExtensions = ? where cnvID = ?', array($cnvFileExtensions, $this->getConversationID()));
     }
 
 
