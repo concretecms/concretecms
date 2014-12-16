@@ -24,7 +24,14 @@ class MetadataGenerator
             } else {
                 $className = $static['concrete'];
             }
-            $file .= '\'' . $name . '\' instanceof ' . $className . ',';
+
+            if ($className !== null) {
+                if ($className[0] !== '\\') {
+                    $className = '\\' . $className;
+                }
+
+                $file .= '\'' . $name . '\' instanceof ' . $className . ',';
+            }
         }
         $file .= '));}';
 
