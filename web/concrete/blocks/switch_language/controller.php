@@ -3,6 +3,8 @@ namespace Concrete\Block\SwitchLanguage;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Multilingual\Page\Section;
 use Concrete\Core\Routing\Redirect;
+use Cookie;
+use Session;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -25,19 +27,17 @@ class Controller extends BlockController
         return t("Switch Language");
     }
 
-    public function action_switch_language()
+    public function action_switch_language($currentPageID, $sectionID)
     {
-        $lang = Section::getByID($_REQUEST['language']);
+        $lang = Section::getByID(intval($sectionID));
         if (is_object($lang)) {
-            if ($this->post('currentPageID')) {
-                $page = \Page::getByID($this->post('ccmMultilingualCurrentPageID'));
-                if (!$page->isError()) {
-                    $relatedID = $lang->getTranslatedPageID($page);
-                    if ($relatedID) {
-                        $pc = \Page::getByID($relatedID);
-                        Redirect::page($pc)->send();
-                        exit;
-                    }
+            $page = \Page::getByID(intval($currentPageID));
+            if (!$page->isError()) {
+                $relatedID = $lang->getTranslatedPageID($page);
+                if ($relatedID) {
+                    $pc = \Page::getByID($relatedID);
+                    Redirect::page($pc)->send();
+                    exit;
                 }
             }
             Redirect::page($lang)->send();
@@ -46,6 +46,26 @@ class Controller extends BlockController
 
         Redirect::to('/');
         exit;
+    }
+
+    public function action_set_current_language()
+    {
+
+        if ($this->post('language')) {
+
+            $section = Section::getByID($this->post('language'));
+            if (is_object($section)) {
+                Session::set('multilingual_default_locale', $section->getLocale());
+                if ($this->post('remember')) {
+                    Cookie::set('multilingual_default_locale', $section->getLocale(), time() + (60 * 60 * 24 * 365));
+                } else {
+                    Cookie::clear('multilingual_default_locale');
+                }
+            }
+
+        }
+
+        $this->action_switch_language($this->post('rcID'), $this->post('language'));
     }
 
     public function add()
@@ -74,6 +94,7 @@ class Controller extends BlockController
         }
         $dl = \Core::make('multilingual/detector');
         $this->set('defaultLocale', $dl->getPreferredSection());
+        $this->set('locale', $locale);
         $this->set('cID', $c->getCollectionID());
     }
 

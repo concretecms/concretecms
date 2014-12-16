@@ -1,31 +1,37 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
-$ih = Loader::helper("interface/flag", 'multilingual');
+<? defined('C5_EXECUTE') or die("Access Denied.");
+$ih = Core::make("multilingual/interface/flag");
 ?>
 
-<div class="ccm-multilingual-language-list-wrapper">
-	<strong><?php echo $label?></strong>
-	
-	<form method="post" action="<?php echo $action?>" id="ccm-multilingual-language-list">
-	<?php if (Loader::helper('validation/numbers')->integer($_REQUEST['rcID'])) { ?>
-		<input type="hidden" name="ccmMultilingualCurrentPageID" value="<?php echo Loader::helper('text')->entities($_REQUEST['rcID'])?>" />
-	<?php } ?>
+<div class="ccm-block-language-list-set-default-wrapper">
 
-<?php foreach($languageSections as $ml) {  ?>
-	<div class="ccm-multilingual-language-list-item">
-	
-	<input type="radio" name="ccmMultilingualSiteDefaultLanguage" value="<?php echo $ml->getLocale()?>"  <?php if ($defaultLanguage == $ml->getLocale()) { ?> checked="checked" <?php } ?> /><?
-		print $ih->getSectionFlagIcon($ml);	
-		print $ml->getLanguageText($ml->getLocale());
-		print ' ' . (strlen($ml->msIcon)?'('.$ml->msIcon.')':'');
-	?></div>
-	
-<?php } ?>
+	<form method="post" action="<?=$view->action('set_current_language')?>" class="form-stacked">
+        <? if (Loader::helper('validation/numbers')->integer($_REQUEST['rcID'])) { ?>
+            <input type="hidden" name="rcID" value="<?php echo Loader::helper('text')->entities($_REQUEST['rcID'])?>" />
+        <? } ?>
 
-	<div class="ccm-multilingual-site-default-remember">
-		<?php echo $form->checkbox('ccmMultilingualSiteRememberDefault', 1, 1)?> <?php echo $form->label('ccmMultilingualSiteRememberDefault', t('Remember my choice on this computer.'))?>
-	</div>
-	
-	<?php echo $form->submit('submit', t('Save'))?>
+        <div class="form-group">
+            <label class="control-label"><?=$label?></label>
+
+            <? foreach($languageSections as $ml) {  ?>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="language" value="<?php echo $ml->getCollectionID()?>"  <?php if ($defaultLocale->getCollectionID() == $ml->getCollectionID()) { ?> checked="checked" <?php } ?> />
+                        <?=$ih->getSectionFlagIcon($ml)?>
+                        <?=$ml->getLanguageText($locale)?>
+                    </label>
+                </div>
+            <? } ?>
+        </div>
+
+        <div class="form-group">
+            <div class="checkbox">
+                <label>
+                <?php echo $form->checkbox('remember', 1, 1)?> <?=t('Remember my choice on this computer.')?>
+                </label>
+            </div>
+        </div>
+
+        <button class="btn btn-primary" type="submit"><?=t("Save")?></button>
 	</form>
 	
 </div>
