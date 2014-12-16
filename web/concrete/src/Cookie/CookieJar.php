@@ -8,6 +8,7 @@ class CookieJar
 {
 
     protected $cookies = array();
+    protected $clearedCookies = array();
 
     /**
      * Adds a CookieObject to the cookie pantry
@@ -29,7 +30,6 @@ class CookieJar
         $secure = false,
         $httpOnly = true
     ) {
-        $expire = ($expire > 0) ? $expire * 60 : 0;
         $cookie = new CookieObject($name, $value, $expire, $path, $domain, $secure, $httpOnly);
         $this->add($cookie);
         return $cookie;
@@ -55,6 +55,11 @@ class CookieJar
         return $request->cookies->has($cookie);
     }
 
+    public function clear($cookie)
+    {
+        $this->clearedCookies[] = $cookie;
+    }
+
     /**
      * @param string $name The cookie key
      * @return mixed
@@ -74,4 +79,8 @@ class CookieJar
         return $this->cookies;
     }
 
+    public function getClearedCookies()
+    {
+        return $this->clearedCookies;
+    }
 }

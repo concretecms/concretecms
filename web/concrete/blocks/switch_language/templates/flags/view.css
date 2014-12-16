@@ -1,6 +1,16 @@
-div.ccm-multilingual-switch-language-flags {display: inline;}
-div.ccm-multilingual-switch-language-flags-label {float: left; margin-right: 8px}
-div.ccm-multilingual-switch-language-flags a {padding: 2px; float: left;}
-/*
-a.ccm-multilingual-active-flag {background: white;}
-*/
+div.ccm-block-switch-language-flags {
+    display: inline-block;
+}
+div.ccm-block-switch-language-flags-label {
+    float: left;
+    margin-right: 8px
+}
+div.ccm-block-switch-language-flags a {
+    margin: 2px;
+    float: left;
+    opacity: 0.4;
+}
+
+div.ccm-block-switch-language-flags a.ccm-block-switch-language-active-flag {
+    opacity: 1.0;
+}

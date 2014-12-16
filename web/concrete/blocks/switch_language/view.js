@@ -1,6 +1,7 @@
 $(function() {
 
 	$('select[data-select=multilingual-switch-language]').change(function() {
-		$(this).parent().submit();
+        var action = $(this).attr('data-action').replace('%language%', $(this).val());
+        window.location.href = action;
 	});
 });

@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "33199f81698a361e7f016b685b4ddcc6",
+    "hash": "1e2005f5857e61c550cd73860ca9dd0e",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -906,6 +906,59 @@
                 "zf2"
             ],
             "time": "2014-10-26 09:05:09"
+        },
+        {
+            "name": "gettext/gettext",
+            "version": "v2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/oscarotero/Gettext.git",
+                "reference": "2be5da2f975df690910f99ebc7199a28da8b0a1b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/oscarotero/Gettext/zipball/2be5da2f975df690910f99ebc7199a28da8b0a1b",
+                "reference": "2be5da2f975df690910f99ebc7199a28da8b0a1b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "suggest": {
+                "illuminate/view": "Is necessary if you want use the Blade extractor"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Gettext\\": "src"
+                },
+                "files": [
+                    "src/translator_functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Oscar Otero",
+                    "email": "oom@oscarotero.com",
+                    "homepage": "http://oscarotero.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "PHP gettext mananger",
+            "homepage": "https://github.com/oscarotero/Gettext",
+            "keywords": [
+                "JS",
+                "gettext",
+                "i18n",
+                "mo",
+                "po",
+                "translation"
+            ],
+            "time": "2014-11-21 13:06:04"
         },
         {
             "name": "hautelook/phpass",

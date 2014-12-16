@@ -15,6 +15,10 @@ class RedirectResponse extends \Symfony\Component\HttpFoundation\RedirectRespons
 
     public function send()
     {
+        $cleared = \Cookie::getClearedCookies();
+        foreach($cleared as $cookie) {
+            $this->headers->clearCookie($cookie);
+        }
         // First, we see if we have any cookies to send along
         $cookies = \Cookie::getCookies();
         foreach ($cookies as $cookie) {

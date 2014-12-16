@@ -2,12 +2,12 @@
 
 <div class="ccm-block-switch-language">
 
-    <form method="post" action="<?=$view->action('switch_language')?>" class="form-inline">
+    <form method="post" class="form-inline">
         <?php echo $label?>
         <?php echo $form->select('language', $languages, $activeLanguage, array(
-            'data-select' => 'multilingual-switch-language'
+            'data-select' => 'multilingual-switch-language',
+            'data-action' => $view->action('switch_language', $cID, '%language%')
         ))?>
-        <input type="hidden" name="currentPageID" value="<?php echo $cID?>" />
     </form>
 
 </div>

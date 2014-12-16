@@ -518,6 +518,8 @@
               description="" package="" />
         <page name="Page Report" path="/dashboard/system/multilingual/page_report" filename="/dashboard/system/multilingual/page_report.php" pagetype=""
               description="" package="" />
+        <page name="Translate Site Interface" path="/dashboard/system/multilingual/translate_interface" filename="/dashboard/system/multilingual/translate_interface.php" pagetype=""
+              description="" package="" />
 
         <!--
         <page name="Interface Preferences" path="/dashboard/system/basics/images"

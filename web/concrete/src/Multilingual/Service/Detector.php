@@ -29,10 +29,10 @@ class Detector
 
         $locale = false;
         // they have a language in a certain session going already
-        if (Session::has('multilingual.default_locale')) {
-            $locale = Session::get('multilingual.default_locale');
-        } else if (Cookie::has('multilingual.default_locale')) {
-            $locale = Cookie::get('multilingual.default_locale');
+        if (Session::has('multilingual_default_locale')) {
+            $locale = Session::get('multilingual_default_locale');
+        } else if (Cookie::has('multilingual_default_locale')) {
+            $locale = Cookie::get('multilingual_default_locale');
         }
 
         if ($locale) {
@@ -82,7 +82,7 @@ class Detector
             return;
         }
 
-        $ms = Section::getCurrentSection();
+        $ms = Section::getBySectionOfSite($c);
         if (!is_object($ms)) {
             $ms = static::getPreferredSection();
         }
