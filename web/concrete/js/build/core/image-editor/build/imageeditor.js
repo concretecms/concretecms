@@ -10,9 +10,9 @@ var ImageEditor = function (settings) {
     im.saveUrl = settings.saveUrl;
     im.width = settings.width;
     im.height = settings.height;
-    im.saveWidth = settings.saveWidth || round(im.width / 2);
-    im.saveHeight = settings.saveHeight || round(im.height / 2);
-    im.strictSize = settings.saveWidth !== undefined;
+    im.strictSize = typeof settings.strictSize !== 'undefined' ? !!settings.strictSize : settings.saveWidth > 0;
+    im.saveWidth = settings.saveWidth || (im.strictSize ? 0 : round(im.width / 2));
+    im.saveHeight = settings.saveHeight || (im.strictSize ? 0 : round(im.height / 2));
     im.stage = new Kinetic.Stage(settings);
     im.namespaces = {};
     im.controlSets = {};
@@ -27,6 +27,7 @@ var ImageEditor = function (settings) {
     im.domContext = im.editorContext.parent();
     im.controlContext = im.domContext.children('div.controls');
     im.controlSetNamespaces = [];
+    debugger;
 
     im.showLoader = $.fn.dialog.showLoader;
     im.hideLoader = $.fn.dialog.hideLoader;

@@ -11,7 +11,28 @@ if (settings.src) {
             im.saveHeight = img.height;
             im.fire('saveSizeChange');
             im.buildBackground();
+        } else if (im.saveWidth == 0 || im.saveHeight == 0) {
+            if (im.saveWidth == 0) {
+                if (im.saveHeight == 0) {
+                    im.saveWidth = img.width;
+                    im.saveHeight = img.height;
+
+                    im.fire('saveSizeChange');
+                    im.buildBackground();
+                } else {
+                    im.saveWidth = Math.floor(img.width / img.height * im.saveHeight);
+
+                    im.fire('saveSizeChange');
+                    im.buildBackground();
+                }
+            } else if (im.saveHeight == 0) {
+                im.saveHeight = Math.floor(img.height / img.width * im.saveWidth);
+
+                im.fire('saveSizeChange');
+                im.buildBackground();
+            }
         }
+        debugger;
         var center = {
             x: Math.floor(im.center.x - (img.width / 2)),
             y: Math.floor(im.center.y - (img.height / 2))
