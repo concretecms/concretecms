@@ -392,7 +392,9 @@ abstract class Key extends Object {
             $permissions = static::getList($cat->getPermissionKeyCategoryHandle());
             foreach($permissions as $p) {
                 $translations->insert('PermissionKeyName', $p->getPermissionKeyName());
-                $translations->insert('PermissionKeyDescription', $p->getPermissionKeyDescription());
+                if ($p->getPermissionKeyDescription()) {
+                    $translations->insert('PermissionKeyDescription', $p->getPermissionKeyDescription());
+                }
             }
         }
         return $translations;

@@ -85,6 +85,24 @@ class Extractor
         return $translations;
     }
 
+    public function clearTranslationsFromDatabase()
+    {
+        $db = \Database::get();
+        $db->Execute('truncate table MultilingualTranslations');
+    }
+
+    public function deleteSectionTranslationFile(Section $section)
+    {
+        $po = DIR_LANGUAGES_SITE_INTERFACE . '/' . $section->getLocale() . '.po';
+        $mo = DIR_LANGUAGES_SITE_INTERFACE . '/' . $section->getLocale() . '.mo';
+        if (file_exists($po)) {
+            unlink($po);
+        }
+        if (file_exists($mo)) {
+            unlink($mo);
+        }
+    }
+
     public function mergeTranslationsWithSectionFile(Section $section, Translations $translations)
     {
         $file = DIR_LANGUAGES_SITE_INTERFACE . '/' . $section->getLocale() . '.po';
@@ -93,6 +111,7 @@ class Extractor
             $translations->mergeWith($sectionTranslations, Translations::MERGE_HEADERS | Translations::MERGE_COMMENTS);
         }
 
+        // Now we're going to load the core translations.
         $poFile = DIR_LANGUAGES . '/' . $section->getLocale() . '/LC_MESSAGES/messages.po';
         $moFile = DIR_LANGUAGES . '/' . $section->getLocale() . '/LC_MESSAGES/messages.mo';
         if (file_exists($poFile)) {
@@ -102,18 +121,25 @@ class Extractor
         }
 
         if (isset($coreTranslations)) {
-            $coreTranslationsToMerge = new Translations();
-            foreach($translations as $translation) {
-                // If the current translation has no translation but it does have a value
-                // in the core translations, we use the core.
+            $returnTranslations = new Translations();
+            // Now that we have the core translations, we loop through all the translations from above, and check
+            // to see if the core has a translation for this string. If the core does not, we include it in the translations
+            // object to return.
+
+            // This is actually much faster than unsetting the matching translation from the existing translations object
+
+            foreach($translations as $key => $translation) {
                 if (!$translation->getTranslation()) {
-                    if ($foundTranslation = $coreTranslations->find($translation->getContext(), $translation->getOriginal())) {
-                        $coreTranslationsToMerge[] = $foundTranslation;
+                    if (!$coreTranslations->find($translation->getContext(), $translation->getOriginal())) {
+                        $returnTranslations[] = $translation;
                     }
+                } else {
+                    $returnTranslations[] = $translation;
                 }
             }
-            $translations->mergeWith($coreTranslationsToMerge);
+            return $returnTranslations;
         }
+
         return $translations;
     }
 
