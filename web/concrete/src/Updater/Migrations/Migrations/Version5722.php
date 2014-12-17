@@ -46,6 +46,10 @@ class Version5722 extends AbstractMigration
                 $gat->disable();
             }
         }
+
+		$g1 = \Group::getByID(GUEST_GROUP_ID);
+        $register = \Page::getByPath('/register', "RECENT");
+        $register->assignPermissions($g1, array('view_page'));
     }
 
     public function down(Schema $schema)
