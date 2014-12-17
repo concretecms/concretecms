@@ -1,7 +1,17 @@
 <?php
 
 namespace Concrete\Core\Multilingual\Service;
+use Concrete\Attribute\Select\Option as SelectAttributeOption;
+use Concrete\Core\Attribute\Key\Key as AttributeKey;
+use Concrete\Core\Attribute\Set as AttributeSet;
+use Concrete\Core\Attribute\Type as AttributeType;
+use Concrete\Core\Job\Set as JobSet;
 use Concrete\Core\Multilingual\Page\Section;
+use Concrete\Core\Permission\Access\Entity\Type as PermissionAccessEntityType;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
+use Concrete\Core\User\Group\Group;
+use Concrete\Core\User\Group\GroupSet;
+use Gettext\Extractors\Mo;
 use Gettext\Extractors\Po;
 use Gettext\Translations;
 use Gettext\Extractors\PhpCode;
@@ -53,6 +63,25 @@ class Extractor
             $translations->mergeWith($fileTranslations);
         }
 
+        // Now, we grab dynamic content that's part of our site that we translate dynamically
+        $dynamicTranslations = $this->getDynamicTranslations();
+        $translations->mergeWith($dynamicTranslations);
+
+        return $translations;
+    }
+
+    public function getDynamicTranslations()
+    {
+        $translations = new Translations();
+        $translations->mergeWith(AttributeSet::exportTranslations());
+        $translations->mergeWith(AttributeKey::exportTranslations());
+        $translations->mergeWith(AttributeType::exportTranslations());
+        $translations->mergeWith(PermissionKey::exportTranslations());
+        $translations->mergeWith(PermissionAccessEntityType::exportTranslations());
+        $translations->mergeWith(JobSet::exportTranslations());
+        $translations->mergeWith(Group::exportTranslations());
+        $translations->mergeWith(GroupSet::exportTranslations());
+        $translations->mergeWith(SelectAttributeOption::exportTranslations());
         return $translations;
     }
 
@@ -62,6 +91,28 @@ class Extractor
         if (file_exists($file)) {
             $sectionTranslations = Po::fromFile($file);
             $translations->mergeWith($sectionTranslations, Translations::MERGE_HEADERS | Translations::MERGE_COMMENTS);
+        }
+
+        $poFile = DIR_LANGUAGES . '/' . $section->getLocale() . '/LC_MESSAGES/messages.po';
+        $moFile = DIR_LANGUAGES . '/' . $section->getLocale() . '/LC_MESSAGES/messages.mo';
+        if (file_exists($poFile)) {
+            $coreTranslations = Po::fromFile($poFile);
+        } else if (file_exists($moFile)) {
+            $coreTranslations = Mo::fromFile($moFile);
+        }
+
+        if (isset($coreTranslations)) {
+            $coreTranslationsToMerge = new Translations();
+            foreach($translations as $translation) {
+                // If the current translation has no translation but it does have a value
+                // in the core translations, we use the core.
+                if (!$translation->getTranslation()) {
+                    if ($foundTranslation = $coreTranslations->find($translation->getContext(), $translation->getOriginal())) {
+                        $coreTranslationsToMerge[] = $foundTranslation;
+                    }
+                }
+            }
+            $translations->mergeWith($coreTranslationsToMerge);
         }
         return $translations;
     }
@@ -101,8 +152,13 @@ class Extractor
     {
         $db = \Database::get();
         $data = array();
-        $data['messageCount'] = $db->GetOne('select count(mtID) from MultilingualTranslations where mtSectionID = ?', array($section->getCollectionID()));
-        $data['translatedCount'] = $db->GetOne('select count(mtID) from MultilingualTranslations where mtSectionID = ? and msgstr != ""', array($section->getCollectionID()));
+        $data['messageCount'] = $db->GetOne('select count(mtID) from MultilingualTranslations where mtSectionID = ?',
+            array($section->getCollectionID())
+        );
+        $data['translatedCount'] = $db->GetOne(
+            'select count(mtID) from MultilingualTranslations where mtSectionID = ? and msgstr != ""',
+            array($section->getCollectionID())
+        );
         $data['completionPercentage'] = 0;
         if ($data['messageCount'] > 0) {
             $data['completionPercentage'] = round(($data['translatedCount'] / $data['messageCount']) * 100);

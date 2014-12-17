@@ -25,7 +25,6 @@
         "gettext/gettext": "2.1",
         "symfony/event-dispatcher": "2.5.*",
         "symfony/serializer": "2.5.*",
-        "gettext/gettext": "2.*",
         "illuminate/container": "4.1.*",
         "illuminate/config": "4.1.*",
         "patchwork/utf8": "1.1.*",

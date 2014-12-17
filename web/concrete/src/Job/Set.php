@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\Job;
+use Gettext\Translations;
 use Loader;
 use JobSet;
 use Environment;
@@ -205,4 +206,15 @@ class Set extends Object {
 			return false;
 		}
 	}
+
+    public static function exportTranslations()
+    {
+        $translations = new Translations();
+        $attribs = static::getList();
+        foreach($attribs as $set) {
+            $translations->insert('JobSetName', $set->getJobSetName());
+        }
+        return $translations;
+    }
+
 }
