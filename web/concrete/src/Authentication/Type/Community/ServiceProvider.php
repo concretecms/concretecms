@@ -37,7 +37,7 @@ class ServiceProvider extends \Concrete\Core\Foundation\Service\Provider
                     new Credentials(
                         \Config::get('auth.community.appid'),
                         \Config::get('auth.community.secret'),
-                        BASE_URL . DIR_REL . \URL::to($callback)
+                        BASE_URL . \URL::to($callback)
                     ),
                     new SymfonySession(\Session::getFacadeRoot(), false));
             });
