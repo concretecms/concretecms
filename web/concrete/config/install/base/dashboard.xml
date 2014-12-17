@@ -205,6 +205,7 @@
                 </attributekey>
             </attributes>
         </page>
+
         <page name="Pages &amp; Themes" path="/dashboard/pages" filename="/dashboard/pages/view.php" pagetype="" description="Reskin your site." package="" />
         <page name="Themes" path="/dashboard/pages/themes" filename="/dashboard/pages/themes/view.php" pagetype=""
               description="Reskin your site." package="">
@@ -504,6 +505,22 @@
                 </attributekey>
             </attributes>
         </page>
+
+
+        <page name="Multilingual" path="/dashboard/system/multilingual" filename="/dashboard/system/multilingual/view.php" pagetype="" description="Run your site in multiple languages." package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>multilingual, localization, internationalization, i18n</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Multilingual Setup" path="/dashboard/system/multilingual/setup" filename="/dashboard/system/multilingual/setup.php" pagetype=""
+              description="" package="" />
+        <page name="Page Report" path="/dashboard/system/multilingual/page_report" filename="/dashboard/system/multilingual/page_report.php" pagetype=""
+              description="" package="" />
+        <page name="Translate Site Interface" path="/dashboard/system/multilingual/translate_interface" filename="/dashboard/system/multilingual/translate_interface.php" pagetype=""
+              description="" package="" />
+
         <!--
         <page name="Interface Preferences" path="/dashboard/system/basics/images"
               filename="/dashboard/system/basics/images.php" pagetype="" description="" package="">

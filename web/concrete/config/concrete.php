@@ -7,9 +7,9 @@ return array(
      *
      * @var string
      */
-    'version'           => '5.7.2.2',
-    'version_installed' => '5.7.2.2',
-    'version_db' => '20141201000000', // the key of the latest database migration - corresponds to 5.7.2.2
+    'version'           => '5.7.3',
+    'version_installed' => '5.7.3',
+    'version_db' => '20141217000000', // the key of the latest database migration - corresponds to 5.7.3
 
     /**
      * Installation status
@@ -217,6 +217,13 @@ return array(
             )
         )
 
+    ),
+
+    'multilingual' =>   array(
+        'enabled' => false, // note this will automatically be set to true if needed
+        'redirect_home_to_default_locale' => false,
+        'use_browser_detected_locale' => false,
+        'default_locale' => false
     ),
 
     'design'            => array(

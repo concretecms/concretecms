@@ -44,6 +44,7 @@
         <blocktype handle="search" package=""/>
         <blocktype handle="image_slider" package=""/>
         <blocktype handle="survey" package=""/>
+        <blocktype handle="switch_language" package=""/>
         <blocktype handle="tags" package=""/>
         <blocktype handle="video" package=""/>
         <blocktype handle="youtube" package=""/>
@@ -77,6 +78,7 @@
             <blocktype handle="tags"/>
             <blocktype handle="topic_list"/>
             <blocktype handle="rss_displayer"/>
+            <blocktype handle="switch_language"/>
         </blocktypeset>
         <blocktypeset handle="form" name="Forms" package="">
             <blocktype handle="form"/>

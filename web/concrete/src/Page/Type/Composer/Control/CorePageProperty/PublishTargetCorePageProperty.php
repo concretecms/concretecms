@@ -19,6 +19,8 @@ class PublishTargetCorePageProperty extends CorePageProperty
     {
         if (is_object($this->page)) {
             return $this->page->getPageDraftTargetParentPageID();
+        } else if ($this->getTargetParentPageID()) {
+            return $this->getTargetParentPageID();
         }
     }
 

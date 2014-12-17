@@ -20,7 +20,8 @@ class ValidationServiceProvider extends ServiceProvider {
 		);
 		$registers = array(
 			'helper/validation/token' => '\Concrete\Core\Validation\CSRF\Token',
-			'helper/validation/error' => '\Concrete\Core\Error\Error'
+			'helper/validation/error' => '\Concrete\Core\Error\Error',
+			'token' => '\Concrete\Core\Validation\CSRF\Token'
 		);
 
 		foreach($singletons as $key => $value) {

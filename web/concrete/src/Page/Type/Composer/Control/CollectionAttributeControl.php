@@ -129,14 +129,15 @@ class CollectionAttributeControl extends Control
     public function validate()
     {
         $ak = $this->getAttributeKeyObject();
+        $e = \Core::make('error');
         if (is_object($ak)) {
-            $value = $this->page->getAttribute($ak);
-            if (!$value) {
-                $e = Loader::helper('validation/error');
+            $e1 = $ak->validateAttributeForm();
+            if ($e1 == false) {
                 $e->add(t('The field "%s" is required', $ak->getAttributeKeyDisplayName()));
-
-                return $e;
+            } else if ($e1 instanceof \Concrete\Core\Error\Error) {
+                $e->add($e1);
             }
+            return $e;
         }
     }
 

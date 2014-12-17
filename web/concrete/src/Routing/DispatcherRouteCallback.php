@@ -11,6 +11,7 @@ use Config;
 use View;
 use Permissions;
 use Response;
+use Core;
 
 class DispatcherRouteCallback extends RouteCallback
 {
@@ -127,14 +128,33 @@ class DispatcherRouteCallback extends RouteCallback
         $cms->handleBaseURLRedirection();
         $cms->handleURLSlashes();
 
+        // Now we check to see if we're on the home page, and if it multilingual is enabled,
+        // and if so, whether we should redirect to the default language page.
+        if (Config::get('concrete.multilingual.enabled')) {
+            $dl = Core::make('multilingual/detector');
+            if ($c->getCollectionID() == HOME_CID && Config::get('concrete.multilingual.redirect_home_to_default_locale')) {
+                // Let's retrieve the default language
+                $ms = $dl->getPreferredSection();
+                if (is_object($ms)) {
+                    Redirect::page($ms)->send();
+                    exit;
+                }
+            }
+
+            $dl->setupSiteInterfaceLocalization($c);
+        }
+
         $request->setCurrentPage($c);
         require(DIR_BASE_CORE . '/bootstrap/process.php');
         $u = new User();
 
-        ## Fire the on_page_view Eventclass
+
+        // On page view event.
         $pe = new PageEvent($c);
         $pe->setUser($u);
         Events::dispatch('on_page_view', $pe);
+
+
 
         $controller = $c->getPageController();
         $controller->on_start();

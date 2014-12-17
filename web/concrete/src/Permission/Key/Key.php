@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Permission\Key;
 use \Concrete\Core\Foundation\Object;
+use Gettext\Translations;
 use Loader;
 use CacheLocal;
 use Package;
@@ -382,6 +383,22 @@ abstract class Key extends Object {
 	public function exportAccess($pxml) {
 		// by default we don't. but tasks do
 	}
+
+    public static function exportTranslations()
+    {
+        $translations = new Translations();
+        $categories = PermissionKeyCategory::getList();
+        foreach($categories as $cat) {
+            $permissions = static::getList($cat->getPermissionKeyCategoryHandle());
+            foreach($permissions as $p) {
+                $translations->insert('PermissionKeyName', $p->getPermissionKeyName());
+                if ($p->getPermissionKeyDescription()) {
+                    $translations->insert('PermissionKeyDescription', $p->getPermissionKeyDescription());
+                }
+            }
+        }
+        return $translations;
+    }
 
 
 
