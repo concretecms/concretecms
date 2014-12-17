@@ -766,6 +766,19 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         $ncID = $nc->getCollectionID();
         $nvID = $nc->getVersionID();
 
+        // Composer specific
+        $row = $db->GetRow('select cID, arHandle, cbDisplayOrder, ptComposerFormLayoutSetControlID from PageTypeComposerOutputBlocks where cID = ? and bID = ? and arHandle = ?',
+            array($ocID, $this->bID, $this->arHandle));
+        if ($row && is_array($row) && $row['cID']) {
+            $db->insert('PageTypeComposerOutputBlocks', array(
+                'cID' => $ncID,
+                'arHandle' => $this->arHandle,
+                'cbDisplayOrder' => $row['cbDisplayOrder'],
+                'ptComposerFormLayoutSetControlID' => $row['ptComposerFormLayoutSetControlID'],
+                'bID' => $newBID
+                ));
+        }
+
         $q = "select paID, pkID from BlockPermissionAssignments where cID = '$ocID' and bID = ? and cvID = ?";
         $r = $db->query($q, array($this->bID, $ovID));
         if ($r) {
