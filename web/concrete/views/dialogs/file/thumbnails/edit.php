@@ -17,8 +17,9 @@ try {
     $view = \View::getInstance();
     $view->renderError(
         t('Invalid File Dimensions'),
-        t('The dimensions for this image are either unspecified or invalid. Please rescan this file or manually enter' .
-          ' the correct dimensions.'));
+        t(
+            'The dimensions for this image are either unspecified or invalid. Please rescan this file or manually enter' .
+            ' the correct dimensions.'));
     return;
 } catch (\Exception $e) {
     $view = \View::getInstance();
@@ -44,8 +45,9 @@ if ($type_version) {
     $view = \View::getInstance();
     $view->renderError(
         t('Unable to find requested thumbnail'),
-        t('The thumbnail you requested was not included in the available thumbnails, is your source image smaller ' .
-          'than the thumbnail?'));
+        t(
+            'The thumbnail you requested was not included in the available thumbnails, is your source image smaller ' .
+            'than the thumbnail?'));
     return;
 }
 
