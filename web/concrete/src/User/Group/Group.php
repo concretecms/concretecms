@@ -4,6 +4,7 @@ namespace Concrete\Core\User\Group;
 use \Concrete\Core\Foundation\Object;
 use Concrete\Core\User\User;
 use Config;
+use Gettext\Translations;
 use Loader;
 use CacheLocal;
 use GroupTree;
@@ -641,4 +642,18 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
             array($interval, $action, $this->gID)
         );
     }
+
+    public static function exportTranslations()
+    {
+        $translations = new Translations();
+        $gl = new GroupList();
+        $gl->includeAllGroups();
+        $results = $gl->getResults();
+        foreach($results as $group) {
+            $translations->insert('GroupName', $group->getGroupName());
+            $translations->insert('GroupDescription', $group->getGroupDescription());
+        }
+        return $translations;
+    }
+
 }

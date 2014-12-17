@@ -5,6 +5,7 @@ use \Concrete\Core\Foundation\Object;
 use \Concrete\Core\Attribute\Type as AttributeType;
 use \Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
 use \Concrete\Core\Database\Schema\Schema;
+use Gettext\Translations;
 use Loader;
 use Package;
 use CacheLocal;
@@ -914,6 +915,18 @@ class Key extends Object
     public function getKeyID()
     {
         return $this->getAttributeKeyID();
+    }
+
+    public static function exportTranslations()
+    {
+        $translations = new Translations();
+        $db = \Database::get();
+        $r = $db->Execute('select akID from AttributeKeys order by akID asc');
+        while ($row = $r->FetchRow()) {
+            $key = static::getInstanceByID($row['akID']);
+            $translations->insert('AttributeKeyName', $key->getAttributeKeyName());
+        }
+        return $translations;
     }
 
 }

@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Attribute\Select;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
+use Gettext\Translations;
 use Loader;
 use \Concrete\Core\Foundation\Object;
 use \Concrete\Core\Attribute\Controller as AttributeTypeController;
@@ -653,7 +654,19 @@ class Option extends Object {
 			return Option::getByID($this->ID);
 		}
 	}
-	
+
+    public static function exportTranslations()
+    {
+        $translations = new Translations();
+        $db = \Database::get();
+        $r = $db->Execute('select ID from atSelectOptions order by ID asc');
+        while ($row = $r->FetchRow()) {
+            $opt = static::getByID($row['ID']);
+            $translations->insert('SelectAttributeValue', $opt->getSelectAttributeOptionValue());
+        }
+        return $translations;
+    }
+
 }
 
 class OptionList extends Object implements \Iterator {
