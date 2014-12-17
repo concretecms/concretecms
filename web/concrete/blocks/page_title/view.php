@@ -1,2 +1,2 @@
 <?php  defined('C5_EXECUTE') or die("Access Denied."); ?>
-<h1 class="page-title"><?=$title?></h1>
+<<?=$formatting;?> class="page-title" style="text-align:<?=$title_alignment;?>"><?php echo $title?></<?=$formatting;?>>

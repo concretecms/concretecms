@@ -10,5 +10,7 @@
 			<default value="0"/>
 		</field>
 		<field name="titleText" type="C" size="255"></field>
+		<field name="formatting" type="C" size="255"></field>
+		<field name="title_alignment" type="C" size="255"></field>
 	</table>
 </schema>
