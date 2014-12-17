@@ -89,12 +89,47 @@ if ($this->controller->getTask() == 'translate_po') {
         <?
         if (is_dir(DIR_LANGUAGES_SITE_INTERFACE) && is_writable(DIR_LANGUAGES_SITE_INTERFACE)) { ?>
 
-        <div class="ccm-dashboard-header-buttons">
-            <form method="post" action="<?=$controller->action('reload')?>">
-                <?=$valt->output('reload')?>
-                <button class="btn btn-default" type="submit"><?=t('Reload Strings')?></button>
-            </form>
+        <form method="post" action="<?=$controller->action('reload')?>">
+        <div class="ccm-dashboard-header-buttons btn-group">
+            <button class="btn btn-default" type="submit"><?=t('Reload Strings')?></button>
+            <?=$valt->output('reload')?>
+            <button class="btn btn-danger" type="button" data-dialog="reset" value="reset"><?=t('Reset All')?></button>
         </div>
+        </form>
+
+
+            <div style="display: none">
+                <div id="ccm-dialog-reset-languages" class="ccm-ui">
+                    <?
+                    $u = new User();
+                    if ($u->isSuperUser()) { ?>
+                    <form method="post" class="form-stacked" style="padding-left: 0px" action="<?=$view->action('reset_languages')?>">
+                        <?=Loader::helper("validation/token")->output('reset_languages')?>
+                        <p><?=t('Are you sure? This will remove all translations from all languages, in the database and in your site PO files. This cannot be undone.')?></p>
+                    </form>
+                    <div class="dialog-buttons">
+                        <button class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
+                        <button class="btn btn-danger pull-right" onclick="$('#ccm-dialog-reset-languages form').submit()"><?=t('Confirm Reset')?></button>
+                    </div>
+                    <? } else { ?>
+                        <p><?=t("Only the admin user may reset all languages.")?></p>
+                    <? } ?>
+                </div>
+            </div>
+
+            <script type="text/javascript">
+                $(function() {
+                    $('button[data-dialog=reset]').on('click', function() {
+                        jQuery.fn.dialog.open({
+                            element: '#ccm-dialog-reset-languages',
+                            modal: true,
+                            width: 320,
+                            title: '<?=t("Reset Languages")?>',
+                            height: 'auto'
+                        });
+                    });
+                });
+            </script>
 
         <? } ?>
 

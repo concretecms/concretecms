@@ -651,7 +651,9 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
         $results = $gl->getResults();
         foreach($results as $group) {
             $translations->insert('GroupName', $group->getGroupName());
-            $translations->insert('GroupDescription', $group->getGroupDescription());
+            if ($group->getGroupDescription()) {
+                $translations->insert('GroupDescription', $group->getGroupDescription());
+            }
         }
         return $translations;
     }

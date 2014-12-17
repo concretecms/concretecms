@@ -25,11 +25,36 @@ class TranslateInterface extends DashboardPageController
         $this->view();
     }
 
+    public function reset_complete()
+    {
+        $this->set('message', t('Languages reset.'));
+        $this->view();
+    }
+
+    public function reset_languages()
+    {
+        if (Core::make('token')->validate('reset_languages')) {
+            $u = new \User();
+            $extractor = Core::make('multilingual/extractor');
+            if ($u->isSuperUser()) {
+                $list = Section::getList();
+                foreach($list as $section) {
+                    // now we load the translations that currently exist for each section
+                    $extractor->deleteSectionTranslationFile($section);
+                }
+                $extractor->clearTranslationsFromDatabase();
+                $this->redirect('/dashboard/system/multilingual/translate_interface', 'reset_complete');
+            }
+        } else {
+            $this->error->add(t('Only the admin user may reset all strings.'));
+        }
+    }
+
     public function reload()
     {
         if (Core::make('token')->validate('reload')) {
-            // First, we look in all the site sources for PHP code with GetText
             $extractor = Core::make('multilingual/extractor');
+            // First, we look in all the site sources for PHP code with GetText
             $translations = $extractor->extractTranslatableSiteStrings();
 
             // $translations contains all of our site translations.
@@ -43,12 +68,12 @@ class TranslateInterface extends DashboardPageController
                 // we insert them into the database so we can update our counts, and give the users
                 // a web interface
                 $extractor->saveSectionTranslationsToDatabase($section, $translations);
+                $this->redirect('/dashboard/system/multilingual/translate_interface', 'reloaded');
             }
-            $this->redirect('/dashboard/system/multilingual/translate_interface', 'reloaded');
-
         } else {
             $this->error->add(Core::make('token')->getErrorMessage());
         }
+        $this->view();
     }
 
     /*
