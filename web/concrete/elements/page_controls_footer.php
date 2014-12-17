@@ -170,7 +170,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 
             <? if ($c->isEditMode()) { ?>
         <li class="ccm-toolbar-page-edit-mode-active ccm-toolbar-page-edit pull-left hidden-xs">
-            <a data-toolbar-action="check-in" <? if ($vo->isNew()) { ?>href="javascript:void(0)"
+            <a data-toolbar-action="check-in" <? if ($vo->isNew() || $c->isPageDraft()) { ?>href="javascript:void(0)"
                data-launch-panel="check-in" <? } else { ?>href="<?= URL::to(
                 '/ccm/system/page/check_in',
                 $c->getCollectionID(),
@@ -411,37 +411,44 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
         if (!$c->getCollectionPointerID() && (!is_array($workflowList) || count($workflowList) == 0)) {
             if (is_object($vo)) {
                 if (!$vo->isApproved() && !$c->isEditMode()) {
-                    ?>
 
-                    <?
-                    $buttons = array();
-                    if ($canApprovePageVersions && !$c->isCheckedOut()) {
-                        $pk = \Concrete\Core\Permission\Key\PageKey::getByHandle('approve_page_versions');
-                        $pk->setPermissionObject($c);
-                        $pa = $pk->getPermissionAccessObject();
-                        if (is_object($pa)) {
-                            if (count($pa->getWorkflows()) > 0) {
-                                $appLabel = t('Submit for Approval');
-                            }
-                        }
-                        if (!$appLabel) {
-                            $appLabel = t('Approve Version');
-                        }
-
-                        $buttons[] = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID() . '&ctask=approve-recent' . $token . '" class="btn btn-primary btn-xs">' . $appLabel . '</a>';
-
-                    }
-
+                    if ($c->isPageDraft()) {
                     print Loader::helper('concrete/ui')->notify(
                         array(
-                            'title'   => t('Page is Pending Approval.'),
-                            'message' => t("This page is newer than what appears to visitors on your live site."),
+                            'title'   => t('Page Draft.'),
+                            'message' => t("This is an un-published draft."),
                             'type'    => 'info',
-                            'icon'    => 'cog',
-                            'buttons' => $buttons
-                        ))?>
+                            'icon'    => 'exclamation'
+                        ));
+                    } else {
+                        $buttons = array();
+                        if ($canApprovePageVersions && !$c->isCheckedOut()) {
+                            $pk = \Concrete\Core\Permission\Key\PageKey::getByHandle('approve_page_versions');
+                            $pk->setPermissionObject($c);
+                            $pa = $pk->getPermissionAccessObject();
+                            if (is_object($pa)) {
+                                if (count($pa->getWorkflows()) > 0) {
+                                    $appLabel = t('Submit for Approval');
+                                }
+                            }
+                            if (!$appLabel) {
+                                $appLabel = t('Approve Version');
+                            }
 
-                <?
+                            $buttons[] = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID() . '&ctask=approve-recent' . $token . '" class="btn btn-primary btn-xs">' . $appLabel . '</a>';
+
+                        }
+
+                        print Loader::helper('concrete/ui')->notify(
+                            array(
+                                'title'   => t('Page is Pending Approval.'),
+                                'message' => t("This page is newer than what appears to visitors on your live site."),
+                                'type'    => 'info',
+                                'icon'    => 'cog',
+                                'buttons' => $buttons
+                            ))?>
+
+                <?  }
                 }
             }
         } ?>
