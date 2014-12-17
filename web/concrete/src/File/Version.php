@@ -648,7 +648,7 @@ class Version
         $file = $this->getFile();
 
         if (!$width || $width < 0) {
-            throw new InvalidDimensionException($this->getFile(), $this, 'Invalid dimensions.');
+            throw new InvalidDimensionException($this->getFile(), $this, t('Invalid dimensions.'));
         }
 
         foreach ($types as $type) {
