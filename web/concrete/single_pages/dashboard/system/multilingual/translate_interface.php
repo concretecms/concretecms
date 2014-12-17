@@ -53,14 +53,16 @@ if ($this->controller->getTask() == 'translate_po') {
                     </td>
                     <td style="width: 40%">
                         <? if ($pc->getLocale() != $defaultLanguage) { ?>
-                            <? //$spl = SimplePoInterface::getCatalogDataByName($pc->getLocale());?>
+                            <?
+                            $data = $extractor->getSectionSiteInterfaceCompletionData($pc);
+                            ?>
                             <div class="progress">
-                                <div class="bar" style="width: <?=$spl['percent_complete']?>%">&nbsp;</div>
+                                <div class="progress-bar" style="width: <?=$data['completionPercentage']?>%">&nbsp;</div>
                             </div>
                         <? } ?>
                     </td>
                     <td style="white-space: nowrap">
-                        <span class="percent"><?=$spl['percent_complete']?>%</span> - <span class="translated"><?=$spl['translated_count']?></span> <?=t('of')?> <span class="total"><?=$spl['message_count']?></span>
+                        <span class="percent"><?=$data['completionPercentage']?>%</span> - <span class="translated"><?=$data['translatedCount']?></span> <?=t('of')?> <span class="total"><?=$data['messageCount']?></span>
                     </td>
                     <td>
                         <? if ($pc->getLocale() != $defaultLanguage) {
@@ -75,7 +77,7 @@ if ($this->controller->getTask() == 'translate_po') {
                     <? if ($pc->getLocale() == $defaultLanguage) { ?>
                         <td></td>
                     <? } else { ?>
-                        <td><a href="<?=$this->action('translate_po', $spl['id'])?>" class="icon-link"><i class="fa fa-pencil"></i></a></td>
+                        <td><a href="<?=$this->action('translate_po', $pc->getCollectionID())?>" class="icon-link"><i class="fa fa-pencil"></i></a></td>
                     <? } ?>
                 </tr>
             <? } ?>

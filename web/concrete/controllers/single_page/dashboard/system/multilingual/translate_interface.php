@@ -1,6 +1,7 @@
 <?
 
 namespace Concrete\Controller\SinglePage\Dashboard\System\Multilingual;
+use Concrete\Core\Multilingual\Page\Section;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use Core;
 use Database;
@@ -12,9 +13,16 @@ class TranslateInterface extends DashboardPageController
 
     public $helpers = array('form');
 
+    public function view()
+    {
+        $extractor = Core::make('multilingual/extractor');
+        $this->set('extractor', $extractor);
+
+    }
     public function reloaded()
     {
         $this->set('message', t('Languages refreshed.'));
+        $this->view();
     }
 
     public function reload()
@@ -24,6 +32,18 @@ class TranslateInterface extends DashboardPageController
             $extractor = Core::make('multilingual/extractor');
             $translations = $extractor->extractTranslatableSiteStrings();
 
+            // $translations contains all of our site translations.
+            $list = Section::getList();
+            foreach($list as $section) {
+                // now we load the translations that currently exist for each section
+                $translations = $extractor->mergeTranslationsWithSectionFile($section, $translations);
+                $extractor->saveSectionTranslationsToFile($section, $translations);
+
+                // now that we've updated the translation file, we take all the translations and
+                // we insert them into the database so we can update our counts, and give the users
+                // a web interface
+                $extractor->saveSectionTranslationsToDatabase($section, $translations);
+            }
             $this->redirect('/dashboard/system/multilingual/translate_interface', 'reloaded');
 
         } else {
