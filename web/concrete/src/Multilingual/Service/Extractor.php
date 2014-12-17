@@ -6,7 +6,7 @@ use Concrete\Core\Attribute\Key\Key as AttributeKey;
 use Concrete\Core\Attribute\Set as AttributeSet;
 use Concrete\Core\Attribute\Type as AttributeType;
 use Concrete\Core\Job\Set as JobSet;
-use Concrete\Core\Multilingual\Page\Section;
+use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Permission\Access\Entity\Type as PermissionAccessEntityType;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\User\Group\Group;
@@ -108,9 +108,14 @@ class Extractor
         $file = DIR_LANGUAGES_SITE_INTERFACE . '/' . $section->getLocale() . '.po';
         if (file_exists($file)) {
             $sectionTranslations = Po::fromFile($file);
-            $translations->mergeWith($sectionTranslations, Translations::MERGE_HEADERS | Translations::MERGE_COMMENTS);
+            $translations->mergeWith($sectionTranslations, Translations::MERGE_ADD);
         }
 
+        return $translations;
+    }
+
+    public function mergeTranslationsWithCore(Section $section, Translations $translations)
+    {
         // Now we're going to load the core translations.
         $poFile = DIR_LANGUAGES . '/' . $section->getLocale() . '/LC_MESSAGES/messages.po';
         $moFile = DIR_LANGUAGES . '/' . $section->getLocale() . '/LC_MESSAGES/messages.mo';

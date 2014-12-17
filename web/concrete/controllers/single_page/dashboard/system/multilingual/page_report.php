@@ -5,7 +5,7 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Multilingual;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Page\EditResponse;
 use Loader;
-use Concrete\Core\Multilingual\Page\Section as MultilingualSection;
+use Concrete\Core\Multilingual\Page\Section\Section as MultilingualSection;
 use Concrete\Core\Multilingual\Page\PageList as MultilingualPageList;
 defined('C5_EXECUTE') or die("Access Denied.");
 

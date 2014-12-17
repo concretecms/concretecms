@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Multilingual\Service;
 
-use Concrete\Core\Multilingual\Page\Section;
+use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Package\Package;
 use Concrete\Core\Package\PackageList;
 use Concrete\Core\Page\Page;

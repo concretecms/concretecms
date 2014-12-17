@@ -3,10 +3,161 @@
 <?$valt = Loader::helper('validation/token')?>
 
 <?php
-if ($this->controller->getTask() == 'translate_po') {
+if ($this->controller->getTask() == 'translate_po') { ?>
 
-//	Loader::packageElement('simplepo/edit', 'multilingual_plus', array('catalogID' => $catalogID,'lang'=>$lang));
+    <style type="text/css">
+        div.ccm-translate-site-interface-messages span.original {
+            float: left;
+            width: 50%;
+            height: 20px;
+            overflow: hidden;
+        }
+        div.ccm-translate-site-interface-messages span.translation {
+            float: left;
+            width: 50%;
+            height: 20px;
+            overflow: hidden;
+        }
 
+        div.ccm-translate-site-interface-messages li.list-group-item {
+            transition: all 0.2s linear;
+        }
+
+        li.list-group-item:hover {
+            background-color: #dedede;
+            cursor:pointer;
+        }
+
+        div.ccm-translate-site-interface-messages ul.list-group {
+            overflow: scroll;
+        }
+
+        div.ccm-translate-site-interface-translate form.translate-form {
+            display:none;
+        }
+    </style>
+
+
+    <div class="row">
+        <div class="ccm-translate-site-interface-messages col-md-7">
+            <div class="panel panel-primary">
+                <div class="panel-heading clearfix">
+                    <span class="original"><?=t('Original String')?></span>
+                    <span class="translation"><?=t('Translation')?></span>
+                </div>
+                <ul class="list-group">
+                    <? foreach($translations as $string) { ?>
+                        <li class="list-group-item <? if ($string->hasTranslation()) { ?>list-group-item-success<? } ?> clearfix" data-translation="<?=$string->getID()?>">
+                            <span class="original">
+                                <?=$string->getOriginal()?>
+                            </span>
+                            <span class="translation">
+                                <?=$string->getTranslation()?>
+                            </span>
+                        </li>
+                    <? } ?>
+                </ul>
+                <div class="panel-footer"></div>
+            </div>
+        </div>
+        <div class="col-md-5 ccm-translate-site-interface-translate">
+            <div class="panel panel-primary">
+                <div class="panel-heading"><?=t('Translate')?></div>
+                <div class="panel-body">
+                    <? foreach($translations as $string) { ?>
+                        <form method="post" class="translate-form" action="<?=$controller->action('save_translation')?>" data-form="<?=$string->getID()?>">
+                            <input type="hidden" name="mtID" value="<?=$string->getID()?>">
+                            <div class="form-group">
+                                <label class="control-label" for="original-<?=$string->getID()?>"><?=t('Original String')?></label>
+                                <textarea class="form-control" disabled id="original-<?=$string->getID()?>" rows="8"><?=h($string->getOriginal())?></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="translation-<?=$string->getID()?>"><?=t('Translation')?></label>
+                                <textarea class="form-control" name="msgstr" id="translation-<?=$string->getID()?>" rows="8"><?=h($string->getTranslation())?></textarea>
+                            </div>
+                            <button class="btn btn-primary" data-btn="save"><?=t('Save &amp; Continue')?></button>
+                        </form>
+                    <? } ?>
+                </div>
+                <div class="panel-footer"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="ccm-dashboard-header-buttons">
+        <a href="<?=$controller->action('view')?>" class="btn btn-default"><?=t('Back to List')?></a>
+    </div>
+
+    <script type="text/javascript">
+        var $translateBody;
+        activateTranslation = function(id) {
+            var $listItem = $('li[data-translation=' + id + ']'),
+                $form = $('form[data-form=' + id + ']');
+
+            $('div.ccm-translate-site-interface-messages li.list-group-item-info').removeClass('list-group-item-info');
+            $('div.ccm-translate-site-interface-translate form').hide();
+            $listItem.addClass('list-group-item-info');
+            $form.concreteAjaxForm({
+                success: function(r) {
+                    $listItem.addClass('list-group-item-success');
+                    return;
+                }
+            }).show();
+        }
+
+        saveAndContinue = function(id) {
+            var $activeTranslation = $('li.list-group-item-info'),
+                $next = $activeTranslation.next(),
+                $form = $('form[data-form=' + id + ']');
+
+            if ($next.length) {
+                activateTranslation($next.attr('data-translation'));
+                $form.submit();
+            }
+        }
+
+        $(function() {
+            $translateBody = $('div.ccm-translate-site-interface-translate div.panel-body');
+            var windowHeight = $(window).height();
+            var height = windowHeight - 350;
+            $('div.ccm-translate-site-interface-messages ul.list-group').css('height', height);
+            $('div.ccm-translate-site-interface-translate div.panel-body').css('height', height);
+
+            $('div.ccm-translate-site-interface-messages').on('click', 'li[data-translation]', function() {
+                var translation = $(this).attr('data-translation');
+                activateTranslation(translation);
+            });
+
+            $('div.ccm-translate-site-interface-translate').on('click', 'button[data-btn=save]', function() {
+                var translation = $(this).attr('data-translation');
+                saveAndContinue(translation);
+            });
+
+            $(window).on('keydown', function(e) {
+                if (e.keyCode == 40) {
+                    e.preventDefault();
+                    var $activeTranslation = $('li.list-group-item-info');
+                    saveAndContinue($activeTranslation.attr('data-translation'));
+                }
+
+                if (e.keyCode == 38) {
+                    e.preventDefault();
+                    var $activeTranslation = $('li.list-group-item-info'),
+                        $previous = $activeTranslation.prev();
+                    if ($previous.length) {
+                        activateTranslation($previous.attr('data-translation'));
+                    }
+                }
+            });
+
+            activateTranslation($('div.ccm-translate-site-interface-messages li[data-translation]:first-child').attr('data-translation'));
+        });
+
+
+
+    </script>
+
+    <?
 }  else {
 
 	if (!is_dir(DIR_LANGUAGES_SITE_INTERFACE) || !is_writable(DIR_LANGUAGES_SITE_INTERFACE)) { ?>
@@ -16,7 +167,7 @@ if ($this->controller->getTask() == 'translate_po') {
 	<?php
 	$nav = Loader::helper('navigation');
 	Loader::model('section', 'multilingual');
-	$pages = \Concrete\Core\Multilingual\Page\Section::getList();
+	$pages = \Concrete\Core\Multilingual\Page\Section\Section::getList();
 	$defaultLanguage = Config::get('concrete.multilingual.default_locale');
 
 	$ch = Core::make('multilingual/interface/flag');
@@ -37,7 +188,7 @@ if ($this->controller->getTask() == 'translate_po') {
             </thead>
             <tbody>
             <? foreach($pages as $pc) {
-                $pcl = \Concrete\Core\Multilingual\Page\Section::getByID($pc->getCollectionID());?>
+                $pcl = \Concrete\Core\Multilingual\Page\Section\Section::getByID($pc->getCollectionID());?>
                 <tr>
                     <td><?=$ch->getSectionFlagIcon($pc)?></td>
                     <td>
@@ -89,10 +240,11 @@ if ($this->controller->getTask() == 'translate_po') {
         <?
         if (is_dir(DIR_LANGUAGES_SITE_INTERFACE) && is_writable(DIR_LANGUAGES_SITE_INTERFACE)) { ?>
 
-        <form method="post" action="<?=$controller->action('reload')?>">
+        <form method="post" action="<?=$controller->action('submit')?>">
         <div class="ccm-dashboard-header-buttons btn-group">
-            <button class="btn btn-default" type="submit"><?=t('Reload Strings')?></button>
-            <?=$valt->output('reload')?>
+            <button class="btn btn-default" type="submit" name="action" value="reload"><?=t('Reload Strings')?></button>
+            <button class="btn btn-default" type="submit" name="action" value="export"><?=t('Export to .PO')?></button>
+            <?=$valt->output()?>
             <button class="btn btn-danger" type="button" data-dialog="reset" value="reset"><?=t('Reset All')?></button>
         </div>
         </form>

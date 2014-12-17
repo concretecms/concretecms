@@ -1,8 +1,10 @@
 <?
 
 namespace Concrete\Controller\SinglePage\Dashboard\System\Multilingual;
-use Concrete\Core\Multilingual\Page\Section;
+use Concrete\Core\Application\EditResponse;
+use Concrete\Core\Multilingual\Page\Section\Section;
 use \Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Multilingual\Page\Section\Translation;
 use Core;
 use Database;
 
@@ -22,6 +24,12 @@ class TranslateInterface extends DashboardPageController
     public function reloaded()
     {
         $this->set('message', t('Languages refreshed.'));
+        $this->view();
+    }
+
+    public function exported()
+    {
+        $this->set('message', t('Translations exported to PO File and Reloaded.'));
         $this->view();
     }
 
@@ -50,66 +58,72 @@ class TranslateInterface extends DashboardPageController
         }
     }
 
-    public function reload()
+    public function submit()
     {
-        if (Core::make('token')->validate('reload')) {
-            $extractor = Core::make('multilingual/extractor');
-            // First, we look in all the site sources for PHP code with GetText
-            $translations = $extractor->extractTranslatableSiteStrings();
+        $extractor = Core::make('multilingual/extractor');
+        if ($this->post('action') == 'reload') {
+            if (Core::make('token')->validate()) {
+                // First, we look in all the site sources for PHP code with GetText
+                $translations = $extractor->extractTranslatableSiteStrings();
 
-            // $translations contains all of our site translations.
-            $list = Section::getList();
-            foreach($list as $section) {
-                // now we load the translations that currently exist for each section
-                $translations = $extractor->mergeTranslationsWithSectionFile($section, $translations);
-                $extractor->saveSectionTranslationsToFile($section, $translations);
+                // $translations contains all of our site translations.
+                $list = Section::getList();
+                foreach($list as $section) {
+                    // now we load the translations that currently exist for each section
+                    $translations = $extractor->mergeTranslationsWithSectionFile($section, $translations);
+                    $translations = $extractor->mergeTranslationsWithCore($section, $translations);
+                    $extractor->saveSectionTranslationsToFile($section, $translations);
 
-                // now that we've updated the translation file, we take all the translations and
-                // we insert them into the database so we can update our counts, and give the users
-                // a web interface
-                $extractor->saveSectionTranslationsToDatabase($section, $translations);
-                $this->redirect('/dashboard/system/multilingual/translate_interface', 'reloaded');
+                    // now that we've updated the translation file, we take all the translations and
+                    // we insert them into the database so we can update our counts, and give the users
+                    // a web interface
+                    $extractor->saveSectionTranslationsToDatabase($section, $translations);
+                    $this->redirect('/dashboard/system/multilingual/translate_interface', 'reloaded');
+                }
+            } else {
+                $this->error->add(Core::make('token')->getErrorMessage());
             }
-        } else {
-            $this->error->add(Core::make('token')->getErrorMessage());
+        }
+        if ($this->post('action') == 'export') {
+            if (Core::make('token')->validate()) {
+                $list = Section::getList();
+                foreach($list as $section) {
+                    $translations = $section->getSectionInterfaceTranslations();
+                    $translations = $extractor->mergeTranslationsWithSectionFile($section, $translations);
+                    $extractor->saveSectionTranslationsToFile($section, $translations);
+                    $this->redirect('/dashboard/system/multilingual/translate_interface', 'exported');
+                }
+            } else {
+                $this->error->add(Core::make('token')->getErrorMessage());
+            }
         }
         $this->view();
     }
 
-    /*
-
-    public function translate_po($catalogID = false)
+    public function save_translation()
     {
-        $this->set('catalogID', $catalogID);
-        $db = Database::get();
-        $r = $db->getCol('SELECT name FROM MultilingualSimplePoCatalogues WHERE id=? LIMIT 1', $catalogID);
-        $lang = $r[0];
-        $this->set('lang', $lang);
-        $html = Core::make('helper/html');
-        $this->addHeaderItem($html->css('simplepo/index.css', 'multilingual_plus'));
-        $this->addHeaderItem($html->css('simplepo/edit.css', 'multilingual_plus'));
-        $this->addHeaderItem($html->javascript('simplepo/jquery.tablesorter.js', 'multilingual_plus'));
-        $this->addHeaderItem($html->javascript('simplepo/json2.js', 'multilingual_plus'));
-
-    }
-
-    public function refresh_status()
-    {
-        $defaultLanguage = \Config::get('concrete.multilingual.default_locale');
-
-        $list = MultilingualSection::getList();
-        foreach ($list as $ms) {
-            if ($ms->getLanguage() == $defaultLanguage || (!is_file(DIR_LANGUAGES_SITE_INTERFACE . '/' . $ms->getLocale() . '.po'))) {
-                continue;
-            }
-            $MsgStore = new DBPoMsgStore();
-            $MsgStore->init($ms->getLocale());
-            $POParser = new POParser($MsgStore);
-            $POParser->parseEntriesFromStream(fopen(DIR_LANGUAGES_SITE_INTERFACE . '/' . $ms->getLocale() . '.po',
-                    'r'));
+        $mtID = intval($this->post('mtID'));
+        $translation = Translation::getByID($mtID);
+        if (is_object($translation)) {
+            $translation->updateTranslation($this->post('msgstr'));
         }
-        $this->redirect($this->getCollectionObject()->getCollectionPath(), t('Completion status refreshed'));
+        $r = new EditResponse();
+        $r->outputJSON();
     }
-    */
+
+    public function translate_po($mtSectionID = false)
+    {
+        $mtSectionID = intval($mtSectionID);
+        $section = Section::getByID(intval($mtSectionID));
+        if ($section) {
+            $translations = $section->getSectionInterfaceTranslations();
+            $this->set('section', $section);
+            $this->set('translations', $translations);
+        } else {
+            $this->redirect('/dashboard/system/multilingual/translate_interface');
+        }
+
+
+    }
 
 }

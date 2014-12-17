@@ -14,6 +14,7 @@ class MultilingualServiceProvider extends ServiceProvider {
 		foreach($singletons as $key => $value) {
 			$this->app->singleton($key, $value);
 		}
+
 	}
 
 

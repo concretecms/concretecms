@@ -84,7 +84,7 @@ $nav = Loader::helper('navigation');
             <thead>
             <tr>
                 <th style="width: <?=$width?>%"><span><?
-                    $sourceMS = \Concrete\Core\Multilingual\Page\Section::getByID($sectionID);
+                    $sourceMS = \Concrete\Core\Multilingual\Page\Section\Section::getByID($sectionID);
                     print t('%s (%s)', $sourceMS->getLanguageText(), $sourceMS->getLocale());
                     ?>
                 </span></th>
