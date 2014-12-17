@@ -59,7 +59,6 @@ class Localization
                 unset($this->translate);
             }
             PunicData::setDefaultLocale($locale);
-
             return;
         }
         if (is_dir(DIR_LANGUAGES . '/' . $locale)) {

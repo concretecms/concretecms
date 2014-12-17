@@ -97,6 +97,7 @@ return array(
         'core_encryption'   => '\Concrete\Core\Encryption\EncryptionServiceProvider',
         'core_validation'   => '\Concrete\Core\Validation\ValidationServiceProvider',
         'core_localization' => '\Concrete\Core\Localization\LocalizationServiceProvider',
+        'core_multilingual' => '\Concrete\Core\Multilingual\MultilingualServiceProvider',
         'core_feed'         => '\Concrete\Core\Feed\FeedServiceProvider',
         'core_html'         => '\Concrete\Core\Html\HtmlServiceProvider',
         'core_pagination'   => '\Concrete\Core\Search\PaginationServiceProvider',
@@ -107,6 +108,7 @@ return array(
         'core_database'     => '\Concrete\Core\Database\DatabaseServiceProvider',
         'core_form'         => '\Concrete\Core\Form\FormServiceProvider',
         'core_session'      => '\Concrete\Core\Session\SessionServiceProvider',
+        'core_cookie'      => '\Concrete\Core\Cookie\CookieServiceProvider',
         'core_http'         => '\Concrete\Core\Http\HttpServiceProvider',
         'core_events'       => '\Concrete\Core\Events\EventsServiceProvider',
         'core_whoops'       => '\Concrete\Core\Error\Provider\WhoopsServiceProvider',
@@ -127,6 +129,7 @@ return array(
     'facades'             => array(
         'Core'     => '\Concrete\Core\Support\Facade\Application',
         'Session'  => '\Concrete\Core\Support\Facade\Session',
+        'Cookie'  => '\Concrete\Core\Support\Facade\Cookie',
         'Database' => '\Concrete\Core\Support\Facade\Database',
         'Events'   => '\Concrete\Core\Support\Facade\Events',
         'Route'    => '\Concrete\Core\Support\Facade\Route',
@@ -217,6 +220,8 @@ return array(
         "/ccm/system/dialogs/area/design/submit"                                        => array('\Concrete\Controller\Dialog\Area\Design::submit'),
         "/ccm/system/dialogs/area/design/reset"                                         => array('\Concrete\Controller\Dialog\Area\Design::reset'),
         "/ccm/system/dialogs/page/add"                                                  => array('\Concrete\Controller\Dialog\Page\Add::view'),
+        "/ccm/system/dialogs/page/add/compose/submit"                                   => array('\Concrete\Controller\Dialog\Page\Add\Compose::submit'),
+        "/ccm/system/dialogs/page/add/compose/{ptID}/{cParentID}"                       => array('\Concrete\Controller\Dialog\Page\Add\Compose::view'),
         "/ccm/system/dialogs/page/add/submit"                                           => array('\Concrete\Controller\Dialog\Page\Add::submit'),
         "/ccm/system/dialogs/page/add_external"                                         => array('\Concrete\Controller\Dialog\Page\AddExternal::view'),
         "/ccm/system/dialogs/page/add_external/submit"                                  => array('\Concrete\Controller\Dialog\Page\AddExternal::submit'),
@@ -249,6 +254,9 @@ return array(
         "/ccm/system/page/create/{ptID}"                                                => array('\Concrete\Controller\Backend\Page::create'),
         "/ccm/system/page/create/{ptID}/{parentID}"                                     => array('\Concrete\Controller\Backend\Page::create'),
         "/ccm/system/page/arrange_blocks/"                                              => array('\Concrete\Controller\Backend\Page\ArrangeBlocks::arrange'),
+        "/ccm/system/page/multilingual/create_new"                                      => array('\Concrete\Controller\Backend\Page\Multilingual::create_new'),
+        "/ccm/system/page/multilingual/ignore"                                          => array('\Concrete\Controller\Backend\Page\Multilingual::ignore'),
+        "/ccm/system/page/multilingual/assign"                                          => array('\Concrete\Controller\Backend\Page\Multilingual::assign'),
         "/ccm/system/page/get_json"                                                     => array('\Concrete\Controller\Backend\Page::getJSON'),
 
         /**
@@ -296,6 +304,7 @@ return array(
          */
         "/ccm/system/panels/dashboard"                                                  => array('\Concrete\Controller\Panel\Dashboard::view'),
         "/ccm/system/panels/sitemap"                                                    => array('\Concrete\Controller\Panel\Sitemap::view'),
+        "/ccm/system/panels/multilingual"                                               => array('\Concrete\Controller\Panel\Multilingual::view'),
         "/ccm/system/panels/add"                                                        => array('\Concrete\Controller\Panel\Add::view'),
         "/ccm/system/panels/page"                                                       => array('\Concrete\Controller\Panel\Page::view'),
         "/ccm/system/panels/page/attributes"                                            => array('\Concrete\Controller\Panel\Page\Attributes::view'),

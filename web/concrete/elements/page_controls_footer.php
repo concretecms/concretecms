@@ -285,13 +285,28 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
             <a href="#" data-panel-url="<?= URL::to('/ccm/system/panels/sitemap') ?>"
                                             title="<?= t('Add Pages and Navigate Your Site') ?>"
                                             data-launch-panel="sitemap">
-                <i class="fa fa-files-o"></i>
+                        <i class="fa fa-files-o"></i>
                 <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add-page">
                     <?= tc('toolbar', 'Add Page') ?>
                 </span>
             </a>
-
         </li>
+        <? if ($cp->canEditPageMultilingualSettings() && Config::get('concrete.multilingual.enabled')) {
+            $section = \Concrete\Core\Multilingual\Page\Section\Section::getCurrentSection();
+            $ch = Core::make('multilingual/interface/flag');
+            if (is_object($section)) { ?>
+                <li class="pull-right hidden-xs">
+                <a href="#" data-panel-url="<?= URL::to('/ccm/system/panels/multilingual') ?>"
+                   title="<?= t('Navigate this page in other languages') ?>"
+                   data-launch-panel="multilingual">
+                    <? print $ch->getFlagIcon($section->getIcon()); ?>
+                    <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add-page">
+                        <?=$section->getLanguageText()?>
+                    </span>
+                </a>
+                </li>
+            <? } ?>
+        <? } ?>
         <li class="ccm-toolbar-search pull-right hidden-xs"><i class="fa fa-search"></i> <input type="search"
                                                                                                 id="ccm-nav-intelligent-search"
                                                                                                 tabindex="1"/></li>

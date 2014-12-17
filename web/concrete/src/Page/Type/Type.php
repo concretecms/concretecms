@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Page\Type;
 
+use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Template;
 use Concrete\Core\Page\Type\Composer\Control\CorePageProperty\NameCorePageProperty;
 use Loader;
@@ -162,6 +163,9 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         $pkr->setRequesterUserID($u->getUserID());
         $pkr->trigger();
         $c->activate();
+
+        Section::registerPage($c);
+
         $u->unloadCollectionEdit($c);
         CacheLocal::flush();
 
@@ -934,7 +938,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         return $p;
     }
 
-    public function renderComposerOutputForm($page = null)
+    public function renderComposerOutputForm($page = null, $targetPage = null)
     {
 
         $env = \Environment::get();
@@ -948,7 +952,8 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         } else {
             Loader::element('page_types/composer/form/output/form', array(
                 'pagetype' => $this,
-                'page' => $page
+                'page' => $page,
+                'targetPage' => $targetPage
             ));
         }
     }

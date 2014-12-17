@@ -179,6 +179,14 @@
 				var parent = node.parent;
 				my.reloadNode(parent);
 			});
+            ConcreteEvent.unsubscribe('SitemapAddPageRequestComplete.sitemap');
+            ConcreteEvent.subscribe('SitemapAddPageRequestComplete.sitemap', function(e, data) {
+                var node = my.getTree().getNodeByKey(data.cParentID);
+                if (node) {
+                    my.reloadNode(node);
+                }
+                jQuery.fn.dialog.closeAll();
+            });
 		},
 
     	rescanDisplayOrder: function(node) {

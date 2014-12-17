@@ -2,6 +2,7 @@
 namespace Concrete\Core\Permission\Access\Entity;
 use \Concrete\Core\Foundation\Object;
 use Concrete\Core\Permission\Category;
+use Gettext\Translations;
 use Loader;
 use Config;
 use Core;
@@ -137,5 +138,15 @@ class Type extends Object {
 		$est = static::getByID($id);
 		return $est;
 	}
+
+    public static function exportTranslations()
+    {
+        $translations = new Translations();
+        $attribs = static::getList();
+        foreach($attribs as $type) {
+            $translations->insert('PermissionAccessEntityTypeName', $type->getAccessEntityTypeName());
+        }
+        return $translations;
+    }
 
 }
