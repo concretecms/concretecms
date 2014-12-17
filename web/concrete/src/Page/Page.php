@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Page;
 use Concrete\Core\Multilingual\Page\Event;
-use Concrete\Core\Multilingual\Page\Section;
+use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Type\Type;
 use Loader;
 use CacheLocal;

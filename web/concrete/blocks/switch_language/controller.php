@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Block\SwitchLanguage;
 use Concrete\Core\Block\BlockController;
-use Concrete\Core\Multilingual\Page\Section;
+use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Routing\Redirect;
 use Cookie;
 use Session;

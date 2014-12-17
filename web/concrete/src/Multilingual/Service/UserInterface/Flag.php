@@ -1,7 +1,7 @@
 <?php
 
 namespace Concrete\Core\Multilingual\Service\UserInterface;
-use Concrete\Core\Multilingual\Page\Section;
+use Concrete\Core\Multilingual\Page\Section\Section;
 use Database;
 
 defined('C5_EXECUTE') or die("Access Denied.");

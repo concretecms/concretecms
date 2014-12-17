@@ -1,8 +1,9 @@
 <?php
 
-namespace Concrete\Core\Multilingual\Page;
+namespace Concrete\Core\Multilingual\Page\Section;
 use Concrete\Core\Page\Page;
 use Database;
+use Gettext\Translations;
 use Punic\Language;
 use Config;
 
@@ -56,7 +57,7 @@ class Section extends Page
     {
         $r = self::isMultilingualSection($cID);
         if ($r) {
-            $obj = parent::getByID($cID, $cvID, '\Concrete\Core\Multilingual\Page\Section');
+            $obj = parent::getByID($cID, $cvID, '\Concrete\Core\Multilingual\Page\Section\Section');
             $obj->msLanguage = $r['msLanguage'];
             $obj->msCountry = $r['msCountry'];
             return $obj;
@@ -77,7 +78,7 @@ class Section extends Page
             array($language)
         );
         if ($r && is_array($r) && $r['msLanguage']) {
-            $obj = parent::getByID($r['cID'], 'RECENT', '\Concrete\Core\Multilingual\Page\Section');
+            $obj = parent::getByID($r['cID'], 'RECENT', '\Concrete\Core\Multilingual\Page\Section\Section');
             $obj->msLanguage = $r['msLanguage'];
             $obj->msCountry = $r['msCountry'];
             return $obj;
@@ -98,7 +99,7 @@ class Section extends Page
             array($locale[0], $locale[1])
         );
         if ($r && is_array($r) && $r['msLanguage']) {
-            $obj = parent::getByID($r['cID'], 'RECENT', '\Concrete\Core\Multilingual\Page\Section');
+            $obj = parent::getByID($r['cID'], 'RECENT', '\Concrete\Core\Multilingual\Page\Section\Section');
             $obj->msLanguage = $r['msLanguage'];
             $obj->msCountry = $r['msCountry'];
             return $obj;
@@ -461,6 +462,24 @@ class Section extends Page
             );
             return $cID;
         }
+    }
+
+    /**
+     * @param Section $section
+     * @return \Concrete\Core\Multilingual\Page\Section\Translation[] $translations
+     */
+    public function getSectionInterfaceTranslations()
+    {
+        $translations = new Translations();
+        $db = \Database::get();
+        $r = $db->query('select mtID, (if(mt.msgstr = "", 0, 1)) as completed from MultilingualTranslations mt where mtSectionID = ? order by completed asc, msgid asc', array($this->getCollectionID()));
+        while ($row = $r->fetch()) {
+            $t = Translation::getByID($row['mtID']);
+            if (is_object($t)) {
+                $translations[] = $t;
+            }
+        }
+        return $translations;
     }
 
 }

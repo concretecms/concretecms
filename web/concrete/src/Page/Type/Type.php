@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Page\Type;
 
-use Concrete\Core\Multilingual\Page\Section;
+use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Template;
 use Concrete\Core\Page\Type\Composer\Control\CorePageProperty\NameCorePageProperty;
 use Loader;

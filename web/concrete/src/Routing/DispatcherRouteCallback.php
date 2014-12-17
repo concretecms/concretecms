@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Core\Routing;
 
-use Concrete\Core\Multilingual\Page\Section;
 use \Concrete\Core\Page\Event as PageEvent;
 use Request;
 use User;

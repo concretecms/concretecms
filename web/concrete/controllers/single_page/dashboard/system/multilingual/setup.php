@@ -3,7 +3,7 @@
 namespace Concrete\Controller\SinglePage\Dashboard\System\Multilingual;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use Core;
-use Concrete\Core\Multilingual\Page\Section;
+use Concrete\Core\Multilingual\Page\Section\Section;
 use Config;
 use Localization;
 use Loader;

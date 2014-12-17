@@ -2,7 +2,7 @@
 namespace Concrete\Controller\Panel;
 
 use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
-use Concrete\Core\Multilingual\Page\Section;
+use Concrete\Core\Multilingual\Page\Section\Section;
 use Config;
 use Core;
 

@@ -292,7 +292,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
             </a>
         </li>
         <? if ($cp->canEditPageMultilingualSettings() && Config::get('concrete.multilingual.enabled')) {
-            $section = \Concrete\Core\Multilingual\Page\Section::getCurrentSection();
+            $section = \Concrete\Core\Multilingual\Page\Section\Section::getCurrentSection();
             $ch = Core::make('multilingual/interface/flag');
             if (is_object($section)) { ?>
                 <li class="pull-right hidden-xs">

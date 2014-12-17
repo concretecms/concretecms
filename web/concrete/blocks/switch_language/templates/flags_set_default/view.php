@@ -15,7 +15,7 @@ $ih = Core::make("multilingual/interface/flag");
             <? foreach($languageSections as $ml) {  ?>
                 <div class="radio">
                     <label>
-                        <input type="radio" name="language" value="<?php echo $ml->getCollectionID()?>"  <?php if ($defaultLocale->getCollectionID() == $ml->getCollectionID()) { ?> checked="checked" <?php } ?> />
+                        <input type="radio" name="language" value="<?php echo $ml->getCollectionID()?>"  <?php if (is_object($defaultLocale) && $defaultLocale->getCollectionID() == $ml->getCollectionID()) { ?> checked="checked" <?php } ?> />
                         <?=$ih->getSectionFlagIcon($ml)?>
                         <?=$ml->getLanguageText($locale)?>
                     </label>

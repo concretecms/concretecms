@@ -3,7 +3,7 @@
 namespace Concrete\Core\Multilingual\Page;
 
 use Concrete\Core\Page\PageList as CorePageList;
-use Concrete\Core\Multilingual\Page\Section;
+use Concrete\Core\Multilingual\Page\Section\Section;
 use Database;
 use Doctrine\DBAL\Query\QueryBuilder;
 

@@ -1,6 +1,6 @@
 <?php
 namespace Concrete\Controller\Backend\Page;
-use Concrete\Core\Multilingual\Page\Section;
+use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Collection\Version\Version;
 use Concrete\Core\Page\EditResponse as PageEditResponse;
 use Concrete\Controller\Backend\UserInterface\Page;

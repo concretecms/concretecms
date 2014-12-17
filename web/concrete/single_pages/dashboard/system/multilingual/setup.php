@@ -1,6 +1,6 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");?>
 <?
-use Concrete\Core\Multilingual\Page\Section as MultilingualSection;
+use Concrete\Core\Multilingual\Page\Section\Section as MultilingualSection;
 ?>
 <fieldset>
     <legend><?php echo t('Content Sections')?></legend>
