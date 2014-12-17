@@ -1606,6 +1606,13 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         }
     }
 
+    public static function resetAllCustomStyles()
+    {
+        $db = Loader::db();
+        $db->delete('CollectionVersionThemeCustomStyles', array('1' => 1));
+        Core::make('app')->clearCaches();
+    }
+
     function update($data) {
         $db = Loader::db();
 
