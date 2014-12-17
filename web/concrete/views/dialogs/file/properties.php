@@ -1,5 +1,6 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
+use Concrete\Core\File\Exception\InvalidDimensionException;
 use \Concrete\Core\File\StorageLocation as FileStorageLocation;
 
 $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
@@ -49,8 +50,8 @@ $url = $fv->getURL();
 </div>
 <?
 $oc = $f->getOriginalPageObject();
-if (is_object($oc)) { 
-	$fileManager = Page::getByPath('/dashboard/files/search'); 
+if (is_object($oc)) {
+	$fileManager = Page::getByPath('/dashboard/files/search');
 	$ocName = $oc->getCollectionName();
 	if (is_object($fileManager) && !$fileManager->isError()) {
 		if ($fileManager->getCollectionID() == $oc->getCollectionID()) {
@@ -69,13 +70,52 @@ if (is_object($oc)) {
 	<div class="col-md-9"><p><?=$fv->getType()?></p></div>
 </div>
 <? if ($fv->getTypeObject()->getGenericType() == \Concrete\Core\File\Type\Type::T_IMAGE) {
-    $thumbnails = $fv->getThumbnails();
-    ?>
-    <div class="row">
-        <div class="col-md-3"><p><?=t('Thumbnails')?></p></div>
-        <div class="col-md-9"><p><a class="dialog-launch icon-link" dialog-title="<?=t('Thumbnail Images')?>" dialog-width="90%" dialog-height="70%" href="<?=URL::to('/ccm/system/dialogs/file/thumbnails')?>?fID=<?=$fv->getFileID()?>&fvID=<?=$fv->getFileVersionID()?>"><?=count($thumbnails)?> <i class="fa fa-edit"></i></a></p></div>
-    </div>
-<? } ?>
+	try {
+		$thumbnails = $fv->getThumbnails();
+	} catch (InvalidDimensionException $e) {
+		?>
+		<div class="row">
+
+			<div class="col-md-3"><p><?= t('Thumbnails') ?></p></div>
+			<div class="col-md-9">
+				<p style="color:#cc3333">
+					<?= t('Invalid file dimensions, please rescan this file.') ?>
+					<? if (!$previewMode && $fp->canEditFileContents()) { ?>
+						<a href="#" class="btn pull-right btn-default btn-xs" data-action="rescan"><?=t('Rescan')?></a>
+					<? } ?>
+				</p>
+			</div>
+		</div>
+		<?php
+	} catch (\Exception $e) {
+		?>
+		<div class="row">
+
+			<div class="col-md-3"><p><?= t('Thumbnails') ?></p></div>
+			<div class="col-md-9">
+				<p style="color:#cc3333">
+					<?= t('Unknown error retrieving thumbnails, please rescan this file.') ?>
+					<? if (!$previewMode && $fp->canEditFileContents()) { ?>
+						<a href="#" class="btn pull-right btn-default btn-xs" data-action="rescan"><?=t('Rescan')?></a>
+					<? } ?>
+				</p>
+			</div>
+		</div>
+		<?php
+	}
+	if ($thumbnails) {
+		?>
+		<div class="row">
+			<div class="col-md-3"><p><?= t('Thumbnails') ?></p></div>
+			<div class="col-md-9"><p><a class="dialog-launch icon-link" dialog-title="<?= t('Thumbnail Images') ?>"
+										dialog-width="90%" dialog-height="70%" href="<?= URL::to(
+						'/ccm/system/dialogs/file/thumbnails') ?>?fID=<?= $fv->getFileID() ?>&fvID=<?= $fv->getFileVersionID() ?>"><?= count(
+							$thumbnails) ?> <i class="fa fa-edit"></i></a></p></div>
+		</div>
+	<?
+	}
+}
+?>
 <div class="row">
 	<div class="col-md-3"><p><?=t('Size')?></p></div>
 	<div class="col-md-9"><p><?=$fv->getSize()?> (<?=t2(/*i18n: %s is a number */ '%s byte', '%s bytes', $fv->getFullSize(), Loader::helper('number')->format($fv->getFullSize()))?>)</p></div>
@@ -118,7 +158,7 @@ if (count($attribs) > 0) { ?>
 <?
 
 Loader::element('attribute/editable_list', array(
-	'attributes' => $attribs, 
+	'attributes' => $attribs,
 	'object' => $f,
 	'saveAction' => $controller->action('update_attribute'),
 	'clearAction' => $controller->action('clear_attribute'),
@@ -131,7 +171,7 @@ Loader::element('attribute/editable_list', array(
 <? } ?>
 </section>
 
-<? 
+<?
 $attribs = FileAttributeKey::getUserAddedList();
 
 if (count($attribs) > 0) { ?>
@@ -141,7 +181,7 @@ if (count($attribs) > 0) { ?>
 <h4><?=t('Other Properties')?></h4>
 
 <? Loader::element('attribute/editable_list', array(
-	'attributes' => $attribs, 
+	'attributes' => $attribs,
 	'object' => $f,
 	'saveAction' => $controller->action('update_attribute'),
 	'clearAction' => $controller->action('clear_attribute'),
@@ -247,32 +287,32 @@ if (count($attribs) > 0) { ?>
 <section>
 	<h4><?=t('Most Recent Downloads')?></h4>
 	<table border="0" cellspacing="0" width="100%" class="table" cellpadding="0">
-		<tr> 
+		<tr>
 			<th><?=t('User')?></th>
 			<th><?=t('Download Time')?></th>
 			<th><?=t('File Version ID')?></th>
-		</tr>	
+		</tr>
 		<?
-		
+
 		$downloadStatsCounter=0;
-		foreach($downloadStatistics as $download){ 
+		foreach($downloadStatistics as $download){
 			$downloadStatsCounter++;
 			if($downloadStatsCounter>20) break;
 			?>
 		<tr>
 			<td>
-				<? 
+				<?
 				$uID=intval($download['uID']);
 				if(!$uID){
 					echo t('Anonymous');
-				}else{ 
+				}else{
 					$downloadUI = UserInfo::getById($uID);
 					if($downloadUI instanceof UserInfo) {
 						echo $downloadUI->getUserName();
 					} else {
 						echo t('Deleted User');
 					}
-				} 
+				}
 				?>
 			</td>
 			<td><?=$dh->formatDateTime($download['timestamp'], true)?></td>

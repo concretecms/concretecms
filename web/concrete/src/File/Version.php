@@ -2,11 +2,13 @@
 namespace Concrete\Core\File;
 
 use Carbon\Carbon;
+use Concrete\Core\File\Exception\InvalidDimensionException;
 use Concrete\Core\File\Image\Thumbnail\Thumbnail;
 use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use Concrete\Core\File\Image\Thumbnail\Type\Version as ThumbnailTypeVersion;
 use Concrete\Flysystem\AdapterInterface;
 use Concrete\Flysystem\FileNotFoundException;
+use Imagine\Gd\Image;
 use Loader;
 use \File as ConcreteFile;
 use \Concrete\Core\File\Type\TypeList as FileTypeList;
@@ -222,7 +224,7 @@ class Version
 
     /**
      * returns the File object associated with this FileVersion object
-     * @return File
+     * @return \File
      */
     public function getFile()
     {
@@ -736,14 +738,20 @@ class Version
     {
         $thumbnails = array();
         $types = Type::getVersionList();
-        foreach($types as $type) {
+        $width = $this->getAttribute('width');
+        $file = $this->getFile();
 
-            if ($this->getAttribute('width') <= $type->getWidth()) {
+        if (!$width || $width < 0) {
+            throw new InvalidDimensionException($this->getFile(), $this, 'Invalid dimensions.');
+        }
+
+        foreach($types as $type) {
+            if ($width <= $type->getWidth()) {
                 continue;
             }
 
             $thumbnailPath = $type->getFilePath($this);
-            $location = $this->getFile()->getFileStorageLocationObject();
+            $location = $file->getFileStorageLocationObject();
             $configuration = $location->getConfigurationObject();
             $filesystem = $location->getFileSystemObject();
             if ($filesystem->has($thumbnailPath)) {
