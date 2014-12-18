@@ -106,7 +106,7 @@ use Page;
 			if($conversation->getConversationMaxFilesGuest() > 0 && $conversation->getConversationAttachmentOverridesEnabled()  > 0) {
 				$maxFilesGuest = $conversation->getConversationMaxFilesGuest();
 			} else {
-				$maxFilesGuest = Config::get('conversations.files.guest.max', 3);
+				$maxFilesGuest = Config::get('conversations.files.guest.max');
 			}
             if($conversation->getConversationAttachmentOverridesEnabled() > 0) {
 
@@ -116,31 +116,34 @@ use Page;
 			if($conversation->getConversationMaxFilesRegistered() > 0 && $conversation->getConversationAttachmentOverridesEnabled()  > 0) {
 				$maxFilesRegistered = $conversation->getConversationMaxFilesRegistered();
 			} else {
-				$maxFilesRegistered = Config::get('conversations.files.registered.max', 6);
+				$maxFilesRegistered = Config::get('conversations.files.registered.max');
 			}
 
 			if($conversation->getConversationMaxFileSizeGuest() > 0 && $conversation->getConversationAttachmentOverridesEnabled()  > 0) {
 				$maxFileSizeGuest = $conversation->getConversationMaxFileSizeGuest();
 			} else {
-				$maxFileSizeGuest = Config::get('conversations.files.guest.max_size', 3);
+				$maxFileSizeGuest = Config::get('conversations.files.guest.max_size');
 			}
 
 			if($conversation->getConversationMaxFileSizeRegistered() > 0 && $conversation->getConversationAttachmentOverridesEnabled()  > 0) {
 				$maxFileSizeRegistered = $conversation->getConversationMaxFileSizeRegistered();
 			} else {
-				$maxFileSizeRegistered = Config::get('conversations.files.registered.max_size', 10);
+				$maxFileSizeRegistered = Config::get('conversations.files.registered.max_size');
 			}
 
 			if($conversation->getConversationFileExtensions() && $conversation->getConversationAttachmentOverridesEnabled()  > 0) {
 				$fileExtensions = $conversation->getConversationFileExtensions();
 			} else {
-				$fileExtensions = Config::get('conversations.files.allowed_types', '*.jpg;*.png;*.gif;*.doc');
-			}
+				$fileExtensions = Config::get('conversations.files.allowed_types');
+                if (!$fileExtensions) {
+                    $fileExtensions = Config::get('concrete.upload.extensions');
+                }
+            }
 
             if($conversation->getConversationAttachmentOverridesEnabled() > 0) {
                 $attachmentsEnabled = $conversation->getConversationAttachmentsEnabled();
             } else {
-                $attachmentsEnabled = is_numeric(Config::get('conversations.attachments_enabled')) ? Config::get('conversations.attachments_enabled') : 1;
+                $attachmentsEnabled = Config::get('conversations.attachments_enabled');
             }
 
 			$fileExtensions = implode(',', $helperFile->unserializeUploadFileExtensions($fileExtensions)); //unserialize and implode extensions into comma separated string
