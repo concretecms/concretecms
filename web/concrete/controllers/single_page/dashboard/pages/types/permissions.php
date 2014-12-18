@@ -14,6 +14,10 @@ class Permissions extends DashboardPageController {
 		if (!$this->pagetype) {
 			$this->redirect('/dashboard/pages/types');
 		}
+        $cmp = new \Permissions($this->pagetype);
+        if (!$cmp->canEditPageType()) {
+            throw new \Exception(t('You do not have access to edit this page type.'));
+        }
 		switch($message) {
 			case 'updated':
 				$this->set('success', t('Permissions updated successfully.'));
@@ -26,41 +30,38 @@ class Permissions extends DashboardPageController {
 	public function save() {
 		$this->view($this->post('ptID'));
 		if (Loader::helper('validation/token')->validate('save_permissions')) {
-			$tp = new TaskPermission();
-			if ($tp->canAccessPageTypePermissions()) {
-				$permissions = PermissionKey::getList('page_type');
-				foreach($permissions as $pk) {
-					$pk->setPermissionObject($this->pagetype);
-					$paID = $_POST['pkID'][$pk->getPermissionKeyID()];
-					$pt = $pk->getPermissionAssignmentObject();
-					$pt->clearPermissionAssignment();
-					if ($paID > 0) {
-						$pa = PermissionAccess::getByID($paID, $pk);
-						if (is_object($pa)) {
-							$pt->assignPermissionAccess($pa);
-						}			
-					}		
-				}
+            $permissions = PermissionKey::getList('page_type');
+            foreach($permissions as $pk) {
+                $pk->setPermissionObject($this->pagetype);
+                $paID = $_POST['pkID'][$pk->getPermissionKeyID()];
+                $pt = $pk->getPermissionAssignmentObject();
+                $pt->clearPermissionAssignment();
+                if ($paID > 0) {
+                    $pa = PermissionAccess::getByID($paID, $pk);
+                    if (is_object($pa)) {
+                        $pt->assignPermissionAccess($pa);
+                    }
+                }
+            }
 
-                if (Config::get('concrete.permissions.model') == 'advanced') {
-                    $permissions = PermissionKey::getList('page');
-                    $defaultPage = $this->pagetype->getPageTypePageTemplateDefaultPageObject();
-                    foreach($permissions as $pk) {
-                        $pk->setPermissionObject($defaultPage);
-                        $paID = $_POST['pkID'][$pk->getPermissionKeyID()];
-                        $pt = $pk->getPermissionAssignmentObject();
-                        $pt->clearPermissionAssignment();
-                        if ($paID > 0) {
-                            $pa = PermissionAccess::getByID($paID, $pk);
-                            if (is_object($pa)) {
-                                $pt->assignPermissionAccess($pa);
-                            }
+            if (Config::get('concrete.permissions.model') == 'advanced') {
+                $permissions = PermissionKey::getList('page');
+                $defaultPage = $this->pagetype->getPageTypePageTemplateDefaultPageObject();
+                foreach($permissions as $pk) {
+                    $pk->setPermissionObject($defaultPage);
+                    $paID = $_POST['pkID'][$pk->getPermissionKeyID()];
+                    $pt = $pk->getPermissionAssignmentObject();
+                    $pt->clearPermissionAssignment();
+                    if ($paID > 0) {
+                        $pa = PermissionAccess::getByID($paID, $pk);
+                        if (is_object($pa)) {
+                            $pt->assignPermissionAccess($pa);
                         }
                     }
                 }
-				$this->redirect('/dashboard/pages/types/permissions', $this->pagetype->getPageTypeID(), 'updated');
-			}
-			
+            }
+            $this->redirect('/dashboard/pages/types/permissions', $this->pagetype->getPageTypeID(), 'updated');
+
 		} else {
 			$this->error->add(Loader::helper("validation/token")->getErrorMessage());
 		}

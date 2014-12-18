@@ -14,6 +14,10 @@ class Output extends DashboardPageController {
 		if (!$this->pagetype) {
 			$this->redirect('/dashboard/pages/types');
 		}
+        $cmp = new \Permissions($this->pagetype);
+        if (!$cmp->canEditPageType()) {
+            throw new \Exception(t('You do not have access to edit this page type.'));
+        }
 		$this->set('pagetype', $this->pagetype);
 	}
 

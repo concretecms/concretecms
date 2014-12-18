@@ -35,18 +35,23 @@
 		</tr>
 	</thead>
 	<tbody>
-		<? foreach($pagetypes as $cm) {  ?>
+		<? foreach($pagetypes as $cm) {
+            $cmp = new Permissions($cm);?>
 		<tr>
 			<td class="page-type-name"><?=$cm->getPageTypeDisplayName()?></td>
 			<td class="page-type-tasks">
-				<a href="<?=$view->action('edit', $cm->getPageTypeID())?>" class="btn btn-default btn-xs"><?=t('Basic Details')?></a>
-				<a href="<?=$view->url('/dashboard/pages/types/form', $cm->getPageTypeID())?>" class="btn btn-default btn-xs"><?=t('Edit Form')?></a>
-				<a href="<?=$view->url('/dashboard/pages/types/output', $cm->getPageTypeID())?>" class="btn btn-default btn-xs"><?=t('Output')?></a>
-				<? if ($pk->can()) { ?>
+                <? if ($cmp->canEditPageType()) { ?>
+    				<a href="<?=$view->action('edit', $cm->getPageTypeID())?>" class="btn btn-default btn-xs"><?=t('Basic Details')?></a>
+	    			<a href="<?=$view->url('/dashboard/pages/types/form', $cm->getPageTypeID())?>" class="btn btn-default btn-xs"><?=t('Edit Form')?></a>
+		    		<a href="<?=$view->url('/dashboard/pages/types/output', $cm->getPageTypeID())?>" class="btn btn-default btn-xs"><?=t('Output')?></a>
+                    <a href="<?=$view->url('/dashboard/pages/types/attributes', $cm->getPageTypeID())?>" class="btn btn-default btn-xs"><?=t('Attributes')?></a>
+                <? } ?>
+                <? if ($cmp->canEditPageTypePermissions()) { ?>
 					<a href="<?=$view->url('/dashboard/pages/types/permissions', $cm->getPageTypeID())?>" class="btn btn-default btn-xs"><?=t('Permissions')?></a>
 				<? } ?>
-				<a href="#" data-delete="<?=$cm->getPageTypeID()?>" class="btn btn-default btn-xs btn-danger"><?=t('Delete')?></a>
-
+                <? if ($cmp->canEditPageType()) { ?>
+    				<a href="#" data-delete="<?=$cm->getPageTypeID()?>" class="btn btn-default btn-xs btn-danger"><?=t('Delete')?></a>
+                <? } ?>
 				<div style="display: none">
 					<div data-delete-dialog="<?=$cm->getPageTypeID()?>">
 						<form data-delete-form="<?=$cm->getPageTypeID()?>" action="<?=$view->action('delete', $cm->getPageTypeID())?>" method="post">
