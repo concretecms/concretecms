@@ -88,7 +88,7 @@ foreach($pages as $pc) {
 	if ($pc->getCollectionID() == HOME_CID) {
 		$includesHome = true;
 	}
-	$copyLocales[$pc->getCollectionID()] = t('%s (%s, %s)', $pc->getCollectionName(), $pcl->getLanguageText(), $pcl->getLocale());
+	$copyLocales[$pc->getCollectionID()] = tc(/*i18n: %1$s is a page name, %2$s is a language name, %3$s is a locale identifier (eg en_US)*/'PageWithLocale', '%1$s (%2$s, %3$s)', $pc->getCollectionName(), $pcl->getLanguageText(), $pcl->getLocale());
 }
 
 if ($u->isSuperUser() && !$includesHome) { ?>
@@ -158,7 +158,7 @@ if ($u->isSuperUser() && !$includesHome) { ?>
 	$defaultLocales = array('' => t('** None Set'));
 	foreach($pages as $pc) {
 		$pcl = MultilingualSection::getByID($pc->getCollectionID());
-		$defaultLocales[$pcl->getLocale()] = t('%s (%s, %s)', $pc->getCollectionName(), $pcl->getLanguageText(), $pcl->getLocale());
+		$defaultLocales[$pcl->getLocale()] = tc(/*i18n: %1$s is a page name, %2$s is a language name, %3$s is a locale identifier (eg en_US)*/'PageWithLocale', '%1$s (%2$s, %3$s)', $pc->getCollectionName(), $pcl->getLanguageText(), $pcl->getLocale());
 	}
 	$defaultLocalesSelect = $form->select('defaultLocale', $defaultLocales, $defaultLocale);
 	
