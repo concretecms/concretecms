@@ -17,7 +17,7 @@ $form = Loader::helper('form');
 
 <h4><?=$addMessageLabel?></h4>
 
-	<? if ($enablePosting) { ?>
+	<? if ($enablePosting == Conversation::POSTING_ENABLED) { ?>
 		<div class="ccm-conversation-add-new-message" rel="main-reply-form">
 			<form method="post" class="main-reply-form">
 			<div class="ccm-conversation-avatar"><? print Loader::helper('concrete/avatar')->outputUserAvatar($ui)?></div>
@@ -74,7 +74,21 @@ $form = Loader::helper('form');
             <?php } ?>
 		</div>
 	<? } else { ?>
-		<p><?=t('Adding new posts is disabled for this conversation.')?></p>
+        <? switch($enablePosting) {
+            case Conversation::POSTING_DISABLED_MANUALLY:
+                print '<p>' . t('Adding new posts is disabled for this conversation.') . '</p>';
+                break;
+            case Conversation::POSTING_DISABLED_PERMISSIONS:
+                print '<p>';
+                print ' ';
+                if (!$u->isRegistered()) {
+                    print t('You must <a href="%s">sign in</a> to post to this conversation.', URL::to('/login'));
+                } else {
+                    print t('You do not have permission to post this to conversation.');
+                }
+                print '</p>';
+                break;
+        } ?>
 	<? } ?>
 
 <? } ?>
@@ -128,7 +142,7 @@ $form = Loader::helper('form');
 
 <h4><?=$addMessageLabel?></h4>
 
-	<? if ($enablePosting) { ?>
+    <? if ($enablePosting == Conversation::POSTING_ENABLED) { ?>
 		<div class="ccm-conversation-add-new-message" rel="main-reply-form">
 			<form method="post" class="main-reply-form">
 			<div class="ccm-conversation-avatar"><? print Loader::helper('concrete/avatar')->outputUserAvatar($ui)?></div>
@@ -185,7 +199,21 @@ $form = Loader::helper('form');
             <?php } ?>
 		</div>
 	<? } else { ?>
-		<p><?=t('Adding new posts is disabled for this conversation.')?></p>
+        <? switch($enablePosting) {
+            case Conversation::POSTING_DISABLED_MANUALLY:
+                print '<p>' . t('Adding new posts is disabled for this conversation.') . '</p>';
+                break;
+            case Conversation::POSTING_DISABLED_PERMISSIONS:
+                print '<p>';
+                print ' ';
+                if (!$u->isRegistered()) {
+                    print t('You must <a href="%s">sign in</a> to post to this conversation.', URL::to('/login'));
+                } else {
+                    print t('You do not have permission to post this to conversation.');
+                }
+                print '</p>';
+                break;
+        } ?>
 	<? } ?>
 
 <? } ?>
