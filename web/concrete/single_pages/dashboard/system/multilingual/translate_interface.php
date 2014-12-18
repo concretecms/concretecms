@@ -168,9 +168,10 @@ if ($this->controller->getTask() == 'translate_po') { ?>
 	$nav = Loader::helper('navigation');
 	Loader::model('section', 'multilingual');
 	$pages = \Concrete\Core\Multilingual\Page\Section\Section::getList();
-	$defaultLanguage = Config::get('concrete.multilingual.default_locale');
+	$defaultSourceLocale = Config::get('concrete.multilingual.default_source_locale');
 
 	$ch = Core::make('multilingual/interface/flag');
+	$dh = Core::make('helper/date');
 	if (count($pages) > 0) { ?>
 
 <div class="ccm-dashboard-content-full">
@@ -198,12 +199,12 @@ if ($this->controller->getTask() == 'translate_po') { ?>
                     </td>
                     <td style="white-space: nowrap">
                         <?php echo $pc->getLocale(); ?>
-                        <? if ($pc->getLocale() != $defaultLanguage) { ?>
+                        <? if ($pc->getLocale() != $defaultSourceLocale) { ?>
                             <a href="#" class="icon-link launch-tooltip" title="<?=REL_DIR_LANGUAGES_SITE_INTERFACE?>/<?=$pc->getLocale()?>.mo"><i class="fa fa-question-circle"></i></a>
                         <? } ?>
                     </td>
                     <td style="width: 40%">
-                        <? if ($pc->getLocale() != $defaultLanguage) { ?>
+                        <? if ($pc->getLocale() != $defaultSourceLocale) { ?>
                             <?
                             $data = $extractor->getSectionSiteInterfaceCompletionData($pc);
                             ?>
@@ -213,19 +214,21 @@ if ($this->controller->getTask() == 'translate_po') { ?>
                         <? } ?>
                     </td>
                     <td style="white-space: nowrap">
-                        <span class="percent"><?=$data['completionPercentage']?>%</span> - <span class="translated"><?=$data['translatedCount']?></span> <?=t('of')?> <span class="total"><?=$data['messageCount']?></span>
+                        <? if ($pc->getLocale() != $defaultSourceLocale) { ?>
+                            <span class="percent"><?=$data['completionPercentage']?>%</span> - <span class="translated"><?=$data['translatedCount']?></span> <?=t('of')?> <span class="total"><?=$data['messageCount']?></span>
+                        <? } ?>
                     </td>
                     <td>
-                        <? if ($pc->getLocale() != $defaultLanguage) {
+                        <? if ($pc->getLocale() != $defaultSourceLocale) {
                             if (file_exists(DIR_LANGUAGES_SITE_INTERFACE . '/' . $pc->getLocale() . '.mo'))
-                                print date('F d, Y g:i:s A', filemtime(DIR_LANGUAGES_SITE_INTERFACE . '/' . $pc->getLocale() . '.mo'));
+                                print $dh->formatDateTime(filemtime(DIR_LANGUAGES_SITE_INTERFACE . '/' . $pc->getLocale() . '.mo'), true);
                             else
                                 print t('File not found.');
                         }
                         else
                             echo t('N/A'); ?>
                     </td>
-                    <? if ($pc->getLocale() == $defaultLanguage) { ?>
+                    <? if ($pc->getLocale() == $defaultSourceLocale) { ?>
                         <td></td>
                     <? } else { ?>
                         <td><a href="<?=$this->action('translate_po', $pc->getCollectionID())?>" class="icon-link"><i class="fa fa-pencil"></i></a></td>

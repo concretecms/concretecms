@@ -161,19 +161,15 @@ if ($u->isSuperUser() && !$includesHome) { ?>
 		$defaultLocales[$pcl->getLocale()] = tc(/*i18n: %1$s is a page name, %2$s is a language name, %3$s is a locale identifier (eg en_US)*/'PageWithLocale', '%1$s (%2$s, %3$s)', $pc->getCollectionName(), $pcl->getLanguageText(), $pcl->getLocale());
 	}
 	$defaultLocalesSelect = $form->select('defaultLocale', $defaultLocales, $defaultLocale);
-	
-
 	?>
-
-    <fieldset>
-        <legend><?php echo t('Multilingual Settings')?></legend>
-
+   <legend><?php echo t('Multilingual Settings')?></legend>
+	<fieldset>
         <form method="post" action="<?php echo $this->action('set_default')?>">
             <div class="form-group">
                 <label class="control-label"><?php echo t('Default Locale');?></label>
                 <?php print $defaultLocalesSelect; ?>
             </div>
-
+            
             <div class="form-group">
                 <div class="checkbox">
                 <label>
@@ -190,10 +186,33 @@ if ($u->isSuperUser() && !$includesHome) { ?>
             </div>
 
             <div class="form-group">
+                <label class="control-label"><?php echo t('Site interface source locale');?></label>
+                <?php
+                echo $form->select('defaultSourceLanguage', array_merge(array('' => t('*** Unknown or mixed language')), $languages), $defaultSourceLanguage);
+                echo $form->select('defaultSourceCountry', array_merge(array('' => ''), $countries), $defaultSourceCountry);
+                ?>
+                <script>
+                $(document).ready(function() {
+                    function update() {
+                        if($('#defaultSourceLanguage').val()) {
+                        	$('#defaultSourceCountry').removeAttr('disabled');
+                        }
+                        else {
+                        	$('#defaultSourceCountry').attr('disabled', 'disabled');                        	
+                        }
+                    }
+                    update();
+                    $('#defaultSourceLanguage').on('change', function() {
+                        update();
+                    });
+                });
+                </script>
+            </div>
+            
+            <div class="form-group">
                 <?php echo Loader::helper('validation/token')->output('set_default')?>
                 <button class="btn btn-default pull-left" type="submit" name="save"><?=t('Save Settings')?></button>
             </div>
         </form>
-
     </fieldset>
 	<?php } ?>
