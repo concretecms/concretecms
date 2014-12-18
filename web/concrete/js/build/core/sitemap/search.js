@@ -66,16 +66,21 @@
             });
 
             ConcreteEvent.unsubscribe('SitemapSelectPage.search');
-            ConcreteEvent.subscribe('SitemapSelectPage.search', function (e, data) {
+
+            var subscription = function (e, data) {
                 Concrete.event.unsubscribe(e);
                 url = CCM_TOOLS_PATH + '/dashboard/sitemap_drag_request?origCID=' + itemIDs.join(',') + '&destCID=' + data.cID;
                 $.fn.dialog.open({
                     width: 350,
                     height: 350,
                     href: url,
-                    title: ccmi18n_sitemap.moveCopyPage
+                    title: ccmi18n_sitemap.moveCopyPage,
+                    onDirectClose: function() {
+                        ConcreteEvent.subscribe('SitemapSelectPage.search', subscription);
+                    }
                 });
-            });
+            };
+            ConcreteEvent.subscribe('SitemapSelectPage.search', subscription);
         }
         ConcreteAjaxSearch.prototype.handleSelectedBulkAction.call(this, value, type, $option, $items);
     }
