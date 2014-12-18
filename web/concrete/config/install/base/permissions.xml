@@ -101,6 +101,8 @@
         		
         <!-- page type (composer) //-->
         <permissionkey handle="add_page_type" name="Add Pages of This Type" description="" package="" category="page_type" />
+        <permissionkey handle="edit_page_type" name="Edit Page Type" description="" package="" category="page_type" />
+        <permissionkey handle="delete_page_type" name="Delete Page Type" description="" package="" category="page_type" />
         <permissionkey handle="edit_page_type_permissions" name="Edit Page Type Permissions" description="" package="" category="page_type" />
         <permissionkey handle="edit_page_type_drafts" name="Edit Page Type Drafts" description="" package="" category="page_type" />
         <!--<permissionkey handle="edit_page_draft" name="Edit Page Draft" description="" package="" category="page_draft" />//-->
