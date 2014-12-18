@@ -14,7 +14,7 @@ class CookieJar
      * Adds a CookieObject to the cookie pantry
      * @param string $name The cookie name
      * @param string|null $value The value of the cookie
-     * @param int $expire The number of minutes until the cookie expires
+     * @param int $expire The number of seconds until the cookie expires
      * @param string $path The path for the cookie
      * @param null|string $domain The domain the cookie is available to
      * @param bool $secure whether the cookie should only be transmitted over a HTTPS connection from the client
