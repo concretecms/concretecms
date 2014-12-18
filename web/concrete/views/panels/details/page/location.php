@@ -6,22 +6,24 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	<form method="post" action="<?=$controller->action('submit')?>" data-dialog-form="location" data-panel-detail-form="location">
 
 		<?=Loader::helper('concrete/ui/help')->notify('panel', '/page/location')?>
+        <input type="hidden" name="cParentID" value="<?=$cParentID?>" />
 
-	<div style="min-height: 140px">
-		<? if ($c->isPageDraft()) { ?>
-			<p class="lead"><?=t('Where will this page live on the site?')?></p>
-		<? } else { ?>
-			<p class="lead"><?=t('Where does this page live on the site?')?></p>
-		<? } ?>
+        <? if (!isset($sitemap) && $sitemap == false) { ?>
+            <div style="min-height: 140px">
+                <? if ($c->isPageDraft()) { ?>
+                    <p class="lead"><?=t('Where will this page live on the site?')?></p>
+                <? } else { ?>
+                    <p class="lead"><?=t('Where does this page live on the site?')?></p>
+                <? } ?>
 
-		<div id="ccm-panel-detail-location-display"></div>
+                <div id="ccm-panel-detail-location-display"></div>
 
-		<input type="hidden" name="cParentID" value="<?=$cParentID?>" />
-		<button class="btn btn-info"type="button" name="location"><?=t('Choose Location')?></button>
+                <button class="btn btn-info"type="button" name="location"><?=t('Choose Location')?></button>
 
-	</div>
-
+            </div>
 		<hr/>
+        <? } ?>
+
 		<p class="lead"><?=t('Current Canonical URL')?></p>
 		<div class="breadcrumb">
 			<? if ($c->isPageDraft()) { ?>
