@@ -263,8 +263,12 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
     }
 
-    public function getPageTypePageTemplateDefaultPageObject(PageTemplate $template)
+    public function getPageTypePageTemplateDefaultPageObject(PageTemplate $template = null)
     {
+        if (!$template) {
+            $template = $this->getPageTypeDefaultPageTemplateObject();
+        }
+
         $db = Loader::db();
         $cID = $db->GetOne(
             'select cID from PageTypePageTemplateDefaultPages where ptID = ? and pTemplateID = ?',
@@ -296,7 +300,11 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
             );
         }
 
-        return Page::getByID($cID, 'RECENT');
+        $template =  Page::getByID($cID, 'RECENT');
+        if ($template->getCollectionInheritance() != 'OVERRIDE') {
+            $template->setPermissionsToManualOverride();
+        }
+        return $template;
     }
 
     public function getPageTypePageTemplateObjects()

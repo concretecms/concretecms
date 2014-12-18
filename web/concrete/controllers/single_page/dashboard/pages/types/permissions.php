@@ -2,6 +2,7 @@
 namespace Concrete\Controller\SinglePage\Dashboard\Pages\Types;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use Loader;
+use Config;
 use TaskPermission;
 use PageType;
 use PermissionAccess;
@@ -18,6 +19,7 @@ class Permissions extends DashboardPageController {
 				$this->set('success', t('Permissions updated successfully.'));
 				break;
 		}
+        $this->set('defaultPage', $this->pagetype->getPageTypePageTemplateDefaultPageObject());
 		$this->set('pagetype', $this->pagetype);
 	}
 
@@ -39,6 +41,23 @@ class Permissions extends DashboardPageController {
 						}			
 					}		
 				}
+
+                if (Config::get('concrete.permissions.model') == 'advanced') {
+                    $permissions = PermissionKey::getList('page');
+                    $defaultPage = $this->pagetype->getPageTypePageTemplateDefaultPageObject();
+                    foreach($permissions as $pk) {
+                        $pk->setPermissionObject($defaultPage);
+                        $paID = $_POST['pkID'][$pk->getPermissionKeyID()];
+                        $pt = $pk->getPermissionAssignmentObject();
+                        $pt->clearPermissionAssignment();
+                        if ($paID > 0) {
+                            $pa = PermissionAccess::getByID($paID, $pk);
+                            if (is_object($pa)) {
+                                $pt->assignPermissionAccess($pa);
+                            }
+                        }
+                    }
+                }
 				$this->redirect('/dashboard/pages/types/permissions', $this->pagetype->getPageTypeID(), 'updated');
 			}
 			
