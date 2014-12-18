@@ -1786,15 +1786,21 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
     public function inheritPermissionsFromDefaults() {
         $db = Loader::db();
-        $cpID = $this->getMasterCollectionID();
-        $this->updatePermissionsCollectionID($this->cID, $cpID);
-        $v = array('TEMPLATE', $cpID, $this->cID);
-        $q = "update Pages set cInheritPermissionsFrom = ?, cInheritPermissionsFromCID = ? where cID = ?";
-        $r = $db->query($q, $v);
-        $this->cInheritPermissionsFrom = 'TEMPLATE';
-        $this->cInheritPermissionsFromCID = $cpID;
-        $this->clearPagePermissions();
-        $this->rescanAreaPermissions();
+        $type = $this->getPageTypeObject();
+        if (is_object($type)) {
+            $master = $type->getPageTypePageTemplateDefaultPageObject();
+            if (is_object($master)) {
+                $cpID = $master->getCollectionID();
+                $this->updatePermissionsCollectionID($this->cID, $cpID);
+                $v = array('TEMPLATE', $cpID, $this->cID);
+                $q = "update Pages set cInheritPermissionsFrom = ?, cInheritPermissionsFromCID = ? where cID = ?";
+                $r = $db->query($q, $v);
+                $this->cInheritPermissionsFrom = 'TEMPLATE';
+                $this->cInheritPermissionsFromCID = $cpID;
+                $this->clearPagePermissions();
+                $this->rescanAreaPermissions();
+            }
+        }
     }
 
     public function setPermissionsToManualOverride() {
