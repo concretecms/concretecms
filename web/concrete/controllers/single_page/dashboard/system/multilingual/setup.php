@@ -29,6 +29,19 @@ class Setup extends DashboardPageController
         $this->set('ch', Core::make('multilingual/interface/flag'));
 
         $this->set('defaultLocale', Config::get('concrete.multilingual.default_locale'));
+        $defaultSourceLanguage = '';
+        $defaultSourceCountry = '';
+        $defaultSourceLocale = Config::get('concrete.multilingual.default_source_locale');
+        if($defaultSourceLocale) {
+            if(strpos($defaultSourceLocale, '_') === false) {
+                $defaultSourceLanguage = $defaultSourceLocale;
+            }
+            else {
+                list($defaultSourceLanguage, $defaultSourceCountry) = explode('_', $defaultSourceLocale);
+            }
+        }        
+        $this->set('defaultSourceLanguage', $defaultSourceLanguage);
+        $this->set('defaultSourceCountry', $defaultSourceCountry);
         $this->set('redirectHomeToDefaultLocale', Config::get('concrete.multilingual.redirect_home_to_default_locale'));
         $this->set('useBrowserDetectedLocale', Config::get('concrete.multilingual.use_browser_detected_locale'));
     }
@@ -108,11 +121,25 @@ class Setup extends DashboardPageController
     public function set_default()
     {
         if (Loader::helper('validation/token')->validate('set_default')) {
+            $ll = Core::make('localization/languages');
+            $languages = $ll->getLanguageList();
+            $cl = Core::Make('lists/countries');
+            $countries = $cl->getCountries();
             $lc = Section::getByLocale($this->post('defaultLocale'));
             if (is_object($lc)) {
                 Config::save('concrete.multilingual.default_locale', $this->post('defaultLocale'));
                 Config::save('concrete.multilingual.redirect_home_to_default_locale', $this->post('redirectHomeToDefaultLocale'));
                 Config::save('concrete.multilingual.use_browser_detected_locale', $this->post('useBrowserDetectedLocale'));
+                $defaultSourceLocale = '';
+                $s = $this->post('defaultSourceLanguage');
+                if(is_string($s) && array_key_exists($s, $languages)) {
+                    $defaultSourceLocale = $s;
+                    $s = $this->post('defaultSourceCountry');
+                    if(is_string($s) && array_key_exists($s, $countries)) {
+                        $defaultSourceLocale .= '_' . $s;
+                    }
+                }
+                Config::save('concrete.multilingual.default_source_locale', $defaultSourceLocale);
                 $this->redirect('/dashboard/system/multilingual/setup', 'default_locale_updated');
             } else {
                 $this->error->add(t('Invalid Section'));
