@@ -30,8 +30,11 @@ class DispatcherRouteCallback extends RouteCallback
         if (is_object($c) && !$c->isError()) {
             $item = $c;
             $request->setCurrentPage($c);
+            $cnt = $item->getPageController();
+        } else {
+            $cnt = Core::make('\Concrete\Controller\Frontend\PageNotFound');
         }
-        $cnt = $item->getPageController();
+
         $v = $cnt->getViewObject();
         $cnt->on_start();
         $cnt->runAction('view');
@@ -46,8 +49,10 @@ class DispatcherRouteCallback extends RouteCallback
         if (is_object($c) && !$c->isError()) {
             $item = $c;
             $request->setCurrentPage($c);
+            $cnt = $item->getPageController();
+        } else {
+            $cnt = Core::make('\Concrete\Controller\Frontend\PageForbidden');
         }
-        $cnt = $item->getPageController();
         $v = $cnt->getViewObject();
         $cnt->on_start();
         $cnt->runAction('view');
