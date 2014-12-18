@@ -8,6 +8,9 @@
         backupStaticAttributes="false">
     <testsuites>
         <testsuite name="BlockTypes">
+            <directory>tests/Asset/</directory>
+        </testsuite>
+        <testsuite name="BlockTypes">
             <directory>tests/Block/</directory>
         </testsuite>
         <testsuite name="Attributes">
