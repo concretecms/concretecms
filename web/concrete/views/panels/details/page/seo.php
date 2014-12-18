@@ -46,3 +46,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		<button class="pull-right btn btn-success" type="button" data-dialog-action="submit" data-panel-detail-action="submit"><?=t('Save Changes')?></button>
 	</div>
 </section>
+
+<script type="text/javascript">
+    $(function() {
+        ConcreteEvent.unsubscribe('AjaxFormSubmitSuccess.saveSeo');
+        ConcreteEvent.subscribe('AjaxFormSubmitSuccess.saveSeo', function(e, data) {
+            if (data.form == 'seo') {
+                ConcreteEvent.publish('SitemapUpdatePageRequestComplete', {'cID': data.response.cID});
+            }
+        });
+    });
+</script>

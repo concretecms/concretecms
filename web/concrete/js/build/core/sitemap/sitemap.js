@@ -187,6 +187,13 @@
                 }
                 jQuery.fn.dialog.closeAll();
             });
+            ConcreteEvent.subscribe('SitemapUpdatePageRequestComplete.sitemap', function(e, data) {
+                var node = my.getTree().getNodeByKey(data.cID);
+                var parent = node.parent;
+                if (parent) {
+                    my.reloadNode(parent);
+                }
+            });
 		},
 
     	rescanDisplayOrder: function(node) {
