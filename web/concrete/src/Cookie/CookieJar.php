@@ -9,6 +9,7 @@ class CookieJar
 
     protected $cookies = array();
     protected $clearedCookies = array();
+    protected $request;
 
     /**
      * Adds a CookieObject to the cookie pantry
@@ -51,8 +52,7 @@ class CookieJar
      */
     public function has($cookie)
     {
-        $request = Request::getInstance();
-        return $request->cookies->has($cookie);
+        return $this->getRequest()->cookies->has($cookie);
     }
 
     public function clear($cookie)
@@ -61,14 +61,16 @@ class CookieJar
     }
 
     /**
-     * @param string $name The cookie key
+     * @param string $name    The key the cookie is stored under
+     * @param mixed  $default A value to return if the cookie isn't set
      * @return mixed
      */
-    public static function get($name)
+    public function get($name, $default = null)
     {
-        $request = Request::getInstance();
-        $value = $request->cookies->get($name);
-        return $value;
+        if (!$this->has($name)) {
+            return $default;
+        }
+        return $this->getRequest()->cookies->get($name);
     }
 
     /**
@@ -82,5 +84,14 @@ class CookieJar
     public function getClearedCookies()
     {
         return $this->clearedCookies;
+    }
+
+    protected function getRequest()
+    {
+        if (!$this->request) {
+            $this->request = \Request::getInstance();
+        }
+
+        return $this->request;
     }
 }
