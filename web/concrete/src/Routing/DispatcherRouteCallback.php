@@ -2,6 +2,7 @@
 namespace Concrete\Core\Routing;
 
 use \Concrete\Core\Page\Event as PageEvent;
+use Concrete\Core\Page\Theme\Theme;
 use Request;
 use User;
 use Events;
@@ -153,13 +154,10 @@ class DispatcherRouteCallback extends RouteCallback
         require(DIR_BASE_CORE . '/bootstrap/process.php');
         $u = new User();
 
-
         // On page view event.
         $pe = new PageEvent($c);
         $pe->setUser($u);
         Events::dispatch('on_page_view', $pe);
-
-
 
         $controller = $c->getPageController();
         $controller->on_start();
@@ -178,6 +176,18 @@ class DispatcherRouteCallback extends RouteCallback
 
         $c->setController($controller);
         $view = $controller->getViewObject();
+
+        // Mobile theme
+        if (Config::get('concrete.misc.mobile_theme_id') > 0) {
+            $md = new \Mobile_Detect();
+            if ($md->isMobile()) {
+                $mobileTheme = Theme::getByID(Config::get('concrete.misc.mobile_theme_id'));
+                if($mobileTheme instanceof Theme) {
+                    $view->setViewTheme($mobileTheme);
+                }
+            }
+        }
+
         // we update the current page with the one bound to this controller.
         $request->setCurrentPage($c);
         return $this->sendResponse($view);

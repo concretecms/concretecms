@@ -72,7 +72,7 @@ class View extends AbstractView {
 
     public function setViewTheme($theme) {
         if (is_object($theme)) {
-            $this->themeHandle = $theme->getPageThemeHandle();
+            $this->themeHandle = $theme->getThemeHandle();
         } else {
             $this->themeHandle = $theme;
         }
