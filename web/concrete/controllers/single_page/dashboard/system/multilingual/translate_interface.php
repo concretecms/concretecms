@@ -78,8 +78,8 @@ class TranslateInterface extends DashboardPageController
                     // we insert them into the database so we can update our counts, and give the users
                     // a web interface
                     $extractor->saveSectionTranslationsToDatabase($section, $translations);
-                    $this->redirect('/dashboard/system/multilingual/translate_interface', 'reloaded');
                 }
+                $this->redirect('/dashboard/system/multilingual/translate_interface', 'reloaded');
             } else {
                 $this->error->add(Core::make('token')->getErrorMessage());
             }

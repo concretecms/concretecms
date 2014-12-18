@@ -236,6 +236,7 @@
     <field name="mtID" type="I" size="11">
         <KEY/>
         <AUTOINCREMENT/>
+        <UNSIGNED/>
     </field>
     <field name="mtSectionID" type="I" size="11">
         <NOTNULL/>
