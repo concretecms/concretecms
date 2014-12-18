@@ -227,9 +227,10 @@ $(function() {
 	$('#ccm-panel-page-versions tbody').on('click', 'a.ccm-panel-page-versions-version-menu', function(e) {
 		e.stopPropagation();
 	});
+	var $checkboxes = $('#ccm-panel-page-versions tbody input[type=checkbox][data-version-active=false]');
 	$('#ccm-panel-page-versions thead input[type=checkbox]').on('change', function() {
-		var $checkboxes = $('#ccm-panel-page-versions tbody input[type=checkbox][data-version-active=false]');
-		$checkboxes.prop('checked', $(this).prop('checked')).trigger('change');
+		$checkboxes.prop('checked', $(this).prop('checked'));
+		Concrete.forceRefresh();
 	});
 
 	$('#ccm-panel-page-versions tbody').on('change', 'input[type=checkbox]', function() {
