@@ -90,7 +90,7 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
 			</div>
 			<? if (!$message->isConversationMessageDeleted() && $message->isConversationMessageApproved()) { ?>
 			<ul>
-				<? if ($enablePosting && $displayMode == 'threaded') { ?>
+				<? if ($enablePosting == Conversation::POSTING_ENABLED && $displayMode == 'threaded') { ?>
 					<li><a href="#" data-toggle="conversation-reply" data-post-parent-id="<?=$message->getConversationMessageID()?>"><?=t('Reply')?></a></li>
 				<? } ?>
                 <? if ($enableCommentRating && $canRateMessage) { ?>

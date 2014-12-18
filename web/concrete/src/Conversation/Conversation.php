@@ -8,7 +8,11 @@ use \Concrete\Core\Conversation\Message\MessageList as ConversationMessageList;
 
 class Conversation extends Object implements \Concrete\Core\Permission\ObjectInterface {
 
-	public function getConversationID() {return $this->cnvID;}
+    const POSTING_ENABLED = 10;
+    const POSTING_DISABLED_MANUALLY = 5;
+    const POSTING_DISABLED_PERMISSIONS = 3;
+
+    public function getConversationID() {return $this->cnvID;}
 	public function getConversationParentMessageID() {return $this->cnvParentMessageID;}
 	public function getConversationDateCreated() {return $this->cnvDateCreated;}
 	public function getConversationDateLastMessage() {return $this->cnvDateLastMessage;}
