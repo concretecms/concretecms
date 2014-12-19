@@ -1741,6 +1741,10 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
                             ));
                         }
                     }
+
+                    // Now, we need to change the default styles on the page, in case we are inheriting any from the
+                    // defaults (for areas)
+                    $this->acquireAreaStylesFromDefaults($template);
                 }
             }
 
@@ -2582,8 +2586,10 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
             if ($r) {
                 // now that we know the insert operation was a success, we need to see if the collection type we're adding has a master collection associated with it
-                if ($masterCID || $masterCIDBlocks) {
+                if ($masterCIDBlocks) {
                     $this->_associateMasterCollectionBlocks($newCID, $masterCIDBlocks);
+                }
+                if ($masterCID) {
                     $this->_associateMasterCollectionAttributes($newCID, $masterCID);
                 }
             }
@@ -2595,6 +2601,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
                 Section::registerPage($pc);
             }
 
+            $pc->acquireAreaStylesFromDefaults($template);
+
             // run any internal event we have for page addition
             $pe = new Event($pc);
             Events::dispatch('on_page_add', $pe);
@@ -2605,6 +2613,33 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         }
 
         return $pc;
+    }
+
+    protected function acquireAreaStylesFromDefaults(\Concrete\Core\Page\Template $template)
+    {
+        $pt = $this->getPageTypeObject();
+        if (is_object($pt)) {
+            $mc = $pt->getPageTypePageTemplateDefaultPageObject($template);
+            $db = \Database::get();
+
+            // first, we delete any styles we currently have
+            $db->delete('CollectionVersionAreaStyles', array('cID' => $this->getCollectionID(), 'cvID' => $this->getVersionID()));
+
+            // now we acquire
+            $q = "select issID, arHandle from CollectionVersionAreaStyles where cID = ?";
+            $r = $db->query($q, array($mc->getCollectionID()));
+            while ($row = $r->FetchRow()) {
+                $db->Execute(
+                    'insert into CollectionVersionAreaStyles (cID, cvID, arHandle, issID) values (?, ?, ?, ?)',
+                    array(
+                        $this->getCollectionID(),
+                        $this->getVersionID(),
+                        $row['arHandle'],
+                        $row['issID']
+                    )
+                );
+            }
+        }
     }
 
     public function getCustomStyleObject()
