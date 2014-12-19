@@ -28,6 +28,7 @@ class Item extends SearchResultItem {
 		$this->canEditPageSpeedSettings = $cp->canEditPageSpeedSettings();
 		$this->canEditPagePermissions = $cp->canEditPagePermissions();
 		$this->canEditPageDesign = $cp->canEditPageTemplate() || $cp->canEditPageTheme();
+        $this->canEditPageType = $cp->canEditPageType();
 		$this->canViewPageVersions = $cp->canViewPageVersions();
 		$this->canDeletePage = $cp->canDeletePage();
 		$this->cvName = $item->getCollectionName();

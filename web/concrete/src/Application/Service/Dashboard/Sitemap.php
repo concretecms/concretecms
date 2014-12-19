@@ -112,6 +112,7 @@ class Sitemap {
 		$canEditPageSpeedSettings = $cp->canEditPageSpeedSettings();
 		$canEditPagePermissions = $cp->canEditPagePermissions();
 		$canEditPageDesign = ($cp->canEditPageTheme() || $cp->canEditPageTemplate());
+        $canEditPageType = $cp->canEditPageType();
 		$canViewPageVersions = $cp->canViewPageVersions();
 		$canDeletePage = $cp->canDeletePage();
 		$canAddSubpages = $cp->canAddSubpage();
@@ -205,6 +206,7 @@ class Sitemap {
 		$node->canEditPageSpeedSettings = $canEditPageSpeedSettings;
 		$node->canEditPagePermissions = $canEditPagePermissions;
 		$node->canEditPageDesign = $canEditPageDesign;
+        $node->canEditPageType = $canEditPageType;
 		$node->canViewPageVersions = $canViewPageVersions;
 		$node->canDeletePage = $canDeletePage;
 		$node->canAddSubpages = $canAddSubpages;
