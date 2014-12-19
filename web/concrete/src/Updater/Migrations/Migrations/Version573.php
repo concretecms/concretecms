@@ -79,6 +79,36 @@ class Version573 extends AbstractMigration
             }
         }
 
+        // add new page type permissions
+        $epk = PermissionKey::getByHandle('edit_page_type_permissions');
+        $msk = PermissionKey::getByHandle('edit_page_type');
+        $dsk = PermissionKey::getByHandle('delete_page_type');
+        if (!is_object($msk)) {
+            $msk = PermissionKey::add('page_type', 'edit_page_type', 'Edit Page Type', '', false, false);
+        }
+        if (!is_object($dsk)) {
+            $dsk = PermissionKey::add('page_type', 'delete_page_type', 'Delete Page Type', '', false, false);
+        }
+        $list = \Concrete\Core\Page\Type\Type::getList();
+        foreach($list as $pagetype) {
+            $epk->setPermissionObject($pagetype);
+            $msk->setPermissionObject($pagetype);
+            $dsk->setPermissionObject($pagetype);
+            $rpa = $epk->getPermissionAccessObject();
+            if (is_object($rpa)) {
+                $pt = $msk->getPermissionAssignmentObject();
+                if (is_object($pt)) {
+                    $pt->clearPermissionAssignment();
+                    $pt->assignPermissionAccess($rpa);
+                }
+                $pt = $dsk->getPermissionAssignmentObject();
+                if (is_object($pt)) {
+                    $pt->clearPermissionAssignment();
+                    $pt->assignPermissionAccess($rpa);
+                }
+            }
+        }
+
         // add new multilingual tables.
         $mpr = $schema->createTable('MultilingualPageRelations');
         $mpr->addColumn('mpRelationID', 'integer', array('notnull' => true, 'unsigned' => true, 'default' => 0));
@@ -131,6 +161,11 @@ class Version573 extends AbstractMigration
         if (!is_object($sp) || $sp->isError()) {
             $sp = SinglePage::add('/dashboard/system/multilingual/translate_interface');
             $sp->update(array('cName' => 'Translate Interface'));
+        }
+        $sp = Page::getByPath('/dashboard/pages/types/attributes');
+        if (!is_object($sp) || $sp->isError()) {
+            $sp = SinglePage::add('/dashboard/pages/types/attributes');
+            $sp->update(array('cName' => 'Page Type Attributes'));
         }
 
     }
