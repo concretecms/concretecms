@@ -49,11 +49,32 @@
                 <? if ($cmp->canEditPageTypePermissions()) { ?>
 					<a href="<?=$view->url('/dashboard/pages/types/permissions', $cm->getPageTypeID())?>" class="btn btn-default btn-xs"><?=t('Permissions')?></a>
 				<? } ?>
-                <? if ($cmp->canEditPageType()) { ?>
+                <a href="#" data-duplicate="<?=$cm->getPageTypeID()?>" class="btn btn-default btn-xs"><?=t('Copy')?></a>
+                <div style="display: none">
+                    <div data-duplicate-dialog="<?=$cm->getPageTypeID()?>" class="ccm-ui">
+                        <form class="form-stacked" data-duplicate-form="<?=$cm->getPageTypeID()?>" action="<?=$view->action('duplicate', $cm->getPageTypeID())?>" method="post">
+                            <div class="form-group">
+                                <label class="control-label"><?=t('Name')?></label>
+                                <input type="text" name="ptName" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label"><?=t('Handle')?></label>
+                                <input type="text" name="ptHandle" class="form-control">
+                            </div>
+                            <?=Loader::helper('validation/token')->output('duplicate_page_type')?>
+                        </form>
+                        <div class="dialog-buttons">
+                            <button onclick="jQuery.fn.dialog.closeTop()" class="btn btn-default pull-left"><?=t('Cancel')?></button>
+                            <button onclick="$('form[data-duplicate-form=<?=$cm->getPageTypeID()?>]').submit()" class="btn btn-primary pull-right"><?=t('Copy')?></button>
+                        </div>
+                    </div>
+                </div>
+
+                <? if ($cmp->canDeletePageType()) { ?>
     				<a href="#" data-delete="<?=$cm->getPageTypeID()?>" class="btn btn-default btn-xs btn-danger"><?=t('Delete')?></a>
                 <? } ?>
 				<div style="display: none">
-					<div data-delete-dialog="<?=$cm->getPageTypeID()?>">
+					<div data-delete-dialog="<?=$cm->getPageTypeID()?>" class="ccm-ui">
 						<form data-delete-form="<?=$cm->getPageTypeID()?>" action="<?=$view->action('delete', $cm->getPageTypeID())?>" method="post">
 						<?=t("Delete this page type? This cannot be undone.")?>
 						<?=Loader::helper('validation/token')->output('delete_page_type')?>
@@ -91,7 +112,7 @@
 				width: 320,
 				dialogClass: 'ccm-ui',
 				title: '<?=t("Delete Page Type")?>',
-				height: 200, 
+				height: 320,
 				buttons: [
 					{
 						'text': '<?=t("Cancel")?>',
@@ -110,7 +131,17 @@
 				]
 			});
 		});
-	});
+        $('a[data-duplicate]').on('click', function() {
+            var ptID = $(this).attr('data-duplicate');
+            jQuery.fn.dialog.open({
+                element: 'div[data-duplicate-dialog=' + ptID + ']',
+                modal: true,
+                width: 320,
+                title: '<?=t("Copy Page Type")?>',
+                height: 280
+            });
+        });
+    });
 	</script>
 
 <? } ?>
