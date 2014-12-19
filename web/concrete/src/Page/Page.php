@@ -2549,8 +2549,10 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
             $ptID = $pt->getPageTypeID();
             if ($template) {
-                $mc = $pt->getPageTypePageTemplateDefaultPageObject($template);
-                $masterCID = $mc->getCollectionID();
+                $mc1 = $pt->getPageTypePageTemplateDefaultPageObject($template);
+                $mc2 = $pt->getPageTypePageTemplateDefaultPageObject();
+                $masterCIDBlocks = $mc1->getCollectionID();
+                $masterCID = $mc2->getCollectionID();
             }
         }
 
@@ -2580,8 +2582,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
             if ($r) {
                 // now that we know the insert operation was a success, we need to see if the collection type we're adding has a master collection associated with it
-                if ($masterCID) {
-                    $this->_associateMasterCollectionBlocks($newCID, $masterCID);
+                if ($masterCID || $masterCIDBlocks) {
+                    $this->_associateMasterCollectionBlocks($newCID, $masterCIDBlocks);
                     $this->_associateMasterCollectionAttributes($newCID, $masterCID);
                 }
             }
