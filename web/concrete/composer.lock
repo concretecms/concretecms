@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "1e2005f5857e61c550cd73860ca9dd0e",
+    "hash": "2256e3e99b566809ff19a69f86dddd4f",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -1971,16 +1971,16 @@
         },
         {
             "name": "punic/punic",
-            "version": "1.2.2",
+            "version": "1.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/punic/punic.git",
-                "reference": "e8057cf10bd0ba6aad1d99e35c985e47692792d3"
+                "reference": "1094985dc6d0b01e7ca346ea25049c203d6a3944"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/punic/punic/zipball/e8057cf10bd0ba6aad1d99e35c985e47692792d3",
-                "reference": "e8057cf10bd0ba6aad1d99e35c985e47692792d3",
+                "url": "https://api.github.com/repos/punic/punic/zipball/1094985dc6d0b01e7ca346ea25049c203d6a3944",
+                "reference": "1094985dc6d0b01e7ca346ea25049c203d6a3944",
                 "shasum": ""
             },
             "require": {
@@ -2034,7 +2034,7 @@
                 "translations",
                 "unicode"
             ],
-            "time": "2014-12-12 07:58:18"
+            "time": "2014-12-19 08:08:52"
         },
         {
             "name": "sunra/php-simple-html-dom-parser",
@@ -3476,6 +3476,7 @@
         "oryzone/oauth-user-data": 20
     },
     "prefer-stable": false,
+    "prefer-lowest": false,
     "platform": {
         "php": ">=5.3.3"
     },
