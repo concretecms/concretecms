@@ -77,8 +77,9 @@ $borderOptions = array(
 
 $alignmentOptions = array(
     '' => t('None'),
-    'right' => t('Right'),
     'left' => t('Left'),
+    'center' => t('Center'),
+    'right' => t('Right'),
 );
 
 

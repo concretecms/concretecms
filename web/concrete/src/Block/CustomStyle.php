@@ -70,7 +70,7 @@ class CustomStyle extends AbstractCustomStyle
             $css .= 'border-color:' . $set->getBorderColor() . ';';
         }
         if ($set->getAlignment()) {
-            $css .= 'float:' . $set->getAlignment() . ';';
+            $css .= 'text-align:' . $set->getAlignment() . ';';
         }
         if ($set->getBorderRadius()) {
             $css .= 'border-radius:' . $set->getBorderRadius() . ';';

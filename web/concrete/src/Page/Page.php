@@ -1744,7 +1744,9 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
                     // Now, we need to change the default styles on the page, in case we are inheriting any from the
                     // defaults (for areas)
-                    $this->acquireAreaStylesFromDefaults($template);
+                    if ($template) {
+                        $this->acquireAreaStylesFromDefaults($template);
+                    }
                 }
             }
 
@@ -2601,7 +2603,9 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
                 Section::registerPage($pc);
             }
 
-            $pc->acquireAreaStylesFromDefaults($template);
+            if ($template) {
+                $pc->acquireAreaStylesFromDefaults($template);
+            }
 
             // run any internal event we have for page addition
             $pe = new Event($pc);
