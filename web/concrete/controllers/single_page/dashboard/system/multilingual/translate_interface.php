@@ -7,6 +7,7 @@ use \Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Multilingual\Page\Section\Translation;
 use Core;
 use Database;
+use Config;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -68,16 +69,19 @@ class TranslateInterface extends DashboardPageController
 
                 // $translations contains all of our site translations.
                 $list = Section::getList();
+                $defaultSourceLocale = Config::get('concrete.multilingual.default_source_locale');
                 foreach($list as $section) {
-                    // now we load the translations that currently exist for each section
-                    $translations = $extractor->mergeTranslationsWithSectionFile($section, $translations);
-                    $translations = $extractor->mergeTranslationsWithCore($section, $translations);
-                    $extractor->saveSectionTranslationsToFile($section, $translations);
-
-                    // now that we've updated the translation file, we take all the translations and
-                    // we insert them into the database so we can update our counts, and give the users
-                    // a web interface
-                    $extractor->saveSectionTranslationsToDatabase($section, $translations);
+                    if($section->getLocale() != $defaultSourceLocale) {
+                        // now we load the translations that currently exist for each section
+                        $translations = $extractor->mergeTranslationsWithSectionFile($section, $translations);
+                        $translations = $extractor->mergeTranslationsWithCore($section, $translations);
+                        $extractor->saveSectionTranslationsToFile($section, $translations);
+    
+                        // now that we've updated the translation file, we take all the translations and
+                        // we insert them into the database so we can update our counts, and give the users
+                        // a web interface
+                        $extractor->saveSectionTranslationsToDatabase($section, $translations);
+                    }
                 }
                 $this->redirect('/dashboard/system/multilingual/translate_interface', 'reloaded');
             } else {
@@ -86,13 +90,16 @@ class TranslateInterface extends DashboardPageController
         }
         if ($this->post('action') == 'export') {
             if (Core::make('token')->validate()) {
+                $defaultSourceLocale = Config::get('concrete.multilingual.default_source_locale');
                 $list = Section::getList();
                 foreach($list as $section) {
-                    $translations = $section->getSectionInterfaceTranslations();
-                    $translations = $extractor->mergeTranslationsWithSectionFile($section, $translations);
-                    $extractor->saveSectionTranslationsToFile($section, $translations);
-                    $this->redirect('/dashboard/system/multilingual/translate_interface', 'exported');
+                    if($section->getLocale() != $defaultSourceLocale) {
+                        $translations = $section->getSectionInterfaceTranslations();
+                        $translations = $extractor->mergeTranslationsWithSectionFile($section, $translations);
+                        $extractor->saveSectionTranslationsToFile($section, $translations);
+                    }
                 }
+                $this->redirect('/dashboard/system/multilingual/translate_interface', 'exported');
             } else {
                 $this->error->add(Core::make('token')->getErrorMessage());
             }
