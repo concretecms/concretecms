@@ -182,6 +182,12 @@ class BlockControl extends Control
     {
         $obj = $this->getPageTypeComposerControlDraftValue();
         if (!is_object($obj)) {
+            if ($this->page) {
+                // we HAVE a page, but we don't have a block object, which means something has gone wrong.
+                // we've lost the association. So we abort.
+                Loader::element('page_types/composer/controls/invalid_block');
+                return;
+            }
             $obj = $this->getBlockTypeObject();
         }
 

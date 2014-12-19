@@ -70,6 +70,11 @@ class PageResponse extends Response
         return $this->canDeletePage();
     }
 
+    public function canEditPageType()
+    {
+        return $this->validate('edit_page_page_type');
+    }
+
     public function canApproveCollection()
     {
         return $this->validate('approve_page_versions');

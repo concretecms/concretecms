@@ -18,7 +18,7 @@ class Version573 extends AbstractMigration
 
     public function getName()
     {
-        return '20141217000000';
+        return '20141219000000';
     }
 
     public function up(Schema $schema)
@@ -55,11 +55,15 @@ class Version573 extends AbstractMigration
         $register = \Page::getByPath('/register', "RECENT");
         $register->assignPermissions($g1, array('view_page'));
 
-        // add new permission, set it to the same value as edit page permissions on all pages.
+        // add new permissions, set it to the same value as edit page permissions on all pages.
         $epk = PermissionKey::getByHandle('edit_page_permissions');
         $msk = PermissionKey::getByHandle('edit_page_multilingual_settings');
+        $ptk = PermissionKey::getByHandle('edit_page_page_type');
         if (!is_object($msk)) {
             $msk = PermissionKey::add('page', 'edit_page_multilingual_settings', 'Edit Multilingual Settings', 'Controls whether a user can see the multilingual settings menu, re-map a page or set a page as ignored in multilingual settings.', false, false);
+        }
+        if (!is_object($ptk)) {
+            $ptk = PermissionKey::add('page', 'edit_page_page_type', 'Edit Page Type', 'Change the type of an existing page.', false, false);
         }
         $db = \Database::get();
         $r = $db->Execute('select cID from Pages where cInheritPermissionsFrom = "OVERRIDE" order by cID asc');
@@ -68,9 +72,15 @@ class Version573 extends AbstractMigration
             if (is_object($c) && !$c->isError()) {
                 $epk->setPermissionObject($c);
                 $msk->setPermissionObject($c);
+                $ptk->setPermissionObject($c);
                 $rpa = $epk->getPermissionAccessObject();
                 if (is_object($rpa)) {
                     $pt = $msk->getPermissionAssignmentObject();
+                    if (is_object($pt)) {
+                        $pt->clearPermissionAssignment();
+                        $pt->assignPermissionAccess($rpa);
+                    }
+                    $pt = $ptk->getPermissionAssignmentObject();
                     if (is_object($pt)) {
                         $pt->clearPermissionAssignment();
                         $pt->assignPermissionAccess($rpa);
@@ -110,29 +120,35 @@ class Version573 extends AbstractMigration
         }
 
         // add new multilingual tables.
-        $mpr = $schema->createTable('MultilingualPageRelations');
-        $mpr->addColumn('mpRelationID', 'integer', array('notnull' => true, 'unsigned' => true, 'default' => 0));
-        $mpr->addColumn('cID', 'integer', array('notnull' => true, 'unsigned' => true, 'default' => 0));
-        $mpr->addColumn('mpLanguage', 'string', array('notnull' => true));
-        $mpr->addColumn('mpLocale', 'string', array('notnull' => true));
-        $mpr->setPrimaryKey(array('mpRelationID', 'cID', 'mpLocale'));
-
-        $mus = $schema->createTable('MultilingualSections');
-        $mus->addColumn('cID', 'integer', array('notnull' => true, 'unsigned' => true, 'default' => 0));
-        $mus->addColumn('msLanguage', 'string', array('notnull' => true, 'default' => ''));
-        $mus->addColumn('msCountry', 'string', array('notnull' => true, 'default' => ''));
-        $mus->setPrimaryKey(array('cID'));
-
-        $mts = $schema->createTable('MultilingualTranslations');
-        $mts->addColumn('mtID', 'integer', array('autoincrement' => true, 'unsigned' => true));
-        $mts->addColumn('mtSectionID', 'integer', array('unsigned' => true, 'notnull' => true, 'default' => 0));
-        $mts->addColumn('msgid', 'text');
-        $mts->addColumn('msgstr', 'text');
-        $mts->addColumn('context', 'text');
-        $mts->addColumn('reference', 'text');
-        $mts->addColumn('flags', 'text');
-        $mts->addColumn('updated', 'datetime');
-        $mts->setPrimaryKey(array('mtID'));
+        $sm = $db->getSchemaManager();
+        $schemaTables = $sm->listTableNames();
+        if (!in_array('MultilingualPageRelations', $schemaTables)) {
+            $mpr = $schema->createTable('MultilingualPageRelations');
+            $mpr->addColumn('mpRelationID', 'integer', array('notnull' => true, 'unsigned' => true, 'default' => 0));
+            $mpr->addColumn('cID', 'integer', array('notnull' => true, 'unsigned' => true, 'default' => 0));
+            $mpr->addColumn('mpLanguage', 'string', array('notnull' => true));
+            $mpr->addColumn('mpLocale', 'string', array('notnull' => true));
+            $mpr->setPrimaryKey(array('mpRelationID', 'cID', 'mpLocale'));
+        }
+        if (!in_array('MultilingualSections', $schemaTables)) {
+            $mus = $schema->createTable('MultilingualSections');
+            $mus->addColumn('cID', 'integer', array('notnull' => true, 'unsigned' => true, 'default' => 0));
+            $mus->addColumn('msLanguage', 'string', array('notnull' => true, 'default' => ''));
+            $mus->addColumn('msCountry', 'string', array('notnull' => true, 'default' => ''));
+            $mus->setPrimaryKey(array('cID'));
+        }
+        if (!in_array('MultilingualTranslations', $schemaTables)) {
+            $mts = $schema->createTable('MultilingualTranslations');
+            $mts->addColumn('mtID', 'integer', array('autoincrement' => true, 'unsigned' => true));
+            $mts->addColumn('mtSectionID', 'integer', array('unsigned' => true, 'notnull' => true, 'default' => 0));
+            $mts->addColumn('msgid', 'text');
+            $mts->addColumn('msgstr', 'text');
+            $mts->addColumn('context', 'text');
+            $mts->addColumn('reference', 'text');
+            $mts->addColumn('flags', 'text');
+            $mts->addColumn('updated', 'datetime');
+            $mts->setPrimaryKey(array('mtID'));
+        }
 
         // block type
         $bt = BlockType::getByHandle('switch_language');

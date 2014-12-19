@@ -1358,6 +1358,21 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
+     * Set the theme for a page using the page object
+     * @param PageType $pl
+     */
+    public function setPageType(\Concrete\Core\Page\Type\Type $type = null) {
+        $ptID = 0;
+        if (is_object($type)) {
+            $ptID = $type->getPageTypeID();
+        }
+        $db = Loader::db();
+        $db->query('update Pages set ptID = ? where cID = ?', array($ptID, $this->cID));
+        $this->ptID = $ptID;
+    }
+
+
+    /**
      * Set the permissions of sub-collections added beneath this permissions to inherit from the template
      */
     function setPermissionsInheritanceToTemplate() {
@@ -1695,7 +1710,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
         } else {
 
-            if ($existingPageTemplateID && $pTemplateID && ($existingPageTemplateID != $pTemplateID) && $this->getPageTypeID() > 0) {
+            if ($existingPageTemplateID && $pTemplateID && ($existingPageTemplateID != $pTemplateID) && $this->getPageTypeID() > 0 && $this->isPageDraft()) {
                 // we are changing a page template in this operation.
                 // when that happens, we need to get the new defaults for this page, remove the other blocks
                 // on this page that were set by the old defaults master page
