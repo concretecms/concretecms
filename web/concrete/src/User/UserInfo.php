@@ -3,6 +3,7 @@ namespace Concrete\Core\User;
 
 use Concrete\Core\File\StorageLocation\StorageLocation;
 use \Concrete\Core\Foundation\Object;
+use Concrete\Core\User\Event\AddUser;
 use Concrete\Core\User\PrivateMessage\Limit;
 use Concrete\Core\User\PrivateMessage\Mailbox as UserPrivateMessageMailbox;
 use Imagine\Image\ImageInterface;
@@ -138,12 +139,17 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 
     /**
      * @param array $data
-     * @param array | false $options
      * @return UserInfo
      */
-    public static function add($data,$options=false)
+    public static function add($data)
     {
-        $options = is_array($options) ? $options : array();
+
+        $uae = new AddUser($data);
+        $uae = Events::dispatch('on_before_user_add', $uae);
+        if (!$uae->proceed()) {
+            return false;
+        }
+
         $db = Loader::db();
         $dh = Loader::helper('date');
         $uDateAdded = $dh->getOverridableNow();
@@ -177,18 +183,19 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
             $ui = UserInfo::getByID($newUID);
 
             if (is_object($ui)) {
+
+                $uo = $ui->getUserObject();
+                $groupControllers = \Group::getAutomatedOnRegisterGroupControllers($uo);
+                foreach($groupControllers as $ga) {
+                    if ($ga->check($uo)) {
+                        $uo->enterGroup($ga->getGroupObject());
+                    }
+                }
+
                 // run any internal event we have for user add
                 $ue = new \Concrete\Core\User\Event\UserInfoWithPassword($ui);
                 $ue->setUserPassword($data['uPassword']);
                 Events::dispatch('on_user_add', $ue);
-            }
-
-            $uo = $ui->getUserObject();
-            $groupControllers = \Group::getAutomatedOnRegisterGroupControllers($uo);
-            foreach($groupControllers as $ga) {
-                if ($ga->check($uo)) {
-                    $uo->enterGroup($ga->getGroupObject());
-                }
             }
 
             return $ui;
@@ -341,6 +348,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
             $mh->addParameter('profileURL', BASE_URL . View::url('/members/profile', 'view', $this->getUserID()));
             $mh->addParameter('profilePreferencesURL', BASE_URL . View::url('/account/profile/edit'));
             $mh->to($recipient->getUserEmail());
+            $mh->addParameter('siteName', Config::get('concrete.site'));
 
             $mi = MailImporter::getByHandle("private_message");
             if (is_object($mi) && $mi->isMailImporterEnabled()) {
@@ -610,6 +618,17 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
             }
 
         }
+    }
+
+    public function saveUserAttributesForm($attributes)
+    {
+        foreach($attributes as $uak) {
+            $uak->saveAttributeForm($this);
+        }
+
+        $ue = new \Concrete\Core\User\Event\UserInfoWithAttributes($this);
+        $ue->setAttributes($attributes);
+        Events::dispatch('on_user_attributes_saved', $ue);
     }
 
     /**

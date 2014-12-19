@@ -72,9 +72,6 @@ body.ccm-loading *, body.ccm-loading {
     cursor: progress !important;
 }
 
-/* page selector in blocks */
-div.ccm-summary-selected-item {border: 1px solid #dedede; margin-top: 8px; margin-bottom: 8px; padding: 10px}
-
 table.ccm-permission-grid {border: 0px;}
 table.ccm-permission-grid td.ccm-permission-grid-name {text-align: right; width: auto; white-space: nowrap;}
 table.ccm-permission-grid td {width: 100%; border-left: 0px !important; border-right: 0px !important;}
@@ -99,10 +96,24 @@ ul#ccm-block-type-list li {margin-left: 0px; list-style-type: none; display: non
 
 /* general overlay select list */
 @import "../../vendor/font-awesome/variables.less";
+
+.item-select-list-hover() {
+  color: @text-color;
+  background-color: #D4F0F7;
+  text-decoration: none;
+  .border-radius(4px);
+  .transition(0.1s linear background-color);
+}
+
 ul.item-select-list {padding: 2px 0px 0px 0px; margin: 0px 0px 15px 0px; list-style-type: none !important;}
 ul.item-select-list > li {position: relative;border-bottom: 1px solid #efefef; margin-bottom: 2px; padding-bottom: 2px}
 ul.item-select-list > li > a, ul.item-select-list > li > span {color: @text-color; background-repeat: no-repeat; display: block; padding: 8px 8px 8px 8px; text-decoration: none; border: 1px solid transparent}
-ul.item-select-list > li > a:hover {color: @text-color; background-color: #D4F0F7; text-decoration: none; .border-radius(4px); .transition(0.1s linear background-color);}
+ul.item-select-list > li > a:hover {
+  .item-select-list-hover();
+}
+ul.item-select-list > li > a:focus {
+  text-decoration: none;
+}
 ul.item-select-list > li > a img, ul.item-select-list li > span img {vertical-align: middle; max-width: 16px; margin-right: 5px; display: Inline-block;}
 ul.item-select-list > li > a i {vertical-align: middle; font-size: 18px; -webkit-font-smoothing: antialiased; margin-right: 5px; display: inline-block}
 ul.item-select-list i.ccm-item-select-list-sort {

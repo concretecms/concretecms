@@ -95,6 +95,7 @@ class Storage extends DashboardPageController {
             if (!$fsl->isDefault()) {
                 $fsl->setIsDefault($request->request->get('fslIsDefault'));
             }
+            $fsl->setConfigurationObject($configuration);
             $fsl->save();
             $this->redirect('/dashboard/system/files/storage', 'storage_location_updated');
         }

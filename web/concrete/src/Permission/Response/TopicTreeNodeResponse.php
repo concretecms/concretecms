@@ -22,7 +22,7 @@ class TopicTreeNodeResponse extends Response {
 	}
 
 	public function canDuplicateTreeNode() {
-		return $this->canAccessTopics();
+		return false;
 	}
 
 	public function canEditTreeNode() {

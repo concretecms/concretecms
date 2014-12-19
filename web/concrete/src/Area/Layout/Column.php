@@ -86,6 +86,7 @@ abstract class Column extends Object {
 		if (!$this->getAreaID()) {
             $this->setAreaID($as->getAreaID());
 		}
+        $as->setSubAreaBlockObject($this->arLayout->getBlockObject());
 		$as->display($c);
 	}
 

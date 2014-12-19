@@ -22,7 +22,7 @@ $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
 	<legend><?=t('Group Details')?></legend>
 <div class="form-group">
 <?=$form->label('gName', t('Name'))?>
-	<input type="text" class="form-control" name="gName" value="<?=htmlentities($_POST['gName'])?>" />
+	<input type="text" class="form-control" name="gName" value="<?=Core::make('helper/text')->entities($_POST['gName'])?>" />
 </div>
 
 <div class="form-group">

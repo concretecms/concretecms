@@ -40,9 +40,8 @@ class Workflows extends DashboardPageController {
 		$wfName = trim($this->post('wfName'));
 		if (!$wfName) { 
 			$this->error->add(t('You must give the workflow a name.'));
-		}
-		if (!Loader::helper('validation/strings')->alphanum($wfName, true)) {
-			$this->error->add(t('Workflow Names must only include alphanumerics and spaces.'));
+		} else if (preg_match('/[<>{};?"`]/i', $wfName)) {
+			$this->error->add(t('Invalid characters in workflow name.'));
 		}
 		if (!$this->error->has()) {
 			$wf = Workflow::getByID($this->post('wfID'));

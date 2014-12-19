@@ -7,9 +7,9 @@ return array(
      *
      * @var string
      */
-    'version'           => '5.7.2.1',
-    'version_installed' => '5.7.2.1',
-    'version_db' => '20141113000000', // the key of the latest database migration - corresponds to 5.7.2.1
+    'version'           => '5.7.3',
+    'version_installed' => '5.7.3',
+    'version_db' => '20141219000000', // the key of the latest database migration - corresponds to 5.7.3
 
     /**
      * Installation status
@@ -219,6 +219,14 @@ return array(
 
     ),
 
+    'multilingual' =>   array(
+        'enabled' => false, // note this will automatically be set to true if needed
+        'redirect_home_to_default_locale' => false,
+        'use_browser_detected_locale' => false,
+        'default_locale' => false,
+        'default_source_locale' => 'en_US'
+    ),
+
     'design'            => array(
         'enable_custom' => true,
         'enable_layouts' => true
@@ -299,6 +307,9 @@ return array(
         'default' => array(
             'address' => 'concrete5-noreply@' . $_SERVER['SERVER_NAME'],
             'name'    => ''
+        ),
+        'form_block' => array(
+            'address' => false
         )
     ),
 

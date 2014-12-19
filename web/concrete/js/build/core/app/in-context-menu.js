@@ -284,15 +284,18 @@
         activeMenu: false,
 
         reset: function () {
-
+            this.$clickProxy.css('width', 0).css('height', 0);
+            this.$container.html('');
         },
 
         enable: function () {
             this.enabled = true;
+            this.reset();
         },
 
         disable: function () {
             this.enabled = false;
+            this.reset();
         },
 
         getActiveMenu: function () {

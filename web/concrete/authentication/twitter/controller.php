@@ -24,6 +24,11 @@ class Controller extends GenericOauth1aTypeController
 
     protected $lastName;
 
+    public function registrationGroupID()
+    {
+        return \Config::get('auth.twitter.registration.group');
+    }
+
     /**
      * Twitter doesn't give us the users email.
      *
@@ -31,7 +36,7 @@ class Controller extends GenericOauth1aTypeController
      */
     public function supportsRegistration()
     {
-        return \Config::get('auth.twitter.registration_enabled', false);
+        return \Config::get('auth.twitter.registration.enabled', false);
     }
 
     /**
@@ -60,7 +65,7 @@ class Controller extends GenericOauth1aTypeController
     public function getService()
     {
         if (!$this->service) {
-            $this->service = \Core::make('twitter_service');
+            $this->service = \Core::make('authentication/twitter');
         }
         return $this->service;
     }
@@ -69,7 +74,8 @@ class Controller extends GenericOauth1aTypeController
     {
         \Config::save('auth.twitter.appid', $args['apikey']);
         \Config::save('auth.twitter.secret', $args['apisecret']);
-        \Config::save('auth.twitter.registration_enabled', $args['registration_enabled']);
+        \Config::save('auth.twitter.registration.enabled', !!$args['registration_enabled']);
+        \Config::save('auth.twitter.registration.group', intval($args['registration_group'], 10));
     }
 
     public function edit()
@@ -77,6 +83,10 @@ class Controller extends GenericOauth1aTypeController
         $this->set('form', \Loader::helper('form'));
         $this->set('apikey', \Config::get('auth.twitter.appid', ''));
         $this->set('apisecret', \Config::get('auth.twitter.secret', ''));
+
+        $list = new \GroupList();
+        $list->includeAllGroups();
+        $this->set('groups', $list->getResults());
     }
 
     /**

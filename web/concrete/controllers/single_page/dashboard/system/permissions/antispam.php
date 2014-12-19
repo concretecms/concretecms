@@ -4,6 +4,7 @@ use \Concrete\Core\Page\Controller\DashboardPageController;
 use Config;
 use Loader;
 use \Concrete\Core\Antispam\Library as SystemAntispamLibrary;
+use GroupList;
 
 class Antispam extends DashboardPageController {
 
@@ -18,10 +19,13 @@ class Antispam extends DashboardPageController {
 		$this->set('libraries', $libraries);
 
 		$db = Loader::db();
-		$groups = array('-1'=>'** None Selected');
-		$groupquery = $db->query('SELECT gID, gName from Groups');
-		while ($group = $groupquery->fetchRow()) {
-			$groups[$group['gID']] = $group['gName'];
+		$groups = array('-1' => t('** None Selected'));
+		$gl = new GroupList();
+		$gl->sortBy('gID', 'asc');
+        $gl->includeAllGroups();
+		$res = $gl->getResults();
+		foreach ($res as $g) {
+			$groups[$g->getGroupID()] = $g->getGroupDisplayName(false);
 		}
 		$this->groups = $groups;
 		$this->set('groups',$groups);

@@ -12,7 +12,7 @@ use View;
 class Controller extends AuthenticationTypeController
 {
 
-    public $apiMethods = array('forgot_password', 'v', 'change_password', 'password_changed');
+    public $apiMethods = array('forgot_password', 'v', 'change_password', 'password_changed', 'email_validated', 'invalid_token');
 
     public function getHandle()
     {
@@ -151,6 +151,8 @@ class Controller extends AuthenticationTypeController
                         $mh->from($adminUser->getUserEmail(), t('Forgot Password'));
                     }
                 }
+
+                $mh->addParameter('siteName', Config::get('concrete.site'));
                 $mh->load('forgot_password');
                 @$mh->sendMail();
 
@@ -217,7 +219,16 @@ class Controller extends AuthenticationTypeController
 
     public function password_changed()
     {
-        $this->set('derp', t('Password changed successfully!'));
+        $this->view();
+    }
+
+    public function email_validated()
+    {
+        $this->view();
+    }
+
+    public function invalid_token()
+    {
         $this->view();
     }
 
@@ -268,7 +279,10 @@ class Controller extends AuthenticationTypeController
             $ui->markValidated();
             $this->set('uEmail', $ui->getUserEmail());
             $this->set('validated', true);
+            $this->redirect('/login/callback/concrete', 'email_validated');
+            exit;
         }
+        $this->redirect('/login/callback/concrete', 'invalid_token');
     }
 
 }

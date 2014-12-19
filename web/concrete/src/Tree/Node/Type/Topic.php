@@ -1,7 +1,10 @@
 <?php
 namespace Concrete\Core\Tree\Node\Type;
+
 use Concrete\Core\Tree\Node\Node as TreeNode;
 use Loader;
+use Core;
+
 class Topic extends TreeNode {
 
 	public function getPermissionResponseClassName() {
@@ -15,9 +18,23 @@ class Topic extends TreeNode {
 		return 'topic_tree_node';
 	}
 
-	public function getTreeNodeDisplayName() {
+	public function getTreeNodeName()
+	{
 		return $this->treeNodeTopicName;
 	}
+
+    public function getTreeNodeDisplayName($format = 'html')
+    {
+        $name = Core::make('helper/text')->unhandle($this->getTreeNodeName());
+        $name = tc('TopicName', $name);
+        switch ($format) {
+            case 'html':
+                return h($name);
+            case 'text':
+            default:
+                return $name;
+        }
+    }
 
 	public function loadDetails() {
 		$db = Loader::db();
