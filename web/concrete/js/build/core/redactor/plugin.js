@@ -131,3 +131,18 @@ RedactorPlugins.concrete5 = {
     }
 
 }
+
+RedactorPlugins.underline = {
+        init: function()
+        {
+            var button = this.buttonAddAfter('italic', 'underline', 'Underline', this.format);
+        },
+        format: function(s)
+        {
+            if (jQuery(this.buttonGet('underline')).hasClass('redactor_act')) {
+                this.inlineRemoveFormat('u');
+            } else {
+                this.inlineFormat('u');
+            }
+        }
+};
