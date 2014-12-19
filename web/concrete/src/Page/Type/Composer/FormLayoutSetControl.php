@@ -18,6 +18,7 @@ class FormLayoutSetControl extends Object
     public function getPageTypeComposerFormLayoutSetID() {return $this->ptComposerFormLayoutSetID;}
     public function getPageTypeComposerControlTypeID() {return $this->ptComposerControlTypeID;}
     public function getPageTypeComposerControlObject() {return $this->ptComposerControlObject;}
+    public function getPageTypeComposerFormLayoutSetControlDisplayOrder() {return $this->ptComposerFormLayoutSetControlDisplayOrder;}
     public function getPageTypeComposerControlTypeObject() {return PageTypeComposerControlType::getByID($this->ptComposerControlTypeID);}
     public function getPageTypeComposerFormLayoutSetObject() {return PageTypeComposerFormLayoutSet::getByID($this->ptComposerFormLayoutSetID);}
     public function getPageTypeComposerFormLayoutSetControlCustomLabel() {return $this->ptComposerFormLayoutSetControlCustomLabel;}
@@ -218,4 +219,15 @@ class FormLayoutSetControl extends Object
         $set->rescanFormLayoutSetControlDisplayOrder();
     }
 
+    public function duplicate(FormLayoutSet $set)
+    {
+        $db = \Database::get();
+        $control = $this->getPageTypeComposerControlObject();
+        $new = $control->addToPageTypeComposerFormLayoutSet($set);
+        $new->updateFormLayoutSetControlRequired($this->isPageTypeComposerFormLayoutSetControlRequired());
+        $new->updateFormLayoutSetControlDescription($this->getPageTypeComposerFormLayoutSetControlDescription());
+        $new->updateFormLayoutSetControlCustomTemplate($this->getPageTypeComposerFormLayoutSetControlCustomTemplate());
+        $new->updateFormLayoutSetControlCustomLabel($this->getPageTypeComposerFormLayoutSetControlCustomLabel());
+        return $new;
+    }
 }

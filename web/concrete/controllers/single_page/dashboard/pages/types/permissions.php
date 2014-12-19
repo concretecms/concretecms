@@ -15,8 +15,8 @@ class Permissions extends DashboardPageController {
 			$this->redirect('/dashboard/pages/types');
 		}
         $cmp = new \Permissions($this->pagetype);
-        if (!$cmp->canEditPageType()) {
-            throw new \Exception(t('You do not have access to edit this page type.'));
+        if (!$cmp->canEditPageTypePermissions()) {
+            throw new \Exception(t('You do not have access to edit this page type permissions.'));
         }
 		switch($message) {
 			case 'updated':
