@@ -3,9 +3,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $cmpp = new Permissions($pagetype);
 ?>
 
-<? if (!is_object($page) || $page->isPageDraft()) { ?>
-	<button type="button" data-page-type-composer-form-btn="publish" class="btn btn-primary pull-right"><?=t('Publish')?></button>
-<? } ?>
+<button type="button" data-page-type-composer-form-btn="publish" class="btn btn-primary pull-right"><?=t('Publish')?></button>
 
 <? if (!is_object($page) || $page->isPageDraft()) { ?>
 <button type="button" data-page-type-composer-form-btn="preview" class="btn btn-success pull-right"><?=t('Edit Mode')?></button>

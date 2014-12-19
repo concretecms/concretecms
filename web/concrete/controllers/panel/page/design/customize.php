@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Controller\Panel\Page\Design;
 use \Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
+use Concrete\Core\Page\PageList;
 use Permissions;
 use Page;
 use stdClass;
@@ -143,6 +144,21 @@ class Customize extends BackendInterfacePageController {
                 $preset = $pt->getThemeCustomizablePreset($this->request->request->get('handle'));
             }
 
+            // reset all custom styles on particular pages
+            $pl = new PageList();
+            $pl->filterByPagesWithCustomStyles();
+            $results = $pl->getResults();
+            foreach($results as $csc) {
+                $cscv = $csc->getVersionToModify();
+                $cscv->resetCustomThemeStyles();
+                $vo = $csc->getVersionObject();
+                if ($vo->isApproved()) {
+                    $vo = $cscv->getVersionObject();
+                    $vo->approve();
+                }
+            }
+
+            // set the global style object.
             $pt->setCustomStyleObject($vl, $preset, $sccRecord);
             $r = new PageEditResponse();
             $r->setPage($this->page);
@@ -189,8 +205,11 @@ class Customize extends BackendInterfacePageController {
 
     public function reset_site_customizations($pThemeID) {
         if ($this->validateAction()) {
+            Page::resetAllCustomStyles();
+
             $pt = PageTheme::getByID($pThemeID);
             $pt->resetThemeCustomStyles();
+
             $r = new PageEditResponse();
             $r->setPage($this->page);
             $r->setRedirectURL(BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $this->page->getCollectionID());

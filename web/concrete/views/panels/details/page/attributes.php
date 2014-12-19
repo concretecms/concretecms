@@ -137,6 +137,15 @@ $(function() {
 		ConcretePageAttributesDetail.removeAttributeKey(akID);
 	});
 
+    $(function() {
+        ConcreteEvent.unsubscribe('AjaxFormSubmitSuccess.saveAttributes');
+        ConcreteEvent.subscribe('AjaxFormSubmitSuccess.saveAttributes', function(e, data) {
+            if (data.form == 'attributes') {
+                ConcreteEvent.publish('SitemapUpdatePageRequestComplete', {'cID': data.response.cID});
+            }
+        });
+    });
+
 });
 
 </script>

@@ -23,7 +23,7 @@ class Settings extends DashboardPageController {
 		$this->set('maxFilesGuest', Config::get('conversations.files.guest.max'));
 		$this->set('maxFilesRegistered', Config::get('conversations.files.registered.max'));
 		$this->set('fileExtensions', implode(',', $fileAccessFileTypes));
-        $this->set('attachmentsEnabled', intval(Config::get('concrete.conversations.attachments_enabled')));
+        $this->set('attachmentsEnabled', intval(Config::get('conversations.attachments_enabled')));
         $this->loadEditors();
 	}
 
@@ -63,24 +63,16 @@ class Settings extends DashboardPageController {
 
     public function success() {
 		$this->view();
-		$this->set('message','Updated conversations settings.');
+		$this->set('message', t('Updated conversations settings.'));
 	}
 
 	public function save() {
 		$helper_file = Loader::helper('concrete/file');
-		if ($this->post('maxFileSizeGuest')) {
-			Config::save('conversations.files.guest.max_size', $this->post('maxFileSizeGuest'));
-		}
-		if($this->post('maxFileSizeRegistered')){
-			Config::save('conversations.files.registered.max_size', $this->post('maxFileSizeRegistered'));
-		}
-		if($this->post('maxFilesGuest')) {
-			Config::save('conversations.files.guest.max', $this->post('maxFilesGuest'));
-		}
-		if($this->post('maxFilesGuest')){
-			Config::save('conversations.files.registered.max', $this->post('maxFilesRegistered')) ;
-		}
-        Config::save('concrete.conversations.attachments_enabled', !!$this->post('attachmentsEnabled'));
+        Config::save('conversations.files.guest.max_size', intval($this->post('maxFileSizeGuest')));
+        Config::save('conversations.files.registered.max_size', intval($this->post('maxFileSizeRegistered')));
+        Config::save('conversations.files.guest.max', intval($this->post('maxFilesGuest')));
+        Config::save('conversations.files.registered.max', intval($this->post('maxFilesRegistered')));
+        Config::save('conversations.attachments_enabled', !!$this->post('attachmentsEnabled'));
 		if ($this->post('fileExtensions')){
 			$types = preg_split('{,}',$this->post('fileExtensions'),null,PREG_SPLIT_NO_EMPTY);
 			$types = $helper_file->serializeUploadFileExtensions($types);

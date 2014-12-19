@@ -2,7 +2,7 @@
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
-$subject = SITE . " " . t("Workflow Notification");
+$subject = $siteName . " " . t("Workflow Notification");
 $body = t("Dear %s,
 
 %s

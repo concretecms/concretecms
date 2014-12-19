@@ -48,12 +48,12 @@ abstract class Configuration extends Object
     }
 
 
-    public function includeChooseTargetForm($pagetype = false, $page = false)
+    public function includeChooseTargetForm($pagetype = false, $target = false)
     {
         Loader::element(
             DIRNAME_PAGE_TYPES . '/' . DIRNAME_ELEMENTS_PAGE_TYPES_PUBLISH_TARGET_TYPES . '/' . DIRNAME_ELEMENTS_PAGE_TYPES_PUBLISH_TARGET_TYPES_FORM . '/' . $this->getPageTypePublishTargetTypeHandle(
             ),
-            array('configuration' => $this, 'page' => $page, 'pagetype' => $pagetype),
+            array('configuration' => $this, 'target' => $target, 'pagetype' => $pagetype),
             $this->pkgHandle
         );
     }

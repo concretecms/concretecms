@@ -329,6 +329,7 @@ class Login extends PageController
                         return $ak->isAttributeKeyRequiredOnRegister() && !is_object($ui->getAttributeValueObject($ak));
                     }));
 
+            $saveAttributes = array();
             foreach ($unfilled as $attribute) {
                 $err = $attribute->validateAttributeForm();
                 if ($err == false) {
@@ -336,10 +337,13 @@ class Login extends PageController
                 } elseif ($err instanceof \Concrete\Core\Error\Error) {
                     $this->error->add($err);
                 } else {
-                    $attribute->saveAttributeForm($ui);
+                    $saveAttributes[] = $attribute;
                 }
             }
 
+            if (count($saveAttributes) > 0) {
+                $ui->saveUserAttributesForm($saveAttributes);
+            }
             $this->finishAuthentication($at);
         } catch (\Exception $e) {
             $this->error->add($e->getMessage());

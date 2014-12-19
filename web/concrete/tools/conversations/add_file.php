@@ -7,7 +7,7 @@ $error = array();
 $pageObj = Page::getByID($_POST['cID']);
 $areaObj = Area::get($pageObj, $_POST['blockAreaHandle']);
 $blockObj = Block::getByID($_POST['bID'], $pageObj, $areaObj);
-$conversation = Conversation::getByID($blockObj->getController()->cnvID);
+$conversation = $blockObj->getController()->getConversationObject();
 
 if(!(is_object($conversation))) {
     $error[] = t('Invalid Conversation.');
@@ -22,7 +22,7 @@ if($conversation->getConversationAttachmentOverridesEnabled() > 0) { // check in
         echo Loader::helper('json')->encode($file);
         exit;
     }
-} else if(!Config::get('concrete.conversations.attachments_enabled')) { // check global config settings for whether or not file attachments should be allowed.
+} else if(!Config::get('conversations.attachments_enabled')) { // check global config settings for whether or not file attachments should be allowed.
     $error[] = t('This conversation does not allow file attachments.');
     $file->error = $error;
     echo Loader::helper('json')->encode($file);
@@ -66,36 +66,28 @@ if(!$p->canRead()) {    // block read permissions check
 // check for registered or guest user file size overrides / limits
 
 $u = new User();
-$blockRegisteredSizeOverride = $blockObj->getController()->maxFileSizeRegistered;
-$blockGuestSizeOverride = $blockObj->getController()->maxFileSizeGuest;
-$blockRegisteredQuantityOverride = $blockObj->getController()->maxFilesRegistered;
-$blockGuestQuantityOverride = $blockObj->getController()->maxFilesGuest;
+$blockRegisteredSizeOverride = $conversation->getConversationMaxFileSizeRegistered();
+$blockGuestSizeOverride = $conversation->getConversationMaxFilesGuest();
+$blockRegisteredQuantityOverride = $conversation->getConversationMaxFilesRegistered();
+$blockGuestQuantityOverride = $conversation->getConversationMaxFilesGuest();
+$blockExtensionsOverride = $conversation->getConversationFileExtensions();
 
 if ($u->isRegistered()) {
-	if($blockRegisteredSizeOverride > 0) { // if block overrides for registered exist, use them instead of global.
+	if($conversation->getConversationAttachmentOverridesEnabled()) {
 		$maxFileSize = $blockRegisteredSizeOverride;
+        $maxQuantity = $blockRegisteredQuantityOverride;
 	} else {
 		$maxFileSize = Config::get('conversations.files.guest.max_size');
+        $maxQuantity = Config::get('conversations.files.registered.max');
 	}
-
-	if($blockRegisteredQuantityOverride > 0) {
-		$maxQuantity = $blockRegisteredQuantityOverride;
-	} else {
-		$maxQuantity = Config::get('conversations.files.registered.max');
-	}
-
 } else {
-	if($blockGuestSizeOverride > 0) {  // if block overrides for guest exist, use them instead of global.
-		 $maxFileSize =  $blockGuestSizeOverride;
-	} else {
-		$maxFileSize = Config::get('conversations.files.guest.max_size');
-	}
-
-	if($blockGuestQuantityOverride > 0) {  // if block overrides for guest exist, use them instead of global.
-		 $maxQuantity =  $blockGuestQuantityOverride;
-	} else {
-		$maxQuantity = Config::get('conversations.files.guest.max');
-	}
+    if($conversation->getConversationAttachmentOverridesEnabled()) {
+        $maxFileSize =  $blockGuestSizeOverride;
+        $maxQuantity =  $blockGuestQuantityOverride;
+    } else {
+        $maxFileSize = Config::get('conversations.files.guest.max_size');
+        $maxQuantity = Config::get('conversations.files.guest.max');
+    }
 }
 
 
@@ -111,8 +103,7 @@ if($maxQuantity > 0 && ($_POST['fileCount']) > $maxQuantity) {
 // check filetype extension and overrides
 
 
-$blockExtensionsOverride = $blockObj->getController()->fileExtensions;
-if($blockExtensionsOverride) {
+if($conversation->getConversationAttachmentOverridesEnabled()) {
 	$extensionList = $blockExtensionsOverride;
 } else {
 	$extensionList = Config::get('conversations.files.allowed_types');
@@ -148,7 +139,7 @@ if(count($error) > 0) {  // send in the errors
 
 $fi = new FileImporter();
 $fv = $fi->import( $_FILES["file"]["tmp_name"], $_FILES["file"]["name"]);
-if(!$fv instanceof FileVersion) {
+if(!($fv instanceof \Concrete\Core\File\Version)) {
 	$file->error = $fi->getErrorMessage($fv);
 	$file->timestamp = $_POST['timestamp'];
 } else {

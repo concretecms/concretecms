@@ -4,6 +4,7 @@ namespace Concrete\Core\User\Group;
 use \Concrete\Core\Foundation\Object;
 use Concrete\Core\User\User;
 use Config;
+use Gettext\Translations;
 use Loader;
 use CacheLocal;
 use GroupTree;
@@ -12,6 +13,7 @@ use Environment;
 use UserList;
 use Events;
 use \Concrete\Core\Package\PackageList;
+use File;
 
 class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
 {
@@ -40,11 +42,11 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
         return false;
     }
 
-    /*
+    /**
      * Takes the numeric id of a group and returns a group object
-     * @parem string $gID
-     * @return object Group
-    */
+     * @param string $gID
+     * @return Group
+     */
     public static function getByID($gID)
     {
         $db = Loader::db();
@@ -62,11 +64,11 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
     }
 
-    /*
+    /**
      * Takes the name of a group and returns a group object
-     * @parem string $gName
-     * @return object Group
-    */
+     * @param string $gName
+     * @return Group
+     */
     public static function getByName($gName)
     {
         $db = Loader::db();
@@ -78,6 +80,10 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
     }
 
+    /**
+     * @param string $gPath The group path
+     * @return Group
+     */
     public static function getByPath($gPath)
     {
         $db = Loader::db();
@@ -524,7 +530,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
         $results = $gs->getResults();
         $badges = array();
         foreach ($results as $gr) {
-            $badges[] = Group::getByID($gr['gID']);
+            $badges[] = $gr;
         }
         return $badges;
     }
@@ -636,4 +642,20 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
             array($interval, $action, $this->gID)
         );
     }
+
+    public static function exportTranslations()
+    {
+        $translations = new Translations();
+        $gl = new GroupList();
+        $gl->includeAllGroups();
+        $results = $gl->getResults();
+        foreach($results as $group) {
+            $translations->insert('GroupName', $group->getGroupName());
+            if ($group->getGroupDescription()) {
+                $translations->insert('GroupDescription', $group->getGroupDescription());
+            }
+        }
+        return $translations;
+    }
+
 }

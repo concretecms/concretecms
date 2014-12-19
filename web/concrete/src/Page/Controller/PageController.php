@@ -164,7 +164,8 @@ class PageController extends Controller {
         if (!$this->isValidControllerTask($this->action, $this->parameters)) {
             $valid = false;
             // we check the blocks on the page.
-            $blocks = $this->getPageObject()->getBlocks();
+            $blocks = array_merge($this->getPageObject()->getBlocks(), $this->getPageObject()->getGlobalBlocks());
+
             foreach($blocks as $b) {
                 $controller = $b->getController();
                 list($method, $parameters) = $controller->getPassThruActionAndParameters($this->parameters);

@@ -709,10 +709,8 @@ class BlockType
      */
     protected function loadController()
     {
-        if (!isset($this->controller)) {
-            $class = static::getBlockTypeMappedClass($this->getBlockTypeHandle(), $this->getPackageHandle());
-            $this->controller = new $class($this);
-        }
+        $class = static::getBlockTypeMappedClass($this->getBlockTypeHandle(), $this->getPackageHandle());
+        $this->controller = new $class($this);
     }
 
 }

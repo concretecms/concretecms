@@ -8,7 +8,11 @@ use \Concrete\Core\Conversation\Message\MessageList as ConversationMessageList;
 
 class Conversation extends Object implements \Concrete\Core\Permission\ObjectInterface {
 
-	public function getConversationID() {return $this->cnvID;}
+    const POSTING_ENABLED = 10;
+    const POSTING_DISABLED_MANUALLY = 5;
+    const POSTING_DISABLED_PERMISSIONS = 3;
+
+    public function getConversationID() {return $this->cnvID;}
 	public function getConversationParentMessageID() {return $this->cnvParentMessageID;}
 	public function getConversationDateCreated() {return $this->cnvDateCreated;}
 	public function getConversationDateLastMessage() {return $this->cnvDateLastMessage;}
@@ -17,7 +21,7 @@ class Conversation extends Object implements \Concrete\Core\Permission\ObjectInt
     public function getConversationMaxFileSizeRegistered() { return intval($this->cnvMaxFileSizeRegistered);}
     public function getConversationMaxFilesGuest() { return intval($this->cnvMaxFilesGuest);}
     public function getConversationMaxFilesRegistered() { return intval($this->cnvMaxFilesRegistered);}
-    public function getConversationFileExtensions() { return intval($this->cnvFileExtensions);}
+    public function getConversationFileExtensions() { return $this->cnvFileExtensions;}
     public function getConversationAttachmentOverridesEnabled() { return intval($this->cnvAttachmentOverridesEnabled);}
     public function getConversationAttachmentsEnabled() { return intval($this->cnvAttachmentsEnabled);}
 
@@ -148,7 +152,7 @@ class Conversation extends Object implements \Concrete\Core\Permission\ObjectInt
 
     public function setConversationFileExtensions($cnvFileExtensions) {
         $db = Loader::db();
-        $db->Execute('update Conversations set cnvFileExtensions = ? where cnvID = ?', array(intval($cnvFileExtensions), $this->getConversationID()));
+        $db->Execute('update Conversations set cnvFileExtensions = ? where cnvID = ?', array($cnvFileExtensions, $this->getConversationID()));
     }
 
 

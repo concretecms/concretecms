@@ -3,14 +3,27 @@ namespace Concrete\Core\Tree\Node\Type;
 use Concrete\Core\Tree\Node\Node as TreeNode;
 use Loader;
 abstract class Category extends TreeNode {
+    
+    public function getTreeNodeName()
+    {
+        return $this->treeNodeCategoryName;
+    }
 
-	public function getTreeNodeDisplayName() {
-		if ($this->treeNodeCategoryName) {
-			return $this->treeNodeCategoryName;
-		} else if ($this->treeNodeParentID == 0) {
-			return t('Categories');
-		}
-	}
+    public function getTreeNodeDisplayName($format = 'html')
+    {
+        if ($this->getTreeNodeName()) {
+            $name = tc('CategoryName', $this->getTreeNodeName());
+            switch ($format) {
+                case 'html':
+                    return h($name);
+                case 'text':
+                default:
+                    return $name;
+            }
+        } else if ($this->treeNodeParentID == 0) {
+            return t('Categories');
+        }
+    }
 
 	public function loadDetails() {
 		$db = Loader::db();

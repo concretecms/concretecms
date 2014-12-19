@@ -3,6 +3,7 @@ namespace Concrete\Block\ImageSlider;
 
 use Concrete\Core\Block\BlockController;
 use Loader;
+use Page;
 
 class Controller extends BlockController
 {
@@ -45,12 +46,14 @@ class Controller extends BlockController
     public function add()
     {
         $this->requireAsset('core/file-manager');
+        $this->requireAsset('core/sitemap');
         $this->requireAsset('redactor');
     }
 
     public function edit()
     {
         $this->requireAsset('core/file-manager');
+        $this->requireAsset('core/sitemap');
         $this->requireAsset('redactor');
         $db = Loader::db();
         $query = $db->GetAll('SELECT * from btImageSliderEntries WHERE bID = ? ORDER BY sortOrder', array($this->bID));
@@ -65,8 +68,17 @@ class Controller extends BlockController
     public function view()
     {
         $db = Loader::db();
-        $query = $db->GetAll('SELECT * from btImageSliderEntries WHERE bID = ? ORDER BY sortOrder', array($this->bID));
-        $this->set('rows', $query);
+        $r = $db->GetAll('SELECT * from btImageSliderEntries WHERE bID = ? ORDER BY sortOrder', array($this->bID));
+        // in view mode, linkURL takes us to where we need to go whether it's on our site or elsewhere
+        $rows = array();
+        foreach($r as $q) {
+            if (!$q['linkURL'] && $q['internalLinkCID']) {
+                $c = Page::getByID($q['internalLinkCID'], 'ACTIVE');
+                $q['linkURL'] = $c->getCollectionLink();
+            }
+            $rows[] = $q;
+        }
+        $this->set('rows', $rows);
     }
 
     public function duplicate($newBID) {
@@ -103,15 +115,32 @@ class Controller extends BlockController
         $count = count($args['sortOrder']);
         $i = 0;
         parent::save($args);
+
         while ($i < $count) {
-            $db->execute('INSERT INTO btImageSliderEntries (bID, fID, linkURL, title, description, sortOrder) values(?,?,?,?,?,?)',
+            $linkURL = $args['linkURL'][$i];
+            $internalLinkCID = $args['internalLinkCID'][$i];
+            switch (intval($args['linkType'][$i])) {
+                case 1:
+                    $linkURL = '';
+                    break;
+                case 2:
+                    $internalLinkCID = 0;
+                    break;
+                default:
+                    $linkURL = '';
+                    $internalLinkCID = 0;
+                    break;
+            }
+
+            $db->execute('INSERT INTO btImageSliderEntries (bID, fID, title, description, sortOrder, linkURL, internalLinkCID) values(?, ?, ?, ?,?,?,?)',
                 array(
                     $this->bID,
                     intval($args['fID'][$i]),
-                    $args['linkURL'][$i],
                     $args['title'][$i],
                     $args['description'][$i],
-                    $args['sortOrder'][$i]
+                    $args['sortOrder'][$i],
+                    $linkURL,
+                    $internalLinkCID
                 )
             );
             $i++;

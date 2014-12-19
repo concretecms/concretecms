@@ -36,7 +36,7 @@ class Actions extends DashboardPageController {
 			$this->set('upaHasCustomClass', $this->upa->hasCustomClass());
 			$g = $this->upa->getUserPointActionBadgeGroupObject();
 			if(is_object($g)) {
-				$this->set('upaBadgeGroupName',$g->getGroupName());
+				$this->set('upaBadgeGroupName',$g->getGroupDisplayName(false));
 			}
 			$this->set('showForm',true);
 		}
@@ -45,7 +45,7 @@ class Actions extends DashboardPageController {
 		$badges = Group::getBadges();
 		$select = array('' => t('** None'));
 		foreach($badges as $g) {
-			$select[$g->getGroupID()] = $g->getGroupName();
+			$select[$g->getGroupID()] = $g->getGroupDisplayName(false);
 		}
 		$this->set('badges', $select);
 		$this->set('pagination',$actionList->getPagination());

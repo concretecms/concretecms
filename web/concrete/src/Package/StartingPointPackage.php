@@ -217,10 +217,12 @@ class StartingPointPackage extends BasePackage {
         $coa = AuthenticationType::add('community', 'concrete5.org');
 		$fba = AuthenticationType::add('facebook',  'Facebook');
         $twa = AuthenticationType::add('twitter',   'Twitter');
+        $gat = AuthenticationType::add('google',   'Google');
 
 		$fba->disable();
         $twa->disable();
         $coa->disable();
+        $gat->disable();
 
 		\Concrete\Core\Tree\TreeType::add('group');
 		\Concrete\Core\Tree\Node\NodeType::add('group');
@@ -321,11 +323,15 @@ class StartingPointPackage extends BasePackage {
 
 		$home = Page::getByID(1, "RECENT");
 		$home->assignPermissions($g1, array('view_page'));
-		$home->assignPermissions($g3, array('view_page_versions', 'view_page_in_sitemap', 'preview_page_as_user', 'edit_page_properties', 'edit_page_contents', 'edit_page_speed_settings', 'edit_page_theme', 'edit_page_template', 'edit_page_permissions', 'delete_page', 'delete_page_versions', 'approve_page_versions', 'add_subpage', 'move_or_copy_page', 'schedule_page_contents_guest_access'));
+		$home->assignPermissions($g3, array('view_page_versions', 'view_page_in_sitemap', 'preview_page_as_user', 'edit_page_properties', 'edit_page_contents', 'edit_page_speed_settings', 'edit_page_multilingual_settings', 'edit_page_theme', 'edit_page_template', 'edit_page_permissions', 'delete_page', 'delete_page_versions', 'approve_page_versions', 'add_subpage', 'move_or_copy_page', 'schedule_page_contents_guest_access'));
 
         // login
-        $dashboard = Page::getByPath('/login', "RECENT");
-        $dashboard->assignPermissions($g1, array('view_page'));
+        $login = Page::getByPath('/login', "RECENT");
+        $login->assignPermissions($g1, array('view_page'));
+
+        // register
+        $register = Page::getByPath('/register', "RECENT");
+        $register->assignPermissions($g1, array('view_page'));
 
 		// dashboard
 		$dashboard = Page::getByPath('/dashboard', "RECENT");

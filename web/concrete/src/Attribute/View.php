@@ -34,7 +34,7 @@ class View extends AbstractView {
 		$this->controller = $this->attributeType->getController();
 		$this->controller->setAttributeKey($this->attributeKey);
 		$this->controller->setAttributeValue($this->attributeValue);
-		if (is_object($attributeKey)) {
+		if (is_object($this->attributeKey)) {
 			$this->controller->set('akID', $this->attributeKey->getAttributeKeyID());
 		}
 	}
@@ -43,6 +43,7 @@ class View extends AbstractView {
 		$this->initialViewToRender = $state;
         $this->viewToRender = $state;
         $env = Environment::get();
+        $atHandle = $this->attributeType->getAttributeTypeHandle();
         $r = $env->getRecord(DIRNAME_ATTRIBUTES . '/' . $atHandle . '/' . $this->viewToRender . '.php', $this->attributePkgHandle);
         if ($this->initialViewToRender == 'composer' && !$r->exists()) {
             $this->viewToRender = 'form';
