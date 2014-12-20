@@ -126,7 +126,7 @@ class Version573 extends AbstractMigration
             $mpr = $schema->createTable('MultilingualPageRelations');
             $mpr->addColumn('mpRelationID', 'integer', array('notnull' => true, 'unsigned' => true, 'default' => 0));
             $mpr->addColumn('cID', 'integer', array('notnull' => true, 'unsigned' => true, 'default' => 0));
-            $mpr->addColumn('mpLanguage', 'string', array('notnull' => true));
+            $mpr->addColumn('mpLanguage', 'string', array('notnull' => true, 'default' => ''));
             $mpr->addColumn('mpLocale', 'string', array('notnull' => true));
             $mpr->setPrimaryKey(array('mpRelationID', 'cID', 'mpLocale'));
         }
@@ -144,6 +144,7 @@ class Version573 extends AbstractMigration
             $mts->addColumn('msgid', 'text');
             $mts->addColumn('msgstr', 'text');
             $mts->addColumn('context', 'text');
+            $mts->addColumn('comments', 'text');
             $mts->addColumn('reference', 'text');
             $mts->addColumn('flags', 'text');
             $mts->addColumn('updated', 'datetime');
