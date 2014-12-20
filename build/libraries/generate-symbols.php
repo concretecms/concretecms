@@ -18,5 +18,10 @@ $generator = new \Concrete\Core\Support\Symbol\SymbolGenerator();
 $symbols = $generator->render();
 file_put_contents(DIR_BASE . '/concrete/src/Support/__IDE_SYMBOLS__.php', $symbols);
 
+$metadataGenerator = new \Concrete\Core\Support\Symbol\MetadataGenerator();
+
+$meta = $metadataGenerator->render();
+file_put_contents(DIR_BASE . '/concrete/src/Support/.phpstorm.meta.php', $meta);
+
 die("Generation Complete.\n");
 

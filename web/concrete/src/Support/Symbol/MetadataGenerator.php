@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Core\Support\ServiceProvider;
+namespace Concrete\Core\Support\Symbol;
 
 use Core;
 
