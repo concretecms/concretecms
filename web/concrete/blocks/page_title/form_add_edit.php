@@ -25,14 +25,7 @@ if(!strlen($titleText)) { $titleText = $controller->getTitleText();}
 				<option value="h6" <?php echo ($this->controller->formatting=="h6"?"selected":"")?>><?php echo t('H6')?></option>
 				
 			</select>
-    <?php echo $form->label('title_alignment', t('Alignment'))?>
-			<select class="form-control" name="title_alignment" id="title_alignment">
-				<option value="left" <?php echo ($this->controller->title_alignment=="left"?"selected":"")?>><?php echo t('Left')?></option>
-				<option value="center" <?php echo ($this->controller->title_alignment=="center"?"selected":"")?>><?php echo t('Centre')?></option>
-				<option value="right" <?php echo ($this->controller->title_alignment=="right"?"selected":"")?>><?php echo t('Right')?></option>
-				
-			</select>
-    
+  
     
     
 </div>
