@@ -3,6 +3,7 @@
 namespace Concrete\Core\Multilingual\Page\Section;
 use Concrete\Core\Page\Page;
 use Database;
+use Concrete\Core\Multilingual\Page\Event;
 use Gettext\Translations;
 use Punic\Language;
 use Config;

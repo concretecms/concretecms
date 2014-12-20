@@ -126,7 +126,7 @@ class Version573 extends AbstractMigration
             $mpr = $schema->createTable('MultilingualPageRelations');
             $mpr->addColumn('mpRelationID', 'integer', array('notnull' => true, 'unsigned' => true, 'default' => 0));
             $mpr->addColumn('cID', 'integer', array('notnull' => true, 'unsigned' => true, 'default' => 0));
-            $mpr->addColumn('mpLanguage', 'string', array('notnull' => true));
+            $mpr->addColumn('mpLanguage', 'string', array('notnull' => true, 'default' => ''));
             $mpr->addColumn('mpLocale', 'string', array('notnull' => true));
             $mpr->setPrimaryKey(array('mpRelationID', 'cID', 'mpLocale'));
         }
@@ -141,12 +141,13 @@ class Version573 extends AbstractMigration
             $mts = $schema->createTable('MultilingualTranslations');
             $mts->addColumn('mtID', 'integer', array('autoincrement' => true, 'unsigned' => true));
             $mts->addColumn('mtSectionID', 'integer', array('unsigned' => true, 'notnull' => true, 'default' => 0));
-            $mts->addColumn('msgid', 'text');
-            $mts->addColumn('msgstr', 'text');
-            $mts->addColumn('context', 'text');
-            $mts->addColumn('reference', 'text');
-            $mts->addColumn('flags', 'text');
-            $mts->addColumn('updated', 'datetime');
+            $mts->addColumn('msgid', 'text', array('notnull' => false));
+            $mts->addColumn('msgstr', 'text', array('notnull' => false));
+            $mts->addColumn('context', 'text', array('notnull' => false));
+            $mts->addColumn('comments', 'text', array('notnull' => false));
+            $mts->addColumn('reference', 'text', array('notnull' => false));
+            $mts->addColumn('flags', 'text', array('notnull' => false));
+            $mts->addColumn('updated', 'datetime', array('notnull' => false));
             $mts->setPrimaryKey(array('mtID'));
         }
 
