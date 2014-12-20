@@ -164,6 +164,7 @@ class View extends AbstractView {
         $event = new \Symfony\Component\EventDispatcher\GenericEvent();
         $event->setArgument('contents', $contents);
         Events::dispatch('on_page_output', $event);
+        $contents = $event->getArgument('contents');
 
         $event = new \Symfony\Component\EventDispatcher\GenericEvent();
         $event->setArgument('view', $this);

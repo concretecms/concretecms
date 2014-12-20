@@ -169,7 +169,7 @@ class PageView extends View
 
     public function finishRender($contents)
     {
-        parent::finishRender($contents);
+        $contents = parent::finishRender($contents);
         $cache = PageCache::getLibrary();
         $shouldAddToCache = $cache->shouldAddToCache($this);
         if ($shouldAddToCache) {
