@@ -25,7 +25,7 @@ class MetadataGenerator
                 $className = $static['concrete'];
             }
 
-            if ($className !== null) {
+            if ($className !== null && $className !== get_class($this)) {
                 if ($className[0] !== '\\') {
                     $className = '\\' . $className;
                 }
