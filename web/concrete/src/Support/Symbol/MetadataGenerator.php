@@ -8,7 +8,7 @@ class MetadataGenerator
 {
     public function render()
     {
-        $file = '<?php namespace PHPSTORM_META { $STATIC_METHOD_TYPES = array(\\Core::make(\'\') => array(';
+        $file = '<?php namespace PHPSTORM_META { $STATIC_METHOD_TYPES = array(\\Core::make(\'\') => array(' . PHP_EOL;
 
         $bindings = Core::getBindings();
         foreach ($bindings as $name => $binding) {
@@ -24,7 +24,7 @@ class MetadataGenerator
             } else {
                 $className = $static['concrete'];
             }
-            $file .= '\'' . $name . '\' instanceof ' . $className . ',';
+            $file .= '\'' . $name . '\' instanceof ' . $className . ',' . PHP_EOL;
         }
         $file .= '));}';
 
