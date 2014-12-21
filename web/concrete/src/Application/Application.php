@@ -82,6 +82,8 @@ class Application extends Container
      */
     public function clearCaches()
     {
+        \Events::dispatch('on_cache_flush');
+
         Core::make('cache')->flush();
         Core::make('cache/expensive')->flush();
 
