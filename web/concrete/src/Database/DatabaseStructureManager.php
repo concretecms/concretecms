@@ -299,7 +299,7 @@ class DatabaseStructureManager
     }
 
     /**
-     * Loads the entity class metadata into the $entities variable.
+     * Loads the entity class metadata into the $metadatas variable.
      * 
      * @return void
      */
