@@ -131,6 +131,7 @@ return array(
         'Session'  => '\Concrete\Core\Support\Facade\Session',
         'Cookie'  => '\Concrete\Core\Support\Facade\Cookie',
         'Database' => '\Concrete\Core\Support\Facade\Database',
+        'ORM'      => '\Concrete\Core\Support\Facade\DatabaseORM',
         'Events'   => '\Concrete\Core\Support\Facade\Events',
         'Route'    => '\Concrete\Core\Support\Facade\Route',
         'Log'      => '\Concrete\Core\Support\Facade\Log',
