@@ -703,7 +703,7 @@ class Package extends Object
 
     public function getEntityManager()
     {
-        return ORM::entityManager(null, $this);
+        return ORM::entityManager($this);
     }
 
     public function getDatabaseStructureManager()
