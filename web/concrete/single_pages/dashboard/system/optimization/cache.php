@@ -146,6 +146,23 @@
         </div>
     </fieldset>
 
+    <fieldset style="margin-bottom: 15px">
+        <legend style="display: inline-block; margin-bottom: 0; width: auto; font-size: 14px; font-weight: bold" class="launch-tooltip" data-placement="right" title="<?=t('Defines whether the Doctrine proxy classes are created on the fly. On the fly generation is active when this setting is disabled.')?>"><?=t('Doctrine Production Mode')?></legend>
+        <div class="radio">
+            <label>
+                <input type="radio" name="DOCTRINE_DEV_MODE" value="1" <?php  if (Config::get('concrete.cache.doctrine_dev_mode')) { ?> checked <?php  } ?> />
+                <span><?=t('Off - Proxy classes will be generated on the fly. Good when developing.')?></span>
+            </label>
+        </div>
+
+        <div class="radio">
+            <label>
+                <input type="radio" name="DOCTRINE_DEV_MODE" value="0" <?php  if (!Config::get('concrete.cache.doctrine_dev_mode')) { ?> checked <?php  } ?> />
+                <span><?=t('On - Proxy classes need to be manually generated. Helps speed up a live site.')?></span>
+            </label>
+        </div>
+    </fieldset>
+
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
             <button class="pull-right btn btn-success" type="submit" ><?=t('Save')?></button>

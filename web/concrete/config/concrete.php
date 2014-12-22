@@ -165,6 +165,13 @@ return array(
         'pages'                    => false,
 
         /**
+         * Use Doctrine development mode
+         * 
+         * @var bool
+         */
+        'doctrine_dev_mode'        => false,
+
+        /**
          * How long to cache full page
          *
          * @var string
