@@ -7,6 +7,7 @@ use Loader;
 use Marketplace;
 use Config;
 use Localization;
+use ORM;
 
 class Update
 {
@@ -157,6 +158,10 @@ class Update
     {
         $cms = Core::make('app');
         $cms->clearCaches();
+
+        $em = ORM::entityManager();
+        $dbm = Core::make('database/structure', $em);
+        $dbm->generateProxyClasses();
 
         $configuration = new \Concrete\Core\Updater\Migrations\Configuration();
         $configuration->registerPreviousMigratedVersions();
