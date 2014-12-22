@@ -83,10 +83,8 @@ class DatabaseManagerORM
      */
     public function makeEntityManager(Connection $connection, $context = null)
     {
-         // TODO: Dev mode to configuration
-        $isDevMode = false;
         $config = Setup::createConfiguration(
-            $isDevMode,
+            Config::get('concrete.cache.doctrine_dev_mode'),
             Config::get('database.proxy_classes'),
             new DoctrineCacheDriver('cache/expensive')
         );
