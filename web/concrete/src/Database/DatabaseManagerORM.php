@@ -52,11 +52,11 @@ class DatabaseManagerORM
      * entities where different settings than the core settings are needed
      * for the EntityManager object.
      * 
-     * @param string $name
      * @param mixed $context
+     * @param string $name
      * @return \Doctrine\ORM\EntityManager
      */
-    public function entityManager($connectionName = null, $context = null)
+    public function entityManager($context = null, $connectionName = null)
     {
         if ($connectionName === null) {
             $connectionName = Database::getDefaultConnection();
@@ -68,20 +68,20 @@ class DatabaseManagerORM
             $name .= 'core';
         }
         if (!isset($this->entityManagers[$name])) {
-            $this->entityManagers[$name] = $this->makeEntityManager(Database::connection($connectionName), $context);
+            $this->entityManagers[$name] = static::makeEntityManager(Database::connection($connectionName), $context);
         }
         return $this->entityManagers[$name];
     }
 
     /**
-     * Makes a new entity manager instance for the given package or if no
-     * package object is given, for the core context.
+     * Makes a new entity manager instance for the given context object
+     * (e.g. a package) or if no context object is given, for the core context.
      * 
      * @param Connection $connection
      * @param mixed      $context
      * @return \Doctrine\ORM\EntityManager
      */
-    public function makeEntityManager(Connection $connection, $context = null)
+    public static function makeEntityManager(Connection $connection, $context = null)
     {
         $config = Setup::createConfiguration(
             Config::get('concrete.cache.doctrine_dev_mode'),
