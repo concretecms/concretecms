@@ -380,6 +380,7 @@ class Controller extends BlockController
             $args['pfID'] = 0;
         }
 
+        $args['pfID'] = intval($args['pfID']);
         parent::save($args);
 
     }
