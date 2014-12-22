@@ -1,7 +1,6 @@
 User-agent: *
 Disallow: /application/attributes
 Disallow: /application/authentication
-Disallow: /application/blocks
 Disallow: /application/bootstrap
 Disallow: /application/config
 Disallow: /application/controllers
