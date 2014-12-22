@@ -3,8 +3,8 @@
 .ccm-notification {
   font-family: @font-family-sans-serif;
   font-size: @font-size-base;
-  letter-spacing: 0.03em;
   z-index: @index-level-hud;
+  -webkit-font-smoothing: antialiased;
   .border-radius(3px);
   i.ccm-notification-icon {
     font-size: 16px;
@@ -129,10 +129,6 @@ div.ccm-notification-info {
       color: #fff;
     }
   }
-}
-
-div.ccm-notification-help {
-  font-weight: 100;
 }
 
 div.ccm-notification-success {
