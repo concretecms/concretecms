@@ -76,6 +76,7 @@ if ($this->controller->getTask() == 'translate_po') { ?>
                                 <textarea class="form-control" name="msgstr" id="translation-<?=$string->getID()?>" rows="8"><?=h($string->getTranslation())?></textarea>
                             </div>
                             <button class="btn btn-primary" data-btn="save"><?=t('Save &amp; Continue')?></button>
+                            <div class="spacer-row-3"></div>
                         </form>
                     <? } ?>
                 </div>
@@ -120,6 +121,11 @@ if ($this->controller->getTask() == 'translate_po') { ?>
             $translateBody = $('div.ccm-translate-site-interface-translate div.panel-body');
             var windowHeight = $(window).height();
             var height = windowHeight - 350;
+            var existingHeight = $translateBody.find('form').height();
+            if (existingHeight > height) {
+                height = existingHeight;
+            }
+
             $('div.ccm-translate-site-interface-messages ul.list-group').css('height', height);
             $('div.ccm-translate-site-interface-translate div.panel-body').css('height', height);
 
