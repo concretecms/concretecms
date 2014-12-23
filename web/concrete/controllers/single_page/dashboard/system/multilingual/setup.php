@@ -64,6 +64,18 @@ class Setup extends DashboardPageController
         }
     }
 
+    public function get_countries_for_language()
+    {
+        $result = array();
+        $language = $this->get('language');
+        if (is_string($language) && strlen($language)) {
+            $cl = Core::Make('lists/countries');
+            $result = $cl->getCountriesForLanguage($language);
+        }
+        echo json_encode($result);
+        die();
+    }
+
     public function load_icon()
     {
         $ll = Core::make('localization/languages');
