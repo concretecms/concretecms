@@ -71,6 +71,7 @@ class DatabaseStructureManager
      * 
      * @param  array $metadatas
      * @return boolean
+     * @throws \Exception Throws an exception in case there are issues with the proxy dir.
      */
     public function generateProxyClassesFor(array $metadatas)
     {

@@ -23,7 +23,7 @@ class DatabaseManagerORM
     /**
      * The active entity manager instances.
      * 
-     * @var Doctrine\ORM\EntityManager[]
+     * @var \Doctrine\ORM\EntityManager[]
      */
     protected $entityManagers = array();
 
