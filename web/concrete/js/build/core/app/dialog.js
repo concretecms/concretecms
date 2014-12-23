@@ -132,8 +132,8 @@ jQuery.fn.dialog.open = function(options) {
             if ( $dialog.jqdialog('option', 'resizable') )
             {
                 var $wrapper = $($dialog.parent());
-                var z = $wrapper.find('.ui-dialog-buttonpane').css('z-index');
-                $wrapper.find('.ui-resizable-handle').css('z-index', 1800);
+                var z = parseInt($wrapper.find('.ui-dialog-buttonpane').css('z-index'));
+                $wrapper.find('.ui-resizable-handle').css('z-index', z + 1000);
             }
 
             if (typeof options.onOpen != "undefined") {
