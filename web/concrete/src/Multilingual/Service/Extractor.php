@@ -49,6 +49,9 @@ class Extractor
 
         $files = array();
         foreach($directories as $directory) {
+            if (!is_dir($directory)) {
+                continue;
+            }
             $directoryIterator = new \RecursiveDirectoryIterator($directory);
             $iterator = new \RecursiveIteratorIterator($directoryIterator);
             $results = new \RegexIterator($iterator, '/^.+\.php$/i', \RecursiveRegexIterator::GET_MATCH);
