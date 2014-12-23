@@ -13,7 +13,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class Setup extends DashboardPageController
 {
-
     public $helpers = array('form');
     protected $pagesToCopy = array();
 
@@ -32,14 +31,13 @@ class Setup extends DashboardPageController
         $defaultSourceLanguage = '';
         $defaultSourceCountry = '';
         $defaultSourceLocale = Config::get('concrete.multilingual.default_source_locale');
-        if($defaultSourceLocale) {
-            if(strpos($defaultSourceLocale, '_') === false) {
+        if ($defaultSourceLocale) {
+            if (strpos($defaultSourceLocale, '_') === false) {
                 $defaultSourceLanguage = $defaultSourceLocale;
-            }
-            else {
+            } else {
                 list($defaultSourceLanguage, $defaultSourceCountry) = explode('_', $defaultSourceLocale);
             }
-        }        
+        }
         $this->set('defaultSourceLanguage', $defaultSourceLanguage);
         $this->set('defaultSourceCountry', $defaultSourceCountry);
         $this->set('redirectHomeToDefaultLocale', Config::get('concrete.multilingual.redirect_home_to_default_locale'));
@@ -66,9 +64,20 @@ class Setup extends DashboardPageController
         }
     }
 
+    public function get_countries_for_language()
+    {
+        $result = array();
+        $language = $this->get('language');
+        if (is_string($language) && strlen($language)) {
+            $cl = Core::Make('lists/countries');
+            $result = $cl->getCountriesForLanguage($language);
+        }
+        echo json_encode($result);
+        die();
+    }
+
     public function load_icon()
     {
-
         $ll = Core::make('localization/languages');
         $ch = Core::make('multilingual/interface/flag');
         $msCountry = $this->post('msCountry');
@@ -132,10 +141,10 @@ class Setup extends DashboardPageController
                 Config::save('concrete.multilingual.use_browser_detected_locale', $this->post('useBrowserDetectedLocale'));
                 $defaultSourceLocale = '';
                 $s = $this->post('defaultSourceLanguage');
-                if(is_string($s) && array_key_exists($s, $languages)) {
+                if (is_string($s) && array_key_exists($s, $languages)) {
                     $defaultSourceLocale = $s;
                     $s = $this->post('defaultSourceCountry');
-                    if(is_string($s) && array_key_exists($s, $countries)) {
+                    if (is_string($s) && array_key_exists($s, $countries)) {
                         $defaultSourceLocale .= '_' . $s;
                     }
                 }
@@ -155,10 +164,8 @@ class Setup extends DashboardPageController
         if (Loader::helper('validation/token')->validate('', $token)) {
             $lc = Section::getByID($sectionID);
             if (is_object($lc)) {
-
                 $lc->unassign();
                 $this->redirect('/dashboard/system/multilingual/setup', 'locale_section_removed');
-
             } else {
                 $this->error->add(t('Invalid section'));
             }
@@ -203,5 +210,4 @@ class Setup extends DashboardPageController
         }
         $this->view();
     }
-
 }
