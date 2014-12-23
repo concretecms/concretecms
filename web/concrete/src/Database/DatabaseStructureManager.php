@@ -22,6 +22,8 @@ class DatabaseStructureManager
     protected $metadatas;
 
     /**
+     * Create a new structure manager.
+     * 
      * @param \Doctrine\ORM\EntityManager $em
      */
     public function __construct(EntityManager $em)
@@ -30,6 +32,8 @@ class DatabaseStructureManager
     }
 
     /**
+     * Get the entity manager object for this structure manager.
+     * 
      * @return \Doctrine\ORM\EntityManager
      */
     public function getEntityManager()
@@ -65,11 +69,12 @@ class DatabaseStructureManager
      * $metadatas array. Returns true on successful generation and false if
      * there were no proxy classes to be generated
      * 
+     * @param  array $metadatas
      * @return boolean
      */
     public function generateProxyClassesFor(array $metadatas)
     {
-        if (sizeof($metadatas) > 0) {
+        if (count($metadatas) > 0) {
             // First create the proxies directory if it does not already exist.
             $proxyDir = $this->getProxyDir();
             if (!is_dir($proxyDir)) {
@@ -122,11 +127,12 @@ class DatabaseStructureManager
      * ones altered. Otherwise this will return false if there were no database
      * migrations needed.
      * 
+     * @param  array $metadatas
      * @return boolean
      */
     public function installDatabaseFor(array $metadatas)
     {
-        if (sizeof($metadatas) > 0) {
+        if (count($metadatas) > 0) {
             // We need to create the SchemaDiff manually here because we want
             // to avoid calling the execution for two separate SchemaDiff
             // objects (one for missing tables and one for new ones).
@@ -163,7 +169,7 @@ class DatabaseStructureManager
                     $newTables[] = $newTable;
                 }
             }
-            if (sizeof($newTables) > 0 || sizeof($changedTables) > 0) {
+            if (count($newTables) > 0 || count($changedTables) > 0) {
                 // If we have new or changed tables (or both), we'll gather
                 // these DB changes into a SchemaDiff object and get all the
                 // necessary DB migration queries for that diff object.
@@ -186,7 +192,7 @@ class DatabaseStructureManager
      * Do not normally call this for anything. Save this ONLY for special
      * occasions.
      * 
-     * @return void
+     * @return boolean
      */
     public function uninstallDatabase()
     {
@@ -199,11 +205,12 @@ class DatabaseStructureManager
      * within the $metadatas array. Returns true if there were tables that were
      * dropped and false otherwise.
      * 
+     * @param  array $metadatas
      * @return boolean
      */
     public function uninstallDatabaseFor(array $metadatas)
     {
-        if (sizeof($metadatas) > 0) {
+        if (count($metadatas) > 0) {
             $em = $this->getEntityManager();
             $conn = $em->getConnection();
             $sm = $conn->getSchemaManager();
@@ -225,7 +232,7 @@ class DatabaseStructureManager
             }
             $sqls = $fromSchema->getMigrateToSql($toSchema, $conn->getDatabasePlatform());
 
-            if (sizeof($sqls) > 0) {
+            if (count($sqls) > 0) {
                 foreach ($sqls as $sql) {
                     $conn->executeQuery($sql);
                 }
@@ -246,7 +253,7 @@ class DatabaseStructureManager
      * for that package that no longer have a corresponding entity defined
      * for them.
      * 
-     * @param string $prefix
+     * @param  string $prefix
      * @return int
      */
     public function dropObsoleteDatabaseTables($prefix)
@@ -281,7 +288,7 @@ class DatabaseStructureManager
      */
     public function hasEntities()
     {
-        return sizeof($this->getMetadatas()) > 0;
+        return count($this->getMetadatas()) > 0;
     }
 
     /**

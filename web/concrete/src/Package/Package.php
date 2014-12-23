@@ -171,6 +171,26 @@ class Package extends Object
         return $this->hasInstallNotes() || $this->allowsFullContentSwap();
     }
 
+    /**
+     * Installs the packages database either through entities or if no entities
+     * are available for the package, through the legacy db.xml if it is
+     * available.
+     * 
+     * @return void
+     */
+    public function installDatabase()
+    {
+        $dbm = $this->getDatabaseStructureManager();
+        if ($dbm->hasEntities()) {
+            $dbm->generateProxyClasses();
+            $dbm->dropObsoleteDatabaseTables(camelcase($this->getPackageHandle()));
+            $dbm->installDatabase();
+        } else {
+            // Legacy db.xml
+            Package::installDB($this->getPackagePath() . '/' . FILENAME_PACKAGE_DB);
+        }
+    }
+
     public static function installDB($xmlFile)
     {
         if (!file_exists($xmlFile)) {
@@ -701,11 +721,21 @@ class Package extends Object
         return $this->getPackagePath() . '/' . DIRNAME_CLASSES . '/' . DIRNAME_ENTITIES;
     }
 
+    /**
+     * Gets a package specific entity manager.
+     * 
+     * @return \Doctrine\ORM\EntityManager
+     */
     public function getEntityManager()
     {
         return ORM::entityManager($this);
     }
 
+    /**
+     * Gets a package specific entity manager.
+     * 
+     * @return \Concrete\Core\Database\DatabaseStructureManager
+     */
     public function getDatabaseStructureManager()
     {
         return Core::make('database/structure', $this->getEntityManager());
@@ -807,15 +837,7 @@ class Package extends Object
         $db->query("insert into Packages (pkgName, pkgDescription, pkgVersion, pkgHandle, pkgIsInstalled, pkgDateInstalled) values (?, ?, ?, ?, ?, ?)", $v);
 
         $pkg = Package::getByID($db->Insert_ID());
-        $dbm = $pkg->getDatabaseStructureManager();
-        if ($dbm->hasEntities()) {
-            $dbm->generateProxyClasses();
-            $dbm->dropObsoleteDatabaseTables(camelcase($pkg->getPackageHandle()));
-            $dbm->installDatabase();
-        } else {
-            // Legacy db.xml
-            Package::installDB($pkg->getPackagePath() . '/' . FILENAME_PACKAGE_DB);
-        }
+        $pkg->installDatabase();
 
         $env = Environment::get();
         $env->clearOverrideCache();
@@ -843,15 +865,7 @@ class Package extends Object
 
     public function upgrade()
     {
-        $dbm = $this->getDatabaseStructureManager();
-        if ($dbm->hasEntities()) {
-            $dbm->generateProxyClasses();
-            $dbm->dropObsoleteDatabaseTables(camelcase($this->getPackageHandle()));
-            $dbm->installDatabase();
-        } else {
-            // Legacy db.xml
-            Package::installDB($pkg->getPackagePath() . '/' . FILENAME_PACKAGE_DB);
-        }
+        $pkg->installDatabase();
 
         // now we refresh all blocks
         $items = $this->getPackageItems();

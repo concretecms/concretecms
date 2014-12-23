@@ -28,7 +28,7 @@ class DatabaseManagerORM
     protected $entityManagers = array();
 
     /**
-     * Create a new database manager instance.
+     * Create a new database ORM manager instance.
      *
      * @param Application $app
      */
@@ -52,8 +52,8 @@ class DatabaseManagerORM
      * entities where different settings than the core settings are needed
      * for the EntityManager object.
      * 
-     * @param mixed $context
-     * @param string $name
+     * @param  mixed $context
+     * @param  string $name
      * @return \Doctrine\ORM\EntityManager
      */
     public function entityManager($context = null, $connectionName = null)
@@ -77,8 +77,8 @@ class DatabaseManagerORM
      * Makes a new entity manager instance for the given context object
      * (e.g. a package) or if no context object is given, for the core context.
      * 
-     * @param Connection $connection
-     * @param mixed      $context
+     * @param  Connection $connection
+     * @param  mixed      $context
      * @return \Doctrine\ORM\EntityManager
      */
     public static function makeEntityManager(Connection $connection, $context = null)
