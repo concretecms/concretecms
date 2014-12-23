@@ -160,7 +160,7 @@ class Update
         $cms->clearCaches();
 
         $em = ORM::entityManager();
-        $dbm = Core::make('database/structure', array($em));
+        $dbm = Core::make('database/structure', $em);
         $dbm->generateProxyClasses();
 
         $configuration = new \Concrete\Core\Updater\Migrations\Configuration();
