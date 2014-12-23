@@ -2,12 +2,18 @@
 namespace Concrete\Core\Localization\Service;
 
 use Events;
+use Localization;
 
 class CountryList
 {
     protected $countries = array();
 
     public function __construct()
+    {
+        $this->loadCountries();
+    }
+
+    protected function loadCountries()
     {
         $countries = \Punic\Territory::getCountries();
         unset(
@@ -21,7 +27,7 @@ class CountryList
         $event = Events::dispatch('on_get_countries_list', $event);
         $countries = $event->getArgument('countries');
 
-        $this->countries = $countries;
+        $this->countries[Localization::activeLocale()] = $countries;
     }
 
     /** Returns an array of countries with their short name as the key and their full name as the value
@@ -29,7 +35,11 @@ class CountryList
     */
     public function getCountries()
     {
-        return $this->countries;
+        if (!array_key_exists(Localization::activeLocale(), $this->countries)) {
+            $this->loadCountries();
+        }
+
+        return $this->countries[Localization::activeLocale()];
     }
 
     /** Gets a country full name given its code
