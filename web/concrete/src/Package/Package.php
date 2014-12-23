@@ -865,7 +865,7 @@ class Package extends Object
 
     public function upgrade()
     {
-        $pkg->installDatabase();
+        $this->installDatabase();
 
         // now we refresh all blocks
         $items = $this->getPackageItems();
