@@ -200,8 +200,8 @@ class StartingPointPackage extends BasePackage {
             $version = $configuration->getVersion(Config::get('concrete.version_db'));
             $version->markMigrated();
 
-        } catch (Exception $e) {
-			throw new Exception(t('Unable to install database: %s', $db->ErrorMsg()));
+        } catch (\Exception $e) {
+			throw new \Exception(t('Unable to install database: %s', $db->ErrorMsg()));
 		}
 	}
 
