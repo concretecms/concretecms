@@ -291,6 +291,7 @@ class Install extends Controller
             $js->message = tc('InstallError', '%s.<br><br>Trace:<br>%s', $e->getMessage(), $e->getTraceAsString());
             $this->reset();
         }
+        header('Content-Type: application/json');
         print $jsx->encode($js);
         exit;
     }
