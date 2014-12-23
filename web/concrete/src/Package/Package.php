@@ -738,7 +738,7 @@ class Package extends Object
      */
     public function getDatabaseStructureManager()
     {
-        return Core::make('database/structure', array($this->getEntityManager()));
+        return Core::make('database/structure', $this->getEntityManager());
     }
 
     /**
