@@ -55,6 +55,7 @@ error_log
 
 # ignore PHP symbol map
 __IDE_SYMBOLS__.php
+.phpstorm.meta.php
 
 
 # Built assets
