@@ -463,6 +463,10 @@ module.exports = function(grunt) {
         require('./tasks/generate-symbols.js')(grunt, config, parameters, this.async());
     });
 
+    grunt.registerTask('generate-metadata', 'Generate PhpStorm advanced metadata', function() {
+        require('./tasks/generate-metadata.js')(grunt, config, parameters, this.async());
+    });
+
     grunt.registerTask('build-release-download', 'Build process: download the latest concrete5 release from GitHub.', function() {
         require('./tasks/build-release/download.js')(grunt, config, parameters, this.async());
     });
