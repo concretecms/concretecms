@@ -52,4 +52,14 @@ class CountryList
 
         return $countries[$code];
     }
+
+    /**
+     * Return a list of territory codes where a specific language is spoken, sorted by the total number of people speaking that language.
+     * @param string $languageCode The language code (eg. 'en')
+     * @return array Returns a list of country codes
+     */
+    public function getCountriesForLanguage($languageCode)
+    {
+        return \Punic\Territory::getTerritoriesForLanguage($languageCode);
+    }
 }
