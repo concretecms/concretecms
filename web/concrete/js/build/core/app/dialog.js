@@ -105,6 +105,7 @@ jQuery.fn.dialog.open = function(options) {
         'escapeClose': true,
         'width': w,
         'height': h,
+        'resizable': true,
 
         'create': function() {
             $(this).parent().addClass('animated fadeIn');
