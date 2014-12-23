@@ -127,6 +127,15 @@ jQuery.fn.dialog.open = function(options) {
 
             jQuery.fn.dialog.activateDialogContents($dialog);
 
+            // on some brother (eg: Chrome) the resizable get hidden because the button pane 
+            // in on top of it, here is a fix for this:
+            if ( $dialog.jqdialog('option', 'resizable') )
+            {
+                var $wrapper = $($dialog.parent());
+                var z = parseInt($wrapper.find('.ui-dialog-buttonpane').css('z-index'));
+                $wrapper.find('.ui-resizable-handle').css('z-index', z + 1000);
+            }
+
             if (typeof options.onOpen != "undefined") {
                 if ((typeof options.onOpen) == 'function') {
                     options.onOpen($dialog);
