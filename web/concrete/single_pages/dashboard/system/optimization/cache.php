@@ -151,7 +151,7 @@
         <div class="radio">
             <label>
                 <input type="radio" name="DOCTRINE_DEV_MODE" value="1" <?php  if (Config::get('concrete.cache.doctrine_dev_mode')) { ?> checked <?php  } ?> />
-                <span><?=t('Off - Proxy classes will be generated on the fly. Good when developing.')?></span>
+                <span><?=t('Off - Proxy classes will be generated on the fly. Good for development.')?></span>
             </label>
         </div>
 
