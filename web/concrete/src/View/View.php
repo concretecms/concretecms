@@ -162,11 +162,6 @@ class View extends AbstractView {
 
     public function finishRender($contents) {
         $event = new \Symfony\Component\EventDispatcher\GenericEvent();
-        $event->setArgument('contents', $contents);
-        Events::dispatch('on_page_output', $event);
-        $contents = $event->getArgument('contents');
-
-        $event = new \Symfony\Component\EventDispatcher\GenericEvent();
         $event->setArgument('view', $this);
         Events::dispatch('on_render_complete', $event);
 
