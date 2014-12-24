@@ -116,11 +116,11 @@ class Service
      * $attachment->filename = "CustomFilename";
      * $mailHelper->send();
      *
-     * @param \File $fob File to attach
+     * @param \Concrete\Core\File\File $fob File to attach
      * @return \StdClass Pointer to the attachment
      * @throws \Exception
      */
-    public function addAttachment(\File $fob)
+    public function addAttachment(\Concrete\Core\File\File $fob)
     {
         // @TODO make this work with the File Storage Locations
 
