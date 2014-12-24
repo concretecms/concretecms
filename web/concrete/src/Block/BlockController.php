@@ -263,7 +263,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
         $event->setArgument('record', $this->record);
         $event->setArgument('btHandle', $this->btHandle);
         $event->setArgument('bID', $this->bID);
-        $ret = Events::dispatch('on_page_output', $event);
+        $ret = Events::dispatch('on_block_load', $event);
         $this->record = $ret->getArgument('record');
 
         if (is_object($this->record)) {

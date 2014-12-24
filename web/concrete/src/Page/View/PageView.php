@@ -2,6 +2,7 @@
 namespace Concrete\Core\Page\View;
 
 use Environment;
+use Events;
 use Loader;
 use PageCache;
 use PageTemplate;
@@ -169,7 +170,13 @@ class PageView extends View
 
     public function finishRender($contents)
     {
-        parent::finishRender($contents);
+        $contents = parent::finishRender($contents);
+
+        $event = new \Symfony\Component\EventDispatcher\GenericEvent();
+        $event->setArgument('contents', $contents);
+        Events::dispatch('on_page_output', $event);
+        $contents = $event->getArgument('contents');
+
         $cache = PageCache::getLibrary();
         $shouldAddToCache = $cache->shouldAddToCache($this);
         if ($shouldAddToCache) {
