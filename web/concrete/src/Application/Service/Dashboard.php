@@ -38,7 +38,7 @@ class Dashboard {
 	 * Test if the current path is within the dashboard.
 	 * Optionally, a Page or path can be passed to test.
 	 *
-	 * @param  bool|\Page|string $page (optional)
+	 * @param  bool|\Concrete\Core\Page\Page|string $page (optional)
 	 * @return bool
 	 */
 	public function inDashboard($page = false) {
@@ -95,6 +95,9 @@ class Dashboard {
 				if (count($navigatePages) > 0) {
 					$subpages = $navigatePages;
 				} else {
+					/**
+					 * @var \Concrete\Core\Page\Page[] $subpages
+					 */
 					$subpages = \Concrete\Block\Autonav\Controller::getChildPages($parent);
 				}
 			}
@@ -378,7 +381,7 @@ class Dashboard {
 class DashboardMenu {
 
 	/**
-	 * @var \Page[]
+	 * @var \Concrete\Core\Page\Page[]
 	 */
 	protected $items;
 
@@ -439,7 +442,7 @@ class DashboardMenu {
 	}
 
 	/**
-	 * @param \Page $c
+	 * @param \Concrete\Core\Page\Page $c
 	 * @return bool
 	 */
 	public function contains($c) {
@@ -447,14 +450,14 @@ class DashboardMenu {
 	}
 
 	/**
-	 * @param \Page $c
+	 * @param \Concrete\Core\Page\Page $c
 	 */
 	public function add($c) {
 		$this->items[] = $c->getCollectionPath();
 	}
 
 	/**
-	 * @param \Page $c
+	 * @param \Concrete\Core\Page\Page $c
 	 */
 	public function remove($c) {
 		unset($this->items[array_search($c->getCollectionPath(), $this->items)]);
