@@ -44,11 +44,17 @@ class Request extends SymfonyRequest
         return static::$_request;
     }
 
+    /**
+     * @return \Concrete\Core\Page\Page
+     */
     public function getCurrentPage()
     {
         return $this->c;
     }
 
+    /**
+     * @param \Concrete\Core\Page\Page $c
+     */
     public function setCurrentPage(\Concrete\Core\Page\Page $c)
     {
         $this->c = $c;
