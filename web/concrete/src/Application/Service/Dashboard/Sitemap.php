@@ -23,7 +23,7 @@ class Sitemap {
 	 */
 	protected $displayNodePagination = false;
 	/**
-	 * @var
+	 * @var bool
 	 */
 	protected $includeSystemPages;
 
