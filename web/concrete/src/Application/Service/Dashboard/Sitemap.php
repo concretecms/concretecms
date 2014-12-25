@@ -121,7 +121,7 @@ class Sitemap {
 	}
 
 	/**
-	 * @param \Page|int $cItem
+	 * @param \Concrete\Core\Page\Page|int $cItem
 	 * @param bool $includeChildren
 	 * @return stdClass
 	 */
