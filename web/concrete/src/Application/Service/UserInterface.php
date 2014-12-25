@@ -120,7 +120,7 @@ class UserInterface {
 	}
 
 	/**
-	 * @param \Collection $c
+	 * @param \Concrete\Core\Page\Page $c
 	 * @return string
 	 */
 	public function getQuickNavigationLinkHTML($c) {
@@ -217,7 +217,7 @@ class UserInterface {
 	}
 
 	/**
-	 * @param \Collection[] $tabs
+	 * @param \Concrete\Core\Page\Page[] $tabs
 	 * @return string
 	 */
 	public function pagetabs($tabs) {
@@ -246,7 +246,7 @@ class UserInterface {
 	}
 
 	/**
-	 * @param \Collection[] $tabs
+	 * @param \Concrete\Core\Page\Page[] $tabs
 	 * @param bool $jstabs
 	 * @param string $callback
 	 * @return string
