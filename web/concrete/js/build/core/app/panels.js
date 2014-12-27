@@ -11,6 +11,10 @@ function ConcretePanel(options) {
 
     this.pinned = function() { return this.isPinned; }
 
+    this.willBePinned = function() { return this.isOpen && !this.isPinned; }
+
+    this.isPinable = function() { return this.options.pinable; }
+
     this.getPositionClass = function () {
         var ccm_class;
         switch (options.position) {
