@@ -86,6 +86,9 @@
                             _.defer(function () {
                                 my.getEditMode().scanBlocks();
                             });
+
+                            var panel = ConcretePanelManager.getByIdentifier('add-block');
+                            if ( panel && panel.pinned() ) panel.show();
                         });
                 });
             } else if (is_inline) {
@@ -111,6 +114,10 @@
                                 placeholder: placeholder
                             });
                         });
+                    },
+                    onDestroy: function() {
+                        var panel = ConcretePanelManager.getByIdentifier('add-block');
+                        if ( panel && panel.pinned() ) panel.show();
                     },
                     width: parseInt(elem.data('dialog-width'), 10),
                     height: parseInt(elem.data('dialog-height'), 10) + 20,
