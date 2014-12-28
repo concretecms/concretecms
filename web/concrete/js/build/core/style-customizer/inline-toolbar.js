@@ -97,7 +97,7 @@
                     value: currentValue(),
                     slide: function( event, ui ) {
                         targetInput.prop('disabled', false);
-                        targetInput.val( ui.value + targetInputFormat );
+                        targetInput.val(ui.value + targetInputFormat);
                         disableCheck();
                     }
                 });
@@ -116,7 +116,8 @@
                     $(this).val(value + targetInputFormat);
                     sliderElement.slider("value", value);
                     disableCheck();
-
+                }).blur(function () {
+                    disableCheck();
                 }).parent().click(function () {
                     if (targetInput.prop('disabled')) {
                         targetInput.prop('disabled', false).select();
