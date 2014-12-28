@@ -187,7 +187,7 @@ class StartingPointPackage extends BasePackage {
 		$db = Loader::db();
 		$installDirectory = DIR_BASE_CORE. '/config';
 		try {
-            $em = \ORM::entityManager();
+            $em = \ORM::entityManager('core');
             $dbm = Core::make('database/structure', $em);
             $dbm->generateProxyClasses();
 
