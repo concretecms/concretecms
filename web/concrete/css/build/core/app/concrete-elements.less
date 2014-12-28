@@ -1,0 +1,122 @@
+
+/*
+ * adapted from add-block.less : display a block and a description around it
+*/
+
+div.ccm-block-type-display
+{
+    display:inline-block;
+    height: 90px;
+    width: 90px; 
+    line-height: 0px;
+    padding: 2px;
+	box-sizing: padding-box;
+	text-align: center;
+    background-color: #161c22;
+    vertical-align: middle;
+
+    .border-radius(4px);
+    margin: 5px;
+
+
+	span {
+		position: relative;
+		left: 0px;
+		bottom: -17px;
+		width: 100%;
+		text-overflow: ellipsis;
+		text-align: center;
+		display: block;
+		color: #8f969a;
+		background-color: #000;
+		font-size: 12px;
+		line-height: 12px;
+  		padding-top: 10px;
+		padding-bottom: 10px;
+		overflow: hidden;
+		white-space: nowrap;
+		.border-bottom-radius(4px);
+
+        a {
+            color: #8f969a;
+        }
+	}
+
+
+	img {
+		margin-top: 15px;
+		height: 24px;
+		width: auto;
+	}
+
+}
+
+.mini div.ccm-block-type-display, div.ccm-block-type-display.mini {
+
+    margin: 2px;
+    height: 45px;
+    width: 45px;
+
+    img {
+        margin-top: 9px;
+        height: 12px;
+    }
+
+    span {
+        bottom: -7px;
+        font-size: 6pt;
+        padding-top: 1px;
+        padding-bottom: 1px;
+    }
+}
+
+.ccm-block-type-description
+{
+	box-sizing: padding-box;
+    line-height: 90px;
+
+    div.ccm-block-type-description-title {
+        height: 20px;
+        line-height:20px;
+        vertical-align:top;
+        font-weight: bold;
+        margin-top:5px;
+        margin-bottom:5px;
+
+        .ccm-block-sets {
+            font-weight: normal;
+            display: inline-block;
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+    }
+
+    .ccm-block-type-description-content {
+        margin:0;
+        vertical-align: middle;
+        line-height: normal;
+        min-height: 50px;
+    }
+
+    .ccm-block-type-description-usage {
+        margin:0;
+        vertical-align: middle;
+        line-height: normal;
+        font-variant: small-caps;
+        color: #aaa;
+        font-size: 75%;
+        margin-top: -5px;
+        margin-bottom: 5px;
+
+        .label 
+        {
+            font-variant: normal;
+            font-size: 133%;
+        }
+    }
+}
+
+dl.ccm-block-set-list dt
+{
+    line-height: 48px;
+}

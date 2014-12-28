@@ -120,8 +120,6 @@ class Types extends DashboardPageController {
 		
 		if (isset($bt) && ($bt instanceof BlockType)) {
 			$this->set('bt', $bt);
-			$this->set('num', $bt->getCount());
-			$this->set('numActive', $bt->getCount(true));
 		} else {
 			$this->redirect('/dashboard/blocks/types');
 		}

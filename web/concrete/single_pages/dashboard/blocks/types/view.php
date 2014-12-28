@@ -1,23 +1,8 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<? if ($this->controller->getTask() == 'inspect' || $this->controller->getTask() == 'refresh') { ?>
-
-
-<h3><img src="<?=$ci->getBlockTypeIconURL($bt)?>" /> <?=t($bt->getBlockTypeName())?></h3>
-
-<h5><?=t('Description')?></h5>
-<p><?=t($bt->getBlockTypeDescription())?></p>
-
-<h5><?=t('Usage Count')?></h5>
-<p><?=$num?></p>
-
-<h5><?php echo t('Usage Count on Active Pages')?></h5>
-<p><?php echo $numActive?></p>
-
-<? if ($bt->isBlockTypeInternal()) { ?>
-<h5><?=t('Internal')?></h5>
-<p><?=t('This is an internal block type.')?></p>
-<? } ?>
+<? if ($this->controller->getTask() == 'inspect' || $this->controller->getTask() == 'refresh') { 
+ Loader::element( 'dashboard/inspect_block_type', array( 'bt' => $bt ) );
+?>
 
 <hr/>
 
