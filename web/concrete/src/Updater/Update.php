@@ -159,8 +159,9 @@ class Update
         $cms = Core::make('app');
         $cms->clearCaches();
 
-        $em = ORM::entityManager();
+        $em = ORM::entityManager('core');
         $dbm = Core::make('database/structure', $em);
+        $dbm->destroyProxyClasses('ConcreteCore');
         $dbm->generateProxyClasses();
 
         $configuration = new \Concrete\Core\Updater\Migrations\Configuration();

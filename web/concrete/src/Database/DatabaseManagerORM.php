@@ -64,8 +64,10 @@ class DatabaseManagerORM
         $name = $connectionName . '_';
         if ($context instanceof Package) {
             $name .= 'pkg_' . $context->getPackageHandle();
-        } else {
+        } elseif ($context === 'core') {
             $name .= 'core';
+        } else {
+            $name .= 'app';
         }
         if (!isset($this->entityManagers[$name])) {
             $this->entityManagers[$name] = static::makeEntityManager(Database::connection($connectionName), $context);
@@ -74,8 +76,13 @@ class DatabaseManagerORM
     }
 
     /**
-     * Makes a new entity manager instance for the given context object
-     * (e.g. a package) or if no context object is given, for the core context.
+     * Makes a new entity manager instance for the given context
+     * (e.g. a package) or if no context object is given, for the application
+     * context. The options for the context are:
+     * - A package object, results in a package specific entity manager
+     * - The string 'core', results in a core specific entity manager
+     * - Null or omitted context, results in an application specific entity
+     *   manager
      * 
      * @param  Connection $connection
      * @param  mixed      $context
@@ -89,13 +96,15 @@ class DatabaseManagerORM
             new DoctrineCacheDriver('cache/expensive')
         );
 
-        // TODO: Once it is figured out how to properly use the entities in
-        //       the core, this spot might need to be revisited.
-        $path = DIR_BASE_CORE . '/' . DIRNAME_CLASSES;
-        //$path = DIR_BASE_CORE . '/' . DIRNAME_CLASSES . '/' . DIRNAME_ENTITIES;
+        $path = DIR_APPLICATION . '/' . DIRNAME_CLASSES . '/' . DIRNAME_ENTITIES;
         if ($context instanceof Package) {
             $path = $context->getPackageEntitiesPath();
-        } else if (is_object($context) && method_exists($context, 'getEntitiesPath')) {
+        } elseif ($context === 'core') {
+            // TODO: Once it is figured out how to properly use the entities in
+            //       the core, this spot might need to be revisited.
+            $path = DIR_BASE_CORE . '/' . DIRNAME_CLASSES;
+            //$path = DIR_BASE_CORE . '/' . DIRNAME_CLASSES . '/' . DIRNAME_ENTITIES;
+        } elseif (is_object($context) && method_exists($context, 'getEntitiesPath')) {
             $path = $context->getEntitiesPath();
         }
 

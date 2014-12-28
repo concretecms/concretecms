@@ -181,6 +181,11 @@ class Package extends Object
     public function installDatabase()
     {
         $dbm = $this->getDatabaseStructureManager();
+        $config = $dbm->getEntityManager()->getConfiguration();
+        if (is_object($cache = $config->getMetadataCacheImpl())) {
+            $cache->flushAll();
+        }
+        $dbm->destroyProxyClasses('ConcretePackage' . camelcase($this->getPackageHandle()) . 'Src');
         if ($dbm->hasEntities()) {
             $dbm->generateProxyClasses();
             $dbm->dropObsoleteDatabaseTables(camelcase($this->getPackageHandle()));

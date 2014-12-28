@@ -904,6 +904,15 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="Database Entities" path="/dashboard/system/environment/entities"
+              filename="/dashboard/system/environment/entities.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>database, entities, doctrine</value>
+                </attributekey>
+            </attributes>
+        </page>
         <page name="Backup &amp; Restore" path="/dashboard/system/backup" filename="/dashboard/system/backup/view.php"
               pagetype="" description="Backup or restore your website." package="">
             <attributes>

@@ -3,6 +3,7 @@ namespace Concrete\Core\Database;
 
 use Doctrine\DBAL\Schema\SchemaDiff;
 use Doctrine\ORM\EntityManager;
+use Core;
 
 class DatabaseStructureManager
 {
@@ -105,6 +106,45 @@ class DatabaseStructureManager
             $pf->generateProxyClasses($metadatas);
 
             return true;
+        }
+        return false;
+    }
+
+    /**
+     * Destroys all the proxy classes that have the defined prefix. No need to
+     * define the generic doctrine proxy marker prefix, i.e. "__CG__" but the
+     * part after that, e.g. "ConcreteCore".
+     * 
+     * Returns a boolean indicating whether any files were deleted or not.
+     * 
+     * @param  string $prefix
+     * @return boolean
+     * @throws \Exception Throws an exception if the given prefix is invalid or 
+     *         if one of the proxy files cannot be deleted.
+     */
+    public function destroyProxyClasses($prefix)
+    {
+        if (!is_string($prefix) || strlen($prefix) < 1) {
+            throw new \Exception(t("The given prefix needs to be a string."));
+        }
+        $proxyDir = $this->getProxyDir();
+        if (is_dir($proxyDir)) {
+            $fh = Core::make('helper/file');
+            $prefix = \Doctrine\Common\Proxy\Proxy::MARKER . $prefix;
+            $filesMatched = 0;
+            foreach ($fh->getDirectoryContents($proxyDir) as $file) {
+                if (strpos($file, $prefix) === 0) {
+                    if (!@unlink($proxyDir . '/' . $file)) {
+                        throw new \Exception(t(
+                            "Could not delete a proxy file. Please check the " .
+                            "permissions of the proxy directory: %s",
+                            $proxyDir
+                        ));
+                    }
+                    $filesMatched++;
+                }
+            }
+            return $filesMatched > 0;
         }
         return false;
     }
