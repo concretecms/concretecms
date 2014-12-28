@@ -4,6 +4,8 @@
 thumbs.db
 __MACOSX
 ._*
+.*swp
+.*swo
 
 # ignore composer files
 composer.phar
