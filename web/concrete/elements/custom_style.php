@@ -289,7 +289,7 @@ $form = Core::make('helper/form');
                 <span class="ccm-inline-style-slider-heading"><?=t('Rotation (in degrees)')?></span>
                 <div class="ccm-inline-style-sliders" data-style-slider-min="0" data-style-slider-max="360" data-style-slider-default-setting="0"></div>
                <span class="ccm-inline-style-slider-display-value">
-                <input type="text" name="rotate" id="rotate" class="ccm-inline-style-slider-value" data-value-format="" value="<?php echo $rotate ? $rotate : '0' ?>" autocomplete="off" />&deg;
+                <input type="text" name="rotate" id="rotate" class="ccm-inline-style-slider-value ccm-slider-value-unit-appended" data-value-format="" value="<?php echo $rotate ? $rotate : '0' ?>" autocomplete="off" /> &deg;
             </span>
             </div>
 
