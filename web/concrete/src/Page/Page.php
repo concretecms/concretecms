@@ -119,6 +119,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
                     $this->cPointerOriginalID = $cPointerOriginalID;
                     $this->cPath = $cPathOverride;
                     $this->cParentID = $cParentIDOverride;
+                    $this->cDisplayOrder = $cDisplayOrderOverride;
                 }
                 $this->isMasterCollection = $row['cIsTemplate'];
             } else {
@@ -613,6 +614,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $cDate = $dh->getOverridableNow();
         $cDatePublic = $dh->getOverridableNow();
         $handle = $this->getCollectionHandle();
+        $cDisplayOrder = $c->getNextSubPageDisplayOrder();
 
         $_cParentID = $c->getCollectionID();
         $q = "select PagePaths.cPath from PagePaths where cID = '{$_cParentID}'";
@@ -627,8 +629,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $cobj = parent::addCollection($data);
         $newCID = $cobj->getCollectionID();
 
-        $v = array($newCID, $cParentID, $uID, $this->getCollectionID());
-        $q = "insert into Pages (cID, cParentID, uID, cPointerID) values (?, ?, ?, ?)";
+        $v = array($newCID, $cParentID, $uID, $this->getCollectionID(), $cDisplayOrder);
+        $q = "insert into Pages (cID, cParentID, uID, cPointerID, cDisplayOrder) values (?, ?, ?, ?, ?)";
         $r = $db->prepare($q);
 
         $res = $db->execute($r, $v);
