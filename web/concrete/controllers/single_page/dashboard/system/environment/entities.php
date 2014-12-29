@@ -38,6 +38,7 @@ class Entities extends DashboardPageController
                 }
                 try {
                     $dbm = Core::make('database/structure', $em);
+                    $dbm->destroyProxyClasses('ApplicationSrc');
                     if ($dbm->hasEntities()) {
                         $dbm->generateProxyClasses();
                         $dbm->installDatabase();
