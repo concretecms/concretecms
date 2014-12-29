@@ -38,7 +38,7 @@ if (isset($activate_confirm)) {
                 ?>
                 <tr <?php if ($siteThemeID == $t->getThemeID()) { ?> class="ccm-theme-active" <? } ?>>
                     <td>
-                        <div class="ccm-themes-thumbnail" style="padding:4px;background-color:#FFF;border-radius:3px;border:1px solid #DDD;">
+                        <div class="ccm-themes-thumbnail" >
                             <?=$t->getThemeThumbnail()?>
                         </div>
                     </td>

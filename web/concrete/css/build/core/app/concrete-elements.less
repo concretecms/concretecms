@@ -74,13 +74,13 @@ div.ccm-block-type-display
     display:inline-block;
 }
 
-.ccm-block-type-description
-{
+
+.ccm-block-type-description, .ccm-theme-description {
     display: inline-block;
 	box-sizing: padding-box;
-    line-height: 90px;
+    vertical-align: middle;
 
-    div.ccm-block-type-description-title {
+    div.ccm-block-type-description-title, .ccm-theme-description-title {
         height: 20px;
         line-height:20px;
         vertical-align:top;
@@ -96,11 +96,14 @@ div.ccm-block-type-display
         }
     }
 
-    .ccm-block-type-description-content {
+    .ccm-block-type-description-content, .ccm-theme-description-content {
         margin:0;
         vertical-align: middle;
         line-height: normal;
         min-height: 50px;
+        &.ccm-theme-description-content {
+            min-height: 70px;
+        }
     }
 
     .ccm-block-type-description-usage {
@@ -124,4 +127,16 @@ div.ccm-block-type-display
 dl.ccm-block-set-list dt
 {
     line-height: 48px;
+}
+
+/* 
+ * Themes elements presentation:
+ */
+
+.ccm-themes-thumbnail {
+    padding:4px;
+    background-color:#FFF;
+    border-radius:3px;
+    border:1px solid #DDD;
+    display: inline-block;
 }

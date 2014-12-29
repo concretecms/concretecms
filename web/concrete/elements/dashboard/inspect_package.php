@@ -71,6 +71,23 @@ $catList = AttributeCategory::getList();
 	unset($items['attribute_keys'] ); 
 ?>
 
+<?php if ( count($items['page_themes']) > 0 ) { ?>
+<div class="form-group">
+	<legend><?= $pkg->getPackageItemsCategoryDisplayName('page_themes'); ?></legend>
+	<ul class="list-unstyled">
+	<?php foreach( $items['page_themes'] as $theme) { ?>
+        <li class="clearfix row">
+            <div class="ccm-themes-thumbnail"><?=$theme->getThemeThumbnail()?></div>
+            <div class="ccm-theme-description" >
+                <div class="ccm-theme-description-title"><a href="<?=$view->url('/dashboard/pages/themes/inspect', $theme->getThemeID())?>"><?=$theme->getThemeDisplayName()?></a></div>
+                <div class="ccm-theme-description-content"> <?php echo $theme->getThemeDisplayDescription(); ?> </div>
+            </div>
+        </li>
+	<?php } ?>
+	</ul>
+</div>
+<?php } unset($items['page_themes'] ); ?>
+
 <?php if ( count($items['single_pages']) > 0 ) { ?>
 <div class="form-group">
 	<legend><?= $pkg->getPackageItemsCategoryDisplayName('single_pages'); ?></legend>
@@ -86,7 +103,7 @@ $catList = AttributeCategory::getList();
 </div>
 <?php } unset($items['single_pages'] ); ?>
 
+
 <!-- Show all remaining items that we don't have a better formatting for !-->
 
 <?php foreach ($items as $key => $itemArray) Loader::element('dashboard/package_element_list', array( 'pkg' => $pkg, 'itemArray' => $itemArray, 'key' => $key ) ); ?>
-
