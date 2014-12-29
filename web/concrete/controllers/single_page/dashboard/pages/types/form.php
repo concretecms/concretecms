@@ -74,9 +74,9 @@ class Form extends DashboardPageController {
 	public function delete_set_control() {
 		$control = PageTypeComposerFormLayoutSetControl::getByID($this->post('ptComposerFormLayoutSetControlID'));
 		if (is_object($control)) {
-            $set = $this->getPageTypeComposerFormLayoutSetObject();
+            $set = $control->getPageTypeComposerFormLayoutSetObject();
             $pt = $set->getPageTypeObject();
-            $this->view($pt);
+            $this->view($pt->getPageTypeID());
 			if ($this->token->validate('delete_set_control', $_POST['token'])) {
 				$control->delete();
 			}
@@ -99,7 +99,7 @@ class Form extends DashboardPageController {
 		$fs = PageTypeComposerFormLayoutSet::getByID($_POST['ptComposerFormLayoutSetID']);
 		if (is_object($fs)) {
             $pt = $fs->getPageTypeObject();
-            $this->view($pt);
+            $this->view($pt->getPageTypeID());
 			if ($this->token->validate('update_set_control_display_order', $_POST['token'])) {
 				$displayOrder = 0;
 				foreach($this->post('ptComposerFormLayoutSetControlID') as $ptComposerFormLayoutSetControlID) {
