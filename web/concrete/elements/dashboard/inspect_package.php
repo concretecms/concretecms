@@ -74,15 +74,15 @@ $catList = AttributeCategory::getList();
 <?php if ( count($items['single_pages']) > 0 ) { ?>
 <div class="form-group">
 	<legend><?= $pkg->getPackageItemsCategoryDisplayName('single_pages'); ?></legend>
-	<dl class="dl-horizontal">
+	<ul class="list-unstyled">
 	<?php foreach( $items['single_pages'] as $page ) { ?>
-	<dt><a href="<?=$nav->getLinkToCollection($page)?>"><?=$page->getCollectionName()?></a></dt>
-		<dd class="clearfix row">
-			<span class="col-sm-4"><?=$page->getCollectionDescription()?></span>
-			<span class="col-sm-4"><code><?=$page->getCollectionPath()?></code></span>
-		</dd>
+        <li class="clearfix row">
+            <span class="col-sm-2"><a href="<?=$nav->getLinkToCollection($page)?>"><?=$page->getCollectionName()?></a></span>
+            <span class="col-sm-3"><code><?=$page->getCollectionPath()?></code></span>
+            <span class="col-sm-5"><?=$page->getCollectionDescription()?></span>
+        </li>
 	<?php } ?>
-	</dl>
+	</ul>
 </div>
 <?php } unset($items['single_pages'] ); ?>
 

@@ -7,8 +7,8 @@ $ci = \Core::make( 'helper/concrete/urls' );
 ?>
 
 <div class="row clearfix">
-	<div class="col-sm-1"><?php Loader::element( 'dashboard/block_type_icon', array( 'bt' => $bt ) ); ?></div>
-	<div class="col-sm-11 ccm-block-type-description" >
+	<div class="ccm-block-type-description-icon"><?php Loader::element( 'dashboard/block_type_icon', array( 'bt' => $bt ) ); ?></div>
+	<div class="ccm-block-type-description" >
 		<div class="ccm-block-type-description-title">
 			<a href="<?php echo $view->url('/dashboard/blocks/types', 'inspect', $bt->getBlockTypeID()); ?>"><?php echo t($bt->getBlockTypeName()); ?></a> 
 			<div class="ccm-block-sets"><?php foreach ( $bt->getBlockTypeSets() as $set ) echo '<span class="badge">' . $set->getBlockTypeSetName() . '</span>'; ?></div>
