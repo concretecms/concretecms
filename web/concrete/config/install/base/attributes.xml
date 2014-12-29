@@ -4,6 +4,7 @@
         <category handle="collection" allow-sets="1" package=""/>
         <category handle="user" allow-sets="1" package=""/>
         <category handle="file" allow-sets="1" package=""/>
+        <category handle="event" allow-sets="1" package=""/>
     </attributecategories>
     <attributetypes>
         <attributetype handle="text" name="Text" package="">
@@ -11,6 +12,7 @@
                 <category handle="collection"/>
                 <category handle="user"/>
                 <category handle="file"/>
+                <category handle="event"/>
             </categories>
         </attributetype>
         <attributetype handle="textarea" name="Text Area" package="">
@@ -18,6 +20,7 @@
                 <category handle="collection"/>
                 <category handle="user"/>
                 <category handle="file"/>
+                <category handle="event"/>
             </categories>
         </attributetype>
         <attributetype handle="boolean" name="Checkbox" package="">
@@ -25,6 +28,7 @@
                 <category handle="collection"/>
                 <category handle="user"/>
                 <category handle="file"/>
+                <category handle="event"/>
             </categories>
         </attributetype>
         <attributetype handle="date_time" name="Date/Time" package="">
@@ -32,11 +36,13 @@
                 <category handle="collection"/>
                 <category handle="user"/>
                 <category handle="file"/>
+                <category handle="event"/>
             </categories>
         </attributetype>
         <attributetype handle="image_file" name="Image/File" package="">
             <categories>
                 <category handle="collection"/>
+                <category handle="event"/>
             </categories>
         </attributetype>
         <attributetype handle="number" name="Number" package="">
@@ -44,12 +50,14 @@
                 <category handle="collection"/>
                 <category handle="user"/>
                 <category handle="file"/>
+                <category handle="event"/>
             </categories>
         </attributetype>
         <attributetype handle="rating" name="Rating" package="">
             <categories>
                 <category handle="collection"/>
                 <category handle="file"/>
+                <category handle="event"/>
             </categories>
         </attributetype>
         <attributetype handle="select" name="Select" package="">
@@ -57,11 +65,13 @@
                 <category handle="collection"/>
                 <category handle="user"/>
                 <category handle="file"/>
+                <category handle="event"/>
             </categories>
         </attributetype>
         <attributetype handle="address" name="Address" package="">
             <categories>
                 <category handle="user"/>
+                <category handle="event"/>
             </categories>
         </attributetype>
         <attributetype handle="topics" name="Topics" package="">
@@ -69,11 +79,13 @@
                 <category handle="collection"/>
                 <category handle="user"/>
                 <category handle="file"/>
+                <category handle="event"/>
             </categories>
         </attributetype>
         <attributetype handle="social_links" name="Social Links" package="">
             <categories>
                 <category handle="user"/>
+                <category handle="event"/>
             </categories>
         </attributetype>
     </attributetypes>
