@@ -97,7 +97,6 @@ class Controller extends BlockController
 
         if ($this->filterByRelated) {
             $ak = CollectionKey::getByHandle($this->relatedTopicAttributeKeyHandle);
-            $c = \Page::getCurrentPage();
             if (is_object($ak)) {
                 $topics = $c->getAttribute($ak->getAttributeKeyHandle());
                 if (count($topics) > 0 && is_array($topics)) {
