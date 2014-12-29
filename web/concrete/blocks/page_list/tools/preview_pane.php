@@ -1,7 +1,7 @@
 <?php
 use Concrete\Block\PageList\Controller;
 $request = Request::getInstance();
-$request->setCurrentPage(Page::getByID($_REQUEST['cID']));
+$request->setCurrentPage(Page::getByID($_REQUEST['current_page']));
 $previewMode = true;
 $nh = Loader::helper('navigation');
 $controller = new Controller();
@@ -19,6 +19,15 @@ $controller->rss = $_REQUEST['rss'];
 $controller->displayFeaturedOnly = $_REQUEST['displayFeaturedOnly'];
 $controller->displayAliases = $_REQUEST['displayAliases'];
 $controller->paginate = !!$_REQUEST['paginate'];
+$controller->enableExternalFiltering = $_REQUEST['enableExternalFiltering'];
+$controller->filterByRelated = $_REQUEST['filterByRelated'];
+$controller->relatedTopicAttributeKeyHandle = $_REQUEST['relatedTopicAttributeKeyHandle'];
+$controller->includeAllDescendents = $_REQUEST['includeAllDescendents'];
+$controller->includeName = $_REQUEST['includeName'];
+$controller->includeDate = $_REQUEST['includeDate'];
+$controller->displayThumbnail = $_REQUEST['displayThumbnail'];
+$controller->includeDescription = $_REQUEST['includeDescription'];
+$controller->useButtonForLink = $_REQUEST['useButtonForLink'];
 $controller->on_start();
 $controller->add();
 $controller->view();
