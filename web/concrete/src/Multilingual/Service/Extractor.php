@@ -157,7 +157,23 @@ class Extractor
         $mo = DIR_LANGUAGES_SITE_INTERFACE . '/' . $section->getLocale() . '.mo';
 
         PoGenerator::toFile($translations, $po);
-        MoGenerator::toFile($translations, $mo);
+
+        /* Do not generate mo for empty catalog, it crashes Zend\I18n gettext loader */
+        $empty = true;
+        foreach ($translations as $entry) {
+            if ($entry->hasTranslation()) {
+                $empty = false;
+                break;
+            }
+        }
+
+        if (!$empty) {
+            MoGenerator::toFile($translations, $mo);
+        } else {
+            if (file_exists($mo)) {
+                unlink($mo);
+            }
+        }
     }
 
     public function saveSectionTranslationsToDatabase(Section $section, Translations $translations)
