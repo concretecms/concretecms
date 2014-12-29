@@ -5340,6 +5340,49 @@
         </field>
     </table>
 
+    <table name="CalendarEvents">
+        <field name="eventID" type="I" size="10">
+            <key/>
+            <autoincrement/>
+            <unsigned/>
+        </field>
+        <field name="repetitionID" type="I" size="10" />
+        <field name="description" type="x2" />
+        <field name="name" type="x2" />
+    </table>
 
+    <table name="CalendarEventRepetitions">
+        <field name="repetitionID" type="I" size="10">
+            <key/>
+            <autoincrement/>
+            <unsigned/>
+        </field>
+        <field name="repetitionObject" type="X">
+            <notnull/>
+        </field>
+    </table>
+
+    <table name="EventAttributeValues">
+        <field name="eID" type="I" size="10">
+            <key/>
+            <default value="0"/>
+            <unsigned/>
+        </field>
+        <field name="akID" type="I" size="10">
+            <key/>
+            <default value="0"/>
+            <unsigned/>
+        </field>
+        <field name="avID" type="I" size="10">
+            <default value="0"/>
+            <unsigned/>
+        </field>
+        <index name="akID">
+            <col>akID</col>
+        </index>
+        <index name="avID">
+            <col>avID</col>
+        </index>
+    </table>
 
 </schema>
