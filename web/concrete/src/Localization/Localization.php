@@ -7,6 +7,7 @@ use Loader;
 use Events;
 use \Zend\I18n\Translator\Translator;
 use \Punic\Data as PunicData;
+use CacheLocal;
 
 class Localization
 {
@@ -53,29 +54,46 @@ class Localization
 
     public function setLocale($locale)
     {
-        $localeNeededLoading = false;
         if (($locale == 'en_US') && (!Config::get('concrete.misc.enable_translate_locale_en_us'))) {
             if (isset($this->translate)) {
                 unset($this->translate);
             }
-            PunicData::setDefaultLocale($locale);
-
-            return;
         }
-        if (is_dir(DIR_LANGUAGES . '/' . $locale)) {
+        else {
+            $this->translate = new Translator();
+            // Core language files
             $languageDir = DIR_LANGUAGES . '/' . $locale;
-        } elseif (is_dir(DIR_LANGUAGES_CORE . '/' . $locale)) {
-            $languageDir = DIR_LANGUAGES_CORE . '/' . $locale;
-        } else {
-            return;
+            if (!is_dir($languageDir)) {
+                $languageDir = DIR_LANGUAGES_CORE . '/' . $locale;
+                if (!is_dir($languageDir)) {
+                    $languageDir = '';
+                }
+            }
+            if(strlen($languageDir)) {
+                $this->translate->addTranslationFilePattern('gettext', $languageDir, 'LC_MESSAGES/messages.mo');
+            }
+            // Site language files
+            $languageDir = DIR_LANGUAGES_SITE_INTERFACE;
+            if (!is_dir($languageDir)) {
+                $languageDir = '';
+            }
+            if(strlen($languageDir)) {
+                $this->translate->addTranslationFilePattern('gettext', DIR_LANGUAGES_SITE_INTERFACE, $locale . '.mo');
+            }
+            // Package language files
+            $pkgList = CacheLocal::getEntry('pkgList', 1);
+            if(!is_null($pkgList)) {
+                $pkgList = $pkgList;
+            }
+            if(is_object($pkgList)) {
+                foreach ($pkgList->getPackages() as $pkg) {
+                    $pkg->setupPackageLocalization($locale, $this->translate);
+                }
+            }
+            $this->translate->setLocale($locale);
+            $this->translate->setCache(self::getCache());
         }
-
-        $this->translate = new Translator();
-        $this->translate->addTranslationFilePattern('gettext', $languageDir, 'LC_MESSAGES/messages.mo');
-        $this->translate->setLocale($locale);
-        $this->translate->setCache(self::getCache());
         PunicData::setDefaultLocale($locale);
-
         $event = new \Symfony\Component\EventDispatcher\GenericEvent();
         $event->setArgument('locale', $locale);
         Events::dispatch('on_locale_load', $event);
@@ -89,15 +107,6 @@ class Localization
     public function getActiveTranslateObject()
     {
         return $this->translate;
-    }
-
-    public function addSiteInterfaceLanguage($language)
-    {
-        if (!is_object($this->translate)) {
-            $this->translate = new Translator();
-            $this->translate->setCache(self::getCache());
-        }
-        $this->translate->addTranslationFilePattern('gettext', DIR_LANGUAGES_SITE_INTERFACE, $language . '.mo');
     }
 
     public static function getTranslate()
