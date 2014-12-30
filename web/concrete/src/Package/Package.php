@@ -115,7 +115,7 @@ class Package extends Object
     /**
      * Gets the date the package was added to the system,
      * @return string date formated like: 2009-01-01 00:00:00
-    */
+     */
     public function getPackageDateInstalled()
     {
         return $this->pkgDateInstalled;
@@ -270,23 +270,19 @@ class Package extends Object
 
     /**
      * Loads package translation files into zend translate
-     * @param string $locale
-     * @param string $key
-     * @return void
-    */
-    public function setupPackageLocalization($locale = null, $key = null)
+     * @param string $locale = null The identifier of the locale to activate (used to build the language file path). If empty we'll use currently active locale.
+     * @param \Zend\I18n\Translator\Translator|string $translate = 'current' The Zend Translator instance that holds the translations (set to 'current' to use the current one)
+     */
+    public function setupPackageLocalization($locale = null, $translate = 'current')
     {
-        $translate = Localization::getTranslate();
+        if ($translate === 'current') {
+            $translate = Localization::getTranslate();
+        }
         if (is_object($translate)) {
             $path = $this->getPackagePath() . '/' . DIRNAME_LANGUAGES;
             if (!isset($locale) || !strlen($locale)) {
                 $locale = Localization::activeLocale();
             }
-
-            if (!isset($key)) {
-                $key = $locale;
-            }
-
             if (file_exists($path . '/' . $locale . '/LC_MESSAGES/messages.mo')) {
                 $translate->addTranslationFilePattern('gettext', $path . '/' . $locale, '/LC_MESSAGES/messages.mo');
             }
@@ -341,10 +337,10 @@ class Package extends Object
     }
 
     /** Returns the display name of a category of package items (localized and escaped accordingly to $format)
-    * @param string $categoryHandle The category handle
-    * @param string $format = 'html' Escape the result in html format (if $format is 'html'). If $format is 'text' or any other value, the display name won't be escaped.
-    * @return string
-    */
+     * @param string $categoryHandle The category handle
+     * @param string $format = 'html' Escape the result in html format (if $format is 'html'). If $format is 'text' or any other value, the display name won't be escaped.
+     * @return string
+     */
     public static function getPackageItemsCategoryDisplayName($categoryHandle, $format = 'html')
     {
         switch ($categoryHandle) {
@@ -913,7 +909,7 @@ class Package extends Object
 
     /**
      * moves the current package's directory to the trash directory renamed with the package handle and a date code.
-    */
+     */
     public function backup()
     {
         // you can only backup root level packages.
@@ -936,7 +932,7 @@ class Package extends Object
     /**
      * if a packate was just backed up by this instance of the package object and the packages/package handle directory doesn't exist, this will restore the
      * package from the trash
-    */
+     */
     public function restore()
     {
         if (strlen($this->backedUpFname) && is_dir($this->backedUpFname) && !is_dir(DIR_PACKAGES . '/' . $this->pkgHandle)) {
