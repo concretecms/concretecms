@@ -6,7 +6,6 @@ use Concrete\Core\Foundation\Service\Provider;
 use OAuth\Common\Http\Client\CurlClient;
 use OAuth\ServiceFactory;
 use OAuth\UserData\ExtractorFactory;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ServiceProvider extends Provider
 {
@@ -62,6 +61,7 @@ class ServiceProvider extends Provider
                         }
                     }
                 } catch (\Exception $e) {
+                    \Log::addNotice('OAUTH ERROR: ' . $e->getMessage());
                 }
             });
     }
