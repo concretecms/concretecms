@@ -74,11 +74,11 @@ class Localization
             }
             // Site language files
             $languageDir = DIR_LANGUAGES_SITE_INTERFACE;
-            if (!is_dir($languageDir)) {
+            if (!is_file("$languageDir/$locale.mo")) {
                 $languageDir = '';
             }
             if(strlen($languageDir)) {
-                $this->translate->addTranslationFilePattern('gettext', DIR_LANGUAGES_SITE_INTERFACE, $locale . '.mo');
+                $this->translate->addTranslationFilePattern('gettext', $languageDir, $locale . '.mo');
             }
             // Package language files
             $pkgList = CacheLocal::getEntry('pkgList', 1);
