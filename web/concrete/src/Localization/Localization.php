@@ -82,9 +82,6 @@ class Localization
             }
             // Package language files
             $pkgList = CacheLocal::getEntry('pkgList', 1);
-            if(!is_null($pkgList)) {
-                $pkgList = $pkgList;
-            }
             if(is_object($pkgList)) {
                 foreach ($pkgList->getPackages() as $pkg) {
                     $pkg->setupPackageLocalization($locale, $this->translate);
