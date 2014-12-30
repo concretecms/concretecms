@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\Localization;
+
 use Config;
 use Concrete\Core\Cache\Adapter\ZendCacheDriver;
 use Loader;
@@ -19,7 +20,6 @@ class Localization
     {
         if (null === self::$loc) {
             self::$loc = new self();
-
         }
 
         return self::$loc;
@@ -59,6 +59,7 @@ class Localization
                 unset($this->translate);
             }
             PunicData::setDefaultLocale($locale);
+
             return;
         }
         if (is_dir(DIR_LANGUAGES . '/' . $locale)) {
