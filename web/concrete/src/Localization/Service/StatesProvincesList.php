@@ -492,7 +492,7 @@ class StatesProvincesList {
 	'JP' => array(
 		'01' => 'Hokkaido',
 		'02' => 'Aomori',
-		'03' => 'Iiwate',
+		'03' => 'Iwate',
 		'04' => 'Miyagi',
 		'05' => 'Akita',
 		'06' => 'Yamagata',
