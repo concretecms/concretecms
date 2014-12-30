@@ -92,23 +92,49 @@ class Package extends Object
         return $dirp . '/' . $this->pkgHandle;
     }
 
-    public function getPackageID() {return $this->pkgID;}
-    public function getPackageName() {return t($this->pkgName);}
-    public function getPackageDescription() {return t($this->pkgDescription);}
-    public function getPackageHandle() {return $this->pkgHandle;}
+    public function getPackageID()
+    {
+        return $this->pkgID;
+    }
+
+    public function getPackageName()
+    {
+        return t($this->pkgName);
+    }
+
+    public function getPackageDescription()
+    {
+        return t($this->pkgDescription);
+    }
+
+    public function getPackageHandle()
+    {
+        return $this->pkgHandle;
+    }
 
     /**
-	 * Gets the date the package was added to the system,
-	 * @return string date formated like: 2009-01-01 00:00:00
-	*/
+     * Gets the date the package was added to the system,
+     * @return string date formated like: 2009-01-01 00:00:00
+    */
     public function getPackageDateInstalled()
     {
         return $this->pkgDateInstalled;
     }
 
-    public function getPackageVersion() {return $this->pkgVersion;}
-    public function getPackageVersionUpdateAvailable() {return $this->pkgAvailableVersion;}
-    public function isPackageInstalled() { return $this->pkgIsInstalled;}
+    public function getPackageVersion()
+    {
+        return $this->pkgVersion;
+    }
+
+    public function getPackageVersionUpdateAvailable()
+    {
+        return $this->pkgAvailableVersion;
+    }
+
+    public function isPackageInstalled()
+    {
+        return $this->pkgIsInstalled;
+    }
 
     public function getChangelogContents()
     {
@@ -122,9 +148,9 @@ class Package extends Object
     }
 
     /**
-	 * Returns the currently installed package version.
-	 * NOTE: This function only returns a value if getLocalUpgradeablePackages() has been called first!
-	 */
+     * Returns the currently installed package version.
+     * NOTE: This function only returns a value if getLocalUpgradeablePackages() has been called first!
+     */
     public function getPackageCurrentlyInstalledVersion()
     {
         return $this->pkgCurrentVersion;
@@ -190,37 +216,36 @@ class Package extends Object
         unset($platform);
 
         /*
-		$schema = Database::getADOSChema();
-		$sql = $schema->ParseSchema($xmlFile);
+        $schema = Database::getADOSChema();
+        $sql = $schema->ParseSchema($xmlFile);
 
-		$db->IgnoreErrors($handler);
+        $db->IgnoreErrors($handler);
 
-		if (!$sql) {
-			$result->message = $db->ErrorMsg();
-			return $result;
-		}
+        if (!$sql) {
+            $result->message = $db->ErrorMsg();
+            return $result;
+        }
 
-		$r = $schema->ExecuteSchema();
+        $r = $schema->ExecuteSchema();
 
 
-		if ($dbLayerErrorMessage != '') {
-			$result->message = $dbLayerErrorMessage;
-			return $result;
-		} if (!$r) {
-			$result->message = $db->ErrorMsg();
-			return $result;
-		}
+        if ($dbLayerErrorMessage != '') {
+            $result->message = $dbLayerErrorMessage;
+            return $result;
+        } if (!$r) {
+            $result->message = $db->ErrorMsg();
+            return $result;
+        }
 
-		$result->result = true;
+        $result->result = true;
 
-		$db->CacheFlush();
-		*/
+        $db->CacheFlush();
+        */
 
         $result = new \stdClass();
         $result->result = false;
 
         return $result;
-
     }
 
     public static function getClass($pkgHandle)
@@ -239,15 +264,16 @@ class Package extends Object
             }
             $item->set($cl);
         }
+
         return clone $cl;
     }
 
     /**
-	 * Loads package translation files into zend translate
-	 * @param string $locale
-	 * @param string $key
-	 * @return void
-	*/
+     * Loads package translation files into zend translate
+     * @param string $locale
+     * @param string $key
+     * @return void
+    */
     public function setupPackageLocalization($locale = null, $key = null)
     {
         $translate = Localization::getTranslate();
@@ -268,8 +294,8 @@ class Package extends Object
     }
 
     /**
-	 * Returns an array of package items (e.g. blocks, themes)
-	 */
+     * Returns an array of package items (e.g. blocks, themes)
+     */
     public function getPackageItems()
     {
         $items = array();
@@ -315,10 +341,10 @@ class Package extends Object
     }
 
     /** Returns the display name of a category of package items (localized and escaped accordingly to $format)
-	* @param string $categoryHandle The category handle
-	* @param string $format = 'html' Escape the result in html format (if $format is 'html'). If $format is 'text' or any other value, the display name won't be escaped.
-	* @return string
-	*/
+    * @param string $categoryHandle The category handle
+    * @param string $format = 'html' Escape the result in html format (if $format is 'html'). If $format is 'text' or any other value, the display name won't be escaped.
+    * @return string
+    */
     public static function getPackageItemsCategoryDisplayName($categoryHandle, $format = 'html')
     {
         switch ($categoryHandle) {
@@ -438,7 +464,6 @@ class Package extends Object
             $akc = AttributeKeyCategory::getByID($item->getAttributeKeyCategoryID());
 
             return t(' %s (%s)', $txt->unhandle($item->getAttributeKeyHandle()), $txt->unhandle($akc->getAttributeKeyCategoryHandle()));
-
         } elseif ($item instanceof UserPointAction) {
             return $item->getUserPointActionName();
         } elseif ($item instanceof SystemCaptchaLibrary) {
@@ -463,8 +488,8 @@ class Package extends Object
     }
 
     /**
-	 * Uninstalls the package. Removes any blocks, themes, or pages associated with the package.
-	 */
+     * Uninstalls the package. Removes any blocks, themes, or pages associated with the package.
+     */
     public function uninstall()
     {
         $db = Loader::db();
@@ -563,7 +588,6 @@ class Package extends Object
     public function swapContent($options)
     {
         if ($this->validateClearSiteContents($options)) {
-
             \Core::make('cache/request')->disable();
 
             $pl = new PageList();
@@ -597,7 +621,6 @@ class Package extends Object
 
             // now we add in any files that this package has
             if (is_dir($this->getPackagePath() . '/content_files')) {
-
                 $fh = new FileImporter();
                 $contents = Loader::helper('file')->getDirectoryContents($this->getPackagePath() . '/content_files');
 
@@ -682,10 +705,10 @@ class Package extends Object
     }
 
     /*
-	 * Returns a path to where the packages files are located.
-	 * @access public
-	 * @return string $path
-	 */
+     * Returns a path to where the packages files are located.
+     * @access public
+     * @return string $path
+     */
 
     public function getPackagePath()
     {
@@ -696,10 +719,10 @@ class Package extends Object
     }
 
     /**
-	 * returns a Package object for the given package id, null if not found
-	 * @param int $pkgID
-	 * @return Package
-	 */
+     * returns a Package object for the given package id, null if not found
+     * @param int $pkgID
+     * @return Package
+     */
     public static function getByID($pkgID)
     {
         $db = Loader::db();
@@ -708,16 +731,17 @@ class Package extends Object
             $pkg = static::getClass($row['pkgHandle']);
             if ($pkg instanceof Package) {
                 $pkg->setPropertiesFromArray($row);
+
                 return $pkg;
             }
         }
     }
 
     /**
-	 * returns a Package object for the given package handle, null if not found
-	 * @param string $pkgHandle
-	 * @return Package
-	 */
+     * returns a Package object for the given package handle, null if not found
+     * @param string $pkgHandle
+     * @return Package
+     */
     public static function getByHandle($pkgHandle)
     {
         $db = Loader::db();
@@ -777,8 +801,8 @@ class Package extends Object
     }
 
     /**
-	 * @return Package
-	 */
+     * @return Package
+     */
     public function install()
     {
         $cl = \Concrete\Core\Foundation\ClassLoader::getInstance();
@@ -852,9 +876,9 @@ class Package extends Object
     }
 
     /**
-	 * Returns an array of packages that have newer versions in the local packages directory
-	 * than those which are in the Packages table. This means they're ready to be upgraded
-	 */
+     * Returns an array of packages that have newer versions in the local packages directory
+     * than those which are in the Packages table. This means they're ready to be upgraded
+     */
     public static function getLocalUpgradeablePackages()
     {
         $packages = Package::getAvailablePackages(false);
@@ -888,8 +912,8 @@ class Package extends Object
     }
 
     /**
-	 * moves the current package's directory to the trash directory renamed with the package handle and a date code.
-	*/
+     * moves the current package's directory to the trash directory renamed with the package handle and a date code.
+    */
     public function backup()
     {
         // you can only backup root level packages.
@@ -910,9 +934,9 @@ class Package extends Object
     }
 
     /**
-	 * if a packate was just backed up by this instance of the package object and the packages/package handle directory doesn't exist, this will restore the
-	 * package from the trash
-	*/
+     * if a packate was just backed up by this instance of the package object and the packages/package handle directory doesn't exist, this will restore the
+     * package from the trash
+    */
     public function restore()
     {
         if (strlen($this->backedUpFname) && is_dir($this->backedUpFname) && !is_dir(DIR_PACKAGES . '/' . $this->pkgHandle)) {
@@ -956,5 +980,4 @@ class Package extends Object
 
         return $packages;
     }
-
 }
