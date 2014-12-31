@@ -3,7 +3,7 @@ namespace Concrete\Core\Localization;
 
 use Config;
 use Concrete\Core\Cache\Adapter\ZendCacheDriver;
-use Loader;
+use Core;
 use Events;
 use \Zend\I18n\Translator\Translator;
 use \Punic\Data as PunicData;
@@ -117,7 +117,7 @@ class Localization
     public static function getAvailableInterfaceLanguages()
     {
         $languages = array();
-        $fh = Loader::helper('file');
+        $fh = Core::make('helper/file');
 
         if (file_exists(DIR_LANGUAGES)) {
             $contents = $fh->getDirectoryContents(DIR_LANGUAGES);
