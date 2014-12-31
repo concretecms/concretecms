@@ -1,6 +1,7 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
 $ih = Core::make('helper/concrete/ui'); 
+$dh = Core::make('helper/date');
 
 ?>
 <?php if ($this->controller->getTask() == 'view_detail') { ?>
@@ -65,21 +66,30 @@ $ih = Core::make('helper/concrete/ui');
             <span class="help-block"><?=t('Click and drag to reorder the files in this set. New files added to this set will automatically be appended to the end.')?></span>
             <div class="ccm-spacer">&nbsp;</div>
 
-            <ul class="ccm-file-set-file-list  item-select-list">
+            <table class="ccm-search-results-table">
+                <thead>
+                    <th></th>
+                    <th><span><?=t('Thumbnail')?></span></th>
+                    <th data-sort="type"><span><?=t('Type')?></span></th>
+                    <th data-sort="title"><span><?=t('Title')?></span></th>
+                    <th data-sort="filename"><span><?=t('File name')?></span></th>
+                    <th data-sort="added"><span><?=t('Added')?></span></th>
+                </thead>
 
-            <?php foreach($files as $f) { ?>
+                <tbody class="ccm-file-set-file-list">
 
-                <li id="fID_<?=$f->getFileID()?>" class="">
-                    <div>
-                        <?=$f->getListingThumbnailImage()?>
-                        <input type="hidden" name="fsDisplayOrder[]" value="<?=$f->getFileID()?>" />
-                        <span style="word-wrap: break-word"><?=$f->getTitle()?></span>
-                    </div>
-                </li>
-
-            <?php } ?>
-
-            </ul>
+                    <?php foreach($files as $f) { ?>
+                        <tr id="fID_<?=$f->getFileID()?>" class="">
+                            <td><i class="fa fa-arrows-v"></i></td>
+                            <td ><?=$f->getListingThumbnailImage()?><input type="hidden" name="fsDisplayOrder[]" value="<?=$f->getFileID()?>" /></td>
+                            <td data-key="type" ><?=$f->getGenericTypetext()?>/<?=$f->getType()?></td>
+                            <td data-key="title"><?=$f->getTitle()?></td>
+                            <td data-key="filename"><?=$f->getFileName()?></td>
+                            <td data-key="added" data-sort="<?=$f->getDateAdded()->getTimestamp()?>" ><?=$dh->formatDateTime($f->getDateAdded()->getTimestamp())?></td>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
 		<?php } else { ?>
 			<div class="alert alert-info"><?=t('There are no files in this set.')?></div>
 		<?php } ?>
@@ -98,7 +108,23 @@ $ih = Core::make('helper/concrete/ui');
 	$(function() {
 		$(".ccm-file-set-file-list").sortable({
 			cursor: 'move',
-			opacity: 0.5
+            opacity: 0.5,
+            axis: 'y',
+            helper: function( evt, elem ) { 
+                var ret = $(elem).clone();
+                var i;
+                // copy the actual width of the elements
+
+                ret.width( elem.outerWidth() );
+                retChilds = $(ret.children());
+                elemChilds = $(elem.children());
+                
+                for ( i = 0; i < elemChilds.length; i++ ) 
+                    $(retChilds[i]).width( $(elemChilds[i]).outerWidth() );
+
+                return ret; 
+            },
+            placeholder: "ccm-file-set-file-placeholder"
 		});
 		
 	});
@@ -107,6 +133,8 @@ $ih = Core::make('helper/concrete/ui');
 	
 	<style type="text/css">
 	    .ccm-file-set-file-list:hover {cursor: move}
+        .ccm-file-set-file-placeholder { background-color: #ffd !important;  }
+        .ccm-file-set-file-placeholder td { background:transparent !important; }
 	</style>
 
 <?php } else { ?>
