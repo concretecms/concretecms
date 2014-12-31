@@ -18,7 +18,6 @@ use BlockType;
 use Block;
 use Group;
 use PageTheme;
-use Loader;
 use Job;
 use Core;
 use JobSet;
@@ -139,9 +138,9 @@ class Package extends Object
     public function getChangelogContents()
     {
         if (file_exists($this->getPackagePath() . '/CHANGELOG')) {
-            $contents = Loader::helper('file')->getContents($this->getPackagePath() . '/CHANGELOG');
+            $contents = Core::make('helper/file')->getContents($this->getPackagePath() . '/CHANGELOG');
 
-            return nl2br(Loader::helper('text')->entities($contents));
+            return nl2br(Core::make('helper/text')->entities($contents));
         }
 
         return '';
@@ -400,7 +399,7 @@ class Package extends Object
                 $value = t('Storage Locations');
                 break;
             default:
-                $value = t(Loader::helper('text')->unhandle($categoryHandle));
+                $value = t(Core::make('helper/text')->unhandle($categoryHandle));
                 break;
         }
         switch ($format) {
@@ -414,7 +413,7 @@ class Package extends Object
 
     public static function getItemName($item)
     {
-        $txt = Loader::helper('text');
+        $txt = Core::make('helper/text');
         if ($item instanceof BlockType) {
             return t($item->getBlockTypeName());
         } elseif ($item instanceof PageTheme) {
@@ -489,7 +488,7 @@ class Package extends Object
      */
     public function uninstall()
     {
-        $db = Loader::db();
+        $db = Database::getActiveConnection();
 
         $items = $this->getPackageItems();
 
@@ -573,7 +572,7 @@ class Package extends Object
         $u = new \User();
         if ($u->isSuperUser()) {
             // this can ONLY be used through the post. We will use the token to ensure that
-            $valt = Loader::helper('validation/token');
+            $valt = Core::make('helper/validation/token');
             if ($valt->validate('install_options_selected', $options['ccm_token'])) {
                 return true;
             }
@@ -619,7 +618,7 @@ class Package extends Object
             // now we add in any files that this package has
             if (is_dir($this->getPackagePath() . '/content_files')) {
                 $fh = new FileImporter();
-                $contents = Loader::helper('file')->getDirectoryContents($this->getPackagePath() . '/content_files');
+                $contents = Core::make('helper/file')->getDirectoryContents($this->getPackagePath() . '/content_files');
 
                 foreach ($contents as $filename) {
                     $f = $fh->import($this->getPackagePath() . '/content_files/' . $filename, $filename);
@@ -639,7 +638,7 @@ class Package extends Object
     {
         // this is the pre-test routine that packages run through before they are installed. Any errors that come here
         // are to be returned in the form of an array so we can show the user. If it's all good we return true
-        $db = Loader::db();
+        $db = Database::getActiveConnection();
         $errors = array();
 
         $pkg = static::getClass($package);
@@ -722,7 +721,7 @@ class Package extends Object
      */
     public static function getByID($pkgID)
     {
-        $db = Loader::db();
+        $db = Database::getActiveConnection();
         $row = $db->GetRow("select * from Packages where pkgID = ?", array($pkgID));
         if ($row) {
             $pkg = static::getClass($row['pkgHandle']);
@@ -741,7 +740,7 @@ class Package extends Object
      */
     public static function getByHandle($pkgHandle)
     {
-        $db = Loader::db();
+        $db = Database::getActiveConnection();
         $row = $db->GetRow("select * from Packages where pkgHandle = ?", array($pkgHandle));
         if ($row) {
             $pkg = static::getClass($row['pkgHandle']);
@@ -806,8 +805,8 @@ class Package extends Object
         $cl->registerPackage($this);
 
         PackageList::refreshCache();
-        $db = Loader::db();
-        $dh = Loader::helper('date');
+        $db = Database::getActiveConnection();
+        $dh = Core::make('helper/date');
         $v = array($this->getPackageName(), $this->getPackageDescription(), $this->getPackageVersion(), $this->getPackageHandle(), 1, $dh->getOverridableNow());
         $db->query("insert into Packages (pkgName, pkgDescription, pkgVersion, pkgHandle, pkgIsInstalled, pkgDateInstalled) values (?, ?, ?, ?, ?, ?)", $v);
 
@@ -822,14 +821,14 @@ class Package extends Object
 
     public function updateAvailableVersionNumber($vNum)
     {
-        $db = Loader::db();
+        $db = Database::getActiveConnection();
         $v = array($vNum, $this->getPackageID());
         $db->query("update Packages set pkgAvailableVersion = ? where pkgID = ?", $v);
     }
 
     public function upgradeCoreData()
     {
-        $db = Loader::db();
+        $db = Database::getActiveConnection();
         $p1 = static::getClass($this->getPackageHandle());
         if ($p1 instanceof Package) {
             $v = array($p1->getPackageName(), $p1->getPackageDescription(), $p1->getPackageVersion(), $this->getPackageID());
@@ -852,14 +851,14 @@ class Package extends Object
 
     public static function getInstalledHandles()
     {
-        $db = Loader::db();
+        $db = Database::getActiveConnection();
 
         return $db->GetCol("select pkgHandle from Packages");
     }
 
     public static function getInstalledList()
     {
-        $db = Loader::db();
+        $db = Database::getActiveConnection();
         $r = $db->query("select * from Packages where pkgIsInstalled = 1 order by pkgDateInstalled asc");
         $pkgArray = array();
         while ($row = $r->fetchRow()) {
@@ -880,7 +879,7 @@ class Package extends Object
     {
         $packages = Package::getAvailablePackages(false);
         $upgradeables = array();
-        $db = Loader::db();
+        $db = Database::getActiveConnection();
         foreach ($packages as $p) {
             $row = $db->GetRow("select pkgID, pkgVersion from Packages where pkgHandle = ? and pkgIsInstalled = 1", array($p->getPackageHandle()));
             if ($row['pkgID'] > 0) {
@@ -898,7 +897,7 @@ class Package extends Object
     {
         $packages = Package::getInstalledList();
         $upgradeables = array();
-        $db = Loader::db();
+        $db = Database::getActiveConnection();
         foreach ($packages as $p) {
             if (version_compare($p->getPackageVersion(), $p->getPackageVersionUpdateAvailable(), '<')) {
                 $upgradeables[] = $p;
@@ -945,7 +944,7 @@ class Package extends Object
 
     public static function getAvailablePackages($filterInstalled = true)
     {
-        $dh = Loader::helper('file');
+        $dh = Core::make('helper/file');
 
         $packages = $dh->getDirectoryContents(DIR_PACKAGES);
         if ($filterInstalled) {
