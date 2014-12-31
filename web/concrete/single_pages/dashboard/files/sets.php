@@ -70,10 +70,10 @@ $dh = Core::make('helper/date');
                 <thead>
                     <th></th>
                     <th><span><?=t('Thumbnail')?></span></th>
-                    <th data-sort="type"><span><?=t('Type')?></span></th>
-                    <th data-sort="title"><span><?=t('Title')?></span></th>
-                    <th data-sort="filename"><span><?=t('File name')?></span></th>
-                    <th data-sort="added"><span><?=t('Added')?></span></th>
+                    <th><a href="javascript:void(0)" class="sort-link" data-sort="type"    ><?=t('Type')?></a></th>
+                    <th><a href="javascript:void(0)" class="sort-link" data-sort="title"   ><?=t('Title')?></a></th>
+                    <th><a href="javascript:void(0)" class="sort-link" data-sort="filename"><?=t('File name')?></a></th>
+                    <th><a href="javascript:void(0)" class="sort-link" data-sort="added"   ><?=t('Added')?></a></th>
                 </thead>
 
                 <tbody class="ccm-file-set-file-list">
@@ -106,6 +106,44 @@ $dh = Core::make('helper/date');
 	<script type="text/javascript">
 
 	$(function() {
+        var baseClass="ccm-results-list-active-sort-"; // asc desc
+
+        function ccmFileSetResetSortIcons()
+        {
+            $(".ccm-search-results-table thead th").removeClass(baseClass + 'asc');
+            $(".ccm-search-results-table thead th").removeClass(baseClass + 'desc');
+            $(".ccm-search-results-table thead th a").css("color", "#93bfd5");
+        }
+
+        function ccmFileSetDoSort()
+        {
+            var $this = $(this);
+            var $parent = $(this).parent();
+            var asc = $parent.hasClass( baseClass + 'asc' );
+            var key = $this.attr('data-sort');
+            console.log( "should sort according to key ", key );
+
+            ccmFileSetResetSortIcons();
+            var sortableList = $('.ccm-file-set-file-list');
+            var listItems = $('tr', sortableList);
+
+            if ( asc ) $parent.addClass( baseClass + 'desc' );
+            else $parent.addClass( baseClass + 'asc' );
+
+            listItems.sort( function( a, b ) {
+                var aTD = $('td[data-key=' + key + ']', $(a) );
+                var bTD = $('td[data-key=' + key + ']', $(b) );
+
+                var aVal = typeof( aTD.attr('data-sort') ) == 'undefined' ? aTD.text().toUpperCase() : parseInt(aTD.attr('data-sort'));
+                var bVal = typeof( bTD.attr('data-sort') ) == 'undefined' ? bTD.text().toUpperCase() : parseInt(bTD.attr('data-sort'));
+
+                return asc ? (aVal < bVal) : (aVal > bVal);
+            });
+            sortableList.append(listItems);
+        }
+
+        $('.ccm-search-results-table thead th a.sort-link').click(ccmFileSetDoSort);
+
 		$(".ccm-file-set-file-list").sortable({
 			cursor: 'move',
             opacity: 0.5,
@@ -124,9 +162,13 @@ $dh = Core::make('helper/date');
 
                 return ret; 
             },
-            placeholder: "ccm-file-set-file-placeholder"
+            placeholder: "ccm-file-set-file-placeholder",
+            stop: function(e,ui) {
+                ccmFileSetResetSortIcons();
+            }
 		});
-		
+
+
 	});
 	
 	</script>
