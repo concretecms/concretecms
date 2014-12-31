@@ -58,37 +58,38 @@ class Localization
             if (isset($this->translate)) {
                 unset($this->translate);
             }
-        }
-        else {
+        } else {
             $this->translate = new Translator();
+            $this->translate->setLocale($locale);
+            $this->translate->setCache(self::getCache());
             // Core language files
-            $languageDir = DIR_LANGUAGES . '/' . $locale;
-            if (!is_dir($languageDir)) {
-                $languageDir = DIR_LANGUAGES_CORE . '/' . $locale;
-                if (!is_dir($languageDir)) {
-                    $languageDir = '';
+            $languageFile = DIR_LANGUAGES . "/$locale/LC_MESSAGES/messages.mo";
+            if (!is_file($languageFile)) {
+                $languageFile = DIR_LANGUAGES_CORE . "/$locale/LC_MESSAGES/messages.mo";
+                if (!is_file($languageFile)) {
+                    $languageFile = '';
                 }
             }
-            if(strlen($languageDir)) {
-                $this->translate->addTranslationFilePattern('gettext', $languageDir, 'LC_MESSAGES/messages.mo');
+            if (strlen($languageFile)) {
+                $this->translate->addTranslationFile('gettext', $languageFile);
             }
             // Site language files
-            $languageDir = DIR_LANGUAGES_SITE_INTERFACE;
-            if (!is_file("$languageDir/$locale.mo")) {
-                $languageDir = '';
-            }
-            if(strlen($languageDir)) {
-                $this->translate->addTranslationFilePattern('gettext', $languageDir, $locale . '.mo');
+            if (Config::get('concrete.multilingual.enabled')) {
+                $languageFile = DIR_LANGUAGES_SITE_INTERFACE . "/$locale.mo";
+                if (!is_file($languageFile)) {
+                    $languageFile = '';
+                }
+                if (strlen($languageFile)) {
+                    $this->translate->addTranslationFile('gettext', $languageFile);
+                }
             }
             // Package language files
             $pkgList = CacheLocal::getEntry('pkgList', 1);
-            if(is_object($pkgList)) {
+            if (is_object($pkgList)) {
                 foreach ($pkgList->getPackages() as $pkg) {
                     $pkg->setupPackageLocalization($locale, $this->translate);
                 }
             }
-            $this->translate->setLocale($locale);
-            $this->translate->setCache(self::getCache());
         }
         PunicData::setDefaultLocale($locale);
         $event = new \Symfony\Component\EventDispatcher\GenericEvent();
