@@ -121,7 +121,6 @@ $dh = Core::make('helper/date');
             var $parent = $(this).parent();
             var asc = $parent.hasClass( baseClass + 'asc' );
             var key = $this.attr('data-sort');
-            console.log( "should sort according to key ", key );
 
             ccmFileSetResetSortIcons();
             var sortableList = $('.ccm-file-set-file-list');
