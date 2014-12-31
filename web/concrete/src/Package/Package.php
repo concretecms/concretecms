@@ -283,8 +283,9 @@ class Package extends Object
             if (!isset($locale) || !strlen($locale)) {
                 $locale = Localization::activeLocale();
             }
-            if (file_exists($path . '/' . $locale . '/LC_MESSAGES/messages.mo')) {
-                $translate->addTranslationFilePattern('gettext', $path . '/' . $locale, '/LC_MESSAGES/messages.mo');
+            $languageFile = "$path/$locale/LC_MESSAGES/messages.mo";
+            if (is_file($languageFile)) {
+                $translate->addTranslationFile('gettext', $languageFile);
             }
         }
     }
