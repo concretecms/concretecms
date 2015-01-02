@@ -16,7 +16,7 @@ $cms = require_once $corePath . '/dispatcher.php';
 $generator = new \Concrete\Core\Support\JSConstantGenerator( $constants );
 $constants = $generator->render();
 
-$js =  "$(function(){ Concrete.const = $constants; })\n";
+$js =  "// GENERATED FILE DO NOT MODIFY (see grunt generate-constants target), DO NOT EDIT THIS FILE, MODIFICATIONS WILL BE LOST!!\n$(function(){ Concrete.const = $constants; })\n";
 
 file_put_contents(DIR_BASE . '/concrete/js/build/core/app/concrete5-const.js', $js);
 
