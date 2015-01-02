@@ -22,6 +22,33 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
     const TYPE_SAVED_SEARCH = 3;
     const GLOBAL_FILESET_USER_ID = 0;
     protected $fileSetFiles;
+    /**
+     * @var int File Set ID
+     */
+    public $fsID;
+
+    /**
+     * @var int User ID
+     */
+    public $uID;
+
+    /**
+     * @var string File Set Name
+     */
+    public $fsName;
+
+    /**
+     * @var int
+     */
+    public $fsOverrideGlobalPermissions;
+
+    /**
+     * @var int
+     */
+    public $fsType;
+
+    public $fsSearchRequest;
+    public $fsResultColumns;
 
     /**
      * Returns an object mapping to the global file set, fsID = 0.
