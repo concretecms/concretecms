@@ -411,7 +411,7 @@ define('LOG_TYPE_EXCEPTIONS', 'exceptions');
  * concrete5 depends on some more forgiving error handling.
  * ----------------------------------------------------------------------------
  */
-error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
+error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED & ~E_WARNING);
 
 
 
