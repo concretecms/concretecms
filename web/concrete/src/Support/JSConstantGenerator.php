@@ -13,12 +13,19 @@ class JSConstantGenerator
 		// All vars listed here will be appended by Grunt into the Concrete.const JS Object
 		$constants = array (
 
+            # Used by the FileManager javascript API to add filters
 			"\Concrete\Core\File\Type\Type::T_IMAGE",
 			"\Concrete\Core\File\Type\Type::T_VIDEO",
 			"\Concrete\Core\File\Type\Type::T_AUDIO",
 			"\Concrete\Core\File\Type\Type::T_DOCUMENT",
 			"\Concrete\Core\File\Type\Type::T_APPLICATION",
 			"\Concrete\Core\File\Type\Type::T_UNKNOWN",
+
+            "\Concrete\Controller\Search\Files::FILTER_BY_SIZE",
+            "\Concrete\Controller\Search\Files::FILTER_BY_TYPE",
+            "\Concrete\Controller\Search\Files::FILTER_BY_EXTENSION",
+            "\Concrete\Controller\Search\Files::FILTER_BY_ADDED_DATE",
+            "\Concrete\Controller\Search\Files::FILTER_BY_ADDED_TO_PAGE",
 		);
 
 		$this->setConstants($constants);

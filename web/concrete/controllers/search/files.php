@@ -231,16 +231,23 @@ class Files extends Controller
         return $this->fields;
     }
 
+
+    const FILTER_BY_TYPE = 'type';
+    const FILTER_BY_SIZE = 'size';
+    const FILTER_BY_EXTENSION = 'extension';
+    const FILTER_BY_ADDED_DATE = 'date_added';
+    const FILTER_BY_ADDED_TO_PAGE = 'added_to';
+
     public static function getSearchFields()
     {
         // Warning:
         // concrete/js/build/core/file-manager/search.js uses those array keys too 
         $r = array(
-            'size' => t('Size'),
-            'type' => t('Type'),
-            'extension' => t('Extension'),
-            'date_added' => t('Added Between'),
-            'added_to' => t('Added to Page')
+            self::FILTER_BY_SIZE          => t('Size'),
+            self::FILTER_BY_TYPE          => t('Type'),
+            self::FILTER_BY_EXTENSION     => t('Extension'),
+            self::FILTER_BY_ADDED_DATE    => t('Added Between'),
+            self::FILTER_BY_ADDED_TO_PAGE => t('Added to Page')
         );
         $sfa = FileAttributeKey::getSearchableList();
         foreach ($sfa as $ak) {
