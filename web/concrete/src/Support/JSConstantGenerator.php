@@ -30,6 +30,9 @@ class JSConstantGenerator
 		$this->_register = null;
 	}
 
+    public function addConstant( $const ) { $this->_constants[] = $const; }
+    public function addConstants( array $consts ) { $this->_constants = array_merge( $this->_constants, $consts); }
+
 	protected function _populateRegister()
 	{
 		$register = array();
