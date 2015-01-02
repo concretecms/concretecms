@@ -8,34 +8,56 @@ class JSConstantGenerator
 	private $_register = null;
 
 
-	public function __construct ( $constants = array() )
+	public function __construct ( array $constants = array() )
 	{
-		// All vars listed here will be appended by Grunt into the Concrete.const JS Object
-		$constants = array (
-
-            # Used by the FileManager javascript API to add filters
-			"\Concrete\Core\File\Type\Type::T_IMAGE",
-			"\Concrete\Core\File\Type\Type::T_VIDEO",
-			"\Concrete\Core\File\Type\Type::T_AUDIO",
-			"\Concrete\Core\File\Type\Type::T_DOCUMENT",
-			"\Concrete\Core\File\Type\Type::T_APPLICATION",
-			"\Concrete\Core\File\Type\Type::T_UNKNOWN",
-
-            "\Concrete\Controller\Search\Files::FILTER_BY_SIZE",
-            "\Concrete\Controller\Search\Files::FILTER_BY_TYPE",
-            "\Concrete\Controller\Search\Files::FILTER_BY_EXTENSION",
-            "\Concrete\Controller\Search\Files::FILTER_BY_ADDED_DATE",
-            "\Concrete\Controller\Search\Files::FILTER_BY_ADDED_TO_PAGE",
-		);
-
 		$this->setConstants($constants);
 	}
 
-	public function setConstants( array $constants )
+	public function setConstants( array $constants = array() )
 	{
 		$this->_constants = $constants;
 		$this->_register = null;
 	}
+
+    public function scanSourceTree( $sourceDir )
+    {
+        $fh = \Core::make( 'helper/file' );
+
+        echo "Scanning $sourceDir \n";
+
+        $list = $fh->getDirectoryContents( $sourceDir, array(), true );
+
+        foreach ( $list as $file )
+        {
+            if ( !preg_match ( '/\.php$/', $file ) ) continue;
+
+            $content = $fh->getContents($file);
+            if ( !preg_match( ',^\s*const\s*.*\s*//!<\s*@javascript-exported,m', $content)) continue;
+
+            $ns = '';
+            $class = '';
+            $var = '';
+
+            $content = str_replace( "\n\r", "\n", $content );
+            $ln = 0;
+            foreach ( explode( "\n", $content ) as $line )
+            {
+                $ln ++;
+                if ( preg_match( '/\s*namespace .*\;/', $line ) ) $ns = preg_replace( ',\s*namespace\s+([^ -;]+);.*$,', '\1', $line );
+
+                if ( preg_match( '/^\s*class.*/', $line ) )       $class = preg_replace( ',\s*class\s+([^ -;\{]+).*$,', '\1', $line );
+
+                if ( preg_match( ',^\s*const\s*.*\s*//!<\s*@javascript-exported,', $line))
+                {
+                    $var = preg_replace( ',\s*const\s+([^ ]+)\s*=.*$,', '\1', $line );
+                    $const = "$ns\\$class::$var";
+                    $this->addConstant($const);
+                }
+            }
+        }
+
+        
+    }
 
     public function addConstant( $const ) { $this->_constants[] = $const; }
     public function addConstants( array $consts ) { $this->_constants = array_merge( $this->_constants, $consts); }
@@ -70,6 +92,8 @@ class JSConstantGenerator
 		return $register;
 	}
 
+    public function getConstantList() { return $this->_constants; }
+
 	public function getRegister()
 	{
 		if ( is_null($this->_register) )
@@ -80,9 +104,9 @@ class JSConstantGenerator
 	}
 
 
-	public function render()
+	public function render( $base = 'Concrete' )
 	{
 		$register = $this->getRegister();
-		return json_encode( $register['Concrete'], JSON_FORCE_OBJECT | JSON_PRETTY_PRINT );
+		return json_encode( $register[$base], JSON_FORCE_OBJECT | JSON_PRETTY_PRINT );
 	}
 }

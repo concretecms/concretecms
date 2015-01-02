@@ -232,11 +232,11 @@ class Files extends Controller
     }
 
 
-    const FILTER_BY_TYPE = 'type';
-    const FILTER_BY_SIZE = 'size';
-    const FILTER_BY_EXTENSION = 'extension';
-    const FILTER_BY_ADDED_DATE = 'date_added';
-    const FILTER_BY_ADDED_TO_PAGE = 'added_to';
+    const FILTER_BY_TYPE = 'type';                  //!< @javascript-exported
+    const FILTER_BY_SIZE = 'size';                  //!< @javascript-exported
+    const FILTER_BY_EXTENSION = 'extension';        //!< @javascript-exported
+    const FILTER_BY_ADDED_DATE = 'date_added';      //!< @javascript-exported
+    const FILTER_BY_ADDED_TO_PAGE = 'added_to';     //!< @javascript-exported
 
     public static function getSearchFields()
     {

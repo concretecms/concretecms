@@ -13,10 +13,13 @@ else {
 $corePath = DIR_BASE . '/concrete';
 $cms = require_once $corePath . '/dispatcher.php';
 
-$generator = new \Concrete\Core\Support\JSConstantGenerator( $constants );
+$generator = new \Concrete\Core\Support\JSConstantGenerator();
+$generator->scanSourceTree( DIR_BASE . '/concrete' );
+
 $constants = $generator->render();
 
 $js =  "// GENERATED FILE DO NOT MODIFY (see grunt generate-constants target), DO NOT EDIT THIS FILE, MODIFICATIONS WILL BE LOST!!\n$(function(){\n\nConcrete.const = $constants;\n\n})\n";
+
 
 file_put_contents(DIR_BASE . '/concrete/js/build/core/app/concrete5-const.js', $js);
 
