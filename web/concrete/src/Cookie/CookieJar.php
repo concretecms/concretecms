@@ -4,36 +4,25 @@ namespace Concrete\Core\Cookie;
 use Symfony\Component\HttpFoundation\Cookie as CookieObject;
 use Request;
 
-class Cookie
+class CookieJar
 {
 
-    static $pantry;
     protected $cookies = array();
-
-    /**
-     * Returns the cookie pantry (the cookie singleton object)
-     * @return static
-     */
-    public static function getInstance()
-    {
-        if (!isset(static::$pantry)) {
-            static::$pantry = new static();
-        }
-        return static::$pantry;
-    }
+    protected $clearedCookies = array();
+    protected $request;
 
     /**
      * Adds a CookieObject to the cookie pantry
      * @param string $name The cookie name
      * @param string|null $value The value of the cookie
-     * @param int $expire The number of minutes until the cookie expires
+     * @param int $expire The number of seconds until the cookie expires
      * @param string $path The path for the cookie
      * @param null|string $domain The domain the cookie is available to
      * @param bool $secure whether the cookie should only be transmitted over a HTTPS connection from the client
      * @param bool $httpOnly Whether the cookie will be made accessible only through the HTTP protocol
-     * @return void
+     * @return \Symfony\Component\HttpFoundation\Cookie
      */
-    public static function set(
+    public function set(
         $name,
         $value = null,
         $expire = 0,
@@ -42,10 +31,9 @@ class Cookie
         $secure = false,
         $httpOnly = true
     ) {
-        $cl = Cookie::getInstance();
-        $expire = ($expire > 0) ? $expire * 60 : 0;
         $cookie = new CookieObject($name, $value, $expire, $path, $domain, $secure, $httpOnly);
-        $cl->add($cookie);
+        $this->add($cookie);
+        return $cookie;
     }
 
     /**
@@ -64,19 +52,25 @@ class Cookie
      */
     public function has($cookie)
     {
-        $request = Request::getInstance();
-        return $request->cookies->has($cookie);
+        return $this->getRequest()->cookies->has($cookie);
+    }
+
+    public function clear($cookie)
+    {
+        $this->clearedCookies[] = $cookie;
     }
 
     /**
-     * @param string $name The cookie key
+     * @param string $name    The key the cookie is stored under
+     * @param mixed  $default A value to return if the cookie isn't set
      * @return mixed
      */
-    public static function get($name)
+    public function get($name, $default = null)
     {
-        $request = Request::getInstance();
-        $value = $request->cookies->get($name);
-        return $value;
+        if (!$this->has($name)) {
+            return $default;
+        }
+        return $this->getRequest()->cookies->get($name);
     }
 
     /**
@@ -85,5 +79,19 @@ class Cookie
     public function getCookies()
     {
         return $this->cookies;
+    }
+
+    public function getClearedCookies()
+    {
+        return $this->clearedCookies;
+    }
+
+    protected function getRequest()
+    {
+        if (!$this->request) {
+            $this->request = \Request::getInstance();
+        }
+
+        return $this->request;
     }
 }

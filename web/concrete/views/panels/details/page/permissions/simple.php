@@ -15,7 +15,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		foreach ($gArray as $g) {
 		?>
 
-		<div class="radio"><label><input type="checkbox" name="readGID[]" value="<?=$g->getGroupID()?>" <? if (in_array($g->getGroupID(), $viewAccess)) { ?> checked <? } ?> /> <?=t($g->getGroupName())?></label></div>
+		<div class="radio"><label><input type="checkbox" name="readGID[]" value="<?=$g->getGroupID()?>" <? if (in_array($g->getGroupID(), $viewAccess)) { ?> checked <? } ?> /> <?=$g->getGroupDisplayName(false)?></label></div>
 
 		<? } ?>
 
@@ -28,7 +28,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		foreach ($gArray as $g) {
 		?>
 
-		<div class="radio"><label><input type="checkbox" name="editGID[]" value="<?=$g->getGroupID()?>" <? if (in_array($g->getGroupID(), $editAccess)) { ?> checked <? } ?> /> <?=t($g->getGroupName())?></label></div>
+		<div class="radio"><label><input type="checkbox" name="editGID[]" value="<?=$g->getGroupID()?>" <? if (in_array($g->getGroupID(), $editAccess)) { ?> checked <? } ?> /> <?=$g->getGroupDisplayName(false)?></label></div>
 
 		<? } ?>
 

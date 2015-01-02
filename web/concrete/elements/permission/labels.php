@@ -28,7 +28,7 @@ if (count($assignments) > 0) {
 				$class = 'label-warning';
 				$pdTitle = 'title="' . $pd->getTextRepresentation() . '"';
 			} else {
-				$class = 'label-primary';
+				$class = 'label-danger';
 			}
 		} else { 
 			if (is_object($pd)) {

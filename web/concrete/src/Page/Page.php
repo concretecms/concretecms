@@ -1,5 +1,7 @@
 <?php
 namespace Concrete\Core\Page;
+use Concrete\Core\Multilingual\Page\Event;
+use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Type\Type;
 use Loader;
 use CacheLocal;
@@ -144,6 +146,17 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     }
     public function getPermissionObjectKeyCategoryHandle() {
         return 'page';
+    }
+
+    /**
+     * Return a representation of the Page object as something easily serializable.
+     */
+    public function getJSONObject()
+    {
+        $r = new \stdClass;
+        $r->name = $this->getCollectionName();
+        $r->cID = $this->getCollectionID();
+        return $r;
     }
 
     /**
@@ -460,6 +473,36 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         }
 
     }
+    
+    public function removePermissions($userOrGroup, $permissions = array()) {
+        if ($this->cInheritPermissionsFrom != 'OVERRIDE') {
+            return;
+        }
+		
+        if (is_array($userOrGroup)) {
+            $pe = GroupCombinationPermissionAccessEntity::getOrCreate($userOrGroup);
+            // group combination
+        } else if ($userOrGroup instanceof User || $userOrGroup instanceof UserInfo) {
+            $pe = UserPermissionAccessEntity::getOrCreate($userOrGroup);
+        } else {
+            // group;
+            $pe = GroupPermissionAccessEntity::getOrCreate($userOrGroup);
+        }
+
+        foreach($permissions as $pkHandle) {
+            $pk = PagePermissionKey::getByHandle($pkHandle);
+            $pk->setPermissionObject($this);
+            $pa = $pk->getPermissionAccessObject();
+            if (is_object($pa)) {
+                if ($pa->isPermissionAccessInUse()) {
+                    $pa = $pa->duplicate();
+                }
+                $pa->removeListItem($pe);
+                $pt = $pk->getPermissionAssignmentObject();
+                $pt->assignPermissionAccess($pa);
+            }
+        }
+    }
 
     public static function getDrafts() {
         $db = Loader::db();
@@ -692,6 +735,10 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
         if ($icon) {
             return $icon;
+        }
+
+        if (Config::get('concrete.multilingual.enabled')) {
+            $icon = \Concrete\Core\Multilingual\Service\UserInterface\Flag::getDashboardSitemapIconSRC($this);
         }
 
         if ($this->isGeneratedCollection()) {
@@ -1060,6 +1107,26 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
+     * Returns the Page Template Object
+     * @return PageTemplate
+     */
+    function getPageTemplateObject() {
+        return PageTemplate::getByID($this->getPageTemplateID());
+    }
+
+    /**
+     * Returns the Page Template handle
+     * @return string
+     */
+    function getPageTemplateHandle() {
+        $pt = $this->getPageTemplateObject();
+        if ($pt instanceof PageTemplate) {
+            return $pt->getPageTemplateHandle();
+        }
+        return false;
+    }
+
+    /**
      * Returns the Collection Type handle
      * @return string
      */
@@ -1291,6 +1358,21 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
+     * Set the theme for a page using the page object
+     * @param PageType $pl
+     */
+    public function setPageType(\Concrete\Core\Page\Type\Type $type = null) {
+        $ptID = 0;
+        if (is_object($type)) {
+            $ptID = $type->getPageTypeID();
+        }
+        $db = Loader::db();
+        $db->query('update Pages set ptID = ? where cID = ?', array($ptID, $this->cID));
+        $this->ptID = $ptID;
+    }
+
+
+    /**
      * Set the permissions of sub-collections added beneath this permissions to inherit from the template
      */
     function setPermissionsInheritanceToTemplate() {
@@ -1510,10 +1592,15 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public function getPageWrapperClass()
     {
         $pt = $this->getPageTypeObject();
+        $ptm = $this->getPageTemplateObject();
         $classes = array('ccm-page');
         if (is_object($pt)) {
             $classes[] = 'page-type-' . str_replace('_', '-', $pt->getPageTypeHandle());
         }
+        if (is_object($ptm)) {
+            $classes[] = 'page-template-' . str_replace('_', '-', $ptm->getPageTemplateHandle());
+        }
+
         return implode(' ', $classes);
     }
 
@@ -1538,6 +1625,13 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
                 }
             }
         }
+    }
+
+    public static function resetAllCustomStyles()
+    {
+        $db = Loader::db();
+        $db->delete('CollectionVersionThemeCustomStyles', array('1' => 1));
+        Core::make('app')->clearCaches();
     }
 
     function update($data) {
@@ -1616,7 +1710,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
         } else {
 
-            if ($existingPageTemplateID && $pTemplateID && ($existingPageTemplateID != $pTemplateID) && $this->getPageTypeID() > 0) {
+            if ($existingPageTemplateID && $pTemplateID && ($existingPageTemplateID != $pTemplateID) && $this->getPageTypeID() > 0 && $this->isPageDraft()) {
                 // we are changing a page template in this operation.
                 // when that happens, we need to get the new defaults for this page, remove the other blocks
                 // on this page that were set by the old defaults master page
@@ -1661,6 +1755,12 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
                                 $this->getCollectionID(), $cvID, $b->getBlockID(), $b->getAreaHandle(), $newBlockDisplayOrder, intval($b->isAlias()), $b->overrideAreaPermissions(), $b->disableBlockVersioning()
                             ));
                         }
+                    }
+
+                    // Now, we need to change the default styles on the page, in case we are inheriting any from the
+                    // defaults (for areas)
+                    if ($template) {
+                        $this->acquireAreaStylesFromDefaults($template);
                     }
                 }
             }
@@ -1707,15 +1807,21 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
     public function inheritPermissionsFromDefaults() {
         $db = Loader::db();
-        $cpID = $this->getMasterCollectionID();
-        $this->updatePermissionsCollectionID($this->cID, $cpID);
-        $v = array('TEMPLATE', $cpID, $this->cID);
-        $q = "update Pages set cInheritPermissionsFrom = ?, cInheritPermissionsFromCID = ? where cID = ?";
-        $r = $db->query($q, $v);
-        $this->cInheritPermissionsFrom = 'TEMPLATE';
-        $this->cInheritPermissionsFromCID = $cpID;
-        $this->clearPagePermissions();
-        $this->rescanAreaPermissions();
+        $type = $this->getPageTypeObject();
+        if (is_object($type)) {
+            $master = $type->getPageTypePageTemplateDefaultPageObject();
+            if (is_object($master)) {
+                $cpID = $master->getCollectionID();
+                $this->updatePermissionsCollectionID($this->cID, $cpID);
+                $v = array('TEMPLATE', $cpID, $this->cID);
+                $q = "update Pages set cInheritPermissionsFrom = ?, cInheritPermissionsFromCID = ? where cID = ?";
+                $r = $db->query($q, $v);
+                $this->cInheritPermissionsFrom = 'TEMPLATE';
+                $this->cInheritPermissionsFromCID = $cpID;
+                $this->clearPagePermissions();
+                $this->rescanAreaPermissions();
+            }
+        }
     }
 
     public function setPermissionsToManualOverride() {
@@ -1914,6 +2020,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $pe->setNewParentPageObject($newParent);
         Events::dispatch('on_page_move', $pe);
 
+        Section::registerMove($this, $oldParent, $newParent);
+
         // now that we've moved the collection, we rescan its path
         $this->rescanCollectionPath();
     }
@@ -2013,6 +2121,9 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             // 2. old page
             $pe = new DuplicatePageEvent($this);
             $pe->setNewPageObject($nc2);
+
+            Section::registerDuplicate($nc2, $this);
+
             Events::dispatch('on_page_duplicate', $pe);
 
             $nc2->rescanCollectionPath();
@@ -2085,6 +2196,10 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             }
         }
 
+        if (Config::get('concrete.multilingual.enabled')) {
+            Section::unregisterPage($this);
+        }
+
         $cache = PageCache::getLibrary();
         $cache->purge($this);
 
@@ -2095,10 +2210,6 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         // run any internal event we have for page trashing
         $pe = new Event($this);
         Events::dispatch('on_page_move_to_trash', $pe);
-
-        if ($ret < 0) {
-            return false;
-        }
 
         $trash = Page::getByPath(Config::get('concrete.paths.trash'));
         Log::addEntry(t('Page "%s" at path "%s" Moved to trash', $this->getCollectionName(), $this->getCollectionPath()),t('Page Action'));
@@ -2459,8 +2570,10 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
             $ptID = $pt->getPageTypeID();
             if ($template) {
-                $mc = $pt->getPageTypePageTemplateDefaultPageObject($template);
-                $masterCID = $mc->getCollectionID();
+                $mc1 = $pt->getPageTypePageTemplateDefaultPageObject($template);
+                $mc2 = $pt->getPageTypePageTemplateDefaultPageObject();
+                $masterCIDBlocks = $mc1->getCollectionID();
+                $masterCID = $mc2->getCollectionID();
             }
         }
 
@@ -2490,13 +2603,24 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
             if ($r) {
                 // now that we know the insert operation was a success, we need to see if the collection type we're adding has a master collection associated with it
+                if ($masterCIDBlocks) {
+                    $this->_associateMasterCollectionBlocks($newCID, $masterCIDBlocks);
+                }
                 if ($masterCID) {
-                    $this->_associateMasterCollectionBlocks($newCID, $masterCID);
                     $this->_associateMasterCollectionAttributes($newCID, $masterCID);
                 }
             }
 
             $pc = Page::getByID($newCID, 'RECENT');
+            // if we are in the drafts area of the site, then we don't check multilingual status. Otherwise
+            // we do
+            if ($this->getCollectionPath() != Config::get('concrete.paths.drafts')) {
+                Section::registerPage($pc);
+            }
+
+            if ($template) {
+                $pc->acquireAreaStylesFromDefaults($template);
+            }
 
             // run any internal event we have for page addition
             $pe = new Event($pc);
@@ -2508,6 +2632,33 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         }
 
         return $pc;
+    }
+
+    protected function acquireAreaStylesFromDefaults(\Concrete\Core\Page\Template $template)
+    {
+        $pt = $this->getPageTypeObject();
+        if (is_object($pt)) {
+            $mc = $pt->getPageTypePageTemplateDefaultPageObject($template);
+            $db = \Database::get();
+
+            // first, we delete any styles we currently have
+            $db->delete('CollectionVersionAreaStyles', array('cID' => $this->getCollectionID(), 'cvID' => $this->getVersionID()));
+
+            // now we acquire
+            $q = "select issID, arHandle from CollectionVersionAreaStyles where cID = ?";
+            $r = $db->query($q, array($mc->getCollectionID()));
+            while ($row = $r->FetchRow()) {
+                $db->Execute(
+                    'insert into CollectionVersionAreaStyles (cID, cvID, arHandle, issID) values (?, ?, ?, ?)',
+                    array(
+                        $this->getCollectionID(),
+                        $this->getVersionID(),
+                        $row['arHandle'],
+                        $row['issID']
+                    )
+                );
+            }
+        }
     }
 
     public function getCustomStyleObject()

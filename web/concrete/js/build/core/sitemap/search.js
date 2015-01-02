@@ -66,16 +66,21 @@
             });
 
             ConcreteEvent.unsubscribe('SitemapSelectPage.search');
-            ConcreteEvent.subscribe('SitemapSelectPage.search', function (e, data) {
+
+            var subscription = function (e, data) {
                 Concrete.event.unsubscribe(e);
                 url = CCM_TOOLS_PATH + '/dashboard/sitemap_drag_request?origCID=' + itemIDs.join(',') + '&destCID=' + data.cID;
                 $.fn.dialog.open({
                     width: 350,
                     height: 350,
                     href: url,
-                    title: ccmi18n_sitemap.moveCopyPage
+                    title: ccmi18n_sitemap.moveCopyPage,
+                    onDirectClose: function() {
+                        ConcreteEvent.subscribe('SitemapSelectPage.search', subscription);
+                    }
                 });
-            });
+            };
+            ConcreteEvent.subscribe('SitemapSelectPage.search', subscription);
         }
         ConcreteAjaxSearch.prototype.handleSelectedBulkAction.call(this, value, type, $option, $items);
     }
@@ -88,6 +93,45 @@
         });
     }
 
+    /**
+     * Static Methods
+     */
+    ConcretePageAjaxSearch.launchDialog = function(callback) {
+        var w = $(window).width() - 53;
+
+        $.fn.dialog.open({
+            width: w,
+            height: '100%',
+            href: CCM_TOOLS_PATH + '/sitemap_search_selector',
+            modal: true,
+            title: ccmi18n_filemanager.title,
+            onClose: function() {
+                ConcreteEvent.fire('PageSelectorClose');
+            },
+            onOpen: function() {
+                ConcreteEvent.unsubscribe('SitemapSelectPage');
+                ConcreteEvent.subscribe('SitemapSelectPage', function(e, data) {
+                    jQuery.fn.dialog.closeTop();
+                    callback(data);
+                });
+            }
+        });
+    };
+
+    ConcretePageAjaxSearch.getPageDetails = function(cID, callback) {
+        $.ajax({
+            type: 'post',
+            dataType: 'json',
+            url: CCM_DISPATCHER_FILENAME + '/ccm/system/page/get_json',
+            data: {'cID': cID},
+            error: function(r) {
+                ConcreteAlert.dialog('Error', r.responseText);
+            },
+            success: function(r) {
+                callback(r);
+            }
+        });
+    };
     var ConcretePageAjaxSearchMenu = {
 
         get: function () {
@@ -124,7 +168,7 @@
                 '<% if (item.canEditPagePermissions) { %>' +
                 '<li><a class="dialog-launch" dialog-on-close="ConcreteSitemap.exitEditMode(<%=item.cID%>)" dialog-width="500" dialog-height="630" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.setPagePermissions + '" href="' + CCM_DISPATCHER_FILENAME + '/ccm/system/panels/details/page/permissions?cID=<%=item.cID%>">' + ccmi18n_sitemap.setPagePermissions + '</a></li>' +
                 '<% } %>' +
-                '<% if (item.canEditPageDesign) { %>' +
+                '<% if (item.canEditPageDesign || item.canEditPageType) { %>' +
                 '<li><a class="dialog-launch" dialog-on-close="ConcreteSitemap.exitEditMode(<%=item.cID%>)" dialog-width="350" dialog-height="250" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.pageDesign + '" href="' + CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/design?cID=<%=item.cID%>">' + ccmi18n_sitemap.pageDesign + '</a></li>' +
                 '<% } %>' +
                 '<% if (item.canViewPageVersions) { %>' +

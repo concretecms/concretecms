@@ -175,23 +175,6 @@ class BlockControl extends Control
         $layoutSetControl = parent::addToPageTypeComposerFormLayoutSet($set, $import);
         $pagetype = $set->getPageTypeObject();
         $pagetype->rescanPageTypeComposerOutputControlObjects();
-        if (!$import) {
-            // we ensure that an output control block exists in the main area.
-            $bt = \BlockType::getByHandle(BLOCK_HANDLE_PAGE_TYPE_OUTPUT_PROXY);
-            $pagetype = $set->getPageTypeObject();
-            $templates = $pagetype->getPageTypePageTemplateObjects();
-            foreach ($templates as $template) {
-                $c = $pagetype->getPageTypePageTemplateDefaultPageObject($template);
-                $outputControl = $layoutSetControl->getPageTypeComposerOutputControlObject($template);
-                if (is_object($c) && !$c->isError()) {
-                    $c->addBlock(
-                        $bt,
-                        'Main',
-                        array('ptComposerOutputControlID' => $outputControl->getPageTypeComposerOutputControlID())
-                    );
-                }
-            }
-        }
         return $layoutSetControl;
     }
 
@@ -199,6 +182,12 @@ class BlockControl extends Control
     {
         $obj = $this->getPageTypeComposerControlDraftValue();
         if (!is_object($obj)) {
+            if ($this->page) {
+                // we HAVE a page, but we don't have a block object, which means something has gone wrong.
+                // we've lost the association. So we abort.
+                Loader::element('page_types/composer/controls/invalid_block');
+                return;
+            }
             $obj = $this->getBlockTypeObject();
         }
 

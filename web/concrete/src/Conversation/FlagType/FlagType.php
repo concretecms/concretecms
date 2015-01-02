@@ -16,7 +16,7 @@ class FlagType extends Object {
 
 	public function init($id,$handle) {
 		if ($this->id && $this->handle) {
-			throw new Exception('Flag type already initialized.');
+			throw new \Exception(t('Flag type already initialized.'));
 		}
 		$this->id     = $id;
 		$this->handle = $handle;

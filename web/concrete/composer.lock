@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "1ac877ebc146492b24e432a88314765f",
+    "hash": "2256e3e99b566809ff19a69f86dddd4f",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -908,6 +908,59 @@
             "time": "2014-10-26 09:05:09"
         },
         {
+            "name": "gettext/gettext",
+            "version": "v2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/oscarotero/Gettext.git",
+                "reference": "2be5da2f975df690910f99ebc7199a28da8b0a1b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/oscarotero/Gettext/zipball/2be5da2f975df690910f99ebc7199a28da8b0a1b",
+                "reference": "2be5da2f975df690910f99ebc7199a28da8b0a1b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "suggest": {
+                "illuminate/view": "Is necessary if you want use the Blade extractor"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Gettext\\": "src"
+                },
+                "files": [
+                    "src/translator_functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Oscar Otero",
+                    "email": "oom@oscarotero.com",
+                    "homepage": "http://oscarotero.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "PHP gettext mananger",
+            "homepage": "https://github.com/oscarotero/Gettext",
+            "keywords": [
+                "JS",
+                "gettext",
+                "i18n",
+                "mo",
+                "po",
+                "translation"
+            ],
+            "time": "2014-11-21 13:06:04"
+        },
+        {
             "name": "hautelook/phpass",
             "version": "dev-master",
             "source": {
@@ -949,7 +1002,7 @@
                 "password",
                 "security"
             ],
-            "time": "2012-08-31 00:00:00"
+            "time": "2014-07-18 03:04:01"
         },
         {
             "name": "htmlawed/htmlawed",
@@ -1918,16 +1971,16 @@
         },
         {
             "name": "punic/punic",
-            "version": "1.1.0",
+            "version": "1.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/punic/punic.git",
-                "reference": "b4a06d4ad15040b18ec5db4491fc8ed8aa42874c"
+                "reference": "1094985dc6d0b01e7ca346ea25049c203d6a3944"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/punic/punic/zipball/b4a06d4ad15040b18ec5db4491fc8ed8aa42874c",
-                "reference": "b4a06d4ad15040b18ec5db4491fc8ed8aa42874c",
+                "url": "https://api.github.com/repos/punic/punic/zipball/1094985dc6d0b01e7ca346ea25049c203d6a3944",
+                "reference": "1094985dc6d0b01e7ca346ea25049c203d6a3944",
                 "shasum": ""
             },
             "require": {
@@ -1938,7 +1991,8 @@
                 "punic/common": "*"
             },
             "require-dev": {
-                "apigen/apigen": "~2.8.2",
+                "apigen/apigen": "2.8.0",
+                "nette/nette": "~2.1.3",
                 "satooshi/php-coveralls": "dev-master"
             },
             "type": "library",
@@ -1980,7 +2034,7 @@
                 "translations",
                 "unicode"
             ],
-            "time": "2014-09-25 08:53:54"
+            "time": "2014-12-19 08:08:52"
         },
         {
             "name": "sunra/php-simple-html-dom-parser",
@@ -3422,6 +3476,7 @@
         "oryzone/oauth-user-data": 20
     },
     "prefer-stable": false,
+    "prefer-lowest": false,
     "platform": {
         "php": ">=5.3.3"
     },

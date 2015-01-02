@@ -179,6 +179,21 @@
 				var parent = node.parent;
 				my.reloadNode(parent);
 			});
+            ConcreteEvent.unsubscribe('SitemapAddPageRequestComplete.sitemap');
+            ConcreteEvent.subscribe('SitemapAddPageRequestComplete.sitemap', function(e, data) {
+                var node = my.getTree().getNodeByKey(data.cParentID);
+                if (node) {
+                    my.reloadNode(node);
+                }
+                jQuery.fn.dialog.closeAll();
+            });
+            ConcreteEvent.subscribe('SitemapUpdatePageRequestComplete.sitemap', function(e, data) {
+                var node = my.getTree().getNodeByKey(data.cID);
+                var parent = node.parent;
+                if (parent) {
+                    my.reloadNode(parent);
+                }
+            });
 		},
 
     	rescanDisplayOrder: function(node) {

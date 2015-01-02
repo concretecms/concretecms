@@ -46,7 +46,11 @@ class LocalConfiguration extends Configuration implements ConfigurationInterface
 
     public function getPublicURLToFile($file)
     {
-        return BASE_URL . $this->getRelativePathToFile($file);
+        $rel = $this->getRelativePathToFile($file);
+        if(strpos($rel, '://')) {
+            return $rel;
+        }
+        return BASE_URL . $rel;
     }
 
     public function loadFromRequest(\Concrete\Core\Http\Request $req)
@@ -69,6 +73,8 @@ class LocalConfiguration extends Configuration implements ConfigurationInterface
             $e->add(t("You must include a root path for this storage location."));
         } else if (!is_dir($this->path)) {
             $e->add(t("The specified root path does not exist."));
+        } else if ($this->path == '/') {
+            $e->add(t('Invalid path to file storage location. You may not choose the root directory.'));
         }
         return $e;
     }

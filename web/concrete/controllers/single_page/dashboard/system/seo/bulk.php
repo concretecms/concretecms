@@ -18,6 +18,7 @@ class Bulk extends DashboardPageController {
             $pages = $pagination->getCurrentPageResults();
 			$this->set('pageList', $pageList);
 			$this->set('pages', $pages);
+			$this->set('siteName', Config::get('concrete.site'));
             $paginationView = false;
             if ($pagination->haveToPaginate()) {
                 $paginationView = $pagination->renderDefaultView();

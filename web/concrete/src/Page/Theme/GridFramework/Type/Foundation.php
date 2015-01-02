@@ -36,18 +36,18 @@ class Foundation extends GridFramework
     public function getPageThemeGridFrameworkColumnClasses()
     {
         $columns = array(
-            'small-1 ',
-            'small-2 ',
-            'small-3',
-            'small-4',
-            'small-5',
-            'small-6',
-            'small-7',
-            'small-8',
-            'small-9',
-            'small-10',
-            'small-11',
-            'small-12',
+            'medium-1 ',
+            'medium-2 ',
+            'medium-3',
+            'medium-4',
+            'medium-5',
+            'medium-6',
+            'medium-7',
+            'medium-8',
+            'medium-9',
+            'medium-10',
+            'medium-11',
+            'medium-12',
         );
         return $columns;
     }
@@ -55,18 +55,18 @@ class Foundation extends GridFramework
     public function getPageThemeGridFrameworkColumnOffsetClasses()
     {
         $offsets = array(
-            'small-offset-1',
-            'small-offset-2',
-            'small-offset-3',
-            'small-offset-4',
-            'small-offset-5',
-            'small-offset-6',
-            'small-offset-7',
-            'small-offset-8',
-            'small-offset-9',
-            'small-offset-10',
-            'small-offset-11',
-            'small-offset-12',
+            'medium-offset-1',
+            'medium-offset-2',
+            'medium-offset-3',
+            'medium-offset-4',
+            'medium-offset-5',
+            'medium-offset-6',
+            'medium-offset-7',
+            'medium-offset-8',
+            'medium-offset-9',
+            'medium-offset-10',
+            'medium-offset-11',
+            'medium-offset-12',
         );
         return $offsets;
     }

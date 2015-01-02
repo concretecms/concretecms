@@ -21,7 +21,7 @@ if ($user->isLoggedIn()) {
         <hr>
     </div>
     <div class="form-group">
-        <a href="<?= \URL::to('/system/authentication/community/attempt_attach'); ?>" class="btn btn-primary btn-community btn-block">
+        <a href="<?= \URL::to('/ccm/system/authentication/oauth2/community/attempt_attach'); ?>" class="btn btn-primary btn-community btn-block">
             <img src="<?= BASE_URL . DIR_REL ?>/concrete/images/logo.png" class="concrete5-icon"></i>
             <?= t('Attach a concrete5.org account') ?>
         </a>
@@ -36,7 +36,7 @@ if ($user->isLoggedIn()) {
         <hr>
     </div>
     <div class="form-group">
-        <a href="<?= \URL::to('/system/authentication/community/attempt_auth'); ?>" class="btn btn-primary btn-community btn-block">
+        <a href="<?= \URL::to('/ccm/system/authentication/oauth2/community/attempt_auth'); ?>" class="btn btn-primary btn-community btn-block">
             <img src="<?= BASE_URL . DIR_REL ?>/concrete/images/logo.png" class="concrete5-icon"></i>
             <?= t('Log in with concrete5.org') ?>
         </a>

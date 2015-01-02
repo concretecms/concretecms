@@ -197,6 +197,68 @@
     </index>
   </table>
 
+  <table name="MultilingualSections">
+    <field name="cID" type="I" size="11">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="msLanguage" type="C" size="32">
+      <NOTNULL/>
+      <DEFAULT value=""/>
+    </field>
+    <field name="msCountry" type="C" size="32">
+      <NOTNULL/>
+      <DEFAULT value=""/>
+    </field>
+  </table>
+  <table name="MultilingualPageRelations">
+    <field name="mpRelationID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="cID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="mpLanguage" type="C" size="32">
+      <DEFAULT value=""/>
+      <NOTNULL/>
+    </field>
+    <field name="mpLocale" type="C" size="32">
+      <KEY/>
+      <NOTNULL/>
+    </field>
+  </table>
+    <table name="MultilingualTranslations">
+    <field name="mtID" type="I" size="11">
+        <KEY/>
+        <AUTOINCREMENT/>
+        <UNSIGNED/>
+    </field>
+    <field name="mtSectionID" type="I" size="11">
+        <NOTNULL/>
+        <DEFAULT value="0"/>
+        <UNSIGNED/>
+    </field>
+    <field name="msgid" type="X">
+        <NOTNULL/>
+    </field>
+    <field name="msgstr" type="X">
+    </field>
+    <field name="context" type="X">
+    </field>
+    <field name="comments" type="X">
+    </field>
+    <field name="reference" type="X">
+    </field>
+    <field name="flags" type="X">
+    </field>
+    <field name="updated" type="T">
+    </field>
+  </table>
   <table name="PageTypePageTemplateDefaultPages">
     <field name="pTemplateID" type="I" size="10">
       <unsigned/>

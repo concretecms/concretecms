@@ -67,7 +67,14 @@ abstract class ItemList extends AbstractItemList
 
     protected function executeSortBy($column, $direction = 'asc')
     {
-        $this->query->orderBy($column, $direction);
+        if (strcasecmp($column, 'rand()') == 0 ||
+            preg_match('/[^0-9a-zA-Z\$\.\_\x{0080}-\x{ffff}]+/u', $column) === 0
+            && in_array(strtolower($direction), array('asc','desc'))
+        ) {
+            $this->query->orderBy($column, $direction);
+        } else {
+            throw new \Exception(t('Invalid SQL in order by'));
+        }
     }
 
     /**

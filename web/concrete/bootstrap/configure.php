@@ -143,6 +143,7 @@ define('DIRNAME_GROUP', 'group');
 define('DIRNAME_GROUP_AUTOMATION', 'automation');
 define('DIRNAME_JAVASCRIPT', 'js');
 define('DIRNAME_IMAGES', 'images');
+define('DIRNAME_IMAGES_LANGUAGES', 'countries');
 define('DIRNAME_HELPERS', 'helpers');
 define('DIRNAME_USER_POINTS', 'user_point');
 define('DIRNAME_ACTIONS', 'actions');

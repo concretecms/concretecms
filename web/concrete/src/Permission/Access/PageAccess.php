@@ -14,8 +14,9 @@ class PageAccess extends Access {
             // Obviously a better way of doing this would be to retrieve all access entity types, run through each and see whether
             // they support it but this is better for performance.
             try {
+                $db = \Database::get();
                 $q = "select pal.paID from PagePermissionAssignments ppa inner join PermissionAccessList pal on (ppa.paID = pal.paID) inner join PermissionAccessEntities pae on pal.peID = pae.peID inner join PermissionAccessEntityTypes paet on pae.petID = paet.petID  where paet.petHandle not in ('group', 'user', 'group_set', 'group_combination', 'file_uploader')";
-                $paID = Database::GetOne($q);
+                $paID = $db->GetOne($q);
                 if ($paID) {
                     $usePermissionsCollectionID = false;
                 } else {

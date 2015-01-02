@@ -3,6 +3,7 @@ namespace Concrete\Core\Attribute;
 
 use \Concrete\Core\Foundation\Object;
 use \Concrete\Core\Attribute\View as AttributeTypeView;
+use Gettext\Translations;
 use Loader;
 use \Concrete\Core\Package\PackageList;
 use Environment;
@@ -275,6 +276,16 @@ class Type extends Object
         $atHandle = Core::make('helper/text')->camelcase($this->atHandle);
         $class = core_class('Attribute\\' . $atHandle . '\\Controller', $prefix);
         $this->controller = Core::make($class, array($this));
+    }
+
+    public static function exportTranslations()
+    {
+        $translations = new Translations();
+        $attribs = static::getList();
+        foreach($attribs as $type) {
+            $translations->insert('AttributeTypeName', $type->getAttributeTypeName());
+        }
+        return $translations;
     }
 
 }

@@ -1,6 +1,6 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 <div class="row">
-<div class="span10 offset1">
+<div class="col-sm-10 col-sm-offset-1">
 <div class="page-header">
 	<h1><?=t('Site Registration')?></h1>
 </div>
@@ -10,10 +10,10 @@
 <?
 $attribs = UserAttributeKey::getRegistrationList();
 
-if($success) { ?>
+if($registerSuccess) { ?>
 <div class="row">
-<div class="span10 offset1">
-<?	switch($success) {
+<div class="col-sm-10 col-sm-offset-1">
+<?	switch($registerSuccess) {
 		case "registered":
 			?>
 			<p><strong><?=$successMsg ?></strong><br/><br/>
@@ -38,40 +38,32 @@ if($success) { ?>
 </div>
 <?
 } else { ?>
-	<form method="post" action="<?=$view->url('/register', 'do_register')?>" class="form-horizontal">
+	<form method="post" action="<?=$view->url('/register', 'do_register')?>" class="form-stacked">
 		<div class="row">
-			<div class="span10 offset1">
+			<div class="col-sm-10 col-sm-offset-1">
 				<fieldset>
 					<legend><?=t('Your Details')?></legend>
 					<?php
 					if ($displayUserName) {
 						?>
-						<div class="control-group">
+						<div class="form-group">
 							<?=$form->label('uName',t('Username'))?>
-							<div class="controls">
-								<?=$form->text('uName')?>
-							</div>
+                            <?=$form->text('uName')?>
 						</div>
 						<?php
 					}
 					?>
-					<div class="control-group">
-						<?=$form->label('uEmail',t('Email Address'))?>
-						<div class="controls">
-							<?=$form->text('uEmail')?>
-						</div>
-					</div>
-					<div class="control-group">
+                    <div class="form-group">
+                        <?=$form->label('uEmail',t('Email Address'))?>
+                        <?=$form->text('uEmail')?>
+                    </div>
+                    <div class="form-group">
 						<?=$form->label('uPassword',t('Password'))?>
-						<div class="controls">
-							<?=$form->password('uPassword')?>
-						</div>
+					    <?=$form->password('uPassword')?>
 					</div>
-					<div class="control-group">
+                    <div class="form-group">
 						<?=$form->label('uPasswordConfirm',t('Confirm Password'))?>
-						<div class="controls">
-							<?=$form->password('uPasswordConfirm')?>
-						</div>
+						<?=$form->password('uPasswordConfirm')?>
 					</div>
 
 				</fieldset>
@@ -81,7 +73,7 @@ if($success) { ?>
 		if (count($attribs) > 0) {
 			?>
 			<div class="row">
-				<div class="span10 offset1">
+				<div class="col-sm-10 col-sm-offset-1">
 					<fieldset>
 						<legend><?=t('Options')?></legend>
 						<?php
@@ -98,30 +90,27 @@ if($success) { ?>
 		if (Config::get('concrete.user.registration.captcha')) {
 			?>
 			<div class="row">
-				<div class="span10 offset1 ">
+				<div class="col-sm-10 col-sm-offset-1 ">
 
-					<div class="control-group">
+					<div class="form-group">
 						<?php
 						$captcha = Loader::helper('validation/captcha');
 						echo $captcha->label();
 						?>
-						<div class="controls">
-							<?php
-							$captcha->showInput();
-							$captcha->display();
-							?>
-						</div>
+                        <?php
+                        $captcha->showInput();
+                        $captcha->display();
+                        ?>
 					</div>
-
 				</div>
 			</div>
 
 		<? } ?>
 		<div class="row">
-			<div class="span10 offset1">
-				<div class="actions">
+			<div class="col-sm-10 col-sm-offset-1">
+				<div class="form-actions">
 					<?=$form->hidden('rcID', $rcID); ?>
-					<?=$form->submit('register', t('Register') . ' &gt;', array('class' => 'primary'))?>
+					<?=$form->submit('register', t('Register') . ' &gt;', array('class' => 'btn-lg btn-primary'))?>
 				</div>
 			</div>
 		</div>

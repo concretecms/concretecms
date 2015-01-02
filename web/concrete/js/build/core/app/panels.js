@@ -319,41 +319,23 @@ function ConcretePanel(options) {
         $panel.find('.dialog-launch').dialog();
         $panel.find('[data-panel-menu=collapsible-list-group]').each(function () {
             var $clg = $(this);
+            var $inner = $clg.find('.list-group-item-collapse-wrapper');
+            var menuID = $clg.attr('data-panel-menu-id');
+            var $title = $clg.find('.list-group-item-collapse span');
+            var height;
+
             $clg.find('.list-group-item-collapse').unbind('.clg').on('click.clg', function () {
-                var $inner = $clg.find('.list-group-item-collapse-wrapper');
-                var menuID = $clg.attr('data-panel-menu-id');
-                var $title = $clg.find('.list-group-item-collapse span');
-                $inner.css({ position: "absolute", visibility: "hidden", display: "block" });
-                var height = $inner.outerHeight();
-                $inner.css({position: 'static', 'visibility': 'visible', display: 'none'});
+
                 if ($clg.hasClass('ccm-panel-list-group-item-expanded')) {
                     $title.text(ccmi18n.expand);
                     Concrete.event.publish('PanelCollapsibleListGroupCollapse', menuID);
-                    $inner.
-                        queue(function () {
-                            $(this).css('height', 0);
-                            $(this).dequeue();
-                        }).
-                        delay(305).
-                        queue(function () {
-                            $(this).hide();
-                            $(this).css('height', 'auto');
-                            $(this).dequeue();
-                        });
+                    $inner.height(0);
                 } else {
+                    height = $inner.show().height('').outerHeight();
+                    $inner.height(0);
                     Concrete.event.publish('PanelCollapsibleListGroupExpand', menuID);
                     $title.text(ccmi18n.collapse);
-                    $inner.
-                        queue(function () {
-                            $(this).css('height', 0);
-                            $(this).show();
-                            $(this).dequeue();
-                        }).
-                        delay(5).
-                        queue(function () {
-                            $(this).css('height', 'auto');
-                            $(this).dequeue();
-                        });
+                    $inner.height(height);
                 }
                 $clg.toggleClass('ccm-panel-list-group-item-expanded');
             });

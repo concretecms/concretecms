@@ -5,9 +5,11 @@ use Cookie;
 class Response extends \Symfony\Component\HttpFoundation\Response {
 
 	public function send() {
-		// First, we see if we have any cookies to send along
-		$cl = Cookie::getInstance();
-		$cookies = $cl->getCookies();
+        $cleared = Cookie::getClearedCookies();
+        foreach($cleared as $cookie) {
+            $this->headers->clearCookie($cookie);
+        }
+		$cookies = Cookie::getCookies();
 		foreach($cookies as $cookie) {
 			$this->headers->setCookie($cookie);
 		}

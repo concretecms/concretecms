@@ -85,6 +85,7 @@ class RemoteItemList extends ItemList
 
     public function execute()
     {
+        $this->loadQueryStringPagingVariable();
         $params = $this->params;
         $params['version'] = APP_VERSION;
         $params['itemsPerPage'] = $this->itemsPerPage;

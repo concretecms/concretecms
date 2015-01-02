@@ -173,7 +173,6 @@ class PageView extends View
         $cache = PageCache::getLibrary();
         $shouldAddToCache = $cache->shouldAddToCache($this);
         if ($shouldAddToCache) {
-            $cache->outputCacheHeaders($this->c);
             $cache->set($this->c, $contents);
         }
         return $contents;

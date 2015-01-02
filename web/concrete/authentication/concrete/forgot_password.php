@@ -14,7 +14,7 @@ $form = Loader::helper('form');
             </div>
         </div>
         <div class="form-group">
-            <input name="uEmail" type="email" placeholder="Email Address" class="form-control" />
+            <input name="uEmail" type="email" placeholder="<?= t('Email Address') ?>" class="form-control" />
         </div>
         <button name="resetPassword" class="btn btn-primary btn-block"><?= t('Reset and Email Password') ?></button>
     </form>

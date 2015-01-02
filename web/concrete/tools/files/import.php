@@ -1,6 +1,8 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
+use Concrete\Core\File\StorageLocation\StorageLocation;
 $u = new User();
+/** @var Concrete\Core\File\Service\Application $ch */
 $ch = Loader::helper('concrete/file');
 $h = Loader::helper('concrete/ui');
 $form = Loader::helper('form');
@@ -58,11 +60,18 @@ ConcreteFileImportDialog = {
 <?php
 	$valt = Loader::helper('validation/token');
 	$fh = Loader::helper('validation/file');
-	
-	$incoming_contents = $ch->getIncomingDirectoryContents();
+    $error = false;
+
+	try {
+        $incoming_contents = $ch->getIncomingDirectoryContents();
+    } catch(\Exception $e) {
+        $error = t('Unable to get contents of incoming/ directory');
+        $error .= '<br>';
+        $error .= $e->getMessage();
+    }
 ?>
 <div id="ccm-file-add-incoming-tab">
-<?php if(!empty($incoming_contents)) { ?>
+<?php if(!empty($incoming_contents) && is_array($incoming_contents)) { ?>
     <br/>
 <form id="ccm-file-add-incoming-form" method="post" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/importers/incoming">
     <input type="hidden" name="ocID" value="<?=$ocID?>" />
@@ -82,9 +91,9 @@ ConcreteFileImportDialog = {
 						<input type="checkbox" name="send_file<?=$i?>" class="ccm-file-select-incoming" value="<?=$file['basename']?>" />
 					<?php } ?>
 				</td>
-				<td width="20%" style="vertical-align: middle" class="center"><?=$ft->getListingThumbnail()?></td>
+				<td width="20%" style="vertical-align: middle" class="center"><?=$ft->getThumbnail()?></td>
 				<td width="45%" style="vertical-align: middle"><?=$file['basename']?></td>
-				<td width="25%" style="vertical-align: middle"class="center"><?=Loader::helper('number')->formatSize($file['size'], 'KB')?></td>
+				<td width="25%" style="vertical-align: middle" class="center"><?=Loader::helper('number')->formatSize($file['size'], 'KB')?></td>
 			</tr>
 		<?php } ?>
             <tr>
@@ -100,8 +109,14 @@ ConcreteFileImportDialog = {
 </form>
 <?php } else { ?>
     <br/><br/>
-	<?=t('No files found in %s', REL_DIR_FILES_INCOMING)?>
-<?php } ?>
+    <?php if($error) { ?>
+        <div class="alert alert-danger">
+            <?php echo $error;?>
+        </div>
+    <?php } else {
+        echo t('No files found in %s for the storage location "%s".', REL_DIR_FILES_INCOMING, StorageLocation::getDefault()->getName());
+    }
+} ?>
 </div>
 
 <div class="dialog-buttons">

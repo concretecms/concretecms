@@ -21,7 +21,7 @@ if ($user->isLoggedIn()) {
         <hr>
     </div>
     <div class="form-group">
-        <a href="<?= \URL::to('/system/authentication/facebook/attempt_attach'); ?>" class="btn btn-primary btn-facebook btn-block">
+        <a href="<?= \URL::to('/ccm/system/authentication/oauth2/facebook/attempt_attach'); ?>" class="btn btn-primary btn-facebook btn-block">
             <i class="fa fa-facebook"></i>
             <?= t('Attach a %s account', t('facebook')) ?>
         </a>
@@ -36,7 +36,7 @@ if ($user->isLoggedIn()) {
         <hr>
     </div>
     <div class="form-group">
-        <a href="<?= \URL::to('/system/authentication/facebook/attempt_auth'); ?>" class="btn btn-primary btn-facebook btn-block">
+        <a href="<?= \URL::to('/ccm/system/authentication/oauth2/facebook/attempt_auth'); ?>" class="btn btn-primary btn-facebook btn-block">
             <i class="fa fa-facebook"></i>
             <?= t('Log in with %s', 'facebook') ?>
         </a>

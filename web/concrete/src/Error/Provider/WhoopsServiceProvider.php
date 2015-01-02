@@ -27,7 +27,6 @@ class WhoopsServiceProvider extends Provider
         $cli_handler->addTraceFunctionArgsToOutput(true);
         $cli_handler->addTraceToOutput(true);
 
-        $run->pushHandler($handler);
         $run->pushHandler($json_handler);
         $run->pushHandler($cli_handler);
 

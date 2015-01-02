@@ -11,10 +11,15 @@ $seoSet = AttributeSet::getByHandle('seo');
 ?>
 <section>
     <header><?= t('Page Settings') ?></header>
+    <? if ($cp->canEditPageContents()
+        || $cp->canEditPageTheme()
+        || $cp->canEditPageProperties()
+        || $cp->canEditPageTemplate()) { ?>
+
     <menu class="ccm-panel-page-basics">
         <?php
         $pagetype = PageType::getByID($c->getPageTypeID());
-        if (is_object($pagetype)) {
+        if (is_object($pagetype) && $cp->canEditPageContents()) {
             ?>
             <li>
                 <a href="#" data-launch-panel-detail="page-composer"
@@ -63,6 +68,8 @@ $seoSet = AttributeSet::getByHandle('seo');
         }
         ?>
     </menu>
+    <? } ?>
+
     <menu>
         <?php
         if ($cp->canEditPageProperties()) {

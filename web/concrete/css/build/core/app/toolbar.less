@@ -26,7 +26,7 @@ div#ccm-toolbar {
       width: auto !important;
       padding: 14px 16px;
     }
-    li > a i {
+    li > a i, li > a img {
       position: static;
     }
   }
@@ -63,10 +63,12 @@ div#ccm-toolbar {
         margin-left: -1px; /* we have to do this tomfoolery because of user-added menus */
         text-decoration: none;
 
-        i {
+        i, img {
           position: absolute;
           top: 17px;
-          left: 24px;
+          left: 23px;
+          width: 14px;
+          height: 14px;
         }
 
         .spinner {
@@ -78,6 +80,7 @@ div#ccm-toolbar {
           position: absolute;
           top: 12px;
           left: 18px;
+          z-index: @index-level-main-bar-loading;
           .transition(opacity cubic-bezier(0.355, 0, 1.000, 0.035) 0.5s);
         }
 
@@ -132,11 +135,6 @@ div#ccm-toolbar {
       }
     }
 
-    > li:last-child {
-      a {
-        border-right: 0px;
-      }
-    }
 
     li.ccm-logo {
       span {

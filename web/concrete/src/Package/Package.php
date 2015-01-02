@@ -65,6 +65,7 @@ use \Concrete\Core\Database\Schema\Schema;
 use Environment;
 use \Concrete\Core\Package\PackageList;
 use Localization;
+use \Concrete\Core\File\StorageLocation\Type\Type as StorageLocation;
 
 class Package extends Object
 {
@@ -307,6 +308,7 @@ class Package extends Object
         $items['jobs'] = Job::getListByPackage($this);
         $items['workflow_types'] = WorkflowType::getListByPackage($this);
         $items['authentication_types'] = AuthenticationType::getListByPackage($this);
+        $items['storage_locations'] = StorageLocation::getListByPackage($this);
         ksort($items);
 
         return $items;
@@ -370,6 +372,9 @@ class Package extends Object
                 break;
             case 'workflow_types':
                 $value = t('Workflow types');
+                break;
+            case 'storage_locations':
+                $value = t('Storage Locations');
                 break;
             default:
                 $value = t(Loader::helper('text')->unhandle($categoryHandle));
@@ -452,6 +457,8 @@ class Package extends Object
             return $item->getJobName();
         } elseif (is_a($item, 'WorkflowType')) {
             return $item->getWorkflowTypeName();
+        } elseif ($item instanceof StorageLocation) {
+            return $item->getName();
         }
     }
 
@@ -890,7 +897,7 @@ class Package extends Object
         if ($this->pkgHandle != '' && is_dir(DIR_PACKAGES . '/' . $this->pkgHandle)) {
             $trash = \Config::get('concrete.misc.package_backup_directory');
             if (!is_dir($trash)) {
-                mkdir($trash, Config::get('concrete.filesystem.permissions.directory'));
+                mkdir($trash, \Config::get('concrete.filesystem.permissions.directory'));
             }
             $trashName = $trash . '/' . $this->pkgHandle . '_' . date('YmdHis');
             $ret = rename(DIR_PACKAGES . '/' . $this->pkgHandle, $trashName);
