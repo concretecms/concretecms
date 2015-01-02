@@ -15,6 +15,11 @@
         </field>	
         <field name="height" type="C" size="8">
             <default value="400px"/>
-        </field>	
+        </field>
+        <field name="scrollwheel" type="I1">
+            <unsigned />
+            <notnull />
+            <default value="1" />
+        </field>
 	</table>
 </schema>

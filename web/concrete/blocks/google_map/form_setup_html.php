@@ -60,7 +60,7 @@
         <? echo $form->label('scrollwheel', t('Enable Scrollwheel'));?>
         <div class="input-group">
           <span class="input-group-addon"><i class="fa fa-binoculars"></i></span>
-          <? echo $form->checkbox('scrollwheel', $scrollwheel); ?>
+          <? echo $form->checkbox('scrollwheel', 1, (is_null($scrollwheel) || $scrollwheel)); ?>
         </div>
       </div>
     </div>
