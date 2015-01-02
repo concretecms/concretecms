@@ -45,22 +45,19 @@ class Validation
 
     /**
      * Returns true if this is a valid password.
+     * @param string $pass
+     * @return bool
      */
     public function password($pass)
     {
-        if (strlen($pass) < Config::get('concrete.user.password.minimum')) {
-            return false;
-        }
-        if (strlen($pass) > Config::get('concrete.user.password.maximum')) {
-            return false;
-        }
-
-        return true;
+        $hu = \Core::make('helper/concrete/user');
+        return $hu->validNewPassword($pass);
     }
 
     /**
      * Returns true if this is a valid username.
      * Valid usernames can only contain letters, numbers, dots (only in the middle), underscores (only in the middle) and optionally single spaces
+     * @param string $username
      * @return bool
      */
     public function username($username)

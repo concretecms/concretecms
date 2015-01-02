@@ -56,7 +56,7 @@ class PageController extends Controller {
     }
 
     public function getTheme() {
-        if (!$this->theme) {
+        if ($this->theme === null) {
             $theme = parent::getTheme();
             if (!$theme) {
                 $theme = $this->c->getCollectionThemeObject();

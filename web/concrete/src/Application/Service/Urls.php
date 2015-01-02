@@ -1,6 +1,5 @@
 <?php
 namespace Concrete\Core\Application\Service;
-use Loader;
 
 /**
  * @package Helpers
@@ -23,6 +22,8 @@ class Urls {
 
 	/**
 	 * Gets a full URL to an icon for a particular application
+	 * @param \Package $pkg
+	 * @return string URL to the package's icon
 	 */
 	public function getPackageIconURL($pkg) {
 		if ($pkg && file_exists($pkg->getPackagePath() . '/' . FILENAME_BLOCK_ICON)) {
@@ -32,14 +33,20 @@ class Urls {
 		}
 	}
 
+	/**
+	 * Get the package's URL
+	 * @param \Package $pkg
+	 * @return mixed
+	 */
 	public function getPackageURL($pkg) {
 		return $pkg->getRelativePath();
 	}
 
 	/**
 	 * Gets a URL to reference a script in the tools directory
-	 * @param $string $tool
-	 * @param $string $pkgHandle
+	 * @param string $tool
+	 * @param string $pkgHandle
+	 * @return string Relative url to tool
 	 */
 	public function getToolsURL($tool, $pkgHandle = null) {
 		if ($pkgHandle != null) {
@@ -56,7 +63,7 @@ class Urls {
 
 	/**
 	 * Gets a full URL to an icon for a particular block type
-	 * @param BlockType $bt
+	 * @param \BlockType $bt
 	 * @return string
 	 */
 	public function getBlockTypeIconURL($bt) {
@@ -70,7 +77,8 @@ class Urls {
 
 	/**
 	 * Gets a full URL to the directory containing all of a block's items, including JavaScript, tools, icons, etc...
-	 * @param BlockType $bt
+	 * @param \BlockType $bt
+	 * @param bool|string $file If provided will get the assets url for a file in a block
 	 * @return string $url
 	 */
 	public function getBlockTypeAssetsURL($bt, $file = false) {
@@ -78,11 +86,11 @@ class Urls {
 		if ($file != false) {
 			$ff = '/' . $file;
 		}
+		$url = '';
 
 		if (file_exists(DIR_FILES_BLOCK_TYPES . '/' . $bt->getBlockTypeHandle() . $ff)) {
 			$url = REL_DIR_APPLICATION . '/' . DIRNAME_BLOCKS . '/' . $bt->getBlockTypeHandle() . $ff;
 		} else if ($bt->getPackageID() > 0) {
-			$db = Loader::db();
 			$h = $bt->getPackageHandle();
 			$dirp = (is_dir(DIR_PACKAGES . '/' . $h)) ? DIR_PACKAGES . '/' . $h : DIR_PACKAGES_CORE . '/' . $h;
 			if (file_exists($dirp . '/' . DIRNAME_BLOCKS . '/' . $bt->getBlockTypeHandle() . $ff)) {
@@ -97,7 +105,7 @@ class Urls {
 
 	/**
 	 * Gets a full URL to a block's JavaScript file (if one exists)
-	 * @param BlockType $bt
+	 * @param \BlockType $bt
 	 * @return string $url
 	 */
 	public function getBlockTypeJavaScriptURL($bt) {
@@ -106,7 +114,7 @@ class Urls {
 
 	/**
 	 * Gets a full URL to a block's tools directory
-	 * @param BlockType $bt
+	 * @param \BlockType $bt
 	 * @return string $url
 	 */
 	public function getBlockTypeToolsURL($bt) {
