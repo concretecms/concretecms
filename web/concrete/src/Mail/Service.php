@@ -9,6 +9,7 @@ use \Zend\Mail\Transport\Smtp as SmtpTransport;
 use \Zend\Mail\Transport\SmtpOptions;
 use \Zend\Mime\Message as MimeMessage;
 use \Zend\Mime\Part as MimePart;
+use Exception;
 
 use Log;
 use \Monolog\Logger;
@@ -18,6 +19,7 @@ class Service
 
     protected $headers = array();
     protected $to = array();
+    protected $replyto = array();
     protected $cc = array();
     protected $bcc = array();
     protected $from = array();
@@ -114,8 +116,9 @@ class Service
      * $attachment->filename = "CustomFilename";
      * $mailHelper->send();
      *
-     * @param File $fob File to attach
-     * @return StdClass Pointer to the attachment
+     * @param \Concrete\Core\File\File $fob File to attach
+     * @return \StdClass Pointer to the attachment
+     * @throws \Exception
      */
     public function addAttachment(\Concrete\Core\File\File $fob)
     {
@@ -133,7 +136,7 @@ class Service
         }
         $type = @mime_content_type($path); // This is deprecated. Should be stable until php5.6
         if (!$type) {
-            $mt = Loader::helper('mime');
+            $mt = \Loader::helper('mime');
             $ext = preg_replace('/^.+\.([^\.]+)$/', '\1', $path);
             $type = $mt->mimeFromExtension($ext);
         }
@@ -142,7 +145,7 @@ class Service
             throw new Exception(t('Unable to get the file contents for attachment.'));
         }
 
-        $file = new StdClass();
+        $file = new \StdClass();
         $file->object = $fob;
         $file->type = $type;
         $file->path = $path;
@@ -383,7 +386,9 @@ class Service
 
     /**
      * Sends the email
+     * @param bool $resetData Whether or not to reset the service to its default values.
      * @return void
+     * @throws \Exception
      */
     public function sendMail($resetData = true)
     {
