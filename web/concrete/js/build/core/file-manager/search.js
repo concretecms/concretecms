@@ -174,13 +174,6 @@
         });
     };
 
-    // Only provided for convenience 
-    ConcreteFileManager.FILTER_BY_TYPE = 'type';
-    ConcreteFileManager.FILTER_BY_SIZE = 'size';
-    ConcreteFileManager.FILTER_BY_EXTENSION = 'extension';
-    ConcreteFileManager.FILTER_BY_ADDED_DATE = 'date_added';
-    ConcreteFileManager.FILTER_BY_ADDED_TO_PAGE = 'added_to';
-
     /**
      * Static Methods
      */
@@ -190,7 +183,7 @@
         var i;
 
         var options = {
-            filters: [], // filters must be an array of objects ex: [{ field: ConcreteFileManager.FILTER_BY_TYPE, type: Concrete.const.Core.File.Type.Type.T_IMAGE }]
+            filters: [], // filters must be an array of objects ex: [{ field: Concrete.const.Controller.Search.Files.FILTER_BY_TYPE, type: Concrete.const.Core.File.Type.Type.T_IMAGE }]
         };
 
         $.extend(options, opts);
