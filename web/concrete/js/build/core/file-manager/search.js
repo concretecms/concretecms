@@ -178,7 +178,7 @@
     ConcreteFileManager.FILTER_BY_TYPE = 'type';
     ConcreteFileManager.FILTER_BY_SIZE = 'size';
     ConcreteFileManager.FILTER_BY_EXTENSION = 'extension';
-    ConcreteFileManager.FILTER_BY_ADDED_DATE = 'added_to';
+    ConcreteFileManager.FILTER_BY_ADDED_DATE = 'date_added';
     ConcreteFileManager.FILTER_BY_ADDED_TO_PAGE = 'added_to';
 
     /**
