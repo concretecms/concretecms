@@ -109,10 +109,13 @@ if ($_POST['task'] == 'add_to_sets') {
 
 	if ($_POST['fsNew']) {
 		$type = ($_POST['fsNewShare'] == 1) ? FileSet::TYPE_PUBLIC : FileSet::TYPE_PRIVATE;
-		$fs = FileSet::createAndGetSet($_POST['fsNewText'], $type);
-		//print_r($fs);
-		foreach($files as $f) {
-			$fs->addFileToSet($f);
+		if (preg_match('/[<>;{}?"`]/i', $_POST['fsNewText'])) {
+			$r->error->add(t('File Set Name cannot contain the characters: %s', Loader::helper('text')->entities('<>;{}?"`')));
+		} else {
+			$fs = FileSet::createAndGetSet($_POST['fsNewText'], $type);
+			foreach ($files as $f) {
+				$fs->addFileToSet($f);
+			}
 		}
 	}
 
