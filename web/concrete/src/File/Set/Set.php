@@ -64,7 +64,7 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
      *
      * @param string $fs_name
      * @param int    $fs_type
-     * @param int    $fs_uid
+     * @param int|bool    $fs_uid
      * @return Mixed
      *
      * Dev Note: This will create duplicate sets with the same name if a set exists owned by another user!!!
@@ -82,7 +82,7 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
         if ($fsID > 0) {
             return static::getByID($fsID);
         } else {
-            $fs = static::add($fs_name, 0, $fs_uid, $fs_type);
+            $fs = static::add(h($fs_name), 0, $fs_uid, $fs_type);
             return $fs;
         }
     }
@@ -91,7 +91,7 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
      * Get a file set object by a file set's id
      *
      * @param int $fsID
-     * @return FileSet
+     * @return Set
      */
     public static function getByID($fsID)
     {
@@ -154,7 +154,7 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
     {
         if (intval($fsID) > 0) {
             $fileset = self::getByID($fsID);
-            if ($fileset instanceof FileSet) {
+            if ($fileset instanceof \Concrete\Core\File\Set\Se) {
                 return $fileset->getFiles();
             }
         }
@@ -182,7 +182,7 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
      *
      * @param  string   $fsName
      * @param  int|bool $uID
-     * @return FileSet
+     * @return Set
      */
     public static function getByName($fsName, $uID = false)
     {
@@ -221,7 +221,6 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
      *
      * Can obsolete this when we get version of ADOdB with one/many support
      *
-     * @return type $var_name
      */
     private function populateFiles()
     {
@@ -315,7 +314,7 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
         $db = Loader::db();
         $db->update(
             'FileSets',
-            array('fsName' => $setName, 'fsOverrideGlobalPermissions' => $fsOverrideGlobalPermissions),
+            array('fsName' => h($setName), 'fsOverrideGlobalPermissions' => $fsOverrideGlobalPermissions),
             array('fsID' => $this->fsID));
         return static::getByID($this->fsID);
     }
@@ -323,7 +322,7 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
     /**
      * Adds the file to the set
      *
-     * @param type $fID //accepts an ID or a File object
+     * @param int|\Concrete\Core\File\File $f_id //accepts an ID or a File object
      * @return object
      */
     public function addFileToSet($f_id)
