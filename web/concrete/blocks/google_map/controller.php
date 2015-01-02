@@ -72,7 +72,7 @@ class Controller extends BlockController {
         $args['longitude'] = is_numeric($data['longitude']) ? $data['longitude'] : 0;
         $args['width'] = $data['width'];
         $args['height'] = $data['height'];
-        $args['scrollwheel'] = $data['scrollwheel'];
+        $args['scrollwheel'] = $data['scrollwheel'] ? 1 : 0;
 		parent::save($args);
 	}
 
