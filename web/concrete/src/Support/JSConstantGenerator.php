@@ -73,6 +73,6 @@ class JSConstantGenerator
 	public function render()
 	{
 		$register = $this->getRegister();
-		return json_encode( $register['Concrete'], JSON_FORCE_OBJECT );
+		return json_encode( $register['Concrete'], JSON_FORCE_OBJECT | JSON_PRETTY_PRINT );
 	}
 }
