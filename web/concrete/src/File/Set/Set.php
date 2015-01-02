@@ -54,7 +54,6 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
      * Returns an object mapping to the global file set, fsID = 0.
      * This is really only used for permissions mapping
      */
-
     public static function getGlobal()
     {
         $fs = new static;
@@ -62,6 +61,10 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
         return $fs;
     }
 
+    /**
+     * @param bool|\User $u
+     * @return array
+     */
     public static function getMySets($u = false)
     {
         if ($u === false) {
@@ -138,8 +141,14 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
         }
     }
 
+
     /**
-     * Adds a file set
+     * Adds a File set
+     * @param string $setName
+     * @param int $fsOverrideGlobalPermissions
+     * @param bool|\User $u
+     * @param int $type
+     * @return Set
      */
     public static function add($setName, $fsOverrideGlobalPermissions = 0, $u = false, $type = self::TYPE_PUBLIC)
     {
@@ -175,13 +184,13 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
      * Static method to return an array of File objects by the set id
      *
      * @param  int $fsID
-     * @return array
+     * @return array|void
      */
     public static function getFilesBySetID($fsID)
     {
         if (intval($fsID) > 0) {
             $fileset = self::getByID($fsID);
-            if ($fileset instanceof \Concrete\Core\File\Set\Se) {
+            if ($fileset instanceof \Concrete\Core\File\Set\Set) {
                 return $fileset->getFiles();
             }
         }
@@ -192,7 +201,7 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
      *
      * @param  string   $fsName
      * @param  int|bool $uID
-     * @return array
+     * @return array|void
      */
     public static function getFilesBySetName($fsName, $uID = false)
     {
@@ -229,7 +238,7 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
     /**
      * Returns an array of File objects from the current set
      *
-     * @return array
+     * @return ConcreteFile[]
      */
     public function getFiles()
     {
@@ -244,7 +253,7 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
     }
 
     /**
-     * Get a list of files asociated with this set
+     * Get a list of files associated with this set
      *
      * Can obsolete this when we get version of ADOdB with one/many support
      *
@@ -254,11 +263,17 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
         $this->fileSetFiles = File::getFileSetFiles($this);
     }
 
+    /**
+     * @return int
+     */
     public function getFileSetUserID()
     {
         return $this->uID;
     }
 
+    /**
+     * @return int
+     */
     public function getFileSetType()
     {
         return $this->fsType;
@@ -295,11 +310,17 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
         return 'file_set';
     }
 
+    /**
+     * @return int
+     */
     public function getPermissionObjectIdentifier()
     {
         return $this->getFileSetID();
     }
 
+    /**
+     * @return int
+     */
     public function getFileSetID()
     {
         if ($this->fsID) {
@@ -308,6 +329,9 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
         return 0;
     }
 
+    /**
+     * @param array $files Array of file IDs
+     */
     public function updateFileSetDisplayOrder($files)
     {
         $db = Loader::db();
@@ -323,11 +347,17 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
         }
     }
 
+    /**
+     * @return int
+     */
     public function overrideGlobalPermissions()
     {
         return $this->fsOverrideGlobalPermissions;
     }
 
+    /**
+     * @return string
+     */
     public function getFileSetName()
     {
         return $this->fsName;
@@ -335,6 +365,7 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
 
     /**
      * Updates a file set.
+     * @return Set
      */
     public function update($setName, $fsOverrideGlobalPermissions = 0)
     {
@@ -349,8 +380,8 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
     /**
      * Adds the file to the set
      *
-     * @param int|\Concrete\Core\File\File $f_id //accepts an ID or a File object
-     * @return object
+     * @param int|\File $f_id //accepts an ID or a File object
+     * @return File|mixed
      */
     public function addFileToSet($f_id)
     {
@@ -375,6 +406,9 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
         return $this->fsResultColumns;
     }
 
+    /**
+     * @param int|\File $f_id
+     */
     public function removeFileFromSet($f_id)
     {
 
@@ -452,7 +486,7 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
             $pe = GroupCombinationPermissionAccessEntity::getOrCreate($userOrGroup);
             // group combination
         } else {
-            if ($userOrGroup instanceof User || $userOrGroup instanceof UserInfo) {
+            if ($userOrGroup instanceof User || $userOrGroup instanceof \UserInfo) {
                 $pe = UserPermissionAccessEntity::getOrCreate($userOrGroup);
             } else {
                 // group;
