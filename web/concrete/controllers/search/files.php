@@ -233,6 +233,8 @@ class Files extends Controller
 
     public static function getSearchFields()
     {
+        // Warning:
+        // concrete/js/build/core/file-manager/search.js uses those array keys too 
         $r = array(
             'size' => t('Size'),
             'type' => t('Type'),
