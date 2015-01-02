@@ -89,7 +89,14 @@ var ConcreteToolbar = function() {
             if ( panel.isPinable() ) 
             {
                 var parent = $($this.parent());
-                if ( panel.willBePinned() || panel.pinned() ) parent.toggleClass("ccm-toolbar-page-edit-mode-active");
+                if ( panel.willBePinned() || panel.pinned() ) parent.toggleClass("ccm-toolbar-page-edit-mode-pinned ");
+				if (panel.willBePinned()) {
+					$this.attr('data-original-icon-class', $this.find('i').attr('class'));
+					$this.find('i').removeClass().addClass('fa fa-lock');
+				} else if ($this.attr('data-original-icon-class')) {
+					$this.find('i').removeClass().addClass($this.attr('data-original-icon-class'));
+					$this.removeAttr('data-original-icon-class');
+				}
             }
 			panel.toggle();
 			return false;
