@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\User\Group;
 use \Concrete\Core\Foundation\Object;
+use Gettext\Translations;
 use Loader;
 
 class GroupSet extends Object {
@@ -127,5 +128,15 @@ class GroupSet extends Object {
 		$db = Loader::db();
 		$db->Execute('delete from GroupSetGroups where gsID = ? and gID = ?', array($this->getGroupSetID(), $g->getGroupID()));
 	}
+
+    public static function exportTranslations()
+    {
+        $translations = new Translations();
+        $sets = static::getList();
+        foreach($sets as $set) {
+            $translations->insert('GroupSetName', $set->getGroupSetName());
+        }
+        return $translations;
+    }
 
 }

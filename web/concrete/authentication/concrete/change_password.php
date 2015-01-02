@@ -1,6 +1,11 @@
 <?php defined('C5_EXECUTE') or die('Access denied.');
 $form = Loader::helper('form');
 ?>
+
+<? if (is_object($error) && $error->has()) { ?>
+    <? Loader::element('system_errors', array('format' => 'block', 'error' => $error))?>
+<? } ?>
+
 <h2><?= t('Reset Password') ?></h2>
 <div class="help-block"><?= t('Enter your new password below.') ?></div>
 <div class="change-password">

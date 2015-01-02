@@ -170,7 +170,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 
             <? if ($c->isEditMode()) { ?>
         <li class="ccm-toolbar-page-edit-mode-active ccm-toolbar-page-edit pull-left hidden-xs">
-            <a data-toolbar-action="check-in" <? if ($vo->isNew()) { ?>href="javascript:void(0)"
+            <a data-toolbar-action="check-in" <? if ($vo->isNew() || $c->isPageDraft()) { ?>href="javascript:void(0)"
                data-launch-panel="check-in" <? } else { ?>href="<?= URL::to(
                 '/ccm/system/page/check_in',
                 $c->getCollectionID(),
@@ -285,13 +285,28 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
             <a href="#" data-panel-url="<?= URL::to('/ccm/system/panels/sitemap') ?>"
                                             title="<?= t('Add Pages and Navigate Your Site') ?>"
                                             data-launch-panel="sitemap">
-                <i class="fa fa-files-o"></i>
+                        <i class="fa fa-files-o"></i>
                 <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add-page">
                     <?= tc('toolbar', 'Add Page') ?>
                 </span>
             </a>
-
         </li>
+        <? if ($cp->canEditPageMultilingualSettings() && Config::get('concrete.multilingual.enabled')) {
+            $section = \Concrete\Core\Multilingual\Page\Section\Section::getCurrentSection();
+            $ch = Core::make('multilingual/interface/flag');
+            if (is_object($section)) { ?>
+                <li class="pull-right hidden-xs">
+                <a href="#" data-panel-url="<?= URL::to('/ccm/system/panels/multilingual') ?>"
+                   title="<?= t('Navigate this page in other languages') ?>"
+                   data-launch-panel="multilingual">
+                    <? print $ch->getFlagIcon($section->getIcon()); ?>
+                    <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add-page">
+                        <?=$section->getLanguageText()?>
+                    </span>
+                </a>
+                </li>
+            <? } ?>
+        <? } ?>
         <li class="ccm-toolbar-search pull-right hidden-xs"><i class="fa fa-search"></i> <input type="search"
                                                                                                 id="ccm-nav-intelligent-search"
                                                                                                 tabindex="1"/></li>
@@ -411,37 +426,44 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
         if (!$c->getCollectionPointerID() && (!is_array($workflowList) || count($workflowList) == 0)) {
             if (is_object($vo)) {
                 if (!$vo->isApproved() && !$c->isEditMode()) {
-                    ?>
 
-                    <?
-                    $buttons = array();
-                    if ($canApprovePageVersions && !$c->isCheckedOut()) {
-                        $pk = \Concrete\Core\Permission\Key\PageKey::getByHandle('approve_page_versions');
-                        $pk->setPermissionObject($c);
-                        $pa = $pk->getPermissionAccessObject();
-                        if (is_object($pa)) {
-                            if (count($pa->getWorkflows()) > 0) {
-                                $appLabel = t('Submit for Approval');
-                            }
-                        }
-                        if (!$appLabel) {
-                            $appLabel = t('Approve Version');
-                        }
-
-                        $buttons[] = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID() . '&ctask=approve-recent' . $token . '" class="btn btn-primary btn-xs">' . $appLabel . '</a>';
-
-                    }
-
+                    if ($c->isPageDraft()) {
                     print Loader::helper('concrete/ui')->notify(
                         array(
-                            'title'   => t('Page is Pending Approval.'),
-                            'message' => t("This page is newer than what appears to visitors on your live site."),
+                            'title'   => t('Page Draft.'),
+                            'message' => t("This is an un-published draft."),
                             'type'    => 'info',
-                            'icon'    => 'cog',
-                            'buttons' => $buttons
-                        ))?>
+                            'icon'    => 'exclamation'
+                        ));
+                    } else {
+                        $buttons = array();
+                        if ($canApprovePageVersions && !$c->isCheckedOut()) {
+                            $pk = \Concrete\Core\Permission\Key\PageKey::getByHandle('approve_page_versions');
+                            $pk->setPermissionObject($c);
+                            $pa = $pk->getPermissionAccessObject();
+                            if (is_object($pa)) {
+                                if (count($pa->getWorkflows()) > 0) {
+                                    $appLabel = t('Submit for Approval');
+                                }
+                            }
+                            if (!$appLabel) {
+                                $appLabel = t('Approve Version');
+                            }
 
-                <?
+                            $buttons[] = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID() . '&ctask=approve-recent' . $token . '" class="btn btn-primary btn-xs">' . $appLabel . '</a>';
+
+                        }
+
+                        print Loader::helper('concrete/ui')->notify(
+                            array(
+                                'title'   => t('Page is Pending Approval.'),
+                                'message' => t("This page is newer than what appears to visitors on your live site."),
+                                'type'    => 'info',
+                                'icon'    => 'cog',
+                                'buttons' => $buttons
+                            ))?>
+
+                <?  }
                 }
             }
         } ?>

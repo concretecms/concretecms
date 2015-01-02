@@ -3,7 +3,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 
 <div class="ccm-ui">
-<div class="container" data-container="editable-fields">
+<div data-container="editable-fields">
 
 <section>
 	<h4><?=t('Other Attributes')?></h4>

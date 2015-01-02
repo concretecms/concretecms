@@ -2,6 +2,7 @@
 namespace Concrete\Controller\Panel\Page;
 use \Concrete\Controller\Backend\UserInterface\Page as BackendUIPageController;
 use Concrete\Core\Page\Collection\Version\Version;
+use Concrete\Core\Page\Type\Type;
 use Permissions;
 use PageTemplate;
 use PageTheme;
@@ -25,9 +26,9 @@ class Design extends BackendUIPageController {
 		$c = $this->page;
 		$cp = $this->permissions;
 
-		$pt = $c->getPageTypeObject();
-		if (is_object($pt)) {
-			$_templates = $pt->getPageTypePageTemplateObjects();
+		$pagetype = $c->getPageTypeObject();
+		if (is_object($pagetype)) {
+			$_templates = $pagetype->getPageTypePageTemplateObjects();
 		} else {
 			$_templates = PageTemplate::getList();
 		}
@@ -76,11 +77,19 @@ class Design extends BackendUIPageController {
 			$templatesSelect[$pt->getPageTemplateID()] = $pt->getPageTemplateDisplayName();
 		}
 
+        $typeList = Type::getList();
+        $typesSelect = array('0' => t('** None'));
+        foreach($typeList as $_pagetype) {
+            $typesSelect[$_pagetype->getPageTypeID()] = $_pagetype->getPageTypeDisplayName();
+        }
+
 		$this->set('templatesSelect', $templatesSelect);
 		$this->set('themesSelect', $themesSelect);
 		$this->set('themes', $themes);
 		$this->set('templates', $templates);
+        $this->set('typesSelect', $typesSelect);
 		$this->set('selectedTheme', $selectedTheme);
+        $this->set('selectedType', $pagetype);
 		$this->set('selectedTemplate', $selectedTemplate);
 	}
 
@@ -151,12 +160,27 @@ class Design extends BackendUIPageController {
 						$nvc->update($data);
 					}
 				}
+
+                if ($cp->canEditPageType()) {
+                    $ptID = $c->getPageTypeID();
+                    if ($ptID != $_POST['ptID']) {
+                        // the page type has changed.
+                        if ($_POST['ptID']) {
+                            $type = Type::getByID($_POST['ptID']);
+                            if (is_object($type)) {
+                                $nvc->setPageType($type);
+                            }
+                        } else {
+                            $nvc->setPageType(null);
+                        }
+                    }
+                }
 			}
 
 			$r = new PageEditResponse();
 			$r->setPage($c);
             if ($this->request->request->get('sitemap')) {
-                $r->setMessage(t('Page template and theme updated successfully.'));
+                $r->setMessage(t('Page updated successfully.'));
                 if ($this->permissions->canApprovePageVersions() && Config::get('concrete.misc.sitemap_approve_immediately')) {
                     $pkr = new ApprovePageRequest();
                     $u = new User();

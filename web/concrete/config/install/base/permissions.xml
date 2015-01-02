@@ -34,6 +34,7 @@
         <permissionkey handle="edit_page_speed_settings" name="Edit Speed Settings" description="Ability to change caching settings." package="" category="page"/>
         <permissionkey handle="edit_page_theme" has-custom-class="true" name="Change Theme" description="Ability to change just the theme for this page." package="" category="page"/>
         <permissionkey handle="edit_page_template" name="Change Page Template" description="Ability to change just the page template for this page." package="" category="page"/>
+        <permissionkey handle="edit_page_page_type" name="Edit Page Type" description="Change the type of an existing page." package="" category="page"/>
         <permissionkey handle="edit_page_permissions" name="Edit Permissions" description="Ability to change permissions for this page. Warning: by granting this a user could give themselves more access." package="" can-trigger-workflow="true" category="page"/>
         <permissionkey handle="delete_page" name="Delete" package="" description="Ability to move this page to the site's Trash." category="page" can-trigger-workflow="true" />
         <permissionkey handle="delete_page_versions" name="Delete Versions" package="" description="Ability to remove old versions of this page." category="page" can-trigger-workflow="true" />
@@ -41,6 +42,7 @@
         <permissionkey handle="add_subpage" has-custom-class="true" name="Add Sub-Page" package="" description="Can add a page beneath the current page." category="page"/>
         <permissionkey handle="move_or_copy_page" name="Move or Copy Page" description="Can move or copy this page to another location." package="" category="page" can-trigger-workflow="true" />
         <permissionkey handle="schedule_page_contents_guest_access" name="Schedule Guest Access" description="Can control scheduled guest access to this page." package="" category="page"/>
+        <permissionkey handle="edit_page_multilingual_settings" name="Edit Multilingual Settings" description="Controls whether a user can see the multilingual settings menu, re-map a page or set a page as ignored in multilingual settings." package="" category="page"/>
         <!-- block types //-->
         <permissionkey handle="add_block" has-custom-class="true" name="Add Block" description="Can add a block to any area on the site. If someone is added here they can add blocks to any area (unless that area has permissions that override these global permissions.)" package="" category="block_type">
             <access>
@@ -99,7 +101,9 @@
         <permissionkey handle="notify_on_basic_workflow_deny" name="Notify on Deny" description="Notify approvers that a change has been denied." package="" category="basic_workflow" />
         		
         <!-- page type (composer) //-->
-        <permissionkey handle="add_page_type" name="Add Page Type" description="" package="" category="page_type" />
+        <permissionkey handle="add_page_type" name="Add Pages of This Type" description="" package="" category="page_type" />
+        <permissionkey handle="edit_page_type" name="Edit Page Type" description="" package="" category="page_type" />
+        <permissionkey handle="delete_page_type" name="Delete Page Type" description="" package="" category="page_type" />
         <permissionkey handle="edit_page_type_permissions" name="Edit Page Type Permissions" description="" package="" category="page_type" />
         <permissionkey handle="edit_page_type_drafts" name="Edit Page Type Drafts" description="" package="" category="page_type" />
         <!--<permissionkey handle="edit_page_draft" name="Edit Page Draft" description="" package="" category="page_draft" />//-->
@@ -293,6 +297,8 @@
                 <category handle="group_tree_node" />
                 <category handle="topic_category_tree_node" />
                 <category handle="topic_tree_node" />
+                <category handle="conversation" />
+                <category handle="conversation_message" />
 			</categories>
         </permissionaccessentitytype>
         <permissionaccessentitytype handle="user" name="User" package="">
@@ -313,6 +319,8 @@
                 <category handle="group_tree_node" />
                 <category handle="topic_category_tree_node" />
                 <category handle="topic_tree_node" />
+                <category handle="conversation" />
+                <category handle="conversation_message" />
 			</categories>
         </permissionaccessentitytype>
         <permissionaccessentitytype handle="group_set" name="Group Set" package="">
@@ -333,6 +341,8 @@
                 <category handle="group_tree_node" />
                 <category handle="topic_category_tree_node" />
                 <category handle="topic_tree_node" />
+                <category handle="conversation" />
+                <category handle="conversation_message" />
 			</categories>
         </permissionaccessentitytype>
         <permissionaccessentitytype handle="group_combination" name="Group Combination" package="">
@@ -353,6 +363,8 @@
                 <category handle="group_tree_node" />
                 <category handle="topic_category_tree_node" />
                 <category handle="topic_tree_node" />
+                <category handle="conversation" />
+                <category handle="conversation_message" />
 			</categories>
 
         </permissionaccessentitytype>

@@ -77,14 +77,14 @@ $borderOptions = array(
 
 $alignmentOptions = array(
     '' => t('None'),
-    'right' => t('Right'),
     'left' => t('Left'),
+    'center' => t('Center'),
+    'right' => t('Right'),
 );
 
 
-$customClassesSelect = array(
-    '' => t('None')
-);
+$customClassesSelect = array();
+
 if (is_array($customClasses)) {
     foreach($customClasses as $class) {
         $customClassesSelect[$class] = $class;
@@ -302,7 +302,7 @@ $form = Core::make('helper/form');
 
             <div>
                 <?=t('Custom Class')?>
-                <?=$form->select('customClass', $customClassesSelect, $customClass);?>
+                <?= $form->text('customClass', $customClass);?>
             </div>
             <hr/>
 
@@ -337,4 +337,5 @@ $form = Core::make('helper/form');
 
 <script type="text/javascript">
     $('#ccm-inline-design-form').<?=$method?>();
+    $("#customClass").select2({tags:<?= json_encode(array_values($customClassesSelect)); ?>, separator: " "});
 </script>

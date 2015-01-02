@@ -8,7 +8,7 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase {
     protected $tables = array('Pages', 'PageThemes', 'PagePaths', 'PermissionKeys', 'PermissionKeyCategories', 'PageTypes',
         'PageTemplates', 'Collections', 'CollectionVersions', 'CollectionVersionFeatureAssignments',
         'CollectionAttributeValues', 'CollectionVersionBlockStyles', 'CollectionVersionThemeCustomStyles',
-        'CollectionVersionRelatedEdits', 'CollectionVersionAreaStyles',
+        'CollectionVersionRelatedEdits', 'CollectionVersionAreaStyles', 'MultilingualSections', 'MultilingualPageRelations',
         'PagePermissionAssignments', 'CollectionVersionBlocks', 'Areas', 'PageSearchIndex', 'ConfigStore',
         'GatheringDataSources', 'Logs', 'AttributeKeyCategories'); // so brutal
 

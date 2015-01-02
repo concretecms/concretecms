@@ -55,6 +55,9 @@ class CustomStyle extends AbstractCustomStyle
         if ($set->getBorderColor()) {
             $css .= 'border-color:' . $set->getBorderColor() . ';';
         }
+        if ($set->getAlignment()) {
+            $css .= 'text-align:' . $set->getAlignment() . ';';
+        }
         if ($set->getBorderRadius()) {
             $css .= 'border-radius:' . $set->getBorderRadius() . ';';
             $css .= '-moz-border-radius:' . $set->getBorderRadius() . ';';

@@ -202,13 +202,17 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         $newFileSystem = $newLocation->getFileSystemObject();
 
         $list = $this->getVersionList();
-        foreach ($list as $fv) {
-            $contents = $fv->getFileContents();
-            $newFileSystem->put($fh->prefix($fv->getPrefix(), $fv->getFilename()), $contents);
-            $currentFilesystem->delete($fh->prefix($fv->getPrefix(), $fv->getFilename()));
+        try {
+            foreach ($list as $fv) {
+                $contents = $fv->getFileContents();
+                $newFileSystem->put($fh->prefix($fv->getPrefix(), $fv->getFilename()), $contents);
+                $currentFilesystem->delete($fh->prefix($fv->getPrefix(), $fv->getFilename()));
+            }
+        } catch(\Exception $e) {
+            throw new \Exception($e->getMessage());
         }
 
-        $this->location = $newLocation;
+        $this->storageLocation = $newLocation;
         $this->save();
     }
 

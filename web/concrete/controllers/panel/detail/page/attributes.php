@@ -162,7 +162,10 @@ class Attributes extends BackendInterfacePageController
             $ag = ResponseAssetGroup::get();
             foreach ($ag->getAssetsToOutput() as $position => $assets) {
                 foreach ($assets as $asset) {
-                    $obj->assets[$asset->getAssetType()][] = $asset->getAssetURL();
+                    if (is_object($asset)) {
+                        // have to do a check here because we might be included a dumb javascript call like i18n_js
+                        $obj->assets[$asset->getAssetType()][] = $asset->getAssetURL();
+                    }
                 }
             }
             Loader::helper('ajax')->sendResult($obj);

@@ -58,20 +58,6 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
             return;
         }
         $db = Loader::db();
-        $scrapbookHelper = Loader::helper('concrete/scrapbook');
-        $globalScrapbookPage = $scrapbookHelper->getGlobalScrapbookPage();
-        if ($globalScrapbookPage->getCollectionID()) {
-            $row = $db->getRow(
-                      'SELECT b.bID, cvb.arHandle FROM Blocks AS b, CollectionVersionBlocks AS cvb ' .
-                      'WHERE b.bName=? AND b.bID=cvb.bID AND cvb.cID=? ORDER BY cvb.cvID DESC',
-                      array($globalBlockName, intval($globalScrapbookPage->getCollectionId())));
-            if ($row != false && isset($row['bID']) && $row['bID'] > 0) {
-                return Block::getByID($row['bID'], $globalScrapbookPage, $row['arHandle']);
-            }
-        }
-
-        //If we made it this far, either there's no scrapbook (clean installation of Concrete5.5+),
-        // or the block wasn't in the legacy scrapbook -- so look in stacks...
         $sql = 'SELECT b.bID, cvb.arHandle, cvb.cID'
             . ' FROM Blocks AS b'
             . ' INNER JOIN CollectionVersionBlocks AS cvb ON b.bID = cvb.bID'
@@ -779,6 +765,19 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
 
         $ncID = $nc->getCollectionID();
         $nvID = $nc->getVersionID();
+
+        // Composer specific
+        $row = $db->GetRow('select cID, arHandle, cbDisplayOrder, ptComposerFormLayoutSetControlID from PageTypeComposerOutputBlocks where cID = ? and bID = ? and arHandle = ?',
+            array($ocID, $this->bID, $this->arHandle));
+        if ($row && is_array($row) && $row['cID']) {
+            $db->insert('PageTypeComposerOutputBlocks', array(
+                'cID' => $ncID,
+                'arHandle' => $this->arHandle,
+                'cbDisplayOrder' => $row['cbDisplayOrder'],
+                'ptComposerFormLayoutSetControlID' => $row['ptComposerFormLayoutSetControlID'],
+                'bID' => $newBID
+                ));
+        }
 
         $q = "select paID, pkID from BlockPermissionAssignments where cID = '$ocID' and bID = ? and cvID = ?";
         $r = $db->query($q, array($this->bID, $ovID));

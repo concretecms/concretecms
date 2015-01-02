@@ -13,7 +13,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
     <ul class="item-select-list">
 
         <? foreach($frequentPageTypes as $pt) { ?>
-            <li><a href="<?=URL::to('/ccm/system/page/', 'create', $pt->getPageTypeID(), $c->getCollectionID())?>"><i class="fa fa-file-o"></i> <?=$pt->getPageTypeDisplayName()?></a></li>
+            <li><a dialog-width="640" dialog-title="<?=t('Add %s', $pt->getPageTypeDisplayName())?>" dialog-height="550" class="dialog-launch" href="<?=URL::to('/ccm/system/dialogs/page/add/compose', $pt->getPageTypeID(), $c->getCollectionID())?>"><i class="fa fa-file-o"></i> <?=$pt->getPageTypeDisplayName()?></a></li>
         <? } ?>
 
         <? if (count($frequentPageTypes) && count($otherPageTypes)) { ?>
@@ -23,7 +23,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
         <? } ?>
 
         <? foreach($otherPageTypes as $pt) { ?>
-            <li><a href="<?=URL::to('/ccm/system/page/', 'create', $pt->getPageTypeID(), $c->getCollectionID())?>"><i class="fa fa-file-o"></i> <?=$pt->getPageTypeDisplayName()?></a></li>
+            <li><a dialog-width="640" dialog-title="<?=t('Add %s', $pt->getPageTypeDisplayName())?>" dialog-height="550" class="dialog-launch" href="<?=URL::to('/ccm/system/dialogs/page/add/compose', $pt->getPageTypeID(), $c->getCollectionID())?>"><i class="fa fa-file-o"></i> <?=$pt->getPageTypeDisplayName()?></a></li>
         <? } ?>
     </ul>
 

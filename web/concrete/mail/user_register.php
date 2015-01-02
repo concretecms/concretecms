@@ -1,7 +1,7 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 
-$subject = SITE.' '.t("Registration - A New User Has Registered");
+$subject = $siteName.' '.t("Registration - A New User Has Registered");
 
 /**
  * HTML BODY START
@@ -24,7 +24,7 @@ ob_start();
 <? endif ?>
 <br />
 <? t('This account may be managed directly at') ?><br />
-<a href="<?= BASE_URL.View::url('/dashboard/users/search?uID='.$uID) ?>"><?= BASE_URL.View::url('/dashboard/users/search?uID='.$uID) ?></a>
+<a href="<?= BASE_URL.View::url('/dashboard/users/search', 'view', $uID) ?>"><?= BASE_URL.View::url('/dashboard/users/search', 'view', $uID) ?></a>
 <?
 
 $bodyHTML = ob_get_clean();
@@ -55,7 +55,7 @@ ob_start();
 
 <? t('This account may be managed directly at') ?>
 
-<?= BASE_URL.View::url('/dashbard/users/search?uID='.$uID) ?>
+<?= BASE_URL.View::url('/dashbard/users/search', 'view', $uID) ?>
 <?
 
 $body = ob_get_clean();

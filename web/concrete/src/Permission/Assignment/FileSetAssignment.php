@@ -1,17 +1,17 @@
 <?php
 namespace Concrete\Core\Permission\Assignment;
 use PermissionAccess;
-use FileSet;
+use Concrete\Core\File\Set\Set;
 use Loader;
 class FileSetAssignment extends Assignment {
 
-	public function setPermissionObject(FileSet $fs) {
+	public function setPermissionObject(Set $fs) {
 		$this->permissionObject = $fs;
 
 		if ($fs->overrideGlobalPermissions()) {
 			$this->permissionObjectToCheck = $fs;
 		} else {
-			$fs = FileSet::getGlobal();
+			$fs = Set::getGlobal();
 			$this->permissionObjectToCheck = $fs;
 		}
 	}

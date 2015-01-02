@@ -6,13 +6,13 @@ $cnv = Conversation::getByID($_POST['cnvID']);
 if (is_object($cnv)) {
 	$displayForm = true;
 	$enableOrdering = ($_POST['enableOrdering'] == 1) ? true : false;
-	$enablePosting = ($_POST['enablePosting'] == 1) ? true : false;
+	$enablePosting = ($_POST['enablePosting'] == 1) ? Conversation::POSTING_ENABLED : Conversation::POSTING_DISABLED_MANUALLY;
 	$paginate = ($_POST['paginate'] == 1) ? true : false;
 	$enableCommentRating = ($_POST['enableCommentRating']);
 
     $cp = new Permissions($cnv);
     if (!$cp->canAddConversationMessage()) {
-        $enablePosting = false;
+        $enablePosting = Conversation::POSTING_DISABLED_PERMISSIONS;
     }
 
 	if (in_array($_POST['displayMode'], array('flat'))) {
