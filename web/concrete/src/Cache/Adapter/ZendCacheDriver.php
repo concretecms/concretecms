@@ -93,6 +93,6 @@ class ZendCacheDriver extends AbstractAdapter implements StorageInterface, Flush
      */
     public function flush()
     {
-        return Core::make($this->cacheName)->flush();
+        return Core::make($this->cacheName)->getItem('zend')->clear();
     }
 }
