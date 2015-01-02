@@ -81,9 +81,16 @@ var ConcreteToolbar = function() {
         });
 
 		$('[data-launch-panel]').unbind().on('click', function() {
-			var panelID = $(this).attr('data-launch-panel');
-			$(this).toggleClass('ccm-launch-panel-loading');
+            var $this = $(this);
+			var panelID = $this.attr('data-launch-panel');
 			var panel = ConcretePanelManager.getByIdentifier(panelID);
+            if ( !panel.willBePinned() ) $this.toggleClass('ccm-launch-panel-loading');
+            
+            if ( panel.isPinable() ) 
+            {
+                var parent = $($this.parent());
+                if ( panel.willBePinned() || panel.pinned() ) parent.toggleClass("ccm-toolbar-page-edit-mode-active");
+            }
 			panel.toggle();
 			return false;
 		});

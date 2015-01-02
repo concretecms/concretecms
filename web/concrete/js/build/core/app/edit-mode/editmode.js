@@ -167,6 +167,9 @@
                 my.bindEvent('EditModeExitInlineSaved', function (e) {
                     Concrete.event.unbind(e);
                     saved = true;
+
+                    var panel = ConcretePanelManager.getByIdentifier('add-block');
+                    if ( panel && panel.pinned() ) panel.show();
                 });
                 my.bindEvent('EditModeExitInline', function (e) {
                     Concrete.event.unsubscribe(e);
@@ -176,6 +179,9 @@
                     $('#a' + area.getId() + '-bt' + btID).remove();
                     my.destroyInlineEditModeToolbars();
                     ConcreteEvent.fire('EditModeExitInlineComplete');
+
+                    var panel = ConcretePanelManager.getByIdentifier('add-block');
+                    if ( panel && panel.pinned() ) panel.show();
                 });
                 $.ajax({
                     type: 'GET',
