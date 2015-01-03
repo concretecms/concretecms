@@ -65,14 +65,14 @@ $req = $flr->getSearchRequest();
     </div>
     <?php } ?>
     <div class="ccm-search-fields-advanced"></div>
-    <div class="ccm-search-fields-submit">
-        <button type="submit" class="btn btn-primary pull-right"><?=t('Search')?></button>
-        <div style="display:inline-block; max-width: 160px; vertical-align: middle; float: right; margin-right: 5px">
-            <div class="input-group">
+    <div class="ccm-search-fields-row ccm-search-fields-submit">
+        <div class="form-group form-group-full">
+            <label class="control-label"><?=t('Per Page')?></label>
+            <div class="ccm-search-field-content ccm-search-field-content-select2">
                 <?=$form->select( 'numResults', array( t('10')=>10, t('20')=>20, t('50')=>50, t('100')=>100, t('250')=>250, t('500')=>500, t('1000')=>1000 ) ); ?>
-                <span class="input-group-addon"><?=t('per page')?></span>
             </div>
         </div>
+        <button type="submit" class="btn btn-primary pull-right"><?=t('Search')?></button>
     </div>
 </form>
 </script>
