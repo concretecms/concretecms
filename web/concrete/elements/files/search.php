@@ -15,7 +15,7 @@ $req = $flr->getSearchRequest();
         <div class="form-group">
             <select data-bulk-action="files" disabled class="ccm-search-bulk-action form-control">
                 <option value=""><?php echo t('Items Selected')?></option>
-                <option value="download"><?php echo t('Download')?></option>
+                <option data-bulk-action-type="open" data-bulk-action-url="<?=URL::to('/ccm/system/file/download')?>" ><?php echo t('Download')?></option>
                 <option data-bulk-action-type="dialog" data-bulk-action-title="<?php echo t('Edit Properties')?>" data-bulk-action-url="<?php echo URL::to('/ccm/system/dialogs/file/bulk/properties')?>" data-bulk-action-dialog-width="630" data-bulk-action-dialog-height="450"><?php echo t('Edit Properties')?></option>
                 <option data-bulk-action-type="dialog" data-bulk-action-title="<?php echo t('Sets')?>" data-bulk-action-url="<?php echo Loader::helper('concrete/urls')->getToolsURL('files/add_to')?>" data-bulk-action-dialog-width="500" data-bulk-action-dialog-height="400"><?php echo t('Sets')?></option>
                 <option data-bulk-action-type="ajax" data-bulk-action-url="<?php echo URL::to('/ccm/system/file/rescan')?>"><?php echo t('Rescan')?></option>

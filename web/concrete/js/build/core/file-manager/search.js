@@ -155,12 +155,12 @@
 
     ConcreteFileManager.prototype.handleSelectedBulkAction = function(value, type, $option, $items) {
         var my = this, itemIDs = [];
-        $.each($items, function(i, checkbox) {
-            itemIDs.push({'name': 'item[]', 'value': $(checkbox).val()});
-        });
 
-        if (value == 'download') {
-            my.$downloadTarget.get(0).src = CCM_TOOLS_PATH + '/files/download?' + jQuery.param(itemIDs);
+        if (type == 'open' ) {
+            $.each($items, function(i, checkbox) {
+                itemIDs.push({'name': 'fID[]', 'value': $(checkbox).val()});
+            });
+            my.$downloadTarget.get(0).src = $option.attr('data-bulk-action-url') + '?' + jQuery.param(itemIDs);
         } else {
             ConcreteAjaxSearch.prototype.handleSelectedBulkAction.call(this, value, type, $option, $items);
         }
@@ -246,7 +246,7 @@
                 '<% if (item.canViewFile) { %>' +
                     '<li><a class="dialog-launch" dialog-modal="false" dialog-append-buttons="true" dialog-width="90%" dialog-height="75%" dialog-title="' + ccmi18n_filemanager.view + '" href="' + CCM_TOOLS_PATH + '/files/view?fID=<%=item.fID%>">' + ccmi18n_filemanager.view + '</a></li>' +
                 '<% } %>' +
-                '<li><a href="#" onclick="window.frames[\'ccm-file-manager-download-target\'].location=\'' + CCM_TOOLS_PATH + '/files/download?fID=<%=item.fID%>\'; return false">' + ccmi18n_filemanager.download + '</a></li>' +
+                '<li><a href="#" onclick="window.frames[\'ccm-file-manager-download-target\'].location=\'' + CCM_DISPATCHER_FILENAME + '/ccm/system/file/download?fID=<%=item.fID%>\'; return false">' + ccmi18n_filemanager.download + '</a></li>' +
                 '<% if (item.canEditFile) { %>' +
                     '<li><a class="dialog-launch" dialog-modal="true" dialog-width="90%" dialog-height="70%" dialog-title="' + ccmi18n_filemanager.edit + '" href="' + CCM_TOOLS_PATH + '/files/edit?fID=<%=item.fID%>">' + ccmi18n_filemanager.edit + '</a></li>' +
                 '<% } %>' +
