@@ -104,9 +104,23 @@ class JSConstantGenerator
 	}
 
 
-	public function render( $base = 'Concrete' )
+	public function render( $path = 'Concrete' )
 	{
 		$register = $this->getRegister();
-		return json_encode( $register[$base], JSON_FORCE_OBJECT | JSON_PRETTY_PRINT );
+
+        $extract = $register;
+        if ( $path )
+        {
+            $pathArray = preg_split( ',\\\\|::,', $path );
+            while ( count($pathArray) )
+            {
+                $key = '';
+				while ( '' == $key && count($pathArray) ) $key = array_shift($pathArray);
+                if ( $key ) $extract = $register[$key];
+            }
+        }
+
+
+		return json_encode( $extract, JSON_FORCE_OBJECT | JSON_PRETTY_PRINT );
 	}
 }
