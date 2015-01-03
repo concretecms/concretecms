@@ -2,7 +2,6 @@
 
 namespace Concrete\Core\Cache\Adapter;
 
-
 use Concrete\Core\Cache\Cache;
 use Core;
 use Zend\Cache\Exception;
@@ -26,7 +25,8 @@ class ZendCacheDriver extends AbstractAdapter implements StorageInterface, Flush
     /**
      * @param string $cacheName Name of the cache being used. Defaults to cache.
      */
-    public function __construct($cacheName = 'cache') {
+    public function __construct($cacheName = 'cache')
+    {
         parent::__construct();
 
         $this->cacheName = $cacheName;
@@ -45,12 +45,14 @@ class ZendCacheDriver extends AbstractAdapter implements StorageInterface, Flush
     {
         /** @var Cache $cache  */
         $cache = Core::make($this->cacheName);
-        $item = $cache->getItem('zend/' . $normalizedKey);
+        $item = $cache->getItem('zend/'.$normalizedKey);
         if ($item->isMiss()) {
             $success = false;
+
             return null;
         } else {
             $success = true;
+
             return $item->get();
         }
     }
@@ -67,7 +69,8 @@ class ZendCacheDriver extends AbstractAdapter implements StorageInterface, Flush
     {
         /** @var Cache $cache  */
         $cache = Core::make($this->cacheName);
-        $item = $cache->getItem('zend/' . $normalizedKey);
+        $item = $cache->getItem('zend/'.$normalizedKey);
+
         return $item->set($value);
     }
 
@@ -82,7 +85,8 @@ class ZendCacheDriver extends AbstractAdapter implements StorageInterface, Flush
     {
         /** @var Cache $cache  */
         $cache = Core::make($this->cacheName);
-        $item = $cache->getItem('zend/' . $normalizedKey);
+        $item = $cache->getItem('zend/'.$normalizedKey);
+
         return $item->clear();
     }
 
@@ -93,6 +97,6 @@ class ZendCacheDriver extends AbstractAdapter implements StorageInterface, Flush
      */
     public function flush()
     {
-        return Core::make($this->cacheName)->flush();
+        return Core::make($this->cacheName)->getItem('zend')->clear();
     }
 }
