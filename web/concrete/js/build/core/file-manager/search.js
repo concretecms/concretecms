@@ -177,14 +177,37 @@
     /**
      * Static Methods
      */
-    ConcreteFileManager.launchDialog = function(callback) {
+    ConcreteFileManager.launchDialog = function(callback, opts ) {
         var w = $(window).width() - 53;
+        var data = {};
+        var i;
+
+        var options = {
+            filters: [], // filters must be an array of objects ex: [{ field: Concrete.const.Controller.Search.Files.FILTER_BY_TYPE, type: Concrete.const.Core.File.Type.Type.T_IMAGE }]
+        };
+
+        $.extend(options, opts);
+
+        if ( options.filters.length > 0 )
+        {
+            data['field\[\]'] = [];
+
+            for ( i = 0; i < options.filters.length; i++ )
+            {
+                var filter = $.extend(true, {}, options.filters[i] ); // clone
+                data['field\[\]'].push(filter.field);
+                delete ( filter.field );
+                $.extend( data, filter); // add all remaining fields to the data
+            }
+        }
+        
 
         $.fn.dialog.open({
             width: w,
             height: '100%',
             href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/file/search',
             modal: true,
+            data: data,
             title: ccmi18n_filemanager.title,
             onOpen: function() {
                 ConcreteEvent.unsubscribe('FileManagerSelectFile');

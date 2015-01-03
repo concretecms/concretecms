@@ -80,6 +80,7 @@ module.exports = function(grunt) {
                 '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-form/jquery-form.js',
                 '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-mousewheel/jquery.mousewheel.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/concrete5.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/app/concrete5-const.js',
                 '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-liveupdate/jquery-liveupdate.js',
                 '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-pep/jquery-pep.js',
                 '<%= DIR_BASE %>/concrete/js/build/vendor/retinajs/retinajs.js',
@@ -443,8 +444,16 @@ module.exports = function(grunt) {
 
     // Set Grunt tasks
     grunt.initConfig(config);
-    grunt.registerTask('js:debug', jsTargets.debug);
-    grunt.registerTask('js:release', jsTargets.release);
+
+    grunt.registerTask('generate-constants', 'Generate Javascript Constants', function() {
+        require('./tasks/generate-constants.js')(grunt, config, parameters, this.async());
+    });
+
+    grunt.registerTask('jsOnly:debug', jsTargets.debug);
+    grunt.registerTask('jsOnly:release', jsTargets.release );
+
+    grunt.registerTask('js:debug', ['generate-constants', 'jsOnly:debug' ]);
+    grunt.registerTask('js:release', ['generate-constants', 'jsOnly:release' ]);
     grunt.registerTask('js', 'js:release');
 
     grunt.registerTask('css:debug', 'less:debug');

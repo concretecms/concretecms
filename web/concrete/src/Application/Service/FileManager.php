@@ -41,11 +41,15 @@ class FileManager
             $fileID = $bf->getFileID();
         }
 
+        $filters = '[]';
+        if ( $filterArgs['filters'] ) $filters = json_encode($filterArgs['filters']);
+
         if ($fileID) {
-            $args = "{'inputName': '{$postname}', 'fID': {$fileID}}";
+            $args = "{'inputName': '{$postname}', 'fID': {$fileID}, 'filters': $filters }";
         } else {
-            $args = "{'inputName': '{$postname}'}";
+            $args = "{'inputName': '{$postname}', 'filters': $filters }";
         }
+
 
         $html = <<<EOL
 		<div class="ccm-file-selector" data-file-selector="{$id}"></div>
@@ -75,7 +79,7 @@ EOL;
     public function image($id, $postname, $chooseText, $fileInstanceBlock = null, $additionalArgs = array())
     {
         $args = array();
-        $args['fType'] = FileType::T_IMAGE;
+        $args['filters'] = array( array( 'field' => 'type', 'type' => FileType::T_IMAGE ) );
         $args = array_merge($args, $additionalArgs);
         return $this->file($id, $postname, $chooseText, $fileInstanceBlock, $args);
     }
@@ -93,7 +97,7 @@ EOL;
     public function video($id, $postname, $chooseText, $fileInstanceBlock = null, $additionalArgs = array())
     {
         $args = array();
-        $args['fType'] = FileType::T_VIDEO;
+        $args['filters'] = array( array( 'field' => 'type', 'type' => FileType::T_VIDEO) );
         $args = array_merge($args, $additionalArgs);
         return $this->file($id, $postname, $chooseText, $fileInstanceBlock, $args);
     }
@@ -111,7 +115,7 @@ EOL;
     public function text($id, $postname, $chooseText, $fileInstanceBlock = null, $additionalArgs = array())
     {
         $args = array();
-        $args['fType'] = FileType::T_TEXT;
+        $args['filters'] = array( array( 'field' => 'type', 'type' => FileType::T_TEXT) );
         $args = array_merge($args, $additionalArgs);
         return $this->file($id, $postname, $chooseText, $fileInstanceBlock, $args);
     }
@@ -129,7 +133,7 @@ EOL;
     public function audio($id, $postname, $chooseText, $fileInstanceBlock = null, $additionalArgs = array())
     {
         $args = array();
-        $args['fType'] = FileType::T_AUDIO;
+        $args['filters'] = array( array( 'field' => 'type', 'type' => FileType::T_AUDIO) );
         $args = array_merge($args, $additionalArgs);
         return $this->file($id, $postname, $chooseText, $fileInstanceBlock, $args);
     }
@@ -147,7 +151,7 @@ EOL;
     public function doc($id, $postname, $chooseText, $fileInstanceBlock = null, $additionalArgs = array())
     {
         $args = array();
-        $args['fType'] = FileType::T_DOCUMENT;
+        $args['filters'] = array( array( 'field' => 'type', 'type' => FileType::T_DOCUMENT) );
         $args = array_merge($args, $additionalArgs);
         return $this->file($id, $postname, $chooseText, $fileInstanceBlock, $args);
     }
@@ -165,7 +169,7 @@ EOL;
     public function app($id, $postname, $chooseText, $fileInstanceBlock = null, $additionalArgs = array())
     {
         $args = array();
-        $args['fType'] = FileType::T_APPLICATION;
+        $args['filters'] = array( array( 'field' => 'type', 'type' => FileType::T_APPLICATION) );
         $args = array_merge($args, $additionalArgs);
         return $this->file($id, $postname, $chooseText, $fileInstanceBlock, $args);
     }
