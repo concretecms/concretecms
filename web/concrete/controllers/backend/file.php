@@ -70,7 +70,7 @@ class File extends Controller {
         $files = $this->getRequestFiles('canEditFileContents');
         $r = new FileEditResponse();
         $r->setFiles($files);
-        $fv = $files[0]->getVersion(Loader::helper('security')->sanitizeInt($_REQUEST['fvID']));
+        $fv = $files[0]->getVersion(\Core::make('helper/security')->sanitizeInt($_REQUEST['fvID']));
         if (is_object($fv)) {
             $fv->approve();
         } else {
@@ -83,7 +83,7 @@ class File extends Controller {
         $files = $this->getRequestFiles('canEditFileContents');
         $r = new FileEditResponse();
         $r->setFiles($files);
-        $fv = $files[0]->getVersion(Loader::helper('security')->sanitizeInt($_REQUEST['fvID']));
+        $fv = $files[0]->getVersion(\Core::make('helper/security')->sanitizeInt($_REQUEST['fvID']));
         if (is_object($fv) && !$fv->isApproved()) {
             $fv->delete();
         } else {
@@ -116,12 +116,13 @@ class File extends Controller {
 
     public function upload() {
         $fp = FilePermissions::getGlobal();
-        $cf = Loader::helper('file');
+        $cf = \Core::make('helper/file');
         if (!$fp->canAddFiles()) {
             throw new Exception(t("Unable to add files."));
         }
-        if (!Loader::helper('validation/token')->validate()) {
-            throw new Exception(Loader::helper('validation/token')->getErrorMessage());
+        $val = \Core::make( 'helper/validtion/token' );
+        if (!$val->validate()) {
+            throw new Exception($val->getErrorMessage());
         }
         $files = array();
         if (isset($_FILES['files']) && (is_uploaded_file($_FILES['files']['tmp_name'][0]))) {
@@ -147,7 +148,7 @@ class File extends Controller {
             throw new Exception(FileImporter::getErrorMessage($_FILES['Filedata']['error']));
         }
 
-        Loader::helper('ajax')->sendResult($files);
+        \Core::make('helper/ajax')->sendResult($files);
     }
 
     public function duplicate() {
@@ -168,7 +169,6 @@ class File extends Controller {
         $r->setFiles($files);
         $r->outputJSON();
     }
-
 
 }
 
