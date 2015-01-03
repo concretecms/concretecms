@@ -170,5 +170,92 @@ class File extends Controller {
         $r->outputJSON();
     }
 
+    public function stream( $fID, $fvID ) {
+
+        $fp = FilePermissions::getGlobal();
+        $f = ConcreteFile::getByID($fID);
+
+        if($f->isError()) {
+            switch($f->getError()) {
+                case \Concrete\Core\File\Importer::E_FILE_INVALID: die(t("The requested file couldn't be found."));
+                default: die(t("An unexpected error occurred while looking for the requested file"));
+            }
+        }
+
+        $fp = new ConcretePermissions($f);
+
+        if ($fp->canViewFile()) {
+
+            $fv = !is_null( $fvID ) ? $f->getVersion($_REQUEST['fvID']) : $f->getApprovedVersion();
+
+            $f->trackDownload();
+            $f->forceDownload();
+        }
+    }
+
+    public function zipAndStream( array $fIDs, $fvID = null ) {
+
+        $vh = \Core::make('helper/validation/identifier');
+        $fh = \Core::make( 'helper/file' );
+
+        $filename = $fh->getTemporaryDirectory() . '/' . $vh->getString() . '.zip';
+
+        $files = array();
+        $filenames = array();
+
+        foreach($fIDs as $fID) {
+
+            $f = ConcreteFile::getByID($fID);
+            if($f->isError()) continue;
+
+            $fp = new ConcretePermissions($f);
+
+            if ($fp->canViewFile()) {
+                $files[] = $f;
+                $f->trackDownload();
+            }
+        }
+
+        if(empty($files)) die(t("None of the requested files could be found."));
+
+        if(class_exists('ZipArchive', false)) {
+
+            $zip = new \ZipArchive;
+            $res = $zip->open( $filename, \ZipArchive::CREATE );
+
+            if($res !== true) throw new Exception(t('Could not open with %s', 'ZipArchive::CREATE'));
+
+            foreach($files as $f) $zip->addFromString($f->getFilename(), $f->getFileContents());
+
+            $zip->close();
+
+            $fh->forceDownload($filename);
+
+        } else {
+            throw new Exception(t('Unable to zip files using ZipArchive. Please ensure the Zip extension is installed.'));
+        }
+
+    }
+
+    public function download() {
+
+        $fp = FilePermissions::getGlobal();
+
+        if (!$fp->canSearchFileSet()) die(t("Unable to search file sets."));
+
+        $target = $_REQUEST['fID'];
+
+        if ( !is_array($target) && isset( $_REQUEST['zipit'] ) ) $target = array( $target );
+                
+        if ( is_array($target) ) {
+            // sanitize:
+            foreach ( $target as $key => $val ) $target[$key] = intval($val);
+            $this->zipAndStream($target);
+            return;
+        } else {
+            $this->stream( intval($target), isset( $_REQUEST['fvID'] )? intval($_REQUEST['fvID']) : null );
+        }
+    }
+
 }
 

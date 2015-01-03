@@ -240,6 +240,7 @@ return array(
         "/ccm/system/file/get_json"                                                     => array('\Concrete\Controller\Backend\File::getJSON'),
         "/ccm/system/file/duplicate"                                                    => array('\Concrete\Controller\Backend\File::duplicate'),
         "/ccm/system/file/upload"                                                       => array('\Concrete\Controller\Backend\File::upload'),
+        "/ccm/system/file/download"                                                     => array('\Concrete\Controller\Backend\File::download'),
 
         /**
          * Users
