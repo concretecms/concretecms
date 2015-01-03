@@ -93,32 +93,8 @@ class Detector
 
         $locale = $ms->getLocale();
 
-
-        // change core language to translate e.g. core blocks/themes
         if (strlen($locale)) {
             \Localization::changeLocale($locale);
-        }
-
-        // site translations
-        if (is_dir(DIR_LANGUAGES_SITE_INTERFACE)) {
-            if (file_exists(DIR_LANGUAGES_SITE_INTERFACE . '/' . $locale . '.mo')) {
-                $loc = \Localization::getInstance();
-                $loc->addSiteInterfaceLanguage($locale);
-            }
-        }
-
-        // add package translations
-        if (strlen($locale)) {
-            $ms = Section::getByLocale($locale);
-            if ($ms instanceof Section) {
-                $pl = PackageList::get();
-                $installed = $pl->getPackages();
-                foreach ($installed as $pkg) {
-                    if ($pkg instanceof Package) {
-                        $pkg->setupPackageLocalization($ms->getLocale());
-                    }
-                }
-            }
         }
     }
 }
