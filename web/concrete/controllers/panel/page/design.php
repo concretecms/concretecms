@@ -163,16 +163,12 @@ class Design extends BackendUIPageController {
 
                 if ($cp->canEditPageType()) {
                     $ptID = $c->getPageTypeID();
-                    if ($ptID != $_POST['ptID']) {
-                        // the page type has changed.
-                        if ($_POST['ptID']) {
-                            $type = Type::getByID($_POST['ptID']);
-                            if (is_object($type)) {
-                                $nvc->setPageType($type);
-                            }
-                        } else {
-                            $nvc->setPageType(null);
-                        }
+                    if ($_POST['ptID'] && $ptID != $_POST['ptID']) {
+                        // the page type has changed. 
+                        $type = Type::getByID($_POST['ptID']);
+                        if (is_object($type)) {
+                           $nvc->setPageType($type);
+                        }         
                     }
                 }
 			}
