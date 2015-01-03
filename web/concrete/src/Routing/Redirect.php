@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\Routing;
+use Core;
 use Loader;
 use Request;
 use Page;
@@ -29,7 +30,7 @@ class Redirect {
 	 */
 	public static function page(Page $c, $code = 302, $headers = array()) {
         if ($c->getCollectionPath()) {
-    		$url = BASE_URL . URL::to($c->getCollectionPath());
+            $url = Core::make('helper/navigation')->getLinkToCollection($c, true);
         } else {
             $url = BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID();
         }
