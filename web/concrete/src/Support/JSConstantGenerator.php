@@ -43,13 +43,13 @@ class JSConstantGenerator
             foreach ( explode( "\n", $content ) as $line )
             {
                 $ln ++;
-                if ( preg_match( '/\s*namespace .*\;/', $line ) ) $ns = preg_replace( ',\s*namespace\s+([^ -;]+);.*$,', '\1', $line );
+                if ( preg_match( '/\s*namespace .*\;/', $line ) ) $ns = preg_replace( ',\s*namespace\s+([^[:space:]-;]+);.*$,', '\1', $line );
 
-                if ( preg_match( '/^\s*class.*/', $line ) )       $class = preg_replace( ',\s*class\s+([^ -;\{]+).*$,', '\1', $line );
+                if ( preg_match( '/^\s*class.*/', $line ) )       $class = preg_replace( ',\s*class\s+([^[:space:]-;\{]+).*$,', '\1', $line );
 
                 if ( preg_match( ',^\s*const\s*.*\s*//!<\s*@javascript-exported,', $line))
                 {
-                    $var = preg_replace( ',\s*const\s+([^ ]+)\s*=.*$,', '\1', $line );
+                    $var = preg_replace( ',\s*const\s+([^[:space:]]+)\s*=.*$,', '\1', $line );
                     $const = "$ns\\$class::$var";
                     $this->addConstant($const);
                 }
