@@ -256,32 +256,79 @@
 
         cs.$bulkActionsMenu = cs.$element.find( "div.ccm-search-bulk-action" );
 
+
+        cs.$targetDropDn   = cs.$bulkActionsMenu.find( "button.dropdown-toggle");
         cs.$targetButtons  = cs.$bulkActionsMenu.find( '.ccm-action-target-control .btn-group' );
+
 
         cs.$targetSelected = cs.$targetButtons.find( 'button.ccm-target-selected' );
         cs.$targetUploaded = cs.$targetButtons.find( 'button.ccm-target-uploaded' );
 
-        var updateTargetButtons = function updateTargetButtons() {
+        cs.updateTargetButtons = function () {
             var $btn = $(this);
-            cs.$targetButtons.find("button").removeClass("active");
-            $btn.addClass("active");
+            var found = false;
+
+            var sel = cs.getSelectedItems();
+
+            if ( sel.length == 0 ) {
+                cs.$targetSelected.enable(false);
+                cs.$targetSelected.addClass('disabled');
+            } else{
+                found = true;
+                cs.$targetSelected.enable(true);
+                cs.$targetSelected.removeClass('disabled');
+            }
+
+            var up = cs.getUploadedItems();
+
+            if ( up.length == 0 ) {
+                cs.$targetUploaded.enable(false);
+                cs.$targetUploaded.addClass("disabled");
+            } else {
+                found = true;
+                cs.$targetUploaded.enable(true);
+                cs.$targetUploaded.removeClass("disabled");
+            }
+
+            if ( !found ) {
+                cs.$targetButtons.find("button").removeClass("active");
+                cs.$targetDropDn.addClass("disabled");
+            }
+            else cs.$targetDropDn.removeClass("disabled");
+ 
+            if ($btn ) {
+                // called from a button
+                cs.$targetButtons.find("button").removeClass("active");
+                $btn.addClass("active");
+            }
         }
 
-        cs.$targetButtons.find("button").on('click', updateTargetButtons );
+        $(function(){cs.updateTargetButtons()});
+
+        cs.$targetButtons.find("button").on('click', cs.updateTargetButtons );
+
+        cs.getUploadedItems = function() {
+            var itemIDs = [];
+            var uploaded = $('#ccm-search-uploaded-fIDs').val().trim();
+            if ( "" != uploaded ) itemIDs = uploaded.split(",");
+            if ( itemIDs[itemIDs.length-1] == '' ) itemIDs.pop();
+            return itemIDs;
+        }
+
+        cs.getSelectedItems = function() {
+            var itemIDs = [];
+            var $items = cs.$element.find('input[data-search-checkbox=individual]:checked');
+
+            $.each($items, function(i, checkbox) {
+                itemIDs.push($(checkbox).val());
+            });
+            return itemIDs;
+        }
+
 
         cs.getTargetItems = function() {
-            var itemIDs = [];
-            if (cs.$targetSelected.hasClass('active') ) {
-                var $items = cs.$element.find('input[data-search-checkbox=individual]:checked');
-
-                $.each($items, function(i, checkbox) {
-                    itemIDs.push($(checkbox).val());
-                });
-            } else { 
-                var uploaded = $('#ccm-search-uploaded-fIDs').val().trim();
-                if ( "" != uploaded ) itemIDs = uploaded.split(",");
-            }
-            return itemIDs;
+            if (cs.$targetSelected.hasClass('active') ) return cs.getSelectedItems();
+            else  return cs.getUploadedItems();
         }
 
         cs.$bulkActionsMenu.find("li a").on( 'click', function( evt ) {
@@ -291,7 +338,6 @@
             var items = cs.getTargetItems();
 
             if (items.length == 0 ) { 
-                console.debug( "called on an empty set" );
                 event.stopPropagation();
                 return false;
             }
@@ -320,11 +366,8 @@
 			cs.$element.find('input[data-search-checkbox=individual]').prop('checked', $(this).is(':checked')).trigger('change');
 		});
 		cs.$element.on('change', 'input[data-search-checkbox=individual]', function() {
-			if (cs.$element.find('input[data-search-checkbox=individual]:checked').length) {
-				cs.$bulkActions.prop('disabled', false);
-			} else {
-				cs.$bulkActions.prop('disabled', true);
-			}
+            cs.updateTargetButtons();
+            cs.$targetSelected.click();
 		});
 
 	}

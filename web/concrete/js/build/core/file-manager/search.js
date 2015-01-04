@@ -42,6 +42,7 @@
     };
 
     ConcreteFileManager.prototype.setupFileUploads = function() {
+        // TODO get the fIDs in the right place, update the visibilities
         var my = this,
             $fileUploaders = $('.ccm-file-manager-upload'),
             $fileUploader = $fileUploaders.filter('#ccm-file-manager-upload-prompt'),
@@ -69,7 +70,10 @@
                     var progress = parseInt(data.loaded / data.total * 100, 10);
                     $('#ccm-file-upload-progress-wrapper').html(my._templateFileProgress({'progress': progress}));
                 },
-                start: function() {
+                start: function(e) {
+                    $('#ccm-search-uploaded-fIDs').val(''); // reset the list
+                    my.updateTargetButtons();
+
                     errors = [];
                     $('#ccm-file-upload-progress-wrapper').remove();
                     $('<div />', {'id': 'ccm-file-upload-progress-wrapper'}).html(my._templateFileProgress({'progress': 100})).appendTo(document.body);
@@ -81,7 +85,7 @@
                         modal: true
                     });
                 },
-                stop: function() {
+                stop: function(e) {
                     jQuery.fn.dialog.closeTop();
                     my.refreshResults();
 
@@ -96,7 +100,28 @@
                             'message': ccmi18n_filemanager.uploadComplete,
                             'title': ccmi18n_filemanager.title
                         });
+                        my.updateTargetButtons();
+                        my.$targetUploaded.click();
+                        my.$bulkActionsMenu.addClass("open");
                     }
+                },
+                done: function( e, data) {
+                    if (!data || !data.jqXHR ) return;
+                    data.jqXHR.done(function(data, status, jq ) {
+
+                        if ( data.length > 0 )
+                        {
+                            var i;
+                            var store = $('#ccm-search-uploaded-fIDs').val();
+                            for ( i = 0; i < data.length ; i++ ) store = store += String(data[i].fID) + ",";
+                            $('#ccm-search-uploaded-fIDs').val(store);
+                        }
+                        
+                    });
+                    data.jqXHR.fail(function(){
+                        $('#ccm-search-uploaded-fIDs').val(''); // reset the list
+                    });
+
                 }
             };
 
@@ -156,13 +181,12 @@
         var my = this, itemIDs = [], target;
         var FileMenuItem = Concrete.const.Core.Application.UserInterface.Menu.Item.FileMenuItem;
 
-        console.debug( "Called with type[" + type + "] with items", items );
-
         $.each(items, function(i, val) {
             itemIDs.push({'name': 'fID[]', 'value':val});
         });
 
         target = my.$downloadTarget.get(0).src = $anchor.attr('href') + '?' + jQuery.param(itemIDs);
+        my.$bulkActionsMenu.removeClass("open");
 
         if ( type == FileMenuItem.ACTION_DOWNLOAD ) {
             my.$downloadTarget.get(0).src = target;
