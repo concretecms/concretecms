@@ -297,7 +297,9 @@ class ContentImporter
                 if (is_object($ct)) {
                     $args['ptID'] = $ct->getPageTypeID();
                 }
-                $args['pTemplateID'] = $template->getPageTemplateID();
+                if (is_object($template)) {
+                    $args['pTemplateID'] = $template->getPageTemplateID();
+                }
                 $page->update($args);
             }
         }
