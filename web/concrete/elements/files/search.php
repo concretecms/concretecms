@@ -28,15 +28,16 @@ $fm  = \Core::make('helper/concrete/ui/file_manager_menu');
                 <option data-bulk-action-type="dialog" data-bulk-action-title="<?php echo t('Delete')?>" data-bulk-action-url="<?php echo URL::to('/ccm/system/dialogs/file/bulk/delete')?>" data-bulk-action-dialog-width="500" data-bulk-action-dialog-height="400"><?php echo t('Delete')?></option>
             </select>
         </div>
-        <div class="form-group dropdown">
+        <div class="form-group dropdown ccm-search-bulk-action">
+            <input type="hidden" name="ccm-search-uploaded-fIDs" id="ccm-search-uploaded-fIDs" value=""/>
             <button class="btn btn-default dropdown-toggle" type="button" data-toogle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="ccm-dropdown-label"><?=t("Bulk Action Menu")?></span><span class="caret"></span>
             </button>
             <ul class="dropdown-menu" role="menu">
                 <li role="presentation" class="ccm-action-target-control ">
                     <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-default active"><?=t('Selected')?></button>
-                        <button type="button" class="btn btn-default"><?=t('Uploaded')?></button>
+                        <button type="button" class="ccm-target-selected btn btn-default active"><?=t('Selected')?></button>
+                        <button type="button" class="ccm-target-uploaded btn btn-default"><?=t('Uploaded')?></button>
                     </div>
                 </li>
                 <?php 
@@ -49,7 +50,7 @@ $fm  = \Core::make('helper/concrete/ui/file_manager_menu');
                     if ( $item->isSeparator() ) { ?>
                         <li role="presentation" class="divider"></li> 
                     <?php } else { ?>
-                        <li><?=$cnt->getMenuItemLinkElement()?></li>
+                        <li class="<?=$item->isDangerous()?'bg-danger':''; ?>"><?=$cnt->getMenuItemLinkElement()?></li>
                     <?php } ?>
             <?php } ?>
             </ul>

@@ -30,7 +30,7 @@ class FileManagerMenu
 
 			"ccm_dangerous"  => array( 'type' => FileMenuItem::ACTION_SEPARATOR ),
 
-			"ccm_delete"	 => array( "type" => FileMenuItem::ACTION_OPEN_DIALOG, "label" => t('Delete'),          "url" => \URL::to('/ccm/system/dialogs/file/bulk/delete'), 'icon' => 'trash', 
+			"ccm_delete"	 => array( "type" => FileMenuItem::ACTION_OPEN_DIALOG, "label" => t('Delete'),          "url" => \URL::to('/ccm/system/dialogs/file/bulk/delete'), 'icon' => 'trash', 'dangerous' => true,
 									   		"options" => array ( "title" => t('Delete'), "width"=> "500", "height" => 400, )),
         );
 
@@ -42,6 +42,8 @@ class FileManagerMenu
 			$item->setController( new ItemController() );
 
 			$item->setActionType ( $desc['type'] );
+
+			if ( isset( $desc['dangerous'] ) ) $item->setDangerous(true);
 
 			if ( FileMenuItem::ACTION_SEPARATOR != $item->getActionType() )
 			{

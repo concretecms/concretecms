@@ -25,6 +25,9 @@ class FileMenuItem extends Item
 
 	public function isSeparator() { return self::ACTION_SEPARATOR == $this->actionType; }
 
+	protected $dangerous	  = false;
+	public function isDangerous() { return $this->dangerous; }
+	public function setDangerous($dangerous = true) { $this->dangerous = $dangerous; }
 
 	public function setLinkAttributes( $attributes )
 	{
