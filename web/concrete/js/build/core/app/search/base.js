@@ -260,7 +260,6 @@
         cs.$targetDropDn   = cs.$bulkActionsMenu.find( "button.dropdown-toggle");
         cs.$targetButtons  = cs.$bulkActionsMenu.find( '.ccm-action-target-control .btn-group' );
 
-
         cs.$targetSelected = cs.$targetButtons.find( 'button.ccm-target-selected' );
         cs.$targetUploaded = cs.$targetButtons.find( 'button.ccm-target-uploaded' );
 
@@ -337,13 +336,9 @@
 
             var items = cs.getTargetItems();
 
-            if (items.length == 0 ) { 
-                event.stopPropagation();
-                return false;
-            }
+            if (items.length == 0 ) return false;
 
             cs.handleSelectedBulkAction(type, $anchor, cs.getTargetItems() );
-            event.stopPropagation();
             return false;
         });
 
