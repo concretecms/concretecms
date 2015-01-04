@@ -10,8 +10,7 @@
 		options = $.extend({
 			'result': {},
 			'onLoad': false,
-			'onUpdateResults': false,
-            'bulkParameterName': 'item'
+			'onUpdateResults': false
 		}, options);
 		this.$element = $element;
 		this.$results = $element.find('div[data-search-element=results]');
@@ -205,27 +204,27 @@
 		});
 	}
 
-	ConcreteAjaxSearch.prototype.handleSelectedBulkAction = function(value, type, $option, $items) {
-		var cs = this,
-			itemIDs = [];
+	ConcreteAjaxSearch.prototype.handleSelectedBulkAction = function(type, $anchor, itemIDs ) {
 
-		$.each($items, function(i, checkbox) {
-			itemIDs.push({'name': cs.options.bulkParameterName + '[]', 'value': $(checkbox).val()});
-		});
+		var cs = this;
+        var FileMenuItem = Concrete.const.Core.Application.UserInterface.Menu.Item.FileMenuItem;
 
-		if (type == 'dialog') {
+		if ( type == FileMenuItem.ACTION_OPEN_DIALOG ) {
+            var title = $anchor.find('span').text();
+            if ( 'undefined' != $anchor.attr('data-filemenu-title') ) title = $anchor.attr('data-filemenu-title');
+
 			jQuery.fn.dialog.open({
-				width: $option.attr('data-bulk-action-dialog-width'),
-				height: $option.attr('data-bulk-action-dialog-height'),
-				modal: true,
-				href: $option.attr('data-bulk-action-url') + '?' + jQuery.param(itemIDs),
-				title: $option.attr('data-bulk-action-title')
+				width:  $anchor.attr('data-filemenu-width'),
+				height: $anchor.attr('data-filemenu-height'),
+				modal:  true,
+				href:   $anchor.attr('href') + '?' + $.param( itemIDs ),
+				title:  title,
 			});
 		}
 
-        if (type == 'ajax') {
+        if (type == FileMenuItem.ACTION_AJAX_REQUEST ) {
             $.concreteAjax({
-                url: $option.attr('data-bulk-action-url'),
+                url: $option.attr('href'),
                 data: itemIDs,
                 success: function(r) {
                     if (r.message) {
@@ -237,7 +236,8 @@
                 }
             });
         }
-		cs.publish('SearchBulkActionSelect', {value: value, option: $option, items: $items});
+
+		cs.publish('SearchBulkActionSelect', {type: type, anchor: $anchor, items: itemIDs});
 	}
 
 	ConcreteAjaxSearch.prototype.publish = function(eventName, data) {
@@ -249,21 +249,61 @@
 		var cs = this;
 		ConcreteEvent.subscribe(eventName, callback, cs);
 	}
-
 	ConcreteAjaxSearch.prototype.setupBulkActions = function() {
 		var cs = this;
 
         cs.$element.find('.dropdown-toggle').dropdown();
 
-		cs.$bulkActions = cs.$element.find('select[data-bulk-action]');
-		cs.$element.on('change', 'select[data-bulk-action]', function() {
-			var $option = $(this).find('option:selected'),
-				value = $option.val(),
-				type = $option.attr('data-bulk-action-type'),
-				items = [];
+        cs.$bulkActionsMenu = cs.$element.find( "div.ccm-search-bulk-action" );
 
-			cs.handleSelectedBulkAction(value, type, $option, cs.$element.find('input[data-search-checkbox=individual]:checked'));
-		});
+        cs.$targetButtons  = cs.$bulkActionsMenu.find( '.ccm-action-target-control .btn-group' );
+
+        cs.$targetSelected = cs.$targetButtons.find( 'button.ccm-target-selected' );
+        cs.$targetUploaded = cs.$targetButtons.find( 'button.ccm-target-uploaded' );
+
+        var updateTargetButtons = function updateTargetButtons() {
+            var $btn = $(this);
+            cs.$targetButtons.find("button").removeClass("active");
+            $btn.addClass("active");
+        }
+
+        cs.$targetButtons.find("button").on('click', updateTargetButtons );
+
+        cs.getTargetItems = function() {
+            var itemIDs = [];
+            if (cs.$targetSelected.hasClass('active') ) {
+                var $items = cs.$element.find('input[data-search-checkbox=individual]:checked');
+
+                $.each($items, function(i, checkbox) {
+                    itemIDs.push($(checkbox).val());
+                });
+            } else { 
+                var uploaded = $('#ccm-search-uploaded-fIDs').val().trim();
+                if ( "" != uploaded ) itemIDs = uploaded.split(",");
+            }
+            return itemIDs;
+        }
+
+        cs.$bulkActionsMenu.find("li a").on( 'click', function( evt ) {
+            var $anchor = $(this);
+            var type    = $(this).attr('data-filemenu-type');
+
+            var items = cs.getTargetItems();
+
+            if (items.length == 0 ) { 
+                console.debug( "called on an empty set" );
+                event.stopPropagation();
+                return false;
+            }
+
+            cs.handleSelectedBulkAction(type, $anchor, cs.getTargetItems() );
+            event.stopPropagation();
+            return false;
+        });
+
+
+		cs.$bulkActions = cs.$element.find('select[data-bulk-action]');
+
 	}
 
 	ConcreteAjaxSearch.prototype.setupPagination = function() {
