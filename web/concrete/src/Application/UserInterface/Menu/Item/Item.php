@@ -7,6 +7,7 @@ class Item implements ItemInterface
 {
 
     protected $controller;
+    protected $linkAttributes = array();
 
     public function __construct($handle, $pkgHandle = false)
     {
@@ -43,6 +44,8 @@ class Item implements ItemInterface
     {
         $this->linkAttributes = $linkAttributes;
     }
+
+    public function setLinkAttribute( $key, $value ) { $this->linkAttributes[$key] = $value; }
 
     public function setLink($href)
     {

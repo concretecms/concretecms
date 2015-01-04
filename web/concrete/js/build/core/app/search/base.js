@@ -252,6 +252,9 @@
 
 	ConcreteAjaxSearch.prototype.setupBulkActions = function() {
 		var cs = this;
+
+        cs.$element.find('.dropdown-toggle').dropdown();
+
 		cs.$bulkActions = cs.$element.find('select[data-bulk-action]');
 		cs.$element.on('change', 'select[data-bulk-action]', function() {
 			var $option = $(this).find('option:selected'),

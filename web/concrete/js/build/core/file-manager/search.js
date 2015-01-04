@@ -25,7 +25,6 @@
         my.setupFileDownloads();
         my.setupFileUploads();
         my.setupEvents();
-
     }
 
     ConcreteFileManager.prototype = Object.create(ConcreteAjaxSearch.prototype);
@@ -154,13 +153,18 @@
     };
 
     ConcreteFileManager.prototype.handleSelectedBulkAction = function(value, type, $option, $items) {
-        var my = this, itemIDs = [];
+        var my = this, itemIDs = [], target;
 
-        if (type == 'open' ) {
-            $.each($items, function(i, checkbox) {
-                itemIDs.push({'name': 'fID[]', 'value': $(checkbox).val()});
-            });
-            my.$downloadTarget.get(0).src = $option.attr('data-bulk-action-url') + '?' + jQuery.param(itemIDs);
+        $.each($items, function(i, checkbox) {
+            itemIDs.push({'name': 'fID[]', 'value': $(checkbox).val()});
+        });
+
+        target = my.$downloadTarget.get(0).src = $option.attr('data-bulk-action-url') + '?' + jQuery.param(itemIDs);
+
+        if ( type == 'download' ) {
+            my.$downloadTarget.get(0).src = target;
+        } else if ( type == 'open' ) {
+            window.location = target;
         } else {
             ConcreteAjaxSearch.prototype.handleSelectedBulkAction.call(this, value, type, $option, $items);
         }

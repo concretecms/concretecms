@@ -7,15 +7,18 @@ $searchFields = $controller->getSearchFields();
 $flr = new \Concrete\Core\Search\StickyRequest('files');
 $req = $flr->getSearchRequest();
 
+$fm  = \Core::make('helper/concrete/ui/file_manager_menu');
+
 ?>
 
 <script type="text/template" data-template="search-form">
 <form role="form" data-search-form="files" action="<?php echo URL::to('/ccm/system/search/files/submit')?>" class="form-inline ccm-search-fields">
+    <?php // TODO FIXME This will be removed when the js adaptation is completed -- Goutnet ?>
     <div class="ccm-search-fields-row">
         <div class="form-group">
             <select data-bulk-action="files" disabled class="ccm-search-bulk-action form-control">
                 <option value=""><?php echo t('Items Selected')?></option>
-                <option data-bulk-action-type="open" data-bulk-action-url="<?=URL::to('/ccm/system/file/download')?>" ><?php echo t('Download')?></option>
+                <option data-bulk-action-type="download" data-bulk-action-url="<?=URL::to('/ccm/system/file/download')?>" ><?php echo t('Download')?></option>
                 <option data-bulk-action-type="dialog" data-bulk-action-title="<?php echo t('Edit Properties')?>" data-bulk-action-url="<?php echo URL::to('/ccm/system/dialogs/file/bulk/properties')?>" data-bulk-action-dialog-width="630" data-bulk-action-dialog-height="450"><?php echo t('Edit Properties')?></option>
                 <option data-bulk-action-type="dialog" data-bulk-action-title="<?php echo t('Sets')?>" data-bulk-action-url="<?php echo Loader::helper('concrete/urls')->getToolsURL('files/add_to')?>" data-bulk-action-dialog-width="500" data-bulk-action-dialog-height="400"><?php echo t('Sets')?></option>
                 <option data-bulk-action-type="ajax" data-bulk-action-url="<?php echo URL::to('/ccm/system/file/rescan')?>"><?php echo t('Rescan')?></option>
@@ -24,6 +27,32 @@ $req = $flr->getSearchRequest();
  */ ?>
                 <option data-bulk-action-type="dialog" data-bulk-action-title="<?php echo t('Delete')?>" data-bulk-action-url="<?php echo URL::to('/ccm/system/dialogs/file/bulk/delete')?>" data-bulk-action-dialog-width="500" data-bulk-action-dialog-height="400"><?php echo t('Delete')?></option>
             </select>
+        </div>
+        <div class="form-group dropdown">
+            <button class="btn btn-default dropdown-toggle" type="button" data-toogle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="ccm-dropdown-label"><?=t("Bulk Action Menu")?></span><span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+                <li role="presentation" class="ccm-action-target-control ">
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-default active"><?=t('Selected')?></button>
+                        <button type="button" class="btn btn-default"><?=t('Uploaded')?></button>
+                    </div>
+                </li>
+                <?php 
+                foreach ( $fm->getBulkMenu() as $item ) { 
+
+                    $cnt = $item->getController();
+                    if ( !$cnt->displayItem() ) continue;
+                    $cnt->registerViewAssets();
+
+                    if ( $item->isSeparator() ) { ?>
+                        <li role="presentation" class="divider"></li> 
+                    <?php } else { ?>
+                        <li><?=$cnt->getMenuItemLinkElement()?></li>
+                    <?php } ?>
+            <?php } ?>
+            </ul>
         </div>
         <div class="form-group">
             <div class="ccm-search-main-lookup-field">

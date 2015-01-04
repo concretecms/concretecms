@@ -21,6 +21,8 @@ class ApplicationServiceProvider extends ServiceProvider {
 			'helper/concrete/validation' => '\Concrete\Core\Application\Service\Validation',
 			'helper/rating' => '\Concrete\Attribute\Rating\Service',
             'helper/pagination' => '\Concrete\Core\Legacy\Pagination',
+
+            'helper/concrete/ui/file_manager_menu' => '\Concrete\Core\Application\Service\UserInterface\FileManagerMenu',
 		);
 
 		foreach($singletons as $key => $value) {
