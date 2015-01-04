@@ -120,7 +120,7 @@ class File extends Controller {
         if (!$fp->canAddFiles()) {
             throw new Exception(t("Unable to add files."));
         }
-        $val = \Core::make( 'helper/validtion/token' );
+        $val = \Core::make( 'helper/validation/token' );
         if (!$val->validate()) {
             throw new Exception($val->getErrorMessage());
         }
@@ -195,7 +195,7 @@ class File extends Controller {
     public function zipAndStream( array $fIDs, $fvID = null ) {
 
         $vh = \Core::make('helper/validation/identifier');
-        $fh = \Core::make( 'helper/file' );
+        $fh = \Core::make('helper/file');
 
         $filename = $fh->getTemporaryDirectory() . '/' . $vh->getString() . '.zip';
 
