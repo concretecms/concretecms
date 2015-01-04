@@ -175,11 +175,10 @@ class File extends Controller {
         $fp = FilePermissions::getGlobal();
         $f = ConcreteFile::getByID($fID);
 
-        if($f->isError()) {
-            switch($f->getError()) {
-                case \Concrete\Core\File\Importer::E_FILE_INVALID: die(t("The requested file couldn't be found."));
-                default: die(t("An unexpected error occurred while looking for the requested file"));
-            }
+        if(!$f || $f->isError()) {
+
+            if ($f && $f->getError() == \Concrete\Core\File\Importer::E_FILE_INVALID ) die(t("The requested file couldn't be found."));
+            die(t("An unexpected error occurred while looking for the requested file"));
         }
 
         $fp = new ConcretePermissions($f);
