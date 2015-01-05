@@ -36,7 +36,7 @@ $fm  = \Core::make('helper/concrete/ui/file_manager_menu');
                     if ( $item->isSeparator() ) { ?>
                         <li role="presentation" class="divider"></li> 
                     <?php } else { ?>
-                        <li role="presentation" <?=$item->isDangerous()?'class="bg-danger"':''; ?>><?=$cnt->getMenuItemLinkElement()?></li>
+                        <li role="presentation" <?=$item->isDangerous()?'class="text-danger"':''; ?>><?=$cnt->getMenuItemLinkElement()?></li>
                     <?php } ?>
                 <?php } ?>
             </ul>
