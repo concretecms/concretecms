@@ -213,7 +213,16 @@
             var title = $anchor.find('span').text();
             if ( 'undefined' != $anchor.attr('data-filemenu-title') ) title = $anchor.attr('data-filemenu-title');
 
-            jQuery.fn.dialog.open({
+            // WARNING MAD HACK AHEAD! MAY HURT (YET) SANE DEVELOPER LOGIC SENSIBILITY!
+            // -- still want to read it? Alright, but *You've been warned!*
+            // OK Here is some real bad black sorcery, for some reason under chrome the dialog gets opened under the iframe!!
+            // causing dialog embeded javascript to fail finding document's resources such as $ jQuery etc..)
+            // if we remove the iframe it all works fine, seriously I don't get it, but upload still works even without it 
+            // in the document tree, so we scrap the iframe before we open a new dialog. That *is* WeIrD!
+            $('iframe').remove(); // Here it is <- \.o_@./!!
+            // END-WARNING (you may question our sanity at this point).
+            
+            jQuery.fn.dialog.open.call( $("body"), {
                 width:  $anchor.attr('data-filemenu-width'),
                 height: $anchor.attr('data-filemenu-height'),
                 modal:  true,
