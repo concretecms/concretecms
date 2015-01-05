@@ -42,7 +42,6 @@
     };
 
     ConcreteFileManager.prototype.setupFileUploads = function() {
-        // TODO get the fIDs in the right place, update the visibilities
         var my = this,
             $fileUploaders = $('.ccm-file-manager-upload'),
             $fileUploader = $fileUploaders.filter('#ccm-file-manager-upload-prompt'),

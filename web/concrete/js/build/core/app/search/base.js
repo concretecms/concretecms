@@ -217,7 +217,7 @@
 				width:  $anchor.attr('data-filemenu-width'),
 				height: $anchor.attr('data-filemenu-height'),
 				modal:  true,
-				href:   $anchor.attr('href') + '?' + $.param( itemIDs ),
+				href:   $anchor.attr('href') + '?' + jQuery.param( itemIDs ),
 				title:  title,
 			});
 		}
