@@ -1,6 +1,6 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<div class="ccm-google-map-block-container">
+<div class="ccm-google-map-block-container row">
     <div class="col-xs-12">
         <div class="form-group">
             <?= $form->label('title', t('Map Title (optional)'));?>
@@ -26,10 +26,7 @@
                     $zoomArray[$i] = $i;
                 }
             ?>
-            <div class="input-group">
-                <span class="input-group-addon"><i class="fa fa-search-plus"></i></span>
-                <?= $form->select('zoom', $zoomArray, $mapObj->zoom);?>
-            </div>
+            <?= $form->select('zoom', $zoomArray, $mapObj->zoom);?>
         </div>
     </div>
 
@@ -55,14 +52,13 @@
         </div>
     </div>
 
-    <div class="col-xs-4">
-      <div class="form-group">
-        <?= $form->label('scrollwheel', t('Enable Scrollwheel'));?>
-        <div class="input-group">
-          <span class="input-group-addon"><i class="fa fa-binoculars"></i></span>
-          <?= $form->checkbox('scrollwheel', 1, (is_null($scrollwheel) || $scrollwheel)); ?>
+    <div class="col-xs-12">
+        <div class="form-group">
+          <label>
+            <?= $form->checkbox('scrollwheel', 1, (is_null($scrollwheel) || $scrollwheel)); ?>
+            <?=t("Enable Scroll Wheel")?>
+          </label>
         </div>
-      </div>
     </div>
 </div>
 
