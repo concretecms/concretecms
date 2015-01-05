@@ -14,12 +14,12 @@ $fm  = \Core::make('helper/concrete/ui/file_manager_menu');
 <script type="text/template" data-template="search-form">
 <form role="form" data-search-form="files" action="<?php echo URL::to('/ccm/system/search/files/submit')?>" class="form-inline ccm-search-fields">
     <div class="ccm-search-fields-row">
-        <div class="form-group dropdown ccm-search-bulk-action">
+        <div class="dropdown ccm-search-bulk-action form-group">
             <input type="hidden" name="ccm-search-uploaded-fIDs" id="ccm-search-uploaded-fIDs" value=""/>
-            <button class="btn btn-default dropdown-toggle" type="button" data-toogle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <button class="btn btn-default dropdown-toggle" type="button" id="ccm-bulk-action-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                 <span class="ccm-dropdown-label"><?=t("Bulk Action Menu")?></span><span class="caret"></span>
             </button>
-            <ul class="dropdown-menu" role="menu">
+            <ul class="dropdown-menu" role="menu" area-labelledby="ccm-bulk-action-toggle" >
                 <li role="presentation" class="ccm-action-target-control ">
                     <div class="btn-group" role="group">
                         <button type="button" class="ccm-target-selected btn btn-default active"><?=t('Selected')?></button>
@@ -36,11 +36,12 @@ $fm  = \Core::make('helper/concrete/ui/file_manager_menu');
                     if ( $item->isSeparator() ) { ?>
                         <li role="presentation" class="divider"></li> 
                     <?php } else { ?>
-                        <li class="<?=$item->isDangerous()?'bg-danger':''; ?>"><?=$cnt->getMenuItemLinkElement()?></li>
+                        <li role="presentation" <?=$item->isDangerous()?'class="bg-danger"':''; ?>><?=$cnt->getMenuItemLinkElement()?></li>
                     <?php } ?>
-            <?php } ?>
+                <?php } ?>
             </ul>
         </div>
+
         <div class="form-group">
             <div class="ccm-search-main-lookup-field">
                 <i class="fa fa-search"></i>

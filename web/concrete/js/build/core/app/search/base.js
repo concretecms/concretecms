@@ -224,7 +224,7 @@
 
         if (type == FileMenuItem.ACTION_AJAX_REQUEST ) {
             $.concreteAjax({
-                url: $option.attr('href'),
+                url: $anchor.attr('href'),
                 data: itemIDs,
                 success: function(r) {
                     if (r.message) {
@@ -299,6 +299,7 @@
                 // called from a button
                 cs.$targetButtons.find("button").removeClass("active");
                 $btn.addClass("active");
+                event.stopPropagation()
             }
         }
 
