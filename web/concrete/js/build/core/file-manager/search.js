@@ -268,6 +268,9 @@
     var ConcreteFileManagerMenu = {
 
         get: function() {
+            return $('script[data-template=search-results-default-file-menu]').html();
+            my._templateSearchResultsMenu = _.template(my.find('script[data-template=search-results-default-file-menu]').html());
+
             return '<div class="ccm-ui"><div class="ccm-popover-file-menu popover fade" data-search-file-menu="<%=item.fID%>" data-search-menu="<%=item.fID%>">' +
                 '<div class="arrow"></div><div class="popover-inner"><ul class="dropdown-menu">' +
                 '<% if (typeof(displayClear) != \'undefined\' && displayClear) { %>' +

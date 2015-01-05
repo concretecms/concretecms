@@ -15,23 +15,46 @@ class FileManagerMenu
         $uh = \Core::make('helper/concrete/urls');
 
         $default = array (
-            "ccm_download"   => array( "type" => FileMenuItem::ACTION_DOWNLOAD,    "label"=> t('Download'),         "url"=>\URL::to('/ccm/system/file/download') , 'icon' => 'download'),
 
-            "ccm_properties" => array( "type" => FileMenuItem::ACTION_OPEN_DIALOG, "label" => t('Edit Properties'), "url" => \URL::to('/ccm/system/dialogs/file/bulk/properties'), 'icon' => 'sliders',
-                                            'options' =>  array( "width"=> "630", "height" => 450 )),
+            "ccm_view"       => array( "label"=> t('View'), 'icon' => 'eye', "url"=> $uh->getToolsURL('files/view'), // TODO refactor tool to a route
+                                       "type" => FileMenuItem::ACTION_OPEN_DIALOG, 'perms' => array( FileMenuItem::CAN_VIEW ), 'ability' => FileMenuItem::CAN_UNIQUE,
+                                       "options" => array( 'modal' => 'false', 'buttons' => 'true', 'height' =>  '75%', 'width' => '90%') ),
 
-            "ccm_sets"       => array( "type" => FileMenuItem::ACTION_OPEN_DIALOG, "label" => t('Sets'),            "url" => $uh->getToolsURL('files/add_to'), 'icon' => 'reorder',     // TODO refactor and remove tools once and for all
-                                            "options" => array( "width"=>"500", "height"=>"400", )),
+            "ccm_download"   => array( "label"=> t('Download'), 'icon' => 'download', "url"=>\URL::to('/ccm/system/file/download'),
+                                       "type" => FileMenuItem::ACTION_DOWNLOAD, 'perms' => array(FileMenuItem::CAN_VIEW) ),
 
-            "ccm_rescan"     => array( "type" => FileMenuItem::ACTION_AJAX_REQUEST,                                 "url"=>\URL::to('/ccm/system/file/rescan'), "label" => t('Rescan'), 'icon' => 'refresh'),
+            "ccm_edit"       => array( "label"=> t('Edit'), 'icon' => 'edit', "url"=> $uh->getToolsURL('files/edit'), // TODO refactor tool to a route
+                                       "type" => FileMenuItem::ACTION_OPEN_DIALOG, 'perms' => array( FileMenuItem::CAN_EDIT), 'ability' => FileMenuItem::CAN_UNIQUE,
+                                       "options" => array( 'modal' => 'true', 'height' =>  '70%', 'width' => '90%') ),
 
-            # "ccm_duplicate"  => array( "type" => FileMenuItem::ACTION_OPEN_DIALOG, "label" => t('Copy'),            "url" => REL_DIR_FILES_TOOLS_REQUIRED . "files/duplicate",
-            #                           "options" => array ( "title" => t('Duplicate'), "width"=> "500", "height" => 400, ) ),
+            "ccm_properties" => array( "label" => t('Properties'), 'icon' => 'sliders', "url" => \URL::to('/ccm/system/dialogs/file/bulk/properties'), 
+                                        "type" => FileMenuItem::ACTION_OPEN_DIALOG,  
+                                        'options' =>  array( "width"=> "680", "height" => 450 )),
+
+            "ccm_replace"    => array( "label"=> t('Replace'), 'icon' => 'angle-double-down', "url"=> $uh->getToolsURL('files/replace'), // TODO refactor tool to a route
+                                       "type" => FileMenuItem::ACTION_OPEN_DIALOG, 'perms' => array( FileMenuItem::CAN_REPLACE), 'ability' => FileMenuItem::CAN_UNIQUE,
+                                       "options" => array( 'modal' => 'true', 'height' =>  '500', 'width' => '200') ),
+
+            # "ccm_duplicate"  => array( "label" => t('Copy'), 'icon' => 'copy', "url" => $uh->getToolsURL('files/duplicate'), // TODO refactor to a route, and make it work
+            #                           "type" => FileMenuItem::ACTION_OPEN_DIALOG, 'perms' => array( FileMenuItem::CAN_COPY),
+            #                           "options" => array ( "title" => t('Duplicate'), "width"=> "500", "height" => 400, 'action' => 'duplicate') ), // XXX on unique used to rely on 'data-file-manager-action=duplicate'
+
+            "ccm_sets"       => array( "label" => t('Sets'), 'icon' => 'reorder', "url" => $uh->getToolsURL('files/add_to'),      // TODO refactor and remove tools once and for all
+                                        "type" => FileMenuItem::ACTION_OPEN_DIALOG, 
+                                        "options" => array( "width"=>"500", "height"=>"400", )),
+
+            "ccm_rescan"     => array( "label" => t('Rescan'), 'icon' => 'refresh', "url"=>\URL::to('/ccm/system/file/rescan'),
+                                        "type" => FileMenuItem::ACTION_AJAX_REQUEST ),
 
             "ccm_dangerous"  => array( 'type' => FileMenuItem::ACTION_SEPARATOR ),
 
-            "ccm_delete"     => array( "type" => FileMenuItem::ACTION_OPEN_DIALOG, "label" => t('Delete'),          "url" => \URL::to('/ccm/system/dialogs/file/bulk/delete'), 'icon' => 'trash', 'dangerous' => true,
-                                            "options" => array ( "title" => t('Delete'), "width"=> "500", "height" => 400, )),
+            "ccm_perms"      => array( "label" => t('Permissions'), 'icon' => 'key', "url" => $uh->getToolsURL('files/permissions'),      // TODO refactor and remove tools once and for all
+                                        "type" => FileMenuItem::ACTION_OPEN_DIALOG, 'perms' => array( FileMenuItem::CAN_PERMS ), 'ability' => FileMenuItem::CAN_UNIQUE, // TODO: This tool would be nice as CAN_ALL
+                                        "options" => array( "width"=>"500", "height"=>"400", )),
+
+            "ccm_delete"     => array( "label" => t('Delete'),  'icon' => 'trash', "url" => \URL::to('/ccm/system/dialogs/file/bulk/delete'),
+                                        "type" => FileMenuItem::ACTION_OPEN_DIALOG, 'dangerous' => true, 'perms' => array( FileMenuItem::CAN_DELETE ),
+                                        "options" => array ( "title" => t('Delete'), "width"=> "500", "height" => 400, )),
         );
 
 
@@ -39,11 +62,12 @@ class FileManagerMenu
         {
 
             $item = new FileMenuItem( $handle );
-            $item->setController( new ItemController() );
 
             $item->setActionType ( $desc['type'] );
 
-            if ( isset( $desc['dangerous'] ) ) $item->setDangerous(true);
+            if ( isset( $desc['dangerous'] ) )   $item->setDangerous(true);
+            if ( isset( $desc['permissions'] ) ) $item->setRestrictions( $desc['permissions'] );
+            if ( isset( $desc['ability'] ) )     $item->setAbilities( $desc['ability'] );
 
             if ( FileMenuItem::ACTION_SEPARATOR != $item->getActionType() )
             {
@@ -62,16 +86,38 @@ class FileManagerMenu
     }
 
 
-    public function removeMenuItem( $handle ) 
-    { 
-        if ( isset( $this->menu[$handle] ) ) unset( $this->menu[$handle] ); 
-
-        if ( !is_null ($this->_bulkMenu ) ) $this->_bulkMenu = $this->_getBulkMenu();
+    public function addMenuItem( FileMenuItem $item, ItemControllerInterface $controller = NULL ) { 
+        if ( !$controller ) $controller = new ItemController();
+        $item->setController( $controller );
+        $this->menu[] = $item; 
     }
 
-    public function addMenuItem( FileMenuItem $item ) { $this->menu[] = $item; }
+    public function getItemPosition ( $handleOrObject ) {
+        $handle = $handleOrObject;
+        if ( is_object($handleOrObject) ) $handle = $handleOrObject->getHandle();
+        foreach ( $this->menu as $key => $item ) {
+            if ( $item->getHandle() == $handle ) return $key;
+        }
+        return false;
+    }
 
-    # TODO: insertMenuItemAfter removeMenuItem replaceMenuItem
+    public function removeMenuItem( $handle ) {
+        $idx = $this->getItemPosition($handle);
+        if ( false !== $idx ) unset ($this->menu[$idx]);
+    }
+
+    public function replaceMenuItem( FileMenuItem $newItem )
+    {
+        $idx = $this->getItemPosition($newItem->getHandle() );
+        if ( false !== $idx ) $this->menu[$idx] = $newItem;
+    }
+
+    public function insertMenuItemAfter( $handleOrItem, $newItem )
+    {
+        $idx = $this->getItemPosition($handleOrItem);
+        if ( false === $idx ) return;
+        array_splice( $this->menu, $idx, 0, array( $newItem ) );
+    }
 
     public function getMenuItemByHandle( $handle )
     {
@@ -84,21 +130,33 @@ class FileManagerMenu
 
     public function getMenuItemByPosition( $idx ) { return $this->menu[$idx]; }
 
-    protected function _getBulkMenu()
+    protected function getFilteredMenu( $ability )
     {
         $menu = array();
         foreach ( $this->menu as $item ) {
-            if ( $item->handleMultiple() ) $menu[] = $item;
+            if ( $item->hasAbility($ability) ) $menu[] = $item;
         }
         return $menu;
     }
 
     public function getBulkMenu() 
     { 
-        if ( is_null( $this->_bulkMenu ) ) {
-            \Events::dispatch('on_filemanager_bulk_menu');
-            $this->_bulkMenu = $this->_getBulkMenu();
+        static $eventFired = false;
+        if ( !$eventFired ) {
+            $eventFired = true;
+            \Events::dispatch('on_file_manager_bulk_menu');
         }
-        return $this->menu; 
+
+        return $this->getFilteredMenu( FileMenuItem::CAN_MULTIPLE );
+    }
+
+    public function getFileContextMenu() {
+        static $eventFired = false;
+        if ( !$eventFired ) {
+            $eventFired = true;
+            \Events::dispatch('on_file_manager_context_menu');
+        }
+
+        return $this->getFilteredMenu( FileMenuItem::CAN_UNIQUE );
     }
 }

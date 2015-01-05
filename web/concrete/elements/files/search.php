@@ -10,6 +10,38 @@ $req = $flr->getSearchRequest();
 $fm  = \Core::make('helper/concrete/ui/file_manager_menu');
 
 ?>
+<script type="text/template" data-template="search-results-default-file-menu">
+    <div class="ccm-ui">
+        <div class="ccm-popover-file-menu popover fade" data-search-file-menu="<%=item.fID%>" data-search-menu="<%=item.fID%>">
+            <div class="arrow"></div>
+            <div class="popover-inner">
+                <ul class="dropdown-menu">
+                <% if (typeof(displayClear) != 'undefined' && displayClear) { %>
+                    <li><a href="#" data-file-manager-action="clear"><%= ccmi18n_filemanager.clear %></a></li>
+                    <li class="divider"></li>
+                <% } %>
+                <?php 
+                foreach ( $fm->getFileContextMenu() as $item ) { 
+
+                    $cnt = $item->getController();
+                    if ( !$cnt->displayItem() ) continue;
+                    $cnt->registerViewAssets();
+                    $perms = $item->getRestrictions();
+
+                    if ( count( $perms ) ) echo "<% if ( item." . join( $perms, " || item." ) .") { %>\n";
+                    if ( $item->isSeparator() ) { ?>
+                        <li role="presentation" class="divider"></li> 
+                    <?php } else { ?>
+                        <li role="presentation" <?=$item->isDangerous()?'class="text-danger"':''; ?>><?=$cnt->getMenuItemLinkElement()?></li>
+                    <?php 
+                    } 
+                    if ( count($perms) ) echo "<% } %>\n";
+                    ?>
+                <?php } ?>
+                </ul>
+            </div>
+        </div>
+</script>
 
 <script type="text/template" data-template="search-form">
 <form role="form" data-search-form="files" action="<?php echo URL::to('/ccm/system/search/files/submit')?>" class="form-inline ccm-search-fields">
