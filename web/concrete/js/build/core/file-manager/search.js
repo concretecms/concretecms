@@ -188,6 +188,7 @@
         my.$bulkActionsMenu.removeClass("open");
 
         if ( type == FileMenuItem.ACTION_DOWNLOAD ) {
+            my.setupFileDownloads();
             my.$downloadTarget.get(0).src = target;
         } else if ( type == FileMenuItem.ACTION_OPEN ) {
             window.location = target;

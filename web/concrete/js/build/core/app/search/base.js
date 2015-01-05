@@ -219,7 +219,7 @@
             // causing dialog embeded javascript to fail finding document's resources such as $ jQuery etc..)
             // if we remove the iframe it all works fine, seriously I don't get it, but upload still works even without it 
             // in the document tree, so we scrap the iframe before we open a new dialog. That *is* WeIrD!
-            $('iframe').remove(); // Here it is <- \.o_@./!!
+            $('iframe#ccm-file-manager-download-target').remove(); // Here it is <- \.o_@./!!
             // END-WARNING (you may question our sanity at this point).
             
             jQuery.fn.dialog.open.call( $("body"), {
