@@ -21,6 +21,10 @@ class Delete extends BackendInterfaceController {
 	}
 
 	protected function populateFiles() {
+        if ( isset( $_REQUEST['fID'] ) && !is_array( $_REQUEST['fID'] ) ) {
+            $_REQUEST['fID'] = array($_REQUEST['fID'] );
+        }
+
         if (is_array($_REQUEST['fID'])) {
 			foreach($_REQUEST['fID'] as $fID) {
 				$f = File::getByID($fID);
