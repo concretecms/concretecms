@@ -10,8 +10,7 @@ class FileManagerMenu
 
     protected $bulkMenu = null;
 
-    public function __construct()
-    {
+    public function __construct() {
         $uh = \Core::make('helper/concrete/urls');
 
         $default = array (
@@ -106,21 +105,18 @@ class FileManagerMenu
         if ( false !== $idx ) unset ($this->menu[$idx]);
     }
 
-    public function replaceMenuItem( FileMenuItem $newItem )
-    {
+    public function replaceMenuItem( FileMenuItem $newItem ) {
         $idx = $this->getItemPosition($newItem->getHandle() );
         if ( false !== $idx ) $this->menu[$idx] = $newItem;
     }
 
-    public function insertMenuItemAfter( $handleOrItem, $newItem )
-    {
+    public function insertMenuItemAfter( $handleOrItem, $newItem ) {
         $idx = $this->getItemPosition($handleOrItem);
         if ( false === $idx ) return;
         array_splice( $this->menu, $idx, 0, array( $newItem ) );
     }
 
-    public function getMenuItemByHandle( $handle )
-    {
+    public function getMenuItemByHandle( $handle ) {
         foreach ( $this->menu as $item ) {
             if ( $item->getHandle() == $handle ) {
                 return $item;
@@ -130,8 +126,7 @@ class FileManagerMenu
 
     public function getMenuItemByPosition( $idx ) { return $this->menu[$idx]; }
 
-    protected function getFilteredMenu( $ability )
-    {
+    protected function getFilteredMenu( $ability ) {
         $menu = array();
         foreach ( $this->menu as $item ) {
             if ( $item->hasAbility($ability) ) $menu[] = $item;
@@ -139,8 +134,7 @@ class FileManagerMenu
         return $menu;
     }
 
-    public function getBulkMenu() 
-    { 
+    public function getBulkMenu() { 
         static $eventFired = false;
         if ( !$eventFired ) {
             $eventFired = true;
