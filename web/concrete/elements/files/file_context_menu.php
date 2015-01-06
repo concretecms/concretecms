@@ -1,8 +1,8 @@
 <?php
 $fm  = \Core::make('helper/concrete/ui/file_manager_menu');
 
-if ( !$menu ) $menu = $fm->getFileContextMenu();
-if ( !$scriptName ) $scriptName = "search-results-default-file-menu";
+if (!$menu) $menu = $fm->getFileContextMenu();
+if (!$scriptName) $scriptName = "search-results-default-file-menu";
 
 ?>
 <script type="text/template" data-template="<?=$scriptName?>">
@@ -16,22 +16,22 @@ if ( !$scriptName ) $scriptName = "search-results-default-file-menu";
                     <li class="divider"></li>
                 <% } %>
                 <?php 
-                foreach ( $menu as $item ) { 
+                foreach ($menu as $item) { 
 
                     $cnt = $item->getController();
                     if ( !$cnt->displayItem() ) continue;
                     $cnt->registerViewAssets();
                     $perms = $item->getRestrictions();
 
-                    if ( count( $perms ) ) echo "<% if ( item." . join( $perms, " || item." ) .") { %>\n";
-                    if ( $item->isSeparator() ) { ?>
+                    if (count($perms)) echo "<% if ( item." . join( $perms, " || item." ) .") { %>\n";
+                    if ($item->isSeparator()) { ?>
                         <li role="presentation" class="divider"></li> 
                     <?php } else { ?>
                         <li role="presentation" <?=$item->isDangerous()?'class="text-danger"':''; ?>><?=$cnt->getMenuItemLinkElement()?></li>
                     <?php 
                     } 
 
-                    if ( count($perms) ) echo "<% } %>\n";
+                    if (count($perms)) echo "<% } %>\n";
                 }
                 ?>
                 </ul>
