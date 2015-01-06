@@ -123,7 +123,7 @@ class PageController extends Controller {
             }
         } else {
             $this->action = 'view';
-            if ($taskparts[0]) {
+            if ($taskparts[0] !== '') {
                 $this->parameters = $taskparts;
             }
         }
