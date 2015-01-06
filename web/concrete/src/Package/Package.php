@@ -86,6 +86,11 @@ class Package extends Object
      */
     protected $fileConfig;
 
+    /**
+     * @var \Concrete\Core\Database\DatabaseStructureManager
+     */
+    protected $databaseStructureManager;
+
     public function getRelativePath()
     {
         $dirp = (is_dir($this->DIR_PACKAGES . '/' . $this->getPackageHandle())) ? $this->REL_DIR_PACKAGES : $this->REL_DIR_PACKAGES_CORE;
@@ -181,11 +186,7 @@ class Package extends Object
     public function installDatabase()
     {
         $dbm = $this->getDatabaseStructureManager();
-        $config = $dbm->getEntityManager()->getConfiguration();
-        if (is_object($cache = $config->getMetadataCacheImpl())) {
-            $cache->flushAll();
-        }
-        $dbm->destroyProxyClasses('ConcretePackage' . camelcase($this->getPackageHandle()) . 'Src');
+        $this->destroyProxyClasses();
         if ($dbm->hasEntities()) {
             $dbm->generateProxyClasses();
             $dbm->dropObsoleteDatabaseTables(camelcase($this->getPackageHandle()));
@@ -568,8 +569,25 @@ class Package extends Object
         \Config::clearNamespace($this->getPackageHandle());
         \Core::make('config/database')->clearNamespace($this->getPackageHandle());
 
+        $this->destroyProxyClasses();
+
         $db->Execute("delete from Packages where pkgID = ?", array($this->pkgID));
         Localization::clearCache();
+    }
+
+    /**
+     * Destroys all the existing proxy classes for this package.
+     * 
+     * @return boolean
+     */
+    protected function destroyProxyClasses()
+    {
+        $dbm = $this->getDatabaseStructureManager();
+        $config = $dbm->getEntityManager()->getConfiguration();
+        if (is_object($cache = $config->getMetadataCacheImpl())) {
+            $cache->flushAll();
+        }
+        return $dbm->destroyProxyClasses('ConcretePackage' . camelcase($this->getPackageHandle()) . 'Src');
     }
 
     protected function validateClearSiteContents($options)
@@ -743,7 +761,10 @@ class Package extends Object
      */
     public function getDatabaseStructureManager()
     {
-        return Core::make('database/structure', $this->getEntityManager());
+        if (!isset($this->databaseStructureManager)) {
+            $this->databaseStructureManager = Core::make('database/structure', $this->getEntityManager());
+        }
+        return $this->databaseStructureManager;
     }
 
     /**
