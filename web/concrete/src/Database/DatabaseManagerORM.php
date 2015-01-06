@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
 use Config;
 use Database;
+use Events;
 
 class DatabaseManagerORM
 {
@@ -53,7 +54,7 @@ class DatabaseManagerORM
      * for the EntityManager object.
      * 
      * @param  mixed $context
-     * @param  string $name
+     * @param  string $connectionName
      * @return \Doctrine\ORM\EntityManager
      */
     public function entityManager($context = null, $connectionName = null)
@@ -110,9 +111,14 @@ class DatabaseManagerORM
 
         $driverImpl = $config->newDefaultAnnotationDriver($path);
         $config->setMetadataDriverImpl($driverImpl);
-        if (is_object($context) && method_exists($context, 'modifyEntityManagerConfiguration')) {
-            $context->modifyEntityManagerConfiguration($config);
-        }
+
+        $event = new \Symfony\Component\EventDispatcher\GenericEvent();
+        $event->setArgument('connection', $connection);
+        $event->setArgument('context', $context);
+        $event->setArgument('configuration', $config);
+        Events::dispatch('on_entity_manager_configure', $event);
+        $config = $event->getArgument('configuration');
+
         return EntityManager::create($connection, $config);
     }
 
