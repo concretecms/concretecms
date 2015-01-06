@@ -30,6 +30,7 @@
         if (this.$menuTemplate.length) {
             this._templateSearchResultsMenu = _.template(this.$menuTemplate.html());
         }
+
         if (this.$searchFieldRowTemplate.length) {
             this._templateAdvancedSearchFieldRow = _.template(this.$searchFieldRowTemplate.html());
         }
@@ -85,18 +86,7 @@
             // loop through all results,
             // create nodes for them.
             $.each(result.items, function(i, item) {
-                cs.$results.append(cs._templateSearchResultsMenu({'item': item}));
-            });
-
-            cs.$results.find(".ccm-popover-file-menu li a").on( 'click', function( evt ) {
-                var $anchor = $(this);
-                var type    = $(this).attr('data-filemenu-type');
-
-                var container = $(this).closest('div[data-search-file-menu]');
-                var item = container.attr('data-search-file-menu');
-
-                ConcreteAjaxSearch.handleFileMenuAction(type, $anchor, { fID: item } );
-                return false;
+                ConcreteAjaxSearch.setupFileMenu(cs.$results, {'item':item}, cs._templateSearchResultsMenu );
             });
 
             cs.$element.find('tbody tr').each(function() {
@@ -344,10 +334,43 @@
         });
 
     }
+    ConcreteAjaxSearch.prototype.getFileMenuTemplateTxt = function() {
+        if (this.$menuTemplate.length) return this.$menuTemplate.html();
+        return ConcreteAjaxSearch.getDefaultFileMenuTemplateTxt();
+    }
 
     /*
-     * Static Method:
+     * Static Methods:
      */
+
+    ConcreteAjaxSearch.getDefaultFileMenuTemplateTxt = function() {
+        var m = $('script[data-template=search-results-default-file-menu]');
+        if (m.length > 0) return $(m.get(0)).html();
+    }
+
+    ConcreteAjaxSearch.setupFileMenu = function( $parent, data, t ) {
+        var template = t;
+        var menu;
+
+        if ( !template ) template = _.template(ConcreteAjaxSearch.getDefaultFileMenuTemplateTxt() );
+    
+        menu = $(template(data));
+
+        menu.find("ul.dropdown-menu li a").on( 'click', function( evt ) {
+            var $anchor = $(this);
+            var type    = $(this).attr('data-filemenu-type');
+
+            var container = $(this).closest('div[data-search-file-menu]');
+            var item = container.attr('data-search-file-menu');
+
+            ConcreteAjaxSearch.handleFileMenuAction(type, $anchor, { fID: item } );
+            return false;
+        });
+
+        $parent.append( menu );
+
+    }
+
     ConcreteAjaxSearch.handleFileMenuAction = function(type, $anchor, params ) {
 
         var FileMenuItem = Concrete.const.Core.Application.UserInterface.Menu.Item.FileMenuItem;

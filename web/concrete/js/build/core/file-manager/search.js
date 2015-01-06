@@ -19,9 +19,7 @@
             '<div class="progress progress-striped active"><div class="progress-bar" style="width: <%=progress%>%;"></div></div>' +
             '</div></div>');
 
-
-        // TODO
-        my._templateSearchResultsMenu =  _.template($('script[data-template=search-results-default-file-menu]').html());
+        my._templateSearchResultsMenu =  _.template(ConcreteAjaxSearch.getDefaultFileMenuTemplateTxt());
 
         ConcreteAjaxSearch.call(my, $element, options);
 
