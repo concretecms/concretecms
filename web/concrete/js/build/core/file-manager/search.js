@@ -176,16 +176,13 @@
         }
     };
 
-    ConcreteFileManager.prototype.handleSelectedBulkAction = function(type, $anchor, items) {
-        var my = this, itemIDs = [], target;
+    ConcreteFileManager.prototype.handleFileMenuAction = function(type, $anchor, params ) {
+
+        var my = this;
+        var target;
         var FileMenuItem = Concrete.const.Core.Application.UserInterface.Menu.Item.FileMenuItem;
 
-        $.each(items, function(i, val) {
-            itemIDs.push({'name': 'fID[]', 'value':val});
-        });
-
-        target = my.$downloadTarget.get(0).src = $anchor.attr('href') + '?' + jQuery.param(itemIDs);
-        my.$bulkActionsMenu.removeClass("open");
+        target = $anchor.attr('href') + '?' + jQuery.param(params);
 
         if ( type == FileMenuItem.ACTION_DOWNLOAD ) {
             my.setupFileDownloads();
@@ -193,8 +190,23 @@
         } else if ( type == FileMenuItem.ACTION_OPEN ) {
             window.location = target;
         } else {
-            ConcreteAjaxSearch.prototype.handleSelectedBulkAction.call(this, type, $anchor, itemIDs);
+            ConcreteAjaxSearch.prototype.handleFileMenuAction.call(this, type, $anchor, params);
         }
+    }
+
+
+    ConcreteFileManager.prototype.handleSelectedBulkAction = function(type, $anchor, items) {
+        var my = this;
+        var itemIDs = [];
+
+        $.each(items, function(i, val) {
+            itemIDs.push({'name': 'fID[]', 'value':val});
+        });
+
+        my.$bulkActionsMenu.removeClass("open");
+        my.handleFileMenuAction( type, $anchor, itemIDs );
+
+        this.publish('SearchBulkActionSelect', {type: type, anchor: $anchor, items: itemIDs});
     };
 
     ConcreteAjaxSearch.prototype.createMenu = function($selector) {
@@ -270,38 +282,6 @@
         get: function() {
             return $('script[data-template=search-results-default-file-menu]').html();
             my._templateSearchResultsMenu = _.template(my.find('script[data-template=search-results-default-file-menu]').html());
-
-            return '<div class="ccm-ui"><div class="ccm-popover-file-menu popover fade" data-search-file-menu="<%=item.fID%>" data-search-menu="<%=item.fID%>">' +
-                '<div class="arrow"></div><div class="popover-inner"><ul class="dropdown-menu">' +
-                '<% if (typeof(displayClear) != \'undefined\' && displayClear) { %>' +
-                '<li><a href="#" data-file-manager-action="clear">' + ccmi18n_filemanager.clear + '</a></li>' +
-                '<li class="divider"></li>' +
-                '<% } %>' +
-                '<% if (item.canViewFile) { %>' +
-                    '<li><a class="dialog-launch" dialog-modal="false" dialog-append-buttons="true" dialog-width="90%" dialog-height="75%" dialog-title="' + ccmi18n_filemanager.view + '" href="' + CCM_TOOLS_PATH + '/files/view?fID=<%=item.fID%>">' + ccmi18n_filemanager.view + '</a></li>' +
-                '<% } %>' +
-                '<li><a href="#" onclick="window.frames[\'ccm-file-manager-download-target\'].location=\'' + CCM_DISPATCHER_FILENAME + '/ccm/system/file/download?fID=<%=item.fID%>\'; return false">' + ccmi18n_filemanager.download + '</a></li>' +
-                '<% if (item.canEditFile) { %>' +
-                    '<li><a class="dialog-launch" dialog-modal="true" dialog-width="90%" dialog-height="70%" dialog-title="' + ccmi18n_filemanager.edit + '" href="' + CCM_TOOLS_PATH + '/files/edit?fID=<%=item.fID%>">' + ccmi18n_filemanager.edit + '</a></li>' +
-                '<% } %>' +
-                '<li><a class="dialog-launch" dialog-modal="true" dialog-width="680" dialog-height="450" dialog-title="' + ccmi18n_filemanager.properties + '" href="' + CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/file/properties?fID=<%=item.fID%>">' + ccmi18n_filemanager.properties + '</a></li>' +
-                '<% if (item.canReplaceFile) { %>' +
-                    '<li><a class="dialog-launch" dialog-modal="true" dialog-width="500" dialog-height="200" dialog-title="' + ccmi18n_filemanager.replace + '" href="' + CCM_TOOLS_PATH + '/files/replace?fID=<%=item.fID%>">' + ccmi18n_filemanager.replace + '</a></li>' +
-                '<% } %>' +
-                '<% if (item.canCopyFile) { %>' +
-                    '<li><a href="#" data-file-manager-action="duplicate">' + ccmi18n_filemanager.duplicate + '</a></li>' +
-                '<% } %>' +
-                '<li><a class="dialog-launch" dialog-modal="true" dialog-width="500" dialog-height="400" dialog-title="' + ccmi18n_filemanager.sets + '" href="' + CCM_TOOLS_PATH + '/files/add_to?fID=<%=item.fID%>">' + ccmi18n_filemanager.sets + '</a></li>' +
-                '<% if (item.canDeleteFile || item.canEditFilePermissions) { %>' +
-                    '<li class="divider"></li>' +
-                '<% } %>' +
-                '<% if (item.canEditFilePermissions) { %>' +
-                    '<li><a class="dialog-launch" dialog-modal="true" dialog-width="520" dialog-height="450" dialog-title="' + ccmi18n_filemanager.permissions + '" href="' + CCM_TOOLS_PATH + '/files/permissions?fID=<%=item.fID%>">' + ccmi18n_filemanager.permissions + '</a></li>' +
-                '<% } %>' +
-                '<% if (item.canDeleteFile) { %>' +
-                '<li><a class="dialog-launch" dialog-modal="true" dialog-width="500" dialog-height="200" dialog-title="' + ccmi18n_filemanager.deleteFile + '" href="' + CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/file/bulk/delete?fID=<%=item.fID%>">' + ccmi18n_filemanager.deleteFile + '</a></li>' +
-                '<% } %>' +
-            '</ul></div></div>';
         }
     };
 

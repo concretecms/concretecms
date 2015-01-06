@@ -54,7 +54,7 @@ class FileManagerMenu
 
             "ccm_delete"     => array( "label" => t('Delete'),  'icon' => 'trash', "url" => \URL::to('/ccm/system/dialogs/file/bulk/delete'),
                                         "type" => FileMenuItem::ACTION_OPEN_DIALOG, 'dangerous' => true, 'perms' => array( FileMenuItem::CAN_DELETE ),
-                                        "options" => array ( "title" => t('Delete'), "width"=> "500", "height" => 400, )),
+                                        "options" => array ( "width"=> "500", "height" => 400, )),
         );
 
 
@@ -66,7 +66,7 @@ class FileManagerMenu
             $item->setActionType ( $desc['type'] );
 
             if ( isset( $desc['dangerous'] ) )   $item->setDangerous(true);
-            if ( isset( $desc['permissions'] ) ) $item->setRestrictions( $desc['permissions'] );
+            if ( isset( $desc['perms'] ) ) $item->setRestrictions( $desc['perms'] );
             if ( isset( $desc['ability'] ) )     $item->setAbilities( $desc['ability'] );
 
             if ( FileMenuItem::ACTION_SEPARATOR != $item->getActionType() )

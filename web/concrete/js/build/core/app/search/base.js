@@ -87,6 +87,17 @@
                 cs.$results.append(cs._templateSearchResultsMenu({'item': item}));
             });
 
+            cs.$results.find(".ccm-popover-file-menu li a").on( 'click', function( evt ) {
+                var $anchor = $(this);
+                var type    = $(this).attr('data-filemenu-type');
+
+                var container = $(this).closest('div[data-search-file-menu]');
+                var item = container.attr('data-search-file-menu');
+
+                cs.handleFileMenuAction(type, $anchor, { fID: item } );
+                return false;
+            });
+
             cs.$element.find('tbody tr').each(function() {
                 cs.createMenu($(this));
             });
@@ -204,14 +215,18 @@
         });
     }
 
-    ConcreteAjaxSearch.prototype.handleSelectedBulkAction = function(type, $anchor, itemIDs ) {
+    ConcreteAjaxSearch.prototype.handleFileMenuAction = function(type, $anchor, params ) {
 
         var cs = this;
         var FileMenuItem = Concrete.const.Core.Application.UserInterface.Menu.Item.FileMenuItem;
 
         if ( type == FileMenuItem.ACTION_OPEN_DIALOG ) {
+
+            var modal = true;
             var title = $anchor.find('span').text();
-            if ( 'undefined' != $anchor.attr('data-filemenu-title') ) title = $anchor.attr('data-filemenu-title');
+
+            if ( 'undefined' != typeof($anchor.attr('data-filemenu-title')) ) title = $anchor.attr('data-filemenu-title');
+            if ( 'undefined' != typeof($anchor.attr('data-filemenu-modal')) ) modal = $anchor.attr('data-filemenu-modal') == true;
 
             // WARNING MAD HACK AHEAD! MAY HURT (YET) SANE DEVELOPER LOGIC SENSIBILITY!
             // -- still want to read it? Alright, but *You've been warned!*
@@ -225,8 +240,8 @@
             jQuery.fn.dialog.open.call( $("body"), {
                 width:  $anchor.attr('data-filemenu-width'),
                 height: $anchor.attr('data-filemenu-height'),
-                modal:  true,
-                href:   $anchor.attr('href') + '?' + jQuery.param( itemIDs ),
+                modal:  modal,
+                href:   $anchor.attr('href') + '?' + jQuery.param( params ),
                 title:  title,
             });
         }
@@ -234,7 +249,7 @@
         if (type == FileMenuItem.ACTION_AJAX_REQUEST ) {
             $.concreteAjax({
                 url: $anchor.attr('href'),
-                data: itemIDs,
+                data: params,
                 success: function(r) {
                     if (r.message) {
                         ConcreteAlert.notify({
@@ -246,7 +261,6 @@
             });
         }
 
-        cs.publish('SearchBulkActionSelect', {type: type, anchor: $anchor, items: itemIDs});
     }
 
     ConcreteAjaxSearch.prototype.publish = function(eventName, data) {

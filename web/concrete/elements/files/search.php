@@ -35,9 +35,10 @@ $fm  = \Core::make('helper/concrete/ui/file_manager_menu');
                         <li role="presentation" <?=$item->isDangerous()?'class="text-danger"':''; ?>><?=$cnt->getMenuItemLinkElement()?></li>
                     <?php 
                     } 
+
                     if ( count($perms) ) echo "<% } %>\n";
-                    ?>
-                <?php } ?>
+                }
+                ?>
                 </ul>
             </div>
         </div>
