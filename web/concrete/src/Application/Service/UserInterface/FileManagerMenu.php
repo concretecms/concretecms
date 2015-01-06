@@ -26,8 +26,12 @@ class FileManagerMenu
                                        "type" => FileMenuItem::ACTION_OPEN_DIALOG, 'perms' => array( FileMenuItem::CAN_EDIT), 'ability' => FileMenuItem::CAN_UNIQUE,
                                        "options" => array( 'modal' => 'true', 'height' =>  '70%', 'width' => '90%') ),
 
-            "ccm_properties" => array( "label" => t('Properties'), 'icon' => 'sliders', "url" => \URL::to('/ccm/system/dialogs/file/bulk/properties'), 
-                                        "type" => FileMenuItem::ACTION_OPEN_DIALOG,  
+            "ccm_bulk_properties" => array( "label" => t('Properties'), 'icon' => 'sliders', "url" => \URL::to('/ccm/system/dialogs/file/bulk/properties'), 
+                                        "type" => FileMenuItem::ACTION_OPEN_DIALOG,  'ability' => FileMenuItem::CAN_MULTIPLE,
+                                        'options' =>  array( "width"=> "680", "height" => 450 )),
+
+            "ccm_properties" => array( "label" => t('Properties'), 'icon' => 'sliders', "url" => \URL::to('/ccm/system/dialogs/file/properties'), 
+                                        "type" => FileMenuItem::ACTION_OPEN_DIALOG,  'ability' => FileMenuItem::CAN_UNIQUE,
                                         'options' =>  array( "width"=> "680", "height" => 450 )),
 
             "ccm_replace"    => array( "label"=> t('Replace'), 'icon' => 'angle-double-down', "url"=> $uh->getToolsURL('files/replace'), // TODO refactor tool to a route
