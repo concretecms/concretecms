@@ -50,7 +50,9 @@ class FileManager
             $args = "{'inputName': '{$postname}', 'filters': $filters }";
         }
 
-        ob_start(); Loader::element('files/file_context_menu'); $menu = ob_get_clean(); // TODO: Should move that to an asset
+        ob_start();
+        Loader::element('files/file_context_menu');
+        $menu = ob_get_clean(); // TODO: Should move that to an asset
         $html = <<<EOL
 		<div class="ccm-file-selector" data-file-selector="{$id}"></div>
                 $menu;
