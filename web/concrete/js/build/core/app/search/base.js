@@ -26,6 +26,7 @@
         this._templateSearchResultsTableHead = _.template($element.find('script[data-template=search-results-table-head]').html());
         this._templateSearchResultsTableBody = _.template($element.find('script[data-template=search-results-table-body]').html());
         this._templateSearchResultsPagination = _.template($element.find('script[data-template=search-results-pagination]').html());
+
         if (this.$menuTemplate.length) {
             this._templateSearchResultsMenu = _.template(this.$menuTemplate.html());
         }
@@ -94,7 +95,7 @@
                 var container = $(this).closest('div[data-search-file-menu]');
                 var item = container.attr('data-search-file-menu');
 
-                cs.handleFileMenuAction(type, $anchor, { fID: item } );
+                ConcreteAjaxSearch.handleFileMenuAction(type, $anchor, { fID: item } );
                 return false;
             });
 
@@ -215,53 +216,6 @@
         });
     }
 
-    ConcreteAjaxSearch.prototype.handleFileMenuAction = function(type, $anchor, params ) {
-
-        var cs = this;
-        var FileMenuItem = Concrete.const.Core.Application.UserInterface.Menu.Item.FileMenuItem;
-
-        if ( type == FileMenuItem.ACTION_OPEN_DIALOG ) {
-
-            var modal = true;
-            var title = $anchor.find('span').text();
-
-            if ( 'undefined' != typeof($anchor.attr('data-filemenu-title')) ) title = $anchor.attr('data-filemenu-title');
-            if ( 'undefined' != typeof($anchor.attr('data-filemenu-modal')) ) modal = $anchor.attr('data-filemenu-modal') == true;
-
-            // WARNING MAD HACK AHEAD! MAY HURT (YET) SANE DEVELOPER LOGIC SENSIBILITY!
-            // -- still want to read it? Alright, but *You've been warned!*
-            // OK Here is some real bad black sorcery, for some reason under chrome the dialog gets opened under the iframe!!
-            // causing dialog embeded javascript to fail finding document's resources such as $ jQuery etc..)
-            // if we remove the iframe it all works fine, seriously I don't get it, but upload still works even without it 
-            // in the document tree, so we scrap the iframe before we open a new dialog. That *is* WeIrD!
-            $('iframe#ccm-file-manager-download-target').remove(); // Here it is <- \.o_@./!!
-            // END-WARNING (you may question our sanity at this point).
-            
-            jQuery.fn.dialog.open.call( $("body"), {
-                width:  $anchor.attr('data-filemenu-width'),
-                height: $anchor.attr('data-filemenu-height'),
-                modal:  modal,
-                href:   $anchor.attr('href') + '?' + jQuery.param( params ),
-                title:  title,
-            });
-        }
-
-        if (type == FileMenuItem.ACTION_AJAX_REQUEST ) {
-            $.concreteAjax({
-                url: $anchor.attr('href'),
-                data: params,
-                success: function(r) {
-                    if (r.message) {
-                        ConcreteAlert.notify({
-                            'message': r.message,
-                            'title': r.title
-                        });
-                    }
-                }
-            });
-        }
-
-    }
 
     ConcreteAjaxSearch.prototype.publish = function(eventName, data) {
         var cs = this;
@@ -388,6 +342,65 @@
             cs.updateTargetButtons();
             cs.$targetSelected.click();
         });
+
+    }
+
+    /*
+     * Static Method:
+     */
+    ConcreteAjaxSearch.handleFileMenuAction = function(type, $anchor, params ) {
+
+        var FileMenuItem = Concrete.const.Core.Application.UserInterface.Menu.Item.FileMenuItem;
+        var target = $anchor.attr('href') + '?' + jQuery.param(params);
+
+        if ( type == FileMenuItem.ACTION_OPEN ) {
+
+            window.location = target;
+
+        } else if ( type == FileMenuItem.ACTION_DOWNLOAD ) { 
+
+            var downloadTarget = $('#ccm-file-manager-download-target');
+
+            if ( !downloadTarget.length ) {
+                downloadTarget = $('<iframe />', {
+                    'name': 'ccm-file-manager-download-target',
+                    'id': 'ccm-file-manager-download-target'
+                }).appendTo(document.body);
+            }
+            downloadTarget.get(0).src = target;
+
+        } else if ( type == FileMenuItem.ACTION_OPEN_DIALOG ) {
+
+            var modal = true;
+            var title = $anchor.find('span').text();
+
+            if ( 'undefined' != typeof($anchor.attr('data-filemenu-title')) ) title = $anchor.attr('data-filemenu-title');
+            if ( 'undefined' != typeof($anchor.attr('data-filemenu-modal')) ) modal = $anchor.attr('data-filemenu-modal') == true;
+
+            $('iframe#ccm-file-manager-download-target').remove(); // Remove the target to prevent dialog to get appended to it
+            
+            jQuery.fn.dialog.open.call( $("body"), {
+                width:  $anchor.attr('data-filemenu-width'),
+                height: $anchor.attr('data-filemenu-height'),
+                modal:  modal,
+                href:   $anchor.attr('href') + '?' + jQuery.param( params ),
+                title:  title,
+            });
+
+        } else if (type == FileMenuItem.ACTION_AJAX_REQUEST ) {
+            $.concreteAjax({
+                url: $anchor.attr('href'),
+                data: params,
+                success: function(r) {
+                    if (r.message) {
+                        ConcreteAlert.notify({
+                            'message': r.message,
+                            'title': r.title
+                        });
+                    }
+                }
+            });
+        } 
 
     }
 

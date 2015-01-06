@@ -10,71 +10,11 @@ $req = $flr->getSearchRequest();
 $fm  = \Core::make('helper/concrete/ui/file_manager_menu');
 
 ?>
-<script type="text/template" data-template="search-results-default-file-menu">
-    <div class="ccm-ui">
-        <div class="ccm-popover-file-menu popover fade" data-search-file-menu="<%=item.fID%>" data-search-menu="<%=item.fID%>">
-            <div class="arrow"></div>
-            <div class="popover-inner">
-                <ul class="dropdown-menu">
-                <% if (typeof(displayClear) != 'undefined' && displayClear) { %>
-                    <li><a href="#" data-file-manager-action="clear"><%= ccmi18n_filemanager.clear %></a></li>
-                    <li class="divider"></li>
-                <% } %>
-                <?php 
-                foreach ( $fm->getFileContextMenu() as $item ) { 
-
-                    $cnt = $item->getController();
-                    if ( !$cnt->displayItem() ) continue;
-                    $cnt->registerViewAssets();
-                    $perms = $item->getRestrictions();
-
-                    if ( count( $perms ) ) echo "<% if ( item." . join( $perms, " || item." ) .") { %>\n";
-                    if ( $item->isSeparator() ) { ?>
-                        <li role="presentation" class="divider"></li> 
-                    <?php } else { ?>
-                        <li role="presentation" <?=$item->isDangerous()?'class="text-danger"':''; ?>><?=$cnt->getMenuItemLinkElement()?></li>
-                    <?php 
-                    } 
-
-                    if ( count($perms) ) echo "<% } %>\n";
-                }
-                ?>
-                </ul>
-            </div>
-        </div>
-</script>
-
+<?php Loader::element('files/file_context_menu') ?>
 <script type="text/template" data-template="search-form">
 <form role="form" data-search-form="files" action="<?php echo URL::to('/ccm/system/search/files/submit')?>" class="form-inline ccm-search-fields">
     <div class="ccm-search-fields-row">
-        <div class="dropdown ccm-search-bulk-action form-group">
-            <input type="hidden" name="ccm-search-uploaded-fIDs" id="ccm-search-uploaded-fIDs" value=""/>
-            <button class="btn btn-default dropdown-toggle" type="button" id="ccm-bulk-action-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                <span class="ccm-dropdown-label"><?=t("Bulk Action Menu")?></span><span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu" area-labelledby="ccm-bulk-action-toggle" >
-                <li role="presentation" class="ccm-action-target-control ">
-                    <div class="btn-group" role="group">
-                        <button type="button" class="ccm-target-selected btn btn-default active"><?=t('Selected')?></button>
-                        <button type="button" class="ccm-target-uploaded btn btn-default"><?=t('Uploaded')?></button>
-                    </div>
-                </li>
-                <?php 
-                foreach ( $fm->getBulkMenu() as $item ) { 
-
-                    $cnt = $item->getController();
-                    if ( !$cnt->displayItem() ) continue;
-                    $cnt->registerViewAssets();
-
-                    if ( $item->isSeparator() ) { ?>
-                        <li role="presentation" class="divider"></li> 
-                    <?php } else { ?>
-                        <li role="presentation" <?=$item->isDangerous()?'class="text-danger"':''; ?>><?=$cnt->getMenuItemLinkElement()?></li>
-                    <?php } ?>
-                <?php } ?>
-            </ul>
-        </div>
-
+        <?php Loader::element('files/files_bulk_menu'); ?>
         <div class="form-group">
             <div class="ccm-search-main-lookup-field">
                 <i class="fa fa-search"></i>

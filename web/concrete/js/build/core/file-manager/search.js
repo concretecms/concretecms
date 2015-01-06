@@ -18,28 +18,23 @@
         my._templateFileProgress = _.template('<div id="ccm-file-upload-progress" class="ccm-ui"><div id="ccm-file-upload-progress-bar">' +
             '<div class="progress progress-striped active"><div class="progress-bar" style="width: <%=progress%>%;"></div></div>' +
             '</div></div>');
-        my._templateSearchResultsMenu = _.template(ConcreteFileManagerMenu.get());
+
+
+        // TODO
+        my._templateSearchResultsMenu =  _.template($('script[data-template=search-results-default-file-menu]').html());
 
         ConcreteAjaxSearch.call(my, $element, options);
 
-        my.setupFileDownloads();
         my.setupFileUploads();
         my.setupEvents();
     }
 
+
     ConcreteFileManager.prototype = Object.create(ConcreteAjaxSearch.prototype);
 
-    ConcreteFileManager.prototype.setupFileDownloads = function() {
-        var my = this;
-        if (!$('#ccm-file-manager-download-target').length) {
-            my.$downloadTarget = $('<iframe />', {
-                'name': 'ccm-file-manager-download-target',
-                'id': 'ccm-file-manager-download-target'
-            }).appendTo(document.body);
-        } else {
-            my.$downloadTarget = $('#ccm-file-manager-download-target');
-        }
-    };
+    ConcreteFileManager.prototype.setupFileMenu = function( parent, data ) {
+        
+    }
 
     ConcreteFileManager.prototype.setupFileUploads = function() {
         var my = this,
@@ -170,29 +165,10 @@
             my.$element.unbind('.concreteFileManagerChooseFile').on('click.concreteFileManagerChooseFile', 'tr[data-file-manager-file]', function() {
                 ConcreteEvent.publish('FileManagerBeforeSelectFile', {fID: $(this).attr('data-file-manager-file')});
                 ConcreteEvent.publish('FileManagerSelectFile', {fID: $(this).attr('data-file-manager-file')});
-                my.$downloadTarget.remove();
                 return false;
             });
         }
     };
-
-    ConcreteFileManager.prototype.handleFileMenuAction = function(type, $anchor, params ) {
-
-        var my = this;
-        var target;
-        var FileMenuItem = Concrete.const.Core.Application.UserInterface.Menu.Item.FileMenuItem;
-
-        target = $anchor.attr('href') + '?' + jQuery.param(params);
-
-        if ( type == FileMenuItem.ACTION_DOWNLOAD ) {
-            my.setupFileDownloads();
-            my.$downloadTarget.get(0).src = target;
-        } else if ( type == FileMenuItem.ACTION_OPEN ) {
-            window.location = target;
-        } else {
-            ConcreteAjaxSearch.prototype.handleFileMenuAction.call(this, type, $anchor, params);
-        }
-    }
 
 
     ConcreteFileManager.prototype.handleSelectedBulkAction = function(type, $anchor, items) {
@@ -204,7 +180,7 @@
         });
 
         my.$bulkActionsMenu.removeClass("open");
-        my.handleFileMenuAction( type, $anchor, itemIDs );
+        ConcreteAjaxSearch.handleFileMenuAction( type, $anchor, itemIDs );
 
         this.publish('SearchBulkActionSelect', {type: type, anchor: $anchor, items: itemIDs});
     };
@@ -278,10 +254,8 @@
     };
 
     var ConcreteFileManagerMenu = {
-
         get: function() {
             return $('script[data-template=search-results-default-file-menu]').html();
-            my._templateSearchResultsMenu = _.template(my.find('script[data-template=search-results-default-file-menu]').html());
         }
     };
 
@@ -293,6 +267,5 @@
     };
 
     global.ConcreteFileManager = ConcreteFileManager;
-    global.ConcreteFileManagerMenu = ConcreteFileManagerMenu;
 
 }(window, $);

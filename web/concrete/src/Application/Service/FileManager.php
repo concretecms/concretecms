@@ -50,9 +50,10 @@ class FileManager
             $args = "{'inputName': '{$postname}', 'filters': $filters }";
         }
 
-
+        ob_start(); Loader::element('files/files_bulk_context_menu'); $menu = ob_get_clean();
         $html = <<<EOL
 		<div class="ccm-file-selector" data-file-selector="{$id}"></div>
+                $menu;
 		<script type="text/javascript">
 		$(function() {
 			$('[data-file-selector={$id}]').concreteFileSelector({$args});
