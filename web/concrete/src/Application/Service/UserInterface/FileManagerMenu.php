@@ -10,7 +10,8 @@ class FileManagerMenu
 
     protected $bulkMenu = null;
 
-    public function __construct() {
+    public function __construct()
+    {
         $uh = \Core::make('helper/concrete/urls');
 
         $default = array (
@@ -61,100 +62,109 @@ class FileManagerMenu
         );
 
 
-        foreach ( $default as $handle => $desc )
-        {
+        foreach ($default as $handle => $desc) {
 
-            $item = new FileMenuItem( $handle );
+            $item = new FileMenuItem($handle);
 
-            $item->setActionType ( $desc['type'] );
+            $item->setActionType($desc['type']);
 
-            if ( isset( $desc['dangerous'] ) )   $item->setDangerous(true);
-            if ( isset( $desc['perms'] ) ) $item->setRestrictions( $desc['perms'] );
-            if ( isset( $desc['ability'] ) )     $item->setAbilities( $desc['ability'] );
+            if (isset($desc['dangerous'])) $item->setDangerous(true);
+            if (isset($desc['perms']))     $item->setRestrictions($desc['perms']);
+            if (isset($desc['ability']))   $item->setAbilities($desc['ability']);
 
-            if ( FileMenuItem::ACTION_SEPARATOR != $item->getActionType() )
-            {
-                $item->setLabel( $desc['label'] );
-                $item->setLink ( $desc['url'] );
+            if (FileMenuItem::ACTION_SEPARATOR != $item->getActionType()) {
+                $item->setLabel($desc['label']);
+                $item->setLink($desc['url']);
 
-                if (isset($desc['icon'] ) ) $item->setIcon ( $desc['icon'] );
+                if (isset($desc['icon'])) $item->setIcon($desc['icon']);
 
-                if ( isset( $desc['options'] ) )
-                {
-                    foreach( $desc['options'] as $key => $val ) $item->setLinkAttribute( "data-filemenu-$key", $val );
+                if (isset($desc['options'])) {
+                    foreach ($desc['options'] as $key => $val) $item->setLinkAttribute("data-filemenu-$key", $val);
                 }
             }
-            $this->addMenuItem( $item );
+            $this->addMenuItem($item);
         }
     }
 
 
-    public function addMenuItem( FileMenuItem $item, ItemControllerInterface $controller = NULL ) { 
-        if ( !$controller ) $controller = new ItemController();
+    public function addMenuItem(FileMenuItem $item, ItemControllerInterface $controller = NULL) 
+    {
+        if (!$controller) $controller = new ItemController();
         $item->setController( $controller );
         $this->menu[] = $item; 
     }
 
-    public function getItemPosition ( $handleOrObject ) {
+    public function getItemPosition ( $handleOrObject ) 
+    {
         $handle = $handleOrObject;
-        if ( is_object($handleOrObject) ) $handle = $handleOrObject->getHandle();
-        foreach ( $this->menu as $key => $item ) {
-            if ( $item->getHandle() == $handle ) return $key;
+        if (is_object($handleOrObject)) $handle = $handleOrObject->getHandle();
+        foreach ($this->menu as $key => $item) {
+            if ($item->getHandle() == $handle) return $key;
         }
         return false;
     }
 
-    public function removeMenuItem( $handle ) {
+    public function removeMenuItem( $handle )
+    {
         $idx = $this->getItemPosition($handle);
-        if ( false !== $idx ) unset ($this->menu[$idx]);
+        if (false !== $idx) unset ($this->menu[$idx]);
     }
 
-    public function replaceMenuItem( FileMenuItem $newItem ) {
-        $idx = $this->getItemPosition($newItem->getHandle() );
-        if ( false !== $idx ) $this->menu[$idx] = $newItem;
+    public function replaceMenuItem( FileMenuItem $newItem )
+    {
+        $idx = $this->getItemPosition($newItem->getHandle());
+        if (false !== $idx) $this->menu[$idx] = $newItem;
     }
 
-    public function insertMenuItemAfter( $handleOrItem, $newItem ) {
+    public function insertMenuItemAfter( $handleOrItem, $newItem )
+    {
         $idx = $this->getItemPosition($handleOrItem);
         if ( false === $idx ) return;
-        array_splice( $this->menu, $idx, 0, array( $newItem ) );
+        array_splice($this->menu, $idx, 0, array($newItem));
     }
 
-    public function getMenuItemByHandle( $handle ) {
-        foreach ( $this->menu as $item ) {
-            if ( $item->getHandle() == $handle ) {
-                return $item;
-            }
+    public function getMenuItemByHandle($handle)
+    {
+        foreach ($this->menu as $item) {
+            if ($item->getHandle() == $handle) return $item;
         }
+        return null;
     }
 
-    public function getMenuItemByPosition( $idx ) { return $this->menu[$idx]; }
+    public function getMenuItemByPosition( $idx )
+    {
+        return $this->menu[$idx];
+    }
 
-    protected function getFilteredMenu( $ability ) {
+    protected function getFilteredMenu( $ability )
+    {
         $menu = array();
-        foreach ( $this->menu as $item ) {
-            if ( $item->hasAbility($ability) ) $menu[] = $item;
+        foreach ($this->menu as $item) {
+            if ($item->hasAbility($ability)) $menu[] = $item;
         }
         return $menu;
     }
 
-    public function getBulkMenu() { 
+    public function getBulkMenu()
+    { 
         static $eventFired = false;
-        if ( !$eventFired ) {
+
+        if (!$eventFired) {
             $eventFired = true;
             \Events::dispatch('on_file_manager_bulk_menu');
         }
 
-        return $this->getFilteredMenu( FileMenuItem::CAN_MULTIPLE );
+        return $this->getFilteredMenu(FileMenuItem::CAN_MULTIPLE);
     }
 
-    public function getFileContextMenu() {
+    public function getFileContextMenu()
+    {
         static $eventFired = false;
-        if ( !$eventFired ) {
+        if (!$eventFired) {
             $eventFired = true;
             \Events::dispatch('on_file_manager_context_menu');
         }
 
-        return $this->getFilteredMenu( FileMenuItem::CAN_UNIQUE );
+        return $this->getFilteredMenu(FileMenuItem::CAN_UNIQUE);
     }
 }
