@@ -41,6 +41,7 @@ $(function() {
 	$("a[data-form-user-selector={$selector}]").on('click', function() {
 		var selector = $(this);
 		ConcreteEvent.unsubscribe('UserSearchDialogSelectUser.core');
+		ConcreteEvent.unsubscribe('UserSearchDialogAfterSelectUser.core');
 		ConcreteEvent.subscribe('UserSearchDialogSelectUser.core', function(e, data) {
 			var par = selector.parent().find('.ccm-summary-selected-item-label'),
 				pari = selector.parent().find('[data-form-user-selector-input={$selector}]');
@@ -48,7 +49,7 @@ $(function() {
 			pari.val(data.uID);
 			e.stopPropagation();
 		});
-		ConcreteEvent.subscribe('UserSearchDialogAfterSelectUser', function(e) {
+		ConcreteEvent.subscribe('UserSearchDialogAfterSelectUser.core', function(e) {
 			jQuery.fn.dialog.closeTop();
 		});
 	});
