@@ -31,20 +31,6 @@ defined('DIRNAME_CORE') or define('DIRNAME_CORE', 'concrete');
 defined('DIR_BASE') or define('DIR_BASE', dirname($_SERVER['SCRIPT_FILENAME']));
 defined('DIR_APPLICATION') or define('DIR_APPLICATION', DIR_BASE . '/' . DIRNAME_APPLICATION);
 defined('DIR_CONFIG_SITE') or define('DIR_CONFIG_SITE', DIR_APPLICATION . '/config');
-defined('CONFIG_FILE') or define('CONFIG_FILE', DIR_CONFIG_SITE . '/site.php');
-
-
-
-/**
- * ----------------------------------------------------------------------------
- * Now we test to see if we have a valid site configuration file. If not, we're
- * going to need to render install.
- * ----------------------------------------------------------------------------
- */
-if (!defined('APP_UPDATED_PASSTHRU')
-&& file_exists(CONFIG_FILE)) define('CONFIG_FILE_EXISTS', true) and include(CONFIG_FILE);
-
-
 
 /**
  * ----------------------------------------------------------------------------
@@ -67,7 +53,7 @@ if (!defined('APP_UPDATED_PASSTHRU') && isset($updates['core'])) {
     } else if(file_exists(DIRNAME_UPDATES . '/' . $updates['core'] . '/' . DIRNAME_CORE . '/' . 'dispatcher.php')){
         require(DIRNAME_UPDATES . '/' . $updates['core'] . '/' . DIRNAME_CORE . '/' . 'dispatcher.php');
     } else {
-        die(sprintf('Invalid "%s" defined. Please remove it from %s.','update.core', CONFIG_FILE));
+        die(sprintf('Invalid "%s" defined. Please remove it from %s.','update.core', $update_file));
     }
     exit;
 }
@@ -157,6 +143,7 @@ define('DIRNAME_GROUP', 'group');
 define('DIRNAME_GROUP_AUTOMATION', 'automation');
 define('DIRNAME_JAVASCRIPT', 'js');
 define('DIRNAME_IMAGES', 'images');
+define('DIRNAME_IMAGES_LANGUAGES', 'countries');
 define('DIRNAME_HELPERS', 'helpers');
 define('DIRNAME_USER_POINTS', 'user_point');
 define('DIRNAME_ACTIONS', 'actions');
@@ -205,7 +192,7 @@ define('FILENAME_COLLECTION_VIEW', 'view.php');
 define('FILENAME_COLLECTION_ACCESS', 'access.xml');
 define('FILENAME_COLLECTION_EDIT', 'edit.php');
 define('FILENAME_COLLECTION_DEFAULT_THEME', 'default');
-define('FILENAME_PAGE_TEMPLATE_DEFAULT_ICON', 'main.png');
+define('FILENAME_PAGE_TEMPLATE_DEFAULT_ICON', 'full.png');
 define('FILENAME_PAGE_ICON', 'icon.png');
 define('FILENAME_PACKAGE_CONTROLLER', 'controller.php');
 define('FILENAME_PACKAGE_DB', 'db.xml');
@@ -305,7 +292,6 @@ define('REL_DIR_PACKAGES', DIR_REL . '/packages');
 define('REL_DIR_PACKAGES_CORE', ASSETS_URL . '/packages');
 define('REL_DIR_FILES_PAGE_TEMPLATE_ICONS', ASSETS_URL_IMAGES . '/icons/page_templates');
 define('REL_DIR_FILES_UPLOADED_STANDARD', REL_DIR_APPLICATION . '/files');
-define('REL_DIR_FILES_TRASH_STANDARD', REL_DIR_FILES_UPLOADED_STANDARD . '/trash');
 define('REL_DIR_FILES_CACHE', REL_DIR_FILES_UPLOADED_STANDARD . '/cache');
 define('REL_DIR_AL_ICONS', ASSETS_URL_IMAGES . '/icons/filetypes');
 define('REL_DIR_FILES_AVATARS', '/avatars');
@@ -428,6 +414,26 @@ define('LOG_TYPE_EXCEPTIONS', 'exceptions');
 error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
 
 
+/**
+ * ----------------------------------------------------------------------------
+ * Define computed permissions for files and directories
+ * ----------------------------------------------------------------------------
+ *
+ */
+// Set directory permissions to that of DIR_FILES_UPLOADED_STANDARD. Or if that can't be found, 0775.
+$DIRECTORY_PERMISSIONS_MODE = (($p = @fileperms(DIR_FILES_UPLOADED_STANDARD) & 0777) > 0) ? $p : 0775;
+$FILE_PERMISSIONS_MODE = '';
+foreach(str_split(decoct($DIRECTORY_PERMISSIONS_MODE), 1) as $p) {
+    if (intval($p) % 2 == 0) {
+        $FILE_PERMISSIONS_MODE .= $p;
+        continue;
+    }
+    $FILE_PERMISSIONS_MODE .= intval($p) - 1;
+}
+$FILE_PERMISSIONS_MODE = octdec($FILE_PERMISSIONS_MODE);
+define('DIRECTORY_PERMISSIONS_MODE_COMPUTED', $DIRECTORY_PERMISSIONS_MODE);
+define('FILE_PERMISSIONS_MODE_COMPUTED', $FILE_PERMISSIONS_MODE);
+
 
 /**
  * ----------------------------------------------------------------------------
@@ -443,17 +449,3 @@ ini_set('include_path', DIR_BASE_CORE . DIRECTORY_SEPARATOR . DIRNAME_VENDOR . P
  * ----------------------------------------------------------------------------
  */
 require dirname(__FILE__) . '/helpers.php';
-
-
-
-/**
- * ----------------------------------------------------------------------------
- * Set the timezone
- * ----------------------------------------------------------------------------
- */
-if (defined('APP_TIMEZONE')) {
-    define('APP_TIMEZONE_SERVER', @date_default_timezone_get());
-    date_default_timezone_set(APP_TIMEZONE);
-} else {
-    date_default_timezone_set(@date_default_timezone_get());
-}

@@ -2,6 +2,7 @@
 namespace Concrete\Core\Page\Stack;
 
 use Area;
+use GlobalArea;
 use CacheLocal;
 use Config;
 use Loader;
@@ -212,6 +213,7 @@ class Stack extends Page
     public function display()
     {
         $ax = Area::get($this, STACKS_AREA_NAME);
+        $ax->disableControls();
         $ax->display($this);
         return true;
     }

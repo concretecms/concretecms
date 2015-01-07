@@ -15,6 +15,7 @@ class Controller extends BlockController {
     protected $btCacheBlockOutputForRegisteredUsers = true;
     protected $btWrapperClass = 'ccm-ui';
     protected $btExportFileColumns = array('fID','fOnstateID');
+    protected $btExportPageColumns = array('internalLinkCID');
     protected $btFeatures = array(
         'image'
     );
@@ -123,9 +124,12 @@ class Controller extends BlockController {
     public function save($args) {
         $args['fID'] = ($args['fID'] != '') ? $args['fID'] : 0;
         $args['fOnstateID'] = ($args['fOnstateID'] != '') ? $args['fOnstateID'] : 0;
-        $args['forceImageToMatchDimensions'] = ($args['forceImageToMatchDimensions']) ? 1 : 0;
         $args['maxWidth'] = (intval($args['maxWidth']) > 0) ? intval($args['maxWidth']) : 0;
         $args['maxHeight'] = (intval($args['maxHeight']) > 0) ? intval($args['maxHeight']) : 0;
+        if (!$args['constrainImage']) {
+            $args['maxWidth'] = 0;
+            $args['maxHeight'] = 0;
+        }
         switch (intval($args['linkType'])) {
             case 1:
                 $args['externalLink'] = '';

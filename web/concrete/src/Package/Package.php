@@ -1,7 +1,14 @@
 <?php
 namespace Concrete\Core\Package;
 
+use Concrete\Core\Authentication\AuthenticationType as AuthenticationType;
+use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Config\Repository\Liaison;
+use Concrete\Core\File\FileList;
+use Concrete\Core\Page\PageList;
+use Concrete\Core\Page\Stack\StackList;
+use Concrete\Core\Sharing\SocialNetwork\Link;
+use Concrete\Core\Tree\Type\Topic;
 use Page;
 use Stack;
 use SinglePage;
@@ -58,6 +65,7 @@ use \Concrete\Core\Database\Schema\Schema;
 use Environment;
 use \Concrete\Core\Package\PackageList;
 use Localization;
+use \Concrete\Core\File\StorageLocation\Type\Type as StorageLocation;
 
 class Package extends Object
 {
@@ -217,14 +225,21 @@ class Package extends Object
 
     public static function getClass($pkgHandle)
     {
-        // loads and instantiates the object
-        $class = '\\Concrete\\Package\\' . camelcase($pkgHandle) . '\\Controller';
-        try {
-            $cl = Core::make($class);
-        } catch(\ReflectionException $ex) {
-            throw new \Exception(t('Unable to load class for package %s. Please double-check that a valid controller.php exists and that the package has been updated for concrete5 5.7', $pkgHandle));
+        $cache = Core::make('cache/request');
+        $item = $cache->getItem('package/class/' . $pkgHandle);
+        $cl = $item->get();
+        if ($item->isMiss()) {
+            $item->lock();
+            // loads and instantiates the object
+            $class = '\\Concrete\\Package\\' . camelcase($pkgHandle) . '\\Controller';
+            try {
+                $cl = Core::make($class);
+            } catch (\ReflectionException $ex) {
+                $cl = new BrokenPackage($pkgHandle);
+            }
+            $item->set($cl);
         }
-        return $cl;
+        return clone $cl;
     }
 
     /**
@@ -292,6 +307,8 @@ class Package extends Object
         $items['community_point_actions'] = UserPointAction::getListByPackage($this);
         $items['jobs'] = Job::getListByPackage($this);
         $items['workflow_types'] = WorkflowType::getListByPackage($this);
+        $items['authentication_types'] = AuthenticationType::getListByPackage($this);
+        $items['storage_locations'] = StorageLocation::getListByPackage($this);
         ksort($items);
 
         return $items;
@@ -355,6 +372,9 @@ class Package extends Object
                 break;
             case 'workflow_types':
                 $value = t('Workflow types');
+                break;
+            case 'storage_locations':
+                $value = t('Storage Locations');
                 break;
             default:
                 $value = t(Loader::helper('text')->unhandle($categoryHandle));
@@ -429,12 +449,16 @@ class Package extends Object
             return $item->getConversationRatingTypeDisplayName();
         } elseif ($item instanceof SystemContentEditorSnippet) {
             return $item->getSystemContentEditorSnippetName();
+        } elseif ($item instanceof AuthenticationType) {
+            return $item->getAuthenticationTypeName();
         } elseif (is_a($item, 'PermissionKey')) {
             return $item->getPermissionKeyDisplayName();
         } elseif (is_a($item, 'Job')) {
             return $item->getJobName();
         } elseif (is_a($item, 'WorkflowType')) {
             return $item->getWorkflowTypeName();
+        } elseif ($item instanceof StorageLocation) {
+            return $item->getName();
         }
     }
 
@@ -453,6 +477,10 @@ class Package extends Object
             }
 
             foreach ($array as $item) {
+                if ($item instanceof AuthenticationType) {
+                    $item->delete();
+                }
+
                 if (is_a($item, 'Job')) {
                     $item->uninstall();
                 } elseif (is_a($item, 'AttributeKey') || is_a($item, 'MailImporter')) {
@@ -515,11 +543,12 @@ class Package extends Object
         \Core::make('config/database')->clearNamespace($this->getPackageHandle());
 
         $db->Execute("delete from Packages where pkgID = ?", array($this->pkgID));
+        Localization::clearCache();
     }
 
     protected function validateClearSiteContents($options)
     {
-        $u = new User();
+        $u = new \User();
         if ($u->isSuperUser()) {
             // this can ONLY be used through the post. We will use the token to ensure that
             $valt = Loader::helper('validation/token');
@@ -535,14 +564,16 @@ class Package extends Object
     {
         if ($this->validateClearSiteContents($options)) {
 
+            \Core::make('cache/request')->disable();
+
             $pl = new PageList();
-            $pages = $pl->get();
+            $pages = $pl->getResults();
             foreach ($pages as $c) {
                 $c->delete();
             }
 
             $fl = new FileList();
-            $files = $fl->get();
+            $files = $fl->getResults();
             foreach ($files as $f) {
                 $f->delete();
             }
@@ -580,6 +611,7 @@ class Package extends Object
             $ci = new ContentImporter();
             $ci->importContentFile($this->getPackagePath() . '/content.xml');
 
+            \Core::make('cache/request')->enable();
         }
     }
 
@@ -595,7 +627,7 @@ class Package extends Object
         // Step 1 does that package exist ?
         if ((!is_dir(DIR_PACKAGES . '/' . $package) && (!is_dir(DIR_PACKAGES_CORE . '/' . $package))) || $package == '') {
             $errors[] = Package::E_PACKAGE_NOT_FOUND;
-        } elseif (!is_object($pkg)) {
+        } elseif ($pkg instanceof BrokenPackage) {
             $errors[] = Package::E_PACKAGE_NOT_FOUND;
         }
 
@@ -674,9 +706,8 @@ class Package extends Object
         $row = $db->GetRow("select * from Packages where pkgID = ?", array($pkgID));
         if ($row) {
             $pkg = static::getClass($row['pkgHandle']);
-            if (is_object($pkg)) {
+            if ($pkg instanceof Package) {
                 $pkg->setPropertiesFromArray($row);
-
                 return $pkg;
             }
         }
@@ -693,7 +724,7 @@ class Package extends Object
         $row = $db->GetRow("select * from Packages where pkgHandle = ?", array($pkgHandle));
         if ($row) {
             $pkg = static::getClass($row['pkgHandle']);
-            if (is_object($pkg)) {
+            if ($pkg instanceof Package) {
                 $pkg->setPropertiesFromArray($row);
             }
 
@@ -728,6 +759,7 @@ class Package extends Object
         if (!$this->config) {
             $this->config = new Liaison(\Core::make('config/database'), $this->getPackageHandle());
         }
+
         return $this->config;
     }
 
@@ -740,6 +772,7 @@ class Package extends Object
         if (!$this->fileConfig) {
             $this->fileConfig = new Liaison(\Core::make('config'), $this->getPackageHandle());
         }
+
         return $this->fileConfig;
     }
 
@@ -761,6 +794,7 @@ class Package extends Object
         Package::installDB($pkg->getPackagePath() . '/' . FILENAME_PACKAGE_DB);
         $env = Environment::get();
         $env->clearOverrideCache();
+        Localization::clearCache();
 
         return $pkg;
     }
@@ -776,8 +810,10 @@ class Package extends Object
     {
         $db = Loader::db();
         $p1 = static::getClass($this->getPackageHandle());
-        $v = array($p1->getPackageName(), $p1->getPackageDescription(), $p1->getPackageVersion(), $this->getPackageID());
-        $db->query("update Packages set pkgName = ?, pkgDescription = ?, pkgVersion = ? where pkgID = ?", $v);
+        if ($p1 instanceof Package) {
+            $v = array($p1->getPackageName(), $p1->getPackageDescription(), $p1->getPackageVersion(), $this->getPackageID());
+            $db->query("update Packages set pkgName = ?, pkgDescription = ?, pkgVersion = ? where pkgID = ?", $v);
+        }
     }
 
     public function upgrade()
@@ -790,6 +826,7 @@ class Package extends Object
                 $item->refresh();
             }
         }
+        Localization::clearCache();
     }
 
     public static function getInstalledHandles()
@@ -858,8 +895,12 @@ class Package extends Object
         // you can only backup root level packages.
         // Need to figure something else out for core level
         if ($this->pkgHandle != '' && is_dir(DIR_PACKAGES . '/' . $this->pkgHandle)) {
-            $trashName = DIR_FILES_UPLOADED_STANDARD . REL_DIR_FILES_TRASH_STANDARD. '/' . $this->pkgHandle . '_' . date('YmdHis');
-            $ret = @rename(DIR_PACKAGES . '/' . $this->pkgHandle, $trashName);
+            $trash = \Config::get('concrete.misc.package_backup_directory');
+            if (!is_dir($trash)) {
+                mkdir($trash, \Config::get('concrete.filesystem.permissions.directory'));
+            }
+            $trashName = $trash . '/' . $this->pkgHandle . '_' . date('YmdHis');
+            $ret = rename(DIR_PACKAGES . '/' . $this->pkgHandle, $trashName);
             if (!$ret) {
                 return array(Package::E_PACKAGE_MIGRATE_BACKUP);
             } else {

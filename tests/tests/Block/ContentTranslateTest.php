@@ -1,4 +1,7 @@
 <?php
+
+use \Concrete\Core\Editor\LinkAbstractor;
+
 class ContentTranslateTest extends ConcreteDatabaseTestCase {
 
     protected $fixtures = array();
@@ -6,18 +9,13 @@ class ContentTranslateTest extends ConcreteDatabaseTestCase {
         'SystemContentEditorSnippets'
     );
 
-    public function setUp()
-    {
-        $this->c = new \Concrete\Block\Content\Controller();
-    }
-
     /**
      * This is saving data from the content editor HTML INTO the database.
      *  @dataProvider contentsTo
      */
     public function testTo($from, $to)
     {
-        $translated = $this->c->translateTo($from);
+        $translated = LinkAbstractor::translateTo($from);
         $this->assertEquals($to, $translated);
     }
 
@@ -27,7 +25,7 @@ class ContentTranslateTest extends ConcreteDatabaseTestCase {
      */
     public function testFromEditMode($to, $from)
     {
-        $translated = $this->c->translateFromEditMode($from);
+        $translated = LinkAbstractor::translateFromEditMode($from);
         $this->assertEquals($to, $translated);
     }
 
@@ -37,7 +35,7 @@ class ContentTranslateTest extends ConcreteDatabaseTestCase {
      */
     public function testFrom($from, $to)
     {
-        $translated = $this->c->translateFrom($from);
+        $translated = LinkAbstractor::translateFrom($from);
         $this->assertEquals($to, $translated);
     }
 

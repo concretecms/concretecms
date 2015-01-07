@@ -11,106 +11,116 @@ return array(
      * Core Aliases
      */
     'aliases'             => array(
-        'Request'                              => '\Concrete\Core\Http\Request',
-        'Environment'                          => '\Concrete\Core\Foundation\Environment',
-        'Localization'                         => '\Concrete\Core\Localization\Localization',
-        'Response'                             => '\Concrete\Core\Http\Response',
-        'Redirect'                             => '\Concrete\Core\Routing\Redirect',
-        'URL'                                  => '\Concrete\Core\Routing\URL',
-        'Cookie'                               => '\Concrete\Core\Cookie\Cookie',
-        'Cache'                                => '\Concrete\Core\Cache\Cache',
-        'CacheLocal'                           => '\Concrete\Core\Cache\CacheLocal',
-        'CollectionAttributeKey'               => '\Concrete\Core\Attribute\Key\CollectionKey',
-        'FileAttributeKey'                     => '\Concrete\Core\Attribute\Key\FileKey',
-        'UserAttributeKey'                     => '\Concrete\Core\Attribute\Key\UserKey',
-        'AttributeSet'                         => '\Concrete\Core\Attribute\Set',
-        'Asset'                                => '\Concrete\Core\Asset\Asset',
-        'AssetList'                            => '\Concrete\Core\Asset\AssetList',
-        'Router'                               => '\Concrete\Core\Routing\Router',
-        'RedirectResponse'                     => '\Concrete\Core\Routing\RedirectResponse',
-        'Page'                                 => '\Concrete\Core\Page\Page',
-        'PageEditResponse'                     => '\Concrete\Core\Page\EditResponse',
-        'Controller'                           => '\Concrete\Core\Controller\Controller',
-        'PageController'                       => '\Concrete\Core\Page\Controller\PageController',
-        'SinglePage'                           => '\Concrete\Core\Page\Single',
-        'PageType'                             => '\Concrete\Core\Page\Type\Type',
-        'PageTemplate'                         => '\Concrete\Core\Page\Template',
-        'PageTheme'                            => '\Concrete\Core\Page\Theme\Theme',
-        'PageList'                             => '\Concrete\Core\Page\PageList',
-        'PageCache'                            => '\Concrete\Core\Cache\Page\PageCache',
-        'Conversation'                         => '\Concrete\Core\Conversation\Conversation',
-        'ConversationEditor'                   => '\Concrete\Core\Conversation\Editor\Editor',
-        'ConversationMessage'                  => '\Concrete\Core\Conversation\Message\Message',
-        'ConversationFlagType'                 => '\Concrete\Core\Conversation\FlagType\FlagType',
-        'ConversationRatingType'               => '\Concrete\Core\Conversation\Rating\Type',
-        'Queue'                                => '\Concrete\Core\Foundation\Queue\Queue',
-        'Block'                                => '\Concrete\Core\Block\Block',
-        'Marketplace'                          => '\Concrete\Core\Marketplace\Marketplace',
-        'BlockType'                            => '\Concrete\Core\Block\BlockType\BlockType',
-        'BlockTypeList'                        => '\Concrete\Core\Block\BlockType\BlockTypeList',
-        'BlockTypeSet'                         => '\Concrete\Core\Block\BlockType\Set',
-        'Package'                              => '\Concrete\Core\Package\Package',
-        'Collection'                           => '\Concrete\Core\Page\Collection\Collection',
-        'CollectionVersion'                    => '\Concrete\Core\Page\Collection\Version\Version',
-        'Area'                                 => '\Concrete\Core\Area\Area',
-        'GlobalArea'                           => '\Concrete\Core\Area\GlobalArea',
-        'Stack'                                => '\Concrete\Core\Page\Stack\Stack',
-        'StackList'                            => '\Concrete\Core\Page\Stack\StackList',
-        'View'                                 => '\Concrete\Core\View\View',
-        'Job'                                  => '\Concrete\Core\Job\Job',
-        'Workflow'                             => '\Concrete\Core\Workflow\Workflow',
-        'JobSet'                               => '\Concrete\Core\Job\Set',
-        'File'                                 => '\Concrete\Core\File\File',
-        'FileVersion'                          => '\Concrete\Core\File\Version',
-        'FileSet'                              => '\Concrete\Core\File\Set\Set',
-        'FileImporter'                         => '\Concrete\Core\File\Importer',
-        'Group'                                => '\Concrete\Core\User\Group\Group',
-        'GroupSet'                             => '\Concrete\Core\User\Group\GroupSet',
-        'GroupSetList'                         => '\Concrete\Core\User\Group\GroupSetList',
-        'GroupList'                            => '\Concrete\Core\User\Group\GroupList',
-        'FileList'                             => '\Concrete\Core\File\FileList',
-        'QueueableJob'                         => '\Concrete\Core\Job\QueueableJob',
-        'Permissions'                          => '\Concrete\Core\Permission\Checker',
-        'PermissionKey'                        => '\Concrete\Core\Permission\Key\Key',
-        'PermissionKeyCategory'                => '\Concrete\Core\Permission\Category',
-        'PermissionAccess'                     => '\Concrete\Core\Permission\Access\Access',
-        'PermissionCache'                      => '\Concrete\Core\Permission\Cache',
-        'User'                                 => '\Concrete\Core\User\User',
-        'UserInfo'                             => '\Concrete\Core\User\UserInfo',
-        'UserList'                             => '\Concrete\Core\User\UserList',
-        'StartingPointPackage'                 => '\Concrete\Core\Package\StartingPointPackage',
-        'AuthenticationType'                   => '\Concrete\Core\Authentication\AuthenticationType',
-        'ConcreteAuthenticationTypeController' => '\Concrete\Authentication\Concrete\Controller',
-        'FacebookAuthenticationTypeController' => '\Concrete\Authentication\Facebook\Controller',
-        'GroupTree'                            => '\Concrete\Core\Tree\Type\Group',
-        'GroupTreeNode'                        => '\Concrete\Core\Tree\Node\Type\Group',
-        'Loader'                               => '\Concrete\Core\Legacy\Loader',
-        'TaskPermission'                       => '\Concrete\Core\Legacy\TaskPermission',
-        'FilePermissions'                      => '\Concrete\Core\Legacy\FilePermissions'
+		'Area'                                 => '\Concrete\Core\Area\Area',
+		'Asset'                                => '\Concrete\Core\Asset\Asset',
+		'AssetList'                            => '\Concrete\Core\Asset\AssetList',
+		'AttributeSet'                         => '\Concrete\Core\Attribute\Set',
+		'AuthenticationType'                   => '\Concrete\Core\Authentication\AuthenticationType',
+		'Block'                                => '\Concrete\Core\Block\Block',
+		'BlockType'                            => '\Concrete\Core\Block\BlockType\BlockType',
+		'BlockTypeList'                        => '\Concrete\Core\Block\BlockType\BlockTypeList',
+		'BlockTypeSet'                         => '\Concrete\Core\Block\BlockType\Set',
+		'Cache'                                => '\Concrete\Core\Cache\Cache',
+		'CacheLocal'                           => '\Concrete\Core\Cache\CacheLocal',
+		'Collection'                           => '\Concrete\Core\Page\Collection\Collection',
+		'CollectionAttributeKey'               => '\Concrete\Core\Attribute\Key\CollectionKey',
+		'CollectionVersion'                    => '\Concrete\Core\Page\Collection\Version\Version',
+		'ConcreteAuthenticationTypeController' => '\Concrete\Authentication\Concrete\Controller',
+		'Controller'                           => '\Concrete\Core\Controller\Controller',
+		'Conversation'                         => '\Concrete\Core\Conversation\Conversation',
+		'ConversationEditor'                   => '\Concrete\Core\Conversation\Editor\Editor',
+		'ConversationFlagType'                 => '\Concrete\Core\Conversation\FlagType\FlagType',
+		'ConversationMessage'                  => '\Concrete\Core\Conversation\Message\Message',
+		'ConversationRatingType'               => '\Concrete\Core\Conversation\Rating\Type',
+		'Cookie'                               => '\Concrete\Core\Cookie\Cookie',
+		'Environment'                          => '\Concrete\Core\Foundation\Environment',
+		'FacebookAuthenticationTypeController' => '\Concrete\Authentication\Facebook\Controller',
+		'File'                                 => '\Concrete\Core\File\File',
+		'FileAttributeKey'                     => '\Concrete\Core\Attribute\Key\FileKey',
+		'FileImporter'                         => '\Concrete\Core\File\Importer',
+		'FileList'                             => '\Concrete\Core\File\FileList',
+		'FilePermissions'                      => '\Concrete\Core\Legacy\FilePermissions',
+		'FileSet'                              => '\Concrete\Core\File\Set\Set',
+		'FileVersion'                          => '\Concrete\Core\File\Version',
+		'GlobalArea'                           => '\Concrete\Core\Area\GlobalArea',
+		'Group'                                => '\Concrete\Core\User\Group\Group',
+		'GroupList'                            => '\Concrete\Core\User\Group\GroupList',
+		'GroupSet'                             => '\Concrete\Core\User\Group\GroupSet',
+		'GroupSetList'                         => '\Concrete\Core\User\Group\GroupSetList',
+		'GroupTree'                            => '\Concrete\Core\Tree\Type\Group',
+		'GroupTreeNode'                        => '\Concrete\Core\Tree\Node\Type\Group',
+		'Job'                                  => '\Concrete\Core\Job\Job',
+		'JobSet'                               => '\Concrete\Core\Job\Set',
+		'Loader'                               => '\Concrete\Core\Legacy\Loader',
+		'Localization'                         => '\Concrete\Core\Localization\Localization',
+		'Marketplace'                          => '\Concrete\Core\Marketplace\Marketplace',
+		'Package'                              => '\Concrete\Core\Package\Package',
+		'Page'                                 => '\Concrete\Core\Page\Page',
+		'PageCache'                            => '\Concrete\Core\Cache\Page\PageCache',
+		'PageController'                       => '\Concrete\Core\Page\Controller\PageController',
+		'PageEditResponse'                     => '\Concrete\Core\Page\EditResponse',
+		'PageList'                             => '\Concrete\Core\Page\PageList',
+		'PageTemplate'                         => '\Concrete\Core\Page\Template',
+		'PageTheme'                            => '\Concrete\Core\Page\Theme\Theme',
+		'PageType'                             => '\Concrete\Core\Page\Type\Type',
+		'PermissionAccess'                     => '\Concrete\Core\Permission\Access\Access',
+		'PermissionCache'                      => '\Concrete\Core\Permission\Cache',
+		'PermissionKey'                        => '\Concrete\Core\Permission\Key\Key',
+		'PermissionKeyCategory'                => '\Concrete\Core\Permission\Category',
+		'Permissions'                          => '\Concrete\Core\Permission\Checker',
+		'Queue'                                => '\Concrete\Core\Foundation\Queue\Queue',
+		'QueueableJob'                         => '\Concrete\Core\Job\QueueableJob',
+		'Redirect'                             => '\Concrete\Core\Routing\Redirect',
+		'RedirectResponse'                     => '\Concrete\Core\Routing\RedirectResponse',
+		'Request'                              => '\Concrete\Core\Http\Request',
+		'Response'                             => '\Concrete\Core\Http\Response',
+		'Router'                               => '\Concrete\Core\Routing\Router',
+		'SinglePage'                           => '\Concrete\Core\Page\Single',
+		'Stack'                                => '\Concrete\Core\Page\Stack\Stack',
+		'StackList'                            => '\Concrete\Core\Page\Stack\StackList',
+		'StartingPointPackage'                 => '\Concrete\Core\Package\StartingPointPackage',
+		'TaskPermission'                       => '\Concrete\Core\Legacy\TaskPermission',
+		'URL'                                  => '\Concrete\Core\Routing\URL',
+		'User'                                 => '\Concrete\Core\User\User',
+		'UserAttributeKey'                     => '\Concrete\Core\Attribute\Key\UserKey',
+		'UserInfo'                             => '\Concrete\Core\User\UserInfo',
+		'UserList'                             => '\Concrete\Core\User\UserList',
+		'View'                                 => '\Concrete\Core\View\View',
+		'Workflow'                             => '\Concrete\Core\Workflow\Workflow'
     ),
 
     /**
      * Core Providers
      */
     'providers'           => array(
-        '\Concrete\Core\File\FileServiceProvider',
-        '\Concrete\Core\Encryption\EncryptionServiceProvider',
-        '\Concrete\Core\Validation\ValidationServiceProvider',
-        '\Concrete\Core\Localization\LocalizationServiceProvider',
-        '\Concrete\Core\Feed\FeedServiceProvider',
-        '\Concrete\Core\Html\HtmlServiceProvider',
-        '\Concrete\Core\Search\PaginationServiceProvider',
-        '\Concrete\Core\Mail\MailServiceProvider',
-        '\Concrete\Core\Application\ApplicationServiceProvider',
-        '\Concrete\Core\Utility\UtilityServiceProvider',
-        '\Concrete\Core\Database\DatabaseServiceProvider',
-        '\Concrete\Core\Form\FormServiceProvider',
-        '\Concrete\Core\Session\SessionServiceProvider',
-        '\Concrete\Core\Http\HttpServiceProvider',
-        '\Concrete\Core\Events\EventsServiceProvider',
-        '\Concrete\Core\Error\Provider\WhoopsServiceProvider',
-        '\Concrete\Core\Logging\LoggingServiceProvider',
-        '\Concrete\Core\Cache\CacheServiceProvider'
+        'core_file'         => '\Concrete\Core\File\FileServiceProvider',
+        'core_encryption'   => '\Concrete\Core\Encryption\EncryptionServiceProvider',
+        'core_validation'   => '\Concrete\Core\Validation\ValidationServiceProvider',
+        'core_localization' => '\Concrete\Core\Localization\LocalizationServiceProvider',
+        'core_multilingual' => '\Concrete\Core\Multilingual\MultilingualServiceProvider',
+        'core_feed'         => '\Concrete\Core\Feed\FeedServiceProvider',
+        'core_html'         => '\Concrete\Core\Html\HtmlServiceProvider',
+        'core_pagination'   => '\Concrete\Core\Search\PaginationServiceProvider',
+        'core_mail'         => '\Concrete\Core\Mail\MailServiceProvider',
+        'core_application'  => '\Concrete\Core\Application\ApplicationServiceProvider',
+        'core_utility'      => '\Concrete\Core\Utility\UtilityServiceProvider',
+        'core_manager_grid_framework' => '\Concrete\Core\Page\Theme\GridFramework\ManagerServiceProvider',
+        'core_database'     => '\Concrete\Core\Database\DatabaseServiceProvider',
+        'core_form'         => '\Concrete\Core\Form\FormServiceProvider',
+        'core_session'      => '\Concrete\Core\Session\SessionServiceProvider',
+        'core_cookie'      => '\Concrete\Core\Cookie\CookieServiceProvider',
+        'core_http'         => '\Concrete\Core\Http\HttpServiceProvider',
+        'core_events'       => '\Concrete\Core\Events\EventsServiceProvider',
+        'core_whoops'       => '\Concrete\Core\Error\Provider\WhoopsServiceProvider',
+        'core_logging'      => '\Concrete\Core\Logging\LoggingServiceProvider',
+        'core_cache'        => '\Concrete\Core\Cache\CacheServiceProvider',
+
+        // Authentication
+        'core_oauth'          => '\Concrete\Core\Authentication\Type\OAuth\ServiceProvider',
+        'core_auth_facebook'  => '\Concrete\Core\Authentication\Type\Facebook\ServiceProvider',
+        'core_auth_twitter'   => '\Concrete\Core\Authentication\Type\Twitter\ServiceProvider',
+        'core_auth_google'    => '\Concrete\Core\Authentication\Type\Google\ServiceProvider',
+        'core_auth_community' => '\Concrete\Core\Authentication\Type\Community\ServiceProvider'
     ),
 
     /**
@@ -119,6 +129,7 @@ return array(
     'facades'             => array(
         'Core'     => '\Concrete\Core\Support\Facade\Application',
         'Session'  => '\Concrete\Core\Support\Facade\Session',
+        'Cookie'  => '\Concrete\Core\Support\Facade\Cookie',
         'Database' => '\Concrete\Core\Support\Facade\Database',
         'Events'   => '\Concrete\Core\Support\Facade\Events',
         'Route'    => '\Concrete\Core\Support\Facade\Route',
@@ -167,6 +178,8 @@ return array(
         "/ccm/system/dialogs/page/design/css/submit"                                    => array('\Concrete\Controller\Dialog\Page\Design\Css::submit'),
         "/ccm/system/dialogs/page/search"                                               => array('\Concrete\Controller\Dialog\Page\Search::view'),
         "/ccm/system/dialogs/page/attributes"                                           => array('\Concrete\Controller\Dialog\Page\Attributes::view'),
+        "/ccm/system/dialogs/page/seo"                                                  => array('\Concrete\Controller\Dialog\Page\Seo::view'),
+        "/ccm/system/dialogs/page/location"                                             => array('\Concrete\Controller\Dialog\Page\Location::view'),
         "/ccm/system/dialogs/user/bulk/properties"                                      => array('\Concrete\Controller\Dialog\User\Bulk\Properties::view'),
         "/ccm/system/dialogs/user/bulk/properties/update_attribute"                     => array('\Concrete\Controller\Dialog\User\Bulk\Properties::updateAttribute'),
         "/ccm/system/dialogs/user/bulk/properties/clear_attribute"                      => array('\Concrete\Controller\Dialog\User\Bulk\Properties::clearAttribute'),
@@ -179,6 +192,8 @@ return array(
         "/ccm/system/dialogs/file/bulk/properties"                                      => array('\Concrete\Controller\Dialog\File\Bulk\Properties::view'),
         "/ccm/system/dialogs/file/bulk/properties/update_attribute"                     => array('\Concrete\Controller\Dialog\File\Bulk\Properties::updateAttribute'),
         "/ccm/system/dialogs/file/bulk/properties/clear_attribute"                      => array('\Concrete\Controller\Dialog\File\Bulk\Properties::clearAttribute'),
+        "/ccm/system/dialogs/file/bulk/delete"                                          => array('\Concrete\Controller\Dialog\File\Bulk\Delete::view'),
+        "/ccm/system/dialogs/file/bulk/delete/delete_files"                             => array('\Concrete\Controller\Dialog\File\Bulk\Delete::deleteFiles'),
         "/ccm/system/dialogs/page/add_block_list"                                       => array('\Concrete\Controller\Dialog\Page\AddBlockList::view'),
         "/ccm/system/dialogs/page/clipboard"                                            => array('\Concrete\Controller\Dialog\Page\Clipboard::view'),
         "/ccm/system/dialogs/page/add_block"                                            => array('\Concrete\Controller\Dialog\Page\AddBlock::view'),
@@ -196,6 +211,8 @@ return array(
         "/ccm/system/dialogs/block/permissions/guest_access/"                           => array('\Concrete\Controller\Dialog\Block\Permissions\GuestAccess::__construct'),
         "/ccm/system/dialogs/block/aliasing/"                                           => array('\Concrete\Controller\Dialog\Block\Aliasing::view'),
         "/ccm/system/dialogs/block/aliasing/submit"                                     => array('\Concrete\Controller\Dialog\Block\Aliasing::submit'),
+        "/ccm/system/dialogs/block/cache/"                                              => array('\Concrete\Controller\Dialog\Block\Cache::view'),
+        "/ccm/system/dialogs/block/cache/submit"                                        => array('\Concrete\Controller\Dialog\Block\Cache::submit'),
         "/ccm/system/dialogs/block/design/"                                             => array('\Concrete\Controller\Dialog\Block\Design::view'),
         "/ccm/system/dialogs/block/design/submit"                                       => array('\Concrete\Controller\Dialog\Block\Design::submit'),
         "/ccm/system/dialogs/block/design/reset"                                        => array('\Concrete\Controller\Dialog\Block\Design::reset'),
@@ -203,6 +220,8 @@ return array(
         "/ccm/system/dialogs/area/design/submit"                                        => array('\Concrete\Controller\Dialog\Area\Design::submit'),
         "/ccm/system/dialogs/area/design/reset"                                         => array('\Concrete\Controller\Dialog\Area\Design::reset'),
         "/ccm/system/dialogs/page/add"                                                  => array('\Concrete\Controller\Dialog\Page\Add::view'),
+        "/ccm/system/dialogs/page/add/compose/submit"                                   => array('\Concrete\Controller\Dialog\Page\Add\Compose::submit'),
+        "/ccm/system/dialogs/page/add/compose/{ptID}/{cParentID}"                       => array('\Concrete\Controller\Dialog\Page\Add\Compose::view'),
         "/ccm/system/dialogs/page/add/submit"                                           => array('\Concrete\Controller\Dialog\Page\Add::submit'),
         "/ccm/system/dialogs/page/add_external"                                         => array('\Concrete\Controller\Dialog\Page\AddExternal::view'),
         "/ccm/system/dialogs/page/add_external/submit"                                  => array('\Concrete\Controller\Dialog\Page\AddExternal::submit'),
@@ -231,10 +250,14 @@ return array(
         /**
          * Page actions - non UI
          */
-        "/ccm/system/page/check_in/{cID}/{token}"                                       => array('\Concrete\Controller\Panel\Page\CheckIn::exitEditMode'),
+        "/ccm/system/page/check_in/{cID}/{token}"                                       => array('\Concrete\Controller\Backend\Page::exitEditMode'),
         "/ccm/system/page/create/{ptID}"                                                => array('\Concrete\Controller\Backend\Page::create'),
         "/ccm/system/page/create/{ptID}/{parentID}"                                     => array('\Concrete\Controller\Backend\Page::create'),
         "/ccm/system/page/arrange_blocks/"                                              => array('\Concrete\Controller\Backend\Page\ArrangeBlocks::arrange'),
+        "/ccm/system/page/multilingual/create_new"                                      => array('\Concrete\Controller\Backend\Page\Multilingual::create_new'),
+        "/ccm/system/page/multilingual/ignore"                                          => array('\Concrete\Controller\Backend\Page\Multilingual::ignore'),
+        "/ccm/system/page/multilingual/assign"                                          => array('\Concrete\Controller\Backend\Page\Multilingual::assign'),
+        "/ccm/system/page/get_json"                                                     => array('\Concrete\Controller\Backend\Page::getJSON'),
 
         /**
          * Block actions - non UI
@@ -244,7 +267,8 @@ return array(
         /**
          * Misc
          */
-        "/ccm/system/css/page/{cID}/{cvID}/{stylesheet}"                                => array('\Concrete\Controller\Frontend\Stylesheet::page'),
+        "/ccm/system/css/page/{cID}/{stylesheet}/{cvID}"                                => array('\Concrete\Controller\Frontend\Stylesheet::page_version'),
+        "/ccm/system/css/page/{cID}/{stylesheet}"                                       => array('\Concrete\Controller\Frontend\Stylesheet::page'),
         "/ccm/system/css/layout/{bID}"                                                  => array('\Concrete\Controller\Frontend\Stylesheet::layout'),
         "/ccm/system/backend/editor_data/"                                              => array('\Concrete\Controller\Backend\EditorData::view'),
         "/ccm/system/upgrade/"                                                          => array('\Concrete\Controller\Upgrade::view'),
@@ -253,8 +277,16 @@ return array(
         /**
          * General Attribute
          */
-        "/ccm/system/attribute/attribute_sort/set"                                      => array('\Concrete\Controller\Backend\AttributeSort::set'),
-        "/ccm/system/attribute/attribute_sort/user"                                     => array('\Concrete\Controller\Backend\AttributeSort::user'),
+        "/ccm/system/attribute/attribute_sort/set"                                      => array('\Concrete\Controller\Backend\Attributes::sortInSet'),
+        "/ccm/system/attribute/attribute_sort/user"                                     => array('\Concrete\Controller\Backend\Attributes::sortUser'),
+
+        /**
+         * Marketplace
+         */
+        "/ccm/system/marketplace/connect"                                        => array('\Concrete\Controller\Backend\Marketplace\Connect::view'),
+        "/ccm/system/marketplace/search"                                        => array('\Concrete\Controller\Backend\Marketplace\Search::view'),
+        "/ccm/system/dialogs/marketplace/download"                               => array('\Concrete\Controller\Dialog\Marketplace\Download::view'),
+        "/ccm/system/dialogs/marketplace/checkout"                               => array('\Concrete\Controller\Dialog\Marketplace\Checkout::view'),
 
         /**
          * Search Routes
@@ -272,6 +304,7 @@ return array(
          */
         "/ccm/system/panels/dashboard"                                                  => array('\Concrete\Controller\Panel\Dashboard::view'),
         "/ccm/system/panels/sitemap"                                                    => array('\Concrete\Controller\Panel\Sitemap::view'),
+        "/ccm/system/panels/multilingual"                                               => array('\Concrete\Controller\Panel\Multilingual::view'),
         "/ccm/system/panels/add"                                                        => array('\Concrete\Controller\Panel\Add::view'),
         "/ccm/system/panels/page"                                                       => array('\Concrete\Controller\Panel\Page::view'),
         "/ccm/system/panels/page/attributes"                                            => array('\Concrete\Controller\Panel\Page\Attributes::view'),
@@ -418,6 +451,9 @@ return array(
             array('javascript', 'js/jquery-ui.js', array('minify' => false, 'combine' => false)),
             array('css', 'css/jquery-ui.css', array('minify' => false))
         ),
+        'jquery/touch-punch'              => array(
+            array('javascript', 'js/jquery-ui-touch-punch.js')
+        ),
         'select2'                  => array(
             array('javascript', 'js/select2.js', array('minify' => false, 'combine' => false)),
             array('css', 'css/select2.css', array('minify' => false))
@@ -443,10 +479,6 @@ return array(
         'picturefill'              => array(
             array('javascript', 'js/picturefill.js', array('minify' => false))
         ),
-        'jquery/rating'            => array(
-            array('javascript', 'js/jquery.rating.js'),
-            array('css', 'css/jquery-rating.css')
-        ),
         'spectrum'                 => array(
             array('javascript', 'js/spectrum.js', array('minify' => false)),
             array('css', 'css/spectrum.css', array('minify' => false))
@@ -460,6 +492,17 @@ return array(
         'core/style-customizer'    => array(
             array('javascript', 'js/style-customizer.js', array('minify' => false)),
             array('css', 'css/style-customizer.css', array('minify' => false))
+        ),
+        'core/locale' => array(
+            array(
+                'javascript',
+                REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js',
+                array('combine' => false, 'minify' => false, 'local' => false)
+            )
+        ),
+        'jquery/awesome-rating'                 => array(
+            array('javascript', 'js/jquery-awesome-rating.js', array('minify' => false)),
+            array('css', 'css/jquery-awesome-rating.css', array('minify' => false))
         ),
         'jquery/fileupload'        => array(
             array('javascript', 'js/jquery-fileupload.js')
@@ -621,13 +664,6 @@ return array(
                 array('css', 'select2')
             )
         ),
-        'jquery/rating'            => array(
-            array(
-                array('javascript', 'jquery/metadata'),
-                array('javascript', 'jquery/rating'),
-                array('css', 'jquery/rating')
-            )
-        ),
         'ace'         => array(
             array(
                 array('javascript', 'ace')
@@ -637,6 +673,7 @@ return array(
             array(
                 array('javascript', 'jquery'),
                 array('javascript', 'core/events'),
+                array('javascript', 'core/locale'),
                 array('javascript', 'spectrum'),
                 array('css', 'spectrum')
             )
@@ -644,6 +681,14 @@ return array(
         'font-awesome'             => array(
             array(
                 array('css', 'font-awesome')
+            )
+        ),
+        'core/rating'            => array(
+            array(
+                array('javascript', 'jquery'),
+                array('javascript', 'jquery/awesome-rating'),
+                array('css', 'font-awesome'),
+                array('css', 'jquery/awesome-rating')
             )
         ),
         'core/style-customizer'    => array(
@@ -654,6 +699,7 @@ return array(
                 array('javascript', 'underscore'),
                 array('javascript', 'core/colorpicker'),
                 array('javascript', 'core/app'),
+                array('javascript', 'core/locale'),
                 array('javascript', 'core/legacy'),
                 array('javascript', 'core/file-manager'),
                 array('javascript', 'core/style-customizer'),
@@ -698,6 +744,7 @@ return array(
                 array('javascript', 'bootstrap/tooltip'),
                 array('javascript', 'bootstrap/popover'),
                 array('javascript', 'jquery/ui'),
+                array('javascript', 'core/locale'),
                 array('javascript', 'core/app'),
                 array('javascript', 'core/legacy'),
                 array('css', 'core/app'),
@@ -732,6 +779,7 @@ return array(
             array(
                 array('javascript', 'jquery'),
                 array('javascript', 'jquery/ui'),
+                array('javascript', 'jquery/touch-punch'),
                 array('javascript', 'underscore'),
                 array('javascript', 'dashboard'),
                 array('javascript', 'core/events'),
@@ -740,6 +788,7 @@ return array(
                 array('javascript', 'bootstrap/popover'),
                 array('javascript', 'bootstrap/transition'),
                 array('javascript', 'bootstrap/alert'),
+                array('javascript', 'core/locale'),
                 array('javascript', 'core/app'),
                 array('javascript', 'redactor'),
                 array('css', 'core/app'),
@@ -751,13 +800,16 @@ return array(
         'core/file-manager'        => array(
             array(
                 array('css', 'core/app'),
+                array('css', 'jquery/ui'),
                 array('css', 'core/file-manager'),
                 array('css', 'select2'),
                 array('javascript', 'core/events'),
+                array('javascript', 'bootstrap/tooltip'),
                 array('javascript', 'underscore'),
                 array('javascript', 'jquery/ui'),
                 array('javascript', 'select2'),
                 array('javascript', 'select2_locale'),
+                array('javascript', 'core/locale'),
                 array('javascript', 'core/app'),
                 array('javascript', 'core/file-manager')
             )
@@ -770,6 +822,7 @@ return array(
                 array('javascript', 'dynatree'),
                 array('javascript', 'dynatree_locale'),
                 array('javascript', 'core/app'),
+                array('javascript', 'core/locale'),
                 array('javascript', 'core/sitemap'),
                 array('css', 'dynatree'),
                 array('css', 'core/sitemap')

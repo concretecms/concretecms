@@ -47,10 +47,10 @@ class Controller extends BlockController
         $content = "";
         switch ($this->attributeHandle) {
             case "rpv_pageName":
-                $content = $c->getCollectionName();
+                $content = h($c->getCollectionName());
                 break;
             case "rpv_pageDescription":
-                $content = $c->getCollectionDescription();
+                $content = h($c->getCollectionDescription());
                 break;
             case "rpv_pageDateCreated":
                 $content = $c->getCollectionDateAdded();
@@ -63,8 +63,8 @@ class Controller extends BlockController
                 break;
             default:
                 $content = $c->getAttribute($this->attributeHandle);
-                if (is_object($content) && get_class($content) === 'File') {
-                    $im = Loader::helper('image');
+                if (is_object($content) && $content instanceof \Concrete\Core\File\File) {
+                    $im = \Loader::helper('image');
                     $thumb = $im->getThumbnail(
                         $content,
                         $this->thumbnailWidth,
@@ -75,7 +75,8 @@ class Controller extends BlockController
                 break;
         }
 
-        if (!strlen($content) && $c->isMasterCollection()) {
+        $is_stack = $c->getController() instanceof \Concrete\Controller\SinglePage\Dashboard\Blocks\Stacks;
+        if (!strlen(trim(strip_tags($content))) && ($c->isMasterCollection() || $is_stack)) {
             $content = $this->getPlaceHolderText($this->attributeHandle);
         }
         return $content;

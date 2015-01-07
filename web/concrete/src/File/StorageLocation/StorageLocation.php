@@ -41,6 +41,24 @@ class StorageLocation
     {
         return $this->fslName;
     }
+    
+    /** Returns the display name for this storage location (localized and escaped accordingly to $format)
+    * @param string $format = 'html'
+    *    Escape the result in html format (if $format is 'html').
+    *    If $format is 'text' or any other value, the display name won't be escaped.
+    * @return string
+    */
+    public function getDisplayName($format = 'html')
+    {
+        $value = tc('StorageLocationName', $this->getName());
+        switch($format) {
+            case 'html':
+                return h($value);
+            case 'text':
+            default:
+                return $value;
+        }
+    }
 
     public function setName($fslName)
     {
@@ -106,7 +124,9 @@ class StorageLocation
         $r = $em->find('\Concrete\Core\File\StorageLocation\StorageLocation', intval($id));
         return $r;
     }
-
+    /**
+     * @return StorageLocation[]
+     */
     public static function getList()
     {
         $db = Database::get();
@@ -132,12 +152,12 @@ class StorageLocation
     /**
      * Returns the proper file system object for the current storage location, by mapping
      * it through Flysystem
-     * @return \League\Flysystem\Filesystem
+     * @return \Concrete\Flysystem\Filesystem
      */
     public function getFileSystemObject()
     {
         $adapter = $this->fslConfiguration->getAdapter();
-        $filesystem = new \League\Flysystem\Filesystem($adapter);
+        $filesystem = new \Concrete\Flysystem\Filesystem($adapter);
         return $filesystem;
     }
 

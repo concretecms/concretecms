@@ -1,11 +1,16 @@
 (function (window, $, _, Concrete) {
     'use strict';
 
+    /**
+     * Stack object used in the stack panel. This is a BlockType subclass.
+     * @type {Function}
+     */
     var Stack = Concrete.Stack = function Stack(elem, edit_mode, dragger) {
         this.init.apply(this, _(arguments).toArray());
     };
 
-    Stack.prototype = _.extend(Object.create(Concrete.Block.prototype), {
+    Stack.prototype = _.extend(Object.create(Concrete.BlockType.prototype), {
+
         addToDragArea: function StackAddToDragArea(drag_area) {
             var my = this, elem = my.getElem(),
                 area = drag_area.getArea(),
@@ -43,6 +48,7 @@
                 'title': ccmi18n.addBlockStack
             });
         }
+
     });
 
 

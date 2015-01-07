@@ -6,22 +6,24 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	<form method="post" action="<?=$controller->action('submit')?>" data-dialog-form="location" data-panel-detail-form="location">
 
 		<?=Loader::helper('concrete/ui/help')->notify('panel', '/page/location')?>
+        <input type="hidden" name="cParentID" value="<?=$cParentID?>" />
 
-	<div style="min-height: 140px">
-		<? if ($c->isPageDraft()) { ?>
-			<p class="lead"><?=t('Where will this page live on the site?')?></p>
-		<? } else { ?>
-			<p class="lead"><?=t('Where does this page live on the site?')?></p>
-		<? } ?>
+        <? if (!isset($sitemap) && $sitemap == false) { ?>
+            <div style="min-height: 140px">
+                <? if ($c->isPageDraft()) { ?>
+                    <p class="lead"><?=t('Where will this page live on the site?')?></p>
+                <? } else { ?>
+                    <p class="lead"><?=t('Where does this page live on the site?')?></p>
+                <? } ?>
 
-		<div id="ccm-panel-detail-location-display"></div>
+                <div id="ccm-panel-detail-location-display"></div>
 
-		<input type="hidden" name="cParentID" value="<?=$cParentID?>" />
-		<button class="btn btn-info"type="button" name="location"><?=t('Choose Location')?></button>
+                <button class="btn btn-info"type="button" name="location"><?=t('Choose Location')?></button>
 
-	</div>
-
+            </div>
 		<hr/>
+        <? } ?>
+
 		<p class="lead"><?=t('Current Canonical URL')?></p>
 		<div class="breadcrumb">
 			<? if ($c->isPageDraft()) { ?>
@@ -47,6 +49,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 
 	<? } ?>
+        <? if (isset($sitemap) && $sitemap) { ?>
+            <input type="hidden" name="sitemap" value="1" />
+        <? } ?>
 
 	</form>
 	<div class="ccm-panel-detail-form-actions dialog-buttons">
@@ -73,8 +78,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 <script type="text/template" class="pagePath">
 <div class="ccm-panel-detail-location-page-path">
-	<input class="control-input" type="text" name="additionalPath[]" value="<%=path%>" />
-	<a href="#"><i class="fa fa-minus-circle" /></a>
+    <div class="form-group">
+        <div class="input-group">
+	    <input class="form-control" type="text" name="additionalPath[]" value="<%=path%>" />
+    	<a href="#" class="input-group-addon"><i class="fa fa-minus-circle" /></a>
+        </div>
+    </div>
 </div>
 </script>
 

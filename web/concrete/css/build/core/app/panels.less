@@ -134,10 +134,11 @@ div.ccm-panel-left {
  * Panel Content
  */
 div.ccm-panel-content {
-  padding: 48px 0px 0px 0px;
+  padding: 0px;
+  margin-top: 48px;
   position: absolute;
   top: 0px;
-  height: 100%;
+  bottom: 0px;
   overflow: auto;
   width: 320px;
   left: 0px;
@@ -450,12 +451,6 @@ div#ccm-panel-add-clipboard-block-list {
   }
 }
 
-/**
- * New Page
- */
-div#ccm-panel-sitemap {
-  background-color: #eff7fd;
-}
 
 /**
  * Properties
@@ -1109,5 +1104,35 @@ div.preview-frame-container {
     z-index: 5;
   }
 }
+
+/**
+ * Search at the top of attributes and add block
+ */
+div.ccm-panel-header-search {
+
+  position: relative;
+  i.fa-search {
+    position: absolute;
+    top: 22px;
+    left: 40px;
+    color: #111;
+  }
+
+  input {
+    display: block;
+    padding: 20px 20px 20px 70px;
+    border: 0px;
+    outline: none;
+    width: 100%;
+
+    &:focus {
+      outline: none;
+      .box-shadow(none);
+      border: 0px;
+    }
+
+  }
+}
+
 
 

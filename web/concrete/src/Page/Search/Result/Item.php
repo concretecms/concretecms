@@ -22,11 +22,13 @@ class Item extends SearchResultItem {
 
 	protected function populateDetails($item) {
 		$this->cID = $item->getCollectionID();
+        $this->link = $item->getCollectionLink();
 		$cp = new Permissions($item);
 		$this->canEditPageProperties = $cp->canEditPageProperties();
 		$this->canEditPageSpeedSettings = $cp->canEditPageSpeedSettings();
 		$this->canEditPagePermissions = $cp->canEditPagePermissions();
 		$this->canEditPageDesign = $cp->canEditPageTemplate() || $cp->canEditPageTheme();
+        $this->canEditPageType = $cp->canEditPageType();
 		$this->canViewPageVersions = $cp->canViewPageVersions();
 		$this->canDeletePage = $cp->canDeletePage();
 		$this->cvName = $item->getCollectionName();

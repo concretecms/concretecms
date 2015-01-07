@@ -8,16 +8,31 @@ class SubArea extends Area {
 
 	const AREA_SUB_DELIMITER = ' : ';
 
+    protected $parentBlock;
+
+    public function setSubAreaBlockObject($block)
+    {
+        $this->parentBlock = $block;
+    }
+
 	public function create($c, $arHandle) {
 		$db = Loader::db();
 		$db->Replace('Areas', array('cID' => $c->getCollectionID(), 'arHandle' => $arHandle, 'arParentID' => $this->arParentID), array('arHandle', 'cID'), true);
+        $this->refreshCache($c);
 		$area = self::get($c, $arHandle);
 		$area->rescanAreaPermissionsChain();
 		return $area;
 	}
 
-	public function getSubAreaParentPermissionsObject() {
-		$db = Loader::db();
+	public function getSubAreaParentPermissionsObject()
+    {
+		$cache = \Core::make('cache/request');
+        $item = $cache->getItem(sprintf('subarea/parent/permissions/%s', $this->getAreaID()));
+        if (!$item->isMiss()) {
+            return $item->get();
+        }
+
+        $db = Loader::db();
 		$arParentID = $this->arParentID;
 		if ($arParentID == 0) {
 			return false;
@@ -30,24 +45,18 @@ class SubArea extends Area {
 				break;
 			}
 		}
-
 		$a = Area::get($this->c, $row['arHandle']);
+        $item->set($a);
 		return $a;
 	}
 
 	public function getSubAreaBlockObject() {
-		$db = Loader::db();
-		$bID = $db->GetOne('select cvb.bID from btCoreAreaLayout bta inner join AreaLayoutColumns alc on bta.arLayoutID = alc.arLayoutID inner join CollectionVersionBlocks cvb on bta.bID = cvb.bID where cvb.cID = ? and cvb.cvID = ? and alc.arID = ?', array($this->c->getCollectionID(), $this->c->getVersionID(), $this->arID));
-		$arHandle = $db->GetOne('select arHandle from Areas where arID = ?', array($this->arParentID));
-		if ($bID) {
-			$b = Block::getByID($bID, $this->c, $arHandle);
-			return $b;
-		}
+        return $this->parentBlock;
 	}
 
-	public function __construct($arHandle, Area $parent) {
-		$arHandle = $parent->getAreaHandle() . self::AREA_SUB_DELIMITER . $arHandle;
-		$this->arParentID = $parent->getAreaID();
+	public function __construct($arHandle, $arParentHandle, $arParentID) {
+        $this->arParentID = $arParentID;
+		$arHandle = $arParentHandle . self::AREA_SUB_DELIMITER . $arHandle;
 		parent::__construct($arHandle);
 	}
 

@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Permission\Access;
 use \Concrete\Core\Permission\Duration as PermissionDuration;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Area\Area;
 use Loader;
 class AddBlockToAreaAreaAccess extends AreaAccess {
 

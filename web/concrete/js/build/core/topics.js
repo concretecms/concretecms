@@ -13,7 +13,7 @@
 			var params = [{'name': 'sourceTreeNodeID', 'value': sourceNode.data.key}, {'name': 'treeNodeParentID', 'value': treeNodeParentID}];
 			var childNodes = node.parent.getChildren();
 			if (childNodes) {
-				for (i = 0; i < childNodes.length; i++) {
+				for (var i = 0; i < childNodes.length; i++) {
 					var childNode = childNodes[i];
 					params.push({'name': 'treeNodeID[]', 'value': childNode.data.key});
 				}
@@ -42,11 +42,15 @@
 
 			if (data.canEditTreeNode && data.treeNodeTypeHandle == 'topic_category') {
 				menu += '<li><a class="dialog-launch" dialog-width="550" dialog-on-open="$(\'[data-topic-form=update-category-node]\').ccmtopicstree(\'initUpdateCategoryNodeForm\', ' + options.treeID + ');" dialog-height="auto" dialog-modal="false" dialog-title="' + ccmi18n_topics.editCategory + '" href="' + CCM_DISPATCHER_FILENAME + '/tools/required/tree/node/edit/topic_category?treeNodeID=' + data.key + '">' + ccmi18n_topics.editCategory + '<\/a><\/li>';
+			}
+			if (data.canDuplicateTreeNode && data.treeNodeTypeHandle == 'topic_category') {
 				menu += '<li><a href="#" onclick="$.fn.ccmtopicstree(\'cloneNode\', \'node\', ' + options.treeID + ',' + data.key + ')">' + ccmi18n_topics.cloneCategory + '<\/a><\/li>';
 			}
 
 			if (data.canEditTreeNode && data.treeNodeTypeHandle == 'topic') {
 				menu += '<li><a class="dialog-launch" dialog-width="550" dialog-on-open="$(\'[data-topic-form=update-topic-node]\').ccmtopicstree(\'initUpdateTopicNodeForm\', ' + options.treeID + ');" dialog-height="auto" dialog-modal="false" dialog-title="' + ccmi18n_topics.editTopic + '" href="' + CCM_DISPATCHER_FILENAME + '/tools/required/tree/node/edit/topic?treeNodeID=' + data.key + '">' + ccmi18n_topics.editTopic + '<\/a><\/li>';
+			}
+			if (data.canDuplicateTreeNode && data.treeNodeTypeHandle == 'topic') {
 				menu += '<li><a href="#" onclick="$.fn.ccmtopicstree(\'cloneNode\', \'node\', ' + options.treeID + ',' + data.key + ')">' + ccmi18n_topics.cloneTopic + '<\/a><\/li>';
 			}
 
@@ -101,14 +105,14 @@
 	    			'url': $form.attr('action'),
 	    			success: function(r) {
 	    				if (r.error == true) {
-	    					ConcreteAlert.dialog('Error', '<div class="alert alert-danger">' + r.messages.join("<br>") + '</div>');
+	    					ConcreteAlert.dialog(ccmi18n.error, r.errors.join("<br>"));
 	    				} else {
 	    					jQuery.fn.dialog.closeTop();
 	    					onSuccess(r);
 	    				}
 	    			},
 	    			error: function(r) {
-    					ConcreteAlert.dialog('Error', '<div class="alert alert-danger">' + r.responseText + '</div>');
+    					ConcreteAlert.dialog(ccmi18n.error, r.responseText);
 	    			},
 	    			complete: function() {
 	    				jQuery.fn.dialog.hideLoader();
@@ -123,7 +127,7 @@
     	methods.private.setupDialogForm($(this), function(r) {
     		var $tree = $('[data-topic-tree=' + treeID + ']');
     		if (r.length) {
-    			for (i = 0; i < r.length; i++) {
+    			for (var i = 0; i < r.length; i++) {
 		    		var node = $tree.dynatree('getTree').getNodeByKey(r[i].treeNodeParentID);
     				node.addChild(r[i]);
     			}
@@ -146,7 +150,7 @@
 			'url': CCM_TOOLS_PATH + '/tree/node/duplicate/' + cloneType,
 			success: function(r) {
 				if (r.error == true) {
-					ConcreteAlert.dialog('Error', '<div class="alert alert-danger">' + r.messages.join("<br>") + '</div>');
+					ConcreteAlert.dialog(ccmi18n.error, r.errors.join("<br>"));
 				} else {
 					jQuery.fn.dialog.closeTop();
 		    		var node = $tree.dynatree('getTree').getNodeByKey(r.treeNodeParentID);
@@ -157,7 +161,7 @@
 				}
 			},
 			error: function(r) {
-				ConcreteAlert.dialog('Error', '<div class="alert alert-danger">' + r.responseText + '</div>');
+				ConcreteAlert.dialog(ccmi18n.error, '<div class="alert alert-danger">' + r.responseText + '</div>');
 			},
 			complete: function() {
 				jQuery.fn.dialog.hideLoader();
@@ -194,7 +198,7 @@
     },
 
 	init: function(options) {
-		var options = $.extend({
+		options = $.extend({
 			readonly: false,
 			chooseNodeInForm: false,
 			onSelect: false,
@@ -292,7 +296,7 @@
 
 					if (options.chooseNodeInForm) {
 						var selectedNodes = $tree.dynatree('getTree');
-						var selectedNodes = selectedNodes.getSelectedNodes();
+						selectedNodes = selectedNodes.getSelectedNodes();
 						if (selectedNodes[0]) {
 							var node = selectedNodes[0];
 							options.onSelect(true, node);
@@ -343,6 +347,22 @@
 						return true;
 					},
 					onDragOver: function(node, sourceNode, hitMode) {
+						if ((!node.parent.data.treeNodeID) && (node.data.treeNodeID !== '1')) { // Home page has no parents, but we still want to be able to hit it.
+							return false;
+						}
+
+                        if((hitMode != 'over') && (node.data.treeNodeID == 1)) {  // Home gets no siblings
+                            return false;
+                        }
+
+                        if (sourceNode.data.treeNodeID == node.data.treeNodeID) {
+                            return false; // can't drag node onto itself.
+                        }
+
+						if (!node.data.treeNodeID && hitMode == 'after') {
+							return false;
+						}
+
 						// you can only drag shit into other categories.
 						var nodeTypeHandle = node.data.treeNodeType;
 						if (hitMode === 'over' && jQuery.inArray(node.data.treeNodeTypeHandle, ['topic']) > -1) {

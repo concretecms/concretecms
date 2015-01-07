@@ -15,6 +15,11 @@ class Form extends DashboardPageController {
 		if (!$this->pagetype) {
 			$this->redirect('/dashboard/pages/types');
 		}
+
+        $cmp = new \Permissions($this->pagetype);
+        if (!$cmp->canEditPageType()) {
+            throw new \Exception(t('You do not have access to edit this page type.'));
+        }
 		switch($message) {
 			case 'layout_set_added':
 				$this->set('success', t('Form layout set added.'));
@@ -69,6 +74,9 @@ class Form extends DashboardPageController {
 	public function delete_set_control() {
 		$control = PageTypeComposerFormLayoutSetControl::getByID($this->post('ptComposerFormLayoutSetControlID'));
 		if (is_object($control)) {
+            $set = $this->getPageTypeComposerFormLayoutSetObject();
+            $pt = $set->getPageTypeObject();
+            $this->view($pt);
 			if ($this->token->validate('delete_set_control', $_POST['token'])) {
 				$control->delete();
 			}
@@ -90,6 +98,8 @@ class Form extends DashboardPageController {
 	public function update_set_control_display_order() {
 		$fs = PageTypeComposerFormLayoutSet::getByID($_POST['ptComposerFormLayoutSetID']);
 		if (is_object($fs)) {
+            $pt = $fs->getPageTypeObject();
+            $this->view($pt);
 			if ($this->token->validate('update_set_control_display_order', $_POST['token'])) {
 				$displayOrder = 0;
 				foreach($this->post('ptComposerFormLayoutSetControlID') as $ptComposerFormLayoutSetControlID) {

@@ -22,33 +22,14 @@ class Column {
     {
         $class = '';
         $il = $result->getItemListObject();
-        if ($il->isActiveSortColumn($this->getColumnKey())) {
-            $class = 'ccm-results-list-active-sort-';
-            if ($il->getActiveSortDirection() == 'desc') {
-                $class .= 'desc';
-            } else {
-                $class .= 'asc';
-            }
-        }
-        return $class;
+        return $il->getSortClassName($this->getColumnKey());
     }
 
     public function getSortURL(Result $result)
     {
-        $uh = Loader::helper('url');
         $il = $result->getItemListObject();
         $dir = $this->getColumnDefaultSortDirection();
-        if ($il->isActiveSortColumn($this->getColumnKey()) && $il->getActiveSortDirection() == $dir) {
-            $dir = ($dir == 'asc') ? 'desc' : 'asc';
-        }
-
-        $args = array(
-            $il->getQuerySortColumnParameter() => $this->getColumnKey(),
-            $il->getQuerySortDirectionParameter() => $dir
-        );
-
-        $url = $uh->setVariable($args, false, $result->getBaseURL());
-        return strip_tags($url);
+        return $il->getSortURL($this->getColumnKey(), $dir, $result->getBaseURL());
     }
 
     public function __construct($key, $name, $callback, $isSortable = true, $defaultSort = 'asc') {

@@ -18,6 +18,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 <section class="ccm-ui">
 	<form method="post" action="<?=$controller->action('submit')?>" data-dialog-form="attributes" data-panel-detail-form="attributes">
 
+        <? if (isset($sitemap) && $sitemap) { ?>
+            <input type="hidden" name="sitemap" value="1" />
+        <? } ?>
+
 		<?=Loader::helper('concrete/ui/help')->notify('panel', '/page/attributes')?>
 		<? if ($assignment->allowEditName()) { ?>
 		<div class="form-group">
@@ -132,6 +136,15 @@ $(function() {
 		var akID = $(this).attr('data-remove-attribute-key');
 		ConcretePageAttributesDetail.removeAttributeKey(akID);
 	});
+
+    $(function() {
+        ConcreteEvent.unsubscribe('AjaxFormSubmitSuccess.saveAttributes');
+        ConcreteEvent.subscribe('AjaxFormSubmitSuccess.saveAttributes', function(e, data) {
+            if (data.form == 'attributes') {
+                ConcreteEvent.publish('SitemapUpdatePageRequestComplete', {'cID': data.response.cID});
+            }
+        });
+    });
 
 });
 

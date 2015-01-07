@@ -76,7 +76,7 @@ abstract class Column extends Object {
 	public function display($disableControls = false) {
 		$layout = $this->getAreaLayoutObject();
 		$a = $layout->getAreaObject();
-		$as = new SubArea($this->getAreaLayoutColumnDisplayID(), $a);
+		$as = new SubArea($this->getAreaLayoutColumnDisplayID(), $a->getAreaHandle(), $a->getAreaID());
 		$as->setAreaDisplayName(t('Column %s', $this->getAreaLayoutColumnIndex() + 1));
 		if ($disableControls) {
 			$as->disableControls();
@@ -86,6 +86,7 @@ abstract class Column extends Object {
 		if (!$this->getAreaID()) {
             $this->setAreaID($as->getAreaID());
 		}
+        $as->setSubAreaBlockObject($this->arLayout->getBlockObject());
 		$as->display($c);
 	}
 

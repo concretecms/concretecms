@@ -8,6 +8,12 @@ abstract class UserInterface extends Controller {
 
 	abstract protected function canAccess();
 	protected $error;
+    protected $validationToken;
+
+    public function shouldRunControllerTask()
+    {
+        return $this->canAccess();
+    }
 
 	public function __construct() {
 		$this->error = Loader::helper('validation/error');
@@ -21,15 +27,17 @@ abstract class UserInterface extends Controller {
 		});
 	}
 
-	public function getViewObject() {
-		if ($this->canAccess()) {
-			return parent::getViewObject();
-		}
-		throw new \Exception(t('Access Denied'));
-	}
+    public function getViewObject()
+    {
+        if ($this->canAccess()) {
+            return parent::getViewObject();
+        }
+        throw new \Exception(t('Access Denied'));
+    }
 
 	protected function validateAction() {
-		if (!Loader::helper('validation/token')->validate(get_class($this))) {
+        $token = (isset($this->validationToken)) ? $this->validationToken : get_class($this);
+		if (!Loader::helper('validation/token')->validate($token)) {
 			$this->error->add(Loader::helper('validation/token')->getErrorMessage());
 			return false;
 		}
@@ -40,8 +48,9 @@ abstract class UserInterface extends Controller {
 	}
 
 	public function action() {
+        $token = (isset($this->validationToken)) ? $this->validationToken : get_class($this);
 		$url = call_user_func_array('parent::action', func_get_args());
-		$url .= '?ccm_token=' . Loader::helper('validation/token')->generate(get_class($this));
+		$url .= '?ccm_token=' . Loader::helper('validation/token')->generate($token);
 		return $url;
 	}
 

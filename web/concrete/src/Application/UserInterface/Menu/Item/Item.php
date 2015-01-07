@@ -1,44 +1,18 @@
 <?php
 namespace Concrete\Core\Application\UserInterface\Menu\Item;
+use Concrete\Core\Package\Package;
 use Core;
-use Concrete\Core\Asset\CssAsset;
-use Concrete\Core\Asset\JavascriptAsset;
 
-class Item
+class Item implements ItemInterface
 {
+
+    protected $controller;
 
     public function __construct($handle, $pkgHandle = false)
     {
         $this->handle = $handle;
         $this->pkgHandle = $pkgHandle;
-        $al = \AssetList::getInstance();
-        $v = \View::getInstance();
-        $env = \Environment::get();
-        $identifier = 'menuitem/' . $this->handle . '/view';
-        foreach(array('CSS' => 'view.css', 'JAVASCRIPT' => 'view.js') as $t => $i) {
-            $r = $env->getRecord(DIRNAME_MENU_ITEMS . '/' . $handle . '/' . $i, $pkgHandle);
-            if ($r->exists()) {
-                switch($t) {
-                    case 'CSS':
-                        $asset = new CSSAsset($identifier);
-                        $asset->setAssetURL($r->url);
-                        $asset->setAssetPath($r->file);
-                        $al->registerAsset($asset);
-                        $v->requireAsset('css', $identifier);
-                        break;
-                    case 'JAVASCRIPT':
-                        $asset = new JavascriptAsset($identifier);
-                        $asset->setAssetURL($r->url);
-                        $asset->setAssetPath($r->file);
-                        $al->registerAsset($asset);
-                        $v->requireAsset('javascript', $identifier);
-                        break;
-                }
-            }
-        }
     }
-
-    protected $controller;
 
     public function getHandle()
     {
@@ -95,9 +69,14 @@ class Item
         $this->position = $position;
     }
 
-    public function getPackageObject()
+    public function getPackageHandle()
     {
         return $this->pkgHandle;
+    }
+
+    public function getPackageObject()
+    {
+        return Package::getByHandle($this->pkgHandle);
     }
 
     public function getController()
@@ -110,10 +89,15 @@ class Item
                 DIRNAME_MENU_ITEMS . '/' . $this->handle . '/' . FILENAME_CONTROLLER,
                 $this->pkgHandle
             );
-            $this->controller = \Core::make($class, array($this));
-            $this->controller->setMenuItem($this);
+            $this->setController(\Core::make($class, array($this)));
             return $this->controller;
         }
+    }
+
+    public function setController(ControllerInterface $controller)
+    {
+        $this->controller = $controller;
+        $this->controller->setMenuItem($this);
     }
 
 }

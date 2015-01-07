@@ -19,8 +19,7 @@ class ContentPageTranslateTest extends PageTestCase {
     {
         self::createPage('Awesome');
         self::createPage('All Right', '/awesome');
-        $c = new \Concrete\Block\Content\Controller();
-        $translated = $c->translateFrom($from);
+        $translated = \Concrete\Core\Editor\LinkAbstractor::translateFrom($from);
         $this->assertEquals($to, $translated);
     }
 

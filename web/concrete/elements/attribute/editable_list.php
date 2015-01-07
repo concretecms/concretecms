@@ -17,8 +17,9 @@
         $value = $object->getAttributeValueObject($ak);
         if (is_object($value)) {
             $display = $value->getValue('displaySanitized', 'display');
+        } else {
+            $display = '';
         }
-        $display = $object->getAttribute($ak->getAttributeKeyHandle(), 'displaySanitized', 'display');
     }
 
     $canEdit = $permissionsCallback($ak, $permissionsArguments); ?>

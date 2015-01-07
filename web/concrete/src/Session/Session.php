@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Session;
 
+use Concrete\Core\Utility\IPAddress;
 use Config;
 use \Symfony\Component\HttpFoundation\Session\Session as SymfonySession;
 use \Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
@@ -45,14 +46,16 @@ class Session
 
     protected static function testSessionFixation(SymfonySession $session)
     {
+        $iph = Core::make('helper/validation/ip');
+        $currentIp = $iph->getRequestIP();
         $ip = $session->get('CLIENT_REMOTE_ADDR');
         $agent = $session->get('CLIENT_HTTP_USER_AGENT');
-        if ($ip && $ip != $_SERVER['REMOTE_ADDR'] || $agent && $agent != $_SERVER['HTTP_USER_AGENT']) {
+        if ($ip && $ip != $currentIp->getIp(IPAddress::FORMAT_IP_STRING) || $agent && $agent != $_SERVER['HTTP_USER_AGENT']) {
             $session->invalidate();
         }
 
-        if (!$ip && isset($_SERVER['REMOTE_ADDR'])) {
-            $session->set('CLIENT_REMOTE_ADDR', $_SERVER['REMOTE_ADDR']);
+        if (!$ip && $currentIp !== false) {
+            $session->set('CLIENT_REMOTE_ADDR', $currentIp->getIp(IPAddress::FORMAT_IP_STRING));
         }
         if (!$agent && isset($_SERVER['HTTP_USER_AGENT'])) {
             $session->set('CLIENT_HTTP_USER_AGENT', $_SERVER['HTTP_USER_AGENT']);

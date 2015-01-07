@@ -20,12 +20,15 @@ class ApplicationServiceProvider extends ServiceProvider {
 			'helper/concrete/user' => '\Concrete\Core\Application\Service\User',
 			'helper/concrete/validation' => '\Concrete\Core\Application\Service\Validation',
 			'helper/rating' => '\Concrete\Attribute\Rating\Service',
-            'helper/pagination' => '\Concrete\Core\Legacy\Pagination'
+            'helper/pagination' => '\Concrete\Core\Legacy\Pagination',
 		);
 
 		foreach($singletons as $key => $value) {
 			$this->app->singleton($key, $value);
 		}
+
+        $this->app->bind('controller/page/default', 'Concrete\Core\Page\Controller\PageController');
+        $this->app->bind('error', 'Concrete\Core\Error\Error');
 	}
 
 }

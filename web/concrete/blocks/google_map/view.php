@@ -20,7 +20,7 @@ if ($c->isEditMode()) { ?>
 ?>
 
 <script type="text/javascript">
-    function googleMapInit<?$bID?>() {
+    function googleMapInit<?=$bID?>() {
         try{
             var latlng = new google.maps.LatLng(<?=$latitude?>, <?=$longitude?>);
             var mapOptions = {
@@ -43,7 +43,7 @@ if ($c->isEditMode()) { ?>
         var startWhenVisible = function (){
             if ($("#googleMapCanvas<?=$bID?>").is(":visible")){
                 window.clearInterval(t);
-                googleMapInit<?=$this->bID?>();
+                googleMapInit<?=$bID?>();
                 return true;
             }
             return false;

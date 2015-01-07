@@ -1,11 +1,11 @@
 <?php
-namespace Concrete\Controller\SinglePage\Account\Members;
-use \Concrete\Core\Page\Controller\AccountPageController;
+namespace Concrete\Controller\SinglePage\Members;
+use Concrete\Core\Page\Controller\PublicProfilePageController;
 use UserAttributeKey;
 use Loader;
 use Concrete\Core\User\UserList;
 
-class Directory extends AccountPageController {
+class Directory extends PublicProfilePageController {
 
     /**
      * @var \Concrete\Core\User\UserList

@@ -15,6 +15,7 @@ use Concrete\Core\Page\Theme\GridFramework\GridFramework;
 use \Concrete\Core\Page\Single as SinglePage;
 use \Concrete\Core\StyleCustomizer\Preset;
 use \Concrete\Core\StyleCustomizer\CustomCssRecord;
+use Concrete\Core\Page\Theme\GridFramework\Manager as GridFrameworkManager;
 
 /**
  *
@@ -43,7 +44,8 @@ class Theme extends Object
     protected $stylesheetCachePath;
     protected $stylesheetCacheRelativePath = REL_DIR_FILES_CACHE;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->setStylesheetCachePath(Config::get('concrete.cache.directory'));
     }
 
@@ -75,12 +77,14 @@ class Theme extends Object
             $pl = static::getByID($row['pThemeID']);
             $themes[] = $pl;
         }
+
         return $themes;
     }
 
     public static function getInstalledHandles()
     {
         $db = Loader::db();
+
         return $db->GetCol("select pThemeHandle from PageThemes");
     }
 
@@ -128,26 +132,31 @@ class Theme extends Object
             }
             $themes = $themesTemp;
         }
+
         return $themes;
 
     }
 
-    public static function getByFileHandle($handle, $dir = DIR_FILES_THEMES)
+    public static function getByFileHandle($handle, $dir = DIR_FILES_THEMES, $pkgHandle = '')
     {
         $dirt = $dir . '/' . $handle;
         if (is_dir($dirt)) {
-            $res = static::getThemeNameAndDescription($dirt);
+            $res = static::getThemeNameAndDescription($dirt, $handle, $pkgHandle);
 
-            $th = new static;
+            $th = new static();
             $th->pThemeHandle = $handle;
             $th->pThemeDirectory = $dirt;
             $th->pThemeName = $res->pThemeName;
             $th->pThemeDescription = $res->pThemeDescription;
+            if (strlen($res->pError) > 0) {
+                $th->error = $res->pError;
+            }
             switch ($dir) {
                 case DIR_FILES_THEMES:
                     $th->pThemeURL = DIR_REL . '/' . DIRNAME_APPLICATION . '/' . DIRNAME_THEMES . '/' . $handle;
                     break;
             }
+
             return $th;
         }
     }
@@ -164,6 +173,7 @@ class Theme extends Object
             DIRNAME_THEMES . '/' . $this->getThemeHandle() . '/' . DIRNAME_CSS . '/' . FILENAME_STYLE_CUSTOMIZER_STYLES,
             $this->getPackageHandle()
         );
+
         return $r->exists();
     }
 
@@ -182,6 +192,7 @@ class Theme extends Object
             );
             $this->styleList = \Concrete\Core\StyleCustomizer\StyleList::loadFromXMLFile($r->file);
         }
+
         return $this->styleList;
     }
 
@@ -203,11 +214,11 @@ class Theme extends Object
                     $this->getPackageHandle()
                 );
                 $preset = Preset::getFromFile($file->file, $urlroot);
+
                 return $preset;
             }
         }
     }
-
 
     /**
      * Gets all presets available to this theme.
@@ -247,6 +258,7 @@ class Theme extends Object
                 }
             }
         );
+
         return $presets;
     }
 
@@ -290,6 +302,7 @@ class Theme extends Object
                 }
             }
         }
+
         return $sheets;
     }
 
@@ -304,6 +317,7 @@ class Theme extends Object
         );
 
         $stylesheet = new \Concrete\Core\StyleCustomizer\Stylesheet($stylesheet, $r->file, $r->url, $output, $relative);
+
         return $stylesheet;
     }
 
@@ -330,6 +344,7 @@ class Theme extends Object
         if ($this->isThemePreviewRequest()) {
             $path .= '?ts=' . time();
         }
+
         return $path;
     }
 
@@ -346,10 +361,10 @@ class Theme extends Object
             $o->setValueListID($row['scvlID']);
             $o->setPresetHandle($row['preset']);
             $o->setCustomCssRecordID($row['sccRecordID']);
+
             return $o;
         }
     }
-
 
     public function setCustomStyleObject(
         \Concrete\Core\StyleCustomizer\Style\ValueList $valueList,
@@ -390,6 +405,7 @@ class Theme extends Object
         $scc->setValueListID($valueList->getValueListID());
         $scc->setPresetHandle($preset);
         $scc->setCustomCssRecordID($sccRecordID);
+
         return $scc;
     }
 
@@ -402,6 +418,7 @@ class Theme extends Object
         $where = 'pThemeHandle = ?';
         $args = array($pThemeHandle);
         $pt = static::populateThemeQuery($where, $args);
+
         return $pt;
     }
 
@@ -414,6 +431,7 @@ class Theme extends Object
         $where = 'pThemeID = ?';
         $args = array($pThemeID);
         $pt = static::populateThemeQuery($where, $args);
+
         return $pt;
     }
 
@@ -426,23 +444,29 @@ class Theme extends Object
         );
         $env = Environment::get();
         if ($row['pThemeID']) {
+            $standardClass = '\\Concrete\Core\\Page\\Theme\\Theme';
             if ($row['pThemeHasCustomClass']) {
                 $pkgHandle = PackageList::getHandle($row['pkgID']);
                 $r = $env->getRecord(DIRNAME_THEMES . '/' . $row['pThemeHandle'] . '/' . FILENAME_THEMES_CLASS, $pkgHandle);
                 $prefix = $r->override ? true : $pkgHandle;
-                $class = core_class(
+                $customClass = core_class(
                     'Theme\\' .
                     Loader::helper('text')->camelcase($row['pThemeHandle']) .
                     '\\PageTheme',
                 $prefix);
+                try {
+                    $pl = Core::make($customClass);
+                } catch(\ReflectionException $e) {
+                    $pl = Core::make($standardClass);
+                }
             } else {
-                $class = '\\Concrete\Core\\Page\\Theme\\Theme';
+                $pl = Core::make($standardClass);
             }
-            $pl = Core::make($class);
             $pl->setPropertiesFromArray($row);
             $pkgHandle = $pl->getPackageHandle();
             $pl->pThemeDirectory = $env->getPath(DIRNAME_THEMES . '/' . $row['pThemeHandle'], $pkgHandle);
             $pl->pThemeURL = $env->getURL(DIRNAME_THEMES . '/' . $row['pThemeHandle'], $pkgHandle);
+
             return $pl;
         }
     }
@@ -466,6 +490,7 @@ class Theme extends Object
             }
         }
         $l = static::install($dir, $pThemeHandle, $pkgID);
+
         return $l;
     }
 
@@ -488,7 +513,7 @@ class Theme extends Object
 
                 if ($f == FILENAME_THEMES_VIEW) {
                     $type = PageThemeFile::TFTYPE_VIEW;
-                } else if ($f == FILENAME_THEMES_CLASS) {
+                } elseif ($f == FILENAME_THEMES_CLASS) {
                     $type = PageThemeFile::TFTYPE_PAGE_CLASS;
                 } else {
                     if ($f == FILENAME_THEMES_DEFAULT) {
@@ -516,16 +541,71 @@ class Theme extends Object
         return $files;
     }
 
-    private static function getThemeNameAndDescription($dir)
+    private static function getThemeNameAndDescription($dir, $pThemeHandle, $pkgHandle = '')
     {
-        $res = new \stdClass;
-        $res->ptName = '';
-        $res->ptDescription = '';
+        $res = new \stdClass();
+        $res->pThemeName = '';
+        $res->pThemeDescription = '';
+        $res->pError = '';
         if (file_exists($dir . '/' . FILENAME_THEMES_DESCRIPTION)) {
             $con = file($dir . '/' . FILENAME_THEMES_DESCRIPTION);
             $res->pThemeName = trim($con[0]);
             $res->pThemeDescription = trim($con[1]);
         }
+        $pageThemeFile = $dir . '/' . FILENAME_THEMES_CLASS;
+        if (is_file($pageThemeFile)) {
+            try {
+                $cn .= '\\Theme\\' . camelcase($pThemeHandle) . '\\PageTheme';
+                $classNames = array();
+                if (strlen($pkgHandle)) {
+                    $classNames[] = '\\Concrete\\Package\\' . camelcase($pkgHandle) . $cn;
+                } else {
+                    $classNames[] = '\\Application' . $cn;
+                    $classNames[] = '\\Concrete' . $cn;
+                }
+                $className = null;
+                foreach ($classNames as $cn) {
+                    if (class_exists($cn, false)) {
+                        $className = $cn;
+                        break;
+                    }
+                }
+                if (is_null($className)) {
+                    include_once $pageThemeFile;
+                    foreach ($classNames as $cn) {
+                        if (class_exists($cn, false)) {
+                            $className = $cn;
+                            break;
+                        }
+                    }
+                }
+                if (is_null($className)) {
+                    $res->pError = t(/*i18n: %1$s is a filename, %2$s is a PHP class name */'The theme file %1$s does not defines the class %2$s', FILENAME_THEMES_CLASS, ltrim($classNames[0], '\\'));
+                } else {
+                    $instance = new $className();
+                    $extensionOf = '\\Concrete\\Core\\Page\\Theme\\Theme';
+                    if (!is_a($instance, $extensionOf)) {
+                        $res->pError = t(/*i18n: %1$s is a filename, %2$s and %3$s are PHP class names */'The theme file %1$s should define a %2$s class that extends the class %3$s', FILENAME_THEMES_CLASS, ltrim($className, '\\'), ltrim($extensionOf, '\\'));
+                    } else {
+                        if (method_exists($instance, 'getThemeName')) {
+                            $s = $instance->getThemeName();
+                            if (strlen($s) > 0) {
+                                $res->pThemeName = $s;
+                            }
+                        }
+                        if (method_exists($instance, 'getThemeDescription')) {
+                            $s = $instance->getThemeDescription();
+                            if (strlen($s) > 0) {
+                                $res->pThemeDescription = $s;
+                            }
+                        }
+                    }
+                }
+            } catch (\Exception $x) {
+                $res->pError = $x->getMessage();
+            }
+        }
+
         return $res;
     }
 
@@ -550,27 +630,37 @@ class Theme extends Object
 
     protected static function install($dir, $pThemeHandle, $pkgID)
     {
+        $result = null;
         if (is_dir($dir)) {
+            $pkg = null;
+            if ($pkgID) {
+                $pkg = \Concrete\Core\Package\Package::getByID($pkgID);
+            }
             $db = Loader::db();
             $cnt = $db->getOne("select count(pThemeID) from PageThemes where pThemeHandle = ?", array($pThemeHandle));
             if ($cnt > 0) {
-                throw new Exception(static::E_THEME_INSTALLED);
+                throw new \Exception(static::E_THEME_INSTALLED);
             }
-            $res = static::getThemeNameAndDescription($dir);
-            $pThemeName = $res->pThemeName;
-            $pThemeDescription = $res->pThemeDescription;
-            $db->query(
-                "insert into PageThemes (pThemeHandle, pThemeName, pThemeDescription, pkgID) values (?, ?, ?, ?)",
-                array($pThemeHandle, $pThemeName, $pThemeDescription, $pkgID)
-            );
+            $res = static::getThemeNameAndDescription($dir, $pThemeHandle, is_object($pkg) ? $pkg->getPackageHandle() : '');
+            if (strlen($res->pError) === 0) {
+                $pThemeName = $res->pThemeName;
+                $pThemeDescription = $res->pThemeDescription;
+                $db->query(
+                    "insert into PageThemes (pThemeHandle, pThemeName, pThemeDescription, pkgID) values (?, ?, ?, ?)",
+                    array($pThemeHandle, $pThemeName, $pThemeDescription, $pkgID)
+                );
 
-            $env = Environment::get();
-            $env->clearOverrideCache();
+                $env = Environment::get();
+                $env->clearOverrideCache();
 
-            $pt = static::getByID($db->Insert_ID());
-            $pt->updateThemeCustomClass();
-            return $pt;
+                $pt = static::getByID($db->Insert_ID());
+                $pt->updateThemeCustomClass();
+
+                $result = $pt;
+            }
         }
+
+        return $result;
     }
 
     public function updateThemeCustomClass()
@@ -751,6 +841,7 @@ class Theme extends Object
     public static function getSiteTheme()
     {
         $c = Page::getByID(HOME_CID);
+
         return static::getByID($c->getCollectionThemeID());
     }
 
@@ -762,7 +853,6 @@ class Theme extends Object
         $env = Environment::get();
         $env->clearOverrideCache();
     }
-
 
     /**
      * Special items meant to be extended by custom theme classes
@@ -785,8 +875,8 @@ class Theme extends Object
     public function getThemeGridFrameworkObject()
     {
         if ($this->pThemeGridFrameworkHandle) {
-            $pTheme = GridFramework::getByHandle($this->pThemeGridFrameworkHandle);
-            return $pTheme;
+            $framework = Core::make('manager/grid_framework')->driver($this->pThemeGridFrameworkHandle);
+            return $framework;
         }
     }
 

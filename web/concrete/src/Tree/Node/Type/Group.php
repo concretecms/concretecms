@@ -29,7 +29,14 @@ class Group extends TreeNode
     {
         return UserGroup::getByID($this->gID);
     }
-    public function getTreeNodeDisplayName()
+    public function getTreeNodeName()
+    {
+        $g = UserGroup::getByID($this->gID);
+        if (is_object($g)) {
+            return $g->getGroupName();
+        }
+    }
+    public function getTreeNodeDisplayName($format = 'html')
     {
         if ($this->treeNodeParentID == 0) {
             return t('All Groups');
@@ -37,7 +44,14 @@ class Group extends TreeNode
 
         $g = UserGroup::getByID($this->gID);
         if (is_object($g)) {
-            return t($g->getGroupName());
+            $gName = $g->getGroupDisplayName(false);
+            switch ($format) {
+                case 'html':
+                    return h($gName);
+                case 'text':
+                default:
+                    return $gName;
+            }
         }
     }
 

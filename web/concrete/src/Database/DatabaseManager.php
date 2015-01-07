@@ -3,6 +3,7 @@ namespace Concrete\Core\Database;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Support\Facade\Config;
 
 class DatabaseManager
 {
@@ -89,6 +90,9 @@ class DatabaseManager
         // set the "fetch mode" for PDO which determines the query return types.
         if (!isset($this->connections[$name])) {
             $connection = $this->makeConnection($name);
+            if (Config::get('concrete.log.queries.log')) {
+                $connection->getConfiguration()->setSQLLogger(new \Doctrine\DBAL\Logging\DebugStack());
+            }
             $this->connections[$name] = $this->prepare($connection);
         }
 
@@ -184,7 +188,7 @@ class DatabaseManager
      * @param Connection $connection
      * @return Connection
      */
-    protected function prepare(Connection $connection)
+    protected function prepare($connection)
     {
         return $connection;
     }

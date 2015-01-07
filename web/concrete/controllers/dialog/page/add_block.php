@@ -19,9 +19,9 @@ class AddBlock extends BackendInterfacePageController
 
     protected $viewPath = '/dialogs/page/add_block';
 
-    public function __construct()
+    public function on_start()
     {
-        parent::__construct();
+        parent::on_start();
         $request = $this->request;
 
         if (!Loader::helper('validation/numbers')->integer($_REQUEST['btID'])) {
@@ -34,7 +34,7 @@ class AddBlock extends BackendInterfacePageController
         $this->areaToModify = $this->area;
         if ($this->area->isGlobalArea()) {
             $this->pageToModify = Stack::getByName($_REQUEST['arHandle']);
-            $this->areaToModify = Area::get($this->page, STACKS_AREA_NAME);
+            $this->areaToModify = Area::get($this->pageToModify, STACKS_AREA_NAME);
         }
         $this->areaPermissions = new Permissions($this->areaToModify);
         $cnt = $this->blockType->getController();

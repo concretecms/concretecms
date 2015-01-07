@@ -5,6 +5,13 @@ use \Concrete\Core\Block\BlockController;
 use User;
 use Page;
 use UserInfo;
+use Exception;
+use FileImporter;
+use FileSet;
+use File;
+use Config;
+use \Concrete\Core\File\Version;
+
 class Controller extends BlockController {
 	public $btTable = 'btForm';
 	public $btQuestionsTablename = 'btFormQuestions';
@@ -134,7 +141,8 @@ class Controller extends BlockController {
 		if( intval($total)==0 ){
 			$q = "insert into {$this->btTable} (questionSetId, surveyName, notifyMeOnSubmission, recipientEmail, thankyouMsg, displayCaptcha, redirectCID, addFilesToSet, bID) values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		}else{
-			$q = "update {$this->btTable} set questionSetId = ?, surveyName=?, notifyMeOnSubmission=?, recipientEmail=?, thankyouMsg=?, displayCaptcha=?, redirectCID=?, addFilesToSet=? where bID = ? AND questionSetId=".$data['qsID'];
+			$v[] = $data['qsID'];
+			$q = "update {$this->btTable} set questionSetId = ?, surveyName=?, notifyMeOnSubmission=?, recipientEmail=?, thankyouMsg=?, displayCaptcha=?, redirectCID=?, addFilesToSet=? where bID = ? AND questionSetId= ?";
 		}
 		
 		$rs = $db->query($q,$v);  
@@ -318,7 +326,7 @@ class Controller extends BlockController {
 			}
 			$fi = new FileImporter();
 			$resp = $fi->import($_FILES[$questionName]['tmp_name'], $_FILES[$questionName]['name']);
-			if (!($resp instanceof FileVersion)) {
+			if (!($resp instanceof Version)) {
 				switch($resp) {
 					case FileImporter::E_FILE_INVALID_EXTENSION:
 						$errors['fileupload'] = t('Invalid file extension.');
@@ -358,8 +366,8 @@ class Controller extends BlockController {
 			
 			$questionAnswerPairs=array();
 
-			if( strlen(FORM_BLOCK_SENDER_EMAIL)>1 && strstr(FORM_BLOCK_SENDER_EMAIL,'@') ){
-				$formFormEmailAddress = FORM_BLOCK_SENDER_EMAIL;
+			if (Config::get('concrete.email.form_block.address') && strstr(Config::get('concrete.email.form_block.address'),'@') ){
+				$formFormEmailAddress = Config::get('concrete.email.form_block.address');
 			}else{
 				$adminUserInfo=UserInfo::getByID(USER_SUPER_ID);
 				$formFormEmailAddress = $adminUserInfo->getUserEmail();
@@ -441,8 +449,8 @@ class Controller extends BlockController {
 			}
 			
 			if(intval($this->notifyMeOnSubmission)>0 && !$foundSpam){	
-				if( strlen(FORM_BLOCK_SENDER_EMAIL)>1 && strstr(FORM_BLOCK_SENDER_EMAIL,'@') ){
-					$formFormEmailAddress = FORM_BLOCK_SENDER_EMAIL;  
+				if( Config::get('concrete.email.form_block.address') && strstr(Config::get('concrete.email.form_block.address'),'@') ){
+					$formFormEmailAddress = Config::get('concrete.email.form_block.address');
 				}else{ 
 					$adminUserInfo=UserInfo::getByID(USER_SUPER_ID);
 					$formFormEmailAddress = $adminUserInfo->getUserEmail(); 

@@ -1,22 +1,22 @@
 <div class="row">
-    <div class="col-sm-10 row form-horizontal">
+    <div class="col-sm-12 row">
         <div class="form-group">
-            <label for="scale" class="control-label col-sm-4"><?= t('Scale') ?></label>
-            <div class="col-sm-8 scale-container">
-                <div class="scale-slider"></div>
+            <label for="scale" class="control-label"><?= t('Scale') ?></label>
+            <div class="scale-container">
+                <div class="scale-slider col-sm-10"></div>
+                <div class="col-sm-2">
+                    <span class="scale-percent">100%</span>
+                </div>
             </div>
         </div>
     </div>
-    <div class="col-sm-2">
-        <span class="scale-percent">100%</span>
-    </div>
 </div>
 <div>
-    <div class="col-sm-10 row form-horizontal">
+    <div class="col-sm-10 row">
         <div class="form-group">
-            <label for="width" class="control-label col-sm-4"><?= t('Width') ?></label>
+            <label for="width" class="control-label"><?= t('Width') ?></label>
 
-            <div class="input-group col-sm-8">
+            <div class="input-group">
                 <input class="form-control" name="width">
 
                 <div class="input-group-addon">px</div>
@@ -24,9 +24,9 @@
         </div>
 
         <div class="form-group">
-            <label for="height" class="control-label col-sm-4"><?= t('Height') ?></label>
+            <label for="height" class="control-label"><?= t('Height') ?></label>
 
-            <div class="input-group col-sm-8">
+            <div class="input-group">
                 <input class="form-control" name="height">
 
                 <div class="input-group-addon">px</div>
@@ -34,20 +34,20 @@
         </div>
     </div>
     <div class="col-sm-1 col-sm-offset-1 lock-button">
-        <button class="btn lock active">
+        <button class="btn btn-default lock active">
             <i class="fa fa-lock"></i>
         </button>
     </div>
 </div>
 <div class="form-group">
     <div class="btn-group">
-        <button class="rot btn">
+        <button class="rot btn btn-default">
             <i class="fa fa-rotate-right"></i>
         </button>
-        <button class="vflip btn">
+        <button class="vflip btn btn-default">
             <i class="fa fa-arrows-v"></i>
         </button>
-        <button class="hflip btn">
+        <button class="hflip btn btn-default">
             <i class="fa fa-arrows-h"></i>
         </button>
     </div>

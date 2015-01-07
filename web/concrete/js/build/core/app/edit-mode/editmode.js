@@ -26,12 +26,14 @@
                 dragAreaBlacklist: []
             });
 
-
             my.bindEvent('PanelLoad', function editModePanelOpenEventHandler(event, data) {
                 my.panelOpened(data.panel, data.element);
             });
+            my.bindEvent('PanelClose', function editModePanelCloseEventHandler(event, data) {
+                html.removeClass('ccm-panel-add-block');
+            });
 
-            my.bindEvent('EditModeAddBlockComplete', function() {
+            my.bindEvent('EditModeAddBlockComplete EditModeUpdateBlockComplete', function(e) {
                 _.defer(function() {
                     my.scanBlocks();
                 });
@@ -100,8 +102,8 @@
 //            ConcreteMenuManager.disable();
                 ConcreteToolbar.disable();
                 $('div.ccm-area').addClass('ccm-area-inline-edit-disabled');
+                block.getElem().addClass('ccm-block-edit-inline-active');
 
-                $container.addClass('ccm-block-edit-inline-active');
 
                 $.ajax({
                     type: 'GET',
@@ -109,7 +111,10 @@
                     data: postData,
                     success: function (r) {
                         var elem = $(r);
-                        $container.empty().append(elem);
+                        $container.empty()
+                            .append(elem)
+                            .find('.ccm-block-edit')
+                            .addClass('ccm-block-edit-inline-active');
                         my.loadInlineEditModeToolbars($container);
                         $.fn.dialog.hideLoader();
                         Concrete.event.fire('EditModeInlineEditLoaded', {
@@ -138,7 +143,7 @@
                     after = selected.getElem();
                     dragAreaBlock = selected.getBlock();
                 } else {
-                    after = area.getElem().children().last();
+                    after = area.getBlockContainer().children().last();
                     dragAreaBlock = data.dragAreaBlock;
                 }
 
@@ -305,6 +310,7 @@
             my.bindEvent('EditModeBlockDragStop', function editModeEditModeBlockDragStopEventHandler(e, data) {
                 Concrete.event.fire('EditModeContenders', []);
                 Concrete.event.fire('EditModeSelectableContender');
+                $('html').removeClass('ccm-block-dragging');
 
                 if (data.block instanceof Concrete.BlockType) return;
                 my.scanBlocks();
@@ -336,6 +342,7 @@
                     url: CCM_DISPATCHER_FILENAME + '/ccm/system/page/arrange_blocks?cID=' + block.getCID(),
                     data: send,
                     success: function (r) {
+                        ConcreteToolbar.disableDirectExit();
                         $.fn.dialog.hideLoader();
                         clearTimeout(timeout);
                     }
@@ -344,6 +351,7 @@
             });
 
             my.bindEvent('EditModeBlockDragStart', function editModeEditModeBlockDragStartEventHandler() {
+                $('html').addClass('ccm-block-dragging');
                 my.setDragging(true);
             });
 
@@ -382,7 +390,9 @@
             my.reset();
 
             $('div.ccm-area').each(function () {
-                area = new Concrete.Area($(this), my);
+                var me = $(this);
+                if (me.parent().hasClass('ccm-block-stack')) return;
+                area = new Concrete.Area(me, my);
                 area.scanBlocks();
                 my.addArea(area);
             });
@@ -396,6 +406,11 @@
             if (panel.getIdentifier() !== 'add-block') {
                 return null;
             }
+
+            html.addClass('ccm-panel-add-block');
+
+            $(element).find('input[data-input=search-blocks]').liveUpdate('ccm-panel-add-blocktypes-list', 'blocktypes');
+            $(element).find('input[data-input=search-blocks]').focus();
 
             $(element).find('a.ccm-panel-add-block-draggable-block-type').each(function () {
                 var block, me = $(this), dragger = $('<a/>').addClass('ccm-panel-add-block-draggable-block-type-dragger').appendTo(me);
@@ -421,6 +436,34 @@
             $(element).find('div.ccm-panel-add-clipboard-block-item').each(function () {
                 var block, me = $(this);
                 new Concrete.DuplicateBlock(me, my);
+            });
+
+            $(element).find('.ccm-panel-content').mousewheel(function (e) {
+
+                if (!e.deltaY) {
+                    return;
+                }
+
+                var change = -1 * e.deltaY;
+
+                var me = $(this),
+                    deltaY = e.originalEvent.deltaY || 0,
+                    distance_from_top = me.scrollTop(),
+                    distance_from_bottom = (me.get(0).scrollHeight - (me.scrollTop() + me.height()) - me.css('paddingTop').replace('px', ''));
+
+                // If we don't have deltaY, just use default behavior.
+                if (!deltaY) {
+                    return;
+                }
+
+                if ((deltaY < 0 && !distance_from_top) ||
+                    (deltaY > 0 && !distance_from_bottom)
+                ) {
+                    return false;
+                }
+
+                me.scrollTop(me.scrollTop() + deltaY);
+                return false;
             });
 
             return panel;

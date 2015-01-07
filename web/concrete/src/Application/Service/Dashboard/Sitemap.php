@@ -59,7 +59,10 @@ class Sitemap {
 		if ($cID == 1) {
 			$results = $pl->getResults();
 		} else {
-    		$results = $pl->getPagination()->setMaxPerPage(Config::get('concrete.limits.sitemap_pages'))->getCurrentPageResults();
+            $pl->setItemsPerPage(Config::get('concrete.limits.sitemap_pages'));
+            $pagination = $pl->getPagination();
+            $total = $pagination->getTotalResults();
+            $results = $pagination->getCurrentPageResults();
 		}
 
 		$nodes = array();
@@ -69,16 +72,15 @@ class Sitemap {
 				$nodes[] = $n;
 			}
 		}
-        $total = count($results);
-		if ($total > Config::get('concrete.limits.sitemap_pages')) {
-			if ($this->displayNodePagination) {
-
+		if (is_object($pagination) && $pagination->getNbPages() > 1) {
+            if ($this->displayNodePagination && isset($pagination)) {
 				$n = new stdClass;
 				$n->icon = false;
-				$n->addClass = 'ccm-sitemap-explore-paging';
+				$n->addClass = 'ccm-sitemap-explore';
 				$n->noLink = true;
 				$n->unselectable = true;
-				$n->title = $pl->displayPagingV2(false, true);
+                $html = $pagination->renderDefaultView();
+                $n->title = $html;
 				$nodes[] = $n;
 			} else {
 				$n = new stdClass;
@@ -110,6 +112,7 @@ class Sitemap {
 		$canEditPageSpeedSettings = $cp->canEditPageSpeedSettings();
 		$canEditPagePermissions = $cp->canEditPagePermissions();
 		$canEditPageDesign = ($cp->canEditPageTheme() || $cp->canEditPageTemplate());
+        $canEditPageType = $cp->canEditPageType();
 		$canViewPageVersions = $cp->canViewPageVersions();
 		$canDeletePage = $cp->canDeletePage();
 		$canAddSubpages = $cp->canAddSubpage();
@@ -128,7 +131,7 @@ class Sitemap {
 		$numSubpages = ($c->getNumChildren()  > 0) ? $c->getNumChildren()  : '';
 
 		$cvName = ($c->getCollectionName()) ? $c->getCollectionName() : '(No Title)';
-		$cvName = ($c->isSystemPage()) ? t($cvName) : $cvName;
+		$cvName = ($c->isSystemPage() || $cID == 1) ? t($cvName) : $cvName;
 
 		$ct = PageType::getByID($c->getPageTypeID());
 		$isInTrash = $c->isInTrash();
@@ -181,6 +184,7 @@ class Sitemap {
 
 		$node = new stdClass;
 		$node->title = $cvName;
+        $node->link = $c->getCollectionLink();
 		if ($numSubpages > 0) {
 			$node->isLazy = true;
 		}
@@ -202,6 +206,7 @@ class Sitemap {
 		$node->canEditPageSpeedSettings = $canEditPageSpeedSettings;
 		$node->canEditPagePermissions = $canEditPagePermissions;
 		$node->canEditPageDesign = $canEditPageDesign;
+        $node->canEditPageType = $canEditPageType;
 		$node->canViewPageVersions = $canViewPageVersions;
 		$node->canDeletePage = $canDeletePage;
 		$node->canAddSubpages = $canAddSubpages;

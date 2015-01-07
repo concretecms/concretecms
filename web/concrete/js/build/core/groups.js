@@ -89,7 +89,7 @@
 				initAjax: {
 					url: CCM_TOOLS_PATH + '/tree/load',
 					type: 'post',
-					data: ajaxData,
+					data: ajaxData
 				},
 				onLazyRead: function(node) {
 					my.reloadNode(node);
@@ -119,7 +119,7 @@
 
 					if (options.chooseNodeInForm) {
 						var selectedNodes = $tree.dynatree('getTree');
-						var selectedNodes = selectedNodes.getSelectedNodes();
+						selectedNodes = selectedNodes.getSelectedNodes();
 						if (selectedNodes[0]) {
 							var node = selectedNodes[0];
 							options.onSelect(true, node);
@@ -189,11 +189,23 @@
 						return true;
 					},
 					onDragOver: function(node, sourceNode, hitMode) {
-						// can't drag this thing out of the tree.
-				        if (node.data.treeNodeParentID == '0' && hitMode != 'over') {
-				        	return false;
-				        }
-				        // Prevent dropping a parent below its own child
+						if ((!node.parent.data.treeNodeID) && (node.data.treeNodeID !== '1')) { // Home page has no parents, but we still want to be able to hit it.
+							return false;
+						}
+
+                        if((hitMode != 'over') && (node.data.treeNodeID == 1)) {  // Home gets no siblings
+                            return false;
+                        }
+
+                        if (sourceNode.data.treeNodeID == node.data.treeNodeID) {
+                            return false; // can't drag node onto itself.
+                        }
+
+						if (!node.data.treeNodeID && hitMode == 'after') {
+							return false;
+						}
+
+				        // Prevent dropping a parent below it's own child
 				        if(node.isDescendantOf(sourceNode)){
 				          return false;
 				        }
@@ -229,7 +241,7 @@
 			node.appendAjax(params);
     	}
 
-	}
+	};
 
 	/** 
 	 * Static methods
@@ -245,14 +257,14 @@
 				'<li><a class="dialog-launch" dialog-width="480" dialog-height="380" dialog-modal="true" dialog-title="Edit Permissions" href="' + CCM_TOOLS_PATH + '/tree/node/permissions?treeNodeID=<%=data.key%>">' + ccmi18n_groups.editPermissions + '</a></li>' + 
 			'<% } %>' +
 		'</ul></div></div>';
-	}
+	};
 
 	// jQuery Plugin
 	$.fn.concreteGroupsTree = function(options) {
 		return $.each($(this), function(i, obj) {
 			new ConcreteGroupsTree($(this), options);
 		});
-	}
+	};
 
 	global.ConcreteGroupsTree = ConcreteGroupsTree;
 

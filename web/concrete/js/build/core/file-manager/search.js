@@ -16,11 +16,7 @@
 
         my.options = options;
         my._templateFileProgress = _.template('<div id="ccm-file-upload-progress" class="ccm-ui"><div id="ccm-file-upload-progress-bar">' +
-            '<% if (progress == \'-1\') { %>' +
-                '<div class="progress progress-striped active"><div class="progress-bar" style="width: 100%;"></div></div>' +
-            '<% } else { %>' +
-                '<div class="progress"><div class="progress-bar" style="width: <%=progress%>%;"></div></div>' +
-                '<% } %>' +
+            '<div class="progress progress-striped active"><div class="progress-bar" style="width: <%=progress%>%;"></div></div>' +
             '</div></div>');
         my._templateSearchResultsMenu = _.template(ConcreteFileManagerMenu.get());
 
@@ -48,26 +44,36 @@
 
     ConcreteFileManager.prototype.setupFileUploads = function() {
         var my = this,
-            $fileUploader = $('#ccm-file-manager-upload'),
-            arguments = {
+            $fileUploaders = $('.ccm-file-manager-upload'),
+            $fileUploader = $fileUploaders.filter('#ccm-file-manager-upload-prompt'),
+            errors = [],
+            error_template = _.template(
+                '<span><%- message %></span>' +
+                '<ul><% _(errors).each(function(error) { %>' +
+                '<li><strong><%- error.name %></strong><p><%- error.error %></p></li>' +
+                '<% }) %></ul>'),
+            args = {
                 url: CCM_DISPATCHER_FILENAME + '/ccm/system/file/upload',
                 dataType: 'json',
                 formData: {'ccm_token': CCM_SECURITY_TOKEN},
                 error: function(r) {
-                    jQuery.fn.dialog.closeTop();
                     var message = r.responseText;
                     try {
-                        message = jQuery.parseJSON(message).errors.join('<br/>');
+                        message = jQuery.parseJSON(message).errors;
+                        var name = this.files[0].name;
+                        _(message).each(function(error) {
+                            errors.push({ name:name, error:error });
+                        });
                     } catch (e) {}
-                    ConcreteAlert.dialog('Error', message);
                 },
-                progress: function(e, data) {
+                progressall: function(e, data) {
                     var progress = parseInt(data.loaded / data.total * 100, 10);
                     $('#ccm-file-upload-progress-wrapper').html(my._templateFileProgress({'progress': progress}));
                 },
                 start: function() {
+                    errors = [];
                     $('#ccm-file-upload-progress-wrapper').remove();
-                    $('<div />', {'id': 'ccm-file-upload-progress-wrapper'}).html(my._templateFileProgress({'progress': -1})).appendTo(document.body);
+                    $('<div />', {'id': 'ccm-file-upload-progress-wrapper'}).html(my._templateFileProgress({'progress': 100})).appendTo(document.body);
                     $.fn.dialog.open({
                         title: ccmi18n_filemanager.uploadProgress,
                         width: 400,
@@ -76,17 +82,31 @@
                         modal: true
                     });
                 },
-                success: function(r) {
+                stop: function() {
                     jQuery.fn.dialog.closeTop();
                     my.refreshResults();
+
+                    if (errors.length) {
+                        ConcreteAlert.error({
+                            message: error_template({message: ccmi18n_filemanager.uploadFailed, errors: errors}),
+                            title: ccmi18n_filemanager.title,
+                            delay: 10000
+                        });
+                    } else {
+                        ConcreteAlert.notify({
+                            'message': ccmi18n_filemanager.uploadComplete,
+                            'title': ccmi18n_filemanager.title
+                        });
+                    }
                 }
             };
 
+        $fileUploader = $fileUploader.length ? $fileUploader : $fileUploaders.first();
         $fileUploader.on('click', function() {
             $(this).find('input').trigger('click');
         });
-        $fileUploader.fileupload(arguments);
 
+        $fileUploader.fileupload(args);
     };
 
     ConcreteFileManager.prototype.setupEvents = function() {
@@ -127,6 +147,7 @@
             my.$element.unbind('.concreteFileManagerChooseFile').on('click.concreteFileManagerChooseFile', 'tr[data-file-manager-file]', function() {
                 ConcreteEvent.publish('FileManagerBeforeSelectFile', {fID: $(this).attr('data-file-manager-file')});
                 ConcreteEvent.publish('FileManagerSelectFile', {fID: $(this).attr('data-file-manager-file')});
+                my.$downloadTarget.remove();
                 return false;
             });
         }
@@ -208,7 +229,7 @@
                 '<% } %>' +
                 '<li><a class="dialog-launch" dialog-modal="true" dialog-width="680" dialog-height="450" dialog-title="' + ccmi18n_filemanager.properties + '" href="' + CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/file/properties?fID=<%=item.fID%>">' + ccmi18n_filemanager.properties + '</a></li>' +
                 '<% if (item.canReplaceFile) { %>' +
-                    '<li><a class="dialog-launch" dialog-modal="true" dialog-width="300" dialog-height="320" dialog-title="' + ccmi18n_filemanager.replace + '" href="' + CCM_TOOLS_PATH + '/files/replace?fID=<%=item.fID%>">' + ccmi18n_filemanager.replace + '</a></li>' +
+                    '<li><a class="dialog-launch" dialog-modal="true" dialog-width="500" dialog-height="200" dialog-title="' + ccmi18n_filemanager.replace + '" href="' + CCM_TOOLS_PATH + '/files/replace?fID=<%=item.fID%>">' + ccmi18n_filemanager.replace + '</a></li>' +
                 '<% } %>' +
                 '<% if (item.canCopyFile) { %>' +
                     '<li><a href="#" data-file-manager-action="duplicate">' + ccmi18n_filemanager.duplicate + '</a></li>' +

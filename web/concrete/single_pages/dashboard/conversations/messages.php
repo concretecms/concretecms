@@ -38,9 +38,12 @@ $ip = Loader::helper('validation/ip'); ?>
                     <?=$form->label('cmpMessageSort', t('Sort By'))?>
                     <div class="ccm-search-field-content">
                         <?=$form->select('cmpMessageSort', $cmpSortTypes)?>
-                        <button class="btn btn-primary" type="submit"><?php echo t('Search') ?></button>
                     </div>
                 </div>
+            </div>
+
+            <div class="ccm-search-fields-submit">
+            <button type="submit" class="btn btn-primary pull-right"><?=t('Search')?></button>
             </div>
 
         </form>
@@ -118,7 +121,9 @@ $ip = Loader::helper('validation/ip'); ?>
                                 <? } ?>
                             </td>
                             <td>
-                                <a href="<?=Loader::helper('navigation')->getLinkToCollection($page)?>#cnv<?php echo $cnvID ?>Message<?php echo $msgID ?>" data-open-text="<?php echo t('View full message.') ?>" data-close-text="<?php echo t('Minimize message') ?>" class="read-all truncated btn"><i class="fa fa-share"></i></a>
+                                <?php if (is_object($page)) { ?>
+                                    <a href="<?=Loader::helper('navigation')->getLinkToCollection($page)?>#cnv<?php echo $cnvID ?>Message<?php echo $msgID ?>" data-open-text="<?php echo t('View full message.') ?>" data-close-text="<?php echo t('Minimize message') ?>" class="read-all truncated btn"><i class="fa fa-share"></i></a>
+                                <?php } ?>
                             </td>
                             <td class="hidden-actions">
                                 <div class="message-actions message-actions<?php echo $msgID ?>" data-id="<?php echo $msgID ?>">

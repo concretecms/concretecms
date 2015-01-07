@@ -5,6 +5,7 @@ use \Concrete\Core\Foundation\Object;
 use \Concrete\Core\Attribute\Type as AttributeType;
 use \Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
 use \Concrete\Core\Database\Schema\Schema;
+use Gettext\Translations;
 use Loader;
 use Package;
 use CacheLocal;
@@ -225,7 +226,8 @@ class Key extends Object
         $list = array();
         $txt = Loader::helper('text');
 
-        $className = '\\Concrete\\Core\\Attribute\\Key\\' . $txt->camelcase($akCategoryHandle) . 'Key';
+        $prefix = $pkgHandle;
+        $className = core_class('Core\\Attribute\\Key\\' . $txt->camelcase($akCategoryHandle) . 'Key', $prefix);
         while ($row = $r->FetchRow()) {
             $c1a = call_user_func(array($className, 'getByID'), $row['akID']);
             if (is_object($c1a)) {
@@ -420,7 +422,9 @@ class Key extends Object
             //certain adodb drivers (like mysqli) will fail and return 0
             $akID = $db->Insert_ID();
             $category = AttributeKeyCategory::getByID($akCategoryID);
-            $className = '\\Concrete\\Core\\Attribute\\Key\\' . $txt->camelcase($akCategoryHandle) . 'Key';
+            $pkgID = $category->getPackageID();
+            $prefix = ($pkgID > 0) ? $category->getPackageHandle() : false;
+            $className = core_class('Core\\Attribute\\Key\\' . $txt->camelcase($akCategoryHandle) . 'Key', $prefix);
             $ak = Core::make($className);
             $ak->load($akID);
             switch ($category->allowAttributeSets()) {
@@ -498,8 +502,10 @@ class Key extends Object
 
         if ($r) {
             $txt = Loader::helper('text');
-            $className = $txt->camelcase($akCategoryHandle) . 'AttributeKey';
-            $ak = new $className();
+            $pkgID = $category->getPackageID();
+            $prefix = ($pkgID > 0) ? $category->getPackageHandle() : false;
+            $className = core_class('Core\\Attribute\\Key\\' . $txt->camelcase($akCategoryHandle) . 'Key', $prefix);
+            $ak = Core::make($className);
             $ak->load($this->getAttributeKeyID());
             $at = $ak->getAttributeType();
             $cnt = $at->getController();
@@ -909,6 +915,18 @@ class Key extends Object
     public function getKeyID()
     {
         return $this->getAttributeKeyID();
+    }
+
+    public static function exportTranslations()
+    {
+        $translations = new Translations();
+        $db = \Database::get();
+        $r = $db->Execute('select akID from AttributeKeys order by akID asc');
+        while ($row = $r->FetchRow()) {
+            $key = static::getInstanceByID($row['akID']);
+            $translations->insert('AttributeKeyName', $key->getAttributeKeyName());
+        }
+        return $translations;
     }
 
 }

@@ -42,6 +42,7 @@ class PageView extends View
     public function setCustomPageTheme(PageTheme $pt)
     {
         $this->themeObject = $pt;
+        $this->pkgHandle = $pt->getPackageHandle();
     }
 
     public function setupRender()
@@ -51,7 +52,7 @@ class PageView extends View
         if ($this->c->getPageTypeID() == 0 && $this->c->getCollectionFilename()) {
             $cFilename = trim($this->c->getCollectionFilename(), '/');
             // if we have this exact template in the theme, we use that as the outer wrapper and we don't do an inner content file
-            $r = $env->getRecord(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $cFilename);
+            $r = $env->getRecord(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $cFilename, $this->pkgHandle);
             if ($r->exists()) {
                 $this->setViewTemplate($r->file);
             } else {
@@ -62,7 +63,7 @@ class PageView extends View
                 } else {
                     $this->setViewTemplate(
                         $env->getPath(
-                            DIRNAME_THEMES . '/' . $this->themeHandle . '/' . FILENAME_THEMES_VIEW,
+                            DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $this->controller->getThemeViewTemplate(),
                             $this->pkgHandle));
                 }
                 $this->setInnerContentFile(
@@ -92,7 +93,7 @@ class PageView extends View
                             $this->pkgHandle));
                     $this->setViewTemplate(
                         $env->getPath(
-                            DIRNAME_THEMES . '/' . $this->themeHandle . '/' . FILENAME_THEMES_VIEW,
+                            DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $this->controller->getThemeViewTemplate(),
                             $this->pkgHandle));
                 } else {
                     $this->setViewTemplate(
@@ -110,10 +111,14 @@ class PageView extends View
             return $this->themeObject->getStylesheet($stylesheet);
         }
 
-        if ($this->cp->canViewPageVersions() && $this->c->hasPageThemeCustomizations()) {
-            // this means that we're potentially viewing customizations that haven't been approved yet. So we're going to
-            // pipe them all through a handler script, basically uncaching them.
-            return URL::to('/ccm/system/css/page', $this->c->getCollectionID(), $this->c->getVersionID(), $stylesheet);
+        if ($this->c->hasPageThemeCustomizations()) {
+            if ($this->c->getVersionObject()->isApproved()) {
+                return URL::to('/ccm/system/css/page', $this->c->getCollectionID(), $stylesheet);
+            } else {
+                // this means that we're potentially viewing customizations that haven't been approved yet. So we're going to
+                // pipe them all through a handler script, basically uncaching them.
+                return URL::to('/ccm/system/css/page', $this->c->getCollectionID(), $stylesheet, $this->c->getVersionID());
+            }
         }
 
         $env = Environment::get();
@@ -168,7 +173,6 @@ class PageView extends View
         $cache = PageCache::getLibrary();
         $shouldAddToCache = $cache->shouldAddToCache($this);
         if ($shouldAddToCache) {
-            $cache->outputCacheHeaders($this->c);
             $cache->set($this->c, $contents);
         }
         return $contents;

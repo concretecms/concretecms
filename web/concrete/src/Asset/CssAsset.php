@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Asset;
+
 use HtmlObject\Element;
+use Concrete\Core\Html\Object\HeadLink;
 use Config;
 
 class CssAsset extends Asset {
@@ -127,13 +129,12 @@ class CssAsset extends Asset {
 
 	public function minify($assets) {
 		return self::process($assets, function($css, $assetPath, $targetPath) {
-			return \CssMin::minify($css);
+			return \CssMin::minify(CSSAsset::changePaths($css, $assetPath, $targetPath));
 		});
 	}
 
 	public function __toString() {
-        $e = new Element('link');
-        $e->rel('stylesheet')->type('text/css')->href($this->getAssetURL());
+        $e = new HeadLink($this->getAssetURL(), 'stylesheet', 'text/css', 'all');
         if (count($this->combinedAssetSourceFiles)) {
             $source = '';
             foreach($this->combinedAssetSourceFiles as $file) {

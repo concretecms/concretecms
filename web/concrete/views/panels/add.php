@@ -203,7 +203,7 @@ switch ($tab) {
                      data-block-id="<?= intval($block->getBlockID()) ?>">
                     <div class="block-content">
                         <div class="block-name">
-                            <span class="handle"><?= h($type->getBlockTypeName()) ?></span>
+                            <span class="handle"><?= h(t($type->getBlockTypeName())) ?></span>
                         </div>
                         <div class="blocks">
                             <div class="block"
@@ -254,8 +254,12 @@ switch ($tab) {
 
     default:
         ?>
+            <div class="ccm-panel-header-search">
+                <i class="fa fa-search"></i>
+                <input type="text" data-input="search-blocks" placeholder="<?=t('Search')?>" autocomplete="false" />
+            </div>
 
-            <div class="ccm-panel-content-inner">
+            <div class="ccm-panel-content-inner" id="ccm-panel-add-blocktypes-list">
 
                 <?php
                 $sets = BlockTypeSet::getList();
@@ -360,7 +364,14 @@ switch ($tab) {
                         </ul>
 
                     </div>
+
                 <? } ?>
+
+            <? if (Config::get('concrete.marketplace.enabled')) { ?>
+                <div class="ccm-marketplace-btn-wrapper">
+                <button type="button" onclick="window.location.href='<?=URL::to('/dashboard/extend/addons')?>'" class="btn-info btn-block btn btn-large"><?=t("Get More Blocks")?></button>
+                </div>
+            <? } ?>
 
             </div>
 

@@ -97,6 +97,7 @@ var ConcretePageVersionList = {
 	},
 
 	handleVersionRemovalResponse: function(r) {
+		$('button[data-version-action]').addClass('disabled');
 		for (i = 0; i < r.versions.length; i++) {
 			var $row = $('input[type=checkbox][value=' + r.versions[i].cvID + ']').parent().parent();
 			$row.queue(function() {
@@ -111,6 +112,9 @@ var ConcretePageVersionList = {
 
 	previewSelectedVersions: function(checkboxes) {
 		var panel = ConcretePanelManager.getByIdentifier('page');
+        if (!panel) {
+            return;
+        }
 		if (checkboxes.length > 0) {
 			var src = '<?=URL::to("/ccm/system/panels/details/page/versions")?>';
 			var data = '';
@@ -223,9 +227,10 @@ $(function() {
 	$('#ccm-panel-page-versions tbody').on('click', 'a.ccm-panel-page-versions-version-menu', function(e) {
 		e.stopPropagation();
 	});
+	var $checkboxes = $('#ccm-panel-page-versions tbody input[type=checkbox][data-version-active=false]');
 	$('#ccm-panel-page-versions thead input[type=checkbox]').on('change', function() {
-		var $checkboxes = $('#ccm-panel-page-versions tbody input[type=checkbox][data-version-active=false]');
-		$checkboxes.prop('checked', $(this).prop('checked')).trigger('change');
+		$checkboxes.prop('checked', $(this).prop('checked'));
+		Concrete.forceRefresh();
 	});
 
 	$('#ccm-panel-page-versions tbody').on('change', 'input[type=checkbox]', function() {
@@ -269,9 +274,11 @@ $(function() {
             $.each(checkboxes, function (i, cb) {
                 cvIDs.push({'name': 'cvID[]', 'value': $(cb).val()});
             });
-            ConcretePageVersionList.sendRequest('<?=$controller->action("delete")?>', cvIDs, function (r) {
-                ConcretePageVersionList.handleVersionRemovalResponse(r);
-            });
+            if(cvIDs.length > 0) {
+                ConcretePageVersionList.sendRequest('<?=$controller->action("delete")?>', cvIDs, function (r) {
+                    ConcretePageVersionList.handleVersionRemovalResponse(r);
+                });
+            }
         }
 	});
 

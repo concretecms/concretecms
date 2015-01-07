@@ -12,6 +12,7 @@ class GlobalArea extends Area {
 		$db = Loader::db();
 		Stack::getOrCreateGlobalArea($arHandle);
 		$db->Replace('Areas', array('cID' => $c->getCollectionID(), 'arHandle' => $arHandle, 'arIsGlobal' => 1), array('arHandle', 'cID'), true);
+        $this->refreshCache($c);
 		$area = self::get($c, $arHandle);
 		$area->rescanAreaPermissionsChain();
 		return $area;
@@ -58,6 +59,7 @@ class GlobalArea extends Area {
 		} else {
 			$stack = Stack::getByName($this->arHandle, 'ACTIVE');
 		}
+        $blocksTmp = array();
 		if (is_object($stack)) {
 			$blocksTmp = $stack->getBlocks(STACKS_AREA_NAME);
 			$globalArea = self::get($stack, STACKS_AREA_NAME);

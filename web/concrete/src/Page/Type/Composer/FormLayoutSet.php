@@ -4,6 +4,8 @@ use \Concrete\Core\Foundation\Object;
 use Concrete\Core\Page\Type\Type;
 use PageType;
 use Loader;
+use \Concrete\Core\Page\Type\Composer\Control\Type\Type as PageTypeComposerControlType;
+
 class FormLayoutSet extends Object {
 
 	public function getPageTypeComposerFormLayoutSetID() {return $this->ptComposerFormLayoutSetID;}
@@ -117,6 +119,20 @@ class FormLayoutSet extends Object {
 			$displayOrder++;
 		}
 	}
+
+    public function duplicate(\Concrete\Core\Page\Type\Type $type)
+    {
+        // first, create a new set based on the current one.
+        $set = $type->addPageTypeComposerFormLayoutSet(
+            $this->getPageTypeComposerFormLayoutSetDisplayName(),
+            $this->getPageTypeComposerFormLayoutSetDescription()
+        );
+        $controls = FormLayoutSetControl::getList($this);
+        foreach($controls as $control) {
+            $control->duplicate($set);
+        }
+
+    }
 
 
 }

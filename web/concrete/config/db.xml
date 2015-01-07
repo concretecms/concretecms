@@ -197,6 +197,68 @@
     </index>
   </table>
 
+  <table name="MultilingualSections">
+    <field name="cID" type="I" size="11">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="msLanguage" type="C" size="32">
+      <NOTNULL/>
+      <DEFAULT value=""/>
+    </field>
+    <field name="msCountry" type="C" size="32">
+      <NOTNULL/>
+      <DEFAULT value=""/>
+    </field>
+  </table>
+  <table name="MultilingualPageRelations">
+    <field name="mpRelationID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="cID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="mpLanguage" type="C" size="32">
+      <DEFAULT value=""/>
+      <NOTNULL/>
+    </field>
+    <field name="mpLocale" type="C" size="32">
+      <KEY/>
+      <NOTNULL/>
+    </field>
+  </table>
+    <table name="MultilingualTranslations">
+    <field name="mtID" type="I" size="11">
+        <KEY/>
+        <AUTOINCREMENT/>
+        <UNSIGNED/>
+    </field>
+    <field name="mtSectionID" type="I" size="11">
+        <NOTNULL/>
+        <DEFAULT value="0"/>
+        <UNSIGNED/>
+    </field>
+    <field name="msgid" type="X">
+        <NOTNULL/>
+    </field>
+    <field name="msgstr" type="X">
+    </field>
+    <field name="context" type="X">
+    </field>
+    <field name="comments" type="X">
+    </field>
+    <field name="reference" type="X">
+    </field>
+    <field name="flags" type="X">
+    </field>
+    <field name="updated" type="T">
+    </field>
+  </table>
   <table name="PageTypePageTemplateDefaultPages">
     <field name="pTemplateID" type="I" size="10">
       <unsigned/>
@@ -1736,7 +1798,56 @@
       <UNSIGNED/>
     </field>
     <index name="bID">
-        <col>bID</col>
+      <col>bID</col>
+      <col>cID</col>
+      <col>cvID</col>
+      <col>arHandle</col>
+    </index>
+  </table>
+  <table name="CollectionVersionBlocksCacheSettings">
+    <field name="cID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="cvID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="1"/>
+      <UNSIGNED/>
+    </field>
+    <field name="bID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="arHandle" type="C" size="255">
+      <KEY/>
+    </field>
+    <field name="btCacheBlockOutput" type="I1">
+      <DEFAULT value="0"/>
+        <notnull />
+      <UNSIGNED/>
+    </field>
+    <field name="btCacheBlockOutputOnPost" type="I1">
+      <DEFAULT value="0"/>
+        <notnull />
+      <UNSIGNED/>
+    </field>
+    <field name="btCacheBlockOutputForRegisteredUsers" type="I1">
+      <DEFAULT value="0"/>
+      <notnull />
+        <UNSIGNED/>
+    </field>
+    <field name="btCacheBlockOutputLifetime" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <index name="bID">
+      <col>bID</col>
+      <col>cID</col>
+      <col>cvID</col>
+      <col>arHandle</col>
     </index>
   </table>
   <table name="CollectionVersionFeatureAssignments">
@@ -1916,6 +2027,10 @@
       <default value="0"/>
     </field>
     <field name="cbIncludeAll" type="I1" size="1">
+      <notnull/>
+      <default value="0"/>
+    </field>
+    <field name="cbOverrideBlockTypeCacheSettings" type="I1" size="1">
       <notnull/>
       <default value="0"/>
     </field>
@@ -3415,6 +3530,13 @@
         <col>pkgID</col>
     </index>
   </table>
+  <table name="SystemDatabaseQueryLog">
+    <field name="query" type="X">
+    </field>
+    <field name="params" type="X" />
+    <field name="executionMS" type="C">
+    </field>
+  </table>
 
   <table name="SystemContentEditorSnippets">
     <field name="scsHandle" type="C" size="64">
@@ -4148,7 +4270,7 @@
       <col>msgIsNew</col>
     </index>
   </table>
-  <table name="UserBannedIPs">
+    <table name="UserBannedIPs">
     <field name="id" type="I" size="11">
         <key/>
         <autoincrement/>
@@ -4409,7 +4531,7 @@
         <col>uEmail</col>
     </index>
   </table>
-  <table name="SignupRequests">
+    <table name="SignupRequests">
     <field name="id" type="I" size="11">
       <key/>
       <autoincrement/>

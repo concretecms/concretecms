@@ -9,18 +9,33 @@ $view->requireAsset('css', 'font-awesome');
 $view->requireAsset('javascript', 'jquery');
 $view->requireAsset('javascript', 'bootstrap/alert');
 $view->requireAsset('javascript', 'bootstrap/transition');
+$view->addHeaderItem('<meta name="viewport" content="width=device-width, initial-scale=1">');
 
 $showLogo = true;
 if (is_object($c)) {
-	if (is_object($cp)) {
-		if ($cp->canViewToolbar()) {
-			$showLogo = false;
-		}
-	}
-		
- 	Loader::element('header_required');
+    if (is_object($cp)) {
+        if ($cp->canViewToolbar()) {
+            $showLogo = false;
+        }
+    }
+        
+     Loader::element('header_required');
 } else { 
-	$this->markHeaderAssetPosition();
+    $this->markHeaderAssetPosition();
+}
+
+$showAccount = false;
+if (Config::get('concrete.user.profiles_enabled')) {
+    $account = Page::getByPath('/account');
+    if (is_object($account) && !$account->isError()) {
+        $cp = new Permissions($account);
+        if ($cp->canRead()) {
+            $request = Request::getInstance();
+            if ($request->matches('/account*')) {
+                $showAccount = true;
+            }
+        }
+    }
 }
 ?>
 </head>
@@ -29,9 +44,34 @@ if (is_object($c)) {
 
 <? if ($showLogo) { ?>
 <div id="ccm-toolbar">
-	<ul>
-		<li class="ccm-logo pull-left"><span><?=Loader::helper('concrete/ui')->getToolbarLogoSRC()?></span></li>
-	</ul>
+    <ul>
+        <li class="ccm-logo pull-left"><span><?=Loader::helper('concrete/ui')->getToolbarLogoSRC()?></span></li>
+        <?php if ($showAccount) { ?>
+        <li class="pull-right">
+            <a href="<?=URL::to('/login', 'logout', Loader::helper('validation/token')->generate('logout'))?>" title="<?=t('Sign Out')?>"><i class="fa fa-sign-out"></i>
+            <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-site-settings">
+                <?= tc('toolbar', 'Sign Out') ?>
+            </span>
+            </a>
+        </li>
+        <li class="pull-right">
+            <a href="<?=URL::to('/')?>">
+                <i class="fa fa-home"></i>
+                <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-site-settings">
+                    <?=tc('toolbar', 'Return to Website') ?>
+                </span>
+            </a>
+        </li>
+        <li class="pull-right">
+            <a href="<?=URL::to('/account')?>">
+                <i class="fa fa-user"></i>
+                <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-site-settings">
+                    <?=t('My Account') ?>
+                </span>
+            </a>
+        </li>
+        <?php } ?>
+    </ul>
 </div>
 <? } ?>
 
@@ -49,7 +89,7 @@ if (is_object($c)) {
 
 <? 
 if (is_object($c)) {
-	Loader::element('footer_required');
+    Loader::element('footer_required');
 }
 ?>
 

@@ -25,9 +25,9 @@ class CheckIn extends BackendInterfacePageController
         return $this->permissions->canApprovePageVersions() || $this->permissions->canEditPageContents();
     }
 
-    public function __construct()
+    public function on_start()
     {
-        parent::__construct();
+        parent::on_start();
         if ($this->page) {
             $this->set('publishErrors', $this->checkForPublishing());
         }
@@ -40,7 +40,7 @@ class CheckIn extends BackendInterfacePageController
         $e = Loader::helper('validation/error');
         if ($c->isPageDraft()) {
             if (!$c->getPageDraftTargetParentPageID()) {
-                $e->add(t('You must choose a page to publish this page beneath.'));
+                $e->add(t('You haven\'t chosen where to publish this page.'));
             }
         }
         $pagetype = $c->getPageTypeObject();
@@ -123,21 +123,6 @@ class CheckIn extends BackendInterfacePageController
             $pr->setRedirectURL(Loader::helper('navigation')->getLinkToCollection($nc, true));
             $pr->outputJSON();
         }
-    }
-
-    public function exitEditMode($cID, $token)
-    {
-        if (Loader::helper('validation/token')->validate('', $token)) {
-            $c = Page::getByID($cID);
-            $cp = new Permissions($c);
-            if ($cp->canViewToolbar()) {
-                $u = new User();
-                $u->unloadCollectionEdit();
-            }
-            return Redirect::page($c);
-        }
-
-        return new Response(t('Access Denied'));
     }
 
     protected function validateAction()

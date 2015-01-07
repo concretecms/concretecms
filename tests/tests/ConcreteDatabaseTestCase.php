@@ -100,7 +100,7 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase {
         $db->getEntityManager()->clear();
 
         if ($this->conn) {
-            $this->conn->close();
+            $this->conn = null;
         }
 
         parent::tearDown();

@@ -7,17 +7,6 @@
     position: relative;
     padding-top: 10px;
     padding-bottom: 0px; /* the ccm-search-fields-row has a margin on the bottom */
-    margin-left: 95px;
-
-    &.ccm-search-fields-none {
-      margin-left: 0px;
-      border-bottom: 1px solid #efefef;
-      margin-bottom: 20px;
-      div.ccm-search-main-lookup-field {
-        border-left: 0px;
-        margin-left: 95px;
-      }
-    }
 
     select.ccm-search-bulk-action, select.ccm-search-choose-field {
       border: 0px;
@@ -28,6 +17,9 @@
       color: #999;
       height: auto;
       width: 200px;
+      height: 34px;
+      vertical-align: top;
+      display: inline-block;
       outline: none !important;
       .border-radius(0px);
       padding-right: 15px;
@@ -39,10 +31,8 @@
     }
 
     select.ccm-search-choose-field {
-      color: #666;
-      position: absolute;
-      top: 0px;
-      left: 0px;
+      color: #999;
+      margin-right: 40px;
     }
 
     select {
@@ -51,7 +41,6 @@
 
     div.ccm-search-main-lookup-field {
       position: relative;
-      border-left: 1px solid #efefef;
 
       i {
         position: absolute;
@@ -83,7 +72,7 @@
       }
 
       position: absolute;
-      right: 10px;
+      right: 20px;
       top: 10px;
       font-size: @font-size-small;
     }
@@ -100,40 +89,67 @@
 
 }
 
+div.ccm-dashboard-content-full {
+  form.ccm-search-fields {
+      &.ccm-search-fields-none {
+      margin-left: 0px;
+      margin-top: 10px;
+      border-bottom: 1px solid #efefef;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      div.ccm-search-main-lookup-field {
+        margin-left: 97px;
+      }
+      ul.ccm-search-form-advanced {
+        top: 20px;
+      }
+    }
+  }
+}
+
+div.ccm-search-fields-submit {
+  padding-bottom: 10px;
+  padding-right: 20px;
+.clearfix();
+}
+
+form.ccm-search-fields-none {
+  div.ccm-search-fields-row {
+    padding-left: 0px;
+  }
+}
+
 div.ccm-search-fields-row {
 
   min-height: 34px;
 
-  position: relative;
   margin-bottom: 10px;
+  padding: 0px 0px 10px 97px;
+  border-bottom: 1px solid #efefef;
+
+  position: relative;
+
   div.form-group {
 
     label.control-label {
+      width: 200px;
       color: #999;
-      top: 5px;
-      left: 0px;
-      position: absolute;
+      line-height: 34px;
+      vertical-align: top;
+      margin-right: 40px;
       font-size: @font-size-base !important;
       font-weight: normal;
     }
 
-    &.form-group-full {
-      width: 100%;
-      padding-right: 20px;
-    }
   }
 
   div.ccm-search-field-content {
-    border-left: 1px solid #efefef;
-    margin-left: 244px;
     padding-left: 10px;
+    display: inline-block;
     div.ccm-search-main-lookup-field {
       border-left: 0px;
     }
 
-    .select2-select {
-      width: 100%;
-    }
   }
 
 }
@@ -148,7 +164,7 @@ div.ccm-search-fields-advanced {
       color: #aaa;
       position: absolute;
       right: 20px;
-      top: 0px;
+      top: 8px;
 
       &:hover {
         color: #666;
@@ -296,12 +312,10 @@ table.ccm-search-results-table {
   }
 }
 
-table.ccm-search-results-table {
-  div.ccm-search-results-none {
-    font-size: @font-size-large;
-    margin-top: 60px;
-    text-align: center;
-  }
+div.ccm-search-results-none {
+  font-size: @font-size-large;
+  margin-top: 60px;
+  text-align: center;
 }
 
 div.ccm-search-results-pagination {
@@ -322,8 +336,29 @@ div.ccm-search-results-pagination {
         padding-right: 8px;
       }
     }
+  }
+}
+
+@media (max-width: @screen-md-max) {
+
+  .ccm-ui {
+    form.ccm-search-fields {
+
+      select.ccm-search-bulk-action, select.ccm-search-choose-field {
+        width: 120px;
+      }
+    }
+
+    div.ccm-search-fields-row {
+      div.form-group {
+        label.control-label {
+          width: 120px;
+        }
+      }
+    }
 
   }
+
 }
 
 @media (max-width: @screen-xs-max) {
@@ -337,13 +372,24 @@ div.ccm-search-results-pagination {
 
       div.ccm-search-fields-row {
         div.ccm-search-field-content {
-          margin-left: 100px;
-        }
-        select.ccm-search-choose-field, select.ccm-search-bulk-action {
-          width: 100px;
+          padding-left: 0px;
         }
       }
     }
   }
 
+    form.ccm-search-fields {
+
+      select.ccm-search-bulk-action, select.ccm-search-choose-field {
+        display: block;
+      }
+    }
+
+    div.ccm-search-fields-row {
+      div.form-group {
+        label.control-label {
+          display: block;
+        }
+      }
+    }
 }

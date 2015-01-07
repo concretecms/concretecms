@@ -34,8 +34,6 @@ if (count($argv) === 1) {
     exit;
 }
 
-define('FILE_PERMISSIONS_MODE', 0777);
-define('DIRECTORY_PERMISSIONS_MODE', 0777);
 define('C5_ENVIRONMENT_ONLY', true);
 
 error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
@@ -49,7 +47,7 @@ $defaults = array(
     'db-database' => '',
     'admin-email' => 'admin@example.com',
     'admin-password' => '',
-    'starting-point' => 'blank',
+    'starting-point' => 'elemental_blank',
     'target' => '',
     'site' => 'concrete5 Site',
     'core' => '',
@@ -107,20 +105,24 @@ if (!is_file($corePath . '/config/concrete.php')) {
     die("ERROR: Invalid concrete5 core.\n");
 }
 
-$availableLocales = array_filter(scandir(DIR_BASE . '/application/languages'), function ($item) {
-    if (strpos($item, '.') === 0) {
-        return false;
-    }
-    $fullPath = DIR_BASE . '/application/languages/' . $item;
-    if (!is_dir($fullPath)) {
-        return false;
-    }
-    if (!is_file($fullPath . '/LC_MESSAGES/messages.mo')) {
-        return false;
-    }
+if(is_dir(DIR_BASE . '/application/languages')) {
+    $availableLocales = array_filter(scandir(DIR_BASE . '/application/languages'), function ($item) {
+        if (strpos($item, '.') === 0) {
+            return false;
+        }
+        $fullPath = DIR_BASE . '/application/languages/' . $item;
+        if (!is_dir($fullPath)) {
+            return false;
+        }
+        if (!is_file($fullPath . '/LC_MESSAGES/messages.mo')) {
+            return false;
+        }
 
-    return true;
-});
+        return true;
+    });
+} else {
+    $availableLocales = array();
+}
 if ($cliconfig['default-locale']) {
     if ($cliconfig['default-locale'] === 'en_US') {
         $cliconfig['default-locale'] = '';

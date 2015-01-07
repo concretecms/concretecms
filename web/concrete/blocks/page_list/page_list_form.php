@@ -30,7 +30,7 @@ $form = Loader::helper('form/page_selector');
                         ?>
                         <option
                             value="<?= $ct->getPageTypeID() ?>" <? if ($ptID == $ct->getPageTypeID()) { ?> selected <? } ?>>
-                            <?= $ct->getPageTypeName() ?>
+                            <?= $ct->getPageTypeDisplayName() ?>
                         </option>
                     <?php
                     }

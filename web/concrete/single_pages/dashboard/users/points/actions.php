@@ -54,16 +54,16 @@
         	</div>
 
             <? 
-            $label = t('Add');
+            $label = t('Add Action');
             if ($upaID > 0) {
-            	$label = t('Update');
+            	$label = t('Update Action');
             }
             ?>
     
             <div class="ccm-dashboard-form-actions-wrapper">
                 <div class="ccm-dashboard-form-actions">
                     <a href="<?=$view->url('/dashboard/users/points/actions')?>" class="btn btn-default pull-left"><?=t('Back to List')?></a>
-                    <button class="btn btn-primary pull-right" type="submit"><?=t($label . ' Action')?></button>
+                    <button class="btn btn-primary pull-right" type="submit"><?=$label?></button>
                 </div>
             </div>
         </div>

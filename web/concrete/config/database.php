@@ -8,7 +8,7 @@ return array(
     /**
      * The location of the doctrine Proxy Classes
      */
-    'proxy_classes' => DIR_BASE_CORE . '/config/doctrine',
+    'proxy_classes' => DIR_BASE_CORE . '/config/doctrine/proxies',
 
     /**
      * The database charset

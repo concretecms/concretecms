@@ -204,8 +204,8 @@ class StartingPointPackage extends BasePackage {
 
         $db->Execute('alter table PagePaths add index (`cPath` (255))');
         $db->Execute('alter table Groups add index (`gPath` (255))');
-        $db->Execute('CREATE INDEX ipFrom ON SignupRequests (ipFrom(32))');
-        $db->Execute('CREATE UNIQUE INDEX ips ON UserBannedIPs (ipFrom(32), ipTo(32))');
+        $db->Execute('alter table SignupRequests add index (`ipFrom` (32))');
+        $db->Execute('alter table UserBannedIPs add unique index (ipFrom (32), ipTo(32))');
         $db->Execute(
             'alter table QueueMessages add FOREIGN KEY (`queue_id`) REFERENCES `Queues` (`queue_id`) ON DELETE CASCADE ON UPDATE CASCADE'
         );
@@ -213,10 +213,16 @@ class StartingPointPackage extends BasePackage {
 
 	public function add_users() {
 		// Firstly, install the core authentication types
-		$cba = AuthenticationType::add('concrete', 'Standard');
-		$fba = AuthenticationType::add('facebook', 'Facebook');
+		$cba = AuthenticationType::add('concrete',  'Standard');
+        $coa = AuthenticationType::add('community', 'concrete5.org');
+		$fba = AuthenticationType::add('facebook',  'Facebook');
+        $twa = AuthenticationType::add('twitter',   'Twitter');
+        $gat = AuthenticationType::add('google',   'Google');
 
 		$fba->disable();
+        $twa->disable();
+        $coa->disable();
+        $gat->disable();
 
 		\Concrete\Core\Tree\TreeType::add('group');
 		\Concrete\Core\Tree\Node\NodeType::add('group');
@@ -252,13 +258,13 @@ class StartingPointPackage extends BasePackage {
         Core::make('cache')->flush();
 
         if (!is_dir(Config::get('concrete.cache.directory'))) {
-            mkdir(Config::get('concrete.cache.directory'), DIRECTORY_PERMISSIONS_MODE);
-            chmod(Config::get('concrete.cache.directory'), DIRECTORY_PERMISSIONS_MODE);
+            mkdir(Config::get('concrete.cache.directory'), Config::get('concrete.filesystem.permissions.directory'));
+            chmod(Config::get('concrete.cache.directory'), Config::get('concrete.filesystem.permissions.directory'));
         }
 
         if (!is_dir(DIR_FILES_UPLOADED_STANDARD . REL_DIR_FILES_INCOMING)) {
-			mkdir(DIR_FILES_UPLOADED_STANDARD . REL_DIR_FILES_INCOMING, DIRECTORY_PERMISSIONS_MODE);
-			chmod(DIR_FILES_UPLOADED_STANDARD . REL_DIR_FILES_INCOMING, DIRECTORY_PERMISSIONS_MODE);
+			mkdir(DIR_FILES_UPLOADED_STANDARD . REL_DIR_FILES_INCOMING, Config::get('concrete.filesystem.permissions.directory'));
+			chmod(DIR_FILES_UPLOADED_STANDARD . REL_DIR_FILES_INCOMING, Config::get('concrete.filesystem.permissions.directory'));
 		}
 
 	}
@@ -276,13 +282,13 @@ class StartingPointPackage extends BasePackage {
 
         @unlink(DIR_CONFIG_SITE . '/database.php');
         file_put_contents(DIR_CONFIG_SITE . '/database.php', $renderer->render());
-        @chmod(DIR_CONFIG_SITE . '/database.php', FILE_PERMISSIONS_MODE);
+        @chmod(DIR_CONFIG_SITE . '/database.php', Config::get('concrete.filesystem.permissions.file'));
 
         $renderer = new Renderer($site_install);
 
         @unlink(DIR_CONFIG_SITE . '/app.php');
         file_put_contents(DIR_CONFIG_SITE . '/app.php', $renderer->render());
-        @chmod(DIR_CONFIG_SITE . '/app.php', FILE_PERMISSIONS_MODE);
+        @chmod(DIR_CONFIG_SITE . '/app.php', Config::get('concrete.filesystem.permissions.file'));
 
 
         @unlink(DIR_CONFIG_SITE . '/site_install.php');
@@ -317,11 +323,15 @@ class StartingPointPackage extends BasePackage {
 
 		$home = Page::getByID(1, "RECENT");
 		$home->assignPermissions($g1, array('view_page'));
-		$home->assignPermissions($g3, array('view_page_versions', 'view_page_in_sitemap', 'preview_page_as_user', 'edit_page_properties', 'edit_page_contents', 'edit_page_speed_settings', 'edit_page_theme', 'edit_page_template', 'edit_page_permissions', 'delete_page', 'delete_page_versions', 'approve_page_versions', 'add_subpage', 'move_or_copy_page', 'schedule_page_contents_guest_access'));
+		$home->assignPermissions($g3, array('view_page_versions', 'view_page_in_sitemap', 'preview_page_as_user', 'edit_page_properties', 'edit_page_contents', 'edit_page_speed_settings', 'edit_page_multilingual_settings', 'edit_page_theme', 'edit_page_template', 'edit_page_permissions', 'delete_page', 'delete_page_versions', 'approve_page_versions', 'add_subpage', 'move_or_copy_page', 'schedule_page_contents_guest_access'));
 
         // login
-        $dashboard = Page::getByPath('/login', "RECENT");
-        $dashboard->assignPermissions($g1, array('view_page'));
+        $login = Page::getByPath('/login', "RECENT");
+        $login->assignPermissions($g1, array('view_page'));
+
+        // register
+        $register = Page::getByPath('/register', "RECENT");
+        $register->assignPermissions($g1, array('view_page'));
 
 		// dashboard
 		$dashboard = Page::getByPath('/dashboard', "RECENT");

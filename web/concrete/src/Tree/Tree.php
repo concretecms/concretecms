@@ -107,7 +107,7 @@ abstract class Tree extends Object
             $node->populateDirectChildrenOnly();
 
             if ($node->getTreeNodeID() != $tree->getRootTreeNodeID()) {
-                $name = $node->getTreeNodeDisplayName();
+                $name = $node->getTreeNodeName();
                 $computedPath .= '/' . $name;
             }
 
@@ -140,7 +140,9 @@ abstract class Tree extends Object
         $db = Loader::db();
         // delete top level node
         $node = $this->getRootTreeNodeObject();
-        $node->delete();
+        if (is_object($node)) {
+            $node->delete();
+        }
         $this->deleteDetails();
         $db->Execute('delete from Trees where treeID = ?', array($this->treeID));
     }

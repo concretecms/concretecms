@@ -30,7 +30,7 @@ class AuthenticationType extends Object
      * Return a raw list of authentication types
      * @param bool $sorted true: Sort by display order, false: sort by install order
      * @param bool $activeOnly true: include only active types, false: include active and inactive types
-     * @return array
+     * @return AuthenticationType[]
      */
     public static function getList($sorted = false, $activeOnly = false)
     {
@@ -218,6 +218,18 @@ class AuthenticationType extends Object
     }
 
     /**
+     * Update the name
+     * @param string $authTypeName
+     */
+    public function setAuthenticationTypeName($authTypeName)
+    {
+        $db = Loader::db();
+        $db->Execute(
+           'UPDATE AuthenticationTypes SET authTypeName=? WHERE authTypeID=?',
+           array($authTypeName, $this->getAuthenticationTypeID()));
+    }
+
+    /**
      * AuthenticationType::setAuthenticationTypeDisplayOrder
      * Update the order for display.
      *
@@ -393,13 +405,22 @@ class AuthenticationType extends Object
         $form_hook = $this->mapAuthenticationTypeFilePath('hook.php');
         if ($form_hook->exists()) {
             ob_start();
-            $this->controller->hook();
+            if(method_exists($this->controller, 'hook'))
+            {
+                $this->controller->hook();
+            }
             extract($this->controller->getSets());
             require_once($form_hook->file);
             $out = ob_get_contents();
             ob_end_clean();
             echo $out;
         }
+    }
+
+    public function hasHook() {
+        $form_hook = $this->mapAuthenticationTypeFilePath('hook.php');
+
+        return method_exists($this->controller, 'hook') || $form_hook->exists();
     }
 
 }

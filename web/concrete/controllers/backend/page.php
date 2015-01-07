@@ -3,6 +3,8 @@ namespace Concrete\Controller\Backend;
 use Controller;
 use PageType, Permissions, Loader, Redirect;
 use Page as ConcretePage;
+use User;
+use Concrete\Core\Page\EditResponse as PageEditResponse;
 
 class Page extends Controller {
 
@@ -33,5 +35,34 @@ class Page extends Controller {
 			}
 		}
 	}
+
+    public function exitEditMode($cID, $token)
+    {
+        if (Loader::helper('validation/token')->validate('', $token)) {
+            $c = ConcretePage::getByID($cID);
+            $cp = new Permissions($c);
+            if ($cp->canViewToolbar()) {
+                $u = new User();
+                $u->unloadCollectionEdit();
+            }
+            return Redirect::page($c);
+        }
+
+        return new Response(t('Access Denied'));
+    }
+
+	public function getJSON() {
+        $h = \Core::make('helper/concrete/dashboard/sitemap');
+        if ($h->canRead()) {
+            $c = ConcretePage::getByID(intval($_POST['cID']));
+            $cp = new Permissions($c);
+            if ($cp->canViewPage()) {
+                $r = new PageEditResponse();
+                $r->setPage($c);
+                $r->outputJSON();
+            }
+        }
+	}
+
 }
 

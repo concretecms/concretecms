@@ -53,9 +53,11 @@ class Model {
 				$data[$key] = $value;
 			}
 		}
-		$db->Replace($this->_table, $data, $primaryKeys);
-		return 1;
 
+		$columnName = $this->getAutoIncrementColumnName();
+		$db->Replace($this->_table, $data, $primaryKeys);
+		$this->setAutoincrementColumn($columnName);
+		return 1;
 	}
 
 	protected function getPrimaryKeys() {
@@ -71,6 +73,29 @@ class Model {
 		return $primaryKeys;
 	}
 
+	protected function getAutoIncrementColumnName() {
+		$db = Loader::db();
+		$sm = $db->getSchemaManager();
+		$details = $sm->listTableDetails($this->_table);
+		foreach($details->getColumns() as $name => $column) {
+			if($column->getAutoincrement()) {
+				return $name;
+			}
+		}
+		return null;
+	}
+	
+	protected function setAutoIncrementColumn($name) {
+		if(empty($name)) {
+			return;
+		}
+
+		if(property_exists($this, $name) && empty($this->$name)) {
+			$db = Loader::db();
+			$this->$name = $db->lastInsertId();
+		}
+	}
+
 	public function Insert() {
 		$db = Loader::db();
 		$data = array();
@@ -80,8 +105,10 @@ class Model {
 				$data[$key] = $value;
 			}
 		}
-		$db->insert($this->_table, $data);
 
+		$columnName = $this->getAutoIncrementColumnName();
+		$db->insert($this->_table, $data);
+		$this->setAutoincrementColumn($columnName);
 	}
 
 	public function Delete() {

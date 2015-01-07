@@ -6,7 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Util\Debug;
 use Doctrine\DBAL\Logging\EchoSQLLogger;
 use FileSet;
-use League\Flysystem\AdapterInterface;
+use Concrete\Flysystem\AdapterInterface;
 use Loader;
 use CacheLocal;
 use Core;
@@ -193,18 +193,26 @@ class File implements \Concrete\Core\Permission\ObjectInterface
     {
         $fh = Loader::helper('concrete/file');
         $currentLocation = $this->getFileStorageLocationObject();
+        if ($newLocation->getID() == $currentLocation->getID()) {
+            return false;
+        }
+
         $currentFilesystem = $currentLocation->getFileSystemObject();
 
         $newFileSystem = $newLocation->getFileSystemObject();
 
         $list = $this->getVersionList();
-        foreach ($list as $fv) {
-            $contents = $fv->getFileContents();
-            $newFileSystem->put($fh->prefix($fv->getPrefix(), $fv->getFilename()), $contents);
-            $currentFilesystem->delete($fh->prefix($fv->getPrefix(), $fv->getFilename()));
+        try {
+            foreach ($list as $fv) {
+                $contents = $fv->getFileContents();
+                $newFileSystem->put($fh->prefix($fv->getPrefix(), $fv->getFilename()), $contents);
+                $currentFilesystem->delete($fh->prefix($fv->getPrefix(), $fv->getFilename()));
+            }
+        } catch(\Exception $e) {
+            throw new \Exception($e->getMessage());
         }
 
-        $this->location = $newLocation;
+        $this->storageLocation = $newLocation;
         $this->save();
     }
 
@@ -468,10 +476,22 @@ class File implements \Concrete\Core\Permission\ObjectInterface
 
     public function getApprovedVersion()
     {
+        // Ideally, doctrine's caching would handle this. Unfortunately, something is wrong with the $file
+        // object going into the query, so none of them are ever marked as cacheable, which means we always
+        // run the query even though we've run it multiple times in the same request. So we're going to
+        // step between doctrine this time.
+        $item = \Core::make('cache/request')->getItem('file/version/approved/' . $this->getFileID());
+        if (!$item->isMiss()) {
+            return $item->get();
+        }
+
         $db = Loader::db();
         $em = $db->getEntityManager();
         $r = $em->getRepository('\Concrete\Core\File\Version');
         $fv = $r->findOneBy(array('file' => $this, 'fvIsApproved' => true));
+
+        $item->set($fv);
+
         return $fv;
     }
 
@@ -508,6 +528,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         // now from the DB
         $em = $db->getEntityManager();
         $em->remove($this);
+        $em->flush();
         $db->Execute("delete from FileSetFiles where fID = ?", array($this->fID));
         $db->Execute("delete from FileSearchIndexAttributes where fID = ?", array($this->fID));
         $db->Execute("delete from DownloadStatistics where fID = ?", array($this->fID));

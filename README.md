@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/concrete5/concrete5-5.7.0.png?branch=master)](https://travis-ci.org/concrete5/concrete5-5.7.0)
+[![Build Status](http://img.shields.io/travis/concrete5/concrete5-5.7.0/master.svg)](https://travis-ci.org/concrete5/concrete5-5.7.0)
 
 # concrete5 5.7.0 Developer Repository
 
@@ -29,8 +29,8 @@ This is a developer preview branch. This is intended for Add-On developers and c
 4. Use [npm](https://www.npmjs.org/) to install [grunt](http://gruntjs.com/) to the build directory and install the command line interface
 
         cd build
-        npm install grunt grunt-contrib-concat grunt-contrib-uglify grunt-contrib-cssmin grunt-contrib-less grunt-contrib-watch
-		npm install -g grunt-cli
+        npm install -g grunt-cli
+        npm install
 
 5. Build concrete5 sources with grunt
 

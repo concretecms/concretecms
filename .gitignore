@@ -8,8 +8,8 @@ __MACOSX
 # ignore composer files
 composer.phar
 
-# ignore the site.php
-/web/application/config/site.php
+# ignore the config
+/web/application/config/*
 
 # ignore everything but the index.html
 /web/application/files/*
@@ -85,6 +85,7 @@ __IDE_SYMBOLS__.php
 /web/concrete/js/kinetic.js
 /web/concrete/js/layouts.js
 /web/concrete/js/redactor.js
+/web/concrete/js/jquery-awesome-rating.js
 /web/concrete/js/sitemap.js
 /web/concrete/js/spectrum.js
 /web/concrete/js/style-customizer.js
@@ -108,7 +109,7 @@ __IDE_SYMBOLS__.php
 /web/concrete/css/gathering/display.css
 /web/concrete/css/image-editor.css
 /web/concrete/css/jquery-magnific-popup.css
-/web/concrete/css/jquery-rating.css
+/web/concrete/css/jquery-awesome-rating.css
 /web/concrete/css/jquery-ui.css
 /web/concrete/css/redactor.css
 /web/concrete/css/sitemap.css

@@ -1,4 +1,7 @@
 <?php  defined('C5_EXECUTE') or die("Access Denied.");
+
+$fp = FilePermissions::getGlobal();
+$tp = new TaskPermission();
 ?>
 <script>
     var CCM_EDITOR_SECURITY_TOKEN = "<?=Loader::helper('validation/token')->generate('editor')?>";
@@ -52,8 +55,32 @@
             });
         };
 
+        sliderEntriesContainer.on('change', 'select[data-field=entry-link-select]', function() {
+            var container = $(this).closest('.ccm-image-slider-entry');
+            switch(parseInt($(this).val())) {
+                case 2:
+                    container.find('div[data-field=entry-link-page-selector]').hide();
+                    container.find('div[data-field=entry-link-url]').show();
+                    break;
+                case 1:
+                    container.find('div[data-field=entry-link-url]').hide();
+                    container.find('div[data-field=entry-link-page-selector]').show();
+                    break;
+                default:
+                    container.find('div[data-field=entry-link-page-selector]').hide();
+                    container.find('div[data-field=entry-link-url]').hide();
+                    break;
+            }
+        });
+
        <?php if($rows) {
-           foreach ($rows as $row) { ?>
+           foreach ($rows as $row) {
+            $linkType = 0;
+            if ($row['linkURL']) {
+                $linkType = 2;
+            } else if ($row['internalLinkCID']) {
+                $linkType = 1;
+           } ?>
            sliderEntriesContainer.append(_templateSlide({
                 fID: '<?php echo $row['fID'] ?>',
                 <?php if(File::getByID($row['fID'])) { ?>
@@ -62,14 +89,19 @@
                 image_url: '',
                <?php } ?>
                 link_url: '<?php echo $row['linkURL'] ?>',
+                link_type: '<?php echo $linkType?>',
                 title: '<?php echo addslashes($row['title']) ?>',
                 description: '<?php echo str_replace(array("\t", "\r", "\n"), "", addslashes($row['description']))?>',
                 sort_order: '<?php echo $row['sortOrder'] ?>'
             }));
+            sliderEntriesContainer.find('.ccm-image-slider-entry:last-child div[data-field=entry-link-page-selector]').concretePageSelector({
+                'inputName': 'internalLinkCID[]', 'cID': <? if ($linkType == 1) { ?><?=intval($row['internalLinkCID'])?><? } else { ?>false<? } ?>
+            });
         <?php }
         }?>
 
         doSortCount();
+        sliderEntriesContainer.find('select[data-field=entry-link-select]').trigger('change');
 
         $('.ccm-add-image-slider-entry').click(function(){
            var thisModal = $(this).closest('.ui-dialog-content');
@@ -79,16 +111,25 @@
                 link_url: '',
                 cID: '',
                 description: '',
+                link_type: 0,
                 sort_order: '',
                 image_url: ''
             }));
             var newSlide = $('.ccm-image-slider-entry').last();
             thisModal.scrollTop(newSlide.offset().top);
             newSlide.find('.redactor-content').redactor({
-                minHeight: '200'
+                minHeight: '200',
+                'concrete5': {
+                    filemanager: <?=$fp->canAccessFileManager()?>,
+                    sitemap: <?=$tp->canAccessSitemap()?>,
+                    lightbox: true
+                }
             });
             attachDelete(newSlide.find('.ccm-delete-image-slider-entry'));
             attachFileManagerLaunch(newSlide.find('.ccm-pick-slide-image'));
+            newSlide.find('div[data-field=entry-link-page-selector-select]').concretePageSelector({
+                'inputName': 'internalLinkCID[]'
+            });
             attachSortDesc(newSlide.find('i.fa-sort-desc'));
             attachSortAsc(newSlide.find('i.fa-sort-asc'));
             doSortCount();
@@ -99,7 +140,12 @@
         attachFileManagerLaunch($('.ccm-pick-slide-image'));
         $(function() {  // activate redactors
             $('.redactor-content').redactor({
-                minHeight: '200'
+                minHeight: '200',
+                'concrete5': {
+                    filemanager: <?=$fp->canAccessFileManager()?>,
+                    sitemap: <?=$tp->canAccessSitemap()?>,
+                    lightbox: true
+                }
             });
         });
     });
@@ -202,9 +248,24 @@
             <textarea style="display: none" class="redactor-content" name="<?=$view->field('description')?>[]"><%=description%></textarea>
         </div>
         <div class="form-group">
-            <label><?php echo t('URL') ?></label>
+           <label><?php echo t('Link') ?></label>
+            <select data-field="entry-link-select" name="linkType[]" class="form-control" style="width: 60%;">
+                <option value="0" <% if (!link_type) { %>selected<% } %>><?=t('None')?></option>
+                <option value="1" <% if (link_type == 1) { %>selected<% } %>><?=t('Another Page')?></option>
+                <option value="2" <% if (link_type == 2) { %>selected<% } %>><?=t('External URL')?></option>
+            </select>
+        </div>
+
+        <div style="display: none;" data-field="entry-link-url" class="form-group">
+           <label><?php echo t('URL:') ?></label>
             <textarea name="linkURL[]"><%=link_url%></textarea>
         </div>
+
+        <div style="display: none;" data-field="entry-link-page-selector" class="form-group">
+           <label><?php echo t('Choose Page:') ?></label>
+            <div data-field="entry-link-page-selector-select"></div>
+        </div>
+
         <input class="ccm-image-slider-entry-sort" type="hidden" name="<?=$view->field('sortOrder')?>[]" value="<%=sort_order%>"/>
         <div class="form-group">
             <span class="btn btn-danger ccm-delete-image-slider-entry"><?php echo t('Delete Entry'); ?></span>

@@ -26,6 +26,7 @@ class IPAddress {
      * Sets the current IP Address
      * @param string $ipAddress
      * @param bool $isHex
+     * @return $this
      */
     public function setIp($ipAddress, $isHex = false)
     {
@@ -34,6 +35,7 @@ class IPAddress {
         } else {
             $this->ipHex = bin2hex(inet_pton($ipAddress));
         }
+        return $this;
     }
 
     /**
@@ -140,10 +142,10 @@ class IPAddress {
             )
             ||
             ($this->isIPv6() &&
-                (  strpos($this->ipHex, 'fe80') === 0 //fe80::/10 Link-Scope Unicast
-                    || strpos($this->ipHex, 'fe90') === 0 //fe80::/10 Link-Scope Unicast
-                    || strpos($this->ipHex, 'fea0') === 0 //fe80::/10 Link-Scope Unicast
-                    || strpos($this->ipHex, 'feb0') === 0 //fe80::/10 Link-Scope Unicast
+                (  strpos($this->ipHex, 'fe8') === 0 //fe80::/10 Link-Scope Unicast
+                    || strpos($this->ipHex, 'fe9') === 0 //fe80::/10 Link-Scope Unicast
+                    || strpos($this->ipHex, 'fea') === 0 //fe80::/10 Link-Scope Unicast
+                    || strpos($this->ipHex, 'feb') === 0 //fe80::/10 Link-Scope Unicast
                 )
             )
         ) {

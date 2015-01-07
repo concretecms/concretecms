@@ -15,6 +15,8 @@ RedactorPlugins.concrete5inline = {
             $('li#ccm-redactor-actions-buttons').hide();
             ConcreteEvent.fire('EditModeExitInline');
             obj.destroy();
+
+            Concrete.getEditMode().scanBlocks();
         });
         $('#ccm-redactor-save-button').unbind().on('click', function() {
             $('#redactor-content').val(obj.get());
@@ -129,3 +131,18 @@ RedactorPlugins.concrete5 = {
     }
 
 }
+
+RedactorPlugins.underline = {
+        init: function()
+        {
+            var button = this.buttonAddAfter('italic', 'underline', 'Underline', this.format);
+        },
+        format: function(s)
+        {
+            if (jQuery(this.buttonGet('underline')).hasClass('redactor_act')) {
+                this.inlineRemoveFormat('u');
+            } else {
+                this.inlineFormat('u');
+            }
+        }
+};

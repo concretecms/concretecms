@@ -27,7 +27,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
         <h4>
             <?= $type->getName() ?>
             <small><?= t('%s x %s dimensions', $width, $height) ?></small>
-            <? if ($fp->canEditFile() && $hasFile) { ?>
+            <? if ($fp->canEditFileContents() && $hasFile) { ?>
                 <a href="<?= $url . '?' . $query ?>"
                    dialog-width="90%"
                    dialog-height="70%"

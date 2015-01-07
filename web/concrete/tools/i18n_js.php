@@ -61,8 +61,9 @@ var ccmi18n = {
     requestTimeout: "<?=t('This request took too long.')?>",
     generalRequestError: "<?=t('An unexpected error occurred.')?>",
     helpPopup: "<?=t('Help')?>",
-    community: "<?=t('concrete5 Community')?>",
-    communityCheckout: "<?=t('concrete5 Community - Purchase &amp; Checkout')?>",
+    community: "<?=t('concrete5 Marketplace')?>",
+    communityCheckout: "<?=t('concrete5 Marketplace - Purchase & Checkout')?>",
+    communityDownload: "<?=t('concrete5 Marketplace - Download')?>",
     noIE6: "<?=t('concrete5 does not support Internet Explorer 6 in edit mode.')?>",
     helpPopupLoginMsg: "<?=t('Get more help on your question by posting it to the concrete5 help center on concrete5.org')?>",
     marketplaceErrorMsg: "<?=t('<p>You package could not be installed.  An unknown error occured.</p>')?>",
@@ -101,7 +102,8 @@ var ccmi18n = {
     uppercase: "<?=t('Uppercase')?>",
     fontSize: "<?=t('Font Size')?>",
     letterSpacing: "<?=t('Letter spacing')?>",
-    lineHeight: "<?=t('Line Height')?>"
+    lineHeight: "<?=t('Line Height')?>",
+    emptyArea: "<?= t('Empty %s Area', '<%- area_handle %>') ?>"
 };
 
 var ccmi18n_editor = {
@@ -137,7 +139,7 @@ var ccmi18n_sitemap = {
     setPagePermissions: "<?=t('Permissions')?>",
     setPagePermissionsMsg: "<?=t('Page permissions updated successfully.')?>",
     pageDesignMsg: "<?=t('Theme and page type updated successfully.')?>",
-    pageDesign: "<?=t('Design')?>",
+    pageDesign: "<?=t('Design &amp; Type')?>",
     pageVersions: "<?=t('Versions')?>",
     deletePage: "<?=t('Delete')?>",
     deletePages: "<?=t('Delete Pages')?>",
@@ -161,6 +163,7 @@ var ccmi18n_sitemap = {
     max: "<?=t('max')?>",
     noResults: "<?=t('No results found.')?>",
     areYouSure: "<?=t('Are you sure?')?>",
+    loadingText: "<?=t('Loading')?>",
     loadError: "<?=t('Unable to load sitemap data. Response received: ')?>",
     loadErrorTitle: "<?=t('Unable to load sitemap data.')?>",
     on: "<?=t('on')?>"
@@ -201,6 +204,7 @@ var ccmi18n_filemanager = {
     rescan: "<?=t('Rescan')?>",
     pending: "<?=t('Pending')?>",
     uploadComplete: "<?=t('Upload Complete')?>",
+    uploadFailed: "<?=t('One or more files failed to upload')?>",
     uploadProgress: "<?=t('Upload Progress')?>",
 
     PTYPE_CUSTOM: "<?//=FilePermissions::PTYPE_CUSTOM?>",
@@ -235,5 +239,5 @@ var ccmi18n_topics = {
     deleteTopic: "<?=t('Delete Topic')?>",
     cloneTopic: "<?=t('Clone Topic')?>",
     editPermissions: "<?=t('Edit Permissions')?>"
-    
+
 };

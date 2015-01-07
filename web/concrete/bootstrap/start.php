@@ -72,6 +72,23 @@ $cms->instance('config', $config = new ConfigRepository($file_loader, $file_save
 
 /**
  * ----------------------------------------------------------------------------
+ * Timezone Config
+ * ----------------------------------------------------------------------------
+ */
+if (!$config->has('app.timezone')) {
+    // There is no timezone set.
+    $config->set('app.timezone', @date_default_timezone_get());
+}
+
+if (!$config->has('app.server_timezone')) {
+    // There is no server timezone set.
+    $config->set('app.server_timezone', @date_default_timezone_get());
+}
+
+@date_default_timezone_set($config->get('app.timezone'));
+
+/**
+ * ----------------------------------------------------------------------------
  * Legacy Definitions
  * ----------------------------------------------------------------------------
  */
@@ -152,7 +169,7 @@ if ($cms->isRunThroughCommandLineInterface()) {
  * ----------------------------------------------------------------------------
  * If not through CLI, load up the application/bootstrap/app.php
  */
-@include DIR_APPLICATION . '/bootstrap/app.php';
+include DIR_APPLICATION . '/bootstrap/app.php';
 
 
 /**
@@ -200,7 +217,6 @@ if ($response) {
  */
 require DIR_BASE_CORE . '/bootstrap/preprocess.php';
 
-
 /**
  * ----------------------------------------------------------------------------
  * Set the active language for the site, based either on the site locale, or the
@@ -214,13 +230,9 @@ $loc = Localization::getInstance();
 $loc->setLocale($lan);
 
 /**
- * ----------------------------------------------------------------------------
- * Redirect user based on their trailing or non-trailing slash. Must come after
- * preferences because we use the pretty URLs preference.
- * ----------------------------------------------------------------------------
+ * Handle automatic updating
  */
-$cms->handleBaseURLRedirection();
-$cms->handleURLSlashes();
+$cms->handleAutomaticUpdates();
 
 /**
  * ----------------------------------------------------------------------------

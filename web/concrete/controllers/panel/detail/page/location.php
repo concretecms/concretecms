@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Controller\Panel\Detail\Page;
 use \Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
+use Concrete\Core\Workflow\Request\ApprovePageRequest;
 use PageEditResponse;
 use PermissionKey;
 use Exception;
@@ -10,6 +11,7 @@ use Permissions;
 use User;
 use Page;
 use Request;
+use Concrete\Core\Page\Collection\Version\Version;
 use Database;
 use \Concrete\Core\Workflow\Request\MovePageRequest as MovePagePageWorkflowRequest;
 use \Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
@@ -17,13 +19,15 @@ use \Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
 class Location extends BackendInterfacePageController {
 
 	protected $viewPath = '/panels/details/page/location';
+    protected $controllerActionPath = '/ccm/system/panels/details/page/location';
+    protected $validationToken = '/panels/details/page/location';
 
 	protected function canAccess() {
 		return ($this->page->getCollectionID() != HOME_CID && is_object($this->asl) && $this->asl->allowEditPaths());
 	}
 
-	public function __construct() {
-		parent::__construct();
+	public function on_start() {
+		parent::on_start();
 		$pk = PermissionKey::getByHandle('edit_page_properties');
 		$pk->setPermissionObject($this->page);
 		$this->asl = $pk->getMyAssignment();
@@ -72,7 +76,7 @@ class Location extends BackendInterfacePageController {
 					$pkr->setRequesterUserID($u->getUserID());
 					$u->unloadCollectionEdit($oc);
 			        $response = $pkr->trigger();
-                    if ($response instanceof WorkflowProgressResponse) {
+                    if ($response instanceof WorkflowProgressResponse && !$this->request->request->get('sitemap')) {
                         $nc = Page::getByID($oc->getCollectionID());
                         $r->setRedirectURL(Loader::helper('navigation')->getLinkToCollection($nc));
                     }

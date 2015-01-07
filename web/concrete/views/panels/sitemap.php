@@ -5,10 +5,10 @@
 	<h5><?=t('New Page')?></h5>
 	<ul class="ccm-panel-sitemap-list">
 	<? foreach($frequentPageTypes as $pt) { ?>
-		<li><a href="<?=URL::to('/ccm/system/page/', 'create', $pt->getPageTypeID())?>"><?=$pt->getPageTypeName()?></a></li>
+		<li><a href="<?=URL::to('/ccm/system/page/', 'create', $pt->getPageTypeID())?>"><?=$pt->getPageTypeDisplayName()?></a></li>
 	<? } ?>
     <? foreach($otherPageTypes as $pt) { ?>
-        <li data-page-type="other" <? if (count($frequentPageTypes)) { ?>style="display: none"<? } ?>><a href="<?=URL::to('/ccm/system/page/', 'create', $pt->getPageTypeID())?>"><?=$pt->getPageTypeName()?></a></li>
+        <li data-page-type="other" <? if (count($frequentPageTypes)) { ?>style="display: none"<? } ?>><a href="<?=URL::to('/ccm/system/page/', 'create', $pt->getPageTypeID())?>"><?=$pt->getPageTypeDisplayName()?></a></li>
     <? } ?>
 
     <? if (count($frequentPageTypes) && count($otherPageTypes)) { ?>

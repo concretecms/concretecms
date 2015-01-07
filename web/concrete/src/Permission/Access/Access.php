@@ -288,11 +288,14 @@ class Access extends Object
 
     public static function getByID($paID, PermissionKey $pk, $checkPA = true)
     {
-        $db = Loader::db();
-        $pa = PermissionCache::getPermissionAccessObject($paID, $pk);
-        if (is_object($pa)) {
-            return $pa;
+        $cache = Core::make('cache/request');
+    	$identifier = sprintf('permission/access/%s/%s', $pk->getPermissionKeyID(), $paID);
+        $item = $cache->getItem($identifier);
+        if (!$item->isMiss()) {
+            return $item->get();
         }
+
+        $db = Loader::db();
 
         $handle = $pk->getPermissionKeyCategoryHandle();
         if ($pk->permissionKeyHasCustomClass()) {
@@ -315,7 +318,8 @@ class Access extends Object
         if (is_object($obj)) {
             $obj->setPermissionKey($pk);
         }
-        PermissionCache::addPermissionAccessObject($paID, $pk, $obj);
+
+        $item->set($obj);
         return $obj;
     }
 

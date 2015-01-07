@@ -4,6 +4,7 @@ namespace Concrete\Core\Database\Connection;
 use Concrete\Core\Cache\Adapter\DoctrineCacheDriver;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
+use Config;
 
 class Connection extends \Doctrine\DBAL\Connection
 {
@@ -31,11 +32,11 @@ class Connection extends \Doctrine\DBAL\Connection
 
         $config = Setup::createConfiguration(
             false,
-            \Config::get('database.proxy_classes'),
-            new DoctrineCacheDriver('cache/expensive'));
+            Config::get('database.proxy_classes'),
+            new DoctrineCacheDriver('cache/expensive')
+        );
         $driverImpl = $config->newDefaultAnnotationDriver(DIR_BASE_CORE . '/' . DIRNAME_CLASSES);
         $config->setMetadataDriverImpl($driverImpl);
-
         return EntityManager::create($this, $config);
     }
 

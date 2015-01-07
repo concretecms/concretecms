@@ -6,7 +6,10 @@ use Concrete\Core\Cache\Page\PageCache;
 use Concrete\Core\Cache\Page\PageCacheRecord;
 use Concrete\Core\Foundation\ClassLoader;
 use Concrete\Core\Foundation\EnvironmentDetector;
+use Concrete\Core\Localization\Localization;
+use Concrete\Core\Logging\Query\Logger;
 use Concrete\Core\Routing\DispatcherRouteCallback;
+use Concrete\Core\Updater\Update;
 use Config;
 use Core;
 use Database;
@@ -41,6 +44,25 @@ class Application extends Container
 
         if ($this->isInstalled()) {
             $this->handleScheduledJobs();
+
+            $logger = new Logger();
+            $r = Request::getInstance();
+
+            if (Config::get('concrete.log.queries.log')) {
+                $connection = Database::getActiveConnection();
+                if ($logger->shouldLogQueries($r)) {
+                    $loggers = array();
+                    $configuration = $connection->getConfiguration();
+                    $loggers[] = $configuration->getSQLLogger();
+                    $configuration->setSQLLogger(null);
+                    if (Config::get('concrete.log.queries.clear_on_reload')) {
+                        $logger->clearQueryLog();
+                    }
+
+                    $logger->write($loggers);
+
+                }
+            }
 
             foreach (\Database::getConnections() as $connection) {
                 $connection->close();
@@ -77,6 +99,9 @@ class Application extends Container
         // clear the environment overrides cache
         $env = \Environment::get();
         $env->clearOverrideCache();
+
+        // Clear localization cache
+        Localization::clearCache();
 
         // clear block type cache
         BlockType::clearCache();
@@ -168,6 +193,17 @@ class Application extends Container
         return false;
     }
 
+    public function handleAutomaticUpdates()
+    {
+        if (Config::get('concrete.updates.enable_auto_update_core')) {
+            $installed = Config::get('concrete.version_installed');
+            $core = Config::get('concrete.version');
+            if ($core && $installed && version_compare($installed, $core, '<')) {
+                Update::updateToCurrentVersion();
+            }
+        }
+    }
+
     /**
      * Run startup and localization events on any installed packages.
      */
@@ -181,7 +217,7 @@ class Application extends Container
             $p->registerConfigNamespace();
             if ($p->isPackageInstalled()) {
                 $pkg = Package::getClass($p->getPackageHandle());
-                if (is_object($pkg)) {
+                if (is_object($pkg) && (!$pkg instanceof \Concrete\Core\Package\BrokenPackage)) {
                     $cl->registerPackage($pkg);
                     // handle updates
                     if (Config::get('concrete.updates.enable_auto_update_packages')) {
@@ -213,19 +249,9 @@ class Application extends Container
      */
     public function setupFilesystem()
     {
-        if (!defined('FILE_PERMISSIONS_MODE')) {
-            $perm = $this->make('helper/file')->getCreateFilePermissions()->file;
-            $perm ? define('FILE_PERMISSIONS_MODE', $perm) : define('FILE_PERMISSIONS_MODE', 0664);
-        }
-        if (!defined('DIRECTORY_PERMISSIONS_MODE')) {
-            $perm = $this->make('helper/file')->getCreateFilePermissions()->dir;
-            $perm ? define('DIRECTORY_PERMISSIONS_MODE', $perm) : define('DIRECTORY_PERMISSIONS_MODE', 0775);
-        }
         if (!is_dir(Config::get('concrete.cache.directory'))) {
-            @mkdir(Config::get('concrete.cache.directory'));
-            @chmod(Config::get('concrete.cache.directory'), DIRECTORY_PERMISSIONS_MODE);
-            @touch(Config::get('concrete.cache.directory') . '/index.html');
-            @chmod(Config::get('concrete.cache.directory') . '/index.html', FILE_PERMISSIONS_MODE);
+            @mkdir(Config::get('concrete.cache.directory'), Config::get('concrete.filesystem.permissions.directory'));
+            @touch(Config::get('concrete.cache.directory') . '/index.html', Config::get('concrete.filesystem.permissions.file'));
         }
     }
 
@@ -234,7 +260,8 @@ class Application extends Container
      */
     public function isRunThroughCommandLineInterface()
     {
-        return PHP_SAPI == 'cli';
+
+        return defined('C5_ENVIRONMENT_ONLY') && C5_ENVIRONMENT_ONLY || PHP_SAPI == 'cli';
     }
 
     /**
@@ -256,7 +283,7 @@ class Application extends Container
             if ($pathInfo != $redirect) {
                 $dispatcher = Config::get('concrete.seo.url_rewriting') ? '' : '/' . DISPATCHER_FILENAME;
                 Redirect::url(
-                        BASE_URL . DIR_REL . $dispatcher . '/' . $path . ($r->getQueryString(
+                        BASE_URL . DIR_REL . $dispatcher . $redirect . ($r->getQueryString(
                         ) ? '?' . $r->getQueryString() : '')
                 )->send();
             }
@@ -278,7 +305,7 @@ class Application extends Container
                 }
             }
 
-            $uri = $this->make('security')->sanitizeURL($_SERVER['REQUEST_URI']);
+            $uri = $this->make('helper/security')->sanitizeURL($_SERVER['REQUEST_URI']);
             if (strpos($uri, '%7E') !== false) {
                 $uri = str_replace('%7E', '~', $uri);
             }

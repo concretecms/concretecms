@@ -53,7 +53,13 @@ class ArrangeBlocks extends Page
                     } else {
                         // we're not done yet. Now we have to check to see whether this user has permission to add
                         // a block of this type to the destination area.
-                        $b = Block::getByID($_REQUEST['block'], $nvc, $arHandle);
+
+                        if ($ar->isGlobalArea()) {
+                            $stack = Stack::getByName($arHandle);
+                            $b = Block::getByID($_REQUEST['block'], $stack, STACKS_AREA_NAME);
+                        } else {
+                            $b = Block::getByID($_REQUEST['block'], $nvc, $arHandle);
+                        }
                         $bt = $b->getBlockTypeObject();
                         if (!$destAP->canAddBlock($bt)) {
                             $e->add(t('You may not add %s to area %s.', t($bt->getBlockTypeName()), $destAreaHandle));
@@ -76,34 +82,27 @@ class ArrangeBlocks extends Page
             // If the source_area is the only global area
             if ($source_area->isGlobalArea() && !$destination_area->isGlobalArea()) {
                 $cp = new Permissions($nvc);
-                if ($cp->canViewPageVersions()) {
-                    $stack = Stack::getByName($source_area->getAreaHandle());
-                } else {
-                    $stack = Stack::getByName($source_area->getAreaHandle(), 'ACTIVE');
-                }
-                $block = Block::getByID($_POST['block'], $stack, Area::get($stack, STACKS_AREA_NAME));
+                $stack = Stack::getByName($source_area->getAreaHandle());
+                $stackToModify = $stack->getVersionToModify();
+                $nvc->relateVersionEdits($stackToModify);
+                $block = Block::getByID($_POST['block'], $stackToModify, Area::get($stackToModify, STACKS_AREA_NAME));
                 $block->move($nvc, Area::get($nvc, STACKS_AREA_NAME));
             }
 
             if ($destination_area->isGlobalArea()) {
                 $cp = new Permissions($nvc);
-                if ($cp->canViewPageVersions()) {
-                    $stack = Stack::getByName($destination_area->getAreaHandle());
-                } else {
-                    $stack = Stack::getByName($destination_area->getAreaHandle(), 'ACTIVE');
-                }
+                $stack = Stack::getByName($destination_area->getAreaHandle());
+                $stackToModify = $stack->getVersionToModify();
+                $nvc->relateVersionEdits($stackToModify);
                 // If the source area is global, we need to get the block from there rather than from the view controller
                 if ($source_area->isGlobalArea()) {
-                    if ($cp->canViewPageVersions()) {
-                        $source_stack = Stack::getByName($source_area->getAreaHandle());
-                    } else {
-                        $source_stack = Stack::getByName($source_area->getAreaHandle(), 'ACTIVE');
-                    }
-                    $block = Block::getByID($_POST['block'], $source_stack, Area::get($source_stack, STACKS_AREA_NAME));
+                    $sourceStackToModify = Stack::getByName($source_area->getAreaHandle())->getVersionToModify();
+                    $nvc->relateVersionEdits($sourceStackToModify);
+                    $block = Block::getByID($_POST['block'], $sourceStackToModify, Area::get($sourceStackToModify, STACKS_AREA_NAME));
                 } else {
-                    $block = Block::getByID($_POST['block'], $this->page, $source_area);
+                    $block = Block::getByID($_POST['block'], $nvc, $source_area);
                 }
-                $block->move($stack->getVersionToModify(), Area::get($stack, STACKS_AREA_NAME));
+                $block->move($stackToModify, Area::get($stackToModify, STACKS_AREA_NAME));
             }
         }
 

@@ -1,7 +1,6 @@
 (function (window, $, _, Concrete) {
     'use strict';
 
-
     var Layout = Concrete.Layout = function Layout(elem, edit_mode) {
         this.init.apply(this, _(arguments).toArray());
     };

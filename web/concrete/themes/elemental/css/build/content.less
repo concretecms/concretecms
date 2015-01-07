@@ -19,7 +19,7 @@ div.ccm-page {
   h3 {.make-heading(@h3-type-font-family, @h3-type-font-size, @h3-type-font-weight, @h3-type-color);}
   h4 {.make-heading(@h4-type-font-family, @h4-type-font-size, @h4-type-font-weight, @h4-type-color);}
   h5 {.make-heading(@h5-type-font-family, @h5-type-font-size, @h5-type-font-weight, @h5-type-color, @h5-type-text-transform);}
-  h6 {.make-heading(@h6-type-font-family, @h6-type-font-size, @h6-type-font-weight, @h6-type-color, @h5-type-text-transform);}
+  h6 {.make-heading(@h6-type-font-family, @h6-type-font-size, @h6-type-font-weight, @h6-type-color, @h6-type-text-transform);}
 
   img {
     max-width: 100%;
@@ -43,7 +43,7 @@ div.ccm-page {
   }
 
   main, footer {
-    a:not(.fa .btn) {
+    a:not(.fa):not(.btn) {
       color: @body-link-color;
 
       &:hover {

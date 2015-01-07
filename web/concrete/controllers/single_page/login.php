@@ -3,6 +3,7 @@ namespace Concrete\Controller\SinglePage;
 
 use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Core\Authentication\AuthenticationTypeFailureException;
+use Concrete\Core\Authentication\LoginException;
 use Concrete\Core\Routing\RedirectResponse;
 use Config;
 use Events;
@@ -22,7 +23,6 @@ class Login extends PageController
 
     public $helpers = array('form');
     protected $locales = array();
-    protected $supportsPageCache = true;
 
     public function on_before_render()
     {
@@ -64,18 +64,21 @@ class Login extends PageController
      * @throws \Concrete\Core\Authentication\AuthenticationTypeFailureException
      * @throws \Exception
      */
-    public function callback($type, $method = 'callback', $a = null, $b = null, $c = null, $d = null, $e = null, $f = null, $g = null, $h = null, $i = null, $j = null)
+    public function callback($type=null, $method = 'callback', $a = null, $b = null, $c = null, $d = null, $e = null, $f = null, $g = null, $h = null, $i = null, $j = null)
     {
+        if (!$type) {
+            return $this->view();
+        }
         $at = AuthenticationType::getByHandle($type);
         if ($at) {
             $this->set('authType', $at);
         }
         if (!method_exists($at->controller, $method)) {
-            throw new \Exception(t('Invalid method.'));
+            return $this->view();
         }
         if ($method != 'callback') {
             if (!is_array($at->controller->apiMethods) || !in_array($method, $at->controller->apiMethods)) {
-                throw new \Exception(t("Invalid method."));
+                return $this->view();
             }
         }
         try {
@@ -109,8 +112,10 @@ class Login extends PageController
         } else {
             try {
                 $at = AuthenticationType::getByHandle($type);
-                $at->controller->authenticate();
-                $this->finishAuthentication($at);
+                $user = $at->controller->authenticate();
+                if ($user && $user->isLoggedIn()) {
+                    $this->finishAuthentication($at);
+                }
             } catch (\exception $e) {
                 $this->error->add($e->getMessage());
             }
@@ -131,10 +136,6 @@ class Login extends PageController
         }
         $db = Loader::db();
         $u = new User();
-        if ($u->getUserID() == 1 && $type->getAuthenticationTypeHandle() != 'concrete') {
-            $u->logout();
-            throw new \Exception(t('You can only identify as the admin user using the concrete login.'));
-        }
 
         $ui = UserInfo::getByID($u->getUserID());
         $aks = UserAttributeKey::getRegistrationList();
@@ -244,6 +245,9 @@ class Login extends PageController
                 //should administrator be redirected to dashboard?  defaults to yes if not set.
                 $adminToDash = intval(Config::get('concrete.misc.login_admin_to_dashboard'));
                 if ($dbp->canRead() && $adminToDash) {
+                    if(!$rc instanceof Page || $rc->isError()){
+                        $rc = $dash;
+                    }
                     $rUrl = $navigation->getLinkToCollection($rc);
                     break;
                 }
@@ -325,6 +329,7 @@ class Login extends PageController
                         return $ak->isAttributeKeyRequiredOnRegister() && !is_object($ui->getAttributeValueObject($ak));
                     }));
 
+            $saveAttributes = array();
             foreach ($unfilled as $attribute) {
                 $err = $attribute->validateAttributeForm();
                 if ($err == false) {
@@ -332,10 +337,13 @@ class Login extends PageController
                 } elseif ($err instanceof \Concrete\Core\Error\Error) {
                     $this->error->add($err);
                 } else {
-                    $attribute->saveAttributeForm($ui);
+                    $saveAttributes[] = $attribute;
                 }
             }
 
+            if (count($saveAttributes) > 0) {
+                $ui->saveUserAttributesForm($saveAttributes);
+            }
             $this->finishAuthentication($at);
         } catch (\Exception $e) {
             $this->error->add($e->getMessage());
@@ -359,18 +367,5 @@ class Login extends PageController
             Session::set('rcID', intval($cID));
         }
     }
-
-    /* @TODO this functionality needs to be ported to the concrete5 auth type
-     * // responsible for validating a user's email address
-     * public function v($hash = '') {
-     * $ui = UserInfo::getByValidationHash($hash);
-     * if (is_object($ui)) {
-     * $ui->markValidated();
-     * $this->set('uEmail', $ui->getUserEmail());
-     * $this->set('validated', true);
-     * }
-     * }
-
-     */
 
 }

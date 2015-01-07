@@ -122,12 +122,12 @@ class Stacks extends DashboardPageController {
 			foreach($blocks as $b1) {
 				$btc = $b1->getInstance();
 				// now we inject any custom template CSS and JavaScript into the header
-				if('Controller' != get_class($btc)){
+                if ($btc instanceof \Concrete\Core\Block\BlockController) {
 					$btc->outputAutoHeaderItems();
 				}
 				$btc->runTask('on_page_view', array($view));
 			}
-			$this->addHeaderItem('<style type="text/css">' . $s->outputCustomStyleHeaderItems(true) . '</style>');
+			$this->addHeaderItem($s->outputCustomStyleHeaderItems(true));
 
 			$this->set('stack', $s);
 			$this->set('blocks', $blocks);

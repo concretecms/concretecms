@@ -9,8 +9,7 @@ abstract class File extends \Concrete\Controller\Backend\UserInterface {
 
 	protected $file;
 
-	public function __construct() {
-		parent::__construct();
+	public function on_start() {
 		$request = $this->request;
 		$fID = Loader::helper('security')->sanitizeInt($request->query->get('fID'));
 		if ($fID) {

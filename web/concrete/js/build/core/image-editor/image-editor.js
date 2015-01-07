@@ -128,9 +128,9 @@ var ImageEditor = function (settings) {
     im.saveUrl = settings.saveUrl;
     im.width = settings.width;
     im.height = settings.height;
-    im.saveWidth = settings.saveWidth || round(im.width / 2);
-    im.saveHeight = settings.saveHeight || round(im.height / 2);
-    im.strictSize = settings.saveWidth !== undefined;
+    im.strictSize = typeof settings.strictSize !== 'undefined' ? !!settings.strictSize : settings.saveWidth > 0;
+    im.saveWidth = settings.saveWidth || (im.strictSize ? 0 : round(im.width / 2));
+    im.saveHeight = settings.saveHeight || (im.strictSize ? 0 : round(im.height / 2));
     im.stage = new Kinetic.Stage(settings);
     im.namespaces = {};
     im.controlSets = {};
@@ -145,6 +145,7 @@ var ImageEditor = function (settings) {
     im.domContext = im.editorContext.parent();
     im.controlContext = im.domContext.children('div.controls');
     im.controlSetNamespaces = [];
+    debugger;
 
     im.showLoader = $.fn.dialog.showLoader;
     im.hideLoader = $.fn.dialog.hideLoader;
@@ -795,7 +796,28 @@ if (settings.src) {
             im.saveHeight = img.height;
             im.fire('saveSizeChange');
             im.buildBackground();
+        } else if (im.saveWidth == 0 || im.saveHeight == 0) {
+            if (im.saveWidth == 0) {
+                if (im.saveHeight == 0) {
+                    im.saveWidth = img.width;
+                    im.saveHeight = img.height;
+
+                    im.fire('saveSizeChange');
+                    im.buildBackground();
+                } else {
+                    im.saveWidth = Math.floor(img.width / img.height * im.saveHeight);
+
+                    im.fire('saveSizeChange');
+                    im.buildBackground();
+                }
+            } else if (im.saveHeight == 0) {
+                im.saveHeight = Math.floor(img.height / img.width * im.saveWidth);
+
+                im.fire('saveSizeChange');
+                im.buildBackground();
+            }
         }
+        debugger;
         var center = {
             x: Math.floor(im.center.x - (img.width / 2)),
             y: Math.floor(im.center.y - (img.height / 2))

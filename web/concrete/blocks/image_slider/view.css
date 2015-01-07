@@ -1,5 +1,9 @@
 /*! http://responsiveslides.com v1.54 by @viljamis */
 
+.ccm-image-slider {
+    position: relative;
+}
+
 .rslides {
     position: relative;
     list-style: none;
@@ -9,7 +13,7 @@
     margin: 0;
 }
 
-.rslides li {
+.rslides > li {
     -webkit-backface-visibility: hidden;
     position: absolute;
     display: none;
@@ -18,7 +22,7 @@
     top: 0;
 }
 
-.rslides li:first-child {
+.rslides > li:first-child {
     position: relative;
     display: block;
     float: left;

@@ -13,12 +13,12 @@ class AddSet extends DashboardPageController {
 		
 		
 		if (!$validation_token->validate("file_sets_add")) {
-			$this->set('error', array($validation_token->getErrorMessage()));
+			$this->error->add($validation_token->getErrorMessage());
 			return;
 		}
 		
 		if (!trim($this->post('file_set_name'))) {
-			$this->set('error', array(t('Please Enter a Name')));
+			$this->error->add(t('Please Enter a Name'));
 			return;
 		}
 		$setName = trim($this->post('file_set_name'));

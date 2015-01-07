@@ -6,7 +6,7 @@
 <?
 $permissions = PermissionKey::getList('page_type');
 
-foreach($permissions as $pk) { 
+foreach($permissions as $pk) {
 	$pk->setPermissionObject($pagetype);
 	?>
 	<tr>

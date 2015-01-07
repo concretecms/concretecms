@@ -20,7 +20,7 @@ class PageController extends Controller {
         return $this->supportsPageCache;
     }
 
-    public function __construct(Page $c) {
+    public function __construct(\Concrete\Core\Page\Page $c) {
         parent::__construct();
         $this->c = $c;
         $this->view = new PageView($this->c);
@@ -164,7 +164,8 @@ class PageController extends Controller {
         if (!$this->isValidControllerTask($this->action, $this->parameters)) {
             $valid = false;
             // we check the blocks on the page.
-            $blocks = $this->getPageObject()->getBlocks();
+            $blocks = array_merge($this->getPageObject()->getBlocks(), $this->getPageObject()->getGlobalBlocks());
+
             foreach($blocks as $b) {
                 $controller = $b->getController();
                 list($method, $parameters) = $controller->getPassThruActionAndParameters($this->parameters);

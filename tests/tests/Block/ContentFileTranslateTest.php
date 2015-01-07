@@ -50,14 +50,14 @@ class ContentFileTranslateTest extends FileStorageTestCase {
         $r = $fi->import($file, 'background-slider-blue-sky.png');
         $path = $r->getRelativePath();
 
-        $c = new \Concrete\Block\Content\Controller();
-        $translated = $c->translateFrom($from);
+        $translated = \Concrete\Core\Editor\LinkAbstractor::translateFrom($from);
 
         $to = '<p>This is really nice.</p><img src="' . $path . '" alt="Happy Cat" width="48" height="20">';
 
         $this->assertEquals('background-slider-blue-sky.png', $r->getFilename());
         $this->assertEquals($to, $translated);
 
+        $c = new \Concrete\Block\Content\Controller();
         $c->content = $from;
         $sx = new SimpleXMLElement('<test />');
         $c->export($sx);

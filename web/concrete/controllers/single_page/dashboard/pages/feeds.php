@@ -131,7 +131,7 @@ class Feeds extends DashboardPageController
         $pageTypes = array('' => t('** No Filtering'));
         $types = Type::getList();
         foreach($types as $type) {
-            $pageTypes[$type->getPageTypeID()] = $type->getPageTypeName();
+            $pageTypes[$type->getPageTypeID()] = $type->getPageTypeDisplayName();
         }
         $this->set('pageTypes', $pageTypes);
 

@@ -282,6 +282,15 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     }
 
     /**
+     * Displays only those pages that have style customizations
+     */
+    public function filterByPagesWithCustomStyles()
+    {
+        $this->query->innerJoin('cv', 'CollectionVersionThemeCustomStyles', 'cvStyles',
+            'cv.cID = cvStyles.cID');
+    }
+
+    /**
      * Filters by user ID)
      * @param mixed $uID
      */

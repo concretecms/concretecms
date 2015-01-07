@@ -23,6 +23,13 @@ if (!ini_get('safe_mode')) {
 class Install extends Controller
 {
 
+    /**
+     * This is to check if comments are being stripped
+     * Doctrine ORM depends on comments not being stripped
+     * @var int
+     */
+    protected $docCommentCanary = 1;
+
     protected $fp;
     protected $fpu;
 
@@ -71,8 +78,7 @@ class Install extends Controller
                     'successMessage',
                     t(
                         'Congratulations. concrete5 has been installed. You have been logged in as <b>%s</b> with the password you chose. If you wish to change this password, you may do so from the users area of the dashboard.',
-                        USER_SUPER,
-                        $uPassword));
+                        USER_SUPER));
             }
         }
     }
@@ -104,6 +110,11 @@ class Install extends Controller
                             t(
                                 'There are already %s tables in this database. concrete5 must be installed in an empty database.',
                                 count($num)));
+                    }
+
+                    $support = $db->GetOne('SELECT SUPPORT FROM INFORMATION_SCHEMA.ENGINES WHERE ENGINE = \'InnoDB\'');
+                    if (!in_array($support, array('YES', 'DEFAULT'))) {
+                        $e->add(t('Your MySQL database does not support InnoDB database tables. These are required.'));
                     }
                 }
             }
@@ -171,22 +182,37 @@ class Install extends Controller
 
     private function setRequiredItems()
     {
-        $this->set('imageTest', function_exists('imagecreatetruecolor') || class_exists('Imagick'));
+//        $this->set('imageTest', function_exists('imagecreatetruecolor') || class_exists('Imagick'));
+        $this->set('imageTest', function_exists('imagecreatetruecolor')
+            && function_exists('imagepng')
+            && function_exists('imagegif')
+            && function_exists('imagejpeg'));
         $this->set('mysqlTest', extension_loaded('pdo_mysql'));
-        $this->set('i18nTest', function_exists('ctype_lower'));
+        $this->set('i18nTest', function_exists('ctype_lower')
+            && function_exists('iconv')
+            && function_exists('mb_strlen'));
         $this->set('jsonTest', extension_loaded('json'));
         $this->set('xmlTest', function_exists('xml_parse') && function_exists('simplexml_load_file'));
         $this->set('fileWriteTest', $this->testFileWritePermissions());
-        $this->set('finfoTest', function_exists('finfo_open'));
+        $this->set('aspTagsTest', ini_get('asp_tags') == false);
+        $rf = new \ReflectionObject($this);
+        $rp = $rf->getProperty('docCommentCanary');
+        $this->set('docCommentTest', (bool) $rp->getDocComment());
 
-        $val = $this->getBytes(ini_get('memory_limit'));
-        $this->set('memoryBytes', $val);
-        if ($val < 25165824) {
-            $this->set('memoryTest', -1);
-        } else if ($val >= 67108864) {
+        $memoryLimit = ini_get('memory_limit');
+        if ($memoryLimit == -1) {
             $this->set('memoryTest', 1);
+            $this->set('memoryBytes', 0);
         } else {
-            $this->set('memoryTest', 0);
+            $val = $this->getBytes($memoryLimit);
+            $this->set('memoryBytes', $val);
+            if ($val < 25165824) {
+                $this->set('memoryTest', -1);
+            } else if ($val >= 67108864) {
+                $this->set('memoryTest', 1);
+            } else {
+                $this->set('memoryTest', 0);
+            }
         }
 
         $phpVmin = '5.3.3';
@@ -232,9 +258,9 @@ class Install extends Controller
 
     public function passedRequiredItems()
     {
-        if ($this->get('imageTest') && $this->get('mysqlTest') && $this->get('fileWriteTest') && $this->get(
-                'xmlTest') && $this->get('phpVtest') && $this->get('i18nTest') && $this->get('finfoTest')
-            && $this->get('memoryTest') !== -1
+        if ($this->get('imageTest') && $this->get('mysqlTest') && $this->get('fileWriteTest') &&
+            $this->get('xmlTest') && $this->get('phpVtest') && $this->get('i18nTest') &&
+            $this->get('memoryTest') !== -1 && $this->get('docCommentTest') && $this->get('aspTagsTest')
         ) {
             return true;
         }
@@ -262,7 +288,7 @@ class Install extends Controller
             $js->error = false;
         } catch (Exception $e) {
             $js->error = true;
-            $js->message = $e->getTraceAsString();
+            $js->message = tc('InstallError', '%s.<br><br>Trace:<br>%s', $e->getMessage(), $e->getTraceAsString());
             $this->reset();
         }
         print $jsx->encode($js);

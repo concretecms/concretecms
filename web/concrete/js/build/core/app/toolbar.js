@@ -9,7 +9,9 @@ var ConcreteToolbar = function() {
 	var $searchResults = $('#ccm-intelligent-search-results');
 	var remotesearchquery, ajaxtimer;
 
-    $searchResults.css('right', $(window).width() - $searchInput.offset().left - $searchResults.width() - 1);
+    if ($searchInput.length) {
+        $searchResults.css('right', $(window).width() - $searchInput.offset().left - $searchResults.width() - 1);
+    }
 
 	setupHelpNotifications = function() {
         $('.ccm-notification .dialog-launch').dialog();
@@ -202,7 +204,7 @@ var ConcreteToolbar = function() {
 				$("#ccm-intelligent-search-results-list-help").parent().removeClass('ccm-intelligent-search-results-module-loaded');
 				$("#ccm-intelligent-search-results-list-your-site").parent().removeClass('ccm-intelligent-search-results-module-loaded');
 
-				$.getJSON(CCM_TOOLS_PATH + '/marketplace/intelligent_search', {
+				$.getJSON(CCM_DISPATCHER_FILENAME + '/ccm/system/marketplace/search', {
 					'q': remotesearchquery
 				},
 				function(r) {
@@ -210,7 +212,7 @@ var ConcreteToolbar = function() {
 					$("#ccm-intelligent-search-results-list-marketplace").html('');
 					for (i = 0; i < r.length; i++) {
 						var rr= r[i];
-						var _onclick = "ccm_getMarketplaceItemDetails(" + rr.mpID + ")";
+						var _onclick = "ConcreteMarketplace.getMoreInformation(" + rr.mpID + ")";
 						$("#ccm-intelligent-search-results-list-marketplace").append('<li><a href="javascript:void(0)" onclick="' + _onclick + '"><img src="' + rr.img + '" />' + rr.name + '</a></li>');
 					}
 					if (r.length == 0) {
