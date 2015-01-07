@@ -372,7 +372,6 @@
     }
 
     ConcreteAjaxSearch.handleFileMenuAction = function(type, $anchor, params ) {
-
         var FileMenuItem = Concrete.const.Core.Application.UserInterface.Menu.Item.FileMenuItem;
         var target = $anchor.attr('href') + '?' + jQuery.param(params);
 
@@ -411,6 +410,8 @@
             });
 
         } else if (type == FileMenuItem.ACTION_AJAX_REQUEST ) {
+            var refresh = false;
+
             $.concreteAjax({
                 url: $anchor.attr('href'),
                 data: params,
@@ -421,6 +422,7 @@
                             'title': r.title
                         });
                     }
+                    if (!r.error) ConcreteEvent.publish('FileManagerUpdateRequestComplete', r);
                 }
             });
         } 

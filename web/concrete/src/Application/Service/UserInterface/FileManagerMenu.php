@@ -37,11 +37,10 @@ class FileManagerMenu
 
             "ccm_replace"    => array( "label"=> t('Replace'), 'icon' => 'angle-double-down', "url"=> $uh->getToolsURL('files/replace'), // TODO refactor tool to a route
                                        "type" => FileMenuItem::ACTION_OPEN_DIALOG, 'perms' => array( FileMenuItem::CAN_REPLACE), 'ability' => FileMenuItem::CAN_UNIQUE,
-                                       "options" => array( 'modal' => 'true', 'height' =>  '500', 'width' => '200') ),
+                                       "options" => array( 'modal' => 'true', 'height' =>  '500', 'width' => '200')),
 
-            # "ccm_duplicate"  => array( "label" => t('Copy'), 'icon' => 'copy', "url" => $uh->getToolsURL('files/duplicate'), // TODO refactor to a route, and make it work
-            #                           "type" => FileMenuItem::ACTION_OPEN_DIALOG, 'perms' => array( FileMenuItem::CAN_COPY),
-            #                           "options" => array ( "title" => t('Duplicate'), "width"=> "500", "height" => 400, 'action' => 'duplicate') ), // XXX on unique used to rely on 'data-file-manager-action=duplicate'
+            "ccm_duplicate"  => array( "label" => t('Duplicate'), 'icon' => 'copy', "url" => \URL::to('/ccm/system/file/duplicate'),// FIXME: For now duplicate is broken on Doctrine side
+                                       "type" => FileMenuItem::ACTION_AJAX_REQUEST, 'perms' => array( FileMenuItem::CAN_COPY)),
 
             "ccm_sets"       => array( "label" => t('Sets'), 'icon' => 'reorder', "url" => $uh->getToolsURL('files/add_to'),      // TODO refactor and remove tools once and for all
                                         "type" => FileMenuItem::ACTION_OPEN_DIALOG, 

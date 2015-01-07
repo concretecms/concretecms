@@ -66,6 +66,7 @@ class File extends Controller
             $r->setError($e);
         } else {
             $r->setMessage($errorMessage . $successMessage);
+            $r->setNeedRefresh(true);
         }
         $r->outputJSON();
     }
@@ -169,6 +170,8 @@ class File extends Controller
             $newFiles[] = $nf;
         }
         $r->setFiles($newFiles);
+        $r->setMessage(t('%s files duplicated', count($newFiles)));
+        $r->setNeedRefresh(true);
         $r->outputJSON();
     }
 

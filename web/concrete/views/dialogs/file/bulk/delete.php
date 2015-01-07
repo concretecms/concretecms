@@ -47,7 +47,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
         $(function() {
             ConcreteEvent.subscribe('AjaxFormSubmitSuccess', function(e, data) {
                 if (data.form == 'delete-file') {
-                    ConcreteEvent.publish('FileManagerUpdateRequestComplete', {files: data.response.files});
+                    ConcreteEvent.publish('FileManagerUpdateRequestComplete', {needRefresh: true, files: data.response.files});
                 }
             });
         });
