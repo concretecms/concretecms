@@ -157,6 +157,13 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         $this->stripEmptyPageTypeComposerControls($c);
         $parent = Page::getByID($c->getPageDraftTargetParentPageID());
         $c->move($parent);
+        if (!$parent->overrideTemplatePermissions()) {
+            // that means the permissions of pages added beneath here inherit from page type permissions
+            // this is a very poorly named method. Template actually used to mean Type.
+            // so this means we need to set the permissions of this current page to inherit from page types.
+            $c->inheritPermissionsFromDefaults();
+        }
+
         $u = new User();
         $v = CollectionVersion::get($c, 'RECENT');
         $pkr = new ApprovePagePageWorkflowRequest();
