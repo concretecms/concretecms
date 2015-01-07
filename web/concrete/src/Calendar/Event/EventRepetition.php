@@ -8,7 +8,7 @@ use Concrete\Core\Foundation\Repetition\AbstractRepetition;
  *
  * @package Concrete\Core\Calendar
  */
-class Repetition extends AbstractRepetition
+class EventRepetition extends AbstractRepetition
 {
 
     protected $repetitionID;
@@ -21,16 +21,13 @@ class Repetition extends AbstractRepetition
     public static function getByID($id)
     {
         $id = intval($id, 10);
-        $query = \Database::connection()->executeQuery(
-            'SELECT * FROM CalendarEventRepetitions WHERE repetitionID = ' . $id);
+        $row = \Database::connection()->executeQuery(
+            'SELECT * FROM CalendarEventRepetitions WHERE repetitionID = ' . $id)->fetch();
 
-        foreach ($query as $row) {
-            if ($serialized = array_get($row, 'repetitionObject')) {
-                $object = unserialize($serialized);
-                $object->repetitionID = $id;
-                return $object;
-            }
-            break;
+        if ($serialized = array_get($row, 'repetitionObject')) {
+            $object = unserialize($serialized);
+            $object->repetitionID = intval($id, 10);
+            return $object;
         }
 
         return null;
@@ -50,7 +47,7 @@ class Repetition extends AbstractRepetition
                 ));
             $id = $connection->lastInsertId();
 
-            $this->repetitionID = $id;
+            $this->repetitionID = intval($id, 10);
         } else {
             $connection->update(
                 'CalendarEventRepetitions',
@@ -63,6 +60,17 @@ class Repetition extends AbstractRepetition
         }
 
         return true;
+    }
+
+    public function delete()
+    {
+        if ($this->getID() > 0) {
+            $db = \Database::connection();
+            if ($db->delete('CalendarEventRepetitions', array('repetitionID' => intval($this->getID())))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public function getID()
