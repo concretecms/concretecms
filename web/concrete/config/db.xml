@@ -5362,6 +5362,31 @@
         </field>
     </table>
 
+    <table name="CalendarEventOccurrences">
+        <field name="occurrenceID" type="I" size="10">
+            <key/>
+            <autoincrement/>
+            <unsigned/>
+        </field>
+        <field name="eventID" type="I" size="10">
+            <notnull/>
+        </field>
+        <field name="startTime" type="I" size="10">
+            <notnull/>
+        </field>
+        <field name="endTime" type="I" size="10">
+            <notnull/>
+        </field>
+        <field name="cancelled" type="I" size="1">
+            <notnull/>
+        </field>
+        <index name="eventdates">
+            <col>eventID</col>
+            <col>startTime</col>
+            <col>endTime</col>
+        </index>
+    </table>
+
     <table name="EventAttributeValues">
         <field name="eID" type="I" size="10">
             <key/>

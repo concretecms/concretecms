@@ -1,9 +1,12 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<? use Concrete\Core\Foundation\Repetition\RepetitionInterface;
+use Concrete\Core\Permission\Duration;
+
+defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <?
 
 $repeats = array(
-	'' => t('** Options'), 
+	'' => t('** Options'),
 	'daily' => t('Every Day'),
 	'weekly' => t('Every Week'),
 	'monthly' => t('Every Month')
@@ -36,8 +39,8 @@ if (is_object($pd)) {
 	$pdStartDate = $pd->getStartDate();
 	$pdEndDate = $pd->getEndDate();
 	$pdRepeats = $pd->repeats();
-	$pdStartDateAllDay = $pd->isStartDateAllDay(); 
-	$pdEndDateAllDay = $pd->isEndDateAllDay(); 
+	$pdStartDateAllDay = $pd->isStartDateAllDay();
+	$pdEndDateAllDay = $pd->isEndDateAllDay();
 	$pdRepeatPeriod = $pd->getRepeatPeriod();
 	$pdRepeatPeriodWeekDays = $pd->getRepeatPeriodWeekDays();
 	if ($pdRepeatPeriod == 'daily') {
@@ -50,7 +53,7 @@ if (is_object($pd)) {
 		$pdRepeatPeriodMonthsEvery = $pd->getRepeatPeriodEveryNum();
 	}
 	if ($pd->getRepeatMonthBy() != '') {
-		$pdRepeatPeriodMonthsRepeatBy = $pd->getRepeatMonthBy();
+		$pdRepeatPeriodMonthsRepeatBy = $pd->getRepeatMonthBy() === Duration::MONTHLY_REPEAT_MONTHLY ? 'month' : 'week';
 	}
 	$pdEndRepeatDateSpecific = $pd->getRepeatPeriodEnd();
 	if ($pdEndRepeatDateSpecific) {
@@ -183,21 +186,21 @@ ccm_accessEntityCalculateRepeatOptions = function() {
 	if (!$("#pdStartDate_activate").is(':checked')) {
 		return false;
 	}
-       
+
 	var sdf = ($("#pdStartDate_dt_pub").datepicker('option', 'altFormat'));
 	var sdfr = $.datepicker.parseDate(sdf, $("#pdStartDate_dt").val());
 	var edf = ($("#pdEndDate_dt_pub").datepicker('option', 'altFormat'));
 	var edfr = $.datepicker.parseDate(edf, $("#pdEndDate_dt").val());
 	var sh = $("select[name=pdStartDate_h]").val();
 	var eh = $("select[name=pdEndDate_h]").val();
-	if ($("select[name=pdStartDate_a]").val() == 'PM' && (sh < 12)) { 
+	if ($("select[name=pdStartDate_a]").val() == 'PM' && (sh < 12)) {
 		sh = parseInt(sh) + 12;
-	} else if (sh == 12 && $("select[name=pdStartDate_a]").val() == 'AM') { 
+	} else if (sh == 12 && $("select[name=pdStartDate_a]").val() == 'AM') {
 		sh = 0;
 	}
-	if ($("select[name=pdEndDate_a]").val() == 'PM' && (eh < 12)) { 
+	if ($("select[name=pdEndDate_a]").val() == 'PM' && (eh < 12)) {
 		eh = parseInt(eh) + 12;
-	} else if (eh == 12 && $("select[name=pdEndDate_a]").val() == 'AM') { 
+	} else if (eh == 12 && $("select[name=pdEndDate_a]").val() == 'AM') {
 		eh = 0;
 	}
 	var startDate = new Date(sdfr.getFullYear(), sdfr.getMonth(), sdfr.getDate(), sh, $('select[name=pdStartDate_m]').val(), 0);
@@ -237,9 +240,9 @@ ccm_accessEntityCalculateRepeatOptions = function() {
 }
 
 ccm_accessEntityCheckRepeat = function() {
-	if ($('input[name=pdRepeat]').is(':checked')) { 
+	if ($('input[name=pdRepeat]').is(':checked')) {
 		$("#ccm-permissions-access-entity-repeat-selector").show();
-	} else { 
+	} else {
 		$("#ccm-permissions-access-entity-repeat-selector").hide();
 	}
 }
@@ -254,12 +257,12 @@ ccm_accessEntityOnActivateDates = function() {
 		$("#ccm-permissions-access-entity-repeat").hide();
 	}
 	if ($("#pdStartDate_activate").is(':checked')) {
-		$('#pdStartDateAllDayActivate').attr('disabled', false);		
+		$('#pdStartDateAllDayActivate').attr('disabled', false);
 	} else {
 		$('input[name=pdStartDateAllDayActivate]').attr('disabled', true);
 	}
 	if ($("#pdEndDate_activate").is(':checked')) {
-		$('#pdEndDateAllDayActivate').attr('disabled', false);		
+		$('#pdEndDateAllDayActivate').attr('disabled', false);
 	} else {
 		$('input[name=pdEndDateAllDayActivate]').attr('disabled', true);
 	}
@@ -282,14 +285,14 @@ ccm_accessEntityOnRepeatPeriodChange = function() {
 	$("#ccm-permissions-access-entity-dates-repeat-daily").hide();
 	$("#ccm-permissions-access-entity-dates-repeat-weekly").hide();
 	$("#ccm-permissions-access-entity-dates-repeat-monthly").hide();
-	if ($('select[name=pdRepeatPeriod]').val() != '') { 
+	if ($('select[name=pdRepeatPeriod]').val() != '') {
 		$("#ccm-permissions-access-entity-dates-repeat-" + $('select[name=pdRepeatPeriod]').val()).show();
 		$("#ccm-permissions-access-entity-dates-repeat-dates").show();
 	}
 }
 
 ccm_accessEntityCalculateRepeatEnd = function() {
-	if ($('input[name=pdEndRepeatDate]:checked').val() == 'date') { 
+	if ($('input[name=pdEndRepeatDate]:checked').val() == 'date') {
 		$("#ccm-permissions-access-entity-dates-repeat-dates .ccm-input-date-wrapper input").attr('disabled', false);
 	} else {
 		$("#ccm-permissions-access-entity-dates-repeat-dates .ccm-input-date-wrapper input").attr('disabled', true);
@@ -299,12 +302,12 @@ ccm_accessEntityCalculateRepeatEnd = function() {
 $(function() {
 	$("#ccm-permissions-access-entity-dates input[type=checkbox]").click(function() {
 		ccm_accessEntityOnActivateDates();
-	});	
-	
+	});
+
 	$("select[name=pdRepeatPeriod]").change(function() {
 		ccm_accessEntityOnRepeatPeriodChange();
 	});
-	
+
 	$("input[name=pdRepeat]").click(function() {
 		ccm_accessEntityCheckRepeat();
 	});
@@ -318,7 +321,7 @@ $(function() {
 	});
 	ccm_accessEntityCalculateRepeatOptions();
 	ccm_accessEntityOnActivateDates();
-	ccm_accessEntityCheckRepeat();	
+	ccm_accessEntityCheckRepeat();
 	ccm_accessEntityOnRepeatPeriodChange();
 	ccm_accessEntityCalculateRepeatEnd();
 });

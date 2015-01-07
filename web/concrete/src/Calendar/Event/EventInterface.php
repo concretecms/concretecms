@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Calendar\Event;
 
+use Concrete\Core\Foundation\Repetition\RepetitionInterface;
+
 /**
  * A simplified interface for Calendar Events
  *
@@ -10,9 +12,16 @@ interface EventInterface
 {
 
     /**
+     * The identifier, null for unsaved
+     *
+     * @return string|int|null
+     */
+    public function getID();
+
+    /**
      * The repetition object
      *
-     * @return Repetition
+     * @return RepetitionInterface
      */
     public function getRepetition();
 
@@ -47,9 +56,9 @@ interface EventInterface
     /**
      * Set the new repetition object
      *
-     * @param Repetition $repetition
+     * @param RepetitionInterface $repetition
      */
-    public function setRepetition(Repetition $repetition);
+    public function setRepetition(RepetitionInterface $repetition);
 
     /**
      * Save this event

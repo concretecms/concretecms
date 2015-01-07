@@ -57,19 +57,25 @@ class Duration extends AbstractRepetition
             $pd->setStartDate($dateStart);
             $pd->setEndDate($dateEnd);
             if ($_POST['pdRepeatPeriod'] && $_POST['pdRepeat']) {
-                $pd->setRepeatPeriod($_POST['pdRepeatPeriod']);
+
                 if ($_POST['pdRepeatPeriod'] == 'daily') {
+                    $pd->setRepeatPeriod(Duration::REPEAT_DAILY);
                     $pd->setRepeatEveryNum($_POST['pdRepeatPeriodDaysEvery']);
                 } elseif ($_POST['pdRepeatPeriod'] == 'weekly') {
+                    $pd->setRepeatPeriod(Duration::REPEAT_WEEKLY);
                     $pd->setRepeatEveryNum($_POST['pdRepeatPeriodWeeksEvery']);
                     $pd->setRepeatPeriodWeekDays($_POST['pdRepeatPeriodWeeksDays']);
                 } elseif ($_POST['pdRepeatPeriod'] == 'monthly') {
-                    $pd->setRepeatMonthBy($_POST['pdRepeatPeriodMonthsRepeatBy']);
+                    $pd->setRepeatPeriod(Duration::REPEAT_MONTHLY);
+                    $repeat = $_POST['pdRepeatPeriodMonthsRepeatBy'] === 'weekly' ?
+                        Duration::MONTHLY_REPEAT_WEEKLY :
+                        Duration::MONTHLY_REPEAT_MONTHLY;
+                    $pd->setRepeatMonthBy($repeat);
                     $pd->setRepeatEveryNum($_POST['pdRepeatPeriodMonthsEvery']);
                 }
                 $pd->setRepeatPeriodEnd($dt->translate('pdEndRepeatDateSpecific'));
             } else {
-                $pd->setRepeatPeriod(false);
+                $pd->setRepeatPeriod(Duration::REPEAT_NONE);
             }
             $pd->save();
 
@@ -102,6 +108,11 @@ class Duration extends AbstractRepetition
         }
         $pdObject = serialize($this);
         $db->Execute('UPDATE PermissionDurationObjects SET pdObject = ? WHERE pdID = ?', array($pdObject, $this->pdID));
+    }
+
+    public function getID()
+    {
+        return $this->getPermissionDurationID();
     }
 
     public function getPermissionDurationID()
