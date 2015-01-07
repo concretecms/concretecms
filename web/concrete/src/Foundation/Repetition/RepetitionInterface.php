@@ -5,6 +5,27 @@ interface RepetitionInterface
 {
 
     /**
+     * Repeat constants
+     */
+    const REPEAT_NONE = 0;
+    const REPEAT_DAILY = 1;
+    const REPEAT_WEEKLY = 2;
+    const REPEAT_MONTHLY = 4;
+
+    /**
+     * Monthly repeat constants
+     */
+    const MONTHLY_REPEAT_WEEKLY = 1;
+    const MONTHLY_REPEAT_MONTHLY = 2;
+
+    /**
+     * The ID of this repetition, null for unsaved
+     *
+     * @return int|string|null
+     */
+    public function getID();
+
+    /**
      * Set the start date
      *
      * @param $start_date
@@ -55,7 +76,7 @@ interface RepetitionInterface
     public function setRepeatEveryNum($repeat_every_num);
 
     /**
-     * @param $repeat_month_by
+     * @param int $repeat_month_by [ ::MONTHLY_REPEAT_WEEKLY | ::MONTHLY_REPEAT_MONTHLY ]
      * @return mixed
      */
     public function setRepeatMonthBy($repeat_month_by);
@@ -102,12 +123,12 @@ interface RepetitionInterface
     public function getRepeatPeriodWeekDays();
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getRepeatMonthBy();
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getRepeatEveryNum();
 
