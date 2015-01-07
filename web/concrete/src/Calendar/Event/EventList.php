@@ -7,6 +7,12 @@ use Pagerfanta\Adapter\DoctrineDbalAdapter;
 class EventList extends \Concrete\Core\Search\ItemList\Database\AttributedItemList
 {
 
+    protected $autoSortColumns = array(
+        'eventID',
+        'name',
+        'description'
+    );
+
     public function getResult($row)
     {
         return Event::getByID(array_get($row, 'eventID'));

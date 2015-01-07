@@ -51,7 +51,6 @@ class Event implements EventInterface
         foreach ($query as $result) {
             if (intval(array_get($result, 'eventID')) === $id) {
                 $repetition = EventRepetition::getByID(array_get($result, 'repetitionID', null));
-
                 $event = new Event(
                     array_get($result, 'name'),
                     array_get($result, 'description'),

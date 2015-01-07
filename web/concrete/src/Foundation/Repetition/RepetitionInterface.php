@@ -123,7 +123,7 @@ interface RepetitionInterface
     public function getRepeatPeriodWeekDays();
 
     /**
-     * @return int
+     * @return int self::MONTHLY_REPEAT_* enum [ ::MONTHLY_REPEAT_WEEKLY | ::MONTHLY_REPEAT_MONTHLY ]
      */
     public function getRepeatMonthBy();
 
