@@ -3,6 +3,7 @@ namespace Concrete\Core\Calendar\Event;
 
 use Concrete\Core\Attribute\Key\EventKey;
 use Concrete\Core\Attribute\Value\EventValue;
+use Concrete\Core\Foundation\Repetition\RepetitionInterface;
 
 /**
  * Generic Event class
@@ -21,30 +22,26 @@ class Event implements EventInterface
     /** @var string */
     protected $description;
 
-    /** @var int */
-    protected $repetition_id;
-
-    /** @var Repetition */
-    protected $repetition = false;
+    /** @var RepetitionInterface */
+    protected $repetition;
 
     /**
-     * @param string         $name
-     * @param string         $description
-     * @param Repetition|int $repetition Either the repetition object or the id of the repetition object
+     * @param string              $name
+     * @param string              $description
+     * @param RepetitionInterface $repetition
      */
-    function __construct($name, $description, $repetition = null)
+    function __construct($name, $description, RepetitionInterface $repetition)
     {
         $this->name = $name;
         $this->description = $description;
-
-        if ($repetition instanceof Repetition) {
-            $this->repetition = $repetition;
-            $this->repetition_id = $repetition->getID();
-        } else {
-            $this->repetition_id = intval($repetition, 10);
-        }
+        $this->repetition = $repetition;
     }
 
+    /**
+     * @param $id
+     * @return Event|null
+     * @throws \Doctrine\DBAL\DBALException
+     */
     public static function getByID($id)
     {
         $id = intval($id, 10);
@@ -53,10 +50,12 @@ class Event implements EventInterface
         $query = $connection->query('SELECT * FROM CalendarEvents WHERE eventID=' . $id);
         foreach ($query as $result) {
             if (intval(array_get($result, 'eventID')) === $id) {
+                $repetition = EventRepetition::getByID(array_get($result, 'repetitionID', null));
+
                 $event = new Event(
                     array_get($result, 'name'),
                     array_get($result, 'description'),
-                    array_get($result, 'repetitionID'));
+                    $repetition);
                 $event->id = $id;
 
                 return $event;
@@ -66,11 +65,14 @@ class Event implements EventInterface
         return null;
     }
 
+    /**
+     * @return bool
+     */
     public function save()
     {
         $connection = \Database::connection();
         if ($this->id) {
-            $connection->update(
+            if ($connection->update(
                 'CalendarEvents',
                 array(
                     'name'         => $this->getName(),
@@ -79,19 +81,36 @@ class Event implements EventInterface
                 ),
                 array(
                     'eventID' => $this->getID()
-                ));
+                ))
+            ) {
+                return true;
+            }
         } else {
-            $connection->insert(
+            if ($connection->insert(
                 'CalendarEvents',
                 array(
                     'name'         => $this->getName(),
                     'description'  => $this->getDescription(),
                     'repetitionID' => $this->getRepetition()->getID()
-                ));
-            $this->id = intval($connection->lastInsertId(), 10);
+                ))
+            ) {
+                $this->id = intval($connection->lastInsertId(), 10);
+                return true;
+            }
         }
 
-        return true;
+        return false;
+    }
+
+    public function delete()
+    {
+        if ($this->getID() > 0) {
+            $db = \Database::connection();
+            if ($db->delete('CalendarEvents', array('eventID' => intval($this->getID())))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -127,27 +146,22 @@ class Event implements EventInterface
     }
 
     /**
-     * @return Repetition
+     * @return RepetitionInterface
      */
     public function getRepetition()
     {
-        if ($this->repetition === false) {
-            $this->repetition = Repetition::getByID($this->repetition_id);
-        }
-
         return $this->repetition;
     }
 
-    public function setRepetition(Repetition $repetition)
+    public function setRepetition(RepetitionInterface $repetition)
     {
         $this->repetition = $repetition;
-        $this->repetition_id = intval($repetition->getID());
     }
 
     /**
      * @return int
      */
-    public function getId()
+    public function getID()
     {
         return $this->id;
     }

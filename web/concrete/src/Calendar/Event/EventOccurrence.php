@@ -9,16 +9,83 @@ namespace Concrete\Core\Calendar\Event;
 class EventOccurrence
 {
 
+    /** @var int */
+    protected $id;
+
     /** @var EventInterface */
     protected $event;
 
-    /** @var int The time of this occurrence */
-    protected $now;
+    /** @var int The time this occurrence began */
+    protected $start;
 
-    public function __construct(EventInterface $event, $now = null)
+    /** @var int The time this occurrence is scheduled to end */
+    protected $end;
+
+    /** @var bool Is this cancelled? */
+    protected $cancelled;
+
+    /**
+     * @param EventInterface $event
+     * @param int            $start
+     * @param int            $end
+     * @param bool           $cancelled
+     */
+    public function __construct(EventInterface $event, $start, $end, $cancelled)
     {
-        $this->now = $now;
         $this->event = $event;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isCancelled()
+    {
+        return $this->cancelled;
+    }
+
+    /**
+     * @param boolean $cancelled
+     */
+    public function setCancelled($cancelled)
+    {
+        $this->cancelled = $cancelled;
+    }
+
+    public function cancel()
+    {
+        $this->setCancelled(true);
+    }
+
+    /**
+     * @return int
+     */
+    public function getStart()
+    {
+        return $this->start;
+    }
+
+    /**
+     * @param int $start
+     */
+    public function setStart($start)
+    {
+        $this->start = $start;
+    }
+
+    /**
+     * @return int
+     */
+    public function getEnd()
+    {
+        return $this->end;
+    }
+
+    /**
+     * @param int $end
+     */
+    public function setEnd($end)
+    {
+        $this->end = $end;
     }
 
     /**
@@ -29,9 +96,84 @@ class EventOccurrence
         return $this->event;
     }
 
-    public function isActive()
+    public function getID()
     {
-        return $this->event->getRepetition()->isActive($this->now);
+        return $this->id;
+    }
+
+    /**
+     * Get a current / new EventOccurrence from an Event object
+     * These may not exist in the database, so be sure to check `$occurrence->getID()`
+     *
+     * @param Event $event
+     * @param int   $now The current timestamp
+     * @return EventOccurrence|null
+     */
+    public static function getFromEvent(Event $event, $now = null)
+    {
+        if (!$now) {
+            $now = time();
+        }
+
+        if ($range = $event->getRepetition()->getActiveRange($now)) {
+            list($start, $end) = $range;
+
+            $db = \Database::connection();
+            $result = $db->query(
+                'SELECT * FROM CalendarEventOccurrences WHERE eventID=? && startTime < ? && endTime > ?',
+                array(
+                    $event->getId(),
+                    $now,
+                    $now
+                ))->fetch();
+
+            if ($result) {
+                $occurrence = new EventOccurrence(
+                    $event,
+                    array_get($result, 'startTime'),
+                    array_get($result, 'endTime'),
+                    !!array_get($result, 'cancelled'));
+
+                $occurrence->id = intval(array_get($result, 'occurrenceID'));
+            }
+
+            return new EventOccurrence($event, $start, $end, false);
+        }
+
+        return null;
+    }
+
+    /**
+     * @return bool
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function save()
+    {
+        $db = \Database::connection();
+        if ($db->query(
+            'INSERT INTO CalendarEventOccurrences (eventID, startTime, endTime, cancelled) VALUES (?, ?, ?, ?)',
+            array(
+                $this->getEvent()->getID(),
+                $this->getStart(),
+                $this->getEnd(),
+                $this->isCancelled() ? 1 : 0
+            ))
+        ) {
+            $this->id = $db->lastInsertId();
+            return true;
+        }
+        return false;
+    }
+
+    public function delete()
+    {
+        if ($this->getID() > 0) {
+            $db = \Database::connection();
+            if ($db->delete('CalendarEventOccurrences', array('occurrenceID' => intval($this->getID())))) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }
