@@ -120,8 +120,6 @@ module.exports = function(grunt) {
         filemanager: {
             dest: '<%= DIR_BASE %>/concrete/js/file-manager.js',
             src: [
-                '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-fileupuload/jquery-iframe-transport.js',
-                '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-fileupload/jquery-fileupload.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/file-manager/search.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/file-manager/selector.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/file-manager/menu.js'
@@ -175,7 +173,10 @@ module.exports = function(grunt) {
 
         jquery_fileupload: {
             dest: '<%= DIR_BASE %>/concrete/js/jquery-fileupload.js',
-            src: '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-fileupload/jquery-fileupload.js'
+            src: [
+                '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-fileupload/jquery-iframe-transport.js',
+                '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-fileupload/jquery-fileupload.js'
+            ]
         },
 
         dropzone: {
