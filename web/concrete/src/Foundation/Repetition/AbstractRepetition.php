@@ -46,7 +46,7 @@ abstract class AbstractRepetition implements RepetitionInterface
     protected $repeatEveryNum;
 
     /**
-     * @var string [ month | week ]
+     * @var int self::MONTHLY_REPEAT_* enum [ ::MONTHLY_REPEAT_WEEKLY | ::MONTHLY_REPEAT_MONTHLY ]
      */
     protected $repeatMonthBy;
 
@@ -79,7 +79,7 @@ abstract class AbstractRepetition implements RepetitionInterface
      */
     public function isEndDateAllDay()
     {
-        return !!$this->startDateAllDay;
+        return !!$this->endDateAllDay;
     }
 
     /**
@@ -420,6 +420,16 @@ abstract class AbstractRepetition implements RepetitionInterface
         }
 
         return $text;
+    }
+
+    /**
+     * This method is deprecated, use `getRepeatEveryNum`
+     *
+     * @deprecated
+     */
+    public function getRepeatPeriodEveryNum()
+    {
+        return $this->getRepeatEveryNum();
     }
 
 }

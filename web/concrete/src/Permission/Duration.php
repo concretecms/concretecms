@@ -120,14 +120,4 @@ class Duration extends AbstractRepetition
         return $this->pdID;
     }
 
-    /**
-     * This method is deprecated, use `getRepeatEveryNum`
-     *
-     * @deprecated
-     */
-    public function getRepeatPeriodEveryNum()
-    {
-        return $this->getRepeatEveryNum();
-    }
-
 }
