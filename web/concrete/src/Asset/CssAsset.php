@@ -5,33 +5,40 @@ use HtmlObject\Element;
 use Concrete\Core\Html\Object\HeadLink;
 use Config;
 
-class CssAsset extends Asset {
+class CssAsset extends Asset
+{
 
-	protected $assetSupportsMinification = true;
-	protected $assetSupportsCombination = true;
+    protected $assetSupportsMinification = true;
+    protected $assetSupportsCombination = true;
 
-	public function getAssetDefaultPosition() {
-		return Asset::ASSET_POSITION_HEADER;
-	}
+    public function getAssetDefaultPosition()
+    {
+        return Asset::ASSET_POSITION_HEADER;
+    }
 
-	public function getAssetType() {return 'css';}
+    public function getAssetType()
+    {
+        return 'css';
+    }
 
-	protected static function getRelativeOutputDirectory() {
-		return REL_DIR_FILES_CACHE . '/' . DIRNAME_CSS;
-	}
+    protected static function getRelativeOutputDirectory()
+    {
+        return REL_DIR_FILES_CACHE . '/' . DIRNAME_CSS;
+    }
 
-	protected static function getOutputDirectory() {
-		if (!file_exists(Config::get('concrete.cache.directory') . '/' . DIRNAME_CSS)) {
-			$proceed = @mkdir(Config::get('concrete.cache.directory') . '/' . DIRNAME_CSS);
-		} else {
-			$proceed = true;
-		}
-		if ($proceed) {
-			return Config::get('concrete.cache.directory') . '/' . DIRNAME_CSS;
-		} else {
-			return false;
-		}
-	}
+    protected static function getOutputDirectory()
+    {
+        if (!file_exists(Config::get('concrete.cache.directory') . '/' . DIRNAME_CSS)) {
+            $proceed = @mkdir(Config::get('concrete.cache.directory') . '/' . DIRNAME_CSS);
+        } else {
+            $proceed = true;
+        }
+        if ($proceed) {
+            return Config::get('concrete.cache.directory') . '/' . DIRNAME_CSS;
+        } else {
+            return false;
+        }
+    }
 
     static function changePaths( $content, $current_path, $target_path )
     {
@@ -90,50 +97,54 @@ class CssAsset extends Asset {
         return $content;
     }
 
-    protected static function process($assets, $processFunction) {
-		if ($directory = self::getOutputDirectory()) {
+    protected static function process($assets, $processFunction)
+    {
+        if ($directory = self::getOutputDirectory()) {
 
-			$filename = '';
-			for ($i = 0; $i < count($assets); $i++) {
-				$asset = $assets[$i];
-				$filename .= $asset->getAssetURL();
+            $filename = '';
+            for ($i = 0; $i < count($assets); $i++) {
+                $asset = $assets[$i];
+                $filename .= $asset->getAssetURL();
                 $sourceFiles[] = $asset->getAssetURL();
-			}
-			$filename = sha1($filename);
-			$cacheFile = $directory . '/' . $filename . '.css';
-			if (!file_exists($cacheFile)) {
-				$css = '';
-				foreach($assets as $asset) {
+            }
+            $filename = sha1($filename);
+            $cacheFile = $directory . '/' . $filename . '.css';
+            if (!file_exists($cacheFile)) {
+                $css = '';
+                foreach($assets as $asset) {
                     if ($asset->getAssetPath()) {
                         $css .= file_get_contents($asset->getAssetPath()) . "\n\n";
                     }
-					$css = $processFunction($css, $asset->getAssetURLPath(), self::getRelativeOutputDirectory());
-				}
-				@file_put_contents($cacheFile, $css);
-			}
+                    $css = $processFunction($css, $asset->getAssetURLPath(), self::getRelativeOutputDirectory());
+                }
+                @file_put_contents($cacheFile, $css);
+            }
 
-			$asset = new CSSAsset();
-			$asset->setAssetURL(self::getRelativeOutputDirectory() . '/' . $filename . '.css');
-			$asset->setAssetPath($directory . '/' . $filename . '.css');
+            $asset = new CSSAsset();
+            $asset->setAssetURL(self::getRelativeOutputDirectory() . '/' . $filename . '.css');
+            $asset->setAssetPath($directory . '/' . $filename . '.css');
             $asset->setCombinedAssetSourceFiles($sourceFiles);
-			return array($asset);
-		}
-		return $assets;
+            return array($asset);
+        }
+        return $assets;
     }
 
-	public function combine($assets) {
-		return self::process($assets, function($css, $assetPath, $targetPath) {
-			return CSSAsset::changePaths($css, $assetPath, $targetPath);
-		});
-	}
+    public function combine($assets)
+    {
+        return self::process($assets, function($css, $assetPath, $targetPath) {
+            return CSSAsset::changePaths($css, $assetPath, $targetPath);
+        });
+    }
 
-	public function minify($assets) {
-		return self::process($assets, function($css, $assetPath, $targetPath) {
-			return \CssMin::minify(CSSAsset::changePaths($css, $assetPath, $targetPath));
-		});
-	}
+    public function minify($assets)
+    {
+        return self::process($assets, function($css, $assetPath, $targetPath) {
+            return \CssMin::minify(CSSAsset::changePaths($css, $assetPath, $targetPath));
+        });
+    }
 
-	public function __toString() {
+    public function __toString()
+    {
         $e = new HeadLink($this->getAssetURL(), 'stylesheet', 'text/css', 'all');
         if (count($this->combinedAssetSourceFiles)) {
             $source = '';
@@ -145,7 +156,5 @@ class CssAsset extends Asset {
         }
         return (string) $e;
     }
-
-
 
 }
