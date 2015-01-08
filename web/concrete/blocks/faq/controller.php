@@ -6,6 +6,7 @@ use Loader;
 
 class Controller extends BlockController
 {
+
     protected $btTable = 'btFaq';
     protected $btExportTables = array('btFaq', 'btFaqEntries');
     protected $btInterfaceWidth = "600";
@@ -33,8 +34,8 @@ class Controller extends BlockController
         $v = array($this->bID);
         $q = 'select * from btFaqEntries where bID = ?';
         $r = $db->query($q, $v);
-        foreach($r as $row) {
-           $content.= $row['title']. ' '.$row['linkTitle'].' '.$row['description'];
+        foreach ($r as $row) {
+            $content .= $row['title'] . ' ' . $row['linkTitle'] . ' ' . $row['description'];
         }
         return $content;
     }
@@ -53,13 +54,15 @@ class Controller extends BlockController
         $this->set('rows', $query);
     }
 
-    public function duplicate($newBID) {
+    public function duplicate($newBID)
+    {
         $db = Loader::db();
         $v = array($this->bID);
         $q = 'select * from btFaqEntries where bID = ?';
         $r = $db->query($q, $v);
-        foreach($r as $row) {
-            $db->execute('INSERT INTO btFaqEntries (bID, title, linkTitle, description, sortOrder) values(?,?,?,?,?)',
+        foreach ($r as $row) {
+            $db->execute(
+                'INSERT INTO btFaqEntries (bID, title, linkTitle, description, sortOrder) values(?,?,?,?,?)',
                 array(
                     $newBID,
                     $row['title'],
@@ -86,7 +89,8 @@ class Controller extends BlockController
         $i = 0;
         parent::save($args);
         while ($i < $count) {
-            $db->execute('INSERT INTO btFaqEntries (bID, title, linkTitle, description, sortOrder) values(?,?,?,?,?)',
+            $db->execute(
+                'INSERT INTO btFaqEntries (bID, title, linkTitle, description, sortOrder) values(?,?,?,?,?)',
                 array(
                     $this->bID,
                     $args['title'][$i],
