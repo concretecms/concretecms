@@ -40,8 +40,17 @@ class Controller extends BlockController
         return $content;
     }
 
+    public function add()
+    {
+        $this->requireAsset('core/file-manager');
+        $this->requireAsset('core/sitemap');
+        $this->requireAsset('redactor');
+    }
+
     public function edit()
     {
+        $this->add();
+
         $db = Loader::db();
         $query = $db->GetAll('SELECT * from btFaqEntries WHERE bID = ? ORDER BY sortOrder', array($this->bID));
         $this->set('rows', $query);
