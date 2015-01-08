@@ -49,6 +49,9 @@ class Extractor
 
         $files = array();
         foreach($directories as $directory) {
+            if (!is_dir($directory)) {
+                continue;
+            }
             $directoryIterator = new \RecursiveDirectoryIterator($directory);
             $iterator = new \RecursiveIteratorIterator($directoryIterator);
             $results = new \RegexIterator($iterator, '/^.+\.php$/i', \RecursiveRegexIterator::GET_MATCH);
@@ -154,7 +157,23 @@ class Extractor
         $mo = DIR_LANGUAGES_SITE_INTERFACE . '/' . $section->getLocale() . '.mo';
 
         PoGenerator::toFile($translations, $po);
-        MoGenerator::toFile($translations, $mo);
+
+        /* Do not generate mo for empty catalog, it crashes Zend\I18n gettext loader */
+        $empty = true;
+        foreach ($translations as $entry) {
+            if ($entry->hasTranslation()) {
+                $empty = false;
+                break;
+            }
+        }
+
+        if (!$empty) {
+            MoGenerator::toFile($translations, $mo);
+        } else {
+            if (file_exists($mo)) {
+                unlink($mo);
+            }
+        }
     }
 
     public function saveSectionTranslationsToDatabase(Section $section, Translations $translations)

@@ -76,28 +76,59 @@
         setupSliders: function(){
             var my = this;
             my.$toolbar.find('.ccm-inline-style-sliders').each(function(){
-                var targetInput = $(this).children('.ccm-inline-style-slider-value');
+                var targetInput = $(this).next().children('.ccm-inline-style-slider-value');
+                var targetInputFormat = targetInput.attr('data-value-format');
+                var sliderElement = $(this);
                 var min = parseInt($(this).attr('data-style-slider-min'));
                 var max = parseInt($(this).attr('data-style-slider-max'));
-                var currentValue = parseInt($(this).children('.ccm-inline-style-slider-value').val().replace(/\D/g,''));
-                if(isNaN(currentValue)) {
-                    currentValue = parseInt($(this).attr('data-style-slider-default-setting'));
-                }
-                $(this).slider({
+                var defaultValue = $(this).attr('data-style-slider-default-setting');
+                var currentValue = function () {
+                    return parseInt(targetInput.val().replace(/\D\-/g,''));
+                };
+                var disableCheck = function () {
+                    if (parseInt(defaultValue) === currentValue() || isNaN(currentValue())) {
+                        targetInput.prop('disabled', true).val(defaultValue + targetInputFormat);
+                    }
+                };
+
+                sliderElement.slider({
                     min: min,
                     max: max,
-                    value: currentValue,
+                    value: currentValue(),
                     slide: function( event, ui ) {
                         targetInput.prop('disabled', false);
-                        var targetInputFormat = targetInput.attr('data-value-format');
-                        targetInput.val( ui.value + targetInputFormat );
-                        $(this).next('.ccm-inline-style-slider-display-value').text(ui.value + targetInputFormat);
+                        targetInput.val(ui.value + targetInputFormat);
+                        disableCheck();
                     }
                 });
+
+                targetInput.change(function () {
+                    var value = currentValue();
+
+                    if (value > max) { 
+                        value = max;
+                    } else if (value < min) {
+                        value = min;
+                    } else if (isNaN(value)) {
+                        value = defaultValue;
+                    }
+                    
+                    $(this).val(value + targetInputFormat);
+                    sliderElement.slider("value", value);
+                    disableCheck();
+                }).blur(function () {
+                    disableCheck();
+                }).parent().click(function () {
+                    if (targetInput.prop('disabled')) {
+                        targetInput.prop('disabled', false).select();
+                    }
+                });
+
+                disableCheck();
             });
         }
 
-    }
+    };
 
     function ConcreteBlockInlineStyleCustomizer($element, options) {
         var my = this;

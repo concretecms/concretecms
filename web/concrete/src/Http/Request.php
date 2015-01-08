@@ -28,9 +28,15 @@ class Request extends SymfonyRequest
 {
 
     static $_request = null;
+    /**
+     * @var bool
+     */
     protected $hasCustomRequestUser;
     protected $customRequestUser;
     protected $customRequestDateTime;
+    /**
+     * @var \Concrete\Core\Page\Page
+     */
     protected $c;
 
     /**
@@ -44,11 +50,17 @@ class Request extends SymfonyRequest
         return static::$_request;
     }
 
+    /**
+     * @return \Concrete\Core\Page\Page
+     */
     public function getCurrentPage()
     {
         return $this->c;
     }
 
+    /**
+     * @param \Concrete\Core\Page\Page $c
+     */
     public function setCurrentPage(\Concrete\Core\Page\Page $c)
     {
         $this->c = $c;
@@ -65,6 +77,9 @@ class Request extends SymfonyRequest
         $this->customRequestUser = $ui;
     }
 
+    /**
+     * @return bool
+     */
     public function hasCustomRequestUser()
     {
         return $this->hasCustomRequestUser;
@@ -82,6 +97,8 @@ class Request extends SymfonyRequest
 
     /**
      * Determines whether a request matches a particular pattern
+     * @param string
+     * @return bool
      */
     public function matches($pattern)
     {
@@ -90,6 +107,7 @@ class Request extends SymfonyRequest
 
     /**
      * Returns the full path for a request
+     * @return string
      */
     public function getPath()
     {
@@ -139,6 +157,9 @@ class Request extends SymfonyRequest
         return $default_value;
     }
 
+    /**
+     * @return bool
+     */
     public function isPost()
     {
         return $_SERVER['REQUEST_METHOD'] == 'POST';

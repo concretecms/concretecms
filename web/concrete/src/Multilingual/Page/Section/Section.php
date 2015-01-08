@@ -131,8 +131,8 @@ class Section extends Page
         if (count($explode) == 2) {
             // we have a language first, and a country second
             $section = static::getByLocale($explode[0] . '_' . $explode[1]);
-            if ($home) {
-                break;
+            if ($section) {
+                return $section;
             }
         }
         $section = static::getByLanguage($explode[0]);

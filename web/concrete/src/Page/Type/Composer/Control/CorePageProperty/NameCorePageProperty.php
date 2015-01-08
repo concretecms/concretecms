@@ -25,7 +25,7 @@ class NameCorePageProperty extends CorePageProperty
             return false;
         });
         $this->addPageTypeComposerControlRequestValue('cName', $data['name']);
-        if (!count($slug)) {
+        if (!count($slug) && $c->isPageDraft()) {
             $txt = new \URLify();
             $this->addPageTypeComposerControlRequestValue('cHandle', $txt->filter($data['name']));
         }

@@ -8,12 +8,12 @@ use \Concrete\Core\Authentication\AuthenticationType;
 class Avatar {
 
 	/**
-	* Outputs the final user avatar
-	* @param user object $uo
-	* @return string $str
-	*/
-
-	function outputUserAvatar($uo, $suppressNone = false, $aspectRatio = 1.0) {
+	 * @param \User $uo
+	 * @param bool $suppressNone
+	 * @param float $aspectRatio
+	 * @return string
+	 */
+	public function outputUserAvatar($uo, $suppressNone = false, $aspectRatio = 1.0) {
 		if (is_object($uo)) {
 			$ati = $this->getAuthTypeImagePath($uo);
             $width = Config::get('concrete.icons.user_avatar.width') * $aspectRatio;
@@ -44,6 +44,11 @@ class Avatar {
 		}
 	}
 
+	/**
+	 * @param \UserInfo $uo
+	 * @return bool
+	 * @throws \Exception
+	 */
 	public function getAuthTypeImagePath($uo) {
 		$lat = $uo->getUserObject()->getLastAuthType();
 		if ($lat > 1) {
@@ -53,16 +58,16 @@ class Avatar {
 					$uimgpath = $at->controller->getUserImagePath($uo);
 					return $uimgpath;
 				}
-			} catch(Exception $e) {}
+			} catch(\Exception $e) {}
 		}
 		return false;
 	}
 
 	/**
 	* gets the image path for a users avatar
-	* @param user object $uo
+	* @param \UserInfo $uo
 	* @param bool $withNoCacheStr
-	* @return string $src
+	* @return bool|string $src
 	*/
 	public function getImagePath($uo,$withNoCacheStr=true) {
 		if (!$uo->hasAvatar()) {
@@ -82,7 +87,7 @@ class Avatar {
 
 	/**
 	* What to show if the user has no avatar
-	* @param int $aspectRatio
+	* @param float $aspectRatio
 	* @return string $str
 	*/
 	function outputNoAvatar($aspectRatio = 1.0) {
@@ -94,7 +99,7 @@ class Avatar {
 
 	/**
 	* Removes the avatar for the given user
-	* @param user object $ui
+	* @param \User $ui
 	*/
 	function removeAvatar($ui) {
 		if (is_object($ui)) {
@@ -110,7 +115,7 @@ class Avatar {
    * Get either a Gravatar URL or complete image tag for a specified email address.
    *
    * @param string $email The email address
-   * @param string $s Size in pixels, defaults to 80px [ 1 - 512 ]
+   * @param int $s Size in pixels, defaults to 80px [ 1 - 512 ]
    * @param string $d Default imageset to use [ 404 | mm | identicon | monsterid | wavatar ]
    * @param string $r Maximum rating (inclusive) [ g | pg | r | x ]
    * @param bool $img True to return a complete IMG tag False for just the URL

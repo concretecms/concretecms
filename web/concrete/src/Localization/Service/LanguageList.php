@@ -15,7 +15,7 @@ class LanguageList
      */
     public function getLanguageList()
     {
-        $languages = Language::getAll(false, false, Localization::activeLocale());
+        $languages = Language::getAll(true, true);
         return $languages;
     }
 

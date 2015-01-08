@@ -215,7 +215,7 @@ $dh = Core::make('helper/date');
     			<td><?=$job->getJobName() ?></td>
     			<td><?=$job->getJobDescription() ?></td> 
     			<td><?if(!$job->invalid):?>
-    				<a href="<?=$view->action('install', $job->jHandle)?>" class="btn btn-small pull-right"><?=t('Install')?></a>
+    				<a href="<?=$view->action('install', $job->jHandle)?>" class="btn btn-sm btn-default pull-right"><?=t('Install')?></a>
     			<?endif?></td>
     		</tr>	
 		<?endforeach?>

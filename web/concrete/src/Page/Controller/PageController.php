@@ -56,7 +56,7 @@ class PageController extends Controller {
     }
 
     public function getTheme() {
-        if (!$this->theme) {
+        if ($this->theme === null) {
             $theme = parent::getTheme();
             if (!$theme) {
                 $theme = $this->c->getCollectionThemeObject();
@@ -123,7 +123,7 @@ class PageController extends Controller {
             }
         } else {
             $this->action = 'view';
-            if ($taskparts[0]) {
+            if ($taskparts[0] !== '') {
                 $this->parameters = $taskparts;
             }
         }

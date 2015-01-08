@@ -7,7 +7,12 @@ use Config;
 defined('C5_EXECUTE') or die("Access Denied.");
 class User {
 
-	function getOnlineNow($uo, $showSpacer = true) {
+	/**
+	 * @param $uo \User
+	 * @param bool $showSpacer
+	 * @return mixed
+	 */
+	public function getOnlineNow($uo, $showSpacer = true) {
 		$ul = 0;
 		if (is_object($uo)) {
 			// user object
@@ -30,10 +35,13 @@ class User {
 		}
 	}
 
+	/**
+	 * @param string $password
+	 * @param null|\Concrete\Core\Error\Error $errorObj
+	 * @return bool
+	 */
 	public function validNewPassword( $password, $errorObj=NULL){
-
-		$valc = Loader::helper('concrete/validation');
-
+		$invalid = false;
 		if ((strlen($password) < Config::get('concrete.user.password.minimum')) || (strlen($password) >  Config::get('concrete.user.password.maximum'))) {
 			if($errorObj)
 				$errorObj->add( t('A password must be between %s and %s characters', Config::get('concrete.user.password.minimum'),  Config::get('concrete.user.password.maximum')) );
@@ -45,6 +53,9 @@ class User {
 		return true;
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function canAccessUserSearchInterface() {
 		$tp = new TaskPermission();
 		return $tp->canAccessUserSearch();

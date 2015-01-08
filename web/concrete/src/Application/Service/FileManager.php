@@ -12,13 +12,11 @@ class FileManager
     /**
      * Sets up a file field for use with a block.
      *
-     * @param string $id
-     *            The ID of your form field
-     * @param string $postname
-     *            The name of your database column into which you'd like to save the file ID
+     * @param string $id The ID of your form field
+     * @param string $postname The name of your database column into which you'd like to save the file ID
      * @param string $chooseText
-     * @param LibraryFileBlock $bf
-     *            return string $html
+     * @param \File $bf
+     * @return string $html
      */
     public function file($id, $postname, $chooseText, $bf = null, $filterArgs = array())
     {
@@ -39,15 +37,19 @@ class FileManager
             }
         }
 
-        if (is_object($bf) && (! $bf->isError()) && $bf->getFileID() > 0) {
+        if (is_object($bf) && $bf->getFileID() > 0) {
             $fileID = $bf->getFileID();
         }
 
+        $filters = '[]';
+        if ( $filterArgs['filters'] ) $filters = json_encode($filterArgs['filters']);
+
         if ($fileID) {
-            $args = "{'inputName': '{$postname}', 'fID': {$fileID}}";
+            $args = "{'inputName': '{$postname}', 'fID': {$fileID}, 'filters': $filters }";
         } else {
-            $args = "{'inputName': '{$postname}'}";
+            $args = "{'inputName': '{$postname}', 'filters': $filters }";
         }
+
 
         $html = <<<EOL
 		<div class="ccm-file-selector" data-file-selector="{$id}"></div>
@@ -67,18 +69,17 @@ EOL;
     /**
      * Sets up an image to be chosen for use with a block.
      *
-     * @param string $id
-     *            The ID of your form field
-     * @param string $postname
-     *            The name of your database column into which you'd like to save the file ID
+     * @param string $id The ID of your form field
+     * @param string $postname The name of your database column into which you'd like to save the file ID
      * @param string $chooseText
-     * @param LibraryFileBlock $bf
-     *            return string $html
+     * @param \File $fileInstanceBlock
+     * @param array $additionalArgs
+     * @return string $html
      */
     public function image($id, $postname, $chooseText, $fileInstanceBlock = null, $additionalArgs = array())
     {
         $args = array();
-        $args['fType'] = FileType::T_IMAGE;
+        $args['filters'] = array( array( 'field' => 'type', 'type' => FileType::T_IMAGE ) );
         $args = array_merge($args, $additionalArgs);
         return $this->file($id, $postname, $chooseText, $fileInstanceBlock, $args);
     }
@@ -86,18 +87,17 @@ EOL;
     /**
      * Sets up a video to be chosen for use with a block.
      *
-     * @param string $id
-     *            The ID of your form field
-     * @param string $postname
-     *            The name of your database column into which you'd like to save the file ID
+     * @param string $id  The ID of your form field
+     * @param string $postname The name of your database column into which you'd like to save the file ID
      * @param string $chooseText
-     * @param LibraryFileBlock $bf
-     *            return string $html
+     * @param \File $fileInstanceBlock
+     * @param array $additionalArgs
+     * @return string $html
      */
     public function video($id, $postname, $chooseText, $fileInstanceBlock = null, $additionalArgs = array())
     {
         $args = array();
-        $args['fType'] = FileType::T_VIDEO;
+        $args['filters'] = array( array( 'field' => 'type', 'type' => FileType::T_VIDEO) );
         $args = array_merge($args, $additionalArgs);
         return $this->file($id, $postname, $chooseText, $fileInstanceBlock, $args);
     }
@@ -105,18 +105,17 @@ EOL;
     /**
      * Sets up a text file to be chosen for use with a block.
      *
-     * @param string $id
-     *            The ID of your form field
-     * @param string $postname
-     *            The name of your database column into which you'd like to save the file ID
+     * @param string $id The ID of your form field
+     * @param string $postname The name of your database column into which you'd like to save the file ID
      * @param string $chooseText
-     * @param LibraryFileBlock $bf
-     *            return string $html
+     * @param \File $fileInstanceBlock
+     * @param array $additionalArgs
+     * @return string $html
      */
     public function text($id, $postname, $chooseText, $fileInstanceBlock = null, $additionalArgs = array())
     {
         $args = array();
-        $args['fType'] = FileType::T_TEXT;
+        $args['filters'] = array( array( 'field' => 'type', 'type' => FileType::T_TEXT) );
         $args = array_merge($args, $additionalArgs);
         return $this->file($id, $postname, $chooseText, $fileInstanceBlock, $args);
     }
@@ -124,18 +123,17 @@ EOL;
     /**
      * Sets up audio to be chosen for use with a block.
      *
-     * @param string $id
-     *            The ID of your form field
-     * @param string $postname
-     *            The name of your database column into which you'd like to save the file ID
+     * @param string $id The ID of your form field
+     * @param string $postname The name of your database column into which you'd like to save the file ID
      * @param string $chooseText
-     * @param LibraryFileBlock $bf
-     *            return string $html
+     * @param \File $fileInstanceBlock
+     * @param array $additionalArgs
+     * @return string $html
      */
     public function audio($id, $postname, $chooseText, $fileInstanceBlock = null, $additionalArgs = array())
     {
         $args = array();
-        $args['fType'] = FileType::T_AUDIO;
+        $args['filters'] = array( array( 'field' => 'type', 'type' => FileType::T_AUDIO) );
         $args = array_merge($args, $additionalArgs);
         return $this->file($id, $postname, $chooseText, $fileInstanceBlock, $args);
     }
@@ -143,18 +141,17 @@ EOL;
     /**
      * Sets up a document to be chosen for use with a block.
      *
-     * @param string $id
-     *            The ID of your form field
-     * @param string $postname
-     *            The name of your database column into which you'd like to save the file ID
+     * @param string $id  The ID of your form field
+     * @param string $postname The name of your database column into which you'd like to save the file ID
      * @param string $chooseText
-     * @param LibraryFileBlock $bf
-     *            return string $html
+     * @param \File $fileInstanceBlock
+     * @param array $additionalArgs
+     * @return string $html
      */
     public function doc($id, $postname, $chooseText, $fileInstanceBlock = null, $additionalArgs = array())
     {
         $args = array();
-        $args['fType'] = FileType::T_DOCUMENT;
+        $args['filters'] = array( array( 'field' => 'type', 'type' => FileType::T_DOCUMENT) );
         $args = array_merge($args, $additionalArgs);
         return $this->file($id, $postname, $chooseText, $fileInstanceBlock, $args);
     }
@@ -162,18 +159,17 @@ EOL;
     /**
      * Sets up an application to be chosen for use with a block.
      *
-     * @param string $id
-     *            The ID of your form field
-     * @param string $postname
-     *            The name of your database column into which you'd like to save the file ID
+     * @param string $id The ID of your form field
+     * @param string $postname The name of your database column into which you'd like to save the file ID
      * @param string $chooseText
-     * @param LibraryFileBlock $bf
-     *            return string $html
+     * @param \File $fileInstanceBlock
+     * @param array $additionalArgs
+     * @return string $html
      */
     public function app($id, $postname, $chooseText, $fileInstanceBlock = null, $additionalArgs = array())
     {
         $args = array();
-        $args['fType'] = FileType::T_APPLICATION;
+        $args['filters'] = array( array( 'field' => 'type', 'type' => FileType::T_APPLICATION) );
         $args = array_merge($args, $additionalArgs);
         return $this->file($id, $postname, $chooseText, $fileInstanceBlock, $args);
     }

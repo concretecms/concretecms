@@ -69,6 +69,7 @@ div.ccm-style-customizer-palette {
         top: 20px;
         right: 0px;
     }
+
     div.sp-replacer {
         top: 8px;
         right: 5px;
@@ -236,9 +237,23 @@ div.ccm-widget-colorpicker {
     .ccm-inline-style-slider-display-value {
       display: inline-block;
       margin-left: 5%;
-      width: 20%;
+      width: 25%;
       text-align: left;
-      vertical-align: top;
+      vertical-align: text-bottom;
+
+      input[type="text"] {
+        width: 100%;
+        background: #444;
+        color: #ccc;
+        text-align: center;
+        margin-top: 0;
+        margin-bottom: 0;
+
+        &.ccm-slider-value-unit-appended {
+          width: 80%;
+        }
+      }
+
     }
 
     .ccm-inline-style-sliders {

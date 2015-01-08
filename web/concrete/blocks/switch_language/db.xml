@@ -6,7 +6,7 @@
       <UNSIGNED/>
     </field>
     <field name="label" type="C" size="255">
-      <DEFAULT value="''"/>
+      <DEFAULT value=""/>
     </field>
   </table>
 </schema>
