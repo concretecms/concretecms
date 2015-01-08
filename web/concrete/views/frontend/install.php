@@ -403,7 +403,7 @@ $(function() {
     <td><? if ($i18nTest) { ?><i class="fa fa-check"></i><? } else { ?><i class="fa fa-exclamation-circle"></i><? } ?></td>
     <td width="100%"><?=t('Internationalization Support')?>
     </td>
-    <td><? if (!$i18nTest) { ?><i class="fa fa-question-circle launch-tooltip" title="<?=t('You must enable ctype, multibyte and iconv support in your copy of PHP.')?>"></i><? } ?></td>
+    <td><? if (!$i18nTest) { ?><i class="fa fa-question-circle launch-tooltip" title="<?=t('You must enable ctype and multibyte string (mbstring) support in PHP.')?>"></i><? } ?></td>
 </tr>
 <tr>
     <td><? if ($docCommentTest) { ?><i class="fa fa-check"></i><? } else { ?><i class="fa fa-exclamation-circle"></i><? } ?></td>

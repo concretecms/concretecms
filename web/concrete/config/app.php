@@ -701,6 +701,7 @@ return array(
                 array('javascript', 'core/app'),
                 array('javascript', 'core/locale'),
                 array('javascript', 'core/legacy'),
+                array('javascript', 'jquery/fileupload'),
                 array('javascript', 'core/file-manager'),
                 array('javascript', 'core/style-customizer'),
                 array('css', 'core/app'),
@@ -811,6 +812,7 @@ return array(
                 array('javascript', 'select2_locale'),
                 array('javascript', 'core/locale'),
                 array('javascript', 'core/app'),
+                array('javascript', 'jquery/fileupload'),
                 array('javascript', 'core/file-manager')
             )
         ),
