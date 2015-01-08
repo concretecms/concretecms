@@ -27,7 +27,7 @@
         "symfony/serializer": "2.5.*",
         "illuminate/container": "4.1.*",
         "illuminate/config": "4.1.*",
-        "patchwork/utf8": "1.1.*",
+        "patchwork/utf8": "1.1.x-dev",
         "oyejorge/less.php": "v1.7.0.1",
         "imagine/imagine": "0.6.*@dev",
         "innogames/cssmin": "dev-master",

@@ -156,7 +156,21 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
     {
         $this->stripEmptyPageTypeComposerControls($c);
         $parent = Page::getByID($c->getPageDraftTargetParentPageID());
-        $c->move($parent);
+        if ($c->isPageDraft()) { // this is still a draft, which means it has never been properly published.
+            // so we need to move it, check its permissions, etc...
+            Section::registerPage($c);
+            $c->move($parent);
+            if (!$parent->overrideTemplatePermissions()) {
+                // that means the permissions of pages added beneath here inherit from page type permissions
+                // this is a very poorly named method. Template actually used to mean Type.
+                // so this means we need to set the permissions of this current page to inherit from page types.
+                $c->inheritPermissionsFromDefaults();
+            }
+            $c->activate();
+        } else {
+            $c->rescanCollectionPath();
+        }
+
         $u = new User();
         $v = CollectionVersion::get($c, 'RECENT');
         $pkr = new ApprovePagePageWorkflowRequest();
@@ -164,9 +178,6 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         $pkr->setRequestedVersionID($v->getVersionID());
         $pkr->setRequesterUserID($u->getUserID());
         $pkr->trigger();
-        $c->activate();
-
-        Section::registerPage($c);
 
         $u->unloadCollectionEdit($c);
         CacheLocal::flush();

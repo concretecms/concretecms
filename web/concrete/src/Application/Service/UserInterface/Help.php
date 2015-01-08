@@ -5,6 +5,9 @@ use User;
 
 class Help
 {
+    /**
+     * @return array
+     */
     public function getBlockTypes()
     {
         $blockTypes = array(
@@ -33,6 +36,9 @@ class Help
         return $blockTypes;
     }
 
+    /**
+     * @return array
+     */
     public function getPages()
     {
         $pages = array(
@@ -103,6 +109,9 @@ class Help
         return $pages;
     }
 
+    /**
+     * @return array
+     */
     public function getPanels()
     {
         $panels = array(
@@ -115,8 +124,15 @@ class Help
         return $panels;
     }
 
+    /**
+     * @param $type
+     * @param $identifier
+     * @param $displayCount
+     * @return bool|string
+     */
     protected function getMessage($type, $identifier, $displayCount)
     {
+        $messages = array();
         switch ($type) {
             case 'panel':
                 $messages = $this->getPanels();
@@ -143,6 +159,10 @@ class Help
         return $message;
     }
 
+    /**
+     * @param $type
+     * @param $identifier
+     */
     protected function getIncrementDisplayCount($type, $identifier)
     {
         /*
@@ -157,6 +177,11 @@ class Help
         */
     }
 
+    /**
+     * @param $type
+     * @param $identifier
+     * @return void
+     */
     public function notify($type, $identifier)
     {
         $message = $this->getMessage($type, $identifier, $this->getIncrementDisplayCount($type, $identifier));
@@ -191,13 +216,22 @@ EOT;
         print $html;
     }
 
+    /**
+     * @param User $u
+     */
     public function disableAllHelpNotifications(User $u)
     {
         $u->saveConfig('DISABLED_HELP_NOTIFICATIONS', 'all');
     }
 
+    /**
+     * @param User $u
+     * @param $type
+     * @param $identifier
+     */
     public function disableThisHelpNotification(User $u, $type, $identifier)
     {
+        $disabled = array();
         $message = $this->getMessage($type, $identifier, $this->getIncrementDisplayCount($type, $identifier));
         if ($message) {
             $disabledHelpNotifications = $u->config('DISABLED_HELP_NOTIFICATIONS');
@@ -232,6 +266,10 @@ class HelpMessage
      */
     public $content;
 
+    /**
+     * @param $displayCount
+     * @return bool|string
+     */
     public function getContentToDisplay($displayCount)
     {
         $content = false;
@@ -243,10 +281,11 @@ class HelpMessage
     }
 
     /**
-     * @param string $handle
+     * @param string $identifier
      * @param string $content
-     * @param int $displayOnCount
-     * @return ConcreteInterfaceHelpHelperMessage
+     * @param int $displayOnCountMin
+     * @param int $displayOnCountMax
+     * @return HelpMessage
      */
     public static function get($identifier, $content, $displayOnCountMin = 0, $displayOnCountMax = 0)
     {

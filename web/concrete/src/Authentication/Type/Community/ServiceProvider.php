@@ -16,22 +16,19 @@ class ServiceProvider extends \Concrete\Core\Foundation\Service\Provider
      */
     public function register()
     {
-        /** @var ExtractorFactory $factory */
-        $factory = $this->app->make('oauth/factory/extractor');
-        $factory->addExtractorMapping('Concrete\\Core\\Authentication\\Type\\Community\\Service\\Community',
-                                      'Concrete\\Core\\Authentication\\Type\\Community\\Extractor\\Community');
+        /** @var ExtractorFactory $extractor */
+        $extractor = $this->app->make('oauth/factory/extractor');
+        $extractor->addExtractorMapping(
+            'Concrete\\Core\\Authentication\\Type\\Community\\Service\\Community',
+            'Concrete\\Core\\Authentication\\Type\\Community\\Extractor\\Community');
 
+        /** @var ServiceFactory $factory */
         $factory = $this->app->make('oauth/factory/service');
         $factory->registerService('community', '\\Concrete\\Core\\Authentication\\Type\\Community\\Service\\Community');
 
-        unset($factory);
-
         $this->app->bindShared(
             'authentication/community',
-            function ($app, $callback = '/ccm/system/authentication/oauth2/community/callback/') {
-                /** @var ServiceFactory $factory */
-                $factory = $app->make('oauth/factory/service');
-
+            function ($app, $callback = '/ccm/system/authentication/oauth2/community/callback/') use ($factory) {
                 return $factory->createService(
                     'community',
                     new Credentials(

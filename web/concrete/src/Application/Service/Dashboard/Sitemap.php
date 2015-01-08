@@ -14,14 +14,29 @@ use PermissionKey;
 class Sitemap {
 
 
+	/**
+	 * @var bool
+	 */
 	protected $autoOpenNodes = true;
+	/**
+	 * @var bool
+	 */
 	protected $displayNodePagination = false;
+	/**
+	 * @var bool
+	 */
 	protected $includeSystemPages;
 
+	/**
+	 * @param bool $autoOpen
+	 */
 	public function setAutoOpenNodes($autoOpen) {
 		$this->autoOpenNodes = $autoOpen;
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function includeSystemPages() {
 		if (!isset($this->includeSystemPages)) {
 			$this->includeSystemPages = Cookie::get('includeSystemPages');
@@ -29,19 +44,26 @@ class Sitemap {
 		return $this->includeSystemPages;
 	}
 
+	/**
+	 * @param bool $systemPages
+	 */
 	public function setIncludeSystemPages($systemPages) {
 		$this->includeSystemPages = $systemPages;
 		Cookie::set('includeSystemPages', $systemPages);
 	}
 
+	/**
+	 * @param bool $paginate
+	 */
 	public function setDisplayNodePagination($paginate) {
 		$this->displayNodePagination = $paginate;
 	}
 
+	/**
+	 * @param int $cID
+	 * @return array
+	 */
 	function getSubNodes($cID) {
-		$db = Loader::db();
-
-		$obj = new stdClass;
 		$pl = new PageList();
         $pl->setPermissionsChecker(function($page) {
             $cp = new \Permissions($page);
@@ -98,6 +120,11 @@ class Sitemap {
 		return $nodes;
 	}
 
+	/**
+	 * @param \Concrete\Core\Page\Page|int $cItem
+	 * @param bool $includeChildren
+	 * @return stdClass
+	 */
 	public function getNode($cItem, $includeChildren = true) {
 		if (!is_object($cItem)) {
 			$cID = $cItem;
@@ -126,14 +153,11 @@ class Sitemap {
 			}
 		}
 
-		$cls = ($c->getNumChildren() > 0) ? "folder" : "file";
-		$leaf = ($c->getNumChildren() > 0) ? false : true;
 		$numSubpages = ($c->getNumChildren()  > 0) ? $c->getNumChildren()  : '';
 
 		$cvName = ($c->getCollectionName()) ? $c->getCollectionName() : '(No Title)';
 		$cvName = ($c->isSystemPage() || $cID == 1) ? t($cvName) : $cvName;
 
-		$ct = PageType::getByID($c->getPageTypeID());
 		$isInTrash = $c->isInTrash();
 
 		$isTrash = $c->getCollectionPath() == Config::get('concrete.paths.trash');
@@ -220,6 +244,9 @@ class Sitemap {
 		return $node;
 	}
 
+	/**
+	 * @return bool
+	 */
 	function canRead() {
 		$tp = new TaskPermission();
 		return $tp->canAccessSitemap();

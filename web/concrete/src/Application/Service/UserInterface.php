@@ -3,7 +3,6 @@ namespace Concrete\Core\Application\Service;
 use User as ConcreteUser;
 use Loader;
 use Page;
-use Localization;
 use Config;
 use Session;
 use \Concrete\Core\View\ErrorView;
@@ -33,7 +32,7 @@ class UserInterface {
 	/**
 	 * Generates a submit button in the Concrete style
 	 * @param string $text The text of the button
-	 * @param string $formID The form this button will submit
+	 * @param bool|string $formID The form this button will submit
 	 * @param string $buttonAlign
 	 * @param string $innerClass
 	 * @param array $args Extra args passed to the link
@@ -53,7 +52,7 @@ class UserInterface {
 		foreach($args as $k => $v) {
 			$argsstr .= $k . '="' . $v . '" ';
 		}
-		return '<input type="submit" class="btn ' . $innerClass . '" value="' . $text . '" id="ccm-submit-' . $formID . '" name="ccm-submit-' . $formID . '" ' . $align . ' ' . $argsstr . ' />';
+		return '<input type="submit" class="btn ' . $innerClass . '" value="' . $text . '" id="ccm-submit-' . $formID . '" name="ccm-submit-' . $formID . '" ' . $argsstr . ' />';
 	}
 
 	/**
@@ -105,7 +104,7 @@ class UserInterface {
 	 * <code>
 	 *    $bh->buttons($myButton1, $myButton2, $myButton3);
 	 * </code>
-	 * @param string $buttonHTML
+	 * @param string $buttons
 	 * @return string
 	 */
 	public function buttons($buttons = null) {
@@ -120,6 +119,10 @@ class UserInterface {
 		return $html;
 	}
 
+	/**
+	 * @param \Concrete\Core\Page\Page $c
+	 * @return string
+	 */
 	public function getQuickNavigationLinkHTML($c) {
 		$cnt = Loader::controller($c);
 		if (method_exists($cnt, 'getQuickNavigationLinkHTML')) {
@@ -129,11 +132,20 @@ class UserInterface {
 		}
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function showWhiteLabelMessage() {
 		return (Config::get('concrete.white_label.logo') || file_exists(DIR_APPLICATION . '/' . DIRNAME_IMAGES . '/logo_menu.png'));
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getToolbarLogoSRC() {
+		$alt = false;
+		$src = false;
+		$dimensions = '';
 		if (Config::get('concrete.white_label.name')) {
 			$alt = Config::get('concrete.white_label.name');
 		}
@@ -157,6 +169,9 @@ class UserInterface {
 		return '<img id="ccm-logo" src="' . $src . '" ' . $dimensions . ' alt="' . $alt . '" title="' . $alt . '" />';
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function showNewsflowOverlay() {
 		$tp = new \TaskPermission();
 		$c = Page::getCurrentPage();
@@ -181,6 +196,9 @@ class UserInterface {
 		return false;
 	}
 
+	/**
+	 * Clears the Interface Items Cache (clears the session)
+	 */
 	public function clearInterfaceItemsCache() {
 		$u = new ConcreteUser();
 		if ($u->isRegistered()) {
@@ -188,6 +206,9 @@ class UserInterface {
 		}
 	}
 
+	/**
+	 * Cache the interface items
+	 */
 	public function cacheInterfaceItems() {
 		$u = new ConcreteUser();
 		if ($u->isRegistered()) {
@@ -195,6 +216,10 @@ class UserInterface {
 		}
 	}
 
+	/**
+	 * @param \Concrete\Core\Page\Page[] $tabs
+	 * @return string
+	 */
 	public function pagetabs($tabs) {
 		$tcn = rand(0, getrandmax());
 
@@ -220,6 +245,12 @@ class UserInterface {
 		return $html;
 	}
 
+	/**
+	 * @param \Concrete\Core\Page\Page[] $tabs
+	 * @param bool $jstabs
+	 * @param string $callback
+	 * @return string
+	 */
 	public function tabs($tabs, $jstabs = true, $callback = 'ccm_activateTabBar') {
 		$tcn = rand(0, getrandmax());
 
@@ -240,7 +271,11 @@ class UserInterface {
 		return $html;
 	}
 
-
+	/**
+	 * @param string $title
+	 * @param string $error
+	 * @param bool|\Exception $exception
+	 */
 	public function renderError($title, $error, $exception = false) {
 		$o = new stdClass;
 		$o->title = $title;
@@ -254,6 +289,10 @@ class UserInterface {
         \Response::create($ve->render($o))->send();
 	}
 
+	/**
+	 * @param array $arguments
+	 * @return string
+	 */
 	public function notify($arguments) {
 		$defaults = array(
 			'type' => 'success',

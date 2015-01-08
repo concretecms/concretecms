@@ -2127,6 +2127,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             Events::dispatch('on_page_duplicate', $pe);
 
             $nc2->rescanCollectionPath();
+            $nc2->movePageDisplayOrderToBottom();
 
             return $nc2;
         }

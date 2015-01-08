@@ -16,6 +16,7 @@ class Dashboard {
 
 	/**
 	 * Checks to see if a user has access to the C5 dashboard.
+	 * @return bool
 	 */
 	public function canRead() {
 		$c = Page::getByPath('/dashboard', 'ACTIVE');
@@ -24,6 +25,9 @@ class Dashboard {
 	}
 
 
+	/**
+	 * @return bool
+	 */
 	public function canAccessComposer() {
 		$c = Page::getByPath('/dashboard/composer', 'ACTIVE');
 		$cp = new Permissions($c);
@@ -34,8 +38,8 @@ class Dashboard {
 	 * Test if the current path is within the dashboard.
 	 * Optionally, a Page or path can be passed to test.
 	 *
-	 * @param  Page | string $page (optional)
-	 * @return [boolean]
+	 * @param  bool|\Concrete\Core\Page\Page|string $page (optional)
+	 * @return bool
 	 */
 	public function inDashboard($page = false) {
         $path = "";
@@ -52,52 +56,33 @@ class Dashboard {
 		return strpos($path, '/dashboard') === 0;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public function getDashboardPaneFooterWrapper($includeDefaultBody = true) {
 		return;
-
-		$html = '</div></div></div></div>';
-		if ($includeDefaultBody) {
-			$html .= '</div>';
-		}
-		return $html;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public function getDashboardPaneHeaderWrapper($title = false, $help = false, $span = 'span12', $includeDefaultBody = true, $navigatePages = array(), $upToPage = false, $favorites = true) {
 		return;
-
-		$spantotal = 12;
-		$offset = preg_match('/offset([0-9]+)/i', $span, $offsetmatches);
-		if ($offset) {
-			$offsettotal = $offsetmatches[1];
-			$hasspan = preg_match('/span([0-9]+)/i', $span, $spanmatches);
-			if ($hasspan) {
-				$spantotal = $spanmatches[1];
-				$gridtotal = ($offsettotal * 2) + $spantotal;
-			}
-		}
-
-		if ($gridtotal > 12) {
-			// we are working with legacy bootstrap 16-column grid
-			// we take the offset and then we subtract from the span
-			$spantotal = $spantotal - ($gridtotal - 12);
-			$spantotal .= ' offset' . $offsettotal;
-			$span = 'span' . $spantotal;
-		}
-
-		$html = '<div class="ccm-ui"><div class="row"><div class="' . $span . '"><div class="ccm-pane">';
-		$html .= self::getDashboardPaneHeader($title, $help, $navigatePages, $upToPage, $favorites);
-		if ($includeDefaultBody) {
-			$html .= '<div class="ccm-pane-body ccm-pane-body-footer">';
-		}
-		return $html;
 	}
 
+	/**
+	 * @param bool $title
+	 * @param bool $help
+	 * @param array $navigatePages
+	 * @param bool $upToPage
+	 * @param bool $favorites
+	 * @return string
+	 */
 	public function getDashboardPaneHeader($title = false, $help = false, $navigatePages = array(), $upToPage = false, $favorites = true) {
 		$c = Page::getCurrentPage();
 		$vt = Loader::helper('validation/token');
 		$token = $vt->generate('access_quick_nav');
 
-		$currentMenu = array();
 		$nh = Loader::helper('navigation');
 		$trail = $nh->getTrailToCollection($c);
 		if (count($trail) > 1 || count($navigatePages) > 1 || is_object($upToPage)) {
@@ -110,6 +95,9 @@ class Dashboard {
 				if (count($navigatePages) > 0) {
 					$subpages = $navigatePages;
 				} else {
+					/**
+					 * @var \Concrete\Core\Page\Page[] $subpages
+					 */
 					$subpages = \Concrete\Block\Autonav\Controller::getChildPages($parent);
 				}
 			}
@@ -195,14 +183,18 @@ class Dashboard {
 		return $html;
 	}
 
+	/**
+	 * @return stdClass
+	 */
 	public function getDashboardBackgroundImage() {
 		$feed = array();
 		// this feed is an array of standard PHP objects with a SRC, a caption, and a URL
 		// allow for a custom white-label feed
 		$filename = date('Ymd') . '.jpg';
-		$obj = new stdClass;
+		$obj = new \stdClass;
 		$obj->checkData = false;
 		$obj->displayCaption = false;
+		$image = '';
 
 		if (Config::get('concrete.white_label.dashboard_background')) {
 			$image = Config::get('concrete.white_label.dashboard_background');
@@ -233,6 +225,9 @@ class Dashboard {
 		return $obj;
 	}
 
+	/**
+	 * @return mixed
+	 */
 	public function getIntelligentSearchMenu() {
 		$dashboardMenus = Session::get('dashboardMenus', array());
 		$dashboardMenusKey = Localization::activeLocale();
@@ -385,7 +380,15 @@ class Dashboard {
 
 class DashboardMenu {
 
+	/**
+	 * @var \Concrete\Core\Page\Page[]
+	 */
 	protected $items;
+
+	/**
+	 * @param bool $sort
+	 * @return array
+	 */
 	public function getItems($sort = true) {
 		if ($sort) {
 			usort($this->items, array('\Concrete\Core\Application\Service\DashboardMenu', 'sortItems'));
@@ -393,6 +396,11 @@ class DashboardMenu {
 		return $this->items;
 	}
 
+	/**
+	 * @param string $a
+	 * @param string $b
+	 * @return int
+	 */
 	protected static function sortItems($a, $b) {
 		$subpatha = substr($a, 11); // /dashboard
 		$subpathb = substr($b, 11); // /dashboard
@@ -433,18 +441,31 @@ class DashboardMenu {
 		}
 	}
 
+	/**
+	 * @param \Concrete\Core\Page\Page $c
+	 * @return bool
+	 */
 	public function contains($c) {
 		return in_array($c->getCollectionPath(), $this->items);
 	}
 
+	/**
+	 * @param \Concrete\Core\Page\Page $c
+	 */
 	public function add($c) {
 		$this->items[] = $c->getCollectionPath();
 	}
 
+	/**
+	 * @param \Concrete\Core\Page\Page $c
+	 */
 	public function remove($c) {
 		unset($this->items[array_search($c->getCollectionPath(), $this->items)]);
 	}
 
+	/**
+	 * @return DashboardMenu
+	 */
 	public static function getMine() {
 		$u = new ConcreteUser();
 		$qn = unserialize($u->config('QUICK_NAV_BOOKMARKS'));
@@ -462,6 +483,9 @@ class DashboardMenu {
 
 class DefaultDashboardMenu extends DashboardMenu {
 
+	/**
+	 * @var array
+	 */
 	public $items = array(
 		'/dashboard/composer/write',
 		'/dashboard/composer/drafts',

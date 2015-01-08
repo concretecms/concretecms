@@ -19,9 +19,10 @@ class ServiceProvider extends \Concrete\Core\Foundation\Service\Provider
     public function register()
     {
         /** @var ExtractorFactory $factory */
-        $factory = $this->app->make('oauth/factory/extractor');
-        $factory->addExtractorMapping('OAuth\\OAuth2\\Service\\Google',
-                                      'Concrete\\Core\\Authentication\\Type\\Google\\Extractor\\Google');
+        $extractor = $this->app->make('oauth/factory/extractor');
+        $extractor->addExtractorMapping(
+            'OAuth\\OAuth2\\Service\\Google',
+            'Concrete\\Core\\Authentication\\Type\\Google\\Extractor\\Google');
 
         $this->app->bindShared(
             'authentication/google',
