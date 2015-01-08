@@ -1,9 +1,9 @@
-<?php  defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 <script>
-    $(document).ready(function(){
-        var doSortCount = function(){
-            $('.ccm-faq-entry').each(function(index) {
-               $(this).find('.ccm-faq-entry-sort').val(index);
+    $(document).ready(function () {
+        var doSortCount = function () {
+            $('.ccm-faq-entry').each(function (index) {
+                $(this).find('.ccm-faq-entry-sort').val(index);
             });
         };
         doSortCount();
@@ -11,36 +11,36 @@
         cloneTemplate.removeClass('.ccm-faq-entry-template');
         $('.ccm-faq-entry-template').remove();
 
-        $(cloneTemplate).add($('.ccm-faq-entry')).find('.ccm-delete-faq-entry').click(function(){
-          var deleteIt = confirm('<?php echo t('Are you sure?') ?>');
-          if(deleteIt == true) {
-              $(this).closest('.ccm-faq-entry').remove();
-              doSortCount();
-          }
+        $(cloneTemplate).add($('.ccm-faq-entry')).find('.ccm-delete-faq-entry').click(function () {
+            var deleteIt = confirm('<?php echo t('Are you sure?') ?>');
+            if (deleteIt == true) {
+                $(this).closest('.ccm-faq-entry').remove();
+                doSortCount();
+            }
         });
 
-        var attachSortDesc = function($obj) {
-            $obj.click(function(){
+        var attachSortDesc = function ($obj) {
+            $obj.click(function () {
                 var myContainer = $(this).closest($('.ccm-faq-entry'));
                 myContainer.insertAfter(myContainer.next('.ccm-faq-entry'));
                 doSortCount();
             });
-        }
+        };
 
-        var attachSortAsc = function($obj) {
-            $obj.click(function(){
+        var attachSortAsc = function ($obj) {
+            $obj.click(function () {
                 var myContainer = $(this).closest($('.ccm-faq-entry'));
                 myContainer.insertBefore(myContainer.prev('.ccm-faq-entry'));
                 doSortCount();
             });
-        }
-        $('.ccm-faq-block-container i.fa-sort-desc').each(function(){
+        };
+        $('.ccm-faq-block-container i.fa-sort-desc').each(function () {
             attachSortDesc($(this));
         });
-        $('.ccm-faq-block-container i.fa-sort-asc').each(function(){
+        $('.ccm-faq-block-container i.fa-sort-asc').each(function () {
             attachSortAsc($(this));
         });
-        $('.ccm-add-faq-entry').click(function(){
+        $('.ccm-add-faq-entry').click(function () {
             var newClone = cloneTemplate.clone(true);
             newClone.show();
             $('.ccm-faq-block-container').append(newClone);
@@ -59,6 +59,7 @@
         display: block;
         width: 100%;
     }
+
     .ccm-faq-block-container .btn-success {
         margin-bottom: 20px;
     }
@@ -87,52 +88,56 @@
 </style>
 <div class="ccm-faq-block-container">
     <span class="btn btn-success ccm-add-faq-entry"><?php echo t('Add Entry') ?></span>
-    <?php if($rows) {
+    <?php if ($rows) {
     foreach ($rows as $row) { ?>
         <div class="ccm-faq-entry well">
             <i class="fa-sort-asc fa"></i>
             <i class="fa-sort-desc fa"></i>
+
             <div class="form-group">
                 <label><?php echo t('Navigation Link Text') ?></label>
-                <input type="text" name="linkTitle[]" value="<?php echo $row['linkTitle'] ?>" />
+                <input type="text" name="linkTitle[]" value="<?php echo $row['linkTitle'] ?>"/>
             </div>
             <div class="form-group">
                 <label><?php echo t('Title Text') ?></label>
-                <input type="text" name="title[]" value="<?php echo $row['title'] ?>" />
+                <input type="text" name="title[]" value="<?php echo $row['title'] ?>"/>
             </div>
             <div class="form-group">
                 <label><?php echo t('Description') ?></label>
                 <textarea name="description[]"><?php echo $row['description'] ?></textarea>
             </div>
-                <input class="ccm-faq-entry-sort" type="hidden" name="sortOrder[]" value="<?php echo $row['sortOrder'] ?>"/>
+            <input class="ccm-faq-entry-sort" type="hidden" name="sortOrder[]" value="<?php echo $row['sortOrder'] ?>"/>
+
             <div class="form-group">
                 <span class="btn btn-danger ccm-delete-faq-entry"><?php echo t('Delete Entry'); ?></span>
             </div>
         </div>
     <?php }
-    } else {?>
-    <script>
-        $(document).ready(function(){
-            $('.ccm-add-faq-entry').click();  // throw out a blank entry for context if none exist.
-        });
-    </script>
+    } else { ?>
+        <script>
+            $(document).ready(function () {
+                $('.ccm-add-faq-entry').click();  // throw out a blank entry for context if none exist.
+            });
+        </script>
     <?php } ?>
-    <div class="ccm-faq-entry well ccm-faq-entry-template"style="display: none;">
+    <div class="ccm-faq-entry well ccm-faq-entry-template" style="display: none;">
         <i class="fa-sort-asc fa"></i>
         <i class="fa-sort-desc fa"></i>
+
         <div class="form-group">
             <label><?php echo t('Navigation Link Text') ?></label>
-            <input type="text" name="linkTitle[]" value="" />
+            <input type="text" name="linkTitle[]" value=""/>
         </div>
         <div class="form-group">
             <label><?php echo t('Title Text') ?></label>
-            <input type="text" name="title[]" value="" />
+            <input type="text" name="title[]" value=""/>
         </div>
         <div class="form-group">
             <label><?php echo t('Description') ?></label>
             <textarea name="description[]"></textarea>
         </div>
-            <input class="ccm-faq-entry-sort" type="hidden" name="sortOrder[]" value=""/>
+        <input class="ccm-faq-entry-sort" type="hidden" name="sortOrder[]" value=""/>
+
         <div class="form-group">
             <span class="btn btn-danger ccm-delete-faq-entry"><?php echo t('Delete Entry'); ?></span>
         </div>
