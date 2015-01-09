@@ -19,9 +19,9 @@ class Add extends DashboardPageController
         }
         if (!$this->error->has()) {
             $calendar = new Calendar();
-            $calendar->setTitle($this->request->post('calendarName'));
+            $calendar->setName($this->request->post('calendarName'));
             $calendar->save();
-            $this->redirect('/dashboard/system/calendar/events', $calendar->getID());
+            $this->redirect('/dashboard/calendar/events', $calendar->getID());
         }
     }
 
