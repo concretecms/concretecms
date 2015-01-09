@@ -230,6 +230,7 @@ return array(
         "/ccm/system/dialogs/page/edit_external"                                        => array('\Concrete\Controller\Dialog\Page\EditExternal::view'),
         "/ccm/system/dialogs/page/edit_external/submit"                                 => array('\Concrete\Controller\Dialog\Page\EditExternal::submit'),
         "/ccm/system/dialogs/calendar/event/add/{caID}"                                 => array('\Concrete\Controller\Dialog\Calendar\Event::add'),
+        "/ccm/system/dialogs/calendar/event/add/{caID}/submit"                          => array('\Concrete\Controller\Dialog\Calendar\Event::submit'),
 
         /**
          * Files
