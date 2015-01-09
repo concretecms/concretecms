@@ -1,47 +1,34 @@
-<div class="ccm-ui">
-    <form class="ccm-event-add form form-horizontal">
 
-        <div class="form-group">
-            <label for="name" class="col-sm-2 control-label">
-                <?= t('Name') ?>
-            </label>
+    <div class="form-group">
+        <label for="name" class="col-sm-2 control-label">
+            <?= t('Name') ?>
+        </label>
 
-            <div class="col-sm-10">
-                <input type="text" class="form-control" placeholder="Name" name="name">
-            </div>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" placeholder="Name" name="name">
         </div>
-        <div class="form-group">
-            <label for="name" class="col-sm-2 control-label">
-                <?= t('Description') ?>
-            </label>
+    </div>
+    <div class="form-group">
+        <label for="name" class="col-sm-2 control-label">
+            <?= t('Description') ?>
+        </label>
 
-            <div class="col-sm-10">
-                <input type="text" class="form-control" placeholder="Description" name="description">
-            </div>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" placeholder="Description" name="description">
         </div>
-        <div class="form-group">
-            <label for="name" class="col-sm-2 control-label">
-                <?= t('Schedule') ?>
-            </label>
+    </div>
+    <div class="form-group">
+        <label for="name" class="col-sm-2 control-label">
+            <?= t('Schedule') ?>
+        </label>
 
-            <div class="col-sm-10">
-                <button class="ccm-event-add-repetition btn btn-default btn-small">
-                    <i class="fa fa-clock-o"></i>
-                </button>
-            </div>
+        <div class="col-sm-10">
+            <button class="ccm-event-add-repetition btn btn-default btn-small">
+                <i class="fa fa-clock-o"></i>
+            </button>
         </div>
-        <div class="form-group">
-            <div class="col-sm-2">
-            </div>
-            <div class="col-sm-10">
-                <button class="ccm-event-add-submit btn btn-primary">
-                    <?= t('Submit') ?>
-                </button>
-            </div>
-        </div>
-    </form>
-
-</div>
+    </div>
+    <? /*
 <script>
     (function () {
 
@@ -111,3 +98,4 @@
         var me = new EventAdd;
     }());
 </script>
+*/ ?>

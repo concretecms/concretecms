@@ -198,6 +198,17 @@ class StorageLocation extends \Concrete\Core\File\StorageLocation\StorageLocatio
     /**
      * {@inheritDoc}
      */
+    public function getDisplayName($format = 'html')
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getDisplayName', array($format));
+
+        return parent::getDisplayName($format);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function setName($fslName)
     {
 

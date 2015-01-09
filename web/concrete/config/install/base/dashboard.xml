@@ -332,6 +332,12 @@
 			</attributes>
         </page>
 
+        <page name="Calendar &amp; Events" path="/dashboard/calendar" filename="/dashboard/calendar/view.php" pagetype="" description="" package=""></page>
+        <page name="Events" path="/dashboard/calendar/events" filename="/dashboard/calendar/events.php" pagetype="" description="" package="">
+        </page>
+        <page name="Add Calendar" path="/dashboard/calendar/add" filename="/dashboard/calendar/add.php" pagetype="" description="" package="">
+        </page>
+
         <page name="Workflow" path="/dashboard/workflow" filename="/dashboard/workflow/view.php" pagetype=""
               description="" package="">
             <attributes>

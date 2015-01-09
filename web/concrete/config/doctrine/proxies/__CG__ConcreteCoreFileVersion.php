@@ -176,89 +176,12 @@ class Version extends \Concrete\Core\File\Version implements \Doctrine\ORM\Proxy
     /**
      * {@inheritDoc}
      */
-    public function setFile(\Concrete\Core\File\File $file)
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setFile', array($file));
-
-        return parent::setFile($file);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getFileID()
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getFileID', array());
-
-        return parent::getFileID();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getFileVersionID()
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getFileVersionID', array());
-
-        return parent::getFileVersionID();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function getPrefix()
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getPrefix', array());
 
         return parent::getPrefix();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getFileName()
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getFileName', array());
-
-        return parent::getFileName();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getTitle()
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getTitle', array());
-
-        return parent::getTitle();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getTags()
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getTags', array());
-
-        return parent::getTags();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getDescription()
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getDescription', array());
-
-        return parent::getDescription();
     }
 
     /**
@@ -275,12 +198,34 @@ class Version extends \Concrete\Core\File\Version implements \Doctrine\ORM\Proxy
     /**
      * {@inheritDoc}
      */
-    public function getGenericTypeText()
+    public function getTagsList()
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getGenericTypeText', array());
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getTagsList', array());
 
-        return parent::getGenericTypeText();
+        return parent::getTagsList();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getTags()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getTags', array());
+
+        return parent::getTags();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setAttribute($ak, $value)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setAttribute', array($ak, $value));
+
+        return parent::setAttribute($ak, $value);
     }
 
     /**
@@ -297,23 +242,12 @@ class Version extends \Concrete\Core\File\Version implements \Doctrine\ORM\Proxy
     /**
      * {@inheritDoc}
      */
-    public function getTagsList()
+    public function setFile(\Concrete\Core\File\File $file)
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getTagsList', array());
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setFile', array($file));
 
-        return parent::getTagsList();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setAttribute($ak, $value)
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setAttribute', array($ak, $value));
-
-        return parent::setAttribute($ak, $value);
+        return parent::setFile($file);
     }
 
     /**
@@ -341,12 +275,56 @@ class Version extends \Concrete\Core\File\Version implements \Doctrine\ORM\Proxy
     /**
      * {@inheritDoc}
      */
-    public function getAttribute($ak, $mode = false)
+    public function getFileID()
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getAttribute', array($ak, $mode));
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getFileID', array());
 
-        return parent::getAttribute($ak, $mode);
+        return parent::getFileID();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getFileVersionID()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getFileVersionID', array());
+
+        return parent::getFileVersionID();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function delete($deleteFilesAndThumbnails = false)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'delete', array($deleteFilesAndThumbnails));
+
+        return parent::delete($deleteFilesAndThumbnails);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function deleteThumbnail($type)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'deleteThumbnail', array($type));
+
+        return parent::deleteThumbnail($type);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getFileResource()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getFileResource', array());
+
+        return parent::getFileResource();
     }
 
     /**
@@ -429,23 +407,23 @@ class Version extends \Concrete\Core\File\Version implements \Doctrine\ORM\Proxy
     /**
      * {@inheritDoc}
      */
-    public function logVersionUpdate($updateTypeID, $updateTypeAttributeID = 0)
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'logVersionUpdate', array($updateTypeID, $updateTypeAttributeID));
-
-        return parent::logVersionUpdate($updateTypeID, $updateTypeAttributeID);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function duplicate()
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'duplicate', array());
 
         return parent::duplicate();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function deny()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'deny', array());
+
+        return parent::deny();
     }
 
     /**
@@ -495,6 +473,17 @@ class Version extends \Concrete\Core\File\Version implements \Doctrine\ORM\Proxy
     /**
      * {@inheritDoc}
      */
+    public function logVersionUpdate($updateTypeID, $updateTypeAttributeID = 0)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'logVersionUpdate', array($updateTypeID, $updateTypeAttributeID));
+
+        return parent::logVersionUpdate($updateTypeID, $updateTypeAttributeID);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function updateTags($tags)
     {
 
@@ -539,78 +528,12 @@ class Version extends \Concrete\Core\File\Version implements \Doctrine\ORM\Proxy
     /**
      * {@inheritDoc}
      */
-    public function deny()
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'deny', array());
-
-        return parent::deny();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function delete()
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'delete', array());
-
-        return parent::delete();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function deleteThumbnail($type)
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'deleteThumbnail', array($type));
-
-        return parent::deleteThumbnail($type);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getFileResource()
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getFileResource', array());
-
-        return parent::getFileResource();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getURL()
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getURL', array());
-
-        return parent::getURL();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function getFileContents()
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getFileContents', array());
 
         return parent::getFileContents();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getDownloadURL()
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getDownloadURL', array());
-
-        return parent::getDownloadURL();
     }
 
     /**
@@ -638,6 +561,17 @@ class Version extends \Concrete\Core\File\Version implements \Doctrine\ORM\Proxy
     /**
      * {@inheritDoc}
      */
+    public function getFileName()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getFileName', array());
+
+        return parent::getFileName();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getRelativePath()
     {
 
@@ -649,23 +583,23 @@ class Version extends \Concrete\Core\File\Version implements \Doctrine\ORM\Proxy
     /**
      * {@inheritDoc}
      */
-    public function getThumbnailURL($type)
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getThumbnailURL', array($type));
-
-        return parent::getThumbnailURL($type);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function getThumbnails()
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getThumbnails', array());
 
         return parent::getThumbnails();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getAttribute($ak, $mode = false)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getAttribute', array($ak, $mode));
+
+        return parent::getAttribute($ak, $mode);
     }
 
     /**
@@ -693,17 +627,6 @@ class Version extends \Concrete\Core\File\Version implements \Doctrine\ORM\Proxy
     /**
      * {@inheritDoc}
      */
-    public function getListingThumbnailImage()
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getListingThumbnailImage', array());
-
-        return parent::getListingThumbnailImage();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function getDetailThumbnailImage()
     {
 
@@ -715,12 +638,67 @@ class Version extends \Concrete\Core\File\Version implements \Doctrine\ORM\Proxy
     /**
      * {@inheritDoc}
      */
+    public function getThumbnailURL($type)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getThumbnailURL', array($type));
+
+        return parent::getThumbnailURL($type);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getURL()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getURL', array());
+
+        return parent::getURL();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getDownloadURL()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getDownloadURL', array());
+
+        return parent::getDownloadURL();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function refreshAttributes($firstRun = false)
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'refreshAttributes', array($firstRun));
 
         return parent::refreshAttributes($firstRun);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getTitle()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getTitle', array());
+
+        return parent::getTitle();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getJSONObject()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getJSONObject', array());
+
+        return parent::getJSONObject();
     }
 
     /**
@@ -748,12 +726,34 @@ class Version extends \Concrete\Core\File\Version implements \Doctrine\ORM\Proxy
     /**
      * {@inheritDoc}
      */
-    public function getJSONObject()
+    public function getGenericTypeText()
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getJSONObject', array());
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getGenericTypeText', array());
 
-        return parent::getJSONObject();
+        return parent::getGenericTypeText();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getDescription()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getDescription', array());
+
+        return parent::getDescription();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getListingThumbnailImage()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getListingThumbnailImage', array());
+
+        return parent::getListingThumbnailImage();
     }
 
 }
