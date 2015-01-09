@@ -57,7 +57,9 @@ class AssetList
         if ($args['position']) {
             $o->setAssetPosition($args['position']);
         }
-        if ($args['attributes']) $o->setTagAttributes($args['attributes']);
+        if ($args['attributes']) {
+            $o->setTagAttributes($args['attributes']);
+        }
         $this->registerAsset($o);
         return $o;
     }
