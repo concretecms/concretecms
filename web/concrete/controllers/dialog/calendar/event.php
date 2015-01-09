@@ -24,5 +24,10 @@ class Event extends BackendInterfaceController
         }
     }
 
+    public function submit()
+    {
+
+    }
+
 }
 

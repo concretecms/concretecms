@@ -17,17 +17,9 @@
             <input type="text" class="form-control" placeholder="Description" name="description">
         </div>
     </div>
-    <div class="form-group">
-        <label for="name" class="col-sm-2 control-label">
-            <?= t('Schedule') ?>
-        </label>
 
-        <div class="col-sm-10">
-            <button class="ccm-event-add-repetition btn btn-default btn-small">
-                <i class="fa fa-clock-o"></i>
-            </button>
-        </div>
-    </div>
+    <?= \Loader::element('permission/duration', array('pd' => $event ? $event->getRepetition() : null)); ?>
+
     <? /*
 <script>
     (function () {
