@@ -146,6 +146,7 @@ class CssAsset extends Asset
     public function __toString()
     {
         $e = new HeadLink($this->getAssetURL(), 'stylesheet', 'text/css', 'all');
+        $e->setAttributes($this->getTagAttributes());
         if (count($this->combinedAssetSourceFiles)) {
             $source = '';
             foreach($this->combinedAssetSourceFiles as $file) {

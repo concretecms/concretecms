@@ -16,6 +16,33 @@ abstract class Asset
     protected $pkg;
     protected $combinedAssetSourceFiles = array();
 
+    protected $tagAttributes = array();
+
+    public function setTagAttributes(array $attrs)
+    {
+        $this->tagAttributes = $attrs;
+    }
+
+    public function getTagAttributes()
+    {
+        return $this->tagAttributes;
+    }
+
+    public function setTagAttribute($key, $val)
+    {
+        $this->tagAttributes[$key] = $val;
+    }
+
+    public function getTagAttributeString()
+    {
+        $str = '';
+        $space = '';
+        foreach ($this->tagAttributes as $key => $val) {
+            $str .= "$space$key=\"$val\"";
+        }
+        return $str;
+    }
+
     const ASSET_POSITION_HEADER = 'H';
     const ASSET_POSITION_FOOTER = 'F';
 

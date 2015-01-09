@@ -10,6 +10,8 @@ class JavascriptAsset extends Asset
     protected $assetSupportsMinification = true;
     protected $assetSupportsCombination = true;
 
+    protected $scriptType = 'text/javascript';
+
     public function getAssetDefaultPosition() 
     {
         return Asset::ASSET_POSITION_FOOTER;
@@ -86,7 +88,8 @@ class JavascriptAsset extends Asset
     public function __toString() 
     {
         $e = new Element('script');
-        $e->type('text/javascript')->src($this->getAssetURL());
+        $e->setAttributes($this->getTagAttributes());
+        $e->type($this->scriptType)->src($this->getAssetURL());
         if (count($this->combinedAssetSourceFiles)) {
             $source = '';
             foreach($this->combinedAssetSourceFiles as $file) {
