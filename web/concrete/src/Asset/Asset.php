@@ -52,6 +52,7 @@ abstract class Asset
         $space = '';
         foreach ($this->tagAttributes as $key => $val) {
             $str .= "$space$key=\"$val\"";
+            $space = ' ';
         }
         return $str;
     }
