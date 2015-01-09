@@ -704,7 +704,16 @@
        <col>gasID</col>
    </index>
   </table>
-  <table name="Conversations">
+    <table name="Calendars">
+    <field name="caID" type="I" size="10">
+        <key/>
+        <unsigned/>
+        <autoincrement />
+    </field>
+    <field name="caName" type="C" size="255">
+    </field>
+    </table>
+    <table name="Conversations">
     <field name="cnvID" type="I" size="10">
       <key/>
       <autoincrement/>

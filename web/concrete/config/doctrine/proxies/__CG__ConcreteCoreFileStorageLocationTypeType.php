@@ -261,4 +261,15 @@ class Type extends \Concrete\Core\File\StorageLocation\Type\Type implements \Doc
         return parent::includeOptionsForm($location);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public function delete()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'delete', array());
+
+        return parent::delete();
+    }
+
 }
