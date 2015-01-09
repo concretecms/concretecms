@@ -204,15 +204,18 @@ class Package extends Object
         // currently this is just done from xml
         $db = Database::get();
 
-        $schema = Schema::loadFromXMLFile($xmlFile, $db);
-        $platform = $db->getDatabasePlatform();
-        $queries = $schema->toSql($platform);
-        foreach ($queries as $query) {
+        $parser = Schema::getSchemaParser(simplexml_load_file($xmlFile));
+        $parser->setIgnoreExistingTables(false);
+        $toSchema = $parser->parse($db);
+
+        $fromSchema = $db->getSchemaManager()->createSchema();
+        $comparator = new \Doctrine\DBAL\Schema\Comparator();
+        $schemaDiff = $comparator->compare($fromSchema, $toSchema);
+        $saveQueries = $schemaDiff->toSaveSql($db->getDatabasePlatform());
+
+        foreach($saveQueries as $query) {
             $db->query($query);
         }
-
-        unset($schema);
-        unset($platform);
 
         /*
         $schema = Database::getADOSChema();
