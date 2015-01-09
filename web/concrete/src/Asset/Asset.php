@@ -18,6 +18,19 @@ abstract class Asset
 
     protected $tagAttributes = array();
 
+    const ASSET_POSITION_HEADER = 'H';
+    const ASSET_POSITION_FOOTER = 'F';
+
+    abstract public function getAssetDefaultPosition();
+
+    abstract public function getAssetType();
+
+    abstract public function minify($assets);
+
+    abstract public function combine($assets);
+
+    abstract public function __toString();
+
     public function setTagAttributes(array $attrs)
     {
         $this->tagAttributes = $attrs;
@@ -43,18 +56,6 @@ abstract class Asset
         return $str;
     }
 
-    const ASSET_POSITION_HEADER = 'H';
-    const ASSET_POSITION_FOOTER = 'F';
-
-    abstract public function getAssetDefaultPosition();
-
-    abstract public function getAssetType();
-
-    abstract public function minify($assets);
-
-    abstract public function combine($assets);
-
-    abstract public function __toString();
 
     public function assetSupportsMinification()
     {
