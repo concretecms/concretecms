@@ -94,6 +94,7 @@ class Event implements EventInterface
                 ))
             ) {
                 $this->id = intval($connection->lastInsertId(), 10);
+                $this->generateOccurrences();
                 return true;
             }
         }
@@ -110,6 +111,11 @@ class Event implements EventInterface
             }
         }
         return false;
+    }
+
+    protected function generateOccurrences()
+    {
+
     }
 
     /**
