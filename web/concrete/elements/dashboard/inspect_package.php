@@ -2,11 +2,11 @@
 
 // Params:
 
-if ( !is_object($pkg) ) $pkg = Package::getByHandle($pkg);
-if ( !is_object($pkg) ) return;
+if (!is_object($pkg)) $pkg = Package::getByHandle($pkg);
+if (!is_object($pkg)) return;
 
 
-$ci  = \Core::make('helper/concrete/urls' );
+$ci  = \Core::make('helper/concrete/urls');
 $txt = \Core::make('helper/text');
 $nav = \Core::make('helper/navigation');
 
@@ -27,21 +27,21 @@ $catList = AttributeCategory::getList();
 </table>
 
 
-<?php if ( count($items['block_types']) > 0 ) { ?>
+<?php if (count($items['block_types']) > 0) { ?>
 <div class="form-group">
 	<legend><?= $pkg->getPackageItemsCategoryDisplayName('block_types_sets'); ?></legend>
 	<dl class="dl-horizontal ccm-block-set-list">
-	<?php foreach ($items['block_type_sets'] as $bset ) { ?>
+	<?php foreach ($items['block_type_sets'] as $bset) { ?>
 		<dt><span class="badge"><?=$bset->getBlockTypeSetName()?></span></dt>
 		<dd>
 			<span><?= t('Containing the following blocks') ?></span> 
                         <ul id="ccm-block-type-block-set-list" class="item-select-list ccm-block-type-sortable-list">
-                        <?php foreach ( $bset->getBlockTypes() as $bt ) {?>
+                        <?php foreach ($bset->getBlockTypes() as $bt) {?>
                             <li style="display:inline-block">
                                 <a style="display:inline-block" href="<?= $view->url('/dashboard/blocks/types', 'inspect', $bt->getBlockTypeID()); ?>"><img src="<?=$ci->getBlockTypeIconURL($bt)?>"/> <?=$bt->getBlockTypeName()?></a>
                                 <?php
                                 $pkgRefID = $bt->getPackageID();
-                                if ( $pkgRefID && $pkgRefID != $pkg->getPackageID()) { 
+                                if ($pkgRefID && $pkgRefID != $pkg->getPackageID()) { 
                                     $pkgRef = Package::getByID($pkgRefID);
                                 ?>
                                     <span class="label label-warning" ><?=t('Package: ')?><a style="color:white" href="<?=$view->url('/dashboard/extend/install/inspect_package', $pkgRefID)?>"><?=$pkgRef->getPackageName()?></a></span>
@@ -54,7 +54,7 @@ $catList = AttributeCategory::getList();
 	<?php } ?>
 	</dl>
 </div>
-<?php } unset($items['block_type_sets'] ); ?>
+<?php } unset($items['block_type_sets']); ?>
 
 <?php if (count($items['block_types']) > 0) { ?>
 <legend><?= $pkg->getPackageItemsCategoryDisplayName('block_types'); ?></legend>
@@ -68,15 +68,20 @@ $catList = AttributeCategory::getList();
 </ul>
 <?php } ?>
 
-<?php if ( count($items['attribute_types']) > 0 ) { ?>
+<?php if (count($items['attribute_types']) > 0) { ?>
 <div class="form-group">
 	<legend><?= $pkg->getPackageItemsCategoryDisplayName('attribute_types'); ?></legend>
 	<dl class="dl-horizontal">
-		<?php foreach ( $items['attribute_types'] as $at ) { ?>
+		<?php foreach ($items['attribute_types'] as $at) { ?>
 		<dt><img src="<?=$at->getAttributeTypeIconSRC()?>" alt="<?=t('attribute type icon')?>"/></dt>
 		<dd>
 			<?=$at->getAttributeTypeName()?>
-			<?php foreach ( $catList as $cat ) { if (!$at->isAssociatedWithCategory($cat)) continue; ?>
+                        <?php
+                        foreach ($catList as $cat) { 
+                            if (!$at->isAssociatedWithCategory($cat)) {
+                                continue;
+                            }
+                        ?>
 			<span class="badge"><?=$txt->unhandle($cat->getAttributeKeyCategoryHandle())?></span>
 			<?php } ?>
 		</dd>
@@ -84,18 +89,18 @@ $catList = AttributeCategory::getList();
 		<?php } ?>
 	</dl>
 </div>
-<?php } unset($items['attribute_types'] ); ?>
+<?php } unset($items['attribute_types']); ?>
 
 <?php 
-	Loader::element('dashboard/package_element_list', array( 'pkg' => $pkg, 'itemArray' => $items['attribute_keys'], 'key' => 'attribute_keys')  );
-	unset($items['attribute_keys'] ); 
+	Loader::element('dashboard/package_element_list', array('pkg' => $pkg, 'itemArray' => $items['attribute_keys'], 'key' => 'attribute_keys'));
+	unset($items['attribute_keys']); 
 ?>
 
-<?php if ( count($items['page_themes']) > 0 ) { ?>
+<?php if (count($items['page_themes']) > 0) { ?>
 <div class="form-group">
 	<legend><?= $pkg->getPackageItemsCategoryDisplayName('page_themes'); ?></legend>
 	<ul class="list-unstyled">
-	<?php foreach( $items['page_themes'] as $theme) { ?>
+	<?php foreach($items['page_themes'] as $theme) { ?>
         <dl class="dl-horizontal">
             <dt><div class="ccm-themes-thumbnail" style="padding:4px;background-color:#FFF;border-radius:3px;border:1px solid #DDD; width:130px"><?=$theme->getThemeThumbnail()?></div></dt>
             <dd>
@@ -108,13 +113,13 @@ $catList = AttributeCategory::getList();
 	<?php } ?>
 	</ul>
 </div>
-<?php } unset($items['page_themes'] ); ?>
+<?php } unset($items['page_themes']); ?>
 
-<?php if ( count($items['single_pages']) > 0 ) { ?>
+<?php if (count($items['single_pages']) > 0) { ?>
 <div class="form-group">
 	<legend><?= $pkg->getPackageItemsCategoryDisplayName('single_pages'); ?></legend>
 	<ul class="list-unstyled">
-	<?php foreach( $items['single_pages'] as $page ) { ?>
+	<?php foreach ($items['single_pages'] as $page) { ?>
         <li class="clearfix row">
             <span class="col-sm-2"><a href="<?=$nav->getLinkToCollection($page)?>"><?=$page->getCollectionName()?></a></span>
             <span class="col-sm-3"><code><?=$page->getCollectionPath()?></code></span>
@@ -123,9 +128,9 @@ $catList = AttributeCategory::getList();
 	<?php } ?>
 	</ul>
 </div>
-<?php } unset($items['single_pages'] ); ?>
+<?php } unset($items['single_pages']); ?>
 
 
 <!-- Show all remaining items that we don't have a better formatting for !-->
 
-<?php foreach ($items as $key => $itemArray) Loader::element('dashboard/package_element_list', array( 'pkg' => $pkg, 'itemArray' => $itemArray, 'key' => $key ) ); ?>
+<?php foreach ($items as $key => $itemArray) Loader::element('dashboard/package_element_list', array('pkg' => $pkg, 'itemArray' => $itemArray, 'key' => $key)); ?>
