@@ -25,9 +25,8 @@ for ($i = 0; $i < count($sets); $i++) {
 <section>
     <legend><?= $set->getBlockTypeSetDisplayName() ?></legend>
     <ul class="item-select-list">
-        <? $blockTypes = $types[$set->getBlockTypeSetName()];
+        <?php $blockTypes = $types[$set->getBlockTypeSetName()];
         foreach ($blockTypes as $bt) {
-            $btIcon = $ci->getBlockTypeIconURL($bt);
             ?>
             <li>
                 <a
@@ -40,22 +39,21 @@ for ($i = 0; $i < count($sets); $i++) {
                     data-supports-inline-add="<?= $bt->supportsInlineAdd() ?>"
                     data-btID="<?= $bt->getBlockTypeID() ?>"
                     title="<?= t($bt->getBlockTypeName()) ?>"
-                    href="javascript:void(0)"><img src="<?=$btIcon?>" /> <?=t($bt->getBlockTypeName())?></a>
+                    href="javascript:void(0)"><?php Loader::element('dashboard/block_type_icon', array('bt'=>$bt, 'class'=>'mini', 'nolink'=>true))?> <?=t($bt->getBlockTypeName())?></a>
             </li>
-        <? } ?>
+        <?php } ?>
     </ul>
 </section>
 
-<? } ?>
+<?php } ?>
 
-<? if (is_array($types['Other'])) { ?>
+<?php if (is_array($types['Other'])) { ?>
 
     <section>
         <legend><?=t('Other')?></legend>
         <ul class="item-select-list">
-            <? $blockTypes = $types['Other'];
+            <?php $blockTypes = $types['Other'];
             foreach ($blockTypes as $bt) {
-                $btIcon = $ci->getBlockTypeIconURL($bt);
                 ?>
                 <li>
                     <a
@@ -68,13 +66,13 @@ for ($i = 0; $i < count($sets); $i++) {
                         data-supports-inline-add="<?= $bt->supportsInlineAdd() ?>"
                         data-btID="<?= $bt->getBlockTypeID() ?>"
                         title="<?= t($bt->getBlockTypeName()) ?>"
-                        href="javascript:void(0)"><img src="<?=$btIcon?>" /> <?=t($bt->getBlockTypeName())?></a>
+                        href="javascript:void(0)"><?php Loader::element('dashboard/block_type_icon', array('bt'=>$bt, 'class'=>'mini', 'nolink'=>true))?><?=t($bt->getBlockTypeName())?></a>
                 </li>
-            <? } ?>
+            <?php } ?>
         </ul>
     </section>
 
-<? } ?>
+<?php } ?>
 
 </div>
 

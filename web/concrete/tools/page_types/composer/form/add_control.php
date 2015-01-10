@@ -42,7 +42,11 @@ if ($cp->canViewPage()) {
 		$controls = $t->getPageTypeComposerControlObjects();
 		foreach($controls as $cnt) { ?>
 			<li><a href="#" data-control-type-id="<?=$t->getPageTypeComposerControlTypeID()?>" data-control-identifier="<?=$cnt->getPageTypeComposerControlIdentifier()?>">
+                    <?php if ( 'block' == $cnt->getPageTypeComposerControlTypeHandle() ) { ?>
+                    <?php Loader::element('dashboard/block_type_icon', array('bt'=>$cnt->getBlockTypeObject(), 'class'=>'mini', 'nolink'=>true))?>
+                    <?php } else { ?>
                     <img src="<?=$cnt->getPageTypeComposerControlIconSRC()?>" />
+                    <?php } ?>
                     <?=$cnt->getPageTypeComposerControlDisplayName()?></a></li>
 		<? } ?>
 	</ul>
