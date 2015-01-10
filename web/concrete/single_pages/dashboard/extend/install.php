@@ -49,21 +49,10 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
         <?php echo $valt->output('uninstall'); ?>
         <input type="hidden" name="pkgID" value="<?php echo $pkg->getPackageID(); ?>" />
         <fieldset>
-            <legend><?php echo t('Uninstall Package'); ?></legend>
+            <h2><?php echo t('Uninstall Package'); ?></h2>
 
-            <p><?php echo t('Uninstalling %s will remove the following data from your system.', $pkg->getPackageName()); ?></p>
-            <?php
-            foreach ($items as $k => $itemArray) {
-                if (count($itemArray) == 0) {
-                    continue;
-                }
-                ?><h5><?php echo $pkg->getPackageItemsCategoryDisplayName($k); ?></h5><?php
-                foreach ($itemArray as $item) {
-                    echo $pkg->getItemName($item);
-                    ?><br/><?php
-                }
-            }
-            ?>
+            <p class="alert alert-warning"><?php echo t('Uninstalling %s will remove the following data from your system.', $pkg->getPackageName()); ?></p><legend class="invisible"></legend>
+            <?php Loader::element('dashboard/inspect_package', array( 'pkg' => $pkg ) ); ?>
             <br/>
         </fieldset>
 
@@ -155,36 +144,11 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
         }
     }
 
-    if (is_object($pkg)) {
+    if (is_object($pkg)) 
+    {
+        Loader::element('dashboard/inspect_package', array( 'pkg' => $pkg ) );
         ?>
-        <table class="table table-bordered table-striped">
-            <tr>
-                <td class="ccm-marketplace-list-thumbnail"><img src="<?php echo $ci->getPackageIconURL($pkg); ?>" /></td>
-                <td class="ccm-addon-list-description" style="width: 100%"><h3><?php echo $pkg->getPackageName(); ?> - <?php echo $pkg->getPackageVersion(); ?></h3><?php echo $pkg->getPackageDescription(); ?></td>
-            </tr>
-        </table>
-        <?php
-        $items = $pkg->getPackageItems();
-        $blocks = array();
-        if (isset($items['block_types']) && is_array($items['block_types'])) {
-            $blocks = $items['block_types'];
-        }
-        if (count($blocks) > 0) { ?>
-            <h5><?php echo $pkg->getPackageItemsCategoryDisplayName('block_types'); ?></h5>
-            <div class="form-group">
-            <?php
-            foreach ($blocks as $bt) {
-                $btIcon = $ci->getBlockTypeIconURL($bt);
-                ?>
-                <a href="<?php echo $view->url('/dashboard/blocks/types', 'inspect', $bt->getBlockTypeID()); ?>"><?php echo t($bt->getBlockTypeName()); ?></a>
-                <div class="ccm-block-type-description"  id="ccm-bt-help<?php echo $bt->getBlockTypeID(); ?>"><?php echo t($bt->getBlockTypeDescription()); ?></div>
-                <?php
-            }
-            ?>
-            </div>
-            <?php
-        }
-        ?>
+
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
             <?php
