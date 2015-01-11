@@ -222,7 +222,7 @@ $(function() {
 				<li class="ccm-file-set-add-cb">
 				<label>
 					<?=checkbox('fsID', $s->getFileSetID(), $s->state)?>
-					<span><?=$s->getFileSetName()?></span>
+					<span><?=$s->getFileSetDisplayName()?></span>
 				</label>
 				</li>
 		<? }
