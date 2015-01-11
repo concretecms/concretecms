@@ -112,7 +112,7 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
         if ($fsID > 0) {
             return static::getByID($fsID);
         } else {
-            $fs = static::add(h($fs_name), 0, $fs_uid, $fs_type);
+            $fs = static::add($fs_name, 0, $fs_uid, $fs_type);
             return $fs;
         }
     }
@@ -364,6 +364,23 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
     }
 
     /**
+     * Returns the display name for this file set (localized and escaped accordingly to $format)
+     * @param string $format
+     * @return string
+     */
+    public function getFileSetDisplayName($format = 'html')
+    {
+        $value = tc('FileSetName', $this->getFileSetName());
+        switch ($format) {
+            case 'html':
+                return h($value);
+            case 'text':
+            default:
+            return $value;
+        }
+    }
+
+    /**
      * Updates a file set.
      * @return Set
      */
@@ -372,7 +389,7 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
         $db = Loader::db();
         $db->update(
             'FileSets',
-            array('fsName' => h($setName), 'fsOverrideGlobalPermissions' => $fsOverrideGlobalPermissions),
+            array('fsName' => $setName, 'fsOverrideGlobalPermissions' => $fsOverrideGlobalPermissions),
             array('fsID' => $this->fsID));
         return static::getByID($this->fsID);
     }
