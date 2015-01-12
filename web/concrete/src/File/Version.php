@@ -936,4 +936,20 @@ class Version
             return $this->getTypeObject()->getThumbnail();
         }
     }
+
+    /**
+     * Returns a full filesystem path to the file on disk.
+    */
+    public function getPath() {
+        $f = core::make('helper/concrete/file');
+        if ($this->fslID > 0) {
+            Loader::model('file_storage_location');
+            $fsl = FileStorageLocation::getByID($this->fslID);
+            $path = $f->mapSystemPath($this->fvPrefix, $this->fvFilename, false, $fsl->getDirectory());
+        } else {
+            $path = $f->getSystemPath($this->fvPrefix, $this->fvFilename);
+        }
+        return $path;
+    }
+	
 }

@@ -8,6 +8,7 @@ use \Zend\Mail\Transport\Sendmail as SendmailTransport;
 use \Zend\Mail\Transport\Smtp as SmtpTransport;
 use \Zend\Mail\Transport\SmtpOptions;
 use \Zend\Mime\Message as MimeMessage;
+use \Zend\Mime\Mime;
 use \Zend\Mime\Part as MimePart;
 use Exception;
 
@@ -123,10 +124,10 @@ class Service
     public function addAttachment(\Concrete\Core\File\File $fob)
     {
         // @TODO make this work with the File Storage Locations
-
-        $fv = $fob->getVersion();
-        $path = $fob->getPath();
+        $fv = $fob->getVersion();	
+        $path = $fv->getPath();
         $name = $fv->getFileName();
+
         $type = false;
         if (!function_exists('mime_content_type')) {
             function mime_content_type($path)
@@ -145,7 +146,7 @@ class Service
             throw new Exception(t('Unable to get the file contents for attachment.'));
         }
 
-        $file = new \StdClass();
+        $file = new \stdClass();
         $file->object = $fob;
         $file->type = $type;
         $file->path = $path;
@@ -441,24 +442,32 @@ class Service
                 }
             }
 
-            if (is_array($this->attachments) && count($this->attachments)) {
-                foreach ($this->attachments as $att) {
-                    $natt = $mail->createAttachment($att->contents);
-                    $fob = $att->object;
-                    unset($att->object);
-                    unset($att->contents);
-                    foreach ((array)$att as $key => $value) {
-                        $natt->{$key} = $value;
-                    }
-                }
-            }
+            $body = new MimeMessage();
 
             $text = new MimePart($this->body);
             $text->type = "text/plain";
             $text->charset = APP_CHARSET;
+            $text->encoding = Mime::ENCODING_QUOTEDPRINTABLE;
 
-            $body = new MimeMessage();
-            $body->setParts(array($text));
+            if(is_array($this->attachments) && count($this->attachments)) {
+                $content = new MimeMessage();
+                $content->addPart($text);
+                $contentPart = new MimePart($content->generateMessage());
+                $contentPart->type = "multipart/alternative;\n boundary=\"" .
+                  $content->getMime()->boundary() . '"';
+                $body->addPart($contentPart);
+
+                foreach ($this->attachments as $att) {
+                    $attachment = new MimePart($att->contents);
+                    $attachment->filename    = $att->filename;
+                    $attachment->type        = $att->type;
+                    $attachment->encoding    = Mime::ENCODING_BASE64;
+                    $attachment->disposition = Mime::DISPOSITION_ATTACHMENT;
+                    $body->addPart($attachment);
+                }
+            } else {
+                $body->setParts(array($text));
+            }
 
             if ($this->bodyHTML != false) {
                 $html = new MimePart($this->bodyHTML);
