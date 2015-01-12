@@ -2,7 +2,7 @@
 namespace Concrete\Controller\Dialog\Calendar;
 
 use \Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
-use Concrete\Core\Application\EditResponse;
+use Concrete\Core\Calendar\Event\EditResponse;
 use Concrete\Core\Calendar\Calendar;
 use Concrete\Core\Calendar\Event\EventRepetition;
 use Concrete\Core\Calendar\Event\Event as CalendarEvent;
@@ -27,23 +27,44 @@ class Event extends BackendInterfaceController
         }
     }
 
-    public function submit()
+    public function submit($caID)
     {
-        $repetition = new EventRepetition();
-        $repetition->setStartDate(date('Y-m-d'));
-        $repetition->setStartDateAllDay(true);
-        $repetition->setEndDate(date('Y-m-d'));
-        $repetition->setEndDateAllDay(true);
-        $repetition->save();
-        $ev = new CalendarEvent(
-            $this->request->request->get('name'),
-            $this->request->request->get('description'),
-            $repetition
-        );
-        $ev->save();
+        $repetition = EventRepetition::translateFromRequest($this->request);
+        $e = \Core::make('error');
+        if (!is_object($repetition)) {
+            $e->add(t('You must specify a valid date for this event.'));
+        }
 
-        $r = new EditResponse();
-        $r->setMessage(t('Event added successfully.'));
+        $calendar = Calendar::getByID($caID);
+        if (!is_object($calendar)) {
+            $e->add(t('Invalid calendar.'));
+        }
+
+        $r = new EditResponse($e);
+
+        if (!$e->has()) {
+            $repetition->save();
+            $ev = new CalendarEvent(
+                $this->request->request->get('name'),
+                $this->request->request->get('description'),
+                $repetition
+            );
+
+            $ev->setCalendar($calendar);
+            $ev->save();
+
+            // Commenting this out until we can do ajax style calendar updating. In the meantime
+            // we're just going to refresh to the date of the start of the event and call it good.
+            //$occurrences = $ev->getOccurrences();
+            //$r->setOccurrences($occurrences);
+            //$r->setMessage(t('Event added successfully.'));
+            $year = date('Y', strtotime($repetition->getStartDate()));
+            $month = date('m', strtotime($repetition->getStartDate()));
+            $r->setRedirectURL(\URL::to('/dashboard/calendar/events/', 'view', $calendar->getID(),
+                $year, $month, 'event_added'
+            ));
+        }
+
         $r->outputJSON();
     }
 

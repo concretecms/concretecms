@@ -5355,7 +5355,12 @@
             <autoincrement/>
             <unsigned/>
         </field>
-        <field name="repetitionID" type="I" size="10" />
+        <field name="caID" type="I" size="10">
+            <unsigned/>
+        </field>
+        <field name="repetitionID" type="I" size="10">
+            <unsigned/>
+        </field>
         <field name="description" type="x2" />
         <field name="name" type="x2" />
     </table>

@@ -8,7 +8,7 @@ use URL;
 class Events extends DashboardPageController
 {
 
-    public function view($caID = null, $year = null, $month = null)
+    public function view($caID = null, $year = null, $month = null, $msg = null)
     {
         $calendars = Calendar::getList();
         if (count($calendars) == 0) {
@@ -65,6 +65,12 @@ class Events extends DashboardPageController
         $this->set('nextLink', $nextLink);
         $this->set('previousLink', $previousLink);
         $this->set('todayLink', $todayLink);
+
+        switch($msg) {
+            case 'event_added':
+                $this->set('success', t('Event added successfully.'));
+                break;
+        }
     }
 
 }

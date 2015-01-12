@@ -4,7 +4,7 @@
 class EventOccurrenceTest extends \ConcreteDatabaseTestCase
 {
     protected $fixtures = array();
-    protected $tables = array('CalendarEventRepetitions', 'CalendarEvents', 'CalendarEventOccurrences');
+    protected $tables = array('Calendars', 'CalendarEventRepetitions', 'CalendarEvents', 'CalendarEventOccurrences');
 
     public function testSingleOccurrence()
     {
@@ -28,6 +28,10 @@ class EventOccurrenceTest extends \ConcreteDatabaseTestCase
         $occurrence = $occurrences[0];
         $this->assertEquals(2, $occurrence->getID());
         $this->assertEquals('2014-01-11 09:00:00', date('Y-m-d H:i:s', $occurrence->getStart()));
+    }
+
+    public function testSaveEventFromRequest()
+    {
 
     }
 
