@@ -118,6 +118,9 @@ class Set extends Object {
 		$db->Execute('delete from JobSetJobs where jsID = ?', array($this->jsID));
 	}
 
+	/**
+	 * @return Job[]
+	 */
 	public function getJobs() {
 		$db = Loader::db();
 		$r = $db->Execute('select jID from JobSetJobs where jsID = ? order by jID asc', $this->getJobSetId());
