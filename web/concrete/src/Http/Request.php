@@ -34,6 +34,8 @@ class Request extends SymfonyRequest
     protected $hasCustomRequestUser;
     protected $customRequestUser;
     protected $customRequestDateTime;
+
+    protected static $instance;
     /**
      * @var \Concrete\Core\Page\Page
      */
@@ -44,11 +46,17 @@ class Request extends SymfonyRequest
      */
     public static function getInstance()
     {
-        if (null === static::$_request) {
-            static::$_request = static::createFromGlobals();
+        if (self::$instance === null) {
+            self::$instance = static::createFromGlobals();
         }
-        return static::$_request;
+        return self::$instance;
     }
+
+    public static function setInstance(SymfonyRequest $instance)
+    {
+        self::$instance = $instance;
+    }
+
 
     /**
      * @return \Concrete\Core\Page\Page
