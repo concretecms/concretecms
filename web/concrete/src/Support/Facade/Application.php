@@ -1,7 +1,12 @@
 <?php
 namespace Concrete\Core\Support\Facade;
-class Application extends Facade {
 
-	public static function getFacadeAccessor() {return 'app';}
+class Application extends Facade
+{
+
+    public static function getFacadeAccessor()
+    {
+        return 'app';
+    }
 
 }
