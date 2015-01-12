@@ -141,7 +141,7 @@ class Application extends Container
                         foreach ($jSets as $set) {
                             if ($set->isScheduledForNow()) {
                                 $url = BASE_URL . View::url(
-                                                      '/tools/required/jobs?auth=' . $auth . '&jsID=' . $set->getJobSetID(
+                                                      '/ccm/system/jobs?auth=' . $auth . '&jsID=' . $set->getJobSetID(
                                                       )
                                     );
                                 break;

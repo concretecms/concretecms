@@ -151,7 +151,7 @@ $dh = Core::make('helper/date');
     						<h4><?=t('No Queueing')?></h4>
     						
     						<div class="form-group">
-    						    <textarea rows="2" class="ccm-default-jobs-url form-control"><?=BASE_URL . $view->url('/tools/required/jobs?auth=' . $auth . '&jID=' . $j->getJobID())?></textarea>
+    						    <textarea rows="2" class="ccm-default-jobs-url form-control"><?=BASE_URL . $view->url('/ccm/system/jobs?auth=' . $auth . '&jID=' . $j->getJobID())?></textarea>
                             </div>
                             
     						<div class="alert alert-info">
@@ -229,7 +229,7 @@ if (is_object($djs)) { ?>
     <h4><?=t('Automation Instructions')?></h4>
     <p><?=t('To run all the jobs in the <a href="%s">%s</a> Job Set, schedule this URL using cron or a similar system:', $view->url('/dashboard/system/optimization/jobs', 'edit_set', $djs->getJobSetID()), $djs->getJobSetDisplayName())?></p>
     <div>
-        <input type="text" style="width: 700px" class="ccm-default-jobs-url" value="<?=BASE_URL . $view->url('/tools/required/jobs?auth=' . $auth)?>" />
+        <input type="text" style="width: 700px" class="ccm-default-jobs-url" value="<?=BASE_URL . $view->url('/ccm/system/jobs?auth=' . $auth)?>" />
     </div>
 </div>
 <? } ?>
