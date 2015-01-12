@@ -30,9 +30,6 @@ class EventOccurrenceTest extends \ConcreteDatabaseTestCase
         $this->assertEquals('2014-01-11 09:00:00', date('Y-m-d H:i:s', $occurrence->getStart()));
     }
 
-    public function testSaveEventFromRequest()
-    {
 
-    }
 
 }

@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Calendar\Event;
 
+use Concrete\Core\Calendar\Calendar;
 use Concrete\Core\Search\Pagination\Pagination;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 
@@ -16,6 +17,12 @@ class EventList extends \Concrete\Core\Search\ItemList\Database\AttributedItemLi
     public function getResult($row)
     {
         return Event::getByID(array_get($row, 'eventID'));
+    }
+
+    public function filterByCalendar(Calendar $calendar)
+    {
+        $this->query->andWhere('e.caID = :caID');
+        $this->query->setParameter('caID', $calendar->getID());
     }
 
     /**
