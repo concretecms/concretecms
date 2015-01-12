@@ -48,13 +48,13 @@ class Jobs extends Controller {
                 $response->setStatusCode(Response::HTTP_OK);
                 $response->setContent(json_encode($r));
                 $response->send();
-                \Core::shutdown();
+                exit;
             } else {
                 $r->error = t('Unknown Job');
                 $response->setStatusCode(Response::HTTP_NOT_FOUND);
                 $response->setContent(json_encode($r));
                 $response->send();
-                \Core::shutdown();
+                exit;
             }
 
         } else {
@@ -62,7 +62,7 @@ class Jobs extends Controller {
             $response->setStatusCode(Response::HTTP_FORBIDDEN);
             $response->setContent(json_encode($r));
             $response->send();
-            \Core::shutdown();
+            exit;
         }
     }
 
