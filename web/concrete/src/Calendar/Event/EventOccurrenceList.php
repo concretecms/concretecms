@@ -30,12 +30,28 @@ class EventOccurrenceList extends ItemList
 
     public function filterByDate($date)
     {
-        $startTime = strtotime($date . ' 00:00:00');
-        $endTime = strtotime($date . ' 23:59:59');
-        $this->query->andWhere('eo.startTime >= :startTime');
-        $this->query->setParameter('startTime', $startTime);
-        $this->query->andWhere('eo.startTime <= :endTime');
-        $this->query->setParameter('endTime', $endTime);
+
+        $startOfDay = strtotime($date . ' 00:00:00');
+        $endOfDay = strtotime($date . ' 23:59:59');
+
+        $this->query->andWhere(
+            $this->query->expr()->orX(
+                $this->query->expr()->andX(
+                    $this->query->expr()->comparison('eo.startTime', '<=', ':startOfDay'),
+                    $this->query->expr()->comparison('eo.endTime', '>', ':startOfDay')
+                ),
+                $this->query->expr()->andX(
+                    $this->query->expr()->comparison('eo.startTime', '>=', ':startOfDay'),
+                    $this->query->expr()->comparison('eo.startTime', '<=', ':endOfDay')
+                ),
+                $this->query->expr()->andX(
+                    $this->query->expr()->comparison('eo.startTime', '<=', ':startOfDay'),
+                    $this->query->expr()->comparison('eo.endTime', '>=', ':endOfDay')
+                )
+            )
+        );
+        $this->query->setParameter('startOfDay', $startOfDay);
+        $this->query->setParameter('endOfDay', $endOfDay);
     }
     /**
      * Returns the total results in this item list.
