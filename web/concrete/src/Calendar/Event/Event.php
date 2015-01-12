@@ -3,6 +3,7 @@ namespace Concrete\Core\Calendar\Event;
 
 use Concrete\Core\Attribute\Key\EventKey;
 use Concrete\Core\Attribute\Value\EventValue;
+use Concrete\Core\Calendar\Calendar;
 use Concrete\Core\Foundation\Repetition\RepetitionInterface;
 
 /**
@@ -24,6 +25,9 @@ class Event implements EventInterface
 
     /** @var RepetitionInterface */
     protected $repetition;
+
+    /** @var \Concrete\Core\Calendar\Calendar */
+    protected $calendar;
 
     /**
      * @param string              $name
@@ -56,7 +60,10 @@ class Event implements EventInterface
                     array_get($result, 'description'),
                     $repetition);
                 $event->id = $id;
-
+                $calendar = Calendar::getByID($result['caID']);
+                if (is_object($calendar)) {
+                    $event->setCalendar($calendar);
+                }
                 return $event;
             }
         }
@@ -69,8 +76,18 @@ class Event implements EventInterface
      */
     public function getOccurrenceList()
     {
-        $ev = new EventOccurrenceList($this);
+        $ev = new EventOccurrenceList();
+        $ev->filterByEvent($this);
         return $ev;
+    }
+
+    /**
+     * return \Concrete\Core\Calendar\EventOccurrence[]
+     */
+    public function getOccurrences()
+    {
+        $list = $this->getOccurrenceList();
+        return $list->getResults();
     }
 
     /**
@@ -85,6 +102,7 @@ class Event implements EventInterface
                 array(
                     'name'         => $this->getName(),
                     'description'  => $this->getDescription(),
+                    'caID'         => $this->getCalendarID(),
                     'repetitionID' => $this->getRepetition()->getID()
                 ),
                 array(
@@ -99,6 +117,7 @@ class Event implements EventInterface
                 array(
                     'name'         => $this->getName(),
                     'description'  => $this->getDescription(),
+                    'caID'         => $this->getCalendarID(),
                     'repetitionID' => $this->getRepetition()->getID()
                 ))
             ) {
@@ -158,6 +177,30 @@ class Event implements EventInterface
     }
 
     /**
+     * @return \Concrete\Core\Calendar\Calendar
+     */
+    public function getCalendar()
+    {
+        return $this->calendar;
+    }
+
+    /**
+     * @param \Concrete\Core\Calendar\Calendar $calendar
+     */
+    public function setCalendar(\Concrete\Core\Calendar\Calendar $calendar)
+    {
+        $this->calendar = $calendar;
+    }
+
+    public function getCalendarID()
+    {
+        if (isset($this->calendar)) {
+            return $this->calendar->getID();
+        }
+        return 0;
+    }
+
+    /**
      * @return string
      */
     public function getDescription()
@@ -214,4 +257,15 @@ class Event implements EventInterface
         return EventValue::getAttributeValueObject($this, $key, !!$create_on_miss);
     }
 
+    /**
+     * @return \stdClass
+     */
+    public function getJSONObject()
+    {
+        $o = new \stdClass;
+        $o->id = $this->getID();
+        $o->name = $this->getName();
+        $o->description = $this->getDescription();
+        return $o;
+    }
 }

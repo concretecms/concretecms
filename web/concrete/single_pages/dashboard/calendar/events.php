@@ -15,7 +15,7 @@
 
         </ul>
         <a class="dialog-launch btn btn-primary" dialog-width="640" dialog-title="<?=t('Add Event')?>" dialog-height="400"
-            href="<?= URL::to('/ccm/system/dialogs/calendar/event/add', $cal->getID())?>"><?= t("Add Event") ?></a>
+            href="<?= URL::to('/ccm/system/dialogs/calendar/event/add', $calendar->getID())?>"><?= t("Add Event") ?></a>
     </div>
 </div>
 
@@ -61,6 +61,18 @@
                 <div class="ccm-dashboard-calendar-date-wrap">
                 <? if ($i > 0) { ?>
                     <div class="ccm-dashboard-calendar-date"><?= $i ?></div>
+
+                    <?
+                        $list = new \Concrete\Core\Calendar\Event\EventOccurrenceList();
+                        $list->filterByCalendar($calendar);
+                        $list->filterByDate(date('Y-m-d', strtotime($year . '-' . $month . '-' . $i)));
+                        $results = $list->getResults();
+                        foreach($results as $occurrence) {
+                            $event = $occurrence->getEvent(); ?>
+                            <div class="ccm-dashboard-calendar-date-event"><?=$event->getName()?></div>
+                            <?
+                        }
+                    ?>
                 <? } else { ?>
                     <div class="ccm-dashboard-calendar-date-inactive">&nbsp;</div>
                 <? } ?>
@@ -96,9 +108,18 @@
     div.ccm-dashboard-calendar-date {
         text-align: right;
         font-size: 1.1em;
+        margin-bottom: 20px;
         color: #666;
     }
     td.ccm-dashboard-calendar-today {
         background-color: rgba(91, 192, 222, 0.15);
+    }
+
+    div.ccm-dashboard-calendar-date-event {
+        background-color: #3988ED;
+        margin-left: -8px;
+        margin-right: -8px;
+        padding: 2px 10px 2px 10px;
+        color: #fff;
     }
 </style>

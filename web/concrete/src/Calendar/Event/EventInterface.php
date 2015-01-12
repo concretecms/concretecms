@@ -11,6 +11,10 @@ use Concrete\Core\Foundation\Repetition\RepetitionInterface;
 interface EventInterface
 {
 
+    public function getCalendarID();
+    public function getCalendar();
+    public function setCalendar(\Concrete\Core\Calendar\Calendar $calendar);
+
     /**
      * The identifier, null for unsaved
      *

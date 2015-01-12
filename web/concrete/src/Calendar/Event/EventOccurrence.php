@@ -192,4 +192,13 @@ class EventOccurrence
         return false;
     }
 
+    public function getJSONObject()
+    {
+        $ev = $this->getEvent();
+        $r = array();
+        $r['start'] = $this->getStart();
+        $r['end'] = $this->getEnd();
+        return (object) array_merge($r, (array) $ev->getJSONObject());
+    }
+
 }

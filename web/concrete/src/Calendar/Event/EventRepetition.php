@@ -78,4 +78,65 @@ class EventRepetition extends AbstractRepetition
         return $this->repetitionID;
     }
 
+    /**
+     * @return EventRepetition|null
+     */
+    public static function translateFromRequest($request)
+    {
+        $dt = \Core::make('helper/form/date_time');
+        $dateStart = $dt->translate('pdStartDate');
+        $dateEnd = $dt->translate('pdEndDate');
+
+        if ($dateStart || $dateEnd) {
+            // create a Repetition object
+            if ($request->request->get('repetitionID')) {
+                $pd = static::getByID($request->request->get('repetitionID'));
+            } else {
+                $pd = new static();
+            }
+
+            if ($request->request->get('pdStartDateAllDayActivate')) {
+                $pd->setStartDateAllDay(1);
+                $dateStart = date('Y-m-d 00:00:00', strtotime($dateStart));
+            } else {
+                $pd->setStartDateAllDay(0);
+            }
+            if ($request->request->get('pdEndDateAllDayActivate')) {
+                $pd->setEndDateAllDay(1);
+                $dateEnd = date('Y-m-d 23:59:59', strtotime($dateEnd));
+            } else {
+                $pd->setEndDateAllDay(0);
+            }
+
+            $pd->setStartDate($dateStart);
+            $pd->setEndDate($dateEnd);
+            if ($_POST['pdRepeatPeriod'] && $_POST['pdRepeat']) {
+
+                if ($_POST['pdRepeatPeriod'] == 'daily') {
+                    $pd->setRepeatPeriod(self::REPEAT_DAILY);
+                    $pd->setRepeatEveryNum($_POST['pdRepeatPeriodDaysEvery']);
+                } elseif ($_POST['pdRepeatPeriod'] == 'weekly') {
+                    $pd->setRepeatPeriod(self::REPEAT_WEEKLY);
+                    $pd->setRepeatEveryNum($_POST['pdRepeatPeriodWeeksEvery']);
+                    $pd->setRepeatPeriodWeekDays($_POST['pdRepeatPeriodWeeksDays']);
+                } elseif ($_POST['pdRepeatPeriod'] == 'monthly') {
+                    $pd->setRepeatPeriod(self::REPEAT_MONTHLY);
+                    $repeat = $_POST['pdRepeatPeriodMonthsRepeatBy'] === 'weekly' ?
+                        self::MONTHLY_REPEAT_WEEKLY :
+                        self::MONTHLY_REPEAT_MONTHLY;
+                    $pd->setRepeatMonthBy($repeat);
+                    $pd->setRepeatEveryNum($_POST['pdRepeatPeriodMonthsEvery']);
+                }
+                $pd->setRepeatPeriodEnd($dt->translate('pdEndRepeatDateSpecific'));
+            } else {
+                $pd->setRepeatPeriod(self::REPEAT_NONE);
+            }
+            $pd->save();
+
+            return $pd;
+        } else {
+            unset($pd);
+        }
+        return null;
+    }
 }
