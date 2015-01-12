@@ -23,9 +23,9 @@ class IndexSearch extends AbstractJob {
 
 
 
-			$attributes = CollectionAttributeKey::getList();
-			$attributes = array_merge($attributes, FileAttributeKey::getList());
-			$attributes = array_merge($attributes, UserAttributeKey::getList());
+			$attributes = \CollectionAttributeKey::getList();
+			$attributes = array_merge($attributes, \FileAttributeKey::getList());
+			$attributes = array_merge($attributes, \UserAttributeKey::getList());
 			foreach($attributes as $ak) {
 				$ak->updateSearchIndex();
 			}
