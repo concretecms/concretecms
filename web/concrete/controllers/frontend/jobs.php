@@ -13,6 +13,10 @@ class Jobs extends Controller {
         if (!ini_get('safe_mode')) {
             @set_time_limit(0);
         }
+
+        //Disable job scheduling so we don't end up in a loop
+        \Config::set('concrete.jobs.enable_scheduling', false);
+
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
 
@@ -48,13 +52,13 @@ class Jobs extends Controller {
                 $response->setStatusCode(Response::HTTP_OK);
                 $response->setContent(json_encode($r));
                 $response->send();
-                exit;
+                \Core::shutdown();
             } else {
                 $r->error = t('Unknown Job');
                 $response->setStatusCode(Response::HTTP_NOT_FOUND);
                 $response->setContent(json_encode($r));
                 $response->send();
-                exit;
+                \Core::shutdown();
             }
 
         } else {
@@ -62,7 +66,7 @@ class Jobs extends Controller {
             $response->setStatusCode(Response::HTTP_FORBIDDEN);
             $response->setContent(json_encode($r));
             $response->send();
-            exit;
+            \Core::shutdown();
         }
     }
 
