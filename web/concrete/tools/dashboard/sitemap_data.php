@@ -31,7 +31,7 @@ if ($_REQUEST['displayNodePagination']) {
     $dh->setDisplayNodePagination(false);
 }
 
-if ($_REQUEST['includeSystemPages']) {
+if ($_GET['includeSystemPages']) {
     $dh->setIncludeSystemPages(true);
 } else {
     $dh->setIncludeSystemPages(false);
