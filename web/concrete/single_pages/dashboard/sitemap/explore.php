@@ -30,7 +30,7 @@ $view = View::getInstance();
                 if (event.originalEvent.state && event.originalEvent.state.key) {
                     redirect = my_url + '/-/' + event.originalEvent.state.key;
                 } else {
-                    redirect = my_url;
+                    return true;
                 }
                 window.location = redirect;
                 $.fn.dialog.showLoader();
