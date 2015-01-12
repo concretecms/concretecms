@@ -69,7 +69,7 @@ $req = $flr->getSearchRequest();
         <div class="form-group form-group-full">
             <label class="control-label"><?=t('Per Page')?></label>
             <div class="ccm-search-field-content ccm-search-field-content-select2">
-                <?=$form->select( 'numResults', array( t('10')=>10, t('20')=>20, t('50')=>50, t('100')=>100, t('250')=>250, t('500')=>500, t('1000')=>1000 ) ); ?>
+                <?=$form->select('numResults', array(10 => t('10'), 20 => t('20'), 50 => t('50'), 100 => t('100'), 250 => t('250'), 500 => t('500'), 1000 => t('1000'))); ?>
             </div>
         </div>
         <button type="submit" class="btn btn-primary pull-right"><?=t('Search')?></button>
