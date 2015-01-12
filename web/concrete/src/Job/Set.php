@@ -14,6 +14,9 @@ class Set extends Object {
 	public $scheduledInterval = 'days'; // hours|days|weeks|months
 	public $scheduledValue = 0;
 
+	/**
+	 * @return JobSet[]
+	 */
 	public static function getList() {
 		$db = Loader::db();
 		$r = $db->Execute('select jsID, pkgID, jsName, jDateLastRun, isScheduled, scheduledInterval, scheduledValue from JobSets order by jsName asc');
