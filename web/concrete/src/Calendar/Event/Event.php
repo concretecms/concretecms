@@ -65,6 +65,15 @@ class Event implements EventInterface
     }
 
     /**
+     * return |Concrete\Core\Calendar\EventOccurrenceList
+     */
+    public function getOccurrenceList()
+    {
+        $ev = new EventOccurrenceList($this);
+        return $ev;
+    }
+
+    /**
      * @return bool
      */
     public function save()
@@ -115,7 +124,21 @@ class Event implements EventInterface
 
     protected function generateOccurrences()
     {
+        $r = $this->getRepetition();
+        if (!$r->repeats()) {
+            // we're only going to generate a single occurrence record.
+            $startDate = $r->getStartDate();
+            $endDate = $r->getEndDate();
+            if (!$endDate) {
+                $endDate = $r->getStartDate();
+            }
 
+            $o = new EventOccurrence($this, strtotime($startDate), strtotime($endDate));
+            $o->save();
+
+        } else {
+
+        }
     }
 
     /**

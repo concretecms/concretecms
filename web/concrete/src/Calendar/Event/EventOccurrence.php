@@ -30,9 +30,11 @@ class EventOccurrence
      * @param int            $end
      * @param bool           $cancelled
      */
-    public function __construct(EventInterface $event, $start, $end, $cancelled)
+    public function __construct(EventInterface $event, $start, $end, $cancelled = false)
     {
         $this->event = $event;
+        $this->start = $start;
+        $this->end = $end;
     }
 
     /**
@@ -141,6 +143,20 @@ class EventOccurrence
         }
 
         return null;
+    }
+
+    public static function getByID($id)
+    {
+        $db = \Database::get();
+        $r = $db->GetRow('select * from CalendarEventOccurrences where occurrenceID = ?', array($id));
+        if (is_array($r) && isset($r['occurrenceID'])) {
+            $ev = Event::getByID($r['eventID']);
+            if (is_object($ev)) {
+                $o = new static($ev, $r['startTime'], $r['endDate'], $r['cancelled']);
+                $o->id = $r['occurrenceID'];
+                return $o;
+            }
+        }
     }
 
     /**
