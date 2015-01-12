@@ -140,10 +140,10 @@ $tp = new TaskPermission();
                 doSortCount();
             });
         };
-        $('.ccm-faq-block-container i.fa-sort-desc', container).each(function () {
+        $('i.fa-sort-desc', container).each(function () {
             attachSortDesc($(this));
         });
-        $('.ccm-faq-block-container i.fa-sort-asc', container).each(function () {
+        $('i.fa-sort-asc', container).each(function () {
             attachSortAsc($(this));
         });
         $('.ccm-add-faq-entry', container).click(function () {
