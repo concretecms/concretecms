@@ -21,6 +21,12 @@ class Add extends DashboardPageController {
 		}
 		if (!$vs->handle($handle)) {
 			$this->error->add(t('You must specify a valid handle for your page type.'));
+		} else {
+    		$_pt = PageType::getByHandle($handle);
+    		if (is_object($_pt)) {
+        		$this->error->add(t('You must specify a unique handle for your page type.'));
+    		}
+    		unset($_pt);
 		}
 		$defaultTemplate = PageTemplate::getByID($this->post('ptDefaultPageTemplateID'));
 		if (!is_object($defaultTemplate)) {
