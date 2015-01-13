@@ -2,6 +2,7 @@
 namespace Concrete\Controller\Dialog\Calendar;
 
 use \Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
+use Concrete\Core\Attribute\Key\EventKey;
 use Concrete\Core\Calendar\Event\EditResponse;
 use Concrete\Core\Calendar\Calendar;
 use Concrete\Core\Calendar\Event\EventRepetition;
@@ -52,6 +53,11 @@ class Event extends BackendInterfaceController
 
             $ev->setCalendar($calendar);
             $ev->save();
+
+            $attributes = EventKey::getList();
+            foreach($attributes as $ak) {
+                $ak->saveAttributeForm($ev);
+            }
 
             // Commenting this out until we can do ajax style calendar updating. In the meantime
             // we're just going to refresh to the date of the start of the event and call it good.

@@ -5403,8 +5403,8 @@
         </index>
     </table>
 
-    <table name="EventAttributeValues">
-        <field name="eID" type="I" size="10">
+    <table name="CalendarEventAttributeValues">
+        <field name="eventID" type="I" size="10">
             <key/>
             <default value="0"/>
             <unsigned/>

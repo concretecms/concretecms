@@ -16,7 +16,7 @@ class EventValue extends Value
 
         $value = null;
         $avID = $db->GetOne(
-            "SELECT avID FROM EventAttributeValues WHERE eID = ? AND akID = ?",
+            "SELECT avID FROM CalendarEventAttributeValues WHERE eventID = ? AND akID = ?",
             array(
                 $event->getId(),
                 $key->getAttributeKeyID()
@@ -36,7 +36,7 @@ class EventValue extends Value
             // Is this avID in use ?
             if (is_object($value)) {
                 $count = $db->GetOne(
-                    "SELECT count(avID) FROM EventAttributeValues WHERE avID = ?",
+                    "SELECT count(avID) FROM CalendarEventAttributeValues WHERE avID = ?",
                     $value->getAttributeValueID()
                 );
             }
@@ -48,9 +48,9 @@ class EventValue extends Value
                 $value->setEvent($event);
 
                 $db->insert(
-                    'EventAttributeValues',
+                    'CalendarEventAttributeValues',
                     array(
-                        'eID'  => $event->getID(),
+                        'eventID'  => $event->getID(),
                         'akID' => $key->getKeyID(),
                         'avID' => $value->getAttributeValueID()
                     ));
@@ -96,7 +96,7 @@ class EventValue extends Value
     {
         $db = \Database::connection();
         $db->Execute(
-            'DELETE FROM EventAttributeValues WHERE eID = ? AND akID = ? AND avID = ?',
+            'DELETE FROM CalendarEventAttributeValues WHERE eventID = ? AND akID = ? AND avID = ?',
             array(
                 $this->u->getUserID(),
                 $this->attributeKey->getAttributeKeyID(),
@@ -104,7 +104,7 @@ class EventValue extends Value
             ));
 
         $num = $db->GetOne(
-            'SELECT count(avID) FROM EventAttributeValues WHERE avID = ?',
+            'SELECT count(avID) FROM CalendarEventAttributeValues WHERE avID = ?',
             array($this->getAttributeValueID()));
         if ($num < 1) {
             parent::delete();
