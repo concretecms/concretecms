@@ -712,6 +712,8 @@
     </field>
     <field name="caName" type="C" size="255">
     </field>
+    <field name="caColor" type="C" size="255">
+    </field>
     </table>
     <table name="Conversations">
     <field name="cnvID" type="I" size="10">

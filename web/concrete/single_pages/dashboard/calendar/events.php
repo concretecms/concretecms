@@ -116,7 +116,7 @@
     }
 
     div.ccm-dashboard-calendar-date-event {
-        background-color: #3988ED;
+        background-color: <?=$calendar->getColor()?>;
         margin-left: -8px;
         margin-right: -8px;
         padding: 2px 10px 2px 10px;
