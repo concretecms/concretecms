@@ -153,18 +153,20 @@ abstract class AbstractRepetition implements RepetitionInterface
                     break;
 
                 case self::REPEAT_WEEKLY:
-                    $numWeeks = round(($now - strtotime($startsOn)) / (86400 * 7));
+                    $numWeeks = floor(($now - strtotime($startsOn)) / (86400 * 7));
                     if (!$this->getRepeatEveryNum() || ($numWeeks % $this->getRepeatEveryNum()) == 0) {
                         // now we check to see if it's on the right day
                         $startDOW = date('w', strtotime($this->getStartDate()));
                         $endDOW = date('w', strtotime($this->getEndDate()));
                         $dow = date('w', $now);
+
                         if ($startDOW == $endDOW) {
                             $days = $this->getRepeatPeriodWeekDays();
                             if (in_array($dow, $days)) {
                                 if ($now >= $dailyTimeStart && $now <= $dailyTimeEnd) {
                                     return $this->rangeFromTime($dailyTimeStart);
                                 }
+
                             }
                         } else {
                             if ($dow <= $endDOW && $dow >= $startDOW) {
