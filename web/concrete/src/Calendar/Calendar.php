@@ -8,6 +8,9 @@ use Database;
  */
 class Calendar
 {
+
+    const DEFAULT_COLOR = '#3988ED';
+
     /**
      * @return mixed
      */
@@ -44,6 +47,31 @@ class Calendar
      * @Column(type="string")
      */
     protected $caName;
+
+    /**
+     * @return mixed
+     */
+    public function getColor()
+    {
+        if ($this->caColor) {
+            return $this->caColor;
+        }
+        return self::DEFAULT_COLOR;
+    }
+
+    /**
+     * @param mixed $caColor
+     */
+    public function setColor($caColor)
+    {
+        $this->caColor = $caColor;
+    }
+
+    /**
+     * @Column(type="string")
+     */
+    protected $caColor;
+
 
     /**
      * @Id @Column(columnDefinition="integer unsigned")

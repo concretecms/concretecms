@@ -1,14 +1,20 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 $form = Core::make('helper/form');
+$color = Core::make('helper/form/color');
 ?>
 
 <form method="post" action="<?=$view->action('submit')?>">
     <?=Loader::helper('validation/token')->output('submit')?>
-    <div class="control-group">
+    <div class="form-group">
         <?=$form->label('calendarName', t('Calendar Name'))?>
-        <div class="controls">
-            <?=$form->text('calendarName')?>
+        <?=$form->text('calendarName')?>
+    </div>
+
+    <div class="form-group">
+        <?=$form->label('caColor', t('Event Color'))?>
+        <div>
+        <?=$color->output('caColor', '#3988ED')?>
         </div>
     </div>
 

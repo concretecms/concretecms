@@ -20,6 +20,7 @@ class Add extends DashboardPageController
         if (!$this->error->has()) {
             $calendar = new Calendar();
             $calendar->setName($this->request->post('calendarName'));
+            $calendar->setColor($this->request->post('caColor'));
             $calendar->save();
             $this->redirect('/dashboard/calendar/events', $calendar->getID());
         }
