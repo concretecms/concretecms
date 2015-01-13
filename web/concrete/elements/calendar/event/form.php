@@ -1,24 +1,39 @@
 
+<fieldset>
+    <legend><?=t('Basics')?></legend>
     <div class="form-group">
-        <label for="name" class="col-sm-2 control-label">
+        <label for="name" class="control-label">
             <?= t('Name') ?>
         </label>
 
-        <div class="col-sm-10">
-            <input type="text" class="form-control" placeholder="Name" name="name">
-        </div>
+        <input type="text" class="form-control" placeholder="Name" name="name">
     </div>
     <div class="form-group">
-        <label for="name" class="col-sm-2 control-label">
+        <label for="name" class="control-label">
             <?= t('Description') ?>
         </label>
 
-        <div class="col-sm-10">
-            <input type="text" class="form-control" placeholder="Description" name="description">
-        </div>
+        <input type="text" class="form-control" placeholder="Description" name="description">
     </div>
-
+</fieldset>
+<fieldset>
+    <legend><?=t('Date & Time')?></legend>
     <?= \Loader::element('permission/duration', array('pd' => $event ? $event->getRepetition() : null)); ?>
+</fieldset>
+
+<?
+    $attributes = \Concrete\Core\Attribute\Key\EventKey::getList();
+    $af = Core::make('helper/form/attribute');
+    if (count($attributes)) { ?>
+    <fieldset>
+        <legend><?=t("Custom Attributes")?></legend>
+        <?
+        foreach($attributes as $ak) {
+            echo $af->display($ak);
+        }
+        ?>
+    </fieldset>
+<? } ?>
 
     <? /*
 <script>

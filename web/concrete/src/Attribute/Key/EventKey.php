@@ -11,11 +11,11 @@ class EventKey extends Key
     protected $searchIndexFieldDefinition = array(
         'columns' => array(
             array(
-                'name'    => 'eID',
+                'name'    => 'eventID',
                 'type'    => 'integer',
                 'options' => array('unsigned' => true, 'default' => 0, 'notnull' => true))
         ),
-        'primary' => array('eID')
+        'primary' => array('eventID')
     );
 
     /**
@@ -28,7 +28,7 @@ class EventKey extends Key
     {
         $db = \Database::connection();
         $values = $db->GetAll(
-            "SELECT akID, avID FROM EventAttributeValues WHERE eID = ?",
+            "SELECT akID, avID FROM CalendarEventAttributeValues WHERE eventID = ?",
             array($fID, $fvID));
         $avl = new AttributeValueList();
         foreach ($values as $val) {
@@ -120,7 +120,7 @@ class EventKey extends Key
         $db = \Database::connection();
         foreach ($list as $l) {
             $r = $db->GetOne(
-                'SELECT count(akID) FROM EventAttributeValues WHERE eID = ? AND akID = ?',
+                'SELECT count(akID) FROM CalendarEventAttributeValues WHERE eventID = ? AND akID = ?',
                 array($event->getId(), $l->getAttributeKeyID()));
             if ($r > 0) {
                 $list2[] = $l;
@@ -149,18 +149,18 @@ class EventKey extends Key
 
     public function getIndexedSearchTable()
     {
-        return 'EventSearchIndexAttributes';
+        return 'CalendarEventSearchIndexAttributes';
     }
 
     public function delete()
     {
         parent::delete();
         $db = \Database::connection();
-        $r = $db->Execute('SELECT avID FROM EventAttributeValues WHERE akID = ?', array($this->getAttributeKeyID()));
+        $r = $db->Execute('SELECT avID FROM CalendarEventAttributeValues WHERE akID = ?', array($this->getAttributeKeyID()));
         while ($row = $r->FetchRow()) {
             $db->Execute('DELETE FROM AttributeValues WHERE avID = ?', array($row['avID']));
         }
-        $db->Execute('DELETE FROM EventAttributeValues WHERE akID = ?', array($this->getAttributeKeyID()));
+        $db->Execute('DELETE FROM CalendarEventAttributeValues WHERE akID = ?', array($this->getAttributeKeyID()));
     }
 
     protected function saveAttribute(Event $event, $value = false)
@@ -172,13 +172,13 @@ class EventKey extends Key
         parent::saveAttribute($av, $value);
         $db = \Database::connection();
         $db->Replace(
-            'EventAttributeValues',
+            'CalendarEventAttributeValues',
             array(
-                'eID'  => $event->getID(),
+                'eventID'  => $event->getID(),
                 'akID' => $this->getAttributeKeyID(),
                 'avID' => $av->getAttributeValueID()
             ),
-            array('eID', 'akID'));
+            array('eventID', 'akID'));
 
         unset($av);
         unset($fo);

@@ -1,7 +1,7 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <div class="ccm-ui">
-<form method="post" data-dialog-form="event-form" class="ccm-event-add form-horizontal" action="<?=$controller->action('submit')?>">
+<form method="post" data-dialog-form="event-form" class="ccm-event-add form-stacked" action="<?=$controller->action('submit')?>">
     <? View::element('calendar/event/form');?>
 </form>
 </div>
