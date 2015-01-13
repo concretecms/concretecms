@@ -122,7 +122,17 @@ class Event implements EventInterface
                 ))
             ) {
                 $this->id = intval($connection->lastInsertId(), 10);
-                $this->generateOccurrences();
+
+                /** @var EventOccurrenceFactory $factory */
+                $factory = \Core::make('calendar/event/occurrence/factory');
+                $start_time = strtotime($this->repetition->getStartDate());
+                $end_time = strtotime('+5 years', $start_time);
+                $occurrences = $factory->eventOccurrencesBetween($this, $start_time, $end_time);
+
+                foreach ($occurrences as $occurrence) {
+                    $occurrence->save();
+                }
+
                 return true;
             }
         }
@@ -139,25 +149,6 @@ class Event implements EventInterface
             }
         }
         return false;
-    }
-
-    protected function generateOccurrences()
-    {
-        $r = $this->getRepetition();
-        if (!$r->repeats()) {
-            // we're only going to generate a single occurrence record.
-            $startDate = $r->getStartDate();
-            $endDate = $r->getEndDate();
-            if (!$endDate) {
-                $endDate = $r->getStartDate();
-            }
-
-            $o = new EventOccurrence($this, strtotime($startDate), strtotime($endDate));
-            $o->save();
-
-        } else {
-
-        }
     }
 
     /**
