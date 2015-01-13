@@ -7,7 +7,7 @@ class UserInfo extends AbstractEvent {
 
 	protected $ui;
 
-	public function __construct(ConcreteUserInfo $u) {
+	public function __construct(ConcreteUserInfo $ui) {
 		$this->ui = $ui;
 	}
 
