@@ -12,6 +12,9 @@
             <? } ?>
             <li class="divider"></li>
             <li><a href="<?= URL::to('/dashboard/calendar/add') ?>"><?= t("Add Calendar") ?></a></li>
+            <li class="divider"></li>
+            <li><a href="<?= URL::to('/dashboard/calendar/add', $calendar->getID()) ?>"><?= t("Edit Calendar") ?></a></li>
+            <li><a href="#" data-dialog="delete-calendar"><span class="text-danger"><?= t("Delete Calendar") ?></span></a></li>
 
         </ul>
         <a class="dialog-launch btn btn-primary" dialog-width="640" dialog-title="<?=t('Add Event')?>" dialog-height="400"
@@ -87,6 +90,35 @@
     </tr>
     </tbody>
 </table>
+
+<div style="display: none">
+    <div id="ccm-dialog-delete-calendar" class="ccm-ui">
+        <form method="post" class="form-stacked" action="<?=$view->action('delete_calendar')?>">
+            <?=Loader::helper("validation/token")->output('delete_calendar')?>
+            <input type="hidden" name="caID" value="<?=$calendar->getID()?>" />
+            <p><?=t('Are you sure? This action cannot be undone.')?></p>
+        </form>
+        <div class="dialog-buttons">
+            <button class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
+            <button class="btn btn-danger pull-right" onclick="$('#ccm-dialog-delete-calendar form').submit()"><?=t('Delete Calendar')?></button>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function() {
+    $('a[data-dialog=delete-calendar]').on('click', function() {
+        jQuery.fn.dialog.open({
+            element: '#ccm-dialog-delete-calendar',
+            modal: true,
+            width: 320,
+            title: '<?=t("Delete Calendar")?>',
+            height: 'auto'
+        });
+    });
+
+});
+</script>
 
 <style type="text/css">
     table.ccm-dashboard-calendar {

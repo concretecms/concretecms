@@ -96,6 +96,14 @@ class Calendar
 
     public function delete()
     {
+        // delete all events bound to the given calendar
+        $db = Database::get();
+        $r = $db->Execute('select eventID from CalendarEvents where caID = ?', array($this->getID()));
+        while ($row = $r->fetchRow()) {
+            $db->delete('CalendarEventOccurrences', array('eventID' => $row['eventID']));
+        }
+        $db->delete('CalendarEvents', array('caID' => $this->getID()));
+
         $em = Database::get()->getEntityManager();
         $em->remove($this);
         $em->flush();
