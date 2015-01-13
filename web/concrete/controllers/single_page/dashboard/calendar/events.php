@@ -73,4 +73,32 @@ class Events extends DashboardPageController
         }
     }
 
+    public function calendar_deleted()
+    {
+        $this->set('success', t('Calendar deleted successfully.'));
+        $this->view();
+    }
+
+    public function delete_calendar()
+    {
+        $caID = $this->request->request->get('caID');
+        if (\Core::make("helper/validation/numbers")->integer($caID)) {
+            if ($caID > 0) {
+                $calendar = Calendar::getByID($caID);
+            }
+        }
+
+        if (!is_object($calendar)) {
+            $this->error->add(t('Invalid calendar.'));
+        }
+        if (!$this->token->validate('delete_calendar')) {
+            $this->error->add($this->token->getErrorMessage());
+        }
+
+        if (!$this->error->has()) {
+            $calendar->delete();
+            $this->redirect('/dashboard/calendar/events', 'calendar_deleted');
+        }
+    }
+
 }

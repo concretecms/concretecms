@@ -336,6 +336,14 @@
         <page name="Events" path="/dashboard/calendar/events" filename="/dashboard/calendar/events.php" pagetype="" description="" package="">
         </page>
         <page name="Add Calendar" path="/dashboard/calendar/add" filename="/dashboard/calendar/add.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+                <attributekey handle="exclude_search_index">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
         </page>
 
         <page name="Workflow" path="/dashboard/workflow" filename="/dashboard/workflow/view.php" pagetype=""
@@ -907,6 +915,15 @@
             <attributes>
                 <attributekey handle="meta_keywords">
                     <value>network, proxy server</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Database Entities" path="/dashboard/system/environment/entities"
+              filename="/dashboard/system/environment/entities.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>database, entities, doctrine</value>
                 </attributekey>
             </attributes>
         </page>
