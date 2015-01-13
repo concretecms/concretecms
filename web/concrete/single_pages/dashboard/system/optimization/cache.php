@@ -39,7 +39,7 @@
     </fieldset>
 
     <fieldset style="margin-bottom: 15px">
-        <legend style="display: inline-block; margin-bottom: 0; width: auto; font-size: 14px; font-weight: bold" class="launch-tooltip" data-placement="right" title="<?=t('Determines whether ')?>"><?=t('Compress LESS Output.')?></legend>
+        <legend style="display: inline-block; margin-bottom: 0; width: auto; font-size: 14px; font-weight: bold" class="launch-tooltip" data-placement="right" title="<?=t('Determines whether compiled LESS stylesheets should output as compressed CSS. Uncompressed stylesheets are slightly larger but easier to read.')?>"><?=t('Compress LESS Output.')?></legend>
 
         <div class="radio">
             <label>

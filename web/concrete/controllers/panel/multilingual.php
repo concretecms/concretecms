@@ -15,6 +15,7 @@ class Multilingual extends BackendInterfacePageController
     {
         $this->requireAsset('core/sitemap');
         $mlist = Section::getList();
+        $ml = array();
         $currentSection = Section::getCurrentSection();
         foreach($mlist as $m) {
             if ($m->getCollectionID() != $currentSection->getCollectionID()) {
