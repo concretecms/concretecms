@@ -1,4 +1,5 @@
 <?php
+namespace Concrete\Core\Calendar\Event;
 
 use Concrete\Core\Foundation\Service\Provider;
 
