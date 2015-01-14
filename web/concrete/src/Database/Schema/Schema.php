@@ -35,4 +35,33 @@ class Schema
         }
         return $parser;
     }
+
+    public static function refreshCoreXMLSchema($tables)
+    {
+
+        $xml = simplexml_load_file(DIR_BASE_CORE . '/config/db.xml');
+        $output = new \SimpleXMLElement("<schema></schema>");
+        $output->addAttribute('version', '0.3');
+        $th = \Core::make('helper/text');
+        foreach($xml->table as $t) {
+            $name = (string) $t['name'];
+            if (in_array($name, $tables)) {
+                $th->appendXML($output, $t);
+            }
+        }
+
+        $db = \Database::get();
+
+        $parser = static::getSchemaParser($output);
+        $parser->setIgnoreExistingTables(false);
+        $toSchema = $parser->parse($db);
+        $fromSchema = $db->getSchemaManager()->createSchema();
+        $comparator = new \Doctrine\DBAL\Schema\Comparator();
+        $schemaDiff = $comparator->compare($fromSchema, $toSchema);
+        $saveQueries = $schemaDiff->toSaveSql($db->getDatabasePlatform());
+
+        foreach($saveQueries as $query) {
+            $db->query($query);
+        }
+    }
 }

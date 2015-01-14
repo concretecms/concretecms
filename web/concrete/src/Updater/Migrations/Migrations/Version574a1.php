@@ -13,6 +13,10 @@ class Version574a1 extends AbstractMigration
 
     public function up(Schema $schema)
     {
+        \Concrete\Core\Database\Schema\Schema::refreshCoreXMLSchema(array(
+           'Calendars', 'CalendarEvents', 'CalendarEventRepetitions', 'CalendarEventOccurrences',
+           'CalendarEventAttributeValues'
+        ));
     }
 
     public function down(Schema $schema)
