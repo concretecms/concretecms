@@ -72,7 +72,12 @@
                         $results = $list->getResults();
                         foreach($results as $occurrence) {
                             $event = $occurrence->getEvent(); ?>
-                            <div class="ccm-dashboard-calendar-date-event"><?=$event->getName()?></div>
+                            <div class="ccm-dashboard-calendar-date-event">
+                                <a class="dialog-launch" dialog-width="640" dialog-title="<?=t('Edit Event')?>" dialog-height="400"
+                                   href="<?= URL::to('/ccm/system/dialogs/calendar/event/edit', $occurrence->getID())?>">
+                                    <?= t($occurrence->getEvent()->getName()) ?>
+                                </a>
+                            </div>
                             <?
                         }
                     ?>
@@ -149,9 +154,19 @@ $(function() {
 
     div.ccm-dashboard-calendar-date-event {
         background-color: <?=$calendar->getColor()?>;
+        padding: 0px;
+    }
+    div.ccm-dashboard-calendar-date-event > a {
+        background-color: <?=$calendar->getColor()?>;
+        display:block;
+        text-decoration: none;
+        color: #fff;
+        padding: 2px 10px 2px 10px;
         margin-left: -8px;
         margin-right: -8px;
-        padding: 2px 10px 2px 10px;
-        color: #fff;
+        text-decoration: none;
+    }
+    div.ccm-dashboard-calendar-date-event > a:hover {
+        color: #ccc;
     }
 </style>
