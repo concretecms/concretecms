@@ -22,7 +22,7 @@ if ($occurrence) {
             <?= t('Description') ?>
         </label>
 
-        <input type="text" class="form-control" placeholder="Description" name="description" value="<?= $event ? $event->getDescription() : '' ?>">
+        <textarea class="form-control" rows="3" placeholder="Description" name="description"><?= $event ? $event->getDescription() : '' ?></textarea>
     </div>
 </fieldset>
 <fieldset>
@@ -33,6 +33,9 @@ if ($occurrence) {
 <?
     $attributes = \Concrete\Core\Attribute\Key\EventKey::getList();
     $af = Core::make('helper/form/attribute');
+    if (is_object($event)) {
+        $af->setAttributeObject($event);
+    }
     if (count($attributes)) { ?>
     <fieldset>
         <legend><?=t("Custom Attributes")?></legend>
