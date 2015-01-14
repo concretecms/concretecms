@@ -23,7 +23,7 @@ class BlockType extends Type {
 				$bx = new BlockControl();
 				$bx->setBlockTypeID($bt->getBlockTypeID());
 				$bx->setPageTypeComposerControlIconSRC($ci->getBlockTypeIconURL($bt));
-				$bx->setPageTypeComposerControlName($bt->getBlockTypeName());
+				$bx->setPageTypeComposerControlName(t($bt->getBlockTypeName()));
 				$objects[] = $bx;
 			}
 		}
@@ -36,7 +36,7 @@ class BlockType extends Type {
 		$bx = new BlockControl();
 		$bx->setBlockTypeID($bt->getBlockTypeID());
 		$bx->setPageTypeComposerControlIconSRC($ci->getBlockTypeIconURL($bt));
-		$bx->setPageTypeComposerControlName($bt->getBlockTypeName());
+		$bx->setPageTypeComposerControlName(t($bt->getBlockTypeName()));
 		return $bx;
 	}
 
