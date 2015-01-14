@@ -27,7 +27,7 @@ class DateTime
             }
             $h = @intval($arr[$field . '_h']);
             $m = @intval($arr[$field . '_m']);
-            if (isset($arr[$field . '_a']) && ($arr[$field . '_a'] === 'PM')) {
+            if ($h < 12 && isset($arr[$field . '_a']) && ($arr[$field . '_a'] === 'PM')) {
                 $h += 12;
             }
             $value .= ' ' . substr("0$h", -2) . ':' . substr("0$m", -2);
