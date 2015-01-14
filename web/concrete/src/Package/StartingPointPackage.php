@@ -185,6 +185,12 @@ class StartingPointPackage extends BasePackage {
 
 	public function install_database() {
 		$db = Loader::db();
+		$num = $db->GetCol("show tables");
+		if (count($num) > 0) {
+			throw new \Exception(t(
+				'There are already %s tables in this database. concrete5 must be installed in an empty database.',
+				count($num)));
+		}
 		$installDirectory = DIR_BASE_CORE. '/config';
 		try {
             $em = \ORM::entityManager('core');
@@ -198,8 +204,8 @@ class StartingPointPackage extends BasePackage {
             $version = $configuration->getVersion(Config::get('concrete.version_db'));
             $version->markMigrated();
 
-        } catch (Exception $e) {
-			throw new Exception(t('Unable to install database: %s', $db->ErrorMsg()));
+        } catch (\Exception $e) {
+			throw new \Exception(t('Unable to install database: %s', $db->ErrorMsg()));
 		}
 	}
 
