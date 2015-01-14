@@ -211,4 +211,152 @@ class EventRepetitionTest extends \ConcreteDatabaseTestCase
         $this->assertTrue($monthly_weekly_repetition->isActive(strtotime(date('Y-m-21 01:50:00', time()))));
     }
 
+
+    public function testGenerateSingle()
+    {
+        $now = time();
+        $repetition = new EventRepetition();
+
+        $repetition->setStartDate('2015/1/17 1:00:00');
+        $repetition->setEndDate('2015/2/17 3:00:00');
+
+        $occurrences = $repetition->activeRangesBetween($now, strtotime('+5 years', $now));
+
+        $this->assertNotEmpty($occurrences);
+        $this->assertEquals(1, count($occurrences));
+
+        $occurrence = $occurrences[0];
+        $this->assertEquals(strtotime($repetition->getStartDate()), $occurrence[0]);
+        $this->assertEquals(strtotime($repetition->getEndDate()), $occurrence[1]);
+    }
+
+    public function testGenerateDaily()
+    {
+        $repetition = new EventRepetition();
+
+        // Every 2 days
+        $repetition->setRepeatPeriod($repetition::REPEAT_DAILY);
+        $repetition->setRepeatEveryNum(3);
+        $repetition->setStartDate('12/10/1992 1:00:00');
+        $repetition->setEndDate('12/11/1992 1:00:00');
+
+        $now = time();
+        $occurrences = $repetition->activeRangesBetween($now, strtotime('+5 years', $now));
+
+        $all_active = true;
+        foreach ($occurrences as $occurrence) {
+            $window = $repetition->getActiveRange($occurrence[0]);
+            if (!$window) {
+                $all_active = false;
+                break;
+            }
+
+            if ($window[0] !== $occurrence[0] || $window[1] !== $occurrence[1]) {
+                $all_active = false;
+                break;
+            }
+        }
+
+        $this->assertTrue($all_active, 'EventOccurrenceFactory generated inactive occurrences.');
+    }
+
+    public function testGenerateWeekly()
+    {
+        $repetition = new EventRepetition();
+
+        // Every 2 days
+        $repetition->setRepeatPeriod($repetition::REPEAT_WEEKLY);
+        $repetition->setRepeatEveryNum(3);
+        $repetition->setStartDate('1/1/2015 01:00:00');
+        $repetition->setEndDate('1/1/2015 03:00:00');
+
+        // Sunday, Tuesday
+        $repetition->setRepeatPeriodWeekDays(array(2, 3, 0));
+
+        $now = time();
+        $occurrences = $repetition->activeRangesBetween($now, strtotime('+5 years', $now));
+
+        $all_active = true;
+        foreach ($occurrences as $occurrence) {
+            $window = $repetition->getActiveRange($occurrence[0]);
+            if (!$window) {
+                $all_active = false;
+                break;
+            }
+
+            if ($window[0] !== $occurrence[0] || $window[1] !== $occurrence[1]) {
+                $all_active = false;
+                break;
+            }
+        }
+
+        $this->assertTrue($all_active, 'EventOccurrenceFactory generated inactive occurrences.');
+    }
+
+    public function testGenerateMonthlyWeekly()
+    {
+        $repetition = new EventRepetition();
+
+        $repetition->setRepeatPeriod($repetition::REPEAT_MONTHLY);
+        $repetition->setRepeatMonthBy($repetition::MONTHLY_REPEAT_WEEKLY);
+        $repetition->setRepeatEveryNum(3);
+        $repetition->setStartDate('2/1/2015 1:00:00');
+        $repetition->setEndDate('2/10/2015 3:00:00');
+
+        $now = time();
+        $end = strtotime('+5 years', $now);
+
+        $occurrences = $repetition->activeRangesBetween($now, $end);
+
+        $all_active = true;
+        foreach ($occurrences as $occurrence) {
+            $window = $repetition->getActiveRange($occurrence[0]);
+
+            echo date('l, Y-m-d H:i:s', $occurrence[0]) . "\n";
+
+            if (!$window) {
+                $all_active = false;
+                break;
+            }
+
+            if ($window[0] !== $occurrence[0] || $window[1] !== $occurrence[1]) {
+                $all_active = false;
+                break;
+            }
+        }
+        $this->assertTrue($all_active, 'EventOccurrenceFactory generated inactive occurrences.');
+    }
+
+    public function testGenerateMonthlyMonthly()
+    {
+        $repetition = new EventRepetition();
+
+        $repetition->setRepeatPeriod($repetition::REPEAT_MONTHLY);
+        $repetition->setRepeatMonthBy($repetition::MONTHLY_REPEAT_MONTHLY);
+        $repetition->setRepeatEveryNum(3);
+        $repetition->setStartDate('1/14/2015 1:00:00');
+        $repetition->setEndDate('1/14/2015 3:00:00');
+
+        $now = time();
+        $end = strtotime('+5 years', $now);
+
+        $occurrences = $repetition->activeRangesBetween($now, $end);
+
+        $all_active = true;
+        foreach ($occurrences as $occurrence) {
+            $window = $repetition->getActiveRange($occurrence[0]);
+
+            if (!$window) {
+                $all_active = false;
+                break;
+            }
+
+            if ($window[0] !== $occurrence[0] || $window[1] !== $occurrence[1]) {
+                $all_active = false;
+                break;
+            }
+        }
+        $this->assertTrue($all_active, 'EventOccurrenceFactory generated inactive occurrences.');
+    }
+
 }

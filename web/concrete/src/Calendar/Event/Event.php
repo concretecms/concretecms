@@ -125,12 +125,21 @@ class Event implements EventInterface
 
                 /** @var EventOccurrenceFactory $factory */
                 $factory = \Core::make('calendar/event/occurrence/factory');
-                $start_time = strtotime($this->repetition->getStartDate());
+                $start_time = time();
                 $end_time = strtotime('+5 years', $start_time);
-                $occurrences = $factory->eventOccurrencesBetween($this, $start_time, $end_time);
+                $occurrences = $this->getRepetition()->activeRangesBetween($start_time, $end_time);
+
+                $initial_occurrence = $factory->createEventOccurrence(
+                    $this,
+                    strtotime($this->repetition->getStartDate()),
+                    strtotime($this->repetition->getEndDate()));
+                $initial_occurrence->save();
 
                 foreach ($occurrences as $occurrence) {
-                    $occurrence->save();
+                    if ($occurrence[0] === $initial_occurrence->getStart()) {
+                        continue;
+                    }
+                    $factory->createEventOccurrence($this, $occurrence[0], $occurrence[1])->save();
                 }
 
                 return true;

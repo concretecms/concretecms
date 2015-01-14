@@ -152,4 +152,12 @@ interface RepetitionInterface
      */
     public function save();
 
+    /**
+     * Get all active time slots that start within two time periods
+     * @param int $start
+     * @param int $end
+     * @return array[]
+     */
+    public function activeRangesBetween($start, $end);
+
 }
