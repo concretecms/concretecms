@@ -30,48 +30,50 @@ class Event extends BackendInterfaceController
 
     public function submit($caID)
     {
-        $repetition = EventRepetition::translateFromRequest($this->request);
-        $e = \Core::make('error');
-        if (!is_object($repetition)) {
-            $e->add(t('You must specify a valid date for this event.'));
-        }
-
-        $calendar = Calendar::getByID($caID);
-        if (!is_object($calendar)) {
-            $e->add(t('Invalid calendar.'));
-        }
-
-        $r = new EditResponse($e);
-
-        if (!$e->has()) {
-            $repetition->save();
-            $ev = new CalendarEvent(
-                $this->request->request->get('name'),
-                $this->request->request->get('description'),
-                $repetition
-            );
-
-            $ev->setCalendar($calendar);
-            $ev->save();
-
-            $attributes = EventKey::getList();
-            foreach($attributes as $ak) {
-                $ak->saveAttributeForm($ev);
+        if ($this->canAccess()) {
+            $repetition = EventRepetition::translateFromRequest($this->request);
+            $e = \Core::make('error');
+            if (!is_object($repetition)) {
+                $e->add(t('You must specify a valid date for this event.'));
             }
 
-            // Commenting this out until we can do ajax style calendar updating. In the meantime
-            // we're just going to refresh to the date of the start of the event and call it good.
-            //$occurrences = $ev->getOccurrences();
-            //$r->setOccurrences($occurrences);
-            //$r->setMessage(t('Event added successfully.'));
-            $year = date('Y', strtotime($repetition->getStartDate()));
-            $month = date('m', strtotime($repetition->getStartDate()));
-            $r->setRedirectURL(\URL::to('/dashboard/calendar/events/', 'view', $calendar->getID(),
-                $year, $month, 'event_added'
-            ));
-        }
+            $calendar = Calendar::getByID($caID);
+            if (!is_object($calendar)) {
+                $e->add(t('Invalid calendar.'));
+            }
 
-        $r->outputJSON();
+            $r = new EditResponse($e);
+
+            if (!$e->has()) {
+                $repetition->save();
+                $ev = new CalendarEvent(
+                    $this->request->request->get('name'),
+                    $this->request->request->get('description'),
+                    $repetition
+                );
+
+                $ev->setCalendar($calendar);
+                $ev->save();
+
+                $attributes = EventKey::getList();
+                foreach($attributes as $ak) {
+                    $ak->saveAttributeForm($ev);
+                }
+
+                // Commenting this out until we can do ajax style calendar updating. In the meantime
+                // we're just going to refresh to the date of the start of the event and call it good.
+                //$occurrences = $ev->getOccurrences();
+                //$r->setOccurrences($occurrences);
+                //$r->setMessage(t('Event added successfully.'));
+                $year = date('Y', strtotime($repetition->getStartDate()));
+                $month = date('m', strtotime($repetition->getStartDate()));
+                $r->setRedirectURL(\URL::to('/dashboard/calendar/events/', 'view', $calendar->getID(),
+                    $year, $month, 'event_added'
+                ));
+            }
+
+            $r->outputJSON();
+        }
     }
 
 }
