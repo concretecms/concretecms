@@ -24,7 +24,8 @@ class JavascriptInlineAsset extends JavascriptAsset
 
     public function __toString()
     {
-        return '<script type="text/javascript">' . $this->getAssetURL() . '</script>';
+        $attrs = $this->getTagAttributeString();
+        return '<script '. $attrs .' type="'. $this->scriptType . '">' . $this->getAssetURL() . '</script>';
     }
 
 }
