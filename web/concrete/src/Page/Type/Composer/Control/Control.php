@@ -77,7 +77,7 @@ abstract class Control extends Object
     }
     public function getPageTypeComposerControlDisplayName($format = 'html')
     {
-        $value = tc('PageTypeComposerControlName', $this->getPageTypeComposerControlName());
+        $value = $this->getPageTypeComposerControlName();
         switch ($format) {
             case 'html':
                 return h($value);

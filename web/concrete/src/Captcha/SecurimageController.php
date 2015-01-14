@@ -41,7 +41,7 @@ class SecurimageController extends Controller
     public function label()
     {
         $form = Loader::helper('form');
-        print $form->label('captcha', t('Please type the letters and numbers shown in the image.'));
+        print $form->label('ccm-captcha-code', t('Please type the letters and numbers shown in the image.'));
     }
 
     /**
@@ -64,7 +64,7 @@ class SecurimageController extends Controller
                 $attribs .= $key . '="' . $value . '" ';
             }
         }
-        echo '<div><input type="text" name="ccmCaptchaCode" class="ccm-input-captcha" required="required" ' . $attribs . ' /></div><br/>';
+        echo '<div><input type="text" name="ccmCaptchaCode" id="ccm-captcha-code" class="ccm-input-captcha" required="required" ' . $attribs . ' /></div><br/>';
     }
 
     /**
