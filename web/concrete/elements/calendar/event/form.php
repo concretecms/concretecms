@@ -1,3 +1,12 @@
+<?php
+use Concrete\Core\Calendar\Event\EventOccurrence;
+
+/** @var EventOccurrence $occurrence */
+if ($occurrence) {
+    $event = $occurrence->getEvent();
+}
+
+?>
 
 <fieldset>
     <legend><?=t('Basics')?></legend>
@@ -6,14 +15,14 @@
             <?= t('Name') ?>
         </label>
 
-        <input type="text" class="form-control" placeholder="Name" name="name">
+        <input type="text" class="form-control" placeholder="Name" name="name" value="<?= $event ? $event->getName() : '' ?>">
     </div>
     <div class="form-group">
         <label for="name" class="control-label">
             <?= t('Description') ?>
         </label>
 
-        <input type="text" class="form-control" placeholder="Description" name="description">
+        <input type="text" class="form-control" placeholder="Description" name="description" value="<?= $event ? $event->getDescription() : '' ?>">
     </div>
 </fieldset>
 <fieldset>
