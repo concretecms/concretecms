@@ -231,6 +231,9 @@ return array(
         "/ccm/system/dialogs/page/delete_alias/submit"                                  => array('\Concrete\Controller\Dialog\Page\DeleteAlias::submit'),
         "/ccm/system/dialogs/page/edit_external"                                        => array('\Concrete\Controller\Dialog\Page\EditExternal::view'),
         "/ccm/system/dialogs/page/edit_external/submit"                                 => array('\Concrete\Controller\Dialog\Page\EditExternal::submit'),
+        "/ccm/system/dialogs/calendar/event/edit/{occurrence_id}"                       => array('\Concrete\Controller\Dialog\Calendar\Event::edit'),
+        "/ccm/system/dialogs/calendar/event/edit/{occurrence_id}/submit"                => array('\Concrete\Controller\Dialog\Calendar\Event::save'),
+        "/ccm/system/dialogs/calendar/event/edit/{occurrence_id}/delete"                => array('\Concrete\Controller\Dialog\Calendar\Event::delete'),
         "/ccm/system/dialogs/calendar/event/add/{caID}"                                 => array('\Concrete\Controller\Dialog\Calendar\Event::add'),
         "/ccm/system/dialogs/calendar/event/add/{caID}/submit"                          => array('\Concrete\Controller\Dialog\Calendar\Event::submit'),
 

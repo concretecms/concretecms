@@ -70,6 +70,12 @@ class Events extends DashboardPageController
             case 'event_added':
                 $this->set('success', t('Event added successfully.'));
                 break;
+            case 'event_deleted':
+                $this->set('success', t('Event deleted successfully.'));
+                break;
+            case 'event_delete_failed':
+                $this->error->add('Unable to delete event.');
+                break;
         }
     }
 

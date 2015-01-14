@@ -1,8 +1,8 @@
-<? use Concrete\Core\Permission\Duration;
+<?php
+use Concrete\Core\Permission\Duration;
 
-defined('C5_EXECUTE') or die("Access Denied."); ?>
+defined('C5_EXECUTE') or die("Access Denied.");
 
-<?
 $repeats = array(
     ''        => t('** Options'),
     'daily'   => t('Every Day'),

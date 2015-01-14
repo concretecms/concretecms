@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Calendar\Event;
 
+use Concrete\Core\Calendar\Calendar;
 use Concrete\Core\Foundation\Repetition\RepetitionInterface;
 
 /**
@@ -11,9 +12,21 @@ use Concrete\Core\Foundation\Repetition\RepetitionInterface;
 interface EventInterface
 {
 
+    /**
+     * @return int
+     */
     public function getCalendarID();
+
+    /**
+     * @return Calendar
+     */
     public function getCalendar();
-    public function setCalendar(\Concrete\Core\Calendar\Calendar $calendar);
+
+    /**
+     * @param Calendar $calendar
+     * @return void
+     */
+    public function setCalendar(Calendar $calendar);
 
     /**
      * The identifier, null for unsaved
