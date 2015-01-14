@@ -126,7 +126,7 @@ class Application extends Container
                     foreach ($jobs as $j) {
                         if ($j->isScheduledForNow()) {
                             $url = BASE_URL . View::url(
-                                                  '/tools/required/jobs/run_single?auth=' . $auth . '&jID=' . $j->getJobID(
+                                                  '/ccm/system/jobs/run_single?auth=' . $auth . '&jID=' . $j->getJobID(
                                                   )
                                 );
                             break;
