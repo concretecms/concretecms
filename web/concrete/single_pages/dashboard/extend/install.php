@@ -19,7 +19,6 @@ $catList = AttributeCategory::getList();
 
 if (is_object($pkg)) {
     $pkgID = $pkg->getPackageID();
-    $items = $pkg->getPackageItems();
 }
 
 if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScreen && $tp->canInstallPackages()) { ?>
@@ -159,7 +158,10 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
         }
     }
 
-    if (is_object($pkg)) { ?>
+    if (is_object($pkg)) {
+        $items = $pkg->getPackageItems();
+
+        ?>
 
         <table class="table table-bordered table-striped">
             <tr>
@@ -172,29 +174,11 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
         <?php if (count($items['block_types']) > 0) { ?>
         <div class="form-group">
             <legend><?= $pkg->getPackageItemsCategoryDisplayName('block_types_sets'); ?></legend>
-            <dl class="dl-horizontal ccm-block-set-list">
+            <ul class="list-unstyled">
             <?php foreach ($items['block_type_sets'] as $bset) { ?>
-                <dt><span class="badge"><?=$bset->getBlockTypeSetName()?></span></dt>
-                <dd>
-                    <span><?= t('Containing the following blocks') ?></span> 
-                        <ul id="ccm-block-type-block-set-list" class="item-select-list ccm-block-type-sortable-list">
-                        <?php foreach ($bset->getBlockTypes() as $bt) {?>
-                            <li style="display:inline-block">
-                                <a style="display:inline-block" href="<?= $view->url('/dashboard/blocks/types', 'inspect', $bt->getBlockTypeID()); ?>"><img src="<?=$ci->getBlockTypeIconURL($bt)?>"/> <?=$bt->getBlockTypeName()?></a>
-                                <?php
-                                $pkgRefID = $bt->getPackageID();
-                                if ($pkgRefID && $pkgRefID != $pkg->getPackageID()) { 
-                                    $pkgRef = Package::getByID($pkgRefID);
-                                ?>
-                                    <span class="label label-warning" ><?=t('Package: ')?><a style="color:white" href="<?=$view->url('/dashboard/extend/install/inspect_package', $pkgRefID)?>"><?=$pkgRef->getPackageName()?></a></span>
-                                <?php 
-                                }
-                                ?>
-                            </li>
-                        <?php }?>
-                </dd>
-            <?php } ?>
-            </dl>
+                <li><?=ucfirst($bset->getBlockTypeSetName())?></li>
+            <? } ?>
+            </ul>
         </div>
         <?php } unset($items['block_type_sets']); ?>
 
@@ -207,13 +191,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
             ?>
 
                 <li id="btID_<?=$btID?>"  data-btid="<?=$btID?>">
-                        <?php
-                        foreach ($bt->getBlockTypeSets() as $set) {
-                            echo '<span class="badge pull-right">' . $set->getBlockTypeSetName() . '</span>';
-                        }
-                        ?>
-                        <div class="pull-right" style="margin-left: 10px; margin-right: 10px" ><?=t('Usage Count: %s (%s%s on active pages %s)', $bt->getCount(), "<strong>", $bt->getCount(true), "</strong>") ?></div>
-                        <a href="<?= $view->url('/dashboard/blocks/types', 'inspect', $bt->getBlockTypeID()); ?>"><img src="<?=$ci->getBlockTypeIconURL($bt)?>" /> <?=t($bt->getBlockTypeName()); ?></a>
+                    <a href="<?= $view->url('/dashboard/blocks/types', 'inspect', $bt->getBlockTypeID()); ?>"><img src="<?=$ci->getBlockTypeIconURL($bt)?>" /> <?=t($bt->getBlockTypeName()); ?></a>
                 </li>
 
             <?php } unset($items['block_types']) ?>
@@ -245,9 +223,9 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 
         <?php if ( count( $items['attribute_keys'] ) ) { ?>
             <legend><?= $pkg->getPackageItemsCategoryDisplayName('attribute_keys'); ?></legend>
-            <ul>
+            <ul class="list-unstyled">
             <?php foreach ($items['attribute_keys'] as $item) { ?>
-                <li><?= $pkg->getItemName('attribute_keys'); ?></li>
+                <li><?= $item->getAttributeKeyDisplayName(); ?></li>
             <?php } ?>
             </ul>
             <?php unset($items['attribute_keys']); ?>
@@ -258,14 +236,9 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
             <legend><?= $pkg->getPackageItemsCategoryDisplayName('page_themes'); ?></legend>
             <ul class="list-unstyled">
             <?php foreach($items['page_themes'] as $theme) { ?>
-                <dl class="dl-horizontal">
-                    <dt><div class="ccm-themes-thumbnail" style="padding:4px;background-color:#FFF;border-radius:3px;border:1px solid #DDD; width:130px"><?=$theme->getThemeThumbnail()?></div></dt>
-                    <dd>
-                        <div >
-                            <div><a href="<?=$view->url('/dashboard/pages/themes/inspect', $theme->getThemeID())?>"><?=$theme->getThemeDisplayName()?></a></div>
-                            <div> <?= $theme->getThemeDisplayDescription(); ?> </div>
-                        </div>
-                    </dd>
+                <li>
+                    <div><a href="<?=$view->url('/dashboard/pages/themes/inspect', $theme->getThemeID())?>"><?=$theme->getThemeDisplayName()?></a></div>
+                    <div> <?= $theme->getThemeDisplayDescription(); ?> </div>
                 </li>
             <?php } ?>
             </ul>
@@ -296,7 +269,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
             }
         ?>
             <legend><?= $pkg->getPackageItemsCategoryDisplayName($key); ?></legend>
-            <ul>
+            <ul class="list-unstyled">
             <?php foreach ($itemArray as $item) { ?>
                 <li><?= $pkg->getItemName($item); ?></li>
             <?php } ?>
