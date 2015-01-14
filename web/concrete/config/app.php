@@ -262,6 +262,9 @@ return array(
         "/ccm/system/jobs"                                                              => array('\Concrete\Controller\Frontend\Jobs::view'),
         // @TODO remove the line below
         "/tools/required/jobs"                                                          => array('\Concrete\Controller\Frontend\Jobs::view'),
+        "/ccm/system/jobs/run_single"                                                          => array('\Concrete\Controller\Frontend\Jobs::run_single'),
+        // @TODO remove the line below
+        "/tools/required/jobs/run_single"                                               => array('\Concrete\Controller\Frontend\Jobs::run_single'),
         "/ccm/system/upgrade/"                                                          => array('\Concrete\Controller\Upgrade::view'),
         "/ccm/system/upgrade/submit"                                                    => array('\Concrete\Controller\Upgrade::submit'),
 
