@@ -260,11 +260,13 @@ return array(
         "/ccm/system/css/layout/{bID}"                                                  => array('\Concrete\Controller\Frontend\Stylesheet::layout'),
         "/ccm/system/backend/editor_data/"                                              => array('\Concrete\Controller\Backend\EditorData::view'),
         "/ccm/system/jobs"                                                              => array('\Concrete\Controller\Frontend\Jobs::view'),
+        "/ccm/system/jobs/run_single"                                                   => array('\Concrete\Controller\Frontend\Jobs::run_single'),
+        "/ccm/system/jobs/check_queue"                                                  => array('\Concrete\Controller\Frontend\Jobs::check_queue'),
         // @TODO remove the line below
         "/tools/required/jobs"                                                          => array('\Concrete\Controller\Frontend\Jobs::view'),
-        "/ccm/system/jobs/run_single"                                                          => array('\Concrete\Controller\Frontend\Jobs::run_single'),
-        // @TODO remove the line below
+        "/tools/required/jobs/check_queue"                                              => array('\Concrete\Controller\Frontend\Jobs::check_queue'),
         "/tools/required/jobs/run_single"                                               => array('\Concrete\Controller\Frontend\Jobs::run_single'),
+        // end removing lines
         "/ccm/system/upgrade/"                                                          => array('\Concrete\Controller\Upgrade::view'),
         "/ccm/system/upgrade/submit"                                                    => array('\Concrete\Controller\Upgrade::submit'),
 
