@@ -74,7 +74,7 @@ class Events extends DashboardPageController
                 $this->set('success', t('Event deleted successfully.'));
                 break;
             case 'event_delete_failed':
-                $this->error->add('Unable to delete event.');
+                $this->error->add(t('Unable to delete event.'));
                 break;
         }
     }
