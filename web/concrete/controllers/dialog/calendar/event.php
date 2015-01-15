@@ -199,9 +199,43 @@ class Event extends BackendInterfaceController
                         '/dashboard/calendar/events/',
                         'view',
                         $event->getCalendar()->getID(),
-                        null,
-                        null,
+                        date('y', $occurrence->getStart()),
+                        date('m', $occurrence->getEnd()),
                         'event_deleted'
+                    ));
+                $r->send();
+            } else {
+                $r = new RedirectResponse(
+                    \URL::to(
+                        '/dashboard/calendar/events/',
+                        'view',
+                        null,
+                        null,
+                        null,
+                        'event_delete_failed'
+                    ));
+                $r->send();
+            }
+        }
+
+    }
+
+    public function delete_local($occurrence_id)
+    {
+        if ($this->canAccess()) {
+            $occurrence = EventOccurrence::getByID($occurrence_id);
+
+            if ($occurrence) {
+                $occurrence->delete();
+
+                $r = new RedirectResponse(
+                    \URL::to(
+                        '/dashboard/calendar/events/',
+                        'view',
+                        $occurrence->getEvent()->getCalendar()->getID(),
+                        date('y', $occurrence->getStart()),
+                        date('m', $occurrence->getEnd()),
+                        'event_occurrence_deleted'
                     ));
                 $r->send();
             } else {
