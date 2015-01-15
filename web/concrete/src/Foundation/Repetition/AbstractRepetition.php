@@ -153,12 +153,35 @@ abstract class AbstractRepetition implements RepetitionInterface
                     break;
 
                 case self::REPEAT_WEEKLY:
-                    $numWeeks = floor(($now - strtotime($startsOn)) / (86400 * 7));
-                    if (!$this->getRepeatEveryNum() || ($numWeeks % $this->getRepeatEveryNum()) == 0) {
+                    $start_time = new \DateTime();
+                    $start_time->setTimestamp(strtotime($startsOn));
+
+                    $now_time = new \DateTime();
+                    $now_time->setTimestamp($now);
+
+
+                    $week_diff_start = new \DateTime();
+                    if (($days_past_sunday = date('w', $start_time->getTimestamp())) !== 0) {
+                        $week_diff_start->setTimestamp(strtotime("-{$days_past_sunday} days", $start_time->getTimestamp()));
+                    } else {
+                        $week_diff_start->setTimestamp($start_time->getTimestamp());
+                    }
+
+                    $week_diff_now = new \DateTime();
+                    if (($days_past_sunday = date('w', $now_time->getTimestamp())) !== 0) {
+                        $week_diff_now->setTimestamp(strtotime("-{$days_past_sunday} days", $now_time->getTimestamp()));
+                    } else {
+                        $week_diff_now->setTimestamp($now_time->getTimestamp());
+                    }
+
+                    $diff = $week_diff_now->diff($week_diff_start);
+                    $num_weeks = floor($diff->days / 7);
+
+                    if (!$this->getRepeatEveryNum() || ($num_weeks % $this->getRepeatEveryNum()) == 0) {
                         // now we check to see if it's on the right day
-                        $startDOW = date('w', strtotime($this->getStartDate()));
+                        $startDOW = date('w', $start_time->getTimestamp());
                         $endDOW = date('w', strtotime($this->getEndDate()));
-                        $dow = date('w', $now);
+                        $dow = date('w', $now_time->getTimestamp());
 
                         if ($startDOW == $endDOW) {
                             $days = $this->getRepeatPeriodWeekDays();
@@ -519,23 +542,27 @@ abstract class AbstractRepetition implements RepetitionInterface
                     break;
 
                 case $this::REPEAT_WEEKLY:
-                    $start_time = $start;
-                    if (date('w', $start_time) != '0') {
-                        $start_time = strtotime('last sunday', $start_time);
+                    $begin = $start;
+                    if (date('w', $begin) != '0') {
+                        $begin = strtotime('last sunday', $begin);
                     }
 
-                    $weeks = floor(($start_time - $repetition_start) / (86400 * 7));
-                    if ($difference = ($weeks % $repetition_num)) {
-                        $start_time = strtotime(
-                            "+{$repetition_num} weeks",
-                            strtotime("-{$difference} weeks", $start_time));
+                    $start_time = new \DateTime();
+                    $start_time->setTimestamp($begin);
+                    $repetition_start_time = new \DateTime();
+                    $repetition_start_time->setTimestamp($repetition_start);
+
+                    $diff = $start_time->diff($repetition_start_time);
+                    if ($difference = (floor($diff->days / 7) % $repetition_num)) {
+                        $interval = \DateInterval::createFromDateString("{$difference} weeks");
+                        $start_time->add($interval);
                     }
 
-                    $current_date = strtotime(date('Y-m-d ', $start_time) . date('H:i:s', $repetition_start));
+                    $current_date = strtotime(date('Y-m-d ', $start_time->getTimestamp()) . date('H:i:s', $repetition_start));
                     while ($current_date < $end) {
                         foreach ($this->getRepeatPeriodWeekDays() as $day) {
                             $day_of_the_week = strtotime("+{$day} days", $current_date);
-                            if ($day_of_the_week < $end) {
+                            if ($day_of_the_week >= $start && $day_of_the_week <= $end) {
                                 $occurrences[] = array(
                                     $day_of_the_week,
                                     $day_of_the_week + $repetition_end - $repetition_start);

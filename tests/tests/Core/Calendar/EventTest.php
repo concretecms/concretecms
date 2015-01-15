@@ -1,6 +1,7 @@
 <?php
 namespace tests\Core\Calendar;
 
+use Concrete\Core\Calendar\Calendar;
 use Concrete\Core\Calendar\Event\Event;
 use Concrete\Core\Calendar\Event\EventRepetition;
 use Concrete\Core\Foundation\Repetition\RepetitionInterface;
@@ -40,19 +41,26 @@ class EventTest extends \ConcreteDatabaseTestCase
 
     public function testSave()
     {
+        $mock = $this->getMockBuilder('\Concrete\Core\Calendar\Calendar')
+                     ->disableOriginalConstructor()
+                     ->getMock();
+        $mock->method('getID')->willReturn(1338);
+
         $name = md5(uniqid());
         $description = md5(uniqid());
 
         $event = new Event($name, $description, $this->repetition);
+        $event->setCalendar($mock);
         $event->save();
 
         $db = \Database::connection();
         $result = $db->query('SELECT * FROM CalendarEvents WHERE eventID=? LIMIT 1', array($event->getID()))->fetch();
 
         $this->assertNotEmpty((array)$result, 'Failed to retrieve event');
-        $this->assertEquals(array_get($result, 'repetitionID'), 1337, 'Failed to validate event repetition');
-        $this->assertEquals(array_get($result, 'name'), $name, 'Failed to validate event name');
-        $this->assertEquals(array_get($result, 'description'), $description, 'Failed to validate event description');
+        $this->assertEquals(1337, array_get($result, 'repetitionID'), 'Failed to validate event repetition');
+        $this->assertEquals($name, array_get($result, 'name'), 'Failed to validate event name');
+        $this->assertEquals($description, array_get($result, 'description'), 'Failed to validate event description');
+        $this->assertEquals(1338, array_get($result, 'caID'), 'Failed to validate event description');
     }
 
     public function testUpdate()
@@ -98,6 +106,8 @@ class EventTest extends \ConcreteDatabaseTestCase
         $description = md5(uniqid());
         $repetition = new EventRepetition();
         $repetition->save();
+        $calendar = new Calendar();
+        $calendar->save();
 
         $db = \Database::connection();
         $db->insert(
@@ -105,7 +115,8 @@ class EventTest extends \ConcreteDatabaseTestCase
             array(
                 'name'         => $name,
                 'description'  => $description,
-                'repetitionID' => $repetition->getID()));
+                'repetitionID' => $repetition->getID(),
+                'caID'         => $calendar->getID()));
 
         $id = $db->lastInsertId();
         $event = Event::getByID($id);
@@ -115,6 +126,10 @@ class EventTest extends \ConcreteDatabaseTestCase
             $event->getRepetition()->getID(),
             $repetition->getID(),
             'Failed to validate event repetition');
+        $this->assertEquals(
+            $event->getCalendar()->getID(),
+            $repetition->getID(),
+            'Failed to validate event Calendar');
         $this->assertEquals($event->getName(), $name, 'Failed to validate event name');
         $this->assertEquals($event->getDescription(), $description, 'Failed to validate event description');
         $this->assertEquals($event->getID(), $id, 'Failed to validate event identifier');
@@ -127,6 +142,10 @@ class EventTest extends \ConcreteDatabaseTestCase
             $event->getRepetition()->getID(),
             $repetition->getID(),
             'Failed to validate event repetition');
+        $this->assertEquals(
+            $event->getCalendar()->getID(),
+            $repetition->getID(),
+            'Failed to validate event Calendar');
         $this->assertEquals($event->getName(), $name, 'Failed to validate event name');
         $this->assertEquals($event->getDescription(), $description, 'Failed to validate event description');
         $this->assertEquals($event->getID(), $id, 'Failed to validate event identifier');

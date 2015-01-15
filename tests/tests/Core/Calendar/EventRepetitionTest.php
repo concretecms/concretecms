@@ -278,15 +278,14 @@ class EventRepetitionTest extends \ConcreteDatabaseTestCase
 
         $all_active = true;
         foreach ($occurrences as $occurrence) {
-            $window = $repetition->getActiveRange($occurrence[0]);
+            $window = $repetition->getActiveRange($occurrence[0] + 5);
+
             if (!$window) {
                 $all_active = false;
-                break;
             }
 
             if ($window[0] !== $occurrence[0] || $window[1] !== $occurrence[1]) {
                 $all_active = false;
-                break;
             }
         }
 
@@ -311,8 +310,6 @@ class EventRepetitionTest extends \ConcreteDatabaseTestCase
         $all_active = true;
         foreach ($occurrences as $occurrence) {
             $window = $repetition->getActiveRange($occurrence[0]);
-
-            echo date('l, Y-m-d H:i:s', $occurrence[0]) . "\n";
 
             if (!$window) {
                 $all_active = false;
