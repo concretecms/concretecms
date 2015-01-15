@@ -169,7 +169,7 @@ $dh = Core::make('helper/date');
     						<p><?=t('Then, make sure this URL is scheduled to run frequently, like every 3-5 minutes:')?></p>
     						
     						<div class="form-group">
-    						    <textarea rows="2" class="ccm-default-jobs-url form-control"><?=BASE_URL . REL_DIR_FILES_TOOLS_REQUIRED . '/jobs/check_queue?auth=' . $auth?></textarea>
+    						    <textarea rows="2" class="ccm-default-jobs-url form-control"><?=BASE_URL . URL::to('/ccm/system/jobs/check_queue?auth=' . $auth)?></textarea>
     						</div>
     						
     						<div class="alert alert-info">
