@@ -97,7 +97,7 @@ class DatabaseManagerORM
             new DoctrineCacheDriver('cache/expensive')
         );
 
-        $path = DIR_APPLICATION . '/' . DIRNAME_CLASSES . '/' . DIRNAME_ENTITIES;
+        $path = DIR_APPLICATION . '/' . DIRNAME_CLASSES;
         if ($context instanceof Package) {
             $path = $context->getPackageEntitiesPath();
         } elseif ($context === 'core') {
