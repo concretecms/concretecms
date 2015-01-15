@@ -30,10 +30,6 @@
 
     ConcreteFileManager.prototype = Object.create(ConcreteAjaxSearch.prototype);
 
-    ConcreteFileManager.prototype.setupFileMenu = function( parent, data ) {
-        
-    }
-
     ConcreteFileManager.prototype.setupFileUploads = function() {
         var my = this,
             $fileUploaders = $('.ccm-file-manager-upload'),
@@ -249,12 +245,6 @@
                 callback(r);
             }
         });
-    };
-
-    var ConcreteFileManagerMenu = {
-        get: function() {
-            return $('script[data-template=search-results-default-file-menu]').html();
-        }
     };
 
     // jQuery Plugin

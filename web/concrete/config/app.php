@@ -241,6 +241,7 @@ return array(
         "/ccm/system/file/duplicate"                                                    => array('\Concrete\Controller\Backend\File::duplicate'),
         "/ccm/system/file/upload"                                                       => array('\Concrete\Controller\Backend\File::upload'),
         "/ccm/system/file/download"                                                     => array('\Concrete\Controller\Backend\File::download'),
+        "/ccm/system/file/context_menu"                                                 => array('\Concrete\Controller\Backend\FileContextMenu::view'),
 
         /**
          * Users

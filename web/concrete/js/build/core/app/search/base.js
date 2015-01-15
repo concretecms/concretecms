@@ -343,7 +343,38 @@
      * Static Methods:
      */
 
+    ConcreteAjaxSearch.contextMenuTemplateText = null;
+    ConcreteAjaxSearch.templateURL = CCM_DISPATCHER_FILENAME + '/ccm/system/file/context_menu';
+
+    ConcreteAjaxSearch.retrieveTemplate = function(url) {
+            var retText = null;
+
+            $.ajax({
+                url: url,
+                async: false,
+                success: function(t) {
+                    var h = $(t).get(0);
+                    if (h.tagName == "SCRIPT") retText = h.text;
+                    else retText = t;
+                }
+            });
+            return retText;
+        },
+
     ConcreteAjaxSearch.getDefaultFileMenuTemplateTxt = function() {
+        if (!ConcreteAjaxSearch.contextMenuTemplateText)
+        {
+            var templateTxt = null;
+            var m = $('script[data-template=search-results-default-file-menu]');
+            if (m.length > 0) {
+                templateTxt = $(m.get(0)).html();
+            } else  {
+                templateTxt = ConcreteAjaxSearch.retrieveTemplate(ConcreteAjaxSearch.templateURL);
+            }
+            ConcreteAjaxSearch.contextMenuTemplateText = templateTxt;
+        }
+        return ConcreteAjaxSearch.contextMenuTemplateText;
+
         var m = $('script[data-template=search-results-default-file-menu]');
         if (m.length > 0) return $(m.get(0)).html();
     }
