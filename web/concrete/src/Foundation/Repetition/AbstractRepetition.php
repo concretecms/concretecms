@@ -51,7 +51,7 @@ abstract class AbstractRepetition implements RepetitionInterface
     protected $repeatMonthBy;
 
     /**
-     * @var int Timestamp of the last possible time for repetition
+     * @var string Time string of the last possible time for repetition
      */
     protected $repeatPeriodEnd;
 
@@ -372,7 +372,7 @@ abstract class AbstractRepetition implements RepetitionInterface
     }
 
     /**
-     * @return int Timestamp of the last possible time for an occurrence
+     * @return string Time string of the last possible time for an occurrence
      */
     public function getRepeatPeriodEnd()
     {
@@ -502,10 +502,17 @@ abstract class AbstractRepetition implements RepetitionInterface
 
         $repetition_start = strtotime($start_date);
         $repetition_end = strtotime($end_date);
+
+        $repetition_final = strtotime($this->getRepeatPeriodEnd());
+
         $repetition_num = $this->getRepeatEveryNum();
 
         if ($repetition_start > $start) {
             $start = $repetition_start;
+        }
+
+        if ($repetition_final && $end > $repetition_final) {
+            $end = $repetition_final;
         }
 
         if ($start > $end) {
