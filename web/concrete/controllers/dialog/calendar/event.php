@@ -1,14 +1,14 @@
 <?
 namespace Concrete\Controller\Dialog\Calendar;
 
-use \Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
+use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Concrete\Core\Attribute\Key\EventKey;
-use Concrete\Core\Calendar\Event\EditResponse;
 use Concrete\Core\Calendar\Calendar;
+use Concrete\Core\Calendar\Event\EditResponse;
+use Concrete\Core\Calendar\Event\Event as CalendarEvent;
 use Concrete\Core\Calendar\Event\EventOccurrence;
 use Concrete\Core\Calendar\Event\EventOccurrenceList;
 use Concrete\Core\Calendar\Event\EventRepetition;
-use Concrete\Core\Calendar\Event\Event as CalendarEvent;
 use Concrete\Core\Form\Service\Widget\DateTime;
 use RedirectResponse;
 
@@ -16,13 +16,6 @@ class Event extends BackendInterfaceController
 {
 
     protected $viewPath = '/dialogs/calendar/event/form';
-
-    protected function canAccess()
-    {
-        $c = \Page::getByPath('/dashboard/calendar/events');
-        $cp = new \Permissions($c);
-        return $cp->canViewPage();
-    }
 
     public function add($caID)
     {
@@ -32,10 +25,9 @@ class Event extends BackendInterfaceController
         }
     }
 
-    public function edit($occurrence_id=0)
+    public function edit($occurrence_id = 0)
     {
-
-        if ($this->canAccess()) {
+        if ($this->canAccess(false)) {
 
             $occurrence = EventOccurrence::getByID($occurrence_id);
             if (!$occurrence) {
@@ -43,6 +35,42 @@ class Event extends BackendInterfaceController
             }
 
             $this->set('occurrence', $occurrence);
+        } else {
+            die('Access Denied.');
+        }
+    }
+
+    protected function canAccess()
+    {
+        $c = \Page::getByPath('/dashboard/calendar/events');
+        $cp = new \Permissions($c);
+        return $cp->canViewPage();
+    }
+
+    public function cancel($occurrence_id)
+    {
+        if ($this->canAccess()) {
+
+            $occurrence = EventOccurrence::getByID($occurrence_id);
+            if (!$occurrence) {
+                throw new \Exception(t('Invalid occurrence.'));
+            }
+
+            $occurrence->cancel();
+            $occurrence->save();
+
+            $year = date('Y', $occurrence->getStart());
+            $month = date('m', $occurrence->getStart());
+            $response = new \RedirectResponse(
+                \URL::to(
+                    '/dashboard/calendar/events/',
+                    'view',
+                    $occurrence->getEvent()->getCalendar()->getID(),
+                    $year,
+                    $month,
+                    'occurrence_cancelled'
+                ));
+            $response->send();
         } else {
             die('Access denied');
         }
@@ -116,9 +144,11 @@ class Event extends BackendInterfaceController
 
                 $now = time();
                 $db = \Database::connection();
-                $db->query('DELETE FROM CalendarEventOccurrences WHERE startTime>=? AND eventID=?', array(
-                    $now,
-                    $ev->getID()));
+                $db->query(
+                    'DELETE FROM CalendarEventOccurrences WHERE startTime>=? AND eventID=?',
+                    array(
+                        $now,
+                        $ev->getID()));
 
                 $ev->generateOccurrences($now, strtotime('+5 years', $now));
 
@@ -135,9 +165,15 @@ class Event extends BackendInterfaceController
             //$r->setMessage(t('Event added successfully.'));
             $year = date('Y', strtotime($repetition->getStartDate()));
             $month = date('m', strtotime($repetition->getStartDate()));
-            $r->setRedirectURL(\URL::to('/dashboard/calendar/events/', 'view', $calendar->getID(),
-                                        $year, $month, 'event_saved'
-            ));
+            $r->setRedirectURL(
+                \URL::to(
+                    '/dashboard/calendar/events/',
+                    'view',
+                    $calendar->getID(),
+                    $year,
+                    $month,
+                    'event_saved'
+                ));
         }
 
         $r->outputJSON();
@@ -216,7 +252,7 @@ class Event extends BackendInterfaceController
                 $ev->generateOccurrences($repetition_start - 1, strtotime('+5 years', $repetition_start));
 
                 $attributes = EventKey::getList();
-                foreach($attributes as $ak) {
+                foreach ($attributes as $ak) {
                     $ak->saveAttributeForm($ev);
                 }
 
@@ -227,9 +263,15 @@ class Event extends BackendInterfaceController
                 //$r->setMessage(t('Event added successfully.'));
                 $year = date('Y', strtotime($repetition->getStartDate()));
                 $month = date('m', strtotime($repetition->getStartDate()));
-                $r->setRedirectURL(\URL::to('/dashboard/calendar/events/', 'view', $calendar->getID(),
-                    $year, $month, 'event_added'
-                ));
+                $r->setRedirectURL(
+                    \URL::to(
+                        '/dashboard/calendar/events/',
+                        'view',
+                        $calendar->getID(),
+                        $year,
+                        $month,
+                        'event_added'
+                    ));
             }
 
             $r->outputJSON();
