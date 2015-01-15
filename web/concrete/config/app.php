@@ -234,6 +234,7 @@ return array(
         "/ccm/system/dialogs/calendar/event/edit/{occurrence_id}"                       => array('\Concrete\Controller\Dialog\Calendar\Event::edit'),
         "/ccm/system/dialogs/calendar/event/edit/{occurrence_id}/submit"                => array('\Concrete\Controller\Dialog\Calendar\Event::save'),
         "/ccm/system/dialogs/calendar/event/edit/{occurrence_id}/delete"                => array('\Concrete\Controller\Dialog\Calendar\Event::delete'),
+        "/ccm/system/dialogs/calendar/event/edit/{occurrence_id}/delete_local"          => array('\Concrete\Controller\Dialog\Calendar\Event::delete_local'),
         "/ccm/system/dialogs/calendar/event/edit/{occurrence_id}/cancel"                => array('\Concrete\Controller\Dialog\Calendar\Event::cancel'),
         "/ccm/system/dialogs/calendar/event/add/{caID}"                                 => array('\Concrete\Controller\Dialog\Calendar\Event::add'),
         "/ccm/system/dialogs/calendar/event/add/{caID}/submit"                          => array('\Concrete\Controller\Dialog\Calendar\Event::submit'),
