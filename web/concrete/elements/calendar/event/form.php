@@ -89,16 +89,31 @@ use Concrete\Core\Calendar\Event\EventOccurrence;
     _.defer(function() {
         var radios = $("input[name='edit_type']"),
             local = $('fieldset.date-time'),
-            all = $('fieldset.repeat-date-time');
+            all = $('fieldset.repeat-date-time'),
+            delete_local = $('a.delete-local'),
+            delete_all = $('a.delete-all');
 
         radios.closest('form').change(function() {
             if (radios.filter(':checked').val() === 'local') {
                 local.show();
                 all.hide();
+
+                delete_local.show();
+                delete_all.hide();
             } else {
                 local.hide();
                 all.show();
+
+                delete_local.hide();
+                delete_all.show();
             }
+        });
+
+        delete_local.click(function() {
+            return confirm('<?= t('Are you sure you want to delete this occurrence?') ?> ');
+        });
+        delete_all.click(function() {
+            return confirm('<?= t('Are you sure you want to delete this event and all occurrences?') ?> ');
         });
     });
 </script>

@@ -1,4 +1,6 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<? use Concrete\Core\Calendar\Event\EventOccurrence;
+
+defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <div class="ccm-dashboard-header-buttons">
     <div class="btn-group">
@@ -13,19 +15,22 @@
             <li class="divider"></li>
             <li><a href="<?= URL::to('/dashboard/calendar/add') ?>"><?= t("Add Calendar") ?></a></li>
             <li class="divider"></li>
-            <li><a href="<?= URL::to('/dashboard/calendar/add', $calendar->getID()) ?>"><?= t("Edit Calendar") ?></a></li>
-            <li><a href="#" data-dialog="delete-calendar"><span class="text-danger"><?= t("Delete Calendar") ?></span></a></li>
+            <li><a href="<?= URL::to('/dashboard/calendar/add', $calendar->getID()) ?>"><?= t("Edit Calendar") ?></a>
+            </li>
+            <li><a href="#" data-dialog="delete-calendar"><span class="text-danger"><?= t(
+                            "Delete Calendar") ?></span></a></li>
 
         </ul>
-        <a class="dialog-launch btn btn-primary" dialog-width="640" dialog-title="<?=t('Add Event')?>" dialog-height="400"
-            href="<?= URL::to('/ccm/system/dialogs/calendar/event/add', $calendar->getID())?>"><?= t("Add Event") ?></a>
+        <a class="dialog-launch btn btn-primary" dialog-width="640" dialog-title="<?= t('Add Event') ?>"
+           dialog-height="400"
+           href="<?= URL::to('/ccm/system/dialogs/calendar/event/add', $calendar->getID()) ?>"><?= t("Add Event") ?></a>
     </div>
 </div>
 
 <div class="btn-group pull-right">
-    <a href="<?=$previousLink?>" class="btn btn-sm btn-default"><i class="fa fa-angle-double-left"></i></a>
-    <a href="<?=$todayLink?>" class="btn btn-sm btn-default"><?=t('Today')?></i></a>
-    <a href="<?=$nextLink?>" class="btn btn-sm btn-default"><i class="fa fa-angle-double-right"></i></a>
+    <a href="<?= $previousLink ?>" class="btn btn-sm btn-default"><i class="fa fa-angle-double-left"></i></a>
+    <a href="<?= $todayLink ?>" class="btn btn-sm btn-default"><?= t('Today') ?></i></a>
+    <a href="<?= $nextLink ?>" class="btn btn-sm btn-default"><i class="fa fa-angle-double-right"></i></a>
 </div>
 
 <h2><?= $monthText ?>
@@ -62,28 +67,47 @@
             ?>
             <td class="<? if ($isToday) { ?>ccm-dashboard-calendar-today<? } ?> <? if ($i > 0) { ?>ccm-dashboard-calendar-active-day<? } ?>">
                 <div class="ccm-dashboard-calendar-date-wrap">
-                <? if ($i > 0) { ?>
-                    <div class="ccm-dashboard-calendar-date"><?= $i ?></div>
+                    <? if ($i > 0) { ?>
+                        <div class="ccm-dashboard-calendar-date"><?= $i ?></div>
 
-                    <?
+                        <?
                         $list = new \Concrete\Core\Calendar\Event\EventOccurrenceList();
                         $list->filterByCalendar($calendar);
                         $list->filterByDate(date('Y-m-d', strtotime($year . '-' . $month . '-' . $i)));
                         $results = $list->getResults();
-                        foreach($results as $occurrence) {
+
+                        /** @var EventOccurrence $occurrence */
+                        foreach ($results as $occurrence) {
                             $event = $occurrence->getEvent(); ?>
-                            <div class="ccm-dashboard-calendar-date-event">
-                                <a class="dialog-launch" dialog-width="640" dialog-title="<?=t('Edit Event')?>" dialog-height="400"
-                                   href="<?= URL::to('/ccm/system/dialogs/calendar/event/edit', $occurrence->getID())?>">
-                                    <?= t($occurrence->getEvent()->getName()) ?: "&nbsp;" ?>
-                                </a>
+                            <div class="ccm-dashboard-calendar-date-event<?= $occurrence->isCancelled() ? " ccm-dashboard-calendar-date-event-cancelled" : '' ?>">
+                                <?php
+                                if ($occurrence->isCancelled()) {
+                                    ?>
+                                    <span>
+                                        <?= h($occurrence->getEvent()->getName()) ?: "&nbsp;" ?>
+                                    </span>
+                                    <?php
+                                } else {
+                                    ?>
+                                    <a class="dialog-launch"
+                                       dialog-title="<?= t('Edit Event') ?>"
+                                       dialog-width="640"
+                                       dialog-height="400"
+                                       href="<?= URL::to(
+                                           '/ccm/system/dialogs/calendar/event/edit',
+                                           $occurrence->getID()) ?>">
+                                        <?= h($occurrence->getEvent()->getName()) ?: "&nbsp;" ?>
+                                    </a>
+                                <?php
+                                }
+                                ?>
                             </div>
-                            <?
+                        <?
                         }
-                    ?>
-                <? } else { ?>
-                    <div class="ccm-dashboard-calendar-date-inactive">&nbsp;</div>
-                <? } ?>
+                        ?>
+                    <? } else { ?>
+                        <div class="ccm-dashboard-calendar-date-inactive">&nbsp;</div>
+                    <? } ?>
                 </div>
             </td>
         <? }
@@ -98,31 +122,33 @@
 
 <div style="display: none">
     <div id="ccm-dialog-delete-calendar" class="ccm-ui">
-        <form method="post" class="form-stacked" action="<?=$view->action('delete_calendar')?>">
-            <?=Loader::helper("validation/token")->output('delete_calendar')?>
-            <input type="hidden" name="caID" value="<?=$calendar->getID()?>" />
-            <p><?=t('Are you sure? This action cannot be undone.')?></p>
+        <form method="post" class="form-stacked" action="<?= $view->action('delete_calendar') ?>">
+            <?= Loader::helper("validation/token")->output('delete_calendar') ?>
+            <input type="hidden" name="caID" value="<?= $calendar->getID() ?>"/>
+
+            <p><?= t('Are you sure? This action cannot be undone.') ?></p>
         </form>
         <div class="dialog-buttons">
-            <button class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
-            <button class="btn btn-danger pull-right" onclick="$('#ccm-dialog-delete-calendar form').submit()"><?=t('Delete Calendar')?></button>
+            <button class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?= t('Cancel') ?></button>
+            <button class="btn btn-danger pull-right" onclick="$('#ccm-dialog-delete-calendar form').submit()"><?= t(
+                    'Delete Calendar') ?></button>
         </div>
     </div>
 </div>
 
 <script type="text/javascript">
-$(function() {
-    $('a[data-dialog=delete-calendar]').on('click', function() {
-        jQuery.fn.dialog.open({
-            element: '#ccm-dialog-delete-calendar',
-            modal: true,
-            width: 320,
-            title: '<?=t("Delete Calendar")?>',
-            height: 'auto'
+    $(function () {
+        $('a[data-dialog=delete-calendar]').on('click', function () {
+            jQuery.fn.dialog.open({
+                element: '#ccm-dialog-delete-calendar',
+                modal: true,
+                width: 320,
+                title: '<?=t("Delete Calendar")?>',
+                height: 'auto'
+            });
         });
-    });
 
-});
+    });
 </script>
 
 <style type="text/css">
@@ -142,23 +168,25 @@ $(function() {
     div.ccm-dashboard-calendar-date-wrap {
         height: 110px;
     }
+
     div.ccm-dashboard-calendar-date {
         text-align: right;
         font-size: 1.1em;
         margin-bottom: 20px;
         color: #666;
     }
+
     td.ccm-dashboard-calendar-today {
         background-color: rgba(91, 192, 222, 0.15);
     }
 
     div.ccm-dashboard-calendar-date-event {
-        background-color: <?=$calendar->getColor()?>;
         padding: 0px;
     }
+
     div.ccm-dashboard-calendar-date-event > a {
         background-color: <?=$calendar->getColor()?>;
-        display:block;
+        display: block;
         text-decoration: none;
         color: #fff;
         padding: 2px 10px 2px 10px;
@@ -166,7 +194,21 @@ $(function() {
         margin-right: -8px;
         text-decoration: none;
     }
+
+    div.ccm-dashboard-calendar-date-event-cancelled > span {
+        background-color: <?=$calendar->getColor()?>;
+        display: block;
+        text-decoration: none;
+        color: #fff;
+        padding: 2px 10px 2px 10px;
+        margin-left: -8px;
+        margin-right: -8px;
+        cursor: not-allowed;
+        opacity: .5;
+    }
+
     div.ccm-dashboard-calendar-date-event > a:hover {
         color: #ccc;
     }
+
 </style>
