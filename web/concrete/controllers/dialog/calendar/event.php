@@ -9,6 +9,7 @@ use Concrete\Core\Calendar\Event\EventOccurrence;
 use Concrete\Core\Calendar\Event\EventOccurrenceList;
 use Concrete\Core\Calendar\Event\EventRepetition;
 use Concrete\Core\Calendar\Event\Event as CalendarEvent;
+use Concrete\Core\Form\Service\Widget\DateTime;
 use RedirectResponse;
 
 class Event extends BackendInterfaceController
@@ -33,20 +34,38 @@ class Event extends BackendInterfaceController
 
     public function edit($occurrence_id=0)
     {
-        $occurrence = EventOccurrence::getByID($occurrence_id);
-        if (!$occurrence) {
-            throw new \Exception(t('Invalid occurrence.'));
-        }
 
-        $this->set('occurrence', $occurrence);
+        if ($this->canAccess()) {
+
+            $occurrence = EventOccurrence::getByID($occurrence_id);
+            if (!$occurrence) {
+                throw new \Exception(t('Invalid occurrence.'));
+            }
+
+            $this->set('occurrence', $occurrence);
+        } else {
+            die('Access denied');
+        }
     }
 
     public function save($occurrence_id)
     {
-        $repetition = EventRepetition::translateFromRequest($this->request);
         $e = \Core::make('error');
-        if (!is_object($repetition)) {
-            $e->add(t('You must specify a valid date for this event.'));
+
+        if (!$this->canAccess()) {
+            $e->add('Access denied.');
+            $r = new EditResponse($e);
+            $r->outputJSON();
+            exit;
+        }
+
+        $repetition = null;
+        if (!($local = ($this->request->request->get('edit_type') == 'local'))) {
+            $repetition = EventRepetition::translateFromRequest($this->request);
+            if (!is_object($repetition)) {
+                $e->add(t('You must specify a valid date for this event.'));
+            }
+
         }
 
         $occurrence = EventOccurrence::getByID($occurrence_id);
@@ -54,20 +73,59 @@ class Event extends BackendInterfaceController
             throw new \Exception(t('Invalid occurrence.'));
         }
 
+        $calendar = $occurrence->getEvent()->getCalendar();
+
         $r = new EditResponse($e);
 
         if (!$e->has()) {
-            $repetition->save();
-            $ev = $occurrence->getEvent();
-            $ev->setName($this->request->request->get('name'));
-            $ev->setDescription($this->request->request->get('description'));
-            $rep = $ev->getRepetition();
-            $ev->setRepetition($repetition);
-            $ev->save();
+            if ($local) {
+                /** @var DateTime $datetime */
+                $datetime = \Core::make('helper/form/date_time');
+                $repetition = new EventRepetition();
 
-            $attributes = EventKey::getList();
-            foreach($attributes as $ak) {
-                $ak->saveAttributeForm($ev);
+                $start = $datetime->translate('pdOccurrenceStartDate');
+                $end = $datetime->translate('pdOccurrenceEndDate');
+
+                if (!$start || !$end) {
+                    $e->add('A valid start date must be provided.');
+                } else {
+                    $repetition->setStartDate($start);
+                    $repetition->setEndDate($end);
+                    $repetition->setRepeatPeriod($repetition::REPEAT_NONE);
+                    $repetition->save();
+
+                    $ev = new \Concrete\Core\Calendar\Event\Event(
+                        $this->request->request->get('name'),
+                        $this->request->request->get('description'),
+                        $repetition);
+
+                    $ev->setCalendar($occurrence->getEvent()->getCalendar());
+                    $ev->save();
+
+                    $occurrence->delete();
+                }
+            } else {
+                $repetition->save();
+                /** @var \Concrete\Core\Calendar\Event\Event $ev */
+                $ev = $occurrence->getEvent();
+                $ev->setName($this->request->request->get('name'));
+                $ev->setDescription($this->request->request->get('description'));
+                $rep = $ev->getRepetition();
+                $ev->setRepetition($repetition);
+                $ev->save();
+
+                $now = time();
+                $db = \Database::connection();
+                $db->query('DELETE FROM CalendarEventOccurrences WHERE startTime>=? AND eventID=?', array(
+                    $now,
+                    $ev->getID()));
+
+                $ev->generateOccurrences($now, strtotime('+5 years', $now));
+
+                $attributes = EventKey::getList();
+                foreach ($attributes as $ak) {
+                    $ak->saveAttributeForm($ev);
+                }
             }
 
             // Commenting this out until we can do ajax style calendar updating. In the meantime
@@ -77,7 +135,7 @@ class Event extends BackendInterfaceController
             //$r->setMessage(t('Event added successfully.'));
             $year = date('Y', strtotime($repetition->getStartDate()));
             $month = date('m', strtotime($repetition->getStartDate()));
-            $r->setRedirectURL(\URL::to('/dashboard/calendar/events/', 'view', $ev->getCalendar()->getID(),
+            $r->setRedirectURL(\URL::to('/dashboard/calendar/events/', 'view', $calendar->getID(),
                                         $year, $month, 'event_saved'
             ));
         }
@@ -87,27 +145,41 @@ class Event extends BackendInterfaceController
 
     public function delete($occurrence_id)
     {
-        $occurrence = EventOccurrence::getByID($occurrence_id);
+        if ($this->canAccess()) {
+            $occurrence = EventOccurrence::getByID($occurrence_id);
 
-        if ($occurrence) {
-            /** @var \Concrete\Core\Calendar\Event\Event $event */
-            $event = $occurrence->getEvent();
-            $event->delete();
+            if ($occurrence) {
+                /** @var \Concrete\Core\Calendar\Event\Event $event */
+                $event = $occurrence->getEvent();
+                $event->delete();
 
-            $occurrence_list = new EventOccurrenceList();
-            $occurrence_list->filterByEvent($event);
-            foreach($occurrence_list->getResults() as $occurrence_row) {
-                $occurrence_list->getResult($occurrence_row)->delete();
+                $occurrence_list = new EventOccurrenceList();
+                $occurrence_list->filterByEvent($event);
+                foreach ($occurrence_list->getResults() as $occurrence_row) {
+                    $occurrence_list->getResult($occurrence_row)->delete();
+                }
+                $r = new RedirectResponse(
+                    \URL::to(
+                        '/dashboard/calendar/events/',
+                        'view',
+                        $event->getCalendar()->getID(),
+                        null,
+                        null,
+                        'event_deleted'
+                    ));
+                $r->send();
+            } else {
+                $r = new RedirectResponse(
+                    \URL::to(
+                        '/dashboard/calendar/events/',
+                        'view',
+                        null,
+                        null,
+                        null,
+                        'event_delete_failed'
+                    ));
+                $r->send();
             }
-            $r = new RedirectResponse(\URL::to('/dashboard/calendar/events/', 'view', $event->getCalendar()->getID(),
-                                        null, null, 'event_deleted'
-            ));
-            $r->send();
-        } else {
-            $r = new RedirectResponse(\URL::to('/dashboard/calendar/events/', 'view', null,
-                                        null, null, 'event_delete_failed'
-            ));
-            $r->send();
         }
 
     }
@@ -136,8 +208,12 @@ class Event extends BackendInterfaceController
                     $repetition
                 );
 
+                $repetition_start = strtotime($repetition->getStartDate());
+
                 $ev->setCalendar($calendar);
                 $ev->save();
+
+                $ev->generateOccurrences($repetition_start - 1, strtotime('+5 years', $repetition_start));
 
                 $attributes = EventKey::getList();
                 foreach($attributes as $ak) {

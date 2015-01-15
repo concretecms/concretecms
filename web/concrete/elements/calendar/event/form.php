@@ -1,34 +1,107 @@
+
 <?php
 use Concrete\Core\Calendar\Event\EventOccurrence;
-
-/** @var EventOccurrence $occurrence */
-if ($occurrence) {
-    $event = $occurrence->getEvent();
-}
-
 ?>
+<div class="ccm-event-form">
+    <?php
+    /** @var EventOccurrence $occurrence */
+    if ($occurrence) {
+        $event = $occurrence->getEvent();
+        ?>
+        <fieldset>
+            <div class="form-group">
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="edit_type" value="all" checked /> <?= t('All occurrences') ?>
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="edit_type" value="local" /> <?= t('Just this occurrence') ?>
+                    </label>
+                </div>
+            </div>
+        </fieldset>
 
-<fieldset>
-    <legend><?=t('Basics')?></legend>
-    <div class="form-group">
-        <label for="name" class="control-label">
-            <?= t('Name') ?>
-        </label>
+        <?php
+    }
+    ?>
 
-        <input type="text" class="form-control" placeholder="Name" name="name" value="<?= $event ? $event->getName() : '' ?>">
-    </div>
-    <div class="form-group">
-        <label for="name" class="control-label">
-            <?= t('Description') ?>
-        </label>
+    <fieldset>
+        <legend><?=t('Basics')?></legend>
+        <div class="form-group">
+            <label for="name" class="control-label">
+                <?= t('Name') ?>
+            </label>
 
-        <textarea class="form-control" rows="3" placeholder="Description" name="description"><?= $event ? $event->getDescription() : '' ?></textarea>
-    </div>
-</fieldset>
-<fieldset>
-    <legend><?=t('Date & Time')?></legend>
-    <?= \Loader::element('permission/duration', array('pd' => $event ? $event->getRepetition() : null)); ?>
-</fieldset>
+            <input type="text" class="form-control" placeholder="Name" name="name" value="<?= $event ? $event->getName() : '' ?>">
+        </div>
+        <div class="form-group">
+            <label for="name" class="control-label">
+                <?= t('Description') ?>
+            </label>
+
+            <textarea class="form-control" rows="3" placeholder="Description" name="description"><?= $event ? $event->getDescription() : '' ?></textarea>
+        </div>
+    </fieldset>
+    <?php
+    if ($occurrence) {
+        ?>
+        <fieldset class="date-time" style="display:none">
+            <legend><?= t('Date &amp; Time') ?></legend>
+            <?php
+            $form = \Core::make('helper/form');
+            $dt = \Core::make('helper/form/date_time');
+
+            $pdStartDate = date('Y-m-d H:i:s', $occurrence->getStart());
+            $pdEndDate = date('Y-m-d H:i:s', $occurrence->getEnd());
+            ?>
+            <div id="ccm-permissions-access-entity-dates">
+
+                <div class="form-group">
+                    <label for="pdStartDate_activate" class="control-label"><?= tc('Start date', 'From') ?></label>
+
+                    <div class="">
+                        <?= $dt->datetime('pdOccurrenceStartDate', $pdStartDate, true); ?>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="pdEndDate_activate" class="control-label"><?= tc('End date', 'To') ?></label>
+
+                    <div class="">
+                        <?= $dt->datetime('pdOccurrenceEndDate', $pdEndDate, true); ?>
+                    </div>
+                </div>
+
+            </div>
+        </fieldset>
+        <?php
+    }
+    ?>
+    <fieldset class="repeat-date-time">
+        <legend><?=t('Date & Time')?></legend>
+        <?= \Loader::element('permission/duration', array('pd' => $event ? $event->getRepetition() : null)); ?>
+    </fieldset>
+</div>
+
+<script>
+    _.defer(function() {
+        var radios = $("input[name='edit_type']"),
+            local = $('fieldset.date-time'),
+            all = $('fieldset.repeat-date-time');
+
+        radios.closest('form').change(function() {
+            if (radios.filter(':checked').val() === 'local') {
+                local.show();
+                all.hide();
+            } else {
+                local.hide();
+                all.show();
+            }
+        });
+    });
+</script>
 
 <?
     $attributes = \Concrete\Core\Attribute\Key\EventKey::getList();
