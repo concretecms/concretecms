@@ -32,6 +32,7 @@ class EventOccurrence
         $this->event = $event;
         $this->start = $start;
         $this->end = $end;
+        $this->cancelled = !!$cancelled;
     }
 
     /**
@@ -83,7 +84,7 @@ class EventOccurrence
         if (is_array($r) && isset($r['occurrenceID'])) {
             $ev = Event::getByID($r['eventID']);
             if (is_object($ev)) {
-                $o = new static($ev, $r['startTime'], $r['endDate'], $r['cancelled']);
+                $o = new static($ev, $r['startTime'], $r['endTime'], !!$r['cancelled']);
                 $o->id = $r['occurrenceID'];
                 return $o;
             }
@@ -102,17 +103,32 @@ class EventOccurrence
     public function save()
     {
         $db = \Database::connection();
-        if ($db->query(
-            'INSERT INTO CalendarEventOccurrences (eventID, startTime, endTime, cancelled) VALUES (?, ?, ?, ?)',
-            array(
-                $this->getEvent()->getID(),
-                $this->getStart(),
-                $this->getEnd(),
-                $this->isCancelled() ? 1 : 0
-            ))
-        ) {
-            $this->id = $db->lastInsertId();
-            return true;
+        if ($this->getID()) {
+            if ($db->query(
+                'UPDATE CalendarEventOccurrences SET eventID=?, startTime=?, endTime=?, cancelled=? WHERE occurrenceID=?',
+                array(
+                    $this->getEvent()->getID(),
+                    $this->getStart(),
+                    $this->getEnd(),
+                    $this->isCancelled() ? 1 : 0,
+                    $this->getID()
+                ))
+            ) {
+                return true;
+            }
+        } else {
+            if ($db->query(
+                'INSERT INTO CalendarEventOccurrences (eventID, startTime, endTime, cancelled) VALUES (?, ?, ?, ?)',
+                array(
+                    $this->getEvent()->getID(),
+                    $this->getStart(),
+                    $this->getEnd(),
+                    $this->isCancelled() ? 1 : 0
+                ))
+            ) {
+                $this->id = $db->lastInsertId();
+                return true;
+            }
         }
         return false;
     }
@@ -170,7 +186,7 @@ class EventOccurrence
      */
     public function isCancelled()
     {
-        return $this->cancelled;
+        return !!$this->cancelled;
     }
 
     /**

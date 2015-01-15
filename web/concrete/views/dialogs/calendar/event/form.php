@@ -25,6 +25,9 @@
         <a href="<?= $controller->action('delete') ?>" class="btn pull-right btn-danger" style="margin: .5em .4em .5em 0;cursor: pointer;">
             <?= t('Delete') ?>
         </a>
+        <a href="<?= $controller->action('cancel') ?>" class="btn pull-right btn-warning" style="margin: .5em .4em .5em 0;cursor: pointer;">
+            <?= t('Cancel Occurrence') ?>
+        </a>
     <?php
     }
     ?>
