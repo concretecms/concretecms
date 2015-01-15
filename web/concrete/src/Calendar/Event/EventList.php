@@ -39,7 +39,8 @@ class EventList extends \Concrete\Core\Search\ItemList\Database\AttributedItemLi
 
     public function createQuery()
     {
-        $this->query->select('e.eventID')->from('CalendarEvents', 'e');
+        $this->query->select('e.eventID')->from('CalendarEvents', 'e')
+            ->leftJoin('e', 'CalendarEventSearchIndexAttributes', 'ea', 'e.eventID = ea.eventID');
     }
 
     protected function getAttributeKeyClassName()
