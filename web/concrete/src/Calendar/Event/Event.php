@@ -122,31 +122,42 @@ class Event implements EventInterface
                 ))
             ) {
                 $this->id = intval($connection->lastInsertId(), 10);
-
-                /** @var EventOccurrenceFactory $factory */
-                $factory = \Core::make('calendar/event/occurrence/factory');
-                $start_time = time();
-                $end_time = strtotime('+5 years', $start_time);
-                $occurrences = $this->getRepetition()->activeRangesBetween($start_time, $end_time);
-
-                $initial_occurrence = $factory->createEventOccurrence(
-                    $this,
-                    strtotime($this->repetition->getStartDate()),
-                    strtotime($this->repetition->getEndDate()));
-                $initial_occurrence->save();
-
-                foreach ($occurrences as $occurrence) {
-                    if ($occurrence[0] === $initial_occurrence->getStart()) {
-                        continue;
-                    }
-                    $factory->createEventOccurrence($this, $occurrence[0], $occurrence[1])->save();
-                }
-
                 return true;
             }
         }
 
         return false;
+    }
+
+    /**
+     * @param int $start_time The earliest possible time for an event to occur
+     * @param int $end_time The latest possible time for an event to occur
+     * @return EventOccurrence[]
+     */
+    public function generateOccurrences($start_time, $end_time)
+    {
+        /** @var EventOccurrenceFactory $factory */
+        $factory = \Core::make('calendar/event/occurrence/factory');
+        $occurrences = $this->getRepetition()->activeRangesBetween($start_time, $end_time);
+
+        $initial_occurrence_time = strtotime($this->repetition->getStartDate());
+        $initial_occurrence = $factory->createEventOccurrence(
+            $this,
+            $initial_occurrence_time,
+            strtotime($this->repetition->getEndDate()));
+
+        if ($initial_occurrence_time >= $start_time && $initial_occurrence_time <= $end_time) {
+            $initial_occurrence->save();
+        }
+
+        $all_occurrences = array();
+        foreach ($occurrences as $occurrence) {
+            if ($occurrence[0] === $initial_occurrence->getStart()) {
+                continue;
+            }
+            $all_occurrences[] = $factory->createEventOccurrence($this, $occurrence[0], $occurrence[1])->save();
+        }
+        return $all_occurrences;
     }
 
     /**
