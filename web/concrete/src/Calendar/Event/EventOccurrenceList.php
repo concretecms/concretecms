@@ -22,6 +22,16 @@ class EventOccurrenceList extends AttributedItemList
         $this->query->setParameter('eventID', $ev->getID());
     }
 
+    /**
+     * @param bool $cancelled
+     */
+    public function filterByCancelled($cancelled)
+    {
+        $this->query->andWhere('eo.cancelled = :isCancelled');
+        $this->query->setParameter('isCancelled', !!$cancelled);
+
+    }
+
     public function filterByCalendar(Calendar $calendar)
     {
         $this->query->andWhere('e.caID = :caID');

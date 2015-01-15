@@ -133,7 +133,7 @@ interface RepetitionInterface
     public function getRepeatEveryNum();
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getRepeatPeriodEnd();
 
