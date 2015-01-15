@@ -12,7 +12,7 @@ if (!$scriptName) $scriptName = "search-results-default-file-menu";
             <div class="popover-inner">
                 <ul class="dropdown-menu">
                 <% if (typeof(displayClear) != 'undefined' && displayClear) { %>
-					<li><a href="#" data-file-manager-action="clear"><i class="fa fa-remove"></i><span><?=t('Clear')?></span></a></li>
+					<li><a href="#" data-file-manager-action="clear"><span><?=t('Clear')?></span></a></li>
                     <li class="divider"></li>
                 <% } %>
                 <?php 
