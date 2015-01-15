@@ -149,6 +149,25 @@ class Event implements EventInterface
         return false;
     }
 
+    /**
+     * Reindex the attributes on this Event.
+     * @return void
+     */
+    public function reindex()
+    {
+        $attribs = EventKey::getAttributes(
+            $this->getID(),
+            'getSearchIndexValue'
+        );
+        $db = \Database::connection();
+
+        $db->Execute('delete from CalendarEventSearchIndexAttributes where eventID = ?', array($this->getID()));
+        $searchableAttributes = array('eventID' => $this->getID());
+
+        $key = new EventKey();
+        $key->reindex('CalendarEventSearchIndexAttributes', $searchableAttributes, $attribs);
+    }
+
     public function delete()
     {
         if ($this->getID() > 0) {

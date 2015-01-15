@@ -24,12 +24,12 @@ class EventKey extends Key
      *
      * @return AttributeValueList
      */
-    public static function getAttributes($fID, $fvID, $method = 'getValue')
+    public static function getAttributes($eventID, $method = 'getValue')
     {
         $db = \Database::connection();
         $values = $db->GetAll(
             "SELECT akID, avID FROM CalendarEventAttributeValues WHERE eventID = ?",
-            array($fID, $fvID));
+            array($eventID));
         $avl = new AttributeValueList();
         foreach ($values as $val) {
             $ak = static::getByID($val['akID']);
@@ -180,7 +180,8 @@ class EventKey extends Key
             ),
             array('eventID', 'akID'));
 
+        $event->reindex();
         unset($av);
-        unset($fo);
+        unset($event);
     }
 }
