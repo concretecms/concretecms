@@ -216,7 +216,9 @@ class Package extends Object
             $dbm->generateProxyClasses();
             $dbm->dropObsoleteDatabaseTables(camelcase($this->getPackageHandle()));
             $dbm->installDatabase();
-        } else {
+        }
+
+        if (file_exists($this->getPackagePath() . '/' . FILENAME_PACKAGE_DB)) {
             // Legacy db.xml
             Package::installDB($this->getPackagePath() . '/' . FILENAME_PACKAGE_DB);
         }
@@ -763,7 +765,7 @@ class Package extends Object
 
     public function getPackageEntitiesPath()
     {
-        return $this->getPackagePath() . '/' . DIRNAME_CLASSES . '/' . DIRNAME_ENTITIES;
+        return $this->getPackagePath() . '/' . DIRNAME_CLASSES;
     }
 
     /**
