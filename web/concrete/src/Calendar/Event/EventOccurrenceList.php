@@ -1,12 +1,12 @@
 <?php
 namespace Concrete\Core\Calendar\Event;
 
-use Concrete\Core\Search\ItemList\Database\ItemList;
+use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Concrete\Core\Search\Pagination\Pagination;
 use Concrete\Core\Calendar\Calendar;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 
-class EventOccurrenceList extends ItemList
+class EventOccurrenceList extends AttributedItemList
 {
 
     protected $ev;
@@ -26,6 +26,12 @@ class EventOccurrenceList extends ItemList
     {
         $this->query->andWhere('e.caID = :caID');
         $this->query->setParameter('caID', $calendar->getID());
+    }
+
+    public function filterByStartTimeAfter($startTime)
+    {
+        $this->query->andWhere('eo.startTime >= :startTimeAfter');
+        $this->query->setParameter('startTimeAfter', $startTime);
     }
 
     public function filterByDate($date)
@@ -68,8 +74,14 @@ class EventOccurrenceList extends ItemList
     public function createQuery()
     {
         $this->query->select('eo.occurrenceID')->from('CalendarEventOccurrences', 'eo')
-            ->innerJoin('eo', 'CalendarEvents', 'e', 'e.eventID = eo.eventID');
+            ->innerJoin('eo', 'CalendarEvents', 'e', 'e.eventID = eo.eventID')
+            ->leftJoin('e', 'CalendarEventSearchIndexAttributes', 'ea', 'e.eventID = ea.eventID');
+        $this->query->orderBy('eo.startTime');
+    }
 
+    protected function getAttributeKeyClassName()
+    {
+        return '\\Concrete\\Core\\Attribute\\Key\\EventKey';
     }
 
     /**
