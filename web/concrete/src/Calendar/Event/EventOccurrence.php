@@ -14,13 +14,10 @@ class EventOccurrence
 
     /** @var EventInterface */
     protected $event;
-
     /** @var int The time this occurrence began */
     protected $start;
-
     /** @var int The time this occurrence is scheduled to end */
     protected $end;
-
     /** @var bool Is this cancelled? */
     protected $cancelled;
 
@@ -35,72 +32,6 @@ class EventOccurrence
         $this->event = $event;
         $this->start = $start;
         $this->end = $end;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isCancelled()
-    {
-        return $this->cancelled;
-    }
-
-    /**
-     * @param boolean $cancelled
-     */
-    public function setCancelled($cancelled)
-    {
-        $this->cancelled = $cancelled;
-    }
-
-    public function cancel()
-    {
-        $this->setCancelled(true);
-    }
-
-    /**
-     * @return int
-     */
-    public function getStart()
-    {
-        return $this->start;
-    }
-
-    /**
-     * @param int $start
-     */
-    public function setStart($start)
-    {
-        $this->start = $start;
-    }
-
-    /**
-     * @return int
-     */
-    public function getEnd()
-    {
-        return $this->end;
-    }
-
-    /**
-     * @param int $end
-     */
-    public function setEnd($end)
-    {
-        $this->end = $end;
-    }
-
-    /**
-     * @return EventInterface
-     */
-    public function getEvent()
-    {
-        return $this->event;
-    }
-
-    public function getID()
-    {
-        return $this->id;
     }
 
     /**
@@ -148,7 +79,7 @@ class EventOccurrence
     public static function getByID($id)
     {
         $db = \Database::get();
-        $r = $db->GetRow('select * from CalendarEventOccurrences where occurrenceID = ?', array($id));
+        $r = $db->GetRow('SELECT * FROM CalendarEventOccurrences WHERE occurrenceID = ?', array($id));
         if (is_array($r) && isset($r['occurrenceID'])) {
             $ev = Event::getByID($r['eventID']);
             if (is_object($ev)) {
@@ -157,6 +88,11 @@ class EventOccurrence
                 return $o;
             }
         }
+    }
+
+    public function cancel()
+    {
+        $this->setCancelled(true);
     }
 
     /**
@@ -181,6 +117,70 @@ class EventOccurrence
         return false;
     }
 
+    /**
+     * @return EventInterface
+     */
+    public function getEvent()
+    {
+        return $this->event;
+    }
+
+    /**
+     * @param EventInterface $event
+     */
+    public function setEvent($event)
+    {
+        $this->event = $event;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStart()
+    {
+        return $this->start;
+    }
+
+    /**
+     * @param int $start
+     */
+    public function setStart($start)
+    {
+        $this->start = $start;
+    }
+
+    /**
+     * @return int
+     */
+    public function getEnd()
+    {
+        return $this->end;
+    }
+
+    /**
+     * @param int $end
+     */
+    public function setEnd($end)
+    {
+        $this->end = $end;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isCancelled()
+    {
+        return $this->cancelled;
+    }
+
+    /**
+     * @param boolean $cancelled
+     */
+    public function setCancelled($cancelled)
+    {
+        $this->cancelled = $cancelled;
+    }
+
     public function delete()
     {
         if ($this->getID() > 0) {
@@ -192,13 +192,18 @@ class EventOccurrence
         return false;
     }
 
+    public function getID()
+    {
+        return $this->id;
+    }
+
     public function getJSONObject()
     {
         $ev = $this->getEvent();
         $r = array();
         $r['start'] = $this->getStart();
         $r['end'] = $this->getEnd();
-        return (object) array_merge($r, (array) $ev->getJSONObject());
+        return (object)array_merge($r, (array)$ev->getJSONObject());
     }
 
 }

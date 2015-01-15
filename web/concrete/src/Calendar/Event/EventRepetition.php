@@ -121,7 +121,7 @@ class EventRepetition extends AbstractRepetition
                     $pd->setRepeatPeriodWeekDays($_POST['pdRepeatPeriodWeeksDays']);
                 } elseif ($_POST['pdRepeatPeriod'] == 'monthly') {
                     $pd->setRepeatPeriod(self::REPEAT_MONTHLY);
-                    $repeat = $_POST['pdRepeatPeriodMonthsRepeatBy'] === 'weekly' ?
+                    $repeat = $_POST['pdRepeatPeriodMonthsRepeatBy'] === 'week' ?
                         self::MONTHLY_REPEAT_WEEKLY :
                         self::MONTHLY_REPEAT_MONTHLY;
                     $pd->setRepeatMonthBy($repeat);
@@ -131,7 +131,6 @@ class EventRepetition extends AbstractRepetition
             } else {
                 $pd->setRepeatPeriod(self::REPEAT_NONE);
             }
-            $pd->save();
 
             return $pd;
         } else {

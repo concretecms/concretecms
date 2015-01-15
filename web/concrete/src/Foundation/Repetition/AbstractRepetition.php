@@ -525,7 +525,7 @@ abstract class AbstractRepetition implements RepetitionInterface
                     }
 
                     $weeks = floor(($start_time - $repetition_start) / (86400 * 7));
-                    if ($difference = ($weeks % 3)) {
+                    if ($difference = ($weeks % $repetition_num)) {
                         $start_time = strtotime(
                             "+{$repetition_num} weeks",
                             strtotime("-{$difference} weeks", $start_time));

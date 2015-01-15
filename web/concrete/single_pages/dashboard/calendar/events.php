@@ -75,7 +75,7 @@
                             <div class="ccm-dashboard-calendar-date-event">
                                 <a class="dialog-launch" dialog-width="640" dialog-title="<?=t('Edit Event')?>" dialog-height="400"
                                    href="<?= URL::to('/ccm/system/dialogs/calendar/event/edit', $occurrence->getID())?>">
-                                    <?= t($occurrence->getEvent()->getName()) ?>
+                                    <?= t($occurrence->getEvent()->getName()) ?: "&nbsp;" ?>
                                 </a>
                             </div>
                             <?
