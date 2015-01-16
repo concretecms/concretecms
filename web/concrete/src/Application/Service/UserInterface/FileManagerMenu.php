@@ -17,26 +17,26 @@ class FileManagerMenu
         $default = array (
 
             "ccm_view"       => array( "label"=> t('View'), "url"=> $uh->getToolsURL('files/view'), // TODO refactor tool to a route
-                                       "type" => FileMenuItem::ACTION_OPEN_DIALOG, 'perms' => array( FileMenuItem::CAN_VIEW ), 'ability' => FileMenuItem::CAN_UNIQUE,
+                                       "type" => FileMenuItem::ACTION_OPEN_DIALOG, 'perms' => array( FileMenuItem::CAN_VIEW ), 'ability' => FileMenuItem::ABILITY_UNIQUE,
                                        "options" => array( 'modal' => 'false', 'buttons' => 'true', 'height' =>  '75%', 'width' => '90%') ),
 
             "ccm_download"   => array( "label"=> t('Download'), "url"=>\URL::to('/ccm/system/file/download'),
                                        "type" => FileMenuItem::ACTION_DOWNLOAD, 'perms' => array(FileMenuItem::CAN_VIEW) ),
 
             "ccm_edit"       => array( "label"=> t('Edit'), "url"=> $uh->getToolsURL('files/edit'), // TODO refactor tool to a route
-                                       "type" => FileMenuItem::ACTION_OPEN_DIALOG, 'perms' => array( FileMenuItem::CAN_EDIT), 'ability' => FileMenuItem::CAN_UNIQUE,
+                                       "type" => FileMenuItem::ACTION_OPEN_DIALOG, 'perms' => array( FileMenuItem::CAN_EDIT), 'ability' => FileMenuItem::ABILITY_UNIQUE,
                                        "options" => array( 'modal' => 'true', 'height' =>  '70%', 'width' => '90%') ),
 
             "ccm_bulk_properties" => array( "label" => t('Properties'), "url" => \URL::to('/ccm/system/dialogs/file/bulk/properties'), 
-                                        "type" => FileMenuItem::ACTION_OPEN_DIALOG,  'ability' => FileMenuItem::CAN_MULTIPLE,
+                                        "type" => FileMenuItem::ACTION_OPEN_DIALOG,  'ability' => FileMenuItem::ABILITY_MULTIPLE,
                                         'options' =>  array( "width"=> "680", "height" => 450 )),
 
             "ccm_properties" => array( "label" => t('Properties'), "url" => \URL::to('/ccm/system/dialogs/file/properties'), 
-                                        "type" => FileMenuItem::ACTION_OPEN_DIALOG,  'ability' => FileMenuItem::CAN_UNIQUE,
+                                        "type" => FileMenuItem::ACTION_OPEN_DIALOG,  'ability' => FileMenuItem::ABILITY_UNIQUE,
                                         'options' =>  array( "width"=> "680", "height" => 450 )),
 
             "ccm_replace"    => array( "label"=> t('Replace'), "url"=> $uh->getToolsURL('files/replace'), // TODO refactor tool to a route
-                                       "type" => FileMenuItem::ACTION_OPEN_DIALOG, 'perms' => array( FileMenuItem::CAN_REPLACE), 'ability' => FileMenuItem::CAN_UNIQUE,
+                                       "type" => FileMenuItem::ACTION_OPEN_DIALOG, 'perms' => array( FileMenuItem::CAN_REPLACE), 'ability' => FileMenuItem::ABILITY_UNIQUE,
                                        "options" => array( 'modal' => 'true', 'height' =>  '500', 'width' => '200')),
 
             "ccm_duplicate"  => array( "label" => t('Duplicate'), "url" => \URL::to('/ccm/system/file/duplicate'),// FIXME: For now duplicate is broken on Doctrine side
@@ -52,7 +52,7 @@ class FileManagerMenu
             "ccm_dangerous"  => array( 'type' => FileMenuItem::ACTION_SEPARATOR ),
 
             "ccm_perms"      => array( "label" => t('Permissions'), "url" => $uh->getToolsURL('files/permissions'),      // TODO refactor and remove tools once and for all
-                                        "type" => FileMenuItem::ACTION_OPEN_DIALOG, 'perms' => array( FileMenuItem::CAN_PERMS ), 'ability' => FileMenuItem::CAN_UNIQUE, // TODO: This tool would be nice as CAN_ALL
+                                        "type" => FileMenuItem::ACTION_OPEN_DIALOG, 'perms' => array( FileMenuItem::CAN_PERMS ), 'ability' => FileMenuItem::ABILITY_UNIQUE, // TODO: This tool would be nice as ABILITY_ALL
                                         "options" => array( "width"=>"500", "height"=>"400", )),
 
             "ccm_delete"     => array( "label" => t('Delete'),  "url" => \URL::to('/ccm/system/dialogs/file/bulk/delete'),
@@ -153,7 +153,7 @@ class FileManagerMenu
             \Events::dispatch('on_file_manager_bulk_menu');
         }
 
-        return $this->getFilteredMenu(FileMenuItem::CAN_MULTIPLE);
+        return $this->getFilteredMenu(FileMenuItem::ABILITY_MULTIPLE);
     }
 
     public function getFileContextMenu()
@@ -164,6 +164,6 @@ class FileManagerMenu
             \Events::dispatch('on_file_manager_context_menu');
         }
 
-        return $this->getFilteredMenu(FileMenuItem::CAN_UNIQUE);
+        return $this->getFilteredMenu(FileMenuItem::ABILITY_UNIQUE);
     }
 }
