@@ -17,7 +17,7 @@ if ($to->getPackageHandle() != '') {
 
 <div class="dialog-buttons">
 <form method="post" action="<?=\URL::to('/ccm/system/file/download')?>?fID=<?=$f->getFileID()?>&fvID=<?=$f->getFileVersionID()?>" style="margin: 0px">
-<label class="ccm-resize-related"><input id="ccm-resize-control" type="checkbox" checked/><?=t('Resize to dialog size')?></label>
+<label class="ccm-resize-related"><input id="ccm-resize-control" type="checkbox" /><?=t('View actual size')?></label>
 <?=$form->submit('submit', t('Download'), array('class' => 'btn btn-primary pull-right'))?>
 </form>
 </div>
@@ -36,9 +36,9 @@ $(function(){
 		function updateResizeTarget() {
 			var mustResize = $('#ccm-resize-control').is(':checked');
 			if (mustResize) {
-				$('.ccm-resize-target').addClass('responsive');
-			} else {
 				$('.ccm-resize-target').removeClass('responsive');
+			} else {
+				$('.ccm-resize-target').addClass('responsive');
 			}
 		}
 		$('#ccm-resize-control').change(updateResizeTarget);
