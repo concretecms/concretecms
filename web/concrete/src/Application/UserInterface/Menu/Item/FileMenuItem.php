@@ -23,20 +23,20 @@ class FileMenuItem extends Item
         $this->actionType = $type; 
     }
 
-    const CAN_UNIQUE        = 1;
-    const CAN_MULTIPLE      = 2;
-    const CAN_ALL           = 3;
+    const ABILITY_UNIQUE        = 1;
+    const ABILITY_MULTIPLE      = 2;
+    const ABILITY_ALL           = 3;
 
-    protected $abilities    = self::CAN_ALL;
+    protected $abilities    = self::ABILITY_ALL;
 
     public function handleMultiple()
     { 
-        return $this->abilities & self::CAN_MULTIPLE; 
+        return $this->abilities & self::ABILITY_MULTIPLE; 
     }
 
     public function handleUnique()
     { 
-        return $this->abilities & self::CAN_UNIQUE; 
+        return $this->abilities & self::ABILITY_UNIQUE; 
     }
 
     public function setAbilities($abilities)
