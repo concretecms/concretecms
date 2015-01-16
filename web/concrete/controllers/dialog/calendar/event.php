@@ -187,13 +187,15 @@ class Event extends BackendInterfaceController
             if ($occurrence) {
                 /** @var \Concrete\Core\Calendar\Event\Event $event */
                 $event = $occurrence->getEvent();
-                $event->delete();
 
                 $occurrence_list = new EventOccurrenceList();
                 $occurrence_list->filterByEvent($event);
-                foreach ($occurrence_list->getResults() as $occurrence_row) {
-                    $occurrence_list->getResult($occurrence_row)->delete();
+                foreach ($occurrence_list->getResults() as $occurrence) {
+                    $occurrence->delete();
                 }
+
+                $event->delete();
+
                 $r = new RedirectResponse(
                     \URL::to(
                         '/dashboard/calendar/events/',
