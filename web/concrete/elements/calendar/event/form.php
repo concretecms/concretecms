@@ -7,23 +7,25 @@ use Concrete\Core\Calendar\Event\EventOccurrence;
     /** @var EventOccurrence $occurrence */
     if ($occurrence) {
         $event = $occurrence->getEvent();
-        ?>
-        <fieldset>
-            <div class="form-group">
-                <div class="radio">
-                    <label>
-                        <input type="radio" name="edit_type" value="all" checked /> <?= t('All occurrences') ?>
-                    </label>
+        if ($event->getRepetition()->repeats()) {
+            ?>
+            <fieldset>
+                <div class="form-group">
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="edit_type" value="all" checked/> <?= t('All occurrences') ?>
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="edit_type" value="local"/> <?= t('Just this occurrence') ?>
+                        </label>
+                    </div>
                 </div>
-                <div class="radio">
-                    <label>
-                        <input type="radio" name="edit_type" value="local" /> <?= t('Just this occurrence') ?>
-                    </label>
-                </div>
-            </div>
-        </fieldset>
+            </fieldset>
 
         <?php
+        }
     }
     ?>
 

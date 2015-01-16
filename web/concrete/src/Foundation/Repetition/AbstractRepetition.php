@@ -512,7 +512,7 @@ abstract class AbstractRepetition implements RepetitionInterface
         }
 
         if ($repetition_final && $end > $repetition_final) {
-            $end = $repetition_final;
+            $end = strtotime('+1 day', $repetition_final);
         }
 
         if ($start > $end) {
