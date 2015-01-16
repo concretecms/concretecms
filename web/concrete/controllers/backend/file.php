@@ -14,7 +14,6 @@ use FileVersion;
 
 class File extends Controller
 {
-
     public function star()
     {
         $fs = FileSet::createAndGetSet('Starred Files', FileSet::TYPE_STARRED);
@@ -270,6 +269,25 @@ class File extends Controller
         } else {
             $this->stream(intval($target), isset($_REQUEST['fvID']) ? intval($_REQUEST['fvID']) : null);
         }
+    }
+
+
+    public function view()
+    {
+	$this->setViewPath('/backend/file_view');
+
+        $files = $this->getRequestFiles('canViewFile');
+        $f = $files[0];
+        if (isset($_REQUEST['fvID'])) {
+            $fv = $f->getVersion(\Core::make('helper/security')->sanitizeInt($_REQUEST['fvID']));
+        } else {
+            $fv = $f->getApprovedVersion();
+        }
+
+        $this->set('f', $f);
+        $this->set('fv', $fv);
+        $this->set('to', $fv->getTypeObject());
+
     }
 
 }

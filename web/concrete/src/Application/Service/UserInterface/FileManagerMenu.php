@@ -16,9 +16,9 @@ class FileManagerMenu
 
         $default = array (
 
-            "ccm_view"       => array( "label"=> t('View'), "url"=> $uh->getToolsURL('files/view'), // TODO refactor tool to a route
+            "ccm_view"       => array( "label"=> t('View'), "url"=>\URL::to('/ccm/system/file/view'),
                                        "type" => FileMenuItem::ACTION_OPEN_DIALOG, 'perms' => array( FileMenuItem::CAN_VIEW ), 'ability' => FileMenuItem::ABILITY_UNIQUE,
-                                       "options" => array( 'modal' => 'false', 'buttons' => 'true', 'height' =>  '75%', 'width' => '90%') ),
+                                       "options" => array( 'modal' => 'false', 'height' =>  '75%', 'width' => '90%') ),
 
             "ccm_download"   => array( "label"=> t('Download'), "url"=>\URL::to('/ccm/system/file/download'),
                                        "type" => FileMenuItem::ACTION_DOWNLOAD, 'perms' => array(FileMenuItem::CAN_VIEW) ),
