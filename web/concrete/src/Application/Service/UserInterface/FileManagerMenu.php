@@ -16,14 +16,14 @@ class FileManagerMenu
 
         $default = array (
 
-            "ccm_view"       => array( "label"=> t('View'), "url"=>\URL::to('/ccm/system/file/view'),
+            "ccm_view"       => array( "label"=> t('View'), "url" => \URL::to('/ccm/system/file/view'),
                                        "type" => FileMenuItem::ACTION_OPEN_DIALOG, 'perms' => array( FileMenuItem::CAN_VIEW ), 'ability' => FileMenuItem::ABILITY_UNIQUE,
                                        "options" => array( 'modal' => 'false', 'height' =>  '75%', 'width' => '90%') ),
 
             "ccm_download"   => array( "label"=> t('Download'), "url"=>\URL::to('/ccm/system/file/download'),
                                        "type" => FileMenuItem::ACTION_DOWNLOAD, 'perms' => array(FileMenuItem::CAN_VIEW) ),
 
-            "ccm_edit"       => array( "label"=> t('Edit'), "url"=> $uh->getToolsURL('files/edit'), // TODO refactor tool to a route
+            "ccm_edit"       => array( "label"=> t('Edit'), "url" => \URL::to('/ccm/system/file/edit'),
                                        "type" => FileMenuItem::ACTION_OPEN_DIALOG, 'perms' => array( FileMenuItem::CAN_EDIT), 'ability' => FileMenuItem::ABILITY_UNIQUE,
                                        "options" => array( 'modal' => 'true', 'height' =>  '70%', 'width' => '90%') ),
 
@@ -39,7 +39,7 @@ class FileManagerMenu
                                        "type" => FileMenuItem::ACTION_OPEN_DIALOG, 'perms' => array( FileMenuItem::CAN_REPLACE), 'ability' => FileMenuItem::ABILITY_UNIQUE,
                                        "options" => array( 'modal' => 'true', 'height' =>  '500', 'width' => '200')),
 
-            "ccm_duplicate"  => array( "label" => t('Duplicate'), "url" => \URL::to('/ccm/system/file/duplicate'),// FIXME: For now duplicate is broken on Doctrine side
+            "ccm_duplicate"  => array( "label" => t('Duplicate'), "url" => \URL::to('/ccm/system/file/duplicate'),
                                        "type" => FileMenuItem::ACTION_AJAX_REQUEST, 'perms' => array( FileMenuItem::CAN_COPY)),
 
             "ccm_sets"       => array( "label" => t('Sets'), "url" => $uh->getToolsURL('files/add_to'),      // TODO refactor and remove tools once and for all

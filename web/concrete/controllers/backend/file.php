@@ -290,5 +290,20 @@ class File extends Controller
 
     }
 
+    public function edit()
+    {
+	$this->setViewPath('/backend/file_edit');
+
+        $files = $this->getRequestFiles('canEditFileContents');
+
+        $f = $files[0];
+        $fv = $f->getApprovedVersion();
+
+        $this->set('f', $f);
+        $this->set('fv', $fv);
+        $this->set('to', $fv->getTypeObject());
+
+    }
+
 }
 
