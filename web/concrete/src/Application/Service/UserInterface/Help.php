@@ -180,7 +180,7 @@ class Help
     /**
      * @param $type
      * @param $identifier
-     * @return void
+     * @return void|bool
      */
     public function notify($type, $identifier)
     {
