@@ -12,7 +12,7 @@ class Validation
      * @param string $uName
      * @return bool
      */
-    function isUniqueUsername($uName)
+    public function isUniqueUsername($uName)
     {
         $db = Loader::db();
         $q = "select uID from Users where uName = ?";
@@ -30,7 +30,7 @@ class Validation
      * @return bool
      * @param string $uEmail
      */
-    function isUniqueEmail($uEmail)
+    public function isUniqueEmail($uEmail)
     {
         $db = Loader::db();
         $q = "select uID from Users where uEmail = ?";
