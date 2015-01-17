@@ -103,7 +103,7 @@ abstract class Column extends Object
     }
 
     /**
-     * @param $newAreaLayout
+     * @param Column $newAreaLayout
      * @return int
      */
     protected function duplicate($newAreaLayout)
