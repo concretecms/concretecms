@@ -144,18 +144,6 @@ return array(
     'routes'              => array(
 
         /**
-         * Tools - legacy
-         */
-        "/tools/blocks/{btHandle}/{tool}"                                               => array(
-            '\Concrete\Core\Legacy\Controller\ToolController::displayBlock',
-            'blockTool',
-            array('tool' => '[A-Za-z0-9_/.]+')),
-        "/tools/{tool}"                                                                 => array(
-            '\Concrete\Core\Legacy\Controller\ToolController::display',
-            'tool',
-            array('tool' => '[A-Za-z0-9_/.]+')),
-
-        /**
          * Dialog
          */
         "/ccm/system/dialogs/page/delete"                                               => array('\Concrete\Controller\Dialog\Page\Delete::view'),
@@ -271,6 +259,14 @@ return array(
         "/ccm/system/css/page/{cID}/{stylesheet}"                                       => array('\Concrete\Controller\Frontend\Stylesheet::page'),
         "/ccm/system/css/layout/{bID}"                                                  => array('\Concrete\Controller\Frontend\Stylesheet::layout'),
         "/ccm/system/backend/editor_data/"                                              => array('\Concrete\Controller\Backend\EditorData::view'),
+        "/ccm/system/jobs"                                                              => array('\Concrete\Controller\Frontend\Jobs::view'),
+        "/ccm/system/jobs/run_single"                                                   => array('\Concrete\Controller\Frontend\Jobs::run_single'),
+        "/ccm/system/jobs/check_queue"                                                  => array('\Concrete\Controller\Frontend\Jobs::check_queue'),
+        // @TODO remove the line below
+        "/tools/required/jobs"                                                          => array('\Concrete\Controller\Frontend\Jobs::view'),
+        "/tools/required/jobs/check_queue"                                              => array('\Concrete\Controller\Frontend\Jobs::check_queue'),
+        "/tools/required/jobs/run_single"                                               => array('\Concrete\Controller\Frontend\Jobs::run_single'),
+        // end removing lines
         "/ccm/system/upgrade/"                                                          => array('\Concrete\Controller\Upgrade::view'),
         "/ccm/system/upgrade/submit"                                                    => array('\Concrete\Controller\Upgrade::submit'),
 
@@ -365,6 +361,19 @@ return array(
          * Special Dashboard
          */
         "/dashboard/blocks/stacks/list"                                                 => array('\Concrete\Controller\SinglePage\Dashboard\Blocks\Stacks::list_page'),
+
+        /**
+         * Tools - legacy
+         */
+        "/tools/blocks/{btHandle}/{tool}"                                               => array(
+            '\Concrete\Core\Legacy\Controller\ToolController::displayBlock',
+            'blockTool',
+            array('tool' => '[A-Za-z0-9_/.]+')),
+        "/tools/{tool}"                                                                 => array(
+            '\Concrete\Core\Legacy\Controller\ToolController::display',
+            'tool',
+            array('tool' => '[A-Za-z0-9_/.]+')),
+
     ),
 
     /**

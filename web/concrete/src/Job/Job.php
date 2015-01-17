@@ -112,6 +112,10 @@ abstract class Job extends Object
     // Job Retrieval
     // ==============
 
+    /**
+     * @param bool $scheduledOnly
+     * @return Job[]
+     */
     public static function getList($scheduledOnly = false)
     {
         $db = Loader::db();
