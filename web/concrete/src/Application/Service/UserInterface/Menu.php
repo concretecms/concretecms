@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Application\Service\UserInterface;
 
 use Concrete\Core\Application\UserInterface\Menu\Item\Item;
