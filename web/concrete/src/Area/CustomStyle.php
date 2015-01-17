@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\Area;
+
 use Concrete\Core\StyleCustomizer\Inline\CustomStyle as AbstractCustomStyle;
 use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 use Core;
@@ -7,15 +8,25 @@ use Core;
 class CustomStyle extends AbstractCustomStyle
 {
 
+    /**
+     * @var string
+     */
     protected $arHandle;
+
+    /**
+     * @var StyleSet
+     */
     protected $set;
 
-    public function __construct(StyleSet $set = null, $arHandle)
+    public function __construct(StyleSet $set = null, $arHandle = null)
     {
         $this->arHandle = $arHandle;
         $this->set = $set;
     }
 
+    /**
+     * @return string
+     */
     public function getCSS()
     {
         $set = $this->set;
@@ -87,6 +98,9 @@ class CustomStyle extends AbstractCustomStyle
         return $css;
     }
 
+    /**
+     * @return string
+     */
     public function getContainerClass()
     {
         $class = 'ccm-custom-style-';
