@@ -2,6 +2,7 @@
 namespace Concrete\Core\Application\Service;
 
 use View;
+use Core;
 use Loader;
 use \Concrete\Core\File\Type\Type as FileType;
 use File;
@@ -29,7 +30,7 @@ class FileManager
          * use that file
          * If not try to use the $bf parameter passed in
          */
-        $vh = Loader::helper('validation/numbers');
+        $vh = Core::make('helper/validation/numbers');
         if (isset($_POST[$postname]) && $vh->integer($_POST[$postname])) {
             $postFile = File::getByID($_POST[$postname]);
             if (is_object($postFile) && $postFile->getFileID() > 0) {
@@ -42,7 +43,9 @@ class FileManager
         }
 
         $filters = '[]';
-        if ( $filterArgs['filters'] ) $filters = json_encode($filterArgs['filters']);
+        if ($filterArgs['filters']) {
+            $filters = json_encode($filterArgs['filters']);
+        }
 
         if ($fileID) {
             $args = "{'inputName': '{$postname}', 'fID': {$fileID}, 'filters': $filters }";
