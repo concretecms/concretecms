@@ -14,6 +14,9 @@ class Set extends Object {
 	public $scheduledInterval = 'days'; // hours|days|weeks|months
 	public $scheduledValue = 0;
 
+	/**
+	 * @return JobSet[]
+	 */
 	public static function getList() {
 		$db = Loader::db();
 		$r = $db->Execute('select jsID, pkgID, jsName, jDateLastRun, isScheduled, scheduledInterval, scheduledValue from JobSets order by jsName asc');
@@ -118,6 +121,9 @@ class Set extends Object {
 		$db->Execute('delete from JobSetJobs where jsID = ?', array($this->jsID));
 	}
 
+	/**
+	 * @return Job[]
+	 */
 	public function getJobs() {
 		$db = Loader::db();
 		$r = $db->Execute('select jID from JobSetJobs where jsID = ? order by jID asc', $this->getJobSetId());
