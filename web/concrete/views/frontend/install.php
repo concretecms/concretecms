@@ -142,7 +142,7 @@ $(function() {
 <div class="row">
 <div class="col-md-5 col-md-offset-1">
 
-	<input type="hidden" name="locale" value="<?=$locale?>" />
+	<input type="hidden" name="locale" value="<?=h($locale)?>" />
 
 	<fieldset>
 		<legend><?=t('Site Information')?></legend>
@@ -504,7 +504,7 @@ $(function() {
 <div class="col-sm-10 col-sm-offset-1">
 <div class="well" id="install-success">
 	<form method="post" action="<?=$view->url('/install','setup')?>">
-	<input type="hidden" name="locale" value="<?=$locale?>" />
+	<input type="hidden" name="locale" value="<?=h($locale)?>" />
 	<a class="btn btn-large btn-primary" href="javascript:void(0)" onclick="$(this).parent().submit()"><?=t('Continue to Installation')?> <i class="fa fa-arrow-right fa-white"></i></a>
 	</form>
 </div>
@@ -513,7 +513,7 @@ $(function() {
 	<?=t('There are problems with your installation environment. Please correct them and click the button below to re-run the pre-installation tests.')?>
     <br/><br/>
 	<form method="post" action="<?=$view->url('/install')?>">
-    	<input type="hidden" name="locale" value="<?=$locale?>" />
+    	<input type="hidden" name="locale" value="<?=h($locale)?>" />
     	<button class="btn btn-default" type="submit"><?=t('Run Tests')?> <i class="fa fa-refresh"></i></button>
 	</form>
 </div>
