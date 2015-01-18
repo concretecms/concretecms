@@ -3818,6 +3818,7 @@
       <col>cRequiresReindex</col>
   </index>
   </table>
+    <!--
   <table name="PageStatistics">
     <opt platform="MYSQL">ENGINE=MYISAM</opt>
     <opt platform="MYSQLT">ENGINE=MYISAM</opt>
@@ -3851,6 +3852,7 @@
       <col>uID</col>
     </index>
   </table>
+  -->
   <table name="PageThemes">
     <field name="pThemeID" type="I" size="10">
       <key/>
