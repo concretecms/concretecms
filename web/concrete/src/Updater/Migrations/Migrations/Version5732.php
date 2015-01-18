@@ -3,9 +3,8 @@ namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
-use Concrete\Core\Block\BlockType\BlockType;
 
-class Version5731 extends AbstractMigration
+class Version5732 extends AbstractMigration
 {
 
     public function getName()
