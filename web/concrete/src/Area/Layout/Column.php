@@ -4,7 +4,7 @@ namespace Concrete\Core\Area\Layout;
 use Loader;
 use \Concrete\Core\Foundation\Object;
 use \Concrete\Core\Area\SubArea;
-use Page
+use Page;
 use Area;
 
 abstract class Column extends Object
