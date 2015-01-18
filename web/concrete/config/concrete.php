@@ -785,7 +785,7 @@ return array(
          * @var bool
          */
         'url_rewriting'        => false,
-        'url_rewriting_all'        => false,
+        'url_rewriting_all'    => false,
         'redirect_to_base_url' => false,
         'trailing_slash'       => false,
         'title_format'         => '%1$s :: %2$s',
@@ -801,7 +801,7 @@ return array(
      * ------------------------------------------------------------------------
      */
     'statistics'        => array(
-        'track_page_views' => true
+//        'track_page_views' => true
     ),
     'limits'            => array(
         'sitemap_pages'           => 100,
