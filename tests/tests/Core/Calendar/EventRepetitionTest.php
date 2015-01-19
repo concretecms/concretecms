@@ -179,6 +179,22 @@ class EventRepetitionTest extends \ConcreteDatabaseTestCase
 
     public function testMonthlyRecurring()
     {
+        // -- Last day of the week
+        $monthly_ldotw_repetition = new EventRepetition();
+        $monthly_ldotw_repetition->setStartDate(date('Y-m-d 01:00:00', strtotime('second saturday of december 1992')));
+        $monthly_ldotw_repetition->setEndDate(date('Y-m-d 03:00:00', strtotime('second saturday of december 1992')));
+
+        $monthly_ldotw_repetition->setEndDateAllDay(false);
+        $monthly_ldotw_repetition->setStartDateAllDay(false);
+
+        $monthly_ldotw_repetition->setRepeatPeriod($monthly_ldotw_repetition::REPEAT_MONTHLY);
+        $monthly_ldotw_repetition->setRepeatMonthBy($monthly_ldotw_repetition::MONTHLY_REPEAT_LAST_WEEKDAY);
+        $monthly_ldotw_repetition->setRepeatMonthLastWeekday(1); // Monday
+        $monthly_ldotw_repetition->setRepeatEveryNum(1);
+
+        $this->assertTrue(
+            $monthly_ldotw_repetition->isActive(
+                strtotime(date('Y-m-d 01:30:00', strtotime('last monday of march 2205')))));
 
         // -- Weekly
         $monthly_weekly_repetition = new EventRepetition();

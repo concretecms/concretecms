@@ -53,8 +53,16 @@ if (is_object($pd)) {
         $pdRepeatPeriod = 'monthly';
         $pdRepeatPeriodMonthsEvery = $pd->getRepeatPeriodEveryNum();
     }
-    if ($pd->getRepeatMonthBy() != '') {
-        $pdRepeatPeriodMonthsRepeatBy = $pd->getRepeatMonthBy() === Duration::MONTHLY_REPEAT_MONTHLY ? 'month' : 'week';
+    $pdRepeatPeriodMonthsRepeatLastDay = $pd->getRepeatMonthLastWeekday();
+    $rmb = $pd->getRepeatMonthBy();
+    if ($rmb) {
+        if ($rmb === Duration::MONTHLY_REPEAT_MONTHLY) {
+            $pdRepeatPeriodMonthsRepeatBy = 'month';
+        } elseif ($rmb === Duration::MONTHLY_REPEAT_WEEKLY) {
+            $pdRepeatPeriodMonthsRepeatBy = 'week';
+        } elseif ($rmb === Duration::MONTHLY_REPEAT_LAST_WEEKDAY) {
+            $pdRepeatPeriodMonthsRepeatBy = 'lastweekday';
+        }
     }
     $pdEndRepeatDateSpecific = $pd->getRepeatPeriodEnd();
     if ($pdEndRepeatDateSpecific) {
@@ -145,6 +153,23 @@ $dt = Loader::helper('form/date_time');
                             'pdRepeatPeriodMonthsRepeatBy',
                             'week',
                             $pdRepeatPeriodMonthsRepeatBy) ?> <?= t('Day of Week') ?></label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <?= $form->radio(
+                            'pdRepeatPeriodMonthsRepeatBy',
+                            'lastweekday',
+                            $pdRepeatPeriodMonthsRepeatBy) ?> <?= t('The last ') ?>
+                        <select name="pdRepeatPeriodMonthsRepeatLastDay">
+                            <option value="0" <?= $pdRepeatPeriodMonthsRepeatLastDay == 0 ? 'selected' : '' ?>><?= t('Sunday') ?></option>
+                            <option value="1" <?= $pdRepeatPeriodMonthsRepeatLastDay == 1 ? 'selected' : '' ?>><?= t('Monday') ?></option>
+                            <option value="2" <?= $pdRepeatPeriodMonthsRepeatLastDay == 2 ? 'selected' : '' ?>><?= t('Tuesday') ?></option>
+                            <option value="3" <?= $pdRepeatPeriodMonthsRepeatLastDay == 3 ? 'selected' : '' ?>><?= t('Wednesday') ?></option>
+                            <option value="4" <?= $pdRepeatPeriodMonthsRepeatLastDay == 4 ? 'selected' : '' ?>><?= t('Thursday') ?></option>
+                            <option value="5" <?= $pdRepeatPeriodMonthsRepeatLastDay == 5 ? 'selected' : '' ?>><?= t('Friday') ?></option>
+                            <option value="6" <?= $pdRepeatPeriodMonthsRepeatLastDay == 6 ? 'selected' : '' ?>><?= t('Saturday') ?></option>
+                        </select>
+                    </label>
                 </div>
             </div>
         </div>

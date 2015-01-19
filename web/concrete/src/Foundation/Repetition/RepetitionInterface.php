@@ -17,6 +17,7 @@ interface RepetitionInterface
      */
     const MONTHLY_REPEAT_WEEKLY = 1;
     const MONTHLY_REPEAT_MONTHLY = 2;
+    const MONTHLY_REPEAT_LAST_WEEKDAY = 3;
 
     /**
      * The ID of this repetition, null for unsaved

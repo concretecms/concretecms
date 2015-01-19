@@ -13,12 +13,17 @@ use Concrete\Core\Calendar\Event\EventOccurrence;
                 <div class="form-group">
                     <div class="radio">
                         <label>
-                            <input type="radio" name="edit_type" value="all" checked/> <?= t('All occurrences') ?>
+                            <input type="radio" name="edit_type" value="forward" data-start="<?= $occurrence->getStart() ?>" data-end="<?php $occurrence->getEnd() ?>"/> <?= t('Occurrences after this one') ?>
                         </label>
                     </div>
                     <div class="radio">
                         <label>
                             <input type="radio" name="edit_type" value="local"/> <?= t('Just this occurrence') ?>
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="edit_type" value="all" checked/> <?= t('All occurrences') ?>
                         </label>
                     </div>
                 </div>

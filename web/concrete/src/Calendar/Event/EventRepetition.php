@@ -81,7 +81,7 @@ class EventRepetition extends AbstractRepetition
     /**
      * @return EventRepetition|null
      */
-    public static function translateFromRequest($request)
+    public static function translateFromRequest($request, $new = false)
     {
         $dt = \Core::make('helper/form/date_time');
         $dateStart = $dt->translate('pdStartDate');
@@ -89,7 +89,7 @@ class EventRepetition extends AbstractRepetition
 
         if ($dateStart || $dateEnd) {
             // create a Repetition object
-            if ($request->request->get('repetitionID')) {
+            if (!$new && $request->request->get('repetitionID')) {
                 $pd = static::getByID($request->request->get('repetitionID'));
             } else {
                 $pd = new static();
@@ -121,9 +121,23 @@ class EventRepetition extends AbstractRepetition
                     $pd->setRepeatPeriodWeekDays($_POST['pdRepeatPeriodWeeksDays']);
                 } elseif ($_POST['pdRepeatPeriod'] == 'monthly') {
                     $pd->setRepeatPeriod(self::REPEAT_MONTHLY);
-                    $repeat = $_POST['pdRepeatPeriodMonthsRepeatBy'] === 'week' ?
-                        self::MONTHLY_REPEAT_WEEKLY :
-                        self::MONTHLY_REPEAT_MONTHLY;
+
+                    $repeat_by = $_POST['pdRepeatPeriodMonthsRepeatBy'];
+                    $repeat = self::MONTHLY_REPEAT_WEEKLY;
+                    switch ($repeat_by) {
+                        case 'week':
+                            $repeat = self::MONTHLY_REPEAT_WEEKLY;
+                            break;
+                        case 'month':
+                            $repeat = self::MONTHLY_REPEAT_MONTHLY;
+                            break;
+                        case 'lastweekday':
+                            $repeat = self::MONTHLY_REPEAT_LAST_WEEKDAY;
+                            $dotw = $request->request->get('pdRepeatPeriodMonthsRepeatLastDay', 0);
+                            $pd->setRepeatMonthLastWeekday($dotw);
+                            break;
+                    }
+
                     $pd->setRepeatMonthBy($repeat);
                     $pd->setRepeatEveryNum($_POST['pdRepeatPeriodMonthsEvery']);
                 }
