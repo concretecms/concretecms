@@ -34,7 +34,11 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
 </div>
 
 <h2><?= $monthText ?>
-    <small><?= $year ?></small>
+    <select id="ccm-dashboard-calendar-year-selector">
+        <? for ($i = 1970; $i <= 2085; $i++) { ?>
+            <option value="<?=$i?>" <? if ($year == $i) { ?>selected<? } ?>><?=$i?></option>
+        <? } ?>
+    </select>
 </h2>
 
 <table class="ccm-dashboard-calendar table table-bordered">
@@ -148,6 +152,10 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
             });
         });
 
+        $('select#ccm-dashboard-calendar-year-selector').on('change', function() {
+           window.location.href='<?=URL::to('/dashboard/calendar/events', 'view', $calendar->getID())?>/'
+           + $(this).val() + '/' + '<?=$month?>';
+        });
     });
 </script>
 
@@ -166,7 +174,7 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
     }
 
     div.ccm-dashboard-calendar-date-wrap {
-        min-height: 110px;
+        min-height: 80px;
     }
 
     div.ccm-dashboard-calendar-date {
