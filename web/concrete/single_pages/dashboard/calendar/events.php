@@ -166,7 +166,7 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
     }
 
     div.ccm-dashboard-calendar-date-wrap {
-        height: 110px;
+        min-height: 110px;
     }
 
     div.ccm-dashboard-calendar-date {
@@ -193,6 +193,11 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
         margin-left: -8px;
         margin-right: -8px;
         text-decoration: none;
+        border-top: 1px solid white;
+    }
+
+    div.ccm-dashboard-calendar-date + div.ccm-dashboard-calendar-date-event a {
+        border-top: none;
     }
 
     div.ccm-dashboard-calendar-date-event-cancelled > span {

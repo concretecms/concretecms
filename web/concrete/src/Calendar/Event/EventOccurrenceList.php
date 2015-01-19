@@ -86,7 +86,7 @@ class EventOccurrenceList extends AttributedItemList
         $this->query->select('eo.occurrenceID')->from('CalendarEventOccurrences', 'eo')
             ->innerJoin('eo', 'CalendarEvents', 'e', 'e.eventID = eo.eventID')
             ->leftJoin('e', 'CalendarEventSearchIndexAttributes', 'ea', 'e.eventID = ea.eventID');
-        $this->query->orderBy('eo.startTime');
+        $this->query->orderBy('eo.startTime, e.name');
     }
 
     protected function getAttributeKeyClassName()
