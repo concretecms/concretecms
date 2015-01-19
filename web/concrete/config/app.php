@@ -464,6 +464,10 @@ return array(
             array('javascript', 'js/jquery-ui.js', array('minify' => false, 'combine' => false)),
             array('css', 'css/jquery-ui.css', array('minify' => false))
         ),
+        'jquery/visualize'                => array(
+            array('javascript', 'js/jquery-visualize.js', array('minify' => false, 'combine' => false)),
+            array('css', 'css/jquery-visualize.css', array('minify' => false))
+        ),
         'jquery/touch-punch'              => array(
             array('javascript', 'js/jquery-ui-touch-punch.js')
         ),
