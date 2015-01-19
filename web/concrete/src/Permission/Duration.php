@@ -67,9 +67,23 @@ class Duration extends AbstractRepetition
                     $pd->setRepeatPeriodWeekDays($_POST['pdRepeatPeriodWeeksDays']);
                 } elseif ($_POST['pdRepeatPeriod'] == 'monthly') {
                     $pd->setRepeatPeriod(Duration::REPEAT_MONTHLY);
-                    $repeat = $_POST['pdRepeatPeriodMonthsRepeatBy'] === 'weekly' ?
-                        Duration::MONTHLY_REPEAT_WEEKLY :
-                        Duration::MONTHLY_REPEAT_MONTHLY;
+
+                    $repeat_by = $_POST['pdRepeatPeriodMonthsRepeatBy'];
+                    $repeat = self::MONTHLY_REPEAT_WEEKLY;
+                    switch ($repeat_by) {
+                        case 'week':
+                            $repeat = self::MONTHLY_REPEAT_WEEKLY;
+                            break;
+                        case 'month':
+                            $repeat = self::MONTHLY_REPEAT_MONTHLY;
+                            break;
+                        case 'lastweekday':
+                            $repeat = self::MONTHLY_REPEAT_LAST_WEEKDAY;
+                            $dotw = $_POST['pdRepeatPeriodMonthsRepeatLastDay'] ?: 0;
+                            $pd->setRepeatMonthLastWeekday($dotw);
+                            break;
+                    }
+
                     $pd->setRepeatMonthBy($repeat);
                     $pd->setRepeatEveryNum($_POST['pdRepeatPeriodMonthsEvery']);
                 }

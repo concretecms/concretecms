@@ -46,9 +46,14 @@ abstract class AbstractRepetition implements RepetitionInterface
     protected $repeatEveryNum;
 
     /**
-     * @var int self::MONTHLY_REPEAT_* enum [ ::MONTHLY_REPEAT_WEEKLY | ::MONTHLY_REPEAT_MONTHLY ]
+     * @var int self::MONTHLY_REPEAT_* enum [ ::MONTHLY_REPEAT_WEEKLY | ::MONTHLY_REPEAT_MONTHLY | ::MONTHLY_REPEAT_LAST_WEEKDAY ]
      */
     protected $repeatMonthBy;
+
+    /**
+     * @var int The week day number
+     */
+    protected $repeatMonthLastWeekday;
 
     /**
      * @var string Time string of the last possible time for repetition
@@ -159,10 +164,10 @@ abstract class AbstractRepetition implements RepetitionInterface
                     $now_time = new \DateTime();
                     $now_time->setTimestamp($now);
 
-
                     $week_diff_start = new \DateTime();
                     if (($days_past_sunday = date('w', $start_time->getTimestamp())) !== 0) {
-                        $week_diff_start->setTimestamp(strtotime("-{$days_past_sunday} days", $start_time->getTimestamp()));
+                        $week_diff_start->setTimestamp(
+                            strtotime("-{$days_past_sunday} days", $start_time->getTimestamp()));
                     } else {
                         $week_diff_start->setTimestamp($start_time->getTimestamp());
                     }
@@ -227,7 +232,8 @@ abstract class AbstractRepetition implements RepetitionInterface
                     $start_datetime = new \DateTime($startsOn);
 
                     $start_datetime_time = date('H:i:s', $start_datetime->getTimestamp());
-                    $normalized_now_datetime = new \DateTime(date("Y-m-01 {$start_datetime_time}", $now_datetime->getTimestamp()));
+                    $normalized_now_datetime = new \DateTime(
+                        date("Y-m-01 {$start_datetime_time}", $now_datetime->getTimestamp()));
                     $normalized_start_datetime = new \DateTime(date("Y-m-01 H:i:s", $start_datetime->getTimestamp()));
 
                     $diff = $normalized_now_datetime->diff($normalized_start_datetime);
@@ -256,7 +262,6 @@ abstract class AbstractRepetition implements RepetitionInterface
                                 break;
 
                             case self::MONTHLY_REPEAT_WEEKLY:
-
                                 $now_wotm = -1;
                                 $now_month = date('m', $start_datetime->getTimestamp());
                                 $wotm_timestamp = $start_datetime->getTimestamp();
@@ -274,6 +279,16 @@ abstract class AbstractRepetition implements RepetitionInterface
                                     }
                                 }
 
+                                break;
+
+                            case self::MONTHLY_REPEAT_LAST_WEEKDAY:
+                                $weekday = $this->getDayString($this->getRepeatMonthLastWeekday());
+                                $now_last_day = strtotime('Last ' . $weekday . ' of ' . date('F Y', $now));
+
+                                // that means it has to be the same day of the month. e.g. the 29th, etc..
+                                if (date('d', $now_last_day) == date('d', $now)) {
+                                    $checkTime = true;
+                                }
                                 break;
                         }
 
@@ -423,26 +438,20 @@ abstract class AbstractRepetition implements RepetitionInterface
     }
 
     /**
-     * @return int [ ::MONTHLY_REPEAT_WEEKLY | ::MONTHLY_REPEAT_MONTHLY ]
+     * @return int [ ::MONTHLY_REPEAT_WEEKLY | ::MONTHLY_REPEAT_MONTHLY | ::MONTHLY_REPEAT_LAST_WEEKDAY ]
      */
     public function getRepeatMonthBy()
     {
-        if ($this->repeatMonthBy === self::MONTHLY_REPEAT_WEEKLY) {
-            return self::MONTHLY_REPEAT_WEEKLY;
-        }
-
-        return self::MONTHLY_REPEAT_MONTHLY;
+        return max(0, min(3, $this->repeatMonthBy));
     }
 
     /**
-     * @param int $repeat_month_by [ ::MONTHLY_REPEAT_WEEKLY | ::MONTHLY_REPEAT_MONTHLY ]
+     * @param int $repeat_month_by [ ::MONTHLY_REPEAT_WEEKLY | ::MONTHLY_REPEAT_MONTHLY | ::MONTHLY_REPEAT_LAST_WEEKDAY ]
      * @return void
      */
     public function setRepeatMonthBy($repeat_month_by)
     {
-        $repeat_month_by = intval($repeat_month_by, 10);
-        $repeat = $repeat_month_by === self::MONTHLY_REPEAT_WEEKLY ? self::MONTHLY_REPEAT_WEEKLY : self::MONTHLY_REPEAT_MONTHLY;
-        $this->repeatMonthBy = $repeat;
+        $this->repeatMonthBy = max(0, min(3, $repeat_month_by));
     }
 
     /**
@@ -483,6 +492,22 @@ abstract class AbstractRepetition implements RepetitionInterface
     public function getRepeatPeriodEveryNum()
     {
         return $this->getRepeatEveryNum();
+    }
+
+    /**
+     * @return int The week day number
+     */
+    public function getRepeatMonthLastWeekday()
+    {
+        return $this->repeatMonthLastWeekday;
+    }
+
+    /**
+     * @param int $repeatMonthLastWeekday
+     */
+    public function setRepeatMonthLastWeekday($repeatMonthLastWeekday)
+    {
+        $this->repeatMonthLastWeekday = min(6, max(0, $repeatMonthLastWeekday));
     }
 
     /**
@@ -565,7 +590,8 @@ abstract class AbstractRepetition implements RepetitionInterface
                         $start_time->add($interval);
                     }
 
-                    $current_date = strtotime(date('Y-m-d ', $start_time->getTimestamp()) . date('H:i:s', $repetition_start));
+                    $current_date = strtotime(
+                        date('Y-m-d ', $start_time->getTimestamp()) . date('H:i:s', $repetition_start));
                     while ($current_date < $end) {
                         foreach ($this->getRepeatPeriodWeekDays() as $day) {
                             $day_of_the_week = strtotime("+{$day} days", $current_date);
@@ -640,13 +666,37 @@ abstract class AbstractRepetition implements RepetitionInterface
                             $time = date('H:i:s', $repetition_start_datetime->getTimestamp());
 
                             while ($current_datetime->getTimestamp() < $end) {
-                                $occurrence_start = strtotime(date("Y-m-{$dotm} {$time}", $current_datetime->getTimestamp()));
+                                $occurrence_start = strtotime(
+                                    date("Y-m-{$dotm} {$time}", $current_datetime->getTimestamp()));
                                 if ($occurrence_start && $occurrence_start >= $start && $occurrence_start <= $end) {
                                     $occurrences[] = array(
                                         $occurrence_start,
                                         $occurrence_start + $repetition_end - $repetition_start);
                                 }
 
+                                $current_datetime->add($interval);
+                            }
+                            break;
+
+                        case $this::MONTHLY_REPEAT_LAST_WEEKDAY:
+                            $current_datetime = clone $start_datetime;
+                            $weekday = $this->getDayString($this->getRepeatMonthLastWeekday());
+
+                            while ($current_datetime->getTimestamp() < $end) {
+                                $occurrence_start = $current_datetime->getTimestamp();
+                                $occurrence_start = strtotime(
+                                    date('Y-m-d ', strtotime('Last ' . $weekday . ' of ' . date('F Y', $occurrence_start))) .
+                                    date('H:i:s', $repetition_start));
+
+                                if ($occurrence_start >= $start && $occurrence_start <= $end) {
+                                    if (date('m', $occurrence_start) === date('m', $current_datetime->getTimestamp())) {
+                                        $occurrences[] = array(
+                                            $occurrence_start,
+                                            $occurrence_start + $repetition_end - $repetition_start);
+                                    }
+                                }
+
+                                $last_datetime = clone $current_datetime;
                                 $current_datetime->add($interval);
                             }
                             break;
@@ -657,6 +707,13 @@ abstract class AbstractRepetition implements RepetitionInterface
         }
 
         return $occurrences;
+    }
+
+
+    protected function getDayString($day)
+    {
+        $days = array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday');
+        return array_get($days, $day);
     }
 
 }

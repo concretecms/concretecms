@@ -88,12 +88,12 @@ class Event extends BackendInterfaceController
         }
 
         $repetition = null;
-        if (!($local = ($this->request->request->get('edit_type') == 'local'))) {
-            $repetition = EventRepetition::translateFromRequest($this->request);
+        $edit_type = $this->request->request->get('edit_type');
+        if ($edit_type != 'local') {
+            $repetition = EventRepetition::translateFromRequest($this->request, $edit_type == 'forward');
             if (!is_object($repetition)) {
                 $e->add(t('You must specify a valid date for this event.'));
             }
-
         }
 
         $occurrence = EventOccurrence::getByID($occurrence_id);
@@ -102,11 +102,39 @@ class Event extends BackendInterfaceController
         }
 
         $calendar = $occurrence->getEvent()->getCalendar();
-
         $r = new EditResponse($e);
 
         if (!$e->has()) {
-            if ($local) {
+            if (!$occurrence->getEvent()->getRepetition()->repeats()) {
+                $repetition = EventRepetition::translateFromRequest($this->request);
+                $repetition->save();
+
+                /** @var \Concrete\Core\Calendar\Event\Event $ev */
+                $ev = $occurrence->getEvent();
+                $ev->setName($this->request->request->get('name'));
+                $ev->setDescription($this->request->request->get('description'));
+                $rep = $ev->getRepetition();
+                $ev->setRepetition($repetition);
+                $ev->save();
+
+                $now = $occurrence->getStart();
+                $db = \Database::connection();
+                $db->query(
+                    'DELETE FROM CalendarEventOccurrences WHERE eventID=?',
+                    array($ev->getID()));
+
+                $occurrence = new EventOccurrence(
+                    $ev,
+                    strtotime($repetition->getStartDate()),
+                    strtotime($repetition->getEndDate()));
+                $occurrence->save();
+
+                $attributes = EventKey::getList();
+                foreach ($attributes as $ak) {
+                    $ak->saveAttributeForm($ev);
+                }
+
+            } elseif ($edit_type == 'local') {
                 /** @var DateTime $datetime */
                 $datetime = \Core::make('helper/form/date_time');
                 $repetition = new EventRepetition();
@@ -130,8 +158,33 @@ class Event extends BackendInterfaceController
                     $ev->setCalendar($occurrence->getEvent()->getCalendar());
                     $ev->save();
 
+                    $now = strtotime($repetition->getStartDate());
+                    $ev->generateOccurrences($now, strtotime('+5 years', $now));
+
                     $occurrence->delete();
                 }
+            } elseif ($edit_type === 'forward') {
+                $repetition->save();
+
+                $ev = new \Concrete\Core\Calendar\Event\Event(
+                    $this->request->request->get('name'),
+                    $this->request->request->get('description'),
+                    $repetition);
+
+                $db = \Database::connection();
+                $db->query(
+                    'DELETE FROM CalendarEventOccurrences WHERE startTime>=? AND eventID=?',
+                    array(
+                        $occurrence->getStart(),
+                        $occurrence->getEvent()->getID()));
+
+                $ev->setCalendar($occurrence->getEvent()->getCalendar());
+                $ev->save();
+
+                $now = strtotime($repetition->getStartDate());
+                $ev->generateOccurrences($now, strtotime('+5 years', $now));
+
+                $occurrence->delete();
             } else {
                 $repetition->save();
                 /** @var \Concrete\Core\Calendar\Event\Event $ev */
@@ -142,7 +195,7 @@ class Event extends BackendInterfaceController
                 $ev->setRepetition($repetition);
                 $ev->save();
 
-                $now = time();
+                $now = strtotime($repetition->getStartDate()) - 1;
                 $db = \Database::connection();
                 $db->query(
                     'DELETE FROM CalendarEventOccurrences WHERE startTime>=? AND eventID=?',
