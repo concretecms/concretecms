@@ -185,7 +185,7 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
     }
 
     div.ccm-dashboard-calendar-date-event > a {
-        background-color: <?=$calendar->getColor()?>;
+        background-color: #3988ED;
         display: block;
         text-decoration: none;
         color: #fff;
@@ -196,7 +196,7 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
     }
 
     div.ccm-dashboard-calendar-date-event-cancelled > span {
-        background-color: <?=$calendar->getColor()?>;
+        background-color: #3988ED;
         display: block;
         text-decoration: none;
         color: #fff;
