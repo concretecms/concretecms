@@ -134,6 +134,11 @@ class Controller extends BlockController
         $this->set('links', $links);
     }
 
+    public function registerViewAssets()
+    {
+        $this->requireAsset('css', 'font-awesome');
+    }
+
 
 }
 
