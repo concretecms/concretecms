@@ -4,11 +4,9 @@ $form = Core::make('helper/form');
 $color = Core::make('helper/form/color');
 
 $calendarName = null;
-$caColor = '#3988ED';
 $buttonText = t('Add Calendar');
 if (is_object($calendar)) {
     $calendarName = $calendar->getName();
-    $caColor = $calendar->getColor();
     $buttonText = t('Save Calendar');
 }
 ?>
@@ -22,13 +20,6 @@ if (is_object($calendar)) {
     <div class="form-group">
         <?=$form->label('calendarName', t('Calendar Name'))?>
         <?=$form->text('calendarName', $calendarName)?>
-    </div>
-
-    <div class="form-group">
-        <?=$form->label('caColor', t('Event Color'))?>
-        <div>
-        <?=$color->output('caColor', $caColor)?>
-        </div>
     </div>
 
     <div class="ccm-dashboard-form-actions-wrapper">
