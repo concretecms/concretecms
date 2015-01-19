@@ -9,7 +9,7 @@ return array(
      */
     'version'           => '5.7.3.1',
     'version_installed' => '5.7.3.1',
-    'version_db' => '20150109000000', // the key of the latest database migration - corresponds to 5.7.3
+    'version_db' => '20150117000000', // the key of the latest database migration - corresponds to 5.7.3.2
 
     /**
      * Installation status
@@ -785,7 +785,7 @@ return array(
          * @var bool
          */
         'url_rewriting'        => false,
-        'url_rewriting_all'        => false,
+        'url_rewriting_all'    => false,
         'redirect_to_base_url' => false,
         'trailing_slash'       => false,
         'title_format'         => '%1$s :: %2$s',
@@ -801,7 +801,7 @@ return array(
      * ------------------------------------------------------------------------
      */
     'statistics'        => array(
-        'track_page_views' => true
+//        'track_page_views' => true
     ),
     'limits'            => array(
         'sitemap_pages'           => 100,
