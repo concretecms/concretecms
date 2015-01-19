@@ -674,6 +674,12 @@ return array(
                 array('css', 'jquery/ui'),
             )
         ),
+        'jquery/visualize'                => array(
+            array(
+                array('javascript', 'jquery/visualize'),
+                array('css', 'jquery/visualize'),
+            )
+        ),
         'select2'                  => array(
             array(
                 array('javascript', 'select2'),
