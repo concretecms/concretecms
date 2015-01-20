@@ -176,8 +176,7 @@ class ContentExporter {
 		$xml = $this->x->asXML();
 
 		// remove crappy characters
-        return preg_replace('/[\x00-\x1F\x7F]/', '', $xml);
-
+		return preg_replace('/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', $xml);
 	}
 
 	public function getFilesArchive()
