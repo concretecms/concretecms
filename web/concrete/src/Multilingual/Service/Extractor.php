@@ -11,8 +11,8 @@ use Concrete\Core\Permission\Access\Entity\Type as PermissionAccessEntityType;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\User\Group\Group;
 use Concrete\Core\User\Group\GroupSet;
-use Gettext\Extractors\Mo;
-use Gettext\Extractors\Po;
+use Gettext\Extractors\Mo as MoExtractor;
+use Gettext\Extractors\Po as PoExtractor;
 use Gettext\Translations;
 use Gettext\Extractors\PhpCode;
 use Gettext\Generators\Po as PoGenerator;
@@ -111,7 +111,7 @@ class Extractor
     {
         $file = DIR_LANGUAGES_SITE_INTERFACE . '/' . $section->getLocale() . '.po';
         if (file_exists($file)) {
-            $sectionTranslations = Po::fromFile($file);
+            $sectionTranslations = PoExtractor::fromFile($file);
             $translations->mergeWith($sectionTranslations, Translations::MERGE_ADD);
         }
 
@@ -124,9 +124,9 @@ class Extractor
         $poFile = DIR_LANGUAGES . '/' . $section->getLocale() . '/LC_MESSAGES/messages.po';
         $moFile = DIR_LANGUAGES . '/' . $section->getLocale() . '/LC_MESSAGES/messages.mo';
         if (file_exists($poFile)) {
-            $coreTranslations = Po::fromFile($poFile);
+            $coreTranslations = PoExtractor::fromFile($poFile);
         } elseif (file_exists($moFile)) {
-            $coreTranslations = Mo::fromFile($moFile);
+            $coreTranslations = MoExtractor::fromFile($moFile);
         }
 
         if (isset($coreTranslations)) {
