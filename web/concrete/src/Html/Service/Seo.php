@@ -1,0 +1,34 @@
+<?php
+namespace Concrete\Core\Html\Service;
+
+class Seo
+{
+    private $siteName = '';
+    private $titleSegments = array();
+    private $titleSegmentSeparator = ' - ';
+    private $titleFormat = '%1$s :: %2$s';
+    
+    public function setSiteName($name)
+    {
+        $this->siteName = $name;
+    }
+    
+    public function addTitleSegment($segment)
+    {
+        array_push($this->titleSegments, $segment);
+    }
+    
+    public function setTitleFormat($format)
+    {
+        $this->titleFormat = $format;
+    }
+    
+    public function getTitle()
+    {
+        $segments = '';
+        if (count($this->titleSegments) > 0) {
+            $segments = implode($this->titleSegmentSeparator, $this->titleSegments);
+        }
+        return sprintf($this->titleFormat, $segments, $this->siteName);
+    }
+}
