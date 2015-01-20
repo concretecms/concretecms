@@ -1,6 +1,6 @@
 <?php
-
 namespace Concrete\Core\Multilingual\Service;
+
 use Concrete\Attribute\Select\Option as SelectAttributeOption;
 use Concrete\Core\Attribute\Key\Key as AttributeKey;
 use Concrete\Core\Attribute\Set as AttributeSet;
@@ -44,24 +44,24 @@ class Extractor
             DIR_APPLICATION . '/' . DIRNAME_PAGE_TYPES,
             DIR_APPLICATION . '/' . DIRNAME_PAGES,
             DIR_APPLICATION . '/' . DIRNAME_THEMES,
-            DIR_APPLICATION . '/' . DIRNAME_VIEWS
+            DIR_APPLICATION . '/' . DIRNAME_VIEWS,
         );
 
         $files = array();
-        foreach($directories as $directory) {
+        foreach ($directories as $directory) {
             if (!is_dir($directory)) {
                 continue;
             }
             $directoryIterator = new \RecursiveDirectoryIterator($directory);
             $iterator = new \RecursiveIteratorIterator($directoryIterator);
             $results = new \RegexIterator($iterator, '/^.+\.php$/i', \RecursiveRegexIterator::GET_MATCH);
-            foreach($results as $result) {
+            foreach ($results as $result) {
                 $files[] = $result[0];
             }
         }
 
         $translations = new Translations();
-        foreach($files as $file) {
+        foreach ($files as $file) {
             $fileTranslations = Translations::fromPhpCodeFile($file);
             $translations->mergeWith($fileTranslations);
         }
@@ -85,6 +85,7 @@ class Extractor
         $translations->mergeWith(Group::exportTranslations());
         $translations->mergeWith(GroupSet::exportTranslations());
         $translations->mergeWith(SelectAttributeOption::exportTranslations());
+
         return $translations;
     }
 
@@ -124,7 +125,7 @@ class Extractor
         $moFile = DIR_LANGUAGES . '/' . $section->getLocale() . '/LC_MESSAGES/messages.mo';
         if (file_exists($poFile)) {
             $coreTranslations = Po::fromFile($poFile);
-        } else if (file_exists($moFile)) {
+        } elseif (file_exists($moFile)) {
             $coreTranslations = Mo::fromFile($moFile);
         }
 
@@ -136,7 +137,7 @@ class Extractor
 
             // This is actually much faster than unsetting the matching translation from the existing translations object
 
-            foreach($translations as $key => $translation) {
+            foreach ($translations as $key => $translation) {
                 if (!$translation->getTranslation()) {
                     if (!$coreTranslations->find($translation->getContext(), $translation->getOriginal())) {
                         $returnTranslations[] = $translation;
@@ -145,6 +146,7 @@ class Extractor
                     $returnTranslations[] = $translation;
                 }
             }
+
             return $returnTranslations;
         }
 
@@ -180,11 +182,11 @@ class Extractor
     {
         $db = \Database::get();
         $db->delete('MultilingualTranslations', array('mtSectionID' => $section->getCollectionID()));
-        foreach($translations as $translation) {
+        foreach ($translations as $translation) {
             $comments = implode(':', $translation->getComments());
             $references = $translation->getReferences();
             $refs = '';
-            foreach($references as $reference) {
+            foreach ($references as $reference) {
                 $refs = implode(':', $reference) . "\n";
             }
             $db->insert('MultilingualTranslations', array(
@@ -193,7 +195,7 @@ class Extractor
                 'msgstr' => $translation->getTranslation(),
                 'context' => $translation->getContext(),
                 'comments' => $comments,
-                'reference' => $refs
+                'reference' => $refs,
             ));
         }
     }
@@ -213,7 +215,7 @@ class Extractor
         if ($data['messageCount'] > 0) {
             $data['completionPercentage'] = round(($data['translatedCount'] / $data['messageCount']) * 100);
         }
+
         return $data;
     }
-
 }
