@@ -1,4 +1,4 @@
-<?
+<?php
 
 namespace Concrete\Core\Package;
 use Cache;
@@ -292,10 +292,10 @@ class StartingPointPackage extends BasePackage {
 
         $renderer = new Renderer($site_install);
 
-        @unlink(DIR_CONFIG_SITE . '/app.php');
-        file_put_contents(DIR_CONFIG_SITE . '/app.php', $renderer->render());
-        @chmod(DIR_CONFIG_SITE . '/app.php', Config::get('concrete.filesystem.permissions.file'));
-
+		if (!file_exists(DIR_CONFIG_SITE . '/app.php')) {
+			file_put_contents(DIR_CONFIG_SITE . '/app.php', $renderer->render());
+			@chmod(DIR_CONFIG_SITE . '/app.php', Config::get('concrete.filesystem.permissions.file'));
+		}
 
         @unlink(DIR_CONFIG_SITE . '/site_install.php');
         @unlink(DIR_CONFIG_SITE . '/site_install_user.php');
