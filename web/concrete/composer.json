@@ -22,7 +22,7 @@
         "doctrine/orm": "2.4.*",
         "doctrine/migrations": "1.0.*@dev",
         "concrete5/flysystem": "0.4.*",
-        "gettext/gettext": "2.1",
+        "mlocati/concrete5-translation-library": "dev-master",
         "symfony/event-dispatcher": "2.5.*",
         "symfony/serializer": "2.5.*",
         "illuminate/container": "4.1.*",

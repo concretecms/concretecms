@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c45527ab746e75c46b94b9298d0e00c5",
+    "hash": "ba6fd3e019fd092e0c6a9038dec90cde",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -909,16 +909,16 @@
         },
         {
             "name": "gettext/gettext",
-            "version": "v2.1",
+            "version": "v2.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/oscarotero/Gettext.git",
-                "reference": "2be5da2f975df690910f99ebc7199a28da8b0a1b"
+                "reference": "6baa57defc4dfe0fc63220fc3737ef9295af7428"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/oscarotero/Gettext/zipball/2be5da2f975df690910f99ebc7199a28da8b0a1b",
-                "reference": "2be5da2f975df690910f99ebc7199a28da8b0a1b",
+                "url": "https://api.github.com/repos/oscarotero/Gettext/zipball/6baa57defc4dfe0fc63220fc3737ef9295af7428",
+                "reference": "6baa57defc4dfe0fc63220fc3737ef9295af7428",
                 "shasum": ""
             },
             "require": {
@@ -931,10 +931,7 @@
             "autoload": {
                 "psr-4": {
                     "Gettext\\": "src"
-                },
-                "files": [
-                    "src/translator_functions.php"
-                ]
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -958,7 +955,7 @@
                 "po",
                 "translation"
             ],
-            "time": "2014-11-21 13:06:04"
+            "time": "2015-01-19 17:58:26"
         },
         {
             "name": "hautelook/phpass",
@@ -1475,6 +1472,56 @@
                 "markdown"
             ],
             "time": "2014-08-10 19:25:52"
+        },
+        {
+            "name": "mlocati/concrete5-translation-library",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mlocati/concrete5-translation-library.git",
+                "reference": "23d0cf5213414f2e2126ac27544b5b1a88215238"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mlocati/concrete5-translation-library/zipball/23d0cf5213414f2e2126ac27544b5b1a88215238",
+                "reference": "23d0cf5213414f2e2126ac27544b5b1a88215238",
+                "shasum": ""
+            },
+            "require": {
+                "gettext/gettext": "2.3.*",
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "C5TL\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michele Locati",
+                    "email": "mlocati@gmail.com",
+                    "homepage": "https://github.com/mlocati",
+                    "role": "developer"
+                }
+            ],
+            "description": "Library to handle concrete5 core and package translations",
+            "homepage": "https://github.com/mlocati/concrete5-translation-library",
+            "keywords": [
+                "concrete5",
+                "i18n",
+                "internationalization",
+                "l10n",
+                "localization",
+                "packages",
+                "translate",
+                "translation"
+            ],
+            "time": "2015-01-20 13:56:52"
         },
         {
             "name": "mobiledetect/mobiledetectlib",
@@ -3460,6 +3507,7 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "doctrine/migrations": 20,
+        "mlocati/concrete5-translation-library": 20,
         "patchwork/utf8": 20,
         "imagine/imagine": 20,
         "innogames/cssmin": 20,
