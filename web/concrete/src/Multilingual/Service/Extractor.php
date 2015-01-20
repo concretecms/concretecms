@@ -1,20 +1,10 @@
 <?php
 namespace Concrete\Core\Multilingual\Service;
 
-use Concrete\Attribute\Select\Option as SelectAttributeOption;
-use Concrete\Core\Attribute\Key\Key as AttributeKey;
-use Concrete\Core\Attribute\Set as AttributeSet;
-use Concrete\Core\Attribute\Type as AttributeType;
-use Concrete\Core\Job\Set as JobSet;
 use Concrete\Core\Multilingual\Page\Section\Section;
-use Concrete\Core\Permission\Access\Entity\Type as PermissionAccessEntityType;
-use Concrete\Core\Permission\Key\Key as PermissionKey;
-use Concrete\Core\User\Group\Group;
-use Concrete\Core\User\Group\GroupSet;
 use Gettext\Extractors\Mo as MoExtractor;
 use Gettext\Extractors\Po as PoExtractor;
 use Gettext\Translations;
-use Gettext\Extractors\PhpCode;
 use Gettext\Generators\Po as PoGenerator;
 use Gettext\Generators\Mo as MoGenerator;
 
@@ -22,48 +12,37 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class Extractor
 {
-    public function __construct()
-    {
-        // register concrete5 translator functions
-        PhpCode::$functions['t'] = '__';
-        PhpCode::$functions['t2'] = 'n__';
-        PhpCode::$functions['tc'] = 'p__';
-    }
-
     /**
      * return \GetText\Translations $translations;
      */
     public function extractTranslatableSiteStrings()
     {
-        // first, we figure out which files we're going to operate on.
-        $directories = array(
-            DIR_APPLICATION . '/' . DIRNAME_BLOCKS,
-            DIR_APPLICATION . '/' . DIRNAME_ELEMENTS,
-            DIR_APPLICATION . '/' . DIRNAME_CONTROLLERS,
-            DIR_APPLICATION . '/' . DIRNAME_MAIL_TEMPLATES,
-            DIR_APPLICATION . '/' . DIRNAME_PAGE_TYPES,
-            DIR_APPLICATION . '/' . DIRNAME_PAGES,
-            DIR_APPLICATION . '/' . DIRNAME_THEMES,
-            DIR_APPLICATION . '/' . DIRNAME_VIEWS,
-        );
-
-        $files = array();
-        foreach ($directories as $directory) {
-            if (!is_dir($directory)) {
-                continue;
-            }
-            $directoryIterator = new \RecursiveDirectoryIterator($directory);
-            $iterator = new \RecursiveIteratorIterator($directoryIterator);
-            $results = new \RegexIterator($iterator, '/^.+\.php$/i', \RecursiveRegexIterator::GET_MATCH);
-            foreach ($results as $result) {
-                $files[] = $result[0];
-            }
-        }
-
         $translations = new Translations();
-        foreach ($files as $file) {
-            $fileTranslations = Translations::fromPhpCodeFile($file);
-            $translations->mergeWith($fileTranslations);
+        $phpParser = new \C5TL\Parser\Php();
+        $blockTemplatesParser = new \C5TL\Parser\BlockTemplates();
+        $themesPresetsParser = new \C5TL\Parser\ThemePresets();
+
+        $processApplication = array(
+            DIRNAME_BLOCKS => array($phpParser, $blockTemplatesParser),
+            DIRNAME_ELEMENTS => array($phpParser),
+            DIRNAME_CONTROLLERS => array($phpParser),
+            DIRNAME_MAIL_TEMPLATES => array($phpParser),
+            DIRNAME_PAGE_TYPES => array($phpParser),
+            DIRNAME_PAGES => array($phpParser),
+            DIRNAME_THEMES => array($phpParser, $themesPresetsParser, $blockTemplatesParser),
+            DIRNAME_VIEWS => array($phpParser),
+        );
+        foreach ($processApplication as $dirname => $parsers) {
+            if (is_dir(DIR_APPLICATION.'/'.$dirname)) {
+                foreach ($parsers as $parser) {
+                    /* @var $parser \C5TL\Parser */
+                    $parser->parseDirectory(
+                        DIR_APPLICATION.'/'.$dirname,
+                        DIRNAME_APPLICATION.'/'.$dirname,
+                        $translations
+                    );
+                }
+            }
         }
 
         // Now, we grab dynamic content that's part of our site that we translate dynamically
@@ -75,18 +54,9 @@ class Extractor
 
     public function getDynamicTranslations()
     {
-        $translations = new Translations();
-        $translations->mergeWith(AttributeSet::exportTranslations());
-        $translations->mergeWith(AttributeKey::exportTranslations());
-        $translations->mergeWith(AttributeType::exportTranslations());
-        $translations->mergeWith(PermissionKey::exportTranslations());
-        $translations->mergeWith(PermissionAccessEntityType::exportTranslations());
-        $translations->mergeWith(JobSet::exportTranslations());
-        $translations->mergeWith(Group::exportTranslations());
-        $translations->mergeWith(GroupSet::exportTranslations());
-        $translations->mergeWith(SelectAttributeOption::exportTranslations());
+        $parser = new \C5TL\Parser\Dynamic();
 
-        return $translations;
+        return $parser->parseRunningConcrete5();
     }
 
     public function clearTranslationsFromDatabase()
