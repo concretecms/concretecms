@@ -10,6 +10,7 @@ use Page;
 use Core;
 use PageList;
 use Concrete\Core\Attribute\Key\CollectionKey;
+use \Concrete\Core\Tree\Node\Type\Topic;
 
 class Controller extends BlockController
 {
@@ -226,6 +227,11 @@ class Controller extends BlockController
         $treeNodeID = $db->GetOne('select treeNodeID from TreeTopicNodes where treeNodeTopicName = ?', array($topic));
         if ($treeNodeID) {
             $this->list->filterByTopic(intval($treeNodeID));
+            $topicObj = Topic::getByID(intval($treeNodeID));
+            if (is_object($topicObj)) {
+                $seo = Core::make('helper/seo');
+                $seo->addTitleSegment($topicObj->getTreeNodeDisplayName());
+            }
         }
         $this->view();
     }
