@@ -238,7 +238,8 @@ class Controller extends BlockController
 
     public function action_filter_by_tag($tag = false)
     {
-        $db = Loader::db();
+        $seo = Core::make('helper/seo');
+        $seo->addTitleSegment($tag);
         $this->list->filterByTags(h($tag));
         $this->view();
     }
@@ -264,6 +265,10 @@ class Controller extends BlockController
             }
             $this->list->filterByPublicDate($start, '>=');
             $this->list->filterByPublicDate($end, '<=');
+            
+            $seo = Core::make('helper/seo');
+            $srv = Core::make('helper/date');
+            $seo->addTitleSegment($srv->date('F Y',$start));
         }
         $this->view();
     }

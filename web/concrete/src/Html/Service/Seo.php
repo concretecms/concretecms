@@ -15,7 +15,7 @@ class Seo
     
     public function addTitleSegment($segment)
     {
-        array_push($this->titleSegments, $segment);
+        array_unshift($this->titleSegments, $segment);
     }
     
     public function setTitleFormat($format)
@@ -34,6 +34,6 @@ class Seo
         if (count($this->titleSegments) > 0) {
             $segments = implode($this->titleSegmentSeparator, $this->titleSegments);
         }
-        return sprintf($this->titleFormat, $segments, $this->siteName);
+        return sprintf($this->titleFormat, $this->siteName, $segments);
     }
 }
