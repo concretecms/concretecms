@@ -704,15 +704,6 @@
        <col>gasID</col>
    </index>
   </table>
-    <table name="Calendars">
-    <field name="caID" type="I" size="10">
-        <key/>
-        <unsigned/>
-        <autoincrement />
-    </field>
-    <field name="caName" type="C" size="255">
-    </field>
-    </table>
     <table name="Conversations">
     <field name="cnvID" type="I" size="10">
       <key/>
@@ -5349,81 +5340,6 @@
             <UNSIGNED/>
             <notnull />
         </field>
-    </table>
-
-    <table name="CalendarEvents">
-        <field name="eventID" type="I" size="10">
-            <key/>
-            <autoincrement/>
-            <unsigned/>
-        </field>
-        <field name="caID" type="I" size="10">
-            <unsigned/>
-        </field>
-        <field name="repetitionID" type="I" size="10">
-            <unsigned/>
-        </field>
-        <field name="description" type="x2" />
-        <field name="name" type="x2" />
-    </table>
-
-    <table name="CalendarEventRepetitions">
-        <field name="repetitionID" type="I" size="10">
-            <key/>
-            <autoincrement/>
-            <unsigned/>
-        </field>
-        <field name="repetitionObject" type="X">
-            <notnull/>
-        </field>
-    </table>
-
-    <table name="CalendarEventOccurrences">
-        <field name="occurrenceID" type="I" size="10">
-            <key/>
-            <autoincrement/>
-            <unsigned/>
-        </field>
-        <field name="eventID" type="I" size="10">
-            <notnull/>
-        </field>
-        <field name="startTime" type="I" size="10">
-            <notnull/>
-        </field>
-        <field name="endTime" type="I" size="10">
-            <notnull/>
-        </field>
-        <field name="cancelled" type="I" size="1">
-            <notnull/>
-        </field>
-        <index name="eventdates">
-            <col>eventID</col>
-            <col>startTime</col>
-            <col>endTime</col>
-        </index>
-    </table>
-
-    <table name="CalendarEventAttributeValues">
-        <field name="eventID" type="I" size="10">
-            <key/>
-            <default value="0"/>
-            <unsigned/>
-        </field>
-        <field name="akID" type="I" size="10">
-            <key/>
-            <default value="0"/>
-            <unsigned/>
-        </field>
-        <field name="avID" type="I" size="10">
-            <default value="0"/>
-            <unsigned/>
-        </field>
-        <index name="akID">
-            <col>akID</col>
-        </index>
-        <index name="avID">
-            <col>avID</col>
-        </index>
     </table>
 
 </schema>
