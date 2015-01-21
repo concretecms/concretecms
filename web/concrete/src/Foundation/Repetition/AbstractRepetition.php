@@ -116,10 +116,20 @@ abstract class AbstractRepetition implements RepetitionInterface
             $now = \Core::make('helper/date')->getOverridableNow(true);
         }
 
+        $dh = \Core::make('helper/date');
+
         if (!$this->repeats()) {
             $isActive = true;
-            $start_date = $this->getStartDate();
-            $end_date = $this->getEndDate();
+            $start_date = false;
+            $end_date = false;
+            $start_date_object = $dh->toDateTime($this->getStartDate(), 'app');
+            $end_date_object = $dh->toDateTime($this->getEndDate(), 'app');
+            if (is_object($start_date_object)) {
+                $start_date = $start_date_object->format('Y-m-d H:i:s');
+            }
+            if (is_object($end_date_object)) {
+                $end_date = $end_date_object->format('Y-m-d H:i:s');
+            }
             if (!$start_date || !$end_date) {
                 return null;
             }

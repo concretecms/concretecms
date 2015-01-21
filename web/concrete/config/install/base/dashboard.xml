@@ -332,24 +332,6 @@
 			</attributes>
         </page>
 
-        <page name="Calendar &amp; Events" path="/dashboard/calendar" filename="/dashboard/calendar/view.php" pagetype="" description="" package=""></page>
-        <page name="Events" path="/dashboard/calendar/events" filename="/dashboard/calendar/events.php" pagetype="" description="" package="">
-        </page>
-        <page name="Attributes" path="/dashboard/calendar/attributes" filename="/dashboard/calendar/attributes.php"
-              pagetype="" description="" package="">
-        </page>
-
-        <page name="Add Calendar" path="/dashboard/calendar/add" filename="/dashboard/calendar/add.php" pagetype="" description="" package="">
-            <attributes>
-                <attributekey handle="exclude_nav">
-                    <value><![CDATA[1]]></value>
-                </attributekey>
-                <attributekey handle="exclude_search_index">
-                    <value><![CDATA[1]]></value>
-                </attributekey>
-            </attributes>
-        </page>
-
         <page name="Workflow" path="/dashboard/workflow" filename="/dashboard/workflow/view.php" pagetype=""
               description="" package="">
             <attributes>
