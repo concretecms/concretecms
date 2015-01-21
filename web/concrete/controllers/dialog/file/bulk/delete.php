@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Controller\Dialog\File\Bulk;
+
 use \Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use FilePermissions;
 use \Concrete\Core\Http\ResponseAssetGroup;
@@ -15,12 +16,18 @@ class Delete extends BackendInterfaceController {
 	protected $files = array();
     protected $canEdit = false;
 
-	protected function canAccess() {
+    protected function canAccess()
+    {
 		$this->populateFiles();
 		return $this->canEdit;
 	}
 
-	protected function populateFiles() {
+    protected function populateFiles()
+    {
+        if (isset( $_REQUEST['fID']) && !is_array($_REQUEST['fID'])) {
+            $_REQUEST['fID'] = array($_REQUEST['fID'] );
+        }
+
         if (is_array($_REQUEST['fID'])) {
 			foreach($_REQUEST['fID'] as $fID) {
 				$f = File::getByID($fID);
@@ -45,7 +52,8 @@ class Delete extends BackendInterfaceController {
 		return $this->canEdit;
 	}
 
-	public function view() {
+    public function view()
+    {
 
 		$this->populateFiles();
         $files = array();
@@ -71,7 +79,8 @@ class Delete extends BackendInterfaceController {
         $this->set('dh', \Core::make('helper/date'));
 	}
 
-	public function deleteFiles() {
+    public function deleteFiles()
+    {
         $fr = new FileEditResponse();
         $files = array();
         if (is_array($_POST['fID'])) {

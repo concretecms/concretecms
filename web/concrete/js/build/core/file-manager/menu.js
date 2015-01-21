@@ -14,7 +14,6 @@
 
     ConcreteFileMenu.prototype = Object.create(ConcreteMenu.prototype);
 
-
     ConcreteFileMenu.prototype.setupMenuOptions = function($menu) {
 		var my = this, 
 			parent = ConcreteMenu.prototype,
@@ -28,18 +27,6 @@
 				menu.hide();
 			}
 			_.defer(function() { container.$element.html(container._chooseTemplate); });
-			return false;
-		});
-		$menu.find('a[data-file-manager-action=duplicate]').on('click', function() {
-			$.concreteAjax({
-				url: CCM_DISPATCHER_FILENAME + '/ccm/system/file/duplicate',
-				data: {fID: fID},
-				success: function(r) {
-					if (typeof(container.refreshResults) != 'undefined') {
-						container.refreshResults();
-					}
-				}
-			});
 			return false;
 		});
 	}

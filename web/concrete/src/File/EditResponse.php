@@ -5,6 +5,12 @@ class EditResponse extends \Concrete\Core\Application\EditResponse
 {
 
     protected $files = array();
+    protected $needRefresh = false;
+    
+    public function setNeedRefresh($needRefresh = true)
+    {
+        $this->needRefresh = $needRefresh;
+    }
 
     public function setFile(File $file)
     {
@@ -22,6 +28,7 @@ class EditResponse extends \Concrete\Core\Application\EditResponse
         foreach ($this->files as $file) {
             $o->files[] = $file->getJSONObject();
         }
+        $o->needRefresh = $this->needRefresh;
         return $o;
     }
 

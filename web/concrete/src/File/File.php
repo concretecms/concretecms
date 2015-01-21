@@ -18,6 +18,7 @@ use \Concrete\Core\Attribute\Key as AttributeKey;
 use \Concrete\Core\File\StorageLocation\StorageLocation;
 use FileAttributeKey;
 use PermissionKey;
+use Log;
 
 /**
  * @Entity
@@ -392,7 +393,6 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         $em->persist($nf);
         $em->flush();
 
-
         $r = $db->Execute('select fvID, akID, avID from FileAttributeValues where fID = ?', array($this->getFileID()));
         while ($row = $r->fetchRow()) {
             $db->Execute(
@@ -533,6 +533,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         $db->Execute("delete from FileSearchIndexAttributes where fID = ?", array($this->fID));
         $db->Execute("delete from DownloadStatistics where fID = ?", array($this->fID));
         $db->Execute("delete from FilePermissionAssignments where fID = ?", array($this->fID));
+        $db->Execute("delete from FileAttributeValues where fID = ?", array($this->fID));
     }
 
     /**

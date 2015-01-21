@@ -11,25 +11,20 @@
             options = $.extend({
                 'chooseText': ccmi18n_filemanager.chooseNew,
                 'inputName': 'concreteFile',
-                'fID': false,
-                'filters': []
+                'fID': false
             }, options);
-
-        var dialogOpts = {};
-        dialogOpts.filters = options.filters;
 
         my.$element = $element;
         my.options = options;
         my._chooseTemplate = _.template(my.chooseTemplate, {'options': my.options});
         my._loadingTemplate = _.template(my.loadingTemplate);
         my._fileLoadedTemplate = _.template(my.fileLoadedTemplate);
-        my._fileMenuTemplate = _.template(ConcreteFileManagerMenu.get());
 
         my.$element.append(my._chooseTemplate);
         my.$element.on('click', 'div.ccm-file-selector-choose-new', function() {
             ConcreteFileManager.launchDialog(function(data) {
                 my.loadFile(data.fID);
-            }, dialogOpts);
+            });
             return false;
         });
 
@@ -57,7 +52,9 @@
             ConcreteFileManager.getFileDetails(fID, function(r) {
                 var file = r.files[0];
                 my.$element.html(my._fileLoadedTemplate({'inputName': my.options.inputName, 'file': file}));
-                my.$element.append(my._fileMenuTemplate({'displayClear': true, 'item': file}));
+
+                ConcreteAjaxSearch.setupFileMenu( my.$element, {'displayClear':true, 'item': file} );
+
                 my.$element.find('.ccm-file-selector-file-selected').concreteFileMenu({
                     'container': my,
                     'menu': $('[data-search-file-menu=' + file.fID + ']'),

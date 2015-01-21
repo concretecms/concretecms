@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Controller\Backend;
+
 use Controller;
 use FileSet;
 use File as ConcreteFile;
@@ -11,9 +12,10 @@ use Permissions as ConcretePermissions;
 use FilePermissions;
 use FileVersion;
 
-class File extends Controller {
-
-    public function star() {
+class File extends Controller
+{
+    public function star()
+    {
         $fs = FileSet::createAndGetSet('Starred Files', FileSet::TYPE_STARRED);
         $files = $this->getRequestFiles();
         $r = new FileEditResponse();
@@ -30,7 +32,8 @@ class File extends Controller {
         $r->outputJSON();
     }
 
-    public function rescan() {
+    public function rescan()
+    {
         $files = $this->getRequestFiles('canEditFileContents');
         $r = new FileEditResponse();
         $r->setFiles($files);
@@ -62,15 +65,17 @@ class File extends Controller {
             $r->setError($e);
         } else {
             $r->setMessage($errorMessage . $successMessage);
+            $r->setNeedRefresh(true);
         }
         $r->outputJSON();
     }
 
-    public function approveVersion() {
+    public function approveVersion()
+    {
         $files = $this->getRequestFiles('canEditFileContents');
         $r = new FileEditResponse();
         $r->setFiles($files);
-        $fv = $files[0]->getVersion(Loader::helper('security')->sanitizeInt($_REQUEST['fvID']));
+        $fv = $files[0]->getVersion(\Core::make('helper/security')->sanitizeInt($_REQUEST['fvID']));
         if (is_object($fv)) {
             $fv->approve();
         } else {
@@ -79,11 +84,12 @@ class File extends Controller {
         $r->outputJSON();
     }
 
-    public function deleteVersion() {
+    public function deleteVersion()
+    {
         $files = $this->getRequestFiles('canEditFileContents');
         $r = new FileEditResponse();
         $r->setFiles($files);
-        $fv = $files[0]->getVersion(Loader::helper('security')->sanitizeInt($_REQUEST['fvID']));
+        $fv = $files[0]->getVersion(\Core::make('helper/security')->sanitizeInt($_REQUEST['fvID']));
         if (is_object($fv) && !$fv->isApproved()) {
             $fv->delete();
         } else {
@@ -92,7 +98,8 @@ class File extends Controller {
         $r->outputJSON();
     }
 
-    protected function getRequestFiles($permission = 'canViewFileInFileManager') {
+    protected function getRequestFiles($permission = 'canViewFileInFileManager')
+    {
         $files = array();
         if (is_array($_REQUEST['fID'])) {
             $fileIDs = $_REQUEST['fID'];
@@ -114,14 +121,16 @@ class File extends Controller {
         return $files;
     }
 
-    public function upload() {
+    public function upload()
+    {
         $fp = FilePermissions::getGlobal();
-        $cf = Loader::helper('file');
+        $cf = \Core::make('helper/file');
         if (!$fp->canAddFiles()) {
             throw new Exception(t("Unable to add files."));
         }
-        if (!Loader::helper('validation/token')->validate()) {
-            throw new Exception(Loader::helper('validation/token')->getErrorMessage());
+        $val = \Core::make( 'helper/validation/token' );
+        if (!$val->validate()) {
+            throw new Exception($val->getErrorMessage());
         }
         $files = array();
         if (isset($_FILES['files']) && (is_uploaded_file($_FILES['files']['tmp_name'][0]))) {
@@ -147,10 +156,11 @@ class File extends Controller {
             throw new Exception(FileImporter::getErrorMessage($_FILES['Filedata']['error']));
         }
 
-        Loader::helper('ajax')->sendResult($files);
+        \Core::make('helper/ajax')->sendResult($files);
     }
 
-    public function duplicate() {
+    public function duplicate()
+    {
         $files = $this->getRequestFiles('canCopyFile');
         $r = new FileEditResponse();
         $newFiles = array();
@@ -159,16 +169,141 @@ class File extends Controller {
             $newFiles[] = $nf;
         }
         $r->setFiles($newFiles);
+        $r->setMessage(t('%s files duplicated', count($newFiles)));
+        $r->setNeedRefresh(true);
         $r->outputJSON();
     }
 
-    public function getJSON() {
+    public function getJSON()
+    {
         $files = $this->getRequestFiles();
         $r = new FileEditResponse();
         $r->setFiles($files);
         $r->outputJSON();
     }
 
+    public function stream( $fID, $fvID )
+    {
+
+        $fp = FilePermissions::getGlobal();
+        $f = ConcreteFile::getByID($fID);
+
+        if(!$f || $f->isError()) {
+
+            if ($f && $f->getError() == \Concrete\Core\File\Importer::E_FILE_INVALID ) die(t("The requested file couldn't be found."));
+            die(t("An unexpected error occurred while looking for the requested file"));
+        }
+
+        $fp = new ConcretePermissions($f);
+
+        if ($fp->canViewFile()) {
+
+            $fv = !is_null( $fvID ) ? $f->getVersion($_REQUEST['fvID']) : $f->getApprovedVersion();
+
+            $f->trackDownload();
+            $f->forceDownload();
+        }
+    }
+
+    public function zipAndStream( array $fIDs, $fvID = null )
+    {
+
+        $vh = \Core::make('helper/validation/identifier');
+        $fh = \Core::make('helper/file');
+
+        $filename = $fh->getTemporaryDirectory() . '/' . $vh->getString() . '.zip';
+
+        $files = array();
+        $filenames = array();
+
+        foreach($fIDs as $fID) {
+
+            $f = ConcreteFile::getByID($fID);
+            if($f->isError()) continue;
+
+            $fp = new ConcretePermissions($f);
+
+            if ($fp->canViewFile()) {
+                $files[] = $f;
+                $f->trackDownload();
+            }
+        }
+
+        if (empty($files)) die(t("None of the requested files could be found."));
+
+        if (class_exists('ZipArchive', false)) {
+
+            $zip = new \ZipArchive;
+            $res = $zip->open( $filename, \ZipArchive::CREATE );
+
+            if($res !== true) throw new Exception(t('Could not open with %s', 'ZipArchive::CREATE'));
+
+            foreach($files as $f) $zip->addFromString($f->getFilename(), $f->getFileContents());
+
+            $zip->close();
+
+            $fh->forceDownload($filename);
+
+        } else {
+            throw new Exception(t('Unable to zip files using ZipArchive. Please ensure the Zip extension is installed.'));
+        }
+
+    }
+
+    public function download()
+    {
+
+        $fp = FilePermissions::getGlobal();
+
+        if (!$fp->canSearchFileSet()) die(t("Unable to search file sets."));
+
+        $target = $_REQUEST['fID'];
+
+        if (!is_array($target) && isset($_REQUEST['zipit'])) $target = array($target);
+                
+        if (is_array($target)) {
+            // sanitize:
+            foreach ( $target as $key => $val ) $target[$key] = intval($val);
+            $this->zipAndStream($target);
+            return;
+        } else {
+            $this->stream(intval($target), isset($_REQUEST['fvID']) ? intval($_REQUEST['fvID']) : null);
+        }
+    }
+
+
+    public function view()
+    {
+	$this->setViewPath('/backend/file_view');
+
+        $files = $this->getRequestFiles('canViewFile');
+        $f = $files[0];
+        if (isset($_REQUEST['fvID'])) {
+            $fv = $f->getVersion(\Core::make('helper/security')->sanitizeInt($_REQUEST['fvID']));
+        } else {
+            $fv = $f->getApprovedVersion();
+        }
+
+        $this->set('f', $f);
+        $this->set('fv', $fv);
+        $this->set('to', $fv->getTypeObject());
+
+    }
+
+    public function edit()
+    {
+	$this->setViewPath('/backend/file_edit');
+
+        $files = $this->getRequestFiles('canEditFileContents');
+
+        $f = $files[0];
+        $fv = $f->getApprovedVersion();
+
+        $this->set('f', $f);
+        $this->set('fv', $fv);
+        $this->set('to', $fv->getTypeObject());
+
+    }
 
 }
 

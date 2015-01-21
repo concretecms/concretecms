@@ -53,7 +53,6 @@ class FileManager
             $args = "{'inputName': '{$postname}', 'filters': $filters }";
         }
 
-
         $html = <<<EOL
 		<div class="ccm-file-selector" data-file-selector="{$id}"></div>
 		<script type="text/javascript">

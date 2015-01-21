@@ -13,10 +13,10 @@ class Controller extends AbstractController implements ControllerInterface
     /** @var ItemInterface */
     protected $menuItem;
 
-    public function displayItem()
-    {
-        return true;
-    }
+    protected $display = true;
+
+    public function enableDisplay($enable=true) { $this->display = !!$enable; }
+    public function displayItem() { return $this->display; }
 
     public function getMenuItemLinkElement()
     {

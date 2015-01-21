@@ -233,6 +233,10 @@ return array(
         "/ccm/system/file/rescan"                                                       => array('\Concrete\Controller\Backend\File::rescan'),
         "/ccm/system/file/star"                                                         => array('\Concrete\Controller\Backend\File::star'),
         "/ccm/system/file/upload"                                                       => array('\Concrete\Controller\Backend\File::upload'),
+        "/ccm/system/file/download"                                                     => array('\Concrete\Controller\Backend\File::download'),
+        "/ccm/system/file/view"                                                         => array('\Concrete\Controller\Backend\File::view'),
+        "/ccm/system/file/edit"                                                         => array('\Concrete\Controller\Backend\File::edit'),
+        "/ccm/system/file/context_menu"                                                 => array('\Concrete\Controller\Backend\FileContextMenu::view'),
 
         /**
          * Users

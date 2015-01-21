@@ -7,24 +7,14 @@ $searchFields = $controller->getSearchFields();
 $flr = new \Concrete\Core\Search\StickyRequest('files');
 $req = $flr->getSearchRequest();
 
-?>
+$fm  = \Core::make('helper/concrete/ui/file_manager_menu');
 
+?>
+<?php Loader::element('files/file_context_menu') ?>
 <script type="text/template" data-template="search-form">
 <form role="form" data-search-form="files" action="<?php echo URL::to('/ccm/system/search/files/submit')?>" class="form-inline ccm-search-fields">
     <div class="ccm-search-fields-row">
-        <div class="form-group">
-            <select data-bulk-action="files" disabled class="ccm-search-bulk-action form-control">
-                <option value=""><?php echo t('Items Selected')?></option>
-                <option value="download"><?php echo t('Download')?></option>
-                <option data-bulk-action-type="dialog" data-bulk-action-title="<?php echo t('Edit Properties')?>" data-bulk-action-url="<?php echo URL::to('/ccm/system/dialogs/file/bulk/properties')?>" data-bulk-action-dialog-width="630" data-bulk-action-dialog-height="450"><?php echo t('Edit Properties')?></option>
-                <option data-bulk-action-type="dialog" data-bulk-action-title="<?php echo t('Sets')?>" data-bulk-action-url="<?php echo Loader::helper('concrete/urls')->getToolsURL('files/add_to')?>" data-bulk-action-dialog-width="500" data-bulk-action-dialog-height="400"><?php echo t('Sets')?></option>
-                <option data-bulk-action-type="ajax" data-bulk-action-url="<?php echo URL::to('/ccm/system/file/rescan')?>"><?php echo t('Rescan')?></option>
-                <?php /*
-                <option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Duplicate')?>" data-bulk-action-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/duplicate" data-bulk-action-dialog-width="500" data-bulk-action-dialog-height="400"><?=t('Copy')?></option>
- */ ?>
-                <option data-bulk-action-type="dialog" data-bulk-action-title="<?php echo t('Delete')?>" data-bulk-action-url="<?php echo URL::to('/ccm/system/dialogs/file/bulk/delete')?>" data-bulk-action-dialog-width="500" data-bulk-action-dialog-height="400"><?php echo t('Delete')?></option>
-            </select>
-        </div>
+        <?php Loader::element('files/files_bulk_menu'); ?>
         <div class="form-group">
             <div class="ccm-search-main-lookup-field">
                 <i class="fa fa-search"></i>
