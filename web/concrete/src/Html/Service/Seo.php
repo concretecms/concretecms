@@ -5,7 +5,7 @@ class Seo
 {
     private $siteName = '';
     private $titleSegments = array();
-    private $titleSegmentSeparator = ' - ';
+    private $titleSegmentSeparator = ' :: ';
     private $titleFormat = '%1$s :: %2$s';
     
     public function setSiteName($name)
@@ -21,6 +21,11 @@ class Seo
     public function setTitleFormat($format)
     {
         $this->titleFormat = $format;
+    }
+    
+    public function setTitleSegmentSeparator($separator)
+    {
+        $this->titleSegmentSeparator = $separator;
     }
     
     public function getTitle()
