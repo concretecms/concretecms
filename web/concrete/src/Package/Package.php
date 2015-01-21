@@ -65,6 +65,7 @@ use Environment;
 use \Concrete\Core\Package\PackageList;
 use Localization;
 use \Concrete\Core\File\StorageLocation\Type\Type as StorageLocation;
+use ORM;
 
 class Package extends Object
 {
@@ -83,6 +84,11 @@ class Package extends Object
      * @var \Concrete\Core\Config\Repository\Liaison
      */
     protected $fileConfig;
+
+    /**
+     * @var \Concrete\Core\Database\DatabaseStructureManager
+     */
+    protected $databaseStructureManager;
 
     public function getRelativePath()
     {
@@ -193,6 +199,29 @@ class Package extends Object
     public function showInstallOptionsScreen()
     {
         return $this->hasInstallNotes() || $this->allowsFullContentSwap();
+    }
+
+    /**
+     * Installs the packages database either through entities or if no entities
+     * are available for the package, through the legacy db.xml if it is
+     * available.
+     * 
+     * @return void
+     */
+    public function installDatabase()
+    {
+        $dbm = $this->getDatabaseStructureManager();
+        $this->destroyProxyClasses();
+        if ($dbm->hasEntities()) {
+            $dbm->generateProxyClasses();
+            $dbm->dropObsoleteDatabaseTables(camelcase($this->getPackageHandle()));
+            $dbm->installDatabase();
+        }
+
+        if (file_exists($this->getPackagePath() . '/' . FILENAME_PACKAGE_DB)) {
+            // Legacy db.xml
+            Package::installDB($this->getPackagePath() . '/' . FILENAME_PACKAGE_DB);
+        }
     }
 
     public static function installDB($xmlFile)
@@ -566,8 +595,25 @@ class Package extends Object
         \Config::clearNamespace($this->getPackageHandle());
         \Core::make('config/database')->clearNamespace($this->getPackageHandle());
 
+        $this->destroyProxyClasses();
+
         $db->Execute("delete from Packages where pkgID = ?", array($this->pkgID));
         Localization::clearCache();
+    }
+
+    /**
+     * Destroys all the existing proxy classes for this package.
+     * 
+     * @return boolean
+     */
+    protected function destroyProxyClasses()
+    {
+        $dbm = $this->getDatabaseStructureManager();
+        $config = $dbm->getEntityManager()->getConfiguration();
+        if (is_object($cache = $config->getMetadataCacheImpl())) {
+            $cache->flushAll();
+        }
+        return $dbm->destroyProxyClasses('ConcretePackage' . camelcase($this->getPackageHandle()) . 'Src');
     }
 
     protected function validateClearSiteContents($options)
@@ -717,6 +763,34 @@ class Package extends Object
         return $path;
     }
 
+    public function getPackageEntitiesPath()
+    {
+        return $this->getPackagePath() . '/' . DIRNAME_CLASSES;
+    }
+
+    /**
+     * Gets a package specific entity manager.
+     * 
+     * @return \Doctrine\ORM\EntityManager
+     */
+    public function getEntityManager()
+    {
+        return ORM::entityManager($this);
+    }
+
+    /**
+     * Gets a package specific entity manager.
+     * 
+     * @return \Concrete\Core\Database\DatabaseStructureManager
+     */
+    public function getDatabaseStructureManager()
+    {
+        if (!isset($this->databaseStructureManager)) {
+            $this->databaseStructureManager = Core::make('database/structure', $this->getEntityManager());
+        }
+        return $this->databaseStructureManager;
+    }
+
     /**
      * returns a Package object for the given package id, null if not found
      * @param int $pkgID
@@ -814,7 +888,8 @@ class Package extends Object
         $db->query("insert into Packages (pkgName, pkgDescription, pkgVersion, pkgHandle, pkgIsInstalled, pkgDateInstalled) values (?, ?, ?, ?, ?, ?)", $v);
 
         $pkg = Package::getByID($db->Insert_ID());
-        Package::installDB($pkg->getPackagePath() . '/' . FILENAME_PACKAGE_DB);
+        $pkg->installDatabase();
+
         $env = Environment::get();
         $env->clearOverrideCache();
         Localization::clearCache();
@@ -841,7 +916,8 @@ class Package extends Object
 
     public function upgrade()
     {
-        Package::installDB($this->getPackagePath() . '/' . FILENAME_PACKAGE_DB);
+        $this->installDatabase();
+
         // now we refresh all blocks
         $items = $this->getPackageItems();
         if (is_array($items['block_types'])) {
