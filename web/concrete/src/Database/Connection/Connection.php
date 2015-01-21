@@ -5,6 +5,7 @@ use Concrete\Core\Cache\Adapter\DoctrineCacheDriver;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
 use Config;
+use ORM;
 
 class Connection extends \Doctrine\DBAL\Connection
 {
@@ -29,15 +30,7 @@ class Connection extends \Doctrine\DBAL\Connection
      */
     public function createEntityManager()
     {
-
-        $config = Setup::createConfiguration(
-            false,
-            Config::get('database.proxy_classes'),
-            new DoctrineCacheDriver('cache/expensive')
-        );
-        $driverImpl = $config->newDefaultAnnotationDriver(DIR_BASE_CORE . '/' . DIRNAME_CLASSES);
-        $config->setMetadataDriverImpl($driverImpl);
-        return EntityManager::create($this, $config);
+        return ORM::makeEntityManager($this, 'core');
     }
 
     /**

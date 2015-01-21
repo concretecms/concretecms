@@ -27,7 +27,7 @@ class DateTime
             }
             $h = @intval($arr[$field . '_h']);
             $m = @intval($arr[$field . '_m']);
-            if (isset($arr[$field . '_a']) && ($arr[$field . '_a'] === 'PM')) {
+            if ($h < 12 && isset($arr[$field . '_a']) && ($arr[$field . '_a'] === 'PM')) {
                 $h += 12;
             }
             $value .= ' ' . substr("0$h", -2) . ':' . substr("0$m", -2);
@@ -96,6 +96,7 @@ class DateTime
         $html = '';
         $disabled = false;
         $html .= '<div class="form-inline">';
+
         if ($includeActivation) {
             if ($value) {
                 $activated = 'checked';
@@ -105,7 +106,7 @@ class DateTime
             $html .= '<input type="checkbox" id="' . $id . '_activate" class="ccm-activate-date-time" ccm-date-time-id="' . $id . '" name="' . $_activate . '" ' . $activated . ' />';
         }
 
-        $html .= '<div class="form-group"><span class="ccm-input-date-wrapper" id="' . $id . '_dw"><input id="' . $id . '_dt_pub" class="form-control ccm-input-date"  ' . $disabled . ' /><input id="' . $id . '_dt" name="' . $_dt . '" type="hidden" ' . $disabled . ' /></span>';
+        $html .= '<span class="ccm-input-date-wrapper" id="' . $id . '_dw"><input id="' . $id . '_dt_pub" class="form-control ccm-input-date"  ' . $disabled . ' /><input id="' . $id . '_dt" name="' . $_dt . '" type="hidden" ' . $disabled . ' /></span>';
         $html .= '<span class="ccm-input-time-wrapper form-inline" id="' . $id . '_tw">';
         $html .= '<select class="form-control" id="' . $id . '_h" name="' . $_h . '" ' . $disabled . '>';
 
@@ -150,7 +151,7 @@ class DateTime
             $html .= '</option>';
             $html .= '</select>';
         }
-        $html .= '</span></div></div>';
+        $html .= '</span></div>';
         $jh = Core::make('helper/json'); /* @var $jh \Concrete\Core\Http\Service\Json */
         if ($calendarAutoStart) {
             $html .= '<script type="text/javascript">$(function () {
