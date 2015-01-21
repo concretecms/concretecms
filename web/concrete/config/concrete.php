@@ -784,15 +784,16 @@ return array(
          *
          * @var bool
          */
-        'url_rewriting'        => false,
-        'url_rewriting_all'    => false,
-        'redirect_to_base_url' => false,
-        'trailing_slash'       => false,
-        'title_format'         => '%1$s :: %2$s',
-        'page_path_separator'  => '-',
-        'group_name_separator' => ' / ',
-        'segment_max_length'   => 128,
-        'paging_string'        => 'ccm_paging_p'
+        'url_rewriting'           => false,
+        'url_rewriting_all'       => false,
+        'redirect_to_base_url'    => false,
+        'trailing_slash'          => false,
+        'title_format'            => '%1$s :: %2$s',
+        'title_segment_separator' => ' :: ',
+        'page_path_separator'     => '-',
+        'group_name_separator'    => ' / ',
+        'segment_max_length'      => 128,
+        'paging_string'           => 'ccm_paging_p'
     ),
 
     /**
