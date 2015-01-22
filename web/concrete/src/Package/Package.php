@@ -212,6 +212,7 @@ class Package extends Object
     {
         $dbm = $this->getDatabaseStructureManager();
         $this->destroyProxyClasses();
+
         if ($dbm->hasEntities()) {
             $dbm->generateProxyClasses();
             $dbm->dropObsoleteDatabaseTables(camelcase($this->getPackageHandle()));
@@ -287,6 +288,10 @@ class Package extends Object
         if ($item->isMiss()) {
             $item->lock();
             // loads and instantiates the object
+
+            $cl = \Concrete\Core\Foundation\ClassLoader::getInstance();
+            $cl->registerPackage($pkgHandle);
+
             $class = '\\Concrete\\Package\\' . camelcase($pkgHandle) . '\\Controller';
             try {
                 $cl = Core::make($class);
@@ -878,9 +883,6 @@ class Package extends Object
      */
     public function install()
     {
-        $cl = \Concrete\Core\Foundation\ClassLoader::getInstance();
-        $cl->registerPackage($this);
-
         PackageList::refreshCache();
         $db = Database::getActiveConnection();
         $dh = Core::make('helper/date');
