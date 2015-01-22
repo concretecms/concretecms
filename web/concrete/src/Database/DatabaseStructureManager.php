@@ -353,11 +353,15 @@ class DatabaseStructureManager
      */
     protected function loadMetadatas()
     {
-        $this->metadatas = array();
-        $em = $this->getEntityManager();
-        $cmf = $em->getMetadataFactory();
-        foreach ($cmf->getAllMetadata() as $metaData) {
-            $this->metadatas[$metaData->getName()] = $metaData;
+        try {
+            $this->metadatas = array();
+            $em = $this->getEntityManager();
+            $cmf = $em->getMetadataFactory();
+            foreach ($cmf->getAllMetadata() as $metaData) {
+                $this->metadatas[$metaData->getName()] = $metaData;
+            }
+        } catch (\Exception $e) {
+            // we don't want them complaining about a src directory not being in the package.
         }
     }
 
