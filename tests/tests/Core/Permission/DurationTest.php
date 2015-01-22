@@ -222,18 +222,15 @@ class DurationTest extends \PHPUnit_Framework_TestCase
         foreach ($occurrences as $occurrence) {
             $window = $repetition->getActiveRange($occurrence[0] + 5);
 
-            echo date('l, Y-m-d H:i:s', $occurrence[0]);
             if (!$window) {
                 $all_active = false;
-                echo " failed1.\n";
-                continue;
+                break;
             }
 
             if ($window[0] !== $occurrence[0] || $window[1] !== $occurrence[1]) {
                 $all_active = false;
-                echo " failed2.";
+                break;
             }
-            echo "\n";
         }
 
         $this->assertTrue($all_active, 'EventOccurrenceFactory generated inactive occurrences.');
