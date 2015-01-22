@@ -119,28 +119,34 @@ abstract class AbstractRepetition implements RepetitionInterface
         $dh = \Core::make('helper/date');
 
         if (!$this->repeats()) {
-            $isActive = true;
-            $start_date = false;
-            $end_date = false;
-            $start_date_object = $dh->toDateTime($this->getStartDate(), 'app');
-            $end_date_object = $dh->toDateTime($this->getEndDate(), 'app');
+            $start_date = $this->getStartDate();
+            $end_date = $this->getEndDate();
+
+            $start_time = null;
+            $end_time = null;
+
+            $start_date_object = $dh->toDateTime($start_date, 'app');
+            $end_date_object = $dh->toDateTime($end_date, 'app');
             if (is_object($start_date_object)) {
-                $start_date = $start_date_object->format('Y-m-d H:i:s');
+                $start_time = $start_date_object->getTimestamp();
             }
             if (is_object($end_date_object)) {
-                $end_date = $end_date_object->format('Y-m-d H:i:s');
+                $end_time = $end_date_object->getTimestamp();
             }
-            if (!$start_date || !$end_date) {
+            if (!$start_date ) {
                 return null;
             }
-            if ($start_date && strtotime($start_date) > $now) {
+            if ($start_date && $start_time > $now) {
                 return null;
             }
-            if ($end_date && strtotime($end_date) < $now) {
+            if ($end_date && $end_time < $now) {
                 return null;
             }
-            if ($isActive) {
-                return $this->rangeFromTime(strtotime($start_date));
+
+            if ($end_date) {
+                return $this->rangeFromTime($start_time, $end_time);
+            } else {
+                return $this->rangeFromTime($start_time, PHP_INT_MAX);
             }
         } else {
             $startsOn = date('Y-m-d', strtotime($this->getStartDate()));
@@ -391,9 +397,12 @@ abstract class AbstractRepetition implements RepetitionInterface
         $this->endDate = $end_date;
     }
 
-    protected function rangeFromTime($start)
+    protected function rangeFromTime($start, $end = null)
     {
-        return array($start, $start + (strtotime($this->getEndDate()) - strtotime($this->getStartDate())));
+        if (!$end) {
+            $end = $start + (strtotime($this->getEndDate()) - strtotime($this->getStartDate()));
+        }
+        return array($start, $end);
     }
 
     /**
@@ -718,7 +727,6 @@ abstract class AbstractRepetition implements RepetitionInterface
 
         return $occurrences;
     }
-
 
     protected function getDayString($day)
     {
