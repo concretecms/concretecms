@@ -18,6 +18,10 @@ abstract class UserInterface extends Controller {
 	public function __construct() {
 		$this->error = Loader::helper('validation/error');
 		$this->view = new DialogView($this->viewPath);
+		if (preg_match('/Concrete\\\Package\\\(.*)\\\Controller/i', get_class($this), $matches)) {
+			$pkgHandle = uncamelcase($matches[1]);
+			$this->view->setPackageHandle($pkgHandle);
+		}
 		$this->view->setController($this);
 		$request = Request::getInstance();
 		$this->request = $request;

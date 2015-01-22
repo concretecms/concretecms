@@ -72,7 +72,10 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase {
         $class = overrideable_core_class('\Core\Captcha\AkismetController', '/foo', 'akismet');
         $this->assertEquals('\Concrete\Package\Akismet\Src\Captcha\AkismetController', $class);
 
-    }
+		$class = core_class('Core\\Attribute\\Key\\EventKey', 'calendar');
+		$this->assertEquals('\\Concrete\\Package\\Calendar\\Src\\Attribute\\Key\\EventKey', $class);
+
+	}
 
 	public function testRouteControllerOverride() {
 		$root = dirname(DIR_BASE_CORE . '../');
