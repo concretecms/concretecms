@@ -1479,12 +1479,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mlocati/concrete5-translation-library.git",
-                "reference": "cc4f93a468d97ebc9e820edf02f0136ccc16563c"
+                "reference": "c5673cdc7de5a3da6579e76296bd644022ac01cd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mlocati/concrete5-translation-library/zipball/cc4f93a468d97ebc9e820edf02f0136ccc16563c",
-                "reference": "cc4f93a468d97ebc9e820edf02f0136ccc16563c",
+                "url": "https://api.github.com/repos/mlocati/concrete5-translation-library/zipball/c5673cdc7de5a3da6579e76296bd644022ac01cd",
+                "reference": "c5673cdc7de5a3da6579e76296bd644022ac01cd",
                 "shasum": ""
             },
             "require": {
@@ -1521,7 +1521,7 @@
                 "translate",
                 "translation"
             ],
-            "time": "2015-01-23 09:12:28"
+            "time": "2015-01-23 11:38:58"
         },
         {
             "name": "mobiledetect/mobiledetectlib",
