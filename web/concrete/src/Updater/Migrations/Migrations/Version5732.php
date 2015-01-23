@@ -27,6 +27,8 @@ class Version5732 extends AbstractMigration
         $pkx->associateAccessEntityType(Type::getByHandle('user'));
         $pkx->associateAccessEntityType(Type::getByHandle('group_combination'));
 
+        $db->Execute("alter table QueueMessages modify column body longtext not null");
+
         // TODO: Convert database PermissionDuration objects to new class signature.
     }
 
