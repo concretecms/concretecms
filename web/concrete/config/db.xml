@@ -5103,7 +5103,7 @@
       <UNSIGNED/>
     </field>
     <field name="handle" type="C" size="32"/>
-    <field name="body" type="C" size="8192">
+    <field name="body" type="X2">
       <NOTNULL/>
     </field>
     <field name="md5" type="C" size="32">

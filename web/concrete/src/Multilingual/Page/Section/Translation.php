@@ -36,6 +36,15 @@ class Translation extends \Gettext\Translation
         }
     }
 
+    public static function getByString($msgid)
+    {
+        $db = \Database::get();
+        $r = $db->query('select mtID from MultilingualTranslations mt where msgid = ?', array($msgid));
+        $row = $r->fetch();
+        if ($row && $row['mtID']) {
+            return static::getByID($row['mtID']);
+        }
+    }
 
 
 }
