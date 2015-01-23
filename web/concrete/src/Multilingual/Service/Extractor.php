@@ -82,10 +82,8 @@ class Extractor
         $file = DIR_LANGUAGES_SITE_INTERFACE . '/' . $section->getLocale() . '.po';
         if (file_exists($file)) {
             $sectionTranslations = PoExtractor::fromFile($file);
-            $translations->mergeWith($sectionTranslations, Translations::MERGE_ADD);
+            $translations->mergeWith($sectionTranslations, Translations::MERGE_ADD | self::MERGE_PLURAL);
         }
-
-        return $translations;
     }
 
     public function mergeTranslationsWithCore(Section $section, Translations $translations)
@@ -100,27 +98,22 @@ class Extractor
         }
 
         if (isset($coreTranslations)) {
-            $returnTranslations = new Translations();
             // Now that we have the core translations, we loop through all the translations from above, and check
             // to see if the core has a translation for this string. If the core does not, we include it in the translations
             // object to return.
 
             // This is actually much faster than unsetting the matching translation from the existing translations object
 
-            foreach ($translations as $key => $translation) {
-                if (!$translation->getTranslation()) {
-                    if (!$coreTranslations->find($translation->getContext(), $translation->getOriginal())) {
-                        $returnTranslations[] = $translation;
+            foreach ($translations as $translation) {
+                /* @var $translation \Gettext\Translation */
+                if (!$translation->hasTranslation()) {
+                    $coreTranslation = $coreTranslations->find($translation);
+                    if ($coreTranslation && $translation->hasTranslation()) {
+                        $translation->mergeWith($coreTranslation, Translations::MERGE_PLURAL);
                     }
-                } else {
-                    $returnTranslations[] = $translation;
                 }
             }
-
-            return $returnTranslations;
         }
-
-        return $translations;
     }
 
     public function saveSectionTranslationsToFile(Section $section, Translations $translations)
