@@ -473,10 +473,10 @@ class Section extends Page
     {
         $translations = new Translations();
         $db = \Database::get();
-        $r = $db->query('select mtID, (if(mt.msgstr = "", 0, 1)) as completed from MultilingualTranslations mt where mtSectionID = ? order by completed asc, msgid asc', array($this->getCollectionID()));
+        $r = $db->query('select * from MultilingualTranslations mt where mtSectionID = ? order by if(mt.msgstr = "", 0, 1) asc, msgid asc', array($this->getCollectionID()));
         while ($row = $r->fetch()) {
-            $t = Translation::getByID($row['mtID']);
-            if (is_object($t)) {
+            $t = Translation::getByRow($row);
+            if (isset($t)) {
                 $translations[] = $t;
             }
         }
