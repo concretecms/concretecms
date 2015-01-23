@@ -115,10 +115,15 @@ abstract class Key extends Object {
 		$txt = Loader::helper('text');
 		$e = $db->Execute('select pkID, pkName, pkDescription, pkHandle, pkCategoryHandle, pkCanTriggerWorkflow, pkHasCustomClass, PermissionKeys.pkCategoryID, pkCategoryHandle, PermissionKeys.pkgID from PermissionKeys inner join PermissionKeyCategories on PermissionKeyCategories.pkCategoryID = PermissionKeys.pkCategoryID');
 		while ($r = $e->FetchRow()) {
-			$class = '\\Concrete\\Core\\Permission\\Key\\' . $txt->camelcase($r['pkCategoryHandle']) . 'Key';
+			$class = '\\Core\\Permission\\Key\\' . $txt->camelcase($r['pkCategoryHandle']) . 'Key';
 			if ($r['pkHasCustomClass']) {
-				$class = '\\Concrete\\Core\\Permission\\Key\\' . $txt->camelcase($r['pkHandle'] . '_' . $r['pkCategoryHandle']) . 'Key';
+				$class = '\\Core\\Permission\\Key\\' . $txt->camelcase($r['pkHandle'] . '_' . $r['pkCategoryHandle']) . 'Key';
 			}
+			$pkgHandle = null;
+			if ($r['pkgID']) {
+				$pkgHandle = PackageList::getHandle($r['pkgID']);
+			}
+			$class = core_class($class, $pkgHandle);
 			$pk = Core::make($class);
 			$pk->setPropertiesFromArray($r);
 
@@ -133,15 +138,19 @@ abstract class Key extends Object {
 		$db = Loader::db();
 		$txt = Loader::helper('text');
 		$r = $db->GetRow('select pkID, pkName, pkDescription, pkHandle, pkCategoryHandle, pkCanTriggerWorkflow, pkHasCustomClass, PermissionKeys.pkCategoryID, pkCategoryHandle, PermissionKeys.pkgID from PermissionKeys inner join PermissionKeyCategories on PermissionKeyCategories.pkCategoryID = PermissionKeys.pkCategoryID where ' . $loadBy . ' = ?', array($key));
-		$class = '\\Concrete\\Core\\Permission\\Key\\' . $txt->camelcase($r['pkCategoryHandle']) . 'Key';
+		$class = '\\Core\\Permission\\Key\\' . $txt->camelcase($r['pkCategoryHandle']) . 'Key';
 		if (!is_array($r) && (!$r['pkID'])) {
 			return false;
 		}
 
 		if ($r['pkHasCustomClass']) {
-			$class = '\\Concrete\\Core\\Permission\\Key\\' . $txt->camelcase($r['pkHandle'] . '_' . $r['pkCategoryHandle']) . 'Key';
+			$class = '\\Core\\Permission\\Key\\' . $txt->camelcase($r['pkHandle'] . '_' . $r['pkCategoryHandle']) . 'Key';
 		}
-
+		$pkgHandle = null;
+		if ($r['pkgID']) {
+			$pkgHandle = PackageList::getHandle($r['pkgID']);
+		}
+		$class = core_class($class, $pkgHandle);
 		$pk = Core::make($class);
 		$pk->setPropertiesFromArray($r);
 		return $pk;

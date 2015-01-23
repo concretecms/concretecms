@@ -12,6 +12,16 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class Section extends Page
 {
+    public function getPermissionResponseClassName()
+    {
+        return '\\Concrete\\Core\\Permission\\Response\\MultilingualSectionResponse';
+    }
+
+
+    public function getPermissionObjectKeyCategoryHandle()
+    {
+        return 'multilingual_section';
+    }
 
     /**
      * @var string
