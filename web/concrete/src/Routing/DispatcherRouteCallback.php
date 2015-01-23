@@ -85,7 +85,7 @@ class DispatcherRouteCallback extends RouteCallback
                 $c = $home;
             }
         }
-        if (!$c->cPathFetchIsCanonical) {
+        if (!$c->cPathFetchIsCanonical && $c->getCollectionPath()) {
             // Handle redirect URL (additional page paths)
             return Redirect::page($c, 301)->send();
         }
