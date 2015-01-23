@@ -69,10 +69,10 @@ class Extractor
     {
         $po = DIR_LANGUAGES_SITE_INTERFACE . '/' . $section->getLocale() . '.po';
         $mo = DIR_LANGUAGES_SITE_INTERFACE . '/' . $section->getLocale() . '.mo';
-        if (file_exists($po)) {
+        if (is_file($po)) {
             unlink($po);
         }
-        if (file_exists($mo)) {
+        if (is_file($mo)) {
             unlink($mo);
         }
     }
@@ -80,7 +80,7 @@ class Extractor
     public function mergeTranslationsWithSectionFile(Section $section, Translations $translations)
     {
         $file = DIR_LANGUAGES_SITE_INTERFACE . '/' . $section->getLocale() . '.po';
-        if (file_exists($file)) {
+        if (is_file($file)) {
             $sectionTranslations = PoExtractor::fromFile($file);
             $translations->mergeWith($sectionTranslations, Translations::MERGE_ADD | self::MERGE_PLURAL);
         }
@@ -91,9 +91,10 @@ class Extractor
         // Now we're going to load the core translations.
         $poFile = DIR_LANGUAGES . '/' . $section->getLocale() . '/LC_MESSAGES/messages.po';
         $moFile = DIR_LANGUAGES . '/' . $section->getLocale() . '/LC_MESSAGES/messages.mo';
-        if (file_exists($poFile)) {
+        $coreTranslations = null;
+        if (is_file($poFile)) {
             $coreTranslations = PoExtractor::fromFile($poFile);
-        } elseif (file_exists($moFile)) {
+        } elseif (is_file($moFile)) {
             $coreTranslations = MoExtractor::fromFile($moFile);
         }
 
@@ -108,7 +109,7 @@ class Extractor
                 /* @var $translation \Gettext\Translation */
                 if (!$translation->hasTranslation()) {
                     $coreTranslation = $coreTranslations->find($translation);
-                    if ($coreTranslation && $translation->hasTranslation()) {
+                    if ($coreTranslation && $coreTranslation->hasTranslation()) {
                         $translation->mergeWith($coreTranslation, Translations::MERGE_PLURAL);
                     }
                 }
@@ -135,7 +136,7 @@ class Extractor
         if (!$empty) {
             MoGenerator::toFile($translations, $mo);
         } else {
-            if (file_exists($mo)) {
+            if (is_file($mo)) {
                 unlink($mo);
             }
         }
