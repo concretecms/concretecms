@@ -7,6 +7,7 @@ use Concrete\Core\Multilingual\Page\Event;
 use Gettext\Translations;
 use Punic\Language;
 use Config;
+use Gettext\Utils\Locales;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -22,12 +23,44 @@ class Section extends Page
      */
     public $msLanguage;
 
-    public static function assign($c, $language, $country)
+    /**
+     * @var int
+     */
+    protected $numPlurals;
+
+    /**
+     * @var string
+     */
+    protected $pluralRule;
+
+    public static function assign($c, $language, $country, $numPlurals = null, $pluralRule = '')
     {
+        $country = (string) $country;
+        $data = array(
+            'cID' => $c->getCollectionID(),
+            'msLanguage' => $language,
+            'msCountry' => $country
+        );
+        $pluralRule = (string) $pluralRule;
+        if(empty($numPlurals) || ($pluralRule === '')) {
+            $locale = $language;
+            if($country !== '') {
+                $locale .= '_' . $country;
+            }
+            $localeInfo = \Gettext\Utils\Locales::getLocaleInfo($locale);
+            if($localeInfo) {
+                $numPlurals = $localeInfo['plurals'];
+                $pluralRule = $localeInfo['pluralRule'];
+            }
+        }
+        if((!empty($numPlurals)) && ($pluralRule !== '')) {
+            $data['msNumPlurals'] = $numPlurals;
+            $data['msPluralRule'] = $pluralRule;
+        }
         $db = Database::get();
         $db->Replace(
             'MultilingualSections',
-            array('cID' => $c->getCollectionID(), 'msLanguage' => $language, 'msCountry' => $country),
+            $data,
             array('cID'),
             true
         );
@@ -60,6 +93,8 @@ class Section extends Page
             $obj = parent::getByID($cID, $cvID, '\Concrete\Core\Multilingual\Page\Section\Section');
             $obj->msLanguage = $r['msLanguage'];
             $obj->msCountry = $r['msCountry'];
+            $obj->msNumPlurals = $r['msNumPlurals'];
+            $obj->msPluralRule = $r['msPluralRule'];
 
             return $obj;
         }
@@ -75,13 +110,15 @@ class Section extends Page
     {
         $db = Database::get();
         $r = $db->GetRow(
-            'select cID, msLanguage, msCountry from MultilingualSections where msLanguage = ?',
+            'select cID, msLanguage, msCountry, msNumPlurals, msPluralRule from MultilingualSections where msLanguage = ?',
             array($language)
         );
         if ($r && is_array($r) && $r['msLanguage']) {
             $obj = parent::getByID($r['cID'], 'RECENT', '\Concrete\Core\Multilingual\Page\Section\Section');
             $obj->msLanguage = $r['msLanguage'];
             $obj->msCountry = $r['msCountry'];
+            $obj->msNumPlurals = $r['msNumPlurals'];
+            $obj->msPluralRule = $r['msPluralRule'];
 
             return $obj;
         }
@@ -98,13 +135,15 @@ class Section extends Page
         $locale = explode('_', $locale);
         $db = Database::get();
         $r = $db->GetRow(
-            'select cID, msLanguage, msCountry from MultilingualSections where msLanguage = ? and msCountry = ?',
+            'select cID, msLanguage, msCountry, msNumPlurals, msPluralRule from MultilingualSections where msLanguage = ? and msCountry = ?',
             array($locale[0], $locale[1])
         );
         if ($r && is_array($r) && $r['msLanguage']) {
             $obj = parent::getByID($r['cID'], 'RECENT', '\Concrete\Core\Multilingual\Page\Section\Section');
             $obj->msLanguage = $r['msLanguage'];
             $obj->msCountry = $r['msCountry'];
+            $obj->msNumPlurals = $r['msNumPlurals'];
+            $obj->msPluralRule = $r['msPluralRule'];
 
             return $obj;
         }
@@ -389,7 +428,7 @@ class Section extends Page
         }
         $db = Database::get();
         $r = $db->GetRow(
-            'select cID, msLanguage, msCountry from MultilingualSections where cID = ?',
+            'select cID, msLanguage, msCountry, msNumPlurals, msPluralRule from MultilingualSections where cID = ?',
             array($cID)
         );
         if ($r && is_array($r) && $r['msLanguage']) {
