@@ -1,6 +1,6 @@
 <?php
-
 namespace Concrete\Core\Multilingual\Page\Section;
+
 use Concrete\Core\Page\Page;
 use Database;
 use Concrete\Core\Multilingual\Page\Event;
@@ -12,7 +12,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class Section extends Page
 {
-
     /**
      * @var string
      */
@@ -61,6 +60,7 @@ class Section extends Page
             $obj = parent::getByID($cID, $cvID, '\Concrete\Core\Multilingual\Page\Section\Section');
             $obj->msLanguage = $r['msLanguage'];
             $obj->msCountry = $r['msCountry'];
+
             return $obj;
         }
 
@@ -82,8 +82,10 @@ class Section extends Page
             $obj = parent::getByID($r['cID'], 'RECENT', '\Concrete\Core\Multilingual\Page\Section\Section');
             $obj->msLanguage = $r['msLanguage'];
             $obj->msCountry = $r['msCountry'];
+
             return $obj;
         }
+
         return false;
     }
 
@@ -103,11 +105,12 @@ class Section extends Page
             $obj = parent::getByID($r['cID'], 'RECENT', '\Concrete\Core\Multilingual\Page\Section\Section');
             $obj->msLanguage = $r['msLanguage'];
             $obj->msCountry = $r['msCountry'];
+
             return $obj;
         }
+
         return false;
     }
-
 
     /**
      * gets the MultilingualSection object for the current section of the site
@@ -122,6 +125,7 @@ class Section extends Page
                 $lang = self::getBySectionOfSite($c);
             }
         }
+
         return $lang;
     }
 
@@ -136,6 +140,7 @@ class Section extends Page
             }
         }
         $section = static::getByLanguage($explode[0]);
+
         return $section;
     }
 
@@ -173,6 +178,7 @@ class Section extends Page
         if ($this->getCountry()) {
             $locale .= '_' . $this->getCountry();
         }
+
         return $locale;
     }
 
@@ -186,6 +192,7 @@ class Section extends Page
         } catch (Exception $e) {
             $text = $this->msLanguage;
         }
+
         return $text;
     }
 
@@ -230,11 +237,11 @@ class Section extends Page
                 $pde = new Event($page);
                 $pde->setLocale($ms->getLocale());
                 \Events::dispatch('on_multilingual_page_relate', $pde);
+
                 return $mpRelationID;
             }
         }
     }
-
 
     public static function unregisterPage($page)
     {
@@ -312,6 +319,7 @@ class Section extends Page
             'select mpRelationID from MultilingualPageRelations where cID = ?',
             array($page->getCollectionID())
         );
+
         return $mpRelationID > 0;
     }
 
@@ -350,11 +358,10 @@ class Section extends Page
                             $mpRelationID,
                             $oldPage->getCollectionID(),
                             $msx->getLanguage(),
-                            $msx->getLocale()
+                            $msx->getLocale(),
                         )
                     );
                 }
-
             }
             $v = array($mpRelationID, $newPage->getCollectionID(), $ms->getLocale());
             $cID = $db->GetOne(
@@ -374,8 +381,6 @@ class Section extends Page
             \Events::dispatch('on_multilingual_page_relate', $pde);
         }
     }
-
-
 
     public static function isMultilingualSection($cID)
     {
@@ -422,6 +427,7 @@ class Section extends Page
         if (!$ids) {
             $ids = array();
         }
+
         return $ids;
     }
 
@@ -437,6 +443,7 @@ class Section extends Page
                 }
             }
         }
+
         return $pages;
     }
 
@@ -447,9 +454,10 @@ class Section extends Page
     {
         $db = Database::get();
         $ids = static::getIDList();
-        $locale = explode('_' , $this->getLocale());
+        $locale = explode('_', $this->getLocale());
         if (in_array($page->getCollectionID(), $ids)) {
             $cID = $db->GetOne('select cID from MultilingualSections where msLanguage = ? and msCountry = ?', array($locale[0], $locale[1]));
+
             return $cID;
         }
         $mpRelationID = $db->GetOne(
@@ -461,6 +469,7 @@ class Section extends Page
                 'select cID from MultilingualPageRelations where mpRelationID = ? and mpLocale = ?',
                 array($mpRelationID, $this->getLocale())
             );
+
             return $cID;
         }
     }
@@ -480,7 +489,7 @@ class Section extends Page
                 $translations[] = $t;
             }
         }
+
         return $translations;
     }
-
 }

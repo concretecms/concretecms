@@ -162,22 +162,22 @@ class Extractor
                 'context' => $translation->getContext(),
             );
             $plurals = $translation->getPluralTranslation();
-            if(!empty($plurals)) {
+            if (!empty($plurals)) {
                 $data['msgstrPlurals'] = implode("\x00", $plurals);
             }
             $comments = $translation->getExtractedComments();
-            if(!empty($plurals)) {
+            if (!empty($plurals)) {
                 $data['comments'] = implode("\n", $comments);
             }
             $references = $translation->getReferences();
-            if(!empty($references)) {
+            if (!empty($references)) {
                 $data['reference'] = '';
                 foreach ($translation->getReferences() as $reference) {
                     $data['reference'] .= implode(':', $reference) . "\n";
                 }
             }
             $flags = $translation->getFlags();
-            if(!empty($flags)) {
+            if (!empty($flags)) {
                 $data['flags'] =  implode("\n", $flags);
             }
             $db->insert('MultilingualTranslations', $data);
