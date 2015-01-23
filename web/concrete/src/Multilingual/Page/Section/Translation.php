@@ -10,13 +10,30 @@ class Translation extends \Gettext\Translation
         return $this->mtID;
     }
 
-    public function updateTranslation($msgstr)
+    public function updateTranslation($msgstr, $msgstrPlurals = array())
     {
+        $msgstr = (string) $msgstr;
+        $data = array(
+            'msgstr' => (string) $msgstr,
+            'msgstrPlurals' => null,
+            'updated' => \Core::make('helper/date')->toDB(),
+        );
+        if ($this->hasPlural()) {
+            if (!is_array($msgstrPlurals)) {
+                $msgstrPlurals = array();
+            }
+            if (!empty($msgstrPlurals)) {
+                $data['msgstrPlurals'] = implode("\x00", $msgstrPlurals);
+            }
+        }
         $db = \Database::get();
-        $db->update('MultilingualTranslations', array(
-            'msgstr' => $msgstr,
-        ), array('mtID' => $this->mtID));
+        $db->update('MultilingualTranslations', $data, array('mtID' => $this->mtID));
         $this->setTranslation($msgstr);
+        if ($this->hasPlural()) {
+            foreach ($msgstrPlurals as $pluralIndex => $plural) {
+                $this->setPluralTranslation($plural, $pluralIndex);
+            }
+        }
     }
 
     public static function getByRow($row)
