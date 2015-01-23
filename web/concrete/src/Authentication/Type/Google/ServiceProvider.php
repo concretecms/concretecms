@@ -28,7 +28,7 @@ class ServiceProvider extends \Concrete\Core\Foundation\Service\Provider
             'authentication/google',
             function (Application $app, $callback = '/ccm/system/authentication/oauth2/google/callback/') {
                 /** @var ServiceFactory $factory */
-                $factory = $app->make('oauth/factory/service', array(CURLOPT_SSL_VERIFYPEER => false));
+                $factory = $app->make('oauth/factory/service');
 
                 return $factory->createService(
                     'google',
