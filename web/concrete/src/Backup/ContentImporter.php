@@ -191,7 +191,7 @@ class ContentImporter
         }
     }
 
-    protected function setupPageNodeOrder($pageNodeA, $pageNodeB)
+    public function setupPageNodeOrder($pageNodeA, $pageNodeB)
     {
         $pathA = (string)$pageNodeA['path'];
         $pathB = (string)$pageNodeB['path'];
