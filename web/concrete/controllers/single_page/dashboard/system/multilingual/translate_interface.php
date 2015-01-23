@@ -73,8 +73,8 @@ class TranslateInterface extends DashboardPageController
                 foreach($list as $section) {
                     if($section->getLocale() != $defaultSourceLocale) {
                         // now we load the translations that currently exist for each section
-                        $translations = $extractor->mergeTranslationsWithSectionFile($section, $translations);
-                        $translations = $extractor->mergeTranslationsWithCore($section, $translations);
+                        $extractor->mergeTranslationsWithSectionFile($section, $translations);
+                        $extractor->mergeTranslationsWithCore($section, $translations);
                         $extractor->saveSectionTranslationsToFile($section, $translations);
     
                         // now that we've updated the translation file, we take all the translations and
@@ -95,7 +95,7 @@ class TranslateInterface extends DashboardPageController
                 foreach($list as $section) {
                     if($section->getLocale() != $defaultSourceLocale) {
                         $translations = $section->getSectionInterfaceTranslations();
-                        $translations = $extractor->mergeTranslationsWithSectionFile($section, $translations);
+                        $extractor->mergeTranslationsWithSectionFile($section, $translations);
                         $extractor->saveSectionTranslationsToFile($section, $translations);
                     }
                 }
