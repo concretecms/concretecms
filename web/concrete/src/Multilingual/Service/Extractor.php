@@ -153,20 +153,34 @@ class Extractor
         $db = \Database::get();
         $db->delete('MultilingualTranslations', array('mtSectionID' => $section->getCollectionID()));
         foreach ($translations as $translation) {
-            $comments = implode(':', $translation->getComments());
-            $references = $translation->getReferences();
-            $refs = '';
-            foreach ($references as $reference) {
-                $refs = implode(':', $reference) . "\n";
-            }
-            $db->insert('MultilingualTranslations', array(
-               'mtSectionID' => $section->getCollectionID(),
+            /* @var $translation \Gettext\Translation */
+            $data = array(
+                'mtSectionID' => $section->getCollectionID(),
                 'msgid' => $translation->getOriginal(),
+                'msgidPlural' => $translation->getPlural(),
                 'msgstr' => $translation->getTranslation(),
                 'context' => $translation->getContext(),
-                'comments' => $comments,
-                'reference' => $refs,
-            ));
+            );
+            $plurals = $translation->getPluralTranslation();
+            if(!empty($plurals)) {
+                $data['msgstrPlurals'] = implode("\x00", $plurals);
+            }
+            $comments = $translation->getExtractedComments();
+            if(!empty($plurals)) {
+                $data['comments'] = implode("\n", $comments);
+            }
+            $references = $translation->getReferences();
+            if(!empty($references)) {
+                $data['reference'] = '';
+                foreach ($translation->getReferences() as $reference) {
+                    $data['reference'] .= implode(':', $reference) . "\n";
+                }
+            }
+            $flags = $translation->getFlags();
+            if(!empty($flags)) {
+                $data['flags'] =  implode("\n", $flags);
+            }
+            $db->insert('MultilingualTranslations', $data);
         }
     }
 
