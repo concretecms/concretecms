@@ -103,7 +103,7 @@ class Controller extends BlockController {
     function getInternalLinkCID() {return $this->internalLinkCID;}
     function getLinkURL() {
         if (!empty($this->externalLink)) {
-            $sec = Core::make('helper/security');
+            $sec = \Core::make('helper/security');
             return $sec->sanitizeURL($this->externalLink);
         } else if (!empty($this->internalLinkCID)) {
             $linkToC = Page::getByID($this->internalLinkCID);
