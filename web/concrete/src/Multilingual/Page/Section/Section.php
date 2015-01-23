@@ -26,12 +26,12 @@ class Section extends Page
     /**
      * @var int
      */
-    protected $numPlurals;
+    protected $msNumPlurals;
 
     /**
      * @var string
      */
-    protected $pluralRule;
+    protected $msPluralRule;
 
     public static function assign($c, $language, $country, $numPlurals = null, $pluralRule = '')
     {
@@ -520,6 +520,8 @@ class Section extends Page
     public function getSectionInterfaceTranslations()
     {
         $translations = new Translations();
+        $translations->setLanguage($this->getLocale());
+        $translations->setPluralForms($this->msNumPlurals, $this->msPluralRule);
         $db = \Database::get();
         $r = $db->query('select * from MultilingualTranslations mt where mtSectionID = ? order by if(mt.msgstr = "", 0, 1) asc, msgid asc', array($this->getCollectionID()));
         while ($row = $r->fetch()) {
