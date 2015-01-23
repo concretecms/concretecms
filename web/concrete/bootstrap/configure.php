@@ -75,19 +75,9 @@ define('NAMESPACE_SEGMENT_VENDOR', 'Concrete');
 
 /**
  * ----------------------------------------------------------------------------
- * Base URL, Relative Directory and URL rewriting
+ * Relative Directory and URL rewriting
  * ----------------------------------------------------------------------------
  */
-if (!defined('BASE_URL')) {
-    if(isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on')) {
-        define('BASE_URL', 'https://' . $_SERVER['HTTP_HOST']);
-    } else if (isset($_SERVER['HTTP_HOST'])) {
-        define('BASE_URL', 'http://' . $_SERVER['HTTP_HOST']);
-    } else {
-        define('BASE_URL', false);
-    }
-}
-
 if (!defined('DIR_REL')) {
     $pos = stripos($_SERVER['SCRIPT_NAME'], DISPATCHER_FILENAME);
     if($pos > 0) { //we do this because in CLI circumstances (and some random ones) we would end up with index.ph instead of index.php
