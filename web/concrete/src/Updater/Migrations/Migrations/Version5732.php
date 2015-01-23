@@ -6,6 +6,9 @@ use Doctrine\DBAL\Schema\Schema;
 
 class Version5732 extends AbstractMigration
 {
+    private $updateSectionPlurals = false;
+    private $updateMultilingualTranslations = false;
+
     public function getName()
     {
         return '20150117000000';
@@ -16,16 +19,29 @@ class Version5732 extends AbstractMigration
         $db = \Database::get();
         $db->Execute('DROP TABLE IF EXISTS PageStatistics');
         $ms = $schema->getTable('MultilingualSections');
-        $msUpdated = false;
-        if (!$ms->hasColumn('msPlurals')) {
+        if (!$ms->hasColumn('msNumPlurals')) {
             $ms->addColumn('msNumPlurals', 'integer', array('notnull' => true, 'unsigned' => true, 'default' => 2));
-            $msUpdated = true;
+            $this->updateSectionPlurals = true;
         }
         if (!$ms->hasColumn('msPluralRule')) {
             $ms->addColumn('msPluralRule', 'string', array('notnull' => true, 'length' => 255, 'default' => '(n != 1)'));
-            $msUpdated = true;
+            $this->updateSectionPlurals = true;
         }
-        if ($msUpdated) {
+        $mt = $schema->getTable('MultilingualTranslations');
+        if (!$mt->hasColumn('msgidPlural')) {
+            $mt->addColumn('msgidPlural', 'text', array('notnull' => false));
+            $this->updateMultilingualTranslations = true;
+        }
+        if (!$mt->hasColumn('msgstrPlurals')) {
+            $mt->addColumn('msgstrPlurals', 'text', array('notnull' => false));
+            $this->updateMultilingualTranslations = true;
+        }
+    }
+
+    public function postUp(Schema $schema)
+    {
+        $db = \Database::get();
+        if ($this->updateSectionPlurals) {
             $rs = $db->Execute('select cID, msLanguage, msCountry from MultilingualSections');
             while ($row = $rs->FetchRow()) {
                 $locale = $row['msLanguage'];
@@ -45,17 +61,7 @@ class Version5732 extends AbstractMigration
                 }
             }
         }
-        $mt = $schema->getTable('MultilingualTranslations');
-        $mtUpdated = false;
-        if (!$mt->hasColumn('msgidPlural')) {
-            $mt->addColumn('msgidPlural', 'text', array('notnull' => false));
-            $mtUpdated = true;
-        }
-        if (!$mt->hasColumn('msgstrPlurals')) {
-            $mt->addColumn('msgstrPlurals', 'text', array('notnull' => false));
-            $mtUpdated = true;
-        }
-        if ($mtUpdated) {
+        if ($this->updateMultilingualTranslations) {
             $db->Execute("UPDATE MultilingualTranslations SET comments = REPLACE(comments, ':', '\\n') WHERE comments IS NOT NULL");
         }
     }
