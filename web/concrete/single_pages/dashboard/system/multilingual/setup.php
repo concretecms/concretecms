@@ -285,10 +285,15 @@ if ($u->isSuperUser() && !$includesHome) { ?>
 
             <div class="form-group">
                 <label class="control-label"><?php echo t('Site interface source locale');?></label>
+                <div class="form-inline">
                 <?php
                 echo $form->select('defaultSourceLanguage', array_merge(array('' => t('*** Unknown or mixed language')), $languages), $defaultSourceLanguage);
+                ?>
+
+                    <?
                 echo $form->select('defaultSourceCountry', array_merge(array('' => t('*** Undetermined country')), $countries), $defaultSourceCountry);
                 ?>
+                </div>
                 <script>
                 $(document).ready(function() {
                 	new ccmCountryForLanguageLister($('#defaultSourceLanguage'), $('#defaultSourceCountry'));
