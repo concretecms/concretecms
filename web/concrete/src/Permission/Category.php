@@ -32,7 +32,7 @@ class Category extends Object {
 			self::populateCategories();
 		}
 
-		return array_key_exists($pkCategoryHandle, self::$categories) ? self::$categories[$pkCategoryHandle] : false;
+		return array_key_exists($pkCategoryHandle, self::$categories) ? self::$categories[$pkCategoryHandle] : null;
 	}
 
 	public function handleExists($pkHandle) {
@@ -64,14 +64,20 @@ class Category extends Object {
 
 	public function getPermissionKeyByHandle($pkHandle) {
 		$txt = Loader::helper('text');
-		$className = '\\Concrete\\Core\\Permission\\Key\\' . Loader::helper('text')->camelcase($this->pkCategoryHandle) . 'Key';
+		$className = core_class('\\Core\\Permission\\Key\\'
+			. \Core::make("helper/text")->camelcase($this->pkCategoryHandle) . 'Key',
+			$this->getPackageHandle()
+		);
 		$ak = call_user_func(array($className, 'getByHandle'), $pkHandle);
 		return $ak;
 	}
 
 	public function getPermissionKeyByID($pkID) {
 		$txt = Loader::helper('text');
-		$className = '\\Concrete\\Core\\Permission\\Key\\' . Loader::helper('text')->camelcase($this->pkCategoryHandle) . 'Key';
+		$className = core_class('\\Core\\Permission\\Key\\'
+			. \Core::make("helper/text")->camelcase($this->pkCategoryHandle) . 'Key',
+			$this->getPackageHandle()
+		);
 		$ak = call_user_func(array($className, 'getByID'), $pkID);
 		return $ak;
 	}
