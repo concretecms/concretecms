@@ -75,6 +75,7 @@ class TranslateInterface extends DashboardPageController
                         // now we load the translations that currently exist for each section
                         $extractor->mergeTranslationsWithSectionFile($section, $translations);
                         $extractor->mergeTranslationsWithCore($section, $translations);
+                        $extractor->mergeTranslationsWithPackages($section, $translations);
                         $extractor->saveSectionTranslationsToFile($section, $translations);
     
                         // now that we've updated the translation file, we take all the translations and

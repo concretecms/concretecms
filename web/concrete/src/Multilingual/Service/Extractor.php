@@ -7,6 +7,7 @@ use Gettext\Extractors\Po as PoExtractor;
 use Gettext\Translations;
 use Gettext\Generators\Po as PoGenerator;
 use Gettext\Generators\Mo as MoGenerator;
+use Concrete\Core\Package\PackageList;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -111,6 +112,33 @@ class Extractor
                     $coreTranslation = $coreTranslations->find($translation);
                     if ($coreTranslation && $coreTranslation->hasTranslation()) {
                         $translation->mergeWith($coreTranslation, Translations::MERGE_PLURAL);
+                    }
+                }
+            }
+        }
+    }
+
+    public function mergeTranslationsWithPackages(Section $section, Translations $translations)
+    {
+        foreach (PackageList::get()->getPackages() as $package) {
+            /* @var $package \Concrete\Core\Package\Package */
+            $baseDir = $package->getPackagePath() . '/' . DIRNAME_LANGUAGES . '/' . $section->getLocale() . '/LC_MESSAGES';
+            $poFile = $baseDir . '/messages.po';
+            $moFile = $baseDir . '/messages.po';
+            $packageTranslations = null;
+            if (is_file($poFile)) {
+                $packageTranslations = PoExtractor::fromFile($poFile);
+            } elseif (is_file($moFile)) {
+                $packageTranslations = MoExtractor::fromFile($moFile);
+            }
+            if (isset($packageTranslations)) {
+                foreach ($translations as $translation) {
+                    /* @var $translation \Gettext\Translation */
+                    if (!$translation->hasTranslation()) {
+                        $packageTranslation = $packageTranslations->find($translation);
+                        if ($packageTranslation && $packageTranslation->hasTranslation()) {
+                            $translation->mergeWith($packageTranslation, Translations::MERGE_PLURAL);
+                        }
                     }
                 }
             }
