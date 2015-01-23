@@ -83,7 +83,7 @@ class Extractor
         $file = DIR_LANGUAGES_SITE_INTERFACE . '/' . $section->getLocale() . '.po';
         if (is_file($file)) {
             $sectionTranslations = PoExtractor::fromFile($file);
-            $translations->mergeWith($sectionTranslations, Translations::MERGE_ADD | self::MERGE_PLURAL);
+            $translations->mergeWith($sectionTranslations, Translations::MERGE_ADD | Translations::MERGE_PLURAL);
         }
     }
 
