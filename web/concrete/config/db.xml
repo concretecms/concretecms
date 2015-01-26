@@ -211,6 +211,14 @@
       <NOTNULL/>
       <DEFAULT value=""/>
     </field>
+    <field name="msNumPlurals" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="2"/>
+    </field>
+    <field name="msPluralRule" type="C" size="255">
+      <NOTNULL/>
+      <DEFAULT value="(n != 1)"/>
+    </field>
   </table>
   <table name="MultilingualPageRelations">
     <field name="mpRelationID" type="I" size="10">
@@ -246,7 +254,11 @@
     <field name="msgid" type="X">
         <NOTNULL/>
     </field>
+    <field name="msgidPlural" type="X">
+    </field>
     <field name="msgstr" type="X">
+    </field>
+    <field name="msgstrPlurals" type="X">
     </field>
     <field name="context" type="X">
     </field>
