@@ -276,10 +276,13 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             $r = array();
             $db = Loader::db();
             $cID = false;
+            $ppIsCanonical = false;
             while ((!$cID) && $path) {
-                $cID = $db->GetOne('select cID from PagePaths where cPath = ?', array($path));
+                $row = $db->GetRow('select cID, ppIsCanonical from PagePaths where cPath = ?', array($path));
+                $cID = $row['cID'];
                 if ($cID) {
                     $cPath = $path;
+                    $ppIsCanonical = (bool)$row['ppIsCanonical'];
                     break;
                 }
                 $path = substr($path, 0, strrpos($path, '/'));
@@ -287,6 +290,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
             if ($cID && $cPath) {
                 $c = Page::getByID($cID, 'ACTIVE');
+                $c->cPathFetchIsCanonical = $ppIsCanonical;
             } else {
                 $c = new Page();
                 $c->loadError(COLLECTION_NOT_FOUND);
@@ -302,6 +306,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
                 $cID = 1;
             }
             $c = Page::getByID($cID, 'ACTIVE');
+            $c->cPathFetchIsCanonical = true;
         }
 
         return $c;
