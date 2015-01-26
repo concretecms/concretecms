@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c45527ab746e75c46b94b9298d0e00c5",
+    "hash": "eb916751d0bbe065bfd21e78b784533f",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -909,16 +909,16 @@
         },
         {
             "name": "gettext/gettext",
-            "version": "v2.1",
+            "version": "v3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/oscarotero/Gettext.git",
-                "reference": "2be5da2f975df690910f99ebc7199a28da8b0a1b"
+                "reference": "e54627b820b9ff838934134ce403e22a7e86dd02"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/oscarotero/Gettext/zipball/2be5da2f975df690910f99ebc7199a28da8b0a1b",
-                "reference": "2be5da2f975df690910f99ebc7199a28da8b0a1b",
+                "url": "https://api.github.com/repos/oscarotero/Gettext/zipball/e54627b820b9ff838934134ce403e22a7e86dd02",
+                "reference": "e54627b820b9ff838934134ce403e22a7e86dd02",
                 "shasum": ""
             },
             "require": {
@@ -931,10 +931,7 @@
             "autoload": {
                 "psr-4": {
                     "Gettext\\": "src"
-                },
-                "files": [
-                    "src/translator_functions.php"
-                ]
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -958,7 +955,7 @@
                 "po",
                 "translation"
             ],
-            "time": "2014-11-21 13:06:04"
+            "time": "2015-01-22 21:42:54"
         },
         {
             "name": "hautelook/phpass",
@@ -1475,6 +1472,56 @@
                 "markdown"
             ],
             "time": "2014-08-10 19:25:52"
+        },
+        {
+            "name": "mlocati/concrete5-translation-library",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mlocati/concrete5-translation-library.git",
+                "reference": "58894ed37bf6c76d632b446d18427b2242ec3f8b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mlocati/concrete5-translation-library/zipball/58894ed37bf6c76d632b446d18427b2242ec3f8b",
+                "reference": "58894ed37bf6c76d632b446d18427b2242ec3f8b",
+                "shasum": ""
+            },
+            "require": {
+                "gettext/gettext": "3.*",
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "C5TL\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michele Locati",
+                    "email": "mlocati@gmail.com",
+                    "homepage": "https://github.com/mlocati",
+                    "role": "developer"
+                }
+            ],
+            "description": "Library to handle concrete5 core and package translations",
+            "homepage": "https://github.com/mlocati/concrete5-translation-library",
+            "keywords": [
+                "concrete5",
+                "i18n",
+                "internationalization",
+                "l10n",
+                "localization",
+                "packages",
+                "translate",
+                "translation"
+            ],
+            "time": "2015-01-23 16:49:37"
         },
         {
             "name": "mobiledetect/mobiledetectlib",
