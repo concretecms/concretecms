@@ -32,6 +32,8 @@ class Translation extends \Gettext\Translation
             $t->mtSectionID = $row['mtSectionID'];
             $t->setOriginal($row['msgid']);
             $t->setTranslation($row['msgstr']);
+            $t->setContext($row['context']);
+
             return $t;
         }
     }
