@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Attribute;
 use \Concrete\Core\Foundation\Object;
+use Gettext\Translations;
 use Loader;
 use \Concrete\Core\Package\PackageList;
 use \Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
@@ -171,6 +172,17 @@ class Set extends Object {
 		}
 	}
 
+    public static function exportTranslations()
+    {
+        $translations = new Translations();
+        $db = \Database::get();
+        $r = $db->Execute('select asID from AttributeSets order by asID asc');
+        while ($row = $r->FetchRow()) {
+            $set = static::getByID($row['asID']);
+            $translations->insert('AttributeSet', $set->getAttributeSetName());
+        }
+        return $translations;
+    }
 
 
 }

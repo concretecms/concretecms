@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Session;
 
+use Concrete\Core\Utility\IPAddress;
 use Config;
 use \Symfony\Component\HttpFoundation\Session\Session as SymfonySession;
 use \Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
@@ -17,23 +18,21 @@ class Session
         if ($app->isRunThroughCommandLineInterface()) {
             $storage = new MockArraySessionStorage();
         } else {
+            $options = Config::get('concrete.session.cookie');
+            $options['gc_max_lifetime'] = Config::get('concrete.session.max_lifetime');
+            $handler = null;
             if (Config::get('concrete.session.handler') == 'database') {
                 $db = \Database::get();
-                $storage = new NativeSessionStorage(array(),
-                    new PdoSessionHandler($db->getWrappedConnection(), array(
+                $handler = new PdoSessionHandler($db->getWrappedConnection(), array(
                             'db_table' => 'Sessions',
                             'db_id_col' => 'sessionID',
                             'db_data_col' => 'sessionValue',
                             'db_time_col' => 'sessionTime'
                         )
-                    )
-                );
-            } else {
-                $storage = new NativeSessionStorage();
+                    );
             }
-            $options = Config::get('concrete.session.cookie');
-            $options['gc_max_lifetime'] = Config::get('concrete.session.max_lifetime');
-            $storage->setOptions($options);
+            $storage = new NativeSessionStorage($options,$handler);
+            unset($options,$handler);
         }
 
         $session = new SymfonySession($storage);
@@ -45,14 +44,16 @@ class Session
 
     protected static function testSessionFixation(SymfonySession $session)
     {
+        $iph = Core::make('helper/validation/ip');
+        $currentIp = $iph->getRequestIP();
         $ip = $session->get('CLIENT_REMOTE_ADDR');
         $agent = $session->get('CLIENT_HTTP_USER_AGENT');
-        if ($ip && $ip != $_SERVER['REMOTE_ADDR'] || $agent && $agent != $_SERVER['HTTP_USER_AGENT']) {
+        if ($ip && $ip != $currentIp->getIp(IPAddress::FORMAT_IP_STRING) || $agent && $agent != $_SERVER['HTTP_USER_AGENT']) {
             $session->invalidate();
         }
 
-        if (!$ip && isset($_SERVER['REMOTE_ADDR'])) {
-            $session->set('CLIENT_REMOTE_ADDR', $_SERVER['REMOTE_ADDR']);
+        if (!$ip && $currentIp !== false) {
+            $session->set('CLIENT_REMOTE_ADDR', $currentIp->getIp(IPAddress::FORMAT_IP_STRING));
         }
         if (!$agent && isset($_SERVER['HTTP_USER_AGENT'])) {
             $session->set('CLIENT_HTTP_USER_AGENT', $_SERVER['HTTP_USER_AGENT']);

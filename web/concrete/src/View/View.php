@@ -72,7 +72,7 @@ class View extends AbstractView {
 
     public function setViewTheme($theme) {
         if (is_object($theme)) {
-            $this->themeHandle = $theme->getPageThemeHandle();
+            $this->themeHandle = $theme->getThemeHandle();
         } else {
             $this->themeHandle = $theme;
         }
@@ -161,10 +161,6 @@ class View extends AbstractView {
     }
 
     public function finishRender($contents) {
-        $event = new \Symfony\Component\EventDispatcher\GenericEvent();
-        $event->setArgument('contents', $contents);
-        Events::dispatch('on_page_output', $event);
-
         $event = new \Symfony\Component\EventDispatcher\GenericEvent();
         $event->setArgument('view', $this);
         Events::dispatch('on_render_complete', $event);

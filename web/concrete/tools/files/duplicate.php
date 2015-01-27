@@ -102,7 +102,7 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
                             <tr>
                                 <td><?= $fv->getType() ?></td>
                                 <td class="ccm-file-list-filename" width="100%">
-                                    <div style="width: 150px; word-wrap: break-word"><?= $fv->getTitle() ?></div>
+                                    <div style="width: 150px; word-wrap: break-word"><?=h($fv->getTitle()) ?></div>
                                 </td>
                                 <td><?= $dh->formatDateTime($f->getDateAdded()->getTimestamp()) ?></td>
                                 <td><?= $fv->getSize() ?></td>

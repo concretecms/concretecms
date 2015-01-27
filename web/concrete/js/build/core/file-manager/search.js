@@ -147,6 +147,7 @@
             my.$element.unbind('.concreteFileManagerChooseFile').on('click.concreteFileManagerChooseFile', 'tr[data-file-manager-file]', function() {
                 ConcreteEvent.publish('FileManagerBeforeSelectFile', {fID: $(this).attr('data-file-manager-file')});
                 ConcreteEvent.publish('FileManagerSelectFile', {fID: $(this).attr('data-file-manager-file')});
+                my.$downloadTarget.remove();
                 return false;
             });
         }
@@ -176,14 +177,37 @@
     /**
      * Static Methods
      */
-    ConcreteFileManager.launchDialog = function(callback) {
+    ConcreteFileManager.launchDialog = function(callback, opts ) {
         var w = $(window).width() - 53;
+        var data = {};
+        var i;
+
+        var options = {
+            filters: [], // filters must be an array of objects ex: [{ field: Concrete.const.Controller.Search.Files.FILTER_BY_TYPE, type: Concrete.const.Core.File.Type.Type.T_IMAGE }]
+        };
+
+        $.extend(options, opts);
+
+        if ( options.filters.length > 0 )
+        {
+            data['field\[\]'] = [];
+
+            for ( i = 0; i < options.filters.length; i++ )
+            {
+                var filter = $.extend(true, {}, options.filters[i] ); // clone
+                data['field\[\]'].push(filter.field);
+                delete ( filter.field );
+                $.extend( data, filter); // add all remaining fields to the data
+            }
+        }
+        
 
         $.fn.dialog.open({
             width: w,
             height: '100%',
             href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/file/search',
             modal: true,
+            data: data,
             title: ccmi18n_filemanager.title,
             onOpen: function() {
                 ConcreteEvent.unsubscribe('FileManagerSelectFile');
@@ -228,7 +252,7 @@
                 '<% } %>' +
                 '<li><a class="dialog-launch" dialog-modal="true" dialog-width="680" dialog-height="450" dialog-title="' + ccmi18n_filemanager.properties + '" href="' + CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/file/properties?fID=<%=item.fID%>">' + ccmi18n_filemanager.properties + '</a></li>' +
                 '<% if (item.canReplaceFile) { %>' +
-                    '<li><a class="dialog-launch" dialog-modal="true" dialog-width="300" dialog-height="320" dialog-title="' + ccmi18n_filemanager.replace + '" href="' + CCM_TOOLS_PATH + '/files/replace?fID=<%=item.fID%>">' + ccmi18n_filemanager.replace + '</a></li>' +
+                    '<li><a class="dialog-launch" dialog-modal="true" dialog-width="500" dialog-height="200" dialog-title="' + ccmi18n_filemanager.replace + '" href="' + CCM_TOOLS_PATH + '/files/replace?fID=<%=item.fID%>">' + ccmi18n_filemanager.replace + '</a></li>' +
                 '<% } %>' +
                 '<% if (item.canCopyFile) { %>' +
                     '<li><a href="#" data-file-manager-action="duplicate">' + ccmi18n_filemanager.duplicate + '</a></li>' +

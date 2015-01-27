@@ -63,7 +63,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 						'Posted by <span class="post-author">%1$s at <a href="%2$s">%3$s on %4$s</a></span>',
 						$profileLink,
 						$c->getLinkToCollection,
-						$dh->formatTime($c->getCollectionDatePublic())
+						$dh->formatTime($c->getCollectionDatePublic()),
 						$dh->formatDate($c->getCollectionDatePublic(), true)
 					); ?>
 				</p>

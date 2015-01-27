@@ -10,6 +10,7 @@ use Page;
 use Core;
 use PageList;
 use Concrete\Core\Attribute\Key\CollectionKey;
+use \Concrete\Core\Tree\Node\Type\Topic;
 
 class Controller extends BlockController
 {
@@ -97,7 +98,6 @@ class Controller extends BlockController
 
         if ($this->filterByRelated) {
             $ak = CollectionKey::getByHandle($this->relatedTopicAttributeKeyHandle);
-            $c = \Page::getCurrentPage();
             if (is_object($ak)) {
                 $topics = $c->getAttribute($ak->getAttributeKeyHandle());
                 if (count($topics) > 0 && is_array($topics)) {
@@ -227,13 +227,19 @@ class Controller extends BlockController
         $treeNodeID = $db->GetOne('select treeNodeID from TreeTopicNodes where treeNodeTopicName = ?', array($topic));
         if ($treeNodeID) {
             $this->list->filterByTopic(intval($treeNodeID));
+            $topicObj = Topic::getByID(intval($treeNodeID));
+            if (is_object($topicObj)) {
+                $seo = Core::make('helper/seo');
+                $seo->addTitleSegment($topicObj->getTreeNodeDisplayName());
+            }
         }
         $this->view();
     }
 
     public function action_filter_by_tag($tag = false)
     {
-        $db = Loader::db();
+        $seo = Core::make('helper/seo');
+        $seo->addTitleSegment($tag);
         $this->list->filterByTags(h($tag));
         $this->view();
     }
@@ -259,6 +265,10 @@ class Controller extends BlockController
             }
             $this->list->filterByPublicDate($start, '>=');
             $this->list->filterByPublicDate($end, '<=');
+            
+            $seo = Core::make('helper/seo');
+            $srv = Core::make('helper/date');
+            $seo->addTitleSegment($srv->date('F Y',$start));
         }
         $this->view();
     }
@@ -380,6 +390,7 @@ class Controller extends BlockController
             $args['pfID'] = 0;
         }
 
+        $args['pfID'] = intval($args['pfID']);
         parent::save($args);
 
     }

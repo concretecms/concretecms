@@ -103,7 +103,8 @@ class Controller extends BlockController {
     function getInternalLinkCID() {return $this->internalLinkCID;}
     function getLinkURL() {
         if (!empty($this->externalLink)) {
-            return $this->externalLink;
+            $sec = \Core::make('helper/security');
+            return $sec->sanitizeURL($this->externalLink);
         } else if (!empty($this->internalLinkCID)) {
             $linkToC = Page::getByID($this->internalLinkCID);
             return (empty($linkToC) || $linkToC->error) ? '' : Loader::helper('navigation')->getLinkToCollection($linkToC);

@@ -5,6 +5,7 @@ use Concrete\Core\Cache\Adapter\DoctrineCacheDriver;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
 use Config;
+use ORM;
 
 class Connection extends \Doctrine\DBAL\Connection
 {
@@ -20,7 +21,6 @@ class Connection extends \Doctrine\DBAL\Connection
         if (!$this->entityManager) {
             $this->entityManager = $this->createEntityManager();
         }
-
         return $this->entityManager;
     }
 
@@ -30,15 +30,7 @@ class Connection extends \Doctrine\DBAL\Connection
      */
     public function createEntityManager()
     {
-
-        $config = Setup::createConfiguration(
-            false,
-            Config::get('database.proxy_classes'),
-            new DoctrineCacheDriver('cache/expensive')
-        );
-        $driverImpl = $config->newDefaultAnnotationDriver(DIR_BASE_CORE . '/' . DIRNAME_CLASSES);
-        $config->setMetadataDriverImpl($driverImpl);
-        return EntityManager::create($this, $config);
+        return ORM::makeEntityManager($this, 'core');
     }
 
     /**
@@ -73,23 +65,11 @@ class Connection extends \Doctrine\DBAL\Connection
     public function query()
     {
         $args = func_get_args();
-        switch (func_num_args()) {
-            case 1:
-                $result = parent::query($args[0]);
-                break;
-            case 2:
-                if (is_array($args[1])) {
-                    $result = $this->executeQuery($args[0], $args[1]);
-                } else {
-                    $result = parent::query($args[0], $args[1]);
-                }
-                break;
-            default:
-                $result = call_user_func_array('parent::query', $args);
-                break;
+        if (isset($args) && isset($args[1]) && (is_string($args[1]) || is_array($args[1]))) {
+            return $this->executeQuery($args[0], $args[1]);
+        } else {
+            return call_user_func_array('parent::query', $args);
         }
-
-        return $result;
     }
 
     /**

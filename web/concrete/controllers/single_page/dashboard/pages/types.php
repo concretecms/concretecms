@@ -17,6 +17,11 @@ class Types extends DashboardPageController {
 		$this->view();
 	}
 
+    public function page_type_duplicated() {
+        $this->set('success', t('Page type copied successfully. Important! You will need to re-add any blocks into output areas that you had set on the original page type.'));
+        $this->view();
+    }
+
 	public function page_type_deleted() {
 		$this->set('success', t('Page type deleted successfully.'));
 		$this->view();
@@ -24,6 +29,10 @@ class Types extends DashboardPageController {
 
 	public function edit($ptID = false) {
 		$cm = PageType::getByID($ptID);
+        $cmp = new \Permissions($cm);
+        if (!$cmp->canEditPageType()) {
+            throw new \Exception(t('You do not have access to edit this page type.'));
+        }
 		$this->set('pagetype', $cm);
 	}
 
@@ -37,16 +46,47 @@ class Types extends DashboardPageController {
 		if (!is_object($pagetype)) {
 			$this->error->add(t('Invalid page type object.'));
 		}
-		if (!$this->token->validate('delete_page_type')) { 
+        $cmp = new \Permissions($pagetype);
+        if (!$cmp->canDeletePageType()) {
+            $this->error->add(t('You do not have access to delete this page type.'));
+        }
+		if (!$this->token->validate('delete_page_type')) {
 			$this->error->add(t($this->token->getErrorMessage()));
 		}
 		if (!$this->error->has()) {
 			$pagetype->delete();
 			$this->redirect('/dashboard/pages/types', 'page_type_deleted');
 		}
+        $this->view();
 	}
-	
-	public function submit($ptID = false) {
+
+    public function duplicate($ptID = false) {
+        $pagetype = PageType::getByID($ptID);
+        if (!is_object($pagetype)) {
+            $this->error->add(t('Invalid page type object.'));
+        }
+        if (!$this->token->validate('duplicate_page_type')) {
+            $this->error->add(t($this->token->getErrorMessage()));
+        }
+        $vs = Loader::helper('validation/strings');
+        $sec = Loader::helper('security');
+        $name = $sec->sanitizeString($this->post('ptName'));
+        $handle = $sec->sanitizeString($this->post('ptHandle'));
+        if (!$vs->notempty($name)) {
+            $this->error->add(t('You must specify a valid name for your page type.'));
+        }
+        if (!$vs->handle($handle)) {
+            $this->error->add(t('You must specify a valid handle for your page type.'));
+        }
+        if (!$this->error->has()) {
+            $pagetype->duplicate($handle, $name);
+            $this->redirect('/dashboard/pages/types', 'page_type_duplicated');
+        }
+        $this->view();
+    }
+
+
+    public function submit($ptID = false) {
 		$pagetype = PageType::getByID($ptID);
 		if (!is_object($pagetype)) {
 			$this->error->add(t('Invalid page type object.'));

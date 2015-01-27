@@ -2,6 +2,7 @@
 namespace Concrete\Core\Routing;
 
 use \Concrete\Core\Page\Event as PageEvent;
+use Concrete\Core\Page\Theme\Theme;
 use Request;
 use User;
 use Events;
@@ -11,6 +12,7 @@ use Config;
 use View;
 use Permissions;
 use Response;
+use Core;
 
 class DispatcherRouteCallback extends RouteCallback
 {
@@ -19,6 +21,7 @@ class DispatcherRouteCallback extends RouteCallback
     {
         $contents = $v->render();
         $response = new Response($contents, $code);
+
         return $response;
     }
 
@@ -29,12 +32,16 @@ class DispatcherRouteCallback extends RouteCallback
         if (is_object($c) && !$c->isError()) {
             $item = $c;
             $request->setCurrentPage($c);
+            $cnt = $item->getPageController();
+        } else {
+            $cnt = Core::make('\Concrete\Controller\Frontend\PageNotFound');
         }
-        $cnt = $item->getPageController();
+
         $v = $cnt->getViewObject();
         $cnt->on_start();
         $cnt->runAction('view');
         $v->setController($cnt);
+
         return $this->sendResponse($v, 404);
     }
 
@@ -45,18 +52,20 @@ class DispatcherRouteCallback extends RouteCallback
         if (is_object($c) && !$c->isError()) {
             $item = $c;
             $request->setCurrentPage($c);
+            $cnt = $item->getPageController();
+        } else {
+            $cnt = Core::make('\Concrete\Controller\Frontend\PageForbidden');
         }
-        $cnt = $item->getPageController();
         $v = $cnt->getViewObject();
         $cnt->on_start();
         $cnt->runAction('view');
         $v->setController($cnt);
+
         return $this->sendResponse($v, 403);
     }
 
     public function execute(Request $request, \Concrete\Core\Routing\Route $route = null, $parameters = array())
     {
-
         // figure out where we need to go
         $c = Page::getFromRequest($request);
         if ($c->isError() && $c->getError() == COLLECTION_NOT_FOUND) {
@@ -76,6 +85,10 @@ class DispatcherRouteCallback extends RouteCallback
                 $c = $home;
             }
         }
+        if (!$c->cPathFetchIsCanonical) {
+            // Handle redirect URL (additional page paths)
+            return Redirect::page($c, 301)->send();
+        }
 
         // maintenance mode
         if ((!$c->isAdminArea()) && ($c->getCollectionPath() != '/login')) {
@@ -85,6 +98,7 @@ class DispatcherRouteCallback extends RouteCallback
             ) {
                 $v = new View('/frontend/maintenance_mode');
                 $v->setViewTheme(VIEW_CORE_THEME);
+
                 return $this->sendResponse($v);
             }
         }
@@ -127,11 +141,27 @@ class DispatcherRouteCallback extends RouteCallback
         $cms->handleBaseURLRedirection();
         $cms->handleURLSlashes();
 
+        // Now we check to see if we're on the home page, and if it multilingual is enabled,
+        // and if so, whether we should redirect to the default language page.
+        if (Config::get('concrete.multilingual.enabled')) {
+            $dl = Core::make('multilingual/detector');
+            if ($c->getCollectionID() == HOME_CID && Config::get('concrete.multilingual.redirect_home_to_default_locale')) {
+                // Let's retrieve the default language
+                $ms = $dl->getPreferredSection();
+                if (is_object($ms) && $ms->getCollectionID() != HOME_CID) {
+                    Redirect::page($ms)->send();
+                    exit;
+                }
+            }
+
+            $dl->setupSiteInterfaceLocalization($c);
+        }
+
         $request->setCurrentPage($c);
-        require(DIR_BASE_CORE . '/bootstrap/process.php');
+        require DIR_BASE_CORE . '/bootstrap/process.php';
         $u = new User();
 
-        ## Fire the on_page_view Eventclass
+        // On page view event.
         $pe = new PageEvent($c);
         $pe->setUser($u);
         Events::dispatch('on_page_view', $pe);
@@ -153,16 +183,28 @@ class DispatcherRouteCallback extends RouteCallback
 
         $c->setController($controller);
         $view = $controller->getViewObject();
+
+        // Mobile theme
+        if (Config::get('concrete.misc.mobile_theme_id') > 0) {
+            $md = new \Mobile_Detect();
+            if ($md->isMobile()) {
+                $mobileTheme = Theme::getByID(Config::get('concrete.misc.mobile_theme_id'));
+                if ($mobileTheme instanceof Theme) {
+                    $view->setViewTheme($mobileTheme);
+                }
+            }
+        }
+
         // we update the current page with the one bound to this controller.
         $request->setCurrentPage($c);
+
         return $this->sendResponse($view);
     }
 
     public static function getRouteAttributes($callback)
     {
         $callback = new DispatcherRouteCallback($callback);
+
         return array('callback' => $callback);
     }
-
-
 }

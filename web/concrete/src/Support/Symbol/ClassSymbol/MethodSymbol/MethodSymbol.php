@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Support\Symbol\ClassSymbol\MethodSymbol;
 
+use Concrete\Core\Support\Symbol\ClassSymbol\ClassSymbol;
+
 class MethodSymbol
 {
 
@@ -8,6 +10,11 @@ class MethodSymbol
      * @var \ReflectionMethod
      */
     protected $reflectionMethod;
+
+    /**
+     * @var ClassSymbol
+     */
+    protected $classSymbol;
 
     /**
      * The method handle.
@@ -33,8 +40,9 @@ class MethodSymbol
     /**
      * @param \ReflectionMethod $method
      */
-    public function __construct(\ReflectionMethod $method)
+    public function __construct(ClassSymbol $class, \ReflectionMethod $method)
     {
+        $this->classSymbol = $class;
         $this->reflectionMethod = $method;
         $this->parameters = $method->getParameters();
         $this->handle = $method->getName();
@@ -55,7 +63,9 @@ class MethodSymbol
         }
         $rendered = $eol . implode($eol, array_map(trim, explode($eol, $method->getDocComment()))) . $eol;
         $visibility = \Reflection::getModifierNames($method->getModifiers());
-        $visibility[] = 'static';
+        if ($this->classSymbol->isFacade()) {
+            $visibility[] = 'static';
+        }
         $rendered .= implode(' ', array_unique($visibility)) . ' function ' . $this->handle . '(';
 
         $params = array();
@@ -127,7 +137,9 @@ class MethodSymbol
         $rendered .= implode(', ', $params) . "){$eol}{{$eol}";
         $class_name = $method->getDeclaringClass()->getName();
         if ($method->isStatic()) {
-            $rendered .= "{$padding}return {$class_name}::{$method->getName()}(" . implode(', ', $calling_params) . ");";
+            $rendered .= "{$padding}return {$class_name}::{$method->getName()}(" . implode(
+                    ', ',
+                    $calling_params) . ");";
         } else {
             $rendered .= "{$padding}/** @var {$class_name} \$instance */{$eol}";
             $rendered .= "{$padding}return \$instance->{$method->getName()}(" . implode(', ', $calling_params) . ");";

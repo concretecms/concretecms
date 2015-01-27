@@ -81,9 +81,23 @@ var ConcreteToolbar = function() {
         });
 
 		$('[data-launch-panel]').unbind().on('click', function() {
-			var panelID = $(this).attr('data-launch-panel');
-			$(this).toggleClass('ccm-launch-panel-loading');
+            var $this = $(this);
+			var panelID = $this.attr('data-launch-panel');
 			var panel = ConcretePanelManager.getByIdentifier(panelID);
+            if ( !panel.willBePinned() ) $this.toggleClass('ccm-launch-panel-loading');
+            
+            if ( panel.isPinable() ) 
+            {
+                var parent = $($this.parent());
+                if ( panel.willBePinned() || panel.pinned() ) parent.toggleClass("ccm-toolbar-page-edit-mode-pinned ");
+				if (panel.willBePinned()) {
+					$this.attr('data-original-icon-class', $this.find('i').attr('class'));
+					$this.find('i').removeClass().addClass('fa fa-lock');
+				} else if ($this.attr('data-original-icon-class')) {
+					$this.find('i').removeClass().addClass($this.attr('data-original-icon-class'));
+					$this.removeAttr('data-original-icon-class');
+				}
+            }
 			panel.toggle();
 			return false;
 		});

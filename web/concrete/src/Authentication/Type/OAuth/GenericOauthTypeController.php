@@ -46,18 +46,6 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
     }
 
     /**
-     * @return AbstractService
-     */
-    abstract public function getService();
-
-    /**
-     * Whether or not we will attempt to register the user.
-     *
-     * @return bool
-     */
-    abstract public function supportsRegistration();
-
-    /**
      * @return Array
      */
     public function getAdditionalRequestParameters()
@@ -65,49 +53,100 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
         return array();
     }
 
-    /**
-     * @param \User $user
-     * @param       $binding
-     * @return int|null
-     */
-    public function bindUser(\User $user, $binding)
+    public function handle_error($error = false)
     {
-        return $this->bindUserID(intval($user->getUserID(), 10), $binding);
+        if (!$error) {
+            $error = \Session::get('oauth_last_error');
+            \Session::set('oauth_last_error', null);
+        }
+        if (!$error) {
+            $error = 'An unexpected error occurred.';
+        }
+
+        $this->set('error', $error);
+    }
+
+    public function showError($error = null)
+    {
+        if ($error) {
+            $this->markError($error);
+        }
+        id(new \RedirectResponse(\URL::to('/login/callback/' . $this->getHandle() . '/handle_error')))->send();
+    }
+
+    public function markError($error)
+    {
+        \Session::set('oauth_last_error', $error);
+    }
+
+    public function handle_success($message = false)
+    {
+        if (!$message) {
+            $message = \Session::get('oauth_last_message');
+            \Session::set('oauth_last_message', null);
+        }
+        if ($message) {
+            $this->set('message', $message);
+        }
+    }
+
+    public function showSuccess($message = null)
+    {
+        if ($message) {
+            $this->markSuccess($message);
+        }
+        id(new \RedirectResponse(\URL::to('/login/callback/' . $this->getHandle() . '/handle_success')))->send();
+    }
+
+    public function markSuccess($message)
+    {
+        \Session::set('oauth_last_message', $message);
     }
 
     /**
-     * @param $user_id
-     * @param $binding
-     * @return int|null
+     * Empty because we don't use the authenticate entry point.
      */
-    public function bindUserID($user_id, $binding)
+    public function authenticate()
     {
+    }
 
-        if (!$binding || !$user_id) {
-            return null;
-        }
-        $qb = \Database::connection()->createQueryBuilder();
+    /**
+     * Create a cookie hash to identify the user indefinitely
+     *
+     * @param \User $u
+     * @return string Unique hash to be used to verify the users identity
+     */
+    public function buildHash(\User $u)
+    {
+        return '';
+    }
 
-        $or = $qb->expr()->orX();
-        $or->add($qb->expr()->eq('user_id', intval($user_id, 10)));
-        $or->add($qb->expr()->eq('binding', ':binding'));
+    /**
+     * Hash authentication disabled for oauth
+     *
+     * @param \User  $u object requesting verification.
+     * @param string $hash
+     * @return bool        returns true if the hash is valid, false if not
+     */
+    public function verifyHash(\User $u, $hash)
+    {
+        return false;
+    }
 
-        $and = $qb->expr()->andX();
-        $and->add($qb->expr()->comparison('namespace', '=', ':namespace'));
-        $and->add($or);
+    /**
+     * @return \OAuth\Common\Token\TokenInterface
+     */
+    public function getToken()
+    {
+        return $this->token;
+    }
 
-        $qb->delete('OauthUserMap')->where($and)
-           ->setParameter(':namespace', $this->getHandle())
-           ->setParameter(':binding', $binding)
-           ->execute();
-
-        return \Database::connection()->insert(
-            'OauthUserMap',
-            array(
-                'user_id'   => $user_id,
-                'binding'   => $binding,
-                'namespace' => $this->getHandle()
-            ));
+    /**
+     * @param \OAuth\Common\Token\TokenInterface $token
+     */
+    public function setToken(TokenInterface $token)
+    {
+        $this->token = $token;
     }
 
     /**
@@ -117,6 +156,12 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
     protected function attemptAuthentication()
     {
         $extractor = $this->getExtractor();
+
+        if (!$this->isValid()) {
+            throw new Exception(
+                'Invalid account, user cannot be logged in.');
+        }
+
         $user_id = $this->getBoundUserID($extractor->getUniqueId());
 
         if ($user_id && $user_id > 0) {
@@ -141,75 +186,58 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
         return null;
     }
 
-    public function supportsEmail()
+    /**
+     * @return \OAuth\UserData\Extractor\ExtractorInterface
+     * @throws \OAuth\UserData\Exception\UndefinedExtractorException
+     */
+    public function getExtractor($new = false)
     {
-        return $this->getExtractor()->supportsEmail();
+        if ($new || !$this->extractor) {
+            $this->extractor = \Core::make('oauth_extractor', $this->getService());
+        }
+        return $this->extractor;
     }
 
-    public function supportsVerifiedEmail()
+    /**
+     * @return AbstractService
+     */
+    abstract public function getService();
+
+    protected function isValid()
     {
-        return $this->getExtractor()->supportsVerifiedEmail();
+        return $this->extractor->supportsUniqueId();
     }
 
-    public function supportsFirstName()
+    /**
+     * @param $binding
+     * @return bool|string
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function getBoundUserID($binding)
     {
-        return $this->getExtractor()->supportsFirstName();
+        $result = \Database::connection()->executeQuery(
+            'SELECT user_id FROM OauthUserMap WHERE namespace=? AND binding=?',
+            array(
+                $this->getHandle(),
+                $binding
+            ));
+
+        return $result->fetchColumn();
     }
 
-    public function supportsLastName()
-    {
-        return $this->getExtractor()->supportsLastName();
-    }
+    /**
+     * Whether or not we will attempt to register the user.
+     *
+     * @return bool
+     */
+    abstract public function supportsRegistration();
 
-    public function supportsFullName()
-    {
-        return $this->getExtractor()->supportsFullName();
-    }
-
-    public function supportsUsername()
-    {
-        return $this->getExtractor()->supportsUsername();
-    }
-
-    public function supportsUniqueId()
-    {
-        return $this->getExtractor()->supportsUniqueId();
-    }
-
-    public function isEmailVerified()
-    {
-        return $this->getExtractor()->isEmailVerified();
-    }
-
-    public function getEmail()
-    {
-        return $this->getExtractor()->getEmail();
-    }
-
-    public function getFirstName()
-    {
-        return $this->getExtractor()->getFirstName();
-    }
-
-    public function getLastName()
-    {
-        return $this->getExtractor()->getLastName();
-    }
-
-    public function getFullName()
-    {
-        return $this->getExtractor()->getFullName();
-    }
-
-    public function getUsername()
-    {
-        return $this->getExtractor()->getUsername();
-    }
-
-    public function getUniqueId()
-    {
-        return $this->getExtractor()->getUniqueId();
-    }
+    /**
+     * Whether or not we will attempt to register the user.
+     *
+     * @return bool
+     */
+    abstract public function registrationGroupID();
 
     protected function createUser()
     {
@@ -280,6 +308,14 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
             throw new Exception('Unable to create new account.');
         }
 
+        if ($group_id = intval($this->registrationGroupID(), 10)) {
+            $group = \Group::getByID($group_id);
+            if ($group && is_object($group) && !$group->isError()) {
+                $user = \User::getByUserID($user_info->getUserID());
+                $user->enterGroup($group);
+            }
+        }
+
         $key = \UserAttributeKey::getByHandle('first_name');
         if ($key) {
             $user_info->setAttribute($key, $first_name);
@@ -296,129 +332,119 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
         return $user;
     }
 
+    public function supportsEmail()
+    {
+        return $this->getExtractor()->supportsEmail();
+    }
+
+    public function supportsUniqueId()
+    {
+        return $this->getExtractor()->supportsUniqueId();
+    }
+
+    public function supportsVerifiedEmail()
+    {
+        return $this->getExtractor()->supportsVerifiedEmail();
+    }
+
+    public function isEmailVerified()
+    {
+        return $this->getExtractor()->isEmailVerified();
+    }
+
+    public function getEmail()
+    {
+        return $this->getExtractor()->getEmail();
+    }
+
+    public function supportsFullName()
+    {
+        return $this->getExtractor()->supportsFullName();
+    }
+
+    public function supportsFirstName()
+    {
+        return $this->getExtractor()->supportsFirstName();
+    }
+
+    public function supportsLastName()
+    {
+        return $this->getExtractor()->supportsLastName();
+    }
+
+    public function getFirstName()
+    {
+        return $this->getExtractor()->getFirstName();
+    }
+
+    public function getLastName()
+    {
+        return $this->getExtractor()->getLastName();
+    }
+
+    public function getFullName()
+    {
+        return $this->getExtractor()->getFullName();
+    }
+
+    public function supportsUsername()
+    {
+        return $this->getExtractor()->supportsUsername();
+    }
+
+    public function getUsername()
+    {
+        return $this->getExtractor()->getUsername();
+    }
+
     /**
+     * @param \User $user
+     * @param       $binding
+     * @return int|null
+     */
+    public function bindUser(\User $user, $binding)
+    {
+        return $this->bindUserID(intval($user->getUserID(), 10), $binding);
+    }
+
+    /**
+     * @param $user_id
      * @param $binding
-     * @return bool|string
-     * @throws \Doctrine\DBAL\DBALException
+     * @return int|null
      */
-    public function getBoundUserID($binding)
+    public function bindUserID($user_id, $binding)
     {
-        $result = \Database::connection()->executeQuery(
-            'SELECT user_id FROM OauthUserMap WHERE namespace=? AND binding=?',
+
+        if (!$binding || !$user_id) {
+            return null;
+        }
+        $qb = \Database::connection()->createQueryBuilder();
+
+        $or = $qb->expr()->orX();
+        $or->add($qb->expr()->eq('user_id', intval($user_id, 10)));
+        $or->add($qb->expr()->eq('binding', ':binding'));
+
+        $and = $qb->expr()->andX();
+        $and->add($qb->expr()->comparison('namespace', '=', ':namespace'));
+        $and->add($or);
+
+        $qb->delete('OauthUserMap')->where($and)
+           ->setParameter(':namespace', $this->getHandle())
+           ->setParameter(':binding', $binding)
+           ->execute();
+
+        return \Database::connection()->insert(
+            'OauthUserMap',
             array(
-                $this->getHandle(),
-                $binding
+                'user_id'   => $user_id,
+                'binding'   => $binding,
+                'namespace' => $this->getHandle()
             ));
-
-        return $result->fetchColumn();
     }
 
-    public function handle_error($error = false)
+    public function getUniqueId()
     {
-        if (!$error) {
-            $error = \Session::get('oauth_last_error');
-            \Session::set('oauth_last_error', null);
-        }
-        if (!$error) {
-            $error = 'An unexpected error occurred.';
-        }
-
-        $this->set('error', $error);
-    }
-
-    public function showError($error = null)
-    {
-        if ($error) {
-            $this->markError($error);
-        }
-        id(new \RedirectResponse(\URL::to('/login/callback/' . $this->getHandle() . '/handle_error')))->send();
-    }
-
-    public function markError($error)
-    {
-        \Session::set('oauth_last_error', $error);
-    }
-
-    public function handle_success($message = false)
-    {
-        if (!$message) {
-            $message = \Session::get('oauth_last_message');
-            \Session::set('oauth_last_message', null);
-        }
-        if ($message) {
-            $this->set('message', $message);
-        }
-    }
-
-    public function showSuccess($message = null)
-    {
-        if ($message) {
-            $this->markSuccess($message);
-        }
-        id(new \RedirectResponse(\URL::to('/login/callback/' . $this->getHandle() . '/handle_success')))->send();
-    }
-
-    public function markSuccess($message)
-    {
-        \Session::set('oauth_last_message', $message);
-    }
-
-    /**
-     * @return \OAuth\UserData\Extractor\ExtractorInterface
-     * @throws \OAuth\UserData\Exception\UndefinedExtractorException
-     */
-    public function getExtractor($new = false)
-    {
-        if ($new || !$this->extractor) {
-            $this->extractor = \Core::make('oauth_extractor', $this->getService());
-        }
-        return $this->extractor;
-    }
-
-    /**
-     * Empty because we don't use the authenticate entry point.
-     */
-    public function authenticate()
-    {
-    }
-
-    /**
-     * Create a cookie hash to identify the user indefinitely
-     *
-     * @param \User $u
-     * @return string Unique hash to be used to verify the users identity
-     */
-    public function buildHash(\User $u)
-    {
-        return '';
-    }
-
-    /**
-     * Hash authentication disabled for oauth
-     *
-     * @param \User  $u object requesting verification.
-     * @param string $hash
-     * @return bool        returns true if the hash is valid, false if not
-     */
-    public function verifyHash(\User $u, $hash)
-    {
-        return false;
-    }
-
-    /**
-     * @return \OAuth\Common\Token\TokenInterface
-     */
-    public function getToken()
-    {
-        return $this->token;
-    }
-
-    /**
-     * @param \OAuth\Common\Token\TokenInterface $token
-     */
-    public function setToken(TokenInterface $token)
-    {
-        $this->token = $token;
+        return $this->getExtractor()->getUniqueId();
     }
 
 }

@@ -9,6 +9,7 @@ use \Concrete\Core\Authentication\AuthenticationTypeFailureException;
 use Loader;
 use User;
 use UserAttributeKey;
+use Localization;
 
 class EditProfile extends AccountPageController {
 
@@ -20,6 +21,19 @@ class EditProfile extends AccountPageController {
 		} else {
 			throw new Exception(t('You must be logged in to access this page.'));
 		}
+        $locales = array();
+		$languages = Localization::getAvailableInterfaceLanguages();
+		if (count($languages) > 0) {
+			array_unshift($languages, 'en_US');
+		}
+		if (count($languages) > 0) {
+			foreach ($languages as $lang) {
+				$locales[$lang] = \Punic\Language::getName($lang, $lang);
+			}
+			asort($locales);
+			$locales = array_merge(array('' => tc('Default locale', '** Default')), $locales);
+		}
+        $this->set('locales', $locales);
 	}
 
 	public function callback($type,$method='callback') {

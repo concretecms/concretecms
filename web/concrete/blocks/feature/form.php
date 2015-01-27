@@ -49,15 +49,11 @@
 <script type="text/javascript">
 $(function() {
     $('div.ccm-block-feature-select-icon').on('change', 'select', function() {
-        var $preview = $('i[data-preview=icon]');
-            icon = $(this).val();
-
-        $preview.removeClass();
-        if (icon) {
-            $preview.addClass('fa fa-' + icon);
+        $('i[data-preview="icon"]').removeClass();
+        if($(this).val()) {
+            $('i[data-preview="icon"]').addClass('fa fa-' + $(this).val());
         }
     });
-
     $('select[data-select=feature-link-type]').on('change', function() {
        if ($(this).val() == '0') {
            $('div[data-select-contents=feature-link-type-internal]').hide();

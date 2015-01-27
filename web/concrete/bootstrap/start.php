@@ -34,6 +34,7 @@ use Illuminate\Filesystem\Filesystem;
  * Instantiate concrete5.
  * ----------------------------------------------------------------------------
  */
+/** @var Application $cms */
 $cms = require DIR_APPLICATION . '/bootstrap/start.php';
 $cms->instance('app', $cms);
 
@@ -250,6 +251,13 @@ PermissionKey::loadAll();
 
 /**
  * ----------------------------------------------------------------------------
+ * Fire an event for intercepting the dispatch
+ * ----------------------------------------------------------------------------
+ */
+\Events::dispatch('on_before_dispatch');
+
+/**
+ * ----------------------------------------------------------------------------
  * Get the response to the current request
  * ----------------------------------------------------------------------------
  */
@@ -259,7 +267,6 @@ $response = $cms->dispatch($request);
  * Send it to the user
  * ----------------------------------------------------------------------------
  */
-
 $response->send();
 
 /**

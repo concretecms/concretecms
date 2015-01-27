@@ -24,7 +24,12 @@ if (is_object($c)) {
 			if($c->isSystemPage()) {
 				$pageTitle = t($pageTitle);
 			}
-			$pageTitle = sprintf(Config::get('concrete.seo.title_format'), Config::get('concrete.site'), $pageTitle);
+			$seo = Core::make('helper/seo');
+			$seo->addTitleSegment($pageTitle);
+			$seo->setSiteName(Config::get('concrete.site'));
+			$seo->setTitleFormat(Config::get('concrete.seo.title_format'));
+			$seo->setTitleSegmentSeparator(Config::get('concrete.seo.title_segment_separator'));
+			$pageTitle = $seo->getTitle();
 		}
 	}
 	$pageDescription = (!isset($pageDescription) || !$pageDescription) ? $c->getCollectionDescription() : $pageDescription;
@@ -122,24 +127,36 @@ $modernIconFID = intval(Config::get('concrete.misc.modern_tile_thumbnail_fid'));
 $modernIconBGColor = strval(Config::get('concrete.misc.modern_tile_thumbnail_bgcolor'));
 
 if($favIconFID) {
-	$f = File::getByID($favIconFID); ?>
-	<link rel="shortcut icon" href="<?php echo $f->getRelativePath()?>" type="image/x-icon" />
-	<link rel="icon" href="<?php echo $f->getRelativePath()?>" type="image/x-icon" />
-<?php }
+    $f = File::getByID($favIconFID);
+    if (is_object($f)) {
+        ?>
+        <link rel="shortcut icon" href="<?php echo $f->getRelativePath() ?>" type="image/x-icon"/>
+        <link rel="icon" href="<?php echo $f->getRelativePath() ?>" type="image/x-icon"/>
+    <?php
+    }
+}
 
 if($appleIconFID) {
-	$f = File::getByID($appleIconFID); ?>
-	<link rel="apple-touch-icon" href="<?php echo $f->getRelativePath()?>"  />
-<?php }
+    $f = File::getByID($appleIconFID);
+    if (is_object($f)) {
+        ?>
+        <link rel="apple-touch-icon" href="<?php echo $f->getRelativePath() ?>"/>
+    <?php
+    }
+}
 
 if($modernIconFID) {
 	$f = File::getByID($modernIconFID);
-	?><meta name="msapplication-TileImage" content="<?php echo $f->getRelativePath(); ?>" /><?php
-	echo "\n";
-	if(strlen($modernIconBGColor)) {
-		?><meta name="msapplication-TileColor" content="<?php echo $modernIconBGColor; ?>" /><?php
-		echo "\n";
-	}
+    if(is_object($f)) {
+        ?>
+        <meta name="msapplication-TileImage" content="<?php echo $f->getRelativePath(); ?>" /><?php
+        echo "\n";
+        if (strlen($modernIconBGColor)) {
+            ?>
+            <meta name="msapplication-TileColor" content="<?php echo $modernIconBGColor; ?>" /><?php
+            echo "\n";
+        }
+    }
 }
 
 if (is_object($cp)) {

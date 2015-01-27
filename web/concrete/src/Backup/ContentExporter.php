@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Backup;
+
 use Concrete\Core\Page\Feed;
+use Concrete\Core\Page\PageList;
 use Concrete\Core\Page\Type\Composer\FormLayoutSetControl;
 use Concrete\Core\Tree\Tree;
 use Page;
@@ -48,99 +50,111 @@ use FileImporter;
 use FileList;
 use ZipArchive;
 
-class ContentExporter {
+class ContentExporter
+{
 
-	protected $x; // the xml object for export
-	protected static $mcBlockIDs = array();
-	protected static $ptComposerOutputControlIDs = array();
-
-	public function run() {
-		$this->x = new SimpleXMLElement("<concrete5-cif></concrete5-cif>");
-		$this->x->addAttribute('version', '1.0');
-
-		// First, attribute categories
-		AttributeKeyCategory::exportList($this->x);
-
-		// Features
-		Feature::exportList($this->x);
-		FeatureCategory::exportList($this->x);
-
-		ConversationEditor::exportList($this->x);
-
-		ConversationRatingType::exportList($this->x);
-
-		// composer
-		PageTypePublishTargetType::exportList($this->x);
-		PageTypeComposerControlType::exportList($this->x);
-		PageType::exportList($this->x);
-
-		// attribute types
-		AttributeType::exportList($this->x);
-
-		// then block types
-		BlockTypeList::exportList($this->x);
-
-		// now block type sets (including user)
-		BlockTypeSet::exportList($this->x);
-
-		// gathering
-		GatheringDataSource::exportList($this->x);
-		GatheringItemTemplate::exportList($this->x);
-
-		// now attribute keys (including user)
-		AttributeKey::exportList($this->x);
-
-		// now attribute keys (including user)
-		AttributeSet::exportList($this->x);
-
-		PageTemplate::exportList($this->x);
-
-		// now theme
-		PageTheme::exportList($this->x);
-
-		// now packages
-		PackageList::export($this->x);
-
-		// permission access entity types
-		PermissionAccessEntityType::exportList($this->x);
-
-		// now task permissions
-		PermissionKey::exportList($this->x);
-
-		// workflow types
-		WorkflowType::exportList($this->x);
-
-		// now jobs
-
-		Job::exportList($this->x);
-
-		// now single pages
-		$singlepages = $this->x->addChild("singlepages");
-		$db = Loader::db();
-		$r = $db->Execute('select cID from Pages where cFilename is not null and cFilename <> "" and cID not in (select cID from Stacks) order by cID asc');
-		while($row = $r->FetchRow()) {
-			$pc = Page::getByID($row['cID'], 'RECENT');
-			$pc->export($singlepages);
-		}
-
-		// now stacks/global areas
-
-		StackList::export($this->x);
-
-		// now content pages
-		$pages = $this->x->addChild("pages");
-		$db = Loader::db();
-		$r = $db->Execute('select Pages.cID from Pages where cIsTemplate = 0 and cFilename is null or cFilename = "" order by cID asc');
-		while($row = $r->FetchRow()) {
-			$pc = Page::getByID($row['cID'], 'RECENT');
-            if ($pc->getPageTypeHandle() == STACKS_PAGE_TYPE) {
-                continue;
-            }
-			$pc->export($pages);
-		}
+    protected $x; // the xml object for export
+    protected static $mcBlockIDs = array();
+    protected static $ptComposerOutputControlIDs = array();
 
 
-		SystemCaptchaLibrary::exportList($this->x);
+    /**
+     * @deprecated
+     */
+    public function run()
+    {
+        $this->exportAll();
+    }
+
+    protected function getXMLRoot()
+    {
+        $root = new SimpleXMLElement("<concrete5-cif></concrete5-cif>");
+        $root->addAttribute('version', '1.0');
+        return $root;
+    }
+
+    public function getXMLNode()
+    {
+        return $this->x;
+    }
+
+    public function exportAll()
+    {
+        $this->x = $this->getXMLRoot();
+
+        // First, attribute categories
+        AttributeKeyCategory::exportList($this->x);
+
+        // Features
+        Feature::exportList($this->x);
+        FeatureCategory::exportList($this->x);
+
+        ConversationEditor::exportList($this->x);
+
+        ConversationRatingType::exportList($this->x);
+
+        // composer
+        PageTypePublishTargetType::exportList($this->x);
+        PageTypeComposerControlType::exportList($this->x);
+        PageType::exportList($this->x);
+
+        // attribute types
+        AttributeType::exportList($this->x);
+
+        // then block types
+        BlockTypeList::exportList($this->x);
+
+        // now block type sets (including user)
+        BlockTypeSet::exportList($this->x);
+
+        // gathering
+        GatheringDataSource::exportList($this->x);
+        GatheringItemTemplate::exportList($this->x);
+
+        // now attribute keys (including user)
+        AttributeKey::exportList($this->x);
+
+        // now attribute keys (including user)
+        AttributeSet::exportList($this->x);
+
+        PageTemplate::exportList($this->x);
+
+        // now theme
+        PageTheme::exportList($this->x);
+
+        // now packages
+        PackageList::export($this->x);
+
+        // permission access entity types
+        PermissionAccessEntityType::exportList($this->x);
+
+        // now task permissions
+        PermissionKey::exportList($this->x);
+
+        // workflow types
+        WorkflowType::exportList($this->x);
+
+        // now jobs
+
+        Job::exportList($this->x);
+
+        // now single pages
+        $singlepages = $this->x->addChild("singlepages");
+        $db = Loader::db();
+        $r = $db->Execute('select cID from Pages where cFilename is not null and cFilename <> "" and cID not in (select cID from Stacks) order by cID asc');
+        while ($row = $r->FetchRow()) {
+            $pc = Page::getByID($row['cID'], 'RECENT');
+            $pc->export($singlepages);
+        }
+
+        // now stacks/global areas
+
+        StackList::export($this->x);
+
+        // now content pages
+        $this->exportPages($this->x);
+
+        SystemCaptchaLibrary::exportList($this->x);
 
         \Concrete\Core\Sharing\SocialNetwork\Link::exportList($this->x);
 
@@ -150,41 +164,62 @@ class ContentExporter {
 
         Tree::exportList($this->x);
 
-	}
+    }
 
-	public static function addMasterCollectionBlockID($b, $id) {
-		self::$mcBlockIDs[$b->getBlockID()] = $id;
-	}
+    public function exportPages($xml = null, PageList $pl = null)
+    {
+        if (!$xml) {
+            $this->x = $this->getXMLRoot();
+        }
+        $node = $this->x->addChild("pages");
+        if (!$pl) {
+            $pl = new PageList();
+        }
+        $pl->ignorePermissions();
+        $pl->getQueryObject()->andWhere("cFilename is null or cFilename = ''");
+        $pages = $pl->getResults();
+        foreach ($pages as $pc) {
+            $pc->export($node);
+        }
+    }
 
-	public static function getMasterCollectionTemporaryBlockID($b) {
-		if (isset(self::$mcBlockIDs[$b->getBlockID()])) {
-			return self::$mcBlockIDs[$b->getBlockID()];
-		}
-	}
+    public static function addMasterCollectionBlockID($b, $id)
+    {
+        self::$mcBlockIDs[$b->getBlockID()] = $id;
+    }
 
-	public static function addPageTypeComposerOutputControlID(FormLayoutSetControl $control, $id) {
-		self::$ptComposerOutputControlIDs[$control->getPageTypeComposerFormLayoutSetControlID()] = $id;
-	}
+    public static function getMasterCollectionTemporaryBlockID($b)
+    {
+        if (isset(self::$mcBlockIDs[$b->getBlockID()])) {
+            return self::$mcBlockIDs[$b->getBlockID()];
+        }
+    }
 
-	public static function getPageTypeComposerOutputControlTemporaryID(FormLayoutSetControl $control) {
-		if (isset(self::$ptComposerOutputControlIDs[$control->getPageTypeComposerFormLayoutSetControlID()])) {
-			return self::$ptComposerOutputControlIDs[$control->getPageTypeComposerFormLayoutSetControlID()];
-		}
-	}
+    public static function addPageTypeComposerOutputControlID(FormLayoutSetControl $control, $id)
+    {
+        self::$ptComposerOutputControlIDs[$control->getPageTypeComposerFormLayoutSetControlID()] = $id;
+    }
 
-	public function output() {
-		$xml = $this->x->asXML();
+    public static function getPageTypeComposerOutputControlTemporaryID(FormLayoutSetControl $control)
+    {
+        if (isset(self::$ptComposerOutputControlIDs[$control->getPageTypeComposerFormLayoutSetControlID()])) {
+            return self::$ptComposerOutputControlIDs[$control->getPageTypeComposerFormLayoutSetControlID()];
+        }
+    }
 
-		// remove crappy characters
-        return preg_replace('/[\x00-\x1F\x7F]/', '', $xml);
+    public function output()
+    {
+        $xml = $this->x->asXML();
 
-	}
+        // remove crappy characters
+        return preg_replace('/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', $xml);
+    }
 
-	public function getFilesArchive()
+    public function getFilesArchive()
     {
 
-		$vh = Loader::helper("validation/identifier");
-		$archive = $vh->getString();
+        $vh = Loader::helper("validation/identifier");
+        $archive = $vh->getString();
 
         $fl = new FileList();
         $files = $fl->getResults();
@@ -194,8 +229,8 @@ class ContentExporter {
             try {
                 $zip = new ZipArchive;
                 $res = $zip->open($filename, ZipArchive::CREATE);
-                if ($res === TRUE) {
-                    foreach($files as $f) {
+                if ($res === true) {
+                    foreach ($files as $f) {
                         $zip->addFromString($f->getFilename(), $f->getFileContents());
                     }
                     $zip->close();
@@ -203,50 +238,56 @@ class ContentExporter {
                 } else {
                     throw new Exception(t('Could not open with ZipArchive::CREATE'));
                 }
-            } catch(Exception $e) {
+            } catch (Exception $e) {
                 throw new Exception(t('Failed to create zip file as "%s": %s', $filename, $e->getMessage()));
             }
         }
 
-		return $archive;
-	}
+        return $archive;
+    }
 
-	public static function replacePageWithPlaceHolder($cID) {
-		if ($cID > 0) {
-			$c = Page::getByID($cID);
-			return '{ccm:export:page:' . $c->getCollectionPath() . '}';
-		}
-	}
+    public static function replacePageWithPlaceHolder($cID)
+    {
+        if ($cID > 0) {
+            $c = Page::getByID($cID);
+            return '{ccm:export:page:' . $c->getCollectionPath() . '}';
+        }
+    }
 
-	public static function replaceFileWithPlaceHolder($fID) {
-		if ($fID > 0) {
-			$f = File::getByID($fID);
-			return '{ccm:export:file:' . $f->getFileName() . '}';
-		}
-	}
+    public static function replaceFileWithPlaceHolder($fID)
+    {
+        if ($fID > 0) {
+            $f = File::getByID($fID);
+            return '{ccm:export:file:' . $f->getFileName() . '}';
+        }
+    }
 
-	public static function replacePageWithPlaceHolderInMatch($cID) {
-		if ($cID[1] > 0) {
-			$cID = $cID[1];
-			return self::replacePageWithPlaceHolder($cID);
-		}
-	}
+    public static function replacePageWithPlaceHolderInMatch($cID)
+    {
+        if ($cID[1] > 0) {
+            $cID = $cID[1];
+            return self::replacePageWithPlaceHolder($cID);
+        }
+    }
 
-	public static function replaceFileWithPlaceHolderInMatch($fID) {
-		if ($fID[1] > 0) {
-			$fID = $fID[1];
-			return self::replaceFileWithPlaceHolder($fID);
-		}
-	}
+    public static function replaceFileWithPlaceHolderInMatch($fID)
+    {
+        if ($fID[1] > 0) {
+            $fID = $fID[1];
+            return self::replaceFileWithPlaceHolder($fID);
+        }
+    }
 
-	public static function replacePageTypeWithPlaceHolder($ptID) {
-		if ($ptID > 0) {
-			$ct = PageType::getByID($ptID);
-			return '{ccm:export:pagetype:' . $ct->getPageTypeHandle() . '}';
-		}
-	}
+    public static function replacePageTypeWithPlaceHolder($ptID)
+    {
+        if ($ptID > 0) {
+            $ct = PageType::getByID($ptID);
+            return '{ccm:export:pagetype:' . $ct->getPageTypeHandle() . '}';
+        }
+    }
 
-    public static function replacePageFeedWithPlaceholder($pfID) {
+    public static function replacePageFeedWithPlaceholder($pfID)
+    {
         if ($pfID > 0) {
             $pf = Feed::getByID($pfID);
             return '{ccm:export:pagefeed:' . $pf->getHandle() . '}';
@@ -254,25 +295,26 @@ class ContentExporter {
     }
 
     /**
-	 * Removes an item from the export xml registry
-	 */
-	public function removeItem($parent, $node, $handle) {
-		$query = '//'.$node.'[@handle=\''.$handle.'\' or @package=\''.$handle.'\']';
-		$r = $this->x->xpath($query);
-		if ($r && isset($r[0]) && $r[0] instanceof SimpleXMLElement) {
-			$dom = dom_import_simplexml($r[0]);
-			$dom->parentNode->removeChild($dom);
-		}
+     * Removes an item from the export xml registry
+     */
+    public function removeItem($parent, $node, $handle)
+    {
+        $query = '//' . $node . '[@handle=\'' . $handle . '\' or @package=\'' . $handle . '\']';
+        $r = $this->x->xpath($query);
+        if ($r && isset($r[0]) && $r[0] instanceof SimpleXMLElement) {
+            $dom = dom_import_simplexml($r[0]);
+            $dom->parentNode->removeChild($dom);
+        }
 
-		$query = '//'.$parent;
-		$r = $this->x->xpath($query);
-		if ($r && isset($r[0]) && $r[0] instanceof SimpleXMLElement) {
-			$dom = dom_import_simplexml($r[0]);
-			if ($dom->childNodes->length < 1) {
-				$dom->parentNode->removeChild($dom);
-			}
-		}
-	}
+        $query = '//' . $parent;
+        $r = $this->x->xpath($query);
+        if ($r && isset($r[0]) && $r[0] instanceof SimpleXMLElement) {
+            $dom = dom_import_simplexml($r[0]);
+            if ($dom->childNodes->length < 1) {
+                $dom->parentNode->removeChild($dom);
+            }
+        }
+    }
 
 
 }

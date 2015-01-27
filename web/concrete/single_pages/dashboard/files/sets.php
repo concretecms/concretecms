@@ -173,7 +173,7 @@
 		<? foreach ($fileSets as $fs) { ?>
 		
 			<div class="ccm-group">
-				<a class="ccm-group-inner" href="<?=$view->url('/dashboard/files/sets/', 'view_detail', $fs->getFileSetID())?>"><i class="fa fa-cubes"></i> <?=$fs->getFileSetName()?></a>
+				<a class="ccm-group-inner" href="<?=$view->url('/dashboard/files/sets/', 'view_detail', $fs->getFileSetID())?>"><i class="fa fa-cubes"></i> <?=$fs->getFileSetDisplayName()?></a>
 			</div>
 		
 		<? }

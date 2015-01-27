@@ -120,6 +120,7 @@ ConcretePageAttributesDetail = {
 			},
 			complete: function() {
 				jQuery.fn.dialog.hideLoader();
+				$('#ccm-panel-detail-page-attributes').scrollTop(100000000);
 			}
 		});
 	}
@@ -136,6 +137,15 @@ $(function() {
 		var akID = $(this).attr('data-remove-attribute-key');
 		ConcretePageAttributesDetail.removeAttributeKey(akID);
 	});
+
+    $(function() {
+        ConcreteEvent.unsubscribe('AjaxFormSubmitSuccess.saveAttributes');
+        ConcreteEvent.subscribe('AjaxFormSubmitSuccess.saveAttributes', function(e, data) {
+            if (data.form == 'attributes') {
+                ConcreteEvent.publish('SitemapUpdatePageRequestComplete', {'cID': data.response.cID});
+            }
+        });
+    });
 
 });
 

@@ -12,7 +12,7 @@ $miniSurvey->frontEndMode = true;
 //Clean up variables from controller so html is easier to work with...
 $bID = intval($bID);
 $qsID = intval($survey->questionSetId);
-$formAction = $view->action('submit_form').'#'.$qsID;
+$formAction = $view->action('submit_form').'#formblock'.$bID;
 
 $questionsRS = $miniSurvey->loadQuestions($qsID, $bID);
 $questions = array();
@@ -72,7 +72,6 @@ $surveyBlockInfo = $miniSurvey->getMiniSurveyBlockInfoByQuestionId($qsID, $bID);
 $captcha = $surveyBlockInfo['displayCaptcha'] ? Loader::helper('validation/captcha') : false;
 
 //Localized labels
-$translatedCaptchaLabel = t('Please type the letters and numbers shown in the image.');
 $translatedSubmitLabel = t('Submit');
 
 /******************************************************************************
@@ -116,7 +115,14 @@ $translatedSubmitLabel = t('Submit');
 	
 	<?php  if ($captcha): ?>
 		<div class="form-group captcha">
-			<label class="control-label"><?php  echo $translatedCaptchaLabel; ?></label>
+			<?php
+			$captchaLabel = $captcha->label();
+			if (!empty($captchaLabel)) {
+				?>
+				<label class="control-label"><?php echo $captchaLabel; ?></label>
+				<?php
+			}
+			?>
 			<div><?php  $captcha->display(); ?></div>
 			<div><?php  $captcha->showInput(); ?></div>
 		</div>

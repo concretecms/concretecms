@@ -33,6 +33,11 @@ class IPAddress {
         if($isHex) {
             $this->ipHex = $ipAddress;
         } else {
+            //Check included port number
+            if(strpos($ipAddress, ":") !== false && strpos($ipAddress, ".") !== false){
+                $ips = explode(":", $ipAddress);
+                $ipAddress = $ips[0];
+            }
             $this->ipHex = bin2hex(inet_pton($ipAddress));
         }
         return $this;

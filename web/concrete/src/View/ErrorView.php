@@ -12,7 +12,7 @@ class ErrorView extends CoreView {
 		$this->error = $error;
 	}
 	public function action($action) {
-		throw new Exception(t('Action is not available here.'));
+		throw new \Exception(t('Action is not available here.'));
 	}
 
 	protected function setupController() {}

@@ -18,12 +18,12 @@ class BlockType extends Type {
 		$env = Environment::get();
 
 		foreach($blockTypes as $bt) {
-			$cmf = $env->getRecord(DIRNAME_BLOCKS . '/' . $bt->getBlockTypeHandle() . '/' . FILENAME_BLOCK_COMPOSER);
+			$cmf = $env->getRecord(DIRNAME_BLOCKS . '/' . $bt->getBlockTypeHandle() . '/' . FILENAME_BLOCK_COMPOSER, $bt->getPackageHandle());
 			if ($cmf->exists() || count($bt->getBlockTypeComposerTemplates()) > 0) {
 				$bx = new BlockControl();
 				$bx->setBlockTypeID($bt->getBlockTypeID());
 				$bx->setPageTypeComposerControlIconSRC($ci->getBlockTypeIconURL($bt));
-				$bx->setPageTypeComposerControlName($bt->getBlockTypeName());
+				$bx->setPageTypeComposerControlName(t($bt->getBlockTypeName()));
 				$objects[] = $bx;
 			}
 		}
@@ -36,7 +36,7 @@ class BlockType extends Type {
 		$bx = new BlockControl();
 		$bx->setBlockTypeID($bt->getBlockTypeID());
 		$bx->setPageTypeComposerControlIconSRC($ci->getBlockTypeIconURL($bt));
-		$bx->setPageTypeComposerControlName($bt->getBlockTypeName());
+		$bx->setPageTypeComposerControlName(t($bt->getBlockTypeName()));
 		return $bx;
 	}
 

@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Application\Service\UserInterface;
 
 use Concrete\Core\Application\UserInterface\Menu\Item\Item;
@@ -8,6 +7,9 @@ use Concrete\Core\Application\UserInterface\Menu\Item\ItemInterface;
 class Menu
 {
 
+    /**
+     * @var ItemInterface[]
+     */
     protected $pageHeaderMenuItems = array();
 
     /**
@@ -45,6 +47,9 @@ class Menu
         return $obj;
     }
 
+    /**
+     * @param ItemInterface $item
+     */
     public function addMenuItem(ItemInterface $item)
     {
         $this->pageHeaderMenuItems[] = $item;

@@ -4,6 +4,8 @@
 thumbs.db
 __MACOSX
 ._*
+.*swp
+.*swo
 
 # ignore composer files
 composer.phar
@@ -55,6 +57,7 @@ error_log
 
 # ignore PHP symbol map
 __IDE_SYMBOLS__.php
+.phpstorm.meta.php
 
 
 # Built assets

@@ -142,7 +142,7 @@ $(function() {
 <div class="row">
 <div class="col-md-5 col-md-offset-1">
 
-	<input type="hidden" name="locale" value="<?=$locale?>" />
+	<input type="hidden" name="locale" value="<?=h($locale)?>" />
 
 	<fieldset>
 		<legend><?=t('Site Information')?></legend>
@@ -379,7 +379,7 @@ $(function() {
 	<td><? if ($imageTest) { ?><i class="fa fa-check"></i><? } else { ?><i class="fa fa-exclamation-circle"></i><? } ?></td>
 	<td width="100%"><?=t('Image Manipulation Available')?>
 	</td>
-	<td><? if (!$imageTest) { ?><i class="fa fa-question-circle launch-tooltip" title="<?=t('concrete5 requires GD library 2.0.1 or Imagick and ImageMagick 6.2.9 or greater.')?>"></i><? } ?></td>
+	<td><? if (!$imageTest) { ?><i class="fa fa-question-circle launch-tooltip" title="<?=t('concrete5 requires GD library 2.0.1 with JPEG, PNG and GIF support. Doublecheck that your installation has support for all these image types.')?>"></i><? } ?></td>
 </tr>
 <tr>
 	<td><? if ($xmlTest) { ?><i class="fa fa-check"></i><? } else { ?><i class="fa fa-exclamation-circle"></i><? } ?></td>
@@ -403,7 +403,7 @@ $(function() {
     <td><? if ($i18nTest) { ?><i class="fa fa-check"></i><? } else { ?><i class="fa fa-exclamation-circle"></i><? } ?></td>
     <td width="100%"><?=t('Internationalization Support')?>
     </td>
-    <td><? if (!$i18nTest) { ?><i class="fa fa-question-circle launch-tooltip" title="<?=t('You must enable ctype support in your copy of PHP.')?>"></i><? } ?></td>
+    <td><? if (!$i18nTest) { ?><i class="fa fa-question-circle launch-tooltip" title="<?=t('You must enable ctype and multibyte string (mbstring) support in PHP.')?>"></i><? } ?></td>
 </tr>
 <tr>
     <td><? if ($docCommentTest) { ?><i class="fa fa-check"></i><? } else { ?><i class="fa fa-exclamation-circle"></i><? } ?></td>
@@ -504,7 +504,7 @@ $(function() {
 <div class="col-sm-10 col-sm-offset-1">
 <div class="well" id="install-success">
 	<form method="post" action="<?=$view->url('/install','setup')?>">
-	<input type="hidden" name="locale" value="<?=$locale?>" />
+	<input type="hidden" name="locale" value="<?=h($locale)?>" />
 	<a class="btn btn-large btn-primary" href="javascript:void(0)" onclick="$(this).parent().submit()"><?=t('Continue to Installation')?> <i class="fa fa-arrow-right fa-white"></i></a>
 	</form>
 </div>
@@ -513,7 +513,7 @@ $(function() {
 	<?=t('There are problems with your installation environment. Please correct them and click the button below to re-run the pre-installation tests.')?>
     <br/><br/>
 	<form method="post" action="<?=$view->url('/install')?>">
-    	<input type="hidden" name="locale" value="<?=$locale?>" />
+    	<input type="hidden" name="locale" value="<?=h($locale)?>" />
     	<button class="btn btn-default" type="submit"><?=t('Run Tests')?> <i class="fa fa-refresh"></i></button>
 	</form>
 </div>

@@ -18,21 +18,23 @@ function t($text)
         return '';
     }
     $zt = Localization::getTranslate();
-    if (func_num_args() == 1) {
-        if (is_object($zt)) {
-            return $zt->translate($text);
+    if (is_object($zt)) {
+        $v = $zt->translate($text);
+        if (is_array($v)) {
+            if (isset($v[0]) && ($v[0] !== '')) {
+                $text = $v[0];
+            }
         } else {
-            return $text;
+            $text = $v;
         }
     }
-    $arg = array();
-    for ($i = 1; $i < func_num_args(); $i++) {
-        $arg[] = func_get_arg($i);
-    }
-    if (is_object($zt)) {
-        return vsprintf($zt->translate($text), $arg);
+    if (func_num_args() === 1) {
+        return $text;
     } else {
-        return vsprintf($text, $arg);
+        $args = func_get_args();
+        array_shift($args);
+
+        return vsprintf($text, $args);
     }
 }
 

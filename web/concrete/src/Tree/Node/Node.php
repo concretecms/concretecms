@@ -11,7 +11,17 @@ use stdClass;
 abstract class Node extends Object implements \Concrete\Core\Permission\ObjectInterface {
 
     abstract public function loadDetails();
-    abstract public function getTreeNodeDisplayName();
+    
+    /** Returns the standard name for this tree node
+     * @return string
+     */
+    abstract public function getTreeNodeName();
+    
+    /** Returns the display name for this tree node (localized and escaped accordingly to $format)
+     * @param  string $format = 'html' Escape the result in html format (if $format is 'html'). If $format is 'text' or any other value, the display name won't be escaped.
+     * @return string
+     */
+    abstract public function getTreeNodeDisplayName($format = 'html');
     abstract public function deleteDetails();
 
     protected $childNodes = array();
@@ -89,6 +99,7 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
             $node = new stdClass;
             $node->title = $this->getTreeNodeDisplayName();
             $node->key = $this->getTreeNodeID();
+            $node->treeNodeID = $this->getTreeNodeID();
             $node->isFolder = false;
             $node->select = $this->treeNodeIsSelected;
             $node->canEditTreeNodePermissions = $p->canEditTreeNodePermissions();
@@ -113,7 +124,7 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
     public function export(\SimpleXMLElement $x) {
         if (!$this->getTreeNodeParentID() == 0) {
             $tag = $x->addChild($this->getTreeNodeTypeHandle());
-            $tag->addAttribute('name', $this->getTreeNodeDisplayName());
+            $tag->addAttribute('name', $this->getTreeNodeName());
         } else {
             $tag = $x;
         }
@@ -139,10 +150,10 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
                 continue;
             }
             $n = $nodes[$i];
-            $path .= $n->getTreeNodeDisplayName() . '/';
+            $path .= $n->getTreeNodeName() . '/';
         }
         if (count($nodes) > 0) {
-            $path .= $this->getTreeNodeDisplayName();
+            $path .= $this->getTreeNodeName();
         }
         return $path;
     }

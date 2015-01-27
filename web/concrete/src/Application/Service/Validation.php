@@ -12,7 +12,7 @@ class Validation
      * @param string $uName
      * @return bool
      */
-    function isUniqueUsername($uName)
+    public function isUniqueUsername($uName)
     {
         $db = Loader::db();
         $q = "select uID from Users where uName = ?";
@@ -30,7 +30,7 @@ class Validation
      * @return bool
      * @param string $uEmail
      */
-    function isUniqueEmail($uEmail)
+    public function isUniqueEmail($uEmail)
     {
         $db = Loader::db();
         $q = "select uID from Users where uEmail = ?";
@@ -45,22 +45,19 @@ class Validation
 
     /**
      * Returns true if this is a valid password.
+     * @param string $pass
+     * @return bool
      */
     public function password($pass)
     {
-        if (strlen($pass) < Config::get('concrete.user.password.minimum')) {
-            return false;
-        }
-        if (strlen($pass) > Config::get('concrete.user.password.maximum')) {
-            return false;
-        }
-
-        return true;
+        $hu = \Core::make('helper/concrete/user');
+        return $hu->validNewPassword($pass);
     }
 
     /**
      * Returns true if this is a valid username.
      * Valid usernames can only contain letters, numbers, dots (only in the middle), underscores (only in the middle) and optionally single spaces
+     * @param string $username
      * @return bool
      */
     public function username($username)

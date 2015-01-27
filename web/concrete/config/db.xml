@@ -197,6 +197,80 @@
     </index>
   </table>
 
+  <table name="MultilingualSections">
+    <field name="cID" type="I" size="11">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="msLanguage" type="C" size="32">
+      <NOTNULL/>
+      <DEFAULT value=""/>
+    </field>
+    <field name="msCountry" type="C" size="32">
+      <NOTNULL/>
+      <DEFAULT value=""/>
+    </field>
+    <field name="msNumPlurals" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="2"/>
+    </field>
+    <field name="msPluralRule" type="C" size="255">
+      <NOTNULL/>
+      <DEFAULT value="(n != 1)"/>
+    </field>
+  </table>
+  <table name="MultilingualPageRelations">
+    <field name="mpRelationID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="cID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="mpLanguage" type="C" size="32">
+      <DEFAULT value=""/>
+      <NOTNULL/>
+    </field>
+    <field name="mpLocale" type="C" size="32">
+      <KEY/>
+      <NOTNULL/>
+    </field>
+  </table>
+    <table name="MultilingualTranslations">
+    <field name="mtID" type="I" size="11">
+        <KEY/>
+        <AUTOINCREMENT/>
+        <UNSIGNED/>
+    </field>
+    <field name="mtSectionID" type="I" size="11">
+        <NOTNULL/>
+        <DEFAULT value="0"/>
+        <UNSIGNED/>
+    </field>
+    <field name="msgid" type="X">
+        <NOTNULL/>
+    </field>
+    <field name="msgidPlural" type="X">
+    </field>
+    <field name="msgstr" type="X">
+    </field>
+    <field name="msgstrPlurals" type="X">
+    </field>
+    <field name="context" type="X">
+    </field>
+    <field name="comments" type="X">
+    </field>
+    <field name="reference" type="X">
+    </field>
+    <field name="flags" type="X">
+    </field>
+    <field name="updated" type="T">
+    </field>
+  </table>
   <table name="PageTypePageTemplateDefaultPages">
     <field name="pTemplateID" type="I" size="10">
       <unsigned/>
@@ -642,7 +716,7 @@
        <col>gasID</col>
    </index>
   </table>
-  <table name="Conversations">
+    <table name="Conversations">
     <field name="cnvID" type="I" size="10">
       <key/>
       <autoincrement/>
@@ -3756,6 +3830,7 @@
       <col>cRequiresReindex</col>
   </index>
   </table>
+    <!--
   <table name="PageStatistics">
     <opt platform="MYSQL">ENGINE=MYISAM</opt>
     <opt platform="MYSQLT">ENGINE=MYISAM</opt>
@@ -3789,6 +3864,7 @@
       <col>uID</col>
     </index>
   </table>
+  -->
   <table name="PageThemes">
     <field name="pThemeID" type="I" size="10">
       <key/>
@@ -5039,7 +5115,7 @@
       <UNSIGNED/>
     </field>
     <field name="handle" type="C" size="32"/>
-    <field name="body" type="C" size="8192">
+    <field name="body" type="X2">
       <NOTNULL/>
     </field>
     <field name="md5" type="C" size="32">
@@ -5277,7 +5353,5 @@
             <notnull />
         </field>
     </table>
-
-
 
 </schema>

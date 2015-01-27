@@ -17,8 +17,8 @@ $.fn.visualize = function(options, container){
 			appendTitle: true, //table caption text is added to chart
 			title: null, //grabs from table caption if null
 			appendKey: true, //color key is added to chart
-			rowFilter: ' ',
-			colFilter: ' ',
+			rowFilter: '*',
+			colFilter: '*',
 			colors: ['#be1e2d','#666699','#92d5ea','#ee8310','#8d10ee','#5a3b16','#26a4ed','#f45a90','#e9e744'],
 			textColors: [], //corresponds with colors array. null/undefined items will fall back to CSS
 			parseDirection: 'x', //which direction to parse the table data
@@ -255,7 +255,7 @@ $.fn.visualize = function(options, container){
 					else if(i== xLabels.length-1){ leftOffset = -label.width(); }
 					label
 						.css('margin-left', leftOffset)
-						.addClass('visualize-label');
+						.addClass('label');
 				});
 
 				//write Y labels
@@ -277,7 +277,7 @@ $.fn.visualize = function(options, container){
 					else if(i== yLabels.length-1){ topOffset = 0; }
 					label
 						.css('margin-top', topOffset)
-						.addClass('visualize-label');
+						.addClass('label');
 				});
 
 				//start from the bottom left
@@ -324,13 +324,13 @@ $.fn.visualize = function(options, container){
 					.height(canvas.height())
 					.insertBefore(canvas);
 				$.each(xLabels, function(i){ 
-					var thisLi = $('<li><span class="visualize-label">'+this+'</span></li>')
+					var thisLi = $('<li><span class="label">'+this+'</span></li>')
 						.prepend('<span class="line" />')
 						.css('left', xInterval * i)
 						.width(xInterval)
 						.appendTo(xlabelsUL);
-					var label = thisLi.find('span.visualize-label');
-					label.addClass('visualize-label');
+					var label = thisLi.find('span.label');
+					label.addClass('label');
 				});
 
 				//write Y labels
@@ -351,7 +351,7 @@ $.fn.visualize = function(options, container){
 						else if(i== yLabels.length-1){ topOffset = 0; }
 						label
 							.css('margin-top', topOffset)
-							.addClass('visualize-label');
+							.addClass('label');
 				});
 
 				//start from the bottom left

@@ -28,12 +28,18 @@ class Html
     {
         $asset = new CSSAsset();
         // if the first character is a / then that means we just go right through, it's a direct path
-        if (substr($file, 0, 4) == 'http' || substr($file, 0, 2) == '//') {
+        if (substr($file, 0, 4) == 'http' || substr($file, 0, 2) == '//' || strpos($file, '?') > 0) {
+            // we can't cache this file, so we make sure to say it's not local. It may BE local –but we can't cache it.
             $asset->setAssetURL($file);
             $asset->setAssetIsLocal(false);
         } else {
             if (substr($file, 0, 1) == '/') {
                 $asset->setAssetURL($file);
+                // if we're in a relative directory, strip the relative part of the $file, since it'll
+                // duplicate in DIR_BASE
+                if (DIR_REL != '') {
+                    $file = substr($file, strlen(DIR_REL));
+                }
                 $asset->setAssetPath(DIR_BASE . $file);
             } else {
                 $v = View::getInstance();
@@ -85,12 +91,18 @@ class Html
     {
         $asset = new JavascriptAsset();
         // if the first character is a / then that means we just go right through, it's a direct path
-        if (substr($file, 0, 4) == 'http' || substr($file, 0, 2) == '//') {
+        if (substr($file, 0, 4) == 'http' || substr($file, 0, 2) == '//' || strpos($file, '?') > 0) {
+            // we can't cache this file, so we make sure to say it's not local. It may BE local –but we can't cache it.
             $asset->setAssetURL($file);
             $asset->setAssetIsLocal(false);
         } else {
             if (substr($file, 0, 1) == '/') {
                 $asset->setAssetURL($file);
+                // if we're in a relative directory, strip the relative part of the $file, since it'll
+                // duplicate in DIR_BASE
+                if (DIR_REL != '') {
+                    $file = substr($file, strlen(DIR_REL));
+                }
                 $asset->setAssetPath(DIR_BASE . $file);
             } else {
                 if (file_exists(DIR_APPLICATION . '/' . DIRNAME_JAVASCRIPT . '/' . $file)) {

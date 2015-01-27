@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\Permission\Access\Entity;
+use Concrete\Core\Page\Page;
 use Loader;
 use PermissionAccess;
 use Config;
@@ -32,7 +33,7 @@ class PageOwnerEntity extends Entity {
 		if (count($users) == 0) {
 			return false;
 		} else if (is_object($users[0])) {
-			$u = new User();
+			$u = new \User();
 			return $users[0]->getUserID() == $u->getUserID();
 		}
 	}

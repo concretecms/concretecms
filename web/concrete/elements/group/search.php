@@ -91,8 +91,8 @@ $(function() {
 			onClick: function(node) {
 				ConcreteEvent.publish('SelectGroup', {'gID': node.data.gID, 'gName': node.data.title});
 			},
-		<? } ?>
 		'enableDragAndDrop': false
+		<? } ?>
 	});
 	$('div[data-search=groups]').concreteAjaxSearch({
 		result: <?=$result?>,

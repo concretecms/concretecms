@@ -22,7 +22,7 @@ $req = $flr->getSearchRequest();
                 <?php /*
                 <option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Duplicate')?>" data-bulk-action-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/duplicate" data-bulk-action-dialog-width="500" data-bulk-action-dialog-height="400"><?=t('Copy')?></option>
  */ ?>
-                <option data-bulk-action-type="dialog" data-bulk-action-title="<?php echo t('Delete')?>" data-bulk-action-url="<?php echo REL_DIR_FILES_TOOLS_REQUIRED?>/files/delete" data-bulk-action-dialog-width="500" data-bulk-action-dialog-height="400"><?php echo t('Delete')?></option>
+                <option data-bulk-action-type="dialog" data-bulk-action-title="<?php echo t('Delete')?>" data-bulk-action-url="<?php echo URL::to('/ccm/system/dialogs/file/bulk/delete')?>" data-bulk-action-dialog-width="500" data-bulk-action-dialog-height="400"><?php echo t('Delete')?></option>
             </select>
         </div>
         <div class="form-group">
@@ -53,7 +53,7 @@ $req = $flr->getSearchRequest();
         <select multiple name="fsID[]" class="select2-select" style="width: 360px">
             <optgroup label="<?php echo t('Sets')?>">
             <?php foreach ($s1 as $s) { ?>
-                <option value="<?php echo $s->getFileSetID()?>"  <?php if (is_array($req['fsID']) && in_array($s->getFileSetID(), $req['fsID'])) { ?> selected="selected" <?php } ?>><?php echo wordwrap($s->getFileSetName(), '23', '&shy;', true)?></option>
+                <option value="<?php echo $s->getFileSetID()?>"  <?php if (is_array($req['fsID']) && in_array($s->getFileSetID(), $req['fsID'])) { ?> selected="selected" <?php } ?>><?php echo wordwrap($s->getFileSetDisplayName(), '23', '&shy;', true)?></option>
             <?php } ?>
             </optgroup>
             <optgroup label="<?php echo t('Other')?>">
@@ -65,7 +65,13 @@ $req = $flr->getSearchRequest();
     </div>
     <?php } ?>
     <div class="ccm-search-fields-advanced"></div>
-    <div class="ccm-search-fields-submit">
+    <div class="ccm-search-fields-row ccm-search-fields-submit">
+        <div class="form-group form-group-full">
+            <label class="control-label"><?=t('Per Page')?></label>
+            <div class="ccm-search-field-content ccm-search-field-content-select2">
+                <?=$form->select('numResults', array(10 => t('10'), 20 => t('20'), 50 => t('50'), 100 => t('100'), 250 => t('250'), 500 => t('500'), 1000 => t('1000'))); ?>
+            </div>
+        </div>
         <button type="submit" class="btn btn-primary pull-right"><?=t('Search')?></button>
     </div>
 </form>

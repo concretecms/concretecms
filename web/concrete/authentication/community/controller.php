@@ -7,9 +7,14 @@ use Concrete\Core\Authentication\Type\OAuth\OAuth2\GenericOauth2TypeController;
 class Controller extends GenericOauth2TypeController
 {
 
+    public function registrationGroupID()
+    {
+        return \Config::get('auth.community.registration.group');
+    }
+
     public function supportsRegistration()
     {
-        return \Config::get('auth.community.registration_enabled', false);
+        return \Config::get('auth.community.registration.enabled', false);
     }
 
     public function getAuthenticationTypeIconHTML()
@@ -30,7 +35,7 @@ class Controller extends GenericOauth2TypeController
     public function getService()
     {
         if (!$this->service) {
-            $this->service = \Core::make('community_service');
+            $this->service = \Core::make('authentication/community');
         }
         return $this->service;
     }
@@ -39,7 +44,8 @@ class Controller extends GenericOauth2TypeController
     {
         \Config::save('auth.community.appid', $args['apikey']);
         \Config::save('auth.community.secret', $args['apisecret']);
-        \Config::save('auth.community.registration_enabled', $args['registration_enabled']);
+        \Config::save('auth.community.registration.enabled', !!$args['registration_enabled']);
+        \Config::save('auth.community.registration.group', intval($args['registration_group'], 10));
     }
 
     public function edit()
@@ -47,6 +53,10 @@ class Controller extends GenericOauth2TypeController
         $this->set('form', \Loader::helper('form'));
         $this->set('apikey', \Config::get('auth.community.appid', ''));
         $this->set('apisecret', \Config::get('auth.community.secret', ''));
+
+        $list = new \GroupList();
+        $list->includeAllGroups();
+        $this->set('groups', $list->getResults());
     }
 
     /**
