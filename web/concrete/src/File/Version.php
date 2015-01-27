@@ -281,12 +281,9 @@ class Version
     {
 
         $db = Loader::db();
-        $em = $db->getEntityManager();
-        $em->remove($this);
-        $em->flush();
 
-        $db->Execute("DELETE FROM FileAttributeValues WHERE fID = ? AND fvID = ?", array($this->fID, $this->fvID));
-        $db->Execute("DELETE FROM FileVersionLog WHERE fID = ? AND fvID = ?", array($this->fID, $this->fvID));
+        $db->Execute("DELETE FROM FileAttributeValues WHERE fID = ? AND fvID = ?", array($this->getFileID(), $this->fvID));
+        $db->Execute("DELETE FROM FileVersionLog WHERE fID = ? AND fvID = ?", array($this->getFileID(), $this->fvID));
 
         $types = Type::getVersionList();
 
@@ -304,6 +301,10 @@ class Version
             } catch (FileNotFoundException $e) {
             }
         }
+
+        $em = $db->getEntityManager();
+        $em->remove($this);
+        $em->flush();
     }
 
     /**
