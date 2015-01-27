@@ -85,13 +85,13 @@ class PageView extends View
                         $this->pkgHandle));
             } else {
                 $rec = $env->getRecord(
-                    DIRNAME_PAGE_TYPES . '/' . $this->c->getPageTypeHandle() . '.php',
-                    $this->pkgHandle);
+                    DIRNAME_PAGE_TEMPLATES . '/' . $this->c->getPageTypeHandle() . '.php',
+                    $this->pTemplatePkgHandle);
                 if ($rec->exists()) {
                     $this->setInnerContentFile(
                         $env->getPath(
-                            DIRNAME_PAGE_TYPES . '/' . $this->c->getPageTypeHandle() . '.php',
-                            $this->pkgHandle));
+                            DIRNAME_PAGE_TEMPLATES . '/' . $this->c->getPageTypeHandle() . '.php',
+                            $this->pTemplatePkgHandle));
                     $this->setViewTemplate(
                         $env->getPath(
                             DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $this->controller->getThemeViewTemplate(),
@@ -214,6 +214,10 @@ class PageView extends View
         parent::constructView($page->getCollectionPath());
         if (!isset($this->pTemplateID)) {
             $this->pTemplateID = $this->c->getPageTemplateID();
+            $pto = $this->c->getPageTemplateObject();
+            if ($pto && $pto->getPackageID()) {
+                $this->pTemplatePkgHandle = $this->c->getPageTemplateObject()->getPackageHandle();
+            }
         }
         if (!isset($this->pThemeID)) {
             $this->pThemeID = $this->c->getPageTemplateID();
