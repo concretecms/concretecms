@@ -88,7 +88,7 @@ class Environment {
 			DIR_FILES_CONTENT, 
 			DIR_FILES_THEMES, 
 			DIR_FILES_TOOLS, 
-			DIR_APPLICATION . '/' . DIRNAME_PAGE_TYPES, 
+			DIR_APPLICATION . '/' . DIRNAME_PAGE_TEMPLATES,
 			DIR_APPLICATION . '/' . DIRNAME_CLASSES);
 		foreach($check as $loc) {
 			if (is_dir($loc)) {
