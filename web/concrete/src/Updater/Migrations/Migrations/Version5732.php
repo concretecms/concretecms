@@ -3,6 +3,7 @@ namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Permission\Access\Entity\Type;
 use Concrete\Core\Permission\Category;
+use Concrete\Core\Permission\Duration;
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
@@ -13,7 +14,7 @@ class Version5732 extends AbstractMigration
 
     public function getName()
     {
-        return '20150126000000';
+        return '20150127000000';
     }
 
     public function up(Schema $schema)
@@ -31,7 +32,6 @@ class Version5732 extends AbstractMigration
 
         $db->Execute("alter table QueueMessages modify column body longtext not null");
 
-        // TODO: Convert database PermissionDuration objects to new class signature.
         $ms = $schema->getTable('MultilingualSections');
         if (!$ms->hasColumn('msNumPlurals')) {
             $ms->addColumn('msNumPlurals', 'integer', array('notnull' => true, 'unsigned' => true, 'default' => 2));
@@ -49,6 +49,60 @@ class Version5732 extends AbstractMigration
         if (!$mt->hasColumn('msgstrPlurals')) {
             $mt->addColumn('msgstrPlurals', 'text', array('notnull' => false));
             $this->updateMultilingualTranslations = true;
+        }
+
+        $this->updatePermissionDurationObjects();
+    }
+
+    protected function updatePermissionDurationObjects()
+    {
+        $db = \Database::get();
+        $r = $db->Execute('select pdID from PermissionDurationObjects order by pdID asc');
+        while ($row = $r->FetchRow()) {
+            $pd = Duration::getByID($row['pdID']);
+            if (isset($pd->error)) {
+                // this is a legacy object. It was serialized from 5.7.3.1 and earlier and used to extend Object.
+                // so we take the old pd* parameters and use them as the basis for the standard parameters.
+                $pd->setStartDate($pd->pdStartDate);
+                $pd->setEndDate($pd->pdEndDate);
+                $pd->setStartDateAllDay((bool) $pd->pdStartDateAllDay);
+                $pd->setEndDateAllDay((bool) $pd->pdEndDateAllDay);
+                if ($pd->pdRepeatPeriod == 'daily') {
+                    $pd->setRepeatPeriod(Duration::REPEAT_DAILY);
+                } else if ($pd->pdRepeatPeriod == 'weekly') {
+                    $pd->setRepeatPeriod(Duration::REPEAT_WEEKLY);
+                } else if ($pd->pdRepeatPeriod == 'monthly') {
+                    $pd->setRepeatPeriod(Duration::REPEAT_MONTHLY);
+                } else {
+                    $pd->setRepeatPeriod(Duration::REPEAT_NONE);
+                }
+                if ($pd->pdRepeatEveryNum) {
+                    $pd->setRepeatEveryNum($pd->pdRepeatEveryNum);
+                }
+                if ($pd->pdRepeatPeriodWeeksDays) {
+                    $pd->setRepeatPeriodWeekDays($pd->pdRepeatPeriodWeeksDays);
+                }
+                if ($pd->pdRepeatPeriodMonthsRepeatBy == 'week') {
+                    $pd->setRepeatMonthBy(Duration::MONTHLY_REPEAT_WEEKLY);
+                } else if ($pd->pdRepeatPeriodMonthsRepeatBy == 'month') {
+                    $pd->setRepeatMonthBy(Duration::MONTHLY_REPEAT_MONTHLY);
+                }
+                if ($pd->pdRepeatPeriodEnd) {
+                    $pd->setRepeatPeriodEnd($pd->pdRepeatPeriodEnd);
+                }
+
+                unset($pd->pdStartDate);
+                unset($pd->pdEndDate);
+                unset($pd->pdStartDateAllDay);
+                unset($pd->pdEndDateAllDay);
+                unset($pd->pdRepeatPeriod);
+                unset($pd->pdRepeatEveryNum);
+                unset($pd->pdRepeatPeriodWeeksDays);
+                unset($pd->pdRepeatPeriodMonthsRepeatBy);
+                unset($pd->pdRepeatPeriodEnd);
+                unset($pd->error);
+                $pd->save();
+            }
         }
     }
 
