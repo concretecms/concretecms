@@ -23,7 +23,10 @@ class URL {
 		}
 
 		$dispatcher = '';
-		if (!Config::get('concrete.seo.url_rewriting_all')) {
+		if (!Config::get('concrete.seo.url_rewriting')
+			|| (!Config::get('concrete.seo.url_rewriting_all') &&
+				\Core::make('helper/concrete/dashboard')->inDashboard($path))
+		) {
 			$dispatcher = '/' . DISPATCHER_FILENAME;
 		}
 

@@ -1037,8 +1037,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      * Returns full url for the current page
      * @return string
      */
-    public function getCollectionLink($appendBaseURL = false, $ignoreUrlRewriting = false) {
-        return Loader::helper('navigation')->getLinkToCollection($this, $appendBaseURL, $ignoreUrlRewriting);
+    public function getCollectionLink($appendBaseURL = false) {
+        return Loader::helper('navigation')->getLinkToCollection($this, $appendBaseURL);
     }
 
     /**

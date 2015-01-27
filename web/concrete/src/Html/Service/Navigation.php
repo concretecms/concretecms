@@ -13,18 +13,18 @@ class Navigation
      * 
      * @param Page $cObj
      * @param boolean $prependBaseURL
-     * @param boolean $ignoreUrlRewriting
      * @return string
      */
-    public function getLinkToCollection(&$cObj, $prependBaseURL = false, $ignoreUrlRewriting = false)
+    public function getLinkToCollection($cObj, $prependBaseURL = false)
     {
         // basically returns a link to a collection, based on whether or we have
         // mod_rewrite enabled, and the collection has a path
         $dispatcher = '';
-        if (!Config::get('concrete.seo.url_rewriting_all')) {
-            if ((!Config::get('concrete.seo.url_rewriting')) || $ignoreUrlRewriting) {
-                $dispatcher = '/' . DISPATCHER_FILENAME;
-            }
+        if (!Config::get('concrete.seo.url_rewriting')
+            || (!Config::get('concrete.seo.url_rewriting_all') &&
+                \Core::make('helper/concrete/dashboard')->inDashboard($cObj))
+        ) {
+            $dispatcher = '/' . DISPATCHER_FILENAME;
         }
         if ($cObj->isExternalLink() && $prependBaseURL == false) {
             $link = $cObj->getCollectionPointerExternalLink();
