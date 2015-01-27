@@ -133,12 +133,12 @@ class Dashboard
                         $class = '';
                     }
 
-                    $relatedPages .= '<li class="' . $class . '"><a href="' . $nh->getLinkToCollection($sc, false, true) . '">' . t($sc->getCollectionName()) . '</a></li>';
+                    $relatedPages .= '<li class="' . $class . '"><a href="' . $nh->getLinkToCollection($sc) . '">' . t($sc->getCollectionName()) . '</a></li>';
                 }
 
                 if ($upToPage) {
                     $relatedPages .= '<li class="ccm-menu-separator"></li>';
-                    $relatedPages .= '<li><a href="' . $nh->getLinkToCollection($upToPage, false, true) . '">' . t('&lt; Back to %s', t($upToPage->getCollectionName())) . '</a></li>';
+                    $relatedPages .= '<li><a href="' . $nh->getLinkToCollection($upToPage) . '">' . t('&lt; Back to %s', t($upToPage->getCollectionName())) . '</a></li>';
                 }
                 $relatedPages .= '</ul>';
                 $navigateTitle = t($parent->getCollectionName());
@@ -286,7 +286,7 @@ class Dashboard
                 <?php
                 if (count($ch2) == 0) {
                     ?>
-                    <li><a href="<?=Loader::helper('navigation')->getLinkTocollection($page, false, true)?>"><?=t($page->getCollectionName())?></a><span><?=t($page->getCollectionName())?> <?=t($page->getAttribute('meta_keywords'))?></span></li>
+                    <li><a href="<?=Loader::helper('navigation')->getLinkTocollection($page)?>"><?=t($page->getCollectionName())?></a><span><?=t($page->getCollectionName())?> <?=t($page->getAttribute('meta_keywords'))?></span></li>
                     <?php
                 }
                 ?>
@@ -294,7 +294,7 @@ class Dashboard
                 <?php
                 if ($page->getCollectionPath() == '/dashboard/system') {
                     ?>
-                    <li><a href="<?=Loader::helper('navigation')->getLinkTocollection($page, false, true)?>"><?=t('View All')?></a><span><?=t($page->getCollectionName())?> <?=t($page->getAttribute('meta_keywords'))?></span></li>
+                    <li><a href="<?=Loader::helper('navigation')->getLinkTocollection($page)?>"><?=t('View All')?></a><span><?=t($page->getCollectionName())?> <?=t($page->getAttribute('meta_keywords'))?></span></li>
                     <?php
                 }
 
@@ -310,7 +310,7 @@ class Dashboard
                     }
 
                     ?>
-                    <li><a href="<?=Loader::helper('navigation')->getLinkTocollection($subpage, false, true)?>"><?=t($subpage->getCollectionName())?></a><span><? if ($page->getCollectionPath() != '/dashboard/system') { ?><?=t($page->getCollectionName())?> <?=t($page->getAttribute('meta_keywords'))?> <? } ?><?=t($subpage->getCollectionName())?> <?=t($subpage->getAttribute('meta_keywords'))?></span></li>
+                    <li><a href="<?=Loader::helper('navigation')->getLinkTocollection($subpage)?>"><?=t($subpage->getCollectionName())?></a><span><? if ($page->getCollectionPath() != '/dashboard/system') { ?><?=t($page->getCollectionName())?> <?=t($page->getAttribute('meta_keywords'))?> <? } ?><?=t($subpage->getCollectionName())?> <?=t($subpage->getAttribute('meta_keywords'))?></span></li>
                     <?php
                 }
                 ?>
