@@ -47,7 +47,7 @@ if ($this->controller->getTask() == 'translate_po') { ?>
                 </div>
                 <ul class="list-group">
                     <? foreach($translations as $string) { ?>
-                        <li class="list-group-item <? if ($string->hasTranslation()) { ?>list-group-item-success<? } ?> clearfix" data-translation="<?=$string->getID()?>">
+                        <li class="list-group-item <? if ($string->hasTranslation()) { ?>list-group-item-success<? } ?> clearfix" data-translation="<?=$string->getRecordID()?>">
                             <span class="original">
                                 <?=$string->getOriginal()?>
                             </span>
@@ -65,15 +65,15 @@ if ($this->controller->getTask() == 'translate_po') { ?>
                 <div class="panel-heading"><?=t('Translate')?></div>
                 <div class="panel-body">
                     <? foreach($translations as $string) { ?>
-                        <form method="post" class="translate-form" action="<?=$controller->action('save_translation')?>" data-form="<?=$string->getID()?>">
-                            <input type="hidden" name="mtID" value="<?=$string->getID()?>">
+                        <form method="post" class="translate-form" action="<?=$controller->action('save_translation')?>" data-form="<?=$string->getRecordID()?>">
+                            <input type="hidden" name="mtID" value="<?=$string->getRecordID()?>">
                             <div class="form-group">
-                                <label class="control-label" for="original-<?=$string->getID()?>"><?=t('Original String')?></label>
-                                <textarea class="form-control" disabled id="original-<?=$string->getID()?>" rows="8"><?=h($string->getOriginal())?></textarea>
+                                <label class="control-label" for="original-<?=$string->getRecordID()?>"><?=t('Original String')?></label>
+                                <textarea class="form-control" disabled id="original-<?=$string->getRecordID()?>" rows="8"><?=h($string->getOriginal())?></textarea>
                             </div>
                             <div class="form-group">
-                                <label class="control-label" for="translation-<?=$string->getID()?>"><?=t('Translation')?></label>
-                                <textarea class="form-control" name="msgstr" id="translation-<?=$string->getID()?>" rows="8"><?=h($string->getTranslation())?></textarea>
+                                <label class="control-label" for="translation-<?=$string->getRecordID()?>"><?=t('Translation')?></label>
+                                <textarea class="form-control" name="msgstr" id="translation-<?=$string->getRecordID()?>" rows="8"><?=h($string->getTranslation())?></textarea>
                             </div>
                             <button class="btn btn-primary" data-btn="save"><?=t('Save &amp; Continue')?></button>
                             <div class="spacer-row-3"></div>

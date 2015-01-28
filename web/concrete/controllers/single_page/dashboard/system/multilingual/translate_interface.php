@@ -1,9 +1,9 @@
-<?
-
+<?php
 namespace Concrete\Controller\SinglePage\Dashboard\System\Multilingual;
+
 use Concrete\Core\Application\EditResponse;
 use Concrete\Core\Multilingual\Page\Section\Section;
-use \Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Multilingual\Page\Section\Translation;
 use Core;
 use Database;
@@ -20,7 +20,6 @@ class TranslateInterface extends DashboardPageController
     {
         $extractor = Core::make('multilingual/extractor');
         $this->set('extractor', $extractor);
-
     }
     public function reloaded()
     {
@@ -47,7 +46,7 @@ class TranslateInterface extends DashboardPageController
             $extractor = Core::make('multilingual/extractor');
             if ($u->isSuperUser()) {
                 $list = Section::getList();
-                foreach($list as $section) {
+                foreach ($list as $section) {
                     // now we load the translations that currently exist for each section
                     $extractor->deleteSectionTranslationFile($section);
                 }
@@ -65,23 +64,28 @@ class TranslateInterface extends DashboardPageController
         if ($this->post('action') == 'reload') {
             if (Core::make('token')->validate()) {
                 // First, we look in all the site sources for PHP code with GetText
-                $translations = $extractor->extractTranslatableSiteStrings();
+                $baseTranslations = $extractor->extractTranslatableSiteStrings();
 
                 // $translations contains all of our site translations.
                 $list = Section::getList();
                 $defaultSourceLocale = Config::get('concrete.multilingual.default_source_locale');
-                foreach($list as $section) {
-                    if($section->getLocale() != $defaultSourceLocale) {
+                foreach ($list as $section) {
+                    /* @var $section \Concrete\Core\Multilingual\Page\Section\Section */
+                    if ($section->getLocale() != $defaultSourceLocale) {
+                        $localeTranslations = clone $baseTranslations;
+                        /* @var $localeTranslations \Gettext\Translations */
+                        $localeTranslations->setLanguage($section->getLocale());
+                        $localeTranslations->setPluralForms($section->getNumberOfPluralForms(), $section->getPluralsRule());
                         // now we load the translations that currently exist for each section
-                        $extractor->mergeTranslationsWithSectionFile($section, $translations);
-                        $extractor->mergeTranslationsWithCore($section, $translations);
-                        $extractor->mergeTranslationsWithPackages($section, $translations);
-                        $extractor->saveSectionTranslationsToFile($section, $translations);
-    
+                        $extractor->mergeTranslationsWithSectionFile($section, $localeTranslations);
+                        $extractor->mergeTranslationsWithCore($section, $localeTranslations);
+                        $extractor->mergeTranslationsWithPackages($section, $localeTranslations);
+                        $extractor->saveSectionTranslationsToFile($section, $localeTranslations);
+
                         // now that we've updated the translation file, we take all the translations and
                         // we insert them into the database so we can update our counts, and give the users
                         // a web interface
-                        $extractor->saveSectionTranslationsToDatabase($section, $translations);
+                        $extractor->saveSectionTranslationsToDatabase($section, $localeTranslations);
                     }
                 }
                 $this->redirect('/dashboard/system/multilingual/translate_interface', 'reloaded');
@@ -93,8 +97,8 @@ class TranslateInterface extends DashboardPageController
             if (Core::make('token')->validate()) {
                 $defaultSourceLocale = Config::get('concrete.multilingual.default_source_locale');
                 $list = Section::getList();
-                foreach($list as $section) {
-                    if($section->getLocale() != $defaultSourceLocale) {
+                foreach ($list as $section) {
+                    if ($section->getLocale() != $defaultSourceLocale) {
                         $translations = $section->getSectionInterfaceTranslations();
                         $extractor->mergeTranslationsWithSectionFile($section, $translations);
                         $extractor->saveSectionTranslationsToFile($section, $translations);
@@ -111,7 +115,7 @@ class TranslateInterface extends DashboardPageController
     public function save_translation()
     {
         $mtID = intval($this->post('mtID'));
-        $translation = Translation::getByID($mtID);
+        $translation = Translation::getByRecordID($mtID);
         if (is_object($translation)) {
             $translation->updateTranslation($this->post('msgstr'));
         }
@@ -130,8 +134,5 @@ class TranslateInterface extends DashboardPageController
         } else {
             $this->redirect('/dashboard/system/multilingual/translate_interface');
         }
-
-
     }
-
 }
