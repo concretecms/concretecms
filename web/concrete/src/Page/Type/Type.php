@@ -381,6 +381,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         } else {
             $ptAllowedPageTemplates = 'A';
         }
+
         $ptName = (string)$node['name'];
         $ptHandle = (string)$node['handle'];
         $db = Loader::db();
@@ -412,11 +413,16 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
 
         $data['templates'] = $types;
+        $pkg = false;
+        if ($node['package']) {
+            $pkg = Package::getByHandle((string) $node['package']);
+        }
+
         if ($ptID) {
             $cm = static::getByID($ptID);
             $cm->update($data);
         } else {
-            $cm = static::add($data);
+            $cm = static::add($data, $pkg);
         }
         $node = $node->composer;
         if (isset($node->formlayout->set)) {
