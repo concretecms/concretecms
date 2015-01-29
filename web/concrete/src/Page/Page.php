@@ -165,9 +165,10 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         if (!isset($this->controller)) {
             $env = Environment::get();
             if ($this->getPageTypeID() > 0) {
-                $ptHandle = $this->getPageTypeHandle();
-                $r = $env->getRecord(DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES . '/' . $ptHandle . '.php', $this->getPackageHandle());
-                $prefix = $r->override ? true : $this->getPackageHandle();
+                $pt = $this->getPageTypeObject();
+                $ptHandle = $pt->getPageTypeHandle();
+                $r = $env->getRecord(DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES . '/' . $ptHandle . '.php', $pt->getPackageHandle());
+                $prefix = $r->override ? true : $pt->getPackageHandle();
                 $class = core_class('Controller\\PageType\\' . camelcase($ptHandle), $prefix);
             } else if ($this->isGeneratedCollection()) {
                 $file = $this->getCollectionFilename();
