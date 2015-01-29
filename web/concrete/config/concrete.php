@@ -557,7 +557,7 @@ return array(
         'handler'      => 'file',
         'max_lifetime' => 7200,
         'cookie'       => array(
-            'cookie_path'     => '',
+            'cookie_path'     => DIR_REL.'/',
             'cookie_lifetime' => 7200,
             'cookie_domain'   => '',
             'cookie_secure'   => false,
