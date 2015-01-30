@@ -31,7 +31,7 @@ if (
     $gf = $pt->getThemeGridFrameworkObject();
     print $gf->getPageThemeGridFrameworkContainerStartHTML();
     print $gf->getPageThemeGridFrameworkRowStartHTML();
-    printf('<div class="%s">', $gf->getPageThemeGridFrameworkColumnClassForSpan(
+    printf('<div class="%s">', $gf->getPageThemeGridFrameworkColumnClassesForSpan(
         $gf->getPageThemeGridFrameworkNumColumns()
     ));
 }
