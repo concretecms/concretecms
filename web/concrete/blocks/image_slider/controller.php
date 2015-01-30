@@ -60,6 +60,11 @@ class Controller extends BlockController
         $this->set('rows', $query);
     }
 
+    public function composer()
+    {
+        $this->edit();
+    }
+
     public function registerViewAssets()
     {
         $this->requireAsset('javascript', 'jquery');
