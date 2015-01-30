@@ -51,4 +51,25 @@ abstract class GridFramework
         return $classes[$offset];
     }
 
+    public function getPageThemeGridFrameworkColumnClassesForSpan($span)
+    {
+        $classes = $this->getPageThemeGridFrameworkColumnClassForSpan($span);
+
+        if ($this->getPageThemeGridFrameworkColumnAdditionalClasses()) {
+            $classes .= ' '.$this->getPageThemeGridFrameworkColumnAdditionalClasses();
+        }
+
+        return $classes;
+    }
+
+    public function getPageThemeGridFrameworkColumnClassesForOffset($offset)
+    {
+        $classes = $this->getPageThemeGridFrameworkColumnClassForOffset($offset);
+
+        if ($this->getPageThemeGridFrameworkColumnOffsetAdditionalClasses()) {
+            $classes .= ' '.$this->getPageThemeGridFrameworkColumnOffsetAdditionalClasses();
+        }
+
+        return $classes;
+    }
 }
