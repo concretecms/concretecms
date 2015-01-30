@@ -201,6 +201,14 @@ class BlockType
         $class = core_class('Block\\' . $txt->camelcase($btHandle) . '\\Controller', $prefix);
         return $class;
     }
+    
+    /**
+     * Sets the Ignore Page Theme Gride Framework Container 
+     */
+    public function setBlockTypeIgnorePageThemeGridFrameworkContainer($btIgnorePageThemeGridFrameworkContainer)
+    {
+        $this->btIgnorePageThemeGridFrameworkContainer = $btIgnorePageThemeGridFrameworkContainer;
+    }
 
     /**
      * Sets the block type handle

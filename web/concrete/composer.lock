@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "543eff7cf2088a114ece69dc4e8b3eb4",
+    "hash": "81df73f8e38831c4bbac5ab3c5a9a923",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -915,16 +915,16 @@
         },
         {
             "name": "gettext/gettext",
-            "version": "v3.0",
+            "version": "v3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/oscarotero/Gettext.git",
-                "reference": "e54627b820b9ff838934134ce403e22a7e86dd02"
+                "reference": "e6598d172881dd8eb6232d6321784a01fd6a47d7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/oscarotero/Gettext/zipball/e54627b820b9ff838934134ce403e22a7e86dd02",
-                "reference": "e54627b820b9ff838934134ce403e22a7e86dd02",
+                "url": "https://api.github.com/repos/oscarotero/Gettext/zipball/e6598d172881dd8eb6232d6321784a01fd6a47d7",
+                "reference": "e6598d172881dd8eb6232d6321784a01fd6a47d7",
                 "shasum": ""
             },
             "require": {
@@ -961,7 +961,7 @@
                 "po",
                 "translation"
             ],
-            "time": "2015-01-22 21:42:54"
+            "time": "2015-01-28 15:27:55"
         },
         {
             "name": "hautelook/phpass",
@@ -1481,20 +1481,20 @@
         },
         {
             "name": "mlocati/concrete5-translation-library",
-            "version": "1.0.1",
+            "version": "1.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mlocati/concrete5-translation-library.git",
-                "reference": "d26f7a338092110a2fc660cd9c4ed3cd1455cbca"
+                "reference": "f9e122aee56fb1428b9a8279036fdc6b2cdc2cea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mlocati/concrete5-translation-library/zipball/d26f7a338092110a2fc660cd9c4ed3cd1455cbca",
-                "reference": "d26f7a338092110a2fc660cd9c4ed3cd1455cbca",
+                "url": "https://api.github.com/repos/mlocati/concrete5-translation-library/zipball/f9e122aee56fb1428b9a8279036fdc6b2cdc2cea",
+                "reference": "f9e122aee56fb1428b9a8279036fdc6b2cdc2cea",
                 "shasum": ""
             },
             "require": {
-                "gettext/gettext": "3.*",
+                "gettext/gettext": "3.1.*",
                 "php": ">=5.3.0"
             },
             "type": "library",
@@ -1527,7 +1527,7 @@
                 "translate",
                 "translation"
             ],
-            "time": "2015-01-27 13:17:52"
+            "time": "2015-01-30 07:57:32"
         },
         {
             "name": "mobiledetect/mobiledetectlib",

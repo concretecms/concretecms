@@ -37,11 +37,14 @@ class Extractor
             if (is_dir(DIR_APPLICATION.'/'.$dirname)) {
                 foreach ($parsers as $parser) {
                     /* @var $parser \C5TL\Parser */
-                    $parser->parseDirectory(
-                        DIR_APPLICATION.'/'.$dirname,
-                        DIRNAME_APPLICATION.'/'.$dirname,
-                        $translations
-                    );
+                    $fullDirname = DIR_APPLICATION.'/'.$dirname;
+                    if (is_dir($fullDirname)) {
+                        $parser->parseDirectory(
+                            $fullDirname,
+                            DIRNAME_APPLICATION.'/'.$dirname,
+                            $translations
+                        );
+                    }
                 }
             }
         }

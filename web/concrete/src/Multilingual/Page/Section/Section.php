@@ -18,7 +18,6 @@ class Section extends Page
         return '\\Concrete\\Core\\Permission\\Response\\MultilingualSectionResponse';
     }
 
-
     public function getPermissionObjectKeyCategoryHandle()
     {
         return 'multilingual_section';
@@ -50,21 +49,21 @@ class Section extends Page
         $data = array(
             'cID' => $c->getCollectionID(),
             'msLanguage' => $language,
-            'msCountry' => $country
+            'msCountry' => $country,
         );
         $pluralRule = (string) $pluralRule;
-        if(empty($numPlurals) || ($pluralRule === '')) {
+        if (empty($numPlurals) || ($pluralRule === '')) {
             $locale = $language;
-            if($country !== '') {
+            if ($country !== '') {
                 $locale .= '_' . $country;
             }
             $localeInfo = \Gettext\Utils\Locales::getLocaleInfo($locale);
-            if($localeInfo) {
+            if ($localeInfo) {
                 $numPlurals = $localeInfo['plurals'];
                 $pluralRule = $localeInfo['pluralRule'];
             }
         }
-        if((!empty($numPlurals)) && ($pluralRule !== '')) {
+        if ((!empty($numPlurals)) && ($pluralRule !== '')) {
             $data['msNumPlurals'] = $numPlurals;
             $data['msPluralRule'] = $pluralRule;
         }
@@ -254,6 +253,32 @@ class Section extends Page
     public function getCountry()
     {
         return $this->msCountry;
+    }
+
+    /**
+     * Returns the number of plural forms
+     * @return int
+     * @example For Japanese: returns 1
+     * @example For English: returns 2
+     * @example For French: returns 2
+     * @example For Russian returns 3
+     */
+    public function getNumberOfPluralForms()
+    {
+        return (int) $this->msNumPlurals;
+    }
+
+    /**
+     * Returns the rule to determine which plural we should use (in gettext notation)
+     * @return string
+     * @example For Japanese: returns '0'
+     * @example For English: returns '(n != 1)'
+     * @example For French: returns '(n > 1)'
+     * @example For Russian returns '(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)'
+     */
+    public function getPluralsRule()
+    {
+        return (string) $this->msPluralRule;
     }
 
     public static function registerPage($page)
@@ -532,9 +557,9 @@ class Section extends Page
     {
         $translations = new Translations();
         $translations->setLanguage($this->getLocale());
-        $translations->setPluralForms($this->msNumPlurals, $this->msPluralRule);
+        $translations->setPluralForms($this->getNumberOfPluralForms(), $this->getPluralsRule());
         $db = \Database::get();
-        $r = $db->query('select * from MultilingualTranslations mt where mtSectionID = ? order by if(mt.msgstr = "", 0, 1) asc, msgid asc', array($this->getCollectionID()));
+        $r = $db->query('select * from MultilingualTranslations mt where mtSectionID = ? order by mtID', array($this->getCollectionID()));
         while ($row = $r->fetch()) {
             $t = Translation::getByRow($row);
             if (isset($t)) {
