@@ -1006,7 +1006,10 @@ class ContentImporter
         if (isset($sx->blocktypesets)) {
             foreach ($sx->blocktypesets->blocktypeset as $bts) {
                 $pkg = static::getPackageObject($bts['package']);
-                $set = BlockTypeSet::add((string)$bts['handle'], (string)$bts['name'], $pkg);
+                $set = BlockTypeSet::getByHandle((string) $bts['handle']);
+                if (!is_object($set)) {
+                    $set = BlockTypeSet::add((string)$bts['handle'], (string)$bts['name'], $pkg);
+                }
                 foreach ($bts->children() as $btk) {
                     $bt = BlockType::getByHandle((string)$btk['handle']);
                     if (is_object($bt)) {
