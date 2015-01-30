@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Page\Type;
 
+use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Template;
 use Concrete\Core\Page\Type\Composer\Control\CorePageProperty\NameCorePageProperty;
@@ -468,13 +469,30 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         $ptID = $db->GetOne('select ptID from PageTypes where ptHandle = ?', array($ptHandle));
         if ($ptID) {
             $pt = static::getByID($ptID);
+            $defaultTemplate = $pt->getPageTypeDefaultPageTemplateObject();
             if (isset($node->composer->output->pagetemplate)) {
                 $ci = new ContentImporter();
                 foreach ($node->composer->output->pagetemplate as $pagetemplate) {
-                    $ptt = PageTemplate::getByHandle((string)$pagetemplate['handle']);
+                    $handle = (string)$pagetemplate['handle'];
+                    $ptt = PageTemplate::getByHandle($handle);
                     if (is_object($ptt)) {
+
                         // let's get the defaults page for this
                         $xc = $pt->getPageTypePageTemplateDefaultPageObject($ptt);
+
+                        // if the $handle matches the default page template for this page type, then we ALSO check in here
+                        // and see if there are any attributes
+                        if (is_object($defaultTemplate) && $defaultTemplate->getPageTemplateHandle() == $handle) {
+                            if (isset($pagetemplate->page->attributes)) {
+                                foreach ($pagetemplate->page->attributes->children() as $attr) {
+                                    $ak = CollectionKey::getByHandle((string) $attr['handle']);
+                                    if (is_object($ak)) {
+                                        $xc->setAttribute((string) $attr['handle'], $ak->getController()->importValue($attr));
+                                    }
+                                }
+                            }
+                        }
+
                         // now that we have the defaults page, let's import this content into it.
                         if (isset($pagetemplate->page)) {
                             $ci->importPageAreas($xc, $pagetemplate->page);
