@@ -5,7 +5,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class Translation extends \Gettext\Translation
 {
-    public function getID()
+    public function getRecordID()
     {
         return $this->mtID;
     }
@@ -88,11 +88,11 @@ class Translation extends \Gettext\Translation
         $r = $db->query('select mtID from MultilingualTranslations mt where msgid = ?', array($msgid));
         $row = $r->fetch();
         if ($row && $row['mtID']) {
-            return static::getByID($row['mtID']);
+            return static::getByRecordID($row['mtID']);
         }
     }
-    
-    public static function getByID($mtID)
+
+    public static function getByRecordID($mtID)
     {
         $result = null;
         $db = \Database::get();
