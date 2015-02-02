@@ -85,7 +85,10 @@ $ip = Loader::helper('validation/ip'); ?>
                         } else {
                             $flagClass = '';
                         }
-                        $ui = $msg->getConversationMessageUserObject(); ?>
+                        $author = $msg->getConversationMessageAuthorObject();
+                        $formatter = $author->getFormatter();
+
+                        ?>
                         <tr>
                             <!-- <td><?=$form->checkbox('cnvMessageID[]', $msg->getConversationMessageID())?></td> -->
                             <td class="message-cell">
@@ -107,11 +110,7 @@ $ip = Loader::helper('validation/ip'); ?>
                             <td>
                                 <?=$msg->getConversationMessageDateTimeOutput('mdy_full_ts');?>
                                 <p><?
-                                    if(is_object($ui)) {
-                                        echo tc(/*i18n: %s is the name of the author */ 'Authored', 'By %s', $ui->getUserDisplayName());
-                                    } else {
-                                        echo t(/*i18n: when the author of a message is anonymous */ 'By Anonymous');
-                                    }
+                                    echo tc(/*i18n: %s is the name of the author */ 'Authored', 'By %s', $formatter->getLinkedAdministrativeDisplayName());
                                     ?></p>
 
                                 <?
@@ -122,7 +121,7 @@ $ip = Loader::helper('validation/ip'); ?>
                             </td>
                             <td>
                                 <?php if (is_object($page)) { ?>
-                                    <a href="<?=Loader::helper('navigation')->getLinkToCollection($page)?>#cnv<?php echo $cnvID ?>Message<?php echo $msgID ?>" data-open-text="<?php echo t('View full message.') ?>" data-close-text="<?php echo t('Minimize message') ?>" class="read-all truncated btn"><i class="fa fa-share"></i></a>
+                                    <a href="<?=Loader::helper('navigation')->getLinkToCollection($page)?>#cnv<?php echo $cnvID ?>Message<?php echo $msgID ?>" class="icon-link"><i class="fa fa-share"></i></a>
                                 <?php } ?>
                             </td>
                             <td class="hidden-actions">
@@ -151,6 +150,7 @@ $ip = Loader::helper('validation/ip'); ?>
                                         <li>
                                             <a class = "mark-user" data-rel-message-id="<?php echo $msgID ?>" href="#"><?php echo t('Mark all user posts as spam') ?></a>
                                         </li>
+                                        <? /*
                                         <li>
                                             <?php if(is_object($ui) && $ui->isActive()) { ?>
                                                 <a class = "deactivate-user" data-rel-message-id="<?php echo $msgID ?>" href="#"><?php echo t('Deactivate User') ?></a>
@@ -158,6 +158,7 @@ $ip = Loader::helper('validation/ip'); ?>
                                                 <span class="inactive"><?php echo t('User deactivated'); ?></span>
                                             <?php }?>
                                         </li>
+                                         */ ?>
                                         <li>
                                             <?php if(!$ip->isBanned($msg->getConversationMessageSubmitIP())) { ?>
                                                 <a class = "block-ip" data-rel-message-id="<?php echo $msgID ?>" href="#"><?php echo t('Block user IP Address') ?></a>

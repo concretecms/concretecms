@@ -14,7 +14,7 @@ class Version5732 extends AbstractMigration
 
     public function getName()
     {
-        return '20150127000000';
+        return '20150202000000';
     }
 
     public function up(Schema $schema)
@@ -49,6 +49,14 @@ class Version5732 extends AbstractMigration
         if (!$mt->hasColumn('msgstrPlurals')) {
             $mt->addColumn('msgstrPlurals', 'text', array('notnull' => false));
             $this->updateMultilingualTranslations = true;
+        }
+
+        $cms = $schema->getTable('ConversationMessages');
+        if (!$cms->hasColumn('cnvMessageAuthorName')) {
+            $cms->addColumn('cnvMessageAuthorName', 'string', array('notnull' => false, 'length' => 255));
+        }
+        if (!$cms->hasColumn('cnvMessageAuthorEmail')) {
+            $cms->addColumn('cnvMessageAuthorEmail', 'string', array('notnull' => false, 'length' => 255));
         }
 
         $this->updatePermissionDurationObjects();
