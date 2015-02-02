@@ -20,7 +20,7 @@ $form = Loader::helper('form');
 	<? if ($enablePosting == Conversation::POSTING_ENABLED) { ?>
 		<div class="ccm-conversation-add-new-message" rel="main-reply-form">
 			<form method="post" class="main-reply-form">
-			<div class="ccm-conversation-avatar"><? print Loader::helper('concrete/avatar')->outputUserAvatar($ui)?></div>
+			<? Loader::element('conversation/message/author');?>
 			<div class="ccm-conversation-message-form">
 				<div class="ccm-conversation-errors alert alert-danger"></div>
 				<? $editor->outputConversationEditorAddMessageForm(); ?>
@@ -48,7 +48,7 @@ $form = Loader::helper('form');
 
 		<div class="ccm-conversation-add-reply">
 			<form method="post" class="aux-reply-form">
-			<div class="ccm-conversation-avatar"><? print Loader::helper('concrete/avatar')->outputUserAvatar($ui)?></div>
+			<? Loader::element('conversation/message/author');?>
 			<div class="ccm-conversation-message-form">
 				<div class="ccm-conversation-errors alert alert-danger"></div>
 				<? $editor->outputConversationEditorReplyMessageForm(); ?>
@@ -145,13 +145,13 @@ $form = Loader::helper('form');
     <? if ($enablePosting == Conversation::POSTING_ENABLED) { ?>
 		<div class="ccm-conversation-add-new-message" rel="main-reply-form">
 			<form method="post" class="main-reply-form">
-			<div class="ccm-conversation-avatar"><? print Loader::helper('concrete/avatar')->outputUserAvatar($ui)?></div>
+			<? Loader::element('conversation/message/author');?>
 			<div class="ccm-conversation-message-form">
 				<div class="ccm-conversation-errors alert alert-danger"></div>
 				<? $editor->outputConversationEditorAddMessageForm(); ?>
 				<button type="button" data-post-parent-id="0" data-submit="conversation-message" class="pull-right btn btn-primary btn-small"><?=t('Reply')?> </button>
 				<?php if ($attachmentsEnabled) { ?>
-                    <button type="button" class="ccm-conversation-attachment-toggle" title="<?php echo t('Attach Files'); ?>"><i class="fa fa-image"></i></button>
+                    <button type="button" class="pull-right btn btn-default ccm-conversation-attachment-toggle" title="<?php echo t('Attach Files'); ?>"><i class="fa fa-image"></i></button>
                 <?php } ?>
 				<?php echo $form->hidden('blockAreaHandle', $blockAreaHandle) ?>
 				<?php echo $form->hidden('cID', $cID) ?>
@@ -173,13 +173,13 @@ $form = Loader::helper('form');
 
 		<div class="ccm-conversation-add-reply" >
 			<form method="post" class="aux-reply-form">
-			<div class="ccm-conversation-avatar"><? print Loader::helper('concrete/avatar')->outputUserAvatar($ui)?></div>
+			<? Loader::element('conversation/message/author');?>
 			<div class="ccm-conversation-message-form">
 				<div class="ccm-conversation-errors alert alert-danger"></div>
 				<? $editor->outputConversationEditorReplyMessageForm(); ?>
 				<button type="button" data-submit="conversation-message" class="pull-right btn btn-primary btn-small"><?=t('Reply')?></button>
                 <?php if ($attachmentsEnabled) { ?>
-				    <button type="button" class="ccm-conversation-attachment-toggle" title="<?php echo t('Attach Files'); ?>"><i class="fa fa-image"></i></button>
+				    <button type="button" class="pull-right btn btn-default ccm-conversation-attachment-toggle" title="<?php echo t('Attach Files'); ?>"><i class="fa fa-image"></i></button>
                 <?php } ?>
 				<?php echo $form->hidden('blockAreaHandle', $blockAreaHandle) ?>
 				<?php echo $form->hidden('cID', $cID) ?>

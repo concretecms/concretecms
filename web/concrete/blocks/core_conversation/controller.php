@@ -76,6 +76,10 @@ use Page;
         {
             $this->requireAsset('core/conversation');
             $this->requireAsset('core/lightbox');
+			$u = new \User();
+			if (!$u->isRegistered()) {
+				$this->requireAsset('css', 'core/frontend/captcha');
+			}
         }
 		public function view() {
 			$fileSettings = $this->getFileSettings();
