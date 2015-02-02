@@ -8,5 +8,5 @@ $user = Loader::helper('form/user_selector');
 	<? if($description): ?>
 	<i class="fa fa-question-circle launch-tooltip" title="" data-original-title="<?=$description?>"></i>
 	<? endif; ?>
-	<?=Loader::helper('form/date_time')->datetime($this->field('date_time'))?>
+	<?=Loader::helper('form/date_time')->datetime($this->field('date_time'), $control->getPageTypeComposerControlDraftValue())?>
 </div>
