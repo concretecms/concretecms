@@ -60,7 +60,7 @@ $gf = $pt->getThemeGridFrameworkObject();
         if ($pt->supportsGridFramework() && $a->isGridContainerEnabled()) {
             echo $gf->getPageThemeGridFrameworkContainerStartHTML();
             echo $gf->getPageThemeGridFrameworkRowStartHTML();
-            printf('<div class="%s">', $gf->getPageThemeGridFrameworkColumnClassForSpan(
+            printf('<div class="%s">', $gf->getPageThemeGridFrameworkColumnClassesForSpan(
                                           $gf->getPageThemeGridFrameworkNumColumns()
             ));
             ?>
