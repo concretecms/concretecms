@@ -32,9 +32,10 @@ class DateTimeCorePageProperty extends CorePageProperty
 
     public function getPageTypeComposerControlDraftValue()
     {
-        $c = $this->page;
-
-        return $c->getCollectionDatePublic();
+        if (is_object($this->page)) {
+            $c = $this->page;
+            return $c->getCollectionDatePublic();
+        }
     }
 
 }
