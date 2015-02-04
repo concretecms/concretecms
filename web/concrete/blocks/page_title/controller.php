@@ -17,7 +17,7 @@ class Controller extends BlockController
     protected $btCacheBlockOutput = true;
     protected $btCacheBlockOutputOnPost = true;
     protected $btCacheBlockOutputForRegisteredUsers = false;
-    protected $btInterfaceHeight = 200;
+    protected $btInterfaceHeight = 400;
     protected $btTable = 'btPageTitle';
     protected $btWrapperClass = 'ccm-ui';
 
