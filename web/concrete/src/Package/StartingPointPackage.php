@@ -340,6 +340,10 @@ class StartingPointPackage extends BasePackage
 
         MailImporter::add(array('miHandle' => 'private_message'));
         UserPointAction::add('won_badge', t('Won a Badge'), 5, false, true);
+
+        // Install conversation default email
+        Config::save('conversations.notification', true);
+        Config::save('conversations.notification_email', INSTALL_USER_EMAIL);
     }
 
     public function make_directories()

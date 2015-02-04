@@ -14,7 +14,7 @@ class Version5732 extends AbstractMigration
 
     public function getName()
     {
-        return '20150202000000';
+        return '20150203000000';
     }
 
     public function up(Schema $schema)
@@ -59,6 +59,16 @@ class Version5732 extends AbstractMigration
             $cms->addColumn('cnvMessageAuthorEmail', 'string', array('notnull' => false, 'length' => 255));
         }
 
+        $mss = $schema->getTable('Conversations');
+        if (!$mss->hasColumn('cnvNotificationOverridesEnabled')) {
+            $mss->addColumn('cnvNotificationOverridesEnabled', 'boolean', array('unsigned' => true, 'notnull' => true, 'length' => 1, 'default' => 0));
+        }
+        if (!$mss->hasColumn('cnvSendNotification')) {
+            $mss->addColumn('cnvSendNotification', 'boolean', array('unsigned' => true, 'notnull' => true, 'length' => 1, 'default' => 0));
+        }
+        if (!$mss->hasColumn('cnvNotificationEmailAddress')) {
+            $mss->addColumn('cnvNotificationEmailAddress', 'text', array('notnull' => false));
+        }
         $this->updatePermissionDurationObjects();
     }
 

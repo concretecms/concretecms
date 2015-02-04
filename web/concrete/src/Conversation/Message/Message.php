@@ -408,6 +408,17 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
 
         if ($cnv instanceof Conversation) {
             $cnv->updateConversationSummary();
+
+            if ($cnv->getConversationNotificationEnabled()) {
+                /*$formatter = new AuthorFormatter($author);
+                $email = $cnv->getConversationNotificationEmailAddress();
+                $mail = Core::make('mail');
+                $mail->to($email);
+                $mail->addParameter('poster', $formatter->getDisplayName());
+                $mail->addParameter('body', $cnvMessageBody);
+                $mail->load('new_conversation_message');
+                $mail->sendMail();*/
+            }
         }
 
         return static::getByID($cnvMessageID);
