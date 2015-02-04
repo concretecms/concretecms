@@ -522,7 +522,7 @@ class Theme extends Object
                         if (in_array($f, SinglePage::getThemeableCorePages())) {
                             $type = PageThemeFile::TFTYPE_SINGLE_PAGE;
                         } else {
-                            if (in_array($fHandle, $pts)) {
+                            if (is_array($pts) && in_array($fHandle, $pts)) {
                                 $type = PageThemeFile::TFTYPE_PAGE_TEMPLATE_EXISTING;
                             } else {
                                 $type = PageThemeFile::TFTYPE_PAGE_TEMPLATE_NEW;
