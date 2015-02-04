@@ -766,6 +766,18 @@
     </field>
     <field name="cnvFileExtensions" type="X">
     </field>
+    <field name="cnvNotificationOverridesEnabled" type="I1">
+        <unsigned />
+        <notnull />
+        <default value="0" />
+    </field>
+    <field name="cnvSendNotification" type="I1">
+        <unsigned />
+        <notnull />
+        <default value="0" />
+    </field>
+    <field name="cnvNotificationEmailAddress" type="X">
+    </field>
     <index name="cID">
         <col>cID</col>
     </index>
