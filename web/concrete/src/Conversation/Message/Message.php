@@ -311,9 +311,10 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
             $author = new Author();
             if ($r['uID'] > 0) {
                 $author->setUser(\UserInfo::getByID($r['uID']));
+            } else {
+                $author->setName($r['cnvMessageAuthorName']);
+                $author->setEmail($r['cnvMessageAuthorEmail']);
             }
-            $author->setName($r['cnvMessageAuthorName']);
-            $author->setEmail($r['cnvMessageAuthorEmail']);
             $msg->cnvMessageAuthor = $author;
             return $msg;
         }
@@ -406,18 +407,23 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
 
         $cnvMessageID = $db->Insert_ID();
 
-        if ($cnv instanceof Conversation) {
+        if ($cnv instanceof \Concrete\Core\Conversation\Conversation) {
             $cnv->updateConversationSummary();
-
             if ($cnv->getConversationNotificationEnabled()) {
-                /*$formatter = new AuthorFormatter($author);
-                $email = $cnv->getConversationNotificationEmailAddress();
-                $mail = Core::make('mail');
-                $mail->to($email);
-                $mail->addParameter('poster', $formatter->getDisplayName());
-                $mail->addParameter('body', $cnvMessageBody);
-                $mail->load('new_conversation_message');
-                $mail->sendMail();*/
+                $c = $cnv->getCurrentPage();
+                if (is_object($c)) {
+                    $formatter = new AuthorFormatter($author);
+                    $email = $cnv->getConversationNotificationEmailAddress();
+                    $mail = Core::make('mail');
+                    $mail->to($email);
+                    $mail->addParameter('title', $c->getCollectionName());
+                    $mail->addParameter('link', $c->getCollectionLink(true));
+                    $mail->addParameter('poster', $formatter->getDisplayName());
+                    $cnvMessageBody = html_entity_decode($cnvMessageBody, ENT_QUOTES, APP_CHARSET);
+                    $mail->addParameter('body', Core::make('helper/text')->prettyStripTags($cnvMessageBody));
+                    $mail->load('new_conversation_message');
+                    $mail->sendMail();
+                }
             }
         }
 

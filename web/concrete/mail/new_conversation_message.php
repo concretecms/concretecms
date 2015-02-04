@@ -1,13 +1,13 @@
 <? 
 defined('C5_EXECUTE') or die("Access Denied.");
-$subject = t('New Message on Conversation: %s', $pageName);
+$subject = t('New Message on Conversation: %s', $title);
 $body = t("
-There is a new reply on a guestbook in your concrete5 website.
+%s has posted a new message to the conversation \"%s\":
 
 %s
 
-To view this guestbook, visit: 
-%s 
+You can view the whole conversation at
 
-", $comment, $guestbookURL);
-?>
+%s
+
+", $poster, $title, $body, $link);
