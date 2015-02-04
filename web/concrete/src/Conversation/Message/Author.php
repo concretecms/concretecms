@@ -28,6 +28,9 @@ class Author
         } else {
             $this->user = $user;
         }
+        $this->name = $this->user->getUserName();
+        $this->email = $this->user->getUserEmail();
+
     }
 
     /**
