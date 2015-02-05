@@ -244,6 +244,7 @@ class Application extends Container
                 }
             }
         }
+        Config::set('concrete.packages_loaded', true);
     }
 
     /**
