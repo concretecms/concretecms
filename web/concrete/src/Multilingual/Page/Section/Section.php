@@ -469,7 +469,7 @@ class Section extends Page
 
             $cID = self::getCollectionIDForLocale($mpRelationID, $ms->getLocale());
 
-            if ($cID < 1) {
+            if ($cID > 0) {
                 $db->Execute(
                     'delete from MultilingualPageRelations where mpRelationID = ? and mpLocale = ?',
                     array($mpRelationID, $ms->getLocale())
