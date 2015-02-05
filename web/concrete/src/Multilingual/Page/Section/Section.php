@@ -438,9 +438,8 @@ class Section extends Page
                     $mpRelationID++;
                 }
 
-                if (is_object(
-                    $msx
-                )) {   // adding in a check to see if old page was part of a language section or neutral.
+                // adding in a check to see if old page was part of a language section or neutral.
+                if (is_object($msx)) {
                     $db->Execute(
                         'insert into MultilingualPageRelations (mpRelationID, cID, mpLanguage, mpLocale) values (?, ?, ?, ?)',
                         array(
@@ -452,6 +451,7 @@ class Section extends Page
                     );
                 }
             }
+
             $v = array($mpRelationID, $newPage->getCollectionID(), $ms->getLocale());
 
             $cID = self::getCollectionIDForLocale($mpRelationID, $ms->getLocale());
@@ -462,6 +462,7 @@ class Section extends Page
                     array($mpRelationID, $ms->getLocale())
                 );
             }
+
             $db->Execute('insert into MultilingualPageRelations (mpRelationID, cID, mpLocale) values (?, ?, ?)', $v);
 
             $pde = new Event($newPage);
