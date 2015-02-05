@@ -401,6 +401,18 @@ class Section extends Page
         return $mpRelationID;
     }
 
+    public static function getCollectionIDForLocale($mpRelationID, $locale)
+    {
+        $db = Database::get();
+
+        $cID = $db->GetOne(
+            'select cID from MultilingualPageRelations where mpRelationID = ? and mpLocale = ?',
+            array($mpRelationID, $locale)
+        );
+
+        return $cID;
+    }
+
     public static function registerDuplicate($newPage, $oldPage)
     {
         $db = Database::get();
@@ -441,10 +453,9 @@ class Section extends Page
                 }
             }
             $v = array($mpRelationID, $newPage->getCollectionID(), $ms->getLocale());
-            $cID = $db->GetOne(
-                'select cID from MultilingualPageRelations where mpRelationID = ? and mpLocale = ?',
-                array($mpRelationID, $ms->getLocale())
-            );
+
+            $cID = self::getCollectionIDForLocale($mpRelationID, $ms->getLocale());
+
             if ($cID < 1) {
                 $db->Execute(
                     'delete from MultilingualPageRelations where mpRelationID = ? and mpLocale = ?',
@@ -541,10 +552,7 @@ class Section extends Page
         $mpRelationID = self::getMultilingualPageRelationID($page->getCollectionID());
 
         if ($mpRelationID) {
-            $cID = $db->GetOne(
-                'select cID from MultilingualPageRelations where mpRelationID = ? and mpLocale = ?',
-                array($mpRelationID, $this->getLocale())
-            );
+            $cID = self::getCollectionIDForLocale($mpRelationID, $this->getLocale());
 
             return $cID;
         }
