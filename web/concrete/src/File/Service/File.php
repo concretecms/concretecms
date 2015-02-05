@@ -275,15 +275,6 @@ class File
     {
         $url = @parse_url($file);
         if (isset($url['scheme']) && isset($url['host'])) {
-            if (ini_get('allow_url_fopen')) {
-                $ctx = stream_context_create(
-                    array(
-                        'http' => array('timeout' => $timeout)
-                    ));
-                if ($contents = @file_get_contents($file, 0, $ctx)) {
-                    return $contents;
-                }
-            }
 
             if (function_exists('curl_init')) {
                 $curl_handle = curl_init();

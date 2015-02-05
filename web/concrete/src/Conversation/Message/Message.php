@@ -410,7 +410,7 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
         if ($cnv instanceof \Concrete\Core\Conversation\Conversation) {
             $cnv->updateConversationSummary();
             if ($cnv->getConversationNotificationEnabled()) {
-                $c = $cnv->getCurrentPage();
+                $c = $cnv->getConversationPageObject();
                 if (is_object($c)) {
                     $formatter = new AuthorFormatter($author);
                     $email = $cnv->getConversationNotificationEmailAddress();

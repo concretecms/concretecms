@@ -230,55 +230,43 @@ class Package extends Object
         if (!file_exists($xmlFile)) {
             return false;
         }
-
         // currently this is just done from xml
         $db = Database::get();
-
-        $parser = Schema::getSchemaParser(simplexml_load_file($xmlFile));
-        $parser->setIgnoreExistingTables(false);
-        $toSchema = $parser->parse($db);
-
-        $fromSchema = $db->getSchemaManager()->createSchema();
-        $comparator = new \Doctrine\DBAL\Schema\Comparator();
-        $schemaDiff = $comparator->compare($fromSchema, $toSchema);
-        $saveQueries = $schemaDiff->toSaveSql($db->getDatabasePlatform());
-
-        foreach($saveQueries as $query) {
+        $db->beginTransaction();
+        $schema = Schema::loadFromXMLFile($xmlFile, $db);
+        $platform = $db->getDatabasePlatform();
+        $queries = $schema->toSql($platform);
+        foreach ($queries as $query) {
             $db->query($query);
         }
 
+        $db->commit();
+        unset($schema);
+        unset($platform);
         /*
-        $schema = Database::getADOSChema();
-        $sql = $schema->ParseSchema($xmlFile);
-
-        $db->IgnoreErrors($handler);
-
-        if (!$sql) {
-            $result->message = $db->ErrorMsg();
-            return $result;
-        }
-
-        $r = $schema->ExecuteSchema();
-
-
-        if ($dbLayerErrorMessage != '') {
-            $result->message = $dbLayerErrorMessage;
-            return $result;
-        } if (!$r) {
-            $result->message = $db->ErrorMsg();
-            return $result;
-        }
-
-        $result->result = true;
-
-        $db->CacheFlush();
-        */
-
+		$schema = Database::getADOSChema();
+		$sql = $schema->ParseSchema($xmlFile);
+		$db->IgnoreErrors($handler);
+		if (!$sql) {
+			$result->message = $db->ErrorMsg();
+			return $result;
+		}
+		$r = $schema->ExecuteSchema();
+		if ($dbLayerErrorMessage != '') {
+			$result->message = $dbLayerErrorMessage;
+			return $result;
+		} if (!$r) {
+			$result->message = $db->ErrorMsg();
+			return $result;
+		}
+		$result->result = true;
+		$db->CacheFlush();
+		*/
         $result = new \stdClass();
         $result->result = false;
-
         return $result;
     }
+
 
     public static function getClass($pkgHandle)
     {

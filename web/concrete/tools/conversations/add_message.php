@@ -93,7 +93,6 @@ if (Config::get('conversation.banned_words') && Loader::helper('validation/banne
 if ($ve->has()) {
 	$ax->sendError($ve);
 } else {
-	$cn->setCurrentPage($pageObj);
 	$msg = ConversationMessage::add($cn, $author, $cnvMessageSubject, $_POST['cnvMessageBody'], $parent);
 	if (!Loader::helper('validation/antispam')->check($_POST['cnvMessageBody'],'conversation_comment')) {
 		$msg->flag(ConversationFlagType::getByHandle('spam'));
