@@ -17,19 +17,6 @@ class Conversation extends Object implements \Concrete\Core\Permission\ObjectInt
 
     protected $page;
 
-    /**
-     * @return \Concrete\Core\Page\Page
-     */
-    public function getCurrentPage()
-    {
-        return $this->page;
-    }
-
-    public function setCurrentPage(\Concrete\Core\Page\Page $page)
-    {
-        $this->page = $page;
-    }
-
     public function getConversationID()
     {
         return $this->cnvID;
