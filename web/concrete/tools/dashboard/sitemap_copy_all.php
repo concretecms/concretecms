@@ -1,5 +1,8 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Multilingual\Page\Section\Section;
+
 $dh = Loader::helper('concrete/dashboard/sitemap');
 if (!$dh->canRead()) {
 	die(t("Access Denied."));
@@ -32,7 +35,30 @@ if ($_POST['process']) {
 		} else {
 			$dc = Page::getByID($page['destination']);
 		}
-		$nc = $oc->duplicate($dc);
+
+		if ($_POST['multilingual']) {
+			// Find multilingual section of the destination
+			if (Section::isMultilingualSection($dc)) {
+				$ms = Section::getByID($dc->getCollectionID());
+			} else {
+				$ms = Section::getBySectionOfSite($dc);
+			}
+
+			// Is page already copied?
+			$existingCID = Section::getRelatedCollectionIDForLocale($page['cID'], $ms->getLocale());
+			if ($existingCID) {
+				$nc = Page::getById($existingCID);
+
+				if ($dc->getCollectionID() != $nc->getCollectionParentID()) {
+					$nc->move($dc);
+				}
+			} else {
+				$nc = $oc->duplicate($dc);
+			}
+		} else {
+			$nc = $oc->duplicate($dc);
+		}
+
 		$ocID = $oc->getCollectionID();
 		$ncID = $nc->getCollectionID();
 		if ($oc->getCollectionPointerOriginalID() > 0) {
@@ -47,6 +73,7 @@ if ($_POST['process']) {
 
 		$q->deleteMessage($p);
 	}
+
 	$obj->totalItems = $q->count();
 	print $js->encode($obj);
 	if ($q->count() == 0) {

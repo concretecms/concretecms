@@ -227,7 +227,12 @@ if ($u->isSuperUser() && !$includesHome) { ?>
 				if (ctt > 0 && ctf > 0 && ctt != ctf) {
 					ccm_triggerProgressiveOperation(
 						CCM_TOOLS_PATH + '/dashboard/sitemap_copy_all',
-						[{'name': 'origCID', 'value': ctf}, {'name': 'destCID', 'value': ctt}, {'name': 'copyChildrenOnly', 'value': true}],
+						[
+							{'name': 'origCID', 'value': ctf},
+							{'name': 'destCID', 'value': ctt},
+							{'name': 'copyChildrenOnly', 'value': true},
+							{'name': 'multilingual', 'value': true}
+						],
 						"<?=t('Copy Locale Tree')?>", function() {
 							window.location.href= "<?=$this->action('tree_copied')?>";
 						}
