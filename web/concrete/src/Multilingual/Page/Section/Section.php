@@ -286,10 +286,8 @@ class Section extends Page
             $db = Database::get();
             $ms = static::getBySectionOfSite($page);
             if (is_object($ms)) {
-                $mpRelationID = $db->GetOne(
-                    'select mpRelationID from MultilingualPageRelations where cID = ?',
-                    array($page->getCollectionID())
-                );
+                $mpRelationID = self::getMultilingualPageRelationID($page->getCollectionID());
+
                 if ($mpRelationID) {
                     // already exists. We quit and return
                     return $mpRelationID;
@@ -368,10 +366,8 @@ class Section extends Page
     public static function relatePage($oldPage, $newPage, $locale)
     {
         $db = Database::get();
-        $mpRelationID = $db->GetOne(
-            'select mpRelationID from MultilingualPageRelations where cID = ?',
-            array($oldPage->getCollectionID())
-        );
+        $mpRelationID = self::getMultilingualPageRelationID($oldPage->getCollectionID());
+
         if ($mpRelationID) {
             $v = array($mpRelationID, $newPage->getCollectionID(), $locale);
             $db->Execute(
@@ -388,22 +384,29 @@ class Section extends Page
 
     public static function isAssigned($page)
     {
-        $db = Database::get();
-        $mpRelationID = $db->GetOne(
-            'select mpRelationID from MultilingualPageRelations where cID = ?',
-            array($page->getCollectionID())
-        );
+        $mpRelationID = self::getMultilingualPageRelationID($page->getCollectionID());
 
         return $mpRelationID > 0;
+    }
+
+    public static function getMultilingualPageRelationID($cID)
+    {
+        $db = Database::get();
+
+        $mpRelationID = $db->getOne(
+            'select mpRelationID from MultilingualPageRelations where cID = ?',
+            array($cID)
+        );
+
+        return $mpRelationID;
     }
 
     public static function registerDuplicate($newPage, $oldPage)
     {
         $db = Database::get();
-        $mpRelationID = $db->GetOne(
-            'select mpRelationID from MultilingualPageRelations where cID = ?',
-            array($oldPage->getCollectionID())
-        );
+
+        $mpRelationID = self::getMultilingualPageRelationID($oldPage->getCollectionID());
+
         if (static::isMultilingualSection($newPage)) {
             $ms = static::getByID($newPage->getCollectionID());
         } else {
@@ -534,10 +537,9 @@ class Section extends Page
 
             return $cID;
         }
-        $mpRelationID = $db->GetOne(
-            'select mpRelationID from MultilingualPageRelations where cID = ?',
-            array($page->getCollectionID())
-        );
+
+        $mpRelationID = self::getMultilingualPageRelationID($page->getCollectionID());
+
         if ($mpRelationID) {
             $cID = $db->GetOne(
                 'select cID from MultilingualPageRelations where mpRelationID = ? and mpLocale = ?',
