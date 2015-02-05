@@ -480,12 +480,12 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         }
 
     }
-    
+
     public function removePermissions($userOrGroup, $permissions = array()) {
         if ($this->cInheritPermissionsFrom != 'OVERRIDE') {
             return;
         }
-		
+
         if (is_array($userOrGroup)) {
             $pe = GroupCombinationPermissionAccessEntity::getOrCreate($userOrGroup);
             // group combination
@@ -893,8 +893,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public function queueForDuplication($destination, $includeParent = true) {
         $pages = array();
         $pages = $this->populateRecursivePages($pages, array('cID' => $this->getCollectionID()), $this->getCollectionParentID(), 0, $includeParent);
-        // now, since this is deletion, we want to order the pages by level, which
-        // should get us no funny business if the queue dies.
+        // we want to order the pages by level, which should get us no funny
+        // business if the queue dies.
         usort($pages, array('Page', 'queueForDuplicationSort'));
         $q = Queue::get('copy_page');
         foreach($pages as $page) {
