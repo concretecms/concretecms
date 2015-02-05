@@ -413,6 +413,19 @@ class Section extends Page
         return $cID;
     }
 
+    public static function getRelatedCollectionIDForLocale($cID, $locale)
+    {
+        $mpRelationID = self::getMultilingualPageRelationID($cID);
+
+        if (!$mpRelationID) {
+            return null;
+        }
+
+        $relatedCID = self::getCollectionIDForLocale($mpRelationID, $locale);
+
+        return $relatedCID;
+    }
+
     public static function registerDuplicate($newPage, $oldPage)
     {
         $db = Database::get();
