@@ -198,6 +198,8 @@ class Localization
      */
     public static function clearCache()
     {
+        $locale = static::activeLocale();
         self::getCache()->flush();
+        static::changeLocale($locale);
     }
 }
