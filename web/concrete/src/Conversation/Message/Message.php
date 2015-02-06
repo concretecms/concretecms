@@ -303,7 +303,7 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
     {
         $db = Loader::db();
         $r = $db->GetRow('select * from ConversationMessages where cnvMessageID = ?', array($cnvMessageID));
-        if (is_array($r) && $r['cnvMessageID'] == $cnvMessageID) {
+        if (is_array($r) && $r['cnvMessageID'] && $r['cnvMessageID'] == $cnvMessageID) {
             $msg = new static();
             $msg->getConversationMessageFlagTypes();
             $msg->setPropertiesFromArray($r);

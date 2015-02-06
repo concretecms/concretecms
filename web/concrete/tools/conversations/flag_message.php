@@ -23,7 +23,18 @@ if (Loader::helper('validation/numbers')->integer($_POST['cnvMessageID']) && $_P
                 $message->getConversationMessageSubmitIP(),
                 $message->getConversationMessageSubmitUserAgent()
             );
-            Loader::element('conversation/message', array('message' => $message));
+
+            $r = Request::getInstance();
+            $types = $r->getAcceptableContentTypes();
+            if ($types[0] == 'application/json') {
+                $r = new \Concrete\Core\Application\EditResponse();
+                $r->setMessage(t('Message flagged successfully.'));
+                $r->outputJSON();
+            } else {
+                Loader::element('conversation/message', array('message' => $message));
+            }
+
+
         }
     }
 }
