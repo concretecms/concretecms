@@ -550,16 +550,23 @@ class Section extends Page
     }
 
     /**
-     * @param Section $section
-     * @return \Concrete\Core\Multilingual\Page\Section\Translation[] $translations
+     * Loads the translations of this multilingual section
+     * @param bool $untranslatedFirst Set to true to have untranslated strings first
+     * @return \Gettext\Translations
      */
-    public function getSectionInterfaceTranslations()
+    public function getSectionInterfaceTranslations($untranslatedFirst = false)
     {
         $translations = new Translations();
         $translations->setLanguage($this->getLocale());
         $translations->setPluralForms($this->getNumberOfPluralForms(), $this->getPluralsRule());
         $db = \Database::get();
-        $r = $db->query('select * from MultilingualTranslations mt where mtSectionID = ? order by mtID', array($this->getCollectionID()));
+        $r = $db->query(
+            "select *
+            from MultilingualTranslations
+            where mtSectionID = ?
+            order by ".($untranslatedFirst ? "if(ifnull(msgstr, '') = '', 0, 1), " : "")."mtID",
+            array($this->getCollectionID())
+        );
         while ($row = $r->fetch()) {
             $t = Translation::getByRow($row);
             if (isset($t)) {

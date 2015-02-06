@@ -128,7 +128,7 @@ class TranslateInterface extends DashboardPageController
         $mtSectionID = intval($mtSectionID);
         $section = Section::getByID(intval($mtSectionID));
         if ($section) {
-            $translations = $section->getSectionInterfaceTranslations();
+            $translations = $section->getSectionInterfaceTranslations(true);
             $this->set('section', $section);
             $this->set('translations', $translations);
         } else {
