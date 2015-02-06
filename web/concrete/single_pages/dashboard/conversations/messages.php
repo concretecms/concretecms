@@ -32,7 +32,7 @@ $ip = Loader::helper('validation/ip'); ?>
 
             <div class="ccm-search-fields-row">
                 <div class="form-group">
-                    <?=$form->label('cmpMessageFilter', t('Filter by Flag'))?>
+                    <?=$form->label('cmpMessageFilter', t('Filter By'))?>
                     <div class="ccm-search-field-content">
                         <?=$form->select('cmpMessageFilter', $cmpFilterTypes, $cmpMessageFilter) ?>
                     </div>
