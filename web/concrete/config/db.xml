@@ -2936,6 +2936,25 @@
             <col>pkID</col>
         </index>
     </table>
+    <table name="ConversationPermissionAddMessageAccessList">
+        <field name="paID" type="I" size="10">
+            <key/>
+            <default value="0"/>
+            <unsigned/>
+        </field>
+        <field name="peID" type="I" size="10">
+            <key/>
+            <default value="0"/>
+            <unsigned/>
+        </field>
+        <field name="permission" type="C" size="1">
+            <notnull/>
+            <default value="A"/>
+        </field>
+        <index name="peID">
+            <col>peID</col>
+        </index>
+    </table>
 
   <table name="FileSetPermissionFileTypeAccessList">
     <field name="paID" type="I" size="10">
