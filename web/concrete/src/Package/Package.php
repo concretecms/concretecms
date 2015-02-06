@@ -211,7 +211,6 @@ class Package extends Object
     public function installDatabase()
     {
         $dbm = $this->getDatabaseStructureManager();
-        $this->destroyProxyClasses();
 
         if ($dbm->hasEntities()) {
             $dbm->generateProxyClasses();
@@ -222,6 +221,39 @@ class Package extends Object
         if (file_exists($this->getPackagePath() . '/' . FILENAME_PACKAGE_DB)) {
             // Legacy db.xml
             Package::installDB($this->getPackagePath() . '/' . FILENAME_PACKAGE_DB);
+        }
+    }
+
+    public function upgradeDatabase()
+    {
+        $dbm = $this->getDatabaseStructureManager();
+        $this->destroyProxyClasses();
+        if ($dbm->hasEntities()) {
+            $dbm->generateProxyClasses();
+            $dbm->dropObsoleteDatabaseTables(camelcase($this->getPackageHandle()));
+            $dbm->installDatabase();
+        }
+
+        if (file_exists($this->getPackagePath() . '/' . FILENAME_PACKAGE_DB)) {
+            // Legacy db.xml
+            // currently this is just done from xml
+            $db = Database::get();
+            $db->beginTransaction();
+
+            $parser = Schema::getSchemaParser(simplexml_load_file($this->getPackagePath() . '/' . FILENAME_PACKAGE_DB));
+            $parser->setIgnoreExistingTables(false);
+            $toSchema = $parser->parse($db);
+
+            $fromSchema = $db->getSchemaManager()->createSchema();
+            $comparator = new \Doctrine\DBAL\Schema\Comparator();
+            $schemaDiff = $comparator->compare($fromSchema, $toSchema);
+            $saveQueries = $schemaDiff->toSaveSql($db->getDatabasePlatform());
+
+            foreach($saveQueries as $query) {
+                $db->query($query);
+            }
+
+            $db->commit();
         }
     }
 
@@ -906,7 +938,7 @@ class Package extends Object
 
     public function upgrade()
     {
-        $this->installDatabase();
+        $this->refreshDatabase();
 
         // now we refresh all blocks
         $items = $this->getPackageItems();
