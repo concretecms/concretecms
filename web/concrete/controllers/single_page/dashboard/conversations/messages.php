@@ -1,11 +1,13 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\Conversations;
 
+use Concrete\Core\Application\EditResponse;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use Loader;
 use stdClass;
 use Page;
 use UserInfo;
+use Core;
 use \Concrete\Core\Conversation\FlagType\FlagType as ConversationFlagType;
 use \Concrete\Core\Conversation\FlagType\FlagTypeList as ConversationFlagTypeList;
 use \Concrete\Core\Conversation\Message\Message as ConversationMessage;
@@ -101,82 +103,68 @@ class Messages extends DashboardPageController
         $this->set('cmpMessageFilter', $cmpMessageFilter);
     }
 
-    public function bulk_update()
+    public function approve_message()
     {
-        foreach ($this->post('cnvMessageID') as $messageID) {
-            $messageObj = ConversationMessage::getByID($messageID);
-            switch ($this->post('bulkTask')) {
-                case 'Deleted':
-                    $messageObj->delete();
-                    break;
-                case 'Spam':
-                    $spamFlag = ConversationFlagType::getByHandle('spam');
-                    $messageObj->flag($spamFlag);
-                    break;
-                case 'Unapproved':
-                    $messageObj->unapprove();
-                    break;
-                case 'Approved':
-                    $messageObj->approve();
-                    break;
+        $e = Core::make('error');
+        $message = ConversationMessage::getByID($this->post('cnvMessageID'));
+        if (!is_object($message)) {
+            $e->add(t('Invalid message'));
+        } else {
+            $mp = new \Permissions($message);
+            if (!$mp->canApproveConversationMessage()) {
+                $e->add(t('You do not have permission to approve this message.'));
             }
         }
-        $this->redirect(Page::getCurrentPage()->getCollectionPath());
-    }
-
-    public function unapprove()
-    {
-        $json = Loader::helper('json');
-        $response = new stdClass();
-        $message = ConversationMessage::getByID($this->post('messageID'));
-        if (is_object($message)) {
-            $message->unapprove();
-            $response->success = t('Message successfully unapproved.');
-            echo $json->encode($response);
-            exit;
-        } else {
-            $response->error = t('Invalid message');
-            echo $json->encode($response);
-            exit;
-        }
-        exit;
-    }
-
-    public function approve()
-    {
-        $json = Loader::helper('json');
-        $response = new stdClass();
-        $message = ConversationMessage::getByID($this->post('messageID'));
-        if (is_object($message)) {
+        $er = new EditResponse($e);
+        if (!$e->has()) {
             $message->approve();
-            $response->success = t('Message successfully approved.');
-            echo $json->encode($response);
-            exit;
-        } else {
-            $response->error = t('Invalid message');
-            echo $json->encode($response);
-            exit;
+            $er->setMessage(t('Message approved.'));
         }
-        exit;
+        $er->outputJSON();
     }
 
-    public function deleteMessage()
+    public function unflag_message()
     {
-        $json = Loader::helper('json');
-        $response = new stdClass();
-        $message = ConversationMessage::getByID($this->post('messageID'));
-        if (is_object($message)) {
-            $message->delete();
-            $response->success = t('Message successfully deleted.');
-            echo $json->encode($response);
-            exit;
+        $e = Core::make('error');
+        $message = ConversationMessage::getByID($this->post('cnvMessageID'));
+        if (!is_object($message)) {
+            $e->add(t('Invalid message'));
         } else {
-            $response->error = t('Invalid message');
-            echo $json->encode($response);
-            exit;
+            $mp = new \Permissions($message);
+            if (!$mp->canFlagConversationMessage()) {
+                $e->add(t('You do not have permission to flag this message.'));
+            }
         }
-        exit;
+        $er = new EditResponse($e);
+        if (!$e->has()) {
+            $spamFlag = ConversationFlagType::getByHandle('spam');
+            $message->unflag($spamFlag);
+            $er->setMessage(t('Message unflagged.'));
+        }
+        $er->outputJSON();
     }
+
+    public function undelete_message()
+    {
+        $e = Core::make('error');
+        $message = ConversationMessage::getByID($this->post('cnvMessageID'));
+        if (!is_object($message)) {
+            $e->add(t('Invalid message'));
+        } else {
+            $mp = new \Permissions($message);
+            if (!$mp->canDeleteConversationMessage()) {
+                $e->add(t('You do not have permission to restore this message.'));
+            }
+        }
+        $er = new EditResponse($e);
+        if (!$e->has()) {
+            $message->restore();
+            $er->setMessage(t('Message restored.'));
+        }
+        $er->outputJSON();
+    }
+
+    /*
 
     public function restoreMessage()
     {
@@ -186,44 +174,6 @@ class Messages extends DashboardPageController
         if (is_object($message)) {
             $message->restore();
             $response->success = t('Message successfully deleted.');
-            echo $json->encode($response);
-            exit;
-        } else {
-            $response->error = t('Invalid message');
-            echo $json->encode($response);
-            exit;
-        }
-        exit;
-    }
-
-    public function markSpam()
-    {
-        $json = Loader::helper('json');
-        $response = new stdClass();
-        $spamFlag = ConversationFlagType::getByHandle('spam');
-        $message = ConversationMessage::getByID($this->post('messageID'));
-        if (is_object($message)) {
-            $message->flag($spamFlag);
-            $response->success = t('Message successfully marked as spam.');
-            echo $json->encode($response);
-            exit;
-        } else {
-            $response->error = t('Invalid message');
-            echo $json->encode($response);
-            exit;
-        }
-        exit;
-    }
-
-    public function unmarkSpam()
-    {
-        $json = Loader::helper('json');
-        $response = new stdClass();
-        $spamFlag = ConversationFlagType::getByHandle('spam');
-        $message = ConversationMessage::getByID($this->post('messageID'));
-        if (is_object($message)) {
-            $message->unflag($spamFlag);
-            $response->success = t('Message successfully unmarked as spam.');
             echo $json->encode($response);
             exit;
         } else {
@@ -306,5 +256,5 @@ class Messages extends DashboardPageController
         }
         exit;
     }
-
+    */
 }
