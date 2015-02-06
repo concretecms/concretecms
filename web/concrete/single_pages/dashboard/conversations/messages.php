@@ -24,15 +24,15 @@ $ip = Loader::helper('validation/ip'); ?>
                     </div>
                 </div>
             </div>
-            <?php /* <div class="ccm-search-fields-row">
+
+            <div class="ccm-search-fields-row">
                 <div class="form-group">
                     <?=$form->label('cmpMessageFilter', t('Filter by Flag'))?>
                     <div class="ccm-search-field-content">
-                        <?=$form->select('cmpMessageFilter', array('any'=>t('** Any')), $cmpFilterTypes) ?>
+                        <?=$form->select('cmpMessageFilter', $cmpFilterTypes, $cmpMessageFilter) ?>
                     </div>
                 </div>
-            </div>  */ ?>
-
+            </div>
             <div class="ccm-search-fields-row">
                 <div class="form-group form-group-full">
                     <?=$form->label('cmpMessageSort', t('Sort By'))?>
@@ -55,13 +55,16 @@ $ip = Loader::helper('validation/ip'); ?>
             <table class="ccm-search-results-table">
                 <thead>
                 <tr>
+                    <th class="<?=$list->getSearchResultsClass('cnvMessageDateCreated')?>"><a href="<?=$list->getSortByURL('cnvMessageDateCreated', 'desc')?>"><?=t('Posted')?></a></th>
+                    <th><span><?=t('Author')?></span></th>
                     <th><span><?=t('Message')?></span></th>
-                    <th><span><?=t('Posted')?></span></th>
+                    <th style="text-align: center"><span><?=t('Status')?></span></th>
                     <th></th>
                 </tr>
                 </thead>
                 <tbody>
                 <?php if (count($messages) > 0) {
+                    $dh = Core::make('date');
                     foreach($messages as $msg) {
                         $cnv = $msg->getConversationObject();
                         if(is_object($cnv)) {
@@ -69,54 +72,47 @@ $ip = Loader::helper('validation/ip'); ?>
                         }
                         $msgID = $msg->getConversationMessageID();
                         $cnvID = $cnv->getConversationID();
-                        if(!$msg->isConversationMessageApproved() && !$msg->isConversationMessageDeleted()) {
-                            $pendingClass = "pending";
-                        } else {
-                            $pendingClass = '';
-                        }
-                        if($msg->isConversationMessageDeleted()) {
-                            $deletedClass = "deleted";
-                        } else {
-                            $deletedClass = '';
-                        }
-
-                        if($msg->isConversationMessageFlagged()) {
-                            $flagClass = 'flagged';
-                        } else {
-                            $flagClass = '';
-                        }
                         $author = $msg->getConversationMessageAuthorObject();
                         $formatter = $author->getFormatter();
-
                         ?>
                         <tr>
                             <!-- <td><?=$form->checkbox('cnvMessageID[]', $msg->getConversationMessageID())?></td> -->
-                            <td class="message-cell">
-                                <div class="ccm-conversation-message-summary">
-                                    <div class="message-output">
-                                        <?=$msg->getConversationMessageBodyOutput(true)?>
-                                    </div>
-                                    <?php if($flagClass) { ?>
-                                        <p class="message-status"><?php echo t('Message is flagged as spam.') ?></p>
-                                    <?php } ?>
-                                    <?php if($deletedClass) { ?>
-                                        <p class="message-status"><?php echo t('Message is currently deleted.') ?></p>
-                                    <?php } ?>
-                                    <?php if($pendingClass) { ?>
-                                        <p class="message-status"><?php echo t('Message is currently pending approval.') ?></p>
-                                    <?php } ?>
-                                </div>
+                            <td>
+                                <?=$dh->formatDateTime(strtotime($msg->getConversationMessageDateTime()))?>
                             </td>
                             <td>
-                                <?=$msg->getConversationMessageDateTimeOutput('mdy_full_ts');?>
                                 <p><?
                                     echo tc(/*i18n: %s is the name of the author */ 'Authored', 'By %s', $formatter->getLinkedAdministrativeDisplayName());
                                     ?></p>
-
                                 <?
 
                                 if (is_object($page)) { ?>
                                     <div><a href="<?=Loader::helper('navigation')->getLinkToCollection($page)?>"><?=$page->getCollectionPath()?></a></div>
+                                <? } ?>
+                            </td>
+                            <td class="message-cell" style="width: 33%">
+                                <div class="ccm-conversation-message-summary">
+                                    <div class="message-output">
+                                        <?=$msg->getConversationMessageBodyOutput(true)?>
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="text-align: center">
+                                <?
+                                if (!$msg->isConversationMessageApproved() && !$msg->isConversationMessageDeleted()) { ?>
+                                    <i class="fa fa-warning text-warning launch-tooltip" title="<?php echo t('Message has not been approved.')?>"></i>
+                                <? }
+
+                                if ($msg->isConversationMessageDeleted()) { ?>
+                                    <i class="fa fa-trash launch-tooltip" title="<?php echo t('Message is deleted.')?>"></i>
+                                <? }
+
+                                if($msg->isConversationMessageFlagged()) { ?>
+                                    <i class="fa fa-flag text-danger launch-tooltip" title="<?php echo t('Message is flagged as spam.')?>"></i>
+                                <? }
+
+                                if ($msg->isConversationMessageApproved() && !$msg->isConversationMessageDeleted()) { ?>
+                                    <i class="fa fa-thumbs-up launch-tooltip" title="<?php echo t('Message is approved.')?>"></i>
                                 <? } ?>
                             </td>
                             <td>

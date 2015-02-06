@@ -14,14 +14,33 @@ use \Concrete\Core\Conversation\Message\MessageList as ConversationMessageList;
 class Messages extends DashboardPageController
 {
 
+    /**
+     * Returns default message filter for search interface. We default to all, UNLESS we have at least one access
+     * entity that publishes its messages and has them be unapproved. If that's the case, then we default to unapproved.
+     */
+    protected function getDefaultMessageFilter()
+    {
+        $filter = 'all';
+        $db = \Database::get();
+        $count = $db->GetOne('select count(cpa.paID) from ConversationPermissionAssignments cpa
+            inner join PermissionAccess pa on cpa.paID = pa.paID
+            inner join ConversationPermissionAddMessageAccessList cpl on pa.paID = cpl.paID
+            where paIsInUse = 1 and permission = "U"');
+        if ($count > 0) {
+            $filter = 'unapproved';
+        }
+        return $filter;
+    }
+
     public function view()
     {
         $ml = new ConversationMessageList();
         $ml->setItemsPerPage(20);
         $cmpFilterTypes = array(
+            'all' => t('** Show All'),
+            'unapproved' => t('Unapproved'),
             'approved' => t('Approved'),
             'deleted' => t('Deleted'),
-            'unapproved' => t('Unapproved')
         );
         $fl = new ConversationFlagTypeList();
         foreach ($fl->get() as $flagtype) {
@@ -38,28 +57,36 @@ class Messages extends DashboardPageController
             $ml->filterByKeywords($_REQUEST['cmpMessageKeywords']);
             $ml->filterByNotDeleted();
         }
-        if ($_REQUEST['cmpMessageFilter'] && $_REQUEST['cmpMessageFilter'] != 'approved') {
-            switch ($_REQUEST['cmpMessageFilter']) {
-                case 'deleted':
-                    $ml->filterByDeleted();
-                    break;
-                case 'unapproved':
-                    $ml->filterByUnapproved();
-                    $ml->filterByNotDeleted();
-                    break;
-                default: // flag
-                    $flagtype = ConversationFlagType::getByHandle($_REQUEST['cmpMessageFilter']);
-                    if (is_object($flagtype)) {
-                        $ml->filterByFlag($flagtype);
-                        $ml->filterByNotDeleted();
-                    } else {
-                        $ml->filterByNotDeleted();
-                    }
-                    break;
 
-            }
-        } else {
-            $ml->filterByApproved();
+        $cmpMessageFilter = $this->getDefaultMessageFilter();
+        if ($this->request->query->has('cmpMessageFilter')
+            && in_array($this->request->query->get('cmpMessageFilter'), array_keys($cmpFilterTypes))) {
+            $cmpMessageFilter = $this->request->query->get('cmpMessageFilter');
+        }
+
+        switch ($cmpMessageFilter) {
+            case 'all':
+                break;
+            case 'approved':
+                $ml->filterByApproved();
+                break;
+            case 'deleted':
+                $ml->filterByDeleted();
+                break;
+            case 'unapproved':
+                $ml->filterByUnapproved();
+                $ml->filterByNotDeleted();
+                break;
+            default: // flag
+                $flagtype = ConversationFlagType::getByHandle($_REQUEST['cmpMessageFilter']);
+                if (is_object($flagtype)) {
+                    $ml->filterByFlag($flagtype);
+                    $ml->filterByNotDeleted();
+                } else {
+                    $ml->filterByNotDeleted();
+                }
+                break;
+
         }
         if ($_REQUEST['cmpMessageSort'] == 'date_asc') {
             $ml->sortByDateAscending();
@@ -71,6 +98,7 @@ class Messages extends DashboardPageController
         $this->set('messages', $ml->getPage());
         $this->set('cmpFilterTypes', $cmpFilterTypes);
         $this->set('cmpSortTypes', $cmpSortTypes);
+        $this->set('cmpMessageFilter', $cmpMessageFilter);
     }
 
     public function bulk_update()

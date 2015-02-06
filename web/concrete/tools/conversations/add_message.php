@@ -9,6 +9,8 @@ $areaObj = Area::get($pageObj, $_POST['blockAreaHandle']);
 $blockObj = Block::getByID($_POST['bID'], $pageObj, $areaObj);
 $cnvMessageSubject = null;
 
+$pk = PermissionKey::getByHandle('add_conversation_message');
+
 if(!is_object($blockObj)) {
 	$ve->add(t('Invalid Block Object.'));
 }
@@ -20,7 +22,7 @@ if (!is_object($cn)) {
 	$ve->add(t('Invalid conversation.'));
 } else {
     $pp = new Permissions($cn);
-    if (!$pp->canAddConversationMessage()) {
+	if (!$pk->validate()) {
         $ve->add(t('You do not have access to add a message to this conversation.'));
     } else {
 		// We know that we have access. So let's check to see if the user is logged in. If they're not we're going
@@ -97,7 +99,10 @@ if ($ve->has()) {
 	if (!Loader::helper('validation/antispam')->check($_POST['cnvMessageBody'],'conversation_comment')) {
 		$msg->flag(ConversationFlagType::getByHandle('spam'));
 	} else {
-		$msg->approve();
+		$assignment = $pk->getMyAssignment();
+		if ($assignment->approveNewConversationMessages()) {
+			$msg->approve();
+		}
 	}
 	if($_POST['attachments'] && count($_POST['attachments'])) {
 		foreach($_POST['attachments'] as $attachmentID) {

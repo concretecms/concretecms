@@ -4,6 +4,7 @@ namespace Concrete\Core\Updater\Migrations\Migrations;
 use Concrete\Core\Permission\Access\Entity\Type;
 use Concrete\Core\Permission\Category;
 use Concrete\Core\Permission\Duration;
+use Concrete\Core\Permission\Key\Key;
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
@@ -14,7 +15,7 @@ class Version5732 extends AbstractMigration
 
     public function getName()
     {
-        return '20150203000000';
+        return '20150206000000';
     }
 
     public function up(Schema $schema)
@@ -70,6 +71,13 @@ class Version5732 extends AbstractMigration
             $mss->addColumn('cnvNotificationEmailAddress', 'text', array('notnull' => false));
         }
         $this->updatePermissionDurationObjects();
+
+        $key = Key::getByHandle('add_conversation_message');
+        if (is_object($key) && !$key->permissionKeyHasCustomClass()) {
+            $key->setPermissionKeyHasCustomClass(true);
+        }
+
+        \Concrete\Core\Database\Schema\Schema::refreshCoreXMLSchema(array('ConversationPermissionAddMessageAccessList'));
     }
 
     protected function updatePermissionDurationObjects()
