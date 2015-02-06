@@ -37,6 +37,22 @@ use Page;
 			return t("Conversation");
 		}
 
+		public function getSearchableContent() {
+			$ml = new MessageList();
+			$ml->filterByConversation($this->getConversationObject());
+			$messages = $ml->get();
+			if (!count($messages)) {
+				return '';
+			}
+
+			$content = '';
+			foreach ($messages as $message) {
+				$content .= $message->getConversationMessageSubject() . ' ' .
+				           strip_tags($message->getConversationMessageBody()) . ' ';
+			}
+			return rtrim($content);
+		}
+
 		public function getConversationFeatureDetailConversationObject() {
 			return $this->getConversationObject();
 		}
