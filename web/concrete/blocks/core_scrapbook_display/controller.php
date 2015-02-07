@@ -56,8 +56,9 @@ class Controller extends BlockController
     public function on_page_view($page)
     {
         $b = Block::getByID($this->bOriginalID);
-        $bc = $b->getInstance();
-        if (method_exists($bc, 'on_page_view')) {
+        $bc = ($b) ? $b->getInstance() : false;
+
+        if ($bc && method_exists($bc, 'on_page_view')) {
             $bc->on_page_view($page);
         }
     }
@@ -65,9 +66,12 @@ class Controller extends BlockController
     public function outputAutoHeaderItems()
     {
         $b = Block::getByID($this->bOriginalID);
-        $b = $this->getBlockObject();
-        $bvt = new BlockViewTemplate($b);
-        $bvt->registerTemplateAssets();
+        if ($b) {
+            $b = $this->getBlockObject();
+            $bvt = new BlockViewTemplate($b);
+            $bvt->registerTemplateAssets();
+        }
+
     }
 
 }
