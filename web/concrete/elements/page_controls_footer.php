@@ -63,7 +63,16 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                     <li class="parent-ul"><i class="fa fa-cog mobile-leading-icon"></i><a href="#"><?php echo t(
                                 'Page Properties') ?><i class="fa fa-caret-down"></i></a>
                         <ul class="list-unstyled">
-                            <? if ($permissions->canEditPageProperties() ||
+                            <?
+                            $pagetype = PageType::getByID($c->getPageTypeID());
+                            if (is_object($pagetype) && $cp->canEditPageContents()) { ?>
+                                <li><a class="dialog-launch" dialog-width="640" dialog-height="640"
+                                       dialog-modal="false" dialog-title="<?= t('Composer') ?>" href="<?= URL::to(
+                                        '/ccm/system/panels/details/page/composer') ?>?cID=<?= $cID ?>"><?= t(
+                                            'Composer') ?></a></li>
+                            <?
+                            }
+                            if ($permissions->canEditPageProperties() ||
                                 $permissions->canEditPageTheme() ||
                                 $permissions->canEditPageTemplate() ||
                                 $permissions->canDeletePage() ||
