@@ -501,7 +501,7 @@ class Theme extends Object
 
         $dh = Loader::helper('file');
         $templateList = PageTemplate::getList();
-        $cts = array();
+        $pts = array();
         foreach ($templateList as $pt) {
             $pts[] = $pt->getPageTemplateHandle();
         }
