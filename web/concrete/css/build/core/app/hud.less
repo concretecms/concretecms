@@ -54,6 +54,7 @@
 
 div.ccm-notification-inner {
   width: 360px;
+  max-width: 100%;
   padding: 30px 30px 30px 80px;
 }
 
@@ -87,8 +88,12 @@ div#ccm-notification-hud {
 div#ccm-notification-page-alert, div#ccm-notification-page-alert-workflow {
   position: fixed;
   top: 110px;
-  right: 60px;
+  right: 10px;
+  max-width: 90%;
   z-index: @index-level-page-alert;
+  @media (min-width: @screen-sm-min) {
+    right: 60px;
+  }
 }
 
 div#ccm-notification-page-alert-workflow {
