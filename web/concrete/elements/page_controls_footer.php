@@ -267,7 +267,8 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                 'Powered by <a href="%s">concrete5</a>.',
                 Config::get('concrete.urls.concrete5')) ?></li>
     <? } ?>
-        <li class="pull-right ccm-toolbar-mobile-menu-button visible-xs hidden-sm hidden-md hidden-lg">
+        <li class="pull-right ccm-toolbar-mobile-menu-button visible-xs hidden-sm hidden-md hidden-lg
+            <? if ($c->isEditMode()) { ?> ccm-toolbar-mobile-menu-button-active<?php } ?>">
             <i class="fa fa-bars fa-2"></i>
         </li>
         <? if ($dh->canRead()) { ?>
