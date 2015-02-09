@@ -4,6 +4,9 @@ namespace Concrete\Core\Html\Service;
 use Config;
 use Loader;
 use Page;
+use URL;
+use User;
+use Concrete\Core\Validation\CSRF\Token;
 
 class Navigation
 {
@@ -91,6 +94,18 @@ class Navigation
     public function getCollectionURL($cObj)
     {
         return $this->getLinkToCollection($cObj, true);
+    }
+    
+    public function getLogInOutLink()
+    {
+        if (!id(new User())->isLoggedIn()) {
+            $url = URL::to('/login');
+            $label = t('Log in');
+        } else {
+            $url = URL::to('/login', 'logout', id(new Token())->generate('logout'));
+            $label = t('Log out');
+        }
+        return sprintf('<a href="%s">%s</a>', $url, $label);
     }
 
 }
