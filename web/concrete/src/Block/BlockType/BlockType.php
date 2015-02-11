@@ -197,6 +197,10 @@ class BlockType
         $env = Environment::get();
         $txt = Loader::helper('text');
         $r = $env->getRecord(DIRNAME_BLOCKS . '/' . $btHandle . '/' . FILENAME_CONTROLLER);
+
+        // Replace $pkgHandle if overridden via environment
+        $r->pkgHandle and $pkgHandle = $r->pkgHandle;
+
         $prefix = $r->override ? true : $pkgHandle;
         $class = core_class('Block\\' . $txt->camelcase($btHandle) . '\\Controller', $prefix);
         return $class;
