@@ -38,7 +38,12 @@ class Aliasing extends BackendInterfaceBlockController
                         foreach ($_POST['cIDs'] as $cID) {
                             $nc = \Page::getByID($cID);
                             if (!$b->isAlias($nc)) {
-                                $b->alias($nc);
+                                $bt = $b->getBlockTypeObject();
+                                if ($bt->isCopiedWhenPropagated()) {
+                                    $b->duplicate($nc, true);
+                                } else {
+                                    $b->alias($nc);
+                                }
                             }
                         }
                     }
