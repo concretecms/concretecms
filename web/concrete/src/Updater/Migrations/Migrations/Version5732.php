@@ -7,6 +7,7 @@ use Concrete\Core\Permission\Duration;
 use Concrete\Core\Permission\Key\Key;
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
+use Concrete\Core\Block\BlockType\BlockType;
 
 class Version5732 extends AbstractMigration
 {
@@ -22,6 +23,11 @@ class Version5732 extends AbstractMigration
     {
         $db = \Database::get();
         $db->Execute('DROP TABLE IF EXISTS PageStatistics');
+
+        $bt = BlockType::getByHandle('page_title');
+        if (is_object($bt)) {
+            $bt->refresh();
+        }
 
         $pkx = Category::getByHandle('multilingual_section');
         if (!is_object($pkx)) {

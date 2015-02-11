@@ -58,16 +58,16 @@ class ImageHelper
             $image = Image::open($mixed);
         }
         if ($fit) {
-            return $image->thumbnail(new Box($width, $height), ImageInterface::THUMBNAIL_OUTBOUND)->save($newPath);
+            return $image->thumbnail(new Box($width, $height), ImageInterface::THUMBNAIL_OUTBOUND)->save($newPath, array('quality'=>$this->jpegCompression));
 
         } else {
 
             if ($height < 1) {
-                $image->thumbnail($image->getSize()->widen($width))->save($newPath);
+                $image->thumbnail($image->getSize()->widen($width))->save($newPath, array('quality'=>$this->jpegCompression));
             } else if ($width < 1) {
-                $image->thumbnail($image->getSize()->heighten($height))->save($newPath);
+                $image->thumbnail($image->getSize()->heighten($height))->save($newPath, array('quality'=>$this->jpegCompression));
             } else {
-                $image->thumbnail(new Box($width, $height))->save($newPath);
+                $image->thumbnail(new Box($width, $height))->save($newPath, array('quality'=>$this->jpegCompression));
             }
         }
      }
