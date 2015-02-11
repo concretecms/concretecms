@@ -83,7 +83,7 @@ class Localization
                 }
             }
             // Package language files
-            if (Config::get('concrete.packages_loaded') === true) {
+            if (Config::get('app.bootstrap.packages_loaded') === true) {
                 $pkgList = \Concrete\Core\Package\PackageList::get();
                 foreach ($pkgList->getPackages() as $pkg) {
                     $pkg->setupPackageLocalization($locale, $this->translate);
