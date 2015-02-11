@@ -244,7 +244,7 @@ class Application extends Container
                 }
             }
         }
-        Config::set('concrete.packages_loaded', true);
+        Config::set('app.bootstrap.packages_loaded', true);
     }
 
     /**
