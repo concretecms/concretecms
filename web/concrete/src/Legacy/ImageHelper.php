@@ -89,17 +89,20 @@ class ImageHelper
         $fh = Loader::helper('file');
         if ($obj instanceof File) {
             $fr = $obj->getFileResource();
-            $image = \Image::load($fr->read());
             $fID = $obj->getFileID();
             $filename = md5(implode(':', array($fID, $maxWidth, $maxHeight, $crop, $fr->getTimestamp())))
                 . '.' . $fh->getExtension($fr->getPath());
         } else {
-            $image = \Image::open($obj);
             $filename = md5(implode(':', array($obj, $maxWidth, $maxHeight, $crop, filemtime($obj))))
                 . '.' . $fh->getExtension($obj);
         }
 
         if (!file_exists(Config::get('concrete.cache.directory') . '/' . $filename)) {
+            if ($obj instanceof File) {
+                $image = \Image::load($fr->read());
+            } else {
+                $image = \Image::open($obj);
+            }
             // create image there
             $this->create($image,
                           Config::get('concrete.cache.directory') . '/' . $filename,
