@@ -1969,7 +1969,15 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         }
         $theme = $this->getCollectionThemeObject();
         if ($btHandle && $theme) {
-            $templates = array_merge($theme->getThemeDefaultBlockTemplates(), $a->getAreaCustomTemplates());
+            $areaTemplates = array();
+            if (is_object($a)) {
+                $areaTemplates = $a->getAreaCustomTemplates();
+            }
+            $themeTemplates = $theme->getThemeDefaultBlockTemplates();
+            if (!is_array($themeTemplates)) {
+                $themeTemplates = array();
+            }
+            $templates = array_merge($themeTemplates, $areaTemplates);
             if (count($templates) && isset($templates[$btHandle])) {
                 $template = $templates[$btHandle];
                 $b->updateBlockInformation(array('bFilename' => $template));
