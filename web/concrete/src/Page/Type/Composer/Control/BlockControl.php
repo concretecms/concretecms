@@ -285,11 +285,15 @@ class BlockControl extends Control
 
         $arHandle = $b->getAreaHandle();
         $blockDisplayOrder = $b->getBlockDisplayOrder();
+        $bFilename = $b->getBlockFilename();
         $b->deleteBlock();
         $ax = Area::getOrCreate($c, $arHandle);
         $b = $c->addBlock($bt, $ax, $data);
         $this->setPageTypeComposerControlBlockObject($b);
         $b->setAbsoluteBlockDisplayOrder($blockDisplayOrder);
+        if ($bFilename) {
+            $b->setCustomTemplate($bFilename);
+        }
 
         // make a reference to the new block
         $db = Loader::db();

@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Page;
 use Concrete\Core\Multilingual\Page\Section\Section;
+use Concrete\Core\Page\Type\Composer\Control\BlockControl;
+use Concrete\Core\Page\Type\Composer\FormLayoutSetControl;
 use Concrete\Core\Page\Type\Type;
 use Loader;
 use CacheLocal;
@@ -1955,6 +1957,16 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     {
         $b = parent::addBlock($bt, $a, $data);
         $btHandle = $bt->getBlockTypeHandle();
+        if ($b->getBlockTypeHandle() == BLOCK_HANDLE_PAGE_TYPE_OUTPUT_PROXY) {
+            $bi = $b->getInstance();
+            $output = $bi->getComposerOutputControlObject();
+            $control = FormLayoutSetControl::getByID($output->getPageTypeComposerFormLayoutSetControlID());
+            $object = $control->getPageTypeComposerControlObject();
+            if ($object instanceof BlockControl) {
+                $_bt = $object->getBlockTypeObject();
+                $btHandle = $_bt->getBlockTypeHandle();
+            }
+        }
         $theme = $this->getCollectionThemeObject();
         if ($btHandle && $theme) {
             $templates = array_merge($theme->getThemeDefaultBlockTemplates(), $a->getAreaCustomTemplates());
