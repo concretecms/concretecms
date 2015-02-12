@@ -3,6 +3,7 @@ namespace Concrete\Block\CoreConversation;
 use Loader;
 use \Concrete\Core\Block\BlockController;
 use Concrete\Core\Conversation\Conversation;
+use Concrete\Core\Conversation\Message\MessageList;
 use Concrete\Core\Feature\ConversationFeatureInterface;
 use Page;
 
