@@ -44,7 +44,8 @@
                     area = block.getArea(),
                     action = (data.action) ? data.action : CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/block/edit',
                     arEnableGridContainer = area.getEnableGridContainer() ? 1 : 0,
-                    postData = [
+                    templates = area.getCustomTemplates();
+                    var postData = [
                         {name: 'cID', value: block.getCID()},
                         {name: 'arHandle', value: area.getHandle()},
                         {name: 'arGridMaximumColumns', value: data.arGridMaximumColumns},
@@ -55,6 +56,15 @@
                     bID = block.getId(),
                     $container = block.getElem(),
                     prop;
+
+                if (templates) {
+                    for (var k in templates) {
+                        postData[postData.length] = {
+                            name: 'arCustomTemplates[' + k + ']',
+                            value: templates[k]
+                        };
+                    }
+                }
 
                 if (block.getAttr('menu')) {
                     block.getAttr('menu').destroy();
@@ -145,6 +155,16 @@
                 } else {
                     after = area.getBlockContainer().children().last();
                     dragAreaBlock = data.dragAreaBlock;
+                }
+
+                var templates = area.getCustomTemplates();
+                if (templates) {
+                    for (var k in templates) {
+                        postData[postData.length] = {
+                            name: 'arCustomTemplate[' + k + ']',
+                            value: templates[k]
+                        };
+                    }
                 }
 
                 if (dragAreaBlock) {
