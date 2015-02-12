@@ -108,7 +108,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
         $user_list = new UserList();
         $user_list->filterByGroup($this);
 
-        return $user_list->getUserIDs();
+        return $user_list->getResultIDs();
     }
 
     public function setPermissionsForObject($obj)
