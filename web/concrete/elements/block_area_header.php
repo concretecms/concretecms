@@ -52,6 +52,7 @@ $gf = $pt->getThemeGridFrameworkObject();
      data-area-menu-handle="<?= $a->getAreaID() ?>"
      data-area-enable-grid-container="<?= $a->isGridContainerEnabled() ?>"
      data-launch-area-menu="area-menu-a<?= $a->getAreaID() ?>"
+     data-area-custom-templates='<?=json_encode($a->getAreaCustomTemplates(), ENT_QUOTES)?>'
      class="<?= $class ?>">
 
     <? unset($class); ?>

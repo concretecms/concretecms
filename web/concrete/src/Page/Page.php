@@ -1957,7 +1957,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $btHandle = $bt->getBlockTypeHandle();
         $theme = $this->getCollectionThemeObject();
         if ($btHandle && $theme) {
-            $templates = $theme->getThemeDefaultBlockTemplates();
+            $templates = array_merge($theme->getThemeDefaultBlockTemplates(), $a->getAreaCustomTemplates());
             if (count($templates) && isset($templates[$btHandle])) {
                 $template = $templates[$btHandle];
                 $b->updateBlockInformation(array('bFilename' => $template));

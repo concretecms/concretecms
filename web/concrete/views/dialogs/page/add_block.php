@@ -78,6 +78,10 @@ if ($blockType->supportsInlineAdd()) {
 	<input type="hidden" name="ccm-string-<?=$key?>" value="<?=h($val)?>" />
 <? } ?>
 
+<? foreach($area->getAreaCustomTemplates() as $btHandle => $template) {?>
+	<input type="hidden" name="arCustomTemplates[<?=$btHandle?>]" value="<?=$template?>" />
+<? } ?>
+
 <? if (!$blockType->supportsInlineAdd()) { ?>
 <div id="ccm-block-fields">
 <? } else { ?>
