@@ -26,6 +26,8 @@ class Importer
 	const E_FILE_UNABLE_TO_STORE = 12;
     const E_FILE_INVALID_STORAGE_LOCATION = 13;
 
+    protected $rescanThumbnailsOnImport = true;
+
 	/**
 	 * Returns a text string explaining the error that was passed
      * @param int $code
@@ -131,13 +133,16 @@ class Importer
 		if (!($fr instanceof File)) {
 			// we have to create a new file object for this file version
 			$fv = ConcreteFile::add($sanitizedFilename, $prefix, array('fvTitle'=>$filename), $fsl);
-			$fv->refreshAttributes();
-			$fr = $fv->getFile();
+			if ($this->rescanThumbnailsOnImport) {
+                $fv->rescanThumbnails();
+            }
 		} else {
 			// We get a new version to modify
 			$fv = $fr->getVersionToModify(true);
 			$fv->updateFile($sanitizedFilename, $prefix);
-			$fv->refreshAttributes();
+            if ($this->rescanThumbnailsOnImport) {
+                $fv->rescanThumbnails();
+            }
 		}
 
 		return $fv;
@@ -181,13 +186,17 @@ class Importer
         if (!($fr instanceof File)) {
             // we have to create a new file object for this file version
             $fv = ConcreteFile::add($sanitizedFilename, $prefix, array('fvTitle'=>$filename), $default);
-            $fv->refreshAttributes();
+            if ($this->rescanThumbnailsOnImport) {
+                $fv->rescanThumbnails();
+            }
             $fr = $fv->getFile();
         } else {
             // We get a new version to modify
             $fv = $fr->getVersionToModify(true);
             $fv->updateFile($sanitizedFilename, $prefix);
-            $fv->refreshAttributes();
+            if ($this->rescanThumbnailsOnImport) {
+                $fv->rescanThumbnails();
+            }
 
             $fsl = $fr->getFileStorageLocationObject();
             if ($fsl->getID() != $storage->getID()) {
@@ -201,4 +210,11 @@ class Importer
 
         return $fv;
     }
+
+    public function setRescanThumbnailsOnImport($refresh)
+    {
+        $this->rescanThumbnailsOnImport = $refresh;
+    }
+
+
 }

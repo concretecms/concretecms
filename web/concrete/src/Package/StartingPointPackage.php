@@ -62,8 +62,7 @@ class StartingPointPackage extends BasePackage
             new StartingPointInstallRoutine('install_config', 60, t('Configuring site.')),
             new StartingPointInstallRoutine('import_files', 65, t('Importing files.')),
             new StartingPointInstallRoutine('install_content', 70, t('Adding pages and content.')),
-            new StartingPointInstallRoutine('set_site_permissions', 80, t('Setting up site permissions.')),
-            new StartingPointInstallRoutine('precache', 85, t('Prefetching information.')),
+            new StartingPointInstallRoutine('set_site_permissions', 90, t('Setting up site permissions.')),
             new StartingPointInstallRoutine('finish', 95, t('Finishing.'))
         );
     }
@@ -121,6 +120,7 @@ class StartingPointPackage extends BasePackage
         Page::addHomePage();
     }
 
+    /*
     public function precache()
     {
         $c = Page::getByPath('/dashboard/home');
@@ -131,6 +131,7 @@ class StartingPointPackage extends BasePackage
         }
         Loader::helper('concrete/ui')->cacheInterfaceItems();
     }
+    */
 
     public function install_attributes()
     {
@@ -230,12 +231,8 @@ class StartingPointPackage extends BasePackage
         $thumbnailType->save();
 
         if (is_dir($this->getPackagePath() . '/files')) {
-            $fh = new FileImporter();
-            $contents = Loader::helper('file')->getDirectoryContents($this->getPackagePath() . '/files');
-
-            foreach ($contents as $filename) {
-                $f = $fh->import($this->getPackagePath() . '/files/' . $filename, $filename);
-            }
+            $ch = new ContentImporter();
+            $ch->importFiles($this->getPackagePath() . '/files', $this->contentProvidesFileThumbnails());
         }
     }
 

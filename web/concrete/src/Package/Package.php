@@ -163,6 +163,7 @@ class Package extends Object
 
     protected $appVersionRequired = '5.7.0';
     protected $pkgAllowsFullContentSwap = false;
+    protected $pkgContentProvidesFileThumbnails = false;
 
     const E_PACKAGE_NOT_FOUND = 1;
     const E_PACKAGE_INSTALLED = 2;
@@ -194,6 +195,11 @@ class Package extends Object
     public function allowsFullContentSwap()
     {
         return $this->pkgAllowsFullContentSwap;
+    }
+
+    public function contentProvidesFileThumbnails()
+    {
+        return $this->pkgContentProvidesFileThumbnails;
     }
 
     public function showInstallOptionsScreen()
