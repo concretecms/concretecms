@@ -392,6 +392,7 @@ class Package extends Object
         $items['community_point_actions'] = UserPointAction::getListByPackage($this);
         $items['jobs'] = Job::getListByPackage($this);
         $items['workflow_types'] = WorkflowType::getListByPackage($this);
+        $items['workflow_progress_categories'] = WorkflowProgressCategory::getListByPackage($this);
         $items['authentication_types'] = AuthenticationType::getListByPackage($this);
         $items['storage_locations'] = StorageLocation::getListByPackage($this);
         ksort($items);
@@ -458,6 +459,9 @@ class Package extends Object
             case 'workflow_types':
                 $value = t('Workflow types');
                 break;
+            case 'workflow_progress_categories':
+                $value = t('Workflow progress categories');
+                break;
             case 'storage_locations':
                 $value = t('Storage Locations');
                 break;
@@ -511,6 +515,8 @@ class Package extends Object
             return $item->getAccessEntityTypeDisplayName();
         } elseif ($item instanceof PermissionKeyCategory) {
             return $txt->unhandle($item->getPermissionKeyCategoryHandle());
+        } elseif ($item instanceof WorkflowProgressCategory) {
+            return $txt->unhandle($item->getWorkflowProgressCategoryHandle());
         } elseif ($item instanceof AttributeKeyCategory) {
             return $txt->unhandle($item->getAttributeKeyCategoryHandle());
         } elseif ($item instanceof AttributeSet) {
@@ -608,6 +614,7 @@ class Package extends Object
                         case 'GroupSet':
                         case 'AttributeType':
                         case 'WorkflowType':
+                        case 'WorkflowProgressCategory':
                         case 'PermissionKey':
                         case 'PermissionAccessEntityType':
                             $item->delete();
