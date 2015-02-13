@@ -42,6 +42,7 @@ class File extends Controller {
             try {
                 $fv = $f->getApprovedVersion();
                 $resp = $fv->refreshAttributes();
+                $fv->rescanThumbnails();
                 switch ($resp) {
                     case \Concrete\Core\File\Importer::E_FILE_INVALID:
                         $errorMessage .= t('File %s could not be found.', $fv->getFilename()) . '<br/>';

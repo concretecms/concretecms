@@ -550,6 +550,7 @@ class Version
         $this->fvPrefix = $prefix;
         $this->save();
         $this->logVersionUpdate(self::UT_REPLACE_FILE);
+        $this->refreshAttributes();
     }
 
     public function approve()
@@ -697,6 +698,10 @@ class Version
 
     public function rescanThumbnails()
     {
+        if ($this->getType() != \Concrete\Core\File\Type\Type::T_IMAGE) {
+            return false;
+        }
+
         $types = Type::getVersionList();
         foreach ($types as $type) {
 
@@ -792,6 +797,41 @@ class Version
             } else {
                 return $this->getURL();
             }
+        }
+    }
+
+    /**
+     * When given a thumbnail type versin object and a full path to a file on the server
+     * the file is imported into the system as is as the thumbnail.
+     * @param ThumbnailTypeVersion $version
+     * @param $path
+     */
+    public function importThumbnail(\Concrete\Core\File\Image\Thumbnail\Type\Version $version, $path)
+    {
+        $thumbnailPath = $version->getFilePath($this);
+        $filesystem = $this->getFile()
+            ->getFileStorageLocationObject()
+            ->getFileSystemObject();
+        if ($filesystem->has($thumbnailPath)) {
+            $filesystem->delete($thumbnailPath);
+        }
+
+        $filesystem->write(
+            $thumbnailPath,
+            file_get_contents($path),
+            array(
+                'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
+                'mimetype'   => 'image/jpeg'
+            )
+        );
+
+
+        if ($version->getHandle() == \Config::get('concrete.icons.file_manager_listing.handle')) {
+            $this->fvHasListingThumbnail = true;
+        }
+
+        if ($version->getHandle() == \Config::get('concrete.icons.file_manager_detail.handle')) {
+            $this->fvHasDetailThumbnail = true;
         }
     }
 

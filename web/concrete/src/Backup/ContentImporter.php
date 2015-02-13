@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Backup;
 
+use Concrete\Core\File\Importer;
 use Concrete\Core\Page\Feed;
 use Concrete\Core\Sharing\SocialNetwork\Link;
 use Concrete\Core\Tree\Tree;
@@ -45,7 +46,6 @@ use \Concrete\Core\ImageEditor\Filter as SystemImageEditorFilter;
 use \Concrete\Core\ImageEditor\Component as SystemImageEditorComponent;
 use \Concrete\Core\Conversation\FlagType\FlagType as ConversationFlagType;
 use \Concrete\Core\Validation\BannedWord\BannedWord as BannedWord;
-use FileImporter;
 use \Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFormLayoutSetControl;
 
 class ContentImporter
@@ -1056,6 +1056,36 @@ class ContentImporter
             }
         } else {
             return $value;
+        }
+    }
+
+    public function importFiles($fromPath, $computeThumbnails = true)
+    {
+        $fh = new Importer();
+
+        if ($computeThumbnails) {
+            $fh->setRescanThumbnailsOnImport(false);
+            $helper = \Core::make('helper/file');
+        }
+        $contents = \Loader::helper('file')->getDirectoryContents($fromPath);
+        foreach ($contents as $filename) {
+            if (!is_dir($filename)) {
+                $fv = $fh->import($fromPath . '/' . $filename, $filename);
+                if ($computeThumbnails) {
+                    $types = \Concrete\Core\File\Image\Thumbnail\Type\Type::getVersionList();
+                    foreach($types as $type) {
+                        // since we provide the thumbnails, we're going to get a list of thumbnail types
+                        // and loop through them, assigning them to all the files.
+                        $thumbnailPath = $helper->replaceExtension(
+                            $fromPath . '/' . $type->getHandle() . '/' . $filename,
+                            'jpg'
+                        );
+                        if (file_exists($thumbnailPath)) {
+                            $fv->importThumbnail($type, $thumbnailPath);
+                        }
+                    }
+                }
+            }
         }
     }
 
