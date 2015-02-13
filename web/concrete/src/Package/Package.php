@@ -697,12 +697,13 @@ class Package extends Object
 
             // now we add in any files that this package has
             if (is_dir($this->getPackagePath() . '/content_files')) {
-                $fh = new FileImporter();
-                $contents = Core::make('helper/file')->getDirectoryContents($this->getPackagePath() . '/content_files');
 
-                foreach ($contents as $filename) {
-                    $f = $fh->import($this->getPackagePath() . '/content_files/' . $filename, $filename);
+                $ch = new ContentImporter();
+                $computeThumbnails = true;
+                if ($this->contentProvidesFileThumbnails()) {
+                    $computeThumbnails = false;
                 }
+                $ch->importFiles($this->getPackagePath() . '/content_files', $computeThumbnails);
             }
 
             // now we parse the content.xml if it exists.

@@ -550,7 +550,6 @@ class Version
         $this->fvPrefix = $prefix;
         $this->save();
         $this->logVersionUpdate(self::UT_REPLACE_FILE);
-        $this->refreshAttributes();
     }
 
     public function approve()
@@ -833,6 +832,8 @@ class Version
         if ($version->getHandle() == \Config::get('concrete.icons.file_manager_detail.handle')) {
             $this->fvHasDetailThumbnail = true;
         }
+
+        $this->save();
     }
 
     /**
@@ -867,7 +868,7 @@ class Version
      * This will run any type-based import routines, and store those attributes, generate thumbnails,
      * etc...
      */
-    public function refreshAttributes($firstRun = false)
+    public function refreshAttributes($rescanThumbnails = true)
     {
         $fh = Loader::helper('file');
         $ext = $fh->getExtension($this->fvFilename);
@@ -894,6 +895,10 @@ class Version
                 $cl = $ftl->getCustomInspector();
                 $cl->inspect($this);
             }
+        }
+
+        if ($rescanThumbnails) {
+            $this->rescanThumbnails();
         }
 
         $this->save();

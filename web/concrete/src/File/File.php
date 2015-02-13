@@ -417,7 +417,6 @@ class File implements \Concrete\Core\Permission\ObjectInterface
 
         foreach($nf->getVersionList() as $v) {
             $v->refreshAttributes();
-            $v->rescanThumbnails();
         }
 
         $fe = new \Concrete\Core\File\Event\DuplicateFile($this);
@@ -472,8 +471,6 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         if (!$hasUploader) {
             $u->refreshUserGroups();
         }
-
-        $fv->refreshAttributes();
 
         return $fv;
     }
