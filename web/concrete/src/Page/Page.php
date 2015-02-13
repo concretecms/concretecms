@@ -1956,8 +1956,9 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $b = parent::addBlock($bt, $a, $data);
         $btHandle = $bt->getBlockTypeHandle();
         $theme = $this->getCollectionThemeObject();
+        $area = is_object($a) ? $a : Area::getOrCreate($this, $a);
         if ($btHandle && $theme) {
-            $templates = array_merge($theme->getThemeDefaultBlockTemplates(), $a->getAreaCustomTemplates());
+            $templates = array_merge($theme->getThemeDefaultBlockTemplates(), $area->getAreaCustomTemplates());
             if (count($templates) && isset($templates[$btHandle])) {
                 $template = $templates[$btHandle];
                 $b->updateBlockInformation(array('bFilename' => $template));
