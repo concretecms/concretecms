@@ -232,7 +232,11 @@ class StartingPointPackage extends BasePackage
 
         if (is_dir($this->getPackagePath() . '/files')) {
             $ch = new ContentImporter();
-            $ch->importFiles($this->getPackagePath() . '/files', $this->contentProvidesFileThumbnails());
+            $computeThumbnails = true;
+            if ($this->contentProvidesFileThumbnails()) {
+                $computeThumbnails = false;
+            }
+            $ch->importFiles($this->getPackagePath() . '/files', $computeThumbnails);
         }
     }
 

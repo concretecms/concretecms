@@ -1063,7 +1063,7 @@ class ContentImporter
     {
         $fh = new Importer();
 
-        if ($computeThumbnails) {
+        if (!$computeThumbnails) {
             $fh->setRescanThumbnailsOnImport(false);
             $helper = \Core::make('helper/file');
         }
@@ -1071,7 +1071,7 @@ class ContentImporter
         foreach ($contents as $filename) {
             if (!is_dir($filename)) {
                 $fv = $fh->import($fromPath . '/' . $filename, $filename);
-                if ($computeThumbnails) {
+                if (!$computeThumbnails) {
                     $types = \Concrete\Core\File\Image\Thumbnail\Type\Type::getVersionList();
                     foreach($types as $type) {
                         // since we provide the thumbnails, we're going to get a list of thumbnail types
