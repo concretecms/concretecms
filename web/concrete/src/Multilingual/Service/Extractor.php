@@ -86,7 +86,7 @@ class Extractor
         $file = DIR_LANGUAGES_SITE_INTERFACE . '/' . $section->getLocale() . '.po';
         if (is_file($file)) {
             $sectionTranslations = PoExtractor::fromFile($file);
-            $translations->mergeWith($sectionTranslations, Translations::MERGE_ADD | Translations::MERGE_PLURAL);
+            $translations->mergeWith($sectionTranslations);
         }
     }
 
@@ -114,7 +114,7 @@ class Extractor
                 if (!$translation->hasTranslation()) {
                     $coreTranslation = $coreTranslations->find($translation);
                     if ($coreTranslation && $coreTranslation->hasTranslation()) {
-                        $translation->mergeWith($coreTranslation, Translations::MERGE_PLURAL);
+                        $translation->mergeWith($coreTranslation);
                     }
                 }
             }
@@ -140,7 +140,7 @@ class Extractor
                     if (!$translation->hasTranslation()) {
                         $packageTranslation = $packageTranslations->find($translation);
                         if ($packageTranslation && $packageTranslation->hasTranslation()) {
-                            $translation->mergeWith($packageTranslation, Translations::MERGE_PLURAL);
+                            $translation->mergeWith($packageTranslation);
                         }
                     }
                 }
@@ -165,6 +165,7 @@ class Extractor
         }
 
         if (!$empty) {
+            MoGenerator::$includeEmptyTranslations = true;
             MoGenerator::toFile($translations, $mo);
         } else {
             if (is_file($mo)) {
