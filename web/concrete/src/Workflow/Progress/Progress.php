@@ -5,6 +5,7 @@ use \Concrete\Core\Workflow\Workflow;
 use \Concrete\Core\Workflow\Request\Request as WorkflowRequest;
 use \Concrete\Core\Workflow\EmptyWorkflow;
 use \Concrete\Core\Workflow\Progress\Category as WorkflowProgressCategory;
+use \Concrete\Core\Package\PackageList;
 use Loader;
 use Core;
 abstract class Progress extends Object {
@@ -76,8 +77,10 @@ abstract class Progress extends Object {
 		if ($this->wrID > 0) {
 			$cat = WorkflowProgressCategory::getByID($this->wpCategoryID);
 			$handle = $cat->getWorkflowProgressCategoryHandle();
-            $class = '\\Concrete\\Core\\Workflow\\Request\\' . Loader::helper('text')->camelcase($handle) . 'Request';
-			$wr = call_user_func_array(array($class, 'getByID'), array($this->wrID));
+			$class = '\\Core\\Workflow\\Request\\' . Loader::helper('text')->camelcase($handle) . 'Request';
+			$pkHandle = $cat->getPackageHandle();
+			$class = core_class($class, $pkHandle);
+			$wr = $class::getByID($this->wrID);
 			if (is_object($wr)) {
 				$wr->setCurrentWorkflowProgressObject($this);
 				return $wr;
@@ -113,12 +116,16 @@ abstract class Progress extends Object {
 
 	public static function getByID($wpID) {
 		$db = Loader::db();
-		$r = $db->GetRow('select WorkflowProgress.*, WorkflowProgressCategories.wpCategoryHandle from WorkflowProgress inner join WorkflowProgressCategories on WorkflowProgress.wpCategoryID = WorkflowProgressCategories.wpCategoryID where wpID  = ?', array($wpID));
+		$r = $db->GetRow('select WorkflowProgress.*, WorkflowProgressCategories.wpCategoryHandle, WorkflowProgressCategories.pkgID from WorkflowProgress inner join WorkflowProgressCategories on WorkflowProgress.wpCategoryID = WorkflowProgressCategories.wpCategoryID where wpID  = ?', array($wpID));
 		if (!is_array($r) || (!$r['wpID'])) {
 			return false;
 		}
-        $class = '\\Concrete\\Core\\Workflow\\Progress\\' . Core::make('helper/text')->camelcase($r['wpCategoryHandle']) . 'Progress';
+		$class = '\\Core\\Workflow\\Progress\\' . Core::make('helper/text')->camelcase($r['wpCategoryHandle']) . 'Progress';
 
+		if ($r['pkgID']) {
+			$pkgHandle = PackageList::getHandle($r['pkgID']);
+		}
+		$class = core_class($class, $pkgHandle);
 		$wp = Core::make($class);
 		$wp->setPropertiesFromArray($r);
 		$wp->loadDetails();
