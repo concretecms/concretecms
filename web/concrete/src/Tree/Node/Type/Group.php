@@ -99,7 +99,7 @@ class Group extends TreeNode
         }
     }
 
-    public function setTreeNodeGroup(UserGroup $g)
+    public function setTreeNodeGroup(\Concrete\Core\User\Group\Group $g)
     {
         $db = Loader::db();
         $db->Replace('TreeGroupNodes', array('treeNodeID' => $this->getTreeNodeID(), 'gID' => $g->getGroupID()), array('treeNodeID'), true);
