@@ -215,7 +215,7 @@
       <NOTNULL/>
       <DEFAULT value="2"/>
     </field>
-    <field name="msPluralRule" type="C" size="255">
+    <field name="msPluralRule" type="C" size="400">
       <NOTNULL/>
       <DEFAULT value="(n != 1)"/>
     </field>
@@ -240,7 +240,7 @@
       <NOTNULL/>
     </field>
   </table>
-    <table name="MultilingualTranslations">
+  <table name="MultilingualTranslations">
     <field name="mtID" type="I" size="11">
         <KEY/>
         <AUTOINCREMENT/>
