@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "81df73f8e38831c4bbac5ab3c5a9a923",
+    "hash": "cffa013e81e9c1e0937f89050facef13",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -915,19 +915,20 @@
         },
         {
             "name": "gettext/gettext",
-            "version": "v3.1",
+            "version": "v3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/oscarotero/Gettext.git",
-                "reference": "e6598d172881dd8eb6232d6321784a01fd6a47d7"
+                "reference": "3addf67466e8ab129b8a5b15ad374c3d1a9359b3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/oscarotero/Gettext/zipball/e6598d172881dd8eb6232d6321784a01fd6a47d7",
-                "reference": "e6598d172881dd8eb6232d6321784a01fd6a47d7",
+                "url": "https://api.github.com/repos/oscarotero/Gettext/zipball/3addf67466e8ab129b8a5b15ad374c3d1a9359b3",
+                "reference": "3addf67466e8ab129b8a5b15ad374c3d1a9359b3",
                 "shasum": ""
             },
             "require": {
+                "gettext/languages": "2.*",
                 "php": ">=5.3.0"
             },
             "suggest": {
@@ -951,7 +952,7 @@
                     "role": "Developer"
                 }
             ],
-            "description": "PHP gettext mananger",
+            "description": "PHP gettext manager",
             "homepage": "https://github.com/oscarotero/Gettext",
             "keywords": [
                 "JS",
@@ -961,7 +962,61 @@
                 "po",
                 "translation"
             ],
-            "time": "2015-01-28 15:27:55"
+            "time": "2015-02-16 11:52:19"
+        },
+        {
+            "name": "gettext/languages",
+            "version": "2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mlocati/cldr-to-gettext-plural-rules.git",
+                "reference": "6c07497385a9c918d274be4ec5c334f07d49a7fa"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mlocati/cldr-to-gettext-plural-rules/zipball/6c07497385a9c918d274be4ec5c334f07d49a7fa",
+                "reference": "6c07497385a9c918d274be4ec5c334f07d49a7fa",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Gettext\\Languages\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michele Locati",
+                    "email": "mlocati@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "gettext languages with plural rules",
+            "homepage": "https://github.com/mlocati/cldr-to-gettext-plural-rules",
+            "keywords": [
+                "cldr",
+                "i18n",
+                "internationalization",
+                "l10n",
+                "language",
+                "languages",
+                "localization",
+                "php",
+                "plural",
+                "plural rules",
+                "plurals",
+                "translate",
+                "translations",
+                "unicode"
+            ],
+            "time": "2015-02-16 13:08:40"
         },
         {
             "name": "hautelook/phpass",
@@ -1481,20 +1536,20 @@
         },
         {
             "name": "mlocati/concrete5-translation-library",
-            "version": "1.0.5",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mlocati/concrete5-translation-library.git",
-                "reference": "f9e122aee56fb1428b9a8279036fdc6b2cdc2cea"
+                "reference": "4608e7ec8e7578e65a2b6865cf6af2269b610bf2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mlocati/concrete5-translation-library/zipball/f9e122aee56fb1428b9a8279036fdc6b2cdc2cea",
-                "reference": "f9e122aee56fb1428b9a8279036fdc6b2cdc2cea",
+                "url": "https://api.github.com/repos/mlocati/concrete5-translation-library/zipball/4608e7ec8e7578e65a2b6865cf6af2269b610bf2",
+                "reference": "4608e7ec8e7578e65a2b6865cf6af2269b610bf2",
                 "shasum": ""
             },
             "require": {
-                "gettext/gettext": "3.1.*",
+                "gettext/gettext": "3.3.*",
                 "php": ">=5.3.0"
             },
             "type": "library",
@@ -1527,7 +1582,7 @@
                 "translate",
                 "translation"
             ],
-            "time": "2015-01-30 07:57:32"
+            "time": "2015-02-16 15:08:48"
         },
         {
             "name": "mobiledetect/mobiledetectlib",
