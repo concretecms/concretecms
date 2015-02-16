@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Authentication\Type\OAuth;
 
+use Concrete\Core\Authentication\Type\OAuth\OAuth1a\GenericOauth1aTypeController;
 use Concrete\Core\Authentication\Type\OAuth\OAuth2\GenericOauth2TypeController;
 use Concrete\Core\Foundation\Service\Provider;
 use OAuth\Common\Http\Client\CurlClient;
@@ -42,7 +43,7 @@ class ServiceProvider extends Provider
                     if ($type && is_object($type) && !$type->isError()) {
                         /** @var GenericOauth2TypeController $controller */
                         $controller = $type->getController();
-                        if ($controller instanceof GenericOauth2TypeController) {
+                        if ($controller instanceof GenericOauth2TypeController || $controller instanceof GenericOauth1aTypeController) {
 
                             switch ($action) {
                                 case 'attempt_auth':
