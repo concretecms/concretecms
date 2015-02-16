@@ -7,7 +7,6 @@ use Concrete\Core\Multilingual\Page\Event;
 use Gettext\Translations;
 use Punic\Language;
 use Config;
-use Gettext\Utils\Locales;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -57,10 +56,10 @@ class Section extends Page
             if ($country !== '') {
                 $locale .= '_' . $country;
             }
-            $localeInfo = \Gettext\Utils\Locales::getLocaleInfo($locale);
+            $localeInfo = \Gettext\Languages\Language::getById($locale);
             if ($localeInfo) {
-                $numPlurals = $localeInfo['plurals'];
-                $pluralRule = $localeInfo['pluralRule'];
+                $numPlurals = count($localeInfo->categories);
+                $pluralRule = $localeInfo->formula;
             }
         }
         if ((!empty($numPlurals)) && ($pluralRule !== '')) {
@@ -272,9 +271,9 @@ class Section extends Page
      * Returns the rule to determine which plural we should use (in gettext notation)
      * @return string
      * @example For Japanese: returns '0'
-     * @example For English: returns '(n != 1)'
-     * @example For French: returns '(n > 1)'
-     * @example For Russian returns '(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)'
+     * @example For English: returns 'n != 1'
+     * @example For French: returns 'n > 1'
+     * @example For Russian returns '(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2)'
      */
     public function getPluralsRule()
     {
