@@ -148,13 +148,13 @@ class Version5732 extends AbstractMigration
                 if ($row['msCountry']) {
                     $locale .= '_' . $row['msCountry'];
                 }
-                $localeInfo = \Gettext\Utils\Locales::getLocaleInfo($locale);
+                $localeInfo = \Gettext\Languages\Language::getById($locale);
                 if ($localeInfo) {
                     $db->update(
                         'MultilingualSections',
                         array(
-                            'msNumPlurals' => $localeInfo['plurals'],
-                            'msPluralRule' => $localeInfo['pluralRule'],
+                            'msNumPlurals' => count($localeInfo->categories),
+                            'msPluralRule' => $localeInfo->formula,
                         ),
                         array('cID' => $row['cID'])
                     );
