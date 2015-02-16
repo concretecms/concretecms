@@ -420,6 +420,10 @@ function ConcretePanel(options) {
         } else {
             show.call(this);
         }
+        
+        // hide mobile menu
+        $('.ccm-toolbar-mobile-menu-button').removeClass('ccm-mobile-close');
+        $('.ccm-mobile-menu-overlay').slideUp();
     }
 
 }

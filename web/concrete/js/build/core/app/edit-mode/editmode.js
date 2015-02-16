@@ -594,13 +594,7 @@
                 pos = $container.offset(),
                 l = pos.left;
 
-            var tw = l + parseInt($toolbar.width());
-            if (tw > $window.width()) {
-                var overage = tw - (l + $container.width());
-                $toolbar.css('left', l - overage);
-            } else {
-                $toolbar.css('left', l);
-            }
+            $toolbar.css('left', l);
             $toolbar.css('opacity', 1);
             $toolbar.find('.dialog-launch').dialog();
             var t = pos.top - $holder.outerHeight() - 5;
