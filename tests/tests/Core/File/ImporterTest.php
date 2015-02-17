@@ -152,9 +152,9 @@ class ImporterTest extends \FileStorageTestCase {
         mkdir($this->getStorageDirectory());
         $this->getStorageLocation();
 
-        $file = DIR_BASE . '/concrete/themes/default/images/inneroptics_dot_net_aspens.jpg';
+        $file = DIR_BASE . '/concrete/themes/elemental/images/background.png';
         $fi = new Importer();
-        $fo = $fi->import($file, 'Aspens.png');
+        $fo = $fi->import($file, 'background.png');
         $type = $fo->getTypeObject();
         $this->assertEquals(\Concrete\Core\File\Type\Type::T_IMAGE, $type->getGenericType());
 
