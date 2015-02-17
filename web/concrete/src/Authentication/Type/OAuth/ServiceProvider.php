@@ -40,9 +40,9 @@ class ServiceProvider extends Provider
                 try {
                     $type = \AuthenticationType::getByHandle($type);
                     if ($type && is_object($type) && !$type->isError()) {
-                        /** @var GenericOauthTypeController $controller */
+                        /** @var GenericOauth2TypeController $controller */
                         $controller = $type->getController();
-                        if ($controller instanceof GenericOauthTypeController) {
+                        if ($controller instanceof GenericOauth2TypeController) {
 
                             switch ($action) {
                                 case 'attempt_auth':
