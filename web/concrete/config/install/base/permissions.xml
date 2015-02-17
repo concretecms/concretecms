@@ -114,7 +114,7 @@
         <permissionkey handle="view_topic_category_tree_node" name="View Topic Category Tree Node" description="" package="" category="topic_category_tree_node" />
 
         <!-- conversations //-->
-        <permissionkey handle="add_conversation_message" name="Add Message to Conversation" description="" package="" category="conversation" />
+        <permissionkey handle="add_conversation_message" name="Add Message to Conversation" has-custom-class="true" description="" package="" category="conversation" />
         <permissionkey handle="add_conversation_message_attachments" name="Add Message Attachments" description="" package="" category="conversation" />
         <permissionkey handle="edit_conversation_permissions" name="Edit Conversation Permissions" description="" package="" category="conversation" />
         <permissionkey handle="delete_conversation_message" name="Delete Message" description="" package="" category="conversation" />
