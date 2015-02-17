@@ -165,7 +165,7 @@ class ImporterTest extends \FileStorageTestCase {
         $cf = Core::make('helper/concrete/file');
         $fh = Core::make('helper/file');
         $this->assertEquals('http://www.dummyco.com/application/files/thumbnails/file_manager_detail'
-            . $cf->prefix($fo->getPrefix(), $fh->replaceExtension($fo->getFilename(), 'jpg'), 2),
+            . $cf->prefix($fo->getPrefix(), $fh->replaceExtension($fo->getFilename(), 'png'), 2),
             $fo->getThumbnailURL('file_manager_detail'));
     }
 
@@ -178,10 +178,10 @@ class ImporterTest extends \FileStorageTestCase {
         $incomingPath = $this->getStorageDirectory() . '/incoming';
         mkdir($incomingPath);
 
-        copy(DIR_BASE . '/concrete/themes/elemental/images/background.png', $incomingPath . '/trees.jpg');
+        copy(DIR_BASE . '/concrete/themes/elemental/images/background.png', $incomingPath . '/trees.png');
 
         $fi = new Importer();
-        $fo = $fi->importIncomingFile('trees.jpg');
+        $fo = $fi->importIncomingFile('trees.png');
         $this->assertInstanceOf('\Concrete\Core\File\Version', $fo);
         $type = $fo->getTypeObject();
         $this->assertEquals(\Concrete\Core\File\Type\Type::T_IMAGE, $type->getGenericType());
@@ -193,7 +193,7 @@ class ImporterTest extends \FileStorageTestCase {
         $cf = Core::make('helper/concrete/file');
         $fh = Core::make('helper/file');
         $this->assertEquals('http://www.dummyco.com/application/files/thumbnails/file_manager_detail'
-            . $cf->prefix($fo->getPrefix(), $fh->replaceExtension($fo->getFilename(), 'jpg'), 2),
+            . $cf->prefix($fo->getPrefix(), $fh->replaceExtension($fo->getFilename(), 'png'), 2),
             $fo->getThumbnailURL('file_manager_detail'));
     }
 
