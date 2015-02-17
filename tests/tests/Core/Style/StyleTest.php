@@ -136,9 +136,9 @@ class StyleTest extends \PHPUnit_Framework_TestCase {
         $env = Environment::get();
 
         $pt = new PageTheme();
-        $pt->setThemeHandle('greek_yogurt');
-        $pt->setThemeDirectory($env->getPath(DIRNAME_THEMES . '/greek_yogurt'));
-        $pt->setThemeURL($env->getURL(DIRNAME_THEMES . '/greek_yogurt'));
+        $pt->setThemeHandle('elemental');
+        $pt->setThemeDirectory($env->getPath(DIRNAME_THEMES . '/elemental'));
+        $pt->setThemeURL($env->getURL(DIRNAME_THEMES . '/elmental'));
 
         $sheets = $pt->getThemeCustomizableStyleSheets();
         $this->assertTrue(count($sheets) == 1);
