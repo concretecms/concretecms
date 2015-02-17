@@ -72,7 +72,7 @@ class IPService
             if (array_key_exists($index, $_SERVER) && is_string($_SERVER[$index])) {
                 foreach (explode(',', $_SERVER[$index]) as $ip) {
                     $ip = trim($ip);
-                    if (strlen($ip)) {
+                    if (strlen($ip) && (strcasecmp($ip, 'unknown') != 0)) {
                         $ip = new IPAddress($ip);
                         if ($ip->isPrivate()) {
                             $result = $ip;
