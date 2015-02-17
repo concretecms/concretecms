@@ -158,6 +158,7 @@ class Environment {
 		}
 
 		$obj = new EnvironmentRecord();
+		$obj->pkgHandle = null;
 
 		if (!in_array($segment, $this->coreOverrides) && !$pkgHandle && !array_key_exists($segment, $this->coreOverridesByPackage)) {
 			$obj->file = DIR_BASE_CORE . '/' . $segment;
@@ -177,6 +178,7 @@ class Environment {
 
 		if (array_key_exists($segment, $this->coreOverridesByPackage)) {
 			$pkgHandle = $this->coreOverridesByPackage[$segment];
+			$obj->pkgHandle = $pkgHandle;
 		}
 
 		if (!in_array($pkgHandle, $this->corePackages)) {
