@@ -221,10 +221,9 @@ class Controller extends BlockController
         $this->set('attributeKeys', $attributeKeys);
     }
 
-    public function action_filter_by_topic($topic = false)
+    public function action_filter_by_topic($treeNodeID = false, $topic = false)
     {
         $db = Loader::db();
-        $treeNodeID = $db->GetOne('select treeNodeID from TreeTopicNodes where treeNodeTopicName = ?', array($topic));
         if ($treeNodeID) {
             $this->list->filterByTopic(intval($treeNodeID));
             $topicObj = Topic::getByID(intval($treeNodeID));
