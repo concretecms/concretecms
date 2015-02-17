@@ -178,7 +178,7 @@ class ImporterTest extends \FileStorageTestCase {
         $incomingPath = $this->getStorageDirectory() . '/incoming';
         mkdir($incomingPath);
 
-        copy(DIR_BASE . '/concrete/themes/elemental/images/background.png', $incomingPath . '/trees.png');
+        copy(DIR_BASE . '/concrete/themes/elemental/images/background-slider-night-road.png', $incomingPath . '/trees.png');
 
         $fi = new Importer();
         $fo = $fi->importIncomingFile('trees.png');
