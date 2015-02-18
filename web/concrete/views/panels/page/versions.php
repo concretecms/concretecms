@@ -229,7 +229,7 @@ $(function() {
 	});
 	var $checkboxes = $('#ccm-panel-page-versions tbody input[type=checkbox][data-version-active=false]');
 	$('#ccm-panel-page-versions thead input[type=checkbox]').on('change', function() {
-		$checkboxes.prop('checked', $(this).prop('checked'));
+		$checkboxes.prop('checked', $(this).prop('checked')).trigger('change');
 		Concrete.forceRefresh();
 	});
 
@@ -242,7 +242,7 @@ $(function() {
 		var checkboxes = $('#ccm-panel-page-versions tbody input[type=checkbox]:checked');
 		$('button[data-version-action]').addClass('disabled');
 		if (checkboxes.length > 1) {
-			$('button[data-version-action=compare').removeClass('disabled');
+			$('button[data-version-action=compare]').removeClass('disabled');
 		}
 		if (checkboxes.length > 0 && !checkboxes.filter('[data-version-active=true]').length) {
 			$('button[data-version-action=delete]').removeClass('disabled');
