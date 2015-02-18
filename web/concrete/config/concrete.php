@@ -557,11 +557,11 @@ return array(
         'handler'      => 'file',
         'max_lifetime' => 7200,
         'cookie'       => array(
-            'path'     => '',
-            'lifetime' => 7200,
-            'domain'   => '',
-            'secure'   => false,
-            'httponly' => false
+            'cookie_path'     => DIR_REL . '/',
+            'cookie_lifetime' => 7200,
+            'cookie_domain'   => '',
+            'cookie_secure'   => false,
+            'cookie_httponly' => false
         )
     ),
 
