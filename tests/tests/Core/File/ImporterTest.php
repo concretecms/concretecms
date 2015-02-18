@@ -152,9 +152,9 @@ class ImporterTest extends \FileStorageTestCase {
         mkdir($this->getStorageDirectory());
         $this->getStorageLocation();
 
-        $file = DIR_BASE . '/concrete/themes/elemental/images/background.png';
+        $file = DIR_BASE . '/concrete/themes/elemental/images/background-slider-night-road.png';
         $fi = new Importer();
-        $fo = $fi->import($file, 'background.png');
+        $fo = $fi->import($file, 'background-slider-night-road.png');
         $type = $fo->getTypeObject();
         $this->assertEquals(\Concrete\Core\File\Type\Type::T_IMAGE, $type->getGenericType());
 
@@ -165,7 +165,7 @@ class ImporterTest extends \FileStorageTestCase {
         $cf = Core::make('helper/concrete/file');
         $fh = Core::make('helper/file');
         $this->assertEquals('http://www.dummyco.com/application/files/thumbnails/file_manager_detail'
-            . $cf->prefix($fo->getPrefix(), $fh->replaceExtension($fo->getFilename(), 'png'), 2),
+            . $cf->prefix($fo->getPrefix(), $fh->replaceExtension($fo->getFilename(), 'jpg'), 2),
             $fo->getThumbnailURL('file_manager_detail'));
     }
 
@@ -193,7 +193,7 @@ class ImporterTest extends \FileStorageTestCase {
         $cf = Core::make('helper/concrete/file');
         $fh = Core::make('helper/file');
         $this->assertEquals('http://www.dummyco.com/application/files/thumbnails/file_manager_detail'
-            . $cf->prefix($fo->getPrefix(), $fh->replaceExtension($fo->getFilename(), 'png'), 2),
+            . $cf->prefix($fo->getPrefix(), $fh->replaceExtension($fo->getFilename(), 'jpg'), 2),
             $fo->getThumbnailURL('file_manager_detail'));
     }
 
