@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Attribute\Text;
 use Loader;
 use \Concrete\Core\Foundation\Object;

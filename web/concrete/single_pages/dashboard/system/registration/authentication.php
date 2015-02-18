@@ -104,5 +104,5 @@ if ($editmode) {
            </div>
         </div>
     </form>
-    <?
+    <?php
 }

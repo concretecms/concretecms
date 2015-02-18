@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Block\DashboardNewsflowLatest;
 use Concrete\Controller\SinglePage\Dashboard\News;
 use Loader;

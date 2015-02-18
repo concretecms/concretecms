@@ -18,7 +18,7 @@
 </div>
 </div>
 
-<? 
+<?php
 $customOptions = array(
 	'character_styles' => t('Bold, Italic, Underline'),
 	'paragraph_styles' => t('Paragraph Styles Dropdown'),
@@ -40,14 +40,14 @@ $customOptions = array(
 	<div class="control-group">
 	<?php echo $form->label('akTextareaDisplayModeCustom', t('Options'))?>
 	<div class="controls">
-		<? foreach($customOptions as $key => $value) { ?>
+		<?php foreach($customOptions as $key => $value) { ?>
 		<label class="checkbox">
 			<?=$form->checkbox('akTextareaDisplayModeCustomOptions[]', $key, (
 				in_array($key, $akTextareaDisplayModeCustomOptions) || count($akTextareaDisplayModeCustomOptions) == 0
 			))?>
 			<span><?=$value?></span>
 		</label>
-		<? } ?>
+		<?php } ?>
 	</div>
 	</div>
 </div>

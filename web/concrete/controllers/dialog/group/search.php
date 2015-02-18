@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Controller\Dialog\Group;
 use \Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use \Concrete\Controller\Search\Groups as SearchGroupsController;

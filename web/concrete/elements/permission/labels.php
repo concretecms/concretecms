@@ -1,5 +1,5 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
-<?
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php
 if (!isset($pa)) {
 	$pa = $pk->getPermissionAccessObject();
 }
@@ -12,7 +12,7 @@ if (is_object($pa)) {
 
 ?>
 <div class="ccm-permission-access-line">
-<?
+<?php
 $str = '';
 
 if (count($assignments) > 0) {
@@ -45,11 +45,11 @@ if (count($assignments) > 0) {
 }
 
 ?>
-<? if (!$str) { ?>
+<?php if (!$str) { ?>
 	<span style="color: #ccc"><?=t('None')?></span>
-<? } else { ?>
+<?php } else { ?>
 	<?=$str?>
-<? } ?>
+<?php } ?>
 
 <input type="hidden" name="pkID[<?=$pk->getPermissionKeyID()?>]" value="<?=$paID?>" data-pkID="<?=$pk->getPermissionKeyID()?>" />
 </div>

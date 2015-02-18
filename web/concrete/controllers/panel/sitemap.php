@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Controller\Panel;
 use \Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Loader;

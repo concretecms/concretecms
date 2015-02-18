@@ -1,13 +1,13 @@
-<? defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 if ($_GET['_ccm_dashboard_external']) {
         return;
 }
 $html = Loader::helper('html');
 ?><!DOCTYPE html>
-<html <? if (!$hideDashboardPanel) { ?>class="ccm-panel-open ccm-panel-right"<? } ?>>
+<html <?php if (!$hideDashboardPanel) { ?>class="ccm-panel-open ccm-panel-right"<?php } ?>>
 <head>
     <link rel="stylesheet" type="text/css" href="<?=$this->getThemePath()?>/main.css" />
-<?
+<?php
 $v = View::getInstance();
 $v->requireAsset('dashboard');
 $v->addFooterItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js"></script>');
@@ -75,7 +75,7 @@ $large_font = !!Config::get('concrete.accessibility.toolbar_large_font');
         </li>
         <li class="pull-right hidden-xs hidden-sm">
             <a href="<?=URL::to('/dashboard')?>"
-                data-launch-panel="dashboard" <? if (!$hideDashboardPanel) { ?>class="ccm-launch-panel-active" <? } ?>
+                data-launch-panel="dashboard" <?php if (!$hideDashboardPanel) { ?>class="ccm-launch-panel-active" <?php } ?>
                 data-panel-url="<?=URL::to('/system/panels/dashboard')?>">
                 <i class="fa fa-sliders"></i>
                 <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-site-settings">
@@ -100,7 +100,7 @@ $large_font = !!Config::get('concrete.accessibility.toolbar_large_font');
         </li>
     </ul>
 </div>
-<?
+<?php
 $dh = Loader::helper('concrete/dashboard');
 print $dh->getIntelligentSearchMenu();
 
@@ -109,7 +109,7 @@ if (!$hideDashboardPanel) { ?>
 <div id="ccm-panel-dashboard" class="hidden-xs hidden-sm ccm-panel ccm-panel-right ccm-panel-transition-slide ccm-panel-active ccm-panel-loaded">
     <div class="ccm-panel-content-wrapper ccm-ui">
         <div class="ccm-panel-content ccm-panel-content-visible">
-<?
+<?php
 $cnt = new \Concrete\Controller\Panel\Dashboard();
 $cnt->setPageObject($c);
 $cnt->view();
@@ -125,6 +125,6 @@ Loader::element('panels/dashboard', array(
 </div></div>
 </div>
 
-<? } ?>
+<?php } ?>
 
 <div id="ccm-dashboard-content" class="container-fluid">

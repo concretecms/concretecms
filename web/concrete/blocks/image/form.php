@@ -16,7 +16,7 @@ if ($controller->getFileOnstateID() > 0) {
 <fieldset>
 
     <legend><?=t('Files')?></legend>
-<?
+<?php
 $args = array();
 $constrain = $maxWidth > 0 || $maxHeight > 0;
 if ($maxWidth == 0) {

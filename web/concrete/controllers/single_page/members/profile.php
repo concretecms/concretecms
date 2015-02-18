@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Controller\SinglePage\Members;
 use Concrete\Core\Page\Controller\PublicProfilePageController;
 use Loader;

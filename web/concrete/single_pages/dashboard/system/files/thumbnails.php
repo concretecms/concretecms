@@ -1,12 +1,12 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<? if ($this->controller->getTask() == 'add'
+<?php if ($this->controller->getTask() == 'add'
     || $this->controller->getTask() == 'do_add'
     || $this->controller->getTask() == 'edit'
     || $this->controller->getTask() == 'update'
     || $this->controller->getTask() == 'delete') { ?>
 
-    <?
+    <?php
     if (is_object($type)) {
         $ftTypeName = $type->getName();
         $ftTypeHandle = $type->getHandle();
@@ -25,7 +25,7 @@
                 </form>
             </div>
 
-        <?
+        <?php
         }
 
     } else {
@@ -35,9 +35,9 @@
 
     <form method="post" action="<?=$view->action($method)?>" id="ccm-attribute-key-form">
         <?=Loader::helper('validation/token')->output($method);?>
-        <? if (is_object($type)) { ?>
+        <?php if (is_object($type)) { ?>
             <input type="hidden" name="ftTypeID" value="<?=$type->getID()?>" />
-        <? } ?>
+        <?php } ?>
         <fieldset>
             <div class="form-group">
                 <?=$form->label('ftTypeHandle', t('Handle'))?>
@@ -69,11 +69,11 @@
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
                 <a href="<?=URL::page($c)?>" class="btn pull-left btn-default"><?=t('Back')?></a>
-                <? if (is_object($type)) { ?>
+                <?php if (is_object($type)) { ?>
                     <button type="submit" class="btn btn-primary pull-right"><?=t('Save')?></button>
-                <? } else { ?>
+                <?php } else { ?>
                     <button type="submit" class="btn btn-primary pull-right"><?=t('Add')?></button>
-                <? } ?>
+                <?php } ?>
             </div>
         </div>
     </form>
@@ -89,7 +89,7 @@
         })
     </script>
 
-<? } else { ?>
+<?php } else { ?>
 
     <div class="ccm-dashboard-header-buttons">
         <a href="<?php echo $view->action('add')?>" class="btn btn-primary"><?php echo t("Add Type")?></a>
@@ -106,7 +106,7 @@
     </tr>
     </thead>
     <tbody>
-    <? foreach($types as $type) { ?>
+    <?php foreach($types as $type) { ?>
     <tr>
         <td><a href="<?=$view->action('edit', $type->getID())?>"><?=$type->getHandle()?></a></td>
         <td><?=$type->getDisplayName()?></td>
@@ -114,7 +114,7 @@
         <td><?=($type->getHeight()) ? $type->getHeight() : '<span class="text-muted">' . t('Automatic') . '</span>' ?></td>
         <td><?=($type->isRequired()) ? t('Yes') : t('No')?></td>
     </tr>
-    <? } ?>
+    <?php } ?>
     </tbody>
     </table>
-<? } ?>
+<?php } ?>

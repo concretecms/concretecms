@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Job;
 use Concrete\Core\Cache\Cache;
 use Core;

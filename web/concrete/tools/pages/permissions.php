@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $u = new User();
 $form = Loader::helper('form');
@@ -33,9 +33,9 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 ?>
 <div class="ccm-ui">
 
-<? if ($pcnt == 0) { ?>
+<?php if ($pcnt == 0) { ?>
 	<?=t("You do not have permission to change permissions on any of the selected pages."); ?>
-<? } else {
+<?php } else {
 
 	$dh = Loader::helper('date');
 	$dt = Loader::helper('form/date_time');
@@ -61,14 +61,14 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 	if ($_REQUEST['subtask'] == 'set' && $permissionsInherit == 'OVERRIDE') { ?>
 		
 		
-	<?
+	<?php
 	$pk = PagePermissionKey::getByID($_REQUEST['pkID']);
 	$pk->setPermissionObject($pages[0]);
 	$pk->setMultiplePageArray($pages);
 	
 	?>
 	
-	<? Loader::element("permission/detail", array('permissionKey' => $pk)); ?>
+	<?php Loader::element("permission/detail", array('permissionKey' => $pk)); ?>
 	
 	
 	<script type="text/javascript">
@@ -77,7 +77,7 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 
 	
 	
-	<? } else { ?>
+	<?php } else { ?>
 
 	<form>
 	
@@ -86,10 +86,10 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 	<label for="ccm-page-permissions-inherit"><?=t('Assign Permissions')?></label>
 	<div class="input">
 	   <select id="ccm-page-permissions-inherit" style="width: 220px">
-	   <? if ($permissionsInherit == '-1') { ?>	<option value="-1" selected><?=t('** Multiple Settings')?></option><? } ?>
-		<option value="PARENT" <? if ($permissionsInherit == 'PARENT') { ?>selected<? } ?>><?=t('By Area of Site (Hierarchy)')?></option>
-		<option value="TEMPLATE" <? if ($permissionsInherit == 'TEMPLATE') { ?>selected<? } ?>><?=t('From Page Type Defaults')?></option>
-		<option value="OVERRIDE" <? if ($permissionsInherit == 'OVERRIDE') { ?>selected<? } ?>><?=t('Manually')?></option>
+	   <?php if ($permissionsInherit == '-1') { ?>	<option value="-1" selected><?=t('** Multiple Settings')?></option><?php } ?>
+		<option value="PARENT" <?php if ($permissionsInherit == 'PARENT') { ?>selected<?php } ?>><?=t('By Area of Site (Hierarchy)')?></option>
+		<option value="TEMPLATE" <?php if ($permissionsInherit == 'TEMPLATE') { ?>selected<?php } ?>><?=t('From Page Type Defaults')?></option>
+		<option value="OVERRIDE" <?php if ($permissionsInherit == 'OVERRIDE') { ?>selected<?php } ?>><?=t('Manually')?></option>
 	  </select>
 	</div>
 	</div>
@@ -98,9 +98,9 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 	<label for="ccm-page-permissions-subpages-override-template-permissions"><?=t('Subpage Permissions')?></label>
 	<div class="input">
 		<select id="ccm-page-permissions-subpages-override-template-permissions" style="width: 260px">
-		   	<? if ($permissionsSubpageOverride == '-1') { ?><option value="-1" selected><?=t('** Multiple Settings')?></option><? } ?>
-			<option value="0" <? if ($permissionsSubpageOverride == '0') { ?>selected<? } ?>><?=t('Inherit page type default permissions.')?></option>
-			<option value="1" <? if ($permissionsSubpageOverride == '1') { ?>selected<? } ?>><?=t('Inherit the permissions of this page.')?></option>
+		   	<?php if ($permissionsSubpageOverride == '-1') { ?><option value="-1" selected><?=t('** Multiple Settings')?></option><?php } ?>
+			<option value="0" <?php if ($permissionsSubpageOverride == '0') { ?>selected<?php } ?>><?=t('Inherit page type default permissions.')?></option>
+			<option value="1" <?php if ($permissionsSubpageOverride == '1') { ?>selected<?php } ?>><?=t('Inherit the permissions of this page.')?></option>
 		</select>
 	</div>
 	</div>
@@ -111,24 +111,24 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 	<br/>
 	
 	
-	<? if ($permissionsInherit == 'OVERRIDE') { ?>
+	<?php if ($permissionsInherit == 'OVERRIDE') { ?>
 
 <?=Loader::element('permission/help');?>
 
-<? $cat = PermissionKeyCategory::getByHandle('page'); ?>
+<?php $cat = PermissionKeyCategory::getByHandle('page'); ?>
 <form method="post" id="ccm-permission-list-form" action="<?=$cat->getToolsURL("save_permission_assignments")?><?=$cIDStr?>">
 
 <table class="ccm-permission-grid table table-striped">
-<?
+<?php
 $permissions = PermissionKey::getList('page');
 foreach($permissions as $pk) { 
 	$pk->setPermissionObject($c);
 	?>
 	<tr>
-	<td class="ccm-permission-grid-name" id="ccm-permission-grid-name-<?=$pk->getPermissionKeyID()?>"><strong><? if ($editPermissions) { ?><a dialog-title="<?=$pk->getPermissionKeyDisplayName()?>" data-pkID="<?=$pk->getPermissionKeyID()?>" data-paID="<?=$pk->getPermissionAccessID()?>" onclick="ccm_permissionLaunchDialog(this)" href="javascript:void(0)"><? } ?><?=$pk->getPermissionKeyDisplayName()?><? if ($editPermissions) { ?></a><? } ?></strong></td>
-	<td id="ccm-permission-grid-cell-<?=$pk->getPermissionKeyID()?>" <? if ($editPermissions) { ?>class="ccm-permission-grid-cell"<? } ?>><?=Loader::element('permission/labels', array('pk' => $pk))?></td>
+	<td class="ccm-permission-grid-name" id="ccm-permission-grid-name-<?=$pk->getPermissionKeyID()?>"><strong><?php if ($editPermissions) { ?><a dialog-title="<?=$pk->getPermissionKeyDisplayName()?>" data-pkID="<?=$pk->getPermissionKeyID()?>" data-paID="<?=$pk->getPermissionAccessID()?>" onclick="ccm_permissionLaunchDialog(this)" href="javascript:void(0)"><?php } ?><?=$pk->getPermissionKeyDisplayName()?><?php if ($editPermissions) { ?></a><?php } ?></strong></td>
+	<td id="ccm-permission-grid-cell-<?=$pk->getPermissionKeyID()?>" <?php if ($editPermissions) { ?>class="ccm-permission-grid-cell"<?php } ?>><?=Loader::element('permission/labels', array('pk' => $pk))?></td>
 </tr>
-<? } ?>
+<?php } ?>
 </table>
 
 </form>
@@ -145,18 +145,18 @@ ccm_permissionLaunchDialog = function(link) {
 }
 </script>
 
- <? if ($editPermissions) { ?>
+ <?php if ($editPermissions) { ?>
 <div class="dialog-buttons">
 	<a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeTop()" class="btn btn-default pull-left"><?=t('Cancel')?></a>
 	<button onclick="$('#ccm-permission-list-form').submit()" class="btn btn-primary pull-right"><?=t('Save')?> <i class="icon-ok-sign icon-white"></i></button>
 </div>
-<? } ?>
+<?php } ?>
 
 	
-	<? } else { ?>
-		<? $pkl = PermissionKey::getList('page'); $pk = $pkl[0];?>
+	<?php } else { ?>
+		<?php $pkl = PermissionKey::getList('page'); $pk = $pkl[0];?>
 		<p><?=t('You may only set specific permissions for pages if they are set to override defaults or their parent pages.')?></p>
-	<? } ?>
+	<?php } ?>
 	
 	
 	<div id="ccm-page-permissions-confirm-dialog" style="display: none">
@@ -168,8 +168,8 @@ ccm_permissionLaunchDialog = function(link) {
 	</div>
 	
 	
-	<? $pk->setPermissionObject($pages[0]); ?>
-	<? $pk->setMultiplePageArray($pages); ?>
+	<?php $pk->setPermissionObject($pages[0]); ?>
+	<?php $pk->setMultiplePageArray($pages); ?>
 
 	<script type="text/javascript">
 	var inheritanceVal = '';
@@ -272,9 +272,9 @@ ccm_permissionLaunchDialog = function(link) {
 	</script>
 	
 	
-<? }
+<?php }
 
 ?>
 </div>
 
-<? } ?>
+<?php } ?>

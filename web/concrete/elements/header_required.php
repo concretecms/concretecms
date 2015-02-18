@@ -66,7 +66,7 @@ $akd = $c->getCollectionAttributeValue('meta_description');
 $akk = $c->getCollectionAttributeValue('meta_keywords');
 ?>
 <title><?php echo htmlspecialchars($pageTitle, ENT_COMPAT, APP_CHARSET)?></title>
-<?
+<?php
 if ($akd) { ?>
 <meta name="description" content="<?=htmlspecialchars($akd, ENT_COMPAT, APP_CHARSET)?>" />
 <?php } else { ?>
@@ -106,11 +106,11 @@ var CCM_REL = "<?php echo DIR_REL?>";
 
 </script>
 
-<? if (is_object($scc)) { ?>
+<?php if (is_object($scc)) { ?>
     <style type="text/css">
-        <? print $scc->getValue();?>
+        <?php print $scc->getValue();?>
     </style>
-<? } ?>
+<?php } ?>
 
 <?php
 

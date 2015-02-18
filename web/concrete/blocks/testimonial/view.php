@@ -1,9 +1,9 @@
 <?php  defined('C5_EXECUTE') or die("Access Denied."); ?>
 <div class="ccm-block-testimonial-wrapper">
     <div class="ccm-block-testimonial">
-        <? if ($image): ?>
+        <?php if ($image): ?>
             <div class="ccm-block-testimonial-image"><?=$image?></div>
-        <? endif; ?>
+        <?php endif; ?>
 
         <div class="ccm-block-testimonial-text">
 
@@ -11,34 +11,34 @@
                 <?=$name?>
             </div>
 
-        <? if ($position && $company && $companyURL): ?>
+        <?php if ($position && $company && $companyURL): ?>
             <div class="ccm-block-testimonial-position">
                 <?=t('%s, <a href="%s">%s</a>', $position, $companyURL, $company)?>
             </div>
-        <? endif; ?>
+        <?php endif; ?>
 
-        <? if ($position && !$company && $companyURL): ?>
+        <?php if ($position && !$company && $companyURL): ?>
             <div class="ccm-block-testimonial-position">
                 <?=t('<a href="%s">%s</a>', $companyURL, $position)?>
             </div>
-        <? endif; ?>
+        <?php endif; ?>
 
-        <? if ($position && $company && !$companyURL): ?>
+        <?php if ($position && $company && !$companyURL): ?>
             <div class="ccm-block-testimonial-position">
                 <?=t('%s, %s', $position, $company)?>
             </div>
-        <? endif; ?>
+        <?php endif; ?>
 
-        <? if ($position && !$company && !$companyURL): ?>
+        <?php if ($position && !$company && !$companyURL): ?>
             <div class="ccm-block-testimonial-position">
                 <?=$position?>
             </div>
-        <? endif; ?>
+        <?php endif; ?>
 
 
-        <? if ($paragraph): ?>
+        <?php if ($paragraph): ?>
             <div class="ccm-block-testimonial-paragraph"><?=$paragraph?></div>
-        <? endif; ?>
+        <?php endif; ?>
 
         </div>
 

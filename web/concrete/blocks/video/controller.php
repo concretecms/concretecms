@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Block\Video;
 use Loader;
 use File;

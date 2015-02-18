@@ -1,9 +1,9 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 
     <table class="table table-striped">
 
-<? foreach($pagetype->getPageTypePageTemplateObjects() as $pt) { ?>
+<?php foreach($pagetype->getPageTypePageTemplateObjects() as $pt) { ?>
 	
 
     <tr>
@@ -12,6 +12,6 @@
         <td style="vertical-align: middle"><a href="<?=$view->action('edit_defaults', $pagetype->getPageTypeID(), $pt->getPageTemplateID())?>" target="_blank" class="btn btn-default"><?=t('Edit Defaults')?></a></td>
     </tr>
 
-<? } ?>
+<?php } ?>
 
 </table>

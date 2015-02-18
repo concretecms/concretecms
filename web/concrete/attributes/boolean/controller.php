@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Attribute\Boolean;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Loader;

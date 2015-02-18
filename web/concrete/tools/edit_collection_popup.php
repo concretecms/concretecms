@@ -1,4 +1,4 @@
-<?
+<?php
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -43,7 +43,7 @@ if (!$canViewPane) {
 
 <div id="<?=$divID?>">
 
-<? if (!$_GET['close']) {
+<?php if (!$_GET['close']) {
 
 	if (!$c->isEditMode() && (!in_array($_GET['ctask'], array('add', 'edit_external', 'delete_external')))) {
 		// first, we attempt to check the user in as editing the collection

@@ -39,7 +39,7 @@ if ($canUpgrade) {
         <script>
             $('header.ccm-dashboard-page-header').children().text('<?= t('Currently Running %s', config::get('concrete.version')) ?>');
         </script>
-    <?
+    <?php
     } else {
         if (count($updates)) {
             ?>
@@ -68,7 +68,7 @@ if ($canUpgrade) {
                         </form>
                     </div>
                 </div>
-            <? } else { ?>
+            <?php } else { ?>
                 <p><?= t('Several updates are available. Please choose the desired update from the list below.') ?></p>
                 <span class="label"><?= t('Current Version') ?> <?= config::get('concrete.version') ?></span>
                 <form method="post" class="form" action="<?= $view->action('do_update') ?>" id="ccm-update-form">
@@ -93,10 +93,10 @@ if ($canUpgrade) {
                         </div>
                     </div>
                 </form>
-            <? } ?>
+            <?php } ?>
             </div>
             <div class="clearfix">&nbsp;</div>
-        <?
+        <?php
         } else {
             ?>
 
@@ -110,10 +110,10 @@ if ($canUpgrade) {
 
             <p><?= t('No updates available.') ?></p>
 
-        <?
+        <?php
         }
     } ?>
 
-<? } else { ?>
+<?php } else { ?>
     <p><?=t('You do not have permission to upgrade this installation of concrete5.')?></p>
-<? } ?>
+<?php } ?>

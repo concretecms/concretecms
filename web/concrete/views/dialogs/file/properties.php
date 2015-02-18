@@ -10,7 +10,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 
     <div id="ccm-file-properties-response"></div>
 
-    <?
+    <?php
     $tabs = array(array('details', t('Details'), true));
     $tabs[] = array('versions', t('Versions'));
     $tabs[] = array('statistics', t('Statistics'));
@@ -20,17 +20,17 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
     }
     ?>
 
-    <? if (!$previewMode) { ?>
+    <?php if (!$previewMode) { ?>
     <div class="ccm-tab-content" id="ccm-tab-content-details" data-container="editable-fields">
-        <? } else { ?>
+        <?php } else { ?>
         <div class="container">
-            <? } ?>
+            <?php } ?>
 
             <section>
 
-                <? if (!$previewMode && $fp->canEditFileContents()) { ?>
+                <?php if (!$previewMode && $fp->canEditFileContents()) { ?>
                     <a href="#" class="btn pull-right btn-default btn-xs" data-action="rescan"><?= t('Rescan') ?></a>
-                <? } ?>
+                <?php } ?>
 
                 <h4><?= t('Basic Properties') ?></h4>
 
@@ -43,14 +43,14 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                     <div class="col-md-3"><p><?= t('Filename') ?></p></div>
                     <div class="col-md-9"><p><?= h($fv->getFileName()) ?></p></div>
                 </div>
-                <?
+                <?php
                 $url = $fv->getURL();
                 ?>
                 <div class="row">
                     <div class="col-md-3"><p><?= t('URL to File') ?></p></div>
                     <div class="col-md-9"><p><?= $url ?></p></div>
                 </div>
-                <?
+                <?php
                 $oc = $f->getOriginalPageObject();
                 if (is_object($oc)) {
                     $fileManager = Page::getByPath('/dashboard/files/search');
@@ -66,13 +66,13 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                         <div class="col-md-9"><p><a href="<?= Loader::helper('navigation')->getLinkToCollection($oc) ?>"
                                                     target="_blank"><?= $ocName ?></a></p></div>
                     </div>
-                <? } ?>
+                <?php } ?>
 
                 <div class="row">
                     <div class="col-md-3"><p><?= t('Type') ?></p></div>
                     <div class="col-md-9"><p><?= $fv->getType() ?></p></div>
                 </div>
-                <? if ($fv->getTypeObject()->getGenericType() == \Concrete\Core\File\Type\Type::T_IMAGE) {
+                <?php if ($fv->getTypeObject()->getGenericType() == \Concrete\Core\File\Type\Type::T_IMAGE) {
                     try {
                         $thumbnails = $fv->getThumbnails();
                     } catch (InvalidDimensionException $e) {
@@ -83,10 +83,10 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                             <div class="col-md-9">
                                 <p style="color:#cc3333">
                                     <?= t('Invalid file dimensions, please rescan this file.') ?>
-                                    <? if (!$previewMode && $fp->canEditFileContents()) { ?>
+                                    <?php if (!$previewMode && $fp->canEditFileContents()) { ?>
                                         <a href="#" class="btn pull-right btn-default btn-xs"
                                            data-action="rescan"><?= t('Rescan') ?></a>
-                                    <? } ?>
+                                    <?php } ?>
                                 </p>
                             </div>
                         </div>
@@ -99,10 +99,10 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                             <div class="col-md-9">
                                 <p style="color:#cc3333">
                                     <?= t('Unknown error retrieving thumbnails, please rescan this file.') ?>
-                                    <? if (!$previewMode && $fp->canEditFileContents()) { ?>
+                                    <?php if (!$previewMode && $fp->canEditFileContents()) { ?>
                                         <a href="#" class="btn pull-right btn-default btn-xs"
                                            data-action="rescan"><?= t('Rescan') ?></a>
-                                    <? } ?>
+                                    <?php } ?>
                                 </p>
                             </div>
                         </div>
@@ -118,7 +118,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                                         '/ccm/system/dialogs/file/thumbnails') ?>?fID=<?= $fv->getFileID() ?>&fvID=<?= $fv->getFileVersionID() ?>"><?= count(
                                             $thumbnails) ?> <i class="fa fa-edit"></i></a></p></div>
                         </div>
-                    <?
+                    <?php
                     }
                 }
                 ?>
@@ -137,36 +137,36 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                                 $fv->getAuthorName(),
                                 $dh->formatDateTime($f->getDateAdded(), true)) ?></p></div>
                 </div>
-                <?
+                <?php
                 $fsl = $f->getFileStorageLocationObject();
                 if (is_object($fsl)) { ?>
                     <div class="row">
                         <div class="col-md-3"><p><?= t('Storage Location') ?></p></div>
                         <div class="col-md-9"><p><?= $fsl->getDisplayName() ?></div>
                     </div>
-                <? } ?>
+                <?php } ?>
                 <div class="row">
                     <div class="col-md-3"><p><?= t('Title') ?></p></div>
                     <div class="col-md-9"><p><span
-                                <? if ($fp->canEditFileProperties()) { ?>data-editable-field-type="xeditable"
-                                data-type="text" data-name="fvTitle"<? } ?>><?= h($fv->getTitle()) ?></span></p></div>
+                                <?php if ($fp->canEditFileProperties()) { ?>data-editable-field-type="xeditable"
+                                data-type="text" data-name="fvTitle"<?php } ?>><?= h($fv->getTitle()) ?></span></p></div>
                 </div>
                 <div class="row">
                     <div class="col-md-3"><p><?= t('Description') ?></p></div>
                     <div class="col-md-9"><p><span
-                                <? if ($fp->canEditFileProperties()) { ?>data-editable-field-type="xeditable"
-                                data-type="textarea" data-name="fvDescription"<? } ?>><?= h(
+                                <?php if ($fp->canEditFileProperties()) { ?>data-editable-field-type="xeditable"
+                                data-type="textarea" data-name="fvDescription"<?php } ?>><?= h(
                                     $fv->getDescription()) ?></span></p></div>
                 </div>
                 <div class="row">
                     <div class="col-md-3"><p><?= t('Tags') ?></p></div>
                     <div class="col-md-9"><p><span
-                                <? if ($fp->canEditFileProperties()) { ?>data-editable-field-type="xeditable"
-                                data-type="textarea" data-name="fvTags"<? } ?>><?= h($fv->getTags()) ?></span></p></div>
+                                <?php if ($fp->canEditFileProperties()) { ?>data-editable-field-type="xeditable"
+                                data-type="textarea" data-name="fvTags"<?php } ?>><?= h($fv->getTags()) ?></span></p></div>
                 </div>
             </section>
 
-            <?
+            <?php
             $attribs = FileAttributeKey::getImporterList($fv);
             $ft = $fv->getType();
 
@@ -175,7 +175,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
             <section>
                 <h4><?= t('%s File Properties', $ft) ?></h4>
 
-                <?
+                <?php
 
                 Loader::element(
                     'attribute/editable_list',
@@ -190,10 +190,10 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                         }
                     )); ?>
 
-                <? } ?>
+                <?php } ?>
             </section>
 
-            <?
+            <?php
             $attribs = FileAttributeKey::getUserAddedList();
 
             if (count($attribs) > 0) { ?>
@@ -202,7 +202,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 
                     <h4><?= t('Other Properties') ?></h4>
 
-                    <? Loader::element(
+                    <?php Loader::element(
                         'attribute/editable_list',
                         array(
                             'attributes'           => $attribs,
@@ -217,7 +217,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 
                 </section>
 
-            <? } ?>
+            <?php } ?>
 
             <section>
 
@@ -231,7 +231,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 
         </div>
 
-        <? if (!$previewMode) { ?>
+        <?php if (!$previewMode) { ?>
 
             <div class="ccm-tab-content" id="ccm-tab-content-versions">
 
@@ -245,18 +245,18 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                         <th><?= t('Comments') ?></th>
                         <th><?= t('Creator') ?></th>
                         <th><?= t('Added On') ?></th>
-                        <? if ($fp->canEditFileContents()) { ?>
+                        <?php if ($fp->canEditFileContents()) { ?>
                             <th>&nbsp;</th>
-                        <? } ?>
+                        <?php } ?>
                     </tr>
-                    <?
+                    <?php
                     $versions = $f->getVersionList();
                     foreach ($versions as $fvv) { ?>
-                        <tr <? if ($fvv->getFileVersionID() == $fv->getFileVersionID()) { ?> class="success" <? } ?>
+                        <tr <?php if ($fvv->getFileVersionID() == $fv->getFileVersionID()) { ?> class="success" <?php } ?>
                             data-file-version-id="<?= $fvv->getFileVersionID() ?>">
                             <td style="text-align: center">
                                 <input type="radio" name="fvID" value="<?= $fvv->getFileVersionID() ?>"
-                                       <? if ($fvv->getFileVersionID() == $fv->getFileVersionID()) { ?>checked<? } ?> />
+                                       <?php if ($fvv->getFileVersionID() == $fv->getFileVersionID()) { ?>checked<?php } ?> />
                             </td>
                             <td width="100">
                                 <div style="width: 150px; word-wrap: break-word">
@@ -273,7 +273,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                                     <?= h($fvv->getTitle()) ?>
                                 </div>
                             </td>
-                            <td><?
+                            <td><?php
                                 $comments = $fvv->getVersionLogComments();
                                 if (count($comments) > 0) {
                                     print t('Updated ');
@@ -291,14 +291,14 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                             </td>
                             <td><?= $fvv->getAuthorName() ?></td>
                             <td><?= $dh->formatDateTime($fvv->getDateAdded(), true) ?></td>
-                            <? if ($fp->canEditFileContents()) { ?>
+                            <?php if ($fp->canEditFileContents()) { ?>
                                 <td><a data-action="delete-version"
                                        data-file-version-id="<?= $fvv->getFileVersionID() ?>" href="javascript:void(0)"><i
                                             class="fa fa-trash-o"></i></a></td>
-                            <? } ?>
+                            <?php } ?>
                         </tr>
 
-                    <? } ?>
+                    <?php } ?>
 
                 </table>
 
@@ -306,7 +306,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 
             <div class="ccm-tab-content" id="ccm-tab-content-statistics">
 
-                <?
+                <?php
                 $downloadStatistics = $f->getDownloadStatistics();
                 ?>
 
@@ -324,7 +324,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                             <th><?= t('Download Time') ?></th>
                             <th><?= t('File Version ID') ?></th>
                         </tr>
-                        <?
+                        <?php
 
                         $downloadStatsCounter = 0;
                         foreach ($downloadStatistics as $download) {
@@ -335,7 +335,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                             ?>
                             <tr>
                                 <td>
-                                    <?
+                                    <?php
                                     $uID = intval($download['uID']);
                                     if (!$uID) {
                                         echo t('Anonymous');
@@ -352,11 +352,11 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                                 <td><?= $dh->formatDateTime($download['timestamp'], true) ?></td>
                                 <td><?= intval($download['fvID']) ?></td>
                             </tr>
-                        <? } ?>
+                        <?php } ?>
                     </table>
                 </section>
             </div>
-        <? } ?>
+        <?php } ?>
 
     </div>
     <style type="text/css">
@@ -471,9 +471,9 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 
         }
 
-        <? if (!$previewMode) { ?>
+        <?php if (!$previewMode) { ?>
         $(function () {
             var dialog = new ConcreteFilePropertiesDialog();
         });
-        <? } ?>
+        <?php } ?>
     </script>

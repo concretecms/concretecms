@@ -1,22 +1,22 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 if ($controller->getTask() == 'view_detail') { ?>
 
     <div class="ccm-marketplace-detail-add-on-details-wrapper">
 
     <div class="ccm-marketplace-detail-add-on-gallery">
-        <?
+        <?php
         $detailShots = $item->getScreenshots();
         ?>
         <ul data-gallery="marketplace-addon">
             <?php foreach($detailShots as $i => $image) { ?>
                 <li><a href="<?=$image->src?>"><?=t('Launch')?></a></li>
-            <? } ?>
+            <?php } ?>
         </ul>
     </div>
 
     <div class="ccm-marketplace-detail-add-on-details">
-        <div class="ccm-marketplace-list-item-add-on-thumbnail"><?
+        <div class="ccm-marketplace-list-item-add-on-thumbnail"><?php
             $thumb = $item->getRemoteIconURL();
             printf('<img src="%s">', $thumb);
             ?>
@@ -29,7 +29,7 @@ if ($controller->getTask() == 'view_detail') { ?>
         <div class="ccm-marketplace-detail-add-on-buy">
             <div class="btn-group">
                 <button onclick="ConcreteMarketplace.purchaseOrDownload({mpID: <?=$item->getMarketplaceItemID()?>})" class="btn btn-price" style="background-color: #1888d3"><?=$item->getDisplayPrice()?></button>
-                <button onclick="ConcreteMarketplace.purchaseOrDownload({mpID: <?=$item->getMarketplaceItemID()?>})" class="btn btn-description"><? if ($item->purchaseRequired()) { ?><?=t('Purchase')?><? } else { ?><?=t('Download')?><? } ?></button>
+                <button onclick="ConcreteMarketplace.purchaseOrDownload({mpID: <?=$item->getMarketplaceItemID()?>})" class="btn btn-description"><?php if ($item->purchaseRequired()) { ?><?=t('Purchase')?><?php } else { ?><?=t('Download')?><?php } ?></button>
             </div>
         </div>
         <nav>
@@ -44,17 +44,17 @@ if ($controller->getTask() == 'view_detail') { ?>
             <div class="col-md-4">
                 <ul class="list-group">
                     <li class="list-group-item"><?=Loader::helper('rating')->outputDisplay($item->getAverageRating())?>
-                    <? if ($item->getTotalRatings() > 0) { ?>
+                    <?php if ($item->getTotalRatings() > 0) { ?>
                         <a href="<?=$item->getRemoteReviewsURL()?>" target="_blank" class="ccm-marketplace-detail-reviews-link">
-                    <? } ?>
+                    <?php } ?>
                     <?=t2('%d review', '%d reviews', $item->getTotalRatings(), $item->getTotalRatings())?>
-                    <? if ($item->getTotalRatings() > 0) { ?>
+                    <?php if ($item->getTotalRatings() > 0) { ?>
                         </a>
-                    <? } ?>
+                    <?php } ?>
                     </li>
-                    <? if ($item->getExampleURL()) { ?>
+                    <?php if ($item->getExampleURL()) { ?>
                         <li class="list-group-item"><a href="<?=$item->getExampleURL()?>" target="_blank"><?=t('Live Example')?></a></li>
-                    <? } ?>
+                    <?php } ?>
                     <li class="list-group-item"><a href="<?=$item->getRemoteHelpURL()?>" target="_blank"><i class="fa fa-comment"></i> <?=t('Get Help')?></a></li>
                 </ul>
             </div>
@@ -100,12 +100,12 @@ if ($controller->getTask() == 'view_detail') { ?>
         });
     });
     </script>
-<? } else if (count($items)) { ?>
+<?php } else if (count($items)) { ?>
 
-    <? foreach($items as $mi) { ?>
+    <?php foreach($items as $mi) { ?>
 
         <div class="ccm-marketplace-list-item">
-            <div class="ccm-marketplace-list-item-add-on-thumbnail"><a href="<?=$mi->getLocalURL()?>"><?
+            <div class="ccm-marketplace-list-item-add-on-thumbnail"><a href="<?=$mi->getLocalURL()?>"><?php
                 $thumb = $mi->getRemoteIconURL();
                 printf('<img src="%s">', $thumb);
                 ?></a></div>
@@ -118,14 +118,14 @@ if ($controller->getTask() == 'view_detail') { ?>
             </div>
         </div>
 
-    <? } ?>
+    <?php } ?>
 
     <?=$list->displayPagingV2()?>
 
-<? } else { ?>
+<?php } else { ?>
    <div class="ccm-marketplace-list-item">
    <div class="ccm-marketplace-list-item-add-on-description">
     <p><?=t('No add-ons found.')?></p>
     </div>
     </div>
-<? } ?>
+<?php } ?>

@@ -20,9 +20,9 @@ if (is_object($basePostPage) && $basePostPage->isError()) {
 }
 ?>
 
-<? if (!$controller->indexExists()) { ?>
+<?php if (!$controller->indexExists()) { ?>
     <div class="ccm-error"><?=t('The search index does not appear to exist. This block will not function until the reindex job has been run at least once in the dashboard.')?></div>
-<? } ?>
+<?php } ?>
 
 <fieldset>
 
@@ -55,7 +55,7 @@ if (is_object($basePostPage) && $basePostPage->isError()) {
                 <?=t('Beneath Another Page')?>
                 <div id="basePathSelector" style="display:<?=($searchWithinOther)?'block':'none'?>" >
 
-                    <? $select_page = Loader::helper('form/page_selector');
+                    <?php $select_page = Loader::helper('form/page_selector');
                     if ($searchWithinOther) {
                         $cpo = Page::getByPath($baseSearchPath);
                         if (is_object($cpo)) {
@@ -80,7 +80,7 @@ if (is_object($basePostPage) && $basePostPage->isError()) {
             </label>
         </div>
         <div id="ccm-searchBlock-resultsURL-wrap" class="input" style=" <?=(strlen($searchObj->resultsURL) || $basePostPage !== NULL)?'':'display:none'?>" >
-            <?
+            <?php
             if ($basePostPage !== NULL) {
                 print $select_page->selectPage('postTo_cID', $basePostPage->getCollectionID());
             } else {

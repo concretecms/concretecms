@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 <section class="ccm-ui">
@@ -8,13 +8,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		<?=Loader::helper('concrete/ui/help')->notify('panel', '/page/location')?>
         <input type="hidden" name="cParentID" value="<?=$cParentID?>" />
 
-        <? if (!isset($sitemap) && $sitemap == false) { ?>
+        <?php if (!isset($sitemap) && $sitemap == false) { ?>
             <div style="min-height: 140px">
-                <? if ($c->isPageDraft()) { ?>
+                <?php if ($c->isPageDraft()) { ?>
                     <p class="lead"><?=t('Where will this page live on the site?')?></p>
-                <? } else { ?>
+                <?php } else { ?>
                     <p class="lead"><?=t('Where does this page live on the site?')?></p>
-                <? } ?>
+                <?php } ?>
 
                 <div id="ccm-panel-detail-location-display"></div>
 
@@ -22,18 +22,18 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
             </div>
 		<hr/>
-        <? } ?>
+        <?php } ?>
 
 		<p class="lead"><?=t('Current Canonical URL')?></p>
 		<div class="breadcrumb">
-			<? if ($c->isPageDraft()) { ?>
+			<?php if ($c->isPageDraft()) { ?>
 				<?=t('None. Pages do not have canonical URLs until they are published.')?>
-			<? } else { ?>
+			<?php } else { ?>
 				<?php echo Loader::helper('navigation')->getLinkToCollection($c, true)?>
-			<? } ?>
+			<?php } ?>
 		</div>
 
-	<? if (!$c->isGeneratedCollection()) { ?>
+	<?php if (!$c->isGeneratedCollection()) { ?>
 
 		<hr/>
 		<p class="lead"><?=t('Other URLs that should redirect to this page')?></p>
@@ -48,10 +48,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
  		<span class="help-block"><?=t('Note: Additional page paths are not versioned. They will be available immediately.')?></span>
 
 
-	<? } ?>
-        <? if (isset($sitemap) && $sitemap) { ?>
+	<?php } ?>
+        <?php if (isset($sitemap) && $sitemap) { ?>
             <input type="hidden" name="sitemap" value="1" />
-        <? } ?>
+        <?php } ?>
 
 	</form>
 	<div class="ccm-panel-detail-form-actions dialog-buttons">
@@ -61,7 +61,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 </section>
 
-<? $requestID = mt_rand(100000000,999999999); ?>
+<?php $requestID = mt_rand(100000000,999999999); ?>
 
 <script type="text/template" class="breadcrumb">
 	<% if (parentID && parentID > 0) { %>
@@ -124,11 +124,11 @@ $(function() {
 		);
 	});
 
-    <? foreach($additionalPaths as $path) { ?>
+    <?php foreach($additionalPaths as $path) { ?>
     $('#ccm-panel-detail-location-page-paths').append(
         renderPagePath({path: '<?=$path->getPagePath()?>'})
     );
-    <? } ?>
+    <?php } ?>
 
     ConcreteEvent.subscribe('SitemapSelectPage', function(e, data) {
 		$('#ccm-panel-detail-location-display').html(renderBreadcrumb({

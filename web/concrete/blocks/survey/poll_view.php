@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 
 $a2 = new Area('Poll');
@@ -14,9 +14,9 @@ if (count($aBlocks) > 0)  {
 ?>
 <div id="post-poll">
 	<div class="aux">
-	<?
+	<?php
 		$a2->display($c,$aBlocks);
 	?>	
 	</div>
 </div>
-<? } ?>
+<?php } ?>

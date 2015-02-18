@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Job;
 use \Job as AbstractJob;
 use \Concrete\Core\Mail\Importer\MailImporter;

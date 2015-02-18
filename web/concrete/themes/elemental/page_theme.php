@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Theme\Elemental;
 class PageTheme extends \Concrete\Core\Page\Theme\Theme {
 

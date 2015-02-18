@@ -46,8 +46,8 @@ if ($this->controller->getTask() == 'translate_po') { ?>
                     <span class="translation"><?=t('Translation')?></span>
                 </div>
                 <ul class="list-group">
-                    <? foreach($translations as $string) { ?>
-                        <li class="list-group-item <? if ($string->hasTranslation()) { ?>list-group-item-success<? } ?> clearfix" data-translation="<?=$string->getRecordID()?>">
+                    <?php foreach($translations as $string) { ?>
+                        <li class="list-group-item <?php if ($string->hasTranslation()) { ?>list-group-item-success<?php } ?> clearfix" data-translation="<?=$string->getRecordID()?>">
                             <span class="original">
                                 <?=$string->getOriginal()?>
                             </span>
@@ -55,7 +55,7 @@ if ($this->controller->getTask() == 'translate_po') { ?>
                                 <?=$string->getTranslation()?>
                             </span>
                         </li>
-                    <? } ?>
+                    <?php } ?>
                 </ul>
                 <div class="panel-footer"></div>
             </div>
@@ -64,7 +64,7 @@ if ($this->controller->getTask() == 'translate_po') { ?>
             <div class="panel panel-primary">
                 <div class="panel-heading"><?=t('Translate')?></div>
                 <div class="panel-body">
-                    <? foreach($translations as $string) { ?>
+                    <?php foreach($translations as $string) { ?>
                         <form method="post" class="translate-form" action="<?=$controller->action('save_translation')?>" data-form="<?=$string->getRecordID()?>">
                             <input type="hidden" name="mtID" value="<?=$string->getRecordID()?>">
                             <div class="form-group">
@@ -78,7 +78,7 @@ if ($this->controller->getTask() == 'translate_po') { ?>
                             <button class="btn btn-primary" data-btn="save"><?=t('Save &amp; Continue')?></button>
                             <div class="spacer-row-3"></div>
                         </form>
-                    <? } ?>
+                    <?php } ?>
                 </div>
                 <div class="panel-footer"></div>
             </div>
@@ -163,12 +163,12 @@ if ($this->controller->getTask() == 'translate_po') { ?>
 
     </script>
 
-    <?
+    <?php
 }  else {
 
 	if (!is_dir(DIR_LANGUAGES_SITE_INTERFACE) || !is_writable(DIR_LANGUAGES_SITE_INTERFACE)) { ?>
 		<div class="alert alert-warning"><?=t('You must create the directory %s and make it writable before you may run this tool. Additionally, all files within this directory must be writable.', DIR_LANGUAGES_SITE_INTERFACE)?></div>
-	<? } ?>
+	<?php } ?>
 
 	<?php
 	$nav = Loader::helper('navigation');
@@ -194,7 +194,7 @@ if ($this->controller->getTask() == 'translate_po') { ?>
             </tr>
             </thead>
             <tbody>
-            <? foreach($pages as $pc) {
+            <?php foreach($pages as $pc) {
                 $pcl = \Concrete\Core\Multilingual\Page\Section\Section::getByID($pc->getCollectionID());?>
                 <tr>
                     <td><?=$ch->getSectionFlagIcon($pc)?></td>
@@ -205,27 +205,27 @@ if ($this->controller->getTask() == 'translate_po') { ?>
                     </td>
                     <td style="white-space: nowrap">
                         <?php echo $pc->getLocale(); ?>
-                        <? if ($pc->getLocale() != $defaultSourceLocale) { ?>
+                        <?php if ($pc->getLocale() != $defaultSourceLocale) { ?>
                             <a href="#" class="icon-link launch-tooltip" title="<?=REL_DIR_LANGUAGES_SITE_INTERFACE?>/<?=$pc->getLocale()?>.mo"><i class="fa fa-question-circle"></i></a>
-                        <? } ?>
+                        <?php } ?>
                     </td>
                     <td style="width: 40%">
-                        <? if ($pc->getLocale() != $defaultSourceLocale) { ?>
-                            <?
+                        <?php if ($pc->getLocale() != $defaultSourceLocale) { ?>
+                            <?php
                             $data = $extractor->getSectionSiteInterfaceCompletionData($pc);
                             ?>
                             <div class="progress">
                                 <div class="progress-bar" style="width: <?=$data['completionPercentage']?>%">&nbsp;</div>
                             </div>
-                        <? } ?>
+                        <?php } ?>
                     </td>
                     <td style="white-space: nowrap">
-                        <? if ($pc->getLocale() != $defaultSourceLocale) { ?>
+                        <?php if ($pc->getLocale() != $defaultSourceLocale) { ?>
                             <span class="percent"><?=$data['completionPercentage']?>%</span> - <span class="translated"><?=$data['translatedCount']?></span> <?=t('of')?> <span class="total"><?=$data['messageCount']?></span>
-                        <? } ?>
+                        <?php } ?>
                     </td>
                     <td>
-                        <? if ($pc->getLocale() != $defaultSourceLocale) {
+                        <?php if ($pc->getLocale() != $defaultSourceLocale) {
                             if (file_exists(DIR_LANGUAGES_SITE_INTERFACE . '/' . $pc->getLocale() . '.mo'))
                                 print $dh->formatDateTime(filemtime(DIR_LANGUAGES_SITE_INTERFACE . '/' . $pc->getLocale() . '.mo'), true);
                             else
@@ -234,19 +234,19 @@ if ($this->controller->getTask() == 'translate_po') { ?>
                         else
                             echo t('N/A'); ?>
                     </td>
-                    <? if ($pc->getLocale() == $defaultSourceLocale) { ?>
+                    <?php if ($pc->getLocale() == $defaultSourceLocale) { ?>
                         <td></td>
-                    <? } else { ?>
+                    <?php } else { ?>
                         <td><a href="<?=$this->action('translate_po', $pc->getCollectionID())?>" class="icon-link"><i class="fa fa-pencil"></i></a></td>
-                    <? } ?>
+                    <?php } ?>
                 </tr>
-            <? } ?>
+            <?php } ?>
             </tbody>
         </table>
     </div>
 </div>
 
-        <?
+        <?php
         if (is_dir(DIR_LANGUAGES_SITE_INTERFACE) && is_writable(DIR_LANGUAGES_SITE_INTERFACE)) { ?>
 
         <form method="post" action="<?=$controller->action('submit')?>">
@@ -261,7 +261,7 @@ if ($this->controller->getTask() == 'translate_po') { ?>
 
             <div style="display: none">
                 <div id="ccm-dialog-reset-languages" class="ccm-ui">
-                    <?
+                    <?php
                     $u = new User();
                     if ($u->isSuperUser()) { ?>
                     <form method="post" class="form-stacked" style="padding-left: 0px" action="<?=$view->action('reset_languages')?>">
@@ -272,9 +272,9 @@ if ($this->controller->getTask() == 'translate_po') { ?>
                         <button class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
                         <button class="btn btn-danger pull-right" onclick="$('#ccm-dialog-reset-languages form').submit()"><?=t('Confirm Reset')?></button>
                     </div>
-                    <? } else { ?>
+                    <?php } else { ?>
                         <p><?=t("Only the admin user may reset all languages.")?></p>
-                    <? } ?>
+                    <?php } ?>
                 </div>
             </div>
 
@@ -292,7 +292,7 @@ if ($this->controller->getTask() == 'translate_po') { ?>
                 });
             </script>
 
-        <? } ?>
+        <?php } ?>
 
         <style type="text/css">
             table.ccm-search-results-table div.progress {
@@ -301,8 +301,8 @@ if ($this->controller->getTask() == 'translate_po') { ?>
         </style>
 
 
-	<? } else { ?>
+	<?php } else { ?>
 		<p><?=t('You have not created any multilingual content sections yet.')?></p>
-	<? } ?>
-<? } ?>
+	<?php } ?>
+<?php } ?>
 </div>

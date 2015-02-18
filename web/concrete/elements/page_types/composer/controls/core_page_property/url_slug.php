@@ -1,24 +1,24 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $draft = $control->getPageObject();
 ?>
 
 <div class="form-group ccm-composer-url-slug" data-composer-field="url_slug" style="position: relative">
 	<label class="control-label"><?=$label?></label>
-	<? if($description): ?>
+	<?php if($description): ?>
 	<i class="fa fa-question-circle launch-tooltip" title="" data-original-title="<?=$description?>"></i>
-	<? endif; ?>
+	<?php endif; ?>
 
-    <?
+    <?php
     $element = $form->text($this->field('url_slug'), $control->getPageTypeComposerControlDraftValue(), array('class' => 'span4'));
     ?>
     <div>
         <i class="fa-refresh fa-spin fa ccm-composer-url-slug-loading"></i>
-        <? if (is_object($draft) && !$draft->isPageDraft()) { ?>
+        <?php if (is_object($draft) && !$draft->isPageDraft()) { ?>
             <div><a href="#" class="icon-link" data-composer-field="edit_url_slug"><i class="fa fa-pencil"></i></a> <span><?=$control->getPageTypeComposerControlDraftValue()?></span></div>
-        <? } else { ?>
+        <?php } else { ?>
             <?=$element?>
-        <? } ?>
+        <?php } ?>
     </div>
 </div>
 

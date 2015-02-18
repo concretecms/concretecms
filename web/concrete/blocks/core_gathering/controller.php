@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Block\CoreGathering;
 use Loader;
 use \Concrete\Core\Gathering\Gathering;

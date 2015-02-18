@@ -1,8 +1,8 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
-<? $ih = Loader::helper('concrete/ui'); ?>
-<? if ($this->controller->getTask() == 'view_detail') { ?>
+<?php $ih = Loader::helper('concrete/ui'); ?>
+<?php if ($this->controller->getTask() == 'view_detail') { ?>
 
-	<?
+	<?php
 	$u=new User();
 	$delConfirmJS = t('Are you sure you want to permanently remove this file set?');
 	?>
@@ -14,18 +14,18 @@
 		}
 	</script>
 
-	<?
+	<?php
 	$fsp = new Permissions($fs);
 	if ($fsp->canDeleteFileSet()) { ?>
 	<div class="ccm-dashboard-header-buttons">
 		<button class="btn btn-danger" onclick="deleteFileSet()"><?=t('Delete Set')?></button>
 	</div>
-	<? } ?>
+	<?php } ?>
 
 	<form method="post" class="form-horizontal" id="file_sets_edit" action="<?=$view->url('/dashboard/files/sets', 'file_sets_edit')?>">
 		<?=$validation_token->output('file_sets_edit');?>
 
-		<? print Loader::helper('concrete/ui')->tabs(array(
+		<?php print Loader::helper('concrete/ui')->tabs(array(
 			array('details', t('Details'), true),
 			array('files', t('Files in Set'))
 		));?>
@@ -37,7 +37,7 @@
                 <?=$form->text('file_set_name',$fs->fsName, array('class' => 'span5'));?>
 			</div>
 
-			<?
+			<?php
 			if (Config::get('concrete.permissions.model') != 'simple') {
 				if ($fsp->canEditFileSetPermissions()) { ?>
 			
@@ -47,12 +47,12 @@
                         </div>
                     </div>
 
-                    <div id="ccm-permission-list-form" <? if (!$fs->overrideGlobalPermissions()) { ?> style="display: none" <? } ?>>
+                    <div id="ccm-permission-list-form" <?php if (!$fs->overrideGlobalPermissions()) { ?> style="display: none" <?php } ?>>
 
-                    <? Loader::element('permission/lists/file_set', array("fs" => $fs)); ?>
+                    <?php Loader::element('permission/lists/file_set', array("fs" => $fs)); ?>
 
                     </div>
-				<? } 
+				<?php }
 			
 			}
 
@@ -64,7 +64,7 @@
 		</div>
 
 		<div class="ccm-tab-content" id="ccm-tab-content-files">
-		<?
+		<?php
 		
 		$fl = new FileList();
 		$fl->filterBySet($fs);
@@ -77,7 +77,7 @@
 
             <ul class="ccm-file-set-file-list  item-select-list">
 
-            <?
+            <?php
             foreach($files as $f) { ?>
 
                 <li id="fID_<?=$f->getFileID()?>" class="">
@@ -88,12 +88,12 @@
                     </div>
                 </li>
 
-            <? } ?>
+            <?php } ?>
 
             </ul>
-		<? } else { ?>
+		<?php } else { ?>
 			<div class="alert alert-info"><?=t('There are no files in this set.')?></div>
-		<? } ?>
+		<?php } ?>
 		</div>
 		<div class="ccm-dashboard-form-actions-wrapper">
 		<div class="ccm-dashboard-form-actions">
@@ -142,8 +142,8 @@
                     <?=$form->label('fsType', t('Type'))?>
                     <div class="ccm-search-field-content">
                         <select id="fsType" class="form-control" name="fsType" style="width: 200px; float: right">
-                        <option value="<?=FileSet::TYPE_PUBLIC?>" <? if ($fsType != FileSet::TYPE_PRIVATE) { ?> selected <? } ?>><?=t('Public Sets')?></option>
-                        <option value="<?=FileSet::TYPE_PRIVATE?>" <? if ($fsType == FileSet::TYPE_PRIVATE) { ?> selected <? } ?>><?=t('My Sets')?></option>
+                        <option value="<?=FileSet::TYPE_PUBLIC?>" <?php if ($fsType != FileSet::TYPE_PRIVATE) { ?> selected <?php } ?>><?=t('Public Sets')?></option>
+                        <option value="<?=FileSet::TYPE_PRIVATE?>" <?php if ($fsType == FileSet::TYPE_PRIVATE) { ?> selected <?php } ?>><?=t('My Sets')?></option>
                         </select>
                     </div>
                 </div>
@@ -167,28 +167,28 @@
 	</style>
 
     <section style="margin-right: 20px">
-	<? if (count($fileSets) > 0) { ?>
+	<?php if (count($fileSets) > 0) { ?>
 		
 
-		<? foreach ($fileSets as $fs) { ?>
+		<?php foreach ($fileSets as $fs) { ?>
 		
 			<div class="ccm-group">
 				<a class="ccm-group-inner" href="<?=$view->url('/dashboard/files/sets/', 'view_detail', $fs->getFileSetID())?>"><i class="fa fa-cubes"></i> <?=$fs->getFileSetDisplayName()?></a>
 			</div>
 		
-		<? }
+		<?php }
 		
 		
 	} else { ?>
 	
 		<p><?=t('No file sets found.')?></p>
 	
-	<? } ?>
+	<?php } ?>
 
 
-	<? if ($fsl->requiresPaging()) { ?>
-		<? $fsl->displayPagingV2(); ?>
-	<? } ?>
+	<?php if ($fsl->requiresPaging()) { ?>
+		<?php $fsl->displayPagingV2(); ?>
+	<?php } ?>
 
         </section>
 

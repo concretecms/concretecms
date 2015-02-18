@@ -4,7 +4,7 @@
     <legend><?=t('Icon')?></legend>
         <div class="form-group ccm-block-feature-select-icon">
             <?=$form->select('icon', $icons, $icon, array('style' => 'width: 360px'));?>
-            <i data-preview="icon" <? if ($icon) { ?>class="fa fa-<?=$icon?>"<? } ?>></i>
+            <i data-preview="icon" <?php if ($icon) { ?>class="fa fa-<?=$icon?>"<?php } ?>></i>
         </div>
 </fieldset>
 

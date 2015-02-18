@@ -1,10 +1,10 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <div class="alert alert-info"><?=t('Attributes set here will automatically be applied to new pages of that type.')?></div>
 
 <div data-container="editable-fields">
 
-<? Loader::element('attribute/editable_list', array(
+<?php Loader::element('attribute/editable_list', array(
     'attributes' => $attributes,
     'object' => $defaultPage,
     'saveAction' => $view->action('update_attribute', $pagetype->getPageTypeID()),

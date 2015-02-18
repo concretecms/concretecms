@@ -18,7 +18,7 @@ $(function() {
 });
 </script>
 
-<?
+<?php
 Loader::element('gathering/display', array(
 	'gathering' => $gathering,
 	'list' => $itemList,

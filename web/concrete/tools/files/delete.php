@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Core\File\EditResponse as FileEditResponse;
 $u = new User();
@@ -54,9 +54,9 @@ foreach($files as $f) {
 
 <div class="ccm-ui">
 <br/>
-<? if ($fcnt == 0) { ?>
+<?php if ($fcnt == 0) { ?>
 	<p><?=t("You do not have permission to delete any of the selected files."); ?><p>
-<? } else { ?>
+<?php } else { ?>
 
 	<div class="alert alert-warning"><?=t('Are you sure you want to delete the following files?')?></div>
 
@@ -64,7 +64,7 @@ foreach($files as $f) {
 	<?=$form->hidden('task', 'delete_files')?>
 	<table border="0" cellspacing="0" cellpadding="0" width="100%" class="table table-striped">
 
-	<? foreach($files as $f) {
+	<?php foreach($files as $f) {
 		$fp = new Permissions($f);
 		if ($fp->canDeleteFile()) {
 			$fv = $f->getApprovedVersion();
@@ -80,7 +80,7 @@ foreach($files as $f) {
 				<td><?=$fv->getAuthorName()?></td>
 			</tr>
 
-			<? }
+			<?php }
 		}
 
 	} ?>
@@ -104,7 +104,7 @@ foreach($files as $f) {
 	});
 	</script>
 
-	<?
+	<?php
 
 }
 

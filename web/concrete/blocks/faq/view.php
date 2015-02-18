@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 $linkCount = 1;
 $faqEntryCount = 1; ?>
 <div class="ccm-faq-container">

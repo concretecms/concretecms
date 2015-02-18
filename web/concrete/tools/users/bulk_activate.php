@@ -40,7 +40,7 @@ if ($_POST['task'] == 'activate') {
 
 if (!isset($_REQUEST['reload'])) { ?>
 	<div id="ccm-user-bulk-activate-wrapper">
-<? } ?>
+<?php } ?>
 
 	<div id="ccm-user-activate" class="ccm-ui">
 		<form method="post" id="ccm-user-bulk-activate" action="<?php echo REL_DIR_FILES_TOOLS_REQUIRED ?>/users/bulk_activate">
@@ -58,10 +58,10 @@ if (!isset($_REQUEST['reload'])) { ?>
 		<?=$ih->button_js(t('Cancel'), 'jQuery.fn.dialog.closeTop()', 'left', 'btn')?>	
 		<?=$ih->button_js(t('Activate'), 'ccm_userBulkActivate()', 'right', 'btn primary')?>
 	</div>
-<?
+<?php
 if (!isset($_REQUEST['reload'])) { ?>
 </div>
-<? } ?>
+<?php } ?>
 
 <script type="text/javascript">
 ccm_userBulkActivate = function() { 

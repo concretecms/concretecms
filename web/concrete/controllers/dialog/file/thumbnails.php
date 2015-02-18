@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Controller\Dialog\File;
 use \Concrete\Controller\Backend\UserInterface\File as BackendInterfaceFileController;
 use \Concrete\Core\File\EditResponse as FileEditResponse;

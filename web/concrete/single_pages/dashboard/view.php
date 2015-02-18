@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 <div>
 <?php $rowCount = 0;
 for ($i = 0; $i < count($categories); $i++) {
@@ -15,7 +15,7 @@ if($rowCount == 3 || $i == 0) {
             <h2><?=t($cat->getCollectionName())?></h2>
 
 
-            <?
+            <?php
             $show = array();
             $subcats = $cat->getCollectionChildrenArray(true);
             foreach($subcats as $catID) {
@@ -31,17 +31,17 @@ if($rowCount == 3 || $i == 0) {
 
             <ul class="list-unstyled">
 
-            <? foreach($show as $subcat) { ?>
+            <?php foreach($show as $subcat) { ?>
 
             <li><a href="<?=Loader::helper('navigation')->getLinkToCollection($subcat, false, true)?>"><i class="<?=$subcat->getAttribute('icon_dashboard')?>"></i> <?=t($subcat->getCollectionName())?></a></li>
 
-            <? } ?>
+            <?php } ?>
 
-            <? } else { ?>
+            <?php } else { ?>
 
             <li><a href="<?=Loader::helper('navigation')->getLinkToCollection($cat, false, true)?>"><i class="<?=$cat->getAttribute('icon_dashboard')?>"></i> <?=t('Home')?></a></li>
 
-            <? } ?>
+            <?php } ?>
             </ul>
         </div>
     <?php if($rowCount == 2 || $i == count($categories)) { ?>

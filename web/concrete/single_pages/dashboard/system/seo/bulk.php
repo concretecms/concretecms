@@ -166,7 +166,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                             <label><?php echo t('Meta Keywords'); ?></label>
                             <?php echo $form->textarea('meta_keywords', $cobj->getAttribute('meta_keywords'), array('title' => $cID)); ?>
                         </div>
-                        <? if ($cobj->getCollectionID() != HOME_CID) { ?>
+                        <?php if ($cobj->getCollectionID() != HOME_CID) { ?>
 
                         <div class="form-group">
                             <label><?php echo t('Slug'); ?></label>
@@ -187,7 +187,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                             </form>
                             <img style="display: none; position: absolute; top: 20px; right: 20px;" id="throbber<?php echo $cID ?>"  class="throbber" src="<?php echo ASSETS_URL_IMAGES . '/throbber_white_32.gif' ?>" />
                         </div>
-                        <? } ?>
+                        <?php } ?>
                     </div>
             </div>
             <?php } ?>
@@ -252,9 +252,9 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
         });
         </script>
     </div>
-    <? if ($pagination) { ?>
+    <?php if ($pagination) { ?>
     <div style="text-align: center">
         <?=$pagination?>
     </div>
-    <? } ?>
+    <?php } ?>
 </div>

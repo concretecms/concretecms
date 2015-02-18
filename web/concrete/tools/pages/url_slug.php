@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 if (Loader::helper('validation/token')->validate('get_url_slug', $_REQUEST['token'])) {
 	$lang = Localization::activeLanguage();

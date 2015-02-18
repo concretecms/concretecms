@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 
 $dh = Loader::helper('date');
@@ -7,7 +7,7 @@ $pk = PermissionKey::getByID($_REQUEST['pkID']);
 $pk->setPermissionObject($c);
 ?>
 
-<? Loader::element("permission/detail", array('permissionKey' => $pk)); ?>
+<?php Loader::element("permission/detail", array('permissionKey' => $pk)); ?>
 
 
 <script type="text/javascript">

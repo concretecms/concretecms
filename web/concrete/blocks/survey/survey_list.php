@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Block\Survey;
 use Loader;
 use \Concrete\Core\Legacy\DatabaseItemList;

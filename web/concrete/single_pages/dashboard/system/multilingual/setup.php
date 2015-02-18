@@ -1,5 +1,5 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");?>
-<?
+<?php
 use Concrete\Core\Multilingual\Page\Section\Section as MultilingualSection;
 ?>
 <script type="text/javascript">
@@ -178,7 +178,7 @@ ccm_multilingualPopulateIcons = function(country) {
 
 <fieldset>
     <legend><?php echo t('Copy Locale Tree')?></legend>
-<?
+<?php
 $u = new User();
 $copyLocales = array();
 $includesHome = false;
@@ -216,7 +216,7 @@ if ($u->isSuperUser() && !$includesHome) { ?>
 		<p><?php echo t('You have not created any multilingual content sections yet.')?></p>
 	<?php } ?>
 
-	<? if(version_compare(APP_VERSION, '5.6.0.3', '>')) {
+	<?php if(version_compare(APP_VERSION, '5.6.0.3', '>')) {
 			// 5.6.1 OR GREATER
 		?>
 		<script type="text/javascript">
@@ -240,14 +240,14 @@ if ($u->isSuperUser() && !$includesHome) { ?>
 		});
 		</script>
 
-	<? } ?>
+	<?php } ?>
 
 </form>
-<? } else if (!$u->isSuperUser()) { ?>
+<?php } else if (!$u->isSuperUser()) { ?>
 	<p><?=t('Only the super user may copy locale trees.')?></p>
-<? } else if ($includesHome) { ?>
+<?php } else if ($includesHome) { ?>
 	<p><?=t('Since one of your multilingual sections is the home page, you may not duplicate your site tree using this tool. You must manually assign pages using the page report.')?></p>
-<? } ?>
+<?php } ?>
 </fieldset>
 
 <div class="spacer-row-6"></div>
@@ -290,7 +290,7 @@ if ($u->isSuperUser() && !$includesHome) { ?>
                 echo $form->select('defaultSourceLanguage', array_merge(array('' => t('*** Unknown or mixed language')), $languages), $defaultSourceLanguage);
                 ?>
 
-                    <?
+                    <?php
                 echo $form->select('defaultSourceCountry', array_merge(array('' => t('*** Undetermined country')), $countries), $defaultSourceCountry);
                 ?>
                 </div>

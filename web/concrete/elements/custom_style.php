@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 
 $backgroundColor = '';
@@ -211,7 +211,7 @@ $form = Core::make('helper/form');
             </span>
             </div>
 
-            <? if ($style instanceof \Concrete\Core\Block\CustomStyle) { ?>
+            <?php if ($style instanceof \Concrete\Core\Block\CustomStyle) { ?>
                 <hr />
                 <h3><?=t('Margin')?></h3>
                 <div>
@@ -243,7 +243,7 @@ $form = Core::make('helper/form');
                     </span>
                 </div>
 
-            <? } ?>
+            <?php } ?>
         </div>
 
     </li>
@@ -306,21 +306,21 @@ $form = Core::make('helper/form');
             </div>
             <hr/>
 
-            <? if ($style instanceof \Concrete\Core\Block\CustomStyle && $canEditCustomTemplate) { ?>
+            <?php if ($style instanceof \Concrete\Core\Block\CustomStyle && $canEditCustomTemplate) { ?>
                 <div class="ccm-inline-select-container">
                     <?=t('Custom Template')?>
                     <select id="bFilename" name="bFilename" class="form-control">
                         <option value="">(<?=t('None selected')?>)</option>
-                        <?
+                        <?php
                         foreach($templates as $tpl) {
-                            ?><option value="<?=$tpl->getTemplateFileFilename()?>" <? if ($bFilename == $tpl->getTemplateFileFilename()) { ?> selected <? } ?>><?=$tpl->getTemplateFileDisplayName()?></option><?
+                            ?><option value="<?=$tpl->getTemplateFileFilename()?>" <?php if ($bFilename == $tpl->getTemplateFileFilename()) { ?> selected <?php } ?>><?=$tpl->getTemplateFileDisplayName()?></option><?php
                         }
                         ?>
                     </select>
                  </div>
                 <hr/>
 
-            <? } ?>
+            <?php } ?>
             <div>
                 <button data-reset-action="<?=$resetAction?>" data-action="reset-design" type="button" class="btn-block btn btn-danger"><?=t("Clear Styles")?></button>
             </div>

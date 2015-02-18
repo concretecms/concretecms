@@ -27,7 +27,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
         <h4>
             <?= $type->getName() ?>
             <small><?= t('%s x %s dimensions', $width, $height) ?></small>
-            <? if ($fp->canEditFileContents() && $hasFile) { ?>
+            <?php if ($fp->canEditFileContents() && $hasFile) { ?>
                 <a href="<?= $url . '?' . $query ?>"
                    dialog-width="90%"
                    dialog-height="70%"
@@ -35,7 +35,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                    dialog-title="<?= t('Edit Thumbnail Images') ?>">
                     <?= t('Edit Thumbnail') ?>
                 </a>
-            <? } ?>
+            <?php } ?>
         </h4>
         <hr/>
         <div class="ccm-file-manager-image-thumbnail">
@@ -57,7 +57,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
             ?>
         </div>
 
-    <? } ?>
+    <?php } ?>
 
     <script>
         (function() {

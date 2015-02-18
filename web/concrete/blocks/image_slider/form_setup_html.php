@@ -95,7 +95,7 @@ $tp = new TaskPermission();
                 sort_order: '<?php echo $row['sortOrder'] ?>'
             }));
             sliderEntriesContainer.find('.ccm-image-slider-entry:last-child div[data-field=entry-link-page-selector]').concretePageSelector({
-                'inputName': 'internalLinkCID[]', 'cID': <? if ($linkType == 1) { ?><?=intval($row['internalLinkCID'])?><? } else { ?>false<? } ?>
+                'inputName': 'internalLinkCID[]', 'cID': <?php if ($linkType == 1) { ?><?=intval($row['internalLinkCID'])?><?php } else { ?>false<?php } ?>
             });
         <?php }
         }?>

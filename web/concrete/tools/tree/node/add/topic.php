@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $form = Loader::helper('form');
 $parent = \Concrete\Core\Tree\Node\Node::getByID(Loader::helper('security')->sanitizeInt($_REQUEST['treeNodeParentID']));
@@ -27,6 +27,6 @@ if (is_object($parent) && $np->canAddTopicTreeNode()) { ?>
 	</div>
 
 
-<?
+<?php
 }
 

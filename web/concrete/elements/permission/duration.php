@@ -199,14 +199,14 @@ $dt = Loader::helper('form/date_time');
             <div class="form-group">
                 <label class="control-label"><?= t('On') ?></label>
                 <div class="">
-                <?
+                <?php
                 foreach (\Punic\Calendar::getSortedWeekdays('wide') as $weekDay) {
                     ?>
                     <div class="checkbox"><label><input
-                                <? if (in_array($weekDay['id'], $pdRepeatPeriodWeekDays)) { ?>checked="checked" <? } ?>
+                                <?php if (in_array($weekDay['id'], $pdRepeatPeriodWeekDays)) { ?>checked="checked" <?php } ?>
                                 type="checkbox" name="pdRepeatPeriodWeeksDays[]" value="<?= $weekDay['id'] ?>"/> <?= h(
                                 $weekDay['name']) ?></label></div>
-                <?
+                <?php
                 } ?>
                 </div>
             </div>

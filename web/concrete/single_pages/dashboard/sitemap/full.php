@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $sh = Loader::helper('concrete/dashboard/sitemap');
 ?>
@@ -40,7 +40,7 @@ div#ccm-full-sitemap-container {
 </form>
 
 
-<? $u = new User();
+<?php $u = new User();
 if ($u->isSuperUser()) {
 	if (Queue::exists('copy_page')) {
 	$q = Queue::get('copy_page');
@@ -51,12 +51,12 @@ if ($u->isSuperUser()) {
 			<button class="btn btn-xs btn-default pull-right" onclick="ConcreteSitemap.refreshCopyOperations()"><?=t('Resume Copy')?></button>
 		</div>
 
-	<? }
+	<?php }
 }
 
 } ?>
 
-<? if ($sh->canRead()) { ?>	
+<?php if ($sh->canRead()) { ?>
 	
 	<div id="ccm-full-sitemap-container"></div>
 	
@@ -66,17 +66,17 @@ if ($u->isSuperUser()) {
 	<section>
 		<div class="checkbox">
 		<label>
-			<input type="checkbox" name="includeSystemPages" <? if ($includeSystemPages) { ?>checked<? } ?> value="1" />
+			<input type="checkbox" name="includeSystemPages" <?php if ($includeSystemPages) { ?>checked<?php } ?> value="1" />
 			<?=t('Include System Pages in Sitemap')?>
 		</label>
 		</div>
 	</section>
 
 
-<? } else { ?>
+<?php } else { ?>
 
 	<p><?=t("You do not have access to the sitemap.");?></p>
 
-<? } ?>
+<?php } ?>
 
 </div>

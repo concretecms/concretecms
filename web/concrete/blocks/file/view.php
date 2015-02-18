@@ -9,7 +9,7 @@
 ?>
 <a href="<?= View::url('/download_file', $controller->getFileID(),$cID) ?>"><?= stripslashes($controller->getLinkText()) ?></a>
  
-<?
+<?php
 }
 /*
 $fo = $this->controller->getFileObject();?>

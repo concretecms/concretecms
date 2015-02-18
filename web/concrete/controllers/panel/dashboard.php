@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Controller\Panel;
 use \Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
 use Cookie;
