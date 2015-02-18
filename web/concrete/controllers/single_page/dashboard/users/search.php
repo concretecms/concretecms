@@ -30,12 +30,14 @@ class Search extends DashboardPageController
         }
         if ($this->canEditAvatar) {
             $av = Loader::helper('concrete/avatar');
-            if (is_uploaded_file($_FILES['avatar']['tmp_name']) ) {
+            if (is_uploaded_file($_FILES['avatar']['tmp_name'])) {
                 $image = \Image::open($_FILES['avatar']['tmp_name']);
-                $image = $image->thumbnail(new Box(
-                                               Config::get('concrete.icons.user_avatar.width'),
-                                               Config::get('concrete.icons.user_avatar.height')
-                                           ));
+                $image = $image->thumbnail(
+                    new Box(
+                        Config::get('concrete.icons.user_avatar.width'),
+                        Config::get('concrete.icons.user_avatar.height')
+                    )
+                );
                 $this->user->updateUserAvatar($image);
             } else {
                 if ($_POST['task'] == 'clear') {
@@ -89,7 +91,7 @@ class Search extends DashboardPageController
             $this->set('canEditTimezone', $this->canEditTimezone);
             $this->set('canEditLanguage', $this->canEditLanguage);
             $this->set('canActivateUser', $this->canActivateUser);
-            $this->set('canSignInAsUser', $this->canSignInAsUser );
+            $this->set('canSignInAsUser', $this->canSignInAsUser);
             $this->set('canDeleteUser', $this->canDeleteUser);
             $this->set('allowedEditAttributes', $this->allowedEditAttributes);
             $this->set('canAddGroup', $this->canAddGroup);
@@ -106,14 +108,17 @@ class Search extends DashboardPageController
                     $mh = Loader::helper('mail');
                     $mh->to($this->user->getUserEmail());
                     if (Config::get('concrete.user.registration.notification_email')) {
-                        $mh->from(Config::get('concrete.user.registration.notification_email'), t('Website Registration Notification'));
+                        $mh->from(
+                            Config::get('concrete.user.registration.notification_email'),
+                            t('Website Registration Notification')
+                        );
                     } else {
                         $adminUser = UserInfo::getByID(USER_SUPER_ID);
                         $mh->from($adminUser->getUserEmail(), t('Website Registration Notification'));
                     }
-                    $mh->addParameter('uID',    $this->user->getUserID());
-                    $mh->addParameter('user',   $this->user);
-                    $mh->addParameter('uName',  $this->user->getUserName());
+                    $mh->addParameter('uID', $this->user->getUserID());
+                    $mh->addParameter('user', $this->user);
+                    $mh->addParameter('uName', $this->user->getUserName());
                     $mh->addParameter('uEmail', $this->user->getUserEmail());
                     $mh->addParameter('siteName', Config::get('concrete.site'));
                     $mh->load('user_registered_approval_complete');
@@ -163,8 +168,10 @@ class Search extends DashboardPageController
             }
             if (!Loader::helper('validation/strings')->email($email)) {
                 $this->error->add(t('Invalid email address provided.'));
-            } elseif (!Loader::helper('concrete/validation')->isUniqueEmail($email) && $this->user->getUserEmail() != $email) {
-                $this->error->add(t("The email address '%s' is already in use. Please choose another.",$email));
+            } elseif (!Loader::helper('concrete/validation')->isUniqueEmail($email) && $this->user->getUserEmail(
+                ) != $email
+            ) {
+                $this->error->add(t("The email address '%s' is already in use. Please choose another.", $email));
             }
 
             $sr = new UserEditResponse();
@@ -232,23 +239,47 @@ class Search extends DashboardPageController
                     $this->error->add(Loader::helper('validation/token')->getErrorMessage());
                 }
                 if (strlen($username) < Config::get('concrete.user.username.minimum')) {
-                    $this->error->add(t('A username must be at least %s characters long.',Config::get('concrete.user.username.minimum')));
+                    $this->error->add(
+                        t(
+                            'A username must be at least %s characters long.',
+                            Config::get('concrete.user.username.minimum')
+                        )
+                    );
                 }
 
                 if (strlen($username) > Config::get('concrete.user.username.maximum')) {
-                    $this->error->add(t('A username cannot be more than %s characters long.',Config::get('concrete.user.username.maximum')));
+                    $this->error->add(
+                        t(
+                            'A username cannot be more than %s characters long.',
+                            Config::get('concrete.user.username.maximum')
+                        )
+                    );
                 }
 
-                if (strlen($username) >= Config::get('concrete.user.username.minimum') && !Loader::helper('concrete/validation')->username($username)) {
+                if (strlen($username) >= Config::get('concrete.user.username.minimum') && !Loader::helper(
+                        'concrete/validation'
+                    )->username($username)
+                ) {
                     if (Config::get('concrete.user.username.allow_spaces')) {
-                        $this->error->add(t('A username may only contain letters, numbers, spaces, dots (not at the beginning/end), underscores (not at the beginning/end).'));
+                        $this->error->add(
+                            t(
+                                'A username may only contain letters, numbers, spaces, dots (not at the beginning/end), underscores (not at the beginning/end).'
+                            )
+                        );
                     } else {
-                        $this->error->add(t('A username may only contain letters numbers, dots (not at the beginning/end), underscores (not at the beginning/end).'));
+                        $this->error->add(
+                            t(
+                                'A username may only contain letters numbers, dots (not at the beginning/end), underscores (not at the beginning/end).'
+                            )
+                        );
                     }
                 }
                 $uo = $this->user->getUserObject();
-                if (strcasecmp($uo->getUserName(), $username) && !Loader::Helper('concrete/validation')->isUniqueUsername($username)) {
-                    $this->error->add(t("The username '%s' already exists. Please choose another",$username));
+                if (strcasecmp($uo->getUserName(), $username) && !Loader::Helper(
+                        'concrete/validation'
+                    )->isUniqueUsername($username)
+                ) {
+                    $this->error->add(t("The username '%s' already exists. Please choose another", $username));
                 }
 
                 $sr = new UserEditResponse();
@@ -287,7 +318,7 @@ class Search extends DashboardPageController
             $sr->setError($this->error);
         } else {
             $sr->setMessage(t('Attribute saved successfully.'));
-            $sr->setAdditionalDataAttribute('value',  $val->getValue('displaySanitized','display'));
+            $sr->setAdditionalDataAttribute('value', $val->getValue('displaySanitized', 'display'));
         }
         $this->user->reindex();
         $sr->outputJSON();
@@ -323,13 +354,25 @@ class Search extends DashboardPageController
         if ($this->canEditPassword) {
             $password = $this->post('uPassword');
             $passwordConfirm = $this->post('uPasswordConfirm');
-            if ((strlen($password) < Config::get('concrete.user.password.minimum')) || (strlen($password) > Config::get('concrete.user.password.maximum'))) {
-                $this->error->add( t('A password must be between %s and %s characters',Config::get('concrete.user.password.minimum'), Config::get('concrete.user.password.maximum')));
+            if ((strlen($password) < Config::get('concrete.user.password.minimum')) || (strlen($password) > Config::get(
+                        'concrete.user.password.maximum'
+                    ))
+            ) {
+                $this->error->add(
+                    t(
+                        'A password must be between %s and %s characters',
+                        Config::get('concrete.user.password.minimum'),
+                        Config::get('concrete.user.password.maximum')
+                    )
+                );
             }
             if (!Loader::helper('validation/token')->validate('change_password')) {
                 $this->error->add(Loader::helper('validation/token')->getErrorMessage());
             }
-            if (strlen($password) >= Config::get('concrete.user.password.minimum') && !Loader::helper('concrete/validation')->password($password)) {
+            if (strlen($password) >= Config::get('concrete.user.password.minimum') && !Loader::helper(
+                    'concrete/validation'
+                )->password($password)
+            ) {
                 $this->error->add(t('A password may not contain ", \', >, <, or any spaces.'));
             }
 
@@ -353,16 +396,15 @@ class Search extends DashboardPageController
 
     public function get_timezones()
     {
-        if(array_key_exists('query', $_GET) && is_string($_GET['query'])) {
+        if (array_key_exists('query', $_GET) && is_string($_GET['query'])) {
             $query = preg_replace('/\s+/', ' ', $_GET['query']);
-        }
-        else {
+        } else {
             $query = '';
         }
         $timezones = Loader::helper("date")->getTimezones();
         $result = array();
         foreach ($timezones as $timezoneID => $timezoneName) {
-            if(($query === '') || (stripos($timezoneName, $query) !== false)) {
+            if (($query === '') || (stripos($timezoneName, $query) !== false)) {
                 $obj = new stdClass();
                 $obj->id = $timezoneID;
                 $obj->text = $timezoneName;
@@ -386,17 +428,20 @@ class Search extends DashboardPageController
             $obj->text = \Punic\Language::getName($lang);
             $result[] = $obj;
         }
-        usort($result, function ($a, $b) {
-            if ($a->value === '') {
-                $cmp = -1;
-            } elseif ($b->value === '') {
-                $cmp = 1;
-            } else {
-                $cmp = strcasecmp($a->text, $b->text);
-            }
+        usort(
+            $result,
+            function ($a, $b) {
+                if ($a->value === '') {
+                    $cmp = -1;
+                } elseif ($b->value === '') {
+                    $cmp = 1;
+                } else {
+                    $cmp = strcasecmp($a->text, $b->text);
+                }
 
-            return $cmp;
-        });
+                return $cmp;
+            }
+        );
         Loader::helper('ajax')->sendResult($result);
     }
 
@@ -416,7 +461,8 @@ class Search extends DashboardPageController
 
         $ui = $this->user;
         if (is_object($ui)) {
-            $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
+            $dh = Core::make('helper/date');
+            /* @var $dh \Concrete\Core\Localization\Service\Date */
             $this->requireAsset('core/app/editable-fields');
             $uo = $this->user->getUserObject();
             $groups = array();
@@ -446,27 +492,28 @@ class Search extends DashboardPageController
                     break;
             }
         } else {
-
             $cnt = new SearchUsersController();
             $cnt->search();
             $this->set('searchController', $cnt);
             $object = $cnt->getSearchResultObject()->getJSONObject();
             $result = Loader::helper('json')->encode($object);
-            $this->addFooterItem("<script type=\"text/javascript\">
-			$(function () {
-				$('div[data-search=users]').concreteAjaxSearch({
-					result: " . $result . ",
-					onLoad: function (concreteSearch) {
-						concreteSearch.\$element.on('click', 'a[data-user-id]', function () {
-							window.location.href='"
-                                . rtrim(URL::to('/dashboard/users/search', 'view'), '/')
-                                . "/' + $(this).attr('data-user-id');
-							return false;
-						});
-					}
-				});
-			});
-			</script>");
+            $this->addFooterItem(
+                "<script type=\"text/javascript\">
+                    $(function () {
+                        $('div[data-search=users]').concreteAjaxSearch({
+                            result: " . $result . ",
+                            onLoad: function (concreteSearch) {
+                                concreteSearch.\$element.on('click', 'a[data-user-id]', function () {
+                                    window.location.href='"
+                                        . rtrim(URL::to('/dashboard/users/search', 'view'), '/')
+                                        . "/' + $(this).attr('data-user-id');
+                                    return false;
+                                });
+                            }
+                        });
+                    });
+                </script>"
+            );
         }
     }
 
