@@ -28,7 +28,9 @@ class ClassLoader  {
 		$mapping = array(
 		    'Loader' => DIR_BASE_CORE . '/' . DIRNAME_CLASSES . '/Legacy/Loader.php',
 		    'TaskPermission' => DIR_BASE_CORE . '/' . DIRNAME_CLASSES . '/Legacy/TaskPermission.php',
-		    'FilePermissions' => DIR_BASE_CORE . '/' . DIRNAME_CLASSES . '/Legacy/FilePermissions.php'
+		    'FilePermissions' => DIR_BASE_CORE . '/' . DIRNAME_CLASSES . '/Legacy/FilePermissions.php',
+		    NAMESPACE_SEGMENT_VENDOR . '\\Attribute\\Select\\Option' => DIR_BASE_CORE . '/' . DIRNAME_ATTRIBUTES . '/select/controller.php',
+		    NAMESPACE_SEGMENT_VENDOR . '\\Attribute\\Address\\Value' => DIR_BASE_CORE . '/' . DIRNAME_ATTRIBUTES . '/address/controller.php',
 		);
 
 		$loader = new SymfonyMapClassloader($mapping);
