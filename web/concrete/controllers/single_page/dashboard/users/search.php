@@ -458,7 +458,9 @@ class Search extends DashboardPageController
 					result: " . $result . ",
 					onLoad: function (concreteSearch) {
 						concreteSearch.\$element.on('click', 'a[data-user-id]', function () {
-							window.location.href='" . URL::to('/dashboard/users/search', 'view') . "/' + $(this).attr('data-user-id');
+							window.location.href='"
+                                . rtrim(URL::to('/dashboard/users/search', 'view'), '/')
+                                . "/' + $(this).attr('data-user-id');
 							return false;
 						});
 					}
