@@ -138,7 +138,7 @@ class Importer
 			// We get a new version to modify
 			$fv = $fr->getVersionToModify(true);
 			$fv->updateFile($sanitizedFilename, $prefix);
-            $fv->rescanThumbnails($this->rescanThumbnailsOnImport);
+            $fv->refreshAttributes($this->rescanThumbnailsOnImport);
 		}
 
 		return $fv;
@@ -182,13 +182,13 @@ class Importer
         if (!($fr instanceof File)) {
             // we have to create a new file object for this file version
             $fv = ConcreteFile::add($sanitizedFilename, $prefix, array('fvTitle'=>$filename), $default);
-            $fv->rescanThumbnails($this->rescanThumbnailsOnImport);
+            $fv->refreshAttributes($this->rescanThumbnailsOnImport);
             $fr = $fv->getFile();
         } else {
             // We get a new version to modify
             $fv = $fr->getVersionToModify(true);
             $fv->updateFile($sanitizedFilename, $prefix);
-            $fv->rescanThumbnails($this->rescanThumbnailsOnImport);
+            $fv->refreshAttributes($this->rescanThumbnailsOnImport);
 
             $fsl = $fr->getFileStorageLocationObject();
             if ($fsl->getID() != $storage->getID()) {

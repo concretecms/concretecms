@@ -131,32 +131,31 @@ class StyleTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testCustomizableStyleSheetObjects() {
-        $defaults = dirname(__FILE__) . '/fixtures/greekyogurt.less';
+        $defaults = dirname(__FILE__) . '/fixtures/elemental.less';
         $list = \Concrete\Core\StyleCustomizer\Style\ValueList::loadFromLessFile($defaults);
         $env = Environment::get();
 
         $pt = new PageTheme();
-        $pt->setThemeHandle('greek_yogurt');
-        $pt->setThemeDirectory($env->getPath(DIRNAME_THEMES . '/greek_yogurt'));
-        $pt->setThemeURL($env->getURL(DIRNAME_THEMES . '/greek_yogurt'));
+        $pt->setThemeHandle('elemental');
+        $pt->setThemeDirectory($env->getPath(DIRNAME_THEMES . '/elemental'));
+        $pt->setThemeURL($env->getURL(DIRNAME_THEMES . '/elmental'));
 
         $sheets = $pt->getThemeCustomizableStyleSheets();
         $this->assertTrue(count($sheets) == 1);
         $this->assertTrue($sheets[0] instanceof \Concrete\Core\StyleCustomizer\Stylesheet);
 
         $css = $sheets[0]->getCss();
-        $r = preg_match('/background-image: url\(\'(.+)\'\);/i', $css, $matches);
-        $this->assertTrue(trim($matches[1]) == '/concrete/themes/greek_yogurt/images/spacer.gif');
+        $this->assertTrue(strpos($css, "background-image: url('/concrete/themes/elemental/images/background-slider-default.png')") !== false);
 
         $sheets[0]->setValueList($list);
         $css = $sheets[0]->getCss();
-        $r = preg_match('/background-image: url\(\'(.+)\'\);/i', $css, $matches);
-        $this->assertTrue(trim($matches[1]) == '/concrete/themes/greek_yogurt/images/testingit.jpg');
+        $this->assertTrue(strpos($css, "background-image: url('/concrete/themes/elemental/images/testingit.jpg')") !== false);
+        $this->assertTrue(strpos($css, 'font-family: "Testing Font Family"') !== false);
 
         $sheet = $pt->getStylesheetObject('typography.less');
         $sheet->setValueList($list);
-        $this->assertTrue($sheet->getOutputPath() == DIR_BASE . '/application/files/cache/css/greek_yogurt/typography.css');
-        $this->assertTrue($sheet->getOutputRelativePath() == DIR_REL . '/application/files/cache/css/greek_yogurt/typography.css');
+        $this->assertTrue($sheet->getOutputPath() == DIR_BASE . '/application/files/cache/css/elemental/typography.css');
+        $this->assertTrue($sheet->getOutputRelativePath() == DIR_REL . '/application/files/cache/css/elemental/typography.css');
 
     }
 }
