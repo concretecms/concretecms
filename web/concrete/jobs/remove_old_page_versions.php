@@ -4,7 +4,7 @@ use Concrete\Core\Page\Collection\Version\VersionList;
 use \Job as AbstractJob;
 use Config;
 use PageList;
-use Concrete\Core\Page\Collection\Version;
+use Concrete\Core\Page\Collection\Version\Version;
 class RemoveOldPageVersions extends AbstractJob {
 
 	public function getJobName() {
