@@ -33,7 +33,10 @@ class MailImporter extends Object {
 		return $importers;
 	}
 
-	public function getEnabledList() {
+    /**
+     * @return self[]
+     */
+    public function getEnabledList() {
 		$db = Loader::db();
 		$r = $db->Execute('select miID from MailImporters where miIsEnabled = 1 order by miID asc');
 		$importers = array();
@@ -42,8 +45,8 @@ class MailImporter extends Object {
 		}
 		return $importers;
 	}
-	
-	public static function getByID($miID) {
+
+    public static function getByID($miID) {
 		$db = Loader::db();
 		$row = $db->GetRow("select miID, miHandle, miServer, miUsername, miPassword, miEncryption, miIsEnabled, miEmail, miPort, miConnectionMethod, Packages.pkgID, pkgHandle from MailImporters left join Packages on MailImporters.pkgID = Packages.pkgID where miID = ?", array($miID));
 		if (isset($row['miID'])) {
@@ -52,6 +55,7 @@ class MailImporter extends Object {
 			$mi->setPropertiesFromArray($row);
 			return $mi;
 		}
+        return false;
 	}
 
 	public static function getByHandle($miHandle) {
@@ -183,8 +187,11 @@ class MailImporter extends Object {
 		$this->validationHash = $hash;
 		return $hash;
 	}
-	
-	public function getPendingMessages() {
+
+    /**
+     * @return MailImportedMessage[]
+     */
+    public function getPendingMessages() {
 		$messages = array();
 		// connect to the server to grab all messages 
 		
