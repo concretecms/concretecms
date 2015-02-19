@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Job;
 
 use Concrete\Core\User\Group\GroupList;
@@ -51,12 +51,10 @@ class CheckAutomatedGroups extends QueueableJob
         $gl = new GroupList();
         $gl->filterByExpirable();
         $groups = $gl->getResults();
-        foreach($groups as $group) {
+        foreach ($groups as $group) {
             if ($group->isUserExpired($ux)) {
                 $ux->exitGroup($group);
             }
         }
     }
-
-
 }

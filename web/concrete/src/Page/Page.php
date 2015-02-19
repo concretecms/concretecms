@@ -445,8 +445,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      * @return bool
      */
     function isGeneratedCollection() {
-        // generated collections are collections without types, that have special cFilename attributes
-        return $this->cFilename && !$this->vObj->ptID;
+        // generated collections are collections without templates, that have special cFilename attributes
+        return $this->getCollectionFilename() && !$this->getPageTemplateID();
     }
 
     public function assignPermissions($userOrGroup, $permissions = array(), $accessType = PagePermissionKey::ACCESS_TYPE_INCLUDE) {
