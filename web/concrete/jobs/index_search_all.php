@@ -8,7 +8,6 @@ use CollectionAttributeKey;
 use FileAttributeKey;
 use UserAttributeKey;
 use Page;
-use Database;
 use \ZendQueue\Queue as ZendQueue;
 use \ZendQueue\Message as ZendQueueMessage;
 
@@ -17,6 +16,8 @@ class IndexSearchAll extends QueueableJob
 
     public $jNotUninstallable = 1;
     public $jSupportsQueue = true;
+
+    protected $indexedSearch;
 
     public function getJobName()
     {
@@ -30,7 +31,7 @@ class IndexSearchAll extends QueueableJob
 
     public function start(ZendQueue $q)
     {
-        $this->is = new IndexedSearch();
+        $this->indexedSearch = new IndexedSearch();
 
         $attributes = CollectionAttributeKey::getList();
         $attributes = array_merge($attributes, FileAttributeKey::getList());
@@ -42,7 +43,11 @@ class IndexSearchAll extends QueueableJob
         $db = Loader::db();
         $db->Execute('truncate table PageSearchIndex');
         $r = $db->Execute(
-            'select Pages.cID from Pages left join CollectionSearchIndexAttributes csia on Pages.cID = csia.cID where (ak_exclude_search_index is null or ak_exclude_search_index = 0) and cIsActive = 1'
+            'select Pages.cID
+            from Pages
+                left join CollectionSearchIndexAttributes csia
+                    on Pages.cID = csia.cID
+            where (ak_exclude_search_index is null or ak_exclude_search_index = 0) and cIsActive = 1'
         );
         while ($row = $r->FetchRow()) {
             $q->send($row['cID']);
@@ -61,9 +66,7 @@ class IndexSearchAll extends QueueableJob
         $c = Page::getByID($msg->body, 'ACTIVE');
         $cv = $c->getVersionObject();
         if (is_object($cv)) {
-            $c->reindex($this->is, true);
+            $c->reindex($this->indexedSearch, true);
         }
     }
-
-
 }
