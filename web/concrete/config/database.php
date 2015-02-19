@@ -11,6 +11,13 @@ return array(
     'proxy_classes' => DIR_APPLICATION . '/config/doctrine/proxies',
 
     /**
+     * Paths to exclude from the doctrine proxy classes
+     */
+    'proxy_exclusions' => array(
+        DIR_BASE_CORE . '/' . DIRNAME_CLASSES . '/Support/',
+    ),
+
+    /**
      * The database charset
      */
     'charset' => 'utf8'
