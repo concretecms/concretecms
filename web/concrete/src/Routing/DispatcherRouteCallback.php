@@ -13,6 +13,7 @@ use View;
 use Permissions;
 use Response;
 use Core;
+use Session;
 
 class DispatcherRouteCallback extends RouteCallback
 {
