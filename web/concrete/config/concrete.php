@@ -407,8 +407,8 @@ return array(
 
     'limits' => array(
         'style_customizer' => array(
-            'slider_min' => -50,
-            'slider_max' => 200,
+            'size_min' => -50,
+            'size_max' => 200,
         )
     ),
 
