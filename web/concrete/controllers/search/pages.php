@@ -44,7 +44,7 @@ class Pages extends Controller
 
         if (!$this->pageList->getActiveSortColumn()) {
             $col = $columns->getDefaultSortColumn();
-            $this->pageList->sortBy($col->getColumnKey(), $col->getColumnDefaultSortDirection());
+            $this->pageList->sanitizedSortBy($col->getColumnKey(), $col->getColumnDefaultSortDirection());
         }
 
         $cvName = htmlentities($req['cvName'], ENT_QUOTES, APP_CHARSET);
