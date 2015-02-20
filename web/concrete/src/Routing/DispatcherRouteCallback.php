@@ -13,6 +13,7 @@ use View;
 use Permissions;
 use Response;
 use Core;
+use Session;
 
 class DispatcherRouteCallback extends RouteCallback
 {
@@ -47,6 +48,12 @@ class DispatcherRouteCallback extends RouteCallback
 
     protected function sendPageForbidden(Request $request)
     {
+        // set page for redirection after successful login
+        $currentPage = Page::getByPath($request->getPath());
+        if($currentPage){
+                Session::set('rcID', $currentPage->getCollectionID());
+        }
+        // load page forbidden
         $item = '/page_forbidden';
         $c = Page::getByPath($item);
         if (is_object($c) && !$c->isError()) {
