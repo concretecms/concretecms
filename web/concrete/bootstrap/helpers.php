@@ -240,3 +240,13 @@ function array_to_object($o, $array)
 
     return $o;
 }
+
+/**
+ * Dumps information about a variable in a way that can be used with Doctrine recursive objects.)
+ * @param $o
+ * @param bool $maxDepth
+ */
+function var_dump_safe($o, $maxDepth = true)
+{
+    return Doctrine\Common\Util\Debug::dump($o, $maxDepth);
+}
