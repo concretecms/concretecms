@@ -21,7 +21,7 @@ class VersionList extends DatabaseItemList {
 		$this->sortBy('cvID', 'desc');			
 	}
 
-	public function get($itemsToGet, $offset) {
+	public function get($itemsToGet = 0, $offset = 0) {
 		$r = parent::get($itemsToGet, $offset);
 		$items = array();
 		foreach($r as $row) {

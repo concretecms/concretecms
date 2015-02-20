@@ -41,9 +41,8 @@ class RemoveOldPageVersions extends AbstractJob {
 		$pagesAffected = array();
 		foreach($pages as $page) {
 			$pvl = new VersionList($page);
-			$pvl->setItemsPerPage(10);
 			$pagesAffected[] = $page->getCollectionID();
-			foreach(array_reverse($pvl->getPage()) as $v) {
+			foreach(array_slice(array_reverse($pvl->get()), 10) as $v) {
 				if($v instanceof Version && !$v->isApproved() && !$v->isMostRecent() ) {
 					@$v->delete();
 					$versionCount++;
