@@ -284,17 +284,18 @@ if ($u->isSuperUser() && !$includesHome) { ?>
             </div>
 
             <div class="form-group">
-                <label class="control-label"><?php echo t("Users' language");?></label>
+                <label class="control-label"><?php echo t('Registered Users Language Preferences'); ?></label>
+                <p><?php echo t('Load Interface Language from:'); ?></p>
                 <div class="radio">
                     <label>
                         <?php echo $form->radio('keepUsersLocale', 0, $keepUsersLocale); ?>
-                        <span><?php echo t('Always use pages language.'); ?></span>
+                        <span><?php echo t('Page (if it exists)'); ?></span>
                     </label>
                 </div>
                 <div class="radio">
                     <label>
                         <?php echo $form->radio('keepUsersLocale', 1, $keepUsersLocale); ?>
-                        <span><?php echo t("Use users' language for logged-in users."); ?></span>
+                        <span><?php echo t("User Profile"); ?></span>
                     </label>
                 </div>
             </div>
@@ -323,4 +324,6 @@ if ($u->isSuperUser() && !$includesHome) { ?>
             </div>
         </form>
     </fieldset>
-	<?php } ?>
+    <?php
+}
+
