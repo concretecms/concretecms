@@ -405,13 +405,6 @@ return array(
         'app_version_display_in_header' => true
     ),
 
-    'limits' => array(
-        'style_customizer' => array(
-            'size_min' => -50,
-            'size_max' => 200,
-        )
-    ),
-
     'theme' => array(
 
         'compress_preprocessor_output' => true
@@ -823,6 +816,10 @@ return array(
         'delete_pages'            => 10,
         'copy_pages'              => 10,
         'page_search_index_batch' => 200,
-        'job_queue_batch'         => 10
+        'job_queue_batch'         => 10,
+        'style_customizer' => array(
+            'size_min' => -50,
+            'size_max' => 200,
+        )
     )
 );
