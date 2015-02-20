@@ -405,6 +405,13 @@ return array(
         'app_version_display_in_header' => true
     ),
 
+    'limits' => array(
+        'style_customizer' => array(
+            'size_min' => -50,
+            'size_max' => 200,
+        )
+    ),
+
     'theme' => array(
 
         'compress_preprocessor_output' => true
