@@ -35,9 +35,9 @@ abstract class AttributedItemList extends ItemList
             if (substr($nm, 0, 6) == 'sortBy') {
                 $handle = uncamelcase(substr($nm, 6));
                 if (count($a) == 1) {
-                    $this->sortBy($handle, $a[0]);
+                    $this->sanitizedSortBy($handle, $a[0]);
                 } else {
-                    $this->sortBy($handle);
+                    $this->sanitizedSortBy($handle);
                 }
             } else {
                 throw new \Exception(t('%s method does not exist for the %s class', $nm, get_called_class()));
