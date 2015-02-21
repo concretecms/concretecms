@@ -1,7 +1,8 @@
 <?php
 namespace Concrete\Core\Page;
-use Concrete\Core\Multilingual\Page\Event;
 use Concrete\Core\Multilingual\Page\Section\Section;
+use Concrete\Core\Page\Type\Composer\Control\BlockControl;
+use Concrete\Core\Page\Type\Composer\FormLayoutSetControl;
 use Concrete\Core\Page\Type\Type;
 use Loader;
 use CacheLocal;
@@ -166,9 +167,10 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         if (!isset($this->controller)) {
             $env = Environment::get();
             if ($this->getPageTypeID() > 0) {
-                $ptHandle = $this->getPageTypeHandle();
-                $r = $env->getRecord(DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES . '/' . $ptHandle . '.php', $this->getPackageHandle());
-                $prefix = $r->override ? true : $this->getPackageHandle();
+                $pt = $this->getPageTypeObject();
+                $ptHandle = $pt->getPageTypeHandle();
+                $r = $env->getRecord(DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES . '/' . $ptHandle . '.php', $pt->getPackageHandle());
+                $prefix = $r->override ? true : $pt->getPackageHandle();
                 $class = core_class('Controller\\PageType\\' . camelcase($ptHandle), $prefix);
             } else if ($this->isGeneratedCollection()) {
                 $file = $this->getCollectionFilename();
@@ -277,10 +279,13 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             $r = array();
             $db = Loader::db();
             $cID = false;
+            $ppIsCanonical = false;
             while ((!$cID) && $path) {
-                $cID = $db->GetOne('select cID from PagePaths where cPath = ?', array($path));
+                $row = $db->GetRow('select cID, ppIsCanonical from PagePaths where cPath = ?', array($path));
+                $cID = $row['cID'];
                 if ($cID) {
                     $cPath = $path;
+                    $ppIsCanonical = (bool)$row['ppIsCanonical'];
                     break;
                 }
                 $path = substr($path, 0, strrpos($path, '/'));
@@ -288,6 +293,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
             if ($cID && $cPath) {
                 $c = Page::getByID($cID, 'ACTIVE');
+                $c->cPathFetchIsCanonical = $ppIsCanonical;
             } else {
                 $c = new Page();
                 $c->loadError(COLLECTION_NOT_FOUND);
@@ -303,6 +309,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
                 $cID = 1;
             }
             $c = Page::getByID($cID, 'ACTIVE');
+            $c->cPathFetchIsCanonical = true;
         }
 
         return $c;
@@ -438,8 +445,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      * @return bool
      */
     function isGeneratedCollection() {
-        // generated collections are collections without types, that have special cFilename attributes
-        return $this->cFilename && !$this->vObj->ptID;
+        // generated collections are collections without templates, that have special cFilename attributes
+        return $this->getCollectionFilename() && !$this->getPageTemplateID();
     }
 
     public function assignPermissions($userOrGroup, $permissions = array(), $accessType = PagePermissionKey::ACCESS_TYPE_INCLUDE) {
@@ -869,16 +876,17 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         }
     }
 
-    public function queueForDeletionRequest() {
+    public function queueForDeletionRequest($queue = null, $includeThisPage = true) {
         $pages = array();
-        $includeThisPage = true;
         $pages = $this->populateRecursivePages($pages, array('cID' => $this->getCollectionID()), $this->getCollectionParentID(), 0, $includeThisPage);
         // now, since this is deletion, we want to order the pages by level, which
         // should get us no funny business if the queue dies.
         usort($pages, array('Page', 'queueForDeletionSort'));
-        $q = Queue::get('delete_page_request');
+        if (!$queue) {
+            $queue = Queue::get('delete_page_request');
+        }
         foreach($pages as $page) {
-            $q->send(serialize($page));
+            $queue->send(serialize($page));
         }
     }
 
@@ -1032,8 +1040,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      * Returns full url for the current page
      * @return string
      */
-    public function getCollectionLink($appendBaseURL = false, $ignoreUrlRewriting = false) {
-        return Loader::helper('navigation')->getLinkToCollection($this, $appendBaseURL, $ignoreUrlRewriting);
+    public function getCollectionLink($appendBaseURL = false) {
+        return Loader::helper('navigation')->getLinkToCollection($this, $appendBaseURL);
     }
 
     /**
@@ -1949,9 +1957,27 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     {
         $b = parent::addBlock($bt, $a, $data);
         $btHandle = $bt->getBlockTypeHandle();
+        if ($b->getBlockTypeHandle() == BLOCK_HANDLE_PAGE_TYPE_OUTPUT_PROXY) {
+            $bi = $b->getInstance();
+            $output = $bi->getComposerOutputControlObject();
+            $control = FormLayoutSetControl::getByID($output->getPageTypeComposerFormLayoutSetControlID());
+            $object = $control->getPageTypeComposerControlObject();
+            if ($object instanceof BlockControl) {
+                $_bt = $object->getBlockTypeObject();
+                $btHandle = $_bt->getBlockTypeHandle();
+            }
+        }
         $theme = $this->getCollectionThemeObject();
         if ($btHandle && $theme) {
-            $templates = $theme->getThemeDefaultBlockTemplates();
+            $areaTemplates = array();
+            if (is_object($a)) {
+                $areaTemplates = $a->getAreaCustomTemplates();
+            }
+            $themeTemplates = $theme->getThemeDefaultBlockTemplates();
+            if (!is_array($themeTemplates)) {
+                $themeTemplates = array();
+            }
+            $templates = array_merge($themeTemplates, $areaTemplates);
             if (count($templates) && isset($templates[$btHandle])) {
                 $template = $templates[$btHandle];
                 $b->updateBlockInformation(array('bFilename' => $template));
@@ -2127,6 +2153,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             Events::dispatch('on_page_duplicate', $pe);
 
             $nc2->rescanCollectionPath();
+            $nc2->movePageDisplayOrderToBottom();
 
             return $nc2;
         }

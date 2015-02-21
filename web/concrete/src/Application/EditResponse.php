@@ -8,6 +8,7 @@ class EditResponse {
 	public $time;
 	public $message;
 	public $redirectURL;
+	public $title;
 	protected $additionalData = array();
 	public $error;
 

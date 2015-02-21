@@ -296,17 +296,15 @@ else {
         </div>
         </div>
         <? if ($paginator && strlen($paginator->getPages()) > 0) { ?>
-            <div class="ccm-pane-footer">
-                <div class="pagination">
-                    <ul>
-                        <li class="prev"><?= $paginator->getPrevious() ?></li>
+            <div class="ccm-search-results-pagination">
+                <ul class="pagination">
+                    <li class="prev"><?= $paginator->getPrevious() ?></li>
 
-                        <? // Call to pagination helper's 'getPages' method with new $wrapper var ?>
-                        <?= $paginator->getPages('li') ?>
+                    <? // Call to pagination helper's 'getPages' method with new $wrapper var ?>
+                    <?= $paginator->getPages('li') ?>
 
-                        <li class="next"><?= $paginator->getNext() ?></li>
-                    </ul>
-                </div>
+                    <li class="next"><?= $paginator->getNext() ?></li>
+                </ul>
             </div>
         <? } ?>
     <? }endif ?>

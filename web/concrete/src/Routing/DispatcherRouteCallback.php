@@ -21,6 +21,7 @@ class DispatcherRouteCallback extends RouteCallback
     {
         $contents = $v->render();
         $response = new Response($contents, $code);
+
         return $response;
     }
 
@@ -40,6 +41,7 @@ class DispatcherRouteCallback extends RouteCallback
         $cnt->on_start();
         $cnt->runAction('view');
         $v->setController($cnt);
+
         return $this->sendResponse($v, 404);
     }
 
@@ -58,12 +60,12 @@ class DispatcherRouteCallback extends RouteCallback
         $cnt->on_start();
         $cnt->runAction('view');
         $v->setController($cnt);
+
         return $this->sendResponse($v, 403);
     }
 
     public function execute(Request $request, \Concrete\Core\Routing\Route $route = null, $parameters = array())
     {
-
         // figure out where we need to go
         $c = Page::getFromRequest($request);
         if ($c->isError() && $c->getError() == COLLECTION_NOT_FOUND) {
@@ -83,6 +85,10 @@ class DispatcherRouteCallback extends RouteCallback
                 $c = $home;
             }
         }
+        if (!$c->cPathFetchIsCanonical) {
+            // Handle redirect URL (additional page paths)
+            return Redirect::page($c, 301)->send();
+        }
 
         // maintenance mode
         if ((!$c->isAdminArea()) && ($c->getCollectionPath() != '/login')) {
@@ -92,6 +98,7 @@ class DispatcherRouteCallback extends RouteCallback
             ) {
                 $v = new View('/frontend/maintenance_mode');
                 $v->setViewTheme(VIEW_CORE_THEME);
+
                 return $this->sendResponse($v);
             }
         }
@@ -141,7 +148,7 @@ class DispatcherRouteCallback extends RouteCallback
             if ($c->getCollectionID() == HOME_CID && Config::get('concrete.multilingual.redirect_home_to_default_locale')) {
                 // Let's retrieve the default language
                 $ms = $dl->getPreferredSection();
-                if (is_object($ms)) {
+                if (is_object($ms) && $ms->getCollectionID() != HOME_CID) {
                     Redirect::page($ms)->send();
                     exit;
                 }
@@ -151,7 +158,7 @@ class DispatcherRouteCallback extends RouteCallback
         }
 
         $request->setCurrentPage($c);
-        require(DIR_BASE_CORE . '/bootstrap/process.php');
+        require DIR_BASE_CORE . '/bootstrap/process.php';
         $u = new User();
 
         // On page view event.
@@ -182,7 +189,7 @@ class DispatcherRouteCallback extends RouteCallback
             $md = new \Mobile_Detect();
             if ($md->isMobile()) {
                 $mobileTheme = Theme::getByID(Config::get('concrete.misc.mobile_theme_id'));
-                if($mobileTheme instanceof Theme) {
+                if ($mobileTheme instanceof Theme) {
                     $view->setViewTheme($mobileTheme);
                 }
             }
@@ -190,14 +197,14 @@ class DispatcherRouteCallback extends RouteCallback
 
         // we update the current page with the one bound to this controller.
         $request->setCurrentPage($c);
+
         return $this->sendResponse($view);
     }
 
     public static function getRouteAttributes($callback)
     {
         $callback = new DispatcherRouteCallback($callback);
+
         return array('callback' => $callback);
     }
-
-
 }

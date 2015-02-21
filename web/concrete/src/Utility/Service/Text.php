@@ -248,6 +248,16 @@ class Text
     }
 
     /**
+     * Runs strip_tags but ensures that spaces are kept between the stripped tags.
+     * @param $input
+     * @param $allowedTags
+     */
+    public function prettyStripTags($input, $allowedTags = null)
+    {
+        return str_replace('  ',' ', strip_tags(str_replace( '<', ' <', $input), $allowedTags));
+    }
+
+    /**
      * Scans passed text and automatically hyperlinks any URL inside it
      *
      * @param string $input

@@ -566,7 +566,7 @@
                         <page name="" path="" filename="" pagetype="" template="full" user="admin" description="" package="">
                             <area name="Main">
                                 <blocks>
-                                    <block type="page_title" name="" mc-block-id="1SrIYV5J">
+                                    <block type="page_title" name="" custom-template="archive.php" mc-block-id="1SrIYV5J">
                                         <data table="btPageTitle">
                                             <record>
                                                 <useCustomTitle><![CDATA[0]]></useCustomTitle>

@@ -126,7 +126,7 @@ class Application extends Container
                     foreach ($jobs as $j) {
                         if ($j->isScheduledForNow()) {
                             $url = BASE_URL . View::url(
-                                                  '/tools/required/jobs/run_single?auth=' . $auth . '&jID=' . $j->getJobID(
+                                                  '/ccm/system/jobs/run_single?auth=' . $auth . '&jID=' . $j->getJobID(
                                                   )
                                 );
                             break;
@@ -141,7 +141,7 @@ class Application extends Container
                         foreach ($jSets as $set) {
                             if ($set->isScheduledForNow()) {
                                 $url = BASE_URL . View::url(
-                                                      '/tools/required/jobs?auth=' . $auth . '&jsID=' . $set->getJobSetID(
+                                                      '/ccm/system/jobs?auth=' . $auth . '&jsID=' . $set->getJobSetID(
                                                       )
                                     );
                                 break;
@@ -244,6 +244,7 @@ class Application extends Container
                 }
             }
         }
+        Config::set('app.bootstrap.packages_loaded', true);
     }
 
     /**

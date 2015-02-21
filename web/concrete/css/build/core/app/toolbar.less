@@ -176,6 +176,14 @@ div#ccm-toolbar {
       }
     }
 
+    li.ccm-toolbar-page-edit-mode-pinned{
+      > a, a:hover {
+        background-color: #D6E6EE;
+        #gradient .vertical(#D6E6EE, #B8DCEE);
+        color: #136CC0;
+      }
+    }
+
     > li#ccm-white-label-message {
 
       > a {
@@ -278,6 +286,10 @@ div#ccm-toolbar-disabled {
   &:hover,
   &.ccm-mobile-close {
     color: #7d7d7d;
+  }
+  &.ccm-toolbar-mobile-menu-button-active {
+    background-color: #b5eeb5;
+    #gradient .vertical(#c2ffc2, #b5eeb5);
   }
 }
 

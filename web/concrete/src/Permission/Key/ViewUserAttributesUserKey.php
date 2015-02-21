@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\Permission\Key;
+use Concrete\Core\Permission\Access\ListItem\ViewUserAttributesUserListItem;
 use Loader;
 use User;
 use \Concrete\Core\Permission\Duration as PermissionDuration;
@@ -39,7 +40,7 @@ class ViewUserAttributesUserKey extends UserKey  {
 
 	public function getMyAssignment() {
 		$u = new User();
-		$asl = new ViewUserAttributesUserPermissionAssignment();
+		$asl = new ViewUserAttributesUserListItem();
 		if ($u->isSuperUser()) {
 			$asl->setAttributesAllowedPermission('A');
 			return $asl;

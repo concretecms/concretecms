@@ -3,6 +3,8 @@
 namespace Concrete\Block\PageTitle;
 use Page;
 use \Concrete\Core\Block\BlockController;
+use Loader;
+use \Concrete\Core\Tree\Node\Type\Topic;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -15,7 +17,7 @@ class Controller extends BlockController
     protected $btCacheBlockOutput = true;
     protected $btCacheBlockOutputOnPost = true;
     protected $btCacheBlockOutputForRegisteredUsers = false;
-    protected $btInterfaceHeight = 200;
+    protected $btInterfaceHeight = 400;
     protected $btTable = 'btPageTitle';
     protected $btWrapperClass = 'ccm-ui';
 
@@ -54,6 +56,9 @@ class Controller extends BlockController
 
     public function view()
     {
+        if (!$this->formatting) {
+            $this->set('formatting', 'h1');
+        }
         $this->set('title', $this->getTitleText());
     }
 
@@ -62,6 +67,17 @@ class Controller extends BlockController
     {
         $data['useCustomTitle'] = ($data['useCustomTitle'] ? 1 : 0);
         parent::save($data);
+    }
+
+    public function action_topic($topic = false)
+    {
+        $db = Loader::db();
+        $treeNodeID = $db->GetOne('select treeNodeID from TreeTopicNodes where treeNodeTopicName = ?', array($topic));
+        if ($treeNodeID) {
+            $topicObj = Topic::getByID(intval($treeNodeID));
+            $this->set('currentTopic', $topicObj);
+        }
+        $this->view();
     }
 
 }

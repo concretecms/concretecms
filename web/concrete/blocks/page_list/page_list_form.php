@@ -8,9 +8,8 @@ $form = Loader::helper('form/page_selector');
         <input type="hidden" name="pageListToolsDir" value="<?= Loader::helper('concrete/urls')->getBlockTypeToolsURL($bt) ?>/"/>
 
         <fieldset>
-            <legend><?= t('Settings') ?></legend>
-        </fieldset>
-
+        <legend><?= t('Settings') ?></legend>
+        
         <div class="form-group">
             <label class='control-label'><?= t('Number of Pages to Display') ?></label>
             <input type="text" name="num" value="<?= $num ?>" class="form-control">
@@ -40,7 +39,9 @@ $form = Loader::helper('form/page_selector');
             }
             ?>
         </div>
-
+		</fieldset>
+		
+		<fieldset>
         <legend><?= t('Filtering') ?></legend>
         <div class="checkbox">
             <label>
@@ -87,7 +88,9 @@ $form = Loader::helper('form/page_selector');
                 <? } ?>
             </select>
         </div>
-
+		</fieldset>
+		
+		<fieldset>
         <legend><?= t('Pagination') ?></legend>
         <div class="checkbox">
             <label>
@@ -95,7 +98,9 @@ $form = Loader::helper('form/page_selector');
                 <?= t('Display pagination interface if more items are available than are displayed.') ?>
             </label>
         </div>
-
+		</fieldset>
+		
+		<fieldset>
         <legend><?= t('Location') ?></legend>
         <div class="radio">
             <label>
@@ -138,7 +143,9 @@ $form = Loader::helper('form/page_selector');
                 </div>
             </div>
         </div>
-
+		</fieldset>
+		
+		<fieldset>
         <legend><?= t('Sort') ?></legend>
         <div class="form-group">
             <select name="orderBy" class="form-control">
@@ -162,7 +169,9 @@ $form = Loader::helper('form/page_selector');
                 </option>
             </select>
         </div>
-
+		</fieldset>
+		
+		<fieldset>
         <legend><?= t('Output') ?></legend>
         <div class="form-group">
             <label class="control-label"><?= t('Provide RSS Feed') ?></label>
@@ -318,6 +327,7 @@ $form = Loader::helper('form/page_selector');
             <label class="control-label"><?= t('Message to Display When No Pages Listed.') ?></label>
             <textarea class="form-control" name="noResultsMessage"><?=$noResultsMessage?></textarea>
         </div>
+        <fieldset>
 
 
         <div class="loader">
@@ -326,15 +336,15 @@ $form = Loader::helper('form/page_selector');
     </div>
 
     <div class="col-xs-6" id="ccm-tab-content-page-list-preview">
+        <fieldset>
+        <legend><?= t('Included Pages') ?></legend>
         <div class="preview">
-            <fieldset>
-                <legend><?= t('Included Pages') ?></legend>
-            </fieldset>
-            <div class="render">
+            	<div class="render">
 
-            </div>
-            <div class="cover"></div>
+            	</div>
+            	<div class="cover"></div>
         </div>
+         </fieldset>
     </div>
 
 </div>

@@ -58,7 +58,8 @@
             jQuery.fn.dialog.closeAll();
 
             if (!has_add) {
-                $.getJSON(CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/add_block/submit', {
+
+                var postData = {
                     cID: cID,
                     arHandle: area_handle,
                     btID: block_type_id,
@@ -66,8 +67,21 @@
                     processBlock: 1,
                     add: 1,
                     ccm_token: CCM_SECURITY_TOKEN,
+                    arCustomTemplates: area.getCustomTemplates(),
                     dragAreaBlockID: dragAreaBlockID
-                }, function (response) {
+                };
+
+                var templates = area.getCustomTemplates();
+                if (templates) {
+                    for (var k in templates) {
+                        postData[postData.length] = {
+                            name: 'arCustomTemplates[' + k + ']',
+                            value: templates[k]
+                        };
+                    }
+                }
+
+                $.getJSON(CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/add_block/submit', postData, function (response) {
                     $.fn.dialog.showLoader();
                     ConcreteToolbar.disableDirectExit();
                     $.get(CCM_DISPATCHER_FILENAME + '/ccm/system/block/render',
@@ -86,6 +100,9 @@
                             _.defer(function () {
                                 my.getEditMode().scanBlocks();
                             });
+
+                            var panel = ConcretePanelManager.getByIdentifier('add-block');
+                            if ( panel && panel.pinned() ) panel.show();
                         });
                 });
             } else if (is_inline) {
@@ -98,6 +115,16 @@
                     'dragAreaBlockID': dragAreaBlockID
                 });
             } else {
+
+                var templates = area.getCustomTemplates(),
+                    customTemplateString = '';
+
+                if (templates) {
+                    for (var k in templates) {
+                        customTemplateString += '&arCustomTemplates[' + k + ']=' + templates[k];
+                    }
+                }
+
                 $.fn.dialog.open({
 
                     onOpen: function () {
@@ -112,10 +139,15 @@
                             });
                         });
                     },
+                    onDestroy: function() {
+                        var panel = ConcretePanelManager.getByIdentifier('add-block');
+                        if ( panel && panel.pinned() ) panel.show();
+                    },
                     width: parseInt(elem.data('dialog-width'), 10),
                     height: parseInt(elem.data('dialog-height'), 10) + 20,
                     title: elem.data('dialog-title'),
                     href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/add_block?cID=' + cID + '&btID=' + block_type_id + '&arHandle=' + encodeURIComponent(area_handle)
+                    + customTemplateString
                 });
             }
         }

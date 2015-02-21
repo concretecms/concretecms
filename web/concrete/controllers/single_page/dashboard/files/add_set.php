@@ -22,9 +22,7 @@ class AddSet extends DashboardPageController {
 			return;
 		}
 		$setName = trim($this->post('file_set_name'));
-		if (preg_match('/[<>;{}?"`]/i', $setName)) {
-			$this->error->add(t('File Set Name cannot contain the characters: %s', Loader::helper('text')->entities('<>;{}?"`')));
-		}
+
         if (!$this->error->has()) {
     		$fsOverrideGlobalPermissions = ($this->post('fsOverrideGlobalPermissions') == 1) ? 1 : 0;
 	    	$fs = FileSet::add($setName, $fsOverrideGlobalPermissions);

@@ -18,6 +18,16 @@ class DatabaseServiceProvider extends ServiceProvider
                 $factory = new ConnectionFactory($cms, $driver_manager);
                 return new DatabaseManager($cms, $factory);
             });
+        $this->app->bind(
+            'database/orm',
+            function ($cms) {
+                return new DatabaseManagerORM($cms);
+            });
+        $this->app->bind(
+            'database/structure',
+            function ($cms, $em) {
+                return new DatabaseStructureManager($em);
+            });
     }
 
 }

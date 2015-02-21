@@ -1,11 +1,12 @@
 <?php
 namespace Concrete\Core\Localization;
+
 use Config;
 use Concrete\Core\Cache\Adapter\ZendCacheDriver;
-use Loader;
+use Core;
 use Events;
-use \Zend\I18n\Translator\Translator;
-use \Punic\Data as PunicData;
+use Zend\I18n\Translator\Translator;
+use Punic\Data as PunicData;
 
 class Localization
 {
@@ -19,7 +20,6 @@ class Localization
     {
         if (null === self::$loc) {
             self::$loc = new self();
-
         }
 
         return self::$loc;
@@ -53,28 +53,44 @@ class Localization
 
     public function setLocale($locale)
     {
-        $localeNeededLoading = false;
         if (($locale == 'en_US') && (!Config::get('concrete.misc.enable_translate_locale_en_us'))) {
             if (isset($this->translate)) {
                 unset($this->translate);
             }
-            PunicData::setDefaultLocale($locale);
-            return;
-        }
-        if (is_dir(DIR_LANGUAGES . '/' . $locale)) {
-            $languageDir = DIR_LANGUAGES . '/' . $locale;
-        } elseif (is_dir(DIR_LANGUAGES_CORE . '/' . $locale)) {
-            $languageDir = DIR_LANGUAGES_CORE . '/' . $locale;
         } else {
-            return;
+            $this->translate = new Translator();
+            $this->translate->setLocale($locale);
+            $this->translate->setCache(self::getCache());
+            // Core language files
+            $languageFile = DIR_LANGUAGES . "/$locale/LC_MESSAGES/messages.mo";
+            if (!is_file($languageFile)) {
+                $languageFile = DIR_LANGUAGES_CORE . "/$locale/LC_MESSAGES/messages.mo";
+                if (!is_file($languageFile)) {
+                    $languageFile = '';
+                }
+            }
+            if (strlen($languageFile)) {
+                $this->translate->addTranslationFile('gettext', $languageFile);
+            }
+            // Site language files
+            if (Config::get('concrete.multilingual.enabled')) {
+                $languageFile = DIR_LANGUAGES_SITE_INTERFACE . "/$locale.mo";
+                if (!is_file($languageFile)) {
+                    $languageFile = '';
+                }
+                if (strlen($languageFile)) {
+                    $this->translate->addTranslationFile('gettext', $languageFile);
+                }
+            }
+            // Package language files
+            if (Config::get('app.bootstrap.packages_loaded') === true) {
+                $pkgList = \Concrete\Core\Package\PackageList::get();
+                foreach ($pkgList->getPackages() as $pkg) {
+                    $pkg->setupPackageLocalization($locale, $this->translate);
+                }
+            }
         }
-
-        $this->translate = new Translator();
-        $this->translate->addTranslationFilePattern('gettext', $languageDir, 'LC_MESSAGES/messages.mo');
-        $this->translate->setLocale($locale);
-        $this->translate->setCache(self::getCache());
         PunicData::setDefaultLocale($locale);
-
         $event = new \Symfony\Component\EventDispatcher\GenericEvent();
         $event->setArgument('locale', $locale);
         Events::dispatch('on_locale_load', $event);
@@ -90,15 +106,6 @@ class Localization
         return $this->translate;
     }
 
-    public function addSiteInterfaceLanguage($language)
-    {
-        if (!is_object($this->translate)) {
-            $this->translate = new Translator();
-            $this->translate->setCache(self::getCache());
-        }
-        $this->translate->addTranslationFilePattern('gettext', DIR_LANGUAGES_SITE_INTERFACE, $language . '.mo');
-    }
-
     public static function getTranslate()
     {
         $loc = Localization::getInstance();
@@ -109,7 +116,7 @@ class Localization
     public static function getAvailableInterfaceLanguages()
     {
         $languages = array();
-        $fh = Loader::helper('file');
+        $fh = Core::make('helper/file');
 
         if (file_exists(DIR_LANGUAGES)) {
             $contents = $fh->getDirectoryContents(DIR_LANGUAGES);
@@ -191,6 +198,8 @@ class Localization
      */
     public static function clearCache()
     {
+        $locale = static::activeLocale();
         self::getCache()->flush();
+        static::changeLocale($locale);
     }
 }

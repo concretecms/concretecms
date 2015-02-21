@@ -309,10 +309,10 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
         $db = \Database::get();
         if (is_array($ptID)) {
             $this->query->andWhere(
-                $this->query->expr()->in('p.ptID', array_map(array($db, 'quote'), $ptID))
+                $this->query->expr()->in('pt.ptID', array_map(array($db, 'quote'), $ptID))
             );
         } else {
-            $this->query->andWhere($this->query->expr()->comparison('p.ptID', '=', ':ptID'));
+            $this->query->andWhere($this->query->expr()->comparison('pt.ptID', '=', ':ptID'));
             $this->query->setParameter('ptID', $ptID, \PDO::PARAM_INT);
         }
     }

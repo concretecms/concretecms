@@ -4,8 +4,13 @@ $valt = Loader::helper('validation/token');
 $th = Loader::helper('text');
 $ip = Loader::helper('validation/ip'); ?>
 <style>
-    td.hidden-actions {
-        display: none;
+    span.ccm-conversation-display-author-name, #ccm-conversation-messages i.fa {
+        position: relative;
+        z-index: 20000;
+    }
+
+    div.ccm-popover.ccm-conversation-message-popover {
+        z-index: 20001;
     }
 </style>
 <div class="ccm-dashboard-content-full">
@@ -24,15 +29,15 @@ $ip = Loader::helper('validation/ip'); ?>
                     </div>
                 </div>
             </div>
-            <?php /* <div class="ccm-search-fields-row">
+
+            <div class="ccm-search-fields-row">
                 <div class="form-group">
-                    <?=$form->label('cmpMessageFilter', t('Filter by Flag'))?>
+                    <?=$form->label('cmpMessageFilter', t('Filter By'))?>
                     <div class="ccm-search-field-content">
-                        <?=$form->select('cmpMessageFilter', array('any'=>t('** Any')), $cmpFilterTypes) ?>
+                        <?=$form->select('cmpMessageFilter', $cmpFilterTypes, $cmpMessageFilter) ?>
                     </div>
                 </div>
-            </div>  */ ?>
-
+            </div>
             <div class="ccm-search-fields-row">
                 <div class="form-group form-group-full">
                     <?=$form->label('cmpMessageSort', t('Sort By'))?>
@@ -52,16 +57,18 @@ $ip = Loader::helper('validation/ip'); ?>
 
     <div data-search-element="results">
         <div class="table-responsive">
-            <table class="ccm-search-results-table">
+            <table id="ccm-conversation-messages" class="ccm-search-results-table">
                 <thead>
                 <tr>
+                    <th class="<?=$list->getSearchResultsClass('cnvMessageDateCreated')?>"><a href="<?=$list->getSortByURL('cnvMessageDateCreated', 'desc')?>"><?=t('Posted')?></a></th>
+                    <th><span><?=t('Author')?></span></th>
                     <th><span><?=t('Message')?></span></th>
-                    <th><span><?=t('Posted')?></span></th>
-                    <th></th>
+                    <th style="text-align: center"><span><?=t('Status')?></span></th>
                 </tr>
                 </thead>
                 <tbody>
                 <?php if (count($messages) > 0) {
+                    $dh = Core::make('date');
                     foreach($messages as $msg) {
                         $cnv = $msg->getConversationObject();
                         if(is_object($cnv)) {
@@ -69,62 +76,94 @@ $ip = Loader::helper('validation/ip'); ?>
                         }
                         $msgID = $msg->getConversationMessageID();
                         $cnvID = $cnv->getConversationID();
-                        if(!$msg->isConversationMessageApproved() && !$msg->isConversationMessageDeleted()) {
-                            $pendingClass = "pending";
-                        } else {
-                            $pendingClass = '';
-                        }
-                        if($msg->isConversationMessageDeleted()) {
-                            $deletedClass = "deleted";
-                        } else {
-                            $deletedClass = '';
-                        }
+                        $p = new Permissions($cnv);
+                        $author = $msg->getConversationMessageAuthorObject();
+                        $formatter = $author->getFormatter();
 
-                        if($msg->isConversationMessageFlagged()) {
-                            $flagClass = 'flagged';
-                        } else {
-                            $flagClass = '';
+                        $displayUnflagOption = $p->canFlagConversationMessage() && $msg->isConversationMessageFlagged();
+                        $displayUndeleteOption = $p->canDeleteConversationMessage() && $msg->isConversationMessageDeleted();
+
+                        $displayApproveOption = $p->canApproveConversationMessage() && (!$msg->isConversationMessageDeleted() && !$msg->isConversationMessageApproved() && !$msg->isConversationMessageFlagged());
+                        if (!$displayUnflagOption) {
+                            $displayFlagOption = $p->canFlagConversationMessage() && !$msg->isConversationMessageDeleted();
                         }
-                        $ui = $msg->getConversationMessageUserObject(); ?>
+                        $displayDeleteOption = $p->canDeleteConversationMessage() && !$msg->isConversationMessageDeleted();
+                        ?>
                         <tr>
                             <!-- <td><?=$form->checkbox('cnvMessageID[]', $msg->getConversationMessageID())?></td> -->
-                            <td class="message-cell">
+                            <td>
+                                <?=$dh->formatDateTime(strtotime($msg->getConversationMessageDateTime()))?>
+                            </td>
+                            <td>
+
+                                <div class="ccm-popover ccm-conversation-message-popover popover fade" data-menu="<?=$msg->getConversationMessageID()?>">
+                                    <div class="arrow"></div><div class="popover-inner">
+                                        <ul class="dropdown-menu">
+                                            <? if (is_object($page)) { ?>
+                                                <li><a href="<?=$page->getCollectionLink()?>#cnv<?=$cnv->getConversationID()?>Message<?=$msg->getConversationMessageID()?>"><?=t('View Conversation')?></a></li>
+                                                <? if ($displayFlagOption || $displayApproveOption || $displayDeleteOption || $displayUnflagOption || $displayUndeleteOption) { ?>
+                                                    <li class="divider"></li>
+                                                <? } ?>
+                                            <? } ?>
+                                            <?
+                                            if ($displayApproveOption) { ?>
+                                                <li><a href="#" data-message-action="approve" data-message-id="<?=$msg->getConversationMessageID()?>"><?=t('Approve')?></a></li>
+                                            <? } ?>
+                                            <?
+                                            if ($displayFlagOption) { ?>
+                                                <li><a href="#" data-message-action="flag" data-message-id="<?=$msg->getConversationMessageID()?>"><?=t('Flag as Spam')?></a></li>
+                                            <? } ?>
+                                            <?
+                                            if ($displayDeleteOption) { ?>
+                                                <li><a href="#" data-message-action="delete" data-message-id="<?=$msg->getConversationMessageID()?>"><?=t('Delete')?></a></li>
+                                            <? } ?>
+                                            <?
+                                            if ($displayUnflagOption) { ?>
+                                                <li><a href="#" data-message-action="unflag" data-message-id="<?=$msg->getConversationMessageID()?>"><?=t('Un-Flag As Spam')?></a></li>
+                                            <? } ?>
+                                            <?
+                                            if ($displayUndeleteOption) { ?>
+                                                <li><a href="#" data-message-action="undelete" data-message-id="<?=$msg->getConversationMessageID()?>"><?=t('Un-Delete Message')?></a></li>
+                                            <? } ?>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <p><span class="ccm-conversation-display-author-name"><?
+                                    echo tc(/*i18n: %s is the name of the author */ 'Authored', 'By %s', $formatter->getLinkedAdministrativeDisplayName());
+                                    ?></span></p>
+                                <?
+
+                                if (is_object($page)) { ?>
+                                    <div><?=$page->getCollectionPath()?></div>
+                                <? } ?>
+                            </td>
+                            <td class="message-cell" style="width: 33%">
                                 <div class="ccm-conversation-message-summary">
                                     <div class="message-output">
                                         <?=$msg->getConversationMessageBodyOutput(true)?>
                                     </div>
-                                    <?php if($flagClass) { ?>
-                                        <p class="message-status"><?php echo t('Message is flagged as spam.') ?></p>
-                                    <?php } ?>
-                                    <?php if($deletedClass) { ?>
-                                        <p class="message-status"><?php echo t('Message is currently deleted.') ?></p>
-                                    <?php } ?>
-                                    <?php if($pendingClass) { ?>
-                                        <p class="message-status"><?php echo t('Message is currently pending approval.') ?></p>
-                                    <?php } ?>
                                 </div>
                             </td>
-                            <td>
-                                <?=$msg->getConversationMessageDateTimeOutput('mdy_full_ts');?>
-                                <p><?
-                                    if(is_object($ui)) {
-                                        echo tc(/*i18n: %s is the name of the author */ 'Authored', 'By %s', $ui->getUserDisplayName());
-                                    } else {
-                                        echo t(/*i18n: when the author of a message is anonymous */ 'By Anonymous');
-                                    }
-                                    ?></p>
-
+                            <td style="text-align: center">
                                 <?
+                                if (!$msg->isConversationMessageApproved() && !$msg->isConversationMessageDeleted()) { ?>
+                                    <i class="fa fa-warning text-warning launch-tooltip" title="<?php echo t('Message has not been approved.')?>"></i>
+                                <? }
 
-                                if (is_object($page)) { ?>
-                                    <div><a href="<?=Loader::helper('navigation')->getLinkToCollection($page)?>"><?=$page->getCollectionPath()?></a></div>
+                                if ($msg->isConversationMessageDeleted()) { ?>
+                                    <i class="fa fa-trash launch-tooltip" title="<?php echo t('Message is deleted.')?>"></i>
+                                <? }
+
+                                if($msg->isConversationMessageFlagged()) { ?>
+                                    <i class="fa fa-flag text-danger launch-tooltip" title="<?php echo t('Message is flagged as spam.')?>"></i>
+                                <? }
+
+                                if ($msg->isConversationMessageApproved() && !$msg->isConversationMessageDeleted()) { ?>
+                                    <i class="fa fa-thumbs-up launch-tooltip" title="<?php echo t('Message is approved.')?>"></i>
                                 <? } ?>
                             </td>
-                            <td>
-                                <?php if (is_object($page)) { ?>
-                                    <a href="<?=Loader::helper('navigation')->getLinkToCollection($page)?>#cnv<?php echo $cnvID ?>Message<?php echo $msgID ?>" data-open-text="<?php echo t('View full message.') ?>" data-close-text="<?php echo t('Minimize message') ?>" class="read-all truncated btn"><i class="fa fa-share"></i></a>
-                                <?php } ?>
-                            </td>
+                            <? /*
                             <td class="hidden-actions">
                                 <div class="message-actions message-actions<?php echo $msgID ?>" data-id="<?php echo $msgID ?>">
                                     <ul>
@@ -151,6 +190,7 @@ $ip = Loader::helper('validation/ip'); ?>
                                         <li>
                                             <a class = "mark-user" data-rel-message-id="<?php echo $msgID ?>" href="#"><?php echo t('Mark all user posts as spam') ?></a>
                                         </li>
+                                        <? /*
                                         <li>
                                             <?php if(is_object($ui) && $ui->isActive()) { ?>
                                                 <a class = "deactivate-user" data-rel-message-id="<?php echo $msgID ?>" href="#"><?php echo t('Deactivate User') ?></a>
@@ -167,7 +207,8 @@ $ip = Loader::helper('validation/ip'); ?>
                                         </li>
                                     </ul>
                                 </div>
-                            </td>
+                            </td>*/ ?>
+
                         </tr>
                     <? }
                 }?>
@@ -176,6 +217,81 @@ $ip = Loader::helper('validation/ip'); ?>
         </div>
     </div>
 
+    <script type="text/javascript">
+        $(function() {
+            $('#ccm-conversation-messages tbody tr').each(function() {
+                $(this).concreteMenu({
+                    menu: $(this).find('div[data-menu]')
+                });
+            });
+
+            $('a[data-message-action=flag]').on('click', function(e) {
+                e.preventDefault();
+                $.concreteAjax({
+                    url: '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/conversations/flag_message',
+                    data: {
+                        'cnvMessageID': $(this).attr('data-message-id')
+                    },
+                    success: function(r) {
+                        window.location.reload();
+                    }
+                });
+            });
+
+            $('a[data-message-action=delete]').on('click', function(e) {
+                e.preventDefault();
+                $.concreteAjax({
+                    url: '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/conversations/delete_message',
+                    data: {
+                        'cnvMessageID': $(this).attr('data-message-id')
+                    },
+                    success: function(r) {
+                        window.location.reload();
+                    }
+                });
+            });
+
+            $('a[data-message-action=approve]').on('click', function(e) {
+                e.preventDefault();
+                $.concreteAjax({
+                    url: '<?=$controller->action('approve_message')?>',
+                    data: {
+                        'cnvMessageID': $(this).attr('data-message-id')
+                    },
+                    success: function(r) {
+                       window.location.reload();
+                    }
+                });
+            });
+
+            $('a[data-message-action=unflag]').on('click', function(e) {
+                e.preventDefault();
+                $.concreteAjax({
+                    url: '<?=$controller->action('unflag_message')?>',
+                    data: {
+                        'cnvMessageID': $(this).attr('data-message-id')
+                    },
+                    success: function(r) {
+                        window.location.reload();
+                    }
+                });
+            });
+
+            $('a[data-message-action=undelete]').on('click', function(e) {
+                e.preventDefault();
+                $.concreteAjax({
+                    url: '<?=$controller->action('undelete_message')?>',
+                    data: {
+                        'cnvMessageID': $(this).attr('data-message-id')
+                    },
+                    success: function(r) {
+                        window.location.reload();
+                    }
+                });
+            });
+
+        });
+    </script>
     <!-- END Body Pane -->
     <?=$list->displayPagingV2()?>
 

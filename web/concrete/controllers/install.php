@@ -70,7 +70,7 @@ class Install extends Controller
                 if (defined('INSTALL_STARTING_POINT') && INSTALL_STARTING_POINT) {
                     $spl = StartingPointPackage::getClass(INSTALL_STARTING_POINT);
                 } else {
-                    $spl = StartingPointPackage::getClass('standard');
+                    $spl = StartingPointPackage::getClass('elemental_full');
                 }
                 $this->set('installPackage', $spl->getPackageHandle());
                 $this->set('installRoutines', $spl->getInstallRoutines());
@@ -189,8 +189,7 @@ class Install extends Controller
             && function_exists('imagejpeg'));
         $this->set('mysqlTest', extension_loaded('pdo_mysql'));
         $this->set('i18nTest', function_exists('ctype_lower')
-            && function_exists('iconv')
-            && function_exists('mb_strlen'));
+           );
         $this->set('jsonTest', extension_loaded('json'));
         $this->set('xmlTest', function_exists('xml_parse') && function_exists('simplexml_load_file'));
         $this->set('fileWriteTest', $this->testFileWritePermissions());

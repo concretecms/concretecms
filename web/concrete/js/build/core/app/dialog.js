@@ -188,7 +188,7 @@ jQuery.fn.dialog.open = function(options) {
         }
     };
 
-    var finalSettings = {'autoOpen': false};
+    var finalSettings = {'autoOpen': false, 'data': {} };
     $.extend(finalSettings, defaults, options);
 
     if (finalSettings.element) {
@@ -199,6 +199,7 @@ jQuery.fn.dialog.open = function(options) {
         $.ajax({
             type: 'GET',
             url: finalSettings.href,
+            data: finalSettings.data,
             success: function(r) {
                 jQuery.fn.dialog.hideLoader();
                 // note the order here is very important in order to actually run javascript in

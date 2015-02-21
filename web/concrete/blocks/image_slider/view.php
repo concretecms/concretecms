@@ -38,11 +38,17 @@ $(document).ready(function(){
                 ?>
                 <?php if(is_object($f)) {
                     $tag = Core::make('html/image', array($f, false))->getTag();
-                    $tag->alt($row['title']);
+                    if($row['title']) {
+                    	$tag->alt($row['title']);
+                    }else{
+                    	$tag->alt("slide"); 
+                    }
                     print $tag; ?>
                 <?php } ?>
                 <div class="ccm-image-slider-text">
-                    <h2 class="ccm-image-slider-title"><?php echo $row['title'] ?></h2>
+                    <?php if($row['title']) { ?>
+                    	<h2 class="ccm-image-slider-title"><?php echo $row['title'] ?></h2>
+                    <?php } ?>
                     <?php echo $row['description'] ?>
                 </div>
                 </li>

@@ -9,6 +9,7 @@ if ($cp->canViewPageVersions()) {
 	$req->setCustomRequestUser(-1);
 	$req->setCurrentPage($c);
 	$controller = $c->getPageController();
+	$controller->runTask('view', array());
 	$view = $controller->getViewObject();
 	$response = new Response();
 	$content = $view->render();

@@ -52,6 +52,7 @@ $gf = $pt->getThemeGridFrameworkObject();
      data-area-menu-handle="<?= $a->getAreaID() ?>"
      data-area-enable-grid-container="<?= $a->isGridContainerEnabled() ?>"
      data-launch-area-menu="area-menu-a<?= $a->getAreaID() ?>"
+     data-area-custom-templates='<?=json_encode($a->getAreaCustomTemplates(), ENT_QUOTES)?>'
      class="<?= $class ?>">
 
     <? unset($class); ?>
@@ -60,7 +61,7 @@ $gf = $pt->getThemeGridFrameworkObject();
         if ($pt->supportsGridFramework() && $a->isGridContainerEnabled()) {
             echo $gf->getPageThemeGridFrameworkContainerStartHTML();
             echo $gf->getPageThemeGridFrameworkRowStartHTML();
-            printf('<div class="%s">', $gf->getPageThemeGridFrameworkColumnClassForSpan(
+            printf('<div class="%s">', $gf->getPageThemeGridFrameworkColumnClassesForSpan(
                                           $gf->getPageThemeGridFrameworkNumColumns()
             ));
             ?>

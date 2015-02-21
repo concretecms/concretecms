@@ -44,7 +44,8 @@
                     area = block.getArea(),
                     action = (data.action) ? data.action : CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/block/edit',
                     arEnableGridContainer = area.getEnableGridContainer() ? 1 : 0,
-                    postData = [
+                    templates = area.getCustomTemplates();
+                    var postData = [
                         {name: 'cID', value: block.getCID()},
                         {name: 'arHandle', value: area.getHandle()},
                         {name: 'arGridMaximumColumns', value: data.arGridMaximumColumns},
@@ -55,6 +56,15 @@
                     bID = block.getId(),
                     $container = block.getElem(),
                     prop;
+
+                if (templates) {
+                    for (var k in templates) {
+                        postData[postData.length] = {
+                            name: 'arCustomTemplates[' + k + ']',
+                            value: templates[k]
+                        };
+                    }
+                }
 
                 if (block.getAttr('menu')) {
                     block.getAttr('menu').destroy();
@@ -147,6 +157,16 @@
                     dragAreaBlock = data.dragAreaBlock;
                 }
 
+                var templates = area.getCustomTemplates();
+                if (templates) {
+                    for (var k in templates) {
+                        postData[postData.length] = {
+                            name: 'arCustomTemplate[' + k + ']',
+                            value: templates[k]
+                        };
+                    }
+                }
+
                 if (dragAreaBlock) {
                     dragAreaBlockID = dragAreaBlock.getId();
                 }
@@ -167,6 +187,9 @@
                 my.bindEvent('EditModeExitInlineSaved', function (e) {
                     Concrete.event.unbind(e);
                     saved = true;
+
+                    var panel = ConcretePanelManager.getByIdentifier('add-block');
+                    if ( panel && panel.pinned() ) panel.show();
                 });
                 my.bindEvent('EditModeExitInline', function (e) {
                     Concrete.event.unsubscribe(e);
@@ -176,6 +199,9 @@
                     $('#a' + area.getId() + '-bt' + btID).remove();
                     my.destroyInlineEditModeToolbars();
                     ConcreteEvent.fire('EditModeExitInlineComplete');
+
+                    var panel = ConcretePanelManager.getByIdentifier('add-block');
+                    if ( panel && panel.pinned() ) panel.show();
                 });
                 $.ajax({
                     type: 'GET',
@@ -569,11 +595,13 @@
                 l = pos.left;
 
             var tw = l + parseInt($toolbar.width());
-            if (tw > $window.width()) {
-                var overage = tw - (l + $container.width());
-                $toolbar.css('left', l - overage);
-            } else {
-                $toolbar.css('left', l);
+            if ($window.width() > $toolbar.width()) {
+                if (tw > $window.width()) {
+                    var overage = tw - (l + $container.width());
+                    $toolbar.css('left', l - overage);
+                } else {
+                    $toolbar.css('left', l);
+                }
             }
             $toolbar.css('opacity', 1);
             $toolbar.find('.dialog-launch').dialog();

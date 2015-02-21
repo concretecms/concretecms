@@ -152,9 +152,9 @@ class ImporterTest extends \FileStorageTestCase {
         mkdir($this->getStorageDirectory());
         $this->getStorageLocation();
 
-        $file = DIR_BASE . '/concrete/themes/default/images/inneroptics_dot_net_aspens.jpg';
+        $file = DIR_BASE . '/concrete/themes/elemental/images/background-slider-night-road.png';
         $fi = new Importer();
-        $fo = $fi->import($file, 'Aspens.png');
+        $fo = $fi->import($file, 'background-slider-night-road.png');
         $type = $fo->getTypeObject();
         $this->assertEquals(\Concrete\Core\File\Type\Type::T_IMAGE, $type->getGenericType());
 
@@ -178,10 +178,10 @@ class ImporterTest extends \FileStorageTestCase {
         $incomingPath = $this->getStorageDirectory() . '/incoming';
         mkdir($incomingPath);
 
-        copy(DIR_BASE . '/concrete/themes/default/images/inneroptics_dot_net_aspens.jpg', $incomingPath . '/trees.jpg');
+        copy(DIR_BASE . '/concrete/themes/elemental/images/background-slider-night-road.png', $incomingPath . '/trees.png');
 
         $fi = new Importer();
-        $fo = $fi->importIncomingFile('trees.jpg');
+        $fo = $fi->importIncomingFile('trees.png');
         $this->assertInstanceOf('\Concrete\Core\File\Version', $fo);
         $type = $fo->getTypeObject();
         $this->assertEquals(\Concrete\Core\File\Type\Type::T_IMAGE, $type->getGenericType());

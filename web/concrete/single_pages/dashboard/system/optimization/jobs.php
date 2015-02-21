@@ -151,7 +151,7 @@ $dh = Core::make('helper/date');
     						<h4><?=t('No Queueing')?></h4>
     						
     						<div class="form-group">
-    						    <textarea rows="2" class="ccm-default-jobs-url form-control"><?=BASE_URL . $view->url('/tools/required/jobs?auth=' . $auth . '&jID=' . $j->getJobID())?></textarea>
+    						    <textarea rows="2" class="ccm-default-jobs-url form-control"><?=BASE_URL . URL::to('/ccm/system/jobs?auth=' . $auth . '&jID=' . $j->getJobID())?></textarea>
                             </div>
                             
     						<div class="alert alert-info">
@@ -163,13 +163,13 @@ $dh = Core::make('helper/date');
     						<p><?=t("First, schedule this URL for when you'd like this job to run:")?></p>
     						
     						<div class="form-group">
-    						    <textarea rows="2" class="ccm-default-jobs-url form-control"><?=BASE_URL . REL_DIR_FILES_TOOLS_REQUIRED . '/jobs/run_single?auth=' . $auth . '&jID=' . $j->getJobID()?></textarea>
+    						    <textarea rows="2" class="ccm-default-jobs-url form-control"><?php echo BASE_URL . URL::to('/ccm/system/jobs/run_single?auth=' . $auth . '&jID=' . $j->getJobID())?></textarea>
                             </div>
                             
     						<p><?=t('Then, make sure this URL is scheduled to run frequently, like every 3-5 minutes:')?></p>
     						
     						<div class="form-group">
-    						    <textarea rows="2" class="ccm-default-jobs-url form-control"><?=BASE_URL . REL_DIR_FILES_TOOLS_REQUIRED . '/jobs/check_queue?auth=' . $auth?></textarea>
+    						    <textarea rows="2" class="ccm-default-jobs-url form-control"><?=BASE_URL . URL::to('/ccm/system/jobs/check_queue?auth=' . $auth)?></textarea>
     						</div>
     						
     						<div class="alert alert-info">
@@ -179,7 +179,7 @@ $dh = Core::make('helper/date');
     					<? } else { ?>
     						<p><?=t('To run the "%s" job, automate the following URL using cron or a similar system:', $j->getJobName())?></p><br/>
     						<div>
-    						    <textarea rows="2" class="ccm-default-jobs-url form-control"><?=BASE_URL . $view->url('/tools/required/jobs/run_single?auth=' . $auth . '&jID=' . $j->getJobID())?></textarea>
+    						    <textarea rows="2" class="ccm-default-jobs-url form-control"><?=BASE_URL . URL::to('/ccm/system/jobs/run_single?auth=' . $auth . '&jID=' . $j->getJobID())?></textarea>
                             </div>
     					<? } ?>	
     				</div>
@@ -215,7 +215,7 @@ $dh = Core::make('helper/date');
     			<td><?=$job->getJobName() ?></td>
     			<td><?=$job->getJobDescription() ?></td> 
     			<td><?if(!$job->invalid):?>
-    				<a href="<?=$view->action('install', $job->jHandle)?>" class="btn btn-small pull-right"><?=t('Install')?></a>
+    				<a href="<?=$view->action('install', $job->jHandle)?>" class="btn btn-sm btn-default pull-right"><?=t('Install')?></a>
     			<?endif?></td>
     		</tr>	
 		<?endforeach?>
@@ -229,7 +229,7 @@ if (is_object($djs)) { ?>
     <h4><?=t('Automation Instructions')?></h4>
     <p><?=t('To run all the jobs in the <a href="%s">%s</a> Job Set, schedule this URL using cron or a similar system:', $view->url('/dashboard/system/optimization/jobs', 'edit_set', $djs->getJobSetID()), $djs->getJobSetDisplayName())?></p>
     <div>
-        <input type="text" style="width: 700px" class="ccm-default-jobs-url" value="<?=BASE_URL . $view->url('/tools/required/jobs?auth=' . $auth)?>" />
+        <input type="text" style="width: 700px" class="ccm-default-jobs-url" value="<?=BASE_URL . $view->url('/ccm/system/jobs?auth=' . $auth)?>" />
     </div>
 </div>
 <? } ?>
@@ -513,7 +513,7 @@ $(function() {
 		];
 		if (jSupportsQueue) {
 			ccm_triggerProgressiveOperation(
-				CCM_TOOLS_PATH + '/jobs/run_single',
+				'<?php echo addslashes(URL::to('/ccm/system/jobs/run_single'))?>',
 				params,
 				jName, function(r) {
 					$('.ui-dialog-content').dialog('close');
@@ -524,7 +524,7 @@ $(function() {
 			);
 		} else {
 			$.ajax({ 
-				url: CCM_TOOLS_PATH + '/jobs/run_single',
+				url: '<?php echo addslashes(URL::to('/ccm/system/jobs/run_single'))?>',
 				data: params,
 				dataType: 'json',
 				cache: false,

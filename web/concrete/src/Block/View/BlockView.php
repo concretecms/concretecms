@@ -158,6 +158,12 @@ class BlockView extends AbstractView
                     if ($this->block) {
                         $bFilename = $this->block->getBlockFilename();
                         $bvt = new BlockViewTemplate($this->block);
+                        if (!$bFilename && is_object($this->area)) {
+                            $templates = $this->area->getAreaCustomTemplates();
+                            if (isset($templates[$this->block->getBlockTypeHandle()])) {
+                                $bFilename = $templates[$this->block->getBlockTypeHandle()];
+                            }
+                        }
                     } else {
                         $bvt = new BlockViewTemplate($this->blockType);
                     }
