@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "cffa013e81e9c1e0937f89050facef13",
+    "hash": "ef05c9831216be2935cdc348df0cb571",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -1536,16 +1536,16 @@
         },
         {
             "name": "mlocati/concrete5-translation-library",
-            "version": "1.1.0",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mlocati/concrete5-translation-library.git",
-                "reference": "4608e7ec8e7578e65a2b6865cf6af2269b610bf2"
+                "reference": "52b4b809ee7c47b0516438b14c528410f103335a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mlocati/concrete5-translation-library/zipball/4608e7ec8e7578e65a2b6865cf6af2269b610bf2",
-                "reference": "4608e7ec8e7578e65a2b6865cf6af2269b610bf2",
+                "url": "https://api.github.com/repos/mlocati/concrete5-translation-library/zipball/52b4b809ee7c47b0516438b14c528410f103335a",
+                "reference": "52b4b809ee7c47b0516438b14c528410f103335a",
                 "shasum": ""
             },
             "require": {
@@ -1582,7 +1582,7 @@
                 "translate",
                 "translation"
             ],
-            "time": "2015-02-16 15:08:48"
+            "time": "2015-02-21 13:45:26"
         },
         {
             "name": "mobiledetect/mobiledetectlib",
