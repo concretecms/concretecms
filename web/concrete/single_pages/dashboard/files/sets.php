@@ -68,12 +68,14 @@ $dh = Core::make('helper/date');
 
             <table class="ccm-search-results-table">
                 <thead>
-                    <th></th>
-                    <th><span><?=t('Thumbnail')?></span></th>
-                    <th><a href="javascript:void(0)" class="sort-link" data-sort="type"    ><?=t('Type')?></a></th>
-                    <th><a href="javascript:void(0)" class="sort-link" data-sort="title"   ><?=t('Title')?></a></th>
-                    <th><a href="javascript:void(0)" class="sort-link" data-sort="filename"><?=t('File name')?></a></th>
-                    <th><a href="javascript:void(0)" class="sort-link" data-sort="added"   ><?=t('Added')?></a></th>
+                    <tr>
+                        <th></th>
+                        <th><span><?=t('Thumbnail')?></span></th>
+                        <th><a href="javascript:void(0)" class="sort-link" data-sort="type"    ><?=t('Type')?></a></th>
+                        <th><a href="javascript:void(0)" class="sort-link" data-sort="title"   ><?=t('Title')?></a></th>
+                        <th><a href="javascript:void(0)" class="sort-link" data-sort="filename"><?=t('File name')?></a></th>
+                        <th><a href="javascript:void(0)" class="sort-link" data-sort="added"   ><?=t('Added')?></a></th>
+                    </tr>
                 </thead>
 
                 <tbody class="ccm-file-set-file-list">
@@ -110,9 +112,9 @@ $dh = Core::make('helper/date');
 
         function ccmFileSetResetSortIcons()
         {
-            $(".ccm-search-results-table thead th").removeClass(baseClass + 'asc');
-            $(".ccm-search-results-table thead th").removeClass(baseClass + 'desc');
-            $(".ccm-search-results-table thead th a").css("color", "#93bfd5");
+            $(".ccm-search-results-table thead tr th").removeClass(baseClass + 'asc');
+            $(".ccm-search-results-table thead tr th").removeClass(baseClass + 'desc');
+            $(".ccm-search-results-table thead tr th a").css("color", "#93bfd5");
         }
 
         function ccmFileSetDoSort()
@@ -136,7 +138,11 @@ $dh = Core::make('helper/date');
                 var aVal = typeof( aTD.attr('data-sort') ) == 'undefined' ? aTD.text().toUpperCase() : parseInt(aTD.attr('data-sort'));
                 var bVal = typeof( bTD.attr('data-sort') ) == 'undefined' ? bTD.text().toUpperCase() : parseInt(bTD.attr('data-sort'));
 
-                return asc ? (aVal < bVal) : (aVal > bVal);
+                if (asc) {
+                    return aVal < bVal ? -1 : 1;
+                } else {
+                    return bVal < aVal ? -1 : 1;
+                }
             });
             sortableList.append(listItems);
         }
