@@ -112,6 +112,10 @@ abstract class Job extends Object
     // Job Retrieval
     // ==============
 
+    /**
+     * @param bool $scheduledOnly
+     * @return Job[]
+     */
     public static function getList($scheduledOnly = false)
     {
         $db = Loader::db();
@@ -240,7 +244,7 @@ abstract class Job extends Object
 
     protected static function getClassName($jHandle, $pkgHandle = null)
     {
-        $class = core_class('Job\\' . camelcase($jHandle), $pkgHandle);
+        $class = overrideable_core_class('Job\\' . camelcase($jHandle), DIRNAME_JOBS . '/' . $jHandle . '.php', $pkgHandle);
         return $class;
     }
 

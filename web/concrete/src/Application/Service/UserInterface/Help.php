@@ -180,7 +180,7 @@ class Help
     /**
      * @param $type
      * @param $identifier
-     * @return bool
+     * @return void|bool
      */
     public function notify($type, $identifier)
     {
@@ -214,7 +214,6 @@ class Help
         </div>
 EOT;
         print $html;
-        return true;
     }
 
     /**

@@ -1,6 +1,5 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-$token = Loader::helper('validation/token')->generate('composer');
 $cID = $c->getCollectionID();
 ?>
 
@@ -12,7 +11,7 @@ $cID = $c->getCollectionID();
 		<? Loader::helper('concrete/composer')->display($pagetype, $c); ?>
 	</form>
 
-	<div class="ccm-panel-detail-form-actions">
+	<div class="ccm-panel-detail-form-actions dialog-buttons">
 		<? Loader::helper('concrete/composer')->displayButtons($pagetype, $c); ?>
 	</div>
 </section>
@@ -60,7 +59,7 @@ ConcretePageComposerDetail = {
 	    	my.disableAutosave();
 	    	$.concreteAjax({
 	    		'url': '<?=$controller->action('discard')?>',
-	    		'data': {token: '<?=$token?>', cID: '<?=$cID?>'},
+	    		'data': {cID: '<?=$cID?>'},
 	    		success: function(r) {
 					window.location.href = r.redirectURL;
 	    		}

@@ -16,6 +16,17 @@ class Controller extends AttributeTypeController  {
 		return $list;
 	}
 
+	public function filterByAttribute(AttributedItemList $list, $boolean)
+	{
+		$qb = $list->getQueryObject();
+		$column = sprintf('ak_%s', $this->attributeKey->getAttributeKeyHandle());
+		if ($boolean) {
+			$qb->andWhere("{$column} = 1");
+		} else {
+			$qb->andWhere("{$column} <> 1 or {$column} is null");
+		}
+	}
+
 	public function getValue() {
 		$db = Loader::db();
 		$value = $db->GetOne("select value from atBoolean where avID = ?", array($this->getAttributeValueID()));

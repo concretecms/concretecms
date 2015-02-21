@@ -5,7 +5,6 @@
             $('.tree-view-template').ccmtopicstree({  // run first time around to get default tree if new.
                 'treeID': <?php echo $tree->getTreeID(); ?>,
                 'chooseNodeInForm': true,
-                'allChildren': true,
                 'noDrag' : true,
                 //'selectMode': 2,
                 <?php if($parentNode) { ?>

@@ -8,7 +8,7 @@ use Loader;
 class File
 {
 
-    public static function getFileSetFiles(FileSet $fs)
+    public static function getFileSetFiles(Set $fs)
     {
         $db = Loader::db();
         $r = $db->query('SELECT fsfID FROM FileSetFiles WHERE fsID = ?', array($fs->getFileSetID()));

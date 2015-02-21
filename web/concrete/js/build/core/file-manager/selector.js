@@ -11,8 +11,12 @@
             options = $.extend({
                 'chooseText': ccmi18n_filemanager.chooseNew,
                 'inputName': 'concreteFile',
-                'fID': false
+                'fID': false,
+                'filters': []
             }, options);
+
+        var dialogOpts = {};
+        dialogOpts.filters = options.filters;
 
         my.$element = $element;
         my.options = options;
@@ -25,7 +29,7 @@
         my.$element.on('click', 'div.ccm-file-selector-choose-new', function() {
             ConcreteFileManager.launchDialog(function(data) {
                 my.loadFile(data.fID);
-            });
+            }, dialogOpts);
             return false;
         });
 

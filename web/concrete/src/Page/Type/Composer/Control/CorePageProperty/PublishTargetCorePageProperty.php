@@ -18,7 +18,11 @@ class PublishTargetCorePageProperty extends CorePageProperty
     public function getPageTypeComposerControlDraftValue()
     {
         if (is_object($this->page)) {
-            return $this->page->getPageDraftTargetParentPageID();
+            if ($this->page->isPageDraft()) {
+                return $this->page->getPageDraftTargetParentPageID();
+            } else {
+                return $this->page->getCollectionParentID();
+            }
         } else if ($this->getTargetParentPageID()) {
             return $this->getTargetParentPageID();
         }

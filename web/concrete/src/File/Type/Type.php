@@ -9,13 +9,13 @@ class Type
 {
 
     // File Type Constants
-    const T_IMAGE = 1;
-    const T_VIDEO = 2;
-    const T_TEXT = 3;
-    const T_AUDIO = 4;
-    const T_DOCUMENT = 5;
-    const T_APPLICATION = 6;
-    const T_UNKNOWN = 99;
+    const T_IMAGE = 1;          //!< @javascript-exported
+    const T_VIDEO = 2;          //!< @javascript-exported
+    const T_TEXT = 3;           //!< @javascript-exported
+    const T_AUDIO = 4;          //!< @javascript-exported
+    const T_DOCUMENT = 5;       //!< @javascript-exported
+    const T_APPLICATION = 6;    //!< @javascript-exported
+    const T_UNKNOWN = 99;       //!< @javascript-exported
 
     public $pkgHandle = false;
 

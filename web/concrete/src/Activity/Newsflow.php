@@ -2,8 +2,6 @@
 namespace Concrete\Core\Activity;
 
 use Config;
-use Package;
-use Environment;
 use Marketplace;
 use Concrete\Core\File\Service\File;
 use Concrete\Core\Activity\NewsflowItem;
@@ -20,10 +18,22 @@ use Concrete\Core\Activity\NewsflowSlotItem;
 class Newsflow
 {
 
+    /**
+     * Constant for if newsflow is manually disabled (like through a config entry)
+     */
     const E_NEWSFLOW_SUPPORT_MANUALLY_DISABLED = 21;
 
+    /**
+     * @var bool if the site is connected to concrete5.org
+     */
     protected $isConnected = false;
+    /**
+     * @var bool|int if there is a connection error and the error number
+     */
     protected $connectionError = false;
+    /**
+     * @var null|NewsflowSlotItem[]
+     */
     protected $slots = null;
 
     public function __construct()

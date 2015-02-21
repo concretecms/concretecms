@@ -1,6 +1,6 @@
 <?php
-
 namespace Concrete\Core\Multilingual\Page\Section;
+
 use Concrete\Core\Page\Page;
 use Database;
 use Concrete\Core\Multilingual\Page\Event;
@@ -12,6 +12,15 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class Section extends Page
 {
+    public function getPermissionResponseClassName()
+    {
+        return '\\Concrete\\Core\\Permission\\Response\\MultilingualSectionResponse';
+    }
+
+    public function getPermissionObjectKeyCategoryHandle()
+    {
+        return 'multilingual_section';
+    }
 
     /**
      * @var string
@@ -23,12 +32,44 @@ class Section extends Page
      */
     public $msLanguage;
 
-    public static function assign($c, $language, $country)
+    /**
+     * @var int
+     */
+    protected $msNumPlurals;
+
+    /**
+     * @var string
+     */
+    protected $msPluralRule;
+
+    public static function assign($c, $language, $country, $numPlurals = null, $pluralRule = '')
     {
+        $country = (string) $country;
+        $data = array(
+            'cID' => $c->getCollectionID(),
+            'msLanguage' => $language,
+            'msCountry' => $country,
+        );
+        $pluralRule = (string) $pluralRule;
+        if (empty($numPlurals) || ($pluralRule === '')) {
+            $locale = $language;
+            if ($country !== '') {
+                $locale .= '_' . $country;
+            }
+            $localeInfo = \Gettext\Languages\Language::getById($locale);
+            if ($localeInfo) {
+                $numPlurals = count($localeInfo->categories);
+                $pluralRule = $localeInfo->formula;
+            }
+        }
+        if ((!empty($numPlurals)) && ($pluralRule !== '')) {
+            $data['msNumPlurals'] = $numPlurals;
+            $data['msPluralRule'] = $pluralRule;
+        }
         $db = Database::get();
         $db->Replace(
             'MultilingualSections',
-            array('cID' => $c->getCollectionID(), 'msLanguage' => $language, 'msCountry' => $country),
+            $data,
             array('cID'),
             true
         );
@@ -61,6 +102,9 @@ class Section extends Page
             $obj = parent::getByID($cID, $cvID, '\Concrete\Core\Multilingual\Page\Section\Section');
             $obj->msLanguage = $r['msLanguage'];
             $obj->msCountry = $r['msCountry'];
+            $obj->msNumPlurals = $r['msNumPlurals'];
+            $obj->msPluralRule = $r['msPluralRule'];
+
             return $obj;
         }
 
@@ -75,15 +119,19 @@ class Section extends Page
     {
         $db = Database::get();
         $r = $db->GetRow(
-            'select cID, msLanguage, msCountry from MultilingualSections where msLanguage = ?',
+            'select cID, msLanguage, msCountry, msNumPlurals, msPluralRule from MultilingualSections where msLanguage = ?',
             array($language)
         );
         if ($r && is_array($r) && $r['msLanguage']) {
             $obj = parent::getByID($r['cID'], 'RECENT', '\Concrete\Core\Multilingual\Page\Section\Section');
             $obj->msLanguage = $r['msLanguage'];
             $obj->msCountry = $r['msCountry'];
+            $obj->msNumPlurals = $r['msNumPlurals'];
+            $obj->msPluralRule = $r['msPluralRule'];
+
             return $obj;
         }
+
         return false;
     }
 
@@ -96,18 +144,21 @@ class Section extends Page
         $locale = explode('_', $locale);
         $db = Database::get();
         $r = $db->GetRow(
-            'select cID, msLanguage, msCountry from MultilingualSections where msLanguage = ? and msCountry = ?',
+            'select cID, msLanguage, msCountry, msNumPlurals, msPluralRule from MultilingualSections where msLanguage = ? and msCountry = ?',
             array($locale[0], $locale[1])
         );
         if ($r && is_array($r) && $r['msLanguage']) {
             $obj = parent::getByID($r['cID'], 'RECENT', '\Concrete\Core\Multilingual\Page\Section\Section');
             $obj->msLanguage = $r['msLanguage'];
             $obj->msCountry = $r['msCountry'];
+            $obj->msNumPlurals = $r['msNumPlurals'];
+            $obj->msPluralRule = $r['msPluralRule'];
+
             return $obj;
         }
+
         return false;
     }
-
 
     /**
      * gets the MultilingualSection object for the current section of the site
@@ -122,6 +173,7 @@ class Section extends Page
                 $lang = self::getBySectionOfSite($c);
             }
         }
+
         return $lang;
     }
 
@@ -136,6 +188,7 @@ class Section extends Page
             }
         }
         $section = static::getByLanguage($explode[0]);
+
         return $section;
     }
 
@@ -173,6 +226,7 @@ class Section extends Page
         if ($this->getCountry()) {
             $locale .= '_' . $this->getCountry();
         }
+
         return $locale;
     }
 
@@ -186,6 +240,7 @@ class Section extends Page
         } catch (Exception $e) {
             $text = $this->msLanguage;
         }
+
         return $text;
     }
 
@@ -197,6 +252,32 @@ class Section extends Page
     public function getCountry()
     {
         return $this->msCountry;
+    }
+
+    /**
+     * Returns the number of plural forms
+     * @return int
+     * @example For Japanese: returns 1
+     * @example For English: returns 2
+     * @example For French: returns 2
+     * @example For Russian returns 3
+     */
+    public function getNumberOfPluralForms()
+    {
+        return (int) $this->msNumPlurals;
+    }
+
+    /**
+     * Returns the rule to determine which plural we should use (in gettext notation)
+     * @return string
+     * @example For Japanese: returns '0'
+     * @example For English: returns 'n != 1'
+     * @example For French: returns 'n > 1'
+     * @example For Russian returns '(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2)'
+     */
+    public function getPluralsRule()
+    {
+        return (string) $this->msPluralRule;
     }
 
     public static function registerPage($page)
@@ -230,11 +311,11 @@ class Section extends Page
                 $pde = new Event($page);
                 $pde->setLocale($ms->getLocale());
                 \Events::dispatch('on_multilingual_page_relate', $pde);
+
                 return $mpRelationID;
             }
         }
     }
-
 
     public static function unregisterPage($page)
     {
@@ -312,6 +393,7 @@ class Section extends Page
             'select mpRelationID from MultilingualPageRelations where cID = ?',
             array($page->getCollectionID())
         );
+
         return $mpRelationID > 0;
     }
 
@@ -350,11 +432,10 @@ class Section extends Page
                             $mpRelationID,
                             $oldPage->getCollectionID(),
                             $msx->getLanguage(),
-                            $msx->getLocale()
+                            $msx->getLocale(),
                         )
                     );
                 }
-
             }
             $v = array($mpRelationID, $newPage->getCollectionID(), $ms->getLocale());
             $cID = $db->GetOne(
@@ -375,8 +456,6 @@ class Section extends Page
         }
     }
 
-
-
     public static function isMultilingualSection($cID)
     {
         if (is_object($cID)) {
@@ -384,7 +463,7 @@ class Section extends Page
         }
         $db = Database::get();
         $r = $db->GetRow(
-            'select cID, msLanguage, msCountry from MultilingualSections where cID = ?',
+            'select cID, msLanguage, msCountry, msNumPlurals, msPluralRule from MultilingualSections where cID = ?',
             array($cID)
         );
         if ($r && is_array($r) && $r['msLanguage']) {
@@ -422,6 +501,7 @@ class Section extends Page
         if (!$ids) {
             $ids = array();
         }
+
         return $ids;
     }
 
@@ -437,6 +517,7 @@ class Section extends Page
                 }
             }
         }
+
         return $pages;
     }
 
@@ -447,9 +528,10 @@ class Section extends Page
     {
         $db = Database::get();
         $ids = static::getIDList();
-        $locale = explode('_' , $this->getLocale());
+        $locale = explode('_', $this->getLocale());
         if (in_array($page->getCollectionID(), $ids)) {
             $cID = $db->GetOne('select cID from MultilingualSections where msLanguage = ? and msCountry = ?', array($locale[0], $locale[1]));
+
             return $cID;
         }
         $mpRelationID = $db->GetOne(
@@ -461,26 +543,36 @@ class Section extends Page
                 'select cID from MultilingualPageRelations where mpRelationID = ? and mpLocale = ?',
                 array($mpRelationID, $this->getLocale())
             );
+
             return $cID;
         }
     }
 
     /**
-     * @param Section $section
-     * @return \Concrete\Core\Multilingual\Page\Section\Translation[] $translations
+     * Loads the translations of this multilingual section
+     * @param bool $untranslatedFirst Set to true to have untranslated strings first
+     * @return \Gettext\Translations
      */
-    public function getSectionInterfaceTranslations()
+    public function getSectionInterfaceTranslations($untranslatedFirst = false)
     {
         $translations = new Translations();
+        $translations->setLanguage($this->getLocale());
+        $translations->setPluralForms($this->getNumberOfPluralForms(), $this->getPluralsRule());
         $db = \Database::get();
-        $r = $db->query('select mtID, (if(mt.msgstr = "", 0, 1)) as completed from MultilingualTranslations mt where mtSectionID = ? order by completed asc, msgid asc', array($this->getCollectionID()));
+        $r = $db->query(
+            "select *
+            from MultilingualTranslations
+            where mtSectionID = ?
+            order by ".($untranslatedFirst ? "if(ifnull(msgstr, '') = '', 0, 1), " : "")."mtID",
+            array($this->getCollectionID())
+        );
         while ($row = $r->fetch()) {
-            $t = Translation::getByID($row['mtID']);
-            if (is_object($t)) {
+            $t = Translation::getByRow($row);
+            if (isset($t)) {
                 $translations[] = $t;
             }
         }
+
         return $translations;
     }
-
 }

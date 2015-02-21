@@ -15,8 +15,9 @@ class ValidationServiceProvider extends ServiceProvider {
 			'helper/validation/numbers' => '\Concrete\Core\Utility\Service\Validation\Numbers',
 			'helper/validation/strings' => '\Concrete\Core\Utility\Service\Validation\Strings',
 			'helper/validation/banned_words' => '\Concrete\Core\Validation\BannedWord\Service',
-			'helper/security' => '\Concrete\Core\Validation\SanitizeService'
+			'helper/security' => '\Concrete\Core\Validation\SanitizeService',
 
+			'captcha' => '\Concrete\Core\Captcha\Service'
 		);
 		$registers = array(
 			'helper/validation/token' => '\Concrete\Core\Validation\CSRF\Token',

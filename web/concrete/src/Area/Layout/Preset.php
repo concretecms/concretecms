@@ -7,6 +7,26 @@ use \Concrete\Core\Foundation\Object;
 class Preset extends Object
 {
 
+    /**
+     * @var int
+     */
+    public $arLayoutPresetID;
+
+    /**
+     * @var string
+     */
+    public $arLayoutPresetName;
+
+    /**
+     * @var int
+     */
+    public $arLayoutID;
+
+    /**
+     * @param Layout $arLayout
+     * @param string $name
+     * @return Preset
+     */
     public static function add(Layout $arLayout, $name)
     {
         $db = Loader::db();
@@ -20,6 +40,9 @@ class Preset extends Object
         return static::getByID($db->Insert_ID());
     }
 
+    /**
+     * @return Preset[]
+     */
     public static function getList()
     {
         $db = Loader::db();
@@ -34,6 +57,10 @@ class Preset extends Object
         return $presets;
     }
 
+    /**
+     * @param int $arLayoutPresetID
+     * @return static
+     */
     public static function getByID($arLayoutPresetID)
     {
         $db = Loader::db();
@@ -62,26 +89,41 @@ class Preset extends Object
     }
 
 
+    /**
+     * @return int
+     */
     public function getAreaLayoutPresetID()
     {
         return $this->arLayoutPresetID;
     }
 
+    /**
+     * @return string
+     */
     public function getAreaLayoutPresetName()
     {
         return $this->arLayoutPresetName;
     }
 
+    /**
+     * @return int
+     */
     public function getAreaLayoutID()
     {
         return $this->arLayoutID;
     }
 
+    /**
+     * @return CustomLayout|ThemeGridLayout|null
+     */
     public function getAreaLayoutObject()
     {
         return Layout::getByID($this->arLayoutID);
     }
 
+    /**
+     * @param Layout $arLayout
+     */
     public function updateAreaLayoutObject(Layout $arLayout)
     {
         $db = Loader::db();
@@ -95,6 +137,9 @@ class Preset extends Object
         $this->arLayoutID = $arLayout->getAreaLayoutID();
     }
 
+    /**
+     * @param string $arLayoutPresetName
+     */
     public function updateName($arLayoutPresetName)
     {
         $db = Loader::db();
@@ -107,6 +152,5 @@ class Preset extends Object
         );
         $this->arLayoutPresetName = $arLayoutPresetName;
     }
-
 
 }

@@ -211,6 +211,14 @@
       <NOTNULL/>
       <DEFAULT value=""/>
     </field>
+    <field name="msNumPlurals" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="2"/>
+    </field>
+    <field name="msPluralRule" type="C" size="400">
+      <NOTNULL/>
+      <DEFAULT value="(n != 1)"/>
+    </field>
   </table>
   <table name="MultilingualPageRelations">
     <field name="mpRelationID" type="I" size="10">
@@ -232,7 +240,7 @@
       <NOTNULL/>
     </field>
   </table>
-    <table name="MultilingualTranslations">
+  <table name="MultilingualTranslations">
     <field name="mtID" type="I" size="11">
         <KEY/>
         <AUTOINCREMENT/>
@@ -246,7 +254,11 @@
     <field name="msgid" type="X">
         <NOTNULL/>
     </field>
+    <field name="msgidPlural" type="X">
+    </field>
     <field name="msgstr" type="X">
+    </field>
+    <field name="msgstrPlurals" type="X">
     </field>
     <field name="context" type="X">
     </field>
@@ -704,7 +716,7 @@
        <col>gasID</col>
    </index>
   </table>
-  <table name="Conversations">
+    <table name="Conversations">
     <field name="cnvID" type="I" size="10">
       <key/>
       <autoincrement/>
@@ -753,6 +765,18 @@
       <default value="0" />
     </field>
     <field name="cnvFileExtensions" type="X">
+    </field>
+    <field name="cnvNotificationOverridesEnabled" type="I1">
+        <unsigned />
+        <notnull />
+        <default value="0" />
+    </field>
+    <field name="cnvSendNotification" type="I1">
+        <unsigned />
+        <notnull />
+        <default value="0" />
+    </field>
+    <field name="cnvNotificationEmailAddress" type="X">
     </field>
     <index name="cID">
         <col>cID</col>
@@ -825,6 +849,8 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
   </field>
+  <field name="cnvMessageAuthorName" type="C" size="255" />
+  <field name="cnvMessageAuthorEmail" type="C" size="255" />
     <field name="cnvMessageSubmitIP" type="B" size="32" />
     <field name="cnvMessageSubmitUserAgent" type="X2" />
     <field name="cnvMessageLevel" type="I" size="10">
@@ -2910,6 +2936,25 @@
             <col>pkID</col>
         </index>
     </table>
+    <table name="ConversationPermissionAddMessageAccessList">
+        <field name="paID" type="I" size="10">
+            <key/>
+            <default value="0"/>
+            <unsigned/>
+        </field>
+        <field name="peID" type="I" size="10">
+            <key/>
+            <default value="0"/>
+            <unsigned/>
+        </field>
+        <field name="permission" type="C" size="1">
+            <notnull/>
+            <default value="A"/>
+        </field>
+        <index name="peID">
+            <col>peID</col>
+        </index>
+    </table>
 
   <table name="FileSetPermissionFileTypeAccessList">
     <field name="paID" type="I" size="10">
@@ -3818,6 +3863,7 @@
       <col>cRequiresReindex</col>
   </index>
   </table>
+    <!--
   <table name="PageStatistics">
     <opt platform="MYSQL">ENGINE=MYISAM</opt>
     <opt platform="MYSQLT">ENGINE=MYISAM</opt>
@@ -3851,6 +3897,7 @@
       <col>uID</col>
     </index>
   </table>
+  -->
   <table name="PageThemes">
     <field name="pThemeID" type="I" size="10">
       <key/>
@@ -5101,7 +5148,7 @@
       <UNSIGNED/>
     </field>
     <field name="handle" type="C" size="32"/>
-    <field name="body" type="C" size="8192">
+    <field name="body" type="X2">
       <NOTNULL/>
     </field>
     <field name="md5" type="C" size="32">
@@ -5339,7 +5386,5 @@
             <notnull />
         </field>
     </table>
-
-
 
 </schema>

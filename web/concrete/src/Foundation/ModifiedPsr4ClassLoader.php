@@ -86,7 +86,6 @@ class ModifiedPsr4ClassLoader
         $file = $this->findFile($class);
         if (null !== $file) {
             require $file;
-
             return true;
         }
         

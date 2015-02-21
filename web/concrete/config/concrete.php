@@ -7,9 +7,9 @@ return array(
      *
      * @var string
      */
-    'version'           => '5.7.3',
-    'version_installed' => '5.7.3',
-    'version_db' => '20141219000000', // the key of the latest database migration - corresponds to 5.7.3
+    'version'           => '5.7.3.2',
+    'version_installed' => '5.7.3.2',
+    'version_db' => '20150206000000', // the key of the latest database migration - corresponds to 5.7.3.2
 
     /**
      * Installation status
@@ -163,6 +163,13 @@ return array(
          * @var bool|string (block|all)
          */
         'pages'                    => false,
+
+        /**
+         * Use Doctrine development mode
+         * 
+         * @var bool
+         */
+        'doctrine_dev_mode'        => false,
 
         /**
          * How long to cache full page
@@ -550,11 +557,11 @@ return array(
         'handler'      => 'file',
         'max_lifetime' => 7200,
         'cookie'       => array(
-            'path'     => '',
-            'lifetime' => 7200,
-            'domain'   => '',
-            'secure'   => false,
-            'httponly' => false
+            'cookie_path'     => DIR_REL . '/',
+            'cookie_lifetime' => 7200,
+            'cookie_domain'   => '',
+            'cookie_secure'   => false,
+            'cookie_httponly' => false
         )
     ),
 
@@ -784,15 +791,16 @@ return array(
          *
          * @var bool
          */
-        'url_rewriting'        => false,
-        'url_rewriting_all'        => false,
-        'redirect_to_base_url' => false,
-        'trailing_slash'       => false,
-        'title_format'         => '%1$s :: %2$s',
-        'page_path_separator'  => '-',
-        'group_name_separator' => ' / ',
-        'segment_max_length'   => 128,
-        'paging_string'        => 'ccm_paging_p'
+        'url_rewriting'           => false,
+        'url_rewriting_all'       => false,
+        'redirect_to_base_url'    => false,
+        'trailing_slash'          => false,
+        'title_format'            => '%1$s :: %2$s',
+        'title_segment_separator' => ' :: ',
+        'page_path_separator'     => '-',
+        'group_name_separator'    => ' / ',
+        'segment_max_length'      => 128,
+        'paging_string'           => 'ccm_paging_p'
     ),
 
     /**
@@ -801,7 +809,7 @@ return array(
      * ------------------------------------------------------------------------
      */
     'statistics'        => array(
-        'track_page_views' => true
+//        'track_page_views' => true
     ),
     'limits'            => array(
         'sitemap_pages'           => 100,

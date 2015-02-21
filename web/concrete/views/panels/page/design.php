@@ -5,7 +5,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 <form method="post" action="<?=$controller->action('submit')?>" data-panel-detail-form="design">
     <input type="hidden" name="update_theme" value="1" class="accept">
     <input type="hidden" name="processCollection" value="1">
-
+    <input type="hidden" name="ptID" value="<?=$c->getPageTypeID()?>" />
 
     <header><a href="" data-panel-navigation="back" class="ccm-panel-back"><span class="fa fa-chevron-left"></span></a> <a href="" data-panel-navigation="back"><?=t('Design')?></a></header>
 

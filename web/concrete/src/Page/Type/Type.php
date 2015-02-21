@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Page\Type;
 
+use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Template;
 use Concrete\Core\Page\Type\Composer\Control\CorePageProperty\NameCorePageProperty;
@@ -156,7 +157,21 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
     {
         $this->stripEmptyPageTypeComposerControls($c);
         $parent = Page::getByID($c->getPageDraftTargetParentPageID());
-        $c->move($parent);
+        if ($c->isPageDraft()) { // this is still a draft, which means it has never been properly published.
+            // so we need to move it, check its permissions, etc...
+            Section::registerPage($c);
+            $c->move($parent);
+            if (!$parent->overrideTemplatePermissions()) {
+                // that means the permissions of pages added beneath here inherit from page type permissions
+                // this is a very poorly named method. Template actually used to mean Type.
+                // so this means we need to set the permissions of this current page to inherit from page types.
+                $c->inheritPermissionsFromDefaults();
+            }
+            $c->activate();
+        } else {
+            $c->rescanCollectionPath();
+        }
+
         $u = new User();
         $v = CollectionVersion::get($c, 'RECENT');
         $pkr = new ApprovePagePageWorkflowRequest();
@@ -164,9 +179,6 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         $pkr->setRequestedVersionID($v->getVersionID());
         $pkr->setRequesterUserID($u->getUserID());
         $pkr->trigger();
-        $c->activate();
-
-        Section::registerPage($c);
 
         $u->unloadCollectionEdit($c);
         CacheLocal::flush();
@@ -370,6 +382,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         } else {
             $ptAllowedPageTemplates = 'A';
         }
+
         $ptName = (string)$node['name'];
         $ptHandle = (string)$node['handle'];
         $db = Loader::db();
@@ -401,11 +414,16 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
 
         $data['templates'] = $types;
+        $pkg = false;
+        if ($node['package']) {
+            $pkg = Package::getByHandle((string) $node['package']);
+        }
+
         if ($ptID) {
             $cm = static::getByID($ptID);
             $cm->update($data);
         } else {
-            $cm = static::add($data);
+            $cm = static::add($data, $pkg);
         }
         $node = $node->composer;
         if (isset($node->formlayout->set)) {
@@ -451,13 +469,30 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         $ptID = $db->GetOne('select ptID from PageTypes where ptHandle = ?', array($ptHandle));
         if ($ptID) {
             $pt = static::getByID($ptID);
+            $defaultTemplate = $pt->getPageTypeDefaultPageTemplateObject();
             if (isset($node->composer->output->pagetemplate)) {
                 $ci = new ContentImporter();
                 foreach ($node->composer->output->pagetemplate as $pagetemplate) {
-                    $ptt = PageTemplate::getByHandle((string)$pagetemplate['handle']);
+                    $handle = (string)$pagetemplate['handle'];
+                    $ptt = PageTemplate::getByHandle($handle);
                     if (is_object($ptt)) {
+
                         // let's get the defaults page for this
                         $xc = $pt->getPageTypePageTemplateDefaultPageObject($ptt);
+
+                        // if the $handle matches the default page template for this page type, then we ALSO check in here
+                        // and see if there are any attributes
+                        if (is_object($defaultTemplate) && $defaultTemplate->getPageTemplateHandle() == $handle) {
+                            if (isset($pagetemplate->page->attributes)) {
+                                foreach ($pagetemplate->page->attributes->children() as $attr) {
+                                    $ak = CollectionKey::getByHandle((string) $attr['handle']);
+                                    if (is_object($ak)) {
+                                        $xc->setAttribute((string) $attr['handle'], $ak->getController()->importValue($attr));
+                                    }
+                                }
+                            }
+                        }
+
                         // now that we have the defaults page, let's import this content into it.
                         if (isset($pagetemplate->page)) {
                             $ci->importPageAreas($xc, $pagetemplate->page);

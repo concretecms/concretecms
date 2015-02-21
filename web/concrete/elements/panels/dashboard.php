@@ -11,7 +11,7 @@ foreach($parents as $pc) {
 	<span><? if (!in_array($tab, array('favorites'))) { ?><?=t('Dashboard')?><? } else { ?><?=t('Favorites')?><? } ?></span>
 	<ul class="ccm-panel-header-accordion-dropdown">
 		<li><a data-panel-accordion-tab="dashboard" <? if (!in_array($tab, array('favorites'))) { ?>data-panel-accordion-tab-selected="true" <? } ?>><?=t('Dashboard')?></a></li>
-		<li><a data-panel-accordion-tab="favorites" <? if ($tab == 'favorites') { ?>data-panel-accordion-tab-selected="true" <? } ?>><?=t('Favorites')?></a></>
+		<li><a data-panel-accordion-tab="favorites" <? if ($tab == 'favorites') { ?>data-panel-accordion-tab-selected="true" <? } ?>><?=t('Favorites')?></a></li>
 	</ul>
 	</nav>
 	</div>

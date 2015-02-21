@@ -81,7 +81,7 @@ class Controller extends BlockController
             return \Core::make(
                 overrideable_core_class(
                     'Block\\ExternalForm\\Form\\Controller\\' . $class,
-                    DIRNAME_BLOCKS . '/external_form/controllers/' . $this->filename
+                    DIRNAME_BLOCKS . '/external_form/form/controller/' . $this->filename
                 )
             );
         } catch (\Exception $e) {}

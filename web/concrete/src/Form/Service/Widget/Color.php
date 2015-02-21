@@ -34,7 +34,9 @@ class Color
         $defaults['cancelText'] = t('Cancel');
         $defaults['chooseText'] = t('Choose');
         $defaults['preferredFormat'] = 'rgb';
+        $defaults['showAlpha'] = false;
         $defaults['clearText'] = t('Clear Color Selection');
+        $defaults['appendTo'] = '.ui-dialog';
         $strOptions = json_encode(array_merge($defaults, $options));
 
         print "<input type=\"text\" name=\"{$inputName}\" value=\"{$value}\" id=\"ccm-colorpicker-{$inputName}\" />";

@@ -120,6 +120,7 @@ ConcretePageAttributesDetail = {
 			},
 			complete: function() {
 				jQuery.fn.dialog.hideLoader();
+				$('#ccm-panel-detail-page-attributes').scrollTop(100000000);
 			}
 		});
 	}

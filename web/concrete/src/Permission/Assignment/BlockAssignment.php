@@ -48,6 +48,15 @@ class BlockAssignment extends Assignment {
 			if (is_object($a)) {
 				if ($a->overrideCollectionPermissions()) {
 					$this->permissionObjectToCheck = $a;
+				} elseif ($a->getAreaCollectionInheritID()) {
+					$mcID = $a->getAreaCollectionInheritID();
+					$mc = Page::getByID($mcID, 'RECENT');
+					$ma = Area::get($mc, $a->getAreaHandle());
+					if ($ma->overrideCollectionPermissions()) {
+						$this->permissionObjectToCheck = $ma;
+					} else {
+						$this->permissionObjectToCheck = $ma->getAreaCollectionObject();
+					}
 				} else {
 					$this->permissionObjectToCheck = $a->getAreaCollectionObject();
 				}

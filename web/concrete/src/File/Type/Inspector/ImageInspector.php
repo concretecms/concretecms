@@ -19,7 +19,5 @@ class ImageInspector extends Inspector {
 		$at2 = FileAttributeKey::getByHandle('height');
 		$fv->setAttribute($at1, $data->getWidth());
 		$fv->setAttribute($at2, $data->getHeight());
-
-        $fv->rescanThumbnails();
     }
 }

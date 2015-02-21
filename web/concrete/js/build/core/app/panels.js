@@ -7,6 +7,13 @@ function ConcretePanel(options) {
     this.options = options;
     this.isOpen = false;
     this.detail = false;
+    this.isPinned = false;
+
+    this.pinned = function() { return this.isPinned; }
+
+    this.willBePinned = function() { return this.isOpen && !this.isPinned; }
+
+    this.isPinable = function() { return this.options.pinable; }
 
     this.getPositionClass = function () {
         var ccm_class;
@@ -75,7 +82,18 @@ function ConcretePanel(options) {
 
     this.toggle = function () {
         if (this.isOpen) {
-            this.hide();
+            if (this.options.pinable )
+            {
+                if (!this.isPinned )
+                {
+                    this.isPinned = true;
+                }
+                else
+                {
+                    this.isPinned = false;
+                    this.hide();
+                }
+            } else this.hide();
         } else {
             this.show();
         }
@@ -402,6 +420,10 @@ function ConcretePanel(options) {
         } else {
             show.call(this);
         }
+        
+        // hide mobile menu
+        $('.ccm-toolbar-mobile-menu-button').removeClass('ccm-mobile-close');
+        $('.ccm-mobile-menu-overlay').slideUp();
     }
 
 }

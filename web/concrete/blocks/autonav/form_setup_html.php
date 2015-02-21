@@ -13,9 +13,8 @@ $page_selector = Loader::helper('form/page_selector');
                value="<?= Loader::helper('concrete/urls')->getBlockTypeToolsURL($bt) ?>/preview_pane"/>
 
         <fieldset>
-            <legend><?= t('Settings') ?></legend>
-        </fieldset>
-
+        <legend><?= t('Settings') ?></legend>
+        
         <div class="form-group">
             <label for="orderBy"><?= t('Page Order') ?></label>
             <select class="form-control" name="orderBy">
@@ -133,6 +132,7 @@ $page_selector = Loader::helper('form/page_selector');
                 <span class="input-group-addon"> <?= t('levels') ?></span>
             </div>
         </div>
+        </fieldset>
 
         <div class="loader">
             <i class="fa fa-cog fa-spin"></i>
@@ -140,15 +140,13 @@ $page_selector = Loader::helper('form/page_selector');
     </div>
 
     <div class="col-xs-6">
+        <fieldset>
+        <legend><?= t('Included Pages') ?></legend>
         <div class="preview">
-            <fieldset>
-                <legend><?= t('Included Pages') ?></legend>
-            </fieldset>
-            <div class="render">
-
-            </div>
-            <div class="cover"></div>
+         	<div class="render"></div>
+			<div class="cover"></div>
         </div>
+        </fieldset>
     </div>
 
 </div>

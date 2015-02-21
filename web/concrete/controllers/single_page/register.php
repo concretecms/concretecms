@@ -131,7 +131,7 @@ class Register extends PageController {
 			$process = UserInfo::register($data);
 			if (is_object($process)) {
 
-                $process->saveUserAttributes($aks);
+                $process->saveUserAttributesForm($aks);
 
 				if (Config::get('concrete.user.registration.notification')) { //do we notify someone if a new user is added?
 					$mh = Loader::helper('mail');

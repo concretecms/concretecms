@@ -52,7 +52,7 @@ if (!$dh->inDashboard()) {
 	ConcretePanelManager.register({'identifier': 'page', url: '{$panelPage}'});
 	ConcretePanelManager.register({'identifier': 'sitemap', 'position': 'right', url: '{$panelSitemap}'});
 	ConcretePanelManager.register({'identifier': 'multilingual', 'position': 'right', url: '{$panelMultilingual}'});
-	ConcretePanelManager.register({'identifier': 'add-block', 'translucent': false, 'position': 'left', url: '{$panelAdd}'});
+	ConcretePanelManager.register({'identifier': 'add-block', 'translucent': false, 'position': 'left', url: '{$panelAdd}', pinable: true});
 	ConcretePanelManager.register({'identifier': 'check-in', 'position': 'left', url: '{$panelCheckIn}'});
 	ConcreteToolbar.start();
 	{$startEditMode}

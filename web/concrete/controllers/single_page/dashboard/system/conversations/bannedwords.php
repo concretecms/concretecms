@@ -33,8 +33,10 @@ class BannedWords extends DashboardPageController {
 		$db = Loader::db();
 		$db->execute("TRUNCATE TABLE BannedWords");
 		$db->execute("ALTER TABLE BannedWords AUTO_INCREMENT=0");
-		foreach ($this->post('banned_word') as $bw) {
-			BannedWord::add($bw);
+		if(count($this->post('banned_word'))) {
+			foreach ($this->post('banned_word') as $bw) {
+				BannedWord::add($bw);
+			}
 		}
 		Config::save('conversation.banned_words',!!$this->post('banned_list_enabled'));
 		$this->view();

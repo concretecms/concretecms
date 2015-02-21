@@ -43,6 +43,11 @@ class AddBlock extends BackendInterfacePageController
                                     'Unable to load the controller for this block type. Perhaps it has been moved or removed.'));
         }
         $this->blockTypeController = $cnt;
+        if (isset($_REQUEST['arCustomTemplates']) && is_array($_REQUEST['arCustomTemplates'])) {
+            foreach($_REQUEST['arCustomTemplates'] as $btHandle => $template) {
+                $this->area->setCustomTemplate($btHandle, $template);
+            }
+        }
     }
 
     public function view()
@@ -55,6 +60,11 @@ class AddBlock extends BackendInterfacePageController
         }
         if (isset($_REQUEST['arEnableGridContainer']) && $_REQUEST['arEnableGridContainer'] == 1) {
             $this->area->enableGridContainer();
+        }
+        if (isset($_REQUEST['arCustomTemplates']) && is_array($_REQUEST['arCustomTemplates'])) {
+            foreach($_REQUEST['arCustomTemplates'] as $btHandle => $template) {
+                $this->area->setCustomTemplate($btHandle, $template);
+            }
         }
         $bv->addScopeItems(array('a' => $this->a, 'cp' => $this->permissions, 'ap' => $this->areaPermissions));
         $this->set('blockView', $bv);
