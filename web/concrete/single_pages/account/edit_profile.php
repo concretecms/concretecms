@@ -74,14 +74,14 @@ $(function() {
     	<legend><?=t('Change Password')?></legend>
         <div class="form-group">
             <?php echo $form->label('uPasswordNew', t('New Password'))?>
-            <?php echo $form->password('uPasswordNew')?>
+            <?php echo $form->password('uPasswordNew',array('autocomplete' => 'off'))?>
             <a href="javascript:void(0)" title="<?=t("Leave blank to keep current password.")?>"><i class="icon-question-sign"></i></a>
 		</div>
 
         <div class="form-group">
             <?php echo $form->label('uPasswordNewConfirm', t('Confirm New Password'))?>
             <div class="controls">
-                <?php echo $form->password('uPasswordNewConfirm')?>
+                <?php echo $form->password('uPasswordNewConfirm',array('autocomplete' => 'off'))?>
             </div>
         </div>
 
