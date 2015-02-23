@@ -69,10 +69,8 @@ class Controller extends BlockController
         parent::save($data);
     }
 
-    public function action_topic($topic = false)
+    public function action_topic($treeNodeID = false, $topic = false)
     {
-        $db = Loader::db();
-        $treeNodeID = $db->GetOne('select treeNodeID from TreeTopicNodes where treeNodeTopicName = ?', array($topic));
         if ($treeNodeID) {
             $topicObj = Topic::getByID(intval($treeNodeID));
             $this->set('currentTopic', $topicObj);
@@ -81,5 +79,3 @@ class Controller extends BlockController
     }
 
 }
-
-?>
