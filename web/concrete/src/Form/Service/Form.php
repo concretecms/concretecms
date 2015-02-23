@@ -387,7 +387,7 @@ class Form {
 	 * @return $html
 	 */
 	public function password($key, $valueOrArray = false, $miscFields = array()) {
-		return $this->inputType($key, 'password', $valueOrArray, $miscFields);
+		return $this->inputType($key, 'password', $valueOrArray, array_merge(array('autocomplete' => 'off'), $miscFields));
 	}
 
 	/**
