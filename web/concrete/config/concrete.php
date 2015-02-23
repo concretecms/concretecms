@@ -558,8 +558,8 @@ return array(
         'max_lifetime' => 7200,
         'cookie'       => array(
             'cookie_path'     => DIR_REL . '/',
-            'cookie_lifetime' => 7200,
-            'cookie_domain'   => '',
+            'cookie_lifetime' => 0,
+            'cookie_domain'   => false,
             'cookie_secure'   => false,
             'cookie_httponly' => false
         )
