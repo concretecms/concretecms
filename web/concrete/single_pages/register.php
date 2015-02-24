@@ -59,11 +59,11 @@ if($registerSuccess) { ?>
                     </div>
                     <div class="form-group">
 						<?=$form->label('uPassword',t('Password'))?>
-					    <?=$form->password('uPassword',false,array('autocomplete' => 'off'))?>
+					    <?=$form->password('uPassword',array('autocomplete' => 'off'))?>
 					</div>
                     <div class="form-group">
 						<?=$form->label('uPasswordConfirm',t('Confirm Password'))?>
-						<?=$form->password('uPasswordConfirm',false,array('autocomplete' => 'off'))?>
+						<?=$form->password('uPasswordConfirm',array('autocomplete' => 'off'))?>
 					</div>
 
 				</fieldset>
