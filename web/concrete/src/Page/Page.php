@@ -282,11 +282,13 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             $ppIsCanonical = false;
             while ((!$cID) && $path) {
                 $row = $db->GetRow('select cID, ppIsCanonical from PagePaths where cPath = ?', array($path));
-                $cID = $row['cID'];
-                if ($cID) {
-                    $cPath = $path;
-                    $ppIsCanonical = (bool)$row['ppIsCanonical'];
-                    break;
+                if (!empty($row)) {
+                    $cID = $row['cID'];
+                    if ($cID) {
+                        $cPath = $path;
+                        $ppIsCanonical = (bool)$row['ppIsCanonical'];
+                        break;
+                    }
                 }
                 $path = substr($path, 0, strrpos($path, '/'));
             }
