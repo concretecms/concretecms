@@ -311,7 +311,7 @@ class Section extends Page
      */
     public function getPluralsCases()
     {
-        return (array) $this->pluralCases;
+        return (array) $this->msPluralCases;
     }
 
     public static function registerPage($page)
