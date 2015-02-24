@@ -51,25 +51,32 @@ Facade::setFacadeApplication($cms);
  * Add install environment detection
  * ----------------------------------------------------------------------------
  */
-
-$db_config = @include DIR_APPLICATION . '/config/database.php';
-
+if (file_exists(DIR_APPLICATION . '/config/database.php')) {
+    $db_config = include DIR_APPLICATION . '/config/database.php';
+}
 $environment = $cms->environment();
-$cms->detectEnvironment(function() use ($db_config, $environment) {
+$cms->detectEnvironment(function() use ($db_config, $environment, $cms) {
+    try {
+        $installed = $cms->isInstalled();
+        return $installed;
+    } catch (\Exception $e) {}
+
     return isset($db_config['default-connection']) ? $environment : 'install';
 });
-
 
 /**
  * ----------------------------------------------------------------------------
  * Enable Filesystem Config.
  * ----------------------------------------------------------------------------
  */
+if (!$cms->bound('config')) {
+    $file_system = new Filesystem();
+    $file_loader = new FileLoader($file_system);
+    $file_saver = new FileSaver($file_system);
+    $cms->instance('config', new ConfigRepository($file_loader, $file_saver, $cms->environment()));
+}
 
-$file_system = new Filesystem();
-$file_loader = new FileLoader($file_system);
-$file_saver = new FileSaver($file_system);
-$cms->instance('config', $config = new ConfigRepository($file_loader, $file_saver, $cms->environment()));
+$config = $cms->make('config');
 
 /**
  * ----------------------------------------------------------------------------
@@ -112,10 +119,13 @@ $list->registerMultiple($config->get('app.facades'));
  * ----------------------------------------------------------------------------
  */
 
-$database_loader = new DatabaseLoader();
-$database_saver = new DatabaseSaver();
+if (!$cms->bound('config/database')) {
+    $database_loader = new DatabaseLoader();
+    $database_saver = new DatabaseSaver();
+    $cms->instance('config/database', new ConfigRepository($database_loader, $database_saver, $cms->environment()));
+}
 
-$cms->instance('config/database', $database_config = new ConfigRepository($database_loader, $database_saver, $cms->environment()));
+$database_config = $cms->make('config/database');
 
 /**
  * ----------------------------------------------------------------------------
