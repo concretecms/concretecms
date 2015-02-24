@@ -1,15 +1,15 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
-<?php $ih = Loader::helper('concrete/ui'); ?>
-<?php if ($this->controller->getTask() == 'view_detail') { ?>
+<? $ih = Loader::helper('concrete/ui'); ?>
+<? if ($this->controller->getTask() == 'view_detail') { ?>
 
-	<?php
+	<?
 	$u=new User();
 	$delConfirmJS = t('Are you sure you want to permanently remove this file set?');
 	?>
 	<script type="text/javascript">
 		deleteFileSet = function() {
-			if (confirm('<?=$delConfirmJS?>')) { 
-				location.href = "<?=$view->url('/dashboard/files/sets', 'delete', $fs->getFileSetID(), Loader::helper('validation/token')->generate('delete_file_set'))?>";				
+			if (confirm('<?=t('Are you sure you want to permanently remove this file set?')?>')) { 
+				location.href = "<?=$view->url('/dashboard/files/sets', 'delete', $fs->getFileSetID(), Core::make('helper/validation/token')->generate('delete_file_set'))?>";
 			}
 		}
 	</script>
@@ -25,7 +25,7 @@
 	<form method="post" class="form-horizontal" id="file_sets_edit" action="<?=$view->url('/dashboard/files/sets', 'file_sets_edit')?>">
 		<?=$validation_token->output('file_sets_edit');?>
 
-		<?php print Loader::helper('concrete/ui')->tabs(array(
+		<? print Loader::helper('concrete/ui')->tabs(array(
 			array('details', t('Details'), true),
 			array('files', t('Files in Set'))
 		));?>
@@ -37,47 +37,53 @@
                 <?=$form->text('file_set_name',$fs->fsName, array('class' => 'span5'));?>
 			</div>
 
-			<?php
+			<?
 			if (Config::get('concrete.permissions.model') != 'simple') {
 				if ($fsp->canEditFileSetPermissions()) { ?>
 			
-                    <div class="form-group">
-                        <div class="checkbox">
-                            <label class="checkbox"><?=$form->checkbox('fsOverrideGlobalPermissions', 1, $fs->overrideGlobalPermissions())?> <?=t('Enable custom permissions for this file set.')?></label>
-                        </div>
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label class="checkbox"><?=$form->checkbox('fsOverrideGlobalPermissions', 1, $fs->overrideGlobalPermissions())?> <?=t('Enable custom permissions for this file set.')?></label>
                     </div>
+                </div>
 
-                    <div id="ccm-permission-list-form" <?php if (!$fs->overrideGlobalPermissions()) { ?> style="display: none" <?php } ?>>
+                    <div id="ccm-permission-list-form" <? if (!$fs->overrideGlobalPermissions()) { ?> style="display: none" <? } ?>>
 
-                    <?php Loader::element('permission/lists/file_set', array("fs" => $fs)); ?>
+                    <? Loader::element('permission/lists/file_set', array("fs" => $fs)); ?>
 
                     </div>
-				<?php }
+				<? } 
 			
-			}
-
-			?>
-			
-
-			<?php echo $form->hidden('fsID',$fs->getFileSetID()); ?>
+			<?= $form->hidden('fsID',$fs->getFileSetID()); ?>
 			
 		</div>
 
 		<div class="ccm-tab-content" id="ccm-tab-content-files">
-		<?php
+		<?
 		
 		$fl = new FileList();
 		$fl->filterBySet($fs);
 		$fl->sortByFileSetDisplayOrder();
 		$files = $fl->get();
-		if (count($files) > 0) { ?>
+        if (count($files) > 0) { 
+        ?>
 
             <span class="help-block"><?=t('Click and drag to reorder the files in this set. New files added to this set will automatically be appended to the end.')?></span>
             <div class="ccm-spacer">&nbsp;</div>
 
-            <ul class="ccm-file-set-file-list  item-select-list">
+            <table class="ccm-search-results-table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th><span><?=t('Thumbnail')?></span></th>
+                        <th><a href="javascript:void(0)" class="sort-link" data-sort="type"    ><?=t('Type')?></a></th>
+                        <th><a href="javascript:void(0)" class="sort-link" data-sort="title"   ><?=t('Title')?></a></th>
+                        <th><a href="javascript:void(0)" class="sort-link" data-sort="filename"><?=t('File name')?></a></th>
+                        <th><a href="javascript:void(0)" class="sort-link" data-sort="added"   ><?=t('Added')?></a></th>
+                    </tr>
+                </thead>
 
-            <?php
+            <?
             foreach($files as $f) { ?>
 
                 <li id="fID_<?=$f->getFileID()?>" class="">
@@ -88,17 +94,17 @@
                     </div>
                 </li>
 
-            <?php } ?>
+            <? } ?>
 
             </ul>
-		<?php } else { ?>
+		<? } else { ?>
 			<div class="alert alert-info"><?=t('There are no files in this set.')?></div>
 		<?php } ?>
 		</div>
 		<div class="ccm-dashboard-form-actions-wrapper">
 		<div class="ccm-dashboard-form-actions">
 			<a href="<?=View::url('/dashboard/files/sets')?>" class="btn btn-default pull-left"><?=t('Cancel')?></a>
-			<?=Loader::helper("form")->submit('save', t('Save'), array('class' => 'btn btn-primary pull-right'))?>
+			<?=Core::make("helper/form")->submit('save', t('Save'), array('class' => 'btn btn-primary pull-right'))?>
 		</div>
 		</div>
 	</form>
@@ -107,17 +113,80 @@
 	<script type="text/javascript">
 
 	$(function() {
+        var baseClass="ccm-results-list-active-sort-"; // asc desc
+
+        function ccmFileSetResetSortIcons()
+        {
+            $(".ccm-search-results-table thead tr th").removeClass(baseClass + 'asc');
+            $(".ccm-search-results-table thead tr th").removeClass(baseClass + 'desc');
+            $(".ccm-search-results-table thead tr th a").css("color", "#93bfd5");
+        }
+
+        function ccmFileSetDoSort()
+        {
+            var $this = $(this);
+            var $parent = $(this).parent();
+            var asc = $parent.hasClass( baseClass + 'asc' );
+            var key = $this.attr('data-sort');
+
+            ccmFileSetResetSortIcons();
+            var sortableList = $('.ccm-file-set-file-list');
+            var listItems = $('tr', sortableList);
+
+            if ( asc ) $parent.addClass( baseClass + 'desc' );
+            else $parent.addClass( baseClass + 'asc' );
+
+            listItems.sort( function( a, b ) {
+                var aTD = $('td[data-key=' + key + ']', $(a) );
+                var bTD = $('td[data-key=' + key + ']', $(b) );
+
+                var aVal = typeof( aTD.attr('data-sort') ) == 'undefined' ? aTD.text().toUpperCase() : parseInt(aTD.attr('data-sort'));
+                var bVal = typeof( bTD.attr('data-sort') ) == 'undefined' ? bTD.text().toUpperCase() : parseInt(bTD.attr('data-sort'));
+
+                if (asc) {
+                    return aVal < bVal ? -1 : 1;
+                } else {
+                    return bVal < aVal ? -1 : 1;
+                }
+            });
+            sortableList.append(listItems);
+        }
+
+        $('.ccm-search-results-table thead th a.sort-link').click(ccmFileSetDoSort);
+
 		$(".ccm-file-set-file-list").sortable({
 			cursor: 'move',
-			opacity: 0.5
+            opacity: 0.5,
+            axis: 'y',
+            helper: function( evt, elem ) { 
+                var ret = $(elem).clone();
+                var i;
+                // copy the actual width of the elements
+
+                ret.width( elem.outerWidth() );
+                retChilds = $(ret.children());
+                elemChilds = $(elem.children());
+                
+                for ( i = 0; i < elemChilds.length; i++ ) 
+                    $(retChilds[i]).width( $(elemChilds[i]).outerWidth() );
+
+                return ret; 
+            },
+            placeholder: "ccm-file-set-file-placeholder",
+            stop: function(e,ui) {
+                ccmFileSetResetSortIcons();
+            }
 		});
-		
+
+
 	});
 	
 	</script>
 	
 	<style type="text/css">
 	    .ccm-file-set-file-list:hover {cursor: move}
+        .ccm-file-set-file-placeholder { background-color: #ffd !important;  }
+        .ccm-file-set-file-placeholder td { background:transparent !important; }
 	</style>
 
 <?php } else { ?>
@@ -131,7 +200,7 @@
                     <div class="ccm-search-field-content">
                         <div class="ccm-search-main-lookup-field">
                             <i class="fa fa-search"></i>
-				            <?=$form->search('fsKeywords', Loader::helper('text')->entities($_REQUEST['fsKeywords']), array('placeholder' => t('File Set Name')))?>
+				            <?=$form->search('fsKeywords', \Core::make('helper/text')->entities($_REQUEST['fsKeywords']), array('placeholder' => t('File Set Name')))?>
                             <button type="submit" class="ccm-search-field-hidden-submit" tabindex="-1"><?=t('Search')?></button>
                         </div>
                     </div>

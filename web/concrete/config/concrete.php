@@ -557,11 +557,11 @@ return array(
         'handler'      => 'file',
         'max_lifetime' => 7200,
         'cookie'       => array(
-            'path'     => '',
-            'lifetime' => 7200,
-            'domain'   => '',
-            'secure'   => false,
-            'httponly' => false
+            'cookie_path'     => DIR_REL . '/',
+            'cookie_lifetime' => 0,
+            'cookie_domain'   => false,
+            'cookie_secure'   => false,
+            'cookie_httponly' => false
         )
     ),
 
@@ -816,6 +816,10 @@ return array(
         'delete_pages'            => 10,
         'copy_pages'              => 10,
         'page_search_index_batch' => 200,
-        'job_queue_batch'         => 10
+        'job_queue_batch'         => 10,
+        'style_customizer' => array(
+            'size_min' => -50,
+            'size_max' => 200,
+        )
     )
 );

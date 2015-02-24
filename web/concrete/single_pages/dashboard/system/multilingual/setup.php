@@ -258,7 +258,7 @@ if ($u->isSuperUser() && !$includesHome) { ?>
 		$pcl = MultilingualSection::getByID($pc->getCollectionID());
 		$defaultLocales[$pcl->getLocale()] = tc(/*i18n: %1$s is a page name, %2$s is a language name, %3$s is a locale identifier (eg en_US)*/'PageWithLocale', '%1$s (%2$s, %3$s)', $pc->getCollectionName(), $pcl->getLanguageText(), $pcl->getLocale());
 	}
-	$defaultLocalesSelect = $form->select('defaultLocale', $defaultLocales, $defaultLocale);
+	$defaultLocalesSelect = $form->select('defaultLocale', $defaultLocales, $defaultLocale, array('required' => 'required'));
 	?>
    <legend><?php echo t('Multilingual Settings')?></legend>
 	<fieldset>
@@ -280,6 +280,23 @@ if ($u->isSuperUser() && !$includesHome) { ?>
                     <?php echo $form->checkbox('redirectHomeToDefaultLocale', 1, $redirectHomeToDefaultLocale)?>
                     <span><?php echo t('Redirect home page to default locale.') ?></span>
                 </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label"><?php echo t('Registered Users Language Preferences'); ?></label>
+                <p><?php echo t('Load Interface Language from:'); ?></p>
+                <div class="radio">
+                    <label>
+                        <?php echo $form->radio('keepUsersLocale', 0, $keepUsersLocale); ?>
+                        <span><?php echo t('Page (if it exists)'); ?></span>
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <?php echo $form->radio('keepUsersLocale', 1, $keepUsersLocale); ?>
+                        <span><?php echo t("User Profile"); ?></span>
+                    </label>
                 </div>
             </div>
 
@@ -307,4 +324,6 @@ if ($u->isSuperUser() && !$includesHome) { ?>
             </div>
         </form>
     </fieldset>
-	<?php } ?>
+    <?php
+}
+

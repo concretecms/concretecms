@@ -13,6 +13,7 @@ use View;
 use Permissions;
 use Response;
 use Core;
+use Session;
 
 class DispatcherRouteCallback extends RouteCallback
 {
@@ -45,8 +46,12 @@ class DispatcherRouteCallback extends RouteCallback
         return $this->sendResponse($v, 404);
     }
 
-    protected function sendPageForbidden(Request $request)
+    protected function sendPageForbidden(Request $request, $currentPage)
     {
+        // set page for redirection after successful login
+        Session::set('rcID', $currentPage->getCollectionID());
+
+        // load page forbidden
         $item = '/page_forbidden';
         $c = Page::getByPath($item);
         if (is_object($c) && !$c->isError()) {
@@ -110,7 +115,7 @@ class DispatcherRouteCallback extends RouteCallback
         $cp = new Permissions($c);
 
         if ($cp->isError() && $cp->getError() == COLLECTION_FORBIDDEN) {
-            return $this->sendPageForbidden($request);
+            return $this->sendPageForbidden($request, $c);
         }
 
         if (!$c->isActive() && (!$cp->canViewPageVersions())) {
@@ -130,7 +135,7 @@ class DispatcherRouteCallback extends RouteCallback
                     return $this->sendPageNotFound($request);
                     break;
                 case COLLECTION_FORBIDDEN:
-                    return $this->sendPageForbidden($request);
+                    return $this->sendPageForbidden($request, $c);
                     break;
             }
         }

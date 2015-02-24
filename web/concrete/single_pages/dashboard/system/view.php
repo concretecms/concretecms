@@ -24,11 +24,11 @@ for ($i = 0; $i < count($categories); $i++) {
                 $show[] = $subcat;
             }
         }
-
-        if (count($show) > 0) { ?>
-
+        ?>
 
         <ul class="list-unstyled">
+
+        <?php if (count($show) > 0) { ?>
 
             <?php foreach($show as $subcat) { ?>
 
@@ -36,11 +36,12 @@ for ($i = 0; $i < count($categories); $i++) {
 
             <?php } ?>
 
-            <?php } else { ?>
+        <?php } else { ?>
 
-                <li><a href="<?=Loader::helper('navigation')->getLinkToCollection($cat, false, true)?>"><i class="<?=$cat->getAttribute('icon_dashboard')?>"></i> <?=t('Home')?></a></li>
+            <li><a href="<?=Loader::helper('navigation')->getLinkToCollection($cat, false, true)?>"><i class="<?=$cat->getAttribute('icon_dashboard')?>"></i> <?=t('Home')?></a></li>
 
-            <?php } ?>
+        <?php } ?>
+
         </ul>
     </div>
     <?php if($rowCount == 2 || $i == count($categories)) { ?>

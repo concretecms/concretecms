@@ -183,7 +183,7 @@ class Marketplace
                 $csiURL = urlencode(BASE_URL . DIR_REL);
                 $csiBaseURL = urlencode(BASE_URL);
                 if ($this->hasConnectionError()) {
-                    if ($this->connectionError == E_DELETED_SITE_TOKEN) {
+                    if ($this->connectionError == Marketplace::E_DELETED_SITE_TOKEN) {
                         $connectMethod = 'view';
                         $csToken = Marketplace::generateSiteToken();
                     } else {

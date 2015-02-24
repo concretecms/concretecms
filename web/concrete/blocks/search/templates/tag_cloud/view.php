@@ -49,7 +49,7 @@
 <?php
 	for ($i = 0; $i < $ttags->count(); $i++) {
 		$akct = $tags[$i];
-		$qs = $akc->field('atSelectOptionID') . '[]=' . $akct->getSelectAttributeOptionID();
+		$qs = urlencode($akc->field('atSelectOptionID') . '[]') . '=' . urlencode($akct->getSelectAttributeOptionID());
 		?>
 		<li><a style="font-size: <?=$tagSizes[$akct->getSelectAttributeOptionUsageCount()]?>px !important" href="<?=$view->url($resultTargetURL)?>?<?=$qs?>"><?=$akct->getSelectAttributeOptionValue()?></a>
 		<span>(<?=$akct->getSelectAttributeOptionUsageCount()?>)</span>

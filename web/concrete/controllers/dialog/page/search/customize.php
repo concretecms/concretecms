@@ -48,7 +48,7 @@ class Customize extends BackendInterfaceController {
 			$pageList = new PageList();
 			$columns = PageSearchColumnSet::getCurrent();
 			$col = $columns->getDefaultSortColumn();	
-			$pageList->sortBy($col->getColumnKey(), $col->getColumnDefaultSortDirection());
+			$pageList->sanitizedSortBy($col->getColumnKey(), $col->getColumnDefaultSortDirection());
 
 			$ilr = new PageSearchResult($columns, $pageList, URL::to('/ccm/system/search/pages/submit'));
 			$r = new SearchResponse();

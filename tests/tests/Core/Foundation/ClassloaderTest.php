@@ -107,6 +107,12 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase {
 		$this->assertTrue(class_exists('\Concrete\Attribute\Boolean\Controller'));
 	}
 
+	public function testAttributeOtherClasses() {
+		$this->assertTrue(class_exists('\Concrete\Attribute\Select\Option', true));
+		$this->assertTrue(class_exists('\Concrete\Attribute\Address\Value', true));
+		$this->assertTrue(class_exists('\Concrete\Attribute\Select\OptionList', true));
+	}
+
 	public function testBlocks() {
 		$bt = new \BlockType();
 		$bt->setBlockTypeHandle('core_stack_display');

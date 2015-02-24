@@ -107,6 +107,7 @@ class DatabaseManagerORM
         }
 
         $driverImpl = $config->newDefaultAnnotationDriver($path);
+        $driverImpl->addExcludePaths(Config::get('database.proxy_exclusions', array()));
         $config->setMetadataDriverImpl($driverImpl);
 
         $event = new \Symfony\Component\EventDispatcher\GenericEvent();

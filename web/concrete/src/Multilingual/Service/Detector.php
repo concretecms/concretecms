@@ -73,6 +73,9 @@ class Detector
 
     public static function setupSiteInterfaceLocalization(Page $c = null)
     {
+        if (\User::isLoggedIn() && Config::get('concrete.multilingual.keep_users_locale')) {
+            return;
+        }
         if (!$c) {
             $c = Page::getCurrentPage();
         }
