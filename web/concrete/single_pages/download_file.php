@@ -23,7 +23,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			<input type="hidden" value="<?= $force ?>" name="force" />
 		<? } ?>
 		<input type="hidden" value="<?= $rcID ?>" name="rcID"/>
-		<label for="password"><?=t('Password')?>: <input type="password" name="password" /></label>
+		<label for="password"><?=t('Password')?>: <input type="password" name="password" autocomplete="off"/></label>
 		<br /><br />
 		<button type="submit"><?=t('Download')?></button>
 	</form>
