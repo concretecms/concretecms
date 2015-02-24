@@ -32,7 +32,7 @@ $form = Loader::helper('form');
                     </div>
                     <div class="form-group">
                         <?=$form->label('MAIL_SEND_METHOD_SMTP_PASSWORD',t('Password'));?>
-                        <?=$form->password('MAIL_SEND_METHOD_SMTP_PASSWORD', Config::get('concrete.mail.methods.smtp.password'))?>
+                        <?=$form->password('MAIL_SEND_METHOD_SMTP_PASSWORD', Config::get('concrete.mail.methods.smtp.password'), array('autocomplete' => 'off'))?>
                     </div>
 
                     <div class="form-group">

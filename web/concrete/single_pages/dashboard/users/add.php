@@ -22,7 +22,7 @@
 					<label for="uPassword" class="control-label col-sm-3"><?=t('Password')?></label>
 					<div class="col-sm-7">
 						<div class="input-group">
-						<?=$form->password('uPassword',false,array('autocomplete' => 'off'))?>
+						<?=$form->password('uPassword',array('autocomplete' => 'off'))?>
 						<span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
 						</div>
 					</div>
