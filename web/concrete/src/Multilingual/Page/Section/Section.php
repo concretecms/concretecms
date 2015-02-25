@@ -42,7 +42,12 @@ class Section extends Page
      */
     protected $msPluralRule;
 
-    public static function assign($c, $language, $country, $numPlurals = null, $pluralRule = '')
+    /**
+     * @var string[]
+     */
+    protected $msPluralCases;
+
+    public static function assign($c, $language, $country, $numPlurals = null, $pluralRule = '', $pluralCases = array())
     {
         $country = (string) $country;
         $data = array(
@@ -51,7 +56,7 @@ class Section extends Page
             'msCountry' => $country,
         );
         $pluralRule = (string) $pluralRule;
-        if (empty($numPlurals) || ($pluralRule === '')) {
+        if (empty($numPlurals) || ($pluralRule === '') || (empty($pluralCases))) {
             $locale = $language;
             if ($country !== '') {
                 $locale .= '_' . $country;
@@ -60,11 +65,16 @@ class Section extends Page
             if ($localeInfo) {
                 $numPlurals = count($localeInfo->categories);
                 $pluralRule = $localeInfo->formula;
+                $pluralCases = array();
+                foreach($localeInfo->categories as $category) {
+                    $pluralCases[] = $category->id.'@'.$category->examples;
+                }
             }
         }
-        if ((!empty($numPlurals)) && ($pluralRule !== '')) {
+        if ((!empty($numPlurals)) && ($pluralRule !== '') && (!empty($pluralCases))) {
             $data['msNumPlurals'] = $numPlurals;
             $data['msPluralRule'] = $pluralRule;
+            $data['msPluralCases'] = is_array($pluralCases) ? implode("\n", $pluralCases) : $pluralCases;
         }
         $db = Database::get();
         $db->Replace(
@@ -89,6 +99,18 @@ class Section extends Page
         }
     }
 
+    private static function assignPropertiesFromArray($obj, $row) {
+        $obj->msLanguage = $row['msLanguage'];
+        $obj->msCountry = $row['msCountry'];
+        $obj->msNumPlurals = $row['msNumPlurals'];
+        $obj->msPluralRule = $row['msPluralRule'];
+        $obj->msPluralCases = array();
+        foreach(explode("\n", $row['msPluralCases']) as $line) {
+            list($key, $examples) = explode('@', $line);
+            $obj->msPluralCases[$key] = $examples;
+        }
+    }
+
     /**
      * returns an instance of  MultilingualSection for the given page ID
      * @param int $cID
@@ -100,10 +122,7 @@ class Section extends Page
         $r = self::isMultilingualSection($cID);
         if ($r) {
             $obj = parent::getByID($cID, $cvID, '\Concrete\Core\Multilingual\Page\Section\Section');
-            $obj->msLanguage = $r['msLanguage'];
-            $obj->msCountry = $r['msCountry'];
-            $obj->msNumPlurals = $r['msNumPlurals'];
-            $obj->msPluralRule = $r['msPluralRule'];
+            self::assignPropertiesFromArray($obj, $r);
 
             return $obj;
         }
@@ -119,15 +138,12 @@ class Section extends Page
     {
         $db = Database::get();
         $r = $db->GetRow(
-            'select cID, msLanguage, msCountry, msNumPlurals, msPluralRule from MultilingualSections where msLanguage = ?',
+            'select cID, msLanguage, msCountry, msNumPlurals, msPluralRule, msPluralCases from MultilingualSections where msLanguage = ?',
             array($language)
         );
         if ($r && is_array($r) && $r['msLanguage']) {
             $obj = parent::getByID($r['cID'], 'RECENT', '\Concrete\Core\Multilingual\Page\Section\Section');
-            $obj->msLanguage = $r['msLanguage'];
-            $obj->msCountry = $r['msCountry'];
-            $obj->msNumPlurals = $r['msNumPlurals'];
-            $obj->msPluralRule = $r['msPluralRule'];
+            self::assignPropertiesFromArray($obj, $r);
 
             return $obj;
         }
@@ -144,15 +160,12 @@ class Section extends Page
         $locale = explode('_', $locale);
         $db = Database::get();
         $r = $db->GetRow(
-            'select cID, msLanguage, msCountry, msNumPlurals, msPluralRule from MultilingualSections where msLanguage = ? and msCountry = ?',
+            'select cID, msLanguage, msCountry, msNumPlurals, msPluralRule, msPluralCases from MultilingualSections where msLanguage = ? and msCountry = ?',
             array($locale[0], $locale[1])
         );
         if ($r && is_array($r) && $r['msLanguage']) {
             $obj = parent::getByID($r['cID'], 'RECENT', '\Concrete\Core\Multilingual\Page\Section\Section');
-            $obj->msLanguage = $r['msLanguage'];
-            $obj->msCountry = $r['msCountry'];
-            $obj->msNumPlurals = $r['msNumPlurals'];
-            $obj->msPluralRule = $r['msPluralRule'];
+            self::assignPropertiesFromArray($obj, $r);
 
             return $obj;
         }
@@ -278,6 +291,27 @@ class Section extends Page
     public function getPluralsRule()
     {
         return (string) $this->msPluralRule;
+    }
+
+    /**
+     * Returns the plural cases for the language; array keys are the case name, array values are some examples for that case
+     * @return array
+     * @example For Japanese: returns
+     *     'other' => '0~15, 100, 1000, 10000, 100000, 1000000, …'
+     * @example For English: returns
+     *     'one' => '1',
+     *     'other' => '0, 2~16, 100, 1000, 10000, 100000, 1000000, …'
+     * @example For French: returns
+     *     'one' => '0, 1',
+     *     'other' => '2~17, 100, 1000, 10000, 100000, 1000000, …'
+     * @example For Russian returns
+     *     'one' => '1, 21, 31, 41, 51, 61, 71, 81, 101, 1001, …',
+     *     'few' => '2~4, 22~24, 32~34, 42~44, 52~54, 62, 102, 1002, …',
+     *     'other' => '0, 5~19, 100, 1000, 10000, 100000, 1000000, …',
+     */
+    public function getPluralsCases()
+    {
+        return (array) $this->msPluralCases;
     }
 
     public static function registerPage($page)
@@ -463,7 +497,7 @@ class Section extends Page
         }
         $db = Database::get();
         $r = $db->GetRow(
-            'select cID, msLanguage, msCountry, msNumPlurals, msPluralRule from MultilingualSections where cID = ?',
+            'select cID, msLanguage, msCountry, msNumPlurals, msPluralRule, msPluralCases from MultilingualSections where cID = ?',
             array($cID)
         );
         if ($r && is_array($r) && $r['msLanguage']) {
