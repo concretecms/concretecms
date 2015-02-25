@@ -219,6 +219,10 @@
       <NOTNULL/>
       <DEFAULT value="(n != 1)"/>
     </field>
+    <field name="msPluralCases" type="C" size="1000">
+      <NOTNULL/>
+      <DEFAULT value="one@1\nother@0, 2~16, 100, 1000, 10000, 100000, 1000000, …"/>
+    </field>
   </table>
   <table name="MultilingualPageRelations">
     <field name="mpRelationID" type="I" size="10">
