@@ -952,7 +952,7 @@ class Package extends Object
 
     public function upgrade()
     {
-        $this->refreshDatabase();
+        $this->upgradeDatabase();
 
         // now we refresh all blocks
         $items = $this->getPackageItems();
