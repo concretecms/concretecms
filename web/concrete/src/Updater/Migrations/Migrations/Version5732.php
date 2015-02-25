@@ -16,7 +16,7 @@ class Version5732 extends AbstractMigration
 
     public function getName()
     {
-        return '20150206000000';
+        return '20150224000000';
     }
 
     public function up(Schema $schema)
@@ -45,7 +45,11 @@ class Version5732 extends AbstractMigration
             $this->updateSectionPlurals = true;
         }
         if (!$ms->hasColumn('msPluralRule')) {
-            $ms->addColumn('msPluralRule', 'string', array('notnull' => true, 'length' => 255, 'default' => '(n != 1)'));
+            $ms->addColumn('msPluralRule', 'string', array('notnull' => true, 'length' => 400, 'default' => '(n != 1)'));
+            $this->updateSectionPlurals = true;
+        }
+        if (!$ms->hasColumn('msPluralCases')) {
+            $ms->addColumn('msPluralCases', 'string', array('notnull' => true, 'length' => 1000, 'default' => "one@1\nother@0, 2~16, 100, 1000, 10000, 100000, 1000000, …"));
             $this->updateSectionPlurals = true;
         }
         $mt = $schema->getTable('MultilingualTranslations');
@@ -150,11 +154,16 @@ class Version5732 extends AbstractMigration
                 }
                 $localeInfo = \Gettext\Languages\Language::getById($locale);
                 if ($localeInfo) {
+                    $pluralCases = array();
+                    foreach($localeInfo->categories as $category) {
+                        $pluralCases[] = $category->id.'@'.$category->examples;
+                    }
                     $db->update(
                         'MultilingualSections',
                         array(
                             'msNumPlurals' => count($localeInfo->categories),
                             'msPluralRule' => $localeInfo->formula,
+                            'msPluralCases' => implode("\n", $pluralCases),
                         ),
                         array('cID' => $row['cID'])
                     );
