@@ -41,6 +41,10 @@ $addSelected = true;
 			<?=$form->label('surveyName', t('Form Name'))?>
 			<?=$form->text('surveyName', $miniSurveyInfo['surveyName'])?>
 		</div>
+        <div class="form-group">
+            <?=$form->label('submitText', t('Submit Text'))?>
+            <?=$form->text('submitText', $this->controller->submitText)?>
+        </div>
 		<div class="form-group">
 			<?=$form->label('thankyouMsg', t('Message to display when completed'))?>
 			<?=$form->textarea('thankyouMsg', $this->controller->thankyouMsg, array('rows' => 3))?>
