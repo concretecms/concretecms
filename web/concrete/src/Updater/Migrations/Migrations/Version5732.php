@@ -29,6 +29,11 @@ class Version5732 extends AbstractMigration
             $bt->refresh();
         }
 
+        $bt = BlockType::getByHandle('form');
+        if (is_object($bt)) {
+            $bt->refresh();
+        }
+
         $pkx = Category::getByHandle('multilingual_section');
         if (!is_object($pkx)) {
             $pkx = Category::add('multilingual_section');
