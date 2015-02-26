@@ -646,7 +646,7 @@ Translator.prototype = {
         window.alert(data.responseText);
       }
     })
-    .success(function(response) {
+    .done(function(response) {
       if(response && response.error) {
         window.alert(response.errors.join("\n"));
         return;
