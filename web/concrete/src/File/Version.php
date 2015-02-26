@@ -702,9 +702,12 @@ class Version
         }
 
         $types = Type::getVersionList();
+
+        $fr = $this->getFileResource();
+        $image = \Image::load($fr->read());
+
         foreach ($types as $type) {
 
-            $fr = $this->getFileResource();
 
             // delete the file if it exists
             $this->deleteThumbnail($type);
@@ -712,8 +715,6 @@ class Version
             if ($this->getAttribute('width') <= $type->getWidth()) {
                 continue;
             }
-
-            $image = \Image::load($fr->read());
 
             $filesystem = $this->getFile()
                                ->getFileStorageLocationObject()
@@ -748,6 +749,9 @@ class Version
             if ($type->getHandle() == \Config::get('concrete.icons.file_manager_detail.handle')) {
                 $this->fvHasDetailThumbnail = true;
             }
+
+            unset($thumbnail);
+            unset($filesystem);
 
         }
     }
@@ -882,11 +886,11 @@ class Version
 
         $size = $fsr->getSize();
 
-        $title = ($firstRun) ? $this->getFilename() : $this->getTitle();
-
         $this->fvExtension = $ext;
         $this->fvType = $ftl->getGenericType();
-        $this->fvTitle = $title;
+        if (!$this->fvTitle) {
+            $this->fvTitle = $this->getFilename();
+        }
         $this->fvSize = $size;
 
         if (is_object($ftl)) {
