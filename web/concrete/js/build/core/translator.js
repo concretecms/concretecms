@@ -60,7 +60,7 @@ Translation.prototype = {
     this.li.ccmTranslation = this;
     this.li.className = 'list-group-item clearfix' + (this.isTranslated ? ' list-group-item-success' : '');
     var sub = document.createElement('span');
-    sub.textContent = sub.textText = this.original;
+    sub.textContent = sub.innerText = this.original;
     this.li.appendChild(sub);
     this.liTranslated = document.createElement('span');
     this.translationUpdated(true);
@@ -71,7 +71,7 @@ Translation.prototype = {
     };
   },
   translationUpdated: function(skipSetClass) {
-    this.liTranslated.textContent = this.liTranslated.textText = (this.isTranslated ? this.translations[0] : '');
+    this.liTranslated.textContent = this.liTranslated.innerText = (this.isTranslated ? this.translations[0] : '');
     if(skipSetClass !== true) {
       if(this.isTranslated) {
         $(this.li).addClass('list-group-item-success');
