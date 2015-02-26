@@ -3,6 +3,7 @@
 namespace Concrete\Core\Error;
 use Loader;
 use stdClass;
+use Exception;
 
 class Error {
 
