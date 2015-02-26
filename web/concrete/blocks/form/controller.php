@@ -151,7 +151,7 @@ class Controller extends BlockController {
 			$q = "insert into {$this->btTable} (questionSetId, surveyName, submitText, notifyMeOnSubmission, recipientEmail, thankyouMsg, displayCaptcha, redirectCID, addFilesToSet, bID) values (?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
 		}else{
 			$v[] = $data['qsID'];
-			$q = "update {$this->btTable} set questionSetId = ?, surveyName=?, submitText, notifyMeOnSubmission=?, recipientEmail=?, thankyouMsg=?, displayCaptcha=?, redirectCID=?, addFilesToSet=? where bID = ? AND questionSetId= ?";
+			$q = "update {$this->btTable} set questionSetId = ?, surveyName=?, submitText=?, notifyMeOnSubmission=?, recipientEmail=?, thankyouMsg=?, displayCaptcha=?, redirectCID=?, addFilesToSet=? where bID = ? AND questionSetId= ?";
 		}
 		
 		$rs = $db->query($q,$v);  
@@ -238,7 +238,7 @@ class Controller extends BlockController {
 			//duplicate survey block record 
 			//with a new Block ID and a new Question 
 			$v = array($newQuestionSetId,$row['surveyName'],$row['submitText'], $newBID,$row['thankyouMsg'],intval($row['notifyMeOnSubmission']),$row['recipientEmail'],$row['displayCaptcha'], $row['addFilesToSet']);
-			$q = "insert into {$this->btTable} ( questionSetId, surveyName, submitText bID,thankyouMsg,notifyMeOnSubmission,recipientEmail,displayCaptcha,addFilesToSet) values (?, ?, ?, ?, ?, ?, ?, ?,?)";
+			$q = "insert into {$this->btTable} ( questionSetId, surveyName, submitText, bID,thankyouMsg,notifyMeOnSubmission,recipientEmail,displayCaptcha,addFilesToSet) values (?, ?, ?, ?, ?, ?, ?, ?,?)";
 			$result=$db->Execute($q, $v); 
 			
 			$rs=$db->query("SELECT * FROM {$this->btQuestionsTablename} WHERE questionSetId=$oldQuestionSetId AND bID=".intval($this->bID) );
