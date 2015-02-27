@@ -78,12 +78,14 @@ class Controller extends BlockController
     {
         try {
             $class = camelcase(substr($this->filename, 0, strrpos($this->filename, '.php')));
-            return \Core::make(
+            $cl = \Core::make(
                 overrideable_core_class(
                     'Block\\ExternalForm\\Form\\Controller\\' . $class,
                     DIRNAME_BLOCKS . '/external_form/form/controller/' . $this->filename
                 )
             );
+            $cl->bID = $this->bID;
+            return $cl;
         } catch (\Exception $e) {}
     }
 

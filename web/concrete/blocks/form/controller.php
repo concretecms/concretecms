@@ -246,8 +246,12 @@ class Controller extends BlockController {
 	
 
 	//users submits the completed survey
-	function action_submit_form() { 
-	
+	function action_submit_form($bID = false) {
+
+		if ($this->bID != $bID) {
+			return false;
+		}
+
 		$ip = Loader::helper('validation/ip');
 		$this->view();
 		

@@ -110,6 +110,7 @@ class BlockView extends AbstractView
                 $c = Page::getCurrentPage();
                 if (is_object($b) && is_object($c)) {
                     $arguments = func_get_args();
+                    $arguments[] = $b->getBlockID();
                     array_unshift($arguments, $c);
                     return call_user_func_array(array('\Concrete\Core\Routing\URL', 'page'), $arguments);
                 }

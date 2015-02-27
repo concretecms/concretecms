@@ -27,7 +27,7 @@ class Controller extends BlockController
         return t("Switch Language");
     }
 
-    public function action_switch_language($currentPageID, $sectionID)
+    public function action_switch_language($currentPageID, $sectionID, $bID = false)
     {
         $lang = Section::getByID(intval($sectionID));
         if (is_object($lang)) {

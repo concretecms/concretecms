@@ -46,7 +46,7 @@
                     action: 'save_inline'
                 });
             });
-            
+
             my.bindEvent('EditModeBlockEditInline', function (event, data) {
                 var block = data.block,
                     area = block.getArea(),
