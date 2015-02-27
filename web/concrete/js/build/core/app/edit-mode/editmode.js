@@ -39,6 +39,14 @@
                 });
             });
 
+            my.bindEvent('EditModeBlockSaveInline', function(event, data) {
+                $('#ccm-block-form').submit();
+                ConcreteEvent.fire('EditModeExitInlineSaved');
+                ConcreteEvent.fire('EditModeExitInline', {
+                    action: 'save_inline'
+                });
+            });
+            
             my.bindEvent('EditModeBlockEditInline', function (event, data) {
                 var block = data.block,
                     area = block.getArea(),
