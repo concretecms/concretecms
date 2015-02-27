@@ -16,16 +16,13 @@ RedactorPlugins.concrete5inline = {
             ConcreteEvent.fire('EditModeExitInline');
             obj.destroy();
 
-            Concrete.getEditMode().scanBlocks();
+            // i don't believe this is necessary because I believe this is handled by EditModeExitInline
+            //Concrete.getEditMode().scanBlocks();
         });
         $('#ccm-redactor-save-button').unbind().on('click', function() {
             $('#redactor-content').val(obj.get());
             toolbar.hide();
-            $('#ccm-block-form').submit();
-            ConcreteEvent.fire('EditModeExitInlineSaved');
-            ConcreteEvent.fire('EditModeExitInline', {
-                action: 'save_inline'
-            });
+            ConcreteEvent.fire('EditModeBlockSaveInline');
         });
 
     }
