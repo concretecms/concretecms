@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 <div class="ccm-ui">
 
     <form class="form-stacked" data-dialog-form="delete-alias" method="post" action="<?=$controller->action('submit')?>">

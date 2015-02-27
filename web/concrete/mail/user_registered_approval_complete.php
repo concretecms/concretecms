@@ -13,7 +13,7 @@ ob_start();
 <?= t("Your registration has been approved. You can log into your new account here") ?>:<br />
 <br />
 <a href="<?= BASE_URL.View::url('/login') ?>"><?= BASE_URL.View::url('/login') ?></a>
-<?
+<?php
 
 $bodyHTML = ob_get_clean();
 /**
@@ -31,7 +31,7 @@ ob_start();
 <?= t("Your registration has been approved. You can log into your new account here") ?>:
 
 <?= BASE_URL.View::url('/login') ?>
-<?
+<?php
 
 $body = ob_get_clean();
 /**

@@ -1,5 +1,5 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
-<?
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php
 
 $helperFile = Loader::helper('concrete/file');
 if ($controller->getTask() == 'add') {

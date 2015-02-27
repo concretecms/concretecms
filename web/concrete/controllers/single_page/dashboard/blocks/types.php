@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Controller\SinglePage\Dashboard\Blocks;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use Loader;

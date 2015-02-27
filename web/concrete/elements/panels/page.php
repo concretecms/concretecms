@@ -11,7 +11,7 @@ $seoSet = AttributeSet::getByHandle('seo');
 ?>
 <section>
     <header><?= t('Page Settings') ?></header>
-    <? if ($cp->canEditPageContents()
+    <?php if ($cp->canEditPageContents()
         || $cp->canEditPageTheme()
         || $cp->canEditPageProperties()
         || $cp->canEditPageTemplate()) { ?>
@@ -68,7 +68,7 @@ $seoSet = AttributeSet::getByHandle('seo');
         }
         ?>
     </menu>
-    <? } ?>
+    <?php } ?>
 
     <menu>
         <?php

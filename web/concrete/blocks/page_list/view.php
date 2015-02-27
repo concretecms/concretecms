@@ -5,9 +5,9 @@ $c = Page::getCurrentPage();
 $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
 ?>
 
-<? if ( $c->isEditMode() && $controller->isBlockEmpty()) { ?>
+<?php if ( $c->isEditMode() && $controller->isBlockEmpty()) { ?>
     <div class="ccm-edit-mode-disabled-item"><?=t('Empty Page List Block.')?></div>
-<? } else { ?>
+<?php } else { ?>
 
 <div class="ccm-block-page-list-wrapper">
 
@@ -15,7 +15,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
         <div class="ccm-block-page-list-header">
             <h5><?=$pageListTitle?></h5>
         </div>
-    <? endif; ?>
+    <?php endif; ?>
 
     <?php if ($rssUrl): ?>
         <a href="<?php echo $rssUrl ?>" target="_blank" class="ccm-block-page-list-rss-feed"><i class="fa fa-rss"></i></a>
@@ -87,54 +87,54 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 
         <?php if (is_object($thumbnail)): ?>
             <div class="ccm-block-page-list-page-entry-thumbnail">
-                <?
+                <?php
                 $img = Core::make('html/image', array($thumbnail));
                 $tag = $img->getTag();
                 $tag->addClass('img-responsive');
                 print $tag;
                 ?>
             </div>
-        <? endif; ?>
+        <?php endif; ?>
 
         <?php if ($includeEntryText): ?>
             <div class="ccm-block-page-list-page-entry-text">
 
-                <? if ($includeName): ?>
+                <?php if ($includeName): ?>
                 <div class="ccm-block-page-list-title">
-                    <? if ($useButtonForLink) { ?>
+                    <?php if ($useButtonForLink) { ?>
                         <?php echo $title; ?>
-                    <? } else { ?>
+                    <?php } else { ?>
                         <a href="<?php echo $url ?>" target="<?php echo $target ?>"><?php echo $title ?></a>
-                    <? } ?>
+                    <?php } ?>
                 </div>
-                <? endif; ?>
+                <?php endif; ?>
 
-                <? if ($includeDate): ?>
+                <?php if ($includeDate): ?>
                     <div class="ccm-block-page-list-date"><?=$date?></div>
-                <? endif; ?>
+                <?php endif; ?>
 
-                <? if ($includeDescription): ?>
+                <?php if ($includeDescription): ?>
                     <div class="ccm-block-page-list-description">
                         <?php echo $description ?>
                     </div>
-                <? endif; ?>
+                <?php endif; ?>
 
-                <? if ($useButtonForLink): ?>
+                <?php if ($useButtonForLink): ?>
                 <div class="ccm-block-page-list-page-entry-read-more">
                     <a href="<?=$url?>" class="<?=$buttonClasses?>"><?=$buttonLinkText?></a>
                 </div>
-                <? endif; ?>
+                <?php endif; ?>
 
                 </div>
-        <? endif; ?>
+        <?php endif; ?>
         </div>
 
 	<?php endforeach; ?>
     </div>
 
-    <? if (count($pages) == 0): ?>
+    <?php if (count($pages) == 0): ?>
         <div class="ccm-block-page-list-no-pages"><?=$noResultsMessage?></div>
-    <? endif;?>
+    <?php endif;?>
 
 </div><!-- end .ccm-block-page-list -->
 
@@ -143,4 +143,4 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
     <?php echo $pagination;?>
 <?php endif; ?>
 
-<? } ?>
+<?php } ?>

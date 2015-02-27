@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Block\DashboardFeaturedAddon;
 use Loader;
 use \Concrete\Core\Block\BlockController;

@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Controller\SinglePage;
 use Page;
 use \Concrete\Core\Page\Controller\AccountPageController;

@@ -80,9 +80,9 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 
 <div class="ccm-ui ccm-copy-form">
 
-    <? if ($fcnt == 0) { ?>
+    <?php if ($fcnt == 0) { ?>
         <?= t("You do not have permission to copy any of the selected files."); ?>
-    <? } else { ?>
+    <?php } else { ?>
         <?= t('Are you sure you want to copy the following files?') ?><br/><br/>
 
         <form id="ccm-<?= $searchInstance ?>-duplicate-form" method="post"
@@ -90,7 +90,7 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
             <?= $form->hidden('task', 'duplicate_multiple_files') ?>
             <table border="0" cellspacing="0" cellpadding="0" width="100%" class="table table-bordered">
 
-                <? foreach ($files as $f) {
+                <?php foreach ($files as $f) {
                     $fp = new Permissions($f);
                     if ($fp->canCopyFile()) {
                         $fv = $f->getApprovedVersion();
@@ -109,19 +109,19 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
                                 <td><?= $fv->getAuthorName() ?></td>
                             </tr>
 
-                        <?
+                        <?php
                         }
                     }
 
                 } ?>
             </table>
-            <? $ih = Loader::helper('concrete/ui') ?>
+            <?php $ih = Loader::helper('concrete/ui') ?>
             <div class="dialog-buttons">
                 <button class="btn btn-default cancel"><?= t('Cancel') ?></button>
                 <button class="btn btn-primary pull-right submit"><?= t('Copy') ?></button>
             </div>
         </form>
-    <?
+    <?php
 
     }
     }?>

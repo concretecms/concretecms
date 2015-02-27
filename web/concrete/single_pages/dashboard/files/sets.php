@@ -1,11 +1,11 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<? $ih = Loader::helper('concrete/ui'); ?>
+<? if ($this->controller->getTask() == 'view_detail') { ?>
 
-$ih = Core::make('helper/concrete/ui'); 
-$dh = Core::make('helper/date');
-
-?>
-<?php if ($this->controller->getTask() == 'view_detail') { ?>
-
+	<?
+	$u=new User();
+	$delConfirmJS = t('Are you sure you want to permanently remove this file set?');
+	?>
 	<script type="text/javascript">
 		deleteFileSet = function() {
 			if (confirm('<?=t('Are you sure you want to permanently remove this file set?')?>')) { 
@@ -25,7 +25,7 @@ $dh = Core::make('helper/date');
 	<form method="post" class="form-horizontal" id="file_sets_edit" action="<?=$view->url('/dashboard/files/sets', 'file_sets_edit')?>">
 		<?=$validation_token->output('file_sets_edit');?>
 
-		<?= $ih->tabs(array(
+		<? print Loader::helper('concrete/ui')->tabs(array(
 			array('details', t('Details'), true),
 			array('files', t('Files in Set'))
 		));?>
@@ -37,7 +37,9 @@ $dh = Core::make('helper/date');
                 <?=$form->text('file_set_name',$fs->fsName, array('class' => 'span5'));?>
 			</div>
 
-            <?php if (Config::get('concrete.permissions.model') != 'simple' && $fsp->canEditFileSetPermissions()) { ?>
+			<?
+			if (Config::get('concrete.permissions.model') != 'simple') {
+				if ($fsp->canEditFileSetPermissions()) { ?>
 			
                 <div class="form-group">
                     <div class="checkbox">
@@ -45,17 +47,20 @@ $dh = Core::make('helper/date');
                     </div>
                 </div>
 
-                <div id="ccm-permission-list-form" <?= !$fs->overrideGlobalPermissions() ? 'style="display: none"' : ''?> >
-                    <?php Loader::element('permission/lists/file_set', array("fs" => $fs)); ?>
-                </div>
-            <?php } ?>
+                    <div id="ccm-permission-list-form" <? if (!$fs->overrideGlobalPermissions()) { ?> style="display: none" <? } ?>>
+
+                    <? Loader::element('permission/lists/file_set', array("fs" => $fs)); ?>
+
+                    </div>
+				<? } 
 			
 			<?= $form->hidden('fsID',$fs->getFileSetID()); ?>
 			
 		</div>
 
 		<div class="ccm-tab-content" id="ccm-tab-content-files">
-		<?php
+		<?
+		
 		$fl = new FileList();
 		$fl->filterBySet($fs);
 		$fl->sortByFileSetDisplayOrder();
@@ -78,21 +83,21 @@ $dh = Core::make('helper/date');
                     </tr>
                 </thead>
 
-                <tbody class="ccm-file-set-file-list">
+            <?
+            foreach($files as $f) { ?>
 
-                    <?php foreach($files as $f) { ?>
-                        <tr id="fID_<?=$f->getFileID()?>" class="">
-                            <td><i class="fa fa-arrows-v"></i></td>
-                            <td ><?=$f->getListingThumbnailImage()?><input type="hidden" name="fsDisplayOrder[]" value="<?=$f->getFileID()?>" /></td>
-                            <td data-key="type" ><?=$f->getGenericTypetext()?>/<?=$f->getType()?></td>
-                            <td data-key="title"><?=$f->getTitle()?></td>
-                            <td data-key="filename"><?=$f->getFileName()?></td>
-                            <td data-key="added" data-sort="<?=$f->getDateAdded()->getTimestamp()?>" ><?=$dh->formatDateTime($f->getDateAdded()->getTimestamp())?></td>
-                        </tr>
-                    <?php } ?>
-                </tbody>
-            </table>
-		<?php } else { ?>
+                <li id="fID_<?=$f->getFileID()?>" class="">
+                    <div>
+                        <?=$f->getListingThumbnailImage()?>
+                        <input type="hidden" name="fsDisplayOrder[]" value="<?=$f->getFileID()?>" />
+                        <span style="word-wrap: break-word"><?=$f->getTitle()?></span>
+                    </div>
+                </li>
+
+            <? } ?>
+
+            </ul>
+		<? } else { ?>
 			<div class="alert alert-info"><?=t('There are no files in this set.')?></div>
 		<?php } ?>
 		</div>

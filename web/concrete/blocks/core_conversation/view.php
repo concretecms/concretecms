@@ -52,4 +52,4 @@ if (is_object($conversation)) {
         });
     });
     </script>
-<? } ?>
+<?php } ?>

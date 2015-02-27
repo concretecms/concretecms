@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $canRead = false;
 use \Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;

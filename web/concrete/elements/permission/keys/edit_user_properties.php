@@ -1,18 +1,18 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<? $included = $permissionAccess->getAccessListItems(PermissionKey::ACCESS_TYPE_INCLUDE); ?>
-<? $excluded = $permissionAccess->getAccessListItems(PermissionKey::ACCESS_TYPE_EXCLUDE); ?>
+<?php $included = $permissionAccess->getAccessListItems(PermissionKey::ACCESS_TYPE_INCLUDE); ?>
+<?php $excluded = $permissionAccess->getAccessListItems(PermissionKey::ACCESS_TYPE_EXCLUDE); ?>
 
-<? $attributes = UserAttributeKey::getList(); ?>
-<? $form = Loader::helper('form'); ?>
+<?php $attributes = UserAttributeKey::getList(); ?>
+<?php $form = Loader::helper('form'); ?>
 
-<? if (count($included) > 0 || count($excluded) > 0) { ?>
+<?php if (count($included) > 0 || count($excluded) > 0) { ?>
 
-<? if (count($included) > 0) { ?>
+<?php if (count($included) > 0) { ?>
 
 <h3><?=t('Who can edit what?')?></h3>
 
-<? foreach($included as $assignment) {
+<?php foreach($included as $assignment) {
 	$entity = $assignment->getAccessEntityObject(); 
 ?>
 
@@ -21,34 +21,34 @@
 	<label><?=$entity->getAccessEntityLabel()?></label>
 	<div class="input">
 	<?=$form->select('propertiesIncluded[' . $entity->getAccessEntityID() . ']', array('A' => t('All Attributes'), 'C' => t('Custom')), $assignment->getAttributesAllowedPermission())?><br/><br/>
-	<ul class="attribute-list inputs-list" <? if ($assignment->getAttributesAllowedPermission() != 'C') { ?>style="display: none"<? } ?>>
-		<? foreach($attributes as $ak) { ?>
-			<li><label><input type="checkbox" name="akIDInclude[<?=$entity->getAccessEntityID()?>][]" value="<?=$ak->getAttributeKeyID()?>" <? if ($assignment->getAttributesAllowedPermission() == 'A' || in_array($ak->getAttributeKeyID(), $assignment->getAttributesAllowedArray())) { ?> checked="checked" <? } ?> /> <span><?=$ak->getAttributeKeyDisplayName()?></span></label></li>
-		<? } ?>
+	<ul class="attribute-list inputs-list" <?php if ($assignment->getAttributesAllowedPermission() != 'C') { ?>style="display: none"<?php } ?>>
+		<?php foreach($attributes as $ak) { ?>
+			<li><label><input type="checkbox" name="akIDInclude[<?=$entity->getAccessEntityID()?>][]" value="<?=$ak->getAttributeKeyID()?>" <?php if ($assignment->getAttributesAllowedPermission() == 'A' || in_array($ak->getAttributeKeyID(), $assignment->getAttributesAllowedArray())) { ?> checked="checked" <?php } ?> /> <span><?=$ak->getAttributeKeyDisplayName()?></span></label></li>
+		<?php } ?>
 	</ul>
 	<ul class="inputs-list">
-		<li><label><input type="checkbox" name="allowEditUName[<?=$entity->getAccessEntityID()?>]" value="1" <? if ($assignment->allowEditUserName()) { ?>checked="checked" <? } ?> /> <span><?=t('Username')?></span></label></li>
-		<li><label><input type="checkbox" name="allowEditUEmail[<?=$entity->getAccessEntityID()?>]" value="1" <? if ($assignment->allowEditEmail()) { ?>checked="checked" <? } ?> /> <span><?=t('Email Address')?></span></label></li>
-		<li><label><input type="checkbox" name="allowEditUPassword[<?=$entity->getAccessEntityID()?>]" value="1" <? if ($assignment->allowEditPassword()) { ?>checked="checked" <? } ?> /> <span><?=t('Password')?></span></label></li>
-		<li><label><input type="checkbox" name="allowEditUAvatar[<?=$entity->getAccessEntityID()?>]" value="1" <? if ($assignment->allowEditAvatar()) { ?>checked="checked" <? } ?> /> <span><?=t('Avatar')?></span></label></li>
-		<li><label><input type="checkbox" name="allowEditUTimezone[<?=$entity->getAccessEntityID()?>]" value="1" <? if ($assignment->allowEditTimezone()) { ?>checked="checked" <? } ?> /> <span><?=t('Timezone')?></span></label></li>
-		<li><label><input type="checkbox" name="allowEditUDefaultLanguage[<?=$entity->getAccessEntityID()?>]" value="1" <? if ($assignment->allowEditDefaultLanguage()) { ?>checked="checked" <? } ?> /> <span><?=t('Default Language')?></span></label></li>
+		<li><label><input type="checkbox" name="allowEditUName[<?=$entity->getAccessEntityID()?>]" value="1" <?php if ($assignment->allowEditUserName()) { ?>checked="checked" <?php } ?> /> <span><?=t('Username')?></span></label></li>
+		<li><label><input type="checkbox" name="allowEditUEmail[<?=$entity->getAccessEntityID()?>]" value="1" <?php if ($assignment->allowEditEmail()) { ?>checked="checked" <?php } ?> /> <span><?=t('Email Address')?></span></label></li>
+		<li><label><input type="checkbox" name="allowEditUPassword[<?=$entity->getAccessEntityID()?>]" value="1" <?php if ($assignment->allowEditPassword()) { ?>checked="checked" <?php } ?> /> <span><?=t('Password')?></span></label></li>
+		<li><label><input type="checkbox" name="allowEditUAvatar[<?=$entity->getAccessEntityID()?>]" value="1" <?php if ($assignment->allowEditAvatar()) { ?>checked="checked" <?php } ?> /> <span><?=t('Avatar')?></span></label></li>
+		<li><label><input type="checkbox" name="allowEditUTimezone[<?=$entity->getAccessEntityID()?>]" value="1" <?php if ($assignment->allowEditTimezone()) { ?>checked="checked" <?php } ?> /> <span><?=t('Timezone')?></span></label></li>
+		<li><label><input type="checkbox" name="allowEditUDefaultLanguage[<?=$entity->getAccessEntityID()?>]" value="1" <?php if ($assignment->allowEditDefaultLanguage()) { ?>checked="checked" <?php } ?> /> <span><?=t('Default Language')?></span></label></li>
 	</ul>
 
 	</div>
 </div>
 
 
-<? }
+<?php }
 
 } ?>
 
 
-<? if (count($excluded) > 0) { ?>
+<?php if (count($excluded) > 0) { ?>
 
 <h3><?=t('Who can\'t edit what?')?></h3>
 
-<? foreach($excluded as $assignment) {
+<?php foreach($excluded as $assignment) {
 	$entity = $assignment->getAccessEntityObject(); 
 ?>
 
@@ -58,31 +58,31 @@
 	<div class="input">
 
 	<?=$form->select('propertiesExcluded[' . $entity->getAccessEntityID() . ']', array('N' => t('No Attributes'), 'C' => t('Custom')), $assignment->getAttributesAllowedPermission())?><br/><br/>
-	<ul class="attribute-list inputs-list" <? if ($assignment->getAttributesAllowedPermission() != 'C') { ?>style="display: none"<? } ?>>
-		<? foreach($attributes as $ak) { ?>
-			<li><label><input type="checkbox" name="akIDExclude[<?=$entity->getAccessEntityID()?>][]" value="<?=$ak->getAttributeKeyID()?>" <? if (in_array($ak->getAttributeKeyID(), $assignment->getAttributesAllowedArray())) { ?> checked="checked" <? } ?> /> <span><?=$ak->getAttributeKeyDisplayName()?></span></label></li>
-		<? } ?>
+	<ul class="attribute-list inputs-list" <?php if ($assignment->getAttributesAllowedPermission() != 'C') { ?>style="display: none"<?php } ?>>
+		<?php foreach($attributes as $ak) { ?>
+			<li><label><input type="checkbox" name="akIDExclude[<?=$entity->getAccessEntityID()?>][]" value="<?=$ak->getAttributeKeyID()?>" <?php if (in_array($ak->getAttributeKeyID(), $assignment->getAttributesAllowedArray())) { ?> checked="checked" <?php } ?> /> <span><?=$ak->getAttributeKeyDisplayName()?></span></label></li>
+		<?php } ?>
 	</ul>
 	<ul class="inputs-list">
-		<li><label><input type="checkbox" name="allowEditUNameExcluded[<?=$entity->getAccessEntityID()?>]" value="1" <? if ($assignment->allowEditUserName()) { ?>checked="checked" <? } ?> /> <span><?=t('Username')?></span></label></li>
-		<li><label><input type="checkbox" name="allowEditUEmailExcluded[<?=$entity->getAccessEntityID()?>]" value="1" <? if ($assignment->allowEditEmail()) { ?>checked="checked" <? } ?> /> <span><?=t('Email Address')?></span></label></li>
-		<li><label><input type="checkbox" name="allowEditUPasswordExcluded[<?=$entity->getAccessEntityID()?>]" value="1" <? if ($assignment->allowEditPassword()) { ?>checked="checked" <? } ?> /> <span><?=t('Password')?></span></label></li>
-		<li><label><input type="checkbox" name="allowEditUAvatarExcluded[<?=$entity->getAccessEntityID()?>]" value="1" <? if ($assignment->allowEditAvatar()) { ?>checked="checked" <? } ?> /> <span><?=t('Avatar')?></span></label></li>
-		<li><label><input type="checkbox" name="allowEditUTimezoneExcluded[<?=$entity->getAccessEntityID()?>]" value="1" <? if ($assignment->allowEditTimezone()) { ?>checked="checked" <? } ?> /> <span><?=t('Timezone')?></span></label></li>
-		<li><label><input type="checkbox" name="allowEditUDefaultLanguageExcluded[<?=$entity->getAccessEntityID()?>]" value="1" <? if ($assignment->allowEditDefaultLanguage()) { ?>checked="checked" <? } ?> /> <span><?=t('Default Language')?></span></label></li>
+		<li><label><input type="checkbox" name="allowEditUNameExcluded[<?=$entity->getAccessEntityID()?>]" value="1" <?php if ($assignment->allowEditUserName()) { ?>checked="checked" <?php } ?> /> <span><?=t('Username')?></span></label></li>
+		<li><label><input type="checkbox" name="allowEditUEmailExcluded[<?=$entity->getAccessEntityID()?>]" value="1" <?php if ($assignment->allowEditEmail()) { ?>checked="checked" <?php } ?> /> <span><?=t('Email Address')?></span></label></li>
+		<li><label><input type="checkbox" name="allowEditUPasswordExcluded[<?=$entity->getAccessEntityID()?>]" value="1" <?php if ($assignment->allowEditPassword()) { ?>checked="checked" <?php } ?> /> <span><?=t('Password')?></span></label></li>
+		<li><label><input type="checkbox" name="allowEditUAvatarExcluded[<?=$entity->getAccessEntityID()?>]" value="1" <?php if ($assignment->allowEditAvatar()) { ?>checked="checked" <?php } ?> /> <span><?=t('Avatar')?></span></label></li>
+		<li><label><input type="checkbox" name="allowEditUTimezoneExcluded[<?=$entity->getAccessEntityID()?>]" value="1" <?php if ($assignment->allowEditTimezone()) { ?>checked="checked" <?php } ?> /> <span><?=t('Timezone')?></span></label></li>
+		<li><label><input type="checkbox" name="allowEditUDefaultLanguageExcluded[<?=$entity->getAccessEntityID()?>]" value="1" <?php if ($assignment->allowEditDefaultLanguage()) { ?>checked="checked" <?php } ?> /> <span><?=t('Default Language')?></span></label></li>
 	</ul>
 	</div>
 </div>
 
 
 
-<? }
+<?php }
 
 } ?>
 
-<? } else {  ?>
+<?php } else {  ?>
 	<p><?=t('No users or groups selected.')?></p>
-<? } ?>
+<?php } ?>
 
 <script type="text/javascript">
 $(function() {

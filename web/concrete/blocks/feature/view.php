@@ -1,14 +1,14 @@
 <?php  defined('C5_EXECUTE') or die("Access Denied."); ?>
-<?
+<?php
 if ($linkURL) {
     $title = '<a href="' . $linkURL . '">' . $title . '</a>';
 }
 ?>
 <div class="ccm-block-feature-item">
-    <? if ($title) { ?>
+    <?php if ($title) { ?>
         <h4><i class="fa fa-<?=$icon?>"></i> <?=$title?></h4>
-    <? } ?>
-    <? if ($paragraph) { ?>
+    <?php } ?>
+    <?php if ($paragraph) { ?>
         <p><?=$paragraph?></p>
-    <? } ?>
+    <?php } ?>
 </div>

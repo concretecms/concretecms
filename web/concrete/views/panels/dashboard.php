@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 Loader::element('panels/dashboard', array(
 'c' => $c,

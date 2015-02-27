@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <div class="row">
 <div class="col-sm-8 col-sm-offset-2">
@@ -11,10 +11,10 @@
 			<br /><br />
 			<a href="http://www.adobe.com/shockwave/download/download.cgi?P1_Prod_Version=ShockwaveFlash">Download the Flash Player here</a>.
 		</div>
-		<? if ($profile->hasAvatar()) { ?>
+		<?php if ($profile->hasAvatar()) { ?>
 			<br/><br/>
 			<a href="<?php echo $view->action('delete')?>" class="btn btn-danger"><?php echo t('Remove your user avatar')?> <i class="icon-trash icon-white"></i></a>
-		<? } ?>
+		<?php } ?>
 
 		<script type="text/javascript">
 		ThumbnailBuilder_onSaveCompleted = function() {

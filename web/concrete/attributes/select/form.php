@@ -49,7 +49,7 @@ if ($akSelectAllowMultipleValues && $akSelectAllowOtherValues) { // display auto
 				<span class="badge"><?=$opt->getSelectAttributeOptionValue()?></span>
 				<a class="text-error" title="<?=$removeOptionText?>" href="javascript:void(0);" onclick="$(this).parent().remove()">x</a>
 			</div>
-		<? }
+		<?php }
 
 		// now we get items from the post
 		$vals = $this->post('atSelectNewOption');
@@ -60,7 +60,7 @@ if ($akSelectAllowMultipleValues && $akSelectAllowOtherValues) { // display auto
 					<span class="badge"><?=$v?></span>
 					<a class="text-error" title="<?=$removeOptionText?>" onclick="ccmAttributeTypeSelectTagHelper<?php echo $attrKeyID?>.remove(this)" href="javascript:void(0)">x</a>
 				</div>
-			<?
+			<?php
 			}
 		}
 
@@ -149,14 +149,14 @@ if ($akSelectAllowMultipleValues && $akSelectAllowOtherValues) { // display auto
 
 	if ($akSelectAllowMultipleValues) { ?>
 
-		<? foreach($options as $opt) { ?>
+		<?php foreach($options as $opt) { ?>
 			<div class="checkbox"><label>
 				<?=$form->checkbox($this->field('atSelectOptionID') . '[]', $opt->getSelectAttributeOptionID(), in_array($opt->getSelectAttributeOptionID(), $selectedOptions)); ?>
 				<?=$opt->getSelectAttributeOptionDisplayValue()?>
                 </label>
             </div>
-		<? } ?>
-	<? } else {
+		<?php } ?>
+	<?php } else {
 		$opts = array('' => t('** None'));
 		foreach($options as $opt) {
 			$opts[$opt->getSelectAttributeOptionID()] = $opt->getSelectAttributeOptionDisplayValue();
@@ -164,7 +164,7 @@ if ($akSelectAllowMultipleValues && $akSelectAllowOtherValues) { // display auto
 		?>
 		<?=$form->select($this->field('atSelectOptionID') . '[]', $opts, $selectedOptions[0]); ?>
 
-	<? }
+	<?php }
 
 	if ($akSelectAllowOtherValues) { ?>
 		<div id="newAttrValueRows<?=$this->attributeKey->getAttributeKeyID()?>" class="newAttrValueRows"></div>
@@ -173,7 +173,7 @@ if ($akSelectAllowMultipleValues && $akSelectAllowOtherValues) { // display auto
 				<?=t('Add Another Option')?>
 			</a>
 		</div>
-	<? } ?>
+	<?php } ?>
 
 	<script type="text/javascript">
 	//<![CDATA[

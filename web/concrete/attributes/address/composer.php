@@ -1,6 +1,6 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
-<? $f = Loader::helper('form'); ?>
-<? $co = Loader::helper('lists/countries'); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php $f = Loader::helper('form'); ?>
+<?php $co = Loader::helper('lists/countries'); ?>
 
 <div class="ccm-attribute-address-composer-wrapper ccm-attribute-address-<?=$key->getAttributeKeyID()?>">
 
@@ -21,7 +21,7 @@
 
     <div class="form-group ccm-attribute-address-state-province">
         <?=$f->label($this->field('state_province'), t('State/Province'))?>
-    <?
+    <?php
     $spreq = $f->getRequestValue($this->field('state_province'));
     if ($spreq != false) {
         $state_province = $spreq;
@@ -35,7 +35,7 @@
         <?=$f->text($this->field('state_province_text'), $state_province, array('style' => 'display: none', 'ccm-attribute-address-field-name' => $this->field('state_province')))?>
     </div>
 
-    <?
+    <?php
 
     if (!$country && !$search) {
         if ($akDefaultCountry != '') {

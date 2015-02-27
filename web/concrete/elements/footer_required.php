@@ -1,4 +1,4 @@
-<?
+<?php
 
 $c = Page::getCurrentPage();
 if (is_object($c)) {

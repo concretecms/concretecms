@@ -1,8 +1,8 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 <div style="height: 100%">
-<? foreach($_REQUEST['cvID'] as $cvID) {
+<?php foreach($_REQUEST['cvID'] as $cvID) {
 	$tabs[] = array('view-version-' . $cvID, t('Version %s', $cvID), $checked);
 	$checked = false;
 } 
@@ -14,9 +14,9 @@ foreach($_REQUEST['cvID'] as $cvID) { ?>
 	<iframe border="0" id="v<?=time()?>" frameborder="0" height="100%" width="100%" src="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/preview_version?cvID=<?=$cvID?>&amp;cID=<?=$_REQUEST['cID']?>" />
 	</div>
 	
-	<? if ($display == 'block') {
+	<?php if ($display == 'block') {
 		$display = 'none';
 	} ?>
 
-<? } ?>
+<?php } ?>
 </div>

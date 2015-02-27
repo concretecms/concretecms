@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 <div class="row">
 <div class="col-sm-10 col-sm-offset-1">
 <div class="page-header">
@@ -7,7 +7,7 @@
 </div>
 </div>
 
-<?
+<?php
 $attribs = UserAttributeKey::getRegistrationList();
 
 if($registerSuccess) { ?>
@@ -18,25 +18,25 @@ if($registerSuccess) { ?>
 			?>
 			<p><strong><?=$successMsg ?></strong><br/><br/>
 			<a href="<?=$view->url('/')?>"><?=t('Return to Home')?></a></p>
-			<?
+			<?php
 		break;
 		case "validate":
 			?>
 			<p><?=$successMsg[0] ?></p>
 			<p><?=$successMsg[1] ?></p>
 			<p><a href="<?=$view->url('/')?>"><?=t('Return to Home')?></a></p>
-			<?
+			<?php
 		break;
 		case "pending":
 			?>
 			<p><?=$successMsg ?></p>
 			<p><a href="<?=$view->url('/')?>"><?=t('Return to Home')?></a></p>
-            <?
+            <?php
 		break;
 	} ?>
 </div>
 </div>
-<?
+<?php
 } else { ?>
 	<form method="post" action="<?=$view->url('/register', 'do_register')?>" class="form-stacked">
 		<div class="row">
@@ -105,7 +105,7 @@ if($registerSuccess) { ?>
 				</div>
 			</div>
 
-		<? } ?>
+		<?php } ?>
 		<div class="row">
 			<div class="col-sm-10 col-sm-offset-1">
 				<div class="form-actions">

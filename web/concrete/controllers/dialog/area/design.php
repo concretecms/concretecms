@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Controller\Dialog\Area;
 use Concrete\Core\Area\CustomStyle;
 use Concrete\Core\Page\EditResponse;

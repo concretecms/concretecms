@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <h1 class="error"><?=t('Page Forbidden')?></h1>
 
@@ -6,6 +6,6 @@
 <br/>
 <br/>
 
-<? $a = new Area("Main"); $a->display($c); ?>
+<?php $a = new Area("Main"); $a->display($c); ?>
 
 <a href="<?=DIR_REL?>/"><?=t('Back to Home')?></a>.

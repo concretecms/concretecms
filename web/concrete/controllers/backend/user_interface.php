@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Controller\Backend;
 use \Concrete\Core\Controller\Controller;
 use \Concrete\Core\View\DialogView;

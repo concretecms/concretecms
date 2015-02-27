@@ -1,6 +1,6 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 <div class="ccm-ui">
-	<?
+	<?php
 	$c = Page::getCurrentPage();
 	$a = $b->getBlockAreaObject();
 
@@ -16,7 +16,7 @@ if (!$b->overrideAreaPermissions()) { ?>
 	<br/>
 	</div>
 
-<? } else {
+<?php } else {
 	$enablePermissions = true;
 	?>
 
@@ -27,45 +27,45 @@ if (!$b->overrideAreaPermissions()) { ?>
 	<br/>
 	</div>
 
-<? } ?>
+<?php } ?>
 
 
 <?=Loader::element('permission/help');?>
 
-<? $cat = PermissionKeyCategory::getByHandle('block');?>
+<?php $cat = PermissionKeyCategory::getByHandle('block');?>
 <form method="post" id="ccm-permission-list-form" action="<?=$cat->getToolsURL("save_permission_assignments")?>&cID=<?=$c->getCollectionID()?>&arHandle=<?=urlencode($b->getAreaHandle())?>&cvID=<?=$c->getVersionID()?>&bID=<?=$b->getBlockID()?>">
 
 <table class="ccm-permission-grid table table-striped">
 
-<?
+<?php
 $permissions = PermissionKey::getList('block');
 foreach($permissions as $pk) {
 	$pk->setPermissionObject($b);
 
 ?>
 <tr>
-	<td class="ccm-permission-grid-name" id="ccm-permission-grid-name-<?=$pk->getPermissionKeyID()?>"><strong><? if ($enablePermissions) { ?><a dialog-title="<?=$pk->getPermissionKeyDisplayName()?>" data-pkID="<?=$pk->getPermissionKeyID()?>" data-paID="<?=$pk->getPermissionAccessID()?>" onclick="ccm_permissionLaunchDialog(this)" href="javascript:void(0)"><? } ?><?=$pk->getPermissionKeyDisplayName()?><? if ($enablePermissions) { ?></a><? } ?></strong></td>
-	<td id="ccm-permission-grid-cell-<?=$pk->getPermissionKeyID()?>" <? if ($enablePermissions) { ?>class="ccm-permission-grid-cell"<? } ?>><?=Loader::element('permission/labels', array('pk' => $pk))?></td>
+	<td class="ccm-permission-grid-name" id="ccm-permission-grid-name-<?=$pk->getPermissionKeyID()?>"><strong><?php if ($enablePermissions) { ?><a dialog-title="<?=$pk->getPermissionKeyDisplayName()?>" data-pkID="<?=$pk->getPermissionKeyID()?>" data-paID="<?=$pk->getPermissionAccessID()?>" onclick="ccm_permissionLaunchDialog(this)" href="javascript:void(0)"><?php } ?><?=$pk->getPermissionKeyDisplayName()?><?php if ($enablePermissions) { ?></a><?php } ?></strong></td>
+	<td id="ccm-permission-grid-cell-<?=$pk->getPermissionKeyID()?>" <?php if ($enablePermissions) { ?>class="ccm-permission-grid-cell"<?php } ?>><?=Loader::element('permission/labels', array('pk' => $pk))?></td>
 </tr>
-<? } ?>
-<? if ($enablePermissions) { ?>
+<?php } ?>
+<?php if ($enablePermissions) { ?>
 <tr>
 	<td class="ccm-permission-grid-name" ></td>
 	<td>
 	<?=Loader::element('permission/clipboard', array('pkCategory' => $cat))?>
 	</td>
 </tr>
-<? } ?>
+<?php } ?>
 
 </table>
 </form>
 
-<? if ($enablePermissions) { ?>
+<?php if ($enablePermissions) { ?>
 <div class="dialog-buttons">
 	<a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeTop()" class="btn btn-default pull-left"><?=t('Cancel')?></a>
 	<button onclick="$('#ccm-permission-list-form').submit()" class="btn btn-primary pull-right"><?=t('Save')?> <i class="icon-ok-sign icon-white"></i></button>
 </div>
-<? } ?>
+<?php } ?>
 
 </div>
 

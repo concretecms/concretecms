@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Controller\Dialog\Area\Layout;
 
 use \Concrete\Controller\Backend\UserInterface as BackendInterfaceController;

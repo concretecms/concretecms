@@ -44,7 +44,7 @@ if ($_POST['task'] == 'delete') {
 
 if (!isset($_REQUEST['reload'])) { ?>
 	<div id="ccm-user-bulk-delete-wrapper">
-<? } ?>
+<?php } ?>
 
 	<div id="ccm-user-delete" class="ccm-ui">
 		<form method="post" id="ccm-user-bulk-delete" action="<?php echo REL_DIR_FILES_TOOLS_REQUIRED ?>/users/bulk_delete">
@@ -66,10 +66,10 @@ if (!isset($_REQUEST['reload'])) { ?>
 		<?=$ih->button_js(t('Cancel'), 'jQuery.fn.dialog.closeTop()', 'left', 'btn')?>	
 		<?=$ih->button_js(t('Delete'), 'ccm_userBulkActivate()', 'right', 'btn error')?>
 	</div>
-<?
+<?php
 if (!isset($_REQUEST['reload'])) { ?>
 </div>
-<? } ?>
+<?php } ?>
 
 <script type="text/javascript">
 ccm_userBulkActivate = function() { 

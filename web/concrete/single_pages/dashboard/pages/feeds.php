@@ -1,6 +1,6 @@
-<? defined('C5_EXECUTE') or die("Access Denied.");?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");?>
 
-<? if ($controller->getTask() == 'add'
+<?php if ($controller->getTask() == 'add'
     || $controller->getTask() == 'add_feed'
     || $controller->getTask() == 'edit'
     || $controller->getTask() == 'edit_feed'
@@ -40,7 +40,7 @@
         <button data-dialog="delete-feed" class="btn btn-danger"><?php echo t("Delete Feed")?></button>
     </div>
 
-    <? if (is_object($feed)) { ?>
+    <?php if (is_object($feed)) { ?>
 
         <div style="display: none">
             <div id="ccm-dialog-delete-feed" class="ccm-ui">
@@ -56,7 +56,7 @@
             </div>
         </div>
 
-    <? } ?>
+    <?php } ?>
 
     <script type="text/javascript">
         $(function() {
@@ -88,7 +88,7 @@
         </div>
         <div class="form-group">
             <label class="control-label"><?=t('Filter by Parent Page')?></label>
-            <?
+            <?php
             print Loader::helper('form/page_selector')->selectPage('cParentID', $cParentID);
             ?>
         </div>
@@ -183,7 +183,7 @@
 
     </script>
 
-<? } else { ?>
+<?php } else { ?>
 
 
     <div class="ccm-dashboard-header-buttons">
@@ -191,14 +191,14 @@
     </div>
 
 
-    <? if (count($feeds) > 0) { ?>
+    <?php if (count($feeds) > 0) { ?>
         <ul class="item-select-list">
-            <? foreach($feeds as $feed) { ?>
+            <?php foreach($feeds as $feed) { ?>
                 <li><a href="<?=$view->action('edit', $feed->getID())?>"><i class="fa fa-rss"></i> <?=$feed->getTitle()?></a></li>
-            <? } ?>
+            <?php } ?>
         </ul>
-    <? } else { ?>
+    <?php } else { ?>
         <p><?=t("You have not added any feeds.")?></p>
-    <? } ?>
+    <?php } ?>
 
-<? } ?>
+<?php } ?>

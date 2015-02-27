@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Block\HorizontalRule;
 use \Concrete\Core\Block\BlockController;
 

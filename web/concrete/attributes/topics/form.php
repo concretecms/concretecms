@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 <div class="ccm-topic-attribute-wrapper">
 	<style>
 		.tree-view-template_<?php echo $akID?> ul.dynatree-container {

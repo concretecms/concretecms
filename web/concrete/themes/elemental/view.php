@@ -6,7 +6,7 @@ $this->inc('elements/header.php'); ?>
     <div class="container">
         <div class="row">
             <div class="col-sm-12">
-                <? print $innerContent; ?>
+                <?php print $innerContent; ?>
             </div>
         </div>
     </div>

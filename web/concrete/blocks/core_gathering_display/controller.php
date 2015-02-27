@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Block\CoreGatheringDisplay;
 use Loader;
 use \Concrete\Core\Block\BlockController;

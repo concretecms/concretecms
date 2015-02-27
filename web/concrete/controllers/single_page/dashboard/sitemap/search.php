@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Controller\SinglePage\Dashboard\Sitemap;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use \Concrete\Controller\Search\Pages as SearchPagesController;

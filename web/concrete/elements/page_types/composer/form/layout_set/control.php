@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 <div class="ccm-page-type-composer-form-layout-control-set-control" data-page-type-composer-form-layout-control-set-control-id="<?=$control->getPageTypeComposerFormLayoutSetControlID()?>">
@@ -23,7 +23,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	</div>
 
 <div class="ccm-page-type-composer-form-layout-control-set-control-inner">
-	<?
+	<?php
 	print $control->getPageTypeComposerControlDisplayLabel();
 	?>
 </div>

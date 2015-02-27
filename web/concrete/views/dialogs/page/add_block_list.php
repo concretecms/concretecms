@@ -25,7 +25,7 @@ for ($i = 0; $i < count($sets); $i++) {
 <section>
     <legend><?= $set->getBlockTypeSetDisplayName() ?></legend>
     <ul class="item-select-list">
-        <? $blockTypes = $types[$set->getBlockTypeSetName()];
+        <?php $blockTypes = $types[$set->getBlockTypeSetName()];
         foreach ($blockTypes as $bt) {
             $btIcon = $ci->getBlockTypeIconURL($bt);
             ?>
@@ -42,18 +42,18 @@ for ($i = 0; $i < count($sets); $i++) {
                     title="<?= t($bt->getBlockTypeName()) ?>"
                     href="javascript:void(0)"><img src="<?=$btIcon?>" /> <?=t($bt->getBlockTypeName())?></a>
             </li>
-        <? } ?>
+        <?php } ?>
     </ul>
 </section>
 
-<? } ?>
+<?php } ?>
 
-<? if (is_array($types['Other'])) { ?>
+<?php if (is_array($types['Other'])) { ?>
 
     <section>
         <legend><?=t('Other')?></legend>
         <ul class="item-select-list">
-            <? $blockTypes = $types['Other'];
+            <?php $blockTypes = $types['Other'];
             foreach ($blockTypes as $bt) {
                 $btIcon = $ci->getBlockTypeIconURL($bt);
                 ?>
@@ -70,11 +70,11 @@ for ($i = 0; $i < count($sets); $i++) {
                         title="<?= t($bt->getBlockTypeName()) ?>"
                         href="javascript:void(0)"><img src="<?=$btIcon?>" /> <?=t($bt->getBlockTypeName())?></a>
                 </li>
-            <? } ?>
+            <?php } ?>
         </ul>
     </section>
 
-<? } ?>
+<?php } ?>
 
 </div>
 

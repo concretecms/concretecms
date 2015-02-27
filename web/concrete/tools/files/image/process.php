@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $f = File::getByID($_REQUEST['fID']);
 $fp = new Permissions($f);

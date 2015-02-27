@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $p = Page::getByPath('/dashboard/workflow/workflows');
 $cp = new Permissions($p);

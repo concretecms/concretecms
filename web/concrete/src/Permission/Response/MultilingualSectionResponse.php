@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Permission\Response;
 use Concrete\Core\Permission\Response\PageResponse;
 defined('C5_EXECUTE') or die("Access Denied.");

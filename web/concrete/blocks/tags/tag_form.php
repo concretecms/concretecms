@@ -4,7 +4,7 @@ $c = Page::getCurrentPage();
 
 if(!$ak instanceof CollectionAttributeKey) {?>
 	<div class="ccm-error"><?=t('Error: The required page attribute with the handle of: "%s" doesn\'t exist',$controller->attributeHandle)?><br/><br/></div>
-<? } else { ?>
+<?php } else { ?>
 <input type="hidden" name="attributeHandle" value="<?=$controller->attributeHandle?>" />
 
     <?=$form->label('title', t('Title'))?>

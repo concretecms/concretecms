@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Core\Permission\Access\Entity\GroupSetEntity as GroupSetPermissionAccessEntity;
 if (Loader::helper('validation/token')->validate('process')) {

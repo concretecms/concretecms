@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Controller\SinglePage\Dashboard\Pages\Types;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Page\Type\Type;

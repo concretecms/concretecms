@@ -1,6 +1,6 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<? View::getInstance()->requireAsset('javascript', 'jquery');
+<?php View::getInstance()->requireAsset('javascript', 'jquery');
 
 $navItems = $controller->getNavItems();
 

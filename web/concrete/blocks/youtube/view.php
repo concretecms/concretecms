@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 
 $url       = parse_url($videoURL);
@@ -19,13 +19,13 @@ if (Page::getCurrentPage()->isEditMode()) { ?>
 		<div style="padding:8px 0px; padding-top: <?= round($vHeight/2)-10; ?>px;"><?= t('YouTube Video disabled in edit mode.'); ?></div>
 	</div>
 	
-<? } elseif ($vPlayer == 1) { ?>
+<?php } elseif ($vPlayer == 1) { ?>
 
 	<div id="youtube<?= $bID; ?>" class="youtubeBlock">
 		<iframe class="youtube-player" width="<?= $vWidth; ?>" height="<?= $vHeight; ?>" src="//www.youtube.com/embed/<?= $videoID; ?>?wmode=transparent" frameborder="0" allowfullscreen></iframe>
 	</div>
 	
-<? } else { ?>
+<?php } else { ?>
 
 	<div id="youtube<?= $bID; ?>" class="youtubeBlock"><div id="youtube<?= $bID; ?>_video"><?= t('You must install Adobe Flash to view this content.'); ?></div></div>
 	<script type="text/javascript">
@@ -38,4 +38,4 @@ if (Page::getCurrentPage()->isEditMode()) { ?>
 	//]]>
 	</script>
 	
-<? } ?>
+<?php } ?>

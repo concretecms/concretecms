@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Controller\Dialog\Page\Search;
 use \Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use \Concrete\Core\Page\Search\ColumnSet\ColumnSet as PageSearchColumnSet;

@@ -1,7 +1,7 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 <div class="ccm-ui">
-<? $form = Loader::helper('form'); ?>
-<?
+<?php $form = Loader::helper('form'); ?>
+<?php
 
 function checkbox($field, $value, $state, $miscFields = array()) {
 
@@ -164,14 +164,14 @@ $(function() {
 
 </script>
 
-<? if (!$disableForm) { ?>
+<?php if (!$disableForm) { ?>
 	<form method="post" class="form-stacked" data-dialog-form="file-sets" id="ccm-add-to-set-form" action="<?=Loader::helper('concrete/urls')->getToolsURL('files/add_to')?>">
 	<?=$form->hidden('task', 'add_to_sets')?>
-	<? foreach($files as $f) { ?>
+	<?php foreach($files as $f) { ?>
 		<input type="hidden" name="fID[]" value="<?=$f->getFileID();?>" />
-	<? } ?>
+	<?php } ?>
 
-<? } ?>
+<?php } ?>
 
     <fieldset class="form-inline">
         <legend><?=t('Add to New Set')?></legend>
@@ -185,21 +185,21 @@ $(function() {
 	<fieldset>
 		<legend><?=t('Existing Set')?></legend>
 
-	<? $s1 = FileSet::getMySets(); ?>
-	<? if (count($s1) > 0) { ?>
+	<?php $s1 = FileSet::getMySets(); ?>
+	<?php if (count($s1) > 0) { ?>
         <?php if(count($s1) > 10) { // show filter form if there are a bunch of sets ?>
             <div class="form-group">
                 <form class="form-inline">
                     <?=$form->text('fsAddToSearchName', $searchRequest['fsSearchName'], array('autocomplete' => 'off', 'placeholder'=>t('Filter Sets')))?>
                 </form>
             </div>
-        <? } ?>
+        <?php } ?>
 
         <div class="form-group">
 			<ul id="ccm-file-search-add-to-sets-list" class="list-unstyled">
 
 
-		<? foreach($sets as $s) {
+		<?php foreach($sets as $s) {
 			$displaySet = true;
 
 			$pf = new Permissions($s);
@@ -221,24 +221,24 @@ $(function() {
 					<span><?=$s->getFileSetDisplayName()?></span>
 				</label>
 				</li>
-		<? }
+		<?php }
 		} ?>
 
 			</ul>
 		</div>
-		<? } else { ?>
+		<?php } else { ?>
 			<?=t('You have not created any file sets yet.')?>
-		<? } ?>
+		<?php } ?>
 
 	</fieldset>
-<? if (count($extensions) > 1) { ?>
+<?php if (count($extensions) > 1) { ?>
 
 	<div class="alert-message info"><p><?=t('If a file set does not appear above, you either have no access to add files to it, or it does not accept the file types %s.', implode(', ', $extensions));?></p></div>
 
-<? } ?>
+<?php } ?>
 
 
-<? if (!$disableForm) { ?>
+<?php if (!$disableForm) { ?>
 
 <div class="dialog-buttons">
 	<input type="button" data-dialog-button="submit" value="<?=t('Update')?>" class="btn btn-primary pull-right" onclick="$('#ccm-add-to-set-form').submit()" />
@@ -246,5 +246,5 @@ $(function() {
 
 	</form>
 
-<? } ?>
+<?php } ?>
 </div>
