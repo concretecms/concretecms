@@ -7,7 +7,6 @@ if ($controller->getTask() == 'add') {
 	$paginate = 1;
 	$itemsPerPage = 50;
 	$displayMode = 'threaded';
-	$insertNewMessages = 'top';
 	$enableOrdering = 1;
 	$enableCommentRating = 1;
 	$displayPostingForm = 'top';
@@ -93,20 +92,6 @@ if(!$dateFormat) {
 	<div class="form-group" data-row="itemsPerPage">
 		<label class="control-label"><?=t('Messages Per Page')?></label>
 		<?=$form->text('itemsPerPage', $itemsPerPage, array('class' => 'span1'))?>
-	</div>
-	<div class="form-group">
-		<label class="control-label"><?=t('Add New Messages')?></label>
-		<div class="radio">
-			<label>
-			<?=$form->radio('insertNewMessages', 'top', $insertNewMessages)?>
-			<?=t('Top')?></label>
-		</div>
-		<div class="radio">
-			<label>
-			<?=$form->radio('insertNewMessages', 'bottom', $insertNewMessages)?>
-			<?=t('Bottom')?>
-		</label>
-		</div>
 	</div>
 </fieldset>
 
