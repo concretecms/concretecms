@@ -223,7 +223,6 @@ class Controller extends BlockController
 
     public function action_filter_by_topic($treeNodeID = false, $topic = false)
     {
-        $db = Loader::db();
         if ($treeNodeID) {
             $this->list->filterByTopic(intval($treeNodeID));
             $topicObj = Topic::getByID(intval($treeNodeID));

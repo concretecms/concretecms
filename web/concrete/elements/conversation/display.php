@@ -107,9 +107,9 @@ $form = Loader::helper('form');
 	<div class="ccm-conversation-messages-header">
 		<? if ($enableOrdering) { ?>
 		<select class="form-control pull-right ccm-sort-conversations" data-sort="conversation-message-list">
-			<option value="date_desc" <? if ($orderBy == 'date_desc') { ?>selected="selected"<? } ?>><?=t('Recent')?></option>
-			<option value="date_asc" <? if ($orderBy == 'date_asc') { ?>selected="selected"<? } ?>><?=t('Oldest')?></option>
-			<option value="rating" <? if ($orderBy == 'rating') { ?>selected="selected"<? } ?>><?=t('Popular')?></option>
+			<option value="date_asc" <? if ($orderBy == 'date_asc') { ?>selected="selected"<? } ?>><?=t('Earliest First')?></option>
+			<option value="date_desc" <? if ($orderBy == 'date_desc') { ?>selected="selected"<? } ?>><?=t('Most Recent First')?></option>
+			<option value="rating" <? if ($orderBy == 'rating') { ?>selected="selected"<? } ?>><?=t('Highest Rated')?></option>
 		</select>
 		<? } ?>
 
