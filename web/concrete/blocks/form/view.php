@@ -71,9 +71,6 @@ foreach ($errors as $error) {
 $surveyBlockInfo = $miniSurvey->getMiniSurveyBlockInfoByQuestionId($qsID, $bID);
 $captcha = $surveyBlockInfo['displayCaptcha'] ? Loader::helper('validation/captcha') : false;
 
-//Localized labels
-$translatedSubmitLabel = t('Submit');
-
 /******************************************************************************
 * DESIGNERS: CUSTOMIZE THE FORM HTML STARTING HERE...
 */?>
@@ -129,7 +126,7 @@ $translatedSubmitLabel = t('Submit');
 	<?php  endif; ?>
 
 	<div class="form-actions">
-		<input type="submit" name="Submit" class="btn btn-primary" value="<?php  echo $translatedSubmitLabel; ?>" />
+		<input type="submit" name="Submit" class="btn btn-primary" value="<?php  echo t($survey->submitText); ?>" />
 	</div>
 
 	<input name="qsID" type="hidden" value="<?php  echo $qsID; ?>" />
