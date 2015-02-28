@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Controller\Backend;
+use Concrete\Core\Http\Response;
 use Controller;
 use PageType, Permissions, Loader, Redirect;
 use Page as ConcretePage;
@@ -48,7 +49,7 @@ class Page extends Controller {
             return Redirect::page($c);
         }
 
-        return new Response(t('Access Denied'));
+        return new \Response(t('Access Denied'));
     }
 
 	public function getJSON() {
