@@ -7,8 +7,10 @@
 			$cID = $c->getCollectionID();
 		}
 ?>
-<a href="<?= View::url('/download_file', $controller->getFileID(),$cID) ?>"><?= stripslashes($controller->getLinkText()) ?></a>
- 
+<div class="ccm-block-file">
+	<a href="<?= View::url('/download_file', $controller->getFileID(),$cID) ?>"><?= stripslashes($controller->getLinkText()) ?></a>
+</div>
+		
 <?
 }
 /*
