@@ -9,7 +9,7 @@ $canEditMessage = $mp->canEditConversationMessage();
 $canRateMessage = $mp->canRateConversationMessage();
 
 $ui = $message->getConversationMessageUserObject();
-$class = 'ccm-conversation-message ccm-conversation-message-level' . $message->getConversationMessageLevel();
+$class = 'message ccm-conversation-message ccm-conversation-message-level' . $message->getConversationMessageLevel();
 if ($message->isConversationMessageDeleted()) {
 	$class .= ' ccm-conversation-message-deleted';
 }
