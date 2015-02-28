@@ -11,7 +11,10 @@
 			<default value="0" />
 		</field>
 		<field name="surveyName" type="C" size="255">
-		</field> 
+		</field>
+        <field name="submitText" type="C" size="255" >
+            <default value="Submit" />
+        </field>
 		<field name="thankyouMsg" type="X" >
 		</field> 
 		<index name="questionSetIdForeign">

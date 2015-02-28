@@ -160,15 +160,18 @@ class MiniSurvey {
 					//}
 				}
 				$surveyBlockInfo = $this->getMiniSurveyBlockInfoByQuestionId($qsID,intval($bID));
+                if(!strlen($surveyBlockInfo['submitText'])) {
+                    $suveyBlockInfo['submitText'] = 'Submit';
+                }
 
 				if($surveyBlockInfo['displayCaptcha']) {
 		            print '<div class="ccm-edit-mode-disabled-item">' . t('Form Captcha') . '</div><br/>';
                 }
 
 				if($editmode) {
-					echo '<div class="form-group"><input class="btn btn-primary" name="Submit" type="button" value="'.t('Submit').'" /></div>';//make this a button
+					echo '<div class="form-group"><input class="btn btn-primary" name="Submit" type="button" value="'.t($surveyBlockInfo['submitText']).'" /></div>';//make this a button
 				} else {
-					echo '<div class="form-group"><input class="btn btn-primary" name="Submit" type="submit" value="'.t('Submit').'" /></div>';
+					echo '<div class="form-group"><input class="btn btn-primary" name="Submit" type="submit" value="'.t($surveyBlockInfo['submitText']).'" /></div>';
 				}
 				echo '</div>';
 			}else{
