@@ -60,7 +60,6 @@
             var orderBy            = (obj.options.orderBy);
             var enableOrdering     = (obj.options.enableOrdering);
             var displayPostingForm = (obj.options.displayPostingForm);
-            var insertNewMessages  = (obj.options.insertNewMessages);
             var enableCommentRating = (obj.options.enableCommentRating);
             var commentRatingUserID = (obj.options.commentRatingUserID);
             var commentRatingIP = (obj.options.commentRatingIP);
@@ -87,7 +86,6 @@
                     'orderBy':             orderBy,
                     'enableOrdering':      enableOrdering,
                     'displayPostingForm':  displayPostingForm,
-                    'insertNewMessages':   insertNewMessages,
                     'enableCommentRating': enableCommentRating,
                     'commentRatingUserID': commentRatingUserID,
                     'commentRatingIP':     commentRatingIP,
@@ -312,7 +310,6 @@
                     'orderBy':             $(this).val(),
                     'enableOrdering':      obj.options.enableOrdering,
                     'displayPostingForm':  obj.options.displayPostingForm,
-                    'insertNewMessages':   obj.options.insertNewMessages,
                     'enableCommentRating': obj.options.enableCommentRating,
                     'dateFormat':          obj.options.dateFormat,
                     'customDateFormat':    obj.options.customDateFormat,
@@ -594,10 +591,10 @@
                             obj.$replyholder.find(".redactor_conversation_editor_" + obj.options.cnvID).redactor('set', '');
                         } catch(e) {}
                     } else {
-                        if (obj.options.insertNewMessages == 'bottom') {
-                            obj.$messages.append(html);
-                        } else {
+                        if (obj.options.orderBy == 'date_desc') {
                             obj.$messages.prepend(html);
+                        } else {
+                            obj.$messages.append(html);
                         }
                         obj.$element.find('.ccm-conversation-no-messages').hide();
                         obj.$newmessageform.find(".conversation-editor").val('');

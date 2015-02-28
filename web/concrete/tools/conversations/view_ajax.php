@@ -75,7 +75,6 @@ if (is_object($cnv)) {
 		'orderBy' => $_POST['orderBy'],
 		'enableOrdering' => $enableOrdering,
 		'displayPostingForm' => $_POST['displayPostingForm'],
-		'insertNewMessages' => $_POST['insertNewMessages'],
 		'enableCommentRating' => $_POST['enableCommentRating'],
 		'dateFormat' => $_POST['dateFormat'], 
 		'customDateFormat' => $_POST['customDateFormat'],
