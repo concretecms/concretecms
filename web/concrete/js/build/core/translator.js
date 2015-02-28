@@ -10,6 +10,7 @@ var MAX_TRANSLATIONS_FOR_FASTSEARCH = 500;
 
 var i18n = {
   AskDiscardDirtyTranslation: 'The current item has changed.\nIf you proceed you will lose your changes.\n\nDo you want to proceed anyway?',
+  Approved: 'Approved',
   Comments: 'Comments',
   Context: 'Context',
   ExamplePH: 'Example: %s',
@@ -33,6 +34,8 @@ var i18n = {
   TAB_SHIFT: '[SHIFT]+[TAB] Backward',
   Translate: 'Translate',
   Translation: 'Translation',
+  TranslationIsApproved_ReadOnly: 'This translation is approved: you can NOT change it.',
+  TranslationIsNotApproved: 'This translation is not approved.',
   PluralNames: {
     zero: 'Zero',
     one: 'One',
@@ -43,6 +46,12 @@ var i18n = {
   }
 };
 
+var frontend = {
+  colFilter: 'col-md-12',
+  colOriginal: 'col-md-5',
+  colTranslations: 'col-md-7'
+};
+
 var translatorsCount = 0;
 
 function Translation(data, translator) {
@@ -51,6 +60,9 @@ function Translation(data, translator) {
   this.isPlural = 'originalPlural' in data;
   this.isTranslated = 'translations' in data;
   this.translator = translator;
+  if (this.translator.approvalSupport && (!('isApproved' in data))) {
+    this.isApproved = false;
+  }
   this.translator.translations.push(this);
 }
 Translation.prototype = {
@@ -65,7 +77,7 @@ Translation.prototype = {
     this.liTranslated = document.createElement('span');
     this.translationUpdated(true);
     this.li.appendChild(this.liTranslated);
-    this.translator.$list[0].appendChild(this.li);
+    this.translator.UI.$list[0].appendChild(this.li);
     this.li.onclick = function() {
       my.translator.setCurrentTranslation(my);
     };
@@ -80,13 +92,19 @@ Translation.prototype = {
       }
     }
   },
-  translatedSaved: function(translations) {
+  translatedSaved: function(translations, approved) {
     if(translations === null) {
       delete this.translations;
       this.isTranslated = false;
+      if(this.translator.approvalSupport) {
+        this.isApproved = false;
+      }
     } else {
       this.translations = translations;
       this.isTranslated = true;
+      if (this.translator.approvalSupport && ((approved === true) || (approved === false))) {
+        this.isApproved = approved;
+      }
     }
     this.translationUpdated();
   },
@@ -96,6 +114,10 @@ Translation.prototype = {
     if((f.showTranslated === false) && (this.isTranslated === true)) {
       shown = false;
     } else if((f.showUntranslated === false) && (this.isTranslated === false)) {
+      shown = false;
+    } else if (this.translator.approvalSupport && this.isApproved && (!f.showApproved)) {
+      shown = false;
+    } else if (this.translator.approvalSupport && (!this.isApproved) && (!f.showUnapproved)) {
       shown = false;
     } else {
       if(f.text.length > 0) {
@@ -131,17 +153,35 @@ Translation.prototype = {
 var TranslationView = (function() {
 
   function Base(translation, multiline) {
+    this.UI = {};
     this.translation = translation;
     this.multiline = multiline;
     this.element = this.multiline ? 'textarea rows="8"' : 'input type="text"';
-    this.$container = this.translation.translator.UI.$translation;
-    this.$container.empty();
-    this.$container.closest('.panel').css('visibility', 'visible');
+    this.uniquePrefix = 'ccm-translator' + this.translation.translator.index + '-translation';
+    this.readOnly = false;
+    if(this.translation.translator.approvalSupport && this.translation.isApproved && (!this.translation.translator.canModifyApproved)) {
+      this.readOnly = true;
+    }
+    this.UI.$container = this.translation.translator.UI.$translation;
+    this.UI.$container.empty();
+    this.UI.$container.closest('.panel').css('visibility', 'visible');
     this.buildOriginalUI();
     this.buildTranslationUI();
+    if(this.translation.translator.approvalSupport) {
+      if(this.translation.translator.canModifyApproved) {
+        this.UI.$container
+            .append($('<label class="control-label checkbox inline" />')
+              .text(i18n.Approved)
+              .prepend(this.UI.$approved = $('<input type="checkbox" ' + (this.translation.isApproved ? ' checked="checked"' : '') + ' />'))
+            )
+        ;
+      } else {
+        this.UI.$container.append($('<p />').text(this.translation.isApproved ? i18n.TranslationIsApproved_ReadOnly : i18n.TranslationIsNotApproved));
+      }
+    }
     if(('comments' in this.translation) || ('context' in this.translation) || ('references' in this.translation)) {
       var $dl;
-      this.$container.append($dl = $('<dl />'));
+      this.UI.$container.append($dl = $('<dl />'));
       if ('comments' in this.translation) {
         $dl
           .append($('<dt />').text(i18n.Comments))
@@ -184,26 +224,45 @@ var TranslationView = (function() {
     }
   }
   Base.prototype = {
+    /**
+     * @return null if no string is translated
+     * @return false if forSave === true and some string is not translated
+     * @return object with {strings: [], approved: bool} in all other cases (approved key is present if and only if current user can mark as approved)
+     */
+    getTranslatedState: function(forSave) {
+      var strings = this.getTranslatedStrings(forSave);
+      if ((strings === null) || (strings === false)) {
+        return strings;
+      }
+      var result = {strings: strings};
+      if('$approved' in this.UI) {
+        result.approved = this.UI.$approved.is(':checked') ? true : false;
+      }
+      return result;
+    },
     isDirty: function() {
-      var translated = this.getTranslated();
-      if(translated === null) {
+      var translatedState = this.getTranslatedState();
+      if(translatedState === null) {
         return this.translation.isTranslated ? true : false;
       }
       if (this.translation.isTranslated === false) {
         return true;
       }
       var dirty = false;
-      for(var n = translated.length, i = 0; i < n; i++) {
-        if(translated[i] !== this.translation.translations[i]) {
+      for(var n = translatedState.strings.length, i = 0; i < n; i++) {
+        if(translatedState.strings[i] !== this.translation.translations[i]) {
           dirty = true;
           break;
         }
+      }
+      if(('approved' in translatedState) && (translatedState.approved !== this.translation.isApproved)) {
+        dirty = true;
       }
       return dirty;
     },
     dispose: function() {
       $(this.translation.li).removeClass('list-group-item-info');
-      this.$container.empty().closest('.panel').css('visibility', 'hidden');
+      this.UI.$container.empty().closest('.panel').css('visibility', 'hidden');
     }
   };
 
@@ -212,7 +271,7 @@ var TranslationView = (function() {
   }
   $.extend(true, Singular.prototype, Base.prototype, {
     buildOriginalUI: function() {
-      this.$container
+      this.UI.$container
         .append($('<div class="form-group" />')
           .append($('<label class="control-label" />').text(i18n.Original_String))
           .append($('<' + this.element + ' class="form-control" readonly="readonly" />').val(this.translation.original))
@@ -220,16 +279,21 @@ var TranslationView = (function() {
       ;
     },
     buildTranslationUI: function() {
-      this.$container
+      this.UI.$container
         .append($('<div class="form-group" />')
           .append($('<label class="control-label" />').text(i18n.Translation))
-          .append(this.$translated = $('<' + this.element + ' class="form-control" />').val(this.translation.isTranslated ? this.translation.translations[0] : ''))
+          .append(this.UI.$translated = $('<' + this.element + (this.readOnly ? ' readonly="readonly"' : '') + ' class="form-control" />').val(this.translation.isTranslated ? this.translation.translations[0] : ''))
         )
       ;
-      this.$translated.focus();
+      this.UI.$translated.focus();
     },
-    getTranslated: function(forSave) {
-      var s = $.trim(this.$translated.val());
+    /**
+     * @return null if no string is translated
+     * @return false if forSave === true and some string is not translated
+     * @return array in all other cases
+     */
+    getTranslatedStrings: function(forSave) {
+      var s = $.trim(this.UI.$translated.val());
       return (s.length > 0) ? [s] : null;
     }
   });
@@ -239,7 +303,7 @@ var TranslationView = (function() {
   }
   $.extend(true, Plural.prototype, Base.prototype, {
     buildOriginalUI: function() {
-      this.$container
+      this.UI.$container
         .append($('<div class="form-group" />')
           .append($('<label class="control-label" />').text(i18n.Singular_Original_String))
           .append($('<' + this.element + ' class="form-control" readonly="readonly" />').val(this.translation.original))
@@ -251,54 +315,58 @@ var TranslationView = (function() {
       ;
     },
     showTranslationTab: function(key, focalize) {
-      this.$tabHeaders.find('li.active').removeClass('active');
-      this.$tabBodies.find('.tab-pane.active').removeClass('active');
-      this.$tabHeaders.find('li[data-key="' + key + '"]').addClass('active');
-      var $pane = this.$tabBodies.find('.tab-pane[data-key="' + key + '"]').addClass('active');
+      this.UI.$tabHeaders.find('li.active').removeClass('active');
+      this.UI.$tabBodies.find('.tab-pane.active').removeClass('active');
+      this.UI.$tabHeaders.find('li[data-key="' + key + '"]').addClass('active');
+      var $pane = this.UI.$tabBodies.find('.tab-pane[data-key="' + key + '"]').addClass('active');
       if(focalize) {
         $pane.find('textarea,input').focus();
       }
     },
     buildTranslationUI: function() {
       var my = this;
-      var uniquePrefix = 'ccm-translator' + this.translation.translator.index + '-translation';
-      this.$container
+      this.UI.$container
         .append($('<div class="form-group" />')
           .append($('<label class="control-label" />').text(i18n.Translation))
-          .append(this.$tabHeaders = $('<ul class="nav nav-tabs" />'))
-          .append(this.$tabBodies = $('<div class="tab-content" />'))
+          .append(this.UI.$tabHeaders = $('<ul class="nav nav-tabs" />'))
+          .append(this.UI.$tabBodies = $('<div class="tab-content" />'))
         )
       ;
       var index = 0;
-      this.$translated = {};
+      this.UI.$translated = {};
       var firstKey = null;
       $.each(this.translation.translator.plurals, function(key, examples) {
         if (firstKey === null) {
           firstKey = key;
         }
-        my.$tabHeaders.append($('<li data-key="' + key + '"' + ((index === 0) ? ' class="active"' : '') + ' />')
-          .append($('<a href="#' + uniquePrefix + '-' + key + '" />')
+        my.UI.$tabHeaders.append($('<li data-key="' + key + '"' + ((index === 0) ? ' class="active"' : '') + ' />')
+          .append($('<a href="#' + my.uniquePrefix + '-' + key + '" />')
             .text(i18n.PluralNames[key])
           )
         );
-        my.$tabBodies.append($('<div id="' + uniquePrefix + '-' + key + '" class="tab-pane' + ((index === 0) ? ' active' : '') + '"  data-key="' + key + '" style="padding: 20px" />')
+        my.UI.$tabBodies.append($('<div id="' + my.uniquePrefix + '-' + key + '" class="tab-pane' + ((index === 0) ? ' active' : '') + '"  data-key="' + key + '" />')
           .append($('<p />').text(i18n.ExamplePH.replace(/%s/, examples)))
-          .append(my.$translated[key] = $('<' + my.element + ' class="form-control" />').val(my.translation.isTranslated ? my.translation.translations[index] : ''))
+          .append(my.UI.$translated[key] = $('<' + my.element + (my.readOnly ? ' readonly="readonly"' : '') + ' class="form-control" />').val(my.translation.isTranslated ? my.translation.translations[index] : ''))
         );
         index++;
       });
-      this.$tabHeaders.find('a').on('click', function(e) {
+      this.UI.$tabHeaders.find('a').on('click', function(e) {
         e.preventDefault();
         my.showTranslationTab($(this).closest('li').attr('data-key'));
       });
-      this.$translated[firstKey].focus();
+      this.UI.$translated[firstKey].focus();
     },
-    getTranslated: function(forSave) {
+    /**
+     * @return null if no string is translated
+     * @return false if forSave === true and some string is not translated
+     * @return array in all other cases
+     */
+    getTranslatedStrings: function(forSave) {
       var my = this;
       var result = [];
       var some = false, firstNotFilled = null;
       $.each(this.translation.translator.plurals, function(key) {
-        var s = $.trim(my.$translated[key].val());
+        var s = $.trim(my.UI.$translated[key].val());
         if (s.length > 0) {
           some = true;
         } else if(firstNotFilled === null) {
@@ -328,7 +396,10 @@ function Translator(data) {
   this.saveAction = data.saveAction;
   this.plurals = $.extend(true, {}, data.plurals);
   this.translations = [];
-  this.fuzzySupport = (data.fuzzySupport === false) ? false : null;
+  this.approvalSupport = (data.approvalSupport === false) ? false : true;
+  if (this.approvalSupport) {
+    this.canModifyApproved = (data.canModifyApproved === true) ? true : false;
+  }
   for (var i = 0, n = data.translations.length; i < n; i++) {
     new Translation(data.translations[i], this);
   }
@@ -347,7 +418,7 @@ Translator.prototype = {
     }
     this.UI.$container
       .append($('<div class="row" />')
-        .append($('<div class="col-md-12" />')
+        .append($('<div class="' + frontend.colFilter + '" />')
           .append($('<div class="panel panel-info" />')
             .append($('<div class="panel-heading" />')
               .append($('<div class="panel-title" />').text(i18n.Filter))
@@ -361,7 +432,6 @@ Translator.prototype = {
                   .append(this.UI.$searchButton = $('<button type="button" class="btn btn-primary"><span class="fa fa-search"></span></button>'))
                   .append($('<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" />')
                     .append($('<span class="caret" />'))
-                    .append($('<span class="sr-only" />').text(i18n.Toggle_Dropdown))
                   )
                   .append($('<ul class="dropdown-menu dropdown-menu-right" role="menu" />')
                     .append($('<li />')
@@ -416,18 +486,18 @@ Translator.prototype = {
         )
       )
       .append($('<div class="row" />')
-        .append($('<div class="col-md-7 ccm-translator-col-original" />')
+        .append($('<div class="' + frontend.colOriginal + ' ccm-translator-col-original" />')
           .append($('<div class="panel panel-primary" />')
             .append($('<div class="panel-heading clearfix" />')
               .append($('<span />').text(i18n.Original_String))
               .append($('<span />').text(i18n.Translation))
             )
-            .append(this.$list = $('<ul class="list-group" />')
+            .append(this.UI.$list = $('<ul class="list-group" />')
               .css('height', height + 'px')
             )
           )
         )
-        .append($('<div class="col-md-5 ccm-translator-col-translations" />')
+        .append($('<div class="' + frontend.colTranslations + ' ccm-translator-col-translations" />')
           .append($('<div class="panel panel-primary" />')
             .append($('<div class="panel-heading" />').text(i18n.Translate))
             .append(this.UI.$translation = $('<div class="panel-body" />'))
@@ -485,7 +555,6 @@ Translator.prototype = {
       showTranslated: true,
       showUntranslated: true
     };
-    this.viewAppliedFilter();
     this.UI.$searchInOriginals.on('click', function() {
       my.filter({searchInOriginals: !my.appliedFilter.searchInOriginals});
     });
@@ -498,7 +567,7 @@ Translator.prototype = {
     this.UI.$showUntranslated.on('click', function() {
       my.filter({showUntranslated: !my.appliedFilter.showUntranslated});
     });
-    if(this.fuzzySupport) {
+    if(this.approvalSupport) {
       this.UI.$showUnapproved.on('click', function() {
         my.filter({showUnapproved: !my.appliedFilter.showUnapproved});
       });
@@ -509,6 +578,10 @@ Translator.prototype = {
       this.UI.$showUnapproved.closest('li').prev().remove();
       this.UI.$showUnapproved.remove();
       this.UI.$showApproved.remove();
+      delete this.appliedFilter.showUnapproved;
+      delete this.appliedFilter.showApproved;
+      delete this.UI.$showUnapproved;
+      delete this.UI.$showApproved;
     }
     if(someContexts) {
       this.UI.$searchInContexts.on('click', function() {
@@ -517,6 +590,7 @@ Translator.prototype = {
     } else {
       this.UI.$searchInContexts.remove();
     }
+    this.viewAppliedFilter();
     $(window).on('beforeunload', function() {
       if(my.currentTranslationView && my.currentTranslationView.isDirty()) {
         return i18n.AskDiscardDirtyTranslation;
@@ -542,8 +616,10 @@ Translator.prototype = {
     this.UI.$searchInOriginals.find('i').removeClass('fa-check-square-o fa-square-o').addClass(f.searchInOriginals ? 'fa-check-square-o' : 'fa-square-o');
     this.UI.$searchInTranslations.find('i').removeClass('fa-check-square-o fa-square-o').addClass(f.searchInTranslations ? 'fa-check-square-o' : 'fa-square-o');
     this.UI.$searchInContexts.find('i').removeClass('fa-check-square-o fa-square-o').addClass(f.searchInContexts ? 'fa-check-square-o' : 'fa-square-o');
-    this.UI.$showUnapproved.find('i').removeClass('fa-check-square-o fa-square-o').addClass(f.showUnapproved ? 'fa-check-square-o' : 'fa-square-o');
-    this.UI.$showApproved.find('i').removeClass('fa-check-square-o fa-square-o').addClass(f.showApproved ? 'fa-check-square-o' : 'fa-square-o');
+    if(this.approvalSupport) {
+      this.UI.$showUnapproved.find('i').removeClass('fa-check-square-o fa-square-o').addClass(f.showUnapproved ? 'fa-check-square-o' : 'fa-square-o');
+      this.UI.$showApproved.find('i').removeClass('fa-check-square-o fa-square-o').addClass(f.showApproved ? 'fa-check-square-o' : 'fa-square-o');
+    }
     this.UI.$showTranslated.find('i').removeClass('fa-check-square-o fa-square-o').addClass(f.showTranslated ? 'fa-check-square-o' : 'fa-square-o');
     this.UI.$showUntranslated.find('i').removeClass('fa-check-square-o fa-square-o').addClass(f.showUntranslated ? 'fa-check-square-o' : 'fa-square-o');
   },
@@ -617,17 +693,20 @@ Translator.prototype = {
       this.gotoNextTranslation(backward);
       return;
     }
-    var translated = this.currentTranslationView.getTranslated(true);
-    if (translated === false) {
+    var translatedState = this.currentTranslationView.getTranslatedState(true);
+    if (translatedState === false) {
       return;
     }
     var translation = this.currentTranslationView.translation;
     var postData = {};
     postData.id = translation.id;
-    if(translated === null) {
+    if(translatedState === null) {
       postData.clear = 1;
     } else {
-      postData.translated = translated;
+      postData.translated = translatedState.strings;
+      if ('approved' in translatedState) {
+        postData.approved = translatedState.approved ? 1 : 0;
+      }
     }
     this.setSaving(true);
     $.ajax({
@@ -651,12 +730,12 @@ Translator.prototype = {
         window.alert(response.errors.join("\n"));
         return;
       }
-      translation.translatedSaved(translated);
+      translation.translatedSaved(translatedState.strings, translatedState.approved);
       my.gotoNextTranslation(backward);
     });
   },
   gotoNextTranslation: function(backward) {
-    var $lis = this.$list.children(':visible');
+    var $lis = this.UI.$list.children(':visible');
     if($lis.length === 0) {
       this.setCurrentTranslation(null);
       return;
@@ -707,6 +786,11 @@ var Startup = (function() {
 window.ccmTranslator = {
   setI18NDictionart: function(i18nDictionary) {
     $.extend(true, i18n, i18nDictionary);
+  },
+  configureFrontend: function(frontendConfig) {
+    if($.isPlainObject(frontendConfig)) {
+      $.extend(frontend, frontendConfig);
+    }
   },
   initialize: function(data) {
     Startup.setTranslatorReady(new Translator(data));
