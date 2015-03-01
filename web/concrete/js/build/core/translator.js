@@ -108,45 +108,39 @@ Translation.prototype = {
     }
     this.translationUpdated();
   },
-  applyFilter: function() {
-    var shown = true;
-    var f = this.translator.appliedFilter;
-    if((f.showTranslated === false) && (this.isTranslated === true)) {
-      shown = false;
-    } else if((f.showUntranslated === false) && (this.isTranslated === false)) {
-      shown = false;
-    } else if (this.translator.approvalSupport && this.isApproved && (!f.showApproved)) {
-      shown = false;
-    } else if (this.translator.approvalSupport && (!this.isApproved) && (!f.showUnapproved)) {
-      shown = false;
-    } else {
-      if(f.text.length > 0) {
-        var textFound = false;
-        if((textFound === false) && f.searchInOriginals) {
-          if(this.original.toLowerCase().indexOf(f.lowerCaseText) >= 0) {
-            textFound = true;
-          } else if(this.isPlural && (this.originalPlural.toLowerCase().indexOf(f.lowerCaseText) >= 0)) {
-            textFound = true;
-          }
-        }
-        if((textFound === false) && f.searchInTranslations && this.isTranslated) {
-          for(var n = this.translations.length, i = 0; i < n && (textFound === false); i++) {
-            if(this.translations[i].toLowerCase().indexOf(f.lowerCaseText) >= 0) {
-              textFound = true;
-            }
-          }
-        }
-        if((textFound === false) && f.searchInContexts && this.hasContext) {
-          if(this.context.toLowerCase().indexOf(f.lowerCaseText) >= 0) {
-            textFound = true;
-          }
-        }
-        if(textFound === false) {
-          shown = false;
-        }
-      }
+  contextContains: function(lowerCaseText) {
+    if (this.hasContext === false) return false;
+    if (this.context.toLowerCase().indexOf(lowerCaseText) >= 0) return true;
+    return false;
+  },
+  originalContains: function(lowerCaseText) {
+    if (this.original.toLowerCase().indexOf(lowerCaseText) >= 0) return true;
+    if ((this.isPlural === true) && (this.originalPlural.toLowerCase().indexOf(lowerCaseText) >= 0)) return true;
+    return false;
+  },
+  translationContains: function(lowerCaseText) {
+    if (this.isTranslated === false) return false;
+    for (var n = this.translations.length, i = 0; i < n; i++) {
+      if (this.translations[i].toLowerCase().indexOf(lowerCaseText) >= 0) return true;
     }
-    this.li.style.display = shown ? '' : 'none';
+    return false;
+  },
+  satisfyFilter: function(filter) {
+    if ((filter.showTranslated === false) && (this.isTranslated === true)) return false;
+    if ((filter.showUntranslated === false) && (this.isTranslated === false)) return false;
+    if ((filter.showApproved === false) && (this.isApproved === true)) return false;
+    if ((filter.showUnapproved === false) && (this.isApproved === false)) return false;
+    if(filter.text.length > 0) {
+      var textFound = false;
+      textFound = textFound || (filter.searchInContexts && this.contextContains(filter.lowerCaseText));
+      textFound = textFound || (filter.searchInOriginals && this.originalContains(filter.lowerCaseText));
+      textFound = textFound || (filter.searchInTranslations && this.translationContains(filter.lowerCaseText));
+      if(textFound === false) return false;
+    }
+    return true;
+  },
+  applyFilter: function() {
+    this.li.style.display = this.satisfyFilter(this.translator.appliedFilter) ? '' : 'none';
   }
 };
 
