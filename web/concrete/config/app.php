@@ -896,6 +896,7 @@ return array(
                 array('javascript', 'core/events'),
                 array('javascript', 'core/conversation'),
                 array('css', 'core/conversation'),
+                array('css', 'core/frontend/errors'),
                 array('css', 'font-awesome'),
                 array('css', 'bootstrap/dropdown'),
                 array('css', 'jquery/ui')

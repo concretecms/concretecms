@@ -202,17 +202,17 @@
             obj.$permalinkholder = obj.$element.find('div.ccm-conversation-message-permalink');
             obj.$messagelist = obj.$element.find('div.ccm-conversation-message-list');
             obj.$messagecnt = obj.$element.find('.ccm-conversation-message-count');
-            obj.$postbuttons = obj.$element.find('button[data-submit=conversation-message]');
+            obj.$postbuttons = obj.$element.find('[data-submit=conversation-message]');
             obj.$sortselect = obj.$element.find('select[data-sort=conversation-message-list]');
             obj.$loadmore = obj.$element.find('[data-load-page=conversation-message-list]');
             obj.$messages = obj.$element.find('div.ccm-conversation-messages');
             obj.$messagerating = obj.$element.find('span.ccm-conversation-message-rating');
 
-            obj.$element.on('click.cnv', 'button[data-submit=conversation-message]', function() {
+            obj.$element.on('click.cnv', '[data-submit=conversation-message]', function(e) {
+                e.preventDefault();
                 obj.submitForm($(this));
-                return false;
             });
-            obj.$element.on('click.cnv', 'button[data-submit=update-conversation-message]', function() {
+            obj.$element.on('click.cnv', '[data-submit=update-conversation-message]', function() {
                 obj.submitUpdateForm($(this));
                 return false;
             });
@@ -226,7 +226,7 @@
                 });
                 var $replyform = obj.$replyholder.appendTo($(this).closest('div[data-conversation-message-id]'));
                 $replyform.attr('data-form', 'conversation-reply').show();
-                $replyform.find('button[data-submit=conversation-message]').attr('data-post-parent-id', $(this).attr('data-post-parent-id'));
+                $replyform.find('[data-submit=conversation-message]').attr('data-post-parent-id', $(this).attr('data-post-parent-id'));
 
                 $replyform.attr('rel', 'new-reply' + replyIterator);
                 replyIterator++;  // this may not be necessary, but might come in handy if we need to know how many times a new reply box has been triggered.
