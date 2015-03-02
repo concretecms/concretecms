@@ -184,10 +184,7 @@ class TranslateInterface extends DashboardPageController
                     $jsonTranslation['comments'] = $extractedComments;
                 }
                 if ($translation->hasReferences()) {
-                    $jsonTranslation['references'] = array();
-                    foreach ($translation->getReferences() as $ref) {
-                        $jsonTranslation['references'][] = isset($ref[1]) ? "{$ref[0]}:{$ref[1]}" : $ref[0];
-                    }
+                    $jsonTranslation['references'] = $translation->getReferences();
                 }
                 $jsonTranslations[] = $jsonTranslation;
             }
