@@ -888,7 +888,7 @@ class Version
 
         $this->fvExtension = $ext;
         $this->fvType = $ftl->getGenericType();
-        if (!$this->fvTitle) {
+        if ($this->fvTitle === null) {
             $this->fvTitle = $this->getFilename();
         }
         $this->fvSize = $size;
