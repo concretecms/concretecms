@@ -52,8 +52,6 @@ var frontend = {
   colTranslations: 'col-md-7'
 };
 
-var translatorsCount = 0;
-
 function Translation(data, translator) {
   $.extend(this, data);
   this.hasContext = 'context' in data;
@@ -151,7 +149,6 @@ var TranslationView = (function() {
     this.translation = translation;
     this.multiline = multiline;
     this.element = this.multiline ? 'textarea rows="8"' : 'input type="text"';
-    this.uniquePrefix = 'ccm-translator' + this.translation.translator.index + '-translation';
     this.readOnly = false;
     if (this.translation.translator.approvalSupport && this.translation.isApproved && (!this.translation.translator.canModifyApproved)) {
       this.readOnly = true;
@@ -356,11 +353,11 @@ var TranslationView = (function() {
           firstKey = key;
         }
         my.UI.$tabHeaders.append($('<li data-key="' + key + '"' + ((index === 0) ? ' class="active"' : '') + ' />')
-          .append($('<a href="#' + my.uniquePrefix + '-' + key + '" />')
+          .append($('<a href="#" />')
             .text(i18n.PluralNames[key])
           )
         );
-        my.UI.$tabBodies.append($('<div id="' + my.uniquePrefix + '-' + key + '" class="tab-pane' + ((index === 0) ? ' active' : '') + '"  data-key="' + key + '" />')
+        my.UI.$tabBodies.append($('<div class="tab-pane' + ((index === 0) ? ' active' : '') + '"  data-key="' + key + '" />')
           .append($('<p />').text(i18n.ExamplePH.replace(/%s/, examples)))
           .append(my.UI.$translated[key] = $('<' + my.element + (my.readOnly ? ' readonly="readonly"' : '') + ' class="form-control" />').val(my.translation.isTranslated ? my.translation.translations[index] : ''))
         );
@@ -406,7 +403,6 @@ var TranslationView = (function() {
 })();
 
 function Translator(data) {
-  this.index = translatorsCount++;
   this.containerID = data.container;
   this.height = data.height;
   this.saveAction = data.saveAction;
@@ -620,7 +616,9 @@ Translator.prototype = {
       switch (e.keyCode || e.which) {
         case 9:
           e.preventDefault();
-          my.saveAndContinue(e.shiftKey ? true : false);
+          setTimeout(function() {
+            my.saveAndContinue(e.shiftKey ? true : false);
+          }, 0);
           break;
       }
     });
