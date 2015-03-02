@@ -2,7 +2,7 @@
 (function() {
 'use strict';
 
-if(window.ccmTranslator) {
+if (window.ccmTranslator) {
   return;
 }
 
@@ -84,8 +84,8 @@ Translation.prototype = {
   },
   translationUpdated: function(skipSetClass) {
     this.liTranslated.textContent = this.liTranslated.innerText = (this.isTranslated ? this.translations[0] : '');
-    if(skipSetClass !== true) {
-      if(this.isTranslated) {
+    if (skipSetClass !== true) {
+      if (this.isTranslated) {
         $(this.li).addClass('list-group-item-success');
       } else {
         $(this.li).removeClass('list-group-item-success');
@@ -93,10 +93,10 @@ Translation.prototype = {
     }
   },
   translatedSaved: function(translations, approved) {
-    if(translations === null) {
+    if (translations === null) {
       delete this.translations;
       this.isTranslated = false;
-      if(this.translator.approvalSupport) {
+      if (this.translator.approvalSupport) {
         this.isApproved = false;
       }
     } else {
@@ -130,12 +130,12 @@ Translation.prototype = {
     if ((filter.showUntranslated === false) && (this.isTranslated === false)) return false;
     if ((filter.showApproved === false) && (this.isApproved === true)) return false;
     if ((filter.showUnapproved === false) && (this.isApproved === false)) return false;
-    if(filter.text.length > 0) {
+    if (filter.text.length > 0) {
       var textFound = false;
       textFound = textFound || (filter.searchInContexts && this.contextContains(filter.lowerCaseText));
       textFound = textFound || (filter.searchInOriginals && this.originalContains(filter.lowerCaseText));
       textFound = textFound || (filter.searchInTranslations && this.translationContains(filter.lowerCaseText));
-      if(textFound === false) return false;
+      if (textFound === false) return false;
     }
     return true;
   },
@@ -153,7 +153,7 @@ var TranslationView = (function() {
     this.element = this.multiline ? 'textarea rows="8"' : 'input type="text"';
     this.uniquePrefix = 'ccm-translator' + this.translation.translator.index + '-translation';
     this.readOnly = false;
-    if(this.translation.translator.approvalSupport && this.translation.isApproved && (!this.translation.translator.canModifyApproved)) {
+    if (this.translation.translator.approvalSupport && this.translation.isApproved && (!this.translation.translator.canModifyApproved)) {
       this.readOnly = true;
     }
     this.UI.$container = this.translation.translator.UI.$translation;
@@ -161,8 +161,8 @@ var TranslationView = (function() {
     this.UI.$container.closest('.panel').css('visibility', 'visible');
     this.buildOriginalUI();
     this.buildTranslationUI();
-    if(this.translation.translator.approvalSupport) {
-      if(this.translation.translator.canModifyApproved) {
+    if (this.translation.translator.approvalSupport) {
+      if (this.translation.translator.canModifyApproved) {
         this.UI.$container
             .append($('<label class="control-label checkbox inline" />')
               .text(i18n.Approved)
@@ -173,7 +173,7 @@ var TranslationView = (function() {
         this.UI.$container.append($('<p />').text(this.translation.isApproved ? i18n.TranslationIsApproved_ReadOnly : i18n.TranslationIsNotApproved));
       }
     }
-    if(('comments' in this.translation) || ('context' in this.translation) || ('references' in this.translation)) {
+    if (('comments' in this.translation) || ('context' in this.translation) || ('references' in this.translation)) {
       var $dl;
       this.UI.$container.append($dl = $('<dl />'));
       if ('comments' in this.translation) {
@@ -189,11 +189,33 @@ var TranslationView = (function() {
         ;
       }
       if ('references' in this.translation) {
+        var referencePatterns = this.translation.translator.referencePatterns;
         var $dd;
         $dl
           .append($('<dt />').text(i18n.References))
-          .append($dd = $('<dd style="overflow: hidden; white-space: pre" />').text(this.translation.references.join('\n')))
+          .append($dd = $('<dd style="overflow: hidden; white-space: pre" />'))
         ;
+        $.each(this.translation.references, function(index, reference) {
+          if (index > 0) {
+            $dd.append('<br />');
+          }
+          var s, pattern;
+          if ((reference.length > 1) && (reference[1] !== null)) {
+            s = reference.join(':');
+            pattern = referencePatterns.file_line;
+          } else {
+            s = reference[0];
+            pattern = referencePatterns.file;
+          }
+          if(pattern) {
+            $dd.append($('<a target="_blank" />')
+              .text(s)
+              .attr('href', pattern.replace(/\[\[FILE\]\]/g, reference[0]).replace(/\[\[LINE\]\]/g, reference[1]))
+            );
+          } else {
+            $dd.append($('<span />').text(s));
+          }
+        });
         $dd.attr('title', $dd.text());
       }
     }
@@ -203,17 +225,17 @@ var TranslationView = (function() {
     var $ul = $li.closest('ul');
     var liTop = $li.position().top - $ul.position().top;
     var ulTop = $ul.scrollTop();
-    if(liTop < 0) {
+    if (liTop < 0) {
       newScrollTop = ulTop + liTop;
     }
     else {
       var liBottom = liTop + $li.outerHeight();
       var ulBottom = $ul.height();
-      if(liBottom > ulBottom) {
+      if (liBottom > ulBottom) {
         newScrollTop = ulTop + (liBottom - ulBottom);
       }
     }
-    if(newScrollTop !== null) {
+    if (newScrollTop !== null) {
       $ul.animate({scrollTop: newScrollTop}, 50);
     }
   }
@@ -229,27 +251,27 @@ var TranslationView = (function() {
         return strings;
       }
       var result = {strings: strings};
-      if('$approved' in this.UI) {
+      if ('$approved' in this.UI) {
         result.approved = this.UI.$approved.is(':checked') ? true : false;
       }
       return result;
     },
     isDirty: function() {
       var translatedState = this.getTranslatedState();
-      if(translatedState === null) {
+      if (translatedState === null) {
         return this.translation.isTranslated ? true : false;
       }
       if (this.translation.isTranslated === false) {
         return true;
       }
       var dirty = false;
-      for(var n = translatedState.strings.length, i = 0; i < n; i++) {
-        if(translatedState.strings[i] !== this.translation.translations[i]) {
+      for (var n = translatedState.strings.length, i = 0; i < n; i++) {
+        if (translatedState.strings[i] !== this.translation.translations[i]) {
           dirty = true;
           break;
         }
       }
-      if(('approved' in translatedState) && (translatedState.approved !== this.translation.isApproved)) {
+      if (('approved' in translatedState) && (translatedState.approved !== this.translation.isApproved)) {
         dirty = true;
       }
       return dirty;
@@ -313,7 +335,7 @@ var TranslationView = (function() {
       this.UI.$tabBodies.find('.tab-pane.active').removeClass('active');
       this.UI.$tabHeaders.find('li[data-key="' + key + '"]').addClass('active');
       var $pane = this.UI.$tabBodies.find('.tab-pane[data-key="' + key + '"]').addClass('active');
-      if(focalize) {
+      if (focalize) {
         $pane.find('textarea,input').focus();
       }
     },
@@ -363,7 +385,7 @@ var TranslationView = (function() {
         var s = $.trim(my.UI.$translated[key].val());
         if (s.length > 0) {
           some = true;
-        } else if(firstNotFilled === null) {
+        } else if (firstNotFilled === null) {
           firstNotFilled = key;
         }
         result.push(s);
@@ -391,6 +413,7 @@ function Translator(data) {
   this.plurals = $.extend(true, {}, data.plurals);
   this.translations = [];
   this.approvalSupport = (data.approvalSupport === false) ? false : true;
+  this.referencePatterns = $.extend(true, {file: null, file_line: null}, data.referencePatterns);
   if (this.approvalSupport) {
     this.canModifyApproved = (data.canModifyApproved === true) ? true : false;
   }
@@ -407,7 +430,7 @@ Translator.prototype = {
     delete this.containerID;
     var height = this.height;
     delete this.height;
-    if((!height) || (height < 200)) {
+    if ((!height) || (height < 200)) {
       height = 200;
     }
     this.UI.$container
@@ -510,7 +533,7 @@ Translator.prototype = {
       )
     ;
     var n = this.translations.length;
-    if(n < MAX_TRANSLATIONS_FOR_FASTSEARCH) {
+    if (n < MAX_TRANSLATIONS_FOR_FASTSEARCH) {
       this.UI.$searchButton.remove();
       var hAutosearchTimer = null;
       this.UI.$searchText.on('change keydown keyup keypress', function() {
@@ -533,7 +556,7 @@ Translator.prototype = {
       });
     }
     var someContexts = false;
-    for(var i = 0; i < n; i++) {
+    for (var i = 0; i < n; i++) {
       this.translations[i].buildListItem();
       if (this.translations[i].hasContext) {
         someContexts = true;
@@ -561,7 +584,7 @@ Translator.prototype = {
     this.UI.$showUntranslated.on('click', function() {
       my.filter({showUntranslated: !my.appliedFilter.showUntranslated});
     });
-    if(this.approvalSupport) {
+    if (this.approvalSupport) {
       this.UI.$showUnapproved.on('click', function() {
         my.filter({showUnapproved: !my.appliedFilter.showUnapproved});
       });
@@ -577,7 +600,7 @@ Translator.prototype = {
       delete this.UI.$showUnapproved;
       delete this.UI.$showApproved;
     }
-    if(someContexts) {
+    if (someContexts) {
       this.UI.$searchInContexts.on('click', function() {
         my.filter({searchInContexts: !my.appliedFilter.searchInContexts});
       });
@@ -586,11 +609,11 @@ Translator.prototype = {
     }
     this.viewAppliedFilter();
     $(window).on('beforeunload', function() {
-      if(my.currentTranslationView && my.currentTranslationView.isDirty()) {
+      if (my.currentTranslationView && my.currentTranslationView.isDirty()) {
         return i18n.AskDiscardDirtyTranslation;
       }
     });
-    if(n > 0) {
+    if (n > 0) {
       this.setCurrentTranslation(this.translations[0]);
     }
     this.UI.$container.on('keydown', function(e) {
@@ -604,13 +627,13 @@ Translator.prototype = {
   },
   viewAppliedFilter: function() {
     var f = this.appliedFilter;
-    if(this.UI.$searchText.text() !== f.text) {
+    if (this.UI.$searchText.text() !== f.text) {
       this.UI.$searchText.text(f.text); 
     }
     this.UI.$searchInOriginals.find('i').removeClass('fa-check-square-o fa-square-o').addClass(f.searchInOriginals ? 'fa-check-square-o' : 'fa-square-o');
     this.UI.$searchInTranslations.find('i').removeClass('fa-check-square-o fa-square-o').addClass(f.searchInTranslations ? 'fa-check-square-o' : 'fa-square-o');
     this.UI.$searchInContexts.find('i').removeClass('fa-check-square-o fa-square-o').addClass(f.searchInContexts ? 'fa-check-square-o' : 'fa-square-o');
-    if(this.approvalSupport) {
+    if (this.approvalSupport) {
       this.UI.$showUnapproved.find('i').removeClass('fa-check-square-o fa-square-o').addClass(f.showUnapproved ? 'fa-check-square-o' : 'fa-square-o');
       this.UI.$showApproved.find('i').removeClass('fa-check-square-o fa-square-o').addClass(f.showApproved ? 'fa-check-square-o' : 'fa-square-o');
     }
@@ -622,14 +645,14 @@ Translator.prototype = {
     var newFilter = $.extend(true, {}, this.appliedFilter, f, {text: this.UI.$searchText.val()});
     var needApplyFilter = false;
     $.each(newFilter, function(key, value) {
-      if(value === my.appliedFilter[key]) {
+      if (value === my.appliedFilter[key]) {
         return;
       }
       switch(key) {
         case 'searchInOriginals':
         case 'searchInTranslations':
         case 'searchInContexts':
-          if(my.appliedFilter.text === '') {
+          if (my.appliedFilter.text === '') {
             return;
           }
           break;
@@ -639,12 +662,12 @@ Translator.prototype = {
     });
     this.appliedFilter = newFilter;
     this.viewAppliedFilter();
-    if(!needApplyFilter) {
+    if (!needApplyFilter) {
       return;
     }
     this.appliedFilter.lowerCaseText = this.appliedFilter.text.toLowerCase();
     var n = this.translations.length;
-    for(var i = 0; i < n; i++) {
+    for (var i = 0; i < n; i++) {
       this.translations[i].applyFilter();
     }
   },
@@ -652,19 +675,19 @@ Translator.prototype = {
     if (this.saving) {
       return false;
     }
-    if(this.currentTranslationView) {
-      if(this.currentTranslationView.translation === translation) {
+    if (this.currentTranslationView) {
+      if (this.currentTranslationView.translation === translation) {
         return;
       }
-      if(this.currentTranslationView.isDirty()) {
-        if(!window.confirm(i18n.AskDiscardDirtyTranslation)) {
+      if (this.currentTranslationView.isDirty()) {
+        if (!window.confirm(i18n.AskDiscardDirtyTranslation)) {
           return;
         }
       }
       this.currentTranslationView.dispose();
       this.currentTranslationView = null;
     }
-    if(translation === null) {
+    if (translation === null) {
       return;
     }
     this.currentTranslationView = translation.isPlural ? new TranslationView.Plural(translation) :  new TranslationView.Singular(translation);
@@ -672,7 +695,7 @@ Translator.prototype = {
   setSaving: function(saving) {
     this.saving = !!saving;
     var $btn = this.UI.$container.find('button.ccm-translator-savecontinue');
-    if(this.saving) {
+    if (this.saving) {
       $btn.css('width', $btn.outerWidth() + 'px').html('<span class="fa fa-spinner fa-spin"></span>');
     } else {
       $btn.css('width', 'auto').text(i18n.Save_and_Continue);
@@ -683,7 +706,7 @@ Translator.prototype = {
     if (this.saving) {
       return;
     }
-    if(this.currentTranslationView.isDirty() === false) {
+    if (this.currentTranslationView.isDirty() === false) {
       this.gotoNextTranslation(backward);
       return;
     }
@@ -694,7 +717,7 @@ Translator.prototype = {
     var translation = this.currentTranslationView.translation;
     var postData = {};
     postData.id = translation.id;
-    if(translatedState === null) {
+    if (translatedState === null) {
       postData.clear = 1;
     } else {
       postData.translated = translatedState.strings;
@@ -720,7 +743,7 @@ Translator.prototype = {
       }
     })
     .done(function(response) {
-      if(response && response.error) {
+      if (response && response.error) {
         window.alert(response.errors.join("\n"));
         return;
       }
@@ -730,7 +753,7 @@ Translator.prototype = {
   },
   gotoNextTranslation: function(backward) {
     var $lis = this.UI.$list.children(':visible');
-    if($lis.length === 0) {
+    if ($lis.length === 0) {
       this.setCurrentTranslation(null);
       return;
     }
@@ -764,13 +787,13 @@ var Startup = (function() {
   return {
     setDomReady: function() {
       domReady = true;
-      if(readyTranslators.length) {
+      if (readyTranslators.length) {
         launch();
       }
     },
     setTranslatorReady: function(translator) {
       readyTranslators.push(translator);
-      if(domReady) {
+      if (domReady) {
         launch();
       }
     }
@@ -782,7 +805,7 @@ window.ccmTranslator = {
     $.extend(true, i18n, i18nDictionary);
   },
   configureFrontend: function(frontendConfig) {
-    if($.isPlainObject(frontendConfig)) {
+    if ($.isPlainObject(frontendConfig)) {
       $.extend(frontend, frontendConfig);
     }
   },
