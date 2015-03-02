@@ -373,6 +373,8 @@ class BlockView extends AbstractView
     public function runControllerTask()
     {
 
+        $this->controller->on_start();
+
         if ($this->useBlockCache()) {
             $this->didPullFromOutputCache = true;
             $this->outputContent = $this->block->getBlockCachedOutput($this->area);
@@ -400,7 +402,6 @@ class BlockView extends AbstractView
 
             $parameters = array();
             if (!$passthru) {
-                $this->controller->on_start();
                 $this->controller->runAction($method, $parameters);
             }
             $this->controller->on_before_render();
