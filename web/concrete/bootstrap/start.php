@@ -189,6 +189,22 @@ include DIR_APPLICATION . '/bootstrap/app.php';
  * ----------------------------------------------------------------------------
  */
 $request = Request::getInstance();
+$request->setTrustedProxies($config->get('app.trusted_proxies', array()));
+
+if ($config->get('app.trusted_headers')) {
+    foreach ($config->get('app.trusted_headers') as $key => $value) {
+        Request::setTrustedHeaderName($key, $value);
+    }
+}
+
+/**
+ * ----------------------------------------------------------------------------
+ * Define BASE_URL
+ * ----------------------------------------------------------------------------
+ */
+if (!defined('BASE_URL')) {
+    define('BASE_URL', $request->getSchemeAndHttpHost());
+}
 
 /**
  * ----------------------------------------------------------------------------
