@@ -46,4 +46,20 @@ class AuthorFormatter
         }
         return sprintf($html, $link, $name);
     }
+
+    /**
+     * @return string
+     */
+    public function getAvatar()
+    {
+        $ui = $this->author->getUser();
+        $useGravatars = \Config::get('concrete.user.gravatar.enabled');
+        $av = \Core::make('helper/concrete/avatar');
+        if (is_object($ui) || !$useGravatars) {
+            return $av->outputUserAvatar($ui);
+        } else {
+            // we try to use the gravatar with the author email address.
+            return '<img src="' . $av->getGravatar($this->author->getEmail()) . '" />';
+        }
+    }
 }

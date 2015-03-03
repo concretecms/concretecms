@@ -9,6 +9,8 @@ class ServiceList
             array('twitter', 'Twitter', 'twitter'),
             array('linkedin', 'LinkedIn', 'linkedin-square'),
             array('reddit', 'Reddit', 'reddit'),
+            array('pinterest', 'Pinterest', 'pinterest'),
+            array('google_plus', 'Google Plus', 'google-plus'),
             array('email', 'Email', 'envelope')
         );
     }
