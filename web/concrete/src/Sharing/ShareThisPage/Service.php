@@ -32,6 +32,10 @@ class Service extends SocialNetworkService
                 case 'linkedin':
                     $title = urlencode($c->getCollectionName());
                     return "https://www.linkedin.com/shareArticle?mini-true&url={$url}&title={$title}";
+                case 'pinterest':
+                    return "https://www.pinterest.com/pin/create/button?url=$url";
+                case 'google_plus':
+                    return "https://plus.google.com/share?url=$url";
                 case 'reddit':
                     return "https://www.reddit.com/submit?url={$url}";
                 case 'email':
