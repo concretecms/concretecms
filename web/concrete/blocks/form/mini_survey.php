@@ -161,7 +161,7 @@ class MiniSurvey {
 				}
 				$surveyBlockInfo = $this->getMiniSurveyBlockInfoByQuestionId($qsID,intval($bID));
                 if(!strlen($surveyBlockInfo['submitText'])) {
-                    $suveyBlockInfo['submitText'] = 'Submit';
+                    $surveyBlockInfo['submitText'] = 'Submit';
                 }
 
 				if($surveyBlockInfo['displayCaptcha']) {
