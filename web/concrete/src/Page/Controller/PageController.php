@@ -2,6 +2,7 @@
 namespace Concrete\Core\Page\Controller;
 use Concrete\Core\Block\Block;
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Foundation\Environment;
 use Concrete\Core\Routing\Redirect;
 use Page;
 use Request;
@@ -29,14 +30,14 @@ class PageController extends Controller {
 
     /**
      * Given either a path or a Page object, this is a shortcut to
-     * 1. Grab the controller of that page.
-     * 2. Grab the view of that controller
+     * 1. Grab the controller of THAT page.
+     * 2. Grab the view of THAT controller
      * 3. Render that view.
      * 4. Exit – so we immediately stop all other output in the controller that
      * called render().
      * @param @string|\Concrete\Core\Page\Page $var
      */
-    public function render($var)
+    public function replace($var)
     {
         if (!($var instanceof \Concrete\Core\Page\Page)) {
             $var = \Page::getByPath($var);
@@ -49,6 +50,31 @@ class PageController extends Controller {
         $view = $controller->getViewObject();
         print $view->render();
         exit;
+    }
+
+    /**
+     * Given a path to a single page, this command uses the CURRENT controller and renders
+     * the contents of the single page within this request. The current controller is not
+     * replaced, and has already fired (since it is meant to be called from within a view() or
+     * similar method).
+     * @param @string
+     */
+    public function render($path)
+    {
+
+        $view = $this->getViewObject();
+
+        $env = Environment::get();
+        $path = trim($path, '/');
+        $a = $path . '/' . FILENAME_COLLECTION_VIEW;
+        $b = $path . '.php';
+
+        $r = $env->getRecord(DIRNAME_PAGES . '/' . $a);
+        if ($r->exists()) {
+            $view->renderSinglePageByFilename($a);
+        } else {
+            $view->renderSinglePageByFilename($b);
+        }
     }
 
     public function getPageObject() {
