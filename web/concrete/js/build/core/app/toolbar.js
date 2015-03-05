@@ -241,7 +241,7 @@ var ConcreteToolbar = function() {
 					$("#ccm-intelligent-search-results-list-marketplace").parent().hide();
 				});
 
-				$.getJSON(CCM_TOOLS_PATH + '/get_remote_help', {
+				$.getJSON(CCM_DISPATCHER_FILENAME + '/ccm/system/backend/get_remote_help', {
 					'q': remotesearchquery
 				},
 				function(r) {
