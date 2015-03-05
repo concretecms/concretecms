@@ -265,7 +265,7 @@ var ConcreteToolbar = function() {
 					$("#ccm-intelligent-search-results-list-help").parent().hide();
 				});
 
-				$.getJSON(CCM_TOOLS_PATH + '/pages/intelligent_search', {
+				$.getJSON(CCM_DISPATCHER_FILENAME + '/ccm/system/backend/intelligent_search', {
 					'q': remotesearchquery
 				},
 				function(r) {
