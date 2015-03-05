@@ -174,17 +174,14 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
                 $class = core_class('Controller\\PageType\\' . camelcase($ptHandle), $prefix);
             } else if ($this->isGeneratedCollection()) {
                 $file = $this->getCollectionFilename();
-                $r = $env->getRecord(DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS . $file, $this->getPackageHandle());
-                $prefix = $r->override ? true : $this->getPackageHandle();
-
                 if (strpos($file, '/' . FILENAME_COLLECTION_VIEW) !== false) {
                     $path = substr($file, 0, strpos($file, '/'. FILENAME_COLLECTION_VIEW));
                 } else {
                     $path = substr($file, 0, strpos($file, '.php'));
                 }
-
+                $r = $env->getRecord(DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS . $path . '.php', $this->getPackageHandle());
+                $prefix = $r->override ? true : $this->getPackageHandle();
                 $class = core_class('Controller\\SinglePage\\' . str_replace('/','\\', camelcase($path, true)), $prefix);
-
             }
 
             if (isset($class) && class_exists($class)) {
@@ -233,7 +230,10 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      * @return string
      */
     public function getPackageHandle() {
-        return PackageList::getHandle($this->pkgID);
+        if (!isset($this->pkgHandle)) {
+            $this->pkgHandle = PackageList::getHandle($this->pkgID);
+        }
+        return $this->pkgHandle;
     }
 
     /**
