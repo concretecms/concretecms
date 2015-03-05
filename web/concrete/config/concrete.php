@@ -166,7 +166,7 @@ return array(
 
         /**
          * Use Doctrine development mode
-         * 
+         *
          * @var bool
          */
         'doctrine_dev_mode'        => false,

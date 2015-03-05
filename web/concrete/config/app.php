@@ -80,7 +80,6 @@ return array(
         'StackList'                            => '\Concrete\Core\Page\Stack\StackList',
         'StartingPointPackage'                 => '\Concrete\Core\Package\StartingPointPackage',
         'TaskPermission'                       => '\Concrete\Core\Legacy\TaskPermission',
-        'URL'                                  => '\Concrete\Core\Routing\URL',
         'User'                                 => '\Concrete\Core\User\User',
         'UserAttributeKey'                     => '\Concrete\Core\Attribute\Key\UserKey',
         'UserInfo'                             => '\Concrete\Core\User\UserInfo',
@@ -114,6 +113,7 @@ return array(
         'core_whoops'       => '\Concrete\Core\Error\Provider\WhoopsServiceProvider',
         'core_logging'      => '\Concrete\Core\Logging\LoggingServiceProvider',
         'core_cache'        => '\Concrete\Core\Cache\CacheServiceProvider',
+        'core_url'          => '\Concrete\Core\Url\UrlServiceProvider',
 
         // Authentication
         'core_oauth'          => '\Concrete\Core\Authentication\Type\OAuth\ServiceProvider',
@@ -136,7 +136,8 @@ return array(
         'Route'    => '\Concrete\Core\Support\Facade\Route',
         'Log'      => '\Concrete\Core\Support\Facade\Log',
         'Image'    => '\Concrete\Core\Support\Facade\Image',
-        'Config'   => '\Concrete\Core\Support\Facade\Config'
+        'Config'   => '\Concrete\Core\Support\Facade\Config',
+        'URL'      => '\Concrete\Core\Support\Facade\Url'
     ),
 
     /**
