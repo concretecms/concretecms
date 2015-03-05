@@ -56,6 +56,7 @@ class Environment {
 	public function clearOverrideCache() {
 		@unlink(Config::get('concrete.cache.directory') . '/' . Config::get('concrete.cache.environment.file'));
 		$this->overridesScanned = false;
+		$this->cachedOverrides = array();
 	}
 
 
