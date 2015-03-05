@@ -265,6 +265,7 @@ return array(
         "/ccm/system/css/page/{cID}/{stylesheet}/{cvID}"                                => array('\Concrete\Controller\Frontend\Stylesheet::page_version'),
         "/ccm/system/css/page/{cID}/{stylesheet}"                                       => array('\Concrete\Controller\Frontend\Stylesheet::page'),
         "/ccm/system/backend/editor_data/"                                              => array('\Concrete\Controller\Backend\EditorData::view'),
+        "/ccm/system/backend/intelligent_search/"                                       => array('\Concrete\Controller\Backend\IntelligentSearch::view'),
         "/ccm/system/jobs"                                                              => array('\Concrete\Controller\Frontend\Jobs::view'),
         "/ccm/system/jobs/run_single"                                                   => array('\Concrete\Controller\Frontend\Jobs::run_single'),
         "/ccm/system/jobs/check_queue"                                                  => array('\Concrete\Controller\Frontend\Jobs::check_queue'),
