@@ -14,7 +14,7 @@ class URL {
 	public static function page(Page $c, $action = false) {
 		$args = func_get_args();
 		$args[0] = Loader::helper('text')->encodePath($c->getCollectionPath());
-		return call_user_func_array(array('\Concrete\Core\Routing\URL', 'to'), $args);
+		return call_user_func_array(array('URL', 'to'), $args);
 	}
 
 	public static function to($path, $action = false) {
@@ -74,7 +74,7 @@ class URL {
         }
         $route = Router::route($data);
         array_unshift($arguments, $route);
-        return call_user_func_array(array('\Concrete\Core\Routing\URL', 'to'), $arguments);
+        return call_user_func_array(array('URL', 'to'), $arguments);
     }
 
 }
