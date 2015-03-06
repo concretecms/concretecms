@@ -125,11 +125,11 @@ $dh = Core::make('helper/date');
     						
     						<div class="input">
     						    <div class="col-md-6">
-    							    <?php echo $form->text('value',$j->scheduledValue,array('class'=>''))?>
+    							    <?php echo $form->text('value',h($j->scheduledValue),array('class'=>''))?>
     						    </div>
     						    
     						    <div class="col-md-6">
-    						        <?php echo $form->select('unit', array('hours'=>t('Hours'), 'days'=>t('Days'), 'weeks'=>t('Weeks'), 'months'=>t('Months')), $j->scheduledInterval, array('class'=>''))?>
+    						        <?php echo $form->select('unit', array('hours'=>t('Hours'), 'days'=>t('Days'), 'weeks'=>t('Weeks'), 'months'=>t('Months')), h($j->scheduledInterval), array('class'=>''))?>
     						    </div>
     						</div>
     				    </div>
@@ -345,7 +345,7 @@ if (is_object($djs)) { ?>
         				    <div class="form-group">
         				        <label><?php  echo t('Run this Job Every')?></label>
             					<div class="input">
-            						<?php echo $form->text('value', $set->scheduledValue, array('class' => 'col-md-6'))?>
+            						<?php echo $form->text('value', h($set->scheduledValue), array('class' => 'col-md-6'))?>
             					</div>
         				    </div>
     				    </div>
@@ -354,7 +354,7 @@ if (is_object($djs)) { ?>
     				        <div class="form-group">
     				            <label></label>
     				            <div class="input">
-            						<?php echo $form->select('unit', array('hours'=>t('Hours'), 'days'=>t('Days'), 'weeks'=>t('Weeks'), 'months'=>t('Months')), $set->scheduledInterval, array('class'=>''))?>
+            						<?php echo $form->select('unit', array('hours'=>t('Hours'), 'days'=>t('Days'), 'weeks'=>t('Weeks'), 'months'=>t('Months')), h($set->scheduledInterval), array('class'=>''))?>
             					</div>
     				        </div>
     				    </div>
