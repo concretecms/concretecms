@@ -783,17 +783,10 @@ return array(
         'exclude_words'        => 'a, an, as, at, before, but, by, for, from, is, in, into, like, of, off, on, onto, per, ' .
             'since, than, the, this, that, to, up, via, with',
 
-        /**
-         * URL rewriting
-         *
-         * Doesn't impact URL_REWRITING_ALL which is set at a lower level and
-         * controls whether ALL items will be rewritten.
-         *
-         * @var bool
-         */
         'url_rewriting'           => false,
         'url_rewriting_all'       => false,
-        'redirect_to_base_url'    => false,
+        'canonical_host'          => false,
+        'redirect_to_canonical_host' => false,
         'trailing_slash'          => false,
         'title_format'            => '%1$s :: %2$s',
         'title_segment_separator' => ' :: ',

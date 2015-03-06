@@ -591,7 +591,7 @@ class Version
     {
         $c = Page::getCurrentPage();
         $cID = ($c instanceof Page) ? $c->getCollectionID() : 0;
-        return BASE_URL . View::url('/download_file', 'force', $this->getFileID(), $cID);
+        return View::url('/download_file', 'force', $this->getFileID(), $cID);
     }
 
     /**
@@ -864,7 +864,7 @@ class Version
     {
         $c = Page::getCurrentPage();
         $cID = ($c instanceof Page) ? $c->getCollectionID() : 0;
-        return BASE_URL . View::url('/download_file', $this->getFileID(), $cID);
+        return View::url('/download_file', $this->getFileID(), $cID);
     }
 
     /**

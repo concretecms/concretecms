@@ -50,7 +50,7 @@ class LocalConfiguration extends Configuration implements ConfigurationInterface
         if(strpos($rel, '://')) {
             return $rel;
         }
-        return BASE_URL . $rel;
+        return \Core::getApplicationURL() . $rel;
     }
 
     public function loadFromRequest(\Concrete\Core\Http\Request $req)

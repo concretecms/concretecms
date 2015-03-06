@@ -9,6 +9,7 @@ use Concrete\Core\Foundation\EnvironmentDetector;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Logging\Query\Logger;
 use Concrete\Core\Routing\DispatcherRouteCallback;
+use Concrete\Core\Routing\RedirectResponse;
 use Concrete\Core\Updater\Update;
 use Config;
 use Core;
@@ -17,12 +18,14 @@ use Environment;
 use Illuminate\Container\Container;
 use Job;
 use JobSet;
+use League\Url\Url;
+use League\Url\UrlImmutable;
 use Loader;
 use Log;
 use Package;
 use Page;
 use Redirect;
-use Request;
+use \Concrete\Core\Http\Request;
 use Route;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
@@ -294,30 +297,16 @@ class Application extends Container
     }
 
     /**
-     * If we have REDIRECT_TO_BASE_URL enabled, we need to honor it here.
+     * If we have redirect to canonical host enabled, we need to honor it here.
      */
-    public function handleBaseURLRedirection()
+    public function handleCanonicalHostRedirection()
     {
-        if (Config::get('concrete.seo.redirect_to_base_url')) {
-            $protocol = 'http://';
-            $base_url = BASE_URL;
-            if (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on')) {
-                $protocol = 'https://';
-                if (defined('BASE_URL_SSL')) {
-                    $base_url = BASE_URL_SSL;
-                }
-            }
-
-            $uri = $this->make('helper/security')->sanitizeURL($_SERVER['REQUEST_URI']);
-            if (strpos($uri, '%7E') !== false) {
-                $uri = str_replace('%7E', '~', $uri);
-            }
-
-            if (($base_url != $protocol . $_SERVER['HTTP_HOST']) && ($base_url . ':' . $_SERVER['SERVER_PORT'] != 'https://' . $_SERVER['HTTP_HOST'])) {
-                header('HTTP/1.1 301 Moved Permanently');
-                header('Location: ' . $base_url . $uri);
-                exit;
-            }
+        if (Config::get('concrete.seo.redirect_to_canonical_host')) {
+            $url = UrlImmutable::createFromServer($_SERVER);
+            $url->getHost()->set(Config::get('concrete.seo.canonical_host'));
+            $response = new RedirectResponse($url, '301');
+            $response->send();
+            exit;
         }
     }
 
@@ -405,6 +394,22 @@ class Application extends Container
      */
     public function detectEnvironment($environments)
     {
+        $r = Request::getInstance();
+        $pos = stripos($r->server->get('SCRIPT_NAME'), DISPATCHER_FILENAME);
+        if($pos > 0) {
+            //we do this because in CLI circumstances (and some random ones) we would end up with index.ph instead of index.php
+            $pos = $pos - 1;
+        }
+        $home = substr($r->server->get('SCRIPT_NAME'), 0, $pos);
+
+        $url = Url::createFromUrl('');
+        $url->getScheme()->set($r->getScheme());
+        $url->getHost()->set($r->getHost());
+        $url->getPath()->append($home);
+
+        $this['app_relative_path'] = $home;
+        $this['app_url'] = $url;
+
         $args = isset($_SERVER['argv']) ? $_SERVER['argv'] : null;
 
         $detector = new EnvironmentDetector();

@@ -18,7 +18,7 @@ class Navigation
      * @param boolean $prependBaseURL
      * @return \League\URL\URLInterface
      */
-    public function getLinkToCollection($cObj, $prependBaseURL = false)
+    public function getLinkToCollection($cObj)
     {
         return \URL::to($cObj);
     }

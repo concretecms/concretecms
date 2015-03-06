@@ -34,7 +34,11 @@ class PathUrlResolver implements UrlResolverInterface
             if ($string = array_get($components, 'fragment')) {
                 $url->getFragment()->set($string);
             }
-            $url->getHost()->set(\Request::getInstance()->getHost());
+            if (\Config::get('concrete.seo.canonical_host')) {
+                $url->getHost()->set(\Config::get('concrete.seo.canonical_host'));
+            } else {
+//                $url->getHost()->set(\Request::getInstance()->getHost());
+            }
 
             if ($url->getHost()->get()) {
                 $url->setScheme('http');
@@ -50,7 +54,16 @@ class PathUrlResolver implements UrlResolverInterface
                 $url->getPath()->prepend(DISPATCHER_FILENAME);
             }
 
+            // If we have a path to the concrete5 install we have to make sure to add that in.
+            if (\Core::getApplicationRelativePath()) {
+                $url->getPath()->prepend(\Core::getApplicationRelativePath());
+            }
+
             foreach ($args as $segment) {
+                if (!is_array($segment)) {
+                    $segment = (string) $segment; // sometimes integers foul this up when we pass them in as URL arguments.
+                }
+
                 $url->getPath()->append($segment);
             }
 
