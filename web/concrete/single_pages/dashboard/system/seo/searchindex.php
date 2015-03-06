@@ -20,7 +20,7 @@ use \Concrete\Core\Page\Search\IndexedSearch; ?>
 
 			<? foreach($areas as $a) { ?>
                 <div class="checkbox">
-				    <label><?=$form->checkbox('arHandle[]', $a, in_array($a, $selectedAreas))?> <?=$a?></label>
+				    <label><?=$form->checkbox('arHandle[]', h($a), in_array($a, $selectedAreas))?> <?=h($a)?></label>
                 </div>
 			<? } ?>
 			</div>
