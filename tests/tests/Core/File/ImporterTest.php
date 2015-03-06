@@ -164,7 +164,7 @@ class ImporterTest extends \FileStorageTestCase {
 
         $cf = Core::make('helper/concrete/file');
         $fh = Core::make('helper/file');
-        $this->assertEquals('http://www.dummyco.com/application/files/thumbnails/file_manager_detail'
+        $this->assertEquals('http://www.dummyco.com/path/to/server/application/files/thumbnails/file_manager_detail'
             . $cf->prefix($fo->getPrefix(), $fh->replaceExtension($fo->getFilename(), 'jpg'), 2),
             $fo->getThumbnailURL('file_manager_detail'));
     }
@@ -192,7 +192,7 @@ class ImporterTest extends \FileStorageTestCase {
 
         $cf = Core::make('helper/concrete/file');
         $fh = Core::make('helper/file');
-        $this->assertEquals('http://www.dummyco.com/application/files/thumbnails/file_manager_detail'
+        $this->assertEquals('http://www.dummyco.com/path/to/server/application/files/thumbnails/file_manager_detail'
             . $cf->prefix($fo->getPrefix(), $fh->replaceExtension($fo->getFilename(), 'jpg'), 2),
             $fo->getThumbnailURL('file_manager_detail'));
     }
@@ -295,7 +295,7 @@ class ImporterTest extends \FileStorageTestCase {
         $this->assertEquals(2, $r->getFileVersionID());
         $this->assertEquals('sample.txt', $r->getFilename());
         $apr = str_split($r->getPrefix(), 4);
-        $this->assertEquals(BASE_URL . '/application/files/' . $apr[0] . '/' . $apr[1] . '/' . $apr[2] . '/sample.txt',
+        $this->assertEquals(\Core::getApplicationURL() . '/application/files/' . $apr[0] . '/' . $apr[1] . '/' . $apr[2] . '/sample.txt',
             $r->getURL()
         );
     }

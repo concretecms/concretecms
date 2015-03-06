@@ -108,7 +108,9 @@ class DatabaseManager
     public function purge($name = null)
     {
         $this->disconnect($name);
-        unset($this->connections[$name]);
+        if (isset($this->connections[$name = $name ?: $this->getDefaultConnection()])) {
+            unset($this->connections[$name]);
+        }
     }
 
     /**
@@ -120,7 +122,7 @@ class DatabaseManager
     public function disconnect($name = null)
     {
         if (isset($this->connections[$name = $name ?: $this->getDefaultConnection()])) {
-            $this->connections[$name]->getDriver()->disconnect();
+            $this->connections[$name]->close();
         }
     }
 

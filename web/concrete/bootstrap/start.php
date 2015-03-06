@@ -143,6 +143,7 @@ $list->registerProviders($config->get('app.providers'));
  */
 $cms->setupFilesystem();
 
+
 /**
  * ----------------------------------------------------------------------------
  * Handle text encoding.

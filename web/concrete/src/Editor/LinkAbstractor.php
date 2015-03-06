@@ -23,13 +23,8 @@ class LinkAbstractor extends Object {
 	 * and converts them to abstract link references.
 	 */
 	public static function translateTo($text) {
-		// keep links valid
-		if (!defined('BASE_URL') || BASE_URL == '') {
-			return $text;
-		}
-
-		$url1 = str_replace('/', '\/', BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME);
-		$url2 = str_replace('/', '\/', BASE_URL . DIR_REL);
+		$url1 = str_replace('/', '\/', \Core::getApplicationURL() . '/' . DISPATCHER_FILENAME);
+		$url2 = str_replace('/', '\/', \Core::getApplicationURL());
 		$url4 = URL::to('/download_file', 'view');
 		$url4 = str_replace('/', '\/', $url4);
 		$url4 = str_replace('-', '\-', $url4);
@@ -79,7 +74,7 @@ class LinkAbstractor extends Object {
 				'/{CCM:BASE_URL}/i'
 			),
 			array(
-				BASE_URL . DIR_REL,
+				\Core::getApplicationURL(),
 			),
 			$text);
 
@@ -154,10 +149,12 @@ class LinkAbstractor extends Object {
 	 * and expands them to urls suitable for the rich text editor.
 	 */
 	public static function translateFromEditMode($text) {
+		$app = \Core::make('app');
+
 		//page links...
 		$text = preg_replace(
 			'/{CCM:CID_([0-9]+)}/i',
-			BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=\\1',
+			\Core::getApplicationURL() . '/' . DISPATCHER_FILENAME . '?cID=\\1',
 			$text);
 
 		//images...

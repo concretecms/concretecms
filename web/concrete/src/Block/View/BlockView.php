@@ -112,7 +112,7 @@ class BlockView extends AbstractView
                     $arguments = func_get_args();
                     $arguments[] = $b->getBlockID();
                     array_unshift($arguments, $c);
-                    return call_user_func_array(array('\Concrete\Core\Routing\URL', 'page'), $arguments);
+                    return call_user_func_array(array('\URL', 'page'), $arguments);
                 }
             }
         } catch (Exception $e) {
