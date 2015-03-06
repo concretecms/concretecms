@@ -35,8 +35,11 @@ class Controller extends BlockController {
 		$args = array();
 		$content = (string) $blockNode->stack;
 		$stack = Stack::getByName($content);
-		$args['stID'] = $stack->getCollectionID();			
-		return $args;		
+		$args['stID'] = 0;
+		if (is_object($stack)) {
+			$args['stID'] = $stack->getCollectionID();
+		}
+		return $args;
 	}
 	
 	public function export(\SimpleXMLElement $blockNode) {			
