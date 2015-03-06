@@ -35,7 +35,10 @@ class PathUrlResolver implements UrlResolverInterface
                 $url->getFragment()->set($string);
             }
             $url->getHost()->set(\Request::getInstance()->getHost());
-            $url->setScheme('http');
+
+            if ($url->getHost()->get()) {
+                $url->setScheme('http');
+            }
 
             $rewriting    = \Config::get('concrete.seo.url_rewriting');
             $rewrite_all  = \Config::get('concrete.seo.url_rewriting_all');
