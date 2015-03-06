@@ -19,7 +19,7 @@ class Setup extends DashboardPageController
     public function view()
     {
         $ll = Core::make('localization/languages');
-        $cl = Core::Make('lists/countries');
+        $cl = Core::make('lists/countries');
         $languages = $ll->getLanguageList();
 
         $this->set('pages', Section::getList());
