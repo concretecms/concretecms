@@ -271,7 +271,7 @@ class StartingPointPackage extends BasePackage
             $version->markMigrated();
 
         } catch (\Exception $e) {
-            throw new \Exception(t('Unable to install database: %s', $db->ErrorMsg()));
+            throw new \Exception(t('Unable to install database: %s', $db->ErrorMsg() ? $db->ErrorMsg() : $e->getMessage()));
         }
     }
 
