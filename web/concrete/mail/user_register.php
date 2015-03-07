@@ -24,7 +24,7 @@ ob_start();
 <? endif ?>
 <br />
 <? t('This account may be managed directly at') ?><br />
-<a href="<?= BASE_URL.View::url('/dashboard/users/search', 'view', $uID) ?>"><?= BASE_URL.View::url('/dashboard/users/search', 'view', $uID) ?></a>
+<a href="<?= View::url('/dashboard/users/search', 'view', $uID) ?>"><?= View::url('/dashboard/users/search', 'view', $uID) ?></a>
 <?
 
 $bodyHTML = ob_get_clean();
@@ -55,7 +55,7 @@ ob_start();
 
 <? t('This account may be managed directly at') ?>
 
-<?= BASE_URL.View::url('/dashboard/users/search', 'view', $uID) ?>
+<?= View::url('/dashboard/users/search', 'view', $uID) ?>
 <?
 
 $body = ob_get_clean();

@@ -754,7 +754,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             if ($this->getPackageID() > 0) {
                 if (is_dir(DIR_PACKAGES . '/' . $this->getPackageHandle())) {
                     $dirp = DIR_PACKAGES;
-                    $url = BASE_URL . DIR_REL;
+                    $url = \Core::getApplicationURL();
                 } else {
                     $dirp = DIR_PACKAGES_CORE;
                     $url = ASSETS_URL;
@@ -764,7 +764,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
                     $icon = $url . '/' . DIRNAME_PACKAGES . '/' . $this->getPackageHandle() . '/' . DIRNAME_PAGES . $this->getCollectionPath() . '/' . FILENAME_PAGE_ICON;
                 }
             } else if (file_exists(DIR_FILES_CONTENT . $this->getCollectionPath() . '/' . FILENAME_PAGE_ICON)) {
-                $icon = BASE_URL . DIR_REL . '/' . DIRNAME_PAGES . $this->getCollectionPath() . '/' . FILENAME_PAGE_ICON;
+                $icon = \Core::getApplicationURL() . '/' . DIRNAME_PAGES . $this->getCollectionPath() . '/' . FILENAME_PAGE_ICON;
             } else if (file_exists(DIR_FILES_CONTENT_REQUIRED . $this->getCollectionPath() . '/' . FILENAME_PAGE_ICON)) {
                 $icon = ASSETS_URL . '/' . DIRNAME_PAGES . $this->getCollectionPath() . '/' . FILENAME_PAGE_ICON;
             }

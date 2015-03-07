@@ -48,6 +48,14 @@ Facade::setFacadeApplication($cms);
 
 /**
  * ----------------------------------------------------------------------------
+ * Load path detection for relative assets, URL and path to home.
+ * ----------------------------------------------------------------------------
+ */
+require DIR_BASE_CORE . '/bootstrap/paths.php';
+
+
+/**
+ * ----------------------------------------------------------------------------
  * Add install environment detection
  * ----------------------------------------------------------------------------
  */
@@ -103,6 +111,8 @@ if (!$config->has('app.server_timezone')) {
 
 define('APP_VERSION', $config->get('concrete.version'));
 define('APP_CHARSET', $config->get('concrete.charset'));
+define('BASE_URL', $cms['app_url']);
+define('DIR_REL', $cms['app_relative_path']);
 
 /**
  * ----------------------------------------------------------------------------

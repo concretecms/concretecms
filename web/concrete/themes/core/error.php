@@ -29,7 +29,7 @@
             <?
                 Loader::element('error_fatal', array('innerContent' => $innerContent, 'titleContent' => $titleContent));
             ?>
-            <p><a href="<?=BASE_URL.DIR_REL?>" class="btn btn-default"><?=t('&lt; Back to Home')?></a></p>
+            <p><a href="<?=Core::getApplicationURL()?>" class="btn btn-default"><?=t('&lt; Back to Home')?></a></p>
         </div>
     </div>
 </div>

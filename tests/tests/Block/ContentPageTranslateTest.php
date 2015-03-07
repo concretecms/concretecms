@@ -27,7 +27,7 @@ class ContentPageTranslateTest extends PageTestCase {
     {
         return array(
             array('<a href="{CCM:CID_3}">Super Cool!</a>',
-                '<a href="' . \Core::getApplicationRelativePath() . '/' . DISPATCHER_FILENAME . '/awesome/all-right">Super Cool!</a>'
+                '<a href="' . \Core::getApplicationURL() . '/' . DISPATCHER_FILENAME . '/awesome/all-right">Super Cool!</a>'
             )
         );
     }

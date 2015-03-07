@@ -6,9 +6,9 @@ echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Sing
 	<div class="clearfix">
 		<h4><?php echo t('Add Single Page')?></h4>
 		<?php if(Config::get('concrete.seo.url_rewriting')) {
-			$base = BASE_URL.DIR_REL;
+			$base = Core::getApplicationURL();
 		} else {
-			$base = BASE_URL.DIR_REL.'/'.DISPATCHER_FILENAME;
+			$base = Core::getApplicationURL() .'/'.DISPATCHER_FILENAME;
 		}?>
 		<form class="form-inline" method="post" id="add_static_page_form" action="<?php echo $view->url('/dashboard/pages/single')?>">
 			<?php echo $this->controller->token->output('add_single_page')?>
@@ -51,7 +51,7 @@ echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Sing
 						$packageName = t('None');
 					} ?>
 					<tr>
-						<td style="width: 30%"><a href="<?php echo DIR_REL?>/<?php echo DISPATCHER_FILENAME?>?cID=<?php echo $p->getCollectionID()?>"><?php echo $p->getCollectionName()?></a></td>
+						<td style="width: 30%"><a href="<?=URL::to($p)?>"><?php echo $p->getCollectionName()?></a></td>
 						<td style="width: 40%"><?php echo $p->getCollectionPath()?></td>
 						<td style="width: 30%"><?php print $packageName; ?></td>
 						<td style="width: 1">

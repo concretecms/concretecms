@@ -75,7 +75,7 @@ class GenerateSitemap extends AbstractJob
             $addedPages = count($xmlDoc->url);
             $relName = ltrim(Config::get('concrete.sitemap_xml.file'), '\\/');
             $osName = rtrim(DIR_BASE, '\\/') . '/' . $relName;
-            $urlName = rtrim(BASE_URL . DIR_REL, '\\/') . '/' . $relName;
+            $urlName = rtrim(\Core::getApplicationURL(), '\\/') . '/' . $relName;
             if (!file_exists($osName)) {
                 @touch($osName);
             }
@@ -153,7 +153,7 @@ class GenerateSitemap extends AbstractJob
         $xmlNode = $xmlDoc->addChild('url');
         $xmlNode->addChild(
             'loc',
-            Config::get('concrete.sitemap_xml.base_url') . $instances['navigation']->getLinkToCollection($page)
+            $instances['navigation']->getLinkToCollection($page)
         );
         $xmlNode->addChild('lastmod', $lastmod->format(DateTime::ATOM));
         $xmlNode->addChild(
