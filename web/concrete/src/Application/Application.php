@@ -128,7 +128,7 @@ class Application extends Container
                 if (count($jobs)) {
                     foreach ($jobs as $j) {
                         if ($j->isScheduledForNow()) {
-                            $url = BASE_URL . View::url(
+                            $url = View::url(
                                                   '/ccm/system/jobs/run_single?auth=' . $auth . '&jID=' . $j->getJobID(
                                                   )
                                 );
@@ -143,7 +143,7 @@ class Application extends Container
                     if (is_array($jSets) && count($jSets)) {
                         foreach ($jSets as $set) {
                             if ($set->isScheduledForNow()) {
-                                $url = BASE_URL . View::url(
+                                $url = View::url(
                                                       '/ccm/system/jobs?auth=' . $auth . '&jsID=' . $set->getJobSetID(
                                                       )
                                     );
@@ -289,7 +289,7 @@ class Application extends Container
             if ($pathInfo != $redirect) {
                 $dispatcher = Config::get('concrete.seo.url_rewriting') ? '' : '/' . DISPATCHER_FILENAME;
                 Redirect::url(
-                        BASE_URL . DIR_REL . $dispatcher . $redirect . ($r->getQueryString(
+                        \Core::getApplicationURL() . '/' . $dispatcher . $redirect . ($r->getQueryString(
                         ) ? '?' . $r->getQueryString() : '')
                 )->send();
             }
@@ -407,8 +407,8 @@ class Application extends Container
         $url->getHost()->set($r->getHost());
         $url->getPath()->append($home);
 
-        $this['app_relative_path'] = $home;
-        $this['app_url'] = $url;
+        $this['app_relative_path'] = rtrim($home, '/');
+        $this['app_url'] = rtrim($url, '/');
 
         $args = isset($_SERVER['argv']) ? $_SERVER['argv'] : null;
 

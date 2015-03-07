@@ -20,7 +20,7 @@ if ($_REQUEST['task'] == 'save_workflow_progress' && Loader::helper("validation/
 				if (($r instanceof WorkflowProgressResponse) && $r->getWorkflowProgressResponseURL() != '') {
 					$obj->redirect = $r->getWorkflowProgressResponseURL();
 				} else { 
-					$obj->redirect = BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $_REQUEST['cID'];
+					$obj->redirect = URL::to($c);
 				}
 			}
 		}

@@ -63,7 +63,7 @@ if (isset($_REQUEST['btask']) && $_REQUEST['btask'] && $valt->validate()) {
                     $cID = $securityHelper->sanitizeInt($_GET['cID']);
 
                     header(
-                        'Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '&mode=edit' . $step);
+                        'Location: ' . \Core::getApplicationURL() . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '&mode=edit' . $step);
                     exit;
                 }
             }
@@ -150,7 +150,7 @@ if (isset($_REQUEST['ctask']) && $_REQUEST['ctask'] && $valt->validate()) {
                 if ($_REQUEST['ctask'] == 'check-out-add-block') {
                     setcookie("ccmLoadAddBlockWindow", "1", -1, DIR_REL . '/');
                     header(
-                        'Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID());
+                        'Location: ' . \Core::getApplicationURL() . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID());
                     exit;
                     break;
                 }
@@ -168,7 +168,7 @@ if (isset($_REQUEST['ctask']) && $_REQUEST['ctask'] && $valt->validate()) {
                 $u->unloadCollectionEdit($c);
                 $response = $pkr->trigger();
                 header(
-                    'Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID() . $step);
+                    'Location: ' . \Core::getApplicationURL() . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID() . $step);
                 exit;
             }
             break;
@@ -187,11 +187,6 @@ if (isset($_REQUEST['ptask']) && $_REQUEST['ptask'] && $valt->validate()) {
                 $p = $pc->getPile();
                 if ($p->isMyPile()) {
                     $pc->delete();
-                }
-                if ($pcID && ($_REQUEST['sbURL'])) {
-                    $sbURL = $securityHelper->sanitizeInt($_GET['sbURL']);
-                    header('Location: ' . BASE_URL . $sbURL);
-                    exit;
                 }
                 //global scrapbooks
             } elseif ($_REQUEST['bID'] > 0 && $_REQUEST['arHandle']) {

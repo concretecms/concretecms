@@ -227,7 +227,7 @@ class Feed
 
     public function getFeedURL()
     {
-        return BASE_URL . \URL::to('/rss/' . $this->getHandle());
+        return \URL::to('/rss/' . $this->getHandle());
     }
     /**
      * @Column(type="boolean")
@@ -384,10 +384,9 @@ class Feed
     public function getOutput()
     {
         $pl = $this->getPageListObject();
-        $link = BASE_URL;
         if ($this->cParentID) {
             $parent = Page::getByID($this->cParentID);
-            $link = $parent->getCollectionLink(true);
+            $link = $parent->getCollectionLink();
         }
         $pagination = $pl->getPagination();
         if ($pagination->getTotalResults() > 0) {

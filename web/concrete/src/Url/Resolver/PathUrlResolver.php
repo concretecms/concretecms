@@ -23,6 +23,8 @@ class PathUrlResolver implements UrlResolverInterface
         if (is_scalar($path) || (is_object($path) &&
                 method_exists($path, '__toString'))
         ) {
+            $path = rtrim($path, '/');
+
             $url = Url::createFromUrl('', $trailing);
             $components = parse_url($path);
             if ($string = array_get($components, 'path')) {
@@ -37,7 +39,7 @@ class PathUrlResolver implements UrlResolverInterface
             if (\Config::get('concrete.seo.canonical_host')) {
                 $url->getHost()->set(\Config::get('concrete.seo.canonical_host'));
             } else {
-//                $url->getHost()->set(\Request::getInstance()->getHost());
+                $url->getHost()->set(\Request::getInstance()->getHost());
             }
 
             if ($url->getHost()->get()) {

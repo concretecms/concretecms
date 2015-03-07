@@ -6551,7 +6551,7 @@
                         ConcreteEvent.unsubscribe('SitemapSelectPage');
                         ConcreteEvent.subscribe('SitemapSelectPage', function(e, data) {
                             jQuery.fn.dialog.closeTop();
-                            var url = CCM_BASE_URL + CCM_DISPATCHER_FILENAME + '?cID=' + data.cID;
+                            var url = CCM_APPLICATION_URL + '/' + CCM_DISPATCHER_FILENAME + '?cID=' + data.cID;
                             $('#redactor_link_url').val(url);
                             $('#redactor_link_ajax').prop('checked', true);
                         });
@@ -7011,7 +7011,7 @@
                     ConcreteEvent.unsubscribe('SitemapSelectPage');
                     ConcreteEvent.subscribe('SitemapSelectPage', function(e, data) {
                         jQuery.fn.dialog.closeTop();
-                        var url = CCM_BASE_URL + CCM_DISPATCHER_FILENAME + '?cID=' + data.cID;
+                        var url = CCM_APPLICATION_URL + '/' + CCM_DISPATCHER_FILENAME + '?cID=' + data.cID;
                         $('#redactor_file_link').val(url);
                         $('#redactor_link_ajax').prop('checked', true);
                     });

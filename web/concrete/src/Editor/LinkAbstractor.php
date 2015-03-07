@@ -23,21 +23,6 @@ class LinkAbstractor extends Object {
 	 * and converts them to abstract link references.
 	 */
 	public static function translateTo($text) {
-		$url1 = str_replace('/', '\/', \Core::getApplicationURL() . '/' . DISPATCHER_FILENAME);
-		$url2 = str_replace('/', '\/', \Core::getApplicationURL());
-		$url4 = URL::to('/download_file', 'view');
-		$url4 = str_replace('/', '\/', $url4);
-		$url4 = str_replace('-', '\-', $url4);
-		$text = preg_replace(
-			array(
-				'/' . $url1 . '\?cID=([0-9]+)/i',
-				'/' . $url4 . '\/([0-9]+)/i',
-				'/' . $url2 . '/i'),
-			array(
-				'{CCM:CID_\\1}',
-				'{CCM:FID_DL_\\1}',
-				'{CCM:BASE_URL}')
-			, $text);
 
 		// images inline
 		$imgmatch = URL::to('/download_file', 'view_inline');
@@ -59,6 +44,22 @@ class LinkAbstractor extends Object {
 
 			$text = (string) $r;
 		}
+
+		$url1 = str_replace('/', '\/', \Core::getApplicationURL() . '/' . DISPATCHER_FILENAME);
+		$url2 = str_replace('/', '\/', \Core::getApplicationURL());
+		$url4 = URL::to('/download_file', 'view');
+		$url4 = str_replace('/', '\/', $url4);
+		$url4 = str_replace('-', '\-', $url4);
+		$text = preg_replace(
+			array(
+				'/' . $url1 . '\?cID=([0-9]+)/i',
+				'/' . $url4 . '\/([0-9]+)/i',
+				'/' . $url2 . '/i'),
+			array(
+				'{CCM:CID_\\1}',
+				'{CCM:FID_DL_\\1}',
+				'{CCM:BASE_URL}')
+			, $text);
 
 		return $text;
 	}
