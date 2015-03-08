@@ -760,7 +760,7 @@ class Collection extends Object
     {
         $db = Loader::db();
         $v = array(Stack::ST_TYPE_GLOBAL_AREA);
-        $rs = $db->GetCol('select stName from Stacks', $v);
+        $rs = $db->GetCol('select stName from Stacks where Stacks.stType = ?', $v);
         $blocks = array();
         if (count($rs) > 0) {
             $pcp = new Permissions($this);
