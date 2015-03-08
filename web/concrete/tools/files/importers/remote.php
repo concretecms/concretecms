@@ -136,11 +136,11 @@ if (!$error->has()) {
                 unlink($fpath.'/'.$fname);
             } else {
                 // could not figure out a file name
-                $error->add(t(/*i18n: %s is an URL*/'Could not determine the name of the file at %s', $this_url));
+                $error->add(t(/*i18n: %s is an URL*/'Could not determine the name of the file at %s', h($this_url)));
             }
         } else {
             // warn that we couldn't download the file
-            $error->add(t(/*i18n: %s is an URL*/'There was an error downloading %s', $this_url));
+            $error->add(t(/*i18n: %s is an URL*/'There was an error downloading %s', h($this_url)));
         }
     }
 }
