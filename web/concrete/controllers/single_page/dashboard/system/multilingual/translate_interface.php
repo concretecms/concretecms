@@ -114,13 +114,38 @@ class TranslateInterface extends DashboardPageController
 
     public function save_translation()
     {
-        $mtID = intval($this->post('mtID'));
-        $translation = Translation::getByRecordID($mtID);
-        if (is_object($translation)) {
-            $translation->updateTranslation($this->post('msgstr'));
+        $result = new EditResponse();
+        try {
+            $translation = null;
+            $mtID = @intval($this->post('id'));
+            if ($mtID > 0) {
+                $translation = Translation::getByRecordID($mtID);
+            }
+            if (!isset($translation)) {
+                throw new \Exception(t('Invalid parameter received: %s', 'id'));
+            }
+            $singular = '';
+            $plurals = array();
+            if ($this->post('clear') !== '1') {
+                $translated = $this->post('translated');
+                if ((!is_array($translated)) || (count($translated) < 1)) {
+                    throw new \Exception(t('Invalid parameter received: %s', 'translated'));
+                }
+                if ($translation->hasPlural()) {
+                    $singular = array_shift($translated);
+                    $plurals = $translated;
+                } else {
+                    if (count($translated) !== 1) {
+                        throw new \Exception(t('Invalid parameter received: %s', 'translated'));
+                    }
+                    $singular = $translated[0];
+                }
+            }
+            $translation->updateTranslation($singular, $plurals);
+        } catch (\Exception $x) {
+            $result->setError($x);
         }
-        $r = new EditResponse();
-        $r->outputJSON();
+        $result->outputJSON();
     }
 
     public function translate_po($mtSectionID = false)
@@ -128,9 +153,47 @@ class TranslateInterface extends DashboardPageController
         $mtSectionID = intval($mtSectionID);
         $section = Section::getByID(intval($mtSectionID));
         if ($section) {
-            $translations = $section->getSectionInterfaceTranslations(true);
+            $translations = $section->getSectionInterfaceTranslations();
+            $this->requireAsset('core/translator');
             $this->set('section', $section);
-            $this->set('translations', $translations);
+            $jsonTranslations = array();
+            $numPlurals = $section->getNumberOfPluralForms();
+            foreach ($translations as $translation) {
+                /* @var $translation \Concrete\Core\Multilingual\Page\Section\Translation */
+                $jsonTranslation = array();
+                $jsonTranslation['id'] = $translation->getRecordID();
+                if ($translation->hasContext()) {
+                    $jsonTranslation['context'] = $translation->getContext();
+                }
+                $jsonTranslation['original'] = $translation->getOriginal();
+                if ($translation->hasPlural()) {
+                    $jsonTranslation['originalPlural'] = $translation->getPlural();
+                }
+                if ($translation->hasTranslation()) {
+                    $t = array($translation->getTranslation());
+                    if (($numPlurals > 1) && $translation->hasPlural()) {
+                        $t = array_merge($t, $translation->getPluralTranslation());
+                    }
+                    $jsonTranslation['translations'] = $t;
+                }
+                $extractedComments = '';
+                if ($translation->hasExtractedComments()) {
+                    $extractedComments = trim(implode("\n", $translation->getExtractedComments()));
+                }
+                if ($extractedComments !== '') {
+                    $jsonTranslation['comments'] = $extractedComments;
+                }
+                if ($translation->hasReferences()) {
+                    $jsonTranslation['references'] = $translation->getReferences();
+                }
+                $jsonTranslations[] = $jsonTranslation;
+            }
+            $jsonOptions = 0;
+            if (defined('\JSON_UNESCAPED_SLASHES')) {
+                $jsonOptions |= \JSON_UNESCAPED_SLASHES;
+            }
+            $this->set('jsonOptions', $jsonOptions);
+            $this->set('translations', $jsonTranslations);
         } else {
             $this->redirect('/dashboard/system/multilingual/translate_interface');
         }

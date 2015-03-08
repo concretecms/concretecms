@@ -97,6 +97,7 @@ __IDE_SYMBOLS__.php
 /web/concrete/js/lightbox.js
 /web/concrete/js/legacy.js
 /web/concrete/js/select2.js
+/web/concrete/js/translator.js
 
 # CSS
 /web/concrete/css/select2.css
@@ -124,3 +125,4 @@ __IDE_SYMBOLS__.php
 /web/concrete/themes/dashboard/main.css
 /web/concrete/themes/elemental/css/bootstrap-modified.css
 /web/concrete/css/legacy.css
+/web/concrete/css/translator.css

@@ -192,14 +192,14 @@ class Extractor
                 $data['msgstrPlurals'] = implode("\x00", $plurals);
             }
             $comments = $translation->getExtractedComments();
-            if (!empty($plurals)) {
+            if (!empty($comments)) {
                 $data['comments'] = implode("\n", $comments);
             }
             $references = $translation->getReferences();
             if (!empty($references)) {
                 $data['reference'] = '';
                 foreach ($translation->getReferences() as $reference) {
-                    $data['reference'] .= implode(':', $reference) . "\n";
+                    $data['reference'] .= (isset($reference[1]) ? implode(':', $reference) : $reference[0]) . "\n";
                 }
             }
             $flags = $translation->getFlags();
