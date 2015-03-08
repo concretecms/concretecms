@@ -6,8 +6,8 @@ use Request;
 use Loader;
 abstract class UserInterface extends Controller {
 
-	abstract protected function canAccess();
-	protected $error;
+    abstract protected function canAccess();
+    protected $error;
     protected $validationToken;
 
     public function shouldRunControllerTask()
@@ -15,21 +15,22 @@ abstract class UserInterface extends Controller {
         return $this->canAccess();
     }
 
-	public function __construct() {
-		$this->error = Loader::helper('validation/error');
-		$this->view = new DialogView($this->viewPath);
-		if (preg_match('/Concrete\\\Package\\\(.*)\\\Controller/i', get_class($this), $matches)) {
-			$pkgHandle = uncamelcase($matches[1]);
-			$this->view->setPackageHandle($pkgHandle);
-		}
-		$this->view->setController($this);
-		$request = Request::getInstance();
-		$this->request = $request;
+    public function __construct()
+    {
+        $this->error = \Core::make('helper/validation/error');
+        $this->view = new DialogView($this->viewPath);
+        if (preg_match('/Concrete\\\Package\\\(.*)\\\Controller/i', get_class($this), $matches)) {
+            $pkgHandle = uncamelcase($matches[1]);
+            $this->view->setPackageHandle($pkgHandle);
+        }
+        $this->view->setController($this);
+        $request = Request::getInstance();
+        $this->request = $request;
 
-		set_exception_handler(function($exception) {
-			print $exception->getMessage();
-		});
-	}
+        set_exception_handler(function($exception) {
+            print $exception->getMessage();
+        });
+    }
 
     public function getViewObject()
     {
@@ -39,24 +40,25 @@ abstract class UserInterface extends Controller {
         throw new \Exception(t('Access Denied'));
     }
 
-	protected function validateAction() {
+    protected function validateAction()
+    {
         $token = (isset($this->validationToken)) ? $this->validationToken : get_class($this);
-		if (!Loader::helper('validation/token')->validate($token)) {
-			$this->error->add(Loader::helper('validation/token')->getErrorMessage());
-			return false;
-		}
+        if (!Loader::helper('validation/token')->validate($token)) {
+            $this->error->add(\Core::make('helper/validation/token')->getErrorMessage());
+            return false;
+        }
         if (!$this->canAccess()) {
             return false;
         }
-		return true;
-	}
+        return true;
+    }
 
-	public function action() {
+    public function action()
+    {
         $token = (isset($this->validationToken)) ? $this->validationToken : get_class($this);
-		$url = call_user_func_array('parent::action', func_get_args());
-		$url .= '?ccm_token=' . Loader::helper('validation/token')->generate($token);
-		return $url;
-	}
+        $url = call_user_func_array('parent::action', func_get_args());
+        $url .= '?ccm_token=' . \Core::make('helper/validation/token')->generate($token);
+        return $url;
+    }
 
 }
-

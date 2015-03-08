@@ -37,18 +37,24 @@ class Application extends Container
 
     /**
      * Turns off the lights.
+     * @param array $options Array of options for disabling certain things during shutdown
+     *      Add `'jobs' => true` to disable scheduled jobs
+     *      Add `'log_queries' => true` to disable query logging
      */
-    public function shutdown()
+    public function shutdown($options = array())
     {
         \Events::dispatch('on_shutdown');
 
         if ($this->isInstalled()) {
-            $this->handleScheduledJobs();
+            if (!isset($options['jobs']) || $options['jobs'] == false) {
+                $this->handleScheduledJobs();
+            }
 
             $logger = new Logger();
             $r = Request::getInstance();
 
-            if (Config::get('concrete.log.queries.log')) {
+            if (Config::get('concrete.log.queries.log') &&
+                (!isset($options['log_queries']) || $options['log_queries'] == false)) {
                 $connection = Database::getActiveConnection();
                 if ($logger->shouldLogQueries($r)) {
                     $loggers = array();

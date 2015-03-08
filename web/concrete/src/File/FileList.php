@@ -16,6 +16,8 @@ class FileList extends DatabaseItemList implements PermissionableListItemInterfa
 
     /** @var  \Closure | integer | null */
     protected $permissionsChecker;
+    
+    protected $paginationPageParameter = 'ccm_paging_fl';
 
     /**
      * Columns in this array can be sorted via the request.
