@@ -54,6 +54,9 @@ class PathUrlResolver implements UrlResolverInterface
         }
 
         foreach ($args as $segment) {
+            if (!is_array($segment)) {
+                $segment = (string) $segment; // sometimes integers foul this up when we pass them in as URL arguments.
+            }
             $url->getPath()->append($segment);
         }
     }
