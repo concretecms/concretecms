@@ -81,7 +81,7 @@ $captcha = $surveyBlockInfo['displayCaptcha'] ? Loader::helper('validation/captc
 	<?php  if ($success): ?>
 		
 		<div class="alert alert-success">
-			<?php  echo $thanksMsg; ?>
+			<?php  echo h($thanksMsg); ?>
 		</div>
 	
 	<?php  elseif ($errors): ?>
@@ -126,7 +126,7 @@ $captcha = $surveyBlockInfo['displayCaptcha'] ? Loader::helper('validation/captc
 	<?php  endif; ?>
 
 	<div class="form-actions">
-		<input type="submit" name="Submit" class="btn btn-primary" value="<?php  echo t($survey->submitText); ?>" />
+		<input type="submit" name="Submit" class="btn btn-primary" value="<?php  echo h(t($survey->submitText)); ?>" />
 	</div>
 
 	<input name="qsID" type="hidden" value="<?php  echo $qsID; ?>" />
