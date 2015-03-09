@@ -7,9 +7,9 @@ return array(
      *
      * @var string
      */
-    'version'           => '5.7.3.2',
-    'version_installed' => '5.7.3.2',
-    'version_db' => '20150224000000', // the key of the latest database migration - corresponds to 5.7.3.2
+    'version'           => '5.7.4b1',
+    'version_installed' => '5.7.4b1',
+    'version_db' => '20150309000000', // the key of the latest database migration - corresponds to 5.7.3.2
 
     /**
      * Installation status
@@ -166,7 +166,7 @@ return array(
 
         /**
          * Use Doctrine development mode
-         *
+         * 
          * @var bool
          */
         'doctrine_dev_mode'        => false,
@@ -184,6 +184,7 @@ return array(
          * @var int
          */
         'full_page_lifetime_value' => null,
+        'identifier'               => md5(str_replace(array('https://', 'http://'), '', BASE_URL) . DIR_REL),
 
 
         'directory'   => DIR_FILES_UPLOADED_STANDARD . '/cache',
@@ -451,7 +452,8 @@ return array(
     'sitemap_xml'       => array(
         'file'      => 'sitemap.xml',
         'frequency' => 'weekly',
-        'priority'  => 0.5
+        'priority'  => 0.5,
+        'base_url'  => BASE_URL
     ),
 
     /**
@@ -781,10 +783,18 @@ return array(
         'exclude_words'        => 'a, an, as, at, before, but, by, for, from, is, in, into, like, of, off, on, onto, per, ' .
             'since, than, the, this, that, to, up, via, with',
 
+        /**
+         * URL rewriting
+         *
+         * Doesn't impact URL_REWRITING_ALL which is set at a lower level and
+         * controls whether ALL items will be rewritten.
+         *
+         * @var bool
+         */
         'url_rewriting'           => false,
         'url_rewriting_all'       => false,
+        'redirect_to_canonical_host'  => false,
         'canonical_host'          => false,
-        'redirect_to_canonical_host' => false,
         'trailing_slash'          => false,
         'title_format'            => '%1$s :: %2$s',
         'title_segment_separator' => ' :: ',
