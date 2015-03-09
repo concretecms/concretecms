@@ -1,8 +1,6 @@
 <?php
 namespace Concrete\Core\Support\Facade;
 
-use League\Url\Url;
-
 class Application extends Facade
 {
 
@@ -20,7 +18,7 @@ class Application extends Facade
     public static function getApplicationURL()
     {
         $cms = static::make('app');
-        return Url::createFromUrl((string) $cms['app_url']);
+        return \League\Url\Url::createFromUrl((string) $cms['app_url']);
     }
 
 }

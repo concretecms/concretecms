@@ -34,4 +34,14 @@ class Path extends \League\Url\Components\Path
         return implode($this->delimiter, $res) . (!!$this->trail ? '/' : '');
     }
 
+    public function withoutDispatcher()
+    {
+        $path = clone $this;
+        if ($path[0] == DISPATCHER_FILENAME) {
+            $path->offsetUnset(0);
+        }
+
+        return $path;
+    }
+
 }

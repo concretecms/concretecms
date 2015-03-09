@@ -7,7 +7,7 @@ use Page;
 
 class Redirect {
 
-	/** 
+	/**
 	 * Actually sends a redirect
 	 */
 	protected static function createRedirectResponse($url, $code, $headers) {
@@ -16,8 +16,8 @@ class Redirect {
 		return $r;
 	}
 
-	/** 
-	* Redirects to a concrete5 resource.	
+	/**
+	 * Redirects to a concrete5 resource.
 	 */
 	public static function to() {
 		$url = call_user_func_array('\URL::to', func_get_args());
@@ -25,7 +25,7 @@ class Redirect {
 		return $r;
 	}
 
-	/** 
+	/**
 	 * Redirect to a page
 	 */
 	public static function page(Page $c, $code = 302, $headers = array()) {
@@ -39,13 +39,11 @@ class Redirect {
 	}
 
 
-	/** 
-	* Redirects to a URL.	
+	/**
+	 * Redirects to a URL.
 	 */
 	public static function url($url, $code = 302, $headers = array()) {
 		$r = static::createRedirectResponse((string) $url, $code, $headers);
 		return $r;
-	}	
-
-
+	}
 }
