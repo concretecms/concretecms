@@ -493,6 +493,9 @@ return array(
         'dropzone'                 => array(
             array('javascript', 'js/dropzone.js')
         ),
+        'dropzone/locale'          => array(
+            array('javascript', REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_dropzone_js', array('combine' => false, 'minify' => false, 'local' => false))
+        ),
         'jquery/form'              => array(
             array('javascript', 'js/jquery-form.js')
         ),
@@ -898,6 +901,7 @@ return array(
                 array('javascript', 'jquery/ui'),
                 array('javascript', 'underscore'),
                 array('javascript', 'dropzone'),
+                array('javascript', 'dropzone/locale'),
                 array('javascript', 'bootstrap/dropdown'),
                 array('javascript', 'core/events'),
                 array('javascript', 'core/conversation'),
