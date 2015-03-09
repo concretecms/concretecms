@@ -36,7 +36,7 @@ class ResolverManager implements ResolverManagerInterface
 
         if (!$this->priorityTree[$priority]) {
             $this->priorityTree[$priority] = array();
-            sort($this->priorityTree);
+            ksort($this->priorityTree);
         }
         $this->priorityTree[$priority][] = $handle;
     }
@@ -64,7 +64,7 @@ class ResolverManager implements ResolverManagerInterface
     {
         $resolved = null;
 
-        foreach ($this->priorityTree as $priority => $list) {
+        foreach ($this->priorityTree as $list) {
             foreach ($list as $handle) {
                 if ($handle == $this->default) {
                     continue;
