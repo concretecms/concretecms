@@ -12,15 +12,17 @@ class Navigation
 {
 
     /**
-     * Returns a link to a page
+     * Returns a link to a page. Note: this always returns a string.
+     * if you really need the URL object, use \URL::to($page) instead. Not returning a string was killing a json
+     * encode in the sitemap (and could probably screw up other stuff down the line.)
      *
      * @param Page $cObj
      * @param boolean $prependBaseURL
-     * @return \League\URL\URLInterface
+     * @return string
      */
     public function getLinkToCollection($cObj)
     {
-        return \URL::to($cObj);
+        return (string) \URL::to($cObj);
     }
 
     /**
