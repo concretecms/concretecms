@@ -55,14 +55,15 @@ class Urls extends DashboardPageController {
 		$this->set('fh', Loader::helper('form'));
 		$this->set('strRules', $this->getRewriteRules());
 		$this->set('intRewriting', $intRewriting);
+		$this->set('host', Config::get('concrete.seo.canonical_host'));
 
-		if($strStatus == 'rewriting_saved'){
+		if($strStatus == 'saved'){
 			if(Config::get('concrete.seo.url_rewriting') && !$blnHtu){
-				$this->set('message', t('URL rewriting enabled. You need to update .htaccess by hand.'));
+				$this->set('message', t('Settings Saved. URL rewriting enabled. You need to update .htaccess by hand.'));
 			}elseif(Config::get('concrete.seo.url_rewriting') && $blnHtu){
-				$this->set('message', t('URL rewriting enabled. We were able to automatically update .htaccess file.'));
+				$this->set('message', t('Settings Saved. URL rewriting enabled. We were able to automatically update .htaccess file.'));
 			}else{
-				$this->set('message', t('URL rewriting disabled.'));
+				$this->set('message', t('Settings Saved.'));
 			}
 		}
 	}
@@ -73,12 +74,20 @@ class Urls extends DashboardPageController {
 	*
 	* @return void
 	*/
-	public function update_rewriting(){
-		if($this->token->validate('update_rewriting')){
+	public function save_urls(){
+
+		if(!$this->token->validate('save_urls')){
+			$this->error->add($this->token->getErrorMessage());
+		}
+
+		if (!$this->error->has()) {
 			$strHtText = (string) $this->getHtaccessText();
 			$blnHtu = 0;
 
 			if($this->isPost()){
+
+				Config::save('concrete.seo.canonical_host', $this->post('canonical_host'));
+
 				$intCurrent = Config::get('concrete.seo.url_rewriting') == 1 ? 1 : 0;
 				$intPosted = $this->post('URL_REWRITING') == 1 ? 1 : 0;
 
@@ -110,11 +119,9 @@ class Urls extends DashboardPageController {
 					}
 				}
 
-				$this->redirect('/dashboard/system/seo/urls', 'rewriting_saved', $blnHtu);
+				$this->redirect('/dashboard/system/seo/urls', 'saved', $blnHtu);
 			}
-		}else{
-			$this->set('error', array($this->token->getErrorMessage()));
 		}
+		$this->view();
 	}
 }
-?>
