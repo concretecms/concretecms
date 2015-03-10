@@ -557,7 +557,7 @@ return array(
         'handler'      => 'file',
         'max_lifetime' => 7200,
         'cookie'       => array(
-            'cookie_path'     => DIR_REL . '/',
+            'cookie_path'     => false, // set a specific path here if you know it, otherwise it'll default to relative
             'cookie_lifetime' => 0,
             'cookie_domain'   => false,
             'cookie_secure'   => false,

@@ -169,6 +169,7 @@ class DispatcherRouteCallback extends RouteCallback
         // On page view event.
         $pe = new PageEvent($c);
         $pe->setUser($u);
+        $pe->setRequest($request);
         Events::dispatch('on_page_view', $pe);
 
         $controller = $c->getPageController();
