@@ -16,7 +16,7 @@ class Version574 extends AbstractMigration
 
     public function getName()
     {
-        return '20150309000000';
+        return '20150310000000';
     }
 
     public function up(Schema $schema)
@@ -37,6 +37,13 @@ class Version574 extends AbstractMigration
         $c = \Page::getByPath('/dashboard/system/seo/urls');
         if (is_object($c) && !$c->isError()) {
             $c->update(array('cName' => 'URLs and Redirection'));
+        }
+
+        $sp = \Page::getByPath('/dashboard/system/environment/entities');
+        if (!is_object($sp) || $sp->isError()) {
+            $sp = \SinglePage::add('/dashboard/system/environment/entities');
+            $sp->update(array('cName' => 'Database Entities'));
+            $sp->setAttribute('meta_keywords', 'database, entities, doctrine, orm');
         }
 
         $pkx = Category::getByHandle('multilingual_section');
