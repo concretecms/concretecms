@@ -24,13 +24,10 @@ class PathUrlResolver implements UrlResolverInterface
                 method_exists($path, '__toString'))
         ) {
             $path = rtrim($path, '/');
-            if ($path === '') {
-                $path = '/'; // This is in the case of the home page, which has no cPath
-            }
 
             $url = Url::createFromUrl('', $trailing);
-            $this->handleHost($url, $path, $args);
             $this->handlePath($url, $path, $args);
+            $this->handleHost($url, $path, $args);
             $this->handleDispatcher($url, $path, $args);
 
             return $url;
@@ -52,10 +49,6 @@ class PathUrlResolver implements UrlResolverInterface
             $url->getFragment()->set($string);
         }
 
-        if (\Core::getApplicationRelativePath()) {
-            $url->getPath()->prepend(\Core::getApplicationRelativePath());
-        }
-
         foreach ($args as $segment) {
             if (!is_array($segment)) {
                 $segment = (string) $segment; // sometimes integers foul this up when we pass them in as URL arguments.
@@ -75,6 +68,11 @@ class PathUrlResolver implements UrlResolverInterface
         if (!$rewriting || (!$rewrite_all && $in_dashboard)) {
             $url->getPath()->prepend(DISPATCHER_FILENAME);
         }
+
+        if (\Core::getApplicationRelativePath()) {
+            $url->getPath()->prepend(\Core::getApplicationRelativePath());
+        }
+
     }
 
     public function handleHost(Url $url, $path, $args)

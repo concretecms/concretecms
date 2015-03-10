@@ -23,8 +23,7 @@ class PageUrlResolver implements UrlResolverInterface
             }
 
             // otherwise, it's a page object with no path yet, which happens when pages aren't yet approved
-            // @TODO add code here that handles this.
-
+            return \URL::to('?cID=' . $page->getCollectionID(), $arguments);
         }
 
         return null;
