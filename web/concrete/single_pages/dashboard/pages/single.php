@@ -15,7 +15,7 @@ echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Sing
             <div class="form-group">
                 <div class="input-group">
                     <div class="input-group-addon"><?php echo $base?>/</div>
-                    <input type="text" style="width: 200px" class="form-control" name="pageURL" value="<?php echo $this->post('pageURL')?>" />
+                    <input type="text" style="width: 200px" class="form-control" name="pageURL" value="<?php echo h($this->post('pageURL'))?>" />
                     &nbsp; <button class="btn btn-default" type="submit"><?=t('Add')?></button>
                 </div>
             </div>
