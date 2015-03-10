@@ -39,7 +39,7 @@ class Logs extends DashboardPageController {
         $r = Request::getInstance();
         if ($r->query->has('channel') && $r->query->get('channel') != '') {
             $list->filterByChannel($r->query->get('channel'));
-            $this->set('selectedChannel', $r->query->get('channel'));
+            $this->set('selectedChannel', h($r->query->get('channel')));
         }
         if ($r->query->has('level')) {
             $selectedlevels = $r->get('level');
