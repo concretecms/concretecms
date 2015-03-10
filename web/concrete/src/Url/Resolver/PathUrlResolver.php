@@ -24,6 +24,9 @@ class PathUrlResolver implements UrlResolverInterface
                 method_exists($path, '__toString'))
         ) {
             $path = rtrim($path, '/');
+            if ($path === '') {
+                $path = '/'; // This is in the case of the home page, which has no cPath
+            }
 
             $url = Url::createFromUrl('', $trailing);
             $this->handleHost($url, $path, $args);

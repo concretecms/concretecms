@@ -36,6 +36,7 @@ class URLTest extends PHPUnit_Framework_TestCase
         $this->service = $service;
         Config::set('concrete.seo.url_rewriting', false);
         Config::set('concrete.seo.url_rewriting_all', false);
+        Config::set('concrete.seo.canonical_host', false);
 
         parent::setUp();
     }
@@ -104,6 +105,27 @@ class URLTest extends PHPUnit_Framework_TestCase
         );
         $this->assertEquals('http://www.dummyco.com/path/to/server/index.php/dashboard/my/awesome/page', URL::to('/dashboard/my/awesome/page'));
         $this->assertEquals('http://www.dummyco.com/path/to/server/index.php/dashboard/my/awesome/page', URL::page($this->dashboard));
+    }
+
+    public function testPagesWithNoPaths()
+    {
+        $home = new Page();
+        $home->cID = 1;
+        $home->cPath = '';
+
+        $url = \URL::to($home);
+        $this->assertEquals('http://www.dummyco.com/path/to/server/index.php', $url);
+
+        $url = \URL::to('/');
+        $this->assertEquals('http://www.dummyco.com/path/to/server/index.php', $url);
+
+        $page = new Page();
+        $page->cPath = null;
+        $page->cID = 777;
+
+        $url = \URL::to($page);
+        $this->assertEquals('http://www.dummyco.com/path/to/server/index.php?cID=777', $url);
+
     }
 
     public function testUrlRewritingDashboard()
