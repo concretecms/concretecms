@@ -42,7 +42,7 @@ class Location extends BackendInterfacePageController {
 		}
 		$this->set('parent', Page::getByID($cParentID, 'ACTIVE'));
 		$this->set('cParentID', $cParentID);
-        $this->set('additionalPaths', $c->getAdditionalPagePaths());
+        $this->set('paths', $c->getPagePaths());
 	}
 
 	public function submit() {

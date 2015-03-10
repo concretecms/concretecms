@@ -24,6 +24,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		<hr/>
         <? } ?>
 
+	<? if ($c->isGeneratedCollection() || $c->isPageDraft()) { ?>
+
 		<p class="lead"><?=t('Current Canonical URL')?></p>
 		<div class="breadcrumb">
 			<? if ($c->isPageDraft()) { ?>
@@ -33,8 +35,31 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			<? } ?>
 		</div>
 
-	<? if (!$c->isGeneratedCollection()) { ?>
+	<? } else { ?>
 
+		<p class="lead"><?=t('URLs to this Page')?></p>
+
+		<div class="col-md-6">
+		<table class="table table-striped">
+			<thead>
+			<tr>
+				<th></th>
+				<th><?=t('Canonical')?></th>
+				<th style="width: 100%"><?=t('Path')?></th>
+			</tr>
+			</thead>
+			<tbody>
+			<? foreach($paths as $path) { ?>
+				<tr>
+				<td><i class="fa fa-link"></i></td>
+				<td><input type="radio" /></td>
+				<td><?=$path->getPagePath()?></td>
+				</tr>
+			<? } ?>
+			</tbody>
+		</table>
+		</div>
+		<? /*
 		<hr/>
 		<p class="lead"><?=t('Other URLs that should redirect to this page')?></p>
 
@@ -46,12 +71,15 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 		<br/><br/>
  		<span class="help-block"><?=t('Note: Additional page paths are not versioned. They will be available immediately.')?></span>
+		*/
+		?>
 
 
 	<? } ?>
-        <? if (isset($sitemap) && $sitemap) { ?>
-            <input type="hidden" name="sitemap" value="1" />
-        <? } ?>
+
+	<? if (isset($sitemap) && $sitemap) { ?>
+		<input type="hidden" name="sitemap" value="1" />
+	<? } ?>
 
 	</form>
 	<div class="ccm-panel-detail-form-actions dialog-buttons">
@@ -60,8 +88,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	</div>
 
 </section>
-
-<? $requestID = mt_rand(100000000,999999999); ?>
 
 <script type="text/template" class="breadcrumb">
 	<% if (parentID && parentID > 0) { %>
@@ -104,9 +130,10 @@ $(function() {
 			height: '70%',
 			modal: true,
 			title: '<?=t("Choose New Page Parent")?>',
-			href: '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/sitemap_search_selector?requestID=<?=$requestID?>&amp;cID=<?=$c->getCollectionID()?>'
+			href: '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/sitemap_search_selector?cID=<?=$c->getCollectionID()?>'
 		});
 	});
+	/*
 	$('#ccm-panel-detail-location-display').html(renderBreadcrumb({
 		parentLink: '<?=Loader::helper('navigation')->getLinkToCollection($parent);?>',
 		parentName: '<?=$parent->getCollectionName()?>',
@@ -124,11 +151,11 @@ $(function() {
 		);
 	});
 
-    <? foreach($additionalPaths as $path) { ?>
+    <?/* foreach($additionalPaths as $path) { ?>
     $('#ccm-panel-detail-location-page-paths').append(
         renderPagePath({path: '<?=$path->getPagePath()?>'})
     );
-    <? } ?>
+    <? } */ ?>
 
     ConcreteEvent.subscribe('SitemapSelectPage', function(e, data) {
 		$('#ccm-panel-detail-location-display').html(renderBreadcrumb({
@@ -141,5 +168,6 @@ $(function() {
 		container.find('input[name=cParentID]').val(data.cID);
 		$.fn.dialog.closeTop();
 	});
+	*/
 });
 </script>
