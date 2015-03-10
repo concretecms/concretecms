@@ -909,7 +909,7 @@
               description="" package="">
             <attributes>
                 <attributekey handle="meta_keywords">
-                    <value>database, entities, doctrine</value>
+                    <value>database, entities, doctrine, orm</value>
                 </attributekey>
             </attributes>
         </page>
