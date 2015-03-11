@@ -122,10 +122,6 @@ class PagePathTest extends PageTestCase {
         $pathArray = $page->getAdditionalPagePaths();
         $this->assertEquals(2, count($pathArray));
         $this->assertEquals($pathArray[1], $path2);
-
-        $page->clearAdditionalPagePaths();
-        $pathArray = $page->getAdditionalPagePaths();
-        $this->assertEquals(0, count($pathArray));
     }
 
     public function testPagePathUpdate()
