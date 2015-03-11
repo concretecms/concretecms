@@ -39,7 +39,7 @@
 
 
 <? if ($title) { ?>
-	<h3><?=$title?></h3>
+	<h3><?=h($title)?></h3>
 <? } ?>
 
 <div class="ccm-search-block-tag-cloud-wrapper ">

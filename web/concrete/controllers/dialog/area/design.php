@@ -99,7 +99,7 @@ class Design extends BackendPageController {
 
     public function action() {
         $url = call_user_func_array('parent::action', func_get_args());
-        $url .= '&arHandle=' . $this->area->getAreaHandle();
+        $url .= '&arHandle=' . h($this->area->getAreaHandle());
         return $url;
     }
 

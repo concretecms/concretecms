@@ -15,7 +15,7 @@ class Flag
     public function getFlagIcon($region, $filePathOnly = false)
     {
         if ($region) {
-            $region = strtolower($region);
+            $region = h(strtolower($region));
 
             if (file_exists(
                 DIR_BASE . '/' . DIRNAME_IMAGES . '/' . DIRNAME_IMAGES_LANGUAGES . '/' . $region . '.png'
