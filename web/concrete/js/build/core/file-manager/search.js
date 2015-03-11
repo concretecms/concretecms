@@ -222,10 +222,10 @@
             onOpen: function(dialog) {
                 ConcreteEvent.unsubscribe('FileManagerSelectFile');
                 ConcreteEvent.subscribe('FileManagerSelectFile', function(e, data) {
-                    var multipleItemsSelected = Object.prototype.toString.call( data.fID ) === '[object Array]' ;
-                    if ( options.multipleSelection && !multipleItemsSelected ) {
+                    var multipleItemsSelected = (Object.prototype.toString.call( data.fID ) === '[object Array]');
+                    if (options.multipleSelection && !multipleItemsSelected) {
                         data.fID = [data.fID]; 
-                    } else if ( !options.multipleSelection && multipleItemsSelected  ) {
+                    } else if (!options.multipleSelection && multipleItemsSelected) {
                         if (data.fID.length > 1) {
                             $('.ccm-search-bulk-action option:first-child').prop('selected', 'selected');
                             alert(ccmi18n_filemanager.chosenTooMany);
