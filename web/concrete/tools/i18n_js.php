@@ -206,6 +206,7 @@ var ccmi18n_filemanager = {
     uploadComplete: "<?=t('Upload Complete')?>",
     uploadFailed: "<?=t('One or more files failed to upload')?>",
     uploadProgress: "<?=t('Upload Progress')?>",
+    chosenTooMany: "<?=t('You may only select a single file.')?>",
 
     PTYPE_CUSTOM: "<?//=FilePermissions::PTYPE_CUSTOM?>",
     PTYPE_NONE: "<?//=FilePermissions::PTYPE_NONE?>",
