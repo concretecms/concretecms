@@ -28,7 +28,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                 foreach($cList as $p) { ?>
                     <tr class="active">
                         <td><?=$p->getCollectionID()?></td>
-                        <td><a href="<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$p->getCollectionID()?>" target="_blank"><?=$p->getCollectionName()?></a></td>
+                        <td><a href="<?=URL::to($p)?>" target="_blank"><?=$p->getCollectionName()?></a></td>
                         <td ><?=$dh->formatDate($p->getCollectionDateAdded())?></td>
                         <td ><? if ($b->isAlias($p)) { ?> <input type="hidden" name="checkedCIDs[]" value="<?=$p->getCollectionID()?>" /><? } ?><?=$dh->formatDate($p->getCollectionDateLastModified())?></td>
                         <td ><input class="mc-cb" type="checkbox" name="cIDs[]" value="<?=$p->getCollectionID()?>" <? if ($b->isAlias($p)) { ?> checked <? } ?> /></td>

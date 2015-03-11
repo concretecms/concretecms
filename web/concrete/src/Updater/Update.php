@@ -102,7 +102,7 @@ class Update
                 $curl_handle,
                 CURLOPT_POSTFIELDS,
                 'LOCALE=' . $loc->activeLocale(
-                ) . '&BASE_URL_FULL=' . BASE_URL . '/' . DIR_REL . '&APP_VERSION=' . APP_VERSION
+                ) . '&BASE_URL_FULL=' . \Core::getApplicationURL() . '&APP_VERSION=' . APP_VERSION
             );
             $resp = @curl_exec($curl_handle);
 

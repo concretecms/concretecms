@@ -4,8 +4,8 @@ use \Concrete\Core\Legacy\DatabaseItemList;
 use Database;
 class LogList extends DatabaseItemList {
 
-	protected $autoSortColumns = array('time', 'logID', 'level');
-    protected $sortBy = 'time';
+	protected $autoSortColumns = array('logID', 'level');
+    protected $sortBy = 'logID';
     protected $sortByDirection = 'desc';
 
 	function __construct() {

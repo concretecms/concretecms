@@ -58,7 +58,7 @@ $view->addScopeItems(
         'settings' => array(
             'saveHeight' => $height,
             'saveWidth'  => $width,
-            'saveUrl'    => BASE_URL . DIR_REL . '/index.php/tools/required/files/importers/thumbnail',
+            'saveUrl'    => URL::to('/tools/required/files/importers/thumbnail'),
             'saveData'   => array(
                 'isThumbnail' => true,
                 'fID'         => $file_version->getFileID(),

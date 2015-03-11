@@ -103,7 +103,7 @@ class ApprovePageRequest extends PageRequest {
 		Events::dispatch('on_page_version_submit_approve', $ev);
 
 		$wpr = new WorkflowProgressResponse();
-		$wpr->setWorkflowProgressResponseURL(BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID());
+		$wpr->setWorkflowProgressResponseURL(\URL::to($c));
 		return $wpr;
 	}
 

@@ -9,14 +9,14 @@ use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 use Concrete\Core\Block\BlockType\BlockType;
 
-class Version5732 extends AbstractMigration
+class Version574 extends AbstractMigration
 {
     private $updateSectionPlurals = false;
     private $updateMultilingualTranslations = false;
 
     public function getName()
     {
-        return '20150224000000';
+        return '20150310100000';
     }
 
     public function up(Schema $schema)
@@ -32,6 +32,18 @@ class Version5732 extends AbstractMigration
         $bt = BlockType::getByHandle('form');
         if (is_object($bt)) {
             $bt->refresh();
+        }
+
+        $c = \Page::getByPath('/dashboard/system/seo/urls');
+        if (is_object($c) && !$c->isError()) {
+            $c->update(array('cName' => 'URLs and Redirection'));
+        }
+
+        $sp = \Page::getByPath('/dashboard/system/environment/entities');
+        if (!is_object($sp) || $sp->isError()) {
+            $sp = \SinglePage::add('/dashboard/system/environment/entities');
+            $sp->update(array('cName' => 'Database Entities'));
+            $sp->setAttribute('meta_keywords', 'database, entities, doctrine, orm');
         }
 
         $pkx = Category::getByHandle('multilingual_section');
@@ -85,6 +97,13 @@ class Version5732 extends AbstractMigration
         if (!$mss->hasColumn('cnvNotificationEmailAddress')) {
             $mss->addColumn('cnvNotificationEmailAddress', 'text', array('notnull' => false));
         }
+
+
+        $pp = $schema->getTable('PagePaths');
+        if (!$pp->hasColumn('ppGeneratedFromURLSlugs')) {
+            $pp->addColumn('ppGeneratedFromURLSlugs', 'boolean', array('notnull' => true, 'unsigned' => true, 'default' => 0));
+        }
+
         $this->updatePermissionDurationObjects();
 
         $key = Key::getByHandle('add_conversation_message');

@@ -76,7 +76,7 @@ class MovePageRequest extends PageRequest {
                 }
                 $nc2 = $c->move($dc);
                 $wpr = new WorkflowProgressResponse();
-				$wpr->setWorkflowProgressResponseURL(BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID());
+				$wpr->setWorkflowProgressResponseURL(\URL::to($c));
 				return $wpr;
 			}
 		}

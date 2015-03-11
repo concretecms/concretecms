@@ -60,7 +60,7 @@ $th = Loader::helper('text');
         <table class="ccm-search-results-table">
             <thead>
                 <tr>
-                    <th class="<?=$list->getSearchResultsClass('time')?>"><a href="<?=$list->getSortByURL('time', 'desc')?>"><?=t('Date/Time')?></a></th>
+                    <th class="<?=$list->getSearchResultsClass('logID')?>"><a href="<?=$list->getSortByURL('logID', 'desc')?>"><?=t('Date/Time')?></a></th>
                     <th class="<?=$list->getSearchResultsClass('level')?>"><a href="<?=$list->getSortByURL('level', 'desc')?>"><?=t('Level')?></a></th>
                     <th><span><?=t('Channel')?></span></th>
                     <th><span><?=t('User')?></span></th>
