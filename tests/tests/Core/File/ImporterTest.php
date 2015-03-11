@@ -98,7 +98,7 @@ class ImporterTest extends \FileStorageTestCase {
         $this->assertInstanceOf('\Concrete\Core\File\StorageLocation\StorageLocation', $fsl);
         $apr = str_split($r->getPrefix(), 4);
 
-        $this->assertEquals(REL_DIR_FILES_UPLOADED_STANDARD . '/' . $apr[0] . '/' . $apr[1] . '/' . $apr[2] . '/test.txt',
+        $this->assertEquals('/application/files/' . $apr[0] . '/' . $apr[1] . '/' . $apr[2] . '/test.txt',
             $r->getRelativePath()
         );
 
@@ -295,7 +295,7 @@ class ImporterTest extends \FileStorageTestCase {
         $this->assertEquals(2, $r->getFileVersionID());
         $this->assertEquals('sample.txt', $r->getFilename());
         $apr = str_split($r->getPrefix(), 4);
-        $this->assertEquals(BASE_URL . '/application/files/' . $apr[0] . '/' . $apr[1] . '/' . $apr[2] . '/sample.txt',
+        $this->assertEquals('http://www.dummyco.com/application/files/' . $apr[0] . '/' . $apr[1] . '/' . $apr[2] . '/sample.txt',
             $r->getURL()
         );
     }

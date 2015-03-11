@@ -43,10 +43,10 @@ class ContentTranslateTest extends ConcreteDatabaseTestCase {
     {
         return array(
            array('Simple', 'Simple'),
-           array('<p><a href="http://www.dummyco.com/index.php?cID=50">Test</a></p>', '<p><a href="{CCM:CID_50}">Test</a></p>'),
-           array('<p><a href="http://www.dummyco.com">Test</a></p>', '<p><a href="{CCM:BASE_URL}">Test</a></p>'),
-           array('Test<img src="/index.php/download_file/view_inline/1">', 'Test<concrete-picture fID="1" alt="" style="" />'),
-           array('<a href="/index.php/download_file/view/1">Test</a>', '<a href="{CCM:FID_DL_1}">Test</a>')
+           array('<p><a href="http://www.dummyco.com/path/to/server/index.php?cID=50">Test</a></p>', '<p><a href="{CCM:CID_50}">Test</a></p>'),
+           array('<p><a href="http://www.dummyco.com/path/to/server/">Test</a></p>', '<p><a href="{CCM:BASE_URL}/">Test</a></p>'),
+           array('Test<img src="http://www.dummyco.com/path/to/server/index.php/download_file/view_inline/1">', 'Test<concrete-picture fID="1" alt="" style="" />'),
+           array('<a href="http://www.dummyco.com/path/to/server/index.php/download_file/view/1">Test</a>', '<a href="{CCM:FID_DL_1}">Test</a>')
         );
     }
 
@@ -54,9 +54,9 @@ class ContentTranslateTest extends ConcreteDatabaseTestCase {
     {
         return array(
             array('Simple', 'Simple'),
-            array('<p><a href="http://www.dummyco.com/index.php?cID=50">Test</a></p>', '<p><a href="{CCM:CID_50}">Test</a></p>'),
-            array('Test<img src="/index.php/download_file/view_inline/1" alt="Woohoo" style="display: block" />', 'Test<concrete-picture fID="1" alt="Woohoo" style="display: block" />'),
-            array('<a href="/index.php/download_file/view/1">Test</a>', '<a href="{CCM:FID_DL_1}">Test</a>')
+            array('<p><a href="http://www.dummyco.com/path/to/server/index.php?cID=50">Test</a></p>', '<p><a href="{CCM:CID_50}">Test</a></p>'),
+            array('Test<img src="http://www.dummyco.com/path/to/server/index.php/download_file/view_inline/1" alt="Woohoo" style="display: block" />', 'Test<concrete-picture fID="1" alt="Woohoo" style="display: block" />'),
+            array('<a href="http://www.dummyco.com/path/to/server/index.php/download_file/view/1">Test</a>', '<a href="{CCM:FID_DL_1}">Test</a>')
         );
     }
 
@@ -64,8 +64,8 @@ class ContentTranslateTest extends ConcreteDatabaseTestCase {
     {
         return array(
             array('Simple', 'Simple'),
-            array('<p>Super super super {CCM:BASE_URL} !!</p>', '<p>Super super super http://www.dummyco.com !!</p>'),
-            array('<p><a href="{CCM:FID_DL_8}">Download File</a></p>', '<p><a href="/index.php/download_file/view/8">Download File</a></p>')
+            array('<p>Super super super {CCM:BASE_URL} !!</p>', '<p>Super super super http://www.dummyco.com/path/to/server !!</p>'),
+            array('<p><a href="{CCM:FID_DL_8}">Download File</a></p>', '<p><a href="http://www.dummyco.com/path/to/server/index.php/download_file/view/8">Download File</a></p>')
         );
     }
 

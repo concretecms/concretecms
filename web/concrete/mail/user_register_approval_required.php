@@ -15,7 +15,7 @@ ob_start()
 <?= t('Email') ?>: <b><?= $uEmail ?></b><br />
 <br />
 <?= t('You may approve or remove this user account here:') ?><br />
-<a href="<?= BASE_URL.View::url('/dashboard/users/search', 'view', $uID) ?>"><?= BASE_URL.View::url('/dashboard/users/search', 'view', $uID) ?></a>
+<a href="<?= View::url('/dashboard/users/search', 'view', $uID) ?>"><?= View::url('/dashboard/users/search', 'view', $uID) ?></a>
 <? if($attribs): ?>
 	<ul>
 	<? foreach($attribs as $item): ?>
@@ -53,7 +53,7 @@ ob_start();
 
 <?= t('You may approve or remove this user account here') ?>:
 
-<?= BASE_URL . View::url('/dashboard/users/search', 'view', $uID) ?>
+<?= View::url('/dashboard/users/search', 'view', $uID) ?>
 <?
 
 $body = ob_get_clean();

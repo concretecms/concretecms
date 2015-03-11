@@ -64,7 +64,7 @@ class ChangeSubpageDefaultsInheritanceRequest extends PageRequest {
 		$c = Page::getByID($this->getRequestedPageID());
 		$c->setOverrideTemplatePermissions($this->inheritance);
 		$wpr = new WorkflowProgressResponse();
-		$wpr->setWorkflowProgressResponseURL(BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID());
+		$wpr->setWorkflowProgressResponseURL(\URL::to($c));
 		return $wpr;
 	}
 

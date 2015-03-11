@@ -3,16 +3,26 @@ defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 <div class="row">
     <div class="col-md-6">
-        <form method="post" action="<?php echo $view->action('update_rewriting'); ?>">
-            <?php echo $this->controller->token->output('update_rewriting'); ?>
-            <div class="form-group">
-                <div class="checkbox">
-                    <label for="URL_REWRITING">
-                        <?php echo $fh->checkbox('URL_REWRITING', 1, $intRewriting) ?>
+        <form method="post" action="<?php echo $view->action('save_urls'); ?>">
+            <?php echo $this->controller->token->output('save_urls'); ?>
 
-                        <?php echo t('Enable Pretty URLs'); ?>
-                    </label>
+
+            <div class="form-group">
+                <label class="control-label" for="canonical_host"><?=t('Canonical Host')?> <i class="fa fa-question-circle launch-tooltip" title="<?=t('If this site is accessible from multiple domains, it can be useful to specify a single canonical domain. This can usually be left blank.')?>"></i></label>
+                <div class="input-group">
+                    <span class="input-group-addon">http://</span>
+                    <input type="text" class="form-control" placeholder="domain.com" value="<?=$host?>" name="canonical_host">
                 </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label"><?=t('Pretty URLs')?> <i class="fa fa-question-circle launch-tooltip" title="<?=t('Removes index.php from your site\'s URLs.')?>"></i></label>
+                <div class="checkbox">
+                <label>
+                    <?php echo $fh->checkbox('URL_REWRITING', 1, $intRewriting) ?>
+                    <?php echo t('Enable Pretty URLs'); ?>
+                </label>
+                 </div>
 
                 <?php
                 // Show the placeholder textarea with the mod_rewrite rules if pretty urls enabled
@@ -24,6 +34,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 }
                 ?>
             </div>
+
             <div class="ccm-dashboard-form-actions-wrapper">
                 <div class="ccm-dashboard-form-actions">
                     <?php echo $interface->submit(t('Save'), 'url-form', 'right', 'btn-primary'); ?>
