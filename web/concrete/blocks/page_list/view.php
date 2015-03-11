@@ -13,7 +13,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 
     <?php if ($pageListTitle): ?>
         <div class="ccm-block-page-list-header">
-            <h5><?=$pageListTitle?></h5>
+            <h5><?=h($pageListTitle)?></h5>
         </div>
     <? endif; ?>
 
