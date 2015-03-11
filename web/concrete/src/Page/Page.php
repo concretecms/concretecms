@@ -1036,12 +1036,12 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
-     * Clears all additional page paths for a page.
+     * Clears all page paths for a page.
      */
-    public function clearAdditionalPagePaths()
+    public function clearPagePaths()
     {
         $em = Loader::db()->getEntityManager();
-        $paths = $this->getAdditionalPagePaths();
+        $paths = $this->getPagePaths();
         foreach($paths as $path) {
             $em->remove($path);
         }
@@ -2284,10 +2284,40 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
+     * Returns the URL-slug-based path to the current page (including any suffixes) in a string format. Does so in real time.
+     */
+    public function generatePagePath()
+    {
+        $em = Loader::db()->getEntityManager();
+        $newPath = '';
+        if ($this->cParentID > 0) {
+            $pathString = $this->computeCanonicalPagePath();
+            // ensure that the path is unique
+            $proceed = false;
+            $suffix = 0;
+            while ($proceed != true) {
+                $newPath = ($suffix == 0) ? $pathString : $pathString . Config::get('concrete.seo.page_path_separator') . $suffix;
+                $q = $em->createQuery("select p from Concrete\Core\Page\PagePath p
+                    where p.cPath = ?1 and p.cID <> ?2");
+
+                $q->setParameter(1, $newPath);
+                $q->setParameter(2, $this->getCollectionID());
+                $result = $q->getResult();
+
+                if (!is_object($result[0])) {
+                    $proceed = true;
+                } else {
+                    $suffix++;
+                }
+            }
+        }
+        return $newPath;
+    }
+
+    /**
      * Recalculates the canonical page path for the current page, based on its current version, URL slug, etc..
      */
     public function rescanCollectionPath() {
-        $db = Loader::db();
         $em = Loader::db()->getEntityManager();
         if ($this->cParentID > 0) {
             $pathString = $this->computeCanonicalPagePath();
@@ -2309,6 +2339,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
                     $suffix++;
                 }
             }
+
+            $newPath = $this->generatePagePath();
 
             // now our $newPath variable is guaranteed to be unique at the level and good.
             // we set the canonical page path to be this new path.
