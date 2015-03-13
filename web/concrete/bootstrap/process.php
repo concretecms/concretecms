@@ -63,7 +63,7 @@ if (isset($_REQUEST['btask']) && $_REQUEST['btask'] && $valt->validate()) {
                     $cID = $securityHelper->sanitizeInt($_GET['cID']);
 
                     header(
-                        'Location: ' . \Core::getApplicationURL() . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '&mode=edit' . $step);
+                        'Location: ' . \Core::getApplicationURL() . DISPATCHER_FILENAME . '?cID=' . $cID . '&mode=edit' . $step);
                     exit;
                 }
             }
@@ -150,7 +150,7 @@ if (isset($_REQUEST['ctask']) && $_REQUEST['ctask'] && $valt->validate()) {
                 if ($_REQUEST['ctask'] == 'check-out-add-block') {
                     setcookie("ccmLoadAddBlockWindow", "1", -1, DIR_REL . '/');
                     header(
-                        'Location: ' . \Core::getApplicationURL() . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID());
+                        'Location: ' . \Core::getApplicationURL() . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID());
                     exit;
                     break;
                 }
@@ -168,7 +168,7 @@ if (isset($_REQUEST['ctask']) && $_REQUEST['ctask'] && $valt->validate()) {
                 $u->unloadCollectionEdit($c);
                 $response = $pkr->trigger();
                 header(
-                    'Location: ' . \Core::getApplicationURL() . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID() . $step);
+                    'Location: ' . \Core::getApplicationURL() . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID() . $step);
                 exit;
             }
             break;
