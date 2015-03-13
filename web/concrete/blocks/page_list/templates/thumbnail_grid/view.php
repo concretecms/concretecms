@@ -73,7 +73,7 @@ $c = Page::getCurrentPage();
 	<?php endforeach; ?>
 
     <? if (count($pages) == 0): ?>
-        <div class="ccm-block-page-list-no-pages"><?=$noResultsMessage?></div>
+        <div class="ccm-block-page-list-no-pages"><?=h($noResultsMessage)?></div>
     <? endif;?>
 
 </div>
