@@ -15,10 +15,14 @@ class Application extends Facade
         return $cms['app_relative_path'];
     }
 
-    public static function getApplicationURL()
+    public static function getApplicationURL($asObject = false)
     {
         $cms = static::make('app');
-        return \League\Url\Url::createFromUrl((string) $cms['app_url']);
+        $url = (string) $cms['app_url'];
+        if ($asObject) {
+            $url = \League\Url\Url::createFromUrl($url);
+        }
+        return $url;
     }
 
 }

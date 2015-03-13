@@ -51,7 +51,7 @@ class LocalConfiguration extends Configuration implements ConfigurationInterface
             return $rel;
         }
 
-        $url = \Core::getApplicationURL();
+        $url = \Core::getApplicationURL(true);
         $url->getPath()->set($rel);
         return (string) $url;
     }
