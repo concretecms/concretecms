@@ -3,7 +3,6 @@ namespace Concrete\Controller\Dialog\Page\Add;
 use \Concrete\Core\Controller\Controller;
 use Concrete\Core\Page\EditResponse;
 use Concrete\Core\Page\Template;
-use Concrete\Core\Page\Type\Composer\Control\Control;
 use Concrete\Core\Page\Type\Type;
 use Concrete\Core\View\DialogView;
 use Page;
@@ -78,15 +77,7 @@ class Compose extends Controller
         if (is_object($pagetype)) {
             $e->add($pagetype->validateCreateDraftRequest($template));
             if ($this->request->request('addPageComposeAction') == 'publish') {
-                $controls = Control::getList($pagetype);
-                foreach ($controls as $oc) {
-                    if ($oc->isPageTypeComposerFormControlRequiredOnThisRequest()) {
-                        $r = $oc->validate();
-                        if ($r instanceof \Concrete\Core\Error\Error) {
-                            $e->add($r);
-                        }
-                    }
-                }
+                $e->add($pagetype->validatePublishDraftRequest());
             }
         }
 

@@ -73,14 +73,7 @@ class Composer extends BackendInterfacePageController {
 				}
 			}
 
-			foreach($outputControls as $oc) {
-				if ($oc->isPageTypeComposerFormControlRequiredOnThisRequest()) {
-					$r = $oc->validate();
-					if ($r instanceof \Concrete\Core\Error\Error) {
-						$e->add($r);
-					}
-				}
-			}
+			$e->add($pagetype->validatePublishDraftRequest());
 
 			$ptr->setError($e);
 
