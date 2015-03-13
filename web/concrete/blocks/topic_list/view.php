@@ -3,7 +3,7 @@
 <div class="ccm-block-topic-list-wrapper">
 
     <div class="ccm-block-topic-list-header">
-        <h5><?=$title?></h5>
+        <h5><?=h($title)?></h5>
     </div>
 
     <?
