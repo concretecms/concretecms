@@ -8,6 +8,7 @@ use \Zend\Mail\Transport\Sendmail as SendmailTransport;
 use \Zend\Mail\Transport\Smtp as SmtpTransport;
 use \Zend\Mail\Transport\SmtpOptions;
 use \Zend\Mime\Message as MimeMessage;
+use Zend\Mime\Mime;
 use \Zend\Mime\Part as MimePart;
 use Exception;
 
@@ -122,38 +123,25 @@ class Service
      */
     public function addAttachment(\Concrete\Core\File\File $fob)
     {
-        // @TODO make this work with the File Storage Locations
 
+        // Get file version.
         $fv = $fob->getVersion();
-        $path = $fob->getPath();
-        $name = $fv->getFileName();
-        $type = false;
-        if (!function_exists('mime_content_type')) {
-            function mime_content_type($path)
-            {
-                return false;
-            }
-        }
-        $type = @mime_content_type($path); // This is deprecated. Should be stable until php5.6
-        if (!$type) {
-            $mt = \Loader::helper('mime');
-            $ext = preg_replace('/^.+\.([^\.]+)$/', '\1', $path);
-            $type = $mt->mimeFromExtension($ext);
-        }
-        $contents = @file_get_contents($path);
-        if (!$contents) {
-            throw new Exception(t('Unable to get the file contents for attachment.'));
-        }
 
-        $file = new \StdClass();
-        $file->object = $fob;
-        $file->type = $type;
-        $file->path = $path;
-        $file->filename = $name;
-        $file->contents = $contents;
-        unset($contents);
-        $this->attachments[] = $file;
-        return $file; // Returns a pointer
+        // Get file data.
+        $mimetype = $fv->getMimeType();
+        $filename = $fv->getFilename();
+        $resource = $fob->getFileResource();
+        $content = $resource->read();
+
+        // Create attachment.
+        $mp = new MimePart($content);
+        $mp->type = $mimetype;
+        $mp->disposition = Mime::DISPOSITION_ATTACHMENT;
+        $mp->encoding = Mime::ENCODING_BASE64;
+        $mp->filename = $filename;
+
+        // Add mimepart to attachments.
+        $this->attachments[] = $mp;
     }
 
     /**
@@ -441,18 +429,6 @@ class Service
                 }
             }
 
-            if (is_array($this->attachments) && count($this->attachments)) {
-                foreach ($this->attachments as $att) {
-                    $natt = $mail->createAttachment($att->contents);
-                    $fob = $att->object;
-                    unset($att->object);
-                    unset($att->contents);
-                    foreach ((array)$att as $key => $value) {
-                        $natt->{$key} = $value;
-                    }
-                }
-            }
-
             $text = new MimePart($this->body);
             $text->type = "text/plain";
             $text->charset = APP_CHARSET;
@@ -465,6 +441,13 @@ class Service
                 $html->type = "text/html";
                 $html->charset = APP_CHARSET;
                 $body->addPart($html);
+            }
+
+            // Handle attachements.
+            if (is_array($this->attachments) && count($this->attachments)) {
+                foreach ($this->attachments as $att) {
+                    $body->addPart($att);
+                }
             }
 
             $mail->setBody($body);
