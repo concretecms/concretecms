@@ -46,30 +46,43 @@ class PageView extends View
         $this->pkgHandle = $pt->getPackageHandle();
     }
 
+    public function renderSinglePageByFilename($cFilename)
+    {
+        $env = Environment::get();
+        $cFilename = trim($cFilename, '/');
+        // if we have this exact template in the theme, we use that as the outer wrapper and we don't do an inner content file
+        $r = $env->getRecord(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $cFilename, $this->pkgHandle);
+        if ($r->exists()) {
+            $this->setViewTemplate($r->file);
+        } else {
+            if (file_exists(
+                DIR_FILES_THEMES_CORE . '/' . DIRNAME_THEMES_CORE . '/' . $this->themeHandle . '.php')) {
+                $this->setViewTemplate(
+                    $env->getPath(DIRNAME_THEMES . '/' . DIRNAME_THEMES_CORE . '/' . $this->themeHandle . '.php'));
+            } else {
+                $this->setViewTemplate(
+                    $env->getPath(
+                        DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $this->controller->getThemeViewTemplate(),
+                        $this->pkgHandle));
+            }
+            $this->setInnerContentFile(
+                $env->getPath(DIRNAME_PAGES . '/' . $cFilename, $this->c->getPackageHandle()));
+        }
+    }
     public function setupRender()
     {
         $this->loadViewThemeObject();
         $env = Environment::get();
+
+        if (isset($this->innerContentFile)) {
+            // this has already been rendered (e.g. by calling $this->render()
+            // from within a controller. So we don't reset it.
+            return false;
+        }
+
+
         if ($this->c->getPageTypeID() == 0 && $this->c->getCollectionFilename()) {
-            $cFilename = trim($this->c->getCollectionFilename(), '/');
-            // if we have this exact template in the theme, we use that as the outer wrapper and we don't do an inner content file
-            $r = $env->getRecord(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $cFilename, $this->pkgHandle);
-            if ($r->exists()) {
-                $this->setViewTemplate($r->file);
-            } else {
-                if (file_exists(
-                    DIR_FILES_THEMES_CORE . '/' . DIRNAME_THEMES_CORE . '/' . $this->themeHandle . '.php')) {
-                    $this->setViewTemplate(
-                        $env->getPath(DIRNAME_THEMES . '/' . DIRNAME_THEMES_CORE . '/' . $this->themeHandle . '.php'));
-                } else {
-                    $this->setViewTemplate(
-                        $env->getPath(
-                            DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $this->controller->getThemeViewTemplate(),
-                            $this->pkgHandle));
-                }
-                $this->setInnerContentFile(
-                    $env->getPath(DIRNAME_PAGES . '/' . $cFilename, $this->c->getPackageHandle()));
-            }
+            $this->renderSinglePageByFilename($this->c->getCollectionFilename());
         } else {
             $pt = PageTemplate::getByID($this->pTemplateID);
             $rec = null;

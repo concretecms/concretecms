@@ -98,6 +98,7 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase {
 
         $db = Loader::db();
         $db->getEntityManager()->clear();
+		Database::purge();
 
         if ($this->conn) {
             $this->conn = null;

@@ -52,7 +52,7 @@ abstract class PageRequest extends Request {
 	public function cancel(WorkflowProgress $wp) {
 		$c = Page::getByID($this->getRequestedPageID());
 		$wpr = new WorkflowProgressResponse();
-		$wpr->setWorkflowProgressResponseURL(BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID());
+		$wpr->setWorkflowProgressResponseURL(\URL::to($c));
 		return $wpr;
 	}
 

@@ -192,7 +192,7 @@ class Design extends BackendUIPageController {
                     $u->unloadCollectionEdit();
                 }
             } else {
-  				$r->setRedirectURL(BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID());
+  				$r->setRedirectURL(\URL::to($c));
             }
 			$r->outputJSON();
 		}

@@ -7,9 +7,9 @@ return array(
      *
      * @var string
      */
-    'version'           => '5.7.3.2',
-    'version_installed' => '5.7.3.2',
-    'version_db' => '20150224000000', // the key of the latest database migration - corresponds to 5.7.3.2
+    'version'           => '5.7.4b1',
+    'version_installed' => '5.7.4b1',
+    'version_db' => '20150310100000', // the key of the latest database migration - corresponds to 5.7.3.2
 
     /**
      * Installation status
@@ -557,7 +557,7 @@ return array(
         'handler'      => 'file',
         'max_lifetime' => 7200,
         'cookie'       => array(
-            'cookie_path'     => DIR_REL . '/',
+            'cookie_path'     => false, // set a specific path here if you know it, otherwise it'll default to relative
             'cookie_lifetime' => 0,
             'cookie_domain'   => false,
             'cookie_secure'   => false,
@@ -793,7 +793,8 @@ return array(
          */
         'url_rewriting'           => false,
         'url_rewriting_all'       => false,
-        'redirect_to_base_url'    => false,
+        'redirect_to_canonical_host'  => false,
+        'canonical_host'          => false,
         'trailing_slash'          => false,
         'title_format'            => '%1$s :: %2$s',
         'title_segment_separator' => ' :: ',

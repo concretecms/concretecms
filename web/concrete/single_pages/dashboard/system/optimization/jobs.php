@@ -125,11 +125,11 @@ $dh = Core::make('helper/date');
     						
     						<div class="input">
     						    <div class="col-md-6">
-    							    <?php echo $form->text('value',$j->scheduledValue,array('class'=>''))?>
+    							    <?php echo $form->text('value',h($j->scheduledValue),array('class'=>''))?>
     						    </div>
     						    
     						    <div class="col-md-6">
-    						        <?php echo $form->select('unit', array('hours'=>t('Hours'), 'days'=>t('Days'), 'weeks'=>t('Weeks'), 'months'=>t('Months')), $j->scheduledInterval, array('class'=>''))?>
+    						        <?php echo $form->select('unit', array('hours'=>t('Hours'), 'days'=>t('Days'), 'weeks'=>t('Weeks'), 'months'=>t('Months')), h($j->scheduledInterval), array('class'=>''))?>
     						    </div>
     						</div>
     				    </div>
@@ -151,7 +151,7 @@ $dh = Core::make('helper/date');
     						<h4><?=t('No Queueing')?></h4>
     						
     						<div class="form-group">
-    						    <textarea rows="2" class="ccm-default-jobs-url form-control"><?=BASE_URL . URL::to('/ccm/system/jobs?auth=' . $auth . '&jID=' . $j->getJobID())?></textarea>
+    						    <textarea rows="2" class="ccm-default-jobs-url form-control"><?=URL::to('/ccm/system/jobs?auth=' . $auth . '&jID=' . $j->getJobID())?></textarea>
                             </div>
                             
     						<div class="alert alert-info">
@@ -163,13 +163,13 @@ $dh = Core::make('helper/date');
     						<p><?=t("First, schedule this URL for when you'd like this job to run:")?></p>
     						
     						<div class="form-group">
-    						    <textarea rows="2" class="ccm-default-jobs-url form-control"><?php echo BASE_URL . URL::to('/ccm/system/jobs/run_single?auth=' . $auth . '&jID=' . $j->getJobID())?></textarea>
+    						    <textarea rows="2" class="ccm-default-jobs-url form-control"><?php echo URL::to('/ccm/system/jobs/run_single?auth=' . $auth . '&jID=' . $j->getJobID())?></textarea>
                             </div>
                             
     						<p><?=t('Then, make sure this URL is scheduled to run frequently, like every 3-5 minutes:')?></p>
     						
     						<div class="form-group">
-    						    <textarea rows="2" class="ccm-default-jobs-url form-control"><?=BASE_URL . URL::to('/ccm/system/jobs/check_queue?auth=' . $auth)?></textarea>
+    						    <textarea rows="2" class="ccm-default-jobs-url form-control"><?=URL::to('/ccm/system/jobs/check_queue?auth=' . $auth)?></textarea>
     						</div>
     						
     						<div class="alert alert-info">
@@ -179,7 +179,7 @@ $dh = Core::make('helper/date');
     					<? } else { ?>
     						<p><?=t('To run the "%s" job, automate the following URL using cron or a similar system:', $j->getJobName())?></p><br/>
     						<div>
-    						    <textarea rows="2" class="ccm-default-jobs-url form-control"><?=BASE_URL . URL::to('/ccm/system/jobs/run_single?auth=' . $auth . '&jID=' . $j->getJobID())?></textarea>
+    						    <textarea rows="2" class="ccm-default-jobs-url form-control"><?=URL::to('/ccm/system/jobs/run_single?auth=' . $auth . '&jID=' . $j->getJobID())?></textarea>
                             </div>
     					<? } ?>	
     				</div>
@@ -229,7 +229,7 @@ if (is_object($djs)) { ?>
     <h4><?=t('Automation Instructions')?></h4>
     <p><?=t('To run all the jobs in the <a href="%s">%s</a> Job Set, schedule this URL using cron or a similar system:', $view->url('/dashboard/system/optimization/jobs', 'edit_set', $djs->getJobSetID()), $djs->getJobSetDisplayName())?></p>
     <div>
-        <input type="text" style="width: 700px" class="ccm-default-jobs-url" value="<?=BASE_URL . $view->url('/ccm/system/jobs?auth=' . $auth)?>" />
+        <input type="text" style="width: 700px" class="ccm-default-jobs-url" value="<?=$view->url('/ccm/system/jobs?auth=' . $auth)?>" />
     </div>
 </div>
 <? } ?>
@@ -345,7 +345,7 @@ if (is_object($djs)) { ?>
         				    <div class="form-group">
         				        <label><?php  echo t('Run this Job Every')?></label>
             					<div class="input">
-            						<?php echo $form->text('value', $set->scheduledValue, array('class' => 'col-md-6'))?>
+            						<?php echo $form->text('value', h($set->scheduledValue), array('class' => 'col-md-6'))?>
             					</div>
         				    </div>
     				    </div>
@@ -354,7 +354,7 @@ if (is_object($djs)) { ?>
     				        <div class="form-group">
     				            <label></label>
     				            <div class="input">
-            						<?php echo $form->select('unit', array('hours'=>t('Hours'), 'days'=>t('Days'), 'weeks'=>t('Weeks'), 'months'=>t('Months')), $set->scheduledInterval, array('class'=>''))?>
+            						<?php echo $form->select('unit', array('hours'=>t('Hours'), 'days'=>t('Days'), 'weeks'=>t('Weeks'), 'months'=>t('Months')), h($set->scheduledInterval), array('class'=>''))?>
             					</div>
     				        </div>
     				    </div>
@@ -371,7 +371,7 @@ if (is_object($djs)) { ?>
     				    <p><?=t('To run all the jobs in this Job Set, schedule this URL using cron or a similar system:', $set->getJobSetID())?></p>
     				
                         <div class="form-group">
-                            <textarea rows="2" class="ccm-default-jobs-url form-control"><?=BASE_URL . $view->url('/tools/required/jobs?auth=' . $auth . '&jsID=' . $set->getJobSetID())?></textarea>
+                            <textarea rows="2" class="ccm-default-jobs-url form-control"><?=$view->url('/tools/required/jobs?auth=' . $auth . '&jsID=' . $set->getJobSetID())?></textarea>
                         </div>
                     </fieldset>
     			

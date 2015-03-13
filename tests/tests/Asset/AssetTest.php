@@ -24,8 +24,8 @@ class AssetTest extends PHPUnit_Framework_TestCase
         $asset1 = $al->getAsset('css', 'test-css');
         $asset2 = $al->getAsset('javascript', 'testing/tab');
         $asset3 = $al->getAsset('javascript', 'jquery');
-        $this->assertEquals('/concrete/css/awesome.css', $asset1->getAssetURL());
-        $this->assertEquals('/packages/testing_package/blocks/testing_block/js/tab.js', $asset2->getAssetURL());
+        $this->assertEquals('/path/to/server/concrete/css/awesome.css', $asset1->getAssetURL());
+        $this->assertEquals('/path/to/server/packages/testing_package/blocks/testing_block/js/tab.js', $asset2->getAssetURL());
         $this->assertTrue($asset2->isAssetLocal());
         $this->assertFalse($asset3->isAssetLocal());
         $this->assertEquals('//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js', $asset3->getAssetURL());

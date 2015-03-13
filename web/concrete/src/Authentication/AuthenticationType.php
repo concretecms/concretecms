@@ -309,8 +309,7 @@ class AuthenticationType extends Object
     }
 
     /**
-     * Return the path to a file, this is always BASE_URL.DIR_REL.FILE
-     *
+     * Return the path to a file
      * @param string $_file the relative path to the file.
      * @return bool|string
      */

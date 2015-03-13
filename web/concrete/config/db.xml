@@ -3813,6 +3813,10 @@
       <notnull/>
       <default value="1"/>
     </field>
+    <field name="ppGeneratedFromURLSlugs" type="I1" size="1">
+        <notnull/>
+        <default value="0"/>
+    </field>
     <index name="cID">
       <col>cID</col>
     </index>

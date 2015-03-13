@@ -11,7 +11,7 @@ class PublicProfilePageController extends PageController {
         parent::on_start();
 
         if (!Config::get('concrete.user.profiles_enabled')) {
-            $this->render('/page_not_found');
+            $this->replace('/page_not_found');
         }
     }
 

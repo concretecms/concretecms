@@ -85,7 +85,7 @@ $(function() {
 <?=$successMessage?>
 <br/><br/>
 <div class="well">
-<input type="button" class="btn btn-large btn-primary" onclick="window.location.href='<?=DIR_REL?>/'" value="<?=t('Continue to your site')?>" />
+<input type="button" class="btn btn-large btn-primary" onclick="window.location.href='<?=URL::to('/')?>'" value="<?=t('Continue to your site')?>" />
 </div>
 </div>
 

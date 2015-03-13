@@ -35,7 +35,7 @@ class ServiceProvider extends \Concrete\Core\Foundation\Service\Provider
                     new Credentials(
                         \Config::get('auth.google.appid'),
                         \Config::get('auth.google.secret'),
-                        BASE_URL . \URL::to($callback)
+                        \URL::to($callback)
                     ),
                     new SymfonySession(\Session::getFacadeRoot(), false),
                     array(Google::SCOPE_EMAIL, Google::SCOPE_PROFILE));

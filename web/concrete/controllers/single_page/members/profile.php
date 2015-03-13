@@ -22,7 +22,7 @@ class Profile extends PublicProfilePageController {
 			$profile = UserInfo::getByID($u->getUserID());
 		} else {
 			$this->set('intro_msg', t('You must sign in order to access this page!'));
-			$this->render('/login');
+			$this->replace('/login');
 		}
 		if (is_object($profile) && $profile->getUserID() == $u->getUserID()) {
 			$canEdit = true;
