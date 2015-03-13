@@ -425,7 +425,7 @@ return array(
         t('MP4')            => array('mp4', FileType::T_VIDEO),
         t('FLV')            => array('flv', FileType::T_VIDEO, 'flv'),
         t('MP3')            => array('mp3', FileType::T_AUDIO, false, 'audio'),
-        t('MP4')            => array('m4a', FileType::T_AUDIO, false, 'audio'),
+        t('MP4 Audio')            => array('m4a', FileType::T_AUDIO, false, 'audio'),
         t('Realaudio')      => array('ra,ram', FileType::T_AUDIO),
         t('Windows Audio')  => array('wma', FileType::T_AUDIO),
         t('Rich Text')      => array('rtf', FileType::T_DOCUMENT),
