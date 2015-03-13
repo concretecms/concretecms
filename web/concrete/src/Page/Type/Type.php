@@ -4,6 +4,7 @@ namespace Concrete\Core\Page\Type;
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Template;
+use Concrete\Core\Page\Type\Composer\Control\Control;
 use Concrete\Core\Page\Type\Composer\Control\CorePageProperty\NameCorePageProperty;
 use Concrete\Core\Page\Type\Composer\FormLayoutSet;
 use Concrete\Core\Permission\Key\Key;
@@ -1030,6 +1031,21 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         } else {
             if (!in_array($pt->getPageTemplateID(), $availablePageTemplateIDs)) {
                 $e->add(t('This page template is not a valid template for this page type.'));
+            }
+        }
+        return $e;
+    }
+
+    public function validatePublishDraftRequest()
+    {
+        $e = \Core::make('error');
+        $controls = Control::getList($this);
+        foreach ($controls as $oc) {
+            if ($oc->isPageTypeComposerFormControlRequiredOnThisRequest()) {
+                $r = $oc->validate();
+                if ($r instanceof \Concrete\Core\Error\Error) {
+                    $e->add($r);
+                }
             }
         }
         return $e;
