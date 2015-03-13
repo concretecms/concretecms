@@ -89,7 +89,7 @@ class Controller extends AttributeTypeController  {
 	}
 	
 	public function search() {
-		print '<label class="checkbox">' . Loader::helper('form')->checkbox($this->field('value'), 1, $this->request('value') == 1) . ' ' . t('Yes') . '</label>';
+		print '<div class="checkbox"><label>' . Loader::helper('form')->checkbox($this->field('value'), 1, $this->request('value') == 1) . ' ' . $this->attributeKey->getAttributeKeyDisplayName() . '</label></div>';
 	}
 
 	public function type_form() {
