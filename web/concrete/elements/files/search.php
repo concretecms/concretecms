@@ -10,8 +10,8 @@ $req = $flr->getSearchRequest();
 ?>
 
 <script type="text/template" data-template="search-form">
-<form role="form" data-search-form="files" action="<?php echo URL::to('/ccm/system/search/files/submit')?>" class="form-inline ccm-search-fields">
-    <div class="ccm-search-fields-row">
+<form role="form" data-search-form="files" action="<?php echo URL::to('/ccm/system/search/files/submit')?>" class="ccm-search-fields">
+    <div class="ccm-search-fields-row form-inline">
         <div class="form-group">
             <select data-bulk-action="files" disabled class="ccm-search-bulk-action form-control">
                 <option value=""><?php echo t('Items Selected')?></option>
