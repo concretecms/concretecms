@@ -8,6 +8,12 @@ class RedirectResponse extends \Symfony\Component\HttpFoundation\RedirectRespons
 
     protected $request;
 
+    public function __construct($url, $status = 302, $headers = array())
+    {
+        $url = (string) $url; // sometimes we get an object.
+        parent::__construct($url, $status, $headers);
+    }
+
     public function setRequest(Request $r)
     {
         $this->request = $r;
