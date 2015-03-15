@@ -106,7 +106,7 @@ $dh = Core::make('helper/date');
 <div style="display: none" id="ccm-jobs-automation-dialogs">
     <? foreach($installedJobs as $j) { ?>
     	<div id="jd<?=$j->getJobID()?>" class="ccm-ui">
-    		<form action="<?=$view->action('update_job_schedule')?>" method="post" data-form="schedule-job">
+    		<form action="<?=$view->action('update_job_schedule')?>" method="post" data-schedule-form="<?=$j->getJobID()?>">
     			<?=$form->hidden('jID', $j->getJobID());?>
     			
     			<h4><?=t('Run Job')?></h4>
@@ -129,7 +129,7 @@ $dh = Core::make('helper/date');
     						    </div>
     						    
     						    <div class="col-md-6">
-    						        <?php echo $form->select('unit', array('hours'=>t('Hours'), 'days'=>t('Days'), 'weeks'=>t('Weeks'), 'months'=>t('Months')), h($j->scheduledInterval), array('class'=>''))?>
+    						        <?php echo $form->select('unit', array('minutes' => t('Minutes'), 'hours'=>t('Hours'), 'days'=>t('Days'), 'weeks'=>t('Weeks'), 'months'=>t('Months')), h($j->scheduledInterval), array('class'=>''))?>
     						    </div>
     						</div>
     				    </div>
@@ -186,7 +186,7 @@ $dh = Core::make('helper/date');
     			</fieldset>
     			
     			<div class="dialog-buttons">
-                    <button type="button" onclick="$('form[data-form=schedule-job]').submit()" class="btn btn-primary pull-right">
+                    <button type="button" onclick="$('form[data-schedule-form=<?=$j->getJobID()?>]').submit()" class="btn btn-primary pull-right">
                         <?=t('Save')?>
                     </button>
                 </div>

@@ -242,10 +242,9 @@ class Jobs extends DashboardPageController {
 
 	public function update_job_schedule() 
 	{
-		$jID = $this->post('jID');
+		$jID = $this->request->request->get('jID');
 		$J = Job::getByID($jID);
 		$J->setSchedule($this->post('isScheduled'), $this->post('unit'), max(0,(int)$this->post('value')));
-		
 		$this->redirect('/dashboard/system/optimization/jobs', 'job_scheduled');
 	}
 	
