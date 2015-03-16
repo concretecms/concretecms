@@ -17,13 +17,13 @@ if (is_object($f)) {
     }
     $tag->addClass('ccm-image-block img-responsive bID-'.$bID);
     if ($altText) {
-        $tag->alt($altText);
+        $tag->alt(h($altText));
     }
     if ($title) {
-        $tag->title($title);
+        $tag->title(h($title));
     }
     if ($linkURL):
-        print '<a href="' . $linkURL . '">';
+        print '<a href="' . urlencode($linkURL) . '">';
     endif;
 
     print $tag;

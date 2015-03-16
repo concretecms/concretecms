@@ -90,8 +90,8 @@ $tp = new TaskPermission();
                <?php } ?>
                 link_url: '<?php echo $row['linkURL'] ?>',
                 link_type: '<?php echo $linkType?>',
-                title: '<?php echo addslashes($row['title']) ?>',
-                description: '<?php echo str_replace(array("\t", "\r", "\n"), "", addslashes($row['description']))?>',
+                title: '<?php echo addslashes(h($row['title'])) ?>',
+                description: '<?php echo str_replace(array("\t", "\r", "\n"), "", addslashes(h($row['description'])))?>',
                 sort_order: '<?php echo $row['sortOrder'] ?>'
             }));
             sliderEntriesContainer.find('.ccm-image-slider-entry:last-child div[data-field=entry-link-page-selector]').concretePageSelector({
