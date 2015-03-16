@@ -133,7 +133,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
     </div>
 
     <? if (count($pages) == 0): ?>
-        <div class="ccm-block-page-list-no-pages"><?=$noResultsMessage?></div>
+        <div class="ccm-block-page-list-no-pages"><?=h($noResultsMessage)?></div>
     <? endif;?>
 
 </div><!-- end .ccm-block-page-list -->
