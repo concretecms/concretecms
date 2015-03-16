@@ -73,7 +73,7 @@ class Composer extends BackendInterfacePageController {
 				}
 			}
 			$validator = $pagetype->getPageTypeValidatorObject();
-			$e->add($validator->validatePublishDraftRequest());
+			$e->add($validator->validatePublishDraftRequest($c));
 
 			$ptr->setError($e);
 

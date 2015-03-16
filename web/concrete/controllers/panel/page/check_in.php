@@ -46,7 +46,7 @@ class CheckIn extends BackendInterfacePageController
         $pagetype = $c->getPageTypeObject();
         if (is_object($pagetype)) {
             $validator = $pagetype->getPageTypeValidatorObject();
-            $e->add($validator->validatePublishDraftRequest());
+            $e->add($validator->validatePublishDraftRequest($c));
         }
 
         if ($c->isPageDraft() && !$e->has()) {

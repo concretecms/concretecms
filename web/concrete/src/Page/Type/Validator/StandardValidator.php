@@ -1,7 +1,10 @@
 <?php
 namespace Concrete\Core\Page\Type\Validator;
 
+use Concrete\Core\Page\Page;
+use Concrete\Core\Page\Type\Composer\Control\Control;
 use Concrete\Core\Page\Type\Type;
+use Core;
 
 class StandardValidator implements ValidatorInterface
 {
@@ -17,7 +20,7 @@ class StandardValidator implements ValidatorInterface
 
     public function validateCreateDraftRequest($template)
     {
-        $e = Loader::helper('validation/error');
+        $e = Core::make('error');
         $availablePageTemplates = $this->type->getPageTypePageTemplateObjects();
         $availablePageTemplateIDs = array();
         foreach ($availablePageTemplates as $ppt) {
@@ -33,11 +36,14 @@ class StandardValidator implements ValidatorInterface
         return $e;
     }
 
-    public function validatePublishDraftRequest()
+    public function validatePublishDraftRequest(Page $page = null)
     {
-        $e = \Core::make('error');
+        $e = Core::make('error');
         $controls = Control::getList($this->type);
         foreach ($controls as $oc) {
+            if (is_object($page)) {
+                $oc->setPageObject($page);
+            }
             if ($oc->isPageTypeComposerFormControlRequiredOnThisRequest()) {
                 $r = $oc->validate();
                 if ($r instanceof \Concrete\Core\Error\Error) {
