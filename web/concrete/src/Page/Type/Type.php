@@ -1018,37 +1018,16 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         return $target->canPublishPageTypeBeneathTarget($this, $page);
     }
 
-    public function validateCreateDraftRequest($pt)
+    /**
+     * @return \Concrete\Core\Page\Type\Validator\ValidatorInterface|null
+     */
+    public function getPageTypeValidatorObject()
     {
-        $e = Loader::helper('validation/error');
-        $availablePageTemplates = $this->getPageTypePageTemplateObjects();
-        $availablePageTemplateIDs = array();
-        foreach ($availablePageTemplates as $ppt) {
-            $availablePageTemplateIDs[] = $ppt->getPageTemplateID();
+        if ($this->ptHandle) {
+            $validator = \Core::make('manager/page_type/validator')->driver($this->ptHandle);
+            $validator->setPageTypeObject($this);
+            return $validator;
         }
-        if (!is_object($pt)) {
-            $e->add(t('You must choose a page template.'));
-        } else {
-            if (!in_array($pt->getPageTemplateID(), $availablePageTemplateIDs)) {
-                $e->add(t('This page template is not a valid template for this page type.'));
-            }
-        }
-        return $e;
-    }
-
-    public function validatePublishDraftRequest()
-    {
-        $e = \Core::make('error');
-        $controls = Control::getList($this);
-        foreach ($controls as $oc) {
-            if ($oc->isPageTypeComposerFormControlRequiredOnThisRequest()) {
-                $r = $oc->validate();
-                if ($r instanceof \Concrete\Core\Error\Error) {
-                    $e->add($r);
-                }
-            }
-        }
-        return $e;
     }
 
     public function createDraft(PageTemplate $pt, $u = false)
