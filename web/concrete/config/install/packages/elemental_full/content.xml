@@ -2462,6 +2462,7 @@
                                                 <questionSetId><![CDATA[1404886998]]></questionSetId>
                                                 <surveyName><![CDATA[Contact Us]]></surveyName>
                                                 <thankyouMsg><![CDATA[Thanks!]]></thankyouMsg>
+                                                <buttonText><![CDATA[Submit]]></buttonText>
                                                 <notifyMeOnSubmission><![CDATA[0]]></notifyMeOnSubmission>
                                                 <recipientEmail><![CDATA[]]></recipientEmail>
                                                 <displayCaptcha><![CDATA[0]]></displayCaptcha>
