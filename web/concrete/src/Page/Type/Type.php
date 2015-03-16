@@ -4,7 +4,6 @@ namespace Concrete\Core\Page\Type;
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Template;
-use Concrete\Core\Page\Type\Composer\Control\Control;
 use Concrete\Core\Page\Type\Composer\Control\CorePageProperty\NameCorePageProperty;
 use Concrete\Core\Page\Type\Composer\FormLayoutSet;
 use Concrete\Core\Permission\Key\Key;
