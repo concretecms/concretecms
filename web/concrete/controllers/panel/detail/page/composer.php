@@ -72,8 +72,8 @@ class Composer extends BackendInterfacePageController {
 					$e->add(t('You do not have permission to publish a page in this location.'));
 				}
 			}
-
-			$e->add($pagetype->validatePublishDraftRequest());
+			$validator = $pagetype->getPageTypeValidatorObject();
+			$e->add($validator->validatePublishDraftRequest());
 
 			$ptr->setError($e);
 
@@ -119,7 +119,8 @@ class Composer extends BackendInterfacePageController {
 		if (!is_object($pt)) {
 			$pt = $pagetype->getPageTypeDefaultPageTemplateObject();
 		}
-		$e = $pagetype->validateCreateDraftRequest($pt);
+		$validator = $pagetype->getPageTypeValidatorObject();
+		$e = $validator->validateCreateDraftRequest($pt);
         $outputControls = array();
 		if (!$e->has()) {
 			$c = $c->getVersionToModify();

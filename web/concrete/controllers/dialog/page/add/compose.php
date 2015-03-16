@@ -75,9 +75,10 @@ class Compose extends Controller
         }
 
         if (is_object($pagetype)) {
-            $e->add($pagetype->validateCreateDraftRequest($template));
+            $validator = $pagetype->getPageTypeValidatorObject();
+            $e->add($validator->validateCreateDraftRequest($template));
             if ($this->request->request('addPageComposeAction') == 'publish') {
-                $e->add($pagetype->validatePublishDraftRequest());
+                $e->add($validator->validatePublishDraftRequest());
             }
         }
 

@@ -21,8 +21,16 @@ class Version574 extends AbstractMigration
 
     public function up(Schema $schema)
     {
+
         $db = \Database::get();
         $db->Execute('DROP TABLE IF EXISTS PageStatistics');
+
+
+        $pp = $schema->getTable('PagePaths');
+        if (!$pp->hasColumn('ppGeneratedFromURLSlugs')) {
+            $db->Execute('alter table PagePaths add column ppGeneratedFromURLSlugs tinyint(1) unsigned not null default 0');
+            // we have to do this directly because the page path calls below will die otherwise.
+        }
 
         $bt = BlockType::getByHandle('page_title');
         if (is_object($bt)) {
@@ -98,11 +106,6 @@ class Version574 extends AbstractMigration
             $mss->addColumn('cnvNotificationEmailAddress', 'text', array('notnull' => false));
         }
 
-
-        $pp = $schema->getTable('PagePaths');
-        if (!$pp->hasColumn('ppGeneratedFromURLSlugs')) {
-            $pp->addColumn('ppGeneratedFromURLSlugs', 'boolean', array('notnull' => true, 'unsigned' => true, 'default' => 0));
-        }
 
         $this->updatePermissionDurationObjects();
 
