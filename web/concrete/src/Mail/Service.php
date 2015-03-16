@@ -29,6 +29,11 @@ class Service
     protected $bodyHTML;
     protected $testing;
 
+    public function __construct()
+    {
+        $this->reset();
+    }
+
     /**
      * this method is called by the Loader::helper to clean up the instance of this object
      * resets the class scope variables.
@@ -429,6 +434,14 @@ class Service
                     $mail->addBcc($bcc[0], $bcc[1]);
                 }
             }
+            $headers = $mail->getHeaders();
+            if ($headers->has('messageid')) {
+                $messageIdHeader = $headers->get('messageid');
+            } else {
+                $messageIdHeader = new \Zend\Mail\Header\MessageId();
+                $headers->addHeader($messageIdHeader);
+            }
+            $messageIdHeader->setId();
 
             $body = new MimeMessage();
             if (($this->body !== false) && ($this->bodyHTML !== false)) {
