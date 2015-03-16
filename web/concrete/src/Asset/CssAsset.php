@@ -164,7 +164,7 @@ class CssAsset extends Asset
      * @param $assets
      * @return Asset[]
      */
-    public function combine($assets)
+    public static function combine($assets)
     {
         return self::process($assets, function($css, $assetPath, $targetPath) {
             return CSSAsset::changePaths($css, $assetPath, $targetPath);
@@ -175,7 +175,7 @@ class CssAsset extends Asset
      * @param $assets
      * @return Asset[]
      */
-    public function minify($assets)
+    public static function minify($assets)
     {
         return self::process($assets, function($css, $assetPath, $targetPath) {
             return \CssMin::minify(CSSAsset::changePaths($css, $assetPath, $targetPath));
