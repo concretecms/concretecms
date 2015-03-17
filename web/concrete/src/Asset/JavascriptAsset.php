@@ -62,7 +62,7 @@ class JavascriptAsset extends Asset
             $sourceFiles = array();
             for ($i = 0; $i < count($assets); $i++) {
                 $asset = $assets[$i];
-                $filename .= $asset->getAssetURL();
+                $filename .= $asset->getAssetHashKey();
                 $sourceFiles[] = $asset->getAssetURL();
             }
             $filename = sha1($filename);
@@ -70,7 +70,15 @@ class JavascriptAsset extends Asset
             if (!file_exists($cacheFile)) {
                 $js = '';
                 foreach($assets as $asset) {
-                    $js .= file_get_contents($asset->getAssetPath()) . "\n\n";
+                    $contents = false;
+                    if ($asset->assetIsLocaleDependent()) {
+                        //@todo
+                    } else {
+                        $contents = file_get_contents($asset->getAssetPath());
+                    }
+                    if ($contents !== false) {
+                        $js .= $contents . "\n\n";
+                    }
                     $js = $processFunction($js, $asset->getAssetURLPath(), self::getRelativeOutputDirectory());
                 }
                 @file_put_contents($cacheFile, $js);

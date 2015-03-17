@@ -496,8 +496,8 @@ return array(
         'select2/locale'           => array(
             array(
                 'javascript',
-                '/index.php/ccm/assets/localization/select2/js',
-                array('combine' => false, 'minify'  => false, 'local'   => false)
+                '/'.DISPATCHER_FILENAME.'/ccm/assets/localization/select2/js',
+                array('localeDependent' => true)
             ),
         ),
         'underscore'               => array(
@@ -529,8 +529,8 @@ return array(
         'core/locale' => array(
             array(
                 'javascript',
-                '/index.php/ccm/assets/localization/core/js',
-                array('combine' => false, 'minify' => false, 'local' => false)
+                '/'.DISPATCHER_FILENAME.'/ccm/assets/localization/core/js',
+                array('localeDependent' => true)
             )
         ),
         'jquery/awesome-rating'                 => array(
@@ -550,8 +550,8 @@ return array(
         'redactor/locale'          => array(
             array(
                 'javascript',
-                '/index.php/ccm/assets/localization/redactor/js',
-                array('combine' => false, 'minify' => false, 'local' => false)
+                '/'.DISPATCHER_FILENAME.'/ccm/assets/localization/redactor/js',
+                array('localeDependent' => true)
             ),
         ),
         'ace'                      => array(
@@ -567,8 +567,8 @@ return array(
         'dynatree/locale'          => array(
             array(
                 'javascript',
-                '/index.php/ccm/assets/localization/dynatree/js',
-                array('combine' => false, 'minify' => false, 'local' => false)
+                '/'.DISPATCHER_FILENAME.'/ccm/assets/localization/dynatree/js',
+                array('localeDependent' => true)
             ),
         ),
         'bootstrap/dropdown'       => array(
@@ -618,8 +618,8 @@ return array(
         'core/imageeditor/locale'  => array(
             array(
                 'javascript',
-                '/index.php/ccm/assets/localization/imageeditor/js',
-                array('combine' => false, 'minify'  => false, 'local'   => false)
+                '/'.DISPATCHER_FILENAME.'/ccm/assets/localization/imageeditor/js',
+                array('localeDependent' => true)
             ),
         ),
         'dashboard'                => array(

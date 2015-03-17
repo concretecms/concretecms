@@ -135,7 +135,7 @@ class CssAsset extends Asset
             $filename = '';
             for ($i = 0; $i < count($assets); $i++) {
                 $asset = $assets[$i];
-                $filename .= $asset->getAssetURL();
+                $filename .= $asset->getAssetHashKey();
                 $sourceFiles[] = $asset->getAssetURL();
             }
             $filename = sha1($filename);
@@ -143,8 +143,14 @@ class CssAsset extends Asset
             if (!file_exists($cacheFile)) {
                 $css = '';
                 foreach ($assets as $asset) {
-                    if ($asset->getAssetPath()) {
-                        $css .= file_get_contents($asset->getAssetPath()) . "\n\n";
+                    $contents = false;
+                    if ($asset->assetIsLocaleDependent()) {
+                        //@todo
+                    } elseif ($asset->getAssetPath()) {
+                        $contents = file_get_contents($asset->getAssetPath());
+                    }
+                    if ($contents !== false) {
+                        $css .=  $contents."\n\n";
                     }
                     $css = $processFunction($css, $asset->getAssetURLPath(), self::getRelativeOutputDirectory());
                 }

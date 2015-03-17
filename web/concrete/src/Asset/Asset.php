@@ -2,6 +2,7 @@
 namespace Concrete\Core\Asset;
 
 use Environment;
+use Localization;
 
 abstract class Asset
 {
@@ -47,6 +48,11 @@ abstract class Asset
     protected $assetSupportsCombination = false;
 
     /**
+     * @var bool
+     */
+    protected $assetIsLocaleDependent = false;
+
+    /**
      * @var \Package
      */
     protected $pkg;
@@ -86,6 +92,14 @@ abstract class Asset
     }
 
     /**
+     * @return bool
+     */
+    public function assetIsLocaleDependent()
+    {
+        return $this->assetIsLocaleDependent;
+    }
+
+    /**
      * @param bool $minify
      */
     public function setAssetSupportsMinification($minify)
@@ -102,11 +116,32 @@ abstract class Asset
     }
 
     /**
+     * @param bool $localeDependent
+     */
+    public function setAssetIsLocaleDependent($localeDependent)
+    {
+        $this->assetIsLocaleDependent = (bool) $localeDependent;
+    }
+
+    /**
      * @return string
      */
     public function getAssetURL()
     {
         return $this->assetURL;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAssetHashKey()
+    {
+        $result = $this->getAssetURL();
+        if ($this->assetIsLocaleDependent) {
+            $result .= '@'.Localization::activeLocale();
+        }
+
+        return $result;
     }
 
     /**
