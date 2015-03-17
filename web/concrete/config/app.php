@@ -391,11 +391,11 @@ return array(
         /**
          * Assets localization
          */
-        '/ccm/assets/localization/core/js'                                              => array('\Concrete\Controller\Frontend\AssetsLocalization::getCoreJavascript'),
-        '/ccm/assets/localization/select2/js'                                           => array('\Concrete\Controller\Frontend\AssetsLocalization::getSelect2Javascript'),
-        '/ccm/assets/localization/redactor/js'                                          => array('\Concrete\Controller\Frontend\AssetsLocalization::getRedactorJavascript'),
-        '/ccm/assets/localization/dynatree/js'                                          => array('\Concrete\Controller\Frontend\AssetsLocalization::getDynatreeJavascript'),
-        '/ccm/assets/localization/imageeditor/js'                                       => array('\Concrete\Controller\Frontend\AssetsLocalization::getImageEditorJavascript'),
+        '/ccm/assets/localization/core/js/'                                             => array('\Concrete\Controller\Frontend\AssetsLocalization::getCoreJavascript'),
+        '/ccm/assets/localization/select2/js/'                                          => array('\Concrete\Controller\Frontend\AssetsLocalization::getSelect2Javascript'),
+        '/ccm/assets/localization/redactor/js/'                                         => array('\Concrete\Controller\Frontend\AssetsLocalization::getRedactorJavascript'),
+        '/ccm/assets/localization/dynatree/js/'                                         => array('\Concrete\Controller\Frontend\AssetsLocalization::getDynatreeJavascript'),
+        '/ccm/assets/localization/imageeditor/js/'                                      => array('\Concrete\Controller\Frontend\AssetsLocalization::getImageEditorJavascript'),
     ),
 
     /**
@@ -496,7 +496,7 @@ return array(
         'select2/locale'           => array(
             array(
                 'javascript',
-                '/'.DISPATCHER_FILENAME.'/ccm/assets/localization/select2/js',
+                '/'.DISPATCHER_FILENAME.'/ccm/assets/localization/select2/js/',
                 array('localeDependent' => true)
             ),
         ),
@@ -529,7 +529,7 @@ return array(
         'core/locale' => array(
             array(
                 'javascript',
-                '/'.DISPATCHER_FILENAME.'/ccm/assets/localization/core/js',
+                '/'.DISPATCHER_FILENAME.'/ccm/assets/localization/core/js/',
                 array('localeDependent' => true)
             )
         ),
@@ -550,7 +550,7 @@ return array(
         'redactor/locale'          => array(
             array(
                 'javascript',
-                '/'.DISPATCHER_FILENAME.'/ccm/assets/localization/redactor/js',
+                '/'.DISPATCHER_FILENAME.'/ccm/assets/localization/redactor/js/',
                 array('localeDependent' => true)
             ),
         ),
@@ -567,7 +567,7 @@ return array(
         'dynatree/locale'          => array(
             array(
                 'javascript',
-                '/'.DISPATCHER_FILENAME.'/ccm/assets/localization/dynatree/js',
+                '/'.DISPATCHER_FILENAME.'/ccm/assets/localization/dynatree/js/',
                 array('localeDependent' => true)
             ),
         ),
@@ -618,7 +618,7 @@ return array(
         'core/imageeditor/locale'  => array(
             array(
                 'javascript',
-                '/'.DISPATCHER_FILENAME.'/ccm/assets/localization/imageeditor/js',
+                '/'.DISPATCHER_FILENAME.'/ccm/assets/localization/imageeditor/js/',
                 array('localeDependent' => true)
             ),
         ),
