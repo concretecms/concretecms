@@ -31,7 +31,7 @@ class DashboardPageController extends PageController
         $this->set('dashboard', Loader::helper('concrete/dashboard'));
 
         $hideDashboardPanel = false;
-        if (\Cookie::has('panels/dashboard/closed') && intval(\Cookie::get('panels/dashboard/closed')) == 1) {
+        if (\Cookie::has('dashboardPanelStatus') && \Cookie::get('dashboardPanelStatus') == 'closed') {
             $hideDashboardPanel = true;
         }
         $this->set('hideDashboardPanel', $hideDashboardPanel);
