@@ -388,6 +388,14 @@ return array(
             'tool',
             array('tool' => '[A-Za-z0-9_/.]+')),
 
+        /**
+         * Assets localization
+         */
+        '/ccm/assets/localization/core/js'                                              => array('\Concrete\Controller\Frontend\AssetsLocalization::getCoreJavascript'),
+        '/ccm/assets/localization/select2/js'                                           => array('\Concrete\Controller\Frontend\AssetsLocalization::getSelect2Javascript'),
+        '/ccm/assets/localization/redactor/js'                                          => array('\Concrete\Controller\Frontend\AssetsLocalization::getRedactorJavascript'),
+        '/ccm/assets/localization/dynatree/js'                                          => array('\Concrete\Controller\Frontend\AssetsLocalization::getDynatreeJavascript'),
+        '/ccm/assets/localization/imageeditor/js'                                       => array('\Concrete\Controller\Frontend\AssetsLocalization::getImageEditorJavascript'),
     ),
 
     /**
@@ -485,14 +493,12 @@ return array(
             array('javascript', 'js/select2.js', array('minify' => false, 'combine' => false)),
             array('css', 'css/select2.css', array('minify' => false))
         ),
-        'select2_locale'           => array(
+        'select2/locale'           => array(
             array(
                 'javascript',
-                REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_select2_js',
-                array(
-                    'combine' => false,
-                    'minify'  => false,
-                    'local'   => false))
+                '/index.php/ccm/assets/localization/select2/js',
+                array('combine' => false, 'minify'  => false, 'local'   => false)
+            ),
         ),
         'underscore'               => array(
             array('javascript', 'js/underscore.js', array('minify' => false))
@@ -523,7 +529,7 @@ return array(
         'core/locale' => array(
             array(
                 'javascript',
-                REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js',
+                '/index.php/ccm/assets/localization/core/js',
                 array('combine' => false, 'minify' => false, 'local' => false)
             )
         ),
@@ -541,12 +547,12 @@ return array(
             array('javascript', 'js/redactor.js', array('minify' => false)),
             array('css', 'css/redactor.css')
         ),
-        'redactor_locale'          => array(
+        'redactor/locale'          => array(
             array(
                 'javascript',
-                REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_redactor_js',
+                '/index.php/ccm/assets/localization/redactor/js',
                 array('combine' => false, 'minify' => false, 'local' => false)
-            )
+            ),
         ),
         'ace'                      => array(
             array('javascript', 'js/ace/ace.js', array('minify' => false))
@@ -558,12 +564,12 @@ return array(
             array('javascript', 'js/dynatree.js', array('minify' => false)),
             array('css', 'css/dynatree.css', array('minify' => false))
         ),
-        'dynatree_locale'          => array(
+        'dynatree/locale'          => array(
             array(
                 'javascript',
-                REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_dynatree_js',
+                '/index.php/ccm/assets/localization/dynatree/js',
                 array('combine' => false, 'minify' => false, 'local' => false)
-            )
+            ),
         ),
         'bootstrap/dropdown'       => array(
             array('javascript', 'js/bootstrap/dropdown.js'),
@@ -609,16 +615,12 @@ return array(
             array('javascript', 'js/image-editor.js'),
             array('css', 'css/image-editor.css')
         ),
-        'core/imageeditor_locale'  => array(
+        'core/imageeditor/locale'  => array(
             array(
                 'javascript',
-                REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_imageeditor_js',
-                array(
-                    'combine' => false,
-                    'minify'  => false,
-                    'local'   => false
-                )
-            )
+                '/index.php/ccm/assets/localization/imageeditor/js',
+                array('combine' => false, 'minify'  => false, 'local'   => false)
+            ),
         ),
         'dashboard'                => array(
             array('javascript', 'js/dashboard.js')
@@ -697,7 +699,7 @@ return array(
         'select2'                  => array(
             array(
                 array('javascript', 'select2'),
-                array('javascript', 'select2_locale'),
+                array('javascript', 'select2/locale'),
                 array('css', 'select2')
             )
         ),
@@ -761,7 +763,7 @@ return array(
         'redactor'                 => array(
             array(
                 array('javascript', 'redactor'),
-                array('javascript', 'redactor_locale'),
+                array('javascript', 'redactor/locale'),
                 array('css', 'redactor'),
                 array('css', 'font-awesome')
             )
@@ -769,7 +771,7 @@ return array(
         'dynatree'                 => array(
             array(
                 array('javascript', 'dynatree'),
-                array('javascript', 'dynatree_locale'),
+                array('javascript', 'dynatree/locale'),
                 array('css', 'dynatree')
             )
         ),
@@ -808,7 +810,7 @@ return array(
         'core/imageeditor'         => array(
             array(
                 array('javascript', 'kinetic'),
-                array('javascript', 'core/imageeditor_locale'),
+                array('javascript', 'core/imageeditor/locale'),
                 array('javascript', 'core/imageeditor'),
                 array('css', 'core/imageeditor')
             )
@@ -829,6 +831,7 @@ return array(
                 array('javascript', 'core/locale'),
                 array('javascript', 'core/app'),
                 array('javascript', 'redactor'),
+                array('javascript', 'redactor/locale'),
                 array('css', 'core/app'),
                 array('css', 'redactor'),
                 array('css', 'jquery/ui'),
@@ -846,7 +849,7 @@ return array(
                 array('javascript', 'underscore'),
                 array('javascript', 'jquery/ui'),
                 array('javascript', 'select2'),
-                array('javascript', 'select2_locale'),
+                array('javascript', 'select2/locale'),
                 array('javascript', 'core/locale'),
                 array('javascript', 'core/app'),
                 array('javascript', 'jquery/fileupload'),
@@ -859,7 +862,7 @@ return array(
                 array('javascript', 'underscore'),
                 array('javascript', 'jquery/ui'),
                 array('javascript', 'dynatree'),
-                array('javascript', 'dynatree_locale'),
+                array('javascript', 'dynatree/locale'),
                 array('javascript', 'core/app'),
                 array('javascript', 'core/locale'),
                 array('javascript', 'core/sitemap'),
@@ -872,7 +875,7 @@ return array(
                 array('javascript', 'core/events'),
                 array('javascript', 'jquery/ui'),
                 array('javascript', 'dynatree'),
-                array('javascript', 'dynatree_locale'),
+                array('javascript', 'dynatree/locale'),
                 array('javascript', 'core/topics'),
                 array('css', 'dynatree'),
                 array('css', 'core/topics')
@@ -884,7 +887,7 @@ return array(
                 array('javascript', 'underscore'),
                 array('javascript', 'jquery/ui'),
                 array('javascript', 'dynatree'),
-                array('javascript', 'dynatree_locale'),
+                array('javascript', 'dynatree/locale'),
                 array('javascript', 'core/groups'),
                 array('css', 'dynatree')
             )
@@ -893,6 +896,7 @@ return array(
             array(
                 array('javascript', 'core/gathering'),
                 array('javascript', 'redactor'),
+                array('javascript', 'redactor/locale'),
                 array('css', 'core/gathering/base'),
                 array('css', 'core/conversation'),
                 array('css', 'core/gathering/display'),
