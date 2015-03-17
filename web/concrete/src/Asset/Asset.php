@@ -270,7 +270,7 @@ abstract class Asset
      */
     public function mapAssetLocation($path)
     {
-        if ($this->isAssetLocal()) {
+        if ($this->isAssetLocal() && (!$this->assetIsLocaleDependent)) {
             $env = Environment::get();
             $pkgHandle = false;
             if (is_object($this->pkg)) {

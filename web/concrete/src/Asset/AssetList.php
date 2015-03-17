@@ -67,7 +67,6 @@ class AssetList
             $o->setPackageObject($pkg);
         }
         $o->setAssetIsLocal($args['local']);
-        $o->mapAssetLocation($filename);
         if ($args['minify'] === true || $args['minify'] === false) {
             $o->setAssetSupportsMinification($args['minify']);
         }
@@ -81,6 +80,7 @@ class AssetList
         if ($args['position']) {
             $o->setAssetPosition($args['position']);
         }
+        $o->mapAssetLocation($filename);
         $this->registerAsset($o);
         return $o;
     }
