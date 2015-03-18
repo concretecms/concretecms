@@ -174,7 +174,10 @@
 		scrollTarget: false,
 
 		toolbar: true,
-		toolbarFixed: true,
+		/* concrete5 */
+		/*toolbarFixed: true,*/
+		toolbarFixed: false,
+		/* end concrete5 */
 		toolbarFixedTarget: document,
 		toolbarFixedTopOffset: 0, // pixels
 		toolbarExternal: false, // ID selector
@@ -238,6 +241,12 @@
 			'ctrl+shift+8':   { func: 'list.toggle', params: ['unorderedlist'] }
 		},
 		shortcutsAdd: false,
+
+		concrete5: {
+			filemanager: false,
+			sitemap: false,
+			lightbox: false
+		},
 
 		// private
 		buffer: [],
@@ -1453,12 +1462,54 @@
 				}
 			};
 		},
+
 		button: function()
 		{
 			return {
+				/* concrete5 */
+				getClass: function(btnName)
+				{
+					switch(btnName) {
+						case 'html':
+							return 'fa fa-code';
+						case 'formatting':
+						case 'formatting-concrete5':
+							return 'fa fa-paragraph';
+						case 'styles':
+							return 'fa fa-magic';
+						case 'orderedlist':
+							return 'fa fa-list-ol';
+						case 'unorderedlist':
+							return 'fa fa-list-ul';
+						case 'video':
+							return 'fa fa-file-video-o';
+						case 'alignment':
+							return 'fa fa-align-left';
+						case 'horizontalrule':
+							return 'fa fa-minus';
+						case 'deleted':
+							return 'fa fa-strikethrough';
+						case 'fontfamily':
+							return 'fa fa-font';
+						case 'fontsize':
+							return 'fa fa-text-height';
+						case 'fontcolor':
+							return 'fa fa-tint';
+						case 'backcolor':
+							return 'fa fa-tint';
+						default:
+							return 'fa fa-' + btnName;
+
+					}
+				},
+
+				/* end concrete5 */
 				build: function(btnName, btnObject)
 				{
-					var $button = $('<a href="#" class="re-icon re-' + btnName + '" rel="' + btnName + '" />').attr('tabindex', '-1');
+					/* concrete5 */
+					//var $button = $('<a href="#" class="re-icon re-' + btnName + '" rel="' + btnName + '" />').attr('tabindex', '-1');
+					var $button = $('<a href="#" class="' + this.button.getClass(btnName) + ' re-icon re-' + btnName + '" rel="' + btnName + '" />').attr('tabindex', '-1');
+					/* end concrete5 */
 
 					// click
 					if (btnObject.func || btnObject.command || btnObject.dropdown)
@@ -1469,7 +1520,11 @@
 					// dropdown
 					if (btnObject.dropdown)
 					{
-						var $dropdown = $('<div class="redactor-dropdown redactor-dropdown-' +  + this.uuid + ' redactor-dropdown-box-' + btnName + '" style="display: none;">');
+						/* concrete5 */
+						//var $dropdown = $('<div class="redactor-dropdown redactor-dropdown-' +  + this.uuid + ' redactor-dropdown-box-' + btnName + '" style="display: none;">');
+						var $dropdown = $('<ul class="dropdown-menu redactor-dropdown redactor-dropdown-' +  + this.uuid + ' redactor-dropdown-box-' + btnName + '" style="display: none;">');
+						/* end concrete5 */
+
 						$button.data('dropdown', $dropdown);
 						this.dropdown.build(btnName, $dropdown, btnObject.dropdown);
 					}
@@ -1676,7 +1731,10 @@
 				},
 				remove: function(key)
 				{
-					this.button.get(key).remove();
+					/* concrete5 */
+					//this.button.get(key).remove();
+					this.button.get(key).parent().remove();
+					/* end concrete5 */
 				}
 			};
 		},
@@ -2921,7 +2979,11 @@
 
 					$.each(dropdownObject, $.proxy(function(btnName, btnObject)
 					{
-						var $item = $('<a href="#" class="redactor-dropdown-' + btnName + '">' + btnObject.title + '</a>');
+						/* concrete5 */
+						//var $item = $('<a href="#" class="redactor-dropdown-' + btnName + '">' + btnObject.title + '</a>');
+						var $item = $('<li><a href="#" class="redactor-dropdown-' + btnName + '">' + btnObject.title + '</a></li>');
+						/* end concrete5 */
+
 						if (name == 'formatting') $item.addClass('redactor-formatting-' + btnName);
 
 						$item.on('click', $.proxy(function(e)
@@ -2961,7 +3023,14 @@
 					var $button = this.button.get(key);
 
 					// Always re-append it to the end of <body> so it always has the highest sub-z-index.
-					var $dropdown = $button.data('dropdown').appendTo(document.body);
+					/* concrete5 */
+					//var $dropdown = $button.data('dropdown').appendTo(document.body);
+					if ($('#redactor-dropdown-holder').length == 0) {
+						$(document.body).append('<div id="redactor-dropdown-holder" class="ccm-ui" />')
+					}
+					var ccmUI = $('#redactor-dropdown-holder');
+					var $dropdown= $button.data('dropdown').appendTo(ccmUI);
+					/* end concrete5 */
 
 					// ios keyboard hide
 					if (this.utils.isMobile() && !this.utils.browser('msie'))
@@ -3042,7 +3111,10 @@
 					this.$toolbar.find('a.dropact').removeClass('redactor-act').removeClass('dropact');
 
 					$(document.body).removeClass('body-redactor-hidden').css('margin-right', 0);
-					$('.redactor-dropdown-' + this.uuid).hide();
+					/* concrete5 */
+					//$('.redactor-dropdown-' + this.uuid).hide();
+					$('#redactor-dropdown-holder ul.dropdown-menu').hide();
+					/* end concrete5 */
 					this.core.setCallback('dropdownHide');
 				},
 				hide: function (e)
@@ -3062,7 +3134,11 @@
 				show: function()
 				{
 					this.modal.load('file', this.lang.get('file'), 700);
-					this.upload.init('#redactor-modal-file-upload', this.opts.fileUpload, this.file.insert);
+					/* concrete5 */
+					//this.upload.init('#redactor-modal-file-upload', this.opts.fileUpload, this.file.insert);
+					this.modal.createCancelButton();
+					this.image.buttonSave = this.modal.createActionButton(this.lang.get('save'));
+					/* end concrete5 */
 
 					this.selection.save();
 
@@ -3207,7 +3283,11 @@
 				show: function()
 				{
 					this.modal.load('image', this.lang.get('image'), 700);
-					this.upload.init('#redactor-modal-image-droparea', this.opts.imageUpload, this.image.insert);
+					/* concrete5 */
+					//this.upload.init('#redactor-modal-image-droparea', this.opts.imageUpload, this.image.insert);
+					this.modal.createCancelButton();
+					this.image.buttonSave = this.modal.createActionButton(this.lang.get('save'));
+					/* end concrete5 */
 
 					this.selection.save();
 					this.modal.show();
@@ -5741,25 +5821,33 @@
 
 						image: String()
 						+ '<section id="redactor-modal-image-insert">'
-							+ '<div id="redactor-modal-image-droparea"></div>'
- 						+ '</section>',
+						+ '<div class="form-group">'
+						+ '<label class="control-label">' + this.lang.get('image_web_link') + '</label>'
+						+ '<input type="text" name="redactor_file_link" id="redactor_file_link" class="form-control"  />'
+						+ '</div>'
+						+ '</section>',
 
 						file: String()
 						+ '<section id="redactor-modal-file-insert">'
-							+ '<div id="redactor-modal-file-upload-box">'
-								+ '<label>' + this.lang.get('filename') + '</label>'
-								+ '<input type="text" id="redactor-filename" /><br><br>'
-								+ '<div id="redactor-modal-file-upload"></div>'
-							+ '</div>'
+						+ '<div class="form-group">'
+						+ '<label class="control-label">' + this.lang.get('file') + '</label>'
+						+ '<input type="text" name="redactor_file_link" id="redactor_file_link" class="form-control"  />'
+						+ '</div>'
 						+ '</section>',
 
 						link: String()
 						+ '<section id="redactor-modal-link-insert">'
-							+ '<label>URL</label>'
-							+ '<input type="url" id="redactor-link-url" />'
-							+ '<label>' + this.lang.get('text') + '</label>'
-							+ '<input type="text" id="redactor-link-url-text" />'
+    						+ '<div class="form-group">'
+							+ '<label class="control-label">URL</label>'
+							+ '<input class="form-control" type="url" id="redactor-link-url" />'
+							+ '</div>'
+							+ '<div class="form-group">'
+							+ '<label class="control-label">' + this.lang.get('text') + '</label>'
+							+ '<input class="form-control" type="text" id="redactor-link-url-text" />'
+							+ '</div>'
+							+ '<div class="checkbox">'
 							+ '<label><input type="checkbox" id="redactor-link-blank"> ' + this.lang.get('link_new_tab') + '</label>'
+							+ '</div>'
 						+ '</section>'
 					};
 
@@ -5946,22 +6034,36 @@
 				},
 				createCancelButton: function()
 				{
-					var button = $('<button>').addClass('redactor-modal-btn redactor-modal-close-btn').html(this.lang.get('cancel'));
+					/* concrete5 */
+					// var button = $('<button>').addClass('redactor-modal-btn redactor-modal-close-btn').html(this.lang.get('cancel'));
+					var button = $('<button>').addClass('btn btn-default redactor-modal-close-btn').html(this.lang.get('cancel'));
+					/* end concrete5 */
+
 					button.on('click', $.proxy(this.modal.close, this));
 
 					this.$modalFooter.append(button);
 				},
 				createDeleteButton: function(label)
 				{
-					return this.modal.createButton(label, 'delete');
+					/* concrete5 */
+					//return this.modal.createButton(label, 'delete');
+					return this.modal.createButton(label, 'danger');
+					/* end concrete5 */
 				},
 				createActionButton: function(label)
 				{
-					return this.modal.createButton(label, 'action');
+					/* concrete5 */
+					//return this.modal.createButton(label, 'action');
+					return this.modal.createButton(label, 'primary');
+					/* end concrete5 */
 				},
 				createButton: function(label, className)
 				{
-					var button = $('<button>').addClass('redactor-modal-btn').addClass('redactor-modal-' + className + '-btn').html(label);
+					/* concrete5 */
+					//var button = $('<button>').addClass('redactor-modal-btn').addClass('redactor-modal-' + className + '-btn').html(label);
+					var button = $('<button>').addClass('btn pull-right').addClass('btn-' + className).html(label);
+					/* end concrete5 */
+
 					this.$modalFooter.append(button);
 
 					return button;
@@ -5970,9 +6072,15 @@
 				{
 					var buttons = this.$modalFooter.find('button');
 					var buttonsSize = buttons.length;
-					if (buttonsSize === 0) return;
 
-					buttons.css('width', (100/buttonsSize) + '%');
+					/* concrete5 */
+					//if (buttonsSize === 0) return;
+					//buttons.css('width', (100/buttonsSize) + '%');
+					if (buttonsSize === 0) {
+						this.$modalFooter.remove();
+					}
+					/* end concrete5 */
+
 				},
 				build: function()
 				{
@@ -5981,12 +6089,22 @@
 					this.$modalBox = $('<div id="redactor-modal-box" />').hide();
 					this.$modal = $('<div id="redactor-modal" />');
 					this.$modalHeader = $('<header />');
-					this.$modalClose = $('<span id="redactor-modal-close" />').html('&times;');
+					/* concrete5 */
+					//this.$modalClose = $('<span id="redactor-modal-close" />').html('&times;');
+					this.$modalClose = $('<span class="ui-button-icon-primary ui-icon ui-icon-closethick" />');
+					this.$modalCloseWrapper = $('<span id="redactor-modal-close"><button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only ui-dialog-titlebar-close" role="button"><span class="ui-button-text">close</span></button></span>');
+					this.$modalClose.appendTo(this.$modalCloseWrapper.find('button.ui-button'));
+					/* end concrete5 */
 					this.$modalBody = $('<div id="redactor-modal-body" />');
 					this.$modalFooter = $('<footer />');
 
+					/* concrete5 */
+					// Add class so that jquery-ui doesn't disable focus.
+					//this.$modal.addClass('ui-dialog');
+					/* end concrete5 */
+
 					this.$modal.append(this.$modalHeader);
-					this.$modal.append(this.$modalClose);
+					this.$modal.append(this.$modalCloseWrapper);
 					this.$modal.append(this.$modalBody);
 					this.$modal.append(this.$modalFooter);
 					this.$modalBox.append(this.$modal);
@@ -5999,14 +6117,21 @@
 				},
 				enableEvents: function()
 				{
-					this.$modalClose.on('click.redactor-modal', $.proxy(this.modal.close, this));
+					/* concrete5 */
+					//this.$modalClose.on('click.redactor-modal', $.proxy(this.modal.close, this));
+					this.$modalClose.find('button').on('click.redactor-modal', $.proxy(this.modal.close, this));
+					/* end concrete5 */
 					$(document).on('keyup.redactor-modal', $.proxy(this.modal.closeHandler, this));
 					this.$editor.on('keyup.redactor-modal', $.proxy(this.modal.closeHandler, this));
 					this.$modalBox.on('click.redactor-modal', $.proxy(this.modal.close, this));
 				},
 				disableEvents: function()
 				{
-					this.$modalClose.off('click.redactor-modal');
+					/* concrete5 */
+					//this.$modalClose.off('click.redactor-modal');
+					this.$modalClose.find('button').off('click.redactor-modal');
+					/* end concrete5 */
+
 					$(document).off('keyup.redactor-modal');
 					this.$editor.off('keyup.redactor-modal');
 					this.$modalBox.off('click.redactor-modal');
@@ -7548,6 +7673,11 @@
 								{
 									title: this.lang.get('header5'),
 									func: 'block.format'
+								},
+								h6: /* concrete5 */
+								{
+									title: this.lang.get('header6'),
+									func: 'block.format'
 								}
 							}
 						},
@@ -7692,7 +7822,8 @@
 					$.each(this.opts.buttons, $.proxy(function(i, btnName)
 					{
 						if (!this.opts.toolbar[btnName]) return;
-
+						/* concrete5 */
+						/*
 						if (btnName === 'file')
 						{
 							 if (this.opts.fileUpload === false) return;
@@ -7704,6 +7835,8 @@
 							 if (this.opts.imageUpload === false) return;
 							 else if (!this.opts.imageUpload && this.opts.s3 === false) return;
 						}
+						*/
+						/* end concrete5 */
 
 						var btnObject = this.opts.toolbar[btnName];
 						this.$toolbar.append($('<li>').append(this.button.build(btnName, btnObject)));
