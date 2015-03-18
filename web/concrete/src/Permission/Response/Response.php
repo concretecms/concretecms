@@ -5,7 +5,6 @@ use \Exception;
 use User;
 use PermissionKeyCategory;
 use Core;
-use PermissionCache;
 
 class Response
 {

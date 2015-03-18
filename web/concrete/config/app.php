@@ -65,7 +65,6 @@ return array(
         'PageTheme'                            => '\Concrete\Core\Page\Theme\Theme',
         'PageType'                             => '\Concrete\Core\Page\Type\Type',
         'PermissionAccess'                     => '\Concrete\Core\Permission\Access\Access',
-        'PermissionCache'                      => '\Concrete\Core\Permission\Cache',
         'PermissionKey'                        => '\Concrete\Core\Permission\Key\Key',
         'PermissionKeyCategory'                => '\Concrete\Core\Permission\Category',
         'Permissions'                          => '\Concrete\Core\Permission\Checker',

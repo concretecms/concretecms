@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Core\Permission\Assignment;
 use PermissionAccess;
-use \Concrete\Core\Permission\Cache as PermissionCache;
 use Core;
 use Loader;
 class PageAssignment extends Assignment {
