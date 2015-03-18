@@ -291,7 +291,9 @@ abstract class Asset
     protected static function getAssetContents(Asset $asset)
     {
         $result = null;
-        if ($asset->assetIsLocaleDependent()) {
+        if (is_a($asset, '\Concrete\Core\Asset\JavascriptInlineAsset')) {
+            $result = $asset->getAssetURL();
+        } elseif ($asset->assetIsLocaleDependent()) {
             $routes = \Route::getList();
             /* @var $routes \Symfony\Component\Routing\RouteCollection */
             $context = new \Symfony\Component\Routing\RequestContext();
