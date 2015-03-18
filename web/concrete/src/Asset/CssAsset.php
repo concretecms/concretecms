@@ -143,21 +143,16 @@ class CssAsset extends Asset
             if (!file_exists($cacheFile)) {
                 $css = '';
                 foreach ($assets as $asset) {
-                    $contents = false;
-                    if ($asset->assetIsLocaleDependent()) {
-                        //@todo
-                    } elseif ($asset->getAssetPath()) {
-                        $contents = file_get_contents($asset->getAssetPath());
-                    }
-                    if ($contents !== false) {
+                    $contents = static::getAssetContents($asset);
+                    if (isset($contents)) {
                         $css .=  $contents."\n\n";
+                        $css = $processFunction($css, $asset->getAssetURLPath(), self::getRelativeOutputDirectory());
                     }
-                    $css = $processFunction($css, $asset->getAssetURLPath(), self::getRelativeOutputDirectory());
                 }
                 @file_put_contents($cacheFile, $css);
             }
 
-            $asset = new CSSAsset();
+            $asset = new CssAsset();
             $asset->setAssetURL(self::getRelativeOutputDirectory() . '/' . $filename . '.css');
             $asset->setAssetPath($directory . '/' . $filename . '.css');
             $asset->setCombinedAssetSourceFiles($sourceFiles);

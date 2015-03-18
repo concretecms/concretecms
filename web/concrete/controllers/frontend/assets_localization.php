@@ -4,6 +4,8 @@ namespace Concrete\Controller\Frontend;
 use Controller;
 use Concrete\Core\File\Type\Type as FileType;
 use Concrete\Core\Localization\Localization;
+use Core;
+use Environment;
 
 class AssetsLocalization extends Controller
 {
@@ -12,9 +14,11 @@ class AssetsLocalization extends Controller
         header('Content-type: text/javascript; charset='.APP_CHARSET);
     }
 
-    public static function getCoreJavascript()
+    public static function getCoreJavascript($setResponseHeaders = true)
     {
-        static::sendJavascriptHeader();
+        if ($setResponseHeaders) {
+            static::sendJavascriptHeader();
+        }
         ?>
 var ccmi18n = {
   expand: <?=json_encode(t('Expand'))?>,
@@ -240,9 +244,11 @@ var ccmi18n_topics = {
 
     }
 
-    public static function getSelect2Javascript()
+    public static function getSelect2Javascript($setResponseHeaders = true)
     {
-        static::sendJavascriptHeader();
+        if ($setResponseHeaders) {
+            static::sendJavascriptHeader();
+        }
         $locale = str_replace('_', '-', Localization::activeLocale());
         if ($locale === 'en-US') {
             echo '// No needs to translate '.$locale;
@@ -270,9 +276,11 @@ var ccmi18n_topics = {
         }
     }
 
-    public static function getRedactorJavascript()
+    public static function getRedactorJavascript($setResponseHeaders = true)
     {
-        static::sendJavascriptHeader();
+        if ($setResponseHeaders) {
+            static::sendJavascriptHeader();
+        }
         $locale = Localization::activeLocale();
         ?>
 jQuery.Redactor.opts.langs[<?=json_encode($locale)?>] = {
@@ -376,9 +384,11 @@ var ccmi18n_redactor = {
 
     }
 
-    public static function getDynatreeJavascript()
+    public static function getDynatreeJavascript($setResponseHeaders = true)
     {
-        static::sendJavascriptHeader();
+        if ($setResponseHeaders) {
+            static::sendJavascriptHeader();
+        }
         ?>
 jQuery.ui.dynatree.prototype.options.strings.loading = <?=json_encode(t('Loading...'))?>;
 jQuery.ui.dynatree.prototype.options.strings.loadError = <?=json_encode(t('Load error!'))?>;
@@ -386,9 +396,11 @@ jQuery.ui.dynatree.prototype.options.strings.loadError = <?=json_encode(t('Load 
 
     }
 
-    public static function getImageEditorJavascript()
+    public static function getImageEditorJavascript($setResponseHeaders = true)
     {
-        static::sendJavascriptHeader();
+        if ($setResponseHeaders) {
+            static::sendJavascriptHeader();
+        }
         ?>
 var ccmi18n_imageeditor = {
   loadingControlSets: <?=json_encode(t('Loading Control Sets...'))?>,
@@ -398,6 +410,75 @@ var ccmi18n_imageeditor = {
   areYouSure: <?=json_encode(t('Are you sure?'))?>
 };
         <?php
+
+    }
+
+    public static function getJQueryUIJavascript($setResponseHeaders = true)
+    {
+        if ($setResponseHeaders) {
+            static::sendJavascriptHeader();
+        }
+        $env = Environment::get();
+        /* @var $env \Concrete\Core\Foundation\Environment */
+        $r = $env->getRecord($path);
+        $alternatives = array(Localization::activeLocale());
+        if (Localization::activeLocale() !== Localization::activeLanguage()) {
+            $alternatives[] = Localization::activeLanguage();
+        }
+        $found = null;
+        foreach ($alternatives as $alternative) {
+            $r = $env->getRecord('js/i18n/ui.datepicker-'.str_replace('_', '-', $alternative).'.js');
+            if (is_file($r->file)) {
+                $found = $r->file;
+                break;
+            }
+        }
+        if (isset($found)) {
+            readfile($found);
+        } else {
+            echo '// No jQueryUI translations for '.Localization::activeLocale();
+        }
+    }
+    public static function getTranslatorJavascript($setResponseHeaders = true)
+    {
+        if ($setResponseHeaders) {
+            static::sendJavascriptHeader();
+        }
+        ?>
+ccmTranslator.setI18NDictionart({
+  AskDiscardDirtyTranslation: <?=json_encode(t("The current item has changed.\nIf you proceed you will lose your changes.\n\nDo you want to proceed anyway?"))?>,
+  Comments: <?=json_encode(t('Comments'))?>,
+  Context: <?=json_encode(t('Context'))?>,
+  ExamplePH: <?=json_encode(t('Example: %s'))?>,
+  Filter: <?=json_encode(t('Filter'))?>,
+  Original_String: <?=json_encode(t('Original String'))?>,
+  Please_fill_in_all_plurals: <?=json_encode(t('Please fill-in all plural forms'))?>,
+  Plural_Original_String: <?=json_encode(t('Plural Original String'))?>,
+  References: <?=json_encode(t('References'))?>,
+  Save_and_Continue: <?=json_encode(t('Save & Continue'))?>,
+  Search_for_: <?=json_encode(t('Search for...'))?>,
+  Search_in_contexts: <?=json_encode(t('Search in contexts'))?>,
+  Search_in_originals: <?=json_encode(t('Search in originals'))?>,
+  Search_in_translations: <?=json_encode(t('Search in translations'))?>,
+  Show_approved: <?=json_encode(t('Show approved'))?>,
+  Show_translated: <?=json_encode(t('Show translated'))?>,
+  Show_unapproved: <?=json_encode(t('Show unapproved'))?>,
+  Show_untranslated: <?=json_encode(t('Show untranslated'))?>,
+  Singular_Original_String: <?=json_encode(t('Singular Original String'))?>,
+  Toggle_Dropdown: <?=json_encode(t('Toggle Dropdown'))?>,
+  TAB: <?=json_encode(t('[TAB] Forward'))?>,
+  TAB_SHIFT: <?=json_encode(t('[SHIFT]+[TAB] Backward'))?>,
+  Translate: <?=json_encode(t('Translate'))?>,
+  Translation: <?=json_encode(t('Translation'))?>,
+  PluralNames: {
+    zero: <?=json_encode(tc('PluralCase', 'Zero'))?>,
+    one: <?=json_encode(tc('PluralCase', 'One'))?>,
+    two: <?=json_encode(tc('PluralCase', 'Two'))?>,
+    few: <?=json_encode(tc('PluralCase', 'Few'))?>,
+    many: <?=json_encode(tc('PluralCase', 'Many'))?>,
+    other: <?=json_encode(tc('PluralCase', 'Other'))?>
+  }
+});<?php
 
     }
 }

@@ -6,7 +6,6 @@ use Localization;
 
 abstract class Asset
 {
-
     /**
      * @var string
      */
@@ -282,5 +281,50 @@ abstract class Asset
         } else {
             $this->setAssetURL($path);
         }
+    }
+
+    /**
+     * @param Asset $asset
+     *
+     * @return string|null
+     */
+    protected static function getAssetContents(Asset $asset)
+    {
+        $result = null;
+        if ($asset->assetIsLocaleDependent()) {
+            $routes = \Route::getList();
+            /* @var $routes \Symfony\Component\Routing\RouteCollection */
+            $context = new \Symfony\Component\Routing\RequestContext();
+            $context->fromRequest(\Request::getInstance());
+            $matcher = new \Symfony\Component\Routing\Matcher\UrlMatcher($routes, $context);
+            try {
+                $matched = $matcher->match(preg_replace('|^/'.preg_quote(DISPATCHER_FILENAME, '|').'/|', '/', $asset->getAssetURL()));
+            } catch (\Exception $x) {
+                $matched = null;
+            }
+            if (isset($matched)) {
+                $route = $routes->get($matched['_route']);
+                if (isset($route)) {
+                    /* @var $route \Concrete\Core\Routing\Route */
+                    $defaults = $route->getDefaults();
+                    $controller = $defaults['_controller'];
+                    if (is_callable($controller)) {
+                        ob_start();
+                        $r = call_user_func($controller, false);
+                        if ($r !== false) {
+                            $result = ob_get_contents();
+                        }
+                        ob_end_clean();
+                    }
+                }
+            }
+        } elseif (is_file($asset->getAssetPath())) {
+            $contents = file_get_contents($asset->getAssetPath());
+            if ($contents !== false) {
+                $result = $contents;
+            }
+        }
+
+        return $result;
     }
 }

@@ -70,16 +70,11 @@ class JavascriptAsset extends Asset
             if (!file_exists($cacheFile)) {
                 $js = '';
                 foreach($assets as $asset) {
-                    $contents = false;
-                    if ($asset->assetIsLocaleDependent()) {
-                        //@todo
-                    } else {
-                        $contents = file_get_contents($asset->getAssetPath());
-                    }
-                    if ($contents !== false) {
+                    $contents = static::getAssetContents($asset);
+                    if (isset($contents)) {
                         $js .= $contents . "\n\n";
+                        $js = $processFunction($js, $asset->getAssetURLPath(), self::getRelativeOutputDirectory());
                     }
-                    $js = $processFunction($js, $asset->getAssetURLPath(), self::getRelativeOutputDirectory());
                 }
                 @file_put_contents($cacheFile, $js);
             }

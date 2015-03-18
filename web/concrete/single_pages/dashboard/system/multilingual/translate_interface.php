@@ -10,40 +10,6 @@ if ($this->controller->getTask() == 'translate_po') {
     ?>
     <script>
     $(document).ready(function() {
-      ccmTranslator.setI18NDictionart({
-        AskDiscardDirtyTranslation: <?php echo json_encode(t("The current item has changed.\nIf you proceed you will lose your changes.\n\nDo you want to proceed anyway?")); ?>,
-        Comments: <?php echo json_encode(t('Comments')); ?>,
-        Context: <?php echo json_encode(t('Context')); ?>,
-        ExamplePH: <?php echo json_encode(t('Example: %s')); ?>,
-        Filter: <?php echo json_encode(t('Filter')); ?>,
-        Original_String: <?php echo json_encode(t('Original String')); ?>,
-        Please_fill_in_all_plurals: <?php echo json_encode(t('Please fill-in all plural forms')); ?>,
-        Plural_Original_String: <?php echo json_encode(t('Plural Original String')); ?>,
-        References: <?php echo json_encode(t('References')); ?>,
-        Save_and_Continue: <?php echo json_encode(t('Save & Continue')); ?>,
-        Search_for_: <?php echo json_encode(t('Search for...')); ?>,
-        Search_in_contexts: <?php echo json_encode(t('Search in contexts')); ?>,
-        Search_in_originals: <?php echo json_encode(t('Search in originals')); ?>,
-        Search_in_translations: <?php echo json_encode(t('Search in translations')); ?>,
-        Show_approved: <?php echo json_encode(t('Show approved')); ?>,
-        Show_translated: <?php echo json_encode(t('Show translated')); ?>,
-        Show_unapproved: <?php echo json_encode(t('Show unapproved')); ?>,
-        Show_untranslated: <?php echo json_encode(t('Show untranslated')); ?>,
-        Singular_Original_String: <?php echo json_encode(t('Singular Original String')); ?>,
-        Toggle_Dropdown: <?php echo json_encode(t('Toggle Dropdown')); ?>,
-        TAB: <?php echo json_encode(t('[TAB] Forward')); ?>,
-        TAB_SHIFT: <?php echo json_encode(t('[SHIFT]+[TAB] Backward')); ?>,
-        Translate: <?php echo json_encode(t('Translate')); ?>,
-        Translation: <?php echo json_encode(t('Translation')); ?>,
-        PluralNames: {
-          zero: <?php echo json_encode(tc('PluralCase', 'Zero')); ?>,
-          one: <?php echo json_encode(tc('PluralCase', 'One')); ?>,
-          two: <?php echo json_encode(tc('PluralCase', 'Two')); ?>,
-          few: <?php echo json_encode(tc('PluralCase', 'Few')); ?>,
-          many: <?php echo json_encode(tc('PluralCase', 'Many')); ?>,
-          other: <?php echo json_encode(tc('PluralCase', 'Other')); ?>
-        }
-      });
       ccmTranslator.initialize({
         container: '#ccm-translator-interface',
         height: $(window).height() - 300,
