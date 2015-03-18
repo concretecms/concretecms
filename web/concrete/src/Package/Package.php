@@ -65,6 +65,7 @@ use Environment;
 use \Concrete\Core\Package\PackageList;
 use Localization;
 use \Concrete\Core\File\StorageLocation\Type\Type as StorageLocation;
+use ORM;
 
 class Package extends Object
 {
@@ -83,6 +84,11 @@ class Package extends Object
      * @var \Concrete\Core\Config\Repository\Liaison
      */
     protected $fileConfig;
+
+    /**
+     * @var \Concrete\Core\Database\DatabaseStructureManager
+     */
+    protected $databaseStructureManager;
 
     public function getRelativePath()
     {
@@ -157,6 +163,7 @@ class Package extends Object
 
     protected $appVersionRequired = '5.7.0';
     protected $pkgAllowsFullContentSwap = false;
+    protected $pkgContentProvidesFileThumbnails = false;
 
     const E_PACKAGE_NOT_FOUND = 1;
     const E_PACKAGE_INSTALLED = 2;
@@ -190,9 +197,70 @@ class Package extends Object
         return $this->pkgAllowsFullContentSwap;
     }
 
+    public function contentProvidesFileThumbnails()
+    {
+        return $this->pkgContentProvidesFileThumbnails;
+    }
+
     public function showInstallOptionsScreen()
     {
         return $this->hasInstallNotes() || $this->allowsFullContentSwap();
+    }
+
+    /**
+     * Installs the packages database either through entities or if no entities
+     * are available for the package, through the legacy db.xml if it is
+     * available.
+     * 
+     * @return void
+     */
+    public function installDatabase()
+    {
+        $dbm = $this->getDatabaseStructureManager();
+
+        if ($dbm->hasEntities()) {
+            $dbm->generateProxyClasses();
+            $dbm->dropObsoleteDatabaseTables(camelcase($this->getPackageHandle()));
+            $dbm->installDatabase();
+        }
+
+        if (file_exists($this->getPackagePath() . '/' . FILENAME_PACKAGE_DB)) {
+            // Legacy db.xml
+            Package::installDB($this->getPackagePath() . '/' . FILENAME_PACKAGE_DB);
+        }
+    }
+
+    public function upgradeDatabase()
+    {
+        $dbm = $this->getDatabaseStructureManager();
+        $this->destroyProxyClasses();
+        if ($dbm->hasEntities()) {
+            $dbm->generateProxyClasses();
+            $dbm->dropObsoleteDatabaseTables(camelcase($this->getPackageHandle()));
+            $dbm->installDatabase();
+        }
+
+        if (file_exists($this->getPackagePath() . '/' . FILENAME_PACKAGE_DB)) {
+            // Legacy db.xml
+            // currently this is just done from xml
+            $db = Database::get();
+            $db->beginTransaction();
+
+            $parser = Schema::getSchemaParser(simplexml_load_file($this->getPackagePath() . '/' . FILENAME_PACKAGE_DB));
+            $parser->setIgnoreExistingTables(false);
+            $toSchema = $parser->parse($db);
+
+            $fromSchema = $db->getSchemaManager()->createSchema();
+            $comparator = new \Doctrine\DBAL\Schema\Comparator();
+            $schemaDiff = $comparator->compare($fromSchema, $toSchema);
+            $saveQueries = $schemaDiff->toSaveSql($db->getDatabasePlatform());
+
+            foreach($saveQueries as $query) {
+                $db->query($query);
+            }
+
+            $db->commit();
+        }
     }
 
     public static function installDB($xmlFile)
@@ -200,55 +268,43 @@ class Package extends Object
         if (!file_exists($xmlFile)) {
             return false;
         }
-
         // currently this is just done from xml
         $db = Database::get();
-
-        $parser = Schema::getSchemaParser(simplexml_load_file($xmlFile));
-        $parser->setIgnoreExistingTables(false);
-        $toSchema = $parser->parse($db);
-
-        $fromSchema = $db->getSchemaManager()->createSchema();
-        $comparator = new \Doctrine\DBAL\Schema\Comparator();
-        $schemaDiff = $comparator->compare($fromSchema, $toSchema);
-        $saveQueries = $schemaDiff->toSaveSql($db->getDatabasePlatform());
-
-        foreach($saveQueries as $query) {
+        $db->beginTransaction();
+        $schema = Schema::loadFromXMLFile($xmlFile, $db);
+        $platform = $db->getDatabasePlatform();
+        $queries = $schema->toSql($platform);
+        foreach ($queries as $query) {
             $db->query($query);
         }
 
+        $db->commit();
+        unset($schema);
+        unset($platform);
         /*
-        $schema = Database::getADOSChema();
-        $sql = $schema->ParseSchema($xmlFile);
-
-        $db->IgnoreErrors($handler);
-
-        if (!$sql) {
-            $result->message = $db->ErrorMsg();
-            return $result;
-        }
-
-        $r = $schema->ExecuteSchema();
-
-
-        if ($dbLayerErrorMessage != '') {
-            $result->message = $dbLayerErrorMessage;
-            return $result;
-        } if (!$r) {
-            $result->message = $db->ErrorMsg();
-            return $result;
-        }
-
-        $result->result = true;
-
-        $db->CacheFlush();
-        */
-
+		$schema = Database::getADOSChema();
+		$sql = $schema->ParseSchema($xmlFile);
+		$db->IgnoreErrors($handler);
+		if (!$sql) {
+			$result->message = $db->ErrorMsg();
+			return $result;
+		}
+		$r = $schema->ExecuteSchema();
+		if ($dbLayerErrorMessage != '') {
+			$result->message = $dbLayerErrorMessage;
+			return $result;
+		} if (!$r) {
+			$result->message = $db->ErrorMsg();
+			return $result;
+		}
+		$result->result = true;
+		$db->CacheFlush();
+		*/
         $result = new \stdClass();
         $result->result = false;
-
         return $result;
     }
+
 
     public static function getClass($pkgHandle)
     {
@@ -258,6 +314,10 @@ class Package extends Object
         if ($item->isMiss()) {
             $item->lock();
             // loads and instantiates the object
+
+            $cl = \Concrete\Core\Foundation\ClassLoader::getInstance();
+            $cl->registerPackage($pkgHandle);
+
             $class = '\\Concrete\\Package\\' . camelcase($pkgHandle) . '\\Controller';
             try {
                 $cl = Core::make($class);
@@ -332,6 +392,7 @@ class Package extends Object
         $items['community_point_actions'] = UserPointAction::getListByPackage($this);
         $items['jobs'] = Job::getListByPackage($this);
         $items['workflow_types'] = WorkflowType::getListByPackage($this);
+        $items['workflow_progress_categories'] = WorkflowProgressCategory::getListByPackage($this);
         $items['authentication_types'] = AuthenticationType::getListByPackage($this);
         $items['storage_locations'] = StorageLocation::getListByPackage($this);
         ksort($items);
@@ -398,6 +459,9 @@ class Package extends Object
             case 'workflow_types':
                 $value = t('Workflow types');
                 break;
+            case 'workflow_progress_categories':
+                $value = t('Workflow progress categories');
+                break;
             case 'storage_locations':
                 $value = t('Storage Locations');
                 break;
@@ -451,6 +515,8 @@ class Package extends Object
             return $item->getAccessEntityTypeDisplayName();
         } elseif ($item instanceof PermissionKeyCategory) {
             return $txt->unhandle($item->getPermissionKeyCategoryHandle());
+        } elseif ($item instanceof WorkflowProgressCategory) {
+            return $txt->unhandle($item->getWorkflowProgressCategoryHandle());
         } elseif ($item instanceof AttributeKeyCategory) {
             return $txt->unhandle($item->getAttributeKeyCategoryHandle());
         } elseif ($item instanceof AttributeSet) {
@@ -548,6 +614,7 @@ class Package extends Object
                         case 'GroupSet':
                         case 'AttributeType':
                         case 'WorkflowType':
+                        case 'WorkflowProgressCategory':
                         case 'PermissionKey':
                         case 'PermissionAccessEntityType':
                             $item->delete();
@@ -566,8 +633,25 @@ class Package extends Object
         \Config::clearNamespace($this->getPackageHandle());
         \Core::make('config/database')->clearNamespace($this->getPackageHandle());
 
+        $this->destroyProxyClasses();
+
         $db->Execute("delete from Packages where pkgID = ?", array($this->pkgID));
         Localization::clearCache();
+    }
+
+    /**
+     * Destroys all the existing proxy classes for this package.
+     * 
+     * @return boolean
+     */
+    protected function destroyProxyClasses()
+    {
+        $dbm = $this->getDatabaseStructureManager();
+        $config = $dbm->getEntityManager()->getConfiguration();
+        if (is_object($cache = $config->getMetadataCacheImpl())) {
+            $cache->flushAll();
+        }
+        return $dbm->destroyProxyClasses('ConcretePackage' . camelcase($this->getPackageHandle()) . 'Src');
     }
 
     protected function validateClearSiteContents($options)
@@ -620,12 +704,13 @@ class Package extends Object
 
             // now we add in any files that this package has
             if (is_dir($this->getPackagePath() . '/content_files')) {
-                $fh = new FileImporter();
-                $contents = Core::make('helper/file')->getDirectoryContents($this->getPackagePath() . '/content_files');
 
-                foreach ($contents as $filename) {
-                    $f = $fh->import($this->getPackagePath() . '/content_files/' . $filename, $filename);
+                $ch = new ContentImporter();
+                $computeThumbnails = true;
+                if ($this->contentProvidesFileThumbnails()) {
+                    $computeThumbnails = false;
                 }
+                $ch->importFiles($this->getPackagePath() . '/content_files', $computeThumbnails);
             }
 
             // now we parse the content.xml if it exists.
@@ -717,6 +802,34 @@ class Package extends Object
         return $path;
     }
 
+    public function getPackageEntitiesPath()
+    {
+        return $this->getPackagePath() . '/' . DIRNAME_CLASSES;
+    }
+
+    /**
+     * Gets a package specific entity manager.
+     * 
+     * @return \Doctrine\ORM\EntityManager
+     */
+    public function getEntityManager()
+    {
+        return ORM::entityManager($this);
+    }
+
+    /**
+     * Gets a package specific entity manager.
+     * 
+     * @return \Concrete\Core\Database\DatabaseStructureManager
+     */
+    public function getDatabaseStructureManager()
+    {
+        if (!isset($this->databaseStructureManager)) {
+            $this->databaseStructureManager = Core::make('database/structure', $this->getEntityManager());
+        }
+        return $this->databaseStructureManager;
+    }
+
     /**
      * returns a Package object for the given package id, null if not found
      * @param int $pkgID
@@ -804,9 +917,6 @@ class Package extends Object
      */
     public function install()
     {
-        $cl = \Concrete\Core\Foundation\ClassLoader::getInstance();
-        $cl->registerPackage($this);
-
         PackageList::refreshCache();
         $db = Database::getActiveConnection();
         $dh = Core::make('helper/date');
@@ -814,7 +924,8 @@ class Package extends Object
         $db->query("insert into Packages (pkgName, pkgDescription, pkgVersion, pkgHandle, pkgIsInstalled, pkgDateInstalled) values (?, ?, ?, ?, ?, ?)", $v);
 
         $pkg = Package::getByID($db->Insert_ID());
-        Package::installDB($pkg->getPackagePath() . '/' . FILENAME_PACKAGE_DB);
+        $pkg->installDatabase();
+
         $env = Environment::get();
         $env->clearOverrideCache();
         Localization::clearCache();
@@ -841,7 +952,8 @@ class Package extends Object
 
     public function upgrade()
     {
-        Package::installDB($this->getPackagePath() . '/' . FILENAME_PACKAGE_DB);
+        $this->upgradeDatabase();
+
         // now we refresh all blocks
         $items = $this->getPackageItems();
         if (is_array($items['block_types'])) {

@@ -15,7 +15,7 @@ class Register extends PageController {
 
 	public function on_start() {
 		if(!in_array(Config::get('concrete.user.registration.type'), array('validate_email', 'enabled', 'manual_approve'))) {
-            $this->render('/page_not_found');
+            $this->replace('/page_not_found');
  		}
 		$u = new User();
 		$this->set('u', $u);

@@ -39,6 +39,19 @@ echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Conv
             <?=Loader::helper('form')->select('activeEditor', $editors, $active);?>
         </div>
     </fieldset>
+	<fieldset>
+		<legend><?=t('Notification')?></legend>
+		<div class="form-group">
+			<div class="checkbox"><label>
+				<?=$form->checkbox('notification', 1, $notification)?>
+				<?=t('Send an email when a message is posted.')?>
+			</label></div>
+		</div>
+		<div class="form-group">
+			<label class="control-label"><?=t('Email Address')?></label>
+			<?=$form->text('notificationEmail', $notification > 0 ? $notificationEmail : '')?>
+		</div>
+	</fieldset>
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
 		    <button class='btn btn-primary pull-right'><?php echo t('Save'); ?></button>

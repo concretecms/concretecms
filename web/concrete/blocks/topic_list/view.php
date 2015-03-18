@@ -1,14 +1,13 @@
 <?php  defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<? if (is_object($tree)) { ?>
+<div class="ccm-block-topic-list-wrapper">
 
-    <div class="ccm-block-topic-list-wrapper">
+    <div class="ccm-block-topic-list-header">
+        <h5><?=h($title)?></h5>
+    </div>
 
-        <div class="ccm-block-topic-list-header">
-            <h5><?=$title?></h5>
-        </div>
     <?
-    if ($mode == 'S'):
+    if ($mode == 'S' && is_object($tree)):
         $node = $tree->getRootTreeNodeObject();
         $node->populateChildren();
         if (is_object($node)) {
@@ -46,6 +45,5 @@
 
     <? endif; ?>
 
-    </div>
+</div>
 
-<? } ?>

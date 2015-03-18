@@ -69,7 +69,7 @@ class ChangePagePermissionsInheritanceRequest extends PageRequest {
 				break;
 		}
 		$wpr = new WorkflowProgressResponse();
-		$wpr->setWorkflowProgressResponseURL(BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID());
+		$wpr->setWorkflowProgressResponseURL(\URL::to($c));
 		return $wpr;
 	}
 

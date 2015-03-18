@@ -4,6 +4,7 @@ namespace Concrete\Core\Session;
 use Concrete\Core\Utility\IPAddress;
 use Config;
 use \Symfony\Component\HttpFoundation\Session\Session as SymfonySession;
+use Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler;
 use \Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
 use \Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
@@ -30,9 +31,12 @@ class Session
                     )
                 );
             } else {
-                $storage = new NativeSessionStorage();
+                $storage = new NativeSessionStorage(array(), new NativeFileSessionHandler());
             }
             $options = Config::get('concrete.session.cookie');
+            if ($options['cookie_path'] === false) {
+                $options['cookie_path'] = $app['app_relative_path'];
+            }
             $options['gc_max_lifetime'] = Config::get('concrete.session.max_lifetime');
             $storage->setOptions($options);
         }
@@ -53,7 +57,6 @@ class Session
         if ($ip && $ip != $currentIp->getIp(IPAddress::FORMAT_IP_STRING) || $agent && $agent != $_SERVER['HTTP_USER_AGENT']) {
             $session->invalidate();
         }
-
         if (!$ip && $currentIp !== false) {
             $session->set('CLIENT_REMOTE_ADDR', $currentIp->getIp(IPAddress::FORMAT_IP_STRING));
         }

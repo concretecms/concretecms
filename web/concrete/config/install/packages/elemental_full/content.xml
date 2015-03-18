@@ -276,7 +276,6 @@
                                                 <maxFileSizeGuest><![CDATA[0]]></maxFileSizeGuest>
                                                 <maxFileSizeRegistered><![CDATA[0]]></maxFileSizeRegistered>
                                                 <fileExtensions><![CDATA[]]></fileExtensions>
-                                                <insertNewMessages><![CDATA[top]]></insertNewMessages>
                                             </record>
                                         </data>
                                     </block>
@@ -2168,7 +2167,6 @@
                                 <maxFileSizeGuest><![CDATA[0]]></maxFileSizeGuest>
                                 <maxFileSizeRegistered><![CDATA[0]]></maxFileSizeRegistered>
                                 <fileExtensions><![CDATA[]]></fileExtensions>
-                                <insertNewMessages><![CDATA[top]]></insertNewMessages>
                             </record>
                         </data>
                     </block>
@@ -2236,7 +2234,6 @@
                                 <maxFileSizeGuest><![CDATA[0]]></maxFileSizeGuest>
                                 <maxFileSizeRegistered><![CDATA[0]]></maxFileSizeRegistered>
                                 <fileExtensions><![CDATA[]]></fileExtensions>
-                                <insertNewMessages><![CDATA[top]]></insertNewMessages>
                             </record>
                         </data>
                     </block>
@@ -2304,7 +2301,6 @@
                                 <maxFileSizeGuest><![CDATA[0]]></maxFileSizeGuest>
                                 <maxFileSizeRegistered><![CDATA[0]]></maxFileSizeRegistered>
                                 <fileExtensions><![CDATA[]]></fileExtensions>
-                                <insertNewMessages><![CDATA[top]]></insertNewMessages>
                             </record>
                         </data>
                     </block>
@@ -2466,6 +2462,7 @@
                                                 <questionSetId><![CDATA[1404886998]]></questionSetId>
                                                 <surveyName><![CDATA[Contact Us]]></surveyName>
                                                 <thankyouMsg><![CDATA[Thanks!]]></thankyouMsg>
+                                                <buttonText><![CDATA[Submit]]></buttonText>
                                                 <notifyMeOnSubmission><![CDATA[0]]></notifyMeOnSubmission>
                                                 <recipientEmail><![CDATA[]]></recipientEmail>
                                                 <displayCaptcha><![CDATA[0]]></displayCaptcha>

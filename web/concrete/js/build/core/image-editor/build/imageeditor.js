@@ -33,7 +33,7 @@ var ImageEditor = function (settings) {
     im.hideLoader = $.fn.dialog.hideLoader;
     im.stage.im = im;
     im.stage.elementType = 'stage';
-    im.crosshair.src = CCM_REL + '/concrete/images/image_editor/crosshair.png';
+    im.crosshair.src = CCM_IMAGE_PATH + '/image_editor/crosshair.png';
 
     im.center = {
         x: Math.round(im.width / 2),

@@ -43,11 +43,11 @@ class Service
      * @param string $ua
      * @param array $additionalArgs
      */
-    public function report($content, $ui, $ip, $ua, $additionalArgs = array())
+    public function report($content, $author, $email, $ip, $ua, $additionalArgs = array())
     {
         $args['content'] = $content;
-        $args['author'] = $ui->getUserName();
-        $args['author_email'] = $ui->getUserEmail();
+        $args['author'] = $author;
+        $args['author_email'] = $email;
         $args['ip_address'] = $ip;
         $args['user_agent'] = $ua;
 
@@ -57,6 +57,14 @@ class Service
         if (method_exists($this->controller, 'report')) {
             $this->controller->report($args);
         }
+
+        $u = new User();
+        \Log::info(t('Content %s (author %s, %s) flagged as spam by user %s',
+            $content,
+            $author,
+            $email,
+            $u->getUserName()
+        ));
     }
 
     /**

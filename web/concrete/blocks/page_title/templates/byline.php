@@ -5,7 +5,7 @@ $date = Core::make('helper/date')->formatDate($page->getCollectionDatePublic(), 
 $user = UserInfo::getByID($page->getCollectionUserID());
 ?>
 <div class="ccm-block-page-title-byline">
-    <h1 class="page-title"><?=$title?></h1>
+    <h1 class="page-title"><?=h($title)?></h1>
 
     <span class="page-date">
     <? print $date; ?>

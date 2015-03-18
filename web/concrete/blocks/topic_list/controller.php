@@ -73,13 +73,9 @@ class Controller extends BlockController
         }
     }
 
-    public function action_topic($topic = false)
+    public function action_topic($treeNodeID = false, $topic = false)
     {
-        $db = Loader::db();
-        $treeNodeID = $db->GetOne('select treeNodeID from TreeTopicNodes where treeNodeTopicName = ?', array($topic));
-        if ($treeNodeID) {
-            $this->set('selectedTopicID', intval($treeNodeID));
-        }
+        $this->set('selectedTopicID', intval($treeNodeID));
         $this->view();
     }
 
@@ -94,7 +90,7 @@ class Controller extends BlockController
             $nodeName = $topic->getTreeNodeName();
             $nodeName = strtolower($nodeName); // convert to lowercase
             $nodeName = Core::make('helper/text')->encodePath($nodeName); // urlencode
-            return \URL::page($c, 'topic', $nodeName);
+            return \URL::page($c, 'topic', $topic->getTreeNodeID(), $nodeName);
         } else {
             return \URL::page($c);
         }

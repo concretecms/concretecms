@@ -198,7 +198,7 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
             <?php if(Config::get('concrete.white_label.background_image') !== 'none') { ?>
             $(function () {
                 var shown = false, info;
-                $.getJSON('<?= BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '/tools/required/dashboard/get_image_data' ?>', { image: '<?= $image ?>' }, function (data) {
+                $.getJSON('<?= Core::getApplicationURL() . '/' . DISPATCHER_FILENAME . '/tools/required/dashboard/get_image_data' ?>', { image: '<?= $image ?>' }, function (data) {
                     if (shown) {
                         $('div.background-credit').fadeIn().children().attr('href', data.link).text(data.author.join());
                     } else {

@@ -2,11 +2,17 @@
 $fp = FilePermissions::getGlobal();
 $tp = new TaskPermission();
 $form = Loader::helper('form');
-print $form->textarea($editor->getConversationEditorInputName(), $editor->getConversationEditorMessageBody(), array('class'=>'unbound conversation-editor redactor_conversation_editor_'.$editor->getConversationObject()->getConversationID()));
+$cnvID = 0;
+$obj = $editor->getConversationObject();
+if (is_object($obj)) {
+    $cnvID = $obj->getConversationID();
+}
+
+print $form->textarea($editor->getConversationEditorInputName(), $editor->getConversationEditorMessageBody(), array('class'=>'unbound conversation-editor redactor_conversation_editor_'.$cnvID));
 ?>
 <script>
 $(function() {
-    var textarea = $('textarea.unbound.redactor_conversation_editor_<?=$editor->getConversationObject()->getConversationID()?>').removeClass('unbound');
+    var textarea = $('textarea.unbound.redactor_conversation_editor_<?=$cnvID?>').removeClass('unbound');
     $(textarea).redactor({
         'concrete5': {
             filemanager: <?=$fp->canAccessFileManager()?>,

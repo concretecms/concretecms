@@ -56,7 +56,7 @@ if ($blockType->supportsInlineAdd()) {
         $gf = $pt->getThemeGridFrameworkObject();
         print $gf->getPageThemeGridFrameworkContainerStartHTML();
         print $gf->getPageThemeGridFrameworkRowStartHTML();
-        printf('<div class="%s">', $gf->getPageThemeGridFrameworkColumnClassForSpan(
+        printf('<div class="%s">', $gf->getPageThemeGridFrameworkColumnClassesForSpan(
                 $gf->getPageThemeGridFrameworkNumColumns()
             ));
     }
@@ -76,6 +76,10 @@ if ($blockType->supportsInlineAdd()) {
 
 <? foreach($blockTypeController->getJavaScriptStrings() as $key => $val) { ?>
 	<input type="hidden" name="ccm-string-<?=$key?>" value="<?=h($val)?>" />
+<? } ?>
+
+<? foreach($area->getAreaCustomTemplates() as $btHandle => $template) {?>
+	<input type="hidden" name="arCustomTemplates[<?=$btHandle?>]" value="<?=$template?>" />
 <? } ?>
 
 <? if (!$blockType->supportsInlineAdd()) { ?>

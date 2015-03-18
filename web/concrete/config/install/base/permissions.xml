@@ -22,6 +22,7 @@
         <category handle="topic_tree_node" package=""/>
         <category handle="conversation" package=""/>
         <category handle="conversation_message" package=""/>
+        <category handle="multilingual_section" package=""/>
     </permissioncategories>
 
     <permissionkeys>
@@ -113,7 +114,7 @@
         <permissionkey handle="view_topic_category_tree_node" name="View Topic Category Tree Node" description="" package="" category="topic_category_tree_node" />
 
         <!-- conversations //-->
-        <permissionkey handle="add_conversation_message" name="Add Message to Conversation" description="" package="" category="conversation" />
+        <permissionkey handle="add_conversation_message" name="Add Message to Conversation" has-custom-class="true" description="" package="" category="conversation" />
         <permissionkey handle="add_conversation_message_attachments" name="Add Message Attachments" description="" package="" category="conversation" />
         <permissionkey handle="edit_conversation_permissions" name="Edit Conversation Permissions" description="" package="" category="conversation" />
         <permissionkey handle="delete_conversation_message" name="Delete Message" description="" package="" category="conversation" />
@@ -299,6 +300,7 @@
                 <category handle="topic_tree_node" />
                 <category handle="conversation" />
                 <category handle="conversation_message" />
+                <category handle="multilingual_section" />
 			</categories>
         </permissionaccessentitytype>
         <permissionaccessentitytype handle="user" name="User" package="">
@@ -321,6 +323,7 @@
                 <category handle="topic_tree_node" />
                 <category handle="conversation" />
                 <category handle="conversation_message" />
+                <category handle="multilingual_section" />
 			</categories>
         </permissionaccessentitytype>
         <permissionaccessentitytype handle="group_set" name="Group Set" package="">
@@ -365,6 +368,7 @@
                 <category handle="topic_tree_node" />
                 <category handle="conversation" />
                 <category handle="conversation_message" />
+                <category handle="multilingual_section" />
 			</categories>
 
         </permissionaccessentitytype>

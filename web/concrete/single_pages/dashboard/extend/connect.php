@@ -10,6 +10,6 @@
 		div.ccm-pane-body div.ccm-error { padding:15px 20px; };
 		</style>
 		<?
-		print $mi->getMarketplaceFrame('100%', '300', false, $startStep);
+		print $mi->getMarketplaceFrame('100%', '300', false, h($startStep));
 	}
 ?>

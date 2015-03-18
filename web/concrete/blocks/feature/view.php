@@ -1,5 +1,6 @@
 <?php  defined('C5_EXECUTE') or die("Access Denied."); ?>
 <?
+$title = h($title);
 if ($linkURL) {
     $title = '<a href="' . $linkURL . '">' . $title . '</a>';
 }
@@ -9,6 +10,6 @@ if ($linkURL) {
         <h4><i class="fa fa-<?=$icon?>"></i> <?=$title?></h4>
     <? } ?>
     <? if ($paragraph) { ?>
-        <p><?=$paragraph?></p>
+        <p><?=h($paragraph)?></p>
     <? } ?>
 </div>

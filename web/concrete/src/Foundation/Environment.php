@@ -56,6 +56,7 @@ class Environment {
 	public function clearOverrideCache() {
 		@unlink(Config::get('concrete.cache.directory') . '/' . Config::get('concrete.cache.environment.file'));
 		$this->overridesScanned = false;
+		$this->cachedOverrides = array();
 	}
 
 
@@ -87,8 +88,8 @@ class Environment {
 			DIR_FILES_EMAIL_TEMPLATES, 
 			DIR_FILES_CONTENT, 
 			DIR_FILES_THEMES, 
-			DIR_FILES_TOOLS, 
-			DIR_APPLICATION . '/' . DIRNAME_PAGE_TYPES,
+			DIR_FILES_TOOLS,
+			DIR_APPLICATION . '/' . DIRNAME_PAGE_TEMPLATES,
 			DIR_APPLICATION . '/' . DIRNAME_VIEWS,
 			DIR_APPLICATION . '/' . DIRNAME_CLASSES);
 		foreach($check as $loc) {
@@ -158,6 +159,7 @@ class Environment {
 		}
 
 		$obj = new EnvironmentRecord();
+		$obj->pkgHandle = null;
 
 		if (!in_array($segment, $this->coreOverrides) && !$pkgHandle && !array_key_exists($segment, $this->coreOverridesByPackage)) {
 			$obj->file = DIR_BASE_CORE . '/' . $segment;
@@ -177,6 +179,7 @@ class Environment {
 
 		if (array_key_exists($segment, $this->coreOverridesByPackage)) {
 			$pkgHandle = $this->coreOverridesByPackage[$segment];
+			$obj->pkgHandle = $pkgHandle;
 		}
 
 		if (!in_array($pkgHandle, $this->corePackages)) {

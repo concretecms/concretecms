@@ -13,6 +13,7 @@ use View;
 use Permissions;
 use Response;
 use Core;
+use Session;
 
 class DispatcherRouteCallback extends RouteCallback
 {
@@ -45,8 +46,12 @@ class DispatcherRouteCallback extends RouteCallback
         return $this->sendResponse($v, 404);
     }
 
-    protected function sendPageForbidden(Request $request)
+    protected function sendPageForbidden(Request $request, $currentPage)
     {
+        // set page for redirection after successful login
+        Session::set('rcID', $currentPage->getCollectionID());
+
+        // load page forbidden
         $item = '/page_forbidden';
         $c = Page::getByPath($item);
         if (is_object($c) && !$c->isError()) {
@@ -83,7 +88,12 @@ class DispatcherRouteCallback extends RouteCallback
                 return $this->sendPageNotFound($request);
             } else {
                 $c = $home;
+                $c->cPathFetchIsCanonical = true;
             }
+        }
+        if (!$c->cPathFetchIsCanonical) {
+            // Handle redirect URL (additional page paths)
+            return Redirect::page($c, 301)->send();
         }
 
         // maintenance mode
@@ -106,7 +116,7 @@ class DispatcherRouteCallback extends RouteCallback
         $cp = new Permissions($c);
 
         if ($cp->isError() && $cp->getError() == COLLECTION_FORBIDDEN) {
-            return $this->sendPageForbidden($request);
+            return $this->sendPageForbidden($request, $c);
         }
 
         if (!$c->isActive() && (!$cp->canViewPageVersions())) {
@@ -126,7 +136,7 @@ class DispatcherRouteCallback extends RouteCallback
                     return $this->sendPageNotFound($request);
                     break;
                 case COLLECTION_FORBIDDEN:
-                    return $this->sendPageForbidden($request);
+                    return $this->sendPageForbidden($request, $c);
                     break;
             }
         }
@@ -134,7 +144,7 @@ class DispatcherRouteCallback extends RouteCallback
         // Now that we've passed all permissions checks, and we have a page, we check to see if we
         // ought to redirect based on base url or trailing slash settings
         $cms = \Core::make("app");
-        $cms->handleBaseURLRedirection();
+        $cms->handleCanonicalHostRedirection();
         $cms->handleURLSlashes();
 
         // Now we check to see if we're on the home page, and if it multilingual is enabled,
@@ -160,6 +170,7 @@ class DispatcherRouteCallback extends RouteCallback
         // On page view event.
         $pe = new PageEvent($c);
         $pe->setUser($u);
+        $pe->setRequest($request);
         Events::dispatch('on_page_view', $pe);
 
         $controller = $c->getPageController();

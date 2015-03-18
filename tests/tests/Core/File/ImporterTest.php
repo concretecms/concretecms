@@ -98,7 +98,7 @@ class ImporterTest extends \FileStorageTestCase {
         $this->assertInstanceOf('\Concrete\Core\File\StorageLocation\StorageLocation', $fsl);
         $apr = str_split($r->getPrefix(), 4);
 
-        $this->assertEquals(REL_DIR_FILES_UPLOADED_STANDARD . '/' . $apr[0] . '/' . $apr[1] . '/' . $apr[2] . '/test.txt',
+        $this->assertEquals('/application/files/' . $apr[0] . '/' . $apr[1] . '/' . $apr[2] . '/test.txt',
             $r->getRelativePath()
         );
 
@@ -152,9 +152,9 @@ class ImporterTest extends \FileStorageTestCase {
         mkdir($this->getStorageDirectory());
         $this->getStorageLocation();
 
-        $file = DIR_BASE . '/concrete/themes/default/images/inneroptics_dot_net_aspens.jpg';
+        $file = DIR_BASE . '/concrete/themes/elemental/images/background-slider-night-road.png';
         $fi = new Importer();
-        $fo = $fi->import($file, 'Aspens.png');
+        $fo = $fi->import($file, 'background-slider-night-road.png');
         $type = $fo->getTypeObject();
         $this->assertEquals(\Concrete\Core\File\Type\Type::T_IMAGE, $type->getGenericType());
 
@@ -178,10 +178,10 @@ class ImporterTest extends \FileStorageTestCase {
         $incomingPath = $this->getStorageDirectory() . '/incoming';
         mkdir($incomingPath);
 
-        copy(DIR_BASE . '/concrete/themes/default/images/inneroptics_dot_net_aspens.jpg', $incomingPath . '/trees.jpg');
+        copy(DIR_BASE . '/concrete/themes/elemental/images/background-slider-night-road.png', $incomingPath . '/trees.png');
 
         $fi = new Importer();
-        $fo = $fi->importIncomingFile('trees.jpg');
+        $fo = $fi->importIncomingFile('trees.png');
         $this->assertInstanceOf('\Concrete\Core\File\Version', $fo);
         $type = $fo->getTypeObject();
         $this->assertEquals(\Concrete\Core\File\Type\Type::T_IMAGE, $type->getGenericType());
@@ -295,7 +295,7 @@ class ImporterTest extends \FileStorageTestCase {
         $this->assertEquals(2, $r->getFileVersionID());
         $this->assertEquals('sample.txt', $r->getFilename());
         $apr = str_split($r->getPrefix(), 4);
-        $this->assertEquals(BASE_URL . '/application/files/' . $apr[0] . '/' . $apr[1] . '/' . $apr[2] . '/sample.txt',
+        $this->assertEquals('http://www.dummyco.com/application/files/' . $apr[0] . '/' . $apr[1] . '/' . $apr[2] . '/sample.txt',
             $r->getURL()
         );
     }

@@ -543,11 +543,11 @@
 
         <page name="SEO &amp; Statistics" path="/dashboard/system/seo" filename="/dashboard/system/seo/view.php"
               pagetype="" description="Enable pretty URLs and tracking codes." package=""/>
-        <page name="Pretty URLs" path="/dashboard/system/seo/urls" filename="/dashboard/system/seo/urls.php" pagetype=""
+        <page name="URLs and Redirection" path="/dashboard/system/seo/urls" filename="/dashboard/system/seo/urls.php" pagetype=""
               description="" package="">
             <attributes>
                 <attributekey handle="meta_keywords">
-                    <value>vanity, pretty url, seo, pageview, view</value>
+                    <value>vanity, pretty url, redirection, hostname, canonical, seo, pageview, view</value>
                 </attributekey>
             </attributes>
         </page>
@@ -901,6 +901,15 @@
             <attributes>
                 <attributekey handle="meta_keywords">
                     <value>network, proxy server</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Database Entities" path="/dashboard/system/environment/entities"
+              filename="/dashboard/system/environment/entities.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>database, entities, doctrine, orm</value>
                 </attributekey>
             </attributes>
         </page>

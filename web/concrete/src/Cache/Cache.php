@@ -84,7 +84,7 @@ abstract class Cache
     public function exists($key)
     {
         if ($this->enabled) {
-            return !$this->pool->getItem()->isMiss($key);
+            return !$this->pool->getItem($key)->isMiss();
         } else {
             return false;
         }

@@ -203,7 +203,7 @@ $form = Loader::helper('form/page_selector');
                     <div class="form-group">
                         <label class="control-label"><?= t('RSS Feed Location') ?></label>
                         <div class="input-group">
-                            <span class="input-group-addon"><?=BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME?>/rss/</span>
+                            <span class="input-group-addon"><?=URL::to('/rss')?>/</span>
                             <input type="text" name="rssHandle" value="" />
                         </div>
                     </div>

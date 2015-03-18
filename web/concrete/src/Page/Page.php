@@ -1,7 +1,8 @@
 <?php
 namespace Concrete\Core\Page;
-use Concrete\Core\Multilingual\Page\Event;
 use Concrete\Core\Multilingual\Page\Section\Section;
+use Concrete\Core\Page\Type\Composer\Control\BlockControl;
+use Concrete\Core\Page\Type\Composer\FormLayoutSetControl;
 use Concrete\Core\Page\Type\Type;
 use Loader;
 use CacheLocal;
@@ -166,23 +167,21 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         if (!isset($this->controller)) {
             $env = Environment::get();
             if ($this->getPageTypeID() > 0) {
-                $ptHandle = $this->getPageTypeHandle();
-                $r = $env->getRecord(DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES . '/' . $ptHandle . '.php', $this->getPackageHandle());
-                $prefix = $r->override ? true : $this->getPackageHandle();
+                $pt = $this->getPageTypeObject();
+                $ptHandle = $pt->getPageTypeHandle();
+                $r = $env->getRecord(DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES . '/' . $ptHandle . '.php', $pt->getPackageHandle());
+                $prefix = $r->override ? true : $pt->getPackageHandle();
                 $class = core_class('Controller\\PageType\\' . camelcase($ptHandle), $prefix);
             } else if ($this->isGeneratedCollection()) {
                 $file = $this->getCollectionFilename();
-                $r = $env->getRecord(DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS . $file, $this->getPackageHandle());
-                $prefix = $r->override ? true : $this->getPackageHandle();
-
                 if (strpos($file, '/' . FILENAME_COLLECTION_VIEW) !== false) {
                     $path = substr($file, 0, strpos($file, '/'. FILENAME_COLLECTION_VIEW));
                 } else {
                     $path = substr($file, 0, strpos($file, '.php'));
                 }
-
+                $r = $env->getRecord(DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS . $path . '.php', $this->getPackageHandle());
+                $prefix = $r->override ? true : $this->getPackageHandle();
                 $class = core_class('Controller\\SinglePage\\' . str_replace('/','\\', camelcase($path, true)), $prefix);
-
             }
 
             if (isset($class) && class_exists($class)) {
@@ -231,7 +230,10 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      * @return string
      */
     public function getPackageHandle() {
-        return PackageList::getHandle($this->pkgID);
+        if (!isset($this->pkgHandle)) {
+            $this->pkgHandle = PackageList::getHandle($this->pkgID);
+        }
+        return $this->pkgHandle;
     }
 
     /**
@@ -277,17 +279,23 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             $r = array();
             $db = Loader::db();
             $cID = false;
+            $ppIsCanonical = false;
             while ((!$cID) && $path) {
-                $cID = $db->GetOne('select cID from PagePaths where cPath = ?', array($path));
-                if ($cID) {
-                    $cPath = $path;
-                    break;
+                $row = $db->GetRow('select cID, ppIsCanonical from PagePaths where cPath = ?', array($path));
+                if (!empty($row)) {
+                    $cID = $row['cID'];
+                    if ($cID) {
+                        $cPath = $path;
+                        $ppIsCanonical = (bool)$row['ppIsCanonical'];
+                        break;
+                    }
                 }
                 $path = substr($path, 0, strrpos($path, '/'));
             }
 
             if ($cID && $cPath) {
                 $c = Page::getByID($cID, 'ACTIVE');
+                $c->cPathFetchIsCanonical = $ppIsCanonical;
             } else {
                 $c = new Page();
                 $c->loadError(COLLECTION_NOT_FOUND);
@@ -303,6 +311,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
                 $cID = 1;
             }
             $c = Page::getByID($cID, 'ACTIVE');
+            $c->cPathFetchIsCanonical = true;
         }
 
         return $c;
@@ -438,8 +447,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      * @return bool
      */
     function isGeneratedCollection() {
-        // generated collections are collections without types, that have special cFilename attributes
-        return $this->cFilename && !$this->vObj->ptID;
+        // generated collections are collections without templates, that have special cFilename attributes
+        return $this->getCollectionFilename() && !$this->getPageTemplateID();
     }
 
     public function assignPermissions($userOrGroup, $permissions = array(), $accessType = PagePermissionKey::ACCESS_TYPE_INCLUDE) {
@@ -745,7 +754,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             if ($this->getPackageID() > 0) {
                 if (is_dir(DIR_PACKAGES . '/' . $this->getPackageHandle())) {
                     $dirp = DIR_PACKAGES;
-                    $url = BASE_URL . DIR_REL;
+                    $url = \Core::getApplicationURL();
                 } else {
                     $dirp = DIR_PACKAGES_CORE;
                     $url = ASSETS_URL;
@@ -755,7 +764,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
                     $icon = $url . '/' . DIRNAME_PACKAGES . '/' . $this->getPackageHandle() . '/' . DIRNAME_PAGES . $this->getCollectionPath() . '/' . FILENAME_PAGE_ICON;
                 }
             } else if (file_exists(DIR_FILES_CONTENT . $this->getCollectionPath() . '/' . FILENAME_PAGE_ICON)) {
-                $icon = BASE_URL . DIR_REL . '/' . DIRNAME_PAGES . $this->getCollectionPath() . '/' . FILENAME_PAGE_ICON;
+                $icon = \Core::getApplicationURL() . '/' . DIRNAME_PAGES . $this->getCollectionPath() . '/' . FILENAME_PAGE_ICON;
             } else if (file_exists(DIR_FILES_CONTENT_REQUIRED . $this->getCollectionPath() . '/' . FILENAME_PAGE_ICON)) {
                 $icon = ASSETS_URL . '/' . DIRNAME_PAGES . $this->getCollectionPath() . '/' . FILENAME_PAGE_ICON;
             }
@@ -869,16 +878,17 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         }
     }
 
-    public function queueForDeletionRequest() {
+    public function queueForDeletionRequest($queue = null, $includeThisPage = true) {
         $pages = array();
-        $includeThisPage = true;
         $pages = $this->populateRecursivePages($pages, array('cID' => $this->getCollectionID()), $this->getCollectionParentID(), 0, $includeThisPage);
         // now, since this is deletion, we want to order the pages by level, which
         // should get us no funny business if the queue dies.
         usort($pages, array('Page', 'queueForDeletionSort'));
-        $q = Queue::get('delete_page_request');
+        if (!$queue) {
+            $queue = Queue::get('delete_page_request');
+        }
         foreach($pages as $page) {
-            $q->send(serialize($page));
+            $queue->send(serialize($page));
         }
     }
 
@@ -990,7 +1000,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      * Sets the canonical page path for a page.
      * @return void
      */
-    public function setCanonicalPagePath($cPath)
+    public function setCanonicalPagePath($cPath, $isAutoGenerated = false)
     {
         $em = Loader::db()->getEntityManager();
         $path = $this->getCollectionPathObject();
@@ -1001,9 +1011,19 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             $path->setPagePath($cPath);
             $path->setPageObject($this);
         }
+        $path->setPagePathIsAutoGenerated($isAutoGenerated);
         $path->setPagePathIsCanonical(true);
         $em->persist($path);
         $em->flush();
+    }
+
+    public function getPagePaths()
+    {
+        $db = Loader::db();
+        $em = $db->getEntityManager();
+        return $em->getRepository('\Concrete\Core\Page\PagePath')->findBy(
+            array('cID' => $this->getCollectionID()), array('ppID' => 'asc')
+        );
     }
 
     public function getAdditionalPagePaths()
@@ -1016,12 +1036,12 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
-     * Clears all additional page paths for a page.
+     * Clears all page paths for a page.
      */
-    public function clearAdditionalPagePaths()
+    public function clearPagePaths()
     {
         $em = Loader::db()->getEntityManager();
-        $paths = $this->getAdditionalPagePaths();
+        $paths = $this->getPagePaths();
         foreach($paths as $path) {
             $em->remove($path);
         }
@@ -1032,8 +1052,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      * Returns full url for the current page
      * @return string
      */
-    public function getCollectionLink($appendBaseURL = false, $ignoreUrlRewriting = false) {
-        return Loader::helper('navigation')->getLinkToCollection($this, $appendBaseURL, $ignoreUrlRewriting);
+    public function getCollectionLink($appendBaseURL = false) {
+        return Loader::helper('navigation')->getLinkToCollection($this, $appendBaseURL);
     }
 
     /**
@@ -1949,9 +1969,27 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     {
         $b = parent::addBlock($bt, $a, $data);
         $btHandle = $bt->getBlockTypeHandle();
+        if ($b->getBlockTypeHandle() == BLOCK_HANDLE_PAGE_TYPE_OUTPUT_PROXY) {
+            $bi = $b->getInstance();
+            $output = $bi->getComposerOutputControlObject();
+            $control = FormLayoutSetControl::getByID($output->getPageTypeComposerFormLayoutSetControlID());
+            $object = $control->getPageTypeComposerControlObject();
+            if ($object instanceof BlockControl) {
+                $_bt = $object->getBlockTypeObject();
+                $btHandle = $_bt->getBlockTypeHandle();
+            }
+        }
         $theme = $this->getCollectionThemeObject();
         if ($btHandle && $theme) {
-            $templates = $theme->getThemeDefaultBlockTemplates();
+            $areaTemplates = array();
+            if (is_object($a)) {
+                $areaTemplates = $a->getAreaCustomTemplates();
+            }
+            $themeTemplates = $theme->getThemeDefaultBlockTemplates();
+            if (!is_array($themeTemplates)) {
+                $themeTemplates = array();
+            }
+            $templates = array_merge($themeTemplates, $areaTemplates);
             if (count($templates) && isset($templates[$btHandle])) {
                 $template = $templates[$btHandle];
                 $b->updateBlockInformation(array('bFilename' => $template));
@@ -2246,10 +2284,40 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
+     * Returns the URL-slug-based path to the current page (including any suffixes) in a string format. Does so in real time.
+     */
+    public function generatePagePath()
+    {
+        $em = Loader::db()->getEntityManager();
+        $newPath = '';
+        if ($this->cParentID > 0) {
+            $pathString = $this->computeCanonicalPagePath();
+            // ensure that the path is unique
+            $proceed = false;
+            $suffix = 0;
+            while ($proceed != true) {
+                $newPath = ($suffix == 0) ? $pathString : $pathString . Config::get('concrete.seo.page_path_separator') . $suffix;
+                $q = $em->createQuery("select p from Concrete\Core\Page\PagePath p
+                    where p.cPath = ?1 and p.cID <> ?2");
+
+                $q->setParameter(1, $newPath);
+                $q->setParameter(2, $this->getCollectionID());
+                $result = $q->getResult();
+
+                if (!is_object($result[0])) {
+                    $proceed = true;
+                } else {
+                    $suffix++;
+                }
+            }
+        }
+        return $newPath;
+    }
+
+    /**
      * Recalculates the canonical page path for the current page, based on its current version, URL slug, etc..
      */
     public function rescanCollectionPath() {
-        $db = Loader::db();
         $em = Loader::db()->getEntityManager();
         if ($this->cParentID > 0) {
             $pathString = $this->computeCanonicalPagePath();
@@ -2272,9 +2340,11 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
                 }
             }
 
+            $newPath = $this->generatePagePath();
+
             // now our $newPath variable is guaranteed to be unique at the level and good.
             // we set the canonical page path to be this new path.
-            $this->setCanonicalPagePath($newPath);
+            $this->setCanonicalPagePath($newPath, true);
             $this->rescanSystemPageStatus();
             $this->cPath = $newPath;
             $this->refreshCache();

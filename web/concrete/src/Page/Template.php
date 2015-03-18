@@ -109,9 +109,11 @@ class Template
 
     public static function getByID($pTemplateID)
     {
-        $db = Database::get();
-        $em = $db->getEntityManager();
-        return $em->find('\Concrete\Core\Page\Template', $pTemplateID);
+        if ($pTemplateID) {
+            $db = Database::get();
+            $em = $db->getEntityManager();
+            return $em->find('\Concrete\Core\Page\Template', $pTemplateID);
+        }
     }
 
     public function delete()

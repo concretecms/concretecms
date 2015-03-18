@@ -23,26 +23,6 @@ class LinkAbstractor extends Object {
 	 * and converts them to abstract link references.
 	 */
 	public static function translateTo($text) {
-		// keep links valid
-		if (!defined('BASE_URL') || BASE_URL == '') {
-			return $text;
-		}
-
-		$url1 = str_replace('/', '\/', BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME);
-		$url2 = str_replace('/', '\/', BASE_URL . DIR_REL);
-		$url4 = URL::to('/download_file', 'view');
-		$url4 = str_replace('/', '\/', $url4);
-		$url4 = str_replace('-', '\-', $url4);
-		$text = preg_replace(
-			array(
-				'/' . $url1 . '\?cID=([0-9]+)/i',
-				'/' . $url4 . '\/([0-9]+)/i',
-				'/' . $url2 . '/i'),
-			array(
-				'{CCM:CID_\\1}',
-				'{CCM:FID_DL_\\1}',
-				'{CCM:BASE_URL}')
-			, $text);
 
 		// images inline
 		$imgmatch = URL::to('/download_file', 'view_inline');
@@ -65,6 +45,22 @@ class LinkAbstractor extends Object {
 			$text = (string) $r;
 		}
 
+		$url1 = str_replace('/', '\/', \Core::getApplicationURL() . '/' . DISPATCHER_FILENAME);
+		$url2 = str_replace('/', '\/', \Core::getApplicationURL());
+		$url4 = URL::to('/download_file', 'view');
+		$url4 = str_replace('/', '\/', $url4);
+		$url4 = str_replace('-', '\-', $url4);
+		$text = preg_replace(
+			array(
+				'/' . $url1 . '\?cID=([0-9]+)/i',
+				'/' . $url4 . '\/([0-9]+)/i',
+				'/' . $url2 . '/i'),
+			array(
+				'{CCM:CID_\\1}',
+				'{CCM:FID_DL_\\1}',
+				'{CCM:BASE_URL}')
+			, $text);
+
 		return $text;
 	}
 
@@ -79,7 +75,7 @@ class LinkAbstractor extends Object {
 				'/{CCM:BASE_URL}/i'
 			),
 			array(
-				BASE_URL . DIR_REL,
+				\Core::getApplicationURL(),
 			),
 			$text);
 
@@ -154,10 +150,12 @@ class LinkAbstractor extends Object {
 	 * and expands them to urls suitable for the rich text editor.
 	 */
 	public static function translateFromEditMode($text) {
+		$app = \Core::make('app');
+
 		//page links...
 		$text = preg_replace(
 			'/{CCM:CID_([0-9]+)}/i',
-			BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=\\1',
+			\Core::getApplicationURL() . '/' . DISPATCHER_FILENAME . '?cID=\\1',
 			$text);
 
 		//images...

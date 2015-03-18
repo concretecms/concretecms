@@ -447,4 +447,9 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
         return $this->getExtractor()->getUniqueId();
     }
 
+    abstract public function handle_authentication_attempt();
+    abstract public function handle_authentication_callback();
+    abstract public function handle_attach_attempt();
+    abstract public function handle_attach_callback();
+
 }

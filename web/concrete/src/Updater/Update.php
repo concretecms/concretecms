@@ -7,6 +7,7 @@ use Loader;
 use Marketplace;
 use Config;
 use Localization;
+use ORM;
 
 class Update
 {
@@ -101,7 +102,7 @@ class Update
                 $curl_handle,
                 CURLOPT_POSTFIELDS,
                 'LOCALE=' . $loc->activeLocale(
-                ) . '&BASE_URL_FULL=' . BASE_URL . '/' . DIR_REL . '&APP_VERSION=' . APP_VERSION
+                ) . '&BASE_URL_FULL=' . \Core::getApplicationURL() . '&APP_VERSION=' . APP_VERSION
             );
             $resp = @curl_exec($curl_handle);
 
@@ -157,6 +158,11 @@ class Update
     {
         $cms = Core::make('app');
         $cms->clearCaches();
+
+        $em = ORM::entityManager('core');
+        $dbm = Core::make('database/structure', $em);
+        $dbm->destroyProxyClasses('ConcreteCore');
+        $dbm->generateProxyClasses();
 
         $configuration = new \Concrete\Core\Updater\Migrations\Configuration();
         $configuration->registerPreviousMigratedVersions();
