@@ -22,6 +22,10 @@ abstract class ItemList
     protected $debug = false;
 
     abstract protected function executeSortBy($field, $direction = 'asc');
+    protected function executeSanitizedSortBy($field, $direction)
+    {
+        $this->executeSortBy($field, $direction);
+    }
     abstract public function executeGetResults();
     abstract public function getResult($mixed);
     abstract public function debugStart();
@@ -47,6 +51,13 @@ abstract class ItemList
         $this->sortBy = $field;
         $this->sortByDirection = $direction;
         $this->executeSortBy($field, $direction);
+    }
+
+    public function sanitizedSortBy($field, $direction = 'asc')
+    {
+        $this->sortBy = $field;
+        $this->sortByDirection = $direction;
+        $this->executeSanitizedSortBy($field, $direction);
     }
 
     /** Returns a full array of results. */
@@ -190,7 +201,7 @@ abstract class ItemList
             if (isset($data[$this->getQuerySortColumnParameter()])) {
                 $value = $data[$this->getQuerySortColumnParameter()];
                 if (in_array($value, $this->autoSortColumns)) {
-                    $this->sortBy($value, $direction);
+                    $this->sanitizedSortBy($value, $direction);
                 }
             }
         }

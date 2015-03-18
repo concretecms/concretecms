@@ -16,6 +16,17 @@ class Controller extends AttributeTypeController  {
 		return $list;
 	}
 
+	public function filterByAttribute(AttributedItemList $list, $boolean)
+	{
+		$qb = $list->getQueryObject();
+		$column = sprintf('ak_%s', $this->attributeKey->getAttributeKeyHandle());
+		if ($boolean) {
+			$qb->andWhere("{$column} = 1");
+		} else {
+			$qb->andWhere("{$column} <> 1 or {$column} is null");
+		}
+	}
+
 	public function getValue() {
 		$db = Loader::db();
 		$value = $db->GetOne("select value from atBoolean where avID = ?", array($this->getAttributeValueID()));
@@ -78,7 +89,7 @@ class Controller extends AttributeTypeController  {
 	}
 	
 	public function search() {
-		print '<label class="checkbox">' . Loader::helper('form')->checkbox($this->field('value'), 1, $this->request('value') == 1) . ' ' . t('Yes') . '</label>';
+		print '<div class="checkbox"><label>' . Loader::helper('form')->checkbox($this->field('value'), 1, $this->request('value') == 1) . ' ' . $this->attributeKey->getAttributeKeyDisplayName() . '</label></div>';
 	}
 
 	public function type_form() {

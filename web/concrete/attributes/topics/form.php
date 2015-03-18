@@ -14,10 +14,8 @@
 			'chooseNodeInForm': 'multiple',
 			'selectNodesByKey': [<?php echo $valueIDs ?>],
 			'selectMode': '2',
-			'noMenu': true,
 			'noDrag' : true,
 			'minExpandLevel': '1',
-			'allChildren': true,
 			'checkbox': true,
 			'onSelect' : function(select, node) {
                  if (select) {

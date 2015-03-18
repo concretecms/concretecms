@@ -26,7 +26,7 @@ class ApproveStackRequest extends ApprovePageRequest {
 		Events::dispatch('on_page_version_submit_approve', $ev);
 
 		$wpr = new WorkflowProgressResponse();
-		$wpr->setWorkflowProgressResponseURL(BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $s->getCollectionID());
+		$wpr->setWorkflowProgressResponseURL(\URL::to($s));
 		return $wpr;
 	}
 

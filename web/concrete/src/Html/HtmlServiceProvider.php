@@ -9,6 +9,7 @@ class HtmlServiceProvider extends ServiceProvider {
             'helper/html' => '\Concrete\Core\Html\Service\Html',
             'helper/lightbox' => '\Concrete\Core\Html\Service\Lightbox',
             'helper/navigation' => '\Concrete\Core\Html\Service\Navigation',
+            'helper/seo' => '\Concrete\Core\Html\Service\Seo',
         );
 
         foreach($singletons as $key => $value) {

@@ -7,7 +7,6 @@ if ($controller->getTask() == 'add') {
 	$paginate = 1;
 	$itemsPerPage = 50;
 	$displayMode = 'threaded';
-	$insertNewMessages = 'top';
 	$enableOrdering = 1;
 	$enableCommentRating = 1;
 	$displayPostingForm = 'top';
@@ -28,6 +27,8 @@ if ($controller->getTask() == 'add') {
     $maxFilesRegistered = Config::get('conversations.files.registered.max');
     $fileExtensions = implode(',', $fileAccessFileTypes);
     $attachmentsEnabled = intval(Config::get('conversations.attachments_enabled'));
+	$notification = (bool) Config::get('conversations.notification');
+	$notificationEmail = Config::get('conversations.notification_email');
 }
 
 if(!$dateFormat) {
@@ -91,20 +92,6 @@ if(!$dateFormat) {
 	<div class="form-group" data-row="itemsPerPage">
 		<label class="control-label"><?=t('Messages Per Page')?></label>
 		<?=$form->text('itemsPerPage', $itemsPerPage, array('class' => 'span1'))?>
-	</div>
-	<div class="form-group">
-		<label class="control-label"><?=t('Add New Messages')?></label>
-		<div class="radio">
-			<label>
-			<?=$form->radio('insertNewMessages', 'top', $insertNewMessages)?>
-			<?=t('Top')?></label>
-		</div>
-		<div class="radio">
-			<label>
-			<?=$form->radio('insertNewMessages', 'bottom', $insertNewMessages)?>
-			<?=t('Bottom')?>
-		</label>
-		</div>
 	</div>
 </fieldset>
 
@@ -217,8 +204,31 @@ if(!$dateFormat) {
 			<?=$form->textarea('fileExtensions', $fileExtensions)?>
 		</div>
 	</div>
+
+
 </fieldset>
 
+<fieldset>
+	<legend><?=t('Notification')?></legend>
+	<div class="form-group">
+		<div class="checkbox">
+			<label>
+				<?=$form->checkbox('notificationOverridesEnabled', 1, $notificationOverridesEnabled)?><?=t('Override Global Settings')?>
+			</label>
+		</div>
+	</div>
+	<div class="form-group notification-overrides">
+		<div class="checkbox">
+			<label class="control-label">
+				<?=$form->checkbox('notification', 1, $notification)?> <?=t('Send an email when a message is posted.')?>
+			</label>
+		</div>
+	</div>
+	<div class="form-group notification-overrides">
+		<label class="control-label"><?=t('Email Address')?></label>
+		<?=$form->text('notificationEmail', $notification > 0 ? $notificationEmail : '')?>
+	</div>
+</fieldset>
 
 <script type="text/javascript">
 $(function() {
@@ -240,5 +250,15 @@ $(function() {
             $('.attachment-overrides label').addClass('text-muted');
         }
     }).trigger('change');
+	$('input[name=notificationOverridesEnabled]').on('change', function() {
+		var ao = $('input[name=notificationOverridesEnabled]:checked');
+		if (ao.val() == 1) {
+			$('.notification-overrides input').prop('disabled', false);
+			$('.notification-overrides label').removeClass('text-muted');
+		} else {
+			$('.notification-overrides input').prop('disabled', true);
+			$('.notification-overrides label').addClass('text-muted');
+		}
+	}).trigger('change');
 });
 </script>

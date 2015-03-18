@@ -135,7 +135,7 @@ $show_graph = (count($optionNamesAbbrev) && !$_GET['dontGraphPoll'] && $totalVot
         <?php
         if (!$controller->requiresRegistration() || intval($uID) > 0) {
             ?>
-            <form method="post" action="<?= $view->action('form_save_vote', '#survey-form-' . $controller->bID) ?>">
+            <form method="post" action="<?= $view->action('form_save_vote') ?>">
                 <input type="hidden" name="rcID" value="<?= $c->getCollectionID() ?>"/>
         <?php
         }

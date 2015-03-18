@@ -65,7 +65,6 @@ return array(
         'PageTheme'                            => '\Concrete\Core\Page\Theme\Theme',
         'PageType'                             => '\Concrete\Core\Page\Type\Type',
         'PermissionAccess'                     => '\Concrete\Core\Permission\Access\Access',
-        'PermissionCache'                      => '\Concrete\Core\Permission\Cache',
         'PermissionKey'                        => '\Concrete\Core\Permission\Key\Key',
         'PermissionKeyCategory'                => '\Concrete\Core\Permission\Category',
         'Permissions'                          => '\Concrete\Core\Permission\Checker',
@@ -80,7 +79,6 @@ return array(
         'StackList'                            => '\Concrete\Core\Page\Stack\StackList',
         'StartingPointPackage'                 => '\Concrete\Core\Package\StartingPointPackage',
         'TaskPermission'                       => '\Concrete\Core\Legacy\TaskPermission',
-        'URL'                                  => '\Concrete\Core\Routing\URL',
         'User'                                 => '\Concrete\Core\User\User',
         'UserAttributeKey'                     => '\Concrete\Core\Attribute\Key\UserKey',
         'UserInfo'                             => '\Concrete\Core\User\UserInfo',
@@ -93,18 +91,19 @@ return array(
      * Core Providers
      */
     'providers'           => array(
-        'core_file'         => '\Concrete\Core\File\FileServiceProvider',
-        'core_encryption'   => '\Concrete\Core\Encryption\EncryptionServiceProvider',
-        'core_validation'   => '\Concrete\Core\Validation\ValidationServiceProvider',
-        'core_localization' => '\Concrete\Core\Localization\LocalizationServiceProvider',
-        'core_multilingual' => '\Concrete\Core\Multilingual\MultilingualServiceProvider',
-        'core_feed'         => '\Concrete\Core\Feed\FeedServiceProvider',
-        'core_html'         => '\Concrete\Core\Html\HtmlServiceProvider',
-        'core_pagination'   => '\Concrete\Core\Search\PaginationServiceProvider',
-        'core_mail'         => '\Concrete\Core\Mail\MailServiceProvider',
-        'core_application'  => '\Concrete\Core\Application\ApplicationServiceProvider',
-        'core_utility'      => '\Concrete\Core\Utility\UtilityServiceProvider',
+        'core_file'                   => '\Concrete\Core\File\FileServiceProvider',
+        'core_encryption'             => '\Concrete\Core\Encryption\EncryptionServiceProvider',
+        'core_validation'             => '\Concrete\Core\Validation\ValidationServiceProvider',
+        'core_localization'           => '\Concrete\Core\Localization\LocalizationServiceProvider',
+        'core_multilingual'           => '\Concrete\Core\Multilingual\MultilingualServiceProvider',
+        'core_feed'                   => '\Concrete\Core\Feed\FeedServiceProvider',
+        'core_html'                   => '\Concrete\Core\Html\HtmlServiceProvider',
+        'core_pagination'             => '\Concrete\Core\Search\PaginationServiceProvider',
+        'core_mail'                   => '\Concrete\Core\Mail\MailServiceProvider',
+        'core_application'            => '\Concrete\Core\Application\ApplicationServiceProvider',
+        'core_utility'                => '\Concrete\Core\Utility\UtilityServiceProvider',
         'core_manager_grid_framework' => '\Concrete\Core\Page\Theme\GridFramework\ManagerServiceProvider',
+        'core_manager_page_type_validator' => '\Concrete\Core\Page\Type\Validator\ManagerServiceProvider',
         'core_database'     => '\Concrete\Core\Database\DatabaseServiceProvider',
         'core_form'         => '\Concrete\Core\Form\FormServiceProvider',
         'core_session'      => '\Concrete\Core\Session\SessionServiceProvider',
@@ -114,6 +113,7 @@ return array(
         'core_whoops'       => '\Concrete\Core\Error\Provider\WhoopsServiceProvider',
         'core_logging'      => '\Concrete\Core\Logging\LoggingServiceProvider',
         'core_cache'        => '\Concrete\Core\Cache\CacheServiceProvider',
+        'core_url'          => '\Concrete\Core\Url\UrlServiceProvider',
 
         // Authentication
         'core_oauth'          => '\Concrete\Core\Authentication\Type\OAuth\ServiceProvider',
@@ -131,11 +131,13 @@ return array(
         'Session'  => '\Concrete\Core\Support\Facade\Session',
         'Cookie'   => '\Concrete\Core\Support\Facade\Cookie',
         'Database' => '\Concrete\Core\Support\Facade\Database',
+        'ORM'      => '\Concrete\Core\Support\Facade\DatabaseORM',
         'Events'   => '\Concrete\Core\Support\Facade\Events',
         'Route'    => '\Concrete\Core\Support\Facade\Route',
         'Log'      => '\Concrete\Core\Support\Facade\Log',
         'Image'    => '\Concrete\Core\Support\Facade\Image',
-        'Config'   => '\Concrete\Core\Support\Facade\Config'
+        'Config'   => '\Concrete\Core\Support\Facade\Config',
+        'URL'      => '\Concrete\Core\Support\Facade\Url'
     ),
 
     /**
@@ -264,6 +266,8 @@ return array(
         "/ccm/system/css/page/{cID}/{stylesheet}/{cvID}"                                => array('\Concrete\Controller\Frontend\Stylesheet::page_version'),
         "/ccm/system/css/page/{cID}/{stylesheet}"                                       => array('\Concrete\Controller\Frontend\Stylesheet::page'),
         "/ccm/system/backend/editor_data/"                                              => array('\Concrete\Controller\Backend\EditorData::view'),
+        "/ccm/system/backend/get_remote_help/"                                          => array('\Concrete\Controller\Backend\GetRemoteHelp::view'),
+        "/ccm/system/backend/intelligent_search/"                                       => array('\Concrete\Controller\Backend\IntelligentSearch::view'),
         "/ccm/system/jobs"                                                              => array('\Concrete\Controller\Frontend\Jobs::view'),
         "/ccm/system/jobs/run_single"                                                   => array('\Concrete\Controller\Frontend\Jobs::run_single'),
         "/ccm/system/jobs/check_queue"                                                  => array('\Concrete\Controller\Frontend\Jobs::check_queue'),
@@ -421,7 +425,7 @@ return array(
         t('MP4')            => array('mp4', FileType::T_VIDEO),
         t('FLV')            => array('flv', FileType::T_VIDEO, 'flv'),
         t('MP3')            => array('mp3', FileType::T_AUDIO, false, 'audio'),
-        t('MP4')            => array('m4a', FileType::T_AUDIO, false, 'audio'),
+        t('MP4 Audio')            => array('m4a', FileType::T_AUDIO, false, 'audio'),
         t('Realaudio')      => array('ra,ram', FileType::T_AUDIO),
         t('Windows Audio')  => array('wma', FileType::T_AUDIO),
         t('Rich Text')      => array('rtf', FileType::T_DOCUMENT),
@@ -463,6 +467,10 @@ return array(
         'jquery/ui'                => array(
             array('javascript', 'js/jquery-ui.js', array('minify' => false, 'combine' => false)),
             array('css', 'css/jquery-ui.css', array('minify' => false))
+        ),
+        'jquery/visualize'                => array(
+            array('javascript', 'js/jquery-visualize.js', array('minify' => false, 'combine' => false)),
+            array('css', 'css/jquery-visualize.css', array('minify' => false))
         ),
         'jquery/touch-punch'              => array(
             array('javascript', 'js/jquery-ui-touch-punch.js')
@@ -660,6 +668,10 @@ return array(
         'core/legacy'              => array(
             array('javascript', 'js/legacy.js'),
             array('css', 'css/legacy.css')
+        ),
+        'core/translator' => array(
+            array('javascript', 'js/translator.js', array('minify' => false)),
+            array('css', 'css/translator.css', array('minify' => false))
         )
     ),
     'asset_groups'        => array(
@@ -668,6 +680,12 @@ return array(
             array(
                 array('javascript', 'jquery/ui'),
                 array('css', 'jquery/ui'),
+            )
+        ),
+        'jquery/visualize'                => array(
+            array(
+                array('javascript', 'jquery/visualize'),
+                array('css', 'jquery/visualize'),
             )
         ),
         'select2'                  => array(
@@ -885,6 +903,7 @@ return array(
                 array('javascript', 'core/events'),
                 array('javascript', 'core/conversation'),
                 array('css', 'core/conversation'),
+                array('css', 'core/frontend/errors'),
                 array('css', 'font-awesome'),
                 array('css', 'bootstrap/dropdown'),
                 array('css', 'jquery/ui')
@@ -912,6 +931,12 @@ return array(
                 array('javascript', 'jquery'),
                 array('javascript', 'core/legacy'),
                 array('css', 'core/legacy')
+            )
+        ),
+        'core/translator'          => array(
+            array(
+                array('javascript', 'core/translator'),
+                array('css', 'core/translator'),
             )
         )
     )

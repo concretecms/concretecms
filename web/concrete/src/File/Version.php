@@ -281,12 +281,9 @@ class Version
     {
 
         $db = Loader::db();
-        $em = $db->getEntityManager();
-        $em->remove($this);
-        $em->flush();
 
-        $db->Execute("DELETE FROM FileAttributeValues WHERE fID = ? AND fvID = ?", array($this->fID, $this->fvID));
-        $db->Execute("DELETE FROM FileVersionLog WHERE fID = ? AND fvID = ?", array($this->fID, $this->fvID));
+        $db->Execute("DELETE FROM FileAttributeValues WHERE fID = ? AND fvID = ?", array($this->getFileID(), $this->fvID));
+        $db->Execute("DELETE FROM FileVersionLog WHERE fID = ? AND fvID = ?", array($this->getFileID(), $this->fvID));
 
         $types = Type::getVersionList();
 
@@ -304,6 +301,10 @@ class Version
             } catch (FileNotFoundException $e) {
             }
         }
+
+        $em = $db->getEntityManager();
+        $em->remove($this);
+        $em->flush();
     }
 
     /**
@@ -590,7 +591,7 @@ class Version
     {
         $c = Page::getCurrentPage();
         $cID = ($c instanceof Page) ? $c->getCollectionID() : 0;
-        return BASE_URL . View::url('/download_file', 'force', $this->getFileID(), $cID);
+        return View::url('/download_file', 'force', $this->getFileID(), $cID);
     }
 
     /**
@@ -696,10 +697,17 @@ class Version
 
     public function rescanThumbnails()
     {
+        if ($this->fvType != \Concrete\Core\File\Type\Type::T_IMAGE) {
+            return false;
+        }
+
         $types = Type::getVersionList();
+
+        $fr = $this->getFileResource();
+        $image = \Image::load($fr->read());
+
         foreach ($types as $type) {
 
-            $fr = $this->getFileResource();
 
             // delete the file if it exists
             $this->deleteThumbnail($type);
@@ -707,8 +715,6 @@ class Version
             if ($this->getAttribute('width') <= $type->getWidth()) {
                 continue;
             }
-
-            $image = \Image::load($fr->read());
 
             $filesystem = $this->getFile()
                                ->getFileStorageLocationObject()
@@ -743,6 +749,9 @@ class Version
             if ($type->getHandle() == \Config::get('concrete.icons.file_manager_detail.handle')) {
                 $this->fvHasDetailThumbnail = true;
             }
+
+            unset($thumbnail);
+            unset($filesystem);
 
         }
     }
@@ -795,6 +804,43 @@ class Version
     }
 
     /**
+     * When given a thumbnail type versin object and a full path to a file on the server
+     * the file is imported into the system as is as the thumbnail.
+     * @param ThumbnailTypeVersion $version
+     * @param $path
+     */
+    public function importThumbnail(\Concrete\Core\File\Image\Thumbnail\Type\Version $version, $path)
+    {
+        $thumbnailPath = $version->getFilePath($this);
+        $filesystem = $this->getFile()
+            ->getFileStorageLocationObject()
+            ->getFileSystemObject();
+        if ($filesystem->has($thumbnailPath)) {
+            $filesystem->delete($thumbnailPath);
+        }
+
+        $filesystem->write(
+            $thumbnailPath,
+            file_get_contents($path),
+            array(
+                'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
+                'mimetype'   => 'image/jpeg'
+            )
+        );
+
+
+        if ($version->getHandle() == \Config::get('concrete.icons.file_manager_listing.handle')) {
+            $this->fvHasListingThumbnail = true;
+        }
+
+        if ($version->getHandle() == \Config::get('concrete.icons.file_manager_detail.handle')) {
+            $this->fvHasDetailThumbnail = true;
+        }
+
+        $this->save();
+    }
+
+    /**
      * Returns a full URL to the file on disk
      */
     public function getURL()
@@ -818,7 +864,7 @@ class Version
     {
         $c = Page::getCurrentPage();
         $cID = ($c instanceof Page) ? $c->getCollectionID() : 0;
-        return BASE_URL . View::url('/download_file', $this->getFileID(), $cID);
+        return View::url('/download_file', $this->getFileID(), $cID);
     }
 
     /**
@@ -826,7 +872,7 @@ class Version
      * This will run any type-based import routines, and store those attributes, generate thumbnails,
      * etc...
      */
-    public function refreshAttributes($firstRun = false)
+    public function refreshAttributes($rescanThumbnails = true)
     {
         $fh = Loader::helper('file');
         $ext = $fh->getExtension($this->fvFilename);
@@ -840,11 +886,11 @@ class Version
 
         $size = $fsr->getSize();
 
-        $title = ($firstRun) ? $this->getFilename() : $this->getTitle();
-
         $this->fvExtension = $ext;
         $this->fvType = $ftl->getGenericType();
-        $this->fvTitle = $title;
+        if ($this->fvTitle === null) {
+            $this->fvTitle = $this->getFilename();
+        }
         $this->fvSize = $size;
 
         if (is_object($ftl)) {
@@ -853,6 +899,10 @@ class Version
                 $cl = $ftl->getCustomInspector();
                 $cl->inspect($this);
             }
+        }
+
+        if ($rescanThumbnails) {
+            $this->rescanThumbnails();
         }
 
         $this->save();

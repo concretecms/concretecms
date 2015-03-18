@@ -53,11 +53,11 @@ class Detector
             }
         }
 
-        if (Config::get('concrete.multilingual.use_browser_detected_language')) {
+        if (Config::get('concrete.multilingual.use_browser_detected_locale')) {
             $home = false;
             $locales =  \Punic\Misc::getBrowserLocales();
-            foreach($locales as $locale => $value) {
-                $home = Section::getByLocaleOrLanguage($value);
+            foreach (array_keys($locales) as $locale) {
+                $home = Section::getByLocaleOrLanguage($locale);
                 if ($home) {
                     break;
                 }
@@ -73,6 +73,9 @@ class Detector
 
     public static function setupSiteInterfaceLocalization(Page $c = null)
     {
+        if (\User::isLoggedIn() && Config::get('concrete.multilingual.keep_users_locale')) {
+            return;
+        }
         if (!$c) {
             $c = Page::getCurrentPage();
         }

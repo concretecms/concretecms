@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Controller\Backend;
+use Concrete\Core\Http\Response;
 use Controller;
 use PageType, Permissions, Loader, Redirect;
 use Page as ConcretePage;
@@ -31,7 +32,7 @@ class Page extends Controller {
                 if (is_object($parent)) {
                     $d->setPageDraftTargetParentPageID($parent->getCollectionID());
                 }
-				return Redirect::url(BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $d->getCollectionID() . '&ctask=check-out-first&' . Loader::helper('validation/token')->getParameter());
+				return Redirect::url(\Core::getApplicationURL() . '/' . DISPATCHER_FILENAME . '?cID=' . $d->getCollectionID() . '&ctask=check-out-first&' . Loader::helper('validation/token')->getParameter());
 			}
 		}
 	}
@@ -48,7 +49,7 @@ class Page extends Controller {
             return Redirect::page($c);
         }
 
-        return new Response(t('Access Denied'));
+        return new \Response(t('Access Denied'));
     }
 
 	public function getJSON() {

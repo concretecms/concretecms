@@ -68,7 +68,7 @@ class IndexedSearch
         }
 
         foreach ($this->searchableAreaNames as $sarHandle) {
-            if (preg_match('/^' . $sarHandle . SubArea::AREA_SUB_DELIMITER . '.+/i', $arHandle)) {
+            if (preg_match('/^' . preg_quote($sarHandle . SubArea::AREA_SUB_DELIMITER, '/') . '.+/i', $arHandle)) {
                 return true;
             } else {
                 if (in_array($arHandle, $this->searchableAreaNames)) {

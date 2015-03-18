@@ -10,7 +10,17 @@ if (Loader::helper('validation/numbers')->integer($_POST['cnvMessageID']) && $_P
         $mp = new Permissions($message);
         if ($mp->canDeleteConversationMessage()) {
     		$message->delete();
-	    	Loader::element('conversation/message', array('message' => $message));
+
+			$r = Request::getInstance();
+			$types = $r->getAcceptableContentTypes();
+			if ($types[0] == 'application/json') {
+				$r = new \Concrete\Core\Application\EditResponse();
+				$r->setMessage(t('Message deleted successfully.'));
+				$r->outputJSON();
+			} else {
+				Loader::element('conversation/message', array('message' => $message));
+			}
+
 	    }
     }
 }

@@ -80,8 +80,12 @@ class Controller extends BlockController
         parent::delete();
     }
 
-    function action_form_save_vote()
+    function action_form_save_vote($bID = false)
     {
+        if ($this->bID != $bID) {
+            return false;
+        }
+
         $u = new User();
         $db = Loader::db();
         $bo = $this->getBlockObject();

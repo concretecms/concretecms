@@ -48,8 +48,8 @@ class Limit {
 		$mh = new MailHelper();
 
 		$mh->addParameter('offenderUname', $offender->getUserName());
-		$mh->addParameter('profileURL', BASE_URL . View::url('/profile', 'view', $offender->getUserID()));
-		$mh->addParameter('profilePreferencesURL', BASE_URL . View::url('/profile/edit'));
+		$mh->addParameter('profileURL', View::url('/profile', 'view', $offender->getUserID()));
+		$mh->addParameter('profilePreferencesURL', View::url('/profile/edit'));
 
 		$mh->to($admin->getUserEmail());
 		$mh->addParameter('siteName', Config::get('concrete.site'));

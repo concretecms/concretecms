@@ -5,10 +5,12 @@ use Concrete\Core\Controller\AbstractController;
 class TestForm extends AbstractController
 {
 
-    public function action_test_search()
+    public function action_test_search($bID = false)
     {
-        $this->set('response', t('Thanks!'));
-        return true;
+        if ($this->bID == $bID) {
+            $this->set('response', t('Thanks!'));
+            return true;
+        }
     }
 
     public function view()

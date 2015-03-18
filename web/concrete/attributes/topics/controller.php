@@ -43,10 +43,22 @@ class Controller extends AttributeTypeController
         // trap dynatree display node / tree node here.
     }
 
+    public function getDisplayValue()
+    {
+        $list = $this->getSelectedOptions();
+        $topics = array();
+        foreach($list as $node) {
+            $topic = Node::getByID($node);
+            if (is_object($topic)) {
+                $topics[] = $topic->getTreeNodeDisplayName();
+            }
+        }
+        return implode(', ', $topics);
+    }
+
     public function getDisplaySanitizedValue()
     {
-        //$this->load();
-        //return parent::getDisplaySanitizedValue();
+        return $this->getDisplayValue();
     }
 
     public function getSelectedOptions()
@@ -305,6 +317,12 @@ class Controller extends AttributeTypeController
         $this->load();
 
         return $this->akTopicParentNodeID;
+    }
+
+    public function getTopicTreeID()
+    {
+        $this->load();
+        return $this->akTopicTreeID;
     }
 
     protected function load()

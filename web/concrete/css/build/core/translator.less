@@ -1,0 +1,32 @@
+.ccm-translator {
+	.ccm-translator-col-original {
+		.panel-heading span {
+			float: left;
+			width: 50%;
+			height: 20px;
+			overflow: hidden;
+		}
+		ul {
+			overflow: scroll;
+			overflow-x: hidden;
+		}
+		li {
+			transition: all 0.2s linear;
+	   	cursor: pointer;
+	   	&:hover {
+				background-color: #dedede;
+			}
+			span {
+				float: left;
+				width: 50%;
+				height: 20px;
+				overflow: hidden;
+			}
+		}
+	}
+	.ccm-translator-col-translations {
+		> .panel {
+			visibility: hidden;
+		}
+	}
+}

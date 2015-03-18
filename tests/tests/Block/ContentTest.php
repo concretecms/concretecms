@@ -5,6 +5,7 @@ class ContentTest extends BlockTypeTestCase {
 
 	protected function setUp() {
 		$this->tables[] = 'SystemContentEditorSnippets';
+		$this->tables[] = 'btContentLocal';
 		parent::setUp();
 	}
 

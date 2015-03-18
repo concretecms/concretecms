@@ -72,7 +72,10 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase {
         $class = overrideable_core_class('\Core\Captcha\AkismetController', '/foo', 'akismet');
         $this->assertEquals('\Concrete\Package\Akismet\Src\Captcha\AkismetController', $class);
 
-    }
+		$class = core_class('Core\\Attribute\\Key\\EventKey', 'calendar');
+		$this->assertEquals('\\Concrete\\Package\\Calendar\\Src\\Attribute\\Key\\EventKey', $class);
+
+	}
 
 	public function testRouteControllerOverride() {
 		$root = dirname(DIR_BASE_CORE . '../');
@@ -102,6 +105,12 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase {
 		$at->atHandle = 'boolean';
 		$at->loadController();
 		$this->assertTrue(class_exists('\Concrete\Attribute\Boolean\Controller'));
+	}
+
+	public function testAttributeOtherClasses() {
+		$this->assertTrue(class_exists('\Concrete\Attribute\Select\Option', true));
+		$this->assertTrue(class_exists('\Concrete\Attribute\Address\Value', true));
+		$this->assertTrue(class_exists('\Concrete\Attribute\Select\OptionList', true));
 	}
 
 	public function testBlocks() {

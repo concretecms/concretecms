@@ -26,6 +26,10 @@
         my.setupFileUploads();
         my.setupEvents();
 
+        // Remove the multiple choice option from the dashboard menu
+        if ( 'menu' === options.mode ) {
+            $('.ccm-search-bulk-action option[value="choose"]').remove();
+        }
     }
 
     ConcreteFileManager.prototype = Object.create(ConcreteAjaxSearch.prototype);
@@ -144,7 +148,8 @@
             my.$element.on('mouseout.concreteFileManagerHoverFile', 'tr[data-file-manager-file]', function() {
                 $(this).removeClass('ccm-search-select-hover');
             });
-            my.$element.unbind('.concreteFileManagerChooseFile').on('click.concreteFileManagerChooseFile', 'tr[data-file-manager-file]', function() {
+            my.$element.unbind('.concreteFileManagerChooseFile').on('click.concreteFileManagerChooseFile', 'tr[data-file-manager-file]', function(e) {
+                if ( 'checkbox' === $(e.target).prop('type') ) return;
                 ConcreteEvent.publish('FileManagerBeforeSelectFile', {fID: $(this).attr('data-file-manager-file')});
                 ConcreteEvent.publish('FileManagerSelectFile', {fID: $(this).attr('data-file-manager-file')});
                 my.$downloadTarget.remove();
@@ -159,7 +164,11 @@
             itemIDs.push({'name': 'item[]', 'value': $(checkbox).val()});
         });
 
-        if (value == 'download') {
+        if (value == 'choose') {
+            var items = itemIDs.map(function (value) { return value.value; });
+            ConcreteEvent.publish('FileManagerBeforeSelectFile', { fID: items });
+            ConcreteEvent.publish('FileManagerSelectFile', { fID: items });
+        } else if (value == 'download') {
             my.$downloadTarget.get(0).src = CCM_TOOLS_PATH + '/files/download?' + jQuery.param(itemIDs);
         } else {
             ConcreteAjaxSearch.prototype.handleSelectedBulkAction.call(this, value, type, $option, $items);
@@ -184,6 +193,7 @@
 
         var options = {
             filters: [], // filters must be an array of objects ex: [{ field: Concrete.const.Controller.Search.Files.FILTER_BY_TYPE, type: Concrete.const.Core.File.Type.Type.T_IMAGE }]
+            multipleSelection: false, // Multiple selection switch
         };
 
         $.extend(options, opts);
@@ -209,9 +219,20 @@
             modal: true,
             data: data,
             title: ccmi18n_filemanager.title,
-            onOpen: function() {
+            onOpen: function(dialog) {
                 ConcreteEvent.unsubscribe('FileManagerSelectFile');
                 ConcreteEvent.subscribe('FileManagerSelectFile', function(e, data) {
+                    var multipleItemsSelected = (Object.prototype.toString.call( data.fID ) === '[object Array]');
+                    if (options.multipleSelection && !multipleItemsSelected) {
+                        data.fID = [data.fID]; 
+                    } else if (!options.multipleSelection && multipleItemsSelected) {
+                        if (data.fID.length > 1) {
+                            $('.ccm-search-bulk-action option:first-child').prop('selected', 'selected');
+                            alert(ccmi18n_filemanager.chosenTooMany);
+                            return;
+                        }
+                        data.fID = data.fID[0];
+                    }
                     jQuery.fn.dialog.closeTop();
                     callback(data);
                 });

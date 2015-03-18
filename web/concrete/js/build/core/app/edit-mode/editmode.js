@@ -39,12 +39,21 @@
                 });
             });
 
+            my.bindEvent('EditModeBlockSaveInline', function(event, data) {
+                $('#ccm-block-form').submit();
+                ConcreteEvent.fire('EditModeExitInlineSaved');
+                ConcreteEvent.fire('EditModeExitInline', {
+                    action: 'save_inline'
+                });
+            });
+
             my.bindEvent('EditModeBlockEditInline', function (event, data) {
                 var block = data.block,
                     area = block.getArea(),
                     action = (data.action) ? data.action : CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/block/edit',
                     arEnableGridContainer = area.getEnableGridContainer() ? 1 : 0,
-                    postData = [
+                    templates = area.getCustomTemplates();
+                    var postData = [
                         {name: 'cID', value: block.getCID()},
                         {name: 'arHandle', value: area.getHandle()},
                         {name: 'arGridMaximumColumns', value: data.arGridMaximumColumns},
@@ -55,6 +64,15 @@
                     bID = block.getId(),
                     $container = block.getElem(),
                     prop;
+
+                if (templates) {
+                    for (var k in templates) {
+                        postData[postData.length] = {
+                            name: 'arCustomTemplates[' + k + ']',
+                            value: templates[k]
+                        };
+                    }
+                }
 
                 if (block.getAttr('menu')) {
                     block.getAttr('menu').destroy();
@@ -145,6 +163,16 @@
                 } else {
                     after = area.getBlockContainer().children().last();
                     dragAreaBlock = data.dragAreaBlock;
+                }
+
+                var templates = area.getCustomTemplates();
+                if (templates) {
+                    for (var k in templates) {
+                        postData[postData.length] = {
+                            name: 'arCustomTemplate[' + k + ']',
+                            value: templates[k]
+                        };
+                    }
                 }
 
                 if (dragAreaBlock) {
@@ -575,11 +603,13 @@
                 l = pos.left;
 
             var tw = l + parseInt($toolbar.width());
-            if (tw > $window.width()) {
-                var overage = tw - (l + $container.width());
-                $toolbar.css('left', l - overage);
-            } else {
-                $toolbar.css('left', l);
+            if ($window.width() > $toolbar.width()) {
+                if (tw > $window.width()) {
+                    var overage = tw - (l + $container.width());
+                    $toolbar.css('left', l - overage);
+                } else {
+                    $toolbar.css('left', l);
+                }
             }
             $toolbar.css('opacity', 1);
             $toolbar.find('.dialog-launch').dialog();

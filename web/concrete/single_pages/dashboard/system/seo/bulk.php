@@ -178,7 +178,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                             $lastkey = array_pop(array_keys($tokens));
                             $tokens[$lastkey] = '<strong class="collectionPath">' . $tokens[$lastkey] . '</strong>';
                             $untokens = implode('/', $tokens);
-                            ?><a class="help-inline url-path" href="<?php echo $nh->getLinkToCollection($cobj); ?>" target="_blank"><?php echo BASE_URL . DIR_REL . $untokens; ?></a><?php
+                            ?><a class="help-inline url-path" href="<?php echo $nh->getLinkToCollection($cobj); ?>" target="_blank"><?php echo Core::getApplicationURL() . $untokens; ?></a><?php
                             ?>
                         </div>
                         <div class="form-group submit-changes">

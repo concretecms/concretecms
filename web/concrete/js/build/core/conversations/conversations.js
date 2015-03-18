@@ -60,7 +60,6 @@
             var orderBy            = (obj.options.orderBy);
             var enableOrdering     = (obj.options.enableOrdering);
             var displayPostingForm = (obj.options.displayPostingForm);
-            var insertNewMessages  = (obj.options.insertNewMessages);
             var enableCommentRating = (obj.options.enableCommentRating);
             var commentRatingUserID = (obj.options.commentRatingUserID);
             var commentRatingIP = (obj.options.commentRatingIP);
@@ -87,7 +86,6 @@
                     'orderBy':             orderBy,
                     'enableOrdering':      enableOrdering,
                     'displayPostingForm':  displayPostingForm,
-                    'insertNewMessages':   insertNewMessages,
                     'enableCommentRating': enableCommentRating,
                     'commentRatingUserID': commentRatingUserID,
                     'commentRatingIP':     commentRatingIP,
@@ -204,17 +202,17 @@
             obj.$permalinkholder = obj.$element.find('div.ccm-conversation-message-permalink');
             obj.$messagelist = obj.$element.find('div.ccm-conversation-message-list');
             obj.$messagecnt = obj.$element.find('.ccm-conversation-message-count');
-            obj.$postbuttons = obj.$element.find('button[data-submit=conversation-message]');
+            obj.$postbuttons = obj.$element.find('[data-submit=conversation-message]');
             obj.$sortselect = obj.$element.find('select[data-sort=conversation-message-list]');
             obj.$loadmore = obj.$element.find('[data-load-page=conversation-message-list]');
             obj.$messages = obj.$element.find('div.ccm-conversation-messages');
             obj.$messagerating = obj.$element.find('span.ccm-conversation-message-rating');
 
-            obj.$element.on('click.cnv', 'button[data-submit=conversation-message]', function() {
+            obj.$element.on('click.cnv', '[data-submit=conversation-message]', function(e) {
+                e.preventDefault();
                 obj.submitForm($(this));
-                return false;
             });
-            obj.$element.on('click.cnv', 'button[data-submit=update-conversation-message]', function() {
+            obj.$element.on('click.cnv', '[data-submit=update-conversation-message]', function() {
                 obj.submitUpdateForm($(this));
                 return false;
             });
@@ -228,7 +226,7 @@
                 });
                 var $replyform = obj.$replyholder.appendTo($(this).closest('div[data-conversation-message-id]'));
                 $replyform.attr('data-form', 'conversation-reply').show();
-                $replyform.find('button[data-submit=conversation-message]').attr('data-post-parent-id', $(this).attr('data-post-parent-id'));
+                $replyform.find('[data-submit=conversation-message]').attr('data-post-parent-id', $(this).attr('data-post-parent-id'));
 
                 $replyform.attr('rel', 'new-reply' + replyIterator);
                 replyIterator++;  // this may not be necessary, but might come in handy if we need to know how many times a new reply box has been triggered.
@@ -312,7 +310,6 @@
                     'orderBy':             $(this).val(),
                     'enableOrdering':      obj.options.enableOrdering,
                     'displayPostingForm':  obj.options.displayPostingForm,
-                    'insertNewMessages':   obj.options.insertNewMessages,
                     'enableCommentRating': obj.options.enableCommentRating,
                     'dateFormat':          obj.options.dateFormat,
                     'customDateFormat':    obj.options.customDateFormat,
@@ -590,16 +587,21 @@
                         obj.$replyholder.appendTo(obj.$element);
                         obj.$replyholder.hide();
                         obj.$replyholder.find(".conversation-editor").val('');
-                        obj.$replyholder.find(".redactor_conversation_editor_" + obj.options.cnvID).redactor('set', '');
+                        try {
+                            obj.$replyholder.find(".redactor_conversation_editor_" + obj.options.cnvID).redactor('set', '');
+                        } catch(e) {}
                     } else {
-                        if (obj.options.insertNewMessages == 'bottom') {
-                            obj.$messages.append(html);
-                        } else {
+                        if (obj.options.orderBy == 'date_desc') {
                             obj.$messages.prepend(html);
+                        } else {
+                            obj.$messages.append(html);
                         }
                         obj.$element.find('.ccm-conversation-no-messages').hide();
                         obj.$newmessageform.find(".conversation-editor").val('');
-                        obj.$newmessageform.find(".redactor_conversation_editor_" + obj.options.cnvID).redactor('set', '');
+                        try {
+                            obj.$newmessageform.find(".redactor_conversation_editor_" + obj.options.cnvID).redactor('set', '');
+                        } catch(e) {}
+
                     }
                     obj.publish('conversationAddMessageFromJSON',{json:json,form:$form});
                     obj.updateCount();

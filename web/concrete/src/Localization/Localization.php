@@ -5,9 +5,8 @@ use Config;
 use Concrete\Core\Cache\Adapter\ZendCacheDriver;
 use Core;
 use Events;
-use \Zend\I18n\Translator\Translator;
-use \Punic\Data as PunicData;
-use CacheLocal;
+use Zend\I18n\Translator\Translator;
+use Punic\Data as PunicData;
 
 class Localization
 {
@@ -84,8 +83,8 @@ class Localization
                 }
             }
             // Package language files
-            $pkgList = CacheLocal::getEntry('pkgList', 1);
-            if (is_object($pkgList)) {
+            if (Config::get('app.bootstrap.packages_loaded') === true) {
+                $pkgList = \Concrete\Core\Package\PackageList::get();
                 foreach ($pkgList->getPackages() as $pkg) {
                     $pkg->setupPackageLocalization($locale, $this->translate);
                 }
@@ -199,6 +198,8 @@ class Localization
      */
     public static function clearCache()
     {
+        $locale = static::activeLocale();
         self::getCache()->flush();
+        static::changeLocale($locale);
     }
 }

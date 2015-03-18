@@ -24,7 +24,12 @@ if (is_object($c)) {
 			if($c->isSystemPage()) {
 				$pageTitle = t($pageTitle);
 			}
-			$pageTitle = sprintf(Config::get('concrete.seo.title_format'), Config::get('concrete.site'), $pageTitle);
+			$seo = Core::make('helper/seo');
+			$seo->addTitleSegment($pageTitle);
+			$seo->setSiteName(Config::get('concrete.site'));
+			$seo->setTitleFormat(Config::get('concrete.seo.title_format'));
+			$seo->setTitleSegmentSeparator(Config::get('concrete.seo.title_segment_separator'));
+			$pageTitle = $seo->getTitle();
 		}
 	}
 	$pageDescription = (!isset($pageDescription) || !$pageDescription) ? $c->getCollectionDescription() : $pageDescription;
@@ -96,8 +101,8 @@ else {
 ?>
 var CCM_IMAGE_PATH = "<?php echo ASSETS_URL_IMAGES?>";
 var CCM_TOOLS_PATH = "<?php echo REL_DIR_FILES_TOOLS_REQUIRED?>";
-var CCM_BASE_URL = "<?php echo BASE_URL?>";
-var CCM_REL = "<?php echo DIR_REL?>";
+var CCM_APPLICATION_URL = "<?php echo \Core::getApplicationURL()?>";
+var CCM_REL = "<?php echo \Core::getApplicationRelativePath()?>";
 
 </script>
 

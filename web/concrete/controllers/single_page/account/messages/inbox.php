@@ -93,10 +93,10 @@ class Inbox extends AccountPageController
             $this->set('author', $msg->getMessageAuthorObject());
             $this->set('msg', $msg);
             $this->set('box', $box);
-            $this->set('backURL', View::url('/account/messages/inbox', 'view_mailbox', $box));
+            $this->set('backURL', View::url('/account/messages/inbox', 'view_mailbox', h($box)));
             $valt = Loader::helper('validation/token');
             $token = $valt->generate('delete_message_' . $msgID);
-            $this->set('deleteURL', View::url('/account/messages/inbox', 'delete_message', $box, $msgID, $token));
+            $this->set('deleteURL', View::url('/account/messages/inbox', 'delete_message', h($box), h($msgID), $token));
         } else {
             $this->redirect('/account/messages/inbox');
         }
@@ -125,7 +125,7 @@ class Inbox extends AccountPageController
     public function write($uID)
     {
         $this->validateUser($uID);
-        $this->set('backURL', View::url('/members/profile', 'view', $uID));
+        $this->set('backURL', View::url('/members/profile', 'view', h($uID)));
     }
 
     public function reply($boxID, $msgID)
