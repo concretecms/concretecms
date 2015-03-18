@@ -6,5 +6,9 @@
  * ----------------------------------------------------------------------------
  */
 if (!@include(DIR_BASE_CORE . '/' . DIRNAME_VENDOR . '/autoload.php')) {
-    die('Third party libraries not installed. Make sure that composer has required libraries in the concrete/ directory.');
+    if (!@include(DIR_BASE_CORE . '/../' . DIRNAME_VENDOR . '/autoload.php')) {
+        if (!@include(DIR_BASE_CORE . '/../../' . DIRNAME_VENDOR . '/autoload.php')) {
+            die('Third party libraries not installed. Make sure that composer has required libraries in the concrete/ directory.');
+        }
+    }
 }
