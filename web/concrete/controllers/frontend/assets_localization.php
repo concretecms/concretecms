@@ -253,23 +253,23 @@ var ccmi18n_topics = {
         if ($locale === 'en-US') {
             echo '// No needs to translate '.$locale;
         } else {
+            $env = Environment::get();
+            /* @var $env \Concrete\Core\Foundation\Environment */
             $language = Localization::activeLanguage();
             $alternatives = array($locale);
             if (strcmp($locale, $language) !== 0) {
                 $alternatives[] = $language;
             }
-            $content = false;
+            $found = null;
             foreach ($alternatives as $alternative) {
-                $path = DIR_BASE_CORE.'/'.DIRNAME_JAVASCRIPT."/i18n/select2_locale_{$alternative}.js";
-                if (is_file($path) && is_readable($path)) {
-                    $content = @file_get_contents($path);
-                    if (is_string($content)) {
-                        break;
-                    }
+                $r = $env->getRecord(DIRNAME_JAVASCRIPT."/i18n/select2_locale_{$alternative}.js");
+                if (is_file($r->file)) {
+                    $found = $r->file;
+                    break;
                 }
             }
-            if (is_string($content)) {
-                echo $content;
+            if (isset($found)) {
+                readfile($found);
             } else {
                 echo '// No select2 translations for '.implode(', ', $alternatives);
             }
@@ -420,14 +420,13 @@ var ccmi18n_imageeditor = {
         }
         $env = Environment::get();
         /* @var $env \Concrete\Core\Foundation\Environment */
-        $r = $env->getRecord($path);
         $alternatives = array(Localization::activeLocale());
         if (Localization::activeLocale() !== Localization::activeLanguage()) {
             $alternatives[] = Localization::activeLanguage();
         }
         $found = null;
         foreach ($alternatives as $alternative) {
-            $r = $env->getRecord('js/i18n/ui.datepicker-'.str_replace('_', '-', $alternative).'.js');
+            $r = $env->getRecord(DIRNAME_JAVASCRIPT.'/i18n/ui.datepicker-'.str_replace('_', '-', $alternative).'.js');
             if (is_file($r->file)) {
                 $found = $r->file;
                 break;
