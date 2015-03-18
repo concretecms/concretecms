@@ -87,6 +87,12 @@ class PathUrlResolver implements UrlResolverInterface
             $url->getHost()->set(\Request::getInstance()->getHost());
         }
 
+        if (\Config::get('concrete.seo.canonical_port')) {
+            $url->getPort()->set(\Config::get('concrete.seo.canonical_port'));
+        } else {
+            $url->getPort()->set(\Request::getInstance()->getPort());
+        }
+
         if ($url->getHost()->get()) {
             $url->setScheme('http');
         }

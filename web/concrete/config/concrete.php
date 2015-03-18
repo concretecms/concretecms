@@ -795,6 +795,7 @@ return array(
         'url_rewriting_all'       => false,
         'redirect_to_canonical_host'  => false,
         'canonical_host'          => false,
+        'canonical_port'          => false,
         'trailing_slash'          => false,
         'title_format'            => '%1$s :: %2$s',
         'title_segment_separator' => ' :: ',
