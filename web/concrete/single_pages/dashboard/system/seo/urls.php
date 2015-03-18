@@ -8,10 +8,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 
             <div class="form-group">
-                <label class="control-label" for="canonical_host"><?=t('Canonical Host')?> <i class="fa fa-question-circle launch-tooltip" title="<?=t('If this site is accessible from multiple domains, it can be useful to specify a single canonical domain. This can usually be left blank.')?>"></i></label>
+                <label class="control-label" for="canonical_host"><?=t('Canonical Host and Port')?> <i class="fa fa-question-circle launch-tooltip" title="<?=t('If this site is accessible from multiple domains, it can be useful to specify a single canonical domain and port. These can usually be left blank.')?>"></i></label>
                 <div class="input-group">
                     <span class="input-group-addon">http://</span>
                     <input type="text" class="form-control" placeholder="domain.com" value="<?=$host?>" name="canonical_host">
+                    <span class="input-group-addon">:</span>
+                    <input type="text" class="form-control" placeholder="80" value="<?=$port?>" name="canonical_port">
                 </div>
             </div>
 

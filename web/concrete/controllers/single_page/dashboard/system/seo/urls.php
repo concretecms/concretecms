@@ -56,6 +56,7 @@ class Urls extends DashboardPageController {
 		$this->set('strRules', $this->getRewriteRules());
 		$this->set('intRewriting', $intRewriting);
 		$this->set('host', Config::get('concrete.seo.canonical_host'));
+        $this->set('port', Config::get('concrete.seo.canonical_port'));
 
 		if($strStatus == 'saved'){
 			if(Config::get('concrete.seo.url_rewriting') && !$blnHtu){
@@ -87,6 +88,7 @@ class Urls extends DashboardPageController {
 			if($this->isPost()){
 
 				Config::save('concrete.seo.canonical_host', $this->post('canonical_host'));
+                Config::save('concrete.seo.canonical_port', $this->post('canonical_port'));
 
 				$intCurrent = Config::get('concrete.seo.url_rewriting') == 1 ? 1 : 0;
 				$intPosted = $this->post('URL_REWRITING') == 1 ? 1 : 0;

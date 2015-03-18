@@ -310,6 +310,9 @@ class Application extends Container
         if (Config::get('concrete.seo.redirect_to_canonical_host')) {
             $url = UrlImmutable::createFromServer($_SERVER);
             $url->getHost()->set(Config::get('concrete.seo.canonical_host'));
+            if (Config::get('concrete.seo.canonical_port')) {
+                $url->getPort()->set(Config::get('concrete.seo.canonical_port'));
+            }
             $response = new RedirectResponse($url, '301');
             $response->send();
             exit;
