@@ -88,6 +88,7 @@ class DispatcherRouteCallback extends RouteCallback
                 return $this->sendPageNotFound($request);
             } else {
                 $c = $home;
+                $c->cPathFetchIsCanonical = true;
             }
         }
         if (!$c->cPathFetchIsCanonical) {
