@@ -3287,7 +3287,25 @@
 					//this.upload.init('#redactor-modal-image-droparea', this.opts.imageUpload, this.image.insert);
 					this.modal.createCancelButton();
 					this.image.buttonSave = this.modal.createActionButton(this.lang.get('save'));
+
+					if (this.opts.concrete5.filemanager) {
+						$('a[data-action=choose-image-from-file-manager]').on('click', function(e) {
+							e.preventDefault();
+							ConcreteFileManager.launchDialog(function(data) {
+								jQuery.fn.dialog.showLoader();
+								ConcreteFileManager.getFileDetails(data.fID, function(r) {
+									jQuery.fn.dialog.hideLoader();
+									var file = r.files[0];
+									$('#redactor-image-link').val(file.urlDownload);
+								});
+							});
+						});
+					} else {
+						$('a[data-action=choose-image-from-file-manager]').remove();
+					}
+
 					/* end concrete5 */
+
 
 					this.selection.save();
 					this.modal.show();
@@ -5416,8 +5434,7 @@
 								ConcreteFileManager.getFileDetails(data.fID, function(r) {
 									jQuery.fn.dialog.hideLoader();
 									var file = r.files[0];
-									$('#redactor_link_url').val(file.urlDownload);
-									$('#redactor_link_image').prop('checked', true);
+									$('#redactor-link-url').val(file.urlDownload);
 								});
 							});
 						});
@@ -5438,11 +5455,9 @@
                             ConcreteEvent.unsubscribe('SitemapSelectPage');
                             ConcreteEvent.subscribe('SitemapSelectPage', function(e, data) {
                                 jQuery.fn.dialog.closeTop();
-                                var url = CCM_BASE_URL + CCM_DISPATCHER_FILENAME + '?cID=' + data.cID;
-                                $('#redactor_link_url').val(url);
-                                $('#redactor_link_ajax').prop('checked', true);
+                                var url = CCM_APPLICATION_URL + CCM_DISPATCHER_FILENAME + '?cID=' + data.cID;
+                                $('#redactor-link-url').val(url);
                             });
-
                         });
                     } else {
                         $('a[data-action=choose-link-from-sitemap]').remove();
@@ -5865,8 +5880,10 @@
 						+ '<section id="redactor-modal-image-insert">'
 						+ '<div class="form-group">'
 						+ '<label class="control-label">' + this.lang.get('image_web_link') + '</label>'
-						+ '<input type="text" name="redactor_file_link" id="redactor_file_link" class="form-control"  />'
-						+ '</div>'
+						+ '<div class="input-group">'
+						+ '<input type="text" name="redactor-image-link" id="redactor-image-link" class="form-control"  />'
+						+ '<a href="#" data-action="choose-image-from-file-manager" class="btn btn-default input-group-addon"><i class="fa fa-search"></i></a>'
+						+ '</div></div>'
 						+ '</section>',
 
 						file: String()
@@ -5880,9 +5897,9 @@
 						link: String()
 						+ '<section id="redactor-modal-link-insert">'
                             + '<div class="form-group">'
-                            + '<label>' + this.lang.get('web') + '</label>'
+                            + '<label class="control-label">' + this.lang.get('web') + '</label>'
                             + '<div class="input-group">'
-                            + '<input type="text" class="form-control" id="redactor_link_url" />'
+                            + '<input type="text" class="form-control" id="redactor-link-url" />'
                             + '<a href="#" data-action="choose-link-from-sitemap" class="btn btn-default input-group-addon"><i class="fa fa-sitemap"></i></a>'
                             + '<a href="#" data-action="choose-file-from-file-manager" class="btn btn-default input-group-addon"><i class="fa fa-file"></i></a>'
                             + '</div>'
