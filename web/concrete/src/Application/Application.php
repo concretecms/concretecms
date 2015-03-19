@@ -414,8 +414,11 @@ class Application extends Container
         $url = Url::createFromUrl('');
         $url->getScheme()->set($r->getScheme());
         $url->getHost()->set($r->getHost());
-        $url->getPort()->set($r->getPort());
         $url->getPath()->append($home);
+
+        if ($r->getPort() != 80 && ($url->getScheme()->get() != 'https' && $r->getPort() != 443)) {
+            $url->getPort()->set($r->getPort());
+        }
 
         $this['app_relative_path'] = rtrim($home, '/');
         $this['app_url'] = rtrim($url, '/');
