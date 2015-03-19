@@ -294,6 +294,40 @@ class Conversation extends Object implements \Concrete\Core\Permission\ObjectInt
             array(intval($cnvEnableSubscription), $this->getConversationID()));
     }
 
+    /**
+     * Similar to the method below, but excludes global subscribers who have opted out of conversations, etc...
+     * This method should be used any time we actually act on subscriptions, send emails, etc...
+     */
+    public function getConversationUsersToEmail()
+    {
+        $db = Loader::db();
+
+        $ids = array();
+        if (!$this->getConversationNotificationOverridesEnabled() > 0) {
+            $ids = $db->GetCol('select uID from ConversationSubscriptions where cnvID = 0');
+        }
+
+        $r = $db->Execute('select uID, type from ConversationSubscriptions where cnvID = ?',
+            array($this->getConversationID()));
+        while ($row = $r->FetchRow()) {
+            if ($row['type'] == 'U' && in_array($row['uID'], $ids)) {
+                $ids = array_diff($ids, array($row['uID']));
+            } else {
+                $ids[] = $row['uID'];
+            }
+        }
+
+        $ids = array_unique($ids);
+
+        $users = array();
+        foreach($ids as $uID) {
+            $ui = \UserInfo::getByID($uID);
+            if (is_object($ui)) {
+                $users[] = $ui;
+            }
+        }
+        return $users;
+    }
 
     public function getConversationSubscribedUsers()
     {
@@ -339,6 +373,49 @@ class Conversation extends Object implements \Concrete\Core\Permission\ObjectInt
         $db->commit();
     }
 
+    public function isUserSubscribed($user)
+    {
+        $db = Loader::db();
+        $type = $db->GetOne('select type from ConversationSubscriptions where uID = ? and cnvID = ?', array(
+           $user->getUserID(), $this->getConversationID()
+        ));
+        if ($type == 'S') {
+            return true;
+        } else if ($type == 'U') {
+            return false;
+        } else {
+            if ($this->getConversationNotificationOverridesEnabled() > 0) {
+                return false;
+            } else {
+                $cnt = $db->GetOne('select count(cnvID) from ConversationSubscriptions where uID = ? and cnvID = 0', array(
+                    $user->getUserID()
+                ));
+                return $cnt > 0;
+            }
+        }
+    }
+
+    public function subscribeUser($user)
+    {
+        $db = Loader::db();
+        $db->delete('ConversationSubscriptions', array('cnvID' => $this->getConversationID(), 'uID' => $user->getUserID()));
+        if (!$this->isUserSubscribed($user)) {
+            // note, even though we just deleted the row, we still run the check, because the user COULD be subscribed
+            // globally
+            $db->insert('ConversationSubscriptions', array('cnvID' => $this->getConversationID(), 'uID' => $user->getUserID()));
+        }
+    }
+
+    public function unsubscribeUser($user)
+    {
+        $db = Loader::db();
+        $db->delete('ConversationSubscriptions', array('cnvID' => $this->getConversationID(), 'uID' => $user->getUserID()));
+        if ($this->isUserSubscribed($user)) {
+            // this means we don't have a subscription record in the conversation specific table. So we check to see if user is still subscribed
+            // If that's the case, it means they're subscribed globally.
+            $db->insert('ConversationSubscriptions', array('cnvID' => $this->getConversationID(), 'type' => 'U', 'uID' => $user->getUserID()));
+        }
+    }
 
     public static function setDefaultSubscribedUsers($users)
     {
