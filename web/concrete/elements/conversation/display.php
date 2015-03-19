@@ -23,7 +23,8 @@ $form = Loader::helper('form');
 	'displayForm' => $displayForm,
 	'displayPostingForm' => $displayPostingForm,
 	'position' => 'top',
-	'enablePosting' => $enablePosting
+	'enablePosting' => $enablePosting,
+	'conversation' => $conversation
 ));?>
 
 
@@ -80,5 +81,6 @@ $form = Loader::helper('form');
 	'displayForm' => $displayForm,
 	'displayPostingForm' => $displayPostingForm,
 	'position' => 'bottom',
-	'enablePosting' => $enablePosting
+	'enablePosting' => $enablePosting,
+	'conversation' => $conversation
 ));?>

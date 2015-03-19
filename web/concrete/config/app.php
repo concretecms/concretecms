@@ -224,6 +224,12 @@ return array(
         "/ccm/system/dialogs/user/search"                                               => array('\Concrete\Controller\Dialog\User\Search::view'),
         "/ccm/system/dialogs/user/search/customize"                                     => array('\Concrete\Controller\Dialog\User\Search\Customize::view'),
         "/ccm/system/dialogs/user/search/customize/submit"                              => array('\Concrete\Controller\Dialog\User\Search\Customize::submit'),
+        /**
+         * Conversations
+         */
+        "/ccm/system/dialogs/conversation/subscribe/{cnvID}"                            => array('\Concrete\Controller\Dialog\Conversation\Subscribe::view'),
+        "/ccm/system/dialogs/conversation/subscribe/subscribe/{cnvID}"                  => array('\Concrete\Controller\Dialog\Conversation\Subscribe::subscribe'),
+        "/ccm/system/dialogs/conversation/subscribe/unsubscribe/{cnvID}"                => array('\Concrete\Controller\Dialog\Conversation\Subscribe::unsubscribe'),
 
         /**
          * Files
@@ -898,6 +904,7 @@ return array(
                 array('javascript', 'jquery'),
                 array('javascript', 'jquery/ui'),
                 array('javascript', 'underscore'),
+                array('javascript', 'core/lightbox'),
                 array('javascript', 'dropzone'),
                 array('javascript', 'bootstrap/dropdown'),
                 array('javascript', 'core/events'),
@@ -906,6 +913,7 @@ return array(
                 array('css', 'core/frontend/errors'),
                 array('css', 'font-awesome'),
                 array('css', 'bootstrap/dropdown'),
+                array('css', 'core/lightbox'),
                 array('css', 'jquery/ui')
             ),
             true

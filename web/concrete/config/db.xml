@@ -2961,6 +2961,9 @@
             <default value="0"/>
             <unsigned/>
         </field>
+        <field name="type" type="C" size="1">
+            <default value="S"/>
+       </field>
         <index name="cnvID">
             <col>cnvID</col>
         </index>
