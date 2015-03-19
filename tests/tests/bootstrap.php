@@ -5,7 +5,7 @@
 
 // testing credentials
 
-use Concrete\Core\Config\Repository;
+use Concrete\Core\Config\Repository\Repository;
 
 define('DIR_BUILDTOOLS', dirname(dirname(__FILE__)) . '/build-tools');
 if (!is_dir(DIR_BUILDTOOLS)) {
@@ -51,6 +51,20 @@ $r = new \Concrete\Core\Http\Request(
  */
 $cms = require $DIR_BASE_CORE . '/bootstrap/start.php';
 
+
+class TestConfigRepository extends Repository {
+
+    public function save($key, $value)
+    {
+        return true;
+    }
+
+}
+
+$old_config = $cms->make('config');
+$cms->instance('config', new TestConfigRepository($old_config->getLoader(), $old_config->getSaver(), 'travis'));
+\Concrete\Core\Support\Facade\Config::clearResolvedInstance('config');
+\Config::set('concrete.seo.canonical_host', null);
 
 /** @var Repository $config */
 $config = $cms->make('config');
