@@ -97,6 +97,7 @@ use Page;
 
             $conversation = $this->getConversationObject();
             $this->set('notificationOverridesEnabled', $conversation->getConversationNotificationOverridesEnabled());
+            $this->set('subscriptionEnabled', $conversation->getConversationSubscriptionEnabled());
             $this->set('notificationUsers', $conversation->getConversationSubscribedUsers());
         }
 
@@ -231,8 +232,10 @@ use Page;
                     }
                 }
                 $conversation->setConversationSubscribedUsers($users);
+                $conversation->setConversationSubscriptionEnabled(intval($values['subscriptionEnabled']));
             } else {
                 $conversation->setConversationNotificationOverridesEnabled(false);
+                $conversation->setConversationSubscriptionEnabled(0);
             }
 
             if ($values['fileExtensions']) {

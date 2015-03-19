@@ -28,6 +28,7 @@ if ($controller->getTask() == 'add') {
     $fileExtensions = implode(',', $fileAccessFileTypes);
     $attachmentsEnabled = intval(Config::get('conversations.attachments_enabled'));
 	$notificationUsers = Conversation::getDefaultSubscribedUsers();
+	$subscriptionEnabled = intval(Config::get('conversations.subscription_enabled'));
 }
 
 if(!$dateFormat) {
@@ -220,6 +221,14 @@ if(!$dateFormat) {
 		<div class="form-group">
 			<label class="control-label"><?=t('Users To Receive Conversation Notifications')?></label>
 			<?=Core::make("helper/form/user_selector")->selectMultipleUsers('notificationUsers', $notificationUsers)?>
+		</div>
+	</div>
+	<div class="form-group notification-overrides">
+		<label class="control-label"><?=t('Subscribe Option')?></label>
+		<div class="checkbox">
+			<label><?=$form->checkbox('subscriptionEnabled', 1, $subscriptionEnabled)?>
+				<?=t('Yes, allow registered users to choose to subscribe to conversations.')?>
+			</label>
 		</div>
 	</div>
 </fieldset>

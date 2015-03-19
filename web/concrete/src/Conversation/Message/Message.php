@@ -409,17 +409,17 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
 
         if ($cnv instanceof \Concrete\Core\Conversation\Conversation) {
             $cnv->updateConversationSummary();
-            if ($cnv->getConversationNotificationEnabled()) {
-                $c = $cnv->getConversationPageObject();
-                if (is_object($c)) {
-                    $formatter = new AuthorFormatter($author);
-                    $email = $cnv->getConversationNotificationEmailAddress();
+            $users = $cnv->getConversationSubscribedUsers();
+            $c = $cnv->getConversationPageObject();
+            if (is_object($c)) {
+                $formatter = new AuthorFormatter($author);
+                $cnvMessageBody = html_entity_decode($cnvMessageBody, ENT_QUOTES, APP_CHARSET);
+                foreach($users as $ui) {
                     $mail = Core::make('mail');
-                    $mail->to($email);
+                    $mail->to($ui->getUserEmail());
                     $mail->addParameter('title', $c->getCollectionName());
                     $mail->addParameter('link', $c->getCollectionLink(true));
                     $mail->addParameter('poster', $formatter->getDisplayName());
-                    $cnvMessageBody = html_entity_decode($cnvMessageBody, ENT_QUOTES, APP_CHARSET);
                     $mail->addParameter('body', Core::make('helper/text')->prettyStripTags($cnvMessageBody));
                     $mail->load('new_conversation_message');
                     $mail->sendMail();
