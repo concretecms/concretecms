@@ -336,15 +336,14 @@ class StartingPointPackage extends BasePackage
             $uPasswordEncrypted = INSTALL_USER_PASSWORD_HASH;
         }
         $uEmail = INSTALL_USER_EMAIL;
-        UserInfo::addSuperUser($uPasswordEncrypted, $uEmail);
+        $superuser = UserInfo::addSuperUser($uPasswordEncrypted, $uEmail);
         $u = User::getByUserID(USER_SUPER_ID, true, false);
 
         MailImporter::add(array('miHandle' => 'private_message'));
         UserPointAction::add('won_badge', t('Won a Badge'), 5, false, true);
 
         // Install conversation default email
-        Config::save('conversations.notification', true);
-        Config::save('conversations.notification_email', INSTALL_USER_EMAIL);
+        \Conversation::setDefaultSubscribedUsers(array($superuser));
     }
 
     public function make_directories()

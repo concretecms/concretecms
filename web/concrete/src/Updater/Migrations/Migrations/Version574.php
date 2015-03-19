@@ -16,11 +16,28 @@ class Version574 extends AbstractMigration
 
     public function getName()
     {
-        return '20150310100000';
+        return '20150319000000';
     }
 
     public function up(Schema $schema)
     {
+
+        \Concrete\Core\Database\Schema\Schema::refreshCoreXMLSchema(array(
+            'ConversationPermissionAddMessageAccessList',
+            'ConversationSubscriptions',
+            'Conversations',
+
+        ));
+
+        // Subscribe admin to conversations by default, if we have no subscriptions
+        $users = \Conversation::getDefaultSubscribedUsers();
+        if (count($users) == 0) {
+            $admin = \UserInfo::getByID(USER_SUPER_ID);
+            if (is_object($admin)) {
+                $users = array($admin);
+                \Conversation::setDefaultSubscribedUsers($users);
+            }
+        }
 
         $db = \Database::get();
         $db->Execute('DROP TABLE IF EXISTS PageStatistics');
@@ -95,18 +112,6 @@ class Version574 extends AbstractMigration
             $cms->addColumn('cnvMessageAuthorEmail', 'string', array('notnull' => false, 'length' => 255));
         }
 
-        $mss = $schema->getTable('Conversations');
-        if (!$mss->hasColumn('cnvNotificationOverridesEnabled')) {
-            $mss->addColumn('cnvNotificationOverridesEnabled', 'boolean', array('unsigned' => true, 'notnull' => true, 'length' => 1, 'default' => 0));
-        }
-        if (!$mss->hasColumn('cnvSendNotification')) {
-            $mss->addColumn('cnvSendNotification', 'boolean', array('unsigned' => true, 'notnull' => true, 'length' => 1, 'default' => 0));
-        }
-        if (!$mss->hasColumn('cnvNotificationEmailAddress')) {
-            $mss->addColumn('cnvNotificationEmailAddress', 'text', array('notnull' => false));
-        }
-
-
         $this->updatePermissionDurationObjects();
 
         $key = Key::getByHandle('add_conversation_message');
@@ -114,7 +119,6 @@ class Version574 extends AbstractMigration
             $key->setPermissionKeyHasCustomClass(true);
         }
 
-        \Concrete\Core\Database\Schema\Schema::refreshCoreXMLSchema(array('ConversationPermissionAddMessageAccessList'));
     }
 
     protected function updatePermissionDurationObjects()
