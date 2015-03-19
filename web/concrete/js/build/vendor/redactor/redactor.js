@@ -5407,6 +5407,48 @@
 					// hide link's tooltip
 					$('.redactor-link-tooltip').remove();
 
+                    /* concrete5 */
+					if (this.opts.concrete5.filemanager) {
+						$('a[data-action=choose-file-from-file-manager]').on('click', function(e) {
+							e.preventDefault();
+							ConcreteFileManager.launchDialog(function(data) {
+								jQuery.fn.dialog.showLoader();
+								ConcreteFileManager.getFileDetails(data.fID, function(r) {
+									jQuery.fn.dialog.hideLoader();
+									var file = r.files[0];
+									$('#redactor_link_url').val(file.urlDownload);
+									$('#redactor_link_image').prop('checked', true);
+								});
+							});
+						});
+					} else {
+						$('a[data-action=choose-file-from-file-manager]').remove();
+					}
+
+					if (this.opts.concrete5.sitemap) {
+                        $('a[data-action=choose-link-from-sitemap]').on('click', function(e) {
+                            e.preventDefault();
+                            jQuery.fn.dialog.open({
+                                width: '90%',
+                                height: '70%',
+                                modal: false,
+                                title: ccmi18n_sitemap.choosePage,
+                                href: CCM_TOOLS_PATH + '/sitemap_search_selector'
+                            });
+                            ConcreteEvent.unsubscribe('SitemapSelectPage');
+                            ConcreteEvent.subscribe('SitemapSelectPage', function(e, data) {
+                                jQuery.fn.dialog.closeTop();
+                                var url = CCM_BASE_URL + CCM_DISPATCHER_FILENAME + '?cID=' + data.cID;
+                                $('#redactor_link_url').val(url);
+                                $('#redactor_link_ajax').prop('checked', true);
+                            });
+
+                        });
+                    } else {
+                        $('a[data-action=choose-link-from-sitemap]').remove();
+                    }
+					/* end concrete5 */
+
 					// show modal
 					this.selection.save();
 					this.modal.show();
@@ -5837,10 +5879,14 @@
 
 						link: String()
 						+ '<section id="redactor-modal-link-insert">'
-    						+ '<div class="form-group">'
-							+ '<label class="control-label">URL</label>'
-							+ '<input class="form-control" type="url" id="redactor-link-url" />'
-							+ '</div>'
+                            + '<div class="form-group">'
+                            + '<label>' + this.lang.get('web') + '</label>'
+                            + '<div class="input-group">'
+                            + '<input type="text" class="form-control" id="redactor_link_url" />'
+                            + '<a href="#" data-action="choose-link-from-sitemap" class="btn btn-default input-group-addon"><i class="fa fa-sitemap"></i></a>'
+                            + '<a href="#" data-action="choose-file-from-file-manager" class="btn btn-default input-group-addon"><i class="fa fa-file"></i></a>'
+                            + '</div>'
+                            + '</div>'
 							+ '<div class="form-group">'
 							+ '<label class="control-label">' + this.lang.get('text') + '</label>'
 							+ '<input class="form-control" type="text" id="redactor-link-url-text" />'
