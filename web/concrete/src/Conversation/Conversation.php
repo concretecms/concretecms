@@ -141,7 +141,7 @@ class Conversation extends Object implements \Concrete\Core\Permission\ObjectInt
         $db = Loader::db();
         $r = $db->GetRow('select cnvID, cID, cnvDateCreated, cnvDateLastMessage, cnvMessagesTotal, cnvAttachmentsEnabled, cnvAttachmentOverridesEnabled,
 		cnvFileExtensions, cnvMaxFileSizeRegistered, cnvMaxFileSizeGuest, cnvMaxFilesRegistered, cnvMaxFilesGuest, cnvOverrideGlobalPermissions,
-		cnvNotificationOverridesEnabled from Conversations where cnvID = ?',
+		cnvNotificationOverridesEnabled, cnvEnableSubscription from Conversations where cnvID = ?',
             array($cnvID));
         if (is_array($r) && $r['cnvID'] == $cnvID) {
             $cnv = new static;
@@ -277,6 +277,23 @@ class Conversation extends Object implements \Concrete\Core\Permission\ObjectInt
         $db->Execute('update Conversations set cnvFileExtensions = ? where cnvID = ?',
             array($cnvFileExtensions, $this->getConversationID()));
     }
+
+    public function getConversationSubscriptionEnabled()
+    {
+        if ($this->getConversationNotificationOverridesEnabled() > 0) {
+            return $this->cnvEnableSubscription;
+        } else {
+            return Config::get('conversations.subscription_enabled');
+        }
+    }
+
+    public function setConversationSubscriptionEnabled($cnvEnableSubscription)
+    {
+        $db = Loader::db();
+        $db->Execute('update Conversations set cnvEnableSubscription = ? where cnvID = ?',
+            array(intval($cnvEnableSubscription), $this->getConversationID()));
+    }
+
 
     public function getConversationSubscribedUsers()
     {

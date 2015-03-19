@@ -775,6 +775,10 @@
         <notnull />
         <default value="0" />
     </field>
+    <field name="cnvEnableSubscription" type="I1">
+        <unsigned/>
+        <default value="0" />
+    </field>
     <index name="cID">
         <col>cID</col>
     </index>

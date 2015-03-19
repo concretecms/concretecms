@@ -27,6 +27,7 @@ class Settings extends DashboardPageController {
         $this->set('attachmentsEnabled', intval(Config::get('conversations.attachments_enabled')));
         $this->loadEditors();
         $this->set('notificationUsers', Conversation::getDefaultSubscribedUsers());
+        $this->set('subscriptionEnabled', intval(Config::get('conversations.subscription_enabled')));
 	}
 
     protected function loadEditors()
@@ -75,6 +76,7 @@ class Settings extends DashboardPageController {
         Config::save('conversations.files.guest.max', intval($this->post('maxFilesGuest')));
         Config::save('conversations.files.registered.max', intval($this->post('maxFilesRegistered')));
         Config::save('conversations.attachments_enabled', !!$this->post('attachmentsEnabled'));
+        Config::save('conversations.subscription_enabled', !!$this->post('subscriptionEnabled'));
         $users = array();
         if (is_array($this->post('defaultUsers'))) {
             foreach($this->post('defaultUsers') as $uID) {

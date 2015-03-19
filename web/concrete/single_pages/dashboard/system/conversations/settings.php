@@ -42,8 +42,16 @@ echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Conv
 	<fieldset>
 		<legend><?=t('Notification')?></legend>
 		<div class="form-group">
-		<label class="control-label"><?=t('Users To Receive Conversation Notifications')?></label>
-		<?=Core::make("helper/form/user_selector")->selectMultipleUsers('defaultUsers', $notificationUsers)?>
+			<label class="control-label"><?=t('Users To Receive Conversation Notifications')?></label>
+			<?=Core::make("helper/form/user_selector")->selectMultipleUsers('defaultUsers', $notificationUsers)?>
+		</div>
+		<div class="form-group">
+			<label class="control-label"><?=t('Subscribe Option')?></label>
+			<div class="checkbox">
+				<label><?=$form->checkbox('subscriptionEnabled', 1, $subscriptionEnabled)?>
+					<?=t('Yes, allow registered users to choose to subscribe to conversations.')?>
+				</label>
+			</div>
 		</div>
 	</fieldset>
     <div class="ccm-dashboard-form-actions-wrapper">
