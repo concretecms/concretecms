@@ -64,7 +64,7 @@ class RedactorEditor implements EditorInterface
                     lightbox: true
                 },
                 'plugins': [
-                    'concrete5inline', 'concrete5magic', 'undoredo'
+                    'concrete5inline', 'concrete5magic', 'undoredo', 'specialcharacters'
                 ]
             });
         });
