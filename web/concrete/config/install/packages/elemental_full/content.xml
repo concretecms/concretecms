@@ -892,7 +892,7 @@
                                 <fID>{ccm:export:file:slider1.png}</fID>
                                 <linkURL><![CDATA[]]></linkURL>
                                 <title><![CDATA[Stand Out on the Web]]></title>
-                                <description><![CDATA[                                    <p>Share your business with an impressive, yet minimal presentation. Let your customers understand your web presence through elegance and clarity.</p>]]></description>
+                                <description><![CDATA[<p>Share your business with an impressive, yet minimal presentation. Let your customers understand your web presence through elegance and clarity.</p>]]></description>
                                 <sortOrder><![CDATA[0]]></sortOrder>
                             </record>
                             <record>
@@ -900,7 +900,7 @@
                                 <fID>{ccm:export:file:slider2.png}</fID>
                                 <linkURL><![CDATA[]]></linkURL>
                                 <title><![CDATA[A Simple Image Slider]]></title>
-                                <description><![CDATA[                                    <p>This image slider can have any content that you want in it.</p>]]></description>
+                                <description><![CDATA[<p>This image slider can have any content that you want in it.</p>]]></description>
                                 <sortOrder><![CDATA[1]]></sortOrder>
                             </record>
                         </data>
@@ -941,7 +941,7 @@
                                             <record>
                                                 <icon><![CDATA[pencil]]></icon>
                                                 <title><![CDATA[Easy to Edit]]></title>
-                                                <paragraph><![CDATA[                                                    Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. ]]></paragraph>
+                                                <paragraph><![CDATA[Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna.]]></paragraph>
                                             </record>
                                         </data>
                                     </block>
@@ -979,7 +979,7 @@
                                             <record>
                                                 <icon><![CDATA[eye]]></icon>
                                                 <title><![CDATA[Pixel Perfect]]></title>
-                                                <paragraph><![CDATA[                                                    Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. ]]></paragraph>
+                                                <paragraph><![CDATA[Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna.]]></paragraph>
                                             </record>
                                         </data>
                                     </block>
@@ -1017,7 +1017,7 @@
                                             <record>
                                                 <icon><![CDATA[youtube-play]]></icon>
                                                 <title><![CDATA[Media Rich]]></title>
-                                                <paragraph><![CDATA[                                                    Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. ]]></paragraph>
+                                                <paragraph><![CDATA[Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna.]]></paragraph>
                                             </record>
                                         </data>
                                     </block>
