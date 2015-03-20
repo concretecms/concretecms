@@ -97,8 +97,8 @@ use Page;
 
             $conversation = $this->getConversationObject();
             $this->set('notificationOverridesEnabled', $conversation->getConversationNotificationOverridesEnabled());
-            $this->set('notification', $conversation->getConversationNotificationEnabled());
-            $this->set('notificationEmail', $conversation->getConversationNotificationEmailAddress());
+            $this->set('subscriptionEnabled', $conversation->getConversationSubscriptionEnabled());
+            $this->set('notificationUsers', $conversation->getConversationSubscribedUsers());
         }
 
         public function registerViewAssets()
@@ -222,12 +222,20 @@ use Page;
 
             if ($values['notificationOverridesEnabled']) {
                 $conversation->setConversationNotificationOverridesEnabled(true);
-                $conversation->setConversationNotificationEmailAddress($values['notificationEmail']);
-                $conversation->setConversationNotificationEnabled($values['notification']);
+                $users = array();
+                if (is_array($this->post('notificationUsers'))) {
+                    foreach($this->post('notificationUsers') as $uID) {
+                        $ui = \UserInfo::getByID($uID);
+                        if (is_object($ui)) {
+                            $users[] = $ui;
+                        }
+                    }
+                }
+                $conversation->setConversationSubscribedUsers($users);
+                $conversation->setConversationSubscriptionEnabled(intval($values['subscriptionEnabled']));
             } else {
                 $conversation->setConversationNotificationOverridesEnabled(false);
-                $conversation->setConversationNotificationEmailAddress(null);
-                $conversation->setConversationNotificationEnabled(false);
+                $conversation->setConversationSubscriptionEnabled(0);
             }
 
             if ($values['fileExtensions']) {

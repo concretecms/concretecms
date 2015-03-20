@@ -4,6 +4,7 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Conversations;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use Config;
 use Loader;
+use \Concrete\Core\Conversation\Conversation;
 
 class Settings extends DashboardPageController {
 
@@ -25,9 +26,8 @@ class Settings extends DashboardPageController {
 		$this->set('fileExtensions', implode(',', $fileAccessFileTypes));
         $this->set('attachmentsEnabled', intval(Config::get('conversations.attachments_enabled')));
         $this->loadEditors();
-        $this->set('notification', intval(Config::get('conversations.notification')));
-        $this->set('notificationEmail', Config::get('conversations.notification_email'));
-
+        $this->set('notificationUsers', Conversation::getDefaultSubscribedUsers());
+        $this->set('subscriptionEnabled', intval(Config::get('conversations.subscription_enabled')));
 	}
 
     protected function loadEditors()
@@ -76,8 +76,17 @@ class Settings extends DashboardPageController {
         Config::save('conversations.files.guest.max', intval($this->post('maxFilesGuest')));
         Config::save('conversations.files.registered.max', intval($this->post('maxFilesRegistered')));
         Config::save('conversations.attachments_enabled', !!$this->post('attachmentsEnabled'));
-        Config::save('conversations.notification', (bool) $this->post('notification'));
-        Config::save('conversations.notification_email', $this->post('notificationEmail'));
+        Config::save('conversations.subscription_enabled', !!$this->post('subscriptionEnabled'));
+        $users = array();
+        if (is_array($this->post('defaultUsers'))) {
+            foreach($this->post('defaultUsers') as $uID) {
+                $ui = \UserInfo::getByID($uID);
+                if (is_object($ui)) {
+                    $users[] = $ui;
+                }
+            }
+        }
+        Conversation::setDefaultSubscribedUsers($users);
 		if ($this->post('fileExtensions')){
 			$types = preg_split('{,}',$this->post('fileExtensions'),null,PREG_SPLIT_NO_EMPTY);
 			$types = $helper_file->serializeUploadFileExtensions($types);

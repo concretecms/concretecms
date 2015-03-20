@@ -142,6 +142,44 @@
             if (obj.dropdown.activeItem >= 0)
                 obj.dropdown.list.children().eq(obj.dropdown.activeItem).addClass('active');
         },
+        attachSubscriptionBindings: function() {
+            $('a[data-conversation-subscribe]').magnificPopup({
+                type: 'ajax',
+                callbacks: {
+                    updateStatus: function(data) {
+                        if (data.status  == 'ready') {
+                            var $form = $('form[data-conversation-form=subscribe]');
+                            $('button').on('click', $form, function(e) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                $.ajax({
+                                    url: $form.attr('action'),
+                                    dataType: 'json',
+                                    success: function(r) {
+                                        if (r.subscribed) {
+                                            $('[data-conversation-subscribe=subscribe]').hide();
+                                            $('[data-conversation-subscribe=unsubscribe]').show();
+                                        } else {
+                                            $('[data-conversation-subscribe=unsubscribe]').hide();
+                                            $('[data-conversation-subscribe=subscribe]').show();
+                                        }
+                                        $.magnificPopup.close();
+                                    }
+                                });
+                            });
+                        }
+                    },
+
+                    beforeOpen: function () {
+                        // just a hack that adds mfp-anim class to markup
+                        this.st.mainClass = 'mfp-zoom-in';
+                    }
+                },
+                closeOnContentClick: true,
+                midClick: true // allow opening popup on middle mouse click. Always set it to true if you don't provide alternative source.
+            });
+        },
+
         attachBindings: function() {
             var obj = this;
             obj.$element.unbind('.cnv');
@@ -216,6 +254,7 @@
                 obj.submitUpdateForm($(this));
                 return false;
             });
+            this.attachSubscriptionBindings();
             var replyIterator = 1;
             obj.$element.on('click.cnv', 'a[data-toggle=conversation-reply]', function(event) {
                 event.preventDefault();
