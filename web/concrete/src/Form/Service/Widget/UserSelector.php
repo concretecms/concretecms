@@ -80,25 +80,25 @@ EOL;
 		return $html;
 	}
 
-	public function selectMultipleUsers($fieldName) {
+	public function selectMultipleUsers($fieldName, $users = array()) {
 
 		$html = '';
-		$html .= '<table id="ccmUserSelect' . $fieldName . '" class="ccm-results-list table table-condensed" cellspacing="0" cellpadding="0" border="0">';
+		$html .= '<table id="ccmUserSelect' . $fieldName . '" class="table table-condensed" cellspacing="0" cellpadding="0" border="0">';
 		$html .= '<tr>';
 		$html .= '<th>' . t('Username') . '</th>';
 		$html .= '<th>' . t('Email Address') . '</th>';
-		$html .= '<th><a class="ccm-user-select-item dialog-launch" dialog-append-buttons="true" dialog-width="90%" dialog-height="70%" dialog-modal="false" dialog-title="' . t('Choose User') . '" href="'. URL::to('/ccm/system/dialogs/user/search') . '"><img src="' . ASSETS_URL_IMAGES . '/icons/add.png" width="16" height="16" /></a></th>';
+		$html .= '<th style="width: 1px"><a class="icon-link ccm-user-select-item dialog-launch" dialog-append-buttons="true" dialog-width="90%" dialog-height="70%" dialog-modal="false" dialog-title="' . t('Choose User') . '" href="'. URL::to('/ccm/system/dialogs/user/search') . '"><i class="fa fa-plus-circle" /></a></th>';
 		$html .= '</tr><tbody id="ccmUserSelect' . $fieldName . '_body" >';
-		/* for ($i = 0; $i < $ul->getTotal(); $i++ ) {
-			$ui = $ul1[$i];
-			$class = $i % 2 == 0 ? 'ccm-row-alt' : '';
-			$html .= '<tr id="ccmUserSelect' . $fieldName . '_' . $ui->getUserID() . '" class="ccm-list-record ' . $class . '">';
+		foreach($users as $ui) {
+			$html .= '<tr id="ccmUserSelect' . $fieldName . '_' . $ui->getUserID() . '" class="ccm-list-record">';
 			$html .= '<td><input type="hidden" name="' . $fieldName . '[]" value="' . $ui->getUserID() . '" />' . $ui->getUserName() . '</td>';
 			$html .= '<td>' . $ui->getUserEmail() . '</td>';
-			$html .= '<td><a href="javascript:void(0)" class="ccm-user-list-clear"><img src="' . ASSETS_URL_IMAGES . '/icons/close.png" width="16" height="16" class="ccm-user-list-clear-button" /></a>';
+			$html .= '<td><a href="javascript:void(0)" class="ccm-user-list-clear icon-link"><i class="fa fa-minus-circle ccm-user-list-clear-button" /></a>';
 			$html .= '</tr>';
-		}*/
-		$html .= '<tr class="ccm-user-selected-item-none"><td colspan="3">' . t('No users selected.') . '</td></tr>';
+		}
+		if (count($users) == 0) {
+			$html .= '<tr class="ccm-user-selected-item-none"><td colspan="3">' . t('No users selected.') . '</td></tr>';
+		}
 		$html .= '</tbody></table><script type="text/javascript">
 		$(function() {
 			$("#ccmUserSelect' . $fieldName . ' .ccm-user-select-item").dialog();
@@ -115,7 +115,7 @@ EOL;
 						var html = "";
 						html += "<tr id=\"ccmUserSelect' . $fieldName . '_" + uID + "\" class=\"ccm-list-record\"><td><input type=\"hidden\" name=\"' . $fieldName . '[]\" value=\"" + uID + "\" />" + uName + "</td>";
 						html += "<td>" + uEmail + "</td>";
-						html += "<td><a href=\"javascript:void(0)\" class=\"ccm-user-list-clear\"><img src=\"' . ASSETS_URL_IMAGES . '/icons/close.png\" width=\"16\" height=\"16\" class=\"ccm-user-list-clear-button\" /></a>";
+						html += "<td><a href=\"javascript:void(0)\" class=\"ccm-user-list-clear icon-link\"><i class=\"fa fa-minus-circle ccm-user-list-clear-button\" /></a>";
 						html += "</tr>";
 						$("#ccmUserSelect' . $fieldName . '_body").append(html);
 					}
