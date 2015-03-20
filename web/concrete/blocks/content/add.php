@@ -21,7 +21,7 @@ $(function() {
             lightbox: true
         },
 		'plugins': [
-            'concrete5inline', 'concrete5'
+            'concrete5inline', 'concrete5magic'
 		]
 	});
 });

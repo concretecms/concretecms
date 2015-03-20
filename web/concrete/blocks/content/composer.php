@@ -23,7 +23,7 @@ var CCM_EDITOR_SECURITY_TOKEN = "<?=Loader::helper('validation/token')->generate
 
 $(function() {
 	$('.<?=$class?>').redactor({
-		'plugins': ['concrete5'],
+		'plugins': ['concrete5magic'],
         'minHeight': 380
 	});
 });

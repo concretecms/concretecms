@@ -47,7 +47,7 @@ class Controller extends DefaultController  {
 			print 'var CCM_EDITOR_SECURITY_TOKEN = "' . Loader::helper('validation/token')->generate('editor') . '";';
 			print '$(function() { $(".ccm-advanced-editor-' . $this->attributeKey->getAttributeKeyID() . '").redactor({';
 			if ($this->akTextareaDisplayMode == 'rich_text' || ($this->akTextareaDisplayMode == 'rich_text_custom' && in_array('concrete5menu', $this->akTextareaDisplayModeCustomOptions))) {
-				print 'plugins: [\'concrete5\'], ';
+				print 'plugins: [\'concrete5magic\'], ';
 			}
 			if ($this->akTextareaDisplayMode == 'rich_text_custom') {
 				print 'buttons: [';

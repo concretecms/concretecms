@@ -30,7 +30,7 @@ RedactorPlugins.concrete5inline = function() {
     }
 }
 
-RedactorPlugins.concrete5 = function() {
+RedactorPlugins.concrete5magic = function() {
 
     return {
         styles: [],
@@ -39,18 +39,22 @@ RedactorPlugins.concrete5 = function() {
             if (!dropdown) {
                 var dropdown = [];
             }
-            var plugin = this.concrete5;
+            var plugin = this.concrete5magic;
+            var btn;
+
             this.button.remove('styles');
             if (this.button.get('formatting').length) {
-                this.button.addAfter('formatting','styles', this.lang.get('customStyles'), false, dropdown);
+                btn = this.button.addAfter('formatting','styles', this.lang.get('customStyles'), false, dropdown);
             } else {
-                this.button.add('styles', this.lang.get('customStyles'), false, dropdown);
+                btn = this.button.add('styles', this.lang.get('customStyles'), false, dropdown)
             }
+            this.button.setAwesome('styles', 'fa-magic');
+            this.button.addDropdown(btn, dropdown);
         },
 
         init: function() {
 
-            var plugin = this.concrete5;
+            var plugin = this.concrete5magic;
             var that = this;
 
             $.ajax({
@@ -73,7 +77,7 @@ RedactorPlugins.concrete5 = function() {
                         }
                         dropdownOptions[snippet.scsHandle] = {
                             'title': snippet.scsName,
-                            'callback': function(option, $item, obj, e) {
+                            'func': function(option, $item, obj, e) {
                                 var editor = this;
                                 var selectedSnippet = plugin.snippetsByHandle[option];
                                 var html = String() +
@@ -88,13 +92,13 @@ RedactorPlugins.concrete5 = function() {
                     var dropdown = {};
                     var button = that.button.get('styles');
 
-                    plugin.styles = response.classes;
+                    that.styles = response.classes;
                     jQuery.each(response.classes, function(i, s)
                     {
-                        dropdown['s' + i] = { title: s.title, className:s.menuClass, callback: function() { plugin.setCustomFormat(s); }};
+                        dropdown['s' + i] = { title: s.title, className:s.menuClass, func: function() { plugin.setCustomFormat(s); }};
                     });
 
-                    dropdown['remove'] = { title: ccmi18n_redactor.remove_style, callback: function() { plugin.resetCustomFormat(); }};
+                    dropdown['remove'] = { title: ccmi18n_redactor.remove_style, func: function() { plugin.resetCustomFormat(); }};
                     plugin.createButton(dropdown);
 
                 }
@@ -106,15 +110,15 @@ RedactorPlugins.concrete5 = function() {
         setCustomFormat: function (s)
         {
             if (s.forceBlock != -1 && (s.forceBlock == 1 || (s.wrap && !(jQuery.inArray(s.wrap,['a','em','strong','small','s','cite','q','dfn','abbr','data','time','var','samp','kbd','i','b','u','mark','ruby','rt','rp','bdi','bdo','span','sub','sup','code']) > -1)))) {
-                this.selectionWrap(s.wrap);
+                this.selection.wrap(s.wrap);
                 //this.inlineFormat(s.wrap);
-                if(s.style) this.blockSetAttr('style',s.style);
-                if(s.spanClass) this.blockSetClass(s.spanClass);
+                if(s.style) this.block.setAttr('style',s.style);
+                if(s.spanClass) this.block.setClass(s.spanClass);
             }
             else {
-                if(s.wrap) this.inlineFormat(s.wrap);
-                if(s.style) this.inlineSetAttr('style', s.style);
-                if(s.spanClass) this.inlineSetClass(s.spanClass);
+                if(s.wrap) this.inline.format(s.wrap);
+                if(s.style) this.block.setAttr('style', s.style);
+                if(s.spanClass) this.inline.toggleClass(s.spanClass);
             }
         },
         resetCustomFormat: function()
@@ -122,12 +126,11 @@ RedactorPlugins.concrete5 = function() {
             var that = this;
             jQuery.each(this.styles, function(i,s) {
                 if(s.spanClass) {
-                    that.inlineRemoveClass(s.spanClass);
-                    that.blockRemoveClass(s.spanClass);
-                    that.formatBlocks('p');
+                    that.inline.removeFormat();
+                    that.block.removeClass(s.spanClass);
                 }
             });
-            this.inlineSetAttr('style','');
+            //this.inline.toggleStyle(null);
         }
     }
 
