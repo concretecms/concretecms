@@ -111,24 +111,6 @@ class Conversation extends Object implements \Concrete\Core\Permission\ObjectInt
         return (bool) $this->cnvNotificationOverridesEnabled;
     }
 
-    public function getConversationNotificationEnabled()
-    {
-        if ($this->getConversationNotificationOverridesEnabled() > 0) {
-            return (bool) $this->cnvSendNotification;
-        } else {
-            return Config::get('conversations.notification');
-        }
-    }
-
-    public function getConversationNotificationEmailAddress()
-    {
-        if ($this->getConversationNotificationOverridesEnabled() > 0) {
-            return $this->cnvNotificationEmailAddress;
-        } else {
-            return Config::get('conversations.notification_email');
-        }
-    }
-
     public function overrideGlobalPermissions()
     {
         return $this->cnvOverrideGlobalPermissions;
@@ -159,7 +141,7 @@ class Conversation extends Object implements \Concrete\Core\Permission\ObjectInt
         $db = Loader::db();
         $r = $db->GetRow('select cnvID, cID, cnvDateCreated, cnvDateLastMessage, cnvMessagesTotal, cnvAttachmentsEnabled, cnvAttachmentOverridesEnabled,
 		cnvFileExtensions, cnvMaxFileSizeRegistered, cnvMaxFileSizeGuest, cnvMaxFilesRegistered, cnvMaxFilesGuest, cnvOverrideGlobalPermissions,
-		cnvNotificationOverridesEnabled, cnvSendNotification, cnvNotificationEmailAddress from Conversations where cnvID = ?',
+		cnvNotificationOverridesEnabled, cnvEnableSubscription from Conversations where cnvID = ?',
             array($cnvID));
         if (is_array($r) && $r['cnvID'] == $cnvID) {
             $cnv = new static;
@@ -254,20 +236,6 @@ class Conversation extends Object implements \Concrete\Core\Permission\ObjectInt
             array(intval($cnvNotificationOverridesEnabled), $this->getConversationID()));
     }
 
-    public function setConversationNotificationEnabled($cnvSendNotification)
-    {
-        $db = Loader::db();
-        $db->Execute('update Conversations set cnvSendNotification = ? where cnvID = ?',
-            array(intval($cnvSendNotification), $this->getConversationID()));
-    }
-
-    public function setConversationNotificationEmailAddress($cnvNotificationEmailAddress)
-    {
-        $db = Loader::db();
-        $db->Execute('update Conversations set cnvNotificationEmailAddress = ? where cnvID = ?',
-            array($cnvNotificationEmailAddress, $this->getConversationID()));
-    }
-
     public function setConversationAttachmentsEnabled($cnvAttachmentsEnabled)
     {
         $db = Loader::db();
@@ -308,6 +276,156 @@ class Conversation extends Object implements \Concrete\Core\Permission\ObjectInt
         $db = Loader::db();
         $db->Execute('update Conversations set cnvFileExtensions = ? where cnvID = ?',
             array($cnvFileExtensions, $this->getConversationID()));
+    }
+
+    public function getConversationSubscriptionEnabled()
+    {
+        if ($this->getConversationNotificationOverridesEnabled() > 0) {
+            return $this->cnvEnableSubscription;
+        } else {
+            return Config::get('conversations.subscription_enabled');
+        }
+    }
+
+    public function setConversationSubscriptionEnabled($cnvEnableSubscription)
+    {
+        $db = Loader::db();
+        $db->Execute('update Conversations set cnvEnableSubscription = ? where cnvID = ?',
+            array(intval($cnvEnableSubscription), $this->getConversationID()));
+    }
+
+    /**
+     * Similar to the method below, but excludes global subscribers who have opted out of conversations, etc...
+     * This method should be used any time we actually act on subscriptions, send emails, etc...
+     */
+    public function getConversationUsersToEmail()
+    {
+        $db = Loader::db();
+
+        $ids = array();
+        if (!$this->getConversationNotificationOverridesEnabled() > 0) {
+            $ids = $db->GetCol('select uID from ConversationSubscriptions where cnvID = 0');
+        }
+
+        $r = $db->Execute('select uID, type from ConversationSubscriptions where cnvID = ?',
+            array($this->getConversationID()));
+        while ($row = $r->FetchRow()) {
+            if ($row['type'] == 'U' && in_array($row['uID'], $ids)) {
+                $ids = array_diff($ids, array($row['uID']));
+            } else {
+                $ids[] = $row['uID'];
+            }
+        }
+
+        $ids = array_unique($ids);
+
+        $users = array();
+        foreach($ids as $uID) {
+            $ui = \UserInfo::getByID($uID);
+            if (is_object($ui)) {
+                $users[] = $ui;
+            }
+        }
+        return $users;
+    }
+
+    public function getConversationSubscribedUsers()
+    {
+        if ($this->getConversationNotificationOverridesEnabled() > 0) {
+            $db = Loader::db();
+            $r = $db->GetCol('select uID from ConversationSubscriptions where cnvID = ? order by uID asc',
+                array($this->getConversationID()));
+            $users = array();
+            foreach($r as $uID) {
+                $ui = \UserInfo::getByID($uID);
+                if (is_object($ui)) {
+                    $users[] = $ui;
+                }
+            }
+        } else {
+            $users = \Conversation::getDefaultSubscribedUsers();
+        }
+        return $users;
+    }
+
+    public static function getDefaultSubscribedUsers()
+    {
+        $db = Loader::db();
+        $r = $db->GetCol('select uID from ConversationSubscriptions where cnvID = 0 order by uID asc');
+        $users = array();
+        foreach($r as $uID) {
+            $ui = \UserInfo::getByID($uID);
+            if (is_object($ui)) {
+                $users[] = $ui;
+            }
+        }
+        return $users;
+    }
+
+    public function setConversationSubscribedUsers($users)
+    {
+        $db = Loader::db();
+        $db->delete('ConversationSubscriptions', array('cnvID' => $this->getConversationID() ));
+        $db->beginTransaction();
+        foreach($users as $ui) {
+            $db->insert('ConversationSubscriptions', array('cnvID' => $this->getConversationID(), 'uID' => $ui->getUserID()));
+        }
+        $db->commit();
+    }
+
+    public function isUserSubscribed($user)
+    {
+        $db = Loader::db();
+        $type = $db->GetOne('select type from ConversationSubscriptions where uID = ? and cnvID = ?', array(
+           $user->getUserID(), $this->getConversationID()
+        ));
+        if ($type == 'S') {
+            return true;
+        } else if ($type == 'U') {
+            return false;
+        } else {
+            if ($this->getConversationNotificationOverridesEnabled() > 0) {
+                return false;
+            } else {
+                $cnt = $db->GetOne('select count(cnvID) from ConversationSubscriptions where uID = ? and cnvID = 0', array(
+                    $user->getUserID()
+                ));
+                return $cnt > 0;
+            }
+        }
+    }
+
+    public function subscribeUser($user)
+    {
+        $db = Loader::db();
+        $db->delete('ConversationSubscriptions', array('cnvID' => $this->getConversationID(), 'uID' => $user->getUserID()));
+        if (!$this->isUserSubscribed($user)) {
+            // note, even though we just deleted the row, we still run the check, because the user COULD be subscribed
+            // globally
+            $db->insert('ConversationSubscriptions', array('cnvID' => $this->getConversationID(), 'uID' => $user->getUserID()));
+        }
+    }
+
+    public function unsubscribeUser($user)
+    {
+        $db = Loader::db();
+        $db->delete('ConversationSubscriptions', array('cnvID' => $this->getConversationID(), 'uID' => $user->getUserID()));
+        if ($this->isUserSubscribed($user)) {
+            // this means we don't have a subscription record in the conversation specific table. So we check to see if user is still subscribed
+            // If that's the case, it means they're subscribed globally.
+            $db->insert('ConversationSubscriptions', array('cnvID' => $this->getConversationID(), 'type' => 'U', 'uID' => $user->getUserID()));
+        }
+    }
+
+    public static function setDefaultSubscribedUsers($users)
+    {
+        $db = Loader::db();
+        $db->delete('ConversationSubscriptions', array('cnvID' => 0));
+        $db->beginTransaction();
+        foreach($users as $ui) {
+            $db->insert('ConversationSubscriptions', array('cnvID' => 0, 'uID' => $ui->getUserID()));
+        }
+        $db->commit();
     }
 
 
