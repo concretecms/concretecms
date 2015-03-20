@@ -64,21 +64,6 @@ use \Concrete\Core\Editor\LinkAbstractor;
 			return LinkAbstractor::translateFromEditMode($this->content);
 		}
 
-		public function add() {
-			$this->requireAsset('redactor');
-            $this->requireAsset('core/file-manager');
-		}
-
-		public function edit() {
-			$this->requireAsset('redactor');
-            $this->requireAsset('core/file-manager');
-		}
-
-		public function composer() {
-			$this->requireAsset('redactor');
-            $this->requireAsset('core/file-manager');
-		}
-
 		public function getImportData($blockNode) {
 			$content = $blockNode->data->record->content;
 			$content = LinkAbstractor::import($content);

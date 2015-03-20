@@ -1495,9 +1495,18 @@
 							return 'fa fa-tint';
 						case 'backcolor':
 							return 'fa fa-tint';
-						default:
-							return 'fa fa-' + btnName;
-
+						case 'bold':
+							return 'fa fa-bold';
+						case 'italic':
+							return 'fa fa-italic';
+						case 'outdent':
+							return 'fa fa-outdent';
+						case 'indent':
+							return 'fa fa-indent';
+						case 'image':
+							return 'fa fa-image';
+						case 'link':
+							return 'fa fa-link';
 					}
 				},
 
