@@ -710,8 +710,11 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             $newWindow = 0;
         }
 
-        $v = array($newCID, $cParentID, $uID, $cLink, $newWindow);
-        $q = "insert into Pages (cID, cParentID, uID, cPointerExternalLink, cPointerExternalLinkNewWindow) values (?, ?, ?, ?, ?)";
+        $cInheritPermissionsFromCID = $this->getPermissionsCollectionID();
+        $cInheritPermissionsFrom = "PARENT";
+
+        $v = array($newCID, $cParentID, $uID, $cInheritPermissionsFrom, $cInheritPermissionsFromCID, $cLink, $newWindow);
+        $q = "insert into Pages (cID, cParentID, uID, cInheritPermissionsFrom, cInheritPermissionsFromCID, cPointerExternalLink, cPointerExternalLinkNewWindow) values (?, ?, ?, ?, ?, ?, ?)";
         $r = $db->prepare($q);
 
         $res = $db->execute($r, $v);
