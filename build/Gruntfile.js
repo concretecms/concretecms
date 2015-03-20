@@ -69,7 +69,9 @@ module.exports = function(grunt) {
                 '<%= DIR_BASE %>/concrete/js/build/vendor/redactor/fontcolor.js',
                 '<%= DIR_BASE %>/concrete/js/build/vendor/redactor/fontfamily.js',
                 '<%= DIR_BASE %>/concrete/js/build/vendor/redactor/fontsize.js',
-                '<%= DIR_BASE %>/concrete/js/build/core/redactor/plugin.js'
+                '<%= DIR_BASE %>/concrete/js/build/core/redactor/undoredo.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/redactor/inline.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/redactor/magic.js'
             ]
         },
 
