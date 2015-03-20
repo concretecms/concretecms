@@ -3138,6 +3138,38 @@
 					//this.upload.init('#redactor-modal-file-upload', this.opts.fileUpload, this.file.insert);
 					this.modal.createCancelButton();
 					this.image.buttonSave = this.modal.createActionButton(this.lang.get('save'));
+
+					if (this.opts.concrete5.filemanager) {
+						$('a[data-action=choose-image-from-file-manager]').on('click', function(e) {
+							e.preventDefault();
+							ConcreteFileManager.launchDialog(function(data) {
+								jQuery.fn.dialog.showLoader();
+								ConcreteFileManager.getFileDetails(data.fID, function(r) {
+									jQuery.fn.dialog.hideLoader();
+									var file = r.files[0];
+									$('#redactor-file-link').val(file.urlDownload);
+								});
+							});
+						});
+					} else {
+						$('a[data-action=choose-image-from-file-manager]').remove();
+					}
+					this.image.buttonSave.on('click', $.proxy(function()
+					{
+						var val = $('#redactor-file-link').val();
+
+						if (val !== '')
+						{
+							var text = $('#redactor-filename').val();
+							var data  = '<a href="' + val + '" id="filelink-marker">' + text + '</a>';
+
+							this.file.insert(data, false);
+
+						}
+						else this.modal.close();
+
+					}, this));
+
 					/* end concrete5 */
 
 					this.selection.save();
@@ -3303,6 +3335,21 @@
 					} else {
 						$('a[data-action=choose-image-from-file-manager]').remove();
 					}
+					this.image.buttonSave.on('click', $.proxy(function()
+					{
+						var val = $('#redactor-image-link').val();
+
+						if (val !== '')
+						{
+							var data = '<img id="image-marker" src="' + val + '" />';
+							if (this.opts.linebreaks === false) data = '<p>' + data + '</p>';
+
+							this.image.insert(data, false);
+
+						}
+						else this.modal.close();
+
+					}, this));
 
 					/* end concrete5 */
 
@@ -5457,6 +5504,8 @@
                                 jQuery.fn.dialog.closeTop();
                                 var url = CCM_APPLICATION_URL + CCM_DISPATCHER_FILENAME + '?cID=' + data.cID;
                                 $('#redactor-link-url').val(url);
+								this.link.$inputUrl.val(url);
+								this.link.$inputText.val(url);
                             });
                         });
                     } else {
@@ -5890,7 +5939,13 @@
 						+ '<section id="redactor-modal-file-insert">'
 						+ '<div class="form-group">'
 						+ '<label class="control-label">' + this.lang.get('file') + '</label>'
-						+ '<input type="text" name="redactor_file_link" id="redactor_file_link" class="form-control"  />'
+						+ '<div class="input-group">'
+						+ '<input type="text" name="redactor-file-link" id="redactor-file-link" class="form-control"  />'
+						+ '<a href="#" data-action="choose-image-from-file-manager" class="btn btn-default input-group-addon"><i class="fa fa-search"></i></a>'
+						+ '</div></div>'
+						+ '<div class="form-group">'
+						+ '<label class="control-label">' + this.lang.get('text') + '</label>'
+						+ '<input class="form-control" type="text" id="redactor-filename" />'
 						+ '</div>'
 						+ '</section>',
 
