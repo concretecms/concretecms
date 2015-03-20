@@ -2,6 +2,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 $form = Core::make('helper/form');
 $val = Core::make('token');
+$u = new User();
 ?>
 
 <? if ($displayForm && $displayPostingForm == $position) { ?>
@@ -24,6 +25,10 @@ $val = Core::make('token');
 					<?php if ($attachmentsEnabled) { ?>
 						<button type="button" class="pull-right btn btn-default ccm-conversation-attachment-toggle" href="#" title="<?php echo t('Attach Files'); ?>"><i class="fa fa-image"></i></button>
 					<?php } ?>
+					<? if ($conversation->getConversationSubscriptionEnabled() && $u->isRegistered()) { ?>
+						<a href="<?=URL::to('/ccm/system/dialogs/conversation/subscribe', $conversation->getConversationID())?>" data-conversation-subscribe="unsubscribe" <? if (!$conversation->isUserSubscribed($u)) { ?>style="display: none"<? } ?> class="btn pull-right btn-default"><?=t('Un-Subscribe')?></a>
+						<a href="<?=URL::to('/ccm/system/dialogs/conversation/subscribe', $conversation->getConversationID())?>" data-conversation-subscribe="subscribe" <? if ($conversation->isUserSubscribed($u)) { ?>style="display: none"<? } ?> class="btn pull-right btn-default"><?=t('Subscribe to Conversation')?></a>
+					<? } ?>
 				</div>
 			</form>
 			<?php if($attachmentsEnabled) { ?>

@@ -775,12 +775,9 @@
         <notnull />
         <default value="0" />
     </field>
-    <field name="cnvSendNotification" type="I1">
-        <unsigned />
-        <notnull />
+    <field name="cnvEnableSubscription" type="I1">
+        <unsigned/>
         <default value="0" />
-    </field>
-    <field name="cnvNotificationEmailAddress" type="X">
     </field>
     <index name="cID">
         <col>cID</col>
@@ -2951,6 +2948,27 @@
         </field>
         <index name="peID">
             <col>peID</col>
+        </index>
+    </table>
+    <table name="ConversationSubscriptions">
+        <field name="cnvID" type="I" size="10">
+            <key/>
+            <default value="0"/>
+            <unsigned/>
+        </field>
+        <field name="uID" type="I" size="10">
+            <key/>
+            <default value="0"/>
+            <unsigned/>
+        </field>
+        <field name="type" type="C" size="1">
+            <default value="S"/>
+       </field>
+        <index name="cnvID">
+            <col>cnvID</col>
+        </index>
+        <index name="uID">
+            <col>uID</col>
         </index>
     </table>
 
