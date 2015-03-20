@@ -185,7 +185,7 @@
 
 		source: true,
 		buttons: ['html', 'formatting', 'bold', 'italic', 'deleted', 'unorderedlist', 'orderedlist',
-				  'outdent', 'indent', 'image', 'file', 'link', 'alignment', 'horizontalrule'], // + 'underline'
+				  'outdent', 'indent', 'image', /* concrete5 'file', */ 'link', 'alignment', 'horizontalrule'], // + 'underline'
 
 		buttonsHide: [],
 		buttonsHideOnMobile: [],
@@ -1475,8 +1475,6 @@
 						case 'formatting':
 						case 'formatting-concrete5':
 							return 'fa fa-paragraph';
-						case 'styles':
-							return 'fa fa-magic';
 						case 'orderedlist':
 							return 'fa fa-list-ol';
 						case 'unorderedlist':
@@ -1674,7 +1672,11 @@
 					var key = $btn.attr('rel');
 					this.button.addCallback($btn, 'dropdown');
 
-					var $dropdown = $('<div class="redactor-dropdown redactor-dropdown-' +  + this.uuid + ' redactor-dropdown-box-' + key + '" style="display: none;">');
+					/* concrete5 */
+					//var $dropdown = $('<div class="redactor-dropdown redactor-dropdown-' +  + this.uuid + ' redactor-dropdown-box-' + key + '" style="display: none;">');
+					var $dropdown = $('<ul class="dropdown-menu redactor-dropdown redactor-dropdown-' +  + this.uuid + ' redactor-dropdown-box-' + key + '" style="display: none;">');
+					/* end concrete5 */
+
 					$btn.data('dropdown', $dropdown);
 
 					// build dropdown
@@ -2981,7 +2983,11 @@
 					{
 						/* concrete5 */
 						//var $item = $('<a href="#" class="redactor-dropdown-' + btnName + '">' + btnObject.title + '</a>');
-						var $item = $('<li><a href="#" class="redactor-dropdown-' + btnName + '">' + btnObject.title + '</a></li>');
+						var className = '';
+						if (btnObject.className) {
+							className = btnObject.className;
+						}
+						var $item = $('<li><a href="#" class="' + className + ' redactor-dropdown-' + btnName + '">' + btnObject.title + '</a></li>');
 						/* end concrete5 */
 
 						if (name == 'formatting') $item.addClass('redactor-formatting-' + btnName);
@@ -4167,7 +4173,10 @@
 					this.selection.save();
 
 					var find = '';
-					if (this.inline.type == 'class') find = '[data-redactor-class=' + this.inline.value + ']';
+					/*concrete5 */
+					//if (this.inline.type == 'class') find = '[data-redactor-class=' + this.inline.value + ']';
+					if (this.inline.type == 'class') find = '[data-redactor-class="' + this.inline.value + '"]';
+					/*end concrete5 */
 					else if (this.inline.type == 'style')
 					{
 						find = '[data-redactor-style="' + this.inline.value + '"]';
@@ -5911,18 +5920,27 @@
 					this.opts.modal = {
 						imageEdit: String()
 						+ '<section id="redactor-modal-image-edit">'
-							+ '<label>' + this.lang.get('title') + '</label>'
-							+ '<input type="text" id="redactor-image-title" />'
-							+ '<label class="redactor-image-link-option">' + this.lang.get('link') + '</label>'
-							+ '<input type="text" id="redactor-image-link" class="redactor-image-link-option" />'
+    						+ '<div class="form-group">'
+							+ '<label class="control-label">' + this.lang.get('title') + '</label>'
+ 							+ '<input type="text" class="form-control" id="redactor-image-title" />'
+						    + '</div>'
+							+ '<div class="form-group">'
+						    + '<label class="control-label redactor-image-link-option">' + this.lang.get('link') + '</label>'
+						    + '<input type="text" id="redactor-image-link" class="form-control redactor-image-link-option" />'
+							+ '</div>'
+							+ '<div class="form-group">'
+						    + '<div class="checkbox">'
 							+ '<label class="redactor-image-link-option"><input type="checkbox" id="redactor-image-link-blank"> ' + this.lang.get('link_new_tab') + '</label>'
-							+ '<label class="redactor-image-position-option">' + this.lang.get('image_position') + '</label>'
-							+ '<select class="redactor-image-position-option" id="redactor-image-align">'
-								+ '<option value="none">' + this.lang.get('none') + '</option>'
-								+ '<option value="left">' + this.lang.get('left') + '</option>'
-								+ '<option value="center">' + this.lang.get('center') + '</option>'
-								+ '<option value="right">' + this.lang.get('right') + '</option>'
+							+ '</div></div>'
+							+ '<div class="form-group">'
+						    + '<label class="control-label redactor-image-position-option">' + this.lang.get('image_position') + '</label>'
+							+ '<select class="form-control redactor-image-position-option" id="redactor-image-align">'
+							+ '<option value="none">' + this.lang.get('none') + '</option>'
+							+ '<option value="left">' + this.lang.get('left') + '</option>'
+							+ '<option value="center">' + this.lang.get('center') + '</option>'
+							+ '<option value="right">' + this.lang.get('right') + '</option>'
 							+ '</select>'
+							+ '</div>'
 						+ '</section>',
 
 						image: String()
