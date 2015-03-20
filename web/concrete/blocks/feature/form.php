@@ -2,8 +2,8 @@
 
 <fieldset>
     <legend><?=t('Icon')?></legend>
-        <div class="form-group ccm-block-feature-select-icon">
-            <?=$form->select('icon', $icons, $icon, array('style' => 'width: 360px'));?>
+        <div class="form-group ccm-block-feature-select-icon" style="margin-right: 35px;">
+            <?=$form->select('icon', $icons, $icon);?>
             <i data-preview="icon" <? if ($icon) { ?>class="fa fa-<?=$icon?>"<? } ?>></i>
         </div>
 </fieldset>
@@ -77,7 +77,7 @@ $(function() {
     }
     div.ccm-block-feature-select-icon i {
         position: absolute;
-        right: 15px;
+        right: -25px;
         top: 10px;
     }
 </style>
