@@ -21,7 +21,7 @@ RedactorPlugins.concrete5inline = function() {
                 //Concrete.getEditMode().scanBlocks();
             });
             $('#ccm-redactor-save-button').unbind().on('click', function() {
-                $('#redactor-content').val(obj.get());
+                $('#redactor-content').val(obj.code.get());
                 toolbar.hide();
                 ConcreteEvent.fire('EditModeBlockSaveInline');
             });
