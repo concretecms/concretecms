@@ -41,11 +41,8 @@ class Controller extends DefaultController  {
 		if ($this->akTextareaDisplayMode == 'text' || $this->akTextareaDisplayMode == '') {
 			print Loader::helper('form')->textarea($this->field('value'), $value, array('class' => $additionalClass, 'rows' => 5));
 		} else {
-			$this->addFooterItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js"></script>');
-			print '<div class="ccm-attribute-textarea-edit">' . Loader::helper('form')->textarea($this->field('value'), $value, array('class' => $additionalClass . ' ccm-advanced-editor-' . $this->attributeKey->getAttributeKeyID())) . '</div>';
-			print '<script type="text/javascript">';
-			print 'var CCM_EDITOR_SECURITY_TOKEN = "' . Loader::helper('validation/token')->generate('editor') . '";';
-			print '$(function() { $(".ccm-advanced-editor-' . $this->attributeKey->getAttributeKeyID() . '").redactor({';
+			print \Core::make('editor')->outputStandardEditor($this->field('value'), $value);
+			/*
 			if ($this->akTextareaDisplayMode == 'rich_text' || ($this->akTextareaDisplayMode == 'rich_text_custom' && in_array('concrete5menu', $this->akTextareaDisplayModeCustomOptions))) {
 				print 'plugins: [\'concrete5magic\'], ';
 			}
@@ -102,8 +99,7 @@ class Controller extends DefaultController  {
 				$buttons = implode(",'|',", $buttonGroups);
 				print $buttons;
 				print ']';
-			}
-			print '}); });</script>';
+			*/
 		}
 	}
 	

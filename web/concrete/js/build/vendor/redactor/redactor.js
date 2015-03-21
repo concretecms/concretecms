@@ -6236,6 +6236,7 @@
 					this.$modalHeader = $('<header />');
 					/* concrete5 */
 					//this.$modalClose = $('<span id="redactor-modal-close" />').html('&times;');
+					this.$modalBox.addClass('ccm-ui');
 					this.$modalClose = $('<span class="ui-button-icon-primary ui-icon ui-icon-closethick" />');
 					this.$modalCloseWrapper = $('<span id="redactor-modal-close"><button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only ui-dialog-titlebar-close" role="button"><span class="ui-button-text">close</span></button></span>');
 					this.$modalClose.appendTo(this.$modalCloseWrapper.find('button.ui-button'));
