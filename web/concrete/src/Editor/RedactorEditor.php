@@ -79,7 +79,7 @@ EOL;
             'concrete5magic',
             'undoredo',
             'specialcharacters'
-        )));
+        ), 'minHeight' => 300));
     }
 
     public function outputPageComposerEditor($key, $content)
@@ -88,7 +88,7 @@ EOL;
             'concrete5magic',
             'undoredo',
             'specialcharacters'
-        )));
+        ), 'minHeight' => 300));
     }
 
     public function outputStandardEditor($key, $content = null)
