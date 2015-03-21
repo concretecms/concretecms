@@ -46,27 +46,27 @@ class RedactorEditor implements EditorInterface
         $this->allowSitemap = $allow;
     }
 
-    protected function getEditor($key, $content = null, $plugins = array())
+    protected function getEditor($key, $content = null, $options = array())
     {
         $this->assets->requireAsset('core/file-manager');
         $this->assets->requireAsset('redactor');
-
+        $concrete5 = array(
+            'filemanager' => $this->allowFileManager(),
+            'sitemap' => $this->allowSitemap(),
+            'lightbox' => true
+        );
+        if (isset($options['concrete5'])) {
+            $options['concrete5'] = array_merge($options['concrete5'], $concrete5);
+        } else {
+            $options['concrete5'] = $concrete5;
+        }
+        $options = json_encode($options);
         $html = sprintf('<textarea data-redactor-editor="%s" name="%s">%s</textarea>', $this->identifier, $key, $content);
         $html .= <<<EOL
         <script type="text/javascript">
         var CCM_EDITOR_SECURITY_TOKEN = "{$this->token}";
         $(function() {
-            $('textarea[data-redactor-editor={$this->identifier}]').redactor({
-                minHeight: '300',
-                'concrete5': {
-                    filemanager: {$this->allowFileManager()},
-                    sitemap: {$this->allowSitemap()},
-                    lightbox: true
-                },
-                'plugins': [
-                    'concrete5inline', 'concrete5magic', 'undoredo', 'specialcharacters'
-                ]
-            });
+            $('textarea[data-redactor-editor={$this->identifier}]').redactor({$options});
         });
         </script>
 EOL;
@@ -74,19 +74,29 @@ EOL;
     }
     public function outputPageInlineEditor($key, $content = null)
     {
-        return $this->getEditor($key, $content, array(
+        return $this->getEditor($key, $content, array('plugins' => array(
             'concrete5inline',
             'concrete5magic',
-            'undoredo'
-        ));
+            'undoredo',
+            'specialcharacters'
+        )));
     }
 
     public function outputPageComposerEditor($key, $content)
     {
-        return $this->getEditor($key, $content, array(
+        return $this->getEditor($key, $content, array('plugins' => array(
             'concrete5magic',
-            'undoredo'
-        ));
+            'undoredo',
+            'specialcharacters'
+        )));
+    }
+
+    public function outputStandardEditor($key, $content = null)
+    {
+        return $this->getEditor($key, $content, array('plugins' => array(
+            'undoredo',
+            'specialcharacters'
+        ), 'minHeight' => 300));
     }
 
 }
