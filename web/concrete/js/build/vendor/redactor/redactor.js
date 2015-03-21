@@ -1662,8 +1662,11 @@
 				setAwesome: function(key, name)
 				{
 					var $button = this.button.get(key);
-					$button.removeClass('redactor-btn-image').addClass('fa-redactor-btn');
-					$button.html('<i class="fa ' + name + '"></i>');
+					/* concrete5 */
+					//$button.removeClass('redactor-btn-image').addClass('fa-redactor-btn');
+					//$button.html('<i class="fa ' + name + '"></i>');
+					$button.removeClass('redactor-btn-image').addClass('fa ' + name);
+					/* end concrete5 */
 				},
 				addCallback: function($btn, callback)
 				{
