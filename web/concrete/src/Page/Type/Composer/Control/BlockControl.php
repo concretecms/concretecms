@@ -56,10 +56,11 @@ class BlockControl extends Control
         if (!is_object($this->b)) {
             $setControl = $this->getPageTypeComposerFormLayoutSetControlObject();
             $r = $db->GetRow(
-                'select bID, arHandle from PageTypeComposerOutputBlocks where cID = ? and ptComposerFormLayoutSetControlID = ?',
+                $q = 'select cdb.bID, cdb.arHandle from PageTypeComposerOutputBlocks cdb inner join CollectionVersionBlocks cvb on (cdb.bID = cvb.bID and cvb.cID = cdb.cID and cvb.cvID = ?) where cdb.ptComposerFormLayoutSetControlID = ? and cdb.cID = ?',
                 array(
-                    $c->getCollectionID(),
-                    $setControl->getPageTypeComposerFormLayoutSetControlID()
+                    $c->getVersionID(),
+                    $setControl->getPageTypeComposerFormLayoutSetControlID(),
+                    $c->getCollectionID()
                 )
             );
             if (!$r['bID']) {
