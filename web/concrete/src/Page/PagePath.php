@@ -51,7 +51,7 @@ class PagePath {
 
     public function setPageObject(Page $c)
     {
-        $this->cID = $c->getCollectionID();
+        $this->cID = ($c->getCollectionPointerOriginalID() > 0) ? $c->getCollectionPointerOriginalID() : $c->getCollectionID();
     }
 
     public function setPagePathIsCanonical($ppIsCanonical)

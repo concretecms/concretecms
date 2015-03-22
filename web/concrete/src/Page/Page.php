@@ -2174,6 +2174,11 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     function delete() {
         $cID = $this->getCollectionID();
 
+        if ($nc->isAlias()) {
+            $nc->removeThisAlias();
+            return;
+        }
+
         if ($cID <= 1) {
             return false;
         }
@@ -2228,9 +2233,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             while ($row = $r->fetchRow()) {
                 if ($row['cID'] > 0) {
                     $nc = Page::getByID($row['cID']);
-                    if( $nc->isAlias() )
-                         $nc->removeThisAlias();
-                    else $nc->delete();
+                    $nc->delete();
                 }
             }
         }
