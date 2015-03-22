@@ -197,4 +197,179 @@ class PageTest extends PageTestCase {
         $this->assertEquals('/page-4/page-2/subpage/page-1', $pagePath->getPagePath());
         $this->assertTrue($pagePath->isPagePathCanonical());
     }
+
+    protected function setupAliases()
+    {
+        $about = self::createPage('About');
+        $search = self::createPage('Search');
+        $contact = self::createPage('Contact Us', $about);
+        $another = self::createPage('Another Page', $about);
+        $awesome = self::createPage('Awesome');
+
+        return array('awesome' => $awesome, 'about' => $about, 'search' => $search, 'contact' => $contact, 'another' => $another);
+    }
+
+    public function testPageAlias()
+    {
+        extract($this->setupAliases());
+
+        $cID = $search->addCollectionAlias($another);
+
+        $this->assertEquals(2, $about->getCollectionID());
+        $this->assertEquals(3, $search->getCollectionID());
+        $this->assertEquals(4, $contact->getCollectionID());
+        $this->assertEquals(5, $another->getCollectionID());
+        $this->assertEquals(6, $awesome->getCollectionID());
+        $this->assertEquals(7, $cID);
+
+        $alias = Page::getByID($cID);
+        $this->assertEquals(3, $alias->getCollectionID());
+        $this->assertEquals(3, $alias->getCollectionPointerID());
+        $this->assertTrue($alias->isAlias());
+        $this->assertEquals(7, $alias->getCollectionPointerOriginalID());
+        $this->assertEquals('/about/another-page/search', $alias->getCollectionPath());
+    }
+
+    public function testPageAliasDirectDelete()
+    {
+        extract($this->setupAliases());
+        $cID = $search->addCollectionAlias($another);
+        $alias = Page::getByID($cID);
+
+        $alias->delete();
+        $search = Page::getByID(3);
+        $this->assertInstanceOf('\Concrete\Core\Page\Page', $search);
+        $this->assertEquals(3, $search->getCollectionID());
+        $this->assertFalse($search->isError());
+
+        $alias = Page::getByID(7);
+        $this->assertEquals(COLLECTION_NOT_FOUND, $alias->getError());
+    }
+
+    public function testPageAliasPageMove()
+    {
+        extract($this->setupAliases());
+        $cID = $search->addCollectionAlias($another);
+        $alias = Page::getByID($cID);
+        $about->move($awesome);
+
+        $about = Page::getByID(2);
+        $search = Page::getByID(3);
+        $contact = Page::getByID(4);
+        $another = Page::getByID(5);
+        $awesome = Page::getByID(6);
+        $alias = Page::getByID(7);
+
+        $this->assertTrue($alias->isAlias());
+
+        $this->assertEquals('/awesome/about', $about->getCollectionPath());
+        $this->assertEquals('/awesome/about/another-page/search', $alias->getCollectionPath());
+        $this->assertEquals('/search', $search->getCollectionPath());
+        $this->assertEquals('/awesome/about/contact-us', $contact->getCollectionPath());
+        $this->assertEquals('/awesome/about/another-page', $another->getCollectionPath());
+        $this->assertEquals('/awesome', $awesome->getCollectionPath());
+        $this->assertEquals(3, $alias->getCollectionID());
+        $this->assertEquals(7, $alias->getCollectionPointerOriginalID());
+    }
+
+    public function testPageAliasParentDelete()
+    {
+        extract($this->setupAliases());
+        $cID = $search->addCollectionAlias($another);
+        $alias = Page::getByID($cID);
+
+        $about->delete();
+        $about = Page::getByID(2);
+        $search = Page::getByID(3);
+        $contact = Page::getByID(4);
+        $another = Page::getByID(5);
+        $awesome = Page::getByID(6);
+        $alias = Page::getByID(7);
+
+        $this->assertEquals(COLLECTION_NOT_FOUND, $about->getError());
+        $this->assertEquals(3, $search->getCollectionID());
+        $this->assertEquals(false, $search->isError());
+        $this->assertEquals(COLLECTION_NOT_FOUND, $contact->getError());
+        $this->assertEquals(COLLECTION_NOT_FOUND, $another->getError());
+        $this->assertEquals(6, $awesome->getCollectionID());
+        $this->assertEquals(false, $awesome->isError());
+
+        $this->assertEquals(COLLECTION_NOT_FOUND, $alias->getError());
+    }
+
+    public function testPageMoveToTrashNoAliases()
+    {
+        \SinglePage::add(Config::get('concrete.paths.trash'));
+
+        $this->setupAliases();
+
+        $about = Page::getByID(3);
+        $about->moveToTrash();
+
+        // note –all the hard coded numerical IDs are increased by one here because we have added
+        // the trash node.
+        $about = Page::getByID(3);
+        $search = Page::getByID(4);
+        $contact = Page::getByID(5);
+        $another = Page::getByID(6);
+        $awesome = Page::getByID(7);
+
+
+        $this->assertFalse($about->isActive());
+        $this->assertFalse($contact->isActive());
+        $this->assertFalse($another->isActive());
+        $this->assertTrue($search->isActive());
+        $this->assertTrue($awesome->isActive());
+
+        $this->assertTrue($about->isInTrash());
+        $this->assertTrue($contact->isInTrash());
+        $this->assertTrue($another->isInTrash());
+        $this->assertFalse($search->isInTrash());
+        $this->assertFalse($awesome->isInTrash());
+
+        $this->assertEquals('/search', $search->getCollectionPath());
+    }
+
+    public function testPageMoveToTrashAliases()
+    {
+        \SinglePage::add(Config::get('concrete.paths.trash'));
+
+        extract($this->setupAliases());
+
+        $cID = $search->addCollectionAlias($another);
+        $alias = Page::getByID($cID);
+
+        $this->assertEquals(8, $cID);
+        $this->assertTrue($alias->isAlias());
+
+        $about = Page::getByID(3);
+        $about->moveToTrash();
+
+        $about = Page::getByID(3);
+        $search = Page::getByID(4);
+        $another = Page::getByID(6);
+        $awesome = Page::getByID(7);
+        $searchAlias = Page::getByID(8);
+
+        $this->assertFalse($about->isActive());
+        $this->assertFalse($another->isActive());
+        $this->assertFalse($searchAlias->isActive());
+        $this->assertTrue($awesome->isActive());
+        $this->assertTrue($search->isActive());
+
+        $this->assertEquals('/!trash/about', $about->getCollectionPath());
+        $this->assertEquals('/!trash/about/another-page', $another->getCollectionPath());
+        $this->assertEquals('/!trash/about/another-page/search', $searchAlias->getCollectionPath());
+        $this->assertEquals('/awesome', $awesome->getCollectionPath());
+        $this->assertEquals('/search', $search->getCollectionPath());
+
+        $this->assertTrue($about->isInTrash());
+        $this->assertTrue($another->isInTrash());
+        $this->assertTrue($searchAlias->isInTrash());
+        $this->assertFalse($awesome->isInTrash());
+        $this->assertFalse($search->isInTrash());
+
+    }
+
+
 }
