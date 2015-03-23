@@ -263,7 +263,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 
     if (Loader::helper('concrete/ui')->showWhiteLabelMessage()) {
         ?>
-        <li class="pull-left" id="ccm-white-label-message"><?= t(
+        <li class="pull-left visible-xs visible-lg" id="ccm-white-label-message"><?= t(
                 'Powered by <a href="%s">concrete5</a>.',
                 Config::get('concrete.urls.concrete5')) ?></li>
     <? } ?>

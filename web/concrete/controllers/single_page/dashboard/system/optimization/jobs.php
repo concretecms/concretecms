@@ -12,6 +12,10 @@ class Jobs extends DashboardPageController {
 	function on_start() 
 	{
 		parent::on_start();
+		// clear the environment overrides cache first
+		$env = \Environment::get();
+		$env->clearOverrideCache();
+
 		$installed = Job::getList();
 		$this->set('availableJobs', Job::getAvailableList(0)); 
 		$this->set('installedJobs', $installed); 
