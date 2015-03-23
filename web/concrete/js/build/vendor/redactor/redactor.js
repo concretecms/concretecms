@@ -330,6 +330,15 @@
 				deleted: 'Deleted',
 				anchor: 'Anchor',
 				link_new_tab: 'Open link in new tab',
+				/* concrete5 */
+				link_same_window: 'Open link in same window',
+				lightbox_link_type: 'Link Type',
+				lightbox_link_type_iframe: 'Web Page',
+				lightbox_link_type_image: 'Image',
+				lightbox_link_type_iframe_options: 'Frame Options',
+				lightbox_link_type_iframe_width: 'Width',
+				lightbox_link_type_iframe_height: 'Height',
+				/* end concrete5 */
 				underline: 'Underline',
 				alignment: 'Alignment',
 				filename: 'Name (optional)',
@@ -5480,7 +5489,35 @@
 					this.link.getData();
 					this.link.cleanUrl();
 
-					if (this.link.target == '_blank') $('#redactor-link-blank').prop('checked', true);
+					/* concrete5 */
+					//if (this.link.target == '_blank') $('#redactor-link-blank').prop('checked', true);
+					this.link.$selectUrlOpen = $('#redactor-link-url-open');
+					this.link.$selectUrlLightboxFieldGroup = $('div[data-field-group=lightbox]');
+					this.link.$selectUrlLightboxIframeFieldGroup = $('div[data-field-group=lightbox-iframe]');
+					this.link.$selectUrlLightboxFieldGroupSelect = $('div[data-field-group=lightbox] select');
+					this.link.$selectUrlLightboxIframeWidth = $('#redactor-link-lightbox-iframe-width');
+					this.link.$selectUrlLightboxIframeHeight = $('#redactor-link-lightbox-iframe-height');
+					this.link.$selectUrlOpen.val(this.link.linkType);
+					this.link.$selectUrlLightboxIframeWidth.val(this.link.linkLightboxIframeWidth);
+					this.link.$selectUrlLightboxIframeHeight.val(this.link.linkLightboxIframeHeight);
+					var _link = this.link;
+					this.link.$selectUrlOpen.on('change', function() {
+						if ($(this).val() == 'lightbox') {
+							_link.$selectUrlLightboxFieldGroup.show();
+						} else {
+							_link.$selectUrlLightboxFieldGroup.hide();
+							_link.$selectUrlLightboxFieldGroupSelect.val('image').trigger('change');
+						}
+					}).trigger('change');
+					this.link.$selectUrlLightboxFieldGroupSelect.val(this.link.linkLightboxType);
+					this.link.$selectUrlLightboxFieldGroupSelect.on('change', function() {
+						if ($(this).val() == 'iframe') {
+							_link.$selectUrlLightboxIframeFieldGroup.show();
+						} else {
+							_link.$selectUrlLightboxIframeFieldGroup.hide();
+						}
+					}).trigger('change');
+					/* end concrete5 */
 
 					this.link.$inputUrl = $('#redactor-link-url');
 					this.link.$inputText = $('#redactor-link-url-text');
@@ -5566,12 +5603,34 @@
 						this.link.url = $el.attr('href');
 						this.link.text = $el.text();
 						this.link.target = $el.attr('target');
+						/* concrete5 */
+						var lightboxType = $el.attr('data-concrete5-link-lightbox');
+						this.link.linkLightboxType = 'image'; // not used unless link type is lightbox
+						this.link.linkLightboxIframeWidth = '600'; // not used unless link type is lightbox
+						this.link.linkLightboxIframeHeight = '400'; // not used unless link type is lightbox
+						if (this.link.target == '_blank') {
+							this.link.linkType = 'blank';
+						} else if (lightboxType == 'image' || lightboxType == 'iframe') {
+							this.link.linkType = 'lightbox';
+							this.link.linkLightboxType = lightboxType;
+							this.link.linkLightboxIframeWidth = $el.attr('data-concrete5-link-lightbox-width');
+							this.link.linkLightboxIframeHeight = $el.attr('data-concrete5-link-lightbox-height');
+						} else {
+							this.link.linkType = 'same';
+						}
+						/* end concrete5 */
 					}
 					else
 					{
 						this.link.text = this.sel.toString();
 						this.link.url = '';
 						this.link.target = '';
+						/* concrete5 */
+						this.link.linkType = 'same';
+						this.link.linkLightboxType = 'image'; // not used unless link type is lightbox
+						this.link.linkLightboxIframeWidth = '600'; // not used unless link type is lightbox
+						this.link.linkLightboxIframeHeight = '400'; // not used unless link type is lightbox
+						/* end concrete5 */
 					}
 
 				},
@@ -5580,6 +5639,9 @@
 					var target = '';
 					var link = this.link.$inputUrl.val();
 					var text = this.link.$inputText.val();
+					/* concrete5 */
+					var lightbox = null, width = null, height = null;
+					/* end concrete5 */
 
 					if ($.trim(link) === '')
 					{
@@ -5601,9 +5663,23 @@
 					// url, not anchor
 					else if (link.search('#') !== 0)
 					{
-						if ($('#redactor-link-blank').prop('checked'))
+
+						/* concrete5 */
+						//if ($('#redactor-link-blank').prop('checked'))
+						if ($('#redactor-link-url-open').val() == 'blank')
+						/* end concrete5 */
 						{
 							target = '_blank';
+						}
+
+						/* concrete5 */
+						if ($('#redactor-link-url-open').val() == 'lightbox')
+						{
+							lightbox = $('#redactor-link-lightbox-type').val();
+							if (lightbox == 'iframe') {
+								width = $('#redactor-link-lightbox-iframe-width').val();
+								height = $('#redactor-link-lightbox-iframe-height').val();
+							}
 						}
 
 						// test url (add protocol)
@@ -5617,10 +5693,15 @@
 						}
 					}
 
-					this.link.set(text, link, target);
+					/* concrete5 */
+					//this.link.set(text, link, target);
+					this.link.set(text, link, target, lightbox, width, height);
+					/* end concrete5 */
 					this.modal.close();
 				},
-				set: function(text, link, target)
+				/* concrete5 */
+				//set: function(text, link, target)
+				set: function(text, link, target, lightbox, width, height)
 				{
 					text = $.trim(text.replace(/<|>/g, ''));
 
@@ -5634,6 +5715,9 @@
 						this.buffer.set();
 
 						this.link.$node.text(text).attr('href', link);
+						/* concrete5 */
+						this.link.$node.removeAttr('data-concrete5-link-lightbox');
+						/* end concrete5  */
 						if (target !== '')
 						{
 							this.link.$node.attr('target', target);
@@ -5641,6 +5725,15 @@
 						else
 						{
 							this.link.$node.removeAttr('target');
+							/* concrete5 */
+							if (lightbox) {
+								this.link.$node.attr('data-concrete5-link-lightbox', lightbox);
+								if (lightbox == 'iframe' && width && height) {
+									this.link.$node.attr('data-concrete5-link-lightbox-width', width);
+									this.link.$node.attr('data-concrete5-link-lightbox-height', height);
+								}
+							}
+							/* end concrete5  */
 						}
 
 						this.code.sync();
@@ -5687,6 +5780,16 @@
 								}
 							}
 						}
+
+						/* concrete5 */
+						if (lightbox) {
+							$a.attr('data-concrete5-link-lightbox', lightbox);
+							if (lightbox == 'iframe' && width && height) {
+								$a.attr('data-concrete5-link-lightbox-width', width);
+								$a.attr('data-concrete5-link-lightbox-height', height);
+							}
+						}
+						/* end concrete5  */
 
 						this.code.sync();
 						this.core.setCallback('insertedLink', $a);
@@ -5927,6 +6030,37 @@
 		{
 			return {
 				callbacks: {},
+				/* concrete5 */
+				getLinkFields: function() {
+					var fields = String()
+					+ '<div class="form-group">'
+					+ '<label class="control-label">' + this.lang.get('open_link') + '</label>'
+					+ '<select class="form-control" id="redactor-link-url-open">'
+					+ '<option value="same">' + this.lang.get('link_same_window') + '</option>'
+					+ '<option value="blank">' + this.lang.get('link_new_tab') + '</option>'
+					+ '<option value="lightbox">' + this.lang.get('in_lightbox') + '</option>'
+					+ '</select>'
+					+ '</div>'
+					+ '<div data-field-group="lightbox" style="display: none" class="form-group">'
+					+ '<label class="control-label">' + this.lang.get('lightbox_link_type') + '</label>'
+					+ '<select class="form-control" id="redactor-link-lightbox-type">'
+					+ '<option value="image">' + this.lang.get('lightbox_link_type_image') + '</option>'
+					+ '<option value="iframe">' + this.lang.get('lightbox_link_type_iframe') + '</option>'
+					+ '</select>'
+					+ '</div>'
+					+ '<div data-field-group="lightbox-iframe" style="display: none">'
+					+ '<div class="form-group">'
+					+ '<label class="control-label">' + this.lang.get('lightbox_link_type_iframe_width') + '</label>'
+					+ '<input class="form-control" type="text" id="redactor-link-lightbox-iframe-width" />'
+					+ '</div>'
+					+ '<div class="form-group">'
+					+ '<label class="control-label">' + this.lang.get('lightbox_link_type_iframe_height') + '</label>'
+					+ '<input class="form-control" type="text" id="redactor-link-lightbox-iframe-height" />'
+					+ '</div>'
+					+ '</div>'
+					return fields;
+				},
+				/* end concrete5 */
 				loadTemplates: function()
 				{
 					this.opts.modal = {
@@ -5940,10 +6074,7 @@
 						    + '<label class="control-label redactor-image-link-option">' + this.lang.get('link') + '</label>'
 						    + '<input type="text" id="redactor-image-link" class="form-control redactor-image-link-option" />'
 							+ '</div>'
-							+ '<div class="form-group">'
-						    + '<div class="checkbox">'
-							+ '<label class="redactor-image-link-option"><input type="checkbox" id="redactor-image-link-blank"> ' + this.lang.get('link_new_tab') + '</label>'
-							+ '</div></div>'
+    						+ this.modal.getLinkFields()
 							+ '<div class="form-group">'
 						    + '<label class="control-label redactor-image-position-option">' + this.lang.get('image_position') + '</label>'
 							+ '<select class="form-control redactor-image-position-option" id="redactor-image-align">'
@@ -5993,12 +6124,9 @@
 							+ '<label class="control-label">' + this.lang.get('text') + '</label>'
 							+ '<input class="form-control" type="text" id="redactor-link-url-text" />'
 							+ '</div>'
-							+ '<div class="checkbox">'
-							+ '<label><input type="checkbox" id="redactor-link-blank"> ' + this.lang.get('link_new_tab') + '</label>'
-							+ '</div>'
+							+ this.modal.getLinkFields()
 						+ '</section>'
 					};
-
 
 					$.extend(this.opts, this.opts.modal);
 

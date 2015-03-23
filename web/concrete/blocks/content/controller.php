@@ -50,7 +50,7 @@ use \Concrete\Core\Editor\LinkAbstractor;
 
         public function registerViewAssets($outputContent)
         {
-            if (preg_match('/data-concrete5-link-launch/i', $outputContent)) {
+            if (preg_match('/data-concrete5-link-lightbox/i', $outputContent)) {
                 $this->requireAsset('core/lightbox');
             }
         }
