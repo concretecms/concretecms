@@ -3164,7 +3164,7 @@
 					/* concrete5 */
 					//this.upload.init('#redactor-modal-file-upload', this.opts.fileUpload, this.file.insert);
 					this.modal.createCancelButton();
-					this.image.buttonSave = this.modal.createActionButton(this.lang.get('save'));
+					this.file.buttonSave = this.modal.createActionButton(this.lang.get('save'));
 
 					if (this.opts.concrete5.filemanager) {
 						$('a[data-action=choose-image-from-file-manager]').on('click', function(e) {
@@ -3181,7 +3181,7 @@
 					} else {
 						$('a[data-action=choose-image-from-file-manager]').remove();
 					}
-					this.image.buttonSave.on('click', $.proxy(function()
+					this.file.buttonSave.on('click', $.proxy(function()
 					{
 						var val = $('#redactor-file-link').val();
 
@@ -3391,6 +3391,88 @@
 
 					this.modal.load('imageEdit', this.lang.get('edit'), 705);
 
+					/* concrete5 */
+					this.image.linkLightboxType = 'image'; // not used unless link type is lightbox
+					this.image.linkLightboxIframeWidth = '600'; // not used unless link type is lightbox
+					this.image.linkLightboxIframeHeight = '400'; // not used unless link type is lightbox
+					var lightboxType = $link.attr('data-concrete5-link-lightbox');
+					if ($link.attr('target') == '_blank') {
+						this.image.linkType = 'blank';
+					} else if (lightboxType == 'image' || lightboxType == 'iframe') {
+						this.image.linkType = 'lightbox';
+						this.image.linkLightboxType = lightboxType;
+						this.image.linkLightboxIframeWidth = $link.attr('data-concrete5-link-lightbox-width');
+						this.image.linkLightboxIframeHeight = $link.attr('data-concrete5-link-lightbox-height');
+					} else {
+						this.image.linkType = 'same';
+					}
+					this.image.$selectUrlOpen = $('#redactor-link-url-open');
+					this.image.$selectUrlLightboxFieldGroup = $('div[data-field-group=lightbox]');
+					this.image.$selectUrlLightboxIframeFieldGroup = $('div[data-field-group=lightbox-iframe]');
+					this.image.$selectUrlLightboxFieldGroupSelect = $('div[data-field-group=lightbox] select');
+					this.image.$selectUrlLightboxIframeWidth = $('#redactor-link-lightbox-iframe-width');
+					this.image.$selectUrlLightboxIframeHeight = $('#redactor-link-lightbox-iframe-height');
+					this.image.$selectUrlOpen.val(this.image.linkType);
+					this.image.$selectUrlLightboxIframeWidth.val(this.image.linkLightboxIframeWidth);
+					this.image.$selectUrlLightboxIframeHeight.val(this.image.linkLightboxIframeHeight);
+					var _link = this.image;
+					this.image.$selectUrlOpen.on('change', function() {
+						if ($(this).val() == 'lightbox') {
+							_link.$selectUrlLightboxFieldGroup.show();
+						} else {
+							_link.$selectUrlLightboxFieldGroup.hide();
+							_link.$selectUrlLightboxFieldGroupSelect.val('image').trigger('change');
+						}
+					}).trigger('change');
+					this.image.$selectUrlLightboxFieldGroupSelect.val(this.image.linkLightboxType);
+					this.image.$selectUrlLightboxFieldGroupSelect.on('change', function() {
+						if ($(this).val() == 'iframe') {
+							_link.$selectUrlLightboxIframeFieldGroup.show();
+						} else {
+							_link.$selectUrlLightboxIframeFieldGroup.hide();
+						}
+					}).trigger('change');
+
+					if (this.opts.concrete5.filemanager) {
+						$('a[data-action=choose-file-from-file-manager]').on('click', function(e) {
+							e.preventDefault();
+							ConcreteFileManager.launchDialog(function(data) {
+								jQuery.fn.dialog.showLoader();
+								ConcreteFileManager.getFileDetails(data.fID, function(r) {
+									jQuery.fn.dialog.hideLoader();
+									var file = r.files[0];
+									$('#redactor-image-link').val(file.urlDownload);
+								});
+							});
+						});
+					} else {
+						$('a[data-action=choose-file-from-file-manager]').remove();
+					}
+
+					if (this.opts.concrete5.sitemap) {
+						$('a[data-action=choose-link-from-sitemap]').on('click', function(e) {
+							e.preventDefault();
+							jQuery.fn.dialog.open({
+								width: '90%',
+								height: '70%',
+								modal: false,
+								title: ccmi18n_sitemap.choosePage,
+								href: CCM_TOOLS_PATH + '/sitemap_search_selector'
+							});
+							ConcreteEvent.unsubscribe('SitemapSelectPage');
+							ConcreteEvent.subscribe('SitemapSelectPage', function(e, data) {
+								jQuery.fn.dialog.closeTop();
+								var url = CCM_APPLICATION_URL + CCM_DISPATCHER_FILENAME + '?cID=' + data.cID;
+								$('#redactor-image-link').val(url);
+								this.link.$inputUrl.val(url);
+								this.link.$inputText.val(url);
+							});
+						});
+					} else {
+						$('a[data-action=choose-link-from-sitemap]').remove();
+					}
+					/* end concrete5 */
+
 					this.modal.createCancelButton();
 					this.image.buttonDelete = this.modal.createDeleteButton(this.lang.get('_delete'));
 					this.image.buttonSave = this.modal.createActionButton(this.lang.get('save'));
@@ -3484,17 +3566,49 @@
 							link = this.opts.linkProtocol + '://' + link;
 						}
 
-						var target = ($('#redactor-image-link-blank').prop('checked')) ? true : false;
+
+						/* concrete5 */
+						var target = false,
+							lightbox,
+							width,
+							height;
+
+						if ($('#redactor-link-url-open').val() == 'blank')
+						/* end concrete5 */
+						{
+							target = true;
+						}
+
+						/* concrete5 */
+						if ($('#redactor-link-url-open').val() == 'lightbox')
+						{
+							lightbox = $('#redactor-link-lightbox-type').val();
+							if (lightbox == 'iframe') {
+								width = $('#redactor-link-lightbox-iframe-width').val();
+								height = $('#redactor-link-lightbox-iframe-height').val();
+							}
+						}
 
 						if ($link.length === 0)
 						{
 							var a = $('<a href="' + link + '">' + this.utils.getOuterHtml($image) + '</a>');
 							if (target) a.attr('target', '_blank');
 
+							if (lightbox) {
+								a.attr('data-concrete5-link-lightbox', lightbox);
+								if (lightbox == 'iframe' && width && height) {
+									a.attr('data-concrete5-link-lightbox-width', width);
+									a.attr('data-concrete5-link-lightbox-height', height);
+								}
+							}
+
 							$image.replaceWith(a);
 						}
 						else
 						{
+							$link.removeAttr('data-concrete5-link-lightbox');
+							$link.removeAttr('data-concrete5-link-lightbox-width');
+							$link.removeAttr('data-concrete5-link-lightbox-height');
 							$link.attr('href', link);
 							if (target)
 							{
@@ -3503,6 +3617,13 @@
 							else
 							{
 								$link.removeAttr('target');
+							}
+							if (lightbox) {
+								$link.attr('data-concrete5-link-lightbox', lightbox);
+								if (lightbox == 'iframe' && width && height) {
+									$link.attr('data-concrete5-link-lightbox-width', width);
+									$link.attr('data-concrete5-link-lightbox-height', height);
+								}
 							}
 						}
 					}
@@ -5472,6 +5593,7 @@
 				}
 			};
 		},
+
 		link: function()
 		{
 			return {
@@ -5717,6 +5839,8 @@
 						this.link.$node.text(text).attr('href', link);
 						/* concrete5 */
 						this.link.$node.removeAttr('data-concrete5-link-lightbox');
+						this.link.$node.removeAttr('data-concrete5-link-lightbox-width');
+						this.link.$node.removeAttr('data-concrete5-link-lightbox-height');
 						/* end concrete5  */
 						if (target !== '')
 						{
@@ -6072,7 +6196,11 @@
 						    + '</div>'
 							+ '<div class="form-group">'
 						    + '<label class="control-label redactor-image-link-option">' + this.lang.get('link') + '</label>'
-						    + '<input type="text" id="redactor-image-link" class="form-control redactor-image-link-option" />'
+							+ '<div class="input-group">'
+							+ '<input type="text" class="form-control" id="redactor-image-link" />'
+							+ '<a href="#" data-action="choose-link-from-sitemap" class="btn btn-default input-group-addon"><i class="fa fa-sitemap"></i></a>'
+							+ '<a href="#" data-action="choose-file-from-file-manager" class="btn btn-default input-group-addon"><i class="fa fa-file"></i></a>'
+							+ '</div>'
 							+ '</div>'
     						+ this.modal.getLinkFields()
 							+ '<div class="form-group">'
