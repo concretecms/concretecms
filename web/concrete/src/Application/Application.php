@@ -416,7 +416,7 @@ class Application extends Container
         $url->getHost()->set($r->getHost());
         $url->getPath()->append($home);
 
-        if ($r->getPort() != 80 && ($url->getScheme()->get() != 'https' && $r->getPort() != 443)) {
+        if (($url->getScheme()->get() != 'http' || $r->getPort() != 80) && ($url->getScheme()->get() != 'https' || $r->getPort() != 443)) {
             $url->getPort()->set($r->getPort());
         }
 
