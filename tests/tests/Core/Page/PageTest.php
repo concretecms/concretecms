@@ -197,4 +197,39 @@ class PageTest extends PageTestCase {
         $this->assertEquals('/page-4/page-2/subpage/page-1', $pagePath->getPagePath());
         $this->assertTrue($pagePath->isPagePathCanonical());
     }
+
+    public function testCustomCanonicalURLs()
+    {
+        $cache = Core::make('cache/request');
+        $cache->disable();
+
+        $about = self::createPage('About');
+        $contact = self::createPage('Contact Us', $about);
+
+        $c = Page::getByID(3);
+        $this->assertEquals('Contact Us', $c->getCollectionName());
+        $this->assertEquals('/about/contact-us', $c->getCollectionPath());
+
+        $p = new \Concrete\Core\Page\PagePath();
+        $p->setPagePath('/contact');
+        $p->setPageObject($contact);
+        $p->setPagePathIsCanonical(true);
+
+        $c->clearPagePaths();
+
+        $db = Loader::db();
+        $db->getEntityManager()->persist($p);
+        $db->getEntityManager()->flush();
+
+        $c = Page::getByID(3);
+        $this->assertEquals('/contact', $c->getCollectionPath());
+
+        $c->rescanCollectionPath();
+
+        $c = Page::getByID(3);
+        $this->assertEquals('/contact', $c->getCollectionPath());
+
+    }
+
+
 }
