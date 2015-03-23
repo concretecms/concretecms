@@ -89,9 +89,9 @@ abstract class AbstractView {
 	 * @param $key
 	 * @return void
 	*/
-	public function post($key) {
+	public function post($key, $defaultValue = null) {
 		$r = Request::getInstance();
-		return $r->post($key);
+		return $r->post($key, $defaultValue);
 	}
 
 	abstract protected function onBeforeGetContents();
