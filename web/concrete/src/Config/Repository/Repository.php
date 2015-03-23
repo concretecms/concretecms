@@ -37,6 +37,9 @@ class Repository extends \Illuminate\Config\Repository
     public function save($key, $value)
     {
         list($namespace, $group, $item) = $this->parseKey($key);
+        if ($namespace === null || $group === null || $item === null) {
+            throw new \Exception(t('Your config key must be using the format "group.item"'));
+        }
         $collection = $this->getCollection($group, $namespace);
         unset($this->items[$collection]);
 
