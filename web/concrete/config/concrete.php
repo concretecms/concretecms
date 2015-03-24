@@ -299,15 +299,19 @@ return array(
     ),
 
     'editor' => array(
+        'concrete' => array(
+            'enable_filemanager' => true,
+            'enable_sitemap' => true
+        ),
         'plugins' => array(
             'selected' => array(
+                'concrete5lightbox',
                 'undoredo',
                 'specialcharacters',
                 'table'
             )
         )
     ),
-
 
 /**
      * ------------------------------------------------------------------------

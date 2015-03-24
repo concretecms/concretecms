@@ -5,17 +5,12 @@
 		<p class="lead"><?=t('Concrete5 Extensions')?></p>
 		<div class="checkbox">
 			<label>
-				<?=$form->checkbox('filemanager', 1)?> <?=t('Enable file selection from file manager.')?>
+				<?=$form->checkbox('enable_filemanager', 1, $filemanager)?> <?=t('Enable file selection from file manager.')?>
 			</label>
 		</div>
 		<div class="checkbox">
 			<label>
-				<?=$form->checkbox('sitemap', 1)?> <?=t('Enable page selection from sitemap.')?>
-			</label>
-		</div>
-		<div class="checkbox">
-			<label>
-				<?=$form->checkbox('lightbox', 1)?> <?=t('Add lightbox option to link editor.')?>
+				<?=$form->checkbox('enable_sitemap', 1, $sitemap)?> <?=t('Enable page selection from sitemap.')?>
 			</label>
 		</div>
 	</fieldset>
@@ -24,7 +19,7 @@
 		<? foreach($plugins as $key => $name) { ?>
 		<div class="checkbox">
 			<label>
-				<?=$form->checkbox('<?=$key?>', 1, $manager->isSelected($key))?> <?=$name?>
+				<?=$form->checkbox('plugin[]', $key, $manager->isSelected($key))?> <?=$name?>
 			</label>
 		</div>
 		<? } ?>
