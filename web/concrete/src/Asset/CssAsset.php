@@ -135,7 +135,7 @@ class CssAsset extends Asset
             $filename = '';
             for ($i = 0; $i < count($assets); $i++) {
                 $asset = $assets[$i];
-                $filename .= $asset->getAssetURL();
+                $filename .= $asset->getAssetHashKey();
                 $sourceFiles[] = $asset->getAssetURL();
             }
             $filename = sha1($filename);
@@ -143,15 +143,16 @@ class CssAsset extends Asset
             if (!file_exists($cacheFile)) {
                 $css = '';
                 foreach ($assets as $asset) {
-                    if ($asset->getAssetPath()) {
-                        $css .= file_get_contents($asset->getAssetPath()) . "\n\n";
+                    $contents = static::getAssetContents($asset);
+                    if (isset($contents)) {
+                        $css .=  $contents."\n\n";
+                        $css = $processFunction($css, $asset->getAssetURLPath(), self::getRelativeOutputDirectory());
                     }
-                    $css = $processFunction($css, $asset->getAssetURLPath(), self::getRelativeOutputDirectory());
                 }
                 @file_put_contents($cacheFile, $css);
             }
 
-            $asset = new CSSAsset();
+            $asset = new CssAsset();
             $asset->setAssetURL(self::getRelativeOutputDirectory() . '/' . $filename . '.css');
             $asset->setAssetPath($directory . '/' . $filename . '.css');
             $asset->setCombinedAssetSourceFiles($sourceFiles);

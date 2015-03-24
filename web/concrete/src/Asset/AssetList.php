@@ -52,7 +52,8 @@ class AssetList
             'local' => true,
             'version' => false,
             'combine' => -1,
-            'minify' => -1 // use the asset default
+            'minify' => -1, // use the asset default
+            'localeDependent' => false,
         );
         // overwrite all the defaults with the arguments
         $args = array_merge($defaults, $args);
@@ -66,19 +67,20 @@ class AssetList
             $o->setPackageObject($pkg);
         }
         $o->setAssetIsLocal($args['local']);
-        $o->mapAssetLocation($filename);
         if ($args['minify'] === true || $args['minify'] === false) {
             $o->setAssetSupportsMinification($args['minify']);
         }
         if ($args['combine'] === true || $args['combine'] === false) {
             $o->setAssetSupportsCombination($args['combine']);
         }
+        $o->setAssetIsLocaleDependent($args['localeDependent']);
         if ($args['version']) {
             $o->setAssetVersion($args['version']);
         }
         if ($args['position']) {
             $o->setAssetPosition($args['position']);
         }
+        $o->mapAssetLocation($filename);
         $this->registerAsset($o);
         return $o;
     }
