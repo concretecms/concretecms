@@ -23,7 +23,7 @@ class ControllerRouteCallback extends RouteCallback {
 		$method = $callback[1];
 		$controller->on_start();
 		$response = $controller->runAction($method, $arguments);
-		if ($response instanceof \Concrete\Core\Http\Response || $response instanceof RedirectResponse) {
+		if ($response instanceof \Symfony\Component\HttpFoundation\Response) {
 			// note, our RedirectResponse doesn't extend Response, it extends symfony2 response
 			return $response;
 		}
