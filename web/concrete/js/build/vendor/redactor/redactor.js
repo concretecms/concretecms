@@ -309,6 +309,7 @@
                     link_type: "Link Type",
                     link_type_image: "Image",
                     link_type_ajax: "AJAX",
+                    link_type_iframe: "IFrame",
                     open_link: "Open link",
                     default_behavior: "Default Behavior",
                     in_lightbox: "In a Lightbox",
@@ -6459,8 +6460,8 @@
                     text = $(elem).text();
                     target = elem.target;
                     /* concrete5 */
-                    lightbox = $(elem).attr('data-concrete5-link-launch') == 'lightbox-image';
-                    type = $(elem).attr('data-concrete5-link-type') === 'image';
+                    lightbox = $(elem).attr('data-concrete5-link-launch') == 'lightbox' || $(elem).attr('data-concrete5-link-launch') == 'lightbox-image';
+                    type = $(elem).attr('data-concrete5-link-type');
                     /* end concret5 */
 
                     this.insert_link_node = elem;
@@ -6472,8 +6473,10 @@
                 if (lightbox) {
                     $('#redactor_link_lightbox').prop('checked', true);
                 }
-                if (type) {
+                if (type === 'image') {
                     $('#redactor_link_image').prop('checked', true);
+                } else if (type === 'iframe') {
+                    $('#redactor_link_iframe').prop('checked', true);
                 } else {
                     $('#redactor_link_ajax').prop('checked', true);
                 }
@@ -6580,13 +6583,13 @@
             var target = '', targetBlank = '';
 
             var link = $('#redactor_link_url').val();
-            var link_type = $('#redactor_link_image').is(':checked') ? 'image' : 'ajax';
+            var link_type = $('input.redactor_link_type:checked').val();
             var text = $('#redactor_link_url_text').val();
             /* concrete5 */
             var lightbox = $('#redactor_link_lightbox').is(':checked');
 
             if (lightbox) {
-                var lightboxStr = 'data-concrete5-link-type="' + link_type + '" data-concrete5-link-launch="lightbox-image"';
+                var lightboxStr = 'data-concrete5-link-type="' + link_type + '" data-concrete5-link-launch="lightbox"';
             } else {
                 var lightboxStr = 'data-concrete5-link-type="' + link_type + '"';
             }
@@ -6646,11 +6649,8 @@
                     {
                         $(this.insert_link_node).removeAttr('target');
                     }
-
                     /* concrete5 */
-                    if (lightbox != '') {
-                        $(this.insert_link_node).attr('data-concrete5-link-launch', 'lightbox');
-                    } else {
+                    if (lightbox == '') {
                         $(this.insert_link_node).removeAttr('data-concrete5-link-launch');
                     }
                     /* end concrete5 */
@@ -6966,8 +6966,11 @@
                     } else if ($(parent).attr('data-concrete5-link-launch')) {
                         $('#redactor_link_lightbox').prop('checked', true);
                     }
-                    if ($(parent).data('concrete5-link-type') === 'image') {
+                    var type = $(parent).data('concrete5-link-type');
+                    if (type === 'image') {
                         $('#redactor_link_image').prop('checked', true);
+                    } else if (type === 'iframe') {
+                        $('#redactor_link_iframe').prop('checked', true);
                     } else {
                         $('#redactor_link_ajax').prop('checked', true);
                     }
@@ -7112,7 +7115,7 @@
                     $('.ccm-redactor-link-type').hide();
                 }
 
-                var type = $('#redactor_link_image').is(':checked') ? 'image' : 'ajax';
+                var type = $('input.redactor_link_type:checked').val();
                 /* end concrete5 */
 
                 if (parent.get(0).tagName !== 'A')
@@ -7124,7 +7127,9 @@
                         a.attr('target', '_blank');
                     }
                     else if (lightbox) {
-                        a.attr('data-concrete5-link-launch', 'lightbox-image');
+                        /* concrete5 */
+                        a.attr('data-concrete5-link-launch', 'lightbox');
+                        /* end concrete5 */
                     }
 
 
@@ -7148,7 +7153,9 @@
 
                     if (lightbox)
                     {
-                        parent.attr('data-concrete5-link-launch', 'lightbox-image');
+                        /* concrete5 */
+                        parent.attr('data-concrete5-link-launch', 'lightbox');
+                        /* end concrete5 */
                     }
                     else
                     {
@@ -7540,8 +7547,9 @@
                     + '</div>'
                     + '<div class="form-group ccm-redactor-link-type" style="display:none">'
                         + '<label class="control-label"> ' + this.opts.curLang.link_type + '</label>'
-                        + '<div class="radio"><label><input type="radio" id="redactor_link_image" name="redactor_link_type" value="image"> ' + this.opts.curLang.link_type_image + ' </label></div>'
-                        + '<div class="radio"><label><input type="radio" id="redactor_link_ajax" name="redactor_link_type" value="ajax" checked> ' + this.opts.curLang.link_type_ajax + ' </label></div>'
+                        + '<div class="radio"><label><input type="radio" id="redactor_link_image" name="redactor_link_type" class="redactor_link_type" value="image"> ' + this.opts.curLang.link_type_image + ' </label></div>'
+                        + '<div class="radio"><label><input type="radio" id="redactor_link_ajax" name="redactor_link_type" class="redactor_link_type" value="ajax" checked> ' + this.opts.curLang.link_type_ajax + ' </label></div>'
+                        + '<div class="radio"><label><input type="radio" id="redactor_link_iframe" name="redactor_link_type" class="redactor_link_type" value="iframe"> ' + this.opts.curLang.link_type_iframe + ' </label></div>'
                     + '</div>'
                     + '<div class="form-group">'
                     + '<label>' + this.opts.curLang.image_position + '</label>'
@@ -7638,8 +7646,9 @@
                     + '</div>'
                     + '<div class="form-group ccm-redactor-link-type" style="display:none">'
                         + '<label class="control-label"> ' + this.opts.curLang.link_type + '</label>'
-                        + '<div class="radio"><label><input type="radio" id="redactor_link_image" name="redactor_link_type" value="image"> ' + this.opts.curLang.link_type_image + ' </label></div>'
-                        + '<div class="radio"><label><input type="radio" id="redactor_link_ajax" name="redactor_link_type" value="ajax" checked> ' + this.opts.curLang.link_type_ajax + ' </label></div>'
+                        + '<div class="radio"><label><input type="radio" id="redactor_link_image" name="redactor_link_type" class="redactor_link_type" value="image"> ' + this.opts.curLang.link_type_image + ' </label></div>'
+                        + '<div class="radio"><label><input type="radio" id="redactor_link_ajax" name="redactor_link_type" class="redactor_link_type" value="ajax" checked> ' + this.opts.curLang.link_type_ajax + ' </label></div>'
+                        + '<div class="radio"><label><input type="radio" id="redactor_link_iframe" name="redactor_link_type" class="redactor_link_type" value="iframe"> ' + this.opts.curLang.link_type_iframe + ' </label></div>'
                     + '</div>'
                     /* end concrete5 */
                 + '</section>'
