@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\Editor;
+use Concrete\Core\Http\Request;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\Legacy\FilePermissions;
 use Concrete\Core\Legacy\TaskPermission;
@@ -22,12 +23,13 @@ class RedactorEditor implements EditorInterface
         $this->assets = ResponseAssetGroup::get();
         $this->identifier = id(new Identifier())->getString(32);
         $this->token = Core::make("token")->generate('editor');
-        $this->allowFileManager = $fp->canAccessFileManager();
-        $this->allowSitemap = $tp->canAccessSitemap();
+        $this->allowFileManager = \Config::get('concrete.editor.concrete.enable_filemanager') && $fp->canAccessFileManager();
+        $this->allowSitemap = \Config::get('concrete.editor.concrete.enable_sitemap') && $tp->canAccessSitemap();
         $this->pluginManager = new PluginManager();
 
         $this->pluginManager->register('undoredo', t('Undo/Redo'));
         $this->pluginManager->register('underline', t('Underline'));
+        $this->pluginManager->register('concrete5lightbox', t('Lightbox'));
         $this->pluginManager->register('specialcharacters', t('Special Characters Palette'));
         $this->pluginManager->register('table', t('Table'));
         $this->pluginManager->register('fontfamily', t('Font Family'));
@@ -64,8 +66,7 @@ class RedactorEditor implements EditorInterface
         $this->assets->requireAsset('redactor');
         $concrete5 = array(
             'filemanager' => $this->allowFileManager(),
-            'sitemap' => $this->allowSitemap(),
-            'lightbox' => true
+            'sitemap' => $this->allowSitemap()
         );
         if (isset($options['concrete5'])) {
             $options['concrete5'] = array_merge($options['concrete5'], $concrete5);
@@ -111,5 +112,21 @@ EOL;
         return $this->pluginManager;
     }
 
+    public function saveOptionsForm(Request $request)
+    {
+        \Config::save('concrete.editor.concrete.enable_filemanager', $request->request->get('enable_filemanager'));
+        \Config::save('concrete.editor.concrete.enable_sitemap', $request->request->get('enable_sitemap'));
 
+        $plugins = array();
+        $post = $request->request->get('plugin');
+        if (is_array($post)) {
+            foreach($post as $plugin) {
+                if ($this->pluginManager->isAvailable($plugin)) {
+                    $plugins[] = $plugin;
+                }
+            }
+        }
+
+        \Config::save('concrete.editor.plugins.selected', $plugins);
+    }
 }

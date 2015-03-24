@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Editor;
 
+use Concrete\Core\Http\Request;
+
 interface EditorInterface
 {
 
@@ -12,5 +14,7 @@ interface EditorInterface
 	public function setAllowFileManager($allow);
 
 	public function getPluginManager();
+
+	public function saveOptionsForm(Request $request);
 
 }
