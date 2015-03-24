@@ -22,11 +22,19 @@ div.ccm-panel-detail .redactor-editor {
   background: transparent;
 }
 
-
 .redactor-editor {
-  td, th {
-    border: dotted 1px rgb(128, 128, 128);
-    min-width: 10px;
-    min-height: 10px;
+  table {
+    border-collapse: collapse;
+    & td,
+    & th {
+      padding: 5px;
+      border: 1px solid #ddd;
+      vertical-align: top;
+    }
+  }
+  table thead td,
+  table th {
+    font-weight: bold;
+    border-bottom-color: #888;
   }
 }

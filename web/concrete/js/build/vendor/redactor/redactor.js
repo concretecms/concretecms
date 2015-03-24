@@ -3407,6 +3407,9 @@
 						this.image.linkType = 'same';
 					}
 					this.image.$selectUrlOpen = $('#redactor-link-url-open');
+					if (this.opts.concrete5.lightbox) {
+						this.image.$selectUrlOpen.find('option[value=lightbox]').show();
+					}
 					this.image.$selectUrlLightboxFieldGroup = $('div[data-field-group=lightbox]');
 					this.image.$selectUrlLightboxIframeFieldGroup = $('div[data-field-group=lightbox-iframe]');
 					this.image.$selectUrlLightboxFieldGroupSelect = $('div[data-field-group=lightbox] select');
@@ -5614,6 +5617,9 @@
 					/* concrete5 */
 					//if (this.link.target == '_blank') $('#redactor-link-blank').prop('checked', true);
 					this.link.$selectUrlOpen = $('#redactor-link-url-open');
+					if (this.opts.concrete5.lightbox) {
+						this.link.$selectUrlOpen.find('option[value=lightbox]').show();
+					}
 					this.link.$selectUrlLightboxFieldGroup = $('div[data-field-group=lightbox]');
 					this.link.$selectUrlLightboxIframeFieldGroup = $('div[data-field-group=lightbox-iframe]');
 					this.link.$selectUrlLightboxFieldGroupSelect = $('div[data-field-group=lightbox] select');
@@ -6162,7 +6168,7 @@
 					+ '<select class="form-control" id="redactor-link-url-open">'
 					+ '<option value="same">' + this.lang.get('link_same_window') + '</option>'
 					+ '<option value="blank">' + this.lang.get('link_new_tab') + '</option>'
-					+ '<option value="lightbox">' + this.lang.get('in_lightbox') + '</option>'
+					+ '<option value="lightbox" style="display: none">' + this.lang.get('in_lightbox') + '</option>'
 					+ '</select>'
 					+ '</div>'
 					+ '<div data-field-group="lightbox" style="display: none" class="form-group">'
