@@ -75,10 +75,15 @@ EOL;
     public function outputPageInlineEditor($key, $content = null)
     {
         return $this->getEditor($key, $content, array('plugins' => array(
-            'concrete5inline',
             'concrete5magic',
             'undoredo',
-            'specialcharacters'
+            'specialcharacters',
+            'table',
+            'fontfamily',
+            'fontsize',
+            'fontcolor',
+            'underline',
+            'concrete5inline'
         ), 'minHeight' => 300));
     }
 
@@ -87,7 +92,12 @@ EOL;
         return $this->getEditor($key, $content, array('plugins' => array(
             'concrete5magic',
             'undoredo',
-            'specialcharacters'
+            'specialcharacters',
+            'table',
+            'fontfamily',
+            'fontsize',
+            'fontcolor',
+            'underline'
         ), 'minHeight' => 300));
     }
 
@@ -95,7 +105,12 @@ EOL;
     {
         return $this->getEditor($key, $content, array('plugins' => array(
             'undoredo',
-            'specialcharacters'
+            'specialcharacters',
+            'table',
+            'fontfamily',
+            'fontsize',
+            'fontcolor',
+            'underline'
         ), 'minHeight' => 300));
     }
 
