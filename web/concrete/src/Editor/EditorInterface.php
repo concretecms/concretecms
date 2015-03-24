@@ -11,4 +11,6 @@ interface EditorInterface
 	public function setAllowSitemap($allow);
 	public function setAllowFileManager($allow);
 
+	public function getPluginManager();
+
 }
