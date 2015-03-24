@@ -24,6 +24,18 @@ class RedactorEditor implements EditorInterface
         $this->token = Core::make("token")->generate('editor');
         $this->allowFileManager = $fp->canAccessFileManager();
         $this->allowSitemap = $tp->canAccessSitemap();
+        $this->pluginManager = new PluginManager();
+
+        $this->pluginManager->register('undoredo', t('Undo/Redo'));
+        $this->pluginManager->register('underline', t('Underline'));
+        $this->pluginManager->register('specialcharacters', t('Special Characters Palette'));
+        $this->pluginManager->register('table', t('Table'));
+        $this->pluginManager->register('fontfamily', t('Font Family'));
+        $this->pluginManager->register('fontsize', t('Font Size'));
+        $this->pluginManager->register('fontcolor', t('Font Color'));
+
+        $this->pluginManager->selectMultiple(\Config::get('concrete.editor.plugins.selected'));
+
     }
 
     public function allowFileManager()
@@ -72,46 +84,32 @@ class RedactorEditor implements EditorInterface
 EOL;
         return $html;
     }
+
     public function outputPageInlineEditor($key, $content = null)
     {
-        return $this->getEditor($key, $content, array('plugins' => array(
-            'concrete5magic',
-            'undoredo',
-            'specialcharacters',
-            'table',
-            'fontfamily',
-            'fontsize',
-            'fontcolor',
-            'underline',
-            'concrete5inline'
-        ), 'minHeight' => 300));
+        $plugins = $this->pluginManager->getSelectedPlugins();
+        $plugins[] = 'concrete5magic';
+        $plugins[] = 'concrete5inline';
+        return $this->getEditor($key, $content, array('plugins' => $plugins), array('minHeight' => 300));
     }
 
     public function outputPageComposerEditor($key, $content)
     {
-        return $this->getEditor($key, $content, array('plugins' => array(
-            'concrete5magic',
-            'undoredo',
-            'specialcharacters',
-            'table',
-            'fontfamily',
-            'fontsize',
-            'fontcolor',
-            'underline'
-        ), 'minHeight' => 300));
+        $plugins = $this->pluginManager->getSelectedPlugins();
+        $plugins[] = 'concrete5magic';
+        return $this->getEditor($key, $content, array('plugins' => $plugins), array('minHeight' => 300));
     }
 
     public function outputStandardEditor($key, $content = null)
     {
-        return $this->getEditor($key, $content, array('plugins' => array(
-            'undoredo',
-            'specialcharacters',
-            'table',
-            'fontfamily',
-            'fontsize',
-            'fontcolor',
-            'underline'
-        ), 'minHeight' => 300));
+        $plugins = $this->pluginManager->getSelectedPlugins();
+        return $this->getEditor($key, $content, $plugins, array('minHeight' => 300));
     }
+
+    public function getPluginManager()
+    {
+        return $this->pluginManager;
+    }
+
 
 }
