@@ -587,6 +587,7 @@
         },
 
         loadInlineEditModeToolbars: function ($container, toolbarHTML) {
+
             $('#ccm-inline-toolbar-container').remove();
             var $holder = $('<div />', {id: 'ccm-inline-toolbar-container'}).appendTo(document.body);
 
@@ -629,6 +630,7 @@
                     $('#ccm-toolbar-disabled,#ccm-toolbar').css('opacity', 1);
                 }
             });
+
         }
     };
 

@@ -930,8 +930,8 @@ class Version
         $r->canViewFile = $this->canView();
         $r->canEditFile = $this->canEdit();
         $r->url = $this->getURL();
-        $r->urlInline = View::url('/download_file', 'view_inline', $this->getFileID());
-        $r->urlDownload = View::url('/download_file', 'view', $this->getFileID());
+        $r->urlInline = (string) View::url('/download_file', 'view_inline', $this->getFileID());
+        $r->urlDownload = (string) View::url('/download_file', 'view', $this->getFileID());
         $r->title = $this->getTitle();
         $r->genericTypeText = $this->getGenericTypeText();
         $r->description = $this->getDescription();

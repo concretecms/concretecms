@@ -41,69 +41,7 @@ class Controller extends DefaultController  {
 		if ($this->akTextareaDisplayMode == 'text' || $this->akTextareaDisplayMode == '') {
 			print Loader::helper('form')->textarea($this->field('value'), $value, array('class' => $additionalClass, 'rows' => 5));
 		} else {
-			$this->addFooterItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js"></script>');
-			print '<div class="ccm-attribute-textarea-edit">' . Loader::helper('form')->textarea($this->field('value'), $value, array('class' => $additionalClass . ' ccm-advanced-editor-' . $this->attributeKey->getAttributeKeyID())) . '</div>';
-			print '<script type="text/javascript">';
-			print 'var CCM_EDITOR_SECURITY_TOKEN = "' . Loader::helper('validation/token')->generate('editor') . '";';
-			print '$(function() { $(".ccm-advanced-editor-' . $this->attributeKey->getAttributeKeyID() . '").redactor({';
-			if ($this->akTextareaDisplayMode == 'rich_text' || ($this->akTextareaDisplayMode == 'rich_text_custom' && in_array('concrete5menu', $this->akTextareaDisplayModeCustomOptions))) {
-				print 'plugins: [\'concrete5\'], ';
-			}
-			if ($this->akTextareaDisplayMode == 'rich_text_custom') {
-				print 'buttons: [';
-				$buttonGroups = array();
-
-				if (in_array('html', $this->akTextareaDisplayModeCustomOptions)) {
-					$buttonGroups[] = "'html'";
-				}
-				if (in_array('paragraph_styles', $this->akTextareaDisplayModeCustomOptions)) {
-					$buttonGroups[] = "'formatting'";
-				}
-				if (in_array('character_styles', $this->akTextareaDisplayModeCustomOptions)) {
-					$buttonGroups[] = "'bold', 'italic', 'underline', 'deleted'";
-				}
-				$listButtons = "'orderedlist', 'unorderedlist'";
-				$indentButtons = "'indent', 'outdent'";
-				$richButtons = array();
-				if (in_array('lists', $this->akTextareaDisplayModeCustomOptions) && in_array('indent', $this->akTextareaDisplayModeCustomOptions)) {
-					$buttonGroups[] = $listButtons . "," . $indentButtons;
-				} else {
-					if (in_array('lists', $this->akTextareaDisplayModeCustomOptions)) {
-						$buttonGroups[] = $listButtons;
-					} else {
-						$buttonGroups[] = $indentButtons;
-					}
-				}
-				if (in_array('image', $this->akTextareaDisplayModeCustomOptions)) {
-					$richButtons[] = "'image'";
-				}
-				if (in_array('video', $this->akTextareaDisplayModeCustomOptions)) {
-					$richButtons[] = "'video'";
-				}
-				if (in_array('table', $this->akTextareaDisplayModeCustomOptions)) {
-					$richButtons[] = "'table'";
-				}
-				if (in_array('link', $this->akTextareaDisplayModeCustomOptions)) {
-					$richButtons[] = "'link'";
-				}
-				if (count($richButtons) > 0) {
-					$buttonGroups[] = implode(",", $richButtons);
-				}	
-				if (in_array('color', $this->akTextareaDisplayModeCustomOptions)) {
-					$buttonGroups[] = "'fontcolor','backcolor'";
-				}
-				if (in_array('alignment', $this->akTextareaDisplayModeCustomOptions)) {
-					$buttonGroups[] = "'alignment'";
-				}
-				if (in_array('horizontalrule', $this->akTextareaDisplayModeCustomOptions)) {
-					$buttonGroups[] = "'horizontalrule'";
-				}
-
-				$buttons = implode(",'|',", $buttonGroups);
-				print $buttons;
-				print ']';
-			}
-			print '}); });</script>';
+			print \Core::make('editor')->outputStandardEditor($this->field('value'), $value);
 		}
 	}
 	
