@@ -91,20 +91,20 @@ EOL;
         $plugins = $this->pluginManager->getSelectedPlugins();
         $plugins[] = 'concrete5magic';
         $plugins[] = 'concrete5inline';
-        return $this->getEditor($key, $content, array('plugins' => $plugins), array('minHeight' => 300));
+        return $this->getEditor($key, $content, array('plugins' => $plugins, 'minHeight' => 300));
     }
 
     public function outputPageComposerEditor($key, $content)
     {
         $plugins = $this->pluginManager->getSelectedPlugins();
         $plugins[] = 'concrete5magic';
-        return $this->getEditor($key, $content, array('plugins' => $plugins), array('minHeight' => 300));
+        return $this->getEditor($key, $content, array('plugins' => $plugins, 'minHeight' => 300));
     }
 
     public function outputStandardEditor($key, $content = null)
     {
         $plugins = $this->pluginManager->getSelectedPlugins();
-        return $this->getEditor($key, $content, $plugins, array('minHeight' => 300));
+        return $this->getEditor($key, $content, array('plugins' => $plugins, 'minHeight' => 300));
     }
 
     public function getPluginManager()

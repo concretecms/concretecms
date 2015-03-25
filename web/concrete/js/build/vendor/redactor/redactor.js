@@ -3015,6 +3015,7 @@
 
 						$item.on('click', $.proxy(function(e)
 						{
+
 							e.preventDefault();
 
 							var type = 'func';
