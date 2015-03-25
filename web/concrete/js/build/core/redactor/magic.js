@@ -37,7 +37,7 @@ RedactorPlugins.concrete5magic = function() {
                 },
 
                 success: function(response) {
-                    dropdownOptions = {};
+                    var dropdown = {};
 
                     plugin.snippetsByHandle = {};
                     $.each(response.snippets, function(i, snippet) {
@@ -45,21 +45,20 @@ RedactorPlugins.concrete5magic = function() {
                             'scsHandle': snippet.scsHandle,
                             'scsName': snippet.scsName
                         }
-                        dropdownOptions[snippet.scsHandle] = {
+                        dropdown[snippet.scsHandle] = {
                             'title': snippet.scsName,
                             'func': function(option, $item, obj, e) {
-                                var editor = this;
                                 var selectedSnippet = plugin.snippetsByHandle[option];
                                 var html = String() +
                                     '<span class="ccm-content-editor-snippet" contenteditable="false" data-scsHandle="' + selectedSnippet.scsHandle + '">' +
                                     selectedSnippet.scsName +
                                     '</span>';
-                                editor.insertHtml(html);
+
+                                that.insert.htmlWithoutClean(html);
                             }
                         }
                     });
 
-                    var dropdown = {};
                     var button = that.button.get('styles');
 
                     that.styles = response.classes;

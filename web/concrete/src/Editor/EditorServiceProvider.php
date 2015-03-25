@@ -8,7 +8,7 @@ class EditorServiceProvider extends ServiceProvider
 
     public function register()
     {
-        $this->app->singleton('editor', '\Concrete\Core\Editor\RedactorEditor');
+        $this->app->bind('editor', '\Concrete\Core\Editor\RedactorEditor');
     }
 
 
