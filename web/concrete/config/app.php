@@ -98,6 +98,7 @@ return array(
         'core_multilingual'           => '\Concrete\Core\Multilingual\MultilingualServiceProvider',
         'core_feed'                   => '\Concrete\Core\Feed\FeedServiceProvider',
         'core_html'                   => '\Concrete\Core\Html\HtmlServiceProvider',
+        'core_editor'                 => '\Concrete\Core\Editor\EditorServiceProvider',
         'core_pagination'             => '\Concrete\Core\Search\PaginationServiceProvider',
         'core_mail'                   => '\Concrete\Core\Mail\MailServiceProvider',
         'core_application'            => '\Concrete\Core\Application\ApplicationServiceProvider',

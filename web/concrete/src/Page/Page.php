@@ -104,6 +104,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             $v = array($row['cPointerID']);
             $cParentIDOverride = $row['cParentID'];
             $cPathOverride = $row['cPath'];
+            $cIsActiveOverride = $row['cIsActive'];
             $cPointerID = $row['cPointerID'];
             $cDisplayOrderOverride = $row['cDisplayOrder'];
             $r = $db->query($q1, $v);
@@ -117,6 +118,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
                 }
                 if (isset($cParentIDOverride)) {
                     $this->cPointerID = $cPointerID;
+                    $this->cIsActive = $cIsActiveOverride;
                     $this->cPointerOriginalID = $cPointerOriginalID;
                     $this->cPath = $cPathOverride;
                     $this->cParentID = $cParentIDOverride;
@@ -973,8 +975,9 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     {
         $db = Loader::db();
         $em = $db->getEntityManager();
+        $cID = ($this->getCollectionPointerOriginalID() > 0) ? $this->getCollectionPointerOriginalID() : $this->cID;
         $path = $em->getRepository('\Concrete\Core\Page\PagePath')->findOneBy(
-            array('cID' => $this->getCollectionID(), 'ppIsCanonical' => true
+            array('cID' => $cID, 'ppIsCanonical' => true
         ));
         return $path;
     }
@@ -2017,8 +2020,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
                 //we have to update the existing collection with the info for the new
                 //as well as all collections beneath it that are set to inherit from this parent
                 // first we do this one
-                $q = "update Pages set cInheritPermissionsFromCID = {$npID} where cID = {$this->cID}";
-                $r = $db->query($q);
+                $q = "update Pages set cInheritPermissionsFromCID = ? where cID = ?";
+                $r = $db->query($q, array($npID, $this->cID));
                 $this->updatePermissionsCollectionID($this->getCollectionID(), $npID);
             }
         }
@@ -2174,6 +2177,11 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     function delete() {
         $cID = $this->getCollectionID();
 
+        if ($this->isAlias()) {
+            $this->removeThisAlias();
+            return;
+        }
+
         if ($cID <= 1) {
             return false;
         }
@@ -2228,9 +2236,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             while ($row = $r->fetchRow()) {
                 if ($row['cID'] > 0) {
                     $nc = Page::getByID($row['cID']);
-                    if( $nc->isAlias() )
-                         $nc->removeThisAlias();
-                    else $nc->delete();
+                    $nc->delete();
                 }
             }
         }
@@ -2254,8 +2260,9 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         Log::addEntry(t('Page "%s" at path "%s" Moved to trash', $this->getCollectionName(), $this->getCollectionPath()),t('Page Action'));
         $this->move($trash);
         $this->deactivate();
+        $cID = ($this->getCollectionPointerOriginalID() > 0) ? $this->getCollectionPointerOriginalID() : $this->cID;
         $pages = array();
-        $pages = $this->populateRecursivePages($pages, array('cID' => $this->getCollectionID()), $this->getCollectionParentID(), 0, false);
+        $pages = $this->populateRecursivePages($pages, array('cID' => $cID), $this->getCollectionParentID(), 0, false);
         $db = Loader::db();
         foreach($pages as $page) {
             $db->Execute('update Pages set cIsActive = 0 where cID = ?', array($page['cID']));
@@ -2300,13 +2307,14 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             // ensure that the path is unique
             $proceed = false;
             $suffix = 0;
+            $cID = ($this->getCollectionPointerOriginalID() > 0) ? $this->getCollectionPointerOriginalID() : $this->cID;
             while ($proceed != true) {
                 $newPath = ($suffix == 0) ? $pathString : $pathString . Config::get('concrete.seo.page_path_separator') . $suffix;
                 $q = $em->createQuery("select p from Concrete\Core\Page\PagePath p
                     where p.cPath = ?1 and p.cID <> ?2");
 
                 $q->setParameter(1, $newPath);
-                $q->setParameter(2, $this->getCollectionID());
+                $q->setParameter(2, $cID);
                 $result = $q->getResult();
 
                 if (!is_object($result[0])) {
@@ -2358,7 +2366,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             $path = $parentPath->getPagePath();
         }
         $path .= '/';
-        $path .= $this->getCollectionHandle() ? $this->getCollectionHandle() : $this->getCollectionID();
+        $cID = ($this->getCollectionPointerOriginalID() > 0) ? $this->getCollectionPointerOriginalID() : $this->cID;
+        $path .= $this->getCollectionHandle() ? $this->getCollectionHandle() : $cID;
 
         $event = new PagePathEvent($this);
         $event->setPagePath($path);
@@ -2421,7 +2430,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     public function rescanSystemPageStatus() {
-        $cID = $this->getCollectionID();
+        $cID = ($this->getCollectionPointerOriginalID() > 0) ? $this->getCollectionPointerOriginalID() : $this->getCollectionID();
         $db = Loader::db();
         $newPath = $db->GetOne('select cPath from PagePaths where cID = ? and ppIsCanonical = 1', array($cID));
         // now we mark the page as a system page based on this path:
@@ -2456,7 +2465,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     public function isActive() {
-        return $this->cIsActive;
+        return (bool) $this->cIsActive;
     }
 
     public function setPageIndexScore($score) {

@@ -40,7 +40,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			</div>
 		</div>
 		<? } ?>
-		
+
 		<? if ($assignment->allowEditUserID()) { ?>
 		<div class="form-group">
 			<label for="cName" class="control-label"><?=t('Author')?></label>
