@@ -20,7 +20,12 @@ class ArrayParser
                 continue;
             }
             $table = $schema->createTable($tableName);
-            $table = $this->addColumns($table, $details['columns']);
+            if (isset($details['columns'])) {
+                $table = $this->addColumns($table, $details['columns']);
+            }
+            else {
+                throw new \Exception(t('Invalid column definition: %s in table %s', var_export($details, true), $tableName));
+            }
             $table->setPrimaryKey($details['primary']);
         }
 
