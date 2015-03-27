@@ -175,11 +175,24 @@ class Package extends Object
     const E_PACKAGE_MIGRATE_BACKUP = 8;
     const E_PACKAGE_INVALID_APP_VERSION = 20;
 
+    protected $pkgAutoloaderMapCoreExtensions = false;
+    protected $pkgAutoloaderRegistries = array();
+
     protected $errorText = array();
 
     public function getApplicationVersionRequired()
     {
         return $this->appVersionRequired;
+    }
+
+    public function providesCoreExtensionAutoloaderMapping()
+    {
+        return $this->pkgAutoloaderMapCoreExtensions;
+    }
+
+    public function getPackageAutoloaderRegistries()
+    {
+        return $this->pkgAutoloaderRegistries;
     }
 
     public function hasInstallNotes()

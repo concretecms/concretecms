@@ -80,6 +80,7 @@ class Controller extends BlockController
             if (!$q['linkURL'] && $q['internalLinkCID']) {
                 $c = Page::getByID($q['internalLinkCID'], 'ACTIVE');
                 $q['linkURL'] = $c->getCollectionLink();
+                $q['linkPage'] = $c;
             }
             $rows[] = $q;
         }
