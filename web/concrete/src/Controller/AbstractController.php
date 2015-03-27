@@ -129,9 +129,9 @@ abstract class AbstractController
         return Request::isPost();
     }
 
-    public function post($key = null)
+    public function post($key = null, $defaultValue = null)
     {
-        return Request::post($key);
+        return Request::post($key, $defaultValue);
     }
 
     public function redirect()
