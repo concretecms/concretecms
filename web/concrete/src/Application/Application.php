@@ -289,13 +289,13 @@ class Application extends Container
         if (strlen($pathInfo) > 1) {
             $path = trim($pathInfo, '/');
             $redirect = '/' . $path;
-            if (Config::get('concrete.seo.trailing_slash')) {
+            if (Config::get('concrete.seo.trailing_slash') && $path) {
                 $redirect .= '/';
             }
             if ($pathInfo != $redirect) {
                 $dispatcher = Config::get('concrete.seo.url_rewriting') ? '' : '/' . DISPATCHER_FILENAME;
                 Redirect::url(
-                        \Core::getApplicationURL() . '/' . $dispatcher . $redirect . ($r->getQueryString(
+                        \Core::getApplicationURL() . $dispatcher . $redirect . ($r->getQueryString(
                         ) ? '?' . $r->getQueryString() : '')
                 )->send();
             }
