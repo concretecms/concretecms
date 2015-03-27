@@ -253,6 +253,9 @@ class Install extends Controller
         //$this->set('searchTest', function_exists('iconv') && function_exists('mb_strtolower') && (@preg_match('/\pL/u', 'a') == 1));
         $this->set('remoteFileUploadTest', function_exists('iconv'));
         $this->set('fileZipTest', class_exists('ZipArchive'));
+
+        // ssl test
+        $this->set('caBundleTest', $this->testCurlCaBundle());
     }
 
     public function passedRequiredItems()
@@ -262,6 +265,24 @@ class Install extends Controller
             $this->get('memoryTest') !== -1 && $this->get('docCommentTest') && $this->get('aspTagsTest')
         ) {
             return true;
+        }
+    }
+
+    public function testCurlCaBundle()
+    {
+        if (function_exists('curl_init')) {
+            $ch = curl_init('https://www.concrete5.org');
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+            curl_setopt($ch, CURLOPT_NOBODY, true);
+            $res = !(curl_exec($ch) === false &&
+                ((curl_errno($ch) === 60 && curl_error($ch) === 'SSL certificate problem: unable to get local issuer certificate')
+                || curl_errno($ch) === 77)
+            );
+            curl_close($ch);
+            return $res;
+        } else {
+            return null;
         }
     }
 
@@ -363,6 +384,11 @@ class Install extends Controller
                         )
                     );
 
+                    if (!$this->testCurlCaBundle()) {
+                        $config['curl'] = array(
+                            'verifyPeer' => false
+                        );
+                    }
 
                     $renderer = new Renderer($config);
                     fwrite($this->fp, $renderer->render());
