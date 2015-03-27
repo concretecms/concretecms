@@ -16,34 +16,35 @@ class Controller extends BlockController {
 	public $btTable = 'btForm';
 	public $btQuestionsTablename = 'btFormQuestions';
 	public $btAnswerSetTablename = 'btFormAnswerSet';
-	public $btAnswersTablename = 'btFormAnswers'; 	
+	public $btAnswersTablename = 'btFormAnswers';
 	public $btInterfaceWidth = '420';
 	public $btInterfaceHeight = '430';
 	public $thankyouMsg='';
+    public $submitText='';
 	public $noSubmitFormRedirect=0;
     protected $btCacheBlockRecord = false;
 	protected $btExportTables = array('btForm', 'btFormQuestions');
 	protected $btExportPageColumns = array('redirectCID');
 	protected $lastAnswerSetId=0;
-		
-	/** 
+
+	/**
 	 * Used for localization. If we want to localize the name/description we have to include this
 	 */
 	public function getBlockTypeDescription() {
 		return t("Build simple forms and surveys.");
 	}
-	
+
 	public function getBlockTypeName() {
 		return t("Form");
 	}
-	
+
 	public function getJavaScriptStrings() {
 		return array(
 			'delete-question' => t('Are you sure you want to delete this question?'),
 			'form-name' => t('Your form must have a name.'),
 			'complete-required' => t('Please complete all required fields.'),
 			'ajax-error' => t('AJAX Error.'),
-			'form-min-1' => t('Please add at least one question to your form.')			
+			'form-min-1' => t('Please add at least one question to your form.')
 		);
 	}
 
@@ -66,20 +67,23 @@ class Controller extends BlockController {
 							}
 							$aar->Replace();
 						}
-					}								
+					}
 				}
 			}
 		}
 	}
-	
-	public function __construct($b = null){ 
+
+	public function __construct($b = null){
 		parent::__construct($b);
 		//$this->bID = intval($this->_bID);
-		if(is_string($this->thankyouMsg) && !strlen($this->thankyouMsg)){ 
+		if(is_string($this->thankyouMsg) && !strlen($this->thankyouMsg)){
 			$this->thankyouMsg = $this->getDefaultThankYouMsg();
 		}
+        if(is_string($this->submitText) && !strlen($this->submitText)){
+            $this->submitText = $this->getDefaultSubmitText();
+        }
 	}
-	
+
 	//Internal helper function
 	private function viewRequiresJqueryUI() {
 		$whereInputTypes = "inputType = 'date' OR inputType = 'datetime'";
@@ -104,6 +108,11 @@ class Controller extends BlockController {
 	public function getDefaultThankYouMsg() {
 		return t("Thanks!");
 	}
+
+    public function getDefaultSubmitText()
+    {
+        return 'Submit';
+    }
 	
 	//form add or edit submit 
 	//(run after the duplicate method on first block edit of new page version)
@@ -135,14 +144,14 @@ class Controller extends BlockController {
 			$data['addFilesToSet'] = 0;
 		}
 		
-		$v = array( $data['qsID'], $data['surveyName'], intval($data['notifyMeOnSubmission']), $data['recipientEmail'], $data['thankyouMsg'], intval($data['displayCaptcha']), intval($data['redirectCID']), intval($data['addFilesToSet']), intval($this->bID) );
+		$v = array( $data['qsID'], $data['surveyName'], $data['submitText'], intval($data['notifyMeOnSubmission']), $data['recipientEmail'], $data['thankyouMsg'], intval($data['displayCaptcha']), intval($data['redirectCID']), intval($data['addFilesToSet']), intval($this->bID) );
  		
 		//is it new? 
 		if( intval($total)==0 ){
-			$q = "insert into {$this->btTable} (questionSetId, surveyName, notifyMeOnSubmission, recipientEmail, thankyouMsg, displayCaptcha, redirectCID, addFilesToSet, bID) values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			$q = "insert into {$this->btTable} (questionSetId, surveyName, submitText, notifyMeOnSubmission, recipientEmail, thankyouMsg, displayCaptcha, redirectCID, addFilesToSet, bID) values (?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
 		}else{
 			$v[] = $data['qsID'];
-			$q = "update {$this->btTable} set questionSetId = ?, surveyName=?, notifyMeOnSubmission=?, recipientEmail=?, thankyouMsg=?, displayCaptcha=?, redirectCID=?, addFilesToSet=? where bID = ? AND questionSetId= ?";
+			$q = "update {$this->btTable} set questionSetId = ?, surveyName=?, submitText=?, notifyMeOnSubmission=?, recipientEmail=?, thankyouMsg=?, displayCaptcha=?, redirectCID=?, addFilesToSet=? where bID = ? AND questionSetId= ?";
 		}
 		
 		$rs = $db->query($q,$v);  
@@ -228,8 +237,8 @@ class Controller extends BlockController {
 			
 			//duplicate survey block record 
 			//with a new Block ID and a new Question 
-			$v = array($newQuestionSetId,$row['surveyName'],$newBID,$row['thankyouMsg'],intval($row['notifyMeOnSubmission']),$row['recipientEmail'],$row['displayCaptcha'], $row['addFilesToSet']);
-			$q = "insert into {$this->btTable} ( questionSetId, surveyName, bID,thankyouMsg,notifyMeOnSubmission,recipientEmail,displayCaptcha,addFilesToSet) values (?, ?, ?, ?, ?, ?, ?,?)";
+			$v = array($newQuestionSetId,$row['surveyName'],$row['submitText'], $newBID,$row['thankyouMsg'],intval($row['notifyMeOnSubmission']),$row['recipientEmail'],$row['displayCaptcha'], $row['addFilesToSet']);
+			$q = "insert into {$this->btTable} ( questionSetId, surveyName, submitText, bID,thankyouMsg,notifyMeOnSubmission,recipientEmail,displayCaptcha,addFilesToSet) values (?, ?, ?, ?, ?, ?, ?, ?,?)";
 			$result=$db->Execute($q, $v); 
 			
 			$rs=$db->query("SELECT * FROM {$this->btQuestionsTablename} WHERE questionSetId=$oldQuestionSetId AND bID=".intval($this->bID) );
@@ -246,8 +255,12 @@ class Controller extends BlockController {
 	
 
 	//users submits the completed survey
-	function action_submit_form() { 
-	
+	function action_submit_form($bID = false) {
+
+		if ($this->bID != $bID) {
+			return false;
+		}
+
 		$ip = Loader::helper('validation/ip');
 		$this->view();
 		
@@ -263,7 +276,7 @@ class Controller extends BlockController {
 		$qsID=intval($_POST['qsID']); 
 		if($qsID==0)
 			throw new Exception(t("Oops, something is wrong with the form you posted (it doesn't have a question set id)."));
-			
+
 		//get all questions for this question set
 		$rows=$db->GetArray("SELECT * FROM {$this->btQuestionsTablename} WHERE questionSetId=? AND bID=? order by position asc, msqID", array( $qsID, intval($this->bID)));			
 
@@ -348,8 +361,8 @@ class Controller extends BlockController {
 				}
 			}
 		}
-		
-		if(count($errors)){			
+
+		if(count($errors)){
 			$this->set('formResponse', t('Please correct the following errors:') );
 			$this->set('errors',$errors);
 		}else{ //no form errors			
@@ -477,7 +490,7 @@ class Controller extends BlockController {
 					}
 				}
 				$c = Page::getCurrentPage();
-				header("Location: ".Loader::helper('navigation')->getLinkToCollection($c, true)."?surveySuccess=1&qsid=".$this->questionSetId."#".$this->questionSetId);
+				header("Location: ".Loader::helper('navigation')->getLinkToCollection($c, true)."?surveySuccess=1&qsid=".$this->questionSetId."#formblock".$this->bID);
 				exit;
 			}
 		}

@@ -309,8 +309,7 @@ class AuthenticationType extends Object
     }
 
     /**
-     * Return the path to a file, this is always BASE_URL.DIR_REL.FILE
-     *
+     * Return the path to a file
      * @param string $_file the relative path to the file.
      * @return bool|string
      */
@@ -390,7 +389,7 @@ class AuthenticationType extends Object
             $this->controller->view();
         }
         extract(array_merge($params, $this->controller->getSets()));
-        require_once($form_element->file);
+        require($form_element->file);
         $out = ob_get_contents();
         ob_end_clean();
         echo $out;

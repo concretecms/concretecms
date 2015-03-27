@@ -100,13 +100,16 @@ class Duration extends AbstractRepetition
         return null;
     }
 
+    /**
+     * @param $pdID
+     * @return \Concrete\Core\Permission\Duration
+     */
     public static function getByID($pdID)
     {
         $db = Loader::db();
         $pdObject = $db->getOne('SELECT pdObject FROM PermissionDurationObjects WHERE pdID = ?', array($pdID));
         if ($pdObject) {
             $pd = unserialize($pdObject);
-
             return $pd;
         }
     }

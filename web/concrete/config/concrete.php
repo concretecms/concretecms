@@ -7,9 +7,9 @@ return array(
      *
      * @var string
      */
-    'version'           => '5.7.3.2',
-    'version_installed' => '5.7.3.2',
-    'version_db' => '20150123000000', // the key of the latest database migration - corresponds to 5.7.3.2
+    'version'           => '5.7.4b1',
+    'version_installed' => '5.7.4b1',
+    'version_db' => '20150319000000', // the key of the latest database migration - corresponds to 5.7.3.2
 
     /**
      * Installation status
@@ -166,7 +166,7 @@ return array(
 
         /**
          * Use Doctrine development mode
-         * 
+         *
          * @var bool
          */
         'doctrine_dev_mode'        => false,
@@ -298,7 +298,22 @@ return array(
         )
     ),
 
-    /**
+    'editor' => array(
+        'concrete' => array(
+            'enable_filemanager' => true,
+            'enable_sitemap' => true
+        ),
+        'plugins' => array(
+            'selected' => array(
+                'concrete5lightbox',
+                'undoredo',
+                'specialcharacters',
+                'table'
+            )
+        )
+    ),
+
+/**
      * ------------------------------------------------------------------------
      * Email settings
      * ------------------------------------------------------------------------
@@ -557,11 +572,11 @@ return array(
         'handler'      => 'file',
         'max_lifetime' => 7200,
         'cookie'       => array(
-            'path'     => '',
-            'lifetime' => 7200,
-            'domain'   => '',
-            'secure'   => false,
-            'httponly' => false
+            'cookie_path'     => false, // set a specific path here if you know it, otherwise it'll default to relative
+            'cookie_lifetime' => 0,
+            'cookie_domain'   => false,
+            'cookie_secure'   => false,
+            'cookie_httponly' => false
         )
     ),
 
@@ -793,7 +808,9 @@ return array(
          */
         'url_rewriting'           => false,
         'url_rewriting_all'       => false,
-        'redirect_to_base_url'    => false,
+        'redirect_to_canonical_host'  => false,
+        'canonical_host'          => null,
+        'canonical_port'          => null,
         'trailing_slash'          => false,
         'title_format'            => '%1$s :: %2$s',
         'title_segment_separator' => ' :: ',
@@ -816,6 +833,10 @@ return array(
         'delete_pages'            => 10,
         'copy_pages'              => 10,
         'page_search_index_batch' => 200,
-        'job_queue_batch'         => 10
+        'job_queue_batch'         => 10,
+        'style_customizer' => array(
+            'size_min' => -50,
+            'size_max' => 200,
+        )
     )
 );

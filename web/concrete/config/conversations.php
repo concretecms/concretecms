@@ -11,6 +11,7 @@
  */
 return array(
     'attachments_enabled' => true,
+    'subscription_enabled' => false,
     'files' => array(
         'allowed_types' => '*.jpg;*.gif;*.jpeg;*.png;*.doc;*.docx;*.zip',
         'guest' => array(

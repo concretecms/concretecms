@@ -16,8 +16,13 @@
         var editor = ace.edit("ccm-block-html-value");
         editor.setTheme("ace/theme/eclipse");
         editor.getSession().setMode("ace/mode/html");
+        refreshTextarea(editor.getValue());
         editor.getSession().on('change', function() {
-            $('#ccm-block-html-value-textarea').val(editor.getValue());
+            refreshTextarea(editor.getValue());
         });
     });
+
+    function refreshTextarea(contents) {
+      $('#ccm-block-html-value-textarea').val(contents);
+    }
 </script>

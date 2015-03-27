@@ -20,6 +20,7 @@ class BlockControl extends Control
     protected $ptComposerControlTypeHandle = 'block';
     protected $bt = false;
     protected $b = false;
+    protected $controller;
 
     public function setBlockTypeID($btID)
     {
@@ -55,10 +56,11 @@ class BlockControl extends Control
         if (!is_object($this->b)) {
             $setControl = $this->getPageTypeComposerFormLayoutSetControlObject();
             $r = $db->GetRow(
-                'select bID, arHandle from PageTypeComposerOutputBlocks where cID = ? and ptComposerFormLayoutSetControlID = ?',
+                $q = 'select cdb.bID, cdb.arHandle from PageTypeComposerOutputBlocks cdb inner join CollectionVersionBlocks cvb on (cdb.bID = cvb.bID and cvb.cID = cdb.cID and cvb.cvID = ?) where cdb.ptComposerFormLayoutSetControlID = ? and cdb.cID = ?',
                 array(
-                    $c->getCollectionID(),
-                    $setControl->getPageTypeComposerFormLayoutSetControlID()
+                    $c->getVersionID(),
+                    $setControl->getPageTypeComposerFormLayoutSetControlID(),
+                    $c->getCollectionID()
                 )
             );
             if (!$r['bID']) {
@@ -178,6 +180,15 @@ class BlockControl extends Control
         return $layoutSetControl;
     }
 
+    protected function getController($obj)
+    {
+        if (!isset($this->controller)) {
+            $this->controller = $obj->getController();
+            $this->controller->setupAndRun('composer');
+        }
+        return $this->controller;
+    }
+
     public function render($label, $customTemplate, $description)
     {
         $obj = $this->getPageTypeComposerControlDraftValue();
@@ -191,8 +202,7 @@ class BlockControl extends Control
             $obj = $this->getBlockTypeObject();
         }
 
-        $cnt = $obj->getController();
-        $cnt->setupAndRun('composer');
+        $this->getController($obj);
 
         $env = Environment::get();
         $form = Loader::helper('form');
@@ -224,7 +234,9 @@ class BlockControl extends Control
                 $obj = $this->getBlockTypeObject();
             }
         }
-        $controller = $obj->getController();
+
+        $controller = $this->getController($obj);
+
         extract($controller->getSets());
         extract($controller->getHelperObjects());
         $label = $this->getPageTypeComposerFormLayoutSetControlObject()->getPageTypeComposerControlDisplayLabel();
@@ -274,11 +286,15 @@ class BlockControl extends Control
 
         $arHandle = $b->getAreaHandle();
         $blockDisplayOrder = $b->getBlockDisplayOrder();
+        $bFilename = $b->getBlockFilename();
         $b->deleteBlock();
         $ax = Area::getOrCreate($c, $arHandle);
         $b = $c->addBlock($bt, $ax, $data);
         $this->setPageTypeComposerControlBlockObject($b);
         $b->setAbsoluteBlockDisplayOrder($blockDisplayOrder);
+        if ($bFilename) {
+            $b->setCustomTemplate($bFilename);
+        }
 
         // make a reference to the new block
         $db = Loader::db();

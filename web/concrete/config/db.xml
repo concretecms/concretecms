@@ -211,6 +211,18 @@
       <NOTNULL/>
       <DEFAULT value=""/>
     </field>
+    <field name="msNumPlurals" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="2"/>
+    </field>
+    <field name="msPluralRule" type="C" size="400">
+      <NOTNULL/>
+      <DEFAULT value="(n != 1)"/>
+    </field>
+    <field name="msPluralCases" type="C" size="1000">
+      <NOTNULL/>
+      <DEFAULT value="one@1\nother@0, 2~16, 100, 1000, 10000, 100000, 1000000, …"/>
+    </field>
   </table>
   <table name="MultilingualPageRelations">
     <field name="mpRelationID" type="I" size="10">
@@ -232,7 +244,7 @@
       <NOTNULL/>
     </field>
   </table>
-    <table name="MultilingualTranslations">
+  <table name="MultilingualTranslations">
     <field name="mtID" type="I" size="11">
         <KEY/>
         <AUTOINCREMENT/>
@@ -246,7 +258,11 @@
     <field name="msgid" type="X">
         <NOTNULL/>
     </field>
+    <field name="msgidPlural" type="X">
+    </field>
     <field name="msgstr" type="X">
+    </field>
+    <field name="msgstrPlurals" type="X">
     </field>
     <field name="context" type="X">
     </field>
@@ -754,6 +770,15 @@
     </field>
     <field name="cnvFileExtensions" type="X">
     </field>
+    <field name="cnvNotificationOverridesEnabled" type="I1">
+        <unsigned />
+        <notnull />
+        <default value="0" />
+    </field>
+    <field name="cnvEnableSubscription" type="I1">
+        <unsigned/>
+        <default value="0" />
+    </field>
     <index name="cID">
         <col>cID</col>
     </index>
@@ -825,6 +850,8 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
   </field>
+  <field name="cnvMessageAuthorName" type="C" size="255" />
+  <field name="cnvMessageAuthorEmail" type="C" size="255" />
     <field name="cnvMessageSubmitIP" type="B" size="32" />
     <field name="cnvMessageSubmitUserAgent" type="X2" />
     <field name="cnvMessageLevel" type="I" size="10">
@@ -1933,15 +1960,9 @@
         <col>cID</col>
         <col>cvID</col>
     </index>
-    <index name="faID">
-        <col>faID</col>
-        <col>cID</col>
-        <col>cvID</col>
-    </index>
     <index name="bID">
         <col>bID</col>
     </index>
-
   </table>
   <table name="CollectionAttributeValues">
     <field name="cID" type="I" size="10">
@@ -2910,6 +2931,46 @@
             <col>pkID</col>
         </index>
     </table>
+    <table name="ConversationPermissionAddMessageAccessList">
+        <field name="paID" type="I" size="10">
+            <key/>
+            <default value="0"/>
+            <unsigned/>
+        </field>
+        <field name="peID" type="I" size="10">
+            <key/>
+            <default value="0"/>
+            <unsigned/>
+        </field>
+        <field name="permission" type="C" size="1">
+            <notnull/>
+            <default value="A"/>
+        </field>
+        <index name="peID">
+            <col>peID</col>
+        </index>
+    </table>
+    <table name="ConversationSubscriptions">
+        <field name="cnvID" type="I" size="10">
+            <key/>
+            <default value="0"/>
+            <unsigned/>
+        </field>
+        <field name="uID" type="I" size="10">
+            <key/>
+            <default value="0"/>
+            <unsigned/>
+        </field>
+        <field name="type" type="C" size="1">
+            <default value="S"/>
+       </field>
+        <index name="cnvID">
+            <col>cnvID</col>
+        </index>
+        <index name="uID">
+            <col>uID</col>
+        </index>
+    </table>
 
   <table name="FileSetPermissionFileTypeAccessList">
     <field name="paID" type="I" size="10">
@@ -3763,6 +3824,10 @@
     <field name="ppIsCanonical" type="C" size="1">
       <notnull/>
       <default value="1"/>
+    </field>
+    <field name="ppGeneratedFromURLSlugs" type="I1" size="1">
+        <notnull/>
+        <default value="0"/>
     </field>
     <index name="cID">
       <col>cID</col>
@@ -5103,7 +5168,7 @@
       <UNSIGNED/>
     </field>
     <field name="handle" type="C" size="32"/>
-    <field name="body" type="C" size="8192">
+    <field name="body" type="X2">
       <NOTNULL/>
     </field>
     <field name="md5" type="C" size="32">

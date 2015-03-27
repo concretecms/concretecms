@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\Sharing\ShareThisPage;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Sharing\SocialNetwork\Service as SocialNetworkService;
 use Config;
 
@@ -16,9 +17,11 @@ class Service extends SocialNetworkService
         }
     }
 
-    public function getServiceLink()
+    public function getServiceLink(Page $c = null)
     {
-        $c = \Page::getCurrentPage();
+        if (!is_object($c)) {
+            $c = \Page::getCurrentPage();
+        }
         if (is_object($c) && !$c->isError()) {
             $url = urlencode($c->getCollectionLink(true));
             switch($this->getHandle()) {
@@ -29,6 +32,10 @@ class Service extends SocialNetworkService
                 case 'linkedin':
                     $title = urlencode($c->getCollectionName());
                     return "https://www.linkedin.com/shareArticle?mini-true&url={$url}&title={$title}";
+                case 'pinterest':
+                    return "https://www.pinterest.com/pin/create/button?url=$url";
+                case 'google_plus':
+                    return "https://plus.google.com/share?url=$url";
                 case 'reddit':
                     return "https://www.reddit.com/submit?url={$url}";
                 case 'email':

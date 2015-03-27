@@ -56,7 +56,10 @@ div.ccm-conversation-message-form {
   }
 }
 
-.ccm-conversation-message-count {
+div.ccm-conversation-message-count {
+  font-weight: bold;
+  margin-top: 20px;
+  float: left;
 }
 
 div.ccm-conversation-messages-header {
@@ -80,8 +83,11 @@ div.ccm-conversation-add-reply, div.ccm-conversation-add-new-message, div.ccm-co
     margin-bottom: 0px;
   }
 
-  div.ccm-conversation-message-form {
+  div.ccm-conversation-avatar + div.ccm-conversation-message-form {
     padding-left: 50px;
+  }
+
+  div.ccm-conversation-message-form {
     .clearfix();
     textarea {
       .box-sizing(border-box);
@@ -99,7 +105,7 @@ div.ccm-conversation-add-reply, div.ccm-conversation-add-new-message, div.ccm-co
       }
     }
 
-    button {
+    button, a.btn {
       margin: 16px 0 0 16px;
     }
   }

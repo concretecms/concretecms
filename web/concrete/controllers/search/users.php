@@ -48,7 +48,7 @@ class Users extends Controller
 
         if (!$this->userList->getActiveSortColumn()) {
             $col = $columns->getDefaultSortColumn();
-            $this->userList->sortBy($col->getColumnKey(), $col->getColumnDefaultSortDirection());
+            $this->userList->sanitizedSortBy($col->getColumnKey(), $col->getColumnDefaultSortDirection());
         }
 
         $this->userList->includeInactiveUsers();

@@ -316,6 +316,9 @@ class Form {
 	 * @return $html
 	 */
 	public function select($key, $optionValues, $valueOrArray = false, $miscFields = array()) {
+        if(!is_array($optionValues)) {
+            $optionValues = array();
+        }
 		$val = $this->getRequestValue($key);
 		if (is_array($val)) {
 			$valueOrArray = $val[0];

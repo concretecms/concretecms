@@ -60,6 +60,11 @@ class Controller extends BlockController
         $this->set('rows', $query);
     }
 
+    public function composer()
+    {
+        $this->edit();
+    }
+
     public function registerViewAssets()
     {
         $this->requireAsset('javascript', 'jquery');
@@ -75,6 +80,7 @@ class Controller extends BlockController
             if (!$q['linkURL'] && $q['internalLinkCID']) {
                 $c = Page::getByID($q['internalLinkCID'], 'ACTIVE');
                 $q['linkURL'] = $c->getCollectionLink();
+                $q['linkPage'] = $c;
             }
             $rows[] = $q;
         }

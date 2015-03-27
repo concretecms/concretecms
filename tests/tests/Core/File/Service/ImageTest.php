@@ -25,13 +25,13 @@ class ImageTest extends \PHPUnit_Framework_TestCase {
     {
         return array(
             array(
-                400, 96, DIR_BASE . '/concrete/themes/default/images/inneroptics_dot_net_aspens.jpg', 400, 300, false
+                400, 150, DIR_BASE . '/concrete/themes/elemental/images/background-slider-night-road.png', 400, 300, false
             ),
             array(
-                208, 50, DIR_BASE . '/concrete/themes/default/images/inneroptics_dot_net_aspens.jpg', 310, 50, false
+                133, 50, DIR_BASE . '/concrete/themes/elemental/images/background-slider-night-road.png', 310, 50, false
             ),
             array(
-                90, 90, DIR_BASE . '/concrete/themes/default/images/inneroptics_dot_net_aspens.jpg', 90, 90, true
+                90, 90, DIR_BASE . '/concrete/themes/elemental/images/background-slider-night-road.png', 90, 90, true
             )
         );
     }

@@ -21,6 +21,8 @@ class Controller extends BlockController
     protected $btInterfaceHeight = 400;
     protected $btTable = 'btShareThisPage';
 
+    protected $services = array();
+
     public function getBlockTypeDescription()
     {
         return t("Allows users to share this page with social networks.");
@@ -48,6 +50,14 @@ class Controller extends BlockController
         $this->edit();
     }
 
+    public function addService($service)
+    {
+        $ss = Service::getByHandle($service);
+        if (is_object($ss)) {
+            $this->services[] = $ss;
+        }
+    }
+
     protected function getSelectedServices()
     {
         $links = array();
@@ -56,12 +66,9 @@ class Controller extends BlockController
             array($this->bID)
         );
         foreach($services as $service) {
-            $ss = Service::getByHandle($service);
-            if (is_object($ss)) {
-                $links[] = $ss;
-            }
+            $this->addService($service);
         }
-        return $links;
+        return $this->services;
     }
 
     public function duplicate($newBlockID)
@@ -132,7 +139,11 @@ class Controller extends BlockController
 
     public function view()
     {
-        $selected = $this->getSelectedServices();
+        if (count($this->services) == 0) {
+            $selected = $this->getSelectedServices();
+        } else {
+            $selected = $this->services;
+        }
         $this->set('selected', $selected);
     }
 

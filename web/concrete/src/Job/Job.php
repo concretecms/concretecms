@@ -370,7 +370,7 @@ abstract class Job extends Object
 
             $je = new Event($j);
             Events::dispatch('on_job_install', $je);
-
+            $j->jID = $db->Insert_ID();
             return $j;
         }
     }
@@ -424,6 +424,9 @@ abstract class Job extends Object
         $last_run = strtotime($this->jDateLastRun);
         $seconds = 1;
         switch ($this->scheduledInterval) {
+            case "minutes":
+                $seconds = 60;
+                break;
             case "hours":
                 $seconds = 60*60;
                 break;

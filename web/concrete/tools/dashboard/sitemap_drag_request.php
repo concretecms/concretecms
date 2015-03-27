@@ -60,7 +60,9 @@ foreach($originalPages as $oc) {
 	}
 }
 
-
+if (is_object($dc) && !$dc->isError() && $dc->isAlias()) {
+	$canMoveCopyTo = false;
+}
 
 $valt = Loader::helper('validation/token');
 

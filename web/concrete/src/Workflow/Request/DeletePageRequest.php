@@ -73,7 +73,8 @@ class DeletePageRequest extends PageRequest {
 			$c->delete();
 		}
 		$wpr = new WorkflowProgressResponse();
-		$wpr->setWorkflowProgressResponseURL(BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cParentID);
+		$parent = Page::getByID($cParentID, 'ACTIVE');
+		$wpr->setWorkflowProgressResponseURL(\URL::to($parent));
 		return $wpr;
 	}
 

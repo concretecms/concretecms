@@ -54,7 +54,7 @@ abstract class PageCache {
 
 	public function getCacheHeaders(ConcretePage $c) {
 		$lifetime = $c->getCollectionFullPageCachingLifetimeValue();
-		$expires  = gmdate('D, d M Y H:i:', time() + $lifetime) . ' GMT';
+		$expires  = gmdate('D, d M Y H:i:s', time() + $lifetime) . ' GMT';
 
 		$headers  = array(
 			'Pragma' => 'public',

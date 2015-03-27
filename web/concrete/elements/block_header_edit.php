@@ -77,6 +77,10 @@ if (isset($help) && !$bt->supportsInlineEdit()) { ?>
 
 <? if (!$bt->supportsInlineEdit()) { ?>
 <div id="ccm-block-fields">
-<? } else { ?>
-    <div>
+<? } else {
+	$css = $b->getCustomStyle();
+?>
+
+	<div <? if (is_object($css)) { ?>class="<?=$css->getContainerClass() ?>" <? } ?>>
+
 <? } ?>

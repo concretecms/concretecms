@@ -4,4 +4,4 @@ if (is_object($currentTopic)) {
     $title = t('Topic Archives: %s', $currentTopic->getTreeNodeDisplayName());
 }
 ?>
-<h1 class="page-title"><?=$title?></h1>
+<h1 class="page-title"><?=h($title)?></h1>

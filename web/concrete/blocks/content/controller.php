@@ -50,7 +50,7 @@ use \Concrete\Core\Editor\LinkAbstractor;
 
         public function registerViewAssets($outputContent)
         {
-            if (preg_match('/data-concrete5-link-launch/i', $outputContent)) {
+            if (preg_match('/data-concrete5-link-lightbox/i', $outputContent)) {
                 $this->requireAsset('core/lightbox');
             }
         }
@@ -62,21 +62,6 @@ use \Concrete\Core\Editor\LinkAbstractor;
 
 		function getContentEditMode() {
 			return LinkAbstractor::translateFromEditMode($this->content);
-		}
-
-		public function add() {
-			$this->requireAsset('redactor');
-            $this->requireAsset('core/file-manager');
-		}
-
-		public function edit() {
-			$this->requireAsset('redactor');
-            $this->requireAsset('core/file-manager');
-		}
-
-		public function composer() {
-			$this->requireAsset('redactor');
-            $this->requireAsset('core/file-manager');
 		}
 
 		public function getImportData($blockNode) {

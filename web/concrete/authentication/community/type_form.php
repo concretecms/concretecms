@@ -2,7 +2,7 @@
 <div class="alert alert-info">
     <h4><?php echo t('Community Authentication Configuration'); ?></h4>
     <p><?php echo t('<a href="%s" target="_blank">Click here</a> to obtain your access keys.', \Config::get('concrete.urls.concrete5_secure') . '/profile/apps/'); ?></p>
-    <p><?php echo t('Set the "Callback URL" to: %s.', '<code>' . BASE_URL . \URL::to('/ccm/system/authentication/oauth2/community/callback') . '</code>'); ?></p>
+    <p><?php echo t('Set the "Callback URL" to: %s.', '<code>' . \URL::to('/ccm/system/authentication/oauth2/community/callback') . '</code>'); ?></p>
 </div>
 
 <div class='form-group'>
@@ -12,7 +12,7 @@
 <div class='form-group'>
     <?=$form->label('apisecret', t('App Secret'))?>
     <div class="input-group">
-        <?=$form->password('apisecret', $apisecret)?>
+        <?=$form->password('apisecret', $apisecret, array('autocomplete' => 'off'))?>
         <span class="input-group-btn">
         <button id="showsecret" class="btn btn-warning" type="button"><?php echo t('Show secret key')?></button>
       </span>

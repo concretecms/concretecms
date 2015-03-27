@@ -9,7 +9,7 @@ $canEditMessage = $mp->canEditConversationMessage();
 $canRateMessage = $mp->canRateConversationMessage();
 
 $ui = $message->getConversationMessageUserObject();
-$class = 'ccm-conversation-message ccm-conversation-message-level' . $message->getConversationMessageLevel();
+$class = 'message ccm-conversation-message ccm-conversation-message-level' . $message->getConversationMessageLevel();
 if ($message->isConversationMessageDeleted()) {
 	$class .= ' ccm-conversation-message-deleted';
 }
@@ -26,13 +26,17 @@ $c = Page::getByID($_REQUEST['cID']);
 $cnvMessageURL = urlencode($c->getCollectionLink(true) . '#cnv' . $cnvID . 'Message' . $cnvMessageID);
 
 if ((!$message->isConversationMessageDeleted() && $message->isConversationMessageApproved()) || $message->conversationMessageHasActiveChildren()) {
+	$author = $message->getConversationMessageAuthorObject();
+	$formatter = $author->getFormatter();
 	?>
 	<div data-conversation-message-id="<?=$message->getConversationMessageID()?>" data-conversation-message-level="<?=$message->getConversationMessageLevel()?>" class="<?=$class?>">
 		<a id="cnv<?=$cnvID?>Message<?=$cnvMessageID?>"></a>
 		<div class="ccm-conversation-message-user">
-			<div class="ccm-conversation-avatar"><? print Loader::helper('concrete/avatar')->outputUserAvatar($ui)?></div>
+			<div class="ccm-conversation-avatar"><? print $formatter->getAvatar(); ?></div>
 			<div class="ccm-conversation-message-byline">
-				<span class="ccm-conversation-message-username"><? if (!is_object($ui)) { ?><?=t('Anonymous')?><? } else { ?><?=$ui->getUserDisplayName()?><? } ?></span>
+				<span class="ccm-conversation-message-username"><?
+					print $formatter->getDisplayName();
+					?></span>
 				<span class="ccm-conversation-message-divider">|</span>
 				<span class="ccm-conversation-message-date"><?=$message->getConversationMessageDateTimeOutput($dateFormat);?></span>
 
