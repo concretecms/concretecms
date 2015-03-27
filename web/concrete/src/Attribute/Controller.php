@@ -119,7 +119,7 @@ class Controller extends AbstractController
         $this->set('controller', $this);
     }
 
-    public function post($field = false)
+    public function post($field = false, $defaultValue = null)
     {
         // the only post that matters is the one for this attribute's name space
         $req = ($this->requestArray == false) ? $_POST : $this->requestArray;
@@ -130,7 +130,7 @@ class Controller extends AbstractController
             }
             return $p;
         }
-        return parent::post($field);
+        return parent::post($field, $defaultValue);
     }
 
     public function request($field = false)
