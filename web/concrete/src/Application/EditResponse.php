@@ -67,7 +67,7 @@ class EditResponse {
 		$o->message = $this->message;
 		$o->title = $this->title;
 		$o->time = $this->time;
-		$o->redirectURL = $this->redirectURL;
+		$o->redirectURL = (string) $this->redirectURL;
 		foreach($this->additionalData as $key => $value) {
 			$o->{$key} = $value;
 		}

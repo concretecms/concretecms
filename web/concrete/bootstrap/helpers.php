@@ -18,21 +18,23 @@ function t($text)
         return '';
     }
     $zt = Localization::getTranslate();
-    if (func_num_args() == 1) {
-        if (is_object($zt)) {
-            return $zt->translate($text);
+    if (is_object($zt)) {
+        $v = $zt->translate($text);
+        if (is_array($v)) {
+            if (isset($v[0]) && ($v[0] !== '')) {
+                $text = $v[0];
+            }
         } else {
-            return $text;
+            $text = $v;
         }
     }
-    $arg = array();
-    for ($i = 1; $i < func_num_args(); $i++) {
-        $arg[] = func_get_arg($i);
-    }
-    if (is_object($zt)) {
-        return vsprintf($zt->translate($text), $arg);
+    if (func_num_args() === 1) {
+        return $text;
     } else {
-        return vsprintf($text, $arg);
+        $args = func_get_args();
+        array_shift($args);
+
+        return vsprintf($text, $args);
     }
 }
 
@@ -127,7 +129,7 @@ function id($mixed)
 }
 
 /**
- *  Returns a concrete5 namespaced class
+ *  Returns a concrete5 namespaced class. $prefix is either true (for application), or a package handle or null.
  *
  * @param string $class
  * @param bool   $prefix
@@ -138,7 +140,12 @@ function core_class($class, $prefix = false)
     $class = trim($class, '\\');
     if ($prefix) {
         if (substr($class, 0, 5) == "Core\\") {
-            $class = "Src\\" . substr($class, 5);
+            $x = \Package::getClass($prefix);
+            if ($x->providesCoreExtensionAutoloaderMapping()) {
+                $class = substr($class, 5);
+            } else {
+                $class = "Src\\" . substr($class, 5);
+            }
         }
         if ($prefix === true) {
             $prefix = Config::get('app.namespace');
@@ -237,4 +244,14 @@ function array_to_object($o, $array)
     }
 
     return $o;
+}
+
+/**
+ * Dumps information about a variable in a way that can be used with Doctrine recursive objects.)
+ * @param $o
+ * @param bool $maxDepth
+ */
+function var_dump_safe($o, $maxDepth = true)
+{
+    return Doctrine\Common\Util\Debug::dump($o, $maxDepth);
 }

@@ -4,6 +4,8 @@ use Concrete\Controller\Backend\UserInterface\Block as BackendInterfaceBlockCont
 use Concrete\Core\Block\CustomStyle;
 use Concrete\Core\Block\View\BlockView;
 use Concrete\Core\Page\EditResponse;
+use Concrete\Core\Page\Type\Composer\Control\BlockControl;
+use Concrete\Core\Page\Type\Composer\FormLayoutSetControl;
 use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 
 class Design extends BackendInterfaceBlockController {
@@ -108,14 +110,29 @@ class Design extends BackendInterfaceBlockController {
         $canEditCustomTemplate = false;
         if ($this->permissions->canEditBlockCustomTemplate()) {
             $canEditCustomTemplate = true;
-            if ($this->block->getBlockTypeHandle() == BLOCK_HANDLE_SCRAPBOOK_PROXY) {
-                $bi = $this->block->getInstance();
-                $bx = \Block::getByID($bi->getOriginalBlockID());
-                $bt = \BlockType::getByID($bx->getBlockTypeID());
-            } else {
-                $bt = \BlockType::getByID($this->block->getBlockTypeID());
+            switch($this->block->getBlockTypeHandle()) {
+                case BLOCK_HANDLE_SCRAPBOOK_PROXY:
+                    $bi = $this->block->getInstance();
+                    $bx = \Block::getByID($bi->getOriginalBlockID());
+                    $bt = \BlockType::getByID($bx->getBlockTypeID());
+                    break;
+                case BLOCK_HANDLE_PAGE_TYPE_OUTPUT_PROXY:
+                    $bi = $this->block->getInstance();
+                    $output = $bi->getComposerOutputControlObject();
+                    $control = FormLayoutSetControl::getByID($output->getPageTypeComposerFormLayoutSetControlID());
+                    $object = $control->getPageTypeComposerControlObject();
+                    if ($object instanceof BlockControl) {
+                        $bt = $object->getBlockTypeObject();
+                    }
+                    break;
+                default:
+                    $bt = \BlockType::getByID($this->block->getBlockTypeID());
+                    break;
             }
-            $templates = $bt->getBlockTypeCustomTemplates();
+            $templates = array();
+            if (is_object($bt)) {
+                $templates = $bt->getBlockTypeCustomTemplates();
+            }
             $this->set('templates', $templates);
         }
         $this->set('canEditCustomTemplate', $canEditCustomTemplate);

@@ -10,7 +10,7 @@ class AccountPageController extends PageController {
 	public function on_start() {
         $u = new \User();
         if (!$u->isRegistered()) {
-            $this->render('/login');
+            $this->replace('/login');
         }
 		$this->error = Loader::helper('validation/error');
 		$this->set('valt', Loader::helper('validation/token'));

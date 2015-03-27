@@ -110,8 +110,9 @@ class BlockView extends AbstractView
                 $c = Page::getCurrentPage();
                 if (is_object($b) && is_object($c)) {
                     $arguments = func_get_args();
+                    $arguments[] = $b->getBlockID();
                     array_unshift($arguments, $c);
-                    return call_user_func_array(array('\Concrete\Core\Routing\URL', 'page'), $arguments);
+                    return call_user_func_array(array('\URL', 'page'), $arguments);
                 }
             }
         } catch (Exception $e) {
@@ -158,6 +159,12 @@ class BlockView extends AbstractView
                     if ($this->block) {
                         $bFilename = $this->block->getBlockFilename();
                         $bvt = new BlockViewTemplate($this->block);
+                        if (!$bFilename && is_object($this->area)) {
+                            $templates = $this->area->getAreaCustomTemplates();
+                            if (isset($templates[$this->block->getBlockTypeHandle()])) {
+                                $bFilename = $templates[$this->block->getBlockTypeHandle()];
+                            }
+                        }
                     } else {
                         $bvt = new BlockViewTemplate($this->blockType);
                     }
@@ -366,6 +373,8 @@ class BlockView extends AbstractView
     public function runControllerTask()
     {
 
+        $this->controller->on_start();
+
         if ($this->useBlockCache()) {
             $this->didPullFromOutputCache = true;
             $this->outputContent = $this->block->getBlockCachedOutput($this->area);
@@ -393,7 +402,6 @@ class BlockView extends AbstractView
 
             $parameters = array();
             if (!$passthru) {
-                $this->controller->on_start();
                 $this->controller->runAction($method, $parameters);
             }
             $this->controller->on_before_render();

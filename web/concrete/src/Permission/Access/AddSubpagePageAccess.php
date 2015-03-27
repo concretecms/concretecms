@@ -3,6 +3,7 @@ namespace Concrete\Core\Permission\Access;
 use \Concrete\Core\Permission\Duration as PermissionDuration;
 use Loader;
 use \Concrete\Core\Permission\Key\PageKey as PagePermissionKey;
+use \Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
 
 class AddSubpagePageAccess extends PageAccess {
 

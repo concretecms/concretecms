@@ -18,8 +18,8 @@ $searchRequest = $flr->getSearchRequest();
 ?>
 
 <script type="text/template" data-template="search-form">
-<form role="form" data-search-form="users" action="<?php echo URL::to('/ccm/system/search/users/submit')?>" class="form-inline ccm-search-fields">
-	<div class="ccm-search-fields-row">
+<form role="form" data-search-form="users" action="<?php echo URL::to('/ccm/system/search/users/submit')?>" class="ccm-search-fields">
+	<div class="ccm-search-fields-row form-inline">
 	<div class="form-group">
 		<select data-bulk-action="users" disabled class="ccm-search-bulk-action form-control">
 			<option value=""><?php echo t('Items Selected')?></option>

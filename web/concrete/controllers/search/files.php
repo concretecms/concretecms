@@ -44,7 +44,7 @@ class Files extends Controller
 
         if (!$this->fileList->getActiveSortColumn()) {
             $col = $columns->getDefaultSortColumn();
-            $this->fileList->sortBy($col->getColumnKey(), $col->getColumnDefaultSortDirection());
+            $this->fileList->sanitizedSortBy($col->getColumnKey(), $col->getColumnDefaultSortDirection());
         }
 
         // first thing, we check to see if a saved search is being used

@@ -95,6 +95,11 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
     protected $arInheritPermissionsFromAreaOnCID;
 
     /**
+     * @var array
+     */
+    protected $arCustomTemplates = array();
+
+    /**
      * @param string $arDisplayName
      */
     public function setAreaDisplayName($arDisplayName)
@@ -229,7 +234,6 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
     {
         return 'area';
     }
-
 
 
     /**
@@ -899,8 +903,7 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
 
         // finally, we rescan subareas so that, if they are inheriting up the tree, they inherit from this place
-        $this->arInheritPermissionsFromAreaOnCID = $this->getCollectionID(
-        ); // we don't need to actually save this on the area, but we need it for the rescan function
+        $this->arInheritPermissionsFromAreaOnCID = $this->getCollectionID(); // we don't need to actually save this on the area, but we need it for the rescan function
         $this->arOverrideCollectionPermissions = 1; // to match what we did above - useful for the rescan functions below
 
         $acobj = $this->getAreaCollectionObject();
@@ -913,15 +916,25 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
     }
 
     /**
-     * @deprecated
-     * This no longer functions. This functionality is now located at the theme level.
-     * sets a custom block template for blocks of a type specified by the btHandle
+     * Sets a custom block template for blocks of a type specified by the btHandle
+     * Note, these can be stacked. For example
+     * $a->setCustomTemplate('image', 'banner');
+     * $a->setCustomTemplate('content', 'masthead_content');
      * @param string $btHandle handle for the block type
      * @param string $view string identifying the block template ex: 'templates/breadcrumb.php'
      */
     public function setCustomTemplate($btHandle, $view)
     {
-        $this->customTemplateArray[$btHandle] = $view;
+        $this->arCustomTemplates[$btHandle] = $view;
+    }
+
+    /**
+     * returns an array of custom templates defined for this Area object.
+     * @return array
+     */
+    public function getAreaCustomTemplates()
+    {
+        return $this->arCustomTemplates;
     }
 
 }

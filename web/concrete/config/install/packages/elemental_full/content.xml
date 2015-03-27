@@ -276,7 +276,6 @@
                                                 <maxFileSizeGuest><![CDATA[0]]></maxFileSizeGuest>
                                                 <maxFileSizeRegistered><![CDATA[0]]></maxFileSizeRegistered>
                                                 <fileExtensions><![CDATA[]]></fileExtensions>
-                                                <insertNewMessages><![CDATA[top]]></insertNewMessages>
                                             </record>
                                         </data>
                                     </block>
@@ -893,7 +892,7 @@
                                 <fID>{ccm:export:file:slider1.png}</fID>
                                 <linkURL><![CDATA[]]></linkURL>
                                 <title><![CDATA[Stand Out on the Web]]></title>
-                                <description><![CDATA[                                    <p>Share your business with an impressive, yet minimal presentation. Let your customers understand your web presence through elegance and clarity.</p>]]></description>
+                                <description><![CDATA[<p>Share your business with an impressive, yet minimal presentation. Let your customers understand your web presence through elegance and clarity.</p>]]></description>
                                 <sortOrder><![CDATA[0]]></sortOrder>
                             </record>
                             <record>
@@ -901,7 +900,7 @@
                                 <fID>{ccm:export:file:slider2.png}</fID>
                                 <linkURL><![CDATA[]]></linkURL>
                                 <title><![CDATA[A Simple Image Slider]]></title>
-                                <description><![CDATA[                                    <p>This image slider can have any content that you want in it.</p>]]></description>
+                                <description><![CDATA[<p>This image slider can have any content that you want in it.</p>]]></description>
                                 <sortOrder><![CDATA[1]]></sortOrder>
                             </record>
                         </data>
@@ -942,7 +941,7 @@
                                             <record>
                                                 <icon><![CDATA[pencil]]></icon>
                                                 <title><![CDATA[Easy to Edit]]></title>
-                                                <paragraph><![CDATA[                                                    Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. ]]></paragraph>
+                                                <paragraph><![CDATA[Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna.]]></paragraph>
                                             </record>
                                         </data>
                                     </block>
@@ -980,7 +979,7 @@
                                             <record>
                                                 <icon><![CDATA[eye]]></icon>
                                                 <title><![CDATA[Pixel Perfect]]></title>
-                                                <paragraph><![CDATA[                                                    Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. ]]></paragraph>
+                                                <paragraph><![CDATA[Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna.]]></paragraph>
                                             </record>
                                         </data>
                                     </block>
@@ -1018,7 +1017,7 @@
                                             <record>
                                                 <icon><![CDATA[youtube-play]]></icon>
                                                 <title><![CDATA[Media Rich]]></title>
-                                                <paragraph><![CDATA[                                                    Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. ]]></paragraph>
+                                                <paragraph><![CDATA[Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna.]]></paragraph>
                                             </record>
                                         </data>
                                     </block>
@@ -2168,7 +2167,6 @@
                                 <maxFileSizeGuest><![CDATA[0]]></maxFileSizeGuest>
                                 <maxFileSizeRegistered><![CDATA[0]]></maxFileSizeRegistered>
                                 <fileExtensions><![CDATA[]]></fileExtensions>
-                                <insertNewMessages><![CDATA[top]]></insertNewMessages>
                             </record>
                         </data>
                     </block>
@@ -2180,7 +2178,7 @@
                     <block type="content" name="">
                         <data table="btContentLocal">
                             <record>
-                                <content><![CDATA[<blockquote>Fusce volutpat sodales mauris quis dapibus. Maecenas convallis, libero eu ultrices interdum, leo mauris commodo diam, sed cursus sapien ligula nec leo.</blockquote><p>Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis. Morbi at suscipit risus. Sed consequat eleifend metus, vitae malesuada eros elementum sed. Fusce risus felis, viverra et dignissim at, lobortis non est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sit amet consectetur lacus. Vestibulum neque lectus, egestas non cursus vitae, aliquam at magna. Etiam aliquam, justo et varius eleifend, dui lectus egestas nunc, vel malesuada nisl purus nec metus. In gravida turpis a pharetra commodo. Donec non turpis vulputate, faucibus metus a, consectetur nunc. Morbi tortor nisi, hendrerit sed laoreet eget, fermentum et justo. Suspendisse potenti.</p><p><a href="{ccm:export:file:balloon.jpg}" data-concrete5-link-launch="lightbox" data-concrete5-link-type="image"><concrete-picture alt="" file="balloon.jpg" /></a></p><h2>Heading 2</h2><p>Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis. Morbi at suscipit risus. Sed consequat eleifend metus, vitae malesuada eros elementum sed. Fusce risus felis, viverra et dignissim at, lobortis non est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sit amet consectetur lacus. Vestibulum neque lectus, egestas non cursus vitae, aliquam at magna. Etiam aliquam, justo et varius eleifend, dui lectus egestas nunc, vel malesuada nisl purus nec metus. In gravida turpis a pharetra commodo. Donec non turpis vulputate, faucibus metus a, consectetur nunc. Morbi tortor nisi, hendrerit sed laoreet eget, fermentum et justo. Suspendisse potenti.</p><h3>Heading 3</h3><p>Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. Quisque dignissim neque a ipsum sodales, mattis aliquam ante dictum. Vestibulum elementum pellentesque tortor ac congue. Mauris vel nibh id metus tincidunt eleifend. In interdum gravida ligula, at venenatis odio fermentum at. Donec dapibus enim lectus, quis venenatis tellus volutpat in. Nullam in velit tortor.</p><h3>Heading 3</h3><p>Donec blandit lectus nec neque ullamcorper rhoncus. Sed adipiscing tempus sem eu molestie. Aenean laoreet pretium ante vitae ultrices. Aenean eu gravida magna, vel aliquet magna. In auctor convallis gravida. Phasellus est erat, adipiscing nec lobortis quis, eleifend at sem. Curabitur fringilla viverra dolor, in rutrum ipsum rutrum sit amet. Vestibulum feugiat porttitor ipsum vel condimentum. Suspendisse at tempus libero. Sed eu tempor enim. Etiam convallis eleifend rutrum. Donec porta diam quis tellus feugiat dignissim. Cras posuere, massa eget laoreet laoreet, urna libero lobortis dolor, sed consequat elit urna eget massa. Donec aliquet pellentesque consectetur.</p>]]></content>
+                                <content><![CDATA[<blockquote>Fusce volutpat sodales mauris quis dapibus. Maecenas convallis, libero eu ultrices interdum, leo mauris commodo diam, sed cursus sapien ligula nec leo.</blockquote><p>Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis. Morbi at suscipit risus. Sed consequat eleifend metus, vitae malesuada eros elementum sed. Fusce risus felis, viverra et dignissim at, lobortis non est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sit amet consectetur lacus. Vestibulum neque lectus, egestas non cursus vitae, aliquam at magna. Etiam aliquam, justo et varius eleifend, dui lectus egestas nunc, vel malesuada nisl purus nec metus. In gravida turpis a pharetra commodo. Donec non turpis vulputate, faucibus metus a, consectetur nunc. Morbi tortor nisi, hendrerit sed laoreet eget, fermentum et justo. Suspendisse potenti.</p><p><a href="{ccm:export:file:balloon.jpg}" data-concrete5-link-lightbox="image"><concrete-picture alt="" file="balloon.jpg" /></a></p><h2>Heading 2</h2><p>Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis. Morbi at suscipit risus. Sed consequat eleifend metus, vitae malesuada eros elementum sed. Fusce risus felis, viverra et dignissim at, lobortis non est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sit amet consectetur lacus. Vestibulum neque lectus, egestas non cursus vitae, aliquam at magna. Etiam aliquam, justo et varius eleifend, dui lectus egestas nunc, vel malesuada nisl purus nec metus. In gravida turpis a pharetra commodo. Donec non turpis vulputate, faucibus metus a, consectetur nunc. Morbi tortor nisi, hendrerit sed laoreet eget, fermentum et justo. Suspendisse potenti.</p><h3>Heading 3</h3><p>Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. Quisque dignissim neque a ipsum sodales, mattis aliquam ante dictum. Vestibulum elementum pellentesque tortor ac congue. Mauris vel nibh id metus tincidunt eleifend. In interdum gravida ligula, at venenatis odio fermentum at. Donec dapibus enim lectus, quis venenatis tellus volutpat in. Nullam in velit tortor.</p><h3>Heading 3</h3><p>Donec blandit lectus nec neque ullamcorper rhoncus. Sed adipiscing tempus sem eu molestie. Aenean laoreet pretium ante vitae ultrices. Aenean eu gravida magna, vel aliquet magna. In auctor convallis gravida. Phasellus est erat, adipiscing nec lobortis quis, eleifend at sem. Curabitur fringilla viverra dolor, in rutrum ipsum rutrum sit amet. Vestibulum feugiat porttitor ipsum vel condimentum. Suspendisse at tempus libero. Sed eu tempor enim. Etiam convallis eleifend rutrum. Donec porta diam quis tellus feugiat dignissim. Cras posuere, massa eget laoreet laoreet, urna libero lobortis dolor, sed consequat elit urna eget massa. Donec aliquet pellentesque consectetur.</p>]]></content>
                             </record>
                         </data>
                     </block>
@@ -2236,7 +2234,6 @@
                                 <maxFileSizeGuest><![CDATA[0]]></maxFileSizeGuest>
                                 <maxFileSizeRegistered><![CDATA[0]]></maxFileSizeRegistered>
                                 <fileExtensions><![CDATA[]]></fileExtensions>
-                                <insertNewMessages><![CDATA[top]]></insertNewMessages>
                             </record>
                         </data>
                     </block>
@@ -2304,7 +2301,6 @@
                                 <maxFileSizeGuest><![CDATA[0]]></maxFileSizeGuest>
                                 <maxFileSizeRegistered><![CDATA[0]]></maxFileSizeRegistered>
                                 <fileExtensions><![CDATA[]]></fileExtensions>
-                                <insertNewMessages><![CDATA[top]]></insertNewMessages>
                             </record>
                         </data>
                     </block>
@@ -2316,7 +2312,7 @@
                     <block type="content" name="">
                         <data table="btContentLocal">
                             <record>
-                                <content><![CDATA[<p>Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis. Morbi at suscipit risus. Sed consequat eleifend metus, vitae malesuada eros elementum sed. Fusce risus felis, viverra et dignissim at, lobortis non est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sit amet consectetur lacus. Vestibulum neque lectus, egestas non cursus vitae, aliquam at magna. Etiam aliquam, justo et varius eleifend, dui lectus egestas nunc, vel malesuada nisl purus nec metus. In gravida turpis a pharetra commodo. Donec non turpis vulputate, faucibus metus a, consectetur nunc. Morbi tortor nisi, hendrerit sed laoreet eget, fermentum et justo. Suspendisse potenti.</p><p><span class="title-caps-bold">Heading 3</span></p><p>Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. Quisque dignissim neque a ipsum sodales, mattis aliquam ante dictum. Vestibulum elementum pellentesque tortor ac congue. Mauris vel nibh id metus tincidunt eleifend. In interdum gravida ligula, at venenatis odio fermentum at. Donec dapibus enim lectus, quis venenatis tellus volutpat in. Nullam in velit tortor.</p><p><a href="{ccm:export:file:plants.jpg}" data-concrete5-link-launch="lightbox" data-concrete5-link-type="image"><concrete-picture alt="" file="plants.jpg" /></a></p><p><span class="image-caption">Look at my beautiful image. Don't you to look more?</span></p><p>Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. Quisque dignissim neque a ipsum sodales, mattis aliquam ante dictum. Vestibulum elementum pellentesque tortor ac congue. Mauris vel nibh id metus tincidunt eleifend. In interdum gravida ligula, at venenatis odio fermentum at. Donec dapibus enim lectus, quis venenatis tellus volutpat in. Nullam in velit tortor.</p>]]></content>
+                                <content><![CDATA[<p>Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis. Morbi at suscipit risus. Sed consequat eleifend metus, vitae malesuada eros elementum sed. Fusce risus felis, viverra et dignissim at, lobortis non est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sit amet consectetur lacus. Vestibulum neque lectus, egestas non cursus vitae, aliquam at magna. Etiam aliquam, justo et varius eleifend, dui lectus egestas nunc, vel malesuada nisl purus nec metus. In gravida turpis a pharetra commodo. Donec non turpis vulputate, faucibus metus a, consectetur nunc. Morbi tortor nisi, hendrerit sed laoreet eget, fermentum et justo. Suspendisse potenti.</p><p><span class="title-caps-bold">Heading 3</span></p><p>Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. Quisque dignissim neque a ipsum sodales, mattis aliquam ante dictum. Vestibulum elementum pellentesque tortor ac congue. Mauris vel nibh id metus tincidunt eleifend. In interdum gravida ligula, at venenatis odio fermentum at. Donec dapibus enim lectus, quis venenatis tellus volutpat in. Nullam in velit tortor.</p><p><a href="{ccm:export:file:plants.jpg}" data-concrete5-link-lightbox="image"><concrete-picture alt="" file="plants.jpg" /></a></p><p><span class="image-caption">Look at my beautiful image. Don't you to look more?</span></p><p>Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. Quisque dignissim neque a ipsum sodales, mattis aliquam ante dictum. Vestibulum elementum pellentesque tortor ac congue. Mauris vel nibh id metus tincidunt eleifend. In interdum gravida ligula, at venenatis odio fermentum at. Donec dapibus enim lectus, quis venenatis tellus volutpat in. Nullam in velit tortor.</p>]]></content>
                             </record>
                         </data>
                     </block>
@@ -2466,6 +2462,7 @@
                                                 <questionSetId><![CDATA[1404886998]]></questionSetId>
                                                 <surveyName><![CDATA[Contact Us]]></surveyName>
                                                 <thankyouMsg><![CDATA[Thanks!]]></thankyouMsg>
+                                                <buttonText><![CDATA[Submit]]></buttonText>
                                                 <notifyMeOnSubmission><![CDATA[0]]></notifyMeOnSubmission>
                                                 <recipientEmail><![CDATA[]]></recipientEmail>
                                                 <displayCaptcha><![CDATA[0]]></displayCaptcha>

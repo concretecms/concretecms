@@ -1,5 +1,4 @@
 <?php
-
 use Concrete\Core\Application\Application;
 
 /**

@@ -9,6 +9,8 @@ $areaObj = Area::get($pageObj, $_POST['blockAreaHandle']);
 $blockObj = Block::getByID($_POST['bID'], $pageObj, $areaObj);
 $cnvMessageSubject = null;
 
+$pk = PermissionKey::getByHandle('add_conversation_message');
+
 if(!is_object($blockObj)) {
 	$ve->add(t('Invalid Block Object.'));
 }
@@ -20,9 +22,32 @@ if (!is_object($cn)) {
 	$ve->add(t('Invalid conversation.'));
 } else {
     $pp = new Permissions($cn);
-    if (!$pp->canAddConversationMessage()) {
+	if (!$pk->validate()) {
         $ve->add(t('You do not have access to add a message to this conversation.'));
-    }
+    } else {
+		// We know that we have access. So let's check to see if the user is logged in. If they're not we're going
+		// to validate their name and email.
+		$author = new \Concrete\Core\Conversation\Message\Author();
+		if (!$u->isRegistered()) {
+			if (!$vs->notempty($_POST['cnvMessageAuthorName'])) {
+				$ve->add(t('You must enter your name to post this message.'));
+			} else {
+				$author->setName($_POST['cnvMessageAuthorName']);
+			}
+			if (!$vs->email($_POST['cnvMessageAuthorEmail'])) {
+				$ve->add(t('You must enter a valid email address to post this message.'));
+			} else {
+				$author->setEmail($_POST['cnvMessageAuthorEmail']);
+			}
+
+			$captcha = Core::make('captcha');
+			if (!$captcha->check()) {
+				$ve->add(t("Incorrect image validation code. Please check the image and re-enter the letters or numbers as necessary."));
+			}
+		} else {
+			$author->setUser($u);
+		}
+	}
 
 }
 
@@ -70,11 +95,14 @@ if (Config::get('conversation.banned_words') && Loader::helper('validation/banne
 if ($ve->has()) {
 	$ax->sendError($ve);
 } else {
-	$msg = ConversationMessage::add($cn, $cnvMessageSubject, $_POST['cnvMessageBody'], $parent);
+	$msg = ConversationMessage::add($cn, $author, $cnvMessageSubject, $_POST['cnvMessageBody'], $parent);
 	if (!Loader::helper('validation/antispam')->check($_POST['cnvMessageBody'],'conversation_comment')) {
 		$msg->flag(ConversationFlagType::getByHandle('spam'));
 	} else {
-		$msg->approve();
+		$assignment = $pk->getMyAssignment();
+		if ($assignment->approveNewConversationMessages()) {
+			$msg->approve();
+		}
 	}
 	if($_POST['attachments'] && count($_POST['attachments'])) {
 		foreach($_POST['attachments'] as $attachmentID) {

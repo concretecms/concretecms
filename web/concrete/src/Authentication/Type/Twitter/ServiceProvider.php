@@ -25,10 +25,11 @@ class ServiceProvider extends \Concrete\Core\Foundation\Service\Provider
                     new Credentials(
                         \Config::get('auth.twitter.appid'),
                         \Config::get('auth.twitter.secret'),
-                        BASE_URL . \URL::to($callback)
+                        (string) \URL::to($callback)
                     ),
                     new SymfonySession(\Session::getFacadeRoot(), false));
-            });
+            }
+        );
     }
 
 }

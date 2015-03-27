@@ -89,7 +89,7 @@ class JavascriptAsset extends Asset
      * @param Asset[] $assets
      * @return Asset[]
      */
-    public function combine($assets)
+    public static function combine($assets)
     {
         return self::process($assets, function($js, $assetPath, $targetPath) {
             return $js;
@@ -100,7 +100,7 @@ class JavascriptAsset extends Asset
      * @param Asset[] $assets
      * @return Asset[]
      */
-    public function minify($assets)
+    public static function minify($assets)
     {
         return self::process($assets, function($js, $assetPath, $targetPath) {
             return \JShrink\Minifier::minify($js);

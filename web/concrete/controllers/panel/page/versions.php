@@ -104,7 +104,7 @@ class Versions extends BackendInterfacePageController
                 $v->delete();
                 // finally, we redirect the user to the new drafts page in composer mode.
                 $r->setPage($nc);
-                $r->setRedirectURL(BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $nc->getCollectionID() . '&ctask=check-out-first&' . Loader::helper('validation/token')->getParameter());
+                $r->setRedirectURL(\Core::getApplicationURL() . '/' . DISPATCHER_FILENAME . '?cID=' . $nc->getCollectionID() . '&ctask=check-out-first&' . Loader::helper('validation/token')->getParameter());
             }
             $r->outputJSON();
         }

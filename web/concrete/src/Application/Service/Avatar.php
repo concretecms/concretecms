@@ -162,7 +162,7 @@ class Avatar
      */
     public function get_gravatar($email, $s = 80, $d = 'mm', $r = 'g', $img = false, $atts = array())
     {
-        return self::getGravatar($email, $s = 80, $d = 'mm', $r = 'g', $img = false, $atts = array());
+        return self::getGravatar($email, $s, $d, $r, $img, $atts);
     }
 
 }

@@ -63,7 +63,16 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                     <li class="parent-ul"><i class="fa fa-cog mobile-leading-icon"></i><a href="#"><?php echo t(
                                 'Page Properties') ?><i class="fa fa-caret-down"></i></a>
                         <ul class="list-unstyled">
-                            <? if ($permissions->canEditPageProperties() ||
+                            <?
+                            $pagetype = PageType::getByID($c->getPageTypeID());
+                            if (is_object($pagetype) && $cp->canEditPageContents()) { ?>
+                                <li><a class="dialog-launch" dialog-width="640" dialog-height="640"
+                                       dialog-modal="false" dialog-title="<?= t('Composer') ?>" href="<?= URL::to(
+                                        '/ccm/system/panels/details/page/composer') ?>?cID=<?= $cID ?>"><?= t(
+                                            'Composer') ?></a></li>
+                            <?
+                            }
+                            if ($permissions->canEditPageProperties() ||
                                 $permissions->canEditPageTheme() ||
                                 $permissions->canEditPageTemplate() ||
                                 $permissions->canDeletePage() ||
@@ -254,11 +263,12 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 
     if (Loader::helper('concrete/ui')->showWhiteLabelMessage()) {
         ?>
-        <li class="pull-left" id="ccm-white-label-message"><?= t(
+        <li class="pull-left visible-xs visible-lg" id="ccm-white-label-message"><?= t(
                 'Powered by <a href="%s">concrete5</a>.',
                 Config::get('concrete.urls.concrete5')) ?></li>
     <? } ?>
-        <li class="pull-right ccm-toolbar-mobile-menu-button visible-xs hidden-sm hidden-md hidden-lg">
+        <li class="pull-right ccm-toolbar-mobile-menu-button visible-xs hidden-sm hidden-md hidden-lg
+            <? if ($c->isEditMode()) { ?> ccm-toolbar-mobile-menu-button-active<?php } ?>">
             <i class="fa fa-bars fa-2"></i>
         </li>
         <? if ($dh->canRead()) { ?>

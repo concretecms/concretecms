@@ -23,6 +23,7 @@
                 elem: elem,
                 totalBlocks: 0,
                 enableGridContainer: elem.data('area-enable-grid-container'),
+                customTemplates: elem.data('area-custom-templates'),
                 handle: elem.data('area-handle'),
                 dragAreas: [],
                 blocks: [],

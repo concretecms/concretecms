@@ -101,15 +101,13 @@ class DatabaseManagerORM
         if ($context instanceof Package) {
             $path = $context->getPackageEntitiesPath();
         } elseif ($context === 'core') {
-            // TODO: Once it is figured out how to properly use the entities in
-            //       the core, this spot might need to be revisited.
             $path = DIR_BASE_CORE . '/' . DIRNAME_CLASSES;
-            //$path = DIR_BASE_CORE . '/' . DIRNAME_CLASSES . '/' . DIRNAME_ENTITIES;
         } elseif (is_object($context) && method_exists($context, 'getEntitiesPath')) {
             $path = $context->getEntitiesPath();
         }
 
         $driverImpl = $config->newDefaultAnnotationDriver($path);
+        $driverImpl->addExcludePaths(Config::get('database.proxy_exclusions', array()));
         $config->setMetadataDriverImpl($driverImpl);
 
         $event = new \Symfony\Component\EventDispatcher\GenericEvent();

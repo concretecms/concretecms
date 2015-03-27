@@ -33,7 +33,7 @@ im.onload = function () {
     });
 };
 var lis = {};
-img.src = CCM_REL + "/concrete/images/image_editor/default_filter_image.jpg";
+img.src = CCM_IMAGE_PATH + "/image_editor/default_filter_image.jpg";
 
 var ul = $($.parseHTML('<ul/>')).addClass('slideOutBlockList');
 im.bind('filterLoad', function (e, data) {

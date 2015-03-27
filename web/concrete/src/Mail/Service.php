@@ -2,59 +2,58 @@
 namespace Concrete\Core\Mail;
 
 use Config;
-use \Concrete\Core\Logging\GroupLogger;
-use \Zend\Mail\Message;
-use \Zend\Mail\Transport\Sendmail as SendmailTransport;
-use \Zend\Mail\Transport\Smtp as SmtpTransport;
-use \Zend\Mail\Transport\SmtpOptions;
-use \Zend\Mime\Message as MimeMessage;
-use \Zend\Mime\Part as MimePart;
+use Concrete\Core\Logging\GroupLogger;
+use Zend\Mail\Message;
+use Zend\Mail\Transport\Sendmail as SendmailTransport;
+use Zend\Mail\Transport\Smtp as SmtpTransport;
+use Zend\Mail\Transport\SmtpOptions;
+use Zend\Mime\Message as MimeMessage;
+use Zend\Mime\Mime;
+use Zend\Mime\Part as MimePart;
 use Exception;
-
-use Log;
-use \Monolog\Logger;
+use Monolog\Logger;
 
 class Service
 {
-
-    protected $headers = array();
-    protected $to = array();
-    protected $replyto = array();
-    protected $cc = array();
-    protected $bcc = array();
-    protected $from = array();
-    protected $data = array();
-    protected $subject = '';
-    public $body = '';
-    protected $attachments = array();
+    protected $headers;
+    protected $to;
+    protected $replyto;
+    protected $cc;
+    protected $bcc;
+    protected $from;
+    protected $data;
+    protected $subject;
+    protected $attachments;
     protected $template;
-    protected $bodyHTML = false;
-    protected $testing = false;
+    protected $body;
+    protected $bodyHTML;
+    protected $testing;
 
+    public function __construct()
+    {
+        $this->reset();
+    }
 
     /**
      * this method is called by the Loader::helper to clean up the instance of this object
-     * resets the class scope variables
-     * @return void
+     * resets the class scope variables.
      */
     public function reset()
     {
-        $this->body = '';
         $this->headers = array();
         $this->to = array();
+        $this->replyto = array();
         $this->cc = array();
         $this->bcc = array();
-        $this->replyto = array();
         $this->from = array();
         $this->data = array();
-        $this->attachments = array();
         $this->subject = '';
-        $this->body = '';
-        $this->template;
+        $this->attachments = array();
+        $this->template = '';
+        $this->body = false;
         $this->bodyHTML = false;
         $this->testing = false;
     }
-
 
     public static function getMailerObject()
     {
@@ -97,12 +96,11 @@ class Service
     }
 
     /**
-     * Adds a parameter to a mail template
+     * Adds a parameter to a mail template.
+     *
      * @param string $key
      * @param string $val
-     * @return void
      */
-
     public function addParameter($key, $val)
     {
         $this->data[$key] = $val;
@@ -117,67 +115,56 @@ class Service
      * $mailHelper->send();
      *
      * @param \Concrete\Core\File\File $fob File to attach
+     *
      * @return \StdClass Pointer to the attachment
+     *
      * @throws \Exception
      */
     public function addAttachment(\Concrete\Core\File\File $fob)
     {
-        // @TODO make this work with the File Storage Locations
 
+        // Get file version.
         $fv = $fob->getVersion();
-        $path = $fob->getPath();
-        $name = $fv->getFileName();
-        $type = false;
-        if (!function_exists('mime_content_type')) {
-            function mime_content_type($path)
-            {
-                return false;
-            }
-        }
-        $type = @mime_content_type($path); // This is deprecated. Should be stable until php5.6
-        if (!$type) {
-            $mt = \Loader::helper('mime');
-            $ext = preg_replace('/^.+\.([^\.]+)$/', '\1', $path);
-            $type = $mt->mimeFromExtension($ext);
-        }
-        $contents = @file_get_contents($path);
-        if (!$contents) {
-            throw new Exception(t('Unable to get the file contents for attachment.'));
-        }
 
-        $file = new \StdClass();
-        $file->object = $fob;
-        $file->type = $type;
-        $file->path = $path;
-        $file->filename = $name;
-        $file->contents = $contents;
-        unset($contents);
-        $this->attachments[] = $file;
-        return $file; // Returns a pointer
+        // Get file data.
+        $mimetype = $fv->getMimeType();
+        $filename = $fv->getFilename();
+        $resource = $fob->getFileResource();
+        $content = $resource->read();
+
+        // Create attachment.
+        $mp = new MimePart($content);
+        $mp->type = $mimetype;
+        $mp->disposition = Mime::DISPOSITION_ATTACHMENT;
+        $mp->encoding = Mime::ENCODING_BASE64;
+        $mp->filename = $filename;
+
+        // Add mimepart to attachments.
+        $this->attachments[] = $mp;
     }
 
     /**
-     * Loads an email template from the /mail/ directory
+     * Loads an email template from the /mail/ directory.
+     *
      * @param string $template
      * @param string $pkgHandle
-     * @return void
      */
     public function load($template, $pkgHandle = null)
     {
         extract($this->data);
 
         // loads template from mail templates directory
-        if (file_exists(DIR_FILES_EMAIL_TEMPLATES . "/{$template}.php")) {
-            include(DIR_FILES_EMAIL_TEMPLATES . "/{$template}.php");
+        if (file_exists(DIR_FILES_EMAIL_TEMPLATES."/{$template}.php")) {
+            include DIR_FILES_EMAIL_TEMPLATES."/{$template}.php";
         } else {
             if ($pkgHandle != null) {
-                if (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) {
-                    include(DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_MAIL_TEMPLATES . "/{$template}.php");
+                if (is_dir(DIR_PACKAGES.'/'.$pkgHandle)) {
+                    include DIR_PACKAGES.'/'.$pkgHandle.'/'.DIRNAME_MAIL_TEMPLATES."/{$template}.php";
                 } else {
-                    include(DIR_PACKAGES_CORE . '/' . $pkgHandle . '/' . DIRNAME_MAIL_TEMPLATES . "/{$template}.php");
+                    include DIR_PACKAGES_CORE.'/'.$pkgHandle.'/'.DIRNAME_MAIL_TEMPLATES."/{$template}.php";
                 }
             } else {
-                include(DIR_FILES_EMAIL_TEMPLATES_CORE . "/{$template}.php");
+                include DIR_FILES_EMAIL_TEMPLATES_CORE."/{$template}.php";
             }
         }
 
@@ -186,14 +173,14 @@ class Service
         }
         $this->template = $template;
         $this->subject = $subject;
-        $this->body = $body;
-        $this->bodyHTML = $bodyHTML;
+        $this->body = (isset($body) && is_string($body)) ? $body : false;
+        $this->bodyHTML = (isset($bodyHTML) && is_string($bodyHTML)) ? $bodyHTML : false;
     }
 
     /**
-     * Manually set the text body of a mail message, typically the body is set in the template + load method
-     * @param string $body
-     * @return void
+     * Manually set the text body of a mail message, typically the body is set in the template + load method.
+     *
+     * @param string|false $body Set the text body (false to not use plain text body)
      */
     public function setBody($body)
     {
@@ -201,9 +188,9 @@ class Service
     }
 
     /**
-     * Manually set the message's subject
+     * Manually set the message's subject.
+     *
      * @param string $subject
-     * @return void
      */
     public function setSubject($subject)
     {
@@ -211,7 +198,8 @@ class Service
     }
 
     /**
-     * Returns the message's subject
+     * Returns the message's subject.
+     *
      * @return string
      */
     public function getSubject()
@@ -220,8 +208,9 @@ class Service
     }
 
     /**
-     * Returns the message's text body
-     * @return string
+     * Returns the message's text body.
+     *
+     * @return string|false
      */
     public function getBody()
     {
@@ -229,8 +218,9 @@ class Service
     }
 
     /**
-     * Returns the message's html body
-     * @return string
+     * Returns the message's html body.
+     *
+     * @return string|false
      */
     public function getBodyHTML()
     {
@@ -238,9 +228,9 @@ class Service
     }
 
     /**
-     * manually set the HTML portion of a MIME encoded message, can also be done by setting $bodyHTML in a mail template
-     * @param string $html
-     * @return void
+     * manually set the HTML portion of a MIME encoded message, can also be done by setting $bodyHTML in a mail template.
+     *
+     * @param string|false $html Set the html body (false to not use html body)
      */
     public function setBodyHTML($html)
     {
@@ -250,7 +240,6 @@ class Service
     /**
      * @param MailImporter $importer
      * @param array $data
-     * @return void
      */
     public function enableMailResponseProcessing($importer, $data)
     {
@@ -258,12 +247,14 @@ class Service
             $importer->setupValidation($em[0], $data);
         }
         $this->from($importer->getMailImporterEmail());
-        $this->body = $importer->setupBody($this->body);
+        $this->body = $importer->setupBody(($this->body === false) ? '' : $this->body);
     }
 
     /**
      * @param array $arr
+     *
      * @return string
+     *
      * @todo documentation
      */
     protected function generateEmailStrings($arr)
@@ -272,7 +263,7 @@ class Service
         for ($i = 0; $i < count($arr); $i++) {
             $v = $arr[$i];
             if (isset($v[1])) {
-                $str .= '"' . $v[1] . '" <' . $v[0] . '>';
+                $str .= '"'.$v[1].'" <'.$v[0].'>';
             } else {
                 $str .= $v[0];
             }
@@ -280,14 +271,15 @@ class Service
                 $str .= ', ';
             }
         }
+
         return $str;
     }
 
     /**
-     * Sets the from address on the email about to be sent out
+     * Sets the from address on the email about to be sent out.
+     *
      * @param string $email
      * @param string $name
-     * @return void
      */
     public function from($email, $name = null)
     {
@@ -296,9 +288,9 @@ class Service
 
     /**
      * Sets to the to email address on the email about to be sent out.
+     *
      * @param string $email
      * @param string $name
-     * @return void
      */
     public function to($email, $name = null)
     {
@@ -314,9 +306,10 @@ class Service
 
     /**
      * Adds an email address to the cc field on the email about to be sent out.
+     *
      * @param string $email
      * @param string $name
-     * @return void
+     *
      * @since 5.5.1
      */
     public function cc($email, $name = null)
@@ -333,9 +326,10 @@ class Service
 
     /**
      * Adds an email address to the bcc field on the email about to be sent out.
+     *
      * @param string $email
      * @param string $name
-     * @return void
+     *
      * @since 5.5.1
      */
     public function bcc($email, $name = null)
@@ -385,9 +379,10 @@ class Service
     }
 
     /**
-     * Sends the email
+     * Sends the email.
+     *
      * @param bool $resetData Whether or not to reset the service to its default values.
-     * @return void
+     *
      * @throws \Exception
      */
     public function sendMail($resetData = true)
@@ -397,7 +392,6 @@ class Service
         $toStr = $this->generateEmailStrings($this->to);
         $replyStr = $this->generateEmailStrings($this->replyto);
         if (Config::get('concrete.email.enabled')) {
-
             $zendMailData = self::getMailerObject();
 
             $mail = $zendMailData['mail'];
@@ -440,55 +434,69 @@ class Service
                     $mail->addBcc($bcc[0], $bcc[1]);
                 }
             }
-
-            if (is_array($this->attachments) && count($this->attachments)) {
-                foreach ($this->attachments as $att) {
-                    $natt = $mail->createAttachment($att->contents);
-                    $fob = $att->object;
-                    unset($att->object);
-                    unset($att->contents);
-                    foreach ((array)$att as $key => $value) {
-                        $natt->{$key} = $value;
-                    }
-                }
+            $headers = $mail->getHeaders();
+            if ($headers->has('messageid')) {
+                $messageIdHeader = $headers->get('messageid');
+            } else {
+                $messageIdHeader = new \Zend\Mail\Header\MessageId();
+                $headers->addHeader($messageIdHeader);
             }
-
-            $text = new MimePart($this->body);
-            $text->type = "text/plain";
-            $text->charset = APP_CHARSET;
+            $messageIdHeader->setId();
 
             $body = new MimeMessage();
-            $body->setParts(array($text));
-
-            if ($this->bodyHTML != false) {
+            if (($this->body !== false) && ($this->bodyHTML !== false)) {
+                $alternatives = new MimeMessage();
+                $text = new MimePart($this->body);
+                $text->type = 'text/plain';
+                $text->charset = APP_CHARSET;
+                $alternatives->addPart($text);
                 $html = new MimePart($this->bodyHTML);
-                $html->type = "text/html";
+                $html->type = 'text/html';
+                $html->charset = APP_CHARSET;
+                $alternatives->addPart($html);
+                $alternativesPath = new MimePart($alternatives->generateMessage());
+                $alternativesPath->type = 'multipart/alternative;'.Mime::LINEEND.' boundary="'.$alternatives->getMime()->boundary().'"';
+                $body->addPart($alternativesPath);
+            } elseif ($this->body !== false) {
+                $text = new MimePart($this->body);
+                $text->type = 'text/plain';
+                $text->charset = APP_CHARSET;
+                $body->addPart($text);
+            } elseif ($this->bodyHTML !== false) {
+                $html = new MimePart($this->bodyHTML);
+                $html->type = 'text/html';
                 $html->charset = APP_CHARSET;
                 $body->addPart($html);
             }
-
+            foreach ($this->attachments as $att) {
+                $body->addPart($att);
+            }
+            if (count($body->getParts()) === 0) {
+                $text = new MimePart('');
+                $text->type = 'text/plain';
+                $text->charset = APP_CHARSET;
+                $body->addPart($text);
+            }
             $mail->setBody($body);
 
             try {
                 $transport->send($mail);
-
             } catch (Exception $e) {
-
                 if ($this->getTesting()) {
                     throw $e;
                 }
                 $l = new GroupLogger(LOG_TYPE_EXCEPTIONS, Logger::CRITICAL);
-                $l->write(t('Mail Exception Occurred. Unable to send mail: ') . $e->getMessage());
+                $l->write(t('Mail Exception Occurred. Unable to send mail: ').$e->getMessage());
                 $l->write($e->getTraceAsString());
                 if (Config::get('concrete.log.emails')) {
-                    $l->write(t('Template Used') . ': ' . $this->template);
-                    $l->write(t('To') . ': ' . $toStr);
-                    $l->write(t('From') . ': ' . $fromStr);
+                    $l->write(t('Template Used').': '.$this->template);
+                    $l->write(t('To').': '.$toStr);
+                    $l->write(t('From').': '.$fromStr);
                     if (isset($this->replyto)) {
-                        $l->write(t('Reply-To') . ': ' . $replyStr);
+                        $l->write(t('Reply-To').': '.$replyStr);
                     }
-                    $l->write(t('Subject') . ': ' . $this->subject);
-                    $l->write(t('Body') . ': ' . $this->body);
+                    $l->write(t('Subject').': '.$this->subject);
+                    $l->write(t('Body').': '.$this->body);
                 }
                 $l->close();
             }
@@ -498,11 +506,11 @@ class Service
         if (Config::get('concrete.log.emails') && !$this->getTesting()) {
             $l = new GroupLogger(LOG_TYPE_EMAILS, Logger::INFO);
             if (Config::get('concrete.email.enabled')) {
-                $l->write('**' . t('EMAILS ARE ENABLED. THIS EMAIL WAS SENT TO mail()') . '**');
+                $l->write('**'.t('EMAILS ARE ENABLED. THIS EMAIL WAS SENT TO mail()').'**');
             } else {
-                $l->write('**' . t('EMAILS ARE DISABLED. THIS EMAIL WAS LOGGED BUT NOT SENT') . '**');
+                $l->write('**'.t('EMAILS ARE DISABLED. THIS EMAIL WAS LOGGED BUT NOT SENT').'**');
             }
-            $l->write(t('Template Used') . ': ' . $this->template);
+            $l->write(t('Template Used').': '.$this->template);
             $l->write(t('Mail Details: %s', $mail->toString()));
             $l->close();
         }
@@ -512,5 +520,4 @@ class Service
             $this->reset();
         }
     }
-
 }

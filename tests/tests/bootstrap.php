@@ -5,10 +5,8 @@
 
 // testing credentials
 
-use Concrete\Core\Config\Repository;
+use Concrete\Core\Config\Repository\Repository;
 
-define('BASE_URL', 'http://www.dummyco.com');
-define('URL_REWRITING', false);
 define('DIR_BUILDTOOLS', dirname(dirname(__FILE__)) . '/build-tools');
 if (!is_dir(DIR_BUILDTOOLS)) {
     exec(
@@ -38,11 +36,35 @@ require $DIR_BASE_CORE . '/bootstrap/configure.php';
  */
 require $DIR_BASE_CORE . '/bootstrap/autoload.php';
 
+$r = new \Concrete\Core\Http\Request(
+    array(),
+    array(),
+    array(),
+    array(),
+    array(),
+    array('HTTP_HOST' => 'www.dummyco.com', 'SCRIPT_NAME' => '/path/to/server/index.php')
+);
+\Concrete\Core\Http\Request::setInstance($r);
+
 /**
  * Begin concrete5 startup.
  */
 $cms = require $DIR_BASE_CORE . '/bootstrap/start.php';
 
+
+class TestConfigRepository extends Repository {
+
+    public function save($key, $value)
+    {
+        return true;
+    }
+
+}
+
+$old_config = $cms->make('config');
+$cms->instance('config', new TestConfigRepository($old_config->getLoader(), $old_config->getSaver(), 'travis'));
+\Concrete\Core\Support\Facade\Config::clearResolvedInstance('config');
+\Config::set('concrete.seo.canonical_host', null);
 
 /** @var Repository $config */
 $config = $cms->make('config');

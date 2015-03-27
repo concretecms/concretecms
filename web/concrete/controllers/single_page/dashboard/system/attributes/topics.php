@@ -81,7 +81,7 @@ class Topics extends DashboardPageController {
 			if (!($node instanceof TopicTreeNode)) {
 				$this->error->add(t('Invalid node.'));
 			}
-			$title = Core::make('helper/text')->slugSafeString($_POST['treeNodeTopicName']);
+			$title = $_POST['treeNodeTopicName'];
 			if (!$title) {
 				$this->error->add(t('Invalid title for topic'));
 			}

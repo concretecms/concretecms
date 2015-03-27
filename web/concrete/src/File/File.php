@@ -471,6 +471,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         if (!$hasUploader) {
             $u->refreshUserGroups();
         }
+
         return $fv;
     }
 

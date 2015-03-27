@@ -26,7 +26,6 @@ class Directory extends PublicProfilePageController {
 		$this->set('users', $users);
         $this->set('total', $pagination->getTotalResults());
 		$this->set('attribs', UserAttributeKey::getMemberListList());
-		$this->set('keywords', htmlentities($keywords, ENT_COMPAT, APP_CHARSET));
 		$this->set('keywords', Loader::helper('text')->entities($_REQUEST['keywords']));
         $this->set('pagination', $pagination);
 	}

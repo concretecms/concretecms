@@ -12,6 +12,10 @@ class Jobs extends DashboardPageController {
 	function on_start() 
 	{
 		parent::on_start();
+		// clear the environment overrides cache first
+		$env = \Environment::get();
+		$env->clearOverrideCache();
+
 		$installed = Job::getList();
 		$this->set('availableJobs', Job::getAvailableList(0)); 
 		$this->set('installedJobs', $installed); 
@@ -242,10 +246,9 @@ class Jobs extends DashboardPageController {
 
 	public function update_job_schedule() 
 	{
-		$jID = $this->post('jID');
+		$jID = $this->request->request->get('jID');
 		$J = Job::getByID($jID);
 		$J->setSchedule($this->post('isScheduled'), $this->post('unit'), max(0,(int)$this->post('value')));
-		
 		$this->redirect('/dashboard/system/optimization/jobs', 'job_scheduled');
 	}
 	

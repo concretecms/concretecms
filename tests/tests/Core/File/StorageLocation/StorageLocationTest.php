@@ -14,7 +14,7 @@ class StorageLocationTest extends \FileStorageTestCase {
         $fsl = StorageLocation::getByID(1);
         $configuration = $fsl->getConfigurationObject();
         $this->assertEquals(DIR_FILES_UPLOADED_STANDARD, $configuration->getRootPath());
-        $this->assertEquals(BASE_URL . '/application/files/test.txt', $configuration->getPublicURLToFile('/test.txt'));
+        $this->assertEquals('http://www.dummyco.com/path/to/server/application/files/test.txt', $configuration->getPublicURLToFile('/test.txt'));
     }
 
     public function testCreateStorageLocations()

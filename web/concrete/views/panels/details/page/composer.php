@@ -11,7 +11,7 @@ $cID = $c->getCollectionID();
 		<? Loader::helper('concrete/composer')->display($pagetype, $c); ?>
 	</form>
 
-	<div class="ccm-panel-detail-form-actions">
+	<div class="ccm-panel-detail-form-actions dialog-buttons">
 		<? Loader::helper('concrete/composer')->displayButtons($pagetype, $c); ?>
 	</div>
 </section>

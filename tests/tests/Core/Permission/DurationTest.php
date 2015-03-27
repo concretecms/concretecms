@@ -12,7 +12,7 @@ class DurationTest extends \PHPUnit_Framework_TestCase
 
     public function testDailyRecurring()
     {
-        $now = time();
+        $now = strtotime('2/13/2014');
 
         // Setup
         $daily_repetition = new Duration();
@@ -47,7 +47,7 @@ class DurationTest extends \PHPUnit_Framework_TestCase
 
     public function testWeeklyRecurring()
     {
-        $now = time();
+        $now = strtotime('2/13/2014');
 
         // Setup
         $weekly_repetition = new Duration();
@@ -153,7 +153,7 @@ class DurationTest extends \PHPUnit_Framework_TestCase
 
     public function testGenerateSingle()
     {
-        $now = time();
+        $now = strtotime('2/13/2014');
         $repetition = new Duration();
 
         $repetition->setStartDate(date('Y-m-d H:i:s', $now));
@@ -182,7 +182,7 @@ class DurationTest extends \PHPUnit_Framework_TestCase
         $repetition->setStartDate('12/10/1992 1:00:00');
         $repetition->setEndDate('12/11/1992 1:00:00');
 
-        $now = time();
+        $now = strtotime('2/13/2014');
         $occurrences = $repetition->activeRangesBetween($now, strtotime('+5 years', $now));
 
         $all_active = true;
@@ -215,7 +215,7 @@ class DurationTest extends \PHPUnit_Framework_TestCase
         // Sunday, Tuesday
         $repetition->setRepeatPeriodWeekDays(array(2, 3, 0));
 
-        $now = time();
+        $now = strtotime('2/13/2014');
         $occurrences = $repetition->activeRangesBetween($now, strtotime('+5 years', $now));
 
         $all_active = true;
@@ -246,7 +246,7 @@ class DurationTest extends \PHPUnit_Framework_TestCase
         $repetition->setStartDate('2/1/2015 1:00:00');
         $repetition->setEndDate('2/10/2015 3:00:00');
 
-        $now = time();
+        $now = strtotime('2/13/2014');
         $end = strtotime('+5 years', $now);
 
         $occurrences = $repetition->activeRangesBetween($now, $end);
@@ -278,7 +278,7 @@ class DurationTest extends \PHPUnit_Framework_TestCase
         $repetition->setStartDate('1/14/2015 1:00:00');
         $repetition->setEndDate('1/14/2015 3:00:00');
 
-        $now = time();
+        $now = strtotime('2/13/2014');
         $end = strtotime('+5 years', $now);
 
         $occurrences = $repetition->activeRangesBetween($now, $end);
