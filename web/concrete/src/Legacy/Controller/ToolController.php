@@ -4,6 +4,8 @@ use Controller;
 use Environment;
 use BlockType;
 use \Concrete\Core\View\DialogView;
+use Package;
+
 class ToolController extends Controller {
 
 	public function getTheme() {
@@ -11,9 +13,19 @@ class ToolController extends Controller {
 	}
 
 	public function display($tool) {
-		$env = Environment::get();
 		$query = false;
-		if (substr($tool, 0, 9) != 'required/') {
+		$package = false;
+
+		if (substr($tool, 0, 9) == 'packages/') {
+			$slashPos = strpos($tool, '/', 9);
+			$packageHandle = substr($tool, 9, $slashPos - 9);
+			$tool = substr($tool, $slashPos + 1);
+			$package = Package::getByHandle($packageHandle);
+
+			if ($package !== null && file_exists($package->getPackagePath() . '/' . DIRNAME_TOOLS . '/' . $tool . '.php')) {
+				$query = $tool;
+			}
+		} elseif (substr($tool, 0, 9) != 'required/') {
 			if (file_exists(DIR_APPLICATION . '/' . DIRNAME_TOOLS . '/' . $tool . '.php')) {
 				$query = $tool;
 			}
@@ -27,6 +39,9 @@ class ToolController extends Controller {
 		if ($query) {
 			$v = new DialogView($query);
 			$v->setViewRootDirectoryName(DIRNAME_TOOLS);
+			if ($package !== false) {
+				$v->setPackageHandle($package->getPackageHandle());
+			}
 			$this->setViewObject($v);
 		}
 	}
