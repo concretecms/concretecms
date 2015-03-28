@@ -1074,32 +1074,23 @@ class Package extends Object
     {
         $dh = Core::make('helper/file');
 
-        $packages = $dh->getDirectoryContents(DIR_PACKAGES);
-        if ($filterInstalled) {
-            $handles = self::getInstalledHandles();
+        $packages = self::getInstalledList();
+        $installedHandles = array_map(function($package) {
+            /** @var \Package $package */
+            return $package->getPackageHandle();
+        }, $packages);
 
-            // strip out packages we've already installed
-            $packagesTemp = array();
-            foreach ($packages as $p) {
-                if (!in_array($p, $handles)) {
-                    $packagesTemp[] = $p;
-                }
-            }
-            $packages = $packagesTemp;
-        }
+        if ($filterInstalled === false) {
+            $allPackages = $dh->getDirectoryContents(DIR_PACKAGES);
 
-        if (count($packages) > 0) {
-            $packagesTemp = array();
-            // get package objects from the file system
-            foreach ($packages as $p) {
-                if (file_exists(DIR_PACKAGES . '/' . $p . '/' . FILENAME_CONTROLLER)) {
-                    $pkg = static::getClass($p);
-                    if (!empty($pkg)) {
-                        $packagesTemp[] = $pkg;
+            foreach ($allPackages as $handle) {
+                if (!in_array($handle, $installedHandles) && file_exists(DIR_PACKAGES . '/' . $handle . '/' . FILENAME_CONTROLLER)) {
+                    $class = static::getClass($handle);
+                    if (!empty($class)) {
+                        $packages[] = $class;
                     }
                 }
             }
-            $packages = $packagesTemp;
         }
 
         return $packages;
