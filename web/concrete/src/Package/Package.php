@@ -329,12 +329,12 @@ class Package extends Object
             // loads and instantiates the object
 
             $cl = \Concrete\Core\Foundation\ClassLoader::getInstance();
-            $cl->registerPackage($pkgHandle);
+            $cl->registerPackageController($pkgHandle);
 
             $class = '\\Concrete\\Package\\' . camelcase($pkgHandle) . '\\Controller';
             try {
                 $cl = Core::make($class);
-            } catch (\ReflectionException $ex) {
+            } catch (\Exception $ex) {
                 $cl = new BrokenPackage($pkgHandle);
             }
             $item->set($cl);

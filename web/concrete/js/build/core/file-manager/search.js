@@ -106,9 +106,6 @@
             };
 
         $fileUploader = $fileUploader.length ? $fileUploader : $fileUploaders.first();
-        $fileUploader.on('click', function() {
-            $(this).find('input').trigger('click');
-        });
 
         $fileUploader.fileupload(args);
     };
