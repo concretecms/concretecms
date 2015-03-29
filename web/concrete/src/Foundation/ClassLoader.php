@@ -54,11 +54,11 @@ class ClassLoader  {
 	}
 
 	public function registerPackage($pkg) {
-		if ($pkg instanceof Package) {
-			$pkgHandle = $pkg->getPackageHandle();
-		} else {
-			$pkgHandle = $pkg;
+		if (!($pkg instanceof Package)) {
+			$pkg = \Package::getClass($pkg);
 		}
+
+		$pkgHandle = $pkg->getPackageHandle();
 		$symfonyLoader = new SymfonyClassloader();
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Attribute', DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_ATTRIBUTES);
         $symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\MenuItem', DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_MENU_ITEMS);
@@ -68,20 +68,39 @@ class ClassLoader  {
         $symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Controller\\PageType', DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Controller', DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CONTROLLERS);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Job', DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_JOBS);
-		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Src', DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CLASSES);
-		$symfonyLoader->register();
 
+		$loaders = $pkg->getPackageAutoloaderRegistries();
+		if (count($loaders) > 0) {
+			foreach($loaders as $path => $prefix) {
+				$symfonyLoader->addPrefix($prefix, DIR_PACKAGES . '/' . $pkgHandle . '/' . $path);
+			}
+		}
+
+		if ($pkg->providesCoreExtensionAutoloaderMapping()) {
+			// We map all src files in the package to the src/Concrete directory
+			$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle), DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CLASSES . '/Concrete');
+		} else {
+			// legacy Src support
+			$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Src', DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CLASSES);
+		}
+
+		$symfonyLoader->register();
+		$this->registerPackageController($pkgHandle);
+	}
+
+	public function registerPackageController($pkgHandle)
+	{
 		$symfonyLoader = new SymfonyMapClassloader(array(
 			NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Controller' =>
 				DIR_PACKAGES . '/' . $pkgHandle . '/' . FILENAME_PACKAGE_CONTROLLER
 		));
 		$symfonyLoader->register();
+
 	}
 
 	protected function setupFileAutoloader() {
 		$symfonyLoader = new SymfonyClassloader();
         $symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\StartingPointPackage', DIR_BASE_CORE . '/config/install/' . DIRNAME_PACKAGES);
-        //$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package', DIR_PACKAGES);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Attribute', DIR_BASE_CORE . '/' . DIRNAME_ATTRIBUTES);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Authentication', DIR_BASE_CORE . '/' . DIRNAME_AUTHENTICATION);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Block', DIR_BASE_CORE . '/' . DIRNAME_BLOCKS);
