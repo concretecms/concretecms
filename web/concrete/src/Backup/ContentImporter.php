@@ -869,9 +869,17 @@ class ContentImporter
                 $pkg = static::getPackageObject($ak['package']);
                 $type = AttributeType::getByHandle($ak['type']);
                 $txt = Loader::helper('text');
-                $c1 = '\\Concrete\\Core\\Attribute\\Key\\' . $txt->camelcase(
-                        $akc->getAttributeKeyCategoryHandle()
-                    ) . 'Key';
+                if ($akc->getPackageID()) {
+                    $c1 = sprintf('\\Concrete\\Package\\%s\\Src\\Attribute\\Key\\%sKey',
+                        $txt->camelcase($akc->getPackageHandle()),
+                        $txt->camelcase($akc->getAttributeKeyCategoryHandle())
+                        );
+                }
+                else {
+                    $c1 = sprintf('\\Concrete\\Core\\Attribute\\Key\\%sKey',
+                        $txt->camelcase($akc->getAttributeKeyCategoryHandle())
+                    );
+                }
                 $ak = call_user_func(array($c1, 'import'), $ak);
             }
         }
