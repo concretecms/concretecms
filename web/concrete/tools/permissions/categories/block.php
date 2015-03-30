@@ -98,7 +98,7 @@ if (is_object($a)) {
 			}
 
 			$pe = GroupPermissionAccessEntity::getOrCreate(Group::getByID(GUEST_GROUP_ID));
-			$pd = PermissionDuration::translateFromRequest();
+			$pd = PermissionDuration::createFromRequest();
 			$pa->addListItem($pe, $pd, PermissionKey::ACCESS_TYPE_INCLUDE);
 			$pt = $pk->getPermissionAssignmentObject();
 			$pt->assignPermissionAccess($pa);
