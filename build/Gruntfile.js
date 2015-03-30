@@ -308,14 +308,6 @@ module.exports = function(grunt) {
             dest: '<%= DIR_BASE %>/concrete/js/image-editor.js',
             src: '<%= DIR_BASE %>/concrete/js/build/core/image-editor/image-editor.js'
         },
-        legacy: {
-            dest: '<%= DIR_BASE %>/concrete/js/legacy.js',
-            src: [
-                '<%= DIR_BASE %>/concrete/js/build/vendor/modernizr/modernizr.js',
-                '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-placeholder/jquery.placeholder.js',
-                '<%= DIR_BASE %>/concrete/js/build/core/legacy.js'
-            ]
-        },
         ccm_translator: {
             dest: '<%= DIR_BASE %>/concrete/js/translator.js',
             src: '<%= DIR_BASE %>/concrete/js/build/core/translator.js'
@@ -359,7 +351,6 @@ module.exports = function(grunt) {
         '<%= DIR_BASE %>/concrete/css/topics.css': '<%= DIR_BASE %>/concrete/css/build/core/topics.less',
         '<%= DIR_BASE %>/concrete/themes/elemental/css/bootstrap-modified.css': '<%= DIR_BASE %>/concrete/themes/elemental/css/build/bootstrap-3.2.0/bootstrap.less',
         '<%= DIR_BASE %>/concrete/css/frontend/pagination.css': '<%= DIR_BASE %>/concrete/css/build/core/frontend/pagination.less',
-        '<%= DIR_BASE %>/concrete/css/legacy.css': '<%= DIR_BASE %>/concrete/css/build/core/legacy.less',
         '<%= DIR_BASE %>/concrete/css/translator.css': '<%= DIR_BASE %>/concrete/css/build/core/translator.less'
     };
 
