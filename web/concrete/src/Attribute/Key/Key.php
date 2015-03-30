@@ -144,8 +144,9 @@ class Key extends Object
             $row = array();
         } else {
             $db = Loader::db();
-            $akunhandle = Loader::helper('text')->uncamelcase(get_class($this));
-            $akCategoryHandle = substr($akunhandle, 0, strpos($akunhandle, '_attribute_key'));
+            $reflect = new \ReflectionClass($this);
+            $className = str_replace('Key', '', $reflect->getShortName());
+            $akCategoryHandle = Loader::helper('text')->uncamelcase($className);
             if ($akCategoryHandle != '') {
                 $row = $db->GetRow(
                     'select akID, akHandle, akName, AttributeKeys.akCategoryID, akIsInternal, akIsEditable, akIsSearchable, akIsSearchableIndexed, akIsAutoCreated, akIsColumnHeader, AttributeKeys.atID, atHandle, AttributeKeys.pkgID from AttributeKeys inner join AttributeKeyCategories on AttributeKeys.akCategoryID = AttributeKeyCategories.akCategoryID inner join AttributeTypes on AttributeKeys.atID = AttributeTypes.atID where ' . $loadBy . ' = ? and akCategoryHandle = ?',
