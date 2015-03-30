@@ -172,6 +172,16 @@
                     return false;
                 });
 
+            $menuElem.find('a[data-menu-action=area-add-block]')
+                .off('click.edit-mode')
+                .on('click.edit-mode', function(e) {
+                    my.getEditMode().setNextBlockArea(my);
+                    var panelButton = $('[data-launch-panel="add-block"]');
+                    panelButton.click();
+
+                    return false;
+                });
+
             $menuElem.find('a[data-menu-action=edit-area-design]')
                 .off('click.edit-mode')
                 .on('click.edit-mode', function (e) {
