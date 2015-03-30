@@ -117,10 +117,11 @@ if ($controller->getTask() == 'view_details') {
     <script type="text/javascript">
         var showApprovalButton = function() {
             $('#ccm-stack-list-approve-button').show().addClass("animated fadeIn");
-        }
+        };
 
         $(function() {
-            var editor = new Concrete.EditMode({notify: false});
+            var editor = new Concrete.EditMode({notify: false}), ConcreteEvent = Concrete.event;
+
 
             ConcreteEvent.on('ClipboardAddBlock', function(event, data) {
                 var area = editor.getAreaByID(<?=$a->getAreaID()?>);
@@ -138,18 +139,24 @@ if ($controller->getTask() == 'view_details') {
 
             ConcreteEvent.on('EditModeAddClipboardComplete', function(event, data) {
                 showApprovalButton();
+                Concrete.getEditMode().scanBlocks();
             });
 
             ConcreteEvent.on('EditModeAddBlockComplete', function(event, data) {
                 showApprovalButton();
+                Concrete.getEditMode().scanBlocks();
             });
 
             ConcreteEvent.on('EditModeUpdateBlockComplete', function(event, data) {
                 showApprovalButton();
+                Concrete.getEditMode().scanBlocks();
             });
 
             ConcreteEvent.on('EditModeBlockDelete', function(event, data) {
                 showApprovalButton();
+                _.defer(function() {
+                    Concrete.getEditMode().scanBlocks();
+                });
             });
 
             $('a[data-dialog=delete-stack]').on('click', function() {
