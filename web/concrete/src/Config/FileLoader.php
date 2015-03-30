@@ -12,6 +12,25 @@ class FileLoader extends \Illuminate\Config\FileLoader implements LoaderInterfac
         $this->addNamespace('core', DIR_BASE_CORE . '/config');
     }
 
+    /**
+     * Non-namespaced order:
+     *   /concrete/config/group.php
+     *   /application/config/generated_overrides/group.php
+     *   /application/config/group.php
+     *   /application/config/environment.group.php
+     *
+     * Namespaced order:
+     *   /path/to/namespace/group.php
+     *   /path/to/namespace/environment.group.php
+     *   /application/config/generated_overrides/namespace/group.php
+     *   /application/config/namespace/group.php
+     *   /application/config/namespace/environment.group.php
+     *
+     * @param string $environment
+     * @param string $group
+     * @param null   $namespace
+     * @return array
+     */
     public function load($environment, $group, $namespace = null)
     {
         $items = array();
@@ -36,10 +55,11 @@ class FileLoader extends \Illuminate\Config\FileLoader implements LoaderInterfac
                 "{$path}/{$environment}.{$group}.php");
         } else {
             $paths = array(
-                "{$this->defaultPath}/generated_overrides/{$namespace}/{$group}.php",
                 "{$path}/{$group}.php",
                 "{$path}/{$environment}.{$group}.php",
-                "{$this->defaultPath}/{$environment}.{$group}.php");
+                "{$this->defaultPath}/generated_overrides/{$namespace}/{$group}.php",
+                "{$this->defaultPath}/{$namespace}/{$group}.php",
+                "{$this->defaultPath}/{$namespace}/{$environment}.{$group}.php");
         }
 
         foreach ($paths as $file) {
@@ -51,14 +71,6 @@ class FileLoader extends \Illuminate\Config\FileLoader implements LoaderInterfac
         return $items;
     }
 
-    public function clearNamespace($namespace)
-    {
-        $path = $this->getPath($namespace);
-        if ($path !== $this->getPath(null) && $this->files->isDirectory($namespace)) {
-            $this->files->deleteDirectory($path);
-        }
-    }
-
     protected function getPath($namespace)
     {
         $path = parent::getPath($namespace);
@@ -66,6 +78,14 @@ class FileLoader extends \Illuminate\Config\FileLoader implements LoaderInterfac
             $path = "{$this->defaultPath}/{$namespace}";
         }
         return $path;
+    }
+
+    public function clearNamespace($namespace)
+    {
+        $path = $this->getPath($namespace);
+        if ($path !== $this->getPath(null) && $this->files->isDirectory($namespace)) {
+            $this->files->deleteDirectory($path);
+        }
     }
 
 }
