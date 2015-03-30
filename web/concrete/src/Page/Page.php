@@ -1695,7 +1695,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         return $children;
     }
 
-    public function _getNumChildren($cID, $oneLevelOnly = 0, $sortColumn = 'cDisplayOrder asc')
+    protected function _getNumChildren($cID, $oneLevelOnly = 0, $sortColumn = 'cDisplayOrder asc')
     {
         $db = Loader::db();
         $q = "select cID from Pages where cParentID = {$cID} and cIsTemplate = 0 order by {$sortColumn}";
@@ -2272,7 +2272,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     /**
      * @access private
      **/
-    public function _duplicateAll($cParent, $cNewParent, $preserveUserID = false)
+    protected function _duplicateAll($cParent, $cNewParent, $preserveUserID = false)
     {
         $db = Loader::db();
         $cID = $cParent->getCollectionID();
@@ -2700,7 +2700,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         return $db->GetOne('select content from PageSearchIndex where cID = ?', array($this->cID));
     }
 
-    public function _associateMasterCollectionBlocks($newCID, $masterCID)
+    protected function _associateMasterCollectionBlocks($newCID, $masterCID)
     {
         $mc = Page::getByID($masterCID, 'ACTIVE');
         $nc = Page::getByID($newCID, 'RECENT');
@@ -2734,7 +2734,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         }
     }
 
-    public function _associateMasterCollectionAttributes($newCID, $masterCID)
+    protected function _associateMasterCollectionAttributes($newCID, $masterCID)
     {
         $mc = Page::getByID($masterCID, 'ACTIVE');
         $nc = Page::getByID($newCID, 'RECENT');
