@@ -50,12 +50,13 @@ class FileLoader extends \Illuminate\Config\FileLoader implements LoaderInterfac
             $items = parent::load($environment, $group, 'core');
 
             $paths = array(
-                "{$path}/generated_overrides/{$group}.php",
                 "{$path}/{$group}.php",
+                "{$path}/generated_overrides/{$group}.php",
                 "{$path}/{$environment}.{$group}.php");
         } else {
             $paths = array(
                 "{$path}/{$group}.php",
+                "{$this->defaultPath}/generated_overrides/{$namespace}/{$group}.php",
                 "{$path}/{$environment}.{$group}.php",
                 "{$this->defaultPath}/generated_overrides/{$namespace}/{$group}.php",
                 "{$this->defaultPath}/{$namespace}/{$group}.php",
