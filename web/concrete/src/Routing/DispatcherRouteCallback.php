@@ -98,7 +98,7 @@ class DispatcherRouteCallback extends RouteCallback
         }
 
         // maintenance mode
-        if ((!$c->isAdminArea()) && ($c->getCollectionPath() != '/login')) {
+        if ($c->getCollectionPath() != '/login') {
             $smm = Config::get('concrete.maintenance_mode');
             if ($smm == 1 && !PermissionKey::getByHandle('view_in_maintenance_mode')->validate() && ($_SERVER['REQUEST_METHOD'] != 'POST' || Loader::helper('validation/token')->validate() == false)) {
                 $v = new View('/frontend/maintenance_mode');
