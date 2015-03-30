@@ -866,12 +866,14 @@ class ContentImporter
         if (isset($sx->attributekeys)) {
             foreach ($sx->attributekeys->attributekey as $ak) {
                 $akc = AttributeKeyCategory::getByHandle($ak['category']);
-                $pkg = static::getPackageObject($ak['package']);
                 $type = AttributeType::getByHandle($ak['type']);
                 $txt = Loader::helper('text');
-                $c1 = '\\Concrete\\Core\\Attribute\\Key\\' . $txt->camelcase(
+                $c1 = overrideable_core_class('\\Core\\Attribute\\Key\\' . $txt->camelcase(
                         $akc->getAttributeKeyCategoryHandle()
-                    ) . 'Key';
+                    ) . 'Key', DIRNAME_CLASSES . '/Attribute/Key/' . $txt->camelcase(
+                        $akc->getAttributeKeyCategoryHandle()
+                    ) . 'Key.php', (string) $ak['package']
+                );
                 $ak = call_user_func(array($c1, 'import'), $ak);
             }
         }

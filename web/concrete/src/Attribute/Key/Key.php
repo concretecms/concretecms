@@ -135,6 +135,13 @@ class Key extends Object
         return $this->akIsEditable;
     }
 
+    public function getComputedAttributeKeyCategoryHandle()
+    {
+        $class = explode('\\', get_class($this));
+        $start = Loader::helper('text')->uncamelcase($class[count($class) - 1]);
+        return substr($start, 0, strpos($start, '_key'));
+    }
+
     /**
      * Loads the required attribute fields for this instantiated attribute
      */
@@ -144,8 +151,7 @@ class Key extends Object
             $row = array();
         } else {
             $db = Loader::db();
-            $akunhandle = Loader::helper('text')->uncamelcase(get_class($this));
-            $akCategoryHandle = substr($akunhandle, 0, strpos($akunhandle, '_attribute_key'));
+            $akCategoryHandle = $this->getComputedAttributeKeyCategoryHandle();
             if ($akCategoryHandle != '') {
                 $row = $db->GetRow(
                     'select akID, akHandle, akName, AttributeKeys.akCategoryID, akIsInternal, akIsEditable, akIsSearchable, akIsSearchableIndexed, akIsAutoCreated, akIsColumnHeader, AttributeKeys.atID, atHandle, AttributeKeys.pkgID from AttributeKeys inner join AttributeKeyCategories on AttributeKeys.akCategoryID = AttributeKeyCategories.akCategoryID inner join AttributeTypes on AttributeKeys.atID = AttributeTypes.atID where ' . $loadBy . ' = ? and akCategoryHandle = ?',
@@ -325,7 +331,11 @@ class Key extends Object
             $akIsInternal = 1;
         }
         $db = Loader::db();
-        $akID = $db->GetOne('select akID from AttributeKeys where akHandle = ?', array($ak['handle']));
+
+        $akc = AttributeKeyCategory::getByHandle($akCategoryHandle);
+        $akID = $db->GetOne('select akID from AttributeKeys where akHandle = ? and akCategoryID = ?',
+            array($ak['handle'], $akc->getAttributeKeyCategoryID()));
+
         if (!$akID) {
             $akn = self::add(
                 $akCategoryHandle,
