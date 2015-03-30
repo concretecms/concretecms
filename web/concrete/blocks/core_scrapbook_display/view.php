@@ -9,6 +9,7 @@ if (is_object($_bx)) {
 	$_bx->setProxyBlock($b);
 	$_bx->loadNewCollection($c);
     $bv = new \Concrete\Core\Block\View\BlockView($_bx);
+	$bv->setController($controller->getScrapbookBlockController());
     $bv->disableControls();
     $bv->render('view');
 }
