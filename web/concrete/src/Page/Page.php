@@ -2318,7 +2318,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
                 $q->setParameter(2, $cID);
                 $result = $q->getResult();
 
-                if (!is_object($result[0])) {
+                if (!(isset($result[0]) && is_object($result[0]))) {
                     $proceed = true;
                 } else {
                     $suffix++;
