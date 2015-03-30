@@ -260,6 +260,7 @@ return array(
         "/ccm/system/page/multilingual/assign"                                          => array('\Concrete\Controller\Backend\Page\Multilingual::assign'),
         "/ccm/system/page/multilingual/create_new"                                      => array('\Concrete\Controller\Backend\Page\Multilingual::create_new'),
         "/ccm/system/page/multilingual/ignore"                                          => array('\Concrete\Controller\Backend\Page\Multilingual::ignore'),
+        "/ccm/system/page/multilingual/unmap"                                           => array('\Concrete\Controller\Backend\Page\Multilingual::unmap'),
 
         /**
          * Block actions - non UI

@@ -161,6 +161,13 @@ $nav = Loader::helper('navigation');
                                                data-btn-multilingual-section="<?php echo $sc->getCollectionID()?>"
                                            ><?=t('Ignore')?></button>
                                         <?php } ?>
+                                        <?php if ($cID) { ?>
+                                            <button class="btn btn-danger btn-xs" type="button"
+                                                    data-btn-action="unmap"
+                                                    data-btn-url="<?=$multilingualController->action('unmap')?>"
+                                                    data-btn-multilingual-page-source="<?php echo $pc->getCollectionID()?>"
+                                                ><?=t('Un-Map')?></button>
+                                        <?php } ?>
 
                                     <?php } else { ?>
                                         <div class="ccm-note"><?php echo t("Create the parent page first.")?></div>
@@ -259,6 +266,23 @@ $nav = Loader::helper('navigation');
                     success: function(r) {
                         var $wrapper = $('div[data-multilingual-page-section=' + sectionID + '][data-multilingual-page-source=' + cID + ']');
                         $wrapper.find('div[data-wrapper=page]').html('<?=t('Ignored')?>');
+                        $wrapper.find('div[data-wrapper=buttons]').hide();
+                    }
+                });
+            });
+
+            $('button[data-btn-action=unmap]').on('click', function(e) {
+                var cID = $(this).attr('data-btn-multilingual-page-source');
+                e.preventDefault();
+                $.concreteAjax({
+                    url: $(this).attr('data-btn-url'),
+                    method: 'post',
+                    data: {
+                        'cID': cID
+                    },
+                    success: function(r) {
+                        var $wrapper = $('div[data-multilingual-page-source=' + cID + ']');
+                        $wrapper.find('div[data-wrapper=page]').html('<?=t('Unmapped')?>');
                         $wrapper.find('div[data-wrapper=buttons]').hide();
                     }
                 });
