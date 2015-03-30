@@ -32,7 +32,7 @@ if ($_POST['task'] == 'save_permissions') {
 	$r = new stdClass;
 
 	if (is_object($pae)) {
-		$pd = PermissionDuration::translateFromRequest();
+		$pd = PermissionDuration::createFromRequest();
 	} else {
 		$r->error = true;
 		$r->message = t('You must choose who this permission is for.');
