@@ -112,6 +112,7 @@
 
     ConcreteFileManager.prototype.setupEvents = function() {
         var my = this;
+        ConcreteEvent.unsubscribe('FileManagerUpdateRequestComplete');
         ConcreteEvent.subscribe('FileManagerUpdateRequestComplete', function(e) {
             my.refreshResults();
         });
