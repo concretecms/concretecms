@@ -140,13 +140,22 @@ function core_class($class, $prefix = false)
     $class = trim($class, '\\');
     if ($prefix) {
         if (substr($class, 0, 5) == "Core\\") {
-            $x = \Package::getClass($prefix);
-            if ($x->providesCoreExtensionAutoloaderMapping()) {
-                $class = substr($class, 5);
+            if ($prefix !== true) {
+                $x = \Package::getClass($prefix);
+                if ($x->providesCoreExtensionAutoloaderMapping()) {
+                    $class = substr($class, 5);
+                } else {
+                    $class = "Src\\" . substr($class, 5);
+                }
             } else {
-                $class = "Src\\" . substr($class, 5);
+                if (Config::get('app.provide_core_extension_autoloader_mapping')) {
+                    $class = substr($class, 5);
+                } else {
+                    $class = "Src\\" . substr($class, 5);
+                }
             }
         }
+
         if ($prefix === true) {
             $prefix = Config::get('app.namespace');
         } else {
