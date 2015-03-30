@@ -279,7 +279,7 @@ $addSelected = true;
 function initFormBlockWhenReady(){
 	if(miniSurvey && typeof(miniSurvey.init)=='function'){
 		miniSurvey.cID=parseInt(<?php echo $c->getCollectionID()?>);
-		miniSurvey.arHandle="<?php echo $a->getAreaHandle()?>";
+		miniSurvey.arHandle="<?php echo urlencode($_REQUEST['arHandle'])?>";
 		miniSurvey.bID=thisbID;
 		miniSurvey.btID=thisbtID;
 		miniSurvey.qsID=parseInt(<?php echo $miniSurveyInfo['questionSetId']?>);	
