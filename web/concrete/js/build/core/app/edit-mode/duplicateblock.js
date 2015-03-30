@@ -16,6 +16,24 @@
             Concrete.BlockType.prototype.init.call(my, elem, edit_mode, elem.find('.block-content'), default_area);
         },
 
+        handleDefaultArea: function() {
+            var my = this;
+            $.pep.unbind(my.getPeper());
+            my.getPeper().click(function (e) {
+                my.handleClick();
+
+                return false;
+            }).css({
+                cursor: 'pointer'
+            }).children('.block-name').css({
+                cursor: 'pointer'
+            });
+        },
+
+        removeElement: function() {
+            this.getElem().remove();
+        },
+
         addToDragArea: function DuplicateBlockAddToDragArea(drag_area) {
             var my = this, elem = my.getElem(),
                 block_type_id = elem.data('btid'),
