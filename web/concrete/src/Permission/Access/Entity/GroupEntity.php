@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Permission\Access\Entity;
 use Loader;
-use Group;
+use Concrete\Core\User\Group\Group;
 use Config;
 use PermissionAccess;
 use URL;
