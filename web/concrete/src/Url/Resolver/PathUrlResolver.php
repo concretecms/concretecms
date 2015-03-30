@@ -79,6 +79,7 @@ class PathUrlResolver implements UrlResolverInterface
     {
         // Normalize
         $url->setHost(null);
+        $url->setPort(null);
         $url->setScheme(null);
 
         if (\Config::get('concrete.seo.canonical_host')) {
@@ -91,11 +92,16 @@ class PathUrlResolver implements UrlResolverInterface
             $url->setScheme(\Request::getInstance()->getScheme());
         }
 
-        $request_port = intval(\Request::getInstance()->getPort(), 10);
         if (\Config::get('concrete.seo.canonical_port')) {
             $url->getPort()->set(\Config::get('concrete.seo.canonical_port'));
-        } elseif ($request_port != 80 && ($url->getScheme()->get() == 'https' && $request_port != 443)) {
-            $url->getPort()->set($request_port);
+        } else {
+            $request_port = \Request::getInstance()->getPort();
+            if (isset($request_port)) {
+                $request_port = intval($request_port, 10);
+                if (($url->getScheme()->get() != 'http' || $request_port != 80) && ($url->getScheme()->get() != 'https' || $request_port != 443)) {
+                    $url->getPort()->set($request_port);
+                }
+            }
         }
     }
 
