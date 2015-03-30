@@ -156,9 +156,9 @@ class ResponseAssetGroup {
 			$assetGroup = $list->getAssetGroup($assetType);
 		}
 
-		if ($assetGroup) {
+		if (isset($assetGroup)) {
 			$this->providedAssetGroup->addGroup($assetGroup);
-		} else if ($asset) {
+		} elseif (isset($asset)) {
 			$ap = new AssetPointer($asset->getAssetType(), $asset->getAssetHandle());
 			$this->providedAssetGroup->add($ap);
 		} else {
