@@ -11,8 +11,8 @@
 
     StackBlock.prototype = _.extend(Object.create(Concrete.BlockType.prototype), {
 
-        init: function stackBlockInit(elem, stack, edit_mode, dragger) {
-            Concrete.BlockType.prototype.init.call(this, elem, edit_mode, dragger);
+        init: function stackBlockInit(elem, stack, edit_mode, dragger, default_area) {
+            Concrete.BlockType.prototype.init.call(this, elem, edit_mode, dragger, default_area);
             this.setAttr('stack', stack);
         },
 
