@@ -7,7 +7,6 @@ defined('C5_EXECUTE') or die('Access denied.');
 $r = ResponseAssetGroup::get();
 $r->requireAsset('javascript', 'underscore');
 $r->requireAsset('javascript', 'core/events');
-$r->requireAsset('core/legacy');
 
 $activeAuths = AuthenticationType::getList(true, true);
 $form = Loader::helper('form');

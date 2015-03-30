@@ -672,10 +672,6 @@ return array(
             array('javascript', 'js/account.js'),
             array('css', 'css/account.css')
         ),
-        'core/legacy'              => array(
-            array('javascript', 'js/legacy.js'),
-            array('css', 'css/legacy.css')
-        ),
         'core/translator' => array(
             array('javascript', 'js/translator.js', array('minify' => false)),
             array('css', 'css/translator.css', array('minify' => false))
@@ -738,7 +734,6 @@ return array(
                 array('javascript', 'core/colorpicker'),
                 array('javascript', 'core/app'),
                 array('javascript', 'core/locale'),
-                array('javascript', 'core/legacy'),
                 array('javascript', 'jquery/fileupload'),
                 array('javascript', 'core/file-manager'),
                 array('javascript', 'core/style-customizer'),
@@ -785,7 +780,6 @@ return array(
                 array('javascript', 'jquery/ui'),
                 array('javascript', 'core/locale'),
                 array('javascript', 'core/app'),
-                array('javascript', 'core/legacy'),
                 array('css', 'core/app'),
                 array('css', 'font-awesome'),
                 array('css', 'jquery/ui')
@@ -933,13 +927,6 @@ return array(
                 array('javascript', 'bootstrap/dropdown'),
                 array('css', 'bootstrap/dropdown'),
                 array('css', 'core/account')
-            )
-        ),
-        'core/legacy'              => array(
-            array(
-                array('javascript', 'jquery'),
-                array('javascript', 'core/legacy'),
-                array('css', 'core/legacy')
             )
         ),
         'core/translator'          => array(
