@@ -33,6 +33,14 @@ class MetadataGenerator
                 $file .= '\'' . $name . '\' instanceof ' . $className . ',' . PHP_EOL;
             }
         }
+
+        $file .= '), \Package::getByHandle(\'\') => array(';
+        $packages = \Package::getAvailablePackages(false);
+        foreach ($packages as $package) {
+            /** @var \Package $package */
+            $file .= '\'' . $package->getPackageHandle() . '\' instanceof \\' . get_class($package) . ',' . PHP_EOL;
+        }
+
         $file .= '));}';
 
         return $file;
