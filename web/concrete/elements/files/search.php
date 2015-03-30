@@ -39,8 +39,8 @@ $req = $flr->getSearchRequest();
             <?php
             $fp = FilePermissions::getGlobal();
             if ($fp->canAddFile()) { ?>
-                <li class="ccm-file-manager-upload"><a href="javascript:void"><?php echo t('Upload Files')?><input type="file" name="files[]" multiple="multiple" /></a></li>
-                <li>        <a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/import"
+                <li class="ccm-file-manager-show-dialog ccm-file-manager-upload"><a href="javascript:void"><?php echo t('Upload Files')?><input type="file" name="files[]" multiple="multiple" /></a></li>
+                <li class="ccm-file-manager-show-dialog">        <a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/import"
                                class="dialog-launch"
                                dialog-width="500"
                                dialog-height="500"

@@ -37,7 +37,7 @@ if ($valt->validate('upload')) {
 			}
 
 		}
-		if (!($resp instanceof FileVersion)) {
+		if (!($resp instanceof \Concrete\Core\File\Version)) {
 			$errorCode = $resp;
 		} else if (!is_object($fr)) {
 			// we check $fr because we don't want to set it if we are replacing an existing file
