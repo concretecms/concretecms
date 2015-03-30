@@ -39,11 +39,6 @@ class PageResponse extends Response
     public function canViewPageInSitemap()
     {
         if (Config::get('concrete.permissions.model') != 'simple') {
-
-            if ($this->object->isExternalLink()) {
-                return true;
-            }
-
             $pk = $this->category->getPermissionKeyByHandle('view_page_in_sitemap');
             $pk->setPermissionObject($this->object);
             return $pk->validate();
@@ -54,9 +49,6 @@ class PageResponse extends Response
 
     public function canViewPage()
     {
-        if ($this->object->isExternalLink()) {
-            return true;
-        }
         return $this->validate('view_page');
     }
 
@@ -118,10 +110,6 @@ class PageResponse extends Response
 
     public function canEditPageProperties($obj = false)
     {
-        if ($this->object->isExternalLink()) {
-            return $this->canDeletePage();
-        }
-
         $pk = $this->category->getPermissionKeyByHandle('edit_page_properties');
         $pk->setPermissionObject($this->object);
         return $pk->validate($obj);
@@ -129,13 +117,6 @@ class PageResponse extends Response
 
     public function canDeletePage()
     {
-        if ($this->object->isExternalLink()) {
-            // then whether the person can delete/write to this page ACTUALLY dependent on whether the PARENT collection
-            // is writable
-            $cParentCollection = Page::getByID($this->object->getCollectionParentID(), "RECENT");
-            $cp2 = new Permissions($cParentCollection);
-            return $cp2->canAddExternalLink();
-        }
         return $this->validate('delete_page');
     }
 
