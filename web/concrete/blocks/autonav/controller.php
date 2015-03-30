@@ -730,7 +730,7 @@ class Controller extends BlockController
 
         if ($this->displayUnavailablePages == false) {
             $tcp = new Permissions($tc);
-            if (!$tcp->canRead() && ($tc->getCollectionPointerExternalLink() == null)) {
+            if (!$tcp->canRead()) {
                 return false;
             }
         }

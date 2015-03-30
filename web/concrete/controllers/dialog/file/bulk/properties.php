@@ -63,10 +63,10 @@ class Properties extends BackendInterfaceController {
 			$this->populateFiles();
 			if ($this->canEdit) {
 				foreach($this->files as $f) {
-					$ak->saveAttributeForm($f);
+					$fv = $f->getVersionToModify();
+					$ak->saveAttributeForm($fv);
 					$f->reindex();
 				}
-
 
 				$fr->setFiles($this->files);
 				$val = $f->getAttributeValueObject($ak);
@@ -84,7 +84,8 @@ class Properties extends BackendInterfaceController {
 			$this->populateFiles();
 			if ($this->canEdit) {
 				foreach($this->files as $f) {
-					$f->clearAttribute($ak);			
+					$fv = $f->getVersionToModify();
+					$fv->clearAttribute($ak);
 					$f->reindex();
 				}
 				$fr->setFiles($this->files);

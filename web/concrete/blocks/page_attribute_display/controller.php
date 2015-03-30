@@ -71,6 +71,11 @@ class Controller extends BlockController
                         $this->thumbnailHeight
                     ); //<-- set these 2 numbers to max width and height of thumbnails
                     $content = "<img src=\"{$thumb->src}\" width=\"{$thumb->width}\" height=\"{$thumb->height}\" alt=\"\" />";
+                } else {
+                    if (!is_scalar($content) && (!is_object($content) || !method_exists($content, '__toString'))) {
+                        $content = $c->getAttribute($this->attributeHandle, 'displaySanitized');
+                    }
+
                 }
                 break;
         }
