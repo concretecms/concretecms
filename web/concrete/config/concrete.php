@@ -811,6 +811,7 @@ return array(
         'redirect_to_canonical_host'  => false,
         'canonical_host'          => null,
         'canonical_port'          => null,
+        'force_ssl'               => false,
         'trailing_slash'          => false,
         'title_format'            => '%1$s :: %2$s',
         'title_segment_separator' => ' :: ',
