@@ -809,7 +809,6 @@ class Collection extends Object
                               'collection_block_ids',
                               $this->getCollectionID() . ':' . $this->getVersionID()
         );
-        $blocks = array();
 
         if (!is_array($blockIDs)) {
             $v = array($this->getCollectionID(), $this->getVersionID());
@@ -825,21 +824,22 @@ class Collection extends Object
             CacheLocal::set('collection_block_ids', $this->getCollectionID() . ':' . $this->getVersionID(), $blockIDs);
         }
 
+        $result = array();
         if ($arHandle != false) {
-            $blockIDsTmp = $blockIDs[strtolower($arHandle)];
-            $blockIDs = $blockIDsTmp;
+            $key = strtolower($arHandle);
+            if (isset($blockIDs[$key])) {
+                $result = $blockIDs[$key];
+            }
         } else {
-            $blockIDsTmp = $blockIDs;
-            $blockIDs = array();
-            foreach ($blockIDsTmp as $arHandle => $row) {
+            foreach ($blockIDs as $arHandle => $row) {
                 foreach ($row as $brow) {
                     if (!in_array($brow, $blockIDs)) {
-                        $blockIDs[] = $brow;
+                        $result[] = $brow;
                     }
                 }
             }
         }
-        return $blockIDs;
+        return $result;
     }
 
     public function addBlock($bt, $a, $data)
