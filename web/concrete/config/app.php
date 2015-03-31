@@ -171,6 +171,7 @@ return array(
         "/ccm/system/dialogs/block/permissions/guest_access/"                           => array('\Concrete\Controller\Dialog\Block\Permissions\GuestAccess::__construct'),
         "/ccm/system/dialogs/block/permissions/list/"                                   => array('\Concrete\Controller\Dialog\Block\Permissions::viewList'),
 
+        "/ccm/system/dialogs/file/upload_complete"                                      => array('\Concrete\Controller\Dialog\File\UploadComplete::view'),
         "/ccm/system/dialogs/file/bulk/delete"                                          => array('\Concrete\Controller\Dialog\File\Bulk\Delete::view'),
         "/ccm/system/dialogs/file/bulk/delete/delete_files"                             => array('\Concrete\Controller\Dialog\File\Bulk\Delete::deleteFiles'),
         "/ccm/system/dialogs/file/bulk/properties"                                      => array('\Concrete\Controller\Dialog\File\Bulk\Properties::view'),

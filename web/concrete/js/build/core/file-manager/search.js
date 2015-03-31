@@ -86,10 +86,10 @@
                         modal: true
                     });
                 },
-                stop: function() {
+                stop: function(e, data) {
                     jQuery.fn.dialog.closeTop();
                     my.refreshResults();
-
+console.log(data);
                     if (errors.length) {
                         ConcreteAlert.error({
                             message: error_template({message: ccmi18n_filemanager.uploadFailed, errors: errors}),
@@ -113,8 +113,9 @@
     ConcreteFileManager.prototype.setupEvents = function() {
         var my = this;
         ConcreteEvent.unsubscribe('FileManagerUpdateRequestComplete');
-        ConcreteEvent.subscribe('FileManagerUpdateRequestComplete', function(e) {
+        ConcreteEvent.subscribe('FileManagerUpdateRequestComplete', function(e, r) {
             my.refreshResults();
+            console.log(r);
         });
     };
 
