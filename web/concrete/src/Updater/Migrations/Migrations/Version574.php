@@ -1,10 +1,13 @@
 <?php
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
+use Concrete\Core\Permission\Access\Access;
+use Concrete\Core\Permission\Access\Entity\GroupEntity;
 use Concrete\Core\Permission\Access\Entity\Type;
 use Concrete\Core\Permission\Category;
 use Concrete\Core\Permission\Duration;
 use Concrete\Core\Permission\Key\Key;
+use Concrete\Core\User\Group\Group;
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 use Concrete\Core\Block\BlockType\BlockType;
@@ -16,7 +19,7 @@ class Version574 extends AbstractMigration
 
     public function getName()
     {
-        return '20150319000000';
+        return '20150330000000';
     }
 
     public function up(Schema $schema)
@@ -119,6 +122,26 @@ class Version574 extends AbstractMigration
             $key->setPermissionKeyHasCustomClass(true);
         }
 
+        $this->installMaintenanceModePermission();
+    }
+
+    public function installMaintenanceModePermission()
+    {
+        $pk = Key::getByHandle('view_in_maintenance_mode');
+        if (!$pk instanceof Key) {
+            $pk = Key::add('admin', 'view_in_maintenance_mode', 'View Site in Maintenance Mode', 'Controls whether a user can access the website when its under maintenance.', false, false);
+            $pa = $pk->getPermissionAccessObject();
+            if (!is_object($pa)) {
+                $pa = Access::create($pk);
+            }
+            $adminGroup = Group::getByID(ADMIN_GROUP_ID);
+            if ($adminGroup) {
+                $adminGroupEntity = GroupEntity::getOrCreate($adminGroup);
+                $pa->addListItem($adminGroupEntity);
+                $pt = $pk->getPermissionAssignmentObject();
+                $pt->assignPermissionAccess($pa);
+            }
+        }
     }
 
     protected function updatePermissionDurationObjects()
