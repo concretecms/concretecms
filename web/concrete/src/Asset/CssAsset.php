@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Asset;
 
 use Concrete\Core\Html\Object\HeadLink;
@@ -6,7 +7,6 @@ use Config;
 
 class CssAsset extends Asset
 {
-
     /**
      * @var bool
      */
@@ -38,7 +38,7 @@ class CssAsset extends Asset
      */
     protected static function getRelativeOutputDirectory()
     {
-        return REL_DIR_FILES_CACHE . '/' . DIRNAME_CSS;
+        return REL_DIR_FILES_CACHE.'/'.DIRNAME_CSS;
     }
 
     /**
@@ -46,13 +46,13 @@ class CssAsset extends Asset
      */
     protected static function getOutputDirectory()
     {
-        if (!file_exists(Config::get('concrete.cache.directory') . '/' . DIRNAME_CSS)) {
-            $proceed = @mkdir(Config::get('concrete.cache.directory') . '/' . DIRNAME_CSS);
+        if (!file_exists(Config::get('concrete.cache.directory').'/'.DIRNAME_CSS)) {
+            $proceed = @mkdir(Config::get('concrete.cache.directory').'/'.DIRNAME_CSS);
         } else {
             $proceed = true;
         }
         if ($proceed) {
-            return Config::get('concrete.cache.directory') . '/' . DIRNAME_CSS;
+            return Config::get('concrete.cache.directory').'/'.DIRNAME_CSS;
         } else {
             return false;
         }
@@ -62,19 +62,20 @@ class CssAsset extends Asset
      * @param string $content
      * @param string $current_path
      * @param string $target_path
+     *
      * @return string
      */
     public static function changePaths($content, $current_path, $target_path)
     {
-        $current_path = rtrim($current_path, "/");
-        $target_path = rtrim($target_path, "/");
-        $current_path_slugs = explode("/", $current_path);
-        $target_path_slugs = explode("/", $target_path);
+        $current_path = rtrim($current_path, '/');
+        $target_path = rtrim($target_path, '/');
+        $current_path_slugs = explode('/', $current_path);
+        $target_path_slugs = explode('/', $target_path);
         $smallest_count = min(count($current_path_slugs), count($target_path_slugs));
         for ($i = 0; $i < $smallest_count && $current_path_slugs[$i] === $target_path_slugs[$i]; $i++);
-        $change_prefix = @implode( "/", @array_merge( @array_fill( 0, count( $target_path_slugs ) - $i, ".." ), @array_slice( $current_path_slugs, $i ) ) );
+        $change_prefix = @implode('/', @array_merge(@array_fill(0, count($target_path_slugs) - $i, '..'), @array_slice($current_path_slugs, $i)));
         if (strlen($change_prefix) > 0) {
-            $change_prefix .= "/";
+            $change_prefix .= '/';
         }
 
         $content = preg_replace_callback(
@@ -88,19 +89,20 @@ class CssAsset extends Asset
             ([a-zA-Z,\\s]*)?    # 2 = media list
             ;                   # end token
             /x',
-            function($m) use ($change_prefix) {
+            function ($m) use ($change_prefix) {
                 $url = $change_prefix.$m[1];
                 $url = str_replace('/./', '/', $url);
                 do {
                     $url = preg_replace('@/(?!\\.\\.?)[^/]+/\\.\\.@', '/', $url, 1, $changed);
                 } while ($changed);
+
                 return "@import url('$url'){$m[2]};";
             },
             $content
         );
         $content = preg_replace_callback(
             '/url\\(\\s*([^\\)\\s]+)\\s*\\)/',
-            function($m) use ($change_prefix) {
+            function ($m) use ($change_prefix) {
                 // $m[1] is either quoted or not
                 $quote = ($m[1][0] === "'" || $m[1][0] === '"')
                     ? $m[1][0]
@@ -116,10 +118,12 @@ class CssAsset extends Asset
                         $url = preg_replace('@/(?!\\.\\.?)[^/]+/\\.\\.@', '/', $url, 1, $changed);
                     } while ($changed);
                 }
+
                 return "url({$quote}{$url}{$quote})";
             },
             $content
         );
+
         return $content;
     }
 
@@ -140,7 +144,7 @@ class CssAsset extends Asset
                 $sourceFiles[] = $asset->getAssetURL();
             }
             $filename = sha1($filename);
-            $cacheFile = $directory . '/' . $filename . '.css';
+            $cacheFile = $directory.'/'.$filename.'.css';
             if (!file_exists($cacheFile)) {
                 $css = '';
                 foreach ($assets as $asset) {
@@ -157,11 +161,13 @@ class CssAsset extends Asset
             }
 
             $asset = new CssAsset();
-            $asset->setAssetURL($relariveDirectory . '/' . $filename . '.css');
-            $asset->setAssetPath($directory . '/' . $filename . '.css');
+            $asset->setAssetURL($relariveDirectory.'/'.$filename.'.css');
+            $asset->setAssetPath($directory.'/'.$filename.'.css');
             $asset->setCombinedAssetSourceFiles($sourceFiles);
+
             return array($asset);
         }
+
         return $assets;
     }
 
@@ -174,11 +180,12 @@ class CssAsset extends Asset
         if (count($this->combinedAssetSourceFiles)) {
             $source = '';
             foreach ($this->combinedAssetSourceFiles as $file) {
-                $source .= $file . ' ';
+                $source .= $file.' ';
             }
             $source = trim($source);
             $e->setAttribute('data-source', $source);
         }
+
         return (string) $e;
     }
 }
