@@ -1,9 +1,9 @@
 <?php
+
 namespace Concrete\Core\Asset;
 
-class JavascriptInlineAsset extends JavascriptAsset
+class CssInlineAsset extends CssAsset
 {
-
     /**
      * @var bool
      */
@@ -27,12 +27,12 @@ class JavascriptInlineAsset extends JavascriptAsset
      */
     public function getAssetType()
     {
-        return 'javascript-inline';
+        return 'css-inline';
     }
 
     public function getOutputAssetType()
     {
-        return 'javascript';
+        return 'css';
     }
 
     /**
@@ -48,7 +48,7 @@ class JavascriptInlineAsset extends JavascriptAsset
      */
     public function __toString()
     {
-        return '<script type="text/javascript">' . $this->getAssetURL() . '</script>';
+        return '<style type="text/css">'.$this->getAssetURL().'</style>';
     }
 
     /**
@@ -58,5 +58,4 @@ class JavascriptInlineAsset extends JavascriptAsset
     {
         return $this->assetURL;
     }
-
 }

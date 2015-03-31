@@ -218,7 +218,7 @@ class View extends AbstractView {
         for ($i = 0; $i < count($assets); $i++) {
 
             $asset = $assets[$i];
-            $nextasset = $assets[$i+1];
+            $nextasset = isset($assets[$i + 1]) ? $assets[$i + 1] : null;
 
             $groupedAssets[$segment][] = $asset;
             if (!($asset instanceof Asset) || !($nextasset instanceof Asset)) {
@@ -226,7 +226,7 @@ class View extends AbstractView {
                 continue;
             }
 
-            if ($asset->getAssetType() != $nextasset->getAssetType()) {
+            if ($asset->getOutputAssetType() != $nextasset->getOutputAssetType()) {
                 $segment++;
                 continue;
             }
