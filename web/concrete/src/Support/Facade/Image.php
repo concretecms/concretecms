@@ -7,7 +7,6 @@ class Image extends Facade
     public static function getFacadeAccessor()
     {
 
-        /*
         if (class_exists('Imagick')) {
             try {
                 $imagick = new \Imagick();
@@ -21,7 +20,7 @@ class Image extends Facade
                 }
             } catch (\Exception $foo) {
             }
-        }*/
+        }
 
         return 'image/gd';
     }
