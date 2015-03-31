@@ -52,12 +52,13 @@ class JavascriptAsset extends Asset
 
     /**
      * @param Asset[] $assets
-     * @param $processFunction
+     *
      * @return Asset[]
      */
-    protected static function process($assets, $processFunction)
+    public static function process($assets)
     {
         if ($directory = self::getOutputDirectory()) {
+            $relariveDirectory = self::getRelativeOutputDirectory();
             $filename = '';
             $sourceFiles = array();
             for ($i = 0; $i < count($assets); $i++) {
@@ -72,42 +73,22 @@ class JavascriptAsset extends Asset
                 foreach($assets as $asset) {
                     $contents = $asset->getAssetContents();
                     if (isset($contents)) {
+                        if ($asset->assetSupportsMinification()) {
+                            $contents = \JShrink\Minifier::minify($contents);
+                        }
                         $js .= $contents."\n\n";
-                        $js = $processFunction($js, $asset->getAssetURLPath(), self::getRelativeOutputDirectory());
                     }
                 }
                 @file_put_contents($cacheFile, $js);
             }
 
             $asset = new JavascriptAsset();
-            $asset->setAssetURL(self::getRelativeOutputDirectory() . '/' . $filename . '.js');
+            $asset->setAssetURL($relariveDirectory . '/' . $filename . '.js');
             $asset->setAssetPath($directory . '/' . $filename . '.js');
             $asset->setCombinedAssetSourceFiles($sourceFiles);
             return array($asset);
         }
         return $assets;
-    }
-
-    /**
-     * @param Asset[] $assets
-     * @return Asset[]
-     */
-    public static function combine($assets)
-    {
-        return self::process($assets, function($js, $assetPath, $targetPath) {
-            return $js;
-        });
-    }
-
-    /**
-     * @param Asset[] $assets
-     * @return Asset[]
-     */
-    public static function minify($assets)
-    {
-        return self::process($assets, function($js, $assetPath, $targetPath) {
-            return \JShrink\Minifier::minify($js);
-        });
     }
 
     /**

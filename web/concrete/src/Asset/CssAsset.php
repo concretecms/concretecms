@@ -125,12 +125,13 @@ class CssAsset extends Asset
 
     /**
      * @param Asset[] $assets
-     * @param $processFunction
+     *
      * @return Asset[]
      */
-    protected static function process($assets, $processFunction)
+    public static function process($assets)
     {
         if ($directory = self::getOutputDirectory()) {
+            $relariveDirectory = self::getRelativeOutputDirectory();
             $filename = '';
             $sourceFiles = array();
             for ($i = 0; $i < count($assets); $i++) {
@@ -145,42 +146,23 @@ class CssAsset extends Asset
                 foreach ($assets as $asset) {
                     $contents = $asset->getAssetContents();
                     if (isset($contents)) {
+                        $contents = CssAsset::changePaths($contents, $asset->getAssetURLPath(), $relariveDirectory);
+                        if ($asset->assetSupportsMinification()) {
+                            $contents = \CssMin::minify($contents);
+                        }
                         $css .= $contents."\n\n";
-                        $css = $processFunction($css, $asset->getAssetURLPath(), self::getRelativeOutputDirectory());
                     }
                 }
                 @file_put_contents($cacheFile, $css);
             }
 
             $asset = new CssAsset();
-            $asset->setAssetURL(self::getRelativeOutputDirectory() . '/' . $filename . '.css');
+            $asset->setAssetURL($relariveDirectory . '/' . $filename . '.css');
             $asset->setAssetPath($directory . '/' . $filename . '.css');
             $asset->setCombinedAssetSourceFiles($sourceFiles);
             return array($asset);
         }
         return $assets;
-    }
-
-    /**
-     * @param $assets
-     * @return Asset[]
-     */
-    public static function combine($assets)
-    {
-        return self::process($assets, function($css, $assetPath, $targetPath) {
-            return CssAsset::changePaths($css, $assetPath, $targetPath);
-        });
-    }
-
-    /**
-     * @param $assets
-     * @return Asset[]
-     */
-    public static function minify($assets)
-    {
-        return self::process($assets, function($css, $assetPath, $targetPath) {
-            return \CssMin::minify(CssAsset::changePaths($css, $assetPath, $targetPath));
-        });
     }
 
     /**
