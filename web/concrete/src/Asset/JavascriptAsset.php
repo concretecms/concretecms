@@ -28,7 +28,7 @@ class JavascriptAsset extends Asset
     /**
      * @return string
      */
-    public function getRelativeOutputDirectory()
+    public static function getRelativeOutputDirectory()
     {
         return REL_DIR_FILES_CACHE . '/' . DIRNAME_JAVASCRIPT;
     }
@@ -62,7 +62,7 @@ class JavascriptAsset extends Asset
             $sourceFiles = array();
             for ($i = 0; $i < count($assets); $i++) {
                 $asset = $assets[$i];
-                $filename .= $asset->getAssetURL();
+                $filename .= $asset->getAssetHashKey();
                 $sourceFiles[] = $asset->getAssetURL();
             }
             $filename = sha1($filename);
@@ -70,8 +70,11 @@ class JavascriptAsset extends Asset
             if (!file_exists($cacheFile)) {
                 $js = '';
                 foreach($assets as $asset) {
-                    $js .= file_get_contents($asset->getAssetPath()) . "\n\n";
-                    $js = $processFunction($js, $asset->getAssetURLPath(), self::getRelativeOutputDirectory());
+                    $contents = $asset->getAssetContents();
+                    if (isset($contents)) {
+                        $js .= $contents."\n\n";
+                        $js = $processFunction($js, $asset->getAssetURLPath(), self::getRelativeOutputDirectory());
+                    }
                 }
                 @file_put_contents($cacheFile, $js);
             }
