@@ -13,13 +13,37 @@
             my.setAttr('defaultArea', default_area || null);
 
             if (default_area) {
-                $.pep.unbind(my.getPeper());
-                my.getPeper().click(function (e) {
-                    my.handleClick();
-
-                    return false;
-                });
+                var types = default_area.getBlockTypes();
+                if (default_area.acceptsBlockType(my.getHandle())) {
+                    my.handleDefaultArea();
+                } else {
+                    my.removeElement();
+                }
             }
+        },
+
+        handleDefaultArea: function() {
+            var my = this;
+            $.pep.unbind(my.getPeper());
+            my.getPeper().click(function (e) {
+                my.handleClick();
+
+                return false;
+            }).css({
+                cursor: 'pointer'
+            });
+        },
+
+        removeElement: function() {
+            var panel = this.getPeper().closest('.ccm-panel-content-inner');
+            this.getPeper().closest('li').remove();
+
+            panel.children('.ccm-panel-add-block-set').each(function() {
+                var ul = $(this).children('ul');
+                if (!ul.children().length) {
+                    $(this).remove();
+                }
+            })
         },
 
         handleClick: function() {

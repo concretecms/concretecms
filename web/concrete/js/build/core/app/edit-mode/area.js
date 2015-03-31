@@ -29,7 +29,7 @@
                 blocks: [],
                 editMode: edit_mode,
                 maximumBlocks: parseInt(elem.data('maximumBlocks'), 10),
-                blockTypes: elem.data('accepts-block-types').split(' '),
+                blockTypes: elem.data('accepts-block-types').toLowerCase().split(' '),
                 blockContainer: elem.children('.ccm-area-block-list')
             });
             my.id = my.getId();
@@ -211,6 +211,15 @@
 
 
                 });
+        },
+
+        /**
+         * Does this area accept a specific block type handle
+         * @param type_handle the block type handle
+         * @returns {bool}
+         */
+        acceptsBlockType: function areaAcceptsBlockType(type_handle) {
+            return _(this.getBlockTypes()).contains(type_handle.toLowerCase());
         },
 
         /**

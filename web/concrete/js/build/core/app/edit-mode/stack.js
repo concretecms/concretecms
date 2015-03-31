@@ -11,6 +11,10 @@
 
     Stack.prototype = _.extend(Object.create(Concrete.BlockType.prototype), {
 
+        removeElement: function() {
+            this.getElem().remove();
+        },
+
         addToDragArea: function StackAddToDragArea(drag_area) {
             var my = this, elem = my.getElem(),
                 area = drag_area.getArea(),
