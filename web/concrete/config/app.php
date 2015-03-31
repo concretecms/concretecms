@@ -390,6 +390,16 @@ return array(
             'tool',
             array('tool' => '[A-Za-z0-9_/.]+')),
 
+        /*
+         * Assets localization
+         */
+        '/ccm/assets/localization/core/js'                                              => array('\Concrete\Controller\Frontend\AssetsLocalization::getCoreJavascript'),
+        '/ccm/assets/localization/select2/js'                                           => array('\Concrete\Controller\Frontend\AssetsLocalization::getSelect2Javascript'),
+        '/ccm/assets/localization/redactor/js'                                          => array('\Concrete\Controller\Frontend\AssetsLocalization::getRedactorJavascript'),
+        '/ccm/assets/localization/dynatree/js'                                          => array('\Concrete\Controller\Frontend\AssetsLocalization::getDynatreeJavascript'),
+        '/ccm/assets/localization/imageeditor/js'                                       => array('\Concrete\Controller\Frontend\AssetsLocalization::getImageEditorJavascript'),
+        '/ccm/assets/localization/jquery/ui/js'                                         => array('\Concrete\Controller\Frontend\AssetsLocalization::getJQueryUIJavascript'),
+        '/ccm/assets/localization/translator/js'                                        => array('\Concrete\Controller\Frontend\AssetsLocalization::getTranslatorJavascript'),
     ),
 
     /**
@@ -474,6 +484,7 @@ return array(
         ),
         'jquery/ui'                => array(
             array('javascript', 'js/jquery-ui.js', array('minify' => false, 'combine' => false)),
+            array('javascript-localized', '/ccm/assets/localization/jquery/ui/js'),
             array('css', 'css/jquery-ui.css', array('minify' => false))
         ),
         'jquery/visualize'                => array(
@@ -485,16 +496,8 @@ return array(
         ),
         'select2'                  => array(
             array('javascript', 'js/select2.js', array('minify' => false, 'combine' => false)),
+            array('javascript-localized', '/ccm/assets/localization/select2/js'),
             array('css', 'css/select2.css', array('minify' => false))
-        ),
-        'select2_locale'           => array(
-            array(
-                'javascript',
-                REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_select2_js',
-                array(
-                    'combine' => false,
-                    'minify'  => false,
-                    'local'   => false))
         ),
         'underscore'               => array(
             array('javascript', 'js/underscore.js', array('minify' => false))
@@ -522,12 +525,8 @@ return array(
             array('javascript', 'js/style-customizer.js', array('minify' => false)),
             array('css', 'css/style-customizer.css', array('minify' => false))
         ),
-        'core/locale' => array(
-            array(
-                'javascript',
-                REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js',
-                array('combine' => false, 'minify' => false, 'local' => false)
-            )
+        'core/localization' => array(
+            array('javascript-localized', '/ccm/assets/localization/core/js'),
         ),
         'jquery/awesome-rating'                 => array(
             array('javascript', 'js/jquery-awesome-rating.js', array('minify' => false)),
@@ -541,14 +540,8 @@ return array(
         ),
         'redactor'                 => array(
             array('javascript', 'js/redactor.js', array('minify' => false)),
+            array('javascript-localized', '/ccm/assets/localization/redactor/js'),
             array('css', 'css/redactor.css')
-        ),
-        'redactor_locale'          => array(
-            array(
-                'javascript',
-                REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_redactor_js',
-                array('combine' => false, 'minify' => false, 'local' => false)
-            )
         ),
         'ace'                      => array(
             array('javascript', 'js/ace/ace.js', array('minify' => false))
@@ -558,14 +551,8 @@ return array(
         ),
         'dynatree'                 => array(
             array('javascript', 'js/dynatree.js', array('minify' => false)),
+            array('javascript-localized', '/ccm/assets/localization/dynatree/js', array('minify' => false)),
             array('css', 'css/dynatree.css', array('minify' => false))
-        ),
-        'dynatree_locale'          => array(
-            array(
-                'javascript',
-                REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_dynatree_js',
-                array('combine' => false, 'minify' => false, 'local' => false)
-            )
         ),
         'bootstrap/dropdown'       => array(
             array('javascript', 'js/bootstrap/dropdown.js'),
@@ -609,18 +596,8 @@ return array(
         ),
         'core/imageeditor'         => array(
             array('javascript', 'js/image-editor.js'),
+            array('javascript-localized', '/ccm/assets/localization/imageeditor/js'),
             array('css', 'css/image-editor.css')
-        ),
-        'core/imageeditor_locale'  => array(
-            array(
-                'javascript',
-                REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_imageeditor_js',
-                array(
-                    'combine' => false,
-                    'minify'  => false,
-                    'local'   => false
-                )
-            )
         ),
         'dashboard'                => array(
             array('javascript', 'js/dashboard.js')
@@ -675,6 +652,7 @@ return array(
         ),
         'core/translator' => array(
             array('javascript', 'js/translator.js', array('minify' => false)),
+            array('javascript-localized', '/ccm/assets/localization/translator/js'),
             array('css', 'css/translator.css', array('minify' => false))
         )
     ),
@@ -683,6 +661,7 @@ return array(
         'jquery/ui'                => array(
             array(
                 array('javascript', 'jquery/ui'),
+                array('javascript-localized', 'jquery/ui'),
                 array('css', 'jquery/ui'),
             )
         ),
@@ -695,7 +674,7 @@ return array(
         'select2'                  => array(
             array(
                 array('javascript', 'select2'),
-                array('javascript', 'select2_locale'),
+                array('javascript-localized', 'select2'),
                 array('css', 'select2')
             )
         ),
@@ -708,7 +687,7 @@ return array(
             array(
                 array('javascript', 'jquery'),
                 array('javascript', 'core/events'),
-                array('javascript', 'core/locale'),
+                array('javascript-localized', 'core/localization'),
                 array('javascript', 'spectrum'),
                 array('css', 'spectrum')
             )
@@ -730,11 +709,12 @@ return array(
             array(
                 array('javascript', 'jquery'),
                 array('javascript', 'jquery/ui'),
+                array('javascript-localized', 'jquery/ui'),
                 array('javascript', 'core/events'),
                 array('javascript', 'underscore'),
                 array('javascript', 'core/colorpicker'),
                 array('javascript', 'core/app'),
-                array('javascript', 'core/locale'),
+                array('javascript-localized', 'core/localization'),
                 array('javascript', 'jquery/fileupload'),
                 array('javascript', 'core/file-manager'),
                 array('javascript', 'core/style-customizer'),
@@ -758,7 +738,7 @@ return array(
         'redactor'                 => array(
             array(
                 array('javascript', 'redactor'),
-                array('javascript', 'redactor_locale'),
+                array('javascript-localized', 'redactor'),
                 array('css', 'redactor'),
                 array('css', 'font-awesome')
             )
@@ -766,7 +746,7 @@ return array(
         'dynatree'                 => array(
             array(
                 array('javascript', 'dynatree'),
-                array('javascript', 'dynatree_locale'),
+                array('javascript-localized', 'dynatree'),
                 array('css', 'dynatree')
             )
         ),
@@ -779,7 +759,8 @@ return array(
                 array('javascript', 'bootstrap/tooltip'),
                 array('javascript', 'bootstrap/popover'),
                 array('javascript', 'jquery/ui'),
-                array('javascript', 'core/locale'),
+                array('javascript-localized', 'jquery/ui'),
+                array('javascript-localized', 'core/localization'),
                 array('javascript', 'core/app'),
                 array('css', 'core/app'),
                 array('css', 'font-awesome'),
@@ -793,6 +774,7 @@ return array(
                 array('javascript', 'bootstrap/tooltip'),
                 array('javascript', 'bootstrap/popover'),
                 array('javascript', 'jquery/ui'),
+                array('javascript-localized', 'jquery/ui'),
                 array('javascript', 'core/events'),
                 array('javascript', 'underscore'),
                 array('javascript', 'core/app'),
@@ -804,7 +786,7 @@ return array(
         'core/imageeditor'         => array(
             array(
                 array('javascript', 'kinetic'),
-                array('javascript', 'core/imageeditor_locale'),
+                array('javascript-localized', 'core/imageeditor'),
                 array('javascript', 'core/imageeditor'),
                 array('css', 'core/imageeditor')
             )
@@ -813,6 +795,7 @@ return array(
             array(
                 array('javascript', 'jquery'),
                 array('javascript', 'jquery/ui'),
+                array('javascript-localized', 'jquery/ui'),
                 array('javascript', 'jquery/touch-punch'),
                 array('javascript', 'underscore'),
                 array('javascript', 'dashboard'),
@@ -822,9 +805,10 @@ return array(
                 array('javascript', 'bootstrap/popover'),
                 array('javascript', 'bootstrap/transition'),
                 array('javascript', 'bootstrap/alert'),
-                array('javascript', 'core/locale'),
+                array('javascript-localized', 'core/localization'),
                 array('javascript', 'core/app'),
                 array('javascript', 'redactor'),
+                array('javascript-localized', 'redactor'),
                 array('css', 'core/app'),
                 array('css', 'redactor'),
                 array('css', 'jquery/ui'),
@@ -841,9 +825,10 @@ return array(
                 array('javascript', 'bootstrap/tooltip'),
                 array('javascript', 'underscore'),
                 array('javascript', 'jquery/ui'),
+                array('javascript-localized', 'jquery/ui'),
                 array('javascript', 'select2'),
-                array('javascript', 'select2_locale'),
-                array('javascript', 'core/locale'),
+                array('javascript-localized', 'select2'),
+                array('javascript-localized', 'core/localization'),
                 array('javascript', 'core/app'),
                 array('javascript', 'jquery/fileupload'),
                 array('javascript', 'core/file-manager')
@@ -854,10 +839,11 @@ return array(
                 array('javascript', 'core/events'),
                 array('javascript', 'underscore'),
                 array('javascript', 'jquery/ui'),
+                array('javascript-localized', 'jquery/ui'),
                 array('javascript', 'dynatree'),
-                array('javascript', 'dynatree_locale'),
+                array('javascript-localized', 'dynatree'),
                 array('javascript', 'core/app'),
-                array('javascript', 'core/locale'),
+                array('javascript-localized', 'core/localization'),
                 array('javascript', 'core/sitemap'),
                 array('css', 'dynatree'),
                 array('css', 'core/sitemap')
@@ -867,8 +853,9 @@ return array(
             array(
                 array('javascript', 'core/events'),
                 array('javascript', 'jquery/ui'),
+                array('javascript-localized', 'jquery/ui'),
                 array('javascript', 'dynatree'),
-                array('javascript', 'dynatree_locale'),
+                array('javascript-localized', 'dynatree'),
                 array('javascript', 'core/topics'),
                 array('css', 'dynatree'),
                 array('css', 'core/topics')
@@ -879,8 +866,9 @@ return array(
                 array('javascript', 'core/events'),
                 array('javascript', 'underscore'),
                 array('javascript', 'jquery/ui'),
+                array('javascript-localized', 'jquery/ui'),
                 array('javascript', 'dynatree'),
-                array('javascript', 'dynatree_locale'),
+                array('javascript-localized', 'dynatree'),
                 array('javascript', 'core/groups'),
                 array('css', 'dynatree')
             )
@@ -889,6 +877,7 @@ return array(
             array(
                 array('javascript', 'core/gathering'),
                 array('javascript', 'redactor'),
+                array('javascript-localized', 'redactor'),
                 array('css', 'core/gathering/base'),
                 array('css', 'core/conversation'),
                 array('css', 'core/gathering/display'),
@@ -899,6 +888,7 @@ return array(
             array(
                 array('javascript', 'jquery'),
                 array('javascript', 'jquery/ui'),
+                array('javascript-localized', 'jquery/ui'),
                 array('javascript', 'underscore'),
                 array('javascript', 'core/lightbox'),
                 array('javascript', 'dropzone'),
@@ -933,6 +923,7 @@ return array(
         'core/translator'          => array(
             array(
                 array('javascript', 'core/translator'),
+                array('javascript-localized', 'core/translator'),
                 array('css', 'core/translator'),
             )
         )

@@ -344,7 +344,9 @@
 				filename: 'Name (optional)',
 				edit: 'Edit',
 				upload_label: 'Drop file here or '
-
+				/* concrete5 */
+				// Remember to add new strings also in in /concrete/controllers/frontend/assets_localization.php, function getRedactorJavascript
+				/* end concrete5 */
 			}
 		}
 	};

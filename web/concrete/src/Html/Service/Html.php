@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Html\Service;
 
-use Concrete\Core\Asset\CSSAsset;
+use Concrete\Core\Asset\CssAsset;
 use Concrete\Core\Asset\JavascriptAsset;
 use View;
 
@@ -26,7 +26,7 @@ class Html
 
     public function css($file, $pkgHandle = null)
     {
-        $asset = new CSSAsset();
+        $asset = new CssAsset();
         // if the first character is a / then that means we just go right through, it's a direct path
         if (substr($file, 0, 4) == 'http' || substr($file, 0, 2) == '//' || strpos($file, '?') > 0) {
             // we can't cache this file, so we make sure to say it's not local. It may BE local –but we can't cache it.

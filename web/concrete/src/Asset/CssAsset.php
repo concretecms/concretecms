@@ -130,12 +130,12 @@ class CssAsset extends Asset
      */
     protected static function process($assets, $processFunction)
     {
-        $sourceFiles = array();
         if ($directory = self::getOutputDirectory()) {
             $filename = '';
+            $sourceFiles = array();
             for ($i = 0; $i < count($assets); $i++) {
                 $asset = $assets[$i];
-                $filename .= $asset->getAssetURL();
+                $filename .= $asset->getAssetHashKey();
                 $sourceFiles[] = $asset->getAssetURL();
             }
             $filename = sha1($filename);
@@ -143,15 +143,16 @@ class CssAsset extends Asset
             if (!file_exists($cacheFile)) {
                 $css = '';
                 foreach ($assets as $asset) {
-                    if ($asset->getAssetPath()) {
-                        $css .= file_get_contents($asset->getAssetPath()) . "\n\n";
+                    $contents = $asset->getAssetContents();
+                    if (isset($contents)) {
+                        $css .= $contents."\n\n";
+                        $css = $processFunction($css, $asset->getAssetURLPath(), self::getRelativeOutputDirectory());
                     }
-                    $css = $processFunction($css, $asset->getAssetURLPath(), self::getRelativeOutputDirectory());
                 }
                 @file_put_contents($cacheFile, $css);
             }
 
-            $asset = new CSSAsset();
+            $asset = new CssAsset();
             $asset->setAssetURL(self::getRelativeOutputDirectory() . '/' . $filename . '.css');
             $asset->setAssetPath($directory . '/' . $filename . '.css');
             $asset->setCombinedAssetSourceFiles($sourceFiles);
@@ -167,7 +168,7 @@ class CssAsset extends Asset
     public static function combine($assets)
     {
         return self::process($assets, function($css, $assetPath, $targetPath) {
-            return CSSAsset::changePaths($css, $assetPath, $targetPath);
+            return CssAsset::changePaths($css, $assetPath, $targetPath);
         });
     }
 
@@ -178,7 +179,7 @@ class CssAsset extends Asset
     public static function minify($assets)
     {
         return self::process($assets, function($css, $assetPath, $targetPath) {
-            return \CssMin::minify(CSSAsset::changePaths($css, $assetPath, $targetPath));
+            return \CssMin::minify(CssAsset::changePaths($css, $assetPath, $targetPath));
         });
     }
 

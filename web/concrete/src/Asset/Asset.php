@@ -63,6 +63,11 @@ abstract class Asset
 
     abstract public function getAssetType();
 
+    public function getOutputAssetType()
+    {
+        return $this->getAssetType();
+    }
+
     abstract public static function minify($assets);
 
     abstract public static function combine($assets);
@@ -105,6 +110,14 @@ abstract class Asset
      * @return string
      */
     public function getAssetURL()
+    {
+        return $this->assetURL;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAssetHashKey()
     {
         return $this->assetURL;
     }
@@ -247,5 +260,58 @@ abstract class Asset
         } else {
             $this->setAssetURL($path);
         }
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getAssetContents()
+    {
+        $result = @file_get_contents($this->getAssetPath());
+        return ($result === false) ? null : $result;
+    }
+
+    /**
+     * @param string $route
+     *
+     * @return string|null
+     */
+    protected static function getAssetContentsByRoute($route)
+    {
+        $result = null;
+        try {
+            $routes = \Route::getList();
+            /* @var $routes \Symfony\Component\Routing\RouteCollection */
+            $context = new \Symfony\Component\Routing\RequestContext();
+            $request = \Request::getInstance();
+            $context->fromRequest($request);
+            $matcher = new \Symfony\Component\Routing\Matcher\UrlMatcher($routes, $context);
+            $matched = null;
+            try {
+                $matched = $matcher->match($route);
+            } catch (\Exception $x) {
+                $m = null;
+                // Route matcher requires that paths ends with a slash
+                if (preg_match('/^(.*[^\/])($|\?.*)$/', $route, $m)) {
+                    try {
+                        $matched = $matcher->match($m[1].'/'.(isset($m[2]) ? $m[2] : ''));
+                    } catch (\Exception $x) {
+                    }
+                }
+            }
+            if (isset($matched)) {
+                $controller = $matched['_controller'];
+                if (is_callable($controller)) {
+                    ob_start();
+                    $r = call_user_func($controller, false);
+                    if ($r !== false) {
+                        $result = ob_get_contents();
+                    }
+                    ob_end_clean();
+                }
+            }
+        } catch (\Exception $x) {
+        }
+        return $result;
     }
 }
