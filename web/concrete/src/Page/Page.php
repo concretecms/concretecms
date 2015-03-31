@@ -2846,6 +2846,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $data['handle'] = $handle;
 
         $ptID = 0;
+        $masterCIDBlocks = null;
+        $masterCID = null;
         if ($pt instanceof \Concrete\Core\Page\Type\Type) {
             if ($pt->getPageTypeHandle() == STACKS_PAGE_TYPE) {
                 $data['cvIsNew'] = 0;
