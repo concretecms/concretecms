@@ -1,11 +1,11 @@
 <?php
+
 namespace Concrete\Core\Asset;
 
 use Environment;
 
 abstract class Asset
 {
-
     /**
      * @var string
      */
@@ -271,6 +271,7 @@ abstract class Asset
     public function getAssetContents()
     {
         $result = @file_get_contents($this->getAssetPath());
+
         return ($result === false) ? null : $result;
     }
 
@@ -315,6 +316,7 @@ abstract class Asset
             }
         } catch (\Exception $x) {
         }
+
         return $result;
     }
 }
