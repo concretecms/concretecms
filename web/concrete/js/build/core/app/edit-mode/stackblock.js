@@ -16,6 +16,10 @@
             this.setAttr('stack', stack);
         },
 
+        removeElement: function() {
+            $.pep.unbind(this.getPeper());
+        },
+
         addToDragArea: function StackBlockAddToDragArea(drag_area) {
             var my = this, elem = my.getElem(),
                 block_type_id = elem.data('btid'),
