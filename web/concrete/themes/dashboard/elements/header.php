@@ -10,7 +10,7 @@ $html = Loader::helper('html');
 <?
 $v = View::getInstance();
 $v->requireAsset('dashboard');
-$v->addFooterItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js"></script>');
+$v->requireAsset('javascript-localized', 'core/localization');
 $v->addFooterItem('<script type="text/javascript">$(function() { ConcreteToolbar.start(); });</script>');
 if (Config::get('concrete.misc.enable_progressive_page_reindex') && Config::get('concrete.misc.do_page_reindex_check')) {
     $v->addFooterItem('<script type="text/javascript">$(function() { ccm_doPageReindexing(); });</script>');
