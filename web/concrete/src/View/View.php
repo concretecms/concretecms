@@ -231,11 +231,6 @@ class View extends AbstractView {
                 continue;
             }
 
-            if ($asset->assetSupportsMinification() != $nextasset->assetSupportsMinification()) {
-                $segment++;
-                continue;
-            }
-
             if ($asset->assetSupportsCombination() != $nextasset->assetSupportsCombination()) {
                 $segment++;
                 continue;
@@ -246,14 +241,18 @@ class View extends AbstractView {
         $return = array();
         // now we have a sub assets array with different segments split by whether they can be combined.
 
-        foreach($groupedAssets as $segment => $assets) {
-            if ($assets[0] instanceof Asset && $assets[0]->assetSupportsMinification()) {
-                // this entire segment can be post processed together
+        foreach($groupedAssets as $assets) {
+            if (
+                ($assets[0] instanceof Asset)
+                &&
+                (
+                    (count($assets) > 1)
+                    ||
+                    $assets[0]->assetSupportsMinification()
+                )
+            ) {
                 $class = get_class($assets[0]);
-                $assets = call_user_func(array($class, 'minify'), $assets);
-            } else if ($assets[0] instanceof Asset && $assets[0]->assetSupportsCombination()) {
-                $class = get_class($assets[0]);
-                $assets = call_user_func(array($class, 'combine'), $assets);
+                $assets = call_user_func(array($class, 'process'), $assets);
             }
             $return = array_merge($return, $assets);
         }
