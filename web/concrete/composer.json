@@ -34,7 +34,6 @@
         "michelf/php-markdown": "1.4.*@dev",
         "filp/whoops": "1.*",
         "pagerfanta/pagerfanta": "1.0.2",
-        "facebook/php-sdk": "3.2.*",
         "htmlawed/htmlawed": "dev-master",
         "mobiledetect/mobiledetectlib": "2.8.*",
         "monolog/monolog": "~1.7",
