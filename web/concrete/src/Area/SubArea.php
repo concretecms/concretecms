@@ -93,6 +93,21 @@ class SubArea extends Area
         return $this->arParentID;
     }
 
+    public function getAreaCustomTemplates($include_parent_templates=true) {
+        $these_templates = parent::getAreaCustomTemplates();
+
+        if ($include_parent_templates && $this->parentBlock && $this->parentBlock->a) {
+            // include parent templates if instructed to do so
+            $parent_templates = $this->parentBlock->a->getAreaCustomTemplates();
+
+            // make sure that parent templates can be overwritten by
+            // custom templates set on the subarea itself
+            return array_merge($parent_templates, $these_templates);
+        }
+
+        return $these_templates;
+    }
+
     /**
      * @param \SimpleXMLElement $p
      * @param \Page $page
