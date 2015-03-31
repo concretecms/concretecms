@@ -8,7 +8,7 @@ use \Concrete\Core\Area\Layout\Layout as AreaLayout;
 use \Concrete\Core\Area\Layout\Preset as AreaLayoutPreset;
 use \Concrete\Core\Area\Layout\CustomLayout as CustomAreaLayout;
 use \Concrete\Core\Area\Layout\ThemeGridLayout as ThemeGridAreaLayout;
-use \Concrete\Core\Asset\CSSAsset;
+use \Concrete\Core\Asset\CssAsset;
 use URL;
 use Page;
 
@@ -235,7 +235,7 @@ class Controller extends BlockController
                 $this->set('gf', $gf);
                 $this->render('view_grid');
             } else {
-                $asset = new CSSAsset();
+                $asset = new CssAsset();
                 $asset->setAssetURL(URL::to('/ccm/system/css/layout', $this->bID));
                 $asset->setAssetSupportsMinification(false);
                 $asset->setAssetSupportsCombination(false);
