@@ -638,26 +638,20 @@ class Collection extends Object
 
     public function getAreaCustomStyle($area, $force = false)
     {
-        $db = Loader::db();
-
         $areac = $area->getAreaCollectionObject();
         if ($areac instanceof Stack) {
             // this fixes the problem of users applying design to the main area on the page, and then that trickling into any
             // stacks that have been added to other areas of the page.
             return false;
         }
-
+        $result = null;
         $styles = $this->vObj->getCustomAreaStyles();
-        $issID = $styles[$area->getAreaHandle()];
-
-        if ($issID > 0 || $force) {
-            if ($issID) {
-                $pss = StyleSet::getByID($issID);
-            }
-
-            $pss = new AreaCustomStyle($pss, $area->getAreaHandle());
-            return $pss;
+        $areaHandle = $area->getAreaHandle();
+        if ($force || isset($styles[$areaHandle])) {
+            $pss = isset($styles[$areaHandle]) ? StyleSet::getByID($styles[$areaHandle]) : null;
+            $result = new AreaCustomStyle($pss, $areaHandle);
         }
+        return $result;
     }
 
     public function resetAreaCustomStyle($area)
