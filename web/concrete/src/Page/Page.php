@@ -2844,9 +2844,6 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
         $handle = str_replace('-', Config::get('concrete.seo.page_path_separator'), $handle);
         $data['handle'] = $handle;
-        $dh = Loader::helper('date');
-        $cDate = $dh->getOverridableNow();
-        $cDatePublic = ($data['cDatePublic']) ? $data['cDatePublic'] : null;
 
         $ptID = 0;
         if ($pt instanceof \Concrete\Core\Page\Type\Type) {
@@ -2884,7 +2881,6 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
         $cInheritPermissionsFromCID = ($this->overrideTemplatePermissions()) ? $this->getPermissionsCollectionID() : $masterCID;
         $cInheritPermissionsFrom = ($this->overrideTemplatePermissions()) ? 'PARENT' : 'TEMPLATE';
-        $pThemeID = $this->getCollectionThemeID();
         $v = array($cID, $ptID, $cParentID, $uID, $cInheritPermissionsFrom, $this->overrideTemplatePermissions(), $cInheritPermissionsFromCID, $cDisplayOrder, $pkgID);
         $q = 'insert into Pages (cID, ptID, cParentID, uID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cDisplayOrder, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?, ?)';
         $r = $db->prepare($q);
