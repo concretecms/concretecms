@@ -161,6 +161,19 @@ class BlockView extends AbstractView
                         $bvt = new BlockViewTemplate($this->block);
                         if (!$bFilename && is_object($this->area)) {
                             $templates = $this->area->getAreaCustomTemplates();
+                            if ($this->area instanceof \Concrete\Core\Area\SubArea) {
+                                // if this is a SubArea (i.e. a column in a gridlayout),
+                                // then we also get look for and use any custom templates
+                                // that have been set for the original 'parent' area
+                                $parent_block = $this->area->getSubAreaBlockObject();
+                                if ($parent_block) {
+                                    $parent_templates = $parent_block->a->getAreaCustomTemplates();
+
+                                    // make sure that parent templates can be overwritten by
+                                    // custom templates set on the subarea itself
+                                    $templates = array_merge($parent_templates, $templates);
+                                }
+                            }
                             if (isset($templates[$this->block->getBlockTypeHandle()])) {
                                 $bFilename = $templates[$this->block->getBlockTypeHandle()];
                             }
