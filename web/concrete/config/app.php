@@ -519,6 +519,16 @@ return array(
         'picturefill'              => array(
             array('javascript', 'js/picturefill.js', array('minify' => false))
         ),
+        'html5-shiv'              => array(
+            array('javascript-conditional', 'js/html5-shiv.js',
+                array('position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false, 'conditional' => 'lt IE 9')
+            )
+        ),
+        'respond'                 => array(
+            array('javascript-conditional', 'js/respond.js',
+                array('position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false, 'conditional' => 'lt IE 9')
+            )
+        ),
         'spectrum'                 => array(
             array('javascript', 'js/spectrum.js', array('minify' => false)),
             array('css', 'css/spectrum.css', array('minify' => false))
@@ -817,6 +827,8 @@ return array(
                 array('javascript', 'core/app'),
                 array('javascript', 'redactor'),
                 array('javascript-localized', 'redactor'),
+                array('javascript-conditional', 'respond'),
+                array('javascript-conditional', 'html5-shiv'),
                 array('css', 'core/app'),
                 array('css', 'redactor'),
                 array('css', 'jquery/ui'),
