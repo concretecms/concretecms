@@ -555,7 +555,7 @@ class Theme extends Object
         $pageThemeFile = $dir . '/' . FILENAME_THEMES_CLASS;
         if (is_file($pageThemeFile)) {
             try {
-                $cn .= '\\Theme\\' . camelcase($pThemeHandle) . '\\PageTheme';
+                $cn = '\\Theme\\' . camelcase($pThemeHandle) . '\\PageTheme';
                 $classNames = array();
                 if (strlen($pkgHandle)) {
                     $classNames[] = '\\Concrete\\Package\\' . camelcase($pkgHandle) . $cn;
