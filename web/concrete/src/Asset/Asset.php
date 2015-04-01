@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Asset;
 
+use Concrete\Core\Package\Package;
 use Environment;
 
 abstract class Asset
@@ -313,5 +314,29 @@ abstract class Asset
         } catch (\Exception $x) {
         }
         return $result;
+    }
+
+    public function register($filename, $args, $pkg = false)
+    {
+        if ($pkg != false) {
+            if (!($pkg instanceof Package)) {
+                $pkg = Package::getByHandle($pkg);
+            }
+            $this->setPackageObject($pkg);
+        }
+        $this->setAssetIsLocal($args['local']);
+        $this->mapAssetLocation($filename);
+        if ($args['minify'] === true || $args['minify'] === false) {
+            $this->setAssetSupportsMinification($args['minify']);
+        }
+        if ($args['combine'] === true || $args['combine'] === false) {
+            $this->setAssetSupportsCombination($args['combine']);
+        }
+        if ($args['version']) {
+            $this->setAssetVersion($args['version']);
+        }
+        if ($args['position']) {
+            $this->setAssetPosition($args['position']);
+        }
     }
 }
