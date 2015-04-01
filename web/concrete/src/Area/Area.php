@@ -426,35 +426,34 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
         $item = $cache->getItem($identifier);
         if (!$item->isMiss()) {
             $areas = $item->get();
-            return $areas[$arHandle];
-        }
-        $areas = array();
-        $db = Loader::db();
-        // First, we verify that this is a legitimate area
-        $v = array($c->getCollectionID());
-        $q = "select arID, arHandle, cID, arOverrideCollectionPermissions, arInheritPermissionsFromAreaOnCID, arIsGlobal, arParentID from Areas where cID = ?";
-        $r = $db->Execute($q, $v);
-        while ($arRow = $r->FetchRow()) {
-            if ($arRow['arID'] > 0) {
-                if ($arRow['arIsGlobal']) {
-                    $obj = new GlobalArea($arHandle);
-                } else {
-                    if ($arRow['arParentID']) {
-                        $arParentHandle = self::getAreaHandleFromID($arRow['arParentID']);
-                        $obj = new SubArea($arHandle, $arParentHandle, $arRow['arParentID']);
+        } else {
+            $areas = array();
+            $db = Loader::db();
+            // First, we verify that this is a legitimate area
+            $v = array($c->getCollectionID());
+            $q = "select arID, arHandle, cID, arOverrideCollectionPermissions, arInheritPermissionsFromAreaOnCID, arIsGlobal, arParentID from Areas where cID = ?";
+            $r = $db->Execute($q, $v);
+            while ($arRow = $r->FetchRow()) {
+                if ($arRow['arID'] > 0) {
+                    if ($arRow['arIsGlobal']) {
+                        $obj = new GlobalArea($arHandle);
                     } else {
-                        $obj = new Area($arHandle);
+                        if ($arRow['arParentID']) {
+                            $arParentHandle = self::getAreaHandleFromID($arRow['arParentID']);
+                            $obj = new SubArea($arHandle, $arParentHandle, $arRow['arParentID']);
+                        } else {
+                            $obj = new Area($arHandle);
+                        }
                     }
+                    $obj->setPropertiesFromArray($arRow);
+                    $obj->c = $c;
+                    $arRowHandle = $arRow['arHandle'];
+                    $areas[$arRowHandle] = $obj;
                 }
-                $obj->setPropertiesFromArray($arRow);
-                $obj->c = $c;
-                $arRowHandle = $arRow['arHandle'];
-                $areas[$arRowHandle] = $obj;
             }
+            $item->set($areas);
         }
-
-        $item->set($areas);
-        return $areas[$arHandle];
+        return isset($areas[$arHandle]) ? $areas[$arHandle] : null;
     }
 
     /**
