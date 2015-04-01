@@ -435,6 +435,11 @@ class Theme extends Object
         return $pt;
     }
 
+    /**
+     * @param string $where
+     * @param array $args
+     * @return \Concrete\Core\Page\Theme\Theme|null
+     */
     protected function populateThemeQuery($where, $args)
     {
         $db = Loader::db();
@@ -443,7 +448,8 @@ class Theme extends Object
             $args
         );
         $env = Environment::get();
-        if ($row['pThemeID']) {
+        $pl = null;
+        if (!empty($row)) {
             $standardClass = '\\Concrete\Core\\Page\\Theme\\Theme';
             if ($row['pThemeHasCustomClass']) {
                 $pkgHandle = PackageList::getHandle($row['pkgID']);
@@ -466,9 +472,8 @@ class Theme extends Object
             $pkgHandle = $pl->getPackageHandle();
             $pl->pThemeDirectory = $env->getPath(DIRNAME_THEMES . '/' . $row['pThemeHandle'], $pkgHandle);
             $pl->pThemeURL = $env->getURL(DIRNAME_THEMES . '/' . $row['pThemeHandle'], $pkgHandle);
-
-            return $pl;
         }
+        return $pl;
     }
 
     public static function add($pThemeHandle, $pkg = null)
