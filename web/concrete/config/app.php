@@ -520,13 +520,13 @@ return array(
             array('javascript', 'js/picturefill.js', array('minify' => false))
         ),
         'html5-shiv'              => array(
-            array('javascript-conditional', 'js/html5-shiv.js',
-                array('position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false, 'conditional' => 'lt IE 9')
+            array('javascript-conditional', 'js/ie/html5-shiv.js',
+                array('conditional' => 'lt IE 9')
             )
         ),
         'respond'                 => array(
-            array('javascript-conditional', 'js/respond.js',
-                array('position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false, 'conditional' => 'lt IE 9')
+            array('javascript-conditional', 'js/ie/respond.js',
+                array('conditional' => 'lt IE 9')
             )
         ),
         'spectrum'                 => array(
