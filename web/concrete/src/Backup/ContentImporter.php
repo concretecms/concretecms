@@ -872,7 +872,7 @@ class ContentImporter
                         $akc->getAttributeKeyCategoryHandle()
                     ) . 'Key', DIRNAME_CLASSES . '/Attribute/Key/' . $txt->camelcase(
                         $akc->getAttributeKeyCategoryHandle()
-                    ) . 'Key.php', (string) $ak['package']
+                    ) . 'Key.php', (string) $akc->getPackageHandle()
                 );
                 $ak = call_user_func(array($c1, 'import'), $ak);
             }
