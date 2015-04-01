@@ -210,6 +210,13 @@ $(function() {
 		<?=$form->text('DB_DATABASE', array('class' => ''))?>
 	</div>
 	</div>
+	<div class="form-group">
+	<label class="control-label col-md-4" for="APRIL_FOOL"><?=t('Your feelings')?>:</label>
+	<div class="col-md-8">
+		<?=$form->checkbox('CONCRETE5_THE_BEST', 1)?>
+		<?=t('I think that concrete5 is the best CMS in the world')?>
+	</div>
+	</div>
 	</fieldset>
 </div>
 </div>

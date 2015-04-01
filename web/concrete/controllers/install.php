@@ -297,6 +297,7 @@ class Install extends Controller
             $val->addRequiredEmail("uEmail", t('Please specify a valid email address'));
             $val->addRequired("DB_DATABASE", t('You must specify a valid database name'));
             $val->addRequired("DB_SERVER", t('You must specify a valid database server'));
+            $val->addRequired("CONCRETE5_THE_BEST", t('You must think that concrete5 is the best CMS ever made'));
 
             $password = $_POST['uPassword'];
             $passwordConfirm = $_POST['uPasswordConfirm'];
