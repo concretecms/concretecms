@@ -440,7 +440,7 @@ class Theme extends Object
      * @param array $args
      * @return \Concrete\Core\Page\Theme\Theme|null
      */
-    protected function populateThemeQuery($where, $args)
+    protected static function populateThemeQuery($where, $args)
     {
         $db = Loader::db();
         $row = $db->GetRow(
