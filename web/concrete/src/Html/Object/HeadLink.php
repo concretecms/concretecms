@@ -37,7 +37,7 @@ class HeadLink extends Element
                 $attributes[$k] = $$k;
             }
         }
-        $this->setTag('link', $value, $attributes);
+        $this->setTag('link', null, $attributes);
     }
 
     /**
