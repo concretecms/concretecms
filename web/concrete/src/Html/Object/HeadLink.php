@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Html\Object;
 
 use HtmlObject\Element;
@@ -6,21 +7,21 @@ use HtmlObject\Element;
 class HeadLink extends Element
 {
     /**
-     * Default element
+     * Default element.
      *
      * @var string
      */
     protected $element = 'link';
 
     /**
-     * Whether the element is self closing
+     * Whether the element is self closing.
      *
-     * @var boolean
+     * @var bool
      */
     protected $isSelfClosing = true;
 
     /**
-     * Create a new Link
+     * Create a new Link.
      *
      * @param string $href  Link url
      * @param string $rel   Link relation (stylesheet)
@@ -37,11 +38,11 @@ class HeadLink extends Element
                 $attributes[$k] = $$k;
             }
         }
-        $this->setTag('link', $value, $attributes);
+        $this->setTag('link', null, $attributes);
     }
 
     /**
-     * Static alias for constructor
+     * Static alias for constructor.
      *
      * @param string $href  Link url
      * @param string $rel   Link relation (stylesheet)
