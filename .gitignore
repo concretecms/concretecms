@@ -82,6 +82,7 @@ __IDE_SYMBOLS__.php
 /web/concrete/js/groups.js
 /web/concrete/js/image-editor.js
 /web/concrete/js/jquery-cookie.js
+/web/concrete/js/jquery-tristate.js
 /web/concrete/js/jquery-fileupload.js
 /web/concrete/js/jquery-form.js
 /web/concrete/js/jquery-magnific-popup.js

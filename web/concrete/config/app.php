@@ -175,8 +175,12 @@ return array(
         "/ccm/system/dialogs/file/bulk/delete"                                          => array('\Concrete\Controller\Dialog\File\Bulk\Delete::view'),
         "/ccm/system/dialogs/file/bulk/delete/delete_files"                             => array('\Concrete\Controller\Dialog\File\Bulk\Delete::deleteFiles'),
         "/ccm/system/dialogs/file/bulk/properties"                                      => array('\Concrete\Controller\Dialog\File\Bulk\Properties::view'),
+        "/ccm/system/dialogs/file/bulk/sets"                                            => array('\Concrete\Controller\Dialog\File\Bulk\Sets::view'),
+        "/ccm/system/dialogs/file/bulk/sets/submit"                                     => array('\Concrete\Controller\Dialog\File\Bulk\Sets::submit'),
         "/ccm/system/dialogs/file/bulk/properties/clear_attribute"                      => array('\Concrete\Controller\Dialog\File\Bulk\Properties::clearAttribute'),
         "/ccm/system/dialogs/file/bulk/properties/update_attribute"                     => array('\Concrete\Controller\Dialog\File\Bulk\Properties::updateAttribute'),
+        "/ccm/system/dialogs/file/sets"                                                 => array('\Concrete\Controller\Dialog\File\Sets::view'),
+        "/ccm/system/dialogs/file/sets/submit"                                          => array('\Concrete\Controller\Dialog\File\Sets::submit'),
         "/ccm/system/dialogs/file/properties"                                           => array('\Concrete\Controller\Dialog\File\Properties::view'),
         "/ccm/system/dialogs/file/properties/clear_attribute"                           => array('\Concrete\Controller\Dialog\File\Properties::clear_attribute'),
         "/ccm/system/dialogs/file/properties/save"                                      => array('\Concrete\Controller\Dialog\File\Properties::save'),
@@ -494,6 +498,9 @@ return array(
         ),
         'jquery/touch-punch'              => array(
             array('javascript', 'js/jquery-ui-touch-punch.js')
+        ),
+        'jquery/tristate'              => array(
+            array('javascript', 'js/jquery-tristate.js')
         ),
         'select2'                  => array(
             array('javascript', 'js/select2.js', array('minify' => false, 'combine' => false)),

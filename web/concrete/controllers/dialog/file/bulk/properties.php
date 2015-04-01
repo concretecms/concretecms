@@ -16,12 +16,11 @@ class Properties extends BackendInterfaceController {
 	protected $canEdit = false;
 
 	protected function canAccess() {
-		$fp = FilePermissions::GetGlobal();
-		$this->populateFiles();
 		return $this->canEdit;
 	}
 
-	protected function populateFiles() {
+	public function on_start() {
+		parent::on_start();
 		if (is_array($_REQUEST['fID'])) {
 			foreach($_REQUEST['fID'] as $fID) {
 				$f = File::getByID($fID);
@@ -42,14 +41,11 @@ class Properties extends BackendInterfaceController {
 		} else {
 			$this->canEdit = false;
 		}
-
-		return $this->canEdit;
 	}
 
 	public function view() {
 		$r = ResponseAssetGroup::get();
 		$r->requireAsset('core/app/editable-fields');
-		$this->populateFiles();
 		$form = Loader::helper('form');
 		$attribs = FileAttributeKey::getList();
 		$this->set('files', $this->files);
