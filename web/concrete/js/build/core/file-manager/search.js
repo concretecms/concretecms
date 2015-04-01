@@ -53,7 +53,6 @@
             errors = [],
             files = [],
             error_template = _.template(
-                '<span><%- message %></span>' +
                 '<ul><% _(errors).each(function(error) { %>' +
                 '<li><strong><%- error.name %></strong><p><%- error.error %></p></li>' +
                 '<% }) %></ul>'),
@@ -95,17 +94,8 @@
                     jQuery.fn.dialog.closeTop();
 
                     if (errors.length) {
-                        ConcreteAlert.error({
-                            message: error_template({message: ccmi18n_filemanager.uploadFailed, errors: errors}),
-                            title: ccmi18n_filemanager.title,
-                            delay: 10000
-                        });
+                        ConcreteAlert.dialog(ccmi18n_filemanager.uploadFailed, error_template({errors: errors}));
                     } else {
-                        ConcreteAlert.notify({
-                            'message': ccmi18n_filemanager.uploadComplete,
-                            'title': ccmi18n_filemanager.title
-                        });
-
                         my.launchUploadCompleteDialog(files);
                         files = [];
                     }
@@ -118,6 +108,7 @@
     };
 
     ConcreteFileManager.prototype.launchUploadCompleteDialog = function(files) {
+        var my = this;
         if (files && files.length && files.length > 0) {
             var data = '';
             _.each(files, function(file) {
@@ -130,6 +121,13 @@
                 href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/file/upload_complete',
                 modal: true,
                 data: data,
+                onClose: function() {
+                  my.refreshResults();
+                },
+                onOpen: function() {
+                    var data = {filemanager: my}
+                    ConcreteEvent.publish('FileManagerUploadCompleteDialogOpen', data);
+                },
                 title: ccmi18n_filemanager.uploadComplete
             });
         }
@@ -137,9 +135,13 @@
 
     ConcreteFileManager.prototype.setupEvents = function() {
         var my = this;
-        ConcreteEvent.unsubscribe('FileManagerUpdateRequestComplete');
-        ConcreteEvent.subscribe('FileManagerUpdateRequestComplete', function(e) {
-            //my.refreshResults();
+        ConcreteEvent.unsubscribe('FileManagerAddFilesComplete');
+        ConcreteEvent.subscribe('FileManagerAddFilesComplete', function(e, data) {
+            my.launchUploadCompleteDialog(data.files);
+        });
+        ConcreteEvent.unsubscribe('FileManagerDeleteFilesComplete');
+        ConcreteEvent.subscribe('FileManagerDeleteFilesComplete', function(e, data) {
+            my.refreshResults();
         });
     };
 

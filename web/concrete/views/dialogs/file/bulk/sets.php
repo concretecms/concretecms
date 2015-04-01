@@ -21,9 +21,8 @@
         ConcreteEvent.unsubscribe('AjaxFormSubmitSuccess.updateFileSets');
         ConcreteEvent.subscribe('AjaxFormSubmitSuccess.updateFileSets', function(e, data) {
             if (data.form == 'save-file-set') {
-                console.log(data);
                 ConcreteEvent.publish('FileSetBulkUpdateRequestComplete', {
-
+                    'filesets': data.response.sets
                 });
             }
         });

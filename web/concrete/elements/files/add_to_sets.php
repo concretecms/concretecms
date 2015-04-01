@@ -11,7 +11,7 @@ $sets = FileSet::getMySets();
 </div>
 
 
-<div class="form-group" id="ccm-file-set-list"">
+<div class="form-group" id="ccm-file-set-list">
 	<? if (count($sets)) { ?>
 		<? foreach($sets as $fs) {
 			if ($displayFileSet($fs)) {	?>
