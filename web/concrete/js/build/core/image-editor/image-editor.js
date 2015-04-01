@@ -418,38 +418,62 @@ im.save = function saveImage() {
             im.stage.setWidth(im.saveWidth + 100);
             im.stage.draw();
 
-            im.stage.toDataURL({
-                width: im.saveWidth,
-                height: im.saveHeight,
-                callback: function saveImageDataUrlCallback(url) {
-                    im.stage.setPosition(oldStagePosition);
-                    im.background.show();
-                    im.foreground.show();
-                    im.stage.setScale(oldScale);
-                    im.stage.setHeight(oldHeight);
-                    im.stage.setWidth(oldWidth);
-                    im.stage.draw();
+            $.ajax(settings.src, {
+                type: "HEAD",
+                success: function(data, status, jqXHR) {
+                    var mime = jqXHR.getResponseHeader('Content-Type');
+                    if (mime !== 'image/jpeg' && mime !== 'image/png') {
+                        if (mime === null) {
+                            // check file extension
+                            var extension = settings.src.split('.').pop();
+                            if (extension === 'jpeg' || extension === 'jpg') {
+                                mime = 'image/jpeg';
+                            } else if (extension === 'png') {
+                                mime = 'image/png';
+                            } else {
+                                mime = 'image/png';
+                            }
+                        } else {
+                            // default to png
+                            mime = 'image/png';
+                        }
+                    }
+                    im.stage.toDataURL({
+                        mimeType: mime,
+                        quality: 0.8,
+                        width: im.saveWidth,
+                        height: im.saveHeight,
+                        callback: function saveImageDataUrlCallback(url) {
+                            im.stage.setPosition(oldStagePosition);
+                            im.background.show();
+                            im.foreground.show();
+                            im.stage.setScale(oldScale);
+                            im.stage.setHeight(oldHeight);
+                            im.stage.setWidth(oldWidth);
+                            im.stage.draw();
 
-                    fake_canvas.remove();
+                            fake_canvas.remove();
 
-                    $.post(im.saveUrl, _.extend(im.saveData, {
-                        fID: im.fileId,
-                        imgData: url
-                    }), function (res) {
-                        $.fn.dialog.hideLoader();
-                        var result = JSON.parse(res);
-                        if (result.error === 1) {
-                            alert(result.message);
-                            $('button.save[disabled]').attr('disabled', false);
-                        } else if (result.error === 0) {
-                            im.fire('ImageEditorDidSave', _.extend(im.saveData, {
+                            $.post(im.saveUrl, _.extend(im.saveData, {
                                 fID: im.fileId,
                                 imgData: url
-                            }));
-                            Concrete.event.fire('ImageEditorDidSave', _.extend(im.saveData, {
-                                fID: im.fileId,
-                                imgData: url
-                            }));
+                            }), function (res) {
+                                $.fn.dialog.hideLoader();
+                                var result = JSON.parse(res);
+                                if (result.error === 1) {
+                                    alert(result.message);
+                                    $('button.save[disabled]').attr('disabled', false);
+                                } else if (result.error === 0) {
+                                    im.fire('ImageEditorDidSave', _.extend(im.saveData, {
+                                        fID: im.fileId,
+                                        imgData: url
+                                    }));
+                                    Concrete.event.fire('ImageEditorDidSave', _.extend(im.saveData, {
+                                        fID: im.fileId,
+                                        imgData: url
+                                    }));
+                                }
+                            });
                         }
                     });
                 }
@@ -1024,39 +1048,6 @@ im.bind('ChangeNavTab', function (e, data) {
 im.bind('FiltersLoaded', function () {
     im.hideLoader();
 });
-im.slideOut = $("<div/>").addClass('slideOut').css({
-  width:0,
-  float:'right',
-  height:'100%',
-  'overflow-x':'hidden',
-  right:im.controlContext.width()-1,
-  position:'absolute',
-  background:'white',
-  'box-shadow':'black -20px 0 20px -25px'
-});
-
-im.slideOutContents = $('<div/>').appendTo(im.slideOut).width(300);
-im.showSlideOut = function(contents,callback) {
-  im.hideSlideOut(function(){
-    im.slideOut.empty();
-    im.slideOutContents = contents.width(300);
-    im.slideOut.append(im.slideOutContents)
-    im.slideOut.addClass('active').addClass('sliding');
-    im.slideOut.stop(1).slideOut(300, function(){
-      im.slideOut.removeClass('sliding');
-      ((typeof callback === 'function') && callback());
-    });
-  });
-};
-im.hideSlideOut = function(callback) {
-  im.slideOut.addClass('sliding');
-  im.slideOut.slideIn(300,function(){
-    im.slideOut.css('border-right','0');
-    im.slideOut.removeClass('active').removeClass('sliding');
-    ((typeof callback === 'function') && callback());
-  });
-};
-im.controlContext.after(im.slideOut);
     // End the ImageEditor object.
 
     im.setActiveElement(im.stage);
