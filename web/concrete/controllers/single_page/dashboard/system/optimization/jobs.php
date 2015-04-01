@@ -17,7 +17,7 @@ class Jobs extends DashboardPageController {
 		$env->clearOverrideCache();
 
 		$installed = Job::getList();
-		$this->set('availableJobs', Job::getAvailableList(0)); 
+		$this->set('availableJobs', Job::getAvailableList(1)); 
 		$this->set('installedJobs', $installed); 
 		$this->set('jobSets', JobSet::getList());
 		$this->set('auth', Job::generateAuth());
