@@ -5,6 +5,7 @@ use Loader;
 class Value extends Object {
 
 	protected $attributeType;
+	protected $attributeKey;
 
 	public static function getByID($avID) {
 		$av = new static();
