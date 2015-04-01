@@ -632,23 +632,22 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
                         "select c.cParentID, c.cID, a.arHandle, a.arOverrideCollectionPermissions, a.arID from Pages c inner join Areas a on (c.cID = a.cID) where c.cID = ? and a.arHandle = ?",
                         array($cIDToCheck, $this->getAreaHandle())
                     );
-                    if ($row['arOverrideCollectionPermissions'] == 1) {
+                    if (empty($row)) {
                         break;
-                    } else {
-                        $cIDToCheck = $row['cParentID'];
                     }
-                }
-
-                if (is_array($row)) {
-                    if ($row['arOverrideCollectionPermissions'] && $row['cID'] > 0) {
-                        // then that means we have successfully found a parent area record that we can inherit from. So we set
-                        // out current area to inherit from that COLLECTION ID (not area ID - from the collection ID)
-                        $db->query(
-                            "update Areas set arInheritPermissionsFromAreaOnCID = ? where arID = ?",
-                            array($row['cID'], $this->getAreaID())
-                        );
-                        $this->arInheritPermissionsFromAreaOnCID = $row['cID'];
+                    if ($row['arOverrideCollectionPermissions'] == 1) {
+                        if ($row['cID'] > 0) {
+                            // then that means we have successfully found a parent area record that we can inherit from. So we set
+                            // out current area to inherit from that COLLECTION ID (not area ID - from the collection ID)
+                            $db->query(
+                                "update Areas set arInheritPermissionsFromAreaOnCID = ? where arID = ?",
+                                array($row['cID'], $this->getAreaID())
+                            );
+                            $this->arInheritPermissionsFromAreaOnCID = $row['cID'];
+                        }
+                        break;
                     }
+                    $cIDToCheck = $row['cParentID'];
                 }
             } else {
                 if ($areac->getCollectionInheritance() == 'TEMPLATE') {
