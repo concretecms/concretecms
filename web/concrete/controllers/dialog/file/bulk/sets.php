@@ -98,8 +98,20 @@ class Sets extends BackendInterfaceController
                 }
             }
 
+
+            $sets = array();
+            foreach($this->files as $file) {
+                foreach($file->getFileSets() as $set) {
+                    $o = $set->getJSONObject();
+                    if (!in_array($o, $sets)) {
+                        $sets[] = $o;
+                    }
+                }
+            }
+
             $response = new EditResponse();
             $response->setFiles($this->files);
+            $response->setAdditionalDataAttribute('sets', $sets);
             $response->setMessage(t('File sets updated successfully.'));
             $response->outputJSON();
 

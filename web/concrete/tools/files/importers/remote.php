@@ -64,6 +64,7 @@ if (!$error->has()) {
 }
 
 $import_responses = array();
+$files = array();
 
 // if we haven't gotten any errors yet then try to process the form
 if (!$error->has()) {
@@ -126,6 +127,7 @@ if (!$error->has()) {
                         // we check $fr because we don't want to set it if we are replacing an existing file
                         $respf = $resp->getFile();
                         $respf->setOriginalPage($_POST['ocID']);
+                        $files[] = $respf;
                     } else {
                         $respf = $fr;
                     }
@@ -146,7 +148,5 @@ if (!$error->has()) {
 }
 
 $r->setError($error);
-if (is_object($respf)) {
-    $r->setFile($respf);
-}
+$r->setFiles($files);
 $r->outputJSON();
