@@ -517,11 +517,10 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
     }
 
     /**
-     * gets a list of all areas - no relation to the current page or area object
-     * possibly could be set as a static method??
+     * Gets a list of all areas
      * @return array
      */
-    public function getHandleList()
+    public static function getHandleList()
     {
         $db = Loader::db();
         $r = $db->Execute('select distinct arHandle from Areas where arParentID = 0 and arIsGlobal = 0 order by arHandle asc');
