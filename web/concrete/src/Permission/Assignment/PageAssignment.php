@@ -18,9 +18,7 @@ class PageAssignment extends Assignment {
 
         $db = Loader::db();
         $r = $db->GetOne('select paID from PagePermissionAssignments where cID = ? and pkID = ?', array($this->getPermissionObject()->getPermissionsCollectionID(), $this->pk->getPermissionKeyID()));
-        if ($r) {
-            $pa = PermissionAccess::getByID($r, $this->pk, false);
-        }
+        $pa = $r ? PermissionAccess::getByID($r, $this->pk, false) : null;
 
         $item->set($pa);
 		return $pa;
