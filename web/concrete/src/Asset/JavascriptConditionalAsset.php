@@ -1,7 +1,9 @@
 <?php
 namespace Concrete\Core\Asset;
 
-class JavascriptConditionalAsset extends JavascriptAsset
+use HtmlObject\Element;
+
+class JavascriptConditionalAsset extends Asset
 {
 
     protected $conditional = null;
@@ -29,16 +31,36 @@ class JavascriptConditionalAsset extends JavascriptAsset
         return 'javascript';
     }
 
+    public static function minify($assets)
+    {
+        return false;
+    }
+
+    public static function combine($assets)
+    {
+        return false;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAssetDefaultPosition()
+    {
+        return Asset::ASSET_POSITION_HEADER;
+    }
+
     /**
      * @return string
      */
     public function __toString()
     {
-        $string = parent::__toString();
+        $e = new Element('script');
+        $e->type('text/javascript')->src($this->getAssetURL());
+
         if (!$this->conditional) {
-            return $string;
+            return (string) $e;
         } else {
-            return sprintf('<!--[if %s]>%s<![endif]-->', $this->conditional, $string);
+            return sprintf('<!--[if %s]>%s<![endif]-->', $this->conditional, (string) $e);
         }
     }
 
