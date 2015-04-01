@@ -177,6 +177,11 @@ module.exports = function(grunt) {
             src: '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-cookie/jquery-cookie.js'
         },
 
+        jquery_tristate: {
+            dest: '<%= DIR_BASE %>/concrete/js/jquery-tristate.js',
+            src: '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-tristate/jquery-tristate.js'
+        },
+
         jquery_fileupload: {
             dest: '<%= DIR_BASE %>/concrete/js/jquery-fileupload.js',
             src: [
