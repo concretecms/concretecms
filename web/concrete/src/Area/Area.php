@@ -415,7 +415,7 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
      * @param string $arHandle
      * @return Area
      */
-    final public static function get(&$c, $arHandle)
+    final public static function get($c, $arHandle)
     {
         if (!is_object($c)) {
             return false;
