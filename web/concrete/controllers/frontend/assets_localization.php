@@ -352,6 +352,7 @@ jQuery.Redactor.opts.langs[<?=json_encode($locale)?>] = {
   link_new_tab: <?=json_encode(t('Open link in new tab'))?>,
   /* concrete5 */
   link_same_window: <?=json_encode(t('Open link in same window'))?>,
+  in_lightbox: <?=json_encode(t('Open link in Lightbox'))?>,
   lightbox_link_type: <?=json_encode(t('Link Type'))?>,
   lightbox_link_type_iframe: <?=json_encode(t('Web Page'))?>,
   lightbox_link_type_image: <?=json_encode(t('Image'))?>,
