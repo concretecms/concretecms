@@ -25,31 +25,34 @@ abstract class Facade {
 	}
 
 	/**
-	 * Get the registered name of the component.
+     * Resolve the facade root instance from the container.
 	 *
-	 * @return string
-	 *
-	 * @throws \RuntimeException
+     * @param  string $name
+     * @return mixed
 	 */
-	protected static function getFacadeAccessor() {
-		throw new \RuntimeException("Facade does not implement getFacadeAccessor method.");
+    protected static function resolveFacadeInstance($name)
+    {
+        if (is_object($name)) {
+            return $name;
+        }
+
+        if (isset(static::$resolvedInstance[$name])) {
+            return static::$resolvedInstance[$name];
+        }
+
+        return static::$resolvedInstance[$name] = static::$app[$name];
 	}
 
 	/**
-	 * Resolve the facade root instance from the container.
-	 *
-	 * @param  string  $name
-	 * @return mixed
+     * Get the registered name of the component.
+     *
+     * @return string
+     *
+     * @throws \RuntimeException
 	 */
-	protected static function resolveFacadeInstance($name) {
-		if (is_object($name)) return $name;
-
-		if (isset(static::$resolvedInstance[$name]))
-		{
-			return static::$resolvedInstance[$name];
-		}
-
-		return static::$resolvedInstance[$name] = static::$app[$name];
+    protected static function getFacadeAccessor()
+    {
+        throw new \RuntimeException("Facade does not implement getFacadeAccessor method.");
 	}
 
 	/**
@@ -73,8 +76,8 @@ abstract class Facade {
 
 	/**
 	 * Get the application instance behind the facade.
-	 *
-	 * @return \Illuminate\Foundation\Application
+     *
+     * @return \Concrete\Core\Application\Application
 	 */
 	public static function getFacadeApplication() {
 		return static::$app;
@@ -82,8 +85,8 @@ abstract class Facade {
 
 	/**
 	 * Set the application instance.
-	 *
-	 * @param  \Illuminate\Foundation\Application  $app
+     *
+     * @param  \Concrete\Core\Application\Application $app
 	 * @return void
 	 */
 	public static function setFacadeApplication($app) {
