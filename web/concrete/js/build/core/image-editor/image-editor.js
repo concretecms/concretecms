@@ -418,62 +418,46 @@ im.save = function saveImage() {
             im.stage.setWidth(im.saveWidth + 100);
             im.stage.draw();
 
-            $.ajax(settings.src, {
-                type: "HEAD",
-                success: function(data, status, jqXHR) {
-                    var mime = jqXHR.getResponseHeader('Content-Type');
-                    if (mime !== 'image/jpeg' && mime !== 'image/png') {
-                        if (mime === null) {
-                            // check file extension
-                            var extension = settings.src.split('.').pop();
-                            if (extension === 'jpeg' || extension === 'jpg') {
-                                mime = 'image/jpeg';
-                            } else if (extension === 'png') {
-                                mime = 'image/png';
-                            } else {
-                                mime = 'image/png';
-                            }
-                        } else {
-                            // default to png
-                            mime = 'image/png';
-                        }
-                    }
-                    im.stage.toDataURL({
-                        mimeType: mime,
-                        quality: 0.8,
-                        width: im.saveWidth,
-                        height: im.saveHeight,
-                        callback: function saveImageDataUrlCallback(url) {
-                            im.stage.setPosition(oldStagePosition);
-                            im.background.show();
-                            im.foreground.show();
-                            im.stage.setScale(oldScale);
-                            im.stage.setHeight(oldHeight);
-                            im.stage.setWidth(oldWidth);
-                            im.stage.draw();
+            var mime = settings.mime;
+            if (mime !== 'image/jpeg' && mime !== 'image/png') {
+                // default to png
+                mime = 'image/png';
+            }
 
-                            fake_canvas.remove();
+            im.stage.toDataURL({
+                mimeType: mime,
+                quality: settings.jpegCompression,
+                width: im.saveWidth,
+                height: im.saveHeight,
+                callback: function saveImageDataUrlCallback(url) {
+                    im.stage.setPosition(oldStagePosition);
+                    im.background.show();
+                    im.foreground.show();
+                    im.stage.setScale(oldScale);
+                    im.stage.setHeight(oldHeight);
+                    im.stage.setWidth(oldWidth);
+                    im.stage.draw();
 
-                            $.post(im.saveUrl, _.extend(im.saveData, {
+                    fake_canvas.remove();
+
+                    $.post(im.saveUrl, _.extend(im.saveData, {
+                        fID: im.fileId,
+                        imgData: url
+                    }), function (res) {
+                        $.fn.dialog.hideLoader();
+                        var result = JSON.parse(res);
+                        if (result.error === 1) {
+                            alert(result.message);
+                            $('button.save[disabled]').attr('disabled', false);
+                        } else if (result.error === 0) {
+                            im.fire('ImageEditorDidSave', _.extend(im.saveData, {
                                 fID: im.fileId,
                                 imgData: url
-                            }), function (res) {
-                                $.fn.dialog.hideLoader();
-                                var result = JSON.parse(res);
-                                if (result.error === 1) {
-                                    alert(result.message);
-                                    $('button.save[disabled]').attr('disabled', false);
-                                } else if (result.error === 0) {
-                                    im.fire('ImageEditorDidSave', _.extend(im.saveData, {
-                                        fID: im.fileId,
-                                        imgData: url
-                                    }));
-                                    Concrete.event.fire('ImageEditorDidSave', _.extend(im.saveData, {
-                                        fID: im.fileId,
-                                        imgData: url
-                                    }));
-                                }
-                            });
+                            }));
+                            Concrete.event.fire('ImageEditorDidSave', _.extend(im.saveData, {
+                                fID: im.fileId,
+                                imgData: url
+                            }));
                         }
                     });
                 }
