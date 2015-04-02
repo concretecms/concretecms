@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Asset;
 
 use Concrete\Core\Package\Package;
@@ -6,7 +7,6 @@ use Environment;
 
 abstract class Asset
 {
-
     /**
      * @var string
      */
@@ -69,9 +69,12 @@ abstract class Asset
         return $this->getAssetType();
     }
 
-    abstract public static function minify($assets);
-
-    abstract public static function combine($assets);
+    /**
+     * @param Asset[] $assets
+     *
+     * @return Asset[]
+     */
+    abstract public static function process($assets);
 
     abstract public function __toString();
 
@@ -269,6 +272,7 @@ abstract class Asset
     public function getAssetContents()
     {
         $result = @file_get_contents($this->getAssetPath());
+
         return ($result === false) ? null : $result;
     }
 
@@ -313,6 +317,7 @@ abstract class Asset
             }
         } catch (\Exception $x) {
         }
+
         return $result;
     }
 
