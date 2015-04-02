@@ -2,6 +2,7 @@
 namespace Concrete\Core\Url\Resolver;
 
 use Concrete\Core\Url\Url;
+use Concrete\Core\Url\UrlImmutable;
 
 class CanonicalUrlResolver implements UrlResolverInterface
 {
@@ -53,7 +54,7 @@ class CanonicalUrlResolver implements UrlResolverInterface
             $url->setPort($port);
         }
 
-        return $url;
+        return UrlImmutable::createFromUrl($url);
     }
 
 }
