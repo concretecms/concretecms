@@ -99,7 +99,9 @@ foreach ($filters as $filter) {
                         controlsets: {},
                         filters: {},
                         components: {},
-                        debug: false
+                        debug: false,
+                        jpegCompression: <?= Config::get('concrete.misc.default_jpeg_image_compression') / 100 ?>,
+                        mime: '<?= $fv->getMimeType() ?>'
                     },
                     settings = _.extend(defaults, <?= json_encode($settings) ?>);
                 $('div.controlset', 'div.controls').each(function () {
