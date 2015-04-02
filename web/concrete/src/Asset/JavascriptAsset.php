@@ -58,7 +58,7 @@ class JavascriptAsset extends Asset
     public static function process($assets)
     {
         if ($directory = self::getOutputDirectory()) {
-            $relariveDirectory = self::getRelativeOutputDirectory();
+            $relativeDirectory = self::getRelativeOutputDirectory();
             $filename = '';
             $sourceFiles = array();
             for ($i = 0; $i < count($assets); $i++) {
@@ -83,7 +83,7 @@ class JavascriptAsset extends Asset
             }
 
             $asset = new JavascriptAsset();
-            $asset->setAssetURL($relariveDirectory.'/'.$filename.'.js');
+            $asset->setAssetURL($relativeDirectory.'/'.$filename.'.js');
             $asset->setAssetPath($directory.'/'.$filename.'.js');
             $asset->setCombinedAssetSourceFiles($sourceFiles);
 

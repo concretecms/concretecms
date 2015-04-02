@@ -31,14 +31,9 @@ class JavascriptConditionalAsset extends Asset
         return 'javascript';
     }
 
-    public static function minify($assets)
+    public static function process($assets)
     {
-        return false;
-    }
-
-    public static function combine($assets)
-    {
-        return false;
+        return $assets;
     }
 
     /**
