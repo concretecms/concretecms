@@ -77,31 +77,31 @@ class PathUrlResolver implements UrlResolverInterface
 
     public function handleHost(Url $url, $path, $args)
     {
-        // Normalize
-        $url->setHost(null);
-        $url->setPort(null);
-        $url->setScheme(null);
-
         if (\Config::get('concrete.seo.canonical_host')) {
-            $url->getHost()->set(\Config::get('concrete.seo.canonical_host'));
+            $url->setHost(\Config::get('concrete.seo.canonical_host'));
         } else {
-            $url->getHost()->set(\Request::getInstance()->getHost());
+            $url->setHost(\Request::getInstance()->getHost());
         }
-
-        if ($url->getHost()->get() && !$url->getScheme()->get()) {
-            $url->setScheme(\Request::getInstance()->getScheme());
-        }
-
-        if (\Config::get('concrete.seo.canonical_port')) {
-            $url->getPort()->set(\Config::get('concrete.seo.canonical_port'));
-        } else {
-            $request_port = \Request::getInstance()->getPort();
-            if (isset($request_port)) {
-                $request_port = intval($request_port, 10);
-                if (($url->getScheme()->get() != 'http' || $request_port != 80) && ($url->getScheme()->get() != 'https' || $request_port != 443)) {
-                    $url->getPort()->set($request_port);
+        $url->setPort(null);
+        if ($url->getHost()->get()) {
+            $scheme = $url->getScheme()->get();
+            if (!$scheme) {
+                $url->setScheme(\Request::getInstance()->getScheme());
+                $scheme = $url->getScheme()->get();
+            }
+            $port = \Config::get('concrete.seo.canonical_port');
+            if ($port) {
+                $port = intval($port);
+            } else {
+                $port = \Request::getInstance()->getPort();
+            }
+            if ($port) {
+                if (($scheme != 'http' || $port != 80) && ($scheme != 'https' || $port != 443)) {
+                    $url->setPort($port);
                 }
             }
+        } else {
+            $url->setScheme(null);
         }
     }
 
