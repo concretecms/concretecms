@@ -29,7 +29,15 @@ im.save = function saveImage() {
             im.stage.setWidth(im.saveWidth + 100);
             im.stage.draw();
 
+            var mime = settings.mime;
+            if (mime !== 'image/jpeg' && mime !== 'image/png') {
+                // default to png
+                mime = 'image/png';
+            }
+
             im.stage.toDataURL({
+                mimeType: mime,
+                quality: settings.jpegCompression,
                 width: im.saveWidth,
                 height: im.saveHeight,
                 callback: function saveImageDataUrlCallback(url) {
