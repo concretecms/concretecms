@@ -528,5 +528,15 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
         }
     }
 
+    public function getJSONObject()
+    {
+        $r = new \stdClass;
+        $r->fsName = $this->getFileSetName();
+        $r->fsDisplayName = $this->getFileSetDisplayName();
+        $r->fsID = $this->getFileSetID();
+        return $r;
+    }
+
+
 }
 

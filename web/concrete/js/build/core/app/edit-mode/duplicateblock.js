@@ -5,15 +5,33 @@
      * ClipBoard block used in panels
      * @type {Function}
      */
-    var DuplicateBlock = Concrete.DuplicateBlock = function DuplicateBlock(elem, edit_mode) {
+    var DuplicateBlock = Concrete.DuplicateBlock = function DuplicateBlock(elem, edit_mode, default_area) {
         this.init.apply(this, _.toArray(arguments));
     };
 
     DuplicateBlock.prototype = _.extend(Object.create(Concrete.BlockType.prototype), {
 
-        init: function duplicateBlockInit(elem, edit_mode) {
+        init: function duplicateBlockInit(elem, edit_mode, default_area) {
             var my = this;
-            Concrete.BlockType.prototype.init.call(my, elem, edit_mode, elem.find('.block-content'));
+            Concrete.BlockType.prototype.init.call(my, elem, edit_mode, elem.find('.block-content'), default_area);
+        },
+
+        handleDefaultArea: function() {
+            var my = this;
+            $.pep.unbind(my.getPeper());
+            my.getPeper().click(function (e) {
+                my.handleClick();
+
+                return false;
+            }).css({
+                cursor: 'pointer'
+            }).children('.block-name').css({
+                cursor: 'pointer'
+            });
+        },
+
+        removeElement: function() {
+            this.getElem().remove();
         },
 
         addToDragArea: function DuplicateBlockAddToDragArea(drag_area) {

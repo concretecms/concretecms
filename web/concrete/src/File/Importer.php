@@ -26,6 +26,7 @@ class Importer
     const E_FILE_INVALID = 11; // pointer is invalid file, is a directory, etc...
     const E_FILE_UNABLE_TO_STORE = 12;
     const E_FILE_INVALID_STORAGE_LOCATION = 13;
+    const E_FILE_EXCEEDS_POST_MAX_FILE_SIZE = 20;
 
     protected $rescanThumbnailsOnImport = true;
 
@@ -51,6 +52,10 @@ class Importer
                 break;
             case Importer::E_FILE_INVALID_STORAGE_LOCATION:
                 $msg = t('No default file storage location could be found to store this file.');
+                break;
+            case Importer::E_FILE_EXCEEDS_POST_MAX_FILE_SIZE:
+                $msg = t('Uploaded file is too large. The current value of post_max_filesize is %s',
+                    ini_get('post_max_size'));
                 break;
             case Importer::E_PHP_FILE_EXCEEDS_HTML_MAX_FILE_SIZE:
             case Importer::E_PHP_FILE_EXCEEDS_UPLOAD_MAX_FILESIZE:

@@ -27,7 +27,8 @@ class ServiceProvider extends \Concrete\Core\Foundation\Service\Provider
                         \Config::get('auth.facebook.secret'),
                         (string) \URL::to($callback)
                     ),
-                    new SymfonySession(\Session::getFacadeRoot(), false));
+                    new SymfonySession(\Session::getFacadeRoot(), false),
+                    array('email'));
             }
         );
     }

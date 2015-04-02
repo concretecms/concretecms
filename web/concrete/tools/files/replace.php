@@ -108,7 +108,7 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
         $('#ccm-file-manager-replace-incoming,#ccm-file-manager-replace-remote,#ccm-file-manager-replace-upload').concreteAjaxForm();
         ConcreteEvent.subscribe('AjaxFormSubmitSuccess', function(e, data) {
             if (data.form == 'replace-file') {
-                ConcreteEvent.publish('FileManagerUpdateRequestComplete', {files: data.response.files});
+                ConcreteEvent.publish('FileManagerReplaceFileComplete', {files: data.response.files});
             }
         });
     });

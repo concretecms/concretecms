@@ -118,4 +118,26 @@ class Number
 
         return t(/*i18n %s is a number, TB means Terabyte */'%s TB', $this->format($size, 2));
     }
+
+    /**
+     * Nice and elegant function for converting memory. Thanks to @lightness races in orbit on Stackoverflow.
+     * @param $val
+     * @return int|string
+     */
+    public function getBytes($val)
+    {
+        $val = trim($val);
+        $last = strtolower($val[strlen($val)-1]);
+        switch($last) {
+            // The 'G' modifier is available since PHP 5.1.0
+            case 'g':
+                $val *= 1024;
+            case 'm':
+                $val *= 1024;
+            case 'k':
+                $val *= 1024;
+        }
+
+        return $val;
+    }
 }

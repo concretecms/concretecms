@@ -12,16 +12,25 @@ use File;
 class Properties extends BackendInterfaceController {
 
 	protected $viewPath = '/dialogs/file/bulk/properties';
-	protected $files = array();
+	protected $controllerActionPath = '/ccm/system/dialogs/file/bulk/properties';
+	protected $files;
 	protected $canEdit = false;
 
 	protected function canAccess() {
-		$fp = FilePermissions::GetGlobal();
-		$this->populateFiles();
 		return $this->canEdit;
 	}
 
-	protected function populateFiles() {
+	protected function setFiles($files)
+	{
+		$this->files = $files;
+	}
+
+	public function on_start() {
+		parent::on_start();
+		if (!isset($this->files)) {
+			$this->files = array();
+		}
+
 		if (is_array($_REQUEST['fID'])) {
 			foreach($_REQUEST['fID'] as $fID) {
 				$f = File::getByID($fID);
@@ -42,14 +51,11 @@ class Properties extends BackendInterfaceController {
 		} else {
 			$this->canEdit = false;
 		}
-
-		return $this->canEdit;
 	}
 
 	public function view() {
 		$r = ResponseAssetGroup::get();
 		$r->requireAsset('core/app/editable-fields');
-		$this->populateFiles();
 		$form = Loader::helper('form');
 		$attribs = FileAttributeKey::getList();
 		$this->set('files', $this->files);
@@ -60,7 +66,6 @@ class Properties extends BackendInterfaceController {
 		$fr = new FileEditResponse();
 		$ak = FileAttributeKey::get($_REQUEST['name']);
 		if ($this->validateAction()) {
-			$this->populateFiles();
 			if ($this->canEdit) {
 				foreach($this->files as $f) {
 					$fv = $f->getVersionToModify();
@@ -81,7 +86,6 @@ class Properties extends BackendInterfaceController {
 		$fr = new FileEditResponse();
 		$ak = FileAttributeKey::get($_REQUEST['akID']);
 		if ($this->validateAction()) {
-			$this->populateFiles();
 			if ($this->canEdit) {
 				foreach($this->files as $f) {
 					$fv = $f->getVersionToModify();

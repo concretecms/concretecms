@@ -1,11 +1,12 @@
 <?php
+
 namespace Concrete\Core\Asset;
 
+use Concrete\Core\Package\Package;
 use Environment;
 
 abstract class Asset
 {
-
     /**
      * @var string
      */
@@ -63,9 +64,17 @@ abstract class Asset
 
     abstract public function getAssetType();
 
-    abstract public static function minify($assets);
+    public function getOutputAssetType()
+    {
+        return $this->getAssetType();
+    }
 
-    abstract public static function combine($assets);
+    /**
+     * @param Asset[] $assets
+     *
+     * @return Asset[]
+     */
+    abstract public static function process($assets);
 
     abstract public function __toString();
 
@@ -105,6 +114,14 @@ abstract class Asset
      * @return string
      */
     public function getAssetURL()
+    {
+        return $this->assetURL;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAssetHashKey()
     {
         return $this->assetURL;
     }
@@ -246,6 +263,85 @@ abstract class Asset
             $this->setAssetURL($r->url);
         } else {
             $this->setAssetURL($path);
+        }
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getAssetContents()
+    {
+        $result = @file_get_contents($this->getAssetPath());
+
+        return ($result === false) ? null : $result;
+    }
+
+    /**
+     * @param string $route
+     *
+     * @return string|null
+     */
+    protected static function getAssetContentsByRoute($route)
+    {
+        $result = null;
+        try {
+            $routes = \Route::getList();
+            /* @var $routes \Symfony\Component\Routing\RouteCollection */
+            $context = new \Symfony\Component\Routing\RequestContext();
+            $request = \Request::getInstance();
+            $context->fromRequest($request);
+            $matcher = new \Symfony\Component\Routing\Matcher\UrlMatcher($routes, $context);
+            $matched = null;
+            try {
+                $matched = $matcher->match($route);
+            } catch (\Exception $x) {
+                $m = null;
+                // Route matcher requires that paths ends with a slash
+                if (preg_match('/^(.*[^\/])($|\?.*)$/', $route, $m)) {
+                    try {
+                        $matched = $matcher->match($m[1].'/'.(isset($m[2]) ? $m[2] : ''));
+                    } catch (\Exception $x) {
+                    }
+                }
+            }
+            if (isset($matched)) {
+                $controller = $matched['_controller'];
+                if (is_callable($controller)) {
+                    ob_start();
+                    $r = call_user_func($controller, false);
+                    if ($r !== false) {
+                        $result = ob_get_contents();
+                    }
+                    ob_end_clean();
+                }
+            }
+        } catch (\Exception $x) {
+        }
+
+        return $result;
+    }
+
+    public function register($filename, $args, $pkg = false)
+    {
+        if ($pkg != false) {
+            if (!($pkg instanceof Package)) {
+                $pkg = Package::getByHandle($pkg);
+            }
+            $this->setPackageObject($pkg);
+        }
+        $this->setAssetIsLocal($args['local']);
+        $this->mapAssetLocation($filename);
+        if ($args['minify'] === true || $args['minify'] === false) {
+            $this->setAssetSupportsMinification($args['minify']);
+        }
+        if ($args['combine'] === true || $args['combine'] === false) {
+            $this->setAssetSupportsCombination($args['combine']);
+        }
+        if ($args['version']) {
+            $this->setAssetVersion($args['version']);
+        }
+        if ($args['position']) {
+            $this->setAssetPosition($args['position']);
         }
     }
 }

@@ -276,14 +276,19 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
             $last_name = strrev($reversed_last_name);
         }
 
+        $username = null;
         if ($this->supportsUsername()) {
             $username = $this->getUsername();
-        } elseif ($first_name || $last_name) {
-            $username = preg_replace('/[^a-z0-9\_]/', '_', strtolower($first_name . ' ' . $last_name));
-            $username = trim('_', preg_replace('/_{2,}/', '_', $username));
-        } else {
-            $username = preg_replace('/[^a-zA-Z0-9\_]/i', '_', strtolower(substr($email, 0, strpos($email, '@'))));
-            $username = trim('_', preg_replace('/_{2,}/', '_', $username));
+        }
+
+        if ($username === null) {
+            if ($first_name || $last_name) {
+                $username = preg_replace('/[^a-z0-9\_]/', '_', strtolower($first_name . ' ' . $last_name));
+                $username = trim(preg_replace('/_{2,}/', '_', $username), '_');
+            } else {
+                $username = preg_replace('/[^a-zA-Z0-9\_]/i', '_', strtolower(substr($email, 0, strpos($email, '@'))));
+                $username = trim(preg_replace('/_{2,}/', '_', $username), '_');
+            }
         }
 
         $unique_username = $username;

@@ -30,6 +30,10 @@ if ($ap->canAddLayout()) {
     $handles .= BLOCK_HANDLE_LAYOUT_PROXY . ' ';
 }
 
+if ($ap->canAddStack()) {
+    $handles .= 'stack ';
+}
+
 if ($canAddGathering) {
     $handles .= BLOCK_HANDLE_GATHERING_ITEM_PROXY . ' ';
 }
