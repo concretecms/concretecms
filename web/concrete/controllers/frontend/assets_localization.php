@@ -349,6 +349,7 @@ jQuery.Redactor.opts.langs[<?=json_encode($locale)?>] = {
   horizontalrule: <?=json_encode(t('Insert Horizontal Rule'))?>,
   deleted: <?=json_encode(t('Deleted'))?>,
   anchor: <?=json_encode(t('Anchor'))?>,
+  open_link: <?=json_encode(t('Open Link'))?>,
   link_new_tab: <?=json_encode(t('Open link in new tab'))?>,
   /* concrete5 */
   link_same_window: <?=json_encode(t('Open link in same window'))?>,
