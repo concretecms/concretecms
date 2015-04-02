@@ -1,19 +1,19 @@
 <?php
+
 namespace Concrete\Core\Area;
 
 use Loader;
-use \Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\Object;
 use Block;
 use PermissionKey;
 use View;
 use Permissions;
 use Page;
 use User;
-use \Concrete\Core\Block\View\BlockView;
+use Concrete\Core\Block\View\BlockView;
 
 class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
 {
-
     /**
      * @var int
      */
@@ -37,13 +37,14 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
     /* area-specific attributes */
 
     /**
-     * limits the number of blocks in the area
+     * limits the number of blocks in the area.
+     *
      * @var int
      */
     public $maximumBlocks = -1; //
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $showControls = -1;
 
@@ -58,8 +59,10 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
     public $enclosingEnd = '';
 
     /**
-     * Array of Blocks within the current area
+     * Array of Blocks within the current area.
+     *
      * @see Area::getAreaBlocksArray()
+     *
      * @var Block[]
      */
     public $areaBlocksArray = array();
@@ -108,7 +111,8 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
     }
 
     /**
-     * Returns whether or not controls are to be displayed
+     * Returns whether or not controls are to be displayed.
+     *
      * @return bool
      */
     public function showControls()
@@ -117,12 +121,13 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
             return $this->showControls;
         } else {
             $c = $this->getAreaCollectionObject();
+
             return $c->isEditMode();
         }
     }
 
     /**
-     * Force enables controls to show
+     * Force enables controls to show.
      */
     public function forceControlsToDisplay()
     {
@@ -139,6 +144,7 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
 
     /**
      * @return int|null
+     *
      * @throws \Exception
      */
     public function getAreaGridMaximumColumns()
@@ -159,11 +165,12 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
                 }
             }
         }
+
         return $this->arGridMaximumColumns;
     }
 
     /**
-     * Enable Grid containers
+     * Enable Grid containers.
      */
     final public function enableGridContainer()
     {
@@ -194,7 +201,7 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
      * The constructor is used primarily on page templates to create areas of content that are editable within the cms.
      * ex: $a = new Area('Main'); $a->display($c)
      * We actually use Collection::getArea() when we want to interact with a fully
-     * qualified Area object when dealing with a Page/Collection object
+     * qualified Area object when dealing with a Page/Collection object.
      *
      * @param string
      */
@@ -208,7 +215,7 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
      */
     public function getPermissionObjectIdentifier()
     {
-        return $this->getCollectionID() . ':' . $this->getAreaHandle();
+        return $this->getCollectionID().':'.$this->getAreaHandle();
     }
 
     /**
@@ -235,9 +242,9 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
         return 'area';
     }
 
-
     /**
-     * returns the Collection's cID
+     * returns the Collection's cID.
+     *
      * @return int
      */
     public function getCollectionID()
@@ -248,7 +255,8 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
     }
 
     /**
-     * returns the Collection object for the current Area
+     * returns the Collection object for the current Area.
+     *
      * @return Page
      */
     public function getAreaCollectionObject()
@@ -257,7 +265,8 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
     }
 
     /**
-     * whether or not it's a global area
+     * whether or not it's a global area.
+     *
      * @return bool
      */
     public function isGlobalArea()
@@ -266,7 +275,8 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
     }
 
     /**
-     * returns the arID of the current area
+     * returns the arID of the current area.
+     *
      * @return int
      */
     public function getAreaID()
@@ -275,7 +285,8 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
     }
 
     /**
-     * returns the handle for the current area
+     * returns the handle for the current area.
+     *
      * @return string
      */
     public function getAreaHandle()
@@ -285,6 +296,7 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
 
     /**
      * Returns the total number of blocks in an area.
+     *
      * @param Page $c must be passed if the display() method has not been run on the area object yet.
      */
     public function getTotalBlocksInArea($c = false)
@@ -319,6 +331,7 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
             $sr = $db->GetOne($q, $v);
             $r += $sr;
         }
+
         return $r;
     }
 
@@ -332,12 +345,14 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
             'select count(b.bID) from CollectionVersionBlocks cvb inner join Blocks b on cvb.bID = b.bID inner join BlockTypes bt on b.btID = bt.btID where cID = ? and cvID = ? and arHandle = ?',
             array($this->c->getCollectionID(), $this->c->getVersionID(), $this->arHandle)
         );
+
         return $r;
     }
 
     /**
-     * check if the area has permissions that override the page's permissions
-     * @return boolean
+     * check if the area has permissions that override the page's permissions.
+     *
+     * @return bool
      */
     public function overrideCollectionPermissions()
     {
@@ -354,8 +369,8 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
 
     /**
      * Sets the total number of blocks an area allows. Does not limit by type.
+     *
      * @param int $num
-     * @return void
      */
     public function setBlockLimit($num)
     {
@@ -363,8 +378,7 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
     }
 
     /**
-     * disables controls for the current area
-     * @return void
+     * disables controls for the current area.
      */
     public function disableControls()
     {
@@ -372,7 +386,8 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
     }
 
     /**
-     * gets the maximum allowed number of blocks, -1 if unlimited
+     * gets the maximum allowed number of blocks, -1 if unlimited.
+     *
      * @return int
      */
     public function getMaximumBlocks()
@@ -383,19 +398,21 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
     /**
      * @param string $task
      * @param null $alternateHandler
+     *
      * @return string
      */
     public function getAreaUpdateAction($task = 'update', $alternateHandler = null)
     {
         $valt = Loader::helper('validation/token');
-        $token = '&' . $valt->getParameter();
-        $step = ($_REQUEST['step']) ? '&step=' . $_REQUEST['step'] : '';
+        $token = '&'.$valt->getParameter();
+        $step = ($_REQUEST['step']) ? '&step='.$_REQUEST['step'] : '';
         $c = $this->getAreaCollectionObject();
         if ($alternateHandler) {
-            $str = $alternateHandler . "?atask={$task}&cID=" . $c->getCollectionID() . "&arHandle=" . $this->getAreaHandle() . $step . $token;
+            $str = $alternateHandler."?atask={$task}&cID=".$c->getCollectionID().'&arHandle='.$this->getAreaHandle().$step.$token;
         } else {
-            $str = DIR_REL . "/" . DISPATCHER_FILENAME . "?atask=" . $task . "&cID=" . $c->getCollectionID() . "&arHandle=" . $this->getAreaHandle() . $step . $token;
+            $str = DIR_REL.'/'.DISPATCHER_FILENAME.'?atask='.$task.'&cID='.$c->getCollectionID().'&arHandle='.$this->getAreaHandle().$step.$token;
         }
+
         return $str;
     }
 
@@ -410,12 +427,14 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
     }
 
     /**
-     * Gets the Area object for the given page and area handle
+     * Gets the Area object for the given page and area handle.
+     *
      * @param Page $c
      * @param string $arHandle
+     *
      * @return Area
      */
-    final public static function get(&$c, $arHandle)
+    final public static function get($c, $arHandle)
     {
         if (!is_object($c)) {
             return false;
@@ -426,41 +445,43 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
         $item = $cache->getItem($identifier);
         if (!$item->isMiss()) {
             $areas = $item->get();
-            return $areas[$arHandle];
-        }
-        $areas = array();
-        $db = Loader::db();
-        // First, we verify that this is a legitimate area
-        $v = array($c->getCollectionID());
-        $q = "select arID, arHandle, cID, arOverrideCollectionPermissions, arInheritPermissionsFromAreaOnCID, arIsGlobal, arParentID from Areas where cID = ?";
-        $r = $db->Execute($q, $v);
-        while ($arRow = $r->FetchRow()) {
-            if ($arRow['arID'] > 0) {
-                if ($arRow['arIsGlobal']) {
-                    $obj = new GlobalArea($arHandle);
-                } else {
-                    if ($arRow['arParentID']) {
-                        $arParentHandle = self::getAreaHandleFromID($arRow['arParentID']);
-                        $obj = new SubArea($arHandle, $arParentHandle, $arRow['arParentID']);
+        } else {
+            $areas = array();
+            $db = Loader::db();
+            // First, we verify that this is a legitimate area
+            $v = array($c->getCollectionID());
+            $q = 'select arID, arHandle, cID, arOverrideCollectionPermissions, arInheritPermissionsFromAreaOnCID, arIsGlobal, arParentID from Areas where cID = ?';
+            $r = $db->Execute($q, $v);
+            while ($arRow = $r->FetchRow()) {
+                if ($arRow['arID'] > 0) {
+                    if ($arRow['arIsGlobal']) {
+                        $obj = new GlobalArea($arHandle);
                     } else {
-                        $obj = new Area($arHandle);
+                        if ($arRow['arParentID']) {
+                            $arParentHandle = self::getAreaHandleFromID($arRow['arParentID']);
+                            $obj = new SubArea($arHandle, $arParentHandle, $arRow['arParentID']);
+                        } else {
+                            $obj = new Area($arHandle);
+                        }
                     }
+                    $obj->setPropertiesFromArray($arRow);
+                    $obj->c = $c;
+                    $arRowHandle = $arRow['arHandle'];
+                    $areas[$arRowHandle] = $obj;
                 }
-                $obj->setPropertiesFromArray($arRow);
-                $obj->c = $c;
-                $arRowHandle = $arRow['arHandle'];
-                $areas[$arRowHandle] = $obj;
             }
+            $item->set($areas);
         }
 
-        $item->set($areas);
-        return $areas[$arHandle];
+        return isset($areas[$arHandle]) ? $areas[$arHandle] : null;
     }
 
     /**
      * Creates an area in the database. I would like to make this static but PHP pre 5.3 sucks at this stuff.
+     *
      * @param Page $c
      * @param string $arHandle
+     *
      * @return Area
      */
     public function create($c, $arHandle)
@@ -476,12 +497,12 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
         $area = self::get($c, $arHandle);
         $area->rescanAreaPermissionsChain();
 
-
         return $area;
     }
 
     /**
      * @param $arID
+     *
      * @return string
      */
     public static function getAreaHandleFromID($arID)
@@ -496,13 +517,16 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
             $db = Loader::db();
             $arHandle = $db->GetOne('select arHandle from Areas where arID = ?', array($arID));
             $item->set($arHandle);
+
             return $arHandle;
         }
     }
 
     /**
-     * Get all of the blocks within the current area for a given page
+     * Get all of the blocks within the current area for a given page.
+     *
      * @param Page|bool $c
+     *
      * @return Block[]
      */
     public function getAreaBlocksArray($c = false)
@@ -513,15 +537,16 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
         if (!$this->arIsLoaded) {
             $this->load($c);
         }
+
         return $this->areaBlocksArray;
     }
 
     /**
-     * gets a list of all areas - no relation to the current page or area object
-     * possibly could be set as a static method??
+     * Gets a list of all areas.
+     *
      * @return array
      */
-    public function getHandleList()
+    public static function getHandleList()
     {
         $db = Loader::db();
         $r = $db->Execute('select distinct arHandle from Areas where arParentID = 0 and arIsGlobal = 0 order by arHandle asc');
@@ -532,11 +557,13 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
         $r->Free();
         unset($r);
         unset($db);
+
         return $handles;
     }
 
     /**
      * @param Page $c
+     *
      * @return Area[]
      */
     public function getListOnPage(Page $c)
@@ -558,14 +585,14 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
                 }
             }
             $item->set($areas);
+
             return $areas;
         }
     }
 
     /**
      * This function removes all permissions records for the current Area
-     * and sets it to inherit from the Page permissions
-     * @return void
+     * and sets it to inherit from the Page permissions.
      */
     public function revertToPagePermissions()
     {
@@ -575,8 +602,8 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
 
         $db = Loader::db();
         $v = array($this->getAreaHandle(), $this->getCollectionID());
-        $db->query("delete from AreaPermissionAssignments where arHandle = ? and cID = ?", $v);
-        $db->query("update Areas set arOverrideCollectionPermissions = 0 where arID = ?", array($this->getAreaID()));
+        $db->query('delete from AreaPermissionAssignments where arHandle = ? and cID = ?', $v);
+        $db->query('update Areas set arOverrideCollectionPermissions = 0 where arID = ?', array($this->getAreaID()));
 
         // now we set rescan this area to determine where it -should- be inheriting from
         $this->arOverrideCollectionPermissions = false;
@@ -598,9 +625,9 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
         unset($this->c);
     }
 
-
     /**
-     * Rescans the current Area's permissions ensuring that it's inheriting permissions properly up the chain
+     * Rescans the current Area's permissions ensuring that it's inheriting permissions properly up the chain.
+     *
      * @return bool
      */
     public function rescanAreaPermissionsChain()
@@ -617,12 +644,12 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
                 // first, we temporarily set the arInheritPermissionsFromAreaOnCID to whatever the arInheritPermissionsFromAreaOnCID is set to
                 // in the immediate parent collection
                 $arInheritPermissionsFromAreaOnCID = $db->getOne(
-                    "select a.arInheritPermissionsFromAreaOnCID from Pages c inner join Areas a on (c.cID = a.cID) where c.cID = ? and a.arHandle = ?",
+                    'select a.arInheritPermissionsFromAreaOnCID from Pages c inner join Areas a on (c.cID = a.cID) where c.cID = ? and a.arHandle = ?',
                     array($cIDToCheck, $this->getAreaHandle())
                 );
                 if ($arInheritPermissionsFromAreaOnCID > 0) {
                     $db->query(
-                        "update Areas set arInheritPermissionsFromAreaOnCID = ? where arID = ?",
+                        'update Areas set arInheritPermissionsFromAreaOnCID = ? where arID = ?',
                         array($arInheritPermissionsFromAreaOnCID, $this->getAreaID())
                     );
                 }
@@ -631,37 +658,36 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
 
                 while ($cIDToCheck > 0) {
                     $row = $db->getRow(
-                        "select c.cParentID, c.cID, a.arHandle, a.arOverrideCollectionPermissions, a.arID from Pages c inner join Areas a on (c.cID = a.cID) where c.cID = ? and a.arHandle = ?",
+                        'select c.cParentID, c.cID, a.arHandle, a.arOverrideCollectionPermissions, a.arID from Pages c inner join Areas a on (c.cID = a.cID) where c.cID = ? and a.arHandle = ?',
                         array($cIDToCheck, $this->getAreaHandle())
                     );
-                    if ($row['arOverrideCollectionPermissions'] == 1) {
+                    if (empty($row)) {
                         break;
-                    } else {
-                        $cIDToCheck = $row['cParentID'];
                     }
-                }
-
-                if (is_array($row)) {
-                    if ($row['arOverrideCollectionPermissions'] && $row['cID'] > 0) {
-                        // then that means we have successfully found a parent area record that we can inherit from. So we set
-                        // out current area to inherit from that COLLECTION ID (not area ID - from the collection ID)
-                        $db->query(
-                            "update Areas set arInheritPermissionsFromAreaOnCID = ? where arID = ?",
-                            array($row['cID'], $this->getAreaID())
-                        );
-                        $this->arInheritPermissionsFromAreaOnCID = $row['cID'];
+                    if ($row['arOverrideCollectionPermissions'] == 1) {
+                        if ($row['cID'] > 0) {
+                            // then that means we have successfully found a parent area record that we can inherit from. So we set
+                            // out current area to inherit from that COLLECTION ID (not area ID - from the collection ID)
+                            $db->query(
+                                'update Areas set arInheritPermissionsFromAreaOnCID = ? where arID = ?',
+                                array($row['cID'], $this->getAreaID())
+                            );
+                            $this->arInheritPermissionsFromAreaOnCID = $row['cID'];
+                        }
+                        break;
                     }
+                    $cIDToCheck = $row['cParentID'];
                 }
             } else {
                 if ($areac->getCollectionInheritance() == 'TEMPLATE') {
                     // we grab an area on the master collection (if it exists)
                     $doOverride = $db->getOne(
-                        "select arOverrideCollectionPermissions from Pages c inner join Areas a on (c.cID = a.cID) where c.cID = ? and a.arHandle = ?",
+                        'select arOverrideCollectionPermissions from Pages c inner join Areas a on (c.cID = a.cID) where c.cID = ? and a.arHandle = ?',
                         array($areac->getPermissionsCollectionID(), $this->getAreaHandle())
                     );
                     if ($doOverride && $areac->getPermissionsCollectionID() > 0) {
                         $db->query(
-                            "update Areas set arInheritPermissionsFromAreaOnCID = ? where arID = ?",
+                            'update Areas set arInheritPermissionsFromAreaOnCID = ? where arID = ?',
                             array($areac->getPermissionsCollectionID(), $this->getAreaID())
                         );
                         $this->arInheritPermissionsFromAreaOnCID = $areac->getPermissionsCollectionID();
@@ -675,8 +701,8 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
      * works a lot like rescanAreaPermissionsChain() but it works down. This is typically only
      * called when we update an area to have specific permissions, and all areas that are on pagesbelow it with the same
      * handle, etc... should now inherit from it.
+     *
      * @param int $cIDToCheck
-     * @return void
      */
     public function rescanSubAreaPermissions($cIDToCheck = null)
     {
@@ -690,14 +716,14 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
 
         $v = array($this->getAreaHandle(), 'PARENT', $cIDToCheck);
         $r = $db->query(
-            "select Areas.arID, Areas.cID from Areas inner join Pages on (Areas.cID = Pages.cID) where Areas.arHandle = ? and cInheritPermissionsFrom = ? and arOverrideCollectionPermissions = 0 and cParentID = ?",
+            'select Areas.arID, Areas.cID from Areas inner join Pages on (Areas.cID = Pages.cID) where Areas.arHandle = ? and cInheritPermissionsFrom = ? and arOverrideCollectionPermissions = 0 and cParentID = ?',
             $v
         );
         while ($row = $r->fetchRow()) {
             // these are all the areas we need to update.
             if ($this->getAreaCollectionInheritID() > 0) {
                 $db->query(
-                    "update Areas set arInheritPermissionsFromAreaOnCID = ? where arID = ?",
+                    'update Areas set arInheritPermissionsFromAreaOnCID = ? where arID = ?',
                     array($this->getAreaCollectionInheritID(), $row['arID'])
                 );
                 $this->rescanSubAreaPermissions($row['cID']);
@@ -706,9 +732,12 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
     }
 
     /**
-     * similar to rescanSubAreaPermissions, but for those who have setup their pages to inherit master collection permissions
+     * similar to rescanSubAreaPermissions, but for those who have setup their pages to inherit master collection permissions.
+     *
      * @see Area::rescanSubAreaPermissions()
+     *
      * @param Page $masterCollection
+     *
      * @return bool
      */
     public function rescanSubAreaPermissionsMasterCollection($masterCollection)
@@ -725,7 +754,7 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
         $db = Loader::db();
         $v = array($this->getAreaHandle(), 'TEMPLATE', $masterCollection->getCollectionID());
         $db->query(
-            "update Areas, Pages set Areas.arInheritPermissionsFromAreaOnCID = " . $toSetCID . " where Areas.cID = Pages.cID and Areas.arHandle = ? and cInheritPermissionsFrom = ? and arOverrideCollectionPermissions = 0 and cInheritPermissionsFromCID = ?",
+            'update Areas, Pages set Areas.arInheritPermissionsFromAreaOnCID = '.$toSetCID.' where Areas.cID = Pages.cID and Areas.arHandle = ? and cInheritPermissionsFrom = ? and arOverrideCollectionPermissions = 0 and cInheritPermissionsFromCID = ?',
             $v
         );
     }
@@ -733,6 +762,7 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
     /**
      * @param Page $c
      * @param string $arHandle
+     *
      * @return Area
      */
     public static function getOrCreate($c, $arHandle)
@@ -742,6 +772,7 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
             $a = new Area($arHandle);
             $area = $a->create($c, $arHandle);
         }
+
         return $area;
     }
 
@@ -782,19 +813,21 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
             }
             $blocks[] = $ab;
         }
+
         return $blocks;
     }
 
     /**
      * displays the Area in the page
-     * ex: $a = new Area('Main'); $a->display($c);
+     * ex: $a = new Area('Main'); $a->display($c);.
+     *
      * @param Page $c
      * @param Block[] $alternateBlockArray optional array of blocks to render instead of default behavior
+     *
      * @return bool
      */
     public function display($c, $alternateBlockArray = null)
     {
-
         $v = View::getRequestInstance();
 
         if (!is_object($c) || $c->isError()) {
@@ -808,7 +841,6 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
 
         $blocksToDisplay = ($alternateBlockArray) ? $alternateBlockArray : $this->getAreaBlocksArray();
-
 
         $u = new User();
 
@@ -842,7 +874,8 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
     }
 
     /**
-     * Exports the area to content format
+     * Exports the area to content format.
+     *
      * @param \SimpleXMLElement $p
      * @param Page $page
      */
@@ -863,11 +896,10 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
     }
 
-
     /**
-     * Specify HTML to automatically print before blocks contained within the area
+     * Specify HTML to automatically print before blocks contained within the area.
+     *
      * @param string $html
-     * @return void
      */
     public function setBlockWrapperStart($html)
     {
@@ -875,9 +907,9 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
     }
 
     /**
-     * Set HTML that automatically prints after any blocks contained within the area
+     * Set HTML that automatically prints after any blocks contained within the area.
+     *
      * @param string $html
-     * @return void
      */
     public function setBlockWrapperEnd($html)
     {
@@ -891,7 +923,7 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
         $v = array($cID, $this->getAreaHandle());
         // update the Area record itself. Hopefully it's been created.
         $db->query(
-            "update Areas set arOverrideCollectionPermissions = 1, arInheritPermissionsFromAreaOnCID = 0 where arID = ?",
+            'update Areas set arOverrideCollectionPermissions = 1, arInheritPermissionsFromAreaOnCID = 0 where arID = ?',
             array($this->getAreaID())
         );
 
@@ -919,7 +951,8 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
      * Sets a custom block template for blocks of a type specified by the btHandle
      * Note, these can be stacked. For example
      * $a->setCustomTemplate('image', 'banner');
-     * $a->setCustomTemplate('content', 'masthead_content');
+     * $a->setCustomTemplate('content', 'masthead_content');.
+     *
      * @param string $btHandle handle for the block type
      * @param string $view string identifying the block template ex: 'templates/breadcrumb.php'
      */
@@ -930,11 +963,11 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
 
     /**
      * returns an array of custom templates defined for this Area object.
+     *
      * @return array
      */
     public function getAreaCustomTemplates()
     {
         return $this->arCustomTemplates;
     }
-
 }
