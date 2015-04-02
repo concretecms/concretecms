@@ -135,7 +135,7 @@ class CssAsset extends Asset
     public static function process($assets)
     {
         if ($directory = self::getOutputDirectory()) {
-            $relariveDirectory = self::getRelativeOutputDirectory();
+            $relativeDirectory = self::getRelativeOutputDirectory();
             $filename = '';
             $sourceFiles = array();
             for ($i = 0; $i < count($assets); $i++) {
@@ -150,7 +150,7 @@ class CssAsset extends Asset
                 foreach ($assets as $asset) {
                     $contents = $asset->getAssetContents();
                     if (isset($contents)) {
-                        $contents = CssAsset::changePaths($contents, $asset->getAssetURLPath(), $relariveDirectory);
+                        $contents = CssAsset::changePaths($contents, $asset->getAssetURLPath(), $relativeDirectory);
                         if ($asset->assetSupportsMinification()) {
                             $contents = \CssMin::minify($contents);
                         }
@@ -161,7 +161,7 @@ class CssAsset extends Asset
             }
 
             $asset = new CssAsset();
-            $asset->setAssetURL($relariveDirectory.'/'.$filename.'.css');
+            $asset->setAssetURL($relativeDirectory.'/'.$filename.'.css');
             $asset->setAssetPath($directory.'/'.$filename.'.css');
             $asset->setCombinedAssetSourceFiles($sourceFiles);
 
