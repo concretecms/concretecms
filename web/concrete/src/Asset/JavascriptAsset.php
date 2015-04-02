@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Asset;
 
 use HtmlObject\Element;
@@ -6,7 +7,6 @@ use Config;
 
 class JavascriptAsset extends Asset
 {
-
     /**
      * @var bool
      */
@@ -28,9 +28,9 @@ class JavascriptAsset extends Asset
     /**
      * @return string
      */
-    public function getRelativeOutputDirectory()
+    public static function getRelativeOutputDirectory()
     {
-        return REL_DIR_FILES_CACHE . '/' . DIRNAME_JAVASCRIPT;
+        return REL_DIR_FILES_CACHE.'/'.DIRNAME_JAVASCRIPT;
     }
 
     /**
@@ -38,13 +38,13 @@ class JavascriptAsset extends Asset
      */
     protected static function getOutputDirectory()
     {
-        if (!file_exists(Config::get('concrete.cache.directory') . '/' . DIRNAME_JAVASCRIPT)) {
-            $proceed = @mkdir(Config::get('concrete.cache.directory') . '/' . DIRNAME_JAVASCRIPT);
+        if (!file_exists(Config::get('concrete.cache.directory').'/'.DIRNAME_JAVASCRIPT)) {
+            $proceed = @mkdir(Config::get('concrete.cache.directory').'/'.DIRNAME_JAVASCRIPT);
         } else {
             $proceed = true;
         }
         if ($proceed) {
-            return Config::get('concrete.cache.directory') . '/' . DIRNAME_JAVASCRIPT;
+            return Config::get('concrete.cache.directory').'/'.DIRNAME_JAVASCRIPT;
         } else {
             return false;
         }
@@ -52,59 +52,45 @@ class JavascriptAsset extends Asset
 
     /**
      * @param Asset[] $assets
-     * @param $processFunction
+     *
      * @return Asset[]
      */
-    protected static function process($assets, $processFunction)
+    public static function process($assets)
     {
         if ($directory = self::getOutputDirectory()) {
+            $relativeDirectory = self::getRelativeOutputDirectory();
             $filename = '';
             $sourceFiles = array();
             for ($i = 0; $i < count($assets); $i++) {
                 $asset = $assets[$i];
-                $filename .= $asset->getAssetURL();
+                $filename .= $asset->getAssetHashKey();
                 $sourceFiles[] = $asset->getAssetURL();
             }
             $filename = sha1($filename);
-            $cacheFile = $directory . '/' . $filename . '.js';
+            $cacheFile = $directory.'/'.$filename.'.js';
             if (!file_exists($cacheFile)) {
                 $js = '';
-                foreach($assets as $asset) {
-                    $js .= file_get_contents($asset->getAssetPath()) . "\n\n";
-                    $js = $processFunction($js, $asset->getAssetURLPath(), self::getRelativeOutputDirectory());
+                foreach ($assets as $asset) {
+                    $contents = $asset->getAssetContents();
+                    if (isset($contents)) {
+                        if ($asset->assetSupportsMinification()) {
+                            $contents = \JShrink\Minifier::minify($contents);
+                        }
+                        $js .= $contents."\n\n";
+                    }
                 }
                 @file_put_contents($cacheFile, $js);
             }
 
             $asset = new JavascriptAsset();
-            $asset->setAssetURL(self::getRelativeOutputDirectory() . '/' . $filename . '.js');
-            $asset->setAssetPath($directory . '/' . $filename . '.js');
+            $asset->setAssetURL($relativeDirectory.'/'.$filename.'.js');
+            $asset->setAssetPath($directory.'/'.$filename.'.js');
             $asset->setCombinedAssetSourceFiles($sourceFiles);
+
             return array($asset);
         }
+
         return $assets;
-    }
-
-    /**
-     * @param Asset[] $assets
-     * @return Asset[]
-     */
-    public static function combine($assets)
-    {
-        return self::process($assets, function($js, $assetPath, $targetPath) {
-            return $js;
-        });
-    }
-
-    /**
-     * @param Asset[] $assets
-     * @return Asset[]
-     */
-    public static function minify($assets)
-    {
-        return self::process($assets, function($js, $assetPath, $targetPath) {
-            return \JShrink\Minifier::minify($js);
-        });
     }
 
     /**
@@ -124,12 +110,13 @@ class JavascriptAsset extends Asset
         $e->type('text/javascript')->src($this->getAssetURL());
         if (count($this->combinedAssetSourceFiles)) {
             $source = '';
-            foreach($this->combinedAssetSourceFiles as $file) {
-                $source .= $file . ' ';
+            foreach ($this->combinedAssetSourceFiles as $file) {
+                $source .= $file.' ';
             }
             $source = trim($source);
             $e->setAttribute('data-source', $source);
         }
+
         return (string) $e;
     }
 }

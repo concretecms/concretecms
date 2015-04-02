@@ -15,7 +15,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		'saveAction' => $controller->action('update_attribute'),
 		'clearAction' => $controller->action('clear_attribute'),
 		'permissionsCallback' => function($ak, $permissionsArguments) {
-			return true;
+			return true; // this is fine because you can't even access this interface without being able to edit every file.
 		}
 	));?>
 </section>

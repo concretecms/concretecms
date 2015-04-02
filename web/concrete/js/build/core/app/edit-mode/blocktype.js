@@ -1,11 +1,60 @@
 (function (window, $, _, Concrete) {
     'use strict';
 
-    var BlockType = Concrete.BlockType = function BlockType(elem, edit_mode, dragger) {
+    var BlockType = Concrete.BlockType = function BlockType(elem, edit_mode, dragger, default_area) {
         this.init.apply(this, _(arguments).toArray());
     };
 
     BlockType.prototype = _.extend(Object.create(Concrete.Block.prototype), {
+
+        init: function(elem, edit_mode, dragger, default_area) {
+            var my = this;
+            Concrete.Block.prototype.init.apply(my, _(arguments).toArray());
+            my.setAttr('defaultArea', default_area || null);
+
+            if (default_area) {
+                var types = default_area.getBlockTypes();
+                if (default_area.acceptsBlockType(my.getHandle())) {
+                    my.handleDefaultArea();
+                } else {
+                    my.removeElement();
+                }
+            }
+        },
+
+        handleDefaultArea: function() {
+            var my = this;
+            $.pep.unbind(my.getPeper());
+            my.getPeper().click(function (e) {
+                my.handleClick();
+
+                return false;
+            }).css({
+                cursor: 'pointer'
+            });
+        },
+
+        removeElement: function() {
+            var panel = this.getPeper().closest('.ccm-panel-content-inner');
+            this.getPeper().closest('li').remove();
+
+            panel.children('.ccm-panel-add-block-set').each(function() {
+                var ul = $(this).children('ul');
+                if (!ul.children().length) {
+                    $(this).remove();
+                }
+            })
+        },
+
+        handleClick: function() {
+            var my = this, default_area = my.getAttr('defaultArea'), panel;
+
+            ConcretePanelManager.exitPanelMode(function() {
+                _.defer(function() {
+                    my.addToDragArea(_.last(default_area.getDragAreas()));
+                });
+            });
+        },
 
         pepStart: function blockTypePepStart(context, event, pep) {
             var my = this, panel;
