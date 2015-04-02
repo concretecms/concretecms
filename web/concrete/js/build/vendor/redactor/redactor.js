@@ -332,6 +332,7 @@
 				link_new_tab: 'Open link in new tab',
 				/* concrete5 */
 				link_same_window: 'Open link in same window',
+				in_lightbox: 'Open link in Lightbox',
 				lightbox_link_type: 'Link Type',
 				lightbox_link_type_iframe: 'Web Page',
 				lightbox_link_type_image: 'Image',
