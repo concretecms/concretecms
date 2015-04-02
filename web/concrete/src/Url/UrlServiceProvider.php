@@ -2,6 +2,7 @@
 namespace Concrete\Core\Url;
 
 use Concrete\Core\Foundation\Service\Provider;
+use Concrete\Core\Url\Resolver\CanonicalUrlResolver;
 use Concrete\Core\Url\Resolver\Manager\ResolverManager;
 use Concrete\Core\Url\Resolver\PageUrlResolver;
 use Concrete\Core\Url\Resolver\PathUrlResolver;
@@ -16,6 +17,18 @@ class UrlServiceProvider extends Provider
      */
     public function register()
     {
+        $this->app->singleton(
+            'url/canonical/resolver',
+            function () {
+                return new CanonicalUrlResolver();
+            });
+
+        $this->app->singleton(
+            'url/canonical',
+            function () {
+                return \Core::make('url/canonical/resolver')->resolve(array());
+            });
+
         $this->app->bind(
             'url/manager',
             function () {
