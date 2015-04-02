@@ -77,10 +77,14 @@ class ImageHelper
         $fID = false;
         $fh = Loader::helper('file');
         if ($obj instanceof File) {
-            $fr = $obj->getFileResource();
-            $fID = $obj->getFileID();
-            $filename = md5(implode(':', array($fID, $maxWidth, $maxHeight, $crop, $fr->getTimestamp())))
+            try {
+                $fr = $obj->getFileResource();
+              $fID = $obj->getFileID();
+                $filename = md5(implode(':', array($fID, $maxWidth, $maxHeight, $crop, $fr->getTimestamp())))
                 . '.' . $fh->getExtension($fr->getPath());
+            } catch(\Exception $e) {
+                $filename = '';
+            }
         } else {
             $filename = md5(implode(':', array($obj, $maxWidth, $maxHeight, $crop, filemtime($obj))))
                 . '.' . $fh->getExtension($obj);
