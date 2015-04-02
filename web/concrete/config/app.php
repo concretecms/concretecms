@@ -405,6 +405,7 @@ return array(
         '/ccm/assets/localization/imageeditor/js'                                       => array('\Concrete\Controller\Frontend\AssetsLocalization::getImageEditorJavascript'),
         '/ccm/assets/localization/jquery/ui/js'                                         => array('\Concrete\Controller\Frontend\AssetsLocalization::getJQueryUIJavascript'),
         '/ccm/assets/localization/translator/js'                                        => array('\Concrete\Controller\Frontend\AssetsLocalization::getTranslatorJavascript'),
+        '/ccm/assets/localization/dropzone/js'                                          => array('\Concrete\Controller\Frontend\AssetsLocalization::getDropzoneJavascript'),
     ),
 
     /**
@@ -511,7 +512,8 @@ return array(
             array('javascript', 'js/underscore.js', array('minify' => false))
         ),
         'dropzone'                 => array(
-            array('javascript', 'js/dropzone.js')
+            array('javascript', 'js/dropzone.js'),
+            array('javascript-localized', '/ccm/assets/localization/dropzone/js'),
         ),
         'jquery/form'              => array(
             array('javascript', 'js/jquery-form.js')
@@ -912,6 +914,7 @@ return array(
                 array('javascript', 'underscore'),
                 array('javascript', 'core/lightbox'),
                 array('javascript', 'dropzone'),
+                array('javascript-localized', 'dropzone'),
                 array('javascript', 'bootstrap/dropdown'),
                 array('javascript', 'core/events'),
                 array('javascript', 'core/conversation'),
