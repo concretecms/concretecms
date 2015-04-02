@@ -11,6 +11,8 @@ use Concrete\Core\Logging\Query\Logger;
 use Concrete\Core\Routing\DispatcherRouteCallback;
 use Concrete\Core\Routing\RedirectResponse;
 use Concrete\Core\Updater\Update;
+use Concrete\Core\Url\Url;
+use Concrete\Core\Url\UrlImmutable;
 use Config;
 use Core;
 use Database;
@@ -18,8 +20,6 @@ use Environment;
 use Illuminate\Container\Container;
 use Job;
 use JobSet;
-use League\Url\Url;
-use League\Url\UrlImmutable;
 use Loader;
 use Log;
 use Package;
@@ -415,18 +415,7 @@ class Application extends Container
             $pos = $pos - 1;
         }
         $home = substr($r->server->get('SCRIPT_NAME'), 0, $pos);
-
-        $url = Url::createFromUrl('');
-        $url->getScheme()->set($r->getScheme());
-        $url->getHost()->set($r->getHost());
-        $url->getPath()->append($home);
-
-        if (($url->getScheme()->get() != 'http' || $r->getPort() != 80) && ($url->getScheme()->get() != 'https' || $r->getPort() != 443)) {
-            $url->getPort()->set($r->getPort());
-        }
-
         $this['app_relative_path'] = rtrim($home, '/');
-        $this['app_url'] = rtrim($url, '/');
 
         $args = isset($_SERVER['argv']) ? $_SERVER['argv'] : null;
 
