@@ -308,16 +308,35 @@ class Application extends Container
     public function handleCanonicalHostRedirection()
     {
         if (Config::get('concrete.seo.redirect_to_canonical_host')) {
-            $url = UrlImmutable::createFromServer($_SERVER);
-            $new = $url->setHost(Config::get('concrete.seo.canonical_host'));
-            if (Config::get('concrete.seo.canonical_port')) {
-                $new = $new->setPort(Config::get('concrete.seo.canonical_port'));
+            $url = Url::createFromServer($_SERVER);
+            $requested = (string) $url;
+            $host = Config::get('concrete.seo.canonical_host');
+            if ($host) {
+                $url->setHost($host);
             }
             if (Config::get('concrete.seo.force_ssl')) {
-                $new = $new->setScheme('https');
+                $url = $url->setScheme('https');
             }
-            if ($new != $url) {
-                $response = new RedirectResponse($new, '301');
+            $port = Config::get('concrete.seo.canonical_port');
+            if ($port) {
+                $port = intval($port);
+                $scheme = $url->getScheme()->get();
+                if (($scheme == 'http' && $port == 80) || ($scheme == 'https' && $port == 443)) {
+                    $port = null;
+                }
+                $currentPort = $url->getPort()->get();
+                if (isset($currentPort)) {
+                    if (($scheme == 'http' && $currentPort == 80) || ($scheme == 'https' && $currentPort == 443)) {
+                        $currentPort = null;
+                    }
+                }
+                if ($currentPort !== $port) {
+                    $url->setPort($port);
+                }
+            }
+            $canonical = (string) $url;
+            if ($requested != $canonical) {
+                $response = new RedirectResponse($canonical, '301');
                 $response->send();
                 exit;
             }
