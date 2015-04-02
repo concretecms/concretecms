@@ -436,13 +436,16 @@ class Application extends Container
         $home = substr($r->server->get('SCRIPT_NAME'), 0, $pos);
 
         $url = Url::createFromUrl('');
-        $url->getScheme()->set($r->getScheme());
-        $url->getHost()->set($r->getHost());
-        $url->getPath()->append($home);
-
-        if (($url->getScheme()->get() != 'http' || $r->getPort() != 80) && ($url->getScheme()->get() != 'https' || $r->getPort() != 443)) {
-            $url->getPort()->set($r->getPort());
+        $url->setScheme($r->getScheme());
+        $url->setHost($r->getHost());
+        $requestPort = $r->getPort();
+        if ($requestPort) {
+            $scheme = $url->getScheme()->get();
+            if (($scheme != 'http' || $requestPort != 80) && ($scheme != 'https' || $requestPort != 443)) {
+                $url->setPort($requestPort);
+            }
         }
+        $url->getPath()->append($home);
 
         $this['app_relative_path'] = rtrim($home, '/');
         $this['app_url'] = rtrim($url, '/');
