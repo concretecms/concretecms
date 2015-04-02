@@ -34,7 +34,7 @@ class ResolverManager implements ResolverManagerInterface
 
         $this->resolvers[$handle] = $resolver;
 
-        if (!$this->priorityTree[$priority]) {
+        if (!isset($this->priorityTree[$priority])) {
             $this->priorityTree[$priority] = array();
             ksort($this->priorityTree);
         }
