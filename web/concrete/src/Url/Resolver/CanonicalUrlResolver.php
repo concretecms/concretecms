@@ -43,6 +43,10 @@ class CanonicalUrlResolver implements UrlResolverInterface
             $port = intval(\Request::getInstance()->getPort(), 10);
         }
 
+        if ($relative_path = \Core::getApplicationRelativePath()) {
+            $url = $url->setPath($relative_path);
+        }
+
         $scheme = strtolower($url->getScheme());
         if ($scheme == 'http' || $scheme == 'https') {
             if (($scheme == 'http' && $port != 80) ||

@@ -41,6 +41,12 @@ class URLTest extends PHPUnit_Framework_TestCase
         parent::setUp();
     }
 
+    public function tearDown()
+    {
+        \Core::forgetInstance('url/canonical');
+        parent::tearDown();
+    }
+
     public function testPathToSiteInApplication()
     {
         $this->assertEquals('/path/to/server', \Core::getApplicationRelativePath());
@@ -112,6 +118,9 @@ class URLTest extends PHPUnit_Framework_TestCase
         $home = new Page();
         $home->cID = 1;
         $home->cPath = '';
+
+
+
 
         $url = \URL::to($home);
         $this->assertEquals('http://www.dummyco.com/path/to/server/index.php', (string) $url);
