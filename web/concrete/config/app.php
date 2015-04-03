@@ -406,6 +406,7 @@ return array(
         '/ccm/assets/localization/jquery/ui/js'                                         => array('\Concrete\Controller\Frontend\AssetsLocalization::getJQueryUIJavascript'),
         '/ccm/assets/localization/translator/js'                                        => array('\Concrete\Controller\Frontend\AssetsLocalization::getTranslatorJavascript'),
         '/ccm/assets/localization/dropzone/js'                                          => array('\Concrete\Controller\Frontend\AssetsLocalization::getDropzoneJavascript'),
+        '/ccm/assets/localization/conversations/js'                                     => array('\Concrete\Controller\Frontend\AssetsLocalization::getConversationsJavascript'),
     ),
 
     /**
@@ -663,6 +664,7 @@ return array(
         ),
         'core/conversation'        => array(
             array('javascript', 'js/conversations.js'),
+            array('javascript-localized', '/ccm/assets/localization/conversations/js'),
             array('css', 'css/conversations.css')
         ),
         'core/lightbox'            => array(
@@ -932,6 +934,7 @@ return array(
                 array('javascript', 'bootstrap/dropdown'),
                 array('javascript', 'core/events'),
                 array('javascript', 'core/conversation'),
+                array('javascript-localized', 'core/conversation'),
                 array('css', 'core/conversation'),
                 array('css', 'core/frontend/errors'),
                 array('css', 'font-awesome'),
