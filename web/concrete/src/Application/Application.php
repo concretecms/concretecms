@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Application;
 
 use Concrete\Core\Block\BlockType\BlockType;
@@ -25,7 +26,7 @@ use Log;
 use Package;
 use Page;
 use Redirect;
-use \Concrete\Core\Http\Request;
+use Concrete\Core\Http\Request;
 use Route;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
@@ -34,12 +35,12 @@ use View;
 
 class Application extends Container
 {
-
     protected $installed = null;
     protected $environment = null;
 
     /**
      * Turns off the lights.
+     *
      * @param array $options Array of options for disabling certain things during shutdown
      *      Add `'jobs' => true` to disable scheduled jobs
      *      Add `'log_queries' => true` to disable query logging
@@ -69,7 +70,6 @@ class Application extends Container
                     }
 
                     $logger->write($loggers);
-
                 }
             }
 
@@ -172,7 +172,7 @@ class Application extends Container
     }
 
     /**
-     * Returns true if concrete5 is installed, false if it has not yet been
+     * Returns true if concrete5 is installed, false if it has not yet been.
      */
     public function isInstalled()
     {
@@ -188,7 +188,7 @@ class Application extends Container
     }
 
     /**
-     * Checks to see whether we should deliver a concrete5 response from the page cache
+     * Checks to see whether we should deliver a concrete5 response from the page cache.
      */
     public function checkPageCache(\Concrete\Core\Http\Request $request)
     {
@@ -201,6 +201,7 @@ class Application extends Container
                 }
             }
         }
+
         return false;
     }
 
@@ -257,7 +258,7 @@ class Application extends Container
     }
 
     /**
-     * Ensure we have a cache directory
+     * Ensure we have a cache directory.
      */
     public function setupFilesystem()
     {
@@ -268,19 +269,16 @@ class Application extends Container
     }
 
     /**
-     * Returns true if the app is run through the command line
+     * Returns true if the app is run through the command line.
      */
     public function isRunThroughCommandLineInterface()
     {
-
         return defined('C5_ENVIRONMENT_ONLY') && C5_ENVIRONMENT_ONLY || PHP_SAPI == 'cli';
     }
 
     /**
      * Using the configuration value, determines whether we need to redirect to a URL with
      * a trailing slash or not.
-     *
-     * @return void
      */
     public function handleURLSlashes()
     {
@@ -309,7 +307,10 @@ class Application extends Container
     {
         if (Config::get('concrete.seo.redirect_to_canonical_host')) {
             $url = UrlImmutable::createFromServer($_SERVER);
-            $new = $url->setHost(Config::get('concrete.seo.canonical_host'));
+            $new = $url;
+            if (Config::get('concrete.seo.canonical_host')) {
+                $new = $new->setHost(Config::get('concrete.seo.canonical_host'));
+            }
             if (Config::get('concrete.seo.canonical_port')) {
                 $new = $new->setPort(Config::get('concrete.seo.canonical_port'));
             }
@@ -344,11 +345,12 @@ class Application extends Container
                 $route = $collection->get($matched['_route']);
                 Route::setRequest($request);
                 $response = Route::execute($route, $matched);
-            } catch(ResourceNotFoundException $e) {
+            } catch (ResourceNotFoundException $e) {
                 $callback = new DispatcherRouteCallback('dispatcher');
                 $response = $callback->execute($request);
             }
         }
+
         return $response;
     }
 
@@ -364,7 +366,7 @@ class Application extends Container
             if (!$valid) {
                 $isActive = $u->isActive();
                 $u->logout();
-                if($u->isError()) {
+                if ($u->isError()) {
                     switch ($u->getError()) {
                         case USER_SESSION_EXPIRED:
                             return Redirect::to('/login', 'session_invalidated')->send();
@@ -376,7 +378,8 @@ class Application extends Container
                     $v = new View('/frontend/user_error');
                     $v->setViewTheme('concrete');
                     $contents = $v->render();
-                    return new Response($contents, 403);
+
+                    return new RedirectResponse($contents, 403);
                 }
             }
         }
@@ -386,16 +389,14 @@ class Application extends Container
      * Get or check the current application environment.
      *
      * @param  mixed
+     *
      * @return string|bool
      */
     public function environment()
     {
-        if (count(func_get_args()) > 0)
-        {
+        if (count(func_get_args()) > 0) {
             return in_array($this->environment, func_get_args());
-        }
-        else
-        {
+        } else {
             return $this->environment;
         }
     }
@@ -404,13 +405,14 @@ class Application extends Container
      * Detect the application's current environment.
      *
      * @param  array|string|Callable  $environments
+     *
      * @return string
      */
     public function detectEnvironment($environments)
     {
         $r = Request::getInstance();
         $pos = stripos($r->server->get('SCRIPT_NAME'), DISPATCHER_FILENAME);
-        if($pos > 0) {
+        if ($pos > 0) {
             //we do this because in CLI circumstances (and some random ones) we would end up with index.ph instead of index.php
             $pos = $pos - 1;
         }
@@ -420,7 +422,7 @@ class Application extends Container
         $args = isset($_SERVER['argv']) ? $_SERVER['argv'] : null;
 
         $detector = new EnvironmentDetector();
+
         return $this->environment = $detector->detect($environments, $args);
     }
-
 }

@@ -14,44 +14,43 @@ class CanonicalUrlResolver implements UrlResolverInterface
      * or null when a url cannot be resolved.
      *
      * @param array                    $arguments A list of the arguments
-     * @param \League\URL\URLInterface $resolved
-     * @return \League\URL\URLInterface
+     * @param \League\Url\UrlInterface $resolved
+     * @return \League\Url\UrlInterface
      */
     public function resolve(array $arguments, $resolved = null)
     {
         $url = Url::createFromUrl('', !!\Config::get('concrete.seo.trailing_slash'));
 
         // Normalize
-        $url->setHost(null);
         $url->setScheme(null);
+        $url->setHost(null);
         $url->setPort(null);
 
-        if (\Config::get('concrete.seo.canonical_host')) {
-            $url->getHost()->set(\Config::get('concrete.seo.canonical_host'));
+        if (\Config::get('concrete.seo.force_ssl')) {
+            $scheme = 'https';
         } else {
-            $url->getHost()->set(\Request::getInstance()->getHost());
+            $scheme = \Request::getInstance()->getScheme();
         }
-
-        if ($url->getHost()->get() && !$url->getScheme()->get()) {
-            $url->setScheme(\Request::getInstance()->getScheme());
+        $host = \Config::get('concrete.seo.canonical_host');
+        if (!$host) {
+            $host = \Request::getInstance()->getHost();
         }
-
-        $port = null;
-        if ($config_port = \Config::get('concrete.seo.canonical_port')) {
-            $port = intval($config_port, 10);
-        } else {
-            $port = intval(\Request::getInstance()->getPort(), 10);
-        }
-
-        $scheme = strtolower($url->getScheme());
-        if ($scheme == 'http' || $scheme == 'https') {
-            if (($scheme == 'http' && $port != 80) ||
-                ($scheme == 'https' && $port != 443)
-            ) {
-                $url->setPort($port);
+        if ($scheme && $host) {
+            $url->setScheme($scheme)->setHost($host);
+            $port = \Config::get('concrete.seo.canonical_port');
+            if (!$port) {
+                $port = \Request::getInstance()->getPort();
             }
-        } else {
-            $url->setPort($port);
+            if ($port) {
+                switch ("$scheme:$port") {
+                    case 'http:80':
+                    case 'https:443':
+                        break;
+                    default:
+                        $url->setPort($port);
+                        break;
+                }
+            }
         }
 
         return UrlImmutable::createFromUrl($url);

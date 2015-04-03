@@ -1,16 +1,18 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\System\Seo;
 
-use \Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Controller\DashboardPageController;
 use Loader;
 use Config;
+
 class Urls extends DashboardPageController
 {
     /**
-    * Returns the mod_rewrite rules
-    *
-    * @return string
-    */
+     * Returns the mod_rewrite rules.
+     *
+     * @return string
+     */
     public function getRewriteRules()
     {
         $strRules = '
@@ -27,10 +29,10 @@ class Urls extends DashboardPageController
     }
 
     /**
-    * Returns the .htaccess text to be copied/inserted
-    *
-    * @return string
-    */
+     * Returns the .htaccess text to be copied/inserted.
+     *
+     * @return string
+     */
     public function getHtaccessText()
     {
         $strHt = '
@@ -42,14 +44,12 @@ class Urls extends DashboardPageController
         return preg_replace('/\t/', '', $strHt);
     }
 
-
     /**
-    * Dashboard page view
-    *
-    * @param string|bool $strStatus - Result of attempting to update rewrite rules
-    * @param boolean $blnHtu - Flag denoting if the .htaccess file was writable or not
-    * @return void
-    */
+     * Dashboard page view.
+     *
+     * @param string|bool $strStatus - Result of attempting to update rewrite rules
+     * @param bool $blnHtu - Flag denoting if the .htaccess file was writable or not
+     */
     public function view($strStatus = false, $blnHtu = false)
     {
         $strStatus = (string) $strStatus;
@@ -77,15 +77,11 @@ class Urls extends DashboardPageController
         }
     }
 
-
     /**
-    * Updates the .htaccess file (if writable)
-    *
-    * @return void
-    */
+     * Updates the .htaccess file (if writable).
+     */
     public function save_urls()
     {
-
         if (!$this->token->validate('save_urls')) {
             $this->error->add($this->token->getErrorMessage());
         }
@@ -96,7 +92,13 @@ class Urls extends DashboardPageController
 
             if ($this->isPost()) {
                 Config::save('concrete.seo.canonical_host', $this->post('canonical_host'));
-                Config::save('concrete.seo.canonical_port', $this->post('canonical_port'));
+                $port = $this->post('canonical_port');
+                $port = is_numeric($port) ? intval($port) : 0;
+                if ($port > 0) {
+                    Config::save('concrete.seo.canonical_port', $port);
+                } else {
+                    Config::save('concrete.seo.canonical_port', null);
+                }
                 Config::save('concrete.seo.force_ssl', $this->post('force_ssl') ? 1 : 0);
                 Config::save('concrete.seo.redirect_to_canonical_host', $this->post('redirect_to_canonical_host') ? 1 : 0);
 
