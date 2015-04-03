@@ -3,6 +3,15 @@
 
 (function($, window) {
 
+  var i18n = {
+    Too_many_files: 'Too many files',
+    Invalid_file_extension: 'Invalid file extension',
+    Max_file_size_exceeded: 'Max file size exceeded',
+    Error_deleting_attachment: 'Something went wrong while deleting this attachment, please refresh and try again.',
+    Confirm_remove_attachment: 'Remove this attachment?'
+    // Please add new translatable strings to the getConversationsJavascript of /concrete/controllers/frontend/assets_localization.php
+  };
+
   var methods = {
 
     init: function(options) {
@@ -39,14 +48,14 @@
             var errors = [];
             var attachmentCount = this.files.length;
             if((obj.options.maxFiles > 0) && attachmentCount > obj.options.maxFiles) {
-              errors.push('Too many files');
+              errors.push(i18n.Too_many_files);
             }
             var requiredExtensions = obj.options.fileExtensions.split(',');
             if(file.name.split('.').pop().toLowerCase() && requiredExtensions.indexOf(file.name.split('.').pop().toLowerCase()) == -1 && requiredExtensions!='') {
-              errors.push('Invalid file extension');
+              errors.push(i18n.Invalid_file_extension);
             }
             if((obj.options.maxFileSize > 0) && file.size > obj.options.maxFileSize * 1000000) {
-              errors.push('Max file size exceeded');
+              errors.push(i18n.Max_file_size_exceeded);
             }
 
             if(errors.length > 0) {
@@ -81,14 +90,14 @@
             var errors = [];
               var attachmentCount = this.files.length;
               if((obj.options.maxFiles > 0) && attachmentCount > obj.options.maxFiles) {
-                errors.push('Too many files');
+                errors.push(i18n.Too_many_files);
               }
               var requiredExtensions = obj.options.fileExtensions.split(',');
               if(file.name.split('.').pop().toLowerCase() && requiredExtensions.indexOf(file.name.split('.').pop().toLowerCase()) == -1 && requiredExtensions!='') {
-                errors.push('Invalid file extension');
+                errors.push(i18n.Invalid_file_extension);
               }
               if((obj.options.maxFileSize > 0) && file.size > obj.options.maxFileSize * 1000000) {
-                errors.push('Max file size exceeded');
+                errors.push(i18n.Max_file_size_exceeded);
               }
 
               if(errors.length > 0) {
@@ -164,14 +173,14 @@
             var errors = [];
             var attachmentCount = this.files.length;
             if((obj.options.maxFiles > 0) && attachmentCount > obj.options.maxFiles) {
-            	errors.push('Too many files');
+              errors.push(i18n.Too_many_files);
             }
             var requiredExtensions = obj.options.fileExtensions.split(',');
             if(file.name.split('.').pop().toLowerCase() && requiredExtensions.indexOf(file.name.split('.').pop().toLowerCase()) == -1 && requiredExtensions!='') {
-              errors.push('Invalid file extension');
+              errors.push(i18n.Invalid_file_extension);
             }
             if((obj.options.maxFileSize > 0) && file.size > obj.options.maxFileSize * 1000000) {
-              errors.push('Max file size exceeded');
+              errors.push(i18n.Max_file_size_exceeded);
             }
 
             if(errors.length > 0) {
@@ -237,7 +246,7 @@
           ]
         });
       } else {
-        if (window.confirm('Remove this attachment?')) {
+        if (window.confirm(i18n.Confirm_remove_attachment)) {
           $(this).concreteConversationAttachments('deleteAttachment',{ 'cnvMessageAttachmentID': link.attr('rel'), 'cnvObj': obj, 'dialogObj': obj.$attachmentdeletetdialog});
         }
       }
@@ -281,7 +290,7 @@
         },
         error: function(e) {
           obj.publish('conversationDeleteAttachmentError',{cnvMessageAttachmentID:cnvMessageAttachmentID,error:arguments});
-          window.alert('Something went wrong while deleting this attachment, please refresh and try again.');
+          window.alert(i18n.Error_deleting_attachment);
         }
       });
     }
@@ -298,5 +307,10 @@
     }
 
   };
+
+  $.fn.concreteConversationAttachments.localize = function(dictionary) {
+  	$.extend(true, i18n, dictionary);
+  };
+
 
 })(jQuery, window);

@@ -34,6 +34,20 @@
       });
     }
   });
+
+  var i18n = {
+    Confirm_remove_message: 'Remove this message? Replies to it will not be removed.',
+    Confirm_mark_as_spam: 'Are you sure you want to flag this message as spam?',
+    Warn_currently_editing: 'Please complete or cancel the current message editing session before editing this message.',
+    Unspecified_error_occurred: 'An unspecified error occurred.',
+    Error_deleting_message: 'Something went wrong while deleting this message, please refresh and try again.',
+    Error_flagging_message: 'Something went wrong while flagging this message, please refresh and try again.'
+    // Please add new translatable strings to the getConversationsJavascript of /concrete/controllers/frontend/assets_localization.php
+  };
+  $.fn.concreteConversation.localize = function(dictionary) {
+    $.extend(true, i18n, dictionary);
+  };
+
   var ConcreteConversation = function(element, options) {
     this.publish("beforeInitializeConversation",{element:element,options:options});
     this.init(element,options);
@@ -317,7 +331,7 @@
             ]
           });
         } else {
-          if (window.confirm('Remove this message? Replies to it will not be removed.')) {
+          if (window.confirm(i18n.Confirm_remove_message)) {
             obj.deleteMessage($link.attr('data-conversation-message-id'));
           }
         }
@@ -325,14 +339,14 @@
       });
       obj.$element.on('click.cnv', 'a[data-submit=flag-conversation-message]', function() {
         var $link = $(this);
-        if (window.confirm('Are you sure you want to flag this message as spam?')) {
+        if (window.confirm(i18n.Confirm_mark_as_spam)) {
           obj.flagMessage($link.attr('data-conversation-message-id'));
         }
         return false;
       });
       obj.$element.on('click.cnv', 'a[data-load=edit-conversation-message]', function() {
         if($('.ccm-conversation-edit-message').is(':visible')) {
-          window.alert('Please complete or cancel the current message editing session before editing this message.');
+          window.alert(i18n.Warn_currently_editing);
           return false;
         }
         var $link = $(this);
@@ -492,7 +506,7 @@
     },
     handlePostError: function($form, messages) {
       if (!messages) {
-        messages = ['An unspecified error occurred.'];
+        messages = [i18n.Unspecified_error_occurred];
       }
       this.publish('conversationPostError',{form:$form,messages:messages});
     },
@@ -522,7 +536,7 @@
         },
         error: function(e) {
           obj.publish('conversationDeleteMessageError',{msgID:msgID,error:arguments});
-          window.alert('Something went wrong while deleting this message, please refresh and try again.');
+          window.alert(i18n.Error_deleting_message);
         }
       });
     },
@@ -595,7 +609,7 @@
         },
         error: function(e) {
           obj.publish('conversationFlagMessageError',{msgID:msgID,error:arguments});
-          window.alert('Something went wrong while flagging this message, please refresh and try again.');
+          window.alert(i18n.Error_flagging_message);
         }
       });
     },
