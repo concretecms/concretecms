@@ -511,6 +511,12 @@ return array(
         'underscore'               => array(
             array('javascript', 'js/underscore.js', array('minify' => false))
         ),
+        'backbone'               => array(
+            array('javascript', 'js/backbone.js', array('minify' => false))
+        ),
+        'core/help'               => array(
+            array('javascript', 'js/help.js', array('minify' => false))
+        ),
         'dropzone'                 => array(
             array('javascript', 'js/dropzone.js'),
             array('javascript-localized', '/ccm/assets/localization/dropzone/js'),
@@ -743,6 +749,14 @@ return array(
                 array('css', 'jquery/ui'),
                 array('css', 'core/colorpicker'),
                 array('css', 'core/style-customizer')
+            )
+        ),
+        'core/help'    => array(
+            array(
+                array('javascript', 'jquery'),
+                array('javascript', 'core/events'),
+                array('javascript', 'underscore'),
+                array('javascript', 'core/help')
             )
         ),
         'jquery/fileupload'        => array(

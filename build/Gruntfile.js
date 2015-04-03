@@ -167,6 +167,11 @@ module.exports = function(grunt) {
             src: '<%= DIR_BASE %>/concrete/js/build/vendor/bootstrap/transition.js'
         },
 
+        backbone: {
+            dest: '<%= DIR_BASE %>/concrete/js/backbone.js',
+            src: '<%= DIR_BASE %>/concrete/js/build/vendor/backbone/backbone.js'
+        },
+
         underscore: {
             dest: '<%= DIR_BASE %>/concrete/js/underscore.js',
             src: '<%= DIR_BASE %>/concrete/js/build/vendor/underscore/underscore.js'
@@ -214,6 +219,14 @@ module.exports = function(grunt) {
         spectrum: {
             dest: '<%= DIR_BASE %>/concrete/js/spectrum.js',
             src: '<%= DIR_BASE %>/concrete/js/build/vendor/spectrum/spectrum.js'
+        },
+
+        ccm_help: {
+            dest: '<%= DIR_BASE %>/concrete/js/help.js',
+            src: [
+                '<%= DIR_BASE %>/concrete/js/build/vendor/tourist/tourist.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/help/dialog.js'
+            ]
         },
 
         ccm_stylecustomizer: {
