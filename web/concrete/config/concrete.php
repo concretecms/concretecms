@@ -184,7 +184,6 @@ return array(
          * @var int
          */
         'full_page_lifetime_value' => null,
-        'identifier'               => md5(str_replace(array('https://', 'http://'), '', BASE_URL) . DIR_REL),
 
 
         'directory'   => DIR_FILES_UPLOADED_STANDARD . '/cache',
@@ -468,8 +467,7 @@ return array(
     'sitemap_xml'       => array(
         'file'      => 'sitemap.xml',
         'frequency' => 'weekly',
-        'priority'  => 0.5,
-        'base_url'  => BASE_URL
+        'priority'  => 0.5
     ),
 
     /**
