@@ -18,16 +18,16 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Asset\AssetList;
 use Concrete\Core\Config\DatabaseLoader;
 use Concrete\Core\Config\DatabaseSaver;
+use Concrete\Core\Config\FileLoader;
 use Concrete\Core\Config\FileSaver;
+use Concrete\Core\Config\Repository\Repository as ConfigRepository;
+use Concrete\Core\File\Type\TypeList;
 use Concrete\Core\Foundation\ClassAliasList;
 use Concrete\Core\Foundation\Service\ProviderList;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\Support\Facade\Facade;
-use Patchwork\Utf8\Bootup;
-use Concrete\Core\Config\Repository\Repository as ConfigRepository;
-use Concrete\Core\File\Type\TypeList;
-use Concrete\Core\Config\FileLoader;
 use Illuminate\Filesystem\Filesystem;
+use Patchwork\Utf8\Bootup;
 
 /**
  * ----------------------------------------------------------------------------
@@ -105,17 +105,6 @@ if (!$config->has('app.server_timezone')) {
 
 /**
  * ----------------------------------------------------------------------------
- * Legacy Definitions
- * ----------------------------------------------------------------------------
- */
-
-define('APP_VERSION', $config->get('concrete.version'));
-define('APP_CHARSET', $config->get('concrete.charset'));
-define('BASE_URL', $cms['app_url']);
-define('DIR_REL', $cms['app_relative_path']);
-
-/**
- * ----------------------------------------------------------------------------
  * Setup core classes aliases.
  * ----------------------------------------------------------------------------
  */
@@ -144,6 +133,17 @@ $database_config = $cms->make('config/database');
  */
 $list = new ProviderList($cms);
 $list->registerProviders($config->get('app.providers'));
+
+/**
+ * ----------------------------------------------------------------------------
+ * Legacy Definitions
+ * ----------------------------------------------------------------------------
+ */
+define('APP_VERSION', $config->get('concrete.version'));
+define('APP_CHARSET', $config->get('concrete.charset'));
+define('BASE_URL', \Core::getApplicationURL());
+define('DIR_REL', $cms['app_relative_path']);
+
 
 /**
  * ----------------------------------------------------------------------------

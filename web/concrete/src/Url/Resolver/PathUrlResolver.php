@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Url\Resolver;
 
-use Concrete\Core\Url\Url;
+use Concrete\Core\Url\UrlInterface;
 
 class PathUrlResolver implements UrlResolverInterface
 {
@@ -18,17 +18,15 @@ class PathUrlResolver implements UrlResolverInterface
 
         $args = $arguments;
         $path = array_shift($args);
-        $trailing = \Config::get('concrete.seo.trailing_slash');
 
         if (is_scalar($path) || (is_object($path) &&
                 method_exists($path, '__toString'))
         ) {
             $path = rtrim($path, '/');
 
-            $url = Url::createFromUrl('', $trailing);
-            $this->handlePath($url, $path, $args);
-            $this->handleHost($url, $path, $args);
-            $this->handleDispatcher($url, $path, $args);
+            $url = \Core::make('url/canonical');
+            $url = $this->handlePath($url, $path, $args);
+            $url = $this->handleDispatcher($url, $path, $args);
 
             return $url;
         }
@@ -36,73 +34,50 @@ class PathUrlResolver implements UrlResolverInterface
         return null;
     }
 
-    public function handlePath(Url $url, $path, $args)
+    public function handlePath(UrlInterface $url, $path, $args)
     {
         $components = parse_url($path);
         if ($string = array_get($components, 'path')) {
-            $url->getPath()->set($string);
+            $url = $url->setPath($string);
         }
         if ($string = array_get($components, 'query')) {
-            $url->getQuery()->set($string);
+            $url = $url->setQuery($string);
         }
         if ($string = array_get($components, 'fragment')) {
-            $url->getFragment()->set($string);
+            $url = $url->setFragment($string);
         }
 
+        $path = $url->getPath();
         foreach ($args as $segment) {
             if (!is_array($segment)) {
                 $segment = (string) $segment; // sometimes integers foul this up when we pass them in as URL arguments.
             }
-            $url->getPath()->append($segment);
+            $path->append($segment);
         }
+        $url = $url->setPath($path);
+
+        return $url;
     }
 
-    public function handleDispatcher(Url $url, $path, $args)
+    public function handleDispatcher(UrlInterface $url, $path, $args)
     {
         $rewriting    = \Config::get('concrete.seo.url_rewriting');
         $rewrite_all  = \Config::get('concrete.seo.url_rewriting_all');
         $in_dashboard = \Core::make('helper/concrete/dashboard')->inDashboard($path);
 
+        $path = $url->getPath();
+
         // If rewriting is disabled, or all_rewriting is disabled and we're
         // in the dashboard, add the dispatcher.
         if (!$rewriting || (!$rewrite_all && $in_dashboard)) {
-            $url->getPath()->prepend(DISPATCHER_FILENAME);
+            $path->prepend(DISPATCHER_FILENAME);
         }
 
         if (\Core::getApplicationRelativePath()) {
-            $url->getPath()->prepend(\Core::getApplicationRelativePath());
+            $path->prepend(\Core::getApplicationRelativePath());
         }
 
-    }
-
-    public function handleHost(Url $url, $path, $args)
-    {
-        // Normalize
-        $url->setHost(null);
-        $url->setPort(null);
-        $url->setScheme(null);
-
-        if (\Config::get('concrete.seo.canonical_host')) {
-            $url->getHost()->set(\Config::get('concrete.seo.canonical_host'));
-        } else {
-            $url->getHost()->set(\Request::getInstance()->getHost());
-        }
-
-        if ($url->getHost()->get() && !$url->getScheme()->get()) {
-            $url->setScheme(\Request::getInstance()->getScheme());
-        }
-
-        if (\Config::get('concrete.seo.canonical_port')) {
-            $url->getPort()->set(\Config::get('concrete.seo.canonical_port'));
-        } else {
-            $request_port = \Request::getInstance()->getPort();
-            if (isset($request_port)) {
-                $request_port = intval($request_port, 10);
-                if (($url->getScheme()->get() != 'http' || $request_port != 80) && ($url->getScheme()->get() != 'https' || $request_port != 443)) {
-                    $url->getPort()->set($request_port);
-                }
-            }
-        }
+        return $url->setPath($path);
     }
 
 }

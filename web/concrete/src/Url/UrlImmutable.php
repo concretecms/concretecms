@@ -3,7 +3,7 @@ namespace Concrete\Core\Url;
 
 use RuntimeException;
 
-class Url extends \League\Url\Url implements UrlInterface
+class UrlImmutable extends \League\Url\UrlImmutable implements UrlInterface
 {
 
     public static function createFromUrl($url, $trailing_slashes = false)
