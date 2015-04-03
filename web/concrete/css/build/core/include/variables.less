@@ -67,12 +67,12 @@
 @index-level-modal-loader: 1201;
 @index-level-dialog: 1300;
 
-/* Magnific Popup */
-@lightbox-overlay: 1200;
-@lightbox-overlay-wrap: 1205;
-@lightbox-loader: 1210;
-@lightbox-content: 1215;
-@lightbox-arrows: 1220;
+/* Magnific Popup –has to come above dialogs because it might get called from a dialog*/
+@lightbox-overlay: 1330;
+@lightbox-overlay-wrap: 1335;
+@lightbox-loader: 1338;
+@lightbox-content: 1340;
+@lightbox-arrows: 1340;
 
 
 /* Redactor dropdown –can be either inline OR in a dialog box so we have to come above dialog. Hopefully this doesn't
@@ -83,7 +83,7 @@ cause other problems */
 @index-level-dialog-content: 1500;
 @index-level-dialog-content-click-proxy: 1550;
 
-/* Search Checkboxes
+/* Search Checkboxes */
 @index-level-search-checkbox: 1575;
 
 /* Dialog Chrome */

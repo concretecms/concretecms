@@ -1,0 +1,28 @@
+//@import "../vendor/bootstrap/variables.less";
+//@import "../vendor/bootstrap/mixins.less";
+//@import "include/variables.less";
+//@import "include/mixins.less";
+
+div.ccm-dialog-help-item {
+  margin-bottom: 30px;
+  ol.breadcrumb {
+    padding: 0px;
+    background: none;
+
+    > li + li::before {
+      content: "|\00a0";
+      color: #999;
+      padding: 0px 5px;
+    }
+  }
+}
+
+
+ol.ccm-dialog-help-item-icon-row {
+  padding: 0px;
+  margin: 0px 0px 10px 0px;
+  li {
+    display: inline-block;
+    margin-right: 10px;
+  }
+}

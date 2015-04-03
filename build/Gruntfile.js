@@ -361,6 +361,7 @@ module.exports = function(grunt) {
         '<%= DIR_BASE %>/concrete/css/account.css': '<%= DIR_BASE %>/concrete/css/build/core/account.less',
         '<%= DIR_BASE %>/concrete/css/dynatree.css': '<%= DIR_BASE %>/concrete/css/build/vendor/dynatree/dynatree.less',
         '<%= DIR_BASE %>/concrete/css/sitemap.css': '<%= DIR_BASE %>/concrete/css/build/core/sitemap.less',
+        '<%= DIR_BASE %>/concrete/css/help.css': '<%= DIR_BASE %>/concrete/css/build/core/help.less',
         '<%= DIR_BASE %>/concrete/css/file-manager.css': '<%= DIR_BASE %>/concrete/css/build/core/file-manager.less',
         '<%= DIR_BASE %>/concrete/css/conversations.css': '<%= DIR_BASE %>/concrete/css/build/core/conversations.less',
         '<%= DIR_BASE %>/concrete/css/gathering/display.css': '<%= DIR_BASE %>/concrete/css/build/core/gathering/display.less',
@@ -473,8 +474,10 @@ module.exports = function(grunt) {
     grunt.registerTask('jsOnly:debug', jsTargets.debug);
     grunt.registerTask('jsOnly:release', jsTargets.release );
 
-    grunt.registerTask('js:debug', ['generate-constants', 'jsOnly:debug' ]);
-    grunt.registerTask('js:release', ['generate-constants', 'jsOnly:release' ]);
+    //grunt.registerTask('js:debug', ['generate-constants', 'jsOnly:debug' ]);
+    //grunt.registerTask('js:release', ['generate-constants', 'jsOnly:release' ]);
+    grunt.registerTask('js:debug', ['jsOnly:debug' ]);
+    grunt.registerTask('js:release', ['jsOnly:release' ]);
     grunt.registerTask('js', 'js:release');
 
     grunt.registerTask('css:debug', 'less:debug');
