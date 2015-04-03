@@ -38,20 +38,21 @@ class CanonicalUrlResolver implements UrlResolverInterface
 
         $port = null;
         if ($config_port = \Config::get('concrete.seo.canonical_port')) {
-            $port = intval($config_port, 10);
+            $port = $config_port;
         } else {
-            $port = intval(\Request::getInstance()->getPort(), 10);
+            $port = \Request::getInstance()->getPort();
         }
-
-        $scheme = strtolower($url->getScheme());
-        if ($scheme == 'http' || $scheme == 'https') {
-            if (($scheme == 'http' && $port != 80) ||
-                ($scheme == 'https' && $port != 443)
-            ) {
+        if (!empty($port)) {
+            $scheme = strtolower($url->getScheme());
+            if ($scheme == 'http' || $scheme == 'https') {
+                if (($scheme == 'http' && $port != 80) ||
+                    ($scheme == 'https' && $port != 443)
+                ) {
+                    $url->setPort($port);
+                }
+            } else {
                 $url->setPort($port);
             }
-        } else {
-            $url->setPort($port);
         }
 
         return UrlImmutable::createFromUrl($url);
