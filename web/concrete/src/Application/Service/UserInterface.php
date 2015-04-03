@@ -102,7 +102,7 @@ class UserInterface
      */
     public function button_js($text, $onclick, $buttonAlign = 'right', $innerClass = null, $args = array())
     {
-        return self::buttonJs($text, $onclick, $buttonAlign = 'right', $innerClass = null, $args = array());
+        return self::buttonJs($text, $onclick, $buttonAlign, $innerClass, $args);
     }
 
     /**
