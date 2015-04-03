@@ -50,7 +50,7 @@ class CanonicalUrlResolver implements UrlResolverInterface
             ) {
                 $url->setPort($port);
             }
-        } else {
+        } elseif ($port !== 0) {
             $url->setPort($port);
         }
 
