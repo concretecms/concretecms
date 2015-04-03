@@ -31,6 +31,12 @@ class Path extends \League\Url\Components\Path
             return null;
         }
 
+        foreach ($res as $key => $value) {
+            if ($value === '') {
+                unset($res[$key]);
+            }
+        }
+
         return implode($this->delimiter, $res) . (!!$this->trail ? '/' : '');
     }
 
