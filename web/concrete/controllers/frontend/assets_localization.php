@@ -496,4 +496,28 @@ Dropzone.prototype.defaultOptions.dictFallbackText = <?=json_encode(t('Please us
     <?php
 
     }
+    public static function getConversationsJavascript($setResponseHeaders = true)
+    {
+        if ($setResponseHeaders) {
+            static::sendJavascriptHeader();
+        }
+        ?>
+jQuery.fn.concreteConversation.localize({
+  Confirm_remove_message: <?=json_encode(t('Remove this message? Replies to it will not be removed'))?>,
+  Confirm_mark_as_spam: <?=json_encode(t('Are you sure you want to flag this message as spam?'))?>,
+  Warn_currently_editing: <?=json_encode(t('Please complete or cancel the current message editing session before editing this message.'))?>,
+  Unspecified_error_occurred: <?=json_encode(t('An unspecified error occurred.'))?>,
+  Error_deleting_message: <?=json_encode(t('Something went wrong while deleting this message, please refresh and try again.'))?>,
+  Error_flagging_message: <?=json_encode(t('Something went wrong while flagging this message, please refresh and try again.'))?>
+});
+jQuery.fn.concreteConversationAttachments.localize({
+  Too_many_files: <?=json_encode(t('Too many files'))?>,
+  Invalid_file_extension: <?=json_encode(t('Invalid file extension'))?>,
+  Max_file_size_exceeded: <?=json_encode(t('Max file size exceeded'))?>,
+  Error_deleting_attachment: <?=json_encode(t('Something went wrong while deleting this attachment, please refresh and try again.'))?>,
+  Confirm_remove_attachment: <?=json_encode(t('Remove this attachment?'))?>
+});
+        <?php
+
+    }
 }
