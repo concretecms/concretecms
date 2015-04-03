@@ -376,7 +376,7 @@ class Application extends Container
                     $v = new View('/frontend/user_error');
                     $v->setViewTheme('concrete');
                     $contents = $v->render();
-                    return new Response($contents, 403);
+                    return new RedirectResponse($contents, 403);
                 }
             }
         }
