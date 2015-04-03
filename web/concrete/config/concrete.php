@@ -518,6 +518,11 @@ return array(
         'background_feed'        => '//backgroundimages.concrete5.org/wallpaper',
         'background_feed_secure' => 'https://backgroundimages.concrete5.org/wallpaper',
         'background_info'        => 'http://backgroundimages.concrete5.org/get_image_data.php',
+        'help'                   => array(
+            'developer'          => 'http://www.concrete5.org/documentation/developers/5.7/',
+            'user'          => 'http://www.concrete5.org/documentation/user-concrete5-7',
+            'forum'          => 'http://www.concrete5.org/community/forums'
+        ),
         'paths'                  => array(
             'menu_help_service' => '/tools/get_remote_help_list/',
             'theme_preview'     => '/tools/preview_theme/',

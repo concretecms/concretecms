@@ -16,3 +16,7 @@ print $v->markFooterAssetPosition();
 
 // user profile menu
 Loader::element('account/menu');
+
+$v->requireAsset('core/help');
+Loader::element('help/dialog/introduction');
+
