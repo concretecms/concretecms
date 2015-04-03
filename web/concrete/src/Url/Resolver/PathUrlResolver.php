@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Url\Resolver;
 
+use Concrete\Core\Url\Components\Path;
 use Concrete\Core\Url\UrlInterface;
 
 class PathUrlResolver implements UrlResolverInterface
@@ -26,7 +27,6 @@ class PathUrlResolver implements UrlResolverInterface
 
             $url = \Core::make('url/canonical');
             $url = $this->handlePath($url, $path, $args);
-            $url = $this->handleDispatcher($url, $path, $args);
 
             return $url;
         }
@@ -36,9 +36,11 @@ class PathUrlResolver implements UrlResolverInterface
 
     public function handlePath(UrlInterface $url, $path, $args)
     {
+        $path_object = $this->basePath($url, $path, $args);
+
         $components = parse_url($path);
         if ($string = array_get($components, 'path')) {
-            $url = $url->setPath($string);
+            $path_object->append($string);
         }
         if ($string = array_get($components, 'query')) {
             $url = $url->setQuery($string);
@@ -47,37 +49,34 @@ class PathUrlResolver implements UrlResolverInterface
             $url = $url->setFragment($string);
         }
 
-        $path = $url->getPath();
         foreach ($args as $segment) {
             if (!is_array($segment)) {
                 $segment = (string) $segment; // sometimes integers foul this up when we pass them in as URL arguments.
             }
-            $path->append($segment);
+            $path_object->append($segment);
         }
-        $url = $url->setPath($path);
 
-        return $url;
+        $url_path = $url->getPath();
+        $url_path->append($path_object);
+
+        return $url->setPath($url_path);
     }
 
-    public function handleDispatcher(UrlInterface $url, $path, $args)
+    public function basePath($url, $path, $args)
     {
+        $path_object = new Path('');
+
         $rewriting    = \Config::get('concrete.seo.url_rewriting');
         $rewrite_all  = \Config::get('concrete.seo.url_rewriting_all');
         $in_dashboard = \Core::make('helper/concrete/dashboard')->inDashboard($path);
 
-        $path = $url->getPath();
-
         // If rewriting is disabled, or all_rewriting is disabled and we're
         // in the dashboard, add the dispatcher.
         if (!$rewriting || (!$rewrite_all && $in_dashboard)) {
-            $path->prepend(DISPATCHER_FILENAME);
+            $path_object->prepend(DISPATCHER_FILENAME);
         }
 
-        if (\Core::getApplicationRelativePath()) {
-            $path->prepend(\Core::getApplicationRelativePath());
-        }
-
-        return $url->setPath($path);
+        return $path_object;
     }
 
 }

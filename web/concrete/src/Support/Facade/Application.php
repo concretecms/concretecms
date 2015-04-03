@@ -20,6 +20,7 @@ class Application extends Facade
         $cms = static::getFacadeApplication();
 
         $url = $cms->make('url/canonical');
+
         if (!$asObject) {
             $url = rtrim((string)$url, '/');
         }
