@@ -45,7 +45,7 @@ if (isset($activate_confirm)) {
                     <td width="100%" style="vertical-align:middle;">
                         <div class="btn-group" style="float: right"><?php
                             if ($siteThemeID == $t->getThemeID()) {
-                                echo $bt->button_js(t('Activate'), "alert('" . $alreadyActiveMessage . "')", 'left', 'primary ccm-button-inactive', array('disabled' => 'disabled'));
+                                echo $bt->buttonJs(t('Activate'), "alert('" . $alreadyActiveMessage . "')", 'left', 'primary ccm-button-inactive', array('disabled' => 'disabled'));
                             } else {
                                 echo $bt->button(t('Activate'), $view->url('/dashboard/pages/themes','activate', $t->getThemeID()), 'left', 'primary');
                             }
