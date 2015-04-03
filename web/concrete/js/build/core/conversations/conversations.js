@@ -18,6 +18,9 @@
  *    conversationSubmitForm               : After submitting form
  */
 
+/* jshint unused:vars, undef:true, browser:true, jquery:true, -W041 */
+/* global CCM_TOOLS_PATH, ConcreteEvent */
+
 (function($,window){
   "use strict";
   $.extend($.fn,{
@@ -67,9 +70,9 @@
       var dateFormat = (obj.options.dateFormat);
       var customDateFormat = (obj.options.customDateFormat);
       var blockAreaHandle = (obj.options.blockAreaHandle);
-      var maxFiles = (obj.options.maxFiles);
-      var maxFileSize = (obj.options.MaxFileSize);
-      var fileExtensions = (obj.options.fileExtensions);
+      var maxFiles = (obj.options.maxFiles); // unused
+      var maxFileSize = (obj.options.MaxFileSize); // unused
+      var fileExtensions = (obj.options.fileExtensions); // unused
       var attachmentsEnabled = (obj.options.attachmentsEnabled);
       var attachmentOverridesEnabled = (obj.options.attachmentOverridesEnabled);
 
@@ -130,7 +133,7 @@
       items.slice(0,20).map(function(item){
         var listitem = $('<li/>');
         var anchor = $('<a/>').appendTo(listitem).text(item.getName());
-        anchor.click(function(){ConcreteEvent.fire('ConversationMentionSelect',{obj:obj,item:item},bindTo)});
+        anchor.click(function(){ConcreteEvent.fire('ConversationMentionSelect',{obj:obj,item:item},bindTo);});
         listitem.appendTo(obj.dropdown.list);
       });
       if (!obj.dropdown.active) {
@@ -314,7 +317,7 @@
             ]
           });
         } else {
-          if (confirm('Remove this message? Replies to it will not be removed.')) {
+          if (window.confirm('Remove this message? Replies to it will not be removed.')) {
             obj.deleteMessage($link.attr('data-conversation-message-id'));
           }
         }
@@ -322,14 +325,14 @@
       });
       obj.$element.on('click.cnv', 'a[data-submit=flag-conversation-message]', function() {
         var $link = $(this);
-        if (confirm('Are you sure you want to flag this message as spam?')) {
+        if (window.confirm('Are you sure you want to flag this message as spam?')) {
           obj.flagMessage($link.attr('data-conversation-message-id'));
         }
         return false;
       });
       obj.$element.on('click.cnv', 'a[data-load=edit-conversation-message]', function() {
         if($('.ccm-conversation-edit-message').is(':visible')) {
-          alert('Please complete or cancel the current message editing session before editing this message.');
+          window.alert('Please complete or cancel the current message editing session before editing this message.');
           return false;
         }
         var $link = $(this);
@@ -449,7 +452,7 @@
       });
       obj.$element.on('click.cnv', 'a.share-permalink', function() {
         var $link = $(this);
-        var permalink = $(this).attr('rel');
+        var permalink = $link.attr('rel');
         obj.$permalinkdialog = obj.$permalinkholder.clone();
         var $textarea = $('<textarea readonly>').text(decodeURIComponent(permalink));
         obj.$permalinkdialog.append($textarea);
@@ -489,7 +492,7 @@
     },
     handlePostError: function($form, messages) {
       if (!messages) {
-        var messages = ['An unspecified error occurred.'];
+        messages = ['An unspecified error occurred.'];
       }
       this.publish('conversationPostError',{form:$form,messages:messages});
     },
@@ -845,7 +848,7 @@
         return /^@[a-z0-9]+$/.test(s);
       },
       getMentionMatches: function(s,u) {
-        return u.filter(function(d){return(d.indexOf(s)>=0)});
+        return u.filter(function(d){return(d.indexOf(s)>=0);});
       },
       isSameConversation: function(o,n) {
         return (o.options.blockID === n.options.blockID && o.options.cnvID === n.options.cnvID);

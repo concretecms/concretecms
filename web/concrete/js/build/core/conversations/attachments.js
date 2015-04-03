@@ -1,3 +1,6 @@
+/* jshint unused:vars, undef:true, browser:true, jquery:true, -W041 */
+/* global CCM_TOOLS_PATH */
+
 (function($, window) {
 
   var methods = {
@@ -37,19 +40,16 @@
             var attachmentCount = this.files.length;
             if((obj.options.maxFiles > 0) && attachmentCount > obj.options.maxFiles) {
               errors.push('Too many files');
-              var maxFilesExceeded = true;
             }
             var requiredExtensions = obj.options.fileExtensions.split(',');
             if(file.name.split('.').pop().toLowerCase() && requiredExtensions.indexOf(file.name.split('.').pop().toLowerCase()) == -1 && requiredExtensions!='') {
               errors.push('Invalid file extension');
-              var invalidFileExtension = true;
             }
             if((obj.options.maxFileSize > 0) && file.size > obj.options.maxFileSize * 1000000) {
               errors.push('Max file size exceeded');
-              var maxFileSizeExceeded = true;
             }
 
-            if(maxFileSizeExceeded || maxFilesExceeded || invalidFileExtension) {
+            if(errors.length > 0) {
               var self = this;
               $('input[rel="'+ $(file.previewTemplate).attr('rel') +'"]').remove();
               var $form = $(file.previewTemplate).parent('.dropzone');
@@ -58,7 +58,7 @@
               $form.children('.ccm-conversation-errors').delay(3000).fadeOut('slow', function() {
                 $(this).html('');
               });
-              var attachmentCount =- 1;
+              attachmentCount =- 1;
               done('error');  // not displayed, just needs to have argument to trigger.
             } else {
               done();
@@ -82,19 +82,16 @@
               var attachmentCount = this.files.length;
               if((obj.options.maxFiles > 0) && attachmentCount > obj.options.maxFiles) {
                 errors.push('Too many files');
-                var maxFilesExceeded = true;
               }
               var requiredExtensions = obj.options.fileExtensions.split(',');
               if(file.name.split('.').pop().toLowerCase() && requiredExtensions.indexOf(file.name.split('.').pop().toLowerCase()) == -1 && requiredExtensions!='') {
                 errors.push('Invalid file extension');
-                var invalidFileExtension = true;
               }
               if((obj.options.maxFileSize > 0) && file.size > obj.options.maxFileSize * 1000000) {
                 errors.push('Max file size exceeded');
-                var maxFileSizeExceeded = true;
               }
 
-              if(maxFileSizeExceeded || maxFilesExceeded || invalidFileExtension) {
+              if(errors.length > 0) {
                 var self = this;
                 $('input[rel="'+ $(file.previewTemplate).attr('rel') +'"]').remove();
                 var $form = $(file.previewTemplate).parent('.dropzone');
@@ -103,7 +100,7 @@
                 $form.children('.ccm-conversation-errors').delay(3000).fadeOut('slow', function() {
                   $(this).html('');
                 });
-                var attachmentCount =- 1;
+                attachmentCount =- 1;
                 done('error'); // not displayed, just needs to have argument to trigger.
               } else {
                 done();
@@ -168,19 +165,16 @@
             var attachmentCount = this.files.length;
             if((obj.options.maxFiles > 0) && attachmentCount > obj.options.maxFiles) {
             	errors.push('Too many files');
-            	var maxFilesExceeded = true;
             }
             var requiredExtensions = obj.options.fileExtensions.split(',');
             if(file.name.split('.').pop().toLowerCase() && requiredExtensions.indexOf(file.name.split('.').pop().toLowerCase()) == -1 && requiredExtensions!='') {
               errors.push('Invalid file extension');
-              var invalidFileExtension = true;
             }
             if((obj.options.maxFileSize > 0) && file.size > obj.options.maxFileSize * 1000000) {
               errors.push('Max file size exceeded');
-              var maxFileSizeExceeded = true;
             }
 
-            if(maxFileSizeExceeded || maxFilesExceeded || invalidFileExtension) {
+            if(errors.length > 0) {
               var self = this;
               $('input[rel="'+ $(file.previewTemplate).attr('rel') +'"]').remove();
               var $form = $(file.previewTemplate).parent('.dropzone');
@@ -189,7 +183,7 @@
               $form.children('.ccm-conversation-errors').delay(3000).fadeOut('slow', function() {
                 $(this).html('');
               });
-              var attachmentCount =- 1;
+              attachmentCount =- 1;
               done('error');  // not displayed, just needs to have argument to trigger.
             } else {
               done();
@@ -243,7 +237,7 @@
           ]
         });
       } else {
-        if (confirm('Remove this attachment?')) {
+        if (window.confirm('Remove this attachment?')) {
           $(this).concreteConversationAttachments('deleteAttachment',{ 'cnvMessageAttachmentID': link.attr('rel'), 'cnvObj': obj, 'dialogObj': obj.$attachmentdeletetdialog});
         }
       }
@@ -279,7 +273,7 @@
         url: CCM_TOOLS_PATH + '/conversations/delete_file',
         success: function(response) {
           var parsedData = JSON.parse(response);
-          $('p[rel="'+parsedData.attachmentID+'"]').parent('.attachment-container').fadeOut(300, function() { $(this).remove() });
+          $('p[rel="'+parsedData.attachmentID+'"]').parent('.attachment-container').fadeOut(300, function() { $(this).remove(); });
           if (attachmentsDialog.dialog) {
             attachmentsDialog.dialog('close');
             obj.publish('conversationDeleteAttachment',{cnvMessageAttachmentID:cnvMessageAttachmentID});
@@ -291,7 +285,7 @@
         }
       });
     }
-  }
+  };
 
   $.fn.concreteConversationAttachments = function(method) {
 
@@ -303,6 +297,6 @@
       $.error( 'Method ' + method + ' does not exist on concreteConversationAttachments' );
     }
 
-  }
+  };
 
 })(jQuery, window);
