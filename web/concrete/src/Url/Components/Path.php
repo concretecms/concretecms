@@ -32,7 +32,7 @@ class Path extends \League\Url\Components\Path
         }
 
         foreach ($res as $key => $value) {
-            if ($value == '') {
+            if ($value === '') {
                 unset($res[$key]);
             }
         }
