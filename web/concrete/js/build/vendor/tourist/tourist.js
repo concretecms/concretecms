@@ -39,7 +39,8 @@
     Base.prototype._module = 'Tourist';
 
     _.extend(Base.prototype, Backbone.Events);
-
+  /* concrete5 */
+    /*
     Base.prototype.skipButtonTemplate = '<button class="btn btn-default btn-sm pull-right tour-next">Skip this step →</button>';
 
     Base.prototype.nextButtonTemplate = '<button class="btn btn-primary btn-sm pull-right tour-next">Next step →</button>';
@@ -49,6 +50,17 @@
     Base.prototype.closeButtonTemplate = '<a class="btn btn-close tour-close" href="#"><i class="icon icon-remove"></i></a>';
 
     Base.prototype.okButtonTemplate = '<button class="btn btn-sm tour-close btn-primary">Okay</button>';
+  */
+    Base.prototype.skipButtonTemplate = '<button class="btn btn-default btn-sm pull-right tour-next">Skip →</button>';
+
+    Base.prototype.nextButtonTemplate = '<button class="btn btn-primary btn-sm pull-right tour-next">Next →</button>';
+
+    Base.prototype.finalButtonTemplate = '<button class="btn btn-primary btn-sm pull-right tour-next">Done</button>';
+
+    Base.prototype.closeButtonTemplate = '<a class="btn btn-close tour-close" href="#"><i class="icon icon-remove"></i></a>';
+
+    Base.prototype.okButtonTemplate = '<button class="btn btn-sm tour-close btn-primary">Ok</button>';
+/* end concrete5 */
 
     Base.prototype.actionLabelTemplate = _.template('<h4 class="action-label"><%= label %></h4>');
 
@@ -294,7 +306,10 @@
       var at, my;
       my = step.my || 'left center';
       at = step.at || 'right center';
-      this.tip.setContainer(step.container || $('body'));
+      /* concrete5 */
+      //this.tip.setContainer(step.container || $('body'));
+      this.tip.setContainer(step.container || $('#ccm-tooltip-holder'));
+      /* end concrete5 */
       this.tip.setContent(contentElement);
       return this.tip.setPosition(step.target || false, my, at);
     };

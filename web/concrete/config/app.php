@@ -756,16 +756,11 @@ return array(
         ),
         'core/help'    => array(
             array(
-                array('javascript', 'jquery'),
-                array('javascript', 'jquery/ui'),
-                array('javascript-localized', 'jquery/ui'),
-                array('javascript', 'core/events'),
+                array('javascript', 'core/app'),
                 array('javascript', 'core/lightbox'),
-                array('javascript', 'underscore'),
                 array('javascript', 'backbone'),
                 array('javascript', 'core/help'),
                 array('css', 'core/app'),
-                array('css', 'jquery/ui'),
                 array('css', 'core/lightbox'),
                 array('css', 'core/help'),
             )

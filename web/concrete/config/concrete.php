@@ -520,7 +520,7 @@ return array(
         'background_info'        => 'http://backgroundimages.concrete5.org/get_image_data.php',
         'help'                   => array(
             'developer'          => 'http://www.concrete5.org/documentation/developers/5.7/',
-            'user'          => 'http://www.concrete5.org/documentation/user-concrete5-7',
+            'user'          => 'http://www.concrete5.org/documentation/using-concrete5-7',
             'forum'          => 'http://www.concrete5.org/community/forums'
         ),
         'paths'                  => array(

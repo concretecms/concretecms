@@ -225,7 +225,9 @@ module.exports = function(grunt) {
             dest: '<%= DIR_BASE %>/concrete/js/help.js',
             src: [
                 '<%= DIR_BASE %>/concrete/js/build/vendor/tourist/tourist.js',
-                '<%= DIR_BASE %>/concrete/js/build/core/help/dialog.js'
+                '<%= DIR_BASE %>/concrete/js/build/core/help/dialog.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/help/guide-manager.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/help/guides/toolbar.js'
             ]
         },
 

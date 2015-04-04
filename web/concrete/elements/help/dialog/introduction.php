@@ -11,7 +11,7 @@
                         <h4><?=t('Use the toolbar')?></h4>
                         <ol class="breadcrumb">
                             <li><a data-lightbox="iframe" href="https://www.youtube.com/watch?t=21&v=VB-R71zk06U"><?=t('Watch Video')?></a></li>
-                            <li><a href="#"><?=t('Run Guide')?></a></li>
+                            <li><a href="#" data-launch-guide="toolbar"><?=t('Run Guide')?></a></li>
                         </ol>
                         </div>
                         <div class="ccm-dialog-help-item">

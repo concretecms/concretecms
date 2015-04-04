@@ -10,7 +10,7 @@
 			width: 800,
 			height: 400,
 			title: 'Help',
-			dialogClass: 'ccm-dialog-slim',
+			dialogClass: 'ccm-dialog-slim ccm-dialog-help-wrapper'
 		}, options);
 		my.options = options;
 	}
@@ -27,6 +27,13 @@
 					removalDelay: 160,
 					preloader: false,
 					fixedContentPos: false
+				});
+
+				$('a[data-launch-guide]').on('click', function(e) {
+					e.preventDefault();
+					var tour = ConcreteHelpGuideManager.getGuide($(this).attr('data-launch-guide'));
+					tour.start();
+
 				});
 			}
 			$.fn.dialog.open(my.options);
