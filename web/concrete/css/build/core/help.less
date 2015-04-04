@@ -1,7 +1,9 @@
-//@import "../vendor/bootstrap/variables.less";
-//@import "../vendor/bootstrap/mixins.less";
+@import "../vendor/bootstrap/variables.less";
+@import "../vendor/bootstrap/mixins.less";
 //@import "include/variables.less";
 //@import "include/mixins.less";
+
+@import "../vendor/tourist/tourist.less";
 
 div.ccm-dialog-help-item {
   margin-bottom: 30px;
@@ -24,5 +26,18 @@ ol.ccm-dialog-help-item-icon-row {
   li {
     display: inline-block;
     margin-right: 10px;
+  }
+}
+
+/** toolbar guide */
+div#ccm-toolbar {
+  .tour-highlight {
+
+    a, &.ccm-toolbar-search {
+      background-color: #D6E6EE;
+      #gradient .vertical(#D6E6EE, #B8DCEE);
+      color: #136CC0;
+    }
+
   }
 }
