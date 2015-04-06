@@ -5,6 +5,7 @@ use Loader;
 use Concrete\Core\Utility\IPAddress;
 use Config;
 use Concrete\Core\User\UserBannedIp;
+use Request;
 
 class IPService
 {
