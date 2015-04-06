@@ -5,7 +5,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	<header><?=t('Location')?></header>
 	<form method="post" action="<?=$controller->action('submit')?>" data-dialog-form="location" data-panel-detail-form="location">
 
-		<?=Loader::helper('concrete/ui/help')->notify('panel', '/page/location')?>
+		<?=Loader::helper('concrete/ui/help')->display('panel', '/page/location')?>
         <input type="hidden" name="cParentID" value="<?=$cParentID?>" />
 
         <? if (!isset($sitemap) && $sitemap == false) { ?>

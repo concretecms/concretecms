@@ -515,10 +515,6 @@ return array(
         'backbone'               => array(
             array('javascript', 'js/backbone.js', array('minify' => false))
         ),
-        'core/help'               => array(
-            array('javascript', 'js/help.js', array('minify' => false)),
-            array('css', 'css/help.css', array('minify' => false))
-        ),
         'dropzone'                 => array(
             array('javascript', 'js/dropzone.js'),
             array('javascript-localized', '/ccm/assets/localization/dropzone/js'),
@@ -741,6 +737,7 @@ return array(
                 array('javascript-localized', 'jquery/ui'),
                 array('javascript', 'core/events'),
                 array('javascript', 'underscore'),
+                array('javascript', 'backbone'),
                 array('javascript', 'core/colorpicker'),
                 array('javascript', 'core/app'),
                 array('javascript-localized', 'core/localization'),
@@ -752,17 +749,6 @@ return array(
                 array('css', 'jquery/ui'),
                 array('css', 'core/colorpicker'),
                 array('css', 'core/style-customizer')
-            )
-        ),
-        'core/help'    => array(
-            array(
-                array('javascript', 'core/app'),
-                array('javascript', 'core/lightbox'),
-                array('javascript', 'backbone'),
-                array('javascript', 'core/help'),
-                array('css', 'core/app'),
-                array('css', 'core/lightbox'),
-                array('css', 'core/help'),
             )
         ),
         'jquery/fileupload'        => array(
@@ -795,6 +781,7 @@ return array(
                 array('javascript', 'jquery'),
                 array('javascript', 'core/events'),
                 array('javascript', 'underscore'),
+                array('javascript', 'backbone'),
                 array('javascript', 'bootstrap/dropdown'),
                 array('javascript', 'bootstrap/tooltip'),
                 array('javascript', 'bootstrap/popover'),
@@ -817,6 +804,7 @@ return array(
                 array('javascript-localized', 'jquery/ui'),
                 array('javascript', 'core/events'),
                 array('javascript', 'underscore'),
+                array('javascript', 'backbone'),
                 array('javascript', 'core/app'),
                 array('javascript', 'bootstrap-editable'),
                 array('css', 'core/app/editable-fields'),
@@ -838,6 +826,7 @@ return array(
                 array('javascript-localized', 'jquery/ui'),
                 array('javascript', 'jquery/touch-punch'),
                 array('javascript', 'underscore'),
+                array('javascript', 'backbone'),
                 array('javascript', 'dashboard'),
                 array('javascript', 'core/events'),
                 array('javascript', 'bootstrap/dropdown'),
@@ -866,6 +855,7 @@ return array(
                 array('javascript', 'core/events'),
                 array('javascript', 'bootstrap/tooltip'),
                 array('javascript', 'underscore'),
+                array('javascript', 'backbone'),
                 array('javascript', 'jquery/ui'),
                 array('javascript-localized', 'jquery/ui'),
                 array('javascript', 'select2'),
@@ -880,6 +870,7 @@ return array(
             array(
                 array('javascript', 'core/events'),
                 array('javascript', 'underscore'),
+                array('javascript', 'backbone'),
                 array('javascript', 'jquery/ui'),
                 array('javascript-localized', 'jquery/ui'),
                 array('javascript', 'dynatree'),

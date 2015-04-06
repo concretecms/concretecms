@@ -30,6 +30,8 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
         }
     }
 
+    print Loader::helper('concrete/ui/help')->display('toolbar');
+
     ?>
 
     <div id="ccm-page-controls-wrapper" class="ccm-ui">

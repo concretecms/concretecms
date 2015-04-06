@@ -23,6 +23,8 @@ html.ccm-panel-right {
 
 div#ccm-dashboard-content {
 
+  padding-top: 35px;
+
   tr {
     &.ccm-theme-active {
       td {
@@ -69,7 +71,11 @@ div#ccm-dashboard-content {
     }
 
     background-color: #f3f3f3;
+    /**
+     * since moving from margin to padding we dont' need this anymore
+
     margin-bottom: 30px;
+    */
   }
 
   form.ccm-dashboard-content-form {
@@ -109,8 +115,9 @@ div#ccm-dashboard-content {
 
   div.ccm-dashboard-header-buttons {
     position: absolute;
-    top: 50px;
-    right: 30px;
+    top: 85px;
+    right: 60px;
+
   }
 
 }
@@ -133,25 +140,37 @@ div#ccm-dashboard-content {
 }
 
 /**
+ * Header Help
+ */
+
+div#ccm-dashboard-content {
+  div.ccm-notification-help-launcher {
+
+    html.ccm-panel-open.ccm-panel-right & {
+      .translate(0, 0);
+    }
+
+    position: absolute;
+    z-index: @index-level-dashboard-help;
+
+  }
+
+  div.ccm-notification-help {
+    position: absolute;
+    z-index: @index-level-dashboard-help;
+    html.ccm-panel-open.ccm-panel-right & {
+      .translate(0, 0);
+    }
+  }
+}
+
+
+/**
  * Connect to community
  */
 div#ccm-dashboard-content {
   iframe.ccm-marketplace-frame-connect {
     margin-left: -97px;
-  }
-}
-
-/**
- * Help and notifications
- */
-div#ccm-dashboard-content {
-  div.ccm-notification-help {
-    position: absolute;
-    right: 0px;
-    top: 122px;
-    .border-right-radius(0px);
-
-    z-index: @index-level-dashboard-help;
   }
 }
 

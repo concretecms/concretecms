@@ -109,7 +109,11 @@ module.exports = function(grunt) {
                 '<%= DIR_BASE %>/concrete/js/build/core/app/custom-style.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/tabs.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/toolbar.js',
-
+                '<%= DIR_BASE %>/concrete/js/build/vendor/tourist/tourist.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/app/help/dialog.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/app/help/launcher.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/app/help/guide-manager.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/app/help/guides/toolbar.js',
                 // Edit Mode
                 '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode/editmode.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode/block.js',
@@ -219,16 +223,6 @@ module.exports = function(grunt) {
         spectrum: {
             dest: '<%= DIR_BASE %>/concrete/js/spectrum.js',
             src: '<%= DIR_BASE %>/concrete/js/build/vendor/spectrum/spectrum.js'
-        },
-
-        ccm_help: {
-            dest: '<%= DIR_BASE %>/concrete/js/help.js',
-            src: [
-                '<%= DIR_BASE %>/concrete/js/build/vendor/tourist/tourist.js',
-                '<%= DIR_BASE %>/concrete/js/build/core/help/dialog.js',
-                '<%= DIR_BASE %>/concrete/js/build/core/help/guide-manager.js',
-                '<%= DIR_BASE %>/concrete/js/build/core/help/guides/toolbar.js'
-            ]
         },
 
         ccm_stylecustomizer: {
@@ -363,7 +357,6 @@ module.exports = function(grunt) {
         '<%= DIR_BASE %>/concrete/css/account.css': '<%= DIR_BASE %>/concrete/css/build/core/account.less',
         '<%= DIR_BASE %>/concrete/css/dynatree.css': '<%= DIR_BASE %>/concrete/css/build/vendor/dynatree/dynatree.less',
         '<%= DIR_BASE %>/concrete/css/sitemap.css': '<%= DIR_BASE %>/concrete/css/build/core/sitemap.less',
-        '<%= DIR_BASE %>/concrete/css/help.css': '<%= DIR_BASE %>/concrete/css/build/core/help.less',
         '<%= DIR_BASE %>/concrete/css/file-manager.css': '<%= DIR_BASE %>/concrete/css/build/core/file-manager.less',
         '<%= DIR_BASE %>/concrete/css/conversations.css': '<%= DIR_BASE %>/concrete/css/build/core/conversations.less',
         '<%= DIR_BASE %>/concrete/css/gathering/display.css': '<%= DIR_BASE %>/concrete/css/build/core/gathering/display.less',
