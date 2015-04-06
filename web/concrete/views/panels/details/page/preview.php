@@ -5,7 +5,7 @@ if (is_object($c) && !$c->isError()) {
 	$cp = new Permissions($c);
 	if ($cp->canViewPageVersions()) { ?>
 
-        <?=Loader::helper('concrete/ui/help')->notify('panel', '/page/design')?>
+        <?=Loader::helper('concrete/ui/help')->display('panel', '/page/design')?>
 
 		<iframe id="ccm-page-preview-frame" name="ccm-page-preview-frame"></iframe>
 

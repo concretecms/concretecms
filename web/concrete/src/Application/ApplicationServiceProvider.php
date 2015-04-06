@@ -21,6 +21,11 @@ class ApplicationServiceProvider extends ServiceProvider {
 			'helper/concrete/validation' => '\Concrete\Core\Application\Service\Validation',
 			'helper/rating' => '\Concrete\Attribute\Rating\Service',
             'helper/pagination' => '\Concrete\Core\Legacy\Pagination',
+
+			'help' => '\Concrete\Core\Application\Service\UserInterface\Help\Manager',
+			'help/dashboard' => '\Concrete\Core\Application\Service\UserInterface\Help\DashboardManager',
+			'help/block_type' => '\Concrete\Core\Application\Service\UserInterface\Help\BlockTypeManager',
+			'help/panel' => '\Concrete\Core\Application\Service\UserInterface\Help\PanelManager'
 		);
 
 		foreach($singletons as $key => $value) {

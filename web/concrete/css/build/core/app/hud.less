@@ -151,3 +151,74 @@ div.ccm-notification-danger {
   color: #fff;
   background-color: rgba(190, 62, 62, 0.90);
 }
+
+
+/**
+ * Help launcher
+ */
+div.ccm-notification-help-launcher {
+  position: fixed;
+  top: 83px;
+  right: 0px;
+  z-index: @index-level-page-alert;
+  -webkit-font-smoothing: antialiased;
+  .transition-transform(cubic-bezier(0.190, 1.000, 0.220, 1.000) 0.5s);
+
+  html.ccm-panel-open.ccm-panel-right & {
+    .translate(-320px, 0);
+  }
+
+  a {
+    .border-left-radius(4px);
+    background-color: #335B8A;
+    color: #fff;
+    display: block;
+    height: 40px;
+    width: 40px;
+    padding-top: 8px;
+    .transition(all 0.1s ease-in-out);
+
+    -webkit-animation-duration:0.2s;
+    -moz-animation-duration:0.2s;
+    -ms-animation-duration:0.2s;
+    -o-animation-duration:0.2s;
+    animation-duration:0.2s;
+
+  }
+
+  a:hover, a:active, a:focus {
+    color: #fff;
+    background-color: #163251;
+  }
+
+  i {
+    margin-left: 9px;
+    font-size: 26px;
+    font-weight: normal;
+  }
+}
+
+div.ccm-notification-help {
+  display: none;
+
+  -webkit-animation-duration:0.2s;
+  -moz-animation-duration:0.2s;
+  -ms-animation-duration:0.2s;
+  -o-animation-duration:0.2s;
+  animation-duration:0.2s;
+  -webkit-font-smoothing: antialiased;
+
+  .transition-transform(cubic-bezier(0.190, 1.000, 0.220, 1.000) 0.5s);
+
+  html.ccm-panel-open.ccm-panel-right & {
+    .translate(-320px, 0);
+  }
+
+  position: fixed;
+  right: 0px;
+  top: 83px;
+  .border-right-radius(0px);
+  z-index: @index-level-page-alert;
+
+}
+
