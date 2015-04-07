@@ -111,7 +111,7 @@ class CssAsset extends Asset
                     ? $m[1]
                     : substr($m[1], 1, strlen($m[1]) - 2);
 
-                if ('/' !== $url[0] && strpos($url, '//') === false) {
+                if ('/' !== $url[0] && strpos($url, '//') === false && strpos($url, 'data:') !== 0) {
                     $url = $change_prefix.$url;
                     $url = str_replace('/./', '/', $url);
                     do {
