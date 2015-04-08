@@ -83,7 +83,7 @@ class ClassLoader  {
 	 * <li>`Concrete\Package\PkgHandle\Authentication` -> `packages/pkg_handle/authentication`</li>
 	 * <li>`Concrete\Package\PkgHandle\Block` -> `packages/pkg_handle/blocks`</li>
 	 * <li>`Concrete\Package\PkgHandle\Theme` -> `packages/pkg_handle/themes`</li>
-	 * <li>`Concrete\Package\PkgHandle\Controller\PageType` -> `packages/pkg_handle/controllers`</li>
+	 * <li>`Concrete\Package\PkgHandle\Controller\PageType` -> `packages/pkg_handle/controllers/page_type`</li>
 	 * <li>`Concrete\Package\PkgHandle\Controller` -> `packages/pkg_handle/controllers`</li>
 	 * <li>`Concrete\Package\PkgHandle\Job` -> `packages/pkg_handle/jobs`</li>
 	 * </ul>
