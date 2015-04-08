@@ -129,7 +129,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
 
     public function getStorageLocationID()
     {
-        return $this->storageLocation;
+        return $this->getFileStorageLocationObject()->getID();
     }
 
     /**
