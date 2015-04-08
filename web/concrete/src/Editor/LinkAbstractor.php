@@ -10,6 +10,7 @@
  */
 
 namespace Concrete\Core\Editor;
+use Core;
 use File;
 use Page;
 use Loader;
@@ -45,21 +46,24 @@ class LinkAbstractor extends Object {
 			$text = (string) $r;
 		}
 
-		$url1 = str_replace('/', '\/', \Core::getApplicationURL() . '/' . DISPATCHER_FILENAME);
-		$url2 = str_replace('/', '\/', \Core::getApplicationURL());
-		$url4 = URL::to('/download_file', 'view');
-		$url4 = str_replace('/', '\/', $url4);
-		$url4 = str_replace('-', '\-', $url4);
-		$text = preg_replace(
-			array(
-				'/' . $url1 . '\?cID=([0-9]+)/i',
-				'/' . $url4 . '\/([0-9]+)/i',
-				'/' . $url2 . '/i'),
-			array(
-				'{CCM:CID_\\1}',
-				'{CCM:FID_DL_\\1}',
-				'{CCM:BASE_URL}')
-			, $text);
+		$appUrl = Core::getApplicationURL();
+		if (!empty($appUrl)) {
+			$url1 = str_replace('/', '\/', $appUrl . '/' . DISPATCHER_FILENAME);
+			$url2 = str_replace('/', '\/', $appUrl);
+			$url4 = URL::to('/download_file', 'view');
+			$url4 = str_replace('/', '\/', $url4);
+			$url4 = str_replace('-', '\-', $url4);
+			$text = preg_replace(
+				array(
+					'/' . $url1 . '\?cID=([0-9]+)/i',
+					'/' . $url4 . '\/([0-9]+)/i',
+					'/' . $url2 . '/i'),
+				array(
+					'{CCM:CID_\\1}',
+					'{CCM:FID_DL_\\1}',
+					'{CCM:BASE_URL}')
+				, $text);
+		}
 
 		return $text;
 	}
