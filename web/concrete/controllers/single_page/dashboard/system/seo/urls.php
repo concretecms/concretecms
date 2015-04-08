@@ -96,7 +96,13 @@ class Urls extends DashboardPageController
 
             if ($this->isPost()) {
                 Config::save('concrete.seo.canonical_host', $this->post('canonical_host'));
-                Config::save('concrete.seo.canonical_port', $this->post('canonical_port'));
+                $port = $this->post('canonical_port');
+                $port = is_numeric($port) ? intval($port) : 0;
+                if ($port > 0) {
+                    Config::save('concrete.seo.canonical_port', $port);
+                } else {
+                    Config::save('concrete.seo.canonical_port', null);
+                }
                 Config::save('concrete.seo.force_ssl', $this->post('force_ssl') ? 1 : 0);
                 Config::save('concrete.seo.redirect_to_canonical_host', $this->post('redirect_to_canonical_host') ? 1 : 0);
 
