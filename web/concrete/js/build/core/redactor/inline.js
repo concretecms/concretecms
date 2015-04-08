@@ -8,7 +8,7 @@ RedactorPlugins.concrete5inline = function() {
 
             var obj = this;
             this.$toolbar.addClass("ccm-inline-toolbar");
-            this.$toolbar.append($('<li class="ccm-inline-toolbar-button ccm-inline-toolbar-button-cancel"><button id="ccm-redactor-cancel-button" type="button" class="btn btn-mini">' + ccmi18n_redactor.cancel + '</button></li><li class="ccm-inline-toolbar-button ccm-inline-toolbar-button-save"><button id="ccm-redactor-save-button" type="button" class="btn btn-primary btn-mini">' + ccmi18n_redactor.save + '</button></li>'));
+            this.$toolbar.append($('<li class="ccm-inline-toolbar-button ccm-inline-toolbar-button-cancel"><button id="ccm-redactor-cancel-button" type="button" class="btn btn-mini">' + this.lang.get('cancel') + '</button></li><li class="ccm-inline-toolbar-button ccm-inline-toolbar-button-save"><button id="ccm-redactor-save-button" type="button" class="btn btn-primary btn-mini">' + this.lang.get('save') + '</button></li>'));
             var toolbar = this.$toolbar;
 
             $('#ccm-redactor-cancel-button').unbind().on('click', function() {

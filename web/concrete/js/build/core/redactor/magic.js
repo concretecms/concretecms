@@ -67,7 +67,7 @@ RedactorPlugins.concrete5magic = function() {
                         dropdown['s' + i] = { title: s.title, className:s.menuClass, func: function() { plugin.setCustomFormat(s); }};
                     });
 
-                    dropdown['remove'] = { title: ccmi18n_redactor.remove_style, func: function() { plugin.resetCustomFormat(); }};
+                    dropdown['remove'] = { title: that.lang.get('remove_style'), func: function() { plugin.resetCustomFormat(); }};
                     plugin.createButton(dropdown);
 
                 }
