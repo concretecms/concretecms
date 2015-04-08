@@ -35,14 +35,10 @@ class BlockTypeManager extends AbstractManager
         foreach($messages as $identifier => $message) {
             $m = new Message();
             $m->setIdentifier($identifier);
-
-            $content = new \HtmlObject\Element('div');
-            $content->setChild(new \HtmlObject\Element('p',$message[0]));
+            $m->setMessageContent($message[0]);
             if ($message[1]) {
-                $content->setChild(id(new \HtmlObject\Link($message[1], t('Learn More')))->target('blank'));
+                $m->addLearnMoreLink($message[1]);
             }
-
-            $m->setContent($content);
 
             $this->messages[$identifier] = $m;
         }

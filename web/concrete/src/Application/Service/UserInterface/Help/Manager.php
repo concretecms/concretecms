@@ -9,9 +9,9 @@ class Manager implements ManagerInterface
         switch($identifier) {
             case 'toolbar':
                 $m = new Message();
-                $m->setContent(t('Use the editing toolbar at the top of the page to put your page in edit mode, add content to the page, change page settings, and navigate your site.'));
+                $m->setMessageContent(t('Use the editing toolbar at the top of the page to put your page in edit mode, add content to the page, change page settings, and navigate your site.'));
                 $m->setIdentifier('toolbar');
-                $m->setGuideToLaunch('toolbar');
+                $m->addGuide('toolbar');
                 break;
         }
 
