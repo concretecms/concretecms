@@ -56,10 +56,10 @@
 		}
 	});
 	tour.on('start', function() {
-		$('.ccm-dialog-help-wrapper').hide();
-		$('#ccm-toolbar').addClass('ccm-toolbar-tour-guide');
+		ConcreteHelpGuideManager.enterToolbarGuideMode();
 	});
 	tour.on('stop', function() {
+		ConcreteHelpGuideManager.exitToolbarGuideMode();
 		$('.ccm-dialog-help-wrapper').show();
 		$('#ccm-toolbar').removeClass('ccm-toolbar-tour-guide');
 	});
