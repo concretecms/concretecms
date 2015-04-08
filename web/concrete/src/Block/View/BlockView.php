@@ -140,6 +140,7 @@ class BlockView extends AbstractView
                 $view = 'view';
             }
         }
+        $customFilenameToRender = null;
         if (!in_array($this->viewToRender, array('view', 'add', 'edit', 'scrapbook'))) {
             // then we're trying to render a custom view file, which we'll pass to the bottom functions as $_filename
             $customFilenameToRender = $view . '.php';
