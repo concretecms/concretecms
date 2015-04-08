@@ -1,12 +1,11 @@
 <?php
 namespace Concrete\Core\Application\Service\UserInterface\Help;
 
-class Message
+class Message implements MessageInterface
 {
     protected $content;
-
-    protected $guideToLaunch = null;
-
+    protected $guide;
+    protected $link;
     protected $identifier;
 
     /**
@@ -14,13 +13,26 @@ class Message
      */
     public function getContent()
     {
-        return $this->content;
+        $content = new \HtmlObject\Element('div');
+        $content->setChild(new \HtmlObject\Element('p', $this->content));
+        if ($this->link) {
+            $content->setChild(id(new \HtmlObject\Link($this->link, t('Learn More')))->target('blank'));
+        }
+        if ($this->guide) {
+            $button = new \HtmlObject\Link($this->link, t('Launch Guide'));
+            $button->addClass('btn btn-info btn-sm')
+                ->href('#')
+                ->setAttribute('data-launch-guide', $this->guide);
+            $content->setChild($button);
+        }
+
+        return $content;
     }
 
     /**
      * @param mixed $content
      */
-    public function setContent($content)
+    public function setMessageContent($content)
     {
         $this->content = $content;
     }
@@ -41,20 +53,17 @@ class Message
         $this->identifier = $identifier;
     }
 
-    /**
-     * @return null
-     */
-    public function getGuideToLaunch()
+    public function addGuide($guide)
     {
-        return $this->guideToLaunch;
+        $this->guide = $guide;
     }
 
     /**
-     * @param null $guideToLaunch
+     * @param mixed $content
      */
-    public function setGuideToLaunch($guideToLaunch)
+    public function addLearnMoreLink($link)
     {
-        $this->guideToLaunch = $guideToLaunch;
+        $this->link = $link;
     }
 
 
