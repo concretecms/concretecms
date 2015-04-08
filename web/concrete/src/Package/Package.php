@@ -49,6 +49,18 @@ use PermissionKey;
 use PermissionKeyCategory;
 use SinglePage;
 
+/**
+ * A package can contains related components that customize concrete5. They can br easily
+ * installed and uninstall by a user.
+ *
+ * @property int $pkgId ID of package
+ * @property string $pkgName Installed name of package
+ * @property string $pkgHandle Installed handle of package. This should be provided by the ending package.
+ * @property string $pkgDescription Installed description of package
+ * @property boolean $pkgIsInstalled True if package is installed
+ * @property string $pkgVersion Version of package installed
+ * @property string $pkgAvailableVersion
+ */
 class Package extends Object
 {
 
@@ -163,6 +175,11 @@ class Package extends Object
         }
     }
 
+    /**
+     * Returns the name of an object belonging to a package
+     * @param $item
+     * @return string
+     */
     public static function getItemName($item)
     {
         $txt = Core::make('helper/text');
@@ -243,6 +260,13 @@ class Package extends Object
         }
     }
 
+    /**
+     * This is the pre-test routine that packages run through before they are installed. Any errors that come here are
+     * to be returned in the form of an array so we can show the user. If it's all good we return true
+     * @param string $package Package handle
+     * @param bool $testForAlreadyInstalled
+     * @return array|bool Returns an array of errors or true if the package can be installed
+     */
     public static function testForInstall($package, $testForAlreadyInstalled = true)
     {
         // this is the pre-test routine that packages run through before they are installed. Any errors that come here
@@ -283,6 +307,11 @@ class Package extends Object
         }
     }
 
+    /**
+     * Returns a package's class
+     * @param string $pkgHandle Handle of package
+     * @return Package
+     */
     public static function getClass($pkgHandle)
     {
         $cache = Core::make('cache/request');
@@ -307,6 +336,10 @@ class Package extends Object
         return clone $cl;
     }
 
+    /**
+     * Returns the version of concrete5 required by the package
+     * @return string
+     */
     public function getApplicationVersionRequired()
     {
         return $this->appVersionRequired;
@@ -329,12 +362,15 @@ class Package extends Object
             }
 
             return $pkg;
+        } else {
+            return null;
         }
     }
 
     /**
      * Returns an array of packages that have newer versions in the local packages directory
      * than those which are in the Packages table. This means they're ready to be upgraded
+     * @return Package[]
      */
     public static function getLocalUpgradeablePackages()
     {
@@ -356,6 +392,11 @@ class Package extends Object
         return $upgradeables;
     }
 
+    /**
+     * Returns all available packages
+     * @param bool $filterInstalled True to only return installed packages
+     * @return Package[]
+     */
     public static function getAvailablePackages($filterInstalled = true)
     {
         $dh = Core::make('helper/file');
@@ -391,6 +432,10 @@ class Package extends Object
         return $packages;
     }
 
+    /**
+     * Returns all installed package handles
+     * @return string[]
+     */
     public static function getInstalledHandles()
     {
         $db = Database::getActiveConnection();
@@ -398,6 +443,10 @@ class Package extends Object
         return $db->GetCol("SELECT pkgHandle FROM Packages");
     }
 
+    /**
+     * Finds all packages that have an upgraded version available in the marketplace
+     * @return Package[]
+     */
     public static function getRemotelyUpgradeablePackages()
     {
         $packages = Package::getInstalledList();
@@ -412,6 +461,10 @@ class Package extends Object
         return $upgradeables;
     }
 
+    /**
+     * Returns an array of all installed packages
+     * @return Package[]
+     */
     public static function getInstalledList()
     {
         $db = Database::getActiveConnection();
@@ -427,6 +480,10 @@ class Package extends Object
         return $pkgArray;
     }
 
+    /**
+     * Returns the path to the package's folder, relative to the install path
+     * @return string
+     */
     public function getRelativePath()
     {
         $dirp = (is_dir(
@@ -435,6 +492,10 @@ class Package extends Object
         return $dirp . '/' . $this->pkgHandle;
     }
 
+    /**
+     * Returns the package handle
+     * @return string
+     */
     public function getPackageHandle()
     {
         return $this->pkgHandle;
@@ -443,7 +504,7 @@ class Package extends Object
     /**
      * Gets the date the package was added to the system,
      *
-     * @return string date formated like: 2009-01-01 00:00:00
+     * @return string date formatted like: 2009-01-01 00:00:00
      */
     public function getPackageDateInstalled()
     {
@@ -455,11 +516,19 @@ class Package extends Object
         return $this->pkgAvailableVersion;
     }
 
+    /**
+     * Returns true if the package is installed, false if not
+     * @return boolean
+     */
     public function isPackageInstalled()
     {
         return $this->pkgIsInstalled;
     }
 
+    /**
+     * Gets the contents of the package's CHANGELOG file. If no changelog is available an empty string is returned.
+     * @return string
+     */
     public function getChangelogContents()
     {
         if (file_exists($this->getPackagePath() . '/CHANGELOG')) {
@@ -483,28 +552,44 @@ class Package extends Object
     /**
      * Returns the currently installed package version.
      * NOTE: This function only returns a value if getLocalUpgradeablePackages() has been called first!
+     * @return string
      */
     public function getPackageCurrentlyInstalledVersion()
     {
         return $this->pkgCurrentVersion;
     }
 
+    /**
+     * @return bool
+     */
     public function providesCoreExtensionAutoloaderMapping()
     {
         return $this->pkgAutoloaderMapCoreExtensions;
     }
 
+    /**
+     * Returns custom autoloader prefixes registered by the class loader
+     * @return array Keys represent the namespace, not relative to the package's namespace. Values are the path, and are relative to the package directory.
+     */
     public function getPackageAutoloaderRegistries()
     {
         return $this->pkgAutoloaderRegistries;
     }
 
+    /**
+     * Returns true if the package has a post install screen
+     * @return bool
+     */
     public function hasInstallPostScreen()
     {
         return file_exists(
             $this->getPackagePath() . '/' . DIRNAME_ELEMENTS . '/' . DIRNAME_DASHBOARD . '/install_post.php');
     }
 
+    /**
+     * Returns true if the package has an install options screen
+     * @return bool
+     */
     public function showInstallOptionsScreen()
     {
         return $this->hasInstallNotes() || $this->allowsFullContentSwap();
@@ -632,6 +717,7 @@ class Package extends Object
 
     /**
      * Returns an array of package items (e.g. blocks, themes)
+     * @return array
      */
     public function getPackageItems()
     {
@@ -716,6 +802,10 @@ class Package extends Object
         return ORM::entityManager($this);
     }
 
+    /**
+     * Removes any existing pages, files, stacks, block and page types and installs content from the package
+     * @param $options
+     */
     public function swapContent($options)
     {
         if ($this->validateClearSiteContents($options)) {
@@ -784,17 +874,21 @@ class Package extends Object
         return false;
     }
 
-    /*
+    /**
      * Returns a path to where the packages files are located.
      * @access public
      * @return string $path
      */
-
     public function contentProvidesFileThumbnails()
     {
         return $this->pkgContentProvidesFileThumbnails;
     }
 
+    /**
+     * Converts package install test errors to human-readable strings
+     * @param $testResults Package install test errors
+     * @return array
+     */
     public function mapError($testResults)
     {
         $errorText[Package::E_PACKAGE_INSTALLED] = t("You've already installed that package.");
@@ -826,6 +920,10 @@ class Package extends Object
         return $testResultsText;
     }
 
+    /**
+     * Returns the directory containing package entities
+     * @return string
+     */
     public function getPackageEntitiesPath()
     {
         return $this->getPackagePath() . '/' . DIRNAME_CLASSES;
@@ -876,6 +974,8 @@ class Package extends Object
     }
 
     /**
+     * Installs the package info row and installs the database. Packages installing additional content should override this method, call the parent method,
+     * and use the resulting package object for further installs.
      * @return Package
      */
     public function install()
@@ -904,16 +1004,28 @@ class Package extends Object
         return $pkg;
     }
 
+    /**
+     * Returns the translated name of the package
+     * @return string
+     */
     public function getPackageName()
     {
         return t($this->pkgName);
     }
 
+    /**
+     * Returns the translated package description
+     * @return string
+     */
     public function getPackageDescription()
     {
         return t($this->pkgDescription);
     }
 
+    /**
+     * Returns the installed package version
+     * @return string
+     */
     public function getPackageVersion()
     {
         return $this->pkgVersion;
@@ -936,6 +1048,8 @@ class Package extends Object
                 return $pkg;
             }
         }
+
+        return null;
     }
 
     /**
@@ -961,6 +1075,12 @@ class Package extends Object
         }
     }
 
+    /**
+     * Installs a package's database from an XML file
+     * @param string $xmlFile Path to the database XML file
+     * @return bool|\stdClass Returns false if the XML file could not be found
+     * @throws \Doctrine\DBAL\ConnectionException
+     */
     public static function installDB($xmlFile)
     {
         if (!file_exists($xmlFile)) {
@@ -1003,6 +1123,10 @@ class Package extends Object
         return $result;
     }
 
+    /**
+     * Updates the available package number in the database
+     * @param string $vNum New version number
+     */
     public function updateAvailableVersionNumber($vNum)
     {
         $db = Database::getActiveConnection();
@@ -1010,11 +1134,18 @@ class Package extends Object
         $db->query("update Packages set pkgAvailableVersion = ? where pkgID = ?", $v);
     }
 
+    /**
+     * Returns the package ID
+     * @return integer
+     */
     public function getPackageID()
     {
         return $this->pkgID;
     }
 
+    /**
+     * Updates a package's name, description, version and ID using the current class properties
+     */
     public function upgradeCoreData()
     {
         $db = Database::getActiveConnection();
@@ -1029,6 +1160,9 @@ class Package extends Object
         }
     }
 
+    /**
+     * Upgrades a package's database and refreshes all blocks.
+     */
     public function upgrade()
     {
         $this->upgradeDatabase();
@@ -1043,6 +1177,11 @@ class Package extends Object
         Localization::clearCache();
     }
 
+    /**
+     * Updates a package's database using entities and a db.xml
+     * @throws \Doctrine\DBAL\ConnectionException
+     * @throws \Exception
+     */
     public function upgradeDatabase()
     {
         $dbm = $this->getDatabaseStructureManager();
@@ -1099,7 +1238,7 @@ class Package extends Object
     }
 
     /**
-     * if a packate was just backed up by this instance of the package object and the packages/package handle directory doesn't exist, this will restore the
+     * if a package was just backed up by this instance of the package object and the packages/package handle directory doesn't exist, this will restore the
      * package from the trash
      */
     public function restore()
