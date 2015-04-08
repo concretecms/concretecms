@@ -29,7 +29,7 @@
             if (resp.oldIssID) {
                 $('head').find('style[data-style-set=' + resp.oldIssID +']').remove();
             }
-            if (resp.issID) {
+            if (resp.issID && resp.css) {
                 $('head').append($('<style />', {'data-style-set': resp.issID, 'text': resp.css}));
             }
         },

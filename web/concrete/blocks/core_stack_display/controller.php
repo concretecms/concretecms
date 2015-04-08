@@ -115,8 +115,11 @@ class Controller extends BlockController
                     }
                     $csr = $b->getCustomStyle();
                     if (is_object($csr)) {
-                        $styleHeader = '<style type="text/css" data-style-set="' . $csr->getStyleSet()->getID() . '">' . $csr->getCSS() . '</style>';
-                        $btc->addHeaderItem($styleHeader);
+                        $css = $csr->getCSS();
+                        if ($css !== '') {
+                            $styleHeader = '<style type="text/css" data-style-set="' . $csr->getStyleSet()->getID() . '">' . $css . '</style>';
+                            $btc->addHeaderItem($styleHeader);
+                        }
                     }
                     $btc->runTask('on_page_view', array($page));
                 }
