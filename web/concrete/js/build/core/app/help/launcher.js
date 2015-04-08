@@ -20,15 +20,34 @@
 
         my.$element.on('click', function() {
             $(this).addClass('animated fadeOut');
+            $notification.addClass('animated fadeIn').show();
 
-            $notification.queue(function() {
-                $(this).addClass('animated fadeIn');
-                $(this).show();
-                $(this).dequeue();
+            $notification.on('click', 'a[data-dismiss=help-single]', function(e) {
+                e.preventDefault();
+                ConcreteHelpLauncher.close($notification);
             });
         });
     }
 
+    ConcreteHelpLauncher.close = function($notification) {
+        if (!$notification) {
+            $notification = $('div[data-help-notification]');
+        }
+
+        if (!$notification || !$notification.is(':visible')) {
+            return false;
+        }
+        var $element = $('[data-help-notification-toggle='
+            + $notification.attr('data-help-notification') + ']');
+
+        $notification.addClass('animated fadeOut');
+        $element.removeClass('fadeOut').addClass('fadeIn');
+        $notification.clearQueue().delay(250).queue(function() {
+            $(this).hide();
+            $(this).removeClass('animated fadeOut');
+            $(this).dequeue();
+        });
+    }
     // jQuery Plugin
     $.fn.concreteHelpLauncher = function (options) {
         return $.each($(this), function (i, obj) {
@@ -36,6 +55,6 @@
         });
     };
 
-    global.ConcreteHelpLauncher = ConcreteMenuManager;
+    global.ConcreteHelpLauncher = ConcreteHelpLauncher;
 
 }(this, $, _);
