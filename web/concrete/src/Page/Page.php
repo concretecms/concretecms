@@ -184,11 +184,23 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         if (!isset($this->controller)) {
             $env = Environment::get();
             if ($this->getPageTypeID() > 0) {
-                $pt = $this->getPageTypeObject();
-                $ptHandle = $pt->getPageTypeHandle();
-                $r = $env->getRecord(DIRNAME_CONTROLLERS.'/'.DIRNAME_PAGE_TYPES.'/'.$ptHandle.'.php', $pt->getPackageHandle());
-                $prefix = $r->override ? true : $pt->getPackageHandle();
-                $class = core_class('Controller\\PageType\\'.camelcase($ptHandle), $prefix);
+
+                $ptHandle = $this->getPageTypeHandle();
+                $r = $env->getRecord(DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES . '/' . $ptHandle . '.php', $this->getPackageHandle());
+
+                // checking If the PageType Has an overwrite in a package
+                $pType = $this->getPageTypeObject();
+                $prefix = $pType->getPackageID() > 0  ? $pType->getPackageHandle() : false;
+
+                // If no package Override was found but there is an Application dir override
+                if (!$prefix && $r->override){
+                    $prefix = true;
+                } else if (!$prefix){ // No package nor Application dir override but perhaps a Page Template package override?
+                    $prefix = $this->getPackageHandle();
+                }
+
+                $class = core_class('Controller\\PageType\\' . camelcase($ptHandle), $prefix);
+
             } elseif ($this->isGeneratedCollection()) {
                 $file = $this->getCollectionFilename();
                 if (strpos($file, '/'.FILENAME_COLLECTION_VIEW) !== false) {
