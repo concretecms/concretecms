@@ -480,14 +480,14 @@
 
             $(element).find('.ccm-panel-content').mousewheel(function (e) {
 
-                if (!e.deltaY) {
+                if (!e.deltaY || !e.deltaFactor) {
                     return;
                 }
 
-                var change = -1 * e.deltaY;
+                var change = -1 * e.deltaY * e.deltaFactor;
 
                 var me = $(this),
-                    deltaY = e.originalEvent.deltaY || 0,
+                    deltaY = change || 0,
                     distance_from_top = me.scrollTop(),
                     distance_from_bottom = (me.get(0).scrollHeight - (me.scrollTop() + me.height()) - me.css('paddingTop').replace('px', ''));
 
