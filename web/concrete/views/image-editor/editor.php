@@ -93,7 +93,7 @@ foreach ($filters as $filter) {
         $(function () {
             _.defer(function () {
                 var defaults = {
-                        saveUrl: CCM_APPLICATION_URL + '/index.php/tools/required/files/importers/imageeditor',
+                        saveUrl: CCM_DISPATCHER_FILENAME + '/tools/required/files/importers/imageeditor',
                         src: '<?=$fv->getURL()?>',
                         fID: <?= $fv->getFileID() ?>,
                         controlsets: {},
