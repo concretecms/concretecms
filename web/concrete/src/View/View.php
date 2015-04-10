@@ -99,6 +99,12 @@ class View extends AbstractView
         } else {
             $this->themeHandle = $theme;
         }
+
+        if (isset($this->themeObject)) {
+            $this->themeObject = null;
+            $this->loadViewThemeObject();
+        }
+
     }
 
     /**
