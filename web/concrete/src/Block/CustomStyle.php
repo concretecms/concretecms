@@ -112,4 +112,13 @@ class CustomStyle extends AbstractCustomStyle
         }
         return $class;
     }
+
+    public function getCustomStyleClass()
+    {
+        $class = 'ccm-custom-style-';
+        $txt = Core::make('helper/text');
+        $class .= strtolower($txt->filterNonAlphaNum($this->arHandle));
+        $class .= '-' . $this->bID;
+        return $class;
+    }
 }
