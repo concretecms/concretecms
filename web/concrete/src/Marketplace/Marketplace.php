@@ -195,14 +195,14 @@ class Marketplace
                     // new connection
                     $csToken = Marketplace::generateSiteToken();
                 }
-                $url = Config::get('concrete.urls.concrete5') . Config::get('concrete.urls.paths.marketplace.connect') . '/-/' . $connectMethod;
+                $url = Config::get('concrete.urls.concrete5_secure') . Config::get('concrete.urls.paths.marketplace.connect') . '/-/' . $connectMethod;
                 $url = $url . '?ts=' . time() . '&csiBaseURL=' . $csiBaseURL . '&csiURL=' . $csiURL . '&csToken=' . $csToken . '&csReferrer=' . $csReferrer . '&csName=' . htmlspecialchars(
                         Config::get('concrete.site'),
                         ENT_QUOTES,
                         APP_CHARSET);
             } else {
                 $csiBaseURL = urlencode(\Core::getApplicationURL());
-                $url = Config::get('concrete.urls.concrete5') . Config::get('concrete.urls.paths.marketplace.connect_success') . '?csToken=' . $this->getSiteToken() . '&csiBaseURL=' . $csiBaseURL;
+                $url = Config::get('concrete.urls.concrete5_secure') . Config::get('concrete.urls.paths.marketplace.connect_success') . '?csToken=' . $this->getSiteToken() . '&csiBaseURL=' . $csiBaseURL;
             }
             if ($csToken == false && !$this->isConnected()) {
                 return '<div class="ccm-error">' . t(
