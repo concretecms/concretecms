@@ -27,6 +27,7 @@ use Page;
 use Redirect;
 use \Concrete\Core\Http\Request;
 use Route;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use User;
