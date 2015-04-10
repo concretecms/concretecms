@@ -21,6 +21,7 @@ use Concrete\Core\Feature\Category\Category as FeatureCategory;
 use Concrete\Core\Feature\Feature;
 use Concrete\Core\File\FileList;
 use Concrete\Core\File\StorageLocation\Type\Type as StorageLocation;
+use Concrete\Core\Foundation\ClassLoader;
 use Concrete\Core\Foundation\Object;
 use Concrete\Core\Gathering\DataSource\DataSource as GatheringDataSource;
 use Concrete\Core\Gathering\Item\Template\Template as GatheringItemTemplate;
@@ -994,7 +995,8 @@ class Package extends Object
             "INSERT INTO Packages (pkgName, pkgDescription, pkgVersion, pkgHandle, pkgIsInstalled, pkgDateInstalled) VALUES (?, ?, ?, ?, ?, ?)",
             $v);
 
-        $pkg = Package::getByID($db->Insert_ID());
+        $pkg = Package::getByID($db->lastInsertId());
+        ClassLoader::getInstance()->registerPackage($pkg);
         $pkg->installDatabase();
 
         $env = Environment::get();
