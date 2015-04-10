@@ -134,8 +134,24 @@ class Login extends PageController
         if (!$type || !($type instanceof AuthenticationType)) {
             return $this->view();
         }
-        $db = Loader::db();
         $u = new User();
+        if (Config::get('concrete.i18n.choose_language_login')) {
+            $userLocale = $this->post('USER_LOCALE');
+            if (is_string($userLocale) && ($userLocale !== '')) {
+                if ($userLocale !== 'en_US') {
+                    $availableLocales = Localization::getAvailableInterfaceLanguages();
+                    if (!in_array($userLocale, $availableLocales)) {
+                        $userLocale = '';
+                    }
+                }
+                if ($userLocale !== '') {
+                    if (Localization::activeLocale() !== $userLocale) {
+                        Localization::changeLocale($userLocale);
+                    }
+                    $u->setUserDefaultLanguage($userLocale);
+                }
+            }
+        }
 
         $ui = UserInfo::getByID($u->getUserID());
         $aks = UserAttributeKey::getRegistrationList();
