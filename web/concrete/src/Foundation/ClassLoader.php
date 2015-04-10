@@ -109,6 +109,7 @@ class ClassLoader  {
         $symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\MenuItem', DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_MENU_ITEMS);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Authentication', DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_AUTHENTICATION);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Block', DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_BLOCKS);
+		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Models', DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_MODELS);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Theme', DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_THEMES);
         $symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Controller\\PageType', DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Controller', DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CONTROLLERS);
