@@ -25,17 +25,22 @@
 
     ConcreteInlineStyleCustomizer.prototype = {
 
-        refreshStyles: function(resp) {
-            var stylesheets = document.styleSheets,
-                stylesheet = null,
-                ruleCount = 0;
+        getCollectionStyles: function() {
+            var stylesheets = document.styleSheets;
+
             for (var i = 0; i < stylesheets.length; i++) {
                 // is this the one we want?
                 if (stylesheets[i].ownerNode.id === 'collection-styles') {
-                    stylesheet = stylesheets[i];
-                    break;
+                    return stylesheets[i];
                 }
             }
+
+            return null;
+        },
+
+        refreshStyles: function(resp) {
+            var stylesheet = this.getCollectionStyles(),
+                ruleCount = 0;
 
             if (resp.oldIssID && stylesheet !== null) {
                 // grab the rules and remove the ones we don't want anymore
@@ -43,7 +48,6 @@
                 var removedCount = 0;
                 var regexp = new RegExp("\\." + resp.class.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + "($|\\D)");
                 for (var ri = 0; ri < rules.length; ri++) {
-                    // this is getting strange...
                     if (regexp.test(rules[ri].selectorText)) {
                         // remove this style
                         stylesheet.deleteRule(ri - removedCount++);
@@ -54,6 +58,11 @@
 
             if (resp.issID) {
                 // now we need to add new styles
+                if (stylesheet === null) {
+                    var newStylesheet = $("<style id='collection-styles' />");
+                    $('head').append(newStylesheet);
+                    stylesheet = this.getCollectionStyles();
+                }
                 var newRules = resp.css.split("}");
                 for (var nri = 0; nri < newRules.length; nri++) {
                     var newRule = newRules[nri];
