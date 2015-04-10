@@ -48,7 +48,7 @@ class CanonicalUrlResolver implements UrlResolverInterface
         }
 
         $scheme = strtolower($url->getScheme());
-        if ($scheme == 'http' || $scheme == 'https') {
+        if ($port && $scheme == 'http' || $scheme == 'https') {
             if (($scheme == 'http' && $port != 80) ||
                 ($scheme == 'https' && $port != 443)
             ) {
