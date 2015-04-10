@@ -129,7 +129,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
 
     public function getStorageLocationID()
     {
-        return $this->storageLocation;
+        return $this->getFileStorageLocationObject()->getID();
     }
 
     /**
@@ -538,7 +538,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
 
     /**
      * returns the most recent FileVersion object
-     * @return FileVersion
+     * @return Version
      */
     public function getRecentVersion()
     {
