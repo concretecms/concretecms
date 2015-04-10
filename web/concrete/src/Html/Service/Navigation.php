@@ -1,8 +1,7 @@
 <?php
 namespace Concrete\Core\Html\Service;
 
-use Config;
-use Loader;
+use Database;
 use Page;
 use URL;
 use User;
@@ -17,12 +16,11 @@ class Navigation
      * encode in the sitemap (and could probably screw up other stuff down the line.)
      *
      * @param Page $cObj
-     * @param boolean $prependBaseURL
      * @return string
      */
     public function getLinkToCollection($cObj)
     {
-        return (string) \URL::to($cObj);
+        return (string) URL::to($cObj);
     }
 
     /**
@@ -33,7 +31,7 @@ class Navigation
      */
     public function getTrailToCollection($c)
     {
-        $db = Loader::db();
+        $db = Database::connection();
 
         $cArray = array();
         $currentcParentID = $c->getCollectionParentID();
@@ -61,7 +59,7 @@ class Navigation
      */
     public function getCollectionURL($cObj)
     {
-        return $this->getLinkToCollection($cObj, true);
+        return $this->getLinkToCollection($cObj);
     }
 
     public function getLogInOutLink()
