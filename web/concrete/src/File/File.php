@@ -141,7 +141,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
     }
 
     /**
-     * @return array \Concrete\Core\File\Version
+     * @return \Concrete\Core\File\Version[]
      */
     public function getFileVersions()
     {
