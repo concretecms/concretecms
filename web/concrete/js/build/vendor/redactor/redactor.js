@@ -3469,7 +3469,7 @@
 							ConcreteEvent.unsubscribe('SitemapSelectPage');
 							ConcreteEvent.subscribe('SitemapSelectPage', function(e, data) {
 								jQuery.fn.dialog.closeTop();
-								var url = CCM_APPLICATION_URL + CCM_DISPATCHER_FILENAME + '?cID=' + data.cID;
+								var url = CCM_APPLICATION_URL + '/index.php?cID=' + data.cID;
 								$('#redactor-image-link').val(url);
 								this.link.$inputUrl.val(url);
 								this.link.$inputText.val(url);
@@ -5696,7 +5696,7 @@
                             ConcreteEvent.unsubscribe('SitemapSelectPage');
                             ConcreteEvent.subscribe('SitemapSelectPage', function(e, data) {
                                 jQuery.fn.dialog.closeTop();
-                                var url = CCM_APPLICATION_URL + CCM_DISPATCHER_FILENAME + '?cID=' + data.cID;
+                                var url = CCM_APPLICATION_URL + '/index.php?cID=' + data.cID;
                                 $('#redactor-link-url').val(url);
 								this.link.$inputUrl.val(url);
 								this.link.$inputText.val(url);
