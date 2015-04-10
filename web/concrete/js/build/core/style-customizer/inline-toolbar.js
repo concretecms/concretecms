@@ -30,7 +30,7 @@
 
             for (var i = 0; i < stylesheets.length; i++) {
                 // is this the one we want?
-                if (stylesheets[i].ownerNode.id === 'collection-styles') {
+                if (stylesheets[i].ownerNode.id === 'ccm-collection-styles') {
                     return stylesheets[i];
                 }
             }
@@ -59,7 +59,7 @@
             if (resp.issID) {
                 // now we need to add new styles
                 if (stylesheet === null) {
-                    var newStylesheet = $("<style id='collection-styles' />");
+                    var newStylesheet = $("<style id='ccm-collection-styles' />");
                     $('head').append(newStylesheet);
                     stylesheet = this.getCollectionStyles();
                 }

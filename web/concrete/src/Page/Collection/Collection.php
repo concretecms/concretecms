@@ -625,7 +625,7 @@ class Collection extends Object
             }
         }
 
-        $styleHeader = '<style type="text/css" id="collection-styles">';
+        $styleHeader = '<style type="text/css" id="ccm-collection-styles">';
         foreach ($psss as $st) {
             $styleHeader .= $st->getCSS();
         }
