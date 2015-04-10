@@ -2377,7 +2377,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     {
         $cID = $this->getCollectionID();
 
-        if ($this->isAlias()) {
+        if ($this->isAlias() && !$this->isExternalLink()) {
             $this->removeThisAlias();
 
             return;
