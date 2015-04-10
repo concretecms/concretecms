@@ -1,9 +1,9 @@
 <?php
 namespace Concrete\Core\Form\Service\Widget;
 
-use Concrete\Core\Http\ResponseAssetGroup;
-use Loader;
+use Core;
 use Page;
+use Permissions;
 
 class PageSelector
 {
@@ -14,7 +14,9 @@ class PageSelector
      *     $dh->selectPage('pageID', '1'); // prints out the home page and makes it selectable.
      * </code>
      *
-     * @param int $cID
+     * @param $fieldName
+     * @param bool|int $cID
+     * @return string
      */
     public function selectPage($fieldName, $cID = false)
     {
@@ -69,10 +71,9 @@ EOL;
             }
         }
 
-        $form = Loader::helper('form');
-        $valt = Loader::helper('validation/token');
+        $valt = Core::make('helper/validation/token');
         $token = $valt->generate('quick_page_select_' . $key);
-        $html .= "
+        $html = "
 		<script type=\"text/javascript\">
 		$(function () {
 			$('#ccm-quick-page-selector-label-" . $key . "').autocomplete({
