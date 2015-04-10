@@ -52,8 +52,8 @@ class ErrorHandler extends PrettyPageHandler
                 if ($db->isConnected()) {
                     $l = new Logger(LOG_TYPE_EXCEPTIONS);
                     $l->emergency(
-                        t('Exception Occurred: ') . sprintf(
-                            "%s:%d %s (%d)\n",
+                        sprintf(
+                            "Exception Occurred: %s:%d %s (%d)\n",
                             $e->getFile(),
                             $e->getLine(),
                             $e->getMessage(),
