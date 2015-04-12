@@ -37,8 +37,8 @@
         if (!$notification || !$notification.is(':visible')) {
             return false;
         }
-        var $element = $('[data-help-notification-toggle='
-            + $notification.attr('data-help-notification') + ']');
+        var $element = $('[data-help-notification-toggle=\''
+            + $notification.attr('data-help-notification') + '\']');
 
         $notification.addClass('animated fadeOut');
         $element.removeClass('fadeOut').addClass('fadeIn');

@@ -160,7 +160,12 @@ div.ccm-notification-help-launcher {
   position: fixed;
   top: 83px;
   right: 0px;
-  z-index: @index-level-page-alert;
+  z-index: @index-level-page-help;
+
+  div.ccm-panel-detail-content & {
+    z-index: @index-level-panel-help;
+  }
+
   -webkit-font-smoothing: antialiased;
   .transition-transform(cubic-bezier(0.190, 1.000, 0.220, 1.000) 0.5s);
 
@@ -201,6 +206,10 @@ div.ccm-notification-help-launcher {
 div.ccm-notification-help {
   display: none;
 
+  div.ccm-panel-detail-content & {
+    margin-top: -28px; // not sure why – some of the style in these panels gets a little weird.
+  }
+
   -webkit-animation-duration:0.2s;
   -moz-animation-duration:0.2s;
   -ms-animation-duration:0.2s;
@@ -218,7 +227,7 @@ div.ccm-notification-help {
   right: 0px;
   top: 83px;
   .border-right-radius(0px);
-  z-index: @index-level-page-alert;
+  z-index: @index-level-page-help;
 
 }
 
