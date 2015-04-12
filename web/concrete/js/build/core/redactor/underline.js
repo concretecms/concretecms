@@ -4,7 +4,7 @@ RedactorPlugins.underline = function() {
 	return {
 		init: function()
 		{
-			this.button.addAfter('italic', 'underline', 'Underline');
+			this.button.addAfter('italic', 'underline', this.lang.get('underline'));
 			/* concrete5 */
 			$btn = this.button.get('underline');
 			this.button.addCallback($btn, this.underline.format);
