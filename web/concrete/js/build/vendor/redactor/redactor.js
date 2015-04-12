@@ -339,15 +339,22 @@
 				lightbox_link_type_iframe_options: 'Frame Options',
 				lightbox_link_type_iframe_width: 'Width',
 				lightbox_link_type_iframe_height: 'Height',
+				customStyles: 'Custom Styles',
+				remove_font: 'Remove font',
+				change_font_family: 'Change font family',
+				remove_font_size: 'Remove font size',
+				change_font_size: 'Change font size',
+				remove_style: 'Remove Style',
+				insert_character: 'Insert Character',
+				undo: 'Undo',
+				redo: 'Redo',
+				// Remember to add new strings also in in /concrete/controllers/frontend/assets_localization.php, function getRedactorJavascript
 				/* end concrete5 */
 				underline: 'Underline',
 				alignment: 'Alignment',
 				filename: 'Name (optional)',
 				edit: 'Edit',
 				upload_label: 'Drop file here or '
-				/* concrete5 */
-				// Remember to add new strings also in in /concrete/controllers/frontend/assets_localization.php, function getRedactorJavascript
-				/* end concrete5 */
 			}
 		}
 	};

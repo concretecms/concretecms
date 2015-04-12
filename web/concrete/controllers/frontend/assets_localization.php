@@ -360,6 +360,15 @@ jQuery.Redactor.opts.langs[<?=json_encode($locale)?>] = {
   lightbox_link_type_iframe_options: <?=json_encode(t('Frame Options'))?>,
   lightbox_link_type_iframe_width: <?=json_encode(t('Width'))?>,
   lightbox_link_type_iframe_height: <?=json_encode(t('Height'))?>,
+  customStyles: <?=json_encode(t('Custom Styles'))?>,
+  remove_font: <?=json_encode(t('Remove font'))?>,
+  change_font_family: <?=json_encode(t('Change font family'))?>,
+  remove_font_size: <?=json_encode(t('Remove font size'))?>,
+  change_font_size: <?=json_encode(t('Change font size'))?>,
+  remove_style: <?=json_encode(t('Remove Style'))?>,
+  insert_character: <?=json_encode(t('Insert Character'))?>,
+  undo: <?=json_encode(t('Undo'))?>,
+  redo: <?=json_encode(t('Redo'))?>,
   /* end concrete5 */
   underline: <?=json_encode(t('Underline'))?>,
   alignment: <?=json_encode(t('Alignment'))?>,
@@ -374,16 +383,6 @@ jQuery.each(jQuery.Redactor.opts.langs.en, function(key, value) {
     jQuery.Redactor.opts.langs[<?=json_encode($locale)?>][key] = value;
   }
 });
-
-var ccmi18n_redactor = {
-  remove_font: <?=json_encode(t('Remove font'))?>,
-  change_font_family: <?=json_encode(t('Change font family'))?>,
-  remove_font_size: <?=json_encode(t('Remove font size'))?>,
-  change_font_size: <?=json_encode(t('Change font size'))?>,
-  cancel: <?=json_encode(t('Cancel'))?>,
-  save: <?=json_encode(t('Save'))?>,
-  remove_style: <?=json_encode(t('Remove Style'))?>
-};
 <?php
 
     }
