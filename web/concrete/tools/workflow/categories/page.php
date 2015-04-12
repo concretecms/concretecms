@@ -18,9 +18,9 @@ if ($_REQUEST['task'] == 'save_workflow_progress' && Loader::helper("validation/
 			if ($task) {
 				$r = $wp->runTask($task, $_POST);
 				if (($r instanceof WorkflowProgressResponse) && $r->getWorkflowProgressResponseURL() != '') {
-					$obj->redirect = $r->getWorkflowProgressResponseURL();
+					$obj->redirect = (string) $r->getWorkflowProgressResponseURL();
 				} else { 
-					$obj->redirect = URL::to($c);
+					$obj->redirect = (string) URL::to($c);
 				}
 			}
 		}
