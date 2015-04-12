@@ -53,7 +53,7 @@ var ConcreteToolbar = function() {
 			return false;
 		});
 
-		$('#ccm-notification-page-alert form').ajaxForm({
+		$('#ccm-notification-page-alert form, [id|=ccm-notification-page-alert-form]').ajaxForm({
 			dataType: 'json',
 			beforeSubmit: function() {
 				jQuery.fn.dialog.showLoader();
