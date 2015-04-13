@@ -12,7 +12,7 @@ abstract class Category extends TreeNode {
     public function getTreeNodeDisplayName($format = 'html')
     {
         if ($this->getTreeNodeName()) {
-            $name = tc('CategoryName', $this->getTreeNodeName());
+            $name = tc('TreeNodeCategoryName', $this->getTreeNodeName());
             switch ($format) {
                 case 'html':
                     return h($name);
