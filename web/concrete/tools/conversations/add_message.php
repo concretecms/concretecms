@@ -39,6 +39,7 @@ if (!is_object($cn)) {
 			} else {
 				$author->setEmail($_POST['cnvMessageAuthorEmail']);
 			}
+            $author->setWebsite($_POST['cnvMessageAuthorWebsite']);
 
 			$captcha = Core::make('captcha');
 			if (!$captcha->check()) {
