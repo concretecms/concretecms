@@ -31,7 +31,15 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
     }
 
     if (!$c->isEditMode()) {
-       print Loader::helper('concrete/ui/help')->display('toolbar');
+       print Loader::helper('concrete/ui/help')->displayHelpDialogLauncher();
+    }
+
+    $cih = Core::make("helper/concrete/ui");
+    if ($cih->showHelpOverlay()) {
+        Loader::element('help/dialog/introduction');
+        $v = View::getInstance();
+        $v->addFooterItem('<script type="text/javascript">$(function() { new ConcreteHelpDialog().open(); });</script>');
+        $cih->trackHelpOverlayDisplayed();
     }
 
     ?>

@@ -12,7 +12,7 @@
         var $notification = my.options.element ? my.options.element :
             $('div[data-help-notification=\'' + my.$element.attr('data-help-notification-toggle') + '\']');
 
-		$('a[data-launch-guide]').on('click.concreteHelp', function(e) {
+        $notification.find('a[data-launch-guide]').on('click.concreteHelp', function(e) {
 			e.preventDefault();
 			var tour = ConcreteHelpGuideManager.getGuide($(this).attr('data-launch-guide'));
 			tour.start();

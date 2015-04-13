@@ -10,4 +10,9 @@ interface ManagerInterface
      */
     public function getMessage($identifier);
 
+    /**
+     * @return FormatterInterface
+     */
+    public function getFormatter(Message $message);
+
 }

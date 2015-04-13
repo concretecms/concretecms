@@ -60,8 +60,6 @@
 	});
 	tour.on('stop', function() {
 		ConcreteHelpGuideManager.exitToolbarGuideMode();
-		$('.ccm-dialog-help-wrapper').show();
-		$('#ccm-toolbar').removeClass('ccm-toolbar-tour-guide');
 	});
 
 	ConcreteHelpGuideManager.register('toolbar', tour);

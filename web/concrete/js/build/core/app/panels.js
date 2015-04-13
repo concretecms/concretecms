@@ -276,6 +276,7 @@ function ConcretePanel(options) {
 
             _.defer(function() {
                 Concrete.event.publish('PanelOpenDetail', {
+                    panel: options,
                     container: $content
                 });
             });

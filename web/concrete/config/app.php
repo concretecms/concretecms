@@ -238,6 +238,11 @@ return array(
         "/ccm/system/dialogs/conversation/subscribe/unsubscribe/{cnvID}"                => array('\Concrete\Controller\Dialog\Conversation\Subscribe::unsubscribe'),
 
         /**
+         * Help
+         */
+        "/ccm/system/dialogs/help/introduction/"                                        => array('\Concrete\Controller\Dialog\Help\Introduction::view'),
+
+        /**
          * Files
          */
         "/ccm/system/file/approve_version"                                              => array('\Concrete\Controller\Backend\File::approveVersion'),

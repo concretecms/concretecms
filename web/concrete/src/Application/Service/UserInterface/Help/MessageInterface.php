@@ -6,7 +6,7 @@ interface MessageInterface
 {
 
     /**
-     * @return HtmlObject\Element
+     * @return \HtmlObject\Element
      */
     public function getContent();
 
@@ -14,5 +14,6 @@ interface MessageInterface
      * @return string
      */
     public function getIdentifier();
+
 
 }
