@@ -9,6 +9,7 @@ class Author
     protected $user;
     protected $name;
     protected $email;
+    protected $website;
 
     /**
      * @return \Concrete\Core\User\UserInfo
@@ -47,6 +48,22 @@ class Author
     public function setName($name)
     {
         $this->name = $name;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getWebsite()
+    {
+        return $this->website;
+    }
+
+    /**
+     * @param mixed $website
+     */
+    public function setWebsite($website)
+    {
+        $this->website = $website;
     }
 
     /**
