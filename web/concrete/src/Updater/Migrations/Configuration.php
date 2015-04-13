@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Updater\Migrations;
 
 use Doctrine\DBAL\Migrations\Configuration\Configuration as DoctrineMigrationConfiguration;
@@ -30,7 +31,6 @@ class Configuration extends DoctrineMigrationConfiguration
     {
         $db = \Database::get();
         try {
-
             $minimum = $db->GetOne('select min(version) from SystemDatabaseMigrations');
         } catch (\Exception $e) {
             return;
@@ -44,7 +44,7 @@ class Configuration extends DoctrineMigrationConfiguration
         } else {
             // We have to populate this table with all the migrations from the very first migration up to
             // the $minMigration
-            foreach($migrations as $key => $migration) {
+            foreach ($migrations as $key => $migration) {
                 if ($key < $minimum) {
                     $migration->markMigrated();
                 }

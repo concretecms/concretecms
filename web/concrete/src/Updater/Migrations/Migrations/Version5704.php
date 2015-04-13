@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
@@ -7,7 +8,6 @@ use Doctrine\DBAL\Schema\Schema;
 
 class Version5704 extends AbstractMigration
 {
-
     public function getName()
     {
         return '20140930000000';

@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
@@ -7,7 +8,6 @@ use Concrete\Core\Block\BlockType\BlockType;
 
 class Version5731 extends AbstractMigration
 {
-
     public function getName()
     {
         return '20150109000000';

@@ -2,8 +2,6 @@
 
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
-use Concrete\Core\Block\BlockType\BlockType;
-use Concrete\Core\Permission\Access\Entity\PageOwnerEntity;
 use Concrete\Core\Permission\Access\Entity\Type;
 use Concrete\Core\Permission\Category;
 use Doctrine\DBAL\Migrations\AbstractMigration;

@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Updater;
 
 use Concrete\Core\Cache\Cache;
@@ -11,7 +12,6 @@ use ORM;
 
 class Update
 {
-
     public static function getLatestAvailableVersionNumber()
     {
         $d = Loader::helper('date');
@@ -65,12 +65,13 @@ class Update
             $r->lock();
             $r->set(static::getLatestAvailableUpdate());
         }
+
         return $r->get();
     }
 
     protected static function getLatestAvailableUpdate()
     {
-        $obj = new \stdClass;
+        $obj = new \stdClass();
         $obj->notes = false;
         $obj->url = false;
         $obj->date = false;
@@ -111,13 +112,12 @@ class Update
                 // invalid. That means it's old and it's just the version
                 $obj->version = trim($resp);
             } else {
-                $obj = new \stdClass;
-                $obj->version = (string)$xml->version;
-                $obj->notes = (string)$xml->notes;
-                $obj->url = (string)$xml->url;
-                $obj->date = (string)$xml->date;
+                $obj = new \stdClass();
+                $obj->version = (string) $xml->version;
+                $obj->notes = (string) $xml->notes;
+                $obj->url = (string) $xml->url;
+                $obj->date = (string) $xml->date;
             }
-
         } else {
             $obj->version = APP_VERSION;
         }
@@ -128,7 +128,7 @@ class Update
     /**
      * Looks in the designated updates location for all directories, ascertains what
      * version they represent, and finds all versions greater than the currently installed version of
-     * concrete5
+     * concrete5.
      */
     public function getLocalAvailableUpdates()
     {
@@ -151,6 +151,7 @@ class Update
                 return version_compare($a->getUpdateVersion(), $b->getUpdateVersion());
             }
         );
+
         return $updates;
     }
 
@@ -167,10 +168,9 @@ class Update
         $configuration = new \Concrete\Core\Updater\Migrations\Configuration();
         $configuration->registerPreviousMigratedVersions();
         $migrations = $configuration->getMigrationsToExecute('up', $configuration->getLatestVersion());
-        foreach($migrations as $migration) {
+        foreach ($migrations as $migration) {
             $migration->execute('up');
         }
         Config::save('concrete.version_installed', Config::get('concrete.version'));
     }
-
 }
