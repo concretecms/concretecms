@@ -8,6 +8,7 @@ use PermissionKey;
 use Permissions;
 use Core;
 use stdClass;
+use Gettext\Translations;
 abstract class Node extends Object implements \Concrete\Core\Permission\ObjectInterface {
 
     abstract public function loadDetails();
@@ -376,6 +377,22 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
             $node->setPropertiesFromArray($row);
             $node->loadDetails();
             return $node;
+        }
+    }
+    /**
+     * @param Translations $translations
+     * @internal
+     */
+    public function exportTranslations(Translations $translations)
+    {
+        $name = $this->getTreeNodeDisplayName('text');
+        if (is_string($name) && ($name !== '')) {
+            $context = method_exists($this, 'getTreeNodeTranslationContext') ? $this->getTreeNodeTranslationContext() : '';
+            $translations->insert($context, $name);
+        }
+        $this->populateDirectChildrenOnly();
+        foreach($this->getChildNodes() as $childnode) {
+            $childnode->exportTranslations($translations);
         }
     }
 }
