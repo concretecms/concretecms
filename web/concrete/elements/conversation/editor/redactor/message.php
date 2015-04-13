@@ -14,12 +14,8 @@ print $form->textarea($editor->getConversationEditorInputName(), $editor->getCon
 $(function() {
     var textarea = $('textarea.unbound.redactor_conversation_editor_<?=$cnvID?>').removeClass('unbound');
     $(textarea).redactor({
-        'concrete5': {
-            filemanager: <?=$fp->canAccessFileManager()?>,
-            sitemap: <?=$tp->canAccessSitemap()?>,
-            lightbox: true
-        },
         autoresize: false,
+        minHeight: '150px',
         buttons: [ 'bold','italic','deleted','|','fontcolor','|','link' ],
         callback: function(obj) {
             ConcreteEvent.publish('ConversationRedactorEditorLoaded',obj);

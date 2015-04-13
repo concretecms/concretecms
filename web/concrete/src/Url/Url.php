@@ -3,7 +3,7 @@ namespace Concrete\Core\Url;
 
 use RuntimeException;
 
-class Url extends \League\Url\Url
+class Url extends \League\Url\Url implements UrlInterface
 {
 
     public static function createFromUrl($url, $trailing_slashes = false)
@@ -17,14 +17,14 @@ class Url extends \League\Url\Url
         if (is_null($url)) {
             throw new RuntimeException(
                 sprintf(
-                    'The given URL: `%s` could not be parse',
+                    'The given URL: `%s` could not be parsed',
                     $original_url));
         }
         $components = @parse_url($url);
         if (false === $components) {
             throw new RuntimeException(
                 sprintf(
-                    'The given URL: `%s` could not be parse',
+                    'The given URL: `%s` could not be parsed',
                     $original_url));
         }
 

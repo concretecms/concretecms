@@ -115,6 +115,7 @@ class Design extends BackendInterfaceBlockController {
                     $bi = $this->block->getInstance();
                     $bx = \Block::getByID($bi->getOriginalBlockID());
                     $bt = \BlockType::getByID($bx->getBlockTypeID());
+                    $bFilename = $bx->getBlockFilename();
                     break;
                 case BLOCK_HANDLE_PAGE_TYPE_OUTPUT_PROXY:
                     $bi = $this->block->getInstance();
@@ -124,15 +125,18 @@ class Design extends BackendInterfaceBlockController {
                     if ($object instanceof BlockControl) {
                         $bt = $object->getBlockTypeObject();
                     }
+                    $bFilename = $this->block->getBlockFilename();
                     break;
                 default:
                     $bt = \BlockType::getByID($this->block->getBlockTypeID());
+                    $bFilename = $this->block->getBlockFilename();
                     break;
             }
             $templates = array();
             if (is_object($bt)) {
                 $templates = $bt->getBlockTypeCustomTemplates();
             }
+            $this->set('bFilename', $bFilename);
             $this->set('templates', $templates);
         }
         $this->set('canEditCustomTemplate', $canEditCustomTemplate);

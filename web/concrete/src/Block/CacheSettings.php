@@ -13,6 +13,7 @@ class CacheSettings
 
     public static function get(Block $b)
     {
+        $o = null;
         if ($b->overrideBlockTypeCacheSettings()) {
             $c = $b->getBlockCollectionObject();
             $cID = $c->getCollectionID();
@@ -40,7 +41,7 @@ class CacheSettings
                 $o->btCacheBlockOutputLifetime = $r['btCacheBlockOutputLifetime'];
             }
         }
-        if (!is_object($o)) {
+        if (!isset($o)) {
             if ($controller = $b->getController()) {
                 $o = new static();
                 $o->btCacheBlockOutput = $controller->cacheBlockOutput();

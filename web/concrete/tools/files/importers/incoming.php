@@ -64,8 +64,6 @@ if ($valt->validate('import_incoming')) {
 }
 
 $r->setError($error);
-if (is_object($respf)) {
-	$r->setFile($respf);
-}
+$r->setFiles($files);
 $r->setMessage(t2('%s file imported successfully.', '%s files imported successfully', count($files)));
 $r->outputJSON();

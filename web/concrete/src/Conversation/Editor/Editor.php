@@ -85,7 +85,7 @@ abstract class Editor extends Object
             return '';
         }
         $cnv = $this->cnvMessage->getConversationObject();
-        return $this->formatConversationMessageBody($cnv, $this->cnvMessage->getConversationMessageBody());
+        return $this->cnvMessage->getConversationMessageBody();
     }
 
     public function getConversationEditorHandle()

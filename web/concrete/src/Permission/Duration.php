@@ -27,7 +27,7 @@ class Duration extends AbstractRepetition
     /**
      * @return Duration|null
      */
-    public static function translateFromRequest()
+    public static function createFromRequest()
     {
         $dt = Loader::helper('form/date_time');
         $dateStart = $dt->translate('pdStartDate');
@@ -35,11 +35,7 @@ class Duration extends AbstractRepetition
 
         if ($dateStart || $dateEnd) {
             // create a Duration object
-            if ($_REQUEST['pdID']) {
-                $pd = Duration::getByID($_REQUEST['pdID']);
-            } else {
-                $pd = new Duration();
-            }
+            $pd = new Duration();
 
             if ($_REQUEST['pdStartDateAllDayActivate']) {
                 $pd->setStartDateAllDay(1);

@@ -52,9 +52,9 @@
     </singlepages>
 
     <conversationeditors>
-        <editor handle="plain_text" name="Plain Text" package="" activated="0"/>
+        <editor handle="plain_text" name="Plain Text" package="" activated="1"/>
         <editor handle="markdown" name="Markdown" package="" activated="0"/>
-        <editor handle="redactor" name="Redactor" package="" activated="1"/>
+        <editor handle="redactor" name="Redactor" package="" activated="0"/>
     </conversationeditors>
 
     <conversationratingtypes>

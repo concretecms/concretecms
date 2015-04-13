@@ -25,7 +25,7 @@ if (is_object($c)) {
 }
 
 $showAccount = false;
-if (Config::get('concrete.user.profiles_enabled')) {
+if (Config::get('concrete.user.profiles_enabled') && Core::isInstalled()) {
     $account = Page::getByPath('/account');
     if (is_object($account) && !$account->isError()) {
         $cp = new Permissions($account);

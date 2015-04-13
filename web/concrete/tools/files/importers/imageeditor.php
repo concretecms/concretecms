@@ -19,7 +19,8 @@ if (!$imgData) {
 $fh = Loader::helper('file');
 $tmpName = tempnam($fh->getTemporaryDirectory(), 'img');
 
-$fh->append($tmpName, base64_decode(str_replace('data:image/png;base64,', '', $imgData)));
+$imgData = base64_decode(preg_replace('/data:image\/(png|jpeg);base64,/', '', $imgData, 1));
+$fh->append($tmpName, $imgData);
 
 $fi = new FileImporter;
 $fi->import($tmpName, $f->getFileName(), $f);

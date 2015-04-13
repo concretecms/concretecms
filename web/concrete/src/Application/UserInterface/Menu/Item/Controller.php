@@ -55,7 +55,7 @@ class Controller extends AbstractController implements ControllerInterface
             if ($r->exists()) {
                 switch ($t) {
                     case 'CSS':
-                        $asset = new CSSAsset($identifier);
+                        $asset = new CssAsset($identifier);
                         $asset->setAssetURL($r->url);
                         $asset->setAssetPath($r->file);
                         $al->registerAsset($asset);

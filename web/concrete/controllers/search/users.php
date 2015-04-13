@@ -36,7 +36,7 @@ class Users extends Controller
     {
         $dh = Loader::helper('concrete/user');
         if (!$dh->canAccessUserSearchInterface()) {
-            throw new \Exception(t('Access Denied.'));
+            return false;
         }
 
         if ($_REQUEST['submitSearch']) {

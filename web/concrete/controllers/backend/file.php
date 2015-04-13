@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Controller\Backend;
+use Concrete\Core\File\Importer;
 use Controller;
 use FileSet;
 use File as ConcreteFile;
@@ -120,6 +121,11 @@ class File extends Controller {
         if (!$fp->canAddFiles()) {
             throw new Exception(t("Unable to add files."));
         }
+
+        if (\Loader::helper('number')->getBytes(ini_get('post_max_size')) < $_SERVER['CONTENT_LENGTH']) {
+            throw new Exception(FileImporter::getErrorMessage(Importer::E_FILE_EXCEEDS_POST_MAX_FILE_SIZE));
+        }
+
         if (!Loader::helper('validation/token')->validate()) {
             throw new Exception(Loader::helper('validation/token')->getErrorMessage());
         }

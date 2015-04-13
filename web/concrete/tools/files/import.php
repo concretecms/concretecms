@@ -49,7 +49,7 @@ ConcreteFileImportDialog = {
             $form.concreteAjaxForm({
                 success: function(r) {
                     jQuery.fn.dialog.closeTop();
-                    ConcreteEvent.trigger('FileManagerUpdateRequestComplete');
+                    ConcreteEvent.trigger('FileManagerAddFilesComplete', {files: r.files});
                 }
             }).submit();
         }

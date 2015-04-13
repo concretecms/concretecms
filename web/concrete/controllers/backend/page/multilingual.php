@@ -28,6 +28,15 @@ class Multilingual extends Page
         $r->outputJSON();
     }
 
+    public function unmap()
+    {
+        Section::unregisterPage($this->page);
+        $r = new PageEditResponse();
+        $r->setPage($this->page);
+        $r->setMessage(t('Page unmapped.'));
+        $r->outputJSON();
+    }
+
     public function assign()
     {
 

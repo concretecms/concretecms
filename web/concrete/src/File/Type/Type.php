@@ -130,6 +130,19 @@ class Type
         return $types;
     }
 
+    public static function getTypeList()
+    {
+        return array(
+            static::T_DOCUMENT,
+            static::T_IMAGE,
+            static::T_VIDEO,
+            static::T_AUDIO,
+            static::T_TEXT,
+            static::T_APPLICATION,
+            static::T_UNKNOWN
+        );
+    }
+
     /**
      * Returns a thumbnail for this type of file
      */

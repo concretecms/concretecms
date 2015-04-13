@@ -18,6 +18,19 @@ class Repository extends \Illuminate\Config\Repository
     protected $loader;
 
     /**
+     * Create a new configuration repository.
+     *
+     * @param LoaderInterface $loader
+     * @param SaverInterface  $saver
+     * @param                 $environment
+     */
+    public function __construct(LoaderInterface $loader, SaverInterface $saver, $environment)
+    {
+        $this->saver = $saver;
+        parent::__construct($loader, $environment);
+    }
+
+    /**
      * Clear specific key
      *
      * @param string $key
@@ -49,16 +62,24 @@ class Repository extends \Illuminate\Config\Repository
     }
 
     /**
-     * Create a new configuration repository.
+     * Register a package for cascading configuration.
      *
-     * @param LoaderInterface $loader
-     * @param SaverInterface  $saver
-     * @param                 $environment
+     * @param  string $package
+     * @param  string $hint
+     * @param  string $namespace
+     * @return void
      */
-    public function __construct(LoaderInterface $loader, SaverInterface $saver, $environment)
+    public function package($package, $hint, $namespace = null)
     {
-        $this->saver = $saver;
-        parent::__construct($loader, $environment);
+        $namespace = $this->getPackageNamespace($package, $namespace);
+
+        $this->packages[] = $namespace;
+        $this->addNamespace($namespace, $hint);
+    }
+
+    protected function getPackageNamespace($package, $namespace)
+    {
+        return $namespace ?: $package;
     }
 
     public function clearCache()
@@ -78,9 +99,18 @@ class Repository extends \Illuminate\Config\Repository
         return $this->saver;
     }
 
-    protected function getPackageNamespace($package, $namespace)
+    protected function parsePackageSegments($key, $namespace, $item)
     {
-        return $namespace ?: $package;
+        list($namespace, $item) = explode('::', $key);
+
+        // First we'll just explode the first segment to get the namespace and group
+        // since the item should be in the remaining segments. Once we have these
+        // two pieces of data we can proceed with parsing out the item's value.
+        $itemSegments = explode('.', $item);
+
+        $groupAndItem = array_slice($this->parseBasicSegments($itemSegments), 1);
+
+        return array_merge(array($namespace), $groupAndItem);
     }
 
 }

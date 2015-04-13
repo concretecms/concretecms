@@ -21,7 +21,7 @@ Loader::element("custom_style", array(
     'saveAction' => $controller->action('submit'),
     'resetAction' => $controller->action('reset'),
     'style' => $b->getCustomStyle(true),
-    'bFilename' => $b->getBlockFilename(),
+    'bFilename' => $bFilename,
     'bName' => $b->getBlockName(),
     'templates' => $templates,
     'customClasses' => $customClasses,

@@ -7,9 +7,9 @@ return array(
      *
      * @var string
      */
-    'version'           => '5.7.4b1',
-    'version_installed' => '5.7.4b1',
-    'version_db' => '20150319000000', // the key of the latest database migration - corresponds to 5.7.3.2
+    'version'           => '5.7.4b3',
+    'version_installed' => '5.7.4b3',
+    'version_db' => '20150330000000', // the key of the latest database migration - corresponds to 5.7.3.2
 
     /**
      * Installation status
@@ -184,7 +184,6 @@ return array(
          * @var int
          */
         'full_page_lifetime_value' => null,
-        'identifier'               => md5(str_replace(array('https://', 'http://'), '', BASE_URL) . DIR_REL),
 
 
         'directory'   => DIR_FILES_UPLOADED_STANDARD . '/cache',
@@ -417,7 +416,8 @@ return array(
         'enable_translate_locale_en_us' => false,
         'page_search_index_lifetime'    => 259200,
         'enable_trash_can'              => true,
-        'app_version_display_in_header' => true
+        'app_version_display_in_header' => true,
+        'default_jpeg_image_compression'     => 80
     ),
 
     'theme' => array(
@@ -467,8 +467,7 @@ return array(
     'sitemap_xml'       => array(
         'file'      => 'sitemap.xml',
         'frequency' => 'weekly',
-        'priority'  => 0.5,
-        'base_url'  => BASE_URL
+        'priority'  => 0.5
     ),
 
     /**
@@ -811,6 +810,7 @@ return array(
         'redirect_to_canonical_host'  => false,
         'canonical_host'          => null,
         'canonical_port'          => null,
+        'force_ssl'               => false,
         'trailing_slash'          => false,
         'title_format'            => '%1$s :: %2$s',
         'title_segment_separator' => ' :: ',

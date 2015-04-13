@@ -6,11 +6,21 @@ use \Concrete\Core\Package\Package;
 use \Concrete\Core\Foundation\ModifiedPSR4ClassLoader as SymfonyClassloader;
 use \Symfony\Component\ClassLoader\MapClassLoader as SymfonyMapClassloader;
 
+/**
+ * Provides autoloading for concrete5
+ * Typically getInstance() should be used rather than instantiating a new object.
+ * @package Concrete\Core\Foundation
+ */
 class ClassLoader  {
 
+	/** @var ClassLoader */
 	static $instance;
 	protected $classAliases = array();
 
+	/**
+	 * Returns the ClassLoader instance
+	 * @return ClassLoader
+	 */
 	public static function getInstance() {
 		if (!isset(static::$instance)) {
 			static::$instance = new Classloader();
@@ -24,6 +34,9 @@ class ClassLoader  {
 		$this->setupMapClassAutoloader();
 	}
 
+	/**
+	 * Maps legacy classes
+	 */
 	protected function setupMapClassAutoloader() {
 		$mapping = array(
 		    'Loader' => DIR_BASE_CORE . '/' . DIRNAME_CLASSES . '/Legacy/Loader.php',
@@ -35,6 +48,13 @@ class ClassLoader  {
 		$loader->register();
 	}
 
+	/**
+	 * Aliases concrete5 classes to shorter class name aliases
+	 *
+	 * IDEs will not recognize these classes by default. A symbols file can be generated to
+	 * assist IDEs by running SymbolGenerator::render(). On development copies of concrete5
+	 * this can also be run with `grunt generate-symbols` in the build folder.
+	 */
 	protected function setupAliasAutoloader() {
 		$loader = $this;
 		spl_autoload_register(function($class) use ($loader) {
@@ -53,12 +73,37 @@ class ClassLoader  {
 		});
 	}
 
+	/**
+	 * Registers the prefixes for a package
+	 *
+	 * The following prefixes are registered:
+	 * <ul>
+	 * <li>`Concrete\Package\PkgHandle\Attribute` -> `packages/pkg_handle/attributes`</li>
+	 * <li>`Concrete\Package\PkgHandle\MenuItem` -> `packages/pkg_handle/menu_items`</li>
+	 * <li>`Concrete\Package\PkgHandle\Authentication` -> `packages/pkg_handle/authentication`</li>
+	 * <li>`Concrete\Package\PkgHandle\Block` -> `packages/pkg_handle/blocks`</li>
+	 * <li>`Concrete\Package\PkgHandle\Theme` -> `packages/pkg_handle/themes`</li>
+	 * <li>`Concrete\Package\PkgHandle\Controller\PageType` -> `packages/pkg_handle/controllers/page_type`</li>
+	 * <li>`Concrete\Package\PkgHandle\Controller` -> `packages/pkg_handle/controllers`</li>
+	 * <li>`Concrete\Package\PkgHandle\Job` -> `packages/pkg_handle/jobs`</li>
+	 * </ul>
+	 *
+	 * If Package::$pkgAutoloaderMapCoreExtensions is true, all remaining class paths will be checked for
+	 * under packages/pkg_handle/src/Concrete
+	 *
+	 * Otherwise, `Concrete\Package\PkgHandle\Src` -> `packages/pkg_handle/src` will be registered
+	 *
+	 * The function Package::getPackageAutoloaderRegistries() can be used to add custom prefixes
+	 *
+	 * @param string|\Package $pkg Package handle or an instance of the package controller
+	 * @see Package::$pkgAutoloaderMapCoreExtensions, Package::getPackageAutoloaderRegistries()
+	 */
 	public function registerPackage($pkg) {
-		if ($pkg instanceof Package) {
-			$pkgHandle = $pkg->getPackageHandle();
-		} else {
-			$pkgHandle = $pkg;
+		if (!($pkg instanceof Package)) {
+			$pkg = \Package::getClass($pkg);
 		}
+
+		$pkgHandle = $pkg->getPackageHandle();
 		$symfonyLoader = new SymfonyClassloader();
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Attribute', DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_ATTRIBUTES);
         $symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\MenuItem', DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_MENU_ITEMS);
@@ -68,20 +113,70 @@ class ClassLoader  {
         $symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Controller\\PageType', DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Controller', DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CONTROLLERS);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Job', DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_JOBS);
-		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Src', DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CLASSES);
-		$symfonyLoader->register();
 
+		$loaders = $pkg->getPackageAutoloaderRegistries();
+		if (count($loaders) > 0) {
+			foreach($loaders as $path => $prefix) {
+				$symfonyLoader->addPrefix($prefix, DIR_PACKAGES . '/' . $pkgHandle . '/' . $path);
+			}
+		}
+
+		if ($pkg->providesCoreExtensionAutoloaderMapping()) {
+			// We map all src files in the package to the src/Concrete directory
+			$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle), DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CLASSES . '/Concrete');
+		} else {
+			// legacy Src support
+			$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Src', DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CLASSES);
+		}
+
+		$symfonyLoader->register();
+		$this->registerPackageController($pkgHandle);
+	}
+
+	/**
+	 * Maps a package controller's class name to the file
+	 * @param string $pkgHandle Handle of package
+	 */
+	public function registerPackageController($pkgHandle)
+	{
 		$symfonyLoader = new SymfonyMapClassloader(array(
 			NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Controller' =>
 				DIR_PACKAGES . '/' . $pkgHandle . '/' . FILENAME_PACKAGE_CONTROLLER
 		));
 		$symfonyLoader->register();
+
 	}
 
+	/**
+	 * Adds concrete5's core autoloading prefixes
+	 *
+	 * * The following prefixes are registered:
+	 * <ul>
+	 * <li>`Concrete\StartingPointPackage` -> `concrete/config/install/packages`</li>
+	 * <li>`Concrete\Attribute` -> `concrete/attributes`</li>
+	 * <li>`Concrete\Authentication` -> `concrete/authentication`</li>
+	 * <li>`Concrete\Block` -> `concrete/blocks`</li>
+	 * <li>`Concrete\Theme` -> `concrete/themes`</li>
+	 * <li>`Concrete\Controller\PageType` -> `concrete/controllers/page_types`</li>
+	 * <li>`Concrete\Controller` -> `concrete/controllers`</li>
+	 * <li>`Concrete\Job` -> `concrete/jobs`</li>
+	 * <li>`Concrete\Core` -> `concrete/src`</li>
+	 * <li>`Application\StartingPointPackage` -> `application/config/install/packages`</li>
+	 * <li>`Application\Attribute` -> `application/attributes`</li>
+	 * <li>`Application\Authentication` -> `application/authentication`</li>
+	 * <li>`Application\Block` -> `application/blocks`</li>
+	 * <li>`Application\Theme` -> `application/themes`</li>
+	 * <li>`Application\Controller\PageType` -> `application/controllers/page_types`</li>
+	 * <li>`Application\Controller` -> `application/controllers`</li>
+	 * <li>`Application\Job` -> `application/jobs`</li>
+	 * <li>`Application\Core` -> `application/src`</li>
+	 * </ul>
+	 *
+	 * The application namespace can be customized by setting `namespace` in the application's `config/app.php`.
+	 */
 	protected function setupFileAutoloader() {
 		$symfonyLoader = new SymfonyClassloader();
         $symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\StartingPointPackage', DIR_BASE_CORE . '/config/install/' . DIRNAME_PACKAGES);
-        //$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package', DIR_PACKAGES);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Attribute', DIR_BASE_CORE . '/' . DIRNAME_ATTRIBUTES);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Authentication', DIR_BASE_CORE . '/' . DIRNAME_AUTHENTICATION);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Block', DIR_BASE_CORE . '/' . DIRNAME_BLOCKS);

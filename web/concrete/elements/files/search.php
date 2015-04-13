@@ -18,7 +18,7 @@ $req = $flr->getSearchRequest();
                 <option value="choose"><?php echo t('Choose')?></option>
                 <option value="download"><?php echo t('Download')?></option>
                 <option data-bulk-action-type="dialog" data-bulk-action-title="<?php echo t('Edit Properties')?>" data-bulk-action-url="<?php echo URL::to('/ccm/system/dialogs/file/bulk/properties')?>" data-bulk-action-dialog-width="630" data-bulk-action-dialog-height="450"><?php echo t('Edit Properties')?></option>
-                <option data-bulk-action-type="dialog" data-bulk-action-title="<?php echo t('Sets')?>" data-bulk-action-url="<?php echo Loader::helper('concrete/urls')->getToolsURL('files/add_to')?>" data-bulk-action-dialog-width="500" data-bulk-action-dialog-height="400"><?php echo t('Sets')?></option>
+                <option data-bulk-action-type="dialog" data-bulk-action-title="<?php echo t('Sets')?>" data-bulk-action-url="<?php echo URL::to('/ccm/system/dialogs/file/bulk/sets')?>" data-bulk-action-dialog-width="500" data-bulk-action-dialog-height="400"><?php echo t('Sets')?></option>
                 <option data-bulk-action-type="ajax" data-bulk-action-url="<?php echo URL::to('/ccm/system/file/rescan')?>"><?php echo t('Rescan')?></option>
                 <?php /*
                 <option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Duplicate')?>" data-bulk-action-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/duplicate" data-bulk-action-dialog-width="500" data-bulk-action-dialog-height="400"><?=t('Copy')?></option>
@@ -39,8 +39,8 @@ $req = $flr->getSearchRequest();
             <?php
             $fp = FilePermissions::getGlobal();
             if ($fp->canAddFile()) { ?>
-                <li class="ccm-file-manager-upload"><a href="javascript:void"><?php echo t('Upload Files')?><input type="file" name="files[]" multiple="multiple" /></a></li>
-                <li>        <a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/import"
+                <li class="ccm-file-manager-show-dialog ccm-file-manager-upload"><a href="javascript:void"><?php echo t('Upload Files')?><input type="file" name="files[]" multiple="multiple" /></a></li>
+                <li class="ccm-file-manager-show-dialog">        <a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/import"
                                class="dialog-launch"
                                dialog-width="500"
                                dialog-height="500"

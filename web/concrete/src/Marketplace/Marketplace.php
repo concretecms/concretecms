@@ -174,6 +174,10 @@ class Marketplace
         // a. go to its purchase page
         // b. pass you through to the page AFTER connecting.
         $tp = new TaskPermission();
+        $frameURL = Config::get('concrete.urls.concrete5');
+        if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
+            $frameURL = Config::get('concrete.urls.concrete5_secure');
+        }
         if ($tp->canInstallPackages()) {
             if (!$this->isConnected()) {
                 if (!$completeURL) {
@@ -195,14 +199,14 @@ class Marketplace
                     // new connection
                     $csToken = Marketplace::generateSiteToken();
                 }
-                $url = Config::get('concrete.urls.concrete5') . Config::get('concrete.urls.paths.marketplace.connect') . '/-/' . $connectMethod;
+                $url = $frameURL . Config::get('concrete.urls.paths.marketplace.connect') . '/-/' . $connectMethod;
                 $url = $url . '?ts=' . time() . '&csiBaseURL=' . $csiBaseURL . '&csiURL=' . $csiURL . '&csToken=' . $csToken . '&csReferrer=' . $csReferrer . '&csName=' . htmlspecialchars(
                         Config::get('concrete.site'),
                         ENT_QUOTES,
                         APP_CHARSET);
             } else {
                 $csiBaseURL = urlencode(\Core::getApplicationURL());
-                $url = Config::get('concrete.urls.concrete5') . Config::get('concrete.urls.paths.marketplace.connect_success') . '?csToken=' . $this->getSiteToken() . '&csiBaseURL=' . $csiBaseURL;
+                $url = $frameURL . Config::get('concrete.urls.paths.marketplace.connect_success') . '?csToken=' . $this->getSiteToken() . '&csiBaseURL=' . $csiBaseURL;
             }
             if ($csToken == false && !$this->isConnected()) {
                 return '<div class="ccm-error">' . t(

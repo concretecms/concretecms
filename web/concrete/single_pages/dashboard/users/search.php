@@ -289,10 +289,7 @@ $(function() {
 		</div>
 
 	<? } else { ?>
-	<div class="ccm-pane-body">
 		<p><?=t('You do not have access to user search. This setting may be changed in the access section of the dashboard settings page.')?></p>
-	</div>
-
 	<? } ?>
 
 <? } ?>

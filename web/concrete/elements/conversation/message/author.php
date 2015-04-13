@@ -7,7 +7,7 @@ $u = new User();
 <? } else {
 	// non-logged-in posting. ?>
 	<div class="form-group">
-		<label class="control-label" for="cnvMessageAuthorName"><?=t('Name')?></label>
+		<label class="control-label" for="cnvMessageAuthorName"><?=t('Full Name')?></label>
 		<input type="text" class="form-control" name="cnvMessageAuthorName" />
 	</div>
 	<div class="form-group">
