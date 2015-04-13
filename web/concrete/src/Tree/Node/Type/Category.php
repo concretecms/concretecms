@@ -9,10 +9,15 @@ abstract class Category extends TreeNode {
         return $this->treeNodeCategoryName;
     }
 
+    public function getTreeNodeTranslationContext()
+    {
+        return 'TreeNodeCategoryName';
+    }
+
     public function getTreeNodeDisplayName($format = 'html')
     {
         if ($this->getTreeNodeName()) {
-            $name = tc('TreeNodeCategoryName', $this->getTreeNodeName());
+            $name = tc($this->getTreeNodeTranslationContext(), $this->getTreeNodeName());
             switch ($format) {
                 case 'html':
                     return h($name);

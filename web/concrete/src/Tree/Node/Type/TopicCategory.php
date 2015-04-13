@@ -6,11 +6,15 @@ use Core;
 
 class TopicCategory extends Category {
 
+    public function getTreeNodeTranslationContext()
+    {
+        return 'TreeNodeCategoryName';
+    }
     public function getTreeNodeDisplayName($format = 'html')
     {
         if ($this->getTreeNodeName()) {
             $name = Core::make('helper/text')->unhandle($this->getTreeNodeName());
-            $name = tc('TreeNodeCategoryName', $name);
+            $name = tc($this->getTreeNodeTranslationContext(), $name);
             switch ($format) {
                 case 'html':
                     return h($name);

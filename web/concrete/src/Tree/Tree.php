@@ -4,6 +4,8 @@ namespace Concrete\Core\Tree;
 use \Concrete\Core\Foundation\Object;
 use Loader;
 use Core;
+use Localization;
+use Gettext\Translations;
 
 abstract class Tree extends Object
 {
@@ -208,4 +210,49 @@ abstract class Tree extends Object
         }
     }
 
+    /**
+     * Export all the translations associates to every trees
+     * @return Translations
+     */
+    public static function exportTranslations()
+    {
+        $translations = new Translations();
+        $currentLocale = Localization::activeLocale();
+        if ($currentLocale !== 'en_US') {
+            Localization::changeLocale('en_US');
+        }
+        try {
+            $db = \Database::get();
+            $r = $db->Execute('select treeID from Trees order by treeID asc');
+            while ($row = $r->FetchRow()) {
+                try {
+                    $tree = static::getByID($row['treeID']);
+                } catch (\Exception $x) {
+                    $tree = null;
+                }
+                if (isset($tree)) {
+                    /* @var $tree Tree */
+                    $treeName = $tree->getTreeName();
+                    if (is_string($treeName) && ($treeName !== '')) {
+                        $translations->insert('TreeName', $treeName);
+                    }
+                    $rootNode = $tree->getRootTreeNodeObject();
+                    /* @var $rootNode \Concrete\Core\Tree\Node\Node */
+                    if (isset($rootNode)) {
+                        $rootNode->exportTranslations($translations);
+                    }
+                }
+            }
+        }
+        catch (\Exception $x) {
+            if ($currentLocale !== 'en_US') {
+                Localization::changeLocale($currentLocale);
+            }
+            throw $x;
+        }
+        if ($currentLocale !== 'en_US') {
+            Localization::changeLocale($currentLocale);
+        }
+        return $translations;
+    }
 }

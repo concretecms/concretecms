@@ -28,10 +28,14 @@ class Topic extends TreeNode
         return $this->treeNodeTopicName;
     }
 
+    public function getTreeNodeTranslationContext()
+    {
+        return 'TopicName';
+    }
     public function getTreeNodeDisplayName($format = 'html')
     {
         $name = Core::make('helper/text')->unhandle($this->getTreeNodeName());
-        $name = tc('TopicName', $name);
+        $name = tc($this->getTreeNodeTranslationContext(), $name);
         switch ($format) {
             case 'html':
                 return h($name);
