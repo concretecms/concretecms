@@ -51,8 +51,10 @@
 /* Disable Toolbar (over toolbar) */
 @index-level-toolbar-disabled: 1100;
 
-/* Page help –should come above widget overlay but below panel detail */
-@index-level-page-help: 860;
+/* Page help – below panel detail and below widget overlay */
+/* USED to come above widget overlay so we could show it while the dashboard panel is open, but moved to below panel
+/* overlay because it makes it ambiguous whether help is available in the lefthand panel or not */
+@index-level-page-help: 840;
 
 /* Show the toolbar over the dialog/widget overlay – used during help guided tours */
 @index-level-toolbar-tour-guide: 1400;

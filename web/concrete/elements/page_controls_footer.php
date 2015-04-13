@@ -30,7 +30,9 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
         }
     }
 
-    print Loader::helper('concrete/ui/help')->display('toolbar');
+    if (!$c->isEditMode()) {
+       print Loader::helper('concrete/ui/help')->display('toolbar');
+    }
 
     ?>
 

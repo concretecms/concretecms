@@ -2,6 +2,7 @@
 namespace Concrete\Core\Application\Service\UserInterface;
 
 use Concrete\Core\Application\Service\UserInterface\Help\Formatter;
+use Concrete\Core\Application\Service\UserInterface\Help\MessageInterface;
 use User;
 use Core;
 
@@ -29,6 +30,9 @@ class Help
 
         $formatter = new Formatter();
         $message = $manager->getMessage($identifier);
+        if (!$message instanceof MessageInterface) {
+            throw new \Exception(t('No message found for identifier %s', $identifier));
+        }
         print $formatter->getLauncherHtml($message) . $formatter->getMessageHtml($message);
     }
 
