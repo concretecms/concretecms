@@ -14,7 +14,6 @@ class Update
 {
     public static function getLatestAvailableVersionNumber()
     {
-        $d = Loader::helper('date');
         // first, we check session
         $queryWS = false;
         Cache::disableAll();
