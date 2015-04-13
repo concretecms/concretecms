@@ -167,6 +167,47 @@ class Key extends Object
         $this->setPropertiesFromArray($row);
     }
 
+  /*  protected function load($akIdentifier, $loadBy = 'akID')
+    {
+        if (empty($akIdentifier)) {
+            $row = array();
+        } else {
+            $cache = Core::make('cache/request');
+            if ($cache->isEnabled()) {
+                $item = $cache->getItem('attribute_key_' . $akIdentifier);
+                if (!$item->isMiss()) {
+
+                    var_dump('HIT attribute_key_' . $akIdentifier);
+                    $row =  $item->get();
+                } else {
+                    var_dump('MISS attribute_key_' . $akIdentifier);
+                    $row = $this->findKeyRecord($akIdentifier, $loadBy);
+                    $item->set($row);
+                }
+            } else {
+                $row = $this->findKeyRecord($akIdentifier, $loadBy);
+            }
+        }
+        $this->setPropertiesFromArray($row);
+    }
+
+    protected function findKeyRecord($akIdentifier, $loadBy = 'akID')
+    {
+        $db = Loader::db();
+        $akCategoryHandle = $this->getComputedAttributeKeyCategoryHandle();
+        if ($akCategoryHandle != '') {
+            return $db->GetRow(
+                'select akID, akHandle, akName, AttributeKeys.akCategoryID, akIsInternal, akIsEditable, akIsSearchable, akIsSearchableIndexed, akIsAutoCreated, akIsColumnHeader, AttributeKeys.atID, atHandle, AttributeKeys.pkgID from AttributeKeys inner join AttributeKeyCategories on AttributeKeys.akCategoryID = AttributeKeyCategories.akCategoryID inner join AttributeTypes on AttributeKeys.atID = AttributeTypes.atID where ' . $loadBy . ' = ? and akCategoryHandle = ?',
+                array($akIdentifier, $akCategoryHandle)
+            );
+        } else {
+            return $db->GetRow(
+                'select akID, akHandle, akName, akCategoryID, akIsEditable, akIsInternal, akIsSearchable, akIsSearchableIndexed, akIsAutoCreated, akIsColumnHeader, AttributeKeys.atID, atHandle, AttributeKeys.pkgID from AttributeKeys inner join AttributeTypes on AttributeKeys.atID = AttributeTypes.atID where ' . $loadBy . ' = ?',
+                array($akIdentifier)
+            );
+        }
+    }*/
+
     public function getPackageID()
     {
         return $this->pkgID;
@@ -179,13 +220,7 @@ class Key extends Object
 
     public static function getInstanceByID($akID)
     {
-        $db = Loader::db();
-        $akCategoryID = $db->GetOne('select akCategoryID from AttributeKeys where akID = ?', $akID);
-        if ($akCategoryID > 0) {
-            $akc = AttributeKeyCategory::getByID($akCategoryID);
-
-            return $akc->getAttributeKeyByID($akID);
-        }
+        return Category::getByAttributeKeyID($akID);
     }
 
     /**
