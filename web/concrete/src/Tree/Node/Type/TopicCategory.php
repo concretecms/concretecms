@@ -10,7 +10,7 @@ class TopicCategory extends Category {
     {
         if ($this->getTreeNodeName()) {
             $name = Core::make('helper/text')->unhandle($this->getTreeNodeName());
-            $name = tc('TopicCategoryName', $name);
+            $name = tc('TreeNodeCategoryName', $name);
             switch ($format) {
                 case 'html':
                     return h($name);
