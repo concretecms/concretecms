@@ -63,7 +63,7 @@ $req = $flr->getSearchRequest();
         <select multiple name="fsID[]" class="select2-select" style="width: 360px">
             <optgroup label="<?php echo t('Sets')?>">
             <?php foreach ($s1 as $s) { ?>
-                <option value="<?php echo $s->getFileSetID()?>"  <?php if (is_array($req['fsID']) && in_array($s->getFileSetID(), $req['fsID'])) { ?> selected="selected" <?php } ?>><?php echo wordwrap($s->getFileSetDisplayName(), '23', '&shy;', true)?></option>
+                <option value="<?php echo $s->getFileSetID()?>"  <?php if (is_array($req['fsID']) && in_array($s->getFileSetID(), $req['fsID'])) { ?> selected="selected" <?php } ?>><?php echo $s->getFileSetDisplayName()?></option>
             <?php } ?>
             </optgroup>
             <optgroup label="<?php echo t('Other')?>">
