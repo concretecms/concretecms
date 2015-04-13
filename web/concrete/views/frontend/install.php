@@ -435,20 +435,6 @@ $(function() {
 	</td>
 	<td><? if (!$remoteFileUploadTest) { ?><i class="fa fa-question-circle launch-tooltip" title="<?=t('Remote file importing through the file manager requires the iconv PHP extension.')?>"></i><? } ?></td>
 </tr>
-<?php
-if ($caBundleTest !== null) {
-	?>
-	<tr>
-		<td><? if ($caBundleTest) { ?><i class="fa fa-check"></i><? } else { ?><i class="fa fa-warning"></i><? } ?></td>
-		<td width="100%"><?= t('Valid cURL Certificate Authority Bundle') ?>
-		</td>
-		<td><? if (!$caBundleTest) { ?><i class="fa fa-question-circle launch-tooltip"
-										  title="<?= t('cURL\'s SSL certificate bundle is incorrectly configured. Some SSL requests will be made insecurely unless this is fixed.') ?>"></i><? } ?>
-		</td>
-	</tr>
-<?php
-}
-?>
 </table>
 
 </div>
