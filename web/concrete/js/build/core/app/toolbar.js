@@ -16,6 +16,16 @@ var ConcreteToolbar = function() {
 	setupHelpNotifications = function() {
 		$('.ccm-notification .dialog-launch').dialog();
 		$('a[data-help-notification-toggle]').concreteHelpLauncher();
+		$('a[data-help-launch-dialog=main]').on('click', function(e) {
+			e.preventDefault();
+			new ConcreteHelpDialog().open();
+		});
+
+		var manager = ConcreteHelpGuideManager.get();
+		if (manager.getGuideToLaunchOnRefresh()) {
+			var tour = ConcreteHelpGuideManager.getGuide(manager.getGuideToLaunchOnRefresh());
+			tour.start();
+		}
 	}
 
 	setupPageAlerts = function() {

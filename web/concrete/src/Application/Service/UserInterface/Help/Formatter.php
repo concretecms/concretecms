@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Application\Service\UserInterface\Help;
 
-class Formatter
+class Formatter implements FormatterInterface
 {
     public function getLauncherHtml(Message $message)
     {

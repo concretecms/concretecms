@@ -66,5 +66,4 @@ class Message implements MessageInterface
         $this->link = $link;
     }
 
-
 }

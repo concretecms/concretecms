@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Application\Service\UserInterface\Help;
 
-class Manager implements ManagerInterface
+class CoreManager implements ManagerInterface
 {
 
     public function getMessage($identifier)
@@ -16,6 +16,11 @@ class Manager implements ManagerInterface
         }
 
         return (isset($m)) ? $m : null;
+    }
+
+    public function getFormatter(Message $message)
+    {
+        return new Formatter();
     }
 
 }

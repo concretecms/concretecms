@@ -2,7 +2,9 @@
 namespace Concrete\Core\Application\Service\UserInterface;
 
 use Concrete\Core\Application\Service\UserInterface\Help\Formatter;
+use Concrete\Core\Application\Service\UserInterface\Help\Message;
 use Concrete\Core\Application\Service\UserInterface\Help\MessageInterface;
+use Concrete\Core\Application\Service\UserInterface\Help\StandardManager;
 use User;
 use Core;
 
@@ -19,22 +21,31 @@ class Help
             $manager = Core::make('help/' . $type);
             $identifier = $args[1];
         } else if (count($args) == 1) {
-            $type = '';
-            $manager = Core::make('help');
-            $identifier = $args[0];
+            // Then we just create a message object with the contents of this message.
+            $manager = new StandardManager();
+            $message = new Message();
+            $message->setIdentifier(Core::make('helper/validation/identifier')->getString(12));
+            $message->setMessageContent($args[0]);
         }
 
-        if (!is_object($manager) || !$identifier) {
-            return;
+        if (!isset($message)) {
+            $message = $manager->getMessage($identifier);
         }
-
-        $formatter = new Formatter();
-        $message = $manager->getMessage($identifier);
-        if (!$message instanceof MessageInterface) {
-            throw new \Exception(t('No message found for identifier %s', $identifier));
+        if ($message instanceof MessageInterface) {
+            $formatter = $manager->getFormatter($message);
+            print $formatter->getLauncherHtml($message) . $formatter->getMessageHtml($message);
         }
-        print $formatter->getLauncherHtml($message) . $formatter->getMessageHtml($message);
     }
 
+    public function displayHelpDialogLauncher()
+    {
+        $html =<<<EOT
+        <div class="ccm-notification-help-launcher">
+            <a href="#" data-help-launch-dialog="main"><i class="fa fa-question-circle"></i></a>
+        </div>
+EOT;
+        return $html;
+
+    }
 
 }

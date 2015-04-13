@@ -20,6 +20,10 @@
             // if the help dialog is active, hide it
             $('.ccm-dialog-help-wrapper').hide();
 
+            this.showOverlay();
+        },
+
+        showOverlay: function() {
             // if the widget overlay doesn't exist, show it
             if ($('.ui-widget-overlay').length < 1) {
                 var $overlay = $('<div class="ui-widget-overlay"></div>').hide().appendTo('body');
@@ -30,20 +34,41 @@
             $('#ccm-toolbar').addClass('ccm-toolbar-tour-guide');
         },
 
-        exitToolbarGuideMode: function() {
-            // if the help dialog is active, show it
-            if ($('.ccm-dialog-help-wrapper').length) {
-                $('.ccm-dialog-help-wrapper').show();
-            } else {
-                $('.ui-widget-overlay').addClass('animated fadeOut');
-                $('.ui-widget-overlay').delay(250).queue(function() {
-                    $(this).remove();
-                    $(this).dequeue();
-                });
-            }
+        hideOverlay: function() {
+            $('.ui-widget-overlay').addClass('animated fadeOut');
+            $('.ui-widget-overlay').delay(250).queue(function() {
+                $(this).remove();
+                $(this).dequeue();
+            });
 
             // move the toolbar back
             $('#ccm-toolbar').removeClass('ccm-toolbar-tour-guide');
+        },
+
+        exitToolbarGuideMode: function() {
+            this.hideOverlay();
+
+            // if the help dialog is active, show it
+            /*if ($('.ccm-dialog-help-wrapper').length) {
+                $('.ccm-dialog-help-wrapper').show();
+            }*/
+
+        },
+
+        launchGuideOnRefresh: function(guide) {
+            $.cookie('ConcreteHelpActiveGuide', guide, {path: CCM_REL + '/'});
+        },
+
+        clearGuideToLaunchOnRefresh: function(guide) {
+            $.cookie('ConcreteHelpActiveGuide', null, {path: CCM_REL + '/'});
+        },
+
+        getGuideToLaunchOnRefresh: function() {
+            return $.cookie('ConcreteHelpActiveGuide');
+        },
+
+        get: function() {
+            return ConcreteHelpGuideManager;
         }
 
 

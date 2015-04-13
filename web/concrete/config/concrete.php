@@ -411,7 +411,6 @@ return array(
         'package_backup_directory'      => DIR_FILES_UPLOADED_STANDARD . '/trash',
         'enable_progressive_page_reindex'      => true,
         'mobile_theme_id'               => 0,
-        'seen_introduction'             => false,
         'sitemap_approve_immediately'   => true,
         'enable_translate_locale_en_us' => false,
         'page_search_index_lifetime'    => 259200,

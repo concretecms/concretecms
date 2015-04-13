@@ -6,7 +6,6 @@
 		var my = this;
 		options = options || {};
 		options = $.extend({
-			element: $('#ccm-dialog-help'),
 			width: 800,
 			height: 400,
 			title: 'Help',
@@ -19,22 +18,10 @@
 
 		open: function() {
 			var my = this;
-			my.options.onOpen = function() {
-				$('a[data-lightbox=iframe]').magnificPopup({
-					disableOn: 700,
-					type: 'iframe',
-					mainClass: 'mfp-fade',
-					removalDelay: 160,
-					preloader: false,
-					fixedContentPos: false
-				});
-
-				$('a[data-launch-guide]').on('click', function(e) {
-					e.preventDefault();
-					var tour = ConcreteHelpGuideManager.getGuide($(this).attr('data-launch-guide'));
-					tour.start();
-
-				});
+			if ($('#ccm-dialog-help').length) {
+				my.options.element = '#ccm-dialog-help';
+			} else {
+				my.options.href = CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/help/introduction';
 			}
 			$.fn.dialog.open(my.options);
 		}

@@ -6,6 +6,8 @@
 
 div.ccm-dialog-slim {
 
+  height: 100%;
+
   div.ui-dialog-titlebar {
     background: none;
     border-bottom: 0px;
@@ -20,6 +22,11 @@ div.ccm-dialog-slim {
   div.ui-dialog-content {
     padding: 0px;
     .border-radius(4px);
+    height: 100%;
+
+    > div {
+      height: 100%;
+    }
   }
 
   button.ui-dialog-titlebar-close {
