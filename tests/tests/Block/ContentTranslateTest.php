@@ -9,6 +9,13 @@ class ContentTranslateTest extends ConcreteDatabaseTestCase {
         'SystemContentEditorSnippets'
     );
 
+    public function setUp()
+    {
+        \Core::forgetInstance('url/canonical');
+
+        return parent::setUp();
+    }
+
     /**
      * This is saving data from the content editor HTML INTO the database.
      *  @dataProvider contentsTo

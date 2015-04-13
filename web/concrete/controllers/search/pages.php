@@ -227,6 +227,14 @@ class Pages extends Controller
                     $html .= '<option value="OVERRIDE"' . ($searchRequest['cInheritPermissionsFrom'] == 'OVERRIDE' ? ' selected' : '') . '>' . t('Itself (Override)') . '</option>';
                 $html .= '</select>';
                 break;
+            case 'type':
+                $html .= $form->select('ptID', array_reduce(
+                    \PageType::getList(), function($types, $type) {
+                        $types[$type->getPageTypeID()] = $type->getPageTypeDisplayName();
+                        return $types;
+                    }
+                ), $searchRequest['ptID']);
+                break;
             case 'version_status':
                 $versionToRetrieve = \Concrete\Core\Page\PageList::PAGE_VERSION_RECENT;
                 if ($searchRequest['versionToRetrieve']) {
@@ -288,6 +296,7 @@ class Pages extends Controller
     {
         $r = array(
             'parent' => t('Parent Page'),
+            'type' => t('Page Type'),
             'keywords' => t('Full Page Index'),
             'date_added' => t('Date Added'),
             'theme' => t('Theme'),

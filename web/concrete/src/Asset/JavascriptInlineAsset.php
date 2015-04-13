@@ -25,17 +25,22 @@ class JavascriptInlineAsset extends JavascriptAsset
     /**
      * @return string
      */
-    public function getAssetDefaultPosition()
+    public function getAssetType()
     {
-        return Asset::ASSET_POSITION_FOOTER;
+        return 'javascript-inline';
+    }
+
+    public function getOutputAssetType()
+    {
+        return 'javascript';
     }
 
     /**
      * @return string
      */
-    public function getAssetType()
+    public function getAssetHashKey()
     {
-        return 'javascript-inline';
+        return md5($this->assetURL);
     }
 
     /**
@@ -45,4 +50,13 @@ class JavascriptInlineAsset extends JavascriptAsset
     {
         return '<script type="text/javascript">' . $this->getAssetURL() . '</script>';
     }
+
+    /**
+     * @return string|null
+     */
+    public function getAssetContents()
+    {
+        return $this->assetURL;
+    }
+
 }

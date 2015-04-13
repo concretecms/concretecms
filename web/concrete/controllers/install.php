@@ -158,28 +158,6 @@ class Install extends Controller
         }
     }
 
-    /**
-     * Nice and elegant function for converting memory. Thanks to @lightness races in orbit on Stackoverflow.
-     * @param $val
-     * @return int|string
-     */
-    protected function getBytes($val)
-    {
-        $val = trim($val);
-        $last = strtolower($val[strlen($val)-1]);
-        switch($last) {
-            // The 'G' modifier is available since PHP 5.1.0
-            case 'g':
-                $val *= 1024;
-            case 'm':
-                $val *= 1024;
-            case 'k':
-                $val *= 1024;
-        }
-
-        return $val;
-    }
-
     private function setRequiredItems()
     {
 //        $this->set('imageTest', function_exists('imagecreatetruecolor') || class_exists('Imagick'));
@@ -203,7 +181,7 @@ class Install extends Controller
             $this->set('memoryTest', 1);
             $this->set('memoryBytes', 0);
         } else {
-            $val = $this->getBytes($memoryLimit);
+            $val = Loader::helper('number')->getBytes($memoryLimit);
             $this->set('memoryBytes', $val);
             if ($val < 25165824) {
                 $this->set('memoryTest', -1);

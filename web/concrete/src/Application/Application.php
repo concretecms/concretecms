@@ -11,6 +11,8 @@ use Concrete\Core\Logging\Query\Logger;
 use Concrete\Core\Routing\DispatcherRouteCallback;
 use Concrete\Core\Routing\RedirectResponse;
 use Concrete\Core\Updater\Update;
+use Concrete\Core\Url\Url;
+use Concrete\Core\Url\UrlImmutable;
 use Config;
 use Core;
 use Database;
@@ -18,8 +20,6 @@ use Environment;
 use Illuminate\Container\Container;
 use Job;
 use JobSet;
-use League\Url\Url;
-use League\Url\UrlImmutable;
 use Loader;
 use Log;
 use Package;
@@ -27,6 +27,7 @@ use Page;
 use Redirect;
 use \Concrete\Core\Http\Request;
 use Route;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use User;
@@ -310,13 +311,18 @@ class Application extends Container
     {
         if (Config::get('concrete.seo.redirect_to_canonical_host')) {
             $url = UrlImmutable::createFromServer($_SERVER);
-            $url->getHost()->set(Config::get('concrete.seo.canonical_host'));
+            $new = $url->setHost(Config::get('concrete.seo.canonical_host'));
             if (Config::get('concrete.seo.canonical_port')) {
-                $url->getPort()->set(Config::get('concrete.seo.canonical_port'));
+                $new = $new->setPort(Config::get('concrete.seo.canonical_port'));
             }
-            $response = new RedirectResponse($url, '301');
-            $response->send();
-            exit;
+            if (Config::get('concrete.seo.force_ssl')) {
+                $new = $new->setScheme('https');
+            }
+            if ($new != $url) {
+                $response = new RedirectResponse($new, '301');
+                $response->send();
+                exit;
+            }
         }
     }
 
@@ -411,18 +417,7 @@ class Application extends Container
             $pos = $pos - 1;
         }
         $home = substr($r->server->get('SCRIPT_NAME'), 0, $pos);
-
-        $url = Url::createFromUrl('');
-        $url->getScheme()->set($r->getScheme());
-        $url->getHost()->set($r->getHost());
-        $url->getPath()->append($home);
-
-        if ($r->getPort() != 80 && ($url->getScheme()->get() != 'https' && $r->getPort() != 443)) {
-            $url->getPort()->set($r->getPort());
-        }
-
         $this['app_relative_path'] = rtrim($home, '/');
-        $this['app_url'] = rtrim($url, '/');
 
         $args = isset($_SERVER['argv']) ? $_SERVER['argv'] : null;
 

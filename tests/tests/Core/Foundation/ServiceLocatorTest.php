@@ -64,6 +64,7 @@ class ServiceLocatorTest extends \PHPUnit_Framework_TestCase {
 		$pt = $this->sl->make('\Concrete\Core\Page\Theme\Theme');
 		$this->assertTrue($pt instanceof \Concrete\Core\Page\Theme\Theme);
 
+		require_once('fixtures/FakeThemePackageController.php');
 
 		$class1 = core_class('Core\Page\Theme\Theme');
 		$class2 = core_class('Core\Page\Theme\RiverTheme', 'river_theme');

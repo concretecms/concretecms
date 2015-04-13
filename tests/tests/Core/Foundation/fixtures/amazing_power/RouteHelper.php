@@ -1,5 +1,5 @@
 <?php
-namespace \ElectricState\AmazingPower\Routing;
+namespace ElectricState\AmazingPower\Routing;
 class RouteHelper
 {
 

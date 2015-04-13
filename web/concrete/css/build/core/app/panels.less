@@ -41,13 +41,13 @@ div#ccm-panel-overlay.ccm-panel-translucent {
 
 html.ccm-panel-ready.ccm-panel-left {
   div.ccm-page {
-    .translate3d(320px, 0, 0);
+    .translate(320px, 0);
   }
 }
 
 html.ccm-panel-ready.ccm-panel-right {
   div.ccm-page {
-    .translate3d(-320px, 0, 0);
+    .translate(-320px, 0);
   }
 }
 
@@ -75,7 +75,7 @@ div.ccm-panel-transition-none.ccm-panel-left.ccm-panel-active {
 }
 
 div.ccm-panel-transition-slide.ccm-panel-left {
-  .translate3d(-100%, 0, 0);
+  .translate(-100%, 0);
   left: 0px;
   .transition-transform(cubic-bezier(0.190, 1.000, 0.220, 1.000) 0.5s);
 
@@ -93,7 +93,7 @@ div.ccm-panel-transition-none.ccm-panel-right.ccm-panel-active {
 }
 
 div.ccm-panel-transition-slide.ccm-panel-right {
-  .translate3d(100%, 0, 0);
+  .translate(100%, 0);
   right: 0px;
   .transition-transform(cubic-bezier(0.190, 1.000, 0.220, 1.000) 0.5s);
 
@@ -103,7 +103,7 @@ div.ccm-panel-transition-slide.ccm-panel-right {
 }
 
 div.ccm-panel-left.ccm-panel-transition-slide.ccm-panel-active {
-  .translate3d(0, 0, 0);
+  .translate(0, 0);
 
   .ccm-no-csstransforms3d & {
     left: 0;
@@ -111,7 +111,7 @@ div.ccm-panel-left.ccm-panel-transition-slide.ccm-panel-active {
 }
 
 div.ccm-panel-right.ccm-panel-transition-slide.ccm-panel-active {
-  .translate3d(0, 0, 0);
+  .translate(0, 0);
 
   .ccm-no-csstransforms3d & {
     left: auto;
@@ -498,7 +498,7 @@ div#ccm-panel-page, div#ccm-panel-compose-page {
  * Panel Drill Down
  */
 div.ccm-panel-slide-left {
-  .translate3d(-320px, 0, 0);
+  .translate(-320px, 0);
 
   .ccm-no-csstransforms3d & {
     left: -320px;
@@ -506,7 +506,7 @@ div.ccm-panel-slide-left {
 }
 
 div.ccm-panel-slide-right {
-  .translate3d(320px, 0, 0);
+  .translate(320px, 0);
 
   .ccm-no-csstransforms3d & {
     left: 320px;
@@ -514,7 +514,7 @@ div.ccm-panel-slide-right {
 }
 
 div.ccm-panel-content-appearing {
-  .translate3d(320px, 0, 0);
+  .translate(320px, 0);
 
   .ccm-no-csstransforms3d & {
     left: 320px;
@@ -522,7 +522,7 @@ div.ccm-panel-content-appearing {
 }
 
 div.ccm-panel-content.ccm-panel-content-visible {
-  .translate3d(0px, 0, 0);
+  .translate(0px, 0);
 
   .ccm-no-csstransforms3d & {
     left: 0;
@@ -1052,9 +1052,9 @@ div.ccm-panel-confirmation-wrapper {
     -webkit-filter: blur(10px);
     filter: blur(20px);
     .opacity(0.4);
-    .translate3d(0, 0, 0);
+    .translate(0, 0);
     .transition(all 0.3s ease-out);
-
+    
     p {
       font-size: @font-size-large;
       line-height: 32px;

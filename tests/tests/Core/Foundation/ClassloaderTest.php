@@ -69,6 +69,9 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals('\Concrete\Package\Akismet\Src\Captcha\AkismetController', $class);
 
         // now for the weird one.
+		// We need to already have these files included so that the autoloader doesn't break
+		require('fixtures/FakeAkismetPackageController.php');
+		require('fixtures/FakeCalendarPackageController.php');
         $class = overrideable_core_class('\Core\Captcha\AkismetController', '/foo', 'akismet');
         $this->assertEquals('\Concrete\Package\Akismet\Src\Captcha\AkismetController', $class);
 
@@ -186,13 +189,12 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase {
 		$root = dirname(DIR_BASE_CORE . '../');
 		@mkdir($root . '/packages/amazing_power/src/ElectricState/Routing', 0777, true);
 		@mkdir($root . '/packages/amazing_power/src/Concrete/Captcha', 0777, true);
-		@copy(dirname(__FILE__) . '/fixtures/amazing_power/RouteHelper.php', $root . '/packages/testing/src/ElectricState/Routing/RouteHelper.php');
-		@copy(dirname(__FILE__) . '/fixtures/amazing_power/AkismetController.php', $root . '/packages/testing/src/Concrete/Captcha/AkismetController.php');
-
+		@copy(dirname(__FILE__) . '/fixtures/amazing_power/RouteHelper.php', $root . '/packages/amazing_power/src/ElectricState/Routing/RouteHelper.php');
+		@copy(dirname(__FILE__) . '/fixtures/amazing_power/AkismetController.php', $root . '/packages/amazing_power/src/Concrete/Captcha/AkismetController.php');
 		$class = overrideable_core_class('\Captcha\AkismetController', 'Captcha/AkismetController.php', $package->getPackageHandle());
 		$this->assertEquals('\Concrete\Package\AmazingPower\Captcha\AkismetController', $class);
-//		$this->assertTrue(class_exists('\Concrete\Package\AmazingPower\Captcha\AkismetController'));
-//		$this->assertTrue(class_exists('\ElectricState\AmazingPower\Routing\RouteHelper'));
+		$this->assertTrue(class_exists('\Concrete\Package\AmazingPower\Captcha\AkismetController'));
+		$this->assertTrue(class_exists('\ElectricState\AmazingPower\Routing\RouteHelper'));
 
 
 		@unlink($root . '/packages/amazing_power/src/ElectricState/Routing/RouteHelper.php');

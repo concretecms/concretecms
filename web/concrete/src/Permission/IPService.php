@@ -5,6 +5,7 @@ use Loader;
 use Concrete\Core\Utility\IPAddress;
 use Config;
 use Concrete\Core\User\UserBannedIp;
+use Request;
 
 class IPService
 {
@@ -58,32 +59,7 @@ class IPService
      */
     public function getRequestIP()
     {
-        $result = false;
-        $serverVars = array(
-            'HTTP_CLIENT_IP',
-            'HTTP_X_FORWARDED_FOR',
-            'HTTP_X_FORWARDED',
-            'HTTP_X_CLUSTER_CLIENT_IP',
-            'HTTP_FORWARDED_FOR',
-            'HTTP_FORWARDED',
-            'REMOTE_ADDR'
-        );
-        foreach ($serverVars as $index) {
-            if (array_key_exists($index, $_SERVER) && is_string($_SERVER[$index])) {
-                foreach (explode(',', $_SERVER[$index]) as $ip) {
-                    $ip = trim($ip);
-                    if (strlen($ip) && (strcasecmp($ip, 'unknown') != 0)) {
-                        $ip = new IPAddress($ip);
-                        if ($ip->isPrivate()) {
-                            $result = $ip;
-                        } else {
-                            return $ip;
-                        }
-                    }
-                }
-            }
-        }
-        return $result;
+        return new IPAddress(Request::getInstance()->getClientIp());
     }
 
     public function getErrorMessage()

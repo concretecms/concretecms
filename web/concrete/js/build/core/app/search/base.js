@@ -260,6 +260,7 @@
 				items = [];
 
 			cs.handleSelectedBulkAction(value, type, $option, cs.$element.find('input[data-search-checkbox=individual]:checked'));
+			cs.$element.find('option').eq(0).prop('selected', true);
 		});
 	}
 

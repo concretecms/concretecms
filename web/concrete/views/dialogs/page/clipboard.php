@@ -30,7 +30,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
                 <div class="item-select-list-content">
                     <?php
-                    $block->display()
+                    $bv = new \Concrete\Core\Block\View\BlockView($block);
+                    $bv->render('scrapbook')
                     ?>
                 </div>
         </li>

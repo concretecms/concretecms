@@ -10,14 +10,16 @@ abstract class File extends \Concrete\Controller\Backend\UserInterface {
 	protected $file;
 
 	public function on_start() {
-		$request = $this->request;
-		$fID = Loader::helper('security')->sanitizeInt($request->query->get('fID'));
-		if ($fID) {
-			$file = ConcreteFile::getByID($fID);
-			if (is_object($file) && !$file->isError()) {
-				$this->setFileObject($file);
-			} else {
-				throw new Exception(t('Invalid file.'));
+		if (!isset($this->file)) {
+			$request = $this->request;
+			$fID = Loader::helper('security')->sanitizeInt($request->query->get('fID'));
+			if ($fID) {
+				$file = ConcreteFile::getByID($fID);
+				if (is_object($file) && !$file->isError()) {
+					$this->setFileObject($file);
+				} else {
+					throw new Exception(t('Invalid file.'));
+				}
 			}
 		}
 	}

@@ -332,19 +332,29 @@
 				link_new_tab: 'Open link in new tab',
 				/* concrete5 */
 				link_same_window: 'Open link in same window',
+				in_lightbox: 'Open link in Lightbox',
 				lightbox_link_type: 'Link Type',
 				lightbox_link_type_iframe: 'Web Page',
 				lightbox_link_type_image: 'Image',
 				lightbox_link_type_iframe_options: 'Frame Options',
 				lightbox_link_type_iframe_width: 'Width',
 				lightbox_link_type_iframe_height: 'Height',
+				customStyles: 'Custom Styles',
+				remove_font: 'Remove font',
+				change_font_family: 'Change font family',
+				remove_font_size: 'Remove font size',
+				change_font_size: 'Change font size',
+				remove_style: 'Remove Style',
+				insert_character: 'Insert Character',
+				undo: 'Undo',
+				redo: 'Redo',
+				// Remember to add new strings also in in /concrete/controllers/frontend/assets_localization.php, function getRedactorJavascript
 				/* end concrete5 */
 				underline: 'Underline',
 				alignment: 'Alignment',
 				filename: 'Name (optional)',
 				edit: 'Edit',
 				upload_label: 'Drop file here or '
-
 			}
 		}
 	};
@@ -3408,8 +3418,8 @@
 						this.image.linkType = 'same';
 					}
 					this.image.$selectUrlOpen = $('#redactor-link-url-open');
-					if (this.opts.concrete5.lightbox) {
-						this.image.$selectUrlOpen.find('option[value=lightbox]').show();
+					if (!this.opts.concrete5.lightbox) {
+						this.image.$selectUrlOpen.find('option[value=lightbox]').remove();
 					}
 					this.image.$selectUrlLightboxFieldGroup = $('div[data-field-group=lightbox]');
 					this.image.$selectUrlLightboxIframeFieldGroup = $('div[data-field-group=lightbox-iframe]');
@@ -3466,7 +3476,7 @@
 							ConcreteEvent.unsubscribe('SitemapSelectPage');
 							ConcreteEvent.subscribe('SitemapSelectPage', function(e, data) {
 								jQuery.fn.dialog.closeTop();
-								var url = CCM_APPLICATION_URL + CCM_DISPATCHER_FILENAME + '?cID=' + data.cID;
+								var url = CCM_APPLICATION_URL + '/index.php?cID=' + data.cID;
 								$('#redactor-image-link').val(url);
 								this.link.$inputUrl.val(url);
 								this.link.$inputText.val(url);
@@ -3474,6 +3484,10 @@
 						});
 					} else {
 						$('a[data-action=choose-link-from-sitemap]').remove();
+					}
+
+					if (!this.opts.concrete5.sitemap && !this.opts.concrete5.filemanager) {
+						$('#redactor-image-link').parent().removeClass(); // remove the input group
 					}
 					/* end concrete5 */
 
@@ -5618,8 +5632,8 @@
 					/* concrete5 */
 					//if (this.link.target == '_blank') $('#redactor-link-blank').prop('checked', true);
 					this.link.$selectUrlOpen = $('#redactor-link-url-open');
-					if (this.opts.concrete5.lightbox) {
-						this.link.$selectUrlOpen.find('option[value=lightbox]').show();
+					if (!this.opts.concrete5.lightbox) {
+						this.link.$selectUrlOpen.find('option[value=lightbox]').remove();
 					}
 					this.link.$selectUrlLightboxFieldGroup = $('div[data-field-group=lightbox]');
 					this.link.$selectUrlLightboxIframeFieldGroup = $('div[data-field-group=lightbox-iframe]');
@@ -5689,7 +5703,7 @@
                             ConcreteEvent.unsubscribe('SitemapSelectPage');
                             ConcreteEvent.subscribe('SitemapSelectPage', function(e, data) {
                                 jQuery.fn.dialog.closeTop();
-                                var url = CCM_APPLICATION_URL + CCM_DISPATCHER_FILENAME + '?cID=' + data.cID;
+                                var url = CCM_APPLICATION_URL + '/index.php?cID=' + data.cID;
                                 $('#redactor-link-url').val(url);
 								this.link.$inputUrl.val(url);
 								this.link.$inputText.val(url);
@@ -5698,6 +5712,9 @@
                     } else {
                         $('a[data-action=choose-link-from-sitemap]').remove();
                     }
+					if (!this.opts.concrete5.sitemap && !this.opts.concrete5.filemanager) {
+						$('#redactor-link-url').parent().removeClass(); // remove the input group
+					}
 					/* end concrete5 */
 
 					// show modal
@@ -6169,7 +6186,7 @@
 					+ '<select class="form-control" id="redactor-link-url-open">'
 					+ '<option value="same">' + this.lang.get('link_same_window') + '</option>'
 					+ '<option value="blank">' + this.lang.get('link_new_tab') + '</option>'
-					+ '<option value="lightbox" style="display: none">' + this.lang.get('in_lightbox') + '</option>'
+					+ '<option value="lightbox">' + this.lang.get('in_lightbox') + '</option>'
 					+ '</select>'
 					+ '</div>'
 					+ '<div data-field-group="lightbox" style="display: none" class="form-group">'

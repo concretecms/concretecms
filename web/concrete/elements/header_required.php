@@ -55,10 +55,6 @@ if (is_object($c)) {
 	$cID = 1;
 }
 ?>
-<!--[if lt IE 9]>
-<script src="<?=ASSETS_URL_JAVASCRIPT?>/ie/html5-shiv.js"></script>
-<script src="<?=ASSETS_URL_JAVASCRIPT?>/ie/respond.js"></script>
-<![endif]-->
 
 <meta http-equiv="content-type" content="text/html; charset=<?php echo APP_CHARSET?>" />
 <?php

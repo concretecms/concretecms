@@ -217,7 +217,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                title="<?= t('Page Design, Location, Attributes and Settings') ?>">
                 <i class="fa fa-cog"></i>
                 <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-settings">
-                    <?= tc('toolbar', 'Settings') ?>
+                    <?= tc('toolbar', 'Page Settings') ?>
                 </span>
             </a>
         </li>
@@ -233,7 +233,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                    title="<?= t('Add Content to The Page') ?>">
                     <i class="fa fa-plus"></i>
                     <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add">
-                        <?= tc('toolbar', 'Add') ?>
+                        <?= tc('toolbar', 'Add Content') ?>
                     </span>
                 </a>
             <? } else { ?>
@@ -241,7 +241,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                    title="<?= t('Add Content to The Page') ?>">
                     <i class="fa fa-plus"></i>
                     <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add">
-                        <?= tc('toolbar', 'Add') ?>
+                        <?= tc('toolbar', 'Add Content') ?>
                     </span>
                 </a>
             <? } ?>
@@ -297,7 +297,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                                             data-launch-panel="sitemap">
                         <i class="fa fa-files-o"></i>
                 <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add-page">
-                    <?= tc('toolbar', 'Add Page') ?>
+                    <?= tc('toolbar', 'Pages') ?>
                 </span>
             </a>
         </li>

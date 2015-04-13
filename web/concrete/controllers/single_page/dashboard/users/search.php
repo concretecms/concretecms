@@ -495,25 +495,28 @@ class Search extends DashboardPageController
             $cnt = new SearchUsersController();
             $cnt->search();
             $this->set('searchController', $cnt);
-            $object = $cnt->getSearchResultObject()->getJSONObject();
-            $result = Loader::helper('json')->encode($object);
-            $this->addFooterItem(
-                "<script type=\"text/javascript\">
-                    $(function () {
-                        $('div[data-search=users]').concreteAjaxSearch({
-                            result: " . $result . ",
-                            onLoad: function (concreteSearch) {
-                                concreteSearch.\$element.on('click', 'a[data-user-id]', function () {
-                                    window.location.href='"
-                                        . rtrim(URL::to('/dashboard/users/search', 'view'), '/')
-                                        . "/' + $(this).attr('data-user-id');
-                                    return false;
-                                });
-                            }
+            $result = $cnt->getSearchResultObject();
+            if (is_object($result)) {
+                $object = $result->getJSONObject();
+                $result = Loader::helper('json')->encode($object);
+                $this->addFooterItem(
+                    "<script type=\"text/javascript\">
+                        $(function () {
+                            $('div[data-search=users]').concreteAjaxSearch({
+                                result: " . $result . ",
+                                onLoad: function (concreteSearch) {
+                                    concreteSearch.\$element.on('click', 'a[data-user-id]', function () {
+                                        window.location.href='"
+                                            . rtrim(URL::to('/dashboard/users/search', 'view'), '/')
+                                            . "/' + $(this).attr('data-user-id');
+                                        return false;
+                                    });
+                                }
+                            });
                         });
-                    });
-                </script>"
-            );
+                    </script>"
+                );
+            }
         }
     }
 

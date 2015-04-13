@@ -173,7 +173,12 @@ class PageController extends Controller {
         return $valid;
     }
 
-    protected function setPassThruBlockController(Block $b, BlockController $controller)
+    /**
+     * @access private
+     * @param Block $b
+     * @param BlockController $controller
+     */
+    public function setPassThruBlockController(Block $b, BlockController $controller)
     {
         $this->passThruBlocks[$b->getBlockID()] = $controller;
     }
@@ -207,7 +212,7 @@ class PageController extends Controller {
                     $valid = true;
 
                     // then, we need to save the persisted data that may have been set.
-                    $this->setPassThruBlockController($b, $controller);
+                    $controller->setPassThruBlockController($this);
                 }
             }
 

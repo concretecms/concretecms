@@ -11,24 +11,7 @@ use \Concrete\Core\File\File;
 class ImageHelper
 {
 
-    public $jpegCompression = 80;
-
-    /**
-     * Resets the compression level to the system default
-     * This method is automatically run when Loader::helper invokes this class
-     * @return void
-     */
-    function reset() {
-        $this->jpegCompression = $this->defaultJpegCompression();
-    }
-
-    /**
-     * Returns the default system value for JPEG image compression
-     * @return int from 1-100
-     */
-    public function defaultJpegCompression(){
-        return defined('AL_THUMBNAIL_JPEG_COMPRESSION') ? AL_THUMBNAIL_JPEG_COMPRESSION : 80;
-    }
+    protected $jpegCompression;
 
     /**
      * Overrides the default or defined JPEG compression level per instance
@@ -41,10 +24,16 @@ class ImageHelper
     public function setJpegCompression($level) {
         if (is_int($level)) {
             $this->jpegCompression = min(max($level, 0), 100);
-        } else {
-            $this->reset();
         }
         return $this;
+    }
+
+    protected function getJpegCompression()
+    {
+        if (!isset($this->jpegCompression)) {
+            $this->jpegCompression = \Config::get('concrete.misc.default_jpeg_image_compression');
+        }
+        return $this->jpegCompression;
     }
     /**
      * Deprecated. Use the Image facade instead.
@@ -58,16 +47,16 @@ class ImageHelper
             $image = Image::open($mixed);
         }
         if ($fit) {
-            return $image->thumbnail(new Box($width, $height), ImageInterface::THUMBNAIL_OUTBOUND)->save($newPath, array('quality'=>$this->jpegCompression));
+            return $image->thumbnail(new Box($width, $height), ImageInterface::THUMBNAIL_OUTBOUND)->save($newPath, array('quality'=>$this->getJpegCompression()));
 
         } else {
 
             if ($height < 1) {
-                $image->thumbnail($image->getSize()->widen($width))->save($newPath, array('quality'=>$this->jpegCompression));
+                $image->thumbnail($image->getSize()->widen($width))->save($newPath, array('quality'=>$this->getJpegCompression()));
             } else if ($width < 1) {
-                $image->thumbnail($image->getSize()->heighten($height))->save($newPath, array('quality'=>$this->jpegCompression));
+                $image->thumbnail($image->getSize()->heighten($height))->save($newPath, array('quality'=>$this->getJpegCompression()));
             } else {
-                $image->thumbnail(new Box($width, $height))->save($newPath, array('quality'=>$this->jpegCompression));
+                $image->thumbnail(new Box($width, $height))->save($newPath, array('quality'=>$this->getJpegCompression()));
             }
         }
      }
@@ -88,10 +77,14 @@ class ImageHelper
         $fID = false;
         $fh = Loader::helper('file');
         if ($obj instanceof File) {
-            $fr = $obj->getFileResource();
-            $fID = $obj->getFileID();
-            $filename = md5(implode(':', array($fID, $maxWidth, $maxHeight, $crop, $fr->getTimestamp())))
+            try {
+                $fr = $obj->getFileResource();
+              $fID = $obj->getFileID();
+                $filename = md5(implode(':', array($fID, $maxWidth, $maxHeight, $crop, $fr->getTimestamp())))
                 . '.' . $fh->getExtension($fr->getPath());
+            } catch(\Exception $e) {
+                $filename = '';
+            }
         } else {
             $filename = md5(implode(':', array($obj, $maxWidth, $maxHeight, $crop, filemtime($obj))))
                 . '.' . $fh->getExtension($obj);

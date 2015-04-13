@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Application\Service;
 
+use PermissionKey;
 use User as ConcreteUser;
 use Loader;
 use Page;
@@ -101,7 +102,7 @@ class UserInterface
      */
     public function button_js($text, $onclick, $buttonAlign = 'right', $innerClass = null, $args = array())
     {
-        return self::buttonJs($text, $onclick, $buttonAlign = 'right', $innerClass = null, $args = array());
+        return self::buttonJs($text, $onclick, $buttonAlign, $innerClass, $args);
     }
 
     /**
@@ -192,7 +193,7 @@ class UserInterface
                 return false;
             }
 
-            if (Config::get('concrete.maintenance_mode')) {
+            if (Config::get('concrete.maintenance_mode') && !PermissionKey::getByHandle('view_in_maintenance_mode')->validate()) {
                 return false;
             }
 

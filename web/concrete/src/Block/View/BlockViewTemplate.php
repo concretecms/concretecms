@@ -8,7 +8,7 @@ use View;
 use Block;
 use \Concrete\Core\Package\PackageList;
 use \Concrete\Core\Asset\JavascriptAsset;
-use \Concrete\Core\Asset\CSSAsset;
+use \Concrete\Core\Asset\CssAsset;
 
 class BlockViewTemplate {
 
@@ -176,7 +176,7 @@ class BlockViewTemplate {
                     // $identifier = 'blocks/page_list', 'blocks/feature', 'blocks/page_list/templates/responsive', etc...
 					switch($t) {
 						case 'CSS':
-							$asset = new CSSAsset($identifier);
+							$asset = new CssAsset($identifier);
 							$asset->setAssetURL($this->getBaseURL() . '/' . $i);
 							$asset->setAssetPath($this->basePath . '/' . $i);
 							$al->registerAsset($asset);
@@ -198,7 +198,7 @@ class BlockViewTemplate {
 				foreach($css as $i) {
 					if(substr($i,-4)=='.css') {
                         $identifier = substr($this->basePath, strpos($this->basePath, 'blocks')) . '/' . $i;
-						$asset = new CSSAsset($identifier);
+						$asset = new CssAsset($identifier);
 						$asset->setAssetURL($this->getBaseURL() . '/' . DIRNAME_CSS . '/' . $i);
 						$asset->setAssetPath($this->basePath . '/' . DIRNAME_CSS . '/' . $i);
 						$al->registerAsset($asset);

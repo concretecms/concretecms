@@ -54,7 +54,7 @@
 							this.list.hide();
 						}
 					} else {
-						this.list.children('li').show();
+						this.list.children('li,div.li').show();
 					}
 					return;
 				}
@@ -80,7 +80,7 @@
 			this.cache = [];
 			this.rows = [];
 			var lutype = this.lutype;
-			this.list.find('li').each(function() {
+			this.list.find('li,div.li').each(function() {
 				if (lutype == 'blocktypes') {
 					self.cache.push($(this).find('span').html().toLowerCase());
 				} else if (lutype == 'attributes') {
@@ -90,7 +90,7 @@
 					var val = $(this).find('a,span').html().toLowerCase();
 					self.cache.push(val);
 				} else if (lutype == 'fileset') {
-					self.cache.push($(this).find('span').html().toLowerCase());
+					self.cache.push($(this).find('span[data-label=file-set-name]').html().toLowerCase());
 				} else if (lutype == 'intelligent-search') {
 					var s = $(this).find('span').html();
 					if (s) {
@@ -106,7 +106,7 @@
 			var self = this;
 			if (this.lutype == 'blocktypes') {
 				this.list.find('.ccm-panel-add-block-set').hide();
-				this.list.find('li').hide();
+				this.list.find('li,div.li').hide();
 				$.each(scores, function(i, score) {
                     self.rows[score[1]].show();
                     self.rows[score[1]].closest('.ccm-panel-add-block-set').show();
@@ -153,7 +153,7 @@
 				this.list.find('li a').removeClass('ccm-intelligent-search-result-selected');
 				this.list.find('li:visible a:first').addClass('ccm-intelligent-search-result-selected');
 			} else {
-				this.list.children('li').hide();
+				this.list.children('li,div.li').hide();
 				$.each(scores, function(i, score) { self.rows[score[1]].show(); });
 			}
 		},

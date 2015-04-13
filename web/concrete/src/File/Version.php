@@ -395,6 +395,7 @@ class Version
         $fv = clone $this;
         $fv->fvID = $fvID;
         $fv->fvIsApproved = false;
+        $fv->fvDateAdded = new \DateTime();
 
         $em->persist($fv);
         $em->flush();

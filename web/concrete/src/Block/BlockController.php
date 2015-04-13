@@ -8,6 +8,7 @@ use Concrete\Core\Block\View\BlockViewTemplate;
 use Concrete\Core\Controller;
 use Concrete\Core\Feature\Feature;
 use Concrete\Core\Legacy\BlockRecord;
+use Concrete\Core\Page\Controller\PageController;
 use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 use Config;
 use Events;
@@ -416,6 +417,11 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
                 }
             }
         }
+    }
+
+    public function setPassThruBlockController(PageController $controller)
+    {
+        $controller->setPassThruBlockController($this->block, $this);
     }
 
     public function getPassThruActionAndParameters($parameters)
