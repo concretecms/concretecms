@@ -1,11 +1,12 @@
 <?php
+
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Permission\Access\Entity\Type;
 use Concrete\Core\Permission\Category;
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
-use \Concrete\Core\Conversation\FlagType\FlagType;
+use Concrete\Core\Conversation\FlagType\FlagType;
 use Concrete\Core\Block\BlockType\BlockType;
 use AuthenticationType;
 use Exception;
@@ -15,7 +16,6 @@ use Concrete\Core\Permission\Key\Key as PermissionKey;
 
 class Version573 extends AbstractMigration
 {
-
     public function getName()
     {
         return '20141219000000';
@@ -33,8 +33,8 @@ class Version573 extends AbstractMigration
 
         $types = array(Type::getByHandle('group'), Type::getByHandle('user'), Type::getByHandle('group_set'), Type::getByHandle('group_combination'));
         $categories = array(Category::getByHandle('conversation'), Category::getByHandle('conversation_message'));
-        foreach($categories as $category) {
-            foreach($types as $pe) {
+        foreach ($categories as $category) {
+            foreach ($types as $pe) {
                 if (is_object($category) && is_object($pe)) {
                     $category->associateAccessEntityType($pe);
                 }
@@ -43,7 +43,7 @@ class Version573 extends AbstractMigration
 
         try {
             $gat = AuthenticationType::getByHandle('google');
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $gat = AuthenticationType::add('google', 'Google');
             if (is_object($gat)) {
                 $gat->disable();
@@ -51,7 +51,7 @@ class Version573 extends AbstractMigration
         }
 
         // fix register page permissions
-		$g1 = \Group::getByID(GUEST_GROUP_ID);
+        $g1 = \Group::getByID(GUEST_GROUP_ID);
         $register = \Page::getByPath('/register', "RECENT");
         $register->assignPermissions($g1, array('view_page'));
 
@@ -100,7 +100,7 @@ class Version573 extends AbstractMigration
             $dsk = PermissionKey::add('page_type', 'delete_page_type', 'Delete Page Type', '', false, false);
         }
         $list = \Concrete\Core\Page\Type\Type::getList();
-        foreach($list as $pagetype) {
+        foreach ($list as $pagetype) {
             $epk->setPermissionObject($pagetype);
             $msk->setPermissionObject($pagetype);
             $dsk->setPermissionObject($pagetype);
@@ -184,7 +184,6 @@ class Version573 extends AbstractMigration
             $sp = SinglePage::add('/dashboard/pages/types/attributes');
             $sp->update(array('cName' => 'Page Type Attributes'));
         }
-
     }
 
     public function down(Schema $schema)

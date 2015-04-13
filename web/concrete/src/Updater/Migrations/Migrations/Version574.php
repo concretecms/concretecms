@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Permission\Access\Access;
@@ -24,7 +25,6 @@ class Version574 extends AbstractMigration
 
     public function up(Schema $schema)
     {
-
         \Concrete\Core\Database\Schema\Schema::refreshCoreXMLSchema(array(
             'ConversationPermissionAddMessageAccessList',
             'ConversationSubscriptions',
@@ -44,7 +44,6 @@ class Version574 extends AbstractMigration
 
         $db = \Database::get();
         $db->Execute('DROP TABLE IF EXISTS PageStatistics');
-
 
         $pp = $schema->getTable('PagePaths');
         if (!$pp->hasColumn('ppGeneratedFromURLSlugs')) {
@@ -159,9 +158,9 @@ class Version574 extends AbstractMigration
                 $pd->setEndDateAllDay((bool) $pd->pdEndDateAllDay);
                 if ($pd->pdRepeatPeriod == 'daily') {
                     $pd->setRepeatPeriod(Duration::REPEAT_DAILY);
-                } else if ($pd->pdRepeatPeriod == 'weekly') {
+                } elseif ($pd->pdRepeatPeriod == 'weekly') {
                     $pd->setRepeatPeriod(Duration::REPEAT_WEEKLY);
-                } else if ($pd->pdRepeatPeriod == 'monthly') {
+                } elseif ($pd->pdRepeatPeriod == 'monthly') {
                     $pd->setRepeatPeriod(Duration::REPEAT_MONTHLY);
                 } else {
                     $pd->setRepeatPeriod(Duration::REPEAT_NONE);
@@ -174,7 +173,7 @@ class Version574 extends AbstractMigration
                 }
                 if ($pd->pdRepeatPeriodMonthsRepeatBy == 'week') {
                     $pd->setRepeatMonthBy(Duration::MONTHLY_REPEAT_WEEKLY);
-                } else if ($pd->pdRepeatPeriodMonthsRepeatBy == 'month') {
+                } elseif ($pd->pdRepeatPeriodMonthsRepeatBy == 'month') {
                     $pd->setRepeatMonthBy(Duration::MONTHLY_REPEAT_MONTHLY);
                 }
                 if ($pd->pdRepeatPeriodEnd) {
@@ -209,7 +208,7 @@ class Version574 extends AbstractMigration
                 $localeInfo = \Gettext\Languages\Language::getById($locale);
                 if ($localeInfo) {
                     $pluralCases = array();
-                    foreach($localeInfo->categories as $category) {
+                    foreach ($localeInfo->categories as $category) {
                         $pluralCases[] = $category->id.'@'.$category->examples;
                     }
                     $db->update(
