@@ -3,16 +3,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $valt = Loader::helper('validation/token');
 $th = Loader::helper('text');
 $ip = Loader::helper('validation/ip'); ?>
-<style>
-    span.ccm-conversation-display-author-name, #ccm-conversation-messages i.fa {
-        position: relative;
-        z-index: 20000;
-    }
-
-    div.ccm-popover.ccm-conversation-message-popover {
-        z-index: 20001;
-    }
-</style>
 <div class="ccm-dashboard-content-full">
 
     <div data-search-element="wrapper">
@@ -292,6 +282,16 @@ $ip = Loader::helper('validation/ip'); ?>
 
         });
     </script>
+    <style>
+        span.ccm-conversation-display-author-name, #ccm-conversation-messages i.fa {
+            position: relative;
+            z-index: 20000;
+        }
+
+        div.ccm-popover.ccm-conversation-message-popover {
+            z-index: 20001;
+        }
+    </style>
     <!-- END Body Pane -->
     <?=$list->displayPagingV2()?>
 

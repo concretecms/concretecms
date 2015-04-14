@@ -109,7 +109,17 @@ module.exports = function(grunt) {
                 '<%= DIR_BASE %>/concrete/js/build/core/app/custom-style.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/tabs.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/toolbar.js',
-
+                '<%= DIR_BASE %>/concrete/js/build/vendor/tourist/tourist.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/app/help/dialog.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/app/help/launcher.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/app/help/guide-manager.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/app/help/guides/toolbar.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/app/help/guides/change-content.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/app/help/guides/change-content-edit-mode.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/app/help/guides/add-page.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/app/help/guides/personalize.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/app/help/guides/dashboard.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/app/help/guides/location-panel.js',
                 // Edit Mode
                 '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode/editmode.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode/block.js',
@@ -165,6 +175,11 @@ module.exports = function(grunt) {
         bootstrap_transition: {
             dest: '<%= DIR_BASE %>/concrete/js/bootstrap/transition.js',
             src: '<%= DIR_BASE %>/concrete/js/build/vendor/bootstrap/transition.js'
+        },
+
+        backbone: {
+            dest: '<%= DIR_BASE %>/concrete/js/backbone.js',
+            src: '<%= DIR_BASE %>/concrete/js/build/vendor/backbone/backbone.js'
         },
 
         underscore: {
@@ -460,8 +475,10 @@ module.exports = function(grunt) {
     grunt.registerTask('jsOnly:debug', jsTargets.debug);
     grunt.registerTask('jsOnly:release', jsTargets.release );
 
-    grunt.registerTask('js:debug', ['generate-constants', 'jsOnly:debug' ]);
-    grunt.registerTask('js:release', ['generate-constants', 'jsOnly:release' ]);
+    //grunt.registerTask('js:debug', ['generate-constants', 'jsOnly:debug' ]);
+    //grunt.registerTask('js:release', ['generate-constants', 'jsOnly:release' ]);
+    grunt.registerTask('js:debug', ['jsOnly:debug' ]);
+    grunt.registerTask('js:release', ['jsOnly:release' ]);
     grunt.registerTask('js', 'js:release');
 
     grunt.registerTask('css:debug', 'less:debug');

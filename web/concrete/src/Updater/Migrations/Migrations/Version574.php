@@ -20,7 +20,7 @@ class Version574 extends AbstractMigration
 
     public function getName()
     {
-        return '20150330000000';
+        return '20150413000000';
     }
 
     public function up(Schema $schema)
@@ -112,6 +112,9 @@ class Version574 extends AbstractMigration
         }
         if (!$cms->hasColumn('cnvMessageAuthorEmail')) {
             $cms->addColumn('cnvMessageAuthorEmail', 'string', array('notnull' => false, 'length' => 255));
+        }
+        if (!$cms->hasColumn('cnvMessageAuthorWebsite')) {
+            $cms->addColumn('cnvMessageAuthorWebsite', 'string', array('notnull' => false, 'length' => 255));
         }
 
         $this->updatePermissionDurationObjects();

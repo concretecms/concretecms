@@ -22,7 +22,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
             <input type="hidden" name="sitemap" value="1" />
         <? } ?>
 
-		<?=Loader::helper('concrete/ui/help')->notify('panel', '/page/attributes')?>
+		<?=Loader::helper('concrete/ui/help')->display('panel', '/page/attributes')?>
 		<? if ($assignment->allowEditName()) { ?>
 		<div class="form-group">
 			<label for="cName" class="control-label"><?=t('Name')?></label>
