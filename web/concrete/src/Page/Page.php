@@ -25,6 +25,7 @@ use PageTheme;
 use Concrete\Core\Permission\Key\PageKey as PagePermissionKey;
 use PermissionAccess;
 use Concrete\Core\Package\PackageList;
+use Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
 use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
 use Concrete\Core\Permission\Access\Entity\GroupCombinationEntity as GroupCombinationPermissionAccessEntity;
 use Concrete\Core\Permission\Access\Entity\UserEntity as UserPermissionAccessEntity;
@@ -510,6 +511,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             // group combination
         } elseif ($userOrGroup instanceof User || $userOrGroup instanceof UserInfo) {
             $pe = UserPermissionAccessEntity::getOrCreate($userOrGroup);
+        } elseif ($userOrGroup instanceof PermissionAccessEntity) {
+            $pe = $userOrGroup;
         } else {
             // group;
             $pe = GroupPermissionAccessEntity::getOrCreate($userOrGroup);
