@@ -2,6 +2,7 @@
 namespace Concrete\Core\Legacy;
 use \Concrete\Core\Legacy\DatabaseItemList;
 use UserAttributeKey;
+use UserInfo;
 /**
  * An object that allows a filtered list of users to be returned.
  * @package Files
