@@ -118,6 +118,7 @@ module.exports = function(grunt) {
                 '<%= DIR_BASE %>/concrete/js/build/core/app/help/guides/change-content-edit-mode.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/help/guides/add-page.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/help/guides/personalize.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/app/help/guides/dashboard.js',
                 // Edit Mode
                 '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode/editmode.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode/block.js',
