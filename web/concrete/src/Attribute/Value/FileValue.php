@@ -4,14 +4,14 @@ use Loader;
 class FileValue extends Value {
 
 	/**
-	 * @param File $f
+	 * @param \File $f
 	 */
 	public function setFile($f) {
 		$this->f = $f;
 	}
 
 	/**
-	 * @return File
+	 * @return \File
 	 */
 	public function getFile() {
 		return $this->f;
