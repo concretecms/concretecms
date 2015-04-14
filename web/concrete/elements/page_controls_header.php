@@ -9,7 +9,7 @@ if (isset($cp)) {
 
 ?>
 
-<style type="text/css">body {margin-top: 49px !important;} </style>
+<style type="text/css">div.ccm-page {padding-top: 49px !important;} </style>
 
 <script type="text/javascript">
 <?
@@ -69,10 +69,6 @@ EOL;
 	$cih = Loader::helper('concrete/ui');
 	if (Localization::activeLanguage() != 'en') {
 		$v->addFooterItem('<script type="text/javascript">$(function() { jQuery.datepicker.setDefaults({dateFormat: \'yy-mm-dd\'}); });</script>');
-	}
-	if (!Config::get('concrete.misc.seen_introduction')) {
-		$v->addFooterItem('<script type="text/javascript">$(function() { ccm_showAppIntroduction(); });</script>');
-		Config::save('concrete.misc.seen_introduction', true);
 	}
 }
 

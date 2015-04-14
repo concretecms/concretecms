@@ -1,4 +1,5 @@
 <?
+defined('C5_EXECUTE') or die("Access Denied.");
 
 $c = Page::getCurrentPage();
 if (is_object($c)) {

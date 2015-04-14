@@ -80,6 +80,8 @@ __IDE_SYMBOLS__.php
 /web/concrete/js/file-manager.js
 /web/concrete/js/gathering.js
 /web/concrete/js/groups.js
+/web/concrete/js/help.js
+/web/concrete/js/backbone.js
 /web/concrete/js/image-editor.js
 /web/concrete/js/jquery-cookie.js
 /web/concrete/js/jquery-tristate.js
@@ -113,6 +115,7 @@ __IDE_SYMBOLS__.php
 /web/concrete/css/gathering/display.css
 /web/concrete/css/image-editor.css
 /web/concrete/css/jquery-magnific-popup.css
+/web/concrete/css/help.css
 /web/concrete/css/jquery-awesome-rating.css
 /web/concrete/css/jquery-ui.css
 /web/concrete/css/redactor.css

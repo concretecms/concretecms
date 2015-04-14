@@ -207,6 +207,21 @@ class UserInterface
         return false;
     }
 
+    public function showHelpOverlay()
+    {
+        $u = new ConcreteUser;
+        $timestamp = $u->config('MAIN_HELP_LAST_VIEWED');
+        if (!$timestamp) {
+            return true;
+        }
+    }
+
+    public function trackHelpOverlayDisplayed()
+    {
+        $u = new ConcreteUser;
+        $u->saveConfig('MAIN_HELP_LAST_VIEWED', time());
+    }
+
     /**
      * Clears the Interface Items Cache (clears the session)
      */

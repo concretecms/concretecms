@@ -4,7 +4,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 <section class="ccm-ui">
 	<header><?=t('Page Permissions')?></header>
 	<form method="post" action="<?=$controller->action('save_simple')?>" data-dialog-form="permissions" data-panel-detail-form="permissions">
-		<?=Loader::helper('concrete/ui/help')->notify('panel', '/page/permissions')?>
+		<?=Loader::helper('concrete/ui/help')->display('panel', '/page/permissions')?>
 		
 		<p class="lead"><?=t('Who can view this page?')?></p>
 
