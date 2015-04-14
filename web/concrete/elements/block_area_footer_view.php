@@ -1,11 +1,13 @@
-<?
-defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die('Access Denied.');
+
 $c = Page::getCurrentPage();
 $css = $c->getAreaCustomStyle($a);
-if (is_object($css)) {
-    $class = $css->getContainerClass();
-}
 
-if ($class) { ?>
-</div>
-<? } ?>
+if (isset($css)) {
+    $class = $css->getContainerClass();
+} else {
+    $class = '';
+}
+if ($class !== '') {
+    ?></div><?php
+}
