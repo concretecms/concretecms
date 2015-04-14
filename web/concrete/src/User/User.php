@@ -3,6 +3,7 @@ namespace Concrete\Core\User;
 use \Concrete\Core\Foundation\Object;
 use Loader;
 use Config;
+use Database;
 use UserInfo as CoreUserInfo;
 use Request;
 use \Concrete\Core\Authentication\AuthenticationType;
@@ -14,7 +15,6 @@ use \Hautelook\Phpass\PasswordHash;
 use \Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
 use Core;
 use Group;
-use Zend\Stdlib\DateTime;
 
 class User extends Object
 {
@@ -37,7 +37,7 @@ class User extends Object
 	*/
     public static function getByUserID($uID, $login = false, $cacheItemsOnLogin = true)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $v = array($uID);
         $q = "SELECT uID, uName, uIsActive, uLastOnline, uTimezone, uDefaultLanguage, uLastPasswordChange FROM Users WHERE uID = ? LIMIT 1";
         $r = $db->query($q, $v);
@@ -45,15 +45,9 @@ class User extends Object
         $nu = null;
         if ($row) {
             $nu = new User();
-            $nu->uID = $row['uID'];
-            $nu->uName = $row['uName'];
-            $nu->uIsActive = $row['uIsActive'];
-            $nu->uDefaultLanguage = $row['uDefaultLanguage'];
-            $nu->uLastLogin = $row['uLastLogin'];
-            $nu->uTimezone = $row['uTimezone'];
+            $nu->setPropertiesFromArray($row);
             $nu->uGroups = $nu->_getUserGroups(true);
             $nu->superUser = ($nu->getUserID() == USER_SUPER_ID);
-            $nu->uLastPasswordChange = $row['uLastPasswordChange'];
             if ($login) {
                 $nu->persist($cacheItemsOnLogin);
                 $nu->recordLogin();
@@ -354,8 +348,8 @@ class User extends Object
             Session::invalidate();
         }
 
-        if (isset($_COOKIE['ccmUserHash']) && $_COOKIE['ccmUserHash']) {
-            setcookie("ccmUserHash", "", 315532800, DIR_REL . '/',
+        if (isset($_COOKIE['ccmAuthUserHash']) && $_COOKIE['ccmAuthUserHash']) {
+            setcookie("ccmAuthUserHash", "", 315532800, DIR_REL . '/',
                       Config::get('concrete.session.cookie.domain'),
                       Config::get('concrete.session.cookie.secure'),
                       Config::get('concrete.session.cookie.httponly'));
