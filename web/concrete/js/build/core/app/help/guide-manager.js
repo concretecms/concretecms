@@ -49,9 +49,9 @@
             this.hideOverlay();
 
             // if the help dialog is active, show it
-            /*if ($('.ccm-dialog-help-wrapper').length) {
+            if ($('.ccm-dialog-help-wrapper').length) {
                 $('.ccm-dialog-help-wrapper').show();
-            }*/
+            }
 
         },
 
