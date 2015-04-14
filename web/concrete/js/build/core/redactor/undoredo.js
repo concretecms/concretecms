@@ -6,8 +6,8 @@ RedactorPlugins.undoredo = function() {
     return {
         init: function()
         {
-            var undo = this.button.addFirst('undo', 'Undo');
-            var redo = this.button.addAfter('undo', 'redo', 'Redo');
+            var undo = this.button.addFirst('undo', this.lang.get('undo'));
+            var redo = this.button.addAfter('undo', 'redo', this.lang.get('redo'));
             this.button.setAwesome('undo', 'fa-undo');
             this.button.setAwesome('redo', 'fa-undo fa-flip-horizontal');
 

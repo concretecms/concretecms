@@ -279,7 +279,7 @@ RedactorPlugins.specialcharacters = function()
         ]
         ,
         init: function() {
-            var button = this.button.addAfter('horizontalrule', 'special-character-button', 'Insert Character');
+            var button = this.button.addAfter('horizontalrule', 'special-character-button', this.lang.get('insert_character'));
             this.button.setAwesome('special-character-button', 'fa-copyright');
             this.button.addCallback(button, this.specialcharacters.show);
         },
@@ -300,7 +300,7 @@ RedactorPlugins.specialcharacters = function()
         show: function()
         {
             this.modal.addTemplate('specialcharacters', this.specialcharacters.getTemplate());
-            this.modal.load('specialcharacters', 'Insert Character', 500);
+            this.modal.load('specialcharacters', this.lang.get('insert_character'), 500);
             this.modal.createCancelButton();
             this.selection.save();
             this.modal.show();
