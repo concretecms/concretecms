@@ -252,6 +252,14 @@ var ccmi18n_tourist = {
   nextThis: <?=json_encode(t('Next this:'))?>,
   stepXofY: <?=json_encode(t('step %1$d of %2$d'))?>
 };
+
+var ccmi18n_helpGuides = {
+  'add-page': [
+    {title: <?=json_encode(t('Pages Panel'))?>, text: <?=json_encode(t('The pages is where you go to add a new page to your site, or jump between existing pages. To open the pages panel, click the icon.'))?>},
+    {title: <?=json_encode(t('Page Types'))?>, text: <?=json_encode(t('This is your list of page types. Click any of them to add a page.'))?>},
+    {title: <?=json_encode(t('Page Types'))?>, text: <?=json_encode(t('This is your list of page types. Click any of them to add a page.'))?>}
+  ]
+}
 <?php
 
     }

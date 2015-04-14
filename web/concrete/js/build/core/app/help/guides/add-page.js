@@ -1,7 +1,8 @@
 !function(global, $) {
 	'use strict';
+	var i18n = ccmi18n_helpGuides['add-page'];
 	var steps = [{
-		content: '<p><span class="h5">Pages Panel</span><br/>The pages is where you go to add a new page to your site, or jump between existing pages. To open the pages panel, click the icon.</p>',
+		content: '<p><span class="h5">' + i18n[0].title + '</span><br/>' + i18n[0].text + '</p>',
 		highlightTarget: true,
 		nextButton: false,
 		target: $('[data-guide-toolbar-action=sitemap]'),
@@ -22,7 +23,7 @@
 			});
 		}
 	},{
-		content: '<p><span class="h5">Page Types</span><br/>This is your list of page types. Click any of them to add a page.</p>',
+		content: '<p><span class="h5">' + i18n[1].title + '</span><br/>' + i18n[1].text + '</p>',
 		highlightTarget: true,
 		nextButton: true,
 		my: 'right center',
@@ -31,7 +32,7 @@
 			return {target: $('ul.ccm-panel-sitemap-list li a').eq(0)}
 		}
 	},{
-		content: '<p><span class="h5">Page Types</span><br/>This is your list of page types. Click any of them to add a page.</p>',
+		content: '<p><span class="h5">' + i18n[2].title + '</span><br/>' + i18n[2].text + '</p>',
 		highlightTarget: true,
 		nextButton: true,
 		my: 'right center',
@@ -39,7 +40,7 @@
 		setup: function(tour, options) {
 			return {target: $('div#ccm-sitemap-panel-sitemap')}
 		}
-	},];
+	}];
 
 	var tour = new Tourist.Tour({
 		steps: steps,
