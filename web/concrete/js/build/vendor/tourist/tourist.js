@@ -39,7 +39,7 @@
     Base.prototype._module = 'Tourist';
 
     _.extend(Base.prototype, Backbone.Events);
-  /* concrete5 */
+/* concrete5 */
     /*
     Base.prototype.skipButtonTemplate = '<button class="btn btn-default btn-sm pull-right tour-next">Skip this step →</button>';
 
@@ -51,20 +51,23 @@
 
     Base.prototype.okButtonTemplate = '<button class="btn btn-sm tour-close btn-primary">Okay</button>';
   */
-    Base.prototype.skipButtonTemplate = '<button class="btn btn-default btn-sm pull-right tour-next">Skip →</button>';
+    Base.prototype.skipButtonTemplate = ccmi18n_tourist.skipButton;
 
-    Base.prototype.nextButtonTemplate = '<button class="btn btn-primary btn-sm pull-right tour-next">Next →</button>';
+    Base.prototype.nextButtonTemplate = ccmi18n_tourist.nextButton;
 
-    Base.prototype.finalButtonTemplate = '<button class="btn btn-primary btn-sm pull-right tour-next">Done</button>';
+    Base.prototype.finalButtonTemplate = ccmi18n_tourist.finalButton;
 
-    Base.prototype.closeButtonTemplate = '<a class="btn btn-close tour-close" href="#"><i class="icon icon-remove"></i></a>';
+    Base.prototype.closeButtonTemplate = ccmi18n_tourist.closeButton;
 
-    Base.prototype.okButtonTemplate = '<button class="btn btn-sm tour-close btn-primary">Ok</button>';
+    Base.prototype.okButtonTemplate = ccmi18n_tourist.okButton;
 /* end concrete5 */
 
     Base.prototype.actionLabelTemplate = _.template('<h4 class="action-label"><%= label %></h4>');
 
-    Base.prototype.actionLabels = ['Do this:', 'Then this:', 'Next this:'];
+/* concrete5 */
+    //Base.prototype.actionLabels = ['Do this:', 'Then this:', 'Next this:'];
+    Base.prototype.actionLabels = [ccmi18n_tourist.doThis, ccmi18n_tourist.thenThis, ccmi18n_tourist.nextThis];
+/* end concrete5 */
 
     Base.prototype.highlightClass = 'tour-highlight';
 
@@ -167,7 +170,10 @@
         content: step.content,
         buttons: buttons,
         close_button: this._buildCloseButton(step),
-        counter: step.final ? '' : "step " + (step.index + 1) + " of " + step.total,
+/* concrete5 */
+        //counter: step.final ? '' : "step " + (step.index + 1) + " of " + step.total,
+        counter: step.final ? '' : ccmi18n_tourist.stepXofY.replace(/%1\$d/g, step.index + 1).replace(/%2\$d/g, step.total),
+/* end concrete5 */
         counter_class: step.final ? 'final' : ''
       })));
       if (!buttons) {
