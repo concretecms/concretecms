@@ -17,7 +17,7 @@
 	
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
-                <button class="pull-right btn btn-success" type="submit" value="file-access-extensions"><?=t('Save')?></button>
+                <button class="pull-right btn btn-primary" type="submit" value="file-access-extensions"><?=t('Save')?></button>
             </div>
         </div>	        
     </form>
