@@ -41,7 +41,7 @@ $dh = Core::make('helper/date');
 			
                 <div class="form-group">
                     <div class="checkbox">
-                        <label class="checkbox"><?=$form->checkbox('fsOverrideGlobalPermissions', 1, $fs->overrideGlobalPermissions())?> <?=t('Enable custom permissions for this file set.')?></label>
+                        <label><?=$form->checkbox('fsOverrideGlobalPermissions', 1, $fs->overrideGlobalPermissions())?> <?=t('Enable custom permissions for this file set.')?></label>
                     </div>
                 </div>
 
