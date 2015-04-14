@@ -6,6 +6,11 @@ use Doctrine\DBAL\Migrations\Configuration\Configuration as DoctrineMigrationCon
 
 class Configuration extends DoctrineMigrationConfiguration
 {
+    /**
+     * Construct a migration configuration object.
+     *
+     * @param bool $registerMigrations Set to true to load the currently available migrations.
+     */
     public function __construct($registerMigrations = true)
     {
         $db = \Database::get();
@@ -20,7 +25,7 @@ class Configuration extends DoctrineMigrationConfiguration
         $this->setMigrationsTableName('SystemDatabaseMigrations');
     }
 
-    /*
+    /**
      * This is a stupid requirement, but basically, we grab the lowest version number in our
      * system database migrations table, and we loop through all migrations in our file system
      * and for any of those LOWER than the lowest one in the table, we can assume they are included
@@ -49,9 +54,6 @@ class Configuration extends DoctrineMigrationConfiguration
                     $migration->markMigrated();
                 }
             }
-            // And now we have to reset the directory.
-            $directory = DIR_BASE_CORE . '/' . DIRNAME_CLASSES . '/Updater/Migrations/Migrations';
-            $this->registerMigrationsFromDirectory($directory);
         }
     }
 }
