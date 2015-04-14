@@ -14,6 +14,10 @@ $u = new User();
 		<label class="control-label" for="cnvMessageAuthorEmail"><?=t('Email Address')?></label>
 		<input type="text" class="form-control" name="cnvMessageAuthorEmail" />
 	</div>
+    <div class="form-group">
+        <label class="control-label" for="cnvMessageAuthorWebsite"><?=t('Website')?></label>
+        <input type="text" class="form-control" name="cnvMessageAuthorWebsite" />
+    </div>
 	<?
 	$captcha = Core::make('captcha');
 	?>

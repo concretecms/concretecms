@@ -852,6 +852,7 @@
   </field>
   <field name="cnvMessageAuthorName" type="C" size="255" />
   <field name="cnvMessageAuthorEmail" type="C" size="255" />
+  <field name="cnvMessageAuthorWebsite" type="C" size="255" />
     <field name="cnvMessageSubmitIP" type="B" size="32" />
     <field name="cnvMessageSubmitUserAgent" type="X2" />
     <field name="cnvMessageLevel" type="I" size="10">

@@ -9,7 +9,7 @@ return array(
      */
     'version'           => '5.7.4b3',
     'version_installed' => '5.7.4b3',
-    'version_db' => '20150330000000', // the key of the latest database migration - corresponds to 5.7.3.2
+    'version_db' => '20150413000000', // the key of the latest database migration - corresponds to 5.7.3.2
 
     /**
      * Installation status
@@ -411,7 +411,6 @@ return array(
         'package_backup_directory'      => DIR_FILES_UPLOADED_STANDARD . '/trash',
         'enable_progressive_page_reindex'      => true,
         'mobile_theme_id'               => 0,
-        'seen_introduction'             => false,
         'sitemap_approve_immediately'   => true,
         'enable_translate_locale_en_us' => false,
         'page_search_index_lifetime'    => 259200,
@@ -518,6 +517,11 @@ return array(
         'background_feed'        => '//backgroundimages.concrete5.org/wallpaper',
         'background_feed_secure' => 'https://backgroundimages.concrete5.org/wallpaper',
         'background_info'        => 'http://backgroundimages.concrete5.org/get_image_data.php',
+        'help'                   => array(
+            'developer'          => 'http://www.concrete5.org/documentation/developers/5.7/',
+            'user'          => 'http://www.concrete5.org/documentation/using-concrete5-7',
+            'forum'          => 'http://www.concrete5.org/community/forums'
+        ),
         'paths'                  => array(
             'menu_help_service' => '/tools/get_remote_help_list/',
             'theme_preview'     => '/tools/preview_theme/',

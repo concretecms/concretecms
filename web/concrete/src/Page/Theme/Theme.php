@@ -92,10 +92,11 @@ class Theme extends Object
         $r->markAssetAsIncluded($assetType, $assetHandle);
     }
 
-    public function requireAsset($assetType, $assetHandle)
+    public function requireAsset()
     {
         $r = ResponseAssetGroup::get();
-        $r->requireAsset($assetType, $assetHandle);
+        $args = func_get_args();
+        call_user_func_array(array($r, 'requireAsset'), $args);
     }
 
     public static function getAvailableThemes($filterInstalled = true)

@@ -9,6 +9,10 @@ div#ccm-toolbar {
   width: 100%;
   z-index: @index-level-main-bar; /* over the top of the highlighter, which is 1000 */
 
+  &.ccm-toolbar-tour-guide {
+    z-index: @index-level-toolbar-tour-guide;
+  }
+
   .ccm-toolbar-item-list {
     height: 48px;
     overflow: hidden;
@@ -164,6 +168,7 @@ div#ccm-toolbar {
       input {
         border-right: 1px solid #ccc;
         margin-right: 0px;
+        background-color: transparent;
       }
 
     }
