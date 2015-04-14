@@ -201,7 +201,7 @@ class Library extends Object
     public function hasOptionsForm()
     {
         $path = DIRNAME_SYSTEM . '/' . DIRNAME_SYSTEM_ANTISPAM . '/' . $this->saslHandle . '/' . FILENAME_FORM;
-        if (file_exists(DIRNAME_ELEMENTS . '/' . $path)) {
+        if (file_exists(DIR_FILES_ELEMENTS . '/' . $path)) {
             return true;
         } elseif ($this->pkgID > 0) {
             $pkgHandle = $this->getPackageHandle();
@@ -213,7 +213,7 @@ class Library extends Object
                 return true;
             }
         } else {
-            return file_exists(DIRNAME_ELEMENTS . '/' . $path);
+            return file_exists(DIR_FILES_ELEMENTS_CORE . '/' . $path);
         }
 
         return false;
