@@ -12,9 +12,9 @@ use Exception;
 
 class Version572 extends AbstractMigration
 {
-    public function getName()
+    public function getDescription()
     {
-        return '20141024000000';
+        return '5.7.2';
     }
 
     public function up(Schema $schema)

@@ -9,9 +9,9 @@ use Doctrine\DBAL\Schema\Schema;
 
 class Version5702 extends AbstractMigration
 {
-    public function getName()
+    public function getDescription()
     {
-        return '20140919000000';
+        return '5.7.0.2';
     }
 
     public function up(Schema $schema)

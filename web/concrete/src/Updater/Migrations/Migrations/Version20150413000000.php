@@ -18,9 +18,9 @@ class Version574 extends AbstractMigration
     private $updateSectionPlurals = false;
     private $updateMultilingualTranslations = false;
 
-    public function getName()
+    public function getDescription()
     {
-        return '20150413000000';
+        return '5.7.4';
     }
 
     public function up(Schema $schema)
