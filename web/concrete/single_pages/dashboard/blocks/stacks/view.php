@@ -39,11 +39,11 @@ if ($controller->getTask() == 'view_details') {
     ?>
 
     <div class="ccm-dashboard-header-buttons">
-        <?php if ($isGlobalArea) : ?>
+        <?php if ($isGlobalArea) { ?>
         <a href="<?=URL::to('/dashboard/blocks/stacks/view_global_areas')?>" data-dialog="add-stack" class="btn btn-default"><i class="fa fa-angle-double-left"></i> <?=t("Back to Global Areas")?></a>
-        <?php else: ?>
+        <?php } else { ?>
         <a href="<?=URL::to('/dashboard/blocks/stacks')?>" data-dialog="add-stack" class="btn btn-default"><i class="fa fa-angle-double-left"></i> <?=t("Back to Stacks")?></a>
-        <?php endif; ?>
+        <?php } ?>
     </div>
 
     <p class="lead"><?php echo $stack->getCollectionName()?></p>
