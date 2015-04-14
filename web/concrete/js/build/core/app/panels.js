@@ -271,10 +271,12 @@ function ConcretePanel(options) {
         $content.load(options.url + '?cID=' + CCM_CID + options.data, function () {
             jQuery.fn.dialog.hideLoader();
             $content.find('.launch-tooltip').tooltip({'container': '#ccm-tooltip-holder'});
+            $content.find('a[data-help-notification-toggle]').concreteHelpLauncher();
             obj.loadPanelDetailActions($content);
 
             _.defer(function() {
                 Concrete.event.publish('PanelOpenDetail', {
+                    panel: options,
                     container: $content
                 });
             });
