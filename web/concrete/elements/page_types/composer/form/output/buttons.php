@@ -8,7 +8,7 @@ $cmpp = new Permissions($pagetype);
 <? if (!is_object($page) || $page->isPageDraft()) { ?>
 <button type="button" data-page-type-composer-form-btn="preview" class="btn btn-success pull-right"><?=t('Edit Mode')?></button>
 <? } else { ?>
-<button type="button" data-page-type-composer-form-btn="preview" class="btn btn-success pull-right"><?=t('Save')?></button>
+<button type="button" data-page-type-composer-form-btn="preview" class="btn btn-primary pull-right"><?=t('Save')?></button>
 <? } ?>
 
 <? if (is_object($page) && $page->isPageDraft()) { ?>
