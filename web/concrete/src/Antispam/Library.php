@@ -5,6 +5,7 @@ use \Concrete\Core\Foundation\Object;
 use Loader;
 use Package;
 use \Concrete\Core\Package\PackageList;
+use Core;
 
 class Library extends Object
 {
@@ -200,7 +201,7 @@ class Library extends Object
     public function hasOptionsForm()
     {
         $path = DIRNAME_SYSTEM . '/' . DIRNAME_SYSTEM_ANTISPAM . '/' . $this->saslHandle . '/' . FILENAME_FORM;
-        if (file_exists(DIR_ELEMENTS . '/' . $path)) {
+        if (file_exists(DIRNAME_ELEMENTS . '/' . $path)) {
             return true;
         } elseif ($this->pkgID > 0) {
             $pkgHandle = $this->getPackageHandle();
@@ -212,7 +213,7 @@ class Library extends Object
                 return true;
             }
         } else {
-            return file_exists(DIR_ELEMENTS . '/' . $path);
+            return file_exists(DIRNAME_ELEMENTS . '/' . $path);
         }
 
         return false;
@@ -223,8 +224,8 @@ class Library extends Object
      * @return mixed
      */
     public function getController() {
-        $class = core_class('Core\\Antispam\\' . Concrete::make('helper/text')->camelcase($this->saslHandle) . 'Controller', $this->getPackageHandle());
-        $cl = \Core::make($class);
+        $class = core_class('Core\\Antispam\\' . Core::make('helper/text')->camelcase($this->saslHandle) . 'Controller', $this->getPackageHandle());
+        $cl = Core::make($class);
         return $cl;
     }
 

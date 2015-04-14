@@ -26,28 +26,28 @@
 				} else {
 					Loader::element('system/antispam/' . $activeLibrary->getSystemAntispamLibraryHandle() . '/form');
 				}
-
-				?>
-
-				<div class="form-group">
-                <label><?= t('Log settings') ?></label>
-                    <div class="checkbox">
-                        <?=t('Log entries marked as spam.')?><label><?=$form->checkbox('ANTISPAM_LOG_SPAM', 1, Config::get('concrete.log.spam'))?></label>
-                    </div>
+			}
+		}
+		if (is_object($activeLibrary)) {
+			?>
+			<fieldset>
+				<legend style="margin-bottom: 0"><?=t('Log Settings')?></legend>
+				<div class="checkbox">
+					<div class="checkbox">
+						<label><?=$form->checkbox('ANTISPAM_LOG_SPAM', 1, Config::get('concrete.log.spam'))?> <?=t('Log entries marked as spam.')?></label>
+					</div>
 					<span class="help-block"><?=t('Logged entries can be found in <a href="%s" style="color: #bfbfbf; text-decoration: underline">Dashboard > Reports > Logs</a>', $view->url('/dashboard/reports/logs'))?></span>
 				</div>
 
 				<div class="form-group">
-                    <label><?=t('Email Notification')?> </label>
+					<label><?=t('Email Notification')?> </label>
 					<?=$form->text('ANTISPAM_NOTIFY_EMAIL', Config::get('concrete.spam.notify_email'))?>
-				    <span class="help-block"><?=t('Any email address in this box will be notified when spam is detected.')?></span>
+					<span class="help-block"><?=t('Any email address in this box will be notified when spam is detected.')?></span>
 				</div>
-
-
-				<?
-			}
-		} ?>
-
+			</fieldset>
+			<?php
+		}
+		?>
 
 	<? } else { ?>
 		<p><?=t('You have no anti-spam libraries installed.')?></p>
