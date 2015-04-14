@@ -928,6 +928,8 @@ class Version
         $r->canEditFilePermissions = $fp->canEditFilePermissions();
         $r->canDeleteFile = $fp->canDeleteFile();
         $r->canReplaceFile = $fp->canEditFileContents();
+        $r->canEditFileContents = $fp->canEditFileContents();
+        $r->canRead = $fp->canRead();
         $r->canViewFile = $this->canView();
         $r->canEditFile = $this->canEdit();
         $r->url = $this->getURL();
