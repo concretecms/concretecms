@@ -4,6 +4,8 @@ use \Concrete\Core\Foundation\Object;
 use Loader;
 use Core;
 use \Concrete\Core\Package\PackageList;
+use Package;
+
 class Library extends Object {
 
 	public function getSystemCaptchaLibraryHandle() { return $this->sclHandle;}

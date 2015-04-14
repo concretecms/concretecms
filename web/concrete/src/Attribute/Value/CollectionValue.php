@@ -4,14 +4,14 @@ use Loader;
 class CollectionValue extends Value {
 
 	/**
-	 * @param Collection $cObj
+	 * @param \Collection $cObj
 	 */
 	public function setCollection($cObj) {
 		$this->c = $cObj;
 	}
 
 	/**
-	 * @return Collection
+	 * @return \Collection
 	 */
 	public function getCollection() {
 		return $this->c;
