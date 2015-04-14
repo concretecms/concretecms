@@ -240,6 +240,18 @@ var ccmi18n_topics = {
   cloneTopic: <?=json_encode(t('Clone Topic'))?>,
   editPermissions: <?=json_encode(t('Edit Permissions'))?>
 };
+
+var ccmi18n_tourist = {
+  skipButton: <?=json_encode('<button class="btn btn-default btn-sm pull-right tour-next">'.t('Skip →').'</button>')?>,
+  nextButton: <?=json_encode('<button class="btn btn-primary btn-sm pull-right tour-next">'.t('Next →').'</button>')?>,
+  finalButton: <?=json_encode('<button class="btn btn-primary btn-sm pull-right tour-next">'.t('Done').'</button>')?>,
+  closeButton: <?=json_encode('<a class="btn btn-close tour-close" href="#"><i class="icon icon-remove"></i></a>')?>,
+  okButton: <?=json_encode('<button class="btn btn-sm tour-close btn-primary">'.t('Ok').'</button>')?>,
+  doThis: <?=json_encode(t('Do this:'))?>,
+  thenThis: <?=json_encode(t('Then this:'))?>,
+  nextThis: <?=json_encode(t('Next this:'))?>,
+  stepXofY: <?=json_encode(t('step %1$d of %2$d'))?>
+};
 <?php
 
     }
