@@ -642,12 +642,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/migrations.git",
-                "reference": "93a9369ea7846e8ae2e9303c94bb36dbcbb2009b"
+                "reference": "efb77c10dfb75485998a843154bbc44d8124c4d1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/migrations/zipball/93a9369ea7846e8ae2e9303c94bb36dbcbb2009b",
-                "reference": "93a9369ea7846e8ae2e9303c94bb36dbcbb2009b",
+                "url": "https://api.github.com/repos/doctrine/migrations/zipball/efb77c10dfb75485998a843154bbc44d8124c4d1",
+                "reference": "efb77c10dfb75485998a843154bbc44d8124c4d1",
                 "shasum": ""
             },
             "require": {
@@ -692,7 +692,7 @@
                 "database",
                 "migrations"
             ],
-            "time": "2015-03-04 08:37:18"
+            "time": "2015-04-07 10:34:31"
         },
         {
             "name": "doctrine/orm",
