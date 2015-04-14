@@ -44,7 +44,7 @@ $ag->requireAsset('core/lightbox');
                             <h4><?=t('Organize and manage your site')?></h4>
                             <ol class="breadcrumb">
                                 <li><a href="#" onclick="ConcreteAlert.dialog('<?=t('Coming Soon')?>', '<?=t('This video is coming soon.')?>')"><?=t('Watch Video')?></a></li>
-                                <li><a href="#"><?=t('Run Guide')?></a></li>
+                                <li><a href="#" data-launch-guide="dashboard"><?=t('Run Guide')?></a></li>
                             </ol>
                         </div>
                     </div>
