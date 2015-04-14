@@ -16,9 +16,9 @@ use Concrete\Core\Permission\Key\Key as PermissionKey;
 
 class Version573 extends AbstractMigration
 {
-    public function getName()
+    public function getDescription()
     {
-        return '20141219000000';
+        return '5.7.3';
     }
 
     public function up(Schema $schema)

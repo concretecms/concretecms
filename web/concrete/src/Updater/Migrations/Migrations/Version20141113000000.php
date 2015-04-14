@@ -11,9 +11,9 @@ use Concrete\Core\Block\BlockType\BlockType;
 
 class Version5721 extends AbstractMigration
 {
-    public function getName()
+    public function getDescription()
     {
-        return '20141113000000';
+        return '5.7.2.1';
     }
 
     public function up(Schema $schema)
