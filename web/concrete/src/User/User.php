@@ -362,7 +362,7 @@ class User extends Object
         }
     }
 
-    public function verifyAuthTypeCookie()
+    public static function verifyAuthTypeCookie()
     {
         if ($_COOKIE['ccmAuthUserHash']) {
             list($_uID, $authType, $uHash) = explode(':', $_COOKIE['ccmAuthUserHash']);
