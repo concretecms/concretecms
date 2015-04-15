@@ -1,9 +1,12 @@
 <?php
+
 namespace Concrete\Core\Tree;
 
-use \Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\Object;
 use Loader;
 use Core;
+use Localization;
+use Gettext\Translations;
 
 abstract class Tree extends Object
 {
@@ -19,6 +22,7 @@ abstract class Tree extends Object
 
     /** Returns the display name for this tree (localized and escaped accordingly to $format)
      * @param  string $format = 'html' Escape the result in html format (if $format is 'html'). If $format is 'text' or any other value, the display name won't be escaped.
+     *
      * @return string
      */
     abstract public function getTreeDisplayName($format = 'html');
@@ -84,13 +88,23 @@ abstract class Tree extends Object
         $parent->importChildren($sx);
     }
 
-    public function getTreeID() {return $this->treeID;}
-    public function getRootTreeNodeObject() {return \Concrete\Core\Tree\Node\Node::getByID($this->rootTreeNodeID);}
-    public function getRootTreeNodeID() {return $this->rootTreeNodeID;}
+    public function getTreeID()
+    {
+        return $this->treeID;
+    }
+    public function getRootTreeNodeObject()
+    {
+        return \Concrete\Core\Tree\Node\Node::getByID($this->rootTreeNodeID);
+    }
+    public function getRootTreeNodeID()
+    {
+        return $this->rootTreeNodeID;
+    }
 
     /**
      * Iterates through the segments in the path, to return the node at the proper display. Mostly used for export
      * and import.
+     *
      * @param $path
      */
     public function getNodeByDisplayPath($path)
@@ -123,7 +137,7 @@ abstract class Tree extends Object
                 }
             }
 
-            return null;
+            return;
         };
         $node = $walk($root, $computedPath);
 
@@ -185,7 +199,7 @@ abstract class Tree extends Object
         $treeTypeHandle = Loader::helper('text')->uncamelcase(strrchr(get_called_class(), '\\'));
         $type = TreeType::getByHandle($treeTypeHandle);
         $db->Execute('insert into Trees (treeDateAdded, rootTreeNodeID, treeTypeID) values (?, ?, ?)', array(
-            $date, $rootNode->getTreeNodeID(), $type->getTreeTypeID()
+            $date, $rootNode->getTreeNodeID(), $type->getTreeTypeID(),
         ));
         $treeID = $db->Insert_ID();
         $rootNode->setTreeNodeTreeID($treeID);
@@ -208,4 +222,50 @@ abstract class Tree extends Object
         }
     }
 
+    /**
+     * Export all the translations associates to every trees.
+     *
+     * @return Translations
+     */
+    public static function exportTranslations()
+    {
+        $translations = new Translations();
+        $currentLocale = Localization::activeLocale();
+        if ($currentLocale !== 'en_US') {
+            Localization::changeLocale('en_US');
+        }
+        try {
+            $db = \Database::get();
+            $r = $db->Execute('select treeID from Trees order by treeID asc');
+            while ($row = $r->FetchRow()) {
+                try {
+                    $tree = static::getByID($row['treeID']);
+                } catch (\Exception $x) {
+                    $tree = null;
+                }
+                if (isset($tree)) {
+                    /* @var $tree Tree */
+                    $treeName = $tree->getTreeName();
+                    if (is_string($treeName) && ($treeName !== '')) {
+                        $translations->insert('TreeName', $treeName);
+                    }
+                    $rootNode = $tree->getRootTreeNodeObject();
+                    /* @var $rootNode \Concrete\Core\Tree\Node\Node */
+                    if (isset($rootNode)) {
+                        $rootNode->exportTranslations($translations);
+                    }
+                }
+            }
+        } catch (\Exception $x) {
+            if ($currentLocale !== 'en_US') {
+                Localization::changeLocale($currentLocale);
+            }
+            throw $x;
+        }
+        if ($currentLocale !== 'en_US') {
+            Localization::changeLocale($currentLocale);
+        }
+
+        return $translations;
+    }
 }
