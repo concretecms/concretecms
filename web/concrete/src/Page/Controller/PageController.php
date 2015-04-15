@@ -185,7 +185,8 @@ class PageController extends Controller {
 
     public function getPassThruBlockController(Block $b)
     {
-        return $this->passThruBlocks[$b->getBlockID()];
+        $bID = $b->getBlockID();
+        return isset($this->passThruBlocks[$bID]) ? $this->passThruBlocks[$bID] : null;
     }
 
     public function validateRequest() {
