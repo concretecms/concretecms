@@ -129,6 +129,7 @@ class PageController extends Controller {
             }
         }
 
+        $foundTask = false;
         try {
             $r = new \ReflectionMethod(get_class($this), $method);
             $cl = $r->getDeclaringClass();
