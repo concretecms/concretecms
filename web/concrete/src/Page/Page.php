@@ -204,7 +204,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             if (isset($class) && class_exists($class)) {
                 $this->controller = Core::make($class, array($this));
             } else {
-                $this->controller = Core::make('controller/page/default', array($this));
+                $this->controller = Core::make('\PageController', array($this));
             }
         }
 

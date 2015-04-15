@@ -1,6 +1,6 @@
 <?
 namespace Concrete\Controller\SinglePage;
-use \Concrete\Core\Page\Controller\PageController;
+use \PageController;
 use Config;
 use Loader;
 use User;
