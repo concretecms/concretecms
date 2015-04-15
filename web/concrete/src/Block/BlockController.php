@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Block;
 
 use Concrete\Core\Backup\ContentExporter;
@@ -18,7 +19,6 @@ use Page;
 
 class BlockController extends \Concrete\Core\Controller\AbstractController
 {
-
     public $headerItems = array(); // blockrecord
     public $blockViewRenderOverride;
     protected $record;
@@ -83,19 +83,22 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
      * See concrete/models/block_types.php::doInstallBlockType() for usage example.
      *
      * @param string $path
+     *
      * @return mixed boolean or object having ->result (boolean) and ->message (string) properties
      */
-    function install($path)
+    public function install($path)
     {
         // passed path is the path to this block (try saying that ten times fast)
         // create the necessary table
 
         if (!$this->btTable) {
-            $r = new \stdClass;
+            $r = new \stdClass();
             $r->result = true;
+
             return $r;
         }
         $ret = Package::installDB($path . '/' . FILENAME_BLOCK_DB);
+
         return $ret;
     }
 
@@ -108,9 +111,8 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
      * </code>
      *
      * @param string $view
-     * @return void
      */
-    function render($view)
+    public function render($view)
     {
         $this->blockViewRenderOverride = $view;
     }
@@ -129,7 +131,6 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
      * Run when a block is added or edited. Automatically saves block data against the block's database table. If a block needs to do more than this (save to multiple tables, upload files, etc... it should override this.
      *
      * @param array $args
-     * @return void
      */
     public function save($args)
     {
@@ -172,13 +173,12 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     }
 
     /**
-     *
-     * Gets the permissions object for this controller's block
-     *
+     * Gets the permissions object for this controller's block.
      */
     public function getPermissionObject()
     {
         $bp = new Permissions(Block::getByID($this->bID));
+
         return $bp;
     }
 
@@ -186,6 +186,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
      * Automatically run when a block is duplicated. This most likely happens when a block is edited: a block is first duplicated, and then presented to the user to make changes.
      *
      * @param int $newBlockID
+     *
      * @return BlockRecord $newInstance
      */
     public function duplicate($newBID)
@@ -197,6 +198,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
             $newInstance = clone $ni;
             $newInstance->bID = $newBID;
             $newInstance->Insert();
+
             return $newInstance;
         }
     }
@@ -231,7 +233,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     }
 
     /**
-     * Sets the block object for this controller
+     * Sets the block object for this controller.
      */
     public function setBlockObject($b)
     {
@@ -239,9 +241,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     }
 
     /**
-     * Loads the BlockRecord class based on its attribute names
-     *
-     * @return void
+     * Loads the BlockRecord class based on its attribute names.
      */
     protected function load()
     {
@@ -287,12 +287,12 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
                 }
             }
         }
+
         return $this->btFeatureObjects;
     }
 
     public function export(\SimpleXMLElement $blockNode)
     {
-
         $tables[] = $this->getBlockTypeDatabaseTable();
         if (isset($this->btExportTables)) {
             $tables = $this->btExportTables;
@@ -315,11 +315,11 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
                     if (isset($columns[strtolower($key)])) {
                         if (in_array($key, $this->btExportPageColumns)) {
                             $tableRecord->addChild($key, ContentExporter::replacePageWithPlaceHolder($value));
-                        } else if (in_array($key, $this->btExportFileColumns)) {
+                        } elseif (in_array($key, $this->btExportFileColumns)) {
                             $tableRecord->addChild($key, ContentExporter::replaceFileWithPlaceHolder($value));
-                        } else if (in_array($key, $this->btExportPageTypeColumns)) {
+                        } elseif (in_array($key, $this->btExportPageTypeColumns)) {
                             $tableRecord->addChild($key, ContentExporter::replacePageTypeWithPlaceHolder($value));
-                        } else if (in_array($key, $this->btExportPageFeedColumns)) {
+                        } elseif (in_array($key, $this->btExportPageFeedColumns)) {
                             $tableRecord->addChild($key, ContentExporter::replacePageFeedWithPlaceHolder($value));
                         } else {
                             $cnode = $tableRecord->addChild($key);
@@ -360,7 +360,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
         }
 
         if ($page->isMasterCollection() && $blockNode['mc-block-id'] != '') {
-            ContentImporter::addMasterCollectionBlockID($b, (string)$blockNode['mc-block-id']);
+            ContentImporter::addMasterCollectionBlockID($b, (string) $blockNode['mc-block-id']);
         }
 
         // now we insert stuff that isn't part of the btTable
@@ -389,12 +389,13 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
                 if ($data['table'] == $this->getBlockTypeDatabaseTable()) {
                     if (isset($data->record)) {
                         foreach ($data->record->children() as $node) {
-                            $args[$node->getName()] = ContentImporter::getValue((string)$node);
+                            $args[$node->getName()] = ContentImporter::getValue((string) $node);
                         }
                     }
                 }
             }
         }
+
         return $args;
     }
 
@@ -403,14 +404,14 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
         if (isset($blockNode->data)) {
             foreach ($blockNode->data as $data) {
                 if (strtoupper($data['table']) != strtoupper($this->getBlockTypeDatabaseTable())) {
-                    $table = (string)$data['table'];
+                    $table = (string) $data['table'];
                     if (isset($data->record)) {
                         foreach ($data->record as $record) {
                             $aar = new \Concrete\Core\Legacy\BlockRecord($table);
                             $aar->bID = $b->getBlockID();
                             foreach ($record->children() as $node) {
                                 $nodeName = $node->getName();
-                                $aar->{$nodeName} = ContentImporter::getValue((string)$node);
+                                $aar->{$nodeName} = ContentImporter::getValue((string) $node);
                             }
                             $aar->Save();
                         }
@@ -429,6 +430,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     {
         $method = 'action_' . $parameters[0];
         $parameters = array_slice($parameters, 1);
+
         return array($method, $parameters);
     }
 
@@ -495,11 +497,12 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
             }
         }
         $field .= '][' . $fieldName . ']';
+
         return $field;
     }
 
     /**
-     * Gets the generic Block object attached to this controller's instance
+     * Gets the generic Block object attached to this controller's instance.
      *
      * @return Block $b
      */
@@ -508,6 +511,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
         if (is_object($this->block)) {
             return $this->block;
         }
+
         return Block::getByID($this->bID);
     }
 
@@ -529,8 +533,10 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
             if ($field) {
                 return $p[$field];
             }
+
             return $p;
         }
+
         return parent::post($field, $defaultValue);
     }
 
@@ -583,7 +589,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     }
 
     /**
-     * Gets the Area object attached to this controller's instance
+     * Gets the Area object attached to this controller's instance.
      *
      * @return Area $a
      */
@@ -599,6 +605,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
 
     /**
      * @access private
+     *
      * @todo   Make block's uninstallable
      */
     public function uninstall()
@@ -607,7 +614,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     }
 
     /**
-     * Returns the name of the block type
+     * Returns the name of the block type.
      *
      * @return string $btName
      */
@@ -637,7 +644,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     }
 
     /**
-     * Returns the description of the block type
+     * Returns the description of the block type.
      *
      * @return string
      */
@@ -647,7 +654,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     }
 
     /**
-     * Returns HTML that will be shown when a user wants help for a given block type
+     * Returns HTML that will be shown when a user wants help for a given block type.
      */
     public function getBlockTypeHelp()
     {
@@ -683,9 +690,9 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     }
 
     /**
-     * if a the current BlockType supports inline edit or not
+     * if a the current BlockType supports inline edit or not.
      *
-     * @return boolean
+     * @return bool
      */
     public function supportsInlineEdit()
     {
@@ -693,9 +700,9 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     }
 
     /**
-     * if a the current BlockType supports inline add or not
+     * if a the current BlockType supports inline add or not.
      *
-     * @return boolean
+     * @return bool
      */
     public function supportsInlineAdd()
     {
@@ -705,6 +712,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     /**
      * If true, container classes will not be wrapped around this block type in edit mode (if the
      * theme in question supports a grid framework.
+     *
      * @return bool
      */
     public function ignorePageThemeGridFrameworkContainer()
@@ -713,12 +721,10 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     }
 
     /**
-     * Returns a key/value array of strings that is used to translate items when used in javascript
+     * Returns a key/value array of strings that is used to translate items when used in javascript.
      */
     public function getJavaScriptStrings()
     {
         return array();
     }
-
 }
-
