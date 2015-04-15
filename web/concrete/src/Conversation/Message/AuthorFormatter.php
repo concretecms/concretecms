@@ -20,11 +20,14 @@ class AuthorFormatter
     {
         $ui = $this->author->getUser();
         if (is_object($ui)) {
-            return $ui->getUserDisplayName();
+            $name = $ui->getUserDisplayName();
         } else if ($this->author->getName()) {
-            return $this->author->getName();
+            $name = $this->author->getName();
         } else {
-            return t('Anonymous');
+            $name = t('Anonymous');
+        }
+        if ($this->author->getWebsite()) {
+            return sprintf('<a href="%s">%s</a>', h($this->author->getWebsite()), $name);
         }
     }
 
