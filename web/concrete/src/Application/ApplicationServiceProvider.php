@@ -33,7 +33,6 @@ class ApplicationServiceProvider extends ServiceProvider {
 			$this->app->singleton($key, $value);
 		}
 
-        $this->app->bind('controller/page/default', 'Concrete\Core\Page\Controller\PageController');
         $this->app->bind('error', 'Concrete\Core\Error\Error');
 	}
 

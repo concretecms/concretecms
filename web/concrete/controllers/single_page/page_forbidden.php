@@ -1,7 +1,7 @@
 <?
 
 namespace Concrete\Controller\SinglePage;
-use \Concrete\Core\Page\Controller\PageController;
+use \PageController;
 use Loader;
 use User;
 
