@@ -51,6 +51,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     protected $btFeatures = array();
     protected $btFeatureObjects;
     protected $identifier;
+    protected $btTable = null;
 
     public function getIdentifier()
     {
