@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Tree\Node\Type;
 
 use Concrete\Core\Tree\Node\Node as TreeNode;
@@ -7,7 +8,6 @@ use Core;
 
 class Topic extends TreeNode
 {
-
     public function getPermissionResponseClassName()
     {
         return '\\Concrete\\Core\\Permission\\Response\\TopicTreeNodeResponse';
@@ -28,10 +28,14 @@ class Topic extends TreeNode
         return $this->treeNodeTopicName;
     }
 
+    public function getTreeNodeTranslationContext()
+    {
+        return 'TopicName';
+    }
     public function getTreeNodeDisplayName($format = 'html')
     {
         $name = Core::make('helper/text')->unhandle($this->getTreeNodeName());
-        $name = tc('TopicName', $name);
+        $name = tc($this->getTreeNodeTranslationContext(), $name);
         switch ($format) {
             case 'html':
                 return h($name);
@@ -59,6 +63,7 @@ class Topic extends TreeNode
         $obj = parent::getTreeNodeJSON();
         if (is_object($obj)) {
             $obj->iconClass = 'fa fa-comment-o';
+
             return $obj;
         }
     }
@@ -67,6 +72,7 @@ class Topic extends TreeNode
     {
         $node = $this::add($this->treeNodeTopicName, $parent);
         $this->duplicateChildren($node);
+
         return $node;
     }
 
@@ -81,7 +87,7 @@ class Topic extends TreeNode
 
     public function importNode(\SimpleXMLElement $sx, $parent = false)
     {
-        return static::add((string)$sx['name'], $parent);
+        return static::add((string) $sx['name'], $parent);
     }
 
     public static function add($treeNodeTopicName, $parent = false)
@@ -89,6 +95,7 @@ class Topic extends TreeNode
         $db = Loader::db();
         $node = parent::add($parent);
         $node->setTreeNodeTopicName($treeNodeTopicName);
+
         return $node;
     }
 
