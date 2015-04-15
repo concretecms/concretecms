@@ -118,15 +118,12 @@ class PageController extends Controller {
         $task = substr($request->getPath(), strlen($this->c->getCollectionPath()) + 1);
         $task = str_replace('-/', '', $task);
         $taskparts = explode('/', $task);
-        if (isset($taskparts[0]) && $taskparts[0] != '') {
+        if (isset($taskparts[0]) && $taskparts[0] !== '') {
             $method = $taskparts[0];
-        }
-        if ($method == '') {
-            if (is_object($this->c) && is_callable(array($this, $this->c->getCollectionHandle()))) {
-                $method = $this->c->getCollectionHandle();
-            } else {
-                $method = 'view';
-            }
+        } elseif (is_object($this->c) && is_callable(array($this, $this->c->getCollectionHandle()))) {
+            $method = $this->c->getCollectionHandle();
+        } else {
+            $method = 'view';
         }
 
         $foundTask = false;
