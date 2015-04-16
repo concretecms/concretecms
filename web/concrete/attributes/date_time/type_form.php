@@ -1,4 +1,4 @@
-<fieldset>
+<fieldset class="ccm-attribute ccm-attribute-date-time">
 <legend><?=t('Date/Time Options')?></legend>
 
 <div class="clearfix">

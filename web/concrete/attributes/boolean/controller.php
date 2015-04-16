@@ -83,13 +83,13 @@ class Controller extends AttributeTypeController  {
 	}
 	
 	public function composer() {
-		print '<div class="checkbox"><label>';
+		print '<div class="ccm-attribute ccm-attribute-boolean checkbox"><label>';
 		$this->form();
 		print '</label></div>';
 	}
 	
 	public function search() {
-		print '<div class="checkbox"><label>' . Loader::helper('form')->checkbox($this->field('value'), 1, $this->request('value') == 1) . ' ' . $this->attributeKey->getAttributeKeyDisplayName() . '</label></div>';
+		print '<div class="ccm-attribute ccm-attribute-boolean checkbox"><label>' . Loader::helper('form')->checkbox($this->field('value'), 1, $this->request('value') == 1) . ' ' . $this->attributeKey->getAttributeKeyDisplayName() . '</label></div>';
 	}
 
 	public function type_form() {
