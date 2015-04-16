@@ -31,10 +31,19 @@ if ($controller->getTask() == 'view_details') {
         }
     }
 
+    $isGlobalArea = false;
+    if ($stack->getStackType() == Stack::ST_TYPE_GLOBAL_AREA) {
+        $isGlobalArea = true;
+    }
+
     ?>
 
     <div class="ccm-dashboard-header-buttons">
+        <?php if ($isGlobalArea) { ?>
+        <a href="<?=URL::to('/dashboard/blocks/stacks/view_global_areas')?>" data-dialog="add-stack" class="btn btn-default"><i class="fa fa-angle-double-left"></i> <?=t("Back to Global Areas")?></a>
+        <?php } else { ?>
         <a href="<?=URL::to('/dashboard/blocks/stacks')?>" data-dialog="add-stack" class="btn btn-default"><i class="fa fa-angle-double-left"></i> <?=t("Back to Stacks")?></a>
+        <?php } ?>
     </div>
 
     <p class="lead"><?php echo $stack->getCollectionName()?></p>
