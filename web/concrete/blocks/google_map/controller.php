@@ -4,6 +4,7 @@ namespace Concrete\Block\GoogleMap;
 use Loader;
 use Page;
 use \Concrete\Core\Block\BlockController;
+use Core;
 
 class Controller extends BlockController
 {
@@ -64,6 +65,7 @@ class Controller extends BlockController
 
     public function view()
     {
+		$this->set('unique_identifier', Core::make('helper/validation/identifier')->getString(18));
         $this->set('bID', $this->bID);
         $this->set('title', $this->title);
         $this->set('location', $this->location);
