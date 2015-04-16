@@ -646,7 +646,7 @@ class Collection extends Object
         if ($areac instanceof Stack) {
             // this fixes the problem of users applying design to the main area on the page, and then that trickling into any
             // stacks that have been added to other areas of the page.
-            return false;
+            return null;
         }
         $result = null;
         $styles = $this->vObj->getCustomAreaStyles();
