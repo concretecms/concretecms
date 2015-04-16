@@ -341,7 +341,6 @@ class Install extends Controller
                         )
                     );
 
-
                     $renderer = new Renderer($config);
                     fwrite($this->fp, $renderer->render());
 

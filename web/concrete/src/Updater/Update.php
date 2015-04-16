@@ -128,6 +128,7 @@ class Update
             @curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, 2);
             @curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
             @curl_setopt($curl_handle, CURLOPT_POST, true);
+            @curl_setopt($curl_handle, CURLOPT_SSL_VERIFYPEER, Config::get('app.curl.verifyPeer'));
             $loc = Localization::getInstance();
             @curl_setopt(
                 $curl_handle,
