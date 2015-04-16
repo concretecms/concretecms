@@ -134,7 +134,7 @@ class AssetList
      */
     public function getAsset($assetType, $assetHandle)
     {
-        return $this->assets[$assetType][$assetHandle];
+        return isset($this->assets[$assetType][$assetHandle]) ? $this->assets[$assetType][$assetHandle] : null;
     }
 
     /**
