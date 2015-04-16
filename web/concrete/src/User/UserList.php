@@ -177,7 +177,7 @@ class UserList extends DatabaseItemList
 
     /**
      * Filters the user list for only users within the provided group.  Accepts an instance of a group object or a string group name
-     * @param \Concrete\Core\User\Group | string $group
+     * @param \Group | string $group
      * @param boolean $inGroup
      * @return void
      */

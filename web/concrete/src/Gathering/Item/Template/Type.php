@@ -3,6 +3,8 @@ namespace Concrete\Core\Gathering\Item\Template;
 use \Concrete\Core\Foundation\Object;
 use Loader;
 use \Concrete\Core\Package\PackageList;
+use CacheLocal;
+
 class Type extends Object {
 
 	public function getGatheringItemTemplateTypeID() {return $this->gatTypeID;}
@@ -50,7 +52,7 @@ class Type extends Object {
 		foreach($agtypes as $agt) {
 			$atype = $axml->addChild('gatheringitemtemplatetype');
 			$atype->addAttribute('handle', $agt->getGatheringItemTemplateTypeHandle());
-			$atype->addAttribute('package', $wt->getPackageHandle());
+			$atype->addAttribute('package', $agt->getPackageHandle());
 		}
 	}
 

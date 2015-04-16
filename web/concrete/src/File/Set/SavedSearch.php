@@ -2,6 +2,7 @@
 namespace Concrete\Core\File\Set;
 
 use Loader;
+use FileSet;
 
 class SavedSearch extends Set
 {

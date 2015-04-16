@@ -4,6 +4,8 @@ use Loader;
 use \Concrete\Core\Foundation\Object;
 use \Concrete\Core\Package\PackageList;
 use Core;
+use Package;
+
 abstract class Snippet extends Object {
 
 	/**

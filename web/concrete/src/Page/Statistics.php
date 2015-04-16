@@ -19,7 +19,7 @@ class Statistics {
 
 	/**
 	 * Gets total page views for everyone but the passed user object
-	 * @param User $u
+	 * @param \User $u
 	 * @param date $date
 	 * @return int
 	 */

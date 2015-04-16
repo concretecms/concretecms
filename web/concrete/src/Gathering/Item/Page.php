@@ -2,6 +2,9 @@
 namespace Concrete\Core\Gathering\Item;
 use Loader;
 use Concrete\Core\Gathering\DataSource\DataSource as GatheringDataSource;
+use Exception;
+use Permissions;
+
 class Page extends Item {
 
 	public function canViewGatheringItem() {
