@@ -7,7 +7,7 @@ if ($c->isEditMode()) { ?>
 	</div>
 <?php  } else { ?>
 	<?php  if( strlen($title)>0){ ?><h3><?= $title?></h3><?php  } ?>
-	<div id="googleMapCanvas<?= $bID?>" class="googleMapCanvas" style="width: <?= $width; ?>; height: <?= $height; ?>"></div>
+	<div id="googleMapCanvas<?=$unique_identifier?>" class="googleMapCanvas" style="width: <?= $width; ?>; height: <?= $height; ?>"></div>
 <?php  } ?>
 
 
@@ -20,7 +20,7 @@ if ($c->isEditMode()) { ?>
 ?>
 
 <script type="text/javascript">
-    function googleMapInit<?=$bID?>() {
+    function googleMapInit<?=$unique_identifier?>() {
         try{
             var latlng = new google.maps.LatLng(<?=$latitude?>, <?=$longitude?>);
             var mapOptions = {
@@ -31,20 +31,20 @@ if ($c->isEditMode()) { ?>
                 scrollwheel: <?=!!$scrollwheel ? "true" : "false"?>,
                 mapTypeControl: false
             };
-            var map = new google.maps.Map(document.getElementById('googleMapCanvas<?=$bID?>'), mapOptions);
+            var map = new google.maps.Map(document.getElementById('googleMapCanvas<?=$unique_identifier?>'), mapOptions);
             var marker = new google.maps.Marker({
                 position: latlng,
                 map: map
             });
         }catch(e){
-            $("#googleMapCanvas<?=$bID?>").replaceWith("<p>Unable to display map: "+e.message+"</p>")}
+            $("#googleMapCanvas<?=$unique_identifier?>").replaceWith("<p>Unable to display map: "+e.message+"</p>")}
     }
     $(function() {
         var t;
         var startWhenVisible = function (){
-            if ($("#googleMapCanvas<?=$bID?>").is(":visible")){
+            if ($("#googleMapCanvas<?=$unique_identifier?>").is(":visible")){
                 window.clearInterval(t);
-                googleMapInit<?=$bID?>();
+                googleMapInit<?=$unique_identifier?>();
                 return true;
             }
             return false;
