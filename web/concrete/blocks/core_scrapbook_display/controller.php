@@ -92,6 +92,25 @@ class Controller extends BlockController
         return false;
    }
 
+    public function on_start()
+    {
+        $bc = $this->getScrapbookBlockController();
+
+        if (is_object($bc)) {
+            return $bc->on_start();
+        }
+    }
+
+    public function on_before_render()
+    {
+        $bc = $this->getScrapbookBlockController();
+
+        if (is_object($bc)) {
+            return $bc->on_before_render();
+        }
+    }
+
+
     public function runAction($action, $parameters = array())
     {
 
