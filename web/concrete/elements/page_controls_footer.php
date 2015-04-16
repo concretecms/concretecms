@@ -158,23 +158,23 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                         href="<?= URL::to('/dashboard') ?>"><?php echo t('Dashboard') ?><i
                             class="fa fa-caret-down"></i></a>
                     <ul class="list-unstyled">
-                        <li class="last-li"><a href="<?= View::url('/dashboard/sitemap') ?>"><?php echo t(
+                        <li class="last-li"><a href="<?= URL::to('/dashboard/sitemap') ?>"><?php echo t(
                                     'Sitemap'); ?></a></li>
-                        <li class="last-li"><a href="<?= View::url('/dashboard/files') ?>"><?php echo t(
+                        <li class="last-li"><a href="<?= URL::to('/dashboard/files') ?>"><?php echo t(
                                     'Files'); ?></a></li>
-                        <li class="last-li"><a href="<?= View::url('/dashboard/users') ?>"><?php echo t(
+                        <li class="last-li"><a href="<?= URL::to('/dashboard/users') ?>"><?php echo t(
                                     'Members'); ?></a></li>
-                        <li class="last-li"><a href="<?= View::url('/dashboard/reports') ?>"><?php echo t(
+                        <li class="last-li"><a href="<?= URL::to('/dashboard/reports') ?>"><?php echo t(
                                     'Reports'); ?></a></li>
-                        <li class="last-li"><a href="<?= View::url('/dashboard/pages') ?>"><?php echo t(
+                        <li class="last-li"><a href="<?= URL::to('/dashboard/pages') ?>"><?php echo t(
                                     'Pages & Themes'); ?></a></li>
-                        <li class="last-li"><a href="<?= View::url('/dashboard/workflow') ?>"><?php echo t(
+                        <li class="last-li"><a href="<?= URL::to('/dashboard/workflow') ?>"><?php echo t(
                                     'Workflow'); ?></a></li>
-                        <li class="last-li"><a href="<?= View::url('/dashboard/blocks/stacks') ?>"><?php echo t(
+                        <li class="last-li"><a href="<?= URL::to('/dashboard/blocks/stacks') ?>"><?php echo t(
                                     'Stacks & Blocks'); ?></a></li>
-                        <li class="last-li"><a href="<?= View::url('/dashboard/extend') ?>"><?php echo t(
+                        <li class="last-li"><a href="<?= URL::to('/dashboard/extend') ?>"><?php echo t(
                                     'Extend concrete5'); ?></a></li>
-                        <li class="last-li"><a href="<?= View::url('/dashboard/system') ?>"><?php echo t(
+                        <li class="last-li"><a href="<?= URL::to('/dashboard/system') ?>"><?php echo t(
                                     'System & Settings'); ?></a></li>
                     </ul>
                 </li>
@@ -185,7 +185,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
     <ul class="ccm-toolbar-item-list">
         <li class="ccm-logo pull-left"><span><?= Loader::helper('concrete/ui')->getToolbarLogoSRC() ?></span></li>
         <? if ($c->isMasterCollection()) { ?>
-        <li class="pull-left"><a href="<?= View::url('/dashboard/pages/types') ?>"><i class="fa fa-arrow-left"></i></a>
+        <li class="pull-left"><a href="<?= URL::to('/dashboard/pages/types') ?>"><i class="fa fa-arrow-left"></i></a>
             <? } ?>
             <? if (!$pageInUseBySomeoneElse && $c->getCollectionPointerID() == 0) { ?>
 
