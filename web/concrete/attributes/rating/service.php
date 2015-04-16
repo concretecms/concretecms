@@ -49,7 +49,7 @@ class Service
         if ($value > 94) {
             $star5 = 'fa-star';
         }
-        $html .= '<div class="ccm-rating">';
+        $html .= '<div class="ccm-attribute ccm-attribute-rating ccm-rating">';
         $html .= '<div class="fa ' . $star1 . '"><a href="javascript:void(0)"></a></div>';
         $html .= '<div class="fa ' . $star2 . '"><a href="javascript:void(0)"></a></div>';
         $html .= '<div class="fa ' . $star3 . '"><a href="javascript:void(0)"></a></div>';
@@ -72,7 +72,7 @@ class Service
         }
 
         $sanitized = preg_replace('/[^A-Za-z0-9]/i', '', $field);
-        $html = '<div class="ccm-rating" data-rating-field-name="' . $sanitized . '" data-score="' . $value . '"></div>';
+        $html = '<div class="ccm-attribute ccm-attribute-rating ccm-rating" data-rating-field-name="' . $sanitized . '" data-score="' . $value . '"></div>';
         $html .= "<script type=\"text/javascript\">
             $(function() {
                 $('div[data-rating-field-name={$sanitized}]').awesomeStarRating({
