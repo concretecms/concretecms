@@ -1,5 +1,7 @@
 <?php
 namespace Concrete\Core\Workflow\HistoryEntry;
+use UserInfo;
+
 class BasicHistoryEntry extends HistoryEntry {
 
 	public function getWorkflowProgressHistoryDescription() {

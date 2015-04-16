@@ -5,7 +5,7 @@ use \Concrete\Core\Foundation\Object;
 use Loader;
 class ConfigStore {
 	/**
-	 * @var Database
+	 * @var \Database
 	 */
 	protected $db;
 

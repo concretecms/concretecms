@@ -4,6 +4,7 @@ use Loader;
 use Environment;
 use \Concrete\Core\Package\PackageList;
 use Group;
+use User;
 use UserInfo;
 use \Concrete\Core\User\Point\Entry as UserPointEntry;
 
@@ -55,7 +56,7 @@ class Action {
 
 
 	/**
-	 * @param Package $pkg
+	 * @param \Package $pkg
 	 * @return array
  	 */
 	public static function getListByPackage($pkg)

@@ -155,7 +155,7 @@ class Date
 
     /**
      * Returns the display name of a timezone
-     * @param string|\DateTimeZone|\DataTime $timezone The timezone for which you want the localized display name
+     * @param string|\DateTimeZone|\DateTime $timezone The timezone for which you want the localized display name
      * @return string
      */
     public function getTimezoneDisplayName($timezone)

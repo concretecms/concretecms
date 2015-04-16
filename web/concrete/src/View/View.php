@@ -341,7 +341,7 @@ class View extends AbstractView
         if (is_array($args)) {
             $collisions = array_intersect(array('_file', '_pkgHandle'), array_keys($args));
             if ($collisions) {
-                throw new Exception(t("Illegal variable name '%s' in element args.", implode(', ', $collisions)));
+                throw new \Exception(t("Illegal variable name '%s' in element args.", implode(', ', $collisions)));
             }
             $collisions = null;
             extract($args);
