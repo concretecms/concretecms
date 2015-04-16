@@ -1,5 +1,7 @@
 <?php
 namespace Concrete\Core\Html\Service;
+use View;
+
 class Lightbox {
 
 	public function init($selector = '.ccm-overlay') {
