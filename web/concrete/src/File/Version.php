@@ -135,6 +135,7 @@ class Version
         $fv->fvAuthorUID = $uID;
         $fv->fvActivateDateTime = $date;
         $fv->fvTitle = $fvTitle;
+        $fv->fvDescription = $fvDescription;
         $fv->fvTags = $fvTags;
         $fv->file = $file;
         $fv->fvID = 1;
