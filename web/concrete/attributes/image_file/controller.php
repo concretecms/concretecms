@@ -87,7 +87,10 @@ class Controller extends AttributeTypeController
             $bf = $this->getValue();
         }
         $al = Loader::helper('concrete/asset_library');
-        print $al->file('ccm-file-akID-' . $this->attributeKey->getAttributeKeyID(), $this->field('value'), t('Choose File'), $bf);
+        $form = '<div class="ccm-attribute ccm-attribute-image-file">';
+        $form .= $al->file('ccm-file-akID-' . $this->attributeKey->getAttributeKeyID(), $this->field('value'), t('Choose File'), $bf);
+        $form .= '</div>';
+        print $form;
     }
 
     // run when we call setAttribute(), instead of saving through the UI
