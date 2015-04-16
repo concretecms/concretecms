@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
@@ -7,10 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 
 class Version5704 extends AbstractMigration
 {
-
-    public function getName()
+    public function getDescription()
     {
-        return '20140930000000';
+        return '5.7.0.4';
     }
 
     public function up(Schema $schema)
