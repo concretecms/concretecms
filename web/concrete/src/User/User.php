@@ -1,18 +1,20 @@
 <?php
+
 namespace Concrete\Core\User;
-use \Concrete\Core\Foundation\Object;
+
+use Concrete\Core\Foundation\Object;
 use Loader;
 use Config;
 use Database;
 use UserInfo as CoreUserInfo;
 use Request;
-use \Concrete\Core\Authentication\AuthenticationType;
+use Concrete\Core\Authentication\AuthenticationType;
 use Events;
 use Page;
 use GroupList;
 use Session;
-use \Hautelook\Phpass\PasswordHash;
-use \Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
+use Hautelook\Phpass\PasswordHash;
+use Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
 use Core;
 use Group;
 use \Concrete\Core\User\Point\Action\Action as UserPointAction;
@@ -32,11 +34,12 @@ class User extends Object
     protected $uLastPasswordChange;
 
     /** Return an User instance given its id (or null if it's not found)
-	* @param int $uID The id of the user
-	* @param boolean $login = false Set to true to make the user the current one
-	* @param boolean $cacheItemsOnLogin = false Set to true to cache some items when $login is true
-	* @return User|null
-	*/
+     * @param int $uID The id of the user
+     * @param bool $login = false Set to true to make the user the current one
+     * @param bool $cacheItemsOnLogin = false Set to true to cache some items when $login is true
+     *
+     * @return User|null
+     */
     public static function getByUserID($uID, $login = false, $cacheItemsOnLogin = true)
     {
         $db = Database::connection();
@@ -60,9 +63,10 @@ class User extends Object
     }
 
     /**
-	 * @param int $uID
-	 * @return User
-	 */
+     * @param int $uID
+     *
+     * @return User
+     */
     public function loginByUserID($uID)
     {
         return User::getByUserID($uID, true);
@@ -78,7 +82,6 @@ class User extends Object
 
     public function checkLogin()
     {
-
         $session = Core::make('session');
         $aeu = Config::get('concrete.misc.access_entity_updated');
         if ($aeu && $aeu > $session->get('accessEntitiesUpdated')) {
@@ -88,15 +91,16 @@ class User extends Object
         if ($session->get('uID') > 0) {
             $db = Loader::db();
             $row = $db->GetRow("select uID, uIsActive, uLastPasswordChange from Users where uID = ? and uName = ?", array($session->get('uID'), $session->get('uName')));
-            $checkUID = (isset($row['uID']))?($row['uID']):(false);
+            $checkUID = (isset($row['uID'])) ? ($row['uID']) : (false);
 
             if ($checkUID == $session->get('uID')) {
                 if (!$row['uIsActive']) {
                     return false;
                 }
 
-                if($row['uLastPasswordChange'] > $session->get('uLastPasswordChange')) {
+                if ($row['uLastPasswordChange'] > $session->get('uLastPasswordChange')) {
                     $this->loadError(USER_SESSION_EXPIRED);
+
                     return false;
                 }
 
@@ -228,7 +232,7 @@ class User extends Object
         /** @var \Concrete\Core\Permission\IPService $iph */
         $iph = Core::make('helper/validation/ip');
         $ip = $iph->getRequestIP();
-        $db->query("update Users set uLastIP = ?, uLastLogin = ?, uPreviousLogin = ?, uNumLogins = uNumLogins + 1 where uID = ?", array(($ip === false)?(''):($ip->getIp()), time(), $uLastLogin, $this->uID));
+        $db->query("update Users set uLastIP = ?, uLastLogin = ?, uPreviousLogin = ?, uNumLogins = uNumLogins + 1 where uID = ?", array(($ip === false) ? ('') : ($ip->getIp()), time(), $uLastLogin, $this->uID));
     }
 
     public function recordView($c)
@@ -238,7 +242,6 @@ class User extends Object
         $cID = $c->getCollectionID();
         $v = array($cID, $uID);
         $db->query("insert into PageStatistics (cID, uID, date) values (?, ?, NOW())", $v);
-
     }
 
     // $salt is retained for compatibilty with older versions of concerete5, but not used.
@@ -342,7 +345,8 @@ class User extends Object
         Events::dispatch('on_user_logout');
     }
 
-    public function invalidateSession($hard = true) {
+    public function invalidateSession($hard = true)
+    {
         // @todo remove this hard option if `Session::clear()` does what we need.
         if (!$hard) {
             Session::clear();
@@ -358,7 +362,7 @@ class User extends Object
         }
     }
 
-    public function verifyAuthTypeCookie()
+    public static function verifyAuthTypeCookie()
     {
         if ($_COOKIE['ccmAuthUserHash']) {
             list($_uID, $authType, $uHash) = explode(':', $_COOKIE['ccmAuthUserHash']);
@@ -387,8 +391,8 @@ class User extends Object
     }
 
     /**
-	 * Sets a default language for a user record
-	 */
+     * Sets a default language for a user record.
+     */
     public function setUserDefaultLanguage($lang)
     {
         $db = Loader::db();
@@ -398,15 +402,15 @@ class User extends Object
     }
 
     /**
-	 * Gets the default language for the logged-in user
-	 */
+     * Gets the default language for the logged-in user.
+     */
     public function getUserDefaultLanguage()
     {
         return $this->uDefaultLanguage;
     }
 
     /**
-     * Gets the default language for the logged-in user
+     * Gets the default language for the logged-in user.
      */
     public function getLastPasswordChange()
     {
@@ -414,9 +418,9 @@ class User extends Object
     }
 
     /**
-	 * Checks to see if the current user object is registered. If so, it queries that records
-	 * default language. Otherwise, it falls back to sitewide settings.
-	 */
+     * Checks to see if the current user object is registered. If so, it queries that records
+     * default language. Otherwise, it falls back to sitewide settings.
+     */
     public function getUserLanguageToDisplay()
     {
         if ($this->getUserDefaultLanguage() != '') {
@@ -425,7 +429,6 @@ class User extends Object
             return Config::get('concrete.locale');
         }
     }
-
 
     public function refreshUserGroups()
     {
@@ -500,12 +503,11 @@ class User extends Object
                 $db->Replace('UserGroups', array(
                     'uID' => $this->getUserID(),
                     'gID' => $g->getGroupID(),
-                    'ugEntered' => $dt->getOverridableNow()
+                    'ugEntered' => $dt->getOverridableNow(),
                 ),
                 array('uID', 'gID'), true);
 
                 if ($g->isGroupBadge()) {
-
                     $action = UserPointAction::getByHandle('won_badge');
                     if (is_object($action)) {
                         $action->addDetailedEntry($this, $g);
@@ -525,7 +527,6 @@ class User extends Object
                 $ue = new \Concrete\Core\User\Event\UserGroup($this);
                 $ue->setGroupObject($g);
                 Events::dispatch('on_user_enter_group', $ue);
-
             }
         }
     }
@@ -561,7 +562,6 @@ class User extends Object
         // so you can work on it without the system failing because you're editing a template
         Session::set('mcEditID', $mcID);
         Session::set('ocID', $ocID);
-
     }
 
     public function loadCollectionEdit(&$c)
@@ -596,7 +596,6 @@ class User extends Object
                 $c->cCheckedOutDatetimeLastEdit = $datetime;
             }
         }
-
     }
 
     public function unloadCollectionEdit($removeCache = true)
@@ -670,10 +669,10 @@ class User extends Object
     }
 
     /**
-	 * @see PasswordHash
-	 *
-	 * @return PasswordHash
-	 */
+     * @see PasswordHash
+     *
+     * @return PasswordHash
+     */
     public function getUserPasswordHasher()
     {
         if (isset($this->hasher)) {
@@ -685,7 +684,8 @@ class User extends Object
     }
 
     /**
-     * Manage user session writing
+     * Manage user session writing.
+     *
      * @param bool $cache_interface
      */
     public function persist($cache_interface = true)
@@ -712,5 +712,4 @@ class User extends Object
     {
         $this->persist($cache_interface);
     }
-
 }
