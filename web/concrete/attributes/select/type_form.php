@@ -38,7 +38,7 @@ function getAttributeOptionHTML($v){
 		<div class="ccm-spacer">&nbsp;</div>
 <? } ?>
 
-<fieldset>
+<fieldset class="ccm-attribute ccm-attribute-select">
 <legend><?=t('Select Options')?></legend>
 
 <div class="form-group">
