@@ -1,21 +1,22 @@
 !function(global, $) {
 	'use strict';
+	var i18n = ccmi18n_helpGuides['toolbar'];
 	var steps = [{
-		content: '<p><span class="h5">Edit Mode</span><br/>Edit anything on this page by clicking the pencil icon.</p>',
+		content: '<p><span class="h5">' + i18n[0].title + '</span><br/>' + i18n[0].text + '</p>',
 		highlightTarget: true,
 		nextButton: true,
 		target: $('[data-guide-toolbar-action=edit-page]'),
 		my: 'top left',
 		at: 'bottom center'
 	},{
-		content: '<p><span class="h5">Settings</span><br/>Change the general look and options like SEO and permissions. Delete the page or roll versions back from here as well.</p>',
+		content: '<p><span class="h5">' + i18n[1].title + '</span><br/>' + i18n[1].text + '</p>',
 		highlightTarget: true,
 		nextButton: true,
 		target: $('[data-guide-toolbar-action=page-settings]'),
 		my: 'top left',
 		at: 'bottom center'
 	},{
-		content: '<p><span class="h5">Add Content</span><br/>Place a new block on the page. Copy one using the clipboard, or try a reusable stack.</p>',
+		content: '<p><span class="h5">' + i18n[2].title + '</span><br/>' + i18n[2].text + '</p>',
 		highlightTarget: true,
 		nextButton: true,
 		target: $('[data-guide-toolbar-action=add-content]'),
@@ -23,7 +24,7 @@
 		at: 'bottom center'
 
 	},{
-		content: '<p><span class="h5">Intelligent Search</span><br/>At a loss? Try searching here. You can find anything from pages in your site to settings and how-to documentation.</p>',
+		content: '<p><span class="h5">' + i18n[3].title + '</span><br/>' + i18n[3].text + '</p>',
 		highlightTarget: true,
 		nextButton: true,
 		target: $('[data-guide-toolbar-action=intelligent-search]'),
@@ -31,7 +32,7 @@
 		at: 'bottom center'
 
 	},{
-		content: '<p><span class="h5">Add Page</span><br/>Add a new page to your site, or quickly jump around your sitemap.</p>',
+		content: '<p><span class="h5">' + i18n[4].title + '</span><br/>' + i18n[4].text + '</p>',
 		highlightTarget: true,
 		nextButton: true,
 		target: $('[data-guide-toolbar-action=sitemap]'),
@@ -39,7 +40,7 @@
 		at: 'bottom center'
 
 	},{
-		content: '<p><span class="h5">Dashboard</span><br/>Anything that isn\'t specific to this page happens here. Manage users, files, reporting data, and site-wide settings.</p>',
+		content: '<p><span class="h5">' + i18n[5].title + '</span><br/>' + i18n[5].text + '</p>',
 		highlightTarget: true,
 		nextButton: true,
 		target: $('[data-guide-toolbar-action=dashboard]'),

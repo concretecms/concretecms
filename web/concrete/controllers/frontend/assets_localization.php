@@ -258,6 +258,40 @@ var ccmi18n_helpGuides = {
     {title: <?=json_encode(t('Pages Panel'))?>, text: <?=json_encode(t('The pages is where you go to add a new page to your site, or jump between existing pages. To open the pages panel, click the icon.'))?>},
     {title: <?=json_encode(t('Page Types'))?>, text: <?=json_encode(t('This is your list of page types. Click any of them to add a page.'))?>},
     {title: <?=json_encode(t('Page Types'))?>, text: <?=json_encode(t('This is your list of page types. Click any of them to add a page.'))?>}
+  ],
+  'change-content-edit-mode': [
+    {title: <?=json_encode(t('Edit Mode Active'))?>, text: <?=json_encode(t('The highlighted button makes it obvious you\'re in edit mode.'))?>},
+    {title: <?=json_encode(t('Edit the Block'))?>, text: <?=json_encode(t('Just roll over any content on the page. Click or tap to get the edit menu for that block.'))?>},
+    {title: <?=json_encode(t('Edit Menu'))?>, text: <?=json_encode(t('Use this menu to edit a block\'s contents, change its display, or remove it entirely.'))?>},
+    {title: <?=json_encode(t('Save Changes'))?>, text: <?=json_encode(t('Your changes save as you go – but when you\'re done editing, don\'t forget to exit edit mode by clicking on the page\'s edit button again.'))?>}
+  ],
+  'change-content': [
+    {title: <?=json_encode(t('Enter Edit Mode'))?>, text: <?=json_encode(t('First, click the "Edit Page" button. This will enter edit mode for this page.'))?>}
+  ],
+  'dashboard': [
+    {title: <?=json_encode(t('Dashboard Panel'))?>, text: <?=json_encode(t('The dashboard is where you go to manage aspects of your site that have to do with more than the content on just one page. Click the button to continue.'))?>},
+    {title: <?=json_encode(t('Sitemap'))?>, text: <?=json_encode(t('Click to the sitemap to see a complete list of pages in your site. You can move, copy or delete entire parts of your site from the sitemap.'))?>},
+    {title: <?=json_encode(t('File Manager'))?>, text: <?=json_encode(t('Add new files or manage existing images, documents and media from the file manager.'))?>},
+    {title: <?=json_encode(t('Members'))?>, text: <?=json_encode(t('Manage site members, editors and administrators, including users and groups.'))?>},
+    {title: <?=json_encode(t('Reports'))?>, text: <?=json_encode(t('View form and survey results from the Reports section.'))?>},
+    {title: <?=json_encode(t('System & Settings'))?>, text: <?=json_encode(t('Fully customize your editing and administrative experience.'))?>}
+  ],
+  'location-panel': [
+    {title: <?=json_encode(t('Choose Location'))?>, text: <?=json_encode(t('Click this button to choose the location of the page in your sitemap. If saved, the page will be moved to this location.'))?>},
+    {title: <?=json_encode(t('Page URLs'))?>, text: <?=json_encode(t('Control the URLs used to access your page here. Non-canonical URLs will redirect to your page; canonical URLs can be either generated or automatically or overridden. Sub-pages to this page start with canonical URLs by default.'))?>}
+  ],
+  'personalize': [
+    {title: <?=json_encode(t('Properties Panel'))?>, text: <?=json_encode(t('The properties panel controls data and details about the current page. You can also go there to make design customizations for the page. To open the properties panel, click the icon.'))?>},
+    {title: <?=json_encode(t('Page Design'))?>, text: <?=json_encode(t('From here you can change your page template and customize your page\'s styles.'))?>},
+    {title: <?=json_encode(t('Customize'))?>, text: <?=json_encode(t('Click here to load the theme customizer for the page.'))?>}
+  ],
+  'toolbar': [
+    {title: <?=json_encode(t('Edit Mode'))?>, text: <?=json_encode(t('Edit anything on this page by clicking the pencil icon.'))?>},
+    {title: <?=json_encode(t('Settings'))?>, text: <?=json_encode(t('Change the general look and options like SEO and permissions. Delete the page or roll versions back from here as well.'))?>},
+    {title: <?=json_encode(t('Add Content'))?>, text: <?=json_encode(t('Place a new block on the page. Copy one using the clipboard, or try a reusable stack.'))?>},
+    {title: <?=json_encode(t('Intelligent Search'))?>, text: <?=json_encode(t('At a loss? Try searching here. You can find anything from pages in your site to settings and how-to documentation.'))?>},
+    {title: <?=json_encode(t('Add Page'))?>, text: <?=json_encode(t('Add a new page to your site, or quickly jump around your sitemap.'))?>},
+    {title: <?=json_encode(t('Dashboard'))?>, text: <?=json_encode(t('Anything that isn\'t specific to this page happens here. Manage users, files, reporting data, and site-wide settings.'))?>}
   ]
 }
 <?php

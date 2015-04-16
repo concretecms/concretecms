@@ -1,7 +1,8 @@
 !function(global, $) {
 	'use strict';
+	var i18n = ccmi18n_helpGuides['location-panel'];
 	var steps = [{
-		content: '<p><span class="h5">Choose Location</span><br/>Click this button to choose the location of the page in your sitemap. If saved, the page will be moved to this location.</p>',
+		content: '<p><span class="h5">' + i18n[0].title + '</span><br/>' + i18n[0].text + '</p>',
 		highlightTarget: true,
 		nextButton: true,
 		setup: function(tour, options) {
@@ -10,7 +11,7 @@
 		my: 'left center',
 		at: 'right center',
 	},{
-		content: '<p><span class="h5">Page URLs</span><br/>Control the URLs used to access your page here. Non-canonical URLs will redirect to your page; canonical URLs can be either generated or automatically or overridden. Sub-pages to this page start with canonical URLs by default.</p>',
+		content: '<p><span class="h5">' + i18n[1].title + '</span><br/>' + i18n[1].text + '</p>',
 		highlightTarget: true,
 		nextButton: true,
 		setup: function(tour, options) {

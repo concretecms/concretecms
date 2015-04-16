@@ -1,7 +1,8 @@
 !function(global, $) {
 	'use strict';
+	var i18n = ccmi18n_helpGuides['dashboard'];
 	var steps = [{
-		content: '<p><span class="h5">Dashboard Panel</span><br/>The dashboard is where you go to manage aspects of your site that have to do with more than the content on just one page. Click the button to continue.</p>',
+		content: '<p><span class="h5">' + i18n[0].title + '</span><br/>' + i18n[0].text + '</p>',
 		highlightTarget: true,
 		nextButton: false,
 		target: $('[data-guide-toolbar-action=dashboard]'),
@@ -22,7 +23,7 @@
 			});
 		}
 	},{
-		content: '<p><span class="h5">Sitemap</span><br/>Click to the sitemap to see a complete list of pages in your site. You can move, copy or delete entire parts of your site from the sitemap.</p>',
+		content: '<p><span class="h5">' + i18n[1].title + '</span><br/>' + i18n[1].text + '</p>',
 		highlightTarget: false,
 		nextButton: true,
 		my: 'right center',
@@ -31,7 +32,7 @@
 			return {target: $('div#ccm-panel-dashboard ul.nav a[href$=sitemap]').eq(0)}
 		}
 	},{
-		content: '<p><span class="h5">File Manager</span><br/>Add new files or manage existing images, documents and media from the file manager.</p>',
+		content: '<p><span class="h5">' + i18n[2].title + '</span><br/>' + i18n[2].text + '</p>',
 		highlightTarget: false,
 		nextButton: true,
 		my: 'right center',
@@ -40,7 +41,7 @@
 			return {target: $('div#ccm-panel-dashboard ul.nav a[href$=files]').eq(0)}
 		}
 	},{
-		content: '<p><span class="h5">Members</span><br/>Manage site members, editors and administrators, including users and groups.</p>',
+		content: '<p><span class="h5">' + i18n[3].title + '</span><br/>' + i18n[3].text + '</p>',
 		highlightTarget: false,
 		nextButton: true,
 		my: 'right center',
@@ -49,7 +50,7 @@
 			return {target: $('div#ccm-panel-dashboard ul.nav a[href$=users]').eq(0)}
 		}
 	},{
-		content: '<p><span class="h5">Reports</span><br/>View form and survey results from the Reports section.</p>',
+		content: '<p><span class="h5">' + i18n[4].title + '</span><br/>' + i18n[4].text + '</p>',
 		highlightTarget: false,
 		nextButton: true,
 		my: 'right center',
@@ -58,7 +59,7 @@
 			return {target: $('div#ccm-panel-dashboard ul.nav a[href$=reports]').eq(0)}
 		}
 	},{
-		content: '<p><span class="h5">System & Settings</span><br/>Fully customize your editing and administrative experience.</p>',
+		content: '<p><span class="h5">' + i18n[5].title + '</span><br/>' + i18n[5].text + '</p>',
 		highlightTarget: false,
 		nextButton: true,
 		my: 'right center',

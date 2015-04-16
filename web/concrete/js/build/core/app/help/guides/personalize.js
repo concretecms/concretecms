@@ -1,7 +1,8 @@
 !function(global, $) {
 	'use strict';
+	var i18n = ccmi18n_helpGuides['personalize'];
 	var steps = [{
-		content: '<p><span class="h5">Properties Panel</span><br/>The properties panel controls data and details about the current page. You can also go there to make design customizations for the page. To open the properties panel, click the icon.</p>',
+		content: '<p><span class="h5">' + i18n[0].title + '</span><br/>' + i18n[0].text + '</p>',
 		highlightTarget: true,
 		nextButton: false,
 		target: $('[data-guide-toolbar-action=page-settings]'),
@@ -22,7 +23,7 @@
 			});
 		}
 	},{
-		content: '<p><span class="h5">Page Design</span><br/>From here you can change your page template and customize your page\'s styles.</p>',
+		content: '<p><span class="h5">' + i18n[1].title + '</span><br/>' + i18n[1].text + '</p>',
 		highlightTarget: true,
 		nextButton: false,
 		my: 'left center',
@@ -41,7 +42,7 @@
 			return {target: $('a[data-launch-panel-detail=page-design]').eq(0)}
 		}
 	},{
-		content: '<p><span class="h5">Customize</span><br/>Click here to load the theme customizer for the page.</p>',
+		content: '<p><span class="h5">' + i18n[2].title + '</span><br/>' + i18n[2].text + '</p>',
 		highlightTarget: true,
 		nextButton: true,
 		my: 'bottom center',
@@ -49,7 +50,7 @@
 		setup: function(tour, options) {
 			return {target: $('span.ccm-page-design-theme-customize')}
 		}
-	},];
+	}];
 
 	var tour = new Tourist.Tour({
 		steps: steps,

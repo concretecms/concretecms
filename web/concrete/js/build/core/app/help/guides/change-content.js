@@ -1,7 +1,8 @@
 !function(global, $) {
 	'use strict';
+	var i18n = ccmi18n_helpGuides['change-content'];
 	var steps = [{
-		content: '<p><span class="h5">Enter Edit Mode</span><br/>First, click the "Edit Page" button. This will enter edit mode for this page.</p>',
+		content: '<p><span class="h5">' + i18n[0].title + '</span><br/>' + i18n[0].text + '</p>',
 		highlightTarget: false,
 		nextButton: false,
 		target: $('[data-guide-toolbar-action=edit-page]'),
