@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Page\Page;
@@ -10,40 +11,38 @@ use Concrete\Core\Block\BlockType\BlockType;
 
 class Version5721 extends AbstractMigration
 {
-
-    public function getName()
+    public function getDescription()
     {
-        return '20141113000000';
+        return '5.7.2.1';
     }
 
     public function up(Schema $schema)
     {
 
-        /** delete customize page themes dashboard single page */
+        /* delete customize page themes dashboard single page */
         $customize = Page::getByPath('/dashboard/pages/themes/customize');
         if (is_object($customize) && !$customize->isError()) {
             $customize->delete();
         }
 
-        /** Add inspect single page back if it's missing */
+        /* Add inspect single page back if it's missing */
         $sp = Page::getByPath('/dashboard/pages/themes/inspect');
-		if (!is_object($sp) || $sp->isError()) {
-			$sp = SinglePage::add('/dashboard/pages/themes/inspect');
-			$sp->setAttribute('meta_keywords', 'inspect, templates');
-			$sp->setAttribute('exclude_nav', 1);
+        if (!is_object($sp) || $sp->isError()) {
+            $sp = SinglePage::add('/dashboard/pages/themes/inspect');
+            $sp->setAttribute('meta_keywords', 'inspect, templates');
+            $sp->setAttribute('exclude_nav', 1);
         }
 
         $sp = Page::getByPath('/members/directory');
-		if (!is_object($sp) || $sp->isError()) {
-			$sp = SinglePage::add('/members/directory');
-			$sp->setAttribute('exclude_nav', 1);
+        if (!is_object($sp) || $sp->isError()) {
+            $sp = SinglePage::add('/members/directory');
+            $sp->setAttribute('exclude_nav', 1);
         }
 
         $bt = BlockType::getByHandle('feature');
         if (is_object($bt)) {
             $bt->refresh();
         }
-
 
         $bt = BlockType::getByHandle('image_slider');
         if (is_object($bt)) {
