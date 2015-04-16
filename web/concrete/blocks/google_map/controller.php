@@ -3,6 +3,7 @@ namespace Concrete\Block\GoogleMap;
 use Loader;
 use Page;
 use \Concrete\Core\Block\BlockController;
+use Core;
 class Controller extends BlockController {
 	
 	protected $btTable = 'btGoogleMap';
@@ -54,27 +55,14 @@ class Controller extends BlockController {
     }
 
 	public function view(){
-		$this->set('unique_identifier', $this->get_unique_identifier());
+		$this->set('unique_identifier', Core::make('helper/validation/identifier')->getString(18));
 		$this->set('title', $this->title);
 		$this->set('location', $this->location);
 		$this->set('latitude', $this->latitude);
 		$this->set('longitude', $this->longitude);
 		$this->set('zoom', $this->zoom);			
 	}
-	public function get_unique_identifier()
-	{	
-		// This is needed because blocks in stacks don't have a proxy, but still need to be unique
-		$suffix = '_'.rand(0,1000000);
 
-		// its a copy, so use proxy id
-		if($this->getBlockObject()->getProxyBlock()){
-			return $this->getBlockObject()->getProxyBlock()->getInstance()->getIdentifier().$suffix;
-		}
-
-		// its a unique block, so use id
-		return $this->getIdentifier().$suffix;
-	}
-	
 	public function save($data) { 
 		$args['title'] = isset($data['title']) ? trim($data['title']) : '';
 		$args['location'] = isset($data['location']) ? trim($data['location']) : '';
