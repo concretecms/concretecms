@@ -2,8 +2,6 @@
 
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
-use Concrete\Core\Block\BlockType\BlockType;
-use Concrete\Core\Permission\Access\Entity\PageOwnerEntity;
 use Concrete\Core\Permission\Access\Entity\Type;
 use Concrete\Core\Permission\Category;
 use Doctrine\DBAL\Migrations\AbstractMigration;
@@ -11,9 +9,9 @@ use Doctrine\DBAL\Schema\Schema;
 
 class Version5702 extends AbstractMigration
 {
-    public function getName()
+    public function getDescription()
     {
-        return '20140919000000';
+        return '5.7.0.2';
     }
 
     public function up(Schema $schema)

@@ -1,9 +1,9 @@
 <?php
+
 namespace Concrete\Core\Updater;
 
 use Concrete\Core\Cache\Cache;
 use Core;
-use Loader;
 use Marketplace;
 use Config;
 use Localization;
@@ -11,15 +11,21 @@ use ORM;
 
 class Update
 {
-
+    /**
+     * Fetch from the remote marketplace the latest available versions of the core and the packages.
+     * These operations are done only the first time or after at least APP_VERSION_LATEST_THRESHOLD seconds since the previous check.
+     *
+     * @return string|null Returns the latest available core version (eg. '5.7.3.1').
+     * If we can't retrieve the latest version and if this never succeeded previously, this function returns null.
+     */
     public static function getLatestAvailableVersionNumber()
     {
-        $d = Loader::helper('date');
         // first, we check session
         $queryWS = false;
         Cache::disableAll();
         $vNum = Config::get('concrete.misc.latest_version', true);
         Cache::enableAll();
+        $versionNum = null;
         if (is_object($vNum)) {
             $seconds = strtotime($vNum->timestamp);
             $version = $vNum->value;
@@ -56,24 +62,49 @@ class Update
         return $versionNum;
     }
 
+    /**
+     * Retrieves the info about the latest available information.
+     * The effective request to the remote server is done just once per request.
+     *
+     * @return \stdClass Return an \stdClass instance with these properties:
+     * <ul>
+     * <li>false|string notes</li>
+     * <li>false|string url</li>
+     * <li>false|string date</li>
+     * <li>null|string version</li>
+     * </ul>
+     */
     public static function getApplicationUpdateInformation()
     {
-        /** @var \Concrete\Core\Cache\Cache $cache */
+        /* @var $cache \Concrete\Core\Cache\Cache */
         $cache = Core::make('cache');
         $r = $cache->getItem('APP_UPDATE_INFO');
         if ($r->isMiss()) {
             $r->lock();
             $r->set(static::getLatestAvailableUpdate());
         }
+
         return $r->get();
     }
 
+    /**
+     * Retrieves the info about the latest available information.
+     *
+     * @return \stdClass Return an \stdClass instance with these properties:
+     * <ul>
+     * <li>false|string notes</li>
+     * <li>false|string url</li>
+     * <li>false|string date</li>
+     * <li>null|string version</li>
+     * </ul>
+     */
     protected static function getLatestAvailableUpdate()
     {
-        $obj = new \stdClass;
+        $obj = new \stdClass();
         $obj->notes = false;
         $obj->url = false;
         $obj->date = false;
+        $obj->version = null;
 
         if (function_exists('curl_init')) {
             $curl_handle = @curl_init();
@@ -102,7 +133,7 @@ class Update
                 $curl_handle,
                 CURLOPT_POSTFIELDS,
                 'LOCALE=' . $loc->activeLocale(
-                ) . '&BASE_URL_FULL=' . \Core::getApplicationURL() . '&APP_VERSION=' . APP_VERSION
+                ) . '&BASE_URL_FULL=' . Core::getApplicationURL() . '&APP_VERSION=' . APP_VERSION
             );
             $resp = @curl_exec($curl_handle);
 
@@ -111,13 +142,12 @@ class Update
                 // invalid. That means it's old and it's just the version
                 $obj->version = trim($resp);
             } else {
-                $obj = new \stdClass;
-                $obj->version = (string)$xml->version;
-                $obj->notes = (string)$xml->notes;
-                $obj->url = (string)$xml->url;
-                $obj->date = (string)$xml->date;
+                $obj = new \stdClass();
+                $obj->version = (string) $xml->version;
+                $obj->notes = (string) $xml->notes;
+                $obj->url = (string) $xml->url;
+                $obj->date = (string) $xml->date;
             }
-
         } else {
             $obj->version = APP_VERSION;
         }
@@ -128,11 +158,13 @@ class Update
     /**
      * Looks in the designated updates location for all directories, ascertains what
      * version they represent, and finds all versions greater than the currently installed version of
-     * concrete5
+     * concrete5.
+     *
+     * @return ApplicationUpdate[]
      */
     public function getLocalAvailableUpdates()
     {
-        $fh = Loader::helper('file');
+        $fh = Core::make('helper/file');
         $updates = array();
         $contents = @$fh->getDirectoryContents(DIR_CORE_UPDATES);
         foreach ($contents as $con) {
@@ -151,9 +183,13 @@ class Update
                 return version_compare($a->getUpdateVersion(), $b->getUpdateVersion());
             }
         );
+
         return $updates;
     }
 
+    /**
+     * Upgrade the current core version to the latest locally available by running the applicable migrations.
+     */
     public static function updateToCurrentVersion()
     {
         $cms = Core::make('app');
@@ -167,10 +203,9 @@ class Update
         $configuration = new \Concrete\Core\Updater\Migrations\Configuration();
         $configuration->registerPreviousMigratedVersions();
         $migrations = $configuration->getMigrationsToExecute('up', $configuration->getLatestVersion());
-        foreach($migrations as $migration) {
+        foreach ($migrations as $migration) {
             $migration->execute('up');
         }
         Config::save('concrete.version_installed', Config::get('concrete.version'));
     }
-
 }
