@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Http\Service;
 use Loader;
+
 class Ajax {
 
     /** Sends a result to the client and ends the execution.

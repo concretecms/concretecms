@@ -4,14 +4,14 @@ use Loader;
 class UserValue extends Value {
 
 	/**
-	 * @param UserInfo $uo
+	 * @param \UserInfo $uo
 	 */
 	public function setUser($uo) {
 		$this->u = $uo;
 	}
 
 	/**
-	 * @return UserInfo
+	 * @return \UserInfo
 	 */
 	public function getUser() {
 		return $this->u;

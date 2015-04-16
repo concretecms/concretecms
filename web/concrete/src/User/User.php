@@ -15,6 +15,8 @@ use \Hautelook\Phpass\PasswordHash;
 use \Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
 use Core;
 use Group;
+use \Concrete\Core\User\Point\Action\Action as UserPointAction;
+use View;
 
 class User extends Object
 {

@@ -3,6 +3,10 @@ namespace Concrete\Core\User\PrivateMessage;
 use Loader;
 use DateTime;
 use Config;
+use UserInfo;
+use Events;
+use View;
+
 class Limit {
 	/**
 	 * checks to see if a user has exceeded their limit for sending private messages
@@ -44,8 +48,7 @@ class Limit {
 
 		Log::addEntry(t("User: %s has tried to send more than %s private messages within %s minutes", $offender->getUserName(), Config::get('concrete.user.private_messages.throttle_max'), Config::get('concrete.user.private_messages.throttle_max_timespan')),t('warning'));
 
-		Loader::helper('mail');
-		$mh = new MailHelper();
+		$mh = Loader::helper('mail');
 
 		$mh->addParameter('offenderUname', $offender->getUserName());
 		$mh->addParameter('profileURL', View::url('/profile', 'view', $offender->getUserID()));

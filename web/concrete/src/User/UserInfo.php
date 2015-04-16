@@ -354,7 +354,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
             if (is_object($mi) && $mi->isMailImporterEnabled()) {
                 $mh->load('private_message_response_enabled');
                 // we store information ABOUT the message here. The mail handler has to know how to handle this.
-                $data = new stdClass();
+                $data = new \stdClass();
                 $data->msgID = $msgID;
                 $data->toUID = $recipient->getUserID();
                 $data->fromUID = $this->getUserID();
