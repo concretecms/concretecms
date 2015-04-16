@@ -15,7 +15,7 @@ class UpdateTest extends ConcreteDatabaseTestCase {
         $version = $configuration->getCurrentVersion();
         $this->assertEquals('0', $version);
 
-        $version = $configuration->getVersion(20140908071333);
+        $version = $configuration->getVersion('20140908071333');
         $this->assertInstanceOf('\Doctrine\DBAL\Migrations\Version', $version);
         $version->markMigrated();
 
