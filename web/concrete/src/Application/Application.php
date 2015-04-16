@@ -166,6 +166,7 @@ class Application extends Container
                     curl_setopt($ch, CURLOPT_HEADER, 0);
                     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 1);
                     curl_setopt($ch, CURLOPT_TIMEOUT, 1);
+                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, Config::get('app.curl.verifyPeer'));
                     $res = curl_exec($ch);
                 }
             }

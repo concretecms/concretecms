@@ -2,6 +2,7 @@
 namespace Concrete\Core\Authentication\Type\Google;
 
 use Concrete\Core\Application\Application;
+use Config;
 use OAuth\Common\Consumer\Credentials;
 use OAuth\Common\Storage\SymfonySession;
 use OAuth\OAuth2\Service\Google;
@@ -28,7 +29,7 @@ class ServiceProvider extends \Concrete\Core\Foundation\Service\Provider
             'authentication/google',
             function (Application $app, $callback = '/ccm/system/authentication/oauth2/google/callback/') {
                 /** @var ServiceFactory $factory */
-                $factory = $app->make('oauth/factory/service', array(CURLOPT_SSL_VERIFYPEER => false));
+                $factory = $app->make('oauth/factory/service', array(CURLOPT_SSL_VERIFYPEER => Config::get('app.curl.verifyPeer')));
 
                 return $factory->createService(
                     'google',

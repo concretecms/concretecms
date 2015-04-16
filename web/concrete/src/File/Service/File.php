@@ -296,7 +296,8 @@ class File
                 curl_setopt($curl_handle, CURLOPT_URL, $file);
                 curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, $timeout);
                 curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
-                curl_setopt($curl_handle, CURLOPT_SSL_VERIFYPEER, false);
+                curl_setopt($curl_handle, CURLOPT_SSL_VERIFYPEER, Config::get('app.curl.verifyPeer'));
+
                 $contents = curl_exec($curl_handle);
                 $http_code = curl_getinfo($curl_handle, CURLINFO_HTTP_CODE);
                 curl_close($curl_handle);

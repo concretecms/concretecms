@@ -967,5 +967,8 @@ return array(
                 array('css', 'core/translator'),
             )
         )
+    ),
+    'curl' => array(
+        'verifyPeer' => true
     )
 );
