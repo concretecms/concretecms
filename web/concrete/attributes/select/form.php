@@ -35,7 +35,7 @@ if ($akSelectAllowMultipleValues && $akSelectAllowOtherValues) { // display auto
 		}
 	</style>
 
-<div class="ccm-attribute-type-select-autocomplete">
+<div class="ccm-attribute ccm-attribute-select ccm-attribute-type-select-autocomplete">
 
 	<div id="selectedAttrValueRows_<?php echo $attrKeyID;?>" class="well well-small clearfix">
 		<h6><?=t('Selected Options')?></h6>
