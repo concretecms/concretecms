@@ -72,6 +72,15 @@ class Controller extends BlockController
         parent::__construct($obj);
     }
 
+    public function registerViewAssets()
+    {
+        if (is_object($this->block) && $this->block->getBlockFilename() == 'responsive_header_navigation') {
+            // this isn't great but it's the only way to do this and still make block
+            // output caching available to this block.
+            $this->requireAsset('javascript', 'jquery');
+        }
+    }
+
     // private variable $displayUnapproved, used by the dashboard
 
     public function getBlockTypeDescription()
