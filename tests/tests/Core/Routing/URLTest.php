@@ -103,9 +103,45 @@ class URLTest extends PHPUnit_Framework_TestCase
         Config::set('concrete.seo.canonical_url', null);
     }
 
+    public function testCanonicalURLRedirectionSameDomain()
+    {
+        $app = Core::make("app");
+        Config::set('concrete.seo.redirect_to_canonical_url', true);
+        Config::set('concrete.seo.canonical_url', 'http://concrete5.dev');
+        $request = \Concrete\Core\Http\Request::create('http://concrete5.dev/login');
+        $response = $app->handleCanonicalURLRedirection($request);
+        $this->assertNull($response);
+
+        $request = \Concrete\Core\Http\Request::create('http://concrete5.dev/index.php?cID=1');
+        $response = $app->handleCanonicalURLRedirection($request);
+        $this->assertNull($response);
+
+        Config::set('concrete.seo.redirect_to_canonical_url', false);
+        Config::set('concrete.seo.canonical_url', null);
+    }
+
+    public function testCanonicalUrlRedirectionSslUrl()
+    {
+        $app = Core::make("app");
+        Config::set('concrete.seo.redirect_to_canonical_url', true);
+        Config::set('concrete.seo.canonical_url', 'http://mysite.com');
+        Config::set('concrete.seo.canonical_ssl_url', 'https://secure.mysite.com:8080');
+        $request = \Concrete\Core\Http\Request::create('https://secure.mysite.com:8080/path/to/page');
+        $response = $app->handleCanonicalURLRedirection($request);
+        $this->assertNull($response);
+        Config::set('concrete.seo.redirect_to_canonical_url', false);
+        Config::set('concrete.seo.canonical_url', null);
+        Config::set('concrete.seo.canonical_ssl_url', null);
+    }
+
     public function testPathSlashesRedirection()
     {
         $app = Core::make("app");
+
+        $request = \Concrete\Core\Http\Request::create('http://concrete5.dev/index.php?cID=1');
+        $response = $app->handleURLSlashes($request);
+        $this->assertNull($response);
+
         $request = \Concrete\Core\Http\Request::create('http://www.awesome.com/about-us/now');
         $response = $app->handleURLSlashes($request);
         $this->assertNull($response);
