@@ -142,6 +142,11 @@ $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
                 <span><?=t('When the "Check Automated Groups" Job runs.')?></span>
             </label>
         </div>
+        <div class="alert alert-info">
+            <?
+            print t('For custom automated group actions, make sure an automation group controller exists.');
+            ?>
+        </div>
 	</div>
 </div>
 

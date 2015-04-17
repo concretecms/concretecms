@@ -367,7 +367,11 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
     public function getGroupAutomationController()
     {
         $class = $this->getGroupAutomationControllerClass();
-        $c = \Core::make($class, array($this));
+        try {
+            $c = \Core::make($class, array($this));
+        } catch(\ReflectionException $e) {
+            $c = \Core::make(core_class('\\Core\\User\\Group\\AutomatedGroup\\DefaultAutomation'), array($this));
+        }
         return $c;
     }
 
