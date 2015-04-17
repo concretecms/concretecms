@@ -255,6 +255,15 @@ class URLTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('http://www.derpco.com:8080/path/to/server/index.php/dashboard/my/awesome/page', (string) URL::page($this->dashboard));
         Config::set('concrete.seo.canonical_url', null);
     }
+
+    public function testURLFunctionWithCanonicalURL()
+    {
+        Config::set('concrete.seo.canonical_url', 'http://concrete5');
+        \Core::forgetInstance('url/canonical');
+        $url = URL::to('/dashboard/system/test', 'outstanding');
+        $this->assertEquals('http://concrete5/path/to/server/index.php/dashboard/system/test/outstanding', (string) $url);
+        Config::set('concrete.seo.canonical_url', null);
+    }
     /*
     public function testPage()
     {
