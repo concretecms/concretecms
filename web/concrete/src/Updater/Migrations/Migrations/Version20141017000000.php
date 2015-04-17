@@ -10,7 +10,7 @@ use Doctrine\DBAL\Schema\Schema;
 use SinglePage;
 use Exception;
 
-class Version571 extends AbstractMigration
+class Version20141017000000 extends AbstractMigration
 {
     public function getDescription()
     {

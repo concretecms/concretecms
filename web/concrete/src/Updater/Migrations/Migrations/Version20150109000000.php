@@ -6,7 +6,7 @@ use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 use Concrete\Core\Block\BlockType\BlockType;
 
-class Version5731 extends AbstractMigration
+class Version20150109000000 extends AbstractMigration
 {
     public function getDescription()
     {

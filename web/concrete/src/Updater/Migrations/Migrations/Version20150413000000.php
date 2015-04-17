@@ -13,7 +13,7 @@ use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 use Concrete\Core\Block\BlockType\BlockType;
 
-class Version574 extends AbstractMigration
+class Version20150413000000 extends AbstractMigration
 {
     private $updateSectionPlurals = false;
     private $updateMultilingualTranslations = false;
