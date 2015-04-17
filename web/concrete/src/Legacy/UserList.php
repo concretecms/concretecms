@@ -3,7 +3,8 @@ namespace Concrete\Core\Legacy;
 use \Concrete\Core\Legacy\DatabaseItemList;
 use UserAttributeKey;
 use UserInfo;
-use Loader;
+use Core;
+use Database;
 use Group;
 /**
  * An object that allows a filtered list of users to be returned.
@@ -32,7 +33,7 @@ class UserList extends DatabaseItemList {
 	}
 
 	public function filterByKeywords($keywords) {
-		$db = Loader::db();
+		$db = Database::connection();
 		$qkeywords = $db->quote('%' . $keywords . '%');
 		$keys = UserAttributeKey::getSearchableIndexedList();
 		$emailSearchStr=' OR u.uEmail like '.$qkeywords.' ';
@@ -73,7 +74,7 @@ class UserList extends DatabaseItemList {
 	}
 
 	public function filterByGroupID($gID){
-		if (!Loader::helper('validation/numbers')->integer($gID)) {
+		if (!Core::make('helper/validation/numbers')->integer($gID)) {
 			$gID = 0;
 		}
 		$tbl='ug_'.$gID;
@@ -143,7 +144,7 @@ class UserList extends DatabaseItemList {
 	/* magic method for filtering by page attributes. */
 	public function __call($nm, $a) {
 		if (substr($nm, 0, 8) == 'filterBy') {
-			$txt = Loader::helper('text');
+			$txt = Core::make('helper/text');
 			$attrib = $txt->uncamelcase(substr($nm, 8));
 			if (count($a) == 2) {
 				$this->filterByAttribute($attrib, $a[0], $a[1]);
