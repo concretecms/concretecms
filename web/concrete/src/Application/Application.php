@@ -30,6 +30,7 @@ use Route;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
+use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use User;
 use View;
 
@@ -282,47 +283,67 @@ class Application extends Container
      * Using the configuration value, determines whether we need to redirect to a URL with
      * a trailing slash or not.
      *
-     * @return void
+     * @return \Concrete\Core\Routing\RedirectResponse
      */
-    public function handleURLSlashes()
+    public function handleURLSlashes(SymfonyRequest $request)
     {
-        $r = Request::getInstance();
-        $pathInfo = $r->getPathInfo();
-        if (strlen($pathInfo) > 1) {
-            $path = trim($pathInfo, '/');
-            $redirect = '/' . $path;
-            if (Config::get('concrete.seo.trailing_slash') && $path) {
-                $redirect .= '/';
-            }
-            if ($pathInfo != $redirect) {
-                $dispatcher = Config::get('concrete.seo.url_rewriting') ? '' : '/' . DISPATCHER_FILENAME;
-                Redirect::url(
-                        \Core::getApplicationURL() . $dispatcher . $redirect . ($r->getQueryString(
-                        ) ? '?' . $r->getQueryString() : '')
-                )->send();
-            }
+        $url = Url::createFromUrl($request->getUri(), Config::get('concrete.seo.trailing_slash'));
+        if ((string) $url != $request->getUri()) {
+            $response = new RedirectResponse((string) $url);
+            $response->setRequest($request);
+            return $response;
         }
     }
 
     /**
      * If we have redirect to canonical host enabled, we need to honor it here.
+     * @return \Concrete\Core\Routing\RedirectResponse
      */
-    public function handleCanonicalHostRedirection()
+    public function handleCanonicalURLRedirection(SymfonyRequest $r)
     {
-        if (Config::get('concrete.seo.redirect_to_canonical_host')) {
-            $url = UrlImmutable::createFromServer($_SERVER);
-            $new = $url->setHost(Config::get('concrete.seo.canonical_host'));
-            if (Config::get('concrete.seo.canonical_port')) {
-                $new = $new->setPort(Config::get('concrete.seo.canonical_port'));
+        if (Config::get('concrete.seo.redirect_to_canonical_url') && Config::get('concrete.seo.canonical_url')) {
+            $url = Url::createFromUrl($r->getUri());
+
+            $canonical = Url::createFromUrl(\Config::get('concrete.seo.canonical_url'),
+                (bool) \Config::get('concrete.seo.trailing_slash')
+            );
+
+            // Set the parts of the current URL that are specified in the canonical URL, including host,
+            // port, scheme. Set scheme first so that our port can use the magic "set if necessary" method.
+            $url->getScheme()->set($canonical->getScheme());
+            $url->getHost()->set($canonical->getHost());
+            $url->setPortIfNecessary($canonical->getPort());
+
+            // Now we have our current url, swapped out with the important parts of the canonical URL.
+            // If it matches, we're good.
+            if ($url == $canonical) {
+                return null;
             }
-            if (Config::get('concrete.seo.force_ssl')) {
-                $new = $new->setScheme('https');
+
+            // Uh oh, it didn't match. before we redirect to the canonical URL, let's check to see if we have an SSL
+            // URL
+            if (\Config::get('concrete.seo.canonical_url_ssl')) {
+                $url = Url::createFromUrl($r->getUri()); // safer just to get again.
+                $ssl = Url::createFromUrl(\Config::get('concrete.seo.canonical_ssl_url'),
+                    (bool) \Config::get('concrete.seo.trailing_slash')
+                );
+
+                // Set the parts of the current URL that are specified in the canonical URL, including host,
+                // port, scheme. Set scheme first so that our port can use the magic "set if necessary" method.
+                $url->getScheme()->set($ssl->getScheme());
+                $url->getHost()->set($ssl->getHost());
+                $url->setPortIfNecessary($ssl->getPort());
+
+                // Now we have our current url, swapped out with the important parts of the canonical URL.
+                // If it matches, we're good.
+                if ($url == $ssl) {
+                    return null;
+                }
+
             }
-            if ($new != $url) {
-                $response = new RedirectResponse($new, '301');
-                $response->send();
-                exit;
-            }
+
+            $response = new RedirectResponse($url, '301');
+            return $response;
         }
     }
 

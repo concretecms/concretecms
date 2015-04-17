@@ -36,7 +36,7 @@ class URLTest extends PHPUnit_Framework_TestCase
         $this->service = $service;
         Config::set('concrete.seo.url_rewriting', false);
         Config::set('concrete.seo.url_rewriting_all', false);
-        Config::set('concrete.seo.canonical_host', false);
+        Config::set('concrete.seo.canonical_url', false);
 
         parent::setUp();
     }
@@ -89,6 +89,48 @@ class URLTest extends PHPUnit_Framework_TestCase
         );
         $this->assertEquals('http://www.dummyco.com/path/to/server/path/to/my/page', (string) URL::to('/path/to/my/page'));
         $this->assertEquals('http://www.dummyco.com/path/to/server/path/to/my/page', (string) URL::page($this->page));
+    }
+
+    public function testCanonicalURLRedirection()
+    {
+        $app = Core::make("app");
+        Config::set('concrete.seo.redirect_to_canonical_url', true);
+        Config::set('concrete.seo.canonical_url', 'https://www2.myawesomesite.com:8080');
+        $request = \Concrete\Core\Http\Request::create('http://www.awesome.com/path/to/site/index.php/dashboard?bar=1&foo=1');
+        $response = $app->handleCanonicalURLRedirection($request);
+        $this->assertEquals('https://www2.myawesomesite.com:8080/path/to/site/index.php/dashboard?bar=1&foo=1', $response->getTargetUrl());
+        Config::set('concrete.seo.redirect_to_canonical_url', false);
+        Config::set('concrete.seo.canonical_url', null);
+    }
+
+    public function testPathSlashesRedirection()
+    {
+        $app = Core::make("app");
+        $request = \Concrete\Core\Http\Request::create('http://www.awesome.com/about-us/now');
+        $response = $app->handleURLSlashes($request);
+        $this->assertNull($response);
+
+        $request = \Concrete\Core\Http\Request::create('http://www.awesome.com/about-us/now/');
+        $response = $app->handleURLSlashes($request);
+        $this->assertInstanceOf('\Concrete\Core\Routing\RedirectResponse', $response);
+        $this->assertEquals('http://www.awesome.com/about-us/now', $response->getTargetUrl());
+
+        $request = \Concrete\Core\Http\Request::create('http://www.awesome.com/index.php/about-us/now/?bar=1&foo=2');
+        $response = $app->handleURLSlashes($request);
+        $this->assertInstanceOf('\Concrete\Core\Routing\RedirectResponse', $response);
+        $this->assertEquals('http://www.awesome.com/index.php/about-us/now?bar=1&foo=2', $response->getTargetUrl());
+
+        Config::set('concrete.seo.trailing_slash', true);
+
+        $request = \Concrete\Core\Http\Request::create('http://www.awesome.com:8080/index.php/about-us/now/?bar=1&foo=2');
+        $response = $app->handleURLSlashes($request);
+        $this->assertNull($response);
+
+        $request = \Concrete\Core\Http\Request::create('http://www.awesome.com:8080/index.php/about-us/now?bar=1&foo=2');
+        $response = $app->handleURLSlashes($request);
+        $this->assertEquals('http://www.awesome.com:8080/index.php/about-us/now/?bar=1&foo=2', $response->getTargetUrl());
+
+        Config::set('concrete.seo.trailing_slash', false);
     }
 
     public function testUrlRewritingAll()
@@ -160,15 +202,23 @@ class URLTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('http://www.dummyco.com/path/to/server/dashboard/my/awesome/page', (string) URL::page($this->dashboard));
     }
 
-    public function testCanonicalHost()
+    public function testCanonicalUrl()
     {
-        Config::set('concrete.seo.canonical_host', 'www.derpco.com');
+        Config::set('concrete.seo.canonical_url', 'http://www.derpco.com');
         \Core::forgetInstance('url/canonical');
         $this->assertEquals('http://www.derpco.com/path/to/server/index.php/dashboard/my/awesome/page', (string) URL::to('/dashboard/my/awesome/page'));
         $this->assertEquals('http://www.derpco.com/path/to/server/index.php/dashboard/my/awesome/page', (string) URL::page($this->dashboard));
-        Config::set('concrete.seo.canonical_host', null);
+        Config::set('concrete.seo.canonical_url', null);
     }
 
+    public function testCanonicalUrlWithPort()
+    {
+        Config::set('concrete.seo.canonical_url', 'http://www.derpco.com:8080');
+        \Core::forgetInstance('url/canonical');
+        $this->assertEquals('http://www.derpco.com:8080/path/to/server/index.php/dashboard/my/awesome/page', (string) URL::to('/dashboard/my/awesome/page'));
+        $this->assertEquals('http://www.derpco.com:8080/path/to/server/index.php/dashboard/my/awesome/page', (string) URL::page($this->dashboard));
+        Config::set('concrete.seo.canonical_url', null);
+    }
     /*
     public function testPage()
     {

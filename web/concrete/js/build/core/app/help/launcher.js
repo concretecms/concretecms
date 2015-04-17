@@ -18,7 +18,8 @@
 			tour.start();
 		});
 
-        my.$element.on('click', function() {
+        my.$element.on('click', function(e) {
+            e.preventDefault();
             $(this).addClass('animated fadeOut');
             $notification.addClass('animated fadeIn').show();
 

@@ -1,10 +1,22 @@
 <?php
 namespace Concrete\Core\Url;
 
+use Concrete\Core\Http\Request;
 use RuntimeException;
 
 class Url extends \League\Url\Url implements UrlInterface
 {
+
+    public function setPortIfNecessary($port)
+    {
+        if (
+            ($this->getScheme()->get() == 'http' && $port == '80') ||
+            ($this->getScheme()->get() == 'https' && $port == '443')) {
+            return false;
+        }
+
+        $this->getPort()->set($port);
+    }
 
     public static function createFromUrl($url, $trailing_slashes = false)
     {

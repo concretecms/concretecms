@@ -143,8 +143,14 @@ class DispatcherRouteCallback extends RouteCallback
         // Now that we've passed all permissions checks, and we have a page, we check to see if we
         // ought to redirect based on base url or trailing slash settings
         $cms = \Core::make("app");
-        $cms->handleCanonicalHostRedirection();
-        $cms->handleURLSlashes();
+        $response = $cms->handleCanonicalURLRedirection($request);
+        if (!$response) {
+            $response = $cms->handleURLSlashes($request);
+        }
+        if (isset($response)) {
+            $response->send();
+            exit;
+        }
 
         // Now we check to see if we're on the home page, and if it multilingual is enabled,
         // and if so, whether we should redirect to the default language page.

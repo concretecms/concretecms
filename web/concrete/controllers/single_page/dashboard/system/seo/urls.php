@@ -14,16 +14,16 @@ class Urls extends DashboardPageController
     public function getRewriteRules()
     {
         $strRules = '
-        <IfModule mod_rewrite.c>
-        RewriteEngine On
-        RewriteBase ' . DIR_REL . '/
-        RewriteCond %{REQUEST_FILENAME} !-f
-        RewriteCond %{REQUEST_FILENAME}/index.html !-f
-        RewriteCond %{REQUEST_FILENAME}/index.php !-f
-        RewriteRule . ' . DISPATCHER_FILENAME .' [L]
-        </IfModule>';
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase ' . DIR_REL . '/
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME}/index.html !-f
+RewriteCond %{REQUEST_FILENAME}/index.php !-f
+RewriteRule . ' . DISPATCHER_FILENAME .' [L]
+</IfModule>';
 
-        return preg_replace('/\t/', '', $strRules);
+        return $strRules;
     }
 
     /**
@@ -59,14 +59,12 @@ class Urls extends DashboardPageController
         $this->set('fh', \Core::make('helper/form'));
         $this->set('strRules', $this->getRewriteRules());
         $this->set('intRewriting', $intRewriting);
-        $this->set('host', Config::get('concrete.seo.canonical_host'));
-        $this->set('port', Config::get('concrete.seo.canonical_port'));
-        $this->set('force_ssl', Config::get('concrete.seo.force_ssl'));
-        $this->set('redirect_to_canonical_host', Config::get('concrete.seo.redirect_to_canonical_host'));
+        $this->set('canonical_url', Config::get('concrete.seo.canonical_url'));
+        $this->set('canonical_ssl_url', Config::get('concrete.seo.canonical_ssl_url'));
+        $this->set('redirect_to_canonical_url', Config::get('concrete.seo.redirect_to_canonical_url'));
 
         if ($strStatus == 'saved') {
             $message = t('Settings Saved.');
-            $urlmsg = t('URL rewriting enabled.');
             if (Config::get('concrete.seo.url_rewriting') && !$blnHtu) {
                 $this->set('message', $message . ' ' . $urlmsg . ' ' . t('You need to update .htaccess by hand.'));
             } elseif (Config::get('concrete.seo.url_rewriting') && $blnHtu) {
@@ -95,17 +93,18 @@ class Urls extends DashboardPageController
             $blnHtu = 0;
 
             if ($this->isPost()) {
-                Config::save('concrete.seo.canonical_host', $this->post('canonical_host'));
-                Config::save('concrete.seo.canonical_port', $this->post('canonical_port'));
-                Config::save('concrete.seo.force_ssl', $this->post('force_ssl') ? 1 : 0);
-                Config::save('concrete.seo.redirect_to_canonical_host', $this->post('redirect_to_canonical_host') ? 1 : 0);
+
+
+                Config::save('concrete.seo.canonical_url', $this->post('canonical_url'));
+                Config::save('concrete.seo.canonical_ssl_url', $this->post('canonical_ssl_url'));
+                Config::save('concrete.seo.redirect_to_canonical_url', $this->post('redirect_to_canonical_url') ? 1 : 0);
 
                 $intCurrent = Config::get('concrete.seo.url_rewriting') == 1 ? 1 : 0;
                 $intPosted = $this->post('URL_REWRITING') == 1 ? 1 : 0;
 
                 // If there was no change we don't attempt to edit/create the .htaccess file
                 if ($intCurrent == $intPosted) {
-                    $this->redirect('/dashboard/system/seo/urls');
+                    $this->redirect('/dashboard/system/seo/urls', 'saved');
                 }
 
                 Config::save('concrete.seo.url_rewriting', $intPosted);

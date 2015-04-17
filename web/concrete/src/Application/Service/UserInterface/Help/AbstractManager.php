@@ -16,7 +16,12 @@ class AbstractManager implements ManagerInterface, RegistryInterface
     public function registerMessageString($identifier, $message)
     {
         $m = new Message();
-        $m->setMessageContent($message);
+        if (is_array($message)) {
+            $m->setMessageContent($message[0]);
+            $m->addGuide($message[1]);
+        } else {
+            $m->setMessageContent($message);
+        }
         $m->setIdentifier($identifier);
         $this->messages[$identifier] = $m;
     }
