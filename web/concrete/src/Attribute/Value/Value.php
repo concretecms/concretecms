@@ -34,8 +34,10 @@ class Value extends Object
 
     public function __destruct()
     {
-        if (is_object($this->attributeType)) {
-            $this->attributeType->__destruct();
+        if (isset($this->attributeType)) {
+            if (is_object($this->attributeType)) {
+                $this->attributeType->__destruct();
+            }
             unset($this->attributeType);
         }
     }
