@@ -625,10 +625,11 @@ class Collection extends Object
             }
         }
 
-        $styleHeader = '';
+        $styleHeader = '<style type="text/css" id="ccm-collection-styles">';
         foreach ($psss as $st) {
-            $styleHeader .= '<style type="text/css" data-style-set="'.$st->getStyleSet()->getID().'">'.$st->getCSS().'</style>';
+            $styleHeader .= $st->getCSS();
         }
+        $styleHeader .= '</style>';
 
         if (strlen(trim($styleHeader))) {
             if ($return == true) {

@@ -25,12 +25,51 @@
 
     ConcreteInlineStyleCustomizer.prototype = {
 
-        refreshStyles: function(resp) {
-            if (resp.oldIssID) {
-                $('head').find('style[data-style-set=' + resp.oldIssID +']').remove();
+        getCollectionStyles: function() {
+            var stylesheets = document.styleSheets;
+
+            for (var i = 0; i < stylesheets.length; i++) {
+                // is this the one we want?
+                if (stylesheets[i].ownerNode.id === 'ccm-collection-styles') {
+                    return stylesheets[i];
+                }
             }
+
+            return null;
+        },
+
+        refreshStyles: function(resp) {
+            var stylesheet = this.getCollectionStyles(),
+                ruleCount = 0;
+
+            if (resp.oldIssID && stylesheet !== null) {
+                // grab the rules and remove the ones we don't want anymore
+                var rules = stylesheet.cssRules;
+                var removedCount = 0;
+                var regexp = new RegExp("\\." + resp.class.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + "($|\\D)");
+                for (var ri = 0; ri < rules.length; ri++) {
+                    if (regexp.test(rules[ri].selectorText)) {
+                        // remove this style
+                        stylesheet.deleteRule(ri - removedCount++);
+                    }
+                }
+                ruleCount = rules.length - removedCount;
+            }
+
             if (resp.issID) {
-                $('head').append($('<style />', {'data-style-set': resp.issID, 'text': resp.css}));
+                // now we need to add new styles
+                if (stylesheet === null) {
+                    var newStylesheet = $("<style id='ccm-collection-styles' />");
+                    $('head').append(newStylesheet);
+                    stylesheet = this.getCollectionStyles();
+                }
+                var newRules = resp.css.split("}");
+                for (var nri = 0; nri < newRules.length; nri++) {
+                    var newRule = newRules[nri];
+                    if (newRule.length > 0) {
+                        stylesheet.insertRule(newRule + "}", ruleCount++);
+                    }
+                }
             }
         },
 

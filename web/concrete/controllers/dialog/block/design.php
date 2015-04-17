@@ -94,6 +94,7 @@ class Design extends BackendInterfaceBlockController {
             $style = new CustomStyle($set, $b->getBlockID(), $this->area->getAreaHandle());
 
             $pr->setAdditionalDataAttribute('css', $style->getCSS());
+            $pr->setAdditionalDataAttribute('class', $style->getCustomStyleClass());
             $pr->setAdditionalDataAttribute('bID', $b->getBlockID());
             $pr->setMessage(t('Design updated.'));
             $pr->outputJSON();
