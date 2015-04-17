@@ -58,6 +58,14 @@ class ResolverManager implements ResolverManagerInterface
     }
 
     /**
+     * @return array
+     */
+    public function getResolvers()
+    {
+        return $this->resolvers;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function resolve(array $args)

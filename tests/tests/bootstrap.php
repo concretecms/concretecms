@@ -64,7 +64,7 @@ class TestConfigRepository extends Repository {
 $old_config = $cms->make('config');
 $cms->instance('config', new TestConfigRepository($old_config->getLoader(), $old_config->getSaver(), 'travis'));
 \Concrete\Core\Support\Facade\Config::clearResolvedInstance('config');
-\Config::set('concrete.seo.canonical_host', null);
+\Config::set('concrete.seo.canonical_url', null);
 
 /** @var Repository $config */
 $config = $cms->make('config');
