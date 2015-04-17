@@ -4,58 +4,57 @@ defined('C5_EXECUTE') or die("Access Denied.");
 <form method="post" action="<?php echo $view->action('save_urls'); ?>">
     <?php echo $this->controller->token->output('save_urls'); ?>
 
-
-    <div class="row">
-        <div class="col-sm-8">
-            <div class="form-group">
-                <label class="control-label" for="canonical_host"><?=t('Canonical Host and Port')?> <i class="fa fa-question-circle launch-tooltip" title="<?=t('If this site is accessible from multiple domains, it can be useful to specify a single canonical domain and port. These can usually be left blank.')?>"></i></label>
-                <div class="input-group">
-                    <span class="input-group-addon" data-field="url-scheme">http://</span>
-                    <input type="text" class="form-control" placeholder="domain.com" style="width: 100%" value="<?=$host?>" name="canonical_host">
-                    <span class="input-group-addon">:</span>
-                    <input type="text" class="form-control" value="<?=$port?>" placeholder="80" name="canonical_port">
-                    <span class="input-group-addon">
-                        <?php echo $fh->checkbox('force_ssl', 1, $force_ssl) ?>
-                        <?php echo t('SSL'); ?>
-                    </span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label class="control-label"><?=t('Pretty URLs')?> <i class="fa fa-question-circle launch-tooltip" title="<?=t('Removes index.php from your site\'s URLs.')?>"></i></label>
-        <div class="checkbox">
-        <label>
-            <?php echo $fh->checkbox('URL_REWRITING', 1, $intRewriting) ?>
-            <?php echo t('Enable Pretty URLs'); ?>
-        </label>
-         </div>
-
-        <?php
-        // Show the placeholder textarea with the mod_rewrite rules if pretty urls enabled
-        // NOTE: The contents of the textarea are not saved
-        if(Config::get('concrete.seo.url_rewriting')){
-            echo '
-        <div class="clearfix"><label>' . t('Code for your .htaccess file') . '</label>
-        <textarea style="width:98%; max-width:98%; min-width:98%; height:150px; min-height:150px; max-height:300px;" onclick="this.select()">' . $strRules . '</textarea></div>';
-        }
-        ?>
-    </div>
-
-    <h4><?=t('Advanced')?></h4>
-
-    <div class="alert alert-warning"><?=t('Ensure that your site is viewable at the host/ssl/port combination above before you check the checkbox below. If not, doing so may render your site unviewable until you can manually undo this change.')?></div>
-
-    <div class="form-group">
-        <label class="control-label" for="force_ssl"><?=t('URL Redirection')?> <i class="fa fa-question-circle launch-tooltip" title="<?=t('If checked, this site will only be available at the host, port and SSL combination chosen above.')?>"></i></label>
+    <fieldset>
+        <legend><?= t('Pretty URLs') ?></legend>
         <div class="checkbox">
             <label>
-                <?php echo $fh->checkbox('redirect_to_canonical_host', 1, $redirect_to_canonical_host) ?>
-                <?php echo t('Only render at canonical host and port.'); ?>
+                <?php echo $fh->checkbox('URL_REWRITING', 1, $intRewriting) ?>
+                <?php echo t('Remove index.php from URLs'); ?>
             </label>
         </div>
+        <?php
+        if (Config::get('concrete.seo.url_rewriting')) { ?>
+            <div class="form-group">
+                <label class="control-label"><?=t('Code for your .htaccess file')?></label>
+                <textarea rows="8" class="form-control" onclick="this.select()"><?=$strRules?></textarea>
+            </div>
+        <? } ?>
+    </fieldset>
+
+    <fieldset>
+        <legend><?= t('Canonical URLs') ?></legend>
+        <div class="form-group">
+            <label class="control-label" for="canonical_url"><?= t('Canonical URL') ?></label>
+            <input type="text" class="form-control" placeholder="http://domain.com" value="<?= $canonical_url ?>"
+                   name="canonical_url">
+        </div>
+
+        <div class="form-group">
+            <label class="control-label" for="canonical_ssl_url"><?= t('SSL URL') ?></label>
+            <input type="text" class="form-control" placeholder="https://domain.com" value="<?= $canonical_ssl_url ?>"
+                   name="canonical_ssl_url">
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="redirect_to_canonical_url"><?= t('URL Redirection') ?> <i
+                    class="fa fa-question-circle launch-tooltip"
+                    title="<?= t('If checked, this site will only be available at the host, port and SSL combination chosen above.') ?>"></i></label>
+
+            <div class="checkbox">
+                <label>
+                    <?php echo $fh->checkbox('redirect_to_canonical_url', 1, $redirect_to_canonical_url) ?>
+                    <?php echo t('Only render at canonical URLs.'); ?>
+                </label>
+            </div>
+        </div>
+    </fieldset>
+
+
+
+    <div class="alert alert-warning">
+        <?= t('Ensure that your site is viewable at the URL(s) above before you check the checkbox below.
+        If not, doing so may render your site unviewable until you can manually undo this change.') ?>
     </div>
+
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
@@ -65,13 +64,58 @@ defined('C5_EXECUTE') or die("Access Denied.");
 </form>
 
 <script type="text/javascript">
-    $(function() {
-        $('input[name=force_ssl]').on('change', function() {
-           if ($(this).is(':checked')) {
-               $('span[data-field=url-scheme]').html('https://');
-           } else {
-               $('span[data-field=url-scheme]').html('http://');
-           }
-        }).trigger("change");
+    $(function () {
+
+        var steps = [{
+            content: '<p><span class="h5"><?=t('Pretty URLs')?></span><br/><?=t('Check this checkbox to remove index.php from your URLs. You will be given code to place in a file named .htaccess in your web root. Concrete5 will try and place this code in the file for you.')?></p>',
+            highlightTarget: false,
+            nextButton: true,
+            target: $('input[name=URL_REWRITING]'),
+            my: 'bottom left',
+            at: 'top left'
+        },{
+            content: '<p><span class="h5"><?=t('Canonical URL')?></span><br/><?=t('If you are running a site at multiple domains, enter the canonical domain here. This will be used for sitemap generation, any other purposes that require a specific domain. You can usually leave this blank.')?></p>',
+            highlightTarget: false,
+            nextButton: true,
+            target: $('input[name=canonical_url]'),
+            my: 'bottom center',
+            at: 'top center',
+            setup: function() {
+                var $url = $('input[name=canonical_url]');
+                $(document).scrollTop($url.offset().top);
+            }
+        },{
+            content: '<p><span class="h5"><?=t('SSL URL')?></span><br/><?=t('Certain add-ons require a secure SSL URL. Enter that URL here.')?></p>',
+            highlightTarget: false,
+            nextButton: true,
+            target: $('input[name=canonical_ssl_url]'),
+            my: 'bottom center',
+            at: 'top center'
+        },{
+            content: '<p><span class="h5"><?=t('SSL URL')?></span><br/><?=t('Ensure that your site ONLY renders at the canonical URL or the canonical SSL URL.')?></p>',
+            highlightTarget: false,
+            nextButton: true,
+            target: $('input[name=redirect_to_canonical_url]'),
+            my: 'bottom left',
+            at: 'top left'
+        }];
+
+        var tour = new Tourist.Tour({
+            steps: steps,
+            tipClass: 'Bootstrap',
+            tipOptions:{
+                showEffect: 'slidein'
+            }
+        });
+        tour.on('start', function() {
+            ConcreteHelpLauncher.close();
+        });
+        tour.on('stop', function() {
+            $(document).scrollTop(0);
+        });
+        ConcreteHelpGuideManager.register('dashboard-system-urls', tour);
+
     });
+
+
 </script>

@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Routing;
 
-use Request;
+use Concrete\Core\Http\Request;
 
 class RedirectResponse extends \Symfony\Component\HttpFoundation\RedirectResponse
 {

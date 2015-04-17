@@ -811,10 +811,9 @@ return array(
          */
         'url_rewriting'           => false,
         'url_rewriting_all'       => false,
-        'redirect_to_canonical_host'  => false,
-        'canonical_host'          => null,
-        'canonical_port'          => null,
-        'force_ssl'               => false,
+        'redirect_to_canonical_url'  => false,
+        'canonical_url'          => null,
+        'canonical_ssl_url'          => null,
         'trailing_slash'          => false,
         'title_format'            => '%1$s :: %2$s',
         'title_segment_separator' => ' :: ',

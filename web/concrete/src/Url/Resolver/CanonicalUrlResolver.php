@@ -3,6 +3,7 @@ namespace Concrete\Core\Url\Resolver;
 
 use Concrete\Core\Url\Url;
 use Concrete\Core\Url\UrlImmutable;
+use Concrete\Core\Http\Request;
 
 class CanonicalUrlResolver implements UrlResolverInterface
 {
@@ -19,43 +20,28 @@ class CanonicalUrlResolver implements UrlResolverInterface
      */
     public function resolve(array $arguments, $resolved = null)
     {
-        $url = Url::createFromUrl('', !!\Config::get('concrete.seo.trailing_slash'));
+        $url = Url::createFromUrl('', (bool) \Config::get('concrete.seo.trailing_slash'));
 
-        // Normalize
         $url->setHost(null);
         $url->setScheme(null);
-        $url->setPort(null);
 
-        if (\Config::get('concrete.seo.canonical_host')) {
-            $url->getHost()->set(\Config::get('concrete.seo.canonical_host'));
+        if (\Config::get('concrete.seo.canonical_url')) {
+            $canonical = UrlImmutable::createFromUrl(\Config::get('concrete.seo.canonical_url'),
+                (bool) \Config::get('concrete.seo.trailing_slash')
+            );
+            $url->getHost()->set($canonical->getHost());
+            $url->getScheme()->set($canonical->getScheme());
+            if (intval($canonical->getPort()->get()) > 0) {
+                $url->getPort()->set($canonical->getPort());
+            }
         } else {
-            $url->getHost()->set(\Request::getInstance()->getHost());
-        }
-
-        if ($url->getHost()->get() && !$url->getScheme()->get()) {
-            $url->setScheme(\Request::getInstance()->getScheme());
-        }
-
-        $port = null;
-        if ($config_port = \Config::get('concrete.seo.canonical_port')) {
-            $port = intval($config_port, 10);
-        } else {
-            $port = intval(\Request::getInstance()->getPort(), 10);
+            $url->getHost()->set(Request::getInstance()->getHost());
+            $url->setScheme(Request::getInstance()->getScheme());
+            $url->setPortIfNecessary(Request::getInstance()->getPort());
         }
 
         if ($relative_path = \Core::getApplicationRelativePath()) {
             $url = $url->setPath($relative_path);
-        }
-
-        $scheme = strtolower($url->getScheme());
-        if ($port && ($scheme == 'http' || $scheme == 'https')) {
-            if (($scheme == 'http' && $port != 80) ||
-                ($scheme == 'https' && $port != 443)
-            ) {
-                $url->setPort($port);
-            }
-        } elseif ($port) {
-            $url->setPort($port);
         }
 
         return UrlImmutable::createFromUrl($url);
