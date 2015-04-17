@@ -15,8 +15,8 @@ if ($this->controller->getTask() == 'translate_po') {
         height: $(window).height() - 300,
         saveAction: <?php echo json_encode($this->action('save_translation')); ?>,
         plurals: <?php echo json_encode($section->getPluralsCases()); ?>,
-        translations: <?php echo json_encode($translations, $jsonOptions); ?>,
-        approvalSupport: false
+        translations: <?php echo json_encode($translations); ?>,
+        fuzzySupport: false
       })
     });
     </script>

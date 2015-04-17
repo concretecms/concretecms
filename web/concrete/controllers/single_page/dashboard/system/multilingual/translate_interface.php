@@ -188,11 +188,7 @@ class TranslateInterface extends DashboardPageController
                 }
                 $jsonTranslations[] = $jsonTranslation;
             }
-            $jsonOptions = 0;
-            if (defined('\JSON_UNESCAPED_SLASHES')) {
-                $jsonOptions |= \JSON_UNESCAPED_SLASHES;
-            }
-            $this->set('jsonOptions', $jsonOptions);
+
             $this->set('translations', $jsonTranslations);
         } else {
             $this->redirect('/dashboard/system/multilingual/translate_interface');
