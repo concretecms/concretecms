@@ -1,16 +1,15 @@
 <?php
 
 namespace Concrete\Block\PageTitle;
+
 use Page;
-use \Concrete\Core\Block\BlockController;
-use Loader;
-use \Concrete\Core\Tree\Node\Type\Topic;
+use Concrete\Core\Block\BlockController;
+use Concrete\Core\Tree\Node\Type\Topic;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
 class Controller extends BlockController
 {
-
     public $helpers = array('form');
 
     protected $btInterfaceWidth = 400;
@@ -20,7 +19,6 @@ class Controller extends BlockController
     protected $btInterfaceHeight = 400;
     protected $btTable = 'btPageTitle';
     protected $btWrapperClass = 'ccm-ui';
-
 
     public function getBlockTypeDescription()
     {
@@ -37,7 +35,7 @@ class Controller extends BlockController
         return $this->getTitleText();
     }
 
-    function getTitleText()
+    public function getTitleText()
     {
         if ($this->useCustomTitle && strlen($this->titleText)) {
             $title = $this->titleText;
@@ -52,9 +50,9 @@ class Controller extends BlockController
                 $title = '';
             }
         }
+
         return $title;
     }
-
 
     public function view()
     {
@@ -63,7 +61,6 @@ class Controller extends BlockController
         }
         $this->set('title', $this->getTitleText());
     }
-
 
     public function save($data)
     {
@@ -79,5 +76,4 @@ class Controller extends BlockController
         }
         $this->view();
     }
-
 }
