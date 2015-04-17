@@ -4794,6 +4794,9 @@
     <field name="value" type="N" size="14.4">
       <default value="0"/>
     </field>
+    <index name="value">
+      <col>value</col>
+    </index>
   </table>
   <table name="atSelectSettings">
     <field name="akID" type="I" size="10">
