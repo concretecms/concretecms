@@ -48,6 +48,8 @@ class Controller extends BlockController
                 if (!strlen($title) && $p->isMasterCollection()) {
                     $title = '[' . t('Page Title') . ']';
                 }
+            } else {
+                $title = '';
             }
         }
         return $title;
