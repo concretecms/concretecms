@@ -118,7 +118,7 @@ if (isset($group)) { ?>
     		<div class="alert alert-info">
     			<?
     			$path = $group->getGroupAutomationControllerClass();
-    			print t('Make sure an automation group controller exists at %s', $path);
+    			print t('For custom automated group actions, make sure an automation group controller exists at %s', $path);
     			?>
     		</div>
     	</div>
