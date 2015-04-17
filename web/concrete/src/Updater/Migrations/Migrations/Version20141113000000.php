@@ -9,7 +9,7 @@ use SinglePage;
 use Database;
 use Concrete\Core\Block\BlockType\BlockType;
 
-class Version5721 extends AbstractMigration
+class Version20141113000000 extends AbstractMigration
 {
     public function getDescription()
     {
