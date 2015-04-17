@@ -31,7 +31,7 @@
 			return {target: $('ul.ccm-panel-sitemap-list li a').eq(0)}
 		}
 	},{
-		content: '<p><span class="h5">Page Types</span><br/>This is your list of page types. Click any of them to add a page.</p>',
+		content: '<p><span class="h5">Sitemap</span><br/>This is your sitemap. Use it to navigate to your site quickly and easily.</p>',
 		highlightTarget: true,
 		nextButton: true,
 		my: 'right center',
