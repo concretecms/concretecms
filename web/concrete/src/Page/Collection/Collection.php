@@ -83,6 +83,19 @@ class Collection extends Object
         $db = Loader::db();
         $dh = Loader::helper('date');
         $cDate = $dh->getOverridableNow();
+
+        $data = array_merge(
+            array(
+                'name' => '',
+                'pTemplateID' => 0,
+                'handle' => null,
+                'uID' => null,
+                'cDatePublic' => $cDate,
+                'cDescription' => null,
+            ),
+            $data
+        );
+
         $cDatePublic = ($data['cDatePublic']) ? $data['cDatePublic'] : $cDate;
 
         if (isset($data['cID'])) {
@@ -108,7 +121,7 @@ class Collection extends Object
             $cvIsNew = $data['cvIsNew'];
         }
         $data['name'] = Loader::helper('text')->sanitize($data['name']);
-        if (is_object($this) && $this instanceof Page) {
+        if (isset($this) && $this instanceof Page) {
             $pThemeID = $this->getCollectionThemeID();
         } else {
             $pThemeID = 0;
