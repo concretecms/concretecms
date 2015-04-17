@@ -16,7 +16,7 @@ if ($this->controller->getTask() == 'translate_po') {
         saveAction: <?php echo json_encode($this->action('save_translation')); ?>,
         plurals: <?php echo json_encode($section->getPluralsCases()); ?>,
         translations: <?php echo json_encode($translations); ?>,
-        fuzzySupport: false
+        approvalSupport: false
       })
     });
     </script>
