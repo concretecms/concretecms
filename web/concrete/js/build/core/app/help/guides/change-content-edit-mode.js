@@ -37,7 +37,10 @@
 			return {target: target}
 		},
 		teardown: function() {
-			ConcreteMenuManager.getActiveMenu().hide();
+			var menu = ConcreteMenuManager.getActiveMenu();
+			if (menu) {
+				menu.hide();
+			}
 		},
 		my: 'left center',
 		at: 'right center'
