@@ -1,10 +1,10 @@
 !function(global, $) {
 	'use strict';
-
+	var i18n = ccmi18n_helpGuides['change-content-edit-mode'];
 	var $area = $('div.ccm-area:not(.ccm-global-area)').eq(0);
 	var $block = $area.find('.ccm-block-edit').eq(0);
 	var steps = [{
-		content: '<p><span class="h5">Edit Mode Active</span><br/>The highlighted button makes it obvious you\'re in edit mode.</p>',
+		content: '<p><span class="h5">' + i18n[0].title + '</span><br/>' + i18n[0].text + '</p>',
 		highlightTarget: false,
 		nextButton: true,
 		target: $('[data-guide-toolbar-action=check-in]'),
@@ -14,7 +14,7 @@
 			ConcreteHelpGuideManager.clearGuideToLaunchOnRefresh();
 		}
 	},{
-		content: '<p><span class="h5">Edit the Block</span><br/>Just roll over any content on the page. Click or tap to get the edit menu for that block.</p>',
+		content: '<p><span class="h5">' + i18n[1].title + '</span><br/>' + i18n[1].text + '</p>',
 		highlightTarget: false,
 		nextButton: false,
 		target: $block,
@@ -29,7 +29,7 @@
 			ConcreteEvent.unsubscribe('ConcreteMenuShow.changeContentEditModeTour');
 		}
 	},{
-		content: '<p><span class="h5">Edit Menu</span><br/>Use this menu to edit a block\'s contents, change its display, or remove it entirely.</p>',
+		content: '<p><span class="h5">' + i18n[2].title + '</span><br/>' + i18n[2].text + '</p>',
 		highlightTarget: false,
 		nextButton: true,
 		setup: function(tour, options) {
@@ -42,7 +42,7 @@
 		my: 'left center',
 		at: 'right center'
 	},{
-		content: '<p><span class="h5">Save Changes</span><br/>Your changes save as you go – but when you\'re done editing, don\'t forget to exit edit mode by clicking on the page\'s edit button again.</p>',
+		content: '<p><span class="h5">' + i18n[3].title + '</span><br/>' + i18n[3].text + '</p>',
 		highlightTarget: true,
 		nextButton: true,
 		target: $('[data-guide-toolbar-action=check-in]'),
