@@ -66,7 +66,7 @@ $repeatOptions = array(
     'repeat' => t('Tile')
 );
 $borderOptions = array(
-    'none' => t('None'),
+    '' => t('None'),
     'solid' => t('Solid'),
     'dotted' => t('Dotted'),
     'dashed' => t('Dashed'),
