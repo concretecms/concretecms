@@ -89,7 +89,10 @@ class Design extends BackendPageController {
             }
 
             $style = new CustomStyle($set, $this->area->getAreaHandle());
-            $pr->setAdditionalDataAttribute('css', $style->getCSS());
+            $css = $style->getCSS();
+            if ($css !== '') {
+                $pr->setAdditionalDataAttribute('css', $style->getCSS());
+            }
             $pr->setAdditionalDataAttribute('containerClass', $style->getContainerClass());
 
             $pr->setMessage(t('Design updated.'));
