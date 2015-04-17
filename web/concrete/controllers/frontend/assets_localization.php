@@ -257,7 +257,7 @@ var ccmi18n_helpGuides = {
   'add-page': [
     {title: <?=json_encode(t('Pages Panel'))?>, text: <?=json_encode(t('The pages is where you go to add a new page to your site, or jump between existing pages. To open the pages panel, click the icon.'))?>},
     {title: <?=json_encode(t('Page Types'))?>, text: <?=json_encode(t('This is your list of page types. Click any of them to add a page.'))?>},
-    {title: <?=json_encode(t('Page Types'))?>, text: <?=json_encode(t('This is your list of page types. Click any of them to add a page.'))?>}
+    {title: <?=json_encode(t('Sitemap'))?>, text: <?=json_encode(t('This is your sitemap. Use it to easily navigate your site.'))?>}
   ],
   'change-content-edit-mode': [
     {title: <?=json_encode(t('Edit Mode Active'))?>, text: <?=json_encode(t('The highlighted button makes it obvious you\'re in edit mode.'))?>},
