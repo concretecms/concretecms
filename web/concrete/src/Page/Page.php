@@ -978,8 +978,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     {
         $pages = array();
         $pages = $this->populateRecursivePages($pages, array('cID' => $this->getCollectionID()), $this->getCollectionParentID(), 0, $includeParent);
-        // now, since this is deletion, we want to order the pages by level, which
-        // should get us no funny business if the queue dies.
+        // we want to order the pages by level, which should get us no funny
+        // business if the queue dies.
         usort($pages, array('Page', 'queueForDuplicationSort'));
         $q = Queue::get('copy_page');
         foreach ($pages as $page) {
