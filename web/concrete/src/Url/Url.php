@@ -9,12 +9,15 @@ class Url extends \League\Url\Url implements UrlInterface
 
     public function setPortIfNecessary($port)
     {
+        if (!$port) {
+            return false;
+        }
+
         if (
             ($this->getScheme()->get() == 'http' && $port == '80') ||
             ($this->getScheme()->get() == 'https' && $port == '443')) {
             return false;
         }
-
         $this->getPort()->set($port);
     }
 
