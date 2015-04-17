@@ -14,7 +14,7 @@ use Page;
 use SinglePage;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
 
-class Version573 extends AbstractMigration
+class Version20141219000000 extends AbstractMigration
 {
     public function getDescription()
     {
