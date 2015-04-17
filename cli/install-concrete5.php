@@ -31,7 +31,7 @@ $helpText = <<<EOT
 EOT;
 if (count($argv) === 1) {
     echo $helpText;
-    exit;
+    exit(0);
 }
 
 define('C5_ENVIRONMENT_ONLY', true);
@@ -65,13 +65,14 @@ foreach (array_slice($argv, 1) as $arg) {
 }
 if (array_key_exists('help', $args)) {
     echo $helpText;
-    exit;
+    exit(0);
 }
 
 $cliconfig = array();
 if (array_key_exists('config', $args)) {
     if (!is_file($args['config'])) {
-        die("ERROR: Config file not found.\n");
+        echo "ERROR: Config file not found.\n";
+        exit(1);
     }
     include $args['config'];
 }
@@ -83,7 +84,8 @@ if ($cliconfig['target']) {
         $target = realpath(dirname(__FILE__) . '/' . $target);
     }
     if (!is_dir($target)) {
-        die("ERROR: Target location not found.\n");
+        echo "ERROR: Target location not found.\n";
+        exit(1);
     }
     define('DIR_BASE', $target);
 } else {
@@ -102,7 +104,8 @@ if ($cliconfig['core']) {
     $corePath = DIR_BASE . '/concrete';
 }
 if (!is_file($corePath . '/config/concrete.php')) {
-    die("ERROR: Invalid concrete5 core.\n");
+    echo "ERROR: Invalid concrete5 core.\n";
+    exit(1);
 }
 
 if(is_dir(DIR_BASE . '/application/languages')) {
@@ -127,7 +130,8 @@ if ($cliconfig['default-locale']) {
     if ($cliconfig['default-locale'] === 'en_US') {
         $cliconfig['default-locale'] = '';
     } elseif (!in_array($cliconfig['default-locale'], $availableLocales, true)) {
-        die("ERROR: '{$cliconfig['default-locale']}' is not a valid locale identifiers.\nAvailable locales: " . ($availableLocales ? implode(', ', $availableLocales) : 'no locale found') . ".\n");
+        echo "ERROR: '{$cliconfig['default-locale']}' is not a valid locale identifiers.\nAvailable locales: " . ($availableLocales ? implode(', ', $availableLocales) : 'no locale found') . ".\n";
+        exit(1);
     }
 }
 
@@ -135,7 +139,8 @@ if ($cliconfig['reinstall'] === 'yes' && is_file(DIR_BASE . '/application/config
     unlink(DIR_BASE . '/application/config/database.php');
 }
 if (is_file(DIR_BASE . '/application/config/database.php')) {
-    die("ERROR: concrete5 is already installed.\n");
+    echo "ERROR: concrete5 is already installed.\n";
+    exit(1);
 }
 
 /**
@@ -237,7 +242,7 @@ if ($e->has()) {
     foreach ($e->getList() as $ei) {
         print "ERROR: " . $ei . "\n";
     }
-    die;
+    exit(1);
 }
 
 $cnt->configure($e);
@@ -246,6 +251,7 @@ if ($e->has()) {
     foreach ($e->getList() as $ei) {
         print "ERROR: " . $ei . "\n";
     }
+    exit(1);
 } else {
 
     $spl = StartingPointPackage::getClass($cliconfig['starting-point']);
@@ -283,3 +289,5 @@ if ($e->has()) {
         print "Installation Complete!\n";
     }
 }
+
+exit(0);
