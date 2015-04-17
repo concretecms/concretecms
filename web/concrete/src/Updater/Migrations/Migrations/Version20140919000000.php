@@ -7,7 +7,7 @@ use Concrete\Core\Permission\Category;
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
-class Version5702 extends AbstractMigration
+class Version20140919000000 extends AbstractMigration
 {
     public function getDescription()
     {

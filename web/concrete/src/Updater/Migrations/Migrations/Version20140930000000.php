@@ -6,7 +6,7 @@ use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Comparator;
 use Doctrine\DBAL\Schema\Schema;
 
-class Version5704 extends AbstractMigration
+class Version20140930000000 extends AbstractMigration
 {
     public function getDescription()
     {
