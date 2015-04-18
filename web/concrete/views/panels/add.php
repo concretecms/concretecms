@@ -291,6 +291,25 @@ switch ($tab) {
                                 $blocktypes = array();
                             }
                             if (count($blocktypes)) {
+
+                                if(count($blocktypes)>1) {
+                                    // create an odered table of btID
+                                    $bts_in_set = $set->getBlockTypes();
+                                    if(count($bts_in_set)>1) {
+
+                                        // map to btID
+                                        $bt_order = array_map(function($bt){return $bt->getBlockTypeID();}, $bts_in_set);
+
+                                        // sort the block types according to ascending position in set
+                                        usort ( $blocktypes, 
+                                                function($bt_a, $bt_b) use ($bt_order){
+                                                    return ( array_search($bt_a->getBlockTypeID(),$bt_order) > 
+                                                             array_search($bt_b->getBlockTypeID(),$bt_order) )?1:-1;
+                                                }
+                                            );
+                                    }
+                                }
+
                                 foreach ($blocktypes as $bt) {
 
                                     $btIcon = $ci->getBlockTypeIconURL($bt);
