@@ -192,7 +192,13 @@ class Set extends Object {
 		$r = $db->GetOne('select count(*) from BlockTypeSetBlockTypes where btsID = ? and btID = ?', array($this->getBlockTypeSetID(), $bt->getBlockTypeID()));
 		return $r > 0;
 	}
-
+	
+    public function displayOrder($bt) {
+        $db = Loader::db();
+        $r = $db->GetOne('select displayOrder from BlockTypeSetBlockTypes where btsID = ? and btID = ?', array($this->getBlockTypeSetID(), $bt->getBlockTypeID()));
+        return $r;
+    }
+    
 	public function delete() {
 		$db = Loader::db();
 		$db->Execute('delete from BlockTypeSets where btsID = ?', array($this->getBlockTypeSetID()));
