@@ -13,6 +13,7 @@ use Concrete\Flysystem\FileNotFoundException;
 use Core;
 use Events;
 use FileAttributeKey;
+use Imagine\Exception\InvalidArgumentException as ImagineInvalidArgumentException;
 use Imagine\Image\ImageInterface;
 use Loader;
 use Page;
@@ -706,55 +707,59 @@ class Version
         $types = Type::getVersionList();
 
         $fr = $this->getFileResource();
-        $image = \Image::load($fr->read());
+        try {
+            $image = \Image::load($fr->read());
 
-        foreach ($types as $type) {
+            foreach ($types as $type) {
 
 
-            // delete the file if it exists
-            $this->deleteThumbnail($type);
+                // delete the file if it exists
+                $this->deleteThumbnail($type);
 
-            if ($this->getAttribute('width') <= $type->getWidth()) {
-                continue;
+                if ($this->getAttribute('width') <= $type->getWidth()) {
+                    continue;
+                }
+
+                $filesystem = $this->getFile()
+                    ->getFileStorageLocationObject()
+                    ->getFileSystemObject();
+
+                $height = $type->getHeight();
+                $thumbnailMode = ImageInterface::THUMBNAIL_OUTBOUND;
+                if (!$height) {
+                    $height = $type->getWidth();
+                    $thumbnailMode = ImageInterface::THUMBNAIL_INSET;
+                }
+                $thumbnail = $image->thumbnail(new \Imagine\Image\Box($type->getWidth(), $height), $thumbnailMode);
+                $thumbnailPath = $type->getFilePath($this);
+
+                $o = new \stdClass;
+                $o->visibility = AdapterInterface::VISIBILITY_PUBLIC;
+                $o->mimetype = 'image/jpeg';
+
+                $filesystem->write(
+                    $thumbnailPath,
+                    $thumbnail->get('jpg', array('jpeg_quality' => 60)),
+                    array(
+                        'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
+                        'mimetype' => 'image/jpeg'
+                    )
+                );
+
+                if ($type->getHandle() == \Config::get('concrete.icons.file_manager_listing.handle')) {
+                    $this->fvHasListingThumbnail = true;
+                }
+
+                if ($type->getHandle() == \Config::get('concrete.icons.file_manager_detail.handle')) {
+                    $this->fvHasDetailThumbnail = true;
+                }
+
+                unset($thumbnail);
+                unset($filesystem);
+
             }
-
-            $filesystem = $this->getFile()
-                               ->getFileStorageLocationObject()
-                               ->getFileSystemObject();
-
-            $height = $type->getHeight();
-            $thumbnailMode = ImageInterface::THUMBNAIL_OUTBOUND;
-            if (!$height) {
-                $height = $type->getWidth();
-                $thumbnailMode = ImageInterface::THUMBNAIL_INSET;
-            }
-            $thumbnail = $image->thumbnail(new \Imagine\Image\Box($type->getWidth(), $height), $thumbnailMode);
-            $thumbnailPath = $type->getFilePath($this);
-
-            $o = new \stdClass;
-            $o->visibility = AdapterInterface::VISIBILITY_PUBLIC;
-            $o->mimetype = 'image/jpeg';
-
-            $filesystem->write(
-                $thumbnailPath,
-                $thumbnail->get('jpg', array('jpeg_quality' => 60)),
-                array(
-                    'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
-                    'mimetype'   => 'image/jpeg'
-                )
-            );
-
-            if ($type->getHandle() == \Config::get('concrete.icons.file_manager_listing.handle')) {
-                $this->fvHasListingThumbnail = true;
-            }
-
-            if ($type->getHandle() == \Config::get('concrete.icons.file_manager_detail.handle')) {
-                $this->fvHasDetailThumbnail = true;
-            }
-
-            unset($thumbnail);
-            unset($filesystem);
-
+        } catch (ImagineInvalidArgumentException $e) {
+            return false;
         }
     }
 
