@@ -94,6 +94,12 @@ class Group extends TreeNode
         if (is_object($obj)) {
             $obj->gID = $this->gID;
             $obj->iconClass = 'fa fa-users';
+            // If not root node...
+            if (isset($this->gID)) {
+                // ...use Name (not DisplayName,
+                // which contains full path).
+                $obj->title = $this->getTreeNodeName();
+	        }
 
             return $obj;
         }
