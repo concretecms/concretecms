@@ -54,7 +54,7 @@ $message = $hih->getMessage($bt->getBlockTypeHandle());
 if (!$message && $cont->getBlockTypeHelp()) {
 	$message = new \Concrete\Core\Application\Service\UserInterface\Help\Message();
 	$message->setIdentifier($bt->getBlockTypeHandle());
-	$message->setContent($cont->getBlockTypeHelp());
+	$message->setMessageContent($cont->getBlockTypeHelp());
 }
 
 if (isset($message) && is_object($message) && !$bt->supportsInlineEdit()) { ?>
