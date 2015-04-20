@@ -17,13 +17,40 @@ if ($this->controller->getTask() == 'translate_po') {
         plurals: <?php echo json_encode($section->getPluralsCases()); ?>,
         translations: <?php echo json_encode($translations); ?>,
         approvalSupport: false
-      })
+      });
+      var saveToFileToken = <?php echo json_encode(Core::make('token')->generate('export_translations')); ?>;
+      $('.ccm-save-to-file').on('click', function() {
+        var $btn = $(this);
+        $btn.addClass('disabled').css('width', $btn.outerWidth() + 'px').html('<span class="fa fa-spinner fa-spin"></span>');
+        $.ajax({
+          cache: false,
+          dataType: 'json',
+          method: 'POST',
+          data: {ccm_token: saveToFileToken},
+          url: <?php echo json_encode($controller->action('export_translations', $section->getLocale())); ?>
+        })
+        .done(function(data) {
+          if (data && data.message) {
+            alert(data.message);
+          }
+          if (data && data.newToken) {
+          	saveToFileToken = data.newToken;
+          }
+        })
+        .fail(function(xhr, status, error) {
+          alert(xhr.responseText || error);
+        })
+        .always(function() {
+          $btn.removeClass('disabled').css('width', 'auto').text(<?php echo json_encode(t('Save to file')); ?>);
+        }); 
+      });
     });
     </script>
     <div id="ccm-translator-interface" class="ccm-translator"></div>
 
     <div class="ccm-dashboard-header-buttons">
         <a href="<?php echo $controller->action('view'); ?>" class="btn btn-default"><?php echo t('Back to List'); ?></a>
+        <a href="javascript:void(0)" class="btn btn-primary ccm-save-to-file"><?php echo t('Save to file'); ?></a>
     </div>
     <?php
 
@@ -114,7 +141,7 @@ if ($this->controller->getTask() == 'translate_po') {
             <form method="post" action="<?php echo $controller->action('submit'); ?>">
                 <div class="ccm-dashboard-header-buttons btn-group">
                     <button class="btn btn-default" type="submit" name="action" value="reload"><?php echo t('Reload Strings'); ?></button>
-                    <button class="btn btn-default" type="submit" name="action" value="export"><?php echo t('Export to .PO'); ?></button>
+                    <button class="btn btn-default" type="submit" name="action" value="export"><?php echo t('Save to file'); ?></button>
                     <?php echo $valt->output(); ?>
                     <button class="btn btn-danger" type="button" data-dialog="reset" value="reset"><?php echo t('Reset All'); ?></button>
                 </div>
