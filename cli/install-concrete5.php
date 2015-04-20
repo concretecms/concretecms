@@ -5,7 +5,7 @@ use Concrete\Core\Database\Connection\ConnectionFactory;
 $helpText = <<<EOT
     Usage: install-concrete5.php [OPTION]...
     install concrete5 from the shell
-
+        --root-url=<url>                   URL of the installation
         --db-server=<hostname>             Location of database server
         --db-username=<username>           Database username
         --db-password=<password>           Database password
@@ -41,6 +41,7 @@ ini_set('display_errors', 1);
 define('C5_EXECUTE', true);
 
 $defaults = array(
+    'root-url' => '',
     'db-server' => '',
     'db-username' => '',
     'db-password' => '',
@@ -77,6 +78,57 @@ if (array_key_exists('config', $args)) {
     include $args['config'];
 }
 $cliconfig = array_merge($defaults, $cliconfig, $args);
+
+if (empty($cliconfig['root-url'])) {
+    echo "ERROR: root URL must be specified.\n";
+    exit(1);
+}
+// See http://3v4l.org/dcget
+if (!preg_match('_^(https?)://([^:/?]+)(?::(\d+))?(?:(/[^?]+))?(?:\?(.*))?$_i', $cliconfig['root-url'], $m)) {
+    echo "ERROR: root URL is not valid.\n";
+    exit(1);
+}
+$rootUrl = array();
+$rootUrl['protocol'] = strtolower($m[1]);
+$rootUrl['domain'] = $m[2];
+$rootUrl['port'] = null;
+if (isset($m[3]) && ($m[3] !== '')) {
+    $rootUrl['port'] = intval($m[3]);
+} else {
+    switch($rootUrl['protocol']) {
+        case 'http':
+            $rootUrl['port'] = 80;
+            break;
+        case 'https':
+            $rootUrl['port'] = 443;
+            break;
+    }
+}
+$rootUrl['path'] = isset($m[4]) ? $m[4] : '';
+if ($rootUrl['path'] === '') {
+    $rootUrl['path'] = '/';
+}
+$rootUrl['queryString'] = isset($m[5]) ? $m[5] : '';
+switch($rootUrl['protocol'].'@'.$rootUrl['port']) {
+    case'http@80':
+    case'https@443':
+        $rootUrl['host'] = $rootUrl['domain'];
+        break;
+    default:
+        $rootUrl['host'] = $rootUrl['domain'].':'.$rootUrl['port'];
+        break;
+}
+$rootUrl['requestUri'] = $rootUrl['path'].(($rootUrl['queryString'] === '') ? '' : "?{$rootUrl['queryString']}");
+
+$_SERVER['HTTP_HOST'] = $rootUrl['host'];
+$_SERVER['SERVER_NAME'] = $rootUrl['domain'];
+$_SERVER['SERVER_PORT'] = $rootUrl['port'];
+$_SERVER['REQUEST_SCHEME'] = $rootUrl['protocol'];
+$_SERVER['QUERY_STRING'] = $rootUrl['queryString'];
+$_SERVER['REQUEST_URI'] = $rootUrl['requestUri'];
+if ($rootUrl['protocol'] === 'https') {
+    $_SERVER['HTTPS'] = 'on';
+}
 
 if ($cliconfig['target']) {
     $target = $cliconfig['target'];
