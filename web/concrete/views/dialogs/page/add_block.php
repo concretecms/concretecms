@@ -31,8 +31,8 @@ $message = $hih->getMessage($blockType->getBlockTypeHandle());
 
 if (!$message && $blockTypeController->getBlockTypeHelp()) {
 	$message = new \Concrete\Core\Application\Service\UserInterface\Help\Message();
-	$message->setIdentifier($bt->getBlockTypeHandle());
-	$message->setContent($blockTypeController->getBlockTypeHelp());
+	$message->setIdentifier($blockType->getBlockTypeHandle());
+	$message->setMessageContent($blockTypeController->getBlockTypeHelp());
 }
 
 
