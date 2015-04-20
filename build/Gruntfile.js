@@ -123,7 +123,7 @@ module.exports = function(grunt) {
                 // Edit Mode
                 '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode/editmode.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode/block.js',
-                '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode/StackDisplay.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode/stackdisplay.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode/area.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode/layout.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode/dragarea.js',
