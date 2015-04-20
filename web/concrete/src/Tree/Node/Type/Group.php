@@ -44,7 +44,7 @@ class Group extends TreeNode
 
         $g = UserGroup::getByID($this->gID);
         if (is_object($g)) {
-            $gName = $g->getGroupDisplayName(false);
+            $gName = $g->getGroupDisplayName(false, false);
             switch ($format) {
                 case 'html':
                     return h($gName);
@@ -94,7 +94,9 @@ class Group extends TreeNode
         if (is_object($obj)) {
             $obj->gID = $this->gID;
             $obj->iconClass = 'fa fa-users';
-
+            if (isset($this->gID)) {
+                $obj->title = $this->getTreeNodeDisplayName('text');
+            }
             return $obj;
         }
     }
