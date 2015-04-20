@@ -29,7 +29,7 @@ class EditResponse
         if ($e instanceof \Concrete\Core\Error\Error && $e->has()) {
             $this->error = $e;
         } else {
-            $this->error = Code::make('helper/validation/error');
+            $this->error = Core::make('helper/validation/error');
         }
         $this->time = Core::make('helper/date')->toDB();
     }
