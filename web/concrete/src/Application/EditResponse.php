@@ -1,6 +1,5 @@
 <?php
 namespace Concrete\Core\Application;
-use Loader;
 use Core;
 use stdClass;
 class EditResponse {
@@ -24,7 +23,7 @@ class EditResponse {
 		if ($e instanceof \Concrete\Core\Error\Error && $e->has()) {
 			$this->error = $e;
 		} else {
-			$this->error = Loader::helper('validation/error');
+			$this->error = Code::make('helper/validation/error');
 		}
 		$this->time = Core::make('helper/date')->toDB();
 	}
@@ -50,7 +49,7 @@ class EditResponse {
 	}
 
 	public function getJSON() {
-		return Loader::helper('json')->encode($this->getJSONObject());
+		return json_encode($this->getJSONObject());
 	}
 
 	public function setAdditionalDataAttribute($key, $value) {
@@ -77,9 +76,9 @@ class EditResponse {
 
 	public function outputJSON() {
 		if ($this->error && is_object($this->error) && (($this->error instanceof \Exception) || $this->error->has())) {
-			Loader::helper('ajax')->sendError($this->error);
+			Core::make('helper/ajax')->sendError($this->error);
 		} else {
-			Loader::helper('ajax')->sendResult($this->getJSONObject());
+			Core::make('helper/ajax')->sendResult($this->getJSONObject());
 		}
 	}
 
