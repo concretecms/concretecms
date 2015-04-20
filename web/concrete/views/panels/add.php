@@ -291,6 +291,9 @@ switch ($tab) {
                                 $blocktypes = array();
                             }
                             if (count($blocktypes)) {
+
+                                usort ( $blocktypes, function($bt_a, $bt_b) use($set){return ($set->displayOrder($bt_a) > $set->displayOrder($bt_b))?1:-1;});
+
                                 foreach ($blocktypes as $bt) {
 
                                     $btIcon = $ci->getBlockTypeIconURL($bt);
