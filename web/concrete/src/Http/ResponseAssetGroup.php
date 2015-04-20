@@ -180,7 +180,9 @@ class ResponseAssetGroup {
 			$this->requiredAssetGroup->add($ap);
 		} else {
 			$r = $list->getAssetGroup($assetType);
-			$this->requiredAssetGroup->addGroup($r);
+			if (isset($r)) {
+				$this->requiredAssetGroup->addGroup($r);
+			}
 		}
 	}
 
