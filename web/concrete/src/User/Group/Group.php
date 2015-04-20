@@ -280,21 +280,23 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
     }
 
-    public function getGroupDisplayName($includeHTML = true)
+    public function getGroupDisplayName($includeHTML = true, $includePath = true)
     {
         $return = '';
-        $parentGroups = $this->getParentGroups();
-        if (count($parentGroups) > 0) {
-            if ($includeHTML) {
-                $return .= '<span class="ccm-group-breadcrumb">';
-            }
-            foreach ($parentGroups as $pg) {
-                $return .= h(tc('GroupName', $pg->getGroupName()));
-                $return .= ' ' . Config::get('concrete.seo.group_name_separator') . ' ';
-            }
-            $return = trim($return);
-            if ($includeHTML) {
-                $return .= '</span> ';
+        if ($includePath) {
+            $parentGroups = $this->getParentGroups();
+            if (count($parentGroups) > 0) {
+                if ($includeHTML) {
+                    $return .= '<span class="ccm-group-breadcrumb">';
+                }
+                foreach ($parentGroups as $pg) {
+                    $return .= h(tc('GroupName', $pg->getGroupName()));
+                    $return .= ' ' . Config::get('concrete.seo.group_name_separator') . ' ';
+                }
+                $return = trim($return);
+                if ($includeHTML) {
+                    $return .= '</span> ';
+                }
             }
         }
         $return .= tc('GroupName', $this->getGroupName());
