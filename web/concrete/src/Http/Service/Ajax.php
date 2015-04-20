@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Http\Service;
 use Loader;
+use Exception;
 
 class Ajax {
 
