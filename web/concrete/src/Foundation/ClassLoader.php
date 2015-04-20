@@ -178,6 +178,7 @@ class ClassLoader  {
 		$symfonyLoader = new SymfonyClassloader();
         $symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\StartingPointPackage', DIR_BASE_CORE . '/config/install/' . DIRNAME_PACKAGES);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Attribute', DIR_BASE_CORE . '/' . DIRNAME_ATTRIBUTES);
+		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\MenuItem', DIR_BASE_CORE . '/' . DIRNAME_MENU_ITEMS);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Authentication', DIR_BASE_CORE . '/' . DIRNAME_AUTHENTICATION);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Block', DIR_BASE_CORE . '/' . DIRNAME_BLOCKS);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Theme', DIR_BASE_CORE . '/' . DIRNAME_THEMES);
@@ -196,6 +197,7 @@ class ClassLoader  {
         }
         $symfonyLoader->addPrefix($namespace . '\\StartingPointPackage', DIR_APPLICATION . '/config/install/' . DIRNAME_PACKAGES);
 		$symfonyLoader->addPrefix($namespace . '\\Attribute', DIR_APPLICATION. '/' . DIRNAME_ATTRIBUTES);
+		$symfonyLoader->addPrefix($namespace . '\\MenuItem', DIR_APPLICATION . '/' . DIRNAME_MENU_ITEMS);
 		$symfonyLoader->addPrefix($namespace . '\\Authentication', DIR_APPLICATION . '/' . DIRNAME_AUTHENTICATION);
 		$symfonyLoader->addPrefix($namespace . '\\Block', DIR_APPLICATION . '/' . DIRNAME_BLOCKS);
 		$symfonyLoader->addPrefix($namespace . '\\Theme', DIR_APPLICATION . '/' . DIRNAME_THEMES);
