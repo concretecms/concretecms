@@ -27,7 +27,14 @@ use Concrete\Core\Foundation\Service\ProviderList;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\Support\Facade\Facade;
 use Illuminate\Filesystem\Filesystem;
-use Patchwork\Utf8\Bootup;
+use Patchwork\Utf8\Bootup as PatchworkUTF8;
+
+/**
+ * ----------------------------------------------------------------------------
+ * Handle text encoding.
+ * ----------------------------------------------------------------------------
+ */
+PatchworkUTF8::initAll();
 
 /**
  * ----------------------------------------------------------------------------
@@ -152,14 +159,6 @@ define('DIR_REL', $cms['app_relative_path']);
  * ----------------------------------------------------------------------------
  */
 $cms->setupFilesystem();
-
-
-/**
- * ----------------------------------------------------------------------------
- * Handle text encoding.
- * ----------------------------------------------------------------------------
- */
-Bootup::initAll();
 
 /**
  * ----------------------------------------------------------------------------
