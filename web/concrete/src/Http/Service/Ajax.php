@@ -1,6 +1,5 @@
 <?php
 namespace Concrete\Core\Http\Service;
-use Loader;
 use Exception;
 
 class Ajax {
@@ -17,7 +16,7 @@ class Ajax {
         } else {
             header('Content-Type: text/plain; charset=' . APP_CHARSET, true);
         }
-        echo Loader::helper('json')->encode($result);
+        echo json_encode($result);
         die();
     }
 
