@@ -23,7 +23,7 @@ if (is_object($f)) {
         $tag->title(h($title));
     }
     if ($linkURL):
-        print '<a href="' . urlencode($linkURL) . '">';
+        print '<a href="' . $linkURL . '">';
     endif;
 
     print $tag;
