@@ -19,6 +19,7 @@ class Url extends \League\Url\Url implements UrlInterface
             return false;
         }
         $this->getPort()->set($port);
+        return $this;
     }
 
     public static function createFromUrl($url, $trailing_slashes = false)
