@@ -4,7 +4,7 @@ namespace Concrete\Core\Url\Resolver;
 
 use Concrete\Core\Url\Url;
 use Concrete\Core\Url\UrlImmutable;
-use Concrete\Core\Http\Request;
+use Request;
 
 class CanonicalUrlResolver implements UrlResolverInterface
 {
@@ -36,8 +36,8 @@ class CanonicalUrlResolver implements UrlResolverInterface
                $url->getPort()->set($canonical->getPort());
            }
        } else {
-           $scheme = \Request::getInstance()->getScheme();
-           $host = \Request::getInstance()->getHost();
+           $scheme = Request::getInstance()->getScheme();
+           $host = Request::getInstance()->getHost();
            if ($scheme && $host) {
                $url
                    ->setScheme($scheme)
