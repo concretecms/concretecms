@@ -194,6 +194,8 @@ class ResponseAssetGroup
             $r = $list->getAssetGroup($assetType);
             if (isset($r)) {
                 $this->requiredAssetGroup->addGroup($r);
+            } else {
+                throw new \Exception(t('"%s" is not a valid asset group handle', $assetType));
             }
         }
     }
