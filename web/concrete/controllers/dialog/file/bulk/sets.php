@@ -90,10 +90,12 @@ class Sets extends BackendInterfaceController
 
             if (is_array($fsNew)) {
                 foreach($fsNew as $i => $name) {
-                    foreach($this->files as $file) {
-                        $type = ($fsNewShare[$i] == 1) ? Set::TYPE_PUBLIC : Set::TYPE_PRIVATE;
-                        $fs = Set::createAndGetSet($fsNew[$i], $type);
-                        $fs->addFileToSet($file);
+                    if ($name) {
+                        foreach($this->files as $file) {
+                            $type = ($fsNewShare[$i] == 1) ? Set::TYPE_PUBLIC : Set::TYPE_PRIVATE;
+                            $fs = Set::createAndGetSet($fsNew[$i], $type);
+                            $fs->addFileToSet($file);
+                        }
                     }
                 }
             }

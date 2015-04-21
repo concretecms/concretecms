@@ -283,6 +283,29 @@ class PagePathTest extends PageTestCase {
 
     }
 
+    public function testCustomCanonicalPagePathInTrash()
+    {
+        $cache = Core::make('cache/request');
+        $cache->disable();
+
+        \SinglePage::add(Config::get('concrete.paths.trash'));
+
+        $about = self::createPage('About');
+        $contact = self::createPage('Contact Us', $about);
+
+        $about->setCanonicalPagePath('/custom-about');
+
+        $about->moveToTrash();
+
+        $newAbout = Page::getByPath('/custom-about');
+        $contact = Page::getByPath('/custom-about/contact-us');
+        $this->assertEquals(COLLECTION_NOT_FOUND, $newAbout->isError());
+        $this->assertEquals(COLLECTION_NOT_FOUND, $contact->isError());
+
+        $newAbout = Page::getByPath(Config::get('concrete.paths.trash') . '/about');
+        $this->assertFalse($newAbout->isError());
+
+    }
 
 
 }
