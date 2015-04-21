@@ -39,10 +39,18 @@ class Pagination extends Pagerfanta
      * is bootstrap 3) 2. it sets up URLs to start with the pass of the current page, and 3. it uses the default
      * item list query string parameter for paging. If you need more custom functionality you should consider
      * using the Pagerfanta\View\ViewInterface objects directly.
+     *
+     * @param array
+     * @link https://github.com/whiteoctober/Pagerfanta#twitterbootstrapview Default value of options
      * @return string
      */
-    public function renderDefaultView()
+    public function renderDefaultView($args = array())
     {
+        $default_args = array(
+            'prev_message' => tc('Pagination', '&larr; Previous'),
+            'next_message' => tc('Pagination', 'Next &rarr;'),
+            'active_suffix' => '<span class="sr-only">' . tc('Pagination', '(current)') . '</span>'
+        );
         $v = Core::make('pagination/view');
         $list = $this->list;
         $html = $v->render(
@@ -52,11 +60,7 @@ class Pagination extends Pagerfanta
                 $url = $qs->setVariable($list->getQueryPaginationPageParameter(), $page);
                 return $url;
             },
-            array(
-                'prev_message' => tc('Pagination', '&larr; Previous'),
-                'next_message' => tc('Pagination', 'Next &rarr;'),
-                'active_suffix' => '<span class="sr-only">' . tc('Pagination', '(current)') . '</span>'
-            )
+            $args + $default_args
         );
         return $html;
     }
