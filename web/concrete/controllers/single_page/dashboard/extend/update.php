@@ -41,7 +41,7 @@ class Update extends DashboardPageController {
 						if ($currentLocale != 'en_US') {
 							Localization::changeLocale($currentLocale);
 						}
-						$this->set('error', $e);
+						$this->error->add($e);
 					}
 				}
 			}
