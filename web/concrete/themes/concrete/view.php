@@ -13,12 +13,11 @@ $view->addHeaderItem('<meta name="viewport" content="width=device-width, initial
 
 $showLogo = true;
 if (is_object($c)) {
-    if (is_object($cp)) {
-        if ($cp->canViewToolbar()) {
-            $showLogo = false;
-        }
+    $cp = new Permissions($c);
+    if ($cp->canViewToolbar()) {
+        $showLogo = false;
     }
-        
+
      Loader::element('header_required');
 } else { 
     $this->markHeaderAssetPosition();
