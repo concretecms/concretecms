@@ -1,5 +1,5 @@
 div#ccm-dashboard-welcome-back {
-  margin: -13px -10px 0px -12px;
+  margin: -20px 0px 0px -20px;
   overflow: hidden;
   color: #666;
   padding: 80px 30px 30px 155px;
@@ -10,4 +10,30 @@ div#ccm-dashboard-welcome-back {
     color: #666;
   }
 
+}
+
+
+div.newsflow-paging-previous,
+div.newsflow-paging-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 60px;
+
+  a {
+    color: @gray-darker;
+
+    .transition(color cubic-bezier(0.190, 1.000, 0.220, 1.000) 0.5s);
+    &:hover {
+      color: @brand-primary;
+    }
+  }
+}
+
+div.newsflow-paging-next {
+  right: -60px;
+}
+
+div.newsflow-paging-previous {
+  left: -60px;
 }

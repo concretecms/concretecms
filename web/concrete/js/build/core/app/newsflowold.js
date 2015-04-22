@@ -1,12 +1,3 @@
-ccm_closeNewsflow = function(r) {
-	$ovl = ccm_getNewsflowOverlayWindow();
-	$ovl.fadeOut(300, 'easeOutExpo');
-	$('.ui-widget-overlay').fadeOut(300, 'easeOutExpo', function() {
-		$(this).remove();
-        $ovl.remove();
-	});
-}
-
 ccm_setNewsflowPagingArrowHeight = function() {
 	if ($("#ccm-marketplace-detail").length > 0) {
 		var $ovl = $("#ccm-marketplace-detail");
@@ -20,33 +11,6 @@ ccm_setNewsflowPagingArrowHeight = function() {
 	$(".newsflow-paging-next").show();
 	$(".newsflow-paging-previous").show();
 
-}
-
-ccm_setNewsflowOverlayDimensions = function() {
-	if ($("#newsflow-overlay").length > 0) { 
-		var w = $("#newsflow-overlay").width();
-		var tw = $(window).width();
-		var th = $(window).height();
-		
-		var optimalHeight = 650;
-		var availableSpace = th - 80;
-		
-		// we use h strictly for the _top param below
-		
-		if (availableSpace > optimalHeight) {
-			h = optimalHeight;
-		} else {
-			h = availableSpace;
-		}		
-		$("#newsflow-overlay").css('height', optimalHeight);
-
-		var _left = (tw - w) / 2;
-		var _top = (th - h) / 2;
-		_top = _top + 29; // handle the top toolbar
-		_left = _left + "px";
-		_top = _top + "px";
-		$("#newsflow-overlay").css('left', _left).css('top', _top);
-	}
 }
 
 ccm_getNewsflowOverlayWindow = function() {
