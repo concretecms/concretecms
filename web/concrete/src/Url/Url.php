@@ -1,30 +1,29 @@
 <?php
+
 namespace Concrete\Core\Url;
 
-use Concrete\Core\Http\Request;
 use RuntimeException;
 
 class Url extends \League\Url\Url implements UrlInterface
 {
-
     public function setPortIfNecessary($port)
     {
-        if (!$port) {
-            return false;
+        if (
+            $port
+            &&
+            ($this->getScheme()->get() != 'http' || $port != '80')
+            &&
+            ($this->getScheme()->get() != 'https' || $port != '443')
+        ) {
+            $this->getPort()->set($port);
         }
 
-        if (
-            ($this->getScheme()->get() == 'http' && $port == '80') ||
-            ($this->getScheme()->get() == 'https' && $port == '443')) {
-            return false;
-        }
-        $this->getPort()->set($port);
         return $this;
     }
 
     public static function createFromUrl($url, $trailing_slashes = false)
     {
-        $url = (string)$url;
+        $url = (string) $url;
         $url = trim($url);
         $original_url = $url;
         $url = self::sanitizeUrl($url);
@@ -70,5 +69,4 @@ class Url extends \League\Url\Url implements UrlInterface
             new    \League\Url\Components\Fragment($components['fragment'])
         );
     }
-
 }
