@@ -4,6 +4,7 @@
 	var steps = [{
 		content: '<p><span class="h5">' + i18n[0].title + '</span><br/>' + i18n[0].text + '</p>',
 		highlightTarget: false,
+		closeButton: true,
 		nextButton: false,
 		target: $('[data-guide-toolbar-action=edit-page]'),
 		my: 'top left',

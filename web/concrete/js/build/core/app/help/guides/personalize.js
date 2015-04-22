@@ -5,6 +5,7 @@
 		content: '<p><span class="h5">' + i18n[0].title + '</span><br/>' + i18n[0].text + '</p>',
 		highlightTarget: true,
 		nextButton: false,
+		closeButton: true,
 		target: $('[data-guide-toolbar-action=page-settings]'),
 		my: 'top left',
 		at: 'bottom center',
@@ -27,6 +28,7 @@
 		highlightTarget: true,
 		nextButton: false,
 		my: 'left center',
+		closeButton: true,
 		at: 'right center',
 		setup: function(tour, options) {
 			$('a[data-launch-panel-detail=page-design]').on('click', function() {
@@ -45,6 +47,7 @@
 		content: '<p><span class="h5">' + i18n[2].title + '</span><br/>' + i18n[2].text + '</p>',
 		highlightTarget: true,
 		nextButton: true,
+		closeButton: true,
 		my: 'bottom center',
 		at: 'top center',
 		setup: function(tour, options) {

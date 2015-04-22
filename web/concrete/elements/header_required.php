@@ -161,7 +161,7 @@ if (is_object($cp)) {
 
 	$cih = Loader::helper('concrete/ui');
 	if ($cih->showNewsflowOverlay()) {
-		$v->addFooterItem('<script type="text/javascript">$(function() { ccm_showDashboardNewsflowWelcome(); });</script>');
+		$v->addFooterItem('<script type="text/javascript">$(function() { new ConcreteNewsflowDialog().open(); });</script>');
 	}
 
 	if ($_COOKIE['ccmLoadAddBlockWindow'] && $c->isEditMode()) {

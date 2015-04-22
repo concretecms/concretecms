@@ -7,6 +7,7 @@
 		content: '<p><span class="h5">' + i18n[0].title + '</span><br/>' + i18n[0].text + '</p>',
 		highlightTarget: false,
 		nextButton: true,
+		closeButton: true,
 		target: $('[data-guide-toolbar-action=check-in]'),
 		my: 'top left',
 		at: 'bottom center',
@@ -17,6 +18,7 @@
 		content: '<p><span class="h5">' + i18n[1].title + '</span><br/>' + i18n[1].text + '</p>',
 		highlightTarget: false,
 		nextButton: false,
+		closeButton: true,
 		target: $block,
 		my: 'top left',
 		at: 'bottom center',
@@ -30,6 +32,7 @@
 		}
 	},{
 		content: '<p><span class="h5">' + i18n[2].title + '</span><br/>' + i18n[2].text + '</p>',
+		closeButton: true,
 		highlightTarget: false,
 		nextButton: true,
 		setup: function(tour, options) {
