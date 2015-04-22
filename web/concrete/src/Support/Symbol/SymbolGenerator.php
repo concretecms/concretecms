@@ -1,8 +1,10 @@
 <?php
+
 /**
  * Concrete5 symbol file generator.
- * Inspired by Laravel IDE Helper Generator by Barry vd. Heuvel <barryvdh@gmail.com>
+ * Inspired by Laravel IDE Helper Generator by Barry vd. Heuvel <barryvdh@gmail.com>.
  */
+
 namespace Concrete\Core\Support\Symbol;
 
 use Concrete\Core\Foundation\ClassAliasList;
@@ -10,9 +12,8 @@ use Concrete\Core\Support\Symbol\ClassSymbol\ClassSymbol;
 
 class SymbolGenerator
 {
-
     /**
-     * The ClassSymbol objects
+     * The ClassSymbol objects.
      *
      * @var ClassSymbol[]
      */
@@ -47,6 +48,7 @@ class SymbolGenerator
      * @param string $eol
      * @param string $padding
      * @param callable|null $methodFilter
+     *
      * @return mixed|string
      */
     public function render($eol = "\n", $padding = '    ', $methodFilter = null)
@@ -60,6 +62,7 @@ class SymbolGenerator
             }
         }
         $rendered .= '}'.$eol;
+
         return $rendered;
     }
 }

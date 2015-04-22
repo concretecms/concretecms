@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Support\Symbol\ClassSymbol;
 
 use Concrete\Core\Support\Symbol\ClassSymbol\MethodSymbol\MethodSymbol;
@@ -6,7 +7,6 @@ use ReflectionClass;
 
 class ClassSymbol
 {
-
     /**
      * Fully qualified class name.
      *
@@ -78,7 +78,7 @@ class ClassSymbol
     }
 
     /**
-     * Get the methods
+     * Get the methods.
      */
     protected function resolveMethods()
     {
@@ -89,7 +89,7 @@ class ClassSymbol
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isFacade()
     {
@@ -102,6 +102,7 @@ class ClassSymbol
      * @param string $eol
      * @param string $padding
      * @param callable|null $methodFilter
+     *
      * @return string
      */
     public function render($eol = "\n", $padding = '    ', $methodFilter = null)
@@ -131,6 +132,7 @@ class ClassSymbol
             }
         }
         $rendered .= "}{$eol}";
+
         return $rendered;
     }
 }
