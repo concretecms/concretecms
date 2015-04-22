@@ -1,11 +1,11 @@
 <?php
+
 namespace Concrete\Core\Support\Symbol\ClassSymbol\MethodSymbol;
 
 use Concrete\Core\Support\Symbol\ClassSymbol\ClassSymbol;
 
 class MethodSymbol
 {
-
     /**
      * @var \ReflectionMethod
      */
@@ -31,7 +31,7 @@ class MethodSymbol
     protected $parameters = array();
 
     /**
-     * The docblock
+     * The docblock.
      *
      * @var string
      */
@@ -49,10 +49,11 @@ class MethodSymbol
     }
 
     /**
-     * Render the Method
+     * Render the Method.
      *
      * @param string $eol
      * @param string $padding
+     *
      * @return string
      */
     public function render($eol = "\n", $padding = '    ')
@@ -86,15 +87,15 @@ class MethodSymbol
             } /*else if ($parameter->isCallable()) { // This should be enabled for php 5.4
                 $param .= 'callable ';
             } */ else {
-                try {
-                    if (is_object($parameter->getClass())) {
-                        $param .= $parameter->getClass()->getName() . ' ';
-                    }
-                } catch (\ReflectionException $e) {
-                    $class = $this->reflectionMethod->getDeclaringClass()->getName();
-                    echo "Invalid type hint in {$class}::{$this->handle}\n";
-                }
-            }
+     try {
+         if (is_object($parameter->getClass())) {
+             $param .= $parameter->getClass()->getName() . ' ';
+         }
+     } catch (\ReflectionException $e) {
+         $class = $this->reflectionMethod->getDeclaringClass()->getName();
+         echo "Invalid type hint in {$class}::{$this->handle}\n";
+     }
+ }
             if ($parameter->isPassedByReference()) {
                 $param .= "&";
             }
@@ -157,5 +158,4 @@ class MethodSymbol
 
         return $rendered;
     }
-
 }
