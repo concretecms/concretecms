@@ -56,9 +56,14 @@ class ClassSymbol
         $this->alias = $alias;
         $this->comment = $this->reflectionClass->getDocComment();
 
-        if ($facade === true || $facade !== false &&
-            ($this->reflectionClass->isSubclassOf('\Concrete\Core\Support\Facade\Facade') ||
-                $this->reflectionClass->isSubclassOf('\Illuminate\Support\Facades\Facade'))
+        if (
+            ($facade !== false)
+            &&
+            (
+                $this->reflectionClass->isSubclassOf('\Concrete\Core\Support\Facade\Facade')
+                ||
+                $this->reflectionClass->isSubclassOf('\Illuminate\Support\Facades\Facade')
+            )
         ) {
             $obj = $fqn::getFacadeRoot();
 
@@ -96,28 +101,36 @@ class ClassSymbol
      *
      * @param string $eol
      * @param string $padding
+     * @param callable|null $methodFilter
      * @return string
      */
-    public function render($eol = PHP_EOL, $padding = '    ')
+    public function render($eol = "\n", $padding = '    ', $methodFilter = null)
     {
-        $rendered = $eol . implode($eol, array_map('trim', explode($eol, $this->comment))) . $eol;
-        $rendered .= 'class ' . $this->alias . ' extends ' . $this->fqn . "{$eol}{{$eol}{$eol}";
-        $rendered .= '    /** @var ' . $this->fqn . ' */' . $eol . '    protected static $instance;' . $eol . $eol;
-        foreach ($this->methods as $method) {
-            $rendered_method = explode($eol, $method->render($eol, $padding));
-            $rendered .= implode(
-                $eol,
-                array_map(
-                    function ($val) use ($padding) {
-                        if (substr($val, 0, 1) === '*') {
-                            return $padding . $val;
-                        }
-                        return $padding . $val;
-                    },
-                    $rendered_method));
+        $rendered = '';
+        $comment = $this->comment;
+        if ($comment !== false) {
+            $comment = trim($comment);
+            if ($comment !== '') {
+                $rendered .= str_replace($eol.'*', $eol.' *', implode($eol, array_map('trim', explode("\n", $comment)))) . $eol;
+            }
         }
-        $rendered .= "{$eol}}{$eol}";
+        $rendered .= 'class ' . $this->alias . ' extends ' . $this->fqn . "{$eol}{{$eol}";
+        $firstMethod = true;
+        foreach ($this->methods as $method) {
+            if (isset($methodFilter) && (call_user_func($methodFilter, $this, $method) === false)) {
+                continue;
+            }
+            if ($firstMethod) {
+                $firstMethod = false;
+                $rendered .= $padding . '/**' . $eol . $padding . ' * @var ' . $this->fqn . $eol . $padding . ' */' . $eol;
+                $rendered .= $padding . 'protected static $instance;' . $eol;
+            }
+            $rendered_method = $method->render($eol, $padding);
+            if ($rendered_method !== '') {
+                $rendered .= $padding . rtrim(str_replace($eol, $eol . $padding, $rendered_method)) . $eol;
+            }
+        }
+        $rendered .= "}{$eol}";
         return $rendered;
     }
-
 }
