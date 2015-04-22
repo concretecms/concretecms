@@ -5,6 +5,7 @@
 		content: '<p><span class="h5">' + i18n[0].title + '</span><br/>' + i18n[0].text + '</p>',
 		highlightTarget: true,
 		nextButton: false,
+		closeButton: true,
 		target: $('[data-guide-toolbar-action=sitemap]'),
 		my: 'top right',
 		at: 'bottom center',
@@ -26,6 +27,7 @@
 		content: '<p><span class="h5">' + i18n[1].title + '</span><br/>' + i18n[1].text + '</p>',
 		highlightTarget: true,
 		nextButton: true,
+		closeButton: true,
 		my: 'right center',
 		at: 'left center',
 		setup: function(tour, options) {
@@ -35,6 +37,7 @@
 		content: '<p><span class="h5">' + i18n[2].title + '</span><br/>' + i18n[2].text + '</p>',
 		highlightTarget: true,
 		nextButton: true,
+		closeButton: true,
 		my: 'right center',
 		at: 'left center',
 		setup: function(tour, options) {

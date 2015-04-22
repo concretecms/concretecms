@@ -245,7 +245,7 @@ var ccmi18n_tourist = {
   skipButton: <?=json_encode('<button class="btn btn-default btn-sm pull-right tour-next">'.t('Skip →').'</button>')?>,
   nextButton: <?=json_encode('<button class="btn btn-primary btn-sm pull-right tour-next">'.t('Next →').'</button>')?>,
   finalButton: <?=json_encode('<button class="btn btn-primary btn-sm pull-right tour-next">'.t('Done').'</button>')?>,
-  closeButton: <?=json_encode('<a class="btn btn-close tour-close" href="#"><i class="icon icon-remove"></i></a>')?>,
+  closeButton: <?=json_encode('<a class="btn btn-close tour-close" href="#"><i class="fa fa-remove"></i></a>')?>,
   okButton: <?=json_encode('<button class="btn btn-sm tour-close btn-primary">'.t('Ok').'</button>')?>,
   doThis: <?=json_encode(t('Do this:'))?>,
   thenThis: <?=json_encode(t('Then this:'))?>,
@@ -263,25 +263,21 @@ var ccmi18n_helpGuides = {
     {title: <?=json_encode(t('Edit Mode Active'))?>, text: <?=json_encode(t('The highlighted button makes it obvious you\'re in edit mode.'))?>},
     {title: <?=json_encode(t('Edit the Block'))?>, text: <?=json_encode(t('Just roll over any content on the page. Click or tap to get the edit menu for that block.'))?>},
     {title: <?=json_encode(t('Edit Menu'))?>, text: <?=json_encode(t('Use this menu to edit a block\'s contents, change its display, or remove it entirely.'))?>},
-    {title: <?=json_encode(t('Save Changes'))?>, text: <?=json_encode(t('Your changes save as you go – but when you\'re done editing, don\'t forget to exit edit mode by clicking on the page\'s edit button again.'))?>}
+    {title: <?=json_encode(t('Save Changes'))?>, text: <?=json_encode(t("When you're done editing you can Save Changes for other editors to see, or Publish Changes to make your changes live immediately."))?>}
   ],
   'change-content': [
     {title: <?=json_encode(t('Enter Edit Mode'))?>, text: <?=json_encode(t('First, click the "Edit Page" button. This will enter edit mode for this page.'))?>}
   ],
   'dashboard': [
-    {title: <?=json_encode(t('Dashboard Panel'))?>, text: <?=json_encode(t('The dashboard is where you go to manage aspects of your site that have to do with more than the content on just one page. Click the button to continue.'))?>},
-    {title: <?=json_encode(t('Sitemap'))?>, text: <?=json_encode(t('Click to the sitemap to see a complete list of pages in your site. You can move, copy or delete entire parts of your site from the sitemap.'))?>},
-    {title: <?=json_encode(t('File Manager'))?>, text: <?=json_encode(t('Add new files or manage existing images, documents and media from the file manager.'))?>},
-    {title: <?=json_encode(t('Members'))?>, text: <?=json_encode(t('Manage site members, editors and administrators, including users and groups.'))?>},
-    {title: <?=json_encode(t('Reports'))?>, text: <?=json_encode(t('View form and survey results from the Reports section.'))?>},
-    {title: <?=json_encode(t('System & Settings'))?>, text: <?=json_encode(t('Fully customize your editing and administrative experience.'))?>}
+    {title: <?=json_encode(t('Dashboard Panel'))?>, text: <?=json_encode(t('The dashboard is where you go to manage aspects of your site that have to do with more than the content on just one page. Click the sliders icon.'))?>},
+    {title: <?=json_encode(t('Sitemap'))?>, text: <?=json_encode(t("The sitemap lets manage the structure of your website. You can delete pages you don't need, or drag them around the tree to suit your needs."))?>}
   ],
   'location-panel': [
     {title: <?=json_encode(t('Choose Location'))?>, text: <?=json_encode(t('Click this button to choose the location of the page in your sitemap. If saved, the page will be moved to this location.'))?>},
     {title: <?=json_encode(t('Page URLs'))?>, text: <?=json_encode(t('Control the URLs used to access your page here. Non-canonical URLs will redirect to your page; canonical URLs can be either generated or automatically or overridden. Sub-pages to this page start with canonical URLs by default.'))?>}
   ],
   'personalize': [
-    {title: <?=json_encode(t('Properties Panel'))?>, text: <?=json_encode(t('The properties panel controls data and details about the current page. You can also go there to make design customizations for the page. To open the properties panel, click the icon.'))?>},
+    {title: <?=json_encode(t('Properties Panel'))?>, text: <?=json_encode(t('The properties panel controls data and details about the current page including design customizations. To open the properties panel, click the gear icon.'))?>},
     {title: <?=json_encode(t('Page Design'))?>, text: <?=json_encode(t('From here you can change your page template and customize your page\'s styles.'))?>},
     {title: <?=json_encode(t('Customize'))?>, text: <?=json_encode(t('Click here to load the theme customizer for the page.'))?>}
   ],

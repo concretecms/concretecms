@@ -1,5 +1,4 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
-<a href="javascript:void(0)" onclick="ccm_closeNewsflow(this)" class="icon-link ccm-newsflow-close"><i class="fa fa-close"></i></a>
 
 <?
 $_c = Page::getCurrentPage();

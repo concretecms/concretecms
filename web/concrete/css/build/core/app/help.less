@@ -2,6 +2,10 @@
 
 div.ccm-dialog-help-item {
   margin-bottom: 30px;
+  a:focus, a:active {
+    outline: none;
+    text-decoration: none;
+  }
   ol.breadcrumb {
     padding: 0px;
     background: none;
@@ -21,6 +25,10 @@ ol.ccm-dialog-help-item-icon-row {
   li {
     display: inline-block;
     margin-right: 10px;
+
+    i {
+      .opacity(.5);
+    }
   }
 }
 

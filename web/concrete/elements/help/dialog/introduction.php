@@ -13,37 +13,37 @@ $ag->requireAsset('core/lightbox');
                     <div class="row">
                     <div class="col-md-offset-1 col-md-11">
                         <div class="ccm-dialog-help-item">
-                        <h4><?=t('Use the toolbar')?></h4>
-                        <ol class="breadcrumb">
-                            <li><a data-lightbox="iframe" href="https://www.youtube.com/watch?t=21&v=VB-R71zk06U"><?=t('Watch Video')?></a></li>
-                            <li><a href="#" data-launch-guide="toolbar"><?=t('Run Guide')?></a></li>
-                        </ol>
-                        </div>
-                        <div class="ccm-dialog-help-item">
-                        <h4><?=t('Change content')?></h4>
-                        <ol class="breadcrumb">
-                            <li><a href="#" onclick="ConcreteAlert.dialog('<?=t('Coming Soon')?>', '<?=t('This video is coming soon.')?>')"><?=t('Watch Video')?></a></li>
-                            <li><a href="#" data-launch-guide="change-content"><?=t('Run Guide')?></a></li>
-                        </ol>
-                        </div>
-                        <div class="ccm-dialog-help-item">
-                        <h4><?=t('Add a page')?></h4>
-                        <ol class="breadcrumb">
-                            <li><a href="#" onclick="ConcreteAlert.dialog('<?=t('Coming Soon')?>', '<?=t('This video is coming soon.')?>')"><?=t('Watch Video')?></a></li>
-                            <li><a href="#" data-launch-guide="add-page"><?=t('Run Guide')?></a></li>
-                        </ol>
-                        </div>
-                        <div class="ccm-dialog-help-item">
-                        <h4><?=t('Personalize your site')?></h4>
-                        <ol class="breadcrumb">
-                            <li><a href="#" onclick="ConcreteAlert.dialog('<?=t('Coming Soon')?>', '<?=t('This video is coming soon.')?>')"><?=t('Watch Video')?></a></li>
-                            <li><a href="#" data-launch-guide="personalize"><?=t('Run Guide')?></a></li>
-                        </ol>
-                        </div>
-                        <div class="ccm-dialog-help-item">
-                            <h4><?=t('Organize and manage your site')?></h4>
+                            <h4><?=t('Use the toolbar')?></h4>
                             <ol class="breadcrumb">
-                                <li><a href="#" onclick="ConcreteAlert.dialog('<?=t('Coming Soon')?>', '<?=t('This video is coming soon.')?>')"><?=t('Watch Video')?></a></li>
+                                <li><a data-lightbox="iframe" href="https://www.youtube.com/watch?v=VB-R71zk06U"><?=t('Watch Video')?></a></li>
+                                <li><a href="#" data-launch-guide="toolbar"><?=t('Run Guide')?></a></li>
+                            </ol>
+                        </div>
+                        <div class="ccm-dialog-help-item">
+                            <h4><?=t('Change content')?></h4>
+                            <ol class="breadcrumb">
+                                <li><a href="https://www.youtube.com/watch?v=Y1VmBVffLM0" data-lightbox="iframe"><?=t('Watch Video')?></a></li>
+                                <li><a href="#" data-launch-guide="change-content"><?=t('Run Guide')?></a></li>
+                            </ol>
+                        </div>
+                        <div class="ccm-dialog-help-item">
+                            <h4><?=t('Add a page')?></h4>
+                            <ol class="breadcrumb">
+                                <li><a href="https://www.youtube.com/watch?v=mWTNga4_O_Q" data-lightbox="iframe"><?=t('Watch Video')?></a></li>
+                                <li><a href="#" data-launch-guide="add-page"><?=t('Run Guide')?></a></li>
+                            </ol>
+                        </div>
+                        <div class="ccm-dialog-help-item">
+                            <h4><?=t('Personalize your site')?></h4>
+                            <ol class="breadcrumb">
+                                <li><a href="https://www.youtube.com/watch?v=xI8dUNAc6fU" data-lightbox="iframe"><?=t('Watch Video')?></a></li>
+                                <li><a href="#" data-launch-guide="personalize"><?=t('Run Guide')?></a></li>
+                            </ol>
+                        </div>
+                        <div class="ccm-dialog-help-item">
+                            <h4><?=t('Cleanup and organize your site')?></h4>
+                            <ol class="breadcrumb">
+                                <li><a href="https://www.youtube.com/watch?v=_NhlWLU_L6E" data-lightbox="iframe"><?=t('Watch Video')?></a></li>
                                 <li><a href="#" data-launch-guide="dashboard"><?=t('Run Guide')?></a></li>
                             </ol>
                         </div>
