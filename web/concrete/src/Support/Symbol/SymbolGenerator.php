@@ -1,8 +1,10 @@
 <?php
+
 /**
  * Concrete5 symbol file generator.
- * Inspired by Laravel IDE Helper Generator by Barry vd. Heuvel <barryvdh@gmail.com>
+ * Inspired by Laravel IDE Helper Generator by Barry vd. Heuvel <barryvdh@gmail.com>.
  */
+
 namespace Concrete\Core\Support\Symbol;
 
 use Concrete\Core\Foundation\ClassAliasList;
@@ -10,9 +12,8 @@ use Concrete\Core\Support\Symbol\ClassSymbol\ClassSymbol;
 
 class SymbolGenerator
 {
-
     /**
-     * The ClassSymbol objects
+     * The ClassSymbol objects.
      *
      * @var ClassSymbol[]
      */
@@ -46,29 +47,22 @@ class SymbolGenerator
      *
      * @param string $eol
      * @param string $padding
+     * @param callable|null $methodFilter
+     *
      * @return mixed|string
      */
-    public function render($eol = PHP_EOL, $padding = '    ')
+    public function render($eol = "\n", $padding = '    ', $methodFilter = null)
     {
         $rendered = "<?php{$eol}namespace {{$eol}{$padding}die('Intended for use with IDE symbol matching only.');{$eol}";
-        $rendered .= "//Generated on " . date('F d, Y \a\t h:i:s a') . $eol;
+        $rendered .= $padding . "//Generated on " . date('r') . $eol;
         foreach ($this->classes as $class) {
-            $rendered_class = explode($eol, $class->render($eol, $padding));
-            $rendered .= $eol . implode(
-                    $eol,
-                    array_map(
-                        function ($val) use ($padding) {
-                            if (substr($val, 0, 1) === '*') {
-                                return $padding . $val;
-                            }
-                            return $padding . $val;
-                        },
-                        $rendered_class));
+            $rendered_class = $class->render($eol, $padding, $methodFilter);
+            if ($rendered_class !== '') {
+                $rendered .= $eol . $padding . str_replace($eol, $eol . $padding, rtrim($rendered_class)) . $eol;
+            }
         }
-        $rendered .= "{$eol}}{$eol}";
-        $rendered = implode($eol, array_map("rtrim", explode($eol, $rendered)));
-        $rendered = preg_replace("~{$eol}{2,}~", "{$eol}{$eol}", $rendered);
+        $rendered .= '}' . $eol;
+
         return $rendered;
     }
-
 }
