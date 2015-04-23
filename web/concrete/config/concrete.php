@@ -7,9 +7,9 @@ return array(
      *
      * @var string
      */
-    'version'           => '5.7.4RC1',
-    'version_installed' => '5.7.4RC1',
-    'version_db' => '20150413000000', // the key of the latest database migration - corresponds to 5.7.4RC1
+    'version'           => '5.7.4RC2',
+    'version_installed' => '5.7.4RC2',
+    'version_db' => '20150413000000', // the key of the latest database migration - corresponds to 5.7.4RC2
 
     /**
      * Installation status
@@ -513,7 +513,7 @@ return array(
     'urls'              => array(
         'concrete5'              => 'http://www.concrete5.org',
         'concrete5_secure'       => 'https://www.concrete5.org',
-        'newsflow'               => 'http://newsflow.concrete5.org',
+        'newsflow'               => 'http://newsflow.dev',
         'background_feed'        => '//backgroundimages.concrete5.org/wallpaper',
         'background_feed_secure' => 'https://backgroundimages.concrete5.org/wallpaper',
         'background_info'        => 'http://backgroundimages.concrete5.org/get_image_data.php',

@@ -69,8 +69,9 @@ class Newsflow
     {
         if (!$this->hasConnectionError()) {
             $fileService = new File();
+            $appVersion = Config::get('concrete.version');
             $cfToken = Marketplace::getSiteToken();
-            $path = Config::get('concrete.urls.newsflow') . '/' . DISPATCHER_FILENAME . '/?_ccm_view_external=1&cID=' . rawurlencode($cID) . '&cfToken=' . rawurlencode($cfToken);
+            $path = Config::get('concrete.urls.newsflow') . '/' . DISPATCHER_FILENAME . '/?_ccm_view_external=1&appVersion=' . $appVersion . '&cID=' . rawurlencode($cID) . '&cfToken=' . rawurlencode($cfToken);
             $response = $fileService->getContents($path);
             $ni = new NewsflowItem();
             $obj = $ni->parseResponse($response);
@@ -89,8 +90,9 @@ class Newsflow
         $cPath = trim($cPath, '/');
         if (!$this->hasConnectionError()) {
             $fileService = new File();
+            $appVersion = Config::get('concrete.version');
             $cfToken = Marketplace::getSiteToken();
-            $path = Config::get('concrete.urls.newsflow') . '/' . DISPATCHER_FILENAME . '/' . $cPath . '/-/view_external?cfToken=' . rawurlencode($cfToken);
+            $path = Config::get('concrete.urls.newsflow') . '/' . DISPATCHER_FILENAME . '/' . $cPath . '/-/view_external?cfToken=' . rawurlencode($cfToken) . '&appVersion=' . $appVersion;
             $response = $fileService->getContents($path);
             $ni = new NewsflowItem();
             $obj = $ni->parseResponse($response);
@@ -107,9 +109,10 @@ class Newsflow
     {
         if ($this->slots === null) {
             $fileService = new File();
+            $appVersion = Config::get('concrete.version');
             $cfToken = Marketplace::getSiteToken();
             $url = Config::get('concrete.urls.newsflow') . Config::get('concrete.urls.paths.newsflow_slot_content');
-            $path = $url . '?cfToken=' . rawurlencode($cfToken);
+            $path = $url . '?cfToken=' . rawurlencode($cfToken) . '&appVersion=' . $appVersion;
             $response = $fileService->getContents($path);
             $nsi = new NewsflowSlotItem();
             $this->slots = $nsi->parseResponse($response);
