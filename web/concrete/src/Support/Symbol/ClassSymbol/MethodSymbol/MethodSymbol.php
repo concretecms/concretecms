@@ -73,7 +73,6 @@ class MethodSymbol
         $visibility = \Reflection::getModifierNames($method->getModifiers());
         $isStatic = $method->isStatic();
         if ((!$isStatic) && $this->classSymbol->isFacade()) {
-            $isStatic = true;
             $visibility[] = 'static';
         }
         $rendered .= implode(' ', array_unique($visibility)) . ' function ' . $this->handle . '(';
@@ -146,10 +145,10 @@ class MethodSymbol
         $rendered .= implode(', ', $params) . "){$eol}{{$eol}";
         $class_name = $method->getDeclaringClass()->getName();
         $rendered .= $padding . 'return ';
-        if ($this->classSymbol->isFacade()) {
-            $rendered .= 'static::$instance->' . $method->getName();
-        } elseif ($isStatic) {
+        if ($isStatic) {
             $rendered .= $class_name . '::' . $method->getName();
+        } elseif ($this->classSymbol->isFacade()) {
+            $rendered .= 'static::$instance->' . $method->getName();
         } else {
             $rendered .= 'parent::' . $method->getName();
         }

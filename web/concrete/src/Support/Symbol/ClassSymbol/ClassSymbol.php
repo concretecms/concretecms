@@ -14,6 +14,11 @@ class ClassSymbol
      */
     protected $fqn;
 
+    /**
+     * If the class is a facade, here we have the facade ReflectionClass, otherwise it's null.
+     *
+     * @var ReflectionClass|null
+     */
     protected $facade;
 
     /**
@@ -71,11 +76,11 @@ class ClassSymbol
         ) {
             $obj = $fqn::getFacadeRoot();
 
-            $this->facade = true;
+            $this->facade = $this->reflectionClass;
             $this->reflectionClass = new ReflectionClass($obj);
             $this->fqn = $this->reflectionClass->getName();
         } else {
-            $this->facade = false;
+            $this->facade = null;
         }
 
         $this->resolveMethods();
@@ -87,6 +92,9 @@ class ClassSymbol
     protected function resolveMethods()
     {
         $methods = $this->reflectionClass->getMethods();
+        if ($this->isFacade()) {
+            $methods = array_merge($methods, $this->getFacadeReflectionClass()->getMethods());
+        }
         foreach ($methods as $method) {
             $this->methods[] = new MethodSymbol($this, $method);
         }
@@ -97,7 +105,15 @@ class ClassSymbol
      */
     public function isFacade()
     {
-        return !!$this->facade;
+        return isset($this->facade);
+    }
+
+    /**
+     * @return ReflectionClass|null
+     */
+    public function getFacadeReflectionClass()
+    {
+        return $this->facade;
     }
 
     /**
@@ -127,8 +143,10 @@ class ClassSymbol
             }
             if ($firstMethod) {
                 $firstMethod = false;
-                $rendered .= $padding . '/**' . $eol . $padding . ' * @var ' . $this->fqn . $eol . $padding . ' */' . $eol;
-                $rendered .= $padding . 'protected static $instance;' . $eol;
+                if ($this->isFacade()) {
+                    $rendered .= $padding . '/**' . $eol . $padding . ' * @var ' . $this->fqn . $eol . $padding . ' */' . $eol;
+                    $rendered .= $padding . 'protected static $instance;' . $eol;
+                }
             }
             $rendered_method = $method->render($eol, $padding);
             if ($rendered_method !== '') {
