@@ -1,11 +1,11 @@
 <?php
+
 namespace Concrete\Core\Support\Symbol\ClassSymbol\MethodSymbol;
 
 use Concrete\Core\Support\Symbol\ClassSymbol\ClassSymbol;
 
 class MethodSymbol
 {
-
     /**
      * @var \ReflectionMethod
      */
@@ -31,7 +31,7 @@ class MethodSymbol
     protected $parameters = array();
 
     /**
-     * The docblock
+     * The docblock.
      *
      * @var string
      */
@@ -49,25 +49,33 @@ class MethodSymbol
     }
 
     /**
-     * Render the Method
+     * Render the Method.
      *
      * @param string $eol
      * @param string $padding
+     *
      * @return string
      */
-    public function render($eol = PHP_EOL, $padding = '    ')
+    public function render($eol = "\n", $padding = '    ')
     {
         $method = $this->reflectionMethod;
         if ($method->isPrivate() || substr($method->getName(), 0, 2) === '__' || $method->isAbstract()) {
             return '';
         }
-        $rendered = $eol . implode($eol, array_map(trim, explode($eol, $method->getDocComment()))) . $eol;
+        $rendered = '';
+        $comment = $method->getDocComment();
+        if ($comment !== false) {
+            $comment = trim($comment);
+            if ($comment !== '') {
+                $rendered .= str_replace($eol . '*', $eol . ' *', implode($eol, array_map('trim', explode("\n", $comment)))) . $eol;
+            }
+        }
         $visibility = \Reflection::getModifierNames($method->getModifiers());
-        if ($this->classSymbol->isFacade()) {
+        $isStatic = $method->isStatic();
+        if ((!$isStatic) && $this->classSymbol->isFacade()) {
             $visibility[] = 'static';
         }
         $rendered .= implode(' ', array_unique($visibility)) . ' function ' . $this->handle . '(';
-
         $params = array();
         $calling_params = array();
         foreach ($this->parameters as $parameter) {
@@ -78,15 +86,15 @@ class MethodSymbol
             } /*else if ($parameter->isCallable()) { // This should be enabled for php 5.4
                 $param .= 'callable ';
             } */ else {
-                try {
-                    if (is_object($parameter->getClass())) {
-                        $param .= $parameter->getClass()->getName() . ' ';
-                    }
-                } catch (\ReflectionException $e) {
-                    $class = $this->reflectionMethod->getDeclaringClass()->getName();
-                    echo "Invalid type hint in {$class}::{$this->handle}\n";
-                }
-            }
+     try {
+         if (is_object($parameter->getClass())) {
+             $param .= $parameter->getClass()->getName() . ' ';
+         }
+     } catch (\ReflectionException $e) {
+         $class = $this->reflectionMethod->getDeclaringClass()->getName();
+         echo "Invalid type hint in {$class}::{$this->handle}\n";
+     }
+ }
             if ($parameter->isPassedByReference()) {
                 $param .= "&";
             }
@@ -136,18 +144,17 @@ class MethodSymbol
         }
         $rendered .= implode(', ', $params) . "){$eol}{{$eol}";
         $class_name = $method->getDeclaringClass()->getName();
-        if ($method->isStatic()) {
-            $rendered .= "{$padding}return {$class_name}::{$method->getName()}(" . implode(
-                    ', ',
-                    $calling_params) . ");";
+        $rendered .= $padding . 'return ';
+        if ($isStatic) {
+            $rendered .= $class_name . '::' . $method->getName();
+        } elseif ($this->classSymbol->isFacade()) {
+            $rendered .= 'static::$instance->' . $method->getName();
         } else {
-            $rendered .= "{$padding}/** @var {$class_name} \$instance */{$eol}";
-            $rendered .= "{$padding}return \$instance->{$method->getName()}(" . implode(', ', $calling_params) . ");";
+            $rendered .= 'parent::' . $method->getName();
         }
-
-        $rendered .= "{$eol}}{$eol}";
+        $rendered .= '(' . implode(', ', $calling_params) . ');' . $eol;
+        $rendered .= '}' . $eol;
 
         return $rendered;
     }
-
 }
