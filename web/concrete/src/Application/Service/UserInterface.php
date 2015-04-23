@@ -205,8 +205,6 @@ class UserInterface
             }
         }
 
-
-        return true;
         return false;
     }
 
