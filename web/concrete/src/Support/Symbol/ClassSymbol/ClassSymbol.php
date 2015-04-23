@@ -57,12 +57,16 @@ class ClassSymbol
         $this->comment = $this->reflectionClass->getDocComment();
 
         if (
-            ($facade !== false)
-            &&
+            $facade === true
+            ||
             (
-                $this->reflectionClass->isSubclassOf('\Concrete\Core\Support\Facade\Facade')
-                ||
-                $this->reflectionClass->isSubclassOf('\Illuminate\Support\Facades\Facade')
+                $facade !== false
+                &&
+                (
+                    $this->reflectionClass->isSubclassOf('\Concrete\Core\Support\Facade\Facade')
+                    ||
+                    $this->reflectionClass->isSubclassOf('\Illuminate\Support\Facades\Facade')
+                )
             )
         ) {
             $obj = $fqn::getFacadeRoot();
@@ -112,13 +116,13 @@ class ClassSymbol
         if ($comment !== false) {
             $comment = trim($comment);
             if ($comment !== '') {
-                $rendered .= str_replace($eol.'*', $eol.' *', implode($eol, array_map('trim', explode("\n", $comment)))) . $eol;
+                $rendered .= str_replace($eol . '*', $eol . ' *', implode($eol, array_map('trim', explode("\n", $comment)))) . $eol;
             }
         }
         $rendered .= 'class ' . $this->alias . ' extends ' . $this->fqn . "{$eol}{{$eol}";
         $firstMethod = true;
         foreach ($this->methods as $method) {
-            if (isset($methodFilter) && (call_user_func($methodFilter, $this, $method) === false)) {
+            if (is_callable($methodFilter) && (call_user_func($methodFilter, $this, $method) === false)) {
                 continue;
             }
             if ($firstMethod) {

@@ -58,10 +58,10 @@ class SymbolGenerator
         foreach ($this->classes as $class) {
             $rendered_class = $class->render($eol, $padding, $methodFilter);
             if ($rendered_class !== '') {
-                $rendered .= $eol . $padding . str_replace($eol, $eol.$padding, rtrim($rendered_class)) . $eol;
+                $rendered .= $eol . $padding . str_replace($eol, $eol . $padding, rtrim($rendered_class)) . $eol;
             }
         }
-        $rendered .= '}'.$eol;
+        $rendered .= '}' . $eol;
 
         return $rendered;
     }

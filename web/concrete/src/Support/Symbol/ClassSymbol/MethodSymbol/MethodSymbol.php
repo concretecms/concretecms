@@ -67,7 +67,7 @@ class MethodSymbol
         if ($comment !== false) {
             $comment = trim($comment);
             if ($comment !== '') {
-                $rendered .= str_replace($eol.'*', $eol.' *', implode($eol, array_map('trim', explode("\n", $comment)))) . $eol;
+                $rendered .= str_replace($eol . '*', $eol . ' *', implode($eol, array_map('trim', explode("\n", $comment)))) . $eol;
             }
         }
         $visibility = \Reflection::getModifierNames($method->getModifiers());
@@ -145,16 +145,16 @@ class MethodSymbol
         }
         $rendered .= implode(', ', $params) . "){$eol}{{$eol}";
         $class_name = $method->getDeclaringClass()->getName();
-        $rendered .= $padding.'return ';
+        $rendered .= $padding . 'return ';
         if ($this->classSymbol->isFacade()) {
-            $rendered .= 'static::$instance->'.$method->getName();
+            $rendered .= 'static::$instance->' . $method->getName();
         } elseif ($isStatic) {
-            $rendered .= $class_name.'::'.$method->getName();
+            $rendered .= $class_name . '::' . $method->getName();
         } else {
-            $rendered .= 'parent::'.$method->getName();
+            $rendered .= 'parent::' . $method->getName();
         }
-        $rendered .= '(' . implode(', ', $calling_params) . ');'.$eol;
-        $rendered .= '}'.$eol;
+        $rendered .= '(' . implode(', ', $calling_params) . ');' . $eol;
+        $rendered .= '}' . $eol;
 
         return $rendered;
     }
