@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Support\Symbol\ClassSymbol;
 
 use Concrete\Core\Support\Symbol\ClassSymbol\MethodSymbol\MethodSymbol;
@@ -6,7 +7,6 @@ use ReflectionClass;
 
 class ClassSymbol
 {
-
     /**
      * Fully qualified class name.
      *
@@ -14,6 +14,11 @@ class ClassSymbol
      */
     protected $fqn;
 
+    /**
+     * If the class is a facade, here we have the facade ReflectionClass, otherwise it's null.
+     *
+     * @var ReflectionClass|null
+     */
     protected $facade;
 
     /**
@@ -56,39 +61,59 @@ class ClassSymbol
         $this->alias = $alias;
         $this->comment = $this->reflectionClass->getDocComment();
 
-        if ($facade === true || $facade !== false &&
-            ($this->reflectionClass->isSubclassOf('\Concrete\Core\Support\Facade\Facade') ||
-                $this->reflectionClass->isSubclassOf('\Illuminate\Support\Facades\Facade'))
+        if (
+            $facade === true
+            ||
+            (
+                $facade !== false
+                &&
+                (
+                    $this->reflectionClass->isSubclassOf('\Concrete\Core\Support\Facade\Facade')
+                    ||
+                    $this->reflectionClass->isSubclassOf('\Illuminate\Support\Facades\Facade')
+                )
+            )
         ) {
             $obj = $fqn::getFacadeRoot();
 
-            $this->facade = true;
+            $this->facade = $this->reflectionClass;
             $this->reflectionClass = new ReflectionClass($obj);
             $this->fqn = $this->reflectionClass->getName();
         } else {
-            $this->facade = false;
+            $this->facade = null;
         }
 
         $this->resolveMethods();
     }
 
     /**
-     * Get the methods
+     * Get the methods.
      */
     protected function resolveMethods()
     {
         $methods = $this->reflectionClass->getMethods();
+        if ($this->isFacade()) {
+            $methods = array_merge($methods, $this->getFacadeReflectionClass()->getMethods());
+        }
         foreach ($methods as $method) {
             $this->methods[] = new MethodSymbol($this, $method);
         }
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isFacade()
     {
-        return !!$this->facade;
+        return isset($this->facade);
+    }
+
+    /**
+     * @return ReflectionClass|null
+     */
+    public function getFacadeReflectionClass()
+    {
+        return $this->facade;
     }
 
     /**
@@ -96,28 +121,40 @@ class ClassSymbol
      *
      * @param string $eol
      * @param string $padding
+     * @param callable|null $methodFilter
+     *
      * @return string
      */
-    public function render($eol = PHP_EOL, $padding = '    ')
+    public function render($eol = "\n", $padding = '    ', $methodFilter = null)
     {
-        $rendered = $eol . implode($eol, array_map('trim', explode($eol, $this->comment))) . $eol;
-        $rendered .= 'class ' . $this->alias . ' extends ' . $this->fqn . "{$eol}{{$eol}{$eol}";
-        $rendered .= '    /** @var ' . $this->fqn . ' */' . $eol . '    protected static $instance;' . $eol . $eol;
-        foreach ($this->methods as $method) {
-            $rendered_method = explode($eol, $method->render($eol, $padding));
-            $rendered .= implode(
-                $eol,
-                array_map(
-                    function ($val) use ($padding) {
-                        if (substr($val, 0, 1) === '*') {
-                            return $padding . $val;
-                        }
-                        return $padding . $val;
-                    },
-                    $rendered_method));
+        $rendered = '';
+        $comment = $this->comment;
+        if ($comment !== false) {
+            $comment = trim($comment);
+            if ($comment !== '') {
+                $rendered .= str_replace($eol . '*', $eol . ' *', implode($eol, array_map('trim', explode("\n", $comment)))) . $eol;
+            }
         }
-        $rendered .= "{$eol}}{$eol}";
+        $rendered .= 'class ' . $this->alias . ' extends ' . $this->fqn . "{$eol}{{$eol}";
+        $firstMethod = true;
+        foreach ($this->methods as $method) {
+            if (is_callable($methodFilter) && (call_user_func($methodFilter, $this, $method) === false)) {
+                continue;
+            }
+            if ($firstMethod) {
+                $firstMethod = false;
+                if ($this->isFacade()) {
+                    $rendered .= $padding . '/**' . $eol . $padding . ' * @var ' . $this->fqn . $eol . $padding . ' */' . $eol;
+                    $rendered .= $padding . 'protected static $instance;' . $eol;
+                }
+            }
+            $rendered_method = $method->render($eol, $padding);
+            if ($rendered_method !== '') {
+                $rendered .= $padding . rtrim(str_replace($eol, $eol . $padding, $rendered_method)) . $eol;
+            }
+        }
+        $rendered .= "}{$eol}";
+
         return $rendered;
     }
-
 }
