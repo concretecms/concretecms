@@ -11,6 +11,14 @@ $this->inc('elements/header.php', array('enableEditing' => true));
 				<div id="ccm-dashboard-welcome-back">
 				<? $a = new Area('Primary'); $a->display($c); ?>
 				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<? $a = new Area('Secondary 3'); $a->display($c); ?>
+					</div>
+					<div class="col-md-6">
+						<? $a = new Area('Secondary 4'); $a->display($c); ?>
+					</div>
+				</div>
 			</div>
 			<div class="col-md-4 col-accented">
 

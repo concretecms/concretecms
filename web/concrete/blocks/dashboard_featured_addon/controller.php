@@ -37,6 +37,7 @@ use \Concrete\Core\Marketplace\RemoteItemList as MarketplaceRemoteItemList;
 			$mri = new MarketplaceRemoteItemList();
 			$mri->sortBy('recommended');
 			$mri->setItemsPerPage(1);
+			$mri->filterByCompatibility(1);
 			$mri->setType('addons');
 			$mri->execute();
 			$items = $mri->getPage();
