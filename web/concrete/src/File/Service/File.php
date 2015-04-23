@@ -43,7 +43,8 @@ class File
     {
         // removes the extension and makes it look nice
         $txt = Loader::helper('text');
-        return substr($txt->unhandle($filename), 0, strrpos($filename, '.'));
+        $parts = $this->splitFilename($filename);
+        return substr($txt->unhandle($parts[0] . $parts[1]));
     }
 
     /**
@@ -351,6 +352,32 @@ class File
     }
 
     /**
+     * Splits a filename into (optional directory) and (base file name) and (extension).
+     * If the file name starts with a dot and it's the only dot, we don't consider the file to have an extension 
+     * 
+     * @param string $filename
+     *
+     * @return array
+     */
+    public function splitFilename($filename) {
+        $result = array('', '', '');
+        if (is_string($filename)) {
+            $result[1] = $filename;
+            $slashAt = strrpos(str_replace('\\', '/', $result[1]), '/');
+            if ($slashAt !== false) {
+                $result[0] = substr($result[1], 0, $slashAt + 1);
+                $result[1] = (string) substr($result[1], $slashAt + 1);
+            }
+            $dotAt = strrpos($result[1], '.');
+            if (($dotAt !== false) && ($dotAt > 0)) {
+                $result[2] = (string) substr($result[1], $dotAt + 1);
+                $result[1] = substr($result[1], 0, $dotAt);
+            }
+        }
+
+        return $result;
+    }
+    /**
      * Returns the extension for a file name
      *
      * @param string $filename
@@ -358,8 +385,8 @@ class File
      */
     public function getExtension($filename)
     {
-        $extension = trim(end(explode(".", $filename)));
-        return $extension;
+        $parts = $this->splitFilename($filename);
+        return $parts[2];
     }
 
     /**
@@ -367,12 +394,16 @@ class File
      *
      * @param string $filename
      * @param string $extension
-     * @return string $newFileName
+     * @return string
      */
     public function replaceExtension($filename, $extension)
     {
-        $newFileName = substr($filename, 0, strrpos($filename, '.')) . '.' . $extension;
-        return $newFileName;
+        $parts = $this->splitFilename($filename);
+        $newFilename = $parts[0] . $parts[1];
+        if (is_string($extension) && ($extension !== '')) {
+            $newFilename .= '.' . $extension;
+        }
+        return $newFilename;
     }
 
 }
