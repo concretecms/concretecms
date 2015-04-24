@@ -48,11 +48,6 @@ class JavascriptLocalizedAsset extends JavascriptAsset
      */
     public function getAssetContents()
     {
-        static $result = false;
-        if ($result === false) {
-            $result = parent::getAssetContentsByRoute($this->assetURL);
-        }
-
-        return $result;
+        return parent::getAssetContentsByRoute($this->assetURL);
     }
 }
