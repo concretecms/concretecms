@@ -967,6 +967,11 @@ return array(
                 array('javascript-localized', 'core/translator'),
                 array('css', 'core/translator'),
             )
+        ),
+        /** @deprecated keeping this around because certain themes reference it and we don't want to break them. */
+        'core/legacy'              => array(
+            array(
+            )
         )
     ),
     'curl' => array(

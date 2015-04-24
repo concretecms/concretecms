@@ -35,10 +35,7 @@ class Session
             }
             $options = Config::get('concrete.session.cookie');
             if ($options['cookie_path'] === false) {
-                $options['cookie_path'] = $app['app_relative_path'];
-            }
-            if (!$options['cookie_path']) {
-                $options['cookie_path'] = '/';
+                $options['cookie_path'] = $app['app_relative_path'] . '/';
             }
             $options['gc_max_lifetime'] = Config::get('concrete.session.max_lifetime');
             $storage->setOptions($options);
