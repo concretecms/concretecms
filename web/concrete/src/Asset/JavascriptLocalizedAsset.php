@@ -35,7 +35,7 @@ class JavascriptLocalizedAsset extends JavascriptAsset
      */
     public function getAssetHashKey()
     {
-        return $this->assetURL.'::'.Localization::activeLocale();
+        return $this->assetURL.'::'.Localization::activeLocale().'::'.sha1($this->getAssetContents());
     }
 
     public function isAssetLocal()
@@ -48,6 +48,11 @@ class JavascriptLocalizedAsset extends JavascriptAsset
      */
     public function getAssetContents()
     {
-        return parent::getAssetContentsByRoute($this->assetURL);
+        static $result = false;
+        if ($result === false) {
+            $result = parent::getAssetContentsByRoute($this->assetURL);
+        }
+
+        return $result;
     }
 }
