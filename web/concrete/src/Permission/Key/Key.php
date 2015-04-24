@@ -1,21 +1,21 @@
 <?php
+
 namespace Concrete\Core\Permission\Key;
 
-use \Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\Object;
 use Gettext\Translations;
 use Loader;
 use CacheLocal;
 use Package;
-use \Concrete\Core\Package\PackageList;
-use \Concrete\Core\Permission\Assignment\Assignment as PermissionAssignment;
+use Concrete\Core\Package\PackageList;
+use Concrete\Core\Permission\Assignment\Assignment as PermissionAssignment;
 use User;
-use \Concrete\Core\Permission\Category as PermissionKeyCategory;
+use Concrete\Core\Permission\Category as PermissionKeyCategory;
 use Environment;
 use Core;
 
 abstract class Key extends Object
 {
-
     const ACCESS_TYPE_INCLUDE = 10;
     const ACCESS_TYPE_EXCLUDE = -1;
     const ACCESS_TYPE_ALL = 0;
@@ -28,11 +28,12 @@ abstract class Key extends Object
             self::ACCESS_TYPE_INCLUDE => t('Included'),
             self::ACCESS_TYPE_EXCLUDE => t('Excluded'),
         );
+
         return $types;
     }
 
     /**
-     * Returns whether a permission key can start a workflow
+     * Returns whether a permission key can start a workflow.
      */
     public function canPermissionKeyTriggerWorkflow()
     {
@@ -48,7 +49,7 @@ abstract class Key extends Object
     }
 
     /**
-     * Returns the name for this permission key
+     * Returns the name for this permission key.
      */
     public function getPermissionKeyName()
     {
@@ -59,6 +60,7 @@ abstract class Key extends Object
      * @param string $format = 'html'
      *    Escape the result in html format (if $format is 'html').
      *    If $format is 'text' or any other value, the display name won't be escaped.
+     *
      * @return string
      */
     public function getPermissionKeyDisplayName($format = 'html')
@@ -74,7 +76,7 @@ abstract class Key extends Object
     }
 
     /**
-     * Returns the handle for this permission key
+     * Returns the handle for this permission key.
      */
     public function getPermissionKeyHandle()
     {
@@ -82,7 +84,7 @@ abstract class Key extends Object
     }
 
     /**
-     * Returns the description for this permission key
+     * Returns the description for this permission key.
      */
     public function getPermissionKeyDescription()
     {
@@ -93,6 +95,7 @@ abstract class Key extends Object
      * @param string $format = 'html'
      *    Escape the result in html format (if $format is 'html').
      *    If $format is 'text' or any other value, the display description won't be escaped.
+     *
      * @return string
      */
     public function getPermissionKeyDisplayDescription($format = 'html')
@@ -108,7 +111,7 @@ abstract class Key extends Object
     }
 
     /**
-     * Returns the ID for this permission key
+     * Returns the ID for this permission key.
      */
     public function getPermissionKeyID()
     {
@@ -168,6 +171,7 @@ abstract class Key extends Object
             $permissionkeys[$r['pkID']] = $pk;
         }
         CacheLocal::set('permission_keys', false, $permissionkeys);
+
         return $permissionkeys;
     }
 
@@ -192,6 +196,7 @@ abstract class Key extends Object
         $class = core_class($class, $pkgHandle);
         $pk = Core::make($class);
         $pk->setPropertiesFromArray($r);
+
         return $pk;
     }
 
@@ -200,6 +205,7 @@ abstract class Key extends Object
         $env = Environment::get();
         $file = $env->getPath(DIRNAME_ELEMENTS . '/' . DIRNAME_PERMISSIONS . '/' . DIRNAME_KEYS . '/' . $this->pkHandle . '.php',
             $this->getPackageHandle());
+
         return file_exists($file);
     }
 
@@ -214,7 +220,7 @@ abstract class Key extends Object
     }
 
     /**
-     * Returns a list of all permissions of this category
+     * Returns a list of all permissions of this category.
      */
     public static function getList($pkCategoryHandle, $filters = array())
     {
@@ -232,6 +238,7 @@ abstract class Key extends Object
             }
         }
         $r->Close();
+
         return $list;
     }
 
@@ -245,6 +252,7 @@ abstract class Key extends Object
         $pkey->addAttribute('package', $this->getPackageHandle());
         $pkey->addAttribute('category', $category);
         $this->exportAccess($pkey);
+
         return $pkey;
     }
 
@@ -276,7 +284,6 @@ abstract class Key extends Object
         }
         $kinstr = implode(',', $kina);
 
-
         $r = $db->Execute('select pkID, pkCategoryID from PermissionKeys where (pkgID = ? or pkCategoryID in (' . $kinstr . ')) order by pkID asc',
             array($pkg->getPackageID()));
         while ($row = $r->FetchRow()) {
@@ -285,6 +292,7 @@ abstract class Key extends Object
             $list[] = $pk;
         }
         $r->Close();
+
         return $list;
     }
 
@@ -305,6 +313,7 @@ abstract class Key extends Object
         }
         $pkn = self::add($pkCategoryHandle, $pk['handle'], $pk['name'], $pk['description'], $pkCanTriggerWorkflow,
             $pkHasCustomClass, $pkg);
+
         return $pkn;
     }
 
@@ -314,6 +323,7 @@ abstract class Key extends Object
         if (!is_array($keys)) {
             $keys = self::loadAll();
         }
+
         return $keys[$pkID];
     }
 
@@ -323,6 +333,7 @@ abstract class Key extends Object
         if (!is_array($keys)) {
             $keys = self::loadAll();
         }
+
         return $keys[$pkHandle];
     }
 
@@ -338,7 +349,6 @@ abstract class Key extends Object
         $pkHasCustomClass,
         $pkg = false
     ) {
-
         $vn = Loader::helper('validation/numbers');
         $txt = Loader::helper('text');
         $pkgID = 0;
@@ -368,6 +378,7 @@ abstract class Key extends Object
         if ($r) {
             $pkID = $db->Insert_ID();
             $keys = self::loadAll();
+
             return $keys[$pkID];
         }
     }
@@ -418,6 +429,7 @@ abstract class Key extends Object
         }
 
         $item->set($valid);
+
         return $valid;
     }
 
@@ -428,9 +440,8 @@ abstract class Key extends Object
         self::loadAll();
     }
 
-
     /**
-     * A shortcut for grabbing the current assignment and passing into that object
+     * A shortcut for grabbing the current assignment and passing into that object.
      */
     public function getAccessListItems()
     {
@@ -453,12 +464,14 @@ abstract class Key extends Object
             $targ = new PermissionAssignment();
         }
         $targ->setPermissionKeyObject($this);
+
         return $targ;
     }
 
     public function getPermissionAccessObject()
     {
         $targ = $this->getPermissionAssignmentObject();
+
         return $targ->getPermissionAccessObject();
     }
 
@@ -488,8 +501,7 @@ abstract class Key extends Object
                 }
             }
         }
+
         return $translations;
     }
-
-
 }
