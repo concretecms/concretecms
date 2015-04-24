@@ -3,8 +3,9 @@
 namespace Concrete\Core\Foundation;
 use \Concrete\Core\Foundation\Object;
 use \Concrete\Core\Package\Package;
-use \Concrete\Core\Foundation\ModifiedPSR4ClassLoader as SymfonyClassloader;
+use \Concrete\Core\Foundation\ModifiedPSR4ClassLoader;
 use \Symfony\Component\ClassLoader\MapClassLoader as SymfonyMapClassloader;
+use Symfony\Component\ClassLoader\Psr4ClassLoader as SymfonyClassLoader;
 
 /**
  * Provides autoloading for concrete5
@@ -104,7 +105,7 @@ class ClassLoader  {
 		}
 
 		$pkgHandle = $pkg->getPackageHandle();
-		$symfonyLoader = new SymfonyClassloader();
+		$symfonyLoader = new ModifiedPSR4ClassLoader();
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Attribute', DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_ATTRIBUTES);
         $symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\MenuItem', DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_MENU_ITEMS);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Authentication', DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_AUTHENTICATION);
@@ -114,23 +115,26 @@ class ClassLoader  {
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Controller', DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CONTROLLERS);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Job', DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_JOBS);
 
+		$strictLoader = new SymfonyClassLoader();
 		$loaders = $pkg->getPackageAutoloaderRegistries();
 		if (count($loaders) > 0) {
 			foreach($loaders as $path => $prefix) {
-				$symfonyLoader->addPrefix($prefix, DIR_PACKAGES . '/' . $pkgHandle . '/' . $path);
+				$strictLoader->addPrefix($prefix, DIR_PACKAGES . '/' . $pkgHandle . '/' . $path);
 			}
 		}
 
 		if ($pkg->providesCoreExtensionAutoloaderMapping()) {
 			// We map all src files in the package to the src/Concrete directory
-			$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle), DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CLASSES . '/Concrete');
+			$strictLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle), DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CLASSES . '/Concrete');
 		} else {
 			// legacy Src support
-			$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Src', DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CLASSES);
+			$strictLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Src', DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CLASSES);
 		}
 
 		$symfonyLoader->register();
+		$strictLoader->register();
 		$this->registerPackageController($pkgHandle);
+
 	}
 
 	/**
@@ -175,7 +179,8 @@ class ClassLoader  {
 	 * The application namespace can be customized by setting `namespace` in the application's `config/app.php`.
 	 */
 	protected function setupFileAutoloader() {
-		$symfonyLoader = new SymfonyClassloader();
+		$symfonyLoader = new ModifiedPSR4ClassLoader();
+
         $symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\StartingPointPackage', DIR_BASE_CORE . '/config/install/' . DIRNAME_PACKAGES);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Attribute', DIR_BASE_CORE . '/' . DIRNAME_ATTRIBUTES);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\MenuItem', DIR_BASE_CORE . '/' . DIRNAME_MENU_ITEMS);
@@ -185,7 +190,7 @@ class ClassLoader  {
         $symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Controller\\PageType', DIR_BASE_CORE . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Controller', DIR_BASE_CORE . '/' . DIRNAME_CONTROLLERS);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Job', DIR_BASE_CORE . '/' . DIRNAME_JOBS);
-		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Core', DIR_BASE_CORE . '/' . DIRNAME_CLASSES);
+
 
         $namespace = 'Application';
         $app_config_path = DIR_APPLICATION . '/config/app.php';
@@ -204,9 +209,13 @@ class ClassLoader  {
         $symfonyLoader->addPrefix($namespace . '\\Controller\\PageType', DIR_APPLICATION . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES);
 		$symfonyLoader->addPrefix($namespace . '\\Controller', DIR_APPLICATION . '/' . DIRNAME_CONTROLLERS);
 		$symfonyLoader->addPrefix($namespace . '\\Job', DIR_APPLICATION . '/' . DIRNAME_JOBS);
-		$symfonyLoader->addPrefix($namespace . '\\Src', DIR_APPLICATION . '/' . DIRNAME_CLASSES);
 
 		$symfonyLoader->register();
+
+		$strictLoader = new SymfonyClassLoader();
+		$strictLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Core', DIR_BASE_CORE . '/' . DIRNAME_CLASSES);
+		$strictLoader->addPrefix($namespace . '\\Src', DIR_APPLICATION . '/' . DIRNAME_CLASSES);
+		$strictLoader->register();
 	}
 
 
