@@ -20,6 +20,8 @@ abstract class Key extends Object
     const ACCESS_TYPE_EXCLUDE = -1;
     const ACCESS_TYPE_ALL = 0;
 
+    protected $permissionObject = null;
+
     public function getSupportedAccessTypes()
     {
         $types = array(
