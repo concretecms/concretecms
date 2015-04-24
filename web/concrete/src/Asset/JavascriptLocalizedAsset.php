@@ -35,7 +35,7 @@ class JavascriptLocalizedAsset extends JavascriptAsset
      */
     public function getAssetHashKey()
     {
-        return $this->assetURL.'::'.Localization::activeLocale();
+        return $this->assetURL.'::'.Localization::activeLocale().'::'.sha1($this->getAssetContents());
     }
 
     public function isAssetLocal()
