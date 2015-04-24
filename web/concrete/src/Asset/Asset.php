@@ -123,7 +123,18 @@ abstract class Asset
      */
     public function getAssetHashKey()
     {
-        return $this->assetURL;
+        $result = $this->assetURL;
+        if ($this->isAssetLocal()) {
+            $filename = $this->getAssetPath();
+            if (is_file($filename)) {
+                $mtime = @filemtime($filename);
+                if ($mtime !== false) {
+                    $result .= '@' . $mtime;
+                }
+            }
+        }
+
+        return $result;
     }
 
     /**
