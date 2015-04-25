@@ -84,6 +84,13 @@ var miniSurvey = {
         } else {
             $('#emailSettings' + mode).hide();
         }
+
+
+        if (radioButton.value == 'date' || radioButton.value == 'datetime') {
+            $('#answerDateDefault' + mode).show();
+        } else {
+            $('#answerDateDefault' + mode).hide();
+        }
     },
     settingsCheck: function (radioButton, mode) {
         if (mode != 'Edit') mode = '';
@@ -104,6 +111,7 @@ var miniSurvey = {
         answerType = $(formID).val();
         var options = encodeURIComponent($('#answerOptions' + mode).val());
         var postStr = 'question=' + encodeURIComponent($('#question' + mode).val()) + '&options=' + options;
+        postStr += '&defaultDate=' + encodeURIComponent($('#defaultDate' + mode).val());
         postStr += '&width=' + escape($('#width' + mode).val());
         postStr += '&height=' + escape($('#height' + mode).val());
         var req = $('input[type="radio"][name="required' + mode + '"]:checked').val();
@@ -183,12 +191,13 @@ var miniSurvey = {
                 $('#widthEdit').val(jsonObj.width);
                 $('#heightEdit').val(jsonObj.height);
                 $('#positionEdit').val(jsonObj.position);
+                $('#defaultDateEdit').val(jsonObj.defaultDate);
                 if (parseInt(jsonObj.required, 10) == 1) {
-                    $('input[name="requiredEdit"][value=1]').prop('checked', true);
-                    $('input[name="requiredEdit"][value=0]').prop('checked', false);
+                    $('input[name="requiredEdit"][value="1"]').prop('checked', true);
+                    $('input[name="requiredEdit"][value="0"]').prop('checked', false);
                 } else {
-                    $('input[name="requiredEdit"][value=1]').prop('checked', false);
-                    $('input[name="requiredEdit"][value=0]').prop('checked', true);
+                    $('input[name="requiredEdit"][value="1"]').prop('checked', false);
+                    $('input[name="requiredEdit"][value="0"]').prop('checked', true);
                 }
 
                 if (jsonObj.inputType == 'email') {
@@ -252,6 +261,7 @@ var miniSurvey = {
         $('#answerType').val('field').change();
         $('#answerOptionsArea').hide();
         $('#answerSettings').hide();
+        $('#answerDateDefault').hide();
         $('#required input').prop('checked', false);
     },
 
