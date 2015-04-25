@@ -1,10 +1,8 @@
 <?php 
 defined('C5_EXECUTE') or die("Access Denied.");
-/* @var $uh ConcreteUrlsHelper */ 
 $uh = Loader::helper('concrete/urls');
-/* @var $form FormHelper */
 $form = Loader::helper('form');
-/* @var $ih ConcreteInterfaceHelper */
+$datetime = loader::helper('form/date_time');
 $ih = Loader::helper('concrete/ui');
 $a = $view->getAreaObject();
 $bt = BlockType::getByHandle('form');
@@ -154,7 +152,21 @@ $addSelected = true;
 			</div>
 		</div>
 
-		<div class="form-group">
+        <div id="answerDateDefault">
+            <div class="form-group">
+                <?=$form->label('defaultDate', t('Default Value'))?>
+                <?=$form->select(
+                    'defaultDate',
+                    array(
+                        '' => t('Blank'),
+                        'now' => t('Current Date/Time'),
+                    ),
+                    'blank'
+                )?>
+            </div>
+        </div>
+
+        <div class="form-group">
 			<label class="control-label"><?=t('Required')?></label>
 			<div class="radio"><label><?=$form->radio('required', 1)?> <?=t('Yes')?></label></div>
 			<div class="radio"><label><?=$form->radio('required', 0)?> <?=t('No')?></label></div>
@@ -225,6 +237,20 @@ $addSelected = true;
 				</div>
 			</div>
 
+            <div id="answerDateDefaultEdit">
+                <div class="form-group">
+                    <?=$form->label('defaultDateEdit', t('Default Value'))?>
+                    <?=$form->select(
+                        'defaultDateEdit',
+                        array(
+                            '' => t('Blank'),
+                            'now' => t('Current Date/Time'),
+                        ),
+                        'blank'
+                    )?>
+                </div>
+            </div>
+
 			<div class="form-group">
 				<label class="control-label"><?=t('Required')?></label>
 				<div class="radio"><label><?=$form->radio('requiredEdit', 1)?> <?=t('Yes')?></label></div>
@@ -239,7 +265,7 @@ $addSelected = true;
 			</div>
 		</fieldset>
 		
-		<input type="hidden" id="positionEdit" name="position" type="text" value="1000" />
+		<input type="hidden" id="positionEdit" name="position" value="1000" />
 		
 		<div>
 			<?=$ih->button(t('Cancel'), 'javascript:void(0)', 'left', '', array('id' => 'cancelEditQuestion'))?>
@@ -264,7 +290,7 @@ $addSelected = true;
 
 <style type="text/css">
 	div.miniSurveyQuestion {
-		float: left; 
+		float: left;
 		width: 80%;
 	}
 	div.miniSurveyOptions {
