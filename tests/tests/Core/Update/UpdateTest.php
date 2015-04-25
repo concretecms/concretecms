@@ -1,9 +1,9 @@
 <?php
 
-class UpdateTest extends ConcreteDatabaseTestCase {
+class UpdateTest extends BlockTypeTestCase {
 
     protected $fixtures = array();
-    protected $tables = array('Logs', 'BlockTypes', 'CollectionVersionBlocks', 'Widgets', 'Blocks', 'SystemDatabaseMigrations', 'Files');
+    protected $tables = array('Blocks', 'BlockTypes', 'CollectionVersionBlocks', 'Files', 'Logs', 'SystemDatabaseMigrations', 'Widgets');
 
     public function testCurrentMigration()
     {

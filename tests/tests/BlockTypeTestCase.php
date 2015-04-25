@@ -43,7 +43,19 @@ abstract class BlockTypeTestCase extends ConcreteDatabaseTestCase {
 
 	}
 
+    public function getDataSet($fixtures = array())
+    {
+        \BlockType::installBlockType('core_scrapbook_display');
+        parent::getDataSet($fixtures);
+    }
 
-
+    public function tearDown()
+    {
+        $bt = \BlockType::getByHandle('core_scrapbook_display');
+        if($bt) {
+            $bt->delete();
+        }
+        parent::tearDown();
+    }
 
 }
