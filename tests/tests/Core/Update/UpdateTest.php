@@ -1,6 +1,6 @@
 <?php
 
-class UpdateTest extends BlockTypeTestCase {
+class UpdateTest extends ConcreteDatabaseTestCase {
 
     protected $fixtures = array();
     protected $tables = array('Blocks', 'BlockTypes', 'CollectionVersionBlocks', 'Files', 'Logs', 'SystemDatabaseMigrations', 'Widgets');
