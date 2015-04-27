@@ -180,8 +180,11 @@ class Importer
         // first we import the file into the storage location that is the same.
         $prefix = $this->generatePrefix();
         try {
-            $storage->copy(REL_DIR_FILES_INCOMING . '/' . $filename, $cf->prefix($prefix, $sanitizedFilename));
+            $copied = $storage->copy(REL_DIR_FILES_INCOMING . '/' . $filename, $cf->prefix($prefix, $sanitizedFilename));
         } catch (\Exception $e) {
+            $copied = false;
+        }
+        if (!$copied) {
             $storage->write(
                 $cf->prefix($prefix, $sanitizedFilename),
                 $storage->read(REL_DIR_FILES_INCOMING . '/' . $filename)
