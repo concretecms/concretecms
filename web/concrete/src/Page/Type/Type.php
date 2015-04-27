@@ -1047,9 +1047,11 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
 
         // now we setup in the initial configurated page target
         $target = $this->getPageTypePublishTargetObject();
-        $cParentID = $target->getDefaultParentPageID();
-        if ($cParentID > 0) {
-            $p->setPageDraftTargetParentPageID($cParentID);
+        if ($target instanceof PageTypePublishTargetConfiguration) {
+            $cParentID = $target->getDefaultParentPageID();
+            if ($cParentID > 0) {
+                $p->setPageDraftTargetParentPageID($cParentID);
+            }
         }
 
         // we have to publish the controls to the page. i'm not sure why
