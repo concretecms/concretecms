@@ -129,6 +129,7 @@ class Composer extends BackendInterfacePageController {
 
 			/// set the target
 			$configuredTarget = $pagetype->getPageTypePublishTargetObject();
+			$targetPageID = 0;
 			if ($configuredTarget instanceof PageTypePublishTargetConfiguration) {
 				$targetPageID = $configuredTarget->getPageTypePublishTargetConfiguredTargetParentPageID();
 			}
