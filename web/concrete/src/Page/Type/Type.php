@@ -1014,7 +1014,10 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
     public function canPublishPageTypeBeneathPage(\Concrete\Core\Page\Page $page)
     {
         $target = $this->getPageTypePublishTargetObject();
-        return $target->canPublishPageTypeBeneathTarget($this, $page);
+        if ($target instanceof PageTypePublishTargetConfiguration) {
+            return $target->canPublishPageTypeBeneathTarget($this, $page);
+        }
+        return false;
     }
 
     /**
