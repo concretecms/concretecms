@@ -19,7 +19,6 @@ class Directory extends PublicProfilePageController
         parent::on_start();
         $this->requireAsset('css', 'core/frontend/pagination');
         $this->userList = new UserList();
-        $this->userList->setItemsPerPage(1);
         $this->userList->sortByUserID();
     }
 
