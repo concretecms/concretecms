@@ -8,6 +8,7 @@ use Loader;
 use PageTemplate;
 use User;
 use Core;
+use \Concrete\Core\Page\Type\PublishTarget\Configuration\Configuration as PageTypePublishTargetConfiguration;
 
 class Composer extends BackendInterfacePageController {
 
@@ -128,7 +129,9 @@ class Composer extends BackendInterfacePageController {
 
 			/// set the target
 			$configuredTarget = $pagetype->getPageTypePublishTargetObject();
-			$targetPageID = $configuredTarget->getPageTypePublishTargetConfiguredTargetParentPageID();
+			if ($configuredTarget instanceof PageTypePublishTargetConfiguration) {
+				$targetPageID = $configuredTarget->getPageTypePublishTargetConfiguredTargetParentPageID();
+			}
 			if (!$targetPageID) {
 				$targetPageID = $_POST['cParentID'];
 			}
