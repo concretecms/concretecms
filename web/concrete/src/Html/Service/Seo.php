@@ -7,25 +7,48 @@ class Seo
     private $titleSegments = array();
     private $titleSegmentSeparator = ' :: ';
     private $titleFormat = '%1$s :: %2$s';
-    
+    private $hasCustomTitle = false;
+
     public function setSiteName($name)
     {
         $this->siteName = $name;
     }
-    
+
+    public function hasCustomTitle()
+    {
+        return $this->hasCustomTitle;
+    }
+
+    public function setCustomTitle($title)
+    {
+        $this->hasCustomTitle = true;
+        $this->titleSegments = array();
+        $this->addTitleSegmentBefore($title);
+        return $this;
+    }
+
     public function addTitleSegment($segment)
     {
-        array_unshift($this->titleSegments, $segment);
+        array_push($this->titleSegments, $segment);
+        return $this;
     }
-    
+
+    public function addTitleSegmentBefore($segment)
+    {
+        array_unshift($this->titleSegments, $segment);
+        return $this;
+    }
+
     public function setTitleFormat($format)
     {
         $this->titleFormat = $format;
+        return $this;
     }
     
     public function setTitleSegmentSeparator($separator)
     {
         $this->titleSegmentSeparator = $separator;
+        return $this;
     }
     
     public function getTitle()
