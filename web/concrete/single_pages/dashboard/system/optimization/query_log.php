@@ -49,7 +49,7 @@ $th = Loader::helper('text');
         </div>
 
         <div class="ccm-search-results-pagination">
-            <? print $pagination->renderDefaultView();?>
+            <? print $pagination->renderView('dashboard');?>
         </div>
 
     </div>

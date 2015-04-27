@@ -294,7 +294,7 @@ $nav = Loader::helper('navigation');
 
     <div class="ccm-search-results-pagination">
         <? if ($pagination->haveToPaginate()) { ?>
-            <?=$pagination->renderDefaultView();?>
+            <?=$pagination->renderView('dashboard');?>
         <? } ?>
     </div>
 </div>

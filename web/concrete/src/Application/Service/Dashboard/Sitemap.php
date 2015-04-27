@@ -106,7 +106,7 @@ class Sitemap
                 $n->addClass = 'ccm-sitemap-explore';
                 $n->noLink = true;
                 $n->unselectable = true;
-                $html = $pagination->renderDefaultView();
+                $html = $pagination->renderView('dashboard');
                 $n->title = $html;
                 $nodes[] = $n;
             } else {

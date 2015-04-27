@@ -21,7 +21,7 @@ class Bulk extends DashboardPageController {
 			$this->set('siteName', Config::get('concrete.site'));
             $paginationView = false;
             if ($pagination->haveToPaginate()) {
-                $paginationView = $pagination->renderDefaultView();
+                $paginationView = $pagination->renderView('dashboard');
             }
 			$this->set('pagination', $paginationView);
    		}

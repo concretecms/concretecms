@@ -1449,6 +1449,11 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         return $this->vObj->cvDatePublic;
     }
 
+    public function getCollectionDatePublicObject()
+    {
+        return Core::make('date')->toDateTime($this->getCollectionDatePublic());
+    }
+
     /**
      * Get the description of a page.
      *
