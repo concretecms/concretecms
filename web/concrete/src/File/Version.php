@@ -709,6 +709,7 @@ class Version
         $fr = $this->getFileResource();
         try {
             $image = \Image::load($fr->read());
+            $mimetype = $fr->getMimeType();
 
             foreach ($types as $type) {
 
@@ -733,16 +734,33 @@ class Version
                 $thumbnail = $image->thumbnail(new \Imagine\Image\Box($type->getWidth(), $height), $thumbnailMode);
                 $thumbnailPath = $type->getFilePath($this);
 
-                $o = new \stdClass;
-                $o->visibility = AdapterInterface::VISIBILITY_PUBLIC;
-                $o->mimetype = 'image/jpeg';
+                switch ($mimetype) {
+                  case 'image/jpeg':
+                    $thumbnailGetType = array('jpeg', array('jpeg_quality' => 60));
+                    break;
+                  case 'image/png':
+                    $thumbnailGetType = array('png');
+                    break;
+                  case 'image/gif':
+                    $thumbnailGetType = array('gif');
+                    break;
+                  case 'image/xbm':
+                    $thumbnailGetType = array('xbm');
+                    break;
+                  case 'image/vnd.wap.wbmp':
+                    $thumbnailGetType = array('wbmp');
+                    break;
+                  default:
+                    $thumbnailGetType = array('png');
+                    break;
+                }
 
                 $filesystem->write(
                     $thumbnailPath,
-                    $thumbnail->get('jpg', array('jpeg_quality' => 60)),
+                    $thumbnail->get($thumbnailGetType[0]),
                     array(
                         'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
-                        'mimetype' => 'image/jpeg'
+                        'mimetype' => $mimetype
                     )
                 );
 
