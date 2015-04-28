@@ -154,6 +154,7 @@ class Extractor
         $mo = DIR_LANGUAGES_SITE_INTERFACE . '/' . $section->getLocale() . '.mo';
 
         PoGenerator::toFile($translations, $po);
+        $translations = PoExtractor::fromFile($po);
 
         /* Do not generate mo for empty catalog, it crashes Zend\I18n gettext loader */
         $empty = true;
