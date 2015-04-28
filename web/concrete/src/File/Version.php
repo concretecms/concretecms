@@ -739,7 +739,7 @@ class Version
 
                 $filesystem->write(
                     $thumbnailPath,
-                    $thumbnail->get('jpg', array('jpeg_quality' => 60)),
+                    $thumbnail->get('jpg', array('jpeg_quality' => \Config::get('concrete.misc.default_jpeg_image_compression', 60))),
                     array(
                         'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
                         'mimetype' => 'image/jpeg'
