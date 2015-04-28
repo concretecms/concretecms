@@ -537,6 +537,7 @@ abstract class AbstractRepetition implements RepetitionInterface
     public function activeRangesBetween($start, $end)
     {
         $occurrences = array();
+        $dh = \Core::make('date');
 
         $start_date = $this->getStartDate();
         $end_date = $this->getEndDate();
@@ -544,10 +545,13 @@ abstract class AbstractRepetition implements RepetitionInterface
             $end_date = $this->getStartDate();
         }
 
-        $repetition_start = strtotime($start_date);
-        $repetition_end = strtotime($end_date);
+        $repetition_start = $dh->toDateTime($start_date)->getTimestamp();
+        $repetition_end = $dh->toDateTime($end_date)->getTimestamp();
 
-        $repetition_final = strtotime($this->getRepeatPeriodEnd());
+        $period_end = $dh->toDateTime($this->getRepeatPeriodEnd());
+        if (is_object($period_end)) {
+            $repetition_final = $period_end->getTimestamp();
+        }
 
         $repetition_num = $this->getRepeatEveryNum();
 
