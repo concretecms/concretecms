@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "cb45e166b224fc0c90ae467ad8ae6e8a",
+    "hash": "bcc7374a7f9d380751c5f08a87739180",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -44,6 +44,50 @@
             ],
             "description": "A set of classes to create and manipulate HTML objects abstractions",
             "time": "2014-01-27 22:41:20"
+        },
+        {
+            "name": "concrete5/doctrine-xml",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/concrete5/doctrine-xml.git",
+                "reference": "653c156d22bce099f9f06bbd65940ac3b405e05f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/concrete5/doctrine-xml/zipball/653c156d22bce099f9f06bbd65940ac3b405e05f",
+                "reference": "653c156d22bce099f9f06bbd65940ac3b405e05f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3"
+            },
+            "require-dev": {
+                "doctrine/dbal": "2.5.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "DoctrineXml\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Define database structure via XML using Doctrine data types",
+            "homepage": "https://github.com/concrete5/doctrine-xml",
+            "keywords": [
+                "database",
+                "doctrine",
+                "schema",
+                "structure",
+                "xml"
+            ],
+            "support": {
+                "source": "https://github.com/concrete5/doctrine-xml/tree/master",
+                "issues": "https://github.com/concrete5/doctrine-xml/issues"
+            },
+            "time": "2015-04-29 15:48:34"
         },
         {
             "name": "concrete5/flysystem",
@@ -3645,7 +3689,8 @@
         "kertz/twitteroauth": 20,
         "primal/color": 20,
         "zendframework/zend-queue": 20,
-        "oryzone/oauth-user-data": 20
+        "oryzone/oauth-user-data": 20,
+        "concrete5/doctrine-xml": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
