@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "27d5fe87e292cb09b0b49339b6de44e1",
+    "hash": "9a42d837a91e1bdc5e03fe7939cb5932",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -877,16 +877,16 @@
         },
         {
             "name": "gettext/gettext",
-            "version": "v3.4.1",
+            "version": "v3.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/oscarotero/Gettext.git",
-                "reference": "8d01c88edf73bd79bce3c10c3648c0e70489e2ba"
+                "reference": "6d8fae62ce7df8676a351dfa5728c8f87f20ef53"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/oscarotero/Gettext/zipball/8d01c88edf73bd79bce3c10c3648c0e70489e2ba",
-                "reference": "8d01c88edf73bd79bce3c10c3648c0e70489e2ba",
+                "url": "https://api.github.com/repos/oscarotero/Gettext/zipball/6d8fae62ce7df8676a351dfa5728c8f87f20ef53",
+                "reference": "6d8fae62ce7df8676a351dfa5728c8f87f20ef53",
                 "shasum": ""
             },
             "require": {
@@ -895,6 +895,7 @@
             },
             "require-dev": {
                 "illuminate/view": "*",
+                "phpunit/phpunit": "~4.0",
                 "twig/extensions": "*",
                 "twig/twig": "*"
             },
@@ -931,7 +932,7 @@
                 "po",
                 "translation"
             ],
-            "time": "2015-04-28 14:38:58"
+            "time": "2015-04-28 17:50:01"
         },
         {
             "name": "gettext/languages",
