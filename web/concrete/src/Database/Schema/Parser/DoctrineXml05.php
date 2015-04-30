@@ -18,6 +18,8 @@ class DoctrineXml05 extends XmlParser
         return \DoctrineXml\Parser::fromDocument(
             $this->rawXML->asXML(),
             $db->getDatabasePlatform(),
+            true,
+            false,
             $filter
         );
     }
