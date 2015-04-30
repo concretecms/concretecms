@@ -1078,10 +1078,7 @@ class ContentImporter
                     foreach($types as $type) {
                         // since we provide the thumbnails, we're going to get a list of thumbnail types
                         // and loop through them, assigning them to all the files.
-                        $thumbnailPath = $helper->replaceExtension(
-                            $fromPath . '/' . $type->getHandle() . '/' . $filename,
-                            'jpg'
-                        );
+                        $thumbnailPath = $fromPath . '/' . $type->getHandle() . '/' . $filename;
                         if (file_exists($thumbnailPath)) {
                             $fv->importThumbnail($type, $thumbnailPath);
                         }
