@@ -97,8 +97,10 @@ class ErrorHandler extends PrettyPageHandler
         foreach ($config as $key => $value) {
             if (is_array($value)) {
                 $flat = array_merge($flat, $this->flatConfig($value, "{$group}.{$key}"));
-            } else {
+            } elseif (is_string($value)) {
                 $flat["{$group}.{$key}"] = $value;
+            } else {
+                $flat["{$group}.{$key}"] = json_encode($value);
             }
         }
 
