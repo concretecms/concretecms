@@ -109,7 +109,7 @@ class Version
     public static function getByHandle($handle)
     {
         $list = Type::getVersionList();
-        foreach($list as $version) {
+        foreach ($list as $version) {
             if ($version->getHandle() == $handle) {
                 return $version;
             }
@@ -123,8 +123,18 @@ class Version
         $filename = $fv->getFileName();
         $hi = Core::make('helper/file');
         $ii = Core::make('helper/concrete/file');
-        $filename = $hi->replaceExtension($filename, 'jpg');
-        return REL_DIR_FILES_THUMBNAILS . '/' . $this->getDirectoryName() . $ii->prefix($prefix, $filename);
+        $f1 = REL_DIR_FILES_THUMBNAILS . '/' . $this->getDirectoryName() . $ii->prefix($prefix, $filename);
+        $f2 = REL_DIR_FILES_THUMBNAILS . '/' . $this->getDirectoryName() . $ii->prefix($prefix,
+                $hi->replaceExtension($filename, 'jpg'));
+        // 5.7.4 keeps extension; older sets it to .jpg
+
+        $filesystem = $fv->getFile()->getFileStorageLocationObject()->getFileSystemObject();
+        if ($filesystem->has($f1)) {
+            return $f1;
+        }
+
+        //fallback
+        return $f2;
     }
 
 }
