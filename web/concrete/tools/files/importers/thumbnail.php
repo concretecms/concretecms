@@ -37,7 +37,6 @@ foreach ($thumbnails as $thumb) {
 }
 
 if ($thumbnail) {
-    /** @var StorageLocation $fsl */
     $fsl = $f->getFileStorageLocationObject();
 
     /**
@@ -45,7 +44,7 @@ if ($thumbnail) {
      * be revised.
      */
     $filesystem = $fsl->getFileSystemObject();
-    $filesystem->update($type_version->getFilePath($file_version), base64_decode(str_replace('data:image/png;base64,', '', $imgData)));
+    $filesystem->update($type_version->getFilePath($file_version), base64_decode(preg_replace('/data:image\/(png|jpeg);base64,/', '', $imgData, 1)));
 
     die('{"error":0}');
 }
