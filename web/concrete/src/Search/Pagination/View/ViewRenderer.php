@@ -36,7 +36,7 @@ class ViewRenderer
         return $this->view->render(
             $this->pagination,
             $this->routeCollectionFunction,
-            $this->view->getArguments()
+            array_merge($this->view->getArguments(), $args)
         );
     }
 }
