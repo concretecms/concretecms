@@ -51,12 +51,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/concrete5/doctrine-xml.git",
-                "reference": "b30b5b0cc52ac680eb63c64c3a06eaa845b38f81"
+                "reference": "a8db3d402a4ee6d63155979eec92d4c5686fcd69"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/concrete5/doctrine-xml/zipball/b30b5b0cc52ac680eb63c64c3a06eaa845b38f81",
-                "reference": "b30b5b0cc52ac680eb63c64c3a06eaa845b38f81",
+                "url": "https://api.github.com/repos/concrete5/doctrine-xml/zipball/a8db3d402a4ee6d63155979eec92d4c5686fcd69",
+                "reference": "a8db3d402a4ee6d63155979eec92d4c5686fcd69",
                 "shasum": ""
             },
             "require": {
@@ -87,7 +87,7 @@
                 "source": "https://github.com/concrete5/doctrine-xml/tree/master",
                 "issues": "https://github.com/concrete5/doctrine-xml/issues"
             },
-            "time": "2015-04-30 13:39:28"
+            "time": "2015-04-30 15:46:28"
         },
         {
             "name": "concrete5/flysystem",
