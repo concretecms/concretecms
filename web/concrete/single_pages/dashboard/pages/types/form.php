@@ -30,10 +30,13 @@ use \Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayou
 	</div>
 </div>
 
-<div class="ccm-dashboard-header-buttons">
+<div class="ccm-dashboard-header-buttons btn-group">
 	<a href="#" data-dialog="add_set" class="btn btn-default"><?=t('Add Set')?></a>
+    <a href="<?=URL::to('/dashboard/pages/types')?>" class="btn btn-default"><?=t('Back to List')?></a>
 </div>
 <div class="ccm-pane-body ccm-pane-body-footer">
+
+<p class="lead"><?php echo $pagetype->getPageTypeDisplayName(); ?></p>
 
 <? if (count($sets) > 0) {
 
