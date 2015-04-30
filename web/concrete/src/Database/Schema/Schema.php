@@ -45,8 +45,7 @@ class Schema
     {
 
         $xml = simplexml_load_file(DIR_BASE_CORE . '/config/db.xml');
-        $output = new \SimpleXMLElement("<schema></schema>");
-        $output->addAttribute('version', '0.3');
+        $output = new \SimpleXMLElement('<schema xmlns="http://www.concrete5.org/doctrine-xml/0.5" />');
         $th = \Core::make('helper/text');
         foreach($xml->table as $t) {
             $name = (string) $t['name'];
