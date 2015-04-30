@@ -49,7 +49,7 @@ class Pagination extends Pagerfanta
      */
     public function renderDefaultView($arguments = array())
     {
-        return $this->renderView('application', $arguments = array());
+        return $this->renderView('application', $arguments);
     }
 
     public function renderView($driver = 'application', $arguments = array())
