@@ -232,7 +232,7 @@ $addSelected = true;
 			</div>
 
 			<div class="form-group">
-				<div id="emailSettings">
+				<div id="emailSettingsEdit">
 					<?php print $form->label('send_notification_from_edit', t('Reply to this email address'));?>
 					<span class="send_notification_from_edit"><?php print $form->checkbox('send_notification_from_edit', 1); ?></span>
 				</div>
