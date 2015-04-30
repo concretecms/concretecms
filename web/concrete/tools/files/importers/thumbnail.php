@@ -44,7 +44,7 @@ if ($thumbnail) {
      * be revised.
      */
     $filesystem = $fsl->getFileSystemObject();
-    $filesystem->update($type_version->getFilePath($file_version), base64_decode(preg_replace('/data:image\/(png|jpeg);base64,/', '', $imgData, 1)));
+    $filesystem->update($type_version->getFilePath($file_version), base64_decode(preg_replace('/data:image\/(png|jpeg|gif|xbm|wbmp);base64,/', '', $imgData, 1)));
 
     die('{"error":0}');
 }
