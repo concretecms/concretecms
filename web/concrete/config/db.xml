@@ -745,7 +745,7 @@
       <unsigned/>
       <default value="0"/>
     </field>
-    <field name="cnvAttachmentsEnabled" type="smallint">
+    <field name="cnvAttachmentsEnabled" type="boolean">
       <unsigned/>
       <default value="1"/>
       <notnull/>
@@ -758,7 +758,7 @@
       <unsigned/>
       <default value="0"/>
     </field>
-    <field name="cnvAttachmentOverridesEnabled" type="smallint">
+    <field name="cnvAttachmentOverridesEnabled" type="boolean">
       <unsigned/>
       <default value="0"/>
       <notnull/>
@@ -776,12 +776,12 @@
       <default value="0"/>
     </field>
     <field name="cnvFileExtensions" type="text" size="65535"/>
-    <field name="cnvNotificationOverridesEnabled" type="smallint">
+    <field name="cnvNotificationOverridesEnabled" type="boolean">
       <unsigned/>
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="cnvEnableSubscription" type="smallint">
+    <field name="cnvEnableSubscription" type="boolean">
       <unsigned/>
       <default value="0"/>
     </field>
@@ -1067,7 +1067,7 @@
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="accessType" type="integer" size="4">
+    <field name="accessType" type="smallint">
       <default value="0"/>
       <notnull/>
     </field>
@@ -1322,7 +1322,7 @@
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="arLayoutIsCustom" type="smallint">
+    <field name="arLayoutIsCustom" type="boolean">
       <unsigned/>
       <default value="0"/>
       <notnull/>
@@ -1332,7 +1332,7 @@
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="arLayoutUsesThemeGridFramework" type="smallint">
+    <field name="arLayoutUsesThemeGridFramework" type="boolean">
       <unsigned/>
       <default value="0"/>
       <notnull/>
@@ -1893,17 +1893,17 @@
     <field name="arHandle" type="string" size="255">
       <key/>
     </field>
-    <field name="btCacheBlockOutput" type="smallint">
+    <field name="btCacheBlockOutput" type="boolean">
       <unsigned/>
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="btCacheBlockOutputOnPost" type="smallint">
+    <field name="btCacheBlockOutputOnPost" type="boolean">
       <unsigned/>
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="btCacheBlockOutputForRegisteredUsers" type="smallint">
+    <field name="btCacheBlockOutputForRegisteredUsers" type="boolean">
       <unsigned/>
       <default value="0"/>
       <notnull/>
@@ -3104,7 +3104,7 @@
       <notnull/>
     </field>
     <field name="fvPrefix" type="string" size="12"/>
-    <field name="fvGenericType" type="integer" size="3">
+    <field name="fvGenericType" type="smallint">
       <unsigned/>
       <default value="0"/>
       <notnull/>
@@ -3175,7 +3175,7 @@
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="fvUpdateTypeID" type="integer" size="3">
+    <field name="fvUpdateTypeID" type="smallint">
       <unsigned/>
       <default value="0"/>
       <notnull/>
@@ -3869,7 +3869,7 @@
       <notnull/>
     </field>
     <field name="pfDescription" type="string" size="255"/>
-    <field name="pfIncludeAllDescendents" type="smallint">
+    <field name="pfIncludeAllDescendents" type="boolean">
       <unsigned/>
       <default value="0"/>
       <notnull/>
@@ -3879,7 +3879,7 @@
       <notnull/>
     </field>
     <field name="pfAreaHandleToDisplay" type="string" size="255"/>
-    <field name="pfDisplayAliases" type="smallint">
+    <field name="pfDisplayAliases" type="boolean">
       <unsigned/>
       <default value="0"/>
       <notnull/>
@@ -3887,7 +3887,7 @@
     <field name="ptID" type="smallint">
       <unsigned/>
     </field>
-    <field name="pfDisplayFeaturedOnly" type="smallint">
+    <field name="pfDisplayFeaturedOnly" type="boolean">
       <default value="0"/>
     </field>
     <index name="pfHandle">
@@ -3925,7 +3925,7 @@
     </index>
   </table>
 
-  <table name="PageSearchIndex" engine="MYISAM">
+  <table name="PageSearchIndex">
     <field name="cID" type="integer" size="10">
       <unsigned/>
       <key/>
@@ -3969,6 +3969,7 @@
     <index name="cRequiresReindex">
       <col>cRequiresReindex</col>
     </index>
+    <opt for="MySQL" engine="MYISAM"/>
   </table>
 
   <table name="PageThemes">
@@ -4135,7 +4136,7 @@
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="cCacheFullPageContent" type="integer" size="4">
+    <field name="cCacheFullPageContent" type="smallint">
       <default value="-1"/>
       <notnull/>
     </field>
@@ -4460,7 +4461,7 @@
     <field name="uHash" type="string" size="64">
       <notnull/>
     </field>
-    <field name="type" type="integer" size="4">
+    <field name="type" type="smallint">
       <unsigned/>
       <default value="0"/>
       <notnull/>
@@ -4610,7 +4611,7 @@
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="uIsValidated" type="smallint">
+    <field name="uIsValidated" type="boolean">
       <default value="-1"/>
       <notnull/>
     </field>
@@ -4716,10 +4717,10 @@
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="fsType" type="integer" size="4">
+    <field name="fsType" type="smallint">
       <notnull/>
     </field>
-    <field name="fsOverrideGlobalPermissions" type="integer" size="4"/>
+    <field name="fsOverrideGlobalPermissions" type="smallint"/>
     <index name="uID">
       <col>uID</col>
       <col>fsType</col>
@@ -5235,7 +5236,7 @@
     </index>
   </table>
 
-  <table name="Queues" engine="INNODB">
+  <table name="Queues">
     <field name="queue_id" type="integer" size="10">
       <unsigned/>
       <autoincrement/>
@@ -5252,9 +5253,10 @@
     <index name="queue_name">
       <col>queue_name</col>
     </index>
+    <opt for="MySQL" engine="INNODB"/>
   </table>
 
-  <table name="QueueMessages" engine="INNODB">
+  <table name="QueueMessages">
     <field name="message_id" type="integer" size="20">
       <unsigned/>
       <autoincrement/>
@@ -5285,9 +5287,10 @@
     <index name="message_queueid">
       <col>queue_id</col>
     </index>
+    <opt for="MySQL" engine="INNODB"/>
   </table>
 
-  <table name="QueuePageDuplicationRelations" engine="INNODB">
+  <table name="QueuePageDuplicationRelations">
     <field name="queue_name" type="string" size="255">
       <notnull/>
     </field>
@@ -5305,6 +5308,7 @@
       <col>originalCID</col>
       <col>queue_name</col>
     </index>
+    <opt for="MySQL" engine="INNODB"/>
   </table>
 
   <table name="Trees">
@@ -5393,7 +5397,7 @@
       <unsigned/>
       <default value="0"/>
     </field>
-    <field name="treeNodeOverridePermissions" type="smallint">
+    <field name="treeNodeOverridePermissions" type="boolean">
       <unsigned/>
       <default value="0"/>
     </field>
@@ -5501,4 +5505,5 @@
       <notnull/>
     </field>
   </table>
+
 </schema>
