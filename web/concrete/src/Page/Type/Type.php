@@ -27,6 +27,7 @@ use Package;
 use \Concrete\Core\Workflow\Request\ApprovePageRequest as ApprovePagePageWorkflowRequest;
 use CacheLocal;
 use \Concrete\Core\Page\Type\PublishTarget\Configuration\Configuration as PageTypePublishTargetConfiguration;
+use \Concrete\Core\Page\Type\PublishTarget\Type\Type as PageTypePublishTargetType;
 use \Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFormLayoutSetControl;
 use \Concrete\Core\Page\Collection\Version\VersionList;
 use
@@ -737,6 +738,13 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
 
         $ptt = static::getByID($ptID);
+        
+        // set all type publish target as default
+        $target = PageTypePublishTargetType::getByHandle('all');
+        if (is_object($target)) {
+            $configuredTarget = $target->configurePageTypePublishTarget($ptt, array());
+            $ptt->setConfiguredPageTypePublishTargetObject($configuredTarget);
+        }
 
         // copy permissions from the defaults to the page type
         $cpk = PermissionKey::getByHandle('access_page_type_permissions');
