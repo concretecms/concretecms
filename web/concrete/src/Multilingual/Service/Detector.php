@@ -17,11 +17,11 @@ class Detector
 
     /**
      *
-     * Returns the preferred locale based on session, cookie,
+     * Returns the preferred section based on session, cookie,
      * user object, default browser (if allowed), and finally
-     * site preferences. Returns a string, not a section.
+     * site preferences. 
      * Since the user's language is not a locale but a language,
-     * attempts to determine best locale for the given language.
+     * attempts to determine best section for the given language.
      * @return Section
      */
     public static function getPreferredSection()
