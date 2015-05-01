@@ -1,22 +1,22 @@
 <?php
+
 namespace Concrete\Job;
 
 use Concrete\Core\Cache\Cache;
 use Config;
-use \Job as AbstractJob;
+use Job as AbstractJob;
 use Loader;
 use PermissionKey;
 use Group;
 use DateTime;
 use CollectionAttributeKey;
-use \Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
+use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
 use SimpleXMLElement;
 use Page;
 use Events;
 
 class GenerateSitemap extends AbstractJob
 {
-
     /** The end-of-line terminator.
      * @var string
      */
@@ -40,6 +40,7 @@ class GenerateSitemap extends AbstractJob
 
     /** Executes the job.
      * @throws \Exception Throws an exception in case of errors.
+     *
      * @return string Returns a string describing the job result in case of success.
      */
     public function run()
@@ -54,7 +55,7 @@ class GenerateSitemap extends AbstractJob
                 'now' => new DateTime('now'),
                 'ak_exclude_sitemapxml' => CollectionAttributeKey::getByHandle('exclude_sitemapxml'),
                 'ak_sitemap_changefreq' => CollectionAttributeKey::getByHandle('sitemap_changefreq'),
-                'ak_sitemap_priority' => CollectionAttributeKey::getByHandle('sitemap_priority')
+                'ak_sitemap_priority' => CollectionAttributeKey::getByHandle('sitemap_priority'),
             );
             $instances['guestGroupAE'] = array(GroupPermissionAccessEntity::getOrCreate($instances['guestGroup']));
             $xmlDoc = new SimpleXMLElement(
@@ -91,6 +92,7 @@ class GenerateSitemap extends AbstractJob
             @fflush($hFile);
             @fclose($hFile);
             unset($hFile);
+
             return t(
                 '%1$s file saved (%2$d pages).',
                 sprintf('<a href="%s" target="_blank">%s</a>', $urlName, preg_replace('/^https?:\/\//i', '', $urlName)),
@@ -111,6 +113,7 @@ class GenerateSitemap extends AbstractJob
      * @param SimpleXMLElement $xmlDoc The xml document containing the sitemap nodes.
      * @param int $cID The page collection id.
      * @param array $instances An array with some already instantiated helpers, models, ...
+     *
      * @throws \Exception Throws an exception in case of errors.
      */
     private static function addPage($xmlDoc, $cID, $instances)
