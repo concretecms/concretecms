@@ -2,7 +2,7 @@
 namespace Concrete\Core\Search\ItemList\Database;
 use Concrete\Core\Search\StickyRequest;
 use Database;
-abstract class AttributedItemList extends ItemList
+abstract class  AttributedItemList extends ItemList
 {
 
     abstract protected function getAttributeKeyClassName();
@@ -35,9 +35,9 @@ abstract class AttributedItemList extends ItemList
             if (substr($nm, 0, 6) == 'sortBy') {
                 $handle = uncamelcase(substr($nm, 6));
                 if (count($a) == 1) {
-                    $this->sanitizedSortBy($handle, $a[0]);
+                    $this->sanitizedSortBy('ak_' . $handle, $a[0]);
                 } else {
-                    $this->sanitizedSortBy($handle);
+                    $this->sanitizedSortBy('ak_' . $handle);
                 }
             } else {
                 throw new \Exception(t('%s method does not exist for the %s class', $nm, get_called_class()));
