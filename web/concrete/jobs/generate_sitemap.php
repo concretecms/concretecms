@@ -161,7 +161,7 @@ class GenerateSitemap extends AbstractJob
                             if (static::canIncludePageInSitemap($relatedPage, $instances)) {
                                 $xmlAltNode = $xmlNode->addChild('link', null, 'http://www.w3.org/1999/xhtml');
                                 $xmlAltNode->addAttribute('rel', 'alternate');
-                                $xmlAltNode->addAttribute('hreflang', str_replace('_', '-', $section->getLocale()));
+                                $xmlAltNode->addAttribute('hreflang', strtolower(str_replace('_', '-', $section->getLocale())));
                                 $xmlAltNode->addAttribute('href', $instances['navigation']->getLinkToCollection($relatedPage));
                             }
                         }
