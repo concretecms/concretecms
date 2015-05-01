@@ -5,12 +5,14 @@ namespace Concrete\Job;
 use Concrete\Core\Cache\Cache;
 use Config;
 use Job as AbstractJob;
-use Loader;
+use Core;
+use Database;
 use PermissionKey;
 use Group;
 use DateTime;
 use CollectionAttributeKey;
 use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
+use Concrete\Core\Multilingual\Page\Section\Section as MultilingualSection;
 use SimpleXMLElement;
 use Page;
 use Events;
@@ -48,8 +50,8 @@ class GenerateSitemap extends AbstractJob
         Cache::disableAll();
         try {
             $instances = array(
-                'navigation' => Loader::helper('navigation'),
-                'dashboard' => Loader::helper('concrete/dashboard'),
+                'navigation' => Core::make('helper/navigation'),
+                'dashboard' => Core::make('helper/concrete/dashboard'),
                 'view_page' => PermissionKey::getByHandle('view_page'),
                 'guestGroup' => Group::getByID(GUEST_GROUP_ID),
                 'now' => new DateTime('now'),
@@ -58,10 +60,19 @@ class GenerateSitemap extends AbstractJob
                 'ak_sitemap_priority' => CollectionAttributeKey::getByHandle('sitemap_priority'),
             );
             $instances['guestGroupAE'] = array(GroupPermissionAccessEntity::getOrCreate($instances['guestGroup']));
-            $xmlDoc = new SimpleXMLElement(
-                '<' . '?xml version="1.0" encoding="' . APP_CHARSET . '"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" />'
-            );
-            $rs = Loader::db()->Query('SELECT cID FROM Pages');
+            if (Config::get('concrete.multilingual.enabled')) {
+                $instances['multilingualSections'] = MultilingualSection::getList();
+            } else {
+                $instances['multilingualSections'] = array();
+            }
+            $xml = '<?xml version="1.0" encoding="' . APP_CHARSET . '"?>';
+            $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"';
+            if ($instances['multilingualSections']) {
+                $xml .= ' xmlns:x="http://www.w3.org/1999/xhtml"';
+            }
+            $xml .= ' />';
+            $xmlDoc = new SimpleXMLElement($xml);
+            $rs = Database::get()->query('SELECT cID FROM Pages');
             while ($row = $rs->FetchRow()) {
                 self::addPage($xmlDoc, intval($row['cID']), $instances);
             }
@@ -119,35 +130,7 @@ class GenerateSitemap extends AbstractJob
     private static function addPage($xmlDoc, $cID, $instances)
     {
         $page = Page::getByID($cID, 'ACTIVE');
-        if ($page->isSystemPage()) {
-            return;
-        }
-        if ($page->isExternalLink()) {
-            return;
-        }
-        if ($instances['dashboard']->inDashboard($page)) {
-            return;
-        }
-        if ($page->isInTrash()) {
-            return;
-        }
-        $pageVersion = $page->getVersionObject();
-        if ($pageVersion && !$pageVersion->isApproved()) {
-            return;
-        }
-        $pubDate = new DateTime($page->getCollectionDatePublic());
-        if ($pubDate > $instances['now']) {
-            return;
-        }
-        if ($page->getAttribute($instances['ak_exclude_sitemapxml'])) {
-            return;
-        }
-        $instances['view_page']->setPermissionObject($page);
-        $pa = $instances['view_page']->getPermissionAccessObject();
-        if (!is_object($pa)) {
-            return;
-        }
-        if (!$pa->validateAccessEntities($instances['guestGroupAE'])) {
+        if (!static::canIncludePageInSitemap($page, $instances)) {
             return;
         }
         $lastmod = new DateTime($page->getCollectionDateLastModified());
@@ -167,6 +150,25 @@ class GenerateSitemap extends AbstractJob
             'priority',
             is_numeric($priority) ? $priority : Config::get('concrete.sitemap_xml.priority')
         );
+        if ($instances['multilingualSections']) {
+            $thisSection = MultilingualSection::getBySectionOfSite($page);
+            if (is_object($thisSection) && !$thisSection->isError()) {
+                foreach ($instances['multilingualSections'] as $section) {
+                    if ($thisSection->getCollectionID() != $section->getCollectionID()) {
+                        $relatedPageID = $section->getTranslatedPageID($page);
+                        if ($relatedPageID) {
+                            $relatedPage = Page::getByID($relatedPageID);
+                            if (static::canIncludePageInSitemap($relatedPage, $instances)) {
+                                $xmlAltNode = $xmlNode->addChild('link', null, 'http://www.w3.org/1999/xhtml');
+                                $xmlAltNode->addAttribute('rel', 'alternate');
+                                $xmlAltNode->addAttribute('hreflang', str_replace('_', '-', $section->getLocale()));
+                                $xmlAltNode->addAttribute('href', $instances['navigation']->getLinkToCollection($relatedPage));
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         $event = new \Symfony\Component\EventDispatcher\GenericEvent();
         $event->setArgument('xmlNode', $xmlNode);
@@ -181,5 +183,46 @@ class GenerateSitemap extends AbstractJob
                 }
             }
         }
+    }
+
+    protected static function canIncludePageInSitemap($page, $instances)
+    {
+        if (!is_object($page) || $page->isError()) {
+            return false;
+        }
+        /* @var $page Page */
+        if ($page->isSystemPage()) {
+            return false;
+        }
+        if ($page->isExternalLink()) {
+            return false;
+        }
+        if ($instances['dashboard']->inDashboard($page)) {
+            return false;
+        }
+        if ($page->isInTrash()) {
+            return false;
+        }
+        $pageVersion = $page->getVersionObject();
+        if ($pageVersion && !$pageVersion->isApproved()) {
+            return false;
+        }
+        $pubDate = new DateTime($page->getCollectionDatePublic());
+        if ($pubDate > $instances['now']) {
+            return false;
+        }
+        if ($page->getAttribute($instances['ak_exclude_sitemapxml'])) {
+            return false;
+        }
+        $instances['view_page']->setPermissionObject($page);
+        $pa = $instances['view_page']->getPermissionAccessObject();
+        if (!is_object($pa)) {
+            return false;
+        }
+        if (!$pa->validateAccessEntities($instances['guestGroupAE'])) {
+            return false;
+        }
+
+        return true;
     }
 }
