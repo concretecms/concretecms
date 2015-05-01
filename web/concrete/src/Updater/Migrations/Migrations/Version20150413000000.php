@@ -131,7 +131,14 @@ class Version20150413000000 extends AbstractMigration
     {
         $pk = Key::getByHandle('view_in_maintenance_mode');
         if (!$pk instanceof Key) {
-            $pk = Key::add('admin', 'view_in_maintenance_mode', 'View Site in Maintenance Mode', 'Controls whether a user can access the website when its under maintenance.', false, false);
+            $pk = Key::add(
+                'admin',
+                'view_in_maintenance_mode',
+                tc('PermissionKeyName', 'View Site in Maintenance Mode'),
+                tc('PermissionKeyDescription', 'Controls whether a user can access the website when its under maintenance.'),
+                false,
+                false
+            );
             $pa = $pk->getPermissionAccessObject();
             if (!is_object($pa)) {
                 $pa = Access::create($pk);
