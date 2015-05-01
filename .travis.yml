@@ -6,14 +6,15 @@ php:
   - 5.4
   - 5.5
   - 5.6
+  - 7.0
   - hhvm
 
 before_script:
   - bash -c 'if [ "$TRAVIS_PHP_VERSION" != "hhvm" ]; then echo "short_open_tag = On" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini; fi;'
-  - mysql -e 'CREATE DATABASE concrete5_tests;'
   - cd web/concrete
   - composer install
   - cd ../../tests
+  - phpunit --version
 
 script: phpunit
 
@@ -22,4 +23,5 @@ notifications:
 
 matrix:
   allow_failures:
+    - php: 7.0
     - php: hhvm

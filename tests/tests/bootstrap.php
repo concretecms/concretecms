@@ -78,12 +78,28 @@ $config->set(
         'username' => 'travis',
         'password' => '',
         'charset' => 'utf8'
-    ));
+    )
+);
+$config->set(
+    'database.connections.travisWithoutDB',
+    array(
+        'driver' => 'c5_pdo_mysql',
+        'server' => 'localhost',
+        'username' => 'travis',
+        'password' => '',
+        'charset' => 'utf8'
+    )
+);
 
 $config->get('concrete');
 $config->set('concrete.cache.blocks', false);
 $config->set('concrete.cache.pages', false);
 $config->set('concrete.cache.enabled', false);
+
+$cn = $cms->make('database')->connection('travisWithoutDB');
+$cn->query('DROP DATABASE IF EXISTS concrete5_tests');
+$cn->query('CREATE DATABASE concrete5_tests');
+$cn->close();
 
 /**
  * Kill this because it plays hell with phpunit.
