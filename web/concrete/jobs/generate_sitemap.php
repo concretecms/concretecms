@@ -154,16 +154,14 @@ class GenerateSitemap extends AbstractJob
             $thisSection = MultilingualSection::getBySectionOfSite($page);
             if (is_object($thisSection) && !$thisSection->isError()) {
                 foreach ($instances['multilingualSections'] as $section) {
-                    if ($thisSection->getCollectionID() != $section->getCollectionID()) {
-                        $relatedPageID = $section->getTranslatedPageID($page);
-                        if ($relatedPageID) {
-                            $relatedPage = Page::getByID($relatedPageID);
-                            if (static::canIncludePageInSitemap($relatedPage, $instances)) {
-                                $xmlAltNode = $xmlNode->addChild('link', null, 'http://www.w3.org/1999/xhtml');
-                                $xmlAltNode->addAttribute('rel', 'alternate');
-                                $xmlAltNode->addAttribute('hreflang', strtolower(str_replace('_', '-', $section->getLocale())));
-                                $xmlAltNode->addAttribute('href', $instances['navigation']->getLinkToCollection($relatedPage));
-                            }
+                    $relatedPageID = $section->getTranslatedPageID($page);
+                    if ($relatedPageID) {
+                        $relatedPage = Page::getByID($relatedPageID);
+                        if (static::canIncludePageInSitemap($relatedPage, $instances)) {
+                            $xmlAltNode = $xmlNode->addChild('link', null, 'http://www.w3.org/1999/xhtml');
+                            $xmlAltNode->addAttribute('rel', 'alternate');
+                            $xmlAltNode->addAttribute('hreflang', strtolower(str_replace('_', '-', $section->getLocale())));
+                            $xmlAltNode->addAttribute('href', $instances['navigation']->getLinkToCollection($relatedPage));
                         }
                     }
                 }
