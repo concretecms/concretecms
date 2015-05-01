@@ -277,7 +277,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
     }
 
-    public function getPageTypePageTemplateDefaultPageObject(PageTemplate $template = null)
+    public function getPageTypePageTemplateDefaultPageObject(Template $template = null)
     {
         if (!$template) {
             $template = $this->getPageTypeDefaultPageTemplateObject();
@@ -1014,7 +1014,9 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
     public function canPublishPageTypeBeneathPage(\Concrete\Core\Page\Page $page)
     {
         $target = $this->getPageTypePublishTargetObject();
-        return $target->canPublishPageTypeBeneathTarget($this, $page);
+        if (is_object($target)) {
+            return $target->canPublishPageTypeBeneathTarget($this, $page);
+        }
     }
 
     /**
