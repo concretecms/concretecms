@@ -41,8 +41,7 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase {
 	public function getDataSet($fixtures = array()) {
 		$db = Database::get();
 		if (count($this->tables)) {
-			$partial = new SimpleXMLElement('<schema></schema>');
-			$partial->addAttribute('version', '0.3');
+			$partial = new SimpleXMLElement('<schema xmlns="http://www.concrete5.org/doctrine-xml/0.5" />');
 
 			$xml = simplexml_load_file(DIR_BASE_CORE . '/config/db.xml');
 			foreach($xml->table as $t) {
