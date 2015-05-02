@@ -47,7 +47,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
     {
         return $this->ptName;
     }
-    
+
     public function getPageTypeDisplayName($format = 'html')
     {
         $value = t($this->getPageTypeName());
@@ -667,21 +667,20 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
     }
 
     /**
-     * @param array $data An array of data used to create the page type
-     * <code>
-     * array(
-     *  'handle' => This is a string which can be used to identify the page type
-     *  'name' => This is the user friendly display name of the page type
-     *  'defaultTemplate' => This should be a \PageTemplate object to set the default template for this type, default none
-     *  'allowedTemplates' => string, "A" for all (default), "C" for selected templates, "X" for everything except selected templates
-     *  'templates' => \PageTemplate[], array of \PageTemplate objects that are used in combination with the allowedTemplates setting, default empty array
-     *  'internal' => bool, default false, indicating if this is an internal only page type
-     *  'ptLaunchInComposer' => bool, default false
-     *  'ptIsFrequentlyAdded' => bool, default false
-     * )
-     * </code>
+     * Add a page type
+     *
+     * @param array $data {
+     *     @var string          $handle              A string which can be used to identify the page type
+     *     @var string          $name                A user friendly display name
+     *     @var \PageTemplate   $defaultTemplate     The default template object
+     *     @var string          $allowedTemplates    (A|C|X) A for all, C for selected only, X for non-selected only
+     *     @var \PageTemplate[] $templates           Array or Iterator of selected templates, see `$allowedTemplates`
+     *     @var bool            $internal            Is this an internal only page type? Default: `false`
+     *     @var bool            $ptLaunchInComposer  Does this launch in composer? Default: `false`
+     *     @var bool            $ptIsFrequentlyAdded Should this always be displayed in the pages panel? Default: `false`
+     * }
      * @param bool|Package $pkg This should be false if the type is not tied to a package, or a package object
-     * @return Type|mixed|null
+     * @return static|mixed|null
      */
     public static function add($data, $pkg = false)
     {
