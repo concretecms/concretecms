@@ -87,7 +87,7 @@ ConcreteFileImportDialog = {
 		?>
 			<tr>
 				<td width="10%" style="vertical-align: middle" class="center">
-					<?php if($fh->extension($file['extension'])) { ?>
+					<?php if($fh->extension($file['basename'])) { ?>
 						<input type="checkbox" name="send_file<?=$i?>" class="ccm-file-select-incoming" value="<?=$file['basename']?>" />
 					<?php } ?>
 				</td>
