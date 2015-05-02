@@ -9,11 +9,15 @@
             "url": "https://github.com/concrete5/flysystem"
         }
     ],
+    "name" : "concrete5/concrete5-cms",
+    "type" : "concrete5-update",
     "config": {
-        "optimize-autoloader": true
+        "optimize-autoloader": true,
+        "vendor-dir": "concrete/vendor"
     },
     "require": {
         "php": ">=5.3.3",
+        "composer/installers": "~1.0",
         "doctrine/dbal": "2.5.*",
         "symfony/class-loader": "2.5.*",
         "symfony/http-foundation": "2.5.*",

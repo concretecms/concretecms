@@ -16,12 +16,12 @@ This is a developer preview branch. This is intended for Add-On developers and c
 
     If composer is installed globally:
 
-        cd web/concrete
+        cd web
         composer install
 
     If composer is downloaded as a .phar:
 
-        cd web/concrete
+        cd web
         php /path/to/composer.phar install
 
     This should install everything necessary into the vendor/ directory in the concrete directory.
