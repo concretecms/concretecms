@@ -83,7 +83,7 @@ $dh = Core::make('helper/date');
                     <?php foreach($files as $f) { ?>
                         <tr id="fID_<?=$f->getFileID()?>" class="">
                             <td><i class="fa fa-arrows-v"></i></td>
-                            <td ><?=$f->getListingThumbnailImage()?><input type="hidden" name="fsDisplayOrder[]" value="<?=$f->getFileID()?>" /></td>
+                            <td class="ccm-file-manager-search-results-thumbnail"><?=$f->getListingThumbnailImage()?><input type="hidden" name="fsDisplayOrder[]" value="<?=$f->getFileID()?>" /></td>
                             <td data-key="type" ><?=$f->getGenericTypetext()?>/<?=$f->getType()?></td>
                             <td data-key="title"><?=$f->getTitle()?></td>
                             <td data-key="filename"><?=$f->getFileName()?></td>
@@ -153,7 +153,7 @@ $dh = Core::make('helper/date');
 			cursor: 'move',
             opacity: 0.5,
             axis: 'y',
-            helper: function( evt, elem ) { 
+            helper: function( evt, elem ) {
                 var ret = $(elem).clone();
                 var i;
                 // copy the actual width of the elements
@@ -182,6 +182,7 @@ $dh = Core::make('helper/date');
 	    .ccm-file-set-file-list:hover {cursor: move}
         .ccm-file-set-file-placeholder { background-color: #ffd !important;  }
         .ccm-file-set-file-placeholder td { background:transparent !important; }
+        .ccm-file-set-file-list td.ccm-file-manager-search-results-thumbnail img {max-height: 60px}
 	</style>
 
 <?php } else { ?>
