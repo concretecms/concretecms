@@ -47,7 +47,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
     {
         return $this->ptName;
     }
-    
+
     public function getPageTypeDisplayName($format = 'html')
     {
         $value = t($this->getPageTypeName());
@@ -666,6 +666,22 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         $new->setConfiguredPageTypePublishTargetObject($target);
     }
 
+    /**
+     * Add a page type
+     *
+     * @param array $data {
+     *     @var string          $handle              A string which can be used to identify the page type
+     *     @var string          $name                A user friendly display name
+     *     @var \PageTemplate   $defaultTemplate     The default template object
+     *     @var string          $allowedTemplates    (A|C|X) A for all, C for selected only, X for non-selected only
+     *     @var \PageTemplate[] $templates           Array or Iterator of selected templates, see `$allowedTemplates`
+     *     @var bool            $internal            Is this an internal only page type? Default: `false`
+     *     @var bool            $ptLaunchInComposer  Does this launch in composer? Default: `false`
+     *     @var bool            $ptIsFrequentlyAdded Should this always be displayed in the pages panel? Default: `false`
+     * }
+     * @param bool|Package $pkg This should be false if the type is not tied to a package, or a package object
+     * @return static|mixed|null
+     */
     public static function add($data, $pkg = false)
     {
         $ptHandle = $data['handle'];
