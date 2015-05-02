@@ -89,7 +89,8 @@ module.exports = function(grunt) {
                 '<%= DIR_BASE %>/concrete/js/build/core/app/concrete5-const.js',
                 '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-liveupdate/jquery-liveupdate.js',
                 '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-pep/jquery-pep.js',
-                '<%= DIR_BASE %>/concrete/js/build/vendor/retinajs/retinajs.js',
+                //needs some handholding
+                // '<%= DIR_BASE %>/concrete/js/build/vendor/retinajs/retinajs.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/base.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/ajax-request/base.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/ajax-request/form.js',
