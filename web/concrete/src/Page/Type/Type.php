@@ -666,6 +666,23 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         $new->setConfiguredPageTypePublishTargetObject($target);
     }
 
+    /**
+     * @param array $data An array of data used to create the page type
+     * <code>
+     * array(
+     *  'handle' => This is a string which can be used to identify the page type
+     *  'name' => This is the user friendly display name of the page type
+     *  'defaultTemplate' => This should be a \PageTemplate object to set the default template for this type, default none
+     *  'allowedTemplates' => string, "A" for all (default), "C" for selected templates, "X" for everything except selected templates
+     *  'templates' => \PageTemplate[], array of \PageTemplate objects that are used in combination with the allowedTemplates setting, default empty array
+     *  'internal' => bool, default false, indicating if this is an internal only page type
+     *  'ptLaunchInComposer' => bool, default false
+     *  'ptIsFrequentlyAdded' => bool, default false
+     * )
+     * </code>
+     * @param bool|Package $pkg This should be false if the type is not tied to a package, or a package object
+     * @return Type|mixed|null
+     */
     public static function add($data, $pkg = false)
     {
         $ptHandle = $data['handle'];
