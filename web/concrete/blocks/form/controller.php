@@ -1,5 +1,6 @@
 <?php 
 namespace Concrete\Block\Form;
+use Concrete\Core\Block\BlockType\BlockType;
 use Loader;
 use \Concrete\Core\Block\BlockController;
 use User;
@@ -243,8 +244,8 @@ class Controller extends BlockController {
 			
 			$rs=$db->query("SELECT * FROM {$this->btQuestionsTablename} WHERE questionSetId=$oldQuestionSetId AND bID=".intval($this->bID) );
 			while( $row=$rs->fetchRow() ){
-				$v=array($newQuestionSetId,intval($row['msqID']), intval($newBID), $row['question'],$row['inputType'],$row['options'],$row['position'],$row['width'],$row['height'],$row['required']);
-				$sql= "INSERT INTO {$this->btQuestionsTablename} (questionSetId,msqID,bID,question,inputType,options,position,width,height,required) VALUES (?,?,?,?,?,?,?,?,?,?)";
+				$v=array($newQuestionSetId,intval($row['msqID']), intval($newBID), $row['question'],$row['inputType'],$row['options'],$row['position'],$row['width'],$row['height'],$row['required'],$row['defaultDate']);
+				$sql= "INSERT INTO {$this->btQuestionsTablename} (questionSetId,msqID,bID,question,inputType,options,position,width,height,required,defaultDate) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
 				$db->Execute($sql, $v);
 			}
 			

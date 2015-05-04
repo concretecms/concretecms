@@ -61,15 +61,15 @@ class MiniSurvey {
 						$height = $this->limitRange(intval($values['height']), 1, 100);
 					}
 					$dataValues=array(intval($values['qsID']), trim($values['question']), $values['inputType'],
-								      $values['options'], intval($values['position']), $width, $height, intval($values['required']), intval($values['msqID']) );
-					$sql='UPDATE btFormQuestions SET questionSetId=?, question=?, inputType=?, options=?, position=?, width=?, height=?, required=? WHERE msqID=? AND bID=0';
+								      $values['options'], intval($values['position']), $width, $height, intval($values['required']), $values['defaultDate'], intval($values['msqID']) );
+					$sql='UPDATE btFormQuestions SET questionSetId=?, question=?, inputType=?, options=?, position=?, width=?, height=?, required=?, defaultDate=? WHERE msqID=? AND bID=0';
 				}else{
 					if( !isset($values['position']) ) $values['position']=1000;
 					if(!intval($values['msqID']))
 						$values['msqID']=intval($this->db->GetOne("SELECT MAX(msqID) FROM btFormQuestions")+1);
 					$dataValues=array($values['msqID'],intval($values['qsID']), trim($values['question']), $values['inputType'],
-								     $values['options'], intval($values['position']), intval($values['width']), intval($values['height']), intval($values['required']) );
-					$sql='INSERT INTO btFormQuestions (msqID,questionSetId,question,inputType,options,position,width,height,required) VALUES (?,?,?,?,?,?,?,?,?)';
+								     $values['options'], intval($values['position']), intval($values['width']), intval($values['height']), intval($values['required']), $values['defaultDate'] );
+					$sql='INSERT INTO btFormQuestions (msqID,questionSetId,question,inputType,options,position,width,height,required,defaultDate) VALUES (?,?,?,?,?,?,?,?,?,?)';
 				}
 				$result=$this->db->query($sql,$dataValues);
 				$this->lastSavedMsqID=intval($values['msqID']);
@@ -202,6 +202,7 @@ class MiniSurvey {
 
 		function loadInputType($questionData,$showEdit){
 			$options=explode('%%',$questionData['options']);
+            $defaultDate = $questionData['defaultDate'];
 			$msqID=intval($questionData['msqID']);
 			$datetime = loader::helper('form/date_time');
 			$html = '';
@@ -261,10 +262,18 @@ class MiniSurvey {
 					$val=($_REQUEST['Question'.$msqID])?$_REQUEST['Question'.$msqID]:'';
 					return '<input name="Question'.$msqID.'" id="Question'.$msqID.'" class="form-control" type="email" value="'.stripslashes(htmlspecialchars($val)).'" />';
 				case 'date':
-					$val=($_REQUEST['Question'.$msqID])?$_REQUEST['Question'.$msqID]:'';
-					return $datetime->date('Question'.$msqID,($val!==''?$val:'now'));
+					$val=($_REQUEST['Question'.$msqID])?$_REQUEST['Question'.$msqID]:$defaultDate;
+					return $datetime->date('Question'.$msqID,$val);
 				case 'datetime':
-					$val=($_REQUEST['Question'.$msqID])?$_REQUEST['Question'.$msqID]:'';
+                    if(isset($_REQUEST['Question'.$msqID])) {
+                        $val = $_REQUEST['Question'.$msqID];
+                    } elseif ($_REQUEST['Question'.$msqID.'_dt'] && $_REQUEST['Question'.$msqID.'_h']
+                        && $_REQUEST['Question'.$msqID.'_m'] && $_REQUEST['Question'.$msqID.'_a']) {
+                        $val = $_REQUEST['Question'.$msqID.'_dt'] . ' ' . $_REQUEST['Question'.$msqID.'_h']
+                            . ':' . $_REQUEST['Question'.$msqID.'_m'] . ' ' . $_REQUEST['Question'.$msqID.'_a'];
+                    } else {
+                        $val = $defaultDate;
+                    }
 					return $datetime->datetime('Question'.$msqID,$val);
 				case 'field':
 				default:
