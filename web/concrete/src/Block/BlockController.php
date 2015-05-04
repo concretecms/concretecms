@@ -441,7 +441,10 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
         }
         if (is_callable(array($this, $method))) {
             $r = new \ReflectionMethod(get_class($this), $method);
-            if ($r->getNumberOfParameters() >= count($parameters)) {
+            if (count($parameters) - $r->getNumberOfParameters() <= 1) {
+                // how do we get <= 1? If it's 1, that means that the method has one fewer param. That's ok because
+                // certain older blocks don't know that the last param ought to be a $bID. If they're equal it's zero
+                // which is best. and if they're greater that's ok too.
                 return true;
             }
         }
