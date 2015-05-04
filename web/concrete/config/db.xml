@@ -747,7 +747,7 @@
       <default value="0" />
       <unsigned/>
     </field>
-    <field name="cnvOverrideGlobalPermissions" type="I" size="I1">
+    <field name="cnvOverrideGlobalPermissions" type="I" size="1">
       <unsigned/>
       <default value="0" />
     </field>
