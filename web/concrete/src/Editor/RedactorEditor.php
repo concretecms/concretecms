@@ -62,8 +62,7 @@ class RedactorEditor implements EditorInterface
 
     protected function getEditor($key, $content = null, $options = array())
     {
-        $this->assets->requireAsset('core/file-manager');
-        $this->assets->requireAsset('redactor');
+        $this->requireEditorAssets();
         $concrete5 = array(
             'filemanager' => $this->allowFileManager(),
             'sitemap' => $this->allowSitemap()
@@ -128,5 +127,18 @@ EOL;
         }
 
         \Config::save('concrete.editor.plugins.selected', $plugins);
+    }
+
+    public function requireEditorAssets()
+    {
+        $this->assets->requireAsset('core/file-manager');
+        $this->assets->requireAsset('redactor');
+        $plugins = $this->pluginManager->getSelectedPluginObjects();
+        foreach ($plugins as $plugin) {
+            $group = $plugin->getRequiredAssets();
+            $this->assets->requireAsset($group);
+        }
+
+
     }
 }

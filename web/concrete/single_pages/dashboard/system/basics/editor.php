@@ -16,10 +16,10 @@
 	</fieldset>
 	<fieldset>
 		<p class="lead"><?=t('Redactor Plugins')?></p>
-		<? foreach($plugins as $key => $name) { ?>
+		<? foreach($plugins as $key => $plugin) { ?>
 		<div class="checkbox">
 			<label>
-				<?=$form->checkbox('plugin[]', $key, $manager->isSelected($key))?> <?=$name?>
+				<?=$form->checkbox('plugin[]', $key, $manager->isSelected($key))?> <?=$plugin->getName()?>
 			</label>
 		</div>
 		<? } ?>

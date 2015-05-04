@@ -108,6 +108,10 @@ class Controller extends BlockController
             }
         }
 
+        if ($this->filterByCustomTopic) {
+            $this->list->filterByTopic(intval($this->customTopicTreeNodeID));
+        }
+
         $db = Loader::db();
         $columns = $db->MetaColumnNames(CollectionAttributeKey::getIndexedSearchTable());
         if (in_array('ak_exclude_page_list', $columns)) {
@@ -172,6 +176,7 @@ class Controller extends BlockController
     public function add()
     {
 
+        $this->requireAsset('core/topics');
         $c = Page::getCurrentPage();
         $uh = Loader::helper('concrete/urls');
         $this->set('c', $c);
@@ -186,6 +191,7 @@ class Controller extends BlockController
 
     public function edit()
     {
+        $this->requireAsset('core/topics');
         $b = $this->getBlockObject();
         $bCID = $b->getBlockCollectionID();
         $bID = $b->getBlockID();
@@ -347,13 +353,22 @@ class Controller extends BlockController
         $args['includeDate'] = ($args['includeDate']) ? '1' : '0';
         $args['truncateSummaries'] = ($args['truncateSummaries']) ? '1' : '0';
         $args['displayFeaturedOnly'] = ($args['displayFeaturedOnly']) ? '1' : '0';
-        $args['filterByRelated'] = ($args['filterByRelated']) ? '1' : '0';
+        $args['filterByRelated'] = ($args['topicFilter'] == 'related') ? '1' : '0';
+        $args['filterByCustomTopic'] = ($args['topicFilter'] == 'custom') ? '1' : '0';
         $args['displayThumbnail'] = ($args['displayThumbnail']) ? '1' : '0';
         $args['displayAliases'] = ($args['displayAliases']) ? '1' : '0';
         $args['truncateChars'] = intval($args['truncateChars']);
         $args['paginate'] = intval($args['paginate']);
         $args['rss'] = intval($args['rss']);
         $args['ptID'] = intval($args['ptID']);
+
+        if (!$args['filterByRelated']) {
+            $args['relatedTopicAttributeKeyHandle'] = '';
+        }
+        if (!$args['filterByCustomTopic']) {
+            $args['customTopicAttributeKeyHandle'] = '';
+            $args['customTopicTreeNodeID'] = 0;
+        }
 
         if ($args['rss']) {
             if ($this->pfID) {

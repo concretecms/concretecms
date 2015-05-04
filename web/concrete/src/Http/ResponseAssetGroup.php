@@ -185,9 +185,11 @@ class ResponseAssetGroup
     public function requireAsset($assetType, $assetHandle = false)
     {
         $list = AssetList::getInstance();
-        if ($assetType instanceof Asset) {
+        if ($assetType instanceof AssetGroup) {
+            $this->requiredAssetGroup->addGroup($assetType);
+        } else if ($assetType instanceof Asset) {
             $this->requiredAssetGroup->addAsset($assetType);
-        } elseif ($assetType && $assetHandle) {
+        } else if ($assetType && $assetHandle) {
             $ap = new AssetPointer($assetType, $assetHandle);
             $this->requiredAssetGroup->add($ap);
         } else {
