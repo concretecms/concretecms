@@ -1,5 +1,6 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 
+<p class="lead"><?php echo $pagetype->getPageTypeDisplayName(); ?></p>
 
     <table class="table table-striped">
 
@@ -15,3 +16,7 @@
 <? } ?>
 
 </table>
+
+<div class="ccm-dashboard-header-buttons">
+    <a href="<?=URL::to('/dashboard/pages/types')?>" class="btn btn-default"><?=t('Back to List')?></a>
+</div>

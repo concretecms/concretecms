@@ -34,6 +34,7 @@ class Types extends DashboardPageController {
             throw new \Exception(t('You do not have access to edit this page type.'));
         }
 		$this->set('pagetype', $cm);
+		$this->set('pageTitle', t('Edit %s Page Type', $cm->getPageTypeDisplayName()));
 	}
 
 	public function view() {

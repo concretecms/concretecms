@@ -733,33 +733,33 @@ class Version
                 }
                 $thumbnail = $image->thumbnail(new \Imagine\Image\Box($type->getWidth(), $height), $thumbnailMode);
                 $thumbnailPath = $type->getFilePath($this);
+                $thumbnailOptions = array();
 
                 switch ($mimetype) {
                   case 'image/jpeg':
-                    $thumbnailGetType = array('jpeg',
-                        array('jpeg_quality' => \Config::get('misc.default_jpeg_image_compression'))
-                    );
+                    $thumbnailType = 'jpeg';
+                    $thumbnailOptions = array('jpeg_quality' => \Config::get('misc.default_jpeg_image_compression'));
                     break;
                   case 'image/png':
-                    $thumbnailGetType = array('png');
+                    $thumbnailType = 'png';
                     break;
                   case 'image/gif':
-                    $thumbnailGetType = array('gif');
+                    $thumbnailType = 'gif';
                     break;
                   case 'image/xbm':
-                    $thumbnailGetType = array('xbm');
+                    $thumbnailType = 'xbm';
                     break;
                   case 'image/vnd.wap.wbmp':
-                    $thumbnailGetType = array('wbmp');
+                    $thumbnailType = 'wbmp';
                     break;
                   default:
-                    $thumbnailGetType = array('png');
+                    $thumbnailType = 'png';
                     break;
                 }
 
                 $filesystem->write(
                     $thumbnailPath,
-                    $thumbnail->get($thumbnailGetType[0]),
+                    $thumbnail->get($thumbnailType, $thumbnailOptions),
                     array(
                         'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
                         'mimetype' => $mimetype
