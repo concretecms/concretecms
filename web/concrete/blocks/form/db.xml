@@ -73,8 +73,11 @@
 		<field name="height" type="I">
 			<unsigned />
 			<default value="3" />
-		</field> 
-		<field name="required" type="I">
+		</field>
+        <field name="defaultDate" type="C" size="255">
+            <default value="" />
+        </field>
+        <field name="required" type="I">
 			<default value="0"/>
 		</field>  
 		<index name="questionSetId">
