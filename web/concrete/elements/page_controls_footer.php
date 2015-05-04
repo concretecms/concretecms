@@ -330,7 +330,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
             <? } ?>
         <? } ?>
         <li data-guide-toolbar-action="intelligent-search" class="ccm-toolbar-search pull-right hidden-xs"><i class="fa fa-search"></i> <input type="search"
-                                                                                                id="ccm-nav-intelligent-search"
+                                                                                                id="ccm-nav-intelligent-search" autocomplete="off"
                                                                                                 tabindex="1"/></li>
         <?
         $items = $ihm->getPageHeaderMenuItems('right');
