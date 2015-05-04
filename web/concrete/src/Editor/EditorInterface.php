@@ -17,4 +17,5 @@ interface EditorInterface
 
 	public function saveOptionsForm(Request $request);
 
+	public function requireEditorAssets();
 }

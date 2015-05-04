@@ -13,7 +13,7 @@ use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 use Concrete\Core\Block\BlockType\BlockType;
 
-class Version20150413000000 extends AbstractMigration
+class Version20150504000000 extends AbstractMigration
 {
     private $updateSectionPlurals = false;
     private $updateMultilingualTranslations = false;
@@ -49,6 +49,11 @@ class Version20150413000000 extends AbstractMigration
         if (!$pp->hasColumn('ppGeneratedFromURLSlugs')) {
             $db->Execute('alter table PagePaths add column ppGeneratedFromURLSlugs tinyint(1) unsigned not null default 0');
             // we have to do this directly because the page path calls below will die otherwise.
+        }
+
+        $bt = BlockType::getByHandle('page_list');
+        if (is_object($bt)) {
+            $bt->refresh();
         }
 
         $bt = BlockType::getByHandle('page_title');
