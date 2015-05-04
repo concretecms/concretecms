@@ -59,7 +59,7 @@ class File
         $txt = Core::make('helper/text');
         /* @var $txt \Concrete\Core\Utility\Service\Text */
 
-        return substr($txt->unhandle($parts[0] . $parts[1]));
+        return $txt->unhandle($parts[0] . $parts[1]);
     }
 
     /**
