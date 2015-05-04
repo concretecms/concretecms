@@ -4,7 +4,7 @@
 $c = Page::getCurrentPage();
 $ocID = $c->getCollectionID();
 $fp = FilePermissions::getGlobal();
-if ($fp->canSearchFiles()) { ?>
+if ($fp->canAddFile() || $fp->canSearchFiles()) { ?>
 
 <div class="ccm-dashboard-content-full" data-search="files">
 <? Loader::element('files/search', array('controller' => $searchController))?>
