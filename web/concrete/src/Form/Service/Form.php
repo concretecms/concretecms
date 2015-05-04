@@ -38,27 +38,27 @@ class Form
     /**
      * Creates a submit button.
      *
-     * @param string $name
+     * @param string $key
      * @param string value
      * @param array $fields Additional fields appended at the end of the submit button
      * return string $html
      */
-    public function submit($name, $value, $fields = array(), $additionalClasses = '')
+    public function submit($key, $value, $fields = array(), $additionalClasses = '')
     {
-        return '<input type="submit"' . $this->parseMiscFields('btn ccm-input-submit ' . $additionalClasses, $fields) . ' id="' . $name . '" name="' . $name . '" value="' . $value . '" />';
+        return '<input type="submit"' . $this->parseMiscFields('btn ccm-input-submit ' . $additionalClasses, $fields) . ' id="' . $key . '" name="' . $key . '" value="' . $value . '" />';
     }
 
     /**
      * Creates a button.
      *
-     * @param string $name
+     * @param string $key
      * @param string value
      * @param array $fields Additional fields appended at the end of the submit button
      * return string $html
      */
-    public function button($name, $value, $fields = array(), $additionalClasses = '')
+    public function button($key, $value, $fields = array(), $additionalClasses = '')
     {
-        return '<input type="button"' . $this->parseMiscFields('btn ccm-input-button ' . $additionalClasses, $fields) . ' id="' . $name . '" name="' . $name . '" value="' . $value . '" />';
+        return '<input type="button"' . $this->parseMiscFields('btn ccm-input-button ' . $additionalClasses, $fields) . ' id="' . $key . '" name="' . $key . '" value="' . $value . '" />';
     }
 
     /**
