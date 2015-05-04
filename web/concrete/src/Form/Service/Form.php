@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Form\Service;
 
-use Loader;
+use Core;
 use View;
 
 /**
@@ -21,7 +21,7 @@ class Form
 
     public function __construct()
     {
-        $this->th = Loader::helper('text');
+        $this->th = Core::make('helper/text');
     }
 
     /**
@@ -208,7 +208,7 @@ class Form
             // we've got something like 'akID[34]['value'] here, which we need to get data from
 
             /* @var $ah ArrayHelper */
-            $ah = Loader::helper('arrays');
+            $ah = Core::make('helper/arrays');
             $key = str_replace(']', '', $key);
             $key = explode('[', trim($key, '['));
             $v2 = $ah->get($arr, $key);
