@@ -17,7 +17,10 @@ class UserSelector {
 	public function selectUser($fieldName, $uID = false, $javascriptFunc = 'ccm_triggerSelectUser') {
 		$selectedUID = 0;
 		if (isset($_REQUEST[$fieldName])) {
-			$selectedUID = $_REQUEST[$fieldName];
+            $val = \Core::make('helper/validation/numbers');
+            if ($val->integer($_REQUEST[$fieldName])) {
+                $selectedUID = $_REQUEST[$fieldName];
+            }
 		} else if ($uID > 0) {
 			$selectedUID = $uID;
 		}
