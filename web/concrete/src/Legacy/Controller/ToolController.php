@@ -14,12 +14,16 @@ class ToolController extends Controller {
 		$env = Environment::get();
 		$query = false;
 		if (substr($tool, 0, 9) != 'required/') {
-			if (file_exists(DIR_APPLICATION . '/' . DIRNAME_TOOLS . '/' . $tool . '.php')) {
+			$path = DIR_APPLICATION . '/' . DIRNAME_TOOLS . '/' . $tool . '.php';
+			$realpath = realpath($path);
+			if (file_exists($path) && $path == $realpath) {
 				$query = $tool;
 			}
 		} else {
 			$tool = substr($tool, 9);
-			if (file_exists(DIR_BASE_CORE . '/' . DIRNAME_TOOLS . '/' . $tool . '.php')) {
+			$path = DIR_BASE_CORE . '/' . DIRNAME_TOOLS . '/' . $tool . '.php';
+			$realpath = realpath($path);
+			if (file_exists($path) && $path == $realpath) {
 				$query = $tool;
 			}
 		}
