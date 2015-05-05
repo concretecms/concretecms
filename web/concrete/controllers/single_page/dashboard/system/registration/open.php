@@ -12,7 +12,11 @@ class Open extends DashboardPageController
 
     public function update_registration_type()
     {
-        if ($this->isPost()) {
+        if (!$this->token->validate('update_registration_type')) {
+            $this->error->add($this->token->getErrorMessage());
+        }
+
+        if (!$this->error->has() && $this->isPost()) {
             Config::save('concrete.user.registration.email_registration', ($this->post('email_as_username') ? true : false));
 
             Config::save('concrete.user.registration.type', $this->post('registration_type'));
@@ -26,7 +30,7 @@ class Open extends DashboardPageController
                     Config::save('concrete.user.registration.notification', $this->post('register_notification'));
                     Config::save(
                         'concrete.user.registration.notification_email',
-                        Loader::helper('security')->sanitizeString(
+                        Loader::helper('security')->sanitizeEmail(
                             $this->post('register_notification_email')));
                     break;
 
@@ -37,7 +41,7 @@ class Open extends DashboardPageController
                     Config::save('concrete.user.registration.notification', $this->post('register_notification'));
                     Config::save(
                         'concrete.user.registration.notification_email',
-                        Loader::helper('security')->sanitizeString(
+                        Loader::helper('security')->sanitizeEmail(
                             $this->post('register_notification_email')));
                     break;
 
@@ -48,7 +52,7 @@ class Open extends DashboardPageController
                    Config::save('concrete.user.registration.notification', $this->post('register_notification'));
                    Config::save(
                         'concrete.user.registration.notification_email',
-                        Loader::helper('security')->sanitizeString(
+                        Loader::helper('security')->sanitizeEmail(
                             $this->post('register_notification_email')));
                     break;
 
@@ -58,7 +62,6 @@ class Open extends DashboardPageController
                     break;
             }
             Config::save('concrete.user.registration.type', $this->post('registration_type'));
-
             $this->redirect('/dashboard/system/registration/open', 1);
         }
     }
@@ -68,7 +71,6 @@ class Open extends DashboardPageController
         if ($updated) {
             $this->set('message', t('Registration settings have been saved.'));
         }
-        $this->token = Loader::helper('validation/token');
         $type =  Config::get('concrete.user.registration.type');
 		if (!$type) {
 			$type = 'disabled';
