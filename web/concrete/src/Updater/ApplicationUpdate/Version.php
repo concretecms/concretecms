@@ -7,6 +7,23 @@ class Version
 
     protected $version;
     protected $releaseNotes;
+    protected $releaseNotesUrl;
+
+    /**
+     * @return mixed
+     */
+    public function getReleaseNotesURL()
+    {
+        return $this->releaseNotesURL;
+    }
+
+    /**
+     * @param mixed $releaseNotesUrl
+     */
+    public function setReleaseNotesURL($releaseNotesURL)
+    {
+        $this->releaseNotesURL = $releaseNotesURL;
+    }
 
     /**
      * @return mixed

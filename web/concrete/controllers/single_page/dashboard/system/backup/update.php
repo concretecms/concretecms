@@ -71,7 +71,7 @@ class Update extends DashboardPageController
             $remote = \Concrete\Core\Updater\Update::getApplicationUpdateInformation();
             if (is_object($remote)) {
                 // try to download
-                $r = \Marketplace::downloadRemoteFile($remote->url);
+                $r = \Marketplace::downloadRemoteFile($remote->getDirectDownloadURL());
                 if (empty($r) || $r == \Package::E_PACKAGE_DOWNLOAD) {
                     $response = array(\Package::E_PACKAGE_DOWNLOAD);
                 } else {
@@ -113,11 +113,11 @@ class Update extends DashboardPageController
             $updates = $upd->getLocalAvailableUpdates();
             $remote = $upd->getApplicationUpdateInformation();
             $this->set('updates', $updates);
-            if (is_object($remote) && version_compare($remote->version, APP_VERSION, '>')) {
+            if (is_object($remote) && version_compare($remote->getVersion(), APP_VERSION, '>')) {
                 // loop through local updates
                 $downloadableUpgradeAvailable = true;
                 foreach ($updates as $upd) {
-                    if ($upd->getUpdateVersion() == $remote->version) {
+                    if ($upd->getUpdateVersion() == $remote->getVersion()) {
                         // we have a LOCAL version ready to install that is the same, so we abort
                         $downloadableUpgradeAvailable = false;
                         $this->set('showDownloadBox', false);
