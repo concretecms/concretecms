@@ -56,6 +56,7 @@ if ($canUpgrade) { ?>
                     <div class="spacer-row-5"></div>
 
                     <a name="addons"></a>
+                    <a href="<?=URL::to('/dashboard/extend/update')?>" class="btn btn-default pull-right btn-xs "><?=t('Update Add-Ons')?></a>
                     <h3><?=t('Add-On Compatibility')?></h3>
                     <? $list = \Package::getInstalledList();
                     $ci = Core::make('helper/concrete/urls');
@@ -265,8 +266,10 @@ if ($canUpgrade) { ?>
             </div>
             <div class="clearfix">&nbsp;</div>
         <?
-        }?>
+        } else { ?>
+            <p><?=t('No updates are available.')?></p>
 
+        <? } ?>
     <? } ?>
 
 <? } else { ?>
