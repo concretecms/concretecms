@@ -11,5 +11,5 @@ $cms = require $DIR_BASE_CORE . '/bootstrap/start.php';
 if (!$cms->isRunThroughCommandLineInterface()) {
     return;
 }
-$app = new \Concrete\Core\Console\Application($cms);
+$app = new \Concrete\Core\Console\Application();
 $app->run();
