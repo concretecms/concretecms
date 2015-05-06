@@ -428,7 +428,12 @@ return array(
 
         'enable_auto_update_core'       => false,
         'enable_auto_update_packages'   => false,
-        'enable_permissions_protection' => true
+        'enable_permissions_protection' => true,
+        'check_threshold' => 172800,
+        'services' => array(
+            'get_available_updates' => 'http://www.concrete5.org/tools/update_core',
+            'inspect_update' => 'http://www.concrete5.org/tools/inspect_update'
+        )
     ),
     'paths'             => array(
         'trash'  => '/!trash',

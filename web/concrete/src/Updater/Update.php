@@ -35,7 +35,7 @@ class Update
                 $versionNum = $version;
             }
             $diff = time() - $seconds;
-            if ($diff > APP_VERSION_LATEST_THRESHOLD) {
+            if ($diff > Config::get('concrete.updates.check_threshold')) {
                 // we grab a new value from the service
                 $queryWS = true;
             }
@@ -124,7 +124,7 @@ class Update
                 }
             }
 
-            @curl_setopt($curl_handle, CURLOPT_URL, APP_VERSION_LATEST_WS);
+            @curl_setopt($curl_handle, CURLOPT_URL, Config::get('concrete.updates.services.get_available_updates'));
             @curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, 2);
             @curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
             @curl_setopt($curl_handle, CURLOPT_POST, true);
