@@ -253,4 +253,10 @@ class Environment
 
         return $r->url;
     }
+
+    public function getOverrideList()
+    {
+        $this->getOverrides();
+        return $this->coreOverrides;
+    }
 }

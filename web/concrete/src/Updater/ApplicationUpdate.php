@@ -3,6 +3,13 @@
 namespace Concrete\Core\Updater;
 
 use Concrete\Core\Config\Renderer;
+use Concrete\Core\Foundation\Environment;
+use Concrete\Core\Marketplace\Marketplace;
+use Concrete\Core\Package\Package;
+use Concrete\Core\Updater\ApplicationUpdate\DiagnosticFactory;
+use Zend\Http\Client;
+use \Config;
+use Zend\Http\Request;
 
 class ApplicationUpdate
 {
@@ -102,9 +109,72 @@ class ApplicationUpdate
         if ($concrete['version'] != false) {
             $obj = new ApplicationUpdate();
             $obj->version = $concrete['version'];
+            if (file_exists(DIR_CORE_UPDATES . "/{$dir}/" . DIRNAME_CORE . '/CHANGELOG.md')) {
+                $obj->notes = file_get_contents(DIR_CORE_UPDATES . "/{$dir}/" . DIRNAME_CORE . '/CHANGELOG.md');
+            }
             $obj->identifier = $dir;
+            $obj->urlInfo = $concrete['release']['urls']['info'];
+            $obj->urlThumbnail = $concrete['release']['urls']['thumbnail'];
 
             return $obj;
         }
     }
+
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
+    public function getIdentifier()
+    {
+        return $this->identifier;
+    }
+
+    public function getInfoUrl()
+    {
+        return $this->urlInfo;
+    }
+
+    public function getThumbnailURL()
+    {
+        return $this->urlThumbnail;
+    }
+
+    /**
+     * Given the current update object, sends information to concrete5.org to determine updatability
+     * @return \Concrete\Core\Updater\ApplicationUpdateDiagnostic
+     */
+    public function getDiagnosticObject()
+    {
+
+        $request = new Request();
+        $request->setUri(Config::get('concrete.updates.services.inspect_update'));
+        $request->setMethod('POST');
+        $request->getPost()->set('current_version', Config::get('concrete.version_installed'));
+        $request->getPost()->set('requested_version', $this->getVersion());
+        $request->getPost()->set('site_url', (string) \Core::getApplicationURL());
+
+        $mi = Marketplace::getInstance();
+        if ($mi->isConnected() && !$mi->hasConnectionError()) {
+            $config = \Core::make('config/database');
+            $request->getPost()->set('marketplace_token', $config->get('concrete.marketplace.token'));
+            $list = Package::getInstalledList();
+            $packages = array();
+            foreach($list as $pkg) {
+                $packages[] = array('version' => $pkg->getPackageVersion(), 'handle' => $pkg->getPackageHandle());
+            }
+            $request->getPost()->set('packages', $packages);
+        }
+        $overrides = id(Environment::get())->getOverrideList();
+        $request->getPost()->set('overrides', $overrides);
+
+        $client = new Client();
+        $client->setMethod('POST');
+        $response = $client->send($request);
+        $body = $response->getBody();
+
+        $diagnostic = DiagnosticFactory::getFromJSON($body);
+        return $diagnostic;
+    }
+
 }

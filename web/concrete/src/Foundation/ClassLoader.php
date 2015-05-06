@@ -115,6 +115,9 @@ class ClassLoader  {
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Controller', DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CONTROLLERS);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Job', DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_JOBS);
 
+		// @deprecated remove in 5.7.5
+		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle), DIR_PACKAGES . '/' . $pkgHandle);
+
 		$strictLoader = new SymfonyClassLoader();
 		$loaders = $pkg->getPackageAutoloaderRegistries();
 		if (count($loaders) > 0) {
