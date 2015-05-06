@@ -3,7 +3,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 session_write_close();
 
 // first, we check to see if the dashboard image data has been set in the cache
-if (DASHBOARD_BACKGROUND_INFO != false) {
+if (Config::get('concrete.urls.background_info')) {
 	if ($_REQUEST['image'] && preg_match('/([0-9]+)\.jpg/i', $_REQUEST['image'])) {
         /** @var \Stash\Interfaces\ItemInterface $imageDataCache */
         $imageDataCache = Core::make('cache')->getItem('dashboard_image_data/' . $_REQUEST['image']);
