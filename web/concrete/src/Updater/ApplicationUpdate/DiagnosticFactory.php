@@ -14,6 +14,7 @@ class DiagnosticFactory
             $version = new Version();
             $version->setVersion($o->requested_version->version);
             $version->setReleaseNotes($o->requested_version->notes);
+            $version->setReleaseNotesURL($o->requested_version->notes_url);
             $diagnostic->setRequestedVersion($version);
         }
 

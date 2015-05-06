@@ -18,11 +18,7 @@ if ($canUpgrade) { ?>
         <div class="ccm-dashboard-update-details-wrapper">
 
             <div class="ccm-dashboard-update-details">
-                <div class="ccm-dashboard-update-thumbnail"><?
-                    $thumb = $update->getThumbnailURL();
-                    printf('<img src="%s">', $thumb);
-                    ?>
-                </div>
+                <div class="ccm-dashboard-update-thumbnail"><img src="<?=ASSETS_URL_IMAGES?>/logo.png" /></div>
                 <h2><?=t('Version %s', $update->getVersion())?></h2>
                 <div><i class="fa fa-cog"></i> <span class="ccm-dashboard-update-details-testing-text"><?=t('Testing System...')?></span></div>
             </div>
@@ -49,7 +45,7 @@ if ($canUpgrade) { ?>
                 </div>
                 <div class="col-md-7 col-md-offset-1 ccm-dashboard-update-detail-main">
                     <a name="notes"></a>
-                    <a href="<?=$update->getInfoURL()?>" target="_blank" class="btn btn-default pull-right btn-xs "><?=t('View Full Release Notes')?></a>
+                    <a href="#" target="_blank" data-url="info" style="display: none" class="btn btn-default pull-right btn-xs "><?=t('View Full Release Notes')?></a>
                     <h3><?=t('Release Notes')?></h3>
                     <div class="ccm-dashboard-update-detail-release-notes"><?=t('Retrieving Release Notes...')?></div>
 
@@ -95,6 +91,7 @@ if ($canUpgrade) { ?>
                 },
                 url: '<?=$view->action('get_update_diagnostic_information')?>',
                 success: function(r) {
+                    $('a[data-url=info]').attr('href', r.releaseNotesUrl).show();
                     $('.ccm-dashboard-update-detail-release-notes').html(r.releaseNotes);
                     $('span[data-href]').each(function() {
                         var $tag = $('<a />', {'href': $(this).attr('data-href'), text: $(this).text()});
@@ -199,14 +196,14 @@ if ($canUpgrade) { ?>
 
         <? if ($downloadableUpgradeAvailable) { ?>
 
-            <h2><?= t('Available Update') ?></h2>
+            <h2><?= t('Available Update for Download') ?></h2>
             <form method="post" action="<?= $view->action('download_update') ?>" id="ccm-download-update-form">
 
                 <?= Loader::helper('validation/token')->output('download_update') ?>
 
                 <legend style="line-height:40px">
-                    <?= t('Version: %s', $update->version) ?>.
-                    <?= t('Release Date: %s', date(t('F d, Y'), strtotime($update->date))) ?>
+                    <?= t('Version: %s', $remoteUpdate->getVersion()) ?>.
+                    <?= t('Release Date: %s', date(t('F d, Y'), strtotime($remoteUpdate->getDate()))) ?>
                     <?= Loader::helper('concrete/ui')->submit(
                         t('Download'),
                         'ccm-download-update-form',
@@ -214,7 +211,7 @@ if ($canUpgrade) { ?>
                         'btn-success') ?>
                 </legend>
                 <div id="ccm-release-notes">
-                    <?= $update->notes ?>
+                    <?= $remoteUpdate->getNotes() ?>
                 </div>
                 <hr/>
                 <span class="help-block"><?= t('Note: Downloading an update will NOT automatically install it.') ?></span>
@@ -227,8 +224,10 @@ if ($canUpgrade) { ?>
         <?
 
             }
+        ?>
 
-        if (count($updates)) {
+            <h2><?= t('Apply Downloaded Update') ?></h2>
+        <? if (count($updates)) {
             ?>
             <div class="alert alert-warning">
                 <i class="fa fa-warning"></i> <?= t(
@@ -267,7 +266,7 @@ if ($canUpgrade) { ?>
             <div class="clearfix">&nbsp;</div>
         <?
         } else { ?>
-            <p><?=t('No updates are available.')?></p>
+            <p><?=t('No updates are ready to be installed.')?></p>
 
         <? } ?>
     <? } ?>

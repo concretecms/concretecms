@@ -47,6 +47,7 @@ class Diagnostic
         if ($this->requestedVersion) {
             $o->requestedVersion = $this->requestedVersion->getVersion();
             $o->releaseNotes = $this->requestedVersion->getReleaseNotes();
+            $o->releaseNotesUrl = $this->requestedVersion->getReleaseNotesURL();
         }
         $o->marketplaceItemStatuses = array();
         foreach($this->marketplaceItemStatuses as $s) {

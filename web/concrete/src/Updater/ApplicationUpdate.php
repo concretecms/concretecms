@@ -109,13 +109,7 @@ class ApplicationUpdate
         if ($concrete['version'] != false) {
             $obj = new ApplicationUpdate();
             $obj->version = $concrete['version'];
-            if (file_exists(DIR_CORE_UPDATES . "/{$dir}/" . DIRNAME_CORE . '/CHANGELOG.md')) {
-                $obj->notes = file_get_contents(DIR_CORE_UPDATES . "/{$dir}/" . DIRNAME_CORE . '/CHANGELOG.md');
-            }
             $obj->identifier = $dir;
-            $obj->urlInfo = $concrete['release']['urls']['info'];
-            $obj->urlThumbnail = $concrete['release']['urls']['thumbnail'];
-
             return $obj;
         }
     }
@@ -128,16 +122,6 @@ class ApplicationUpdate
     public function getIdentifier()
     {
         return $this->identifier;
-    }
-
-    public function getInfoUrl()
-    {
-        return $this->urlInfo;
-    }
-
-    public function getThumbnailURL()
-    {
-        return $this->urlThumbnail;
     }
 
     /**
