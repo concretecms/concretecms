@@ -299,7 +299,7 @@ class File
      * @param string $filename
      * @param string $timeout
      *
-     * @return string|boolean Returns false in case of failure
+     * @return string|bool Returns false in case of failure
      */
     public function getContents($file, $timeout = 5)
     {
@@ -350,7 +350,7 @@ class File
      * Removes contents of the file.
      *
      * @param $filename
-     * 
+     *
      * @return bool
      */
     public function clear($file)
@@ -443,5 +443,31 @@ class File
         }
 
         return $newFilename;
+    }
+
+    /**
+     * Checks if two path are the same, considering directory separator and OS case sensitivity.
+     *
+     * @param string $path1
+     * @param string $path2
+     *
+     * @return bool
+     */
+    public function isSamePath($path1, $path2)
+    {
+        $path1 = str_replace(DIRECTORY_SEPARATOR, '/', $path1);
+        $path2 = str_replace(DIRECTORY_SEPARATOR, '/', $path2);
+        // Check if OS is case insensitive
+        $checkFile = strtoupper(__FILE__);
+        if ($checkFile === __FILE__) {
+            $checkFile = strtolower(__FILE__);
+        }
+        if (is_file($checkFile)) {
+            $same = (strcasecmp($path1, $path2) === 0) ? true : false;
+        } else {
+            $same = ($path1 === $path2) ? true : false;
+        }
+
+        return $same;
     }
 }
