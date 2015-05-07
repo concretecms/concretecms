@@ -15,15 +15,13 @@ class ToolController extends Controller {
 		$query = false;
 		if (substr($tool, 0, 9) != 'required/') {
 			$path = DIR_APPLICATION . '/' . DIRNAME_TOOLS . '/' . $tool . '.php';
-			$realpath = realpath($path);
-			if (file_exists($path) && $path == $realpath) {
-				$query = $tool;
-			}
 		} else {
 			$tool = substr($tool, 9);
 			$path = DIR_BASE_CORE . '/' . DIRNAME_TOOLS . '/' . $tool . '.php';
+		}
+		if (is_file($path)) {
 			$realpath = realpath($path);
-			if (file_exists($path) && $path == $realpath) {
+			if ($path == $realpath) {
 				$query = $tool;
 			}
 		}
