@@ -1,7 +1,7 @@
 # 5.7.4.1
 
 * Fixed inability to save blocks, work with dialogs, do many things while asset caching was enabled (thanks mlocati.)
-
+* Fixed certain panels and dialog windows not opening on Windows servers (thanks mlocati)
 
 # 5.7.4 
 
