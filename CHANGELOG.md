@@ -1,3 +1,10 @@
+# 5.7.4.1
+
+* Fixed inability to save blocks, work with dialogs, do many things while asset caching was enabled (thanks mlocati.)
+
+
+# 5.7.4 
+
 ## Help System Updates
 
 * Completely new help system, with guided walkthroughs, multiple videos and more.
