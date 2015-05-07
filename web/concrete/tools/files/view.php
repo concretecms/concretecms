@@ -14,7 +14,7 @@ if (isset($_REQUEST['fvID'])) {
 }
 
 $fp = new Permissions($f);
-if (!$fp->canViewFile()) {
+if (!$fp->canViewFileInFileManager()) {
 	die(t("Access Denied."));
 }
 ?>

@@ -83,10 +83,6 @@ class Setup extends DashboardPageController
         $ch = Core::make('multilingual/interface/flag');
         $msCountry = $this->post('msCountry');
 
-        if (!$msCountry) {
-            return false;
-        }
-
         $flag = $ch->getFlagIcon($msCountry);
         if ($flag) {
             $html = $flag;

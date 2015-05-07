@@ -35,7 +35,7 @@ class Update
                 $versionNum = $version;
             }
             $diff = time() - $seconds;
-            if ($diff > APP_VERSION_LATEST_THRESHOLD) {
+            if ($diff > Config::get('concrete.updates.check_threshold')) {
                 // we grab a new value from the service
                 $queryWS = true;
             }
@@ -49,7 +49,7 @@ class Update
                 Marketplace::checkPackageUpdates();
             }
             $update = static::getLatestAvailableUpdate();
-            $versionNum = $update->version;
+            $versionNum = $update->getVersion();
 
             if ($versionNum) {
                 Config::save('concrete.misc.latest_version', $versionNum);
@@ -100,12 +100,6 @@ class Update
      */
     protected static function getLatestAvailableUpdate()
     {
-        $obj = new \stdClass();
-        $obj->notes = false;
-        $obj->url = false;
-        $obj->date = false;
-        $obj->version = null;
-
         if (function_exists('curl_init')) {
             $curl_handle = @curl_init();
 
@@ -124,7 +118,7 @@ class Update
                 }
             }
 
-            @curl_setopt($curl_handle, CURLOPT_URL, APP_VERSION_LATEST_WS);
+            @curl_setopt($curl_handle, CURLOPT_URL, Config::get('concrete.updates.services.get_available_updates'));
             @curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, 2);
             @curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
             @curl_setopt($curl_handle, CURLOPT_POST, true);
@@ -136,24 +130,12 @@ class Update
                 'LOCALE=' . $loc->activeLocale(
                 ) . '&BASE_URL_FULL=' . Core::getApplicationURL() . '&APP_VERSION=' . APP_VERSION
             );
-            $resp = @curl_exec($curl_handle);
+            $body = @curl_exec($curl_handle);
 
-            $xml = @simplexml_load_string($resp);
-            if ($xml === false) {
-                // invalid. That means it's old and it's just the version
-                $obj->version = trim($resp);
-            } else {
-                $obj = new \stdClass();
-                $obj->version = (string) $xml->version;
-                $obj->notes = (string) $xml->notes;
-                $obj->url = (string) $xml->url;
-                $obj->date = (string) $xml->date;
-            }
-        } else {
-            $obj->version = APP_VERSION;
+            $update = RemoteApplicationUpdateFactory::getFromJSON($body);
+            return $update;
         }
 
-        return $obj;
     }
 
     /**

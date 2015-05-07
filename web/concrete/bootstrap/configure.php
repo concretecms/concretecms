@@ -268,16 +268,6 @@ define('STACKS_PAGE_TYPE', 'core_stack');
 
 /**
  * ----------------------------------------------------------------------------
- * Setting defaults for when to check for new versions.
- * ----------------------------------------------------------------------------
- */
-define('APP_VERSION_LATEST_THRESHOLD', 172800); // Every 2 days we check for the latest version (this is seconds)
-define('APP_VERSION_LATEST_WS', 'http://www.concrete5.org/tools/get_latest_version_number');
-define('APP_VERSION_LATEST_DOWNLOAD', 'http://www.concrete5.org/download/');
-
-
-/**
- * ----------------------------------------------------------------------------
  * Configuration values that cannot be overridden
  * ----------------------------------------------------------------------------
  */

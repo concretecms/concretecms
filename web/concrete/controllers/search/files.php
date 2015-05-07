@@ -31,7 +31,7 @@ class Files extends Controller
     public function search()
     {
         $cp = FilePermissions::getGlobal();
-        if (!$cp->canSearchFiles()) {
+        if (!$cp->canSearchFiles() && !$cp->canAddFile()) {
             return false;
         }
 

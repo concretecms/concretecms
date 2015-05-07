@@ -14,9 +14,14 @@ class Flag
      */
     public function getFlagIcon($region, $filePathOnly = false)
     {
-        if ($region) {
+        $val = \Core::make('helper/validation/strings');
+        if ($val->alphanum($region, false, true)) {
             $region = h(strtolower($region));
+        } else {
+            $region = false;
+        }
 
+        if ($region) {
             if (file_exists(
                 DIR_BASE . '/' . DIRNAME_IMAGES . '/' . DIRNAME_IMAGES_LANGUAGES . '/' . $region . '.png'
             )) {
