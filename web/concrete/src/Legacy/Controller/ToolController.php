@@ -21,7 +21,7 @@ class ToolController extends Controller {
 		}
 		if (is_file($path)) {
 			$realpath = realpath($path);
-			if ($path == $realpath) {
+			if (($realpath !== false) && \Core::make('helper/file')->isSamePath($path, $realpath)) {
 				$query = $tool;
 			}
 		}
