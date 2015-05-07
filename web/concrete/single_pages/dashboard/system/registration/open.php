@@ -10,7 +10,7 @@ $h = Loader::helper('concrete/ui');
 ?>
 <form class="form-stacked" method="post" id="registration-type-form"
       action="<?php echo $view->action('update_registration_type') ?>">
-
+        <?=$token->output('update_registration_type')?>
     <div class="row">
 
         <div class="col-sm-6">

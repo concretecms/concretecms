@@ -57,7 +57,7 @@ if ($akSelectAllowMultipleValues && $akSelectAllowOtherValues) { // display auto
 			foreach($vals as $v) { ?>
 				<div class="newAttrValue">
 					<?=$form->hidden($this->field('atSelectNewOption') . '[]', $v)?>
-					<span class="badge"><?=$v?></span>
+					<span class="badge"><?=h($v)?></span>
 					<a class="text-error" title="<?=$removeOptionText?>" onclick="ccmAttributeTypeSelectTagHelper<?php echo $attrKeyID?>.remove(this)" href="javascript:void(0)">x</a>
 				</div>
 			<?
