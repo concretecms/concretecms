@@ -259,7 +259,7 @@ class View extends AbstractView
 
         // goes through all assets in this list, creating new URLs and post-processing them where possible.
         $segment = 0;
-
+        $groupedAssets = array();
         for ($i = 0; $i < count($assets); $i++) {
             $asset = $assets[$i];
             $nextasset = isset($assets[$i + 1]) ? $assets[$i + 1] : null;
@@ -275,7 +275,7 @@ class View extends AbstractView
                 continue;
             }
 
-            if ($asset->assetSupportsCombination() != $nextasset->assetSupportsCombination()) {
+            if (!$asset->assetSupportsCombination() || !$nextasset->assetSupportsCombination()) {
                 $segment++;
                 continue;
             }
