@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Block\PageList;
 
 use BlockType;
@@ -10,11 +11,10 @@ use Page;
 use Core;
 use PageList;
 use Concrete\Core\Attribute\Key\CollectionKey;
-use \Concrete\Core\Tree\Node\Type\Topic;
+use Concrete\Core\Tree\Node\Type\Topic;
 
 class Controller extends BlockController
 {
-
     protected $btTable = 'btPageList';
     protected $btInterfaceWidth = "800";
     protected $btInterfaceHeight = "350";
@@ -25,7 +25,7 @@ class Controller extends BlockController
     protected $list;
 
     /**
-     * Used for localization. If we want to localize the name/description we have to include this
+     * Used for localization. If we want to localize the name/description we have to include this.
      */
     public function getBlockTypeDescription()
     {
@@ -40,7 +40,7 @@ class Controller extends BlockController
     public function getJavaScriptStrings()
     {
         return array(
-            'feed-name' => t('Please give your RSS Feed a name.')
+            'feed-name' => t('Please give your RSS Feed a name.'),
         );
     }
 
@@ -175,7 +175,6 @@ class Controller extends BlockController
 
     public function add()
     {
-
         $this->requireAsset('core/topics');
         $c = Page::getCurrentPage();
         $uh = Loader::helper('concrete/urls');
@@ -269,10 +268,10 @@ class Controller extends BlockController
             }
             $this->list->filterByPublicDate($start, '>=');
             $this->list->filterByPublicDate($end, '<=');
-            
+
             $seo = Core::make('helper/seo');
             $srv = Core::make('helper/date');
-            $seo->addTitleSegment($srv->date('F Y',$start));
+            $seo->addTitleSegment($srv->date('F Y', $start));
         }
         $this->view();
     }
@@ -420,7 +419,6 @@ class Controller extends BlockController
 
         $args['pfID'] = intval($args['pfID']);
         parent::save($args);
-
     }
 
     public function isBlockEmpty()
@@ -445,5 +443,4 @@ class Controller extends BlockController
             }
         }
     }
-
 }
