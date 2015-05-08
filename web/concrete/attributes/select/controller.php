@@ -488,17 +488,19 @@ class Controller extends AttributeTypeController  {
 		$initialOptionSet = $this->getOptions();
 		$selectedPostValues = $this->getSelectValuesFromPost();
 		
-		$akSelectAllowMultipleValues = $data['akSelectAllowMultipleValues'];
-		$akSelectAllowOtherValues = $data['akSelectAllowOtherValues'];
-		$akSelectOptionDisplayOrder = $data['akSelectOptionDisplayOrder'];
-		
-		if ($data['akSelectAllowMultipleValues'] != 1) {
-			$akSelectAllowMultipleValues = 0;
+		if (isset($data['akSelectAllowMultipleValues']) && ($data['akSelectAllowMultipleValues'] == 1)) {
+			$akSelectAllowMultipleValues = 1;
+		} else {
+		    $akSelectAllowMultipleValues = 0;
 		}
-		if ($data['akSelectAllowOtherValues'] != 1) {
+		if (isset($data['akSelectAllowOtherValues']) && ($data['akSelectAllowOtherValues'] == 1)) {
+		    $akSelectAllowOtherValues = 1;
+		} else {
 			$akSelectAllowOtherValues = 0;
 		}
-		if (!in_array($data['akSelectOptionDisplayOrder'], array('display_asc', 'alpha_asc', 'popularity_desc'))) {
+		if (isset($data['akSelectOptionDisplayOrder']) && in_array($data['akSelectOptionDisplayOrder'], array('display_asc', 'alpha_asc', 'popularity_desc'))) {
+		    $akSelectOptionDisplayOrder = $data['akSelectOptionDisplayOrder'];
+		} else {
 			$akSelectOptionDisplayOrder = 'display_asc';
 		}
 				
