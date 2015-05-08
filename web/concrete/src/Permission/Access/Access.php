@@ -306,7 +306,7 @@ class Access extends Object
         $obj = null;
         if ($checkPA) {
             $row = $db->GetRow('select paID, paIsInUse from PermissionAccess where paID = ?', array($paID));
-            if ($row['paID']) {
+            if ($row && $row['paID']) {
                 $obj = Core::make($class);
                 $obj->setPropertiesFromArray($row);
             }
