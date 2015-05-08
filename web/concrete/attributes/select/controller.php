@@ -37,9 +37,9 @@ class Controller extends AttributeTypeController  {
 		
 		$db = Loader::db();
 		$row = $db->GetRow('select akSelectAllowMultipleValues, akSelectOptionDisplayOrder, akSelectAllowOtherValues from atSelectSettings where akID = ?', array($ak->getAttributeKeyID()));
-		$this->akSelectAllowMultipleValues = $row['akSelectAllowMultipleValues'];
-		$this->akSelectAllowOtherValues = $row['akSelectAllowOtherValues'];
-		$this->akSelectOptionDisplayOrder = $row['akSelectOptionDisplayOrder'];
+		$this->akSelectAllowMultipleValues = $row ? $row['akSelectAllowMultipleValues'] : null;
+		$this->akSelectAllowOtherValues = $row ? $row['akSelectAllowOtherValues'] : null;
+		$this->akSelectOptionDisplayOrder = $row ? $row['akSelectOptionDisplayOrder'] : null;
 
 		$this->set('akSelectAllowMultipleValues', $this->akSelectAllowMultipleValues);
 		$this->set('akSelectAllowOtherValues', $this->akSelectAllowOtherValues);			
