@@ -303,6 +303,7 @@ class Access extends Object
 
         $class = '\\Concrete\\Core\\Permission\\Access\\' . Loader::helper('text')->camelcase($handle) . 'Access';
 
+        $obj = null;
         if ($checkPA) {
             $row = $db->GetRow('select paID, paIsInUse from PermissionAccess where paID = ?', array($paID));
             if ($row['paID']) {
@@ -314,7 +315,7 @@ class Access extends Object
             $obj->paID = $paID;
             $obj->paIsInUse = true;
         }
-        if (is_object($obj)) {
+        if (isset($obj)) {
             $obj->setPermissionKey($pk);
         }
 
