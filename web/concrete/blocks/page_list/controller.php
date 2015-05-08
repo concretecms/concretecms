@@ -342,6 +342,21 @@ class Controller extends BlockController
             $this->cID = $c->getCollectionID();
         }
 
+        $args = $args + array(
+            'enableExternalFiltering' => 0,
+            'includeAllDescendents' => 0,
+            'includeDate' => 0,
+            'truncateSummaries' => 0,
+            'displayFeaturedOnly' => 0,
+            'topicFilter' => '',
+            'displayThumbnail' => 0,
+            'displayAliases' => 0,
+            'truncateChars' => 0,
+            'paginate' => 0,
+            'rss' => 0,
+            'pfID' => 0,
+        );
+
         $args['num'] = ($args['num'] > 0) ? $args['num'] : 0;
         $args['cThis'] = ($args['cParentID'] == $this->cID) ? '1' : '0';
         $args['cParentID'] = ($args['cParentID'] == 'OTHER') ? $args['cParentIDValue'] : $args['cParentID'];
@@ -371,7 +386,7 @@ class Controller extends BlockController
         }
 
         if ($args['rss']) {
-            if ($this->pfID) {
+            if (isset($this->pfID) && $this->pfID) {
                 $pf = Feed::getByID($this->pfID);
             }
 
@@ -391,7 +406,7 @@ class Controller extends BlockController
             $pf->displayShortDescriptionContent();
             $pf->save();
             $args['pfID'] = $pf->getID();
-        } elseif ($this->pfID && !$args['rss']) {
+        } elseif (isset($this->pfID) && $this->pfID && !$args['rss']) {
             // let's make sure this isn't in use elsewhere.
             $cnt = $db->GetOne('select count(pfID) from btPageList where pfID = ?', array($this->pfID));
             if ($cnt == 1) { // this is the last one, so we delete
