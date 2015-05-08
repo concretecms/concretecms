@@ -499,7 +499,7 @@ return array(
          *
          * @var bool
          */
-        'display_help_system' => false
+        'display_help_system' => true
     ),
 
     /**
