@@ -3,7 +3,8 @@
 namespace Concrete\Attribute\Select;
 
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
-use Loader;
+use Core;
+use Database;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 
 class Controller extends AttributeTypeController
@@ -16,7 +17,7 @@ class Controller extends AttributeTypeController
 
     public function type_form()
     {
-        $this->set('form', Loader::helper('form'));
+        $this->set('form', Core::make('helper/form'));
         $this->load();
         //$akSelectValues = $this->getSelectValuesFromPost();
         //$this->set('akSelectValues', $akSelectValues);
@@ -39,7 +40,7 @@ class Controller extends AttributeTypeController
             return false;
         }
 
-        $db = Loader::db();
+        $db = Database::get();
         $row = $db->GetRow('select akSelectAllowMultipleValues, akSelectOptionDisplayOrder, akSelectAllowOtherValues from atSelectSettings where akID = ?', array($ak->getAttributeKeyID()));
         $this->akSelectAllowMultipleValues = $row ? $row['akSelectAllowMultipleValues'] : null;
         $this->akSelectAllowOtherValues = $row ? $row['akSelectAllowOtherValues'] : null;
@@ -53,7 +54,7 @@ class Controller extends AttributeTypeController
     public function duplicateKey($newAK)
     {
         $this->load();
-        $db = Loader::db();
+        $db = Database::get();
         $db->Execute('insert into atSelectSettings (akID, akSelectAllowMultipleValues, akSelectOptionDisplayOrder, akSelectAllowOtherValues) values (?, ?, ?, ?)', array($newAK->getAttributeKeyID(), $this->akSelectAllowMultipleValues, $this->akSelectOptionDisplayOrder, $this->akSelectAllowOtherValues));
         $r = $db->Execute('select value, displayOrder, isEndUserAdded from atSelectOptions where akID = ?', $this->getAttributeKey()->getAttributeKeyID());
         while ($row = $r->FetchRow()) {
@@ -69,7 +70,7 @@ class Controller extends AttributeTypeController
     public function exportKey($akey)
     {
         $this->load();
-        $db = Loader::db();
+        $db = Database::get();
         $type = $akey->addChild('type');
         $type->addAttribute('allow-multiple-values', $this->akSelectAllowMultipleValues);
         $type->addAttribute('display-order', $this->akSelectOptionDisplayOrder);
@@ -114,7 +115,7 @@ class Controller extends AttributeTypeController
             $akSelectAllowMultipleValues = $akey->type['allow-multiple-values'];
             $akSelectOptionDisplayOrder = $akey->type['display-order'];
             $akSelectAllowOtherValues = $akey->type['allow-other-values'];
-            $db = Loader::db();
+            $db = Database::get();
             $db->Replace('atSelectSettings', array(
                 'akID' => $this->attributeKey->getAttributeKeyID(),
                 'akSelectAllowMultipleValues' => $akSelectAllowMultipleValues,
@@ -164,6 +165,7 @@ class Controller extends AttributeTypeController
         $this->load();
         $options = $this->getSelectedOptions();
         $selectedOptions = array();
+        $selectedOptionValues = array();
         foreach ($options as $opt) {
             $selectedOptions[] = $opt->getSelectAttributeOptionID();
             $selectedOptionValues[$opt->getSelectAttributeOptionID()] = $opt->getSelectAttributeOptionValue();
@@ -185,13 +187,13 @@ class Controller extends AttributeTypeController
 
     public function deleteValue()
     {
-        $db = Loader::db();
+        $db = Database::get();
         $db->Execute('delete from atSelectOptionsSelected where avID = ?', array($this->getAttributeValueID()));
     }
 
     public function deleteKey()
     {
-        $db = Loader::db();
+        $db = Database::get();
         $db->Execute('delete from atSelectSettings where akID = ?', array($this->attributeKey->getAttributeKeyID()));
         $r = $db->Execute('select ID from atSelectOptions where akID = ?', array($this->attributeKey->getAttributeKeyID()));
         while ($row = $r->FetchRow()) {
@@ -228,7 +230,7 @@ class Controller extends AttributeTypeController
         if (is_array($data['atSelectOptionID'])) {
             $data['atSelectOptionID'] = array_unique($data['atSelectOptionID']);
         }
-        $db = Loader::db();
+        $db = Database::get();
         $db->Execute('delete from atSelectOptionsSelected where avID = ?', array($this->getAttributeValueID()));
         if (is_array($data['atSelectOptionID'])) {
             foreach ($data['atSelectOptionID'] as $optID) {
@@ -250,7 +252,7 @@ class Controller extends AttributeTypeController
     // Code from this bug - http://www.concrete5.org/index.php?cID=595692
     public function saveValue($value)
     {
-        $db = Loader::db();
+        $db = Database::get();
         $this->load();
         $options = array();
 
@@ -330,7 +332,7 @@ class Controller extends AttributeTypeController
     public function searchForm($list)
     {
         $options = $this->request('atSelectOptionID');
-        $db = Loader::db();
+        $db = Database::get();
         $tbl = $this->attributeKey->getIndexedSearchTable();
         if (!is_array($options)) {
             return $list;
@@ -390,7 +392,7 @@ class Controller extends AttributeTypeController
         if (!isset($this->akSelectOptionDisplayOrder)) {
             $this->load();
         }
-        $db = Loader::db();
+        $db = Database::get();
         $sortByDisplayName = false;
         switch ($this->akSelectOptionDisplayOrder) {
             case 'popularity_desc':
@@ -404,7 +406,7 @@ class Controller extends AttributeTypeController
                 $options = $db->GetAll("select ID, value, displayOrder from atSelectOptionsSelected inner join atSelectOptions on atSelectOptionsSelected.atSelectOptionID = atSelectOptions.ID where avID = ? order by displayOrder asc", array($this->getAttributeValueID()));
                 break;
         }
-        $db = Loader::db();
+        $db = Database::get();
         $list = new OptionList();
         foreach ($options as $row) {
             $opt = new Option($row['ID'], $row['value'], $row['displayOrder']);
@@ -428,12 +430,12 @@ class Controller extends AttributeTypeController
                 $values[] = $opt->getSelectAttributeOptionValue(false);
             }
         }
-        print Loader::helper('json')->encode($values);
+        print json_encode($values);
     }
 
     public function getOptionUsageArray($parentPage = false, $limit = 9999)
     {
-        $db = Loader::db();
+        $db = Database::get();
         $q = "select atSelectOptions.value, atSelectOptionID, count(atSelectOptionID) as total from Pages inner join CollectionVersions on (Pages.cID = CollectionVersions.cID and CollectionVersions.cvIsApproved = 1) inner join CollectionAttributeValues on (CollectionVersions.cID = CollectionAttributeValues.cID and CollectionVersions.cvID = CollectionAttributeValues.cvID) inner join atSelectOptionsSelected on (atSelectOptionsSelected.avID = CollectionAttributeValues.avID) inner join atSelectOptions on atSelectOptionsSelected.atSelectOptionID = atSelectOptions.ID where Pages.cIsActive = 1 and CollectionAttributeValues.akID = ? ";
         $v = array($this->attributeKey->getAttributeKeyID());
         if (is_object($parentPage)) {
@@ -482,7 +484,7 @@ class Controller extends AttributeTypeController
         if (!isset($this->akSelectOptionDisplayOrder)) {
             $this->load();
         }
-        $db = Loader::db();
+        $db = Database::get();
         switch ($this->akSelectOptionDisplayOrder) {
             case 'popularity_desc':
                 if (isset($like) && strlen($like)) {
@@ -523,7 +525,7 @@ class Controller extends AttributeTypeController
     {
         $ak = $this->getAttributeKey();
 
-        $db = Loader::db();
+        $db = Database::get();
 
         $initialOptionSet = $this->getOptions();
         $selectedPostValues = $this->getSelectValuesFromPost();
