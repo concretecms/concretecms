@@ -118,7 +118,7 @@ class Sitemap
                 $n->focus = false;
                 $n->unselectable = true;
                 $n->title = ' ' . t('%s more to display. <strong>View all &gt;</strong>', $total - Config::get('concrete.limits.sitemap_pages'));
-                $n->href = \URL::to('/dashboard/sitemap/explore/', $cID);
+                $n->href = (string) \URL::to('/dashboard/sitemap/explore/', $cID);
                 $nodes[] = $n;
             }
         }
