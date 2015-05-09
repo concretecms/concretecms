@@ -580,7 +580,7 @@ class StyleSet
         $em->flush();
     }
 
-    public function import(\SimpleXMLElement $node)
+    public static function import(\SimpleXMLElement $node)
     {
         $o = new self;
         $o->setBackgroundColor((string) $node->backgroundColor);
