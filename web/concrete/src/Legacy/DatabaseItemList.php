@@ -11,6 +11,7 @@ class DatabaseItemList extends ItemList {
 	protected $havingString = '';
 	protected $autoSortColumns = array();
 	protected $userPostQuery = '';
+	protected $attributeClass = '';
 
 	public function getTotal() {
 		if ($this->total == -1) {
@@ -108,7 +109,7 @@ class DatabaseItemList extends ItemList {
 	}
 
 	protected function setupAttributeSort() {
-		if (is_callable(array($this->attributeClass, 'getList'))) {
+		if ($this->attributeClass && is_callable(array($this->attributeClass, 'getList'))) {
 			$l = call_user_func(array($this->attributeClass, 'getList'));
 			foreach($l as $ak) {
 				$this->autoSortColumns[] = 'ak_' . $ak->getAttributeKeyHandle();
