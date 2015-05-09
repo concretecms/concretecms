@@ -153,7 +153,7 @@ abstract class Control extends Object
             $displayOrder = 0;
         }
         $ptComposerFormLayoutSetControlRequired = 0;
-        if ($this->isPageTypeComposerControlRequiredByDefault) {
+        if ($this->isPageTypeComposerControlRequiredByDefault()) {
             $ptComposerFormLayoutSetControlRequired = 1;
         }
         $controlType = $this->getPageTypeComposerControlTypeObject();
@@ -189,6 +189,10 @@ abstract class Control extends Object
         }
 
         return $controls;
+    }
+
+    public function isPageTypeComposerControlRequiredByDefault() {
+        return $this->ptComposerControlRequiredByDefault;
     }
 
 }
