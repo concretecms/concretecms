@@ -50,7 +50,6 @@ class Controller extends BlockController
         $args = array();
         $formLayoutSetControlID = ContentImporter::getPageTypeComposerFormLayoutSetControlFromTemporaryID((string)$blockNode->control['output-control-id']);
         $formLayoutSetControl = PageTypeComposerFormLayoutSetControl::getByID($formLayoutSetControlID);
-        $b = $this->getBlockObject();
         $pt = PageTemplate::getByID($page->getPageTemplateID());
         $outputControl = PageTypeComposerOutputControl::getByPageTypeComposerFormLayoutSetControl($pt,
             $formLayoutSetControl);
