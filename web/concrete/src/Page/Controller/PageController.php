@@ -11,6 +11,7 @@ use Request;
 use Controller;
 use Core;
 use Concrete\Core\Page\View\PageView;
+use Symfony\Component\HttpFoundation\Response;
 
 class PageController extends Controller
 {
@@ -215,8 +216,10 @@ class PageController extends Controller
                 list($method, $parameters) = $controller->getPassThruActionAndParameters($this->parameters);
                 if ($controller->isValidControllerTask($method, $parameters)) {
                     $controller->on_start();
-                    $controller->runAction($method, $parameters);
-
+                    $response = $controller->runAction($method, $parameters);
+                    if ($response instanceof Response) {
+                        return $response;
+                    }
                     // old school blocks have already terminated at this point. They are redirecting
                     // or exiting. But new blocks like topics, etc... can actually rely on their $set
                     // data persisting and being passed into the view.

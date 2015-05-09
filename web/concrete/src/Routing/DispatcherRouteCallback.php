@@ -182,7 +182,7 @@ class DispatcherRouteCallback extends RouteCallback
         $controller->on_start();
         $controller->setupRequestActionAndParameters($request);
         $response = $controller->validateRequest();
-        if ($response instanceof \Concrete\Core\Http\Response) {
+        if ($response instanceof \Symfony\Component\HttpFoundation\Response) {
             return $response;
         } else {
             if ($response == false) {
