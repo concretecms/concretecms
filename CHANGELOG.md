@@ -2,6 +2,8 @@
 
 * Fixed inability to save blocks, work with dialogs, do many things while asset caching was enabled (thanks mlocati.)
 * Fixed certain panels and dialog windows not opening on Windows servers (thanks mlocati)
+* Fixed bug when using "S" option to format date (incorrectly displaying as seconds) (thanks mlocati)
+* Bug fixes with dashboard get image data URL (thanks mlocati)
 
 # 5.7.4 
 
