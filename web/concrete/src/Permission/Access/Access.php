@@ -1,19 +1,19 @@
 <?php
+
 namespace Concrete\Core\Permission\Access;
 
-use \Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\Object;
 use Loader;
 use CacheLocal;
 use PermissionKey;
 use User;
 use Core;
-use \Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
-use \Concrete\Core\Permission\Duration as PermissionDuration;
-use \Concrete\Core\Workflow\Workflow;
+use Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
+use Concrete\Core\Permission\Duration as PermissionDuration;
+use Concrete\Core\Workflow\Workflow;
 
 class Access extends Object
 {
-
     protected $paID;
     protected $paIDList = array();
 
@@ -78,6 +78,7 @@ class Access extends Object
             }
             $list[] = $obj;
         }
+
         return $list;
     }
 
@@ -89,6 +90,7 @@ class Access extends Object
                 $entities[] = $ae;
             }
         }
+
         return $entities;
     }
 
@@ -106,6 +108,7 @@ class Access extends Object
                 $valid = false;
             }
         }
+
         return $valid;
     }
 
@@ -116,6 +119,7 @@ class Access extends Object
             return true;
         }
         $accessEntities = $u->getUserAccessEntityObjects();
+
         return $this->validateAccessEntities($accessEntities);
     }
 
@@ -128,6 +132,7 @@ class Access extends Object
         }
         $p->pk = $permissions[0]->pk;
         $p->paID = -1;
+
         return $p;
     }
 
@@ -138,6 +143,7 @@ class Access extends Object
                     ',',
                     $this->paIDList
                 ) . ')';
+
             return $this->deliverAccessListItems($q, $accessType, $filterEntities);
         } else {
             $filter = $accessType . ':';
@@ -160,6 +166,7 @@ class Access extends Object
                 $this->getPermissionAccessID() . $filter . strtolower(get_class($this->pk)),
                 $items
             );
+
             return $items;
         }
     }
@@ -181,6 +188,7 @@ class Access extends Object
             $accessType = $connection->quote($accessType, \PDO::PARAM_INT);
             $accessType = ' and accessType = ' . $accessType;
         }
+
         return $peIDs . ' ' . $accessType . ' order by accessType desc'; // we order desc so that excludes come last (-1)
     }
 
@@ -215,6 +223,7 @@ class Access extends Object
                 $workflows[] = $wf;
             }
         }
+
         return $workflows;
     }
 
@@ -233,6 +242,7 @@ class Access extends Object
             $newPA->attachWorkflow($wf);
         }
         $newPA->setPermissionKey($this->pk);
+
         return $newPA;
     }
 
@@ -241,7 +251,6 @@ class Access extends Object
         $db = Loader::db();
         $db->Execute('update PermissionAccess set paIsInUse = 1 where paID = ?', array($this->paID));
     }
-
 
     public function addListItem(
         PermissionAccessEntity $pae,
@@ -260,7 +269,7 @@ class Access extends Object
                 'paID' => $this->getPermissionAccessID(),
                 'peID' => $pae->getAccessEntityID(),
                 'pdID' => $pdID,
-                'accessType' => $accessType
+                'accessType' => $accessType,
             ),
             array('paID', 'peID'),
             false
@@ -284,13 +293,14 @@ class Access extends Object
     {
         $db = Loader::db();
         $db->Execute('insert into PermissionAccess (paIsInUse) values (0)');
+
         return static::getByID($db->Insert_ID(), $pk);
     }
 
     public static function getByID($paID, PermissionKey $pk, $checkPA = true)
     {
         $cache = Core::make('cache/request');
-    	$identifier = sprintf('permission/access/%s/%s', $pk->getPermissionKeyID(), $paID);
+        $identifier = sprintf('permission/access/%s/%s', $pk->getPermissionKeyID(), $paID);
         $item = $cache->getItem($identifier);
         if (!$item->isMiss()) {
             return $item->get();
@@ -305,9 +315,10 @@ class Access extends Object
 
         $class = '\\Concrete\\Core\\Permission\\Access\\' . Loader::helper('text')->camelcase($handle) . 'Access';
 
+        $obj = null;
         if ($checkPA) {
             $row = $db->GetRow('select paID, paIsInUse from PermissionAccess where paID = ?', array($paID));
-            if ($row['paID']) {
+            if ($row && $row['paID']) {
                 $obj = Core::make($class);
                 $obj->setPropertiesFromArray($row);
             }
@@ -316,12 +327,12 @@ class Access extends Object
             $obj->paID = $paID;
             $obj->paIsInUse = true;
         }
-        if (is_object($obj)) {
+        if (isset($obj)) {
             $obj->setPermissionKey($pk);
         }
 
         $item->set($obj);
+
         return $obj;
     }
-
 }
