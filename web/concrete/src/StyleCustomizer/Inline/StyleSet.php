@@ -1,16 +1,17 @@
 <?php
+
 namespace Concrete\Core\StyleCustomizer\Inline;
+
 use Concrete\Core\Backup\ContentExporter;
 use Concrete\Core\Backup\ContentImporter;
 use Database;
-use Core;
+
 /**
  * @Entity
  * @Table(name="StyleCustomizerInlineStyleSets")
  */
 class StyleSet
 {
-
     /**
      * @Id @Column(type="integer")
      * @GeneratedValue
@@ -128,7 +129,6 @@ class StyleSet
      * @Column(type="string")
      */
     protected $marginRight;
-
 
     /**
      * @Column(type="string")
@@ -404,7 +404,6 @@ class StyleSet
         return $this->rotate;
     }
 
-
     public function getID()
     {
         return $this->issID;
@@ -557,18 +556,21 @@ class StyleSet
     {
         if ($this->backgroundImageFileID) {
             $f = \File::getByID($this->backgroundImageFileID);
+
             return $f;
         }
     }
 
     /**
      * @param $issID
+     *
      * @return \Concrete\Core\Page\Style\Set
      */
     public static function getByID($issID)
     {
         $db = Database::get();
         $em = $db->getEntityManager();
+
         return $em->find('\Concrete\Core\StyleCustomizer\Inline\StyleSet', $issID);
     }
 
@@ -580,9 +582,9 @@ class StyleSet
         $em->flush();
     }
 
-    public function import(\SimpleXMLElement $node)
+    public static function import(\SimpleXMLElement $node)
     {
-        $o = new self;
+        $o = new self();
         $o->setBackgroundColor((string) $node->backgroundColor);
         $filename = (string) $node['backgroundImage'];
         if ($filename) {
@@ -617,9 +619,9 @@ class StyleSet
         $o->setBoxShadowColor((string) $node->boxShadowColor);
         $o->setCustomClass((string) $node->customClass);
         $o->save();
+
         return $o;
     }
-
 
     public function export(\SimpleXMLElement $node)
     {
