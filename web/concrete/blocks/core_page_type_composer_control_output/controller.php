@@ -1,17 +1,16 @@
-<?
+<?php
+
 namespace Concrete\Block\CorePageTypeComposerControlOutput;
 
-use Loader;
-use \Concrete\Core\Block\BlockController;
-use \Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFormLayoutSetControl;
-use \Concrete\Core\Page\Type\Composer\OutputControl as PageTypeComposerOutputControl;
-use \Concrete\Core\Backup\ContentImporter;
-use \Concrete\Core\Backup\ContentExporter;
+use Concrete\Core\Block\BlockController;
+use Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFormLayoutSetControl;
+use Concrete\Core\Page\Type\Composer\OutputControl as PageTypeComposerOutputControl;
+use Concrete\Core\Backup\ContentImporter;
+use Concrete\Core\Backup\ContentExporter;
 use PageTemplate;
 
 class Controller extends BlockController
 {
-
     protected $btCacheBlockRecord = true;
     protected $btTable = 'btCorePageTypeComposerControlOutput';
     protected $btIsInternal = true;
@@ -29,6 +28,7 @@ class Controller extends BlockController
     public function getComposerOutputControlObject()
     {
         $outputControl = PageTypeComposerOutputControl::getByID($this->ptComposerOutputControlID);
+
         return $outputControl;
     }
 
@@ -48,17 +48,13 @@ class Controller extends BlockController
     public function getImportData($blockNode, $page)
     {
         $args = array();
-        $formLayoutSetControlID = ContentImporter::getPageTypeComposerFormLayoutSetControlFromTemporaryID((string)$blockNode->control['output-control-id']);
+        $formLayoutSetControlID = ContentImporter::getPageTypeComposerFormLayoutSetControlFromTemporaryID((string) $blockNode->control['output-control-id']);
         $formLayoutSetControl = PageTypeComposerFormLayoutSetControl::getByID($formLayoutSetControlID);
-        $b = $this->getBlockObject();
         $pt = PageTemplate::getByID($page->getPageTemplateID());
         $outputControl = PageTypeComposerOutputControl::getByPageTypeComposerFormLayoutSetControl($pt,
             $formLayoutSetControl);
         $args['ptComposerOutputControlID'] = $outputControl->getPageTypeComposerOutputControlID();
+
         return $args;
     }
-
 }
-
-
-
