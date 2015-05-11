@@ -177,6 +177,8 @@ class Access extends Object
         if ($accessType == 0) {
             $accessType = '';
         } else {
+            $connection = \Database::connection();
+            $accessType = $connection->quote($accessType, \PDO::PARAM_INT);
             $accessType = ' and accessType = ' . $accessType;
         }
         return $peIDs . ' ' . $accessType . ' order by accessType desc'; // we order desc so that excludes come last (-1)
