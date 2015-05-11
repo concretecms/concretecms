@@ -818,16 +818,15 @@ class Version
             $type = ThumbnailTypeVersion::getByHandle($type);
         }
         $fsl = $this->getFile()->getFileStorageLocationObject();
-        if ($fsl) {
+        if ($fsl && $type) {
             $configuration = $fsl->getConfigurationObject();
             $fss = $fsl->getFileSystemObject();
             $path = $type->getFilePath($this);
             if ($fss->has($path)) {
                 return $configuration->getPublicURLToFile($path);
-            } else {
-                return $this->getURL();
             }
         }
+        return $this->getURL();
     }
 
     /**
