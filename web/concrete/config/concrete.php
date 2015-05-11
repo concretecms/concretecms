@@ -492,7 +492,14 @@ return array(
          *
          * @var bool
          */
-        'toolbar_large_font' => false
+        'toolbar_large_font' => false,
+
+        /**
+         * Show help system
+         *
+         * @var bool
+         */
+        'display_help_system' => true
     ),
 
     /**

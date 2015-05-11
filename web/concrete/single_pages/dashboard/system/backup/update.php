@@ -87,7 +87,7 @@ if ($canUpgrade) { ?>
                     'version': '<?=$update->getVersion()?>'
                 },
                 complete: function() {
-                    $('.ccm-dashboard-update-apply button').prop('disabled', false).text('<?=t('Install Update')?>');
+                    $('.ccm-dashboard-update-apply button').prop('disabled', false).text(<?=json_encode(t('Install Update'))?>);
                 },
                 url: '<?=$view->action('get_update_diagnostic_information')?>',
                 success: function(r) {
@@ -119,7 +119,7 @@ if ($canUpgrade) { ?>
                             $wrapper.append('<div class="media"><div class="pull-left"><i class="' + className + '"></i></div><div class="media-body ' + textClassName + '">' + notice.status + '</div></div>');
                         });
                     } else {
-                        $wrapper.append('<?=t('No upgrade notices found.')?>');
+                        $wrapper.append(<?=json_encode(t('No upgrade notices found.'))?>);
                     }
                     var $statusIcon = $('.ccm-dashboard-update-details i'),
                         $statusText = $('.ccm-dashboard-update-details-testing-text');
@@ -146,7 +146,7 @@ if ($canUpgrade) { ?>
                         $statusText.removeClass().addClass(textClassName).text(r.status.status);
                     } else {
                         $statusIcon.removeClass().addClass('fa fa-arrow-circle-right');
-                        $statusText.removeClass().addClass(textClassName).text('<?=t('Update Ready')?>');
+                        $statusText.removeClass().addClass(textClassName).text(<?=json_encode(t('Update Ready'))?>);
                     }
                     $('[data-addon]').each(function() {
                         var $addon = $(this);
@@ -182,7 +182,7 @@ if ($canUpgrade) { ?>
                         if (item) {
                             $addon.find('.ccm-dashboard-update-detail-status-text').addClass(textClassName).html(item.status);
                         } else {
-                            $addon.find('.ccm-dashboard-update-detail-status-text').html('<?=t('No information about this add-on available.')?>');
+                            $addon.find('.ccm-dashboard-update-detail-status-text').html(<?=json_encode(t('No information about this add-on available.'))?>);
                         }
                     });
                 }
@@ -218,7 +218,7 @@ if ($canUpgrade) { ?>
 
             </form>
             <script>
-                $('header.ccm-dashboard-page-header').children().text('<?= t('Currently Running %s', config::get('concrete.version')) ?>');
+                $('header.ccm-dashboard-page-header').children().text(<?=json_encode(t('Currently Running %s', config::get('concrete.version'))) ?>);
             </script>
 
         <?

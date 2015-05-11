@@ -7,12 +7,17 @@ use Concrete\Core\Application\Service\UserInterface\Help\MessageInterface;
 use Concrete\Core\Application\Service\UserInterface\Help\StandardManager;
 use User;
 use Core;
+use Config;
 
 class Help
 {
 
     public function display()
     {
+        if(!Config::get('concrete.accessibility.display_help_system')) {
+            return false;
+        }
+
         $args = func_get_args();
         $manager = null;
         $identifier = null;
@@ -39,6 +44,10 @@ class Help
 
     public function displayHelpDialogLauncher()
     {
+        if(!Config::get('concrete.accessibility.display_help_system')) {
+            return false;
+        }
+
         $html =<<<EOT
         <div class="ccm-notification-help-launcher">
             <a href="#" data-help-launch-dialog="main"><i class="fa fa-question-circle"></i></a>
