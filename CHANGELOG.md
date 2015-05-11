@@ -4,6 +4,8 @@
 
 * Add config setting to enable / disable help system (thanks akodde)
 * Redirects with trailing URL slashes to non-trailing (or vice versa) now use the 301 code instead of 302.
+* Code cleanup and bug fixes to form helper class (thanks mlocati)
+* Miscellaneous code cleanup and notice error reduction (thanks mlocati)
 
 ## Bug Fixes
 
