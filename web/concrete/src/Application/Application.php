@@ -290,7 +290,7 @@ class Application extends Container
         $url = Url::createFromUrl($request->getUri(), Config::get('concrete.seo.trailing_slash'));
         if ($request->getPathInfo() != '/') {
             if (((string) $url) != $request->getUri()) {
-                $response = new RedirectResponse((string) $url);
+                $response = new RedirectResponse((string) $url, 301);
                 $response->setRequest($request);
                 return $response;
             }
