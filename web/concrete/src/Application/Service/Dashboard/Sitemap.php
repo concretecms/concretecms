@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Application\Service\Dashboard;
 
 use Config;
@@ -12,8 +13,6 @@ use PermissionKey;
 
 class Sitemap
 {
-
-
     /**
      * @var bool
      */
@@ -43,6 +42,7 @@ class Sitemap
         if (!isset($this->includeSystemPages)) {
             $this->includeSystemPages = Cookie::get('includeSystemPages');
         }
+
         return $this->includeSystemPages;
     }
 
@@ -65,13 +65,15 @@ class Sitemap
 
     /**
      * @param int $cID
+     *
      * @return array
      */
     public function getSubNodes($cID)
     {
         $pl = new PageList();
-        $pl->setPermissionsChecker(function($page) {
+        $pl->setPermissionsChecker(function ($page) {
             $cp = new \Permissions($page);
+
             return $cp->canViewPageInSitemap();
         });
         $pl->includeAliases();
@@ -101,7 +103,7 @@ class Sitemap
         }
         if (is_object($pagination) && $pagination->getNbPages() > 1) {
             if ($this->displayNodePagination && isset($pagination)) {
-                $n = new stdClass;
+                $n = new stdClass();
                 $n->icon = false;
                 $n->addClass = 'ccm-sitemap-explore';
                 $n->noLink = true;
@@ -110,24 +112,26 @@ class Sitemap
                 $n->title = $html;
                 $nodes[] = $n;
             } else {
-                $n = new stdClass;
-                $n->icon =false;
+                $n = new stdClass();
+                $n->icon = false;
                 $n->addClass = 'ccm-sitemap-explore';
                 $n->noLink = true;
                 $n->active = false;
                 $n->focus = false;
                 $n->unselectable = true;
                 $n->title = ' ' . t('%s more to display. <strong>View all &gt;</strong>', $total - Config::get('concrete.limits.sitemap_pages'));
-                $n->href = \URL::to('/dashboard/sitemap/explore/', $cID);
+                $n->href = (string) \URL::to('/dashboard/sitemap/explore/', $cID);
                 $nodes[] = $n;
             }
         }
+
         return $nodes;
     }
 
     /**
      * @param \Concrete\Core\Page\Page|int $cItem
      * @param bool $includeChildren
+     *
      * @return stdClass
      */
     public function getNode($cItem, $includeChildren = true)
@@ -182,7 +186,7 @@ class Sitemap
                 if ($cID == 1) {
                     $cIconClass = 'fa fa-home';
                 } elseif ($numSubpages > 0) {
-                    $cIconClass= 'fa fa-folder-o';
+                    $cIconClass = 'fa fa-folder-o';
                 } else {
                     $cIconClass = 'fa fa-file-o';
                 }
@@ -200,7 +204,6 @@ class Sitemap
                 $cIconClass = 'fa fa-sign-out';
                 $cAlias = 'LINK';
             }
-
         }
 
         /*
@@ -212,7 +215,7 @@ class Sitemap
 
         */
 
-        $node = new stdClass;
+        $node = new stdClass();
         $node->title = $cvName;
         $node->link = $c->getCollectionLink();
         if ($numSubpages > 0) {
@@ -256,7 +259,7 @@ class Sitemap
     public function canRead()
     {
         $tp = new TaskPermission();
+
         return $tp->canAccessSitemap();
     }
-
 }
