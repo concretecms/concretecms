@@ -10,7 +10,6 @@ use Concrete\Core\User\PrivateMessage\Mailbox as UserPrivateMessageMailbox;
 use Imagine\Image\ImageInterface;
 use Concrete\Flysystem\AdapterInterface;
 use Concrete\Core\Mail\Importer\MailImporter;
-use Loader;
 use View;
 use Config;
 use Events;
@@ -21,6 +20,7 @@ use Group;
 use Hautelook\Phpass\PasswordHash;
 use Session;
 use Core;
+use Database;
 
 class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterface
 {
@@ -125,7 +125,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
      */
     public static function getByValidationHash($uHash, $unredeemedHashesOnly = true)
     {
-        $db = Loader::db();
+        $db = Database::get();
         if ($unredeemedHashesOnly) {
             $uID = $db->GetOne("select uID from UserValidationHashes where uHash = ? and uDateRedeemed = 0", array($uHash));
         } else {
@@ -143,7 +143,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function getUserBadges()
     {
-        $db = Loader::db();
+        $db = Database::get();
         $groups = array();
         $r = $db->Execute('select g.gID from Groups g inner join UserGroups ug on g.gID = ug.gID where g.gIsBadge = 1 and ug.uID = ? order by ugEntered desc', array($this->getUserID()));
         while ($row = $r->FetchRow()) {
@@ -161,7 +161,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
      */
     private static function get($where, $var)
     {
-        $db = Loader::db();
+        $db = Database::get();
         $q = "select Users.uID, Users.uLastLogin, Users.uLastIP, Users.uIsValidated, Users.uPreviousLogin, Users.uIsFullRecord, Users.uNumLogins, Users.uDateAdded, Users.uIsActive, Users.uDefaultLanguage, Users.uLastOnline, Users.uHasAvatar, Users.uName, Users.uEmail, Users.uPassword, Users.uTimezone, Users.uLastPasswordChange from Users " . $where;
         $r = $db->query($q, array($var));
         if ($r && $r->numRows() > 0) {
@@ -189,8 +189,8 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
             return false;
         }
 
-        $db = Loader::db();
-        $dh = Loader::helper('date');
+        $db = Database::get();
+        $dh = Core::make('helper/date');
         $uDateAdded = $dh->getOverridableNow();
         $hasher = new PasswordHash(Config::get('concrete.user.password.hash_cost_log2'), Config::get('concrete.user.password.hash_portable'));
 
@@ -247,8 +247,8 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
      */
     public static function addSuperUser($uPasswordEncrypted, $uEmail)
     {
-        $db = Loader::db();
-        $dh = Loader::helper('date');
+        $db = Database::get();
+        $dh = Core::make('helper/date');
         $uDateAdded = $dh->getOverridableNow();
 
         $v = array(USER_SUPER_ID, USER_SUPER, $uEmail, $uPasswordEncrypted, 1, $uDateAdded, $uDateAdded);
@@ -279,7 +279,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
             return false;
         }
 
-        $db = Loader::db();
+        $db = Database::get();
 
         $r = $db->Execute('select avID, akID from UserAttributeValues where uID = ?', array($this->uID));
         while ($row = $r->FetchRow()) {
@@ -351,7 +351,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
             )
         );
 
-        $db = Loader::db();
+        $db = Database::get();
         $db->query("update Users set uHasAvatar = 1 where uID = ?", array($this->getUserID()));
     }
 
@@ -368,7 +368,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         if (Limit::isOverLimit($this->getUserID())) {
             return Limit::getErrorObject();
         }
-        $antispam = Loader::helper('validation/antispam');
+        $antispam = Core::make('helper/validation/antispam');
         $messageText = t('Subject: %s', $subject);
         $messageText .= "\n";
         $messageText .= t('Message: %s', $text);
@@ -379,8 +379,8 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         }
 
         $subject = ($subject == '') ? t('(No Subject)') : $subject;
-        $db = Loader::db();
-        $dt = Loader::helper('date');
+        $db = Database::get();
+        $dt = Core::make('helper/date');
         $v = array($this->getUserID(), $dt->getOverridableNow(), $subject, $text, $recipient->getUserID());
         $db->Execute('insert into UserPrivateMessages (uAuthorID, msgDateCreated, msgSubject, msgBody, uToID) values (?, ?, ?, ?, ?)', $v);
 
@@ -401,7 +401,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 
         // send the email notification
         if ($recipient->getAttribute('profile_private_messages_notification_enabled')) {
-            $mh = Loader::helper('mail');
+            $mh = Core::make('helper/mail');
             $mh->addParameter('msgSubject', $subject);
             $mh->addParameter('msgBody', $text);
             $mh->addParameter('msgAuthor', $this->getUserName());
@@ -460,7 +460,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function clearAttribute($ak)
     {
-        $db = Loader::db();
+        $db = Database::get();
         if (!is_object($ak)) {
             $ak = UserAttributeKey::getByHandle($ak);
         }
@@ -480,7 +480,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
             $this->getUserID(),
             'getSearchIndexValue'
         );
-        $db = Loader::db();
+        $db = Database::get();
 
         $db->Execute('delete from UserSearchIndexAttributes where uID = ?', array($this->getUserID()));
         $searchableAttributes = array('uID' => $this->getUserID());
@@ -537,7 +537,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function getAttributeValueObject($ak, $createIfNotFound = false)
     {
-        $db = Loader::db();
+        $db = Database::get();
         $av = false;
         if (!is_object($ak)) {
             $ak = UserAttributeKey::getByHandle($ak);
@@ -577,7 +577,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function update($data)
     {
-        $db = Loader::db();
+        $db = Database::get();
         if ($this->uID) {
             $ux = $this->getUserObject();
             $uName = $this->getUserName();
@@ -605,7 +605,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 
             if ($data['uPassword'] != null) {
                 if ($data['uPassword'] == $data['uPasswordConfirm']) {
-                    $dh = Loader::helper('date');
+                    $dh = Core::make('helper/date');
                     $dateTime = $dh->getOverridableNow();
                     $v = array($uName, $uEmail, $this->getUserObject()->getUserPasswordHasher()->HashPassword($data['uPassword']), $uHasAvatar, $uTimezone, $uDefaultLanguage, $dateTime, $this->uID);
                     $r = $db->prepare("update Users set uName = ?, uEmail = ?, uPassword = ?, uHasAvatar = ?, uTimezone = ?, uDefaultLanguage = ?, uLastPasswordChange = ? where uID = ?");
@@ -654,7 +654,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function updateGroups($groupArray)
     {
-        $db = Loader::db();
+        $db = Database::get();
         $q = "select gID from UserGroups where uID = '{$this->uID}'";
         $r = $db->query($q);
         if ($r) {
@@ -664,7 +664,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
             }
         }
 
-        $dh = Loader::helper('date');
+        $dh = Core::make('helper/date');
 
         $datetime = $dh->getOverridableNow();
         if (is_array($groupArray)) {
@@ -743,12 +743,12 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function setupValidation()
     {
-        $db = Loader::db();
+        $db = Database::get();
         $hash = $db->GetOne("select uHash from UserValidationHashes where uID = ? order by uDateGenerated desc", array($this->uID));
         if ($hash) {
             return $hash;
         } else {
-            $h = Loader::helper('validation/identifier');
+            $h = Core::make('helper/validation/identifier');
             $hash = $h->generate('UserValidationHashes', 'uHash');
             $db->Execute("insert into UserValidationHashes (uID, uHash, uDateGenerated) values (?, ?, ?)", array($this->uID, $hash, time()));
 
@@ -761,7 +761,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function markValidated()
     {
-        $db = Loader::db();
+        $db = Database::get();
         $v = array($this->uID);
         $db->query("update Users set uIsValidated = 1, uIsFullRecord = 1 where uID = ?", $v);
         $db->query("update UserValidationHashes set uDateRedeemed = " . time() . " where uID = ?", $v);
@@ -779,9 +779,9 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function changePassword($newPassword)
     {
-        $db = Loader::db();
+        $db = Database::get();
         if ($this->uID) {
-            $dh = Loader::helper('date');
+            $dh = Core::make('helper/date');
             $dateTime = $dh->getOverridableNow();
             $v = array(
                 $this->getUserObject()->getUserPasswordHasher()->HashPassword($newPassword),
@@ -811,7 +811,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function activate()
     {
-        $db = Loader::db();
+        $db = Database::get();
         $q = "update Users set uIsActive = 1 where uID = '{$this->uID}'";
         $r = $db->query($q);
         $ue = new \Concrete\Core\User\Event\UserInfo($this);
@@ -822,7 +822,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function deactivate()
     {
-        $db = Loader::db();
+        $db = Database::get();
         $q = "update Users set uIsActive = 0 where uID = '{$this->uID}'";
         $r = $db->query($q);
         $ue = new \Concrete\Core\User\Event\UserInfo($this);
@@ -835,7 +835,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     public function resetUserPassword()
     {
         // resets user's password, and returns the value of the reset password
-        $db = Loader::db();
+        $db = Database::get();
         if ($this->uID > 0) {
             $newPassword = '';
             $chars = "abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ123456789";
