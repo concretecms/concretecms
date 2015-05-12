@@ -14,6 +14,7 @@ class RedactorEditor implements EditorInterface
     protected $token;
     protected $allowFileManager;
     protected $allowSitemap;
+    protected $pluginManager;
 
     public function __construct()
     {
@@ -109,6 +110,11 @@ EOL;
     public function getPluginManager()
     {
         return $this->pluginManager;
+    }
+
+    public function setPluginManager(PluginManager $pluginManager)
+    {
+        $this->pluginManager = $pluginManager;
     }
 
     public function saveOptionsForm(Request $request)
