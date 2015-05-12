@@ -1,15 +1,12 @@
 <?php
+
 namespace Concrete\Core\Database\Connection;
 
-use Concrete\Core\Cache\Adapter\DoctrineCacheDriver;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Tools\Setup;
-use Config;
 use ORM;
 
 class Connection extends \Doctrine\DBAL\Connection
 {
-
     /** @var EntityManager */
     protected $entityManager;
 
@@ -21,11 +18,13 @@ class Connection extends \Doctrine\DBAL\Connection
         if (!$this->entityManager) {
             $this->entityManager = $this->createEntityManager();
         }
+
         return $this->entityManager;
     }
 
     /**
      * @return EntityManager
+     *
      * @throws \Doctrine\ORM\ORMException
      */
     public function createEntityManager()
@@ -36,7 +35,7 @@ class Connection extends \Doctrine\DBAL\Connection
     /**
      * Returns true if a table exists – is NOT case sensitive.
      *
-     * @return boolean
+     * @return bool
      */
     public function tableExists($tableName)
     {
@@ -245,7 +244,6 @@ class Connection extends \Doctrine\DBAL\Connection
         $schemaColumns = $sm->listTableColumns($table);
 
         return $schemaColumns;
-
     }
 
     /**
@@ -307,5 +305,4 @@ class Connection extends \Doctrine\DBAL\Connection
 
         return true;
     }
-
 }
