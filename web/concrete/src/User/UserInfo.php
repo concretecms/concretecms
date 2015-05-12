@@ -24,32 +24,52 @@ use Core;
 
 class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterface
 {
+    /**
+     * @return string
+     */
     public function __toString()
     {
         return 'UserInfo: ' . $this->getUserID();
     }
 
+    /**
+     * @return int
+     */
     public function getPermissionObjectIdentifier()
     {
         return $this->uID;
     }
 
+    /**
+     * @return string
+     */
     public function getPermissionResponseClassName()
     {
         return '\\Concrete\\Core\\Permission\\Response\\UserInfoResponse';
     }
 
+    /**
+     * @return string|false
+     */
     public function getPermissionAssignmentClassName()
     {
         return false;
     }
+
+    /**
+     * @return string|false
+     */
     public function getPermissionObjectKeyCategoryHandle()
     {
         return false;
     }
 
-    /* magic method for user attributes. This is db expensive but pretty damn cool */
-    // so if the attrib handle is "my_attribute", then get the attribute with $ui->getUserMyAttribute(), or "uFirstName" become $ui->getUserUfirstname();
+    /**
+     * Magic method for user attributes. This is db expensive but pretty damn cool
+     * so if the attrib handle is "my_attribute", then get the attribute with $ui->getUserMyAttribute(), or "uFirstName" become $ui->getUserUfirstname();
+     * 
+     * @return mixed|null
+     */
     public function __call($nm, $a)
     {
         if (substr($nm, 0, 7) == 'getUser') {
@@ -62,11 +82,11 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
-     * returns the UserInfo object for a give user's uID.
+     * Returns the UserInfo object for a give user's uID.
      *
      * @param int $uID
      *
-     * @return UserInfo
+     * @return UserInfo|null
      */
     public static function getByID($uID)
     {
@@ -74,11 +94,11 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
-     * returns the UserInfo object for a give user's username.
+     * Returns the UserInfo object for a give user's username.
      *
      * @param string $uName
      *
-     * @return UserInfo
+     * @return UserInfo|null
      */
     public static function getByUserName($uName)
     {
@@ -86,11 +106,11 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
-     * returns the UserInfo object for a give user's email address.
+     * Returns the UserInfo object for a give user's email address.
      *
      * @param string $uEmail
      *
-     * @return UserInfo
+     * @return UserInfo|null
      */
     public static function getByEmail($uEmail)
     {
@@ -101,7 +121,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
      * @param string $uHash
      * @param bool $unredeemedHashesOnly
      *
-     * @return UserInfo
+     * @return UserInfo|null
      */
     public static function getByValidationHash($uHash, $unredeemedHashesOnly = true)
     {
@@ -118,6 +138,9 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         }
     }
 
+    /**
+     * @return Group[]
+     */
     public function getUserBadges()
     {
         $db = Loader::db();
@@ -130,6 +153,12 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         return $groups;
     }
 
+    /**
+     * @param string $where
+     * @param scalar $var
+     *
+     * @return UserInfo|null
+     */
     private function get($where, $var)
     {
         $db = Loader::db();
@@ -150,7 +179,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     /**
      * @param array $data
      *
-     * @return UserInfo
+     * @return UserInfo|false|null
      */
     public static function add($data)
     {
@@ -211,6 +240,11 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         }
     }
 
+    /**
+     * @param string $uPasswordEncrypted
+     * @param string $uEmail
+     * @return UserInfo|null
+     */
     public function addSuperUser($uPasswordEncrypted, $uEmail)
     {
         $db = Loader::db();
@@ -278,16 +312,27 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         $this->gMemberType = $type;
     }
 
+    /**
+     * @return string|null
+     */
     public function getGroupMemberType()
     {
         return $this->gMemberType;
     }
 
+    /**
+     * @param \Concrete\Core\User\PrivateMessage\PrivateMessage $msg
+     *
+     * @return bool
+     */
     public function canReadPrivateMessage($msg)
     {
         return $msg->getMessageUserID() == $this->getUserID();
     }
 
+    /**
+     * @param ImageInterface $image
+     */
     public function updateUserAvatar(ImageInterface $image)
     {
         $fsl = StorageLocation::getDefault()->getFileSystemObject();
@@ -310,6 +355,14 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         $db->query("update Users set uHasAvatar = 1 where uID = ?", array($this->getUserID()));
     }
 
+    /**
+     * @param UserInfo $recipient
+     * @param string $subject
+     * @param string $text
+     * @param \Concrete\Core\User\PrivateMessage\PrivateMessage $inReplyTo
+     *
+     * @return \Concrete\Core\Error\Error|false|null
+     */
     public function sendPrivateMessage($recipient, $subject, $text, $inReplyTo = false)
     {
         if (Limit::isOverLimit($this->getUserID())) {
@@ -375,7 +428,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
-     * gets the user object of the current UserInfo object ($this).
+     * Gets the User object of the current UserInfo object ($this).
      *
      * @return User
      */
@@ -389,6 +442,9 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 
     /**
      * Sets the attribute of a user info object to the specified value, and saves it in the database.
+     *     
+     * @param UserAttributeKey|string $ak
+     * @param mixed $value
      */
     public function setAttribute($ak, $value)
     {
@@ -399,6 +455,9 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         $this->reindex();
     }
 
+    /**
+     * @param UserAttributeKey|string $ak
+     */
     public function clearAttribute($ak)
     {
         $db = Loader::db();
@@ -432,6 +491,11 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 
     /**
      * Gets the value of the attribute for the user.
+     *
+     * @param UserAttributeKey|string $ak
+     * @param string|false $displayMode
+     *
+     * @return mixed|null
      */
     public function getAttribute($ak, $displayMode = false)
     {
@@ -453,6 +517,9 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         }
     }
 
+    /**
+     * @param UserAttributeKey|string $ak
+     */
     public function getAttributeField($ak)
     {
         if (!is_object($ak)) {
@@ -462,6 +529,12 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         $ak->render('form', $value);
     }
 
+    /**
+     * @param UserAttributeKey|string $ak
+     * @param bool $createIfNotFound
+     *
+     * @return \Concrete\Core\Attribute\Value\UserValue|false
+     */
     public function getAttributeValueObject($ak, $createIfNotFound = false)
     {
         $db = Loader::db();
@@ -494,6 +567,11 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         return $av;
     }
 
+    /**
+     * @param array $data
+     *
+     * @return bool|null
+     */
     public function update($data)
     {
         $db = Loader::db();
@@ -568,6 +646,9 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         }
     }
 
+    /**
+     * @param int[] $groupArray
+     */
     public function updateGroups($groupArray)
     {
         $db = Loader::db();
@@ -624,6 +705,9 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         }
     }
 
+    /**
+     * @param UserAttributeKey[] $attributes
+     */
     public function saveUserAttributesForm($attributes)
     {
         foreach ($attributes as $uak) {
@@ -651,6 +735,9 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         return $ui;
     }
 
+    /**
+     * @return string
+     */
     public function setupValidation()
     {
         $db = Loader::db();
@@ -666,6 +753,9 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         }
     }
 
+    /**
+     * @return true
+     */
     public function markValidated()
     {
         $db = Loader::db();
@@ -679,6 +769,11 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         return true;
     }
 
+    /**
+     * @param string $newPassword
+     *
+     * @return boolean
+     */
     public function changePassword($newPassword)
     {
         $db = Loader::db();
@@ -709,6 +804,8 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         }
     }
 
+    /**
+     */
     public function activate()
     {
         $db = Loader::db();
@@ -718,6 +815,8 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         Events::dispatch('on_user_activate', $ue);
     }
 
+    /**
+     */
     public function deactivate()
     {
         $db = Loader::db();
@@ -727,6 +826,9 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         Events::dispatch('on_user_deactivate', $ue);
     }
 
+    /**
+     * @return string
+     */
     public function resetUserPassword()
     {
         // resets user's password, and returns the value of the reset password
@@ -743,16 +845,25 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         }
     }
 
+    /**
+     * @return bool
+     */
     public function hasAvatar()
     {
         return $this->uHasAvatar;
     }
 
+    /**
+     * @return int
+     */
     public function getLastLogin()
     {
         return $this->uLastLogin;
     }
 
+    /**
+     * @return string|null
+     */
     public function getLastIPAddress()
     {
         $ip = new \Concrete\Core\Utility\IPAddress($this->uLastIP, true);
@@ -760,66 +871,99 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         return $ip->getIp($ip::FORMAT_IP_STRING);
     }
 
+    /**
+     * @return int
+     */
     public function getPreviousLogin()
     {
         return $this->uPreviousLogin;
     }
 
+    /**
+     * @return bool
+     */
     public function isActive()
     {
         return $this->uIsActive;
     }
 
+    /**
+     * @return bool
+     */
     public function isValidated()
     {
         return $this->uIsValidated;
     }
 
+    /**
+     * @return bool
+     */
     public function isFullRecord()
     {
         return $this->uIsFullRecord;
     }
 
+    /**
+     * @return int
+     */
     public function getNumLogins()
     {
         return $this->uNumLogins;
     }
 
+    /**
+     * @return int
+     */
     public function getUserID()
     {
         return $this->uID;
     }
 
+    /**
+     * @return string
+     */
     public function getUserName()
     {
         return $this->uName;
     }
 
+    /**
+     * @return string
+     */
     public function getUserDisplayName()
     {
         return $this->getUserName();
     }
 
+    /**
+     * @return string
+     */
     public function getUserPassword()
     {
         return $this->uPassword;
     }
 
+    /**
+     * @return string
+     */
     public function getUserEmail()
     {
         return $this->uEmail;
     }
 
     /**
-     * returns the user's timezone.
+     * Returns the user's timezone.
      *
-     * @return string timezone
+     * @return string
      */
     public function getUserTimezone()
     {
         return $this->uTimezone;
     }
 
+    /**
+     * @return string
+     */
     public function getUserDefaultLanguage()
     {
         return $this->uDefaultLanguage;
