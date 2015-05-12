@@ -94,6 +94,10 @@ class Controller extends BlockController
 
     public function edit()
     {
+        $this->requireAsset('core/file-manager');
+        $this->requireAsset('core/sitemap');
+        $this->requireAsset('redactor');
+
         $this->requireAsset('css', 'font-awesome');
         $classes = $this->getIconClasses();
 
