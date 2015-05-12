@@ -16,10 +16,16 @@ class Controller extends AttributeTypeController  {
 		return $list;
 	}
 
-	public function filterByAttribute(AttributedItemList $list, $boolean)
+	public function filterByAttribute(AttributedItemList $list, $boolean, $comparison = '=')
 	{
 		$qb = $list->getQueryObject();
 		$column = sprintf('ak_%s', $this->attributeKey->getAttributeKeyHandle());
+		switch ($comparison) {
+		    case '<>':
+		    case '!=':
+		        $boolean = $boolean ? false : true;
+		        break;
+		}
 		if ($boolean) {
 			$qb->andWhere("{$column} = 1");
 		} else {
