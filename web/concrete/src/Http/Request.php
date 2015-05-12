@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Http;
 
-use Loader;
+use Core;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
 /**
@@ -135,7 +135,7 @@ class Request extends SymfonyRequest
      */
     public function matches($pattern)
     {
-        return Loader::helper('text')->match($pattern, $this->getPath());
+        return Core::make('helper/text')->match($pattern, $this->getPath());
     }
 
     /**
