@@ -176,6 +176,8 @@ class Category extends Object
         $db = Loader::db();
         if (is_object($pkg)) {
             $pkgID = $pkg->getPackageID();
+        } else {
+            $pkgID = null;
         }
         $db->Execute('insert into PermissionKeyCategories (pkCategoryHandle, pkgID) values (?, ?)', array($pkCategoryHandle, $pkgID));
         $id = $db->Insert_ID();
