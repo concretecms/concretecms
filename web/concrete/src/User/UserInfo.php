@@ -66,8 +66,8 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 
     /**
      * Magic method for user attributes. This is db expensive but pretty damn cool
-     * so if the attrib handle is "my_attribute", then get the attribute with $ui->getUserMyAttribute(), or "uFirstName" become $ui->getUserUfirstname();
-     * 
+     * so if the attrib handle is "my_attribute", then get the attribute with $ui->getUserMyAttribute(), or "uFirstName" become $ui->getUserUfirstname();.
+     *
      * @return mixed|null
      */
     public function __call($nm, $a)
@@ -243,6 +243,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     /**
      * @param string $uPasswordEncrypted
      * @param string $uEmail
+     *
      * @return UserInfo|null
      */
     public static function addSuperUser($uPasswordEncrypted, $uEmail)
@@ -443,7 +444,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 
     /**
      * Sets the attribute of a user info object to the specified value, and saves it in the database.
-     *     
+     *
      * @param UserAttributeKey|string $ak
      * @param mixed $value
      */
@@ -770,7 +771,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     /**
      * @param string $newPassword
      *
-     * @return boolean
+     * @return bool
      */
     public function changePassword($newPassword)
     {
