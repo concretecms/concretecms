@@ -75,7 +75,6 @@ class Category extends Object
 
     public function getPermissionKeyByHandle($pkHandle)
     {
-        $txt = Loader::helper('text');
         $className = core_class('\\Core\\Permission\\Key\\'
             . \Core::make("helper/text")->camelcase($this->pkCategoryHandle) . 'Key',
             $this->getPackageHandle()
@@ -87,7 +86,6 @@ class Category extends Object
 
     public function getPermissionKeyByID($pkID)
     {
-        $txt = Loader::helper('text');
         $className = core_class('\\Core\\Permission\\Key\\'
             . \Core::make("helper/text")->camelcase($this->pkCategoryHandle) . 'Key',
             $this->getPackageHandle()
