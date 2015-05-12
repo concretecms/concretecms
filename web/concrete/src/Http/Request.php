@@ -11,22 +11,19 @@ use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
  * @author     Andrew Embler <andrew@concrete5.org>
  * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
  * @license    http://www.concrete5.org/license/     MIT License
- *
  */
 
 /**
- * An object that represents a particular request to the Concrete-powered website. The request object then determines what is being requested, based on the path, and presents itself to the rest of the dispatcher (which loads the page, etc...)
+ * An object that represents a particular request to the Concrete-powered website. The request object then determines what is being requested, based on the path, and presents itself to the rest of the dispatcher (which loads the page, etc...).
  *
  * @package    Core
  * @author     Andrew Embler <andrew@concrete5.org>
  * @category   Concrete
  * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
  * @license    http://www.concrete5.org/license/     MIT License
- *
  */
 class Request extends SymfonyRequest
 {
-
     /**
      * @var bool
      */
@@ -48,6 +45,7 @@ class Request extends SymfonyRequest
         if (self::$instance === null) {
             self::$instance = static::createFromGlobals();
         }
+
         return self::$instance;
     }
 
@@ -55,7 +53,6 @@ class Request extends SymfonyRequest
     {
         self::$instance = $instance;
     }
-
 
     /**
      * @return \Concrete\Core\Page\Page
@@ -103,8 +100,10 @@ class Request extends SymfonyRequest
     }
 
     /**
-     * Determines whether a request matches a particular pattern
+     * Determines whether a request matches a particular pattern.
+     *
      * @param string
+     *
      * @return bool
      */
     public function matches($pattern)
@@ -113,22 +112,25 @@ class Request extends SymfonyRequest
     }
 
     /**
-     * Returns the full path for a request
+     * Returns the full path for a request.
+     *
      * @return string
      */
     public function getPath()
     {
         $pathInfo = rawurldecode($this->getPathInfo());
         $path = '/' . trim($pathInfo, '/');
+
         return ($path == '/') ? '' : $path;
     }
 
     /**
      * If no arguments are passed, returns the post array. If a key is passed, it returns the value as it exists in the post array.
-     * If a default value is provided and the key does not exist in the POST array, the default value is returned
+     * If a default value is provided and the key does not exist in the POST array, the default value is returned.
      *
      * @param string $key
      * @param mixed  $defaultValue
+     *
      * @return mixed $value
      */
     public static function post($key = null, $defaultValue = null)
@@ -139,12 +141,14 @@ class Request extends SymfonyRequest
         if (isset($_POST[$key])) {
             return (is_string($_POST[$key])) ? trim($_POST[$key]) : $_POST[$key];
         }
+
         return $defaultValue;
     }
 
     /**
      * @param null $key
      * @param null $default_value
+     *
      * @return mixed|null
      */
     public static function request($key = null, $default_value = null)
@@ -152,7 +156,7 @@ class Request extends SymfonyRequest
         if ($key == null) {
             return $_REQUEST;
         }
-        $req = Request::createFromGlobals();
+        $req = self::createFromGlobals();
         if ($req->query->has($key)) {
             return $req->query->get($key);
         } else {
@@ -171,5 +175,4 @@ class Request extends SymfonyRequest
     {
         return $_SERVER['REQUEST_METHOD'] == 'POST';
     }
-
 }
