@@ -129,10 +129,9 @@ class Controller extends AttributeTypeController  {
 	public function saveKey($data) {
 		$ak = $this->getAttributeKey();
 		$db = Loader::db();
-		$akCheckedByDefault = $data['akCheckedByDefault'];
-		
-		if ($data['akCheckedByDefault'] != 1) {
-			$akCheckedByDefault = 0;
+		$akCheckedByDefault = 0;
+		if (isset($data['akCheckedByDefault']) && $data['akCheckedByDefault']) {
+		    $akCheckedByDefault = 1;
 		}
 
 		$db->Replace('atBooleanSettings', array(
@@ -143,7 +142,7 @@ class Controller extends AttributeTypeController  {
 	
 	public function saveForm($data) {
 		$db = Loader::db();
-		$this->saveValue($data['value']);
+		$this->saveValue(isset($data['value']) ? $data['value'] : false);
 	}
 	
 	// if this gets run we assume we need it to be validated/checked
