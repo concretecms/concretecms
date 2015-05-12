@@ -132,7 +132,7 @@ class Request extends SymfonyRequest
      * @param mixed  $defaultValue
      * @return mixed $value
      */
-    public function post($key = null, $defaultValue = null)
+    public static function post($key = null, $defaultValue = null)
     {
         if ($key == null) {
             return $_POST;
@@ -148,7 +148,7 @@ class Request extends SymfonyRequest
      * @param null $default_value
      * @return mixed|null
      */
-    public function request($key = null, $default_value = null)
+    public static function request($key = null, $default_value = null)
     {
         if ($key == null) {
             return $_REQUEST;
@@ -168,7 +168,7 @@ class Request extends SymfonyRequest
     /**
      * @return bool
      */
-    public function isPost()
+    public static function isPost()
     {
         return $_SERVER['REQUEST_METHOD'] == 'POST';
     }
