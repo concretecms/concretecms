@@ -28,17 +28,29 @@ class Request extends SymfonyRequest
      * @var bool
      */
     protected $hasCustomRequestUser;
+
+    /**
+     * @var \Concrete\Core\User\UserInfo
+     */
     protected $customRequestUser;
+
+    /**
+     * @var string
+     */
     protected $customRequestDateTime;
 
+    /**
+     * @var SymfonyRequest
+     */
     protected static $instance;
+
     /**
      * @var \Concrete\Core\Page\Page
      */
     protected $c;
 
     /**
-     * @return Request
+     * @return SymfonyRequest
      */
     public static function getInstance()
     {
@@ -49,6 +61,9 @@ class Request extends SymfonyRequest
         return self::$instance;
     }
 
+    /**
+     * @param SymfonyRequest $instance
+     */
     public static function setInstance(SymfonyRequest $instance)
     {
         self::$instance = $instance;
@@ -70,11 +85,17 @@ class Request extends SymfonyRequest
         $this->c = $c;
     }
 
+    /**
+     * @return \Concrete\Core\User\UserInfo
+     */
     public function getCustomRequestUser()
     {
         return $this->customRequestUser;
     }
 
+    /**
+     * @param \Concrete\Core\User\UserInfo $ui
+     */
     public function setCustomRequestUser($ui)
     {
         $this->hasCustomRequestUser = true;
@@ -89,11 +110,17 @@ class Request extends SymfonyRequest
         return $this->hasCustomRequestUser;
     }
 
+    /**
+     * @return string
+     */
     public function getCustomRequestDateTime()
     {
         return $this->customRequestDateTime;
     }
 
+    /**
+     * @param string $date
+     */
     public function setCustomRequestDateTime($date)
     {
         $this->customRequestDateTime = $date;
@@ -102,7 +129,7 @@ class Request extends SymfonyRequest
     /**
      * Determines whether a request matches a particular pattern.
      *
-     * @param string
+     * @param string $pattern
      *
      * @return bool
      */
@@ -129,9 +156,9 @@ class Request extends SymfonyRequest
      * If a default value is provided and the key does not exist in the POST array, the default value is returned.
      *
      * @param string $key
-     * @param mixed  $defaultValue
+     * @param mixed $defaultValue
      *
-     * @return mixed $value
+     * @return mixed
      */
     public static function post($key = null, $defaultValue = null)
     {
@@ -146,12 +173,12 @@ class Request extends SymfonyRequest
     }
 
     /**
-     * @param null $key
-     * @param null $default_value
+     * @param string $key
+     * @param mixed $defaultValue
      *
-     * @return mixed|null
+     * @return mixed
      */
-    public static function request($key = null, $default_value = null)
+    public static function request($key = null, $defaultValue = null)
     {
         if ($key == null) {
             return $_REQUEST;
@@ -165,7 +192,7 @@ class Request extends SymfonyRequest
             }
         }
 
-        return $default_value;
+        return $defaultValue;
     }
 
     /**
