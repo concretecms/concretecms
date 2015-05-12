@@ -123,7 +123,7 @@ class Controller extends AbstractController
     {
         // the only post that matters is the one for this attribute's name space
         $req = ($this->requestArray == false) ? $_POST : $this->requestArray;
-        if (is_object($this->attributeKey) && is_array($req['akID'])) {
+        if (is_object($this->attributeKey) && isset($req['akID']) && is_array($req['akID'])) {
             $p = $req['akID'][$this->attributeKey->getAttributeKeyID()];
             if ($field) {
                 return $p[$field];
