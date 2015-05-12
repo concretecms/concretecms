@@ -176,7 +176,11 @@ class Connection extends \Doctrine\DBAL\Connection
             $keyCol = array($keyCol);
         }
         foreach ($keyCol as $key) {
-            $field = $fieldArray[$key];
+            if (isset($fieldArray[$key])) {
+                $field = $fieldArray[$key];
+            } else {
+                $field = null;
+            }
             $updateKeys[$key] = $field;
             if ($autoQuote) {
                 $field = $qb->expr()->literal($field);
