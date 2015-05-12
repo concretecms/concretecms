@@ -977,11 +977,6 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         return $this->uDateAdded;
     }
 
-    public function getUserStartDate()
-    {
-        return $this->upStartDate;
-    }
-
     /**
      * Gets the date a user was last active on the site.
      *
@@ -990,10 +985,5 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     public function getLastOnline()
     {
         return $this->uLastOnline;
-    }
-
-    public function getUserEndDate()
-    {
-        return $this->upEndDate;
     }
 }
