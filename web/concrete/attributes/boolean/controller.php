@@ -2,8 +2,9 @@
 
 namespace Concrete\Attribute\Boolean;
 
+use Core;
+use Database;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
-use Loader;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 
 class Controller extends AttributeTypeController
@@ -42,7 +43,7 @@ class Controller extends AttributeTypeController
 
     public function getValue()
     {
-        $db = Loader::db();
+        $db = Database::get();
         $value = $db->GetOne("select value from atBoolean where avID = ?", array($this->getAttributeValueID()));
 
         return $value;
@@ -80,7 +81,7 @@ class Controller extends AttributeTypeController
             return false;
         }
 
-        $db = Loader::db();
+        $db = Database::get();
         $row = $db->GetRow('select akCheckedByDefault from atBooleanSettings where akID = ?', array($ak->getAttributeKeyID()));
         $this->akCheckedByDefault = $row['akCheckedByDefault'];
         $this->set('akCheckedByDefault', $this->akCheckedByDefault);
@@ -102,7 +103,7 @@ class Controller extends AttributeTypeController
             }
         }
 
-        $cb = Loader::helper('form')->checkbox($this->field('value'), 1, $checked);
+        $cb = Core::make('helper/form')->checkbox($this->field('value'), 1, $checked);
         print $cb . ' <span>' . $this->attributeKey->getAttributeKeyDisplayName() .  '</span>';
     }
 
@@ -115,26 +116,26 @@ class Controller extends AttributeTypeController
 
     public function search()
     {
-        print '<div class="ccm-attribute ccm-attribute-boolean checkbox"><label>' . Loader::helper('form')->checkbox($this->field('value'), 1, $this->request('value') == 1) . ' ' . $this->attributeKey->getAttributeKeyDisplayName() . '</label></div>';
+        print '<div class="ccm-attribute ccm-attribute-boolean checkbox"><label>' . Core::make('helper/form')->checkbox($this->field('value'), 1, $this->request('value') == 1) . ' ' . $this->attributeKey->getAttributeKeyDisplayName() . '</label></div>';
     }
 
     public function type_form()
     {
-        $this->set('form', Loader::helper('form'));
+        $this->set('form', Core::make('helper/form'));
         $this->load();
     }
 
     // run when we call setAttribute(), instead of saving through the UI
     public function saveValue($value)
     {
-        $db = Loader::db();
+        $db = Database::get();
         $value = ($value == false || $value == '0') ? 0 : 1;
         $db->Replace('atBoolean', array('avID' => $this->getAttributeValueID(), 'value' => $value), 'avID', true);
     }
 
     public function deleteKey()
     {
-        $db = Loader::db();
+        $db = Database::get();
         $db->Execute('delete from atBooleanSettings where akID = ?', array($this->getAttributeKey()->getAttributeKeyID()));
 
         $arr = $this->attributeKey->getAttributeValueIDList();
@@ -146,14 +147,14 @@ class Controller extends AttributeTypeController
     public function duplicateKey($newAK)
     {
         $this->load();
-        $db = Loader::db();
+        $db = Database::get();
         $db->Execute('insert into atBooleanSettings (akID, akCheckedByDefault) values (?, ?)', array($newAK->getAttributeKeyID(), $this->akCheckedByDefault));
     }
 
     public function saveKey($data)
     {
         $ak = $this->getAttributeKey();
-        $db = Loader::db();
+        $db = Database::get();
         $akCheckedByDefault = 0;
         if (isset($data['akCheckedByDefault']) && $data['akCheckedByDefault']) {
             $akCheckedByDefault = 1;
@@ -178,7 +179,7 @@ class Controller extends AttributeTypeController
 
     public function deleteValue()
     {
-        $db = Loader::db();
+        $db = Database::get();
         $db->Execute('delete from atBoolean where avID = ?', array($this->getAttributeValueID()));
     }
 }
