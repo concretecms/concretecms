@@ -38,9 +38,9 @@ if ($canUpgrade) { ?>
             <div class="row">
                 <div class="col-md-4">
                     <ul class="list-group">
-                        <li class="list-group-item"><a href="#notes"><?=t('Release Notes')?></a></li>
-                        <li class="list-group-item"><span data-href="#addons" class="text-muted"><?=t('Add-On Compatibility')?></span></li>
-                        <li class="list-group-item"><span data-href="#notices" class="text-muted"><?=t('Important Notices')?></span></li>
+                        <li class="list-group-item"><span data-href="#notes" class="text-muted"><?php echo t('Release Notes')?></span></li>
+                        <li class="list-group-item"><span data-href="#addons" class="text-muted"><?php echo t('Add-On Compatibility')?></span></li>
+                        <li class="list-group-item"><span data-href="#notices" class="text-muted"><?php echo t('Important Notices')?></span></li>
                     </ul>
                 </div>
                 <div class="col-md-7 col-md-offset-1 ccm-dashboard-update-detail-main">
@@ -56,6 +56,10 @@ if ($canUpgrade) { ?>
                     <h3><?=t('Add-On Compatibility')?></h3>
                     <? $list = \Package::getInstalledList();
                     $ci = Core::make('helper/concrete/urls');
+                    if (count($list) == 0) { ?>
+                        <p><?=t('No add-ons installed.')?></p>
+
+                    <? }
                     foreach($list as $pkg) { ?>
 
                         <div class="media" data-addon="<?=$pkg->getPackageHandle()?>">
@@ -80,6 +84,16 @@ if ($canUpgrade) { ?>
 
         <script type="text/javascript">
         $(function() {
+
+            handleError = function(r) {
+                var $statusIcon = $('.ccm-dashboard-update-details i'),
+                    $statusText = $('.ccm-dashboard-update-details-testing-text');
+                $statusIcon.removeClass().addClass('fa fa-warning text-info');
+                $statusText.removeClass().addClass('text-info').text(<?=json_encode(t('Unable to retrieve information about this update from concrete5.org. You may upgrade but do so with caution.'))?>);
+                $('.ccm-dashboard-update-detail-release-notes').html(<?=json_encode(t('Unable to retrieve release notes from concrete5.org.'))?>);
+                $('.ccm-dashboard-update-detail-notices').html(<?=json_encode(t('Unable to retrieve upgrade notices from concrete5.org.'))?>);
+            }
+
             $.ajax({
                 dataType: 'json',
                 type: 'post',
@@ -90,7 +104,15 @@ if ($canUpgrade) { ?>
                     $('.ccm-dashboard-update-apply button').prop('disabled', false).text(<?=json_encode(t('Install Update'))?>);
                 },
                 url: '<?=$view->action('get_update_diagnostic_information')?>',
+                error: function(r) {
+                    handleError(r);
+                },
                 success: function(r) {
+                    if (!r.requestedVersion) {
+                        handleError(r);
+                        return false;
+                    }
+
                     $('a[data-url=info]').attr('href', r.releaseNotesUrl).show();
                     $('.ccm-dashboard-update-detail-release-notes').html(r.releaseNotes);
                     $('span[data-href]').each(function() {
@@ -102,6 +124,7 @@ if ($canUpgrade) { ?>
                     if (r.notices && r.notices.length) {
                         $.each(r.notices, function(i, notice) {
                             var className = '';
+                            var textClassName = '';
                             switch(notice.safety) {
                                 case 'info':
                                     className = 'fa fa-question-circle text-info';
@@ -125,6 +148,7 @@ if ($canUpgrade) { ?>
                         $statusText = $('.ccm-dashboard-update-details-testing-text');
                     if (r.status) {
                         var className = '';
+                        var textClassName = '';
                         switch(r.status.safety) {
                             case 'success':
                                 className = 'fa fa-check text-success';

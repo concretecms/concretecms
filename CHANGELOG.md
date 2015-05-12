@@ -1,3 +1,14 @@
+# 5.7.4.2
+
+## Behavioral Improvements
+
+* Improvements to new update functionality when site can't connect to concrete5.org
+* Improvements to new update functionality to make it more resilient with failures, but error messaging.
+
+## Developer Updates
+
+* API improvements to the RedactorEditor class.
+
 # 5.7.4.1
 
 ## Behavioral Improvements
