@@ -2,8 +2,9 @@
 
 namespace Concrete\Core\Permission;
 
+use Core;
+use Database;
 use Concrete\Core\Foundation\Object;
-use Loader;
 use Concrete\Core\Package\PackageList;
 
 class Category extends Object
@@ -21,7 +22,7 @@ class Category extends Object
 
     protected static function populateCategories()
     {
-        $db = Loader::db();
+        $db = Database::get();
         self::$categories = array();
         $r = $db->Execute('select pkCategoryID, pkCategoryHandle, pkgID from PermissionKeyCategories');
         while ($row = $r->FetchRow()) {
@@ -43,7 +44,7 @@ class Category extends Object
 
     public function handleExists($pkHandle)
     {
-        $db = Loader::db();
+        $db = Database::get();
         $r = $db->GetOne("select count(pkID) from PermissionKeys where pkHandle = ?", array($pkHandle));
 
         return $r > 0;
@@ -62,7 +63,7 @@ class Category extends Object
 
     public static function getListByPackage($pkg)
     {
-        $db = Loader::db();
+        $db = Database::get();
         $list = array();
         $r = $db->Execute('select pkCategoryID from PermissionKeyCategories where pkgID = ? order by pkCategoryID asc', array($pkg->getPackageID()));
         while ($row = $r->FetchRow()) {
@@ -76,7 +77,7 @@ class Category extends Object
     public function getPermissionKeyByHandle($pkHandle)
     {
         $className = core_class('\\Core\\Permission\\Key\\'
-            . \Core::make("helper/text")->camelcase($this->pkCategoryHandle) . 'Key',
+            . Core::make("helper/text")->camelcase($this->pkCategoryHandle) . 'Key',
             $this->getPackageHandle()
         );
         $ak = call_user_func(array($className, 'getByHandle'), $pkHandle);
@@ -87,7 +88,7 @@ class Category extends Object
     public function getPermissionKeyByID($pkID)
     {
         $className = core_class('\\Core\\Permission\\Key\\'
-            . \Core::make("helper/text")->camelcase($this->pkCategoryHandle) . 'Key',
+            . Core::make("helper/text")->camelcase($this->pkCategoryHandle) . 'Key',
             $this->getPackageHandle()
         );
         $ak = call_user_func(array($className, 'getByID'), $pkID);
@@ -100,10 +101,10 @@ class Category extends Object
         if (!$task) {
             $task = 'save_permission';
         }
-        $uh = Loader::helper('concrete/urls');
+        $uh = Core::make('helper/concrete/urls');
         $akc = static::getByID($this->getPermissionKeyCategoryID());
         $url = $uh->getToolsURL('permissions/categories/' . $this->pkCategoryHandle, $akc->getPackageHandle());
-        $token = Loader::helper('validation/token')->getParameter($task);
+        $token = Core::make('helper/validation/token')->getParameter($task);
         $url .= '?' . $token . '&task=' . $task;
 
         return $url;
@@ -128,13 +129,13 @@ class Category extends Object
 
     public function delete()
     {
-        $db = Loader::db();
+        $db = Database::get();
         $db->Execute('delete from PermissionKeyCategories where pkCategoryID = ?', array($this->pkCategoryID));
     }
 
     public function associateAccessEntityType(\Concrete\Core\Permission\Access\Entity\Type $pt)
     {
-        $db = Loader::db();
+        $db = Database::get();
         $r = $db->GetOne('select petID from PermissionAccessEntityTypeCategories where petID = ? and pkCategoryID = ?', array(
             $pt->getAccessEntityTypeID(), $this->pkCategoryID,
         ));
@@ -147,19 +148,19 @@ class Category extends Object
 
     public function deassociateAccessEntityType(\Concrete\Core\Permission\Access\Entity\Type $pt)
     {
-        $db = Loader::db();
+        $db = Database::get();
         $db->delete('PermissionAccessEntityTypeCategories', array('petID' => $pt->getAccessEntityTypeID(), 'pkCategoryID' => $this->getPermissionKeyCategoryID()));
     }
 
     public function clearAccessEntityTypeCategories()
     {
-        $db = Loader::db();
+        $db = Database::get();
         $db->Execute('delete from PermissionAccessEntityTypeCategories where pkCategoryID = ?', $this->pkCategoryID);
     }
 
     public static function getList()
     {
-        $db = Loader::db();
+        $db = Database::get();
         $cats = array();
         $r = $db->Execute('select pkCategoryID from PermissionKeyCategories order by pkCategoryID asc');
         while ($row = $r->FetchRow()) {
@@ -171,7 +172,7 @@ class Category extends Object
 
     public static function add($pkCategoryHandle, $pkg = false)
     {
-        $db = Loader::db();
+        $db = Database::get();
         if (is_object($pkg)) {
             $pkgID = $pkg->getPackageID();
         } else {
