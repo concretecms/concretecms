@@ -539,6 +539,9 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     {
         $db = Loader::db();
         $av = false;
+        if (!is_object($ak)) {
+            $ak = UserAttributeKey::getByHandle($ak);
+        }
         $v = array($this->getUserID(), $ak->getAttributeKeyID());
         $avID = $db->GetOne("select avID from UserAttributeValues where uID = ? and akID = ?", $v);
         if ($avID > 0) {
