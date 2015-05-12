@@ -1,8 +1,9 @@
 <?php
+
 namespace Concrete\Core\User;
 
 use Concrete\Core\File\StorageLocation\StorageLocation;
-use \Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\Object;
 use Concrete\Core\User\Event\AddUser;
 use Concrete\Core\User\PrivateMessage\Limit;
 use Concrete\Core\User\PrivateMessage\Mailbox as UserPrivateMessageMailbox;
@@ -15,10 +16,9 @@ use Config;
 use Events;
 use User as ConcreteUser;
 use UserAttributeKey;
-use \Concrete\Core\Attribute\Value\UserValue as UserAttributeValue;
-use \Concrete\Core\Attribute\Key\Key as AttributeKey;
+use Concrete\Core\Attribute\Value\UserValue as UserAttributeValue;
 use Group;
-use \Hautelook\Phpass\PasswordHash;
+use Hautelook\Phpass\PasswordHash;
 use Session;
 use Core;
 
@@ -29,7 +29,10 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         return 'UserInfo: ' . $this->getUserID();
     }
 
-    public function getPermissionObjectIdentifier() {return $this->uID;}
+    public function getPermissionObjectIdentifier()
+    {
+        return $this->uID;
+    }
 
     public function getPermissionResponseClassName()
     {
@@ -50,7 +53,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     public function __call($nm, $a)
     {
         if (substr($nm, 0, 7) == 'getUser') {
-            $nm = preg_replace('/(?!^)[[:upper:]]/','_\0', $nm);
+            $nm = preg_replace('/(?!^)[[:upper:]]/', '_\0', $nm);
             $nm = strtolower($nm);
             $nm = str_replace('get_user_', '', $nm);
 
@@ -59,38 +62,45 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
-     * returns the UserInfo object for a give user's uID
+     * returns the UserInfo object for a give user's uID.
+     *
      * @param int $uID
+     *
      * @return UserInfo
      */
     public static function getByID($uID)
     {
-        return UserInfo::get('where uID = ?', $uID);
+        return self::get('where uID = ?', $uID);
     }
 
     /**
-     * returns the UserInfo object for a give user's username
+     * returns the UserInfo object for a give user's username.
+     *
      * @param string $uName
+     *
      * @return UserInfo
      */
     public static function getByUserName($uName)
     {
-        return UserInfo::get('where uName = ?', $uName);
+        return self::get('where uName = ?', $uName);
     }
 
     /**
-     * returns the UserInfo object for a give user's email address
+     * returns the UserInfo object for a give user's email address.
+     *
      * @param string $uEmail
+     *
      * @return UserInfo
      */
     public static function getByEmail($uEmail)
     {
-        return UserInfo::get('where uEmail = ?', $uEmail);
+        return self::get('where uEmail = ?', $uEmail);
     }
 
     /**
      * @param string $uHash
-     * @param boolean $unredeemedHashesOnly
+     * @param bool $unredeemedHashesOnly
+     *
      * @return UserInfo
      */
     public static function getByValidationHash($uHash, $unredeemedHashesOnly = true)
@@ -102,7 +112,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
             $uID = $db->GetOne("select uID from UserValidationHashes where uHash = ?", array($uHash));
         }
         if ($uID) {
-            $ui = UserInfo::getByID($uID);
+            $ui = self::getByID($uID);
 
             return $ui;
         }
@@ -126,7 +136,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         $q = "select Users.uID, Users.uLastLogin, Users.uLastIP, Users.uIsValidated, Users.uPreviousLogin, Users.uIsFullRecord, Users.uNumLogins, Users.uDateAdded, Users.uIsActive, Users.uDefaultLanguage, Users.uLastOnline, Users.uHasAvatar, Users.uName, Users.uEmail, Users.uPassword, Users.uTimezone, Users.uLastPasswordChange from Users " . $where;
         $r = $db->query($q, array($var));
         if ($r && $r->numRows() > 0) {
-            $ui = new UserInfo();
+            $ui = new self();
             $row = $r->fetchRow();
             $ui->setPropertiesFromArray($row);
             $r->free();
@@ -139,11 +149,11 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 
     /**
      * @param array $data
+     *
      * @return UserInfo
      */
     public static function add($data)
     {
-
         $uae = new AddUser($data);
         $uae = Events::dispatch('on_before_user_add', $uae);
         if (!$uae->proceed()) {
@@ -180,13 +190,12 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         $res = $db->execute($r, $v);
         if ($res) {
             $newUID = $db->Insert_ID();
-            $ui = UserInfo::getByID($newUID);
+            $ui = self::getByID($newUID);
 
             if (is_object($ui)) {
-
                 $uo = $ui->getUserObject();
                 $groupControllers = \Group::getAutomatedOnRegisterGroupControllers($uo);
-                foreach($groupControllers as $ga) {
+                foreach ($groupControllers as $ga) {
                     if ($ga->check($uo)) {
                         $uo->enterGroup($ga->getGroupObject());
                     }
@@ -214,13 +223,12 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         if ($res) {
             $newUID = $db->Insert_ID();
 
-            return UserInfo::getByID($newUID);
+            return self::getByID($newUID);
         }
     }
 
     /**
-     * Deletes a user
-     * @return void
+     * Deletes a user.
      */
     public function delete()
     {
@@ -248,22 +256,22 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
             }
         }
 
-        $r = $db->query("DELETE FROM UserSearchIndexAttributes WHERE uID = ?",array(intval($this->uID)) );
+        $r = $db->query("DELETE FROM UserSearchIndexAttributes WHERE uID = ?", array(intval($this->uID)));
 
-        $r = $db->query("DELETE FROM UserGroups WHERE uID = ?",array(intval($this->uID)) );
-        $r = $db->query("DELETE FROM Users WHERE uID = ?",array(intval($this->uID)));
-        $r = $db->query("DELETE FROM UserValidationHashes WHERE uID = ?",array(intval($this->uID)));
+        $r = $db->query("DELETE FROM UserGroups WHERE uID = ?", array(intval($this->uID)));
+        $r = $db->query("DELETE FROM Users WHERE uID = ?", array(intval($this->uID)));
+        $r = $db->query("DELETE FROM UserValidationHashes WHERE uID = ?", array(intval($this->uID)));
 
-        $r = $db->query("DELETE FROM Piles WHERE uID = ?",array(intval($this->uID)));
+        $r = $db->query("DELETE FROM Piles WHERE uID = ?", array(intval($this->uID)));
 
-        $r = $db->query("UPDATE Blocks set uID=? WHERE uID = ?",array( intval(USER_SUPER_ID), intval($this->uID)));
-        $r = $db->query("UPDATE Pages set uID=? WHERE uID = ?",array( intval(USER_SUPER_ID), intval($this->uID)));
+        $r = $db->query("UPDATE Blocks set uID=? WHERE uID = ?", array(intval(USER_SUPER_ID), intval($this->uID)));
+        $r = $db->query("UPDATE Pages set uID=? WHERE uID = ?", array(intval(USER_SUPER_ID), intval($this->uID)));
     }
 
     /**
-     * Called only by the getGroupMembers function it sets the "type" of member for this group. Typically only used programmatically
+     * Called only by the getGroupMembers function it sets the "type" of member for this group. Typically only used programmatically.
+     *
      * @param string $type
-     * @return void
      */
     public function setGroupMemberType($type)
     {
@@ -294,7 +302,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
             $image,
             array(
                 'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
-                'mimetype' => 'image/jpeg'
+                'mimetype' => 'image/jpeg',
             )
         );
 
@@ -367,7 +375,8 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
-     * gets the user object of the current UserInfo object ($this)
+     * gets the user object of the current UserInfo object ($this).
+     *
      * @return User
      */
     public function getUserObject()
@@ -379,8 +388,8 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
-     * Sets the attribute of a user info object to the specified value, and saves it in the database
-    */
+     * Sets the attribute of a user info object to the specified value, and saves it in the database.
+     */
     public function setAttribute($ak, $value)
     {
         if (!is_object($ak)) {
@@ -405,7 +414,6 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 
     /**
      * Reindex the attributes on this file.
-     * @return void
      */
     public function reindex()
     {
@@ -423,7 +431,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
-     * Gets the value of the attribute for the user
+     * Gets the value of the attribute for the user.
      */
     public function getAttribute($ak, $displayMode = false)
     {
@@ -505,7 +513,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
             if (isset($data['uHasAvatar'])) {
                 $uHasAvatar = $data['uHasAvatar'];
             }
-            if ( isset($data['uTimezone'])) {
+            if (isset($data['uTimezone'])) {
                 $uTimezone = $data['uTimezone'];
             }
             if (isset($data['uDefaultLanguage']) && $data['uDefaultLanguage'] != '') {
@@ -516,7 +524,6 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 
             if ($data['uPassword'] != null) {
                 if ($data['uPassword'] == $data['uPasswordConfirm']) {
-
                     $dh = Loader::helper('date');
                     $dateTime = $dh->getOverridableNow();
                     $v = array($uName, $uEmail, $this->getUserObject()->getUserPasswordHasher()->HashPassword($data['uPassword']), $uHasAvatar, $uTimezone, $uDefaultLanguage, $dateTime, $this->uID);
@@ -527,10 +534,9 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 
                     $currentUser = new User();
                     $session = Core::make('session');
-                    if($currentUser->isLoggedIn() && $currentUser->getUserID() == $session->get('uID')) {
+                    if ($currentUser->isLoggedIn() && $currentUser->getUserID() == $session->get('uID')) {
                         $session->set('uLastPasswordChange', $dateTime);
                     }
-
                 } else {
                     $updateGroups = false;
                 }
@@ -549,7 +555,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
             }
 
             // run any internal event we have for user update
-            $ui = UserInfo::getByID($this->uID);
+            $ui = self::getByID($this->uID);
             $ue = new \Concrete\Core\User\Event\UserInfo($ui);
             Events::dispatch('on_user_update', $ue);
 
@@ -592,7 +598,6 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
             }
         }
 
-
         // now we go through the existing GID Array, and remove everything, since whatever is left is not wanted.
 
         // Fire on_user_exit_group event for each group exited
@@ -616,13 +621,12 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
                 $ue->setGroupObject(Group::getByID($gID));
                 Events::dispatch('on_user_exit_group', $ue);
             }
-
         }
     }
 
     public function saveUserAttributesForm($attributes)
     {
-        foreach($attributes as $uak) {
+        foreach ($attributes as $uak) {
             $uak->saveAttributeForm($this);
         }
 
@@ -633,15 +637,16 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 
     /**
      * @param array $data
+     *
      * @return UserInfo
      */
     public function register($data)
     {
         // slightly different than add. this is public facing
-		if (Config::get('concrete.user.registration.validate_email')) {
-			$data['uIsValidated'] = 0;
-		}
-        $ui = UserInfo::add($data);
+        if (Config::get('concrete.user.registration.validate_email')) {
+            $data['uIsValidated'] = 0;
+        }
+        $ui = self::add($data);
 
         return $ui;
     }
@@ -683,7 +688,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
             $v = array(
                 $this->getUserObject()->getUserPasswordHasher()->HashPassword($newPassword),
                 $dateTime,
-                $this->uID
+                $this->uID,
             );
             $q = "update Users set uPassword = ?, uLastPasswordChange = ?  where uID = ?";
             $r = $db->prepare($q);
@@ -694,7 +699,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 
             $currentUser = new User();
             $session = Core::make('session');
-            if($currentUser->isLoggedIn() && $currentUser->getUserID() == $session->get('uID')) {
+            if ($currentUser->isLoggedIn() && $currentUser->getUserID() == $session->get('uID')) {
                 $session->set('uLastPasswordChange', $dateTime);
             }
 
@@ -730,7 +735,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
             $newPassword = '';
             $chars = "abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ123456789";
             for ($i = 0; $i < 7; $i++) {
-                $newPassword .= substr($chars, rand() %strlen($chars), 1);
+                $newPassword .= substr($chars, rand() % strlen($chars), 1);
             }
             $this->changePassword($newPassword);
 
@@ -751,6 +756,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     public function getLastIPAddress()
     {
         $ip = new \Concrete\Core\Utility\IPAddress($this->uLastIP, true);
+
         return $ip->getIp($ip::FORMAT_IP_STRING);
     }
 
@@ -805,7 +811,8 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
-     * returns the user's timezone
+     * returns the user's timezone.
+     *
      * @return string timezone
      */
     public function getUserTimezone()
@@ -819,7 +826,8 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
-     * Gets the date a user was added to the system,
+     * Gets the date a user was added to the system.
+     *
      * @return string date formated like: 2009-01-01 00:00:00
      */
     public function getUserDateAdded()
@@ -833,7 +841,8 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
-     * Gets the date a user was last active on the site
+     * Gets the date a user was last active on the site.
+     *
      * @return string date formated like: 2009-01-01 00:00:00
      */
     public function getLastOnline()
@@ -845,5 +854,4 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     {
         return $this->upEndDate;
     }
-
 }
