@@ -461,7 +461,6 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function clearAttribute($ak)
     {
-        $db = Database::get();
         if (!is_object($ak)) {
             $ak = UserAttributeKey::getByHandle($ak);
         }
@@ -619,8 +618,6 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
                     if ($currentUser->isLoggedIn() && $currentUser->getUserID() == $session->get('uID')) {
                         $session->set('uLastPasswordChange', $dateTime);
                     }
-                } else {
-                    $updateGroups = false;
                 }
             } else {
                 $v = array($uName, $uEmail, $uHasAvatar, $uTimezone, $uDefaultLanguage, $this->uID);
@@ -665,9 +662,6 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
             }
         }
 
-        $dh = Core::make('helper/date');
-
-        $datetime = $dh->getOverridableNow();
         if (is_array($groupArray)) {
             foreach ($groupArray as $gID) {
                 $key = array_search($gID, $existingGIDArray);
@@ -699,7 +693,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         if (count($existingGIDArray) > 0) {
             $inStr = implode(',', $existingGIDArray);
             $q2 = "delete from UserGroups where uID = '{$this->uID}' and gID in ({$inStr})";
-            $r2 = $db->query($q2);
+            $db->query($q2);
             // fire the user group removal event for each of the groups we've deleted
             foreach ($existingGIDArray as $gID) {
                 $ue = new \Concrete\Core\User\Event\UserGroup($this->getUserObject());
@@ -814,7 +808,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     {
         $db = Database::get();
         $q = "update Users set uIsActive = 1 where uID = '{$this->uID}'";
-        $r = $db->query($q);
+        $db->query($q);
         $ue = new \Concrete\Core\User\Event\UserInfo($this);
         Events::dispatch('on_user_activate', $ue);
     }
@@ -825,7 +819,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     {
         $db = Database::get();
         $q = "update Users set uIsActive = 0 where uID = '{$this->uID}'";
-        $r = $db->query($q);
+        $db->query($q);
         $ue = new \Concrete\Core\User\Event\UserInfo($this);
         Events::dispatch('on_user_deactivate', $ue);
     }
@@ -836,7 +830,6 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     public function resetUserPassword()
     {
         // resets user's password, and returns the value of the reset password
-        $db = Database::get();
         if ($this->uID > 0) {
             $newPassword = '';
             $chars = "abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ123456789";
