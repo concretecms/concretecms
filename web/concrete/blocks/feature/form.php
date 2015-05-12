@@ -1,10 +1,14 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+
+$fp = FilePermissions::getGlobal();
+$tp = new TaskPermission();
+?>
 
 <fieldset>
     <legend><?=t('Icon')?></legend>
         <div class="form-group ccm-block-feature-select-icon" style="margin-right: 35px;">
             <?=$form->select('icon', $icons, $icon);?>
-            <i data-preview="icon" <? if ($icon) { ?>class="fa fa-<?=$icon?>"<? } ?>></i>
+            <i data-preview="icon" <?php if ($icon) { ?>class="fa fa-<?=$icon?>"<?php } ?>></i>
         </div>
 </fieldset>
 
@@ -17,8 +21,8 @@
     </div>
 
     <div class="form-group">
-        <?=$form->label('paragraph', t('Paragraph'))?>
-        <?php echo $form->textarea('paragraph', $paragraph, array('rows' => 5)); ?>
+       <?php echo $form->label('redactor-content', t('Paragraph:'));?>
+        <textarea style="display: none" id="redactor-content" name="content"><?php echo $content; ?></textarea>
     </div>
 
 </fieldset>
@@ -45,6 +49,18 @@
     </div>
 
 </fieldset>
+
+<script>
+    var CCM_EDITOR_SECURITY_TOKEN = "<?php echo Core::make('helper/validation/token')->generate('editor')?>";
+    $('#redactor-content').redactor({
+            minHeight: 200,
+            'concrete5': {
+                filemanager: <?php echo $fp->canAccessFileManager()?>,
+                sitemap: <?php echo $tp->canAccessSitemap()?>,
+                lightbox: true
+            }
+        });
+</script>
 
 <script type="text/javascript">
 $(function() {
