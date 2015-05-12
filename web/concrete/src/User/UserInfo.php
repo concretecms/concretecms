@@ -159,7 +159,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
      *
      * @return UserInfo|null
      */
-    private function get($where, $var)
+    private static function get($where, $var)
     {
         $db = Loader::db();
         $q = "select Users.uID, Users.uLastLogin, Users.uLastIP, Users.uIsValidated, Users.uPreviousLogin, Users.uIsFullRecord, Users.uNumLogins, Users.uDateAdded, Users.uIsActive, Users.uDefaultLanguage, Users.uLastOnline, Users.uHasAvatar, Users.uName, Users.uEmail, Users.uPassword, Users.uTimezone, Users.uLastPasswordChange from Users " . $where;
@@ -245,7 +245,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
      * @param string $uEmail
      * @return UserInfo|null
      */
-    public function addSuperUser($uPasswordEncrypted, $uEmail)
+    public static function addSuperUser($uPasswordEncrypted, $uEmail)
     {
         $db = Loader::db();
         $dh = Loader::helper('date');
@@ -727,7 +727,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
      *
      * @return UserInfo
      */
-    public function register($data)
+    public static function register($data)
     {
         // slightly different than add. this is public facing
         if (Config::get('concrete.user.registration.validate_email')) {
