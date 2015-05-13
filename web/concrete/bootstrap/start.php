@@ -148,7 +148,12 @@ $list->registerProviders($config->get('app.providers'));
  */
 define('APP_VERSION', $config->get('concrete.version'));
 define('APP_CHARSET', $config->get('concrete.charset'));
-define('BASE_URL', \Core::getApplicationURL());
+try {
+    define('BASE_URL', \Core::getApplicationURL());
+} catch (\Exception $x) {
+    echo $x->getMessage();
+    die(1);
+}
 define('DIR_REL', $cms['app_relative_path']);
 
 
