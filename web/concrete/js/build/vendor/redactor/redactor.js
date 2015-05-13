@@ -3366,7 +3366,7 @@
 								ConcreteFileManager.getFileDetails(data.fID, function(r) {
 									jQuery.fn.dialog.hideLoader();
 									var file = r.files[0];
-									$('#redactor-image-link').val(file.urlDownload);
+									$('#redactor-image-link').val(file.urlInline);
 								});
 							});
 						});
@@ -3455,7 +3455,7 @@
 								ConcreteFileManager.getFileDetails(data.fID, function(r) {
 									jQuery.fn.dialog.hideLoader();
 									var file = r.files[0];
-									$('#redactor-image-link').val(file.urlDownload);
+									$('#redactor-image-link').val(file.urlInline);
 								});
 							});
 						});
