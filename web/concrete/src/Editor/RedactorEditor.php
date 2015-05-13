@@ -94,11 +94,16 @@ EOL;
         return $this->getEditor($key, $content, array('plugins' => $plugins, 'minHeight' => 300));
     }
 
-    public function outputPageComposerEditor($key, $content)
+    public function outputBlockEditModeEditor($key, $content)
     {
         $plugins = $this->pluginManager->getSelectedPlugins();
         $plugins[] = 'concrete5magic';
         return $this->getEditor($key, $content, array('plugins' => $plugins, 'minHeight' => 300));
+    }
+
+    public function outputPageComposerEditor($key, $content)
+    {
+        return $this->outputBlockEditModeEditor($key, $content);
     }
 
     public function outputStandardEditor($key, $content = null)

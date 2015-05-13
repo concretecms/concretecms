@@ -8,6 +8,7 @@ interface EditorInterface
 
 	public function outputPageInlineEditor($key, $content = null);
 	public function outputPageComposerEditor($key, $content);
+	public function outputBlockEditModeEditor($key, $content);
 	public function outputStandardEditor($key, $content = null);
 
 	public function setAllowSitemap($allow);
