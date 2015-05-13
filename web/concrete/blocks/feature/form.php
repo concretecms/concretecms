@@ -1,8 +1,4 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
-
-$fp = FilePermissions::getGlobal();
-$tp = new TaskPermission();
-?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <fieldset>
     <legend><?=t('Icon')?></legend>
@@ -21,8 +17,11 @@ $tp = new TaskPermission();
     </div>
 
     <div class="form-group">
-       <?php echo $form->label('redactor-content', t('Paragraph:'));?>
-        <textarea style="display: none" id="redactor-content" name="content"><?php echo $content; ?></textarea>
+        <?php echo $form->label('paragraph', t('Paragraph:'));?>
+        <?php
+            $editor = Core::make('editor');
+            echo $editor->outputStandardEditor('paragraph', $paragraph);
+        ?>
     </div>
 
 </fieldset>
@@ -49,18 +48,6 @@ $tp = new TaskPermission();
     </div>
 
 </fieldset>
-
-<script>
-    var CCM_EDITOR_SECURITY_TOKEN = "<?php echo Core::make('helper/validation/token')->generate('editor')?>";
-    $('#redactor-content').redactor({
-            minHeight: 200,
-            'concrete5': {
-                filemanager: <?php echo $fp->canAccessFileManager()?>,
-                sitemap: <?php echo $tp->canAccessSitemap()?>,
-                lightbox: true
-            }
-        });
-</script>
 
 <script type="text/javascript">
 $(function() {
