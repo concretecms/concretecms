@@ -8,7 +8,7 @@
 		<field name="icon" type="C" size="255">
 		</field>
 		<field name="title" type="C" size="255"></field>
-        <field name="content" type="X"></field>
+        <field name="paragraph" type="X"></field>
 		<field name="externalLink"  type="C" size="255"/>
 		<field name="internalLinkCID"  type="I">
 			<unsigned />
