@@ -10,8 +10,8 @@ if ($linkURL) {
         <h4><i class="fa fa-<?=$icon?>"></i> <?=$title?></h4>
     <?php } ?>
     <?php
-    if ($content) {
-        echo $content;
+    if ($paragraph) {
+        echo $paragraph;
     }
     ?>
 </div>
