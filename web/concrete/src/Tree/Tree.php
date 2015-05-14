@@ -144,6 +144,11 @@ abstract class Tree extends Object
         return $node;
     }
 
+    public function getRequestData()
+    {
+        return $this->requestData;
+    }
+
     public function setRequest($data)
     {
         $this->requestData = $data;
@@ -179,6 +184,7 @@ abstract class Tree extends Object
     public function getJSON()
     {
         $root = $this->getRootTreeNodeObject();
+        $root->setTree($this);
         $root->populateDirectChildrenOnly();
         if (is_array($this->getSelectedTreeNodeIDs())) {
             foreach ($this->getSelectedTreeNodeIDs() as $magicNodes) {
