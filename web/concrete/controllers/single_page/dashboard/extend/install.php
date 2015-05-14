@@ -95,7 +95,7 @@ class Install extends DashboardPageController
 
     public function package_uninstalled()
     {
-        $this->set('message', t('The package type has been uninstalled.'));
+        $this->set('message', t('The package has been uninstalled.'));
     }
 
     public function install_package($package)
