@@ -42,15 +42,10 @@ $("#ccm-file-import-tabs a").click(function() {
 });
 
 $('#check-all-incoming').click(function (event) {
-    if (this.checked) {
-        $('.ccm-file-select-incoming').each(function () {
-            this.checked = true;
-        });
-    } else {
-        $('.ccm-file-select-incoming').each(function () {
-            this.checked = false;
-        });
-    }
+    var checked = this.checked;
+    $('.ccm-file-select-incoming').each(function () {
+        this.checked = checked;
+    });
 });
 
 ConcreteFileImportDialog = {
