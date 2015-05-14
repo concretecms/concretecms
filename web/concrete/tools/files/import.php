@@ -41,6 +41,18 @@ $("#ccm-file-import-tabs a").click(function() {
 	$("#" + ccm_fiActiveTab + "-tab").show();
 });
 
+$('#check-all-incoming').click(function (event) {
+    if (this.checked) {
+        $('.ccm-file-select-incoming').each(function () {
+            this.checked = true;
+        });
+    } else {
+        $('.ccm-file-select-incoming').each(function () {
+            this.checked = false;
+        });
+    }
+});
+
 ConcreteFileImportDialog = {
 
     addFiles: function() {
@@ -77,7 +89,9 @@ ConcreteFileImportDialog = {
     <input type="hidden" name="ocID" value="<?=$ocID?>" />
 		<table id="incoming_file_table" class="table table-striped" width="100%" cellpadding="0" cellspacing="0">
 			<tr>
-				<th width="10%" valign="middle" class="center theader"></th>
+				<th width="10%" valign="middle" class="center theader">
+                    <input type="checkbox" id="check-all-incoming"/>
+				</th>
 				<th width="20%" valign="middle" class="center theader"></th>
 				<th width="45%" valign="middle" class="theader"><?=t('Filename')?></th>
 				<th width="25%" valign="middle" class="center theader"><?=t('Size')?></th>
