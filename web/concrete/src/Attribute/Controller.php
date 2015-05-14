@@ -1,16 +1,15 @@
 <?php
+
 namespace Concrete\Core\Attribute;
 
-use \Concrete\Core\Controller\AbstractController;
+use Concrete\Core\Controller\AbstractController;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
-use Loader;
 use Core;
-use \Concrete\Core\Attribute\View as AttributeTypeView;
-use \Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
+use Concrete\Core\Attribute\View as AttributeTypeView;
+use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
 
 class Controller extends AbstractController
 {
-
     protected $identifier;
     /** @var \Concrete\Core\Attribute\Key\Key */
     protected $attributeKey;
@@ -57,7 +56,7 @@ class Controller extends AbstractController
     public function importValue(\SimpleXMLElement $akv)
     {
         if (isset($akv->value)) {
-            return (string)$akv->value;
+            return (string) $akv->value;
         }
     }
 
@@ -65,19 +64,19 @@ class Controller extends AbstractController
     {
         $val = $this->attributeValue->getValue();
         if (is_object($val)) {
-            $val = (string)$val;
+            $val = (string) $val;
         }
 
         $cnode = $akv->addChild('value');
         $node = dom_import_simplexml($cnode);
         $no = $node->ownerDocument;
         $node->appendChild($no->createCDataSection($val));
+
         return $cnode;
     }
 
     public function importKey($akn)
     {
-
     }
 
     protected function getAttributeValueID()
@@ -123,13 +122,15 @@ class Controller extends AbstractController
     {
         // the only post that matters is the one for this attribute's name space
         $req = ($this->requestArray == false) ? $_POST : $this->requestArray;
-        if (is_object($this->attributeKey) && is_array($req['akID'])) {
+        if (is_object($this->attributeKey) && isset($req['akID']) && is_array($req['akID'])) {
             $p = $req['akID'][$this->attributeKey->getAttributeKeyID()];
             if ($field) {
                 return $p[$field];
             }
+
             return $p;
         }
+
         return parent::post($field, $defaultValue);
     }
 
@@ -142,6 +143,7 @@ class Controller extends AbstractController
             if ($field) {
                 return $p[$field];
             }
+
             return $p;
         }
 
@@ -159,6 +161,7 @@ class Controller extends AbstractController
                 $av = new AttributeTypeView($this->attributeType);
             }
         }
+
         return $av;
     }
 
@@ -192,12 +195,10 @@ class Controller extends AbstractController
 
     public function saveKey($data)
     {
-
     }
 
     public function duplicateKey($newAK)
     {
-
     }
 
     public function searchKeywords($keywords, $queryBuilder)
@@ -206,8 +207,10 @@ class Controller extends AbstractController
     }
 
     /**
-     * Automatically run when an attribute key is added or updated
+     * Automatically run when an attribute key is added or updated.
+     *
      * @param bool|array $args
+     *
      * @return \Concrete\Core\Error\Error
      */
     public function validateKey($args = false)
@@ -254,5 +257,4 @@ class Controller extends AbstractController
 
         return $error;
     }
-
 }
