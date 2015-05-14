@@ -37,5 +37,9 @@ class TopicTreeNodeResponse extends Response {
 		return $this->canAccessTopics();
 	}
 
+	public function canAddTopicTreeNode() {
+		return $this->canAccessTopics();
+	}
+
 
 }
