@@ -1,5 +1,7 @@
 [![Build Status](http://img.shields.io/travis/concrete5/concrete5/develop.svg)](https://travis-ci.org/concrete5/concrete5)
 
+Build test.
+
 # concrete5 Developer Repository
 
 This is the developer repository for Concrete5.
