@@ -255,6 +255,15 @@ class Category extends Object
         }
         return $attributeSets;
     }
+	
+	/**
+     * @param string $asHandle
+     * @return AttributeSet Returns an AttributeSet object for the current category or null if no set exists with that handle
+     */
+	public function getAttributeSetByHandle($asHandle) {
+		$attributeSet = AttributeSet::getByHandle($asHandle, $this->akCategoryID);
+		return $attributeSet;
+	}
 
     /**
      * Sets the Attribute Key Column Headers to false for all Attribute Keys in the category
