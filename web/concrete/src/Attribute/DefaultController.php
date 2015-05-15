@@ -2,7 +2,8 @@
 
 namespace Concrete\Core\Attribute;
 
-use Loader;
+use Core;
+use Database;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 
 class DefaultController extends AttributeTypeController
@@ -11,7 +12,7 @@ class DefaultController extends AttributeTypeController
 
     public function getValue()
     {
-        $db = Loader::db();
+        $db = Database::get();
         $value = $db->GetOne("select value from atDefault where avID = ?", array($this->getAttributeValueID()));
 
         return $value;
@@ -20,9 +21,9 @@ class DefaultController extends AttributeTypeController
     public function form()
     {
         if (is_object($this->attributeValue)) {
-            $value = Loader::helper('text')->entities($this->getAttributeValue()->getValue());
+            $value = Core::make('helper/text')->entities($this->getAttributeValue()->getValue());
         }
-        print Loader::helper('form')->textarea($this->field('value'), $value);
+        print Core::make('helper/form')->textarea($this->field('value'), $value);
     }
 
     public function searchForm($list)
@@ -37,19 +38,19 @@ class DefaultController extends AttributeTypeController
 
     public function getDisplaySanitizedValue()
     {
-        return Loader::helper('text')->entities($this->getValue());
+        return Core::make('helper/text')->entities($this->getValue());
     }
 
     public function search()
     {
-        $f = Loader::helper('form');
+        $f = Core::make('helper/form');
         print $f->text($this->field('value'), $this->request('value'));
     }
 
     // run when we call setAttribute(), instead of saving through the UI
     public function saveValue($value)
     {
-        $db = Loader::db();
+        $db = Database::get();
         $db->Replace('atDefault', array('avID' => $this->getAttributeValueID(), 'value' => $value), 'avID', true);
     }
 
@@ -60,7 +61,7 @@ class DefaultController extends AttributeTypeController
 
     public function deleteKey()
     {
-        $db = Loader::db();
+        $db = Database::get();
         $arr = $this->attributeKey->getAttributeValueIDList();
         foreach ($arr as $id) {
             $db->Execute('delete from atDefault where avID = ?', array($id));
@@ -74,7 +75,7 @@ class DefaultController extends AttributeTypeController
 
     public function deleteValue()
     {
-        $db = Loader::db();
+        $db = Database::get();
         $db->Execute('delete from atDefault where avID = ?', array($this->getAttributeValueID()));
     }
 }
