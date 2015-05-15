@@ -25,6 +25,16 @@ class PageTheme extends \Concrete\Core\Page\Theme\Theme {
 
     protected $pThemeGridFrameworkHandle = 'bootstrap3';
 
+    public function getThemeName()
+    {
+        return t('Elemental');
+    }
+
+    public function getThemeDescription()
+    {
+        return t('Elegant, spacious theme with support for blogs, portfolios, layouts and more.');
+    }
+
     public function getThemeBlockClasses()
     {
         return array(
