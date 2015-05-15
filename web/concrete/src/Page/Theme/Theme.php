@@ -21,6 +21,7 @@ use Localization;
 /**
  * A page's theme is a pointer to a directory containing templates, CSS files and optionally PHP includes, images and JavaScript files.
  * Themes inherit down the tree when a page is added, but can also be set at the site-wide level (thereby overriding any previous choices.).
+ *
  * @package Pages and Collections
  * @subpackages Themes
  */
@@ -324,9 +325,9 @@ class Theme extends Object
      * Looks into the current CSS directory and returns a fully compiled stylesheet
      * when passed a LESS stylesheet. Also serves up custom value list values for the stylesheet if they exist.
      *
-     * @param  string $stylesheet The LESS stylesheet to compile
+     * @param string $stylesheet The LESS stylesheet to compile
      *
-     * @return string             The path to the stylesheet.
+     * @return string The path to the stylesheet.
      */
     public function getStylesheet($stylesheet)
     {
@@ -440,7 +441,7 @@ class Theme extends Object
 
     /**
      * @param string $where
-     * @param array $args
+     * @param array  $args
      *
      * @return \Concrete\Core\Page\Theme\Theme|null
      */
@@ -655,8 +656,7 @@ class Theme extends Object
             }
             try {
                 $res = static::getThemeNameAndDescription($dir, $pThemeHandle, is_object($pkg) ? $pkg->getPackageHandle() : '');
-            }
-            catch (\Exception $x) {
+            } catch (\Exception $x) {
                 if ($curLang !== 'en_US') {
                     Localization::changeLocale($curLang);
                 }
@@ -715,8 +715,8 @@ class Theme extends Object
 
     /** Returns the display name for this theme (localized and escaped accordingly to $format)
      * @param string $format = 'html'
-     *   Escape the result in html format (if $format is 'html').
-     *   If $format is 'text' or any other value, the display name won't be escaped.
+     *                       Escape the result in html format (if $format is 'html').
+     *                       If $format is 'text' or any other value, the display name won't be escaped.
      *
      * @return string
      */
