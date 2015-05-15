@@ -33,6 +33,7 @@
 		getMenu: function(data, options) {
 			var menu = '<div class="ccm-topic-menu ccm-popover-page-menu popover fade popover fade"><div class="arrow"></div><div class="popover-inner">';
 			menu += '<ul class="dropdown-menu">';
+
 			if (data.canAddTopicCategoryTreeNode) {
 				menu += '<li><a class="dialog-launch" dialog-width="550" dialog-on-open="$(\'[data-topic-form=add-category-node]\').ccmtopicstree(\'initAddNodeForm\', ' + options.treeID + ');" dialog-height="auto" dialog-modal="false" dialog-title="' + ccmi18n_topics.addCategory + '" href="' + CCM_DISPATCHER_FILENAME + '/tools/required/tree/node/add/topic_category?treeNodeParentID=' + data.key + '">' + ccmi18n_topics.addCategory + '<\/a><\/li>';
 			}
@@ -202,20 +203,26 @@
 			readonly: false,
 			chooseNodeInForm: false,
 			onSelect: false,
+			allowFolderSelection: false,
 			selectNodesByKey: []
 		}, options);
 
 		var checkbox = false,
 			classNames = false;
 
+		/* var ajaxData =  {
+			'treeID': options.treeID
+		}; */
+
 		if(!options.treeNodeParentID) {
 			var ajaxData = { 'treeID': options.treeID };
 		} else {
 			var ajaxData = { 'treeNodeParentID': options.treeNodeParentID };
 		}
-		/* var ajaxData =  {
-			'treeID': options.treeID
-		}; */ 
+
+		if (options.allowFolderSelection) {
+			ajaxData.allowFolderSelection = 1;
+		}
 
 		var persist = true;
 
@@ -364,10 +371,13 @@
 						}
 
 						// you can only drag shit into other categories.
+						// Restriction lifted. Topics can live inside other topics.
+						/*
 						var nodeTypeHandle = node.data.treeNodeType;
 						if (hitMode === 'over' && jQuery.inArray(node.data.treeNodeTypeHandle, ['topic']) > -1) {
 							return false;
 						}
+						*/
 
 				        // Prevent dropping a parent below its own child
 				        if(node.isDescendantOf(sourceNode)){
