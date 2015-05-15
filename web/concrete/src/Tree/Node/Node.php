@@ -32,6 +32,7 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
     protected $childNodes = array();
     protected $childNodesLoaded = false;
     protected $treeNodeIsSelected = false;
+    protected $tree;
 
     public function getPermissionObjectIdentifier()
     {
@@ -50,10 +51,20 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
     {
         return self::getByID($this->treeNodeParentID);
     }
+
+    public function setTree(Tree $tree)
+    {
+        $this->tree = $tree;
+    }
+
     public function getTreeObject()
     {
-        return Tree::getByID($this->treeID);
+        if (!isset($this->tree)) {
+            $this->tree = Tree::getByID($this->treeID);
+        }
+        return $this->tree;
     }
+
     public function getTreeID()
     {
         return $this->treeID;
@@ -395,6 +406,9 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
             $r = $db->GetCol('select treeNodeID from TreeNodes where treeNodeParentID = ? order by treeNodeDisplayOrder asc', array($this->treeNodeID));
             foreach ($r as $nodeID) {
                 $node = self::getByID($nodeID);
+                if (isset($this->tree)) {
+                    $node->setTree($this->tree);
+                }
                 if (is_object($node)) {
                     $this->childNodes[] = $node;
                 }

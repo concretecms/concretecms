@@ -47,6 +47,12 @@ class TopicCategory extends Category
         $obj = parent::getTreeNodeJSON();
         if (is_object($obj)) {
             $p = new Permissions($this);
+            $data = $this->getTreeObject()->getRequestData();
+            if (is_array($data) && $data['allowFolderSelection']) {
+                $obj->hideCheckbox = false;
+            } else {
+                $obj->hideCheckbox = true;
+            }
             $obj->canAddTopicTreeNode = $p->canAddTopicTreeNode();
             $obj->canAddTopicCategoryTreeNode = $p->canAddTopicCategoryTreeNode();
 
