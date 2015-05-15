@@ -28,6 +28,8 @@ class AuthorFormatter
         }
         if ($this->author->getWebsite()) {
             return sprintf('<a href="%s">%s</a>', h($this->author->getWebsite()), $name);
+        } else {
+            return $name;
         }
     }
 
