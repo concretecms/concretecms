@@ -44,7 +44,7 @@ class DefaultController extends AttributeTypeController  {
 	}
 
 	public function saveForm($data) {
-		$this->saveValue($data['value']);
+		$this->saveValue(isset($data['value']) ? $data['value'] : null);
 	}
 
 	public function deleteKey() {
