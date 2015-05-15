@@ -17,6 +17,17 @@ class Feed
     protected $checkPagePermissions = true;
 
     /**
+     * @Column(type="string")
+     */
+    protected $customTopicAttributeKeyHandle = null;
+
+
+    /**
+     * @Column(columnDefinition="integer unsigned")
+     */
+    protected $customTopicTreeNodeID = 0;
+
+    /**
      * @param mixed $cParentID
      */
     public function setParentID($cParentID)
@@ -118,6 +129,38 @@ class Feed
     public function getTitle()
     {
         return $this->pfTitle;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCustomTopicAttributeKeyHandle()
+    {
+        return $this->customTopicAttributeKeyHandle;
+    }
+
+    /**
+     * @param mixed $customTopicAttributeKeyHandle
+     */
+    public function setCustomTopicAttributeKeyHandle($customTopicAttributeKeyHandle)
+    {
+        $this->customTopicAttributeKeyHandle = $customTopicAttributeKeyHandle;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCustomTopicTreeNodeID()
+    {
+        return $this->customTopicTreeNodeID;
+    }
+
+    /**
+     * @param mixed $customTopicTreeNodeID
+     */
+    public function setCustomTopicTreeNodeID($customTopicTreeNodeID)
+    {
+        $this->customTopicTreeNodeID = $customTopicTreeNodeID;
     }
 
     /**
@@ -348,6 +391,9 @@ class Feed
                 $pl->filterByParentID($this->cParentID);
             }
         }
+        if ($this->getCustomTopicAttributeKeyHandle()) {
+            $pl->filterByTopic(intval($this->getCustomTopicTreeNodeID()));
+        }
         if ($this->pfDisplayAliases) {
             $pl->includeAliases();
         }
@@ -384,9 +430,12 @@ class Feed
     public function getOutput($request = null)
     {
         $pl = $this->getPageListObject();
+        $link = false;
         if ($this->cParentID) {
             $parent = Page::getByID($this->cParentID);
             $link = $parent->getCollectionLink();
+        } else {
+            $link = \URL::to('/');
         }
         $pagination = $pl->getPagination();
         if ($pagination->getTotalResults() > 0) {
@@ -394,6 +443,7 @@ class Feed
             $writer->setTitle($this->getTitle());
             $writer->setDescription($this->getDescription());
             $writer->setLink((string) $link);
+
             foreach($pagination->getCurrentPageResults() as $p) {
                 $entry = $writer->createEntry();
                 $entry->setTitle($p->getCollectionName());
@@ -407,7 +457,10 @@ class Feed
                 $writer->addEntry($entry);
             }
 
-            $ev = new FeedEvent($parent);
+            $ev = new FeedEvent();
+            if (isset($parent)) {
+                $ev->setPageObject($parent);
+            }
             $ev->setFeedObject($this);
             $ev->setWriterObject($writer);
             $ev->setRequest($request);

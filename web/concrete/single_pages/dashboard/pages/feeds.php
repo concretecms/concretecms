@@ -18,6 +18,8 @@
     $pfDisplayFeaturedOnly = false;
     $pfContentToDisplay = 'S';
     $pfAreaHandleToDisplay = 'Main';
+    $customTopicAttributeKeyHandle = null;
+    $customTopicTreeNodeID = 0;
     $button = t('Add');
     if (is_object($feed)) {
         $pfTitle = $feed->getTitle();
@@ -30,6 +32,8 @@
         $pfDisplayFeaturedOnly = $feed->getDisplayFeaturedOnly();
         $pfContentToDisplay = $feed->getTypeOfContentToDisplay();
         $pfAreaHandleToDisplay = $feed->getAreaHandleToDisplay();
+        $customTopicAttributeKeyHandle = $feed->getCustomTopicAttributeKeyHandle();
+        $customTopicTreeNodeID = $feed->getCustomTopicTreeNodeID();
         $action = $view->action('edit_feed', $feed->getID());
         $token = 'edit_feed';
         $button = t('Update');
@@ -95,6 +99,22 @@
         <div class="form-group">
             <?=$form->label('ptID', t('Filter By Page Type'))?>
             <?=$form->select('ptID', $pageTypes, $ptID)?>
+        </div>
+        <div class="form-group">
+            <?=$form->label('customTopicAttributeKeyHandle', t('Filter By Topic'))?>
+            <select class="form-control" name="customTopicAttributeKeyHandle" id="customTopicAttributeKeyHandle">
+                <option value=""><?=t('** No Filtering')?></option>
+                <? foreach($topicAttributes as $attributeKey) {
+                    $attributeController = $attributeKey->getController();
+                    ?>
+                    <option data-topic-tree-id="<?=$attributeController->getTopicTreeID()?>" value="<?=$attributeKey->getAttributeKeyHandle()?>" <? if ($attributeKey->getAttributeKeyHandle() == $customTopicAttributeKeyHandle) { ?>selected<? } ?>><?=$attributeKey->getAttributeKeyDisplayName()?></option>
+                <? } ?>
+            </select>
+            <div class="tree-view-container" style="margin-top: 20px">
+                <div class="tree-view-template">
+                </div>
+            </div>
+            <input type="hidden" name="customTopicTreeNodeID" value="<?php echo $customTopicTreeNodeID ?>">
         </div>
         <div class="form-group">
             <label class="control-label"><?=t('Include All Sub-Pages of Parent?')?></label>
@@ -171,6 +191,30 @@
 
     <script type="text/javascript">
         $(function() {
+            var treeViewTemplate = $('.tree-view-template');
+
+            $('select[name=customTopicAttributeKeyHandle]').on('change', function() {
+                var toolsURL = '<?php echo Loader::helper('concrete/urls')->getToolsURL('tree/load'); ?>';
+                var chosenTree = $(this).find('option:selected').attr('data-topic-tree-id');
+                $('.tree-view-template').remove();
+                if (!chosenTree) {
+                    return;
+                }
+                $('.tree-view-container').append(treeViewTemplate);
+                $('.tree-view-template').ccmtopicstree({
+                    'treeID': chosenTree,
+                    'chooseNodeInForm': true,
+                    'selectNodesByKey': [<?=intval($customTopicTreeNodeID)?>],
+                    'onSelect' : function(select, node) {
+                        if (select) {
+                            $('input[name=customTopicTreeNodeID]').val(node.data.key);
+                        } else {
+                            $('input[name=customTopicTreeNodeID]').val('');
+                        }
+                    }
+                });
+            }).trigger('change');
+
             $('input[name=pfContentToDisplay]').on('change', function() {
                 var pfContentToDisplay = $('input[name=pfContentToDisplay]:checked').val();
                 if (pfContentToDisplay == 'A') {
