@@ -16,6 +16,7 @@ use Concrete\Core\Page\Theme\GridFramework\GridFramework;
 use Concrete\Core\Page\Single as SinglePage;
 use Concrete\Core\StyleCustomizer\Preset;
 use Concrete\Core\StyleCustomizer\CustomCssRecord;
+use Localization;
 
 /**
  * A page's theme is a pointer to a directory containing templates, CSS files and optionally PHP includes, images and JavaScript files.
@@ -648,7 +649,22 @@ class Theme extends Object
             if ($cnt > 0) {
                 throw new \Exception(static::E_THEME_INSTALLED);
             }
-            $res = static::getThemeNameAndDescription($dir, $pThemeHandle, is_object($pkg) ? $pkg->getPackageHandle() : '');
+            $curLang = Localization::activeLocale();
+            if ($curLang !== 'en_US') {
+                Localization::changeLocale('en_US');
+            }
+            try {
+                $res = static::getThemeNameAndDescription($dir, $pThemeHandle, is_object($pkg) ? $pkg->getPackageHandle() : '');
+            }
+            catch (\Exception $x) {
+                if ($curLang !== 'en_US') {
+                    Localization::changeLocale($curLang);
+                }
+                throw $x;
+            }
+            if ($curLang !== 'en_US') {
+                Localization::changeLocale($curLang);
+            }
             if (strlen($res->pError) === 0) {
                 $pThemeName = $res->pThemeName;
                 $pThemeDescription = $res->pThemeDescription;
