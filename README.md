@@ -6,7 +6,7 @@ This is the developer repository for Concrete5.
 
 ## Version
 
-This repository contains Concrete5 version 5.7 and greater. Look for 5.6? You want [http://github.com/concrete5/concrete5-legacy](the concrete5-legacy repository).
+This repository contains Concrete5 version 5.7 and greater. Look for 5.6? You want <a href="http://github.com/concrete5/concrete5-legacy">http://github.com/concrete5/concrete5-legacy</a>  (the concrete5-legacy repository).
 
 ## Installation
 
