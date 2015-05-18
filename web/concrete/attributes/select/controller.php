@@ -303,6 +303,11 @@ class Controller extends AttributeTypeController
         return $this->getDisplayValue();
     }
 
+    public function validateValue()
+    {
+        return is_object($value = $this->getValue()) && ((string) $value != '');
+    }
+
     public function validateForm($p)
     {
         $this->load();

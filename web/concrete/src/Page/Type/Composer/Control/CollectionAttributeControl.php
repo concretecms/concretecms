@@ -126,17 +126,42 @@ class CollectionAttributeControl extends Control
         }
     }
 
+    protected function isFormSubmission()
+    {
+        $ak = $this->getAttributeKeyObject();
+        $controller = $ak->getController();
+        if (is_object($controller)) {
+            return $controller->requestFieldExists();
+        }
+    }
+
     public function validate()
     {
         $ak = $this->getAttributeKeyObject();
-        $e = \Core::make('error');
         if (is_object($ak)) {
-            $e1 = $ak->validateAttributeForm();
-            if ($e1 == false) {
-                $e->add(t('The field "%s" is required', $ak->getAttributeKeyDisplayName()));
-            } else if ($e1 instanceof \Concrete\Core\Error\Error) {
-                $e->add($e1);
+
+            $e = \Core::make('error');
+            if ($this->isFormSubmission()) {
+                $response = $ak->validateAttributeForm();
+                if ($response == false) {
+                    $e->add(t('The field "%s" is required', $ak->getAttributeKeyDisplayName()));
+                } else if ($response instanceof \Concrete\Core\Error\Error) {
+                    $e->add($response);
+                }
+            } else {
+                $value = $this->getPageTypeComposerControlDraftValue();
+                if (!is_object($value)) {
+                    $e->add(t('The field "%s" is required', $ak->getAttributeKeyDisplayName()));
+                } else {
+                    $response = $value->validateAttributeValue();
+                    if ($response == false) {
+                        $e->add(t('The field "%s" is required', $ak->getAttributeKeyDisplayName()));
+                    } else if ($response instanceof \Concrete\Core\Error\Error) {
+                        $e->add($response);
+                    }
+                }
             }
+
             return $e;
         }
     }
