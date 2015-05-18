@@ -133,6 +133,15 @@ class Controller extends AbstractController
         return parent::post($field, $defaultValue);
     }
 
+    public function requestFieldExists()
+    {
+        $req = ($this->requestArray == false) ? $_REQUEST : $this->requestArray;
+        if (is_object($this->attributeKey) && is_array($req['akID'])) {
+            return true;
+        }
+        return false;
+    }
+
     public function request($field = false)
     {
         $req = ($this->requestArray == false) ? $_REQUEST : $this->requestArray;

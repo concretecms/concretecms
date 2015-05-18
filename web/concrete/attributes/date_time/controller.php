@@ -107,6 +107,12 @@ class Controller extends AttributeTypeController
         }
     }
 
+    public function validateValue()
+    {
+        $v = $this->getValue();
+        return $v != false;
+    }
+
     public function validateForm($data)
     {
         if (!isset($this->akDateDisplayMode)) {

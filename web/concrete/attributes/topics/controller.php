@@ -314,6 +314,12 @@ class Controller extends AttributeTypeController
 
     }
 
+    public function validateValue()
+    {
+        $val = $this->getValue();
+        return is_object($val);
+    }
+
     public function validateForm($data)
     {
         // TODO: form validation
