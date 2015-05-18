@@ -25,8 +25,6 @@ class Version20150504000000 extends AbstractMigration
 
     public function up(Schema $schema)
     {
-        $this->purgeOrphanedScrapbooksBlocks();
-
         \Concrete\Core\Database\Schema\Schema::refreshCoreXMLSchema(array(
             'ConversationPermissionAddMessageAccessList',
             'ConversationSubscriptions',
@@ -201,31 +199,6 @@ class Version20150504000000 extends AbstractMigration
                 unset($pd->pdRepeatPeriodEnd);
                 unset($pd->error);
                 $pd->save();
-            }
-        }
-    }
-
-    protected function purgeOrphanedScrapbooksBlocks()
-    {
-        $db = \Database::connection();
-        $orphanedCollectionVersionBlocks = $db->fetchAll(
-            '
-            select cID, cvID, cvb.bID, arHandle
-            from CollectionVersionBlocks cvb
-                inner join btCoreScrapbookDisplay btCSD on cvb.bID = btCSD.bID
-                inner join Blocks b on b.bID = btCSD.bOriginalID
-                left join BlockTypes bt on b.btID = bt.btID
-            where bt.btID IS NULL',
-            array()
-        );
-        foreach($orphanedCollectionVersionBlocks AS $row) {
-            $nc = \Page::getByID($row['cID'], $row['cvID']);
-            if (!is_object($nc) || $nc->isError()) {
-                continue;
-            }
-            $b = \Block::getByID($row['bID'], $nc, $row['arHandle']);
-            if (is_object($b)) {
-                $b->deleteBlock();
             }
         }
     }
