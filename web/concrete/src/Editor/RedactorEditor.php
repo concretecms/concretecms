@@ -22,7 +22,6 @@ class RedactorEditor implements EditorInterface
         $tp = new TaskPermission();
 
         $this->assets = ResponseAssetGroup::get();
-        $this->identifier = id(new Identifier())->getString(32);
         $this->token = Core::make("token")->generate('editor');
         $this->allowFileManager = \Config::get('concrete.editor.concrete.enable_filemanager') && $fp->canAccessFileManager();
         $this->allowSitemap = \Config::get('concrete.editor.concrete.enable_sitemap') && $tp->canAccessSitemap();
@@ -74,12 +73,13 @@ class RedactorEditor implements EditorInterface
             $options['concrete5'] = $concrete5;
         }
         $options = json_encode($options);
-        $html = sprintf('<textarea data-redactor-editor="%s" name="%s">%s</textarea>', $this->identifier, $key, $content);
+        $identifier = id(new Identifier())->getString(32);
+        $html = sprintf('<textarea data-redactor-editor="%s" name="%s">%s</textarea>', $identifier, $key, $content);
         $html .= <<<EOL
         <script type="text/javascript">
         var CCM_EDITOR_SECURITY_TOKEN = "{$this->token}";
         $(function() {
-            $('textarea[data-redactor-editor={$this->identifier}]').redactor({$options});
+            $('textarea[data-redactor-editor={$identifier}]').redactor({$options});
         });
         </script>
 EOL;
