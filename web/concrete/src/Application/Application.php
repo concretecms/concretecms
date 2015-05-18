@@ -287,7 +287,7 @@ class Application extends Container
      */
     public function handleURLSlashes(SymfonyRequest $request)
     {
-        $url = Url::createFromUrl($request->getUri(), Config::get('concrete.seo.trailing_slash'));
+        $url = Url::createFromUrl($request->getUri());
         if ($request->getPathInfo() != '/') {
             if (urldecode((string) $url) != urldecode($request->getUri())) {
                 $response = new RedirectResponse((string) $url, 301);
@@ -325,9 +325,7 @@ class Application extends Container
             // Uh oh, it didn't match. before we redirect to the canonical URL, let's check to see if we have an SSL
             // URL
             if (\Config::get('concrete.seo.canonical_ssl_url')) {
-                $ssl = UrlImmutable::createFromUrl(\Config::get('concrete.seo.canonical_ssl_url'),
-                    (bool) \Config::get('concrete.seo.trailing_slash')
-                );
+                $ssl = UrlImmutable::createFromUrl(\Config::get('concrete.seo.canonical_ssl_url'));
 
                 $new = $url->setScheme($ssl->getScheme()->get());
                 $new = $new->setHost($ssl->getHost()->get());
