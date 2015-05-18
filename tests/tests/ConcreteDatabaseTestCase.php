@@ -74,12 +74,25 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase {
 			$ds = $this->createMySQLXMLDataSet($path);
 			$compositeDs->addDataSet($ds);
 		}
+        if(in_array('BlockTypes', $this->tables)) {
+            $bt = \BlockType::getByHandle('core_scrapbook_display');
+            if($bt) {
+                $bt->delete();
+            }
+        }
 		return $compositeDs;
 	}
 
 
 	public function tearDown() {
 		if (count($this->tables)) {
+            if(in_array('BlockTypes', $this->tables)) {
+                $bt = \BlockType::getByHandle('core_scrapbook_display');
+                if($bt) {
+                    $bt->delete();
+                }
+            }
+
 			foreach ($this->tables as $table) {
 				// drop table
 				$conn = $this->getConnection();
