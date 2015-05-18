@@ -96,6 +96,19 @@ class Controller extends AttributeTypeController
         return ($data['address1'] != '' && $data['city'] != '' && $data['state_province'] != '' && $data['country'] != '' && $data['postal_code'] != '');
     }
 
+    public function validateValue()
+    {
+        $v = $this->getValue();
+        if (!is_object($v)) {
+            return false;
+        }
+        if (trim((string) $v) == '') {
+            return false;
+        }
+
+        return true;
+    }
+
     public function getSearchIndexValue()
     {
         $v = $this->getValue();
