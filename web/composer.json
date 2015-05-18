@@ -9,7 +9,7 @@
             "url": "https://github.com/concrete5/flysystem"
         }
     ],
-    "name" : "concrete5/concrete5-cms",
+    "name" : "concrete5/concrete5",
     "type" : "concrete5-update",
     "config": {
         "optimize-autoloader": true,
