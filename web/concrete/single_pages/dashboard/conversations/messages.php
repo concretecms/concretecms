@@ -285,11 +285,11 @@ $ip = Loader::helper('validation/ip'); ?>
     <style>
         span.ccm-conversation-display-author-name, #ccm-conversation-messages i.fa {
             position: relative;
-            z-index: 20000;
+            z-index: 800;
         }
 
         div.ccm-popover.ccm-conversation-message-popover {
-            z-index: 20001;
+            z-index: 801;
         }
     </style>
     <!-- END Body Pane -->
