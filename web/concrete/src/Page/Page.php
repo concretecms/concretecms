@@ -694,9 +694,10 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         }
         $cPath = $db->getOne($q);
 
-        $data['handle'] = $this->getCollectionHandle();
-        $data['name'] = $this->getCollectionName();
-
+        $data = array(
+            'handle' => $this->getCollectionHandle(),
+            'name' => $this->getCollectionName(),
+        );
         $cobj = parent::addCollection($data);
         $newCID = $cobj->getCollectionID();
 
@@ -764,9 +765,10 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         // make the handle out of the title
         $cLink = $ds->sanitizeURL($cLink);
         $handle = $dt->urlify($cLink);
-        $data['handle'] = $handle;
-        $data['name'] = $cName;
-
+        $data = array(
+            'handle' => $handle,
+            'name' => $cName,
+        );
         $cobj = parent::addCollection($data);
         $newCID = $cobj->getCollectionID();
 
@@ -2804,12 +2806,13 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $uID = HOME_UID;
         $name = HOME_NAME;
 
-        $data['name'] = HOME_NAME;
-        $data['handle'] = $handle;
-        $data['uID'] = $uID;
-        $data['cID'] = HOME_CID;
-
-        $cobj = parent::addCollection($data);
+        $data = array(
+            'name' => HOME_NAME,
+            'handle' => $handle,
+            'uID' => $uID,
+            'cID' => HOME_CID,
+        );
+        $cobj = parent::createCollection($data);
         $cID = $cobj->getCollectionID();
 
         $cDate = $dh->getOverridableNow();
