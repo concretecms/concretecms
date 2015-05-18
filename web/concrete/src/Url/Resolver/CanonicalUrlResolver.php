@@ -21,15 +21,14 @@ class CanonicalUrlResolver implements UrlResolverInterface
     */
    public function resolve(array $arguments, $resolved = null)
    {
-       $url = Url::createFromUrl('', (bool) \Config::get('concrete.seo.trailing_slash'));
+       $url = Url::createFromUrl('');
 
        $url->setHost(null);
        $url->setScheme(null);
 
        if (\Config::get('concrete.seo.canonical_url')) {
-           $canonical = UrlImmutable::createFromUrl(\Config::get('concrete.seo.canonical_url'),
-                (bool) \Config::get('concrete.seo.trailing_slash')
-            );
+           $canonical = UrlImmutable::createFromUrl(\Config::get('concrete.seo.canonical_url'));
+
            $url->getHost()->set($canonical->getHost());
            $url->getScheme()->set($canonical->getScheme());
            if (intval($canonical->getPort()->get()) > 0) {
