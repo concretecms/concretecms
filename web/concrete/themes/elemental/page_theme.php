@@ -1,8 +1,11 @@
-<?
-namespace Concrete\Theme\Elemental;
-class PageTheme extends \Concrete\Core\Page\Theme\Theme {
+<?php
 
-	public function registerAssets() {
+namespace Concrete\Theme\Elemental;
+
+class PageTheme extends \Concrete\Core\Page\Theme\Theme
+{
+    public function registerAssets()
+    {
         //$this->providesAsset('javascript', 'bootstrap/*');
         $this->providesAsset('css', 'bootstrap/*');
         $this->providesAsset('css', 'blocks/form');
@@ -21,9 +24,19 @@ class PageTheme extends \Concrete\Core\Page\Theme\Theme {
         $this->requireAsset('javascript', 'picturefill');
         $this->requireAsset('javascript-conditional', 'html5-shiv');
         $this->requireAsset('javascript-conditional', 'respond');
-	}
+    }
 
     protected $pThemeGridFrameworkHandle = 'bootstrap3';
+
+    public function getThemeName()
+    {
+        return t('Elemental');
+    }
+
+    public function getThemeDescription()
+    {
+        return t('Elegant, spacious theme with support for blogs, portfolios, layouts and more.');
+    }
 
     public function getThemeBlockClasses()
     {
@@ -33,28 +46,28 @@ class PageTheme extends \Concrete\Core\Page\Theme\Theme {
                 'recent-blog-entry',
                 'blog-entry-list',
                 'page-list-with-buttons',
-                'block-sidebar-wrapped'
+                'block-sidebar-wrapped',
             ),
             'next_previous' => array('block-sidebar-wrapped'),
             'share_this_page' => array('block-sidebar-wrapped'),
             'content' => array(
                 'block-sidebar-wrapped',
-                'block-sidebar-padded'
+                'block-sidebar-padded',
             ),
             'date_navigation' => array('block-sidebar-padded'),
             'topic_list' => array('block-sidebar-wrapped'),
             'testimonial' => array('testimonial-bio'),
             'image' => array(
                 'image-right-tilt',
-                'image-circle'
-            )
+                'image-circle',
+            ),
         );
     }
 
     public function getThemeAreaClasses()
     {
         return array(
-            'Page Footer' => array('area-content-accent')
+            'Page Footer' => array('area-content-accent'),
         );
     }
 
@@ -72,7 +85,7 @@ class PageTheme extends \Concrete\Core\Page\Theme\Theme {
         return array(
             'large' => '900px',
             'medium' => '768px',
-            'small' => '0'
+            'small' => '0',
         );
     }
 
@@ -85,8 +98,7 @@ class PageTheme extends \Concrete\Core\Page\Theme\Theme {
             array('title' => t('Image Caption'), 'menuClass' => 'image-caption', 'spanClass' => 'image-caption'),
             array('title' => t('Standard Button'), 'menuClass' => '', 'spanClass' => 'btn btn-default'),
             array('title' => t('Success Button'), 'menuClass' => '', 'spanClass' => 'btn btn-success'),
-            array('title' => t('Primary Button'), 'menuClass' => '', 'spanClass' => 'btn btn-primary')
+            array('title' => t('Primary Button'), 'menuClass' => '', 'spanClass' => 'btn btn-primary'),
         );
     }
-
 }
