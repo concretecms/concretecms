@@ -42,6 +42,21 @@ class Value extends Object
         }
     }
 
+    /**
+     * Validates the current attribute value to see if it fulfills the "requirement" portion of an attribute.
+     * @return bool|\Concrete\Core\Error\Error
+     */
+    public function validateAttributeValue()
+    {
+        $at = $this->attributeType;
+        $at->controller->setAttributeKey($this->attributeKey);
+        $e = true;
+        if (method_exists($at->controller, 'validateValue')) {
+            $e = $at->controller->validateValue();
+        }
+        return $e;
+    }
+
     public function getValue($mode = false)
     {
         if ($mode != false) {

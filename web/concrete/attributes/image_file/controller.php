@@ -114,6 +114,16 @@ class Controller extends AttributeTypeController
         }
     }
 
+    public function validateValue()
+    {
+        $f = $this->getValue();
+        if (!is_object($f)) {
+            $e = Loader::helper('validation/error');
+            $e->add(t('You must specify a valid file for %s', $this->attributeKey->getAttributeKeyDisplayName()));
+        }
+        return $e;
+    }
+
     public function validateForm($data)
     {
         if (Loader::helper('validation/numbers')->integer($data['value'])) {
