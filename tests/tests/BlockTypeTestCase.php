@@ -42,8 +42,4 @@ abstract class BlockTypeTestCase extends ConcreteDatabaseTestCase {
 		}
 
 	}
-
-
-
-
 }
