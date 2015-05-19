@@ -296,8 +296,10 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
             // we create one.
             $dh = Loader::helper('date');
             $cDate = $dh->getOverridableNow();
-            $data['pTemplateID'] = $template->getPageTemplateID();
-            $cobj = Collection::addCollection($data);
+            $data = array(
+                'pTemplateID' => $template->getPageTemplateID(),
+            );
+            $cobj = Collection::createCollection($data);
             $cID = $cobj->getCollectionID();
 
             $v2 = array($cID, 1, $this->getPageTypeID());
