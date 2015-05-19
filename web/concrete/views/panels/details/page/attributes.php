@@ -22,6 +22,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
             <input type="hidden" name="sitemap" value="1" />
         <? } ?>
 
+		<span class="ccm-detail-page-attributes-id"><?=t('Page ID: %s', $c->getCollectionID())?></span>
+
 		<?=Loader::helper('concrete/ui/help')->display('panel', '/page/attributes')?>
 		<? if ($assignment->allowEditName()) { ?>
 		<div class="form-group">
