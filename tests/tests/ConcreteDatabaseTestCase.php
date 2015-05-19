@@ -75,10 +75,14 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase {
 			$compositeDs->addDataSet($ds);
 		}
         if(in_array('BlockTypes', $this->tables)) {
-            $bt = \BlockType::getByHandle('core_scrapbook_display');
-            if($bt) {
-                $bt->delete();
-            }
+			$xml = simplexml_load_file(DIR_BASE_CORE . '/blocks/core_scrapbook_display/db.xml');
+			$schema = \Concrete\Core\Database\Schema\Schema::loadFromXMLElement($xml, $db);
+			$platform = $db->getDatabasePlatform();
+			$queries = $schema->toSql($platform);
+			foreach($queries as $query) {
+				$db->query($query);
+			}
+
         }
 		return $compositeDs;
 	}
@@ -87,10 +91,7 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase {
 	public function tearDown() {
 		if (count($this->tables)) {
             if(in_array('BlockTypes', $this->tables)) {
-                $bt = \BlockType::getByHandle('core_scrapbook_display');
-                if($bt) {
-                    $bt->delete();
-                }
+				$this->tables[] = 'btCoreScrapbookDisplay';
             }
 
 			foreach ($this->tables as $table) {
