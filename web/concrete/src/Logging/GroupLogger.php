@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\Logging;
+
 class GroupLogger
 {
 
