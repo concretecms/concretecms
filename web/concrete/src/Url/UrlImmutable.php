@@ -25,14 +25,8 @@ class UrlImmutable extends \League\Url\UrlImmutable implements UrlInterface
 
     }
 
-    public static function createFromUrl($url, $trailing_slashes = self::TRAILING_SLASHES_AUTO)
+    public static function createFromUrl($url, $trailing_slashes = false)
     {
-        if ($trailing_slashes === self::TRAILING_SLASHES_AUTO) {
-            $trailing_slashes = (bool) \Config::get('concrete.seo.trailing_slash', false);
-        }
-
-        $trailing_slashes = (bool) $trailing_slashes;
-
         $url = (string)$url;
         $url = trim($url);
         $original_url = $url;

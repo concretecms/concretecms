@@ -37,7 +37,7 @@ class Path extends \League\Url\Components\Path
             }
         }
 
-        return implode($this->delimiter, $res) . ((!!$this->trail && $res) ? '/' : '');
+        return implode($this->delimiter, $res) . (!!$this->trail ? '/' : '');
     }
 
     public function withoutDispatcher()
