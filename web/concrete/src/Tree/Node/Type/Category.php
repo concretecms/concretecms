@@ -79,7 +79,7 @@ abstract class Category extends TreeNode
         return $node;
     }
 
-    public function importNode(\SimpleXMLElement $sx, $parent = false)
+    public static function importNode(\SimpleXMLElement $sx, $parent = false)
     {
         return static::add((string) $sx['name'], $parent);
     }
