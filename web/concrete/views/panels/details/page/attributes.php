@@ -144,6 +144,7 @@ $(function() {
         ConcreteEvent.unsubscribe('AjaxFormSubmitSuccess.saveAttributes');
         ConcreteEvent.subscribe('AjaxFormSubmitSuccess.saveAttributes', function(e, data) {
             if (data.form == 'attributes') {
+				ConcreteToolbar.disableDirectExit();
                 ConcreteEvent.publish('SitemapUpdatePageRequestComplete', {'cID': data.response.cID});
             }
         });
