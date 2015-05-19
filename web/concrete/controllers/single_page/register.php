@@ -214,7 +214,7 @@ class Register extends PageController {
 					$mh->addParameter('uHash', $uHash);
 					$mh->addParameter('site', Config::get('concrete.site'));
 					$mh->to($_POST['uEmail']);
-					$mh->load('user_notified_approval_required');
+					$mh->load('user_register_approval_required_to_user');
 					$mh->sendMail();
 					
 					//$this->redirect('/register', 'register_pending', $rcID);
