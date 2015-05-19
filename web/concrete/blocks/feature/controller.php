@@ -1,6 +1,7 @@
 <?php
 
 namespace Concrete\Block\Feature;
+
 use Page;
 use Loader;
 
@@ -13,7 +14,6 @@ use Core;
 
 class Controller extends BlockController
 {
-
     public $helpers = array('form');
 
     protected $btInterfaceWidth = 400;
@@ -34,13 +34,14 @@ class Controller extends BlockController
         return t("Feature");
     }
 
-    function getLinkURL()
+    public function getLinkURL()
     {
         if (!empty($this->externalLink)) {
             return $this->externalLink;
         } else {
             if (!empty($this->internalLinkCID)) {
                 $linkToC = Page::getByID($this->internalLinkCID);
+
                 return (empty($linkToC) || $linkToC->error) ? '' : Loader::helper('navigation')->getLinkToCollection(
                     $linkToC
                 );
@@ -89,6 +90,7 @@ class Controller extends BlockController
             }
         }
         asort($icons);
+
         return $icons;
     }
 
@@ -128,6 +130,4 @@ class Controller extends BlockController
         unset($args['linkType']);
         parent::save($args);
     }
-
-
 }
