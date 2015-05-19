@@ -52,6 +52,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
         ConcreteEvent.unsubscribe('AjaxFormSubmitSuccess.saveSeo');
         ConcreteEvent.subscribe('AjaxFormSubmitSuccess.saveSeo', function(e, data) {
             if (data.form == 'seo') {
+				ConcreteToolbar.disableDirectExit();
                 ConcreteEvent.publish('SitemapUpdatePageRequestComplete', {'cID': data.response.cID});
             }
         });
