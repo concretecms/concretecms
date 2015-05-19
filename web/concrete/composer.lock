@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b6ced64c7eb666f70c68e16f7a624b1f",
+    "hash": "d2ba75434aade271e9f88cd1431202d1",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -3229,13 +3229,13 @@
             "version": "2.2.10",
             "source": {
                 "type": "git",
-                "url": "https://github.com/zendframework/zend-i18n.git",
-                "reference": "6a5a65c1cdcf02877e2526c1b3e315de6a59bb8c"
+                "url": "https://github.com/mlocati/zendframework2-i18n-v3.git",
+                "reference": "45a8a2442e7eaeef5059cb25e1fffe9c9fa0ffcb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zend-i18n/zipball/6a5a65c1cdcf02877e2526c1b3e315de6a59bb8c",
-                "reference": "6a5a65c1cdcf02877e2526c1b3e315de6a59bb8c",
+                "url": "https://api.github.com/repos/mlocati/zendframework2-i18n-v3/zipball/45a8a2442e7eaeef5059cb25e1fffe9c9fa0ffcb",
+                "reference": "45a8a2442e7eaeef5059cb25e1fffe9c9fa0ffcb",
                 "shasum": ""
             },
             "require": {
@@ -3277,16 +3277,25 @@
                     "Zend\\I18n\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "ZendTest\\I18n\\": "test/"
+                }
+            },
             "license": [
                 "BSD-3-Clause"
             ],
+            "description": " ",
             "homepage": "https://github.com/zendframework/zend-i18n",
             "keywords": [
                 "i18n",
                 "zf2"
             ],
-            "time": "2014-03-05 17:29:35"
+            "support": {
+                "source": "https://github.com/mlocati/zendframework2-i18n-v3/tree/release-2.2.10",
+                "issues": "https://github.com/mlocati/zendframework2-i18n-v3/issues"
+            },
+            "time": "2015-05-19 13:20:16"
         },
         {
             "name": "zendframework/zend-json",
