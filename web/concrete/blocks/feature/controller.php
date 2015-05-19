@@ -113,7 +113,7 @@ class Controller extends BlockController
 
     public function save($args)
     {
-        switch (intval($args['linkType'])) {
+        switch (isset($args['linkType']) ? intval($args['linkType']) : 0) {
             case 1:
                 $args['externalLink'] = '';
                 break;
