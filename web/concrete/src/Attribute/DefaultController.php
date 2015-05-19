@@ -1,23 +1,23 @@
 <?php
+
 namespace Concrete\Core\Attribute;
 
 use Core;
 use Database;
-use \Concrete\Core\Foundation\Object;
-use \Concrete\Core\Attribute\Controller as AttributeTypeController;
+use Concrete\Core\Attribute\Controller as AttributeTypeController;
 
 class DefaultController extends AttributeTypeController
 {
-
     protected $searchIndexFieldDefinition = array(
         'type' => 'string',
-        'options' => array('default' => null, 'notnull' => false)
+        'options' => array('default' => null, 'notnull' => false),
     );
 
     public function getValue()
     {
         $db = Database::get();
         $value = $db->GetOne("select value from atDefault where avID = ?", array($this->getAttributeValueID()));
+
         return $value;
     }
 
@@ -36,6 +36,7 @@ class DefaultController extends AttributeTypeController
         }
         $list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), '%' . $this->request('value') . '%',
             'like');
+
         return $list;
     }
 
@@ -86,5 +87,4 @@ class DefaultController extends AttributeTypeController
         $db = Database::get();
         $db->Execute('delete from atDefault where avID = ?', array($this->getAttributeValueID()));
     }
-
 }
