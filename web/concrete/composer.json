@@ -2,7 +2,7 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/mlocati/zendframework2-i18n-v2"
+            "url": "https://github.com/mlocati/zendframework2-i18n-v3"
         },
         {
             "type": "vcs",
