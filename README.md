@@ -1,12 +1,12 @@
-[![Build Status](http://img.shields.io/travis/concrete5/concrete5-5.7.0/develop.svg)](https://travis-ci.org/concrete5/concrete5-5.7.0)
+[![Build Status](http://img.shields.io/travis/concrete5/concrete5/develop.svg)](https://travis-ci.org/concrete5/concrete5)
 
-# concrete5 5.7.0 Developer Repository
+# concrete5 Developer Repository
 
-This is the developer repository for the 5.7 version of concrete5. In addition to user facing improvements (documented on concrete5.org), 5.7.0 is much different under the hood than 5.6 and earlier. In this repository we can make sure that 5.7 gets the attention it deserves, and anyone who wants to contribute to active 5.7 development can do so.
+This is the developer repository for Concrete5.
 
-## Important
+## Version
 
-This is a developer preview branch. This is intended for Add-On developers and core hackers. This is not intended for production sites of any kind.
+This repository contains Concrete5 version 5.7 and greater. Look for 5.6? You want [http://github.com/concrete5/concrete5-legacy](the concrete5-legacy repository).
 
 ## Installation
 
