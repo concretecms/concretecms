@@ -192,7 +192,7 @@ class Install extends Controller
             }
         }
 
-        $phpVmin = '5.3.3';
+        $phpVmin = $this->getMinimumPhpVersion();
         if (version_compare(PHP_VERSION, $phpVmin, '>=')) {
             $phpVtest = true;
         } else {
@@ -287,10 +287,14 @@ class Install extends Controller
         }
     }
 
+    /**
+     * @return \Concrete\Core\Error\Error
+     */
     public function configure()
     {
+        $error = \Core::make('helper/validation/error');
+        /* @var $error \Concrete\Core\Error\Error */
         try {
-
             $val = Loader::helper('validation/form');
             $val->setData($this->post());
             $val->addRequired("SITE", t("Please specify your site's name"));
@@ -301,24 +305,23 @@ class Install extends Controller
             $password = $_POST['uPassword'];
             $passwordConfirm = $_POST['uPasswordConfirm'];
 
-            $e = Loader::helper('validation/error');
             $uh = Loader::helper('concrete/user');
-            $uh->validNewPassword($password, $e);
+            $uh->validNewPassword($password, $error);
 
             if ($password) {
                 if ($password != $passwordConfirm) {
-                    $e->add(t('The two passwords provided do not match.'));
+                    $error->add(t('The two passwords provided do not match.'));
                 }
             }
 
             if (is_object($this->fileWriteErrors)) {
-                $e = $this->fileWriteErrors;
+                $error = $this->fileWriteErrors;
             }
 
-            $e = $this->validateDatabase($e);
-            $e = $this->validateSampleContent($e);
+            $error = $this->validateDatabase($error);
+            $error = $this->validateSampleContent($error);
 
-            if ($val->test() && (!$e->has())) {
+            if ($val->test() && (!$error->has())) {
 
                 // write the config file
                 $vh = Loader::helper('validation/identifier');
@@ -373,26 +376,34 @@ class Install extends Controller
 
             } else {
 
-                if ($e->has()) {
-                    $this->set('error', $e);
+                if ($error->has()) {
+                    $this->set('error', $error);
                 } else {
+                    $error = $val->getError();
                     $this->set('error', $val->getError());
                 }
             }
 
-        } catch (Exception $e) {
+        } catch (Exception $ex) {
             $this->reset();
-            $this->set('error', $e);
+            $this->set('error', $ex);
+            $error->add($ex);
         }
+        return $error;
     }
 
     protected function validateSampleContent($e)
     {
         $pkg = StartingPointPackage::getClass($this->post('SAMPLE_CONTENT'));
+        
         if (!is_object($pkg)) {
             $e->add(t("You must select a valid sample content starting point."));
         }
         return $e;
+    }
+    
+    public function getMinimumPhpVersion() {
+        return '5.3.3';
     }
 
 }
