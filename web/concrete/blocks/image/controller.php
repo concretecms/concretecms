@@ -1,9 +1,9 @@
 <?php
 
-
 namespace Concrete\Block\Image;
 
-use Loader;
+use Core;
+use Database;
 use File;
 use Page;
 use Concrete\Core\Block\BlockController;
@@ -89,7 +89,7 @@ class Controller extends BlockController
     {
         // i don't know why this->fID isn't sticky in some cases, leading us to query
         // every damn time
-        $db = Loader::db();
+        $db = Database::get();
         $fID = $db->GetOne('select fID from btContentImage where bID = ?', array($this->bID));
         if ($fID) {
             $f = File::getByID($fID);
@@ -150,7 +150,7 @@ class Controller extends BlockController
         } elseif (!empty($this->internalLinkCID)) {
             $linkToC = Page::getByID($this->internalLinkCID);
 
-            return (empty($linkToC) || $linkToC->error) ? '' : Loader::helper('navigation')->getLinkToCollection($linkToC);
+            return (empty($linkToC) || $linkToC->error) ? '' : Core::make('helper/navigation')->getLinkToCollection($linkToC);
         } else {
             return '';
         }
@@ -159,7 +159,7 @@ class Controller extends BlockController
     public function validate_composer()
     {
         $f = $this->getFileObject();
-        $e = Loader::helper('validation/error');
+        $e = Core::make('helper/validation/error');
         if (!is_object($f) || $f->isError() || !$f->getFileID()) {
             $e->add(t('You must specify a valid image file.'));
         }
