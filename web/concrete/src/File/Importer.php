@@ -208,15 +208,6 @@ class Importer
             $fv = $fr->getVersionToModify(true);
             $fv->updateFile($sanitizedFilename, $prefix);
             $fv->refreshAttributes($this->rescanThumbnailsOnImport);
-
-            $fsl = $fr->getFileStorageLocationObject();
-            if ($fsl->getID() != $storage->getID()) {
-                // we have to move the file from where we just imported it to this file's location.
-                $newFileSystem = $fsl->getFileSystemObject();
-                $contents = $fv->getFileContents();
-                $newFileSystem->put($fh->prefix($fv->getPrefix(), $fv->getFilename()), $contents);
-                $default->delete($fh->prefix($fv->getPrefix(), $fv->getFilename()));
-            }
         }
 
         return $fv;

@@ -11,9 +11,15 @@ if (!$fp->canAddFiles()) {
     die(t("Unable to add files."));
 }
 
+$error = Loader::helper('validation/error');
+
 if (isset($_REQUEST['fID'])) {
     // we are replacing a file
     $fr = File::getByID($_REQUEST['fID']);
+    $frp = new Permissions($fr);
+    if (!$frp->canEditFileContents()) {
+        $error->add(t('You do not have permission to modify this file.'));
+    }
 } else {
     $fr = false;
 }
@@ -23,8 +29,6 @@ $r = new FileEditResponse();
 $valt = Loader::helper('validation/token');
 $file = Loader::helper('file');
 Loader::helper('mime');
-
-$error = Loader::helper('validation/error');
 
 // load all the incoming fields into an array
 $incoming_urls = array();
