@@ -123,6 +123,16 @@ class Controller extends BlockController {
     }
 
     public function save($args) {
+        $args = $args + array(
+            'fID' => 0,
+            'fOnstateID' => 0,
+            'maxWidth' => 0,
+            'maxHeight' => 0,
+            'constrainImage' => 0,
+            'linkType' => 0,
+            'externalLink' => '',
+            'internalLinkCID' => 0,
+        );
         $args['fID'] = ($args['fID'] != '') ? $args['fID'] : 0;
         $args['fOnstateID'] = ($args['fOnstateID'] != '') ? $args['fOnstateID'] : 0;
         $args['maxWidth'] = (intval($args['maxWidth']) > 0) ? intval($args['maxWidth']) : 0;
