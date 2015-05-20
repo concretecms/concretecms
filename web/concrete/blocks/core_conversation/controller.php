@@ -2,7 +2,8 @@
 
 namespace Concrete\Block\CoreConversation;
 
-use Loader;
+use Core;
+use Database;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Conversation\Conversation;
 use Concrete\Core\Conversation\Message\MessageList;
@@ -67,7 +68,7 @@ class Controller extends BlockController implements ConversationFeatureInterface
         if (!isset($this->conversation)) {
             // i don't know why this->cnvid isn't sticky in some cases, leading us to query
             // every damn time
-            $db = Loader::db();
+            $db = Database::get();
             $cnvID = $db->GetOne('select cnvID from btCoreConversation where bID = ?', array($this->bID));
             $this->conversation = Conversation::getByID($cnvID);
         }
@@ -78,7 +79,7 @@ class Controller extends BlockController implements ConversationFeatureInterface
     public function duplicate_master($newBID, $newPage)
     {
         parent::duplicate($newBID);
-        $db = Loader::db();
+        $db = Database::get();
         $conv = Conversation::add();
         $conv->setConversationPageObject($newPage);
         $this->conversation = $conv;
@@ -118,7 +119,7 @@ class Controller extends BlockController implements ConversationFeatureInterface
         if (is_object($conversation)) {
             $this->set('conversation', $conversation);
             if ($this->enablePosting) {
-                $token = Loader::helper('validation/token')->generate('add_conversation_message');
+                $token = Core::make('helper/validation/token')->generate('add_conversation_message');
             } else {
                 $token = '';
             }
@@ -138,7 +139,7 @@ class Controller extends BlockController implements ConversationFeatureInterface
     public function getFileSettings()
     {
         $conversation = $this->getConversationObject();
-        $helperFile = Loader::helper('concrete/file');
+        $helperFile = Core::make('helper/concrete/file');
         $maxFilesGuest = $conversation->getConversationMaxFilesGuest();
         $attachmentOverridesEnabled = $conversation->getConversationAttachmentOverridesEnabled();
         $maxFilesRegistered = $conversation->getConversationMaxFilesRegistered();
@@ -179,8 +180,8 @@ class Controller extends BlockController implements ConversationFeatureInterface
 
     public function save($post)
     {
-        $helperFile = Loader::helper('concrete/file');
-        $db = Loader::db();
+        $helperFile = Core::make('helper/concrete/file');
+        $db = Database::get();
         $cnvID = $db->GetOne('select cnvID from btCoreConversation where bID = ?', array($this->bID));
         if (!$cnvID) {
             $conversation = Conversation::add();
