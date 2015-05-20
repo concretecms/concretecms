@@ -86,9 +86,6 @@ class Urls extends DashboardPageController
         }
 
         if (!$this->error->has()) {
-            $strHtText = $this->getHtaccessText();
-            $blnHtu = 0;
-
             if ($this->isPost()) {
                 Config::save('concrete.seo.canonical_url', $this->post('canonical_url'));
                 Config::save('concrete.seo.canonical_ssl_url', $this->post('canonical_ssl_url'));
