@@ -1,7 +1,7 @@
 #!/usb/bin/php
 <?php
-define('DIR_BASE', __DIR__);
-$DIR_BASE_CORE = __DIR__.'/concrete';
+$DIR_BASE_CORE = dirname(__DIR__);
+define('DIR_BASE', dirname($DIR_BASE_CORE));
 
 require $DIR_BASE_CORE . '/bootstrap/configure.php';
 require $DIR_BASE_CORE . '/bootstrap/autoload.php';
