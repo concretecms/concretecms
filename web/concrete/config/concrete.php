@@ -326,7 +326,7 @@ return array(
          */
         'enabled' => true,
         'default' => array(
-            'address' => 'concrete5-noreply@' . $_SERVER['SERVER_NAME'],
+            'address' => 'concrete5-noreply@' . (isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'localhost'),
             'name'    => ''
         ),
         'form_block' => array(
