@@ -174,7 +174,10 @@ class PageView extends View
         $this->cp = $cp;
         if ($cp->canViewToolbar()) {
             $dh = Loader::helper('concrete/dashboard');
-            if (!$dh->inDashboard() && $this->c->getCollectionPath() != '/page_not_found' && $this->c->isActive() && !$this->c->isMasterCollection()) {
+            if (!$dh->inDashboard()
+                && $this->c->getCollectionPath() != '/page_not_found'
+                && $this->c->getCollectionPath() != '/download_file'
+                && $this->c->isActive() && !$this->c->isMasterCollection()) {
                 $u = new User();
                 $u->markPreviousFrontendPage($this->c);
             }
