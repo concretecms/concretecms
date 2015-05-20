@@ -90,13 +90,18 @@ class CssAsset extends Asset
             ;                   # end token
             /x',
             function ($m) use ($change_prefix) {
-                $url = $change_prefix.$m[1];
-                $url = str_replace('/./', '/', $url);
-                do {
-                    $url = preg_replace('@/(?!\\.\\.?)[^/]+/\\.\\.@', '/', $url, 1, $changed);
-                } while ($changed);
+                if (preg_match('@^https?://@i', $m[1])) {
+                    $result = $m[0];
+                } else {
+                    $url = $change_prefix.$m[1];
+                    $url = str_replace('/./', '/', $url);
+                    do {
+                        $url = preg_replace('@/(?!\\.\\.?)[^/]+/\\.\\.@', '/', $url, 1, $changed);
+                    } while ($changed);
+                    $result = "@import url('$url'){$m[2]};";
+                }
 
-                return "@import url('$url'){$m[2]};";
+                return $result;
             },
             $content
         );
