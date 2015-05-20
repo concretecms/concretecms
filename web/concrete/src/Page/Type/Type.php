@@ -583,6 +583,13 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
     }
 
+    public function getPageTypeUsageCount()
+    {
+        $db = Loader::db();
+        $count = $db->GetOne('select count(cID) from Pages where cIsTemplate = 0 and ptID = ? and cIsActive = 1', array($this->ptID));
+        return $count;
+    }
+
     public function duplicate($ptHandle, $ptName)
     {
         $data = array(

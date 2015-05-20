@@ -64,7 +64,7 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
                 $error .= $e->getMessage();
             }
             foreach($con1 as $con) {
-                $contents[$con['name']] = $con['name'];
+                $contents[$con['basename']] = $con['basename'];
             }
             if (count($contents) > 0) { ?>
                 <form method="post" id="ccm-file-manager-replace-incoming" class="form-inline" data-dialog-form="replace-file" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/importers/incoming">

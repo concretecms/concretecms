@@ -184,6 +184,16 @@ div.ccm-area[data-total-blocks="0"] {
 
 }
 
+/**
+ * Empty areas - firefox stupidity
+ */
+@-moz-document url-prefix() {
+  div.ccm-area[data-total-blocks="0"] {
+    border:1px solid #e6e6e6;
+    outline:none!important;
+  }
+}
+
 div.ccm-area[data-total-blocks="0"].ccm-area-drag-block-type-over, div.ccm-area[data-total-blocks="0"].ccm-menu-item-hover {
 
   outline: 1px solid #0c6;
