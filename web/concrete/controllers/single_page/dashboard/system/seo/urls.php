@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\System\Seo;
 
+use Core;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use Loader;
 use Config;
@@ -15,15 +16,19 @@ class Urls extends DashboardPageController
     {
         $strRules = '
 <IfModule mod_rewrite.c>
-RewriteEngine On
-RewriteBase ' . DIR_REL . '/
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME}/index.html !-f
-RewriteCond %{REQUEST_FILENAME}/index.php !-f
-RewriteRule . ' . DISPATCHER_FILENAME .' [L]
-</IfModule>';
+  RewriteEngine On
+  RewriteBase ' . DIR_REL . '/
 
-        return $strRules;
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME}/index.html !-f
+  RewriteCond %{REQUEST_FILENAME}/index.php !-f
+  RewriteRule . ' . DISPATCHER_FILENAME .' [L]
+
+  RewriteRule ^cli(\.bat)?$ ' . DISPATCHER_FILENAME .' [L]
+</IfModule>
+';
+
+        return trim($strRules);
     }
 
     /**
@@ -34,12 +39,12 @@ RewriteRule . ' . DISPATCHER_FILENAME .' [L]
     public function getHtaccessText()
     {
         $strHt = '
-        # -- concrete5 urls start --'
-        . $this->getRewriteRules() . '
-        # -- concrete5 urls end --
-        ';
+# -- concrete5 urls start --
+'. $this->getRewriteRules() . '
+# -- concrete5 urls end --
+';
 
-        return preg_replace('/\t/', '', $strHt);
+        return trim($strHt);
     }
 
 
@@ -65,13 +70,10 @@ RewriteRule . ' . DISPATCHER_FILENAME .' [L]
 
         if ($strStatus == 'saved') {
             $message = t('Settings Saved.');
-            if (Config::get('concrete.seo.url_rewriting') && !$blnHtu) {
-                $this->set('message', $message . ' ' . $urlmsg . ' ' . t('You need to update .htaccess by hand.'));
-            } elseif (Config::get('concrete.seo.url_rewriting') && $blnHtu) {
-                $this->set('message', $message . ' ' . $urlmsg . ' ' .t('We were able to automatically update .htaccess file.'));
-            } else {
-                $this->set('message', $message);
+            if ($blnHtu !== false) {
+                $message .= $blnHtu ? t('We were able to automatically update .htaccess file.') : t('You need to update .htaccess by hand.');
             }
+            $this->set('message', $message);
         }
     }
 
@@ -89,7 +91,7 @@ RewriteRule . ' . DISPATCHER_FILENAME .' [L]
         }
 
         if (!$this->error->has()) {
-            $strHtText = (string) $this->getHtaccessText();
+            $strHtText = $this->getHtaccessText();
             $blnHtu = 0;
 
             if ($this->isPost()) {
@@ -108,24 +110,61 @@ RewriteRule . ' . DISPATCHER_FILENAME .' [L]
                 }
 
                 Config::save('concrete.seo.url_rewriting', $intPosted);
-
-                if ($this->post('URL_REWRITING') == 1) {
-                    if (file_exists(DIR_BASE . '/.htaccess') && is_writable(DIR_BASE . '/.htaccess')) {
-                        if (file_put_contents(DIR_BASE . '/.htaccess', $strHtText, FILE_APPEND)) {
-                            $blnHtu = 1;
+                $blnHtu = 0;
+                $htAccessFile = DIR_BASE . '/.htaccess';
+                $fh = Core::make('helper/file');
+                /* @var $fh \Concrete\Core\File\Service\File */
+                if ($intPosted == 1) {
+                    if (is_file($htAccessFile)) {
+                        if (is_writable($htAccessFile)) {
+                            $contents = $fh->getContents($htAccessFile);
+                            if ($contents !== false) {
+                                $contents = rtrim($contents);
+                                if ($contents === '') {
+                                    $contents = $this->getHtaccessText() . "\n";
+                                } else {
+                                    $contents .= "\n\n" . $this->getHtaccessText() . "\n";
+                                }
+                                if (file_put_contents($htAccessFile, $contents)) {
+                                    $blnHtu = 1;
+                                }
+                            }
                         }
-                    } elseif (!file_exists(DIR_BASE . '/.htaccess') && is_writable(DIR_BASE)) {
-                        if (file_put_contents(DIR_BASE . '/.htaccess', $strHtText)) {
+                    } elseif (!file_exists($htAccessFile) && is_writable(DIR_BASE)) {
+                        if (file_put_contents($htAccessFile, $this->getHtaccessText() . "\n")) {
                             $blnHtu = 1;
                         }
                     }
                 } else {
-                    if (file_exists(DIR_BASE . '/.htaccess') && is_writable(DIR_BASE . '/.htaccess')) {
-                        $fh = Loader::helper('file');
-                        $contents = $fh->getContents(DIR_BASE . '/.htaccess');
-
-                        if (file_put_contents(DIR_BASE . '/.htaccess', str_replace($strHtText, '', $contents))) {
-                            $blnHtu = 1;
+                    if (is_file($htAccessFile) && is_writable($htAccessFile)) {
+                        $contents = $fh->getContents($htAccessFile);
+                        if ($contents !== false) {
+                            $rx = '';
+                            // Contents before
+                            $rx .= '(^(?:';
+                            $rx .= '\s*'; // before we have nothing (or at most some space/empty line)
+                            $rx .= '|.*[\r\n]+'; // or we have something followed by a new line
+                            $rx .= ')?)';
+                            // Part to remove
+                            $rx .= '[ \t]*# -- concrete5 urls start --.*?# -- concrete5 urls end --[ \t]*';
+                            // Contents after
+                            $rx .= '((?:';
+                            $rx .= '\s*'; // after we have nothing (or at most some space/empty line)
+                            $rx .= '|[\r\n]+.*'; // or we have something after a new line
+                            $rx .= ')$)';
+                            $match = null;
+                            if (preg_match('/'.$rx.'/s', $contents, $match)) {
+                                $pre = rtrim($match[1]);
+                                $post = ltrim($match[2]);
+                                if ($pre === '' || $post === '') {
+                                    $contents = rtrim($pre.$post)."\n";
+                                } else {
+                                    $contents = $pre."\n\n".$post;
+                                }
+                                if (file_put_contents($htAccessFile, $contents)) {
+                                    $blnHtu = 1;
+                                }
+                            }
                         }
                     }
                 }
