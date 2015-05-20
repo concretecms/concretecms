@@ -189,7 +189,20 @@ use Page;
             } else {
                 $conversation = Conversation::getByID($cnvID);
             }
-            $values = $post;
+            $values = $post + array(
+                'attachmentOverridesEnabled' => null,
+                'attachmentsEnabled' => null,
+                'itemsPerPage' => null,
+                'maxFilesGuest' => null,
+                'maxFilesRegistered' => null,
+                'maxFileSizeGuest' => null,
+                'maxFileSizeRegistered' => null,
+                'enableOrdering' => null,
+                'enableCommentRating' => null,
+                'notificationOverridesEnabled' => null,
+                'subscriptionEnabled' => null,
+                'fileExtensions' => null,
+            );
             if ($values['attachmentOverridesEnabled']) {
                 $conversation->setConversationAttachmentOverridesEnabled(intval($values['attachmentOverridesEnabled']));
             } else {
