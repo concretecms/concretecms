@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/concrete5/concrete5-5.7.0.svg?branch=master)](https://travis-ci.org/concrete5/concrete5-tests)
+[![Build Status](https://travis-ci.org/concrete5/concrete5.svg?branch=master)](https://travis-ci.org/concrete5/concrete5-tests)
 
 
 ## Step 1: Install PHPUnit

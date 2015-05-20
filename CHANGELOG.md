@@ -128,7 +128,7 @@ Instead of defaulting to the current time/date, form block date/datetime have th
 * You can now embed the block controller for this share this page block in a page template more easily.
 * You can now specify permissions and attributes for external links (thanks mitchray)
 * Better scrolling in add block panel on Firefox (thanks EC-Joe)
-* Fixed https://github.com/concrete5/concrete5-5.7.0/issues/875
+* Fixed https://github.com/concrete5/concrete5/issues/875
 
 ## Bug Fixes
 
