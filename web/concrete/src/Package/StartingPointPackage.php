@@ -14,11 +14,11 @@ use Concrete\Core\Updater\Migrations\Configuration;
 use Concrete\Core\User\Point\Action\Action as UserPointAction;
 use Config;
 use Core;
+use Database;
 use FileSet;
 use Group;
 use GroupTree;
 use Hautelook\Phpass\PasswordHash;
-use Loader;
 use Package as BasePackage;
 use Page;
 use PermissionAccess;
@@ -70,7 +70,7 @@ class StartingPointPackage extends BasePackage
 
     public static function hasCustomList()
     {
-        $fh = Loader::helper('file');
+        $fh = Core::make('helper/file');
         if (is_dir(DIR_STARTING_POINT_PACKAGES)) {
             $available = $fh->getDirectoryContents(DIR_STARTING_POINT_PACKAGES);
             if (count($available) > 0) {
@@ -83,7 +83,7 @@ class StartingPointPackage extends BasePackage
 
     public static function getAvailableList()
     {
-        $fh = Loader::helper('file');
+        $fh = Core::make('helper/file');
         // first we check the root install directory. If it exists, then we only include stuff from there. Otherwise we get it from the core.
         $available = array();
         if (is_dir(DIR_STARTING_POINT_PACKAGES)) {
@@ -131,7 +131,7 @@ class StartingPointPackage extends BasePackage
             $bi = $b->getInstance();
             $bi->setupAndRun('view');
         }
-        Loader::helper('concrete/ui')->cacheInterfaceItems();
+        Core::make('helper/concrete/ui')->cacheInterfaceItems();
     }
     */
 
@@ -249,7 +249,7 @@ class StartingPointPackage extends BasePackage
 
     public function install_database()
     {
-        $db = Loader::db();
+        $db = Database::get();
         $num = $db->GetCol("show tables");
         if (count($num) > 0) {
             throw new \Exception(
@@ -276,7 +276,7 @@ class StartingPointPackage extends BasePackage
 
     protected function indexAdditionalDatabaseFields()
     {
-        $db = Loader::db();
+        $db = Database::get();
 
         $db->Execute('ALTER TABLE PagePaths ADD INDEX (`cPath` (255))');
         $db->Execute('ALTER TABLE Groups ADD INDEX (`gPath` (255))');
@@ -501,9 +501,9 @@ class StartingPointPackage extends BasePackage
         );
 
         $config = \Core::make('config/database');
-        $config->save('concrete.security.token.jobs', Loader::helper('validation/identifier')->getString(64));
-        $config->save('concrete.security.token.encryption', Loader::helper('validation/identifier')->getString(64));
-        $config->save('concrete.security.token.validation', Loader::helper('validation/identifier')->getString(64));
+        $config->save('concrete.security.token.jobs', Core::make('helper/validation/identifier')->getString(64));
+        $config->save('concrete.security.token.encryption', Core::make('helper/validation/identifier')->getString(64));
+        $config->save('concrete.security.token.validation', Core::make('helper/validation/identifier')->getString(64));
 
         // group permissions
         $tree = GroupTree::get();
