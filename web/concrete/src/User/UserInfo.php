@@ -300,6 +300,11 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 
         $db = Loader::db();
         $db->query("update Users set uHasAvatar = 1 where uID = ?", array($this->getUserID()));
+
+        // run any internal event we have for user update
+        $ui = self::getByID($this->uID);
+        $ue = new \Concrete\Core\User\Event\UserInfo($ui);
+        Events::dispatch('on_user_update', $ue);
     }
 
     public function sendPrivateMessage($recipient, $subject, $text, $inReplyTo = false)
