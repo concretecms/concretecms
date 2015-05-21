@@ -29,7 +29,7 @@
         "patchwork/utf8": "1.1.x-dev",
         "oyejorge/less.php": "v1.7.0.1",
         "imagine/imagine": "0.6.*@dev",
-        "innogames/cssmin": "dev-master",
+        "natxet/cssmin": "dev-master",
         "tedivm/jshrink": "0.5.*",
         "michelf/php-markdown": "1.4.*@dev",
         "filp/whoops": "1.*",
