@@ -73,8 +73,13 @@ abstract class Asset
      * @param Asset[] $assets
      *
      * @return Asset[]
+     *
+     * @abstract
      */
-    abstract public static function process($assets);
+    public static function process($assets)
+    {
+        return $assets;
+    }
 
     abstract public function __toString();
 
