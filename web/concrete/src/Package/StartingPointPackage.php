@@ -139,9 +139,9 @@ class StartingPointPackage extends BasePackage
         $ci = new ContentImporter();
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/attributes.xml');
 
-        $topicType = \Concrete\Core\Tree\TreeType::add('topic', $pkg);
-        $topicCategoryNodeType = \Concrete\Core\Tree\Node\NodeType::add('topic_category', $pkg);
-        $topicNodeType = \Concrete\Core\Tree\Node\NodeType::add('topic', $pkg);
+        $topicType = \Concrete\Core\Tree\TreeType::add('topic');
+        $topicCategoryNodeType = \Concrete\Core\Tree\Node\NodeType::add('topic_category');
+        $topicNodeType = \Concrete\Core\Tree\Node\NodeType::add('topic');
         //$tree = \Concrete\Core\Tree\Type\Topic::add('Topics');
 
     }
