@@ -694,6 +694,14 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
      */
     public static function add($data, $pkg = false)
     {
+        $data = $data + array(
+            'defaultTemplate' => null,
+            'allowedTemplates' => null,
+            'templates' => null,
+            'internal' => null,
+            'ptLaunchInComposer' => null,
+            'ptIsFrequentlyAdded' => null,
+        );
         $ptHandle = $data['handle'];
         $ptName = $data['name'];
         $ptDefaultPageTemplateID = 0;
