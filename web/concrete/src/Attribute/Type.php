@@ -176,7 +176,7 @@ class Type extends Object
             'select atID, pkgID, atHandle, atName from AttributeTypes where atHandle = ?',
             array($atHandle)
         );
-        if ($row['atID']) {
+        if ($row && $row['atID']) {
             $at = new static();
             $at->setPropertiesFromArray($row);
             $at->loadController();
