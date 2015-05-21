@@ -1,18 +1,18 @@
 <?php
+
 namespace Concrete\Core\Attribute;
 
-use \Concrete\Core\Foundation\Object;
-use \Concrete\Core\Attribute\View as AttributeTypeView;
+use Concrete\Core\Foundation\Object;
+use Concrete\Core\Attribute\View as AttributeTypeView;
 use Gettext\Translations;
 use Loader;
-use \Concrete\Core\Package\PackageList;
+use Concrete\Core\Package\PackageList;
 use Environment;
 use Package;
 use Core;
 
 class Type extends Object
 {
-
     /** @var  \Concrete\Core\Attribute\Controller */
     public $controller;
     public $atName;
@@ -44,6 +44,7 @@ class Type extends Object
      * @param string $format = 'html'
      *    Escape the result in html format (if $format is 'html').
      *    If $format is 'text' or any other value, the display name won't be escaped.
+     *
      * @return string
      */
     public function getAttributeTypeDisplayName($format = 'html')
@@ -65,6 +66,7 @@ class Type extends Object
         $at = new static();
         $at->setPropertiesFromArray($row);
         $at->loadController();
+
         return $at;
     }
 
@@ -90,6 +92,7 @@ class Type extends Object
             $list[] = static::getByID($row['atID']);
         }
         $r->Close();
+
         return $list;
     }
 
@@ -138,6 +141,7 @@ class Type extends Object
             $list[] = static::getByID($row['atID']);
         }
         $r->Close();
+
         return $list;
     }
 
@@ -158,6 +162,7 @@ class Type extends Object
             "select count(akCategoryID) from AttributeTypeCategories where akCategoryID = ? and atID = ?",
             array($cat->getAttributeKeyCategoryID(), $this->getAttributeTypeID())
         );
+
         return $r > 0;
     }
 
@@ -180,6 +185,7 @@ class Type extends Object
             $at = new static();
             $at->setPropertiesFromArray($row);
             $at->loadController();
+
             return $at;
         }
     }
@@ -202,12 +208,14 @@ class Type extends Object
         if ($path) {
             Package::installDB($path);
         }
+
         return $est;
     }
 
     public function getValue($avID)
     {
         $cnt = $this->getController();
+
         return $cnt->getValue($avID);
     }
 
@@ -241,6 +249,7 @@ class Type extends Object
             implode('/', array(DIRNAME_ATTRIBUTES . '/' . $this->getAttributeTypeHandle() . '/' . FILENAME_BLOCK_ICON)),
             $this->getPackageHandle()
         );
+
         return $url;
     }
 
@@ -282,10 +291,10 @@ class Type extends Object
     {
         $translations = new Translations();
         $attribs = static::getList();
-        foreach($attribs as $type) {
+        foreach ($attribs as $type) {
             $translations->insert('AttributeTypeName', $type->getAttributeTypeName());
         }
+
         return $translations;
     }
-
 }
