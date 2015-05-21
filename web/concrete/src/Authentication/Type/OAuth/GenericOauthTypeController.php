@@ -303,7 +303,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
 
         $data = array();
         $data['uName'] = $username;
-        $data['uPassword'] = "";
+        $data['uPassword'] = \Illuminate\Support\Str::random(256);
         $data['uEmail'] = $email;
         $data['uIsValidated'] = 1;
 
