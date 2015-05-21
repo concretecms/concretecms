@@ -379,7 +379,6 @@ class StartingPointPackage extends BasePackage
 
         $renderer = new Renderer($database);
 
-        @unlink(DIR_CONFIG_SITE . '/database.php');
         file_put_contents(DIR_CONFIG_SITE . '/database.php', $renderer->render());
         @chmod(DIR_CONFIG_SITE . '/database.php', Config::get('concrete.filesystem.permissions.file'));
 
