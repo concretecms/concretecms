@@ -172,7 +172,7 @@ class Forms extends DashboardPageController
             $answerSetCount = MiniSurvey::getAnswerCount($questionSet);
 
             //pagination 
-            $pageBaseSurvey = $pageBase . '&qsid=' . $questionSet;
+            $pageBaseSurvey = $pageBase . '?qsid=' . $questionSet;
             $paginator = Loader::helper('pagination');
             $sortBy = $_REQUEST['sortBy'];
             $paginator->init(
