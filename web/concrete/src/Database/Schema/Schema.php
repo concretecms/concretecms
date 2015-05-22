@@ -26,12 +26,17 @@ class Schema
 
     public static function getSchemaParser(\SimpleXMLElement $sx)
     {
-        switch ($sx['version']) {
-            case '0.3':
-                $parser = new \Concrete\Core\Database\Schema\Parser\Axmls($sx);
-                break;
-            default:
-                throw new \Exception(t('Invalid schema version found. Expecting 0.3'));
+        $sx->registerXPathNamespace('dx0.5', 'http://www.concrete5.org/doctrine-xml/0.5');
+        if ($sx->xpath('/dx0.5:schema')) {
+            $parser = new \Concrete\Core\Database\Schema\Parser\DoctrineXml05($sx);
+        } else {
+            switch ($sx['version']) {
+                case '0.3':
+                    $parser = new \Concrete\Core\Database\Schema\Parser\Axmls($sx);
+                    break;
+                default:
+                    throw new \Exception(t('Invalid schema version found. Expecting 0.3'));
+            }
         }
         return $parser;
     }
@@ -40,8 +45,7 @@ class Schema
     {
 
         $xml = simplexml_load_file(DIR_BASE_CORE . '/config/db.xml');
-        $output = new \SimpleXMLElement("<schema></schema>");
-        $output->addAttribute('version', '0.3');
+        $output = new \SimpleXMLElement('<schema xmlns="http://www.concrete5.org/doctrine-xml/0.5" />');
         $th = \Core::make('helper/text');
         foreach($xml->table as $t) {
             $name = (string) $t['name'];
