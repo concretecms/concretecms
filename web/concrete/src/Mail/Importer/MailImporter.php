@@ -101,6 +101,16 @@ class MailImporter extends Object {
 
 	public function add($args, $pkg = null) {
 		$db = Loader::db();
+		$args = $args + array(
+		  'miPort' => null,
+		  'miIsEnabled' => null,
+		  'miEncryption' => null,
+		  'miConnectionMethod' => null,
+		  'miServer' => null,
+		  'miUsername' => null,
+		  'miPassword' => null,
+		  'miEmail' => null,
+		);
 		extract($args);
 		
 		if ($miPort < 1) {
