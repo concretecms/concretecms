@@ -216,36 +216,31 @@ if ($u->isSuperUser() && !$includesHome) { ?>
 		<p><?php echo t('You have not created any multilingual content sections yet.')?></p>
 	<?php } ?>
 
-	<? if(version_compare(APP_VERSION, '5.6.0.3', '>')) {
-			// 5.6.1 OR GREATER
-		?>
-		<script type="text/javascript">
-		$(function() {
-			$("#ccm-internationalization-copy-tree").on('submit', function() {
-				var ctf = $('select[name=copyTreeFrom]').val();
-				var ctt = $('select[name=copyTreeTo]').val();
-				if (ctt > 0 && ctf > 0 && ctt != ctf) {
-					ccm_triggerProgressiveOperation(
-						CCM_TOOLS_PATH + '/dashboard/sitemap_copy_all',
-						[
-							{'name': 'origCID', 'value': ctf},
-							{'name': 'destCID', 'value': ctt},
-							{'name': 'copyChildrenOnly', 'value': true},
-							{'name': 'multilingual', 'value': true}
-						],
-						"<?=t('Copy Locale Tree')?>", function() {
-							window.location.href= "<?=$this->action('tree_copied')?>";
-						}
-					);
-				} else {
-					alert("<?=t('You must choose two separate multilingual sections to copy from/to')?>");
-				}
-				return false;
-			});
+	<script type="text/javascript">
+	$(function() {
+		$("#ccm-internationalization-copy-tree").on('submit', function() {
+			var ctf = $('select[name=copyTreeFrom]').val();
+			var ctt = $('select[name=copyTreeTo]').val();
+			if (ctt > 0 && ctf > 0 && ctt != ctf) {
+				ccm_triggerProgressiveOperation(
+					CCM_TOOLS_PATH + '/dashboard/sitemap_copy_all',
+					[
+						{'name': 'origCID', 'value': ctf},
+						{'name': 'destCID', 'value': ctt},
+						{'name': 'copyChildrenOnly', 'value': true},
+						{'name': 'multilingual', 'value': true}
+					],
+					"<?=t('Copy Locale Tree')?>", function() {
+						window.location.href= "<?=$this->action('tree_copied')?>";
+					}
+				);
+			} else {
+				alert("<?=t('You must choose two separate multilingual sections to copy from/to')?>");
+			}
+			return false;
 		});
-		</script>
-
-	<? } ?>
+	});
+	</script>
 
 </form>
 <? } else if (!$u->isSuperUser()) { ?>
