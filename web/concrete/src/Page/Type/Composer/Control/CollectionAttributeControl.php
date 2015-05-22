@@ -143,7 +143,7 @@ class CollectionAttributeControl extends Control
             $e = \Core::make('error');
             if ($this->isFormSubmission()) {
                 $response = $ak->validateAttributeForm();
-                if ($response == false) {
+                if ($response === false) {
                     $e->add(t('The field "%s" is required', $ak->getAttributeKeyDisplayName()));
                 } else if ($response instanceof \Concrete\Core\Error\Error) {
                     $e->add($response);
@@ -154,7 +154,7 @@ class CollectionAttributeControl extends Control
                     $e->add(t('The field "%s" is required', $ak->getAttributeKeyDisplayName()));
                 } else {
                     $response = $value->validateAttributeValue();
-                    if ($response == false) {
+                    if ($response === false) {
                         $e->add(t('The field "%s" is required', $ak->getAttributeKeyDisplayName()));
                     } else if ($response instanceof \Concrete\Core\Error\Error) {
                         $e->add($response);
