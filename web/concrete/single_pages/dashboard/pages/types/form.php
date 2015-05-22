@@ -7,20 +7,16 @@ use \Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayou
 
 <div style="display: none">
 
-	<div id="ccm-page-type-composer-add-set">
-		<form method="post" class="form-stacked" action="<?=$view->action('add_set', $pagetype->getPageTypeID())?>">
+	<div id="ccm-page-type-composer-add-set" class="ccm-ui">
+		<form method="post" action="<?=$view->action('add_set', $pagetype->getPageTypeID())?>">
 			<?=Loader::helper('validation/token')->output('add_set')?>
-			<div class="control-group">
+			<div class="form-group">
 				<?=$form->label('ptComposerFormLayoutSetName', tc('Name of a set', 'Set Name'))?>
-				<div class="controls">
-					<?=$form->text('ptComposerFormLayoutSetName')?>
-				</div>
+				<?=$form->text('ptComposerFormLayoutSetName')?>
 			</div>
-			<div class="control-group">
+			<div class="form-group">
 				<?=$form->label('ptComposerFormLayoutSetDescription', tc('Description of a set', 'Set Description'))?>
-				<div class="controls">
-					<?=$form->textarea('ptComposerFormLayoutSetDescription')?>
-				</div>
+				<?=$form->textarea('ptComposerFormLayoutSetDescription')?>
 			</div>
 		</form>
 		<div class="dialog-buttons">
@@ -137,7 +133,7 @@ $(function() {
 			modal: true,
 			width: 320,
 			title: '<?=t("Add Control Set")?>',
-			height: 120
+			height: 'auto'
 		});
 	});
 	$('a[data-delete-set]').on('click', function() {
