@@ -68,8 +68,8 @@ class GroupSets extends DashboardPageController {
 			}
 			
 			$gsName = trim($this->post('gsName'));
-			if (!Loader::helper('validation/strings')->alphanum($gsName, true)) {
-				$this->error->add(t('Set Names must only include alphanumerics and spaces.'));
+			if (preg_match('/[<>{};?"`]/i', $gsName)) {
+				$this->error->add(t('Invalid characters in group set name.'));
 			}
 			if (!$this->error->has()) {
 				$as->updateGroupSetName($gsName);
