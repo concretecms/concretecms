@@ -107,6 +107,7 @@ class Archive
         }
         $dir = $this->unzip($directory);
         $dirFull = $this->getArchiveDirectory($dir);
+        $dirFull = str_replace(DIRECTORY_SEPARATOR, '/', $dirFull);
         $dirBase = substr(strrchr($dirFull, '/'), 1);
         if (file_exists($this->targetDirectory . '/' . $dirBase)) {
             throw new Exception(t('The directory %s already exists. Perhaps this item has already been installed.', $this->targetDirectory . '/' . $dirBase));
