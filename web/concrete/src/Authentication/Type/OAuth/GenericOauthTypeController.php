@@ -2,6 +2,7 @@
 namespace Concrete\Core\Authentication\Type\OAuth;
 
 use Concrete\Core\Authentication\AuthenticationTypeController;
+use Concrete\Core\Authentication\AuthenticationType;
 use OAuth\Common\Exception\Exception;
 use OAuth\Common\Service\AbstractService;
 use OAuth\Common\Token\TokenInterface;
@@ -27,8 +28,9 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
      */
     protected $token;
 
-    public function __construct()
+    public function __construct(AuthenticationType $type = null)
     {
+        parent::__construct($type);
         $manager = \Database::connection()->getSchemaManager();
 
         if (!$manager->tablesExist('OauthUserMap')) {
