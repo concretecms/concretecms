@@ -37,22 +37,20 @@ $v = $c->getVersionObject();
             id="ccm-check-in-publish" type="submit" name="action" value="publish" class="btn-block btn btn-primary"><?=$publishTitle?></button>
     <br/>
     <? if (is_object($publishErrors) && $publishErrors->has()) { ?>
-        <div class="small">
+        <div class="small alert alert-warning">
         <? foreach($publishErrors->getList() as $error) { ?>
-            <div class="text-warning"><strong><i class="fa fa-warning"></i> <?=$error?></strong></div>
-            <br/>
+          <p><strong><i class="fa fa-warning"></i> <?=$error?></strong></p>
         <? } ?>
         </div>
 
         <?
         $pagetype = PageType::getByID($c->getPageTypeID());
         if (is_object($pagetype)) { ?>
-            <div class="small">
-           <div class="text-info"><strong><i class="fa fa-question-circle"></i>
-            <?=t('You can specify page name, page location and attributes from the <a href="#" data-launch-panel-detail="page-composer" data-panel-detail-url="%s" data-panel-transition="fade">Page Compose interface</a>.', URL::to('/ccm/system/panels/details/page/composer'))?>
-            </strong></div>
-            <br/>
-            </div>
+          <div class="small alert alert-info">
+            <strong><i class="fa fa-question-circle"></i>
+          <?=t('You can specify page name, page location and attributes from the <a href="#" data-launch-panel-detail="page-composer" data-panel-detail-url="%s" data-panel-transition="fade">Page Compose interface</a>.', URL::to('/ccm/system/panels/details/page/composer'))?>
+            </strong>
+          </div>
         <? } ?>
     <? } ?>
 </div>
