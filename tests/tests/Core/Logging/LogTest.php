@@ -68,6 +68,7 @@ class LogTest extends ConcreteDatabaseTestCase {
 
         $this->assertEquals(count($r), 1);
 
+        $sh->close();
         $contents = trim(file_get_contents(dirname(__FILE__) . '/test.log'));
         $entries = explode("\n", $contents);
 
