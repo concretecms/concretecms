@@ -6,7 +6,6 @@ use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Type\Composer\Control\BlockControl;
 use Concrete\Core\Page\Type\Composer\FormLayoutSetControl;
 use Concrete\Core\Page\Type\Type;
-use Loader;
 use Database;
 use CacheLocal;
 use Collection;
@@ -348,7 +347,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             if (!$cID) {
                 $cID = $request->request->get('cID');
             }
-            $cID = Loader::helper('security')->sanitizeInt($cID);
+            $cID = Core::make('helper/security')->sanitizeInt($cID);
             if (!$cID) {
                 $cID = 1;
             }
@@ -436,7 +435,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             return $this->isCheckedOutCache;
         }
 
-        $dh = Loader::helper('date');
+        $dh = Core::make('helper/date');
 
         $q = 'select cIsCheckedOut, '.$dh->getOverridableNow(true)." - UNIX_TIMESTAMP(cCheckedOutDatetimeLastEdit) as timeout from Pages where cID = '{$this->cID}'";
         $r = $db->query($q);
@@ -681,7 +680,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $uID = $u->getUserID();
         $ptID = 0;
 
-        $dh = Loader::helper('date');
+        $dh = Core::make('helper/date');
 
         $cDate = $dh->getOverridableNow();
         $cDatePublic = $dh->getOverridableNow();
@@ -751,9 +750,9 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public function addCollectionAliasExternal($cName, $cLink, $newWindow = 0)
     {
         $db = Database::get();
-        $dh = Loader::helper('date');
-        $dt = Loader::helper('text');
-        $ds = Loader::helper('security');
+        $dh = Core::make('helper/date');
+        $dt = Core::make('helper/text');
+        $ds = Core::make('helper/security');
         $u = new User();
 
         $cParentID = $this->getCollectionID();
@@ -994,7 +993,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public function export($pageNode, $includePublicDate = false)
     {
         $p = $pageNode->addChild('page');
-        $p->addAttribute('name', Loader::helper('text')->entities($this->getCollectionName()));
+        $p->addAttribute('name', Core::make('helper/text')->entities($this->getCollectionName()));
         $p->addAttribute('path', $this->getCollectionPath());
         if ($includePublicDate) {
             $p->addAttribute('public-date', $this->getCollectionDatePUblic());
@@ -1010,7 +1009,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             $ui = UserInfo::getByID(USER_SUPER_ID);
         }
         $p->addAttribute('user', $ui->getUserName());
-        $p->addAttribute('description', Loader::helper('text')->entities($this->getCollectionDescription()));
+        $p->addAttribute('description', Core::make('helper/text')->entities($this->getCollectionDescription()));
         $p->addAttribute('package', $this->getPackageHandle());
         if ($this->getCollectionParentID() == 0 && $this->isSystemPage()) {
             $p->addAttribute('root', 'true');
@@ -1150,7 +1149,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function getCollectionLink($appendBaseURL = false)
     {
-        return Loader::helper('navigation')->getLinkToCollection($this, $appendBaseURL);
+        return Core::make('helper/navigation')->getLinkToCollection($this, $appendBaseURL);
     }
 
     /**
@@ -1746,7 +1745,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         if (is_object($this->vObj)) {
             $this->vObj->cvName = $name;
 
-            $txt = Loader::helper('text');
+            $txt = Core::make('helper/text');
             $cHandle = $txt->urlify($name);
             $cHandle = str_replace('-', Config::get('concrete.seo.page_path_separator'), $cHandle);
 
@@ -1910,7 +1909,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         if (!$cDatePublic) {
             $cDatePublic = Core::make('helper/date')->getOverridableNow();
         }
-        $txt = Loader::helper('text');
+        $txt = Core::make('helper/text');
         if (!isset($data['cHandle']) && ($this->getCollectionHandle() != '')) {
             $cHandle = $this->getCollectionHandle();
         } elseif (!$data['cHandle']) {
@@ -2213,7 +2212,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     {
         $db = Database::get();
         $newCParentID = $nc->getCollectionID();
-        $dh = Loader::helper('date');
+        $dh = Core::make('helper/date');
 
         $cID = ($this->getCollectionPointerOriginalID() > 0) ? $this->getCollectionPointerOriginalID() : $this->cID;
 
@@ -2314,7 +2313,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         if ($preserveUserID) {
             $uID = $this->getCollectionUserID();
         }
-        $dh = Loader::helper('date');
+        $dh = Core::make('helper/date');
         $cDate = $dh->getOverridableNow();
 
         $cobj = parent::getByID($this->cID);
@@ -2680,7 +2679,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $newPath = $db->GetOne('select cPath from PagePaths where cID = ? and ppIsCanonical = 1', array($cID));
         // now we mark the page as a system page based on this path:
         $systemPages = array('/login', '/register', '/!trash', '/!stacks', '/!drafts', '/members', '/members/*', '/account', '/account/*', '/!trash/*', '/!stacks/*', '/!drafts/*', '/download_file', '/dashboard', '/dashboard/*','/page_forbidden','/page_not_found');
-        $th = Loader::helper('text');
+        $th = Core::make('helper/text');
         $db->Execute('update Pages set cIsSystemPage = 0 where cID = ?', array($cID));
         foreach ($systemPages as $sp) {
             if ($th->fnmatch($sp, $newPath)) {
@@ -2799,7 +2798,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public static function addHomePage()
     {
         // creates the home page of the site
-        $dh = Loader::helper('date');
+        $dh = Core::make('helper/date');
         $db = Database::get();
 
         $cParentID = 0;
@@ -2847,7 +2846,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             'cHandle' => null,
         );
         $db = Database::get();
-        $txt = Loader::helper('text');
+        $txt = Core::make('helper/text');
 
         // the passed collection is the parent collection
         $cParentID = $this->getCollectionID();
