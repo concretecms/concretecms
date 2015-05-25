@@ -37,6 +37,10 @@ class Controller extends AttributeTypeController
 
     public function saveKey($data)
     {
+        $data += array(
+            'akTopicParentNodeID' => null,
+            'akTopicTreeID' => null,
+        );
         $akTopicParentNodeID = $data['akTopicParentNodeID'];
         $akTopicTreeID = $data['akTopicTreeID'];
         $this->setNodes($akTopicParentNodeID, $akTopicTreeID);
