@@ -3,7 +3,7 @@
 namespace Concrete\Block\ImageSlider;
 
 use Concrete\Core\Block\BlockController;
-use Loader;
+use Database;
 use Page;
 
 class Controller extends BlockController
@@ -33,7 +33,7 @@ class Controller extends BlockController
     public function getSearchableContent()
     {
         $content = '';
-        $db = Loader::db();
+        $db = Database::get();
         $v = array($this->bID);
         $q = 'select * from btImageSliderEntries where bID = ?';
         $r = $db->query($q, $v);
@@ -57,7 +57,7 @@ class Controller extends BlockController
         $this->requireAsset('core/file-manager');
         $this->requireAsset('core/sitemap');
         $this->requireAsset('redactor');
-        $db = Loader::db();
+        $db = Database::get();
         $query = $db->GetAll('SELECT * from btImageSliderEntries WHERE bID = ? ORDER BY sortOrder', array($this->bID));
         $this->set('rows', $query);
     }
@@ -74,7 +74,7 @@ class Controller extends BlockController
 
     public function getEntries()
     {
-        $db = Loader::db();
+        $db = Database::get();
         $r = $db->GetAll('SELECT * from btImageSliderEntries WHERE bID = ? ORDER BY sortOrder', array($this->bID));
         // in view mode, linkURL takes us to where we need to go whether it's on our site or elsewhere
         $rows = array();
@@ -98,7 +98,7 @@ class Controller extends BlockController
     public function duplicate($newBID)
     {
         parent::duplicate($newBID);
-        $db = Loader::db();
+        $db = Database::get();
         $v = array($this->bID);
         $q = 'select * from btImageSliderEntries where bID = ?';
         $r = $db->query($q, $v);
@@ -118,14 +118,14 @@ class Controller extends BlockController
 
     public function delete()
     {
-        $db = Loader::db();
+        $db = Database::get();
         $db->delete('btImageSliderEntries', array('bID' => $this->bID));
         parent::delete();
     }
 
     public function save($args)
     {
-        $db = Loader::db();
+        $db = Database::get();
         $db->execute('DELETE from btImageSliderEntries WHERE bID = ?', array($this->bID));
         parent::save($args);
         if (isset($args['sortOrder'])) {
