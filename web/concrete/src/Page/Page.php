@@ -2344,6 +2344,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
                 $db->query($q);
             }
 
+            $args = array();
             if ($index > 1) {
                 $args['cName'] = $newCollectionName;
                 $args['cHandle'] = $nc2->getCollectionHandle().'-'.$index;
