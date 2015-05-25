@@ -1,19 +1,20 @@
 <?php
+
 namespace Concrete\Attribute\Topics;
 
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Concrete\Core\Tree\Node\Node;
 use Loader;
-use \Concrete\Core\Tree\Type\Topic as TopicTree;
-use \Concrete\Core\Tree\Tree;
-use \Concrete\Core\Tree\Node\Node as TreeNode;
-use \Concrete\Core\Attribute\Controller as AttributeTypeController;
+use Concrete\Core\Tree\Type\Topic as TopicTree;
+use Concrete\Core\Tree\Tree;
+use Concrete\Core\Tree\Node\Node as TreeNode;
+use Concrete\Core\Attribute\Controller as AttributeTypeController;
 
 class Controller extends AttributeTypeController
 {
     protected $searchIndexFieldDefinition = array(
         'type' => 'text',
-        'options' => array('length' => 4294967295, 'default' => null, 'notnull' => false)
+        'options' => array('length' => 4294967295, 'default' => null, 'notnull' => false),
     );
 
     public $helpers = array('form');
@@ -51,12 +52,13 @@ class Controller extends AttributeTypeController
     {
         $list = $this->getSelectedOptions();
         $topics = array();
-        foreach($list as $node) {
+        foreach ($list as $node) {
             $topic = Node::getByID($node);
             if (is_object($topic)) {
                 $topics[] = $topic->getTreeNodeDisplayName();
             }
         }
+
         return implode(', ', $topics);
     }
 
@@ -94,7 +96,7 @@ class Controller extends AttributeTypeController
         $selected = array();
         if (isset($akn->topics)) {
             foreach ($akn->topics->topic as $topicPath) {
-                $selected[] = (string)$topicPath;
+                $selected[] = (string) $topicPath;
             }
         }
 
@@ -139,9 +141,9 @@ class Controller extends AttributeTypeController
 
     public function importKey($key)
     {
-        $name = (string)$key->tree['name'];
+        $name = (string) $key->tree['name'];
         $tree = \Concrete\Core\Tree\Type\Topic::getByName($name);
-        $node = $tree->getNodeByDisplayPath((string)$key->tree['path']);
+        $node = $tree->getNodeByDisplayPath((string) $key->tree['path']);
         $this->setNodes($node->getTreeNodeID(), $tree->getTreeID());
     }
 
@@ -185,6 +187,7 @@ class Controller extends AttributeTypeController
     public function searchForm($list)
     {
         $list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), $this->request('treeNodeID'));
+
         return $list;
     }
 
@@ -229,7 +232,7 @@ class Controller extends AttributeTypeController
             array(
                 'akID' => $ak->getAttributeKeyID(),
                 'akTopicParentNodeID' => $akTopicParentNodeID,
-                'akTopicTreeID' => $akTopicTreeID
+                'akTopicTreeID' => $akTopicTreeID,
             ),
             array('akID'),
             true
@@ -317,13 +320,14 @@ class Controller extends AttributeTypeController
         if (!$data['akTopicParentNodeID'] || !$data['akTopicTreeID']) {
             $e->add(t('You must specify a valid topic tree parent node ID and topic tree ID.'));
         }
-        return $e;
 
+        return $e;
     }
 
     public function validateValue()
     {
         $val = $this->getValue();
+
         return is_object($val);
     }
 
@@ -342,6 +346,7 @@ class Controller extends AttributeTypeController
     public function getTopicTreeID()
     {
         $this->load();
+
         return $this->akTopicTreeID;
     }
 
@@ -366,7 +371,7 @@ class Controller extends AttributeTypeController
             array(
                 'akID' => $newAK->getAttributeKeyID(),
                 'akTopicParentNodeID' => $this->akTopicParentNodeID,
-                'akTopicTreeID' => $this->akTopicTreeID
+                'akTopicTreeID' => $this->akTopicTreeID,
             ),
             array('akID'),
             true
