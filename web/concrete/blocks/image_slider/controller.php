@@ -123,38 +123,40 @@ class Controller extends BlockController
     {
         $db = Loader::db();
         $db->execute('DELETE from btImageSliderEntries WHERE bID = ?', array($this->bID));
-        $count = count($args['sortOrder']);
-        $i = 0;
         parent::save($args);
-
-        while ($i < $count) {
-            $linkURL = $args['linkURL'][$i];
-            $internalLinkCID = $args['internalLinkCID'][$i];
-            switch (intval($args['linkType'][$i])) {
-                case 1:
-                    $linkURL = '';
-                    break;
-                case 2:
-                    $internalLinkCID = 0;
-                    break;
-                default:
-                    $linkURL = '';
-                    $internalLinkCID = 0;
-                    break;
+        if (isset($args['sortOrder'])) {
+            $count = count($args['sortOrder']);
+            $i = 0;
+    
+            while ($i < $count) {
+                $linkURL = $args['linkURL'][$i];
+                $internalLinkCID = $args['internalLinkCID'][$i];
+                switch (intval($args['linkType'][$i])) {
+                    case 1:
+                        $linkURL = '';
+                        break;
+                    case 2:
+                        $internalLinkCID = 0;
+                        break;
+                    default:
+                        $linkURL = '';
+                        $internalLinkCID = 0;
+                        break;
+                }
+    
+                $db->execute('INSERT INTO btImageSliderEntries (bID, fID, title, description, sortOrder, linkURL, internalLinkCID) values(?, ?, ?, ?,?,?,?)',
+                    array(
+                        $this->bID,
+                        intval($args['fID'][$i]),
+                        $args['title'][$i],
+                        $args['description'][$i],
+                        $args['sortOrder'][$i],
+                        $linkURL,
+                        $internalLinkCID
+                    )
+                );
+                $i++;
             }
-
-            $db->execute('INSERT INTO btImageSliderEntries (bID, fID, title, description, sortOrder, linkURL, internalLinkCID) values(?, ?, ?, ?,?,?,?)',
-                array(
-                    $this->bID,
-                    intval($args['fID'][$i]),
-                    $args['title'][$i],
-                    $args['description'][$i],
-                    $args['sortOrder'][$i],
-                    $linkURL,
-                    $internalLinkCID
-                )
-            );
-            $i++;
         }
     }
 
