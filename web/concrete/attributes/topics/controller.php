@@ -4,11 +4,12 @@ namespace Concrete\Attribute\Topics;
 
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Concrete\Core\Tree\Node\Node;
-use Loader;
 use Concrete\Core\Tree\Type\Topic as TopicTree;
 use Concrete\Core\Tree\Tree;
 use Concrete\Core\Tree\Node\Node as TreeNode;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
+use Core;
+use Database;
 
 class Controller extends AttributeTypeController
 {
@@ -70,7 +71,7 @@ class Controller extends AttributeTypeController
     public function getSelectedOptions()
     {
         $avID = $this->getAttributeValueID();
-        $db = Loader::db();
+        $db = Database::get();
         $optionIDs = $db->GetCol(
             'select TopicNodeID from atSelectedTopics where avID=?',
             array($avID)
@@ -115,7 +116,7 @@ class Controller extends AttributeTypeController
             }
         }
 
-        $db = Loader::db();
+        $db = Database::get();
         $db->Execute('delete from atSelectedTopics where avID = ?', array($this->getAttributeValueID()));
 
         foreach ($selected as $optionID) {
@@ -213,7 +214,7 @@ class Controller extends AttributeTypeController
     {
         $this->requireAsset('core/topics');
         $this->load();
-        $tree = TopicTree::getByID(Loader::helper('security')->sanitizeInt($this->akTopicTreeID));
+        $tree = TopicTree::getByID(Core::make('helper/security')->sanitizeInt($this->akTopicTreeID));
         $this->set('tree', $tree);
         $treeNodeID = $this->request('treeNodeID');
         if (!$treeNodeID) {
@@ -225,7 +226,7 @@ class Controller extends AttributeTypeController
 
     public function setNodes($akTopicParentNodeID, $akTopicTreeID)
     {
-        $db = Loader::db();
+        $db = Database::get();
         $ak = $this->getAttributeKey();
         $db->Replace(
             'atTopicSettings',
@@ -241,8 +242,8 @@ class Controller extends AttributeTypeController
 
     public function saveForm()
     {
-        $db = Loader::db();
-        $sh = Loader::helper('security');
+        $db = Database::get();
+        $sh = Core::make('helper/security');
         $ak = $this->getAttributeKey();
         $cleanIDs = array();
         $topicsArray = $_POST['topics_' . $ak->getAttributeKeyID()];
@@ -276,7 +277,7 @@ class Controller extends AttributeTypeController
 
     public function deleteKey()
     {
-        $db = Loader::db();
+        $db = Database::get();
         $arr = $this->attributeKey->getAttributeValueIDList();
         foreach ($arr as $id) {
             $db->Execute('delete from atDefault where avID = ?', array($id));
@@ -293,7 +294,7 @@ class Controller extends AttributeTypeController
         $tt = new TopicTree();
         $defaultTree = $tt->getDefault();
         $topicTreeList = $tt->getList();
-        $tree = $tt->getByID(Loader::helper('security')->sanitizeInt($this->akTopicTreeID));
+        $tree = $tt->getByID(Core::make('helper/security')->sanitizeInt($this->akTopicTreeID));
         if (!$tree) {
             $tree = $defaultTree;
         }
@@ -356,7 +357,7 @@ class Controller extends AttributeTypeController
         if (!is_object($ak)) {
             return false;
         }
-        $db = Loader::db();
+        $db = Database::get();
         $row = $db->GetRow('select * from atTopicSettings where akID = ?', $ak->getAttributeKeyID());
         $this->akTopicParentNodeID = $row['akTopicParentNodeID'];
         $this->akTopicTreeID = $row['akTopicTreeID'];
@@ -365,7 +366,7 @@ class Controller extends AttributeTypeController
     public function duplicateKey($newAK)
     { // TODO this is going to need some work to function with the child options table...
         $this->load();
-        $db = Loader::db();
+        $db = Database::get();
         $db->Replace(
             'atTopicSettings',
             array(
