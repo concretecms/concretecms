@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Block\ImageSlider;
 
 use Concrete\Core\Block\BlockController;
@@ -36,10 +37,11 @@ class Controller extends BlockController
         $v = array($this->bID);
         $q = 'select * from btImageSliderEntries where bID = ?';
         $r = $db->query($q, $v);
-        foreach($r as $row) {
-           $content.= $row['title'].' ';
-           $content.= $row['description'].' ';
+        foreach ($r as $row) {
+            $content .= $row['title'].' ';
+            $content .= $row['description'].' ';
         }
+
         return $content;
     }
 
@@ -76,7 +78,7 @@ class Controller extends BlockController
         $r = $db->GetAll('SELECT * from btImageSliderEntries WHERE bID = ? ORDER BY sortOrder', array($this->bID));
         // in view mode, linkURL takes us to where we need to go whether it's on our site or elsewhere
         $rows = array();
-        foreach($r as $q) {
+        foreach ($r as $q) {
             if (!$q['linkURL'] && $q['internalLinkCID']) {
                 $c = Page::getByID($q['internalLinkCID'], 'ACTIVE');
                 $q['linkURL'] = $c->getCollectionLink();
@@ -84,6 +86,7 @@ class Controller extends BlockController
             }
             $rows[] = $q;
         }
+
         return $rows;
     }
 
@@ -92,7 +95,8 @@ class Controller extends BlockController
         $this->set('rows', $this->getEntries());
     }
 
-    public function duplicate($newBID) {
+    public function duplicate($newBID)
+    {
         parent::duplicate($newBID);
         $db = Loader::db();
         $v = array($this->bID);
@@ -106,7 +110,7 @@ class Controller extends BlockController
                     $row['linkURL'],
                     $row['title'],
                     $row['description'],
-                    $row['sortOrder']
+                    $row['sortOrder'],
                 )
             );
         }
@@ -127,7 +131,7 @@ class Controller extends BlockController
         if (isset($args['sortOrder'])) {
             $count = count($args['sortOrder']);
             $i = 0;
-    
+
             while ($i < $count) {
                 $linkURL = $args['linkURL'][$i];
                 $internalLinkCID = $args['internalLinkCID'][$i];
@@ -143,7 +147,7 @@ class Controller extends BlockController
                         $internalLinkCID = 0;
                         break;
                 }
-    
+
                 $db->execute('INSERT INTO btImageSliderEntries (bID, fID, title, description, sortOrder, linkURL, internalLinkCID) values(?, ?, ?, ?,?,?,?)',
                     array(
                         $this->bID,
@@ -152,12 +156,11 @@ class Controller extends BlockController
                         $args['description'][$i],
                         $args['sortOrder'][$i],
                         $linkURL,
-                        $internalLinkCID
+                        $internalLinkCID,
                     )
                 );
                 $i++;
             }
         }
     }
-
 }
