@@ -34,6 +34,8 @@ use Area;
 use Queue;
 use Log;
 use Environment;
+use Group;
+use Session;
 
 /**
  * The page object in Concrete encapsulates all the functionality used by a typical page and their contents
