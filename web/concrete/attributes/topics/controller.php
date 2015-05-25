@@ -73,7 +73,7 @@ class Controller extends AttributeTypeController
         return $optionIDs;
     }
 
-    public function exportValue($akn)
+    public function exportValue(\SimpleXMLElement $akn)
     {
         $avn = $akn->addChild('topics');
         $nodes = $this->getSelectedOptions();
@@ -85,7 +85,7 @@ class Controller extends AttributeTypeController
         }
     }
 
-    public function importValue($akn)
+    public function importValue(\SimpleXMLElement $akn)
     {
         $selected = array();
         if (isset($akn->topics)) {
@@ -304,8 +304,11 @@ class Controller extends AttributeTypeController
         $this->set('parentNode', $this->akTopicParentNodeID);
     }
 
-    public function validateKey($data)
+    public function validateKey($data = false)
     {
+        if ($data == false) {
+            $data = $this->post();
+        }
         $e = parent::validateKey($data);
         if (!$data['akTopicParentNodeID'] || !$data['akTopicTreeID']) {
             $e->add(t('You must specify a valid topic tree parent node ID and topic tree ID.'));
