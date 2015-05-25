@@ -2842,6 +2842,9 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      **/
     public function add($pt, $data, $template = false)
     {
+        $data += array(
+            'cHandle' => null,
+        );
         $db = Loader::db();
         $txt = Loader::helper('text');
 
