@@ -442,7 +442,6 @@ return array(
     'conversations'     => array(
         'attachments_pending_file_set' => 'Conversation Messages (Pending)',
         'attachments_file_set'         => 'Conversation Messages',
-        'attachments_enabled'          => true
     ),
     'icons'             => array(
         'page_template'        => array(
