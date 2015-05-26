@@ -403,7 +403,7 @@ class Service
                 }
             }
             if (!isset($from)) {
-                $from = array(Config::get('concrete.email.default.address'), Config::get('concrete.email.name'));
+                $from = array(Config::get('concrete.email.default.address'), Config::get('concrete.email.default.name'));
                 $fromStr = Config::get('concrete.email.default.address');
             }
 
