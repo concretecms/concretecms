@@ -863,18 +863,21 @@ class ContentImporter
 
     protected function importAttributes(\SimpleXMLElement $sx)
     {
+        $db = Database::get();
         if (isset($sx->attributekeys)) {
             foreach ($sx->attributekeys->attributekey as $ak) {
                 $akc = AttributeKeyCategory::getByHandle($ak['category']);
-                $type = AttributeType::getByHandle($ak['type']);
-                $txt = Loader::helper('text');
-                $c1 = overrideable_core_class('\\Core\\Attribute\\Key\\' . $txt->camelcase(
-                        $akc->getAttributeKeyCategoryHandle()
-                    ) . 'Key', DIRNAME_CLASSES . '/Attribute/Key/' . $txt->camelcase(
-                        $akc->getAttributeKeyCategoryHandle()
-                    ) . 'Key.php', (string) $akc->getPackageHandle()
-                );
-                $ak = call_user_func(array($c1, 'import'), $ak);
+                $akID = $db->GetOne('select akID from AttributeKeys where akHandle = ? and akCategoryID = ?', array($ak['handle'], $akc->getAttributeKeyCategoryID()));
+                if (!$akID) {
+                    $txt = Loader::helper('text');
+                    $c1 = overrideable_core_class('\\Core\\Attribute\\Key\\' . $txt->camelcase(
+                            $akc->getAttributeKeyCategoryHandle()
+                        ) . 'Key', DIRNAME_CLASSES . '/Attribute/Key/' . $txt->camelcase(
+                            $akc->getAttributeKeyCategoryHandle()
+                        ) . 'Key.php', (string) $akc->getPackageHandle()
+                    );
+                    call_user_func(array($c1, 'import'), $ak);
+                }
             }
         }
     }
