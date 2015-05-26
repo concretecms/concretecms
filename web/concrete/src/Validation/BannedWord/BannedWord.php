@@ -23,7 +23,7 @@ class BannedWord extends Object {
 
 	public function init($id,$word) {
 		if ($this->id && $this->word) {
-			throw new Exception('Banned word already initialized.');
+			throw new \Exception(t('Banned word already initialized.'));
 		}
 		$this->id   = $id;
 		$this->word = $word;
