@@ -14,12 +14,11 @@ use Concrete\Core\Updater\Migrations\Configuration;
 use Concrete\Core\User\Point\Action\Action as UserPointAction;
 use Config;
 use Core;
-use FileImporter;
+use Database;
 use FileSet;
 use Group;
 use GroupTree;
 use Hautelook\Phpass\PasswordHash;
-use Loader;
 use Package as BasePackage;
 use Page;
 use PermissionAccess;
@@ -29,7 +28,6 @@ use UserInfo;
 
 class StartingPointPackage extends BasePackage
 {
-
     protected $DIR_PACKAGES_CORE = DIR_STARTING_POINT_PACKAGES_CORE;
     protected $DIR_PACKAGES = DIR_STARTING_POINT_PACKAGES;
     protected $REL_DIR_PACKAGES_CORE = REL_DIR_STARTING_POINT_PACKAGES_CORE;
@@ -64,7 +62,7 @@ class StartingPointPackage extends BasePackage
             new StartingPointInstallRoutine('import_files', 65, t('Importing files.')),
             new StartingPointInstallRoutine('install_content', 70, t('Adding pages and content.')),
             new StartingPointInstallRoutine('set_site_permissions', 90, t('Setting up site permissions.')),
-            new StartingPointInstallRoutine('finish', 95, t('Finishing.'))
+            new StartingPointInstallRoutine('finish', 95, t('Finishing.')),
         );
     }
 
@@ -72,19 +70,20 @@ class StartingPointPackage extends BasePackage
 
     public static function hasCustomList()
     {
-        $fh = Loader::helper('file');
+        $fh = Core::make('helper/file');
         if (is_dir(DIR_STARTING_POINT_PACKAGES)) {
             $available = $fh->getDirectoryContents(DIR_STARTING_POINT_PACKAGES);
             if (count($available) > 0) {
                 return true;
             }
         }
+
         return false;
     }
 
     public static function getAvailableList()
     {
-        $fh = Loader::helper('file');
+        $fh = Core::make('helper/file');
         // first we check the root install directory. If it exists, then we only include stuff from there. Otherwise we get it from the core.
         $available = array();
         if (is_dir(DIR_STARTING_POINT_PACKAGES)) {
@@ -97,6 +96,7 @@ class StartingPointPackage extends BasePackage
         foreach ($available as $pkgHandle) {
             $availableList[] = static::getClass($pkgHandle);
         }
+
         return $availableList;
     }
 
@@ -107,7 +107,8 @@ class StartingPointPackage extends BasePackage
         } else {
             $class = '\\Concrete\\StartingPointPackage\\' . camelcase($pkgHandle) . '\\Controller';
         }
-        $cl = new $class;
+        $cl = new $class();
+
         return $cl;
     }
 
@@ -130,7 +131,7 @@ class StartingPointPackage extends BasePackage
             $bi = $b->getInstance();
             $bi->setupAndRun('view');
         }
-        Loader::helper('concrete/ui')->cacheInterfaceItems();
+        Core::make('helper/concrete/ui')->cacheInterfaceItems();
     }
     */
 
@@ -139,11 +140,10 @@ class StartingPointPackage extends BasePackage
         $ci = new ContentImporter();
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/attributes.xml');
 
-        $topicType = \Concrete\Core\Tree\TreeType::add('topic', $pkg);
-        $topicCategoryNodeType = \Concrete\Core\Tree\Node\NodeType::add('topic_category', $pkg);
-        $topicNodeType = \Concrete\Core\Tree\Node\NodeType::add('topic', $pkg);
+        $topicType = \Concrete\Core\Tree\TreeType::add('topic');
+        $topicCategoryNodeType = \Concrete\Core\Tree\Node\NodeType::add('topic_category');
+        $topicNodeType = \Concrete\Core\Tree\Node\NodeType::add('topic');
         //$tree = \Concrete\Core\Tree\Type\Topic::add('Topics');
-
     }
 
     public function install_dashboard()
@@ -245,12 +245,11 @@ class StartingPointPackage extends BasePackage
     {
         $ci = new ContentImporter();
         $ci->importContentFile($this->getPackagePath() . '/content.xml');
-
     }
 
     public function install_database()
     {
-        $db = Loader::db();
+        $db = Database::get();
         $num = $db->GetCol("show tables");
         if (count($num) > 0) {
             throw new \Exception(
@@ -260,9 +259,9 @@ class StartingPointPackage extends BasePackage
         }
         $installDirectory = DIR_BASE_CORE . '/config';
         try {
-			$em = \ORM::entityManager('core');
-			$dbm = Core::make('database/structure', $em);
-			$dbm->generateProxyClasses();
+            $em = \ORM::entityManager('core');
+            $dbm = Core::make('database/structure', $em);
+            $dbm->generateProxyClasses();
 
             Package::installDB($installDirectory . '/db.xml');
             $this->indexAdditionalDatabaseFields();
@@ -270,7 +269,6 @@ class StartingPointPackage extends BasePackage
             $configuration = new Configuration();
             $version = $configuration->getVersion(Config::get('concrete.version_db'));
             $version->markMigrated();
-
         } catch (\Exception $e) {
             throw new \Exception(t('Unable to install database: %s', $db->ErrorMsg() ? $db->ErrorMsg() : $e->getMessage()));
         }
@@ -278,7 +276,7 @@ class StartingPointPackage extends BasePackage
 
     protected function indexAdditionalDatabaseFields()
     {
-        $db = Loader::db();
+        $db = Database::get();
 
         $db->Execute('ALTER TABLE PagePaths ADD INDEX (`cPath` (255))');
         $db->Execute('ALTER TABLE Groups ADD INDEX (`gPath` (255))');
@@ -327,7 +325,6 @@ class StartingPointPackage extends BasePackage
 
         // insert admin user into the user table
         if (defined('INSTALL_USER_PASSWORD')) {
-
             $hasher = new PasswordHash(
                 Config::get('concrete.user.password.hash_cost_log2'),
                 Config::get('concrete.user.password.hash_portable'));
@@ -364,12 +361,10 @@ class StartingPointPackage extends BasePackage
                 DIR_FILES_UPLOADED_STANDARD . REL_DIR_FILES_INCOMING,
                 Config::get('concrete.filesystem.permissions.directory'));
         }
-
     }
 
     public function finish()
     {
-
         $config = \Core::make('config');
         $site_install = $config->getLoader()->load(null, 'site_install');
 
@@ -379,7 +374,6 @@ class StartingPointPackage extends BasePackage
 
         $renderer = new Renderer($database);
 
-        @unlink(DIR_CONFIG_SITE . '/database.php');
         file_put_contents(DIR_CONFIG_SITE . '/database.php', $renderer->render());
         @chmod(DIR_CONFIG_SITE . '/database.php', Config::get('concrete.filesystem.permissions.file'));
 
@@ -405,7 +399,6 @@ class StartingPointPackage extends BasePackage
 
     public function set_site_permissions()
     {
-
         $fs = FileSet::getGlobal();
         $g1 = Group::getByID(GUEST_GROUP_ID);
         $g2 = Group::getByID(REGISTERED_GROUP_ID);
@@ -423,7 +416,9 @@ class StartingPointPackage extends BasePackage
                 'edit_file_set_permissions',
                 'delete_file_set_files',
                 'delete_file_set',
-                'add_file'));
+                'add_file',
+            )
+        );
         if (defined('SITE_INSTALL_LOCALE') && SITE_INSTALL_LOCALE != '' && SITE_INSTALL_LOCALE != 'en_US') {
             Config::save('concrete.locale', SITE_INSTALL_LOCALE);
         }
@@ -453,7 +448,9 @@ class StartingPointPackage extends BasePackage
                 'approve_page_versions',
                 'add_subpage',
                 'move_or_copy_page',
-                'schedule_page_contents_guest_access'));
+                'schedule_page_contents_guest_access',
+            )
+        );
 
         // login
         $login = Page::getByPath('/login', "RECENT");
@@ -487,7 +484,7 @@ class StartingPointPackage extends BasePackage
                 'approve_page_versions',
                 'add_subpage',
                 'move_or_copy_page',
-                'schedule_page_contents_guest_access'
+                'schedule_page_contents_guest_access',
             )
         );
         $drafts->assignPermissions(
@@ -499,14 +496,14 @@ class StartingPointPackage extends BasePackage
                 'edit_page_template',
                 'delete_page',
                 'delete_page_versions',
-                'approve_page_versions'
+                'approve_page_versions',
             )
         );
 
         $config = \Core::make('config/database');
-        $config->save('concrete.security.token.jobs', Loader::helper('validation/identifier')->getString(64));
-        $config->save('concrete.security.token.encryption', Loader::helper('validation/identifier')->getString(64));
-        $config->save('concrete.security.token.validation', Loader::helper('validation/identifier')->getString(64));
+        $config->save('concrete.security.token.jobs', Core::make('helper/validation/identifier')->getString(64));
+        $config->save('concrete.security.token.encryption', Core::make('helper/validation/identifier')->getString(64));
+        $config->save('concrete.security.token.validation', Core::make('helper/validation/identifier')->getString(64));
 
         // group permissions
         $tree = GroupTree::get();
@@ -516,7 +513,8 @@ class StartingPointPackage extends BasePackage
             'edit_group',
             'assign_group',
             'add_sub_group',
-            'edit_group_permissions');
+            'edit_group_permissions',
+        );
         $adminGroupEntity = GroupPermissionAccessEntity::getOrCreate($g3);
         foreach ($permissions as $pkHandle) {
             $pk = PermissionKey::getByHandle($pkHandle);
@@ -568,7 +566,8 @@ class StartingPointPackage extends BasePackage
         $permissions = array(
             'edit_conversation_permissions',
             'flag_conversation_message',
-            'approve_conversation_message');
+            'approve_conversation_message',
+        );
         foreach ($permissions as $pkHandle) {
             $pk = PermissionKey::getByHandle($pkHandle);
             $pa = PermissionAccess::create($pk);
@@ -576,7 +575,5 @@ class StartingPointPackage extends BasePackage
             $pt = $pk->getPermissionAssignmentObject();
             $pt->assignPermissionAccess($pa);
         }
-
     }
-
 }
