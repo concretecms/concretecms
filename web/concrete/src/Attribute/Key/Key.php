@@ -827,7 +827,11 @@ class Key extends Object
 
     }
 
-    public function validateAttributeForm($h = false)
+    /**
+     * Validates the request object to see if the current request fulfills the "requirement" portion of an attribute.
+     * @return bool|\Concrete\Core\Error\Error
+     */
+    public function validateAttributeForm()
     {
         $at = $this->getAttributeType();
         $at->controller->setAttributeKey($this);

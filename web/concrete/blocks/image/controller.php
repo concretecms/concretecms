@@ -1,11 +1,15 @@
-<?
-namespace Concrete\Block\Image;
-use Loader;
-use \File;
-use Page;
-use \Concrete\Core\Block\BlockController;
-class Controller extends BlockController {
+<?php
 
+namespace Concrete\Block\Image;
+
+use Core;
+use Database;
+use File;
+use Page;
+use Concrete\Core\Block\BlockController;
+
+class Controller extends BlockController
+{
     protected $btInterfaceWidth = 400;
     protected $btInterfaceHeight = 550;
     protected $btTable = 'btContentImage';
@@ -17,28 +21,32 @@ class Controller extends BlockController {
     protected $btExportFileColumns = array('fID','fOnstateID');
     protected $btExportPageColumns = array('internalLinkCID');
     protected $btFeatures = array(
-        'image'
+        'image',
     );
 
     /**
-     * Used for localization. If we want to localize the name/description we have to include this
+     * Used for localization. If we want to localize the name/description we have to include this.
      */
-    public function getBlockTypeDescription() {
+    public function getBlockTypeDescription()
+    {
         return t("Adds images and onstates from the library to pages.");
     }
 
-    public function getBlockTypeName() {
+    public function getBlockTypeName()
+    {
         return t("Image");
     }
 
-    public function registerViewAssets() {
+    public function registerViewAssets()
+    {
         // Ensure we have JQuery if we have an onState image
-        if(is_object($this->getFileOnstateObject())) {
+        if (is_object($this->getFileOnstateObject())) {
             $this->requireAsset('javascript', 'jquery');
         }
     }
 
-    public function view() {
+    public function view()
+    {
         $f = File::getByID($this->fID);
         if (!is_object($f) || !$f->getFileID()) {
             return false;
@@ -55,29 +63,33 @@ class Controller extends BlockController {
         }
 
         $this->set('f', $f);
-        $this->set('altText',$this->getAltText());
-        $this->set('title',$this->getTitle());
-        $this->set('linkURL',$this->getLinkURL());
+        $this->set('altText', $this->getAltText());
+        $this->set('title', $this->getTitle());
+        $this->set('linkURL', $this->getLinkURL());
     }
 
-    public function getJavaScriptStrings() {
+    public function getJavaScriptStrings()
+    {
         return array(
-            'image-required' => t('You must select an image.')
+            'image-required' => t('You must select an image.'),
         );
     }
 
-    public function isComposerControlDraftValueEmpty() {
+    public function isComposerControlDraftValueEmpty()
+    {
         $f = $this->getFileObject();
         if (is_object($f) && !$f->isError()) {
             return false;
         }
+
         return true;
     }
 
-    public function getImageFeatureDetailFileObject() {
+    public function getImageFeatureDetailFileObject()
+    {
         // i don't know why this->fID isn't sticky in some cases, leading us to query
         // every damn time
-        $db = Loader::db();
+        $db = Database::get();
         $fID = $db->GetOne('select fID from btContentImage where bID = ?', array($this->bID));
         if ($fID) {
             $f = File::getByID($fID);
@@ -87,42 +99,86 @@ class Controller extends BlockController {
         }
     }
 
-    function getFileID() {return $this->fID;}
-    function getFileOnstateID() {return $this->fOnstateID;}
-    public function getFileOnstateObject() {
-        if($this->fOnstateID) {
+    public function getFileID()
+    {
+        return $this->fID;
+    }
+
+    public function getFileOnstateID()
+    {
+        return $this->fOnstateID;
+    }
+
+    public function getFileOnstateObject()
+    {
+        if ($this->fOnstateID) {
             return File::getByID($this->fOnstateID);
         }
     }
-    public function getFileObject() {
+
+    public function getFileObject()
+    {
         return File::getByID($this->fID);
     }
-    function getAltText() {return $this->altText;}
-    function getTitle() {return $this->title;}
-    function getExternalLink() {return $this->externalLink;}
-    function getInternalLinkCID() {return $this->internalLinkCID;}
-    function getLinkURL() {
+
+    public function getAltText()
+    {
+        return $this->altText;
+    }
+
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    public function getExternalLink()
+    {
+        return $this->externalLink;
+    }
+
+    public function getInternalLinkCID()
+    {
+        return $this->internalLinkCID;
+    }
+
+    public function getLinkURL()
+    {
         if (!empty($this->externalLink)) {
             $sec = \Core::make('helper/security');
+
             return $sec->sanitizeURL($this->externalLink);
-        } else if (!empty($this->internalLinkCID)) {
+        } elseif (!empty($this->internalLinkCID)) {
             $linkToC = Page::getByID($this->internalLinkCID);
-            return (empty($linkToC) || $linkToC->error) ? '' : Loader::helper('navigation')->getLinkToCollection($linkToC);
+
+            return (empty($linkToC) || $linkToC->error) ? '' : Core::make('helper/navigation')->getLinkToCollection($linkToC);
         } else {
             return '';
         }
     }
 
-    public function validate_composer() {
+    public function validate_composer()
+    {
         $f = $this->getFileObject();
-        $e = Loader::helper('validation/error');
+        $e = Core::make('helper/validation/error');
         if (!is_object($f) || $f->isError() || !$f->getFileID()) {
             $e->add(t('You must specify a valid image file.'));
         }
+
         return $e;
     }
 
-    public function save($args) {
+    public function save($args)
+    {
+        $args = $args + array(
+            'fID' => 0,
+            'fOnstateID' => 0,
+            'maxWidth' => 0,
+            'maxHeight' => 0,
+            'constrainImage' => 0,
+            'linkType' => 0,
+            'externalLink' => '',
+            'internalLinkCID' => 0,
+        );
         $args['fID'] = ($args['fID'] != '') ? $args['fID'] : 0;
         $args['fOnstateID'] = ($args['fOnstateID'] != '') ? $args['fOnstateID'] : 0;
         $args['maxWidth'] = (intval($args['maxWidth']) > 0) ? intval($args['maxWidth']) : 0;
@@ -146,5 +202,4 @@ class Controller extends BlockController {
         unset($args['linkType']); //this doesn't get saved to the database (it's only for UI usage)
         parent::save($args);
     }
-
 }

@@ -62,7 +62,8 @@ class Topic extends TreeNode
     {
         $obj = parent::getTreeNodeJSON();
         if (is_object($obj)) {
-            $obj->iconClass = 'fa fa-comment-o';
+            $p = new \Permissions($this);
+            $obj->canAddTopicTreeNode = $p->canAddTopicTreeNode();
 
             return $obj;
         }

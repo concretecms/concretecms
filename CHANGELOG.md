@@ -1,3 +1,37 @@
+# 5.7.4.2
+
+## Behavioral Improvements
+
+* Saving only a custom template on a block will no longer wrap that block in a custom design DIV. Better saving and resetting of custom designs on blocks and areas.
+* Topics improvements: topics can now be created below other topics; the only different between topic categories and topics is that categories cannot be assigned to objects, only topics can.
+* We now include the page ID in the attributes dialog and panel.
+* Feature block now contains an instance of the rich text editor (thanks MrKarlDilkington)
+* Improvements to new update functionality when site can't connect to concrete5.org
+* Improvements to new update functionality to make it more resilient with failures, but error messaging.
+* Adding attributes to a page will ask for it be checked back/approved when clicking the green icon. 
+* Theme name and description can now be translated (thanks mlocati)
+* Added an error notice when deleting a page type that’s in use in your site.
+
+## Bug Fixes
+
+* Some servers would redirect infinitely when activating a theme or attempting to logout. This has been fixed.
+* Fix bug with multiple redactor instances on the same page and in the same composer window causing problems.
+* Better rendering of empty areas in Firefox (thanks JeramyNS)
+* Fixed problems with “concrete.seo.trailing_slash” set to true leading to an inability to login, other problems.
+* Attributes that had already been filled out were being shown as still required in page check-in panel.
+* Fixed bug where full URLs were incorrectly parsed if asset caching was enabled (thanks mlocati)
+* Fix download file script leading to 404 errors after you go to the dashboard and hit the back button
+* Fixed https://www.concrete5.org/developers/bugs/5-7-4-1/dont-allow-to-create-file-sets-with-names-containing-forbidden-c/
+* Fix https://www.concrete5.org/developers/bugs/5-7-4-1/cant-replace-a-file-with-one-in-the-incoming-directory/
+* Fix XSS in conversation author object; fix author name not showing if a user didn't put in a website (thanks jaromirdalecky)
+* Searching files, pages and users by topics now works in the dashboard
+* Picture tag now properly inserted by Redactor when working with themes that use responsive images.
+* Fixed z-index of message author and status in conversations dashboard page.
+
+## Developer Updates
+
+* API improvements to the RedactorEditor class.
+
 # 5.7.4.1
 
 ## Behavioral Improvements
@@ -117,7 +151,7 @@ Instead of defaulting to the current time/date, form block date/datetime have th
 * You can now embed the block controller for this share this page block in a page template more easily.
 * You can now specify permissions and attributes for external links (thanks mitchray)
 * Better scrolling in add block panel on Firefox (thanks EC-Joe)
-* Fixed https://github.com/concrete5/concrete5-5.7.0/issues/875
+* Fixed https://github.com/concrete5/concrete5/issues/875
 
 ## Bug Fixes
 

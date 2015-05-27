@@ -180,9 +180,8 @@ class Controller extends AttributeTypeController
 
     public function searchForm($list)
     {
-        //$db = Loader::db();
-        //$list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), '%' . $this->request('value') . '%', 'like');
-        //return $list;
+        $list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), $this->request('treeNodeID'));
+        return $list;
     }
 
     public function getSearchIndexValue()
@@ -205,8 +204,16 @@ class Controller extends AttributeTypeController
 
     public function search()
     {
-        //$f = Loader::helper('form');
-        //print $f->text($this->field('value'), $this->request('value'));
+        $this->requireAsset('core/topics');
+        $this->load();
+        $tree = TopicTree::getByID(Loader::helper('security')->sanitizeInt($this->akTopicTreeID));
+        $this->set('tree', $tree);
+        $treeNodeID = $this->request('treeNodeID');
+        if (!$treeNodeID) {
+            $treeNodeID = $this->akTopicParentNodeID;
+        }
+        $this->set('selectedNode', $treeNodeID);
+        $this->set('attributeKey', $this->attributeKey);
     }
 
     public function setNodes($akTopicParentNodeID, $akTopicTreeID)
@@ -305,6 +312,12 @@ class Controller extends AttributeTypeController
         }
         return $e;
 
+    }
+
+    public function validateValue()
+    {
+        $val = $this->getValue();
+        return is_object($val);
     }
 
     public function validateForm($data)

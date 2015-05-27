@@ -14,6 +14,7 @@ class RedactorEditor implements EditorInterface
     protected $token;
     protected $allowFileManager;
     protected $allowSitemap;
+    protected $pluginManager;
 
     public function __construct()
     {
@@ -21,7 +22,6 @@ class RedactorEditor implements EditorInterface
         $tp = new TaskPermission();
 
         $this->assets = ResponseAssetGroup::get();
-        $this->identifier = id(new Identifier())->getString(32);
         $this->token = Core::make("token")->generate('editor');
         $this->allowFileManager = \Config::get('concrete.editor.concrete.enable_filemanager') && $fp->canAccessFileManager();
         $this->allowSitemap = \Config::get('concrete.editor.concrete.enable_sitemap') && $tp->canAccessSitemap();
@@ -73,12 +73,13 @@ class RedactorEditor implements EditorInterface
             $options['concrete5'] = $concrete5;
         }
         $options = json_encode($options);
-        $html = sprintf('<textarea data-redactor-editor="%s" name="%s">%s</textarea>', $this->identifier, $key, $content);
+        $identifier = id(new Identifier())->getString(32);
+        $html = sprintf('<textarea data-redactor-editor="%s" name="%s">%s</textarea>', $identifier, $key, $content);
         $html .= <<<EOL
         <script type="text/javascript">
         var CCM_EDITOR_SECURITY_TOKEN = "{$this->token}";
         $(function() {
-            $('textarea[data-redactor-editor={$this->identifier}]').redactor({$options});
+            $('textarea[data-redactor-editor={$identifier}]').redactor({$options});
         });
         </script>
 EOL;
@@ -93,11 +94,16 @@ EOL;
         return $this->getEditor($key, $content, array('plugins' => $plugins, 'minHeight' => 300));
     }
 
-    public function outputPageComposerEditor($key, $content)
+    public function outputBlockEditModeEditor($key, $content)
     {
         $plugins = $this->pluginManager->getSelectedPlugins();
         $plugins[] = 'concrete5magic';
         return $this->getEditor($key, $content, array('plugins' => $plugins, 'minHeight' => 300));
+    }
+
+    public function outputPageComposerEditor($key, $content)
+    {
+        return $this->outputBlockEditModeEditor($key, $content);
     }
 
     public function outputStandardEditor($key, $content = null)
@@ -109,6 +115,11 @@ EOL;
     public function getPluginManager()
     {
         return $this->pluginManager;
+    }
+
+    public function setPluginManager(PluginManager $pluginManager)
+    {
+        $this->pluginManager = $pluginManager;
     }
 
     public function saveOptionsForm(Request $request)

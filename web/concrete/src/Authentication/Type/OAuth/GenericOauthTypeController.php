@@ -1,7 +1,9 @@
 <?php
+
 namespace Concrete\Core\Authentication\Type\OAuth;
 
 use Concrete\Core\Authentication\AuthenticationTypeController;
+use Concrete\Core\Authentication\AuthenticationType;
 use OAuth\Common\Exception\Exception;
 use OAuth\Common\Service\AbstractService;
 use OAuth\Common\Token\TokenInterface;
@@ -9,7 +11,6 @@ use OAuth\UserData\Extractor\Extractor;
 
 abstract class GenericOauthTypeController extends AuthenticationTypeController
 {
-
     public $apiMethods = array('handle_error', 'handle_success');
 
     /**
@@ -27,8 +28,9 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
      */
     protected $token;
 
-    public function __construct()
+    public function __construct(AuthenticationType $type = null)
     {
+        parent::__construct($type);
         $manager = \Database::connection()->getSchemaManager();
 
         if (!$manager->tablesExist('OauthUserMap')) {
@@ -111,9 +113,10 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
     }
 
     /**
-     * Create a cookie hash to identify the user indefinitely
+     * Create a cookie hash to identify the user indefinitely.
      *
      * @param \User $u
+     *
      * @return string Unique hash to be used to verify the users identity
      */
     public function buildHash(\User $u)
@@ -122,11 +125,12 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
     }
 
     /**
-     * Hash authentication disabled for oauth
+     * Hash authentication disabled for oauth.
      *
-     * @param \User  $u object requesting verification.
+     * @param \User  $u    object requesting verification.
      * @param string $hash
-     * @return bool        returns true if the hash is valid, false if not
+     *
+     * @return bool returns true if the hash is valid, false if not
      */
     public function verifyHash(\User $u, $hash)
     {
@@ -151,6 +155,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
 
     /**
      * @return null|\User
+     *
      * @throws Exception
      */
     protected function attemptAuthentication()
@@ -180,6 +185,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
 
         if ($this->supportsRegistration()) {
             $user = $this->createUser();
+
             return $user;
         }
 
@@ -188,6 +194,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
 
     /**
      * @return \OAuth\UserData\Extractor\ExtractorInterface
+     *
      * @throws \OAuth\UserData\Exception\UndefinedExtractorException
      */
     public function getExtractor($new = false)
@@ -195,6 +202,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
         if ($new || !$this->extractor) {
             $this->extractor = \Core::make('oauth_extractor', $this->getService());
         }
+
         return $this->extractor;
     }
 
@@ -210,7 +218,9 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
 
     /**
      * @param $binding
+     *
      * @return bool|string
+     *
      * @throws \Doctrine\DBAL\DBALException
      */
     public function getBoundUserID($binding)
@@ -219,7 +229,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
             'SELECT user_id FROM OauthUserMap WHERE namespace=? AND binding=?',
             array(
                 $this->getHandle(),
-                $binding
+                $binding,
             ));
 
         return $result->fetchColumn();
@@ -260,9 +270,9 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
         $last_name = "";
 
         $name_support = array(
-            'full'  => $this->supportsFullName(),
+            'full' => $this->supportsFullName(),
             'first' => $this->supportsFirstName(),
-            'last'  => $this->supportsLastName()
+            'last' => $this->supportsLastName(),
         );
 
         if ($name_support['first'] && $name_support['last']) {
@@ -303,7 +313,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
 
         $data = array();
         $data['uName'] = $username;
-        $data['uPassword'] = "";
+        $data['uPassword'] = \Illuminate\Support\Str::random(256);
         $data['uEmail'] = $email;
         $data['uIsValidated'] = 1;
 
@@ -334,6 +344,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
         \User::loginByUserID($user_info->getUserID());
 
         $this->bindUser($user = \User::getByUserID($user_info->getUserID()), $this->getUniqueId());
+
         return $user;
     }
 
@@ -405,6 +416,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
     /**
      * @param \User $user
      * @param       $binding
+     *
      * @return int|null
      */
     public function bindUser(\User $user, $binding)
@@ -415,11 +427,11 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
     /**
      * @param $user_id
      * @param $binding
+     *
      * @return int|null
      */
     public function bindUserID($user_id, $binding)
     {
-
         if (!$binding || !$user_id) {
             return null;
         }
@@ -441,9 +453,9 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
         return \Database::connection()->insert(
             'OauthUserMap',
             array(
-                'user_id'   => $user_id,
-                'binding'   => $binding,
-                'namespace' => $this->getHandle()
+                'user_id' => $user_id,
+                'binding' => $binding,
+                'namespace' => $this->getHandle(),
             ));
     }
 
@@ -456,5 +468,4 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
     abstract public function handle_authentication_callback();
     abstract public function handle_attach_attempt();
     abstract public function handle_attach_callback();
-
 }

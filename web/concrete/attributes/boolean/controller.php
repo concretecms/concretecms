@@ -144,7 +144,13 @@ class Controller extends AttributeTypeController
         }
     }
 
-    public function duplicateKey($newAK)
+	public function validateValue()
+	{
+		$v = $this->getValue();
+		return $v == 1;
+	}
+
+	public function duplicateKey($newAK)
     {
         $this->load();
         $db = Database::get();

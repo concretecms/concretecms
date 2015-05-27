@@ -296,8 +296,10 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
             // we create one.
             $dh = Loader::helper('date');
             $cDate = $dh->getOverridableNow();
-            $data['pTemplateID'] = $template->getPageTemplateID();
-            $cobj = Collection::addCollection($data);
+            $data = array(
+                'pTemplateID' => $template->getPageTemplateID(),
+            );
+            $cobj = Collection::createCollection($data);
             $cID = $cobj->getCollectionID();
 
             $v2 = array($cID, 1, $this->getPageTypeID());
@@ -579,6 +581,13 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
                 }
             }
         }
+    }
+
+    public function getPageTypeUsageCount()
+    {
+        $db = Loader::db();
+        $count = $db->GetOne('select count(cID) from Pages where cIsTemplate = 0 and ptID = ? and cIsActive = 1', array($this->ptID));
+        return $count;
     }
 
     public function duplicate($ptHandle, $ptName)

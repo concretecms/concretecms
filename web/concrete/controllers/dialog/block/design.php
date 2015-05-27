@@ -43,36 +43,13 @@ class Design extends BackendInterfaceBlockController {
             }
 
             $r = $this->request->request->all();
-            $set = new StyleSet();
-            $set->setBackgroundColor($r['backgroundColor']);
-            $set->setBackgroundImageFileID(intval($r['backgroundImageFileID']));
-            $set->setBackgroundRepeat($r['backgroundRepeat']);
-            $set->setLinkColor($r['linkColor']);
-            $set->setTextColor($r['textColor']);
-            $set->setBaseFontSize($r['baseFontSize']);
-            $set->setMarginTop($r['marginTop']);
-            $set->setMarginRight($r['marginRight']);
-            $set->setMarginBottom($r['marginBottom']);
-            $set->setMarginLeft($r['marginLeft']);
-            $set->setPaddingTop($r['paddingTop']);
-            $set->setPaddingRight($r['paddingRight']);
-            $set->setPaddingBottom($r['paddingBottom']);
-            $set->setPaddingLeft($r['paddingLeft']);
-            $set->setBorderWidth($r['borderWidth']);
-            $set->setBorderStyle($r['borderStyle']);
-            $set->setBorderColor($r['borderColor']);
-            $set->setBorderRadius($r['borderRadius']);
-            $set->setAlignment($r['alignment']);
-            $set->setRotate($r['rotate']);
-            $set->setBoxShadowBlur($r['boxShadowBlur']);
-            $set->setBoxShadowColor($r['boxShadowColor']);
-            $set->setBoxShadowHorizontal($r['boxShadowHorizontal']);
-            $set->setBoxShadowVertical($r['boxShadowVertical']);
-            $set->setBoxShadowSpread($r['boxShadowSpread']);
-            $set->setCustomClass($r['customClass']);
-            $set->save();
-
-            $b->setCustomStyleSet($set);
+            $set = StyleSet::populateFromRequest($this->request);
+            if (is_object($set)) {
+                $set->save();
+                $b->setCustomStyleSet($set);
+            } else if ($oldStyleSet) {
+                $b->resetCustomStyle();
+            }
 
             if ($this->permissions->canEditBlockCustomTemplate()) {
                 $data = array();
@@ -85,17 +62,20 @@ class Design extends BackendInterfaceBlockController {
             $pr->setAdditionalDataAttribute('aID', $this->area->getAreaID());
             $pr->setAdditionalDataAttribute('arHandle', $this->area->getAreaHandle());
             $pr->setAdditionalDataAttribute('originalBlockID', $this->block->getBlockID());
-            $pr->setAdditionalDataAttribute('issID', $set->getID());
 
             if (is_object($oldStyleSet)) {
                 $pr->setAdditionalDataAttribute('oldIssID', $oldStyleSet->getID());
             }
 
-            $style = new CustomStyle($set, $b->getBlockID(), $this->area->getAreaHandle());
-            $css = $style->getCSS();
-            if ($css !== '') {
-                $pr->setAdditionalDataAttribute('css', $css);
+            if (is_object($set)) {
+                $pr->setAdditionalDataAttribute('issID', $set->getID());
+                $style = new CustomStyle($set, $b->getBlockID(), $this->area->getAreaHandle());
+                $css = $style->getCSS();
+                if ($css !== '') {
+                    $pr->setAdditionalDataAttribute('css', $css);
+                }
             }
+
             $pr->setAdditionalDataAttribute('bID', $b->getBlockID());
             $pr->setMessage(t('Design updated.'));
             $pr->outputJSON();

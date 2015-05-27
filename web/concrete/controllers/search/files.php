@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Controller\Search;
 
+use Concrete\Core\Http\ResponseAssetGroup;
 use Controller;
 use FileList;
 use \Concrete\Core\Search\StickyRequest;
@@ -220,7 +221,16 @@ class Files extends Controller
                 break;
         }
         $r->html = $html;
-
+        $ag = ResponseAssetGroup::get();
+        $r->assets = array();
+        foreach ($ag->getAssetsToOutput() as $position => $assets) {
+            foreach ($assets as $asset) {
+                if (is_object($asset)) {
+                    // have to do a check here because we might be included a dumb javascript call like i18n_js
+                    $r->assets[$asset->getAssetType()][] = $asset->getAssetURL();
+                }
+            }
+        }
         return $r;
     }
 

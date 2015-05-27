@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\Pages;
 use Concrete\Core\Area\Area;
+use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Page\Feed;
 use Concrete\Core\Page\Type\Type;
@@ -66,6 +67,9 @@ class Feeds extends DashboardPageController
         $pf->setDescription($this->post('pfDescription'));
         $pf->setHandle($this->post('pfHandle'));
         $pf->setPageTypeID($this->post('ptID'));
+        $pf->setCustomTopicAttributeKeyHandle($this->post('customTopicAttributeKeyHandle'));
+        $customTopicTreeNodeID = $this->post('customTopicAttributeKeyHandle') ? $this->post('customTopicTreeNodeID') : 0;
+        $pf->setCustomTopicTreeNodeID($customTopicTreeNodeID);
         $pf->setParentID(intval($this->post('cParentID')));
         $pf->setIncludeAllDescendents($this->post('pfIncludeAllDescendents'));
         $pf->setDisplayAliases($this->post('pfDisplayAliases'));
@@ -135,12 +139,22 @@ class Feeds extends DashboardPageController
         }
         $this->set('pageTypes', $pageTypes);
 
+        $attributeKeys = array();
+        $keys = CollectionKey::getList(array('atHandle' => 'topics'));
+        foreach ($keys as $ak) {
+            if ($ak->getAttributeTypeHandle() == 'topics') {
+                $attributeKeys[] = $ak;
+            }
+        }
+        $this->set('topicAttributes', $attributeKeys);
+
         $areas = Area::getHandleList();
         $select = array();
         foreach($areas as $handle) {
             $select[$handle] = $handle;
         }
         $this->set('areas', $select);
+        $this->requireAsset('core/topics');
 
     }
 

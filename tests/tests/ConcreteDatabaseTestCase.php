@@ -74,12 +74,26 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase {
 			$ds = $this->createMySQLXMLDataSet($path);
 			$compositeDs->addDataSet($ds);
 		}
+        if(in_array('BlockTypes', $this->tables)) {
+			$xml = simplexml_load_file(DIR_BASE_CORE . '/blocks/core_scrapbook_display/db.xml');
+			$schema = \Concrete\Core\Database\Schema\Schema::loadFromXMLElement($xml, $db);
+			$platform = $db->getDatabasePlatform();
+			$queries = $schema->toSql($platform);
+			foreach($queries as $query) {
+				$db->query($query);
+			}
+
+        }
 		return $compositeDs;
 	}
 
 
 	public function tearDown() {
 		if (count($this->tables)) {
+            if(in_array('BlockTypes', $this->tables)) {
+				$this->tables[] = 'btCoreScrapbookDisplay';
+            }
+
 			foreach ($this->tables as $table) {
 				// drop table
 				$conn = $this->getConnection();

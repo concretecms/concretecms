@@ -236,7 +236,7 @@ class Controller extends AuthenticationTypeController
     {
         $post = $this->post();
 
-        if (!isset($post['uName']) || !isset($post['uPassword'])) {
+        if (empty($post['uName']) || empty($post['uPassword'])) {
             throw new Exception(t('Please provide both username and password.'));
         }
         $uName = $post['uName'];

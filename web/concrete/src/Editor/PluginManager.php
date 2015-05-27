@@ -50,6 +50,12 @@ class PluginManager
         }
     }
 
+    public function deselect($keyOrKeys)
+    {
+        $plugins = is_array($keyOrKeys) ? $keyOrKeys : array($keyOrKeys);
+        $this->selectedPlugins = array_diff($this->selectedPlugins, $plugins);
+    }
+
     public function selectMultiple($plugins)
     {
         foreach($plugins as $key)

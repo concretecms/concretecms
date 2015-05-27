@@ -7,9 +7,9 @@ return array(
      *
      * @var string
      */
-    'version'           => '5.7.4.1',
-    'version_installed' => '5.7.4.1',
-    'version_db' => '20150504000000', // the key of the latest database migration - corresponds to 5.7.4RC2
+    'version'           => '5.7.5a1',
+    'version_installed' => '5.7.5a1',
+    'version_db' => '20150515000000', // the key of the latest database migration
 
     /**
      * Installation status
@@ -326,7 +326,7 @@ return array(
          */
         'enabled' => true,
         'default' => array(
-            'address' => 'concrete5-noreply@' . $_SERVER['SERVER_NAME'],
+            'address' => 'concrete5-noreply@' . (isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'localhost'),
             'name'    => ''
         ),
         'form_block' => array(

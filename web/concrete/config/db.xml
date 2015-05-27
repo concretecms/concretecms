@@ -1423,7 +1423,6 @@
       <unsigned/>
     </field>
     <index name="asHandle">
-        <unique/>
         <col>asHandle</col>
     </index>
     <index name="akCategoryID">
@@ -3792,6 +3791,13 @@
             <!-- S = short description, A = Area //-->
         </field>
         <field name="pfAreaHandleToDisplay" type="C" size="255">
+        </field>
+        <field name="customTopicAttributeKeyHandle" type="C" size="255">
+        </field>
+        <field name="customTopicTreeNodeID" type="I">
+            <unsigned />
+            <notnull />
+            <default value="0" />
         </field>
         <field name="pfDisplayAliases" type="I1">
             <unsigned />

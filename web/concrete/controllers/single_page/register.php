@@ -208,6 +208,15 @@ class Register extends PageController {
 				} else if(Config::get('concrete.user.registration.approval')) {
 					$ui = UserInfo::getByID($u->getUserID());
 					$ui->deactivate();
+					// Email to the user when he/she registered but needs approval
+					$mh = Loader::helper('mail');
+					$mh->addParameter('uEmail', $_POST['uEmail']);
+					$mh->addParameter('uHash', $uHash);
+					$mh->addParameter('site', Config::get('concrete.site'));
+					$mh->to($_POST['uEmail']);
+					$mh->load('user_register_approval_required_to_user');
+					$mh->sendMail();
+					
 					//$this->redirect('/register', 'register_pending', $rcID);
 					$redirectMethod='register_pending';
 					$this->set('message', $this->getRegisterPendingMsg());

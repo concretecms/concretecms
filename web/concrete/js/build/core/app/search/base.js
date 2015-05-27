@@ -170,6 +170,12 @@
 			var field = $(this).find(':selected').attr('data-search-field-url');
 			if (field) {
 				cs.ajaxUpdate(field, false, function(r) {
+					_.each(r.assets.css, function(css) {
+						ccm_addHeaderItem(css, 'CSS');
+					});
+					_.each(r.assets.javascript, function(javascript) {
+						ccm_addHeaderItem(javascript, 'JAVASCRIPT');
+					});
 					$content.html(r.html);
 				});
 			}
