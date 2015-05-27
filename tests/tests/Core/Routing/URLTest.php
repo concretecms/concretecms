@@ -5,8 +5,7 @@
  * Date: 1/27/15
  * Time: 6:24 AM
  */
-use \Config;
-use \Core;
+
 class URLTest extends PHPUnit_Framework_TestCase
 {
     /**
