@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "379d1830b7861c1e10b55a6fb741744d",
+    "hash": "fa47bcd4a47b7958a67617d35a3e4713",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -1323,48 +1323,6 @@
             "time": "2014-11-11 11:36:02"
         },
         {
-            "name": "innogames/cssmin",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/innogames/CssMin.git",
-                "reference": "6d3aa76c53c47ddbaf02d5bd2e0d1d5ecd0ade7a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/innogames/CssMin/zipball/6d3aa76c53c47ddbaf02d5bd2e0d1d5ecd0ade7a",
-                "reference": "6d3aa76c53c47ddbaf02d5bd2e0d1d5ecd0ade7a",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.0"
-            },
-            "type": "library",
-            "autoload": {
-                "classmap": [
-                    "src/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Joe Scylla",
-                    "email": "joe.scylla@gmail.com",
-                    "homepage": "https://profiles.google.com/joe.scylla"
-                }
-            ],
-            "description": "Minifying CSS",
-            "homepage": "http://code.google.com/p/cssmin/",
-            "keywords": [
-                "css",
-                "minify"
-            ],
-            "time": "2013-10-08 13:59:22"
-        },
-        {
             "name": "kertz/twitteroauth",
             "version": "dev-master",
             "source": {
@@ -1732,6 +1690,53 @@
                 "psr-3"
             ],
             "time": "2015-03-05 01:12:12"
+        },
+        {
+            "name": "natxet/CssMin",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/natxet/CssMin.git",
+                "reference": "f076e41392b0008efb47074a133ec1d90dc8c99f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/natxet/CssMin/zipball/f076e41392b0008efb47074a133ec1d90dc8c99f",
+                "reference": "f076e41392b0008efb47074a133ec1d90dc8c99f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.0-dev"
+                }
+            },
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Joe Scylla",
+                    "email": "joe.scylla@gmail.com",
+                    "homepage": "https://profiles.google.com/joe.scylla"
+                }
+            ],
+            "description": "Minifying CSS",
+            "homepage": "http://code.google.com/p/cssmin/",
+            "keywords": [
+                "css",
+                "minify"
+            ],
+            "time": "2015-05-21 16:53:45"
         },
         {
             "name": "nesbot/carbon",
@@ -3873,14 +3878,14 @@
         "doctrine/migrations": 20,
         "patchwork/utf8": 20,
         "imagine/imagine": 20,
-        "innogames/cssmin": 20,
         "michelf/php-markdown": 20,
         "htmlawed/htmlawed": 20,
         "hautelook/phpass": 20,
         "kertz/twitteroauth": 20,
         "primal/color": 20,
         "zendframework/zend-queue": 20,
-        "oryzone/oauth-user-data": 20
+        "oryzone/oauth-user-data": 20,
+        "natxet/cssmin": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
