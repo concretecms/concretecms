@@ -1,15 +1,13 @@
-#!/usb/bin/php
-<?php
-$DIR_BASE_CORE = dirname(__DIR__);
-define('DIR_BASE', dirname($DIR_BASE_CORE));
+#!/usr/bin/env bash
 
-require $DIR_BASE_CORE . '/bootstrap/configure.php';
-require $DIR_BASE_CORE . '/bootstrap/autoload.php';
-$cms = require $DIR_BASE_CORE . '/bootstrap/start.php';
+pushd . > /dev/null
+SCRIPT_PATH="${BASH_SOURCE[0]}";
+while([ -h "${SCRIPT_PATH}" ]) do
+    cd "`dirname "${SCRIPT_PATH}"`"
+    SCRIPT_PATH="$(readlink "`basename "${SCRIPT_PATH}"`")";
+done
+cd "`dirname "${SCRIPT_PATH}"`" > /dev/null
+SCRIPT_PATH="`pwd`";
+popd  > /dev/null
 
-/* @var $cms \Concrete\Core\Application\Application */
-if (!$cms->isRunThroughCommandLineInterface()) {
-    return;
-}
-$app = new \Concrete\Core\Console\Application();
-$app->run();
+php -d short_open_tag=On "${SCRIPT_PATH}/concrete5.php" "$@"

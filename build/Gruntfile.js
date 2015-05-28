@@ -351,6 +351,7 @@ module.exports = function(grunt) {
         '<%= DIR_BASE %>/concrete/css/app.css': '<%= DIR_BASE %>/concrete/css/build/core/app/app.less',
         '<%= DIR_BASE %>/concrete/css/editable-fields.css': '<%= DIR_BASE %>/concrete/css/build/core/editable-fields.less',
         '<%= DIR_BASE %>/concrete/css/select2.css': '<%= DIR_BASE %>/concrete/css/build/core/select2.less',
+        '<%= DIR_BASE %>/concrete/css/dropzone.css': '<%= DIR_BASE %>/concrete/css/build/vendor/dropzone/dropzone.less',
         '<%= DIR_BASE %>/concrete/css/jquery-ui.css': '<%= DIR_BASE %>/concrete/css/build/vendor/jquery-ui/jquery-ui.less',
         '<%= DIR_BASE %>/concrete/css/jquery-magnific-popup.css': '<%= DIR_BASE %>/concrete/css/build/vendor/jquery-magnific-popup/jquery-magnific-popup.less',
         '<%= DIR_BASE %>/concrete/css/jquery-awesome-rating.css': '<%= DIR_BASE %>/concrete/css/build/vendor/jquery-awesome-rating/jquery-awesome-rating.less',
@@ -492,14 +493,6 @@ module.exports = function(grunt) {
 
     grunt.registerTask('remove-short-tags', 'Remove short tags.', function() {
         require('./tasks/remove-short-tags.js')(grunt, config, parameters, this.async());
-    });
-
-    grunt.registerTask('generate-symbols', 'Generate IDE symbols', function() {
-        require('./tasks/generate-symbols.js')(grunt, config, parameters, this.async());
-    });
-
-    grunt.registerTask('generate-metadata', 'Generate PhpStorm advanced metadata', function() {
-        require('./tasks/generate-metadata.js')(grunt, config, parameters, this.async());
     });
 
     grunt.registerTask('build-release-download', 'Build process: download the latest concrete5 release from GitHub.', function() {
