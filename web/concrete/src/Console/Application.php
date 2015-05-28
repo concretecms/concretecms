@@ -14,6 +14,7 @@ class Application extends \Symfony\Component\Console\Application
         parent::__construct('concrete5', \Config::get('concrete.version'));
         $this->add(new Command\ResetCommand());
         $this->add(new Command\InstallCommand());
+        $this->add(new Command\GenerateIDESymbolsCommand());
         $cms = Core::make('app');
         if ($cms->isInstalled()) {
             $cn = Database::get();

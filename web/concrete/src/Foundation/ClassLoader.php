@@ -53,8 +53,8 @@ class ClassLoader  {
 	 * Aliases concrete5 classes to shorter class name aliases
 	 *
 	 * IDEs will not recognize these classes by default. A symbols file can be generated to
-	 * assist IDEs by running SymbolGenerator::render(). On development copies of concrete5
-	 * this can also be run with `grunt generate-symbols` in the build folder.
+	 * assist IDEs by running SymbolGenerator::render() via PHP or executing the command-line
+	 * 'concrete/bin/concrete5 c5:ide-symbols
 	 */
 	protected function setupAliasAutoloader() {
 		$loader = $this;
