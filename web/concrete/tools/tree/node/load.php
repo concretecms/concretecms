@@ -11,6 +11,7 @@ if (is_array($_REQUEST['treeNodeSelectedIDs'])) {
 if (is_object($node)) {
 	$np = new Permissions($node);
 	if ($np->canViewTreeNode()) {
+		$node->getTreeObject()->setRequest($_REQUEST);
 		$node->populateDirectChildrenOnly();
 		$r = array();
 		if(count($selected) > 0) {

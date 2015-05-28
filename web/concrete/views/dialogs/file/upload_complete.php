@@ -106,8 +106,14 @@ $(function() {
 	});
 
 	ConcreteEvent.subscribe('FileManagerUploadCompleteDialogOpen', function(e, data) {
-		if (data.filemanager.options.mode == 'choose') {
+		if (data.filemanager && data.filemanager.options.mode == 'choose') {
 			$('button[data-action=choose-file]').show();
+		}
+	});
+
+	ConcreteEvent.subscribe('FileManagerUploadCompleteDialogClose', function(e, data) {
+		if (data.filemanager) {
+			data.filemanager.refreshResults();
 		}
 	});
 

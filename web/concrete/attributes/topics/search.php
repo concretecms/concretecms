@@ -5,7 +5,6 @@
             $('.tree-view-template-<?=$attributeKey->getAttributeKeyID()?>').ccmtopicstree({  // run first time around to get default tree if new.
                 'treeID': <?php echo $tree->getTreeID(); ?>,
                 'chooseNodeInForm': true,
-                'allowFolderSelection': true,
                 'noDrag' : true,
                 <?php if($selectedNode) { ?>
                  'selectNodesByKey': [<?php echo $selectedNode ?>],
