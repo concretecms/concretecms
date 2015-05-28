@@ -114,7 +114,7 @@ $addSelected = true;
 
 		<div class="form-group">
 			<?=$form->label('question', t('Question'))?>
-			<?=$form->text('question')?>
+			<?=$form->text('question', array('maxlength' => '255'))?>
 		</div>
 		<div class="form-group">
 			<?=$form->label('answerType', t('Answer Type'))?>

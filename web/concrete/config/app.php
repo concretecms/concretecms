@@ -523,6 +523,7 @@ return array(
         'dropzone'                 => array(
             array('javascript', 'js/dropzone.js'),
             array('javascript-localized', '/ccm/assets/localization/dropzone/js'),
+            array('css', 'css/dropzone.css', array('minify' => false))
         ),
         'jquery/form'              => array(
             array('javascript', 'js/jquery-form.js')
@@ -706,6 +707,13 @@ return array(
                 array('javascript', 'select2'),
                 array('javascript-localized', 'select2'),
                 array('css', 'select2')
+            )
+        ),
+        'dropzone'                  => array(
+            array(
+                array('javascript', 'dropzone'),
+                array('javascript-localized', 'dropzone'),
+                array('css', 'dropzone')
             )
         ),
         'ace'         => array(

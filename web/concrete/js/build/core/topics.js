@@ -203,7 +203,7 @@
 			readonly: false,
 			chooseNodeInForm: false,
 			onSelect: false,
-			allowFolderSelection: false,
+			allowFolderSelection: true,
 			selectNodesByKey: []
 		}, options);
 

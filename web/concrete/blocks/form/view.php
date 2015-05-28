@@ -76,7 +76,7 @@ $captcha = $surveyBlockInfo['displayCaptcha'] ? Loader::helper('validation/captc
 */?>
 
 <div id="formblock<?php  echo $bID; ?>" class="ccm-block-type-form">
-<form enctype="multipart/form-data" class="form-stacked" id="miniSurveyView<?php  echo $bID; ?>" class="miniSurveyView" method="post" action="<?php  echo $formAction ?>">
+<form enctype="multipart/form-data" class="form-stacked miniSurveyView" id="miniSurveyView<?php  echo $bID; ?>" method="post" action="<?php  echo $formAction ?>">
 
 	<?php  if ($success): ?>
 		
