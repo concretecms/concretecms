@@ -96,7 +96,7 @@
                     if (errors.length) {
                         ConcreteAlert.dialog(ccmi18n_filemanager.uploadFailed, error_template({errors: errors}));
                     } else {
-                        my.launchUploadCompleteDialog(files);
+                        my._launchUploadCompleteDialog(files);
                         files = [];
                     }
                 }
@@ -107,37 +107,16 @@
         $fileUploader.fileupload(args);
     };
 
-    ConcreteFileManager.prototype.launchUploadCompleteDialog = function(files) {
+    ConcreteFileManager.prototype._launchUploadCompleteDialog = function(files) {
         var my = this;
-        if (files && files.length && files.length > 0) {
-            var data = '';
-            _.each(files, function(file) {
-               data += 'fID[]=' + file.fID + '&';
-            });
-            data = data.substring(0, data.length - 1);
-            $.fn.dialog.open({
-                width: '660',
-                height: '500',
-                href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/file/upload_complete',
-                modal: true,
-                data: data,
-                onClose: function() {
-                  my.refreshResults();
-                },
-                onOpen: function() {
-                    var data = {filemanager: my}
-                    ConcreteEvent.publish('FileManagerUploadCompleteDialogOpen', data);
-                },
-                title: ccmi18n_filemanager.uploadComplete
-            });
-        }
+        ConcreteFileManager.launchUploadCompleteDialog(files, my);
     }
 
     ConcreteFileManager.prototype.setupEvents = function() {
         var my = this;
         ConcreteEvent.unsubscribe('FileManagerAddFilesComplete');
         ConcreteEvent.subscribe('FileManagerAddFilesComplete', function(e, data) {
-            my.launchUploadCompleteDialog(data.files);
+            my._launchUploadCompleteDialog(data.files);
         });
         ConcreteEvent.unsubscribe('FileManagerDeleteFilesComplete');
         ConcreteEvent.subscribe('FileManagerDeleteFilesComplete', function(e, data) {
@@ -264,6 +243,32 @@
             }
         });
     };
+
+    ConcreteFileManager.launchUploadCompleteDialog = function(files, my) {
+        if (files && files.length && files.length > 0) {
+            var data = '';
+            _.each(files, function(file) {
+                data += 'fID[]=' + file.fID + '&';
+            });
+            data = data.substring(0, data.length - 1);
+            $.fn.dialog.open({
+                width: '660',
+                height: '500',
+                href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/file/upload_complete',
+                modal: true,
+                data: data,
+                onClose: function() {
+                    var data = {filemanager: my}
+                    ConcreteEvent.publish('FileManagerUploadCompleteDialogClose', data);
+                },
+                onOpen: function() {
+                    var data = {filemanager: my}
+                    ConcreteEvent.publish('FileManagerUploadCompleteDialogOpen', data);
+                },
+                title: ccmi18n_filemanager.uploadComplete
+            });
+        }
+    }
 
     ConcreteFileManager.getFileDetails = function(fID, callback) {
         $.ajax({
