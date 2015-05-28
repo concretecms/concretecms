@@ -70,7 +70,7 @@ class TypeStyle extends Style {
         if ($type['underline']) {
             $tv->setTextDecoration('underline');
         } else if (isset($type['underline'])) {
-            $tv->setDecoration('none');
+            $tv->setTextDecoration('none');
         }
 
         if ($type['uppercase']) {
