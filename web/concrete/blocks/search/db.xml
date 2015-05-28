@@ -1,19 +1,18 @@
-<?xml version="1.0"?>
-<schema version="0.3">
-	<table name="btSearch">
-		<field name="bID" type="I">
-			<key />
-			<unsigned />
-		</field>
-		<field name="title" type="C" size="255">
-		</field>
-		<field name="buttonText" type="C" size="128">
-		</field>
-		<field name="baseSearchPath" type="C" size="255">
-		</field>
-		<field name="postTo_cID" type="C" size="255">
-		</field>
-		<field name="resultsURL" type="C" size="255">
-		</field>
-	</table>
+<?xml version="1.0" encoding="UTF-8"?>
+<schema
+  xmlns="http://www.concrete5.org/doctrine-xml/0.5"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.concrete5.org/doctrine-xml/0.5 http://concrete5.github.io/doctrine-xml/doctrine-xml-0.5.xsd">
+
+  <table name="btSearch">
+    <field name="bID" type="integer">
+      <unsigned/>
+      <key/>
+    </field>
+    <field name="title" type="string" size="255"/>
+    <field name="buttonText" type="string" size="128"/>
+    <field name="baseSearchPath" type="string" size="255"/>
+    <field name="postTo_cID" type="string" size="255"/>
+    <field name="resultsURL" type="string" size="255"/>
+  </table>
+
 </schema>
