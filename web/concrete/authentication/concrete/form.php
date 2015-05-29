@@ -4,10 +4,6 @@ $form = Loader::helper('form');
 
 <form method='post'
       action='<?= View::url('/login', 'authenticate', $this->getAuthenticationTypeHandle()) ?>'>
-    <div class="form-group concrete-login">
-        <span><?= t('Sign in with a local account.') ?> </span>
-        <hr>
-    </div>
     <div class="form-group">
         <input name="uName" class="form-control col-sm-12"
                placeholder="<?=Config::get('concrete.user.registration.email_registration') ? t('Email Address') : t('Username')?>" />

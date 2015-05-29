@@ -6,7 +6,7 @@ $form = Loader::helper('form');
     <form method="post"
           action="<?= View::url('/login', 'callback', $authType->getAuthenticationTypeHandle(), 'forgot_password') ?>">
         <div class="form-group">
-            <h2><?= t('Forgot Your Password?') ?></h2>
+            <h4><?= t('Forgot Your Password?') ?></h4>
 
             <div class="ccm-message"><?= $intro_msg ?></div>
             <div class='help-block'>

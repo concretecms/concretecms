@@ -2,7 +2,7 @@
 $form = Loader::helper('form');
 ?>
 <div class='forgotPassword'>
-    <h2><?= t('Forgot Your Password?') ?></h2>
+    <h4><?= t('Forgot Your Password?') ?></h4>
 
     <div class="ccm-message"><?= $intro_msg ?></div>
     <div class='help-block'>

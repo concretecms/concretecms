@@ -2,7 +2,7 @@
 $form = Loader::helper('form');
 ?>
 <div class='forgotPassword'>
-    <h2><?= t('Email Validated') ?></h2>
+    <h4><?= t('Email Validated') ?></h4>
 
     <div class='help-block'>
         <?= t(

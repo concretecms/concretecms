@@ -273,6 +273,7 @@ define('STACKS_PAGE_TYPE', 'core_stack');
  */
 /* -- Appearance -- */
 define('VIEW_CORE_THEME', 'concrete');
+define('VIEW_CORE_THEME_TEMPLATE_BACKGROUND_IMAGE', 'background_image.php');
 
 /* -- Users -- */
 define('USER_SUPER', 'admin');
