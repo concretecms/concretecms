@@ -119,7 +119,7 @@ $db = Loader::db();
                             <input type="hidden" name="action" value="deleteFormAnswers"/>
                             <?php $valt->output('deleteFormAnswers') ?>
                             <div class="btn-group">
-                                <a href="<?= DIR_REL . '/index.php?cID=' . $c->getCollectionID() . '&qsid=' . $qsid ?>"
+                                <a href="<?= URL::to($c->getCollectionPath() . '?qsid=' . $qsid) ?>"
                                    class="btn btn-default btn-sm">
                                     <?= t('View Responses') ?>
                                 </a>
