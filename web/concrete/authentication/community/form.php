@@ -33,7 +33,7 @@ if ($user->isLoggedIn()) {
         <span>
             <?= t('Sign in with a community account') ?>
         </span>
-        <hr>
+        <hr class="ccm-authentication-type-community">
     </div>
     <div class="form-group">
         <a href="<?= \URL::to('/ccm/system/authentication/oauth2/community/attempt_auth'); ?>" class="btn btn-primary btn-community btn-block">
@@ -60,6 +60,10 @@ if ($user->isLoggedIn()) {
         filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1fbae8', endColorstr='#129bd3',GradientType=0 );
     }
 
+    .ccm-concrete-authentication-type-svg > svg {
+      width: 16px;
+    }
+
     img.concrete5-icon {
         width: 20px;
         margin-right:5px;
@@ -78,13 +82,15 @@ if ($user->isLoggedIn()) {
             $(function() {
 
                 if (svg.closest('li').hasClass('active')) {
-                    svg.attr('fill', 'white');
+                    var color = $('ul.auth-types li.active').css('color');
+                    svg.attr('fill', color);
                 } else {
                     svg.attr('fill', 'rgb(155,155,155)');
                 }
                 Concrete.event.bind('AuthenticationTypeSelected', function(e, handle) {
                     if (handle === 'community') {
-                        svg.attr('fill', 'white');
+                        var color = $('ul.auth-types li.active').css('color');
+                        svg.attr('fill', color);
                     } else {
                         svg.attr('fill', 'rgb(155,155,155)');
                     }

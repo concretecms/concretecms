@@ -2,11 +2,7 @@
 $form = Loader::helper('form');
 ?>
 
-<? if (is_object($error) && $error->has()) { ?>
-    <? Loader::element('system_errors', array('format' => 'block', 'error' => $error))?>
-<? } ?>
-
-<h2><?= t('Reset Password') ?></h2>
+<h4><?= t('Reset Password') ?></h4>
 <div class="help-block"><?= t('Enter your new password below.') ?></div>
 <div class="change-password">
     <form method="post" action="<?=

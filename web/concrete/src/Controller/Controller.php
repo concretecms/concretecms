@@ -47,6 +47,12 @@ class Controller extends AbstractController {
     }
     public function getThemeViewTemplate()
     {
+		if (is_object($this->view)) {
+			$tmpTheme = Route::getThemeByRoute($this->view->getViewPath());
+			if ($tmpTheme && isset($tmpTheme[1])) {
+				return $tmpTheme[1];
+			}
+		}
         return $this->themeViewTemplate;
     }
 
