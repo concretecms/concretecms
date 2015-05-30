@@ -33,10 +33,11 @@ class IPAddress {
         if($isHex) {
             $this->ipHex = $ipAddress;
         } else {
-            //Check included port number
-            if(strpos($ipAddress, ":") !== false && strpos($ipAddress, ".") !== false){
-                $ips = explode(":", $ipAddress);
-                $ipAddress = $ips[0];
+            //discard any IPv6 port
+            $ipAddress = preg_replace('/\[(.*?)\].*/', '$1', $ipAddress);
+            //discard any IPv4 port
+            if(strpos($ipAddress, '.') !== false) {
+                $ipAddress = preg_replace('/(.*?(?:\d{1,3}\.?){4}).*/', "$1", $ipAddress);
             }
             $this->ipHex = bin2hex(inet_pton($ipAddress));
         }
@@ -96,8 +97,10 @@ class IPAddress {
         }
         if($this->isIPv4() && strpos($this->ipHex, '7f') === 0) {
             return true; //IPv4 loopback 127.0.0.0/8
-        } elseif ($this->ipHex === '00000000000000000000000000000001') {
-            return true; //IPv6 loopback ::1
+        } elseif ($this->ipHex === '00000000000000000000000000000001'
+            || $this->ipHex === '00000000000000000000ffff7f000001'
+        ) {
+            return true; //IPv6 loopback ::1 or ::ffff:127.0.0.1
         }
         return false;
     }
@@ -123,6 +126,9 @@ class IPAddress {
             ($this->isIPv6() &&
                 (  strpos($this->ipHex, 'fc') === 0 //fc00::/7
                 || strpos($this->ipHex, 'fd') === 0 //fd00::/7
+                || strpos($this->ipHex, 'ffff0a') === 20 //::ffff:10.0.0.0/8
+                || strpos($this->ipHex, 'ffffac1') === 20 //::ffff:172.16.0.0/12
+                || strpos($this->ipHex, 'ffffc0a8') === 20 //::ffff:192.168.0.0/16
                 )
             )
         ) {
@@ -151,6 +157,7 @@ class IPAddress {
                     || strpos($this->ipHex, 'fe9') === 0 //fe80::/10 Link-Scope Unicast
                     || strpos($this->ipHex, 'fea') === 0 //fe80::/10 Link-Scope Unicast
                     || strpos($this->ipHex, 'feb') === 0 //fe80::/10 Link-Scope Unicast
+                    || strpos($this->ipHex, 'ffffa9fe') === 20 //::ffff:169.254.0.0/16
                 )
             )
         ) {
