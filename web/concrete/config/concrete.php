@@ -185,6 +185,12 @@ return array(
          */
         'full_page_lifetime_value' => null,
 
+        /**
+         * Calculate the cache key reading the assets contents (true) of the assets modification time (false).
+         *
+         * @var bool
+         */
+        'full_contents_assets_hash' => false,
 
         'directory'   => DIR_FILES_UPLOADED_STANDARD . '/cache',
         'page'        => array(
