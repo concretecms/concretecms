@@ -2,8 +2,9 @@
 
 namespace Concrete\Block\Form;
 
-use Loader;
 use Concrete\Core\Block\BlockController;
+use Core;
+use Database;
 use User;
 use Page;
 use UserInfo;
@@ -71,7 +72,7 @@ class Controller extends BlockController
                                 $aar->{$nodeName} = (string) $node;
                             }
                             if ($table == 'btFormQuestions') {
-                                $db = Loader::db();
+                                $db = Database::connection();
                                 $aar->questionSetId = $db->GetOne('select questionSetId from btForm where bID = ?', array($b->getBlockID()));
                             }
                             $aar->Replace();
@@ -102,7 +103,7 @@ class Controller extends BlockController
         $whereInputTypes = "inputType = 'date' OR inputType = 'datetime'";
         $sql = "SELECT COUNT(*) FROM {$this->btQuestionsTablename} WHERE questionSetID = ? AND bID = ? AND ({$whereInputTypes})";
         $vals = array(intval($this->questionSetId), intval($this->bID));
-        $JQUIFieldCount = Loader::db()->GetOne($sql, $vals);
+        $JQUIFieldCount = Database::connection()->GetOne($sql, $vals);
 
         return (bool) $JQUIFieldCount;
     }
@@ -148,7 +149,7 @@ class Controller extends BlockController
         $b = $this->getBlockObject();
         $c = $b->getBlockCollectionObject();
 
-        $db = Loader::db();
+        $db = Database::connection();
         if (intval($this->bID) > 0) {
             $q = "select count(*) as total from {$this->btTable} where bID = ".intval($this->bID);
             $total = $db->getOne($q);
@@ -215,7 +216,7 @@ class Controller extends BlockController
             'ignoreQuestionIDs' => '',
             'pendingDeleteIDs' => '',
         );
-        $db = Loader::db();
+        $db = Database::connection();
         $oldBID = intval($data['bID']);
 
         //if this block is being edited a second time, remove edited questions with the current bID that are pending replacement
@@ -259,7 +260,7 @@ class Controller extends BlockController
         $b = $this->getBlockObject();
         $c = $b->getBlockCollectionObject();
 
-        $db = Loader::db();
+        $db = Database::connection();
         $v = array($this->bID);
         $q = "select * from {$this->btTable} where bID = ? LIMIT 1";
         $r = $db->query($q, $v);
@@ -313,7 +314,7 @@ class Controller extends BlockController
             return false;
         }
 
-        $ip = Loader::helper('validation/ip');
+        $ip = Core::make('helper/validation/ip');
         $this->view();
 
         if ($ip->isBanned()) {
@@ -322,8 +323,8 @@ class Controller extends BlockController
             return;
         }
 
-        $txt = Loader::helper('text');
-        $db = Loader::db();
+        $txt = Core::make('helper/text');
+        $db = Database::connection();
 
         //question set id
         $qsID = intval($_POST['qsID']);
@@ -336,7 +337,7 @@ class Controller extends BlockController
 
         // check captcha if activated
         if ($this->displayCaptcha) {
-            $captcha = Loader::helper('validation/captcha');
+            $captcha = Core::make('helper/validation/captcha');
             if (!$captcha->check()) {
                 $errors['captcha'] = t("Incorrect captcha code");
                 $_REQUEST['ccmCaptchaCode'] = '';
@@ -347,7 +348,7 @@ class Controller extends BlockController
         foreach ($rows as $row) {
             if ($row['inputType'] == 'datetime') {
                 if (!isset($datetime)) {
-                    $datetime = Loader::helper("form/date_time");
+                    $datetime = Core::make('helper/form/date_time');
                 }
                 $translated = $datetime->translate('Question'.$row['msqID']);
                 if ($translated) {
@@ -357,7 +358,7 @@ class Controller extends BlockController
             if (intval($row['required']) == 1) {
                 $notCompleted = 0;
                 if ($row['inputType'] == 'email') {
-                    if (!Loader::helper('validation/strings')->email($_POST['Question' . $row['msqID']])) {
+                    if (!Core::make('helper/validation/strings')->email($_POST['Question' . $row['msqID']])) {
                         $errors['emails'] = t('You must enter a valid email address.');
                     }
                 }
@@ -513,7 +514,7 @@ class Controller extends BlockController
             foreach ($questionAnswerPairs as $questionAnswerPair) {
                 $submittedData .= $questionAnswerPair['question']."\r\n".$questionAnswerPair['answer']."\r\n"."\r\n";
             }
-            $antispam = Loader::helper('validation/antispam');
+            $antispam = Core::make('helper/validation/antispam');
             if (!$antispam->check($submittedData, 'form_block')) {
                 // found to be spam. We remove it
                 $foundSpam = true;
@@ -531,7 +532,7 @@ class Controller extends BlockController
                     $formFormEmailAddress = $adminUserInfo->getUserEmail();
                 }
 
-                $mh = Loader::helper('mail');
+                $mh = Core::make('helper/mail');
                 $mh->to($this->recipientEmail);
                 $mh->from($formFormEmailAddress);
                 $mh->replyto($replyToEmailAddress);
@@ -552,7 +553,7 @@ class Controller extends BlockController
                     }
                 }
                 $c = Page::getCurrentPage();
-                header("Location: ".Loader::helper('navigation')->getLinkToCollection($c, true)."?surveySuccess=1&qsid=".$this->questionSetId."#formblock".$this->bID);
+                header("Location: ".Core::make('helper/navigation')->getLinkToCollection($c, true)."?surveySuccess=1&qsid=".$this->questionSetId."#formblock".$this->bID);
                 exit;
             }
         }
@@ -560,7 +561,7 @@ class Controller extends BlockController
 
     public function delete()
     {
-        $db = Loader::db();
+        $db = Database::connection();
 
         $deleteData['questionsIDs'] = array();
         $deleteData['strandedAnswerSetIDs'] = array();
