@@ -10,6 +10,9 @@ class Controller extends DefaultController  {
 	public $helpers = array('form');
 	
 	public function saveKey($data) {
+		$data += array(
+			'akTextareaDisplayMode' => null,
+		);
 		$akTextareaDisplayMode = $data['akTextareaDisplayMode'];
 		if (!$akTextareaDisplayMode) {
 			$akTextareaDisplayMode = 'text';
