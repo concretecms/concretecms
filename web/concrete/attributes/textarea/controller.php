@@ -1,10 +1,10 @@
 <?php
 
-
 namespace Concrete\Attribute\Textarea;
 
-use Loader;
 use Concrete\Core\Attribute\DefaultController;
+use Core;
+use Database;
 
 class Controller extends DefaultController
 {
@@ -49,9 +49,9 @@ class Controller extends DefaultController
         }
         // switch display type here
         if ($this->akTextareaDisplayMode == 'text' || $this->akTextareaDisplayMode == '') {
-            print Loader::helper('form')->textarea($this->field('value'), $value, array('class' => $additionalClass, 'rows' => 5));
+            print Core::make('helper/form')->textarea($this->field('value'), $value, array('class' => $additionalClass, 'rows' => 5));
         } else {
-            print \Core::make('editor')->outputStandardEditor($this->field('value'), $value);
+            print Core::make('editor')->outputStandardEditor($this->field('value'), $value);
         }
     }
 
@@ -62,7 +62,6 @@ class Controller extends DefaultController
 
     public function searchForm($list)
     {
-        $db = Loader::db();
         $list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), '%' . $this->request('value') . '%', 'like');
 
         return $list;
@@ -70,13 +69,13 @@ class Controller extends DefaultController
 
     public function search()
     {
-        $f = Loader::helper('form');
+        $f = Core::make('helper/form');
         print $f->text($this->field('value'), $this->request('value'));
     }
 
     public function setDisplayMode($akTextareaDisplayMode, $akTextareaDisplayModeCustomOptions = array())
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $ak = $this->getAttributeKey();
         $akTextareaDisplayModeCustomOptionsValue = '';
         if (is_array($akTextareaDisplayModeCustomOptions) && count($akTextareaDisplayModeCustomOptions) > 0) {
@@ -90,8 +89,8 @@ class Controller extends DefaultController
     }
 
     /*
-    public function saveForm($data) {
-        $db = Loader::db();
+    public function saveForm($data)
+    {
         $this->saveValue($data['value']);
     }
     */
@@ -99,7 +98,7 @@ class Controller extends DefaultController
     // should have to delete the at thing
     public function deleteKey()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $arr = $this->attributeKey->getAttributeValueIDList();
         foreach ($arr as $id) {
             $db->Execute('delete from atDefault where avID = ?', array($id));
@@ -121,7 +120,7 @@ class Controller extends DefaultController
             return false;
         }
 
-        $db = Loader::db();
+        $db = Database::connection();
         $row = $db->GetRow('select akTextareaDisplayMode, akTextareaDisplayModeCustomOptions from atTextareaSettings where akID = ?', array($ak->getAttributeKeyID()));
         $this->akTextareaDisplayMode = $row['akTextareaDisplayMode'];
         $this->akTextareaDisplayModeCustomOptions = array();
@@ -151,7 +150,7 @@ class Controller extends DefaultController
     public function duplicateKey($newAK)
     {
         $this->load();
-        $db = Loader::db();
+        $db = Database::connection();
         $db->Replace('atTextareaSettings', array(
             'akID' => $newAK->getAttributeKeyID(),
             'akTextareaDisplayMode' => $this->akDateDisplayMode,
