@@ -119,6 +119,11 @@ class Controller extends BlockController {
 	//(run after the duplicate method on first block edit of new page version)
 	function save( $data=array() ) { 
 		if( !$data || count($data)==0 ) $data=$_POST;  
+		$data += array(
+			'qsID' => null,
+			'oldQsID' => null,
+			'questions' => array(),
+		);
 		
 		$b=$this->getBlockObject(); 
 		$c=$b->getBlockCollectionObject();
@@ -172,6 +177,10 @@ class Controller extends BlockController {
 	//Ties the new or edited questions to the new block number
 	//New and edited questions are temporarily given bID=0, until the block is saved... painfully complicated
 	protected function questionVersioning( $data=array() ){
+		$data += array(
+			'ignoreQuestionIDs' => '',
+			'pendingDeleteIDs' => '',
+		);
 		$db = Loader::db();
 		$oldBID = intval($data['bID']);
 		
