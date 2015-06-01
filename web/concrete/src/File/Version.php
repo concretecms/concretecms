@@ -738,7 +738,7 @@ class Version
                 switch ($mimetype) {
                   case 'image/jpeg':
                     $thumbnailType = 'jpeg';
-                    $thumbnailOptions = array('jpeg_quality' => \Config::get('misc.default_jpeg_image_compression'));
+                    $thumbnailOptions = array('jpeg_quality' => \Config::get('concrete.misc.default_jpeg_image_compression'));
                     break;
                   case 'image/png':
                     $thumbnailType = 'png';
