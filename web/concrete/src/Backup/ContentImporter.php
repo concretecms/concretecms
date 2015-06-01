@@ -26,6 +26,7 @@ use \Concrete\Core\Block\BlockType\Set as BlockTypeSet;
 use \Concrete\Core\Attribute\Type as AttributeType;
 use \Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
 use PermissionKeyCategory;
+use PermissionKey;
 use \Concrete\Core\Permission\Access\Entity\Type as PermissionAccessEntityType;
 use \Concrete\Core\Workflow\Progress\Category as WorkflowProgressCategory;
 use \Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
@@ -799,6 +800,9 @@ class ContentImporter
     {
         if (isset($sx->permissionkeys)) {
             foreach ($sx->permissionkeys->permissionkey as $pk) {
+                if (is_object(PermissionKey::getByHandle((string) $pk['handle']))) {
+                    continue;
+                }                
                 $pkc = PermissionKeyCategory::getByHandle((string)$pk['category']);
                 $pkg = static::getPackageObject($pk['package']);
                 $txt = Loader::helper('text');
