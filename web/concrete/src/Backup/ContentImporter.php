@@ -399,11 +399,13 @@ class ContentImporter
     {
         if (isset($sx->blocktypes)) {
             foreach ($sx->blocktypes->blocktype as $bt) {
-                $pkg = static::getPackageObject($bt['package']);
-                if (is_object($pkg)) {
-                    BlockType::installBlockTypeFromPackage((string) $bt['handle'], $pkg);
-                } else {
-                    BlockType::installBlockType((string) $bt['handle']);
+                if (!is_object(BlockType::getByHandle((string) $bt['handle']))) {
+                    $pkg = static::getPackageObject($bt['package']);
+                    if (is_object($pkg)) {
+                        BlockType::installBlockTypeFromPackage((string) $bt['handle'], $pkg);
+                    } else {
+                        BlockType::installBlockType((string) $bt['handle']);
+                    }
                 }
             }
         }
