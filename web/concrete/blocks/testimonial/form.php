@@ -1,10 +1,10 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 
-<?
+<?php
 if ($fID > 0) {
     $fo = File::getByID($fID);
-    if ($fo->isError()) {
+   if (!is_object($fo)) {
         unset($fo);
     }
 }
