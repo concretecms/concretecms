@@ -382,45 +382,6 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $update_query .= ' '.implode(' ', $when_statements).' END WHERE bID in ('.
             implode(',', array_pad(array(), count($block_order), '?')).')';
         $db->execute($update_query, array_merge($update_values, $block_order));
-
-        return;
-
-        // this function is called via ajax, so it's a bit wonky, but the format is generally
-        // a{areaID} = array(b1, b2, b3) (where b1, etc... are blocks with ids appended.)
-        $db = Database::get();
-        $db->Execute('delete from CollectionVersionBlockStyles where cID = ? and cvID = ?', array($this->getCollectionID(), $this->getVersionID()));
-
-        foreach ($areas as $arID => $blocks) {
-            if (intval($arID) > 0) {
-                // this is a serialized area;
-                $arHandle =  Area::getAreaHandleFromID($arID);
-                $startDO = 0;
-                foreach ($blocks as $bIdentifier) {
-                    $bID = 0;
-                    $csrID = 0;
-
-                    $bd2 = explode('-', $bIdentifier);
-                    $bID = $bd2[0];
-                    $csrID = $bd2[1];
-
-                    if (intval($bID) > 0) {
-                        $v = array($startDO, $arHandle, $bID, $this->getCollectionID(), $this->getVersionID());
-                        try {
-                            $db->query('update CollectionVersionBlocks set cbDisplayOrder = ?, arHandle = ? where bID = ? and cID = ? and (cvID = ? or cbIncludeAll = 1)', $v);
-                            if ($csrID > 0) {
-                                $db->query('insert into CollectionVersionBlockStyles (csrID, arHandle, bID, cID, cvID) values (?, ?, ?, ?, ?)', array(
-                                    $csrID, $arHandle, $bID, $this->getCollectionID(), $this->getVersionID(),
-                                ));
-                            }
-                            // update the style for any of these blocks
-                        } catch (Exception $e) {
-                        }
-
-                        $startDO++;
-                    }
-                }
-            }
-        }
     }
 
     /**
