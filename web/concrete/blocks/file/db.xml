@@ -8,6 +8,10 @@
 		<field name="fID" type="I">
 			<unsigned />
 		</field>
+        <field name="forceDownload" type="I1">
+            <unsigned />
+            <default value="0" />
+        </field>
 		<field name="fileLinkText" type="C" size="255"/>
 		<field name="filePassword" type="C" size="255"/>
         <index name="fID">
