@@ -6,6 +6,7 @@ use CacheLocal;
 use Package;
 use \Concrete\Core\Attribute\Value\ValueList as AttributeValueList;
 use \Concrete\Core\Attribute\Value\UserValue as UserAttributeValue;
+use \Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
 
 class UserKey extends Key {
 
@@ -98,25 +99,33 @@ class UserKey extends Key {
 
 	public static function import(\SimpleXMLElement $ak) {
 		$type = AttributeType::getByHandle($ak['type']);
+        $akCategoryHandle = $ak['category'];
 		$pkg = false;
 		if ($ak['package']) {
 			$pkg = Package::getByHandle($ak['package']);
 		}
-		$akn = static::add($type, array(
-			'akHandle' => $ak['handle'],
-			'akName' => $ak['name'],
-			'akIsSearchableIndexed' => $ak['indexed'],
-			'akIsSearchable' => $ak['searchable'],
-			'uakProfileDisplay' => $ak['profile-displayed'],
-			'uakProfileEdit' => $ak['profile-editable'],
-			'uakProfileEditRequired' => $ak['profile-required'],
-			'uakRegisterEdit' => $ak['register-editable'],
-			'uakRegisterEditRequired' => $ak['register-required'],
-			'uakMemberListDisplay' => $ak['member-list-displayed']
-		), $pkg);
 
-		$akn->getController()->importKey($ak);
+        $db = Loader::db();
+        $akc = AttributeKeyCategory::getByHandle($akCategoryHandle);
+        $akID = $db->GetOne('select akID from AttributeKeys where akHandle = ? and akCategoryID = ?',
+            array($ak['handle'], $akc->getAttributeKeyCategoryID()));
 
+        if (!$akID) {
+            $akn = static::add($type, array(
+                'akHandle' => $ak['handle'],
+                'akName' => $ak['name'],
+                'akIsSearchableIndexed' => $ak['indexed'],
+                'akIsSearchable' => $ak['searchable'],
+                'uakProfileDisplay' => $ak['profile-displayed'],
+                'uakProfileEdit' => $ak['profile-editable'],
+                'uakProfileEditRequired' => $ak['profile-required'],
+                'uakRegisterEdit' => $ak['register-editable'],
+                'uakRegisterEditRequired' => $ak['register-required'],
+                'uakMemberListDisplay' => $ak['member-list-displayed']
+            ), $pkg);
+
+            $akn->getController()->importKey($ak);
+        }
 	}
 
 	public function isAttributeKeyDisplayedOnProfile() {
