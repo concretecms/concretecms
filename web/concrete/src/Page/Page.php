@@ -2348,10 +2348,10 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $db = Database::get();
 
         // run any internal event we have for page deletion
-        $pe = new Event($this);
+        $pe = new DeletePageEvent($this);
         Events::dispatch('on_page_delete', $pe);
 
-        if ($ret < 0) {
+        if (!$pe->proceed()) {
             return false;
         }
         Log::addEntry(t('Page "%s" at path "%s" deleted', $this->getCollectionName(), $this->getCollectionPath()), t('Page Action'));
