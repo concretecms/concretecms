@@ -860,6 +860,61 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         if ($this->getCustomStyleSetID() > 0 || $force) {
             $csr = StyleSet::getByID($this->getCustomStyleSetID());
             $bs = new CustomStyle($csr, $this->getBlockID(), $this->getAreaHandle());
+            $noCustomStyle = true;
+            if (is_object($bs)) {
+                if ($bs->backgroundColor) {
+                    $noCustomStyle = false;
+                } else if ($bs->backgroundImageFileID) {
+                    $noCustomStyle = false;
+                } else if ($bs->backgroundRepeat) {
+                    // no-repeat does not mean empty object
+                } else if ($bs->borderStyle) {
+                    $noCustomStyle = false;
+                } else if ($bs->borderWidth) {
+                    $noCustomStyle = false;
+                } else if ($bs->borderRadius) {
+                    $noCustomStyle = false;
+                } else if ($bs->baseFontSize) {
+                    $noCustomStyle = false;
+                } else if ($bs->alignment) {
+                    $noCustomStyle = false;
+                } else if ($bs->textColor) {
+                    $noCustomStyle = false;
+                } else if ($bs->linkColor) {
+                    $noCustomStyle = false;
+                } else if ($bs->marginTop) {
+                    $noCustomStyle = false;
+                } else if ($bs->marginBottom) {
+                    $noCustomStyle = false;
+                } else if ($bs->marginLeft) {
+                    $noCustomStyle = false;
+                } else if ($bs->marginRight) {
+                    $noCustomStyle = false;
+                } else if ($bs->paddingTop) {
+                    $noCustomStyle = false;
+                } else if ($bs->paddingBottom) {
+                    $noCustomStyle = false;
+                } else if ($bs->paddingLeft) {
+                    $noCustomStyle = false;
+                } else if ($bs->paddingRight) {
+                    $noCustomStyle = false;
+                } else if ($bs->rotate) {
+                    $noCustomStyle = false;
+                } else if ($bs->boxShadowHorizontal) {
+                    $noCustomStyle = false;
+                } else if ($bs->boxShadowVertical) {
+                    $noCustomStyle = false;
+                } else if ($bs->boxShadowBlur) {
+                    $noCustomStyle = false;
+                } else if ($bs->boxShadowSpread) {
+                    $noCustomStyle = false;
+                } else if ($bs->boxShadowColor) {
+                    $noCustomStyle = false;
+                }
+            }
+            if ($noCustomStyle) {
+                $bs = null;
+            }
             return $bs;
         }
     }
