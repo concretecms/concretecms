@@ -5,6 +5,7 @@ use Concrete\Core\File\Importer;
 use Concrete\Core\Page\Feed;
 use Concrete\Core\Sharing\SocialNetwork\Link;
 use Concrete\Core\Tree\Tree;
+use Database;
 use Page;
 use Package;
 use Stack;
