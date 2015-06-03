@@ -16,7 +16,6 @@ use BlockType;
 use Block;
 use Group;
 use PageTheme;
-use Loader;
 use Core;
 use Database;
 use Job;
@@ -475,8 +474,10 @@ class ContentImporter
     {
         if (isset($sx->packages)) {
             foreach ($sx->packages->package as $p) {
-                $pkg = Loader::package((string) $p['handle']);
-                $pkg->install();
+                $pkg = Package::getClass((string) $p['handle']);
+                if (!$pkg->isPackageInstalled()) {
+                    $pkg->install();
+                }
             }
         }
     }
