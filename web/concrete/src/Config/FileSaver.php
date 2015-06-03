@@ -1,11 +1,11 @@
 <?php
+
 namespace Concrete\Core\Config;
 
 use Illuminate\Filesystem\Filesystem;
 
 class FileSaver implements SaverInterface
 {
-
     /**
      * The filesystem instance.
      *
@@ -18,7 +18,7 @@ class FileSaver implements SaverInterface
         $this->files = $files;
     }
 
-    public function save($item, $value, $environment, $group, $namespace = null)
+    protected function prepareSave($group, $namespace = null)
     {
         $path = DIR_APPLICATION . '/config/generated_overrides';
 
@@ -59,8 +59,33 @@ class FileSaver implements SaverInterface
             }
         }
 
+        return array(
+            $file,
+            $current,
+            $ns_string,
+        );
+    }
+
+    public function save($item, $value, $environment, $group, $namespace = null)
+    {
+        list($file, $current, $ns_string) = $this->prepareSave($group, $namespace);
+
         array_set($current, $item, $value);
 
+        return $this->finalSave($file, $current, $group, $ns_string);
+    }
+
+    public function reset($item, $environment, $group, $namespace = null)
+    {
+        list($file, $current, $ns_string) = $this->prepareSave($group, $namespace);
+
+        array_pull($current, $item);
+
+        return $this->finalSave($file, $current, $group, $ns_string);
+    }
+
+    protected function finalSave($file, $current, $group, $ns_string)
+    {
         $renderer = new Renderer($current);
 
         $header = array(
@@ -70,18 +95,15 @@ class FileSaver implements SaverInterface
             " * -----------------------------------------------------------------------------",
             " * Generated " . date(DATE_ATOM),
             " *",
-            " * @item      {$item}",
             " * @group     {$group}",
             " * @namespace {$ns_string}",
             " * -----------------------------------------------------------------------------",
             " */",
-            "return "
+            "return ",
         );
 
-
         $rendered = $renderer->render(PHP_EOL, '    ', implode(PHP_EOL, $header));
+
         return $this->files->put($file, $rendered) !== false;
-
     }
-
 }
