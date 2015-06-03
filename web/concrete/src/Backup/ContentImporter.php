@@ -17,6 +17,8 @@ use Block;
 use Group;
 use PageTheme;
 use Loader;
+use Core;
+use Database;
 use Job;
 use JobSet;
 use PageTemplate;
@@ -419,7 +421,7 @@ class ContentImporter
                 $pkg = static::getPackageObject($wt['package']);
                 $name = $wt['name'];
                 if (!$name) {
-                    $name = Loader::helper('text')->unhandle($wt['handle']);
+                    $name = Core::make('helper/text')->unhandle($wt['handle']);
                 }
                 $type = \Concrete\Core\Workflow\Type::add($wt['handle'], $name, $pkg);
             }
@@ -433,7 +435,7 @@ class ContentImporter
                 $pkg = static::getPackageObject($at['package']);
                 $name = $at['name'];
                 if (!$name) {
-                    $name = Loader::helper('text')->unhandle($at['handle']);
+                    $name = Core::make('helper/text')->unhandle($at['handle']);
                 }
                 $type = AttributeType::getByHandle($at['handle']);
                 if (!is_object($type)) {
@@ -456,7 +458,7 @@ class ContentImporter
                 $pkg = static::getPackageObject($pt['package']);
                 $name = $pt['name'];
                 if (!$name) {
-                    $name = Loader::helper('text')->unhandle($pt['handle']);
+                    $name = Core::make('helper/text')->unhandle($pt['handle']);
                 }
                 $type = PermissionAccessEntityType::add($pt['handle'], $name, $pkg);
                 if (isset($pt->categories)) {
@@ -742,7 +744,7 @@ class ContentImporter
     protected function importDatabaseConfigValues(\SimpleXMLElement $sx)
     {
         if (isset($sx->databaseconfig)) {
-            $config = \Core::make('config/database');
+            $config = Core::make('config/database');
             foreach ($sx->databaseconfig->children() as $key) {
                 $pkg = static::getPackageObject($key['package']);
                 if (is_object($pkg)) {
@@ -804,7 +806,7 @@ class ContentImporter
                 }
                 $pkc = PermissionKeyCategory::getByHandle((string) $pk['category']);
                 $pkg = static::getPackageObject($pk['package']);
-                $txt = Loader::helper('text');
+                $txt = Core::make('helper/text');
                 $c1 = '\\Concrete\\Core\\Permission\\Key\\' . $txt->camelcase(
                         $pkc->getPermissionKeyCategoryHandle()
                     ) . 'Key';
@@ -867,13 +869,13 @@ class ContentImporter
 
     protected function importAttributes(\SimpleXMLElement $sx)
     {
-        $db = Database::get();
+        $db = Database::connection();
         if (isset($sx->attributekeys)) {
             foreach ($sx->attributekeys->attributekey as $ak) {
                 $akc = AttributeKeyCategory::getByHandle($ak['category']);
                 $akID = $db->GetOne('select akID from AttributeKeys where akHandle = ? and akCategoryID = ?', array($ak['handle'], $akc->getAttributeKeyCategoryID()));
                 if (!$akID) {
-                    $txt = Loader::helper('text');
+                    $txt = Core::make('helper/text');
                     $c1 = overrideable_core_class('\\Core\\Attribute\\Key\\' . $txt->camelcase(
                             $akc->getAttributeKeyCategoryHandle()
                         ) . 'Key', DIRNAME_CLASSES . '/Attribute/Key/' . $txt->camelcase(
@@ -1047,13 +1049,13 @@ class ContentImporter
                 return $c->getCollectionID();
             }
             if (isset($matches[2]) && $matches[2]) {
-                $db = Loader::db();
+                $db = Database::connection();
                 $fID = $db->GetOne('select fID from FileVersions where fvFilename = ?', array($matches[2]));
 
                 return $fID;
             }
             if (isset($matches[3]) && $matches[3]) {
-                $db = Loader::db();
+                $db = Database::connection();
                 $fID = $db->GetOne('select fID from FileVersions where fvFilename = ?', array($matches[3]));
 
                 return $fID;
@@ -1079,9 +1081,9 @@ class ContentImporter
 
         if (!$computeThumbnails) {
             $fh->setRescanThumbnailsOnImport(false);
-            $helper = \Core::make('helper/file');
+            $helper = Core::make('helper/file');
         }
-        $contents = \Loader::helper('file')->getDirectoryContents($fromPath);
+        $contents = Core::make('helper/file')->getDirectoryContents($fromPath);
         foreach ($contents as $filename) {
             if (!is_dir($filename)) {
                 $fv = $fh->import($fromPath . '/' . $filename, $filename);
