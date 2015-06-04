@@ -14,15 +14,8 @@ class SurveyList extends DatabaseItemList
                         max(btSurveyResults.timestamp) AS lastResponse,
                         count(btSurveyResults.bID) AS numberOfResponses
                     FROM btSurvey
-                    INNER JOIN CollectionVersionBlocks
-                      ON btSurvey.bID = CollectionVersionBlocks.bID
-                    INNER JOIN CollectionVersions
-                      ON CollectionVersionBlocks.cID = CollectionVersions.cID
-                        AND CollectionVersionBlocks.cvID = CollectionVersions.cvID
-                        AND CollectionVersions.cvIsApproved = 1
-                    LEFT JOIN btSurveyResults
-                      ON btSurvey.bID = btSurveyResults.bID
-                        AND btSurveyResults.cID = CollectionVersions.cID';
+                    LEFT JOIN btSurveyResults ON btSurveyResults.bID = btSurvey.bID
+                    LEFT JOIN CollectionVersions ON CollectionVersions.cID = btSurveyResults.cID AND CollectionVersions.cvIsApproved = 1';
 
         $this->setQuery($query);
         $this->userPostQuery .= 'GROUP BY btSurvey.bID, CollectionVersions.cID,
