@@ -98,11 +98,13 @@ class Application extends Container
         Core::make('cache')->flush();
         Core::make('cache/expensive')->flush();
 
-        // flush the CSS cache
-        if (is_dir(DIR_FILES_CACHE . '/' . DIRNAME_CSS)) {
+        // Delete and re-create the cache directory
+        $cacheDir = Config::get('concrete.cache.directory');
+        if (is_dir($cacheDir)) {
             $fh = Loader::helper("file");
-            $fh->removeAll(DIR_FILES_CACHE . '/' . DIRNAME_CSS);
+            $fh->removeAll($cacheDir, true);
         }
+        $this->setupFilesystem();
 
         $pageCache = PageCache::getLibrary();
         if (is_object($pageCache)) {
