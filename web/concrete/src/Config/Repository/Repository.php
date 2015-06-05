@@ -75,6 +75,7 @@ class Repository extends \Illuminate\Config\Repository
         unset($this->items[$collection]);
 
         if ($this->saver->reset($item, $this->environment, $group, $namespace)) {
+            $this->clearCache();
             $this->load($group, $namespace, $this->getCollection($group, $namespace));
 
             return true;
