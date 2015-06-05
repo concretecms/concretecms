@@ -100,5 +100,8 @@ class LiaisonSaver implements SaverInterface
     {
         $this->saved = "{$namespace}::{$group}.{$item}";
     }
+    public function reset($item, $environment, $group, $namespace = null)
+    {
+    }
 
 }
