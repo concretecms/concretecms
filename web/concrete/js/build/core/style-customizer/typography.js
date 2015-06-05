@@ -266,7 +266,7 @@
 
     ConcreteTypographySelector.prototype.save = function (e) {
         var my = this;
-        my.setValue('font-family', my.fonts[my.$fontMenu.val()].css);
+        my.setValue('font-family', (my.options.fontFamily != -1) ? my.fonts[my.$fontMenu.val()].css : '');
         my.setValue('color', my.$widget.find('input[data-style-customizer-field=color]').spectrum('get'));
         my.setValue('italic', my.$widget.find('input[data-style-customizer-field=italic]').is(':checked') ? '1' : 0);
         my.setValue('underline', my.$widget.find('input[data-style-customizer-field=underline]').is(':checked') ? '1' : 0);
