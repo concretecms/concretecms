@@ -217,7 +217,7 @@ class ClassLoader  {
 
 		$strictLoader = new SymfonyClassLoader();
 		$strictLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Core', DIR_BASE_CORE . '/' . DIRNAME_CLASSES);
-		$strictLoader->addPrefix($namespace . '\\Src', DIR_APPLICATION . '/' . DIRNAME_CLASSES);
+		$strictLoader->addPrefix($namespace . '\\Core', DIR_APPLICATION . '/' . DIRNAME_CLASSES);
 		$strictLoader->register();
 	}
 
