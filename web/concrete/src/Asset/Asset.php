@@ -132,9 +132,16 @@ abstract class Asset
         if ($this->isAssetLocal()) {
             $filename = $this->getAssetPath();
             if (is_file($filename)) {
-                $mtime = @filemtime($filename);
-                if ($mtime !== false) {
-                    $result .= '@' . $mtime;
+                if (is_readable($filename) && \Config::get('concrete.cache.full_contents_assets_hash')) {
+                    $sha1 = @sha1_file($filename);
+                    if ($sha1 !== false) {
+                        $result = $sha1;
+                    }
+                } else {
+                    $mtime = @filemtime($filename);
+                    if ($mtime !== false) {
+                        $result .= '@' . $mtime;
+                    }
                 }
             }
         }
