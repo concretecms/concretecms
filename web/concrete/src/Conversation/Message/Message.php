@@ -331,8 +331,8 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
                 $this->getConversationMessageID(),
                 $f->getFileID()
             ));
-            $fs = FileSet::createAndGetSet(Config::get('concrete.conversations.attachments_file_set'), FileSet::TYPE_PUBLIC, USER_SUPER_ID);
-            $fsToRemove = FileSet::createAndGetSet(Config::get('concrete.conversations.attachments_pending_file_set'), FileSet::TYPE_PUBLIC, USER_SUPER_ID);
+            $fs = FileSet::createAndGetSet(Config::get('conversations.attachments_file_set'), FileSet::TYPE_PUBLIC, USER_SUPER_ID);
+            $fsToRemove = FileSet::createAndGetSet(Config::get('conversations.attachments_pending_file_set'), FileSet::TYPE_PUBLIC, USER_SUPER_ID);
             $fs->addFileToSet($f);
             $fsToRemove->removeFileFromSet($f);
         }

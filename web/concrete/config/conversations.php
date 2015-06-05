@@ -11,6 +11,8 @@
  */
 return array(
     'attachments_enabled' => true,
+    'attachments_pending_file_set' => 'Conversation Messages (Pending)',
+    'attachments_file_set'         => 'Conversation Messages',
     'subscription_enabled' => false,
     'files' => array(
         'allowed_types' => '*.jpg;*.gif;*.jpeg;*.png;*.doc;*.docx;*.zip',

@@ -439,10 +439,6 @@ return array(
         'trash'  => '/!trash',
         'drafts' => '/!drafts'
     ),
-    'conversations'     => array(
-        'attachments_pending_file_set' => 'Conversation Messages (Pending)',
-        'attachments_file_set'         => 'Conversation Messages',
-    ),
     'icons'             => array(
         'page_template'        => array(
             'width'  => 120,
