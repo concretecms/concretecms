@@ -1,28 +1,29 @@
 <?php
+
 namespace Concrete\Core\Config;
 
 class DatabaseSaver implements SaverInterface
 {
-
     /**
-     * Save config item
+     * Save config item.
      *
      * @param string      $item
      * @param string      $value
      * @param string      $environment
      * @param string      $group
      * @param string|null $namespace
+     *
      * @return bool
      */
     public function save($item, $value, $environment, $group, $namespace = null)
     {
         if (is_array($value)) {
-
             foreach ($value as $key => $val) {
                 $key = ($item ? $item . '.' : '') . $key;
 
                 $this->save($key, $val, $environment, $group, $namespace);
             }
+
             return;
         }
 
@@ -46,7 +47,7 @@ class DatabaseSaver implements SaverInterface
                         $item,
                         $value,
                         $group,
-                        $namespace ?: ''
+                        $namespace ?: '',
                     ));
             } catch (\Exception $e) {
                 // This happens when the update succeeded, but didn't actually change anything on the row.
@@ -54,4 +55,38 @@ class DatabaseSaver implements SaverInterface
         }
     }
 
+    /**
+     * Reset a config item.
+     *
+     * @param string $item
+     * @param string $environment
+     * @param string $group
+     * @param string|null $namespace
+     *
+     * @return bool
+     */
+    public function reset($item, $environment, $group, $namespace = null)
+    {
+        $query = \Database::createQueryBuilder();
+        $query->delete('Config');
+        if ($namespace) {
+            $query->andWhere($query->expr()->eq('configNamespace', $query->expr()->literal($namespace)));
+        } else {
+            $query->andWhere($query->expr()->orX(
+                $query->expr()->isNull('configNamespace'),
+                $query->expr()->eq('configNamespace', $query->expr()->literal(''))
+            ));
+        }
+        $query->andWhere($query->expr()->eq('configGroup', $query->expr()->literal($group)));
+        if ($item) {
+            $query->andWhere($query->expr()->eq('configItem', $query->expr()->literal($item)));
+        } else {
+            $query->andWhere($query->expr()->orX(
+                $query->expr()->isNull('configItem'),
+                $query->expr()->eq('configItem', $query->expr()->literal(''))
+            ));
+        }
+        $query->execute();
+        return true;
+    }
 }
