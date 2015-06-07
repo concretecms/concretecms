@@ -683,12 +683,6 @@ return array(
          */
         'profiles_enabled'  => false,
 
-        /**
-         * Enable user timezones
-         *
-         * @var bool
-         */
-        'timezones_enabled' => false,
         'username'          => array(
             'maximum'      => 64,
             'minimum'      => 3,
