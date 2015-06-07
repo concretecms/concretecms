@@ -771,13 +771,6 @@ return array(
          * @var string The permission model (simple|advanced)
          */
         'model'                         => 'simple',
-
-        /**
-         * Use collection ID for page permission identifier
-         *
-         * @var bool
-         */
-        'page_permission_collection_id' => true
     ),
 
     /**
