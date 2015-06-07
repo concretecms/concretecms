@@ -515,11 +515,6 @@ return array(
     'i18n'              => array(
 
         /**
-         * Enable internationalization
-         */
-        'enabled'               => true,
-
-        /**
          * Allow users to choose language on login
          *
          * @var bool
