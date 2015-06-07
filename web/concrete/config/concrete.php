@@ -536,7 +536,6 @@ return array(
         ),
         'paths'                  => array(
             'menu_help_service' => '/tools/get_remote_help_list/',
-            'theme_preview'     => '/tools/preview_theme/',
             'site_page'         => '/private/sites',
             'newsflow_slot_content'      => '/tools/slot_content/',
             'marketplace'       => array(
