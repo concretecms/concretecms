@@ -2622,7 +2622,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $db = Database::get();
         $newPath = $db->GetOne('select cPath from PagePaths where cID = ? and ppIsCanonical = 1', array($cID));
         // now we mark the page as a system page based on this path:
-        $systemPages = array('/login', '/register', '/!trash', '/!stacks', Config::get('concrete.paths.drafts'), '/members', '/members/*', '/account', '/account/*', '/!trash/*', '/!stacks/*', Config::get('concrete.paths.drafts').'/*', '/download_file', '/dashboard', '/dashboard/*','/page_forbidden','/page_not_found');
+        $systemPages = array('/login', '/register', Config::get('concrete.paths.trash'), '/!stacks', Config::get('concrete.paths.drafts'), '/members', '/members/*', '/account', '/account/*', Config::get('concrete.paths.trash').'/*', '/!stacks/*', Config::get('concrete.paths.drafts').'/*', '/download_file', '/dashboard', '/dashboard/*','/page_forbidden','/page_not_found');
         $th = Core::make('helper/text');
         $db->Execute('update Pages set cIsSystemPage = 0 where cID = ?', array($cID));
         foreach ($systemPages as $sp) {
