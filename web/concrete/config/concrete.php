@@ -766,13 +766,6 @@ return array(
      */
     'permissions'       => array(
         /**
-         * Forward to login if access is denied
-         *
-         * @var bool
-         */
-        'forward_to_login'              => true,
-
-        /**
          * Permission model
          *
          * @var string The permission model (simple|advanced)
