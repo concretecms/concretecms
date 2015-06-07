@@ -853,5 +853,12 @@ return array(
             'size_min' => -50,
             'size_max' => 200,
         )
-    )
+    ),
+
+    'page' => array(
+        'search' => array(
+            // Always reindex pages (usually it isn't performed when approving workflows)
+            'always_reindex' => false,
+        )
+    ),
 );
