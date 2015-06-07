@@ -16,6 +16,9 @@ use Config;
 
 class BasicWorkflow extends \Concrete\Core\Workflow\Workflow
 {
+    public function getPermissionAssignmentClassName() {
+        return '\\Concrete\\Core\\Permission\\Assignment\\BasicWorkflowAssignment';
+    }
 
     public function updateDetails($post)
     {
