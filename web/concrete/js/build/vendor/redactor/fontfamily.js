@@ -16,10 +16,9 @@ if (!RedactorPlugins) var RedactorPlugins = {};
 					dropdown['s' + i] = { title: s, func: function() { that.fontfamily.set(s); }};
 				});
 
-				dropdown.remove = { title: 'Remove Font Family', func: that.fontfamily.reset };
-
-				var button = this.button.add('fontfamily', 'Change Font Family');
 				/* concrete5 */
+				dropdown.remove = { title: this.lang.get('remove_font_family'), func: that.fontfamily.reset };
+				var button = this.button.add('fontfamily', this.lang.get('change_font_family'));
 				this.button.setAwesome('fontfamily', 'fa fa-font');
 				/* end concrete5 */
 				this.button.addDropdown(button, dropdown);
