@@ -1,25 +1,29 @@
-<?xml version="1.0"?>
-<schema version="0.3">
-	<table name="btGoogleMap">
-		<field name="bID" type="I">
-			<key />
-			<unsigned />
-		</field>
-		<field name="title" type="C" size="255"></field>		
-		<field name="location" type="C" size="255"></field>	
-		<field name="latitude" type="F"></field>
-		<field name="longitude" type="F"></field>	
-		<field name="zoom" type="I" size="3"></field>
-        <field name="width" type="C" size="8">
-            <default value="100%"/>
-        </field>	
-        <field name="height" type="C" size="8">
-            <default value="400px"/>
-        </field>
-            <field name="scrollwheel" type="I1">
-            <unsigned />
-            <notnull />
-            <default value="1" />
-        </field>
-	</table>
+<?xml version="1.0" encoding="UTF-8"?>
+<schema
+  xmlns="http://www.concrete5.org/doctrine-xml/0.5"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.concrete5.org/doctrine-xml/0.5 http://concrete5.github.io/doctrine-xml/doctrine-xml-0.5.xsd">
+
+  <table name="btGoogleMap">
+    <field name="bID" type="integer">
+      <unsigned/>
+      <key/>
+    </field>
+    <field name="title" type="string" size="255"/>
+    <field name="location" type="string" size="255"/>
+    <field name="latitude" type="float"/>
+    <field name="longitude" type="float"/>
+    <field name="zoom" type="smallint"/>
+    <field name="width" type="string" size="8">
+      <default value="100%"/>
+    </field>
+    <field name="height" type="string" size="8">
+      <default value="400px"/>
+    </field>
+    <field name="scrollwheel" type="boolean">
+      <unsigned/>
+      <default value="1"/>
+      <notnull/>
+    </field>
+  </table>
+
 </schema>

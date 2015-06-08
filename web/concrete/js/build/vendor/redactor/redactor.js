@@ -348,6 +348,10 @@
 				insert_character: 'Insert Character',
 				undo: 'Undo',
 				redo: 'Redo',
+				remove_font_family: 'Remove Font Family',
+				change_font_family: 'Change Font Family',
+				remove_font_size: 'Remove Font Size',
+				change_font_size: 'Change Font Size',
 				// Remember to add new strings also in in /concrete/controllers/frontend/assets_localization.php, function getRedactorJavascript
 				/* end concrete5 */
 				underline: 'Underline',

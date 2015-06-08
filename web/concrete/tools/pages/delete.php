@@ -18,7 +18,7 @@ if ($_POST['task'] == 'delete_pages') {
 	if ($_POST['process']) {
 		$obj = new stdClass;
 		$js = Loader::helper('json');
-		$messages = $q->receive(Config::get('concrete.limits.sitemap_pages'));
+		$messages = $q->receive(Config::get('concrete.limits.delete_pages'));
 		foreach($messages as $key => $p) {
 			// delete the page here
 			$page = unserialize($p->body);
