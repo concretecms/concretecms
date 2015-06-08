@@ -1,18 +1,22 @@
-<?xml version="1.0"?>
-<schema version="0.3">
-	<table name="btTestimonial">
-		<field name="bID" type="I">
-			<key />
-			<unsigned />
-		</field>
-        <field name="fID" type="I">
-            <unsigned />
-            <default value="0" />
-        </field>
-		<field name="name" type="C" size="255"></field>
-        <field name="position" type="C" size="255"></field>
-        <field name="company" type="C" size="255"></field>
-        <field name="companyURL" type="C" size="255"></field>
-        <field name="paragraph" type="X"></field>
-	</table>
+<?xml version="1.0" encoding="UTF-8"?>
+<schema
+  xmlns="http://www.concrete5.org/doctrine-xml/0.5"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.concrete5.org/doctrine-xml/0.5 http://concrete5.github.io/doctrine-xml/doctrine-xml-0.5.xsd">
+
+  <table name="btTestimonial">
+    <field name="bID" type="integer">
+      <unsigned/>
+      <key/>
+    </field>
+    <field name="fID" type="integer">
+      <unsigned/>
+      <default value="0"/>
+    </field>
+    <field name="name" type="string" size="255"/>
+    <field name="position" type="string" size="255"/>
+    <field name="company" type="string" size="255"/>
+    <field name="companyURL" type="string" size="255"/>
+    <field name="paragraph" type="text" size="65535"/>
+  </table>
+
 </schema>

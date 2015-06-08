@@ -1,112 +1,109 @@
-<?xml version="1.0"?>
-<schema version="0.3">
-	<table name="btPageList">
-		<field name="bID" type="I">
-			<key />
-			<unsigned />
-		</field>
-		<field name="num" type="I2">
-			<unsigned />
-			<notnull />
-		</field>
-		<field name="orderBy" type="C" size="32">
-			<descr>Was enum, display_asc','display_desc','chrono_asc','chrono_desc','alpha_asc','alpha_desc','score_asc','score_desc'</descr>
-		</field>
-		<field name="cParentID" type="I">
-			<unsigned />
-			<notnull />
-			<default value="1" />
-		</field>
-		<field name="cThis" type="I1">
-			<unsigned />
-			<notnull />
-			<default value="0" />
-		</field>
-        <field name="useButtonForLink" type="I1">
-            <unsigned />
-            <notnull />
-            <default value="0" />
-        </field>
-        <field name="buttonLinkText" type="C" size="255">
-        </field>
-        <field name="pageListTitle" type="C" size="255">
-        </field>
-		<field name="filterByRelated" type="I1">
-			<unsigned />
-			<notnull />
-			<default value="0" />
-		</field>
-		<field name="filterByCustomTopic" type="I1">
-			<unsigned />
-			<notnull />
-			<default value="0" />
-		</field>
-        <field name="relatedTopicAttributeKeyHandle" type="C" size="255">
-        </field>
-		<field name="customTopicAttributeKeyHandle" type="C" size="255">
-		</field>
-		<field name="customTopicTreeNodeID" type="I">
-			<unsigned />
-			<notnull />
-			<default value="0" />
-		</field>
-        <field name="includeName" type="I1">
-            <unsigned />
-            <notnull />
-            <default value="1" />
-        </field>
-        <field name="includeDescription" type="I1">
-            <unsigned />
-            <notnull />
-            <default value="1" />
-        </field>
-        <field name="includeDate" type="I1">
-            <unsigned />
-            <notnull />
-            <default value="0" />
-        </field>
-        <field name="includeAllDescendents" type="I1">
-			<unsigned />
-			<notnull />
-			<default value="0" />
-		</field>
-		<field name="paginate" type="I1">
-			<unsigned />
-			<notnull />
-			<default value="0" />
-		</field>
-		<field name="displayAliases" type="I1">
-			<unsigned />
-			<notnull />
-			<default value="1" />
-		</field>
-        <field name="enableExternalFiltering" type="I1">
-            <unsigned />
-            <notnull />
-            <default value="0" />
-        </field>
-		<field name="ptID" type="I2">
-			<unsigned />
-		</field>
-		<field name="pfID" type="I">
-			<default value="0"/>
-		</field>
-		<field name="truncateSummaries" type="I">
-			<default value="0"/>
-		</field>
-		<field name="displayFeaturedOnly" type="I1">
-			<default value="0"/>
-		</field>
-        <field name="noResultsMessage" type="C" size="255">
-        </field>
-        <field name="displayThumbnail" type="I1">
-            <default value="0"/>
-        </field>
-		<field name="truncateChars" type="I">
-			<default value="128"/>
-		</field>
-        <index name="ptID">
-            <col>ptID</col>
-        </index>
-	</table>
+<?xml version="1.0" encoding="UTF-8"?>
+<schema
+  xmlns="http://www.concrete5.org/doctrine-xml/0.5"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.concrete5.org/doctrine-xml/0.5 http://concrete5.github.io/doctrine-xml/doctrine-xml-0.5.xsd">
+
+  <table name="btPageList">
+    <field name="bID" type="integer">
+      <unsigned/>
+      <key/>
+    </field>
+    <field name="num" type="smallint">
+      <unsigned/>
+      <notnull/>
+    </field>
+    <field name="orderBy" type="string" size="32" comment="Was enum, display_asc','display_desc','chrono_asc','chrono_desc','alpha_asc','alpha_desc','score_asc','score_desc'"/>
+    <field name="cParentID" type="integer">
+      <unsigned/>
+      <default value="1"/>
+      <notnull/>
+    </field>
+    <field name="cThis" type="boolean">
+      <unsigned/>
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="useButtonForLink" type="boolean">
+      <unsigned/>
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="buttonLinkText" type="string" size="255"/>
+    <field name="pageListTitle" type="string" size="255"/>
+    <field name="filterByRelated" type="boolean">
+      <unsigned/>
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="filterByCustomTopic" type="boolean">
+      <unsigned/>
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="relatedTopicAttributeKeyHandle" type="string" size="255"/>
+    <field name="customTopicAttributeKeyHandle" type="string" size="255"/>
+    <field name="customTopicTreeNodeID" type="integer">
+      <unsigned/>
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="includeName" type="boolean">
+      <unsigned/>
+      <default value="1"/>
+      <notnull/>
+    </field>
+    <field name="includeDescription" type="boolean">
+      <unsigned/>
+      <default value="1"/>
+      <notnull/>
+    </field>
+    <field name="includeDate" type="boolean">
+      <unsigned/>
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="includeAllDescendents" type="boolean">
+      <unsigned/>
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="paginate" type="boolean">
+      <unsigned/>
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="displayAliases" type="boolean">
+      <unsigned/>
+      <default value="1"/>
+      <notnull/>
+    </field>
+    <field name="enableExternalFiltering" type="boolean">
+      <unsigned/>
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="ptID" type="smallint">
+      <unsigned/>
+    </field>
+    <field name="pfID" type="integer">
+      <default value="0"/>
+    </field>
+    <field name="truncateSummaries" type="integer">
+      <default value="0"/>
+    </field>
+    <field name="displayFeaturedOnly" type="boolean">
+      <default value="0"/>
+    </field>
+    <field name="noResultsMessage" type="string" size="255"/>
+    <field name="displayThumbnail" type="boolean">
+      <default value="0"/>
+    </field>
+    <field name="truncateChars" type="integer">
+      <default value="128"/>
+    </field>
+    <index name="ptID">
+      <col>ptID</col>
+    </index>
+  </table>
+
 </schema>

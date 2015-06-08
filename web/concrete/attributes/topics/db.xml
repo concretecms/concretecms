@@ -1,27 +1,32 @@
-<?xml version="1.0"?>
-<schema version="0.3">
-	<table name="atTopicSettings">
-    <field name="akID" type="I" size="10">
-      <KEY/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
+<?xml version="1.0" encoding="UTF-8"?>
+<schema
+  xmlns="http://www.concrete5.org/doctrine-xml/0.5"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.concrete5.org/doctrine-xml/0.5 http://concrete5.github.io/doctrine-xml/doctrine-xml-0.5.xsd">
+
+  <table name="atTopicSettings">
+    <field name="akID" type="integer" size="10">
+      <unsigned/>
+      <key/>
+      <default value="0"/>
     </field>
-    <field name="akTopicParentNodeID" type="I" size="10"/>
-    <field name="akTopicTreeID" type="I" size="10"/>
+    <field name="akTopicParentNodeID" type="integer" size="10"/>
+    <field name="akTopicTreeID" type="integer" size="10"/>
     <index name="akTopicTreeID">
-        <col>akTopicTreeID</col>
+      <col>akTopicTreeID</col>
     </index>
   </table>
+
   <table name="atSelectedTopics">
-  	<field name="avID" type="I" size="10">
-        <KEY/>
-        <UNSIGNED/>
+    <field name="avID" type="integer" size="10">
+      <unsigned/>
+      <key/>
     </field>
-  	<field name="TopicNodeID" type="I" size="10">
-        <KEY/>
+    <field name="TopicNodeID" type="integer" size="10">
+      <key/>
     </field>
-	<index name="TopicNodeID">
-		<col>TopicNodeID</col>
-	</index>
+    <index name="TopicNodeID">
+      <col>TopicNodeID</col>
+    </index>
   </table>
+
 </schema>
