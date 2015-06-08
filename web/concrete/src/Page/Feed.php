@@ -28,6 +28,27 @@ class Feed
     protected $customTopicTreeNodeID = 0;
 
     /**
+     * @Column(columnDefinition="integer unsigned")
+     */
+    protected $iconFID = 0;
+
+    /**
+     * @return mixed
+     */
+    public function getIconFileID()
+    {
+        return $this->iconFID;
+    }
+
+    /**
+     * @param mixed $iconFID
+     */
+    public function setIconFileID($iconFID)
+    {
+        $this->iconFID = $iconFID;
+    }
+
+    /**
      * @param mixed $cParentID
      */
     public function setParentID($cParentID)
@@ -442,6 +463,17 @@ class Feed
             $writer = new \Zend\Feed\Writer\Feed();
             $writer->setTitle($this->getTitle());
             $writer->setDescription($this->getDescription());
+            if ($this->getIconFileID()) {
+                $f = \File::getByID($this->getIconFileID());
+                if (is_object($f)) {
+                    $data = array(
+                        'uri' => $f->getURL(),
+                        'title' => $f->getTitle(),
+                        'link' => (string) $link
+                    );
+                    $writer->setImage($data);
+                }
+            }
             $writer->setLink((string) $link);
 
             foreach($pagination->getCurrentPageResults() as $p) {
