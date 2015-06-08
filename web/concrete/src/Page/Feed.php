@@ -429,9 +429,11 @@ class Feed
 
     protected function getPageFeedContent(Page $p)
     {
+        $content = false;
         switch($this->pfContentToDisplay) {
             case 'S':
-                return $p->getCollectionDescription();
+                $content = $p->getCollectionDescription();
+                break;
             case 'A':
                 $a = new \Area($this->getAreaHandleToDisplay());
                 $blocks = $a->getAreaBlocksArray($p);
@@ -444,8 +446,14 @@ class Feed
                 }
                 $content = ob_get_contents();
                 ob_end_clean();
-                return $content;
+                break;
         }
+
+        $f = $p->getAttribute('thumbnail');
+        if (is_object($f)) {
+            $content = '<p><img src="' . $f->getURL() . '" /></p>' . $content;
+        }
+        return $content;
     }
 
     public function getOutput($request = null)
