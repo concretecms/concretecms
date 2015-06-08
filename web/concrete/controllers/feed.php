@@ -7,7 +7,7 @@ class Feed extends \Concrete\Core\Controller\Controller
     {
         $feed = \Concrete\Core\Page\Feed::getByHandle($identifier);
         if (is_object($feed)) {
-            header('Content-Type: text/xml');
+            //header('Content-Type: text/xml');
             $xml = $feed->getOutput($this->request);
             print $xml;
         }
