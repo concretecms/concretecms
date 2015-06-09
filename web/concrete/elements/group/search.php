@@ -1,5 +1,12 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?> 
 <?
+$tp = new TaskPermission();
+if (!$tp->canAccessGroupSearch()) {
+	?>
+	<p><?=t('You do not have access to the group search.')?></p>
+	<?php
+} else {
+
 $form = Loader::helper('form');
 $searchRequest = $_REQUEST;
 $result = Loader::helper('json')->encode($controller->getSearchResultObject()->getJSONObject());
@@ -132,5 +139,6 @@ $(function() {
 </div>
 
 
-
+<?php
+}
 
