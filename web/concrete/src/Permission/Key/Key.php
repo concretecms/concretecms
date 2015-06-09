@@ -275,7 +275,7 @@ abstract class Key extends Object
     {
         $db = Loader::db();
 
-        $kina[] = '-1';
+        $kina = array('-1');
         $kinb = $db->GetCol('select pkCategoryID from PermissionKeyCategories where pkgID = ?',
             array($pkg->getPackageID()));
         if (is_array($kinb)) {
@@ -283,6 +283,7 @@ abstract class Key extends Object
         }
         $kinstr = implode(',', $kina);
 
+        $list = array();
         $r = $db->Execute('select pkID, pkCategoryID from PermissionKeys where (pkgID = ? or pkCategoryID in (' . $kinstr . ')) order by pkID asc',
             array($pkg->getPackageID()));
         while ($row = $r->FetchRow()) {
