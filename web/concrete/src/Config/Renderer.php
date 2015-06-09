@@ -4,7 +4,6 @@ namespace Concrete\Core\Config;
 
 class Renderer
 {
-
     protected $config = null;
 
     public function __construct(array $config)
@@ -99,5 +98,4 @@ class Renderer
 
         return $result;
     }
-
 }
