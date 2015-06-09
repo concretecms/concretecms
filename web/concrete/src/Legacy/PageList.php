@@ -7,6 +7,7 @@ use \Concrete\Core\Permission\Access\Entity\PageOwnerEntity as PageOwnerPermissi
 use PermissionKey;
 use Permissions;
 use CollectionAttributeKey;
+use Concrete\Core\Permission\Duration as PermissionDuration;
 /**
 *
 * An object that allows a filtered list of pages to be returned.
