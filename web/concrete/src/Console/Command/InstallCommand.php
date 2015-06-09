@@ -45,7 +45,11 @@ class InstallCommand extends Command
             if (!is_array($configOptions)) {
                 throw new Exception('The configuration file did not returned an array.');
             }
-            $options = $configOptions + $options;
+            foreach ($configOptions as $k => $v) {
+                if (!$input->hasParameterOption("--$k")) {
+                    $options[$k] = $v;
+                }
+            }
         }
         if (file_exists(DIR_CONFIG_SITE.'/database.php')) {
             throw new Exception('concrete5 is already installed.');
