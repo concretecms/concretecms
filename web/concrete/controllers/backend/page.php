@@ -6,6 +6,7 @@ use PageType, Permissions, Loader, Redirect;
 use Page as ConcretePage;
 use User;
 use Concrete\Core\Page\EditResponse as PageEditResponse;
+use Core;
 
 class Page extends Controller {
 
@@ -61,7 +62,11 @@ class Page extends Controller {
                 $r = new PageEditResponse();
                 $r->setPage($c);
                 $r->outputJSON();
+            } else {
+                Core::make('helper/ajax')->sendError(t('You are not allowed to access this page.'));
             }
+        } else {
+            Core::make('helper/ajax')->sendError(t('You do not have access to the sitemap.'));
         }
 	}
 
