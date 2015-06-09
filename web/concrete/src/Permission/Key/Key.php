@@ -387,12 +387,12 @@ abstract class Key extends Object
     {
         $db = Loader::db();
         $db->Execute('update PermissionKeys set pkHasCustomClass = ? where pkID = ?', array(intval($pkHasCustomClass), $this->getPermissionKeyID()));
-        Key::loadAll();
+        self::loadAll();
     }
 
     /**
+     * Legacy support.
      * @access private
-     * legacy support
      */
     public function can()
     {
