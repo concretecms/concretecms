@@ -149,7 +149,6 @@ abstract class Key extends Object
 
     public static function loadAll()
     {
-        $cl = new CacheLocal();
         $db = Loader::db();
         $permissionkeys = array();
         $txt = Loader::helper('text');
@@ -349,8 +348,6 @@ abstract class Key extends Object
         $pkHasCustomClass,
         $pkg = false
     ) {
-        $vn = Loader::helper('validation/numbers');
-        $txt = Loader::helper('text');
         $pkgID = 0;
         $db = Loader::db();
 
