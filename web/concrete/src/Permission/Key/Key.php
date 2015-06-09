@@ -334,7 +334,7 @@ abstract class Key extends Object
             $keys = self::loadAll();
         }
 
-        return $keys[$pkHandle];
+        return isset($keys[$pkHandle]) ? $keys[$pkHandle] : null;
     }
 
     /**
