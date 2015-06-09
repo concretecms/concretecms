@@ -586,6 +586,7 @@ return array(
 
         'name'         => 'CONCRETE5',
         'handler'      => 'file',
+        'save_path'    => null,
         'max_lifetime' => 7200,
         'cookie'       => array(
             'cookie_path'     => false, // set a specific path here if you know it, otherwise it'll default to relative

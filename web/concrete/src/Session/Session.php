@@ -31,7 +31,8 @@ class Session
                     )
                 );
             } else {
-                $storage = new NativeSessionStorage(array(), new NativeFileSessionHandler());
+                $savePath = Config::get('concrete.session.save_path') ?: null;
+                $storage = new NativeSessionStorage(array(), new NativeFileSessionHandler($savePath));
             }
             $options = Config::get('concrete.session.cookie');
             if ($options['cookie_path'] === false) {
