@@ -88,9 +88,16 @@ class Renderer
             }
         }
 
-        return 'array(' . $eol .
-        implode(',' . $eol, $results) . $eol .
-        ($depth ? str_repeat($spacer, $depth - 1) : '') . ')';
+        $result = 'array(' . $eol;
+        if (!empty($results)) {
+            $result .= implode(',' . $eol, $results) . ',' . $eol;
+        }
+        if ($depth > 0) {
+            $result .= str_repeat($spacer, $depth - 1);
+        }
+        $result .= ')';
+
+        return $result;
     }
 
 }
