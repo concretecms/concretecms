@@ -298,18 +298,10 @@ class Install extends Controller
             $val->addRequired("DB_DATABASE", t('You must specify a valid database name'));
             $val->addRequired("DB_SERVER", t('You must specify a valid database server'));
 
-            $password = $_POST['uPassword'];
-            $passwordConfirm = $_POST['uPasswordConfirm'];
-
             $e = Loader::helper('validation/error');
-            $uh = Loader::helper('concrete/user');
-            $uh->validNewPassword($password, $e);
-
-            if ($password) {
-                if ($password != $passwordConfirm) {
-                    $e->add(t('The two passwords provided do not match.'));
-                }
-            }
+            $userHelper = Loader::helper('concrete/user');
+            $arrPassword = array('password' => $_POST['uPassword'], 'passwordConfirm' => $_POST['uPasswordConfirm']);
+            $userHelper->validNewPassword($arrPassword, $e);
 
             if (is_object($this->fileWriteErrors)) {
                 $e = $this->fileWriteErrors;

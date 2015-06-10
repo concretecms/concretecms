@@ -352,39 +352,19 @@ class Search extends DashboardPageController
     {
         $this->setupUser($uID);
         if ($this->canEditPassword) {
-            $password = $this->post('uPassword');
-            $passwordConfirm = $this->post('uPasswordConfirm');
-            if ((strlen($password) < Config::get('concrete.user.password.minimum')) || (strlen($password) > Config::get(
-                        'concrete.user.password.maximum'
-                    ))
-            ) {
-                $this->error->add(
-                    t(
-                        'A password must be between %s and %s characters',
-                        Config::get('concrete.user.password.minimum'),
-                        Config::get('concrete.user.password.maximum')
-                    )
-                );
-            }
+            $userHelper = Loader::helper('concrete/user');
+            $arrPassword = array('password' => $this->post('uPassword'), 'passwordConfirm' => $this->post('uPasswordConfirm'));
+            $userHelper->validNewPassword($arrPassword, $this->error);
+
             if (!Loader::helper('validation/token')->validate('change_password')) {
                 $this->error->add(Loader::helper('validation/token')->getErrorMessage());
-            }
-            if (strlen($password) >= Config::get('concrete.user.password.minimum') && !Loader::helper(
-                    'concrete/validation'
-                )->password($password)
-            ) {
-                $this->error->add(t('A password may not contain ", \', >, <, or any spaces.'));
-            }
-
-            if ($password != $passwordConfirm) {
-                $this->error->add(t('The two passwords provided do not match.'));
             }
 
             $sr = new UserEditResponse();
             $sr->setUser($this->user);
             if (!$this->error->has()) {
-                $data['uPassword'] = $password;
-                $data['uPasswordConfirm'] = $passwordConfirm;
+                $data['uPassword'] = $this->post('uPassword');
+                $data['uPasswordConfirm'] = $this->post('uPasswordConfirm');
                 $this->user->update($data);
                 $sr->setMessage(t('Password updated successfully.'));
             } else {

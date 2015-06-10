@@ -185,11 +185,8 @@ class Controller extends AuthenticationTypeController
                 if (strlen($_POST['uPassword'])) {
 
                     $userHelper = Loader::helper('concrete/user');
-                    $userHelper->validNewPassword($_POST['uPassword'], $e);
-
-                    if (strlen($_POST['uPassword']) && $_POST['uPasswordConfirm'] != $_POST['uPassword']) {
-                        $e->add(t('The two passwords provided do not match.'));
-                    }
+                    $arrPassword = array('password' => $_POST['uPassword'], 'passwordConfirm' => $_POST['uPasswordConfirm']);
+                    $userHelper->validNewPassword($arrPassword, $e);
 
                     if (!$e->has()) {
                         $ui->changePassword($_POST['uPassword']);

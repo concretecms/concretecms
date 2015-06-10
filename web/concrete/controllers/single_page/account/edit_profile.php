@@ -65,7 +65,7 @@ class EditProfile extends AccountPageController {
 		$this->view();
 		$ui = $this->get('profile');
 
-		$uh = Loader::helper('concrete/user');
+		$userHelper = Loader::helper('concrete/user');
 		$th = Loader::helper('text');
 		$vsh = Loader::helper('validation/strings');
 		$cvh = Loader::helper('concrete/validation');
@@ -92,24 +92,11 @@ class EditProfile extends AccountPageController {
 
 		// password
 		if(strlen($data['uPasswordNew'])) {
-			$passwordNew = $data['uPasswordNew'];
-			$passwordNewConfirm = $data['uPasswordNewConfirm'];
+			$arrPassword = array('password' => $data['uPasswordNew'], 'passwordConfirm' => $data['uPasswordNewConfirm']);
+			$userHelper->validNewPassword($arrPassword, $this->error);
 
-			if ((strlen($passwordNew) < Config::get('concrete.user.password.minimum')) || (strlen($passwordNew) >  Config::get('concrete.user.password.maximum'))) {
-				$this->error->add(t('A password must be between %s and %s characters', Config::get('concrete.user.password.minimum'),  Config::get('concrete.user.password.maximum')));
-			}
-
-			if (strlen($passwordNew) >= Config::get('concrete.user.password.minimum') && !$cvh->password($passwordNew)) {
-				$this->error->add(t('A password may not contain ", \', >, <, or any spaces.'));
-			}
-
-			if ($passwordNew) {
-				if ($passwordNew != $passwordNewConfirm) {
-                    $this->error->add(t('The two passwords provided do not match.'));
-				}
-			}
-			$data['uPasswordConfirm'] = $passwordNew;
-			$data['uPassword'] = $passwordNew;
+			$data['uPasswordConfirm'] = $data['uPasswordNew'];
+			$data['uPassword'] = $data['uPasswordNewConfirm'];
 		}
 
 		$aks = UserAttributeKey::getEditableInProfileList();

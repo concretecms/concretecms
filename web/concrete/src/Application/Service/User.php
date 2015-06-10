@@ -37,13 +37,22 @@ class User
     }
 
     /**
-     * @param string $password
+     * @param mixed $params
      * @param null|\Concrete\Core\Error\Error $errorObj
      * @return bool
      */
-    public function validNewPassword($password, $errorObj = null)
+    public function validNewPassword($params, $errorObj = null)
     {
-        $invalid = false;
+        $valid = true;
+
+        if (is_array($params)) {
+            $password = $params['password'];
+            $passwordConfirm = $params['passwordConfirm'];
+        } else {
+            // Add user does not require password confirmation. Also useful for AJAX pre-checks?
+            $password = $params;
+        }
+
         if ((strlen($password) < Config::get('concrete.user.password.minimum')) || (strlen($password) >  Config::get('concrete.user.password.maximum'))) {
             if ($errorObj) {
                 $errorObj->add(
@@ -54,14 +63,20 @@ class User
                     )
                 );
             }
-            $invalid=1;
+            $valid = false;
         }
 
-        if ($invalid) {
-            return false;
+        // Only check equality if password confirm was supplied
+        if ($password && isset($passwordConfirm) && $password != $passwordConfirm) {
+            if ($errorObj) {
+                $errorObj->add(
+                    t('The two passwords provided do not match.')
+                );
+            }
+            $valid = false;
         }
 
-        return true;
+        return $valid;
     }
 
     /**

@@ -46,7 +46,6 @@ class Add extends DashboardPageController {
 		$username = preg_replace("/\s+/", " ", $username);
 		$_POST['uName'] = $username;
 
-		$password = $_POST['uPassword'];
 
 		if (!$vals->email($_POST['uEmail'])) {
 			$this->error->add(t('Invalid email address provided.'));
@@ -78,14 +77,8 @@ class Add extends DashboardPageController {
 			$this->error->add(t('Invalid Username'));
 		}
 
-
-		if ((strlen($password) < Config::get('concrete.user.password.minimum')) || (strlen($password) >  Config::get('concrete.user.password.maximum'))) {
-			$this->error->add(t('A password must be between %s and %s characters',Config::get('concrete.user.password.minimum'), Config::get('concrete.user.password.maximum')));
-		}
-
-		if (strlen($password) >= Config::get('concrete.user.password.minimum') && !$valc->password($password)) {
-			$this->error->add(t('A password may not contain ", \', >, <, or any spaces.'));
-		}
+		$userHelper = Loader::helper('concrete/user');
+		$userHelper->validNewPassword($_POST['uPassword'], $this->error);
 
 		if (!$valt->validate('submit')) {
 			$this->error->add($valt->getErrorMessage());
@@ -106,7 +99,7 @@ class Add extends DashboardPageController {
 
 		if (!$this->error->has()) {
 			// do the registration
-			$data = array('uName' => $username, 'uPassword' => $password, 'uEmail' => $_POST['uEmail'], 'uDefaultLanguage' => $_POST['uDefaultLanguage']);
+			$data = array('uName' => $username, 'uPassword' => $_POST['uPassword'], 'uEmail' => $_POST['uEmail'], 'uDefaultLanguage' => $_POST['uDefaultLanguage']);
 			$uo = UserInfo::add($data);
 
 			if (is_object($uo)) {

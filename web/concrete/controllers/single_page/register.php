@@ -36,8 +36,6 @@ class Register extends PageController {
 		$valc = Loader::helper('concrete/validation');
 
 		$username = $_POST['uName'];
-		$password = $_POST['uPassword'];
-		$passwordConfirm = $_POST['uPasswordConfirm'];
 
 		// clean the username
 		$username = trim($username);
@@ -99,13 +97,8 @@ class Register extends PageController {
 		}
 		*/
 
-		$userHelper->validNewPassword($password,$e);
-
-		if ($password) {
-			if ($password != $passwordConfirm) {
-				$e->add(t('The two passwords provided do not match.'));
-			}
-		}
+        $arrPassword = array('password' => $_POST['uPassword'], 'passwordConfirm' => $_POST['uPasswordConfirm']);
+        $userHelper->validNewPassword($arrPassword, $e);
 
 		$aks = UserAttributeKey::getRegistrationList();
 
@@ -125,8 +118,8 @@ class Register extends PageController {
 			// do the registration
 			$data = $_POST;
 			$data['uName'] = $username;
-			$data['uPassword'] = $password;
-			$data['uPasswordConfirm'] = $passwordConfirm;
+			$data['uPassword'] = $_POST['uPassword'];
+			$data['uPasswordConfirm'] = $_POST['uPasswordConfirm'];
 
 			$process = UserInfo::register($data);
 			if (is_object($process)) {
