@@ -9,7 +9,7 @@ class Controller extends BlockController {
 	protected $btCacheBlockOutput = true;
 	protected $btCacheBlockOutputOnPost = true;
 	protected $btCacheBlockOutputForRegisteredUsers = true;
-	protected $btInterfaceHeight = 250;
+	protected $btInterfaceHeight = 320;
 	protected $btTable = 'btContentFile';
 	
 	protected $btExportFileColumns = array('fID');
@@ -32,8 +32,13 @@ class Controller extends BlockController {
 	public function getSearchableContent(){
 		return $this->fileLinkText;
 	}
-	
-	public function validate($args) {
+
+    function save($args){
+		$args['forceDownload'] = ($args['forceDownload']) ? '1' : '0';
+		parent::save($args);
+    }
+
+    public function validate($args) {
 		$e = Loader::helper('validation/error');
 		if ($args['fID'] < 1) {
 			$e->add(t('You must select a file.'));

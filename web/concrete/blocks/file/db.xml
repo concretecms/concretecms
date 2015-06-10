@@ -13,6 +13,11 @@
     </field>
     <field name="fileLinkText" type="string" size="255"/>
     <field name="filePassword" type="string" size="255"/>
+  	<field name="forceDownload" type="boolean" size="1">
+		<unsigned/>
+		<default value="0"/>
+		<notnull/>
+	</field>
     <index name="fID">
       <col>fID</col>
     </index>
