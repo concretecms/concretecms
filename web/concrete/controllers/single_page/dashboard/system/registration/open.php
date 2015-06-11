@@ -77,7 +77,6 @@ class Open extends DashboardPageController
 		}
         $this->set('email_as_username', Config::get('concrete.user.registration.email_registration'));
         $this->set('registration_type', $type);
-        $this->set('user_timezones', Config::get('concrete.user.timezones_enabled'));
         $this->set('enable_registration_captcha', Config::get('concrete.user.registration.captcha'));
         $this->set('register_notification', !!Config::get('concrete.user.registration.notification'));
         $this->set('register_notification_email', Config::get('concrete.user.registration.notification_email'));

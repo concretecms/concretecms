@@ -14,7 +14,7 @@ class Postlogin extends DashboardPageController {
 
 		//login redirection
 		$this->set('site_login_redirect', Config::get('concrete.misc.login_redirect') );
-		$this->set('login_redirect_cid', intval(Config::get('concrete.misc.login_redirect_CID')) );
+		$this->set('login_redirect_cid', intval(Config::get('concrete.misc.login_redirect_cid')) );
 		$adminToDash=Config::get('concrete.misc.login_admin_to_dashboard');
 		$this->set('site_login_admin_to_dashboard', intval($adminToDash) );
 	}
