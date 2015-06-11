@@ -27,7 +27,7 @@ class EnvironmentDetector {
         }
         else
         {
-            return $this->detectWebEnvironment($environments);
+            return $this->detectVariableEnvironment($environments);
         }
     }
 
@@ -79,6 +79,21 @@ class EnvironmentDetector {
         }
         else
         {
+            return $this->detectVariableEnvironment($environments);
+        }
+    }
+
+    /**
+     * Set the application environment from environment variable.
+     *
+     * @param mixed $environments
+     * @return string
+     */
+    protected function detectVariableEnvironment($environments)
+    {
+        if (($env = $this->getEnvironmentFromVariable()) !== false) {
+            return $env;
+        } else {
             return $this->detectWebEnvironment($environments);
         }
     }
@@ -95,6 +110,16 @@ class EnvironmentDetector {
         {
             return starts_with($v, '--env');
         });
+    }
+
+    /**
+     * Gets the environment from the CONCRETE5_ENV environment variable.
+     * 
+     * @return string|bool
+     */
+    protected function getEnvironmentFromVariable()
+    {
+        return getenv('CONCRETE5_ENV');
     }
 
     /**
