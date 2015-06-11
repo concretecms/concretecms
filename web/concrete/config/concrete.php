@@ -511,11 +511,6 @@ return array(
     'i18n'              => array(
 
         /**
-         * Enable internationalization
-         */
-        'enabled'               => true,
-
-        /**
          * Allow users to choose language on login
          *
          * @var bool
@@ -537,7 +532,6 @@ return array(
         ),
         'paths'                  => array(
             'menu_help_service' => '/tools/get_remote_help_list/',
-            'theme_preview'     => '/tools/preview_theme/',
             'site_page'         => '/private/sites',
             'newsflow_slot_content'      => '/tools/slot_content/',
             'marketplace'       => array(
@@ -586,6 +580,7 @@ return array(
 
         'name'         => 'CONCRETE5',
         'handler'      => 'file',
+        'save_path'    => null,
         'max_lifetime' => 7200,
         'cookie'       => array(
             'cookie_path'     => false, // set a specific path here if you know it, otherwise it'll default to relative
@@ -685,12 +680,6 @@ return array(
          */
         'profiles_enabled'  => false,
 
-        /**
-         * Enable user timezones
-         *
-         * @var bool
-         */
-        'timezones_enabled' => false,
         'username'          => array(
             'maximum'      => 64,
             'minimum'      => 3,
@@ -767,25 +756,11 @@ return array(
      */
     'permissions'       => array(
         /**
-         * Forward to login if access is denied
-         *
-         * @var bool
-         */
-        'forward_to_login'              => true,
-
-        /**
          * Permission model
          *
          * @var string The permission model (simple|advanced)
          */
         'model'                         => 'simple',
-
-        /**
-         * Use collection ID for page permission identifier
-         *
-         * @var bool
-         */
-        'page_permission_collection_id' => true
     ),
 
     /**
@@ -854,5 +829,12 @@ return array(
             'size_min' => -50,
             'size_max' => 200,
         )
-    )
+    ),
+
+    'page' => array(
+        'search' => array(
+            // Always reindex pages (usually it isn't performed when approving workflows)
+            'always_reindex' => false,
+        )
+    ),
 );
