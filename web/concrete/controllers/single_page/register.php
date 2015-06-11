@@ -73,9 +73,9 @@ class Register extends PageController {
 
 			if (strlen($username) >= Config::get('concrete.user.username.minimum') && !$valc->username($username)) {
 				if(Config::get('concrete.user.username.allow_spaces')) {
-					$e->add(t('A username may only contain letters, numbers and spaces.'));
+					$e->add(t('A username may only contain letters, numbers, spaces (not at the beginning/end), dots (not at the beginning/end), underscores (not at the beginning/end).'));
 				} else {
-					$e->add(t('A username may only contain letters or numbers.'));
+					$e->add(t('A username may only contain letters, numbers, dots (not at the beginning/end), underscores (not at the beginning/end).'));
 				}
 
 			}
