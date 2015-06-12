@@ -106,12 +106,6 @@ class Setup extends DashboardPageController
         $this->view();
     }
 
-    public function tree_copied()
-    {
-        $this->set('message', t('Multilingual tree copied.'));
-        $this->view();
-    }
-
     public function locale_section_removed()
     {
         $this->set('message', t('Section removed.'));
