@@ -525,6 +525,8 @@
         </page>
         <page name="Multilingual Setup" path="/dashboard/system/multilingual/setup" filename="/dashboard/system/multilingual/setup.php" pagetype=""
               description="" package="" />
+        <page name="Copy Languages" path="/dashboard/system/multilingual/copy" filename="/dashboard/system/multilingual/copy.php" pagetype=""
+              description="" package="" />
         <page name="Page Report" path="/dashboard/system/multilingual/page_report" filename="/dashboard/system/multilingual/page_report.php" pagetype=""
               description="" package="" />
         <page name="Translate Site Interface" path="/dashboard/system/multilingual/translate_interface" filename="/dashboard/system/multilingual/translate_interface.php" pagetype=""
