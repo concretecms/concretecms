@@ -2,6 +2,7 @@
 namespace Concrete\Core\Config;
 
 use Illuminate\Filesystem\Filesystem;
+use Concrete\Core\Cache\OpCache;
 
 class FileSaver implements SaverInterface
 {
@@ -80,8 +81,12 @@ class FileSaver implements SaverInterface
 
 
         $rendered = $renderer->render(PHP_EOL, '    ', implode(PHP_EOL, $header));
-        return $this->files->put($file, $rendered) !== false;
+        $result = $this->files->put($file, $rendered) !== false;
+        if ($result) {
+            OpCache::clear($file);
+        }
 
+        return $result;
     }
 
 }
