@@ -43,7 +43,7 @@ use \Concrete\Core\Block\BlockController;
 				$ve->add(t('Your message cannot be empty.'));
 			}
 
-			if (Config::get('conversation.banned_words') && (
+			if (Config::get('conversations.banned_words') && (
 				Loader::helper('validation/banned_words')->hasBannedWords($data['cnvMessageSubject']) ||
 				Loader::helper('validation/banned_words')->hasBannedWords($data['cnvMessageBody']))) {
 				$ve->add(t('Banned words detected.'));
