@@ -20,6 +20,7 @@ class GenerateIDESymbolsCommand extends Command
             ->addArgument('generate-what', InputArgument::IS_ARRAY, 'Elements to generate [all|ide-classes|phpstorm]', array('all'))
         ;
     }
+
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $rc = 0;
@@ -42,7 +43,8 @@ class GenerateIDESymbolsCommand extends Command
 
         return $rc;
     }
-    protected function generateIDEClasses()
+
+    protected function generatePHPStorm()
     {
         $metadataGenerator = new \Concrete\Core\Support\Symbol\MetadataGenerator();
         $metadata = $metadataGenerator->render();
@@ -51,7 +53,8 @@ class GenerateIDESymbolsCommand extends Command
             throw new Exception('Error writing to file "'.$filename.'"');
         }
     }
-    protected function generatePHPStorm()
+
+    protected function generateIDEClasses()
     {
         $generator = new \Concrete\Core\Support\Symbol\SymbolGenerator();
         $symbols = $generator->render(
