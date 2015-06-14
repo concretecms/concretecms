@@ -42,7 +42,6 @@
 
             $.fn.dialog.showLoader();
             $.getJSON(CCM_DISPATCHER_FILENAME, settings, function (response) {
-                $.fn.dialog.hideLoader();
                 my.handleAddResponse(response, area, dragAreaBlock);
             });
         },
