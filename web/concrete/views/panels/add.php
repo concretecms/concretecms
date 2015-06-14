@@ -65,7 +65,7 @@ switch ($tab) {
                      data-panel-add-block-drag-item="stack-item"
                      data-cID="<?= intval($c->getCollectionID()) ?>"
                      data-sID="<?= intval($stack->getCollectionID()) ?>"
-                     data-block-type-handle="<?= t('stack') ?>"
+                     data-block-type-handle="stack"
                      data-has-add-template="no"
                      data-supports-inline-add="no"
                      data-btID="0"
