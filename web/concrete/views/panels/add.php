@@ -63,7 +63,8 @@ switch ($tab) {
                 ?>
                 <div class="ccm-panel-add-block-stack-item"
                      data-panel-add-block-drag-item="stack-item"
-                     data-cID="<?= intval($stack->getCollectionID()) ?>"
+                     data-cID="<?= intval($c->getCollectionID()) ?>"
+                     data-sID="<?= intval($stack->getCollectionID()) ?>"
                      data-block-type-handle="<?= t('stack') ?>"
                      data-has-add-template="no"
                      data-supports-inline-add="no"
