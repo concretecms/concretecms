@@ -2292,15 +2292,15 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         if ($rows && is_array($rows)) {
 	        foreach ($rows as $row) {
 		        if (is_array($row) && $row['cID']) {
-		            $db->insert('PageTypeComposerOutputBlocks', array(
-		                'cID' => $newCID,
-		                'arHandle' => $row['arHandle'],
-		                'cbDisplayOrder' => $row['cbDisplayOrder'],
-		                'ptComposerFormLayoutSetControlID' => $row['ptComposerFormLayoutSetControlID'],
-		                'bID' => $row['bID']
-		                ));
-					}
-				}
+                    $db->insert('PageTypeComposerOutputBlocks', array(
+                        'cID' => $newCID,
+                        'arHandle' => $row['arHandle'],
+                        'cbDisplayOrder' => $row['cbDisplayOrder'],
+                        'ptComposerFormLayoutSetControlID' => $row['ptComposerFormLayoutSetControlID'],
+                        'bID' => $row['bID']
+                        ));
+                    }
+                }
         }
 
         PageStatistics::incrementParents($newCID);
