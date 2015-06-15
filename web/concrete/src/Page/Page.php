@@ -2287,8 +2287,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $res = $db->query($q, $v);
 
         // Composer specific
-        $row = $db->GetRow('select cID, arHandle, cbDisplayOrder, ptComposerFormLayoutSetControlID from PageTypeComposerOutputBlocks where cID = ?',
-            array($newCID));
+        $row = $db->GetRow('select cID, arHandle, cbDisplayOrder, ptComposerFormLayoutSetControlID, bID from PageTypeComposerOutputBlocks where cID = ?',
+            array($this->cID));
         if ($row && is_array($row) && $row['cID']) {
             $db->insert('PageTypeComposerOutputBlocks', array(
                 'cID' => $newCID,
