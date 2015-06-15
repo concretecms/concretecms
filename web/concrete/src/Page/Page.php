@@ -2286,6 +2286,19 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $q = 'insert into Pages (cID, ptID, cParentID, uID, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cInheritPermissionsFrom, cFilename, cPointerID, cPointerExternalLink, cPointerExternalLinkNewWindow, cDisplayOrder, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
         $res = $db->query($q, $v);
 
+        // Composer specific
+        $row = $db->GetRow('select cID, arHandle, cbDisplayOrder, ptComposerFormLayoutSetControlID from PageTypeComposerOutputBlocks where cID = ?',
+            array($newCID));
+        if ($row && is_array($row) && $row['cID']) {
+            $db->insert('PageTypeComposerOutputBlocks', array(
+                'cID' => $newCID,
+                'arHandle' => $row['arHandle'],
+                'cbDisplayOrder' => $row['cbDisplayOrder'],
+                'ptComposerFormLayoutSetControlID' => $row['ptComposerFormLayoutSetControlID'],
+                'bID' => $row['bID']
+                ));
+        }
+
         PageStatistics::incrementParents($newCID);
 
         if ($res) {
