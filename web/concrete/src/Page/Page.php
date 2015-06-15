@@ -2287,16 +2287,20 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $res = $db->query($q, $v);
 
         // Composer specific
-        $row = $db->GetRow('select cID, arHandle, cbDisplayOrder, ptComposerFormLayoutSetControlID, bID from PageTypeComposerOutputBlocks where cID = ?',
+        $rows = $db->GetAll('select cID, arHandle, cbDisplayOrder, ptComposerFormLayoutSetControlID, bID from PageTypeComposerOutputBlocks where cID = ?',
             array($this->cID));
-        if ($row && is_array($row) && $row['cID']) {
-            $db->insert('PageTypeComposerOutputBlocks', array(
-                'cID' => $newCID,
-                'arHandle' => $row['arHandle'],
-                'cbDisplayOrder' => $row['cbDisplayOrder'],
-                'ptComposerFormLayoutSetControlID' => $row['ptComposerFormLayoutSetControlID'],
-                'bID' => $row['bID']
-                ));
+        if ($rows && is_array($rows)) {
+	        foreach ($rows as $row) {
+		        if (is_array($row) && $row['cID']) {
+		            $db->insert('PageTypeComposerOutputBlocks', array(
+		                'cID' => $newCID,
+		                'arHandle' => $row['arHandle'],
+		                'cbDisplayOrder' => $row['cbDisplayOrder'],
+		                'ptComposerFormLayoutSetControlID' => $row['ptComposerFormLayoutSetControlID'],
+		                'bID' => $row['bID']
+		                ));
+					}
+				}
         }
 
         PageStatistics::incrementParents($newCID);
