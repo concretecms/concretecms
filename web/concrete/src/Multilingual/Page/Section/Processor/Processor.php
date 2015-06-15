@@ -17,6 +17,7 @@ class Processor extends FoundationProcessor
         parent::__construct(new MultilingualProcessorTarget($section));
         $this->setQueue(Queue::get('multilingual_section_processor'));
         $this->registerTask(new ReplaceContentLinksTask());
+        $this->registerTask(new ReplaceBlockPageRelationsTask());
     }
 
 }
