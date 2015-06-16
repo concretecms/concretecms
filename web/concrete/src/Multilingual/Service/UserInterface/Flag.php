@@ -24,7 +24,7 @@ class Flag
         if ($region) {
             $v = \View::getInstance();
             
-			if ($v->getThemeDirectory() != '' && file_exists(
+            if ($v->getThemeDirectory() != '' && file_exists(
                 $v->getThemeDirectory() . '/' . DIRNAME_IMAGES . '/' . DIRNAME_IMAGES_LANGUAGES . '/' . $region . '.png'
 			)) {
                 $icon = $v->getThemePath() . '/' . DIRNAME_IMAGES . '/' . DIRNAME_IMAGES_LANGUAGES . '/' . $region . '.png';
