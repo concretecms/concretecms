@@ -420,7 +420,6 @@ jQuery.Redactor.opts.langs[<?=json_encode($locale)?>] = {
   undo: <?=json_encode(t('Undo'))?>,
   redo: <?=json_encode(t('Redo'))?>,
   remove_font_family: <?=json_encode(t('Remove Font Family'))?>,
-  change_font_family: <?=json_encode(t('Change Font Family'))?>,
   remove_font_size: <?=json_encode(t('Remove Font Size'))?>,
   change_font_size: <?=json_encode(t('Change Font Size'))?>,
   /* end concrete5 */
