@@ -313,7 +313,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                 </span>
             </a>
         </li>
-        <? if ($cp->canEditPageMultilingualSettings() && Config::get('concrete.multilingual.enabled')) {
+        <? if ($cp->canEditPageMultilingualSettings() && \Core::make('multilingual/detector')->isEnabled()) {
             $section = \Concrete\Core\Multilingual\Page\Section\Section::getCurrentSection();
             $ch = Core::make('multilingual/interface/flag');
             if (is_object($section)) { ?>

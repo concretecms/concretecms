@@ -4825,6 +4825,11 @@
       <default value="0"/>
       <notnull/>
     </field>
+    <field name="stMultilingualSection" type="integer" size="10">
+      <unsigned/>
+      <default value="0"/>
+      <notnull/>
+    </field>
     <index name="stType">
       <col>stType</col>
     </index>

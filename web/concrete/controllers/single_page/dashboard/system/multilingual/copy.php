@@ -49,7 +49,7 @@ class Copy extends DashboardPageController
                     $processor->start();
                 }
                 $totalItems = $processor->getQueue()->count();
-                \View::element('progress_bar', array('totalItems' => $totalItems, 'totalItemsSummary' => t2("%d page", "%d pages", $totalItems)));
+                \View::element('progress_bar', array('totalItems' => $totalItems, 'totalItemsSummary' => t2("%d task", "%d tasks", $totalItems)));
                 /*
                                 $q = Queue::get('rescan_multilingual_section');
                                 if ($_POST['process']) {
