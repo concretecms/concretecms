@@ -15,6 +15,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class Detector
 {
 
+    protected $enabled;
+
     /**
      *
      * Returns the preferred section based on session, cookie,
@@ -99,5 +101,15 @@ class Detector
         if (strlen($locale)) {
             \Localization::changeLocale($locale);
         }
+    }
+
+    public function isEnabled()
+    {
+        if (!isset($this->enabled)) {
+            $db = \Database::connection();
+            $count = $db->GetOne('select count(cID) from MultilingualSections');
+            $this->enabled = $count > 0;
+        }
+        return $this->enabled;
     }
 }

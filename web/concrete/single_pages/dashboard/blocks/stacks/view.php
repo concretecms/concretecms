@@ -249,7 +249,7 @@ if ($controller->getTask() == 'view_details') {
 
 
     <div class="ccm-dashboard-header-buttons">
-        <? if (Config::get('concrete.multilingual.enabled') && $defaultLanguage) {
+        <? if (\Core::make('multilingual/detector')->isEnabled() && $defaultLanguage) {
             $ch = Core::make('multilingual/interface/flag');
             ?>
         <span class="dropdown">

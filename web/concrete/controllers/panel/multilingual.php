@@ -33,7 +33,7 @@ class Multilingual extends BackendInterfacePageController
 
     protected function canAccess()
     {
-        return $this->permissions->canEditPageMultilingualSettings() && Config::get('concrete.multilingual.enabled');
+        return $this->permissions->canEditPageMultilingualSettings() && \Core::make('multilingual/detector')->isEnabled();
     }
 
 }

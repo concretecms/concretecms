@@ -774,7 +774,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             return $icon;
         }
 
-        if (Config::get('concrete.multilingual.enabled')) {
+        if (\Core::make('multilingual/detector')->isEnabled()) {
             $icon = \Concrete\Core\Multilingual\Service\UserInterface\Flag::getDashboardSitemapIconSRC($this);
         }
 
@@ -2399,7 +2399,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             }
         }
 
-        if (Config::get('concrete.multilingual.enabled')) {
+        if (\Core::make('multilingual/detector')->isEnabled()) {
             Section::unregisterPage($this);
         }
 

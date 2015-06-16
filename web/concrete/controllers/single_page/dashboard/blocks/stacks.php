@@ -25,7 +25,7 @@ class Stacks extends DashboardPageController {
 	public function on_start()
 	{
 		parent::on_start();
-		if (Config::get('concrete.multilingual.enabled')) {
+		if (\Core::make('multilingual/detector')->isEnabled()) {
 			$list = array();
 			$this->multilingualSections = Section::getList();
 			$this->set('multilingualSections', $this->multilingualSections);
@@ -72,7 +72,7 @@ class Stacks extends DashboardPageController {
 
 	protected function setupMultilingualStackList(\Concrete\Core\Page\Stack\StackList $list)
 	{
-		if (Config::get('concrete.multilingual.enabled')) {
+		if (\Core::make('multilingual/detector')->isEnabled()) {
 			$category = StackCategory::getCategoryFromMultilingualSection($this->getSelectedLanguage());
 			if (!is_object($category)) {
 				// we have to create the category

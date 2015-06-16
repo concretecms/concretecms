@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Page\Stack;
 
+use Concrete\Core\Multilingual\Page\Section\Section;
 use Loader;
 use Concrete\Core\Legacy\PageList;
 use Page;
@@ -11,12 +12,10 @@ class StackList extends PageList
 
     public function __construct()
     {
-        $c = Page::getByPath(STACKS_PAGE_PATH);
         $this->ignoreAliases = true;
         $this->ignorePermissions = true;
         $this->filterByPageTypeHandle(STACKS_PAGE_TYPE);
         $this->addToQuery('inner join Stacks on Stacks.cID = p1.cID');
-        $this->filterByParentID($c->getCollectionID());
         $this->sortBy('p1.cDisplayOrder', 'asc');
     }
 
@@ -34,6 +33,20 @@ class StackList extends PageList
     {
         $this->filterByParentID($category->getPage()->getCollectionID());
     }
+
+    public function filterByPageLanguage(\Concrete\Core\Page\Page $page)
+    {
+        $ms = Section::getBySectionOfSite($page);
+        if (!is_object($ms)) {
+            $ms = static::getPreferredSection();
+        }
+
+        if (is_object($ms)) {
+            $this->filter('stMultilingualSection', $ms->getCollectionID());
+        }
+
+    }
+
 
     public static function export(\SimpleXMLElement $x)
     {
@@ -65,5 +78,29 @@ class StackList extends PageList
         return $stacks;
     }
 
+    public static function rescanMultilingualStacks()
+    {
+        $sl = new static();
+        $stacks = $sl->get();
+        foreach($stacks as $stack) {
+            $section = $stack->getMultilingualSection();
+            if (!$section) {
+                $section = false;
+                $parent = \Page::getByID($stack->getCollectionParentID());
+                if ($parent->getCollectionPath() == STACKS_PAGE_PATH) {
+                    // this is the default
+                    $section = Section::getDefaultSection();
+                } else if ($parent->getPageTypeHandle() == STACK_CATEGORY_PAGE_TYPE) {
+                    $locale = $parent->getCollectionHandle();
+                    $section = Section::getByLocale($locale);
+                }
+
+                if ($section) {
+                    $stack->updateMultilingualSection($section);
+                }
+            }
+        }
+
+    }
 
 }
