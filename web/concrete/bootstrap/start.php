@@ -66,6 +66,7 @@ require DIR_BASE_CORE . '/bootstrap/paths.php';
  * Add install environment detection
  * ----------------------------------------------------------------------------
  */
+$db_config = array();
 if (file_exists(DIR_APPLICATION . '/config/database.php')) {
     $db_config = include DIR_APPLICATION . '/config/database.php';
 }
