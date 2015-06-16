@@ -10,7 +10,8 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase {
         'CollectionAttributeValues', 'CollectionVersionBlockStyles', 'CollectionVersionThemeCustomStyles',
         'CollectionVersionRelatedEdits', 'CollectionVersionAreaStyles', 'MultilingualSections', 'MultilingualPageRelations',
         'PagePermissionAssignments', 'CollectionVersionBlocks', 'Areas', 'PageSearchIndex', 'ConfigStore',
-        'GatheringDataSources', 'Logs', 'PageTypePublishTargetTypes', 'AttributeKeyCategories'); // so brutal
+        'GatheringDataSources', 'Logs', 'PageTypePublishTargetTypes', 'AttributeKeyCategories',
+        'PageTypeComposerOutputBlocks'); // so brutal
 
     protected function setUp() {
         parent::setUp();
