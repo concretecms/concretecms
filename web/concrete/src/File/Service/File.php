@@ -251,14 +251,14 @@ class File
             return DIR_TMP;
         }
 
-        if (!is_dir(DIR_FILES_UPLOADED . '/tmp')) {
-            @mkdir(DIR_FILES_UPLOADED . '/tmp', Config::get('concrete.filesystem.permissions.directory'));
-            @chmod(DIR_FILES_UPLOADED . '/tmp', Config::get('concrete.filesystem.permissions.directory'));
-            @touch(DIR_FILES_UPLOADED . '/tmp/index.html');
+        if (!is_dir(DIR_FILES_UPLOADED_STANDARD . '/tmp')) {
+            @mkdir(DIR_FILES_UPLOADED_STANDARD . '/tmp', Config::get('concrete.filesystem.permissions.directory'));
+            @chmod(DIR_FILES_UPLOADED_STANDARD . '/tmp', Config::get('concrete.filesystem.permissions.directory'));
+            @touch(DIR_FILES_UPLOADED_STANDARD . '/tmp/index.html');
         }
 
-        if (is_dir(DIR_FILES_UPLOADED . '/tmp') && is_writable(DIR_FILES_UPLOADED . '/tmp')) {
-            return DIR_FILES_UPLOADED . '/tmp';
+        if (is_dir(DIR_FILES_UPLOADED_STANDARD . '/tmp') && is_writable(DIR_FILES_UPLOADED_STANDARD . '/tmp')) {
+            return DIR_FILES_UPLOADED_STANDARD . '/tmp';
         }
 
         if ($temp = getenv('TMP')) {
