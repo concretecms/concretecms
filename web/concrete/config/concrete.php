@@ -345,6 +345,10 @@ return array(
             'address' => null,
             'name' => null,
         ),
+        'validate_registration' => array(
+            'address' => null,
+            'name' => null,
+        ),
     ),
 
     /**
