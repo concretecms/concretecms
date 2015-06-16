@@ -60,7 +60,7 @@ class GenerateSitemap extends AbstractJob
                 'ak_sitemap_priority' => CollectionAttributeKey::getByHandle('sitemap_priority'),
             );
             $instances['guestGroupAE'] = array(GroupPermissionAccessEntity::getOrCreate($instances['guestGroup']));
-            if (Config::get('concrete.multilingual.enabled')) {
+            if (\Core::make('multilingual/detector')->isEnabled()) {
                 $instances['multilingualSections'] = MultilingualSection::getList();
             } else {
                 $instances['multilingualSections'] = array();

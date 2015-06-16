@@ -525,6 +525,8 @@
         </page>
         <page name="Multilingual Setup" path="/dashboard/system/multilingual/setup" filename="/dashboard/system/multilingual/setup.php" pagetype=""
               description="" package="" />
+        <page name="Copy Languages" path="/dashboard/system/multilingual/copy" filename="/dashboard/system/multilingual/copy.php" pagetype=""
+              description="" package="" />
         <page name="Page Report" path="/dashboard/system/multilingual/page_report" filename="/dashboard/system/multilingual/page_report.php" pagetype=""
               description="" package="" />
         <page name="Translate Site Interface" path="/dashboard/system/multilingual/translate_interface" filename="/dashboard/system/multilingual/translate_interface.php" pagetype=""
@@ -935,6 +937,7 @@
     </singlepages>
     <pagetypes>
         <pagetype handle="core_stack" name="Stack" internal="1" package=""/>
+        <pagetype handle="core_stack_category" name="Stack Category" internal="1" package=""/>
         <pagetype handle="dashboard_primary_five" name="Dashboard Primary + Five" internal="1" package=""/>
         <pagetype handle="dashboard_header_four_col" name="Dashboard Header + Four Column" internal="1" package=""/>
         <pagetype handle="dashboard_full" name="Dashboard Full" internal="1" package=""/>

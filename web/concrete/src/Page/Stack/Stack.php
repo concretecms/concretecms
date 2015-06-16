@@ -2,6 +2,7 @@
 namespace Concrete\Core\Page\Stack;
 
 use Area;
+use Concrete\Core\Multilingual\Page\Section\Section;
 use GlobalArea;
 use CacheLocal;
 use Config;
@@ -56,16 +57,32 @@ class Stack extends Page
      */
     public static function getByName($stackName, $cvID = 'RECENT')
     {
-        $cID = CacheLocal::getEntry('stack_by_name', $stackName);
-        if (!$cID) {
+        $c = \Page::getCurrentPage();
+        $identifier = sprintf('/stack/name/%s/%s', $stackName, $c->getCollectionID());
+        $cache = \Core::make('cache/request');
+        $item = $cache->getItem($identifier);
+        if (!$item->isMiss()) {
+            $cID = $item->get();
+        } else {
+            $item->lock();
             $db = Loader::db();
-            $cID = $db->GetOne('select cID from Stacks where stName = ?', array($stackName));
-            CacheLocal::set('stack_by_name', $stackName, $cID);
+            $ms = false;
+            if (\Core::make('multilingual/detector')->isEnabled()) {
+                $ms = Section::getBySectionOfSite($c);
+                if (!is_object($ms)) {
+                    $ms = static::getPreferredSection();
+                }
+            }
+
+            if (is_object($ms)) {
+                $cID = $db->GetOne('select cID from Stacks where stName = ? and stMultilingualSection = ?', array($stackName, $ms->getCollectionID()));
+            } else {
+                $cID = $db->GetOne('select cID from Stacks where stName = ?', array($stackName));
+            }
+            $item->set($cID);
         }
 
-        if ($cID) {
-            return static::getByID($cID, $cvID);
-        }
+        return static::getByID($cID, $cvID);
     }
 
     /**
@@ -121,8 +138,24 @@ class Stack extends Page
         $v = array($stackName, $stackCID, $type);
         $db->Execute('insert into Stacks (stName, cID, stType) values (?, ?, ?)', $v);
 
-        //Return the new stack
-        return static::getByID($stackCID);
+        $stack = static::getByID($stackCID);
+
+        // If the multilingual add-on is enabled, we need to take this stack and copy it into all non-default stack categories.
+        if (\Core::make('multilingual/detector')->isEnabled()) {
+            $list = Section::getList();
+            foreach($list as $section) {
+                if (!$section->isDefaultMultilingualSection()) {
+                    $category = StackCategory::getCategoryFromMultilingualSection($section);
+                    if (!is_object($category)) {
+                        $category = StackCategory::createFromMultilingualSection($section);
+                    }
+                    $stack->duplicate($category->getPage());
+                }
+            }
+            StackList::rescanMultilingualStacks();
+        }
+
+        return $stack;
     }
 
     /**
@@ -252,6 +285,21 @@ class Stack extends Page
                 return false;
                 break;
         }
+    }
+
+    public function getMultilingualSection()
+    {
+        $db = Loader::db();
+        $cID = $db->GetOne('select stMultilingualSection from Stacks where cID = ?', array($this->getCollectionID()));
+        if ($cID) {
+            return Section::getByID($cID);
+        }
+    }
+
+    public function updateMultilingualSection(Section $section)
+    {
+        $db = Loader::db();
+        $db->Execute('update Stacks set stMultilingualSection = ? where cID = ?', array($section->getCollectionID(), $this->getCollectionID()));
     }
 
 }

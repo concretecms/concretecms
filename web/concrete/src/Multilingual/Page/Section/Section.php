@@ -83,20 +83,12 @@ class Section extends Page
             array('cID'),
             true
         );
-
-        // Now we make sure we have multilingual enabled
-        Config::save('concrete.multilingual.enabled', true);
     }
 
     public function unassign()
     {
         $db = Database::get();
         $db->delete('MultilingualSections', array('cID' => $this->getCollectionID()));
-
-        $total = $db->GetOne('select count(*) from MultilingualSections');
-        if ($total < 1) {
-            Config::save('concrete.multilingual.enabled', false);
-        }
     }
 
     private static function assignPropertiesFromArray($obj, $row) {
@@ -211,18 +203,39 @@ class Section extends Page
      */
     public static function getBySectionOfSite($page)
     {
-        // looks at the page, traverses its parents until it finds the proper language
-        $nav = \Core::make('helper/navigation');
-        $pages = $nav->getTrailToCollection($page);
-        $pages = array_reverse($pages);
-        $pages[] = $page;
-        $ids = self::getIDList();
-        $returnID = false;
-        foreach ($pages as $pc) {
-            if (in_array($pc->getCollectionID(), $ids)) {
-                $returnID = $pc->getCollectionID();
+        $identifier = sprintf('/multilingual/section/%s', $page->getCollectionID());
+        $cache = \Core::make('cache/request');
+        $item = $cache->getItem($identifier);
+        if (!$item->isMiss()) {
+            $returnID = $item->get();
+        } else {
+            $item->lock();
+            if ($page->getPageTypeHandle() == STACKS_PAGE_TYPE) {
+                $parent = Page::getByID($page->getCollectionParentID());
+                if ($parent->getCollectionPath() == STACKS_PAGE_PATH) {
+                    // this is the default multilingual section.
+                    return static::getDefaultSection();
+                } else {
+                    // this is a stack category page type
+                    $locale = $parent->getCollectionHandle();
+                    return static::getByLocale($locale);
+                }
             }
+            // looks at the page, traverses its parents until it finds the proper language
+            $nav = \Core::make('helper/navigation');
+            $pages = $nav->getTrailToCollection($page);
+            $pages = array_reverse($pages);
+            $pages[] = $page;
+            $ids = self::getIDList();
+            $returnID = false;
+            foreach ($pages as $pc) {
+                if (in_array($pc->getCollectionID(), $ids)) {
+                    $returnID = $pc->getCollectionID();
+                }
+            }
+            $item->set($returnID);
         }
+
         if ($returnID) {
             return static::getByID($returnID);
         }
@@ -241,6 +254,11 @@ class Section extends Page
         }
 
         return $locale;
+    }
+
+    public static function getDefaultSection()
+    {
+        return static::getByLocale(Config::get('concrete.multilingual.default_locale'));
     }
 
     public function getLanguageText($locale = null)
@@ -316,7 +334,7 @@ class Section extends Page
 
     public static function registerPage($page)
     {
-        if (Config::get('concrete.multilingual.enabled')) {
+        if (\Core::make('multilingual/detector')->isEnabled()) {
             $db = Database::get();
             $ms = static::getBySectionOfSite($page);
             if (is_object($ms)) {
@@ -516,6 +534,11 @@ class Section extends Page
             $pde->setLocale($ms->getLocale());
             \Events::dispatch('on_multilingual_page_relate', $pde);
         }
+    }
+
+    public function isDefaultMultilingualSection()
+    {
+        return $this->getLocale() == Config::get('concrete.multilingual.default_locale');
     }
 
     public static function isMultilingualSection($cID)

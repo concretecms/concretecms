@@ -154,7 +154,7 @@ class DispatcherRouteCallback extends RouteCallback
 
         // Now we check to see if we're on the home page, and if it multilingual is enabled,
         // and if so, whether we should redirect to the default language page.
-        if (Config::get('concrete.multilingual.enabled')) {
+        if (\Core::make('multilingual/detector')->isEnabled()) {
             $dl = Core::make('multilingual/detector');
             if ($c->getCollectionID() == HOME_CID && Config::get('concrete.multilingual.redirect_home_to_default_locale')) {
                 // Let's retrieve the default language

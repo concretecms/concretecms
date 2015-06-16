@@ -47,8 +47,14 @@ class Flag
         return self::getFlagIcon($icon, $filePathOnly);
     }
 
-    public function getDashboardSitemapIconSRC($page)
+    public static function getDashboardSitemapIconSRC($page)
     {
+        if ($page->getPageTypeHandle() == STACK_CATEGORY_PAGE_TYPE) {
+            $section = Section::getByLocale($page->getCollectionName());
+            if (is_object($section)) {
+                return self::getSectionFlagIcon($section, true);
+            }
+        }
         $ids = Section::getIDList();
         if (in_array($page->getCollectionID(), $ids)) {
             return self::getSectionFlagIcon($page, true);
