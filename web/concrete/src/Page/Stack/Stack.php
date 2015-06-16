@@ -2,6 +2,7 @@
 namespace Concrete\Core\Page\Stack;
 
 use Area;
+use Concrete\Core\Multilingual\Page\Section\Section;
 use GlobalArea;
 use CacheLocal;
 use Config;
@@ -121,8 +122,23 @@ class Stack extends Page
         $v = array($stackName, $stackCID, $type);
         $db->Execute('insert into Stacks (stName, cID, stType) values (?, ?, ?)', $v);
 
-        //Return the new stack
-        return static::getByID($stackCID);
+        $stack = static::getByID($stackCID);
+
+        // If the multilingual add-on is enabled, we need to take this stack and copy it into all non-default stack categories.
+        if (Config::get('concrete.multilingual.enabled')) {
+            $list = Section::getList();
+            foreach($list as $section) {
+                if (!$section->isDefaultMultilingualSection()) {
+                    $category = StackCategory::getCategoryFromMultilingualSection($section);
+                    if (!is_object($category)) {
+                        $category = StackCategory::createFromMultilingualSection($section);
+                    }
+                    $stack->duplicate($category->getPage());
+                }
+            }
+        }
+
+        return $stack;
     }
 
     /**

@@ -1,9 +1,12 @@
 <?
 namespace Concrete\Controller\SinglePage\Dashboard\Blocks;
+use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Collection\Version\Version;
 use \Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Stack\StackCategory;
 use Config;
-use StackList, Stack;
+use Concrete\Core\Page\Stack\StackList;
+use Stack;
 use Page;
 use Permissions;
 use Loader;
@@ -13,19 +16,79 @@ use \Concrete\Core\Workflow\Request\ApproveStackRequest;
 use View;
 use Exception;
 use Redirect;
+use Core;
 
 class Stacks extends DashboardPageController {
+
+	protected $multilingualSections = array();
+
+	public function on_start()
+	{
+		parent::on_start();
+		if (Config::get('concrete.multilingual.enabled')) {
+			$list = array();
+			$this->multilingualSections = Section::getList();
+			$this->set('multilingualSections', $this->multilingualSections);
+			$this->set('defaultLanguage', $this->getSelectedLanguage());
+		}
+	}
+
+	protected function getSelectedLanguage()
+	{
+		$defaultLanguage = false;
+		foreach($this->multilingualSections as $section) {
+			if ($section->getLocale() == Config::get('concrete.multilingual.default_locale')) {
+				$defaultLanguage = $section;
+			}
+		}
+		$session = Core::make('session');
+		if ($session->has('stacksDefaultLanguageID')) {
+			$section = Section::getByID($session->get('stacksDefaultLanguageID'));
+			if (is_object($section)) {
+				$defaultLanguage = $section;
+			}
+		}
+		return $defaultLanguage;
+	}
+
+	public function set_default_language($language = null, $action = null)
+	{
+		$session = Core::make('session');
+		$session->set('stacksDefaultLanguageID', $language);
+		if ($action == 'view_global_areas') {
+			$this->redirect('/dashboard/blocks/stacks', 'view_global_areas');
+		} else {
+			$this->redirect('/dashboard/blocks/stacks');
+		}
+	}
 
     public function view_global_areas()
     {
         $stm = new StackList();
         $stm->filterByGlobalAreas();
+		$this->setupMultilingualStackList($stm);
         $this->set('stacks', $stm->get());
     }
+
+	protected function setupMultilingualStackList(\Concrete\Core\Page\Stack\StackList $list)
+	{
+		if (Config::get('concrete.multilingual.enabled')) {
+			$category = StackCategory::getCategoryFromMultilingualSection($this->getSelectedLanguage());
+			if (!is_object($category)) {
+				// we have to create the category
+				$category = StackCategory::createFromMultilingualSection($this->getSelectedLanguage());
+				// now we copy all the stacks into it
+				$default = StackCategory::getFromDefaultMultilingualSection();
+				$default->copyToTargetCategory($category);
+			}
+			$list->filterByStackCategory($category);
+		}
+	}
 
 	public function view() {
         $stm = new StackList();
         $stm->filterByUserAdded();
+		$this->setupMultilingualStackList($stm);
         $this->set('stacks', $stm->get());
 
 		$parent = Page::getByPath(STACKS_PAGE_PATH);
