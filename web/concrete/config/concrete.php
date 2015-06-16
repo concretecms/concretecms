@@ -340,7 +340,11 @@ return array(
         ),
         'form_block' => array(
             'address' => false
-        )
+        ),
+        'forgot_password' => array(
+            'address' => null,
+            'name' => null,
+        ),
     ),
 
     /**

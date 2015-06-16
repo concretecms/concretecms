@@ -143,13 +143,21 @@ class Controller extends AuthenticationTypeController
 
                 $mh->addParameter('changePassURL', $changePassURL);
 
-                if (defined('EMAIL_ADDRESS_FORGOT_PASSWORD')) {
-                    $mh->from(EMAIL_ADDRESS_FORGOT_PASSWORD, t('Forgot Password'));
-                } else {
+                $fromEmail = (string) Config::get('concrete.email.forgot_password.address');
+                if (!strpos($fromEmail, '@')) {
                     $adminUser = UserInfo::getByID(USER_SUPER_ID);
                     if (is_object($adminUser)) {
-                        $mh->from($adminUser->getUserEmail(), t('Forgot Password'));
+                        $fromEmail = $adminUser->getUserEmail();
+                    } else {
+                        $fromEmail = '';
                     }
+                }
+                if ($fromEmail) {
+                    $fromName = (string) Config::get('concrete.email.forgot_password.name');
+                    if ($fromName === '') {
+                        $fromName = t('Forgot Password');
+                    }
+                    $mh->from($fromEmail, $fromName);
                 }
 
                 $mh->addParameter('siteName', Config::get('concrete.site'));
