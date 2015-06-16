@@ -20,6 +20,8 @@
     $pfAreaHandleToDisplay = 'Main';
     $customTopicAttributeKeyHandle = null;
     $customTopicTreeNodeID = 0;
+    $iconFID = 0;
+    $imageFile = null;
     $button = t('Add');
     if (is_object($feed)) {
         $pfTitle = $feed->getTitle();
@@ -34,6 +36,10 @@
         $pfAreaHandleToDisplay = $feed->getAreaHandleToDisplay();
         $customTopicAttributeKeyHandle = $feed->getCustomTopicAttributeKeyHandle();
         $customTopicTreeNodeID = $feed->getCustomTopicTreeNodeID();
+        $iconFID = $feed->getIconFileID();
+        if ($iconFID) {
+            $imageFile = File::getByID($iconFID);
+        }
         $action = $view->action('edit_feed', $feed->getID());
         $token = 'edit_feed';
         $button = t('Update');
@@ -89,6 +95,10 @@
         <div class="form-group">
             <?=$form->label('pfDescription', t('Description'))?>
             <?=$form->textarea('pfDescription', $pfDescription, array('rows' => 5))?>
+        </div>
+        <div class="form-group">
+            <?=$form->label('iconFID', t('Image'))?>
+            <?=Core::make('helper/concrete/asset_library')->image('iconFID', 'iconFID', t('Choose Image'), $imageFile);?>
         </div>
         <div class="form-group">
             <label class="control-label"><?=t('Filter by Parent Page')?></label>

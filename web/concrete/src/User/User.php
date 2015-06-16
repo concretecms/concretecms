@@ -307,9 +307,9 @@ class User extends Object
             implode(':', $cookie),
             time() + USER_FOREVER_COOKIE_LIFETIME,
             DIR_REL . '/',
-            Config::get('concrete.session.cookie.domain'),
-            Config::get('concrete.session.cookie.secure'),
-            Config::get('concrete.session.cookie.httponly')
+            Config::get('concrete.session.cookie.cookie_domain'),
+            Config::get('concrete.session.cookie.cookie_secure'),
+            Config::get('concrete.session.cookie.cookie_httponly')
         );
     }
 
@@ -356,9 +356,9 @@ class User extends Object
 
         if (isset($_COOKIE['ccmAuthUserHash']) && $_COOKIE['ccmAuthUserHash']) {
             setcookie("ccmAuthUserHash", "", 315532800, DIR_REL . '/',
-                      Config::get('concrete.session.cookie.domain'),
-                      Config::get('concrete.session.cookie.secure'),
-                      Config::get('concrete.session.cookie.httponly'));
+                      Config::get('concrete.session.cookie.cookie_domain'),
+                      Config::get('concrete.session.cookie.cookie_secure'),
+                      Config::get('concrete.session.cookie.cookie_httponly'));
         }
     }
 
