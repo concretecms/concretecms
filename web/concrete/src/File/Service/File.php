@@ -247,8 +247,9 @@ class File
      */
     public function getTemporaryDirectory()
     {
-        if (defined('DIR_TMP')) {
-            return DIR_TMP;
+        $temp = Config::get('concrete.filesystem.temp_directory');
+        if ($temp && @is_dir($temp)) {
+            return $temp;
         }
 
         if (!is_dir(DIR_FILES_UPLOADED_STANDARD . '/tmp')) {
