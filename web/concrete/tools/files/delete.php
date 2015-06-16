@@ -9,26 +9,30 @@ if (!$fp->canAccessFileManager()) {
 	die(t("Unable to access the file manager."));
 }
 
+$token_validator = \Core::make('helper/validation/token');
+
 if ($_POST['task'] == 'delete_files') {
-	$json['error'] = false;
+    $fr = new FileEditResponse();
+    if ($token_validator->validate('files/delete')) {
+        $files = array();
+        if (is_array($_POST['fID'])) {
+            foreach ($_POST['fID'] as $fID) {
+                $f = File::getByID($fID);
+                $fp = new Permissions($f);
+                if ($fp->canDeleteFile()) {
+                    $files[] = $f;
+                    $f->delete();
+                } else {
+                    throw new Exception(t('Unable to delete one or more files.'));
+                }
+            }
+        }
 
-	$fr = new FileEditResponse();
-	$files = array();
-	if (is_array($_POST['fID'])) {
-		foreach($_POST['fID'] as $fID) {
-			$f = File::getByID($fID);
-			$fp = new Permissions($f);
-			if ($fp->canDeleteFile()) {
-				$files[] = $f;
-				$f->delete();
-			} else {
-				throw new Exception(t('Unable to delete one or more files.'));
-			}
-		}
-	}
-
-	$fr->setMessage(t2('%s file deleted successfully.', '%s files deleted successfully.', count($files)));
-	$fr->outputJSON();
+        $fr->setMessage(t2('%s file deleted successfully.', '%s files deleted successfully.', count($files)));
+    } else {
+        $fr->setError(new \Exception('Invalid Token'));
+    }
+    $fr->outputJSON();
 }
 
 $form = Loader::helper('form');
@@ -61,6 +65,7 @@ foreach($files as $f) {
 	<div class="alert alert-warning"><?=t('Are you sure you want to delete the following files?')?></div>
 
 	<form data-dialog-form="delete-file" method="post" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/delete">
+        <?= $token_validator->output('files/delete') ?>
 	<?=$form->hidden('task', 'delete_files')?>
 	<table border="0" cellspacing="0" cellpadding="0" width="100%" class="table table-striped">
 
