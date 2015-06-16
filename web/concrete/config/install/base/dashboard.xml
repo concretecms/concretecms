@@ -937,6 +937,7 @@
     </singlepages>
     <pagetypes>
         <pagetype handle="core_stack" name="Stack" internal="1" package=""/>
+        <pagetype handle="core_stack_category" name="Stack Category" internal="1" package=""/>
         <pagetype handle="dashboard_primary_five" name="Dashboard Primary + Five" internal="1" package=""/>
         <pagetype handle="dashboard_header_four_col" name="Dashboard Header + Four Column" internal="1" package=""/>
         <pagetype handle="dashboard_full" name="Dashboard Full" internal="1" package=""/>

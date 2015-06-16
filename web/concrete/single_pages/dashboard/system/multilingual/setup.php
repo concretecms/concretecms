@@ -156,6 +156,8 @@ var ccmCountryForLanguageLister = (function() {
     </form>
 </fieldset>
 
+<div class="spacer-row-6"></div>
+
 <script type="text/javascript">
 $(function() {
 	new ccmCountryForLanguageLister($('#msLanguage'), $('#msCountry'));
@@ -175,7 +177,6 @@ ccm_multilingualPopulateIcons = function(country) {
 
 
 <hr/>
-
 <?php if (count($pages) > 0) {
 	$defaultLocales = array('' => t('** None Set'));
 	foreach($pages as $pc) {
@@ -184,7 +185,7 @@ ccm_multilingualPopulateIcons = function(country) {
 	}
 	$defaultLocalesSelect = $form->select('defaultLocale', $defaultLocales, $defaultLocale, array('required' => 'required'));
 	?>
-   <legend><?php echo t('General Settings')?></legend>
+   <legend><?php echo t('Multilingual Settings')?></legend>
 	<fieldset>
         <form method="post" action="<?php echo $this->action('set_default')?>">
             <div class="form-group">

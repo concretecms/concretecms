@@ -249,6 +249,22 @@ if ($controller->getTask() == 'view_details') {
 
 
     <div class="ccm-dashboard-header-buttons">
+        <? if (Config::get('concrete.multilingual.enabled') && $defaultLanguage) {
+            $ch = Core::make('multilingual/interface/flag');
+            ?>
+        <span class="dropdown">
+        <button type="button" class="btn btn-default" data-toggle="dropdown">
+            <?=$ch->getSectionFlagIcon($defaultLanguage)?> <?php echo $defaultLanguage->getLanguageText()?> <span class="text-muted"><?php echo $defaultLanguage->getLocale();?></span>
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+            <? foreach($multilingualSections as $section) { ?>
+                <li><a href="<?=$view->action('set_default_language', $section->getCollectionID(), $controller->getTask())?>"><?=$ch->getSectionFlagIcon($section)?> <?php echo $section->getLanguageText()?> <span class="text-muted"><?php echo $section->getLocale();?></span></a></li>
+            <? } ?>
+        </ul>
+        <? } ?>
+        </span>
+        <span class="dropdown">
         <button type="button" class="btn btn-default" data-toggle="dropdown">
             <? if ($controller->getTask() == 'view_global_areas') { ?>
                 <?=t('View Global Areas')?>
@@ -261,6 +277,7 @@ if ($controller->getTask() == 'view_details') {
             <li><a href="<?=$controller->action('view')?>"><?=t('View Stacks')?></a></li>
             <li><a href="<?=$controller->action('view_global_areas')?>"><?=t('View Global Areas')?></a></li>
         </ul>
+        </span>
         <? if ($controller->getTask() != 'view_global_areas') { ?>
             <a href="javascript:void(0)" data-dialog="add-stack" class="btn btn-primary"><?=t("Add Stack")?></a>
         <? } ?>

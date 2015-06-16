@@ -211,6 +211,17 @@ class Section extends Page
      */
     public static function getBySectionOfSite($page)
     {
+        if ($page->getPageTypeHandle() == STACKS_PAGE_TYPE) {
+            $parent = Page::getByID($page->getCollectionParentID());
+            if ($parent->getCollectionPath() == STACKS_PAGE_PATH) {
+                // this is the default multilingual section.
+                return static::getByLocale(Config::get('concrete.multilingual.default_locale'));
+            } else {
+                // this is a stack category page type
+                $locale = $parent->getCollectionHandle();
+                return static::getByLocale($locale);
+            }
+        }
         // looks at the page, traverses its parents until it finds the proper language
         $nav = \Core::make('helper/navigation');
         $pages = $nav->getTrailToCollection($page);
@@ -516,6 +527,11 @@ class Section extends Page
             $pde->setLocale($ms->getLocale());
             \Events::dispatch('on_multilingual_page_relate', $pde);
         }
+    }
+
+    public function isDefaultMultilingualSection()
+    {
+        return $this->getLocale() == Config::get('concrete.multilingual.default_locale');
     }
 
     public static function isMultilingualSection($cID)
