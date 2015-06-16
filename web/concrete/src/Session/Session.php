@@ -1,10 +1,10 @@
 <?php
 namespace Concrete\Core\Session;
 
+use Concrete\Core\Session\Storage\Handler\NativeFileSessionHandler;
 use Concrete\Core\Utility\IPAddress;
 use Config;
 use \Symfony\Component\HttpFoundation\Session\Session as SymfonySession;
-use Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler;
 use \Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
 use \Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
