@@ -4,6 +4,18 @@ namespace Concrete\Core\Validation\BannedWord;
 
 class Service
 {
+    const CASE_FIRST_LOWER = 0;
+    const CASE_FIRST_UPPER = 1;
+    const CASE_HAS_LOWER = 2;
+    const CASE_HAS_UPPER = 4;
+    const CASE_HAS_NONALPH = 8;
+    const CASE_MIXED = 6;
+
+    const TRUNCATE_CHARS = '';
+    const TRUNCATE_WORDS = '\s+';
+    const TRUNCATE_SENTS = '[!.?]\s+';
+    const TRUNCATE_PARS = '\n{2,}';
+
     public $bannedWords;
 
     public function getCSV_simple($file)
@@ -33,18 +45,18 @@ class Service
         while ($c = $word[$i]) {
             if (strpos($lower, $c) !== false) {
                 if ($i == 0) {
-                    $case |= STRING_UTILS_CASE_FIRST_LOWER;
+                    $case |= self::CASE_FIRST_LOWER;
                 } else {
-                    $case |= STRING_UTILS_CASE_HAS_LOWER;
+                    $case |= self::CASE_HAS_LOWER;
                 }
             } elseif (strpos($UPPER, $c) !== false) {
                 if ($i == 0) {
-                    $case |= STRING_UTILS_CASE_FIRST_UPPER;
+                    $case |= self::CASE_FIRST_UPPER;
                 } else {
-                    $case |= STRING_UTILS_CASE_HAS_UPPER;
+                    $case |= self::CASE_HAS_UPPER;
                 }
             } else {
-                $case |= STRING_UTILS_CASE_HAS_NONALPH;
+                $case |= self::CASE_HAS_NONALPH;
             }
             ++$i;
         }
@@ -55,14 +67,14 @@ class Service
     public function forceCase($case, &$word)
     {
         $word = strtolower($word);
-        if ($case & STRING_UTILS_CASE_FIRST_UPPER) {
+        if ($case & self::CASE_FIRST_UPPER) {
             $word = ucfirst($word);
         }
-        $c = $case & STRING_UTILS_CASE_MIXED;
+        $c = $case & self::CASE_MIXED;
         $i = 1;
         while ($word[$i]) {
-            if ($c == STRING_UTILS_CASE_HAS_UPPER ||
-            ($c == STRING_UTILS_CASE_MIXED && !round(mt_rand(0, 2)))
+            if ($c == self::CASE_HAS_UPPER ||
+            ($c == self::CASE_MIXED && !round(mt_rand(0, 2)))
                ) {
                 $word[$i] = strtoupper($word[$i]);
             }
@@ -142,7 +154,7 @@ class Service
         return false;
     }
 
-    public function truncate($string, $num, $which = STRING_UTILS_TRUNCATE_CHARS, $ellipsis = "&#8230;")
+    public function truncate($string, $num, $which = self::TRUNCATE_CHARS, $ellipsis = "&#8230;")
     {
         $parts = preg_split("/($which)/", $string, -1, PREG_SPLIT_DELIM_CAPTURE);
         $i = 0;
