@@ -35,7 +35,7 @@ class FileListTest extends \FileStorageTestCase {
             'FileSetFiles'
         ));
         parent::setUp();
-        define('UPLOAD_FILE_EXTENSIONS_ALLOWED', '*.txt;*.jpg;*.jpeg;*.png');
+        \Config::set('concrete.upload.extensions', '*.txt;*.jpg;*.jpeg;*.png');
 
         Category::add('file');
         \Concrete\Core\Permission\Access\Entity\Type::add('file_uploader', 'File Uploader');
