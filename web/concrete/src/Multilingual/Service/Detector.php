@@ -12,7 +12,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class Detector
 {
-    protected $enabled;
+    protected static $enabled;
 
     /**
      * Returns the preferred section based on session, cookie,
@@ -99,17 +99,17 @@ class Detector
         }
     }
 
-    public function isEnabled()
+    public static function isEnabled()
     {
-        if (!isset($this->enabled)) {
+        if (!isset(self::$enabled)) {
             if (!\Database::getDefaultConnection()) {
                 return false;
             }
             $db = \Database::connection();
             $count = $db->GetOne('select count(cID) from MultilingualSections');
-            $this->enabled = $count > 0;
+            self::$enabled = $count > 0;
         }
 
-        return $this->enabled;
+        return self::$enabled;
     }
 }
