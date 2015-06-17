@@ -1,28 +1,28 @@
 <?php
+
 namespace Concrete\Core\Page\Stack;
 
 use Area;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use GlobalArea;
-use CacheLocal;
 use Config;
 use Loader;
 use Page;
 use PageType;
 
 /**
- * Class Stack
+ * Class Stack.
  *
  * @package Concrete\Core\Page\Stack
  */
 class Stack extends Page
 {
-
     const ST_TYPE_USER_ADDED = 0;
     const ST_TYPE_GLOBAL_AREA = 20;
 
     /**
      * @param string $type
+     *
      * @return int
      */
     public static function mapImportTextToType($type)
@@ -39,6 +39,7 @@ class Stack extends Page
 
     /**
      * @param $stackName
+     *
      * @return Stack
      */
     public static function getOrCreateGlobalArea($stackName)
@@ -47,12 +48,14 @@ class Stack extends Page
         if (!$stack) {
             $stack = static::addStack($stackName, static::ST_TYPE_GLOBAL_AREA);
         }
+
         return $stack;
     }
 
     /**
      * @param string $stackName
      * @param string $cvID
+     *
      * @return Page
      */
     public static function getByName($stackName, $cvID = 'RECENT')
@@ -74,7 +77,7 @@ class Stack extends Page
                         $ms = static::getPreferredSection();
                     }
                 }
-    
+
                 if (is_object($ms)) {
                     $cID = $db->GetOne('select cID from Stacks where stName = ? and stMultilingualSection = ?', array($stackName, $ms->getCollectionID()));
                 } else {
@@ -85,12 +88,14 @@ class Stack extends Page
         } else {
             $cID = Loader::db()->GetOne('select cID from Stacks where stName = ?', array($stackName));
         }
+
         return $cID ? static::getByID($cID, $cvID) : false;
     }
 
     /**
      * @param int    $cID
      * @param string $cvID
+     *
      * @return bool|Page
      */
     public static function getByID($cID, $cvID = 'RECENT')
@@ -101,11 +106,13 @@ class Stack extends Page
         if (static::isValidStack($c)) {
             return $c;
         }
+
         return false;
     }
 
     /**
      * @param Stack $stack
+     *
      * @return bool
      */
     protected static function isValidStack($stack)
@@ -116,6 +123,7 @@ class Stack extends Page
     /**
      * @param string $stackName
      * @param int    $type
+     *
      * @return Page
      */
     public static function addStack($stackName, $type = 0)
@@ -146,7 +154,7 @@ class Stack extends Page
         // If the multilingual add-on is enabled, we need to take this stack and copy it into all non-default stack categories.
         if (\Core::make('multilingual/detector')->isEnabled()) {
             $list = Section::getList();
-            foreach($list as $section) {
+            foreach ($list as $section) {
                 if (!$section->isDefaultMultilingualSection()) {
                     $category = StackCategory::getCategoryFromMultilingualSection($section);
                     if (!is_object($category)) {
@@ -164,6 +172,7 @@ class Stack extends Page
     /**
      * @param |\Concrete\Core\Page\Collection $nc
      * @param bool $preserveUserID
+     *
      * @return Stack
      */
     public function duplicate($nc = null, $preserveUserID = false)
@@ -193,11 +202,13 @@ class Stack extends Page
     public function getStackType()
     {
         $db = Loader::db();
+
         return $db->GetOne('select stType from Stacks where cID = ?', array($this->getCollectionID()));
     }
 
     /**
      * @param $data
+     *
      * @return bool
      */
     public function update($data)
@@ -217,6 +228,7 @@ class Stack extends Page
             $stackName = $data['stackName'];
             $db->Execute('update Stacks set stName = ? WHERE cID = ?', array($stackName, $this->getCollectionID()));
         }
+
         return $worked;
     }
 
@@ -231,6 +243,7 @@ class Stack extends Page
 
         parent::delete();
         $db = Loader::db();
+
         return $db->Execute('delete from Stacks where cID = ?', array($this->getCollectionID()));
     }
 
@@ -240,6 +253,7 @@ class Stack extends Page
     public function getStackName()
     {
         $db = Loader::db();
+
         return $db->GetOne('select stName from Stacks where cID = ?', array($this->getCollectionID()));
     }
 
@@ -251,6 +265,7 @@ class Stack extends Page
         $ax = Area::get($this, STACKS_AREA_NAME);
         $ax->disableControls();
         $ax->display($this);
+
         return true;
     }
 
@@ -259,7 +274,6 @@ class Stack extends Page
      */
     public function export($pageNode)
     {
-
         $p = $pageNode->addChild('stack');
         $p->addAttribute('name', Loader::helper('text')->entities($this->getCollectionName()));
         if ($this->getStackTypeExportText()) {
@@ -304,5 +318,4 @@ class Stack extends Page
         $db = Loader::db();
         $db->Execute('update Stacks set stMultilingualSection = ? where cID = ?', array($section->getCollectionID(), $this->getCollectionID()));
     }
-
 }
