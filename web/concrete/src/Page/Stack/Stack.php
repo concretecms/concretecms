@@ -58,31 +58,34 @@ class Stack extends Page
     public static function getByName($stackName, $cvID = 'RECENT')
     {
         $c = \Page::getCurrentPage();
-        $identifier = sprintf('/stack/name/%s/%s', $stackName, $c->getCollectionID());
-        $cache = \Core::make('cache/request');
-        $item = $cache->getItem($identifier);
-        if (!$item->isMiss()) {
-            $cID = $item->get();
-        } else {
-            $item->lock();
-            $db = Loader::db();
-            $ms = false;
-            if (\Core::make('multilingual/detector')->isEnabled()) {
-                $ms = Section::getBySectionOfSite($c);
-                if (!is_object($ms)) {
-                    $ms = static::getPreferredSection();
-                }
-            }
-
-            if (is_object($ms)) {
-                $cID = $db->GetOne('select cID from Stacks where stName = ? and stMultilingualSection = ?', array($stackName, $ms->getCollectionID()));
+        if (is_object($c) && (!$c->isError())) {
+            $identifier = sprintf('/stack/name/%s/%s', $stackName, $c->getCollectionID());
+            $cache = \Core::make('cache/request');
+            $item = $cache->getItem($identifier);
+            if (!$item->isMiss()) {
+                $cID = $item->get();
             } else {
-                $cID = $db->GetOne('select cID from Stacks where stName = ?', array($stackName));
+                $item->lock();
+                $db = Loader::db();
+                $ms = false;
+                if (\Core::make('multilingual/detector')->isEnabled()) {
+                    $ms = Section::getBySectionOfSite($c);
+                    if (!is_object($ms)) {
+                        $ms = static::getPreferredSection();
+                    }
+                }
+    
+                if (is_object($ms)) {
+                    $cID = $db->GetOne('select cID from Stacks where stName = ? and stMultilingualSection = ?', array($stackName, $ms->getCollectionID()));
+                } else {
+                    $cID = $db->GetOne('select cID from Stacks where stName = ?', array($stackName));
+                }
+                $item->set($cID);
             }
-            $item->set($cID);
+        } else {
+            $cID = Loader::db()->GetOne('select cID from Stacks where stName = ?', array($stackName));
         }
-
-        return static::getByID($cID, $cvID);
+        return $cID ? static::getByID($cID, $cvID) : false;
     }
 
     /**
