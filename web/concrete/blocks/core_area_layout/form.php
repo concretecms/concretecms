@@ -6,8 +6,8 @@
 		$spacing = 0;
 		$iscustom = false;
 	}
-
-	$presets = AreaLayoutPreset::getList();
+	$c = Page::getCurrentPage();
+	$presets = AreaLayoutPreset::getList($c);
 ?>
 
 <ul id="ccm-layouts-toolbar" class="ccm-inline-toolbar ccm-ui">

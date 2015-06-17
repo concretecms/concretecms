@@ -1,10 +1,10 @@
 <?php
-namespace Concrete\Core\Area\Layout;
+namespace Concrete\Core\Area\Layout\Preset;
 
 use Loader;
 use \Concrete\Core\Foundation\Object;
 
-class Preset extends Object
+class UserPreset extends Object
 {
 
     /**
