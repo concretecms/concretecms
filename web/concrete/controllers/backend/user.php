@@ -46,7 +46,8 @@ class User extends Controller
                 $users = $this->getRequestUsers();
                 $r = new UserEditResponse();
                 $r->setUsers($users);
-                $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
+                $dh = Core::make('helper/date');
+                /* @var $dh \Concrete\Core\Localization\Service\Date */
                 foreach ($users as $ui) {
                     $uo = $ui->getUserObject();
                     if ($task == 'add') {
