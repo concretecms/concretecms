@@ -810,7 +810,7 @@ return array(
         /**
          * URL rewriting
          *
-         * Doesn't impact URL_REWRITING_ALL which is set at a lower level and
+         * Doesn't impact concrete.seo.url_rewriting_all which is set at a lower level and
          * controls whether ALL items will be rewritten.
          *
          * @var bool
