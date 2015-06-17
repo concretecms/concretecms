@@ -6,7 +6,8 @@ use Area;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use GlobalArea;
 use Config;
-use Loader;
+use Database;
+use Core;
 use Page;
 use PageType;
 
@@ -69,7 +70,7 @@ class Stack extends Page
                 $cID = $item->get();
             } else {
                 $item->lock();
-                $db = Loader::db();
+                $db = Database::connection();
                 $ms = false;
                 if (\Core::make('multilingual/detector')->isEnabled()) {
                     $ms = Section::getBySectionOfSite($c);
@@ -86,7 +87,7 @@ class Stack extends Page
                 $item->set($cID);
             }
         } else {
-            $cID = Loader::db()->GetOne('select cID from Stacks where stName = ?', array($stackName));
+            $cID = Database::connection()->GetOne('select cID from Stacks where stName = ?', array($stackName));
         }
 
         return $cID ? static::getByID($cID, $cvID) : false;
@@ -100,7 +101,7 @@ class Stack extends Page
      */
     public static function getByID($cID, $cvID = 'RECENT')
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $c = parent::getByID($cID, $cvID, 'Stack');
 
         if (static::isValidStack($c)) {
@@ -144,7 +145,7 @@ class Stack extends Page
         $a = Area::getOrCreate($page, STACKS_AREA_NAME);
 
         // finally we add the row to the stacks table
-        $db = Loader::db();
+        $db = Database::connection();
         $stackCID = $page->getCollectionID();
         $v = array($stackName, $stackCID, $type);
         $db->Execute('insert into Stacks (stName, cID, stType) values (?, ?, ?)', $v);
@@ -188,7 +189,7 @@ class Stack extends Page
         // we have to do this because we need the area to exist before we try and add something to it.
         $a = Area::getOrCreate($page, STACKS_AREA_NAME);
 
-        $db = Loader::db();
+        $db = Database::connection();
         $v = array($page->getCollectionName(), $page->getCollectionID(), $this->getStackType());
         $db->Execute('insert into Stacks (stName, cID, stType) values (?, ?, ?)', $v);
 
@@ -201,7 +202,7 @@ class Stack extends Page
      */
     public function getStackType()
     {
-        $db = Loader::db();
+        $db = Database::connection();
 
         return $db->GetOne('select stType from Stacks where cID = ?', array($this->getCollectionID()));
     }
@@ -214,7 +215,7 @@ class Stack extends Page
     public function update($data)
     {
         if (isset($data['stackName'])) {
-            $txt = Loader::helper('text');
+            $txt = Core::make('helper/text');
             $data['cName'] = $data['stackName'];
             $data['cHandle'] = str_replace('-', Config::get('concrete.seo.page_path_separator'), $txt->urlify($data['stackName']));
         }
@@ -224,7 +225,7 @@ class Stack extends Page
             // Make sure the stack path is always up-to-date after a name change
             $this->rescanCollectionPath();
 
-            $db = Loader::db();
+            $db = Database::connection();
             $stackName = $data['stackName'];
             $db->Execute('update Stacks set stName = ? WHERE cID = ?', array($stackName, $this->getCollectionID()));
         }
@@ -242,7 +243,7 @@ class Stack extends Page
         }
 
         parent::delete();
-        $db = Loader::db();
+        $db = Database::connection();
 
         return $db->Execute('delete from Stacks where cID = ?', array($this->getCollectionID()));
     }
@@ -252,7 +253,7 @@ class Stack extends Page
      */
     public function getStackName()
     {
-        $db = Loader::db();
+        $db = Database::connection();
 
         return $db->GetOne('select stName from Stacks where cID = ?', array($this->getCollectionID()));
     }
@@ -275,12 +276,12 @@ class Stack extends Page
     public function export($pageNode)
     {
         $p = $pageNode->addChild('stack');
-        $p->addAttribute('name', Loader::helper('text')->entities($this->getCollectionName()));
+        $p->addAttribute('name', Core::make('helper/text')->entities($this->getCollectionName()));
         if ($this->getStackTypeExportText()) {
             $p->addAttribute('type', $this->getStackTypeExportText());
         }
 
-        $db = Loader::db();
+        $db = Database::connection();
         // you shouldn't ever have a sub area in a stack but just in case.
         $r = $db->Execute('select arHandle from Areas where cID = ? and arParentID = 0', array($this->getCollectionID()));
         while ($row = $r->FetchRow()) {
@@ -306,7 +307,7 @@ class Stack extends Page
 
     public function getMultilingualSection()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $cID = $db->GetOne('select stMultilingualSection from Stacks where cID = ?', array($this->getCollectionID()));
         if ($cID) {
             return Section::getByID($cID);
@@ -315,7 +316,7 @@ class Stack extends Page
 
     public function updateMultilingualSection(Section $section)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $db->Execute('update Stacks set stMultilingualSection = ? where cID = ?', array($section->getCollectionID(), $this->getCollectionID()));
     }
 }
