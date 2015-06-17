@@ -142,7 +142,7 @@ class User extends Object
             $r = $db->query($q, $v);
             if ($r) {
                 $row = $r->fetchRow();
-                $pw_is_valid_legacy = (defined('PASSWORD_SALT') && User::legacyEncryptPassword($password) == $row['uPassword']);
+                $pw_is_valid_legacy = (Config::get('concrete.user.password.legacy_salt') && User::legacyEncryptPassword($password) == $row['uPassword']);
                 $pw_is_valid = $pw_is_valid_legacy || $this->getUserPasswordHasher()->checkPassword($password, $row['uPassword']);
                 if ($row['uID'] && $row['uIsValidated'] === '0' && Config::get('concrete.user.registration.validate_email')) {
                     $this->loadError(USER_NON_VALIDATED);
@@ -254,7 +254,7 @@ class User extends Object
     // Use only for checking password hashes, not generating new ones to store.
     public function legacyEncryptPassword($uPassword)
     {
-        return md5($uPassword . ':' . PASSWORD_SALT);
+        return md5($uPassword . ':' . Config::get('concrete.user.password.legacy_salt'));
     }
 
     public function isActive()
