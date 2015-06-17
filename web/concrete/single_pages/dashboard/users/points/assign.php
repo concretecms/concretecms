@@ -1,8 +1,11 @@
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Assign Community Points'), false, false, false, array(), Page::getByPath('/dashboard/users/points', 'ACTIVE'))?>
 <form method="post" action="<?=$view->action('save')?>" id="ccm-community-point-entry">
-	<?php if(isset($upID) && $upID > 0) {
+	<?php
+    \Core::make('helper/validation/token')->output('add_community_points');
+    if(isset($upID) && $upID > 0) {
 		echo $form->hidden('upID',$upID);
-	}?>
+	}
+    ?>
 	<div class="form-group">
 	    <?=$form->label('upUser', t('User'))?>
 		<div class="input">

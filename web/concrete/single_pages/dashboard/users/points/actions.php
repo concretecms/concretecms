@@ -5,6 +5,7 @@
 
 <?php if($showForm) { ?>
 <form method="post" action="<?=$view->action('save')?>" id="ccm-community-points-action">
+    <?= \Core::make('helper/validation/token')->output('add_action'); ?>
     <div class="row">
         <div class="col-md-12">
     
@@ -97,13 +98,19 @@
                 ?>
         		<tr class="">
         			<td style="text-align: center"><? if ($upa['upaIsActive']) { ?><i class="fa fa-check"></i><? } ?></td>
-        			<td><?=$upa['upaName']?></td>
-        			<td><?=$upa['upaHandle']?></td>
+        			<td><?=h($upa['upaName'])?></td>
+        			<td><?=h($upa['upaHandle'])?></td>
         			<td><?=number_format($upa['upaDefaultPoints'])?></td>
-        			<td><?php echo $upa['gName'];?></td>
+        			<td><?php echo h($upa['gName']);?></td>
         			<td style="text-align: right">
+                        <?php
+                        $delete_url = \League\Url\Url::createFromUrl($view->action('delete', $upa['upaID']));
+                        $delete_url = $delete_url->setQuery(array(
+                            'ccm_token' => \Core::make('helper/validation/token')->generate('delete_action')
+                        ));
+                        ?>
         			    <a href="<?=$view->action($upa['upaID'])?>" class="btn btn-sm btn-default"><?=t('Edit')?></a>
-        			    <a href="<?=$view->action('delete',$upa['upaID'])?>" class="btn btn-sm btn-danger"><?=t('Delete')?></a>
+        			    <a href="<?=$delete_url?>" class="btn btn-sm btn-danger"><?=t('Delete')?></a>
         			</td>
         		</tr>
         		<?php } ?>
