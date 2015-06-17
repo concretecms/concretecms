@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\Users\Points;
+use Concrete\Core\Error\Error;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use \Concrete\Core\User\Point\Action\Action as UserPointAction;
 use \Concrete\Core\User\Point\Action\ActionList as UserPointActionList;
@@ -93,6 +94,14 @@ class Actions extends DashboardPageController {
 	
 	public function save() 
 	{
+        if (!\Core::make('helper/validation/token')->validate('add_action')) {
+            $this->error = new Error();
+            $this->error->add('Invalid Token');
+            $this->add();
+
+            return;
+        }
+
 		if($this->post('upaID') > 0) {
 			$this->upa->load($this->post('upaID'));
 			if (!$this->upa->hasCustomClass()) {
@@ -121,6 +130,13 @@ class Actions extends DashboardPageController {
 	
 	public function delete($upaID) 
 	{
+        if (!\Core::make('helper/validation/token')->validate('delete_action')) {
+            $this->error = new Error();
+            $this->error->add('Invalid Token');
+            $this->view();
+
+            return;
+        }
 		$this->upa->load($upaID);
 		$this->upa->delete();
 		$this->redirect('/dashboard/users/points/actions','action_deleted');
