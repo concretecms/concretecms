@@ -61,10 +61,10 @@ class Stack extends Page
      */
     public static function getByName($stackName, $cvID = 'RECENT')
     {
-        $c = \Page::getCurrentPage();
+        $c = Page::getCurrentPage();
         if (is_object($c) && (!$c->isError())) {
             $identifier = sprintf('/stack/name/%s/%s', $stackName, $c->getCollectionID());
-            $cache = \Core::make('cache/request');
+            $cache = Core::make('cache/request');
             $item = $cache->getItem($identifier);
             if (!$item->isMiss()) {
                 $cID = $item->get();
@@ -72,10 +72,11 @@ class Stack extends Page
                 $item->lock();
                 $db = Database::connection();
                 $ms = false;
-                if (\Core::make('multilingual/detector')->isEnabled()) {
+                $detector = Core::make('multilingual/detector');
+                if ($detector->isEnabled()) {
                     $ms = Section::getBySectionOfSite($c);
                     if (!is_object($ms)) {
-                        $ms = static::getPreferredSection();
+                        $ms = $detector->getPreferredSection();
                     }
                 }
 
@@ -151,7 +152,7 @@ class Stack extends Page
         $stack = static::getByID($stackCID);
 
         // If the multilingual add-on is enabled, we need to take this stack and copy it into all non-default stack categories.
-        if (\Core::make('multilingual/detector')->isEnabled()) {
+        if (Core::make('multilingual/detector')->isEnabled()) {
             $list = Section::getList();
             foreach ($list as $section) {
                 if (!$section->isDefaultMultilingualSection()) {
