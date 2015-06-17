@@ -3,8 +3,6 @@
 namespace Concrete\Core\Multilingual\Service;
 
 use Concrete\Core\Multilingual\Page\Section\Section;
-use Concrete\Core\Package\Package;
-use Concrete\Core\Package\PackageList;
 use Concrete\Core\Page\Page;
 use Session;
 use Cookie;
@@ -14,26 +12,24 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class Detector
 {
-
-    protected $enabled;
+    protected static $enabled;
 
     /**
-     *
      * Returns the preferred section based on session, cookie,
      * user object, default browser (if allowed), and finally
-     * site preferences. 
+     * site preferences.
      * Since the user's language is not a locale but a language,
      * attempts to determine best section for the given language.
+     *
      * @return Section
      */
     public static function getPreferredSection()
     {
-
         $locale = false;
         // they have a language in a certain session going already
         if (Session::has('multilingual_default_locale')) {
             $locale = Session::get('multilingual_default_locale');
-        } else if (Cookie::has('multilingual_default_locale')) {
+        } elseif (Cookie::has('multilingual_default_locale')) {
             $locale = Cookie::get('multilingual_default_locale');
         }
 
@@ -57,7 +53,7 @@ class Detector
 
         if (Config::get('concrete.multilingual.use_browser_detected_locale')) {
             $home = false;
-            $locales =  \Punic\Misc::getBrowserLocales();
+            $locales = \Punic\Misc::getBrowserLocales();
             foreach (array_keys($locales) as $locale) {
                 $home = Section::getByLocaleOrLanguage($locale);
                 if ($home) {
@@ -103,13 +99,17 @@ class Detector
         }
     }
 
-    public function isEnabled()
+    public static function isEnabled()
     {
-        if (!isset($this->enabled)) {
+        if (!isset(self::$enabled)) {
+            if (!\Database::getDefaultConnection()) {
+                return false;
+            }
             $db = \Database::connection();
             $count = $db->GetOne('select count(cID) from MultilingualSections');
-            $this->enabled = $count > 0;
+            self::$enabled = $count > 0;
         }
-        return $this->enabled;
+
+        return self::$enabled;
     }
 }
