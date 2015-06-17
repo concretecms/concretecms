@@ -28,7 +28,7 @@ class ContentFileTranslateTest extends FileStorageTestCase {
             'FileVersionLog'
         ));
         parent::setUp();
-        define('UPLOAD_FILE_EXTENSIONS_ALLOWED', '*.txt;*.jpg;*.jpeg;*.png');
+        \Config::set('concrete.upload.extensions', '*.txt;*.jpg;*.jpeg;*.png');
 
         Category::add('file');
         $number = AttributeType::add('number', 'Number');
