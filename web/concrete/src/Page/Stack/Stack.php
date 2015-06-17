@@ -101,7 +101,6 @@ class Stack extends Page
      */
     public static function getByID($cID, $cvID = 'RECENT')
     {
-        $db = Database::connection();
         $c = parent::getByID($cID, $cvID, 'Stack');
 
         if (static::isValidStack($c)) {
@@ -129,7 +128,6 @@ class Stack extends Page
      */
     public static function addStack($stackName, $type = 0)
     {
-        $ct = new PageType();
         $data = array();
 
         $parent = Page::getByPath(STACKS_PAGE_PATH);
@@ -142,7 +140,7 @@ class Stack extends Page
         $page = $parent->add($pagetype, $data);
 
         // we have to do this because we need the area to exist before we try and add something to it.
-        $a = Area::getOrCreate($page, STACKS_AREA_NAME);
+        Area::getOrCreate($page, STACKS_AREA_NAME);
 
         // finally we add the row to the stacks table
         $db = Database::connection();
@@ -187,7 +185,7 @@ class Stack extends Page
         $page = parent::duplicate($nc, $preserveUserID);
 
         // we have to do this because we need the area to exist before we try and add something to it.
-        $a = Area::getOrCreate($page, STACKS_AREA_NAME);
+        Area::getOrCreate($page, STACKS_AREA_NAME);
 
         $db = Database::connection();
         $v = array($page->getCollectionName(), $page->getCollectionID(), $this->getStackType());
