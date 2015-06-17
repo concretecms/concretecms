@@ -22,10 +22,16 @@ class Flag
         }
 
         if ($region) {
-            if (file_exists(
-                DIR_BASE . '/' . DIRNAME_IMAGES . '/' . DIRNAME_IMAGES_LANGUAGES . '/' . $region . '.png'
+            $v = \View::getInstance();
+            
+            if ($v->getThemeDirectory() != '' && file_exists(
+                $v->getThemeDirectory() . '/' . DIRNAME_IMAGES . '/' . DIRNAME_IMAGES_LANGUAGES . '/' . $region . '.png'
+			)) {
+                $icon = $v->getThemePath() . '/' . DIRNAME_IMAGES . '/' . DIRNAME_IMAGES_LANGUAGES . '/' . $region . '.png';
+            } elseif (file_exists(
+                DIR_APPLICATION . '/' . DIRNAME_IMAGES . '/' . DIRNAME_IMAGES_LANGUAGES . '/' . $region . '.png'
             )) {
-                $icon = DIR_REL . '/' . DIRNAME_IMAGES . '/' . DIRNAME_IMAGES_LANGUAGES . '/' . $region . '.png';
+                $icon = REL_DIR_APPLICATION . '/' . DIRNAME_IMAGES . '/' . DIRNAME_IMAGES_LANGUAGES . '/' . $region . '.png';
             } else {
                 $icon = ASSETS_URL . '/' . DIRNAME_IMAGES . '/' . DIRNAME_IMAGES_LANGUAGES . '/' . $region . '.png';
             }
