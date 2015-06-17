@@ -106,6 +106,9 @@ class Detector
     public function isEnabled()
     {
         if (!isset($this->enabled)) {
+            if (!\Database::getDefaultConnection()) {
+                return false;
+            }
             $db = \Database::connection();
             $count = $db->GetOne('select count(cID) from MultilingualSections');
             $this->enabled = $count > 0;
