@@ -116,7 +116,7 @@
             default: // a preset
                 var arLayoutPresetID = typeval;
                 jQuery.fn.dialog.showLoader();
-                var url = CCM_TOOLS_PATH + '/area/layout_presets?arLayoutPresetID=' + arLayoutPresetID + '&task=get_area_layout&ccm_token=' + CCM_SECURITY_TOKEN;
+                var url = CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/area/layout/presets/get/' + arLayoutPresetID;
                 $.getJSON(url, function (r) {
                     obj.$formviewthemegrid.hide();
                     obj.$formviewcustom.hide();
