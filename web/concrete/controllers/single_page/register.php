@@ -191,8 +191,13 @@ class Register extends PageController {
                     $uHash = $process->setupValidation();
 
                     $mh = Loader::helper('mail');
-                    if (defined('EMAIL_ADDRESS_VALIDATE')) {
-                        $mh->from(EMAIL_ADDRESS_VALIDATE,  t('Validate Email Address'));
+                    $fromEmail = (string) Config::get('concrete.email.validate_registration.address');
+                    if (strpos($fromEmail, '@')) {
+                        $fromName = (string) Config::get('concrete.email.validate_registration.name');
+                        if ($fromName === '') {
+                            $fromName = t('Validate Email Address');
+                        }
+                        $mh->from($fromEmail,  $fromName);
                     }
                     $mh->addParameter('uEmail', $_POST['uEmail']);
                     $mh->addParameter('uHash', $uHash);

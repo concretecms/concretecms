@@ -295,7 +295,10 @@ return array(
     ),
 
     'filesystem'        => array(
-
+        /** Temporary directory.
+         * @link \Concrete\Core\File\Service\File::getTemporaryDirectory
+         */
+        'temp_directory' => null,
         'permissions'   => array(
             'file' => FILE_PERMISSIONS_MODE_COMPUTED,
             'directory' => DIRECTORY_PERMISSIONS_MODE_COMPUTED
@@ -336,7 +339,15 @@ return array(
         ),
         'form_block' => array(
             'address' => false
-        )
+        ),
+        'forgot_password' => array(
+            'address' => null,
+            'name' => null,
+        ),
+        'validate_registration' => array(
+            'address' => null,
+            'name' => null,
+        ),
     ),
 
     /**

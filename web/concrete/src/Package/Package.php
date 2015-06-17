@@ -901,7 +901,8 @@ class Package extends Object
         $errorText[Package::E_PACKAGE_INSTALL] = t('An error occurred while trying to install the package.');
         $errorText[Package::E_PACKAGE_MIGRATE_BACKUP] = t(
             'Unable to backup old package directory to %s',
-            DIR_FILES_TRASH);
+            \Config::get('concrete.misc.package_backup_directory')
+        );
         $errorText[Package::E_PACKAGE_INVALID_APP_VERSION] = t(
             'This package isn\'t currently available for this version of concrete5. Please contact the maintainer of this package for assistance.');
 
