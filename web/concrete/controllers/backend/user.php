@@ -13,13 +13,27 @@ use Exception;
 
 class User extends Controller
 {
+
+    public function validate($action)
+    {
+        $token_validator = \Core::make('helper/validation/token');
+        if (!$token_validator->validate($action)) {
+            $r = new UserEditResponse();
+            $r->setError(new \Exception('Invalid Token.'));
+            $r->outputJSON();
+            \Core::shutdown();
+        }
+    }
+
     public function addGroup()
     {
+        $this->validate('add_group');
         $this->modifyGroup('add');
     }
 
     public function removeGroup()
     {
+        $this->validate('remove_group');
         $this->modifyGroup('remove');
     }
 
