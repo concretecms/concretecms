@@ -232,7 +232,6 @@ return array(
     ),
 
     'multilingual' =>   array(
-        'enabled' => false, // note this will automatically be set to true if needed
         'redirect_home_to_default_locale' => false,
         'use_browser_detected_locale' => false,
         'default_locale' => false,
