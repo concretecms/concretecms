@@ -212,7 +212,7 @@
             this.getContainer().replaceWith(new_block_elem);
 
             this.getArea().scanBlocks();
-            return this.getArea().getBlockByID(new_block_elem.data('block-id'));
+            return this.getArea().getBlockByID(this.getId());
         },
 
         getMenuElem: function blockGetMenuElem() {

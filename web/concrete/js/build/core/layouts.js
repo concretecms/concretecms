@@ -74,6 +74,8 @@
             ConcreteEvent.fire('EditModeExitInline');
         });
         this.$savebtn.unbind().on('click', function () {
+            Concrete.event.fire('EditModeExitInlineSaved');
+
             // move the toolbar back into the form so it submits. so great.
             obj.$toolbar.hide().prependTo('#ccm-block-form');
             $('#ccm-block-form').submit();
