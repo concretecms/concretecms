@@ -25,7 +25,7 @@ if ($relCacheDirectory) {
         $fullCacheDirectory = rtrim(str_replace(DIRECTORY_SEPARATOR, '/', $fullCacheDirectory), '/');
         $fullRootDirectory = rtrim(str_replace(DIRECTORY_SEPARATOR, '/', DIR_BASE), '/');
         if (strpos($fullCacheDirectory, $fullRootDirectory) !== 0) {
-            echo 'The cache directory must be published under the webroot (or you can set the concrete.cache.rel_directory configuration option)';
+            echo 'The cache directory must be published under the webroot (or you can set the concrete.cache.directory_relative configuration option)';
             die(1);
         }
         $relCacheDirectory = substr($fullCacheDirectory, strlen($fullRootDirectory) - 1);
