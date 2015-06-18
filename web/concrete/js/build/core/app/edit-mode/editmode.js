@@ -106,7 +106,12 @@
                     if (!event_data || !event_data.action || event_data.action !== 'save_inline') {
                         $.get(action, data,
                             function (r) {
-                                var newBlock = block.replace(r);
+                                var realBlock = my.getBlockByID(block.getId());
+                                if (!realBlock) {
+                                    return;
+                                }
+
+                                var newBlock = realBlock.replace(r);
                                 _.defer(function () {
                                     ConcreteEvent.fire('EditModeExitInlineComplete', {
                                         block: newBlock
@@ -509,9 +514,31 @@
             return panel;
         },
 
-        getAreaByID: function areaGetByID(arID) {
+        getAreaByID: function editModeGetAreaByID(arID) {
             var areas = this.getAreas();
             return _.findWhere(areas, {id: parseInt(arID)});
+        },
+
+        getBlockByID: function editModeGetBockByID(blockID) {
+            var areas = this.getAreas(), match = null;
+
+            _(areas).every(function(area) {
+                if (match) {
+                    return false;
+                }
+                _(area.getBlocks()).every(function(block) {
+                    if (block.getId() == blockID) {
+                        match = block;
+                        return false;
+                    }
+
+                    return true;
+                });
+
+                return true;
+            });
+
+            return match;
         },
 
         /**
