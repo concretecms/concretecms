@@ -11,7 +11,7 @@ class UserProvider implements ProviderInterface
     public function getPresets(Page $page)
     {
         $presets = UserPreset::getList();
-        
+
     }
 
     public function getName()
