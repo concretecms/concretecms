@@ -118,10 +118,9 @@ class GlobalArea extends Area
         return $blocks;
     }
 
-    public function display()
+    public function display($c = false, $fake = null)
     {
-        $c = Page::getCurrentPage();
-        parent::display($c);
+        parent::display($c, null);
     }
 
     /**
