@@ -7,7 +7,7 @@ use \Concrete\Core\Area\SubArea;
 use Page;
 use Area;
 
-abstract class Column extends Object
+abstract class Column extends Object implements ColumnInterface
 {
 
     /**
@@ -36,7 +36,6 @@ abstract class Column extends Object
     public $arID;
 
     abstract static public function getByID($arLayoutColumnID);
-    abstract public function getAreaLayoutColumnClass();
     abstract public function exportDetails($node);
 
     /**

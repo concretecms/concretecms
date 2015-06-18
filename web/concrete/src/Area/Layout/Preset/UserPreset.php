@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Area\Layout\Preset;
 
+use Concrete\Core\Area\Layout\Layout;
 use Loader;
 use \Concrete\Core\Foundation\Object;
 

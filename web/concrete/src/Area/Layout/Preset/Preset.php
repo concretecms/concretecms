@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Area\Layout\Preset;
 
-use HtmlObject\Element;
+use Concrete\Core\Area\Layout\ColumnInterface;
 
 class Preset implements PresetInterface
 {
@@ -11,10 +11,12 @@ class Preset implements PresetInterface
     public function __construct($name, $columns = array())
     {
         $this->name = $name;
-        $this->columns = $columns;
+        foreach($columns as $column) {
+            $this->addColumn($column);
+        }
     }
 
-    public function addColumn(Element $column)
+    public function addColumn(ColumnInterface $column)
     {
         $this->columns[] = $column;
     }
