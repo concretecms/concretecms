@@ -193,6 +193,11 @@ return array(
         'full_contents_assets_hash' => false,
 
         'directory'   => DIR_FILES_UPLOADED_STANDARD . '/cache',
+        /**
+         * Relative path to the cache directory. If empty it'll be calculated from concrete.cache.directory
+         * @var string|null
+         */
+        'directory_relative' => null,
         'page'        => array(
             'directory' => DIR_FILES_UPLOADED_STANDARD . '/cache/pages',
             'adapter'      => 'file',
