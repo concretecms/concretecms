@@ -4,6 +4,7 @@ namespace Concrete\Core\Application;
 use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Cache\Page\PageCache;
 use Concrete\Core\Cache\Page\PageCacheRecord;
+use Concrete\Core\Cache\OpCache;
 use Concrete\Core\Foundation\ClassLoader;
 use Concrete\Core\Foundation\EnvironmentDetector;
 use Concrete\Core\Localization\Localization;
@@ -120,6 +121,9 @@ class Application extends Container
 
         // clear block type cache
         BlockType::clearCache();
+
+        // Clear precompiled script bytecode caches
+        OpCache::clear();
     }
 
     /**
