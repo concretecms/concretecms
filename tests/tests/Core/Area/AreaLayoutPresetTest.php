@@ -17,12 +17,12 @@ class HtmlColumn implements \Concrete\Core\Area\Layout\ColumnInterface
 
 }
 
-class TestAreaLayoutPresetProvider implements \Concrete\Core\Area\Layout\Preset\ProviderInterface
+class TestAreaLayoutPresetProvider implements \Concrete\Core\Area\Layout\Preset\Provider\ProviderInterface
 {
-    public function getPresets(\Concrete\Core\Page\Page $page)
+    public function getPresets()
     {
 
-        $preset = new \Concrete\Core\Area\Layout\Preset\Preset('Preset 1', array(
+        $preset = new \Concrete\Core\Area\Layout\Preset\Preset('preset-1', 'Preset 1', array(
            new HtmlColumn('col-sm-4'),
             new HtmlColumn('col-sm-8')
         ));
@@ -35,9 +35,9 @@ class TestAreaLayoutPresetProvider implements \Concrete\Core\Area\Layout\Preset\
     }
 }
 
-class BrokenTestAreaLayoutPresetProvider implements \Concrete\Core\Area\Layout\Preset\ProviderInterface
+class BrokenTestAreaLayoutPresetProvider implements \Concrete\Core\Area\Layout\Preset\Provider\ProviderInterface
 {
-    public function getPresets(\Concrete\Core\Page\Page $page)
+    public function getPresets()
     {
         return array(1,2,3);
     }
@@ -48,19 +48,68 @@ class BrokenTestAreaLayoutPresetProvider implements \Concrete\Core\Area\Layout\P
     }
 }
 
+class TestThemeClass implements \Concrete\Core\Area\Layout\Preset\Provider\ThemeProviderInterface
+{
+    public function getThemeHandle()
+    {
+        return 'test_theme';
+    }
+
+    public function getThemeName()
+    {
+        return 'Test Theme';
+    }
+
+    public function getThemeAreaLayoutPresets()
+    {
+        $presets = array(
+            array(
+                'handle' => 'left_sidebar',
+                'name' => 'Left Sidebar',
+                'columns' => array(
+                    '<div class="col-sm-4"></div>',
+                    '<div class="col-sm-8"></div>'
+                ),
+            ),
+            array(
+                'handle' => 'exciting',
+                'name' => 'Exciting',
+                'columns' => array(
+                    '<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"></div>',
+                    '<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"></div>',
+                    '<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"></div>',
+                    '<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"></div>',
+                    '<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"></div>',
+                    '<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 visible-lg"></div>',
+                ),
+            ),
+            array(
+                'handle' => 'three_column',
+                'name' => 'Three Column',
+                'columns' => array(
+                    '<div class="col-md-4"></div>',
+                    '<div class="col-md-4"></div>',
+                    '<div class="col-md-4"></div>',
+                ),
+            )
+        );
+        return $presets;
+    }
+}
 
 class AreaLayoutPresetTest extends ConcreteDatabaseTestCase
 {
 
     protected $tables = array('AreaLayoutPresets','AreaLayouts','AreaLayoutColumns',
         'AreaLayoutCustomColumns', 'AreaLayoutThemeGridColumns', 'PageThemes', 'Pages', 'Collections',
-        'CollectionVersions', 'PagePaths');
+        'CollectionVersions', 'PagePaths','AreaLayoutsUsingPresets');
     protected $fixtures = array();
 
     public function testPresetProviderManagerRetrievePresets()
     {
-        /** @var $manager \Concrete\Core\Area\Layout\Preset\ProviderManager */
+        /** @var $manager \Concrete\Core\Area\Layout\Preset\Provider\Manager */
         $manager = Core::make('manager/area_layout_preset_provider');
+        $manager->unregister('Active Theme');
         $broken = new BrokenTestAreaLayoutPresetProvider();
         $manager->register(new TestAreaLayoutPresetProvider());
         $manager->register($broken);
@@ -74,11 +123,11 @@ class AreaLayoutPresetTest extends ConcreteDatabaseTestCase
         $this->assertEquals(1, count($manager->getProviders()));
 
         $c = new Page();
-        $presets = $manager->getPresets($c);
+        $presets = $manager->getPresets();
         $this->assertEquals(0, count($presets));
 
         $manager->register(new TestAreaLayoutPresetProvider());
-        $presets = $manager->getPresets($c);
+        $presets = $manager->getPresets();
         $this->assertEquals(1, count($presets));
         $manager->unregister('Test');
 
@@ -100,10 +149,10 @@ class AreaLayoutPresetTest extends ConcreteDatabaseTestCase
         $layout->addLayoutColumn();
         $preset2 = \Concrete\Core\Area\Layout\Preset\UserPreset::add($layout, 'Custom Preset 2');
 
-        /** @var $manager \Concrete\Core\Area\Layout\Preset\ProviderManager */
+        /** @var $manager \Concrete\Core\Area\Layout\Preset\Provider\Manager */
         $manager = Core::make('manager/area_layout_preset_provider');
         $c = new Page();
-        $presets = $manager->getPresets($c);
+        $presets = $manager->getPresets();
         $this->assertEquals(2, count($presets));
         $this->assertEquals('Custom Preset 2', $presets[1]->getName());
         $this->assertInstanceOf('\Concrete\Core\Area\Layout\Preset\Preset', $presets[1]);
@@ -124,7 +173,7 @@ class AreaLayoutPresetTest extends ConcreteDatabaseTestCase
         $layout->addLayoutColumn()->setAreaLayoutColumnSpan(6);
         $preset1 = \Concrete\Core\Area\Layout\Preset\UserPreset::add($layout, 'Custom Preset');
 
-        /** @var $manager \Concrete\Core\Area\Layout\Preset\ProviderManager */
+        /** @var $manager \Concrete\Core\Area\Layout\Preset\Provider\Manager */
         $manager = Core::make('manager/area_layout_preset_provider');
 
 
@@ -139,7 +188,7 @@ class AreaLayoutPresetTest extends ConcreteDatabaseTestCase
         $req = Request::getInstance();
         $req->setCurrentPage($c);
 
-        $presets = $manager->getPresets($c);
+        $presets = $manager->getPresets();
         $this->assertEquals(1, count($presets));
         $c = Page::getCurrentPage();
         $this->assertEquals('Custom Preset', $presets[0]->getName());
@@ -151,17 +200,98 @@ class AreaLayoutPresetTest extends ConcreteDatabaseTestCase
         $this->assertEquals('<div class="col-sm-6"></div>', (string) $columns[2]->getColumnHtmlObject());
     }
 
+    public function testSavePreset()
+    {
+        $layout = \Concrete\Core\Area\Layout\CustomLayout::add(20, false);
+        $layout->addLayoutColumn();
+        $layout->addLayoutColumn();
+        $layout->addLayoutColumn();
+        $preset1 = \Concrete\Core\Area\Layout\Preset\UserPreset::add($layout, 'Custom Preset');
+
+        $layout = \Concrete\Core\Area\Layout\CustomLayout::add(10, false);
+        $layout->addLayoutColumn();
+        $layout->addLayoutColumn();
+        $layoutID = $layout->getAreaLayoutID();
+        $preset2 = \Concrete\Core\Area\Layout\Preset\UserPreset::add($layout, 'Custom Preset 2');
+
+        $layout = \Concrete\Core\Area\Layout\PresetLayout::add($preset2->getPresetObject());
+        $this->assertInstanceOf('\Concrete\Core\Area\Layout\PresetLayout', $layout);
+        $this->assertEquals($layoutID, $layout->getAreaLayoutPresetHandle());
+        $this->assertEquals(2, $layout->getAreaLayoutNumColumns());
+    }
+
+    public function testThemePresets()
+    {
+        $manager = Core::make('manager/area_layout_preset_provider');
+        $provider = new \Concrete\Core\Area\Layout\Preset\Provider\ThemeProvider(new TestThemeClass());
+        $manager->register($provider);
+        $c = new Page();
+        $presets = $manager->getPresets();
+        $this->assertEquals(3, count($presets));
+        $best = $presets[1];
+        $this->assertEquals('Exciting', $best->getName());
+        $columns = $best->getColumns();
+        $this->assertEquals(6, count($columns));
+        $this->assertEquals('theme_test_theme_exciting', $best->getIdentifier());
+        $this->assertEquals('<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"></div>', (string) $columns[0]->getColumnHtmlObject());
+        $this->assertEquals('<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"></div>', (string) $columns[1]->getColumnHtmlObject());
+        $this->assertEquals('<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"></div>', (string) $columns[2]->getColumnHtmlObject());
+        $this->assertEquals('<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"></div>', (string) $columns[3]->getColumnHtmlObject());
+        $this->assertEquals('<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"></div>', (string) $columns[4]->getColumnHtmlObject());
+        $this->assertEquals('<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 visible-lg"></div>', (string) $columns[5]->getColumnHtmlObject());
+
+        $manager->unregister($provider);
+    }
+
+    public function testElementalThemePresetsPageWithNoTheme()
+    {
+        $elemental = \Concrete\Core\Page\Theme\Theme::add('elemental');
+        $manager = Core::make('manager/area_layout_preset_provider');
+        $c = new Page();
+        $presets = $manager->getPresets();
+        $this->assertEquals(0, count($presets));
+    }
+
+    public function testElementalThemePresetsPageWithTheme()
+    {
+        $elemental = \Concrete\Core\Page\Theme\Theme::add('elemental');
+
+        Page::addHomePage();
+        Core::make('cache/request')->disable();
+        $c = Page::getByID(1);
+        $c->setTheme($elemental);
+
+        $c = Page::getByID(1);
+
+        $req = Request::getInstance();
+        $req->setCurrentPage($c);
+
+        $manager = Core::make('manager/area_layout_preset_provider');
+        $manager->register(new \Concrete\Core\Area\Layout\Preset\Provider\ActiveThemeProvider());
+        $presets = $manager->getPresets();
+        $this->assertEquals(2, count($presets));
+        $preset = $presets[0];
+        $this->assertEquals('Left Sidebar', $preset->getName());
+        $columns = $preset->getColumns();
+        $this->assertEquals(2, count($columns));
+        $this->assertEquals('theme_elemental_left_sidebar', $preset->getIdentifier());
+        $this->assertEquals('<div class="col-sm-4"></div>', (string) $columns[0]->getColumnHtmlObject());
+        $this->assertEquals('<div class="col-sm-8"></div>', (string) $columns[1]->getColumnHtmlObject());
+    }
+
+
+
     /**
      * @expectedException \Concrete\Core\Area\Layout\Preset\InvalidPresetException
      */
     public function testBrokenRetrievePresets()
     {
-        /** @var $manager \Concrete\Core\Area\Layout\Preset\ProviderManager */
+        /** @var $manager \Concrete\Core\Area\Layout\Preset\Provider\Manager */
         $manager = Core::make('manager/area_layout_preset_provider');
         $broken = new BrokenTestAreaLayoutPresetProvider();
         $manager->register($broken);
         $c = new Page();
-        $presets = $manager->getPresets($c);
+        $presets = $manager->getPresets();
         $this->assertEquals(3, count($presets));
     }
 

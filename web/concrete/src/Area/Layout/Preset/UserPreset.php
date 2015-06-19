@@ -154,4 +154,10 @@ class UserPreset extends Object
         $this->arLayoutPresetName = $arLayoutPresetName;
     }
 
+    public function getPresetObject()
+    {
+        $p = new Preset($this->arLayoutID, $this->getAreaLayoutPresetName(), $this->getAreaLayoutObject()->getAreaLayoutColumns());
+        return $p;
+    }
+
 }

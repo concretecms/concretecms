@@ -105,7 +105,7 @@ return array(
         'core_manager_grid_framework' => '\Concrete\Core\Page\Theme\GridFramework\ManagerServiceProvider',
         'core_manager_pagination_view' => '\Concrete\Core\Search\Pagination\View\ManagerServiceProvider',
         'core_manager_page_type_validator' => '\Concrete\Core\Page\Type\Validator\ManagerServiceProvider',
-        'core_manager_layout_preset_provider' => '\Concrete\Core\Area\Layout\Preset\ProviderManagerServiceProvider',
+        'core_manager_layout_preset_provider' => '\Concrete\Core\Area\Layout\Preset\Provider\ManagerServiceProvider',
         'core_database'     => '\Concrete\Core\Database\DatabaseServiceProvider',
         'core_form'         => '\Concrete\Core\Form\FormServiceProvider',
         'core_session'      => '\Concrete\Core\Session\SessionServiceProvider',
