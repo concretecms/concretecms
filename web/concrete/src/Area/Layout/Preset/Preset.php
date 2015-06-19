@@ -7,10 +7,12 @@ class Preset implements PresetInterface
 {
 
     protected $name;
+    protected $identifier;
 
-    public function __construct($name, $columns = array())
+    public function __construct($identifier, $name, $columns = array())
     {
         $this->name = $name;
+        $this->identifier = $identifier;
         foreach($columns as $column) {
             $this->addColumn($column);
         }
@@ -40,6 +42,22 @@ class Preset implements PresetInterface
     public function setName($name)
     {
         $this->name = $name;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->identifier;
+    }
+
+    /**
+     * @param mixed $identifier
+     */
+    public function setIdentifier($identifier)
+    {
+        $this->identifier = $identifier;
     }
 
 
