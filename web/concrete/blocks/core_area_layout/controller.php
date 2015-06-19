@@ -226,22 +226,21 @@ class Controller extends BlockController
             $c = Page::getCurrentPage();
             $this->set('c', $c);
 
+            $gf = false;
             if ($this->arLayout->isAreaLayoutUsingThemeGridFramework()) {
                 $pt = $c->getCollectionThemeObject();
                 $gf = $pt->getThemeGridFrameworkObject();
             }
-
-            if (isset($gf) && (is_object($gf))) {
-                $this->set('gf', $gf);
-                $this->render('view_grid');
-            } else {
+            if (!is_object($gf)) {
                 $asset = new CssAsset();
-                $asset->setAssetURL(URL::to('/ccm/system/css/layout', $this->bID));
+                $asset->setAssetURL(URL::to('/ccm/system/css/layout', $this->arLayout->getAreaLayoutID()));
                 $asset->setAssetSupportsMinification(false);
                 $asset->setAssetSupportsCombination(false);
                 $this->requireAsset($asset);
-                $this->render('view');
             }
+
+            $formatter = $this->arLayout->getFormatter();
+            $this->set('formatter', $formatter);
         } else {
             $this->set('columns', array());
         }

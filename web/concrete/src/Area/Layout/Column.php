@@ -146,24 +146,38 @@ abstract class Column extends Object implements ColumnInterface
     }
 
     /**
+     * @return string
+     */
+    public function getContents()
+    {
+        ob_start();
+        $this->display();
+        $contents = ob_get_contents();
+        ob_end_clean();
+        return $contents;
+    }
+
+    /**
      * @param bool $disableControls
      */
     public function display($disableControls = false)
     {
         $layout = $this->getAreaLayoutObject();
         $a = $layout->getAreaObject();
-        $as = new SubArea($this->getAreaLayoutColumnDisplayID(), $a->getAreaHandle(), $a->getAreaID());
-        $as->setAreaDisplayName(t('Column %s', $this->getAreaLayoutColumnIndex() + 1));
-        if ($disableControls) {
-            $as->disableControls();
+        if (is_object($a)) {
+            $as = new SubArea($this->getAreaLayoutColumnDisplayID(), $a->getAreaHandle(), $a->getAreaID());
+            $as->setAreaDisplayName(t('Column %s', $this->getAreaLayoutColumnIndex() + 1));
+            if ($disableControls) {
+                $as->disableControls();
+            }
+            $c = $a->getAreaCollectionObject();
+            $as->load($c);
+            if (!$this->getAreaID()) {
+                $this->setAreaID($as->getAreaID());
+            }
+            $as->setSubAreaBlockObject($this->arLayout->getBlockObject());
+            $as->display($c);
         }
-        $c = $a->getAreaCollectionObject();
-        $as->load($c);
-        if (!$this->getAreaID()) {
-            $this->setAreaID($as->getAreaID());
-        }
-        $as->setSubAreaBlockObject($this->arLayout->getBlockObject());
-        $as->display($c);
     }
 
     /**

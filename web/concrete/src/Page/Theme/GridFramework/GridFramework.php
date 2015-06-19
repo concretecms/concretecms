@@ -25,7 +25,7 @@ abstract class GridFramework
 
     public function hasPageThemeGridFrameworkOffsetClasses()
     {
-        $classes = $this->getPageThemeGridFrameworkColumnClasses();
+        $classes = $this->getPageThemeGridFrameworkColumnOffsetClasses();
         return count($classes) > 0;
     }
 
