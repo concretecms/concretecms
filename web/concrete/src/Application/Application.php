@@ -8,7 +8,6 @@ use Concrete\Core\Foundation\ClassLoader;
 use Concrete\Core\Foundation\EnvironmentDetector;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Logging\Query\Logger;
-use Concrete\Core\Routing\DispatcherRouteCallback;
 use Concrete\Core\Routing\RedirectResponse;
 use Concrete\Core\Updater\Update;
 use Concrete\Core\Url\Url;
@@ -367,7 +366,7 @@ class Application extends Container
                 Route::setRequest($request);
                 $response = Route::execute($route, $matched);
             } catch(ResourceNotFoundException $e) {
-                $callback = new DispatcherRouteCallback('dispatcher');
+				$callback = Core::make('\Concrete\Core\Routing\DispatcherRouteCallback', array('dispatcher'));
                 $response = $callback->execute($request);
             }
         }
