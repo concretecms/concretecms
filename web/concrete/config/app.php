@@ -281,7 +281,7 @@ return array(
         /**
          * Misc
          */
-        "/ccm/system/css/layout/{bID}"                                                  => array('\Concrete\Controller\Frontend\Stylesheet::layout'),
+        "/ccm/system/css/layout/{arLayoutID}"                                                  => array('\Concrete\Controller\Frontend\Stylesheet::layout'),
         "/ccm/system/css/page/{cID}/{stylesheet}/{cvID}"                                => array('\Concrete\Controller\Frontend\Stylesheet::page_version'),
         "/ccm/system/css/page/{cID}/{stylesheet}"                                       => array('\Concrete\Controller\Frontend\Stylesheet::page'),
         "/ccm/system/backend/editor_data/"                                              => array('\Concrete\Controller\Backend\EditorData::view'),

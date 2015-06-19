@@ -24,8 +24,8 @@ class ThemeGridFormatter implements FormatterInterface
         if (is_object($gf)) {
             $dom = new HtmlDomParser();
             $r = $dom->str_get_html(
-                $gf->getPageThemeGridFrameworkContainerStartHTML() .
-                $gf->getPageThemeGridFrameworkContainerEndHTML()
+                $gf->getPageThemeGridFrameworkRowStartHTML() .
+                $gf->getPageThemeGridFrameworkRowEndHTML()
             );
 
             $nodes = $r->childNodes();

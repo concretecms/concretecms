@@ -54,6 +54,11 @@ class CustomColumn extends Column
     {
         $element = new Element('div');
         $element->addClass('ccm-layout-column');
+        $inner = new Element('div');
+        $inner->addClass('ccm-layout-column-inner');
+        $inner->setValue($this->getContents());
+        $element->appendChild($inner);
+
         return $element;
     }
 

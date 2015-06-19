@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Area\Layout;
 
+use Concrete\Core\Html\Object\Collection;
 use HtmlObject\Element;
 use Loader;
 
@@ -122,7 +123,18 @@ class ThemeGridColumn extends Column
         if ($gf->hasPageThemeGridFrameworkOffsetClasses() && $this->getAreaLayoutColumnOffset()) {
             $element->addClass($this->getAreaLayoutColumnOffsetClass());
         }
-        return $element;
+        $element->setValue($this->getContents());
+        if ($this->getAreaLayoutColumnOffset() > 0 && (!$gf->hasPageThemeGridFrameworkOffsetClasses())) {
+            $collection = new Collection();
+            $offset = new Element('div');
+            $offset->addClass($this->getAreaLayoutColumnOffsetClass())
+                ->addClass('ccm-theme-grid-offset-column');
+            $collection[0] = $offset;
+            $collection[1] = $element;
+            return $collection;
+        } else {
+            return $element;
+        }
     }
 
     /**

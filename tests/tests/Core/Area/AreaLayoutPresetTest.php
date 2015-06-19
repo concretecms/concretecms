@@ -158,7 +158,7 @@ class AreaLayoutPresetTest extends ConcreteDatabaseTestCase
         $this->assertInstanceOf('\Concrete\Core\Area\Layout\Preset\Preset', $presets[1]);
 
         $columns = $presets[1]->getColumns();
-        $this->assertEquals('<div class="ccm-layout-column"></div>', (string) $columns[0]->getColumnHtmlObject());
+        $this->assertEquals('<div class="ccm-layout-column"><div class="ccm-layout-column-inner"></div></div>', (string) $columns[0]->getColumnHtmlObject());
 
 
     }
