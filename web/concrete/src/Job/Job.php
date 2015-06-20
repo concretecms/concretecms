@@ -175,7 +175,7 @@ abstract class Job extends Object
         $je = new Event($this);
         Events::dispatch('on_job_execute', $je);
 
-        $obj = new stdClass();
+        $obj = new JobResult();
         $obj->error = $resultCode;
         $obj->result = $resultMsg;
         $obj->jDateLastRun = Core::make('helper/date')->formatDateTime('now', true, true);
