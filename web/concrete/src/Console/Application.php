@@ -15,9 +15,9 @@ class Application extends \Symfony\Component\Console\Application
         $this->add(new Command\ResetCommand());
         $this->add(new Command\InstallCommand());
         $this->add(new Command\GenerateIDESymbolsCommand());
-        $this->add(new Command\JobCommand());
         $cms = Core::make('app');
         if ($cms->isInstalled()) {
+            $this->add(new Command\JobCommand());
             $cn = Database::get();
             /* @var $cn \Concrete\Core\Database\Connection\Connection */
             $helperSet = ConsoleRunner::createHelperSet($cn->getEntityManager());
