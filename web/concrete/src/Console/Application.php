@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Console;
 
+use Config;
 use Core;
 use Database;
 use Doctrine\ORM\Tools\Console\ConsoleRunner;
@@ -17,6 +18,7 @@ class Application extends \Symfony\Component\Console\Application
         $this->add(new Command\GenerateIDESymbolsCommand());
         $cms = Core::make('app');
         if ($cms->isInstalled()) {
+            $cms->setupPackages();
             $this->add(new Command\JobCommand());
             $cn = Database::get();
             /* @var $cn \Concrete\Core\Database\Connection\Connection */
