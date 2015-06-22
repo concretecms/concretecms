@@ -18,7 +18,7 @@ class JobCommand extends Command
         $this
         ->setName('c5:job')
         ->setDescription(t('Run a concrete5 job'))
-        ->addOption('set', null, InputOption::VALUE_NONE, t('Find jobs by set instead of name'))
+        ->addOption('set', null, InputOption::VALUE_NONE, t('Find jobs by set instead of job handle'))
         ->addOption('list', null, InputOption::VALUE_NONE, t('List available jobs'))
         ->addArgument(
             'jobs',
