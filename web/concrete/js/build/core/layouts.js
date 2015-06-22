@@ -116,8 +116,22 @@
             default: // a preset
                 var arLayoutPresetID = typeval;
                 jQuery.fn.dialog.showLoader();
-                var url = CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/area/layout/presets/get/' + arLayoutPresetID;
+                var url = CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/area/layout/presets/get/' + CCM_CID + '/' + arLayoutPresetID;
                 $.getJSON(url, function (r) {
+                    obj.$formviewthemegrid.hide();
+                    obj.$formviewcustom.hide();
+                    obj.$element.html(r.html);
+
+                    obj.$element.append($('<input />', {
+                        'name': 'arLayoutPresetID',
+                        'type': 'hidden',
+                        'value': arLayoutPresetID
+                    }));
+
+                    // set the display
+
+
+                    /*
                     obj.$formviewthemegrid.hide();
                     obj.$formviewcustom.hide();
 
@@ -148,6 +162,7 @@
                             obj._showCustomSlider();
                         }
                     }
+                    */
                     jQuery.fn.dialog.hideLoader();
                 });
                 break;

@@ -1,11 +1,12 @@
 <?
 namespace Concrete\Block\CoreAreaLayout;
 
+use Concrete\Core\Area\Layout\PresetLayout;
 use Concrete\Core\Area\SubArea;
 use Loader;
 use \Concrete\Core\Block\BlockController;
 use \Concrete\Core\Area\Layout\Layout as AreaLayout;
-use \Concrete\Core\Area\Layout\Preset as AreaLayoutPreset;
+use \Concrete\Core\Area\Layout\Preset\Preset as AreaLayoutPreset;
 use \Concrete\Core\Area\Layout\CustomLayout as CustomAreaLayout;
 use \Concrete\Core\Area\Layout\ThemeGridLayout as ThemeGridAreaLayout;
 use \Concrete\Core\Asset\CssAsset;
@@ -207,9 +208,8 @@ class Controller extends BlockController
                 }
                 break;
             default: // a preset
-                $arLayoutPreset = AreaLayoutPreset::getByID($post['gridType']);
-                $arLayout = $arLayoutPreset->getAreaLayoutObject();
-                $arLayout = $arLayout->duplicate();
+                $arLayoutPreset = AreaLayoutPreset::getByID($post['arLayoutPresetID']);
+                $arLayout = PresetLayout::add($arLayoutPreset);
                 break;
         }
         return $arLayout;

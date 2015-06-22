@@ -155,7 +155,7 @@ return array(
         "/ccm/system/dialogs/area/design/submit"                                        => array('\Concrete\Controller\Dialog\Area\Design::submit'),
         "/ccm/system/dialogs/area/layout/presets/{arLayoutID}"                          => array('\Concrete\Controller\Dialog\Area\Layout\Presets::view'),
         "/ccm/system/dialogs/area/layout/presets/{arLayoutID}/submit"                   => array('\Concrete\Controller\Dialog\Area\Layout\Presets::submit'),
-        "/ccm/system/dialogs/area/layout/presets/get/{arLayoutPresetID}"                => array('\Concrete\Controller\Dialog\Area\Layout\Presets::getPresetData'),
+        "/ccm/system/dialogs/area/layout/presets/get/{cID}/{arLayoutPresetID}"                => array('\Concrete\Controller\Dialog\Area\Layout\Presets::getPresetData'),
         "/ccm/system/dialogs/area/layout/presets/manage/"                               => array('\Concrete\Controller\Dialog\Area\Layout\Presets\Manage::view'),
         "/ccm/system/dialogs/area/layout/presets/manage/delete"                         => array('\Concrete\Controller\Dialog\Area\Layout\Presets\Manage::delete'),
 

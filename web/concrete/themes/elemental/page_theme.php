@@ -110,6 +110,7 @@ class PageTheme extends \Concrete\Core\Page\Theme\Theme implements ThemeProvider
             array(
                 'handle' => 'left_sidebar',
                 'name' => 'Left Sidebar',
+                'container' => '<div class="row"></div>',
                 'columns' => array(
                     '<div class="col-sm-4"></div>',
                     '<div class="col-sm-8"></div>'
@@ -118,9 +119,20 @@ class PageTheme extends \Concrete\Core\Page\Theme\Theme implements ThemeProvider
             array(
                 'handle' => 'right_sidebar',
                 'name' => 'Right Sidebar',
+                'container' => '<div class="row"></div>',
                 'columns' => array(
                     '<div class="col-sm-8"></div>',
                     '<div class="col-sm-4"></div>'
+                ),
+            ),
+            array(
+                'handle' => 'three_column_centered',
+                'name' => 'Three Column Centered',
+                'container' => '<div class="row"></div>',
+                'columns' => array(
+                    '<div class="col-sm-3"></div>',
+                    '<div class="col-sm-4 col-sm-offset-1"></div>',
+                    '<div class="col-sm-3 col-sm-offset-1"></div>',
                 ),
             )
         );

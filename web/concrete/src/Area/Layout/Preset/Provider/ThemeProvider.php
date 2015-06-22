@@ -2,6 +2,7 @@
 namespace Concrete\Core\Area\Layout\Preset\Provider;
 
 use Concrete\Core\Area\Layout\Preset\Column;
+use Concrete\Core\Area\Layout\Preset\Formatter\ThemeFormatter;
 use Concrete\Core\Area\Layout\Preset\Preset;
 use Concrete\Core\Area\Layout\Preset\Provider\ProviderInterface;
 use Concrete\Core\Area\Layout\Preset\Provider\ThemeProviderInterface;
@@ -25,9 +26,11 @@ class ThemeProvider implements ProviderInterface
                 $columns[] = Column::fromHtml($html);
             }
 
+            $formatter = new ThemeFormatter($arrayPreset);
             $this->presets[] = new Preset(
                 sprintf('theme_%s_%s', $this->themeHandle, $arrayPreset['handle']),
                 $arrayPreset['name'],
+                $formatter,
                 $columns
             );
         }
