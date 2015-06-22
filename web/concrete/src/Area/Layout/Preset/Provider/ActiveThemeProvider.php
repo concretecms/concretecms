@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Area\Layout\Preset\Provider;
 
+use Page;
+
 class ActiveThemeProvider implements ProviderInterface
 {
 
@@ -8,7 +10,7 @@ class ActiveThemeProvider implements ProviderInterface
 
     public function __construct()
     {
-        $c = \Page::getCurrentPage();
+        $c = Page::getCurrentPage();
         if (is_object($c)) {
             $theme = $c->getCollectionThemeObject();
             if (is_object($theme)) {

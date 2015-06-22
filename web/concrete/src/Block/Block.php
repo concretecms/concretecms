@@ -646,7 +646,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         $bt = $this->getBlockTypeObject();
         return $bt->ignorePageThemeGridFrameworkContainer();
     }
-    
+
 
     public function overrideBlockTypeContainerSettings()
     {

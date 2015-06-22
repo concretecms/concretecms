@@ -2,17 +2,20 @@
 namespace Concrete\Core\Area\Layout\Preset;
 
 use Concrete\Core\Area\Layout\ColumnInterface;
+use Concrete\Core\Area\Layout\Preset\Formatter\FormatterInterface;
 
 class Preset implements PresetInterface
 {
 
     protected $name;
     protected $identifier;
+    protected $formatter;
 
-    public function __construct($identifier, $name, $columns = array())
+    public function __construct($identifier, $name, FormatterInterface $formatter, $columns = array())
     {
         $this->name = $name;
         $this->identifier = $identifier;
+        $this->formatter = $formatter;
         foreach($columns as $column) {
             $this->addColumn($column);
         }
@@ -60,5 +63,18 @@ class Preset implements PresetInterface
         $this->identifier = $identifier;
     }
 
+    public static function getByID($identifier)
+    {
+        $manager = \Core::make('manager/area_layout_preset_provider');
+        return $manager->getPresetByIdentifier($identifier);
+    }
+
+    /**
+     * @return \Concrete\Core\Area\Layout\Preset\Formatter\FormatterInterface
+     */
+    public function getFormatter()
+    {
+        return $this->formatter;
+    }
 
 }

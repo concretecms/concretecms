@@ -2,6 +2,7 @@
 namespace Concrete\Core\Area\Layout\Preset;
 
 use Concrete\Core\Area\Layout\Layout;
+use Concrete\Core\Area\Layout\Preset\Formatter\UserFormatter;
 use Loader;
 use \Concrete\Core\Foundation\Object;
 
@@ -156,7 +157,9 @@ class UserPreset extends Object
 
     public function getPresetObject()
     {
-        $p = new Preset($this->arLayoutID, $this->getAreaLayoutPresetName(), $this->getAreaLayoutObject()->getAreaLayoutColumns());
+        $formatter = new UserFormatter();
+        $p = new Preset($this->arLayoutID, $this->getAreaLayoutPresetName(),
+            $formatter, $this->getAreaLayoutObject()->getAreaLayoutColumns());
         return $p;
     }
 

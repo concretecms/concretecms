@@ -17,12 +17,22 @@ class HtmlColumn implements \Concrete\Core\Area\Layout\ColumnInterface
 
 }
 
+class TestAreaLayoutPresetFormatter implements \Concrete\Core\Area\Layout\Preset\Formatter\FormatterInterface
+{
+    public function getPresetContainerHtmlObject()
+    {
+        $column = new \HtmlObject\Element('div');
+        $column->addClass('foo');
+        return $column;
+    }
+}
 class TestAreaLayoutPresetProvider implements \Concrete\Core\Area\Layout\Preset\Provider\ProviderInterface
 {
     public function getPresets()
     {
-
-        $preset = new \Concrete\Core\Area\Layout\Preset\Preset('preset-1', 'Preset 1', array(
+        $formatter = new TestAreaLayoutPresetFormatter();
+        $preset = new \Concrete\Core\Area\Layout\Preset\Preset('preset-1', 'Preset 1',
+            $formatter, array(
            new HtmlColumn('col-sm-4'),
             new HtmlColumn('col-sm-8')
         ));
@@ -66,6 +76,7 @@ class TestThemeClass implements \Concrete\Core\Area\Layout\Preset\Provider\Theme
             array(
                 'handle' => 'left_sidebar',
                 'name' => 'Left Sidebar',
+                'container' => '<div class="row"></div>',
                 'columns' => array(
                     '<div class="col-sm-4"></div>',
                     '<div class="col-sm-8"></div>'
@@ -74,6 +85,7 @@ class TestThemeClass implements \Concrete\Core\Area\Layout\Preset\Provider\Theme
             array(
                 'handle' => 'exciting',
                 'name' => 'Exciting',
+                'container' => '<div class="row"></div>',
                 'columns' => array(
                     '<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"></div>',
                     '<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"></div>',
@@ -86,6 +98,7 @@ class TestThemeClass implements \Concrete\Core\Area\Layout\Preset\Provider\Theme
             array(
                 'handle' => 'three_column',
                 'name' => 'Three Column',
+                'container' => '<div class="row"></div>',
                 'columns' => array(
                     '<div class="col-md-4"></div>',
                     '<div class="col-md-4"></div>',
@@ -230,6 +243,11 @@ class AreaLayoutPresetTest extends ConcreteDatabaseTestCase
         $this->assertEquals(3, count($presets));
         $best = $presets[1];
         $this->assertEquals('Exciting', $best->getName());
+
+        $formatter = $best->getFormatter();
+        $this->assertInstanceOf('\Concrete\Core\Area\Layout\Preset\Formatter\ThemeFormatter', $formatter);
+        $this->assertEquals('<div class="row"></div>', (string) $formatter->getPresetContainerHtmlObject());
+
         $columns = $best->getColumns();
         $this->assertEquals(6, count($columns));
         $this->assertEquals('theme_test_theme_exciting', $best->getIdentifier());
@@ -271,6 +289,11 @@ class AreaLayoutPresetTest extends ConcreteDatabaseTestCase
         $presets = $manager->getPresets();
         $this->assertEquals(2, count($presets));
         $preset = $presets[0];
+
+        $formatter = $preset->getFormatter();
+        $this->assertInstanceOf('\Concrete\Core\Area\Layout\Preset\Formatter\ThemeFormatter', $formatter);
+        $this->assertEquals('<div class="row"></div>', (string) $formatter->getPresetContainerHtmlObject());
+
         $this->assertEquals('Left Sidebar', $preset->getName());
         $columns = $preset->getColumns();
         $this->assertEquals(2, count($columns));
