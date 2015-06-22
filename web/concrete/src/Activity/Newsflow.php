@@ -12,7 +12,7 @@ use Concrete\Core\Activity\NewsflowSlotItem;
  *
  * A class used for retrieving the latest news and updates from Concrete5. This is a singleton class that should be
  * instantiated via Newsflow::getInstance(). This object is prevented from being created if the config file has the
- * ENABLE_APP_NEWS setting set to false.
+ * 'concrete.external.news' setting set to false.
  * @package Concrete\Core\Activity
  */
 class Newsflow

@@ -5,7 +5,7 @@ $form = Loader::helper('form'); ?>
         <div class="form-group">
             <div class="checkbox">
                 <label>
-                <?=$form->checkbox('STATISTICS_TRACK_PAGE_VIEWS', 1, STATISTICS_TRACK_PAGE_VIEWS); ?>
+                <?=$form->checkbox('STATISTICS_TRACK_PAGE_VIEWS', 1, $STATISTICS_TRACK_PAGE_VIEWS); ?>
                 <span><?=t('Track page view statistics.');?></span>
                 </label>
             </div>
