@@ -1,6 +1,10 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 
+if (isset($displayBlockContainerSettings)) {
+    $displayBlockContainerSettings = (bool) $displayBlockContainerSettings;
+}
+
 $backgroundColor = '';
 $image = false;
 $baseFontSize = '';
@@ -323,6 +327,21 @@ $form = Core::make('helper/form');
                 <hr/>
 
             <? } ?>
+
+
+            <? if ($displayBlockContainerSettings) { ?>
+                <div class="ccm-inline-select-container">
+                    <?=t('Block Container Class')?>
+                    <select id="enableBlockContainer" name="enableBlockContainer" class="form-control">
+                        <option value="-1" <? if ($enableBlockContainer == -1) { ?>selected<? } ?>><?=t('Default Setting')?></option>
+                        <option value="0"<? if ($enableBlockContainer == 0) { ?>selected<? } ?>><?=t('Disable Grid Container')?></option>
+                        <option value="1" <? if ($enableBlockContainer == 1) { ?>selected<? } ?>><?=t('Enable Grid Container')?></option>
+                    </select>
+                </div>
+                <hr/>
+
+            <? } ?>
+
             <div>
                 <button data-reset-action="<?=$resetAction?>" data-action="reset-design" type="button" class="btn-block btn btn-danger"><?=t("Clear Styles")?></button>
             </div>
