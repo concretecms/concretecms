@@ -1,9 +1,6 @@
 <?php
 namespace Concrete\Core\Permission\Response;
 
-use User;
-use Group;
-use PermissionKey;
 use TaskPermission;
 
 class GroupTreeNodeResponse extends TreeNodeResponse
