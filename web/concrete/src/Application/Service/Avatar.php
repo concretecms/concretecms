@@ -31,7 +31,7 @@ class Avatar
             } elseif (Config::get('concrete.user.gravatar.enabled')) {
                 return $this->get_gravatar(
                     $uo->getUserEmail(),
-                    Config::get('concrete.icons.user_avatar.width'),
+                    Config::get('concrete.icons.user_avatar.width') * $aspectRatio,
                     Config::get('concrete.user.gravatar.image_set'),
                     Config::get('concrete.user.gravatar.max_level'),
                     true,
