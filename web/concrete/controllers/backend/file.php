@@ -11,6 +11,7 @@ use Exception;
 use Permissions as ConcretePermissions;
 use FilePermissions;
 use FileVersion;
+use Core;
 
 class File extends Controller {
 
@@ -109,7 +110,7 @@ class File extends Controller {
         }
 
         if (count($files) == 0) {
-            throw new Exception(t("Access Denied."));
+            Core::make('helper/ajax')->sendError(t('File not found.'));
         }
 
         return $files;
