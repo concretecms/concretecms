@@ -2117,6 +2117,14 @@
       <default value="0"/>
       <notnull/>
     </field>
+    <field name="cbOverrideBlockTypeContainerSettings" type="boolean">
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="cbEnableBlockContainer" type="boolean">
+      <default value="0"/>
+      <notnull/>
+    </field>
     <index name="bID">
       <col>bID</col>
       <col>cID</col>

@@ -26,7 +26,7 @@ if ($showMenu) { ?>
 if (
     $pt->supportsGridFramework()
     && $a->isGridContainerEnabled()
-    && !$bt->ignorePageThemeGridFrameworkContainer()
+    && !$b->ignorePageThemeGridFrameworkContainer()
 ) {
     $gf = $pt->getThemeGridFrameworkObject();
     print $gf->getPageThemeGridFrameworkContainerStartHTML();
@@ -98,7 +98,7 @@ if ($showMenu) {
         data-cID="<?=$c->getCollectionID()?>"
         data-area-id="<?=$a->getAreaID()?>"
         data-block-id="<?=$b->getBlockID()?>"
-        data-block-type-wraps="<?= intval(!$bt->ignorePageThemeGridFrameworkContainer(), 10) ?>"
+        data-block-type-wraps="<?= intval(!$b->ignorePageThemeGridFrameworkContainer(), 10) ?>"
         class="<?=$class?>"
         data-block-type-handle="<?=$btHandle?>"
         data-launch-block-menu="block-menu-b<?=$b->getBlockID()?>-<?=$a->getAreaID()?>"
