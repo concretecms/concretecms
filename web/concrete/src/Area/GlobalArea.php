@@ -42,11 +42,13 @@ class GlobalArea extends Area
     }
 
     /**
+     * @param Page $c
+     *
      * @return int
      */
-    public function getTotalBlocksInArea()
+    public function getTotalBlocksInArea($c = false)
     {
-        $stack = $this->getGlobalAreaStackObject();
+        $stack = $this->getGlobalAreaStackObject($c);
         $ax = Area::get($stack, STACKS_AREA_NAME);
         if (is_object($ax)) {
             return $ax->getTotalBlocksInArea();
@@ -55,11 +57,15 @@ class GlobalArea extends Area
     }
 
     /**
+     * @param Page $c
+     *
      * @return Page
      */
-    protected function getGlobalAreaStackObject()
+    protected function getGlobalAreaStackObject($c = false)
     {
-        $c = Page::getCurrentPage();
+        if (!$c) {
+            $c = Page::getCurrentPage();
+        }
         $cp = new Permissions($c);
         if ($cp->canViewPageVersions()) {
             $stack = Stack::getByName($this->arHandle);
@@ -112,10 +118,9 @@ class GlobalArea extends Area
         return $blocks;
     }
 
-    public function display()
+    public function display($c = false, $fake = null)
     {
-        $c = Page::getCurrentPage();
-        parent::display($c);
+        parent::display($c, null);
     }
 
     /**
