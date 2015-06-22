@@ -50,10 +50,15 @@ class CustomColumn extends Column
         $node->addAttribute('width', $this->arLayoutColumnWidth);
     }
 
+    public function getAreaLayoutColumnClass()
+    {
+        return 'ccm-layout-column';
+    }
+
     public function getColumnHtmlObject()
     {
         $element = new Element('div');
-        $element->addClass('ccm-layout-column');
+        $element->addClass($this->getAreaLayoutColumnClass());
         $inner = new Element('div');
         $inner->addClass('ccm-layout-column-inner');
         $inner->setValue($this->getContents());

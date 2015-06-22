@@ -37,6 +37,7 @@ abstract class Column extends Object implements ColumnInterface
 
     abstract static public function getByID($arLayoutColumnID);
     abstract public function exportDetails($node);
+    abstract public function getAreaLayoutColumnClass();
 
     /**
      * @param int $arLayoutColumnID
