@@ -1,10 +1,9 @@
 <?php
 namespace Concrete\Core\Permission\Response;
-use Page;
 use User;
 use Group;
 use PermissionKey;
-use Permissions;
+use TaskPermission;
 class GroupTreeNodeResponse extends TreeNodeResponse {
 
 	public function canEditTreeNodePermissions() {
@@ -12,9 +11,8 @@ class GroupTreeNodeResponse extends TreeNodeResponse {
 	}
 
 	public function canViewTreeNode() {
-		$c = Page::getByPath('/dashboard/users/groups');
-		$cp = new Permissions($c);
-		return $cp->canViewPage();
+		$tp = new TaskPermission();
+		return $tp->canAccessGroupSearch();
 	}
 
 	public function canDuplicateTreeNode() {
