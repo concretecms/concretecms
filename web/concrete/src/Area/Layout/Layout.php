@@ -41,20 +41,28 @@ abstract class Layout extends Object
     public static function getByID($arLayoutID)
     {
         $db = Loader::db();
-        $row = $db->GetRow('select arLayoutID, arLayoutUsesThemeGridFramework from AreaLayouts where arLayoutID = ?', array($arLayoutID));
+        $row = $db->GetRow('select arLayoutID, arLayoutIsPreset, arLayoutUsesThemeGridFramework from AreaLayouts where arLayoutID = ?', array($arLayoutID));
         if (is_array($row) && $row['arLayoutID']) {
             if ($row['arLayoutUsesThemeGridFramework']) {
                 $al = new ThemeGridLayout();
+            } else if ($row['arLayoutIsPreset']) {
+                $al = new PresetLayout();
             } else {
                 $al = new CustomLayout();
             }
             $al->setPropertiesFromArray($row);
-            $al->arLayoutNumColumns = $db->GetOne('select count(arLayoutColumnID) as totalColumns from AreaLayoutColumns where arLayoutID = ?', array($arLayoutID));
             $al->loadDetails();
+            $al->loadColumnNumber();
             return $al;
         }
     }
 
+    protected function loadColumnNumber()
+    {
+        $db = Loader::db();
+        $this->arLayoutNumColumns = $db->GetOne('select count(arLayoutColumnID) as totalColumns from AreaLayoutColumns where arLayoutID = ?', array($arLayoutID));
+    }
+    
     /**
      * @param Area $a
      */
@@ -133,7 +141,7 @@ abstract class Layout extends Object
     /**
      * @return int
      */
-    protected function addLayoutColumn()
+    public function addLayoutColumn()
     {
         $db = Loader::db();
         $arLayoutColumnDisplayID = $db->GetOne('select max(arLayoutColumnDisplayID) as arLayoutColumnDisplayID from AreaLayoutColumns');
@@ -149,7 +157,6 @@ abstract class Layout extends Object
     }
 
     abstract public function duplicate();
-    abstract static public function add();
     abstract public function exportDetails($node);
 
     /**
@@ -181,4 +188,14 @@ abstract class Layout extends Object
         $db->Execute('delete from AreaLayoutPresets where arLayoutID = ?', array($this->arLayoutID));
     }
 
+    /**
+     * @return \Concrete\Core\Area\Layout\Formatter\FormatterInterface
+     */
+    public function getFormatter()
+    {
+        $class = '\\Concrete\\Core\\Area\\Layout\\' .
+            'Formatter\\' . \Loader::helper('text')->camelcase($this->arLayoutType) . 'Formatter';
+        $o = new $class($this);
+        return $o;
+    }
 }

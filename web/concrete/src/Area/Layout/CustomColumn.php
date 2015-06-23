@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Area\Layout;
 
+use HtmlObject\Element;
 use Loader;
 
 class CustomColumn extends Column
@@ -49,12 +50,32 @@ class CustomColumn extends Column
         $node->addAttribute('width', $this->arLayoutColumnWidth);
     }
 
-    /**
-     * @return string
-     */
     public function getAreaLayoutColumnClass()
     {
         return 'ccm-layout-column';
+    }
+
+    protected function getColumnElement($contents)
+    {
+        $element = new Element('div');
+        $element->addClass($this->getAreaLayoutColumnClass());
+        $inner = new Element('div');
+        $inner->addClass('ccm-layout-column-inner');
+        $inner->setValue($contents);
+        $element->appendChild($inner);
+        return $element;
+    }
+
+    public function getColumnHtmlObject()
+    {
+        $contents = $this->getContents();
+        return $this->getColumnElement($contents);
+    }
+
+    public function getColumnHtmlObjectEditMode()
+    {
+        $contents = $this->getContents(true);
+        return $this->getColumnElement($contents);
     }
 
     /**

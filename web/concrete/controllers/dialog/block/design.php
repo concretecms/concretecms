@@ -51,6 +51,16 @@ class Design extends BackendInterfaceBlockController {
                 $b->resetCustomStyle();
             }
 
+            if (isset($r['enableBlockContainer'])) {
+                if ($r['enableBlockContainer'] === '-1') {
+                    $b->resetBlockContainerSettings();
+                }
+                if ($r['enableBlockContainer'] === '0' ||
+                    $r['enableBlockContainer'] === '1') {
+                    $b->setCustomContainerSettings($r['enableBlockContainer']);
+                }
+            }
+
             if ($this->permissions->canEditBlockCustomTemplate()) {
                 $data = array();
                 $data['bFilename'] = $r['bFilename'];

@@ -6,8 +6,8 @@
 		$spacing = 0;
 		$iscustom = false;
 	}
-
-	$presets = AreaLayoutPreset::getList();
+	$c = Page::getCurrentPage();
+	$presets = Core::make('manager/area_layout_preset_provider')->getPresets();
 ?>
 
 <ul id="ccm-layouts-toolbar" class="ccm-inline-toolbar ccm-ui">
@@ -23,7 +23,7 @@
 			<? if (count($presets) > 0) { ?>
 			<optgroup label="<?=t('Presets')?>">
 			  	<? foreach($presets as $pr) { ?>
-				    <option value="<?=$pr->getAreaLayoutPresetID()?>"><?=$pr->getAreaLayoutPresetName()?></option>
+				    <option value="<?=$pr->getIdentifier()?>" <? if (is_object($selectedPreset) && $selectedPreset->getIdentifier() == $pr->getIdentifier()) { ?>selected<? } ?>><?=$pr->getName()?></option>
 				<? } ?>
 			</optgroup>
 			<? } ?>
