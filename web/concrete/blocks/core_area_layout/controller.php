@@ -1,11 +1,14 @@
 <?
 namespace Concrete\Block\CoreAreaLayout;
 
+use Concrete\Core\Area\Layout\CustomLayout;
+use Concrete\Core\Area\Layout\PresetLayout;
+use Concrete\Core\Area\Layout\ThemeGridLayout;
 use Concrete\Core\Area\SubArea;
 use Loader;
 use \Concrete\Core\Block\BlockController;
 use \Concrete\Core\Area\Layout\Layout as AreaLayout;
-use \Concrete\Core\Area\Layout\Preset as AreaLayoutPreset;
+use \Concrete\Core\Area\Layout\Preset\Preset as AreaLayoutPreset;
 use \Concrete\Core\Area\Layout\CustomLayout as CustomAreaLayout;
 use \Concrete\Core\Area\Layout\ThemeGridLayout as ThemeGridAreaLayout;
 use \Concrete\Core\Asset\CssAsset;
@@ -78,6 +81,9 @@ class Controller extends BlockController
         } else {
 
             $arLayout = AreaLayout::getByID($arLayoutID);
+            if ($arLayout instanceof PresetLayout) {
+                return;
+            }
             // save spacing
             if ($arLayout->isAreaLayoutUsingThemeGridFramework()) {
                 $columns = $arLayout->getAreaLayoutColumns();
@@ -207,9 +213,11 @@ class Controller extends BlockController
                 }
                 break;
             default: // a preset
-                $arLayoutPreset = AreaLayoutPreset::getByID($post['gridType']);
-                $arLayout = $arLayoutPreset->getAreaLayoutObject();
-                $arLayout = $arLayout->duplicate();
+                $arLayoutPreset = AreaLayoutPreset::getByID($post['arLayoutPresetID']);
+                $arLayout = PresetLayout::add($arLayoutPreset);
+                foreach($arLayoutPreset->getColumns() as $column) {
+                    $arLayout->addLayoutColumn();
+                }
                 break;
         }
         return $arLayout;
@@ -226,22 +234,21 @@ class Controller extends BlockController
             $c = Page::getCurrentPage();
             $this->set('c', $c);
 
+            $gf = false;
             if ($this->arLayout->isAreaLayoutUsingThemeGridFramework()) {
                 $pt = $c->getCollectionThemeObject();
                 $gf = $pt->getThemeGridFrameworkObject();
             }
-
-            if (isset($gf) && (is_object($gf))) {
-                $this->set('gf', $gf);
-                $this->render('view_grid');
-            } else {
+            if ($this->arLayout instanceof CustomLayout) {
                 $asset = new CssAsset();
-                $asset->setAssetURL(URL::to('/ccm/system/css/layout', $this->bID));
+                $asset->setAssetURL(URL::to('/ccm/system/css/layout', $this->arLayout->getAreaLayoutID()));
                 $asset->setAssetSupportsMinification(false);
                 $asset->setAssetSupportsCombination(false);
                 $this->requireAsset($asset);
-                $this->render('view');
             }
+
+            $formatter = $this->arLayout->getFormatter();
+            $this->set('formatter', $formatter);
         } else {
             $this->set('columns', array());
         }
@@ -257,18 +264,22 @@ class Controller extends BlockController
             $pt = $c->getCollectionThemeObject();
             $gf = $pt->getThemeGridFrameworkObject();
         }
-        if (isset($gf) && (is_object($gf))) {
+        if ($this->arLayout instanceof ThemeGridLayout) {
             $this->set('enableThemeGrid', true);
             $this->set('themeGridFramework', $gf);
             $this->set('themeGridMaxColumns', $this->arLayout->getAreaLayoutMaxColumns());
             $this->set('themeGridName', $gf->getPageThemeGridFrameworkName());
             $this->render("edit_grid");
-        } else {
+        } else if ($this->arLayout instanceof CustomLayout) {
             $this->set('enableThemeGrid', false);
             $this->set('spacing', $this->arLayout->getAreaLayoutSpacing());
             $this->set('iscustom', $this->arLayout->hasAreaLayoutCustomColumnWidths());
             $this->set('maxColumns', 12);
             $this->render('edit');
+        } else {
+            $preset = $this->arLayout->getPresetObject();
+            $this->set('selectedPreset', $preset);
+            $this->render('edit_preset');
         }
         $this->set('columnsNum', count($this->arLayout->getAreaLayoutColumns()));
 

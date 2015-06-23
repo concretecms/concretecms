@@ -105,6 +105,7 @@ return array(
         'core_manager_grid_framework' => '\Concrete\Core\Page\Theme\GridFramework\ManagerServiceProvider',
         'core_manager_pagination_view' => '\Concrete\Core\Search\Pagination\View\ManagerServiceProvider',
         'core_manager_page_type_validator' => '\Concrete\Core\Page\Type\Validator\ManagerServiceProvider',
+        'core_manager_layout_preset_provider' => '\Concrete\Core\Area\Layout\Preset\Provider\ManagerServiceProvider',
         'core_database'     => '\Concrete\Core\Database\DatabaseServiceProvider',
         'core_form'         => '\Concrete\Core\Form\FormServiceProvider',
         'core_session'      => '\Concrete\Core\Session\SessionServiceProvider',
@@ -154,7 +155,7 @@ return array(
         "/ccm/system/dialogs/area/design/submit"                                        => array('\Concrete\Controller\Dialog\Area\Design::submit'),
         "/ccm/system/dialogs/area/layout/presets/{arLayoutID}"                          => array('\Concrete\Controller\Dialog\Area\Layout\Presets::view'),
         "/ccm/system/dialogs/area/layout/presets/{arLayoutID}/submit"                   => array('\Concrete\Controller\Dialog\Area\Layout\Presets::submit'),
-        "/ccm/system/dialogs/area/layout/presets/get/{arLayoutPresetID}"                => array('\Concrete\Controller\Dialog\Area\Layout\Presets::getPresetData'),
+        "/ccm/system/dialogs/area/layout/presets/get/{cID}/{arLayoutPresetID}"                => array('\Concrete\Controller\Dialog\Area\Layout\Presets::getPresetData'),
         "/ccm/system/dialogs/area/layout/presets/manage/"                               => array('\Concrete\Controller\Dialog\Area\Layout\Presets\Manage::view'),
         "/ccm/system/dialogs/area/layout/presets/manage/delete"                         => array('\Concrete\Controller\Dialog\Area\Layout\Presets\Manage::delete'),
 
@@ -280,7 +281,7 @@ return array(
         /**
          * Misc
          */
-        "/ccm/system/css/layout/{bID}"                                                  => array('\Concrete\Controller\Frontend\Stylesheet::layout'),
+        "/ccm/system/css/layout/{arLayoutID}"                                                  => array('\Concrete\Controller\Frontend\Stylesheet::layout'),
         "/ccm/system/css/page/{cID}/{stylesheet}/{cvID}"                                => array('\Concrete\Controller\Frontend\Stylesheet::page_version'),
         "/ccm/system/css/page/{cID}/{stylesheet}"                                       => array('\Concrete\Controller\Frontend\Stylesheet::page'),
         "/ccm/system/backend/editor_data/"                                              => array('\Concrete\Controller\Backend\EditorData::view'),

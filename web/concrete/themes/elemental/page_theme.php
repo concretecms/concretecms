@@ -2,7 +2,9 @@
 
 namespace Concrete\Theme\Elemental;
 
-class PageTheme extends \Concrete\Core\Page\Theme\Theme
+use Concrete\Core\Area\Layout\Preset\Provider\ThemeProviderInterface;
+
+class PageTheme extends \Concrete\Core\Page\Theme\Theme implements ThemeProviderInterface
 {
     public function registerAssets()
     {
@@ -100,5 +102,30 @@ class PageTheme extends \Concrete\Core\Page\Theme\Theme
             array('title' => t('Success Button'), 'menuClass' => '', 'spanClass' => 'btn btn-success'),
             array('title' => t('Primary Button'), 'menuClass' => '', 'spanClass' => 'btn btn-primary'),
         );
+    }
+
+    public function getThemeAreaLayoutPresets()
+    {
+        $presets = array(
+            array(
+                'handle' => 'left_sidebar',
+                'name' => 'Left Sidebar',
+                'container' => '<div class="row"></div>',
+                'columns' => array(
+                    '<div class="col-sm-4"></div>',
+                    '<div class="col-sm-8"></div>'
+                ),
+            ),
+            array(
+                'handle' => 'right_sidebar',
+                'name' => 'Right Sidebar',
+                'container' => '<div class="row"></div>',
+                'columns' => array(
+                    '<div class="col-sm-8"></div>',
+                    '<div class="col-sm-4"></div>'
+                ),
+            )
+        );
+        return $presets;
     }
 }

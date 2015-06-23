@@ -2,12 +2,14 @@
 namespace Concrete\Controller\Dialog\Area\Layout;
 
 use \Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
+use Concrete\Core\Area\Layout\Preset\Column;
 use Concrete\Core\Page\EditResponse;
+use HtmlObject\Element;
 use PermissionKey;
 use Exception;
 use Loader;
-
-use \Concrete\Core\Area\Layout\Preset as AreaLayoutPreset;
+use Request;
+use \Concrete\Core\Area\Layout\Preset\Preset as AreaLayoutPreset;
 use \Concrete\Core\Area\Layout\Layout as AreaLayout;
 
 class Presets extends BackendInterfaceController
@@ -39,14 +41,24 @@ class Presets extends BackendInterfaceController
         $this->set('presets', $presets);
     }
 
-    public function getPresetData($arLayoutPresetID)
+    public function getPresetData($cID, $arLayoutPresetID)
     {
+        $c = \Page::getByID($cID, 'ACTIVE');
+        $r = Request::getInstance();
+        $r->setCurrentPage($c);
+
         $existingPreset = AreaLayoutPreset::getByID($arLayoutPresetID);
         if (is_object($existingPreset)) {
             $r = new \stdClass;
-            $arLayout = $existingPreset->getAreaLayoutObject();
-            $r->arLayout = $arLayout;
-            $r->arLayoutColumns = $arLayout->getAreaLayoutColumns();
+            $formatter = $existingPreset->getFormatter();
+            $container = $formatter->getPresetContainerHtmlObject();
+            foreach($existingPreset->getColumns() as $column) {
+                $html = $column->getColumnHtmlObjectEditMode();
+                $container->appendChild($html);
+            }
+
+            $r->id = $arLayoutPresetID;
+            $r->html = (string) $container;
             \Core::make('helper/ajax')->sendResult($r);
         }
     }

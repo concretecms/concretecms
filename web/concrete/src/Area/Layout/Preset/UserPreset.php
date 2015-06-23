@@ -1,10 +1,12 @@
 <?php
-namespace Concrete\Core\Area\Layout;
+namespace Concrete\Core\Area\Layout\Preset;
 
+use Concrete\Core\Area\Layout\Layout;
+use Concrete\Core\Area\Layout\Preset\Formatter\UserFormatter;
 use Loader;
 use \Concrete\Core\Foundation\Object;
 
-class Preset extends Object
+class UserPreset extends Object
 {
 
     /**
@@ -151,6 +153,14 @@ class Preset extends Object
             )
         );
         $this->arLayoutPresetName = $arLayoutPresetName;
+    }
+
+    public function getPresetObject()
+    {
+        $formatter = new UserFormatter();
+        $p = new Preset($this->arLayoutID, $this->getAreaLayoutPresetName(),
+            $formatter, $this->getAreaLayoutObject()->getAreaLayoutColumns());
+        return $p;
     }
 
 }
