@@ -37,7 +37,7 @@ class PresetLayout extends Layout
         $this->setPropertiesFromArray($row);
     }
 
-    protected function getPresetObject()
+    public function getPresetObject()
     {
         if (!isset($this->presetObject)) {
             $manager = Core::make('manager/area_layout_preset_provider');
@@ -48,7 +48,10 @@ class PresetLayout extends Layout
 
     protected function loadColumnNumber()
     {
-        $this->arLayoutNumColumns = count($this->getPresetObject()->getColumns());
+        $preset = $this->getPresetObject();
+        if (is_object($preset)) {
+            $this->arLayoutNumColumns = count($preset->getColumns());
+        }
     }
 
     /**

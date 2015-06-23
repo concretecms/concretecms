@@ -124,16 +124,6 @@ class PageTheme extends \Concrete\Core\Page\Theme\Theme implements ThemeProvider
                     '<div class="col-sm-8"></div>',
                     '<div class="col-sm-4"></div>'
                 ),
-            ),
-            array(
-                'handle' => 'three_column_centered',
-                'name' => 'Three Column Centered',
-                'container' => '<div class="row"></div>',
-                'columns' => array(
-                    '<div class="col-sm-3"></div>',
-                    '<div class="col-sm-4 col-sm-offset-1"></div>',
-                    '<div class="col-sm-3 col-sm-offset-1"></div>',
-                ),
             )
         );
         return $presets;

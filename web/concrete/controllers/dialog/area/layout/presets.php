@@ -53,10 +53,7 @@ class Presets extends BackendInterfaceController
             $formatter = $existingPreset->getFormatter();
             $container = $formatter->getPresetContainerHtmlObject();
             foreach($existingPreset->getColumns() as $column) {
-                $html = $column->getColumnHtmlObject();
-                $inner = new Element('div');
-                $inner->addClass('ccm-layout-column-inner ccm-layout-column-highlight');
-                $html->appendChild($inner);
+                $html = $column->getColumnHtmlObjectEditMode();
                 $container->appendChild($html);
             }
 

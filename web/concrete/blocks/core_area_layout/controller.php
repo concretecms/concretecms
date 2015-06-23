@@ -1,7 +1,9 @@
 <?
 namespace Concrete\Block\CoreAreaLayout;
 
+use Concrete\Core\Area\Layout\CustomLayout;
 use Concrete\Core\Area\Layout\PresetLayout;
+use Concrete\Core\Area\Layout\ThemeGridLayout;
 use Concrete\Core\Area\SubArea;
 use Loader;
 use \Concrete\Core\Block\BlockController;
@@ -79,6 +81,9 @@ class Controller extends BlockController
         } else {
 
             $arLayout = AreaLayout::getByID($arLayoutID);
+            if ($arLayout instanceof PresetLayout) {
+                return;
+            }
             // save spacing
             if ($arLayout->isAreaLayoutUsingThemeGridFramework()) {
                 $columns = $arLayout->getAreaLayoutColumns();
@@ -210,6 +215,9 @@ class Controller extends BlockController
             default: // a preset
                 $arLayoutPreset = AreaLayoutPreset::getByID($post['arLayoutPresetID']);
                 $arLayout = PresetLayout::add($arLayoutPreset);
+                foreach($arLayoutPreset->getColumns() as $column) {
+                    $arLayout->addLayoutColumn();
+                }
                 break;
         }
         return $arLayout;
@@ -231,7 +239,7 @@ class Controller extends BlockController
                 $pt = $c->getCollectionThemeObject();
                 $gf = $pt->getThemeGridFrameworkObject();
             }
-            if (!is_object($gf)) {
+            if ($this->arLayout instanceof CustomLayout) {
                 $asset = new CssAsset();
                 $asset->setAssetURL(URL::to('/ccm/system/css/layout', $this->arLayout->getAreaLayoutID()));
                 $asset->setAssetSupportsMinification(false);
@@ -256,18 +264,22 @@ class Controller extends BlockController
             $pt = $c->getCollectionThemeObject();
             $gf = $pt->getThemeGridFrameworkObject();
         }
-        if (isset($gf) && (is_object($gf))) {
+        if ($this->arLayout instanceof ThemeGridLayout) {
             $this->set('enableThemeGrid', true);
             $this->set('themeGridFramework', $gf);
             $this->set('themeGridMaxColumns', $this->arLayout->getAreaLayoutMaxColumns());
             $this->set('themeGridName', $gf->getPageThemeGridFrameworkName());
             $this->render("edit_grid");
-        } else {
+        } else if ($this->arLayout instanceof CustomLayout) {
             $this->set('enableThemeGrid', false);
             $this->set('spacing', $this->arLayout->getAreaLayoutSpacing());
             $this->set('iscustom', $this->arLayout->hasAreaLayoutCustomColumnWidths());
             $this->set('maxColumns', 12);
             $this->render('edit');
+        } else {
+            $preset = $this->arLayout->getPresetObject();
+            $this->set('selectedPreset', $preset);
+            $this->render('edit_preset');
         }
         $this->set('columnsNum', count($this->arLayout->getAreaLayoutColumns()));
 

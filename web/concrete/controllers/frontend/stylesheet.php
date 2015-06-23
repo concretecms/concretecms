@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Controller\Frontend;
+use Concrete\Core\Area\Layout\CustomLayout;
 use Concrete\Core\Area\Layout\Layout;
 use Controller;
 use Page;
@@ -55,7 +56,7 @@ class Stylesheet extends Controller {
 
 	public function layout($arLayoutID) {
 		$arLayout = Layout::getByID($arLayoutID);
-		if (is_object($arLayout)) {
+		if (is_object($arLayout) && $arLayout instanceof CustomLayout) {
 
 			$css = <<<EOL
 	div.ccm-layout-column {

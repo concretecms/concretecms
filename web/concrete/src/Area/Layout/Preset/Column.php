@@ -35,5 +35,13 @@ class Column implements ColumnInterface
         return $this->column;
     }
 
+    public function getColumnHtmlObjectEditMode()
+    {
+        $column = $this->getColumnHtmlObject();
+        $inner = new Element('div');
+        $inner->addClass('ccm-layout-column-inner ccm-layout-column-highlight');
+        $column->appendChild($inner);
+        return $column;
+    }
 
 }
