@@ -7,6 +7,31 @@ use Core;
 abstract class GridFramework
 {
 
+    const DEVICE_CLASSES_HIDE_ON_EXTRA_SMALL = 10;
+    const DEVICE_CLASSES_HIDE_ON_SMALL = 20;
+    const DEVICE_CLASSES_HIDE_ON_MEDIUM = 30;
+    const DEVICE_CLASSES_HIDE_ON_LARGE = 40;
+
+    public function getPageThemeGridFrameworkHideOnExtraSmallDeviceClass()
+    {
+        return null;
+    }
+
+    public function getPageThemeGridFrameworkHideOnSmallDeviceClass()
+    {
+        return null;
+    }
+
+    public function getPageThemeGridFrameworkHideOnMediumDeviceClass()
+    {
+        return null;
+    }
+
+    public function getPageThemeGridFrameworkHideOnLargeDeviceClass()
+    {
+        return null;
+    }
+
     abstract public function getPageThemeGridFrameworkName();
 
     abstract public function getPageThemeGridFrameworkRowStartHTML();
@@ -72,4 +97,37 @@ abstract class GridFramework
 
         return $classes;
     }
+
+    public function getPageThemeGridFrameworkDeviceHideClasses()
+    {
+        $classes = array();
+        if ($this->getPageThemeGridFrameworkHideOnExtraSmallDeviceClass()) {
+            $classes[] = self::DEVICE_CLASSES_HIDE_ON_EXTRA_SMALL;
+        }
+        if ($this->getPageThemeGridFrameworkHideOnSmallDeviceClass()) {
+            $classes[] = self::DEVICE_CLASSES_HIDE_ON_SMALL;
+        }
+        if ($this->getPageThemeGridFrameworkHideOnMediumDeviceClass()) {
+            $classes[] = self::DEVICE_CLASSES_HIDE_ON_MEDIUM;
+        }
+        if ($this->getPageThemeGridFrameworkHideOnLargeDeviceClass()) {
+            $classes[] = self::DEVICE_CLASSES_HIDE_ON_LARGE;
+        }
+        return $classes;
+    }
+
+    public function getDeviceHideClassIconClass($class)
+    {
+        switch($class) {
+            case self::DEVICE_CLASSES_HIDE_ON_EXTRA_SMALL:
+                return 'fa fa-mobile-phone';
+            case self::DEVICE_CLASSES_HIDE_ON_SMALL:
+                return 'fa fa-tablet';
+            case self::DEVICE_CLASSES_HIDE_ON_MEDIUM:
+                return 'fa fa-laptop';
+            case self::DEVICE_CLASSES_HIDE_ON_LARGE:
+                return 'fa fa-desktop';
+        }
+    }
+
 }

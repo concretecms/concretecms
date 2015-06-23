@@ -18,10 +18,13 @@ class CustomStyle extends AbstractCustomStyle
      */
     protected $set;
 
-    public function __construct(StyleSet $set = null, $arHandle = null)
+    protected $theme;
+
+    public function __construct(StyleSet $set = null, $arHandle = null, $theme)
     {
         $this->arHandle = $arHandle;
         $this->set = $set;
+        $this->theme = $theme;
     }
 
     /**
@@ -106,8 +109,8 @@ class CustomStyle extends AbstractCustomStyle
         $class = 'ccm-custom-style-';
         $txt = Core::make('helper/text');
         $class .= strtolower($txt->filterNonAlphaNum($this->arHandle));
-        if (is_object($this->set) && $this->set->getCustomClass()) {
-            $class .= ' ' . $this->set->getCustomClass();
+        if (is_object($this->set)) {
+            $class .= ' ' . $this->set->getClass($this->theme);
         }
         return $class;
     }
