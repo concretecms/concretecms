@@ -15,6 +15,11 @@ class HtmlColumn implements \Concrete\Core\Area\Layout\ColumnInterface
         return $column;
     }
 
+    public function getColumnHtmlObjectEditMode()
+    {
+        return $this->getColumnHtmlObject();
+    }
+
 }
 
 class TestAreaLayoutPresetFormatter implements \Concrete\Core\Area\Layout\Preset\Formatter\FormatterInterface

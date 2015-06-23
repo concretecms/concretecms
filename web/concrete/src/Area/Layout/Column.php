@@ -149,10 +149,10 @@ abstract class Column extends Object implements ColumnInterface
     /**
      * @return string
      */
-    public function getContents()
+    public function getContents($disableControls = false)
     {
         ob_start();
-        $this->display();
+        $this->display($disableControls);
         $contents = ob_get_contents();
         ob_end_clean();
         return $contents;

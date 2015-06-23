@@ -5,5 +5,6 @@ interface ColumnInterface
 {
 
     public function getColumnHtmlObject();
+    public function getColumnHtmlObjectEditMode();
 
 }

@@ -141,7 +141,7 @@ abstract class Layout extends Object
     /**
      * @return int
      */
-    protected function addLayoutColumn()
+    public function addLayoutColumn()
     {
         $db = Loader::db();
         $arLayoutColumnDisplayID = $db->GetOne('select max(arLayoutColumnDisplayID) as arLayoutColumnDisplayID from AreaLayoutColumns');

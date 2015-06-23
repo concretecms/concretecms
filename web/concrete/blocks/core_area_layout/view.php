@@ -7,5 +7,4 @@
 		$html = $column->getColumnHtmlObject();
 		$container->appendChild($html);
 	}
-
 	print $container;
