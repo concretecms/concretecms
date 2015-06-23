@@ -23,6 +23,9 @@ if ($pt->supportsGridFramework() && $b->overrideBlockTypeContainerSettings()) {
     $enableBlockContainer = $b->enableBlockContainer();
 }
 
+$gf = $pt->getThemeGridFrameworkObject();
+
+
 Loader::element("custom_style", array(
     'saveAction' => $controller->action('submit'),
     'resetAction' => $controller->action('reset'),
@@ -31,6 +34,7 @@ Loader::element("custom_style", array(
     'bName' => $b->getBlockName(),
     'displayBlockContainerSettings' => $pt->supportsGridFramework(),
     'enableBlockContainer' => $enableBlockContainer,
+    'gf' => $gf,
     'templates' => $templates,
     'customClasses' => $customClasses,
     'canEditCustomTemplate' => $canEditCustomTemplate,

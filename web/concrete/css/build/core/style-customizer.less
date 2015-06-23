@@ -222,6 +222,10 @@ div.ccm-widget-colorpicker {
   div.dropdown-menu.ccm-inline-design-dropdown-menu {
     min-width: 261px;
 
+    &.ccm-inline-design-dropdown-menu-doubled {
+      min-width: 522px;
+    }
+
     text-align: left;
 
     .ccm-file-selector {
@@ -280,6 +284,16 @@ div.ccm-widget-colorpicker {
       margin-bottom: 5px;
       background: #444;
       .border-radius(4px);
+    }
+
+    button.btn-default {
+      .button-variant(#ccc; #666; #333);
+
+      &.active {
+        .opacity(1);
+      }
+
+      .opacity(0.5);
     }
     padding: 20px;
     background-color: #0f0f0f;

@@ -9,7 +9,7 @@ return array(
      */
     'version'           => '5.7.5a1',
     'version_installed' => '5.7.5a1',
-    'version_db' => '20150622000000', // the key of the latest database migration
+    'version_db' => '20150623000000', // the key of the latest database migration
 
     /**
      * Installation status

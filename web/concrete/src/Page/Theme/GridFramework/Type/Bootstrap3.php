@@ -80,4 +80,25 @@ class Bootstrap3 extends GridFramework
         return '';
     }
 
+    public function getPageThemeGridFrameworkHideOnExtraSmallDeviceClass()
+    {
+        return 'hidden-xs';
+    }
+
+    public function getPageThemeGridFrameworkHideOnSmallDeviceClass()
+    {
+        return 'hidden-sm';
+    }
+
+    public function getPageThemeGridFrameworkHideOnMediumDeviceClass()
+    {
+        return 'hidden-md';
+    }
+
+    public function getPageThemeGridFrameworkHideOnLargeDeviceClass()
+    {
+        return 'hidden-lg';
+    }
+
+
 }

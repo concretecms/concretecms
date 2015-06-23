@@ -2475,6 +2475,10 @@
     <field name="boxShadowSpread" type="string" size="255"/>
     <field name="boxShadowColor" type="string" size="255"/>
     <field name="customClass" type="string" size="255"/>
+    <field name="hideOnExtraSmallDevice" type="boolean"/>
+    <field name="hideOnSmallDevice" type="boolean"/>
+    <field name="hideOnMediumDevice" type="boolean"/>
+    <field name="hideOnLargeDevice" type="boolean"/>
   </table>
 
   <table name="StyleCustomizerValueLists">
