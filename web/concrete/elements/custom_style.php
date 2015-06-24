@@ -64,10 +64,10 @@ if (is_object($set)) {
 }
 
 $repeatOptions = array(
-    'no-repeat' => t('None'),
-    'repeat-x' => t('Horizontal'),
-    'repeat-y' => t('Vertical'),
-    'repeat' => t('Tile')
+    'no-repeat' => t('No Repeat'),
+    'repeat-x' => t('Horizontally'),
+    'repeat-y' => t('Vertically'),
+    'repeat' => t('Horizontally & Vertically')
 );
 $borderOptions = array(
     '' => t('None'),
@@ -156,7 +156,7 @@ $form = Core::make('helper/form');
                 <?=$al->image('backgroundImageFileID', 'backgroundImageFileID', t('Choose Image'), $image);?>
             </div>
             <div class="ccm-inline-select-container">
-                <?=t('Tile')?>
+                <?=t('Repeats')?>
                 <?=$form->select('backgroundRepeat', $repeatOptions, $backgroundRepeat);?>
             </div>
         </div>

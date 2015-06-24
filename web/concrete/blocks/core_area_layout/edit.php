@@ -1,8 +1,12 @@
 <?
 	defined('C5_EXECUTE') or die("Access Denied.");
+
+	Loader::element('block_header_grid_container', array('a' => $a));
+
 	$this->inc('form.php', array('b' => $b, 'a' => $a));
 
 ?>
+
 
 <input type="hidden" name="arLayoutID" value="<?=$controller->arLayout->getAreaLayoutID()?>" />
 
@@ -21,3 +25,5 @@
 <? } ?>
 
 </div>
+
+<? 	Loader::element('block_footer_grid_container', array('a' => $a));

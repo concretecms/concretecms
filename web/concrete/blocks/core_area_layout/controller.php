@@ -5,6 +5,7 @@ use Concrete\Core\Area\Layout\CustomLayout;
 use Concrete\Core\Area\Layout\PresetLayout;
 use Concrete\Core\Area\Layout\ThemeGridLayout;
 use Concrete\Core\Area\SubArea;
+use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 use Loader;
 use \Concrete\Core\Block\BlockController;
 use \Concrete\Core\Area\Layout\Layout as AreaLayout;
@@ -110,6 +111,21 @@ class Controller extends BlockController
                 }
             }
         }
+
+        $set = StyleSet::populateFromRequest($this->request);
+        $b = $this->getBlockObject();
+        $oldStyle = $b->getCustomStyle();
+        if (is_object($oldStyle)) {
+            $oldStyleSet = $oldStyle->getStyleSet();
+        }
+        if (is_object($set)) {
+            $set->save();
+            $b->setCustomStyleSet($set);
+        } else if ($oldStyleSet) {
+            $b->resetCustomStyle();
+        }
+
+
         $values = array('arLayoutID' => $arLayout->getAreaLayoutID());
         parent::save($values);
     }
