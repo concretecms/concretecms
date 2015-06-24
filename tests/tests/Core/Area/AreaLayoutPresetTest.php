@@ -306,28 +306,5 @@ class AreaLayoutPresetTest extends ConcreteDatabaseTestCase
         $this->assertEquals('<div class="col-sm-4"></div>', (string) $columns[0]->getColumnHtmlObject());
         $this->assertEquals('<div class="col-sm-8"></div>', (string) $columns[1]->getColumnHtmlObject());
     }
-
-
-
-    /**
-     * @expectedException \Concrete\Core\Area\Layout\Preset\InvalidPresetException
-     */
-    public function testBrokenRetrievePresets()
-    {
-        /** @var $manager \Concrete\Core\Area\Layout\Preset\Provider\Manager */
-        $manager = Core::make('manager/area_layout_preset_provider');
-        $broken = new BrokenTestAreaLayoutPresetProvider();
-        $manager->register($broken);
-        $c = new Page();
-        $presets = $manager->getPresets();
-        $this->assertEquals(3, count($presets));
-    }
-
-    // we run this dummy test after the other one so setup and teardown methods work
-    public function testFoo()
-    {
-        $this->assertTrue(true);
-    }
-
-
+    
 }
