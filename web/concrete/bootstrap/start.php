@@ -168,6 +168,23 @@ $cms->setupFilesystem();
 
 /**
  * ----------------------------------------------------------------------------
+ * Registries for theme paths, assets, routes and file types.
+ * ----------------------------------------------------------------------------
+ */
+$asset_list = AssetList::getInstance();
+
+$asset_list->registerMultiple($config->get('app.assets', array()));
+$asset_list->registerGroupMultiple($config->get('app.asset_groups', array()));
+
+Route::registerMultiple($config->get('app.routes'));
+Route::setThemesByRoutes($config->get('app.theme_paths', array()));
+
+$type_list = TypeList::getInstance();
+$type_list->defineMultiple($config->get('app.file_types', array()));
+$type_list->defineImporterAttributeMultiple($config->get('app.importer_attributes', array()));
+
+/**
+ * ----------------------------------------------------------------------------
  * If we are running through the command line, we don't proceed any further
  * ----------------------------------------------------------------------------
  */
@@ -191,34 +208,6 @@ $request = Request::getInstance();
 
 /**
  * ----------------------------------------------------------------------------
- * Check the page cache in case we need to return a result early.
- * ----------------------------------------------------------------------------
- */
-$response = $cms->checkPageCache($request);
-if ($response) {
-    $response->send();
-    $cms->shutdown();
-}
-
-/**
- * ----------------------------------------------------------------------------
- * Registries for theme paths, assets, routes and file types.
- * ----------------------------------------------------------------------------
- */
-$asset_list = AssetList::getInstance();
-
-$asset_list->registerMultiple($config->get('app.assets', array()));
-$asset_list->registerGroupMultiple($config->get('app.asset_groups', array()));
-
-Route::registerMultiple($config->get('app.routes'));
-Route::setThemesByRoutes($config->get('app.theme_paths', array()));
-
-$type_list = TypeList::getInstance();
-$type_list->defineMultiple($config->get('app.file_types', array()));
-$type_list->defineImporterAttributeMultiple($config->get('app.importer_attributes', array()));
-
-/**
- * ----------------------------------------------------------------------------
  * If we haven't installed, then we need to reroute. If we have, and we're
  * on the install page, and we haven't installed, then we need to dispatch
  * early and exit.
@@ -233,6 +222,17 @@ if (!$cms->isInstalled()) {
     else {
         $response = $cms->dispatch($request);
     }
+    $response->send();
+    $cms->shutdown();
+}
+
+/**
+ * ----------------------------------------------------------------------------
+ * Check the page cache in case we need to return a result early.
+ * ----------------------------------------------------------------------------
+ */
+$response = $cms->checkPageCache($request);
+if ($response) {
     $response->send();
     $cms->shutdown();
 }
