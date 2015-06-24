@@ -130,4 +130,9 @@ abstract class GridFramework
         }
     }
 
+    public function supportsNesting()
+    {
+        return false;
+    }
+
 }

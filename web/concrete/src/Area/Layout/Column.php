@@ -158,6 +158,11 @@ abstract class Column extends Object implements ColumnInterface
         return $contents;
     }
 
+    protected function getSubAreaMaximumColumns()
+    {
+        return 0;
+    }
+
     /**
      * @param bool $disableControls
      */
@@ -167,6 +172,7 @@ abstract class Column extends Object implements ColumnInterface
         $a = $layout->getAreaObject();
         if (is_object($a)) {
             $as = new SubArea($this->getAreaLayoutColumnDisplayID(), $a->getAreaHandle(), $a->getAreaID());
+            $as->setAreaGridMaximumColumns($this->getSubAreaMaximumColumns());
             $as->setAreaDisplayName(t('Column %s', $this->getAreaLayoutColumnIndex() + 1));
             if ($disableControls) {
                 $as->disableControls();
