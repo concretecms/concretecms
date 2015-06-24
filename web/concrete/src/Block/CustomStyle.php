@@ -110,7 +110,10 @@ class CustomStyle extends AbstractCustomStyle
         $class .= strtolower($txt->filterNonAlphaNum($this->arHandle));
         $class .= '-' . $this->bID;
         if (is_object($this->set)) {
-            $class .= ' ' . $this->set->getClass($this->theme);
+            $return = $this->set->getClass($this->theme);
+            if ($return) {
+                $class .= ' ' . $return;
+            }
         }
         return $class;
     }

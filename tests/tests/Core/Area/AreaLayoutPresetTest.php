@@ -323,6 +323,11 @@ class AreaLayoutPresetTest extends ConcreteDatabaseTestCase
         $this->assertEquals(3, count($presets));
     }
 
+    // we run this dummy test after the other one so setup and teardown methods work
+    public function testFoo()
+    {
+        $this->assertTrue(true);
+    }
 
 
 }
