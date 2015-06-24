@@ -56,6 +56,8 @@ class AreaLayoutTest extends ConcreteDatabaseTestCase
         $this->assertInstanceOf('\Concrete\Core\Area\Layout\Formatter\ThemeGridFormatter', $formatter);
         $this->assertEquals('<div class="row"></div>', (string) $formatter->getLayoutContainerHtmlObject());
 
+        $req->clearCurrentPage();
+
     }
 
 

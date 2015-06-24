@@ -7,16 +7,10 @@
         backupGlobals="false"
         backupStaticAttributes="false">
     <testsuites>
-        <testsuite name="CoreTests">
+        <testsuite name="Tests">
             <directory>tests/Core/</directory>
-        </testsuite>
-        <testsuite name="AssetsTests">
             <directory>tests/Asset/</directory>
-        </testsuite>
-        <testsuite name="BlockTypesTests">
             <directory>tests/Block/</directory>
-        </testsuite>
-        <testsuite name="AttributesTests">
             <directory>tests/Attribute/</directory>
         </testsuite>
     </testsuites>
