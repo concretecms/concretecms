@@ -39,6 +39,17 @@ class MetadataGenerator
             }
         }
 
+        $app = Core::make('app');
+        $reflection = new \ReflectionClass($app);
+        $instances = $reflection->getProperty("instances");
+        $instances->setAccessible(true); // :)
+        foreach ($instances->getValue($app) as $name => $instance) {
+            if (!isset($bindings[$name])) {
+                $className = get_class($instance);
+                $file .= '\'' . $name . '\' instanceof ' . $className . ',' . PHP_EOL;
+            }
+        }
+
         $file .= '), \Loader::helper(\'\') => array(';
         foreach ($legacyHelpers as $legacyHelper => $className) {
             $file .= '\'' . $legacyHelper . '\' instanceof ' . $className . ',' . PHP_EOL;
