@@ -220,6 +220,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
      */
     public function __construct($obj = null)
     {
+        parent::__construct();
         if ($obj instanceof BlockType) {
             $this->identifier = 'BLOCKTYPE_' . $obj->getBlockTypeID();
             $this->btHandle = $obj->getBlockTypeHandle();

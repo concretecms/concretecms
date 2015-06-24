@@ -8,6 +8,14 @@
 	}
 	$c = Page::getCurrentPage();
 	$presets = Core::make('manager/area_layout_preset_provider')->getPresets();
+
+$repeatOptions = array(
+	'no-repeat' => t('No Repeat'),
+	'repeat-x' => t('Horizontally'),
+	'repeat-y' => t('Vertically'),
+	'repeat' => t('Horizontally & Vertically')
+);
+
 ?>
 
 <ul id="ccm-layouts-toolbar" class="ccm-inline-toolbar ccm-ui">
@@ -51,6 +59,26 @@
 	</li>
 	<li data-grid-form-view="custom" class="ccm-inline-toolbar-icon-cell <? if (!$iscustom) { ?>ccm-inline-toolbar-icon-selected<? } ?>"><a href="#" data-layout-button="toggleautomated"><i class="fa fa-lock"></i></a>
 		<input type="hidden" name="isautomated" value="<? if ($iscustom) { ?>0<? } else {?>1<? } ?>" />
+	</li>
+	<li class="ccm-inline-toolbar-icon-cell"><a href="#" data-toggle="dropdown" title="<?=t('Background Color and Image')?>"><i class="fa fa-image"></i></a>
+
+		<div class="ccm-inline-design-dropdown-menu dropdown-menu">
+			<h3><?=t('Background')?></h3>
+			<div>
+				<?=t('Color')?>
+				<?=Loader::helper('form/color')->output('backgroundColor', $backgroundColor);?>
+			</div>
+			<hr />
+			<div>
+				<?=t('Image')?>
+				<?=Core::make('helper/concrete/asset_library')->image('backgroundImageFileID', 'backgroundImageFileID', t('Choose Image'), $image);?>
+			</div>
+			<div class="ccm-inline-select-container">
+				<?=t('Repeats')?>
+				<?=Core::make('helper/form')->select('backgroundRepeat', $repeatOptions, $backgroundRepeat);?>
+			</div>
+		</div>
+
 	</li>
 	<? if ($controller->getTask() == 'edit') {
 		$bp = new Permissions($b); ?>

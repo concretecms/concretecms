@@ -1076,6 +1076,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
     public function setBlockCollectionObject($c)
     {
         $this->c = $c;
+        $this->cID = $c->getCollectionID();
     }
 
     function getBlockTypeName()
