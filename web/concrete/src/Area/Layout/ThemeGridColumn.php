@@ -48,6 +48,15 @@ class ThemeGridColumn extends Column
         return $newAreaLayoutColumn;
     }
 
+    protected function getSubAreaMaximumColumns()
+    {
+        $framework = $this->getAreaLayoutObject()->getThemeGridFrameworkObject();
+        if (is_object($framework) && $framework->supportsNesting()) {
+            return $framework->getPageThemeGridFrameworkNumColumns();
+        }
+    }
+
+
     /**
      * @param \SimpleXMLElement $node
      */
