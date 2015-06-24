@@ -115,13 +115,14 @@ class TestThemeClass implements \Concrete\Core\Area\Layout\Preset\Provider\Theme
     }
 }
 
-class AreaLayoutPresetTest extends ConcreteDatabaseTestCase
+class AreaLayoutPresetTest extends PageTestCase
 {
 
-    protected $tables = array('AreaLayoutPresets','AreaLayouts','AreaLayoutColumns',
-        'AreaLayoutCustomColumns', 'AreaLayoutThemeGridColumns', 'PageThemes', 'Pages', 'Collections',
-        'CollectionVersions', 'PagePaths','AreaLayoutsUsingPresets');
-    protected $fixtures = array();
+    protected function setUp() {
+        $this->tables = array_merge($this->tables, array('AreaLayoutPresets','AreaLayoutsUsingPresets', 'AreaLayouts','AreaLayoutColumns',
+            'AreaLayoutCustomColumns', 'AreaLayoutThemeGridColumns'));
+        parent::setUp();
+    }
 
     public function testPresetProviderManagerRetrievePresets()
     {
@@ -194,9 +195,7 @@ class AreaLayoutPresetTest extends ConcreteDatabaseTestCase
         /** @var $manager \Concrete\Core\Area\Layout\Preset\Provider\Manager */
         $manager = Core::make('manager/area_layout_preset_provider');
 
-
         $elemental = \Concrete\Core\Page\Theme\Theme::add('elemental');
-        Page::addHomePage();
         Core::make('cache/request')->disable();
         $c = Page::getByID(1);
         $c->setTheme($elemental);
@@ -216,6 +215,9 @@ class AreaLayoutPresetTest extends ConcreteDatabaseTestCase
         $this->assertEquals('<div class="col-sm-4"></div>', (string) $columns[0]->getColumnHtmlObject());
         $this->assertEquals('<div class="col-sm-2 col-sm-offset-2"></div>', (string) $columns[1]->getColumnHtmlObject());
         $this->assertEquals('<div class="col-sm-6"></div>', (string) $columns[2]->getColumnHtmlObject());
+
+        $req->clearCurrentPage();
+
     }
 
     public function testSavePreset()
@@ -237,7 +239,6 @@ class AreaLayoutPresetTest extends ConcreteDatabaseTestCase
         $this->assertEquals($layoutID, $layout->getAreaLayoutPresetHandle());
         $this->assertEquals(2, $layout->getAreaLayoutNumColumns());
     }
-
     public function testThemePresets()
     {
         $manager = Core::make('manager/area_layout_preset_provider');
@@ -279,7 +280,6 @@ class AreaLayoutPresetTest extends ConcreteDatabaseTestCase
     {
         $elemental = \Concrete\Core\Page\Theme\Theme::add('elemental');
 
-        Page::addHomePage();
         Core::make('cache/request')->disable();
         $c = Page::getByID(1);
         $c->setTheme($elemental);
@@ -305,6 +305,9 @@ class AreaLayoutPresetTest extends ConcreteDatabaseTestCase
         $this->assertEquals('theme_elemental_left_sidebar', $preset->getIdentifier());
         $this->assertEquals('<div class="col-sm-4"></div>', (string) $columns[0]->getColumnHtmlObject());
         $this->assertEquals('<div class="col-sm-8"></div>', (string) $columns[1]->getColumnHtmlObject());
+
+        $req->clearCurrentPage();
     }
-    
+
+
 }
