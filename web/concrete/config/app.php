@@ -530,6 +530,9 @@ return array(
             array('javascript-localized', '/ccm/assets/localization/dropzone/js'),
             array('css', 'css/dropzone.css', array('minify' => false))
         ),
+        'stellar'                 => array(
+            array('javascript', 'js/stellar.js'),
+        ),
         'jquery/form'              => array(
             array('javascript', 'js/jquery-form.js')
         ),

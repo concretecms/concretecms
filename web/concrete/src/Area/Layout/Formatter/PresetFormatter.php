@@ -18,8 +18,11 @@ class PresetFormatter implements FormatterInterface
     public function getLayoutContainerHtmlObject()
     {
         $preset = $this->layout->getPresetObject();
-        $formatter = $preset->getFormatter();
-        return $formatter->getPresetContainerHtmlObject();
+        if (is_object($preset)) {
+            $formatter = $preset->getFormatter();
+            return $formatter->getPresetContainerHtmlObject();
+        }
+        return new Element('div');
     }
 
 
