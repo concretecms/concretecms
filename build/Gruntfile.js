@@ -211,7 +211,6 @@ module.exports = function(grunt) {
             src: '<%= DIR_BASE %>/concrete/js/build/vendor/dropzone/dropzone.js'
         },
 
-
         jquery_form: {
             dest: '<%= DIR_BASE %>/concrete/js/jquery-form.js',
             src: '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-form/jquery-form.js'

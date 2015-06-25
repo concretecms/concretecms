@@ -6,6 +6,13 @@
 	$backgroundColor = '';
 	$backgroundImage = false;
 	$backgroundRepeat = 'no-repeat';
+	$customClass = null;
+	$paddingTop = '';
+	$paddingLeft = '';
+	$paddingRight = '';
+	$paddingBottom = '';
+	$sliderMin = \Config::get('concrete.limits.style_customizer.size_min', -50);
+	$sliderMax = \Config::get('concrete.limits.style_customizer.size_max', 200);
 	if ($controller->getTask() == 'add') {
 		$spacing = 0;
 		$iscustom = false;
@@ -13,13 +20,27 @@
 		$style = $b->getCustomStyle();
 		if (is_object($style)) {
 			$styleSet = $style->getStyleSet();
+			$customClass = $styleSet->getCustomClass();
 			$backgroundColor = $styleSet->getBackgroundColor();
 			$backgroundImage = $styleSet->getBackgroundImageFileObject();
 			$backgroundRepeat = $styleSet->getBackgroundRepeat();
+			$paddingTop = $styleSet->getPaddingTop();
+			$paddingLeft = $styleSet->getPaddingLeft();
+			$paddingRight = $styleSet->getPaddingRight();
+			$paddingBottom = $styleSet->getPaddingBottom();
 		}
 	}
 	$c = Page::getCurrentPage();
 	$presets = Core::make('manager/area_layout_preset_provider')->getPresets();
+	$pt = $c->getCollectionThemeObject();
+
+	$customClasses = array();
+	if (is_object($pt)) {
+		$areaClasses = $pt->getThemeBlockClasses();
+		if (isset($areaClasses[BLOCK_HANDLE_LAYOUT_PROXY])) {
+			$customClasses = $areaClasses[BLOCK_HANDLE_LAYOUT_PROXY];
+		}
+	}
 
 	$repeatOptions = array(
 		'no-repeat' => t('No Repeat'),
@@ -27,6 +48,15 @@
 		'repeat-y' => t('Vertically'),
 		'repeat' => t('Horizontally & Vertically')
 	);
+
+	$customClassesSelect = array('' => t('None'));
+
+	if (is_array($customClasses)) {
+		foreach($customClasses as $class) {
+			$customClassesSelect[$class] = $class;
+		}
+	}
+
 
 ?>
 
@@ -74,20 +104,63 @@
 	</li>
 	<li class="ccm-inline-toolbar-icon-cell"><a href="#" data-toggle="dropdown" title="<?=t('Background Color and Image')?>"><i class="fa fa-image"></i></a>
 
-		<div class="ccm-inline-design-dropdown-menu dropdown-menu">
-			<h3><?=t('Background')?></h3>
-			<div>
-				<?=t('Color')?>
-				<?=Loader::helper('form/color')->output('backgroundColor', $backgroundColor);?>
-			</div>
-			<hr />
-			<div>
-				<?=t('Image')?>
-				<?=Core::make('helper/concrete/asset_library')->image('backgroundImageFileID', 'backgroundImageFileID', t('Choose Image'), $backgroundImage);?>
-			</div>
-			<div class="ccm-inline-select-container">
-				<?=t('Repeats')?>
-				<?=Core::make('helper/form')->select('backgroundRepeat', $repeatOptions, $backgroundRepeat);?>
+		<div class="ccm-inline-design-dropdown-menu ccm-inline-design-dropdown-menu-doubled dropdown-menu">
+
+			<div class="row">
+				<div class="col-sm-6">
+					<h3><?=t('Background')?></h3>
+					<div>
+						<?=t('Color')?>
+						<?=Loader::helper('form/color')->output('backgroundColor', $backgroundColor);?>
+					</div>
+					<hr />
+					<div>
+						<?=t('Image')?>
+						<?=Core::make('helper/concrete/asset_library')->image('backgroundImageFileID', 'backgroundImageFileID', t('Choose Image'), $backgroundImage);?>
+					</div>
+					<div class="ccm-inline-select-container">
+						<?=t('Repeats')?>
+						<?=Core::make('helper/form')->select('backgroundRepeat', $repeatOptions, $backgroundRepeat);?>
+					</div>
+					<? if (count($customClassesSelect)) { ?>
+						<hr/>
+						<div>
+							<?=t('Custom Class')?>
+							<?= $form->select('customClass', $customClassesSelect, $customClass);?>
+						</div>
+					<? } ?>
+				</div>
+				<div class="col-sm-6">
+					<h3><?=t('Padding')?></h3>
+					<div>
+						<span class="ccm-inline-style-slider-heading"><?=t('Top')?></span>
+						<div class="ccm-inline-style-sliders" data-style-slider-min="<?= $sliderMin ?>" data-style-slider-max="<?= $sliderMax ?>" data-style-slider-default-setting="0"></div>
+                <span class="ccm-inline-style-slider-display-value">
+                    <input type="text" name="paddingTop" id="paddingTop" data-value-format="px" class="ccm-inline-style-slider-value" value="<?php echo $paddingTop ? $paddingTop : '0px' ?>" <?php echo $paddingTop ? '' : 'disabled' ?> autocomplete="off" />
+                </span>
+					</div>
+					<div>
+						<span class="ccm-inline-style-slider-heading"><?=t('Right')?></span>
+						<div class="ccm-inline-style-sliders" data-style-slider-min="<?= $sliderMin ?>" data-style-slider-max="<?= $sliderMax ?>" data-style-slider-default-setting="0"></div>
+                <span class="ccm-inline-style-slider-display-value">
+                    <input type="text" name="paddingRight" id="paddingRight" data-value-format="px" class="ccm-inline-style-slider-value" value="<?php echo $paddingRight ? $paddingRight : '0px' ?>" <?php echo $paddingRight ? '' : 'disabled' ?> autocomplete="off" />
+                </span>
+					</div>
+					<div>
+						<span class="ccm-inline-style-slider-heading"><?=t('Bottom')?></span>
+						<div class="ccm-inline-style-sliders" data-style-slider-min="<?= $sliderMin ?>" data-style-slider-max="<?= $sliderMax ?>" data-style-slider-default-setting="0"></div>
+                <span class="ccm-inline-style-slider-display-value">
+                    <input type="text" name="paddingBottom" id="paddingBottom" data-value-format="px" class="ccm-inline-style-slider-value" value="<?php echo $paddingBottom ? $paddingBottom : '0px' ?>" <?php echo $paddingBottom ? '' : 'disabled' ?> autocomplete="off" />
+                </span>
+					</div>
+					<div>
+						<span class="ccm-inline-style-slider-heading"><?=t('Left')?></span>
+						<div class="ccm-inline-style-sliders" data-style-slider-min="<?= $sliderMin ?>" data-style-slider-max="<?= $sliderMax ?>" data-style-slider-default-setting="0"></div>
+               <span class="ccm-inline-style-slider-display-value">
+                <input type="text" name="paddingLeft" id="paddingLeft" data-value-format="px" class="ccm-inline-style-slider-value" value="<?php echo $paddingLeft ? $paddingLeft : '0px' ?>" <?php echo $paddingLeft ? '' : 'disabled' ?> autocomplete="off" />
+            </span>
+					</div>
+				</div>
 			</div>
 		</div>
 
@@ -132,6 +205,7 @@ if ($controller->getTask() == 'edit') {
 
 $(function() {
 
+
 	<?
 	if ($controller->getTask() == 'edit') { ?>
 	$('#ccm-layouts-toolbar').on('click', 'a[data-menu-action=delete-layout]', function(e) {
@@ -171,7 +245,11 @@ $(function() {
 				'arHandle': <?=json_encode($a->getAreaHandle())?>
 			},
 			success: function(r) {
-				console.log(r);
+				$('style[data-style-set][data-block-style-block-id=' + block.getId() + ']').remove();
+				if (r.style) {
+					$('head').append(r.style);
+				}
+
 			}
 		});
 	}
@@ -213,6 +291,9 @@ $(function() {
 		]
 		<? } ?>
 	});
+
+	$('#ccm-layouts-toolbar').parent().concreteBlockInlineStyleCustomizer();
+
 });
 
 
