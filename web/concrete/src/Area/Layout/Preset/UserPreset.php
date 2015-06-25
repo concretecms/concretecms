@@ -157,9 +157,14 @@ class UserPreset extends Object
 
     public function getPresetObject()
     {
-        $formatter = new UserFormatter();
+        $formatter = new UserFormatter($this->getAreaLayoutObject());
+        $columns = $this->getAreaLayoutObject()->getAreaLayoutColumns();
+        $presetColumns = array();
+        foreach($columns as $column) {
+            $presetColumns[] = Column::fromHtml((string) $column->getColumnHtmlObject());
+        }
         $p = new Preset($this->arLayoutID, $this->getAreaLayoutPresetName(),
-            $formatter, $this->getAreaLayoutObject()->getAreaLayoutColumns());
+            $formatter, $presetColumns);
         return $p;
     }
 
