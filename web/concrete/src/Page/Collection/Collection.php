@@ -653,7 +653,7 @@ class Collection extends Object
         foreach ($psss as $st) {
             $css = $st->getCSS();
             if ($css !== '') {
-                $styleHeader .= '<style type="text/css" data-style-set="'.$st->getStyleSet()->getID().'">'.$css.'</style>';
+                $styleHeader .= $st->getStyleWrapper($css);
             }
         }
 

@@ -2,19 +2,31 @@
 	defined('C5_EXECUTE') or die("Access Denied.");
 	use \Concrete\Core\Area\Layout\Preset as AreaLayoutPreset;
 	$minColumns = 1;
+
+	$backgroundColor = '';
+	$backgroundImage = false;
+	$backgroundRepeat = 'no-repeat';
 	if ($controller->getTask() == 'add') {
 		$spacing = 0;
 		$iscustom = false;
+	} else {
+		$style = $b->getCustomStyle();
+		if (is_object($style)) {
+			$styleSet = $style->getStyleSet();
+			$backgroundColor = $styleSet->getBackgroundColor();
+			$backgroundImage = $styleSet->getBackgroundImageFileObject();
+			$backgroundRepeat = $styleSet->getBackgroundRepeat();
+		}
 	}
 	$c = Page::getCurrentPage();
 	$presets = Core::make('manager/area_layout_preset_provider')->getPresets();
 
-$repeatOptions = array(
-	'no-repeat' => t('No Repeat'),
-	'repeat-x' => t('Horizontally'),
-	'repeat-y' => t('Vertically'),
-	'repeat' => t('Horizontally & Vertically')
-);
+	$repeatOptions = array(
+		'no-repeat' => t('No Repeat'),
+		'repeat-x' => t('Horizontally'),
+		'repeat-y' => t('Vertically'),
+		'repeat' => t('Horizontally & Vertically')
+	);
 
 ?>
 
@@ -71,7 +83,7 @@ $repeatOptions = array(
 			<hr />
 			<div>
 				<?=t('Image')?>
-				<?=Core::make('helper/concrete/asset_library')->image('backgroundImageFileID', 'backgroundImageFileID', t('Choose Image'), $image);?>
+				<?=Core::make('helper/concrete/asset_library')->image('backgroundImageFileID', 'backgroundImageFileID', t('Choose Image'), $backgroundImage);?>
 			</div>
 			<div class="ccm-inline-select-container">
 				<?=t('Repeats')?>
@@ -145,6 +157,35 @@ $(function() {
 				$spin.trigger('keyup');
 			}
 		});
+	});
+
+	reloadAreaLayoutStyles = function(block) {
+		var url = CCM_DISPATCHER_FILENAME + '/ccm/system/block/core_area_layout/get_style_set_data/';
+		$.ajax({
+			url: url,
+			dataType: 'json',
+			type: 'post',
+			data: {
+				'bID': block.getId(),
+				'cID': block.getCID(),
+				'arHandle': <?=json_encode($a->getAreaHandle())?>
+			},
+			success: function(r) {
+				console.log(r);
+			}
+		});
+	}
+
+	ConcreteEvent.unbind('EditModeAddBlockComplete.coreAreaLayout');
+	ConcreteEvent.unbind('EditModeUpdateBlockComplete.coreAreaLayout');
+
+	ConcreteEvent.on('EditModeUpdateBlockComplete.coreAreaLayout', function(e, data) {
+		reloadAreaLayoutStyles(data.block);
+	});
+
+
+	ConcreteEvent.on('EditModeAddBlockComplete.coreAreaLayout', function(e, data) {
+		reloadAreaLayoutStyles(data.block);
 	});
 
 	$('#ccm-layouts-edit-mode').concreteLayout({

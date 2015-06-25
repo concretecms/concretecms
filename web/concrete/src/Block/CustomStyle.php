@@ -20,6 +20,12 @@ class CustomStyle extends AbstractCustomStyle
         $this->theme = $theme;
     }
 
+    public function getStyleWrapper($css)
+    {
+        $style = '<style type="text/css" data-area-style-area-handle="' . $this->arHandle . '" data-block-style-block-id="' . $this->bID . '" data-style-set="' . $this->getStyleSet()->getID() . '">' . $css . '</style>';
+        return $style;
+    }
+
     public function getCSS()
     {
         $set = $this->set;
