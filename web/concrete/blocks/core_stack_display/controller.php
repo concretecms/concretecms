@@ -117,7 +117,7 @@ class Controller extends BlockController
                     if (is_object($csr)) {
                         $css = $csr->getCSS();
                         if ($css !== '') {
-                            $styleHeader = '<style type="text/css" data-style-set="' . $csr->getStyleSet()->getID() . '">' . $css . '</style>';
+                            $styleHeader = $csr->getStyleWrapper($css);
                             $btc->addHeaderItem($styleHeader);
                         }
                     }

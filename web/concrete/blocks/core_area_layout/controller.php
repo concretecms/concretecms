@@ -5,6 +5,7 @@ use Concrete\Core\Area\Layout\CustomLayout;
 use Concrete\Core\Area\Layout\PresetLayout;
 use Concrete\Core\Area\Layout\ThemeGridLayout;
 use Concrete\Core\Area\SubArea;
+use Concrete\Core\Block\CustomStyle;
 use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 use Loader;
 use \Concrete\Core\Block\BlockController;
@@ -13,8 +14,10 @@ use \Concrete\Core\Area\Layout\Preset\Preset as AreaLayoutPreset;
 use \Concrete\Core\Area\Layout\CustomLayout as CustomAreaLayout;
 use \Concrete\Core\Area\Layout\ThemeGridLayout as ThemeGridAreaLayout;
 use \Concrete\Core\Asset\CssAsset;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use URL;
 use Page;
+use Permissions;
 
 class Controller extends BlockController
 {
@@ -121,13 +124,12 @@ class Controller extends BlockController
         if (is_object($set)) {
             $set->save();
             $b->setCustomStyleSet($set);
-        } else if ($oldStyleSet) {
+        } else if (isset($oldStyleSet)) {
             $b->resetCustomStyle();
         }
-
-
         $values = array('arLayoutID' => $arLayout->getAreaLayoutID());
         parent::save($values);
+
     }
 
     public function getImportData($blockNode)
@@ -298,6 +300,7 @@ class Controller extends BlockController
             $this->render('edit_preset');
         }
         $this->set('columnsNum', count($this->arLayout->getAreaLayoutColumns()));
+        $this->requireAsset('core/style-customizer');
 
     }
 
@@ -322,6 +325,41 @@ class Controller extends BlockController
         }
         $this->set('columnsNum', 1);
         $this->set('maxColumns', $maxColumns);
+        $this->requireAsset('core/style-customizer');
+    }
+
+    public function getStyleSetData()
+    {
+        $c = \Page::getByID($this->request->request->get('cID'), 'RECENT');
+        $data = array();
+        if (is_object($c) && !$c->isError()) {
+            $cp = new Permissions($c);
+            if ($cp->canViewPage()) {
+                $b = \Block::getByID(
+                    $this->request->request->get('bID'),
+                    $c,
+                    $this->request->request->get('arHandle')
+                );
+                if (is_object($b)) {
+                    $bp = new Permissions($b);
+                    if ($bp->canViewBlock()) {
+                        if ($b->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) {
+                            $style = $b->getCustomStyle();
+                            if (is_object($style)) {
+                                $set = $style->getStyleSet();
+                                $data['issID'] = $set->getID();
+                                $css = $style->getCSS();
+                                if ($css !== '') {
+                                    $data['style'] = $style->getStyleWrapper($css);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        $jr = new JsonResponse($data);
+        return $jr;
     }
 
 

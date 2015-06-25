@@ -277,6 +277,7 @@ return array(
          * Block actions - non UI
          */
         "/ccm/system/block/render/"                                                     => array('\Concrete\Controller\Backend\Block::render'),
+        "/ccm/system/block/core_area_layout/get_style_set_data"                                                     => array('\Concrete\\Block\CoreAreaLayout\Controller::getStyleSetData'),
 
         /**
          * Misc
