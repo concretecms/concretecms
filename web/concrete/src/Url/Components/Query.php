@@ -20,7 +20,7 @@ class Query extends \League\Url\Components\Query
         foreach ($this->data as $key => $value) {
             if (is_array($value)) {
                 foreach ($value as $val) {
-                    $pairs[] = rawurlencode($key).'='.rawurlencode($value);
+                    $pairs[] = rawurlencode($key.'[]').'='.rawurlencode($val);
                 }
             } else {
                 $pairs[] = rawurlencode($key).'='.rawurlencode($value);
