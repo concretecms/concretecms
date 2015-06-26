@@ -2,7 +2,7 @@
 class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase {
 
     /** @var PHPUnit_Extensions_Database_DB_DefaultDatabaseConnection */
-	private $conn = null;
+	private static $conn = null;
 	protected $tables = array();
 
 	protected function appendXML($root, $new) {
@@ -21,7 +21,7 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase {
     }
 
 	public function getConnection() {
-	    if ($this->conn === null) {
+	    if (self::$conn === null) {
             $config = \Config::get('database');
             $connection_config = $config['connections'][$config['default-connection']];
             $db = Database::getFactory()->createConnection(
@@ -31,11 +31,11 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase {
                 'password' => $connection_config['password'],
                 'database' => $connection_config['database']
             ));
-            $this->conn = $this->createDefaultDBConnection($db->getWrappedConnection(), 'test');
+            self::$conn = $this->createDefaultDBConnection($db->getWrappedConnection(), 'test');
             $this->db = $db;
 
 	    }
-	    return $this->conn;
+	    return self::$conn;
 	}
 
 	public function getDataSet($fixtures = array()) {
@@ -111,11 +111,6 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase {
 
         $db = Loader::db();
         $db->getEntityManager()->clear();
-		Database::purge();
-
-        if ($this->conn) {
-            $this->conn = null;
-        }
 
         parent::tearDown();
 	}
