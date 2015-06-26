@@ -10,12 +10,14 @@ class CustomStyle extends AbstractCustomStyle
     protected $arHandle;
     protected $bID;
     protected $set;
+    protected $theme;
 
-    public function __construct(StyleSet $set = null, $bID, $arHandle)
+    public function __construct(StyleSet $set = null, $bID, $arHandle, $theme = null)
     {
         $this->arHandle = $arHandle;
         $this->bID = $bID;
         $this->set = $set;
+        $this->theme = $theme;
     }
 
     public function getCSS()
@@ -107,8 +109,11 @@ class CustomStyle extends AbstractCustomStyle
         $txt = Core::make('helper/text');
         $class .= strtolower($txt->filterNonAlphaNum($this->arHandle));
         $class .= '-' . $this->bID;
-        if (is_object($this->set) && $this->set->getCustomClass()) {
-            $class .= ' ' . $this->set->getCustomClass();
+        if (is_object($this->set)) {
+            $return = $this->set->getClass($this->theme);
+            if ($return) {
+                $class .= ' ' . $return;
+            }
         }
         return $class;
     }

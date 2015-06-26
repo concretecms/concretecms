@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Area\Layout;
 
+use Concrete\Core\Html\Object\Collection;
+use HtmlObject\Element;
 use Loader;
 
 class ThemeGridColumn extends Column
@@ -45,6 +47,15 @@ class ThemeGridColumn extends Column
         $newAreaLayoutColumn = ThemeGridColumn::getByID($areaLayoutColumnID);
         return $newAreaLayoutColumn;
     }
+
+    protected function getSubAreaMaximumColumns()
+    {
+        $framework = $this->getAreaLayoutObject()->getThemeGridFrameworkObject();
+        if (is_object($framework) && $framework->supportsNesting()) {
+            return $framework->getPageThemeGridFrameworkNumColumns();
+        }
+    }
+
 
     /**
      * @param \SimpleXMLElement $node
@@ -110,6 +121,40 @@ class ThemeGridColumn extends Column
 
             $class .= $gf->getPageThemeGridFrameworkColumnClassForSpan($this->arLayoutColumnOffset);
             return $class;
+        }
+    }
+
+    public function getColumnHtmlObject()
+    {
+        $contents = $this->getContents();
+        return $this->getColumnElement($contents);
+    }
+
+    public function getColumnHtmlObjectEditMode()
+    {
+        $contents = $this->getContents(true);
+        return $this->getColumnElement($contents);
+    }
+
+    protected function getColumnElement($contents)
+    {
+        $element = new Element('div');
+        $element->addClass($this->getAreaLayoutColumnClass());
+        $gf = $this->arLayout->getThemeGridFrameworkObject();
+        if ($gf->hasPageThemeGridFrameworkOffsetClasses() && $this->getAreaLayoutColumnOffset()) {
+            $element->addClass($this->getAreaLayoutColumnOffsetClass());
+        }
+        $element->setValue($contents);
+        if ($this->getAreaLayoutColumnOffset() > 0 && (!$gf->hasPageThemeGridFrameworkOffsetClasses())) {
+            $collection = new Collection();
+            $offset = new Element('div');
+            $offset->addClass($this->getAreaLayoutColumnOffsetClass())
+                ->addClass('ccm-theme-grid-offset-column');
+            $collection[0] = $offset;
+            $collection[1] = $element;
+            return $collection;
+        } else {
+            return $element;
         }
     }
 

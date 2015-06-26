@@ -8,6 +8,11 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 class Foundation extends GridFramework
 {
 
+    public function supportsNesting()
+    {
+        return true;
+    }
+
     public function getPageThemeGridFrameworkName()
     {
         return t('Foundation');

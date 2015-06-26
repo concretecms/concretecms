@@ -36,6 +36,7 @@
 
         setupForm: function() {
             var my = this;
+            my.$element.find('.launch-tooltip').tooltip();
             my.$element.concreteAjaxForm({
                 success: function(resp) {
                     my.handleResponse(resp);

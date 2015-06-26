@@ -1327,6 +1327,11 @@
       <default value="0"/>
       <notnull/>
     </field>
+    <field name="arLayoutIsPreset" type="boolean">
+      <unsigned/>
+      <default value="0"/>
+      <notnull/>
+    </field>
     <field name="arLayoutMaxColumns" type="integer">
       <unsigned/>
       <default value="0"/>
@@ -1335,6 +1340,18 @@
     <field name="arLayoutUsesThemeGridFramework" type="boolean">
       <unsigned/>
       <default value="0"/>
+      <notnull/>
+    </field>
+  </table>
+
+
+  <table name="AreaLayoutsUsingPresets">
+    <field name="arLayoutID" type="integer">
+      <unsigned/>
+      <key/>
+    </field>
+    <field name="preset" type="string">
+      <default value=""/>
       <notnull/>
     </field>
   </table>
@@ -2100,6 +2117,14 @@
       <default value="0"/>
       <notnull/>
     </field>
+    <field name="cbOverrideBlockTypeContainerSettings" type="boolean">
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="cbEnableBlockContainer" type="boolean">
+      <default value="0"/>
+      <notnull/>
+    </field>
     <index name="bID">
       <col>bID</col>
       <col>cID</col>
@@ -2450,6 +2475,10 @@
     <field name="boxShadowSpread" type="string" size="255"/>
     <field name="boxShadowColor" type="string" size="255"/>
     <field name="customClass" type="string" size="255"/>
+    <field name="hideOnExtraSmallDevice" type="boolean"/>
+    <field name="hideOnSmallDevice" type="boolean"/>
+    <field name="hideOnMediumDevice" type="boolean"/>
+    <field name="hideOnLargeDevice" type="boolean"/>
   </table>
 
   <table name="StyleCustomizerValueLists">

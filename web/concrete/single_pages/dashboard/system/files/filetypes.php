@@ -7,14 +7,9 @@
         <p>
             <?=t('Only files with the following extensions will be allowed. Separate extensions with commas. Periods and spaces will be ignored.')?>
         </p>
-        <? if (UPLOAD_FILE_EXTENSIONS_CONFIGURABLE) { ?>
-            <div class="form-group">
-                <textarea name="file-access-file-types" class="form-control" rows="3"><?=$file_access_file_types?></textarea>
-            </div>
-        <? } else { ?>
-            <?=$file_access_file_types?>
-        <? } ?>
-	
+        <div class="form-group">
+            <textarea name="file-access-file-types" class="form-control" rows="3"><?=$file_access_file_types?></textarea>
+        </div>
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
                 <button class="pull-right btn btn-primary" type="submit" value="file-access-extensions"><?=t('Save')?></button>

@@ -9,7 +9,7 @@ return array(
      */
     'version'           => '5.7.5a1',
     'version_installed' => '5.7.5a1',
-    'version_db' => '20150616000000', // the key of the latest database migration
+    'version_db' => '20150623000000', // the key of the latest database migration
 
     /**
      * Installation status
@@ -193,6 +193,11 @@ return array(
         'full_contents_assets_hash' => false,
 
         'directory'   => DIR_FILES_UPLOADED_STANDARD . '/cache',
+        /**
+         * Relative path to the cache directory. If empty it'll be calculated from concrete.cache.directory
+         * @var string|null
+         */
+        'directory_relative' => null,
         'page'        => array(
             'directory' => DIR_FILES_UPLOADED_STANDARD . '/cache/pages',
             'adapter'      => 'file',
@@ -700,7 +705,8 @@ return array(
             'maximum'        => 128,
             'minimum'        => 5,
             'hash_portable'  => false,
-            'hash_cost_log2' => 12
+            'hash_cost_log2' => 12,
+            'legacy_salt'    => '',
         ),
         'private_messages'  => array(
             'throttle_max'          => 20,
@@ -809,7 +815,7 @@ return array(
         /**
          * URL rewriting
          *
-         * Doesn't impact URL_REWRITING_ALL which is set at a lower level and
+         * Doesn't impact concrete.seo.url_rewriting_all which is set at a lower level and
          * controls whether ALL items will be rewritten.
          *
          * @var bool

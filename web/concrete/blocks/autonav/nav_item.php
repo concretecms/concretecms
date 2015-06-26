@@ -83,7 +83,7 @@ use Loader;
 		}
 
 		/**
-		 * Gets a URL that will take the user to this particular page. Checks against URL_REWRITING, the page's path, etc..
+		 * Gets a URL that will take the user to this particular page. Checks against concrete.seo.url_rewriting, the page's path, etc..
 		 * @return string $url
 		 */
 		function getURL() {
