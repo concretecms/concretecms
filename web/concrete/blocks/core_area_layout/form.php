@@ -1,6 +1,5 @@
 <?
 	defined('C5_EXECUTE') or die("Access Denied.");
-	use \Concrete\Core\Area\Layout\Preset as AreaLayoutPreset;
 	$minColumns = 1;
 	if ($controller->getTask() == 'add') {
 		$spacing = 0;
