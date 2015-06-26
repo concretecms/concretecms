@@ -9,7 +9,7 @@ use PermissionKey;
 use Exception;
 use Loader;
 use Request;
-use \Concrete\Core\Area\Layout\Preset\Preset as AreaLayoutPreset;
+use \Concrete\Core\Area\Layout\Preset\UserPreset as AreaLayoutPreset;
 use \Concrete\Core\Area\Layout\Layout as AreaLayout;
 
 class Presets extends BackendInterfaceController
