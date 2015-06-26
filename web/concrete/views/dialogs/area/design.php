@@ -20,9 +20,12 @@ if (isset($areaClasses[$areaHandle])) {
     $customClasses = $areaClasses[$areaHandle];
 }
 
+$gf = $pt->getThemeGridFrameworkObject();
+
 Loader::element("custom_style", array(
     'saveAction' => $controller->action('submit'),
     'resetAction' => $controller->action('reset'),
     'customClasses' => $customClasses,
+    'gf' => $gf,
     'style' => $c->getAreaCustomStyle($a, true)
 ));

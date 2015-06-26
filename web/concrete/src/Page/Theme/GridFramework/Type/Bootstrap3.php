@@ -7,6 +7,11 @@ use Concrete\Core\Page\Theme\GridFramework\GridFramework;
 class Bootstrap3 extends GridFramework
 {
 
+    public function supportsNesting()
+    {
+        return true;
+    }
+
     public function getPageThemeGridFrameworkName()
     {
         return t('Twitter Bootstrap');
@@ -79,5 +84,26 @@ class Bootstrap3 extends GridFramework
     {
         return '';
     }
+
+    public function getPageThemeGridFrameworkHideOnExtraSmallDeviceClass()
+    {
+        return 'hidden-xs';
+    }
+
+    public function getPageThemeGridFrameworkHideOnSmallDeviceClass()
+    {
+        return 'hidden-sm';
+    }
+
+    public function getPageThemeGridFrameworkHideOnMediumDeviceClass()
+    {
+        return 'hidden-md';
+    }
+
+    public function getPageThemeGridFrameworkHideOnLargeDeviceClass()
+    {
+        return 'hidden-lg';
+    }
+
 
 }

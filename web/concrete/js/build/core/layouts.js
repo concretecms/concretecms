@@ -74,6 +74,8 @@
             ConcreteEvent.fire('EditModeExitInline');
         });
         this.$savebtn.unbind().on('click', function () {
+            Concrete.event.fire('EditModeExitInlineSaved');
+
             // move the toolbar back into the form so it submits. so great.
             obj.$toolbar.hide().prependTo('#ccm-block-form');
             $('#ccm-block-form').submit();
@@ -114,40 +116,24 @@
                 this._updateThemeGridView();
                 break;
             default: // a preset
+                if (this.options.editing) {
+                    return;
+                }
                 var arLayoutPresetID = typeval;
+                this._resetSlider();
                 jQuery.fn.dialog.showLoader();
-                var url = CCM_TOOLS_PATH + '/area/layout_presets?arLayoutPresetID=' + arLayoutPresetID + '&task=get_area_layout&ccm_token=' + CCM_SECURITY_TOKEN;
+                var url = CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/area/layout/presets/get/' + CCM_CID + '/' + arLayoutPresetID;
                 $.getJSON(url, function (r) {
                     obj.$formviewthemegrid.hide();
                     obj.$formviewcustom.hide();
+                    obj.$element.html(r.html);
 
-                    // set theme grid option
-                    if (parseInt(r.arLayout.arLayoutUsesThemeGridFramework)) {
-                        obj.$formviewthemegrid.show();
-                        obj.$selectgridcolumns.val(r.arLayout.arLayoutNumColumns);
-                        obj._updateThemeGridView(true);
-                    } else {
-                        obj.$formviewcustom.show();
-                        obj.$selectcolumnscustom.val(r.arLayout.arLayoutNumColumns);
-                        obj.$customspacing.val(r.arLayout.arLayoutSpacing);
-                        if (parseInt(r.arLayout.arLayoutIsCustom)) {
-                            obj.$customautomatedfrm.val(0);
-                            obj.$customautomated.parent().removeClass('ccm-inline-toolbar-icon-selected');
-                        } else {
-                            obj.$customautomated.val(1);
-                            obj.$customautomated.parent().addClass('ccm-inline-toolbar-icon-selected');
-                        }
-                        obj._updateCustomView(true);
-                        if (parseInt(r.arLayout.arLayoutIsCustom)) {
-                            $.each(r.arLayoutColumns, function (i, column) {
-                                obj.columnwidths.push(parseInt(column.arLayoutColumnWidth));
-                                var $column = $(obj.$element.find('.ccm-layout-column').get(i));
-                                $column.css('width', column.arLayoutColumnWidth + 'px');
-                                $('#ccm-edit-layout-column-width-' + i).val(column.arLayoutColumnWidth);
-                            });
-                            obj._showCustomSlider();
-                        }
-                    }
+                    obj.$element.append($('<input />', {
+                        'name': 'arLayoutPresetID',
+                        'type': 'hidden',
+                        'value': arLayoutPresetID
+                    }));
+
                     jQuery.fn.dialog.hideLoader();
                 });
                 break;

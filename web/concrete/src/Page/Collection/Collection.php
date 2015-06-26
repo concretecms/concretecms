@@ -589,7 +589,7 @@ class Collection extends Object
             $bID = $r['bID'];
             $obj = StyleSet::getByID($issID);
             if (is_object($obj)) {
-                $obj = new BlockCustomStyle($obj, $bID, $arHandle);
+                $obj = new BlockCustomStyle($obj, $bID, $arHandle, $this->getCollectionThemeObject());
                 $psss[] = $obj;
                 CacheLocal::set(
                           'pssObject',
@@ -603,7 +603,7 @@ class Collection extends Object
             $issID = $r['issID'];
             $obj = StyleSet::getByID($issID);
             if (is_object($obj)) {
-                $obj = new AreaCustomStyle($obj, $r['arHandle']);
+                $obj = new AreaCustomStyle($obj, $r['arHandle'], $this->getCollectionThemeObject());
                 $psss[] = $obj;
                 CacheLocal::set(
                           'pssObject',
@@ -636,7 +636,7 @@ class Collection extends Object
                         $issID = $r['issID'];
                         $obj = StyleSet::getByID($issID);
                         if (is_object($obj)) {
-                            $obj = new BlockCustomStyle($obj, $r['bID'], $r['arHandle']);
+                            $obj = new BlockCustomStyle($obj, $r['bID'], $r['arHandle'], $this->getCollectionThemeObject());
                             $psss[] = $obj;
                             CacheLocal::set(
                                       'pssObject',
@@ -680,7 +680,7 @@ class Collection extends Object
         $areaHandle = $area->getAreaHandle();
         if ($force || isset($styles[$areaHandle])) {
             $pss = isset($styles[$areaHandle]) ? StyleSet::getByID($styles[$areaHandle]) : null;
-            $result = new AreaCustomStyle($pss, $areaHandle);
+            $result = new AreaCustomStyle($pss, $areaHandle, $this->getCollectionThemeObject());
         }
 
         return $result;

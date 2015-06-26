@@ -14,18 +14,10 @@
                 <label><?=$form->checkbox('LANGUAGE_CHOOSE_ON_LOGIN', 1, $LANGUAGE_CHOOSE_ON_LOGIN)?><?=t('Offer choice of language on login.')?></label>
             </div>
         </div>
-
-        <?
-        $args = array();
-        if (defined("LOCALE")) {
-            $args['disabled'] = 'disabled';
-        }
-        ?>
-
         <div class="form-group">
             <?=$form->label('SITE_LOCALE', t('Default Language'))?>
             <div class="checkbox">
-                <?=$form->select('SITE_LOCALE', $interfacelocales, $SITE_LOCALE, $args);?>
+                <?=$form->select('SITE_LOCALE', $interfacelocales, $SITE_LOCALE);?>
             </div>
         </div>
 

@@ -85,6 +85,11 @@ class RequestBase extends SymfonyRequest
         $this->c = $c;
     }
 
+    public function clearCurrentPage()
+    {
+        $this->c = null;
+    }
+
     /**
      * @return \Concrete\Core\User\UserInfo
      */

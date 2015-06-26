@@ -53,7 +53,7 @@ class ValidationService {
 
 	/**
 	* Parses the file extension for a given file name, checks it to see if it's in the the extension array if provided
-	* if not, it checks to see if it's in the UPLOAD_FILE_EXTENSIONS_ALLOWED constant
+	* if not, it checks to see if it's in the concrete.upload.extensions configuration option
 	* @param string $filename
 	* @param array $extensions
 	* @return boolean

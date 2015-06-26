@@ -17,7 +17,7 @@ $blockStyle = $b->getCustomStyle();
 if (
     $pt->supportsGridFramework()
     && $b->getBlockAreaObject()->isGridContainerEnabled()
-    && !$bt->ignorePageThemeGridFrameworkContainer()
+    && !$b->ignorePageThemeGridFrameworkContainer()
 ) {
     $gf = $pt->getThemeGridFrameworkObject();
     print '</div>';

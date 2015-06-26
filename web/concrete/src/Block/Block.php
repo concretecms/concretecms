@@ -120,7 +120,8 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
             $cvID = $vo->getVersionID();
 
             $v = array($b->arHandle, $cID, $cvID, $bID);
-            $q = "select CollectionVersionBlocks.isOriginal, CollectionVersionBlocks.cbIncludeAll, Blocks.btCachedBlockRecord, BlockTypes.pkgID, CollectionVersionBlocks.cbOverrideAreaPermissions, CollectionVersionBlocks.cbOverrideBlockTypeCacheSettings, CollectionVersionBlocks.cbDisplayOrder, Blocks.bIsActive, Blocks.bID, Blocks.btID, bName, bDateAdded, bDateModified, bFilename, btHandle, Blocks.uID from CollectionVersionBlocks inner join Blocks on (CollectionVersionBlocks.bID = Blocks.bID) inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where CollectionVersionBlocks.arHandle = ? and CollectionVersionBlocks.cID = ? and (CollectionVersionBlocks.cvID = ? or CollectionVersionBlocks.cbIncludeAll=1) and CollectionVersionBlocks.bID = ?";
+            $q = "select CollectionVersionBlocks.isOriginal, CollectionVersionBlocks.cbIncludeAll, Blocks.btCachedBlockRecord, BlockTypes.pkgID, CollectionVersionBlocks.cbOverrideAreaPermissions, CollectionVersionBlocks.cbOverrideBlockTypeCacheSettings,
+ CollectionVersionBlocks.cbOverrideBlockTypeContainerSettings, CollectionVersionBlocks.cbEnableBlockContainer, CollectionVersionBlocks.cbDisplayOrder, Blocks.bIsActive, Blocks.bID, Blocks.btID, bName, bDateAdded, bDateModified, bFilename, btHandle, Blocks.uID from CollectionVersionBlocks inner join Blocks on (CollectionVersionBlocks.bID = Blocks.bID) inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where CollectionVersionBlocks.arHandle = ? and CollectionVersionBlocks.cID = ? and (CollectionVersionBlocks.cvID = ? or CollectionVersionBlocks.cbIncludeAll=1) and CollectionVersionBlocks.bID = ?";
 
         }
 
@@ -534,8 +535,8 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
                     $this->a->getAreaParentID()
                 ));
             }*/
-            array_push($v, $newBlockDisplayOrder, 0, $this->overrideAreaPermissions(), $this->overrideBlockTypeCacheSettings());
-            $q = "insert into CollectionVersionBlocks (cID, cvID, bID, arHandle, cbDisplayOrder, isOriginal, cbOverrideAreaPermissions, cbOverrideBlockTypeCacheSettings) values (?, ?, ?, ?, ?, ?, ?, ?)";
+            array_push($v, $newBlockDisplayOrder, 0, $this->overrideAreaPermissions(), $this->overrideBlockTypeCacheSettings(), $this->overrideBlockTypeContainerSettings(), $this->enableBlockContainer());
+            $q = "insert into CollectionVersionBlocks (cID, cvID, bID, arHandle, cbDisplayOrder, isOriginal, cbOverrideAreaPermissions, cbOverrideBlockTypeCacheSettings, cbOverrideBlockTypeContainerSettings, cbEnableBlockContainer) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $r = $db->prepare($q);
             $res = $db->execute($r, $v);
 
@@ -630,6 +631,29 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
             $this->cbOverrideBlockTypeCacheSettings = 0;
         }
         return $this->cbOverrideBlockTypeCacheSettings;
+    }
+
+    public function enableBlockContainer()
+    {
+        return $this->cbEnableBlockContainer;
+    }
+
+    public function ignorePageThemeGridFrameworkContainer()
+    {
+        if ($this->overrideBlockTypeContainerSettings()) {
+            return !$this->enableBlockContainer();
+        }
+        $bt = $this->getBlockTypeObject();
+        return $bt->ignorePageThemeGridFrameworkContainer();
+    }
+
+
+    public function overrideBlockTypeContainerSettings()
+    {
+        if (!$this->cbOverrideBlockTypeContainerSettings) {
+            $this->cbOverrideBlockTypeContainerSettings = 0;
+        }
+        return $this->cbOverrideBlockTypeContainerSettings;
     }
 
     public function getBlockCacheSettingsObject()
@@ -833,8 +857,8 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
             $newBlockDisplayOrder = $this->cbDisplayOrder;
         }
         //$v = array($ncID, $nvID, $newBID, $this->areaName, $newBlockDisplayOrder, 1);
-        $v = array($ncID, $nvID, $newBID, $this->arHandle, $newBlockDisplayOrder, 1, $this->overrideAreaPermissions(), $this->overrideBlockTypeCacheSettings());
-        $q = "insert into CollectionVersionBlocks (cID, cvID, bID, arHandle, cbDisplayOrder, isOriginal, cbOverrideAreaPermissions, cbOverrideBlockTypeCacheSettings) values (?, ?, ?, ?, ?, ?, ?, ?)";
+        $v = array($ncID, $nvID, $newBID, $this->arHandle, $newBlockDisplayOrder, 1, $this->overrideAreaPermissions(), $this->overrideBlockTypeCacheSettings(), $this->overrideBlockTypeContainerSettings(), $this->enableBlockContainer());
+        $q = "insert into CollectionVersionBlocks (cID, cvID, bID, arHandle, cbDisplayOrder, isOriginal, cbOverrideAreaPermissions, cbOverrideBlockTypeCacheSettings,cbOverrideBlockTypeContainerSettings, cbEnableBlockContainer) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $r = $db->prepare($q);
         $res = $db->execute($r, $v);
 
@@ -859,9 +883,43 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
     {
         if ($this->getCustomStyleSetID() > 0 || $force) {
             $csr = StyleSet::getByID($this->getCustomStyleSetID());
-            $bs = new CustomStyle($csr, $this->getBlockID(), $this->getAreaHandle());
+            $theme = $this->c->getCollectionThemeObject();
+            $bs = new CustomStyle($csr, $this->getBlockID(), $this->getAreaHandle(), $theme);
             return $bs;
         }
+    }
+
+    public function resetBlockContainerSettings()
+    {
+        $db = Loader::db();
+        $c = $this->getBlockCollectionObject();
+        $cvID = $c->getVersionID();
+        $bt = $this->getBlockTypeObject();
+        $enableBlockContainer = !!$bt->ignorePageThemeGridFrameworkContainer();
+        $db->update('CollectionVersionBlocks', array('cbOverrideBlockTypeContainerSettings' => 0, 'cbEnableBlockContainer' => $enableBlockContainer),
+            array(
+                'cID'      => $this->getBlockCollectionID(),
+                'cvID'     => $cvID,
+                'arHandle' => $this->getAreaHandle(),
+                'bID'      => $this->bID
+            )
+        );
+    }
+
+    public function setCustomContainerSettings($enableBlockContainer)
+    {
+        $db = Loader::db();
+        $c = $this->getBlockCollectionObject();
+        $cvID = $c->getVersionID();
+        $bt = $this->getBlockTypeObject();
+        $db->update('CollectionVersionBlocks', array('cbOverrideBlockTypeContainerSettings' => 1, 'cbEnableBlockContainer' => $enableBlockContainer),
+            array(
+                'cID'      => $this->getBlockCollectionID(),
+                'cvID'     => $cvID,
+                'arHandle' => $this->getAreaHandle(),
+                'bID'      => $this->bID
+            )
+        );
     }
 
     public function resetCustomCacheSettings()

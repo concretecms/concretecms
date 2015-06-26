@@ -4,6 +4,7 @@ namespace Concrete\Core\StyleCustomizer\Inline;
 
 use Concrete\Core\Backup\ContentExporter;
 use Concrete\Core\Backup\ContentImporter;
+use Concrete\Core\Page\Theme\GridFramework\GridFramework;
 use Database;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -180,6 +181,26 @@ class StyleSet
      * @Column(type="string")
      */
     protected $boxShadowColor;
+
+    /**
+     * @Column(type="boolean")
+     */
+    protected $hideOnExtraSmallDevice = false;
+
+    /**
+     * @Column(type="boolean")
+     */
+    protected $hideOnSmallDevice = false;
+
+    /**
+     * @Column(type="boolean")
+     */
+    protected $hideOnMediumDevice = false;
+
+    /**
+     * @Column(type="boolean")
+     */
+    protected $hideOnLargeDevice = false;
 
     /**
      * @param mixed $alignment
@@ -568,6 +589,70 @@ class StyleSet
     }
 
     /**
+     * @return mixed
+     */
+    public function getHideOnExtraSmallDevice()
+    {
+        return $this->hideOnExtraSmallDevice;
+    }
+
+    /**
+     * @param mixed $hideOnExtraSmallDevice
+     */
+    public function setHideOnExtraSmallDevice($hideOnExtraSmallDevice)
+    {
+        $this->hideOnExtraSmallDevice = $hideOnExtraSmallDevice;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHideOnSmallDevice()
+    {
+        return $this->hideOnSmallDevice;
+    }
+
+    /**
+     * @param mixed $hideOnSmallDevice
+     */
+    public function setHideOnSmallDevice($hideOnSmallDevice)
+    {
+        $this->hideOnSmallDevice = $hideOnSmallDevice;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHideOnMediumDevice()
+    {
+        return $this->hideOnMediumDevice;
+    }
+
+    /**
+     * @param mixed $hideOnMediumDevice
+     */
+    public function setHideOnMediumDevice($hideOnMediumDevice)
+    {
+        $this->hideOnMediumDevice = $hideOnMediumDevice;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHideOnLargeDevice()
+    {
+        return $this->hideOnLargeDevice;
+    }
+
+    /**
+     * @param mixed $hideOnLargeDevice
+     */
+    public function setHideOnLargeDevice($hideOnLargeDevice)
+    {
+        $this->hideOnLargeDevice = $hideOnLargeDevice;
+    }
+
+    /**
      * @param $issID
      *
      * @return \Concrete\Core\Page\Style\Set
@@ -661,6 +746,33 @@ class StyleSet
         $node->addChild('boxShadowSpread', $this->getBoxShadowSpread());
         $node->addChild('boxShadowColor', $this->getBoxShadowColor());
         $node->addChild('customClass', $this->getCustomClass());
+        $node->addChild('hideOnExtraSmallDevice', $this->getHideOnExtraSmallDevice());
+        $node->addChild('hideOnSmallDevice', $this->getHideOnSmallDevice());
+        $node->addChild('hideOnMediumDevice', $this->getHideOnMediumDevice());
+        $node->addChild('hideOnLargeDevice', $this->getHideOnLargeDevice());
+    }
+
+    public function getClass($theme = null)
+    {
+        $class = '';
+        if ($this->getCustomClass()) {
+            $class .= $this->getCustomClass();
+        }
+        if (is_object($theme) && ($gf = $theme->getThemeGridFrameworkObject())) {
+            if ($this->getHideOnExtraSmallDevice()) {
+                $class .= ' ' . $gf->getPageThemeGridFrameworkHideOnExtraSmallDeviceClass();
+            }
+            if ($this->getHideOnSmallDevice()) {
+                $class .= ' ' . $gf->getPageThemeGridFrameworkHideOnSmallDeviceClass();
+            }
+            if ($this->getHideOnMediumDevice()) {
+                $class .= ' ' . $gf->getPageThemeGridFrameworkHideOnMediumDeviceClass();
+            }
+            if ($this->getHideOnLargeDevice()) {
+                $class .= ' ' . $gf->getPageThemeGridFrameworkHideOnLargeDeviceClass();
+            }
+        }
+        return $class;
     }
 
     /**
@@ -688,6 +800,21 @@ class StyleSet
             $return = true;
         }
 
+        if (isset($r['hideOnDevice'])) {
+            if (isset($r['hideOnDevice'][GridFramework::DEVICE_CLASSES_HIDE_ON_EXTRA_SMALL]) && $r['hideOnDevice'][GridFramework::DEVICE_CLASSES_HIDE_ON_EXTRA_SMALL] == 1) {
+                $set->setHideOnExtraSmallDevice(true);
+            }
+            if (isset($r['hideOnDevice'][GridFramework::DEVICE_CLASSES_HIDE_ON_SMALL]) && $r['hideOnDevice'][GridFramework::DEVICE_CLASSES_HIDE_ON_SMALL] == 1) {
+                $set->setHideOnSmallDevice(true);
+            }
+            if (isset($r['hideOnDevice'][GridFramework::DEVICE_CLASSES_HIDE_ON_MEDIUM]) && $r['hideOnDevice'][GridFramework::DEVICE_CLASSES_HIDE_ON_MEDIUM] == 1) {
+                $set->setHideOnMediumDevice(true);
+            }
+            if (isset($r['hideOnDevice'][GridFramework::DEVICE_CLASSES_HIDE_ON_LARGE]) && $r['hideOnDevice'][GridFramework::DEVICE_CLASSES_HIDE_ON_LARGE] == 1) {
+                $set->setHideOnLargeDevice(true);
+            }
+            $return = true;
+        }
         if (trim($r['linkColor']) != '') {
             $set->setLinkColor($r['linkColor']);
             $return = true;
@@ -781,5 +908,19 @@ class StyleSet
         }
 
         return null;
+    }
+
+    public function isHiddenOnDevice($class)
+    {
+        switch($class) {
+            case GridFramework::DEVICE_CLASSES_HIDE_ON_EXTRA_SMALL:
+                return $this->getHideOnExtraSmallDevice();
+            case GridFramework::DEVICE_CLASSES_HIDE_ON_SMALL:
+                return $this->getHideOnSmallDevice();
+            case GridFramework::DEVICE_CLASSES_HIDE_ON_MEDIUM:
+                return $this->getHideOnMediumDevice();
+            case GridFramework::DEVICE_CLASSES_HIDE_ON_LARGE:
+                return $this->getHideOnLargeDevice();
+        }
     }
 }

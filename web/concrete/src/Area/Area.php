@@ -826,8 +826,11 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
      *
      * @return bool
      */
-    public function display($c, $alternateBlockArray = null)
+    public function display($c = false, $alternateBlockArray = null)
     {
+        if (!$c) {
+            $c = Page::getCurrentPage();
+        }
         $v = View::getRequestInstance();
 
         if (!is_object($c) || $c->isError()) {
