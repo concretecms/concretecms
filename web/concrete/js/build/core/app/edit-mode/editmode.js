@@ -126,7 +126,7 @@
                     }
                 });
 
-                ConcreteMenuManager.disable();
+//                ConcreteMenuManager.disable();
                 ConcreteToolbar.disable();
                 $('div.ccm-area').addClass('ccm-area-inline-edit-disabled');
                 block.getElem().addClass('ccm-block-edit-inline-active');
