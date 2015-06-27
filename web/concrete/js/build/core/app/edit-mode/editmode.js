@@ -126,7 +126,10 @@
                     }
                 });
 
-//                ConcreteMenuManager.disable();
+                // We can't just wholesale disable the menu manager even though that makes
+                // it so that you can't click on blocks while they're disabled, because we
+                // need the file manager menu when editing block design.
+//              ConcreteMenuManager.disable();
                 ConcreteToolbar.disable();
                 $('div.ccm-area').addClass('ccm-area-inline-edit-disabled');
                 block.getElem().addClass('ccm-block-edit-inline-active');
