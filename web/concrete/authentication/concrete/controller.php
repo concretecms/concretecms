@@ -79,7 +79,9 @@ class Controller extends AuthenticationTypeController
     private function genString($a = 16)
     {
         if (function_exists('mcrypt_create_iv')) {
-            return bin2hex(mcrypt_create_iv($a, MCRYPT_DEV_URANDOM));
+            // Use /dev/urandom if available, otherwise fall back to PHP's rand.
+            // http://php.net/manual/en/function.mcrypt-create-iv.php#117047
+            return bin2hex(mcrypt_create_iv($a, MCRYPT_DEV_URANDOM|MCRYPT_RAND));
         } elseif (function_exists('openssl_random_pseudo_bytes')) {
             return bin2hex(openssl_random_pseudo_bytes($a));
         }
