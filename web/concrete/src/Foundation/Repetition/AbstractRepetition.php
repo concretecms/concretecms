@@ -252,7 +252,7 @@ abstract class AbstractRepetition implements RepetitionInterface
                         date("Y-m-01 {$start_datetime_time}", $now_datetime->getTimestamp()));
                     $normalized_start_datetime = new \DateTime(date("Y-m-01 H:i:s", $start_datetime->getTimestamp()));
 
-                    $diff = $normalized_now_datetime->diff($normalized_start_datetime);
+                    $diff = $this->dateDiffNoDST($normalized_now_datetime, $normalized_start_datetime);
                     $month_difference = $diff->m + ($diff->y * 12);
 
                     $checkTime = false;
@@ -738,4 +738,18 @@ abstract class AbstractRepetition implements RepetitionInterface
         return array_get($days, $day);
     }
 
+    /**
+     * Returns the difference between two DateTime objects without considering DST changes.
+     *
+     * @param \DateTime $from
+     * @param \DateTime $to
+     *
+     * @return \DateInterval
+     */
+    protected function dateDiffNoDST(\DateTime $from, \DateTime $to)
+    {
+        $fromUTC = new \DateTime($from->format('Y-m-d\TH:i:s+00:00'));
+        $toUTC = new \DateTime($to->format('Y-m-d\TH:i:s+00:00'));
+        return $fromUTC->diff($toUTC);
+    }
 }
