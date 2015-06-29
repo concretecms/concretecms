@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ea8f6f39b047d2add52888c1cefb75a1",
+    "hash": "5f95e7fa69a7095909de1a6a0d2412be",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -47,7 +47,7 @@
         },
         {
             "name": "concrete5/doctrine-xml",
-            "version": "dev-master",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/concrete5/doctrine-xml.git",
@@ -687,7 +687,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/migrations/zipball/a4f14d3a3d397104e557ec65d1a4e43bb86e4ddf",
+                "url": "https://api.github.com/repos/doctrine/migrations/zipball/43619782df4e9ae6be6b24557f0429471eeee848",
                 "reference": "efb77c10dfb75485998a843154bbc44d8124c4d1",
                 "shasum": ""
             },
@@ -2018,7 +2018,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tchwork/utf8/zipball/65b19607048351f767a034d4cc709db8b136d2c5",
+                "url": "https://api.github.com/repos/tchwork/utf8/zipball/38047e4a8f64e1974f46ae6bec56aaa0357bb98d",
                 "reference": "ffa082111aa3cb23cf2479a17e6785ace91da982",
                 "shasum": ""
             },
@@ -3926,8 +3926,7 @@
         "kertz/twitteroauth": 20,
         "primal/color": 20,
         "zendframework/zend-queue": 20,
-        "oryzone/oauth-user-data": 20,
-        "concrete5/doctrine-xml": 20
+        "oryzone/oauth-user-data": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
