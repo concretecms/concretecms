@@ -62,7 +62,11 @@ class InlineStyleSet extends ConcreteDatabaseTestCase
         $set = StyleSet::populateFromRequest($r);
         $this->assertInstanceOf('\Concrete\Core\StyleCustomizer\Inline\StyleSet', $set);
 
-        $style = new CustomStyle($set, '100', 'Test');
+        $b = new \Concrete\Core\Block\Block();
+        $b->bID = 100;
+        $a = new \Concrete\Core\Area\Area('Test');
+        $b->setBlockAreaObject($a);
+        $style = new CustomStyle($set, $b);
         $this->assertEquals('.ccm-custom-style-container.ccm-custom-style-test-100{background-color:rgb(0,0,0)}', $style->getCSS());
 
         $arguments = array(

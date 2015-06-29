@@ -589,7 +589,11 @@ class Collection extends Object
             $bID = $r['bID'];
             $obj = StyleSet::getByID($issID);
             if (is_object($obj)) {
-                $obj = new BlockCustomStyle($obj, $bID, $arHandle, $this->getCollectionThemeObject());
+                $b = new Block();
+                $b->bID = $bID;
+                $a = new Area($arHandle);
+                $b->setBlockAreaObject($a);
+                $obj = new BlockCustomStyle($obj, $b, $this->getCollectionThemeObject());
                 $psss[] = $obj;
                 CacheLocal::set(
                           'pssObject',
@@ -603,7 +607,8 @@ class Collection extends Object
             $issID = $r['issID'];
             $obj = StyleSet::getByID($issID);
             if (is_object($obj)) {
-                $obj = new AreaCustomStyle($obj, $r['arHandle'], $this->getCollectionThemeObject());
+                $a = new Area($r['arHandle']);
+                $obj = new AreaCustomStyle($obj, $a, $this->getCollectionThemeObject());
                 $psss[] = $obj;
                 CacheLocal::set(
                           'pssObject',
@@ -636,7 +641,11 @@ class Collection extends Object
                         $issID = $r['issID'];
                         $obj = StyleSet::getByID($issID);
                         if (is_object($obj)) {
-                            $obj = new BlockCustomStyle($obj, $r['bID'], $r['arHandle'], $this->getCollectionThemeObject());
+                            $b = new Block();
+                            $b->bID = $r['bID'];
+                            $a = new Area($r['arHandle']);
+                            $b->setBlockAreaObject($a);
+                            $obj = new BlockCustomStyle($obj, $b, $this->getCollectionThemeObject());
                             $psss[] = $obj;
                             CacheLocal::set(
                                       'pssObject',
@@ -680,7 +689,8 @@ class Collection extends Object
         $areaHandle = $area->getAreaHandle();
         if ($force || isset($styles[$areaHandle])) {
             $pss = isset($styles[$areaHandle]) ? StyleSet::getByID($styles[$areaHandle]) : null;
-            $result = new AreaCustomStyle($pss, $areaHandle, $this->getCollectionThemeObject());
+            $a = new Area($areaHandle);
+            $result = new AreaCustomStyle($pss, $a, $this->getCollectionThemeObject());
         }
 
         return $result;

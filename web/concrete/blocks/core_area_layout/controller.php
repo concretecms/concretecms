@@ -37,6 +37,15 @@ class Controller extends BlockController
         return t("Area Layout");
     }
 
+    public function registerViewAssets()
+    {
+        if (is_object($this->block) && $this->block->getBlockFilename() == 'parallax') {
+            $this->requireAsset('javascript', 'jquery');
+            $this->requireAsset('javascript', 'core/frontend/parallax-image');
+        }
+    }
+
+
     public function duplicate($newBID)
     {
         $db = Loader::db();
@@ -115,21 +124,8 @@ class Controller extends BlockController
             }
         }
 
-        $set = StyleSet::populateFromRequest($this->request);
-        $b = $this->getBlockObject();
-        $oldStyle = $b->getCustomStyle();
-        if (is_object($oldStyle)) {
-            $oldStyleSet = $oldStyle->getStyleSet();
-        }
-        if (is_object($set)) {
-            $set->save();
-            $b->setCustomStyleSet($set);
-        } else if (isset($oldStyleSet)) {
-            $b->resetCustomStyle();
-        }
         $values = array('arLayoutID' => $arLayout->getAreaLayoutID());
         parent::save($values);
-
     }
 
     public function getImportData($blockNode)
@@ -326,40 +322,6 @@ class Controller extends BlockController
         $this->set('columnsNum', 1);
         $this->set('maxColumns', $maxColumns);
         $this->requireAsset('core/style-customizer');
-    }
-
-    public function getStyleSetData()
-    {
-        $c = \Page::getByID($this->request->request->get('cID'), 'RECENT');
-        $data = array();
-        if (is_object($c) && !$c->isError()) {
-            $cp = new Permissions($c);
-            if ($cp->canViewPage()) {
-                $b = \Block::getByID(
-                    $this->request->request->get('bID'),
-                    $c,
-                    $this->request->request->get('arHandle')
-                );
-                if (is_object($b)) {
-                    $bp = new Permissions($b);
-                    if ($bp->canViewBlock()) {
-                        if ($b->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) {
-                            $style = $b->getCustomStyle();
-                            if (is_object($style)) {
-                                $set = $style->getStyleSet();
-                                $data['issID'] = $set->getID();
-                                $css = $style->getCSS();
-                                if ($css !== '') {
-                                    $data['style'] = $style->getStyleWrapper($css);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        $jr = new JsonResponse($data);
-        return $jr;
     }
 
 

@@ -803,17 +803,20 @@ class StyleSet
         if (isset($r['hideOnDevice'])) {
             if (isset($r['hideOnDevice'][GridFramework::DEVICE_CLASSES_HIDE_ON_EXTRA_SMALL]) && $r['hideOnDevice'][GridFramework::DEVICE_CLASSES_HIDE_ON_EXTRA_SMALL] == 1) {
                 $set->setHideOnExtraSmallDevice(true);
+                $return = true;
             }
             if (isset($r['hideOnDevice'][GridFramework::DEVICE_CLASSES_HIDE_ON_SMALL]) && $r['hideOnDevice'][GridFramework::DEVICE_CLASSES_HIDE_ON_SMALL] == 1) {
                 $set->setHideOnSmallDevice(true);
+                $return = true;
             }
             if (isset($r['hideOnDevice'][GridFramework::DEVICE_CLASSES_HIDE_ON_MEDIUM]) && $r['hideOnDevice'][GridFramework::DEVICE_CLASSES_HIDE_ON_MEDIUM] == 1) {
                 $set->setHideOnMediumDevice(true);
+                $return = true;
             }
             if (isset($r['hideOnDevice'][GridFramework::DEVICE_CLASSES_HIDE_ON_LARGE]) && $r['hideOnDevice'][GridFramework::DEVICE_CLASSES_HIDE_ON_LARGE] == 1) {
                 $set->setHideOnLargeDevice(true);
+                $return = true;
             }
-            $return = true;
         }
         if (trim($r['linkColor']) != '') {
             $set->setLinkColor($r['linkColor']);

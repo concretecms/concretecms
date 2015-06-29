@@ -43,9 +43,6 @@ class PageTheme extends \Concrete\Core\Page\Theme\Theme implements ThemeProvider
     public function getThemeBlockClasses()
     {
         return array(
-            'core_area_layout' => array(
-                'parallax-slow',
-            ),
             'feature' => array('feature-home-page'),
             'page_list' => array(
                 'recent-blog-entry',

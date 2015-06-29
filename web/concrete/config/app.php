@@ -277,7 +277,6 @@ return array(
          * Block actions - non UI
          */
         "/ccm/system/block/render/"                                                     => array('\Concrete\Controller\Backend\Block::render'),
-        "/ccm/system/block/core_area_layout/get_style_set_data"                                                     => array('\Concrete\\Block\CoreAreaLayout\Controller::getStyleSetData'),
 
         /**
          * Misc
@@ -530,9 +529,6 @@ return array(
             array('javascript-localized', '/ccm/assets/localization/dropzone/js'),
             array('css', 'css/dropzone.css', array('minify' => false))
         ),
-        'stellar'                 => array(
-            array('javascript', 'js/stellar.js'),
-        ),
         'jquery/form'              => array(
             array('javascript', 'js/jquery-form.js')
         ),
@@ -565,6 +561,9 @@ return array(
         ),
         'core/localization' => array(
             array('javascript-localized', '/ccm/assets/localization/core/js'),
+        ),
+        'core/frontend/parallax-image'               => array(
+            array('javascript', 'js/frontend/parallax-image.js', array('minify' => false))
         ),
         'jquery/awesome-rating'                 => array(
             array('javascript', 'js/jquery-awesome-rating.js', array('minify' => false)),
