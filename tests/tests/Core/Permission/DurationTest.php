@@ -1,21 +1,22 @@
 <?php
+
 namespace tests\Core\Permission;
 
 use Concrete\Core\Permission\Duration;
 
 /**
  * Class DurationTest
- * Tests for `\Concrete\Core\Permission\Duration`
+ * Tests for `\Concrete\Core\Permission\Duration`.
  */
 class DurationTest extends \PHPUnit_Framework_TestCase
 {
-
     private static function getFarYear($wanted)
     {
         static $limitTo32bits;
         if (!isset($limitTo32bits)) {
             $limitTo32bits = @strtotime('2300-01-01') === false;
         }
+
         return $limitTo32bits ? min($wanted, 2037) : $wanted;
     }
 
@@ -158,7 +159,6 @@ class DurationTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($monthly_weekly_repetition->isActive(strtotime(date('Y-m-21 01:50:00', time()))));
     }
-
 
     public function testGenerateSingle()
     {
@@ -308,5 +308,4 @@ class DurationTest extends \PHPUnit_Framework_TestCase
         }
         $this->assertTrue($all_active, 'EventOccurrenceFactory generated inactive occurrences.');
     }
-
 }
