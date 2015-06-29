@@ -161,7 +161,7 @@ class UserPreset extends Object
         $columns = $this->getAreaLayoutObject()->getAreaLayoutColumns();
         $presetColumns = array();
         foreach($columns as $column) {
-            $presetColumns[] = Column::fromHtml((string) $column->getColumnHtmlObject());
+            $presetColumns[] = new Column($column->getColumnHtmlObject());
         }
         $p = new Preset($this->arLayoutID, $this->getAreaLayoutPresetName(),
             $formatter, $presetColumns);
