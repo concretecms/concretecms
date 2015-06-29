@@ -202,7 +202,7 @@ class DurationTest extends \PHPUnit_Framework_TestCase
                 break;
             }
 
-            if ($window[0] !== $occurrence[0] || $window[1] !== $occurrence[1]) {
+            if ($window[0] != $occurrence[0] || $window[1] != $occurrence[1]) {
                 $all_active = false;
                 break;
             }
@@ -236,7 +236,7 @@ class DurationTest extends \PHPUnit_Framework_TestCase
                 break;
             }
 
-            if ($window[0] !== $occurrence[0] || $window[1] !== $occurrence[1]) {
+            if ($window[0] != $occurrence[0] || $window[1] != $occurrence[1]) {
                 $all_active = false;
                 break;
             }
@@ -269,7 +269,7 @@ class DurationTest extends \PHPUnit_Framework_TestCase
                 break;
             }
 
-            if ($window[0] !== $occurrence[0] || $window[1] !== $occurrence[1]) {
+            if ($window[0] != $occurrence[0] || $window[1] != $occurrence[1]) {
                 $all_active = false;
                 break;
             }
@@ -301,7 +301,7 @@ class DurationTest extends \PHPUnit_Framework_TestCase
                 break;
             }
 
-            if ($window[0] !== $occurrence[0] || $window[1] !== $occurrence[1]) {
+            if ($window[0] != $occurrence[0] || $window[1] != $occurrence[1]) {
                 $all_active = false;
                 break;
             }
