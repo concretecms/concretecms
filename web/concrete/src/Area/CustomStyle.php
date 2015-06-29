@@ -20,9 +20,9 @@ class CustomStyle extends AbstractCustomStyle
 
     protected $theme;
 
-    public function __construct(StyleSet $set = null, $arHandle = null, $theme)
+    public function __construct(StyleSet $set = null, Area $area, $theme)
     {
-        $this->arHandle = $arHandle;
+        $this->arHandle = $area->getAreaHandle();
         $this->set = $set;
         $this->theme = $theme;
     }

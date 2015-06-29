@@ -9,7 +9,6 @@
 
         my.options = options;
         my.$element = $element;
-        console.log(my.$element);
         my.$toolbar = my.$element.find('>ul');
         my.$toolbar.find('div.dropdown-menu').on('click', function(e) {
             if ($(e.target).is('button')) {

@@ -299,6 +299,10 @@ module.exports = function(grunt) {
             ]
         },
 
+        ccm_frontend_parallax_image: {
+            dest: '<%= DIR_BASE %>/concrete/js/frontend/parallax-image.js',
+            src: '<%= DIR_BASE %>/concrete/js/build/core/frontend/parallax-image.js'
+        },
 
         ccm_gathering: {
             dest: '<%= DIR_BASE %>/concrete/js/gathering.js',

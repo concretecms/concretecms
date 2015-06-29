@@ -884,7 +884,14 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         if ($this->getCustomStyleSetID() > 0 || $force) {
             $csr = StyleSet::getByID($this->getCustomStyleSetID());
             $theme = $this->c->getCollectionThemeObject();
-            $bs = new CustomStyle($csr, $this->getBlockID(), $this->getAreaHandle(), $theme);
+            switch($this->getBlockTypeHandle()) {
+                case BLOCK_HANDLE_LAYOUT_PROXY:
+                    $bs = new CoreAreaLayoutCustomStyle($csr, $this, $theme);
+                    break;
+                default:
+                    $bs = new CustomStyle($csr, $this, $theme);
+                    break;
+            }
             return $bs;
         }
     }

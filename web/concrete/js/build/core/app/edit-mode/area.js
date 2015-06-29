@@ -172,6 +172,20 @@
                     return false;
                 });
 
+            $menuElem.find('a[data-menu-action=edit-container-layout-style]')
+                .off('click.edit-mode')
+                .on('click.edit-mode', function (e) {
+                    e.preventDefault();
+                    // we are going to place this at the END of the list.
+                    var $link = $(this);
+                    var bID = parseInt($(this).attr('data-container-layout-block-id'));
+                    var editor = Concrete.getEditMode();
+                    var block = _.findWhere(editor.getBlocks(), {id: bID});
+                    Concrete.event.fire('EditModeBlockEditInline', {
+                        block: block, event: e, action: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/block/design'
+                    });
+                });
+
             $menuElem.find('a[data-menu-action=area-add-block]')
                 .off('click.edit-mode')
                 .on('click.edit-mode', function(e) {
