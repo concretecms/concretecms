@@ -10,6 +10,15 @@ use Concrete\Core\Permission\Duration;
 class DurationTest extends \PHPUnit_Framework_TestCase
 {
 
+    private static function getFarYear($wanted)
+    {
+        static $limitTo32bits;
+        if (!isset($limitTo32bits)) {
+            $limitTo32bits = @strtotime('2300-01-01') === false;
+        }
+        return $limitTo32bits ? min($wanted, 2037) : $wanted;
+    }
+
     public function testDailyRecurring()
     {
         $now = strtotime('2/13/2014');
@@ -68,7 +77,7 @@ class DurationTest extends \PHPUnit_Framework_TestCase
 
         $weekly_weeekday_repetition->setRepeatEveryNum(1);
 
-        $test_time = strtotime('last saturday of december 3500');
+        $test_time = strtotime('last saturday of december '.self::getFarYear(3500));
         $test_time = strtotime('3:00:00', $test_time);
 
         $this->assertTrue($weekly_weeekday_repetition->isActive($test_time));
@@ -93,7 +102,7 @@ class DurationTest extends \PHPUnit_Framework_TestCase
         $weekly_repetition->setRepeatEveryNum(1);
 
         $dow = date('l', $now);
-        $test_time = strtotime("last {$dow} of december 3500");
+        $test_time = strtotime("last {$dow} of december ".self::getFarYear(3500));
         $test_time = strtotime('3:00:00', $test_time);
 
         $this->assertTrue($weekly_repetition->isActive($test_time));
@@ -117,7 +126,7 @@ class DurationTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue(
             $monthly_ldotw_repetition->isActive(
-                strtotime(date('Y-m-d 01:30:00', strtotime('last monday of march 2205')))));
+                strtotime(date('Y-m-d 01:30:00', strtotime('last monday of march '.self::getFarYear(2205))))));
 
         // -- Weekly
         $monthly_weekly_repetition = new Duration();
@@ -133,7 +142,7 @@ class DurationTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue(
             $monthly_weekly_repetition->isActive(
-                strtotime(date('Y-m-d 01:30:00', strtotime('second saturday of march 2205')))));
+                strtotime(date('Y-m-d 01:30:00', strtotime('second saturday of march '.self::getFarYear(2205))))));
 
         // -- Monthly
         $monthly_weekly_repetition = new Duration();
