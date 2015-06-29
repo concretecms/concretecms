@@ -181,7 +181,7 @@ abstract class AbstractRepetition implements RepetitionInterface
                     $now_time->setTimestamp($now);
 
                     $week_diff_start = new \DateTime();
-                    if (($days_past_sunday = date('w', $start_time->getTimestamp())) !== 0) {
+                    if (($days_past_sunday = date('w', $start_time->getTimestamp())) != 0) {
                         $week_diff_start->setTimestamp(
                             strtotime("-{$days_past_sunday} days", $start_time->getTimestamp()));
                     } else {
@@ -189,7 +189,7 @@ abstract class AbstractRepetition implements RepetitionInterface
                     }
 
                     $week_diff_now = new \DateTime();
-                    if (($days_past_sunday = date('w', $now_time->getTimestamp())) !== 0) {
+                    if (($days_past_sunday = date('w', $now_time->getTimestamp())) != 0) {
                         $week_diff_now->setTimestamp(strtotime("-{$days_past_sunday} days", $now_time->getTimestamp()));
                     } else {
                         $week_diff_now->setTimestamp($now_time->getTimestamp());
