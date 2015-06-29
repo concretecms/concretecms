@@ -80,7 +80,7 @@ $.fn.parallaxize = (function (global, $) {
 
         translate: function (cache) {
             var transform = [
-                this.resizeTranslation(cache),
+                //this.resizeTranslation(cache),
                 this.positionTranslation()
             ].join(' ');
 
