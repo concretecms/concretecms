@@ -1,6 +1,7 @@
 <?php
 
 namespace Concrete\Block\DateNavigation;
+
 defined('C5_EXECUTE') or die("Access Denied.");
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Page\PageList;
@@ -10,7 +11,6 @@ use Loader;
 
 class Controller extends BlockController
 {
-
     public $helpers = array('form');
 
     protected $btInterfaceWidth = 400;
@@ -18,6 +18,13 @@ class Controller extends BlockController
     protected $btExportPageColumns = array('cParentID', 'cTargetID');
     protected $btExportPageTypeColumns = array('ptID');
     protected $btTable = 'btDateNavigation';
+
+    public $title;
+    public $cTargetID;
+    public $cParentID;
+    public $filterByParent;
+    public $redirectToResults;
+    public $ptID;
 
     public function getBlockTypeDescription()
     {
@@ -60,6 +67,7 @@ class Controller extends BlockController
     {
         $date = strtotime($dateArray['year'] . '-' . $dateArray['month'] . '-01');
         $srv = Core::make('helper/date');
+
         return $srv->date('F Y', $date);
     }
 
@@ -73,6 +81,7 @@ class Controller extends BlockController
                 $parameters[1] = intval($parameters[1]);
             }
         }
+
         return array($method, $parameters);
     }
 
@@ -88,7 +97,6 @@ class Controller extends BlockController
         if (isset($this->selectedYear) && isset($this->selectedMonth)) {
             return $dateArray['year'] == $this->selectedYear && $dateArray['month'] == $this->selectedMonth;
         }
-
     }
 
     public function view()

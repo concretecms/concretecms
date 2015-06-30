@@ -9,6 +9,8 @@ use Loader;
 class Me extends DashboardPageController {
 
 	protected $wpCategoryHandleActive = 'page';
+
+	public $categories;
 	
 	public function on_start() {
 		parent::on_start();

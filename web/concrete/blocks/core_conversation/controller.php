@@ -15,6 +15,7 @@ use Page;
  *
  * @package Blocks
  * @subpackage Conversation
+ *
  * @author Andrew Embler <andrew@concrete5.org>
  * @copyright  Copyright (c) 2003-2013 Concrete5. (http://www.concrete5.org)
  * @license    http://www.concrete5.org/license/     MIT License
@@ -29,6 +30,19 @@ class Controller extends BlockController implements ConversationFeatureInterface
     protected $btFeatures = array(
         'conversation',
     );
+
+    public $cnvID;
+    public $enablePosting;
+    public $paginate;
+    public $itemsPerPage;
+    public $displayMode;
+    public $orderBy;
+    public $enableOrdering;
+    public $enableCommentRating;
+    public $displayPostingForm;
+    public $addMessageLabel;
+    public $dateFormat;
+    public $customDateFormat;
 
     public function getBlockTypeDescription()
     {

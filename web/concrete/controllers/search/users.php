@@ -27,6 +27,9 @@ class Users extends Controller
      */
     protected $userList;
 
+    public $searchRequest;
+    public $result;
+
     public function __construct()
     {
         $this->searchRequest = new StickyRequest('users');

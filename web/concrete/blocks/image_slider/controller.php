@@ -20,6 +20,8 @@ class Controller extends BlockController
     protected $btCacheBlockOutputForRegisteredUsers = false;
     protected $btIgnorePageThemeGridFrameworkContainer = true;
 
+    public $navigationType;
+
     public function getBlockTypeDescription()
     {
         return t("Display your images and captions in an attractive slideshow format.");
@@ -159,7 +161,7 @@ class Controller extends BlockController
                         $internalLinkCID,
                     )
                 );
-                $i++;
+                ++$i;
             }
         }
     }

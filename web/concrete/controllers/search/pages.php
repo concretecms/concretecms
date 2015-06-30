@@ -23,6 +23,9 @@ class Pages extends Controller
      */
     protected $pageList;
 
+    public $searchRequest;
+    public $result;
+
     public function __construct()
     {
         $this->searchRequest = new StickyRequest('pages');

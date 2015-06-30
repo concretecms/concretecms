@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Block\RssDisplayer;
 
 use Concrete\Core\Block\BlockController;
@@ -7,11 +8,13 @@ use Core;
 
 class Controller extends BlockController
 {
-
     public $itemsToDisplay = "5";
     public $showSummary = "1";
     public $launchInNewWindow = "1";
     public $title = "";
+    public $url;
+    public $dateFormat;
+
     protected $btTable = 'btRssDisplay';
     protected $btInterfaceWidth = 400;
     protected $btInterfaceHeight = 550;
@@ -23,7 +26,7 @@ class Controller extends BlockController
     protected $btCacheBlockOutputLifetime = 3600;
 
     /**
-     * Used for localization. If we want to localize the name/description we have to include this
+     * Used for localization. If we want to localize the name/description we have to include this.
      */
     public function getBlockTypeDescription()
     {
@@ -38,8 +41,8 @@ class Controller extends BlockController
     public function getJavaScriptStrings()
     {
         return array(
-            'feed-address'   => t('Please enter a valid feed address.'),
-            'feed-num-items' => t('Please enter the number of items to display.')
+            'feed-address' => t('Please enter a valid feed address.'),
+            'feed-num-items' => t('Please enter the number of items to display.'),
         );
     }
 
@@ -53,7 +56,7 @@ class Controller extends BlockController
             ':longDate:longTime:',
             ':longDate:shortTime:',
             ':shortDate:longTime:',
-            ':shortDate:shortTime:'
+            ':shortDate:shortTime:',
         );
         $now = new \DateTime();
         $result = array();
@@ -65,7 +68,8 @@ class Controller extends BlockController
     }
 
     /**
-     * Format a \DateTime instance accordingly to $format
+     * Format a \DateTime instance accordingly to $format.
+     *
      * @param \DateTime|null $date
      * @param string|bool $format Set to true (default) to use the default format
      */
@@ -129,7 +133,7 @@ class Controller extends BlockController
                 if (($i + 1) == intval($this->itemsToDisplay)) {
                     break;
                 }
-                $i++;
+                ++$i;
             }
         } catch (\Exception $e) {
             $this->set('errorMsg', $e->getMessage());
@@ -161,7 +165,7 @@ class Controller extends BlockController
     public function getSearchableContent()
     {
         $fp = Loader::helper("feed");
-
+        $posts = array();
         try {
             $channel = $fp->load($this->url);
             $i = 0;
@@ -170,10 +174,9 @@ class Controller extends BlockController
                 if (($i + 1) == intval($this->itemsToDisplay)) {
                     break;
                 }
-                $i++;
+                ++$i;
             }
         } catch (\Exception $e) {
-
         }
 
         $searchContent = '';
@@ -183,5 +186,4 @@ class Controller extends BlockController
 
         return $searchContent;
     }
-
 }

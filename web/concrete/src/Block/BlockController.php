@@ -23,7 +23,9 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     public $blockViewRenderOverride;
     protected $record;
     protected $helpers = array('form');
+    protected $area;
     protected $block;
+    protected $bID;
     protected $btDescription = "";
     protected $btName = "";
     protected $btHandle = "";
@@ -230,7 +232,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
                 $this->identifier = 'BLOCK_' . $obj->getBlockID();
                 $this->bID = $b->getBlockID();
                 $this->btHandle = $obj->getBlockTypeHandle();
-                $this->btCachedBlockRecord = $obj->getBlockCachedRecord();
+                $this->btCacheBlockRecord = $obj->getBlockCachedRecord();
                 $this->setBlockObject($b);
                 $this->load();
             }

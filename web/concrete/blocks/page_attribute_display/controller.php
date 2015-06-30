@@ -1,30 +1,33 @@
 <?php
+
 namespace Concrete\Block\PageAttributeDisplay;
+
 use Concrete\Core\Block\BlockController;
-use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
 use Concrete\Core\Attribute\Key\CollectionKey as CollectionAttributeKey;
 
 defined('C5_EXECUTE') or die(_("Access Denied."));
 
 /**
  * @author Ryan Tyler
- *
  */
 class Controller extends BlockController
 {
-
     protected $btTable = 'btPageAttributeDisplay';
     protected $btInterfaceWidth = "500";
     protected $btInterfaceHeight = "365";
+
     public $dateFormat = "m/d/y h:i:a";
+    public $attributeHandle;
+    public $attributeTitleText;
+    public $displayTag;
 
     /**
-     * @var integer thumbnail height
+     * @var int thumbnail height
      */
     public $thumbnailHeight = 250;
 
     /**
-     * @var integer thumbnail width
+     * @var int thumbnail width
      */
     public $thumbnailWidth = 250;
 
@@ -75,7 +78,6 @@ class Controller extends BlockController
                     if (!is_scalar($content) && (!is_object($content) || !method_exists($content, '__toString'))) {
                         $content = $c->getAttribute($this->attributeHandle, 'displaySanitized');
                     }
-
                 }
                 break;
         }
@@ -84,16 +86,20 @@ class Controller extends BlockController
         if (!strlen(trim(strip_tags($content))) && ($c->isMasterCollection() || $is_stack)) {
             $content = $this->getPlaceHolderText($this->attributeHandle);
         }
+
         return $content;
     }
 
     /**
-     * returns a place holder for pages that are new or when editing default page types
+     * returns a place holder for pages that are new or when editing default page types.
+     *
      * @param string $handle
+     *
      * @return string
      */
     public function getPlaceHolderText($handle)
     {
+        $placeHolder = '';
         $pageValues = $this->getAvailablePageValues();
         if (in_array($handle, array_keys($pageValues))) {
             $placeHolder = $pageValues[$handle];
@@ -103,11 +109,13 @@ class Controller extends BlockController
                 $placeHolder = $attributeKey->getAttributeKeyName();
             }
         }
+
         return "[" . $placeHolder . "]";
     }
 
     /**
-     * returns the title text to display in front of the valie
+     * returns the title text to display in front of the valie.
+     *
      * @return string
      */
     public function getTitle()
@@ -133,6 +141,7 @@ class Controller extends BlockController
 
     protected function getTemplateHandle()
     {
+        $templateHandle = '';
         if (in_array($this->attributeHandle, array_keys($this->getAvailablePageValues()))) {
             switch ($this->attributeHandle) {
                 case "rpv_pageDateCreated":
@@ -148,11 +157,13 @@ class Controller extends BlockController
                 $templateHandle = $attributeType->getAttributeTypeHandle();
             }
         }
+
         return $templateHandle;
     }
 
     /**
-     * returns opening html tag
+     * returns opening html tag.
+     *
      * @return string
      */
     public function getOpenTag()
@@ -161,11 +172,13 @@ class Controller extends BlockController
         if (strlen($this->displayTag)) {
             $tag = "<" . $this->displayTag . " class=\"ccm-block-page-attribute-display-wrapper\">";
         }
+
         return $tag;
     }
 
     /**
-     * returns closing html tag
+     * returns closing html tag.
+     *
      * @return string
      */
     public function getCloseTag()
@@ -174,6 +187,7 @@ class Controller extends BlockController
         if (strlen($this->displayTag)) {
             $tag = "</" . $this->displayTag . ">";
         }
+
         return $tag;
     }
 
@@ -185,5 +199,3 @@ class Controller extends BlockController
         }
     }
 }
-
-?>

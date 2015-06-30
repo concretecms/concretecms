@@ -23,6 +23,9 @@ class Files extends Controller
     /** @var \Concrete\Core\File\FileList */
     protected $fileList;
 
+    public $searchRequest;
+    public $result;
+
     public function __construct()
     {
         $this->searchRequest = new StickyRequest('files');

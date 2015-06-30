@@ -14,6 +14,9 @@ class Groups extends Controller {
 
 	protected $fields = array();
 
+	public $groupList;
+	public $result;
+
 	public function __construct() {
 		$this->groupList = new GroupList();
 	}

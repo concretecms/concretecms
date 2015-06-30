@@ -1,10 +1,11 @@
 <?php
+
 namespace Concrete\Block\Search;
 
 use Loader;
 use CollectionAttributeKey;
-use \Concrete\Core\Page\PageList;
-use \Concrete\Core\Block\BlockController;
+use Concrete\Core\Page\PageList;
+use Concrete\Core\Block\BlockController;
 use Page;
 use Core;
 
@@ -21,6 +22,8 @@ class Controller extends BlockController
     public $baseSearchPath = "";
     public $resultsURL = "";
     public $postTo_cID = "";
+    public $hText;
+    public $hHighlight;
 
     protected $hColor = '#EFE795';
 
@@ -31,8 +34,8 @@ class Controller extends BlockController
         }
 
         $this->hText = $fulltext;
-        $this->hHighlight  = $highlight;
-        $this->hText = @preg_replace('#' . preg_quote($this->hHighlight, '#') . '#ui', '<span style="background-color:'. $this->hColor .';">$0</span>', $this->hText );
+        $this->hHighlight = $highlight;
+        $this->hText = @preg_replace('#' . preg_quote($this->hHighlight, '#') . '#ui', '<span style="background-color:'. $this->hColor .';">$0</span>', $this->hText);
 
         return $this->hText;
     }
@@ -42,7 +45,7 @@ class Controller extends BlockController
         $text = @preg_replace("#\n|\r#", ' ', $fulltext);
 
         $matches = array();
-        $highlight = str_replace(array('"',"'","&quot;"),'',$highlight); // strip the quotes as they mess the regex
+        $highlight = str_replace(array('"', "'", "&quot;"), '', $highlight); // strip the quotes as they mess the regex
 
         if (!$highlight) {
             $text = Loader::helper('text')->shorten($fulltext, 180);
@@ -66,12 +69,13 @@ class Controller extends BlockController
                 if ($r) {
                     $body_string[] = $r;
                 }
-                if($body_length > 150)
+                if ($body_length > 150) {
                     break;
+                }
             }
-            if(!empty($body_string))
-
+            if (!empty($body_string)) {
                 return @implode("&hellip;<wbr>", $body_string);
+            }
         }
     }
 
@@ -81,8 +85,8 @@ class Controller extends BlockController
     }
 
     /**
-	 * Used for localization. If we want to localize the name/description we have to include this
-	 */
+     * Used for localization. If we want to localize the name/description we have to include this.
+     */
     public function getBlockTypeDescription()
     {
         return t("Add a search box to your site.");
@@ -129,7 +133,7 @@ class Controller extends BlockController
 
         //run query if display results elsewhere not set, or the cID of this page is set
         if ($this->postTo_cID == '') {
-            if ( !empty($_REQUEST['query']) || isset($_REQUEST['akID']) || isset($_REQUEST['month'])) {
+            if (!empty($_REQUEST['query']) || isset($_REQUEST['akID']) || isset($_REQUEST['month'])) {
                 $this->do_search();
             }
         }
@@ -140,25 +144,29 @@ class Controller extends BlockController
         $args['title'] = isset($data['title']) ? $data['title'] : '';
         $args['buttonText'] = isset($data['buttonText']) ? $data['buttonText'] : '';
         $args['baseSearchPath'] = isset($data['baseSearchPath']) ? $data['baseSearchPath'] : '';
-        if ( $args['baseSearchPath']=='OTHER' && intval($data['searchUnderCID'])>0 ) {
-            $customPathC = Page::getByID( intval($data['searchUnderCID']) );
-            if( !$customPathC )    $args['baseSearchPath']='';
-            else $args['baseSearchPath'] = $customPathC->getCollectionPath();
+        if ($args['baseSearchPath'] == 'OTHER' && intval($data['searchUnderCID']) > 0) {
+            $customPathC = Page::getByID(intval($data['searchUnderCID']));
+            if (!$customPathC) {
+                $args['baseSearchPath'] = '';
+            } else {
+                $args['baseSearchPath'] = $customPathC->getCollectionPath();
+            }
         }
-        if( trim($args['baseSearchPath'])=='/' || strlen(trim($args['baseSearchPath']))==0 )
-            $args['baseSearchPath']='';
+        if (trim($args['baseSearchPath']) == '/' || strlen(trim($args['baseSearchPath'])) == 0) {
+            $args['baseSearchPath'] = '';
+        }
 
-        if ( intval($data['postTo_cID'])>0 ) {
+        if (intval($data['postTo_cID']) > 0) {
             $args['postTo_cID'] = intval($data['postTo_cID']);
         } else {
             $args['postTo_cID'] = '';
         }
 
-        $args['resultsURL'] = ( $data['externalTarget']==1 && strlen($data['resultsURL'])>0 ) ? trim($data['resultsURL']) : '';
+        $args['resultsURL'] = ($data['externalTarget'] == 1 && strlen($data['resultsURL']) > 0) ? trim($data['resultsURL']) : '';
         parent::save($args);
     }
 
-    public $reservedParams=array('page=','query=','search_paths[]=','submit=','search_paths%5B%5D=' );
+    public $reservedParams = array('page=','query=','search_paths[]=','submit=','search_paths%5B%5D=');
 
     public function do_search()
     {
@@ -209,9 +217,11 @@ class Controller extends BlockController
             $ipl->filterByKeywords($_q);
         }
 
-        if ( is_array($_REQUEST['search_paths']) ) {
+        if (is_array($_REQUEST['search_paths'])) {
             foreach ($_REQUEST['search_paths'] as $path) {
-                if(!strlen($path)) continue;
+                if (!strlen($path)) {
+                    continue;
+                }
                 $ipl->filterByPath($path);
             }
         } elseif ($this->baseSearchPath != '') {
@@ -230,5 +240,4 @@ class Controller extends BlockController
         $this->set('searchList', $ipl);
         $this->set('pagination', $pagination);
     }
-
 }

@@ -27,6 +27,9 @@ class Controller extends BlockController
     protected $btTable = 'btCoreAreaLayout';
     protected $btIsInternal = true;
 
+    public $arLayoutID;
+    public $arLayout;
+
     public function getBlockTypeDescription()
     {
         return t("Proxy block for area layouts.");
