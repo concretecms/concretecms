@@ -20,6 +20,10 @@ class Controller extends BlockController
     protected $btTable = 'btPageTitle';
     protected $btWrapperClass = 'ccm-ui';
 
+    public $useCustomTitle;
+    public $titleText;
+    public $formatting;
+
     public function getBlockTypeDescription()
     {
         return t("Displays a Page's Title");
