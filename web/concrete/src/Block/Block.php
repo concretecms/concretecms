@@ -902,7 +902,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         $c = $this->getBlockCollectionObject();
         $cvID = $c->getVersionID();
         $bt = $this->getBlockTypeObject();
-        $enableBlockContainer = !!$bt->ignorePageThemeGridFrameworkContainer();
+        $enableBlockContainer = $bt->ignorePageThemeGridFrameworkContainer() ? 1 : 0;
         $db->update('CollectionVersionBlocks', array('cbOverrideBlockTypeContainerSettings' => 0, 'cbEnableBlockContainer' => $enableBlockContainer),
             array(
                 'cID'      => $this->getBlockCollectionID(),
