@@ -20,6 +20,10 @@ class PageController extends Controller
     protected $passThruBlocks = array();
     protected $parameters = array();
 
+    public $c;
+
+    protected $error;
+
     public function supportsPageCache()
     {
         return $this->supportsPageCache;
@@ -188,8 +192,6 @@ class PageController extends Controller
     }
 
     /**
-     * @access private
-     *
      * @param Block $b
      * @param BlockController $controller
      */
