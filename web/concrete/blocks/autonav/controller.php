@@ -1,4 +1,5 @@
-<?
+<?php
+
 namespace Concrete\Block\Autonav;
 
 use Concrete\Core\Block\BlockController;
@@ -12,15 +13,14 @@ use Permissions;
  *
  * @package    Blocks
  * @subpackage Auto-Nav
+ *
  * @author     Andrew Embler <andrew@concrete5.org>
  * @author     Jordan Lev
  * @copyright  Copyright (c) 2003-2012 Concrete5. (http://www.concrete5.org)
  * @license    http://www.concrete5.org/license/     MIT License
- *
  */
 class Controller extends BlockController
 {
-
     public $collection;
     public $navArray = array();
     public $cParentIDArray = array();
@@ -43,7 +43,10 @@ class Controller extends BlockController
     protected $btWrapperClass = 'ccm-ui';
     protected $btExportPageColumns = array('displayPagesCID');
 
-    function __construct($obj = null)
+    public $cID;
+    public $cParentID;
+
+    public function __construct($obj = null)
     {
         if (is_object($obj)) {
             switch (strtolower(get_class($obj))) {
@@ -100,7 +103,7 @@ class Controller extends BlockController
         return t("Auto-Nav");
     }
 
-    function save($args)
+    public function save($args)
     {
         $args['displayPagesIncludeSelf'] = $args['displayPagesIncludeSelf'] ? 1 : 0;
         $args['displayPagesCID'] = $args['displayPagesCID'] ? $args['displayPagesCID'] : 0;
@@ -109,13 +112,14 @@ class Controller extends BlockController
         parent::save($args);
     }
 
-    function getContent()
+    public function getContent()
     {
         /* our templates expect a variable not an object */
         $con = array();
         foreach ($this as $key => $value) {
             $con[$key] = $value;
         }
+
         return $con;
     }
 
@@ -131,6 +135,7 @@ class Controller extends BlockController
         while ($row = $r->fetchRow()) {
             $pages[] = Page::getByID($row['cID'], 'ACTIVE');
         }
+
         return $pages;
     }
 
@@ -207,7 +212,7 @@ class Controller extends BlockController
         //Prep all data and put it into a clean structure so markup output is as simple as possible
         $navItems = array();
         $navItemCount = count($includedNavItems);
-        for ($i = 0; $i < $navItemCount; $i++) {
+        for ($i = 0; $i < $navItemCount; ++$i) {
             $ni = $includedNavItems[$i];
             $_c = $ni->getCollectionObject();
             $current_level = $ni->getLevel();
@@ -252,7 +257,7 @@ class Controller extends BlockController
 
             //Calculate if this is the last item in its level (useful for CSS classes)
             $is_last_in_level = true;
-            for ($j = $i + 1; $j < $navItemCount; $j++) {
+            for ($j = $i + 1; $j < $navItemCount; ++$j) {
                 if ($includedNavItems[$j]->getLevel() == $current_level) {
                     //we found a subsequent item at this level (before this level "ended"), so this is NOT the last in its level
                     $is_last_in_level = false;
@@ -303,7 +308,7 @@ class Controller extends BlockController
      * It also must exist as a separate function to preserve backwards-compatibility with older autonav templates.
      * Warning: this function has side-effects -- if this gets called twice, items will be duplicated in the nav structure!
      */
-    function generateNav()
+    public function generateNav()
     {
         if (isset($this->displayPagesCID) && !Loader::helper('validation/numbers')->integer($this->displayPagesCID)) {
             $this->displayPagesCID = 0;
@@ -447,23 +452,23 @@ class Controller extends BlockController
                 array_unshift($this->navArray, $ni);
             }
             */
-
         }
 
         return $this->navArray;
     }
 
     /**
-     * heh. probably should've gone the simpler route and named this getGrandparentID()
+     * heh. probably should've gone the simpler route and named this getGrandparentID().
      */
-    function getParentParentID()
+    public function getParentParentID()
     {
         // this has to be the stupidest name of a function I've ever created. sigh
         $cParentID = Page::getCollectionParentIDFromChildID($this->cParentID);
+
         return ($cParentID) ? $cParentID : 0;
     }
 
-    function getParentAtLevel($level)
+    public function getParentAtLevel($level)
     {
         // this function works in the following way
         // we go from the current collection up to the top level. Then we find the parent Id at the particular level specified, and begin our
@@ -488,10 +493,9 @@ class Controller extends BlockController
     }
 
     /** Pupulates the $cParentIDArray instance property.
-     *
      * @param int $cID The collection id.
      */
-    function populateParentIDArray($cID)
+    public function populateParentIDArray($cID)
     {
         // returns an array of collection IDs going from the top level to the current item
         $cParentID = Page::getCollectionParentIDFromChildID($cID);
@@ -505,7 +509,7 @@ class Controller extends BlockController
         }
     }
 
-    function getNavigationArray($cParentID, $orderBy, $currentLevel)
+    public function getNavigationArray($cParentID, $orderBy, $currentLevel)
     {
         // increment all items in the nav array with a greater $currentLevel
 
@@ -571,9 +575,7 @@ class Controller extends BlockController
                         $_c = $ni->getCollectionObject();
                         $object_name = $_c->getCollectionName();
                         $navObjectNames[$niRow['cID']] = $object_name;
-
                     }
-
                 }
             }
             // end while -- sort navSort
@@ -721,13 +723,11 @@ class Controller extends BlockController
                 }
             }
             // End Joshua's Huge Sorting Crap
-
         }
     }
 
     protected function displayPage($tc)
     {
-
         if ($tc->isSystemPage() && (!$this->displaySystemPages)) {
             return false;
         }
@@ -751,5 +751,4 @@ class Controller extends BlockController
     {
         return $c->getAttribute('exclude_nav');
     }
-
 }
