@@ -24,6 +24,15 @@ class Controller extends BlockController
         'image',
     );
 
+    public $fID;
+    public $fOnstateID;
+    public $maxWidth;
+    public $maxHeight;
+    public $externalLink;
+    public $internalLinkCID;
+    public $altText;
+    public $title;
+
     /**
      * Used for localization. If we want to localize the name/description we have to include this.
      */
