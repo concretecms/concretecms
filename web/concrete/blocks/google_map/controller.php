@@ -1,14 +1,14 @@
 <?php
+
 namespace Concrete\Block\GoogleMap;
 
 use Loader;
 use Page;
-use \Concrete\Core\Block\BlockController;
+use Concrete\Core\Block\BlockController;
 use Core;
 
 class Controller extends BlockController
 {
-
     protected $btTable = 'btGoogleMap';
     protected $btInterfaceWidth = "400";
     protected $btInterfaceHeight = "320";
@@ -23,9 +23,11 @@ class Controller extends BlockController
     public $longitude = "";
     public $scrollwheel = true;
     public $zoom = 14;
+    public $width;
+    public $height;
 
     /**
-     * Used for localization. If we want to localize the name/description we have to include this
+     * Used for localization. If we want to localize the name/description we have to include this.
      */
     public function getBlockTypeDescription()
     {
@@ -36,7 +38,6 @@ class Controller extends BlockController
     {
         return t("Google Map");
     }
-
 
     public function validate($args)
     {
@@ -65,7 +66,7 @@ class Controller extends BlockController
 
     public function view()
     {
-		$this->set('unique_identifier', Core::make('helper/validation/identifier')->getString(18));
+        $this->set('unique_identifier', Core::make('helper/validation/identifier')->getString(18));
         $this->set('bID', $this->bID);
         $this->set('title', $this->title);
         $this->set('location', $this->location);
@@ -87,5 +88,4 @@ class Controller extends BlockController
         $args['scrollwheel'] = $data['scrollwheel'] ? 1 : 0;
         parent::save($args);
     }
-
 }
