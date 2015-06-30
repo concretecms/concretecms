@@ -23,7 +23,9 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     public $blockViewRenderOverride;
     protected $record;
     protected $helpers = array('form');
+    protected $area;
     protected $block;
+    protected $bID;
     protected $btDescription = "";
     protected $btName = "";
     protected $btHandle = "";
