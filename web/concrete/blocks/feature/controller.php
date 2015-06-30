@@ -24,6 +24,12 @@ class Controller extends BlockController
     protected $btInterfaceHeight = 520;
     protected $btTable = 'btFeature';
 
+    public $icon;
+    public $title;
+    public $paragraph;
+    public $externalLink;
+    public $internalLinkCID;
+
     public function getBlockTypeDescription()
     {
         return t("Displays an icon, a title, and a short paragraph description.");
