@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "5f95e7fa69a7095909de1a6a0d2412be",
+    "hash": "fa9e1862ca7e57b6ff4a5491744be786",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -687,7 +687,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/migrations/zipball/43619782df4e9ae6be6b24557f0429471eeee848",
+                "url": "https://api.github.com/repos/doctrine/migrations/zipball/70c580174e4e16a79296a02256fb40a34192731c",
                 "reference": "efb77c10dfb75485998a843154bbc44d8124c4d1",
                 "shasum": ""
             },
@@ -1392,25 +1392,26 @@
         },
         {
             "name": "league/url",
-            "version": "3.2.1",
+            "version": "3.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/url.git",
-                "reference": "74ae626949e967fd20511d074835ae6ff67d97ae"
+                "reference": "66a9e42c15315e7ae2817da5ce7748136ab1be39"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/url/zipball/74ae626949e967fd20511d074835ae6ff67d97ae",
-                "reference": "74ae626949e967fd20511d074835ae6ff67d97ae",
+                "url": "https://api.github.com/repos/thephpleague/url/zipball/66a9e42c15315e7ae2817da5ce7748136ab1be39",
+                "reference": "66a9e42c15315e7ae2817da5ce7748136ab1be39",
                 "shasum": ""
             },
             "require": {
                 "ext-mbstring": "*",
                 "php": ">=5.3.0",
-                "true/punycode": "~1.0"
+                "true/punycode": "^2.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "~4.0"
+                "phpunit/phpunit": "^4.0",
+                "scrutinizer/ocular": "^1.1"
             },
             "type": "library",
             "extra": {
@@ -1436,12 +1437,13 @@
                 }
             ],
             "description": "League/url is a lightweight PHP Url manipulating library",
+            "homepage": "http://url.thephpleague.com",
             "keywords": [
                 "parse_url",
                 "php",
                 "url"
             ],
-            "time": "2014-11-27 10:14:00"
+            "time": "2015-06-30 11:08:51"
         },
         {
             "name": "lusitanian/oauth",
@@ -2861,16 +2863,16 @@
         },
         {
             "name": "true/punycode",
-            "version": "1.0.1",
+            "version": "2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/true/php-punycode.git",
-                "reference": "59dca474914324763397be2ea3d6ad3bc48f4688"
+                "reference": "13d3aada7d7d5d1812316031d8d85f5d97178c4e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/true/php-punycode/zipball/59dca474914324763397be2ea3d6ad3bc48f4688",
-                "reference": "59dca474914324763397be2ea3d6ad3bc48f4688",
+                "url": "https://api.github.com/repos/true/php-punycode/zipball/13d3aada7d7d5d1812316031d8d85f5d97178c4e",
+                "reference": "13d3aada7d7d5d1812316031d8d85f5d97178c4e",
                 "shasum": ""
             },
             "require": {
@@ -2878,14 +2880,13 @@
                 "php": ">=5.3.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "4.x",
-                "satooshi/php-coveralls": "dev-master",
-                "squizlabs/php_codesniffer": "2.0.x-dev"
+                "phpunit/phpunit": "~4.7",
+                "squizlabs/php_codesniffer": "~2.0"
             },
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "True\\": "src/"
+                    "TrueBV\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -2904,7 +2905,7 @@
                 "idna",
                 "punycode"
             ],
-            "time": "2014-08-26 14:21:01"
+            "time": "2015-06-24 09:36:39"
         },
         {
             "name": "voku/urlify",
@@ -3926,7 +3927,8 @@
         "kertz/twitteroauth": 20,
         "primal/color": 20,
         "zendframework/zend-queue": 20,
-        "oryzone/oauth-user-data": 20
+        "oryzone/oauth-user-data": 20,
+        "league/url": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
