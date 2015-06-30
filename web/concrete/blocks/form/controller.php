@@ -29,7 +29,15 @@ class Controller extends BlockController
     protected $btCacheBlockRecord = false;
     protected $btExportTables = array('btForm', 'btFormQuestions');
     protected $btExportPageColumns = array('redirectCID');
-    protected $lastAnswerSetId = 0;
+
+    public $lastAnswerSetId = 0;
+    public $questionSetId;
+    public $surveyName;
+    public $notifyMeOnSubmission;
+    public $recipientEmail;
+    public $displayCaptcha;
+    public $redirectCID;
+    public $addFilesToSet;
 
     /**
      * Used for localization. If we want to localize the name/description we have to include this.
