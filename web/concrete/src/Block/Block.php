@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Block;
 
 use Area;
@@ -20,7 +21,6 @@ use Page;
 
 class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
 {
-
     protected $cID;
     protected $arHandle;
     protected $c;
@@ -31,7 +31,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
 
     public static function populateManually($blockInfo, $c, $a)
     {
-        $b = new Block;
+        $b = new self();
         $b->setPropertiesFromArray($blockInfo);
 
         if (is_object($a)) {
@@ -50,7 +50,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
     }
 
     /**
-     * Returns a global block
+     * Returns a global block.
      */
     public static function getByName($globalBlockName)
     {
@@ -69,11 +69,10 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         $vals = array($globalBlockName);
         $row = $db->getRow($sql, $vals);
         if ($row != false && isset($row['bID']) && $row['bID'] > 0) {
-            return Block::getByID($row['bID'], Page::getByID($row['cID']), $row['arHandle']);
+            return self::getByID($row['bID'], Page::getByID($row['cID']), $row['arHandle']);
         } else {
-            return new Block();
+            return new self();
         }
-
     }
 
     public static function getByID($bID, $c = null, $a = null)
@@ -97,20 +96,19 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
             $b = CacheLocal::getEntry('block', $bID . ':' . $cID . ':' . $cvID . ':' . $arHandle);
         }
 
-        if ($b instanceof Block) {
+        if ($b instanceof self) {
             return $b;
         }
 
         $db = Loader::db();
 
-        $b = new Block;
+        $b = new self();
         if ($c == null && $a == null) {
             // just grab really specific block stuff
             $q = "select bID, bIsActive, BlockTypes.btID, Blocks.btCachedBlockRecord, BlockTypes.btHandle, BlockTypes.pkgID, BlockTypes.btName, bName, bDateAdded, bDateModified, bFilename, Blocks.uID from Blocks inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where bID = ?";
             $b->isOriginal = 1;
             $v = array($bID);
         } else {
-
             $b->arHandle = $arHandle;
             $b->a = $a;
             $b->cID = $cID;
@@ -122,7 +120,6 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
             $v = array($b->arHandle, $cID, $cvID, $bID);
             $q = "select CollectionVersionBlocks.isOriginal, CollectionVersionBlocks.cbIncludeAll, Blocks.btCachedBlockRecord, BlockTypes.pkgID, CollectionVersionBlocks.cbOverrideAreaPermissions, CollectionVersionBlocks.cbOverrideBlockTypeCacheSettings,
  CollectionVersionBlocks.cbOverrideBlockTypeContainerSettings, CollectionVersionBlocks.cbEnableBlockContainer, CollectionVersionBlocks.cbDisplayOrder, Blocks.bIsActive, Blocks.bID, Blocks.btID, bName, bDateAdded, bDateModified, bFilename, btHandle, Blocks.uID from CollectionVersionBlocks inner join Blocks on (CollectionVersionBlocks.bID = Blocks.bID) inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where CollectionVersionBlocks.arHandle = ? and CollectionVersionBlocks.cID = ? and (CollectionVersionBlocks.cvID = ? or CollectionVersionBlocks.cbIncludeAll=1) and CollectionVersionBlocks.bID = ?";
-
         }
 
         $r = $db->query($q, $v);
@@ -146,12 +143,12 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
             } else {
                 CacheLocal::set('block', $bID, $b);
             }
-            return $b;
 
+            return $b;
         }
     }
 
-    function getBlockTypeID()
+    public function getBlockTypeID()
     {
         return $this->btID;
     }
@@ -161,7 +158,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         return $this->cID . ':' . $this->getAreaHandle() . ':' . $this->bID;
     }
 
-    function getAreaHandle()
+    public function getAreaHandle()
     {
         return $this->arHandle;
     }
@@ -231,12 +228,14 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
 
         $r = $db->GetRow(
-                'select btCachedBlockOutput, btCachedBlockOutputExpires from CollectionVersionBlocksOutputCache where cID = ? and cvID = ? and bID = ? and arHandle = ? ',
-                array(
-                    $cID,
-                    $cvID,
-                    $this->getBlockID(),
-                    $arHandle));
+            'select btCachedBlockOutput, btCachedBlockOutputExpires from CollectionVersionBlocksOutputCache where cID = ? and cvID = ? and bID = ? and arHandle = ? ',
+            array(
+                $cID,
+                $cvID,
+                $this->getBlockID(),
+                $arHandle,
+            )
+        );
         if ($r['btCachedBlockOutputExpires'] < time()) {
             return false;
         }
@@ -252,10 +251,11 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
                 return true;
             }
         }
+
         return false;
     }
 
-    function getBlockCollectionObject()
+    public function getBlockCollectionObject()
     {
         if (is_object($this->c)) {
             return $this->c;
@@ -264,7 +264,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
     }
 
-    function getOriginalCollection()
+    public function getOriginalCollection()
     {
         // given a block ID, we find the original collection ID (where this bID is marked as isOriginal)
         $db = Loader::db();
@@ -274,6 +274,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
             $row = $r->fetchRow();
             $cID = $row['cID'];
             $nc = Page::getByID($cID, "ACTIVE");
+
             return $nc;
         }
     }
@@ -284,7 +285,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
      * @return string $path
      */
 
-    function getBlockID()
+    public function getBlockID()
     {
         return $this->bID;
     }
@@ -313,18 +314,21 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
             $db->Replace(
                'CollectionVersionBlocksOutputCache',
                array(
-                   'cID'                        => $cID,
-                   'cvID'                       => $cvID,
-                   'bID'                        => $this->getBlockID(),
-                   'arHandle'                   => $arHandle,
-                   'btCachedBlockOutput'        => $content,
-                   'btCachedBlockOutputExpires' => $btCachedBlockOutputExpires),
+                   'cID' => $cID,
+                   'cvID' => $cvID,
+                   'bID' => $this->getBlockID(),
+                   'arHandle' => $arHandle,
+                   'btCachedBlockOutput' => $content,
+                   'btCachedBlockOutputExpires' => $btCachedBlockOutputExpires,
+               ),
                array(
                    'cID',
                    'cvID',
                    'arHandle',
-                   'bID'),
-               true);
+                   'bID',
+               ),
+               true
+            );
         }
     }
 
@@ -332,7 +336,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
     {
         $b = $this;
         if (file_exists($this->getBlockPath() . '/' . $file)) {
-            include($this->getBlockPath() . '/' . $file);
+            include $this->getBlockPath() . '/' . $file;
         }
     }
 
@@ -349,6 +353,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
                 $dir = DIR_FILES_BLOCK_TYPES_CORE . '/' . $this->getBlockTypeHandle();
             }
         }
+
         return $dir;
     }
 
@@ -362,12 +367,12 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         return PackageList::getHandle($this->pkgID);
     }
 
-    function getBlockTypeHandle()
+    public function getBlockTypeHandle()
     {
         return $this->btHandle;
     }
 
-    function revertToAreaPermissions()
+    public function revertToAreaPermissions()
     {
         $c = $this->getBlockCollectionObject();
 
@@ -378,15 +383,16 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         $v[] = $this->arHandle;
         $db->query(
            "update CollectionVersionBlocks set cbOverrideAreaPermissions = 0 where cID = ? and (cvID = ? or cbIncludeAll=1) and bID = ? and arHandle = ?",
-           $v);
+           $v
+        );
     }
 
-    function loadNewCollection(&$c)
+    public function loadNewCollection(&$c)
     {
         $this->c = $c;
     }
 
-    function setBlockAreaObject(&$a)
+    public function setBlockAreaObject(&$a)
     {
         $this->a = $a;
         $this->arHandle = $a->getAreaHandle();
@@ -397,11 +403,12 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         return $this->cbIncludeAll;
     }
 
-    function getNumChildren()
+    public function getNumChildren()
     {
         $db = Loader::db();
         $q = "select count(*) as total from CollectionVersionBlocks where bID = ? and isOriginal = 0";
         $total = $db->getOne($q, array($this->bID));
+
         return $total;
     }
 
@@ -412,8 +419,10 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
 
     public function getInstance()
     {
-        if (Config::get('concrete.cache.blocks') && $this->instance->cacheBlockRecord() && is_object(
-                $this->instance->getBlockControllerData())
+        if (
+            Config::get('concrete.cache.blocks')
+            && $this->instance->cacheBlockRecord()
+            && is_object($this->instance->getBlockControllerData())
         ) {
             $this->instance->__construct();
         } else {
@@ -422,6 +431,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
             $this->instance = new $class($this);
         }
         $this->instance->setBlockObject($this);
+
         return $this->instance;
     }
 
@@ -430,7 +440,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         return BlockType::getByID($this->btID);
     }
 
-    function getCollectionList()
+    public function getCollectionList()
     {
         // gets a list of collections that include this block, along with area name, etc...
         // used in the block_details.php page in the admin control panel
@@ -443,11 +453,12 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
                 $cArray[] = Page::getByID($row['cID'], 'RECENT');
             }
             $r->free();
+
             return $cArray;
         }
     }
 
-    function update($data)
+    public function update($data)
     {
         // this function updates fields common to every block
 
@@ -480,34 +491,35 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         $v = array($c->getCollectionID(), $c->getVersionID(), $this->getAreaHandle(), $bID);
         $db->Execute(
            'update CollectionVersionBlocksOutputCache set btCachedBlockOutputExpires = 0 where cID = ? and cvID = ? and arHandle = ? and bID = ?',
-           $v);
+           $v
+        );
     }
 
-    function getBlockCollectionID()
+    public function getBlockCollectionID()
     {
         return $this->cID;
     }
 
-    function isActive()
+    public function isActive()
     {
         return $this->bIsActive;
     }
 
-    function deactivate()
+    public function deactivate()
     {
         $db = Loader::db();
         $q = "update Blocks set bIsActive = 0 where bID = ?";
         $db->query($q, array($this->bID));
     }
 
-    function activate()
+    public function activate()
     {
         $db = Loader::db();
         $q = "update Blocks set bIsActive = 1 where bID = ?";
         $db->query($q, array($this->bID));
     }
 
-    function alias($c)
+    public function alias($c)
     {
 
         // creates an alias of the block, attached to this collection, within the CollectionVersionBlocks table
@@ -550,8 +562,9 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
                        $cvID,
                        $this->bID,
                        $this->getAreaHandle(),
-                       $issID
-                   ));
+                       $issID,
+                   )
+                );
             }
 
             // custom cache
@@ -566,7 +579,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
                        intval($this->cacheBlockOutput()),
                        intval($this->cacheBlockOutputOnPost()),
                        intval($this->cacheBlockOutputForRegisteredUsers()),
-                       intval($this->getBlockOutputCacheLifetime())
+                       intval($this->getBlockOutputCacheLifetime()),
                    )
                 );
             }
@@ -585,7 +598,8 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
                            'BlockFeatureAssignments',
                            array('cID' => $cID, 'cvID' => $cvID, 'bID' => $this->bID, 'faID' => $rowf['faID']),
                            array('cID', 'cvID', 'bID', 'faID'),
-                           true);
+                           true
+                        );
                     }
                     $rf->free();
                 }
@@ -598,18 +612,21 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
                         $db->Replace(
                            'BlockPermissionAssignments',
                            array(
-                               'cID'  => $cID,
+                               'cID' => $cID,
                                'cvID' => $cvID,
-                               'bID'  => $this->bID,
+                               'bID' => $this->bID,
                                'paID' => $row_a['paID'],
-                               'pkID' => $row_a['pkID']),
+                               'pkID' => $row_a['pkID'],
+                           ),
                            array(
                                'cID',
                                'cvID',
                                'bID',
                                'paID',
-                               'pkID'),
-                           true);
+                               'pkID',
+                           ),
+                           true
+                        );
                     }
                     $ra->free();
                 }
@@ -622,6 +639,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         if (!$this->cbOverrideAreaPermissions) {
             $this->cbOverrideAreaPermissions = 0;
         }
+
         return $this->cbOverrideAreaPermissions;
     }
 
@@ -630,6 +648,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         if (!$this->cbOverrideBlockTypeCacheSettings) {
             $this->cbOverrideBlockTypeCacheSettings = 0;
         }
+
         return $this->cbOverrideBlockTypeCacheSettings;
     }
 
@@ -644,15 +663,16 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
             return !$this->enableBlockContainer();
         }
         $bt = $this->getBlockTypeObject();
+
         return $bt->ignorePageThemeGridFrameworkContainer();
     }
-
 
     public function overrideBlockTypeContainerSettings()
     {
         if (!$this->cbOverrideBlockTypeContainerSettings) {
             $this->cbOverrideBlockTypeContainerSettings = 0;
         }
+
         return $this->cbOverrideBlockTypeContainerSettings;
     }
 
@@ -668,24 +688,28 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
     public function cacheBlockOutput()
     {
         $settings = $this->getBlockCacheSettingsObject();
+
         return $settings->cacheBlockOutput();
     }
 
     public function cacheBlockOutputOnPost()
     {
         $settings = $this->getBlockCacheSettingsObject();
+
         return $settings->cacheBlockOutputOnPost();
     }
 
     public function cacheBlockOutputForRegisteredUsers()
     {
         $settings = $this->getBlockCacheSettingsObject();
+
         return $settings->cacheBlockOutputForRegisteredUsers();
     }
 
     public function getBlockOutputCacheLifetime()
     {
         $settings = $this->getBlockCacheSettingsObject();
+
         return $settings->getBlockOutputCacheLifetime();
     }
 
@@ -707,20 +731,22 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
                     $co->getCollectionID(),
                     $co->getVersionID(),
                     $arHandle,
-                    $this->bID
+                    $this->bID,
                 );
 
                 $this->issID = $db->GetOne(
-                                  'select issID from CollectionVersionBlockStyles where cID = ? and cvID = ? and arHandle = ? and bID = ?',
-                                  $v);
+                    'select issID from CollectionVersionBlockStyles where cID = ? and cvID = ? and arHandle = ? and bID = ?',
+                    $v
+                );
             } else {
                 $this->issID = 0;
             }
         }
+
         return $this->issID;
     }
 
-    function getBlockAreaObject()
+    public function getBlockAreaObject()
     {
         if (is_object($this->a)) {
             return $this->a;
@@ -728,10 +754,11 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
     }
 
     /**
-     * Move block to a new collection
+     * Move block to a new collection.
      *
      * @param Collection $collection
      * @param Area       $area
+     *
      * @return bool
      */
     public function move(Collection $collection, Area $area)
@@ -750,17 +777,18 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
             array(
                 'cID' => $new_collection,
                 'cvID' => $new_version,
-                'arHandle' => $new_area_handle
+                'arHandle' => $new_area_handle,
             ),
             array(
                 'cID' => $old_collection,
                 'cvID' => $old_version,
                 'arHandle' => $old_area_handle,
-                'bID' => $this->getBlockID()
-            ));
+                'bID' => $this->getBlockID(),
+            )
+        );
     }
 
-    function duplicate($nc, $isCopyFromMasterCollectionPropagation = false)
+    public function duplicate($nc, $isCopyFromMasterCollectionPropagation = false)
     {
         // duplicate takes a new collection as its argument, and duplicates the existing block
         // to that collection
@@ -791,16 +819,21 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         $nvID = $nc->getVersionID();
 
         // Composer specific
-        $row = $db->GetRow('select cID, arHandle, cbDisplayOrder, ptComposerFormLayoutSetControlID from PageTypeComposerOutputBlocks where cID = ? and bID = ? and arHandle = ?',
-            array($ocID, $this->bID, $this->arHandle));
+        $row = $db->GetRow(
+            'select cID, arHandle, cbDisplayOrder, ptComposerFormLayoutSetControlID from PageTypeComposerOutputBlocks where cID = ? and bID = ? and arHandle = ?',
+            array($ocID, $this->bID, $this->arHandle)
+        );
         if ($row && is_array($row) && $row['cID']) {
-            $db->insert('PageTypeComposerOutputBlocks', array(
-                'cID' => $ncID,
-                'arHandle' => $this->arHandle,
-                'cbDisplayOrder' => $row['cbDisplayOrder'],
-                'ptComposerFormLayoutSetControlID' => $row['ptComposerFormLayoutSetControlID'],
-                'bID' => $newBID
-                ));
+            $db->insert(
+                'PageTypeComposerOutputBlocks',
+                array(
+                    'cID' => $ncID,
+                    'arHandle' => $this->arHandle,
+                    'cbDisplayOrder' => $row['cbDisplayOrder'],
+                    'ptComposerFormLayoutSetControlID' => $row['ptComposerFormLayoutSetControlID'],
+                    'bID' => $newBID,
+                )
+            );
         }
 
         $q = "select paID, pkID from BlockPermissionAssignments where cID = '$ocID' and bID = ? and cvID = ?";
@@ -810,19 +843,21 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
                 $db->Replace(
                    'BlockPermissionAssignments',
                    array(
-                       'cID'  => $ncID,
+                       'cID' => $ncID,
                        'cvID' => $nvID,
-                       'bID'  => $newBID,
+                       'bID' => $newBID,
                        'paID' => $row['paID'],
-                       'pkID' => $row['pkID']),
+                       'pkID' => $row['pkID'],
+                   ),
                    array(
                        'cID',
                        'cvID',
                        'bID',
                        'paID',
-                       'pkID'),
-                   true);
-
+                       'pkID',
+                   ),
+                   true
+                );
             }
             $r->free();
         }
@@ -845,8 +880,9 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
                        $ncID,
                        $nvID,
                        $newBID,
-                       $fa->getFeatureAssignmentID()
-                   ));
+                       $fa->getFeatureAssignmentID(),
+                   )
+                );
             }
         }
 
@@ -867,15 +903,17 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         $q2 = "insert into BlockRelations (originalBID, bID, relationType) values (?, ?, ?)";
         $r2 = $db->prepare($q2);
         $res2 = $db->execute($r2, $v2);
-        $nb = Block::getByID($newBID, $nc, $this->arHandle);
+        $nb = self::getByID($newBID, $nc, $this->arHandle);
 
         $issID = $this->getCustomStyleSetID();
         if ($issID > 0) {
             $v = array($ncID, $nvID, $newBID, $this->arHandle, $issID);
             $db->Execute(
-               'insert into CollectionVersionBlockStyles (cID, cvID, bID, arHandle, issID) values (?, ?, ?, ?, ?)',
-               $v);
+                'insert into CollectionVersionBlockStyles (cID, cvID, bID, arHandle, issID) values (?, ?, ?, ?, ?)',
+                $v
+            );
         }
+
         return $nb;
     }
 
@@ -884,7 +922,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         if ($this->getCustomStyleSetID() > 0 || $force) {
             $csr = StyleSet::getByID($this->getCustomStyleSetID());
             $theme = $this->c->getCollectionThemeObject();
-            switch($this->getBlockTypeHandle()) {
+            switch ($this->getBlockTypeHandle()) {
                 case BLOCK_HANDLE_LAYOUT_PROXY:
                     $bs = new CoreAreaLayoutCustomStyle($csr, $this, $theme);
                     break;
@@ -892,6 +930,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
                     $bs = new CustomStyle($csr, $this, $theme);
                     break;
             }
+
             return $bs;
         }
     }
@@ -903,12 +942,14 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         $cvID = $c->getVersionID();
         $bt = $this->getBlockTypeObject();
         $enableBlockContainer = $bt->ignorePageThemeGridFrameworkContainer() ? 1 : 0;
-        $db->update('CollectionVersionBlocks', array('cbOverrideBlockTypeContainerSettings' => 0, 'cbEnableBlockContainer' => $enableBlockContainer),
+        $db->update(
+            'CollectionVersionBlocks',
+            array('cbOverrideBlockTypeContainerSettings' => 0, 'cbEnableBlockContainer' => $enableBlockContainer),
             array(
-                'cID'      => $this->getBlockCollectionID(),
-                'cvID'     => $cvID,
+                'cID' => $this->getBlockCollectionID(),
+                'cvID' => $cvID,
                 'arHandle' => $this->getAreaHandle(),
-                'bID'      => $this->bID
+                'bID' => $this->bID,
             )
         );
     }
@@ -919,12 +960,14 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         $c = $this->getBlockCollectionObject();
         $cvID = $c->getVersionID();
         $bt = $this->getBlockTypeObject();
-        $db->update('CollectionVersionBlocks', array('cbOverrideBlockTypeContainerSettings' => 1, 'cbEnableBlockContainer' => $enableBlockContainer),
+        $db->update(
+            'CollectionVersionBlocks',
+            array('cbOverrideBlockTypeContainerSettings' => 1, 'cbEnableBlockContainer' => $enableBlockContainer),
             array(
-                'cID'      => $this->getBlockCollectionID(),
-                'cvID'     => $cvID,
+                'cID' => $this->getBlockCollectionID(),
+                'cvID' => $cvID,
                 'arHandle' => $this->getAreaHandle(),
-                'bID'      => $this->bID
+                'bID' => $this->bID,
             )
         );
     }
@@ -934,20 +977,23 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         $db = Loader::db();
         $c = $this->getBlockCollectionObject();
         $cvID = $c->getVersionID();
-        $db->update('CollectionVersionBlocks', array('cbOverrideBlockTypeCacheSettings' => 0),
+        $db->update(
+            'CollectionVersionBlocks',
+            array('cbOverrideBlockTypeCacheSettings' => 0),
             array(
-                'cID'      => $this->getBlockCollectionID(),
-                'cvID'     => $cvID,
+                'cID' => $this->getBlockCollectionID(),
+                'cvID' => $cvID,
                 'arHandle' => $this->getAreaHandle(),
-                'bID'      => $this->bID
+                'bID' => $this->bID,
             )
         );
-        $db->delete('CollectionVersionBlocksCacheSettings',
+        $db->delete(
+            'CollectionVersionBlocksCacheSettings',
             array(
-            'cID'      => $this->getBlockCollectionID(),
-            'cvID'     => $cvID,
-            'arHandle' => $this->getAreaHandle(),
-            'bID'      => $this->bID
+                'cID' => $this->getBlockCollectionID(),
+                'cvID' => $cvID,
+                'arHandle' => $this->getAreaHandle(),
+                'bID' => $this->bID,
             )
         );
     }
@@ -966,31 +1012,34 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         $db->Replace(
             'CollectionVersionBlocksCacheSettings',
             array(
-                'cID'      => $this->getBlockCollectionID(),
-                'cvID'     => $cvID,
+                'cID' => $this->getBlockCollectionID(),
+                'cvID' => $cvID,
                 'arHandle' => $this->getAreaHandle(),
-                'bID'      => $this->bID,
-                'btCacheBlockOutput'    => intval($enabled),
+                'bID' => $this->bID,
+                'btCacheBlockOutput' => intval($enabled),
                 'btCacheBlockOutputOnPost' => intval($enabledOnPost),
                 'btCacheBlockOutputForRegisteredUsers' => intval($enabledForRegistered),
-                'btCacheBlockOutputLifetime' => intval($lifetime)),
+                'btCacheBlockOutputLifetime' => intval($lifetime),
+            ),
             array(
                 'cID',
                 'cvID',
                 'bID',
-                'arHandle'),
+                'arHandle',
+            ),
             true
         );
-        $db->update('CollectionVersionBlocks', array('cbOverrideBlockTypeCacheSettings' => 1),
+        $db->update(
+            'CollectionVersionBlocks',
+            array('cbOverrideBlockTypeCacheSettings' => 1),
             array(
-                'cID'      => $this->getBlockCollectionID(),
-                'cvID'     => $cvID,
+                'cID' => $this->getBlockCollectionID(),
+                'cvID' => $cvID,
                 'arHandle' => $this->getAreaHandle(),
-                'bID'      => $this->bID
+                'bID' => $this->bID,
             )
         );
     }
-
 
     public function setCustomStyleSet(StyleSet $set)
     {
@@ -1000,16 +1049,18 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         $db->Replace(
             'CollectionVersionBlockStyles',
             array(
-                'cID'      => $this->getBlockCollectionID(),
-                'cvID'     => $cvID,
+                'cID' => $this->getBlockCollectionID(),
+                'cvID' => $cvID,
                 'arHandle' => $this->getAreaHandle(),
-                'bID'      => $this->bID,
-                'issID'    => $set->getID()),
+                'bID' => $this->bID,
+                'issID' => $set->getID(),
+            ),
             array(
                 'cID',
                 'cvID',
                 'bID',
-                'arHandle'),
+                'arHandle',
+            ),
             true
         );
         $this->issID = $set->getID();
@@ -1026,7 +1077,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
                 $this->getBlockCollectionID(),
                 $cvID,
                 $this->getAreaHandle(),
-                $this->bID
+                $this->bID,
             )
         );
         $this->issID = 0;
@@ -1040,7 +1091,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
     }
 
     /**
-     * Removes a cached version of the block
+     * Removes a cached version of the block.
      */
     public function refreshCache()
     {
@@ -1086,26 +1137,27 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         $this->cID = $c->getCollectionID();
     }
 
-    function getBlockTypeName()
+    public function getBlockTypeName()
     {
         return $this->btName;
     }
 
-    function getBlockUserID()
+    public function getBlockUserID()
     {
         return $this->uID;
     }
 
     /**
-     * Gets the date the block was added
+     * Gets the date the block was added.
+     *
      * @return string date formated like: 2009-01-01 00:00:00
      */
-    function getBlockDateAdded()
+    public function getBlockDateAdded()
     {
         return $this->bDateAdded;
     }
 
-    function getBlockDateLastModified()
+    public function getBlockDateLastModified()
     {
         return $this->bDateModified;
     }
@@ -1115,12 +1167,12 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         $this->bActionCID = $bActionCID;
     }
 
-    function getBlockEditAction()
+    public function getBlockEditAction()
     {
         return $this->_getBlockAction();
     }
 
-    function _getBlockAction()
+    public function _getBlockAction()
     {
         $cID = $this->getBlockActionCollectionID();
         $bID = $this->getBlockID();
@@ -1129,11 +1181,12 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         $valt = Loader::helper('validation/token');
         $token = $valt->generate();
         $str = DIR_REL . "/" . DISPATCHER_FILENAME . "?cID={$cID}&amp;bID={$bID}&amp;arHandle={$arHandle}" . $step . "&amp;ccm_token=" . $token;
+
         return $str;
     }
 
     /**
-     * @return integer|false The block action collection id or false if not found
+     * @return int|false The block action collection id or false if not found
      */
     public function getBlockActionCollectionID()
     {
@@ -1154,25 +1207,28 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         return false;
     }
 
-    function getBlockUpdateInformationAction()
+    public function getBlockUpdateInformationAction()
     {
         $str = $this->_getBlockAction();
+
         return $str . '&amp;btask=update_information';
     }
 
-    function getBlockUpdateCssAction()
+    public function getBlockUpdateCssAction()
     {
         $str = $this->_getBlockAction();
+
         return $str . '&amp;btask=update_block_css';
     }
 
-    function isEditable()
+    public function isEditable()
     {
         $bv = new BlockView($this);
         $path = $bv->getBlockPath(FILENAME_BLOCK_EDIT);
         if (file_exists($path . '/' . FILENAME_BLOCK_EDIT)) {
             return true;
         }
+
         return false;
     }
 
@@ -1181,7 +1237,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         $this->deleteBlock($forceDelete);
     }
 
-    function deleteBlock($forceDelete = false)
+    public function deleteBlock($forceDelete = false)
     {
         $db = Loader::db();
 
@@ -1212,7 +1268,6 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
 
             $q = "delete from CollectionVersionBlocksCacheSettings where bID = ?";
             $r = $db->query($q, array($bID));
-
         } else {
             $q = "delete from CollectionVersionBlocks where cID = ? and (cvID = ? or cbIncludeAll=1) and bID = ? and arHandle = ?";
             $r = $db->query($q, array($cID, $cvID, $bID, $arHandle));
@@ -1230,12 +1285,13 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
 
         // delete any feature assignments that have been attached to this block to the collection version
         $faIDs = $db->GetCol(
-                    'select faID from BlockFeatureAssignments where cID = ? and cvID = ? and bID = ?',
-                    array(
-                        $cID,
-                        $cvID,
-                        $bID
-                    ));
+            'select faID from BlockFeatureAssignments where cID = ? and cvID = ? and bID = ?',
+            array(
+                $cID,
+                $cvID,
+                $bID,
+            )
+        );
         foreach ($faIDs as $faID) {
             $fa = FeatureAssignment::getByID($faID, $c);
             $fa->delete();
@@ -1267,14 +1323,14 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
 
             // Aaaand then we delete all scrapbooked blocks to this entry
             $r = $db->Execute(
-                    'select cID, cvID, CollectionVersionBlocks.bID, arHandle from CollectionVersionBlocks inner join btCoreScrapbookDisplay on CollectionVersionBlocks.bID = btCoreScrapbookDisplay.bID where bOriginalID = ?',
-                    array($bID));
+                'select cID, cvID, CollectionVersionBlocks.bID, arHandle from CollectionVersionBlocks inner join btCoreScrapbookDisplay on CollectionVersionBlocks.bID = btCoreScrapbookDisplay.bID where bOriginalID = ?',
+                array($bID)
+            );
             while ($row = $r->FetchRow()) {
                 $c = Page::getByID($row['cID'], $row['cvID']);
-                $b = Block::getByID($row['bID'], $c, $row['arHandle']);
+                $b = self::getByID($row['bID'], $c, $row['arHandle']);
                 $b->delete();
             }
-
         }
     }
 
@@ -1295,7 +1351,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
     }
 
-    function setOriginalBlockID($originalBID)
+    public function setOriginalBlockID($originalBID)
     {
         $this->originalBID = $originalBID;
     }
@@ -1306,11 +1362,12 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
 
         $db = Loader::db();
         $c = $this->getBlockCollectionObject();
-        if ($afterBlock instanceof Block) {
-            $block = Block::getByID(
-                          $afterBlock->getBlockID(),
-                          $this->getBlockCollectionObject(),
-                          $this->getBlockAreaObject());
+        if ($afterBlock instanceof self) {
+            $block = self::getByID(
+                $afterBlock->getBlockID(),
+                $this->getBlockCollectionObject(),
+                $this->getBlockAreaObject()
+            );
             $q = "update CollectionVersionBlocks set cbDisplayOrder = cbDisplayOrder + 1 where cID = ? and (cvID = ? or cbIncludeAll=1) and arHandle = ? and cbDisplayOrder > ?";
             $v = array($c->getCollectionID(), $c->getVersionID(), $this->arHandle, $block->getBlockDisplayOrder());
             $db->Execute($q, $v);
@@ -1322,7 +1379,8 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
                 $this->getBlockID(),
                 $c->getCollectionID(),
                 $c->getVersionID(),
-                $this->arHandle);
+                $this->arHandle,
+            );
             $db->Execute($q, $v);
         } else {
             $q = "update CollectionVersionBlocks set cbDisplayOrder = cbDisplayOrder + 1 where cID = ? and (cvID = ? or cbIncludeAll=1) and arHandle = ?";
@@ -1353,7 +1411,6 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
 
         $q = "update CollectionVersionBlocks set cbDisplayOrder = ? where bID = ? and cID = ? and (cvID = ? or cbIncludeAll=1) and arHandle = ?";
         $r = $db->query($q, array($do, $bID, $cID, $cvID, $arHandle));
-
     }
 
     public function doOverrideAreaPermissions()
@@ -1381,7 +1438,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         $this->updateBlockInformation($data);
     }
 
-    function updateBlockInformation($data)
+    public function updateBlockInformation($data)
     {
         // this is the function that updates a block's information, like its block filename, and block name
         $db = Loader::db();
@@ -1403,7 +1460,6 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         $res = $db->execute($r, $v);
 
         $this->refreshBlockOutputCache();
-
     }
 
     public function setName($name)
@@ -1468,14 +1524,13 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         return $this->getBlockCollectionObject()->isBlockAliasedFromMasterCollection($this);
     }
 
-    function getBlockName()
+    public function getBlockName()
     {
         return $this->bName;
     }
 
-    function getBlockFilename()
+    public function getBlockFilename()
     {
         return $this->bFilename;
     }
-
 }
