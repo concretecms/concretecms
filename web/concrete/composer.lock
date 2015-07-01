@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "fa9e1862ca7e57b6ff4a5491744be786",
+    "hash": "2898f1a54d7c447e6285895ce6c40b80",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -1392,16 +1392,16 @@
         },
         {
             "name": "league/url",
-            "version": "3.x-dev",
+            "version": "3.3.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/url.git",
-                "reference": "66a9e42c15315e7ae2817da5ce7748136ab1be39"
+                "reference": "f95aa87dacd5a93547fe8e2805116068027bd8f0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/url/zipball/66a9e42c15315e7ae2817da5ce7748136ab1be39",
-                "reference": "66a9e42c15315e7ae2817da5ce7748136ab1be39",
+                "url": "https://api.github.com/repos/thephpleague/url/zipball/f95aa87dacd5a93547fe8e2805116068027bd8f0",
+                "reference": "f95aa87dacd5a93547fe8e2805116068027bd8f0",
                 "shasum": ""
             },
             "require": {
@@ -1410,8 +1410,7 @@
                 "true/punycode": "^2.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^4.0",
-                "scrutinizer/ocular": "^1.1"
+                "phpunit/phpunit": "^4.0"
             },
             "type": "library",
             "extra": {
@@ -1443,7 +1442,7 @@
                 "php",
                 "url"
             ],
-            "time": "2015-06-30 11:08:51"
+            "time": "2015-07-01 11:03:30"
         },
         {
             "name": "lusitanian/oauth",
@@ -3927,8 +3926,7 @@
         "kertz/twitteroauth": 20,
         "primal/color": 20,
         "zendframework/zend-queue": 20,
-        "oryzone/oauth-user-data": 20,
-        "league/url": 20
+        "oryzone/oauth-user-data": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
