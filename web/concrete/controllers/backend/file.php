@@ -1,5 +1,6 @@
-<?
+<?php
 namespace Concrete\Controller\Backend;
+
 use Concrete\Core\File\Importer;
 use Controller;
 use FileSet;
@@ -11,15 +12,17 @@ use Exception;
 use Permissions as ConcretePermissions;
 use FilePermissions;
 use FileVersion;
+use Core;
 
-class File extends Controller {
-
-    public function star() {
+class File extends Controller
+{
+    public function star()
+    {
         $fs = FileSet::createAndGetSet('Starred Files', FileSet::TYPE_STARRED);
         $files = $this->getRequestFiles();
         $r = new FileEditResponse();
         $r->setFiles($files);
-        foreach($files as $f) {
+        foreach ($files as $f) {
             if ($f->inFileSet($fs)) {
                 $fs->removeFileFromSet($f);
                 $r->setAdditionalDataAttribute('star', false);
@@ -31,7 +34,8 @@ class File extends Controller {
         $r->outputJSON();
     }
 
-    public function rescan() {
+    public function rescan()
+    {
         $files = $this->getRequestFiles('canEditFileContents');
         $r = new FileEditResponse();
         $r->setFiles($files);
@@ -39,7 +43,7 @@ class File extends Controller {
         $errorMessage = '';
         $successCount = 0;
 
-        foreach($files as $f) {
+        foreach ($files as $f) {
             try {
                 $fv = $f->getApprovedVersion();
                 $resp = $fv->refreshAttributes();
@@ -53,7 +57,7 @@ class File extends Controller {
                             $successCount);
                         break;
                 }
-            } catch(\Concrete\Flysystem\FileNotFoundException $e) {
+            } catch (\Concrete\Flysystem\FileNotFoundException $e) {
                 $errorMessage .= t('File %s could not be found.', $fv->getFilename()) . '<br/>';
             }
         }
@@ -67,7 +71,8 @@ class File extends Controller {
         $r->outputJSON();
     }
 
-    public function approveVersion() {
+    public function approveVersion()
+    {
         $files = $this->getRequestFiles('canEditFileContents');
         $r = new FileEditResponse();
         $r->setFiles($files);
@@ -80,7 +85,8 @@ class File extends Controller {
         $r->outputJSON();
     }
 
-    public function deleteVersion() {
+    public function deleteVersion()
+    {
         $files = $this->getRequestFiles('canEditFileContents');
         $r = new FileEditResponse();
         $r->setFiles($files);
@@ -93,14 +99,15 @@ class File extends Controller {
         $r->outputJSON();
     }
 
-    protected function getRequestFiles($permission = 'canViewFileInFileManager') {
+    protected function getRequestFiles($permission = 'canViewFileInFileManager')
+    {
         $files = array();
         if (is_array($_REQUEST['fID'])) {
             $fileIDs = $_REQUEST['fID'];
         } else {
             $fileIDs[] = $_REQUEST['fID'];
         }
-        foreach($fileIDs as $fID) {
+        foreach ($fileIDs as $fID) {
             $f = ConcreteFile::getByID($fID);
             $fp = new ConcretePermissions($f);
             if ($fp->$permission()) {
@@ -109,13 +116,14 @@ class File extends Controller {
         }
 
         if (count($files) == 0) {
-            throw new Exception(t("Access Denied."));
+            Core::make('helper/ajax')->sendError(t('File not found.'));
         }
 
         return $files;
     }
 
-    public function upload() {
+    public function upload()
+    {
         $fp = FilePermissions::getGlobal();
         $cf = Loader::helper('file');
         if (!$fp->canAddFiles()) {
@@ -156,11 +164,12 @@ class File extends Controller {
         Loader::helper('ajax')->sendResult($files);
     }
 
-    public function duplicate() {
+    public function duplicate()
+    {
         $files = $this->getRequestFiles('canCopyFile');
         $r = new FileEditResponse();
         $newFiles = array();
-        foreach($files as $f) {
+        foreach ($files as $f) {
             $nf = $f->duplicate();
             $newFiles[] = $nf;
         }
@@ -168,13 +177,11 @@ class File extends Controller {
         $r->outputJSON();
     }
 
-    public function getJSON() {
+    public function getJSON()
+    {
         $files = $this->getRequestFiles();
         $r = new FileEditResponse();
         $r->setFiles($files);
         $r->outputJSON();
     }
-
-
 }
-

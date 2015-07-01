@@ -45,7 +45,7 @@ $(function() {
             .fadeIn();
     }, 0);
 
-     <?php if(Config::get('concrete.white_label.background_image') !== 'none') { ?>
+     <?php if(Config::get('concrete.white_label.background_image') !== 'none' && !Config::get('concrete.white_label.background_url')) { ?>
     $(function () {
         var shown = false, info;
         $.getJSON('<?= Core::getApplicationURL() . '/' . DISPATCHER_FILENAME . '/tools/required/dashboard/get_image_data' ?>', { image: '<?= $image ?>' }, function (data) {
@@ -67,7 +67,11 @@ $(function() {
             fade: 500
         });
     });
-<?php } ?>
+    <?php } elseif (Config::get('concrete.white_label.background_url')) { ?>
+        $.backstretch("<?= Config::get('concrete.urls.background_url') ?>", {
+            fade: 500
+        });
+    <?php } ?>
 });
 </script>
 
