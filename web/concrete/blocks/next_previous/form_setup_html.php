@@ -47,6 +47,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
       <select name="orderBy" class="form-control">
           <option value="display_asc" <?php echo ($controller->orderBy=='display_asc') ? 'selected="selected"' : '' ?>><?=t('Sitemap')?></option>
           <option value="chrono_desc" <?php echo ($controller->orderBy=='chrono_desc') ? 'selected="selected"' : '' ?>><?=t('Chronological')?></option>
+          <option value="display_desc" <?php echo ($controller->orderBy=='display_desc') ? 'selected="selected"' : '' ?>><?=t('Reverse Sitemap')?></option>
+          <option value="chrono_asc" <?php echo ($controller->orderBy=='chrono_asc') ? 'selected="selected"' : '' ?>><?=t('Reverse Chronological')?></option>
       </select>
     </div>
 
