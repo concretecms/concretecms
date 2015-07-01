@@ -1,15 +1,15 @@
 <?php
+
 namespace Concrete\Core\Foundation\Repetition;
 
 /**
  * Abstract repetition class
- * This class is used to define and match against various time windows
+ * This class is used to define and match against various time windows.
  *
  * @package Concrete\Core\Foundation\Repetition
  */
 abstract class AbstractRepetition implements RepetitionInterface
 {
-
     /**
      * @var string Date string of the start date/time
      */
@@ -69,10 +69,9 @@ abstract class AbstractRepetition implements RepetitionInterface
     }
 
     /**
-     * Toggle whether `start_date` is all day
+     * Toggle whether `start_date` is all day.
      *
      * @param bool $start_date_all_day
-     * @return void
      */
     public function setStartDateAllDay($start_date_all_day)
     {
@@ -88,10 +87,9 @@ abstract class AbstractRepetition implements RepetitionInterface
     }
 
     /**
-     * Toggle whether `end_date` is all day
+     * Toggle whether `end_date` is all day.
      *
      * @param bool $end_date_all_day
-     * @return void
      */
     public function setEndDateAllDay($end_date_all_day)
     {
@@ -100,6 +98,7 @@ abstract class AbstractRepetition implements RepetitionInterface
 
     /**
      * @param int|null $now The timestamp to check against
+     *
      * @return bool
      */
     public function isActive($now = null)
@@ -133,7 +132,7 @@ abstract class AbstractRepetition implements RepetitionInterface
             if (is_object($end_date_object)) {
                 $end_time = $end_date_object->getTimestamp();
             }
-            if (!$start_date ) {
+            if (!$start_date) {
                 return null;
             }
             if ($start_date && $start_time > $now) {
@@ -181,7 +180,7 @@ abstract class AbstractRepetition implements RepetitionInterface
                     $now_time->setTimestamp($now);
 
                     $week_diff_start = new \DateTime();
-                    if (($days_past_sunday = date('w', $start_time->getTimestamp())) !== 0) {
+                    if (($days_past_sunday = date('w', $start_time->getTimestamp())) != 0) {
                         $week_diff_start->setTimestamp(
                             strtotime("-{$days_past_sunday} days", $start_time->getTimestamp()));
                     } else {
@@ -189,7 +188,7 @@ abstract class AbstractRepetition implements RepetitionInterface
                     }
 
                     $week_diff_now = new \DateTime();
-                    if (($days_past_sunday = date('w', $now_time->getTimestamp())) !== 0) {
+                    if (($days_past_sunday = date('w', $now_time->getTimestamp())) != 0) {
                         $week_diff_now->setTimestamp(strtotime("-{$days_past_sunday} days", $now_time->getTimestamp()));
                     } else {
                         $week_diff_now->setTimestamp($now_time->getTimestamp());
@@ -210,7 +209,6 @@ abstract class AbstractRepetition implements RepetitionInterface
                                 if ($now >= $dailyTimeStart && $now <= $dailyTimeEnd) {
                                     return $this->rangeFromTime($dailyTimeStart);
                                 }
-
                             }
                         } else {
                             if ($dow <= $endDOW && $dow >= $startDOW) {
@@ -252,7 +250,7 @@ abstract class AbstractRepetition implements RepetitionInterface
                         date("Y-m-01 {$start_datetime_time}", $now_datetime->getTimestamp()));
                     $normalized_start_datetime = new \DateTime(date("Y-m-01 H:i:s", $start_datetime->getTimestamp()));
 
-                    $diff = $normalized_now_datetime->diff($normalized_start_datetime);
+                    $diff = $this->dateDiffNoDST($normalized_now_datetime, $normalized_start_datetime);
                     $month_difference = $diff->m + ($diff->y * 12);
 
                     $checkTime = false;
@@ -261,7 +259,7 @@ abstract class AbstractRepetition implements RepetitionInterface
                     $month = date('m', $start_datetime->getTimestamp());
                     $wotm_timestamp = $start_datetime->getTimestamp();
                     do {
-                        $wotm++;
+                        ++$wotm;
                         $wotm_timestamp = strtotime('-1 week', $wotm_timestamp);
                     } while (date('m', $wotm_timestamp) === $month);
 
@@ -282,7 +280,7 @@ abstract class AbstractRepetition implements RepetitionInterface
                                 $now_month = date('m', $start_datetime->getTimestamp());
                                 $wotm_timestamp = $start_datetime->getTimestamp();
                                 do {
-                                    $now_wotm++;
+                                    ++$now_wotm;
                                     $wotm_timestamp = strtotime('-1 week', $wotm_timestamp);
                                 } while (date('m', $wotm_timestamp) === $now_month);
 
@@ -316,7 +314,6 @@ abstract class AbstractRepetition implements RepetitionInterface
                     }
                     break;
             }
-
         }
 
         return null;
@@ -352,7 +349,6 @@ abstract class AbstractRepetition implements RepetitionInterface
 
     /**
      * @param int $repeat_period [ ::REPEAT_DAILY | ::REPEAT_WEEKLY | ::REPEAT_MONTHLY ]
-     * @return void
      */
     public function setRepeatPeriod($repeat_period)
     {
@@ -368,10 +364,9 @@ abstract class AbstractRepetition implements RepetitionInterface
     }
 
     /**
-     * Set the start date
+     * Set the start date.
      *
      * @param $start_date
-     * @return void
      */
     public function setStartDate($start_date)
     {
@@ -387,10 +382,9 @@ abstract class AbstractRepetition implements RepetitionInterface
     }
 
     /**
-     * Set the end date
+     * Set the end date.
      *
      * @param $end_date
-     * @return void
      */
     public function setEndDate($end_date)
     {
@@ -402,6 +396,7 @@ abstract class AbstractRepetition implements RepetitionInterface
         if (!$end) {
             $end = $start + (strtotime($this->getEndDate()) - strtotime($this->getStartDate()));
         }
+
         return array($start, $end);
     }
 
@@ -415,7 +410,6 @@ abstract class AbstractRepetition implements RepetitionInterface
 
     /**
      * @param $repeat_period_end
-     * @return void
      */
     public function setRepeatPeriodEnd($repeat_period_end)
     {
@@ -432,7 +426,6 @@ abstract class AbstractRepetition implements RepetitionInterface
 
     /**
      * @param $repeat_every_num
-     * @return void
      */
     public function setRepeatEveryNum($repeat_every_num)
     {
@@ -444,12 +437,11 @@ abstract class AbstractRepetition implements RepetitionInterface
      */
     public function getRepeatPeriodWeekDays()
     {
-        return (array)$this->repeatPeriodWeekDays;
+        return (array) $this->repeatPeriodWeekDays;
     }
 
     /**
      * @param int[] $repeat_period_week_days
-     * @return void
      */
     public function setRepeatPeriodWeekDays($repeat_period_week_days)
     {
@@ -466,7 +458,6 @@ abstract class AbstractRepetition implements RepetitionInterface
 
     /**
      * @param int $repeat_month_by [ ::MONTHLY_REPEAT_WEEKLY | ::MONTHLY_REPEAT_MONTHLY | ::MONTHLY_REPEAT_LAST_WEEKDAY ]
-     * @return void
      */
     public function setRepeatMonthBy($repeat_month_by)
     {
@@ -478,7 +469,7 @@ abstract class AbstractRepetition implements RepetitionInterface
      */
     public function getTextRepresentation()
     {
-        return (string)$this;
+        return (string) $this;
     }
 
     public function __toString()
@@ -504,7 +495,7 @@ abstract class AbstractRepetition implements RepetitionInterface
     }
 
     /**
-     * This method is deprecated, use `getRepeatEveryNum`
+     * This method is deprecated, use `getRepeatEveryNum`.
      *
      * @deprecated
      */
@@ -532,6 +523,7 @@ abstract class AbstractRepetition implements RepetitionInterface
     /**
      * @param int $start
      * @param int $end
+     *
      * @return array[]
      */
     public function activeRangesBetween($start, $end)
@@ -621,7 +613,8 @@ abstract class AbstractRepetition implements RepetitionInterface
                             if ($day_of_the_week >= $start && $day_of_the_week <= $end) {
                                 $occurrences[] = array(
                                     $day_of_the_week,
-                                    $day_of_the_week + $repetition_end - $repetition_start);
+                                    $day_of_the_week + $repetition_end - $repetition_start,
+                                );
                             }
                         }
 
@@ -655,7 +648,7 @@ abstract class AbstractRepetition implements RepetitionInterface
                             $wotm_step = $repetition_start_datetime->getTimestamp();
 
                             do {
-                                $wotm++;
+                                ++$wotm;
                                 $wotm_step = strtotime('-1 week', $wotm_step);
                             } while (date('m', $wotm_step) === $month);
 
@@ -674,7 +667,8 @@ abstract class AbstractRepetition implements RepetitionInterface
                                     if (date('m', $occurrence_start) === date('m', $current_datetime->getTimestamp())) {
                                         $occurrences[] = array(
                                             $occurrence_start,
-                                            $occurrence_start + $repetition_end - $repetition_start);
+                                            $occurrence_start + $repetition_end - $repetition_start,
+                                        );
                                     }
                                 }
 
@@ -694,7 +688,8 @@ abstract class AbstractRepetition implements RepetitionInterface
                                 if ($occurrence_start && $occurrence_start >= $start && $occurrence_start <= $end) {
                                     $occurrences[] = array(
                                         $occurrence_start,
-                                        $occurrence_start + $repetition_end - $repetition_start);
+                                        $occurrence_start + $repetition_end - $repetition_start,
+                                    );
                                 }
 
                                 $current_datetime->add($interval);
@@ -715,7 +710,8 @@ abstract class AbstractRepetition implements RepetitionInterface
                                     if (date('m', $occurrence_start) === date('m', $current_datetime->getTimestamp())) {
                                         $occurrences[] = array(
                                             $occurrence_start,
-                                            $occurrence_start + $repetition_end - $repetition_start);
+                                            $occurrence_start + $repetition_end - $repetition_start,
+                                        );
                                     }
                                 }
 
@@ -726,7 +722,6 @@ abstract class AbstractRepetition implements RepetitionInterface
                     }
 
             }
-
         }
 
         return $occurrences;
@@ -735,7 +730,23 @@ abstract class AbstractRepetition implements RepetitionInterface
     protected function getDayString($day)
     {
         $days = array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday');
+
         return array_get($days, $day);
     }
 
+    /**
+     * Returns the difference between two DateTime objects without considering DST changes.
+     *
+     * @param \DateTime $from
+     * @param \DateTime $to
+     *
+     * @return \DateInterval
+     */
+    protected function dateDiffNoDST(\DateTime $from, \DateTime $to)
+    {
+        $fromUTC = new \DateTime($from->format('Y-m-d\TH:i:s+00:00'));
+        $toUTC = new \DateTime($to->format('Y-m-d\TH:i:s+00:00'));
+
+        return $fromUTC->diff($toUTC);
+    }
 }
