@@ -86,12 +86,12 @@ class Topic extends TreeNode
         $this->treeNodeTopicName = $treeNodeTopicName;
     }
 
-    public function importNode(\SimpleXMLElement $sx, $parent = false)
+    public static function importNode(\SimpleXMLElement $sx, $parent = false)
     {
         return static::add((string) $sx['name'], $parent);
     }
 
-    public static function add($treeNodeTopicName, $parent = false)
+    public static function add($treeNodeTopicName = '', $parent = false)
     {
         $db = Loader::db();
         $node = parent::add($parent);
