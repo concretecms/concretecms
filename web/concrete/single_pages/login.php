@@ -201,6 +201,15 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
                 $('div.authTypes > div').hide().filter('[data-authType="' + at + '"]').show();
                 return false;
             });
+
+            <?php
+            if (isset($lastAuthType)) {
+                ?>
+                $("ul.auth-types > li[data-handle='<?= $lastAuthType->getAuthenticationTypeHandle() ?>']")
+                    .trigger("click");
+                <?php
+            }
+            ?>
         })(jQuery);
     </script>
 </div>
