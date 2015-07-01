@@ -4,6 +4,7 @@ namespace Concrete\Core\Console\Command;
 
 use Job;
 use JobSet;
+use RuntimeException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
@@ -57,6 +58,11 @@ class JobCommand extends Command
             $jobs = array();
 
             $jobsArg = $input->getArgument('jobs');
+
+            if (empty($jobsArg)) {
+                throw new RuntimeException(t('At least one job must be provided'));
+            }
+
             if ($options['set']) {
                 foreach ($jobsArg as $setName) {
                     $set = JobSet::getByName($setName);
