@@ -2,7 +2,8 @@
 
 namespace Concrete\Core\Area\Layout;
 
-use Loader;
+use Core;
+use Database;
 use Concrete\Core\Foundation\Object;
 use Area;
 use Concrete\Core\Block\Block;
@@ -41,7 +42,7 @@ abstract class Layout extends Object
      */
     public static function getByID($arLayoutID)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $row = $db->GetRow('select arLayoutID, arLayoutIsPreset, arLayoutUsesThemeGridFramework from AreaLayouts where arLayoutID = ?', array($arLayoutID));
         if (is_array($row) && $row['arLayoutID']) {
             if ($row['arLayoutUsesThemeGridFramework']) {
@@ -61,7 +62,7 @@ abstract class Layout extends Object
 
     protected function loadColumnNumber()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $this->arLayoutNumColumns = $db->GetOne('select count(arLayoutColumnID) as totalColumns from AreaLayoutColumns where arLayoutID = ?', array($this->arLayoutID));
     }
 
@@ -126,10 +127,10 @@ abstract class Layout extends Object
      */
     public function getAreaLayoutColumns()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $r = $db->Execute('select arLayoutColumnID from AreaLayoutColumns where arLayoutID = ? order by arLayoutColumnIndex asc', array($this->arLayoutID));
         $columns = array();
-        $class = '\\Concrete\\Core\\Area\\Layout\\' . Loader::helper('text')->camelcase($this->arLayoutType) . 'Column';
+        $class = '\\Concrete\\Core\\Area\\Layout\\' . Core::make('helper/text')->camelcase($this->arLayoutType) . 'Column';
         while ($row = $r->FetchRow()) {
             $column = call_user_func_array(array($class, 'getByID'), array($row['arLayoutColumnID']));
             if (is_object($column)) {
@@ -146,7 +147,7 @@ abstract class Layout extends Object
      */
     public function addLayoutColumn()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $arLayoutColumnDisplayID = $db->GetOne('select max(arLayoutColumnDisplayID) as arLayoutColumnDisplayID from AreaLayoutColumns');
         if ($arLayoutColumnDisplayID) {
             ++$arLayoutColumnDisplayID;
@@ -187,7 +188,7 @@ abstract class Layout extends Object
         foreach ($columns as $col) {
             $col->delete();
         }
-        $db = Loader::db();
+        $db = Database::connection();
         $db->Execute('delete from AreaLayouts where arLayoutID = ?', array($this->arLayoutID));
         $db->Execute('delete from AreaLayoutPresets where arLayoutID = ?', array($this->arLayoutID));
     }
@@ -198,7 +199,7 @@ abstract class Layout extends Object
     public function getFormatter()
     {
         $class = '\\Concrete\\Core\\Area\\Layout\\' .
-            'Formatter\\' . \Loader::helper('text')->camelcase($this->arLayoutType) . 'Formatter';
+            'Formatter\\' . Core::make('helper/text')->camelcase($this->arLayoutType) . 'Formatter';
         $o = new $class($this);
 
         return $o;
