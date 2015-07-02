@@ -116,6 +116,7 @@ return array(
         'core_logging'      => '\Concrete\Core\Logging\LoggingServiceProvider',
         'core_cache'        => '\Concrete\Core\Cache\CacheServiceProvider',
         'core_url'          => '\Concrete\Core\Url\UrlServiceProvider',
+        'core_devices'      => '\Concrete\Core\Device\DeviceServiceProvider',
 
         // Authentication
         'core_oauth'          => '\Concrete\Core\Authentication\Type\OAuth\ServiceProvider',
@@ -351,6 +352,8 @@ return array(
         "/ccm/system/panels/page/versions/new_page"                                     => array('\Concrete\Controller\Panel\Page\Versions::new_page'),
         "/ccm/system/panels/page/versions/delete"                                       => array('\Concrete\Controller\Panel\Page\Versions::delete'),
         "/ccm/system/panels/page/versions/approve"                                      => array('\Concrete\Controller\Panel\Page\Versions::approve'),
+        "/ccm/system/panels/page/devices"                                               => array('\Concrete\Controller\Panel\Page\Devices::view'),
+        "/ccm/system/panels/page/devices/preview"                                       => array('\Concrete\Controller\Panel\Page\Devices::preview'),
         "/ccm/system/panels/sitemap"                                                    => array('\Concrete\Controller\Panel\Sitemap::view'),
 
         /**

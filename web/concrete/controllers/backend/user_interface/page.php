@@ -11,6 +11,9 @@ abstract class Page extends \Concrete\Controller\Backend\UserInterface
     /** @var ConcretePage A page object */
     protected $page;
 
+    /** @var Permissions This page's permissions */
+    protected $permissions;
+
     public function on_start()
     {
         $request = $this->request;
