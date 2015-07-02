@@ -121,7 +121,7 @@ var ConcretePageVersionList = {
 			$.each(checkboxes, function(i, cb) {
 				data += '&cvID[]=' + $(cb).val();
 			});
-			panel.openPanelDetail({'identifier': 'page-versions', 'data': data, 'url': src});
+			panel.openPanelDetail({'identifier': 'page-versions', 'data': data, 'url': src, target: null});
 
 		} else {
 			panel.closePanelDetail();
