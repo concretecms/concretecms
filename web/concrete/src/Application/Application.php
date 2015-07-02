@@ -22,7 +22,6 @@ use Environment;
 use Illuminate\Container\Container;
 use Job;
 use JobSet;
-use Loader;
 use Log;
 use Package;
 use Page;
@@ -102,7 +101,7 @@ class Application extends Container
         // Delete and re-create the cache directory
         $cacheDir = Config::get('concrete.cache.directory');
         if (is_dir($cacheDir)) {
-            $fh = Loader::helper("file");
+            $fh = Core::make('helper/file');
             $fh->removeAll($cacheDir, true);
         }
         $this->setupFilesystem();
