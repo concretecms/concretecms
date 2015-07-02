@@ -1,14 +1,14 @@
 <?php
+
 namespace Concrete\Core\Area\Layout;
 
 use Loader;
-use \Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\Object;
 use Area;
 use Concrete\Core\Block\Block;
 
 abstract class Layout extends Object
 {
-
     /**
      * @var Area
      */
@@ -36,6 +36,7 @@ abstract class Layout extends Object
 
     /**
      * @param int $arLayoutID
+     *
      * @return CustomLayout|ThemeGridLayout|null
      */
     public static function getByID($arLayoutID)
@@ -45,7 +46,7 @@ abstract class Layout extends Object
         if (is_array($row) && $row['arLayoutID']) {
             if ($row['arLayoutUsesThemeGridFramework']) {
                 $al = new ThemeGridLayout();
-            } else if ($row['arLayoutIsPreset']) {
+            } elseif ($row['arLayoutIsPreset']) {
                 $al = new PresetLayout();
             } else {
                 $al = new CustomLayout();
@@ -53,6 +54,7 @@ abstract class Layout extends Object
             $al->setPropertiesFromArray($row);
             $al->loadDetails();
             $al->loadColumnNumber();
+
             return $al;
         }
     }
@@ -62,7 +64,7 @@ abstract class Layout extends Object
         $db = Loader::db();
         $this->arLayoutNumColumns = $db->GetOne('select count(arLayoutColumnID) as totalColumns from AreaLayoutColumns where arLayoutID = ?', array($this->arLayoutID));
     }
-    
+
     /**
      * @param Area $a
      */
@@ -135,6 +137,7 @@ abstract class Layout extends Object
                 $columns[] = $column;
             }
         }
+
         return $columns;
     }
 
@@ -146,13 +149,14 @@ abstract class Layout extends Object
         $db = Loader::db();
         $arLayoutColumnDisplayID = $db->GetOne('select max(arLayoutColumnDisplayID) as arLayoutColumnDisplayID from AreaLayoutColumns');
         if ($arLayoutColumnDisplayID) {
-            $arLayoutColumnDisplayID++;
+            ++$arLayoutColumnDisplayID;
         } else {
             $arLayoutColumnDisplayID = 1;
         }
         $index = $db->GetOne('select count(arLayoutColumnID) from AreaLayoutColumns where arLayoutID = ?', array($this->arLayoutID));
         $db->Execute('insert into AreaLayoutColumns (arLayoutID, arLayoutColumnIndex, arLayoutColumnDisplayID) values (?, ?, ?)', array($this->arLayoutID, $index, $arLayoutColumnDisplayID));
         $arLayoutColumnID = $db->Insert_ID();
+
         return $arLayoutColumnID;
     }
 
@@ -196,6 +200,7 @@ abstract class Layout extends Object
         $class = '\\Concrete\\Core\\Area\\Layout\\' .
             'Formatter\\' . \Loader::helper('text')->camelcase($this->arLayoutType) . 'Formatter';
         $o = new $class($this);
+
         return $o;
     }
 }
