@@ -1,9 +1,9 @@
 <?php
 namespace Concrete\Core\Device\Apple\IPhone;
 
-use Concrete\Core\Device\Device;
+use Concrete\Core\Device\Apple\AppleDevice;
 
-class IPhone6PlusDevice extends Device
+class IPhone6PlusDevice extends AppleDevice
 {
 
     public function getViewportHTML()

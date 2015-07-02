@@ -73,12 +73,17 @@ use Concrete\Core\Device\Device;
                         <script type="text/html" class="viewport"><?= $device->getViewportHTML() ?></script>
 
                         <a href="#" data-launch-panel-detail="page-device-preview" data-panel-transition="fade">
-                            <span class="ccm-panel-device-name">
-                                <?= h($device->getName()) ?>
-                            </span>
-                            <span class="ccm-panel-device-resolution">
+                            <div class="ccm-panel-device-name row">
+                                <div class="ccm-panel-device-name-icon">
+                                    <i class="<?= $device->getIconClass() ?>"></i>
+                                </div>
+                                <div class="ccm-panel-device-name-label">
+                                    <span><?= h($device->getName()) ?></span>
+                                </div>
+                            </div>
+                            <div class="ccm-panel-device-resolution">
                                 <?= h($device->getWidth()) ?> x <?= h($device->getHeight()) ?>
-                            </span>
+                            </div>
                         </a>
                     </li>
                 <?php
