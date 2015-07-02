@@ -77,7 +77,7 @@ if ($u->isRegistered()) {
 		$maxFileSize = $blockRegisteredSizeOverride;
         $maxQuantity = $blockRegisteredQuantityOverride;
 	} else {
-		$maxFileSize = Config::get('conversations.files.guest.max_size');
+		$maxFileSize = Config::get('conversations.files.registered.max_size');
         $maxQuantity = Config::get('conversations.files.registered.max');
 	}
 } else {
