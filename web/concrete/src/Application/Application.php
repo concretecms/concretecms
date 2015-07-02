@@ -293,10 +293,13 @@ class Application extends Container
      */
     public function handleURLSlashes(SymfonyRequest $request)
     {
-        $url = Url::createFromUrl($request->getUri());
+        $parsedUrl = (string) Url::createFromUrl($request->getUri());
         if ($request->getPathInfo() != '/') {
-            if (urldecode((string) $url) != urldecode($request->getUri())) {
-                $response = new RedirectResponse((string) $url, 301);
+            $parsedUrlWithoutQueryString = strstr($parsedUrl, '?', true) ?: $parsedUrl;
+            $requestUrl = $request->getUri();
+            $requestUrlWithoutQueryString = strstr($requestUrl, '?', true) ?: $requestUrl;
+            if (urldecode($parsedUrlWithoutQueryString) != urldecode($requestUrlWithoutQueryString)) {
+                $response = new RedirectResponse($parsedUrl, 301);
                 $response->setRequest($request);
 
                 return $response;
