@@ -1,9 +1,9 @@
 <?php
 namespace Concrete\Core\Device\Apple\IPad;
 
-use Concrete\Core\Device\Device;
+use Concrete\Core\Device\Apple\AppleDevice;
 
-class IPadDevice extends Device
+class IPadDevice extends AppleDevice
 {
 
     public function getViewportHTML()
