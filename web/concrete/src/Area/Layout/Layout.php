@@ -60,7 +60,7 @@ abstract class Layout extends Object
     protected function loadColumnNumber()
     {
         $db = Loader::db();
-        $this->arLayoutNumColumns = $db->GetOne('select count(arLayoutColumnID) as totalColumns from AreaLayoutColumns where arLayoutID = ?', array($arLayoutID));
+        $this->arLayoutNumColumns = $db->GetOne('select count(arLayoutColumnID) as totalColumns from AreaLayoutColumns where arLayoutID = ?', array($this->arLayoutID));
     }
     
     /**
