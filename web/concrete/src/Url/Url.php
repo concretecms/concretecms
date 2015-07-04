@@ -70,7 +70,7 @@ class Url extends \League\Url\Url implements UrlInterface
             new        \League\Url\Components\Host($components['host']),
             new        \League\Url\Components\Port($components['port']),
             new \Concrete\Core\Url\Components\Path($components['path'], $trailing_slashes),
-            new       \League\Url\Components\Query($components['query']),
+            new       \Concrete\Core\Url\Components\Query($components['query']),
             new    \League\Url\Components\Fragment($components['fragment'])
         );
     }
