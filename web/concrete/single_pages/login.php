@@ -135,7 +135,7 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
 
         ul.auth-types > li > .fa,
         ul.auth-types > li svg,
-        ul.auth-types > li .icon {
+        ul.auth-types > li .ccm-auth-type-icon {
             position: absolute;
             top: 2px;
             left: 0px;
