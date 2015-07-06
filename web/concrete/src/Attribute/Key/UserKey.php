@@ -87,8 +87,8 @@ class UserKey extends Key {
 		return $ak;
 	}
 
-	public function export($axml) {
-		$akey = parent::export($axml);
+	public function export($axml, $exporttype = 'full') {
+		$akey = parent::export($axml, $exporttype);
 		$akey->addAttribute('profile-displayed', $this->uakProfileDisplay);
 		$akey->addAttribute('profile-editable', $this->uakProfileEdit);
 		$akey->addAttribute('profile-required',$this->uakProfileEditRequired);
