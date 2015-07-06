@@ -166,7 +166,6 @@ class Device implements DeviceInterface
         return $this->ratio;
     }
 
-
     /**
      * Get the HTML for this device's viewport
      * @return string
