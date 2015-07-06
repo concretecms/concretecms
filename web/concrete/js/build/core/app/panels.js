@@ -239,22 +239,23 @@ function ConcretePanel(options) {
             data: ''
         }, overrides);
         var identifier = options.identifier;
-        if (obj.detail) {
-            //options.transition = 'none';
-        }
         // if a panel is already open, we close it immediately
         if (obj.detail) {
             obj.closePanelDetailImmediately();
         }
         obj.detail = options;
+
         var detailID = 'ccm-panel-detail-' + identifier;
+
         var $detail = $('<div />', {
             id: detailID,
             class: 'ccm-panel-detail'
         }).appendTo(document.body);
+
         var $content = $('<div />', {
             class: 'ccm-panel-detail-content'
         }).appendTo($detail);
+
         $('div.ccm-page')
             .queue(function () {
                 $detail.addClass('ccm-panel-detail-transition-' + options.transition);
@@ -268,19 +269,31 @@ function ConcretePanel(options) {
                 $(this).dequeue();
             });
         html.addClass('ccm-panel-detail-open');
-        $content.load(options.url + '?cID=' + CCM_CID + options.data, function () {
+
+        var complete_function = function () {
+            Concrete.event.publish('PanelOpenDetail', {
+                panel: options,
+                container: $content
+            });
+        };
+
+        if (options.url) {
+            $content.load(options.url + '?cID=' + CCM_CID + options.data, function () {
+                jQuery.fn.dialog.hideLoader();
+                $content.find('.launch-tooltip').tooltip({'container': '#ccm-tooltip-holder'});
+                $content.find('a[data-help-notification-toggle]').concreteHelpLauncher();
+                obj.loadPanelDetailActions($content);
+
+                _.defer(complete_function);
+            });
+        } else {
             jQuery.fn.dialog.hideLoader();
             $content.find('.launch-tooltip').tooltip({'container': '#ccm-tooltip-holder'});
             $content.find('a[data-help-notification-toggle]').concreteHelpLauncher();
             obj.loadPanelDetailActions($content);
 
-            _.defer(function() {
-                Concrete.event.publish('PanelOpenDetail', {
-                    panel: options,
-                    container: $content
-                });
-            });
-        });
+            _.defer(complete_function);
+        }
     };
 
     this.loadPanelDetailActions = function ($content) {
@@ -365,7 +378,7 @@ function ConcretePanel(options) {
             $('.ccm-panel-menu-item-active').removeClass('ccm-panel-menu-item-active');
             $(this).addClass('ccm-panel-menu-item-active');
             var identifier = $(this).attr('data-launch-panel-detail');
-            var panelDetailOptions = {'identifier': identifier};
+            var panelDetailOptions = {'identifier': identifier, target: $(this)};
             if ($(this).attr('data-panel-transition')) {
                 panelDetailOptions.transition = $(this).attr('data-panel-transition');
             }
