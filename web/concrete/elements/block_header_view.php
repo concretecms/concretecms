@@ -37,7 +37,7 @@ if (
     print $gf->getPageThemeGridFrameworkContainerStartHTML();
     print $gf->getPageThemeGridFrameworkRowStartHTML();
     printf('<div class="%s">', $gf->getPageThemeGridFrameworkColumnClassesForSpan(
-        $gf->getPageThemeGridFrameworkNumColumns()
+        min($a->getAreaGridMaximumColumns(), $gf->getPageThemeGridFrameworkNumColumns())
     ));
 }
 
