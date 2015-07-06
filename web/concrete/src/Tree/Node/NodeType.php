@@ -17,7 +17,7 @@ class NodeType extends Object {
 		return PackageList::getHandle($this->pkgID);
 	}
 
-	public function add($treeNodeTypeHandle, $pkg = false) {
+	public static function add($treeNodeTypeHandle, $pkg = false) {
 
 		$pkgID = 0;
 		$db = Loader::db();
