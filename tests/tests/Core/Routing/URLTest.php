@@ -95,8 +95,10 @@ class URLTest extends PHPUnit_Framework_TestCase
         $app = Core::make("app");
         Config::set('concrete.seo.redirect_to_canonical_url', true);
         Config::set('concrete.seo.canonical_url', 'https://www2.myawesomesite.com:8080');
+        Config::set('concrete.seo.canonical_ssl_url', 'https://www2.myawesomesite.com:8080');
         $request = \Concrete\Core\Http\Request::create('http://www.awesome.com/path/to/site/index.php/dashboard?bar=1&foo=1');
         $response = $app->handleCanonicalURLRedirection($request);
+
         $this->assertEquals('https://www2.myawesomesite.com:8080/path/to/site/index.php/dashboard?bar=1&foo=1', $response->getTargetUrl());
         Config::set('concrete.seo.redirect_to_canonical_url', false);
         Config::set('concrete.seo.canonical_url', null);

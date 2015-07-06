@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "2898f1a54d7c447e6285895ce6c40b80",
+    "hash": "5648f2b03f650e0cb7b0576f4ba78404",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -2146,16 +2146,16 @@
         },
         {
             "name": "punic/punic",
-            "version": "1.6.1",
+            "version": "1.6.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/punic/punic.git",
-                "reference": "c98e5e8282723ed7c4e6f260818c2adb9198c928"
+                "reference": "5805b35d6a574f754b49be1f539aaf3ae6484808"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/punic/punic/zipball/c98e5e8282723ed7c4e6f260818c2adb9198c928",
-                "reference": "c98e5e8282723ed7c4e6f260818c2adb9198c928",
+                "url": "https://api.github.com/repos/punic/punic/zipball/5805b35d6a574f754b49be1f539aaf3ae6484808",
+                "reference": "5805b35d6a574f754b49be1f539aaf3ae6484808",
                 "shasum": ""
             },
             "require": {
@@ -2207,7 +2207,7 @@
                 "translations",
                 "unicode"
             ],
-            "time": "2015-05-11 16:20:09"
+            "time": "2015-06-16 13:04:27"
         },
         {
             "name": "sunra/php-simple-html-dom-parser",
