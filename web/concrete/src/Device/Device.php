@@ -1,4 +1,4 @@
-<?php
+s<?php
 namespace Concrete\Core\Device;
 
 /**
@@ -165,7 +165,6 @@ class Device implements DeviceInterface
     {
         return $this->ratio;
     }
-
 
     /**
      * Get the HTML for this device's viewport
