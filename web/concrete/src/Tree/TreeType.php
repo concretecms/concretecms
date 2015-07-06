@@ -16,7 +16,7 @@ class TreeType extends Object {
 		return PackageList::getHandle($this->pkgID);
 	}
 
-	public function add($treeTypeHandle, $pkg = false) {
+	public static function add($treeTypeHandle, $pkg = false) {
 
 		$pkgID = 0;
 		$db = Loader::db();
