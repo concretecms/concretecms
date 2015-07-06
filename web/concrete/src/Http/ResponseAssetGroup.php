@@ -24,8 +24,15 @@ class ResponseAssetGroup
 
     public function __construct()
     {
+        $this->init();
+    }
+    
+    public function init()
+    {
         $this->requiredAssetGroup = new AssetGroup();
         $this->providedAssetGroup = new AssetGroup();
+        $this->providedAssetGroupUnmatched = array();
+        $this->outputAssets = array();
     }
 
     /**

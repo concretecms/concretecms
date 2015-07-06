@@ -305,6 +305,9 @@ class Controller extends BlockController
      */
     function generateNav()
     {
+        // Initialize Nav Array
+        $this->navArray = array();
+        
         if (isset($this->displayPagesCID) && !Loader::helper('validation/numbers')->integer($this->displayPagesCID)) {
             $this->displayPagesCID = 0;
         }
