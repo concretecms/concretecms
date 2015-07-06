@@ -3,9 +3,10 @@
 namespace Concrete\Core\Tree\Node;
 
 use Concrete\Core\Foundation\Object;
-use Loader;
 use Concrete\Core\Tree\Node\NodeType as TreeNodeType;
 use Concrete\Core\Package\PackageList;
+use Core;
+use Database;
 
 class NodeType extends Object
 {
@@ -32,7 +33,7 @@ class NodeType extends Object
     public static function add($treeNodeTypeHandle, $pkg = false)
     {
         $pkgID = 0;
-        $db = Loader::db();
+        $db = Database::connection();
         if (is_object($pkg)) {
             $pkgID = $pkg->getPackageID();
         }
@@ -48,13 +49,13 @@ class NodeType extends Object
 
     public function delete()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $db->Execute('delete from TreeNodeTypes where treeNodeTypeID = ?', array($this->treeNodeTypeID));
     }
 
     public static function getByID($treeNodeTypeID)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $row = $db->GetRow('select * from TreeNodeTypes where treeNodeTypeID = ?', array($treeNodeTypeID));
         if (is_array($row) && $row['treeNodeTypeID']) {
             $type = new TreeNodeType();
@@ -66,7 +67,7 @@ class NodeType extends Object
 
     public static function getByHandle($treeNodeTypeHandle)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $row = $db->GetRow('select * from TreeNodeTypes where treeNodeTypeHandle = ?', array($treeNodeTypeHandle));
         if (is_array($row) && $row['treeNodeTypeHandle']) {
             $type = new TreeNodeType();
@@ -78,7 +79,7 @@ class NodeType extends Object
 
     public function getTreeNodeTypeClass()
     {
-        $txt = Loader::helper('text');
+        $txt = Core::make('helper/text');
         $className = '\\Concrete\\Core\\Tree\\Node\\Type\\' . $txt->camelcase($this->treeNodeTypeHandle);
 
         return $className;
@@ -86,7 +87,7 @@ class NodeType extends Object
 
     public static function getListByPackage($pkg)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $list = array();
         $r = $db->Execute('select treeNodeTypeID from TreeNodeTypes where pkgID = ? order by treeNodeTypeID asc', array($pkg->getPackageID()));
         while ($row = $r->FetchRow()) {
