@@ -33,6 +33,8 @@ class RouteUrlResolver implements UrlResolverInterface
                 }
             }
         }
+
+        return $resolved;
     }
 
 }
