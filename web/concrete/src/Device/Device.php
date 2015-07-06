@@ -1,4 +1,4 @@
-s<?php
+<?php
 namespace Concrete\Core\Device;
 
 /**
