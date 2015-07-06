@@ -173,6 +173,11 @@ class Users extends Controller
         return $this->result;
     }
 
+    public function getListObject()
+    {
+        return $this->userList;
+    }
+
     public function field($field)
     {
         $r = $this->getField($field);
