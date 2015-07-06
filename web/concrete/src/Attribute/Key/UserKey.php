@@ -3,7 +3,7 @@
 namespace Concrete\Core\Attribute\Key;
 
 use Concrete\Core\Attribute\Type as AttributeType;
-use Loader;
+use Database;
 use CacheLocal;
 use Package;
 use Concrete\Core\Attribute\Value\ValueList as AttributeValueList;
@@ -25,7 +25,7 @@ class UserKey extends Key
 
     public static function getAttributes($uID, $method = 'getValue')
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $values = $db->GetAll("select avID, akID from UserAttributeValues where uID = ?", array($uID));
         $avl = new AttributeValueList();
         foreach ($values as $val) {
@@ -48,7 +48,7 @@ class UserKey extends Key
     {
         parent::load($akIdentifier, $loadBy);
         if (isset($this->akID) && $this->akID) {
-            $db = Loader::db();
+            $db = Database::connection();
             $row = $db->GetRow("select uakProfileDisplay, uakMemberListDisplay, displayOrder, uakProfileEdit, uakProfileEditRequired, uakRegisterEdit, uakRegisterEditRequired, uakIsActive from UserAttributeKeys where akID = ?", array($this->akID));
             $this->setPropertiesFromArray($row);
         }
@@ -80,7 +80,7 @@ class UserKey extends Key
             return false;
         }
         $ak = -1;
-        $db = Loader::db();
+        $db = Database::connection();
 
         $q = "SELECT ak.akID
 			FROM AttributeKeys ak
@@ -173,14 +173,14 @@ class UserKey extends Key
 
     public function activate()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $this->refreshCache();
         $db->Execute('update UserAttributeKeys set uakIsActive = 1 where akID = ?', array($this->akID));
     }
 
     public function deactivate()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $this->refreshCache();
         $db->Execute('update UserAttributeKeys set uakIsActive = 0 where akID = ?', array($this->akID));
     }
@@ -206,7 +206,7 @@ class UserKey extends Key
         // otherwise generate new IDs
         $av = $uo->getAttributeValueObject($this, true);
         parent::saveAttribute($av, $value);
-        $db = Loader::db();
+        $db = Database::connection();
         $v = array($uo->getUserID(), $this->getAttributeKeyID(), $av->getAttributeValueID());
         $db->Replace('UserAttributeValues', array(
             'uID' => $uo->getUserID(),
@@ -251,7 +251,7 @@ class UserKey extends Key
             $uakIsActive = 1;
         }
 
-        $db = Loader::db();
+        $db = Database::connection();
         $displayOrder = $db->GetOne('select max(displayOrder) from UserAttributeKeys');
         if (!$displayOrder) {
             $displayOrder = 0;
@@ -290,7 +290,7 @@ class UserKey extends Key
         if ($uakRegisterEditRequired != 1) {
             $uakRegisterEditRequired = 0;
         }
-        $db = Loader::db();
+        $db = Database::connection();
         $v = array($uakProfileDisplay, $uakMemberListDisplay, $uakProfileEdit, $uakProfileEditRequired, $uakRegisterEdit, $uakRegisterEditRequired, $ak->getAttributeKeyID());
         $db->Execute('update UserAttributeKeys set uakProfileDisplay = ?, uakMemberListDisplay = ?, uakProfileEdit= ?, uakProfileEditRequired = ?, uakRegisterEdit = ?, uakRegisterEditRequired = ? where akID = ?', $v);
     }
@@ -298,7 +298,7 @@ class UserKey extends Key
     public function delete()
     {
         parent::delete();
-        $db = Loader::db();
+        $db = Database::connection();
         $db->Execute('delete from UserAttributeKeys where akID = ?', array($this->getAttributeKeyID()));
         $r = $db->Execute('select avID from UserAttributeValues where akID = ?', array($this->getAttributeKeyID()));
         while ($row = $r->FetchRow()) {
@@ -399,7 +399,7 @@ class UserKey extends Key
 
     public static function updateAttributesDisplayOrder($uats)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         for ($i = 0; $i < count($uats); ++$i) {
             $uak = static::getByID($uats[$i]);
             $uak->refreshCache();
