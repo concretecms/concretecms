@@ -1,12 +1,29 @@
 <?php
 namespace Concrete\Core\Routing;
+use Symfony\Component\Routing\Generator\UrlGenerator;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RequestContext;
 use \Symfony\Component\Routing\RouteCollection as SymfonyRouteCollection;
 use Request;
 use Loader;
 
 class Router {
 
+    /**
+     * @var UrlGeneratorInterface|null
+     */
+    protected $generator;
+
+    /**
+     * @var RequestContext|null
+     */
+    protected $context;
+
+    /**
+     * @var SymfonyRouteCollection
+     */
 	protected $collection;
+
 	protected $request;
 	protected $themePaths = array();
 	public $routes = array();
@@ -14,6 +31,45 @@ class Router {
 	public function __construct() {
 		$this->collection = new SymfonyRouteCollection();
 	}
+
+    /**
+     * @return RequestContext
+     */
+    public function getContext()
+    {
+        if (!$this->context) {
+            $this->context = new RequestContext;
+            $this->context->fromRequest(\Request::getInstance());
+        }
+        return $this->context;
+    }
+
+    /**
+     * @param RequestContext $context
+     */
+    public function setContext(RequestContext $context)
+    {
+        $this->context = $context;
+    }
+
+    /**
+     * @return UrlGeneratorInterface
+     */
+    public function getGenerator()
+    {
+        if (!$this->generator) {
+            $this->generator = new UrlGenerator($this->getList(), $this->getContext());
+        }
+        return $this->generator;
+    }
+
+    /**
+     * @param $generator
+     */
+    public function setGenerator(UrlGeneratorInterface $generator)
+    {
+        $this->generator = $generator;
+    }
 
 	public function getList() {
 		return $this->collection;
