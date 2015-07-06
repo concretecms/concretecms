@@ -119,6 +119,7 @@ __IDE_SYMBOLS__.php
 /web/concrete/css/help.css
 /web/concrete/css/jquery-awesome-rating.css
 /web/concrete/css/jquery-ui.css
+/web/concrete/css/dropzone.css
 /web/concrete/css/redactor.css
 /web/concrete/css/sitemap.css
 /web/concrete/css/spectrum.css
