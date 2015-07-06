@@ -37,11 +37,13 @@ class UserKey extends Key {
 	public function getAttributeKeyDisplayOrder() {return $this->displayOrder;}
 
 
-	public function load($akID) {
-		parent::load($akID);
-		$db = Loader::db();
-		$row = $db->GetRow("select uakProfileDisplay, uakMemberListDisplay, displayOrder, uakProfileEdit, uakProfileEditRequired, uakRegisterEdit, uakRegisterEditRequired, uakIsActive from UserAttributeKeys where akID = ?", array($akID));
-		$this->setPropertiesFromArray($row);
+	public function load($akIdentifier, $loadBy = 'akID') {
+		parent::load($akIdentifier, $loadBy);
+		if (isset($this->akID) && $this->akID) {
+			$db = Loader::db();
+			$row = $db->GetRow("select uakProfileDisplay, uakMemberListDisplay, displayOrder, uakProfileEdit, uakProfileEditRequired, uakRegisterEdit, uakRegisterEditRequired, uakIsActive from UserAttributeKeys where akID = ?", array($this->akID));
+			$this->setPropertiesFromArray($row);
+		}
 	}
 
 	public function getAttributeValue($avID, $method = 'getValue') {
