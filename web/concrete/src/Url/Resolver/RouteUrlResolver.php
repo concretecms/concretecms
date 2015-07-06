@@ -24,9 +24,12 @@ class RouteUrlResolver implements UrlResolverInterface
             $route_parameters = count($arguments) ? array_shift($arguments) : array();
 
             if (is_string($route_handle) && is_array($route_parameters)) {
-                if ($url = \Route::getGenerator()->generate($route_handle, $route_parameters, UrlGenerator::ABSOLUTE_PATH)) {
-                    $canonical = \Core::make('url/canonical');
-                    return $canonical->setPath($url);
+                if ($route = \Route::getList()->get($route_handle)) {
+                    if ($url = \Route::getGenerator()->generate($route_handle, $route_parameters, UrlGenerator::ABSOLUTE_PATH)) {
+                        $canonical = \Core::make('url/canonical');
+
+                        return $canonical->setPath($url);
+                    }
                 }
             }
         }
