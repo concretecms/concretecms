@@ -3,8 +3,9 @@
 namespace Concrete\Core\Tree;
 
 use Concrete\Core\Foundation\Object;
-use Loader;
 use Concrete\Core\Package\PackageList;
+use Core;
+use Database;
 
 class TreeType extends Object
 {
@@ -31,7 +32,7 @@ class TreeType extends Object
     public static function add($treeTypeHandle, $pkg = false)
     {
         $pkgID = 0;
-        $db = Loader::db();
+        $db = Database::connection();
         if (is_object($pkg)) {
             $pkgID = $pkg->getPackageID();
         }
@@ -47,13 +48,13 @@ class TreeType extends Object
 
     public function delete()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $db->Execute('delete from TreeTypes where treeTypeID = ?', array($this->treeTypeID));
     }
 
     public static function getByID($treeTypeID)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $row = $db->GetRow('select * from TreeTypes where treeTypeID = ?', array($treeTypeID));
         if (is_array($row) && $row['treeTypeID']) {
             $type = new self();
@@ -65,7 +66,7 @@ class TreeType extends Object
 
     public static function getByHandle($treeTypeHandle)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $row = $db->GetRow('select * from TreeTypes where treeTypeHandle = ?', array($treeTypeHandle));
         if (is_array($row) && $row['treeTypeHandle']) {
             $type = new self();
@@ -77,7 +78,7 @@ class TreeType extends Object
 
     public function getTreeTypeClass()
     {
-        $txt = Loader::helper('text');
+        $txt = Core::make('helper/text');
         $className = '\\Concrete\\Core\\Tree\\Type\\' . $txt->camelcase($this->treeTypeHandle);
 
         return $className;
@@ -85,7 +86,7 @@ class TreeType extends Object
 
     public static function getListByPackage($pkg)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $list = array();
         $r = $db->Execute('select treeTypeID from TreeTypes where pkgID = ? order by treeTypeID asc', array($pkg->getPackageID()));
         while ($row = $r->FetchRow()) {
