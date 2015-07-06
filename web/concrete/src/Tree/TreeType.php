@@ -57,7 +57,7 @@ class TreeType extends Object
         $db = Database::connection();
         $row = $db->GetRow('select * from TreeTypes where treeTypeID = ?', array($treeTypeID));
         if (is_array($row) && $row['treeTypeID']) {
-            $type = new self();
+            $type = new static();
             $type->setPropertiesFromArray($row);
 
             return $type;
@@ -69,7 +69,7 @@ class TreeType extends Object
         $db = Database::connection();
         $row = $db->GetRow('select * from TreeTypes where treeTypeHandle = ?', array($treeTypeHandle));
         if (is_array($row) && $row['treeTypeHandle']) {
-            $type = new self();
+            $type = new static();
             $type->setPropertiesFromArray($row);
 
             return $type;
