@@ -140,11 +140,18 @@ class Controller extends BlockController
     public function save($data)
     {
         $data += array(
+            'title' => '',
+            'buttonText' => '',
+            'baseSearchPath' => '',
+            'searchUnderCID' => 0,
+            'postTo_cID' => 0,
             'externalTarget' => 0,
+            'resultsURL' => '',
         );
-        $args['title'] = isset($data['title']) ? $data['title'] : '';
-        $args['buttonText'] = isset($data['buttonText']) ? $data['buttonText'] : '';
-        $args['baseSearchPath'] = isset($data['baseSearchPath']) ? $data['baseSearchPath'] : '';
+        $args = array();
+        $args['title'] = $data['title'];
+        $args['buttonText'] = $data['buttonText'];
+        $args['baseSearchPath'] = $data['baseSearchPath'];
         if ($args['baseSearchPath'] == 'OTHER' && intval($data['searchUnderCID']) > 0) {
             $customPathC = Page::getByID(intval($data['searchUnderCID']));
             if (!$customPathC) {
