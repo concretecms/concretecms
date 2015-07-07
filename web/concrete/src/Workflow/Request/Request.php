@@ -66,10 +66,13 @@ abstract class Request extends Object {
 
 	/**
 	 * Triggers a workflow request, queries a permission key to see what workflows are attached to it
-	 * and initiates them
+	 * and initiates them.
+	 *
+	 * @param \PermissionKey $pk
+	 *
 	 * @return optional WorkflowProgress
 	 */
-	protected function trigger($pk) {
+	protected function triggerRequest(\PermissionKey $pk) {
 		if (!$this->wrID) {
 			$this->save();
 		}
