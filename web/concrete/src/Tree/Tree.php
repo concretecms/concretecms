@@ -34,6 +34,7 @@ abstract class Tree extends Object
      * @param \SimpleXMLElement $sx
      *
      * @return static|null
+     * @abstract
      */
     public static function importDetails(\SimpleXMLElement $sx)
     {
