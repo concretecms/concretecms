@@ -5,7 +5,7 @@ namespace Concrete\Core\Workflow\Request;
 use Concrete\Core\Foundation\Object;
 use Workflow;
 use Concrete\Core\Workflow\EmptyWorkflow;
-use Loader;
+use Database;
 use Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
 use PermissionKey;
 
@@ -62,7 +62,7 @@ abstract class Request extends Object
 
     public static function getByID($wrID)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $wrObject = $db->getOne('select wrObject from WorkflowRequestObjects where wrID = ?', array($wrID));
         if ($wrObject) {
             $wr = unserialize($wrObject);
@@ -73,13 +73,13 @@ abstract class Request extends Object
 
     public function delete()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $db->Execute('delete from WorkflowRequestObjects where wrID = ?', array($this->wrID));
     }
 
     public function save()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         if (!$this->wrID) {
             $wrObject = '';
             $db->Execute('insert into WorkflowRequestObjects (wrObject) values (?)', array($wrObject));
@@ -146,7 +146,7 @@ abstract class Request extends Object
             if ($task == 'approve') {
                 // we check to see if any other outstanding workflowprogress requests have this id
                 // if they don't we proceed
-                $db = Loader::db();
+                $db = Database::connection();
                 $num = $db->GetOne(
                     'select count(wpID) as total from WorkflowProgress where wpID <> ? and wrID = ? and wpIsCompleted = 0',
                     array(
