@@ -115,7 +115,7 @@ class EditPagePropertiesPageAccess extends PageAccess {
 			$pe = $l->getAccessEntityObject();
 			$prow = $db->GetRow('select attributePermission, name, publicDateTime, uID, description, paths from PagePermissionPropertyAccessList where peID = ? and paID = ?', array($pe->getAccessEntityID(), $l->getPermissionAccessID()));
 			$attributePermission = '';
-			if (is_array($prow) && $prow['attributePermission']) {
+			if (!empty($prow) && $prow['attributePermission']) {
 				$l->setAttributesAllowedPermission($prow['attributePermission']);
 				$l->setAllowEditName($prow['name']);
 				$l->setAllowEditDateTime($prow['publicDateTime']);
