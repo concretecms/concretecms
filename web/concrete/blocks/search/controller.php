@@ -137,6 +137,9 @@ class Controller extends BlockController
 
     public function save($data)
     {
+        $data += array(
+            'externalTarget' => 0,
+        );
         $args['title'] = isset($data['title']) ? $data['title'] : '';
         $args['buttonText'] = isset($data['buttonText']) ? $data['buttonText'] : '';
         $args['baseSearchPath'] = isset($data['baseSearchPath']) ? $data['baseSearchPath'] : '';
