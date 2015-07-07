@@ -1,12 +1,13 @@
 <?php
+
 namespace Concrete\Core\Tree\Type;
 
-use \Concrete\Core\Tree\Tree;
-use \Concrete\Core\Tree\Node\Type\TopicCategory as TopicCategoryTreeNode;
+use Concrete\Core\Tree\Tree;
+use Concrete\Core\Tree\Node\Type\TopicCategory as TopicCategoryTreeNode;
 use Loader;
 use Group as UserGroup;
-use \Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
-use \Concrete\Core\Permission\Key\TopicCategoryTreeNodeKey as TopicCategoryTreeNodePermissionKey;
+use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
+use Concrete\Core\Permission\Key\TopicCategoryTreeNodeKey as TopicCategoryTreeNodePermissionKey;
 use PermissionAccess;
 
 class Topic extends Tree
@@ -21,6 +22,7 @@ class Topic extends Tree
 
     /** Returns the display name for this tree (localized and escaped accordingly to $format)
      * @param  string $format = 'html' Escape the result in html format (if $format is 'html'). If $format is 'text' or any other value, the display name won't be escaped.
+     *
      * @return string
      */
     public function getTreeDisplayName($format = 'html')
@@ -53,6 +55,7 @@ class Topic extends Tree
     {
         $db = Loader::db();
         $treeID = $db->GetOne('select treeID from TopicTrees where topicTreeName = ?', array($name));
+
         return Tree::getByID($treeID);
     }
 
@@ -98,9 +101,10 @@ class Topic extends Tree
                 $root = $tree->getRootTreeNodeObject();
                 $root->populateChildren();
                 $children = $root->getChildNodes();
-                foreach($children as $child) {
+                foreach ($children as $child) {
                     $child->delete();
                 }
+
                 return static::getByName($name);
             } else {
                 return static::add($name);
@@ -140,5 +144,4 @@ class Topic extends Tree
 
         return $trees;
     }
-
 }
