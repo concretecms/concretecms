@@ -329,7 +329,7 @@ class Install extends Controller
                 $this->fpu = @fopen(DIR_CONFIG_SITE . '/site_install_user.php', 'w+');
                 if ($this->fp) {
 
-                    $config = (array)$_POST['SITE_CONFIG'];
+                    $config = isset($_POST['SITE_CONFIG']) ? ((array) $_POST['SITE_CONFIG']) : array();
                     $config['database'] = array(
                         'default-connection' => 'concrete',
                         'connections' => array(
