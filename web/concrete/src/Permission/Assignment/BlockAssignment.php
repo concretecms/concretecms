@@ -3,12 +3,12 @@
 namespace Concrete\Core\Permission\Assignment;
 
 use PermissionAccess;
-use Loader;
 use Concrete\Core\Block\Block;
 use Area;
 use Concrete\Core\Area\SubArea;
 use PermissionKey;
 use Page;
+use Database;
 
 class BlockAssignment extends Assignment
 {
@@ -74,7 +74,7 @@ class BlockAssignment extends Assignment
 
     public function getPermissionAccessObject()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         if ($this->permissionObjectToCheck instanceof Block) {
             $co = $this->permissionObjectToCheck->getBlockCollectionObject();
             $arHandle = $this->permissionObjectToCheck->getAreaHandle();
@@ -105,14 +105,14 @@ class BlockAssignment extends Assignment
 
     public function clearPermissionAssignment()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $co = $this->permissionObject->getBlockCollectionObject();
         $db->Execute('update BlockPermissionAssignments set paID = 0 where pkID = ? and bID = ? and cvID = ? and cID = ?', array($this->pk->getPermissionKeyID(), $this->permissionObject->getBlockID(), $co->getVersionID(), $co->getCollectionID()));
     }
 
     public function assignPermissionAccess(PermissionAccess $pa)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $co = $this->permissionObject->getBlockCollectionObject();
         $arHandle = $this->permissionObject->getAreaHandle();
         $db->Replace(

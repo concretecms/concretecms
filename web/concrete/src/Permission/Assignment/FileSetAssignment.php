@@ -4,7 +4,7 @@ namespace Concrete\Core\Permission\Assignment;
 
 use PermissionAccess;
 use Concrete\Core\File\Set\Set;
-use Loader;
+use Database;
 
 class FileSetAssignment extends Assignment
 {
@@ -25,7 +25,7 @@ class FileSetAssignment extends Assignment
 
     public function getPermissionAccessObject()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $r = $db->GetOne(
             'select paID from FileSetPermissionAssignments where fsID = ? and pkID = ?',
             array(
@@ -39,13 +39,13 @@ class FileSetAssignment extends Assignment
 
     public function clearPermissionAssignment()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $db->Execute('update FileSetPermissionAssignments set paID = 0 where pkID = ? and fsID = ?', array($this->pk->getPermissionKeyID(), $this->permissionObject->getFileSetID()));
     }
 
     public function assignPermissionAccess(PermissionAccess $pa)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $db->Replace('FileSetPermissionAssignments', array('fsID' => $this->getPermissionObject()->getFileSetID(), 'paID' => $pa->getPermissionAccessID(), 'pkID' => $this->pk->getPermissionKeyID()), array('fsID', 'pkID'), true);
         $pa->markAsInUse();
     }

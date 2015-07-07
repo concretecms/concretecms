@@ -6,7 +6,7 @@ use Concrete\Core\Tree\Node\Node;
 use PermissionAccess;
 use Concrete\Core\Tree\Node\Type\Topic as TopicTreeNode;
 use Concrete\Core\Tree\Node\Type\TopicCategory as TopicCategoryTreeNode;
-use Loader;
+use Database;
 
 class TopicTreeNodeAssignment extends TreeNodeAssignment
 {
@@ -31,7 +31,7 @@ class TopicTreeNodeAssignment extends TreeNodeAssignment
 
     public function getPermissionAccessObject()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         if ($this->permissionObjectToCheck instanceof TopicTreeNode) {
             $pa = parent::getPermissionAccessObject();
         } elseif ($this->permissionObjectToCheck instanceof TopicCategoryTreeNode && isset($this->inheritedPermissions[$this->pk->getPermissionKeyHandle()])) {
