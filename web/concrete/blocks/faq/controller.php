@@ -3,7 +3,7 @@
 namespace Concrete\Block\Faq;
 
 use Concrete\Core\Block\BlockController;
-use Loader;
+use Database;
 
 class Controller extends BlockController
 {
@@ -30,7 +30,7 @@ class Controller extends BlockController
     public function getSearchableContent()
     {
         $content = '';
-        $db = Loader::db();
+        $db = Database::connection();
         $v = array($this->bID);
         $q = 'select * from btFaqEntries where bID = ?';
         $r = $db->query($q, $v);
@@ -52,21 +52,21 @@ class Controller extends BlockController
     {
         $this->add();
 
-        $db = Loader::db();
+        $db = Database::connection();
         $query = $db->GetAll('SELECT * from btFaqEntries WHERE bID = ? ORDER BY sortOrder', array($this->bID));
         $this->set('rows', $query);
     }
 
     public function view()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $query = $db->GetAll('SELECT * from btFaqEntries WHERE bID = ? ORDER BY sortOrder', array($this->bID));
         $this->set('rows', $query);
     }
 
     public function duplicate($newBID)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $v = array($this->bID);
         $q = 'select * from btFaqEntries where bID = ?';
         $r = $db->query($q, $v);
@@ -86,14 +86,14 @@ class Controller extends BlockController
 
     public function delete()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $db->execute('DELETE from btFaqEntries WHERE bID = ?', array($this->bID));
         parent::delete();
     }
 
     public function save($args)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $db->execute('DELETE from btFaqEntries WHERE bID = ?', array($this->bID));
         $count = isset($args['sortOrder']) ? count($args['sortOrder']) : 0;
         $i = 0;
