@@ -1,7 +1,8 @@
 <?php
+
 namespace Concrete\Core\User\Group;
 
-use \Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\Object;
 use Concrete\Core\User\User;
 use Config;
 use Gettext\Translations;
@@ -9,17 +10,15 @@ use Loader;
 use CacheLocal;
 use GroupTree;
 use GroupTreeNode;
-use Environment;
 use UserList;
 use Events;
-use \Concrete\Core\Package\PackageList;
+use Concrete\Core\Package\PackageList;
 use File;
 
 class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
 {
-
-    var $ctID;
-    var $permissionSet;
+    public $ctID;
+    public $permissionSet;
     private $permissions = array(); // more advanced version of permissions
 
     public function getPermissionObjectIdentifier()
@@ -43,8 +42,10 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
     }
 
     /**
-     * Takes the numeric id of a group and returns a group object
+     * Takes the numeric id of a group and returns a group object.
+     *
      * @param string $gID
+     *
      * @return Group
      */
     public static function getByID($gID)
@@ -60,13 +61,16 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
             $g = \Core::make('\Concrete\Core\User\Group\Group');
             $g->setPropertiesFromArray($row);
             CacheLocal::set('group', $gID, $g);
+
             return $g;
         }
     }
 
     /**
-     * Takes the name of a group and returns a group object
+     * Takes the name of a group and returns a group object.
+     *
      * @param string $gName
+     *
      * @return Group
      */
     public static function getByName($gName)
@@ -74,14 +78,16 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
         $db = Loader::db();
         $row = $db->getRow("select * from Groups where gName = ?", array($gName));
         if (isset($row['gID'])) {
-            $g = new Group;
+            $g = new self();
             $g->setPropertiesFromArray($row);
+
             return $g;
         }
     }
 
     /**
      * @param string $gPath The group path
+     *
      * @return Group
      */
     public static function getByPath($gPath)
@@ -89,8 +95,9 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
         $db = Loader::db();
         $row = $db->getRow("select * from Groups where gPath = ?", array($gPath));
         if (isset($row['gID'])) {
-            $g = new Group;
+            $g = new self();
             $g->setPropertiesFromArray($row);
+
             return $g;
         }
     }
@@ -135,15 +142,14 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
     {
         $db = Loader::db();
         $cnt = $db->GetOne("select count(uID) from UserGroups where gID = ?", array($this->gID));
+
         return $cnt;
     }
 
-
     /**
-     * Deletes a group
-     * @return void
+     * Deletes a group.
      */
-    function delete()
+    public function delete()
     {
         // we will NOT let you delete the required groups
         if ($this->gID == REGISTERED_GROUP_ID || $this->gID == GUEST_GROUP_ID) {
@@ -207,12 +213,12 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
     }
 
-    function inGroup()
+    public function inGroup()
     {
         return $this->inGroup;
     }
 
-    function getGroupDateTimeEntered($user)
+    public function getGroupDateTimeEntered($user)
     {
         $db = Loader::db();
         $q = "select ugEntered from UserGroups where gID = ? and uID = ?";
@@ -222,12 +228,12 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
     }
 
-    function getGroupID()
+    public function getGroupID()
     {
         return $this->gID;
     }
 
-    function getGroupName()
+    public function getGroupName()
     {
         return $this->gName;
     }
@@ -251,6 +257,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
                 }
             }
         }
+
         return $parentGroups;
     }
 
@@ -268,6 +275,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
                 }
             }
         }
+
         return $children;
     }
 
@@ -300,28 +308,31 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
             }
         }
         $return .= tc('GroupName', $this->getGroupName());
+
         return $return;
     }
 
-    function getGroupDescription()
+    public function getGroupDescription()
     {
         return $this->gDescription;
     }
 
     /**
-     * Gets the group start date
+     * Gets the group start date.
+     *
      * @return string date formated like: 2009-01-01 00:00:00
      */
-    function getGroupStartDate()
+    public function getGroupStartDate()
     {
         return $this->cgStartDate;
     }
 
     /**
-     * Gets the group end date
+     * Gets the group end date.
+     *
      * @return string date formated like: 2009-01-01 00:00:00
      */
-    function getGroupEndDate()
+    public function getGroupEndDate()
     {
         return $this->cgEndDate;
     }
@@ -371,9 +382,10 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
         $class = $this->getGroupAutomationControllerClass();
         try {
             $c = \Core::make($class, array($this));
-        } catch(\ReflectionException $e) {
+        } catch (\ReflectionException $e) {
             $c = \Core::make(core_class('\\Core\\User\\Group\\AutomatedGroup\\DefaultAutomation'), array($this));
         }
+
         return $c;
     }
 
@@ -384,6 +396,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
         $r = $env->getRecord(DIRNAME_CLASSES . '/User/Group/AutomatedGroup/' . camelcase($ts->handle($this->getGroupName())) . '.php');
         $prefix = $r->override ? true : $this->getPackageHandle();
         $class = core_class('\\Core\\User\\Group\\AutomatedGroup\\' . camelcase($ts->handle($this->getGroupName())), $prefix);
+
         return $class;
     }
 
@@ -396,6 +409,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
                 unset($bf);
             }
         }
+
         return $bf;
     }
 
@@ -469,7 +483,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
         return PackageList::getHandle($this->pkgID);
     }
 
-    function update($gName, $gDescription)
+    public function update($gName, $gDescription)
     {
         $db = Loader::db();
         if ($this->gID) {
@@ -477,7 +491,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
             $v = array($gName, $gDescription, $this->gID);
             $r = $db->prepare("update Groups set gName = ?, gDescription = ? where gID = ?");
             $res = $db->Execute($r, $v);
-            $group = Group::getByID($this->gID);
+            $group = self::getByID($this->gID);
             $group->rescanGroupPathRecursive();
 
             $ge = new Event($this);
@@ -490,6 +504,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
     /** Creates a new user group.
      * @param string $gName
      * @param string $gDescription
+     *
      * @return Group
      */
     public static function add($gName, $gDescription, $parentGroup = false, $pkg = null, $gID = null)
@@ -504,7 +519,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
         $res = $db->Execute($r, $v);
 
         if ($res) {
-            $ng = Group::getByID($db->Insert_ID());
+            $ng = self::getByID($db->Insert_ID());
             // create a node for this group.
             $node = null;
             if (is_object($parentGroup)) {
@@ -525,6 +540,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
             Events::dispatch('on_group_add', $ge);
 
             $ng->rescanGroupPath();
+
             return $ng;
         }
     }
@@ -538,6 +554,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
         foreach ($results as $gr) {
             $badges[] = $gr;
         }
+
         return $badges;
     }
 
@@ -559,22 +576,23 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
             $controller = $group->getGroupAutomationController();
             $controllers[] = $controller;
         }
+
         return $controllers;
     }
 
     public static function getAutomatedOnRegisterGroupControllers($u = false)
     {
-        return Group::getAutomationControllers('gCheckAutomationOnRegister', $u);
+        return self::getAutomationControllers('gCheckAutomationOnRegister', $u);
     }
 
     public static function getAutomatedOnLoginGroupControllers($u = false)
     {
-        return Group::getAutomationControllers('gCheckAutomationOnLogin', $u);
+        return self::getAutomationControllers('gCheckAutomationOnLogin', $u);
     }
 
     public static function getAutomatedOnJobRunGroupControllers()
     {
-        return Group::getAutomationControllers('gCheckAutomationOnJobRun');
+        return self::getAutomationControllers('gCheckAutomationOnJobRun');
     }
 
     public function clearBadgeOptions()
@@ -625,7 +643,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
                 intval($gCheckAutomationOnRegister),
                 intval($gCheckAutomationOnLogin),
                 intval($gCheckAutomationOnJobRun),
-                $this->gID
+                $this->gID,
             )
         );
     }
@@ -655,13 +673,13 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
         $gl = new GroupList();
         $gl->includeAllGroups();
         $results = $gl->getResults();
-        foreach($results as $group) {
+        foreach ($results as $group) {
             $translations->insert('GroupName', $group->getGroupName());
             if ($group->getGroupDescription()) {
                 $translations->insert('GroupDescription', $group->getGroupDescription());
             }
         }
+
         return $translations;
     }
-
 }
