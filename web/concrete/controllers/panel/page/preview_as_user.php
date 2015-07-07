@@ -11,7 +11,6 @@ use UserInfo;
 use View;
 use Core;
 use Config;
-use Concrete\Core\Page\Theme\Theme;
 
 class PreviewAsUser extends Controller
 {
@@ -51,13 +50,6 @@ class PreviewAsUser extends Controller
 
             $controller = $page->getPageController();
             $view = $controller->getViewObject();
-            
-            if ($request->request('emulateMobile') == 1) {
-                $mobileTheme = Theme::getByID(Config::get('concrete.misc.mobile_theme_id'));
-                if($mobileTheme instanceof Theme) {
-                    $view->setViewTheme($mobileTheme);
-                }
-            }
 
             $response = new \Response();
             $response->setContent($view->render());
