@@ -96,9 +96,8 @@ class Controller extends BlockController
         }
     }
 
-    public function getImportData($blockNode)
+    protected function getImportData($blockNode, $page)
     {
-
         $args = array();
         foreach($blockNode->data->service as $service) {
             $link = Service::getByHandle((string) $service);
