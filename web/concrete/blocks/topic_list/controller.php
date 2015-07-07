@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Block\TopicList;
 
 use Concrete\Core\Attribute\Key\CollectionKey;
@@ -13,7 +14,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class Controller extends BlockController
 {
-
     public $helpers = array('form');
 
     protected $btInterfaceWidth = 400;
