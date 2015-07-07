@@ -506,7 +506,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
         if ($res) {
             $ng = Group::getByID($db->Insert_ID());
             // create a node for this group.
-
+            $node = null;
             if (is_object($parentGroup)) {
                 $node = GroupTreeNode::getTreeNodeByGroupID($parentGroup->getGroupID());
             }
