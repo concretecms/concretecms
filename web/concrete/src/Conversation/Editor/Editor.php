@@ -164,7 +164,7 @@ abstract class Editor extends Object
             array($cnvEditorID)
         );
 
-        return self::createFromRecord($r);
+        return static::createFromRecord($r);
     }
 
     /**
@@ -184,7 +184,7 @@ abstract class Editor extends Object
             array($cnvEditorHandle)
         );
 
-        return self::createFromRecord($r);
+        return static::createFromRecord($r);
     }
 
     /**
@@ -385,7 +385,7 @@ abstract class Editor extends Object
      */
     public static function exportList($xml)
     {
-        $list = self::getList();
+        $list = static::getList();
         $nxml = $xml->addChild('conversationeditors');
 
         foreach ($list as $sc) {
