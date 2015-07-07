@@ -77,8 +77,18 @@ class Controller extends BlockController
 
     public function save($data)
     {
-        $args['title'] = isset($data['title']) ? trim($data['title']) : '';
-        $args['location'] = isset($data['location']) ? trim($data['location']) : '';
+        $data += array(
+           'title' => '',
+           'location' => '',
+           'zoom' => -1,
+           'latitude' => 0,
+           'longitude' => 0,
+           'width' => null,
+           'width' => null,
+           'scrollwheel' => 0,
+        );
+        $args['title'] = trim($data['title']);
+        $args['location'] = trim($data['location']);
         $args['zoom'] = (intval($data['zoom']) >= 0 && intval($data['zoom']) <= 21) ? intval($data['zoom']) : 14;
         $args['latitude'] = is_numeric($data['latitude']) ? $data['latitude'] : 0;
         $args['longitude'] = is_numeric($data['longitude']) ? $data['longitude'] : 0;
