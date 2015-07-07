@@ -2,7 +2,7 @@
 
 namespace Concrete\Block\Search;
 
-use Loader;
+use Database;
 use CollectionAttributeKey;
 use Concrete\Core\Page\PageList;
 use Concrete\Core\Block\BlockController;
@@ -46,7 +46,7 @@ class Controller extends BlockController
         $highlight = str_replace(array('"', "'", "&quot;"), '', $highlight); // strip the quotes as they mess the regex
 
         if (!$highlight) {
-            $text = Loader::helper('text')->shorten($fulltext, 180);
+            $text = Core::make('helper/text')->shorten($fulltext, 180);
             if (strlen($fulltext) > 180) {
                 $text .= '&hellip;<wbr>';
             }
@@ -102,7 +102,7 @@ class Controller extends BlockController
 
     public function indexExists()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $numRows = $db->GetOne('select count(cID) from PageSearchIndex');
 
         return ($numRows > 0);
@@ -125,7 +125,7 @@ class Controller extends BlockController
             $resultsURL = $resultsPage->cPath;
         }
 
-        $resultsURL = Loader::helper('text')->encodePath($resultsURL);
+        $resultsURL = Core::make('helper/text')->encodePath($resultsURL);
 
         $this->set('resultTargetURL', $resultsURL);
 
