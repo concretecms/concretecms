@@ -8,8 +8,8 @@ class BannedWordList extends DatabaseItemList {
 		$this->sortBy('bwID', 'asc');
 	}
 
-	public function get() {
-		$r = parent::get(0, 0);
+	public function get($itemsToGet = 0, $offset = 0) {
+		$r = parent::get($itemsToGet, $offset);
 		$bannedwords = array();
 		foreach($r as $row) {
 			$bannedwords[] = BannedWord::getByID($row['bwID']);
