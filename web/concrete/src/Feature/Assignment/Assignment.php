@@ -3,11 +3,11 @@
 namespace Concrete\Core\Feature\Assignment;
 
 use Concrete\Core\Foundation\Object;
-use Loader;
 use Core;
 use Concrete\Core\Feature\Feature;
 use Concrete\Core\Feature\Category\Category as FeatureCategory;
 use Concrete\Core\Feature\Detail\Detail as FeatureDetail;
+use Database;
 
 abstract class Assignment extends Object
 {
@@ -51,7 +51,7 @@ abstract class Assignment extends Object
 
     public static function addAssignment(Feature $fe, FeatureCategory $fc, FeatureDetail $fd, $mixed)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $db->Execute(
             'insert into FeatureAssignments (fcID, feID, fdObject) values (?, ?, ?)',
             array(
@@ -107,13 +107,13 @@ abstract class Assignment extends Object
 
     public static function getByID($faID, $mixed)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $r = $db->GetRow(
             'select faID, fa.fcID, fdObject, fa.feID, fe.feHandle, fc.fcHandle from FeatureAssignments fa inner join FeatureCategories fc on fa.fcID = fc.fcID inner join Features fe on fa.feID = fe.feID where faID = ?',
             array($faID)
         );
         if (is_array($r) && $r['faID'] == $faID) {
-            $class = '\\Concrete\\Core\\Feature\\Assignment\\' . Loader::helper('text')->camelcase($r['fcHandle']) . 'Assignment';
+            $class = '\\Concrete\\Core\\Feature\\Assignment\\' . Core::make('helper/text')->camelcase($r['fcHandle']) . 'Assignment';
             $fa = Core::make($class);
             $fa->setPropertiesFromArray($r);
             $fa->fdObject = @unserialize($r['fdObject']);
@@ -125,7 +125,7 @@ abstract class Assignment extends Object
 
     public function delete()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $db->Execute('delete from FeatureAssignments where faID = ?', array($this->getFeatureAssignmentID()));
     }
 }
