@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Block\Faq;
 
 use Concrete\Core\Block\BlockController;
@@ -6,7 +7,6 @@ use Loader;
 
 class Controller extends BlockController
 {
-
     protected $btTable = 'btFaq';
     protected $btExportTables = array('btFaq', 'btFaqEntries');
     protected $btInterfaceWidth = "600";
@@ -37,6 +37,7 @@ class Controller extends BlockController
         foreach ($r as $row) {
             $content .= $row['title'] . ' ' . $row['linkTitle'] . ' ' . $row['description'];
         }
+
         return $content;
     }
 
@@ -77,7 +78,7 @@ class Controller extends BlockController
                     $row['title'],
                     $row['linkTitle'],
                     $row['description'],
-                    $row['sortOrder']
+                    $row['sortOrder'],
                 )
             );
         }
@@ -105,11 +106,10 @@ class Controller extends BlockController
                     $args['title'][$i],
                     $args['linkTitle'][$i],
                     $args['description'][$i],
-                    $args['sortOrder'][$i]
+                    $args['sortOrder'][$i],
                 )
             );
-            $i++;
+            ++$i;
         }
     }
-
 }
