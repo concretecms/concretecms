@@ -11,6 +11,8 @@ use Concrete\Core\Device\Device;
         <a href="" data-panel-navigation="back"><?= t('Devices')?></a>
     </header>
 
+    <div class="ccm-panel-content-inner">
+
     <?php
     $preview_url = \URL::to('/ccm/system/panels/page/devices/preview');
     $preview_url = $preview_url->setQuery(array('cID' => \Page::getCurrentPage()->getCollectionID()));
@@ -48,9 +50,9 @@ use Concrete\Core\Device\Device;
     foreach ($organized as $type => $device_list) {
         ?>
 
-        <section class="ccm-panel-devicelist" style="color:white">
-            <h3><?= $categories[$type] ?></h3>
-            <menu>
+        <h5><?= $categories[$type] ?></h5>
+        <div class="ccm-menu-device-set">
+            <ul>
                 <?php
                 $page = \Page::getCurrentPage();
                 foreach ($device_list as $device) {
@@ -89,11 +91,12 @@ use Concrete\Core\Device\Device;
                 <?php
                 }
                 ?>
-            </menu>
-        </section>
+            </ul>
+        </div>
         <?php
     }
     ?>
+        </div>
 </section>
 <script>
     $(function() {

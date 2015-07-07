@@ -89,23 +89,68 @@
 
 }
 
-.ccm-panel-devicelist {
+#ccm-panel-page-devices {
 
-  .ccm-panel-devicelist-device {
-    > a {
-      text-decoration: none;
+  div.ccm-panel-content-inner {
+  h5 {
+    color: #3baaf7;
+    border-top: 1px solid #464544;
+    margin-top: 30px;
+    padding-top: 8px;
+    padding-bottom: 8px;
 
-      &:hover {
-        text-decoration: none;
-      }
-      &:active {
-        text-decoration: none;
-      }
+    &:first-child {
+      margin-top: 0px;
     }
   }
+  }
+}
 
-  > h3 {
-    padding: 0 20px;
+  div.ccm-menu-device-set {
+
+    .ccm-panel-devicelist-device {
+      > a {
+        text-decoration: none;
+
+        &:active {
+          text-decoration: none;
+        }
+
+        color: #79868d !important;
+        background-color: #272a2e;
+        display: block;
+        padding: 10px 20px 10px 20px;
+        font-size: 15px;
+        .border-radius(4px);
+        .transition(all 0.3s cubic-bezier(0.190, 1.000, 0.220, 1.000));
+
+        &:hover {
+          text-decoration: none;
+          background-color: #191b1f;
+          color: #b8bbc4;
+        }
+
+        &.ccm-panel-menu-item-active {
+          cursor: default;
+          background-color: #153d71;
+
+          span {
+            color: #fff;
+          }
+        }
+      }
+    }
+
+
+    ul {
+      list-style-type: none;
+      margin-left: 0px;
+      padding-left: 0px;
+      li {
+        padding: 0px;
+        margin: 0px 0px 5px 0px;
+      }
+    }
   }
 
   .ccm-panel-device-name {
@@ -124,5 +169,3 @@
     font-weight: 300;
     font-size: 12px;
   }
-
-}
