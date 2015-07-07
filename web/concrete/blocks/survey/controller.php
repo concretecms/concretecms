@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Block\Survey;
 
 use Concrete\Core\Block\BlockController;
@@ -9,14 +10,13 @@ use Core;
 
 class Controller extends BlockController
 {
-
     public $options = array();
     protected $btTable = 'btSurvey';
     protected $btInterfaceWidth = "420";
     protected $btInterfaceHeight = "400";
     protected $btExportTables = array('btSurvey', 'btSurveyOptions', 'btSurveyResults');
 
-    function __construct($obj = null)
+    public function __construct($obj = null)
     {
         $this->cID = null;
         $this->bID = null;
@@ -34,7 +34,7 @@ class Controller extends BlockController
             $this->options = array();
             if ($r) {
                 while ($row = $r->fetchRow()) {
-                    $opt = new Option;
+                    $opt = new Option();
                     $opt->optionID = $row['optionID'];
                     $opt->cID = $this->cID;
                     $opt->optionName = $row['optionName'];
@@ -46,7 +46,7 @@ class Controller extends BlockController
     }
 
     /**
-     * Used for localization. If we want to localize the name/description we have to include this
+     * Used for localization. If we want to localize the name/description we have to include this.
      */
     public function getBlockTypeDescription()
     {
@@ -58,17 +58,17 @@ class Controller extends BlockController
         return t("Survey");
     }
 
-    function getQuestion()
+    public function getQuestion()
     {
         return $this->question;
     }
 
-    function getPollOptions()
+    public function getPollOptions()
     {
         return $this->options;
     }
 
-    function delete()
+    public function delete()
     {
         $db = Loader::db();
         $v = array($this->bID);
@@ -82,7 +82,7 @@ class Controller extends BlockController
         parent::delete();
     }
 
-    function action_form_save_vote($bID = false)
+    public function action_form_save_vote($bID = false)
     {
         if ($this->bID != $bID) {
             return false;
@@ -105,7 +105,6 @@ class Controller extends BlockController
         }
 
         if (!$this->hasVoted()) {
-
             $antispam = Loader::helper('validation/antispam');
             if ($antispam->check('', 'survey_block')) { // we do a blank check which will still check IP and UserAgent's
                 $duID = 0;
@@ -116,13 +115,13 @@ class Controller extends BlockController
                 /** @var \Concrete\Core\Permission\IPService $iph */
                 $iph = Core::make('helper/validation/ip');
                 $ip = $iph->getRequestIP();
-                $ip = ($ip === false)?(''):($ip->getIp($ip::FORMAT_IP_STRING));
+                $ip = ($ip === false) ? ('') : ($ip->getIp($ip::FORMAT_IP_STRING));
                 $v = array(
                     $_REQUEST['optionID'],
                     $this->bID,
                     $duID,
                     $ip,
-                    $this->cID);
+                    $this->cID, );
                 $q = "INSERT INTO btSurveyResults (optionID, bID, uID, ipAddress, cID) VALUES (?, ?, ?, ?, ?)";
                 $db->query($q, $v);
                 setcookie("ccmPoll" . $this->bID . '-' . $this->cID, "voted", time() + 1296000, DIR_REL . '/');
@@ -131,12 +130,12 @@ class Controller extends BlockController
         }
     }
 
-    function requiresRegistration()
+    public function requiresRegistration()
     {
         return $this->requiresRegistration;
     }
 
-    function hasVoted()
+    public function hasVoted()
     {
         $u = new User();
         if ($u->isRegistered()) {
@@ -150,12 +149,12 @@ class Controller extends BlockController
         } elseif ($_COOKIE['ccmPoll' . $this->bID . '-' . $this->cID] == 'voted') {
             return true;
         }
+
         return false;
     }
 
-    function duplicate($newBID)
+    public function duplicate($newBID)
     {
-
         $db = Loader::db();
 
         foreach ($this->options as $opt) {
@@ -177,10 +176,9 @@ class Controller extends BlockController
         }
 
         return parent::duplicate($newBID);
-
     }
 
-    function save($args)
+    public function save($args)
     {
         parent::save($args);
         $db = Loader::db();
@@ -204,7 +202,7 @@ class Controller extends BlockController
                 $v1 = array($this->bID, $optionName, $displayOrder);
                 $q1 = "INSERT INTO btSurveyOptions (bID, optionName, displayOrder) VALUES (?, ?, ?)";
                 $db->query($q1, $v1);
-                $displayOrder++;
+                ++$displayOrder;
             }
         }
 
@@ -231,7 +229,7 @@ class Controller extends BlockController
         while ($row = $r->fetchRow()) {
             $options[$i]['name'] = $row['optionName'];
             $options[$i]['id'] = $row['optionID'];
-            $i++;
+            ++$i;
         }
 
         // Get chosen count for each option
@@ -246,13 +244,14 @@ class Controller extends BlockController
                 $options[$i]['amount'] = $row['count(*)'];
                 $total_results += $row['count(*)'];
             }
-            $i++;
+            ++$i;
         }
 
         if ($total_results <= 0) {
             $chart_options = '<div style="text-align: center; margin-top: 15px;">' . t(
                     'No data is available yet.') . '</div>';
             $this->set('chart_options', $chart_options);
+
             return;
         }
 
@@ -277,7 +276,8 @@ class Controller extends BlockController
             '66DD00',
             '6699FF',
             'FFFF33',
-            'FFCC33');
+            'FFCC33',
+        );
         $percentage_value_string = '';
         foreach ($options as $option) {
             $option['amount'] /= $total_results;
@@ -289,7 +289,7 @@ class Controller extends BlockController
         $percentage_value_string = substr_replace($percentage_value_string, '', -1);
 
         // Get Google Charts API image
-        $img_src = '<img class="surveyChart" style="margin-bottom:10px;" border="" src="//chart.apis.google.com/chart?cht=p&chd=t:' . $percentage_value_string . '&chs=180x180&chco=' . join(
+        $img_src = '<img class="surveyChart" style="margin-bottom:10px;" border="" src="//chart.apis.google.com/chart?cht=p&chd=t:' . $percentage_value_string . '&chs=180x180&chco=' . implode(
                 ',',
                 $graphColors) . '" />';
         $this->set('pie_chart', $img_src);
@@ -308,10 +308,9 @@ class Controller extends BlockController
             $chart_options .= '<div class="surveySwatch" style="border-radius: 3px; margin-left: 6px; width:18px; height:18px; float:right; background:#' . $graphColors[$i - 1] . '"></div>';
             $chart_options .= '</td>';
             $chart_options .= '</tr>';
-            $i++;
+            ++$i;
         }
         $chart_options .= '</tbody></table>';
         $this->set('chart_options', $chart_options);
     }
-
 }
