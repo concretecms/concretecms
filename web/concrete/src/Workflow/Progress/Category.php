@@ -85,6 +85,8 @@ class Category extends Object
 		$db = Loader::db();
 		if (is_object($pkg)) {
 			$pkgID = $pkg->getPackageID();
+		} else {
+		    $pkgID = $pkg ?: null;
 		}
 		$db->Execute('insert into WorkflowProgressCategories (wpCategoryHandle, pkgID) values (?, ?)', array($wpCategoryHandle, $pkgID));
 		$id = $db->Insert_ID();
