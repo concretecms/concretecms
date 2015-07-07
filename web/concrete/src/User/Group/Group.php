@@ -6,7 +6,7 @@ use Concrete\Core\Foundation\Object;
 use Concrete\Core\User\User;
 use Config;
 use Gettext\Translations;
-use Loader;
+use Database;
 use CacheLocal;
 use GroupTree;
 use GroupTreeNode;
@@ -50,7 +50,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
      */
     public static function getByID($gID)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $g = CacheLocal::getEntry('group', $gID);
         if (is_object($g)) {
             return $g;
@@ -75,7 +75,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
      */
     public static function getByName($gName)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $row = $db->getRow("select * from Groups where gName = ?", array($gName));
         if (isset($row['gID'])) {
             $g = new static();
@@ -92,7 +92,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
      */
     public static function getByPath($gPath)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $row = $db->getRow("select * from Groups where gPath = ?", array($gPath));
         if (isset($row['gID'])) {
             $g = new static();
@@ -121,7 +121,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
     public function setPermissionsForObject($obj)
     {
         $this->pObj = $obj;
-        $db = Loader::db();
+        $db = Database::connection();
         if ($obj instanceof UserInfo) {
             $uID = $this->pObj->getUserID();
             if ($uID) {
@@ -140,7 +140,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
 
     public function getGroupMembersNum()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $cnt = $db->GetOne("select count(uID) from UserGroups where gID = ?", array($this->gID));
 
         return $cnt;
@@ -175,14 +175,14 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
             $node->delete();
         }
 
-        $db = Loader::db();
+        $db = Database::connection();
         $r = $db->query("DELETE FROM UserGroups WHERE gID = ?", array(intval($this->gID)));
         $r = $db->query("DELETE FROM Groups WHERE gID = ?", array(intval($this->gID)));
     }
 
     public function rescanGroupPath()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $path = '';
         // first, we get the group node for this group.
         $node = GroupTreeNode::getTreeNodeByGroupID($this->gID);
@@ -220,7 +220,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
 
     public function getGroupDateTimeEntered($user)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $q = "select ugEntered from UserGroups where gID = ? and uID = ?";
         $r = $db->GetOne($q, array($this->gID, $user->getUserID()));
         if ($r) {
@@ -485,7 +485,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
 
     public function update($gName, $gDescription)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         if ($this->gID) {
             $g = CacheLocal::delete('group', $this->gID);
             $v = array($gName, $gDescription, $this->gID);
@@ -509,7 +509,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
      */
     public static function add($gName, $gDescription, $parentGroup = false, $pkg = null, $gID = null)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $pkgID = 0;
         if (is_object($pkg)) {
             $pkgID = $pkg->getPackageID();
@@ -597,7 +597,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
 
     public function clearBadgeOptions()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $db->Execute(
             'update Groups set gIsBadge = 0, gBadgeFID = 0, gBadgeDescription = null, gBadgeCommunityPointValue = 0 where gID = ?',
             array($this->getGroupID())
@@ -606,7 +606,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
 
     public function clearAutomationOptions()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $db->Execute(
             'update Groups set gIsAutomated = 0, gCheckAutomationOnRegister = 0, gCheckAutomationOnLogin = 0, gCheckAutomationOnJobRun = 0 where gID = ?',
             array($this->getGroupID())
@@ -615,7 +615,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
 
     public function removeGroupExpiration()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $db->Execute(
             'update Groups set gUserExpirationIsEnabled = 0, gUserExpirationMethod = null, gUserExpirationSetDateTime = null, gUserExpirationInterval = 0, gUserExpirationAction = null where gID = ?',
             array($this->getGroupID())
@@ -624,7 +624,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
 
     public function setBadgeOptions($gBadgeFID, $gBadgeDescription, $gBadgeCommunityPointValue)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $db->Execute(
             'update Groups set gIsBadge = 1, gBadgeFID = ?, gBadgeDescription = ?, gBadgeCommunityPointValue = ? where gID = ?',
             array(intval($gBadgeFID), $gBadgeDescription, $gBadgeCommunityPointValue, $this->gID)
@@ -636,7 +636,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
         $gCheckAutomationOnLogin,
         $gCheckAutomationOnJobRun
     ) {
-        $db = Loader::db();
+        $db = Database::connection();
         $db->Execute(
             'update Groups set gIsAutomated = 1, gCheckAutomationOnRegister = ?, gCheckAutomationOnLogin = ?, gCheckAutomationOnJobRun = ? where gID = ?',
             array(
@@ -650,7 +650,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
 
     public function setGroupExpirationByDateTime($datetime, $action)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $db->Execute(
             'update Groups set gUserExpirationIsEnabled = 1, gUserExpirationMethod = \'SET_TIME\', gUserExpirationInterval = 0, gUserExpirationSetDateTime = ?, gUserExpirationAction = ? where gID = ?',
             array($datetime, $action, $this->gID)
@@ -659,7 +659,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
 
     public function setGroupExpirationByInterval($days, $hours, $minutes, $action)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $interval = $minutes + ($hours * 60) + ($days * 1440);
         $db->Execute(
             'update Groups set gUserExpirationIsEnabled = 1, gUserExpirationMethod = \'INTERVAL\', gUserExpirationSetDateTime = null, gUserExpirationInterval = ?, gUserExpirationAction = ? where gID = ?',
