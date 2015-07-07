@@ -116,7 +116,7 @@ class Topic extends Tree
     {
         $db = Database::connection();
         $row = $db->GetRow('select treeID, topicTreeName from TopicTrees where treeID = ?', array($this->treeID));
-        if (is_array($row) && $row['treeID']) {
+        if (!empty($row)) {
             $this->setPropertiesFromArray($row);
 
             return $this;
