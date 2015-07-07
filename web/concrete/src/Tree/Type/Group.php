@@ -40,11 +40,6 @@ class Group extends Tree
         return Tree::getByID($treeID);
     }
 
-    public static function importDetails(\SimpleXMLElement $sx)
-    {
-
-    }
-
     public function exportDetails(\SimpleXMLElement $sx)
     {
 

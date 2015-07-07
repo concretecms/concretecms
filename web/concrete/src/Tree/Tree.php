@@ -29,7 +29,15 @@ abstract class Tree extends Object
 
     abstract public function exportDetails(\SimpleXMLElement $sx);
 
-    abstract public static function importDetails(\SimpleXMLElement $sx);
+    /**
+     * @param \SimpleXMLElement $sx
+     *
+     * @return static|null
+     */
+    public static function importDetails(\SimpleXMLElement $sx)
+    {
+        return null;
+    }
 
     public function setSelectedTreeNodeIDs($nodeIDs)
     {
