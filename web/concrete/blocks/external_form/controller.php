@@ -3,7 +3,7 @@
 namespace Concrete\Block\ExternalForm;
 
 use Concrete\Core\Block\BlockController;
-use Loader;
+use Core;
 
 class Controller extends BlockController
 {
@@ -117,7 +117,7 @@ class Controller extends BlockController
     public function getFormList()
     {
         $forms = array();
-        $fh = Loader::helper('file');
+        $fh = Core::make('helper/file');
 
         if (file_exists(DIR_FILES_BLOCK_TYPES_FORMS_EXTERNAL)) {
             $forms = array_merge(
