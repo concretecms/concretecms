@@ -8,7 +8,6 @@ use Concrete\Core\Tree\Tree;
 use Concrete\Core\Tree\Type\Topic as TopicTree;
 use Concrete\Core\Tree\Type\Topic;
 use Core;
-use Loader;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -41,7 +40,7 @@ class Controller extends BlockController
         $this->requireAsset('core/topics');
         $tt = new TopicTree();
         $defaultTree = $tt->getDefault();
-        $tree = $tt->getByID(Loader::helper('security')->sanitizeInt($this->topicTreeID));
+        $tree = $tt->getByID(Core::make('helper/security')->sanitizeInt($this->topicTreeID));
         if (!$tree) {
             $tree = $defaultTree;
         }
@@ -68,7 +67,7 @@ class Controller extends BlockController
             }
         } else {
             $tt = new TopicTree();
-            $tree = $tt->getByID(Loader::helper('security')->sanitizeInt($this->topicTreeID));
+            $tree = $tt->getByID(Core::make('helper/security')->sanitizeInt($this->topicTreeID));
             $this->set('tree', $tree);
         }
     }
