@@ -210,7 +210,7 @@ abstract class Tree extends Object
         return $root->getTreeNodeJSON();
     }
 
-    protected static function add(\Concrete\Core\Tree\Node\Node $rootNode)
+    protected static function create(\Concrete\Core\Tree\Node\Node $rootNode)
     {
         $db = Database::connection();
         $date = Core::make('helper/date')->getOverridableNow();

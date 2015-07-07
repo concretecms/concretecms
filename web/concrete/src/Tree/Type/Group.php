@@ -54,7 +54,7 @@ class Group extends Tree
     {
         // copy permissions from the other node.
         $rootNode = GroupTreeNode::add();
-        $treeID = parent::add($rootNode);
+        $treeID = parent::create($rootNode);
         $tree = self::getByID($treeID);
 
         return $tree;
