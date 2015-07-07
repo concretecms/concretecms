@@ -98,6 +98,16 @@ use Concrete\Core\Device\Device;
     ?>
         </div>
 </section>
+
+<? /* Move this out to the panel detail */ ?>
+<div class="ccm-panel-detail-form-actions dialog-buttons">
+    <div class="btn-group pull-left">
+        <button class="pull-left btn btn-default" type="button"><i class="fa fa-mobile"></i></button>
+        <button class="pull-left btn btn-default active" type="button"><i class="fa fa-mobile fa-rotate-90"></i></button>
+    </div>
+    <button class="pull-right btn btn-default" type="button" data-panel-detail-action="cancel"><?=t('Exit Preview')?></button>
+</div>
+
 <script>
     $(function() {
         Concrete.event.unbind('PanelOpenDetail.device_preview');
