@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Permission\Assignment;
 
 use Concrete\Core\Conversation\Message\Message;
@@ -8,7 +9,6 @@ use Loader;
 
 class ConversationAssignment extends Assignment
 {
-
     protected $permissionObjectToCheck = null;
 
     public function setPermissionObject($object)
@@ -36,9 +36,10 @@ class ConversationAssignment extends Assignment
             'select paID from ConversationPermissionAssignments where cnvID = ? and pkID = ?',
             array(
                 $cnvID,
-                $this->pk->getPermissionKeyID()
+                $this->pk->getPermissionKeyID(),
             )
         );
+
         return PermissionAccess::getByID($r, $this->pk);
     }
 
@@ -69,11 +70,11 @@ class ConversationAssignment extends Assignment
             array(
                 'cnvID' => $cnvID,
                 'paID' => $pa->getPermissionAccessID(),
-                'pkID' => $this->pk->getPermissionKeyID()
+                'pkID' => $this->pk->getPermissionKeyID(),
             ),
             array(
                 'cnvID',
-                'pkID'
+                'pkID',
             ),
             true
         );
@@ -89,5 +90,4 @@ class ConversationAssignment extends Assignment
 
         return parent::getPermissionKeyToolsURL($task) . '&cnvID=' . $cnvID;
     }
-
 }
