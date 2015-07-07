@@ -89,7 +89,7 @@ class Controller extends BlockController
         } catch (\Exception $e) {}
     }
 
-    public function runAction($method, $parameters)
+    public function runAction($method, $parameters = array())
     {
         if (in_array($method, array('add', 'edit'))) {
             parent::runAction($method, $parameters);
