@@ -60,7 +60,7 @@ class Topic extends Tree
     {
         // copy permissions from the other node.
         $rootNode = TopicCategoryTreeNode::add();
-        $treeID = parent::add($rootNode);
+        $treeID = parent::create($rootNode);
         $tree = self::getByID($treeID);
         $tree->setTopicTreeName($name);
 
