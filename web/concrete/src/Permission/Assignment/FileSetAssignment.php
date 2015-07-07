@@ -1,45 +1,57 @@
 <?php
+
 namespace Concrete\Core\Permission\Assignment;
+
 use PermissionAccess;
 use Concrete\Core\File\Set\Set;
 use Loader;
-class FileSetAssignment extends Assignment {
 
+class FileSetAssignment extends Assignment
+{
     /**
      * @param Set $fs
      */
-	public function setPermissionObject($fs) {
-		$this->permissionObject = $fs;
+    public function setPermissionObject($fs)
+    {
+        $this->permissionObject = $fs;
 
-		if ($fs->overrideGlobalPermissions()) {
-			$this->permissionObjectToCheck = $fs;
-		} else {
-			$fs = Set::getGlobal();
-			$this->permissionObjectToCheck = $fs;
-		}
-	}
+        if ($fs->overrideGlobalPermissions()) {
+            $this->permissionObjectToCheck = $fs;
+        } else {
+            $fs = Set::getGlobal();
+            $this->permissionObjectToCheck = $fs;
+        }
+    }
 
-	public function getPermissionAccessObject() {
-		$db = Loader::db();
- 		$r = $db->GetOne('select paID from FileSetPermissionAssignments where fsID = ? and pkID = ?', array(
- 			$this->permissionObjectToCheck->getFileSetID(), $this->pk->getPermissionKeyID()
- 		));
- 		return PermissionAccess::getByID($r, $this->pk);
-	}
+    public function getPermissionAccessObject()
+    {
+        $db = Loader::db();
+        $r = $db->GetOne(
+            'select paID from FileSetPermissionAssignments where fsID = ? and pkID = ?',
+            array(
+                $this->permissionObjectToCheck->getFileSetID(),
+                $this->pk->getPermissionKeyID(),
+            )
+        );
 
-	public function clearPermissionAssignment() {
-		$db = Loader::db();
-		$db->Execute('update FileSetPermissionAssignments set paID = 0 where pkID = ? and fsID = ?', array($this->pk->getPermissionKeyID(), $this->permissionObject->getFileSetID()));
-	}
+        return PermissionAccess::getByID($r, $this->pk);
+    }
 
-	public function assignPermissionAccess(PermissionAccess $pa) {
-		$db = Loader::db();
-		$db->Replace('FileSetPermissionAssignments', array('fsID' => $this->getPermissionObject()->getFileSetID(), 'paID' => $pa->getPermissionAccessID(), 'pkID' => $this->pk->getPermissionKeyID()), array('fsID', 'pkID'), true);
-		$pa->markAsInUse();
-	}
+    public function clearPermissionAssignment()
+    {
+        $db = Loader::db();
+        $db->Execute('update FileSetPermissionAssignments set paID = 0 where pkID = ? and fsID = ?', array($this->pk->getPermissionKeyID(), $this->permissionObject->getFileSetID()));
+    }
 
-	public function getPermissionKeyToolsURL($task = false) {
-		return parent::getPermissionKeyToolsURL($task) . '&fsID=' . $this->getPermissionObject()->getFileSetID();
-	}
+    public function assignPermissionAccess(PermissionAccess $pa)
+    {
+        $db = Loader::db();
+        $db->Replace('FileSetPermissionAssignments', array('fsID' => $this->getPermissionObject()->getFileSetID(), 'paID' => $pa->getPermissionAccessID(), 'pkID' => $this->pk->getPermissionKeyID()), array('fsID', 'pkID'), true);
+        $pa->markAsInUse();
+    }
 
+    public function getPermissionKeyToolsURL($task = false)
+    {
+        return parent::getPermissionKeyToolsURL($task) . '&fsID=' . $this->getPermissionObject()->getFileSetID();
+    }
 }
