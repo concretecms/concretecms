@@ -3,15 +3,15 @@
 namespace Concrete\Core\Permission\Access;
 
 use Concrete\Core\Permission\Duration as PermissionDuration;
-use Loader;
 use Concrete\Core\Permission\Key\PageKey as PagePermissionKey;
+use Database;
 
 class EditPagePropertiesPageAccess extends PageAccess
 {
     public function duplicate($newPA = false)
     {
         $newPA = parent::duplicate($newPA);
-        $db = Loader::db();
+        $db = Database::connection();
         $r = $db->Execute('select * from PagePermissionPropertyAccessList where paID = ?', array($this->getPermissionAccessID()));
         while ($row = $r->FetchRow()) {
             $v = array(
@@ -38,7 +38,7 @@ class EditPagePropertiesPageAccess extends PageAccess
     public function save($args)
     {
         parent::save();
-        $db = Loader::db();
+        $db = Database::connection();
         $db->Execute('delete from PagePermissionPropertyAccessList where paID = ?', array($this->getPermissionAccessID()));
         $db->Execute('delete from PagePermissionPropertyAttributeAccessListCustom where paID = ?', array($this->getPermissionAccessID()));
         if (is_array($args['propertiesIncluded'])) {
@@ -116,7 +116,7 @@ class EditPagePropertiesPageAccess extends PageAccess
 
     public function getAccessListItems($accessType = PagePermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = array())
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $list = parent::getAccessListItems($accessType, $filterEntities);
         $list = PermissionDuration::filterByActive($list);
         foreach ($list as $l) {
