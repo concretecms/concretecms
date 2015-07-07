@@ -27,7 +27,10 @@ class Controller extends BlockController {
 	} 
 	
 	public function save($args) { 
-		$db = Loader::db(); 
+		$args += array(
+		    'showArrows' => 0,
+		    'loopSequence' => 0,
+		);
 		
 		$args['showArrows'] = intval($args['showArrows']) ;
 		$args['loopSequence'] = intval($args['loopSequence']); 
