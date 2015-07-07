@@ -35,10 +35,11 @@ abstract class Type extends Object {
 		return $types;
 	}
 
-	public static function add($cnvRatingTypeHandle, $cnvRatingTypeName, $cnvRatingTypeCommunityPoints, $pkgID = false) {
-		$pkgID = 0;
+	public static function add($cnvRatingTypeHandle, $cnvRatingTypeName, $cnvRatingTypeCommunityPoints, $pkg = false) {
 		if (is_object($pkg)) {
 			$pkgID = $pkg->getPackageID();
+		} else {
+		    $pkgID = $pkg ?: 0;
 		}
 		$db = Loader::db();
 		$db->Execute('insert into ConversationRatingTypes (cnvRatingTypeHandle, cnvRatingTypeName, cnvRatingTypeCommunityPoints, pkgID) values (?, ?, ?, ?)', array($cnvRatingTypeHandle, $cnvRatingTypeName, $cnvRatingTypeCommunityPoints, $pkgID));
