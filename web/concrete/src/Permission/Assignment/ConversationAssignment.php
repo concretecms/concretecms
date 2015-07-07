@@ -11,7 +11,7 @@ class ConversationAssignment extends Assignment
 
     protected $permissionObjectToCheck = null;
 
-    public function setPermissionObject($object = null)
+    public function setPermissionObject($object)
     {
         $this->permissionObject = $object;
 
