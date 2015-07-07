@@ -225,7 +225,7 @@ abstract class Tree extends Object
     {
         $db = Loader::db();
         $row = $db->GetRow('select * from Trees where treeID = ?', array($treeID));
-        if (is_array($row) && $row['treeID']) {
+        if (!empty($row)) {
             $tt = TreeType::getByID($row['treeTypeID']);
             $class = $tt->getTreeTypeClass();
             $tree = Core::make($class);
