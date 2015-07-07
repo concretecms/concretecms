@@ -18,6 +18,8 @@ class Controller extends BlockController
 
     function __construct($obj = null)
     {
+        $this->cID = null;
+        $this->bID = null;
         parent::__construct($obj);
         $c = Page::getCurrentPage();
 
