@@ -183,7 +183,7 @@ abstract class Editor extends Object
      * @param array $record an associative array of field value pairs for the ConversationEditor record
      * @return Editor|null
      */
-    protected function createFromRecord($record)
+    protected static function createFromRecord($record)
     {
         if (is_array($record) && $record['cnvEditorHandle']) {
             /** @var \Concrete\Core\Utility\Service\Text $textHelper */
