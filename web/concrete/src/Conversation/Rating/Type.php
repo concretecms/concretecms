@@ -4,9 +4,9 @@ namespace Concrete\Core\Conversation\Rating;
 
 use Concrete\Core\Conversation\Message\Message;
 use Concrete\Core\Foundation\Object;
-use Loader;
 use Concrete\Core\Package\PackageList;
 use Core;
+use Database;
 
 abstract class Type extends Object
 {
@@ -27,7 +27,7 @@ abstract class Type extends Object
      */
     public static function getList()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $handles = $db->GetCol('select cnvRatingTypeHandle from ConversationRatingTypes order by cnvRatingTypeHandle asc');
         $types = array();
         foreach ($handles as $handle) {
@@ -47,7 +47,7 @@ abstract class Type extends Object
         } else {
             $pkgID = $pkg ?: 0;
         }
-        $db = Loader::db();
+        $db = Database::connection();
         $db->Execute('insert into ConversationRatingTypes (cnvRatingTypeHandle, cnvRatingTypeName, cnvRatingTypeCommunityPoints, pkgID) values (?, ?, ?, ?)', array($cnvRatingTypeHandle, $cnvRatingTypeName, $cnvRatingTypeCommunityPoints, $pkgID));
 
         return static::getByHandle($cnvRatingTypeHandle);
@@ -55,11 +55,11 @@ abstract class Type extends Object
 
     public static function getByHandle($cnvRatingTypeHandle)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $r = $db->GetRow('select cnvRatingTypeID, cnvRatingTypeHandle, cnvRatingTypeName, cnvRatingTypeCommunityPoints, pkgID from ConversationRatingTypes where cnvRatingTypeHandle = ?', array($cnvRatingTypeHandle));
 
         if (is_array($r) && $r['cnvRatingTypeHandle']) {
-            $class = '\\Concrete\\Core\\Conversation\\Rating\\' . Loader::helper('text')->camelcase($r['cnvRatingTypeHandle']) . 'Type';
+            $class = '\\Concrete\\Core\\Conversation\\Rating\\' . Core::make('helper/text')->camelcase($r['cnvRatingTypeHandle']) . 'Type';
             $sc = Core::make($class);
             $sc->setPropertiesFromArray($r);
 
@@ -69,11 +69,11 @@ abstract class Type extends Object
 
     public static function getByID($cnvRatingTypeID)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $r = $db->GetRow('select cnvRatingTypeID, cnvRatingTypeHandle, cnvRatingTypeName, cnvRatingTypeCommunityPoints, pkgID from ConversationRatingTypes where cnvRatingTypeID = ?', array($cnvRatingTypeID));
 
         if (is_array($r) && $r['cnvRatingTypeHandle']) {
-            $class = '\\Concrete\\Core\\Conversation\\Rating\\' . Loader::helper('text')->camelcase($r['cnvRatingTypeHandle']) . 'Type';
+            $class = '\\Concrete\\Core\\Conversation\\Rating\\' . Core::make('helper/text')->camelcase($r['cnvRatingTypeHandle']) . 'Type';
             $sc = Core::make($class);
             $sc->setPropertiesFromArray($r);
 
@@ -97,7 +97,7 @@ abstract class Type extends Object
 
     public static function getListByPackage($pkg)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $handles = $db->GetCol('select cnvRatingTypeHandle from ConversationRatingTypes where pkgID = ? order by cnvRatingTypeHandle asc', array($pkg->getPackageID()));
         $types = array();
         foreach ($handles as $handle) {
@@ -112,7 +112,7 @@ abstract class Type extends Object
 
     public function delete()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $db->Execute('delete from ConversationRatingTypes where cnvRatingTypeHandle = ?', array($this->cnvRatingTypeHandle));
     }
 
