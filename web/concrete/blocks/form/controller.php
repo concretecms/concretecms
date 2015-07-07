@@ -157,7 +157,7 @@ class Controller extends BlockController
             $total = 0;
         }
 
-        if ($_POST['qsID']) {
+        if (isset($_POST['qsID']) && $_POST['qsID']) {
             $data['qsID'] = $_POST['qsID'];
         }
         if (!$data['qsID']) {
