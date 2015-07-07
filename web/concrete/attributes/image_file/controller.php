@@ -1,11 +1,12 @@
 <?php
+
 namespace Concrete\Attribute\ImageFile;
 
 use Loader;
 use File;
 use Concrete\Core\Backup\ContentExporter;
 use Concrete\Core\Backup\ContentImporter;
-use \Concrete\Core\Attribute\Controller as AttributeTypeController;
+use Concrete\Core\Attribute\Controller as AttributeTypeController;
 
 class Controller extends AttributeTypeController
 {
@@ -121,6 +122,7 @@ class Controller extends AttributeTypeController
             $e = Loader::helper('validation/error');
             $e->add(t('You must specify a valid file for %s', $this->attributeKey->getAttributeKeyDisplayName()));
         }
+
         return $e;
     }
 
@@ -154,5 +156,4 @@ class Controller extends AttributeTypeController
         $db = Loader::db();
         $db->Execute('delete from atFile where avID = ?', array($this->getAttributeValueID()));
     }
-
 }
