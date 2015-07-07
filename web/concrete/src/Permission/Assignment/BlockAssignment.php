@@ -34,7 +34,10 @@ class BlockAssignment extends Assignment {
 		'delete_block' => 'edit_page_contents'
 	);
 
-	public function setPermissionObject(Block $b) {
+	/**
+	 * @param Block $b
+	 */
+	public function setPermissionObject($b) {
 		$this->permissionObject = $b;
 
 		// if the area overrides the collection permissions explicitly (with a one on the override column) we check

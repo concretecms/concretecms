@@ -5,7 +5,10 @@ use Concrete\Core\File\Set\Set;
 use Loader;
 class FileSetAssignment extends Assignment {
 
-	public function setPermissionObject(Set $fs) {
+    /**
+     * @param Set $fs
+     */
+	public function setPermissionObject($fs) {
 		$this->permissionObject = $fs;
 
 		if ($fs->overrideGlobalPermissions()) {

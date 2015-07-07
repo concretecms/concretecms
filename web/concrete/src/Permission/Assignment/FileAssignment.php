@@ -64,7 +64,10 @@ class FileAssignment extends Assignment {
 		}
 	}
 
-	public function setPermissionObject(File $f) {
+	/**
+	 * @param File $f
+	 */
+	public function setPermissionObject($f) {
 		$this->permissionObject = $f;
 
 		if ($f->overrideFileSetPermissions()) {
