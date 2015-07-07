@@ -1,17 +1,18 @@
 <?php
+
 namespace Concrete\Attribute\Address;
 
 use Loader;
-use \Concrete\Core\Attribute\Controller as AttributeTypeController;
+use Concrete\Core\Attribute\Controller as AttributeTypeController;
 
 class Controller extends AttributeTypeController
 {
-
     public $helpers = array('form');
 
     public function searchKeywords($keywords, $queryBuilder)
     {
         $h = $this->attributeKey->getAttributeKeyHandle();
+
         return $queryBuilder->expr()->orX(
             $queryBuilder->expr()->like("ak_{$h}_address1", ':keywords'),
             $queryBuilder->expr()->like("ak_{$h}_address2", ':keywords'),
@@ -50,30 +51,31 @@ class Controller extends AttributeTypeController
         if ($country) {
             $list->filter('ak_' . $akHandle . '_country', $country);
         }
+
         return $list;
     }
 
     protected $searchIndexFieldDefinition = array(
         'address1' => array(
             'type' => 'string',
-            'options' => array('length' => '255', 'default' => '', 'notnull' => false)
+            'options' => array('length' => '255', 'default' => '', 'notnull' => false),
         ),
         'address2' => array(
             'type' => 'string',
-            'options' => array('length' => '255', 'default' => '', 'notnull' => false)
+            'options' => array('length' => '255', 'default' => '', 'notnull' => false),
         ),
         'city' => array('type' => 'string', 'options' => array('length' => '255', 'default' => '', 'notnull' => false)),
         'state_province' => array(
             'type' => 'string',
-            'options' => array('length' => '255', 'default' => '', 'notnull' => false)
+            'options' => array('length' => '255', 'default' => '', 'notnull' => false),
         ),
         'country' => array(
             'type' => 'string',
-            'options' => array('length' => '255', 'default' => '', 'notnull' => false)
+            'options' => array('length' => '255', 'default' => '', 'notnull' => false),
         ),
         'postal_code' => array(
             'type' => 'string',
-            'options' => array('length' => '255', 'default' => '', 'notnull' => false)
+            'options' => array('length' => '255', 'default' => '', 'notnull' => false),
         ),
     );
 
@@ -119,6 +121,7 @@ class Controller extends AttributeTypeController
         $args['state_province'] = $v->getStateProvince();
         $args['country'] = $v->getCountry();
         $args['postal_code'] = $v->getPostalCode();
+
         return $args;
     }
 
@@ -141,7 +144,7 @@ class Controller extends AttributeTypeController
     {
         $db = Loader::db();
         if ($data instanceof Value) {
-            $data = (array)$data;
+            $data = (array) $data;
         }
         extract($data);
         $db->Replace(
@@ -153,7 +156,7 @@ class Controller extends AttributeTypeController
                 'city' => $city,
                 'state_province' => $state_province,
                 'country' => $country,
-                'postal_code' => $postal_code
+                'postal_code' => $postal_code,
             ),
             'avID',
             true
@@ -163,6 +166,7 @@ class Controller extends AttributeTypeController
     public function getValue()
     {
         $val = Value::getByID($this->getAttributeValueID());
+
         return $val;
     }
 
@@ -170,6 +174,7 @@ class Controller extends AttributeTypeController
     {
         $v = Loader::helper('text')->entities($this->getValue());
         $ret = nl2br($v);
+
         return $ret;
     }
 
@@ -246,6 +251,7 @@ class Controller extends AttributeTypeController
                 $countries->addChild('country', $country);
             }
         }
+
         return $akey;
     }
 
@@ -270,6 +276,7 @@ class Controller extends AttributeTypeController
             $data['state_province'] = $akv->value['state-province'];
             $data['country'] = $akv->value['country'];
             $data['postal_code'] = $akv->value['postal-code'];
+
             return $data;
         }
     }
@@ -281,7 +288,7 @@ class Controller extends AttributeTypeController
             $data['akDefaultCountry'] = $akey->type['default-country'];
             if (isset($akey->type->countries)) {
                 foreach ($akey->type->countries->children() as $country) {
-                    $data['akCustomCountries'][] = (string)$country;
+                    $data['akCustomCountries'][] = (string) $country;
                 }
             }
             $this->saveKey($data);
@@ -309,7 +316,7 @@ class Controller extends AttributeTypeController
                 array(
                     'akID' => $ak->getAttributeKeyID(),
                     'akHasCustomCountries' => $akHasCustomCountries,
-                    'akDefaultCountry' => $data['akDefaultCountry']
+                    'akDefaultCountry' => $data['akDefaultCountry'],
                 ),
                 array('akID'),
                 true
@@ -379,5 +386,4 @@ class Controller extends AttributeTypeController
         );
         $this->set('key', $this->attributeKey);
     }
-
 }
