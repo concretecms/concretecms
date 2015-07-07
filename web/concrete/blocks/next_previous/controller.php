@@ -2,7 +2,7 @@
 
 namespace Concrete\Block\NextPrevious;
 
-use Loader;
+use Database;
 use Permissions;
 use Page;
 use Concrete\Core\Block\BlockController;
@@ -67,7 +67,7 @@ class Controller extends BlockController
     public function getNextCollection()
     {
         $page = false;
-        $db = Loader::db();
+        $db = Database::connection();
         $systemPages = '';
         if ($this->excludeSystemPages) {
             $systemPages = 'and cIsSystemPage = 0';
@@ -127,7 +127,7 @@ class Controller extends BlockController
     public function getPreviousCollection()
     {
         $page = false;
-        $db = Loader::db();
+        $db = Database::connection();
         $systemPages = '';
         if ($this->excludeSystemPages) {
             $systemPages = 'and cIsSystemPage = 0';
