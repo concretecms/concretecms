@@ -2,7 +2,6 @@
 
 namespace Concrete\Block\GoogleMap;
 
-use Loader;
 use Page;
 use Concrete\Core\Block\BlockController;
 use Core;
@@ -39,7 +38,7 @@ class Controller extends BlockController
 
     public function validate($args)
     {
-        $error = Loader::helper('validation/error');
+        $error = Core::make('helper/validation/error');
 
         if (empty($args['location']) || $args['latitude'] === '' || $args['longtitude'] === '') {
             $error->add(t('You must select a valid location.'));
