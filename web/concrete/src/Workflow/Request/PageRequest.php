@@ -46,7 +46,7 @@ abstract class PageRequest extends Request {
 		$page = Page::getByID($this->cID);
 		$pk = PermissionKey::getByID($this->pkID);
 		$pk->setPermissionObject($page);
-		return parent::trigger($pk);
+		return parent::triggerRequest($pk);
 	}
 
 	public function cancel(WorkflowProgress $wp) {
