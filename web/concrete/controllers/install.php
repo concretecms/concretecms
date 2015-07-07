@@ -9,7 +9,7 @@ use Controller;
 use Config;
 use Exception;
 use Hautelook\Phpass\PasswordHash;
-use Loader;
+use Core;
 use StartingPointPackage;
 use View;
 
@@ -62,7 +62,7 @@ class Install extends Controller
             if (defined('SITE_INSTALL_LOCALE') && Localization::activeLocale() !== SITE_INSTALL_LOCALE) {
                 Localization::changeLocale(SITE_INSTALL_LOCALE);
             }
-            $e = Loader::helper('validation/error');
+            $e = Core::make('helper/validation/error');
             $e = $this->validateDatabase($e);
             if ($e->has()) {
                 $this->set('error', $e);
@@ -179,7 +179,7 @@ class Install extends Controller
             $this->set('memoryTest', 1);
             $this->set('memoryBytes', 0);
         } else {
-            $val = Loader::helper('number')->getBytes($memoryLimit);
+            $val = Core::make('helper/number')->getBytes($memoryLimit);
             $this->set('memoryBytes', $val);
             if ($val < 25165824) {
                 $this->set('memoryTest', -1);
@@ -202,7 +202,7 @@ class Install extends Controller
 
     private function testFileWritePermissions()
     {
-        $e = Loader::helper('validation/error');
+        $e = Core::make('helper/validation/error');
         if (!is_writable(DIR_CONFIG_SITE)) {
             $e->add(t('Your configuration directory config/ does not appear to be writable by the web server.'));
         }
@@ -243,7 +243,7 @@ class Install extends Controller
 
     public function test_url($num1, $num2)
     {
-        $js = Loader::helper('json');
+        $js = Core::make('helper/json');
         $num = $num1 + $num2;
         print $js->encode(array('response' => $num));
         exit;
@@ -255,7 +255,7 @@ class Install extends Controller
         require DIR_CONFIG_SITE . '/site_install.php';
         @include DIR_CONFIG_SITE . '/site_install_user.php';
 
-        $jsx = Loader::helper('json');
+        $jsx = Core::make('helper/json');
         $js = new \stdClass();
 
         try {
@@ -293,7 +293,7 @@ class Install extends Controller
         $error = \Core::make('helper/validation/error');
         /* @var $error \Concrete\Core\Error\Error */
         try {
-            $val = Loader::helper('validation/form');
+            $val = Core::make('helper/validation/form');
             $val->setData($this->post());
             $val->addRequired("SITE", t("Please specify your site's name"));
             $val->addRequiredEmail("uEmail", t('Please specify a valid email address'));
@@ -303,7 +303,7 @@ class Install extends Controller
             $password = $_POST['uPassword'];
             $passwordConfirm = $_POST['uPasswordConfirm'];
 
-            $uh = Loader::helper('concrete/user');
+            $uh = Core::make('helper/concrete/user');
             $uh->validNewPassword($password, $error);
 
             if ($password) {
@@ -322,7 +322,7 @@ class Install extends Controller
             if ($val->test() && (!$error->has())) {
 
                 // write the config file
-                $vh = Loader::helper('validation/identifier');
+                $vh = Core::make('helper/validation/identifier');
                 $this->fp = @fopen(DIR_CONFIG_SITE . '/site_install.php', 'w+');
                 $this->fpu = @fopen(DIR_CONFIG_SITE . '/site_install_user.php', 'w+');
                 if ($this->fp) {
