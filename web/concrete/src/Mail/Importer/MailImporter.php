@@ -153,7 +153,7 @@ class MailImporter extends Object
         return PackageList::getHandle($this->pkgID);
     }
 
-    public function add($args, $pkg = null)
+    public static function add($args, $pkg = null)
     {
         $db = Loader::db();
         $args = $args + array(
