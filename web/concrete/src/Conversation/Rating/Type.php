@@ -83,7 +83,7 @@ abstract class Type extends Object
 
     public static function exportList($xml)
     {
-        $list = self::getList();
+        $list = static::getList();
         $nxml = $xml->addChild('conversationratingtypes');
         foreach ($list as $sc) {
             $activated = 0;
