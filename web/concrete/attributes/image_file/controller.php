@@ -35,7 +35,7 @@ class Controller extends AttributeTypeController
         return $this->getDisplayValue();
     }
 
-    public function exportValue($akn)
+    public function exportValue(\SimpleXMLElement $akn)
     {
         $av = $akn->addChild('value');
         $fo = $this->getValue();
