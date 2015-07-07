@@ -3,7 +3,7 @@
 namespace Concrete\Core\Tree\Type;
 
 use Concrete\Core\Tree\Tree;
-use Loader;
+use Database;
 use GroupTreeNode;
 
 class Group extends Tree
@@ -35,7 +35,7 @@ class Group extends Tree
 
     public static function get()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $treeTypeID = $db->GetOne('select treeTypeID from TreeTypes where treeTypeHandle = ?', array('group'));
         $treeID = $db->GetOne('select treeID from Trees where treeTypeID = ?', array($treeTypeID));
 
@@ -66,7 +66,7 @@ class Group extends Tree
 
     public static function ensureGroupNodes()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $tree = GroupTree::get();
         $rootNode = $tree->getRootTreeNodeObject();
         $rows = $db->GetCol('select Groups.gID from Groups left join TreeGroupNodes on Groups.gID = TreeGroupNodes.gID where TreeGroupNodes.gID is null');
