@@ -79,11 +79,10 @@ class Controller extends BlockController
         }
     }
 
-    public function validate()
+    public function validate($args)
     {
         $e = Core::make('helper/validation/error');
-        $service = $this->post('service');
-        if (count($service) == 0) {
+        if (!isset($args['service']) || empty($args['service'])) {
             $e->add(t('You must choose at least one service.'));
         }
         return $e;
