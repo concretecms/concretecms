@@ -66,9 +66,9 @@ class Controller extends GenericOauth2TypeController
         return array('state' => time());
     }
 
-    public function getExtractor() {
+    public function getExtractor($new = false) {
         try {
-            return parent::getExtractor();
+            return parent::getExtractor($new);
         } catch (\Exception $e) {
             dd($e);
         }
