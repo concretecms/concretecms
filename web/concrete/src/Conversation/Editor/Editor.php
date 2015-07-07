@@ -5,8 +5,8 @@ namespace Concrete\Core\Conversation\Editor;
 use Config;
 use Conversation;
 use Core;
+use Database;
 use Environment;
-use Loader;
 use Concrete\Core\Conversation\Message\Message;
 use Concrete\Core\Foundation\Object;
 use Package;
@@ -138,7 +138,7 @@ abstract class Editor extends Object
      */
     public static function getActive()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $cnvEditorID = $db->fetchColumn('select cnvEditorID from ConversationEditors where cnvEditorIsActive = 1');
         if ($cnvEditorID) {
             return static::getByID($cnvEditorID);
@@ -156,7 +156,7 @@ abstract class Editor extends Object
      */
     public static function getByID($cnvEditorID)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $r = $db->fetchAssoc(
             'select *
              from ConversationEditors
@@ -176,7 +176,7 @@ abstract class Editor extends Object
      */
     public static function getByHandle($cnvEditorHandle)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $r = $db->fetchAssoc(
             'select *
              from ConversationEditors
@@ -297,7 +297,7 @@ abstract class Editor extends Object
         if (is_object($pkg)) {
             $pkgID = $pkg->getPackageID();
         }
-        $db = Loader::db();
+        $db = Database::connection();
         $db->insert(
             'ConversationEditors',
             array(
@@ -315,7 +315,7 @@ abstract class Editor extends Object
      */
     public function delete()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $db->delete('ConversationEditors', array('cnvEditorID' => $this->cnvEditorID));
     }
 
@@ -324,7 +324,7 @@ abstract class Editor extends Object
      */
     public function activate()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         static::deactivateAll();
         $db->update('ConversationEditors', array('cnvEditorIsActive' => 1), array('cnvEditorID' => $this->cnvEditorID));
     }
@@ -334,7 +334,7 @@ abstract class Editor extends Object
      */
     protected function deactivateAll()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $db->update('ConversationEditors', array('cnvEditorIsActive' => 0), array('cnvEditorIsActive' => 1));
     }
 
@@ -347,7 +347,7 @@ abstract class Editor extends Object
      */
     public static function getList($pkgID = null)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $queryBuilder = $db->createQueryBuilder()
             ->select('e.*')
             ->from('ConversationEditors', 'e')
