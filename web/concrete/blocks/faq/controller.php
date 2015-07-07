@@ -94,7 +94,7 @@ class Controller extends BlockController
     {
         $db = Loader::db();
         $db->execute('DELETE from btFaqEntries WHERE bID = ?', array($this->bID));
-        $count = count($args['sortOrder']);
+        $count = isset($args['sortOrder']) ? count($args['sortOrder']) : 0;
         $i = 0;
         parent::save($args);
         while ($i < $count) {
