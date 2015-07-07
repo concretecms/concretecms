@@ -9,9 +9,42 @@ use \Concrete\Core\Feature\Detail\Detail as FeatureDetail;
 abstract class Assignment extends Object {
 
 	abstract public function loadDetails($mixed);
-	abstract public static function getList($mixed);
-	abstract public static function getFeature($feHandle, $mixed);
-	abstract public static function add(Feature $fe, FeatureDetail $fd, $mixed);
+
+	/**
+	 * @param mixed $mixed
+	 *
+	 * @return Assignment[]
+	 * @abstract
+	 */
+	public static function getList($mixed)
+	{
+	    return array();
+	}
+
+	/**
+	 * @param string $feHandle
+	 * @param mixes $mixed
+	 *
+	 * @return Assignment|null
+	 * @abstract
+	 */
+	public static function getFeature($feHandle, $mixed)
+	{
+	    return null;
+	}
+
+	/**
+	 * @param Feature $fe
+	 * @param FeatureDetail $fd
+	 * @param mixed $mixed
+	 *
+	 * @return Assignment
+	 * @abstract
+	 */
+	public static function add(Feature $fe, FeatureDetail $fd, $mixed)
+	{
+	    return null;
+	}
 
 	public static function addAssignment(Feature $fe, FeatureCategory $fc, FeatureDetail $fd, $mixed) {
 		$db = Loader::db();
