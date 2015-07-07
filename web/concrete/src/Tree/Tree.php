@@ -13,6 +13,7 @@ abstract class Tree extends Object
     protected $treeNodeSelectedIDs = array();
 
     abstract protected function loadDetails();
+
     abstract protected function deleteDetails();
 
     /** Returns the standard name for this tree
@@ -100,10 +101,12 @@ abstract class Tree extends Object
     {
         return $this->treeID;
     }
+
     public function getRootTreeNodeObject()
     {
         return \Concrete\Core\Tree\Node\Node::getByID($this->rootTreeNodeID);
     }
+
     public function getRootTreeNodeID()
     {
         return $this->rootTreeNodeID;
