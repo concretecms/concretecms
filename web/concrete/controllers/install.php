@@ -1,12 +1,11 @@
 <?php
+
 namespace Concrete\Controller;
 
 use Concrete\Core\Cache\Cache;
 use Concrete\Core\Config\Renderer;
-use Core;
 use Concrete\Core\Localization\Localization as Localization;
 use Controller;
-use Database as DB;
 use Config;
 use Exception;
 use Hautelook\Phpass\PasswordHash;
@@ -22,10 +21,10 @@ if (!ini_get('safe_mode')) {
 
 class Install extends Controller
 {
-
     /**
      * This is to check if comments are being stripped
-     * Doctrine ORM depends on comments not being stripped
+     * Doctrine ORM depends on comments not being stripped.
+     *
      * @var int
      */
     protected $docCommentCanary = 1;
@@ -39,6 +38,7 @@ class Install extends Controller
     {
         $v = new View('/frontend/install');
         $v->setViewTheme('concrete');
+
         return $v;
     }
 
@@ -57,8 +57,8 @@ class Install extends Controller
     protected function testAndRunInstall()
     {
         if (file_exists(DIR_CONFIG_SITE . '/site_install_user.php')) {
-            require(DIR_CONFIG_SITE . '/site_install.php');
-            @include(DIR_CONFIG_SITE . '/site_install_user.php');
+            require DIR_CONFIG_SITE . '/site_install.php';
+            @include DIR_CONFIG_SITE . '/site_install_user.php';
             if (defined('SITE_INSTALL_LOCALE') && Localization::activeLocale() !== SITE_INSTALL_LOCALE) {
                 Localization::changeLocale(SITE_INSTALL_LOCALE);
             }
@@ -88,13 +88,12 @@ class Install extends Controller
         if (!extension_loaded('pdo')) {
             $e->add($this->getDBErrorMsg());
         } else {
-
             $db = \Database::getFactory()->createConnection(
                 array(
-                    'host'     => $_POST['DB_SERVER'],
-                    'user'     => $_POST['DB_USERNAME'],
+                    'host' => $_POST['DB_SERVER'],
+                    'user' => $_POST['DB_USERNAME'],
                     'password' => $_POST['DB_PASSWORD'],
-                    'database' => $_POST['DB_DATABASE']
+                    'database' => $_POST['DB_DATABASE'],
                 ));
 
             $DB_SERVER = $_POST['DB_SERVER'];
@@ -119,6 +118,7 @@ class Install extends Controller
                 }
             }
         }
+
         return $e;
     }
 
@@ -129,16 +129,14 @@ class Install extends Controller
 
     public function setup()
     {
-
     }
 
     public function select_language()
     {
-
     }
 
     /**
-     * Testing
+     * Testing.
      */
     public function on_start()
     {
@@ -160,7 +158,7 @@ class Install extends Controller
 
     private function setRequiredItems()
     {
-//        $this->set('imageTest', function_exists('imagecreatetruecolor') || class_exists('Imagick'));
+        //        $this->set('imageTest', function_exists('imagecreatetruecolor') || class_exists('Imagick'));
         $this->set('imageTest', function_exists('imagecreatetruecolor')
             && function_exists('imagepng')
             && function_exists('imagegif')
@@ -185,7 +183,7 @@ class Install extends Controller
             $this->set('memoryBytes', $val);
             if ($val < 25165824) {
                 $this->set('memoryTest', -1);
-            } else if ($val >= 67108864) {
+            } elseif ($val >= 67108864) {
                 $this->set('memoryTest', 1);
             } else {
                 $this->set('memoryTest', 0);
@@ -254,11 +252,11 @@ class Install extends Controller
     public function run_routine($pkgHandle, $routine)
     {
         $spl = StartingPointPackage::getClass($pkgHandle);
-        require(DIR_CONFIG_SITE . '/site_install.php');
-        @include(DIR_CONFIG_SITE . '/site_install_user.php');
+        require DIR_CONFIG_SITE . '/site_install.php';
+        @include DIR_CONFIG_SITE . '/site_install_user.php';
 
         $jsx = Loader::helper('json');
-        $js = new \stdClass;
+        $js = new \stdClass();
 
         try {
             call_user_func(array($spl, $routine));
@@ -328,7 +326,6 @@ class Install extends Controller
                 $this->fp = @fopen(DIR_CONFIG_SITE . '/site_install.php', 'w+');
                 $this->fpu = @fopen(DIR_CONFIG_SITE . '/site_install_user.php', 'w+');
                 if ($this->fp) {
-
                     $config = isset($_POST['SITE_CONFIG']) ? ((array) $_POST['SITE_CONFIG']) : array();
                     $config['database'] = array(
                         'default-connection' => 'concrete',
@@ -339,9 +336,9 @@ class Install extends Controller
                                 'database' => $_POST['DB_DATABASE'],
                                 'username' => $_POST['DB_USERNAME'],
                                 'password' => $_POST['DB_PASSWORD'],
-                                'charset' => 'utf8'
-                            )
-                        )
+                                'charset' => 'utf8',
+                            ),
+                        ),
                     );
 
                     $renderer = new Renderer($config);
@@ -373,9 +370,7 @@ class Install extends Controller
                 } else {
                     throw new Exception(t('Unable to open config/site_user.php for writing.'));
                 }
-
             } else {
-
                 if ($error->has()) {
                     $this->set('error', $error);
                 } else {
@@ -383,28 +378,28 @@ class Install extends Controller
                     $this->set('error', $val->getError());
                 }
             }
-
         } catch (Exception $ex) {
             $this->reset();
             $this->set('error', $ex);
             $error->add($ex);
         }
+
         return $error;
     }
 
     protected function validateSampleContent($e)
     {
         $pkg = StartingPointPackage::getClass($this->post('SAMPLE_CONTENT'));
-        
+
         if (!is_object($pkg)) {
             $e->add(t("You must select a valid sample content starting point."));
         }
+
         return $e;
     }
-    
-    public function getMinimumPhpVersion() {
+
+    public function getMinimumPhpVersion()
+    {
         return '5.3.3';
     }
-
 }
-
