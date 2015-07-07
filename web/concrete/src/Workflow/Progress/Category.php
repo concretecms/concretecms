@@ -34,7 +34,7 @@ class Category extends Object
 
     public static function exportList($xml)
     {
-        $attribs = self::getList();
+        $attribs = static::getList();
         $axml = $xml->addChild('workflowprogresscategories');
         foreach ($attribs as $pkc) {
             $acat = $axml->addChild('category');
