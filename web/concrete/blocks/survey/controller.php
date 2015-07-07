@@ -3,10 +3,10 @@
 namespace Concrete\Block\Survey;
 
 use Concrete\Core\Block\BlockController;
-use Loader;
 use Page;
 use User;
 use Core;
+use Database;
 
 class Controller extends BlockController
 {
@@ -27,7 +27,7 @@ class Controller extends BlockController
             $this->cID = $c->getCollectionID();
         }
         if ($this->bID) {
-            $db = Loader::db();
+            $db = Database::connection();
             $v = array($this->bID);
             $q = "SELECT optionID, optionName, displayOrder FROM btSurveyOptions WHERE bID = ? ORDER BY displayOrder ASC";
             $r = $db->query($q, $v);
@@ -70,7 +70,7 @@ class Controller extends BlockController
 
     public function delete()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $v = array($this->bID);
 
         $q = "DELETE FROM btSurveyOptions WHERE bID = ?";
@@ -89,7 +89,7 @@ class Controller extends BlockController
         }
 
         $u = new User();
-        $db = Loader::db();
+        $db = Database::connection();
         $bo = $this->getBlockObject();
         if ($this->post('rcID')) {
             // we pass the rcID through the form so we can deal with stacks
@@ -105,7 +105,7 @@ class Controller extends BlockController
         }
 
         if (!$this->hasVoted()) {
-            $antispam = Loader::helper('validation/antispam');
+            $antispam = Core::make('helper/validation/antispam');
             if ($antispam->check('', 'survey_block')) { // we do a blank check which will still check IP and UserAgent's
                 $duID = 0;
                 if ($u->getUserID() > 0) {
@@ -139,7 +139,7 @@ class Controller extends BlockController
     {
         $u = new User();
         if ($u->isRegistered()) {
-            $db = Loader::db();
+            $db = Database::connection();
             $v = array($u->getUserID(), $this->bID, $this->cID);
             $q = "SELECT count(resultID) AS total FROM btSurveyResults WHERE uID = ? AND bID = ? AND cID = ?";
             $result = $db->getOne($q, $v);
@@ -155,7 +155,7 @@ class Controller extends BlockController
 
     public function duplicate($newBID)
     {
-        $db = Loader::db();
+        $db = Database::connection();
 
         foreach ($this->options as $opt) {
             $v1 = array($newBID, $opt->getOptionName(), $opt->getOptionDisplayOrder());
@@ -181,7 +181,7 @@ class Controller extends BlockController
     public function save($args)
     {
         parent::save($args);
-        $db = Loader::db();
+        $db = Database::connection();
 
         if (!is_array($args['survivingOptionNames'])) {
             $args['survivingOptionNames'] = array();
@@ -217,7 +217,7 @@ class Controller extends BlockController
     public function displayChart($bID, $cID)
     {
         // Prepare the database query
-        $db = Loader::db();
+        $db = Database::connection();
 
         // Get all available options
         $options = array();
