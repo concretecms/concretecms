@@ -151,6 +151,9 @@ class Controller extends BlockController
 
     public function save($data)
     {
+        $data += array(
+            'externalTarget' => 0,
+        );
         $externalTarget = intval($data['externalTarget']);
         if ($externalTarget === 0) {
             $data['cParentID'] = 0;
