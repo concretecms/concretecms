@@ -186,7 +186,7 @@ class Controller extends AttributeTypeController
         print "'";
     }
 
-    public function validateKey($data)
+    public function validateKey($data = false)
     {
         $e = parent::validateKey($data);
 
