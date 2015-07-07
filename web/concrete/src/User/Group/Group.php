@@ -78,7 +78,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
         $db = Loader::db();
         $row = $db->getRow("select * from Groups where gName = ?", array($gName));
         if (isset($row['gID'])) {
-            $g = new self();
+            $g = new static();
             $g->setPropertiesFromArray($row);
 
             return $g;
@@ -95,7 +95,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
         $db = Loader::db();
         $row = $db->getRow("select * from Groups where gPath = ?", array($gPath));
         if (isset($row['gID'])) {
-            $g = new self();
+            $g = new static();
             $g->setPropertiesFromArray($row);
 
             return $g;
@@ -491,7 +491,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
             $v = array($gName, $gDescription, $this->gID);
             $r = $db->prepare("update Groups set gName = ?, gDescription = ? where gID = ?");
             $res = $db->Execute($r, $v);
-            $group = self::getByID($this->gID);
+            $group = static::getByID($this->gID);
             $group->rescanGroupPathRecursive();
 
             $ge = new Event($this);
@@ -519,7 +519,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
         $res = $db->Execute($r, $v);
 
         if ($res) {
-            $ng = self::getByID($db->Insert_ID());
+            $ng = static::getByID($db->Insert_ID());
             // create a node for this group.
             $node = null;
             if (is_object($parentGroup)) {
@@ -582,17 +582,17 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
 
     public static function getAutomatedOnRegisterGroupControllers($u = false)
     {
-        return self::getAutomationControllers('gCheckAutomationOnRegister', $u);
+        return static::getAutomationControllers('gCheckAutomationOnRegister', $u);
     }
 
     public static function getAutomatedOnLoginGroupControllers($u = false)
     {
-        return self::getAutomationControllers('gCheckAutomationOnLogin', $u);
+        return static::getAutomationControllers('gCheckAutomationOnLogin', $u);
     }
 
     public static function getAutomatedOnJobRunGroupControllers()
     {
-        return self::getAutomationControllers('gCheckAutomationOnJobRun');
+        return static::getAutomationControllers('gCheckAutomationOnJobRun');
     }
 
     public function clearBadgeOptions()
