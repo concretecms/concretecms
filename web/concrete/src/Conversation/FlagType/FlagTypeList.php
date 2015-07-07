@@ -10,8 +10,8 @@ class FlagTypeList extends DatabaseItemList {
 		$this->sortBy('cnvMessageFlagTypeID', 'asc');
 	}
 
-	public function get() {
-		$r = parent::get(0, 0);
+	public function get($itemsToGet = 0, $offset = 0) {
+		$r = parent::get($itemsToGet, $offset);
 		$flagTypes = array();
 		foreach($r as $row) {
 			$flagTypes[] = ConversationFlagType::getByID($row['cnvMessageFlagTypeID']);
