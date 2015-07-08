@@ -88,11 +88,10 @@ class Controller extends BlockController
         return $args;
     }
 
-    public function validate()
+    public function validate($args)
     {
         $e = Core::make('helper/validation/error');
-        $slIDs = $this->post('slID');
-        if (count($slIDs) == 0) {
+        if (!isset($args['slID']) || empty($args['slID'])) {
             $e->add(t('You must choose at least one link.'));
         }
 
