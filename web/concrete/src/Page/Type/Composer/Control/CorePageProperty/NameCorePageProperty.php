@@ -47,9 +47,9 @@ class NameCorePageProperty extends CorePageProperty
         }
     }
 
-    public function getRequestValue()
+    public function getRequestValue($args = false)
     {
-        $data = parent::getRequestValue();
+        $data = parent::getRequestValue($args);
         $data['name'] = Loader::helper('security')->sanitizeString($data['name']);
 
         return $data;
