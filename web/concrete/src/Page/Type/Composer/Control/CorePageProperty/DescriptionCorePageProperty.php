@@ -29,9 +29,9 @@ class DescriptionCorePageProperty extends CorePageProperty
         }
     }
 
-    public function getRequestValue()
+    public function getRequestValue($args = false)
     {
-        $data = parent::getRequestValue();
+        $data = parent::getRequestValue($args);
         $data['description'] = Loader::helper('security')->sanitizeString($data['description']);
 
         return $data;
