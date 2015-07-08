@@ -98,7 +98,7 @@ class Controller extends BlockController
         }
     }
 
-    protected function getImportData($blockNode, $page)
+    public function getImportData($blockNode, $page)
     {
         $args = array();
         foreach ($blockNode->data->service as $service) {
