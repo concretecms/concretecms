@@ -64,7 +64,7 @@ use \Concrete\Core\Editor\LinkAbstractor;
 			return LinkAbstractor::translateFromEditMode($this->content);
 		}
 
-		public function getImportData($blockNode) {
+		public function getImportData($blockNode, $page) {
 			$content = $blockNode->data->record->content;
 			$content = LinkAbstractor::import($content);
 			$args = array('content' => $content);
