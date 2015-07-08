@@ -2,7 +2,6 @@
 
 namespace Concrete\Core\Console;
 
-use Config;
 use Core;
 use Database;
 use Doctrine\ORM\Tools\Console\ConsoleRunner;
@@ -19,7 +18,10 @@ class Application extends \Symfony\Component\Console\Application
         $cms = Core::make('app');
         if ($cms->isInstalled()) {
             $cms->setupPackages();
-            $this->add(new Command\JobCommand());
+            $this->addCommands(array(
+                new Command\JobCommand(),
+                new Command\ConfigCommand(),
+            ));
             $cn = Database::get();
             /* @var $cn \Concrete\Core\Database\Connection\Connection */
             $helperSet = ConsoleRunner::createHelperSet($cn->getEntityManager());
