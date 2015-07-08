@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Page\Type\Composer\Control\CorePageProperty;
 
 use Loader;
@@ -43,6 +44,7 @@ class NameCorePageProperty extends CorePageProperty
         }
         if (!$name) {
             $e->add(t('You haven\'t chosen a page name.'));
+
             return $e;
         }
     }
@@ -59,8 +61,8 @@ class NameCorePageProperty extends CorePageProperty
     {
         if (is_object($this->page)) {
             $c = $this->page;
+
             return $c->getCollectionName();
         }
     }
-
 }
