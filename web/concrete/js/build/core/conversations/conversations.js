@@ -85,7 +85,7 @@
       var customDateFormat = (obj.options.customDateFormat);
       var blockAreaHandle = (obj.options.blockAreaHandle);
       var maxFiles = (obj.options.maxFiles); // unused
-      var maxFileSize = (obj.options.MaxFileSize); // unused
+      var maxFileSize = (obj.options.maxFileSize); // unused
       var fileExtensions = (obj.options.fileExtensions); // unused
       var attachmentsEnabled = (obj.options.attachmentsEnabled);
       var attachmentOverridesEnabled = (obj.options.attachmentOverridesEnabled);
