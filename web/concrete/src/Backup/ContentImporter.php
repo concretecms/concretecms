@@ -647,6 +647,7 @@ class ContentImporter
                 $type->setName((string) $l['name']);
                 $type->setHandle((string) $l['handle']);
                 $type->setWidth((string) $l['width']);
+                $type->setHeight((string) $l['height']);
                 $required = (string) $l['required'];
                 if ($required) {
                     $type->requireType();
