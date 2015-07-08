@@ -120,6 +120,7 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
             </div>
         </div>
     </div>
+     <div style="clear:both"></div>
 
     <style type="text/css">
 
