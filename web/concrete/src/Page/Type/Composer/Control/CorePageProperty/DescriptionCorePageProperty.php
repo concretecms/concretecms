@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Page\Type\Composer\Control\CorePageProperty;
 
 use Loader;
@@ -45,5 +46,4 @@ class DescriptionCorePageProperty extends CorePageProperty
             return $c->getCollectionDescription();
         }
     }
-
 }
