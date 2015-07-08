@@ -76,7 +76,7 @@ class Controller extends BlockController
         }
     }
 
-    public function getImportData($blockNode)
+    public function getImportData($blockNode, $page)
     {
 
         $args = array();
