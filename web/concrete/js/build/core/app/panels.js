@@ -273,6 +273,7 @@ function ConcretePanel(options) {
         var complete_function = function () {
             Concrete.event.publish('PanelOpenDetail', {
                 panel: options,
+                panelObj: obj,
                 container: $content
             });
         };
