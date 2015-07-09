@@ -1,5 +1,5 @@
-#ccm-panel-detail-page-device-preview {
-  background: rgba(0,0,0,.8);
+#ccm-panel-detail-mobile-preview {
+  background: rgba(0, 0, 0, .8);
 
   > .ccm-panel-detail-content {
     text-align: center;
@@ -13,9 +13,9 @@
     background: white;
     border: 0px;
 
-    -moz-box-shadow:    inset 0 0 3px #000000;
+    -moz-box-shadow: inset 0 0 3px #000000;
     -webkit-box-shadow: inset 0 0 3px #000000;
-    box-shadow:         inset 0 0 3px #000000;
+    box-shadow: inset 0 0 3px #000000;
 
   }
 
@@ -62,7 +62,7 @@
 
     .ccm-device-iphone6-plus {
       background: url('/concrete/images/devices/iphone/iphone6plus-landscape.png') no-repeat;
-      padding: 108px 28px;
+      padding: 28px 108px;
     }
 
     .ccm-device-iphone5 {
@@ -92,80 +92,79 @@
 #ccm-panel-page-devices {
 
   div.ccm-panel-content-inner {
-  h5 {
-    color: #3baaf7;
-    border-top: 1px solid #464544;
-    margin-top: 30px;
-    padding-top: 8px;
-    padding-bottom: 8px;
+    h5 {
+      color: #3baaf7;
+      border-top: 1px solid #464544;
+      margin-top: 30px;
+      padding-top: 8px;
+      padding-bottom: 8px;
 
-    &:first-child {
-      margin-top: 0px;
+      &:first-child {
+        margin-top: 0px;
+      }
     }
-  }
   }
 }
 
-  div.ccm-menu-device-set {
+div.ccm-menu-device-set {
 
-    .ccm-panel-devicelist-device {
-      > a {
+  .ccm-panel-devicelist-device {
+    > a {
+      text-decoration: none;
+
+      &:active {
         text-decoration: none;
-
-        &:active {
-          text-decoration: none;
-        }
-
-        color: #79868d !important;
-        background-color: #272a2e;
-        display: block;
-        padding: 10px 20px 10px 20px;
-        font-size: 15px;
-        .border-radius(4px);
-        .transition(all 0.3s cubic-bezier(0.190, 1.000, 0.220, 1.000));
-
-        &:hover {
-          text-decoration: none;
-          background-color: #191b1f;
-          color: #b8bbc4;
-        }
-
-        &.ccm-panel-menu-item-active {
-          cursor: default;
-          background-color: #153d71;
-
-          span {
-            color: #fff;
-          }
-        }
       }
-    }
 
+      color: #79868d !important;
+      background-color: #272a2e;
+      display: block;
+      padding: 10px 20px 10px 20px;
+      font-size: 15px;
+      .border-radius(4px);
+      .transition(all 0.3s cubic-bezier(0.190, 1.000, 0.220, 1.000));
 
-    ul {
-      list-style-type: none;
-      margin-left: 0px;
-      padding-left: 0px;
-      li {
-        padding: 0px;
-        margin: 0px 0px 5px 0px;
+      &:hover {
+        text-decoration: none;
+        background-color: #191b1f;
+        color: #b8bbc4;
+      }
+
+      &.ccm-panel-menu-item-active {
+        cursor: default;
+        background-color: #153d71;
+
+        span {
+          color: #fff;
+        }
       }
     }
   }
 
-  .ccm-panel-device-name {
-    font-weight: bold;
-    .ccm-panel-device-name-label {
-      padding-left: 5px;
-      display: inline-block;
-    }
-    .ccm-panel-device-name-icon {
-      display: inline-block;
-      width: 5px;
+  ul {
+    list-style-type: none;
+    margin-left: 0px;
+    padding-left: 0px;
+    li {
+      padding: 0px;
+      margin: 0px 0px 5px 0px;
     }
   }
+}
 
-  .ccm-panel-device-resolution {
-    font-weight: 300;
-    font-size: 12px;
+.ccm-panel-device-name {
+  font-weight: bold;
+  .ccm-panel-device-name-label {
+    padding-left: 5px;
+    display: inline-block;
   }
+  .ccm-panel-device-name-icon {
+    display: inline-block;
+    width: 5px;
+  }
+}
+
+.ccm-panel-device-resolution {
+  font-weight: 300;
+  font-size: 12px;
+}

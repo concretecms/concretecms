@@ -378,6 +378,8 @@ return array(
         "/ccm/system/panels/details/page/seo"                                           => array('\Concrete\Controller\Panel\Detail\Page\Seo::view'),
         "/ccm/system/panels/details/page/seo/submit"                                    => array('\Concrete\Controller\Panel\Detail\Page\Seo::submit'),
         "/ccm/system/panels/details/page/versions"                                      => array('\Concrete\Controller\Panel\Detail\Page\Versions::view'),
+        "/ccm/system/panels/details/page/devices"                                       => array('\Concrete\Controller\Panel\Page\Devices::detail'),
+
 
         /**
          * RSS Feeds
