@@ -7,6 +7,9 @@ use Core;
 use Database;
 use Doctrine\ORM\Tools\Console\ConsoleRunner;
 use Concrete\Core\Updater\Migrations\Configuration as MigrationsConfiguration;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Package;
 
 class Application extends \Symfony\Component\Console\Application
 {
@@ -38,5 +41,32 @@ class Application extends \Symfony\Component\Console\Application
             }
             ConsoleRunner::addCommands($this);
         }
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function run(InputInterface $input = null, OutputInterface $output = null)
+    {
+        $cms = Core::make('app');
+        
+        if ($cms->isInstalled()) {
+            $pla = \Concrete\Core\Package\PackageList::get();
+            $pl = $pla->getPackages();
+            /** @var \Package[] $pl */
+            foreach ($pl as $p) {
+                if ($p->isPackageInstalled()) {
+                    $pkg = Package::getClass($p->getPackageHandle());
+                    if (method_exists($pkg, 'getCommands')) {
+                        $commands = $pkg->getCommands();
+                        foreach ($commands as $command) {
+                            $this->add($command);
+                        }
+                    }
+                }
+            }
+        }
+        
+        parent::run($input, $output);
     }
 }
