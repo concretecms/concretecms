@@ -122,7 +122,10 @@ $seoSet = AttributeSet::getByHandle('seo');
                 </a>
             </li>
             <li>
-                <a href="#" data-launch-sub-panel-url="<?= URL::to('/ccm/system/panels/page/devices') ?>">
+                <a href="#" data-launch-panel-detail="mobile-preview"
+                   data-launch-sub-panel-url="<?= URL::to('/ccm/system/panels/page/devices') ?>"
+                   data-panel-detail-url="<?= URL::to('/ccm/system/panels/details/page/devices') ?>"
+                   data-panel-transition="fade">
                     <?= t('Mobile Preview') ?>
                 </a>
             </li>
