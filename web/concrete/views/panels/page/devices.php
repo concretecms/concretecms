@@ -145,6 +145,9 @@ use Concrete\Core\Device\Device;
                 orientation = device.data('device-orientation'),
                 viewport = $(_(device_template).template({device: device}));
 
+            $('.ccm-device-select-active').removeClass('ccm-device-select-active');
+            $(this).addClass('ccm-device-select-active');
+
             container.empty()
                 .addClass('ccm-device-preview')
                 .append(viewport);
