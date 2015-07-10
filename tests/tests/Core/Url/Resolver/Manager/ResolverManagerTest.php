@@ -22,10 +22,18 @@ class ResolverManagerTest extends PHPUnit_Framework_TestCase
                     return $resolved;
                 }
 
-                return $obj->defaultResponse;
+                return $obj->getDefaultResponse();
             });
 
         $this->manager = new \Concrete\Core\Url\Resolver\Manager\ResolverManager('default', $this->defaultResolver);
+    }
+
+    /**
+     * @return string
+     */
+    public function getDefaultResponse()
+    {
+        return $this->defaultResponse;
     }
 
     public function testDefaultResolve()
