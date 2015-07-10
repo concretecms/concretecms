@@ -463,7 +463,7 @@ class File
         if ($checkFile === __FILE__) {
             $checkFile = strtolower(__FILE__);
         }
-        if (is_file($checkFile)) {
+        if (@is_file($checkFile)) {
             $same = (strcasecmp($path1, $path2) === 0) ? true : false;
         } else {
             $same = ($path1 === $path2) ? true : false;
