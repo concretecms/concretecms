@@ -3,8 +3,8 @@
 namespace Concrete\Core\Mail\Importer;
 
 use Concrete\Core\Foundation\Object;
-use Loader;
 use Core;
+use Database;
 use Concrete\Core\Package\PackageList;
 
 class MailImporter extends Object
@@ -31,7 +31,7 @@ class MailImporter extends Object
 
     public function getList()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $r = $db->Execute('select miID from MailImporters order by miID asc');
         $importers = array();
         while ($row = $r->FetchRow()) {
@@ -46,7 +46,7 @@ class MailImporter extends Object
      */
     public function getEnabledList()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $r = $db->Execute('select miID from MailImporters where miIsEnabled = 1 order by miID asc');
         $importers = array();
         while ($row = $r->FetchRow()) {
@@ -58,10 +58,10 @@ class MailImporter extends Object
 
     public static function getByID($miID)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $row = $db->GetRow("select miID, miHandle, miServer, miUsername, miPassword, miEncryption, miIsEnabled, miEmail, miPort, miConnectionMethod, Packages.pkgID, pkgHandle from MailImporters left join Packages on MailImporters.pkgID = Packages.pkgID where miID = ?", array($miID));
         if (isset($row['miID'])) {
-            $txt = Loader::helper('text');
+            $txt = Core::make('helper/text');
             $mi = Core::make('\\Concrete\\Core\\Mail\\Importer\\Type\\' . $txt->camelcase($row['miHandle']));
             $mi->setPropertiesFromArray($row);
 
@@ -73,7 +73,7 @@ class MailImporter extends Object
 
     public static function getByHandle($miHandle)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $miID = $db->GetOne("select miID from MailImporters where miHandle = ?", $miHandle);
 
         return static::getByID($miID);
@@ -81,13 +81,13 @@ class MailImporter extends Object
 
     public function delete()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $db->Execute('delete from MailImporters where miID = ?', array($this->miID));
     }
 
     public static function getListByPackage($pkg)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $list = array();
         $r = $db->Execute('select miID from MailImporters where pkgID = ? order by miID asc', array($pkg->getPackageID()));
         while ($row = $r->FetchRow()) {
@@ -104,7 +104,7 @@ class MailImporter extends Object
     }
     public function getMailImporterName()
     {
-        $txt = Loader::helper('text');
+        $txt = Core::make('helper/text');
 
         return $txt->unhandle($this->miHandle);
     }
@@ -153,9 +153,9 @@ class MailImporter extends Object
         return PackageList::getHandle($this->pkgID);
     }
 
-    public function add($args, $pkg = null)
+    public static function add($args, $pkg = null)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $args = $args + array(
           'miPort' => null,
           'miIsEnabled' => null,
@@ -189,12 +189,12 @@ class MailImporter extends Object
         $db->Execute('insert into MailImporters (miHandle, miServer, miUsername, miPassword, miEncryption, miIsEnabled, miEmail, miPort, miConnectionMethod, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
             array(
                 $miHandle,
-                Loader::helper('security')->sanitizeString($miServer),
+                Core::make('helper/security')->sanitizeString($miServer),
                 $miUsername,
                 $miPassword,
                 $miEncryption,
                 $miIsEnabled,
-                Loader::helper('security')->sanitizeString($miEmail),
+                Core::make('helper/security')->sanitizeString($miEmail),
                 $miPort,
                 $miConnectionMethod,
                 $pkgID,
@@ -207,7 +207,7 @@ class MailImporter extends Object
 
     public function update($args)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         extract($args);
 
         if ($miPort < 1) {
@@ -224,12 +224,12 @@ class MailImporter extends Object
 
         $db->Execute('update MailImporters set miServer = ?, miUsername = ?, miPassword = ?, miEncryption = ?, miIsEnabled = ?, miEmail = ?, miPort = ?, miConnectionMethod = ? where miID = ?',
             array(
-                Loader::helper('security')->sanitizeString($miServer),
+                Core::make('helper/security')->sanitizeString($miServer),
                 $miUsername,
                 $miPassword,
                 $miEncryption,
                 $miIsEnabled,
-                Loader::helper('security')->sanitizeString($miEmail),
+                Core::make('helper/security')->sanitizeString($miEmail),
                 $miPort,
                 $miConnectionMethod,
                 $this->miID,
@@ -248,8 +248,8 @@ class MailImporter extends Object
 
     public function setupValidation($email, $dataObject)
     {
-        $db = Loader::db();
-        $h = Loader::helper('validation/identifier');
+        $db = Database::connection();
+        $h = Core::make('helper/validation/identifier');
         $hash = $h->generate('MailValidationHashes', 'mHash');
         $args = array($email, $this->miID, $hash, time(), serialize($dataObject));
         $db->Execute("insert into MailValidationHashes (email, miID, mHash, mDateGenerated, data) values (?, ?, ?, ?, ?)", $args);
@@ -291,7 +291,7 @@ class MailImporter extends Object
 
     public function cleanup(MailImportedMessage $me)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $db->query("update MailValidationHashes set mDateRedeemed = " . time() . " where mHash = ?", array($me->getValidationHash()));
 
         $m = $me->getOriginalMailObject();
@@ -356,7 +356,7 @@ class MailImportedMessage
         if ($r) {
             $this->validationHash = $matches[1];
             if ($this->validationHash != '') {
-                $db = Loader::db();
+                $db = Database::connection();
                 $r = $db->GetOne('select data from MailValidationHashes where mHash = ?', array($this->validationHash));
                 if ($r) {
                     $this->dataObject = unserialize($r);
@@ -419,7 +419,7 @@ class MailImportedMessage
         if (!$this->validationHash) {
             return false;
         }
-        $db = Loader::db();
+        $db = Database::connection();
         $row = $db->GetRow("select * from MailValidationHashes where mHash = ? order by mDateGenerated desc limit 1", $this->validationHash);
         if ($row['mvhID'] > 0) {
             // Can't do this even though it's a good idea
