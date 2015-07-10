@@ -29,6 +29,7 @@ class CanonicalUrlResolverTest extends ResolverTestCase
         $mock->expects($this->once())->method('getScheme')->willReturn('http');
         $mock->expects($this->once())->method('getHost')->willReturn('somehost');
 
+        $old_instance = \Request::getInstance();
         \Request::setInstance($mock);
         $old_value = \Config::get('concrete.seo.canonical_url');
         \Config::set('concrete.seo.canonical_url', null);
@@ -39,6 +40,7 @@ class CanonicalUrlResolverTest extends ResolverTestCase
 
 
         \Config::set('concrete.seo.canonical_url', $old_value);
+        \Request::setInstance($old_instance);
     }
 
 }

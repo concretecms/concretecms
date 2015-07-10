@@ -6530,7 +6530,7 @@
 
 					/* concrete5 */
 					// Add class so that jquery-ui doesn't disable focus.
-					//this.$modal.addClass('ui-dialog');
+					this.$modal.addClass('ccm-interaction-dialog');
 					/* end concrete5 */
 
 					this.$modal.append(this.$modalHeader);
