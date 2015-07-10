@@ -128,7 +128,7 @@ class Controller extends BlockController
         parent::save($values);
     }
 
-    public function getImportData($blockNode)
+    public function getImportData($blockNode, $page)
     {
         $args = array();
         if (isset($blockNode->arealayout)) {
