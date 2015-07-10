@@ -272,7 +272,7 @@ class Stack extends Page
     /**
      * @param Page $pageNode
      */
-    public function export($pageNode)
+    public function export($pageNode, $includePublicDate = false)
     {
         $p = $pageNode->addChild('stack');
         $p->addAttribute('name', Core::make('helper/text')->entities($this->getCollectionName()));
