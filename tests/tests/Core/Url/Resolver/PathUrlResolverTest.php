@@ -82,7 +82,10 @@ class PathUrlResolverTest extends ResolverTestCase
 
         if (!is_null($url)) {
             $dispatcher = DISPATCHER_FILENAME;
-            $this->assertEquals("{$dispatcher}/test", $url->getPath()->getRelativePath($canonical_path));
+            $relative_path = (string)trim($canonical_path, '/') ?
+                $url->getPath()->getRelativePath($canonical_path) :
+                $url->getPath();
+            $this->assertEquals("{$dispatcher}/test", $relative_path);
         }
 
 
