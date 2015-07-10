@@ -21,6 +21,11 @@ abstract class ResolverTestCase extends PHPUnit_Framework_TestCase
         $this->canonicalUrl = $url;
     }
 
+    public function tearDown()
+    {
+        \Core::forgetInstance('url/canonical');
+    }
+
     protected function canonicalUrlWithPath($path, $dispatcher = null)
     {
         if (is_null($dispatcher)) {
