@@ -61,18 +61,30 @@ class Install extends DashboardPageController
         }
 
         if (!$this->error->has()) {
-            $pkg->uninstall();
-            if ($this->post('pkgMoveToTrash')) {
-                $r = $pkg->backup();
-                if (is_array($r)) {
-                    $pe = Package::mapError($r);
-                    foreach ($pe as $ei) {
-                        $this->error->add($ei);
+            $test = $pkg->testForUninstall();
+
+            if ($test === true) {
+                $pkg->uninstall();
+                if ($this->post('pkgMoveToTrash')) {
+                    $r = $pkg->backup();
+                    if (is_array($r)) {
+                        $pe = Package::mapError($r);
+                        foreach ($pe as $ei) {
+                            $this->error->add($ei);
+                        }
                     }
                 }
-            }
-            if (!$this->error->has()) {
-                $this->redirect('/dashboard/extend/install', 'package_uninstalled');
+                if (!$this->error->has()) {
+                    $this->redirect('/dashboard/extend/install', 'package_uninstalled');
+                }
+            } else {
+                foreach ($test as $error_code) {
+                    switch ($error_code) {
+                        case $pkg::E_PACKAGE_THEME_ACTIVE:
+                            $this->error->add(new Exception(
+                                t('This package contains the active site theme, please change the theme before uninstalling.')));
+                    }
+                }
             }
         }
 
