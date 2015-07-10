@@ -82,12 +82,9 @@ class PathUrlResolverTest extends ResolverTestCase
 
         if (!is_null($url)) {
             $dispatcher = DISPATCHER_FILENAME;
-            $relative_path = (string)trim($canonical_path, '/') ?
-                $url->getPath()->getRelativePath($canonical_path) :
-                $url->getPath();
+            $relative_path = $url->getPath()->getRelativePath($canonical_path);
             $this->assertEquals("{$dispatcher}/test", $relative_path);
         }
-
 
         \Config::set('concrete.seo.url_rewriting', $old_value);
     }
