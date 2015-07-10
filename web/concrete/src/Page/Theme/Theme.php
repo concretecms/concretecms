@@ -862,6 +862,9 @@ class Theme extends Object
         );
     }
 
+    /**
+     * @return static
+     */
     public static function getSiteTheme()
     {
         $c = Page::getByID(HOME_CID);

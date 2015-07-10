@@ -74,6 +74,7 @@ class Package extends Object
     const E_PACKAGE_INSTALL = 7;
     const E_PACKAGE_MIGRATE_BACKUP = 8;
     const E_PACKAGE_INVALID_APP_VERSION = 20;
+    const E_PACKAGE_THEME_ACTIVE = 21;
     protected $DIR_PACKAGES_CORE = DIR_PACKAGES_CORE;
     protected $DIR_PACKAGES = DIR_PACKAGES;
     protected $REL_DIR_PACKAGES_CORE = REL_DIR_PACKAGES_CORE;
@@ -627,6 +628,28 @@ class Package extends Object
                 $translate->addTranslationFile('gettext', $languageFile);
             }
         }
+    }
+
+    /**
+     * @return bool|int[] true on success, array of error codes on failure
+     */
+    public function testForUninstall()
+    {
+        $errors = array();
+        $items = $this->getPackageItems();
+        /** @var PageTheme[] $themes */
+        $themes = array_get($items, 'page_themes', array());
+
+        // Step 1, check for active themes
+        $active_theme = \PageTheme::getSiteTheme();
+        foreach ($themes as $theme) {
+            if ($active_theme->getThemeID() == $theme->getThemeID()) {
+                $errors[] = self::E_PACKAGE_THEME_ACTIVE;
+                break;
+            }
+        }
+
+        return count($errors) ? $errors : true;
     }
 
     /**
