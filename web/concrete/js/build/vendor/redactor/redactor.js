@@ -7360,7 +7360,15 @@
 
 					if (typeof addProperties['title'] != 'undefined')
 					{
-						$item.text(addProperties['title']);
+                        /* concrete5 */
+                        // $item.text(addProperties['title']); // Original functionality
+                        var elem = $item;
+                        while (elem.children().length) {
+                            elem = elem.children().first()
+                        }
+
+                        elem.text(addProperties['title']);
+                        /* end concrete5 */
 					}
 				},
 				setDropdownAttr: function($item, properties, isDelete)
