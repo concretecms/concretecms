@@ -316,10 +316,10 @@ class Controller extends AttributeTypeController
             $options = array();
         }
         if ($this->akSelectAllowOtherValues) {
-            $options = array_filter((Array) $this->request('atSelectNewOption'));
-            if (is_array($options) && count($options) > 0) {
+            $optionsNew = array_filter((Array) $this->request('atSelectNewOption'));
+            if (is_array($optionsNew) && count($optionsNew) > 0) {
                 return true;
-            } elseif (array_shift($options) != null) {
+            } elseif (array_shift($optionsNew) != null) {
                 return true;
             }
         }
