@@ -13,13 +13,13 @@ class Application extends \Symfony\Component\Console\Application
     public function __construct()
     {
         parent::__construct('concrete5', \Config::get('concrete.version'));
-        $this->add(new Command\ResetCommand());
+//        $this->add(new Command\ResetCommand());
         $this->add(new Command\InstallCommand());
         $this->add(new Command\GenerateIDESymbolsCommand());
         $cms = Core::make('app');
         if ($cms->isInstalled()) {
             $cms->setupPackages();
-            $this->add(new Command\JobCommand());
+  //          $this->add(new Command\JobCommand());
             $cn = Database::get();
             /* @var $cn \Concrete\Core\Database\Connection\Connection */
             $helperSet = ConsoleRunner::createHelperSet($cn->getEntityManager());
