@@ -66,8 +66,8 @@ class PathUrlResolver implements UrlResolverInterface
     {
         $path_object = new Path('');
 
-        $rewriting    = \Config::get('concrete.seo.url_rewriting');
-        $rewrite_all  = \Config::get('concrete.seo.url_rewriting_all');
+        $rewriting = \Config::get('concrete.seo.url_rewriting');
+        $rewrite_all = \Config::get('concrete.seo.url_rewriting_all');
         $in_dashboard = \Core::make('helper/concrete/dashboard')->inDashboard($path);
 
         // If rewriting is disabled, or all_rewriting is disabled and we're
