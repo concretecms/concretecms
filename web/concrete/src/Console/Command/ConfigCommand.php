@@ -2,6 +2,10 @@
 
 namespace Concrete\Core\Console\Command;
 
+use Concrete\Core\Config\DirectFileSaver;
+use Concrete\Core\Config\FileLoader;
+use Concrete\Core\Config\Repository\Repository;
+use Illuminate\Filesystem\Filesystem;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
@@ -15,22 +19,27 @@ class ConfigCommand extends Command
     const OPERATION_GET = 'get';
     const OPERATION_SET = 'set';
 
+    /**
+     * @var Repository
+     */
+    protected $repository;
+
     protected function configure()
     {
         $this
             ->setName('c5:config')
             ->setDescription('Set or get configuration parameters.')
-            ->addArgument('operation', InputArgument::REQUIRED, 'The operation to accomplish ('.implode('|', self::getAllowedOperations()).')')
-            ->addArgument('key', InputArgument::REQUIRED, 'The configuration key (eg: concrete.debug.display_errors)')
-            ->addArgument('value', InputArgument::OPTIONAL, 'The new value of the configuration key')
-            ->addOption('environment', 'e', InputOption::VALUE_REQUIRED, 'The environment (if not specified, we\'ll work with the configuration keys valid for all environments)')
+            ->addArgument('operation', InputArgument::REQUIRED, 'The operation to accomplish ('.implode('|', $this->getAllowedOperations()).')')
+            ->addArgument('item', InputArgument::REQUIRED, 'The configuration item (eg: concrete.debug.display_errors)')
+            ->addArgument('value', InputArgument::OPTIONAL, 'The new value of the configuration item')
+            ->addOption('environment', 'e', InputOption::VALUE_REQUIRED, 'The environment (if not specified, we\'ll work with the configuration item valid for all environments)')
         ;
         $this->setHelp(<<<EOT
 When setting values that may be evaluated as boolean (true/false), null or numbers, but you want to store them as strings, you can enclose those values in single or double quotes.
 For instance, with
-concrete5 %command.name% set concrete.test_key 1
-The new configuration key will have a numeric value of 1. If you want to save the string "1" you have to write
-concrete5 %command.name% set concrete.test_key '1'
+concrete5 %command.name% set concrete.test_item 1
+The new configuration item will have a numeric value of 1. If you want to save the string "1" you have to write
+concrete5 %command.name% set concrete.test_item '1'
 EOT
         );
     }
@@ -38,24 +47,34 @@ EOT
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $rc = 0;
+
+        $default_environment = \Config::getEnvironment();
+
+        $environment = $input->getOption('environment') ?: $default_environment;
+
+        $file_system = new Filesystem();
+        $file_loader = new FileLoader($file_system);
+        $file_saver = new DirectFileSaver($file_system, $environment == $default_environment ? null : $environment);
+        $this->repository = new Repository($file_loader, $file_saver, $environment);
+
         try {
-            $key = $input->getArgument('key');
-            if (!self::isValidConfigurationKeyName($key)) {
-                throw new Exception("Invalid configuration key: '$key'");
-            }
+            $item = $input->getArgument('item');
             switch ($input->getArgument('operation')) {
                 case self::OPERATION_GET:
-                    $output->writeln(self::serialize(\Config::get($key)));
+                    $output->writeln($this->serialize($this->repository->get($item)));
                     break;
+
                 case self::OPERATION_SET:
                     $value = $input->getArgument('value');
                     if (!isset($value)) {
                         throw new Exception('Missing new configuration value');
                     }
-                    \Config::save($key, self::unserialize($value));
+
+                    $this->repository->save($item, $this->unserialize($value));
                     break;
+
                 default:
-                    throw new Exception('Invalid operation specified. Allowed operations: '.implode(', ', self::getAllowedOperations()));
+                    throw new Exception('Invalid operation specified. Allowed operations: '.implode(', ', $this->getAllowedOperations()));
             }
         } catch (Exception $x) {
             $output->writeln('<error>'.$x->getMessage().'</error>');
@@ -68,22 +87,12 @@ EOT
     /**
      * @return string[]
      */
-    protected static function getAllowedOperations()
+    protected function getAllowedOperations()
     {
         return array(
             self::OPERATION_GET,
             self::OPERATION_SET,
         );
-    }
-
-    /**
-     * @param string $environment
-     *
-     * @return bool
-     */
-    protected static function isValidConfigurationKeyName($key)
-    {
-        return (is_string($key) && preg_match('/^[a-z]\w*(\.\w+)+$/i', $key)) ? true : false;
     }
 
     /**
@@ -93,25 +102,32 @@ EOT
      *
      * @throws Exception
      */
-    protected static function serialize($value)
+    protected function serialize($value)
     {
-        $jsonOptions = 0;
+        $jsonOptions = JSON_PRETTY_PRINT;
         if (defined('JSON_UNESCAPED_SLASHES')) {
             $jsonOptions |= JSON_UNESCAPED_SLASHES;
         }
         $type = gettype($value);
         $result = null;
         switch ($type) {
+            case 'array':
+                $result = json_encode($value, $jsonOptions);
+                break;
+
             case 'boolean':
                 $result = $value ? 'true' : 'false';
                 break;
+
             case 'NULL':
                 $result = 'null';
                 break;
+
             case 'integer':
             case 'double':
                 $result = (string) $value;
                 break;
+
             case 'string':
                 $enquote = false;
                 switch ($value) {
@@ -119,14 +135,18 @@ EOT
                     case 'false':
                     case 'null':
                         $enquote = true;
+                        break;
+
                     default:
                         if (preg_match('/^-?\d+(\.\d*)?$/', $value)) {
                             $enquote = true;
                         }
                         break;
+
                 }
                 $result = $enquote ? "\"$value\"" : $value;
                 break;
+
         }
         if (!isset($result)) {
             throw new Exception("Unable to represent variable of type '$type'");
@@ -142,31 +162,13 @@ EOT
      *
      * @throws Exception
      */
-    protected static function unserialize($value)
+    protected function unserialize($value)
     {
-        if (!(is_string($value))) {
-            throw new Exception('Invalid value');
-        }
-        switch (strtolower($value)) {
-            case 'true':
-                return true;
-            case 'false':
-                return false;
-            case 'null':
-                return null;
-        }
-        if (preg_match('/^-?\d+$/', $value)) {
-            return (int) $value;
-        }
-        if (is_numeric($value)) {
-            return (float) $value;
-        }
-        foreach (array('"', "'") as $q) {
-            if (preg_match('/^'.$q.'(true|false|null|-?\d+(\.\d*)?)'.$q.'$/', $value)) {
-                return substr($value, 1, -1);
-            }
+        $result = json_decode($value, true);
+        if (is_null($result) && trim(strtolower($value)) !== 'null') {
+            return (string) $value;
         }
 
-        return $value;
+        return $result;
     }
 }

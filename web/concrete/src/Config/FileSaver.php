@@ -19,9 +19,23 @@ class FileSaver implements SaverInterface
         $this->files = $files;
     }
 
+    protected function getStorageDirectory()
+    {
+        return DIR_APPLICATION . '/config/generated_overrides';
+    }
+
+    protected function getFilename($group, $path = null)
+    {
+        if (!$path) {
+            return 'group.php';
+        } else {
+            return "{$path}/{$group}.php";
+        }
+    }
+
     public function save($item, $value, $environment, $group, $namespace = null)
     {
-        $path = DIR_APPLICATION . '/config/generated_overrides';
+        $path = $this->getStorageDirectory();
 
         if (!$this->files->exists($path)) {
             $this->files->makeDirectory($path, 0777);
@@ -43,7 +57,7 @@ class FileSaver implements SaverInterface
             }
         }
 
-        $file = "{$path}/{$group}.php";
+        $file = $this->getFilename($group, $path);
 
         $current = array();
         if ($this->files->exists($file)) {
