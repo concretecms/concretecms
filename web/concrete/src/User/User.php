@@ -18,6 +18,7 @@ use Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
 use Core;
 use Group;
 use \Concrete\Core\User\Point\Action\Action as UserPointAction;
+use \Concrete\Core\User\Point\Action\ActionDescription as UserPointActionDescription;
 use View;
 
 class User extends Object
@@ -510,7 +511,9 @@ class User extends Object
                 if ($g->isGroupBadge()) {
                     $action = UserPointAction::getByHandle('won_badge');
                     if (is_object($action)) {
-                        $action->addDetailedEntry($this, $g);
+						  $obj = new UserPointActionDescription();
+						  $obj->setComments('');
+						  $action->addDetailedEntry($this, $obj, $g->getGroupBadgeCommunityPointValue());
                     }
 
                     $mh = Loader::helper('mail');
