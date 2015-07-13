@@ -10,12 +10,18 @@ namespace Concrete\Tests\Core\User;
 use Concrete\Core\User\Group\Group;
 use Concrete\Core\User\UserInfo;
 use Concrete\Core\User\UserList;
+use Concrete\Core\Tree\Type\Group as GroupTreeType;
+use Concrete\Core\Tree\TreeType;
+use Concrete\Core\Tree\Node\NodeType as TreeNodeType;
 
 class GroupTest extends \UserTestCase {
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
+        TreeNodeType::add('group');
+        TreeType::add('group');
+        GroupTreeType::add();
         $g1 = Group::add(
             tc("GroupName", "Guest"),
             tc("GroupDescription", "The guest group represents unregistered visitors to your site."),
@@ -68,6 +74,23 @@ class GroupTest extends \UserTestCase {
         $this->assertEquals(3, count($users1));
         $this->assertEquals(4, count($users2));
 
+    }
+
+    public function testUpdateGroup()
+    {
+        $originalGroup = Group::add('Old Group Name', 'This is the description');
+        $newGroup = $originalGroup->update('New Group Name', 'This is the new description');
+
+        $this->assertEquals('New Group Name', $newGroup->getGroupName());
+        $this->assertEquals('This is the new description', $newGroup->getGroupDescription());
+    }
+
+    public function testRescanGroupPath()
+    {
+        $originalGroup = Group::add('Old Group for Rescan', 'This is a test group');
+        $newGroup = $originalGroup->update('New Group for Rescan', 'This is a test group');
+        $newPath = $newGroup->getGroupPath();
+        $this->assertEquals('/New Group for Rescan', $newPath);
     }
 }
  
