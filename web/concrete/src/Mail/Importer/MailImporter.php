@@ -29,7 +29,7 @@ class MailImporter extends Object
         return t('/\-\-\- Reply ABOVE\. Do not alter this line \-\-\- \[(.*)\] \-\-\-/i');
     }
 
-    public function getList()
+    public static function getList()
     {
         $db = Database::connection();
         $r = $db->Execute('select miID from MailImporters order by miID asc');
@@ -44,7 +44,7 @@ class MailImporter extends Object
     /**
      * @return static[]
      */
-    public function getEnabledList()
+    public static function getEnabledList()
     {
         $db = Database::connection();
         $r = $db->Execute('select miID from MailImporters where miIsEnabled = 1 order by miID asc');
