@@ -23,7 +23,9 @@ class UserPointTest extends \ConcreteDatabaseTestCase {
 
         $this->assertInstanceOf('\Concrete\Core\User\Point\Action\Action', $action);
         $this->assertEquals(4, $action->getUserPointActionDefaultPoints());
-        $this->assertEquals($g, $action->getUserPointActionBadgeGroupObject());
+        $this->assertInstanceOf('\Concrete\Core\User\Group\Group', $action->getUserPointActionBadgeGroupObject());
+        $this->assertEquals($g->getGroupID(), $action->getUserPointActionBadgeGroupObject()->getGroupID());
+
     }
 
     public function testUserPointActionWithNoGroup()
