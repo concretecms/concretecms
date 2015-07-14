@@ -6,9 +6,6 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
     private static $conn = null;
     protected $tables = array();
 
-    protected function setUp() {
-        parent::setUp();
-    }
     protected function appendXML($root, $new)
     {
         $node = $root->addChild($new->getName(), (string) $new);
@@ -117,8 +114,6 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
 
         $db = Loader::db();
         $db->getEntityManager()->clear();
-
-        \CacheLocal::flush();
 
         parent::tearDown();
     }
