@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "5648f2b03f650e0cb7b0576f4ba78404",
+    "hash": "9b54b40205a31982140557dc83b3333c",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -687,7 +687,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/migrations/zipball/70c580174e4e16a79296a02256fb40a34192731c",
+                "url": "https://api.github.com/repos/doctrine/migrations/zipball/a4f14d3a3d397104e557ec65d1a4e43bb86e4ddf",
                 "reference": "efb77c10dfb75485998a843154bbc44d8124c4d1",
                 "shasum": ""
             },
@@ -1392,16 +1392,16 @@
         },
         {
             "name": "league/url",
-            "version": "3.3.4",
+            "version": "3.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/url.git",
-                "reference": "f95aa87dacd5a93547fe8e2805116068027bd8f0"
+                "reference": "419ba3c7b3359187e0b99b527c22b4286eb8e69e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/url/zipball/f95aa87dacd5a93547fe8e2805116068027bd8f0",
-                "reference": "f95aa87dacd5a93547fe8e2805116068027bd8f0",
+                "url": "https://api.github.com/repos/thephpleague/url/zipball/419ba3c7b3359187e0b99b527c22b4286eb8e69e",
+                "reference": "419ba3c7b3359187e0b99b527c22b4286eb8e69e",
                 "shasum": ""
             },
             "require": {
@@ -1442,7 +1442,7 @@
                 "php",
                 "url"
             ],
-            "time": "2015-07-01 11:03:30"
+            "time": "2015-07-14 16:01:01"
         },
         {
             "name": "lusitanian/oauth",
@@ -2019,7 +2019,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tchwork/utf8/zipball/38047e4a8f64e1974f46ae6bec56aaa0357bb98d",
+                "url": "https://api.github.com/repos/tchwork/utf8/zipball/65b19607048351f767a034d4cc709db8b136d2c5",
                 "reference": "ffa082111aa3cb23cf2479a17e6785ace91da982",
                 "shasum": ""
             },
@@ -3926,7 +3926,8 @@
         "kertz/twitteroauth": 20,
         "primal/color": 20,
         "zendframework/zend-queue": 20,
-        "oryzone/oauth-user-data": 20
+        "oryzone/oauth-user-data": 20,
+        "league/url": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

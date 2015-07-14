@@ -3,11 +3,13 @@
 namespace Concrete\Core\Console\Command;
 
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Database;
 use Core;
 use Exception;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 class ResetCommand extends Command
 {
@@ -16,10 +18,19 @@ class ResetCommand extends Command
         $this
             ->setName('c5:reset')
             ->setDescription('Reset the concrete5 installation, deleting files and emptying the database')
-        ;
+            ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force the reset');
     }
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $confirmQuestion = new ConfirmationQuestion(
+            'Are you sure you want to reset this concrete5 installation? ' .
+            'This will delete files and empty the database! (y/n)',
+            false
+        );
+        if (!$input->getOption('force') && !$this->getHelper('question')->ask($input, $output, $confirmQuestion) ) {
+            die();
+        }
+
         if (Database::getDefaultConnection()) {
             $output->write("Listing tables... ");
             $cn = Database::get();
