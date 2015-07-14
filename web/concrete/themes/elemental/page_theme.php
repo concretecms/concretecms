@@ -21,6 +21,9 @@ class PageTheme extends \Concrete\Core\Page\Theme\Theme implements ThemeProvider
         $this->providesAsset('css', 'blocks/tags');
         $this->providesAsset('css', 'core/frontend/*');
         $this->providesAsset('css', 'blocks/feature/templates/hover_description');
+
+        $this->providesAsset('css', 'blocks/event_list');
+
         $this->requireAsset('css', 'font-awesome');
         $this->requireAsset('javascript', 'jquery');
         $this->requireAsset('javascript', 'picturefill');
@@ -75,11 +78,9 @@ class PageTheme extends \Concrete\Core\Page\Theme\Theme implements ThemeProvider
 
     public function getThemeDefaultBlockTemplates()
     {
-        /*
         return array(
-            'image' => 'some_special_image_template'
+            'calendar' => 'bootstrap_calendar.php'
         );
-        */
     }
 
     public function getThemeResponsiveImageMap()
