@@ -58,7 +58,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
 
         $row = $db->getRow("select * from Groups where gID = ?", array($gID));
         if (isset($row['gID'])) {
-            $g = \Core::make('\Concrete\Core\User\Group\Group');
+            $g = \Core::make('Group');
             $g->setPropertiesFromArray($row);
             CacheLocal::set('group', $gID, $g);
 
@@ -198,6 +198,8 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
 
         $path .= '/' . $this->gName;
+        $this->gPath = $path;
+
         $db->Execute('update Groups set gPath = ? where gID = ?', array($path, $this->gID));
     }
 
