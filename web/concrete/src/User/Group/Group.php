@@ -58,7 +58,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
 
         $row = $db->getRow("select * from Groups where gID = ?", array($gID));
         if (isset($row['gID'])) {
-            $g = \Core::make('Group');
+            $g = \Core::make('\Concrete\Core\User\Group\Group');
             $g->setPropertiesFromArray($row);
             CacheLocal::set('group', $gID, $g);
 

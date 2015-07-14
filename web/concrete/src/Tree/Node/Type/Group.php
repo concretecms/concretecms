@@ -4,7 +4,7 @@ namespace Concrete\Core\Tree\Node\Type;
 
 use Concrete\Core\Tree\Node\Node as TreeNode;
 use Loader;
-use Group as UserGroup;
+use \Concrete\Core\User\Group\Group as UserGroup;
 
 class Group extends TreeNode
 {
