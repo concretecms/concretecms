@@ -14,29 +14,46 @@ class Application extends \Symfony\Component\Console\Application
     {
         parent::__construct('concrete5', \Config::get('concrete.version'));
     }
-    
+
     public function setupDefaultCommands()
     {
-//        $this->add(new Command\ResetCommand());
+        $this->add(new Command\ConfigCommand());
         $this->add(new Command\InstallCommand());
         $this->add(new Command\GenerateIDESymbolsCommand());
-        //$this->add(new Command\JobCommand());
-        $cn = Database::get();
-        /* @var $cn \Concrete\Core\Database\Connection\Connection */
+
+        //$this->setupRestrictedCommands();
+        $this->setupDoctrineCommands();
+    }
+
+    public function setupRestrictedCommands()
+    {
+        $this->add(new Command\ResetCommand());
+        $this->add(new Command\JobCommand());
+    }
+
+    public function setupDoctrineCommands()
+    {
+        $cn = Database::connection();
         $helperSet = ConsoleRunner::createHelperSet($cn->getEntityManager());
         $this->setHelperSet($helperSet);
-        $mirationsConfiguration = new MigrationsConfiguration();
-        foreach (array(
+
+        $migrationsConfiguration = new MigrationsConfiguration();
+
+        /** @var \Doctrine\DBAL\Migrations\Tools\Console\Command\AbstractCommand[] $commands */
+        $commands = array(
             new \Doctrine\DBAL\Migrations\Tools\Console\Command\DiffCommand(),
             new \Doctrine\DBAL\Migrations\Tools\Console\Command\ExecuteCommand(),
             new \Doctrine\DBAL\Migrations\Tools\Console\Command\GenerateCommand(),
             new \Doctrine\DBAL\Migrations\Tools\Console\Command\MigrateCommand(),
             new \Doctrine\DBAL\Migrations\Tools\Console\Command\StatusCommand(),
             new \Doctrine\DBAL\Migrations\Tools\Console\Command\VersionCommand(),
-        ) as $migrationsCommand) {
-            $migrationsCommand->setMigrationConfiguration($mirationsConfiguration);
+        );
+
+        foreach ($commands as $migrationsCommand) {
+            $migrationsCommand->setMigrationConfiguration($migrationsConfiguration);
             $this->add($migrationsCommand);
         }
+
         ConsoleRunner::addCommands($this);
     }
 }
