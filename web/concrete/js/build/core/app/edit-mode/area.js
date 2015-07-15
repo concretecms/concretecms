@@ -189,10 +189,13 @@
             $menuElem.find('a[data-menu-action=area-add-block]')
                 .off('click.edit-mode')
                 .on('click.edit-mode', function(e) {
-                    my.getEditMode().setNextBlockArea(my);
-                    var panelButton = $('[data-launch-panel="add-block"]');
-                    panelButton.click();
-
+                    if (my.getMaximumBlocks() > my.getTotalBlocks()) {
+                        my.getEditMode().setNextBlockArea(my);
+                        var panelButton = $('[data-launch-panel="add-block"]');
+                        panelButton.click();
+                    } else {
+                        ConcreteAlert.error({'message' : ccmi18n.fullArea});
+                    }
                     return false;
                 });
 
