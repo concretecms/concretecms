@@ -279,7 +279,7 @@ class Application extends Container
     /**
      * Returns true if the app is run through the command line.
      */
-    public function isRunThroughCommandLineInterface()
+    public static function isRunThroughCommandLineInterface()
     {
         return defined('C5_ENVIRONMENT_ONLY') && C5_ENVIRONMENT_ONLY || PHP_SAPI == 'cli';
     }
