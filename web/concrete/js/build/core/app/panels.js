@@ -118,21 +118,27 @@ function ConcretePanel(options) {
             return false;
         });
         $panel.find('[data-panel-navigation=back]').on('click.navigate', function () {
-            obj.closePanelDetailImmediately();
-            $(this)
-                .queue(function () {
-                    var $prev = $panel.find('.ccm-panel-content-visible').prev();
-                    $panel.find('.ccm-panel-content-visible').removeClass('ccm-panel-content-visible').addClass('ccm-panel-slide-right');
-                    $prev.removeClass('ccm-panel-slide-left').addClass('ccm-panel-content-visible');
-                    $(this).dequeue();
-                })
-                .delay(500)
-                .queue(function () {
-                    $panel.find('.ccm-panel-slide-right').remove();
-                    $(this).dequeue();
-                });
+            obj.goBack();
             return false;
         });
+    };
+
+    this.goBack = function() {
+        var $panel = $('#' + this.getDOMID());
+        this.closePanelDetailImmediately();
+
+        $panel
+            .queue(function () {
+                var $prev = $panel.find('.ccm-panel-content-visible').prev();
+                $panel.find('.ccm-panel-content-visible').removeClass('ccm-panel-content-visible').addClass('ccm-panel-slide-right');
+                $prev.removeClass('ccm-panel-slide-left').addClass('ccm-panel-content-visible');
+                $panel.dequeue();
+            })
+            .delay(500)
+            .queue(function () {
+                $panel.find('.ccm-panel-slide-right').remove();
+                $panel.dequeue();
+            });
     };
 
     this.showPanelConfirmationMessage = function (id, msg, buttons) {
