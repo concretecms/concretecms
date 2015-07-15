@@ -144,7 +144,6 @@ use Concrete\Core\Device\Device;
                 } else {
                     setup();
                 }
-
             });
         });
 
@@ -189,6 +188,8 @@ use Concrete\Core\Device\Device;
             Concrete.event.bind('DeviceOrientationChange.mobilepreview', function (e, data) {
                 setOrientation(data.orientation);
             });
+
+            return false;
         });
 
     });
