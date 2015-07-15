@@ -6,10 +6,10 @@ use Concrete\Core\Device\Device;
 <section id="ccm-panel-page-devices" class="ccm-ui">
 
     <header>
-        <a href="" data-panel-navigation="back" class="ccm-panel-back">
+        <a href="" class="ccm-panel-back" data-panel-navigation="back">
             <span class="fa fa-chevron-left"></span>
         </a>
-        <a href="" data-panel-navigation="back"><?= t('Devices') ?></a>
+        <a href="" class="ccm-panel-devices-back" data-panel-navigation="back"><?= t('Devices') ?></a>
     </header>
 
     <div class="ccm-panel-content-inner">
@@ -107,32 +107,42 @@ use Concrete\Core\Device\Device;
 
         Concrete.event.unbind('PanelLoad.mobilepreview');
         Concrete.event.bind('PanelLoad.mobilepreview', function (e, data) {
+            if (data.panel) {
+                panel = data.panel;
+            }
             _.defer(function () {
                 actions = $('.ccm-panel-detail-devices-actions');
                 container = $('.ccm-panel-detail-devices-container');
 
-                orientation_buttons = actions.children('.ccm-device-orientation').children().click(function () {
-                    var me = $(this);
-                    if (me.hasClass('active')) return false;
+                var setup = function() {
+                    orientation_buttons = actions.children('.ccm-device-orientation').children().click(function () {
+                        var me = $(this);
+                        if (me.hasClass('active')) return false;
 
-                    var orientation = 'landscape';
-                    if (me.hasClass('ccm-device-portrait')) {
-                        orientation = 'portrait';
-                    }
+                        var orientation = 'landscape';
+                        if (me.hasClass('ccm-device-portrait')) {
+                            orientation = 'portrait';
+                        }
 
-                    Concrete.event.fire('DeviceOrientationChange', {orientation: orientation});
-                });
+                        Concrete.event.fire('DeviceOrientationChange', {orientation: orientation});
+                    });
+
+                    $('.ccm-panel-detail-device-exit').click(function() {
+                        data.panel.goBack();
+                    });
+                };
+
+                if (!actions.length || !container.length) {
+                    Concrete.event.bind('PanelOpenDetail.mobilepreview', function(e) {
+                        setup();
+                        Concrete.event.unbind(e);
+                    });
+                } else {
+                    setup();
+                }
+
             });
         });
-
-        Concrete.event.unbind('PanelCloseDetail.mobilepreview');
-        Concrete.event.bind('PanelCloseDetail.mobilepreview', function (e, data) {
-            if (data && data.identifier == 'mobile-preview') {
-                Concrete.event.unbind(e);
-                $('.ccm-panel-back').click();
-            }
-        });
-
 
         $('.ccm-device-select').click(function () {
             var device = $(this).closest('.ccm-panel-devicelist-device'),
