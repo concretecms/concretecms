@@ -144,18 +144,23 @@ class CollectionAttributeControl extends Control
             if ($this->isFormSubmission()) {
                 $response = $ak->validateAttributeForm();
                 if ($response === false) {
-                    $e->add(t('The field "%s" is required', $ak->getAttributeKeyDisplayName()));
+
+                    $control = $this->getPageTypeComposerFormLayoutSetControlObject();
+                    $e->add(t('The field %s is required', $control->getPageTypeComposerControlLabel()));
+
                 } else if ($response instanceof \Concrete\Core\Error\Error) {
                     $e->add($response);
                 }
             } else {
                 $value = $this->getPageTypeComposerControlDraftValue();
                 if (!is_object($value)) {
-                    $e->add(t('The field "%s" is required', $ak->getAttributeKeyDisplayName()));
+                    $control = $this->getPageTypeComposerFormLayoutSetControlObject();
+                    $e->add(t('The field %s is required', $control->getPageTypeComposerControlLabel()));
                 } else {
                     $response = $value->validateAttributeValue();
                     if ($response === false) {
-                        $e->add(t('The field "%s" is required', $ak->getAttributeKeyDisplayName()));
+                        $control = $this->getPageTypeComposerFormLayoutSetControlObject();
+                        $e->add(t('The field %s is required', $control->getPageTypeComposerControlLabel()));
                     } else if ($response instanceof \Concrete\Core\Error\Error) {
                         $e->add($response);
                     }
