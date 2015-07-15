@@ -310,7 +310,7 @@ var ConcreteToolbar = function() {
 
 		disableDirectExit: function() {
 			var $link = $('li.ccm-toolbar-page-edit a');
-			if ($link.attr('data-launch-panel') != 'check-in') {
+			if ($link.attr('data-launch-panel') != 'check-in' && $link.attr('data-disable-panel') != 'check-in') {
 				$link.attr('data-launch-panel', 'check-in').on('click', function() {
 					$(this).toggleClass('ccm-launch-panel-active');
 					var panel = ConcretePanelManager.getByIdentifier('check-in');

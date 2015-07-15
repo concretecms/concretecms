@@ -52,7 +52,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                 <? if (!$pageInUseBySomeoneElse && $c->getCollectionPointerID() == 0) { ?>
                     <? if ($c->isEditMode()) { ?>
                         <li class="ccm-toolbar-page-edit-mode-active ccm-toolbar-page-edit"><i
-                                class="fa fa-pencil mobile-leading-icon"></i><a data-toolbar-action="check-in"
+                                class="fa fa-pencil mobile-leading-icon"></i><a <? if ($c->isMasterCollection()) { ?>data-disable-panel="check-in"<? } ?> data-toolbar-action="check-in"
                                                                                 <? if ($vo->isNew() && !$c->isMasterCollection()) { ?>href="javascript:void(0)"
                                                                                 data-launch-panel="check-in"><?php echo t(
                                     'Save Changes') ?><?
@@ -68,6 +68,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                                 } ?></a></li>
                     <? } else if ($permissions->canEditPageContents()) { ?>
                         <li class="ccm-toolbar-page-edit"><i class="fa fa-pencil mobile-leading-icon"></i><a
+                                <? if ($c->isMasterCollection()) { ?>data-disable-panel="check-in"<? } ?>
                                 data-toolbar-action="check-out"
                                 href="<?= DIR_REL ?>/<?= DISPATCHER_FILENAME ?>?cID=<?= $c->getCollectionID() ?>&ctask=check-out<?= $token ?>"><?php echo t(
                                     'Edit this Page') ?></a></li>
@@ -190,8 +191,8 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
             <? if (!$pageInUseBySomeoneElse && $c->getCollectionPointerID() == 0) { ?>
 
             <? if ($c->isEditMode()) { ?>
-        <li data-guide-toolbar-action="check-in" class="ccm-toolbar-page-edit-mode-active ccm-toolbar-page-edit pull-left hidden-xs">
-            <a data-toolbar-action="check-in" <? if ($vo->isNew() || $c->isPageDraft()) { ?>href="javascript:void(0)"
+        <li data-guide-toolbar-action="check-in"  class="ccm-toolbar-page-edit-mode-active ccm-toolbar-page-edit pull-left hidden-xs">
+            <a <? if ($c->isMasterCollection()) { ?>data-disable-panel="check-in"<? } ?> data-toolbar-action="check-in" <? if ($vo->isNew() || $c->isPageDraft()) { ?>href="javascript:void(0)"
                data-launch-panel="check-in" <? } else { ?>href="<?= URL::to(
                 '/ccm/system/page/check_in',
                 $c->getCollectionID(),
@@ -206,7 +207,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
         </li>
     <? } else if ($permissions->canEditPageContents()) { ?>
         <li data-guide-toolbar-action="edit-page" class="ccm-toolbar-page-edit pull-left hidden-xs">
-            <a data-toolbar-action="check-out"
+            <a <? if ($c->isMasterCollection()) { ?>data-disable-panel="check-in"<? } ?> data-toolbar-action="check-out"
                href="<?= DIR_REL ?>/<?= DISPATCHER_FILENAME ?>?cID=<?= $c->getCollectionID() ?>&ctask=check-out<?= $token ?>"
                title="<?= t('Edit This Page') ?>">
                 <i class="fa fa-pencil"></i>
