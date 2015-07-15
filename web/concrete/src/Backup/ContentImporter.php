@@ -697,10 +697,13 @@ class ContentImporter
         if (isset($sx->jobs)) {
             foreach ($sx->jobs->job as $jx) {
                 $pkg = static::getPackageObject($jx['package']);
-                if (is_object($pkg)) {
-                    Job::installByPackage($jx['handle'], $pkg);
-                } else {
-                    Job::installByHandle($jx['handle']);
+                $job = Job::getByHandle($jx['handle']);
+                if (!is_object($job)) {
+                    if (is_object($pkg)) {
+                        Job::installByPackage($jx['handle'], $pkg);
+                    } else {
+                        Job::installByHandle($jx['handle']);
+                    }
                 }
             }
         }
