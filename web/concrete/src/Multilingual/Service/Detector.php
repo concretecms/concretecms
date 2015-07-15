@@ -102,7 +102,7 @@ class Detector
     public static function isEnabled()
     {
         if (!isset(self::$enabled)) {
-            $app = \Core::make('app');  
+            $app = \Core::make('app');
             if (!$app->isInstalled()) {
                 return false;
             }
