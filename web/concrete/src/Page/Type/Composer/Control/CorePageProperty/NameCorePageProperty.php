@@ -43,7 +43,8 @@ class NameCorePageProperty extends CorePageProperty
             $name = $this->getPageTypeComposerControlDraftValue();
         }
         if (!$name) {
-            $e->add(t('You haven\'t chosen a page name.'));
+            $control = $this->getPageTypeComposerFormLayoutSetControlObject();
+            $e->add(t('You haven\'t chosen a valid %s', $control->getPageTypeComposerControlLabel()));
 
             return $e;
         }
