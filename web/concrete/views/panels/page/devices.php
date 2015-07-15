@@ -103,6 +103,7 @@ use Concrete\Core\Device\Device;
 
 <script>
     $(function () {
+
         var actions, container, orientation_buttons;
 
         Concrete.event.unbind('PanelLoad.mobilepreview');
@@ -111,8 +112,6 @@ use Concrete\Core\Device\Device;
                 panel = data.panel;
             }
             _.defer(function () {
-                actions = $('.ccm-panel-detail-devices-actions');
-                container = $('.ccm-panel-detail-devices-container');
 
                 var setup = function() {
                     orientation_buttons = actions.children('.ccm-device-orientation').children().click(function () {
@@ -132,8 +131,13 @@ use Concrete\Core\Device\Device;
                     });
                 };
 
+
+                actions = $('.ccm-panel-detail-devices-actions');
+                container = $('.ccm-panel-detail-devices-container');
                 if (!actions.length || !container.length) {
                     Concrete.event.bind('PanelOpenDetail.mobilepreview', function(e) {
+                        actions = $('.ccm-panel-detail-devices-actions');
+                        container = $('.ccm-panel-detail-devices-container');
                         setup();
                         Concrete.event.unbind(e);
                     });
