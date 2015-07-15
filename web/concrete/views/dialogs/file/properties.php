@@ -40,7 +40,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                 <? Loader::element('files/properties', array('fv' => $fv, 'mode' => $mode))?>
 
             </section>
-            
+
             <?
             $attribs = FileAttributeKey::getList();
 
