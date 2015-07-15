@@ -40,42 +40,15 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                 <? Loader::element('files/properties', array('fv' => $fv, 'mode' => $mode))?>
 
             </section>
-
+            
             <?
-            $attribs = FileAttributeKey::getImporterList($fv);
-            $ft = $fv->getType();
-
-            if (count($attribs) > 0) { ?>
-
-            <section>
-                <h4><?= t('%s File Properties', $ft) ?></h4>
-
-                <?
-
-                Loader::element(
-                    'attribute/editable_list',
-                    array(
-                        'attributes'           => $attribs,
-                        'object'               => $f,
-                        'saveAction'           => $controller->action('update_attribute'),
-                        'clearAction'          => $controller->action('clear_attribute'),
-                        'permissionsArguments' => $fp->canEditFileProperties(),
-                        'permissionsCallback'  => function ($ak, $permissionsArguments) {
-                            return $permissionsArguments;
-                        }
-                    )); ?>
-
-                <? } ?>
-            </section>
-
-            <?
-            $attribs = FileAttributeKey::getUserAddedList();
+            $attribs = FileAttributeKey::getList();
 
             if (count($attribs) > 0) { ?>
 
                 <section>
 
-                    <h4><?= t('Other Properties') ?></h4>
+                    <h4><?= t('Attributes') ?></h4>
 
                     <? Loader::element(
                         'attribute/editable_list',
