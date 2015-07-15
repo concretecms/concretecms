@@ -51,6 +51,8 @@
                 my.getAttr('menu').destroy();
             }
 
+            Concrete.event.unbind(".ccm-area-a" + this.getId());
+
             my.reset();
         },
 
@@ -71,7 +73,7 @@
         },
 
         bindEvent: function areaBindEvent(event, handler) {
-            return Concrete.EditMode.prototype.bindEvent.apply(this, _(arguments).toArray());
+            return Concrete.EditMode.prototype.bindEvent.call(this, event + ".ccm-area-a" + this.getId(), handler);
         },
 
         scanBlocks: function areaScanBlocks() {
@@ -189,7 +191,8 @@
             $menuElem.find('a[data-menu-action=area-add-block]')
                 .off('click.edit-mode')
                 .on('click.edit-mode', function(e) {
-                    if (my.getMaximumBlocks() > my.getTotalBlocks()) {
+                    var max = my.getMaximumBlocks();
+                    if (max < 0 || max > my.getTotalBlocks()) {
                         my.getEditMode().setNextBlockArea(my);
                         var panelButton = $('[data-launch-panel="add-block"]');
                         panelButton.click();
@@ -198,6 +201,20 @@
                     }
                     return false;
                 });
+
+            my.bindEvent('ConcreteMenuShow', function(e, data) {
+                if (data.menu == my.getAttr('menu')) {
+                    var max = my.getMaximumBlocks(),
+                        list_item = data.menu.$menuPointer.find('a[data-menu-action=area-add-block]').parent();
+
+                    if (max < 0 || max > my.getTotalBlocks()) {
+                        list_item.show();
+                    } else {
+                        list_item.hide();
+                    }
+                }
+            });
+
 
             $menuElem.find('a[data-menu-action=edit-area-design]')
                 .off('click.edit-mode')
