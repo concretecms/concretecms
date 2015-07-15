@@ -25,6 +25,14 @@ class Controller extends BlockController
     protected $btIsInternal = true;
     protected $passthruController;
 
+    public function ignorePageThemeGridFrameworkContainer()
+    {
+        $bc = $this->getScrapbookBlockController();
+        if (is_object($bc)) {
+            return $bc->$this->ignorePageThemeGridFrameworkContainer();
+        }
+    }
+
     /**
      * @var int Original Block ID
      */
