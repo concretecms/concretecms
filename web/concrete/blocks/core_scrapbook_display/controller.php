@@ -31,6 +31,7 @@ class Controller extends BlockController
         if (is_object($bc)) {
             return $bc->$this->ignorePageThemeGridFrameworkContainer();
         }
+        return false;
     }
 
     /**
