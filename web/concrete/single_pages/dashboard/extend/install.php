@@ -207,7 +207,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
                 <dd>
                     <?=$at->getAttributeTypeName()?>
                     <?php
-                    foreach ($catList as $cat) { 
+                    foreach ($catList as $cat) {
                         if (!$at->isAssociatedWithCategory($cat)) {
                             continue;
                         }
@@ -263,7 +263,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
         <!-- Show all remaining items that we don't have a better formatting for !-->
 
         <?php
-        foreach ($items as $key => $itemArray) { 
+        foreach ($items as $key => $itemArray) {
             if (!count($itemArray)) {
                 continue;
             }
@@ -341,7 +341,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
         if (count($pkgArray) > 0) {
             foreach ($pkgArray as $pkg) {
                 ?>
-                <div class="media">
+                <div class="media-row">
                     <div class="pull-left"><img style="width: 49px" src="<?= $ci->getPackageIconURL($pkg); ?>" class"media-object" /></div>
                     <div class="media-body">
                         <a href="<?= URL::to('/dashboard/extend/install', 'inspect_package', $pkg->getPackageID()); ?>" class="btn pull-right btn-sm btn-default"><?= t('Details'); ?></a>
@@ -368,7 +368,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
                     $file = $pb->getRemoteFileURL();
                     if (!empty($file)) {
                         ?>
-                        <div class="media">
+                        <div class="media-row">
                             <div class="pull-left"><img style="width: 49px" src="<?= $pb->getRemoteIconURL(); ?>" class"media-object" /></div>
                             <div class="media-body">
                                 <a href="<?= URL::to('/dashboard/extend/install', 'download', $pb->getMarketplaceItemID()); ?>" class="btn pull-right btn-sm btn-default"><?= t('Download'); ?></a>
@@ -381,7 +381,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
                 }
                 foreach ($availableArray as $obj) {
                     ?>
-                    <div class="media">
+                    <div class="media-row">
                         <div class="pull-left"><img style="width: 49px" src="<?= $ci->getPackageIconURL($obj); ?>" class"media-object" /></div>
                         <div class="media-body">
                             <?php if ($obj instanceof \Concrete\Core\Package\BrokenPackage) { ?>
