@@ -32,12 +32,8 @@ class Attributes extends DashboardPageController
         $this->requireAsset('core/app/editable-fields');
         $this->set('pagetype', $this->pagetype);
         $this->set('defaultPage', $this->defaultPage);
-
         $category = AttributeKeyCategory::getByHandle('collection');
-        $sets = $category->getAttributeSets();
-        $this->set('sets', $sets);
-        $attributes = CollectionKey::getList();
-        $this->set('attributes', $attributes);
+        $this->set('category', $category);
     }
 
     public function update_attribute($ptID = false)
