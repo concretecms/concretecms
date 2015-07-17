@@ -176,6 +176,43 @@ div#ccm-dashboard-content {
 }
 
 /**
+ * Add Functionality
+ * - based on the Bootstrap 3 media.less Media object
+ */
+.ccm-ui {
+  // clear floats
+  .media-row {
+    overflow: hidden;
+    zoom: 1;
+  }
+
+  // proper spacing between instances of .media-row
+  .media-row {
+    margin-left: -5px;
+    margin-top: 10px;
+    padding: 5px 5px 0px 5px;
+  }
+  .media-row:first-child {
+    margin-top: 0;
+  }
+
+  // .media-row image alignment
+  .media-row {
+    > .pull-left {
+     margin-right: 10px;
+    }
+    > .pull-right {
+     margin-left: 10px;
+    }
+  }
+
+  // add background hover
+  .media-row:hover {
+    background: #f1f1f1;
+  }
+}
+
+/**
  * Responsive utilities
  */
 @media (min-width: @screen-md) {
