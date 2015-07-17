@@ -6,7 +6,8 @@
 
 <div data-container="editable-fields">
 
-<? Loader::element('attribute/editable_list', array(
+<? Loader::element('attribute/editable_set_list', array(
+    'sets' => $sets,
     'attributes' => $attributes,
     'object' => $defaultPage,
     'saveAction' => $view->action('update_attribute', $pagetype->getPageTypeID()),
