@@ -2,6 +2,7 @@
 namespace Concrete\Controller\SinglePage\Dashboard\Pages\Types;
 use Concrete\Core\Application\EditResponse;
 use Concrete\Core\Attribute\Key\CollectionKey;
+use \Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use PageType;
 use Loader;
@@ -31,6 +32,10 @@ class Attributes extends DashboardPageController
         $this->requireAsset('core/app/editable-fields');
         $this->set('pagetype', $this->pagetype);
         $this->set('defaultPage', $this->defaultPage);
+
+        $category = AttributeKeyCategory::getByHandle('collection');
+        $sets = $category->getAttributeSets();
+        $this->set('sets', $sets);
         $attributes = CollectionKey::getList();
         $this->set('attributes', $attributes);
     }
