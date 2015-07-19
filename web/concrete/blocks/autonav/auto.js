@@ -56,6 +56,7 @@ function reloadPreview(event) {
     displaySubPageLevels = $("select[name=displaySubPageLevels]", container).val();
     displaySubPageLevelsNum = $("input[name=displaySubPageLevelsNum]", container).val();
     displayUnavailablePages = $("input[name=displayUnavailablePages]", container).is(':checked') ? 1 : 0;
+    displaySystemPages = $("input[name=displaySystemPages]", container).is(':checked') ? 1 : 0;
     displayPagesCID = $("input[name=displayPagesCID]", container).val();
     displayPagesIncludeSelf = displayUnavailablePages;
 
@@ -78,6 +79,7 @@ function reloadPreview(event) {
         displaySubPageLevels: displaySubPageLevels,
         displaySubPageLevelsNum: displaySubPageLevelsNum,
         displayUnavailablePages: displayUnavailablePages,
+        displaySystemPages: displaySystemPages,
         displayPagesCID: displayPagesCID,
         displayPagesIncludeSelf: displayPagesIncludeSelf
     }, function (resp) {
