@@ -1,13 +1,10 @@
 <fieldset>
 <legend><?=t('Checkbox Options')?></legend>
 
-<div class="clearfix">
-<label><?=t("Default Value")?></label>
-<div class="input">
-<ul class="inputs-list">
-<li><label><?=$form->checkbox('akCheckedByDefault', 1, $akCheckedByDefault)?> <span><?=t('The checkbox will be checked by default.')?></span></label></li>
-</ul>
-</div>
+<div class="form-group">
+    <label class="control-label"><?=t("Default Value")?></label>
+    <div class="checkbox"><label><?=$form->checkbox('akCheckedByDefault', 1, $akCheckedByDefault)?> <?=t('The checkbox will be checked by default.')?></label>
+    </div>
 </div>
 
 </fieldset>

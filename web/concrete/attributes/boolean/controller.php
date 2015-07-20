@@ -62,7 +62,12 @@ class Controller extends AttributeTypeController
     {
         if (isset($akey->type)) {
             $data = array();
-            $data['akCheckedByDefault'] = $akey->type['checked'];
+            $checked = (string) $akey->type['checked'];
+            if ($checked != '') {
+                $data['akCheckedByDefault'] = 1;
+            } else {
+                $data['akCheckedByDefault'] = 0;
+            }
             $this->saveKey($data);
         }
     }
