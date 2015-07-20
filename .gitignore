@@ -62,6 +62,7 @@ __IDE_SYMBOLS__.php
 
 # Built assets
 # JS
+/web/concrete/js/frontend
 /web/concrete/js/account.js
 /web/concrete/js/app.js
 /web/concrete/js/backstretch.js
