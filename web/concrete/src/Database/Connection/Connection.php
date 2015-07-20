@@ -147,6 +147,17 @@ class Connection extends \Doctrine\DBAL\Connection
 
     /**
      * @deprecated
+     * alias to old ADODB method
+     */
+    public function GetAssoc($q, $arguments = array())
+    {
+        $query = $this->query($q, $arguments);
+
+        return $query->fetchAll(\PDO::FETCH_KEY_PAIR);
+    }
+
+    /**
+     * @deprecated
      * Returns an associative array of all columns in a table
      */
     public function MetaColumnNames($table)
