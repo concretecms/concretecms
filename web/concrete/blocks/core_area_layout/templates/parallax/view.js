@@ -8,10 +8,10 @@ $(function () {
     $parallax.each(function () {
         var $wrapper = $parallax.closest('div.ccm-block-custom-template-parallax'),
             $children = $wrapper.children(),
-            $inner = $children.first();//$('<div />').appendTo($wrapper).append($children);
+            $inner = $children.first();
 
         $wrapper.attr('data-stripe', 'parallax').attr('data-background-image', $parallax.attr('data-background-image'));
-        $children.first().addClass('parallax-stripe-inner');
+        $inner.addClass('parallax-stripe-inner');
 
         $wrapper.parallaxize({
             variation: $wrapper.height()
