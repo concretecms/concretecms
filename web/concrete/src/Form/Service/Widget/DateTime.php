@@ -163,7 +163,10 @@ class DateTime
                     showAnim: \'fadeIn\',
                     onClose: function(dateText, inst) {
                         if(dateText == "") {
-                            $(inst.settings["altField"]).val(dateText);
+                            var altField = $(inst.settings["altField"]);
+                            if(altField.length) {
+                                altField.val(dateText);
+                            }
                         }
                     }
                 }).datepicker("setDate" , ' . $defaultDateJs . '); })</script>';
@@ -240,7 +243,10 @@ EOS;
                     showAnim: \'fadeIn\',
                     onClose: function(dateText, inst) {
                         if(dateText == "") {
-                            $(inst.settings["altField"]).val(dateText);
+                            var altField = $(inst.settings["altField"]);
+                            if(altField.length) {
+                                altField.val(dateText);
+                            }
                         }
                     }
                 }).datepicker( "setDate" , ' . $defaultDateJs . ' ); });</script>';
