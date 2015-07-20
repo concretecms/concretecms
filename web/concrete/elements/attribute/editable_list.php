@@ -8,7 +8,7 @@
             'saveAction' => $saveAction,
             'clearAction' => $clearAction,
             'permissionsCallback' => $permissionsCallback,
-            'permissionArguments' => $permissionsArguments
+            'permissionsArguments' => $permissionsArguments
         )
     );
 }
