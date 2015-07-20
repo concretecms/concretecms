@@ -89,4 +89,10 @@ class PathUrlResolverTest extends ResolverTestCase
         \Config::set('concrete.seo.url_rewriting', $old_value);
     }
 
+    public function testPassedUrl()
+    {
+        $url = $this->urlResolver->resolve(array('http://google.com/', 'testing'));
+        $this->assertEquals('http://google.com/testing', (string)$url);
+    }
+
 }
