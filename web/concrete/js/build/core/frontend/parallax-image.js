@@ -18,7 +18,7 @@ $.fn.parallaxize = (function (global, $) {
 
         initializeConfig: function (settings) {
             var config = {};
-            settings = $.fn.extend({ variation: 20 }, settings);
+            settings = $.fn.extend({variation: 20}, settings);
 
             var getGetter = function (object) {
                 return function (key, value) {
@@ -117,14 +117,14 @@ $.fn.parallaxize = (function (global, $) {
             }
 
             scale = Math.ceil(new_height / image_height * 1000) / 1000;
-/*
-            if (Modernizr && !Modernizr.csstransforms) {
-                image.css({
-                    width: new_width,
-                    height: new_height
-                });
-                return '';
-            }*/
+
+            //if (Modernizr && !Modernizr.csstransforms) {
+            //    image.css({
+            //        width: new_width,
+            //        height: new_height
+            //    });
+            //    return '';
+            //}
 
             this.config('scale', scale);
             return 'scale(' + scale + ')';
@@ -140,20 +140,23 @@ $.fn.parallaxize = (function (global, $) {
                 top = (height - image_height) / 2,
                 left = (width - image_width) / 2,
                 scroll_percentage = this.getScrollPercentage();
+
             top += (variation * 2 * scroll_percentage) - variation;
 
             // First assume translate
-            var method_start = 'translate(', method_end = ')';
-
+            //var method_start = 'translate(', method_end = ')';
+            //
             //if (Modernizr) {
-              //  if (Modernizr.csstransforms3d) {
-                    method_start = 'translate3d(';
-                    method_end = ', 0px)';
-                //} else if (!Modernizr.csstransforms) {
-                  //  return '';
-               // }
-           // }
-            return method_start + Math.round(left) + 'px, ' + Math.round(top) + 'px' + method_end;
+            //    if (Modernizr.csstransforms3d) {
+            //        method_start = 'translate3d(';
+            //        method_end = ', 0px)';
+            //    } else if (!Modernizr.csstransforms) {
+            //        return '';
+            //    }
+            //}
+            //return method_start + Math.round(left) + 'px, ' + Math.round(top) + 'px' + method_end;
+
+            return ['translate3d(', Math.round(left), 'px, ', Math.round(top), 'px, ', '0px)'].join('');
         },
 
         getScrollPercentage: function () {
