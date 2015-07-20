@@ -103,15 +103,14 @@ class BlockType
         $db = DB::get();
         $r = $db->MetaTables();
 
-        if (in_array('Config', $r)) {
+        if (in_array('config', array_map('strtolower', $r))) {
 
-            if(in_array('btCachedBlockRecord', $db->MetaColumnNames('Blocks'))) {
+            if (in_array('btcachedblockrecord', array_map('strtolower', $db->MetaColumnNames('Blocks')))) {
                 $db->Execute('update Blocks set btCachedBlockRecord = null');
             }
-            if (in_array('CollectionVersionBlocksOutputCache', $r)) {
+            if (in_array('collectionversionblocksoutputcache', array_map('strtolower', $r))) {
                 $db->Execute('truncate table CollectionVersionBlocksOutputCache');
             }
-
         }
     }
 
