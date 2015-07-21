@@ -23,6 +23,8 @@ class LinkAbstractor extends Object {
 	 * Takes a chunk of content containing full urls
 	 * and converts them to abstract link references.
 	 */
+	private static $blackListImgAttributes = array('src', 'fid', 'data-verified', 'data-save-url');
+
 	public static function translateTo($text) {
 
 		// images inline
@@ -35,11 +37,16 @@ class LinkAbstractor extends Object {
 		$r = $dom->str_get_html($text);
 		if ($r) {
 			foreach($r->find('img') as $img) {
-				$src = $img->src;
-				$alt = $img->alt;
-				$style = $img->style;
-				if (preg_match($imgmatch, $src, $matches)) {
-					$img->outertext = '<concrete-picture fID="' . $matches[1] . '" alt="' . $alt . '" style="' . $style . '" />';
+
+				$attrString = "";
+				foreach($img->attr as $key => $val) {
+					if(!in_array($key, self::$blackListImgAttributes)) {
+						$attrString .= "$key='$val' ";
+					}
+				}
+
+				if (preg_match($imgmatch, $img->src, $matches)) {
+					$img->outertext = '<concrete-picture fID="' . $matches[1] . '" ' . $attrString . ' />';
 				}
 			}
 
@@ -101,8 +108,6 @@ class LinkAbstractor extends Object {
 		if (is_object($r)) {
 			foreach($r->find('concrete-picture') as $picture) {
 				$fID = $picture->fid;
-				$alt = $picture->alt;
-				$style = $picture->style;
 				$fo = \File::getByID($fID);
 				if (is_object($fo)) {
 					if ($style) {
@@ -112,12 +117,13 @@ class LinkAbstractor extends Object {
 						$image = new \Concrete\Core\Html\Image($fo);
 					}
 					$tag = $image->getTag();
-					if ($alt) {
-						$tag->alt($alt);
+
+					foreach($picture->attr as $attr => $val) {
+						if(!in_array($attr, self::$blackListImgAttributes)) {
+							$tag->$attr($val);
+						}
 					}
-					if ($style) {
-						$tag->style($style);
-					}
+					
 					$picture->outertext = (string) $tag;
 				}
 			}
@@ -168,9 +174,15 @@ class LinkAbstractor extends Object {
 		if (is_object($r)) {
 			foreach($r->find('concrete-picture') as $picture) {
 				$fID = $picture->fid;
-				$alt = $picture->alt;
-				$style = $picture->style;
-				$picture->outertext = '<img src="' . URL::to('/download_file', 'view_inline', $fID) . '" alt="' . $alt . '" style="' . $style . '" />';
+
+				$attrString = "";
+				foreach($picture->attr as $attr => $val) {
+					if(!in_array($attr, self::$blackListImgAttributes)) {
+						$attrString .= "$attr='$val' ";
+					}
+				}
+
+				$picture->outertext = '<img src="' . URL::to('/download_file', 'view_inline', $fID) . '" ' . $attrString . ' />';
 			}
 
 			$text = (string) $r;
