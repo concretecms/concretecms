@@ -1,8 +1,6 @@
 <?php
 namespace Concrete\Core\Page\Type\Composer\Control;
 
-use Loader;
-use \Concrete\Core\Foundation\Object;
 use Controller;
 use CollectionAttributeKey;
 use Page;
@@ -18,6 +16,11 @@ class CollectionAttributeControl extends Control
     {
         $this->akID = $akID;
         $this->setPageTypeComposerControlIdentifier($akID);
+    }
+
+    public function getPageTypeComposerControlName()
+    {
+        return $this->getAttributeKeyObject()->getAttributeKeyDisplayName('text');
     }
 
     public function pageTypeComposerFormControlSupportsValidation()
@@ -39,6 +42,9 @@ class CollectionAttributeControl extends Control
         }
     }
 
+    /**
+     * @return CollectionAttributeKey
+     */
     public function getAttributeKeyObject()
     {
         if (!$this->ak) {
