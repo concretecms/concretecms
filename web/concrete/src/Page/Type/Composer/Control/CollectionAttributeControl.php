@@ -178,4 +178,9 @@ class CollectionAttributeControl extends Control
         $akc->setupAndRun('composer');
     }
 
+    public function objectExists()
+    {
+        return $this->getAttributeKeyObject() !== null;
+    }
+
 }
