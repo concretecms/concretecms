@@ -196,4 +196,9 @@ abstract class Control extends Object
     {
         return $this->ptComposerControlRequiredByDefault;
     }
+
+    public function objectExists()
+    {
+        return true;
+    }
 }
