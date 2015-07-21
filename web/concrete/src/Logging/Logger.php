@@ -13,9 +13,9 @@ class Logger extends MonologLogger
 
     const CHANNEL_APPLICATION = 'application';
 
-    public function __construct($channel = self::CHANNEL_APPLICATION) {
+    public function __construct($channel = self::CHANNEL_APPLICATION, $logLevel = MonologLogger::DEBUG) {
         parent::__construct($channel);
-        $this->addDatabaseHandler();
+        $this->addDatabaseHandler($logLevel);
 
         $le = new Event($this);
         Events::dispatch('on_logger_create', $le);
@@ -25,9 +25,9 @@ class Logger extends MonologLogger
      * Initially called - this sets up the log writer to use the concrete5
      * Logs database table (this is the default setting.)
      */
-    public function addDatabaseHandler()
+    public function addDatabaseHandler($logLevel = MonologLogger::DEBUG)
     {
-        $handler = new DatabaseHandler();
+        $handler = new DatabaseHandler($logLevel);
         // set a more basic formatter.
         $output = "%message%";
         $formatter = new LineFormatter($output, null, true);
