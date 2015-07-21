@@ -19,6 +19,7 @@ class PageView extends View
     protected $c; // page
     protected $cp;
     protected $pTemplateID;
+    protected $pTemplateObject;
     protected $customStyleMap;
 
     public function getScopeItems()
@@ -34,6 +35,7 @@ class PageView extends View
      */
     public function setCustomPageTemplate(PageTemplate $pt)
     {
+        $this->pTemplateObject = $pt;
         $this->pTemplateID = $pt->getPageTemplateID();
     }
 
@@ -44,6 +46,26 @@ class PageView extends View
     {
         $this->themeObject = $pt;
         $this->pkgHandle = $pt->getPackageHandle();
+    }
+
+    public function getPageWrapperClass()
+    {
+        if(!isset($this->pTemplateObject)) {
+            $this->pTemplateObject = $this->c->getPageTemplateObject();
+        }
+
+        $pt = $this->c->getPageTypeObject();
+        $ptm = $this->pTemplateObject;
+        
+        $classes = array('ccm-page');
+        if (is_object($pt)) {
+            $classes[] = 'page-type-'.str_replace('_', '-', $pt->getPageTypeHandle());
+        }
+        if (is_object($ptm)) {
+            $classes[] = 'page-template-'.str_replace('_', '-', $ptm->getPageTemplateHandle());
+        }
+
+        return implode(' ', $classes);
     }
 
     public function renderSinglePageByFilename($cFilename)

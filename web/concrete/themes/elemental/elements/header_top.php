@@ -21,4 +21,4 @@
 </head>
 <body>
 
-<div class="<?=$c->getPageWrapperClass()?>">
+<div class="<?=$view->getPageWrapperClass()?>">
