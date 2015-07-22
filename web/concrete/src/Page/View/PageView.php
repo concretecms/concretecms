@@ -56,8 +56,9 @@ class PageView extends View
         if ($exactThemeTemplate->exists()) {
             $this->setViewTemplate($exactThemeTemplate->file);
         } else {
-            // use the outer wrapper from a core theme if one is being used
-            $coreThemeTemplate = $env->getRecord(DIRNAME_THEMES . '/' . DIRNAME_THEMES_CORE . '/' . $this->themeHandle . '.php');
+            // use a content wrapper from themes/core if specified
+            // e.g. $this->render('your/page', 'none') would use themes/core/none.php to print the $innerContent without a wrapper
+            $coreThemeTemplate = $env->getRecord(DIRNAME_THEMES . '/' . DIRNAME_THEMES_CORE . '/' . $this->pkgHandle . '.php');
             if ($coreThemeTemplate->exists()) {
                 $this->setViewTemplate($coreThemeTemplate->file);
             } else {
