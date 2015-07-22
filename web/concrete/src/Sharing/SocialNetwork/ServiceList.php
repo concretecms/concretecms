@@ -5,7 +5,8 @@ class ServiceList
 {
     protected static function getServices()
     {
-        return array(
+
+        $services = array(
             array('facebook', 'Facebook', 'facebook'),
             array('twitter', 'Twitter', 'twitter'),
             array('instagram', 'Instagram', 'instagram'),
@@ -26,6 +27,12 @@ class ServiceList
             array('skype', 'Skype', 'skype'),
             array('personal_website', 'Personal Website', 'external-link')
         );
+
+        if($additionalSocialNetworks = \Config::get('concrete.social.additional_services')) {
+            $services = array_merge($services, $additionalSocialNetworks);
+        }
+
+        return $services;
     }
 
     public static function get()
@@ -34,7 +41,7 @@ class ServiceList
         $return = array();
         foreach($services as $serviceArray)
         {
-            $o = new Service($serviceArray[0], $serviceArray[1], $serviceArray[2]);
+            $o = new Service($serviceArray[0], $serviceArray[1], $serviceArray[2], $serviceArray[3]);
             $return[] = $o;
         }
         return $return;
