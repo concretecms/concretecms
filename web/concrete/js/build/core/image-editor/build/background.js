@@ -19,7 +19,7 @@ im.bind('load', function(){
     im.setActiveElement(im.stage);
   });
 }, im.bgimage);
-im.bgimage.src = '/concrete/images/testbg.png';
+im.bgimage.src = CCM_REL + '/concrete/images/testbg.png';
 im.buildBackground = function() {
   var dimensions = im.stage.getTotalDimensions();
 
