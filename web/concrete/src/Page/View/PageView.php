@@ -50,23 +50,33 @@ class PageView extends View
     {
         $env = Environment::get();
         $cFilename = trim($cFilename, '/');
+
         // if we have this exact template in the theme, we use that as the outer wrapper and we don't do an inner content file
         $r = $env->getRecord(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $cFilename, $this->pkgHandle);
         if ($r->exists()) {
             $this->setViewTemplate($r->file);
         } else {
-            if (file_exists(
-                DIR_FILES_THEMES_CORE . '/' . DIRNAME_THEMES_CORE . '/' . $this->themeHandle . '.php')) {
+            if (file_exists(DIR_FILES_THEMES_CORE . '/' . DIRNAME_THEMES_CORE . '/' . $this->themeHandle . '.php')) {
                 $this->setViewTemplate(
-                    $env->getPath(DIRNAME_THEMES . '/' . DIRNAME_THEMES_CORE . '/' . $this->themeHandle . '.php'));
+                    $env->getPath(
+                        DIRNAME_THEMES . '/' . DIRNAME_THEMES_CORE . '/' . $this->themeHandle . '.php'
+                    )
+                );
             } else {
                 $this->setViewTemplate(
                     $env->getPath(
                         DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $this->controller->getThemeViewTemplate(),
-                        $this->pkgHandle));
+                        $this->pkgHandle
+                    )
+                );
             }
+
             $this->setInnerContentFile(
-                $env->getPath(DIRNAME_PAGES . '/' . $cFilename, $this->c->getPackageHandle()));
+                $env->getPath(
+                    DIRNAME_PAGES . '/' . $cFilename,
+                    $this->c->getPackageHandle()
+                )
+            );
         }
     }
     public function setupRender()
