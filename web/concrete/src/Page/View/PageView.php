@@ -64,7 +64,15 @@ class PageView extends View
             } else {
                 // check for other themes or in a package if one was specified
                 $themeTemplate = $env->getRecord(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $this->controller->getThemeViewTemplate(), $this->pkgHandle);
-                $this->setViewTemplate($themeTemplate->file);
+                if ($themeTemplate->exists()) {
+                    $this->setViewTemplate($themeTemplate->file);
+                } else {
+                    // fall back to the active theme wrapper if nothing else was found
+                    $fallbackTheme = PageTheme::getByHandle($this->themeHandle);
+                    $fallbackPkgHandle = ($fallbackTheme instanceof PageTheme) ? $fallbackTheme->getPackageHandle() : $this->pkgHandle;
+                    $fallbackTemplate = $env->getRecord(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $this->controller->getThemeViewTemplate(), $fallbackPkgHandle);
+                    $this->setViewTemplate($fallbackTemplate->file);
+                }
             }
 
             // set the inner content for the theme wrapper we found
@@ -76,6 +84,7 @@ class PageView extends View
             );
         }
     }
+    
     public function setupRender()
     {
         $this->loadViewThemeObject();
