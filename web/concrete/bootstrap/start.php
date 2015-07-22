@@ -208,6 +208,22 @@ include DIR_APPLICATION . '/bootstrap/app.php';
 
 /**
  * ----------------------------------------------------------------------------
+ * Set trusted proxies and headers for the request
+ * ----------------------------------------------------------------------------
+ */
+
+if($proxyHeaders = $config->get('concrete.security.trusted_proxies.headers')){
+    foreach($proxyHeaders as $key => $value) {
+        Request::setTrustedHeaderName($key, $value);
+    }
+}
+
+if($trustedProxiesIps = $config->get('concrete.security.trusted_proxies.ips')) {
+    Request::setTrustedProxies($trustedProxiesIps);
+}
+
+/**
+ * ----------------------------------------------------------------------------
  * Obtain the Request object.
  * ----------------------------------------------------------------------------
  */
