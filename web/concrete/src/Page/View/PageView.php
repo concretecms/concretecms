@@ -52,25 +52,21 @@ class PageView extends View
         $cFilename = trim($cFilename, '/');
 
         // if we have this exact template in the theme, we use that as the outer wrapper and we don't do an inner content file
-        $r = $env->getRecord(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $cFilename, $this->pkgHandle);
-        if ($r->exists()) {
-            $this->setViewTemplate($r->file);
+        $exactThemeTemplate = $env->getRecord(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $cFilename, $this->pkgHandle);
+        if ($exactThemeTemplate->exists()) {
+            $this->setViewTemplate($exactThemeTemplate->file);
         } else {
-            if (file_exists(DIR_FILES_THEMES_CORE . '/' . DIRNAME_THEMES_CORE . '/' . $this->themeHandle . '.php')) {
-                $this->setViewTemplate(
-                    $env->getPath(
-                        DIRNAME_THEMES . '/' . DIRNAME_THEMES_CORE . '/' . $this->themeHandle . '.php'
-                    )
-                );
+            // use the outer wrapper from a core theme if one is being used
+            $coreThemeTemplate = $env->getRecord(DIRNAME_THEMES . '/' . DIRNAME_THEMES_CORE . '/' . $this->themeHandle . '.php');
+            if ($coreThemeTemplate->exists()) {
+                $this->setViewTemplate($coreThemeTemplate->file);
             } else {
-                $this->setViewTemplate(
-                    $env->getPath(
-                        DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $this->controller->getThemeViewTemplate(),
-                        $this->pkgHandle
-                    )
-                );
+                // check for other themes in the concrete directory, or in a package if one was specified
+                $themeTemplate = $env->getRecord(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $this->controller->getThemeViewTemplate(), $this->pkgHandle);
+                $this->setViewTemplate($themeTemplate->file);
             }
 
+            // set the inner content for the theme wrapper we found
             $this->setInnerContentFile(
                 $env->getPath(
                     DIRNAME_PAGES . '/' . $cFilename,
