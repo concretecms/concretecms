@@ -34,6 +34,8 @@ class Version
     const UT_DESCRIPTION = 3;
     const UT_TAGS = 4;
     const UT_EXTENDED_ATTRIBUTE = 5;
+    const UT_CONTENTS = 6;
+
     /**
      * /* @Id
      * @ManyToOne(targetEntity="File", inversedBy="versions")
@@ -485,6 +487,9 @@ class Version
                 case self::UT_TAGS:
                     $updates[] = t('Tags');
                     break;
+                case self::UT_CONTENTS:
+                    $updates[] = t('File Content');
+                    break;
                 case self::UT_EXTENDED_ATTRIBUTE:
                     $val = $db->GetOne(
                         "SELECT akName FROM AttributeKeys WHERE akID = ?",
@@ -545,6 +550,19 @@ class Version
         $this->logVersionUpdate(self::UT_DESCRIPTION);
         $fe = new \Concrete\Core\File\Event\FileVersion($this);
         Events::dispatch('on_file_version_update_description', $fe);
+    }
+
+    public function updateContents($contents)
+    {
+        $cf = Core::make('helper/concrete/file');
+        $storage = $this->getFile()->getFileStorageLocationObject();
+        if (is_object($storage)) {
+            $storage->getFileSystemObject()->write($cf->prefix($this->fvPrefix, $this->fvFilename), $contents);
+            $this->logVersionUpdate(self::UT_CONTENTS);
+            $fe = new \Concrete\Core\File\Event\FileVersion($this);
+            Events::dispatch('on_file_version_update_contents', $fe);
+            $this->refreshAttributes();
+        }
     }
 
     public function updateFile($filename, $prefix)
