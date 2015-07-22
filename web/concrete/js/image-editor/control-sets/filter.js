@@ -26,11 +26,9 @@ im.bind('ChangeActiveElement', function (e) {
 var img = new Image();
 var loaded = false;
 var waiting = [];
-im.onload = function () {
+img.onload = function () {
     loaded = true;
-    $.each(waiting, function (e, func) {
-
-    });
+    im.fire('filterExampleImageLoaded', { image: img });
 };
 var lis = {};
 img.src = CCM_IMAGE_PATH + "/image_editor/default_filter_image.jpg";
@@ -70,7 +68,19 @@ im.bind('filterLoad', function (e, data) {
                 }
             });
         }, li.get(0));
-        im.fire('filterApplyExample', {namespace: newFilter.im.namespace, image: image, elem: li.get(0)});
+
+        var fire = function() {
+            im.fire('filterApplyExample', {namespace: newFilter.im.namespace, image: image, elem: li.get(0)});
+        };
+
+        if (loaded) {
+            fire();
+        } else {
+            im.bind('filterExampleImageLoaded', function() {
+                fire()
+            });
+        }
+
     })();
     newFilter.parent = me;
 
