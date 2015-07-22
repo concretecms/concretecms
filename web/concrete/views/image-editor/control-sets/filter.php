@@ -8,7 +8,12 @@ foreach ($filters as $filter) {
         <?php
         $view = new View;
         $view->setInnerContentFile($filter->getViewPath());
-        echo $view->renderViewContents(array('filter' => $filter));
+        try {
+            echo $view->renderViewContents(array('filter' => $filter));
+        } catch (\Exception $e) {
+            echo "<h3>", t('Failed to render filter view.'), "</h3>";
+            echo "<pre>", $e->getMessage(), "</pre>";
+        }
         ?>
     </div>
     <?php
