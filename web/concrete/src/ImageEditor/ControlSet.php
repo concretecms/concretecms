@@ -191,9 +191,9 @@ class ControlSet
         if ($this->pkgID) {
             $package = $this->getPackageObject();
             if ($package && is_object($package) && !$package->isError()) {
-                $path = $package->getPackagePath() . '/' . $directory . '/image-editor/control-sets/' . $file;
-                if (file_exists($path)) {
-                    return $path;
+                $subpath = '/' . $directory . '/image-editor/control-sets/' . $file;
+                if (file_exists($package->getPackagePath() . $subpath)) {
+                    return $full_path ? $package->getPackagePath() . $subpath : $package->getRelativePath() . $subpath;
                 }
             }
         }
