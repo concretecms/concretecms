@@ -128,8 +128,8 @@ if($favIconFID) {
     $f = File::getByID($favIconFID);
     if (is_object($f)) {
         ?>
-        <link rel="shortcut icon" href="<?php echo $f->getRelativePath() ?>" type="image/x-icon"/>
-        <link rel="icon" href="<?php echo $f->getRelativePath() ?>" type="image/x-icon"/>
+        <link rel="shortcut icon" href="<?php echo $f->getURL() ?>" type="image/x-icon"/>
+        <link rel="icon" href="<?php echo $f->getURL() ?>" type="image/x-icon"/>
     <?php
     }
 }
@@ -138,7 +138,7 @@ if($appleIconFID) {
     $f = File::getByID($appleIconFID);
     if (is_object($f)) {
         ?>
-        <link rel="apple-touch-icon" href="<?php echo $f->getRelativePath() ?>"/>
+        <link rel="apple-touch-icon" href="<?php echo $f->getURL() ?>"/>
     <?php
     }
 }
@@ -147,7 +147,7 @@ if($modernIconFID) {
 	$f = File::getByID($modernIconFID);
     if(is_object($f)) {
         ?>
-        <meta name="msapplication-TileImage" content="<?php echo $f->getRelativePath(); ?>" /><?php
+        <meta name="msapplication-TileImage" content="<?php echo $f->getURL(); ?>" /><?php
         echo "\n";
         if (strlen($modernIconBGColor)) {
             ?>
