@@ -62,7 +62,7 @@ class PageView extends View
             if ($coreThemeTemplate->exists()) {
                 $this->setViewTemplate($coreThemeTemplate->file);
             } else {
-                // check for other themes in the concrete directory, or in a package if one was specified
+                // check for other themes or in a package if one was specified
                 $themeTemplate = $env->getRecord(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $this->controller->getThemeViewTemplate(), $this->pkgHandle);
                 $this->setViewTemplate($themeTemplate->file);
             }
