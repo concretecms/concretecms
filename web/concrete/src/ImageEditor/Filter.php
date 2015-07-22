@@ -77,13 +77,14 @@ class Filter
      * @param Package $pkg
      * @return Filter[]
      */
+
     public static function getListByPackage($pkg)
     {
         $db = Loader::db();
         $q = $db->query(
-                'SELECT * FROM SystemImageEditorFilters
+            'SELECT * FROM SystemImageEditorFilters
                                             WHERE pkgID=?',
-                array($pkg->getPackageID()));
+            array($pkg->getPackageID()));
         $cs = self::getSortedListFromQuery($q);
         return $cs;
     }
@@ -98,9 +99,9 @@ class Filter
     {
         $db = Loader::db();
         $q = $db->query(
-                'SELECT * FROM SystemImageEditorFilters
+            'SELECT * FROM SystemImageEditorFilters
                                             WHERE scsID=?',
-                array($scsID));
+            array($scsID));
         return self::load($q->FetchRow());
     }
 
@@ -117,9 +118,9 @@ class Filter
         $db = Loader::db();
         $pkgID = (is_object($pkg)) ? $pkg->getPackageID() : 0;
         $db->execute(
-           'INSERT INTO SystemImageEditorFilters
+            'INSERT INTO SystemImageEditorFilters
                                    (scsHandle,scsName,pkgID) VALUES (?,?,?)',
-           array($scsHandle, $scsName, $pkgID));
+            array($scsHandle, $scsName, $pkgID));
         return self::getByHandle($scsHandle);
     }
 
@@ -131,9 +132,9 @@ class Filter
     {
         $db = Loader::db();
         $q = $db->query(
-                'SELECT * FROM SystemImageEditorFilters
+            'SELECT * FROM SystemImageEditorFilters
                                             WHERE scsHandle=?',
-                array($scsHandle));
+            array($scsHandle));
         return self::load($q->FetchRow());
     }
 
@@ -212,8 +213,8 @@ class Filter
     {
         $db = Loader::db();
         $db->execute(
-           'DELETE FROM SystemImageEditorFilters WHERE scsID=?',
-           array($this->scsID));
+            'DELETE FROM SystemImageEditorFilters WHERE scsID=?',
+            array($this->scsID));
         return true;
     }
 
@@ -232,19 +233,19 @@ class Filter
      *
      * @param string $directory The directory (views|js|css)
      * @param string $extension The extension (.php|.js|.css)
-     * @param bool   $full_path Should we return the full path?
+     * @param bool $full_path Should we return the full path?
      * @return string
      */
-    public function getAssetPath($directory, $extension, $full_path = true)
+    public function getAssetPath($directory, $extension, $full_path)
     {
         $file = $this->getHandle() . $extension;
 
         if ($this->pkgID) {
             $package = $this->getPackageObject();
             if ($package && is_object($package) && !$package->isError()) {
-                $path = $package->getPackagePath() . '/' . $directory . '/image-editor/filters/' . $file;
-                if (file_exists($path)) {
-                    return $path;
+                $subpath = '/' . $directory . '/image-editor/filters/' . $file;
+                if (file_exists($package->getPackagePath() . $subpath)) {
+                    return $full_path ? $package->getPackagePath() . $subpath : $package->getRelativePath() . $subpath;
                 }
             }
         }
