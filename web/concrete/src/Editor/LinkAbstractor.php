@@ -188,7 +188,7 @@ class LinkAbstractor extends Object {
 				$attrString = "";
 				foreach($picture->attr as $attr => $val) {
 					if(!in_array($attr, self::$blackListImgAttributes)) {
-						$attrString .= "$attr='$val' ";
+						$attrString .= "$attr=\"$val\" ";
 					}
 				}
 
