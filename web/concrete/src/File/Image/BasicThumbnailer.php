@@ -1,14 +1,14 @@
 <?php
-namespace Concrete\Core\Legacy;
+namespace Concrete\Core\File\Image;
 
 use Config;
 use Image;
+use Loader;
 use \Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
-use \Imagine\Image\Point\Center;
 use \Concrete\Core\File\File;
 
-class ImageHelper
+class BasicThumbnailer
 {
 
     protected $jpegCompression;
