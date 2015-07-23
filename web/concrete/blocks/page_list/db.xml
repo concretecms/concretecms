@@ -40,6 +40,21 @@
       <default value="0"/>
       <notnull/>
     </field>
+    <field name="filterDateOption" type="string" size="25" comment="('all','today','past','future','between')">
+      <default value="all"/>
+    </field>
+    <field name="filterDateDays" type="integer">
+      <unsigned/>
+      <default value="0"/>
+      <notnull/>
+    </field>
+
+    <field name="filterDateStart" type="string" size="20">
+    </field>
+    <field name="filterDateEnd" type="string" size="20">
+    </field>
+
+
     <field name="relatedTopicAttributeKeyHandle" type="string" size="255"/>
     <field name="customTopicAttributeKeyHandle" type="string" size="255"/>
     <field name="customTopicTreeNodeID" type="integer">

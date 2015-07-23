@@ -76,6 +76,54 @@ class Controller extends BlockController
                 break;
         }
 
+        switch($this->filterDateOption) {
+            case 'now': 
+                $today = date('Y-m-d');
+                $start = "$today 00:00:00";
+                $end = "$today 23:59:59";
+
+                $this->list->filterByPublicDate($start, '>=');
+                $this->list->filterByPublicDate($end, '<=');
+                break;
+
+            case 'past':
+                $today = date('Y-m-d');
+                $end = "$today 23:59:59";
+                $this->list->filterByPublicDate($end, '<=');
+
+                if($this->filterDateDays > 0)  {
+                    $past = date('Y-m-d', strtotime("-{$this->filterDateDays} days"));
+                    $start = "$past 00:00:00";
+
+                    $this->list->filterByPublicDate($start, '>=');
+                }
+                break;
+
+            case 'future':
+                $today = date('Y-m-d');
+                $start = "$today 00:00:00";
+                $this->list->filterByPublicDate($start, '>=');
+
+                if($this->filterDateDays > 0)  {
+                    $future = date('Y-m-d', strtotime("+{$this->filterDateDays} days"));
+                    $end = "$future 23:59:59";
+
+                    $this->list->filterByPublicDate($end, '<=');
+                }
+                break;
+
+            case 'between':
+                $start = "{$this->filterDateStart} 00:00:00";
+                $end = "{$this->filterDateEnd} 23:59:59";
+                $this->list->filterByPublicDate($start, '>=');
+                $this->list->filterByPublicDate($end, '<=');
+                break;
+
+            case 'all':
+            default:
+                break;
+        }
+
         $c = Page::getCurrentPage();
         if (is_object($c)) {
             $this->cID = $c->getCollectionID();
@@ -415,6 +463,19 @@ class Controller extends BlockController
                 }
             }
             $args['pfID'] = 0;
+        }
+
+        if($args['filterDateOption'] != 'between') {
+            $args['filterDateStart'] = null;
+            $args['filterDateEnd'] = null;
+        }
+
+        if ($args['filterDateOption'] == 'past') {
+            $args['filterDateDays'] = $args['filterDatePast'];
+        } else if ($args['filterDateOption'] == 'future') {
+            $args['filterDateDays'] = $args['filterDateFuture'];
+        } else {
+            $args['filterDateDays'] = null;
         }
 
         $args['pfID'] = intval($args['pfID']);
