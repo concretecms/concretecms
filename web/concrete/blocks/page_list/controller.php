@@ -76,52 +76,47 @@ class Controller extends BlockController
                 break;
         }
 
+        $today = date('Y-m-d');
+
         switch($this->filterDateOption) {
             case 'now': 
-                $today = date('Y-m-d');
                 $start = "$today 00:00:00";
                 $end = "$today 23:59:59";
-
-                $this->list->filterByPublicDate($start, '>=');
-                $this->list->filterByPublicDate($end, '<=');
                 break;
 
             case 'past':
-                $today = date('Y-m-d');
                 $end = "$today 23:59:59";
-                $this->list->filterByPublicDate($end, '<=');
 
                 if($this->filterDateDays > 0)  {
                     $past = date('Y-m-d', strtotime("-{$this->filterDateDays} days"));
                     $start = "$past 00:00:00";
-
-                    $this->list->filterByPublicDate($start, '>=');
                 }
                 break;
 
             case 'future':
-                $today = date('Y-m-d');
                 $start = "$today 00:00:00";
-                $this->list->filterByPublicDate($start, '>=');
 
                 if($this->filterDateDays > 0)  {
                     $future = date('Y-m-d', strtotime("+{$this->filterDateDays} days"));
                     $end = "$future 23:59:59";
-
-                    $this->list->filterByPublicDate($end, '<=');
                 }
                 break;
 
             case 'between':
                 $start = "{$this->filterDateStart} 00:00:00";
                 $end = "{$this->filterDateEnd} 23:59:59";
-                $this->list->filterByPublicDate($start, '>=');
-                $this->list->filterByPublicDate($end, '<=');
                 break;
 
             case 'all':
             default:
                 break;
+        }
+
+        if($start) {
+            $this->list->filterByPublicDate($start, '>=');
+        }
+        if($end) {
+            $this->list->filterByPublicDate($end, '<=');
         }
 
         $c = Page::getCurrentPage();
