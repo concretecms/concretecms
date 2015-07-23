@@ -46,7 +46,7 @@ class LinkAbstractor extends Object {
 				}
 
 				if (preg_match($imgmatch, $img->src, $matches)) {
-					$img->outertext = '<concrete-picture fID="' . $matches[1] . '" ' . $attrString . ' />';
+					$img->outertext = '<concrete-picture fID="' . $matches[1] . '" ' . $attrString . '/>';
 				}
 			}
 
@@ -182,7 +182,7 @@ class LinkAbstractor extends Object {
 					}
 				}
 
-				$picture->outertext = '<img src="' . URL::to('/download_file', 'view_inline', $fID) . '" ' . $attrString . ' />';
+				$picture->outertext = '<img src="' . URL::to('/download_file', 'view_inline', $fID) . '" ' . $attrString . '/>';
 			}
 
 			$text = (string) $r;
