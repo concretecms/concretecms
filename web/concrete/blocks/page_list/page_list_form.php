@@ -169,7 +169,7 @@ $form = Loader::helper('form/page_selector');
         </div>
 
         <div class="ccm-page-list-all-descendents"
-             style="<?php echo (!$isOtherPage && !$cThis) ? ' display: none;' : ''; ?>">
+             style="<?php echo ($cParentID === 0) ? ' display: none;' : ''; ?>">
             <div class="form-group">
                 <div class="checkbox">
                 <label>
