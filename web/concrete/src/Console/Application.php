@@ -2,7 +2,6 @@
 
 namespace Concrete\Core\Console;
 
-use Config;
 use Core;
 use Database;
 use Doctrine\ORM\Tools\Console\ConsoleRunner;
@@ -32,6 +31,9 @@ class Application extends \Symfony\Component\Console\Application
 
     public function setupDoctrineCommands()
     {
+        if (!Core::make('app')->isInstalled()) {
+            return;
+        }
         $cn = Database::connection();
         $helperSet = ConsoleRunner::createHelperSet($cn->getEntityManager());
         $this->setHelperSet($helperSet);
