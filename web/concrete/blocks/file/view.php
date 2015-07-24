@@ -13,4 +13,11 @@ if ($f && $fp->canViewFile()) {
 	</div>
 
 
-<? } ?>
+<? }
+
+$c = Page::getCurrentPage();
+ if (!$f && $c->isEditMode()) { ?>
+
+    <div class="ccm-edit-mode-disabled-item"><?=t('Empty File Block.')?></div>
+
+<? }
