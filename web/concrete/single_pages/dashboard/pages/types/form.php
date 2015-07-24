@@ -72,7 +72,6 @@ use \Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayou
 						<button class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
 						<button class="btn btn-danger pull-right" onclick="$('form[data-delete-set-form=<?=$set->getPageTypeComposerFormLayoutSetID()?>]').submit();"><?=t('Delete Set')?></button>
 					</div>
-
 				</div>
 			</div>
 
@@ -96,22 +95,27 @@ use \Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayou
 				</div>
 			</div>
 
-			<table class="table table-hover" style="margin: 0; width: 100%;">
-				<thead>
-					<tr>
-						<th>Label</th>
-						<th>Type</th>
-						<th>Original Name</th>
-						<th>&nbsp;</th>
-					</tr>
-				</thead>
-				<tbody class="ccm-page-type-composer-form-layout-control-set-inner">
-					<? $controls = PageTypeComposerFormLayoutSetControl::getList($set);
-					foreach($controls as $cnt) { ?>
-						<?=Loader::element('page_types/composer/form/layout_set/control', array('control' => $cnt));?>
-					<? } ?>
-				</tbody>
-			</table>
+			<?
+			$controls = PageTypeComposerFormLayoutSetControl::getList($set);
+			if (count($controls) > 0):
+			?>
+				<table class="table table-hover" style="width: 100%;">
+					<thead>
+						<tr>
+							<th>Label</th>
+							<th>Type</th>
+							<th>Original Name</th>
+							<th>&nbsp;</th>
+						</tr>
+					</thead>
+					<tbody class="ccm-page-type-composer-form-layout-control-set-inner">
+						<? $controls = PageTypeComposerFormLayoutSetControl::getList($set);
+						foreach($controls as $cnt) {
+							echo Loader::element('page_types/composer/form/layout_set/control', array('control' => $cnt));
+						} ?>
+					</tbody>
+				</table>
+			<? endif; ?>
 		</div>
 
 	<? } ?>
@@ -246,7 +250,7 @@ $(function() {
 		}
 	});
 
-	$('div.ccm-page-type-composer-form-layout-control-set-inner').on('click', 'a[data-delete-set-control]', function() {
+	$('.ccm-page-type-composer-form-layout-control-set-inner').on('click', 'a[data-delete-set-control]', function() {
 		var ptComposerFormLayoutSetControlID = $(this).attr('data-delete-set-control');
         jQuery.fn.dialog.open({
             element: 'div[data-delete-set-control-dialog=' + ptComposerFormLayoutSetControlID + ']',
