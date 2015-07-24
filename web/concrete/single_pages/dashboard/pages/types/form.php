@@ -36,6 +36,7 @@ use \Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayou
 
 <? if (count($sets) > 0) {
 
+	/* @var $set Concrete\Core\Page\Type\Composer\FormLayoutSet */
 	foreach($sets as $set) { ?>
 
 		<div class="ccm-page-type-composer-form-layout-control-set panel panel-default" data-page-type-composer-form-layout-control-set-id="<?= $set->getPageTypeComposerFormLayoutSetID()?>">
@@ -46,43 +47,56 @@ use \Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayou
 					<li><a href="#" data-edit-set="<?=$set->getPageTypeComposerFormLayoutSetID()?>"><i class="fa fa-pencil"></i></a></li>
 					<li><a href="#" data-delete-set="<?=$set->getPageTypeComposerFormLayoutSetID()?>"><i class="fa fa-trash-o"></i></a></li>
 				</ul>
-				<div class="ccm-page-type-composer-form-layout-control-set-name" ><? if ($set->getPageTypeComposerFormLayoutSetDisplayName()) { ?><?=$set->getPageTypeComposerFormLayoutSetDisplayName()?><? } else { ?><?=t('(No Name)')?><? } ?></div>
-				<div style="display: none">
-					<div data-delete-set-dialog="<?=$set->getPageTypeComposerFormLayoutSetID()?>">
-						<form data-delete-set-form="<?=$set->getPageTypeComposerFormLayoutSetID()?>" action="<?=$view->action('delete_set', $set->getPageTypeComposerFormLayoutSetID())?>" method="post">
+				<div class="ccm-page-type-composer-form-layout-control-set-name" ><?
+					if ($set->getPageTypeComposerFormLayoutSetDisplayName()) {
+						echo $set->getPageTypeComposerFormLayoutSetDisplayName();
+					} else {
+						echo t('(No Name)');
+					}
+				?></div>
+			</div>
+
+			<? if ($set->getPageTypeComposerFormLayoutSetDisplayDescription()): ?>
+				<div class="panel-body">
+					<p><?= $set->getPageTypeComposerFormLayoutSetDisplayDescription(); ?></p>
+				</div>
+			<? endif; ?>
+
+			<div style="display: none">
+				<div data-delete-set-dialog="<?=$set->getPageTypeComposerFormLayoutSetID()?>">
+					<form data-delete-set-form="<?=$set->getPageTypeComposerFormLayoutSetID()?>" action="<?=$view->action('delete_set', $set->getPageTypeComposerFormLayoutSetID())?>" method="post">
 						<?=t("Delete this form layout set? This cannot be undone.")?>
 						<?=Loader::helper('validation/token')->output('delete_set')?>
-						</form>
-                        <div class="dialog-buttons">
-                            <button class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
-                            <button class="btn btn-danger pull-right" onclick="$('form[data-delete-set-form=<?=$set->getPageTypeComposerFormLayoutSetID()?>]').submit();"><?=t('Delete Set')?></button>
-                        </div>
-
+					</form>
+					<div class="dialog-buttons">
+						<button class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
+						<button class="btn btn-danger pull-right" onclick="$('form[data-delete-set-form=<?=$set->getPageTypeComposerFormLayoutSetID()?>]').submit();"><?=t('Delete Set')?></button>
 					</div>
-				</div>
 
-				<div style="display: none">
-					<div data-edit-set-dialog="<?=$set->getPageTypeComposerFormLayoutSetID()?>" class="ccm-ui">
-						<form data-edit-set-form="<?=$set->getPageTypeComposerFormLayoutSetID()?>" action="<?=$view->action('update_set', $set->getPageTypeComposerFormLayoutSetID())?>" method="post">
-						<div class="form-group">
-							<?=$form->label('ptComposerFormLayoutSetName', tc('Name of a set', 'Set Name'))?>
-    						<?=$form->text('ptComposerFormLayoutSetName', $set->getPageTypeComposerFormLayoutSetName())?>
-						</div>
-						<div class="form-group">
-							<?=$form->label('ptComposerFormLayoutSetDescription', tc('Description of a set', 'Set Description'))?>
-							<?=$form->textarea('ptComposerFormLayoutSetDescription', $set->getPageTypeComposerFormLayoutSetDescription())?>
-						</div>
-                        <div class="dialog-buttons">
-                            <button class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
-                            <button class="btn btn-primary pull-right" onclick="$('form[data-edit-set-form=<?=$set->getPageTypeComposerFormLayoutSetID()?>]').submit();"><?=t('Update Set')?></button>
-                        </div>
-						<?=Loader::helper('validation/token')->output('update_set')?>
-						</form>
-					</div>
 				</div>
 			</div>
 
-			<table class="table" style="margin: 0; width: 100%;">
+			<div style="display: none">
+				<div data-edit-set-dialog="<?=$set->getPageTypeComposerFormLayoutSetID()?>" class="ccm-ui">
+					<form data-edit-set-form="<?=$set->getPageTypeComposerFormLayoutSetID()?>" action="<?=$view->action('update_set', $set->getPageTypeComposerFormLayoutSetID())?>" method="post">
+					<div class="form-group">
+						<?=$form->label('ptComposerFormLayoutSetName', tc('Name of a set', 'Set Name'))?>
+						<?=$form->text('ptComposerFormLayoutSetName', $set->getPageTypeComposerFormLayoutSetName())?>
+					</div>
+					<div class="form-group">
+						<?=$form->label('ptComposerFormLayoutSetDescription', tc('Description of a set', 'Set Description'))?>
+						<?=$form->textarea('ptComposerFormLayoutSetDescription', $set->getPageTypeComposerFormLayoutSetDescription())?>
+					</div>
+					<div class="dialog-buttons">
+						<button class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
+						<button class="btn btn-primary pull-right" onclick="$('form[data-edit-set-form=<?=$set->getPageTypeComposerFormLayoutSetID()?>]').submit();"><?=t('Update Set')?></button>
+					</div>
+					<?=Loader::helper('validation/token')->output('update_set')?>
+					</form>
+				</div>
+			</div>
+
+			<table class="table table-hover" style="margin: 0; width: 100%;">
 				<thead>
 					<tr>
 						<th>Label</th>
@@ -278,6 +292,11 @@ ul.ccm-page-type-composer-item-controls {
 .ccm-page-type-composer-item-controls li {
 	display: inline-block;
 	list-style-type: none;
+}
+
+th, td {
+	padding-left: 15px !important;
+	padding-right: 15px !important;
 }
 
 </style>
