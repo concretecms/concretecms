@@ -56,12 +56,6 @@ use \Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayou
 				?></div>
 			</div>
 
-			<? if ($set->getPageTypeComposerFormLayoutSetDisplayDescription()): ?>
-				<div class="panel-body">
-					<p><?= $set->getPageTypeComposerFormLayoutSetDisplayDescription(); ?></p>
-				</div>
-			<? endif; ?>
-
 			<div style="display: none">
 				<div data-delete-set-dialog="<?=$set->getPageTypeComposerFormLayoutSetID()?>">
 					<form data-delete-set-form="<?=$set->getPageTypeComposerFormLayoutSetID()?>" action="<?=$view->action('delete_set', $set->getPageTypeComposerFormLayoutSetID())?>" method="post">
