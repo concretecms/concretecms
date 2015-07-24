@@ -486,7 +486,6 @@ class Form
         if (!is_array($optionValues)) {
             $optionValues = array();
         }
-        $str = "<input type=\"hidden\" class=\"ignore\" name=\"$key\" value=\"\" />";
         $str .= "<select id=\"$key\" name=\"{$key}[]\" multiple=\"multiple\"" . $this->parseMiscFields('form-control', $miscFields) . ">";
         foreach ($optionValues as $k => $text) {
             $str .= '<option value="' . $k . '"';
