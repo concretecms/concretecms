@@ -100,14 +100,6 @@ use \Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayou
 			if (count($controls) > 0):
 			?>
 				<table class="table table-hover" style="width: 100%;">
-					<thead>
-						<tr>
-							<th>Label</th>
-							<th>Type</th>
-							<th>Original Name</th>
-							<th>&nbsp;</th>
-						</tr>
-					</thead>
 					<tbody class="ccm-page-type-composer-form-layout-control-set-inner">
 						<? $controls = PageTypeComposerFormLayoutSetControl::getList($set);
 						foreach($controls as $cnt) {
