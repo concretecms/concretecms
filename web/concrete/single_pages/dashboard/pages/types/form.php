@@ -38,8 +38,8 @@ use \Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayou
 
 	foreach($sets as $set) { ?>
 
-		<div class="ccm-page-type-composer-form-layout-control-set" data-page-type-composer-form-layout-control-set-id="<?=$set->getPageTypeComposerFormLayoutSetID()?>">
-			<div class="ccm-page-type-composer-item-control-bar">
+		<div class="ccm-page-type-composer-form-layout-control-set panel panel-default" data-page-type-composer-form-layout-control-set-id="<?= $set->getPageTypeComposerFormLayoutSetID()?>">
+			<div class="panel-heading">
 				<ul class="ccm-page-type-composer-item-controls">
 					<li><a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/page_types/composer/form/add_control?ptComposerFormLayoutSetID=<?=$set->getPageTypeComposerFormLayoutSetID()?>" dialog-title="<?=t('Add Form Control')?>" dialog-width="640" dialog-height="400" data-command="add-form-set-control"><i class="fa fa-plus"></i></a></li>
 					<li><a href="#" data-command="move_set" style="cursor: move"><i class="fa fa-arrows"></i></a></li>
@@ -80,14 +80,24 @@ use \Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayou
 						</form>
 					</div>
 				</div>
+			</div>
 
-			</div>
-			<div class="ccm-page-type-composer-form-layout-control-set-inner">
-				<? $controls = PageTypeComposerFormLayoutSetControl::getList($set);
-				foreach($controls as $cnt) { ?>
-					<?=Loader::element('page_types/composer/form/layout_set/control', array('control' => $cnt));?>
-				<? } ?>
-			</div>
+			<table class="table" style="margin: 0; width: 100%;">
+				<thead>
+					<tr>
+						<th>Label</th>
+						<th>Type</th>
+						<th>Original Name</th>
+						<th>&nbsp;</th>
+					</tr>
+				</thead>
+				<tbody class="ccm-page-type-composer-form-layout-control-set-inner">
+					<? $controls = PageTypeComposerFormLayoutSetControl::getList($set);
+					foreach($controls as $cnt) { ?>
+						<?=Loader::element('page_types/composer/form/layout_set/control', array('control' => $cnt));?>
+					<? } ?>
+				</tbody>
+			</table>
 		</div>
 
 	<? } ?>
@@ -196,7 +206,7 @@ $(function() {
 				'value': '<?=Loader::helper("validation/token")->generate("update_set_control_display_order")?>'
 			}, {
 				'name': 'ptComposerFormLayoutSetID',
-				'value': $(this).parent().attr('data-page-type-composer-form-layout-control-set-id')
+				'value': $(this).parent().parent().attr('data-page-type-composer-form-layout-control-set-id')
 			}];
 
 			$(this).find('.ccm-page-type-composer-form-layout-control-set-control').each(function() {
@@ -238,40 +248,8 @@ div.ccm-page-type-composer-form-layout-control-set:last-child {
 	margin-bottom: 20px;
 }
 
-div.ccm-page-type-composer-item-control-bar {
-	position: relative;
-}
-
-div.ccm-page-type-composer-form-layout-control-set-control div.ccm-page-type-composer-item-control-bar {
-	background-color: #fafafa;
-	border-bottom: 1px solid #dedede;
-	padding: 4px 10px 4px 10px;
-}
-
-div.ccm-page-type-composer-form-layout-control-set-control:last-child div.ccm-page-type-composer-item-control-bar {
-	border-bottom: 0px;
-}
-
-
-div.ccm-page-type-composer-form-layout-control-set-inner {
-	border: 1px solid #eee;
-}
-
-div.ccm-page-type-composer-form-layout-control-set-name {
-	border-left: 1px solid #eee;
-	border-right: 1px solid #eee;
-	border-top: 1px solid #eee;
-	background-color: #f1f1f1;
-	padding: 4px 4px 4px 8px;
-	color: #888;
-	border-top-left-radius: 4px;
-	border-top-right-radius: 4px;
-}
-
-ul.ccm-page-type-composer-item-controls {
-	position: absolute;
-	right: 8px;
-	top: 7px;
+.panel-heading .ccm-page-type-composer-item-controls {
+	float: right;
 }
 
 ul.ccm-page-type-composer-item-controls a {
@@ -286,15 +264,20 @@ ul.ccm-page-type-composer-item-controls a:hover {
 	text-decoration: none;
 }
 
-div.ccm-page-type-composer-item-control-bar:hover ul.ccm-page-type-composer-item-controls li {
+ul.ccm-page-type-composer-item-controls {
+	padding: 0;
+	margin: 0;
+	display: none
+}
+
+.panel-heading:hover > .ccm-page-type-composer-item-controls,
+.ccm-page-type-composer-form-layout-control-set-control:hover .ccm-page-type-composer-item-controls {
+	display: block;
+}
+
+.ccm-page-type-composer-item-controls li {
 	display: inline-block;
-}
-
-ul.ccm-page-type-composer-item-controls li {
 	list-style-type: none;
-	display: none;
 }
-
-
 
 </style>
