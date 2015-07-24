@@ -16,7 +16,10 @@ if (strlen($control->getPageTypeComposerFormLayoutSetControlCustomLabel())) {
 	</td>
 
 	<td style="width: 100%;">
-		<span class="text-muted"><?= $name ?> (<?= $der->getPageTypeComposerControlTypeDisplayName() ?>)</span>
+		<span class="text-muted"><?= $der->getPageTypeComposerControlTypeDisplayName() ?></span>
+		<? if ($name): ?>
+			<span class="text-muted">(<?= trim($name) ?>)</span>
+		<? endif ?>
 	</td>
 
 	<td style="text-align: right; min-width: 62px; white-space: nowrap;">
