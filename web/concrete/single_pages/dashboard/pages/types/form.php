@@ -214,7 +214,16 @@ $(function() {
 		items: '.ccm-page-type-composer-form-layout-control-set-control',
 		cursor: 'move',
 		axis: 'y',
-		stop: function() {
+		helper: function(e, ui) { // prevent table columns from collapsing
+			ui.addClass('active');
+			ui.children().each(function () {
+				$(this).width($(this).width());
+			});
+			return ui;
+		},
+		stop: function(e, ui) {
+			ui.item.removeClass('active');
+
 			var formData = [{
 				'name': 'token',
 				'value': '<?=Loader::helper("validation/token")->generate("update_set_control_display_order")?>'
