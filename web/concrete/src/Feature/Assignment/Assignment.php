@@ -21,7 +21,7 @@ abstract class Assignment extends Object
      */
     public static function getList($mixed)
     {
-        return array();
+        throw new RuntimeException('This method has not yet been implemented.');
     }
 
     /**
@@ -33,7 +33,7 @@ abstract class Assignment extends Object
      */
     public static function getFeature($feHandle, $mixed)
     {
-        return null;
+        throw new RuntimeException('This method has not yet been implemented.');
     }
 
     /**
@@ -46,7 +46,7 @@ abstract class Assignment extends Object
      */
     public static function add(Feature $fe, FeatureDetail $fd, $mixed)
     {
-        return null;
+        throw new RuntimeException('This method has not yet been implemented.');
     }
 
     public static function addAssignment(Feature $fe, FeatureCategory $fc, FeatureDetail $fd, $mixed)
