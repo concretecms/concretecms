@@ -357,8 +357,12 @@ class Key extends Object
     /**
      * Adds an attribute key.
      */
-    protected static function add($akCategoryHandle, $type, $args, $pkg = false)
+    protected static function add($type, $args, $pkg = false)
     {
+        // Legacy check
+        if (is_array($pkg)) {
+            list($akCategoryHandle, $type, $args, $pkg) = func_get_args();
+        }
 
         $vn = Loader::helper('validation/numbers');
         $txt = Loader::helper('text');

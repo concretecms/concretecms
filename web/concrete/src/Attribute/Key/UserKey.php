@@ -191,7 +191,7 @@ class UserKey extends Key
      * @param null $filters Ignored; included for legacy support
      * @return array
      */
-    public static function getList($akCategoryHandle = null, $filters = null) {
+    public static function getList($akCategoryHandle = null, $filters = null)
     {
         $list = parent::getList('user');
         usort($list, function ($a, $b) {
@@ -228,7 +228,8 @@ class UserKey extends Key
     {
         CacheLocal::delete('user_attribute_key_by_handle', $args['akHandle']);
 
-        $ak = parent::add('user', $type, $args, $pkg);
+        $args['akCategoryHandle'] = 'user';
+        $ak = parent::add($type, $args, $pkg);
 
         extract($args);
 

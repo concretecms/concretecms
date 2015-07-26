@@ -143,7 +143,8 @@ class CollectionKey extends Key
 
         CacheLocal::delete('collection_attribute_key_by_handle', $args['akHandle']);
 
-        $ak = parent::add('collection', $at, $args, $pkg);
+        $args['akCategoryHandle'] = 'collection';
+        $ak = parent::add($at, $args, $pkg);
         return $ak;
     }
 
