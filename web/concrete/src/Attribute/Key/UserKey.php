@@ -83,10 +83,10 @@ class UserKey extends Key
         $db = Database::connection();
 
         $q = "SELECT ak.akID
-			FROM AttributeKeys ak
-			INNER JOIN AttributeKeyCategories akc ON ak.akCategoryID = akc.akCategoryID
-			WHERE ak.akHandle = ?
-			AND akc.akCategoryHandle = 'user'";
+            FROM AttributeKeys ak
+            INNER JOIN AttributeKeyCategories akc ON ak.akCategoryID = akc.akCategoryID
+            WHERE ak.akHandle = ?
+            AND akc.akCategoryHandle = 'user'";
         $akID = $db->GetOne($q, array($akHandle));
         if ($akID > 0) {
             $ak = static::getByID($akID);
@@ -185,7 +185,13 @@ class UserKey extends Key
         $db->Execute('update UserAttributeKeys set uakIsActive = 0 where akID = ?', array($this->akID));
     }
 
-    public static function getList()
+    /**
+     * Get list of attributes for user category
+     * @param null $akCategoryHandle Ignored; included for legacy support
+     * @param null $filters Ignored; included for legacy support
+     * @return array
+     */
+    public static function getList($akCategoryHandle = null, $filters = null) {
     {
         $list = parent::getList('user');
         usort($list, function ($a, $b) {

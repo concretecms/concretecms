@@ -94,8 +94,13 @@ class FileKey extends Key {
 		}
 	}
 
-
-	public static function getList() {
+	/**
+	 * Get list of attributes for file category
+	 * @param null $akCategoryHandle Ignored; included for legacy support
+	 * @param null $filters Ignored; included for legacy support
+	 * @return array
+	 */
+	public static function getList($akCategoryHandle = null, $filters = null) {
 		return parent::getList('file');
 	}
 
