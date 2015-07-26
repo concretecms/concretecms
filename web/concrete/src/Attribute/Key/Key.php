@@ -357,11 +357,22 @@ class Key extends Object
     /**
      * Adds an attribute key.
      */
-    protected static function add($akCategoryHandle, $type, $args, $pkg = false)
+    protected static function add($type, $args, $pkg = false)
     {
+        $txt = Core::make('helper/text');
 
-        $vn = Loader::helper('validation/numbers');
-        $txt = Loader::helper('text');
+        $fargs = func_get_args();
+        if (count($fargs) >= 4) {
+            $akCategoryHandle = $fargs[0];
+            $type = $fargs[1];
+            $args = $fargs[2];
+            $pkg = $fargs[3];
+        } else {
+            $class = get_called_class();
+            $last = array_pop(explode('\\', $class));
+            $akCategoryHandle = $txt->uncamelcase(substr($last, 0, -3)); //strip off `Key`
+        }
+
         if (!is_object($type)) {
             // The passed item is not an object. It is probably something like 'DATE'
             $type = AttributeType::getByHandle(strtolower($type));
