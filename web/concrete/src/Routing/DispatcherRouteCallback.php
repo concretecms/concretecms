@@ -94,7 +94,7 @@ class DispatcherRouteCallback extends RouteCallback
         }
         if (!$c->cPathFetchIsCanonical) {
             // Handle redirect URL (additional page paths)
-            return Redirect::page($c, 301)->send();
+            return Redirect::page($c, 301);
         }
 
         // maintenance mode
@@ -109,7 +109,7 @@ class DispatcherRouteCallback extends RouteCallback
         }
 
         if ($c->getCollectionPointerExternalLink() != '') {
-            return Redirect::url($c->getCollectionPointerExternalLink(), 301)->send();
+            return Redirect::url($c->getCollectionPointerExternalLink(), 301);
         }
 
         $cp = new Permissions($c);
