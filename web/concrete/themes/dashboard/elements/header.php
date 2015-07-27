@@ -1,5 +1,5 @@
 <? defined('C5_EXECUTE') or die("Access Denied.");
-if (isset($_GET['_ccm_dashboard_external']) && $_GET['_ccm_dashboard_external']) {
+if (\Request::getInstance()->get('_ccm_dashboard_external')) {
         return;
 }
 $html = Loader::helper('html');

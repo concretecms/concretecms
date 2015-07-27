@@ -469,7 +469,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                                     $appLabel = t('Submit for Approval');
                                 }
                             }
-                            if (!$appLabel) {
+                            if (!isset($appLabel) || !$appLabel) {
                                 $appLabel = t('Approve Version');
                             }
 
