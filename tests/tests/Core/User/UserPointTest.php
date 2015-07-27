@@ -58,7 +58,7 @@ class UserPointTest extends \ConcreteDatabaseTestCase {
     public function testAddingBadgeToUser()
     {
         \Cache::disableAll();
-        \Config::set('concrete.emails.enabled', false);
+        \Config::set('concrete.email.enabled', false);
         \Config::set('concrete.log.emails', false);
         Action::add('won_badge', t('Won a Badge'), 5, false);
         $g = Group::add('Test Group', 'Gettin a Badge');
@@ -72,7 +72,7 @@ class UserPointTest extends \ConcreteDatabaseTestCase {
         $uo = $user->getUserObject();
         $uo->enterGroup($g);
 
-        \Config::clear('concrete.emails.enabled');
+        \Config::clear('concrete.email.enabled');
         \Config::clear('concrete.log.emails');
 
         $list = new EntryList();
