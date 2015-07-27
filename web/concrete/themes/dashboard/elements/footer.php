@@ -1,5 +1,5 @@
 <?
-if ($_GET['_ccm_dashboard_external']) {
+if (\Request::getInstance()->get('_ccm_dashboard_external')) {
         return;
 }
 ?>

@@ -21,10 +21,13 @@ class Controller extends AuthenticationTypeController
 
     public function deauthenticate(User $u)
     {
-        list($uID, $authType, $hash) = explode(':', $_COOKIE['ccmAuthUserHash']);
-        if ($authType == 'concrete') {
-            $db = Loader::db();
-            $db->execute('DELETE FROM authTypeConcreteCookieMap WHERE uID=? AND token=?', array($uID, $hash));
+        $cookie = array_get($_COOKIE, 'ccmAuthUserHash', '');
+        if ($cookie) {
+            list($uID, $authType, $hash) = explode(':', $cookie);
+            if ($authType == 'concrete') {
+                $db = Loader::db();
+                $db->execute('DELETE FROM authTypeConcreteCookieMap WHERE uID=? AND token=?', array($uID, $hash));
+            }
         }
     }
 

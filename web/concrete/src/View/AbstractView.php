@@ -35,7 +35,7 @@ abstract class AbstractView {
 
 	protected static function revertRequestInstance() {
 		array_pop(View::$requestInstances);
-		self::$requestInstance = View::$requestInstances[count(View::$requestInstances)];
+		self::$requestInstance = last(View::$requestInstances);
 	}
 
 	public $controller;
