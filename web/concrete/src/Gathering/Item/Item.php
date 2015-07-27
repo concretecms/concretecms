@@ -226,7 +226,7 @@ abstract class Item extends Object
         return $items;
     }
 
-    public static function add(
+    public static function addItem(
         Gathering $ag,
         GatheringDataSource $ags,
         $gaiPublicDateTime,
