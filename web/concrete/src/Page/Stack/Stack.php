@@ -21,6 +21,9 @@ class Stack extends Page
     const ST_TYPE_USER_ADDED = 0;
     const ST_TYPE_GLOBAL_AREA = 20;
 
+    const MULTILINGUAL_CONTENT_SOURCE_CURRENT = 100; // in multilingual sites, loads based on current page's locale
+    const MULTILINGUAL_CONTENT_SOURCE_DEFAULT = 200; // in multilingual sites, loads based on default locale (ignores current)
+
     /**
      * @param string $type
      *
@@ -56,14 +59,14 @@ class Stack extends Page
     /**
      * @param string $stackName
      * @param string $cvID
-     *
+     * @param integer $multilingualContentSource
      * @return Page
      */
-    public static function getByName($stackName, $cvID = 'RECENT')
+    public static function getByName($stackName, $cvID = 'RECENT', $multilingualContentSource = self::MULTILINGUAL_CONTENT_SOURCE_CURRENT)
     {
         $c = Page::getCurrentPage();
         if (is_object($c) && (!$c->isError())) {
-            $identifier = sprintf('/stack/name/%s/%s', $stackName, $c->getCollectionID());
+            $identifier = sprintf('/stack/name/%s/%s/%s/%s', $stackName, $c->getCollectionID(), $cvID, $multilingualContentSource);
             $cache = Core::make('cache/request');
             $item = $cache->getItem($identifier);
             if (!$item->isMiss()) {
@@ -74,9 +77,13 @@ class Stack extends Page
                 $ms = false;
                 $detector = Core::make('multilingual/detector');
                 if ($detector->isEnabled()) {
-                    $ms = Section::getBySectionOfSite($c);
-                    if (!is_object($ms)) {
-                        $ms = $detector->getPreferredSection();
+                    if ($multilingualContentSource == self::MULTILINGUAL_CONTENT_SOURCE_DEFAULT) {
+                        $ms = Section::getDefaultSection();
+                    } else {
+                        $ms = Section::getBySectionOfSite($c);
+                        if (!is_object($ms)) {
+                            $ms = $detector->getPreferredSection();
+                        }
                     }
                 }
 
