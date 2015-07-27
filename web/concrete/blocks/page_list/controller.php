@@ -196,7 +196,7 @@ class Controller extends BlockController
         $bID = $b->getBlockID();
         $this->set('bID', $bID);
         $c = Page::getCurrentPage();
-        if ($c->getCollectionID() != $this->cParentID && (!$this->cThis) && ($this->cParentID != 0)) {
+        if ((!$this->cThis) && ($this->cParentID != 0)) {
             $isOtherPage = true;
             $this->set('isOtherPage', true);
         }
