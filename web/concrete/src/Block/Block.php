@@ -654,7 +654,11 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
 
     public function enableBlockContainer()
     {
-        return $this->cbEnableBlockContainer;
+        if ($this->cbEnableBlockContainer) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public function ignorePageThemeGridFrameworkContainer()
