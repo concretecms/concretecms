@@ -117,6 +117,7 @@ return array(
         'core_cache'        => '\Concrete\Core\Cache\CacheServiceProvider',
         'core_url'          => '\Concrete\Core\Url\UrlServiceProvider',
         'core_devices'      => '\Concrete\Core\Device\DeviceServiceProvider',
+        'core_imageeditor'  => '\Concrete\Core\ImageEditor\EditorServiceProvider',
 
         // Authentication
         'core_oauth'          => '\Concrete\Core\Authentication\Type\OAuth\ServiceProvider',
@@ -569,6 +570,34 @@ return array(
         ),
         'core/frontend/parallax-image'               => array(
             array('javascript', 'js/frontend/parallax-image.js', array('minify' => false))
+        ),
+        'core/imageeditor/control/position' => array(
+            array('css', 'css/image-editor/controls/position.css'),
+            array('javascript', 'js/image-editor/controls/position.js')
+        ),
+        'core/imageeditor/control/filter' => array(
+            array('css', 'css/image-editor/controls/filter.css'),
+            array('javascript', 'js/image-editor/controls/filter.js')
+        ),
+        'core/imageeditor/filter/gaussian_blur' => array(
+            array('css', 'css/image-editor/filters/gaussian_blur.css'),
+            array('javascript', 'js/image-editor/filters/gaussian_blur.js')
+        ),
+        'core/imageeditor/filter/none' => array(
+            array('css', 'css/image-editor/filters/none.css'),
+            array('javascript', 'js/image-editor/filters/none.js')
+        ),
+        'core/imageeditor/filter/sepia' => array(
+            array('css', 'css/image-editor/filters/sepia.css'),
+            array('javascript', 'js/image-editor/filters/sepia.js')
+        ),
+        'core/imageeditor/filter/vignette' => array(
+            array('css', 'css/image-editor/filters/vignette.css'),
+            array('javascript', 'js/image-editor/filters/vignette.js')
+        ),
+        'core/imageeditor/filter/grayscale' => array(
+            array('css', 'css/image-editor/filters/grayscale.css'),
+            array('javascript', 'js/image-editor/filters/grayscale.js')
         ),
         'jquery/awesome-rating'                 => array(
             array('javascript', 'js/jquery-awesome-rating.js', array('minify' => false)),
