@@ -161,6 +161,7 @@ class Controller extends BlockController
     public function getSearchableContent()
     {
         $fp = Loader::helper("feed");
+        $posts = array();
 
         try {
             $channel = $fp->load($this->url);
