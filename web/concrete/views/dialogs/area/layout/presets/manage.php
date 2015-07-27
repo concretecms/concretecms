@@ -15,7 +15,7 @@
     </ul>
 
 <? } else { ?>
-    <p>You have no presets.</p>
+    <p><?=t('You have no presets.')?></p>
 <? } ?>
 
 
