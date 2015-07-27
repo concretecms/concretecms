@@ -64,7 +64,7 @@ class Logs extends DashboardPageController {
             $this->redirect('/dashboard/reports/logs');
         } else {
             $list = $this->getFilteredList();
-            $entries = $list->get();
+            $entries = $list->get(0);
 
             $fileName = "Log Search Results";
 
