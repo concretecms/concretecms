@@ -47,7 +47,7 @@ class ImageEditor
     /**
      * @param EditorExtensionInterface $extension
      */
-    public function addComponent(EditorExtensionInterface $extension)
+    public function addControl(EditorExtensionInterface $extension)
     {
         $this->addExtension(self::ImageEditorExtensionControl, $extension);
     }
