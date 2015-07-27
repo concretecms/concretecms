@@ -5,7 +5,7 @@ namespace Concrete\Core\Asset;
 use Concrete\Core\Package\Package;
 use Environment;
 
-abstract class Asset
+abstract class Asset implements AssetInterface
 {
     /**
      * @var string
