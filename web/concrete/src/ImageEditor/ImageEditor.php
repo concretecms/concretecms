@@ -32,7 +32,7 @@ class ImageEditor
                 break;
 
             default:
-                throw new \Concrete\Core\Exception\RuntimeException('Invalid extension type.');
+                throw new \RuntimeException('Invalid extension type.');
         }
     }
 
