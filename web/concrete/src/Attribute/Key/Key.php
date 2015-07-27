@@ -355,6 +355,19 @@ class Key extends Object
     }
 
     /**
+     * Takes a class name (from get_called_class() for example) and returns the handle for the class
+     *
+     * @param string $class
+     * @return string
+     */
+    protected static function getHandleFromClass($class)
+    {
+        $txt = Core::make('helper/text');
+        $last = array_pop(explode('\\', $class));
+        return $txt->uncamelcase(substr($last, 0, -3)); //strip off `Key
+    }
+
+    /**
      * Adds an attribute key.
      */
     protected static function add($type, $args, $pkg = false)
@@ -368,9 +381,7 @@ class Key extends Object
             $args = $fargs[2];
             $pkg = $fargs[3];
         } else {
-            $class = get_called_class();
-            $last = array_pop(explode('\\', $class));
-            $akCategoryHandle = $txt->uncamelcase(substr($last, 0, -3)); //strip off `Key`
+            $akCategoryHandle = self::getHandleFromClass(get_called_class());
         }
 
         if (!is_object($type)) {
