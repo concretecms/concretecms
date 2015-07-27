@@ -200,9 +200,9 @@
   background-color: rgba(0, 0, 0, 0.4);
 }
 
-div.ccm-widget-colorpicker {
+.ccm-panel-left {
 
-  &.sp-container {
+  .sp-container {
     .border-radius(4px);
     border: 0px;
     background-color: rgba(0,0,0,0.95);
@@ -229,7 +229,6 @@ div.ccm-widget-colorpicker {
       .sp-alpha {
         height: 4px;
         background-color: #232323;
-        background-image: none;
       }
 
       .sp-input-container {
@@ -237,6 +236,7 @@ div.ccm-widget-colorpicker {
         width: 100%;
 
         .sp-input {
+          color: #8f969a;
           outline: 0px;
           border: 1px solid #666;
 
@@ -254,15 +254,15 @@ div.ccm-widget-colorpicker {
         width: 12px;
         height: 12px;
         top: -4px;
-        background-color: #888 !important;
         outline: none !important;
+        background-color: #fff;
         background-image: none;
 
       }
 
       a.sp-cancel {
         float: left;
-        color: #777 !important;
+        color: #8f969a !important;
         font-weight: bold;
         font-size: 12px;
         font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -281,20 +281,21 @@ div.ccm-widget-colorpicker {
 
         button.sp-choose {
           float: right;
-          color: #777;
+          color: #8f969a !important;
           font-weight: bold;
           font-size: 12px;
           border: none !important;
           text-shadow: none !important;
           background-color: transparent !important;
           background-image: none !important;
-          padding: 0px;
+          padding: 2px;
           font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
           text-transform: capitalize;
+          .box-shadow(none);
 
           &:hover {
             text-decoration: none;
-            color: #0c6;
+            color: #0c6 !important;
           }
 
           &:focus {
@@ -308,20 +309,13 @@ div.ccm-widget-colorpicker {
       }
 
       .sp-initial {
-
-        span {
-          width: 172px;
-          .border-radius(4px);
-        }
+        overflow: hidden;
         float: none;
         width: 100%;
 
-        div.sp-palette-row-initial {
-          > span:first-child {
-            display: none;
-          }
+        span {
+          width: 172px;
         }
-
       }
     }
   }
