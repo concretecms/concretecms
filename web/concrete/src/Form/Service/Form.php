@@ -486,7 +486,7 @@ class Form
         if (!is_array($optionValues)) {
             $optionValues = array();
         }
-        $str .= "<select id=\"$key\" name=\"{$key}[]\" multiple=\"multiple\"" . $this->parseMiscFields('form-control', $miscFields) . ">";
+        $str = "<select id=\"$key\" name=\"{$key}[]\" multiple=\"multiple\"" . $this->parseMiscFields('form-control', $miscFields) . ">";
         foreach ($optionValues as $k => $text) {
             $str .= '<option value="' . $k . '"';
             if (in_array($k, $selectedValues)) {
