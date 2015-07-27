@@ -489,7 +489,7 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
         $db = Loader::db();
         $db->Replace(
             'Areas',
-            array('cID' => $c->getCollectionID(), 'arHandle' => $arHandle, 'arIsGlobal' => $this->isGlobalArea()),
+            array('cID' => $c->getCollectionID(), 'arHandle' => $arHandle, 'arIsGlobal' => $this->isGlobalArea() ? 1 : 0),
             array('arHandle', 'cID'),
             true
         );
