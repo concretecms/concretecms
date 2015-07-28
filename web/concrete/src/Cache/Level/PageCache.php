@@ -202,11 +202,6 @@ class PageCache extends \Cache
         }
     }
 
-    public function flush()
-    {
-        $this->flush();
-    }
-
     public function purge(ConcretePage $c)
     {
         $key = $this->getCacheKey($c);
