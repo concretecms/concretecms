@@ -140,7 +140,7 @@ class Section extends Page
             array($language)
         );
         if ($r && is_array($r) && $r['msLanguage']) {
-            $obj = parent::getByID($r['cID'], 'RECENT', '\Concrete\Core\Multilingual\Page\Section\Section');
+            $obj = parent::getByID($r['cID'], 'RECENT');
             self::assignPropertiesFromArray($obj, $r);
 
             return $obj;
@@ -163,7 +163,7 @@ class Section extends Page
             array($locale[0], $locale[1])
         );
         if ($r && is_array($r) && $r['msLanguage']) {
-            $obj = parent::getByID($r['cID'], 'RECENT', '\Concrete\Core\Multilingual\Page\Section\Section');
+            $obj = parent::getByID($r['cID'], 'RECENT');
             self::assignPropertiesFromArray($obj, $r);
 
             return $obj;
