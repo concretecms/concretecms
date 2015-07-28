@@ -26,6 +26,10 @@ class Controller extends BlockController
     protected $btSupportsInlineEdit = true;
     protected $btTable = 'btCoreAreaLayout';
     protected $btIsInternal = true;
+    protected $btCacheBlockRecord = true;
+    protected $btCacheBlockOutput = true;
+    protected $btCacheBlockOutputOnPost = true;
+    protected $btCacheBlockOutputForRegisteredUsers = true;
 
     public function getBlockTypeDescription()
     {
