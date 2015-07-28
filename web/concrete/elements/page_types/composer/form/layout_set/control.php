@@ -22,7 +22,7 @@ if (strlen($control->getPageTypeComposerFormLayoutSetControlCustomLabel())) {
 		<? endif ?>
 	</td>
 
-	<td style="text-align: right; min-width: 62px; white-space: nowrap;">
+	<td style="text-align: right; white-space: nowrap;">
 		<ul class="ccm-page-type-composer-item-controls">
 			<li><a href="#" data-command="move-set-control" style="cursor: move"><i class="fa fa-arrows"></i></a></li>
 			<li><a data-command="edit-form-set-control" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/page_types/composer/form/edit_control?ptComposerFormLayoutSetControlID=<?=$control->getPageTypeComposerFormLayoutSetControlID()?>" class="dialog-launch" dialog-width="400" dialog-height="auto" dialog-modal="true" dialog-title="<?=t('Edit Form Control')?>"><i class="fa fa-pencil"></i></a></li>
