@@ -114,11 +114,11 @@ class Section extends Page
      *
      * @return MultilingualSection|false
      */
-    public static function getByID($cID, $cvID = 'RECENT', $class = '\Concrete\Core\Multilingual\Page\Section\Section')
+    public static function getByID($cID, $cvID = 'RECENT')
     {
         $r = self::isMultilingualSection($cID);
         if ($r) {
-            $obj = parent::getByID($cID, $cvID, $class);
+            $obj = parent::getByID($cID, $cvID);
             self::assignPropertiesFromArray($obj, $r);
 
             return $obj;
