@@ -74,8 +74,9 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      *
      * @return Page
      */
-    public static function getByID($cID, $version = 'RECENT', $class = 'Page')
+    public static function getByID($cID, $version = 'RECENT')
     {
+        $class = get_called_class();
         $c = CacheLocal::getEntry('page', $cID.':'.$version.':'.$class);
         if ($c instanceof $class) {
             return $c;
