@@ -21,6 +21,7 @@ print "var CCM_SECURITY_TOKEN = '" . $valt->generate() . "';";
 <?
 $dh = Loader::helper('concrete/dashboard');
 $v = View::getInstance();
+$request = \Request::getInstance();
 
 if (!$dh->inDashboard()) {
 
@@ -30,8 +31,12 @@ if (!$dh->inDashboard()) {
 	$tools = REL_DIR_FILES_TOOLS_REQUIRED;
 	if ($c->isEditMode()) {
 		$startEditMode = 'new Concrete.EditMode();';
-	}
-	if ($cp->canEditPageContents() && $_REQUEST['ctask'] == 'check-out-first') {
+	} else {
+        $startEditMode = '';
+    }
+
+    $launchPageComposer = '';
+	if ($cp->canEditPageContents() && $request->get('ctask') == 'check-out-first') {
 		$pagetype = $c->getPageTypeObject();
 		if (is_object($pagetype) && $pagetype->doesPageTypeLaunchInComposer()) {
 			$launchPageComposer = "$('a[data-launch-panel=page]').toggleClass('ccm-launch-panel-active'); ConcretePanelManager.getByIdentifier('page').show();";
