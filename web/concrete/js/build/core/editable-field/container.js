@@ -60,7 +60,7 @@
 				ajaxOptions: {
 					dataType: 'json'
 				},
-				mode: $field.data('editablemode') || null,						//Comment out this for inline
+				mode: $field.data('editablemode') || null,
 				emptytext: ccmi18n.none,
 				showbuttons: true,
 				savenochange: true,
