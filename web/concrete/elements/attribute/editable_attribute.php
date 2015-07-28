@@ -47,7 +47,7 @@ $canEdit = $permissionsCallback($ak, $permissionsArguments); ?>
                         </a></li>
                 </ul>
             <?php } ?>
-            <div
+            <span
                     <?php if ($canEdit) { ?>
                         data-title="<?= $ak->getAttributeKeyDisplayName() ?>"
                         data-key-id="<?= $ak->getAttributeKeyID() ?>"
@@ -58,7 +58,7 @@ $canEdit = $permissionsCallback($ak, $permissionsArguments); ?>
                         data-type="concreteattribute"<?php
                     } ?>>
                 <?= $display ?>
-            </div>
+            </span>
         </div>
     </div>
 
