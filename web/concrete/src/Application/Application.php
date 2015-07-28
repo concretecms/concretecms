@@ -200,6 +200,7 @@ class Application extends Container
      */
     public function checkPageCache(\Concrete\Core\Http\Request $request)
     {
+        /** @var PageCache $library */
         $library = PageCache::getLibrary();
         if ($library->shouldCheckCache($request)) {
             $record = $library->getRecord($request);

@@ -198,15 +198,24 @@ return array(
          * @var string|null
          */
         'directory_relative' => null,
-        'page'        => array(
-            'directory' => DIR_FILES_UPLOADED_STANDARD . '/cache/pages',
-            'adapter'      => 'file',
-        ),
+
         'environment' => array(
             'file' => 'environment.cache'
         ),
 
         'levels' => array(
+            'page' => array(
+                'drivers' => array(
+                    array(
+                        'class' => '\Stash\Driver\FileSystem',
+                        'options' => array(
+                            'path' => DIR_FILES_UPLOADED_STANDARD . '/cache/pages',
+                            'dirPermissions' => DIRECTORY_PERMISSIONS_MODE_COMPUTED,
+                            'filePermissions' => FILE_PERMISSIONS_MODE_COMPUTED
+                        )
+                    ),
+                )
+            ),
             'expensive' => array(
                 'drivers' => array(
                     array(

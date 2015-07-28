@@ -5,6 +5,11 @@ use Concrete\Core\Page\Page;
 
 class PageCacheRecord {
 
+    public $expires;
+    public $content;
+    public $headers;
+    public $cacheRecordKey;
+
 	public function __construct(Page $c, $content, $lifetime) {
 		$cache = PageCache::getLibrary();
 		$this->setCacheRecordLifetime($lifetime);
