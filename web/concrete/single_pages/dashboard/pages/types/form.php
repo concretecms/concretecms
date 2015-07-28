@@ -280,16 +280,16 @@ ul.ccm-page-type-composer-item-controls a:hover {
 ul.ccm-page-type-composer-item-controls {
 	padding: 0;
 	margin: 0;
-	display: none
+	width: 45px;
 }
 
 .panel-heading:hover > .ccm-page-type-composer-item-controls,
-.ccm-page-type-composer-form-layout-control-set-control:hover .ccm-page-type-composer-item-controls {
-	display: block;
+.ccm-page-type-composer-form-layout-control-set-control:hover .ccm-page-type-composer-item-controls li {
+	display: inline-block;
 }
 
 .ccm-page-type-composer-item-controls li {
-	display: inline-block;
+	display: none;
 	list-style-type: none;
 }
 
