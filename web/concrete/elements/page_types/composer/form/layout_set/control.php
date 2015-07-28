@@ -11,7 +11,7 @@ if (strlen($control->getPageTypeComposerFormLayoutSetControlCustomLabel())) {
 
 ?>
 <tr class="ccm-page-type-composer-form-layout-control-set-control" data-page-type-composer-form-layout-control-set-control-id="<?=$control->getPageTypeComposerFormLayoutSetControlID()?>">
-	<td style="white-space: nowrap;">
+	<td style="white-space: nowrap; width: 20%;">
 		<?= $control->getPageTypeComposerControlDisplayLabel(); ?>
 	</td>
 
