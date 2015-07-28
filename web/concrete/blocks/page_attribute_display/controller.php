@@ -17,6 +17,9 @@ class Controller extends BlockController
     protected $btInterfaceWidth = "500";
     protected $btInterfaceHeight = "365";
     public $dateFormat = "m/d/y h:i:a";
+    protected $btCacheBlockOutput = true;
+    protected $btCacheBlockOutputOnPost = true;
+    protected $btCacheBlockOutputForRegisteredUsers = false;
 
     /**
      * @var integer thumbnail height
