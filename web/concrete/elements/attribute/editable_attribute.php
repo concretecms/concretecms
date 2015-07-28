@@ -47,17 +47,18 @@ $canEdit = $permissionsCallback($ak, $permissionsArguments); ?>
                         </a></li>
                 </ul>
             <?php } ?>
-            <p><span
+            <div
                     <?php if ($canEdit) { ?>
                         data-title="<?= $ak->getAttributeKeyDisplayName() ?>"
                         data-key-id="<?= $ak->getAttributeKeyID() ?>"
                         data-name="<?= $ak->getAttributeKeyID() ?>"
                         data-editable-field-type="xeditableAttribute"
                         data-url="<?= $saveAction ?>"
+                        <?= $ak->atHandle==='textarea' ? "data-editableMode='inline'" : '' ?>
                         data-type="concreteattribute"<?php
                     } ?>>
                 <?= $display ?>
-            </span></p>
+            </div>
         </div>
     </div>
 
