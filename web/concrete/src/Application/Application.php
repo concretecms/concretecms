@@ -3,7 +3,7 @@
 namespace Concrete\Core\Application;
 
 use Concrete\Core\Block\BlockType\BlockType;
-use Concrete\Core\Cache\Page\PageCache;
+use \PageCache;
 use Concrete\Core\Cache\Page\PageCacheRecord;
 use Concrete\Core\Cache\OpCache;
 use Concrete\Core\Foundation\ClassLoader;

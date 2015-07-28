@@ -57,7 +57,7 @@ return array(
         'Marketplace'                          => '\Concrete\Core\Marketplace\Marketplace',
         'Package'                              => '\Concrete\Core\Package\Package',
         'Page'                                 => '\Concrete\Core\Page\Page',
-        'PageCache'                            => '\Concrete\Core\Cache\Page\PageCache',
+        'PageCache'                            => '\Concrete\Core\Cache\Level\PageCache',
         'PageController'                       => '\Concrete\Core\Page\Controller\PageController',
         'PageEditResponse'                     => '\Concrete\Core\Page\EditResponse',
         'PageList'                             => '\Concrete\Core\Page\PageList',
