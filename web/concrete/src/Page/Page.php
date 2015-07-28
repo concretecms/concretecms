@@ -69,8 +69,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
     /**
      * @param int $cID Collection ID of a page
-     * @param string $versionOrig ACTIVE or RECENT
-     * @param string $class
+     * @param string $version ACTIVE or RECENT
      *
      * @return Page
      */
