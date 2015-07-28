@@ -171,29 +171,35 @@ class PageCache extends \Cache
     public function getRecord($mixed)
     {
         $key = $this->getCacheKey($mixed);
-        $item = $this->getItem($key);
-        if (!$item->isMiss()) {
-            return $item->get();
+        if ($key) {
+            $item = $this->getItem($key);
+            if (!$item->isMiss()) {
+                return $item->get();
+            }
         }
         return null;
     }
 
     public function set(ConcretePage $c, $content)
     {
-        $lifetime = $c->getCollectionFullPageCachingLifetimeValue();
         if ($content) {
             $key = $this->getCacheKey($c);
-            $item = $this->getItem($key);
-            $response = new PageCacheRecord($c, $content, $lifetime);
-            $item->set($response, $lifetime);
+            if ($key) {
+                $item = $this->getItem($key);
+                $lifetime = $c->getCollectionFullPageCachingLifetimeValue();
+                $response = new PageCacheRecord($c, $content, $lifetime);
+                $item->set($response, $lifetime);
+            }
         }
     }
 
     public function purgeByRecord(\Concrete\Core\Cache\Page\PageCacheRecord $rec)
     {
         $key = $this->getCacheKey($rec);
-        $item = $this->getItem($key);
-        $item->clear();
+        if ($key) {
+            $item = $this->getItem($key);
+            $item->clear();
+        }
     }
 
     public function flush()
@@ -204,7 +210,9 @@ class PageCache extends \Cache
     public function purge(ConcretePage $c)
     {
         $key = $this->getCacheKey($c);
-        $item = $this->getItem($key);
-        $item->clear();
+        if ($key) {
+            $item = $this->getItem($key);
+            $item->clear();
+        }
     }
 }
