@@ -6,6 +6,7 @@ use Concrete\Core\Permission\Duration;
 
 class ListItem extends Object {
 
+    /** @var Duration */
 	public $duration;
 	public $accessType;
 	public $accessEntity;
