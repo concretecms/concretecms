@@ -11,14 +11,27 @@ class CollectionKey extends Key
 
     protected $searchIndexFieldDefinition = array(
         'columns' => array(
-            array('name' => 'cID', 'type' => 'integer', 'options' => array('unsigned' => true, 'default' => 0, 'notnull' => true))
+            array(
+                'name' => 'cID',
+                'type' => 'integer',
+                'options' => array(
+                    'unsigned' => true,
+                    'default' => 0,
+                    'notnull' => true
+                )
+            )
         ),
         'primary' => array('cID')
     );
 
-    public function getIndexedSearchTable()
+    public static function getIndexedSearchTable()
     {
         return 'CollectionSearchIndexAttributes';
+    }
+
+    public static function getCategoryTypeName()
+    {
+        return 'collection';
     }
 
     /**
@@ -29,7 +42,10 @@ class CollectionKey extends Key
     public static function getAttributes($cID, $cvID, $method = 'getValue')
     {
         $db = Loader::db();
-        $values = $db->GetAll("select akID, avID from CollectionAttributeValues where cID = ? and cvID = ?", array($cID, $cvID));
+        $values = $db->GetAll(
+            "select akID, avID from CollectionAttributeValues where cID = ? and cvID = ?",
+            array($cID, $cvID)
+        );
         $avl = new AttributeValueList();
         foreach($values as $val) {
             $ak = static::getByID($val['akID']);
@@ -43,17 +59,17 @@ class CollectionKey extends Key
 
     public static function getColumnHeaderList()
     {
-        return parent::getList('collection', array('akIsColumnHeader' => 1));
+        return self::getList(array('akIsColumnHeader' => 1));
     }
 
     public static function getSearchableIndexedList()
     {
-        return parent::getList('collection', array('akIsSearchableIndexed' => 1));
+        return self::getList(array('akIsSearchableIndexed' => 1));
     }
 
     public static function getSearchableList()
     {
-        return parent::getList('collection', array('akIsSearchable' => 1));
+        return self::getList(array('akIsSearchable' => 1));
     }
 
     public function getAttributeValue($avID, $method = 'getValue')
@@ -101,17 +117,6 @@ class CollectionKey extends Key
         return $ak;
     }
 
-    /**
-     * Get list of attributes for collection category
-     * @param null $akCategoryHandle Ignored; included for legacy support
-     * @param null $filters Ignored; included for legacy support
-     * @return array
-     */
-    public static function getList($akCategoryHandle = null, $filters = null)
-    {
-        return parent::getList('collection');
-    }
-
     protected function saveAttribute($nvc, $value = false)
     {
         // We check a cID/cvID/akID combo, and if that particular combination has an attribute value ID that
@@ -120,7 +125,12 @@ class CollectionKey extends Key
         $av = $nvc->getAttributeValueObject($this, true);
         parent::saveAttribute($av, $value);
         $db = Loader::db();
-        $v = array($nvc->getCollectionID(), $nvc->getVersionID(), $this->getAttributeKeyID(), $av->getAttributeValueID());
+        $v = array(
+            $nvc->getCollectionID(),
+            $nvc->getVersionID(),
+            $this->getAttributeKeyID(),
+            $av->getAttributeValueID()
+        );
         $db->Replace('CollectionAttributeValues', array(
             'cID' => $nvc->getCollectionID(),
             'cvID' => $nvc->getVersionID(),
@@ -143,8 +153,7 @@ class CollectionKey extends Key
 
         CacheLocal::delete('collection_attribute_key_by_handle', $args['akHandle']);
 
-        $args['akCategoryHandle'] = 'collection';
-        $ak = parent::add($at, $args, $pkg);
+        $ak = parent::add(self::getCategoryTypeName(), $at, $args, $pkg);
         return $ak;
     }
 
@@ -152,11 +161,20 @@ class CollectionKey extends Key
     {
         parent::delete();
         $db = Loader::db();
-        $r = $db->Execute('select avID from CollectionAttributeValues where akID = ?', array($this->getAttributeKeyID()));
+        $r = $db->Execute(
+            'select avID from CollectionAttributeValues where akID = ?',
+            array($this->getAttributeKeyID())
+        );
         while ($row = $r->FetchRow()) {
-            $db->Execute('delete from AttributeValues where avID = ?', array($row['avID']));
+            $db->Execute(
+                'delete from AttributeValues where avID = ?',
+                array($row['avID'])
+            );
         }
-        $db->Execute('delete from CollectionAttributeValues where akID = ?', array($this->getAttributeKeyID()));
+        $db->Execute(
+            'delete from CollectionAttributeValues where akID = ?',
+            array($this->getAttributeKeyID())
+        );
     }
 
 }
