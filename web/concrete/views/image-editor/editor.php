@@ -1,9 +1,6 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 use Concrete\Core\Http\ResponseAssetGroup;
-use Concrete\Core\ImageEditor\Component as SystemImageEditorComponent;
-use Concrete\Core\ImageEditor\ControlSet as SystemImageEditorControlSet;
-use Concrete\Core\ImageEditor\Filter as SystemImageEditorFilter;
 use Concrete\Core\ImageEditor\ImageEditor;
 use Whoops\Exception\ErrorException;
 

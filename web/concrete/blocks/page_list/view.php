@@ -11,13 +11,13 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 
 <div class="ccm-block-page-list-wrapper">
 
-    <?php if ($pageListTitle): ?>
+    <?php if (isset($pageListTitle) && $pageListTitle): ?>
         <div class="ccm-block-page-list-header">
             <h5><?=h($pageListTitle)?></h5>
         </div>
     <? endif; ?>
 
-    <?php if ($rssUrl): ?>
+    <?php if (isset($rssUrl) && $rssUrl): ?>
         <a href="<?php echo $rssUrl ?>" target="_blank" class="ccm-block-page-list-rss-feed"><i class="fa fa-rss"></i></a>
     <?php endif; ?>
 
@@ -29,7 +29,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
         $buttonClasses = 'ccm-block-page-list-read-more';
         $entryClasses = 'ccm-block-page-list-page-entry';
 		$title = $th->entities($page->getCollectionName());
-		$url = $nh->getLinkToCollection($page);
+		$url = ($page->getCollectionPointerExternalLink() != '') ? $page->getCollectionPointerExternalLink() : $nh->getLinkToCollection($page);
 		$target = ($page->getCollectionPointerExternalLink() != '' && $page->openCollectionPointerExternalLinkInNewWindow()) ? '_blank' : $page->getAttribute('nav_target');
 		$target = empty($target) ? '_self' : $target;
 		$description = $page->getCollectionDescription();

@@ -29,6 +29,7 @@ do {
   </button>
   <ul class="dropdown-menu pull-right" role="menu">
   <?
+  	$categories = array();
 	$children = $account->getCollectionChildrenArray(true);
 	foreach($children as $cID) {
 		$nc = Page::getByID($cID, 'ACTIVE');

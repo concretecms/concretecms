@@ -9,12 +9,23 @@ use Stack;
 class GlobalArea extends Area
 {
 
+    protected $ignoreCurrentMultilingualLanguageSection = false;
+
     /**
      * @return bool
      */
     public function isGlobalArea()
     {
         return true;
+    }
+
+    /**
+     * If called on a multilingual website, this global area will not load its content from the language-specific global area stack. Instead, it'll use
+     * the stack in the default language, throughout the website.
+     */
+    public function ignoreCurrentLanguageSection()
+    {
+        $this->ignoreCurrentMultilingualLanguageSection = true;
     }
 
     /**
@@ -67,10 +78,14 @@ class GlobalArea extends Area
             $c = Page::getCurrentPage();
         }
         $cp = new Permissions($c);
+        $contentSource = Stack::MULTILINGUAL_CONTENT_SOURCE_CURRENT;
+        if ($this->ignoreCurrentMultilingualLanguageSection) {
+            $contentSource = Stack::MULTILINGUAL_CONTENT_SOURCE_DEFAULT;
+        }
         if ($cp->canViewPageVersions()) {
-            $stack = Stack::getByName($this->arHandle);
+            $stack = Stack::getByName($this->arHandle, 'RECENT', $contentSource);
         } else {
-            $stack = Stack::getByName($this->arHandle, 'ACTIVE');
+            $stack = Stack::getByName($this->arHandle, 'ACTIVE', $contentSource);
         }
         return $stack;
     }
@@ -96,10 +111,14 @@ class GlobalArea extends Area
     public function getAreaBlocks()
     {
         $cp = new Permissions($this->c);
+        $contentSource = Stack::MULTILINGUAL_CONTENT_SOURCE_CURRENT;
+        if ($this->ignoreCurrentMultilingualLanguageSection) {
+            $contentSource = Stack::MULTILINGUAL_CONTENT_SOURCE_DEFAULT;
+        }
         if ($cp->canViewPageVersions()) {
-            $stack = Stack::getByName($this->arHandle);
+            $stack = Stack::getByName($this->arHandle, 'RECENT', $contentSource);
         } else {
-            $stack = Stack::getByName($this->arHandle, 'ACTIVE');
+            $stack = Stack::getByName($this->arHandle, 'ACTIVE', $contentSource);
         }
         $blocksTmp = array();
         if (is_object($stack)) {

@@ -24,6 +24,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     protected $record;
     protected $helpers = array('form');
     protected $block;
+    protected $bID;
     protected $btDescription = "";
     protected $btName = "";
     protected $btHandle = "";

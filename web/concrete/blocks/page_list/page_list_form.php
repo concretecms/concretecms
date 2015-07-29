@@ -149,7 +149,7 @@ $form = Loader::helper('form/page_selector');
         <div class="radio">
             <label>
                 <input type="radio" name="cParentID" id="cThisPageField"
-                       value="<?= $c->getCollectionID() ?>" <? if ($cParentID == $c->getCollectionID() || $cThis) { ?> checked<? } ?>>
+                       value="<?= $c->getCollectionID() ?>" <? if ($cThis) { ?> checked<? } ?>>
                 <?= t('Beneath this page') ?>
             </label>
          </div>
@@ -169,7 +169,7 @@ $form = Loader::helper('form/page_selector');
         </div>
 
         <div class="ccm-page-list-all-descendents"
-             style="<?php echo (!$isOtherPage && !$cThis) ? ' display: none;' : ''; ?>">
+             style="<?php echo ($cParentID === 0) ? ' display: none;' : ''; ?>">
             <div class="form-group">
                 <div class="checkbox">
                 <label>

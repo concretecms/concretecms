@@ -42,9 +42,14 @@ class StackList extends PageList
         }
 
         if (is_object($ms)) {
-            $this->filter('stMultilingualSection', $ms->getCollectionID());
+            $this->filterByLanguageSection($ms);
         }
 
+    }
+
+    public function filterByLanguageSection(Section $ms)
+    {
+        $this->filter('stMultilingualSection', $ms->getCollectionID());
     }
 
 

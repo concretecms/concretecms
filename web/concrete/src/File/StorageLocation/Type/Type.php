@@ -79,13 +79,8 @@ class Type
      */
     public function getConfigurationObject()
     {
-        if ($this->getPackageID()) {
-            return Core::make('\\Concrete\\Package\\' . camelcase($this->getPackageHandle()) . '\\Core\\File\\StorageLocation\\Configuration\\'
-                . camelcase($this->getHandle()) . 'Configuration');
-        } else {
-            return Core::make('\\Concrete\\Core\\File\\StorageLocation\\Configuration\\'
-                . camelcase($this->getHandle()) . 'Configuration');
-        }
+        $class = core_class('\\Core\\File\\StorageLocation\\Configuration\\' . camelcase($this->getHandle()) . 'Configuration', $this->getPackageHandle());
+        return Core::make($class);
     }
 
     /**
