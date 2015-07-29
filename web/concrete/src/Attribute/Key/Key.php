@@ -21,9 +21,14 @@ use Whoops\Exception\ErrorException;
 class Key extends Object
 {
 
-    public function getIndexedSearchTable()
+    public static function getIndexedSearchTable()
     {
-        return false;
+        return null;
+    }
+
+    public static function getCategoryTypeName()
+    {
+        return null;
     }
 
     public function getSearchIndexFieldDefinition()
@@ -215,6 +220,14 @@ class Key extends Object
      */
     public static function getList($akCategoryHandle, $filters = array())
     {
+        // Deprecated legacy arguments
+        if (is_string($filters)) {
+            list($akCategoryHandle, $filters) = func_get_args();
+            $filters = $filters ?: array();
+        } else {
+            $akCategoryHandle = static::getCategoryTypeName();
+        }
+
         $db = Loader::db();
         $pkgHandle = $db->GetOne(
             'select pkgHandle from AttributeKeyCategories inner join Packages on Packages.pkgID = AttributeKeyCategories.pkgID where akCategoryHandle = ?',
