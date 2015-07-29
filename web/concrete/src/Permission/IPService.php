@@ -1,10 +1,10 @@
 <?php
 namespace Concrete\Core\Permission;
 
-use Loader;
 use Concrete\Core\Utility\IPAddress;
 use Config;
 use Concrete\Core\User\UserBannedIp;
+use Database;
 use Request;
 
 class IPService
@@ -19,7 +19,7 @@ class IPService
     public function isBanned($ip = false, $extraParamString = false, $extraParamValues = array())
     {
         $ip = ($ip instanceof IPAddress) ? $ip : $this->getRequestIP();
-        $db = Loader::db();
+        $db = Database::connection();
         //do ip check
         $q = "SELECT count(expires) as count
 		FROM UserBannedIPs
@@ -39,8 +39,7 @@ class IPService
         $v = array($ip->getIp(), $ip->getIp(), $ip->getIp(), date('Y-m-d H:i:s'));
         $v = array_merge($v, $extraParamValues);
 
-        $rs = $db->Execute($q, $v);
-        $row = $rs->fetchRow();
+        $row = $db->fetchAssoc($q, $v);
 
         return ($row['count'] > 0) ? true : false;
     }
@@ -71,9 +70,8 @@ class IPService
 
     public function logSignupRequest($ignoreConfig = false)
     {
-
-        if (Config::get('concrete.security.ban.ip.enabled') == 1) {
-            $db = Loader::db();
+        if ($ignoreConfig || Config::get('concrete.security.ban.ip.enabled') == 1) {
+            $db = Database::connection();
             $ip = $this->getRequestIP();
             $db->insert('SignupRequests', array('date_access' => date('Y-m-d H:i:s'), 'ipFrom' => $ip->getIp()));
         }
@@ -82,7 +80,7 @@ class IPService
     public function signupRequestThreshholdReached($ignoreConfig = false)
     {
         if ($ignoreConfig || Config::get('concrete.security.ban.ip.enabled') == 1) {
-            $db = Loader::db();
+            $db = Database::connection();
             $threshold_attempts = Config::get('concrete.security.ban.ip.attempts');
             $threshhold_seconds = Config::get('concrete.security.ban.ip.time');
             $ip = $this->getRequestIP();
@@ -92,14 +90,14 @@ class IPService
 			AND date_access > DATE_SUB(?, INTERVAL ? SECOND)';
             $v = Array($ip->getIp(), date('Y-m-d H:i:s'), $threshhold_seconds);
 
-            $rs = $db->execute($q, $v);
-            $row = $rs->fetchRow();
+            $row = $db->fetchAssoc($q, $v);
             if ($row['count'] >= $threshold_attempts) {
                 return true;
             } else {
                 return false;
             }
         }
+        return false;
     }
 
     /**
@@ -111,14 +109,14 @@ class IPService
         if ($ignoreConfig || Config::get('concrete.security.ban.ip.enabled') == 1) {
             $ip = ($ip instanceof IPAddress) ? $ip : $this->getRequestIP();
 
-            $db = Loader::db();
+            $db = Database::connection();
 
             //If there's a permanent ban, obey its setting otherwise set up a temporary ban
             if (!$this->existsManualPermBan($ip)) {
-                $db->StartTrans();
+                $db->beginTransaction();
                 $q = 'DELETE FROM UserBannedIPs WHERE ipFrom = ? AND ipTo = ? AND isManual = ?';
                 $v = Array($ip->getIp(), 0, 0);
-                $db->execute($q, $v);
+                $db->executeQuery($q, $v);
 
 
                 //IP_BAN_LOCK_IP_HOW_LONG_MIN of 0 or undefined  means forever
@@ -132,12 +130,11 @@ class IPService
                     $banUntil = '0000-00-00 00:00:00';
                 }
 
-                $q = 'INSERT INTO UserBannedIPs (ipFrom,ipTo,banCode,expires,isManual) ';
-                $q .= 'VALUES (?,?,?,?,?)';
+                $q = 'INSERT INTO UserBannedIPs (ipFrom,ipTo,banCode,expires,isManual) VALUES (?,?,?,?,?)';
                 $v = array($ip->getIp(), 0, UserBannedIp::IP_BAN_CODE_REGISTRATION_THROTTLE, $banUntil, 0);
-                $db->execute($q, $v);
+                $db->executeQuery($q, $v);
 
-                $db->CompleteTrans();
+                $db->commit();
             }
         }
     }
