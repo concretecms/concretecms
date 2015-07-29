@@ -233,7 +233,7 @@ class UserKey extends Key
     {
         CacheLocal::delete('user_attribute_key_by_handle', $args['akHandle']);
 
-        $ak = parent::add(self::getCategoryTypeName(), $type, $args, $pkg);
+        $ak = parent::add($type, $args, $pkg);
 
         extract($args);
 

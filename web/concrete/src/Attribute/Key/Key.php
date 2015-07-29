@@ -350,7 +350,7 @@ class Key extends Object
             array($ak['handle'], $akc->getAttributeKeyCategoryID()));
 
         if (!$akID) {
-            $akn = self::add(
+            $akn = self::addToCategory(
                 $akCategoryHandle,
                 $type,
                 array(
@@ -368,15 +368,18 @@ class Key extends Object
     }
 
     /**
-     * Adds an attribute key.
+     * Adds an attribute key of this key's category
      */
-    protected static function add($type, $args, $pkg = false)
+    public static function add($type, $args, $pkg = false)
     {
-        // Legacy check
-        if (is_array($pkg)) {
-            list($akCategoryHandle, $type, $args, $pkg) = func_get_args();
-        }
+        return self::addToCategory(static::getCategoryTypeName, $type, $args, $pkg);
+    }
 
+    /**
+     * Adds an attribute key to a specific category
+     */
+    protected static function addToCategory($akCategoryHandle, $type, $args, $pkg = false)
+    {
         $vn = Loader::helper('validation/numbers');
         $txt = Loader::helper('text');
         if (!is_object($type)) {
@@ -401,23 +404,27 @@ class Key extends Object
         if (!isset($akHandle)) {
             throw new ErrorException('No attribute key handle set.');
         }
+
         if (!isset($akName)) {
             throw new ErrorException('No Attribute Key name set.');
         }
 
-
         if (isset($akIsSearchable) && $akIsSearchable != 0) {
             $_akIsSearchable = 1;
         }
+
         if (isset($akIsInternal) && $akIsInternal != 0) {
             $_akIsInternal = 1;
         }
+
         if (isset($akIsSearchableIndexed) && $akIsSearchableIndexed != 0) {
             $_akIsSearchableIndexed = 1;
         }
+
         if (isset($akIsAutoCreated) && $akIsAutoCreated != 0) {
             $_akIsAutoCreated = 1;
         }
+
         if (isset($akIsEditable) && $akIsEditable == 0) {
             $_akIsEditable = 0;
         }
