@@ -372,7 +372,7 @@ class Key extends Object
      */
     public static function add($type, $args, $pkg = false)
     {
-        return self::addToCategory(static::getCategoryTypeName(), $type, $args, $pkg);
+        return static::addToCategory(static::getCategoryTypeName(), $type, $args, $pkg);
     }
 
     /**
