@@ -19,12 +19,7 @@ class AssetGroup
      */
     public function contains(AssetPointer $ap)
     {
-        foreach ($this->assetPointers as $assetPointer) {
-            if ($assetPointer->getHandle() == $ap->getHandle() && $assetPointer->getType() == $ap->getType()) {
-                return true;
-            }
-        }
-        return false;
+        return array_key_exists($ap->getIdentifier(), $this->assetPointers);
     }
 
     /**
@@ -35,7 +30,7 @@ class AssetGroup
         $assetPointers = $item->getAssetPointers();
         foreach ($assetPointers as $assetPointer) {
             if (!$this->contains($assetPointer)) {
-                $this->assetPointers[] = $assetPointer;
+                $this->assetPointers[$assetPointer->getIdentifier()] = $assetPointer;
             }
         }
     }
@@ -56,7 +51,7 @@ class AssetGroup
     public function add(AssetPointer $ap)
     {
         if (!$this->contains($ap)) {
-            $this->assetPointers[] = $ap;
+            $this->assetPointers[$ap->getIdentifier()] = $ap;
         }
     }
 

@@ -48,4 +48,13 @@ class AssetPointer
         $al = AssetList::getInstance();
         return $al->getAsset($this->assetType, $this->assetHandle);
     }
+
+    /**
+     * Returns a string which uniquely identifies this asset pointer object
+     * @return string
+     */
+    public function getIdentifier()
+    {
+        return $this->getType() . $this->getHandle();
+    }
 }
