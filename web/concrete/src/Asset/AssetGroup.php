@@ -19,7 +19,7 @@ class AssetGroup
      */
     public function contains(AssetPointer $ap)
     {
-        return array_key_exists($ap->getIdentifier(), $this->assetPointers);
+        return isset($this->assetPointers[$ap->getIdentifier()]);
     }
 
     /**
