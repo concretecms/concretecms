@@ -701,13 +701,12 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
 
     /**
      * Called by the scrapbook proxy block, this disables the original block container for the current request,
-     * because the scrapbook block takes care of rendering the container
+     * because the scrapbook block takes care of rendering the container.
      */
     public function disableBlockContainer()
     {
         $this->cbOverrideBlockTypeContainerSettings = true;
         $this->cbEnableBlockContainer = false;
-
     }
 
     public function cacheBlockOutputOnPost()
