@@ -243,12 +243,11 @@ class Type
 
     public function getDoubledVersion()
     {
-        $name = t('%s (Retina Version)', $this->getName());
         $height = null;
         if ($this->getHeight()) {
             $height = $this->getHeight() * 2;
         }
-        return new Version($this->getHandle() . '_2x', $this->getHandle() . '_2x', $name, $this->getWidth() * 2, $height);
+        return new Version($this->getHandle() . '_2x', $this->getHandle() . '_2x', $this->getName(), $this->getWidth() * 2, $height, true);
     }
 
 }

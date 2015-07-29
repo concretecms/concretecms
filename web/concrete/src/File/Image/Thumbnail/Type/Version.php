@@ -16,14 +16,16 @@ class Version
     protected $name;
     protected $width;
     protected $height;
+    protected $isDoubledVersion;
 
-    public function __construct($directoryName, $handle, $name, $width, $height)
+    public function __construct($directoryName, $handle, $name, $width, $height, $isDoubledVersion = false)
     {
         $this->handle = $handle;
         $this->name = $name;
         $this->width = $width;
         $this->height = $height;
         $this->directoryName = $directoryName;
+        $this->isDoubledVersion = (bool) $isDoubledVersion;
     }
 
     /**
@@ -64,6 +66,27 @@ class Version
     public function getName()
     {
         return $this->name;
+    }
+
+    /** Returns the display name for this thumbnail type version (localized and escaped accordingly to $format)
+     * @param string $format = 'html'
+     *    Escape the result in html format (if $format is 'html').
+     *    If $format is 'text' or any other value, the display name won't be escaped.
+     * @return string
+     */
+    public function getDisplayName($format = 'html')
+    {
+        $value = tc('ThumbnailTypeName', $this->getName());
+        if ($this->isDoubledVersion) {
+            $value = t('%s (Retina Version)', $value);
+        }
+        switch ($format) {
+            case 'html':
+                return h($value);
+            case 'text':
+            default:
+                return $value;
+        }
     }
 
     /**

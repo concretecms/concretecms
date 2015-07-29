@@ -7,7 +7,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 <div class="ccm-ui">
     <?php
-    /** @var Version $type */
+    /* @var Version $type */
     foreach ($types as $type) {
         $width = $type->getWidth();
         $height = $type->getHeight() ? $type->getHeight() : t('Automatic');
@@ -25,7 +25,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
         ));
         ?>
         <h4>
-            <?= $type->getName() ?>
+            <?= $type->getDisplayName() ?>
             <small><?= t('%s x %s dimensions', $width, $height) ?></small>
             <? if ($fp->canEditFileContents() && $hasFile) { ?>
                 <a href="<?= $url . '?' . $query ?>"
