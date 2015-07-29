@@ -1,7 +1,8 @@
 <?php
+
 namespace Concrete\Core\File\Image\Thumbnail\Type;
 
-use \Concrete\Core\File\Version as FileVersion;
+use Concrete\Core\File\Version as FileVersion;
 use Core;
 
 /**
@@ -10,7 +11,6 @@ use Core;
  */
 class Version
 {
-
     protected $directoryName;
     protected $handle;
     protected $name;
@@ -72,6 +72,7 @@ class Version
      * @param string $format = 'html'
      *    Escape the result in html format (if $format is 'html').
      *    If $format is 'text' or any other value, the display name won't be escaped.
+     *
      * @return string
      */
     public function getDisplayName($format = 'html')
@@ -139,7 +140,6 @@ class Version
         }
     }
 
-
     public function getFilePath(FileVersion $fv)
     {
         $prefix = $fv->getPrefix();
@@ -159,5 +159,4 @@ class Version
         //fallback
         return $f2;
     }
-
 }
