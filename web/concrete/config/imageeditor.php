@@ -9,7 +9,7 @@ return array(
         ##
         'core/position' => array(
             'type' => Concrete\Core\ImageEditor\ImageEditor::ImageEditorExtensionControl,
-            'name' => 'Position',
+            'name' => tc('ImageEditorControlSetName', 'Position'),
             'handle' => 'position',
             'src' => 'core/imageeditor/control/position',
             'view' => 'image-editor/controls/position',
@@ -20,7 +20,7 @@ return array(
 
         'core/filter' => array(
             'type' => Concrete\Core\ImageEditor\ImageEditor::ImageEditorExtensionControl,
-            'name' => 'Filter',
+            'name' => tc('ImageEditorControlSetName', 'Filter'),
             'handle' => 'filter',
             'src' => 'core/imageeditor/control/filter',
             'view' => 'image-editor/controls/filter',
@@ -34,7 +34,7 @@ return array(
         ##
         'core/filter/gaussian_blur' => array(
             'type' => Concrete\Core\ImageEditor\ImageEditor::ImageEditorExtensionFilter,
-            'name' => 'Gaussian Blur',
+            'name' => tc('ImageEditorFilterName', 'Gaussian Blur'),
             'handle' => 'gaussian_blur',
             'src' => 'core/imageeditor/filter/gaussian_blur',
             'view' => 'image-editor/filters/gaussian_blur',
@@ -44,7 +44,7 @@ return array(
         ),
         'core/filter/grayscale' => array(
             'type' => Concrete\Core\ImageEditor\ImageEditor::ImageEditorExtensionFilter,
-            'name' => 'Grayscale',
+            'name' => tc('ImageEditorFilterName', 'Grayscale'),
             'handle' => 'grayscale',
             'src' => 'core/imageeditor/filter/grayscale',
             'view' => 'image-editor/filters/grayscale',
@@ -54,7 +54,7 @@ return array(
         ),
         'core/filter/none' => array(
             'type' => Concrete\Core\ImageEditor\ImageEditor::ImageEditorExtensionFilter,
-            'name' => 'None',
+            'name' => tc('ImageEditorFilterName', 'None'),
             'handle' => 'none',
             'src' => 'core/imageeditor/filter/none',
             'view' => 'image-editor/filters/none',
@@ -64,7 +64,7 @@ return array(
         ),
         'core/filter/sepia' => array(
             'type' => Concrete\Core\ImageEditor\ImageEditor::ImageEditorExtensionFilter,
-            'name' => 'Sepia',
+            'name' => tc('ImageEditorFilterName', 'Sepia'),
             'handle' => 'sepia',
             'src' => 'core/imageeditor/filter/sepia',
             'view' => 'image-editor/filters/sepia',
@@ -74,7 +74,7 @@ return array(
         ),
         'core/filter/vignette' => array(
             'type' => Concrete\Core\ImageEditor\ImageEditor::ImageEditorExtensionFilter,
-            'name' => 'Vignette',
+            'name' => tc('ImageEditorFilterName', 'Vignette'),
             'handle' => 'vignette',
             'src' => 'core/imageeditor/filter/vignette',
             'view' => 'image-editor/filters/vignette',
