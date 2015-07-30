@@ -375,11 +375,8 @@ class Key extends Object
         $txt = Core::make('helper/text');
 
         $fargs = func_get_args();
-        if (count($fargs) >= 4) {
-            $akCategoryHandle = $fargs[0];
-            $type = $fargs[1];
-            $args = $fargs[2];
-            $pkg = $fargs[3];
+        if (count($fargs) == 4) {
+            list($akCategoryHandle, $type, $args, $pkg) = $fargs;
         } else {
             $akCategoryHandle = self::getHandleFromClass(get_called_class());
         }
