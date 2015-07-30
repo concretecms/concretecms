@@ -192,13 +192,12 @@ class UserKey extends Key
 
     /**
      * Get list of attributes for user category
-     * @param null $akCategoryHandle Ignored; included for legacy support
-     * @param null $filters Ignored; included for legacy support
+     * @param array $filters Hashmap of columns to filter on
      * @return array
      */
-    public static function getList($akCategoryHandle = null, $filters = null)
+    public static function getList($filters = array())
     {
-        $list = parent::getList();
+        $list = parent::getList($filters);
         usort($list, function ($a, $b) {
             if ($a->getAttributeKeyDisplayOrder() == $b->getAttributeKeyDisplayOrder()) {
                 return 0;
