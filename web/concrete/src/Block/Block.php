@@ -29,6 +29,8 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
     protected $bActionCID;
     protected $cacheSettings;
 
+    protected $bFilename;
+
     public static function populateManually($blockInfo, $c, $a)
     {
         $b = new self();
@@ -236,7 +238,8 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
                 $arHandle,
             )
         );
-        if ($r['btCachedBlockOutputExpires'] < time()) {
+
+        if (array_get($r, 'btCachedBlockOutputExpires') < time()) {
             return false;
         }
 
@@ -654,7 +657,11 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
 
     public function enableBlockContainer()
     {
-        return $this->cbEnableBlockContainer;
+        if ($this->cbEnableBlockContainer) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public function ignorePageThemeGridFrameworkContainer()

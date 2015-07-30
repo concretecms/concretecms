@@ -202,10 +202,14 @@ class ClassLoader
 
         $namespace = 'Application';
         $app_config_path = DIR_APPLICATION . '/config/app.php';
+        $provideCoreExtensionAutoloaderMapping = false;
         if (file_exists($app_config_path)) {
             $app_config = require $app_config_path;
             if (isset($app_config['namespace'])) {
                 $namespace = $app_config['namespace'];
+            }
+            if (isset($app_config['provide_core_extension_autoloader_mapping'])) {
+                $provideCoreExtensionAutoloaderMapping = true;
             }
         }
         $symfonyLoader->addPrefix($namespace . '\\StartingPointPackage', DIR_APPLICATION . '/config/install/' . DIRNAME_PACKAGES);
@@ -221,8 +225,13 @@ class ClassLoader
         $symfonyLoader->register();
 
         $strictLoader = new SymfonyClassLoader();
+
         $strictLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Core', DIR_BASE_CORE . '/' . DIRNAME_CLASSES);
-        $strictLoader->addPrefix($namespace . '\\Src', DIR_APPLICATION . '/' . DIRNAME_CLASSES);
+        if ($provideCoreExtensionAutoloaderMapping) {
+            $strictLoader->addPrefix($namespace, DIR_APPLICATION . '/' . DIRNAME_CLASSES . '/Concrete');
+        } else {
+            $strictLoader->addPrefix($namespace . '\\Src', DIR_APPLICATION . '/' . DIRNAME_CLASSES);
+        }
         $strictLoader->register();
     }
 

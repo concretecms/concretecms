@@ -157,6 +157,7 @@ class BlockView extends AbstractView
                         ) . '/' . $this->controller->blockViewRenderOverride . '.php';
                     $this->setViewTemplate($env->getPath($template, $this->blockTypePkgHandle));
                 } else {
+                    $bFilename = false;
                     if ($this->block) {
                         $bFilename = $this->block->getBlockFilename();
                         $bvt = new BlockViewTemplate($this->block);
