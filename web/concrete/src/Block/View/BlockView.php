@@ -416,7 +416,6 @@ class BlockView extends AbstractView
         }
 
         if (!$this->outputContent) {
-            var_dump('cache miss!');
             $this->didPullFromOutputCache = false;
             if (in_array($this->viewToRender, array('view', 'add', 'edit', 'composer'))) {
                 $method = $this->viewToRender;

@@ -231,8 +231,6 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
 
         $varyKey = $this->cacheBlockOutputVaryOnKey();
 
-        echo "<pre>$varyKey</pre>";
-
         $r = $db->GetRow(
             'select btCachedBlockOutput, btCachedBlockOutputExpires from CollectionVersionBlocksOutputCache where cID = ? and cvID = ? and bID = ? and arHandle = ? and varyKey = ? ',
             array(
@@ -244,14 +242,8 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
             )
         );
 
-        if(!$r['btCachedBlockOutput']) {
-            var_dump(            array(
-                $cID,
-                $cvID,
-                $this->getBlockID(),
-                $arHandle,
-                $varyKey, $r
-            ));
+        if($r['btCachedBlockOutput']) {
+            $r['btCachedBlockOutput'] = "<pre>$varyKey</pre>" . $r['btCachedBlockOutput'];
         }
 
         if (array_get($r, 'btCachedBlockOutputExpires') < time()) {
@@ -350,6 +342,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
                    'cvID',
                    'arHandle',
                    'bID',
+                   'varyKey'
                ),
                true
             );
