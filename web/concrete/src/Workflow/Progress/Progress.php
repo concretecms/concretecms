@@ -110,7 +110,7 @@ abstract class Progress extends Object
         }
 
         // @deprecated Checking types directly; should be type-hints
-        if ($wf instanceof Workflow && $wr instanceof $wr) {
+        if ($wf instanceof Workflow && $wr instanceof WorkflowRequest) {
             $db = Loader::db();
             $wpDateAdded = Loader::helper('date')->getOverridableNow();
             $wpCategoryID = $db->GetOne('select wpCategoryID from WorkflowProgressCategories where wpCategoryHandle = ?', array($wpCategoryHandle));
