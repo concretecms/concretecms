@@ -1876,6 +1876,9 @@
     <field name="arHandle" type="string" size="255">
       <key/>
     </field>
+    <field name="varyKey" type="string" size="255">
+      <key/>
+    </field>
     <field name="btCachedBlockOutput" type="text"/>
     <field name="btCachedBlockOutputExpires" type="integer" size="10">
       <unsigned/>
@@ -1887,6 +1890,7 @@
       <col>cID</col>
       <col>cvID</col>
       <col>arHandle</col>
+      <col>cacheKey</col>
     </index>
   </table>
 
@@ -1929,6 +1933,7 @@
       <default value="0"/>
       <notnull/>
     </field>
+    <field name="btCacheBlockOutputVaryOn" type="text" />
     <index name="bID">
       <col>bID</col>
       <col>cID</col>

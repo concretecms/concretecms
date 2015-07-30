@@ -5,11 +5,13 @@ use Database;
 
 class CacheSettings
 {
-
+    protected $btCacheBlockOutput = false;
+    protected $btCacheBlockOutputVaryOn = array();
+    protected $btCacheBlockOutputVaryOnKey = null;
     protected $btCacheBlockOutputOnPost = false;
     protected $btCacheBlockOutputForRegisteredUsers = false;
-    protected $btCacheBlockOutput = false;
     protected $btCacheBlockOutputLifetime = 0;
+    
 
     public static function get(Block $b)
     {
@@ -39,18 +41,26 @@ class CacheSettings
                 $o->btCacheBlockOutputOnPost = (bool) $r['btCacheBlockOutputOnPost'];
                 $o->btCacheBlockOutputForRegisteredUsers = (bool) $r['btCacheBlockOutputForRegisteredUsers'];
                 $o->btCacheBlockOutputLifetime = $r['btCacheBlockOutputLifetime'];
+
+                $o->btCacheBlockOutputVaryOn = @unserialize($r['btCacheBlockOutputVaryOn']);
+                if($o->btCacheBlockOutputVaryOn === false) {
+                    $o->btCacheBlockOutputVaryOn = array();
+                }
             }
         }
         if (!isset($o)) {
             if ($controller = $b->getController()) {
                 $o = new static();
                 $o->btCacheBlockOutput = $controller->cacheBlockOutput();
+                $o->btCacheBlockOutputVaryOn = $controller->cacheBlockOutputVaryOn();
                 $o->btCacheBlockOutputOnPost = $controller->cacheBlockOutputOnPost();
                 $o->btCacheBlockOutputForRegisteredUsers = $controller->cacheBlockOutputForRegisteredUsers();
                 $o->btCacheBlockOutputLifetime = $controller->getBlockTypeCacheOutputLifetime();
+
             } else {
                 $o = new static();
                 $o->btCacheBlockOutput = false;
+                $o->btCacheBlockOutputVaryOn = array();
                 $o->btCacheBlockOutputOnPost = false;
                 $o->btCacheBlockOutputForRegisteredUsers = false;
                 $o->btCacheBlockOutputLifetime = false;
@@ -59,9 +69,50 @@ class CacheSettings
         return $o;
     }
 
+    public function cacheBlockOutputVaryOnKey() {
+
+        if($this->btCacheBlockOutputVaryOnKey === null) {
+            $varyOnKey = array();
+            $req = \Request::getInstance();
+
+            foreach($this->btCacheBlockOutputVaryOn as $field => $settings) {
+
+                if($req->query->has($field)) {
+
+                    if($settings['match']) {
+                        if(preg_match($settings['match'],$req->query->get($field),$out)) { 
+                            $varyOnKey[$field] = $out[0];
+                        } else {
+                            $varyOnKey = false;
+                            break;
+                        }
+                    } else {
+                        $varyOnKey[$field] = $req->query->get($field);
+                    }
+
+                } else if($settings['default']) {
+                    $varyOnKey[$field] = $settings['default'];
+                }
+            }
+
+            if($varyOnKey !== false) {
+                $this->btCacheBlockOutputVaryOnKey = md5(serialize($varyOnKey));
+            } else {
+                $this->btCacheBlockOutputVaryOnKey = false;
+            }
+        }
+
+        return $this->btCacheBlockOutputVaryOnKey;
+    }
+
     public function cacheBlockOutput()
     {
         return $this->btCacheBlockOutput;
+    }
+
+    public function cacheBlockOutputVaryOn()
+    {
+        return $this->btCacheBlockOutputVaryOn;
     }
 
     public function cacheBlockOutputOnPost()

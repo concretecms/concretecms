@@ -349,6 +349,26 @@ class BlockView extends AbstractView
     protected function useBlockCache()
     {
         $u = new User();
+
+        if ($this->viewToRender !== 'view' || Config::get('concrete.cache.blocks') !== true) {
+            return false;
+        }
+
+        if($this->block instanceof Block && $this->block->cacheBlockOutput()) {
+
+            if ($u->isRegistered() && $this->block->cacheBlockOutputForRegisteredUsers() === false) {
+                return false;
+            } else if($_SERVER['REQUEST_METHOD'] === 'POST' && $this->block->cacheBlockOutputOnPost() === false) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+
+        return false;
+
+        /*
+        $u = new User();
         if ($this->viewToRender == 'view' && Config::get('concrete.cache.blocks') && $this->block instanceof Block
             && $this->block->cacheBlockOutput()
         ) {
@@ -360,6 +380,7 @@ class BlockView extends AbstractView
         }
 
         return false;
+        */
     }
 
     public function field($field)
@@ -395,6 +416,7 @@ class BlockView extends AbstractView
         }
 
         if (!$this->outputContent) {
+            var_dump('cache miss!');
             $this->didPullFromOutputCache = false;
             if (in_array($this->viewToRender, array('view', 'add', 'edit', 'composer'))) {
                 $method = $this->viewToRender;

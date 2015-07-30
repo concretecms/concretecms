@@ -22,6 +22,13 @@ class Controller extends BlockController
     protected $btExportPageTypeColumns = array('ptID');
     protected $btExportPageFeedColumns = array('pfID');
     protected $btCacheBlockRecord = true;
+    protected $btCacheBlockOutput = true;
+    protected $btCacheBlockOutputVaryOn = array(
+        'ccm_paging_p' => array(
+            'match' => '/^\d+$/', //optional, if specified, a new cache entry will only be made if the value matches this.
+            'default' => '1'    //optional If unset, this is the default. Prevents having a separate key for not set
+        )
+    );
     protected $list;
 
     /**

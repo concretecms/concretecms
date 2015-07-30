@@ -109,6 +109,21 @@ switch(Config::get('concrete.cache.full_page_lifetime')) {
 			<div class="alert alert-info"><?=t('This page is not currently in the full page cache.')?></div>
 		<? } ?>
 
+		<?
+
+		$blocks = $c->getBlocks();
+		array_merge($c->getGlobalBlocks(), $blocks);
+
+		echo "<table class='table table-striped'>";
+		foreach($blocks as $b) {
+			if (!$b->cacheBlockOutput()) {
+				echo "<tr><td>{$b->bID}</td><td>{$b->getAreaHandle()}</td><td>{$b->instance->getBlockTypeName()}</td></tr>";
+			}
+		}
+		echo "</table>";
+
+		?>
+
 	</form>
 	<div class="ccm-panel-detail-form-actions dialog-buttons">
 		<button class="pull-left btn btn-default" type="button" data-dialog-action="cancel" data-panel-detail-action="cancel"><?=t('Cancel')?></button>
