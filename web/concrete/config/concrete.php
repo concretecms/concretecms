@@ -209,12 +209,12 @@ return array(
         'levels' => array(
             'expensive' => array(
                 'drivers' => array(
-                    array(
+                    'core_ephemeral' => array(
                         'class' => '\Stash\Driver\Ephemeral',
                         'options' => array()
                     ),
 
-                    array(
+                    'core_filesystem' => array(
                         'class' => '\Stash\Driver\FileSystem',
                         'options' => array(
                             'path' => DIR_FILES_UPLOADED_STANDARD . '/cache',
@@ -226,7 +226,7 @@ return array(
             ),
             'object' => array(
                 'drivers' => array(
-                    array(
+                    'core_ephemeral' => array(
                         'class' => '\Stash\Driver\Ephemeral',
                         'options' => array()
                     )
