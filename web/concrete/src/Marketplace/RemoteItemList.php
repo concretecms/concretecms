@@ -63,7 +63,12 @@ class RemoteItemList extends ItemList
         $this->params['mpID'] = $mpID;
     }
 
-    public function sortBy($sortBy)
+    /**
+     * Set the parameter to sort the remote list by
+     * @param string $sortBy Parameter to sort by
+     * @param string|null $direction Unsupported, but needed for LSP
+     */
+    public function sortBy($sortBy, $direction = null)
     {
         $this->params['sort'] = $sortBy;
     }
