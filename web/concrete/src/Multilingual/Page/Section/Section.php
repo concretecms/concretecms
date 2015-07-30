@@ -9,8 +9,6 @@ use Gettext\Translations;
 use Punic\Language;
 use Config;
 
-defined('C5_EXECUTE') or die("Access Denied.");
-
 class Section extends Page
 {
     public function getPermissionResponseClassName()
@@ -114,11 +112,11 @@ class Section extends Page
      *
      * @return MultilingualSection|false
      */
-    public static function getByID($cID, $cvID = 'RECENT', $class = '\Concrete\Core\Multilingual\Page\Section\Section')
+    public static function getByID($cID, $cvID = 'RECENT')
     {
         $r = self::isMultilingualSection($cID);
         if ($r) {
-            $obj = parent::getByID($cID, $cvID, $class);
+            $obj = parent::getByID($cID, $cvID);
             self::assignPropertiesFromArray($obj, $r);
 
             return $obj;

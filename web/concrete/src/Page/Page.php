@@ -70,23 +70,38 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     /**
      * @param int $cID Collection ID of a page
      * @param string $versionOrig ACTIVE or RECENT
-     * @param string $class
+     * @deprecated @param string $class
      *
      * @return Page
      */
-    public static function getByID($cID, $version = 'RECENT', $class = 'Page')
+    public static function getByID($cID, $version = 'RECENT')
     {
-        $c = CacheLocal::getEntry('page', $cID.':'.$version.':'.$class);
-        if ($c instanceof $class) {
-            return $c;
+        // must use cID instead of c->getCollectionID() because cID may be the pointer to another page
+        $cacheKey = $cID . ':' . $version;
+        if (func_num_args() === 3) {
+            // @deprecated Check for a 'class' to instantiate
+            $class = func_get_arg(2);
+            $cacheKey .= ':' . $class;
+            $c = CacheLocal::getEntry('page', $cacheKey);
+            if ($c instanceof $class) {
+                return $c;
+            } else {
+                $c = new $class();
+            }
+        } else {
+            // Preferred behaviour: build instance of static
+            $cacheKey = ':' . get_called_class();
+            $c = CacheLocal::getEntry('page', $cacheKey);
+            if ($c instanceof static) {
+                return $c;
+            } else {
+                $c = new static();
+            }
         }
 
-        $where = 'where Pages.cID = ?';
-        $c = new $class();
-        $c->populatePage($cID, $where, $version);
+        $c->populatePage($cID, 'where Pages.cID = ?', $version);
 
-        // must use cID instead of c->getCollectionID() because cID may be the pointer to another page
-        CacheLocal::set('page', $cID.':'.$version.':'.$class, $c);
+        CacheLocal::set('page', $cacheKey, $c);
 
         return $c;
     }
