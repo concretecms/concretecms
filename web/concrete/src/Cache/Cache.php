@@ -38,6 +38,9 @@ abstract class Cache
 
         if (isset($level_config['drivers'])) {
             foreach ($level_config['drivers'] as $driver_build) {
+                if (!$driver_build) {
+                    continue;
+                }
                 if (class_exists($driver_build['class'])) {
                     $temp_driver = new $driver_build['class']();
                     if (isset($driver_build['options'])) {
