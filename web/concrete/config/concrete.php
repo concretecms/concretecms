@@ -206,7 +206,7 @@ return array(
         'levels' => array(
             'page' => array(
                 'drivers' => array(
-                    array(
+                    'core_filesystem' => array(
                         'class' => '\Stash\Driver\FileSystem',
                         'options' => array(
                             'path' => DIR_FILES_UPLOADED_STANDARD . '/cache/pages',
