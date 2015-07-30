@@ -220,7 +220,7 @@ class Key extends Object
     /**
      * Returns a list of all attributes of this category
      */
-    public static function getList($akCategoryHandle, $filters = array())
+    public static function getList($filters = array())
     {
         // Deprecated legacy arguments
         if (is_string($filters)) {
