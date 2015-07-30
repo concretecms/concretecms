@@ -90,7 +90,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             }
         } else {
             // Preferred behaviour: build instance of static
-            $cacheKey = ':' . get_called_class();
+            $cacheKey .= ':' . get_called_class();
             $c = CacheLocal::getEntry('page', $cacheKey);
             if ($c instanceof static) {
                 return $c;
