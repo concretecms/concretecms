@@ -23,7 +23,7 @@ class Key extends Object
 
     protected $akID;
 
-    public function getIndexedSearchTable()
+    public static function getIndexedSearchTable()
     {
         return null;
     }
