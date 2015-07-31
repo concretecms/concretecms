@@ -244,6 +244,8 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
 
         if($r['btCachedBlockOutput']) {
             $r['btCachedBlockOutput'] = "<pre>$varyKey</pre>" . $r['btCachedBlockOutput'];
+        } else {
+            $r['btCachedBlockOutput'] = 'failed to cache';
         }
 
         if (array_get($r, 'btCachedBlockOutputExpires') < time()) {

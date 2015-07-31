@@ -412,7 +412,10 @@ class BlockView extends AbstractView
 
         if ($this->useBlockCache()) {
             $this->didPullFromOutputCache = true;
+
             $this->outputContent = $this->block->getBlockCachedOutput($this->area);
+        } else {
+            echo "don't use cache";
         }
 
         if (!$this->outputContent) {
