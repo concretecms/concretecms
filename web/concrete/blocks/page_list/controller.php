@@ -76,6 +76,49 @@ class Controller extends BlockController
                 break;
         }
 
+        $today = date('Y-m-d');
+
+        switch($this->filterDateOption) {
+            case 'now': 
+                $start = "$today 00:00:00";
+                $end = "$today 23:59:59";
+                break;
+
+            case 'past':
+                $end = "$today 23:59:59";
+
+                if($this->filterDateDays > 0)  {
+                    $past = date('Y-m-d', strtotime("-{$this->filterDateDays} days"));
+                    $start = "$past 00:00:00";
+                }
+                break;
+
+            case 'future':
+                $start = "$today 00:00:00";
+
+                if($this->filterDateDays > 0)  {
+                    $future = date('Y-m-d', strtotime("+{$this->filterDateDays} days"));
+                    $end = "$future 23:59:59";
+                }
+                break;
+
+            case 'between':
+                $start = "{$this->filterDateStart} 00:00:00";
+                $end = "{$this->filterDateEnd} 23:59:59";
+                break;
+
+            case 'all':
+            default:
+                break;
+        }
+
+        if($start) {
+            $this->list->filterByPublicDate($start, '>=');
+        }
+        if($end) {
+            $this->list->filterByPublicDate($end, '<=');
+        }
+
         $c = Page::getCurrentPage();
         if (is_object($c)) {
             $this->cID = $c->getCollectionID();
@@ -415,6 +458,19 @@ class Controller extends BlockController
                 }
             }
             $args['pfID'] = 0;
+        }
+
+        if($args['filterDateOption'] != 'between') {
+            $args['filterDateStart'] = null;
+            $args['filterDateEnd'] = null;
+        }
+
+        if ($args['filterDateOption'] == 'past') {
+            $args['filterDateDays'] = $args['filterDatePast'];
+        } else if ($args['filterDateOption'] == 'future') {
+            $args['filterDateDays'] = $args['filterDateFuture'];
+        } else {
+            $args['filterDateDays'] = null;
         }
 
         $args['pfID'] = intval($args['pfID']);
