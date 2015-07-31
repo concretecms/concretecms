@@ -7,12 +7,14 @@ class Service
     protected $ssHandle;
     protected $ssName;
     protected $ssIcon;
+    protected $customHTML;
 
-    public function __construct($ssHandle, $ssName, $ssIcon)
+    public function __construct($ssHandle, $ssName, $ssIcon, $customHTML = null)
     {
         $this->ssHandle = $ssHandle;
         $this->ssName = $ssName;
         $this->ssIcon = $ssIcon;
+        $this->customHTML = $customHTML;
     }
 
     public function getHandle()
@@ -32,7 +34,11 @@ class Service
 
     public function getServiceIconHTML()
     {
-        return '<i class="fa fa-' . $this->getIcon() . '"></i>';
+        if($this->customHTML) {
+            return $this->customHTML;
+        } else {
+            return '<i class="fa fa-' . $this->getIcon() . '"></i>';    
+        }
     }
 
     public static function getByHandle($ssHandle)
