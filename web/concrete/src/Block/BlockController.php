@@ -164,6 +164,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     }
 
     public function useBlockCache() {
+        echo "<pre>base use block cache</pre>";
         return $this->btCacheBlockOutputDynamicUseCache;
     }
 

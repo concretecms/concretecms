@@ -54,7 +54,7 @@ class CacheSettings
             if ($controller = $b->getController()) {
                 $o = new static();
                 $o->btCacheBlockOutput = $controller->cacheBlockOutput();
-                $o->btCacheBlockOutput = $controller->cacheBlockOutputDynamic();
+                $o->btCacheBlockOutputDynamic = $controller->cacheBlockOutputDynamic();
                 $o->btCacheBlockOutputVaryOn = $controller->cacheBlockOutputVaryOn();
                 $o->btCacheBlockOutputOnPost = $controller->cacheBlockOutputOnPost();
                 $o->btCacheBlockOutputForRegisteredUsers = $controller->cacheBlockOutputForRegisteredUsers();

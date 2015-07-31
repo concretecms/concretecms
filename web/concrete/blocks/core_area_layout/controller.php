@@ -26,7 +26,7 @@ class Controller extends BlockController
     protected $btSupportsInlineEdit = true;
     protected $btTable = 'btCoreAreaLayout';
     protected $btIsInternal = true;
-    protected $btCacheBlockRecord = false;
+    protected $btCacheBlockRecord = true;
     protected $btCacheBlockOutput = true;
     protected $btCacheBlockOutputOnPost = true;
     protected $btCacheBlockOutputForRegisteredUsers = true;
@@ -52,7 +52,7 @@ class Controller extends BlockController
 
     public function useBlockCache() {
         if($this->btCacheBlockOutputDynamicUseCache === null) {
-            var_dump('calculating use block cache');
+            echo "<pre>calculating use block cache {$this->bID}</pre>";
 
             $b = $this->getBlockObject();
             $a = $b->getBlockAreaObject();
@@ -63,15 +63,19 @@ class Controller extends BlockController
                 $columns = $this->arLayout->getAreaLayoutColumns();
 
                 foreach($columns as $column) {
-                   $sa = $column->getSubAreaObject();
-                   $blocks = $sa->getAreaBlocksArray();
+                    $sa = $column->getSubAreaObject();
+                    $blocks = $sa->getAreaBlocksArray();
 
-                   foreach($blocks as $b) {
-                    var_dump(get_class_methods($b));
-                    break 1;
-                   }
+                    foreach($blocks as $b) {
+                        if(!$b->useBlockCache()) {
+                            echo "<pre>child block doesn't support cache, bowing out {$b->bID} {$b->getInstance()->getBlockTypeName()}</pre>";
+                            $this->btCacheBlockOutputDynamicUseCache = false;
+                        }
+                    }
                 }
             }
+        } else {
+            echo "<pre>pre calculed use block cache {$this->bID}</pre>";
         }
 
         return $this->btCacheBlockOutputDynamicUseCache;

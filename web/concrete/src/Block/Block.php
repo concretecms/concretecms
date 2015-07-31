@@ -218,11 +218,14 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
     {
         $u = new User();
         if ($u->isRegistered() && $this->cacheBlockOutputForRegisteredUsers() === false) {
+            echo "<pre>Failing Registered User Test {$this->getBlockID()}</pre>";
             return false;
         } else if($_SERVER['REQUEST_METHOD'] === 'POST' && $this->cacheBlockOutputOnPost() === false) {
+            echo "<pre>Failing Registered User Test  2 {$this->getBlockID()}</pre>";
             return false;
-        } else if(true || $this->cacheBlockOutputDynamic()){
-            return $this->getController()->useBlockCache();
+        } else if($this->cacheBlockOutputDynamic()){
+            $result = $this->getController()->useBlockCache();
+            return $result;
         } else {
             return true;
         }
@@ -750,6 +753,13 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         $settings = $this->getBlockCacheSettingsObject();
 
         return $settings->cacheBlockOutputOnPost();
+    }
+
+    public function cacheBlockOutputDynamic()
+    {
+        $settings = $this->getBlockCacheSettingsObject();
+
+        return $settings->cacheBlockOutputDynamic();
     }
 
     public function cacheBlockOutputForRegisteredUsers()
