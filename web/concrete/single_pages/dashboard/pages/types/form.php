@@ -133,7 +133,7 @@ var Composer = {
             success: function() {
                 jQuery.fn.dialog.hideLoader();
                 jQuery.fn.dialog.closeAll();
-                $('div[data-page-type-composer-form-layout-control-set-control-id=' + ptComposerFormLayoutSetControlID + ']').remove();
+                $('tr[data-page-type-composer-form-layout-control-set-control-id=' + ptComposerFormLayoutSetControlID + ']').remove();
             }
         });
     }
