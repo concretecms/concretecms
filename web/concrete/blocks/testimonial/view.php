@@ -13,13 +13,13 @@
 
         <? if ($position && $company && $companyURL): ?>
             <div class="ccm-block-testimonial-position">
-                <?=t('%s, <a href="%s">%s</a>', h($position), urlencode($companyURL), h($company))?>
+                <?=t('%s, <a href="%s">%s</a>', h($position), $companyURL, h($company))?>
             </div>
         <? endif; ?>
 
         <? if ($position && !$company && $companyURL): ?>
             <div class="ccm-block-testimonial-position">
-                <?=t('<a href="%s">%s</a>', urlencode($companyURL), h($position))?>
+                <?=t('<a href="%s">%s</a>', $companyURL, h($position))?>
             </div>
         <? endif; ?>
 
