@@ -82,7 +82,7 @@ $(function() {
 			success: function(html) {
 				jQuery.fn.dialog.hideLoader();
 				jQuery.fn.dialog.closeTop();
-				$('div[data-page-type-composer-form-layout-control-set-id=<?=$set->getPageTypeComposerFormLayoutSetID()?>] div.ccm-page-type-composer-form-layout-control-set-inner').append(html);
+				$('div[data-page-type-composer-form-layout-control-set-id=<?=$set->getPageTypeComposerFormLayoutSetID()?>] tbody.ccm-page-type-composer-form-layout-control-set-inner').append(html);
 				$('a[data-command=edit-form-set-control]').dialog();
 			}
 		});
