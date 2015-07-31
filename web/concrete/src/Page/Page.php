@@ -765,10 +765,10 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public function getCollectionIcon()
     {
         // returns a fully qualified image link for this page's icon, either based on its collection type or if icon.png appears in its view directory
-        $icon = '';
-
         $pe = new Event($this);
+        $pe->setArgument('icon', '');
         Events::dispatch('on_page_get_icon', $pe);
+        $icon = $pe->getArgument('icon');
 
         if ($icon) {
             return $icon;
