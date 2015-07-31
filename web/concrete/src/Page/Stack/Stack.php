@@ -109,7 +109,7 @@ class Stack extends Page
      */
     public static function getByID($cID, $cvID = 'RECENT')
     {
-        $c = parent::getByID($cID, $cvID, 'Stack');
+        $c = parent::getByID($cID, $cvID);
 
         if (static::isValidStack($c)) {
             return $c;
