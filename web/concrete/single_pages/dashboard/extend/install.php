@@ -64,7 +64,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
             <table class="table table-bordered table-striped">
                 <tr>
                     <td class="ccm-marketplace-list-thumbnail"><img src="<?= $ci->getPackageIconURL($pkg); ?>" /></td>
-                    <td class="ccm-addon-list-description" style="width: 100%"><h3><?= $pkg->getPackageName(); ?> - <?= $pkg->getPackageVersion(); ?></h3><?= $pkg->getPackageDescription(); ?></td>
+                    <td class="ccm-addon-list-description" style="width: 100%"><h3><?= $pkg->getPackageName(); ?> - <?= $pkg->getPackageCurrentlyInstalledVersion(); ?></h3><?= $pkg->getPackageDescription(); ?></td>
                 </tr>
             </table>
 
@@ -345,7 +345,11 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
                     <div class="pull-left"><img style="width: 49px" src="<?= $ci->getPackageIconURL($pkg); ?>" class"media-object" /></div>
                     <div class="media-body">
                         <a href="<?= URL::to('/dashboard/extend/install', 'inspect_package', $pkg->getPackageID()); ?>" class="btn pull-right btn-sm btn-default"><?= t('Details'); ?></a>
-                        <h4 class="media-heading"><?= $pkg->getPackageName(); ?> <span class="badge badge-info" style="margin-right: 10px"><?= tc('AddonVersion', 'v.%s', $pkg->getPackageVersion()); ?></span></h4>
+                        <h4 class="media-heading"><?= $pkg->getPackageName(); ?>
+                            <span class="badge badge-info" style="margin-right: 10px">
+                                <?= tc('AddonVersion', 'v.%s', $pkg->getPackageCurrentlyInstalledVersion()); ?>
+                            </span>
+                        </h4>
                         <p><?= $pkg->getPackageDescription(); ?></p>
                     </div>
                 </div>

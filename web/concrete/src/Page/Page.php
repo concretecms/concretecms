@@ -69,13 +69,13 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
     /**
      * @param int $cID Collection ID of a page
-     * @param string $versionOrig ACTIVE or RECENT
-     * @param string $class
+     * @param string $version ACTIVE or RECENT
      *
      * @return Page
      */
-    public static function getByID($cID, $version = 'RECENT', $class = 'Page')
+    public static function getByID($cID, $version = 'RECENT')
     {
+        $class = get_called_class();
         $c = CacheLocal::getEntry('page', $cID.'/'.$version.'/'.$class);
         if ($c instanceof $class) {
             return $c;
@@ -765,10 +765,10 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public function getCollectionIcon()
     {
         // returns a fully qualified image link for this page's icon, either based on its collection type or if icon.png appears in its view directory
-        $icon = '';
-
         $pe = new Event($this);
+        $pe->setArgument('icon', '');
         Events::dispatch('on_page_get_icon', $pe);
+        $icon = $pe->getArgument('icon');
 
         if ($icon) {
             return $icon;
