@@ -26,6 +26,11 @@ class Controller extends BlockController
     protected $btSupportsInlineEdit = true;
     protected $btTable = 'btCoreAreaLayout';
     protected $btIsInternal = true;
+    protected $btCacheBlockRecord = false;
+    protected $btCacheBlockOutput = true;
+    protected $btCacheBlockOutputOnPost = true;
+    protected $btCacheBlockOutputForRegisteredUsers = true;
+    protected $btCacheBlockOutputDynamic = true;
 
     public function getBlockTypeDescription()
     {
@@ -45,6 +50,32 @@ class Controller extends BlockController
         }
     }
 
+    public function useBlockCache() {
+        if($this->btCacheBlockOutputDynamicUseCache === null) {
+            var_dump('calculating use block cache');
+
+            $b = $this->getBlockObject();
+            $a = $b->getBlockAreaObject();
+            $this->arLayout = $this->getAreaLayoutObject();
+
+            if (is_object($this->arLayout)) {
+                $this->arLayout->setAreaObject($a);
+                $columns = $this->arLayout->getAreaLayoutColumns();
+
+                foreach($columns as $column) {
+                   $sa = $column->getSubAreaObject();
+                   $blocks = $sa->getAreaBlocksArray();
+
+                   foreach($blocks as $b) {
+                    var_dump(get_class_methods($b));
+                    break 1;
+                   }
+                }
+            }
+        }
+
+        return $this->btCacheBlockOutputDynamicUseCache;
+    }
 
     public function duplicate($newBID)
     {

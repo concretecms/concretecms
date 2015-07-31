@@ -17,6 +17,7 @@ use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 use Config;
 use Loader;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
+use User;
 use Page;
 
 class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
@@ -211,6 +212,20 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
     public function getBlockCachedRecord()
     {
         return $this->btCachedBlockRecord;
+    }
+
+    public function useBlockCache()
+    {
+        $u = new User();
+        if ($u->isRegistered() && $this->cacheBlockOutputForRegisteredUsers() === false) {
+            return false;
+        } else if($_SERVER['REQUEST_METHOD'] === 'POST' && $this->cacheBlockOutputOnPost() === false) {
+            return false;
+        } else if(true || $this->cacheBlockOutputDynamic()){
+            return $this->getController()->useBlockCache();
+        } else {
+            return true;
+        }
     }
 
     public function getBlockCachedOutput($area)
