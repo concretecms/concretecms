@@ -54,10 +54,11 @@ use SinglePage;
  * A package can contains related components that customize concrete5. They can br easily
  * installed and uninstall by a user.
  *
- * @property int $pkgId ID of package
+ * @property int $pkgID ID of package
  * @property string $pkgName Installed name of package
  * @property string $pkgHandle Installed handle of package. This should be provided by the ending package.
  * @property string $pkgDescription Installed description of package
+ * @property string $pkgDateInstalled The date/time the package was installed
  * @property boolean $pkgIsInstalled True if package is installed
  * @property string $pkgVersion Version of package installed
  * @property string $pkgAvailableVersion
@@ -99,9 +100,11 @@ class Package extends Object
     protected $pkgAutoloaderRegistries = array();
     protected $errorText = array();
 
+    protected $pkgCurrentVersion = '0.0.0';
+
     /** Returns the display name of a category of package items (localized and escaped accordingly to $format)
      * @param string $categoryHandle The category handle
-     * @param string $format         = 'html' Escape the result in html format (if $format is 'html'). If $format is 'text' or any other value, the display name won't be escaped.
+     * @param string $format = 'html' Escape the result in html format (if $format is 'html'). If $format is 'text' or any other value, the display name won't be escaped.
      * @return string
      */
     public static function getPackageItemsCategoryDisplayName($categoryHandle, $format = 'html')
@@ -229,7 +232,8 @@ class Package extends Object
             return t(
                 '%s (%s)',
                 $item->getAttributeSetDisplayName(),
-                $txt->unhandle($at->getAttributeKeyCategoryHandle()));
+                $txt->unhandle($at->getAttributeKeyCategoryHandle())
+            );
         } elseif ($item instanceof GroupSet) {
             return $item->getGroupSetDisplayName();
         } elseif ($item instanceof AttributeKey) {
@@ -238,7 +242,8 @@ class Package extends Object
             return t(
                 ' %s (%s)',
                 $txt->unhandle($item->getAttributeKeyHandle()),
-                $txt->unhandle($akc->getAttributeKeyCategoryHandle()));
+                $txt->unhandle($akc->getAttributeKeyCategoryHandle())
+            );
         } elseif ($item instanceof UserPointAction) {
             return $item->getUserPointActionName();
         } elseif ($item instanceof SystemCaptchaLibrary) {
@@ -273,14 +278,15 @@ class Package extends Object
     {
         // this is the pre-test routine that packages run through before they are installed. Any errors that come here
         // are to be returned in the form of an array so we can show the user. If it's all good we return true
-        $db = Database::getActiveConnection();
+        $db = Database::connection();
         $errors = array();
 
         $pkg = static::getClass($package);
 
         // Step 1 does that package exist ?
         if ((!is_dir(DIR_PACKAGES . '/' . $package) && (!is_dir(
-                    DIR_PACKAGES_CORE . '/' . $package))) || $package == ''
+                    DIR_PACKAGES_CORE . '/' . $package
+                ))) || $package == ''
         ) {
             $errors[] = Package::E_PACKAGE_NOT_FOUND;
         } elseif ($pkg instanceof BrokenPackage) {
@@ -289,7 +295,7 @@ class Package extends Object
 
         // Step 2 - check to see if the user has already installed a package w/this handle
         if ($testForAlreadyInstalled) {
-            $cnt = $db->getOne("SELECT count(*) FROM Packages WHERE pkgHandle = ?", array($package));
+            $cnt = $db->fetchColumn("SELECT count(*) FROM Packages WHERE pkgHandle = ?", array($package));
             if ($cnt > 0) {
                 $errors[] = Package::E_PACKAGE_INSTALLED;
             }
@@ -316,26 +322,35 @@ class Package extends Object
      */
     public static function getClass($pkgHandle)
     {
-        $cache = Core::make('cache/request');
-        $item = $cache->getItem('package/class/' . $pkgHandle);
-        $cl = $item->get();
+        $item = Core::make('cache/request')->getItem('package/class/' . $pkgHandle);
         if ($item->isMiss()) {
             $item->lock();
-            // loads and instantiates the object
-
             $cl = \Concrete\Core\Foundation\ClassLoader::getInstance();
             $cl->registerPackageController($pkgHandle);
-
             $class = '\\Concrete\\Package\\' . camelcase($pkgHandle) . '\\Controller';
             try {
                 $cl = Core::make($class);
+                $db = Database::connection();
+                $row = $db->fetchAssoc("SELECT * FROM Packages WHERE pkgHandle = ?", array($pkgHandle));
+                if ($row) {
+                    $cl->setPropertiesFromArray($row);
+                }
+                $item->set($cl);
             } catch (\Exception $ex) {
                 $cl = new BrokenPackage($pkgHandle);
             }
-            $item->set($cl);
+        } else {
+            $cl = $item->get();
         }
+        return $cl;
+    }
 
-        return clone $cl;
+    public function setPropertiesFromArray($array)
+    {
+        $fileVersion = $this->pkgVersion;
+        parent::setPropertiesFromArray($array);
+        $this->pkgCurrentVersion = ($this->pkgVersion) ? : '0.0.0';
+        $this->pkgVersion = $fileVersion ? : $this->pkgCurrentVersion;
     }
 
     /**
@@ -355,18 +370,12 @@ class Package extends Object
      */
     public static function getByHandle($pkgHandle)
     {
-        $db = Database::getActiveConnection();
-        $row = $db->GetRow("SELECT * FROM Packages WHERE pkgHandle = ?", array($pkgHandle));
-        if ($row) {
-            $pkg = static::getClass($row['pkgHandle']);
-            if ($pkg instanceof Package) {
-                $pkg->setPropertiesFromArray($row);
-            }
+        $pkg = static::getClass($pkgHandle);
 
+        if ($pkg instanceof Package && $pkg->getPackageID()) {
             return $pkg;
-        } else {
-            return null;
         }
+        return null;
     }
 
     /**
@@ -378,14 +387,9 @@ class Package extends Object
     {
         $packages = Package::getAvailablePackages(false);
         $upgradeables = array();
-        $db = Database::getActiveConnection();
         foreach ($packages as $p) {
-            $row = $db->GetRow(
-                "SELECT pkgID, pkgVersion FROM Packages WHERE pkgHandle = ? AND pkgIsInstalled = 1",
-                array($p->getPackageHandle()));
-            if ($row['pkgID'] > 0) {
-                if (version_compare($p->getPackageVersion(), $row['pkgVersion'], '>')) {
-                    $p->pkgCurrentVersion = $row['pkgVersion'];
+            if ($p->pkgID) {
+                if (version_compare($p->getPackageVersion(), $p->getPackageCurrentlyInstalledVersion(), '>')) {
                     $upgradeables[] = $p;
                 }
             }
@@ -440,9 +444,14 @@ class Package extends Object
      */
     public static function getInstalledHandles()
     {
-        $db = Database::getActiveConnection();
+        $db = Database::connection();
 
-        return $db->GetCol("SELECT pkgHandle FROM Packages");
+        $r = $db->fetchAll("SELECT pkgHandle FROM Packages");
+        $return = array();
+        foreach ($r as $value) {
+            $return[] = $value['pkgHandle'];
+        }
+        return $return;
     }
 
     /**
@@ -453,7 +462,6 @@ class Package extends Object
     {
         $packages = Package::getInstalledList();
         $upgradeables = array();
-        $db = Database::getActiveConnection();
         foreach ($packages as $p) {
             if (version_compare($p->getPackageVersion(), $p->getPackageVersionUpdateAvailable(), '<')) {
                 $upgradeables[] = $p;
@@ -469,17 +477,7 @@ class Package extends Object
      */
     public static function getInstalledList()
     {
-        $db = Database::getActiveConnection();
-        $r = $db->query("SELECT * FROM Packages WHERE pkgIsInstalled = 1 ORDER BY pkgDateInstalled ASC");
-        $pkgArray = array();
-        while ($row = $r->fetchRow()) {
-            $pkg = new Package();
-            $pkg->setPropertiesFromArray($row);
-
-            $pkgArray[] = $pkg;
-        }
-
-        return $pkgArray;
+        return PackageList::get(1)->getPackages();
     }
 
     /**
@@ -488,10 +486,11 @@ class Package extends Object
      */
     public function getRelativePath()
     {
-        $dirp = (is_dir(
-            $this->DIR_PACKAGES . '/' . $this->getPackageHandle())) ? $this->REL_DIR_PACKAGES : $this->REL_DIR_PACKAGES_CORE;
+        $path = (is_dir($this->DIR_PACKAGES . '/' . $this->getPackageHandle()))
+            ? $this->REL_DIR_PACKAGES
+            : $this->REL_DIR_PACKAGES_CORE;
 
-        return $dirp . '/' . $this->pkgHandle;
+        return $path . '/' . $this->pkgHandle;
     }
 
     /**
@@ -545,7 +544,8 @@ class Package extends Object
     public function getPackagePath()
     {
         $dirp = (is_dir(
-            $this->DIR_PACKAGES . '/' . $this->getPackageHandle())) ? $this->DIR_PACKAGES : $this->DIR_PACKAGES_CORE;
+            $this->DIR_PACKAGES . '/' . $this->getPackageHandle()
+        )) ? $this->DIR_PACKAGES : $this->DIR_PACKAGES_CORE;
         $path = $dirp . '/' . $this->getPackageHandle();
 
         return $path;
@@ -553,7 +553,6 @@ class Package extends Object
 
     /**
      * Returns the currently installed package version.
-     * NOTE: This function only returns a value if getLocalUpgradeablePackages() has been called first!
      * @return string
      */
     public function getPackageCurrentlyInstalledVersion()
@@ -585,7 +584,8 @@ class Package extends Object
     public function hasInstallPostScreen()
     {
         return file_exists(
-            $this->getPackagePath() . '/' . DIRNAME_ELEMENTS . '/' . DIRNAME_DASHBOARD . '/install_post.php');
+            $this->getPackagePath() . '/' . DIRNAME_ELEMENTS . '/' . DIRNAME_DASHBOARD . '/install_post.php'
+        );
     }
 
     /**
@@ -610,7 +610,7 @@ class Package extends Object
     /**
      * Loads package translation files into zend translate
      *
-     * @param string                                  $locale    = null The identifier of the locale to activate (used to build the language file path). If empty we'll use currently active locale.
+     * @param string $locale = null The identifier of the locale to activate (used to build the language file path). If empty we'll use currently active locale.
      * @param \Zend\I18n\Translator\Translator|string $translate = 'current' The Zend Translator instance that holds the translations (set to 'current' to use the current one)
      */
     public function setupPackageLocalization($locale = null, $translate = 'current')
@@ -657,7 +657,7 @@ class Package extends Object
      */
     public function uninstall()
     {
-        $db = Database::getActiveConnection();
+        $db = Database::connection();
 
         $items = $this->getPackageItems();
 
@@ -694,7 +694,8 @@ class Package extends Object
                             $item->uninstall();
                             break;
                         case 'Page':
-                            @$item->delete(); // we suppress errors because sometimes the wrapper pages can delete first.
+                            @$item->delete(
+                            ); // we suppress errors because sometimes the wrapper pages can delete first.
                             break;
                         case 'SystemCaptchaLibrary':
                         case 'SystemContentEditorSnippet':
@@ -736,6 +737,8 @@ class Package extends Object
         $this->destroyProxyClasses();
 
         $db->Execute("DELETE FROM Packages WHERE pkgID = ?", array($this->pkgID));
+        PackageList::refreshCache();
+        Core::make('cache/request')->getItem('package/class/' . $this->getPackageHandle())->clear();
         Localization::clearCache();
     }
 
@@ -927,7 +930,8 @@ class Package extends Object
             \Config::get('concrete.misc.package_backup_directory')
         );
         $errorText[Package::E_PACKAGE_INVALID_APP_VERSION] = t(
-            'This package isn\'t currently available for this version of concrete5. Please contact the maintainer of this package for assistance.');
+            'This package isn\'t currently available for this version of concrete5. Please contact the maintainer of this package for assistance.'
+        );
 
         $testResultsText = array();
         foreach ($testResults as $result) {
@@ -1006,7 +1010,7 @@ class Package extends Object
     public function install()
     {
         PackageList::refreshCache();
-        $db = Database::getActiveConnection();
+        $db = Database::connection();
         $dh = Core::make('helper/date');
         $v = array(
             $this->getPackageName(),
@@ -1014,11 +1018,14 @@ class Package extends Object
             $this->getPackageVersion(),
             $this->getPackageHandle(),
             1,
-            $dh->getOverridableNow());
+            $dh->getOverridableNow()
+        );
         $db->query(
             "INSERT INTO Packages (pkgName, pkgDescription, pkgVersion, pkgHandle, pkgIsInstalled, pkgDateInstalled) VALUES (?, ?, ?, ?, ?, ?)",
-            $v);
+            $v
+        );
 
+        Core::make('cache/request')->getItem('package/class/' . $this->getPackageHandle())->clear();
         $pkg = Package::getByID($db->lastInsertId());
         ClassLoader::getInstance()->registerPackage($pkg);
         $pkg->installDatabase();
@@ -1064,13 +1071,9 @@ class Package extends Object
      */
     public static function getByID($pkgID)
     {
-        $db = Database::getActiveConnection();
-        $row = $db->GetRow("SELECT * FROM Packages WHERE pkgID = ?", array($pkgID));
-        if ($row) {
-            $pkg = static::getClass($row['pkgHandle']);
-            if ($pkg instanceof Package) {
-                $pkg->setPropertiesFromArray($row);
-
+        if ($pkgHandle = PackageList::getHandle($pkgID)) {
+            $pkg = static::getClass($pkgHandle);
+            if ($pkg instanceof Package && $pkg->getPackageID()) {
                 return $pkg;
             }
         }
@@ -1113,7 +1116,7 @@ class Package extends Object
             return false;
         }
         // currently this is just done from xml
-        $db = Database::get();
+        $db = Database::connection();
         $db->beginTransaction();
         $schema = Schema::loadFromXMLFile($xmlFile, $db);
         $platform = $db->getDatabasePlatform();
@@ -1125,25 +1128,6 @@ class Package extends Object
         $db->commit();
         unset($schema);
         unset($platform);
-        /*
-		$schema = Database::getADOSChema();
-		$sql = $schema->ParseSchema($xmlFile);
-		$db->IgnoreErrors($handler);
-		if (!$sql) {
-			$result->message = $db->ErrorMsg();
-			return $result;
-		}
-		$r = $schema->ExecuteSchema();
-		if ($dbLayerErrorMessage != '') {
-			$result->message = $dbLayerErrorMessage;
-			return $result;
-		} if (!$r) {
-			$result->message = $db->ErrorMsg();
-			return $result;
-		}
-		$result->result = true;
-		$db->CacheFlush();
-		*/
         $result = new \stdClass();
         $result->result = false;
         return $result;
@@ -1155,9 +1139,10 @@ class Package extends Object
      */
     public function updateAvailableVersionNumber($vNum)
     {
-        $db = Database::getActiveConnection();
+        $db = Database::connection();
         $v = array($vNum, $this->getPackageID());
         $db->query("update Packages set pkgAvailableVersion = ? where pkgID = ?", $v);
+        Core::make('cache/request')->getItem('package/class/' . $this->getPackageHandle())->clear();
     }
 
     /**
@@ -1174,15 +1159,17 @@ class Package extends Object
      */
     public function upgradeCoreData()
     {
-        $db = Database::getActiveConnection();
+        $db = Database::connection();
         $p1 = static::getClass($this->getPackageHandle());
         if ($p1 instanceof Package) {
             $v = array(
                 $p1->getPackageName(),
                 $p1->getPackageDescription(),
                 $p1->getPackageVersion(),
-                $this->getPackageID());
+                $this->getPackageID()
+            );
             $db->query("update Packages set pkgName = ?, pkgDescription = ?, pkgVersion = ? where pkgID = ?", $v);
+            Core::make('cache/request')->getItem('package/class/' . $this->getPackageHandle())->clear();
         }
     }
 
@@ -1200,6 +1187,9 @@ class Package extends Object
                 $item->refresh();
             }
         }
+
+        PackageList::refreshCache();
+        Core::make('cache/request')->getItem('package/class/' . $this->getPackageHandle())->clear();
         Localization::clearCache();
     }
 
@@ -1261,6 +1251,8 @@ class Package extends Object
                 $this->backedUpFname = $trashName;
             }
         }
+
+        return null;
     }
 
     /**
@@ -1269,7 +1261,9 @@ class Package extends Object
      */
     public function restore()
     {
-        if (strlen($this->backedUpFname) && is_dir($this->backedUpFname) && !is_dir(DIR_PACKAGES . '/' . $this->pkgHandle)) {
+        if (strlen($this->backedUpFname) && is_dir($this->backedUpFname)
+            && !is_dir(DIR_PACKAGES . '/' . $this->pkgHandle)
+        ) {
             return @rename($this->backedUpFname, DIR_PACKAGES . '/' . $this->pkgHandle);
         }
 

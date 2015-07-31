@@ -14,7 +14,7 @@ if (Config::get('concrete.marketplace.enabled') && is_object($mi)) {
 	if ($mi->isConnected()) {
 		$pkgArray = Package::getInstalledList();
 		foreach($pkgArray as $pkg) {
-			if ($pkg->isPackageInstalled() && version_compare($pkg->getPackageVersion(), $pkg->getPackageVersionUpdateAvailable(), '<')) {
+			if ($pkg->isPackageInstalled() && version_compare($pkg->getPackageCurrentlyInstalledVersion(), $pkg->getPackageVersionUpdateAvailable(), '<')) {
 				$pkgRemote[] = $pkg;
 			}
 		}
