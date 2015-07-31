@@ -768,7 +768,9 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $icon = '';
 
         $pe = new Event($this);
+        $pe->setArgument('icon', $icon);
         Events::dispatch('on_page_get_icon', $pe);
+        $icon = $pe->getArgument('icon');
 
         if ($icon) {
             return $icon;
