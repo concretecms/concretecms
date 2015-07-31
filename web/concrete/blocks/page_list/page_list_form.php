@@ -102,8 +102,8 @@ $form = Loader::helper('form/page_selector');
             $filterDateOptions = array(
                 'all' => 'Show All',
                 'now' => 'Today',
-                'past' => 'Past',
-                'future' => 'Future',
+                'past' => 'Before Today',
+                'future' => 'After Today',
                 'between' => 'Between'
             );
 
@@ -119,17 +119,17 @@ $form = Loader::helper('form/page_selector');
             <? } ?>
  
             <div class="filterDateOptionDetail" data-filterDateOption="past">
-                <p>Shows only pages which have a public date prior to today.</p>
-                <small>Leave 0 to show all past dated pages.</small>
-
-                <input type="text" name="filterDatePast" value="<?= $filterDateDays ?>" class="form-control">
+                <div class="form-group">
+                    <label class="control-label"><?=t('Days in the Past')?> <i class="launch-tooltip fa fa-question-circle" title="<?=t('Leave 0 to show all past dated pages')?>"></i></label>
+                    <input type="text" name="filterDatePast" value="<?= $filterDateDays ?>" class="form-control">
+                </div>
             </div>
 
             <div class="filterDateOptionDetail" data-filterDateOption="future">
-                <p>Shows only pages which have a public date after today.</p>
-                <small>Leave 0 to show all future dated pages.</small>
-
-                <input type="text" name="filterDateFuture" value="<?= $filterDateDays ?>" class="form-control">
+                <div class="form-group">
+                    <label class="control-label"><?=t('Days in the Future')?> <i class="launch-tooltip fa fa-question-circle" title="<?=t('Leave 0 to show all future dated pages')?>"></i></label>
+                    <input type="text" name="filterDateFuture" value="<?= $filterDateDays ?>" class="form-control">
+                </div>
             </div>
             
             <div class="filterDateOptionDetail" data-filterDateOption="between">
