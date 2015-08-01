@@ -47,7 +47,7 @@ $canEdit = $permissionsCallback($ak, $permissionsArguments); ?>
                         </a></li>
                 </ul>
             <?php } ?>
-            <p><span
+            <span
                     <?php if ($canEdit) { ?>
                         data-title="<?= $ak->getAttributeKeyDisplayName() ?>"
                         data-key-id="<?= $ak->getAttributeKeyID() ?>"
@@ -58,7 +58,7 @@ $canEdit = $permissionsCallback($ak, $permissionsArguments); ?>
                         echo $ak->atHandle==='textarea' ? "data-editableMode='inline'" : ''
                     } ?> >
                 <?= $display ?>
-            </span></p>
+            </span>
         </div>
     </div>
 
