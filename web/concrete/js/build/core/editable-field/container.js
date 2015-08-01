@@ -39,7 +39,6 @@
 				ajaxOptions: {
 					dataType: 'json'
 				},
-				mode: $field.data('editablemode'),
 				emptytext: ccmi18n.none,
 				showbuttons: true,
 				params: my.options.data,
@@ -61,6 +60,7 @@
 				ajaxOptions: {
 					dataType: 'json'
 				},
+				mode: $field.data('editablemode'),
 				emptytext: ccmi18n.none,
 				showbuttons: true,
 				savenochange: true,
