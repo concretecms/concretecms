@@ -1,6 +1,6 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\System\Seo;
-use Concrete\Core\Cache\Page\PageCache;
+use \PageCache;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use Config;
 use Core;

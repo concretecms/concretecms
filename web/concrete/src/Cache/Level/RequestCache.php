@@ -1,9 +1,6 @@
 <?php
-
 namespace Concrete\Core\Cache\Level;
 
-
-use Concrete\Core\Cache\Cache;
 use Stash\Driver\Ephemeral;
 use Stash\Pool;
 
@@ -12,7 +9,7 @@ use Stash\Pool;
  * Cache that only lives for the current request. This cache level is not configurable.
  * @package Concrete\Core\Cache\Level
  */
-class RequestCache extends Cache
+class RequestCache extends \Cache
 {
     protected function init()
     {

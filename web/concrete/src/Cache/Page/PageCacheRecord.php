@@ -5,8 +5,13 @@ use Concrete\Core\Page\Page;
 
 class PageCacheRecord {
 
+    public $expires;
+    public $content;
+    public $headers;
+    public $cacheRecordKey;
+
 	public function __construct(Page $c, $content, $lifetime) {
-		$cache = PageCache::getLibrary();
+		$cache = \PageCache::getLibrary();
 		$this->setCacheRecordLifetime($lifetime);
 		$this->setCacheRecordKey($cache->getCacheKey($c));
 		$this->setCacheRecordHeaders($cache->getCacheHeaders($c));
@@ -52,7 +57,7 @@ class PageCacheRecord {
 			return true;
 		} else {
 			// invalidate and kill this record.
-			$cache = PageCache::getLibrary();
+			$cache = \PageCache::getLibrary();
 			$cache->purgeByRecord($this);
 		}
 	}

@@ -2,8 +2,6 @@
 
 namespace Concrete\Core\Cache\Level;
 
-
-use Concrete\Core\Cache\Cache;
 use Config;
 use Stash\Driver\BlackHole;
 use Stash\Pool;
@@ -13,7 +11,7 @@ use Stash\Pool;
  * This cache stores data that is expensive to build that will see a performance boost if stored on disk.
  * @package Concrete\Core\Cache\Level
  */
-class ExpensiveCache extends Cache
+class ExpensiveCache extends \Cache
 {
     protected function init()
     {
