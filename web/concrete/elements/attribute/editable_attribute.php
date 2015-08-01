@@ -36,8 +36,8 @@ if (isset($objects)) {
 $canEdit = $permissionsCallback($ak, $permissionsArguments); ?>
 
     <div class="row">
-        <div class="col-md-3"><p><?= $ak->getAttributeKeyDisplayName() ?></p></div>
-        <div class="col-md-9" <?php if ($canEdit) { ?>data-editable-field-inline-commands="true"<?php } ?>>
+        <div class="col-md-2"><p><?= $ak->getAttributeKeyDisplayName() ?></p></div>
+        <div class="col-md-10" <?php if ($canEdit) { ?>data-editable-field-inline-commands="true"<?php } ?>>
             <?php if ($canEdit) { ?>
                 <ul class="ccm-edit-mode-inline-commands">
                     <li><a href="#" data-key-id="<?= $ak->getAttributeKeyID() ?>"
