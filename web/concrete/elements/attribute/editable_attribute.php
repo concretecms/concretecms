@@ -55,7 +55,8 @@ $canEdit = $permissionsCallback($ak, $permissionsArguments); ?>
                         data-editable-field-type="xeditableAttribute"
                         data-url="<?= $saveAction ?>"
                         data-type="concreteattribute"<?php
-                    } ?>>
+                        echo $ak->atHandle==='textarea' ? "data-editableMode='inline'" : ''
+                    } ?> >
                 <?= $display ?>
             </span></p>
         </div>
