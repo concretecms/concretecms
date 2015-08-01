@@ -19,9 +19,16 @@ class FilePageCache extends PageCache {
 	}
 
 	protected function getCacheFile($mixed) {
-		$key = $this->getCacheKey($mixed);
-		if ($key) {
-			$key = hash('sha256',$key);
+		$cacheKey = $this->getCacheKey($mixed);
+		if ($cacheKey) {
+
+			$varyOnRecord = $this->getVaryOnRecord($mixed);
+			$cacheVaryOnKey = $this->getVaryOnCacheKey($varyOnRecord);
+
+			var_dump($cacheVaryOnKey);
+
+			$key = hash('sha256', $cacheKey . $cacheVaryOnKey);
+
 			$filename = $key . '.cache';
 			$dir = Config::get('concrete.cache.page.directory') . '/' . $key[0] . '/' . $key[1] . '/' . $key[2];
 			if ($dir && (!is_dir($dir))) {
@@ -30,6 +37,36 @@ class FilePageCache extends PageCache {
 			$path = $dir . '/' . $filename;
 			return $path;
 		}
+	}
+
+	protected function getVaryOnRecord($mixed) {
+		$file = $this->getVaryOnCacheFile($mixed);
+
+		if (file_exists($file)) {
+			$contents = file_get_contents($file);
+			$record = @unserialize($contents);
+
+			//TODO: VaryOnRecordClass
+			if (is_array($record)) {
+				return $record;
+			}
+		}
+
+		return array();
+	}
+
+	protected function getVaryOnCacheFile($mixed) {
+		$cacheKey = $this->getCacheKey($mixed);
+		if ($cacheKey) {
+			$cacheKey = hash('sha256',$cacheKey);
+			$filename = $cacheKey . '.cache';
+			$dir = Config::get('concrete.cache.page.vary_on.directory') . '/' . $cacheKey[0] . '/' . $cacheKey[1] . '/' . $cacheKey[2];
+			if ($dir && (!is_dir($dir))) {
+				@mkdir($dir, Config::get('concrete.filesystem.permissions.directory'), true);
+			}
+			$path = $dir . '/' . $filename;
+		}
+		return $path;
 	}
 
 	public function purgeByRecord(\Concrete\Core\Cache\Page\PageCacheRecord $rec) {
@@ -52,10 +89,19 @@ class FilePageCache extends PageCache {
 	}
 
 	public function set(ConcretePage $c, $content) {
-		if (!is_dir(Config::get('concrete.cache.page.directory'))) {
-			@mkdir(Config::get('concrete.cache.page.directory'));
-			@touch(Config::get('concrete.cache.page.directory') . '/index.html');
+		foreach(array(Config::get('concrete.cache.page.directory'), Config::get('concrete.cache.page.vary_on.directory')) as $dir) {
+			if (!is_dir($dir)) {
+				@mkdir($dir);
+				@touch($dir . '/index.html');
+			}
 		}
+
+		$varyOnSettingsFile = $this->getVaryOnCacheFile($c);
+		if($varyOnSettingsFile) {
+			$varyOnSettings = $this->getVaryOnCacheSettings($c);
+			file_put_contents($varyOnSettingsFile, serialize($varyOnSettings));
+		}
+
 		$lifetime = $c->getCollectionFullPageCachingLifetimeValue();
 		$file = $this->getCacheFile($c);
 		if ($file) {

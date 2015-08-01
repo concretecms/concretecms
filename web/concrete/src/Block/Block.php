@@ -217,16 +217,17 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
     public function useBlockCache()
     {
         $u = new User();
-        if ($u->isRegistered() && $this->cacheBlockOutputForRegisteredUsers() === false) {
-            echo "<pre>Failing Registered User Test {$this->getBlockID()}</pre>";
+
+        if(!$this->cacheBlockOutput()) {
+            echo "<pre>No Cache: Block: ({$this->getBlockID()} {$this->getController()->getBlockTypeName()})</pre>";
+            return false;
+        }  else if ($u->isRegistered() && $this->cacheBlockOutputForRegisteredUsers() === false) {
+            echo "<pre>No Cache: USER: ({$this->getBlockID()} {$this->getController()->getBlockTypeName()})</pre>";
             return false;
         } else if($_SERVER['REQUEST_METHOD'] === 'POST' && $this->cacheBlockOutputOnPost() === false) {
-            echo "<pre>Failing Registered User Test  2 {$this->getBlockID()}</pre>";
+            echo "<pre>No Cache: POST ({$this->getBlockID()} {$this->getController()->getBlockTypeName()})</pre>";
             return false;
-        } else if($this->cacheBlockOutputDynamic()){
-            $result = $this->getController()->useBlockCache();
-            return $result;
-        } else {
+        }  else {
             return true;
         }
     }

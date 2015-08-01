@@ -42,8 +42,6 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     protected $btCacheBlockOutputVaryOn = array();
     protected $btCacheBlockOutputLifetime = 0;
     protected $btCacheBlockOutputOnPost = false;
-    protected $btCacheBlockOutputDynamic = false;
-    protected $btCacheBlockOutputDynamicUseCache = null;
     protected $btCacheBlockOutputForRegisteredUsers = false;
     protected $bActionCID;
     protected $btExportPageColumns = array();
@@ -161,11 +159,6 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
                 $db->Execute('update Blocks set btCachedBlockRecord = ? where bID = ?', array($record, $this->bID));
             }
         }
-    }
-
-    public function useBlockCache() {
-        echo "<pre>base use block cache</pre>";
-        return $this->btCacheBlockOutputDynamicUseCache;
     }
 
     public function cacheBlockRecord()

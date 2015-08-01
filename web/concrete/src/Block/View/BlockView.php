@@ -352,7 +352,7 @@ class BlockView extends AbstractView
             return false;
         }
 
-        if($this->block instanceof Block && $this->block->useBlockCache()) {
+        if($this->block instanceof Block) {
             return $this->block->useBlockCache();
         } else {
             return false;
@@ -405,8 +405,6 @@ class BlockView extends AbstractView
             $this->didPullFromOutputCache = true;
 
             $this->outputContent = $this->block->getBlockCachedOutput($this->area);
-        } else {
-            echo "don't use cache";
         }
 
         if (!$this->outputContent) {

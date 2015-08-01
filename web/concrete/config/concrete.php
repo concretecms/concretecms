@@ -201,6 +201,9 @@ return array(
         'page'        => array(
             'directory' => DIR_FILES_UPLOADED_STANDARD . '/cache/pages',
             'adapter'      => 'file',
+            'vary_on' => array(
+                'directory' => DIR_FILES_UPLOADED_STANDARD . '/cache/vary_on',
+            )
         ),
         'environment' => array(
             'file' => 'environment.cache'

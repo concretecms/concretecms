@@ -27,14 +27,19 @@ class Controller extends BlockController
     protected $btTable = 'btCoreAreaLayout';
     protected $btIsInternal = true;
     protected $btCacheBlockRecord = true;
-    protected $btCacheBlockOutput = true;
-    protected $btCacheBlockOutputOnPost = true;
-    protected $btCacheBlockOutputForRegisteredUsers = true;
-    protected $btCacheBlockOutputDynamic = true;
+    protected $btCacheBlockOutput = false;
+    protected $btCacheBlockOutputOnPost = false;
+    protected $btCacheBlockOutputForRegisteredUsers = false;
 
     public function getBlockTypeDescription()
     {
         return t("Proxy block for area layouts.");
+    }
+
+    public function on_start() {
+        $startTime = microtime(true);
+        $this->setupCacheSettings();
+        echo "<pre>Elapsed time is: ". round((microtime(true) - $startTime) * 1000) ." ms</pre>";
     }
 
     public function getBlockTypeName()
@@ -50,35 +55,74 @@ class Controller extends BlockController
         }
     }
 
-    public function useBlockCache() {
-        if($this->btCacheBlockOutputDynamicUseCache === null) {
-            echo "<pre>calculating use block cache {$this->bID}</pre>";
+    public function setupCacheSettings() {
+        //Block cache settings are only as good as the weakest cached item inside.
+        if(Page::getCurrentPage()->isEditMode()) {
+            return;
+        }
 
-            $b = $this->getBlockObject();
-            $a = $b->getBlockAreaObject();
-            $this->arLayout = $this->getAreaLayoutObject();
+        $btCacheBlockOutput = true;
+        $btCacheBlockOutputVaryOn = array();
+        $btCacheBlockOutputOnPost = true;
+        $btCacheBlockOutputForRegisteredUsers = true;
+        $btCacheBlockOutputLifetime = 0;
 
-            if (is_object($this->arLayout)) {
-                $this->arLayout->setAreaObject($a);
-                $columns = $this->arLayout->getAreaLayoutColumns();
+        echo "<pre>Checking Dynamic Cache (calculating): ({$this->bID})</pre>";
 
-                foreach($columns as $column) {
-                    $sa = $column->getSubAreaObject();
-                    $blocks = $sa->getAreaBlocksArray();
+        $b = $this->getBlockObject();
+        $a = $b->getBlockAreaObject();
+        $this->arLayout = $this->getAreaLayoutObject();
 
-                    foreach($blocks as $b) {
-                        if(!$b->useBlockCache()) {
-                            echo "<pre>child block doesn't support cache, bowing out {$b->bID} {$b->getInstance()->getBlockTypeName()}</pre>";
-                            $this->btCacheBlockOutputDynamicUseCache = false;
+        $useBlockCache = true;
+
+        if (is_object($this->arLayout)) {
+            $this->arLayout->setAreaObject($a);
+            $columns = $this->arLayout->getAreaLayoutColumns();
+
+            foreach($columns as $column) {
+                $sa = $column->getSubAreaObject();
+                $blocks = $sa->getAreaBlocksArray();
+
+                foreach($blocks as $b) {
+
+                    $btCacheBlockOutput = $btCacheBlockOutput && $b->cacheBlockOutput();
+
+                    //As soon as we find something which cannot be cached, entire area cannot be cached, so stop checking.
+                    if(!$btCacheBlockOutput) {
+                        echo "<pre>Cannot cache because of ({$b->bID})</pre>";
+                        return;
+                    }
+
+                    $btCacheBlockOutputOnPost = $btCacheBlockOutputOnPost && $b->cacheBlockOutputOnPost();
+                    $btCacheBlockOutputForRegisteredUsers = $btCacheBlockOutputForRegisteredUsers && $b->cacheBlockOutputForRegisteredUsers();
+                    $btCacheBlockOutputVaryOn = array_merge($btCacheBlockOutputVaryOn, $b->cacheBlockOutputVaryOn());
+
+                    if($expires = $b->getBlockOutputCacheLifetime()) {
+                        if($expires && $btCacheBlockOutputLifetime < $expires) {
+                            $btCacheBlockOutputLifetime = $expires;
                         }
                     }
                 }
             }
-        } else {
-            echo "<pre>pre calculed use block cache {$this->bID}</pre>";
         }
 
-        return $this->btCacheBlockOutputDynamicUseCache;
+        $this->btCacheBlockOutput = $btCacheBlockOutput;
+        $this->btCacheBlockOutputVaryOn = $btCacheBlockOutputVaryOn;
+        $this->btCacheBlockOutputOnPost = $btCacheBlockOutputOnPost;
+        $this->btCacheBlockOutputForRegisteredUsers = $btCacheBlockOutputForRegisteredUsers;
+        $this->btCacheBlockOutputLifetime = $btCacheBlockOutputLifetime;
+
+        echo "<pre>";
+        var_dump(array(
+            "btCacheBlockOutput" => $this->btCacheBlockOutput,
+            "btCacheBlockOutputVaryOn" => $this->btCacheBlockOutputVaryOn,
+            "btCacheBlockOutputOnPost" => $this->btCacheBlockOutputOnPost,
+            "btCacheBlockOutputForRegisteredUsers" => $this->btCacheBlockOutputForRegisteredUsers,
+            "btCacheBlockOutputLifetime" => $this->btCacheBlockOutputLifetime,
+        ));
+        echo "</pre>";
+
+
     }
 
     public function duplicate($newBID)

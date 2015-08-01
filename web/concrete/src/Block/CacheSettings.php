@@ -10,9 +10,7 @@ class CacheSettings
     protected $btCacheBlockOutputVaryOnKey = null;
     protected $btCacheBlockOutputOnPost = false;
     protected $btCacheBlockOutputForRegisteredUsers = false;
-    protected $btCacheBlockOutputLifetime = 0;
-    protected $btCacheBlockOutputDynamic = false;
-    
+    protected $btCacheBlockOutputLifetime = 0;    
 
     public static function get(Block $b)
     {
@@ -39,7 +37,6 @@ class CacheSettings
             if ($r['bID']) {
                 $o = new static();
                 $o->btCacheBlockOutput = (bool) $r['btCacheBlockOutput'];
-                $o->btCacheBlockOutputDynamic = (bool) $r['btCacheBlockOutputDynamic'];
                 $o->btCacheBlockOutputOnPost = (bool) $r['btCacheBlockOutputOnPost'];
                 $o->btCacheBlockOutputForRegisteredUsers = (bool) $r['btCacheBlockOutputForRegisteredUsers'];
                 $o->btCacheBlockOutputLifetime = $r['btCacheBlockOutputLifetime'];
@@ -54,7 +51,6 @@ class CacheSettings
             if ($controller = $b->getController()) {
                 $o = new static();
                 $o->btCacheBlockOutput = $controller->cacheBlockOutput();
-                $o->btCacheBlockOutputDynamic = $controller->cacheBlockOutputDynamic();
                 $o->btCacheBlockOutputVaryOn = $controller->cacheBlockOutputVaryOn();
                 $o->btCacheBlockOutputOnPost = $controller->cacheBlockOutputOnPost();
                 $o->btCacheBlockOutputForRegisteredUsers = $controller->cacheBlockOutputForRegisteredUsers();
@@ -63,7 +59,6 @@ class CacheSettings
             } else {
                 $o = new static();
                 $o->btCacheBlockOutput = false;
-                $o->btCacheBlockOutputDynamic = false;
                 $o->btCacheBlockOutputVaryOn = array();
                 $o->btCacheBlockOutputOnPost = false;
                 $o->btCacheBlockOutputForRegisteredUsers = false;
