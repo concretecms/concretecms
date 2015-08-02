@@ -39,6 +39,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     protected $btHasRendered = false;
     protected $btCacheBlockRecord = true;
     protected $btCacheBlockOutput = false;
+    protected $btCacheBlockOutputVaryOn = array();
     protected $btCacheBlockOutputLifetime = 0;
     protected $btCacheBlockOutputOnPost = false;
     protected $btCacheBlockOutputForRegisteredUsers = false;
@@ -462,6 +463,11 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     public function cacheBlockOutput()
     {
         return $this->btCacheBlockOutput;
+    }
+
+    public function cacheBlockOutputVaryOn()
+    {
+        return $this->btCacheBlockOutputVaryOn;
     }
 
     public function cacheBlockOutputForRegisteredUsers()
