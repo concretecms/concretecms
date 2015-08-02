@@ -22,6 +22,12 @@ class Controller extends BlockController
     protected $btExportPageTypeColumns = array('ptID');
     protected $btExportPageFeedColumns = array('pfID');
     protected $btCacheBlockRecord = true;
+    protected $btCacheBlockOutput = true;
+    protected $btCacheBlockOutputVaryOn = array(
+        'ccm_paging_p' => array(
+            'default' => '1'
+        )
+    );
     protected $list;
 
     /**
