@@ -26,10 +26,18 @@ class Controller extends BlockController
     protected $btSupportsInlineEdit = true;
     protected $btTable = 'btCoreAreaLayout';
     protected $btIsInternal = true;
+    protected $btCacheBlockRecord = true;
+    protected $btCacheBlockOutput = false;
+    protected $btCacheBlockOutputOnPost = false;
+    protected $btCacheBlockOutputForRegisteredUsers = false;
 
     public function getBlockTypeDescription()
     {
         return t("Proxy block for area layouts.");
+    }
+
+    public function on_start() {
+        $this->setupCacheSettings();
     }
 
     public function getBlockTypeName()
@@ -45,6 +53,60 @@ class Controller extends BlockController
         }
     }
 
+    public function setupCacheSettings() {
+        //Block cache settings are only as good as the weakest cached item inside.
+        if(Page::getCurrentPage()->isEditMode()) {
+            return;
+        }
+
+        $btCacheBlockOutput = true;
+        $btCacheBlockOutputVaryOn = array();
+        $btCacheBlockOutputOnPost = true;
+        $btCacheBlockOutputForRegisteredUsers = true;
+        $btCacheBlockOutputLifetime = 0;
+
+        $b = $this->getBlockObject();
+        $a = $b->getBlockAreaObject();
+        $this->arLayout = $this->getAreaLayoutObject();
+
+        $useBlockCache = true;
+
+        if (is_object($this->arLayout)) {
+            $this->arLayout->setAreaObject($a);
+            $columns = $this->arLayout->getAreaLayoutColumns();
+
+            foreach($columns as $column) {
+                $sa = $column->getSubAreaObject();
+                $blocks = $sa->getAreaBlocksArray();
+
+                foreach($blocks as $b) {
+
+                    $btCacheBlockOutput = $btCacheBlockOutput && $b->cacheBlockOutput();
+
+                    //As soon as we find something which cannot be cached, entire area cannot be cached, so stop checking.
+                    if(!$btCacheBlockOutput) {
+                        return;
+                    }
+
+                    $btCacheBlockOutputOnPost = $btCacheBlockOutputOnPost && $b->cacheBlockOutputOnPost();
+                    $btCacheBlockOutputForRegisteredUsers = $btCacheBlockOutputForRegisteredUsers && $b->cacheBlockOutputForRegisteredUsers();
+                    $btCacheBlockOutputVaryOn = array_merge($btCacheBlockOutputVaryOn, $b->cacheBlockOutputVaryOn());
+
+                    if($expires = $b->getBlockOutputCacheLifetime()) {
+                        if($expires && $btCacheBlockOutputLifetime < $expires) {
+                            $btCacheBlockOutputLifetime = $expires;
+                        }
+                    }
+                }
+            }
+        }
+
+        $this->btCacheBlockOutput = $btCacheBlockOutput;
+        $this->btCacheBlockOutputVaryOn = $btCacheBlockOutputVaryOn;
+        $this->btCacheBlockOutputOnPost = $btCacheBlockOutputOnPost;
+        $this->btCacheBlockOutputForRegisteredUsers = $btCacheBlockOutputForRegisteredUsers;
+        $this->btCacheBlockOutputLifetime = $btCacheBlockOutputLifetime;
+    }
 
     public function duplicate($newBID)
     {
