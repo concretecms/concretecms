@@ -114,7 +114,7 @@ abstract class PageCache {
 		}
 
 		$blocks = $c->getBlocks();
-		array_merge($c->getGlobalBlocks(), $blocks);
+		$blocks = array_merge($c->getGlobalBlocks(), $blocks);
 
 		foreach($blocks as $b) {
 			if (!$b->cacheBlockOutput()) {
