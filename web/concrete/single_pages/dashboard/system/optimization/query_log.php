@@ -55,10 +55,16 @@ $th = Loader::helper('text');
     </div>
 
     <div class="ccm-dashboard-header-buttons">
-        <form method="post" action="<?=$view->action('clear')?>">
+        <form method="post" action="<?=$view->action('clear')?>" class='form-inline' style='display:inline'>
             <?=Loader::helper('validation/token')->output('clear')?>
             <button type="submit" class="btn btn-danger"><?=t('Clear Log')?></button>
         </form>
+
+        <form method="post" action="<?=$view->action('csv')?>" class='form-inline' style='display:inline'>
+            <?=Loader::helper('validation/token')->output('csv')?>
+            <button type="submit" class="btn btn-success"><?= t('Export to CSV') ?></button>
+        </form>
+
     </div>
 
     <? } else { ?>
