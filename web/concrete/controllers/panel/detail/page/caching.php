@@ -3,6 +3,9 @@ namespace Concrete\Controller\Panel\Detail\Page;
 use \Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
 use PageEditResponse;
 use PageCache;
+use Request;
+use Response;
+use Config;
 
 class Caching extends BackendInterfacePageController {
 
@@ -16,30 +19,18 @@ class Caching extends BackendInterfacePageController {
 
 	}
 
-	public function purge() {
-		$cache = PageCache::getLibrary();
-		$cache->purge($this->page);
-		$r = new PageEditResponse();
-		$r->setPage($this->page);
-		$r->setTitle(t('Page Updated'));
-		$r->setMessage(t('This page has been purged from the full page cache.'));
-		$r->outputJSON();
+	public function preview() {
+        $req = Request::getInstance();
+        $req->setCurrentPage($this->page);
+        $controller = $this->page->getPageController();
+        $view = $controller->getViewObject();
+        $req->setCustomRequestUser(-1);
+
+        Config::set('concrete.cache.preview', true);
+        
+        $response = new Response();
+        $content = $view->render();
+        $response->setContent($content);
+        return $response;
 	}
-
-	public function submit() {
-		if ($this->validateAction()) {
-			$data = array();
-			$data['cCacheFullPageContent'] = $_POST['cCacheFullPageContent'];
-			$data['cCacheFullPageContentLifetimeCustom'] = $_POST['cCacheFullPageContentLifetimeCustom'];
-			$data['cCacheFullPageContentOverrideLifetime'] = $_POST['cCacheFullPageContentOverrideLifetime'];				
-			$this->page->update($data);
-			$r = new PageEditResponse();
-			$r->setPage($this->page);
-			$r->setTitle(t('Page Updated'));
-			$r->setMessage(t('Full page caching settings saved.'));
-			$r->outputJSON();
-		}
-	}
-
-
 }
