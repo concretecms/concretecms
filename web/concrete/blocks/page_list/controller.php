@@ -23,6 +23,7 @@ class Controller extends BlockController
     protected $btExportPageFeedColumns = array('pfID');
     protected $btCacheBlockRecord = true;
     protected $btCacheBlockOutput = null;
+    protected $btCacheBlockOutputVaryOn = null;
     protected $list;
 
     /**
@@ -228,6 +229,22 @@ class Controller extends BlockController
 
         return  $this->btCacheBlockOutput;
     }
+
+    public function cacheBlockOutputVaryOn() {
+        if($this->btCacheBlockOutputVaryOn === null) {
+            if($this->paginate) {
+                $this->btCacheBlockOutputVaryOn = array(
+                    'ccm_paging_p' => array(
+                        'default' => '1'
+                    )
+                );
+            } else {
+                $this->btCacheBlockOutputVaryOn = array();
+            }
+        }
+
+        return $this->btCacheBlockOutputVaryOn;
+    }   
 
     public function add()
     {
