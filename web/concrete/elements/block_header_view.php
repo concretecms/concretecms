@@ -43,8 +43,8 @@ if (
 
 if(\Config::get('concrete.cache.preview')) {
     if(!$b->useBlockCache()) {
-        echo "<div class='ccm-cache-status' style='outline: solid 1px red'>
-                <span class='label label-danger' style='position:absolute; z-index:3000;'>{$b->instance->getBlockTypeName()} ({$b->getBlockID()})</span>";
+        echo "<div class='ccm-cache-status' style='outline: solid 1px red; position: relative;'>
+                <span class='label label-danger' style='position:absolute; right:0; z-index:3000;'>{$b->instance->getBlockTypeName()} ({$b->getBlockID()})</span>";
     }
 }
 
