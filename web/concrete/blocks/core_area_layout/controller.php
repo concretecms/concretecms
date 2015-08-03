@@ -27,9 +27,6 @@ class Controller extends BlockController
     protected $btTable = 'btCoreAreaLayout';
     protected $btIsInternal = true;
     protected $btCacheBlockRecord = true;
-    protected $btCacheBlockOutput = false;
-    protected $btCacheBlockOutputOnPost = false;
-    protected $btCacheBlockOutputForRegisteredUsers = false;
     protected $btCacheSettingsInitialized = false;
 
     public function getBlockTypeDescription()
@@ -50,7 +47,7 @@ class Controller extends BlockController
         }
     }
 
-    public function setupCacheSettings() {
+    protected function setupCacheSettings() {
         
         if($this->btCacheSettingsInitialized || Page::getCurrentPage()->isEditMode()) {
             return;
