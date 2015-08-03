@@ -22,12 +22,7 @@ class Controller extends BlockController
     protected $btExportPageTypeColumns = array('ptID');
     protected $btExportPageFeedColumns = array('pfID');
     protected $btCacheBlockRecord = true;
-    protected $btCacheBlockOutput = true;
-    protected $btCacheBlockOutputVaryOn = array(
-        'ccm_paging_p' => array(
-            'default' => '1'
-        )
-    );
+    protected $btCacheBlockOutput = null;
     protected $list;
 
     /**
@@ -220,6 +215,18 @@ class Controller extends BlockController
         $this->set('pages', $pages);
         $this->set('list', $list);
         $this->set('showPagination', $showPagination);
+    }
+
+    public function cacheBlockOutput() {
+        if($this->btCacheBlockOutput === null) {
+            if($this->enableExternalFiltering == false) {
+                $this->btCacheBlockOutput = true;
+            } else {
+                $this->btCacheBlockOutput = false;
+            }
+        }
+
+        return  $this->btCacheBlockOutput;
     }
 
     public function add()
