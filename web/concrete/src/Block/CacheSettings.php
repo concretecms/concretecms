@@ -50,6 +50,9 @@ class CacheSettings
         if (!isset($o)) {
             if ($controller = $b->getController()) {
                 $o = new static();
+                if(method_exists($controller, "setupCacheSettings")) {
+                    $controller->setupCacheSettings();
+                }
                 $o->btCacheBlockOutput = $controller->cacheBlockOutput();
                 $o->btCacheBlockOutputVaryOn = $controller->cacheBlockOutputVaryOn();
                 $o->btCacheBlockOutputOnPost = $controller->cacheBlockOutputOnPost();

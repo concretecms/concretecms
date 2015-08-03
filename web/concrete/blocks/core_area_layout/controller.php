@@ -36,10 +36,6 @@ class Controller extends BlockController
         return t("Proxy block for area layouts.");
     }
 
-    public function on_start() {
-        $this->setupCacheSettings();
-    }
-
     public function getBlockTypeName()
     {
         return t("Area Layout");
