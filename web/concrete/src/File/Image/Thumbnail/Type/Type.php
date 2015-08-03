@@ -1,8 +1,8 @@
 <?php
+
 namespace Concrete\Core\File\Image\Thumbnail\Type;
 
 use Database;
-use Core;
 
 /**
  * @Entity
@@ -10,7 +10,6 @@ use Core;
  */
 class Type
 {
-
     /**
      * @Column(type="string")
      */
@@ -102,6 +101,7 @@ class Type
      * @param string $format = 'html'
      *    Escape the result in html format (if $format is 'html').
      *    If $format is 'text' or any other value, the display name won't be escaped.
+     *
      * @return string
      */
     public function getDisplayName($format = 'html')
@@ -148,7 +148,6 @@ class Type
         return $this->ftTypeHeight;
     }
 
-
     /**
      * @return \Concrete\Core\File\Image\Thumbnail\Type\Type[]
      */
@@ -156,6 +155,7 @@ class Type
     {
         $db = Database::get();
         $em = $db->getEntityManager();
+
         return $em->getRepository('\Concrete\Core\File\Image\Thumbnail\Type\Type')->findBy(array(), array('ftTypeWidth' => 'asc'));
     }
 
@@ -166,10 +166,11 @@ class Type
     {
         $types = static::getList();
         $versions = array();
-        foreach($types as $type) {
+        foreach ($types as $type) {
             $versions[] = $type->getBaseVersion();
             $versions[] = $type->getDoubledVersion();
         }
+
         return $versions;
     }
 
@@ -185,7 +186,7 @@ class Type
     {
         $child = $node->addChild('thumbnailtypes');
         $list = static::getList();
-        foreach($list as $link) {
+        foreach ($list as $link) {
             $linkNode = $child->addChild('thumbnailtype');
             $linkNode->addAttribute('name', $link->getName());
             $linkNode->addAttribute('handle', $link->getHandle());
@@ -211,11 +212,13 @@ class Type
         $db = Database::get();
         $em = $db->getEntityManager();
         $r = $em->find('\Concrete\Core\File\Image\Thumbnail\Type\Type', $id);
+
         return $r;
     }
 
     /**
      * @param $ftTypeHandle
+     *
      * @return \Concrete\Core\File\Image\Thumbnail\Type\Type
      */
     public static function getByHandle($ftTypeHandle)
@@ -243,12 +246,11 @@ class Type
 
     public function getDoubledVersion()
     {
-        $name = t('%s (Retina Version)', $this->getName());
         $height = null;
         if ($this->getHeight()) {
             $height = $this->getHeight() * 2;
         }
-        return new Version($this->getHandle() . '_2x', $this->getHandle() . '_2x', $name, $this->getWidth() * 2, $height);
-    }
 
+        return new Version($this->getHandle() . '_2x', $this->getHandle() . '_2x', $this->getName(), $this->getWidth() * 2, $height, true);
+    }
 }
