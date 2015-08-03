@@ -134,6 +134,7 @@ class Controller extends BlockController
 
     public function getBlockTypeCacheOutputLifetime()
     {
+        $this->setupCacheSettings();
         return $this->btCacheBlockOutputLifetime;
     }
 
