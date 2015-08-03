@@ -79,7 +79,9 @@ class RedactorEditor implements EditorInterface
         <script type="text/javascript">
         var CCM_EDITOR_SECURITY_TOKEN = "{$this->token}";
         $(function() {
-            $('textarea[data-redactor-editor={$identifier}]').redactor({$options});
+            $('textarea[data-redactor-editor={$identifier}]').redactor({$options}).on('remove', function(){
+                $(this).redactor('core.destroy');
+            })
         });
         </script>
 EOL;
