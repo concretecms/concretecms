@@ -100,11 +100,11 @@ $form = Loader::helper('form/page_selector');
             
             <?
             $filterDateOptions = array(
-                'all' => 'Show All',
-                'now' => 'Today',
-                'past' => 'Before Today',
-                'future' => 'After Today',
-                'between' => 'Between'
+                'all' => t('Show All'),
+                'now' => t('Today'),
+                'past' => t('Before Today'),
+                'future' => t('After Today'),
+                'between' => t('Between'),
             );
 
             foreach($filterDateOptions as $filterDateOptionHandle => $filterDateOptionLabel) {
@@ -113,7 +113,7 @@ $form = Loader::helper('form/page_selector');
                 <div class="radio">
                     <label>
                         <input type="radio" class='filterDateOption' name="filterDateOption" value="<?=$filterDateOptionHandle?>" <?=$isChecked?> />
-                        <?= t($filterDateOptionLabel) ?>
+                        <?= $filterDateOptionLabel ?>
                     </label>
                 </div>
             <? } ?>
