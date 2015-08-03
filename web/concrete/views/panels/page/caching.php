@@ -146,7 +146,9 @@ switch(Config::get('concrete.cache.full_page_lifetime')) {
 
 		</form>
 	</div>
-
+	<div class="ccm-panel-detail-form-actions dialog-buttons">
+		<button class="pull-right btn btn-success" type="button" data-dialog-action="submit" data-panel-detail-action="submit"><?=t('Save Changes')?></button>
+	</div>
 </section>
 
 
@@ -169,7 +171,7 @@ switch(Config::get('concrete.cache.full_page_lifetime')) {
 			}
 		}
 	}
-	$(function() {
+		$(function() {
 		$('#ccm-button-remove-page-from-cache').on('click', function() {
 			jQuery.fn.dialog.showLoader();
 			$.getJSON('<?=$controller->action("purge")?>', function(r) {

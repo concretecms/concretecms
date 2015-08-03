@@ -6,6 +6,8 @@ use Permissions;
 use Page;
 use stdClass;
 use PermissionKey;
+use PageCache;
+use PageEditResponse;
 use \Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
 
 class Caching extends BackendInterfacePageController
