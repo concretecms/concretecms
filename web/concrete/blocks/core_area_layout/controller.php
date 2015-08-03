@@ -30,6 +30,7 @@ class Controller extends BlockController
     protected $btCacheBlockOutput = false;
     protected $btCacheBlockOutputOnPost = false;
     protected $btCacheBlockOutputForRegisteredUsers = false;
+    protected $btCacheSettingsInitialized = false;
 
     public function getBlockTypeDescription()
     {
@@ -50,11 +51,14 @@ class Controller extends BlockController
     }
 
     public function setupCacheSettings() {
-        //Block cache settings are only as good as the weakest cached item inside.
-        if(Page::getCurrentPage()->isEditMode()) {
+        
+        if($this->btCacheSettingsInitialized || Page::getCurrentPage()->isEditMode()) {
             return;
         }
 
+        $this->btCacheSettingsInitialized = true;
+
+        //Block cache settings are only as good as the weakest cached item inside. So loop through and check.
         $btCacheBlockOutput = true;
         $btCacheBlockOutputVaryOn = array();
         $btCacheBlockOutputOnPost = true;
@@ -102,6 +106,36 @@ class Controller extends BlockController
         $this->btCacheBlockOutputOnPost = $btCacheBlockOutputOnPost;
         $this->btCacheBlockOutputForRegisteredUsers = $btCacheBlockOutputForRegisteredUsers;
         $this->btCacheBlockOutputLifetime = $btCacheBlockOutputLifetime;
+    }
+
+    public function cacheBlockOutput()
+    {
+        $this->setupCacheSettings();
+        return $this->btCacheBlockOutput;
+    }
+
+    public function cacheBlockOutputVaryOn()
+    {
+        $this->setupCacheSettings();
+        return $this->btCacheBlockOutputVaryOn;
+    }
+
+    public function cacheBlockOutputForRegisteredUsers()
+    {
+        $this->setupCacheSettings();
+        return $this->btCacheBlockOutputForRegisteredUsers;
+    }
+
+    public function cacheBlockOutputOnPost()
+    {
+        $this->setupCacheSettings();
+        return $this->btCacheBlockOutputOnPost;
+    }
+
+    public function getBlockTypeCacheOutputLifetime()
+    {
+        $this->setupCacheSettings();
+        return $this->btCacheBlockOutputLifetime;
     }
 
     public function duplicate($newBID)
