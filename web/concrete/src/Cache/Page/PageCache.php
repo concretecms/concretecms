@@ -180,13 +180,13 @@ abstract class PageCache {
 
         $fullPageVaryOn = array();
 
-		$blocks = $c->getBlocks();
-		array_merge($c->getGlobalBlocks(), $blocks);
+        $blocks = $c->getBlocks();
+        array_merge($c->getGlobalBlocks(), $blocks);
 
-		foreach($blocks as $b) {
-			foreach($b->cacheBlockOutputVaryOn() as $key => $val) {
-				$fullPageVaryOn[$key] = $val; //TODO: Possible bug with collisions?
-			}
+        foreach($blocks as $b) {
+            foreach($b->cacheBlockOutputVaryOn() as $key => $val) {
+                $fullPageVaryOn[$key] = $val; //TODO: Possible bug with collisions?
+            }
         }
 
         return $fullPageVaryOn;

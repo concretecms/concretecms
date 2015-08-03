@@ -386,7 +386,7 @@ class BlockView extends AbstractView
     {
         $this->controller->on_start();
 
-        if ($this->useBlockCache()) {
+        if ($this->useBlockCache() && Config::get('concrete.cache.preview') !== true) {
             $this->didPullFromOutputCache = true;
             $this->outputContent = $this->block->getBlockCachedOutput($this->area);
         }

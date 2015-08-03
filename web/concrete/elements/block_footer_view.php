@@ -36,3 +36,11 @@ if ($a->showControls() && $p->canViewEditInterface() && $view->showControls()) {
 <? } else if (is_object($blockStyle)) { ?>
     </div>
 <? } ?>
+<?
+
+if(\Config::get('concrete.cache.preview')) {
+    if(!$b->useBlockCache()) {
+        echo "</div>";
+    }
+}
+?>
