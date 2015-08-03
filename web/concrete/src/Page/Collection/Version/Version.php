@@ -47,9 +47,7 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
 
     public function refreshCache()
     {
-        CacheLocal::delete('page', $this->getCollectionID() . ':' . $this->getVersionID());
-        CacheLocal::delete('page', $this->getCollectionID() . ':' . 'RECENT');
-        CacheLocal::delete('page', $this->getCollectionID() . ':' . 'ACTIVE');
+        CacheLocal::delete('page', $this->getCollectionID());
     }
 
     public static function get(&$c, $cvID)
