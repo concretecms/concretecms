@@ -1,5 +1,6 @@
-<?
+<?php
 namespace Concrete\Controller\Panel\Detail\Page;
+
 use \Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
 use PageEditResponse;
 use PageCache;
@@ -7,19 +8,21 @@ use Request;
 use Response;
 use Config;
 
-class Caching extends BackendInterfacePageController {
+class Caching extends BackendInterfacePageController
+{
+    protected $viewPath = '/panels/details/page/caching';
 
-	protected $viewPath = '/panels/details/page/caching';
+    protected function canAccess()
+    {
+        return $this->permissions->canEditPageSpeedSettings();
+    }
 
-	protected function canAccess() {
-		return $this->permissions->canEditPageSpeedSettings();
-	}
+    public function view()
+    {
+    }
 
-	public function view() {
-
-	}
-
-	public function preview() {
+    public function preview()
+    {
         $req = Request::getInstance();
         $req->setCurrentPage($this->page);
         $controller = $this->page->getPageController();
@@ -32,5 +35,5 @@ class Caching extends BackendInterfacePageController {
         $content = $view->render();
         $response->setContent($content);
         return $response;
-	}
+    }
 }

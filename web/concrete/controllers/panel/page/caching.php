@@ -12,7 +12,6 @@ use \Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
 
 class Caching extends BackendInterfacePageController
 {
-
     protected $viewPath = '/panels/page/caching';
 
     public function canAccess()
@@ -28,7 +27,8 @@ class Caching extends BackendInterfacePageController
         $this->set('blocks', $blocks);
     }
 
-    public function purge() {
+    public function purge()
+    {
         $cache = PageCache::getLibrary();
         $cache->purge($this->page);
         $r = new PageEditResponse();
@@ -38,12 +38,13 @@ class Caching extends BackendInterfacePageController
         $r->outputJSON();
     }
 
-    public function submit() {
+    public function submit()
+    {
         if ($this->validateAction()) {
             $data = array();
             $data['cCacheFullPageContent'] = $_POST['cCacheFullPageContent'];
             $data['cCacheFullPageContentLifetimeCustom'] = $_POST['cCacheFullPageContentLifetimeCustom'];
-            $data['cCacheFullPageContentOverrideLifetime'] = $_POST['cCacheFullPageContentOverrideLifetime'];               
+            $data['cCacheFullPageContentOverrideLifetime'] = $_POST['cCacheFullPageContentOverrideLifetime'];
             $this->page->update($data);
             $r = new PageEditResponse();
             $r->setPage($this->page);
