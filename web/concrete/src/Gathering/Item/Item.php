@@ -2,7 +2,9 @@
 
 namespace Concrete\Core\Gathering\Item;
 
-use Loader;
+use Core;
+use Database;
+use View;
 use Concrete\Core\Foundation\Object;
 use Concrete\Core\Gathering\DataSource\DataSource as GatheringDataSource;
 use RuntimeException;
@@ -108,7 +110,7 @@ abstract class Item extends Object
     public function getGatheringItemFeatureHandles()
     {
         if (!isset($this->feHandles)) {
-            $db = Loader::db();
+            $db = Database::connection();
             $this->feHandles = $db->GetCol(
                 'select distinct feHandle from GatheringItemFeatureAssignments afa inner join FeatureAssignments fa on afa.faID = fa.faID inner join Features fe on fa.feID = fe.feID where gaiID = ?',
                 array($this->gaiID)
@@ -121,7 +123,7 @@ abstract class Item extends Object
     protected function loadGatheringItemTemplates()
     {
         $this->templates = array();
-        $db = Loader::db();
+        $db = Database::connection();
         $r = $db->Execute(
             'select gatID, gatTypeID from GatheringItemSelectedTemplates where gaiID = ?',
             array($this->gaiID)
@@ -133,7 +135,7 @@ abstract class Item extends Object
 
     public function moveToNewGathering(Gathering $gathering)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $db->Execute(
             'update GatheringItems set gaID = ? where gaiID = ?',
             array($gathering->getGatheringID(), $this->gaiID)
@@ -146,7 +148,7 @@ abstract class Item extends Object
 
     public function setGatheringItemTemplate(GatheringItemTemplateType $type, GatheringItemTemplate $template)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $db->Execute(
             'delete from GatheringItemSelectedTemplates where gaiID = ? and gatTypeID = ?',
             array($this->gaiID, $type->getGatheringItemTemplateTypeID())
@@ -164,7 +166,7 @@ abstract class Item extends Object
 
     public function setGatheringItemBatchDisplayOrder($gaiBatchDisplayOrder)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $db->Execute(
             'update GatheringItems set gaiBatchDisplayOrder = ? where gaiID = ?',
             array($gaiBatchDisplayOrder, $this->gaiID)
@@ -174,7 +176,7 @@ abstract class Item extends Object
 
     public function setGatheringItemBatchTimestamp($gaiBatchTimestamp)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $db->Execute(
             'update GatheringItems set gaiBatchTimestamp = ? where gaiID = ?',
             array($gaiBatchTimestamp, $this->gaiID)
@@ -184,14 +186,14 @@ abstract class Item extends Object
 
     public function setGatheringItemSlotWidth($gaiSlotWidth)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $db->Execute('update GatheringItems set gaiSlotWidth = ? where gaiID = ?', array($gaiSlotWidth, $this->gaiID));
         $this->gaiSlotWidth = $gaiSlotWidth;
     }
 
     public function setGatheringItemSlotHeight($gaiSlotHeight)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $db->Execute(
             'update GatheringItems set gaiSlotHeight = ? where gaiID = ?',
             array($gaiSlotHeight, $this->gaiID)
@@ -201,14 +203,14 @@ abstract class Item extends Object
 
     public static function getByID($gaiID)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $r = $db->GetRow(
             'select GatheringItems.*, GatheringDataSources.gasHandle from GatheringItems inner join GatheringDataSources on GatheringItems.gasID = GatheringDataSources.gasID where gaiID = ?',
             array($gaiID)
         );
         if (is_array($r) && $r['gaiID'] == $gaiID) {
             if (!$r['gaiIsDeleted']) {
-                $class = Loader::helper('text')->camelcase($r['gasHandle']) . 'GatheringItem';
+                $class = Core::make('helper/text')->camelcase($r['gasHandle']) . 'GatheringItem';
                 $ags = new $class();
                 $ags->setPropertiesFromArray($r);
                 $ags->loadDetails();
@@ -220,7 +222,7 @@ abstract class Item extends Object
 
     protected static function getListByKey(GatheringDataSource $ags, $gaiKey)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $r = $db->Execute(
             'select gaiID from GatheringItems where gasID = ? and gaiKey = ?',
             array(
@@ -248,8 +250,8 @@ abstract class Item extends Object
         $gaiSlotWidth = 1,
         $gaiSlotHeight = 1
     ) {
-        $db = Loader::db();
-        $gaiDateTimeCreated = Loader::helper('date')->getOverridableNow();
+        $db = Database::connection();
+        $gaiDateTimeCreated = Core::make('helper/date')->getOverridableNow();
         $r = $db->Execute(
             'insert into GatheringItems (gaID, gasID, gaiDateTimeCreated, gaiPublicDateTime, gaiTitle, gaiKey, gaiSlotWidth, gaiSlotHeight) values (?, ?, ?, ?, ?, ?, ?, ?)',
             array(
@@ -269,7 +271,7 @@ abstract class Item extends Object
 
     public function duplicate(Gathering $gathering)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $gaID = $gathering->getGatheringID();
         $db->Execute(
             'insert into GatheringItems (gaID, gasID, gaiDateTimeCreated, gaiPublicDateTime, gaiTitle, gaiKey, gaiSlotWidth, gaiSlotHeight, gaiBatchTimestamp, gaiBatchDisplayOrder)
@@ -327,8 +329,6 @@ abstract class Item extends Object
 
     public function copyFeatureAssignment(FeatureAssignment $fa)
     {
-        $db = Loader::db();
-
         return GatheringItemFeatureAssignment::add($fa->getFeatureObject(), $fa->getFeatureDetailObject(), $this);
     }
 
@@ -369,8 +369,8 @@ abstract class Item extends Object
 
     public function setAutomaticGatheringItemTemplate()
     {
-        $arr = Loader::helper('arrays');
-        $db = Loader::db();
+        $arr = Core::make('helper/arrays');
+        $db = Database::connection();
         $myFeatureHandles = $this->getGatheringItemFeatureHandles();
 
         // we loop through and do it for all installed gathering item template types
@@ -421,7 +421,7 @@ abstract class Item extends Object
 
     public function delete()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $db->Execute('delete from GatheringItems where gaiID = ?', array($this->gaiID));
         $db->Execute('delete from GatheringItemSelectedTemplates where gaiID = ?', array($this->gaiID));
         $this->deleteFeatureAssignments();
@@ -429,7 +429,7 @@ abstract class Item extends Object
 
     public function deactivate()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $db->Execute('update GatheringItems set gaiIsDeleted = 1 where gaiID = ?', array($this->gaiID));
     }
 
@@ -440,7 +440,7 @@ abstract class Item extends Object
             $data = $t->getGatheringItemTemplateData($this);
             $env = Environment::get();
             extract($data);
-            Loader::element(
+            View::element(
                 DIRNAME_GATHERING . '/' . DIRNAME_GATHERING_ITEM_TEMPLATES . '/' . $type->getGatheringItemTemplateTypeHandle(
                 ) . '/' . $t->getGatheringItemTemplateHandle() . '/view',
                 $data
