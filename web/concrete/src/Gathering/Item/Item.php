@@ -4,6 +4,7 @@ namespace Concrete\Core\Gathering\Item;
 use Loader;
 use \Concrete\Core\Foundation\Object;
 use \Concrete\Core\Gathering\DataSource\DataSource as GatheringDataSource;
+use RuntimeException;
 
 abstract class Item extends Object
 {
@@ -14,7 +15,15 @@ abstract class Item extends Object
 
     abstract public function assignFeatureAssignments($mixed);
 
-    abstract public static function getListByItem($mixed);
+    /**
+     * @param mixed $mixed
+     *
+     * @abstract
+     */
+    public static function getListByItem($mixed)
+    {
+        throw new RuntimeException('This method has not yet been implemented.');
+    }
 
     protected $feHandles;
     protected $templates;
