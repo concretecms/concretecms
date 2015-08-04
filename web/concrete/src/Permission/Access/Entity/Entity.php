@@ -5,6 +5,7 @@ use Loader;
 use PermissionAccess;
 use CacheLocal;
 use Core;
+use RuntimeException;
 abstract class Entity extends Object {
 
 	public function getAccessEntityTypeID() {return $this->petID;}
@@ -16,7 +17,15 @@ abstract class Entity extends Object {
 	public function getAccessEntityLabel() {return $this->label;}
 	abstract public function getAccessEntityUsers(PermissionAccess $pa);
 	abstract public function getAccessEntityTypeLinkHTML();
-	abstract public static function getAccessEntitiesForUser($user);
+	/**
+	 * @param mixed $user
+	 *
+	 * @abstract
+	 */
+	public static function getAccessEntitiesForUser($user)
+	{
+	    throw new RuntimeException('This method has not yet been implemented.');
+	}
 
 	public function validate(PermissionAccess $pae) {
 		return true;
