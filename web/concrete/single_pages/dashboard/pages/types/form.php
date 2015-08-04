@@ -89,19 +89,14 @@ use \Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayou
 				</div>
 			</div>
 
-			<?
-			$controls = PageTypeComposerFormLayoutSetControl::getList($set);
-			if (count($controls) > 0):
-			?>
-				<table class="table table-hover" style="width: 100%;">
-					<tbody class="ccm-page-type-composer-form-layout-control-set-inner">
-						<? $controls = PageTypeComposerFormLayoutSetControl::getList($set);
-						foreach($controls as $cnt) {
-							echo Loader::element('page_types/composer/form/layout_set/control', array('control' => $cnt));
-						} ?>
-					</tbody>
-				</table>
-			<? endif; ?>
+			<table class="table table-hover" style="width: 100%;">
+				<tbody class="ccm-page-type-composer-form-layout-control-set-inner">
+					<? $controls = PageTypeComposerFormLayoutSetControl::getList($set);
+					foreach($controls as $cnt) {
+						echo Loader::element('page_types/composer/form/layout_set/control', array('control' => $cnt));
+					} ?>
+				</tbody>
+			</table>
 		</div>
 
 	<? } ?>
