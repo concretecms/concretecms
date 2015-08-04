@@ -218,13 +218,13 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
     {
         $u = new User();
 
-        if(!$this->cacheBlockOutput()) {
+        if (!$this->cacheBlockOutput()) {
             return false;
-        }  else if ($u->isRegistered() && $this->cacheBlockOutputForRegisteredUsers() === false) {
+        } elseif ($u->isRegistered() && $this->cacheBlockOutputForRegisteredUsers() === false) {
             return false;
-        } else if($_SERVER['REQUEST_METHOD'] === 'POST' && $this->cacheBlockOutputOnPost() === false) {
+        } elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && $this->cacheBlockOutputOnPost() === false) {
             return false;
-        }  else {
+        } else {
             return true;
         }
     }
