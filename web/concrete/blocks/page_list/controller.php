@@ -78,8 +78,8 @@ class Controller extends BlockController
 
         $today = date('Y-m-d');
 
-        switch($this->filterDateOption) {
-            case 'now': 
+        switch ($this->filterDateOption) {
+            case 'now':
                 $start = "$today 00:00:00";
                 $end = "$today 23:59:59";
                 break;
@@ -87,7 +87,7 @@ class Controller extends BlockController
             case 'past':
                 $end = "$today 23:59:59";
 
-                if($this->filterDateDays > 0)  {
+                if ($this->filterDateDays > 0) {
                     $past = date('Y-m-d', strtotime("-{$this->filterDateDays} days"));
                     $start = "$past 00:00:00";
                 }
@@ -96,7 +96,7 @@ class Controller extends BlockController
             case 'future':
                 $start = "$today 00:00:00";
 
-                if($this->filterDateDays > 0)  {
+                if ($this->filterDateDays > 0) {
                     $future = date('Y-m-d', strtotime("+{$this->filterDateDays} days"));
                     $end = "$future 23:59:59";
                 }
@@ -112,10 +112,10 @@ class Controller extends BlockController
                 break;
         }
 
-        if($start) {
+        if ($start) {
             $this->list->filterByPublicDate($start, '>=');
         }
-        if($end) {
+        if ($end) {
             $this->list->filterByPublicDate($end, '<=');
         }
 
@@ -397,6 +397,7 @@ class Controller extends BlockController
             'paginate' => 0,
             'rss' => 0,
             'pfID' => 0,
+            'filterDateOption' => '',
         );
 
         $args['num'] = ($args['num'] > 0) ? $args['num'] : 0;
@@ -460,14 +461,14 @@ class Controller extends BlockController
             $args['pfID'] = 0;
         }
 
-        if($args['filterDateOption'] != 'between') {
+        if ($args['filterDateOption'] != 'between') {
             $args['filterDateStart'] = null;
             $args['filterDateEnd'] = null;
         }
 
         if ($args['filterDateOption'] == 'past') {
             $args['filterDateDays'] = $args['filterDatePast'];
-        } else if ($args['filterDateOption'] == 'future') {
+        } elseif ($args['filterDateOption'] == 'future') {
             $args['filterDateDays'] = $args['filterDateFuture'];
         } else {
             $args['filterDateDays'] = null;
