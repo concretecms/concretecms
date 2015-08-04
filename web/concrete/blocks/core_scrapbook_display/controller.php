@@ -19,7 +19,6 @@ use Concrete\Core\Page\Controller\PageController;
  */
 class Controller extends BlockController
 {
-
     protected $btCacheBlockRecord = true;
     protected $btTable = 'btCoreScrapbookDisplay';
     protected $btIsInternal = true;
@@ -99,7 +98,7 @@ class Controller extends BlockController
         }
 
         return false;
-   }
+    }
 
     public function on_start()
     {
@@ -122,7 +121,6 @@ class Controller extends BlockController
 
     public function runAction($action, $parameters = array())
     {
-
         $bc = $this->getScrapbookBlockController();
 
         if (is_object($bc)) {
@@ -147,14 +145,13 @@ class Controller extends BlockController
             $bvt = new BlockViewTemplate($b);
             $bvt->registerTemplateAssets();
         }
-
     }
 
     public function cacheBlockOutput()
     {
         $bc = $this->getScrapbookBlockController();
         
-        if($bc) {
+        if ($bc) {
             return $bc->cacheBlockOutput();
         }
     }
@@ -163,7 +160,7 @@ class Controller extends BlockController
     {
         $bc = $this->getScrapbookBlockController();
         
-        if($bc) {
+        if ($bc) {
             return $bc->cacheBlockOutputVaryOn();
         }
     }
@@ -172,7 +169,7 @@ class Controller extends BlockController
     {
         $bc = $this->getScrapbookBlockController();
         
-        if($bc) {
+        if ($bc) {
             return $bc->cacheBlockOutputForRegisteredUsers();
         }
     }
@@ -181,7 +178,7 @@ class Controller extends BlockController
     {
         $bc = $this->getScrapbookBlockController();
         
-        if($bc) {
+        if ($bc) {
             return $bc->cacheBlockOutputOnPost();
         }
     }
@@ -190,9 +187,8 @@ class Controller extends BlockController
     {
         $bc = $this->getScrapbookBlockController();
         
-        if($bc) {
+        if ($bc) {
             return $bc->getBlockTypeCacheOutputLifetime();
         }
     }
-
 }

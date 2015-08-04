@@ -352,7 +352,7 @@ class BlockView extends AbstractView
             return false;
         }
 
-        if($this->block instanceof Block) {
+        if ($this->block instanceof Block) {
             return $this->block->useBlockCache();
         } else {
             return false;
