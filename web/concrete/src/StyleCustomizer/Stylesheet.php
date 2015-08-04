@@ -33,8 +33,13 @@ class Stylesheet
      */
     public function getCss()
     {
-        $parser = new \Less_Parser(array('cache_dir' => Config::get('concrete.cache.directory'),
-                'compress' => Config::get('concrete.theme.compress_preprocessor_output')));
+        $parser = new \Less_Parser(
+            array(
+                'cache_dir' => Config::get('concrete.cache.directory'),
+                'compress' => !!Config::get('concrete.theme.compress_preprocessor_output'),
+                'sourceMap' => !Config::get('concrete.theme.compress_preprocessor_output'),
+            )
+        );
         $parser = $parser->parseFile($this->file, $this->sourceUriRoot);
         if (isset($this->valueList) && $this->valueList instanceof \Concrete\Core\StyleCustomizer\Style\ValueList) {
             $variables = array();
