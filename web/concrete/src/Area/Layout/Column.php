@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Area\Layout;
 
-use Loader;
+use Database;
 use Concrete\Core\Foundation\Object;
 use Concrete\Core\Area\SubArea;
 use Page;
@@ -54,7 +54,7 @@ abstract class Column extends Object implements ColumnInterface
      */
     protected function loadBasicInformation($arLayoutColumnID)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $row = $db->GetRow('select * from AreaLayoutColumns where arLayoutColumnID = ?', array($arLayoutColumnID));
         if (is_array($row) && $row['arLayoutColumnID']) {
             $this->setPropertiesFromArray($row);
@@ -119,9 +119,9 @@ abstract class Column extends Object implements ColumnInterface
      */
     protected function duplicate($newAreaLayout)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $v = array($newAreaLayout->getAreaLayoutID(), $this->arLayoutColumnIndex, $this->arLayoutColumnDisplayID);
-        $db->Execute('insert into AreaLayoutColumns (arLayoutID, arLayoutColumnIndex, arLayoutColumnDisplayID) values (?, ?, ?)', $v);
+        $db->executeQuery('insert into AreaLayoutColumns (arLayoutID, arLayoutColumnIndex, arLayoutColumnDisplayID) values (?, ?, ?)', $v);
         $newAreaLayoutColumnID = $db->Insert_ID();
 
         return $newAreaLayoutColumnID;
@@ -132,7 +132,7 @@ abstract class Column extends Object implements ColumnInterface
      */
     public function getAreaObject()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $row = $db->GetRow('select cID, arHandle from Areas where arID = ?', array($this->arID));
         if ($row['cID'] && $row['arHandle']) {
             $c = Page::getByID($row['cID']);
@@ -207,18 +207,18 @@ abstract class Column extends Object implements ColumnInterface
      */
     public function setAreaID($arID)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $this->arID = $arID;
-        $db->Execute('update AreaLayoutColumns set arID = ? where arLayoutColumnID = ?', array($arID, $this->arLayoutColumnID));
+        $db->executeQuery('update AreaLayoutColumns set arID = ? where arLayoutColumnID = ?', array($arID, $this->arLayoutColumnID));
     }
 
     public function delete()
     {
-        $db = Loader::db();
-        $db->Execute("delete from AreaLayoutColumns where arLayoutColumnID = ?", array($this->arLayoutColumnID));
+        $db = Database::connection();
+        $db->executeQuery("delete from AreaLayoutColumns where arLayoutColumnID = ?", array($this->arLayoutColumnID));
 
         // now we check to see if this area id is in use anywhere else. If it isn't we delete the sub area.
-        $r = $db->GetOne('select count(arLayoutColumnID) from AreaLayoutColumns where arID = ?', array($this->arID));
+        $r = $db->fetchColumn('select count(arLayoutColumnID) from AreaLayoutColumns where arID = ?', array($this->arID));
         if ($r < 1) {
             $area = $this->getAreaObject();
             if ($area instanceof SubArea) {
