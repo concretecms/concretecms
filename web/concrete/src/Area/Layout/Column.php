@@ -1,16 +1,16 @@
 <?php
+
 namespace Concrete\Core\Area\Layout;
 
 use Loader;
-use \Concrete\Core\Foundation\Object;
-use \Concrete\Core\Area\SubArea;
+use Concrete\Core\Foundation\Object;
+use Concrete\Core\Area\SubArea;
 use Page;
 use Area;
 use RuntimeException;
 
 abstract class Column extends Object implements ColumnInterface
 {
-
     /**
      * @var Layout
      */
@@ -41,7 +41,7 @@ abstract class Column extends Object implements ColumnInterface
      *
      * @abstract
      */
-    static public function getByID($arLayoutColumnID)
+    public static function getByID($arLayoutColumnID)
     {
         throw new RuntimeException('This method has not yet been implemented.');
     }
@@ -114,6 +114,7 @@ abstract class Column extends Object implements ColumnInterface
 
     /**
      * @param Column $newAreaLayout
+     *
      * @return int
      */
     protected function duplicate($newAreaLayout)
@@ -122,6 +123,7 @@ abstract class Column extends Object implements ColumnInterface
         $v = array($newAreaLayout->getAreaLayoutID(), $this->arLayoutColumnIndex, $this->arLayoutColumnDisplayID);
         $db->Execute('insert into AreaLayoutColumns (arLayoutID, arLayoutColumnIndex, arLayoutColumnDisplayID) values (?, ?, ?)', $v);
         $newAreaLayoutColumnID = $db->Insert_ID();
+
         return $newAreaLayoutColumnID;
     }
 
@@ -135,6 +137,7 @@ abstract class Column extends Object implements ColumnInterface
         if ($row['cID'] && $row['arHandle']) {
             $c = Page::getByID($row['cID']);
             $area = Area::get($c, $row['arHandle']);
+
             return $area;
         }
     }
@@ -149,6 +152,7 @@ abstract class Column extends Object implements ColumnInterface
 
     /**
      * unique but doesn't change between version edits on a given page.
+     *
      * @return int
      */
     public function getAreaLayoutColumnDisplayID()
@@ -165,6 +169,7 @@ abstract class Column extends Object implements ColumnInterface
         $this->display($disableControls);
         $contents = ob_get_contents();
         ob_end_clean();
+
         return $contents;
     }
 
@@ -221,5 +226,4 @@ abstract class Column extends Object implements ColumnInterface
             }
         }
     }
-
 }
