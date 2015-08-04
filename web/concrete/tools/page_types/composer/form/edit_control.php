@@ -94,7 +94,8 @@ $(function() {
 			success: function(html) {
 				jQuery.fn.dialog.hideLoader();
 				jQuery.fn.dialog.closeTop();
-				$('div[data-page-type-composer-form-layout-control-set-control-id=<?=$control->getPageTypeComposerFormLayoutSetControlID()?>]').html(html);
+				var data = $(html).html();
+				$('tr[data-page-type-composer-form-layout-control-set-control-id=<?=$control->getPageTypeComposerFormLayoutSetControlID()?>]').html(data);
 				$('a[data-command=edit-form-set-control]').dialog();
 			}
 		});		
