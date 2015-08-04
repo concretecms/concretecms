@@ -1,14 +1,14 @@
 <?php
+
 namespace Concrete\Core\Gathering\Item;
 
 use Loader;
-use \Concrete\Core\Foundation\Object;
-use \Concrete\Core\Gathering\DataSource\DataSource as GatheringDataSource;
+use Concrete\Core\Foundation\Object;
+use Concrete\Core\Gathering\DataSource\DataSource as GatheringDataSource;
 use RuntimeException;
 
 abstract class Item extends Object
 {
-
     abstract public function loadDetails();
 
     abstract public function canViewGatheringItem();
@@ -53,6 +53,7 @@ abstract class Item extends Object
         if (!isset($this->templates)) {
             $this->loadGatheringItemTemplates();
         }
+
         return $this->templates[$type->getGatheringItemTemplateTypeID()];
     }
 
@@ -113,6 +114,7 @@ abstract class Item extends Object
                 array($this->gaiID)
             );
         }
+
         return $this->feHandles;
     }
 
@@ -154,7 +156,7 @@ abstract class Item extends Object
             array(
                 $type->getGatheringItemTemplateTypeID(),
                 $this->gaiID,
-                $template->getGatheringItemTemplateID()
+                $template->getGatheringItemTemplateID(),
             )
         );
         $this->loadGatheringItemTemplates();
@@ -210,6 +212,7 @@ abstract class Item extends Object
                 $ags = new $class();
                 $ags->setPropertiesFromArray($r);
                 $ags->loadDetails();
+
                 return $ags;
             }
         }
@@ -222,7 +225,7 @@ abstract class Item extends Object
             'select gaiID from GatheringItems where gasID = ? and gaiKey = ?',
             array(
                 $ags->getGatheringDataSourceID(),
-                $gaiKey
+                $gaiKey,
             )
         );
         $items = array();
@@ -232,6 +235,7 @@ abstract class Item extends Object
                 $items[] = $item;
             }
         }
+
         return $items;
     }
 
@@ -256,12 +260,12 @@ abstract class Item extends Object
                 $gaiTitle,
                 $gaiKey,
                 $gaiSlotWidth,
-                $gaiSlotHeight
+                $gaiSlotHeight,
             )
         );
+
         return GatheringItem::getByID($db->Insert_ID());
     }
-
 
     public function duplicate(Gathering $gathering)
     {
@@ -280,7 +284,7 @@ abstract class Item extends Object
                 $this->gaiSlotWidth,
                 $this->gaiSlotHeight,
                 $this->gaiBatchTimestamp,
-                $this->gaiBatchDisplayOrder
+                $this->gaiBatchDisplayOrder,
             )
         );
 
@@ -317,12 +321,14 @@ abstract class Item extends Object
         $f = Feature::getbyHandle($feHandle);
         $fd = $f->getFeatureDetailObject($mixed);
         $as = GatheringItemFeatureAssignment::add($f, $fd, $this);
+
         return $as;
     }
 
     public function copyFeatureAssignment(FeatureAssignment $fa)
     {
         $db = Loader::db();
+
         return GatheringItemFeatureAssignment::add($fa->getFeatureObject(), $fa->getFeatureDetailObject(), $this);
     }
 
@@ -345,6 +351,7 @@ abstract class Item extends Object
     {
         $ascore = $a->getGatheringTemplateFeaturesTotalScore();
         $bscore = $b->getGatheringTemplateFeaturesTotalScore();
+
         return mt_rand(0, ($ascore + $bscore)) > $ascore ? 1 : -1;
     }
 
@@ -408,6 +415,7 @@ abstract class Item extends Object
         $templateFeatures = $template->getGatheringItemTemplateFeatureHandles();
         $itemFeatures = $this->getGatheringItemFeatureHandles();
         $features = array_intersect($templateFeatures, $itemFeatures);
+
         return count($features) == count($templateFeatures);
     }
 
@@ -439,5 +447,4 @@ abstract class Item extends Object
             );
         }
     }
-
 }
