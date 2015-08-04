@@ -3,7 +3,8 @@
 namespace Concrete\Core\Permission\Access\Entity;
 
 use Concrete\Core\Foundation\Object;
-use Loader;
+use Database;
+use Core;
 use PermissionAccess;
 use CacheLocal;
 use Core;
@@ -61,7 +62,7 @@ abstract class Entity extends Object
         if ($obj instanceof PermissionAccessEntity) {
             return $obj;
         }
-        $db = Loader::db();
+        $db = Database::connection();
         $r = $db->GetRow('select petID, peID from PermissionAccessEntities where peID = ?', array($peID));
         if (is_array($r)) {
             $pt = Type::getByID($r['petID']);
@@ -69,7 +70,7 @@ abstract class Entity extends Object
                 return false;
             }
 
-            $className = '\\Concrete\\Core\\Permission\\Access\\Entity\\' . Loader::helper('text')->camelcase($pt->getAccessEntityTypeHandle()) . 'Entity';
+            $className = '\\Concrete\\Core\\Permission\\Access\\Entity\\' . Core::make('helper/text')->camelcase($pt->getAccessEntityTypeHandle()) . 'Entity';
             $obj = Core::make($className);
             $r['petHandle'] = $pt->getAccessEntityTypeHandle();
             $obj->setPropertiesFromArray($r);
@@ -83,7 +84,6 @@ abstract class Entity extends Object
     public static function getForUser($user)
     {
         $entities = array();
-        $db = Loader::db();
         $types = Type::getList();
         foreach ($types as $t) {
             $entities = array_merge($entities, $t->getAccessEntitiesForUser($user));
