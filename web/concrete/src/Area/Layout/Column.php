@@ -6,6 +6,7 @@ use \Concrete\Core\Foundation\Object;
 use \Concrete\Core\Area\SubArea;
 use Page;
 use Area;
+use RuntimeException;
 
 abstract class Column extends Object implements ColumnInterface
 {
@@ -35,7 +36,16 @@ abstract class Column extends Object implements ColumnInterface
      */
     public $arID;
 
-    abstract static public function getByID($arLayoutColumnID);
+    /**
+     * @param int $arLayoutColumnID
+     *
+     * @abstract
+     */
+    static public function getByID($arLayoutColumnID)
+    {
+        throw new RuntimeException('This method has not yet been implemented.');
+    }
+
     abstract public function exportDetails($node);
     abstract public function getAreaLayoutColumnClass();
 
