@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\StyleCustomizer;
 
 use Config;
@@ -28,7 +29,8 @@ class Stylesheet
     }
     /**
      * Compiles the stylesheet using LESS. If a ValueList is provided they are
-     * injected into the stylesheet
+     * injected into the stylesheet.
+     *
      * @return string CSS
      */
     public function getCss()
@@ -82,5 +84,4 @@ class Stylesheet
     {
         return $this->relativeOutputDirectory . '/' . str_replace('.less', '.css', $this->stylesheet);
     }
-
 }
