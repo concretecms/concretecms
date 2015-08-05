@@ -11,7 +11,7 @@ class File
     public static function getFileSetFiles(Set $fs)
     {
         $db = Loader::db();
-        $r = $db->query('SELECT fsfID FROM FileSetFiles WHERE fsID = ? ORDER BY fsDisplayOrder ASC AND EXISTS(SELECT fID FROM Files)', array($fs->getFileSetID()));
+        $r = $db->query('SELECT fsfID FROM FileSetFiles WHERE fsID = ? AND EXISTS(SELECT fID FROM Files) ORDER BY fsDisplayOrder ASC', array($fs->getFileSetID()));
         $files = array();
         while ($row = $r->FetchRow()) {
             $fsf = static::getByID($row['fsfID']);
