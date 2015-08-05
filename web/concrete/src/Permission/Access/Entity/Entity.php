@@ -4,7 +4,6 @@ namespace Concrete\Core\Permission\Access\Entity;
 
 use Concrete\Core\Foundation\Object;
 use Database;
-use Core;
 use PermissionAccess;
 use CacheLocal;
 use Core;
