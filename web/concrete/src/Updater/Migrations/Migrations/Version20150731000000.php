@@ -16,6 +16,12 @@ class Version20150731000000 extends AbstractMigration
             $table->setPrimaryKey(array('ID'));
         } catch(\Exception $e) {}
 
+        $db = \Database::connection();
+        $db->executeQuery("DELETE FROM FileSetFiles WHERE fID NOT IN (SELECT fID FROM Files)");
+        $db->executeQuery("DELETE FROM FileSearchIndexAttributes WHERE fID NOT IN (SELECT fID FROM Files)");
+        $db->executeQuery("DELETE FROM DownloadStatistics WHERE fID NOT IN (SELECT fID FROM Files)");
+        $db->executeQuery("DELETE FROM FilePermissionAssignments WHERE fID NOT IN (SELECT fID FROM Files)");
+
         $bt = \BlockType::getByHandle('page_list');
         if (is_object($bt)) {
             $bt->refresh();
