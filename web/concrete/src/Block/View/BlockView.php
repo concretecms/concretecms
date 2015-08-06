@@ -99,20 +99,41 @@ class BlockView extends AbstractView
     public function action($task)
     {
         try {
-            if (is_object($this->block)) {
+            if ($this->viewToRender == 'add') {
+
+                $c = $this->area->getAreaCollectionObject();
+                $arguments = array('/ccm/system/block/action/add',
+                    $c->getCollectionID(),
+                    urlencode($this->area->getAreaHandle()),
+                    $this->blockType->getBlockTypeID(),
+                    $task
+                );
+                return call_user_func_array(array('\URL', 'to'), $arguments);
+
+            } else if (is_object($this->block)) {
                 if (is_object($this->block->getProxyBlock())) {
                     $b = $this->block->getProxyBlock();
                 } else {
                     $b = $this->block;
                 }
 
-                $c = Page::getCurrentPage();
-                if (is_object($b) && is_object($c)) {
-                    $arguments = func_get_args();
-                    $arguments[] = $b->getBlockID();
-                    array_unshift($arguments, $c);
-
-                    return call_user_func_array(array('\URL', 'page'), $arguments);
+                if ($this->viewToRender == 'edit') {
+                    $c = $this->area->getAreaCollectionObject();
+                    $arguments = array('/ccm/system/block/action/edit',
+                        $c->getCollectionID(),
+                        urlencode($this->area->getAreaHandle()),
+                        $b->getBlockID(),
+                        $task
+                    );
+                    return call_user_func_array(array('\URL', 'to'), $arguments);
+                } else {
+                    $c = Page::getCurrentPage();
+                    if (is_object($b) && is_object($c)) {
+                        $arguments = func_get_args();
+                        $arguments[] = $b->getBlockID();
+                        array_unshift($arguments, $c);
+                        return call_user_func_array(array('\URL', 'page'), $arguments);
+                    }
                 }
             }
         } catch (Exception $e) {
