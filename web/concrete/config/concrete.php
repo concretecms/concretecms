@@ -442,7 +442,8 @@ return array(
 
     'theme' => array(
 
-        'compress_preprocessor_output' => true
+        'compress_preprocessor_output' => true,
+        'generate_less_sourcemap' => false,
     ),
 
     'updates' => array(
