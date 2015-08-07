@@ -87,7 +87,7 @@ abstract class Type extends Object
         $r = $db->GetRow(
             'select ptPublishTargetTypeID, ptPublishTargetTypeHandle, ptPublishTargetTypeName, pkgID from PageTypePublishTargetTypes where ptPublishTargetTypeHandle = ?', array($ptPublishTargetTypeHandle)
         );
-        if (is_array($r) && $r['ptPublishTargetTypeHandle']) {
+        if (is_array($r) && isset($r['ptPublishTargetTypeHandle'])) {
             $txt = Loader::helper('text');
             $class = overrideable_core_class('Core\\Page\\Type\\PublishTarget\\Type\\'
                 . $txt->camelcase($r['ptPublishTargetTypeHandle']) . 'Type', DIRNAME_CLASSES . '/Page/Type/PublishTarget/Type/'

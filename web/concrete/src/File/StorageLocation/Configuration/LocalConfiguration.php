@@ -60,7 +60,9 @@ class LocalConfiguration extends Configuration implements ConfigurationInterface
     {
         $data = $req->get('fslType');
         $this->path = rtrim($data['path'], '/');
-        $this->relativePath = rtrim($data['relativePath'], '/');
+        if (isset($data['relativePath'])) {
+            $this->relativePath = rtrim($data['relativePath'], '/');
+        }
     }
 
     /**

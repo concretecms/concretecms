@@ -513,7 +513,7 @@ class User extends Object
                         $action->addDetailedEntry($this, $g);
                     }
 
-                    $mh = Loader::helper('mail');
+                    $mh = Core::make('mail');
                     $ui = CoreUserInfo::getByID($this->getUserID());
                     $mh->addParameter('badgeName', $g->getGroupDisplayName(false));
                     $mh->addParameter('uDisplayName', $ui->getUserDisplayName());

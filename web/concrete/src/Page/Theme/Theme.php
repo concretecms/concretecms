@@ -35,6 +35,7 @@ class Theme extends Object
     protected $pThemeHandle;
     protected $pThemeURL;
     protected $pThemeIsPreview = false;
+    protected $pkgID;
 
     const E_THEME_INSTALLED = 1;
     const THEME_EXTENSION = '.php';
