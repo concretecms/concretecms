@@ -72,7 +72,7 @@ class Controller extends BlockController
         parent::__construct($obj);
     }
 
-    public function registerViewAssets()
+    public function registerViewAssets($outputContent = '')
     {
         if (is_object($this->block) && $this->block->getBlockFilename() == 'responsive_header_navigation') {
             // this isn't great but it's the only way to do this and still make block

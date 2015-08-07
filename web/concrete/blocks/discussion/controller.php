@@ -23,7 +23,7 @@ class Controller extends BlockController {
 		return $this->discussion;
 	}
 
-    public function registerViewAssets()
+    public function registerViewAssets($outputContent = '')
     {
         $this->requireAsset('core/conversation');
         $this->requireAsset('css', 'core/frontend/pagination');

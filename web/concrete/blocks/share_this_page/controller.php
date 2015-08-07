@@ -132,7 +132,7 @@ class Controller extends BlockController
         $db->delete('btShareThisPage', array('bID' => $this->bID));
     }
 
-    public function registerViewAssets()
+    public function registerViewAssets($outputContent = '')
     {
         $this->requireAsset('css', 'font-awesome');
     }

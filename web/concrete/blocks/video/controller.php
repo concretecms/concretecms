@@ -62,7 +62,7 @@ class Controller extends BlockController {
 		parent::save($args);
 	}
 
-    public function registerViewAssets()
+    public function registerViewAssets($outputContent = '')
     {
         $this->requireAsset('swfobject');
     }
