@@ -504,9 +504,10 @@ class Controller extends BlockController
         }
     }
 
-    public function cacheBlockOutput() {
-        if($this->btCacheBlockOutput === null) {
-            if(!$this->enableExternalFiltering && !$this->paginate) {
+    public function cacheBlockOutput()
+    {
+        if ($this->btCacheBlockOutput === null) {
+            if (!$this->enableExternalFiltering && !$this->paginate) {
                 $this->btCacheBlockOutput = true;
             } else {
                 $this->btCacheBlockOutput = false;
