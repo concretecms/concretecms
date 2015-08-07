@@ -1,26 +1,24 @@
-<?
+<?php
+
 namespace Concrete\Block\CoreStackDisplay;
 
 use Stack;
 use Permissions;
-use Loader;
 use Page;
+use Concrete\Core\Block\BlockController;
 
 /**
  * The controller for the stack display block. This is an internal proxy block that is inserted when a stack's contents are displayed in a page.
  *
  * @package Blocks
  * @subpackage Core Stack Display
+ *
  * @author Andrew Embler <andrew@concrete5.org>
  * @copyright  Copyright (c) 2003-2012 Concrete5. (http://www.concrete5.org)
  * @license    http://www.concrete5.org/license/     MIT License
- *
  */
-use \Concrete\Core\Block\BlockController;
-
 class Controller extends BlockController
 {
-
     protected $btCacheBlockRecord = true;
     protected $btTable = 'btCoreStackDisplay';
     protected $btIsInternal = true;
@@ -44,24 +42,25 @@ class Controller extends BlockController
     public function getImportData($blockNode, $page)
     {
         $args = array();
-        $content = (string)$blockNode->stack;
+        $content = (string) $blockNode->stack;
         $stack = Stack::getByName($content);
         $args['stID'] = 0;
         if (is_object($stack)) {
             $args['stID'] = $stack->getCollectionID();
         }
+
         return $args;
     }
 
     public function isValidControllerTask($method, $parameters = array())
     {
         $b = $this->findBlockForAction($method, $parameters);
+
         return !empty($b);
     }
 
     public function runAction($action, $parameters = array())
     {
-
         $b = $this->findBlockForAction($action, $parameters);
         if (empty($b)) {
             return;
@@ -72,7 +71,7 @@ class Controller extends BlockController
         return $controller->runAction($action, $parameters);
     }
 
-    function findBlockForAction($method, $parameters)
+    public function findBlockForAction($method, $parameters)
     {
         $stack = Stack::getByID($this->stID);
         if (!is_object($stack)) {
@@ -85,9 +84,9 @@ class Controller extends BlockController
                 return $b;
             }
         }
+
         return null;
     }
-
 
     public function export(\SimpleXMLElement $blockNode)
     {
@@ -130,9 +129,9 @@ class Controller extends BlockController
         }
     }
 
-    protected function setupCacheSettings() 
-	{
-        if($this->btCacheSettingsInitialized || Page::getCurrentPage()->isEditMode()) {
+    protected function setupCacheSettings()
+    {
+        if ($this->btCacheSettingsInitialized || Page::getCurrentPage()->isEditMode()) {
             return;
         }
 
@@ -142,7 +141,6 @@ class Controller extends BlockController
         $btCacheBlockOutput = true;
         $btCacheBlockOutputOnPost = true;
         $btCacheBlockOutputLifetime = 0;
-
 
         $stack = Stack::getByID($this->stID);
         if (!is_object($stack)) {
@@ -157,12 +155,12 @@ class Controller extends BlockController
                 $btCacheBlockOutputOnPost = $btCacheBlockOutputOnPost && $b->cacheBlockOutputOnPost();
 
                 //As soon as we find something which cannot be cached, entire block cannot be cached, so stop checking.
-                if(!$btCacheBlockOutput) {
+                if (!$btCacheBlockOutput) {
                     return;
                 }
 
-                if($expires = $b->getBlockOutputCacheLifetime()) {
-                    if($expires && $btCacheBlockOutputLifetime < $expires) {
+                if ($expires = $b->getBlockOutputCacheLifetime()) {
+                    if ($expires && $btCacheBlockOutputLifetime < $expires) {
                         $btCacheBlockOutputLifetime = $expires;
                     }
                 }
@@ -177,18 +175,21 @@ class Controller extends BlockController
     public function cacheBlockOutput()
     {
         $this->setupCacheSettings();
+
         return $this->btCacheBlockOutput;
     }
 
     public function cacheBlockOutputOnPost()
     {
         $this->setupCacheSettings();
+
         return $this->btCacheBlockOutputOnPost;
     }
 
     public function getBlockTypeCacheOutputLifetime()
     {
         $this->setupCacheSettings();
+
         return $this->btCacheBlockOutputLifetime;
     }
 }
