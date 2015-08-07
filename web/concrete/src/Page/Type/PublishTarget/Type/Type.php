@@ -8,9 +8,15 @@ use \Concrete\Core\Package\PackageList;
 use Environment;
 use \Concrete\Core\Package\Package as Package;
 use Core;
+use Database;
 
 abstract class Type extends Object
 {
+
+    protected $ptPublishTargetTypeID;
+    protected $ptPublishTargetTypeHandle;
+    protected $ptPublishTargetTypeName;
+    protected $pkgID;
 
     abstract public function configurePageTypePublishTarget(PageType $pt, $post);
 
@@ -64,8 +70,8 @@ abstract class Type extends Object
 
     public static function getByID($ptPublishTargetTypeID)
     {
-        $db = Loader::db();
-        $r = $db->GetRow(
+        $db = Database::connection();
+        $r = $db->fetchAssoc(
             'select ptPublishTargetTypeID, ptPublishTargetTypeHandle, ptPublishTargetTypeName, pkgID from PageTypePublishTargetTypes where ptPublishTargetTypeID = ?',
             array($ptPublishTargetTypeID)
         );
@@ -79,12 +85,13 @@ abstract class Type extends Object
             $sc->setPropertiesFromArray($r);
             return $sc;
         }
+        return null;
     }
 
     public static function getByHandle($ptPublishTargetTypeHandle)
     {
-        $db = Loader::db();
-        $r = $db->GetRow(
+        $db = Database::Connection();
+        $r = $db->fetchAssoc(
             'select ptPublishTargetTypeID, ptPublishTargetTypeHandle, ptPublishTargetTypeName, pkgID from PageTypePublishTargetTypes where ptPublishTargetTypeHandle = ?', array($ptPublishTargetTypeHandle)
         );
         if (is_array($r) && $r['ptPublishTargetTypeHandle']) {
@@ -97,6 +104,7 @@ abstract class Type extends Object
             $sc->setPropertiesFromArray($r);
             return $sc;
         }
+        return null;
     }
 
     public static function importConfiguredPageTypePublishTarget($txml)
@@ -112,8 +120,8 @@ abstract class Type extends Object
         if (is_object($pkg)) {
             $pkgID = $pkg->getPackageID();
         }
-        $db = Loader::db();
-        $db->Execute(
+        $db = Database::connection();
+        $db->executeQuery(
             'insert into PageTypePublishTargetTypes (ptPublishTargetTypeHandle, ptPublishTargetTypeName, pkgID) values (?, ?, ?)',
             array($ptPublishTargetTypeHandle, $ptPublishTargetTypeName, $pkgID)
         );
@@ -122,8 +130,8 @@ abstract class Type extends Object
 
     public function delete()
     {
-        $db = Loader::db();
-        $db->Execute(
+        $db = Database::connection();
+        $db->executeQuery(
             'delete from PageTypePublishTargetTypes where ptPublishTargetTypeID = ?',
             array($this->ptPublishTargetTypeID)
         );
@@ -131,7 +139,7 @@ abstract class Type extends Object
 
     public static function getList()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $ids = $db->GetCol('select ptPublishTargetTypeID from PageTypePublishTargetTypes');
         $types = array();
         foreach ($ids as $id) {
@@ -154,14 +162,14 @@ abstract class Type extends Object
 
     public static function getListByPackage($pkg)
     {
-        $db = Loader::db();
-        $ids = $db->GetCol(
+        $db = Database::connection();
+        $ids = $db->fetchAll(
             'select ptPublishTargetTypeID from PageTypePublishTargetTypes where pkgID = ?',
             array($pkg->getPackageID())
         );
         $types = array();
         foreach ($ids as $id) {
-            $type = static::getByID($id);
+            $type = static::getByID($id['ptPublishTargetTypeID']);
             if (is_object($type)) {
                 $types[] = $type;
             }
