@@ -159,7 +159,7 @@ class Controller extends BlockController
                         $internalLinkCID,
                     )
                 );
-                $i++;
+                ++$i;
             }
         }
     }
