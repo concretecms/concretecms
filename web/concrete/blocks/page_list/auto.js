@@ -34,6 +34,15 @@ var pageList ={
             }
         });
 
+        this.showFilterDateOptionDetails();
+        $('.pagelist-form .filterDateOption').on('change', this.showFilterDateOptionDetails);
+
+	},
+	showFilterDateOptionDetails:function() {
+		$('.pagelist-form .filterDateOptionDetail').hide();
+		$('.pagelist-form .filterDateOption:checked').each(function(){
+			$('.pagelist-form .filterDateOptionDetail[data-filterDateOption='+$(this).val()+']').show();
+		});
 	},
 	truncationShown:function(cb){
 		var truncateTxt=$('#ccm-pagelist-truncateTxt');

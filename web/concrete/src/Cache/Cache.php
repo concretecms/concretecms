@@ -34,20 +34,33 @@ abstract class Cache
     protected function loadConfig($level)
     {
         $drivers = array();
-        $level_config = Config::get("concrete.cache.levels.{$level}", array());
+        $driver_configs = Config::get("concrete.cache.levels.{$level}.drivers", array());
 
-        if (isset($level_config['drivers'])) {
-            foreach ($level_config['drivers'] as $driver_build) {
-                if (class_exists($driver_build['class'])) {
-                    $temp_driver = new $driver_build['class']();
-                    if (isset($driver_build['options'])) {
-                        $temp_driver->setOptions($driver_build['options']);
+        foreach ($driver_configs as $driver_build) {
+            if (!$driver_build) {
+                continue;
+            }
+
+            $class = array_get($driver_build, 'class', '');
+            if ($class && class_exists($class)) {
+                $implements = class_implements($class);
+
+                // Make sure that the provided class implements the DriverInterface
+                if (isset($implements['Stash\Interfaces\DriverInterface'])) {
+                    /** @type \Stash\Interfaces\DriverInterface $temp_driver */
+                    $temp_driver = new $class();
+
+                    if ($options = array_get($driver_build, 'options', null)) {
+                        $temp_driver->setOptions($options);
                     }
 
                     $drivers[] = $temp_driver;
+                } else {
+                    throw new \RuntimeException('Cache driver class must implement \Stash\Interfaces\DriverInterface.');
                 }
             }
         }
+
 
         $count = count($drivers);
         if ($count > 1) {

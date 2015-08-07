@@ -5,6 +5,11 @@ $th = Loader::helper('text');
 
 
 ?>
+<div class="ccm-dashboard-header-buttons">
+    <a id="ccm-export-results" class="btn btn-success" href="<?= $view->action('csv', $valt->generate())?>?<?=$query ?>">
+        <i class='fa fa-download'></i> <?= t('Export to CSV') ?>
+    </a>
+</div>
 
 <div class="ccm-dashboard-content-full">
 

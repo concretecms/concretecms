@@ -33,6 +33,27 @@ class Controller extends BlockController {
 		return $this->fileLinkText;
 	}
 
+    public function validate_composer()
+    {
+        $f = $this->getFileObject();
+        $e = Core::make('helper/validation/error');
+        if (!is_object($f) || $f->isError() || !$f->getFileID()) {
+            $e->add(t('You must specify a valid file.'));
+        }
+
+        return $e;
+    }
+
+    public function isComposerControlDraftValueEmpty()
+    {
+        $f = $this->getFileObject();
+        if (is_object($f) && !$f->isError()) {
+            return false;
+        }
+
+        return true;
+    }
+
     function save($args){
 		$args['forceDownload'] = ($args['forceDownload']) ? '1' : '0';
 		parent::save($args);
@@ -52,7 +73,11 @@ class Controller extends BlockController {
 	function getFileID() {return $this->fID;}
 	
 	function getFileObject() {
-		return File::getByID($this->fID);
+		if($this->fID) {
+			return File::getByID($this->fID);
+		} else {
+			return null;
+		}
 	}
 	
 	function getLinkText() {

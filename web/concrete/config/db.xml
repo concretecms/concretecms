@@ -3709,6 +3709,11 @@
   </table>
 
   <table name="SystemDatabaseQueryLog">
+    <field name="ID" type="integer" size="10">
+      <unsigned/>
+      <autoincrement/>
+      <key/>
+    </field>
     <field name="query" type="text" size="65535"/>
     <field name="params" type="text" size="65535"/>
     <field name="executionMS" type="string" size="255"/>
@@ -3732,127 +3737,7 @@
       <col>pkgID</col>
     </index>
   </table>
-
-  <table name="SystemImageEditorControlSets">
-    <field name="scsID" type="integer" size="10">
-      <unsigned/>
-      <autoincrement/>
-      <key/>
-      <notnull/>
-    </field>
-    <field name="scsHandle" type="string" size="255">
-      <default value=""/>
-      <notnull/>
-    </field>
-    <field name="scsName" type="string" size="255">
-      <default value=""/>
-      <notnull/>
-    </field>
-    <field name="scsDisplayOrder" type="integer" size="10">
-      <unsigned/>
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <field name="pkgID" type="integer" size="10">
-      <unsigned/>
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <index name="pkgID">
-      <col>pkgID</col>
-    </index>
-  </table>
-
-  <table name="SystemImageEditorComponents">
-    <field name="scsID" type="integer" size="10">
-      <unsigned/>
-      <autoincrement/>
-      <key/>
-      <notnull/>
-    </field>
-    <field name="scsHandle" type="string" size="255">
-      <default value=""/>
-      <notnull/>
-    </field>
-    <field name="scsName" type="string" size="255">
-      <default value=""/>
-      <notnull/>
-    </field>
-    <field name="scsDisplayOrder" type="integer" size="10">
-      <unsigned/>
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <field name="pkgID" type="integer" size="10">
-      <unsigned/>
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <index name="pkgID">
-      <col>pkgID</col>
-    </index>
-  </table>
-
-  <table name="SystemImageEditorFilters">
-    <field name="scsID" type="integer" size="10">
-      <unsigned/>
-      <autoincrement/>
-      <key/>
-      <notnull/>
-    </field>
-    <field name="scsHandle" type="string" size="255">
-      <default value=""/>
-      <notnull/>
-    </field>
-    <field name="scsName" type="string" size="255">
-      <default value=""/>
-      <notnull/>
-    </field>
-    <field name="scsDisplayOrder" type="integer" size="10">
-      <unsigned/>
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <field name="pkgID" type="integer" size="10">
-      <unsigned/>
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <index name="pkgID">
-      <col>pkgID</col>
-    </index>
-  </table>
-
-  <table name="SystemImageEditorShapes">
-    <field name="scsID" type="integer" size="10">
-      <unsigned/>
-      <autoincrement/>
-      <key/>
-      <notnull/>
-    </field>
-    <field name="scsHandle" type="string" size="255">
-      <default value=""/>
-      <notnull/>
-    </field>
-    <field name="scsName" type="string" size="255">
-      <default value=""/>
-      <notnull/>
-    </field>
-    <field name="scsDisplayOrder" type="integer" size="10">
-      <unsigned/>
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <field name="pkgID" type="integer" size="10">
-      <unsigned/>
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <index name="pkgID">
-      <col>pkgID</col>
-    </index>
-  </table>
-
+    
   <table name="Packages">
     <field name="pkgID" type="integer" size="10">
       <unsigned/>

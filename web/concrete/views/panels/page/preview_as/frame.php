@@ -1,8 +1,8 @@
 <div class="preview-frame-container">
     <iframe
         style="display:none"
-        src="<?= URL::to('/ccm/system/panels/page/preview_as_user/render') . '?cID=' . Request::request('cID') ?>"
-        data-src="<?= URL::to('/ccm/system/panels/page/preview_as_user/render') ?>"></iframe>
+        src="<?= URL::to('/ccm/system/panels/page/preview_as_user/render') . '?&cID=' . Request::request('cID') ?>"
+        data-src="<?= URL::to('/ccm/system/panels/page/preview_as_user/render') ?>">></iframe>
     <div class="cover"></div>
     <div class="loader">
         <div class="icon">
@@ -51,20 +51,11 @@
         function handleChange() {
             var guest_button = form.find('button.guest-button'),
                 user_input = form.find('input.custom-user'),
-                mobile_button = form.find('button.enable-mobile-button'),
-                container_width = form.find('input.resolution-width'),
                 query = {
                     cID: CCM_CID,
-                    customUser: guest_button.hasClass('active') ? 0 : user_input.val(),
-                    emulateMobile: mobile_button.hasClass('active') ? 1 : 0
+                    customUser: guest_button.hasClass('active') ? 0 : user_input.val()
                 };
 
-            if (mobile_button.hasClass('active')) {
-                container.css('max-width', container_width.val());
-            } else {
-                container.css('max-width', 'none');
-            }
-            
             form.find('input[name],select[name]').each(function() {
                 var $me = $(this), name = $me.attr('name');
                 if(name && (name.indexOf('preview_as_user_datetime_') === 0)) {

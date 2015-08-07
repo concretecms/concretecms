@@ -75,6 +75,6 @@ if (isset($message) && is_object($message) && !$bt->supportsInlineEdit()) { ?>
 	$css = $b->getCustomStyle();
 ?>
 
-	<div <? if (is_object($css)) { ?>class="<?=$css->getContainerClass() ?>" <? } ?>>
+	<div <? if (is_object($css) && $b->getBlockTypeHandle() != BLOCK_HANDLE_LAYOUT_PROXY) { ?>class="<?=$css->getContainerClass() ?>" <? } ?>>
 
 <? } ?>

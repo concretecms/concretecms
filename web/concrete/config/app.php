@@ -116,6 +116,8 @@ return array(
         'core_logging'      => '\Concrete\Core\Logging\LoggingServiceProvider',
         'core_cache'        => '\Concrete\Core\Cache\CacheServiceProvider',
         'core_url'          => '\Concrete\Core\Url\UrlServiceProvider',
+        'core_devices'      => '\Concrete\Core\Device\DeviceServiceProvider',
+        'core_imageeditor'  => '\Concrete\Core\ImageEditor\EditorServiceProvider',
 
         // Authentication
         'core_oauth'          => '\Concrete\Core\Authentication\Type\OAuth\ServiceProvider',
@@ -153,11 +155,11 @@ return array(
         "/ccm/system/dialogs/area/design/"                                              => array('\Concrete\Controller\Dialog\Area\Design::view'),
         "/ccm/system/dialogs/area/design/reset"                                         => array('\Concrete\Controller\Dialog\Area\Design::reset'),
         "/ccm/system/dialogs/area/design/submit"                                        => array('\Concrete\Controller\Dialog\Area\Design::submit'),
+        "/ccm/system/dialogs/area/layout/presets/manage/"                               => array('\Concrete\Controller\Dialog\Area\Layout\Presets\Manage::view'),
+        "/ccm/system/dialogs/area/layout/presets/manage/delete"                         => array('\Concrete\Controller\Dialog\Area\Layout\Presets\Manage::delete'),
         "/ccm/system/dialogs/area/layout/presets/{arLayoutID}"                          => array('\Concrete\Controller\Dialog\Area\Layout\Presets::view'),
         "/ccm/system/dialogs/area/layout/presets/{arLayoutID}/submit"                   => array('\Concrete\Controller\Dialog\Area\Layout\Presets::submit'),
         "/ccm/system/dialogs/area/layout/presets/get/{cID}/{arLayoutPresetID}"                => array('\Concrete\Controller\Dialog\Area\Layout\Presets::getPresetData'),
-        "/ccm/system/dialogs/area/layout/presets/manage/"                               => array('\Concrete\Controller\Dialog\Area\Layout\Presets\Manage::view'),
-        "/ccm/system/dialogs/area/layout/presets/manage/delete"                         => array('\Concrete\Controller\Dialog\Area\Layout\Presets\Manage::delete'),
 
         "/ccm/system/dialogs/block/aliasing/"                                           => array('\Concrete\Controller\Dialog\Block\Aliasing::view'),
         "/ccm/system/dialogs/block/aliasing/submit"                                     => array('\Concrete\Controller\Dialog\Block\Aliasing::submit'),
@@ -277,6 +279,8 @@ return array(
          * Block actions - non UI
          */
         "/ccm/system/block/render/"                                                     => array('\Concrete\Controller\Backend\Block::render'),
+        "/ccm/system/block/action/add/{cID}/{arHandle}/{btID}/{action}"                 => array('\Concrete\Controller\Backend\Block\Action::add'),
+        "/ccm/system/block/action/edit/{cID}/{arHandle}/{bID}/{action}"                 => array('\Concrete\Controller\Backend\Block\Action::edit'),
 
         /**
          * Misc
@@ -334,12 +338,12 @@ return array(
         "/ccm/system/panels/page/check_in"                                              => array('\Concrete\Controller\Panel\Page\CheckIn::__construct'),
         "/ccm/system/panels/page/check_in/submit"                                       => array('\Concrete\Controller\Panel\Page\CheckIn::submit'),
         "/ccm/system/panels/page/design"                                                => array('\Concrete\Controller\Panel\Page\Design::view'),
-        "/ccm/system/panels/page/design/customize/{pThemeID}"                           => array('\Concrete\Controller\Panel\Page\Design\Customize::view'),
+        "/ccm/system/panels/page/design/customize/reset_page_customizations"            => array('\Concrete\Controller\Panel\Page\Design\Customize::reset_page_customizations'),
         "/ccm/system/panels/page/design/customize/apply_to_page/{pThemeID}"             => array('\Concrete\Controller\Panel\Page\Design\Customize::apply_to_page'),
         "/ccm/system/panels/page/design/customize/apply_to_site/{pThemeID}"             => array('\Concrete\Controller\Panel\Page\Design\Customize::apply_to_site'),
         "/ccm/system/panels/page/design/customize/preview/{pThemeID}"                   => array('\Concrete\Controller\Panel\Page\Design\Customize::preview'),
-        "/ccm/system/panels/page/design/customize/reset_page_customizations"            => array('\Concrete\Controller\Panel\Page\Design\Customize::reset_page_customizations'),
         "/ccm/system/panels/page/design/customize/reset_site_customizations/{pThemeID}" => array('\Concrete\Controller\Panel\Page\Design\Customize::reset_site_customizations'),
+        "/ccm/system/panels/page/design/customize/{pThemeID}"                           => array('\Concrete\Controller\Panel\Page\Design\Customize::view'),
         "/ccm/system/panels/page/design/preview_contents"                               => array('\Concrete\Controller\Panel\Page\Design::preview_contents'),
         "/ccm/system/panels/page/design/submit"                                         => array('\Concrete\Controller\Panel\Page\Design::submit'),
         "/ccm/system/panels/page/preview_as_user"                                       => array('\Concrete\Controller\Panel\Page\PreviewAsUser::view'),
@@ -351,6 +355,8 @@ return array(
         "/ccm/system/panels/page/versions/new_page"                                     => array('\Concrete\Controller\Panel\Page\Versions::new_page'),
         "/ccm/system/panels/page/versions/delete"                                       => array('\Concrete\Controller\Panel\Page\Versions::delete'),
         "/ccm/system/panels/page/versions/approve"                                      => array('\Concrete\Controller\Panel\Page\Versions::approve'),
+        "/ccm/system/panels/page/devices"                                               => array('\Concrete\Controller\Panel\Page\Devices::view'),
+        "/ccm/system/panels/page/devices/preview"                                       => array('\Concrete\Controller\Panel\Page\Devices::preview'),
         "/ccm/system/panels/sitemap"                                                    => array('\Concrete\Controller\Panel\Sitemap::view'),
 
         /**
@@ -375,6 +381,8 @@ return array(
         "/ccm/system/panels/details/page/seo"                                           => array('\Concrete\Controller\Panel\Detail\Page\Seo::view'),
         "/ccm/system/panels/details/page/seo/submit"                                    => array('\Concrete\Controller\Panel\Detail\Page\Seo::submit'),
         "/ccm/system/panels/details/page/versions"                                      => array('\Concrete\Controller\Panel\Detail\Page\Versions::view'),
+        "/ccm/system/panels/details/page/devices"                                       => array('\Concrete\Controller\Panel\Page\Devices::detail'),
+
 
         /**
          * RSS Feeds
@@ -561,6 +569,37 @@ return array(
         ),
         'core/localization' => array(
             array('javascript-localized', '/ccm/assets/localization/core/js'),
+        ),
+        'core/frontend/parallax-image'               => array(
+            array('javascript', 'js/frontend/parallax-image.js', array('minify' => false))
+        ),
+        'core/imageeditor/control/position' => array(
+            array('css', 'css/image-editor/controls/position.css'),
+            array('javascript', 'js/image-editor/controls/position.js')
+        ),
+        'core/imageeditor/control/filter' => array(
+            array('css', 'css/image-editor/controls/filter.css'),
+            array('javascript', 'js/image-editor/controls/filter.js')
+        ),
+        'core/imageeditor/filter/gaussian_blur' => array(
+            array('css', 'css/image-editor/filters/gaussian_blur.css'),
+            array('javascript', 'js/image-editor/filters/gaussian_blur.js')
+        ),
+        'core/imageeditor/filter/none' => array(
+            array('css', 'css/image-editor/filters/none.css'),
+            array('javascript', 'js/image-editor/filters/none.js')
+        ),
+        'core/imageeditor/filter/sepia' => array(
+            array('css', 'css/image-editor/filters/sepia.css'),
+            array('javascript', 'js/image-editor/filters/sepia.js')
+        ),
+        'core/imageeditor/filter/vignette' => array(
+            array('css', 'css/image-editor/filters/vignette.css'),
+            array('javascript', 'js/image-editor/filters/vignette.js')
+        ),
+        'core/imageeditor/filter/grayscale' => array(
+            array('css', 'css/image-editor/filters/grayscale.css'),
+            array('javascript', 'js/image-editor/filters/grayscale.js')
         ),
         'jquery/awesome-rating'                 => array(
             array('javascript', 'js/jquery-awesome-rating.js', array('minify' => false)),

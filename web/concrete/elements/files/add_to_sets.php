@@ -33,7 +33,7 @@ $sets = FileSet::getMySets();
 		<div class="form-inline">
 			<a href="#" class="icon-link"><i class="fa fa-minus-circle"></i></a>
 			<input type="text" class="form-control" name="fsNew[]">
-			<label class="checkbox-inline" ><input type="checkbox" name="fsNewShare[]" value="1" /> <span class="small"><?=t('Public Set.')?></span></label>
+			<label class="checkbox-inline" ><input type="checkbox" name="fsNewShare[]" value="1" checked /> <span class="small"><?=t('Public Set.')?></span></label>
 		</div>
 	</div>
 </script>

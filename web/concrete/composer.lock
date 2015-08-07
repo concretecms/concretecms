@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ea8f6f39b047d2add52888c1cefb75a1",
+    "hash": "af609474b82c9d267d6f6a52c87006ea",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -47,7 +47,7 @@
         },
         {
             "name": "concrete5/doctrine-xml",
-            "version": "dev-master",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/concrete5/doctrine-xml.git",
@@ -1039,7 +1039,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hautelook/phpass/zipball/f0217d804225822f9bdb0d392839029b0fcb0914",
+                "url": "https://api.github.com/repos/hautelook/phpass/zipball/9590c12bf7c92f67f646d7bf2cf6384e7292cc41",
                 "reference": "9590c12bf7c92f67f646d7bf2cf6384e7292cc41",
                 "shasum": ""
             },
@@ -1083,7 +1083,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kesar/HTMLawed/zipball/f842e793614bdf3af70a62b1e70570e824dc9ab6",
+                "url": "https://api.github.com/repos/kesar/HTMLawed/zipball/9d292af5f4c288aa68f38b87f5d88c8214f5f233",
                 "reference": "9d292af5f4c288aa68f38b87f5d88c8214f5f233",
                 "shasum": ""
             },
@@ -1392,25 +1392,25 @@
         },
         {
             "name": "league/url",
-            "version": "3.2.1",
+            "version": "3.3.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/url.git",
-                "reference": "74ae626949e967fd20511d074835ae6ff67d97ae"
+                "reference": "1ae2c3ce29a7c5438339ff6388225844e6479da8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/url/zipball/74ae626949e967fd20511d074835ae6ff67d97ae",
-                "reference": "74ae626949e967fd20511d074835ae6ff67d97ae",
+                "url": "https://api.github.com/repos/thephpleague/url/zipball/1ae2c3ce29a7c5438339ff6388225844e6479da8",
+                "reference": "1ae2c3ce29a7c5438339ff6388225844e6479da8",
                 "shasum": ""
             },
             "require": {
                 "ext-mbstring": "*",
                 "php": ">=5.3.0",
-                "true/punycode": "~1.0"
+                "true/punycode": "^2.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "~4.0"
+                "phpunit/phpunit": "^4.0"
             },
             "type": "library",
             "extra": {
@@ -1436,12 +1436,13 @@
                 }
             ],
             "description": "League/url is a lightweight PHP Url manipulating library",
+            "homepage": "http://url.thephpleague.com",
             "keywords": [
                 "parse_url",
                 "php",
                 "url"
             ],
-            "time": "2014-11-27 10:14:00"
+            "time": "2015-07-15 08:24:12"
         },
         {
             "name": "lusitanian/oauth",
@@ -2018,7 +2019,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tchwork/utf8/zipball/65b19607048351f767a034d4cc709db8b136d2c5",
+                "url": "https://api.github.com/repos/tchwork/utf8/zipball/ffa082111aa3cb23cf2479a17e6785ace91da982",
                 "reference": "ffa082111aa3cb23cf2479a17e6785ace91da982",
                 "shasum": ""
             },
@@ -2145,16 +2146,16 @@
         },
         {
             "name": "punic/punic",
-            "version": "1.6.1",
+            "version": "1.6.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/punic/punic.git",
-                "reference": "c98e5e8282723ed7c4e6f260818c2adb9198c928"
+                "reference": "5805b35d6a574f754b49be1f539aaf3ae6484808"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/punic/punic/zipball/c98e5e8282723ed7c4e6f260818c2adb9198c928",
-                "reference": "c98e5e8282723ed7c4e6f260818c2adb9198c928",
+                "url": "https://api.github.com/repos/punic/punic/zipball/5805b35d6a574f754b49be1f539aaf3ae6484808",
+                "reference": "5805b35d6a574f754b49be1f539aaf3ae6484808",
                 "shasum": ""
             },
             "require": {
@@ -2206,7 +2207,7 @@
                 "translations",
                 "unicode"
             ],
-            "time": "2015-05-11 16:20:09"
+            "time": "2015-06-16 13:04:27"
         },
         {
             "name": "sunra/php-simple-html-dom-parser",
@@ -2861,16 +2862,16 @@
         },
         {
             "name": "true/punycode",
-            "version": "1.0.1",
+            "version": "2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/true/php-punycode.git",
-                "reference": "59dca474914324763397be2ea3d6ad3bc48f4688"
+                "reference": "13d3aada7d7d5d1812316031d8d85f5d97178c4e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/true/php-punycode/zipball/59dca474914324763397be2ea3d6ad3bc48f4688",
-                "reference": "59dca474914324763397be2ea3d6ad3bc48f4688",
+                "url": "https://api.github.com/repos/true/php-punycode/zipball/13d3aada7d7d5d1812316031d8d85f5d97178c4e",
+                "reference": "13d3aada7d7d5d1812316031d8d85f5d97178c4e",
                 "shasum": ""
             },
             "require": {
@@ -2878,14 +2879,13 @@
                 "php": ">=5.3.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "4.x",
-                "satooshi/php-coveralls": "dev-master",
-                "squizlabs/php_codesniffer": "2.0.x-dev"
+                "phpunit/phpunit": "~4.7",
+                "squizlabs/php_codesniffer": "~2.0"
             },
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "True\\": "src/"
+                    "TrueBV\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -2904,7 +2904,7 @@
                 "idna",
                 "punycode"
             ],
-            "time": "2014-08-26 14:21:01"
+            "time": "2015-06-24 09:36:39"
         },
         {
             "name": "voku/urlify",
@@ -3926,8 +3926,7 @@
         "kertz/twitteroauth": 20,
         "primal/color": 20,
         "zendframework/zend-queue": 20,
-        "oryzone/oauth-user-data": 20,
-        "concrete5/doctrine-xml": 20
+        "oryzone/oauth-user-data": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

@@ -21,10 +21,13 @@ class Controller extends AuthenticationTypeController
 
     public function deauthenticate(User $u)
     {
-        list($uID, $authType, $hash) = explode(':', $_COOKIE['ccmAuthUserHash']);
-        if ($authType == 'concrete') {
-            $db = Loader::db();
-            $db->execute('DELETE FROM authTypeConcreteCookieMap WHERE uID=? AND token=?', array($uID, $hash));
+        $cookie = array_get($_COOKIE, 'ccmAuthUserHash', '');
+        if ($cookie) {
+            list($uID, $authType, $hash) = explode(':', $cookie);
+            if ($authType == 'concrete') {
+                $db = Loader::db();
+                $db->execute('DELETE FROM authTypeConcreteCookieMap WHERE uID=? AND token=?', array($uID, $hash));
+            }
         }
     }
 
@@ -79,7 +82,9 @@ class Controller extends AuthenticationTypeController
     private function genString($a = 16)
     {
         if (function_exists('mcrypt_create_iv')) {
-            return bin2hex(mcrypt_create_iv($a, MCRYPT_DEV_URANDOM));
+            // Use /dev/urandom if available, otherwise fall back to PHP's rand.
+            // http://php.net/manual/en/function.mcrypt-create-iv.php#117047
+            return bin2hex(mcrypt_create_iv($a, MCRYPT_DEV_URANDOM|MCRYPT_RAND));
         } elseif (function_exists('openssl_random_pseudo_bytes')) {
             return bin2hex(openssl_random_pseudo_bytes($a));
         }

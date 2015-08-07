@@ -1,9 +1,7 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 use Concrete\Core\Http\ResponseAssetGroup;
-use Concrete\Core\ImageEditor\Component as SystemImageEditorComponent;
-use Concrete\Core\ImageEditor\ControlSet as SystemImageEditorControlSet;
-use Concrete\Core\ImageEditor\Filter as SystemImageEditorFilter;
+use Concrete\Core\ImageEditor\ImageEditor;
 use Whoops\Exception\ErrorException;
 
 $editorid = substr(sha1(time()), 0, 5); // Just enough entropy.
@@ -20,9 +18,13 @@ if (!$fp->canEditFileContents()) {
 $req = ResponseAssetGroup::get();
 $req->requireAsset('core/imageeditor');
 
-$controlsets = SystemImageEditorControlSet::getList();
-$components = SystemImageEditorComponent::getList();
-$filters = SystemImageEditorFilter::getList();
+/** @var ImageEditor $editor */
+if (!$editor) {
+    $editor = \Core::make('editor/image');
+}
+
+$filters = $editor->getFilterList();
+$controls = $editor->getControlList()
 
 ?>
     <div class='table ccm-ui'>
@@ -35,28 +37,33 @@ $filters = SystemImageEditorFilter::getList();
                 <div class='editorcontrols'>
                     <div class='control-sets'>
                         <?php
-                        if (!$controlsets) {
+                        if (!$controls) {
                             echo "&nbsp;";
                         }
-                        foreach ($controlsets as $controlset) {
-                            $handle = $controlset->getHandle();
+                        /** @var \Concrete\Core\ImageEditor\EditorExtensionInterface $control */
+                        foreach ((array) $controls as $control) {
+                            $control_handle = $control->getHandle();
+                            $assets = $control->getAssets();
+                            $javascript_asset = $control->getExtensionAsset();
+
+                            foreach ($assets as $asset) {
+                                $req->addOutputAsset($asset);
+                            }
                             ?>
-                            <link rel='stylesheet' href='<?= $controlset->getCssPath() ?>'>
-                            <div class="controlset controlset-<?= $controlset->gethandle() ?>"
-                                 data-namespace="<?= $controlset->getHandle() ?>"
-                                 data-src="<?= $controlset->getJavascriptPath() ?>">
-                                <h4><?= $controlset->getDisplayName() ?></h4>
+                            <div class="controlset controlset-<?= $control_handle ?> control control-<?= $control_handle ?>"
+                                 data-namespace="<?= $control_handle ?>"
+                                 data-src="<?= $javascript_asset->getAssetUrl() ?>">
+                                <h4><?= $control->getName() ?></h4>
 
                                 <div class="control">
                                     <div class="contents">
                                         <?php
                                         try {
-                                            $view = new View;
-                                            $view->setInnerContentFile($controlset->getViewPath());
-                                            echo $view->renderViewContents(array('control-set' => $controlset));
+                                            $view = $control->getView();
+                                            $view->addScopeItems(array('editor' => $editor, 'fv' => $fv));
+                                            echo $view->render();
                                         } catch (ErrorException $e) {
-                                            echo t("No view found.");
-                                            // File doesn't exist, just continue.
+                                            echo t("Invalid View: '{$e->getMessage()}''");
                                         }
                                         ?>
                                     </div>
@@ -81,12 +88,22 @@ if (!$settings) {
     $settings = array();
 }
 $fnames = array();
+
 foreach ($filters as $filter) {
-    $handle = $filter->getHandle();
-    $fnames[$handle] = array(
-        "src"      => $filter->getJavascriptPath(),
-        "name"     => $filter->getDisplayName('text'),
-        "selector" => '.filter.filter-' . $handle);
+    $assets = $filter->getAssets();
+    $extension_asset = $filter->getExtensionAsset();
+    $filter_handle = $filter->getHandle();
+
+    foreach ($assets as $handle => $asset) {
+        $req->addOutputAsset($asset);
+    }
+
+
+    $fnames[$filter_handle] = array(
+        'src' => $extension_asset->getAssetURL(),
+        'name' => h($filter->getName()),
+        "selector" => ".filter.filter-{$filter_handle}"
+    );
 }
 ?>
     <script>
@@ -98,7 +115,6 @@ foreach ($filters as $filter) {
                         fID: <?= $fv->getFileID() ?>,
                         controlsets: {},
                         filters: {},
-                        components: {},
                         debug: false,
                         jpegCompression: <?= Config::get('concrete.misc.default_jpeg_image_compression') / 100 ?>,
                         mime: '<?= $fv->getMimeType() ?>'
@@ -135,9 +151,3 @@ foreach ($filters as $filter) {
             ?>
         });
     </script>
-<?php
-foreach ($filters as $filter) {
-    ?>
-    <link rel='stylesheet' href='<?= $filter->getCssPath() ?>'>
-<?php
-}

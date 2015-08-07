@@ -8,9 +8,16 @@ use Group;
 use PermissionKey;
 use Permissions;
 use Area;
+use Block;
 use Config;
 use Session;
 use TaskPermission;
+use Concrete\Core\Permission\Key\PageKey as PagePermissionKey;
+use Concrete\Core\Permission\Key\AreaKey as AreaPermissionKey;
+use Concrete\Core\Permission\Key\BlockKey as BlockPermissionKey;
+use Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
+use Concrete\Core\Permission\Duration as PermissionDuration;
+use Concrete\Core\Permission\Assignment\PageTimedAssignment as PageContentPermissionTimedAssignment;
 
 class PageResponse extends Response
 {
@@ -167,13 +174,17 @@ class PageResponse extends Response
         return parent::testForErrors();
     }
 
-
     public function getAllTimedAssignmentsForPage()
+    {
+        return $this->getAllAssignmentsForPage();
+    }
+
+    public function getAllAssignmentsForPage()
     {
         $db = Loader::db();
         $assignments = array();
         $r = $db->Execute(
-            'select peID, pkID, pdID from PagePermissionAssignments ppa inner join PermissionAccessList pal on ppa.paID = pal.paID where pdID > 0 and cID = ?',
+            'select peID, pkID, pdID from PagePermissionAssignments ppa inner join PermissionAccessList pal on ppa.paID = pal.paID where cID = ?',
             array($this->object->getCollectionID())
         );
         while ($row = $r->FetchRow()) {
@@ -192,7 +203,7 @@ class PageResponse extends Response
         );
         while ($row = $r->FetchRow()) {
             $r2 = $db->Execute(
-                'select peID, pdID, pkID from AreaPermissionAssignments apa inner join PermissionAccessList pal on apa.paID = pal.paID where pdID > 0 and cID = ? and arHandle = ?',
+                'select peID, pdID, pkID from AreaPermissionAssignments apa inner join PermissionAccessList pal on apa.paID = pal.paID where cID = ? and arHandle = ?',
                 array($this->object->getCollectionID(), $row['arHandle'])
             );
             while ($row2 = $r2->FetchRow()) {
@@ -211,7 +222,7 @@ class PageResponse extends Response
         $r = $db->Execute(
             'select peID, cvb.cvID, cvb.bID, pdID, pkID from BlockPermissionAssignments bpa
                     inner join PermissionAccessList pal on bpa.paID = pal.paID inner join CollectionVersionBlocks cvb on cvb.cID = bpa.cID and cvb.cvID = bpa.cvID and cvb.bID = bpa.bID
-                    where pdID > 0 and cvb.cID = ? and cvb.cvID = ? and cvb.cbOverrideAreaPermissions = 1',
+                    where cvb.cID = ? and cvb.cvID = ? and cvb.cbOverrideAreaPermissions = 1',
             array($this->object->getCollectionID(), $this->object->getVersionID())
         );
         while ($row = $r->FetchRow()) {

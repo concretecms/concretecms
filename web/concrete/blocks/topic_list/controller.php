@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Block\TopicList;
 
 use Concrete\Core\Attribute\Key\CollectionKey;
@@ -7,13 +8,11 @@ use Concrete\Core\Tree\Tree;
 use Concrete\Core\Tree\Type\Topic as TopicTree;
 use Concrete\Core\Tree\Type\Topic;
 use Core;
-use Loader;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
 class Controller extends BlockController
 {
-
     public $helpers = array('form');
 
     protected $btInterfaceWidth = 400;
@@ -41,7 +40,7 @@ class Controller extends BlockController
         $this->requireAsset('core/topics');
         $tt = new TopicTree();
         $defaultTree = $tt->getDefault();
-        $tree = $tt->getByID(Loader::helper('security')->sanitizeInt($this->topicTreeID));
+        $tree = $tt->getByID(Core::make('helper/security')->sanitizeInt($this->topicTreeID));
         if (!$tree) {
             $tree = $defaultTree;
         }
@@ -68,7 +67,7 @@ class Controller extends BlockController
             }
         } else {
             $tt = new TopicTree();
-            $tree = $tt->getByID(Loader::helper('security')->sanitizeInt($this->topicTreeID));
+            $tree = $tt->getByID(Core::make('helper/security')->sanitizeInt($this->topicTreeID));
             $this->set('tree', $tree);
         }
     }
@@ -151,6 +150,9 @@ class Controller extends BlockController
 
     public function save($data)
     {
+        $data += array(
+            'externalTarget' => 0,
+        );
         $externalTarget = intval($data['externalTarget']);
         if ($externalTarget === 0) {
             $data['cParentID'] = 0;

@@ -101,9 +101,8 @@ class Type
 
     public function getCustomInspector()
     {
-        $class = '\\Concrete\\Core\\File\\Type\\Inspector\\' . Loader::helper('text')->camelcase(
-                $this->getCustomImporter()
-            ) . 'Inspector';
+        $name = camelcase($this->getCustomImporter()) . 'Inspector';
+        $class = overrideable_core_class('Core\\File\\Type\\Inspector\\' . $name, 'File/Type/Inspector/' . $name . '.php', $this->getPackageHandle());
         $cl = Core::make($class);
         return $cl;
     }

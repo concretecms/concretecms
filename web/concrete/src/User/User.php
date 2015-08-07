@@ -364,8 +364,8 @@ class User extends Object
 
     public static function verifyAuthTypeCookie()
     {
-        if ($_COOKIE['ccmAuthUserHash']) {
-            list($_uID, $authType, $uHash) = explode(':', $_COOKIE['ccmAuthUserHash']);
+        if ($cookie = array_get($_COOKIE, 'ccmAuthUserHash')) {
+            list($_uID, $authType, $uHash) = explode(':', $cookie);
             $at = AuthenticationType::getByHandle($authType);
             $u = User::getByUserID($_uID);
             if ((!is_object($u)) || $u->isError()) {

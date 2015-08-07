@@ -43,9 +43,6 @@ use Concrete\Core\Page\Type\Composer\Control\Type\Type as PageTypeComposerContro
 use Concrete\Core\Page\Type\PublishTarget\Type\Type as PageTypePublishTargetType;
 use Concrete\Core\Conversation\Editor\Editor as ConversationEditor;
 use Concrete\Core\Conversation\Rating\Type as ConversationRatingType;
-use Concrete\Core\ImageEditor\ControlSet as SystemImageEditorControlSet;
-use Concrete\Core\ImageEditor\Filter as SystemImageEditorFilter;
-use Concrete\Core\ImageEditor\Component as SystemImageEditorComponent;
 use Concrete\Core\Conversation\FlagType\FlagType as ConversationFlagType;
 use Concrete\Core\Validation\BannedWord\BannedWord as BannedWord;
 use Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFormLayoutSetControl;
@@ -100,9 +97,6 @@ class ContentImporter
         $this->importPermissions($sx);
         $this->importJobs($sx);
         $this->importJobSets($sx);
-        $this->importImageEditorControlSets($sx);
-        $this->importImageEditorComponents($sx);
-        $this->importImageEditorFilters($sx);
         // import bare page types first, then import structure, then page types blocks, attributes and composer settings, then page content, because we need the structure for certain attributes and stuff set in master collections (like composer)
         $this->importPageTemplates($sx);
         $this->importPageTypesBase($sx);
@@ -647,6 +641,7 @@ class ContentImporter
                 $type->setName((string) $l['name']);
                 $type->setHandle((string) $l['handle']);
                 $type->setWidth((string) $l['width']);
+                $type->setHeight((string) $l['height']);
                 $required = (string) $l['required'];
                 if ($required) {
                     $type->requireType();
@@ -696,10 +691,13 @@ class ContentImporter
         if (isset($sx->jobs)) {
             foreach ($sx->jobs->job as $jx) {
                 $pkg = static::getPackageObject($jx['package']);
-                if (is_object($pkg)) {
-                    Job::installByPackage($jx['handle'], $pkg);
-                } else {
-                    Job::installByHandle($jx['handle']);
+                $job = Job::getByHandle($jx['handle']);
+                if (!is_object($job)) {
+                    if (is_object($pkg)) {
+                        Job::installByPackage($jx['handle'], $pkg);
+                    } else {
+                        Job::installByHandle($jx['handle']);
+                    }
                 }
             }
         }
@@ -966,48 +964,6 @@ class ContentImporter
                     if (is_object($feo)) {
                         $template->addGatheringItemTemplateFeature($feo);
                     }
-                }
-            }
-        }
-    }
-
-    protected function importImageEditorControlSets(\SimpleXMLElement $sx)
-    {
-        if (isset($sx->imageeditor_controlsets)) {
-            foreach ($sx->imageeditor_controlsets->imageeditor_controlset as $controlset) {
-                $handle = $controlset['handle'];
-                $name = $controlset['name'];
-                $ob = SystemImageEditorControlSet::getByHandle($handle);
-                if ($ob->getHandle() != $handle) {
-                    SystemImageEditorControlSet::add($handle, $name);
-                }
-            }
-        }
-    }
-
-    protected function importImageEditorComponents(\SimpleXMLElement $sx)
-    {
-        if (isset($sx->imageeditor_components)) {
-            foreach ($sx->imageeditor_components->imageeditor_component as $component) {
-                $handle = $component['handle'];
-                $name = $component['name'];
-                $ob = SystemImageEditorComponent::getByHandle($handle);
-                if ($ob->getImageEditorComponentHandle() != $handle) {
-                    SystemImageEditorComponent::add($handle, $name);
-                }
-            }
-        }
-    }
-
-    protected function importImageEditorFilters(\SimpleXMLElement $sx)
-    {
-        if (isset($sx->imageeditor_filters)) {
-            foreach ($sx->imageeditor_filters->imageeditor_filter as $filter) {
-                $handle = $filter['handle'];
-                $name = $filter['name'];
-                $ob = SystemImageEditorFilter::getByHandle($handle);
-                if ($ob->getHandle() != $handle) {
-                    SystemImageEditorFilter::add($handle, $name);
                 }
             }
         }

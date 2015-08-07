@@ -3,8 +3,8 @@
 namespace Concrete\Core\Tree;
 
 use Concrete\Core\Foundation\Object;
-use Loader;
 use Core;
+use Database;
 use Localization;
 use Gettext\Translations;
 
@@ -13,6 +13,7 @@ abstract class Tree extends Object
     protected $treeNodeSelectedIDs = array();
 
     abstract protected function loadDetails();
+
     abstract protected function deleteDetails();
 
     /** Returns the standard name for this tree
@@ -29,7 +30,16 @@ abstract class Tree extends Object
 
     abstract public function exportDetails(\SimpleXMLElement $sx);
 
-    abstract public static function importDetails(\SimpleXMLElement $sx);
+    /**
+     * @param \SimpleXMLElement $sx
+     *
+     * @return static|null
+     * @abstract
+     */
+    public static function importDetails(\SimpleXMLElement $sx)
+    {
+        return null;
+    }
 
     public function setSelectedTreeNodeIDs($nodeIDs)
     {
@@ -71,7 +81,7 @@ abstract class Tree extends Object
     public static function exportList(\SimpleXMLElement $sx)
     {
         $trees = $sx->addChild('trees');
-        $db = Loader::db();
+        $db = Database::connection();
         $r = $db->Execute('select treeID from Trees order by treeID asc');
         while ($row = $r->Fetchrow()) {
             $tree = static::getByID($row['treeID']);
@@ -92,10 +102,12 @@ abstract class Tree extends Object
     {
         return $this->treeID;
     }
+
     public function getRootTreeNodeObject()
     {
         return \Concrete\Core\Tree\Node\Node::getByID($this->rootTreeNodeID);
     }
+
     public function getRootTreeNodeID()
     {
         return $this->rootTreeNodeID;
@@ -156,7 +168,7 @@ abstract class Tree extends Object
 
     public function delete()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         // delete top level node
         $node = $this->getRootTreeNodeObject();
         if (is_object($node)) {
@@ -172,7 +184,7 @@ abstract class Tree extends Object
         $newRoot = $root->duplicate();
         $type = $this->getTreeTypeObject();
         $tree = $type->addTree($newRoot);
-        $db = Loader::db();
+        $db = Database::connection();
         $nodes = $newRoot->getAllChildNodeIDs();
         foreach ($nodes as $nodeID) {
             $db->Execute('update TreeNodes set treeID = ? where treeNodeID = ?', array($tree->getTreeID(), $nodeID));
@@ -198,11 +210,11 @@ abstract class Tree extends Object
         return $root->getTreeNodeJSON();
     }
 
-    protected static function add(\Concrete\Core\Tree\Node\Node $rootNode)
+    protected static function create(\Concrete\Core\Tree\Node\Node $rootNode)
     {
-        $db = Loader::db();
-        $date = Loader::helper('date')->getOverridableNow();
-        $treeTypeHandle = Loader::helper('text')->uncamelcase(strrchr(get_called_class(), '\\'));
+        $db = Database::connection();
+        $date = Core::make('helper/date')->getOverridableNow();
+        $treeTypeHandle = Core::make('helper/text')->uncamelcase(strrchr(get_called_class(), '\\'));
         $type = TreeType::getByHandle($treeTypeHandle);
         $db->Execute('insert into Trees (treeDateAdded, rootTreeNodeID, treeTypeID) values (?, ?, ?)', array(
             $date, $rootNode->getTreeNodeID(), $type->getTreeTypeID(),
@@ -215,9 +227,9 @@ abstract class Tree extends Object
 
     final public static function getByID($treeID)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $row = $db->GetRow('select * from Trees where treeID = ?', array($treeID));
-        if (is_array($row) && $row['treeID']) {
+        if (!empty($row)) {
             $tt = TreeType::getByID($row['treeTypeID']);
             $class = $tt->getTreeTypeClass();
             $tree = Core::make($class);

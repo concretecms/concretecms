@@ -5,6 +5,8 @@ use Concrete\Core\Area\Layout\CustomLayout;
 use Concrete\Core\Area\Layout\PresetLayout;
 use Concrete\Core\Area\Layout\ThemeGridLayout;
 use Concrete\Core\Area\SubArea;
+use Concrete\Core\Block\CustomStyle;
+use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 use Loader;
 use \Concrete\Core\Block\BlockController;
 use \Concrete\Core\Area\Layout\Layout as AreaLayout;
@@ -12,8 +14,10 @@ use \Concrete\Core\Area\Layout\Preset\Preset as AreaLayoutPreset;
 use \Concrete\Core\Area\Layout\CustomLayout as CustomAreaLayout;
 use \Concrete\Core\Area\Layout\ThemeGridLayout as ThemeGridAreaLayout;
 use \Concrete\Core\Asset\CssAsset;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use URL;
 use Page;
+use Permissions;
 
 class Controller extends BlockController
 {
@@ -32,6 +36,15 @@ class Controller extends BlockController
     {
         return t("Area Layout");
     }
+
+    public function registerViewAssets()
+    {
+        if (is_object($this->block) && $this->block->getBlockFilename() == 'parallax') {
+            $this->requireAsset('javascript', 'jquery');
+            $this->requireAsset('javascript', 'core/frontend/parallax-image');
+        }
+    }
+
 
     public function duplicate($newBID)
     {
@@ -110,11 +123,12 @@ class Controller extends BlockController
                 }
             }
         }
+
         $values = array('arLayoutID' => $arLayout->getAreaLayoutID());
         parent::save($values);
     }
 
-    public function getImportData($blockNode)
+    public function getImportData($blockNode, $page)
     {
         $args = array();
         if (isset($blockNode->arealayout)) {
@@ -282,6 +296,7 @@ class Controller extends BlockController
             $this->render('edit_preset');
         }
         $this->set('columnsNum', count($this->arLayout->getAreaLayoutColumns()));
+        $this->requireAsset('core/style-customizer');
 
     }
 
@@ -306,6 +321,7 @@ class Controller extends BlockController
         }
         $this->set('columnsNum', 1);
         $this->set('maxColumns', $maxColumns);
+        $this->requireAsset('core/style-customizer');
     }
 
 

@@ -1,7 +1,7 @@
 <?php  defined('C5_EXECUTE') or die("Access Denied.");
 $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
 $page = Page::getCurrentPage();
-$date = Core::make('helper/date')->formatDate($page->getCollectionDatePublic(), true);
+$date = $dh->formatDate($page->getCollectionDatePublic(), true);
 $user = UserInfo::getByID($page->getCollectionUserID());
 ?>
 <div class="ccm-block-page-title-byline">
@@ -16,5 +16,4 @@ $user = UserInfo::getByID($page->getCollectionUserID());
     <? print $user->getUserDisplayName(); ?>
     </span>
     <? endif; ?>
-
 </div>

@@ -5,6 +5,13 @@
 @import "../bootstrap/mixins.less";
 @import "../../core/redactor/redactor.less";
 
+.clearfix() {
+	&:after {
+		content: "";
+		display: table;
+		clear: both;
+	}
+}
 .transition-redactor(@transition: all linear .2s) {
 	-moz-transition: @transition;
 	transition: @transition;
@@ -118,24 +125,6 @@
 	z-index: 1053;
 }
 
-
-/*
-	Resize
-*/
-.redactor-resize {
-	background: #f4f4f4;
-	padding: 4px 0 3px 0;
-	cursor: move;
-	border: 1px solid #e3e3e3;
-	border-top: none;
-	& div {
-		width: 30px;
-		margin: auto;
-		border-top: 1px solid #bbb;
-		border-bottom: 1px solid #fff;
-	}
-}
-
 /*
 	Fullscreen
 */
@@ -149,8 +138,12 @@ body .redactor-box-fullscreen {
 /*
 	Utils
 */
-.body-redactor-hidden {
-	overflow: hidden;
+.redactor-scrollbar-measure {
+	position: absolute;
+	top: -9999px;
+	width: 50px;
+	height: 50px;
+	overflow: scroll;
 }
 
 /*
@@ -174,6 +167,7 @@ body .redactor-box-fullscreen {
 	overflow: auto;
 	margin: 0 !important;
 	padding: 20px;
+	min-height: 80px;
 	outline: none;
 	white-space: normal;
 	border: 1px solid #eee;
@@ -193,21 +187,14 @@ body .redactor-box-fullscreen {
 /*
 	Placeholder
 */
-.redactor-placeholder {
-	position: relative;
-	&:after {
-		position: absolute;
-		top: 20px;
-		left: 20px;
-	    content: attr(placeholder);
-		color: #999 !important;
-		font-weight: normal !important;
-	}
-}
-/* Placeholder in linebreaks mode */
-.redactor-linebreaks.redactor-placeholder:after {
+.redactor-placeholder:after {
+	position: absolute;
 	top: 20px;
 	left: 20px;
+	content: attr(placeholder);
+	display: block; /* For Firefox */
+	color: #999 !important;
+	font-weight: normal !important;
 }
 
 /* concrete5 */
@@ -307,8 +294,7 @@ body .redactor-box-fullscreen {
 	& li a.fa-redactor-btn {
 		display: inline-block;
 		padding: 9px 10px 8px 10px;
-
-	  line-height: 1;
+		line-height: 1;
 	}
 	& li a.redactor-button-disabled {
 		.opacity-redactor(30);
@@ -319,6 +305,17 @@ body .redactor-box-fullscreen {
 			cursor: default;
 		}
 	}
+	& li a.redactor-button-focus {
+		color:#fff;
+		background:#000;
+	}
+}
+
+/*
+	CodeMirror
+*/
+.redactor-box .CodeMirror {
+	display: none;
 }
 
 /*
@@ -452,7 +449,7 @@ body .redactor-box-fullscreen {
 */
 .redactor-toolbar-tooltip {
 	position: absolute;
-	z-index: 1154;
+	z-index: 1054;
 	text-align: center;
 	top: 0;
 	left: 0;
@@ -497,6 +494,21 @@ body .redactor-box-fullscreen {
 			background-color: rgba(31, 120, 216, 1);
 			color: #fff !important;
 			text-decoration: none;
+		}
+		&.selected {
+			background-color: #000;
+			color: #fff;
+		}
+        &.redactor-dropdown-link-inactive,
+        &.redactor-dropdown-link-inactive:hover {
+            background: none;
+            cursor: default;
+            color: #000 !important;
+            .opacity-redactor(40);
+        }
+		&.redactor-dropdown-link-selected {
+			color:#fff;
+			background:#000;
 		}
 	}
 }
@@ -547,7 +559,7 @@ body .redactor-box-fullscreen {
 */
 .redactor-link-tooltip {
 	position: absolute;
-	z-index: 49999;
+	z-index: 99;
 	padding: 10px;
 	line-height: 1;
 	display: inline-block;
@@ -660,6 +672,7 @@ body .redactor-box-fullscreen {
 /* end concrete5 */
 }
 #redactor-modal {
+	outline:0;
 	position: relative;
 	margin: auto;
 	margin-bottom: 20px;
@@ -798,7 +811,7 @@ body .redactor-box-fullscreen {
 
 
 /*
-    List in Modal
+	List in Modal
 */
 #redactor-modal {
 	#redactor-modal-list {
@@ -841,6 +854,11 @@ body .redactor-box-fullscreen {
 	font-size: 30px;
 	font-weight: 300;
 	cursor: pointer;
+	-webkit-appearance: none;
+	padding:0;
+	border:0;
+	background:0;
+	outline:none;
 	&:hover {
 		color: #000;
 	}
@@ -887,7 +905,6 @@ body .redactor-box-fullscreen {
 
 /*
  * concrete5
-
 #redactor-modal footer button {
 	position: relative;
 	width: 100%;
@@ -1056,6 +1073,12 @@ body .redactor-box-fullscreen {
 	  padding-left: 2em;
 	  border: none;
 	}
+	ol ol li {
+		list-style-type: lower-alpha;
+	}
+	ol ol ol li {
+		list-style-type: lower-roman;
+	}
 	dl dt {
 	  font-weight: bold;
 	}
@@ -1082,12 +1105,10 @@ body .redactor-box-fullscreen {
 	  background-color: #d8d7d7;
 	}
 	pre {
-	  overflow: auto;
 	  padding: 1em;
 	  border: 1px solid #ddd;
 	  border-radius: 3px;
 	  background: #f8f8f8;
-	  white-space: pre;
 	  font-size: 90%;
 	}
 	hr {

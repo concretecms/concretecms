@@ -45,6 +45,10 @@ class Groups extends Controller {
 		return $this->result;
 	}
 
+	public function getListObject() {
+		return $this->groupList;
+	}
+
 	public function submit() {
 		$this->search();
 		$result = $this->result;

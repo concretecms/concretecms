@@ -9,7 +9,8 @@ use PermissionKey;
 use Exception;
 use Loader;
 use Request;
-use \Concrete\Core\Area\Layout\Preset\Preset as AreaLayoutPreset;
+use \Concrete\Core\Area\Layout\Preset\Preset;
+use \Concrete\Core\Area\Layout\Preset\UserPreset;
 use \Concrete\Core\Area\Layout\Layout as AreaLayout;
 
 class Presets extends BackendInterfaceController
@@ -30,7 +31,7 @@ class Presets extends BackendInterfaceController
             throw new Exception(t('Invalid layout object.'));
         }
 
-        $presetlist = AreaLayoutPreset::getList();
+        $presetlist = UserPreset::getList();
         $presets = array();
         $presets['-1'] = t('** New');
         foreach ($presetlist as $preset) {
@@ -47,7 +48,7 @@ class Presets extends BackendInterfaceController
         $r = Request::getInstance();
         $r->setCurrentPage($c);
 
-        $existingPreset = AreaLayoutPreset::getByID($arLayoutPresetID);
+        $existingPreset = Preset::getByID($arLayoutPresetID);
         if (is_object($existingPreset)) {
             $r = new \stdClass;
             $formatter = $existingPreset->getFormatter();
@@ -71,9 +72,9 @@ class Presets extends BackendInterfaceController
                 throw new Exception(t('Invalid layout object.'));
             }
             if ($_POST['arLayoutPresetID'] == '-1') {
-                AreaLayoutPreset::add($arLayout, $_POST['arLayoutPresetName']);
+                UserPreset::add($arLayout, $_POST['arLayoutPresetName']);
             } else {
-                $existingPreset = AreaLayoutPreset::getByID($_POST['arLayoutPresetID']);
+                $existingPreset = UserPreset::getByID($_POST['arLayoutPresetID']);
                 if (is_object($existingPreset)) {
                     $existingPreset->updateName($_POST['arLayoutPresetName']);
                     $existingPreset->updateAreaLayoutObject($arLayout);

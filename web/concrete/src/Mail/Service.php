@@ -379,6 +379,17 @@ class Service
     }
 
     /**
+     * Set additional headers
+     *
+     * @param array $headers
+     * @param string $val
+     */
+    public function setAdditionalHeaders($headers)
+    {
+        $this->headers = $headers;
+    }
+
+    /**
      * Sends the email.
      *
      * @param bool $resetData Whether or not to reset the service to its default values.
@@ -441,6 +452,9 @@ class Service
                 $messageIdHeader = new \Zend\Mail\Header\MessageId();
                 $headers->addHeader($messageIdHeader);
             }
+            
+            $headers->addHeaders($this->headers);
+
             $messageIdHeader->setId();
 
             $body = new MimeMessage();

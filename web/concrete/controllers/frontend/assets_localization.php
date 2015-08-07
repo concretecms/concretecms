@@ -118,7 +118,8 @@ var ccmi18n = {
   fontSize: <?=json_encode(t('Font Size'))?>,
   letterSpacing: <?=json_encode(t('Letter spacing'))?>,
   lineHeight: <?=json_encode(t('Line Height'))?>,
-  emptyArea: <?=json_encode(t('Empty %s Area', '<%- area_handle %>'))?>
+  emptyArea: <?=json_encode(t('Empty %s Area', '<%- area_handle %>'))?>,
+  fullArea: <?=json_encode(t('This area is full!'))?>
 };
 
 var ccmi18n_editor = {

@@ -1,12 +1,13 @@
 <?php
+
 namespace Concrete\Core\Tree\Type;
 
-use \Concrete\Core\Tree\Tree;
-use \Concrete\Core\Tree\Node\Type\TopicCategory as TopicCategoryTreeNode;
-use Loader;
+use Concrete\Core\Tree\Tree;
+use Concrete\Core\Tree\Node\Type\TopicCategory as TopicCategoryTreeNode;
+use Database;
 use Group as UserGroup;
-use \Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
-use \Concrete\Core\Permission\Key\TopicCategoryTreeNodeKey as TopicCategoryTreeNodePermissionKey;
+use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
+use Concrete\Core\Permission\Key\TopicCategoryTreeNodeKey as TopicCategoryTreeNodePermissionKey;
 use PermissionAccess;
 
 class Topic extends Tree
@@ -21,6 +22,7 @@ class Topic extends Tree
 
     /** Returns the display name for this tree (localized and escaped accordingly to $format)
      * @param  string $format = 'html' Escape the result in html format (if $format is 'html'). If $format is 'text' or any other value, the display name won't be escaped.
+     *
      * @return string
      */
     public function getTreeDisplayName($format = 'html')
@@ -37,7 +39,7 @@ class Topic extends Tree
 
     public static function getDefault()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $treeID = $db->GetOne('select treeID from TopicTrees order by treeID asc');
 
         return Tree::getByID($treeID);
@@ -45,14 +47,15 @@ class Topic extends Tree
 
     protected function deleteDetails()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $db->Execute('delete from TopicTrees where treeID = ?', array($this->treeID));
     }
 
     public static function getByName($name)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $treeID = $db->GetOne('select treeID from TopicTrees where topicTreeName = ?', array($name));
+
         return Tree::getByID($treeID);
     }
 
@@ -60,7 +63,7 @@ class Topic extends Tree
     {
         // copy permissions from the other node.
         $rootNode = TopicCategoryTreeNode::add();
-        $treeID = parent::add($rootNode);
+        $treeID = parent::create($rootNode);
         $tree = self::getByID($treeID);
         $tree->setTopicTreeName($name);
 
@@ -98,9 +101,10 @@ class Topic extends Tree
                 $root = $tree->getRootTreeNodeObject();
                 $root->populateChildren();
                 $children = $root->getChildNodes();
-                foreach($children as $child) {
+                foreach ($children as $child) {
                     $child->delete();
                 }
+
                 return static::getByName($name);
             } else {
                 return static::add($name);
@@ -110,9 +114,9 @@ class Topic extends Tree
 
     protected function loadDetails()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $row = $db->GetRow('select treeID, topicTreeName from TopicTrees where treeID = ?', array($this->treeID));
-        if (is_array($row) && $row['treeID']) {
+        if (!empty($row)) {
             $this->setPropertiesFromArray($row);
 
             return $this;
@@ -121,14 +125,14 @@ class Topic extends Tree
 
     public function setTopicTreeName($name)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $db->Replace('TopicTrees', array('treeID' => $this->getTreeID(), 'topicTreeName' => $name), array('treeID'), true);
         $this->topicTreeName = $name;
     }
 
     public static function getList()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $treeIDs = $db->GetCol('select TopicTrees.treeID from TopicTrees inner join Trees on TopicTrees.treeID = Trees.treeID order by treeDateAdded asc');
         $trees = array();
         foreach ($treeIDs as $treeID) {
@@ -140,5 +144,4 @@ class Topic extends Tree
 
         return $trees;
     }
-
 }

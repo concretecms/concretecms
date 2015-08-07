@@ -39,11 +39,14 @@ class PresetColumn extends Column
     protected function getPresetColumnObject()
     {
         $preset = $this->getPresetObject();
-        $index = $this->getAreaLayoutColumnIndex();
-        $columns = $preset->getColumns();
-        if (isset($columns[$index])) {
-            return $columns[$index];
+        if (is_object($preset)) {
+            $index = $this->getAreaLayoutColumnIndex();
+            $columns = $preset->getColumns();
+            if (isset($columns[$index])) {
+                return $columns[$index];
+            }
         }
+        return new Element('div');
     }
 
     public function getColumnHtmlObject()

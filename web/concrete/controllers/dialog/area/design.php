@@ -65,10 +65,10 @@ class Design extends BackendPageController {
 
             if (is_object($set)) {
                 $pr->setAdditionalDataAttribute('issID', $set->getID());
-                $style = new CustomStyle($set, $this->area->getAreaHandle(), $this->page->getCollectionThemeObject());
+                $style = new CustomStyle($set, $this->area, $this->page->getCollectionThemeObject());
                 $css = $style->getCSS();
                 if ($css !== '') {
-                    $pr->setAdditionalDataAttribute('css', $style->getCSS());
+                    $pr->setAdditionalDataAttribute('css', $style->getStyleWrapper($style->getCSS()));
                 }
                 $pr->setAdditionalDataAttribute('containerClass', $style->getContainerClass());
             }

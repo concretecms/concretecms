@@ -375,7 +375,7 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
         return $node;
     }
 
-    public function importNode(\SimpleXMLElement $sx, $parent = false)
+    public static function importNode(\SimpleXMLElement $sx, $parent = false)
     {
         return static::add($parent);
     }
