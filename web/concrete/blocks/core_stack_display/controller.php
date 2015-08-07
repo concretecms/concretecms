@@ -140,9 +140,7 @@ class Controller extends BlockController
 
         //Block cache settings are only as good as the weakest cached item inside. So loop through and check.
         $btCacheBlockOutput = true;
-        $btCacheBlockOutputVaryOn = array();
         $btCacheBlockOutputOnPost = true;
-        $btCacheBlockOutputForRegisteredUsers = true;
         $btCacheBlockOutputLifetime = 0;
 
 
