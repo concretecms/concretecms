@@ -17,6 +17,7 @@ use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 use Config;
 use Loader;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
+use User;
 use Page;
 
 class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
@@ -213,6 +214,21 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         return $this->btCachedBlockRecord;
     }
 
+    public function useBlockCache()
+    {
+        $u = new User();
+
+        if (!$this->cacheBlockOutput()) {
+            return false;
+        } elseif ($u->isRegistered() && $this->cacheBlockOutputForRegisteredUsers() === false) {
+            return false;
+        } elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && $this->cacheBlockOutputOnPost() === false) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     public function getBlockCachedOutput($area)
     {
         $db = Loader::db();
@@ -229,13 +245,16 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
             $cvID = $c->getVersionID();
         }
 
+        $varyKey = $this->cacheBlockOutputVaryOnKey();
+
         $r = $db->GetRow(
-            'select btCachedBlockOutput, btCachedBlockOutputExpires from CollectionVersionBlocksOutputCache where cID = ? and cvID = ? and bID = ? and arHandle = ? ',
+            'select btCachedBlockOutput, btCachedBlockOutputExpires from CollectionVersionBlocksOutputCache where cID = ? and cvID = ? and bID = ? and arHandle = ? and varyKey = ? ',
             array(
                 $cID,
                 $cvID,
                 $this->getBlockID(),
                 $arHandle,
+                $varyKey
             )
         );
 
@@ -298,9 +317,11 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         $db = Loader::db();
         $c = $this->getBlockCollectionObject();
 
-        $btCachedBlockOutputExpires = strtotime('+5 years');
+        
         if ($lifetime > 0) {
             $btCachedBlockOutputExpires = time() + $lifetime;
+        } else {
+            $btCachedBlockOutputExpires = strtotime('+5 years');
         }
 
         $arHandle = $this->getAreaHandle();
@@ -313,6 +334,8 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
             $cvID = $cx->getVersionID();
         }
 
+        $varyKey = $this->cacheBlockOutputVaryOnKey();
+
         if ($arHandle && $cID && $cvID) {
             $db->Replace(
                'CollectionVersionBlocksOutputCache',
@@ -321,6 +344,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
                    'cvID' => $cvID,
                    'bID' => $this->getBlockID(),
                    'arHandle' => $arHandle,
+                   'varyKey' => $varyKey,
                    'btCachedBlockOutput' => $content,
                    'btCachedBlockOutputExpires' => $btCachedBlockOutputExpires,
                ),
@@ -329,6 +353,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
                    'cvID',
                    'arHandle',
                    'bID',
+                   'varyKey'
                ),
                true
             );
@@ -573,13 +598,14 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
             // custom cache
             if ($this->overrideBlockTypeCacheSettings()) {
                 $db->Execute(
-                   'insert into CollectionVersionBlocksCacheSettings (cID, cvID, bID, arHandle, btCacheBlockOutput, btCacheBlockOutputOnPost, btCacheBlockOutputForRegisteredUsers, btCacheBlockOutputLifetime) values (?, ?, ?, ?, ?, ?, ?, ?)',
+                   'insert into CollectionVersionBlocksCacheSettings (cID, cvID, bID, arHandle, btCacheBlockOutput, btCacheBlockOutputVaryOn, btCacheBlockOutputOnPost, btCacheBlockOutputForRegisteredUsers, btCacheBlockOutputLifetime) values (?, ?, ?, ?, ?, ?, ?, ?, ?)',
                    array(
                        $cID,
                        $cvID,
                        $this->bID,
                        $this->getAreaHandle(),
                        intval($this->cacheBlockOutput()),
+                       serialize($this->cacheBlockOutputVaryOn()),
                        intval($this->cacheBlockOutputOnPost()),
                        intval($this->cacheBlockOutputForRegisteredUsers()),
                        intval($this->getBlockOutputCacheLifetime()),
@@ -707,6 +733,19 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
     {
         $this->cbOverrideBlockTypeContainerSettings = true;
         $this->cbEnableBlockContainer = false;
+    }
+
+    public function cacheBlockOutputVaryOn()
+    {
+        $settings = $this->getBlockCacheSettingsObject();
+        return $settings->cacheBlockOutputVaryOn();
+    }
+
+    public function cacheBlockOutputVaryOnKey()
+    {
+        $settings = $this->getBlockCacheSettingsObject();
+
+        return $settings->cacheBlockOutputVaryOnKey();
     }
 
     public function cacheBlockOutputOnPost()
@@ -1034,6 +1073,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
                 'arHandle' => $this->getAreaHandle(),
                 'bID' => $this->bID,
                 'btCacheBlockOutput' => intval($enabled),
+                'btCacheBlockOutputVaryOn' => serialize($this->cacheBlockOutputVaryOn()),
                 'btCacheBlockOutputOnPost' => intval($enabledOnPost),
                 'btCacheBlockOutputForRegisteredUsers' => intval($enabledForRegistered),
                 'btCacheBlockOutputLifetime' => intval($lifetime),

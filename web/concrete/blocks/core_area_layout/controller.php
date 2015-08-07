@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Block\CoreAreaLayout;
 
 use Concrete\Core\Area\Layout\CustomLayout;
@@ -21,11 +21,12 @@ use Permissions;
 
 class Controller extends BlockController
 {
-
     protected $btSupportsInlineAdd = true;
     protected $btSupportsInlineEdit = true;
     protected $btTable = 'btCoreAreaLayout';
     protected $btIsInternal = true;
+    protected $btCacheBlockRecord = true;
+    protected $btCacheSettingsInitialized = false;
 
     public function getBlockTypeDescription()
     {
@@ -45,6 +46,92 @@ class Controller extends BlockController
         }
     }
 
+    protected function setupCacheSettings()
+    {
+        if ($this->btCacheSettingsInitialized || Page::getCurrentPage()->isEditMode()) {
+            return;
+        }
+
+        $this->btCacheSettingsInitialized = true;
+
+        //Block cache settings are only as good as the weakest cached item inside. So loop through and check.
+        $btCacheBlockOutput = true;
+        $btCacheBlockOutputVaryOn = array();
+        $btCacheBlockOutputOnPost = true;
+        $btCacheBlockOutputForRegisteredUsers = true;
+        $btCacheBlockOutputLifetime = 0;
+
+        $b = $this->getBlockObject();
+        $a = $b->getBlockAreaObject();
+        $this->arLayout = $this->getAreaLayoutObject();
+
+        $useBlockCache = true;
+
+        if (is_object($this->arLayout)) {
+            $this->arLayout->setAreaObject($a);
+            $columns = $this->arLayout->getAreaLayoutColumns();
+
+            foreach ($columns as $column) {
+                $sa = $column->getSubAreaObject();
+                $blocks = $sa->getAreaBlocksArray();
+
+                foreach ($blocks as $b) {
+                    $btCacheBlockOutput = $btCacheBlockOutput && $b->cacheBlockOutput();
+
+                    //As soon as we find something which cannot be cached, entire area cannot be cached, so stop checking.
+                    if (!$btCacheBlockOutput) {
+                        return;
+                    }
+
+                    $btCacheBlockOutputOnPost = $btCacheBlockOutputOnPost && $b->cacheBlockOutputOnPost();
+                    $btCacheBlockOutputForRegisteredUsers = $btCacheBlockOutputForRegisteredUsers && $b->cacheBlockOutputForRegisteredUsers();
+                    $btCacheBlockOutputVaryOn = array_merge($btCacheBlockOutputVaryOn, $b->cacheBlockOutputVaryOn());
+
+                    if ($expires = $b->getBlockOutputCacheLifetime()) {
+                        if ($expires && $btCacheBlockOutputLifetime < $expires) {
+                            $btCacheBlockOutputLifetime = $expires;
+                        }
+                    }
+                }
+            }
+        }
+
+        $this->btCacheBlockOutput = $btCacheBlockOutput;
+        $this->btCacheBlockOutputVaryOn = $btCacheBlockOutputVaryOn;
+        $this->btCacheBlockOutputOnPost = $btCacheBlockOutputOnPost;
+        $this->btCacheBlockOutputForRegisteredUsers = $btCacheBlockOutputForRegisteredUsers;
+        $this->btCacheBlockOutputLifetime = $btCacheBlockOutputLifetime;
+    }
+
+    public function cacheBlockOutput()
+    {
+        $this->setupCacheSettings();
+        return $this->btCacheBlockOutput;
+    }
+
+    public function cacheBlockOutputVaryOn()
+    {
+        $this->setupCacheSettings();
+        return $this->btCacheBlockOutputVaryOn;
+    }
+
+    public function cacheBlockOutputForRegisteredUsers()
+    {
+        $this->setupCacheSettings();
+        return $this->btCacheBlockOutputForRegisteredUsers;
+    }
+
+    public function cacheBlockOutputOnPost()
+    {
+        $this->setupCacheSettings();
+        return $this->btCacheBlockOutputOnPost;
+    }
+
+    public function getBlockTypeCacheOutputLifetime()
+    {
+        $this->setupCacheSettings();
+        return $this->btCacheBlockOutputLifetime;
+    }
 
     public function duplicate($newBID)
     {
@@ -92,7 +179,6 @@ class Controller extends BlockController
         if (!$arLayoutID) {
             $arLayout = $this->addFromPost($post);
         } else {
-
             $arLayout = AreaLayout::getByID($arLayoutID);
             if ($arLayout instanceof PresetLayout) {
                 return;
@@ -107,7 +193,6 @@ class Controller extends BlockController
                     $col->setAreaLayoutColumnSpan($span);
                     $col->setAreaLayoutColumnOffset($offset);
                 }
-
             } else {
                 $arLayout->setAreaLayoutColumnSpacing($post['spacing']);
                 if ($post['isautomated']) {
@@ -134,7 +219,7 @@ class Controller extends BlockController
         if (isset($blockNode->arealayout)) {
             $type = (string) $blockNode->arealayout['type'];
             $node = $blockNode->arealayout;
-            switch($type) {
+            switch ($type) {
                 case 'theme-grid':
                     $args['gridType'] = 'TG';
                     $args['arLayoutMaxColumns'] = (string) $node['columns'];
@@ -142,7 +227,7 @@ class Controller extends BlockController
                     $args['offset'] = array();
                     $args['span'] = array();
                     $i = 0;
-                    foreach($node->columns->column as $column) {
+                    foreach ($node->columns->column as $column) {
                         $args['span'][$i] = intval($column['span']);
                         $args['offset'][$i] = intval($column['offset']);
                         $i++;
@@ -159,7 +244,7 @@ class Controller extends BlockController
                     }
                     $args['width'] = array();
                     $i = 0;
-                    foreach($node->columns->column as $column) {
+                    foreach ($node->columns->column as $column) {
                         $args['width'][$i] = intval($column['width']);
                         $i++;
                     }
@@ -180,15 +265,15 @@ class Controller extends BlockController
         $page = $b->getBlockCollectionObject();
 
         $i = 0;
-        foreach($blockNode->arealayout->columns->column as $columnNode) {
+        foreach ($blockNode->arealayout->columns->column as $columnNode) {
             $column = $columns[$i];
             $as = new SubArea($column->getAreaLayoutColumnDisplayID(), $layoutArea->getAreaHandle(), $layoutArea->getAreaID());
             $as->load($page);
             $column->setAreaID($as->getAreaID());
             $area = $column->getAreaObject();
-            foreach($columnNode->block as $bx) {
+            foreach ($columnNode->block as $bx) {
                 $bt = \BlockType::getByHandle($bx['type']);
-                if(!is_object($bt)) {
+                if (!is_object($bt)) {
                     throw new \Exception(t('Invalid block type handle: %s', strval($bx['type'])));
                 }
                 $btc = $bt->getController();
@@ -229,7 +314,7 @@ class Controller extends BlockController
             default: // a preset
                 $arLayoutPreset = AreaLayoutPreset::getByID($post['arLayoutPresetID']);
                 $arLayout = PresetLayout::add($arLayoutPreset);
-                foreach($arLayoutPreset->getColumns() as $column) {
+                foreach ($arLayoutPreset->getColumns() as $column) {
                     $arLayout->addLayoutColumn();
                 }
                 break;
@@ -284,7 +369,7 @@ class Controller extends BlockController
             $this->set('themeGridMaxColumns', $this->arLayout->getAreaLayoutMaxColumns());
             $this->set('themeGridName', $gf->getPageThemeGridFrameworkName());
             $this->render("edit_grid");
-        } else if ($this->arLayout instanceof CustomLayout) {
+        } elseif ($this->arLayout instanceof CustomLayout) {
             $this->set('enableThemeGrid', false);
             $this->set('spacing', $this->arLayout->getAreaLayoutSpacing());
             $this->set('iscustom', $this->arLayout->hasAreaLayoutCustomColumnWidths());
@@ -297,7 +382,6 @@ class Controller extends BlockController
         }
         $this->set('columnsNum', count($this->arLayout->getAreaLayoutColumns()));
         $this->requireAsset('core/style-customizer');
-
     }
 
     public function add()
@@ -323,6 +407,4 @@ class Controller extends BlockController
         $this->set('maxColumns', $maxColumns);
         $this->requireAsset('core/style-customizer');
     }
-
-
 }
