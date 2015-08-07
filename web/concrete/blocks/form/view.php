@@ -53,13 +53,13 @@ while ($questionRow = $questionsRS->fetchRow()) {
 }
 
 //Prep thank-you message
-$success = ($_GET['surveySuccess'] && $_GET['qsid'] == intval($qsID));
+$success = (\Request::request('surveySuccess') && \Request::request('qsid') == intval($qsID));
 $thanksMsg = $survey->thankyouMsg;
 
 //Collate all errors and put them into divs
-$errorHeader = $formResponse;
-$errors = is_array($errors) ? $errors : array();
-if ($invalidIP) {
+$errorHeader = isset($formResponse) ? $formResponse : null;
+$errors = isset($errors) && is_array($errors) ? $errors : array();
+if (isset($invalidIP) && $invalidIP) {
 	$errors[] = $invalidIP;
 }
 $errorDivs = '';
@@ -130,7 +130,7 @@ $captcha = $surveyBlockInfo['displayCaptcha'] ? Loader::helper('validation/captc
 	</div>
 
 	<input name="qsID" type="hidden" value="<?php  echo $qsID; ?>" />
-	<input name="pURI" type="hidden" value="<?php  echo $pURI; ?>" />
+	<input name="pURI" type="hidden" value="<?php  echo isset($pURI) ? $pURI : ''; ?>" />
 	
 </form>
 </div><!-- .formblock -->
