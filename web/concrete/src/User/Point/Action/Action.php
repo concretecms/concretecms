@@ -230,11 +230,6 @@ class Action {
 		return Group::getByID($this->getUserPointActionBadgeGroupID());
 	}
 
-	public function addDetailedEntry($user, ActionDescription $descr, $points = false, $date = null)
-	{
-		$this->addEntry($user, $descr, $points, $date);
-	}
-
 	public function addEntry($user, ActionDescription $descr, $points = false, $date = null)
 	{
 		if (!$this->isUserPointActionActive()) {
