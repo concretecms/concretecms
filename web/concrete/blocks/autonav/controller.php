@@ -3,8 +3,8 @@
 namespace Concrete\Block\Autonav;
 
 use Concrete\Core\Block\BlockController;
-use Loader;
 use Core;
+use Database;
 use Page;
 use Permissions;
 
@@ -124,7 +124,7 @@ class Controller extends BlockController
     {
 
         // a quickie
-        $db = Loader::db();
+        $db = Database::connection();
         $r = $db->query(
                 "select cID from Pages where cParentID = ? order by cDisplayOrder asc",
                 array($c->getCollectionID()));
@@ -223,7 +223,7 @@ class Controller extends BlockController
             if ($_c->getAttribute('replace_link_with_first_in_nav')) {
                 $subPage = $_c->getFirstChild(); //Note: could be a rare bug here if first child was excluded, but this is so unlikely (and can be solved by moving it in the sitemap) that it's not worth the trouble to check
                 if ($subPage instanceof Page) {
-                    $pageLink = Loader::helper('navigation')->getLinkToCollection(
+                    $pageLink = Core::make('helper/navigation')->getLinkToCollection(
                                       $subPage); //We could optimize by instantiating the navigation helper outside the loop, but this is such an infrequent attribute that I prefer code clarity over performance in this case
                 }
             }
@@ -310,11 +310,11 @@ class Controller extends BlockController
         // Initialize Nav Array
         $this->navArray = array();
 
-        if (isset($this->displayPagesCID) && !Loader::helper('validation/numbers')->integer($this->displayPagesCID)) {
+        if (isset($this->displayPagesCID) && !Core::make('helper/validation/numbers')->integer($this->displayPagesCID)) {
             $this->displayPagesCID = 0;
         }
 
-        $db = Loader::db();
+        $db = Database::connection();
         // now we proceed, with information obtained either from the database, or passed manually from
         $orderBy = "";
         /*switch($this->orderBy) {
@@ -428,7 +428,7 @@ class Controller extends BlockController
                 $niRow['cvName'] = $tc1->getCollectionName();
                 $niRow['cID'] = HOME_CID;
                 $niRow['cvDescription'] = $tc1->getCollectionDescription();
-                $niRow['cPath'] = Loader::helper('navigation')->getLinkToCollection($tc1);
+                $niRow['cPath'] = Core::make('helper/navigation')->getLinkToCollection($tc1);
 
                 $ni = new NavItem($niRow, 0);
                 $ni->setCollectionObject($tc1);
@@ -519,7 +519,7 @@ class Controller extends BlockController
             }
         }
 
-        $db = Loader::db();
+        $db = Database::connection();
         $navSort = $this->navSort;
         $sorted_array = $this->sorted_array;
         $navObjectNames = $this->navObjectNames;
@@ -561,7 +561,7 @@ class Controller extends BlockController
                         $niRow['cvName'] = $tc->getCollectionName();
                         $niRow['cID'] = $row['cID'];
                         $niRow['cvDescription'] = $tc->getCollectionDescription();
-                        $niRow['cPath'] = Loader::helper('navigation')->getLinkToCollection($tc);
+                        $niRow['cPath'] = Core::make('helper/navigation')->getLinkToCollection($tc);
                         $niRow['cPointerExternalLink'] = $tc->getCollectionPointerExternalLink();
                         $niRow['cPointerExternalLinkNewWindow'] = $tc->openCollectionPointerExternalLinkInNewWindow();
                         $dateKey = strtotime($tc->getCollectionDatePublic());

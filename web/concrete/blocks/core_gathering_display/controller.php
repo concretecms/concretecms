@@ -2,8 +2,8 @@
 
 namespace Concrete\Block\CoreGatheringDisplay;
 
-use Loader;
 use Concrete\Core\Block\BlockController;
+use Core;
 
 /**
  * Displays an gathering stand-alone in a page.
@@ -37,7 +37,7 @@ class Controller extends BlockController
 
     public function view()
     {
-        Loader::helper('overlay')->init(false);
+        Core::make('helper/overlay')->init(false);
         $gathering = Gathering::getByID($this->gaID);
         if (is_object($gathering)) {
             $list = new GatheringItemList($gathering);

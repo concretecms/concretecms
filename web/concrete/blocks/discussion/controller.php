@@ -2,8 +2,9 @@
 
 namespace Concrete\Block\Discussion;
 
-use Loader;
 use Concrete\Core\Block\BlockController;
+use Core;
+use Database;
 
 class Controller extends BlockController
 {
@@ -23,7 +24,7 @@ class Controller extends BlockController
     public function getConversationDiscussionObject()
     {
         if (!isset($this->discussion)) {
-            $db = Loader::db();
+            $db = Database::connection();
             $cnvDiscussionID = $db->GetOne('select cnvDiscussionID from btDiscussion where bID = ?', array($this->bID));
             $this->discussion = ConversationDiscussion::getByID($cnvDiscussionID);
         }
@@ -45,7 +46,7 @@ class Controller extends BlockController
             if ($this->enableNewTopics && $this->ptID) {
                 $pt = PageType::getByID($this->ptID);
                 $this->set('pagetype', $pt);
-                Loader::helper('concrete/composer')->addAssetsToRequest($pt, $this);
+                Core::make('helper/concrete/composer')->addAssetsToRequest($pt, $this);
             }
 
             $c = Page::getCurrentPage();
@@ -93,7 +94,7 @@ class Controller extends BlockController
                     $d->saveForm();
                     $d->publish();
                     $nc = Page::getByID($d->getCollectionID(), 'RECENT');
-                    $link = Loader::helper('navigation')->getLinkToCollection($nc, true);
+                    $link = Core::make('helper/navigation')->getLinkToCollection($nc, true);
                     $r->setRedirectURL($link);
                 }
                 $r->outputJSON();
@@ -104,7 +105,7 @@ class Controller extends BlockController
 
     public function save($post)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $cnvID = $db->GetOne('select cnvDiscussionID from btDiscussion where bID = ?', array($this->bID));
         if (!$cnvID) {
             $c = Page::getCurrentPage();
