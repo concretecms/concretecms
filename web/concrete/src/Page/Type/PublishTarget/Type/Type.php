@@ -72,14 +72,20 @@ abstract class Type extends Object
     {
         $db = Database::connection();
         $r = $db->fetchAssoc(
-            'select ptPublishTargetTypeID, ptPublishTargetTypeHandle, ptPublishTargetTypeName, pkgID from PageTypePublishTargetTypes where ptPublishTargetTypeID = ?',
+            'select ptPublishTargetTypeID, ptPublishTargetTypeHandle, ptPublishTargetTypeName, pkgID
+                from PageTypePublishTargetTypes
+                where ptPublishTargetTypeID = ?',
             array($ptPublishTargetTypeID)
         );
         if (is_array($r) && $r['ptPublishTargetTypeHandle']) {
             $txt = Loader::helper('text');
-            $class = overrideable_core_class('Core\\Page\\Type\\PublishTarget\\Type\\'
-                . $txt->camelcase($r['ptPublishTargetTypeHandle']) . 'Type', DIRNAME_CLASSES . '/Page/Type/PublishTarget/Type/'
-                . $txt->camelcase($r['ptPublishTargetTypeHandle']) . '.php', PackageList::getHandle($r['pkgID']));
+            $class = overrideable_core_class(
+                'Core\\Page\\Type\\PublishTarget\\Type\\'
+                . $txt->camelcase($r['ptPublishTargetTypeHandle']) . 'Type',
+                DIRNAME_CLASSES . '/Page/Type/PublishTarget/Type/'
+                . $txt->camelcase($r['ptPublishTargetTypeHandle']) . '.php',
+                PackageList::getHandle($r['pkgID'])
+            );
 
             $sc = Core::make($class);
             $sc->setPropertiesFromArray($r);
@@ -92,13 +98,20 @@ abstract class Type extends Object
     {
         $db = Database::Connection();
         $r = $db->fetchAssoc(
-            'select ptPublishTargetTypeID, ptPublishTargetTypeHandle, ptPublishTargetTypeName, pkgID from PageTypePublishTargetTypes where ptPublishTargetTypeHandle = ?', array($ptPublishTargetTypeHandle)
+            'select ptPublishTargetTypeID, ptPublishTargetTypeHandle, ptPublishTargetTypeName, pkgID
+                from PageTypePublishTargetTypes
+                where ptPublishTargetTypeHandle = ?',
+            array($ptPublishTargetTypeHandle)
         );
         if (is_array($r) && $r['ptPublishTargetTypeHandle']) {
             $txt = Loader::helper('text');
-            $class = overrideable_core_class('Core\\Page\\Type\\PublishTarget\\Type\\'
-                . $txt->camelcase($r['ptPublishTargetTypeHandle']) . 'Type', DIRNAME_CLASSES . '/Page/Type/PublishTarget/Type/'
-                . $txt->camelcase($r['ptPublishTargetTypeHandle']) . '.php', PackageList::getHandle($r['pkgID']));
+            $class = overrideable_core_class(
+                'Core\\Page\\Type\\PublishTarget\\Type\\'
+                . $txt->camelcase($r['ptPublishTargetTypeHandle']) . 'Type',
+                DIRNAME_CLASSES . '/Page/Type/PublishTarget/Type/'
+                . $txt->camelcase($r['ptPublishTargetTypeHandle']) . '.php',
+                PackageList::getHandle($r['pkgID'])
+            );
 
             $sc = Core::make($class);
             $sc->setPropertiesFromArray($r);
@@ -122,7 +135,8 @@ abstract class Type extends Object
         }
         $db = Database::connection();
         $db->executeQuery(
-            'insert into PageTypePublishTargetTypes (ptPublishTargetTypeHandle, ptPublishTargetTypeName, pkgID) values (?, ?, ?)',
+            'insert into PageTypePublishTargetTypes (ptPublishTargetTypeHandle, ptPublishTargetTypeName, pkgID)
+            values (?, ?, ?)',
             array($ptPublishTargetTypeHandle, $ptPublishTargetTypeName, $pkgID)
         );
         return static::getByHandle($ptPublishTargetTypeHandle);
@@ -140,10 +154,10 @@ abstract class Type extends Object
     public static function getList()
     {
         $db = Database::connection();
-        $ids = $db->GetCol('select ptPublishTargetTypeID from PageTypePublishTargetTypes');
+        $ids = $db->fetchAll('select ptPublishTargetTypeID from PageTypePublishTargetTypes');
         $types = array();
         foreach ($ids as $id) {
-            $type = static::getByID($id);
+            $type = static::getByID($id)['ptPublishTargetTypeID'];
             if (is_object($type)) {
                 $types[] = $type;
             }
@@ -192,7 +206,6 @@ abstract class Type extends Object
         $nxml = $xml->addChild('pagetypepublishtargettypes');
 
         foreach ($list as $sc) {
-            $activated = 0;
             $type = $nxml->addChild('type');
             $type->addAttribute('handle', $sc->getPageTypePublishTargetTypeHandle());
             $type->addAttribute('name', $sc->getPageTypePublishTargetTypeName());
