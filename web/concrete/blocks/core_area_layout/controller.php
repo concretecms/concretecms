@@ -6,7 +6,8 @@ use Concrete\Core\Area\Layout\CustomLayout;
 use Concrete\Core\Area\Layout\PresetLayout;
 use Concrete\Core\Area\Layout\ThemeGridLayout;
 use Concrete\Core\Area\SubArea;
-use Loader;
+use Core;
+use Database;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Area\Layout\Layout as AreaLayout;
 use Concrete\Core\Area\Layout\Preset\Preset as AreaLayoutPreset;
@@ -43,7 +44,7 @@ class Controller extends BlockController
 
     public function duplicate($newBID)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         parent::duplicate($newBID);
         $ar = AreaLayout::getByID($this->arLayoutID);
         $nr = $ar->duplicate();
@@ -83,7 +84,7 @@ class Controller extends BlockController
 
     public function save($post)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $arLayoutID = $db->GetOne('select arLayoutID from btCoreAreaLayout where bID = ?', array($this->bID));
         if (!$arLayoutID) {
             $arLayout = $this->addFromPost($post);
@@ -266,7 +267,7 @@ class Controller extends BlockController
 
     public function edit()
     {
-        $this->addHeaderItem(Loader::helper('html')->javascript('layouts.js'));
+        $this->addHeaderItem(Core::make('helper/html')->javascript('layouts.js'));
         $this->view();
         // since we set a render override in view() we have to explicitly declare edit
         if ($this->arLayout->isAreaLayoutUsingThemeGridFramework()) {
@@ -297,7 +298,7 @@ class Controller extends BlockController
 
     public function add()
     {
-        $this->addHeaderItem(Loader::helper('html')->javascript('layouts.js'));
+        $this->addHeaderItem(Core::make('helper/html')->javascript('layouts.js'));
         $maxColumns = 12; // normally
         // now we check our active theme and see if it has other plans
         $c = Page::getCurrentPage();

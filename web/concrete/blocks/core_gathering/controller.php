@@ -2,9 +2,9 @@
 
 namespace Concrete\Block\CoreGathering;
 
-use Loader;
 use Concrete\Core\Gathering\Gathering;
 use Concrete\Core\Block\BlockController;
+use Database;
 
 class Controller extends BlockController
 {
@@ -27,7 +27,7 @@ class Controller extends BlockController
         $ni = parent::duplicate($newBID);
         $ag = Gathering::getByID($this->gaID);
         $nr = $ag->duplicate();
-        $db = Loader::db();
+        $db = Database::connection();
         $db->Execute('update btCoreGathering set gaID = ? where bID = ?', array($nr->getGatheringID(), $ni->bID));
     }
 
@@ -49,8 +49,8 @@ class Controller extends BlockController
     {
         if (!isset($this->gathering)) {
             // i don't know why this->cnvid isn't sticky in some cases, leading us to query
-                // every damn time
-                $db = Loader::db();
+            // every damn time
+            $db = Database::connection();
             $agID = $db->GetOne('select gaID from btCoreGathering where bID = ?', array($this->bID));
             $this->gathering = Gathering::getByID($agID);
         }
@@ -92,7 +92,7 @@ class Controller extends BlockController
                     $d->saveForm();
                     $d->publish();
                     $nc = Page::getByID($d->getCollectionID(), 'RECENT');
-                    $link = Loader::helper('navigation')->getLinkToCollection($nc, true);
+                    $link = Core::make('helper/navigation')->getLinkToCollection($nc, true);
                     $r->setRedirectURL($link);
                 }
                 $r->outputJSON();
@@ -103,7 +103,7 @@ class Controller extends BlockController
 
     public function save($args)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $agID = $db->GetOne('select gaID from btCoreGathering where bID = ?', array($this->bID));
         if (!$agID) {
             $ag = Gathering::add();
@@ -182,10 +182,10 @@ class Controller extends BlockController
         if ($this->gaID) {
             $gathering = Gathering::getByID($this->gaID);
             if (is_object($gathering)) {
-                Loader::helper('overlay')->init(false);
+                Core::make('helper/overlay')->init(false);
                 if ($this->enablePostingFromGathering && $this->ptID) {
                     $pt = PageType::getByID($this->ptID);
-                    Loader::helper('concrete/composer')->addAssetsToRequest($pt, $this);
+                    Core::make('helper/concrete/composer')->addAssetsToRequest($pt, $this);
                     $p = new Permissions($pt);
                     if ($p->canEditPageTypeInComposer()) {
                         $this->set('pagetype', $pt);
