@@ -104,7 +104,7 @@
             height: '100%',
             href: CCM_TOOLS_PATH + '/sitemap_search_selector',
             modal: true,
-            title: ccmi18n_filemanager.title,
+            title: ccmi18n_sitemap.pageLocationTitle,
             onClose: function() {
                 ConcreteEvent.fire('PageSelectorClose');
             },
