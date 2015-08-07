@@ -91,7 +91,7 @@ class Files extends Controller
 
         if (isset($req['fExtension']) && $req['fExtension'] != '') {
             $ext = $_GET['fExtension'];
-            $fileList->filterByExtension($ext);
+            $this->fileList->filterByExtension($ext);
         }
 
         $selectedSets = array();
