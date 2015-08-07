@@ -110,14 +110,14 @@ class Controller extends BlockController
         return ($numRows > 0);
     }
 
-    public function cacheBlockOutput() {
-        if($this->btCacheBlockOutput === null) {
-            $this->btCacheBlockOutput = ( ($this->postTo_cID !== '' || $this->resultsURL !== '') && empty($_REQUEST['query']) );
+    public function cacheBlockOutput()
+    {
+        if ($this->btCacheBlockOutput === null) {
+            $this->btCacheBlockOutput = (($this->postTo_cID !== '' || $this->resultsURL !== '') && empty($_REQUEST['query']));
         }
 
         return $this->btCacheBlockOutput;
     }
-
 
     public function view()
     {
