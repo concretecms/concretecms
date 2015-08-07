@@ -25,7 +25,7 @@ class Controller extends BlockController
     protected $btCacheBlockOutputOnPost = true;
     protected $btSupportsInlineEdit = true;
     protected $btSupportsInlineAdd = true;
-    protected $btCacheBlockOutputForRegisteredUsers = false;
+    protected $btCacheBlockOutputForRegisteredUsers = true;
     protected $btCacheBlockOutputLifetime = 0; //until manually updated or cleared
 
     public function getBlockTypeDescription()
