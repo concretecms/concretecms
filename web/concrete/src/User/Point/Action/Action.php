@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\User\Point\Action;
 
-use Loader;
+use Database;
 use Environment;
 use Concrete\Core\Package\PackageList;
 use Group;
@@ -21,14 +21,14 @@ class Action
 
     public function load($upaID)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $row = $db->GetRow('select * from UserPointActions where upaID = ?', array($upaID));
         $this->setDataFromArray($row);
     }
 
     public function delete()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $db->delete('UserPointActions', array('upaID' => $this->upaID));
     }
 
@@ -39,7 +39,7 @@ class Action
      */
     public static function getByID($upaID)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $row = $db->getRow("SELECT * FROM UserPointActions WHERE upaID = ?", array($upaID));
         if ($row['upaID']) {
             $upa = static::getClass($row);
@@ -53,7 +53,7 @@ class Action
     {
         $standardClass = '\\Concrete\Core\\User\\Point\\Action\\Action';
         if ($row['upaHasCustomClass']) {
-            $handleClass = \Loader::helper('text')->camelcase($row['upaHandle']) . 'Action';
+            $handleClass = Core::make('helper/text')->camelcase($row['upaHandle']) . 'Action';
             $pkgHandle = PackageList::getHandle($row['pkgID']);
             $customClass = overrideable_core_class(
                 'Core\\User\\Point\\Action\\' . $handleClass,
@@ -79,7 +79,7 @@ class Action
      */
     public static function getListByPackage($pkg)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $upaIDs = $db->GetCol('select upaID from UserPointActions where pkgID = ? order by upaName asc', array($pkg->getPackageID()));
         $actions = array();
         foreach ($upaIDs as $upaID) {
@@ -99,7 +99,7 @@ class Action
      */
     public static function getByHandle($upaHandle)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $row = $db->getRow("SELECT * FROM UserPointActions WHERE upaHandle = ?", array($upaHandle));
         if ($row['upaID']) {
             $upa = static::getClass($row);
@@ -294,7 +294,7 @@ class Action
 
     public function save()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         if ($this->upaID) {
             $db->update('UserPointActions', array(
                 'upaHandle' => $this->upaHandle,
