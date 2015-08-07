@@ -26,7 +26,7 @@ class QueryLog extends DashboardPageController {
     {
         $this->set('query', h($query));
         $this->set('parameters', Logger::getParametersForQuery($query));
-        $this->setThemeViewTemplate('dialog.php');
+        $this->setTheme(false);
     }
 
     public function clear()
