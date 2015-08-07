@@ -160,12 +160,12 @@ abstract class Column extends Object implements ColumnInterface
                 $this->setAreaID($as->getAreaID());
             }
             $as->setSubAreaBlockObject($this->arLayout->getBlockObject());
+
             return $as;
         } else {
             return null;
         }
     }
-
 
     /**
      * @return int
