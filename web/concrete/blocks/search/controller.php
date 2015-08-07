@@ -130,7 +130,7 @@ class Controller extends BlockController
         $this->set('resultTargetURL', $resultsURL);
 
         //run query if display results elsewhere not set, or the cID of this page is set
-        if ($this->postTo_cID == '') {
+        if ($this->postTo_cID == '' && $this->resultsURL == '') {
             if (!empty($_REQUEST['query']) || isset($_REQUEST['akID']) || isset($_REQUEST['month'])) {
                 $this->do_search();
             }
