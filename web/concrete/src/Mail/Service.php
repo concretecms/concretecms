@@ -264,7 +264,7 @@ class Service
             $v = $arr[$i];
             if (isset($v[1])) {
                 $str .= '"'.$v[1].'" <'.$v[0].'>';
-            } else {
+            } elseif (isset($v[0])) {
                 $str .= $v[0];
             }
             if (($i + 1) < count($arr)) {

@@ -161,7 +161,7 @@ class Form
         }
 
         $checked = false;
-        if ($isChecked && (!isset($_REQUEST[$_field])) && ($_SERVER['REQUEST_METHOD'] != 'POST')) {
+        if ($isChecked && \Request::request($_field) === null && !\Request::isPost()) {
             $checked = true;
         } else {
             $requestValue = $this->getRequestValue($key);
@@ -435,14 +435,17 @@ class Form
         if (is_array($requestValue) && isset($requestValue[0]) && is_string($requestValue[0])) {
             $selectedValue = (string) $requestValue[0];
         } elseif ($requestValue !== false) {
-            $selectedValue = (string) $requestValue;
+            if (!is_array($requestValue)) {
+                $selectedValue = (string)$requestValue;
+            } else {
+                $selectedValue = '';
+            }
         }
         if (substr($key, -2) == '[]') {
             $_key = substr($key, 0, -2);
             $id = $_key . $this->selectIndex;
             $this->selectIndex++;
         } else {
-            $_key = $key;
             $id = $key;
         }
         $str = '<select id="' . $id . '" name="' . $key . '"' . $this->parseMiscFields('form-control', $miscFields) . '>';
