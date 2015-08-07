@@ -4,6 +4,8 @@ namespace Concrete\Block\CoreStackDisplay;
 use Stack;
 use Permissions;
 use Loader;
+use Page;
+
 /**
  * The controller for the stack display block. This is an internal proxy block that is inserted when a stack's contents are displayed in a page.
  *
@@ -22,6 +24,7 @@ class Controller extends BlockController
     protected $btCacheBlockRecord = true;
     protected $btTable = 'btCoreStackDisplay';
     protected $btIsInternal = true;
+    protected $btCacheSettingsInitialized = false;
 
     public function getBlockTypeDescription()
     {
@@ -127,5 +130,67 @@ class Controller extends BlockController
         }
     }
 
+    protected function setupCacheSettings() 
+	{
+        if($this->btCacheSettingsInitialized || Page::getCurrentPage()->isEditMode()) {
+            return;
+        }
 
+        $this->btCacheSettingsInitialized = true;
+
+        //Block cache settings are only as good as the weakest cached item inside. So loop through and check.
+        $btCacheBlockOutput = true;
+        $btCacheBlockOutputVaryOn = array();
+        $btCacheBlockOutputOnPost = true;
+        $btCacheBlockOutputForRegisteredUsers = true;
+        $btCacheBlockOutputLifetime = 0;
+
+
+        $stack = Stack::getByID($this->stID);
+        if (!is_object($stack)) {
+            return false;
+        }
+
+        $p = new Permissions($stack);
+        if ($p->canViewPage()) {
+            $blocks = $stack->getBlocks();
+            foreach ($blocks as $b) {
+                $btCacheBlockOutput = $btCacheBlockOutput && $b->cacheBlockOutput();
+                $btCacheBlockOutputOnPost = $btCacheBlockOutputOnPost && $b->cacheBlockOutputOnPost();
+
+                //As soon as we find something which cannot be cached, entire block cannot be cached, so stop checking.
+                if(!$btCacheBlockOutput) {
+                    return;
+                }
+
+                if($expires = $b->getBlockOutputCacheLifetime()) {
+                    if($expires && $btCacheBlockOutputLifetime < $expires) {
+                        $btCacheBlockOutputLifetime = $expires;
+                    }
+                }
+            }
+        }
+
+        $this->btCacheBlockOutput = $btCacheBlockOutput;
+        $this->btCacheBlockOutputOnPost = $btCacheBlockOutputOnPost;
+        $this->btCacheBlockOutputLifetime = $btCacheBlockOutputLifetime;
+    }
+
+    public function cacheBlockOutput()
+    {
+        $this->setupCacheSettings();
+        return $this->btCacheBlockOutput;
+    }
+
+    public function cacheBlockOutputOnPost()
+    {
+        $this->setupCacheSettings();
+        return $this->btCacheBlockOutputOnPost;
+    }
+
+    public function getBlockTypeCacheOutputLifetime()
+    {
+        $this->setupCacheSettings();
+        return $this->btCacheBlockOutputLifetime;
+    }
 }
