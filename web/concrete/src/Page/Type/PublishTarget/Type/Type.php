@@ -157,7 +157,7 @@ abstract class Type extends Object
         $ids = $db->fetchAll('select ptPublishTargetTypeID from PageTypePublishTargetTypes');
         $types = array();
         foreach ($ids as $id) {
-            $type = static::getByID($id)['ptPublishTargetTypeID'];
+            $type = static::getByID($id['ptPublishTargetTypeID']);
             if (is_object($type)) {
                 $types[] = $type;
             }
