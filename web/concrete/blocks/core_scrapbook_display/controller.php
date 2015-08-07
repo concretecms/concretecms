@@ -150,4 +150,40 @@ class Controller extends BlockController
 
     }
 
+    public function cacheBlockOutput()
+    {
+        $bc = $this->getScrapbookBlockController();
+
+        if($bc) {
+            return $bc->cacheBlockOutput();
+        }
+    }
+
+    public function cacheBlockOutputForRegisteredUsers()
+    {
+        $bc = $this->getScrapbookBlockController();
+
+        if($bc) {
+            return $bc->cacheBlockOutputForRegisteredUsers();
+        }
+    }
+
+    public function cacheBlockOutputOnPost()
+    {
+        $bc = $this->getScrapbookBlockController();
+
+        if($bc) {
+            return $bc->cacheBlockOutputOnPost();
+        }
+    }
+
+    public function getBlockTypeCacheOutputLifetime()
+    {
+        $bc = $this->getScrapbookBlockController();
+
+        if($bc) {
+            return $bc->getBlockTypeCacheOutputLifetime();
+        }
+    }
+
 }
