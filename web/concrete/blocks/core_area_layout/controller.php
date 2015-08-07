@@ -1,27 +1,23 @@
-<?
+<?php
+
 namespace Concrete\Block\CoreAreaLayout;
 
 use Concrete\Core\Area\Layout\CustomLayout;
 use Concrete\Core\Area\Layout\PresetLayout;
 use Concrete\Core\Area\Layout\ThemeGridLayout;
 use Concrete\Core\Area\SubArea;
-use Concrete\Core\Block\CustomStyle;
-use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 use Loader;
-use \Concrete\Core\Block\BlockController;
-use \Concrete\Core\Area\Layout\Layout as AreaLayout;
-use \Concrete\Core\Area\Layout\Preset\Preset as AreaLayoutPreset;
-use \Concrete\Core\Area\Layout\CustomLayout as CustomAreaLayout;
-use \Concrete\Core\Area\Layout\ThemeGridLayout as ThemeGridAreaLayout;
-use \Concrete\Core\Asset\CssAsset;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Concrete\Core\Block\BlockController;
+use Concrete\Core\Area\Layout\Layout as AreaLayout;
+use Concrete\Core\Area\Layout\Preset\Preset as AreaLayoutPreset;
+use Concrete\Core\Area\Layout\CustomLayout as CustomAreaLayout;
+use Concrete\Core\Area\Layout\ThemeGridLayout as ThemeGridAreaLayout;
+use Concrete\Core\Asset\CssAsset;
 use URL;
 use Page;
-use Permissions;
 
 class Controller extends BlockController
 {
-
     protected $btSupportsInlineAdd = true;
     protected $btSupportsInlineEdit = true;
     protected $btTable = 'btCoreAreaLayout';
@@ -47,7 +43,6 @@ class Controller extends BlockController
         }
     }
 
-
     public function duplicate($newBID)
     {
         $db = Loader::db();
@@ -68,6 +63,7 @@ class Controller extends BlockController
             if (is_object($b)) {
                 $arLayout->setBlockObject($b);
             }
+
             return $arLayout;
         }
     }
@@ -94,7 +90,6 @@ class Controller extends BlockController
         if (!$arLayoutID) {
             $arLayout = $this->addFromPost($post);
         } else {
-
             $arLayout = AreaLayout::getByID($arLayoutID);
             if ($arLayout instanceof PresetLayout) {
                 return;
@@ -102,14 +97,13 @@ class Controller extends BlockController
             // save spacing
             if ($arLayout->isAreaLayoutUsingThemeGridFramework()) {
                 $columns = $arLayout->getAreaLayoutColumns();
-                for ($i = 0; $i < count($columns); $i++) {
+                for ($i = 0; $i < count($columns); ++$i) {
                     $col = $columns[$i];
                     $span = ($post['span'][$i]) ? $post['span'][$i] : 0;
                     $offset = ($post['offset'][$i]) ? $post['offset'][$i] : 0;
                     $col->setAreaLayoutColumnSpan($span);
                     $col->setAreaLayoutColumnOffset($offset);
                 }
-
             } else {
                 $arLayout->setAreaLayoutColumnSpacing($post['spacing']);
                 if ($post['isautomated']) {
@@ -117,7 +111,7 @@ class Controller extends BlockController
                 } else {
                     $arLayout->enableAreaLayoutCustomColumnWidths();
                     $columns = $arLayout->getAreaLayoutColumns();
-                    for ($i = 0; $i < count($columns); $i++) {
+                    for ($i = 0; $i < count($columns); ++$i) {
                         $col = $columns[$i];
                         $width = ($post['width'][$i]) ? $post['width'][$i] : 0;
                         $col->setAreaLayoutColumnWidth($width);
@@ -136,7 +130,7 @@ class Controller extends BlockController
         if (isset($blockNode->arealayout)) {
             $type = (string) $blockNode->arealayout['type'];
             $node = $blockNode->arealayout;
-            switch($type) {
+            switch ($type) {
                 case 'theme-grid':
                     $args['gridType'] = 'TG';
                     $args['arLayoutMaxColumns'] = (string) $node['columns'];
@@ -144,10 +138,10 @@ class Controller extends BlockController
                     $args['offset'] = array();
                     $args['span'] = array();
                     $i = 0;
-                    foreach($node->columns->column as $column) {
+                    foreach ($node->columns->column as $column) {
                         $args['span'][$i] = intval($column['span']);
                         $args['offset'][$i] = intval($column['offset']);
-                        $i++;
+                        ++$i;
                     }
                     break;
                 case 'custom':
@@ -161,13 +155,14 @@ class Controller extends BlockController
                     }
                     $args['width'] = array();
                     $i = 0;
-                    foreach($node->columns->column as $column) {
+                    foreach ($node->columns->column as $column) {
                         $args['width'][$i] = intval($column['width']);
-                        $i++;
+                        ++$i;
                     }
                     break;
             }
         }
+
         return $args;
     }
 
@@ -182,21 +177,21 @@ class Controller extends BlockController
         $page = $b->getBlockCollectionObject();
 
         $i = 0;
-        foreach($blockNode->arealayout->columns->column as $columnNode) {
+        foreach ($blockNode->arealayout->columns->column as $columnNode) {
             $column = $columns[$i];
             $as = new SubArea($column->getAreaLayoutColumnDisplayID(), $layoutArea->getAreaHandle(), $layoutArea->getAreaID());
             $as->load($page);
             $column->setAreaID($as->getAreaID());
             $area = $column->getAreaObject();
-            foreach($columnNode->block as $bx) {
+            foreach ($columnNode->block as $bx) {
                 $bt = \BlockType::getByHandle($bx['type']);
-                if(!is_object($bt)) {
+                if (!is_object($bt)) {
                     throw new \Exception(t('Invalid block type handle: %s', strval($bx['type'])));
                 }
                 $btc = $bt->getController();
                 $btc->import($page, $area->getAreaHandle(), $bx);
             }
-            $i++;
+            ++$i;
         }
     }
 
@@ -207,7 +202,7 @@ class Controller extends BlockController
             case 'TG':
                 $arLayout = ThemeGridAreaLayout::add();
                 $arLayout->setAreaLayoutMaxColumns($post['arLayoutMaxColumns']);
-                for ($i = 0; $i < $post['themeGridColumns']; $i++) {
+                for ($i = 0; $i < $post['themeGridColumns']; ++$i) {
                     $span = ($post['span'][$i]) ? $post['span'][$i] : 0;
                     $offset = ($post['offset'][$i]) ? $post['offset'][$i] : 0;
                     $column = $arLayout->addLayoutColumn();
@@ -222,7 +217,7 @@ class Controller extends BlockController
                     $iscustom = 0;
                 }
                 $arLayout = CustomAreaLayout::add($post['spacing'], $iscustom);
-                for ($i = 0; $i < $post['columns']; $i++) {
+                for ($i = 0; $i < $post['columns']; ++$i) {
                     $width = ($post['width'][$i]) ? $post['width'][$i] : 0;
                     $column = $arLayout->addLayoutColumn();
                     $column->setAreaLayoutColumnWidth($width);
@@ -231,11 +226,12 @@ class Controller extends BlockController
             default: // a preset
                 $arLayoutPreset = AreaLayoutPreset::getByID($post['arLayoutPresetID']);
                 $arLayout = PresetLayout::add($arLayoutPreset);
-                foreach($arLayoutPreset->getColumns() as $column) {
+                foreach ($arLayoutPreset->getColumns() as $column) {
                     $arLayout->addLayoutColumn();
                 }
                 break;
         }
+
         return $arLayout;
     }
 
@@ -286,7 +282,7 @@ class Controller extends BlockController
             $this->set('themeGridMaxColumns', $this->arLayout->getAreaLayoutMaxColumns());
             $this->set('themeGridName', $gf->getPageThemeGridFrameworkName());
             $this->render("edit_grid");
-        } else if ($this->arLayout instanceof CustomLayout) {
+        } elseif ($this->arLayout instanceof CustomLayout) {
             $this->set('enableThemeGrid', false);
             $this->set('spacing', $this->arLayout->getAreaLayoutSpacing());
             $this->set('iscustom', $this->arLayout->hasAreaLayoutCustomColumnWidths());
@@ -299,7 +295,6 @@ class Controller extends BlockController
         }
         $this->set('columnsNum', count($this->arLayout->getAreaLayoutColumns()));
         $this->requireAsset('core/style-customizer');
-
     }
 
     public function add()
@@ -377,18 +372,21 @@ class Controller extends BlockController
     public function cacheBlockOutput()
     {
         $this->setupCacheSettings();
+
         return $this->btCacheBlockOutput;
     }
 
     public function cacheBlockOutputOnPost()
     {
         $this->setupCacheSettings();
+
         return $this->btCacheBlockOutputOnPost;
     }
 
     public function getBlockTypeCacheOutputLifetime()
     {
         $this->setupCacheSettings();
+
         return $this->btCacheBlockOutputLifetime;
     }
 }
