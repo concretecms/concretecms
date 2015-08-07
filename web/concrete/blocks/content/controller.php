@@ -27,7 +27,6 @@ class Controller extends BlockController
     protected $btSupportsInlineAdd = true;
     protected $btCacheBlockOutputForRegisteredUsers = false;
     protected $btCacheBlockOutputLifetime = 0; //until manually updated or cleared
-    public $content;
 
     public function getBlockTypeDescription()
     {
@@ -98,7 +97,9 @@ class Controller extends BlockController
 
     public function save($args)
     {
-        $args['content'] = LinkAbstractor::translateTo($args['content']);
+        if(isset($args['content'])) {
+            $args['content'] = LinkAbstractor::translateTo($args['content']);
+        }
         parent::save($args);
     }
 }
