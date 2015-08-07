@@ -1,17 +1,19 @@
 <?php
+
 namespace Concrete\Attribute\Address;
 
-use Loader;
-use \Concrete\Core\Attribute\Controller as AttributeTypeController;
+use Concrete\Core\Attribute\Controller as AttributeTypeController;
+use Core;
+use Database;
 
 class Controller extends AttributeTypeController
 {
-
     public $helpers = array('form');
 
     public function searchKeywords($keywords, $queryBuilder)
     {
         $h = $this->attributeKey->getAttributeKeyHandle();
+
         return $queryBuilder->expr()->orX(
             $queryBuilder->expr()->like("ak_{$h}_address1", ':keywords'),
             $queryBuilder->expr()->like("ak_{$h}_address2", ':keywords'),
@@ -50,30 +52,31 @@ class Controller extends AttributeTypeController
         if ($country) {
             $list->filter('ak_' . $akHandle . '_country', $country);
         }
+
         return $list;
     }
 
     protected $searchIndexFieldDefinition = array(
         'address1' => array(
             'type' => 'string',
-            'options' => array('length' => '255', 'default' => '', 'notnull' => false)
+            'options' => array('length' => '255', 'default' => '', 'notnull' => false),
         ),
         'address2' => array(
             'type' => 'string',
-            'options' => array('length' => '255', 'default' => '', 'notnull' => false)
+            'options' => array('length' => '255', 'default' => '', 'notnull' => false),
         ),
         'city' => array('type' => 'string', 'options' => array('length' => '255', 'default' => '', 'notnull' => false)),
         'state_province' => array(
             'type' => 'string',
-            'options' => array('length' => '255', 'default' => '', 'notnull' => false)
+            'options' => array('length' => '255', 'default' => '', 'notnull' => false),
         ),
         'country' => array(
             'type' => 'string',
-            'options' => array('length' => '255', 'default' => '', 'notnull' => false)
+            'options' => array('length' => '255', 'default' => '', 'notnull' => false),
         ),
         'postal_code' => array(
             'type' => 'string',
-            'options' => array('length' => '255', 'default' => '', 'notnull' => false)
+            'options' => array('length' => '255', 'default' => '', 'notnull' => false),
         ),
     );
 
@@ -119,12 +122,13 @@ class Controller extends AttributeTypeController
         $args['state_province'] = $v->getStateProvince();
         $args['country'] = $v->getCountry();
         $args['postal_code'] = $v->getPostalCode();
+
         return $args;
     }
 
     public function deleteKey()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $arr = $this->attributeKey->getAttributeValueIDList();
         foreach ($arr as $id) {
             $db->Execute('delete from atAddress where avID = ?', array($id));
@@ -133,15 +137,15 @@ class Controller extends AttributeTypeController
 
     public function deleteValue()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $db->Execute('delete from atAddress where avID = ?', array($this->getAttributeValueID()));
     }
 
     public function saveValue($data)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         if ($data instanceof Value) {
-            $data = (array)$data;
+            $data = (array) $data;
         }
         extract($data);
         $db->Replace(
@@ -153,7 +157,7 @@ class Controller extends AttributeTypeController
                 'city' => $city,
                 'state_province' => $state_province,
                 'country' => $country,
-                'postal_code' => $postal_code
+                'postal_code' => $postal_code,
             ),
             'avID',
             true
@@ -163,19 +167,21 @@ class Controller extends AttributeTypeController
     public function getValue()
     {
         $val = Value::getByID($this->getAttributeValueID());
+
         return $val;
     }
 
     public function getDisplayValue()
     {
-        $v = Loader::helper('text')->entities($this->getValue());
+        $v = Core::make('helper/text')->entities($this->getValue());
         $ret = nl2br($v);
+
         return $ret;
     }
 
     public function action_load_provinces_js()
     {
-        $h = Loader::helper('lists/states_provinces');
+        $h = Core::make('helper/lists/states_provinces');
         print "var ccm_attributeTypeAddressStatesTextList = '\\\n";
         $all = $h->getAll();
         foreach ($all as $country => $countries) {
@@ -186,7 +192,7 @@ class Controller extends AttributeTypeController
         print "'";
     }
 
-    public function validateKey($data)
+    public function validateKey($data = false)
     {
         $e = parent::validateKey($data);
 
@@ -219,7 +225,7 @@ class Controller extends AttributeTypeController
     public function duplicateKey($newAK)
     {
         $this->load();
-        $db = Loader::db();
+        $db = Database::connection();
         $db->Execute(
             'insert into atAddressSettings (akID, akHasCustomCountries, akDefaultCountry) values (?, ?, ?)',
             array($newAK->getAttributeKeyID(), $this->akHasCustomCountries, $this->akDefaultCountry)
@@ -246,10 +252,11 @@ class Controller extends AttributeTypeController
                 $countries->addChild('country', $country);
             }
         }
+
         return $akey;
     }
 
-    public function exportValue($akn)
+    public function exportValue(\SimpleXMLElement $akn)
     {
         $avn = $akn->addChild('value');
         $address = $this->getValue();
@@ -270,6 +277,7 @@ class Controller extends AttributeTypeController
             $data['state_province'] = $akv->value['state-province'];
             $data['country'] = $akv->value['country'];
             $data['postal_code'] = $akv->value['postal-code'];
+
             return $data;
         }
     }
@@ -281,7 +289,7 @@ class Controller extends AttributeTypeController
             $data['akDefaultCountry'] = $akey->type['default-country'];
             if (isset($akey->type->countries)) {
                 foreach ($akey->type->countries->children() as $country) {
-                    $data['akCustomCountries'][] = (string)$country;
+                    $data['akCustomCountries'][] = (string) $country;
                 }
             }
             $this->saveKey($data);
@@ -290,10 +298,10 @@ class Controller extends AttributeTypeController
 
     public function saveKey($data)
     {
-        $e = Loader::helper('validation/error');
+        $e = Core::make('helper/validation/error');
 
         $ak = $this->getAttributeKey();
-        $db = Loader::db();
+        $db = Database::connection();
 
         $akCustomCountries = $data['akCustomCountries'];
         $akHasCustomCountries = $data['akHasCustomCountries'];
@@ -309,7 +317,7 @@ class Controller extends AttributeTypeController
                 array(
                     'akID' => $ak->getAttributeKeyID(),
                     'akHasCustomCountries' => $akHasCustomCountries,
-                    'akDefaultCountry' => $data['akDefaultCountry']
+                    'akDefaultCountry' => $data['akDefaultCountry'],
                 ),
                 array('akID'),
                 true
@@ -336,7 +344,7 @@ class Controller extends AttributeTypeController
             return false;
         }
 
-        $db = Loader::db();
+        $db = Database::connection();
         $row = $db->GetRow(
             'select akHasCustomCountries, akDefaultCountry from atAddressSettings where akID = ?',
             array($ak->getAttributeKeyID())
@@ -373,11 +381,10 @@ class Controller extends AttributeTypeController
             $this->set('country', $value->getCountry());
             $this->set('postal_code', $value->getPostalCode());
         }
-        $this->addFooterItem(Loader::helper('html')->javascript($this->getView()->action('load_provinces_js')));
+        $this->addFooterItem(Core::make('helper/html')->javascript($this->getView()->action('load_provinces_js')));
         $this->addFooterItem(
-            Loader::helper('html')->javascript($this->attributeType->getAttributeTypeFileURL('country_state.js'))
+            Core::make('helper/html')->javascript($this->attributeType->getAttributeTypeFileURL('country_state.js'))
         );
         $this->set('key', $this->attributeKey);
     }
-
 }

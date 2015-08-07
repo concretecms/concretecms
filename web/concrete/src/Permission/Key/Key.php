@@ -4,7 +4,7 @@ namespace Concrete\Core\Permission\Key;
 
 use Concrete\Core\Foundation\Object;
 use Gettext\Translations;
-use Loader;
+use Database;
 use CacheLocal;
 use Package;
 use Concrete\Core\Package\PackageList;
@@ -149,10 +149,9 @@ abstract class Key extends Object
 
     public static function loadAll()
     {
-        $cl = new CacheLocal();
-        $db = Loader::db();
+        $db = Database::connection();
         $permissionkeys = array();
-        $txt = Loader::helper('text');
+        $txt = Core::make('helper/text');
         $e = $db->Execute('select pkID, pkName, pkDescription, pkHandle, pkCategoryHandle, pkCanTriggerWorkflow, pkHasCustomClass, PermissionKeys.pkCategoryID, PermissionKeyCategories.pkgID from PermissionKeys inner join PermissionKeyCategories on PermissionKeyCategories.pkCategoryID = PermissionKeys.pkCategoryID');
         while ($r = $e->FetchRow()) {
             $class = '\\Core\\Permission\\Key\\' . $txt->camelcase($r['pkCategoryHandle']) . 'Key';
@@ -177,8 +176,8 @@ abstract class Key extends Object
 
     protected static function load($key, $loadBy = 'pkID')
     {
-        $db = Loader::db();
-        $txt = Loader::helper('text');
+        $db = Database::connection();
+        $txt = Core::make('helper/text');
         $r = $db->GetRow('select pkID, pkName, pkDescription, pkHandle, pkCategoryHandle, pkCanTriggerWorkflow, pkHasCustomClass, PermissionKeys.pkCategoryID, PermissionKeyCategories.pkgID from PermissionKeys inner join PermissionKeyCategories on PermissionKeyCategories.pkCategoryID = PermissionKeys.pkCategoryID where ' . $loadBy . ' = ?',
             array($key));
         $class = '\\Core\\Permission\\Key\\' . $txt->camelcase($r['pkCategoryHandle']) . 'Key';
@@ -224,7 +223,7 @@ abstract class Key extends Object
      */
     public static function getList($pkCategoryHandle, $filters = array())
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $q = 'select pkID from PermissionKeys inner join PermissionKeyCategories on PermissionKeys.pkCategoryID = PermissionKeyCategories.pkCategoryID where pkCategoryHandle = ?';
         foreach ($filters as $key => $value) {
             $q .= ' and ' . $key . ' = ' . $value . ' ';
@@ -274,9 +273,9 @@ abstract class Key extends Object
      */
     public static function getListByPackage($pkg)
     {
-        $db = Loader::db();
+        $db = Database::connection();
 
-        $kina[] = '-1';
+        $kina = array('-1');
         $kinb = $db->GetCol('select pkCategoryID from PermissionKeyCategories where pkgID = ?',
             array($pkg->getPackageID()));
         if (is_array($kinb)) {
@@ -284,6 +283,7 @@ abstract class Key extends Object
         }
         $kinstr = implode(',', $kina);
 
+        $list = array();
         $r = $db->Execute('select pkID, pkCategoryID from PermissionKeys where (pkgID = ? or pkCategoryID in (' . $kinstr . ')) order by pkID asc',
             array($pkg->getPackageID()));
         while ($row = $r->FetchRow()) {
@@ -334,7 +334,7 @@ abstract class Key extends Object
             $keys = self::loadAll();
         }
 
-        return $keys[$pkHandle];
+        return isset($keys[$pkHandle]) ? $keys[$pkHandle] : null;
     }
 
     /**
@@ -349,10 +349,8 @@ abstract class Key extends Object
         $pkHasCustomClass,
         $pkg = false
     ) {
-        $vn = Loader::helper('validation/numbers');
-        $txt = Loader::helper('text');
         $pkgID = 0;
-        $db = Loader::db();
+        $db = Database::connection();
 
         if (is_object($pkg)) {
             $pkgID = $pkg->getPackageID();
@@ -385,14 +383,14 @@ abstract class Key extends Object
 
     public function setPermissionKeyHasCustomClass($pkHasCustomClass)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $db->Execute('update PermissionKeys set pkHasCustomClass = ? where pkID = ?', array(intval($pkHasCustomClass), $this->getPermissionKeyID()));
-        Key::loadAll();
+        self::loadAll();
     }
 
     /**
+     * Legacy support.
      * @access private
-     * legacy support
      */
     public function can()
     {
@@ -435,7 +433,7 @@ abstract class Key extends Object
 
     public function delete()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $db->Execute('delete from PermissionKeys where pkID = ?', array($this->getPermissionKeyID()));
         self::loadAll();
     }

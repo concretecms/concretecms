@@ -6,6 +6,7 @@ use \Concrete\Core\Logging\LogList;
 use Log;
 use Core;
 use Request;
+use User;
 
 class Logs extends DashboardPageController {
 
@@ -25,17 +26,101 @@ class Logs extends DashboardPageController {
     }
 
 	public function view($page = 0) {
-		$list = new LogList();
+		
         $this->requireAsset('select2');
+
         $levels = array();
         foreach(Log::getLevels() as $level) {
             $levels[$level] = Log::getLevelDisplayName($level);
         }
-        $this->set('levels', $levels);
+
         $channels = array('' => t('All Channels'));
         foreach(Log::getChannels() as $channel) {
             $channels[$channel] = Log::getChannelDisplayName($channel);
         }
+
+        $r = Request::getInstance();
+        $query = http_build_query(array(
+            'channel' => $r->query->get('channel'),
+            'keywords' => $r->query->get('keywords'),
+            'level' => $r->query->get('level')
+        ));
+
+        $list = $this->getFilteredList();
+
+        $entries = $list->getPage();
+        $this->set('list', $list);
+        $this->set('entries', $entries);
+
+        $this->set('levels', $levels);
+        $this->set('channels', $channels);
+
+        $this->set('query', $query);
+    }
+	
+    public function csv($token = '') {
+        $valt = Core::make('helper/validation/token');
+        if (!$valt->validate('', $token)) {
+            $this->redirect('/dashboard/reports/logs');
+        } else {
+            $list = $this->getFilteredList();
+            $entries = $list->get(0);
+
+            $fileName = "Log Search Results";
+
+            header("Content-Type: text/csv");
+            header("Cache-control: private");
+            header("Pragma: public");
+            $date = date('Ymd');
+            header("Content-Disposition: attachment; filename=" . $fileName . "_form_data_{$date}.csv");
+
+            $fp = fopen('php://output', 'w');
+
+            // write the columns
+            $row = array(
+                t('Date'),
+                t('Level'),
+                t('Channel'),
+                t('User'),
+                t('Message')
+            );
+
+            fputcsv($fp, $row);
+
+            foreach($entries as $ent) { 
+
+                $uID = $ent->getUserID();
+                if(empty($uID)) {
+                    $user = t("Guest");
+                } else {
+                    $u = User::getByUserID($uID);
+                    if(is_object($u)) {
+                        $user = $u->getUserName() ;
+                    }
+                    else {
+                        $user = tc('Deleted user', 'Deleted (id: %s)', $uID);
+                    }
+                }
+
+                $row = array(
+                    $ent->getDisplayTimestamp(),
+                    $ent->getLevelName(),
+                    $ent->getChannelDisplayName(),
+                    $user,
+                    $ent->getMessage()
+                );
+                
+                fputcsv($fp, $row);
+            }
+
+            fclose($fp);
+            die;
+        }
+    }
+
+    public function getFilteredList() {
+        $list = new LogList();
+
         $r = Request::getInstance();
         if ($r->query->has('channel') && $r->query->get('channel') != '') {
             $list->filterByChannel($r->query->get('channel'));
@@ -51,13 +136,7 @@ class Logs extends DashboardPageController {
             $list->filterByKeywords($r->query->get('keywords'));
         }
 
-        $entries = $list->getPage();
-        $this->set('list', $list);
-        $this->set('entries', $entries);
+        return $list;
+    }
 
-        $this->set('levels', $levels);
-        $this->set('channels', $channels);
-
-       }
-	
 }

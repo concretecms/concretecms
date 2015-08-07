@@ -2,11 +2,11 @@
 	defined('C5_EXECUTE') or die("Access Denied.");
 	use \Concrete\Core\Area\Layout\Preset as AreaLayoutPreset;
 	$minColumns = 1;
+
 	if ($controller->getTask() == 'add') {
 		$spacing = 0;
 		$iscustom = false;
 	}
-	$c = Page::getCurrentPage();
 	$presets = Core::make('manager/area_layout_preset_provider')->getPresets();
 ?>
 
@@ -92,6 +92,7 @@ if ($controller->getTask() == 'edit') {
 
 $(function() {
 
+
 	<?
 	if ($controller->getTask() == 'edit') { ?>
 	$('#ccm-layouts-toolbar').on('click', 'a[data-menu-action=delete-layout]', function(e) {
@@ -144,6 +145,9 @@ $(function() {
 		]
 		<? } ?>
 	});
+
+	$('#ccm-layouts-toolbar').parent().concreteBlockInlineStyleCustomizer();
+
 });
 
 

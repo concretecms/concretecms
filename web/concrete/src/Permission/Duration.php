@@ -2,11 +2,18 @@
 namespace Concrete\Core\Permission;
 
 use Concrete\Core\Foundation\Repetition\AbstractRepetition;
+use Database;
 use Loader;
 
 class Duration extends AbstractRepetition
 {
 
+    protected $pdID;
+
+    /**
+     * @param \Concrete\Core\Permission\Access\ListItem\ListItem[] $list
+     * @return \Concrete\Core\Permission\Access\ListItem\ListItem[]
+     */
     public static function filterByActive($list)
     {
         $filteredList = array();
@@ -102,25 +109,29 @@ class Duration extends AbstractRepetition
      */
     public static function getByID($pdID)
     {
-        $db = Loader::db();
-        $pdObject = $db->getOne('SELECT pdObject FROM PermissionDurationObjects WHERE pdID = ?', array($pdID));
+        $db = Database::connection();
+        $pdObject = $db->fetchColumn('SELECT pdObject FROM PermissionDurationObjects WHERE pdID = ?', array($pdID));
         if ($pdObject) {
             $pd = unserialize($pdObject);
             return $pd;
         }
+        return null;
     }
 
     public function save()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         if (!$this->pdID) {
             $pd = new Duration();
             $pdObject = serialize($pd);
-            $db->Execute('INSERT INTO PermissionDurationObjects (pdObject) VALUES (?)', array($pdObject));
-            $this->pdID = $db->Insert_ID();
+            $db->executeQuery('INSERT INTO PermissionDurationObjects (pdObject) VALUES (?)', array($pdObject));
+            $this->pdID = $db->lastInsertId();
         }
         $pdObject = serialize($this);
-        $db->Execute('UPDATE PermissionDurationObjects SET pdObject = ? WHERE pdID = ?', array($pdObject, $this->pdID));
+        $db->executeQuery(
+            'UPDATE PermissionDurationObjects SET pdObject = ? WHERE pdID = ?',
+            array($pdObject, $this->pdID)
+        );
     }
 
     public function getID()

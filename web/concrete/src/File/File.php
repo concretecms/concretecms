@@ -532,14 +532,15 @@ class File implements \Concrete\Core\Permission\ObjectInterface
             $fv->delete(true);
         }
 
-        // now from the DB
-        $em = $db->getEntityManager();
-        $em->remove($this);
-        $em->flush();
         $db->Execute("delete from FileSetFiles where fID = ?", array($this->fID));
         $db->Execute("delete from FileSearchIndexAttributes where fID = ?", array($this->fID));
         $db->Execute("delete from DownloadStatistics where fID = ?", array($this->fID));
         $db->Execute("delete from FilePermissionAssignments where fID = ?", array($this->fID));
+
+        // now from the DB
+        $em = $db->getEntityManager();
+        $em->remove($this);
+        $em->flush();
     }
 
     /**

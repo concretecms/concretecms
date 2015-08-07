@@ -286,7 +286,7 @@ else {
                                 <input type="hidden" name="asid" value="<?= intval($answerSet['asID']) ?>"/>
                                 <input type="hidden" name="action" value="deleteResponse"/>
                                 <?php $valt->output('deleteResponse') ?>
-                                <?= $ih->submit(t('Delete'), false, 'left', 'btn pull-right btn-danger') ?>
+                                <?= $ih->submit(t('Delete'), false, 'left', 'btn pull-right btn-danger delete-response') ?>
                             </form>
                         </td>
                     </tr>

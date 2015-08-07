@@ -967,7 +967,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
 
         $db = Loader::db();
         $r = $db->GetRow('select * from PageTypes where ptID = ?', array($ptID));
-        if (is_array($r) && $r['ptID']) {
+        if (is_array($r) && isset($r['ptID']) && $r['ptID']) {
             $cm = new static();
             $cm->setPropertiesFromArray($r);
             $cm->ptPublishTargetObject = unserialize($r['ptPublishTargetObject']);

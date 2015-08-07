@@ -8,7 +8,7 @@ class FileServiceProvider extends ServiceProvider {
 		$singletons = array(
 			'helper/file' => '\Concrete\Core\File\Service\File',
 			'helper/concrete/file' => '\Concrete\Core\File\Service\Application',
-			'helper/image' => '\Concrete\Core\Legacy\ImageHelper', /* deprecated */
+			'helper/image' => '\Concrete\Core\File\Image\BasicThumbnailer',
 			'helper/mime' => '\Concrete\Core\File\Service\Mime'
 		);
 
@@ -18,6 +18,7 @@ class FileServiceProvider extends ServiceProvider {
 
         $this->app->bind('image/imagick', '\Imagine\Imagick\Imagine');
         $this->app->bind('image/gd', '\Imagine\Gd\Imagine');
+		$this->app->bind('image/thumbnailer', '\Concrete\Core\File\Image\BasicThumbnailer');
 	}
 
 

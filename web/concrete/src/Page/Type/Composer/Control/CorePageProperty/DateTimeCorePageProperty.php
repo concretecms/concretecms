@@ -24,7 +24,8 @@ class DateTimeCorePageProperty extends CorePageProperty
         $e = Loader::helper('validation/error');
         $date = $this->getPageTypeComposerControlDraftValue();
         if (!strtotime($date)) {
-            $e->add(t('You must specify a valid date/time for this page.'));
+            $control = $this->getPageTypeComposerFormLayoutSetControlObject();
+            $e->add(t('You haven\'t chosen a valid %s', $control->getPageTypeComposerControlLabel()));
 
             return $e;
         }

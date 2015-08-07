@@ -6,6 +6,7 @@ use Concrete\Core\Url\Resolver\CanonicalUrlResolver;
 use Concrete\Core\Url\Resolver\Manager\ResolverManager;
 use Concrete\Core\Url\Resolver\PageUrlResolver;
 use Concrete\Core\Url\Resolver\PathUrlResolver;
+use Concrete\Core\Url\Resolver\RouteUrlResolver;
 
 class UrlServiceProvider extends Provider
 {
@@ -29,12 +30,33 @@ class UrlServiceProvider extends Provider
                 return \Core::make('url/canonical/resolver')->resolve(array());
             });
 
+        $this->app->bindShared(
+            'url/resolver/path',
+            function () {
+                return new PathUrlResolver();
+            });
+
+        $this->app->bindShared(
+            'url/resolver/page',
+            function () {
+                return new PageUrlResolver(\Core::make('url/resolver/path'));
+            });
+
+        $this->app->bindShared(
+            'url/resolver/route',
+            function () {
+                $generator = \Route::getGenerator();
+                $list = \Route::getList();
+
+                return new RouteUrlResolver(\Core::make('url/resolver/path'), $generator, $list);
+            });
+
         $this->app->bind(
             'url/manager',
             function () {
-                $path_resolver = new PathUrlResolver();
-                $manager = new ResolverManager('concrete.path', $path_resolver);
-                $manager->addResolver('concrete.page', new PageUrlResolver());
+                $manager = new ResolverManager('concrete.path', \Core::make('url/resolver/path'));
+                $manager->addResolver('concrete.page', \Core::make('url/resolver/page'));
+                $manager->addResolver('concrete.route', \Core::make('url/resolver/route'));
 
                 return $manager;
             });

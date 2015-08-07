@@ -8,6 +8,7 @@ if (is_object($_bx)) {
 	$c = Page::getCurrentPage();
 	$_bx->setProxyBlock($b);
 	$_bx->loadNewCollection($c);
+	$_bx->disableBlockContainer();
     $bv = new \Concrete\Core\Block\View\BlockView($_bx);
 	$bv->setController($controller->getScrapbookBlockController());
     $bv->disableControls();

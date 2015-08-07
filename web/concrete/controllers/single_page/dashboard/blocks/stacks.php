@@ -36,8 +36,12 @@ class Stacks extends DashboardPageController {
 	protected function getSelectedLanguage()
 	{
 		$defaultLanguage = false;
+		$defaultLocale = Config::get('concrete.multilingual.default_locale');
+		if (!$defaultLocale) {
+			throw new \Exception(t('You must specify a default language tree in your multilingual settings.'));
+		}
 		foreach($this->multilingualSections as $section) {
-			if ($section->getLocale() == Config::get('concrete.multilingual.default_locale')) {
+			if ($section->getLocale() == $defaultLocale) {
 				$defaultLanguage = $section;
 			}
 		}

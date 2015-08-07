@@ -50,25 +50,41 @@ class PageView extends View
     {
         $env = Environment::get();
         $cFilename = trim($cFilename, '/');
+
         // if we have this exact template in the theme, we use that as the outer wrapper and we don't do an inner content file
-        $r = $env->getRecord(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $cFilename, $this->pkgHandle);
-        if ($r->exists()) {
-            $this->setViewTemplate($r->file);
+        $exactThemeTemplate = $env->getRecord(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $cFilename, $this->pkgHandle);
+        if ($exactThemeTemplate->exists()) {
+            $this->setViewTemplate($exactThemeTemplate->file);
         } else {
-            if (file_exists(
-                DIR_FILES_THEMES_CORE . '/' . DIRNAME_THEMES_CORE . '/' . $this->themeHandle . '.php')) {
-                $this->setViewTemplate(
-                    $env->getPath(DIRNAME_THEMES . '/' . DIRNAME_THEMES_CORE . '/' . $this->themeHandle . '.php'));
+            // use a content wrapper from themes/core if specified
+            // e.g. $this->render('your/page', 'none') would use themes/core/none.php to print the $innerContent without a wrapper
+            $coreThemeTemplate = $env->getRecord(DIRNAME_THEMES . '/' . DIRNAME_THEMES_CORE . '/' . $this->pkgHandle . '.php');
+            if ($coreThemeTemplate->exists()) {
+                $this->setViewTemplate($coreThemeTemplate->file);
             } else {
-                $this->setViewTemplate(
-                    $env->getPath(
-                        DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $this->controller->getThemeViewTemplate(),
-                        $this->pkgHandle));
+                // check for other themes or in a package if one was specified
+                $themeTemplate = $env->getRecord(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $this->controller->getThemeViewTemplate(), $this->pkgHandle);
+                if ($themeTemplate->exists()) {
+                    $this->setViewTemplate($themeTemplate->file);
+                } else {
+                    // fall back to the active theme wrapper if nothing else was found
+                    $fallbackTheme = PageTheme::getByHandle($this->themeHandle);
+                    $fallbackPkgHandle = ($fallbackTheme instanceof PageTheme) ? $fallbackTheme->getPackageHandle() : $this->pkgHandle;
+                    $fallbackTemplate = $env->getRecord(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $this->controller->getThemeViewTemplate(), $fallbackPkgHandle);
+                    $this->setViewTemplate($fallbackTemplate->file);
+                }
             }
+
+            // set the inner content for the theme wrapper we found
             $this->setInnerContentFile(
-                $env->getPath(DIRNAME_PAGES . '/' . $cFilename, $this->c->getPackageHandle()));
+                $env->getPath(
+                    DIRNAME_PAGES . '/' . $cFilename,
+                    $this->c->getPackageHandle()
+                )
+            );
         }
     }
+    
     public function setupRender()
     {
         $this->loadViewThemeObject();

@@ -7,9 +7,9 @@ return array(
      *
      * @var string
      */
-    'version'           => '5.7.5a1',
-    'version_installed' => '5.7.5a1',
-    'version_db' => '20150623000000', // the key of the latest database migration
+    'version'           => '5.7.6a1',
+    'version_installed' => '5.7.6a1',
+    'version_db' => '20150731000000', // the key of the latest database migration
 
     /**
      * Installation status
@@ -209,12 +209,12 @@ return array(
         'levels' => array(
             'expensive' => array(
                 'drivers' => array(
-                    array(
+                    'core_ephemeral' => array(
                         'class' => '\Stash\Driver\Ephemeral',
                         'options' => array()
                     ),
 
-                    array(
+                    'core_filesystem' => array(
                         'class' => '\Stash\Driver\FileSystem',
                         'options' => array(
                             'path' => DIR_FILES_UPLOADED_STANDARD . '/cache',
@@ -226,7 +226,7 @@ return array(
             ),
             'object' => array(
                 'drivers' => array(
-                    array(
+                    'core_ephemeral' => array(
                         'class' => '\Stash\Driver\Ephemeral',
                         'options' => array()
                     )
@@ -442,7 +442,8 @@ return array(
 
     'theme' => array(
 
-        'compress_preprocessor_output' => true
+        'compress_preprocessor_output' => true,
+        'generate_less_sourcemap' => false,
     ),
 
     'updates' => array(

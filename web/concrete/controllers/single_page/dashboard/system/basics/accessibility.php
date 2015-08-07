@@ -12,6 +12,7 @@ class Accessibility extends DashboardPageController
     {
         $this->set('show_titles', Config::get('concrete.accessibility.toolbar_titles'));
         $this->set('increase_font_size', Config::get('concrete.accessibility.toolbar_large_font'));
+        $this->set('display_help', Config::get('concrete.accessibility.display_help_system'));
     }
 
     public function saved()
@@ -24,6 +25,7 @@ class Accessibility extends DashboardPageController
     {
         Config::save('concrete.accessibility.toolbar_titles', !!Request::post('show_titles', false));
         Config::save('concrete.accessibility.toolbar_large_font', !!Request::post('increase_font_size', false));
+        Config::save('concrete.accessibility.display_help_system', !!Request::post('display_help', false));
         $this->redirect('/dashboard/system/basics/accessibility', 'saved');
     }
 

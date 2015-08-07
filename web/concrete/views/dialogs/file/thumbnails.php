@@ -3,11 +3,11 @@
 use Concrete\Core\File\Image\Thumbnail\Type\Version;
 
 defined('C5_EXECUTE') or die("Access Denied.");
-/** @var FileVersion $version */
+/* @var FileVersion $version */
 ?>
 <div class="ccm-ui">
     <?php
-    /** @var Version $type */
+    /* @var Version $type */
     foreach ($types as $type) {
         $width = $type->getWidth();
         $height = $type->getHeight() ? $type->getHeight() : t('Automatic');
@@ -21,13 +21,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
         $query = http_build_query(array(
             'fID' => $version->getFileID(),
             'fvID' => $version->getFileVersionID(),
-            'thumbnail' => $type->getHandle()
+            'thumbnail' => $type->getHandle(),
         ));
         ?>
         <h4>
-            <?= $type->getName() ?>
+            <?= $type->getDisplayName() ?>
             <small><?= t('%s x %s dimensions', $width, $height) ?></small>
-            <? if ($fp->canEditFileContents() && $hasFile) { ?>
+            <?php if ($fp->canEditFileContents() && $hasFile) { ?>
                 <a href="<?= $url . '?' . $query ?>"
                    dialog-width="90%"
                    dialog-height="70%"
@@ -35,7 +35,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                    dialog-title="<?= t('Edit Thumbnail Images') ?>">
                     <?= t('Edit Thumbnail') ?>
                 </a>
-            <? } ?>
+            <?php } ?>
         </h4>
         <hr/>
         <div class="ccm-file-manager-image-thumbnail">
@@ -48,7 +48,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                      data-fvid="<?= $version->getFileVersionID() ?>"
                      style="max-width: 100%"
                      src="<?= $configuration->getPublicURLToFile($thumbnailPath) ?>"/>
-            <?php
+                <?php
             } else {
                 echo t(
                     'No thumbnail found. Usually this is because the ' .
@@ -57,7 +57,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
             ?>
         </div>
 
-    <? } ?>
+    <?php } ?>
 
     <script>
         (function() {

@@ -1,5 +1,6 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
+
 $c = Page::getCurrentPage();
 if (is_object($c)) {
 	$cp = new Permissions($c);
@@ -104,7 +105,7 @@ var CCM_REL = "<?php echo \Core::getApplicationRelativePath()?>";
 
 </script>
 
-<? if (is_object($scc)) { ?>
+<? if (isset($scc) && is_object($scc)) { ?>
     <style type="text/css">
         <? print $scc->getValue();?>
     </style>
@@ -128,8 +129,8 @@ if($favIconFID) {
     $f = File::getByID($favIconFID);
     if (is_object($f)) {
         ?>
-        <link rel="shortcut icon" href="<?php echo $f->getRelativePath() ?>" type="image/x-icon"/>
-        <link rel="icon" href="<?php echo $f->getRelativePath() ?>" type="image/x-icon"/>
+        <link rel="shortcut icon" href="<?php echo $f->getURL() ?>" type="image/x-icon"/>
+        <link rel="icon" href="<?php echo $f->getURL() ?>" type="image/x-icon"/>
     <?php
     }
 }
@@ -138,7 +139,7 @@ if($appleIconFID) {
     $f = File::getByID($appleIconFID);
     if (is_object($f)) {
         ?>
-        <link rel="apple-touch-icon" href="<?php echo $f->getRelativePath() ?>"/>
+        <link rel="apple-touch-icon" href="<?php echo $f->getURL() ?>"/>
     <?php
     }
 }
@@ -147,7 +148,7 @@ if($modernIconFID) {
 	$f = File::getByID($modernIconFID);
     if(is_object($f)) {
         ?>
-        <meta name="msapplication-TileImage" content="<?php echo $f->getRelativePath(); ?>" /><?php
+        <meta name="msapplication-TileImage" content="<?php echo $f->getURL(); ?>" /><?php
         echo "\n";
         if (strlen($modernIconBGColor)) {
             ?>
@@ -166,7 +167,7 @@ if (is_object($cp)) {
 		$v->addFooterItem('<script type="text/javascript">$(function() { new ConcreteNewsflowDialog().open(); });</script>');
 	}
 
-	if ($_COOKIE['ccmLoadAddBlockWindow'] && $c->isEditMode()) {
+	if (array_get($_COOKIE, 'ccmLoadAddBlockWindow') && $c->isEditMode()) {
 		$v->addFooterItem('<script type="text/javascript">$(function() { setTimeout(function() { $("a[data-launch-panel=add-block]").click()}, 100); });</script>', 'CORE');
 		setcookie("ccmLoadAddBlockWindow", false, -1, DIR_REL . '/');
 	}

@@ -157,7 +157,7 @@ class Controller extends BlockController
             $total = 0;
         }
 
-        if ($_POST['qsID']) {
+        if (isset($_POST['qsID']) && $_POST['qsID']) {
             $data['qsID'] = $_POST['qsID'];
         }
         if (!$data['qsID']) {
@@ -335,6 +335,8 @@ class Controller extends BlockController
         //get all questions for this question set
         $rows = $db->GetArray("SELECT * FROM {$this->btQuestionsTablename} WHERE questionSetId=? AND bID=? order by position asc, msqID", array($qsID, intval($this->bID)));
 
+        $errorDetails = array();
+
         // check captcha if activated
         if ($this->displayCaptcha) {
             $captcha = Core::make('helper/validation/captcha');
@@ -360,6 +362,7 @@ class Controller extends BlockController
                 if ($row['inputType'] == 'email') {
                     if (!Core::make('helper/validation/strings')->email($_POST['Question' . $row['msqID']])) {
                         $errors['emails'] = t('You must enter a valid email address.');
+                        $errorDetails[$row['msqID']]['emails'] = $errors['emails'];
                     }
                 }
                 if ($row['inputType'] == 'checkboxlist') {
@@ -381,6 +384,7 @@ class Controller extends BlockController
                 }
                 if ($notCompleted) {
                     $errors['CompleteRequired'] = t("Complete required fields *");
+                    $errorDetails[$row['msqID']]['CompleteRequired'] = $errors['CompleteRequired'];
                 }
             }
         }
@@ -406,9 +410,11 @@ class Controller extends BlockController
                     switch ($resp) {
                     case FileImporter::E_FILE_INVALID_EXTENSION:
                         $errors['fileupload'] = t('Invalid file extension.');
+                        $errorDetails[$row['msqID']]['fileupload'] = $errors['fileupload'];
                         break;
                     case FileImporter::E_FILE_INVALID:
                         $errors['fileupload'] = t('Invalid file.');
+                        $errorDetails[$row['msqID']]['fileupload'] = $errors['fileupload'];
                         break;
 
                 }
@@ -428,6 +434,7 @@ class Controller extends BlockController
         if (count($errors)) {
             $this->set('formResponse', t('Please correct the following errors:'));
             $this->set('errors', $errors);
+            $this->set('errorDetails', $errorDetails);
         } else { //no form errors
             //save main survey record
             $u = new User();

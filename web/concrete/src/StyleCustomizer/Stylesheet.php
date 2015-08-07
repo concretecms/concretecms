@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\StyleCustomizer;
 
 use Config;
@@ -28,13 +29,19 @@ class Stylesheet
     }
     /**
      * Compiles the stylesheet using LESS. If a ValueList is provided they are
-     * injected into the stylesheet
+     * injected into the stylesheet.
+     *
      * @return string CSS
      */
     public function getCss()
     {
-        $parser = new \Less_Parser(array('cache_dir' => Config::get('concrete.cache.directory'),
-                'compress' => Config::get('concrete.theme.compress_preprocessor_output')));
+        $parser = new \Less_Parser(
+            array(
+                'cache_dir' => Config::get('concrete.cache.directory'),
+                'compress' => !!Config::get('concrete.theme.compress_preprocessor_output'),
+                'sourceMap' => !Config::get('concrete.theme.compress_preprocessor_output') && !!Config::get('concrete.theme.generate_less_sourcemap'),
+            )
+        );
         $parser = $parser->parseFile($this->file, $this->sourceUriRoot);
         if (isset($this->valueList) && $this->valueList instanceof \Concrete\Core\StyleCustomizer\Style\ValueList) {
             $variables = array();
@@ -77,5 +84,4 @@ class Stylesheet
     {
         return $this->relativeOutputDirectory . '/' . str_replace('.less', '.css', $this->stylesheet);
     }
-
 }

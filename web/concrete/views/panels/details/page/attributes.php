@@ -102,7 +102,7 @@ ConcretePageAttributesDetail = {
 			data: {
 				'akID': akID
 			},
-			type: 'post',
+			type: 'get',
 			success: function(r) {
                 _.each(r.assets.css, function(css) {
                     ccm_addHeaderItem(css, 'CSS');

@@ -79,10 +79,10 @@ class Design extends BackendInterfaceBlockController {
 
             if (is_object($set)) {
                 $pr->setAdditionalDataAttribute('issID', $set->getID());
-                $style = new CustomStyle($set, $b->getBlockID(), $this->area->getAreaHandle(), $this->page->getCollectionThemeObject());
+                $style = new CustomStyle($set, $b, $this->page->getCollectionThemeObject());
                 $css = $style->getCSS();
                 if ($css !== '') {
-                    $pr->setAdditionalDataAttribute('css', $css);
+                    $pr->setAdditionalDataAttribute('css', $style->getStyleWrapper($css));
                 }
             }
 

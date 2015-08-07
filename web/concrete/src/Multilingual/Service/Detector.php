@@ -102,7 +102,8 @@ class Detector
     public static function isEnabled()
     {
         if (!isset(self::$enabled)) {
-            if (!\Database::getDefaultConnection()) {
+            $app = \Core::make('app');
+            if (!$app->isInstalled()) {
                 return false;
             }
             $db = \Database::connection();

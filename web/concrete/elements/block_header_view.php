@@ -22,6 +22,11 @@ if ($showMenu) { ?>
     <div data-container="block">
 <? } ?>
 
+<? if (is_object($css) && $b->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) { ?>
+    <? // in this instance, the css container comes OUTSIDE any theme container ?>
+    <div class="<?=$css->getContainerClass() ?>" >
+<? } ?>
+
 <?
 if (
     $pt->supportsGridFramework()
@@ -32,7 +37,7 @@ if (
     print $gf->getPageThemeGridFrameworkContainerStartHTML();
     print $gf->getPageThemeGridFrameworkRowStartHTML();
     printf('<div class="%s">', $gf->getPageThemeGridFrameworkColumnClassesForSpan(
-        $gf->getPageThemeGridFrameworkNumColumns()
+        min($a->getAreaGridMaximumColumns(), $gf->getPageThemeGridFrameworkNumColumns())
     ));
 }
 
@@ -106,7 +111,7 @@ if ($showMenu) {
         <? if ($btw->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) { ?> data-block-menu-handle="none"<? } ?>
         >
 
-    <? if (is_object($css)) { ?>
+    <? if (is_object($css) && $b->getBlockTypeHandle() != BLOCK_HANDLE_LAYOUT_PROXY) { ?>
     <div class="<?=$css->getContainerClass() ?>" >
     <? } ?>
 
@@ -196,7 +201,7 @@ if ($showMenu) {
         </div>
 
 <? } else { ?>
-    <? if (is_object($css)) { ?>
+    <? if (is_object($css) && $b->getBlockTypeHandle() != BLOCK_HANDLE_LAYOUT_PROXY) { ?>
     <div class="<?=$css->getContainerClass() ?>" >
     <? } ?>
 <? } ?>

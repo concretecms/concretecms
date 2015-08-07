@@ -85,7 +85,7 @@ $page_selector = Loader::helper('form/page_selector');
         </div>
 
         <div class="form-group">
-            <label for="displaySubPages"><?= t('Sibling Pages') ?></label>
+            <label for="displaySubPages"><?= t('Child Pages') ?></label>
 
             <select class='form-control' name="displaySubPages" onchange="toggleSubPageLevels(this.value);">
                 <option value="none"<? if ($info['displaySubPages'] == 'none') { ?> selected<? } ?>>
@@ -106,7 +106,7 @@ $page_selector = Loader::helper('form/page_selector');
         </div>
 
         <div class="form-group">
-            <label for="displaySubPages"><?= t('Page Levels') ?></label>
+            <label for="displaySubPageLevels"><?= t('Page Levels') ?></label>
 
             <select class="form-control" id="displaySubPageLevels"
                     name="displaySubPageLevels" <? if ($info['displaySubPages'] == 'none') { ?> disabled <? } ?>

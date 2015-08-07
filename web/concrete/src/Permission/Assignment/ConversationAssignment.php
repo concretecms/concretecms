@@ -1,17 +1,17 @@
 <?php
+
 namespace Concrete\Core\Permission\Assignment;
 
 use Concrete\Core\Conversation\Message\Message;
 use PermissionAccess;
 use Conversation;
-use Loader;
+use Database;
 
 class ConversationAssignment extends Assignment
 {
-
     protected $permissionObjectToCheck = null;
 
-    public function setPermissionObject($object = null)
+    public function setPermissionObject($object)
     {
         $this->permissionObject = $object;
 
@@ -31,14 +31,15 @@ class ConversationAssignment extends Assignment
             $cnvID = $this->permissionObjectToCheck->getConversationID();
         }
 
-        $db = Loader::db();
+        $db = Database::connection();
         $r = $db->GetOne(
             'select paID from ConversationPermissionAssignments where cnvID = ? and pkID = ?',
             array(
                 $cnvID,
-                $this->pk->getPermissionKeyID()
+                $this->pk->getPermissionKeyID(),
             )
         );
+
         return PermissionAccess::getByID($r, $this->pk);
     }
 
@@ -49,7 +50,7 @@ class ConversationAssignment extends Assignment
             $cnvID = $this->permissionObject->getConversationID();
         }
 
-        $db = Loader::db();
+        $db = Database::connection();
         $db->Execute(
             'update ConversationPermissionAssignments set paID = 0 where pkID = ? and cnvID = ?',
             array($this->pk->getPermissionKeyID(), $cnvID)
@@ -63,17 +64,17 @@ class ConversationAssignment extends Assignment
             $cnvID = $this->permissionObject->getConversationID();
         }
 
-        $db = Loader::db();
+        $db = Database::connection();
         $db->Replace(
             'ConversationPermissionAssignments',
             array(
                 'cnvID' => $cnvID,
                 'paID' => $pa->getPermissionAccessID(),
-                'pkID' => $this->pk->getPermissionKeyID()
+                'pkID' => $this->pk->getPermissionKeyID(),
             ),
             array(
                 'cnvID',
-                'pkID'
+                'pkID',
             ),
             true
         );
@@ -89,5 +90,4 @@ class ConversationAssignment extends Assignment
 
         return parent::getPermissionKeyToolsURL($task) . '&cnvID=' . $cnvID;
     }
-
 }
