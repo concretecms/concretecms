@@ -41,7 +41,7 @@ class Controller extends BlockController
         }
     }
 
-    public function registerViewAssets()
+    public function registerViewAssets($outputContent = '')
     {
         $this->requireAsset('swfobject');
     }

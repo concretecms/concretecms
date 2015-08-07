@@ -51,7 +51,7 @@ class Controller extends BlockController
         }
     }
 
-    public function registerViewAssets()
+    public function registerViewAssets($outputContent = '')
     {
         $this->requireAsset('css', 'font-awesome');
         if (is_object($this->block) && $this->block->getBlockFilename() == 'hover_description') {

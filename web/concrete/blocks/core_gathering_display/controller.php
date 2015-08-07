@@ -26,7 +26,7 @@ use \Concrete\Core\Block\BlockController;
 			return t("Gathering Display");
 		}
 
-        public function registerViewAssets()
+        public function registerViewAssets($outputContent = '')
         {
             $this->requireAsset('core/gathering');
         }

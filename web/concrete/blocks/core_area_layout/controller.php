@@ -37,7 +37,7 @@ class Controller extends BlockController
         return t("Area Layout");
     }
 
-    public function registerViewAssets()
+    public function registerViewAssets($outputContent = '')
     {
         if (is_object($this->block) && $this->block->getBlockFilename() == 'parallax') {
             $this->requireAsset('javascript', 'jquery');
