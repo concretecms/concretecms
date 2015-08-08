@@ -53,7 +53,7 @@ while ($questionRow = $questionsRS->fetchRow()) {
 }
 
 //Prep thank-you message
-$success = ($_GET['surveySuccess'] && $_GET['qsid'] == intval($qsID));
+$success = ($_GET['surveySuccess'] && $_GET['qsid'] == intval($qsID) && $_GET['bID'] == intval($bID));
 $thanksMsg = $survey->thankyouMsg;
 
 //Collate all errors and put them into divs

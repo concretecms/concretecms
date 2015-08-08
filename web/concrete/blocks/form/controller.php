@@ -560,7 +560,7 @@ class Controller extends BlockController
                     }
                 }
                 $c = Page::getCurrentPage();
-                header("Location: ".Core::make('helper/navigation')->getLinkToCollection($c, true)."?surveySuccess=1&qsid=".$this->questionSetId."#formblock".$this->bID);
+                header("Location: ".Core::make('helper/navigation')->getLinkToCollection($c, true)."?surveySuccess=1&qsid=".$this->questionSetId."&bID=".$this->bID."#formblock".$this->bID);
                 exit;
             }
         }
