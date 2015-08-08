@@ -369,18 +369,15 @@ class BlockView extends AbstractView
 
     protected function useBlockCache()
     {
-        $u = new User();
-        if ($this->viewToRender == 'view' && Config::get('concrete.cache.blocks') && $this->block instanceof Block
-            && $this->block->cacheBlockOutput()
-        ) {
-            if ((!$u->isRegistered() || ($this->block->cacheBlockOutputForRegisteredUsers())) &&
-                (($_SERVER['REQUEST_METHOD'] != 'POST' || ($this->block->cacheBlockOutputOnPost() == true)))
-            ) {
-                return true;
-            }
+        if ($this->viewToRender !== 'view' || Config::get('concrete.cache.blocks') !== true) {
+            return false;
         }
 
-        return false;
+        if($this->block instanceof Block) {
+            return $this->block->useBlockCache();
+        } else {
+            return false;
+        }
     }
 
     public function field($field)
@@ -410,7 +407,7 @@ class BlockView extends AbstractView
     {
         $this->controller->on_start();
 
-        if ($this->useBlockCache()) {
+        if ($this->useBlockCache() && Config::get('concrete.cache.preview') !== true) {
             $this->didPullFromOutputCache = true;
             $this->outputContent = $this->block->getBlockCachedOutput($this->area);
         }

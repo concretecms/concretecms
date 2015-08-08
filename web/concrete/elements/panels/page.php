@@ -93,7 +93,9 @@ $seoSet = AttributeSet::getByHandle('seo');
         if ($cp->canEditPageSpeedSettings()) {
             ?>
             <li>
-                <a href="#" data-launch-panel-detail="page-caching"
+                <!--  -->
+                <a href="#" data-launch-sub-panel-url="<?= URL::to('/ccm/system/panels/page/caching') ?>"
+                   data-launch-panel-detail="page-caching"
                    data-panel-detail-url="<?= URL::to('/ccm/system/panels/details/page/caching') ?>"
                    data-panel-transition="fade">
                     <?= t('Caching') ?>

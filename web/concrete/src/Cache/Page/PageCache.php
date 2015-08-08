@@ -142,7 +142,58 @@ abstract class PageCache {
 		}
 	}
 
+	public function getVaryOnCacheKey($varySettings) {
+
+        $varyOnKey = array();
+        $req = \Request::getInstance();
+
+        foreach($varySettings as $field => $settings) {
+
+            if($req->query->has($field)) {
+
+                if($settings['match']) {
+                    if(preg_match($settings['match'],$req->query->get($field),$out)) { 
+                        $varyOnKey[$field] = $out[0];
+                    } else {
+                        $varyOnKey = false;
+                        break;
+                    }
+                } else {
+                    $varyOnKey[$field] = $req->query->get($field);
+                }
+
+            } else if($settings['default']) {
+                $varyOnKey[$field] = $settings['default'];
+            }
+        }
+
+        if($varyOnKey !== false) {
+            $varyOnKey = serialize($varyOnKey);
+        } else {
+            $varyOnKey = false;
+        }
+
+        return $varyOnKey;
+    }
+
+    public function getVaryOnCacheSettings($c) {
+
+        $fullPageVaryOn = array();
+
+        $blocks = $c->getBlocks();
+        array_merge($c->getGlobalBlocks(), $blocks);
+
+        foreach($blocks as $b) {
+            foreach($b->cacheBlockOutputVaryOn() as $key => $val) {
+                $fullPageVaryOn[$key] = $val; //TODO: Possible bug with collisions?
+            }
+        }
+
+        return $fullPageVaryOn;
+    }
+
 	abstract public function getRecord($mixed);
+	abstract protected function getVaryOnRecord($cacheKey);
 	abstract public function set(ConcretePage $c, $content);
 	abstract public function purgeByRecord(\Concrete\Core\Cache\Page\PageCacheRecord $rec);
 	abstract public function purge(ConcretePage $c);
