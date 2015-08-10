@@ -84,16 +84,6 @@ class Files extends Controller
             }
         }
 
-        if (isset($req['fType']) && $req['fType'] != '') {
-            $type = $req['fType'];
-            $this->fileList->filterByType($type);
-        }
-
-        if (isset($req['fExtension']) && $req['fExtension'] != '') {
-            $ext = $_GET['fExtension'];
-            $fileList->filterByExtension($ext);
-        }
-
         $selectedSets = array();
         if (is_array($req['field'])) {
             foreach ($req['field'] as $i => $item) {
