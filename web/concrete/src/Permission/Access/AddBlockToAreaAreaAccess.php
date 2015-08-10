@@ -49,7 +49,7 @@ class AddBlockToAreaAreaAccess extends AreaAccess {
 		return $list;
 	}
 
-	public function save($args) {
+	public function save($args = array()) {
 		$db = Loader::db();
 		parent::save();
 		$db->Execute('delete from AreaPermissionBlockTypeAccessList where paID = ?', array($this->getPermissionAccessID()));

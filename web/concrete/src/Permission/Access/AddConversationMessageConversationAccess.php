@@ -8,7 +8,7 @@ use Concrete\Core\Permission\Key\Key as PermissionKey;
 class AddConversationMessageConversationAccess extends ConversationAccess
 {
 
-    public function save($args)
+    public function save($args = array())
     {
         parent::save();
         $db = Loader::db();

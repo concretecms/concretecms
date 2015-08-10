@@ -57,7 +57,7 @@ class AddFileFileSetAccess extends FileSetAccess
         return $newPA;
     }
 
-    public function save($args)
+    public function save($args = array())
     {
         parent::save();
         $db = Loader::db();

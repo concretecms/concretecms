@@ -4,7 +4,7 @@ use Loader;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
 class ViewUserAttributesUserAccess extends UserAccess {
 
-	public function save($args) {
+	public function save($args = array()) {
 		parent::save();
 		$db = Loader::db();
 		$db->Execute('delete from UserPermissionViewAttributeAccessList where paID = ?', array($this->getPermissionAccessID()));
