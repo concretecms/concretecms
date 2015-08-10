@@ -1,7 +1,8 @@
-<?
+<?php
+
 namespace Concrete\Block\Youtube;
-use Loader;
-use \Concrete\Core\Block\BlockController;
+
+use Concrete\Core\Block\BlockController;
 
 class Controller extends BlockController
 {
@@ -21,7 +22,7 @@ class Controller extends BlockController
     public $mode = "youtube";
 
     /**
-     * Used for localization. If we want to localize the name/description we have to include this
+     * Used for localization. If we want to localize the name/description we have to include this.
      */
     public function getBlockTypeDescription()
     {
@@ -41,7 +42,7 @@ class Controller extends BlockController
         }
     }
 
-    public function registerViewAssets()
+    public function registerViewAssets($outputContent = '')
     {
         $this->requireAsset('swfobject');
     }
@@ -66,5 +67,4 @@ class Controller extends BlockController
         $args['vPlayer'] = ($data['vPlayer'] == 1) ? 1 : 0;
         parent::save($args);
     }
-
 }
