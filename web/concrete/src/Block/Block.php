@@ -28,7 +28,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
     protected $proxyBlock = false;
     protected $bActionCID;
     protected $cacheSettings;
-    protected $a;
+    public $a;
 
     protected $bFilename;
 
