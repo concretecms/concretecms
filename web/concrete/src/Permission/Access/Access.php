@@ -66,7 +66,7 @@ class Access extends Object
         $filterString = $this->buildAssignmentFilterString($accessType, $filterEntities);
         $q = $q . ' ' . $filterString;
         $list = array();
-        $r = $db->Execute($q);
+        $r = $db->executeQuery($q);
         while ($row = $r->FetchRow()) {
             $obj = Core::make($class);
             $obj->setPropertiesFromArray($row);
@@ -195,7 +195,7 @@ class Access extends Object
     public function clearWorkflows()
     {
         $db = Database::connection();
-        $db->Execute('delete from PermissionAccessWorkflows where paID = ?', array($this->getPermissionAccessID()));
+        $db->executeQuery('delete from PermissionAccessWorkflows where paID = ?', array($this->getPermissionAccessID()));
     }
 
     public function attachWorkflow(Workflow $wf)
@@ -212,7 +212,7 @@ class Access extends Object
     public function getWorkflows()
     {
         $db = Database::connection();
-        $r = $db->Execute(
+        $r = $db->executeQuery(
             'select wfID from PermissionAccessWorkflows where paID = ?',
             array($this->getPermissionAccessID())
         );
@@ -249,7 +249,7 @@ class Access extends Object
     public function markAsInUse()
     {
         $db = Database::connection();
-        $db->Execute('update PermissionAccess set paIsInUse = 1 where paID = ?', array($this->paID));
+        $db->executeQuery('update PermissionAccess set paIsInUse = 1 where paID = ?', array($this->paID));
     }
 
     public function addListItem(
@@ -279,7 +279,7 @@ class Access extends Object
     public function removeListItem(PermissionAccessEntity $pe)
     {
         $db = Database::connection();
-        $db->Execute(
+        $db->executeQuery(
             'delete from PermissionAccessList where peID = ? and paID = ?',
             array($pe->getAccessEntityID(), $this->getPermissionAccessID())
         );
@@ -292,9 +292,9 @@ class Access extends Object
     public static function create(PermissionKey $pk)
     {
         $db = Database::connection();
-        $db->Execute('insert into PermissionAccess (paIsInUse) values (0)');
+        $db->executeQuery('insert into PermissionAccess (paIsInUse) values (0)');
 
-        return static::getByID($db->Insert_ID(), $pk);
+        return static::getByID($db->lastInsertId(), $pk);
     }
 
     public static function getByID($paID, PermissionKey $pk, $checkPA = true)
