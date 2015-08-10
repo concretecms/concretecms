@@ -75,7 +75,7 @@ abstract class QueueableJob extends AbstractJob {
 		$q = $this->markStarted();
 		$this->start($q);
 		try {
-			$messages = $q->receive(999999999999);
+			$messages = $q->receive(PHP_INT_MAX);
 			foreach($messages as $key => $p) {
 				$this->processQueueItem($p);
 				$q->deleteMessage($p);
