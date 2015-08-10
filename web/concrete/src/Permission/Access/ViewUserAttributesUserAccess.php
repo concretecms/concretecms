@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Permission\Access;
 
-use Loader;
+use Database;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
 
 class ViewUserAttributesUserAccess extends UserAccess
@@ -10,20 +10,20 @@ class ViewUserAttributesUserAccess extends UserAccess
     public function save($args = array())
     {
         parent::save();
-        $db = Loader::db();
-        $db->Execute('delete from UserPermissionViewAttributeAccessList where paID = ?', array($this->getPermissionAccessID()));
-        $db->Execute('delete from UserPermissionViewAttributeAccessListCustom where paID = ?', array($this->getPermissionAccessID()));
+        $db = Database::connection();
+        $db->executeQuery('delete from UserPermissionViewAttributeAccessList where paID = ?', array($this->getPermissionAccessID()));
+        $db->executeQuery('delete from UserPermissionViewAttributeAccessListCustom where paID = ?', array($this->getPermissionAccessID()));
         if (is_array($args['viewAttributesIncluded'])) {
             foreach ($args['viewAttributesIncluded'] as $peID => $permission) {
                 $v = array($this->getPermissionAccessID(), $peID, $permission);
-                $db->Execute('insert into UserPermissionViewAttributeAccessList (paID, peID, permission) values (?, ?, ?)', $v);
+                $db->executeQuery('insert into UserPermissionViewAttributeAccessList (paID, peID, permission) values (?, ?, ?)', $v);
             }
         }
 
         if (is_array($args['viewAttributesExcluded'])) {
             foreach ($args['viewAttributesExcluded'] as $peID => $permission) {
                 $v = array($this->getPermissionAccessID(), $peID, $permission);
-                $db->Execute('insert into UserPermissionViewAttributeAccessList (paID, peID, permission) values (?, ?, ?)', $v);
+                $db->executeQuery('insert into UserPermissionViewAttributeAccessList (paID, peID, permission) values (?, ?, ?)', $v);
             }
         }
 
@@ -31,7 +31,7 @@ class ViewUserAttributesUserAccess extends UserAccess
             foreach ($args['akIDInclude'] as $peID => $akIDs) {
                 foreach ($akIDs as $akID) {
                     $v = array($this->getPermissionAccessID(), $peID, $akID);
-                    $db->Execute('insert into UserPermissionViewAttributeAccessListCustom (paID, peID, akID) values (?, ?, ?)', $v);
+                    $db->executeQuery('insert into UserPermissionViewAttributeAccessListCustom (paID, peID, akID) values (?, ?, ?)', $v);
                 }
             }
         }
@@ -40,7 +40,7 @@ class ViewUserAttributesUserAccess extends UserAccess
             foreach ($args['akIDExclude'] as $peID => $akIDs) {
                 foreach ($akIDs as $akID) {
                     $v = array($this->getPermissionAccessID(), $peID, $akID);
-                    $db->Execute('insert into UserPermissionViewAttributeAccessListCustom (paID, peID, akID) values (?, ?, ?)', $v);
+                    $db->executeQuery('insert into UserPermissionViewAttributeAccessListCustom (paID, peID, akID) values (?, ?, ?)', $v);
                 }
             }
         }
@@ -49,16 +49,16 @@ class ViewUserAttributesUserAccess extends UserAccess
     public function duplicate($newPA = false)
     {
         $newPA = parent::duplicate($newPA);
-        $db = Loader::db();
-        $r = $db->Execute('select * from UserPermissionViewAttributeAccessList where paID = ?', array($this->getPermissionAccessID()));
+        $db = Database::connection();
+        $r = $db->executeQuery('select * from UserPermissionViewAttributeAccessList where paID = ?', array($this->getPermissionAccessID()));
         while ($row = $r->FetchRow()) {
             $v = array($row['peID'], $newPA->getPermissionAccessID(), $row['permission']);
-            $db->Execute('insert into UserPermissionViewAttributeAccessList (peID, paID, permission) values (?, ?, ?)', $v);
+            $db->executeQuery('insert into UserPermissionViewAttributeAccessList (peID, paID, permission) values (?, ?, ?)', $v);
         }
-        $r = $db->Execute('select * from UserPermissionViewAttributeAccessListCustom where paID = ?', array($this->getPermissionAccessID()));
+        $r = $db->executeQuery('select * from UserPermissionViewAttributeAccessListCustom where paID = ?', array($this->getPermissionAccessID()));
         while ($row = $r->FetchRow()) {
             $v = array($row['peID'], $newPA->getPermissionAccessID(), $row['akID']);
-            $db->Execute('insert into UserPermissionViewAttributeAccessListCustom  (peID, paID, akID) values (?, ?, ?)', $v);
+            $db->executeQuery('insert into UserPermissionViewAttributeAccessListCustom  (peID, paID, akID) values (?, ?, ?)', $v);
         }
 
         return $newPA;
@@ -66,14 +66,14 @@ class ViewUserAttributesUserAccess extends UserAccess
 
     public function getAccessListItems($accessType = PermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = array())
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $list = parent::getAccessListItems($accessType, $filterEntities);
         foreach ($list as $l) {
             $pe = $l->getAccessEntityObject();
             if ($this->permissionObjectToCheck instanceof Page && $l->getAccessType() == PermissionKey::ACCESS_TYPE_INCLUDE) {
                 $permission = 'A';
             } else {
-                $permission = $db->GetOne('select permission from UserPermissionViewAttributeAccessList where paID = ? and peID = ?', array($l->getPermissionAccessID(), $pe->getAccessEntityID()));
+                $permission = $db->fetchColumn('select permission from UserPermissionViewAttributeAccessList where paID = ? and peID = ?', array($l->getPermissionAccessID(), $pe->getAccessEntityID()));
                 if ($permission != 'N' && $permission != 'C') {
                     $permission = 'A';
                 }
