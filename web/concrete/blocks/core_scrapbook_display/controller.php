@@ -1,10 +1,10 @@
 <?php
+
 namespace Concrete\Block\CoreScrapbookDisplay;
 
 use Concrete\Core\Block\BlockController;
 use Block;
 use Concrete\Core\Block\View\BlockViewTemplate;
-use Concrete\Core\Page\Controller\PageController;
 
 /**
  * The controller for the core scrapbook display block. This block is automatically used when a block is copied into a
@@ -12,14 +12,13 @@ use Concrete\Core\Page\Controller\PageController;
  *
  * @package    Blocks
  * @subpackage Core Scrapbook/Clipboard Display
+ *
  * @author     Andrew Embler <andrew@concrete5.org>
  * @copyright  Copyright (c) 2003-2012 Concrete5. (http://www.concrete5.org)
  * @license    http://www.concrete5.org/license/     MIT License
- *
  */
 class Controller extends BlockController
 {
-
     protected $btCacheBlockRecord = true;
     protected $btTable = 'btCoreScrapbookDisplay';
     protected $btIsInternal = true;
@@ -31,6 +30,7 @@ class Controller extends BlockController
         if (is_object($bc)) {
             return $bc->$this->ignorePageThemeGridFrameworkContainer();
         }
+
         return false;
     }
 
@@ -61,6 +61,7 @@ class Controller extends BlockController
             $bc = ($b) ? $b->getInstance() : false;
             $this->passthruController = $bc;
         }
+
         return $this->passthruController;
     }
 
@@ -99,7 +100,7 @@ class Controller extends BlockController
         }
 
         return false;
-   }
+    }
 
     public function on_start()
     {
@@ -119,10 +120,8 @@ class Controller extends BlockController
         }
     }
 
-
     public function runAction($action, $parameters = array())
     {
-
         $bc = $this->getScrapbookBlockController();
 
         if (is_object($bc)) {
@@ -147,7 +146,41 @@ class Controller extends BlockController
             $bvt = new BlockViewTemplate($b);
             $bvt->registerTemplateAssets();
         }
-
     }
 
+    public function cacheBlockOutput()
+    {
+        $bc = $this->getScrapbookBlockController();
+
+        if ($bc) {
+            return $bc->cacheBlockOutput();
+        }
+    }
+
+    public function cacheBlockOutputForRegisteredUsers()
+    {
+        $bc = $this->getScrapbookBlockController();
+
+        if ($bc) {
+            return $bc->cacheBlockOutputForRegisteredUsers();
+        }
+    }
+
+    public function cacheBlockOutputOnPost()
+    {
+        $bc = $this->getScrapbookBlockController();
+
+        if ($bc) {
+            return $bc->cacheBlockOutputOnPost();
+        }
+    }
+
+    public function getBlockTypeCacheOutputLifetime()
+    {
+        $bc = $this->getScrapbookBlockController();
+
+        if ($bc) {
+            return $bc->getBlockTypeCacheOutputLifetime();
+        }
+    }
 }

@@ -30,7 +30,7 @@ class Controller extends BlockController
 
     public function getSearchableContent()
     {
-        return $this->name . "\n" . $this->company . "\n" . $this->paragraph;
+        return $this->name . "\n" . $this->position . "\n" . $this->company . "\n" . $this->paragraph;
     }
 
     public function view()
