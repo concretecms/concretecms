@@ -56,7 +56,7 @@ class Controller extends BlockController
         return $str;
     }
 
-    public function registerViewAssets($outputContent)
+    public function registerViewAssets($outputContent = '')
     {
         if (preg_match('/data-concrete5-link-lightbox/i', $outputContent)) {
             $this->requireAsset('core/lightbox');

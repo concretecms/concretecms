@@ -37,7 +37,7 @@ class Controller extends BlockController
         return t("Image");
     }
 
-    public function registerViewAssets()
+    public function registerViewAssets($outputContent = '')
     {
         // Ensure we have JQuery if we have an onState image
         if (is_object($this->getFileOnstateObject())) {
