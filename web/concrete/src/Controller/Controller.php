@@ -14,7 +14,7 @@ class Controller extends AbstractController {
 	protected $viewPath;
 	protected $theme;
 	protected $controllerActionPath;
-    protected $themeViewTemplate = FILENAME_THEMES_VIEW;
+    protected $themeViewTemplate;
 
 	public function setViewObject(\Concrete\Core\View\AbstractView $view) {
 		$this->view = $view;
@@ -47,13 +47,18 @@ class Controller extends AbstractController {
     }
     public function getThemeViewTemplate()
     {
+		if (isset($this->themeViewTemplate)) {
+			return $this->themeViewTemplate;
+		}
+
 		if (is_object($this->view)) {
 			$tmpTheme = Route::getThemeByRoute($this->view->getViewPath());
 			if ($tmpTheme && isset($tmpTheme[1])) {
 				return $tmpTheme[1];
 			}
 		}
-        return $this->themeViewTemplate;
+
+		return FILENAME_THEMES_VIEW;
     }
 
 	public function getControllerActionPath() {
