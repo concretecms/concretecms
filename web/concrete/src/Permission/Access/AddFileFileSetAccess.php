@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Permission\Access;
 
 use Concrete\Core\Permission\Key\FileSetKey as FileSetPermissionKey;
@@ -6,7 +7,6 @@ use Loader;
 
 class AddFileFileSetAccess extends FileSetAccess
 {
-
     public function getAccessListItems(
         $accessType = FileSetPermissionKey::ACCESS_TYPE_INCLUDE,
         $filterEntities = array()
@@ -29,6 +29,7 @@ class AddFileFileSetAccess extends FileSetAccess
                 $l->setFileTypesAllowedArray($extensions);
             }
         }
+
         return $list;
     }
 
@@ -54,6 +55,7 @@ class AddFileFileSetAccess extends FileSetAccess
                 'INSERT INTO FileSetPermissionFileTypeAccessListCustom  (peID, paID, extension) VALUES (?, ?, ?)',
                 $v);
         }
+
         return $newPA;
     }
 
@@ -107,5 +109,4 @@ class AddFileFileSetAccess extends FileSetAccess
             }
         }
     }
-
 }
