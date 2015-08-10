@@ -30,7 +30,7 @@ class AddSubpagePageAccess extends PageAccess {
 		$db->Execute('delete from PagePermissionPageTypeAccessListCustom where peID = ? and paID = ?', array($pe->getAccessEntityID(), $this->getPermissionAccessID()));
 	}
 
-	public function save($args) {
+	public function save($args = array()) {
 		parent::save();
 		$db = Loader::db();
 		$db->Execute('delete from PagePermissionPageTypeAccessList where paID = ?', array($this->getPermissionAccessID()));

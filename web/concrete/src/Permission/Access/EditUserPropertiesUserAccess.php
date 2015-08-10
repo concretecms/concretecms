@@ -30,7 +30,7 @@ class EditUserPropertiesUserAccess extends UserAccess {
 		return $newPA;
 	}
 
-	public function save($args) {
+	public function save($args = array()) {
 		parent::save();
 		$db = Loader::db();
 		$db->Execute('delete from UserPermissionEditPropertyAccessList where paID = ?', array($this->getPermissionAccessID()));

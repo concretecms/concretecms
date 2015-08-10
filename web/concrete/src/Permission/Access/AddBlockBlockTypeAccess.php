@@ -22,7 +22,7 @@ class AddBlockBlockTypeAccess extends BlockTypeAccess {
 		return $newPA;
 	}
 
-	public function save($args) {
+	public function save($args = array()) {
 		parent::save();
 		$db = Loader::db();
 		$db->Execute('delete from BlockTypePermissionBlockTypeAccessList where paID = ?', array($this->getPermissionAccessID()));

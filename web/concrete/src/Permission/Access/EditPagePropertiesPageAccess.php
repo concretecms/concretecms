@@ -35,7 +35,7 @@ class EditPagePropertiesPageAccess extends PageAccess
         return $newPA;
     }
 
-    public function save($args)
+    public function save($args = array())
     {
         parent::save();
         $db = Database::connection();
