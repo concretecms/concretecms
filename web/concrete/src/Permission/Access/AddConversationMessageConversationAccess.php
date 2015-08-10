@@ -1,13 +1,12 @@
 <?php
+
 namespace Concrete\Core\Permission\Access;
 
 use Concrete\Core\Permission\Key\Key;
 use Loader;
-use Concrete\Core\Permission\Key\Key as PermissionKey;
 
 class AddConversationMessageConversationAccess extends ConversationAccess
 {
-
     public function save($args = array())
     {
         parent::save();
@@ -34,9 +33,9 @@ class AddConversationMessageConversationAccess extends ConversationAccess
             $db->Execute('insert into ConversationPermissionAddMessageAccessList (peID, paID, permission) values (?, ?, ?)',
                 $v);
         }
+
         return $newPA;
     }
-
 
     public function getAccessListItems(
         $accessType = Key::ACCESS_TYPE_INCLUDE,
@@ -54,9 +53,7 @@ class AddConversationMessageConversationAccess extends ConversationAccess
             }
             $l->setNewConversationMessageApprovalStatus($permission);
         }
+
         return $list;
     }
-
-
-
 }
