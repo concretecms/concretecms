@@ -255,6 +255,17 @@ class Controller extends AuthenticationTypeController
         $uName = $post['uName'];
         $uPassword = $post['uPassword'];
 
+        /** @type \Concrete\Core\Permission\IPService $ip_service */
+        $ip_service = \Core::make('ip');
+        $ip_service->logSignupRequest();
+
+        if ($banned = $ip_service->isBanned() || $ip_service->signupRequestThreshholdReached()) {
+            if ($banned) {
+                $ip_service->createIPBan();
+            }
+            throw new \Exception($ip_service->getErrorMessage());
+        }
+
         $user = new User($uName, $uPassword);
         if (!is_object($user) || !($user instanceof User) || $user->isError()) {
             switch ($user->getError()) {
