@@ -12,8 +12,8 @@ use Concrete\Core\Legacy\BlockRecord;
 use Concrete\Core\Page\Controller\PageController;
 use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 use Config;
+use Database;
 use Events;
-use Loader;
 use Package;
 use Page;
 
@@ -142,7 +142,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     {
         //$argsMerged = array_merge($_POST, $args);
         if ($this->btTable) {
-            $db = Loader::db();
+            $db = Database::connection();
             $columns = $db->MetaColumnNames($this->btTable);
             $this->record = new BlockRecord($this->btTable);
             $this->record->bID = $this->bID;
@@ -154,7 +154,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
             $this->record->Replace();
             if ($this->cacheBlockRecord() && Config::get('concrete.cache.blocks')) {
                 $record = base64_encode(serialize($this->record));
-                $db = Loader::db();
+                $db = Database::connection();
                 $db->Execute('update Blocks set btCachedBlockRecord = ? where bID = ?', array($record, $this->bID));
             }
         }
@@ -262,7 +262,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
                 if ($this->btCacheBlockRecord && Config::get('concrete.cache.blocks')) {
                     // this is the first time we're loading
                     $record = base64_encode(serialize($this->record));
-                    $db = Loader::db();
+                    $db = Database::connection();
                     $db->Execute('update Blocks set btCachedBlockRecord = ? where bID = ?', array($record, $this->bID));
                 }
             }
@@ -304,7 +304,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
         if (isset($this->btExportTables)) {
             $tables = $this->btExportTables;
         }
-        $db = Loader::db();
+        $db = Database::connection();
 
         foreach ($tables as $tbl) {
             if (!$tbl) {
@@ -347,7 +347,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
 
     public function import($page, $arHandle, \SimpleXMLElement $blockNode)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         // handle the adodb stuff
         $args = $this->getImportData($blockNode, $page);
         $blockData = array();
@@ -576,7 +576,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
         }
     }
 
-    public function registerViewAssets()
+    public function registerViewAssets($outputContent = '')
     {
     }
 

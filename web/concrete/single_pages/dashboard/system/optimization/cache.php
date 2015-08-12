@@ -46,6 +46,8 @@
                 <input type="radio" name="COMPRESS_THEME_PREPROCESSOR_OUTPUT" value="0" <?php if (!Config::get('concrete.theme.compress_preprocessor_output')) { ?> checked <?php  } ?> />
                 <span><?=t('Off - Good for debugging generated CSS output.')?></span>
             </label>
+            <br>
+            <label><input type="checkbox" name="GENERATE_LESS_SOURCEMAP" value="1" <?php if (Config::get('concrete.theme.generate_less_sourcemap')) { ?> checked <?php  } ?> > <?php echo t('enable source maps in generated CSS files'); ?></label>
         </div>
 
         <div class="radio">

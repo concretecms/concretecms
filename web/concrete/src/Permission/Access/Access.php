@@ -285,7 +285,7 @@ class Access extends Object
         );
     }
 
-    public function save($args)
+    public function save()
     {
     }
 

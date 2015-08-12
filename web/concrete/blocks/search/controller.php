@@ -16,6 +16,8 @@ class Controller extends BlockController
     protected $btInterfaceHeight = "420";
     protected $btWrapperClass = 'ccm-ui';
     protected $btExportPageColumns = array('postTo_cID');
+    protected $btCacheBlockRecord = true;
+    protected $btCacheBlockOutput = null;
 
     public $title = "";
     public $buttonText = ">";
@@ -108,6 +110,15 @@ class Controller extends BlockController
         return ($numRows > 0);
     }
 
+    public function cacheBlockOutput()
+    {
+        if ($this->btCacheBlockOutput === null) {
+            $this->btCacheBlockOutput = (($this->postTo_cID !== '' || $this->resultsURL !== '') && empty($_REQUEST['query']));
+        }
+
+        return $this->btCacheBlockOutput;
+    }
+
     public function view()
     {
         $c = Page::getCurrentPage();
@@ -130,7 +141,7 @@ class Controller extends BlockController
         $this->set('resultTargetURL', $resultsURL);
 
         //run query if display results elsewhere not set, or the cID of this page is set
-        if ($this->postTo_cID == '') {
+        if ($this->postTo_cID == '' && $this->resultsURL == '') {
             if (!empty($_REQUEST['query']) || isset($_REQUEST['akID']) || isset($_REQUEST['month'])) {
                 $this->do_search();
             }

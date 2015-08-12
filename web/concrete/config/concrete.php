@@ -7,9 +7,9 @@ return array(
      *
      * @var string
      */
-    'version'           => '5.7.5RC2',
-    'version_installed' => '5.7.5RC2',
-    'version_db' => '20150713000000', // the key of the latest database migration
+    'version'           => '5.7.6a1',
+    'version_installed' => '5.7.6a1',
+    'version_db' => '20150731000000', // the key of the latest database migration
 
     /**
      * Installation status
@@ -442,7 +442,8 @@ return array(
 
     'theme' => array(
 
-        'compress_preprocessor_output' => true
+        'compress_preprocessor_output' => true,
+        'generate_less_sourcemap' => false,
     ),
 
     'updates' => array(

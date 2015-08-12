@@ -6,8 +6,8 @@
         <type handle="all" name="Choose from all pages when publishing" package="" />
     </pagetypepublishtargettypes>
     <pagetypecomposercontroltypes>
-        <type handle="core_page_property" name="Built-In Properties" package="" />
-        <type handle="collection_attribute" name="Custom Attributes" package="" />
+        <type handle="core_page_property" name="Built-In Property" package="" />
+        <type handle="collection_attribute" name="Custom Attribute" package="" />
         <type handle="block" name="Block" package="" />
     </pagetypecomposercontroltypes>
 </concrete5-cif>

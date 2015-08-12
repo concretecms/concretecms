@@ -3709,6 +3709,11 @@
   </table>
 
   <table name="SystemDatabaseQueryLog">
+    <field name="ID" type="integer" size="10">
+      <unsigned/>
+      <autoincrement/>
+      <key/>
+    </field>
     <field name="query" type="text" size="65535"/>
     <field name="params" type="text" size="65535"/>
     <field name="executionMS" type="string" size="255"/>

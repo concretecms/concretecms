@@ -103,7 +103,7 @@ class Controller extends BlockController implements ConversationFeatureInterface
         $this->set('notificationUsers', $conversation->getConversationSubscribedUsers());
     }
 
-    public function registerViewAssets()
+    public function registerViewAssets($outputContent = '')
     {
         $this->requireAsset('core/conversation');
         $this->requireAsset('core/lightbox');

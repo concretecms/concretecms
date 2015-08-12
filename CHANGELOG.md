@@ -1,3 +1,136 @@
+# 5.7.5
+
+## Grid and Layout Improvements
+
+* Page Theme classes can specify layout presets, which can use classes contained in grid frameworks or use their own custom classes.
+* Layouts now have design controls available to them, including custom templates and custom CSS classes.
+* Added a new custom template “Parallax Image” available to layouts that employ a background image.
+* Grid frameworks can now specify hiding classes for responsive breakpoints, which can be controlled through block and area design settings.
+* Grid containers that wrap around blocks based on their type can now be disabled or enabled on a per-block basis through the block design palette.
+* Added nested support to grid frameworks.
+
+## Mobile Improvements
+
+* Completely new Mobile Device Preview panel in the page panel. Preview the current page in a variety of mobile form factors, simulating user agent, and even rotating the device.
+
+## Multilingual Improvements
+
+* Global areas and stacks are now multilingual: if you have multiple language areas in your site, stacks and global areas you add will have separate instances for each language, and the appropriate stack contents will be displayed on the appropriate pages with no hacks.
+* You can scan a multilingual section for all links and references to multilingual pages, and if those pages exist outside the current tree, they will be remapped into the current tree. (i.e after you copy a multilingual tree, you can rescan its links so they don’t point to the original tree.)
+
+## Other Feature Updates
+
+* Elemental now provides two layout presets – Left Sidebar and Right Sidebar.
+* You can now set an RSS feed to be filtered by a particular topic
+* You can now add an image to an RSS feed
+* If you register a site that requires approval before logging in, you will receive an email letting you know this is the case (thanks ounziw)
+* You can now turn off help via a checkbox in the Dashboard on the Accessibility page.
+* The file block now contains an option to force download (thanks Mesuva)
+* Next/Previous Block now supports reverse ordering options (thanks UziTech)
+* You can now run concrete5 jobs from the command line using concrete/bin/concrete5 c5:job (thanks ChrisHougard!)
+* You can now choose the background image for full-image background pages with the  'concrete.white\_label.background_url' config option (thanks myconcretelab)
+* Redactor rich text editor has been updated to version 10.2.2,. fixing many bugs and adding some small features. 
+* Adds support to adjust trusted proxy ips and settings through Config values (thanks timdix)
+
+
+
+## Behavioral Improvements
+
+* Login page now much easier to theme. Should look nice in stock Elemental theme. More generic language and hides the authentication type list of only one authentication type is enabled. No more background image when attempting to re-skin login page in another theme.
+* File manager import incoming now has a checkbox to select all files (thanks MeyerJL)
+* Table cells in rich text editor have a minimum width of 55 pixels (thanks KarlDilkington)
+* Group set names can now contain multibyte characters (thanks hissy)
+* More rich text editor plugin interfaces are translatable (thanks mlocati)
+* Fixed Typography selector fails on save if it is used without font selection (thanks ojahleto)
+* Permissions are properly checked when displaying the publish button and the delete button in composer (thanks hissy)
+* Editing page defaults no longer prompts you to save or approve your changes, since changes to page defaults are immediately live (they are not versioned.)
+* Improved performance of full page caching (thanks EC-Chris)
+* Improvements to session handling when the session directory exists outside of an open_basedir restriction (thanks acohin and mlocati)
+* Page attributes are now grouped in sets on the page type defaults attributes screen (thanks EC-Joe)
+* Form block now highlights errors on specific fields when they aren’t filled in properly (thanks timdix)
+* Fixed bug that caused areas to have problems if they were converted in code from GlobalArea to Area and vice versa (thanks joe-meyer)
+* Fix: can't override install options by config file (thanks mlocati and hissy)
+* Better dialog message when the user can not select files (thanks hissy)
+* Display last used authentication type if authentication fails (thanks ChrisHougard)
+* Authentication types that rely on mcrypt use a more reliable random number generator (thanks thomwiggers)
+* You can now export logs to CSV files from the Dashboard page (thanks timdix)
+*  If the package contains a theme that's currently active on the site, the package uninstallation can't occur
+* Gravatar user avatars now honor the passed aspect ratio parameter when using a custom aspect ratio (thanks joostrijneveld)
+* Fixed https://github.com/concrete5/concrete5/issues/2522
+
+## Bug Fixes
+
+* Fixed broken list element HTML on dashboard pages when no child pages existing in a certain section. (thanks jaromirdalecky)
+* Lots of configuration cleanup, removal of unused configuration values (thanks mlocati)
+* Fixed bug where a deleted block type could cause problems for scrapbook blocks that referenced blocks of that type (thanks MeyerJL)
+* Fix Base table or view not found: MultilingualSections error when installing in a language other than English
+* Fixed bug where there could be only one basic workflow assignment (thanks hissy)
+* Miscellaneous UI improvements (thanks mitchray)
+* Lots of miscellaneous bug fixes to community points and badges
+* Removed old unused timezone constants and replaced with proper configuration values (thanks mlocati)
+* Fixed bug where Blocks on global areas don't prevent full page caching with the setting "On - If blocks on the particular page allow it (thanks TimDix)
+* The global configuration value for JPEG compression wasn’t being accessed properly, was ignored. This is fixed (thanks mlocati)
+* Email service had been ignoring the default configured name (thanks mlocati)
+* Use \Exception and translate line in BannedWord (thanks mlocati)
+* Fixed error when saving a type with underline option unchecked in theme customization (thanks ojahleto)
+* Fix If you change an Attributes name, those changes do not take effect on the Composer Edit form. You need to delete the attribute and add it again (thanks EC-Joe)
+* Fixing bug in topics where topics of multiple words would all be capitalized
+* Configuration options are more reliably displayed when using caches like PHP opcache, APC, etc.. (thanks mlocati)
+* External links are properly outputted in page list blocks now (thanks GlennSchmidt)
+* Fixed Fixing ipv4 to ipv6 address bugs (thanks MeyerJL)
+* Fixed error editing testimonial blocks when the image of the testimonial had been removed from the file manager (thanks edbeeny)
+* Fixed error where certain checkbox attributes were being imported as defaulting to checked, when they shouldn’t have been.
+* Fixed bug where running \Page::getByID on startup with a page you're currently editing breaks edit mode (thanks EC-Joe)
+* Fixed https://www.concrete5.org/community/forums/5-7-discussion/image-slider-links/#752359
+* Responsive images served by the picture tag now work in IE9 (thanks mitchray)
+* Surveys in global areas are now properly displayed on the survey results dashboard page (thanks EvgeniySpinov)
+* Fixed inability to select topics to create under a new topic tree.
+* Fixed validation incorrectly claiming a file attribute didn’t exist when checking a page in from edit mode (thanks mitchray)
+* Fixed bug with broken URL in testimonial block (thanks KarlDilkington)
+* Fixed https://github.com/concrete5/concrete5/issues/2623
+* Fixed pagination in form results (thanks mitchray)
+* Fixed overrride permissions for user groups not working
+* Fixed https://github.com/concrete5/concrete5/issues/2451 (thanks mlocati)
+* Style customizer for theme should be easier to use on options that have colors but no fonts available
+* Fixed If you create a Checkbox page attribute and select The checkbox will be checked by default. When adding the attribute to pages the box is not checked 
+* Fixed https://www.concrete5.org/developers/bugs/5-7-4-2/cannot-reset-theme-customization-for-this-page/
+* Fixed If you does not have access to group search, you'll get a JSON error message (thanks hissy)
+* Fixed filtering by log status levels on Dashboard page
+* Fixed http://www.concrete5.org/developers/bugs/5-7-4-2/bug-with-tags-attribute-type1/
+* Fixed bug where duplicated pages couldn’t have their block content edited in composer (thanks katzueno)
+* Username validation error string fixes (thanks ounziw)
+* Fix class not included in legacy page list (thanks hissy)
+* Fixed bug: Add layout to area. Without refreshing page, edit container layout of new area, then cancel. Layout looks weird
+
+## Developer Updates
+
+* Big thanks to mlocati for delivering a completely new way to specify database XML, built off of the Doctrine DBAL library, including its types and functionality instead of ADODB’s AXMLS. Database XML now has support for foreign keys, comments and more. Doctrine XML is a composer package and can be used by third party projects as well. More information can be found at https://github.com/concrete5/doctrine-xml.
+* $view->action() now works for blocks in add and edit templates. This makes block AJAX routing much easier (simply reference $view->action(‘my\_method’) in your block add/edit template, and implement action\_my\_method) in your block controller.
+* Code cleanup and API improvements and better code documentation (thanks mlocati)
+* Configuration and old PHP constants removed and replaced (thanks mlocati)
+* Completely new approach to command line utilities built off of the Symfony command line class; existing utilities ported (thanks mlocati!)
+* Adds ability to add Social Icons via config. (thanks TimDix)
+* Packages can also add command line utilities through their on\_start() method (thanks hissy)
+* Flag images for multilingual sites can now be specified in application/images/countries/ as well as theme/current\_theme/images/countries (as opposed to coming solely from concrete/images/) (thanks akodde)
+* Custom file type inspectors now work again.
+* Block types are checked to see if they exist prior to import (thanks Remo)
+* Attribute keys are checked to see if they exist prior to import (thanks Remo)
+* Permission keys are checked to see if they exist prior to import (thanks Remo)
+* Upgraded to Zend Framework 2.2.10 to fix certain internationalization issues (thanks mlocati)
+* Fixed duplicate success message on cloned form blocks on the same page (thanks bluefractals)
+* Fixed bugs installing concrete5 with strict mysql tables enabled (thanks mlocati)
+* Updated Magnific Popup to 1.0 (thanks mitchray)
+* If you’re running an OpCache like PHP’s Opcache, APC, XCache or something else, when you clear the cache this cache will also be cleared (thanks mlocati)
+* Can compute hash key based on full asset contents if so desired, using the concrete.full\_contents\_asset\_hash config value (thanks mlocati)
+* Page cache adapters can now be loaded from places other than the core namespace (thanks hissy)
+* updateUserAvatar now fires on\_user\_update event (thanks timdix)
+* Attribute sets no longer need to have unique handles across different categories (thanks ijessup)
+* Delete page event now can be cancelled by hooking into the event and settings $this->proceed to false (thanks mlocati)
+* You can now customize the session save path through configuration (thanks mlocati).
+* Updated picturefill.js library to 2.3.1.
+* You can now specify your environment for configuration through an environment variable (CONCRETE5_ENV) as well as through host name (thanks ahukkanen)
+* File manager JavaScript API improvements
+
 # 5.7.4.2
 
 ## Behavioral Improvements

@@ -70,38 +70,21 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     /**
      * @param int $cID Collection ID of a page
      * @param string $version ACTIVE or RECENT
-     * @deprecated @param string $class
      *
      * @return Page
      */
     public static function getByID($cID, $version = 'RECENT')
     {
-        // must use cID instead of c->getCollectionID() because cID may be the pointer to another page
-        $cacheKey = $cID . ':' . $version;
-        if (func_num_args() === 3) {
-            // @deprecated Check for a 'class' to instantiate
-            $class = func_get_arg(2);
-            $cacheKey .= ':' . $class;
-            $c = CacheLocal::getEntry('page', $cacheKey);
-            if ($c instanceof $class) {
-                return $c;
-            } else {
-                $c = new $class();
-            }
-        } else {
-            // Preferred behaviour: build instance of static
-            $cacheKey .= ':' . get_called_class();
-            $c = CacheLocal::getEntry('page', $cacheKey);
-            if ($c instanceof static) {
-                return $c;
-            } else {
-                $c = new static();
-            }
+        $class = get_called_class();
+        $c = CacheLocal::getEntry('page', $cID.'/'.$version.'/'.$class);
+        if ($c instanceof $class) {
+            return $c;
         }
 
         $c->populatePage($cID, 'where Pages.cID = ?', $version);
 
-        CacheLocal::set('page', $cacheKey, $c);
+        // must use cID instead of c->getCollectionID() because cID may be the pointer to another page
+        CacheLocal::set('page', $cID.'/'.$version.'/'.$class, $c);
 
         return $c;
     }
@@ -780,10 +763,10 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public function getCollectionIcon()
     {
         // returns a fully qualified image link for this page's icon, either based on its collection type or if icon.png appears in its view directory
-        $icon = '';
-
         $pe = new Event($this);
+        $pe->setArgument('icon', '');
         Events::dispatch('on_page_get_icon', $pe);
+        $icon = $pe->getArgument('icon');
 
         if ($icon) {
             return $icon;

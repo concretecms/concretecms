@@ -550,7 +550,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
                     $this->a->getAreaParentID()
                 ));
             }*/
-            array_push($v, $newBlockDisplayOrder, 0, $this->overrideAreaPermissions(), $this->overrideBlockTypeCacheSettings(), $this->overrideBlockTypeContainerSettings(), $this->enableBlockContainer());
+            array_push($v, $newBlockDisplayOrder, 0, $this->overrideAreaPermissions(), $this->overrideBlockTypeCacheSettings(), $this->overrideBlockTypeContainerSettings(), $this->enableBlockContainer() ? 1 : 0);
             $q = "insert into CollectionVersionBlocks (cID, cvID, bID, arHandle, cbDisplayOrder, isOriginal, cbOverrideAreaPermissions, cbOverrideBlockTypeCacheSettings, cbOverrideBlockTypeContainerSettings, cbEnableBlockContainer) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $r = $db->prepare($q);
             $res = $db->execute($r, $v);
@@ -701,13 +701,12 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
 
     /**
      * Called by the scrapbook proxy block, this disables the original block container for the current request,
-     * because the scrapbook block takes care of rendering the container
+     * because the scrapbook block takes care of rendering the container.
      */
     public function disableBlockContainer()
     {
         $this->cbOverrideBlockTypeContainerSettings = true;
         $this->cbEnableBlockContainer = false;
-
     }
 
     public function cacheBlockOutputOnPost()
@@ -911,7 +910,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
             $newBlockDisplayOrder = $this->cbDisplayOrder;
         }
         //$v = array($ncID, $nvID, $newBID, $this->areaName, $newBlockDisplayOrder, 1);
-        $v = array($ncID, $nvID, $newBID, $this->arHandle, $newBlockDisplayOrder, 1, $this->overrideAreaPermissions(), $this->overrideBlockTypeCacheSettings(), $this->overrideBlockTypeContainerSettings(), $this->enableBlockContainer());
+        $v = array($ncID, $nvID, $newBID, $this->arHandle, $newBlockDisplayOrder, 1, $this->overrideAreaPermissions(), $this->overrideBlockTypeCacheSettings(), $this->overrideBlockTypeContainerSettings(), $this->enableBlockContainer() ? 1 : 0);
         $q = "insert into CollectionVersionBlocks (cID, cvID, bID, arHandle, cbDisplayOrder, isOriginal, cbOverrideAreaPermissions, cbOverrideBlockTypeCacheSettings,cbOverrideBlockTypeContainerSettings, cbEnableBlockContainer) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $r = $db->prepare($q);
         $res = $db->execute($r, $v);
@@ -980,7 +979,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         $bt = $this->getBlockTypeObject();
         $db->update(
             'CollectionVersionBlocks',
-            array('cbOverrideBlockTypeContainerSettings' => 1, 'cbEnableBlockContainer' => $enableBlockContainer),
+            array('cbOverrideBlockTypeContainerSettings' => 1, 'cbEnableBlockContainer' => $enableBlockContainer ? 1 : 0),
             array(
                 'cID' => $this->getBlockCollectionID(),
                 'cvID' => $cvID,
