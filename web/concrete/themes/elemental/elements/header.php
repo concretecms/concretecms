@@ -15,7 +15,7 @@ $displayThirdColumn = $blocks > 0 || $c->isEditMode();
                 $a->display();
                 ?>
             </div>
-            <div class="<? if ($displayThirdColumn) { ?>col-sm-5 col-xs-6<? } else { ?>col-md-8 col-xs-6<? } ?>">
+            <div class="<? if ($displayThirdColumn) { ?>col-sm-5 col-xs-6<? } else { ?>col-sm-8 col-xs-6<? } ?>">
                 <?
                 $a = new GlobalArea('Header Navigation');
                 $a->display();
