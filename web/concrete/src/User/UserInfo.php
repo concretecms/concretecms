@@ -194,7 +194,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         $uDateAdded = $dh->getOverridableNow();
         $hasher = new PasswordHash(Config::get('concrete.user.password.hash_cost_log2'), Config::get('concrete.user.password.hash_portable'));
 
-        if ($data['uIsValidated'] == 1) {
+        if (isset($data['uIsValidated']) && $data['uIsValidated'] == 1) {
             $uIsValidated = 1;
         } elseif (isset($data['uIsValidated']) && $data['uIsValidated'] == 0) {
             $uIsValidated = 0;
@@ -208,9 +208,10 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
             $uIsFullRecord = 1;
         }
 
-        $password_to_insert = $data['uPassword'];
+        $password_to_insert = isset($data['uPassword']) ? $data['uPassword'] : null;
         $hash = $hasher->HashPassword($password_to_insert);
 
+        $uDefaultLanguage = null;
         if (isset($data['uDefaultLanguage']) && $data['uDefaultLanguage'] != '') {
             $uDefaultLanguage = $data['uDefaultLanguage'];
         }
@@ -232,7 +233,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 
                 // run any internal event we have for user add
                 $ue = new \Concrete\Core\User\Event\UserInfoWithPassword($ui);
-                $ue->setUserPassword($data['uPassword']);
+                $ue->setUserPassword($password_to_insert);
                 Events::dispatch('on_user_add', $ue);
             }
 
@@ -408,7 +409,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 
         // send the email notification
         if ($recipient->getAttribute('profile_private_messages_notification_enabled')) {
-            $mh = Core::make('helper/mail');
+            $mh = Core::make('mail');
             $mh->addParameter('msgSubject', $subject);
             $mh->addParameter('msgBody', $text);
             $mh->addParameter('msgAuthor', $this->getUserName());

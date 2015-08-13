@@ -48,7 +48,7 @@ class SizeStyle extends Style {
     public function getValuesFromVariables($rules = array()) {
         $values = array();
         foreach($rules as $rule) {
-            if (preg_match('/@(.+)\-size/i', $rule->name, $matches)) {
+            if (preg_match('/@(.+)\-size/i',  isset($rule->name) ? $rule->name : '', $matches)) {
                 $value = $rule->value->value[0]->value[0];
                 $sv = static::parse($value, $matches[1]);
                 if (is_object($sv)) {

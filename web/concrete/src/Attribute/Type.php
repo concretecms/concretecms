@@ -19,6 +19,7 @@ class Type extends Object
     public $atHandle;
 
     protected $atID;
+    protected $pkgID;
 
     public function getAttributeTypeID()
     {

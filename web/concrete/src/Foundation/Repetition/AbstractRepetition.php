@@ -539,6 +539,7 @@ abstract class AbstractRepetition implements RepetitionInterface
 
         $repetition_start = $dh->toDateTime($start_date)->getTimestamp();
         $repetition_end = $dh->toDateTime($end_date)->getTimestamp();
+        $repetition_final = null;
 
         $period_end = $dh->toDateTime($this->getRepeatPeriodEnd());
         if (is_object($period_end)) {

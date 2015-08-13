@@ -179,6 +179,26 @@ class Controller extends BlockController
             $data['addFilesToSet'] = 0;
         }
 
+        if (!isset($data['surveyName'])) {
+            $data['surveyName'] = '';
+        }
+
+        if (!isset($data['submitText'])) {
+            $data['submitText'] = '';
+        }
+
+        if (!isset($data['notifyMeOnSubmission'])) {
+            $data['notifyMeOnSubmission'] = 0;
+        }
+
+        if (!isset($data['thankyouMsg'])) {
+            $data['thankyouMsg'] = '';
+        }
+
+        if (!isset($data['displayCaptcha'])) {
+            $data['displayCaptcha'] = 0;
+        }
+
         $v = array($data['qsID'], $data['surveyName'], $data['submitText'], intval($data['notifyMeOnSubmission']), $data['recipientEmail'], $data['thankyouMsg'], intval($data['displayCaptcha']), intval($data['redirectCID']), intval($data['addFilesToSet']), intval($this->bID));
 
         //is it new?
