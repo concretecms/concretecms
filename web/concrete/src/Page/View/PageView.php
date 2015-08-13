@@ -37,6 +37,10 @@ class PageView extends View
         $this->pTemplateID = $pt->getPageTemplateID();
     }
 
+    public function getPageTemplate() {
+        return PageTemplate::getByID($this->pTemplateID);
+    }
+
     /**
      * Called from previewing functions, this lets us override the page's theme with one of our own choosing
      */
@@ -100,7 +104,7 @@ class PageView extends View
         if ($this->c->getPageTypeID() == 0 && $this->c->getCollectionFilename()) {
             $this->renderSinglePageByFilename($this->c->getCollectionFilename());
         } else {
-            $pt = PageTemplate::getByID($this->pTemplateID);
+            $pt = $this->getPageTemplate();
             $rec = null;
             if ($pt) {
                 $rec = $env->getRecord(
