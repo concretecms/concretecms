@@ -20,7 +20,7 @@ $req->requireAsset('core/imageeditor');
 
 /** @var ImageEditor $editor */
 if (!$editor) {
-    $editor = \Core::make('editor/image');
+    $editor = \Core::make('editor/image/core');
 }
 
 $filters = $editor->getFilterList();
