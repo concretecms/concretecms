@@ -99,6 +99,10 @@
                         my._launchUploadCompleteDialog(files);
                         files = [];
                     }
+                },
+                always: function()
+                {
+                    $('#ccm-file-upload-progress-wrapper').remove();
                 }
             };
 
