@@ -51,6 +51,11 @@ $r = new \Concrete\Core\Http\Request(
  */
 $cms = require $DIR_BASE_CORE . '/bootstrap/start.php';
 
+/**
+ * Test more strictly than core settings
+ */
+error_reporting(E_ALL & ~E_STRICT & ~E_DEPRECATED);
+
 
 class TestConfigRepository extends Repository {
 
