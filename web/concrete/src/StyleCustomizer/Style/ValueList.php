@@ -47,7 +47,7 @@ class ValueList {
 
         // load required preset variables.
         foreach($rules as $rule) {
-            if (preg_match('/@preset-fonts-file/i', $rule->name, $matches)) {
+            if (preg_match('/@preset-fonts-file/i', isset($rule->name) ? $rule->name : '', $matches)) {
                 $value = $rule->value->value[0]->value[0]->value;
                 $bv = new BasicValue('preset-fonts-file');
                 $bv->setValue($value);

@@ -9,6 +9,7 @@ use User;
 
 class DatabaseHandler extends AbstractProcessingHandler
 {
+    protected $initialized;
     private $statement;
 
     protected function write(array $record)
