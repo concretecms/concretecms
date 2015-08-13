@@ -56,7 +56,7 @@ class ImageStyle extends Style
     {
         $values = array();
         foreach ($rules as $rule) {
-            if (preg_match('/@(.+)\-image/i', $rule->name, $matches)) {
+            if (preg_match('/@(.+)\-image/i', isset($rule->name) ? $rule->name : '', $matches)) {
                 $entryURI = $rule->value->value[0]->value[0]->currentFileInfo['entryUri'];
                 $value = $rule->value->value[0]->value[0]->value;
                 if ($entryURI) {
