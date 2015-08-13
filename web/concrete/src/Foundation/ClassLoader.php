@@ -121,6 +121,7 @@ class ClassLoader
         $symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Controller\\PageType', DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES);
         $symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Controller', DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CONTROLLERS);
         $symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Job', DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_JOBS);
+        $symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Models', DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_MODELS);
 
         $strictLoader = new SymfonyClassLoader();
         $loaders = $pkg->getPackageAutoloaderRegistries();
