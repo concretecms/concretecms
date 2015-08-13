@@ -59,7 +59,7 @@ abstract class Asset implements AssetInterface
 
     const ASSET_POSITION_HEADER = 'H';
     const ASSET_POSITION_FOOTER = 'F';
-    
+
     abstract public function getAssetType();
 
     public function getOutputAssetType()
