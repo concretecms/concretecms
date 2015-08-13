@@ -28,12 +28,16 @@ class ThemeGridFormatter implements FormatterInterface
                 $gf->getPageThemeGridFrameworkRowEndHTML()
             );
 
-            $nodes = $r->childNodes();
-            $node = $nodes[0];
+            if (is_object($r)) {
+                $nodes = $r->childNodes();
+                $node = $nodes[0];
 
-            $element = new Element($node->tag);
-            $element->id($node->id);
-            $element->class($node->class);
+                $element = new Element($node->tag);
+                $element->id($node->id);
+                $element->class($node->class);
+            } else {
+                $element = new Element('div');
+            }
             return $element;
 
         }
