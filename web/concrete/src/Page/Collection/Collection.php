@@ -376,7 +376,7 @@ class Collection extends Object
 
     public function reindex($index = false, $actuallyDoReindex = true)
     {
-        if ($this->isAlias()) {
+        if ($this->isAlias() && !$this->isExternalLink()) {
             return false;
         }
         if ($actuallyDoReindex || Config::get('concrete.page.search.always_reindex') == true) {
