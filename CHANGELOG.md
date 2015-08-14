@@ -1,3 +1,22 @@
+# 5.7.5.1
+
+## Behavioral Improvements
+
+* Better checking for InnoDB database tables than querying INFORMATION_SCHEMA directly.
+* Improved accuracy and performance of the parallax scroll area layout custom template.
+* Fixed Fatal error when getPageThemeGridFrameworkRowStartHTML() and getPageThemeGridFrameworkRowEndHTML() return nothing
+
+## Bug Fixes
+
+* IP Blacklist functionality now works correctly
+* Fixed non-functioning image editor when editing image thumbnails.
+* Fixed error “PHP Fatal error: Can't inherit abstract function” on PHP 5.3.9 and earlier
+* Fixed errors installing and working with concrete5 on MySQL setups with strict tables enabled.
+* Fixing tree topic error in flat filter custom template when you have removed the topic tree its linked to
+* Fixed misnamed header grid classes in Elemental theme (thanks hdk0016)
+* Fixed http://www.concrete5.org/developers/bugs/5-7-4-2/date-type-custom-attributes-was-not-add-default-block/
+* Added legacy Image helper class (\Concrete\Core\Legacy\ImageHelper) back. This class had been moved to BasicThumbnailer and was working for all proper usage of the class, but for those instances where the class was hard-coded a the legacy image helper, the class is back for the time being. **It will be removed in a subsequent update.**
+
 # 5.7.5
 
 ## Grid and Layout Improvements
