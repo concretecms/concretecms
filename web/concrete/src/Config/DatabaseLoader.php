@@ -67,8 +67,8 @@ class DatabaseLoader implements LoaderInterface
         } else {
             $query->andWhere('configNamespace = ? OR configNamespace IS NULL')->setParameter(1, '');
         }
-
-        $count = array_shift($query->execute()->fetch());
+        $row = $query->execute()->fetch();
+        $count = array_shift($row);
         return !!$count;
     }
 
