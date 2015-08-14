@@ -1,11 +1,12 @@
 <?php
+
 namespace Concrete\Core\Marketplace;
 
 use Loader;
 use Config;
 use Log;
-use \Concrete\Core\Legacy\ItemList;
-use \Concrete\Core\Package\Package;
+use Concrete\Core\Legacy\ItemList;
+use Concrete\Core\Package\Package;
 
 class RemoteItemList extends ItemList
 {
@@ -40,6 +41,7 @@ class RemoteItemList extends ItemList
             }
             $r->set($sets);
         }
+
         return $r->get();
     }
 
@@ -143,5 +145,4 @@ class RemoteItemList extends ItemList
 
         return $marketplaceItems;
     }
-
 }
