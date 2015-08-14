@@ -5,7 +5,7 @@ namespace Concrete\Core\Gathering\Item\Template;
 use Concrete\Core\Feature\Assignment\GatheringItemAssignment;
 use Concrete\Core\Feature\Feature;
 use Concrete\Core\Gathering\Item\Item;
-use Loader;
+use Database;
 use Concrete\Core\Package\PackageList;
 use Core;
 use Concrete\Core\Foundation\Object;
@@ -20,7 +20,7 @@ abstract class Template extends Object
     public function getGatheringItemTemplateFeatureHandles()
     {
         if (!isset($this->feHandles)) {
-            $db = Loader::db();
+            $db = Database::connection();
             $this->feHandles = $db->GetCol('select distinct feHandle from GatheringItemTemplateFeatures at inner join Features fe on at.feID = fe.feID where gatID = ?', array($this->gatID));
         }
 
@@ -29,13 +29,13 @@ abstract class Template extends Object
 
     public static function getByID($gatID)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $row = $db->GetRow('select GatheringItemTemplates.*, GatheringItemTemplateTypes.gatTypeHandle from GatheringItemTemplates inner join GatheringItemTemplateTypes on GatheringItemTemplateTypes.gatTypeID = GatheringItemTemplates.gatTypeID where GatheringItemTemplates.gatID = ?', array($gatID));
         if (isset($row['gatID'])) {
-            $ns = Loader::helper('text')->camelcase($row['gatTypeHandle']);
+            $ns = Core::make('helper/text')->camelcase($row['gatTypeHandle']);
             $class = 'Template';
             if ($row['gatHasCustomClass']) {
-                $class = Loader::helper('text')->camelcase($row['gatHandle']) . $class;
+                $class = Core::make('helper/text')->camelcase($row['gatHandle']) . $class;
             }
             $className = '\\Concrete\\Core\\Gathering\\Item\\Template\\' . $ns . '\\' . $class;
             $agt = Core::make($className);
@@ -47,7 +47,7 @@ abstract class Template extends Object
 
     public static function getByHandle($gatHandle)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $row = $db->GetRow('select gatID from GatheringItemTemplates where gatHandle = ?', array($gatHandle));
         if (isset($row['gatID'])) {
             return static::getByID($row['gatID']);
@@ -56,9 +56,9 @@ abstract class Template extends Object
 
     public static function getListByPackage($pkg)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $list = array();
-        $r = $db->Execute('select gatID from GatheringItemTemplates where pkgID = ? order by gatID asc', array($pkg->getPackageID()));
+        $r = $db->executeQuery('select gatID from GatheringItemTemplates where pkgID = ? order by gatID asc', array($pkg->getPackageID()));
         while ($row = $r->FetchRow()) {
             $agt = static::getByID($row['gatID']);
             if (is_object($agt)) {
@@ -72,9 +72,9 @@ abstract class Template extends Object
 
     public static function getListByType(\Concrete\Core\Gathering\Item\Template\Type $type)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $list = array();
-        $r = $db->Execute('select gatID from GatheringItemTemplates where gatTypeID = ? order by gatName asc', array($type->getGatheringItemTemplateTypeID()));
+        $r = $db->executeQuery('select gatID from GatheringItemTemplates where gatTypeID = ? order by gatName asc', array($type->getGatheringItemTemplateTypeID()));
         while ($row = $r->FetchRow()) {
             $agt = static::getByID($row['gatID']);
             if (is_object($agt)) {
@@ -88,9 +88,9 @@ abstract class Template extends Object
 
     public static function getList()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $list = array();
-        $r = $db->Execute('select gatID from GatheringItemTemplates order by gatName asc');
+        $r = $db->executeQuery('select gatID from GatheringItemTemplates order by gatName asc');
         while ($row = $r->FetchRow()) {
             $agt = static::getByID($row['gatID']);
             if (is_object($agt)) {
@@ -247,18 +247,18 @@ abstract class Template extends Object
 
     public function addGatheringItemTemplateFeature($fe)
     {
-        $db = Loader::db();
-        $no = $db->GetOne("select count(gfeID) from GatheringItemTemplateFeatures where gatID = ? and feID = ?", array($this->gatID, $fe->getFeatureID()));
+        $db = Database::connection();
+        $no = $db->fetchColumn("select count(gfeID) from GatheringItemTemplateFeatures where gatID = ? and feID = ?", array($this->gatID, $fe->getFeatureID()));
         if ($no < 1) {
-            $db->Execute('insert into GatheringItemTemplateFeatures (gatID, feID) values (?, ?)', array($this->getGatheringItemTemplateID(), $fe->getFeatureID()));
+            $db->executeQuery('insert into GatheringItemTemplateFeatures (gatID, feID) values (?, ?)', array($this->getGatheringItemTemplateID(), $fe->getFeatureID()));
         }
     }
 
     public function getGatheringTemplateFeaturesTotalScore()
     {
         if (!isset($this->feTotalScore)) {
-            $db = Loader::db();
-            $this->feTotalScore = $db->GetOne('select sum(feScore) from Features fe inner join GatheringItemTemplateFeatures af on af.feID = fe.feID where af.gatID = ?', array($this->getGatheringItemTemplateID()));
+            $db = Database::connection();
+            $this->feTotalScore = $db->fetchColumn('select sum(feScore) from Features fe inner join GatheringItemTemplateFeatures af on af.feID = fe.feID where af.gatID = ?', array($this->getGatheringItemTemplateID()));
         }
 
         return $this->feTotalScore;
@@ -266,8 +266,8 @@ abstract class Template extends Object
 
     public function getGatheringItemTemplateFeatureObjects()
     {
-        $db = Loader::db();
-        $r = $db->Execute('select feID from GatheringItemTemplateFeatures where gatID = ?', array($this->getGatheringItemTemplateID()));
+        $db = Database::connection();
+        $r = $db->executeQuery('select feID from GatheringItemTemplateFeatures where gatID = ?', array($this->getGatheringItemTemplateID()));
         $features = array();
         while ($row = $r->FetchRow()) {
             $fe = Feature::getByID($row['feID']);
@@ -281,14 +281,14 @@ abstract class Template extends Object
 
     public static function add(\Concrete\Core\Gathering\Item\Template\Type $type, $gatHandle, $gatName, $gatFixedSlotWidth, $gatFixedSlotHeight, $gatHasCustomClass = false, $gatForceDefault = false, $pkg = false)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $pkgID = 0;
         if (is_object($pkg)) {
             $pkgID = $pkg->getPackageID();
         }
 
-        $db->Execute('insert into GatheringItemTemplates (gatTypeID, gatHandle, gatName, gatFixedSlotWidth, gatFixedSlotHeight, gatHasCustomClass, gatForceDefault, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?)', array($type->getGatheringItemTemplateTypeID(), $gatHandle, $gatName, $gatFixedSlotWidth, $gatFixedSlotHeight, intval($gatHasCustomClass), intval($gatForceDefault), $pkgID));
-        $id = $db->Insert_ID();
+        $db->executeQuery('insert into GatheringItemTemplates (gatTypeID, gatHandle, gatName, gatFixedSlotWidth, gatFixedSlotHeight, gatHasCustomClass, gatForceDefault, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?)', array($type->getGatheringItemTemplateTypeID(), $gatHandle, $gatName, $gatFixedSlotWidth, $gatFixedSlotHeight, intval($gatHasCustomClass), intval($gatForceDefault), $pkgID));
+        $id = $db->lastInsertId();
 
         $agt = static::getByID($id);
 
@@ -319,8 +319,8 @@ abstract class Template extends Object
     public static function exportList($xml)
     {
         $axml = $xml->addChild('gatheringitemtemplates');
-        $db = Loader::db();
-        $r = $db->Execute('select gatID from GatheringItemTemplates order by gatID asc');
+        $db = Database::connection();
+        $r = $db->executeQuery('select gatID from GatheringItemTemplates order by gatID asc');
         $list = array();
         while ($row = $r->FetchRow()) {
             $agt = static::getByID($row['gatID']);
@@ -335,8 +335,8 @@ abstract class Template extends Object
 
     public function delete()
     {
-        $db = Loader::db();
-        $db->Execute('delete from GatheringItemTemplates where gatID = ?', array($this->gatID));
+        $db = Database::connection();
+        $db->executeQuery('delete from GatheringItemTemplates where gatID = ?', array($this->gatID));
     }
 
     public function getGatheringItemTemplateData(Item $item)
