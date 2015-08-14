@@ -63,9 +63,11 @@ class RemoteItemList extends ItemList
         $this->params['mpID'] = $mpID;
     }
 
-    public function sortBy($sortBy)
+    public function sortBy($column, $direction = 'asc')
     {
-        $this->params['sort'] = $sortBy;
+        $this->params['sort'] = $column;
+        $direction = strtolower($direction);
+        //$this->params['sortDirection'] = in_array($direction, array('asc', 'desc')) ? $direction : 'asc';
     }
 
     public function filterBySet($set)
