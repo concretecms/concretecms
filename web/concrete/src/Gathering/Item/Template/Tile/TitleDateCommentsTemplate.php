@@ -2,6 +2,7 @@
 namespace Concrete\Core\Gathering\Item\Template\Tile;
 use Loader;
 use \Concrete\Core\Gathering\Item\Template\Tile as TileTemplate;
+use Concrete\Core\Gathering\Item\Item as GatheringItem;
 class TitleDateCommentsTemplate extends Template {
 
 	public function getGatheringItemTemplateData(GatheringItem $item) {
