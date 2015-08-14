@@ -258,7 +258,7 @@ abstract class Template extends Object {
 		$db->Execute('delete from GatheringItemTemplates where gatID = ?', array($this->gatID));
 	}
 
-	public function getGatheringItemTemplateData(\Concrete\Gathering\Item $item) {
+	public function getGatheringItemTemplateData(Item $item) {
 		$assignments = \Concrete\Core\Gathering\Feature\Assignment::getList($item);
 		$data = array();
 		foreach($assignments as $as) {
