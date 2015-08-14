@@ -115,7 +115,8 @@ class DatabaseLoaderTest extends ConcreteDatabaseTestCase
 
         $namespaces_after = $this->loader->getNamespaces();
 
-        $value = array_shift(array_diff($namespaces_after, $namespaces_first));
+        $diff = array_diff($namespaces_after, $namespaces_first);
+        $value = array_shift($diff);
 
         $this->assertEquals($namespace, $value);
     }
