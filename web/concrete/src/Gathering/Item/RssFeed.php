@@ -15,7 +15,7 @@ class RssFeed extends Item {
 		$gathering = $configuration->getGatheringObject();
 		try {
 			// we wrap this in a try because it MIGHT fail if it's a duplicate
-			$item = parent::add($gathering, $configuration->getGatheringDataSourceObject(), $post->get_date('Y-m-d H:i:s'), $post->get_title(), $post->get_link());
+			$item = parent::addItem($gathering, $configuration->getGatheringDataSourceObject(), $post->get_date('Y-m-d H:i:s'), $post->get_title(), $post->get_link());
 		} catch(Exception $e) {}
 
 		if (is_object($item)) {

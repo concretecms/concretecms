@@ -25,7 +25,7 @@ class Page extends Item {
 		$gathering = $configuration->getGatheringObject();
 		try {
 			// we wrap this in a try because it MIGHT fail if it's a duplicate
-			$item = parent::add($gathering, $configuration->getGatheringDataSourceObject(), $c->getCollectionDatePublic(), $c->getCollectionName(), $c->getCollectionID());
+			$item = parent::addItem($gathering, $configuration->getGatheringDataSourceObject(), $c->getCollectionDatePublic(), $c->getCollectionName(), $c->getCollectionID());
 		} catch (Exception $e) {}
 
 		if (is_object($item)) {

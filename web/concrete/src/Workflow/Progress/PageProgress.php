@@ -3,14 +3,14 @@ namespace Concrete\Core\Workflow\Progress;
 use Loader;
 use Page;
 use \Concrete\Core\Workflow\Workflow;
-use \Concrete\Core\Workflow\Request\PageRequest as PageWorkflowRequest;
+use \Concrete\Core\Workflow\Request\Request as WorkflowRequest;
 
 class PageProgress extends Progress {
 
 	protected $cID;
 
-	public static function add(Workflow $wf, PageWorkflowRequest $wr) {
-		$wp = parent::add('page', $wf, $wr);
+	public static function add(Workflow $wf, WorkflowRequest $wr) {
+		$wp = parent::add($wf, $wr);
 		$db = Loader::db();
 		$db->Replace('PageWorkflowProgress', array('cID' => $wr->getRequestedPageID(), 'wpID' => $wp->getWorkflowProgressID()), array('cID', 'wpID'), true);
 		$wp->cID = $wr->getRequestedPageID();

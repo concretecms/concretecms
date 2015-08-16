@@ -15,7 +15,7 @@ class Twitter extends Item {
 		$gathering = $configuration->getGatheringObject();
 		try {
 			// we wrap this in a try because it MIGHT fail if it's a duplicate
-			$item = parent::add($gathering, $configuration->getGatheringDataSourceObject(), date('Y-m-d H:i:s', strtotime($tweet->created_at)), $tweet->text, $tweet->id);
+			$item = parent::addItem($gathering, $configuration->getGatheringDataSourceObject(), date('Y-m-d H:i:s', strtotime($tweet->created_at)), $tweet->text, $tweet->id);
 		} catch(Exception $e) {}
 
 		if (is_object($item)) {

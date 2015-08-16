@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "af609474b82c9d267d6f6a52c87006ea",
+    "hash": "d20ff0f672bfdf1f3a7ee4edd7e6738e",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -687,7 +687,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/migrations/zipball/a4f14d3a3d397104e557ec65d1a4e43bb86e4ddf",
+                "url": "https://api.github.com/repos/doctrine/migrations/zipball/78954cce4962a4655ff47c0751eb78021fbaf2cc",
                 "reference": "efb77c10dfb75485998a843154bbc44d8124c4d1",
                 "shasum": ""
             },
@@ -860,16 +860,16 @@
         },
         {
             "name": "filp/whoops",
-            "version": "1.1.3",
+            "version": "dev-php7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filp/whoops.git",
-                "reference": "a85fab9a98f1f9b8ebcdbe71733f0d910e5b9adf"
+                "reference": "fe32a402b086b21360e82013e8a0355575c7c6f4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/filp/whoops/zipball/a85fab9a98f1f9b8ebcdbe71733f0d910e5b9adf",
-                "reference": "a85fab9a98f1f9b8ebcdbe71733f0d910e5b9adf",
+                "url": "https://api.github.com/repos/filp/whoops/zipball/fe32a402b086b21360e82013e8a0355575c7c6f4",
+                "reference": "fe32a402b086b21360e82013e8a0355575c7c6f4",
                 "shasum": ""
             },
             "require": {
@@ -914,7 +914,7 @@
                 "whoops",
                 "zf2"
             ],
-            "time": "2014-10-26 09:05:09"
+            "time": "2015-07-14 13:26:47"
         },
         {
             "name": "gettext/gettext",
@@ -1039,7 +1039,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hautelook/phpass/zipball/9590c12bf7c92f67f646d7bf2cf6384e7292cc41",
+                "url": "https://api.github.com/repos/hautelook/phpass/zipball/f0217d804225822f9bdb0d392839029b0fcb0914",
                 "reference": "9590c12bf7c92f67f646d7bf2cf6384e7292cc41",
                 "shasum": ""
             },
@@ -1083,7 +1083,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kesar/HTMLawed/zipball/9d292af5f4c288aa68f38b87f5d88c8214f5f233",
+                "url": "https://api.github.com/repos/kesar/HTMLawed/zipball/1df80388ef46f50306709c73df0f09c2643872fa",
                 "reference": "9d292af5f4c288aa68f38b87f5d88c8214f5f233",
                 "shasum": ""
             },
@@ -1516,7 +1516,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/michelf/php-markdown/zipball/e1aabe18173231ebcefc90e615565742fc1c7fd9",
+                "url": "https://api.github.com/repos/michelf/php-markdown/zipball/942bf343ddc80b06b1bd43c452ffd58a1e357df6",
                 "reference": "e1aabe18173231ebcefc90e615565742fc1c7fd9",
                 "shasum": ""
             },
@@ -1743,7 +1743,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/natxet/CssMin/zipball/f076e41392b0008efb47074a133ec1d90dc8c99f",
+                "url": "https://api.github.com/repos/natxet/CssMin/zipball/4026975145f645a77e087a26e7b0a1c9209b0191",
                 "reference": "f076e41392b0008efb47074a133ec1d90dc8c99f",
                 "shasum": ""
             },
@@ -2019,7 +2019,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tchwork/utf8/zipball/ffa082111aa3cb23cf2479a17e6785ace91da982",
+                "url": "https://api.github.com/repos/tchwork/utf8/zipball/38047e4a8f64e1974f46ae6bec56aaa0357bb98d",
                 "reference": "ffa082111aa3cb23cf2479a17e6785ace91da982",
                 "shasum": ""
             },
@@ -3921,6 +3921,7 @@
         "imagine/imagine": 20,
         "natxet/cssmin": 20,
         "michelf/php-markdown": 20,
+        "filp/whoops": 20,
         "htmlawed/htmlawed": 20,
         "hautelook/phpass": 20,
         "kertz/twitteroauth": 20,

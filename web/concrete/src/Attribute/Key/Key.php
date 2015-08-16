@@ -357,13 +357,32 @@ class Key extends Object
     }
 
     /**
+     * Takes a class name (from get_called_class() for example) and returns the handle for the class
+     *
+     * @param string $class
+     * @return string
+     */
+    protected static function getHandleFromClass($class)
+    {
+        $txt = Core::make('helper/text');
+        $last = array_pop(explode('\\', $class));
+        return $txt->uncamelcase(substr($last, 0, -3)); //strip off `Key
+    }
+
+    /**
      * Adds an attribute key.
      */
-    protected static function add($akCategoryHandle, $type, $args, $pkg = false)
+    protected static function add($type, $args, $pkg = false)
     {
+        $txt = Core::make('helper/text');
 
-        $vn = Loader::helper('validation/numbers');
-        $txt = Loader::helper('text');
+        $fargs = func_get_args();
+        if (count($fargs) == 4) {
+            list($akCategoryHandle, $type, $args, $pkg) = $fargs;
+        } else {
+            $akCategoryHandle = self::getHandleFromClass(get_called_class());
+        }
+
         if (!is_object($type)) {
             // The passed item is not an object. It is probably something like 'DATE'
             $type = AttributeType::getByHandle(strtolower($type));

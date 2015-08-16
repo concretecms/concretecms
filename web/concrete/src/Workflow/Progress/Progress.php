@@ -96,8 +96,14 @@ abstract class Progress extends Object
     /**
      * Creates a WorkflowProgress object (which will be assigned to a Page, File, etc... in our system.
      */
-    public static function add($wpCategoryHandle, Workflow $wf, WorkflowRequest $wr)
+    public static function add(Workflow $wf, WorkflowRequest $wr)
     {
+        $txt = Core::make('helper/text');
+
+        $class = get_called_class();
+        $last = array_pop(explode('\\', $class));
+        $wpCategoryHandle = $txt->uncamelcase(substr($last, 0, -8)); //strip off `Progress`
+
         $db = Loader::db();
         $wpDateAdded = Loader::helper('date')->getOverridableNow();
         $wpCategoryID = $db->GetOne('select wpCategoryID from WorkflowProgressCategories where wpCategoryHandle = ?', array($wpCategoryHandle));

@@ -32,7 +32,7 @@
         "natxet/cssmin": "dev-master",
         "tedivm/jshrink": "0.5.*",
         "michelf/php-markdown": "1.4.*@dev",
-        "filp/whoops": "1.*",
+        "filp/whoops": "dev-php7",
         "pagerfanta/pagerfanta": "1.0.2",
         "htmlawed/htmlawed": "dev-master",
         "mobiledetect/mobiledetectlib": "2.8.*",
