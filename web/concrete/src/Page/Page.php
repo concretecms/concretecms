@@ -81,6 +81,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             return $c;
         }
 
+        $c = new $class();
         $c->populatePage($cID, 'where Pages.cID = ?', $version);
 
         // must use cID instead of c->getCollectionID() because cID may be the pointer to another page
