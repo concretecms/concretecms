@@ -5,6 +5,7 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
     /** @var PHPUnit_Extensions_Database_DB_DefaultDatabaseConnection */
     private static $conn = null;
     protected $tables = array();
+    protected $fixtures = array();
 
     /*
     protected function setUp() {

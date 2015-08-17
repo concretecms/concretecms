@@ -1765,7 +1765,14 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public function getPageWrapperClass()
     {
         $pt = $this->getPageTypeObject();
-        $ptm = $this->getPageTemplateObject();
+        
+        $view = $this->getController()->getViewObject();
+        if($view) {
+            $ptm = $view->getPageTemplate();
+        } else {
+            $ptm = $this->getPageTemplateObject();    
+        }
+
         $classes = array('ccm-page');
         if (is_object($pt)) {
             $classes[] = 'page-type-'.str_replace('_', '-', $pt->getPageTypeHandle());

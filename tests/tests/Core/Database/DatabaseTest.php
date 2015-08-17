@@ -28,7 +28,7 @@ class DatabaseTest extends ConcreteDatabaseTestcase
                 'database' => md5(rand()),
                 'user'     => md5(rand()),
                 'password' => md5(rand()),
-                'host'     => DB_SERVER
+                'host'     => 'DB_SERVER'
             ));
 
         try {

@@ -133,6 +133,7 @@ $.fn.parallaxize = (function (global, $) {
         positionTranslation: function () {
 
             var variation = this.setting('variation'),
+                scale = this.config('scale'),
                 elem = this.config('element'),
                 image = this.config('image'),
                 height = elem.height(), width = elem.width(),
@@ -156,7 +157,7 @@ $.fn.parallaxize = (function (global, $) {
             //}
             //return method_start + Math.round(left) + 'px, ' + Math.round(top) + 'px' + method_end;
 
-            return ['translate3d(', Math.round(left), 'px, ', Math.round(top), 'px, ', '0px)'].join('');
+            return ['translate3d(', Math.round(left / scale), 'px, ', Math.round(top), 'px, ', '0px)'].join('');
         },
 
         getScrollPercentage: function () {

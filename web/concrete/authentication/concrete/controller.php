@@ -257,12 +257,7 @@ class Controller extends AuthenticationTypeController
 
         /** @type \Concrete\Core\Permission\IPService $ip_service */
         $ip_service = \Core::make('ip');
-        $ip_service->logSignupRequest();
-
-        if ($banned = $ip_service->isBanned() || $ip_service->signupRequestThreshholdReached()) {
-            if ($banned) {
-                $ip_service->createIPBan();
-            }
+        if ($ip_service->isBanned()) {
             throw new \Exception($ip_service->getErrorMessage());
         }
 
@@ -278,6 +273,12 @@ class Controller extends AuthenticationTypeController
                             'This account has not yet been validated. Please check the email associated with this account and follow the link it contains.'));
                     break;
                 case USER_INVALID:
+                    // Log failed auth
+                    $ip_service->logSignupRequest();
+                    if ($ip_service->signupRequestThreshholdReached()) {
+                        $ip_service->createIPBan();
+                        throw new \Exception($ip_service->getErrorMessage());
+                    }
                     if (Config::get('concrete.user.registration.email_registration')) {
                         throw new \Exception(t('Invalid email address or password.'));
                     } else {

@@ -1,11 +1,12 @@
 <?php
+
 namespace Concrete\Core\Marketplace;
 
-use Loader;
+use Core;
 use Config;
 use Log;
-use \Concrete\Core\Legacy\ItemList;
-use \Concrete\Core\Package\Package;
+use Concrete\Core\Legacy\ItemList;
+use Concrete\Core\Package\Package;
 
 class RemoteItemList extends ItemList
 {
@@ -16,7 +17,7 @@ class RemoteItemList extends ItemList
 
     public static function getItemSets($type)
     {
-        $cache = \Core::make('cache/expensive');
+        $cache = Core::make('cache/expensive');
         $r = $cache->getItem('concrete.marketplace.remote_item_sets.' . $type);
         if ($r->isMiss()) {
             $r->lock();
@@ -25,10 +26,10 @@ class RemoteItemList extends ItemList
             if (Config::get('concrete.marketplace.log_requests')) {
                 Log::info($url);
             }
-            $contents = Loader::helper("file")->getContents($url);
+            $contents = Core::make('helper/file')->getContents($url);
             $sets = array();
             if ($contents != '') {
-                $objects = @Loader::helper('json')->decode($contents);
+                $objects = @Core::make('helper/json')->decode($contents);
                 if (is_array($objects)) {
                     foreach ($objects as $obj) {
                         $mr = new RemoteItemSet();
@@ -40,6 +41,7 @@ class RemoteItemList extends ItemList
             }
             $r->set($sets);
         }
+
         return $r->get();
     }
 
@@ -63,14 +65,11 @@ class RemoteItemList extends ItemList
         $this->params['mpID'] = $mpID;
     }
 
-    /**
-     * Set the parameter to sort the remote list by
-     * @param string $sortBy Parameter to sort by
-     * @param string|null $direction Unsupported, but needed for LSP
-     */
-    public function sortBy($sortBy, $direction = null)
+    public function sortBy($column, $direction = 'asc')
     {
-        $this->params['sort'] = $sortBy;
+        $this->params['sort'] = $column;
+        $direction = strtolower($direction);
+        //$this->params['sortDirection'] = in_array($direction, array('asc', 'desc')) ? $direction : 'asc';
     }
 
     public function filterBySet($set)
@@ -111,15 +110,15 @@ class RemoteItemList extends ItemList
             $params[$this->queryStringPagingVariable] = $_REQUEST[$this->queryStringPagingVariable];
         }
 
-        $uh = Loader::helper('url');
+        $uh = Core::make('helper/url');
 
         $url = Config::get('concrete.urls.concrete5') . Config::get('concrete.urls.paths.marketplace.remote_item_list');
         $url = $uh->buildQuery($url . $this->type . '/-/get_remote_list', $params);
         if (Config::get('concrete.marketplace.log_requests')) {
             Log::info($url);
         }
-        $r = Loader::helper('file')->getContents($url);
-        $r2 = @Loader::helper('json')->decode($r);
+        $r = Core::make('helper/file')->getContents($url);
+        $r2 = @Core::make('helper/json')->decode($r);
 
         $total = 0;
         $items = array();
@@ -146,5 +145,4 @@ class RemoteItemList extends ItemList
 
         return $marketplaceItems;
     }
-
 }

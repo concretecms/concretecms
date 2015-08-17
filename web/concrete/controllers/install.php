@@ -111,9 +111,20 @@ class Install extends Controller
                                 count($num)));
                     }
 
-                    $support = $db->GetOne('SELECT SUPPORT FROM INFORMATION_SCHEMA.ENGINES WHERE ENGINE = \'InnoDB\'');
-                    if (!in_array($support, array('YES', 'DEFAULT'))) {
-                        $e->add(t('Your MySQL database does not support InnoDB database tables. These are required.'));
+                    try {
+                        $support = $db->GetAll('show engines');
+                        $supported = false;
+                        foreach($support as $engine) {
+                            $engine = array_change_key_case($engine, CASE_LOWER);
+                            if (isset($engine['engine']) && strtolower($engine['engine']) == 'innodb') {
+                                $supported = true;
+                            }
+                        }
+                        if (!$supported) {
+                            $e->add(t('Your MySQL database does not support InnoDB database tables. These are required.'));
+                        }
+                    } catch(\Exception $exception) {
+                        // we're going to just proceed and hope for the best.
                     }
                 }
             }

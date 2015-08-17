@@ -143,6 +143,31 @@ abstract class Column extends Object implements ColumnInterface
     }
 
     /**
+     * @return SubArea|null
+     */
+    public function getSubAreaObject()
+    {
+        $layout = $this->getAreaLayoutObject();
+        $a = $layout->getAreaObject();
+        if (is_object($a)) {
+            $as = new SubArea($this->getAreaLayoutColumnDisplayID(), $a->getAreaHandle(), $a->getAreaID());
+            $as->setAreaGridMaximumColumns($this->getSubAreaMaximumColumns());
+            $as->setAreaDisplayName(t('Column %s', $this->getAreaLayoutColumnIndex() + 1));
+
+            $c = $a->getAreaCollectionObject();
+            $as->load($c);
+            if (!$this->getAreaID()) {
+                $this->setAreaID($as->getAreaID());
+            }
+            $as->setSubAreaBlockObject($this->arLayout->getBlockObject());
+
+            return $as;
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * @return int
      */
     public function getAreaLayoutColumnID()
@@ -186,18 +211,13 @@ abstract class Column extends Object implements ColumnInterface
         $layout = $this->getAreaLayoutObject();
         $a = $layout->getAreaObject();
         if (is_object($a)) {
-            $as = new SubArea($this->getAreaLayoutColumnDisplayID(), $a->getAreaHandle(), $a->getAreaID());
-            $as->setAreaGridMaximumColumns($this->getSubAreaMaximumColumns());
-            $as->setAreaDisplayName(t('Column %s', $this->getAreaLayoutColumnIndex() + 1));
+            $as = $this->getSubAreaObject();
+
             if ($disableControls) {
                 $as->disableControls();
             }
+
             $c = $a->getAreaCollectionObject();
-            $as->load($c);
-            if (!$this->getAreaID()) {
-                $this->setAreaID($as->getAreaID());
-            }
-            $as->setSubAreaBlockObject($this->arLayout->getBlockObject());
             $as->display($c);
         }
     }
