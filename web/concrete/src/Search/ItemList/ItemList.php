@@ -3,6 +3,7 @@ namespace Concrete\Core\Search\ItemList;
 
 use Concrete\Core\Search\StickyRequest;
 use Pagerfanta\Exception\OutOfRangeCurrentPageException;
+use Pagerfanta\Exception\LessThan1CurrentPageException;
 
 abstract class ItemList
 {
@@ -175,6 +176,8 @@ abstract class ItemList
             $page = intval($query->get($this->getQueryPaginationPageParameter()));
             try {
                 $pagination->setCurrentPage($page);
+            } catch (LessThan1CurrentPageException $e) {
+                $pagination->setCurrentPage(1);
             } catch (OutOfRangeCurrentPageException $e) {
                 $pagination->setCurrentPage(1);
             }
