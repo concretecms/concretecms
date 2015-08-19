@@ -60,8 +60,6 @@ abstract class Asset implements AssetInterface
     const ASSET_POSITION_HEADER = 'H';
     const ASSET_POSITION_FOOTER = 'F';
 
-    abstract public function getAssetType();
-
     public function getOutputAssetType()
     {
         return $this->getAssetType();
@@ -78,8 +76,6 @@ abstract class Asset implements AssetInterface
     {
         return $assets;
     }
-
-    abstract public function __toString();
 
     /**
      * @return bool

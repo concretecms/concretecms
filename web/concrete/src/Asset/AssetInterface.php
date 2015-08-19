@@ -135,4 +135,6 @@ interface AssetInterface
     public function getAssetContents();
 
     public function register($filename, $args, $pkg = false);
+
+    public function __toString();
 }
