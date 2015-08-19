@@ -75,6 +75,7 @@ class PresetLayout extends Layout
      */
     public function duplicate()
     {
+
         $db = Loader::db();
         $v = array($this->arLayoutIsPreset);
         $db->Execute('insert into AreaLayouts (arLayoutIsPreset) values (?)', $v);
@@ -83,6 +84,12 @@ class PresetLayout extends Layout
             $v = array($newAreaLayoutID, $this->getAreaLayoutPresetHandle());
             $db->Execute('insert into AreaLayoutsUsingPresets (arLayoutID, preset) values (?, ?)', $v);
             $newAreaLayout = Layout::getByID($newAreaLayoutID);
+
+            $columns = $this->getAreaLayoutColumns();
+            foreach ($columns as $col) {
+                $col->duplicate($newAreaLayout);
+            }
+
             return $newAreaLayout;
         }
     }
