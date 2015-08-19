@@ -95,6 +95,7 @@ class Site extends DashboardPageController {
 					'edit_page_contents',
 					'edit_page_speed_settings',
 					'edit_page_theme',
+					'edit_page_page_type',
 					'edit_page_template',
 					'edit_page_permissions',
 					'delete_page',

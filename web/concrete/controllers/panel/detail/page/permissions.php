@@ -102,6 +102,7 @@ class Permissions extends BackendInterfacePageController {
 				'edit_page_contents',
 				'edit_page_speed_settings',
 				'edit_page_theme',
+				'edit_page_page_type',
 				'edit_page_template',
 				'edit_page_permissions',
 				'preview_page_as_user',
