@@ -4,14 +4,14 @@
 @import "../bootstrap/variables.less"; // Modify this for custom colors, font-sizes, etc
 @import "../bootstrap/mixins.less";
 @import "../../core/redactor/redactor.less";
-
+/*
 .clearfix() {
 	&:after {
 		content: "";
 		display: table;
 		clear: both;
 	}
-}
+}*/
 .transition-redactor(@transition: all linear .2s) {
 	-moz-transition: @transition;
 	transition: @transition;
@@ -235,8 +235,9 @@ body .redactor-box-fullscreen {
 	border: none;
 	box-shadow: 0 1px 2px rgba(0, 0, 0, .2);
 
+  /*
 	.clearfix;
-
+*/
 	&.redactor-toolbar-overflow {
 		overflow-y: auto;
 		height: 29px;
