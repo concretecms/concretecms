@@ -14,8 +14,18 @@ class ProviderList {
 	 * @return void
 	 */
 	public function registerProvider($class) {
-		$cl = new $class($this->app);
-		$cl->register();
+		$this->createInstance($class)->register();
+	}
+
+	/**
+	 * Class for creating an instance of a passed class string, override this to add extra functionality
+	 *
+	 * @param string $class The class name
+	 * @return \Concrete\Core\Foundation\Service\Provider
+	 */
+	protected function createInstance($class)
+	{
+		return new $class($this->app);
 	}
 
 	/**
