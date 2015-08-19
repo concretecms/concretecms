@@ -18,7 +18,7 @@ class ProviderList {
 	}
 
 	/**
-	 * Class for creating an instance of a passed class string, override this to add extra functionality
+	 * Creates an instance of the passed class string, override this to change how providers are instantiated
 	 *
 	 * @param string $class The class name
 	 * @return \Concrete\Core\Foundation\Service\Provider
