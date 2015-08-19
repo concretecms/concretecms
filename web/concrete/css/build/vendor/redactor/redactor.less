@@ -450,7 +450,10 @@ body .redactor-box-fullscreen {
 */
 .redactor-toolbar-tooltip {
 	position: absolute;
-	z-index: 1054;
+  /* concrete5
+	z-index: 1054;*/
+  z-index: @index-level-tooltip-holder;
+  /* end concrete5 */
 	text-align: center;
 	top: 0;
 	left: 0;
@@ -560,7 +563,11 @@ body .redactor-box-fullscreen {
 */
 .redactor-link-tooltip {
 	position: absolute;
+  /* concrete5
 	z-index: 99;
+	*/
+  z-index: @index-level-tooltip-holder;
+  /* end concrete5 */
 	padding: 10px;
 	line-height: 1;
 	display: inline-block;
