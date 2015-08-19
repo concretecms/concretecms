@@ -117,7 +117,7 @@ abstract class Column extends Object implements ColumnInterface
      *
      * @return int
      */
-    protected function duplicate($newAreaLayout)
+    public function duplicate($newAreaLayout)
     {
         $db = Database::connection();
         $v = array($newAreaLayout->getAreaLayoutID(), $this->arLayoutColumnIndex, $this->arLayoutColumnDisplayID);
