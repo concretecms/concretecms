@@ -74,6 +74,9 @@ $v = $c->getVersionObject();
 $(function() {
     setTimeout("$('#ccm-check-in-comments').focus();",300);
     $('#ccm-check-in').concreteAjaxForm();
+    $('button#ccm-check-in-discard').on('click', function () {
+        return confirm('<?=t('This will remove this draft and it cannot be undone. Are you sure?')?>');
+    });
 });
 </script>
 
