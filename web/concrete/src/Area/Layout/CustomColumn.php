@@ -58,7 +58,7 @@ class CustomColumn extends Column
     protected function getColumnElement($contents)
     {
         $element = new Element('div');
-        $element->addClass($this->getAreaLayoutColumnClass());
+        $element->addClass($this->getAreaLayoutColumnClass())->id('ccm-layout-column-'.$this->arLayoutColumnID);
         $inner = new Element('div');
         $inner->addClass('ccm-layout-column-inner');
         $inner->setValue($contents);
