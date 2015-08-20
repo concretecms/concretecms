@@ -86,7 +86,7 @@ $cms->detectEnvironment(function() use ($db_config, $environment, $cms) {
  * ----------------------------------------------------------------------------
  */
 if (!$cms->bound('config')) {
-    $cms->bindShared('config', function($cms) {
+    $cms->bindShared('config', function(Application $cms) {
         $file_system = new Filesystem();
         $file_loader = new FileLoader($file_system);
         $file_saver = new FileSaver($file_system);
@@ -136,9 +136,11 @@ $list->registerMultiple($config->get('app.facades'));
  */
 
 if (!$cms->bound('config/database')) {
-    $database_loader = new DatabaseLoader();
-    $database_saver = new DatabaseSaver();
-    $cms->instance('config/database', new ConfigRepository($database_loader, $database_saver, $cms->environment()));
+    $cms->bindShared('config/database', function(Application $cms) {
+        $database_loader = new DatabaseLoader();
+        $database_saver = new DatabaseSaver();
+        $cms->instance('config/database', new ConfigRepository($database_loader, $database_saver, $cms->environment()));
+    });
 }
 
 $database_config = $cms->make('config/database');
