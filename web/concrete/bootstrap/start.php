@@ -139,7 +139,7 @@ if (!$cms->bound('config/database')) {
     $cms->bindShared('config/database', function(Application $cms) {
         $database_loader = new DatabaseLoader();
         $database_saver = new DatabaseSaver();
-        $cms->instance('config/database', new ConfigRepository($database_loader, $database_saver, $cms->environment()));
+        return new ConfigRepository($database_loader, $database_saver, $cms->environment());
     });
 }
 
