@@ -150,7 +150,13 @@ $database_config = $cms->make('config/database');
  * Setup the core service groups.
  * ----------------------------------------------------------------------------
  */
+
 $list = new ProviderList($cms);
+
+// Register events first so that they can be used by other providers.
+$list->registerProvider($config->get('app.providers.core_events'));
+
+// Register all other providers
 $list->registerProviders($config->get('app.providers'));
 
 /**
