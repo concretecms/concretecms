@@ -86,10 +86,12 @@ $cms->detectEnvironment(function() use ($db_config, $environment, $cms) {
  * ----------------------------------------------------------------------------
  */
 if (!$cms->bound('config')) {
-    $file_system = new Filesystem();
-    $file_loader = new FileLoader($file_system);
-    $file_saver = new FileSaver($file_system);
-    $cms->instance('config', new ConfigRepository($file_loader, $file_saver, $cms->environment()));
+    $cms->bindShared('config', function($cms) {
+        $file_system = new Filesystem();
+        $file_loader = new FileLoader($file_system);
+        $file_saver = new FileSaver($file_system);
+        return new ConfigRepository($file_loader, $file_saver, $cms->environment());
+    });
 }
 
 $config = $cms->make('config');
