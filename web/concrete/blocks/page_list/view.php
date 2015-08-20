@@ -3,6 +3,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $th = Loader::helper('text');
 $c = Page::getCurrentPage();
 $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
+if ($includeName || $includeDescription || $useButtonForLink) $includeEntryText = true; else $includeEntryText = false;
 ?>
 
 <? if ( $c->isEditMode() && $controller->isBlockEmpty()) { ?>
@@ -39,10 +40,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
         if ($displayThumbnail) {
             $thumbnail = $page->getAttribute('thumbnail');
         }
-        $includeEntryText = false;
-        if ($includeName || $includeDescription || $useButtonForLink) {
-            $includeEntryText = true;
-        }
+        
         if (is_object($thumbnail) && $includeEntryText) {
             $entryClasses = 'ccm-block-page-list-page-entry-horizontal';
         }
