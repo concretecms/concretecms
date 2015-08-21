@@ -23,7 +23,14 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 
     <div class="ccm-block-page-list-pages">
 
-    <?php foreach ($pages as $page):
+    <?php
+
+    $includeEntryText = false;
+    if ($includeName || $includeDescription || $useButtonForLink) {
+        $includeEntryText = true;
+    }
+
+    foreach ($pages as $page):
 
 		// Prepare data for each page being listed...
         $buttonClasses = 'ccm-block-page-list-read-more';
@@ -38,10 +45,6 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
         $thumbnail = false;
         if ($displayThumbnail) {
             $thumbnail = $page->getAttribute('thumbnail');
-        }
-        $includeEntryText = false;
-        if ($includeName || $includeDescription || $useButtonForLink) {
-            $includeEntryText = true;
         }
         if (is_object($thumbnail) && $includeEntryText) {
             $entryClasses = 'ccm-block-page-list-page-entry-horizontal';
