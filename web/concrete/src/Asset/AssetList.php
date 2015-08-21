@@ -17,13 +17,21 @@ class AssetList
     public $assets = array();
 
     /**
-     * @var array map<handle, AssetGroup>
+     * @var AssetGroup[] map<handle, AssetGroup>
      */
     public $assetGroups = array();
 
     public function getRegisteredAssets()
     {
         return $this->assets;
+    }
+
+    /**
+     * @return \Concrete\Core\Asset\AssetGroup[]
+     */
+    public function getRegisteredAssetGroups()
+    {
+        return $this->assetGroups;
     }
 
     /**

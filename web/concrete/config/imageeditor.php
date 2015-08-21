@@ -7,6 +7,12 @@ return array(
         ##
         # Controls
         ##
+
+        /**
+         * Extension that provides image placement and other default core functionality
+         *
+         * @var array imageeditor.extensions.core/position
+         */
         'core/position' => array(
             'type' => Concrete\Core\ImageEditor\ImageEditor::ImageEditorExtensionControl,
             'name' => tc('ImageEditorControlSetName', 'Position'),
@@ -18,6 +24,11 @@ return array(
             )
         ),
 
+        /**
+         * Extension for adding filter management and slideout
+         *
+         * @var array imageeditor.extensions.core/filter
+         */
         'core/filter' => array(
             'type' => Concrete\Core\ImageEditor\ImageEditor::ImageEditorExtensionControl,
             'name' => tc('ImageEditorControlSetName', 'Filter'),
@@ -32,6 +43,12 @@ return array(
         ##
         # Filters
         ##
+
+        /**
+         * Gaussian blur filter
+         *
+         * @var array imageeditor.extensions.core/filter/gaussian_blur
+         */
         'core/filter/gaussian_blur' => array(
             'type' => Concrete\Core\ImageEditor\ImageEditor::ImageEditorExtensionFilter,
             'name' => tc('ImageEditorFilterName', 'Gaussian Blur'),
@@ -42,6 +59,12 @@ return array(
                 'core/imageeditor/filter/gaussian_blur' => array('css')
             )
         ),
+
+        /**
+         * Grayscale filter
+         *
+         * @var array imageeditor.extensions.core/filter/grayscale
+         */
         'core/filter/grayscale' => array(
             'type' => Concrete\Core\ImageEditor\ImageEditor::ImageEditorExtensionFilter,
             'name' => tc('ImageEditorFilterName', 'Grayscale'),
@@ -52,6 +75,12 @@ return array(
                 'core/imageeditor/filter/grayscale' => array('css')
             )
         ),
+
+        /**
+         * No filter
+         *
+         * @var array imageeditor.extensions.core/filter/none
+         */
         'core/filter/none' => array(
             'type' => Concrete\Core\ImageEditor\ImageEditor::ImageEditorExtensionFilter,
             'name' => tc('ImageEditorFilterName', 'None'),
@@ -62,6 +91,12 @@ return array(
                 'core/imageeditor/filter/none' => array('css')
             )
         ),
+
+        /**
+         * Sepia filter
+         *
+         * @var array imageeditor.extensions.core/filter/sepia
+         */
         'core/filter/sepia' => array(
             'type' => Concrete\Core\ImageEditor\ImageEditor::ImageEditorExtensionFilter,
             'name' => tc('ImageEditorFilterName', 'Sepia'),
@@ -72,7 +107,14 @@ return array(
                 'core/imageeditor/filter/sepia' => array('css')
             )
         ),
+
+        /**
+         * Vignette filter
+         *
+         * @var array imageeditor.extensions.core/filter/vignette
+         */
         'core/filter/vignette' => array(
+
             'type' => Concrete\Core\ImageEditor\ImageEditor::ImageEditorExtensionFilter,
             'name' => tc('ImageEditorFilterName', 'Vignette'),
             'handle' => 'vignette',

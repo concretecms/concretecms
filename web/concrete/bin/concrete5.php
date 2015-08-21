@@ -17,4 +17,9 @@ if ($cms->isInstalled()) {
     $cms->setupPackages();
 }
 $app->setupDefaultCommands();
+
+\Events::dispatch('on_before_console_run');
+
 $app->run();
+
+\Events::dispatch('on_after_console_run');
