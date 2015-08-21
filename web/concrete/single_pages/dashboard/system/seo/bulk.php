@@ -181,13 +181,13 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                             ?><a class="help-inline url-path" href="<?php echo $nh->getLinkToCollection($cobj); ?>" target="_blank"><?php echo Core::getApplicationURL() . $untokens; ?></a><?php
                             ?>
                         </div>
+                        <? } ?>
                         <div class="form-group submit-changes">
                             <form id="seoForm<?php echo $cID; ?>" action="<?php echo View::url('/dashboard/system/seo/page_data/', 'saveRecord')?>" method="post" class="pageForm">
                                 <a class="btn btn-default submit-changes" data-cID="<?php echo $cobj->getCollectionID() ?>"><?php echo t('Save') ?></a>
                             </form>
                             <img style="display: none; position: absolute; top: 20px; right: 20px;" id="throbber<?php echo $cID ?>"  class="throbber" src="<?php echo ASSETS_URL_IMAGES . '/throbber_white_32.gif' ?>" />
                         </div>
-                        <? } ?>
                     </div>
             </div>
             <?php } ?>
