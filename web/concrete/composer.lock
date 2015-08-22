@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ee121aec06025b599e2c8bf8c303b922",
+    "hash": "f4cd1316989937e9474cd3392934a011",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -3915,16 +3915,16 @@
     "packages-dev": [
         {
             "name": "concrete5/documentation_generator",
-            "version": "1.0-alpha4",
+            "version": "1.0-beta1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/concrete5/documentation_generator.git",
-                "reference": "ec981bb14f2e52f5d6dffb4bcb3dbbe1abfb6132"
+                "reference": "66139d7ac7c50292e10c8e2ccd4f229557f109fa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/concrete5/documentation_generator/zipball/ec981bb14f2e52f5d6dffb4bcb3dbbe1abfb6132",
-                "reference": "ec981bb14f2e52f5d6dffb4bcb3dbbe1abfb6132",
+                "url": "https://api.github.com/repos/concrete5/documentation_generator/zipball/66139d7ac7c50292e10c8e2ccd4f229557f109fa",
+                "reference": "66139d7ac7c50292e10c8e2ccd4f229557f109fa",
                 "shasum": ""
             },
             "require": {
@@ -3947,7 +3947,7 @@
                 }
             ],
             "description": "concrete5 composer package for adding commands that generate documentation.",
-            "time": "2015-08-20 07:38:40"
+            "time": "2015-08-22 22:22:05"
         },
         {
             "name": "phpdocumentor/reflection-docblock",
@@ -4000,7 +4000,7 @@
         }
     ],
     "aliases": [],
-    "minimum-stability": "alpha",
+    "minimum-stability": "beta",
     "stability-flags": {
         "doctrine/migrations": 20,
         "patchwork/utf8": 20,
@@ -4013,7 +4013,7 @@
         "primal/color": 20,
         "zendframework/zend-queue": 20,
         "oryzone/oauth-user-data": 20,
-        "concrete5/documentation_generator": 15
+        "concrete5/documentation_generator": 10
     },
     "prefer-stable": true,
     "prefer-lowest": false,
