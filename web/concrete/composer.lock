@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f4cd1316989937e9474cd3392934a011",
+    "hash": "c833e5b77d9a8a03b6bada709c2177ae",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -3915,16 +3915,16 @@
     "packages-dev": [
         {
             "name": "concrete5/documentation_generator",
-            "version": "1.0-beta1",
+            "version": "1.0-beta2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/concrete5/documentation_generator.git",
-                "reference": "66139d7ac7c50292e10c8e2ccd4f229557f109fa"
+                "reference": "79e3a5c017797bf39d8cbbfdc1d79517bd21fbe9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/concrete5/documentation_generator/zipball/66139d7ac7c50292e10c8e2ccd4f229557f109fa",
-                "reference": "66139d7ac7c50292e10c8e2ccd4f229557f109fa",
+                "url": "https://api.github.com/repos/concrete5/documentation_generator/zipball/79e3a5c017797bf39d8cbbfdc1d79517bd21fbe9",
+                "reference": "79e3a5c017797bf39d8cbbfdc1d79517bd21fbe9",
                 "shasum": ""
             },
             "require": {
@@ -3947,7 +3947,7 @@
                 }
             ],
             "description": "concrete5 composer package for adding commands that generate documentation.",
-            "time": "2015-08-22 22:22:05"
+            "time": "2015-08-23 06:00:07"
         },
         {
             "name": "phpdocumentor/reflection-docblock",

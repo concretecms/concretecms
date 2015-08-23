@@ -63,6 +63,6 @@
     "concrete5/doctrine-xml": "1.0.0"
   },
   "require-dev": {
-    "concrete5/documentation_generator": "1.0-beta1"
+    "concrete5/documentation_generator": "1.0-beta2"
   }
 }
