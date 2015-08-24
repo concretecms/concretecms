@@ -83,4 +83,28 @@ class Action extends AbstractController
         return $response;
     }
 
+    public function edit_composer($cID, $arHandle, $ptComposerFormLayoutSetControlID, $action)
+    {
+        $c = \Page::getByID($cID);
+        $setControl = FormLayoutSetControl::getByID($ptComposerFormLayoutSetControlID);
+        if (is_object($setControl)) {
+            if (is_object($c) && !$c->isError()) {
+                $formControl = $setControl->getPageTypeComposerControlObject();
+                if ($formControl instanceof BlockControl) {
+                    $b = $formControl->getPageTypeComposerControlBlockObject($c);
+                    if (is_object($b)) {
+                        $bp = new \Permissions($b);
+                        if ($bp->canEditBlock()) {
+                            $controller = $b->getController();
+                            return $this->deliverResponse($controller, $action);
+                        }
+                    }
+                }
+            }
+        }
+        $response = new Response(t('Access Denied'));
+        return $response;
+    }
+
+
 }

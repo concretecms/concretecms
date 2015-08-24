@@ -282,6 +282,7 @@ return array(
         "/ccm/system/block/action/add/{cID}/{arHandle}/{btID}/{action}"                 => array('\Concrete\Controller\Backend\Block\Action::add'),
         "/ccm/system/block/action/edit/{cID}/{arHandle}/{bID}/{action}"                 => array('\Concrete\Controller\Backend\Block\Action::edit'),
         "/ccm/system/block/action/add_composer/{ptComposerFormLayoutSetControlID}/{action}"  => array('\Concrete\Controller\Backend\Block\Action::add_composer'),
+        "/ccm/system/block/action/edit_composer/{cID}/{arHandle}/{ptComposerFormLayoutSetControlID}/{action}"  => array('\Concrete\Controller\Backend\Block\Action::edit_composer'),
 
         /**
          * Misc

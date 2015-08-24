@@ -151,8 +151,9 @@ class FormLayoutSetControl extends Object
             if(!$control->ptComposerControlObject->objectExists()) {
                 $control->delete();
                 return null;
+            } else {
+                $control->ptComposerControlObject->setPageTypeComposerFormLayoutSetControlObject($control);
             }
-
             return $control;
         }
     }
