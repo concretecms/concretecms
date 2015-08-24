@@ -139,7 +139,7 @@ class DateTime
             }
             $html .= '>';
             // This prints out the translation of "AM" in the current language
-            $html .= $dh->date('A', mktime(1));
+            $html .= $dh->date('A', mktime(1), 'app');
             $html .= '</option>';
             $html .= '<option value="PM" ';
             if ($timeAMPM == 'PM') {
@@ -147,7 +147,7 @@ class DateTime
             }
             $html .= '>';
             // This prints out the translation of "PM" in the current language
-            $html .= $dh->date('A', mktime(13));
+            $html .= $dh->date('A', mktime(13), 'app');
             $html .= '</option>';
             $html .= '</select>';
         }
