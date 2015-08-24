@@ -34,7 +34,7 @@ class Marketplace
             $csiURL = urlencode(\Core::getApplicationURL());
             $url = Config::get('concrete.urls.concrete5') . Config::get('concrete.urls.paths.marketplace.connect_validate') . "?csToken={$csToken}&csiURL=" . $csiURL . "&csiVersion=" . APP_VERSION;
             $vn = Loader::helper('validation/numbers');
-            $r = $fh->getContents($url);
+            $r = $fh->getContents($url, 15);
             if ($r == false) {
                 $this->isConnected = true;
             } else {
@@ -68,7 +68,7 @@ class Marketplace
     {
         $fh = Loader::helper('file');
         $file .= '?csiURL=' . urlencode(\Core::getApplicationURL()) . "&csiVersion=" . APP_VERSION;
-        $pkg = $fh->getContents($file);
+        $pkg = $fh->getContents($file, 15);
         if (empty($pkg)) {
             return Package::E_PACKAGE_DOWNLOAD;
         }
@@ -119,7 +119,7 @@ class Marketplace
         $csiURL = urlencode(\Core::getApplicationURL());
         $url = Config::get('concrete.urls.concrete5') . Config::get('concrete.urls.paths.marketplace.purchases');
         $url .= "?csToken={$csToken}&csiURL=" . $csiURL . "&csiVersion=" . APP_VERSION;
-        $json = $fh->getContents($url);
+        $json = $fh->getContents($url, 15);
 
         $addons = array();
 
@@ -247,7 +247,9 @@ class Marketplace
     public function generateSiteToken()
     {
         $fh = Loader::helper('file');
-        $token = $fh->getContents(Config::get('concrete.urls.concrete5') . Config::get('concrete.urls.paths.marketplace.connect_new_token'));
+        $token = $fh->getContents(
+            Config::get('concrete.urls.concrete5') . Config::get('concrete.urls.paths.marketplace.connect_new_token'),
+            15);
         return $token;
     }
 
