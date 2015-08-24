@@ -191,13 +191,25 @@ class Marketplace
                 if ($this->hasConnectionError()) {
                     if ($this->connectionError == Marketplace::E_DELETED_SITE_TOKEN) {
                         $connectMethod = 'view';
-                        $csToken = Marketplace::generateSiteToken();
+                        try {
+                            $csToken = Marketplace::generateSiteToken();
+                        } catch (\Concrete\Core\File\Exception\RequestTimeoutException $exception) {
+                            return '<div class="ccm-error">' .
+                            t('Unable to generate a marketplace token. Request timed out.') .
+                            '</div>';
+                        }
                     } else {
                         $csToken = $this->getSiteToken();
                     }
                 } else {
                     // new connection
-                    $csToken = Marketplace::generateSiteToken();
+                    try {
+                        $csToken = Marketplace::generateSiteToken();
+                    } catch (\Concrete\Core\File\Exception\RequestTimeoutException $exception) {
+                        return '<div class="ccm-error">' .
+                        t('Unable to generate a marketplace token. Request timed out.') .
+                        '</div>';
+                    }
                 }
                 $url = $frameURL . Config::get('concrete.urls.paths.marketplace.connect') . '/-/' . $connectMethod;
                 $url = $url . '?ts=' . time() . '&csiBaseURL=' . $csiBaseURL . '&csiURL=' . $csiURL . '&csToken=' . $csToken . '&csReferrer=' . $csReferrer . '&csName=' . htmlspecialchars(
@@ -244,6 +256,10 @@ class Marketplace
         return $this->connectionError != false;
     }
 
+    /**
+     * @return bool|string
+     * @throws \Concrete\Core\File\Exception\RequestTimeoutException
+     */
     public function generateSiteToken()
     {
         $fh = Loader::helper('file');
