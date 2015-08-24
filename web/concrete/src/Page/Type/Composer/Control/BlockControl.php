@@ -51,7 +51,7 @@ class BlockControl extends Control
         $b->deleteBlock();
     }
 
-    protected function getPageTypeComposerControlBlockObject(Page $c)
+    public function getPageTypeComposerControlBlockObject(Page $c)
     {
         $db = Loader::db();
         if (!is_object($this->b)) {
@@ -239,16 +239,16 @@ class BlockControl extends Control
         } else {
             $area = $obj->getBlockAreaObject();
             $c = $area->getAreaCollectionObject();
-            $arguments = array('/ccm/system/block/action/edit',
+            $arguments = array('/ccm/system/block/action/edit_composer',
                 $c->getCollectionID(),
                 urlencode($area->getAreaHandle()),
-                $obj->getBlockID(),
+                $this->getPageTypeComposerFormLayoutSetControlObject()->getPageTypeComposerFormLayoutSetControlID(),
                 $task
             );
             return call_user_func_array(array('\URL', 'to'), $arguments);
         }
     }
-    
+
     public function inc($file, $args = array())
     {
         extract($args);
