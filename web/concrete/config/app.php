@@ -1028,6 +1028,7 @@ return array(
         )
     ),
     'curl' => array(
-        'verifyPeer' => true
+        'verifyPeer' => true,
+        'connectionTimeout' => 5
     )
 );

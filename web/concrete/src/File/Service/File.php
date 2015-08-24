@@ -302,7 +302,7 @@ class File
      *
      * @return string|bool Returns false in case of failure
      */
-    public function getContents($file, $timeout = 5)
+    public function getContents($file, $timeout = null)
     {
         $url = @parse_url($file);
         if (isset($url['scheme']) && isset($url['host'])) {
@@ -321,6 +321,10 @@ class File
                             CURLOPT_PROXYUSERPWD,
                             Config::get('concrete.proxy.user') . ':' . Config::get('concrete.proxy.password'));
                     }
+                }
+
+                if ($timeout === null) {
+                    $timeout = Config::get('app.curl.connectionTimeout');
                 }
 
                 curl_setopt($curl_handle, CURLOPT_URL, $file);
