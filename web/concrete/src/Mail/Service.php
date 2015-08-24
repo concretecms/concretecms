@@ -402,118 +402,118 @@ class Service
         $fromStr = $this->generateEmailStrings($_from);
         $toStr = $this->generateEmailStrings($this->to);
         $replyStr = $this->generateEmailStrings($this->replyto);
-        if (Config::get('concrete.email.enabled')) {
-            $zendMailData = self::getMailerObject();
+        $zendMailData = self::getMailerObject();
 
-            $mail = $zendMailData['mail'];
-            $transport = $zendMailData['transport'];
+        $mail = $zendMailData['mail'];
+        $transport = $zendMailData['transport'];
 
-            if (is_array($this->from) && count($this->from)) {
-                if ($this->from[0] != '') {
-                    $from = $this->from;
-                }
+        if (is_array($this->from) && count($this->from)) {
+            if ($this->from[0] != '') {
+                $from = $this->from;
             }
-            if (!isset($from)) {
-                $from = array(Config::get('concrete.email.default.address'), Config::get('concrete.email.default.name'));
-                $fromStr = Config::get('concrete.email.default.address');
-            }
+        }
+        if (!isset($from)) {
+            $from = array(Config::get('concrete.email.default.address'), Config::get('concrete.email.default.name'));
+            $fromStr = Config::get('concrete.email.default.address');
+        }
 
-            // The currently included Zend library has a bug in setReplyTo that
-            // adds the Reply-To address as a recipient of the email. We must
-            // set the Reply-To before any header with addresses and then clear
-            // all recipients so that a copy is not sent to the Reply-To address.
-            if (is_array($this->replyto)) {
-                foreach ($this->replyto as $reply) {
-                    $mail->setReplyTo($reply[0], $reply[1]);
-                }
+        // The currently included Zend library has a bug in setReplyTo that
+        // adds the Reply-To address as a recipient of the email. We must
+        // set the Reply-To before any header with addresses and then clear
+        // all recipients so that a copy is not sent to the Reply-To address.
+        if (is_array($this->replyto)) {
+            foreach ($this->replyto as $reply) {
+                $mail->setReplyTo($reply[0], $reply[1]);
             }
+        }
 
-            $mail->setFrom($from[0], $from[1]);
-            $mail->setSubject($this->subject);
-            foreach ($this->to as $to) {
-                $mail->addTo($to[0], $to[1]);
-            }
+        $mail->setFrom($from[0], $from[1]);
+        $mail->setSubject($this->subject);
+        foreach ($this->to as $to) {
+            $mail->addTo($to[0], $to[1]);
+        }
 
-            if (is_array($this->cc) && count($this->cc)) {
-                foreach ($this->cc as $cc) {
-                    $mail->addCc($cc[0], $cc[1]);
-                }
+        if (is_array($this->cc) && count($this->cc)) {
+            foreach ($this->cc as $cc) {
+                $mail->addCc($cc[0], $cc[1]);
             }
+        }
 
-            if (is_array($this->bcc) && count($this->bcc)) {
-                foreach ($this->bcc as $bcc) {
-                    $mail->addBcc($bcc[0], $bcc[1]);
-                }
+        if (is_array($this->bcc) && count($this->bcc)) {
+            foreach ($this->bcc as $bcc) {
+                $mail->addBcc($bcc[0], $bcc[1]);
             }
-            $headers = $mail->getHeaders();
-            if ($headers->has('messageid')) {
-                $messageIdHeader = $headers->get('messageid');
-            } else {
-                $messageIdHeader = new \Zend\Mail\Header\MessageId();
-                $headers->addHeader($messageIdHeader);
-            }
-            
-            $headers->addHeaders($this->headers);
+        }
+        $headers = $mail->getHeaders();
+        if ($headers->has('messageid')) {
+            $messageIdHeader = $headers->get('messageid');
+        } else {
+            $messageIdHeader = new \Zend\Mail\Header\MessageId();
+            $headers->addHeader($messageIdHeader);
+        }
 
-            $messageIdHeader->setId();
+        $headers->addHeaders($this->headers);
 
-            $body = new MimeMessage();
-            if (($this->body !== false) && ($this->bodyHTML !== false)) {
-                $alternatives = new MimeMessage();
-                $text = new MimePart($this->body);
-                $text->type = 'text/plain';
-                $text->charset = APP_CHARSET;
-                $alternatives->addPart($text);
-                $html = new MimePart($this->bodyHTML);
-                $html->type = 'text/html';
-                $html->charset = APP_CHARSET;
-                $alternatives->addPart($html);
-                $alternativesPath = new MimePart($alternatives->generateMessage());
-                $alternativesPath->type = 'multipart/alternative;'.Mime::LINEEND.' boundary="'.$alternatives->getMime()->boundary().'"';
-                $body->addPart($alternativesPath);
-            } elseif ($this->body !== false) {
-                $text = new MimePart($this->body);
-                $text->type = 'text/plain';
-                $text->charset = APP_CHARSET;
-                $body->addPart($text);
-            } elseif ($this->bodyHTML !== false) {
-                $html = new MimePart($this->bodyHTML);
-                $html->type = 'text/html';
-                $html->charset = APP_CHARSET;
-                $body->addPart($html);
-            }
-            foreach ($this->attachments as $att) {
-                $body->addPart($att);
-            }
-            if (count($body->getParts()) === 0) {
-                $text = new MimePart('');
-                $text->type = 'text/plain';
-                $text->charset = APP_CHARSET;
-                $body->addPart($text);
-            }
-            $mail->setBody($body);
+        $messageIdHeader->setId();
 
-            try {
+        $body = new MimeMessage();
+        if (($this->body !== false) && ($this->bodyHTML !== false)) {
+            $alternatives = new MimeMessage();
+            $text = new MimePart($this->body);
+            $text->type = 'text/plain';
+            $text->charset = APP_CHARSET;
+            $alternatives->addPart($text);
+            $html = new MimePart($this->bodyHTML);
+            $html->type = 'text/html';
+            $html->charset = APP_CHARSET;
+            $alternatives->addPart($html);
+            $alternativesPath = new MimePart($alternatives->generateMessage());
+            $alternativesPath->type = 'multipart/alternative;'.Mime::LINEEND.' boundary="'.$alternatives->getMime()->boundary().'"';
+            $body->addPart($alternativesPath);
+        } elseif ($this->body !== false) {
+            $text = new MimePart($this->body);
+            $text->type = 'text/plain';
+            $text->charset = APP_CHARSET;
+            $body->addPart($text);
+        } elseif ($this->bodyHTML !== false) {
+            $html = new MimePart($this->bodyHTML);
+            $html->type = 'text/html';
+            $html->charset = APP_CHARSET;
+            $body->addPart($html);
+        }
+        foreach ($this->attachments as $att) {
+            $body->addPart($att);
+        }
+        if (count($body->getParts()) === 0) {
+            $text = new MimePart('');
+            $text->type = 'text/plain';
+            $text->charset = APP_CHARSET;
+            $body->addPart($text);
+        }
+        $mail->setBody($body);
+
+        try {
+            if (Config::get('concrete.email.enabled')) {
                 $transport->send($mail);
-            } catch (Exception $e) {
-                if ($this->getTesting()) {
-                    throw $e;
-                }
-                $l = new GroupLogger(LOG_TYPE_EXCEPTIONS, Logger::CRITICAL);
-                $l->write(t('Mail Exception Occurred. Unable to send mail: ').$e->getMessage());
-                $l->write($e->getTraceAsString());
-                if (Config::get('concrete.log.emails')) {
-                    $l->write(t('Template Used').': '.$this->template);
-                    $l->write(t('To').': '.$toStr);
-                    $l->write(t('From').': '.$fromStr);
-                    if (isset($this->replyto)) {
-                        $l->write(t('Reply-To').': '.$replyStr);
-                    }
-                    $l->write(t('Subject').': '.$this->subject);
-                    $l->write(t('Body').': '.$this->body);
-                }
-                $l->close();
             }
+        } catch (Exception $e) {
+            if ($this->getTesting()) {
+                throw $e;
+            }
+            $l = new GroupLogger(LOG_TYPE_EXCEPTIONS, Logger::CRITICAL);
+            $l->write(t('Mail Exception Occurred. Unable to send mail: ').$e->getMessage());
+            $l->write($e->getTraceAsString());
+            if (Config::get('concrete.log.emails')) {
+                $l->write(t('Template Used').': '.$this->template);
+                $l->write(t('To').': '.$toStr);
+                $l->write(t('From').': '.$fromStr);
+                if (isset($this->replyto)) {
+                    $l->write(t('Reply-To').': '.$replyStr);
+                }
+                $l->write(t('Subject').': '.$this->subject);
+                $l->write(t('Body').': '.$this->body);
+            }
+            $l->close();
         }
 
         // add email to log
