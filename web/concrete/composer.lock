@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c833e5b77d9a8a03b6bada709c2177ae",
+    "hash": "6d95551af3ed6b76ca68b088b62f433d",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -687,7 +687,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/migrations/zipball/a4f14d3a3d397104e557ec65d1a4e43bb86e4ddf",
+                "url": "https://api.github.com/repos/doctrine/migrations/zipball/27edc388296a3cffc7c30942a7613abb4998701c",
                 "reference": "efb77c10dfb75485998a843154bbc44d8124c4d1",
                 "shasum": ""
             },
@@ -1039,7 +1039,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hautelook/phpass/zipball/9590c12bf7c92f67f646d7bf2cf6384e7292cc41",
+                "url": "https://api.github.com/repos/hautelook/phpass/zipball/f0217d804225822f9bdb0d392839029b0fcb0914",
                 "reference": "9590c12bf7c92f67f646d7bf2cf6384e7292cc41",
                 "shasum": ""
             },
@@ -1083,7 +1083,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kesar/HTMLawed/zipball/9d292af5f4c288aa68f38b87f5d88c8214f5f233",
+                "url": "https://api.github.com/repos/kesar/HTMLawed/zipball/1df80388ef46f50306709c73df0f09c2643872fa",
                 "reference": "9d292af5f4c288aa68f38b87f5d88c8214f5f233",
                 "shasum": ""
             },
@@ -1516,7 +1516,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/michelf/php-markdown/zipball/e1aabe18173231ebcefc90e615565742fc1c7fd9",
+                "url": "https://api.github.com/repos/michelf/php-markdown/zipball/37a75bfac8e16a7d47c2950abcb2f9a3811e375c",
                 "reference": "e1aabe18173231ebcefc90e615565742fc1c7fd9",
                 "shasum": ""
             },
@@ -1743,7 +1743,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/natxet/CssMin/zipball/f076e41392b0008efb47074a133ec1d90dc8c99f",
+                "url": "https://api.github.com/repos/natxet/CssMin/zipball/4026975145f645a77e087a26e7b0a1c9209b0191",
                 "reference": "f076e41392b0008efb47074a133ec1d90dc8c99f",
                 "shasum": ""
             },
@@ -2019,7 +2019,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tchwork/utf8/zipball/ffa082111aa3cb23cf2479a17e6785ace91da982",
+                "url": "https://api.github.com/repos/tchwork/utf8/zipball/38047e4a8f64e1974f46ae6bec56aaa0357bb98d",
                 "reference": "ffa082111aa3cb23cf2479a17e6785ace91da982",
                 "shasum": ""
             },
@@ -3915,20 +3915,24 @@
     "packages-dev": [
         {
             "name": "concrete5/documentation_generator",
-            "version": "1.0-beta2",
+            "version": "1.0-beta3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/concrete5/documentation_generator.git",
-                "reference": "79e3a5c017797bf39d8cbbfdc1d79517bd21fbe9"
+                "reference": "459a67558856aea75fe253d21b5eacda0c8ea4fd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/concrete5/documentation_generator/zipball/79e3a5c017797bf39d8cbbfdc1d79517bd21fbe9",
-                "reference": "79e3a5c017797bf39d8cbbfdc1d79517bd21fbe9",
+                "url": "https://api.github.com/repos/concrete5/documentation_generator/zipball/459a67558856aea75fe253d21b5eacda0c8ea4fd",
+                "reference": "459a67558856aea75fe253d21b5eacda0c8ea4fd",
                 "shasum": ""
             },
             "require": {
                 "phpdocumentor/reflection-docblock": "~2.0"
+            },
+            "require-dev": {
+                "concrete5/concrete5": "dev-develop",
+                "phpunit/phpunit": "~4.8"
             },
             "type": "library",
             "autoload": {
@@ -3947,7 +3951,7 @@
                 }
             ],
             "description": "concrete5 composer package for adding commands that generate documentation.",
-            "time": "2015-08-23 06:00:07"
+            "time": "2015-08-26 20:30:43"
         },
         {
             "name": "phpdocumentor/reflection-docblock",
