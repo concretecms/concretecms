@@ -364,31 +364,42 @@ return array(
         /**
          * Enable marketplace integration
          *
-         * @var bool
+         * @var bool concrete.marketplace.enabled
          */
         'enabled'            => true,
 
         /**
+         * Time it takes for a request to timeout
+         *
+         * @var int concrete.marketplace.request_timeout
+         */
+        'request_timeout'   => 30,
+
+        /**
          * Marketplace Token
          *
-         * @var null|string
+         * @var null|string concrete.marketplace.token
          */
         'token'              => null,
 
         /**
          * Marketplace Site url Token
          *
-         * @var null|string
+         * @var null|string concrete.marketplace.site_token
          */
         'site_token'         => null,
 
         /**
          * Enable intelligent search integration
+         *
+         * @var bool concrete.marketplace.intelligent_search
          */
         'intelligent_search' => true,
 
         /**
          * Log requests
+         *
+         * @var bool concrete.marketplace.log_requests
          */
         'log_requests' => false
     ),
@@ -551,7 +562,6 @@ return array(
             'site_page'         => '/private/sites',
             'newsflow_slot_content'      => '/tools/slot_content/',
             'marketplace'       => array(
-                'request_timeout'   => 30,
                 'connect'           => '/marketplace/connect',
                 'connect_success'   => '/marketplace/connect/-/connected',
                 'connect_validate'  => '/marketplace/connect/-/validate',
