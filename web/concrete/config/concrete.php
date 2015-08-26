@@ -551,6 +551,7 @@ return array(
             'site_page'         => '/private/sites',
             'newsflow_slot_content'      => '/tools/slot_content/',
             'marketplace'       => array(
+                'request_timeout'   => 30,
                 'connect'           => '/marketplace/connect',
                 'connect_success'   => '/marketplace/connect/-/connected',
                 'connect_validate'  => '/marketplace/connect/-/validate',

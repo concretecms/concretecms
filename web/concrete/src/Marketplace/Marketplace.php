@@ -34,7 +34,7 @@ class Marketplace
             $csiURL = urlencode(\Core::getApplicationURL());
             $url = Config::get('concrete.urls.concrete5') . Config::get('concrete.urls.paths.marketplace.connect_validate') . "?csToken={$csToken}&csiURL=" . $csiURL . "&csiVersion=" . APP_VERSION;
             $vn = Loader::helper('validation/numbers');
-            $r = $fh->getContents($url, 15);
+            $r = $fh->getContents($url, Config::get('concrete.marketplace.request_timeout'));
             if ($r == false) {
                 $this->isConnected = true;
             } else {
@@ -68,7 +68,7 @@ class Marketplace
     {
         $fh = Loader::helper('file');
         $file .= '?csiURL=' . urlencode(\Core::getApplicationURL()) . "&csiVersion=" . APP_VERSION;
-        $pkg = $fh->getContents($file, 15);
+        $pkg = $fh->getContents($file, Config::get('concrete.marketplace.request_timeout'));
         if (empty($pkg)) {
             return Package::E_PACKAGE_DOWNLOAD;
         }
@@ -119,7 +119,7 @@ class Marketplace
         $csiURL = urlencode(\Core::getApplicationURL());
         $url = Config::get('concrete.urls.concrete5') . Config::get('concrete.urls.paths.marketplace.purchases');
         $url .= "?csToken={$csToken}&csiURL=" . $csiURL . "&csiVersion=" . APP_VERSION;
-        $json = $fh->getContents($url, 15);
+        $json = $fh->getContents($url, Config::get('concrete.marketplace.request_timeout'));
 
         $addons = array();
 
@@ -265,7 +265,7 @@ class Marketplace
         $fh = Loader::helper('file');
         $token = $fh->getContents(
             Config::get('concrete.urls.concrete5') . Config::get('concrete.urls.paths.marketplace.connect_new_token'),
-            15);
+            Config::get('concrete.marketplace.request_timeout'));
         return $token;
     }
 
