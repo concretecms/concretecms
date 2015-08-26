@@ -274,6 +274,7 @@ return array(
         "/ccm/system/page/multilingual/create_new"                                      => array('\Concrete\Controller\Backend\Page\Multilingual::create_new'),
         "/ccm/system/page/multilingual/ignore"                                          => array('\Concrete\Controller\Backend\Page\Multilingual::ignore'),
         "/ccm/system/page/multilingual/unmap"                                           => array('\Concrete\Controller\Backend\Page\Multilingual::unmap'),
+        "/ccm/system/page/select_sitemap"                                           => array('\Concrete\Controller\Backend\Page\SitemapSelector::view'),
 
         /**
          * Block actions - non UI
