@@ -11,8 +11,13 @@
 		options = $.extend({
 			displayNodePagination: false,
 			cParentID: 0,
+			cookieId: 'ConcreteSitemap',
 			includeSystemPages: false,
-            displaySingleLevel: false
+            displaySingleLevel: false,
+			dataSource: CCM_TOOLS_PATH + '/dashboard/sitemap_data',
+			ajaxData: {},
+			selectMode: false,
+			onPostInit: false
 		}, options);
 		my.options = options;
 		my.$element = $element;
@@ -36,6 +41,22 @@
 				my = this,
 				doPersist = true;
 
+			var dynatreeSelectMode = 1,
+				checkbox = false,
+				classNames = false;
+
+			if (my.options.selectMode == 'single') {
+				checkbox = true;
+				classNames = {checkbox: "dynatree-radio"};
+			} else if (my.options.selectMode == 'multiple') {
+				dynatreeSelectMode = 2;
+				checkbox = true;
+			}
+
+			if (checkbox) {
+				doPersist = false;
+			}
+
 			if (my.options.displaySingleLevel) {
 				if (my.options.cParentID == 1) {
 					minExpandLevel = 2;
@@ -44,38 +65,52 @@
 				}
 				doPersist = false;
 			} else {
-				minExpandLevel = 1;
+				if (my.options.selectMode) {
+					minExpandLevel = 2;
+				} else {
+					minExpandLevel = 1;
+				}
 			}
+
+			var ajaxData = $.extend({
+				'displayNodePagination': my.options.displayNodePagination ? 1 : 0,
+				'cParentID': my.options.cParentID,
+				'displaySingleLevel': my.options.displaySingleLevel ? 1 : 0,
+				'includeSystemPages': my.options.includeSystemPages ? 1 : 0
+			}, my.options.ajaxData);
+
     		$(my.$element).addClass('ccm-tree-sitemap');
     		$(my.$element).dynatree({
                 onQueryExpand: function () {
                     (my.options.onQueryExpand || $.noop).apply(this, arguments);
                 },
 				autoFocus: false,
-				cookieId: 'ConcreteSitemap',
+				classNames: classNames,
+				cookieId: my.options.cookieId,
 				cookie: {
 					path: CCM_REL + '/'
 				},
 				persist: doPersist,
 				initAjax: {
-					url: CCM_TOOLS_PATH + '/dashboard/sitemap_data',
-					data: {
-						'displayNodePagination': my.options.displayNodePagination ? 1 : 0,
-						'cParentID': my.options.cParentID,
-						'displaySingleLevel': my.options.displaySingleLevel ? 1 : 0,
-						'includeSystemPages': my.options.includeSystemPages ? 1 : 0
-					}
-
+					url: my.options.dataSource,
+					data: ajaxData
 				},
 				onPostInit: function() {
+					if (my.options.onPostInit) {
+						my.options.onPostInit.call();
+					}
 					if (my.options.displayNodePagination) {
 						my.setupNodePagination(my.$element, my.options.cParentID);
 					}
 				},
-                onRender: function() {
+                onRender: function(node, span) {
+					if (my.options.selectMode != false) {
+						$(span).find('.fa').remove();
+					}
                     my.$element.children('.ccm-pagination-bound').remove();
                 },
-				selectMode: 1,
+				selectMode: dynatreeSelectMode,
+				checkbox: checkbox,
 				minExpandLevel:  minExpandLevel,
 				clickFolderMode: 2,
 				onLazyRead: function(node) {
@@ -90,9 +125,16 @@
 						my.displaySingleLevel(node);
 					}
 				},
+				onSelect: function(flag, node) {
+					if (my.options.onSelectNode) {
+						my.options.onSelectNode.call(my, node, flag);
+					}
+				},
 				onClick: function(node, e) {
 					if (node.getEventTargetType(e) == "title" && node.data.cID) {
-						if (my.options.onSelectNode) {
+						if (my.options.selectMode) {
+							node.select(node.isSelected() ? false : true);
+						} else if (my.options.onSelectNode) {
 							my.options.onSelectNode.call(my, node);
 
 						/*} else if (methods.private.eventListenerExists(my.options.requestID, 'onSelectNode')) {
@@ -120,6 +162,9 @@
 				fx: {height: 'toggle', duration: 200},
 				dnd: {
 					onDragStart: function(node) {
+						if (my.options.selectMode) {
+							return false;
+						}
 						if (node.data.cID) {
 							return true;
 						}
@@ -301,15 +346,15 @@
     		var root = my.$element.dynatree('getRoot');
 			$(node.li).closest('[data-sitemap=container]').dynatree('option', 'minExpandLevel', minExpandLevel);
 			root.removeChildren();
+			var ajaxData = $.extend({
+				'displayNodePagination': options.displayNodePagination ? 1 : 0,
+				'cParentID': node.data.cID,
+				'displaySingleLevel': true,
+				'includeSystemPages': options.includeSystemPages ? 1 : 0
+			}, options.ajaxData);
 			root.appendAjax({
-				url: CCM_TOOLS_PATH + '/dashboard/sitemap_data',
-				data: {
-					'displayNodePagination': options.displayNodePagination ? 1 : 0,
-					'cParentID': node.data.cID,
-					'displaySingleLevel': true,
-					'includeSystemPages': options.includeSystemPages ? 1 : 0
-				},
-
+				url: options.dataSource,
+				data: ajaxData,
 				success: function() {
 					my.setupNodePagination(root.tree.$tree, node.data.key);
 				}
@@ -320,13 +365,15 @@
     	reloadNode: function(node, onComplete) {
     		var my = this,
     			options = my.options,
+				ajaxData = $.extend({
+					cParentID: node.data.cID,
+					'includeSystemPages': options.includeSystemPages ? 1 : 0,
+					'displayNodePagination': options.displayNodePagination ? 1 : 0
+				}, options.ajaxData),
+
     			params = {
-					url: CCM_TOOLS_PATH + '/dashboard/sitemap_data',
-					data: {
-						cParentID: node.data.cID,
-						'includeSystemPages': options.includeSystemPages ? 1 : 0,
-						'displayNodePagination': options.displayNodePagination ? 1 : 0
-					},
+					url: options.dataSource,
+					data: ajaxData,
 					success: function() {
 						if (onComplete) {
 							onComplete();

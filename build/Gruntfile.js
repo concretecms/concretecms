@@ -264,7 +264,8 @@ module.exports = function(grunt) {
                 '<%= DIR_BASE %>/concrete/js/build/core/sitemap/sitemap.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/sitemap/menu.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/sitemap/search.js',
-                '<%= DIR_BASE %>/concrete/js/build/core/sitemap/selector.js'
+                '<%= DIR_BASE %>/concrete/js/build/core/sitemap/selector.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/sitemap/sitemap-selector.js'
             ]
         },
 
