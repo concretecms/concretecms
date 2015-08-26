@@ -34,7 +34,7 @@ class Marketplace
             $csiURL = urlencode(\Core::getApplicationURL());
             $url = Config::get('concrete.urls.concrete5') . Config::get('concrete.urls.paths.marketplace.connect_validate') . "?csToken={$csToken}&csiURL=" . $csiURL . "&csiVersion=" . APP_VERSION;
             $vn = Loader::helper('validation/numbers');
-            $r = $fh->getContents($url);
+            $r = $fh->getContents($url, Config::get('concrete.marketplace.request_timeout'));
             if ($r == false) {
                 $this->isConnected = true;
             } else {
@@ -68,7 +68,7 @@ class Marketplace
     {
         $fh = Loader::helper('file');
         $file .= '?csiURL=' . urlencode(\Core::getApplicationURL()) . "&csiVersion=" . APP_VERSION;
-        $pkg = $fh->getContents($file);
+        $pkg = $fh->getContents($file, Config::get('concrete.marketplace.request_timeout'));
         if (empty($pkg)) {
             return Package::E_PACKAGE_DOWNLOAD;
         }
@@ -119,7 +119,7 @@ class Marketplace
         $csiURL = urlencode(\Core::getApplicationURL());
         $url = Config::get('concrete.urls.concrete5') . Config::get('concrete.urls.paths.marketplace.purchases');
         $url .= "?csToken={$csToken}&csiURL=" . $csiURL . "&csiVersion=" . APP_VERSION;
-        $json = $fh->getContents($url);
+        $json = $fh->getContents($url, Config::get('concrete.marketplace.request_timeout'));
 
         $addons = array();
 
@@ -191,13 +191,25 @@ class Marketplace
                 if ($this->hasConnectionError()) {
                     if ($this->connectionError == Marketplace::E_DELETED_SITE_TOKEN) {
                         $connectMethod = 'view';
-                        $csToken = Marketplace::generateSiteToken();
+                        try {
+                            $csToken = Marketplace::generateSiteToken();
+                        } catch (\Concrete\Core\File\Exception\RequestTimeoutException $exception) {
+                            return '<div class="ccm-error">' .
+                            t('Unable to generate a marketplace token. Request timed out.') .
+                            '</div>';
+                        }
                     } else {
                         $csToken = $this->getSiteToken();
                     }
                 } else {
                     // new connection
-                    $csToken = Marketplace::generateSiteToken();
+                    try {
+                        $csToken = Marketplace::generateSiteToken();
+                    } catch (\Concrete\Core\File\Exception\RequestTimeoutException $exception) {
+                        return '<div class="ccm-error">' .
+                        t('Unable to generate a marketplace token. Request timed out.') .
+                        '</div>';
+                    }
                 }
                 $url = $frameURL . Config::get('concrete.urls.paths.marketplace.connect') . '/-/' . $connectMethod;
                 $url = $url . '?ts=' . time() . '&csiBaseURL=' . $csiBaseURL . '&csiURL=' . $csiURL . '&csToken=' . $csToken . '&csReferrer=' . $csReferrer . '&csName=' . htmlspecialchars(
@@ -244,10 +256,16 @@ class Marketplace
         return $this->connectionError != false;
     }
 
+    /**
+     * @return bool|string
+     * @throws \Concrete\Core\File\Exception\RequestTimeoutException
+     */
     public function generateSiteToken()
     {
         $fh = Loader::helper('file');
-        $token = $fh->getContents(Config::get('concrete.urls.concrete5') . Config::get('concrete.urls.paths.marketplace.connect_new_token'));
+        $token = $fh->getContents(
+            Config::get('concrete.urls.concrete5') . Config::get('concrete.urls.paths.marketplace.connect_new_token'),
+            Config::get('concrete.marketplace.request_timeout'));
         return $token;
     }
 
