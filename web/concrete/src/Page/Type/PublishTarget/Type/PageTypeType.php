@@ -14,6 +14,7 @@ class PageTypeType extends Type
     {
         $configuration = new PageTypeConfiguration($this);
         $configuration->setPageTypeID($post['ptID']);
+        $configuration->setSelectorFormFactor($post['selectorFormFactorPageType']);
         return $configuration;
     }
 
@@ -21,7 +22,11 @@ class PageTypeType extends Type
     {
         $configuration = new PageTypeConfiguration($this);
         $ct = PageType::getByHandle((string)$txml['pagetype']);
+        $formFactor = (string) $txml['form-factor'];
         $configuration->setPageTypeID($ct->getPageTypeID());
+        if ($formFactor) {
+            $configuration->setSelectorFormFactor($formFactor);
+        }
         return $configuration;
     }
 
