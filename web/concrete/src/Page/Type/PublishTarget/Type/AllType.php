@@ -11,12 +11,18 @@ class AllType extends Type
     public function configurePageTypePublishTarget(PageType $pt, $post)
     {
         $configuredTarget = new AllConfiguration($this);
+        $configuredTarget->setSelectorFormFactor($post['selectorFormFactorAll']);
         return $configuredTarget;
     }
 
     public function configurePageTypePublishTargetFromImport($txml)
     {
-        return new AllConfiguration($this);
+        $configuration = new AllConfiguration($this);
+        $formFactor = (string) $txml['form-factor'];
+        if ($formFactor) {
+            $configuration->setSelectorFormFactor($formFactor);
+        }
+        return $configuration;
     }
 
 
