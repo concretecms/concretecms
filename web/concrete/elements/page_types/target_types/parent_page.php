@@ -12,7 +12,7 @@ if (is_object($pagetype) && $pagetype->getPageTypePublishTargetTypeID() == $type
 	<div class="control-group">
 		<?=$form->label('cParentID', t('Publish Beneath Page'))?>
 		<div class="controls">
-			<? 
+			<?
 			$pf = Loader::helper('form/page_selector');
 			print $pf->selectPage('cParentID', $cID);
 			?>
