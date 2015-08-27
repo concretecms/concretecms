@@ -886,9 +886,11 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         foreach ($existingDefaultTemplateIDs as $existingPageTemplateID) {
             if (!in_array($existingPageTemplateID, $templateIDs)) {
                 $existingPageTemplate = Template::getByID($existingPageTemplateID);
-                $c = $this->getPageTypePageTemplateDefaultPageObject($existingPageTemplate);
-                if (is_object($c)) {
-                    $c->delete();
+                if (is_object($existingPageTemplate)) {
+                    $c = $this->getPageTypePageTemplateDefaultPageObject($existingPageTemplate);
+                    if (is_object($c)) {
+                        $c->delete();
+                    }
                 }
                 $db->Execute('delete from PageTypePageTemplateDefaultPages where pTemplateID = ? and ptID = ?', array($existingPageTemplateID, $this->getPageTypeID()));
             }
