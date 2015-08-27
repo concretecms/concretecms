@@ -1079,25 +1079,38 @@ class Package extends Object
     }
 
     /**
-     * Installs the packages database either through entities or if no entities
-     * are available for the package, through the legacy db.xml if it is
-     * available.
+     * Installs the packages database through doctrine entities and db.xml
+     * database definitions.
      *
      * @return void
      */
     public function installDatabase()
     {
+        $this->installEntitiesDatabase();
+
+        Package::installDB($this->getPackagePath() . '/' . FILENAME_PACKAGE_DB);
+    }
+
+    public function installEntitiesDatabase()
+    {
         $dbm = $this->getDatabaseStructureManager();
 
         if ($dbm->hasEntities()) {
+            $xmlTables = array();
+            $xml = $this->getPackagePath() . '/' . FILENAME_PACKAGE_DB;
+            if (file_exists($xml)) {
+                $db = Database::connection();
+                $sx = simplexml_load_file($xml);
+                $parser = Schema::getSchemaParser($sx);
+                $parser->setIgnoreExistingTables(false);
+                $schema = $parser->parse($db);
+                foreach ($schema->getTables() as $table) {
+                    $xmlTables[] = $table->getName();
+                }
+            }
             $dbm->generateProxyClasses();
-            $dbm->dropObsoleteDatabaseTables(camelcase($this->getPackageHandle()));
+            $dbm->dropObsoleteDatabaseTables(camelcase($this->getPackageHandle()), $xmlTables);
             $dbm->installDatabase();
-        }
-
-        if (file_exists($this->getPackagePath() . '/' . FILENAME_PACKAGE_DB)) {
-            // Legacy db.xml
-            Package::installDB($this->getPackagePath() . '/' . FILENAME_PACKAGE_DB);
         }
     }
 
@@ -1210,13 +1223,8 @@ class Package extends Object
      */
     public function upgradeDatabase()
     {
-        $dbm = $this->getDatabaseStructureManager();
         $this->destroyProxyClasses();
-        if ($dbm->hasEntities()) {
-            $dbm->generateProxyClasses();
-            $dbm->dropObsoleteDatabaseTables(camelcase($this->getPackageHandle()));
-            $dbm->installDatabase();
-        }
+        $this->installEntitiesDatabase();
 
         if (file_exists($this->getPackagePath() . '/' . FILENAME_PACKAGE_DB)) {
             // Legacy db.xml
