@@ -7,5 +7,5 @@ if (is_object($target)) {
 }
 if (is_object($pagetype) && $pagetype->getPageTypePublishTargetTypeID() == $configuration->getPageTypePublishTargetTypeID()) {
 	$ps = Loader::helper('form/page_selector');
-	print $ps->selectPage('cParentID', $cParentID);
+	print $ps->selectFromSitemap('cParentID', $cParentID);
 }
