@@ -19,4 +19,7 @@ class AllType extends Type
         return new AllConfiguration($this);
     }
 
+
+
+
 }
