@@ -2,7 +2,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 $form = Loader::helper('form');
 $ctArray = PageType::getList();
-$types = array();
+$types = array('' => t('** Choose a page type'));
 foreach($ctArray as $cta) {
     $types[$cta->getPageTypeID()] = $cta->getPageTypeDisplayName();
 }

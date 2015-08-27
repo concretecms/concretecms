@@ -9,6 +9,7 @@ use Environment;
 use \Concrete\Core\Package\Package as Package;
 use Core;
 use Database;
+use Symfony\Component\HttpFoundation\Request;
 
 abstract class Type extends Object
 {
@@ -66,6 +67,12 @@ abstract class Type extends Object
             default:
                 return $value;
         }
+    }
+
+    public function validatePageTypeRequest(Request $request)
+    {
+        $e = Core::make('error');
+        return $e;
     }
 
     public static function getByID($ptPublishTargetTypeID)
