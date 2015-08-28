@@ -29,7 +29,7 @@ while ($questionRow = $questionsRS->fetchRow()) {
 		$question['type'] = $questionRow['inputType'];
 	}
 
-    $question['labelFor'] = 'for="Question' . $questionRow['msqID'] . '"';
+    	$question['labelFor'] = 'for="Question' . $questionRow['msqID'] . '"';
 	
 	//Remove hardcoded style on textareas
 	if ($question['type'] == 'textarea') {
