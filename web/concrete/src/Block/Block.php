@@ -314,8 +314,6 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
             $cvID = $cx->getVersionID();
         }
 
-        \Log::info(t('Set Block Cached Output: %s - %s - %s %s - %s', $cID, $cvID, $this->getBlockID(), $arHandle, $btCachedBlockOutputExpires));
-
         if ($arHandle && $cID && $cvID) {
             $db->Replace(
                'CollectionVersionBlocksOutputCache',
