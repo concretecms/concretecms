@@ -8,7 +8,8 @@
                 'mode': 'single',
                 'inputName': 'cID',
                 'selected': 0,
-                'token': ''
+                'token': '',
+                filters: {}
             }, options);
 
         my.$element = $('<div />', {'class': 'ccm-page-sitemap-selector-inner'});
@@ -20,7 +21,8 @@
             dataSource: CCM_DISPATCHER_FILENAME + '/ccm/system/page/select_sitemap',
             ajaxData: {
                 'ccm_token': my.options.token,
-                'selected': my.options.selected
+                'selected': my.options.selected,
+                'filters': my.options.filters
             },
             onPostInit: function() {
                 if (options.selected) {
@@ -41,13 +43,17 @@
                 }
             },
             onSelectNode: function(node, flag) {
-                if (flag) {
-                    if (my.options.mode == 'single') {
-                        my.deselectAll();
+                if (!node.data.hideCheckbox) {
+                    if (flag) {
+                        if (my.options.mode == 'single') {
+                            my.deselectAll();
+                        }
+                        my.select(node);
+                    } else {
+                        my.deselect(node);
                     }
-                    my.select(node);
                 } else {
-                    my.deselect(node);
+                    return false;
                 }
             }
         });

@@ -47,7 +47,18 @@ class SitemapSelector extends UserInterface
             $expanded = $this->addParentsTo($expanded, $page);
         }
         $dh->setExpandedNodes($expanded);
-        $nodes = $dh->getSubNodes($this->request->query->get('cParentID'));
+        $request = $this->request->query->all();
+        $callback = function($node) use ($request) {
+            if (isset($request['filters']) && is_array($request['filters'])) {
+                foreach($request['filters'] as $key => $filter) {
+                    if ($key == 'ptID' && $filter != $node->ptID) {
+                        $node->hideCheckbox = true;
+                    }
+                }
+            }
+            return $node;
+        };
+        $nodes = $dh->getSubNodes($this->request->query->get('cParentID'), $callback);
         return new JsonResponse($nodes);
     }
 

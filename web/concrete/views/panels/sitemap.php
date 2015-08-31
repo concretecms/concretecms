@@ -33,7 +33,7 @@ if ($canViewSitemap) { ?>
 	<script type="text/javascript">
 	$(function() {
 		$('#ccm-sitemap-panel-sitemap').concreteSitemap({
-			onSelectNode: function(node) {
+			onClickNode: function(node) {
 				window.location.href = CCM_DISPATCHER_FILENAME + '?cID=' + node.data.cID;
 			}
 		});

@@ -16,7 +16,9 @@
             displaySingleLevel: false,
 			dataSource: CCM_TOOLS_PATH + '/dashboard/sitemap_data',
 			ajaxData: {},
-			selectMode: false,
+			selectMode: false, // 1 - single, 2 = multi - has NOTHING to do with clicks. If you enable select mode you CANNOT use a click handler.
+			onClickNode: false, // This handles clicking on the title.
+			onSelectNode: false, // this handles when a radio or checkbox in the tree is checked
 			onPostInit: false
 		}, options);
 		my.options = options;
@@ -125,6 +127,46 @@
 						my.displaySingleLevel(node);
 					}
 				},
+				onClick: function(node, e) {
+					if (node.getEventTargetType(e) == "title" && node.data.cID) {
+
+						// I have a select mode, so clicking on the title does nothing.
+						if (my.options.selectMode) {
+							return false;
+						}
+
+						// I have a special on click handler, so we run that. It CAN return
+						// false to disable the on click, but it probably won't.
+						if (my.options.onClickNode) {
+							return my.options.onClickNode.call(my, node);
+						}
+
+						// Standard sitemap dashboard mode.
+						var menu = new ConcretePageMenu($(node.span).find('>a'), {
+							menuOptions: my.options,
+							data: node.data,
+							sitemap: my,
+							onHide: function(menu) {
+								menu.$launcher.each(function() {
+									$(this).unbind('mousemove.concreteMenu');
+								});
+							}
+						});
+						menu.show(e);
+
+					} else if (node.data.href) {
+						window.location.href = node.data.href;
+					} else if (node.data.displaySingleLevel) {
+						my.displaySingleLevel(node);
+					}
+				},
+				onSelect: function(flag, node) {
+					if (my.options.onSelectNode) {
+						my.options.onSelectNode.call(my, node, flag);
+					}
+				},
+
+				/*
 				onSelect: function(flag, node) {
 					if (my.options.onSelectNode) {
 						my.options.onSelectNode.call(my, node, flag);
@@ -136,9 +178,6 @@
 							node.select(node.isSelected() ? false : true);
 						} else if (my.options.onSelectNode) {
 							my.options.onSelectNode.call(my, node);
-
-						/*} else if (methods.private.eventListenerExists(my.options.requestID, 'onSelectNode')) {
-							methods.private.triggerEvent(my.options.requestID, 'onSelectNode', [node]); */
 
 						} else {
 							var menu = new ConcretePageMenu($(node.span).find('>a'), {
@@ -159,6 +198,7 @@
                         my.displaySingleLevel(node);
                     }
 				},
+				*/
 				fx: {height: 'toggle', duration: 200},
 				dnd: {
 					onDragStart: function(node) {
