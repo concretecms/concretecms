@@ -108,9 +108,6 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                         <div class="checkbox">
                             <label> <?php echo $form->checkbox('noDescription', 1, $descCheck);  ?><?=t('No Meta Description'); ?></label>
                         </div>
-                        <div class="checkbox">
-                            <label> <?php echo $form->checkbox('noKeywords', 1, $keywordCheck);  ?><?=t('No Meta Keywords'); ?></label>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -161,10 +158,6 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                             echo $form->textarea('meta_description', $cobj->getAttribute('meta_description') ? $cobj->getAttribute('meta_description') : $autoDesc, $descInfo);
                             echo $descInfo[style] ? '<span class="help-inline">' . t('Default value. Click to edit.') . '</span>' : '';
                             ?>
-                        </div>
-                        <div class="form-group">
-                            <label><?php echo t('Meta Keywords'); ?></label>
-                            <?php echo $form->textarea('meta_keywords', $cobj->getAttribute('meta_keywords'), array('title' => $cID)); ?>
                         </div>
                         <? if ($cobj->getCollectionID() != HOME_CID) { ?>
 
@@ -217,7 +210,6 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                 data.cID = iterator;
                 data.meta_title = $('.ccm-seoRow-'+iterator+' input[name="meta_title"].hasChanged').val();
                 data.meta_description = $('.ccm-seoRow-'+iterator+' textarea[name="meta_description"]').val();
-                data.meta_keywords = $('.ccm-seoRow-'+iterator+' textarea[name="meta_keywords"]').val();
                 data.collection_handle = $('.ccm-seoRow-'+iterator+' input[name="collection_handle"]').val();
 
                 $.ajax({
