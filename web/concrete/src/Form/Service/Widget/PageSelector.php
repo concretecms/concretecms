@@ -109,7 +109,7 @@ EOL;
         return $html;
     }
 
-    public function selectMultipleFromSitemap($field, $pages = array(), $startingPoint = HOME_CID)
+    public function selectMultipleFromSitemap($field, $pages = array(), $startingPoint = HOME_CID, $filters = array())
     {
         $v = \View::getInstance();
         $v->requireAsset('core/sitemap');
@@ -136,6 +136,9 @@ EOL;
         $args->mode = 'multiple';
         $args->token = Core::make('token')->generate('select_sitemap');
         $args->inputName = $field;
+        if (count($filters)) {
+            $args->filters = $filters;
+        }
         $args = json_encode($args);
 
         $html = <<<EOL
@@ -149,7 +152,7 @@ EOL;
         return $html;
     }
 
-    public function selectFromSitemap($field, $page = null, $startingPoint = HOME_CID)
+    public function selectFromSitemap($field, $page = null, $startingPoint = HOME_CID, $filters = array())
     {
         $v = \View::getInstance();
         $v->requireAsset('core/sitemap');
@@ -171,6 +174,9 @@ EOL;
         $args->selected = $selected;
         $args->inputName = $field;
         $args->token = Core::make('token')->generate('select_sitemap');
+        if (count($filters)) {
+            $args->filters = $filters;
+        }
         $args = json_encode($args);
 
         $html = <<<EOL

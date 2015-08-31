@@ -68,7 +68,7 @@ class Sitemap
      *
      * @return array
      */
-    public function getSubNodes($cID)
+    public function getSubNodes($cID, $onGetNode = null)
     {
         $pl = new PageList();
         $pl->setPermissionsChecker(function ($page) {
@@ -96,7 +96,7 @@ class Sitemap
 
         $nodes = array();
         foreach ($results as $c) {
-            $n = $this->getNode($c);
+            $n = $this->getNode($c, true, $onGetNode);
             if ($n != false) {
                 $nodes[] = $n;
             }
@@ -134,7 +134,7 @@ class Sitemap
      *
      * @return stdClass
      */
-    public function getNode($cItem, $includeChildren = true)
+    public function getNode($cItem, $includeChildren = true, $onGetNode = null)
     {
         if (!is_object($cItem)) {
             $cID = $cItem;
@@ -235,6 +235,7 @@ class Sitemap
         $node->isTrash = $isTrash;
         $node->cID = $cID;
         $node->key = $cID;
+        $node->ptID = $c->getPageTypeID();
         $node->canEditPageProperties = $canEditPageProperties;
         $node->canEditPageSpeedSettings = $canEditPageSpeedSettings;
         $node->canEditPagePermissions = $canEditPagePermissions;
@@ -247,7 +248,11 @@ class Sitemap
 
         if ($includeChildren && ($cID == 1 || $nodeOpen)) {
             // We open another level
-            $node->children = $this->getSubNodes($cID);
+            $node->children = $this->getSubNodes($cID, $onGetNode);
+        }
+
+        if ($onGetNode instanceof \Closure) {
+            $node = $onGetNode($node);
         }
 
         return $node;

@@ -11,7 +11,7 @@ if (is_object($pagetype) && $pagetype->getPageTypePublishTargetTypeID() == $conf
     if ($configuredTarget->getSelectorFormFactor() == 'sitemap_in_page') {
 
         $ps = Loader::helper('form/page_selector');
-        print $ps->selectFromSitemap('cParentID', $cParentID);
+        print $ps->selectFromSitemap('cParentID', $cParentID, HOME_CID, array('ptID' => $configuredTarget->getPageTypeID()));
 
     } else {
         $pl = new PageList();
