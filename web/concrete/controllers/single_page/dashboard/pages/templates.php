@@ -1,8 +1,10 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\Pages;
+
+use Core;
 use \Concrete\Core\Page\Controller\DashboardPageController;
+use Database;
 use PageTemplate;
-use Loader;
 use Exception;
 
 class Templates extends DashboardPageController
@@ -15,8 +17,8 @@ class Templates extends DashboardPageController
 
     public function delete($pTemplateID, $token = '')
     {
-        $db = Loader::db();
-        $valt = Loader::helper('validation/token');
+        $db = Database::connection();
+        $valt = Core::make('helper/validation/token');
         if (!$valt->validate('delete_page_template', $token)) {
             $this->set('message', $valt->getErrorMessage());
         } else {
@@ -56,12 +58,12 @@ class Templates extends DashboardPageController
 
     public function update()
     {
-        $valt = Loader::helper('validation/token');
+        $valt = Core::make('helper/validation/token');
         $pt = PageTemplate::getByID($_REQUEST['pTemplateID']);
         $pTemplateName = $_POST['pTemplateName'];
         $pTemplateHandle = $_POST['pTemplateHandle'];
         $pTemplateIcon = $_POST['pTemplateIcon'];
-        $vs = Loader::helper('validation/strings');
+        $vs = Core::make('helper/validation/strings');
 
         if (!is_object($pt)) {
             $this->error->add(t('Invalid page template object.'));
