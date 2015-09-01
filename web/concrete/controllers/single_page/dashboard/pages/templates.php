@@ -3,8 +3,8 @@ namespace Concrete\Controller\SinglePage\Dashboard\Pages;
 
 use Core;
 use \Concrete\Core\Page\Controller\DashboardPageController;
-use Database;
 use PageTemplate;
+use PageType;
 use Exception;
 
 class Templates extends DashboardPageController
@@ -17,15 +17,33 @@ class Templates extends DashboardPageController
 
     public function delete($pTemplateID, $token = '')
     {
-        $db = Database::connection();
         $valt = Core::make('helper/validation/token');
         if (!$valt->validate('delete_page_template', $token)) {
             $this->set('message', $valt->getErrorMessage());
         } else {
-            $pt = PageTemplate::getByID($pTemplateID);
-            $pt->delete();
-            $this->redirect("/dashboard/pages/templates", "page_template_deleted");
+            $pageTypes = PageType::getListByDefaultPageTemplate($pTemplateID);
+            if (count($pageTypes)) {
+                $handles = array();
+                foreach ($pageTypes as $pt) {
+                    $handles[] = $pt->getPageTypeHandle();
+                }
+                $this->set('message', t(
+                    "You cannot delete a template that is set as the default for any of the page types. " . 
+                    "Please change the default template for the following page types first: %s.",
+                    implode(", ", $handles)
+                ));
+            } else {
+                $pt = PageTemplate::getByID($pTemplateID);
+                if (is_object($pt)) {
+                    $pt->delete();
+                    $this->redirect("/dashboard/pages/templates", "page_template_deleted");
+                } else {
+                    $this->redirect("/dashboard/pages/templates");
+                }
+            }
         }
+        $this->action = 'edit';
+        $this->edit($pTemplateID);
     }
 
     public function edit($pTemplateID = false)
