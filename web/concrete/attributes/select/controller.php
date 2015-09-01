@@ -172,7 +172,7 @@ class Controller extends AttributeTypeController
         }
         $this->set('selectedOptionValues', $selectedOptionValues);
         $this->set('selectedOptions', $selectedOptions);
-        $this->requireAsset('jquery/ui');
+        $this->requireAsset('select2');
     }
 
     public function search()
@@ -206,6 +206,8 @@ class Controller extends AttributeTypeController
     {
         $this->load();
 
+        print_r($data);
+print '<br><br>';
         if ($this->akSelectAllowOtherValues && is_array($data['atSelectNewOption'])) {
             $options = $this->getOptions();
 
