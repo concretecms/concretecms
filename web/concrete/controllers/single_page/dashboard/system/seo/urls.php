@@ -88,6 +88,14 @@ RewriteRule . ' . DISPATCHER_FILENAME .' [L]
             $this->error->add($this->token->getErrorMessage());
         }
 
+        if ($this->post('canonical_url') && strpos(strtolower($this->post('canonical_url')), 'http://') !== 0) {
+            $this->error->add(t('The canonical URL provided must start with "http://".'));
+        }
+
+        if ($this->post('canonical_ssl_url') && strpos(strtolower($this->post('canonical_ssl_url')), 'https://') !== 0) {
+            $this->error->add(t('The SSL canonical URL provided must start with "https://".'));
+        }
+        
         if (!$this->error->has()) {
             $strHtText = (string) $this->getHtaccessText();
             $blnHtu = 0;
