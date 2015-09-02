@@ -240,7 +240,10 @@ class Controller extends AttributeTypeController
                     $data['atSelectOptionValue'], $matches)) {
                     $option = Option::getByID($matches[1]);
                 } else {
-                    $option = Option::add($this->attributeKey, trim($data['atSelectOptionValue']), true);
+                    $option = Option::getByValue(trim($data['atSelectOptionValue']), $this->attributeKey);
+                    if (!is_object($option)) {
+                        $option = Option::add($this->attributeKey, trim($data['atSelectOptionValue']), true);
+                    }
                 }
             }
             if (is_object($option)) {
@@ -259,7 +262,10 @@ class Controller extends AttributeTypeController
                     if (preg_match('/SelectAttributeOption\:(.+)/i', $value, $matches)) {
                         $option = Option::getByID($matches[1]);
                     } else {
-                        $option = Option::add($this->attributeKey, trim($value), true);
+                        $option = Option::getByValue(trim($value), $this->attributeKey);
+                        if (!is_object($option)) {
+                            $option = Option::add($this->attributeKey, trim($value), true);
+                        }
                     }
 
                     if (is_object($option)) {
