@@ -496,6 +496,15 @@ return array(
             'default' => ASSETS_URL_IMAGES . '/avatar_none.png'
         )
     ),
+
+    'file_manager' => array(
+
+        'images' => array(
+            'use_exim_data_to_rotate_images' => false
+        )
+
+    ),
+
     'sitemap_xml'       => array(
         'file'      => 'sitemap.xml',
         'frequency' => 'weekly',
