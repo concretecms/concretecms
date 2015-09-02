@@ -6,11 +6,11 @@
 if ($akSelectAllowMultipleValues && !$akSelectAllowOtherValues) {
 
 	$form = Loader::helper('form');
-	$options = $this->controller->getOptions();
+	$options = $controller->getOptions();
 	foreach($options as $opt) { ?>
 
 		<div class="checkbox"><label>
-				<?=$form->checkbox($view->field('atSelectOptionValue'), $opt->getSelectAttributeOptionID(), in_array($opt->getSelectAttributeOptionID(), $selectedOptions)); ?>
+				<?=$form->checkbox($view->field('atSelectOptionValue') . '[]', $opt->getSelectAttributeOptionID(), in_array($opt->getSelectAttributeOptionID(), $selectedOptions)); ?>
 				<?=$opt->getSelectAttributeOptionDisplayValue()?>
 			</label>
 		</div>
@@ -28,7 +28,7 @@ if (!$akSelectAllowMultipleValues && !$akSelectAllowOtherValues) {
 
 	$form = Loader::helper('form');
 	$options = array('' => t('** None'));
-	foreach($this->controller->getOptions() as $option) {
+	foreach($controller->getOptions() as $option) {
 		$options[$option->getSelectAttributeOptionID()] = $option->getSelectAttributeOptionDisplayValue();
 	}
 	?>
@@ -38,18 +38,26 @@ if (!$akSelectAllowMultipleValues && !$akSelectAllowOtherValues) {
 <? }
 
 /**
- * Select Menu + Add One.
+ * Select2
  */
-if (!$akSelectAllowMultipleValues && $akSelectAllowOtherValues) {
+if ($akSelectAllowOtherValues) {
 	$tags = array();
-	foreach($this->controller->getOptions() as $option) {
+	$values = array();
+	foreach($controller->getOptions() as $option) {
 		$tag = new stdClass;
 		$tag->id = 'SelectAttributeOption:' . $option->getSelectAttributeOptionID();
 		$tag->text = $option->getSelectAttributeOptionDisplayValue();
 		$tags[] = $tag;
-		$values[] = $tag->id;
+		if (in_array($option->getSelectAttributeOptionID(), $selectedOptions)) {
+			$values[] = $tag->id;
+		}
 	}
-	$value = implode(',', $values);
+
+	if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+		$value = $controller->request('atSelectOptionValue');
+	} else {
+		$value = implode(',', $values);
+	}
 	?>
 
 	<input type="hidden" data-select-and-add="<?=$akID?>" style="width: 100%" name="<?=$view->field('atSelectOptionValue')?>" value="<?=$value?>" />
@@ -57,35 +65,11 @@ if (!$akSelectAllowMultipleValues && $akSelectAllowOtherValues) {
 		$(function() {
 			$('input[data-select-and-add=<?=$akID?>]').select2({
 				tags: <?=json_encode($tags)?>,
-				maximumSelectionSize: 1
-			});
-		});
-	</script>
-
-<? }
-
-/**
- * Select Multiple + Add Multiple.
- */
-if ($akSelectAllowMultipleValues && $akSelectAllowOtherValues) {
-	$tags = array();
-	foreach($this->controller->getOptions() as $option) {
-		$tag = new stdClass;
-		$tag->id = 'SelectAttributeOption:' . $option->getSelectAttributeOptionID();
-		$tag->text = $option->getSelectAttributeOptionDisplayValue();
-		$tags[] = $tag;
-		$values[] = $tag->id;
-	}
-	$value = implode(',', $values);
-	?>
-
-	<input type="hidden" data-select-and-add="<?=$akID?>" style="width: 100%" name="<?=$view->field('atSelectOptionValue')?>" value="<?=$value?>" />
-	<script type="text/javascript">
-		$(function() {
-			$('input[data-select-and-add=<?=$akID?>]').select2({
-				tags: <?=json_encode($tags)?>,
-				tokenSeparators: [',']
-
+				<? if ($akSelectAllowMultipleValues) { ?>
+					tokenSeparators: [',']
+				<? } else { ?>
+					maximumSelectionSize: 1
+				<? } ?>
 			});
 		});
 	</script>

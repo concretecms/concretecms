@@ -61,8 +61,10 @@ abstract class Assignment extends Object
                 serialize($fd),
             )
         );
+
+        $faID = $db->Insert_ID();
         // sometimes feature detail objects need to do more with the feature assignments, so we do that here.
-        $fa = static::getByID($db->Insert_ID(), $mixed);
+        $fa = static::getByID($faID, $mixed);
         $fd->handleFeatureAssignment($fa);
 
         return $fa;
