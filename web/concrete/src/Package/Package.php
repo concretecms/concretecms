@@ -1096,20 +1096,7 @@ class Package extends Object
         $dbm = $this->getDatabaseStructureManager();
 
         if ($dbm->hasEntities()) {
-            $xmlTables = array();
-            $xml = $this->getPackagePath() . '/' . FILENAME_PACKAGE_DB;
-            if (file_exists($xml)) {
-                $db = Database::connection();
-                $sx = simplexml_load_file($xml);
-                $parser = Schema::getSchemaParser($sx);
-                $parser->setIgnoreExistingTables(false);
-                $schema = $parser->parse($db);
-                foreach ($schema->getTables() as $table) {
-                    $xmlTables[] = $table->getName();
-                }
-            }
             $dbm->generateProxyClasses();
-            $dbm->dropObsoleteDatabaseTables(camelcase($this->getPackageHandle()), $xmlTables);
             $dbm->installDatabase();
         }
     }
