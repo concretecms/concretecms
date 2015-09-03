@@ -22,7 +22,7 @@
     "symfony/routing": "2.5.*",
     "symfony/http-kernel": "2.5.*",
     "doctrine/orm": "2.4.*",
-    "doctrine/migrations": "1.0.*@dev",
+    "doctrine/migrations": "v1.0.0-alpha3",
     "concrete5/flysystem": "0.4.*",
     "symfony/event-dispatcher": "2.5.*",
     "symfony/serializer": "2.5.*",
