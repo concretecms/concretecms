@@ -36,6 +36,19 @@ class StandardValidator implements ValidatorInterface
         return $e;
     }
 
+    public function validatePublishLocationRequest(Page $target = null)
+    {
+        $e = Core::make('error');
+        if (!is_object($target) || $target->isError()) {
+            $e->add(t('You must choose a page to publish this page beneath.'));
+        } else {
+            $ppc = new \Permissions($target);
+            if (!$ppc->canAddSubCollection($this->getPageTypeObject())) {
+                $e->add(t('You do not have permission to publish a page in this location.'));
+            }
+        }
+        return $e;
+    }
     public function validatePublishDraftRequest(Page $page = null)
     {
         $e = Core::make('error');

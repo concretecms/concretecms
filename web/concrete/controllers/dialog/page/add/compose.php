@@ -15,7 +15,23 @@ class Compose extends Controller
 
 	public function view($ptID, $cParentID)
     {
-        list($e, $pagetype, $parent) = $this->checkPermissions($ptID, $cParentID);
+
+        $pagetype = Type::getByID($ptID);
+        $e = Core::make('error');
+        if (is_object($pagetype)) {
+            $ptp = new Permissions($pagetype);
+            if (!$ptp->canAddPageType()) {
+                $e->add(t('You do not have permission to add a page of this type.'));
+            }
+        } else {
+            $e->add(t('Invalid page type.'));
+        }
+
+        $parent = Page::getByID($cParentID);
+        if (!is_object($parent) || $parent->isError()) {
+            $e->add(t('Invalid parent page.'));
+        }
+
         if (!$e->has()) {
             $this->view = new DialogView('/dialogs/page/add/compose');
             $this->set('parent', $parent);
@@ -31,29 +47,9 @@ class Compose extends Controller
         }
 	}
 
-    protected function checkPermissions($ptID, $cParentID)
-    {
-        $e = Core::make('error');
-        $pagetype = Type::getByID($ptID);
-        if (is_object($pagetype)) {
-            $parent = Page::getByID($cParentID);
-            if (is_object($parent) && !$parent->isError()) {
-                $pp = new Permissions($parent);
-                $ptp = new Permissions($pagetype);
-                if (!$pp->canAddSubCollection($pagetype) || !$ptp->canAddPageType()) {
-                    $e->add(t('You do not have permission to add a page of this type to this location.'));
-                }
-            } else {
-                $e->add(t('Invalid parent page.'));
-            }
-        } else {
-            $e->add(t('Invalid page type.'));
-        }
-        return array($e, $pagetype, $parent);
-    }
-
     public function submit()
     {
+        $e = Core::make('error');
         $pagetype = Type::getByID($this->request->request->get('ptID'));
         if (is_object($pagetype)) {
             $configuredTarget = $pagetype->getPageTypePublishTargetObject();
@@ -62,10 +58,7 @@ class Compose extends Controller
                 $cParentID = $this->request->request->get('cParentID');
             }
         }
-        list($e, $pagetype, $parent) = $this->checkPermissions(
-            $this->request->request->get('ptID'),
-            $cParentID
-        );
+        $parent = Page::getByID($cParentID);
 
         if ($this->request->request->get('ptComposerPageTemplateID')) {
             $template = Template::getByID($this->request->request->get('ptComposerPageTemplateID'));
@@ -77,11 +70,11 @@ class Compose extends Controller
         if (is_object($pagetype)) {
             $validator = $pagetype->getPageTypeValidatorObject();
             $e->add($validator->validateCreateDraftRequest($template));
+            $e->add($validator->validatePublishLocationRequest($parent));
             if ($this->request->request('addPageComposeAction') == 'publish') {
                 $e->add($validator->validatePublishDraftRequest());
             }
         }
-
         $pr = new EditResponse();
         $pr->setError($e);
 
