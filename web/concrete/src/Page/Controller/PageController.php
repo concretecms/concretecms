@@ -58,6 +58,21 @@ class PageController extends Controller
         exit;
     }
 
+    public function getSets()
+    {
+        $sets = parent::getSets();
+        $session = Core::make('session');
+        if ($session->getFlashBag()->has('page_message')) {
+            $value = $session->getFlashBag()->get('page_message');
+            foreach($value as $message) {
+                $sets[$message[0]] = $message[1];
+            }
+        }
+        return $sets;
+    }
+
+
+
     /**
      * Given a path to a single page, this command uses the CURRENT controller and renders
      * the contents of the single page within this request. The current controller is not
@@ -89,6 +104,12 @@ class PageController extends Controller
     public function getPageObject()
     {
         return $this->c;
+    }
+
+    public function flash($key, $value)
+    {
+        $session = Core::make('session');
+        $session->getFlashBag()->add('page_message', array($key, $value));
     }
 
     public function getTheme()
