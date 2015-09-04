@@ -301,7 +301,7 @@ abstract class Key extends Object
         $pkCategoryHandle = $pk['category'];
         $pkg = false;
         if ($pk['package']) {
-            $pkg = Package::getByHandle((string) $pk['package']);
+            $pkg = Package::getByHandle($pk['package']);
         }
         $pkCanTriggerWorkflow = 0;
         if ($pk['can-trigger-workflow']) {

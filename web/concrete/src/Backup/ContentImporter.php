@@ -785,7 +785,10 @@ class ContentImporter
         if (isset($sx->permissioncategories)) {
             foreach ($sx->permissioncategories->category as $pkc) {
                 $pkg = static::getPackageObject($pkc['package']);
-                PermissionKeyCategory::add((string) $pkc['handle'], $pkg);
+                $category = PermissionKeyCategory::getByHandle((string) $pkc['handle']);
+                if (!is_object($category)) {
+                    PermissionKeyCategory::add((string) $pkc['handle'], $pkg);
+                }
             }
         }
     }

@@ -49,6 +49,8 @@ class PageController extends Controller
             $var = \Page::getByPath($var);
         }
 
+        $request = \Request::getInstance();
+        $request->setCurrentPage($var);
         $controller = $var->getPageController();
         $controller->on_start();
         $controller->runAction('view');
