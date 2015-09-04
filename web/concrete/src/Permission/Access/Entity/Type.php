@@ -28,9 +28,17 @@ class Type extends Object
         return $this->petName;
     }
 
+    /**
+     * Returns the controller class for the currently selected captcha library
+     */
     public function getAccessEntityTypeClass()
     {
-        $class = '\\Concrete\\Core\\Permission\\Access\\Entity\\' . Loader::helper('text')->camelcase($this->petHandle) . 'Entity';
+        $class = overrideable_core_class('Core\\Permission\\Access\\Entity\\'
+            . Loader::helper('text')->camelcase($this->petHandle) . 'Entity',
+            DIRNAME_CLASSES . '/Permission/Access/Entity/'
+            . Loader::helper('text')->camelcase($this->petHandle) . 'Entity.php',
+            $this->getPackageHandle()
+        );
         return $class;
     }
 

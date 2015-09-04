@@ -448,12 +448,16 @@ class ContentImporter
     {
         if (isset($sx->permissionaccessentitytypes)) {
             foreach ($sx->permissionaccessentitytypes->permissionaccessentitytype as $pt) {
-                $pkg = static::getPackageObject($pt['package']);
-                $name = $pt['name'];
-                if (!$name) {
-                    $name = Core::make('helper/text')->unhandle($pt['handle']);
+                $type = PermissionAccessEntityType::getByHandle((string) $pt['handle']);
+                if (!is_object($type)) {
+                    $pkg = static::getPackageObject($pt['package']);
+                    $name = $pt['name'];
+                    if (!$name) {
+                        $name = Core::make('helper/text')->unhandle($pt['handle']);
+                    }
+                    $type = PermissionAccessEntityType::add($pt['handle'], $name, $pkg);
                 }
-                $type = PermissionAccessEntityType::add($pt['handle'], $name, $pkg);
+
                 if (isset($pt->categories)) {
                     foreach ($pt->categories->children() as $cat) {
                         $catobj = PermissionKeyCategory::getByHandle((string) $cat['handle']);
@@ -804,15 +808,14 @@ class ContentImporter
                     continue;
                 }
                 $pkc = PermissionKeyCategory::getByHandle((string) $pk['category']);
-                $pkg = static::getPackageObject($pk['package']);
-                $txt = Core::make('helper/text');
-                $c1 = '\\Concrete\\Core\\Permission\\Key\\' . $txt->camelcase(
-                        $pkc->getPermissionKeyCategoryHandle()
-                    ) . 'Key';
+                $c1 = $pkc->getPermissionKeyClass();
                 $pkx = call_user_func(array($c1, 'import'), $pk);
                 if (isset($pk->access)) {
                     foreach ($pk->access->children() as $ch) {
                         if ($ch->getName() == 'group') {
+                            /*
+                             * Legacy
+                             */
                             $g = Group::getByName($ch['name']);
                             if (!is_object($g)) {
                                 $g = Group::add($g['name'], $g['description']);
@@ -822,6 +825,18 @@ class ContentImporter
                             $pa->addListItem($pae);
                             $pt = $pkx->getPermissionAssignmentObject();
                             $pt->assignPermissionAccess($pa);
+                        }
+
+                        if ($ch->getName() == 'entity') {
+                            $type = PermissionAccessEntityType::getByHandle((string) $ch['type']);
+                            $class = $type->getAccessEntityTypeClass();
+                            if (method_exists($class, 'configureFromImport')) {
+                                $pae = $class::configureFromImport($ch);
+                                $pa = PermissionAccess::create($pkx);
+                                $pa->addListItem($pae);
+                                $pt = $pkx->getPermissionAssignmentObject();
+                                $pt->assignPermissionAccess($pa);
+                            }
                         }
                     }
                 }
