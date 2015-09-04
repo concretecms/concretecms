@@ -166,39 +166,6 @@
 					}
 				},
 
-				/*
-				onSelect: function(flag, node) {
-					if (my.options.onSelectNode) {
-						my.options.onSelectNode.call(my, node, flag);
-					}
-				},
-				onClick: function(node, e) {
-					if (node.getEventTargetType(e) == "title" && node.data.cID) {
-						if (my.options.selectMode) {
-							node.select(node.isSelected() ? false : true);
-						} else if (my.options.onSelectNode) {
-							my.options.onSelectNode.call(my, node);
-
-						} else {
-							var menu = new ConcretePageMenu($(node.span).find('>a'), {
-								menuOptions: my.options,
-								data: node.data,
-								sitemap: my,
-								onHide: function(menu) {
-									menu.$launcher.each(function() {
-										$(this).unbind('mousemove.concreteMenu');
-									});
-								}
-							});
-							menu.show(e);
-						}
-					} else if (node.data.href) {
-						window.location.href = node.data.href;
-                    } else if (node.data.displaySingleLevel) {
-                        my.displaySingleLevel(node);
-                    }
-				},
-				*/
 				fx: {height: 'toggle', duration: 200},
 				dnd: {
 					onDragStart: function(node) {
@@ -256,8 +223,15 @@
 			});
 		},
 
+		/**
+		 * These are events that are useful when the sitemap is in the Dashboard, but
+		 * they should NOT be listened to when the sitemap is in select Mode.
+		 */
 		setupTreeEvents: function() {
 			var my = this;
+			if (my.options.selectMode || my.options.onClickNode) {
+				return false;
+			}
             ConcreteEvent.unsubscribe('SitemapDeleteRequestComplete.sitemap');
 			ConcreteEvent.subscribe('SitemapDeleteRequestComplete.sitemap', function(e) {
 	 			var node = my.$element.dynatree('getActiveNode');
