@@ -313,7 +313,8 @@ class Access extends Object
             $handle = $pk->getPermissionKeyHandle() . '_' . $handle;
         }
 
-        $class = '\\Concrete\\Core\\Permission\\Access\\' . Core::make('helper/text')->camelcase($handle) . 'Access';
+        $class = '\\Core\\Permission\\Access\\' . Core::make('helper/text')->camelcase($handle) . 'Access';
+        $class = core_class($class, $pk->getPackageHandle());
 
         $obj = null;
         if ($checkPA) {

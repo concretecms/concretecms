@@ -74,25 +74,25 @@ class Category extends Object
         return $list;
     }
 
-    public function getPermissionKeyByHandle($pkHandle)
+    public function getPermissionKeyClass()
     {
         $className = core_class('\\Core\\Permission\\Key\\'
             . Core::make("helper/text")->camelcase($this->pkCategoryHandle) . 'Key',
             $this->getPackageHandle()
         );
-        $ak = call_user_func(array($className, 'getByHandle'), $pkHandle);
+        return $className;
+    }
+
+    public function getPermissionKeyByHandle($pkHandle)
+    {
+        $ak = call_user_func(array($this->getPermissionKeyClass(), 'getByHandle'), $pkHandle);
 
         return $ak;
     }
 
     public function getPermissionKeyByID($pkID)
     {
-        $className = core_class('\\Core\\Permission\\Key\\'
-            . Core::make("helper/text")->camelcase($this->pkCategoryHandle) . 'Key',
-            $this->getPackageHandle()
-        );
-        $ak = call_user_func(array($className, 'getByID'), $pkID);
-
+        $ak = call_user_func(array($this->getPermissionKeyClass(), 'getByID'), $pkID);
         return $ak;
     }
 
