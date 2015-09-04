@@ -359,6 +359,10 @@ class Application extends Container
      */
     public function dispatch(Request $request)
     {
+        // This is a crappy place for this, but it has to come AFTER the packages because sometimes packages
+        // want to replace legacy "tools" URLs with the new MVC, and the tools paths are so greedy they don't
+        // work unless they come at the end.
+        $this->registerLegacyRoutes();
         if ($this->installed) {
             $response = $this->getEarlyDispatchResponse();
         }
@@ -381,6 +385,20 @@ class Application extends Container
         }
 
         return $response;
+    }
+
+    protected function registerLegacyRoutes()
+    {
+
+        \Route::register("/tools/blocks/{btHandle}/{tool}",
+            '\Concrete\Core\Legacy\Controller\ToolController::displayBlock',
+            'blockTool',
+            array('tool' => '[A-Za-z0-9_/.]+')
+        );
+        \Route::register("/tools/{tool}", '\Concrete\Core\Legacy\Controller\ToolController::display',
+        '   tool',
+            array('tool' => '[A-Za-z0-9_/.]+')
+        );
     }
 
     protected function getEarlyDispatchResponse()
