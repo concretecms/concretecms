@@ -810,6 +810,8 @@ class ContentImporter
                 $pkc = PermissionKeyCategory::getByHandle((string) $pk['category']);
                 $c1 = $pkc->getPermissionKeyClass();
                 $pkx = call_user_func(array($c1, 'import'), $pk);
+                $assignments = array();
+
                 if (isset($pk->access)) {
                     foreach ($pk->access->children() as $ch) {
                         if ($ch->getName() == 'group') {
@@ -821,10 +823,7 @@ class ContentImporter
                                 $g = Group::add($g['name'], $g['description']);
                             }
                             $pae = GroupPermissionAccessEntity::getOrCreate($g);
-                            $pa = PermissionAccess::create($pkx);
-                            $pa->addListItem($pae);
-                            $pt = $pkx->getPermissionAssignmentObject();
-                            $pt->assignPermissionAccess($pa);
+                            $assignments[] = $pae;
                         }
 
                         if ($ch->getName() == 'entity') {
@@ -832,13 +831,19 @@ class ContentImporter
                             $class = $type->getAccessEntityTypeClass();
                             if (method_exists($class, 'configureFromImport')) {
                                 $pae = $class::configureFromImport($ch);
-                                $pa = PermissionAccess::create($pkx);
-                                $pa->addListItem($pae);
-                                $pt = $pkx->getPermissionAssignmentObject();
-                                $pt->assignPermissionAccess($pa);
+                                $assignments[] = $pae;
                             }
                         }
                     }
+                }
+
+                if (count($assignments)) {
+                    $pa = PermissionAccess::create($pkx);
+                    foreach($assignments as $pae) {
+                        $pa->addListItem($pae);
+                    }
+                    $pt = $pkx->getPermissionAssignmentObject();
+                    $pt->assignPermissionAccess($pa);
                 }
             }
         }
