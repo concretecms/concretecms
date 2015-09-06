@@ -241,7 +241,7 @@ class Application extends Container
                     $cl->registerPackage($pkg);
                     // handle updates
                     if (Config::get('concrete.updates.enable_auto_update_packages')) {
-                        $pkgInstalledVersion = $p->getPackageVersion();
+                        $pkgInstalledVersion = $p->getPackageCurrentlyInstalledVersion();
                         $pkgFileVersion = $pkg->getPackageVersion();
                         if (version_compare($pkgFileVersion, $pkgInstalledVersion, '>')) {
                             $currentLocale = Localization::activeLocale();
