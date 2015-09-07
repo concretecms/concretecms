@@ -184,7 +184,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
         if (is_object($c) && $this->checkPermissions($c)) {
             if ($this->pageVersionToRetrieve == self::PAGE_VERSION_RECENT) {
                 $cp = new \Permissions($c);
-                if ($cp->canViewPageVersions()) {
+                if ($cp->canViewPageVersions() || $this->permissionsChecker == -1) {
                     $c->loadVersionObject('RECENT');
                 }
             }
