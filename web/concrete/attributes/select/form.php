@@ -70,22 +70,6 @@ if ($akSelectAllowOtherValues) {
 						callback(data);
 					});
 
-					/*
-					$(element.val().split(",")).each(function () {
-						if (this.substring(0,22) == 'SelectAttributeOption:') {
-							var id = this, tag;
-							$.each(tagsFromValue<?=$akID?>, function(i, o) {
-								if (o.id == id) {
-									tag = o;
-								}
-							});
-							data.push(tag);
-						} else {
-							data.push({id: this, text: this});
-						}
-					});
-					*/
-
 					callback(data);
 				},
 				createSearchChoice: function(term, data) {
