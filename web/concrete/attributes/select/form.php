@@ -41,35 +41,86 @@ if (!$akSelectAllowMultipleValues && !$akSelectAllowOtherValues) {
  * Select2
  */
 if ($akSelectAllowOtherValues) {
-	$tags = array();
-	$values = array();
-	foreach($controller->getOptions() as $option) {
-		$tag = new stdClass;
-		$tag->id = 'SelectAttributeOption:' . $option->getSelectAttributeOptionID();
-		$tag->text = $option->getSelectAttributeOptionDisplayValue();
-		$tags[] = $tag;
-		if (in_array($option->getSelectAttributeOptionID(), $selectedOptions)) {
-			$values[] = $tag->id;
-		}
-	}
 
 	if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$value = $controller->request('atSelectOptionValue');
 	} else {
+		$values = array();
+		foreach($selectedOptions as $optionID) {
+			$values[] = 'SelectAttributeOption:' . $optionID;
+		}
 		$value = implode(',', $values);
 	}
-	?>
 
+
+	?>
 	<input type="hidden" data-select-and-add="<?=$akID?>" style="width: 100%" name="<?=$view->field('atSelectOptionValue')?>" value="<?=$value?>" />
 	<script type="text/javascript">
 		$(function() {
 			$('input[data-select-and-add=<?=$akID?>]').select2({
-				tags: <?=json_encode($tags)?>,
+				tags: true,
+				createSearchChoicePosition: 'bottom',
+				initSelection: function(element, callback) {
+					var data = [];
+					$.ajax({
+						'dataType': 'json',
+						'data': {value: $(element).val()},
+						'url': '<?=$view->action('load_autocomplete_selected_value')?>'
+					}).done(function(data) {
+						callback(data);
+					});
+
+					/*
+					$(element.val().split(",")).each(function () {
+						if (this.substring(0,22) == 'SelectAttributeOption:') {
+							var id = this, tag;
+							$.each(tagsFromValue<?=$akID?>, function(i, o) {
+								if (o.id == id) {
+									tag = o;
+								}
+							});
+							data.push(tag);
+						} else {
+							data.push({id: this, text: this});
+						}
+					});
+					*/
+
+					callback(data);
+				},
+				createSearchChoice: function(term, data) {
+					if ($(data).filter(function() {
+							return this.text.localeCompare(term) === 0;
+						}).length === 0) {
+						return {
+							id: term,
+							text: term
+						};
+					}
+				},
 				<? if ($akSelectAllowMultipleValues) { ?>
-					tokenSeparators: [',']
+					tokenSeparators: [','],
+					multiple: true,
 				<? } else { ?>
-					maximumSelectionSize: 1
+					maximumSelectionSize: 1,
 				<? } ?>
+				minimumInputLength: 1,
+				ajax: { // instead of writing the function to execute the request we use Select2's convenient helper
+					url: "<?=$view->action('load_autocomplete_values')?>",
+					dataType: 'json',
+					quietMillis: 250,
+					data: function (term, page) {
+						return {
+							q: term, // search term
+						};
+					},
+					results: function (data, page) {
+					// parse the results into the format expected by Select2.
+						// since we are using custom formatting functions we do not need to alter the remote JSON data
+						return { results: data };
+					},
+				}
+
 			});
 		});
 	</script>

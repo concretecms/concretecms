@@ -474,15 +474,50 @@ class Controller extends AttributeTypeController
         return $list;
     }
 
+    /**
+     * Used by select2. Automatically takes a value request and converts it into tag/text key value pairs.
+     * New options are just text/tag, whereas existing ones are SelectAttributeOption:ID/text
+     */
+    public function action_load_autocomplete_selected_value()
+    {
+        $r = \Request::getInstance();
+        $value = $r->query->get('value');
+        $values = explode(',', $value);
+        $response = array();
+        foreach($values as $value) {
+            $value = trim($value);
+            $o = new \stdClass;
+            if (strpos($value, 'SelectAttributeOption:') === 0) {
+                $optionID = substr($value, 22);
+                $option = Option::getByID($optionID);
+                if (is_object($option)) {
+                    $o->id = $value;
+                    $o->text = $option->getSelectAttributeOptionValue();
+                }
+            } else {
+                $o->id = $value;
+                $o->text = $value;
+            }
+
+            $response[] = $o;
+        }
+
+        print json_encode($response);
+        \Core::shutdown();
+    }
+
     public function action_load_autocomplete_values()
     {
         $this->load();
         $values = array();
             // now, if the current instance of the attribute key allows us to do autocomplete, we return all the values
-        if ($this->akSelectAllowMultipleValues && $this->akSelectAllowOtherValues) {
-            $options = $this->getOptions($_GET['term'] . '%');
+        if ($this->akSelectAllowOtherValues) {
+            $options = $this->getOptions($_GET['q'] . '%');
             foreach ($options as $opt) {
-                $values[] = $opt->getSelectAttributeOptionValue(false);
+                $o = new \stdClass;
+                $o->id = 'SelectAttributeOption:' . $opt->getSelectAttributeOptionID();
+                $o->text = $opt->getSelectAttributeOptionValue(false);
+                $values[] = $o;
             }
         }
         print json_encode($values);
