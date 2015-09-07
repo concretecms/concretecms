@@ -272,6 +272,13 @@ if ($response) {
 
 /**
  * ----------------------------------------------------------------------------
+ * Now we load all installed packages, and register their package autoloaders.
+ * ----------------------------------------------------------------------------
+ */
+$cms->setupPackageAutoloaders();
+
+/**
+ * ----------------------------------------------------------------------------
  * Load preprocess items
  * ----------------------------------------------------------------------------
  */
@@ -296,7 +303,8 @@ $cms->handleAutomaticUpdates();
 
 /**
  * ----------------------------------------------------------------------------
- * Now we load all installed packages, and run package events on them.
+ * Now that we have languages out of the way, we can run our package on_start
+ * methods
  * ----------------------------------------------------------------------------
  */
 $cms->setupPackages();
