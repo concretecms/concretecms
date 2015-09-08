@@ -73,7 +73,12 @@ class PageTheme extends \Concrete\Core\Page\Theme\Theme {
             'small' => '0'
         );
     }
-
+    
+    public function getAdditionalLessVariable()
+    {
+        return array('@var'=>'#fff');
+    }
+    
     public function getThemeEditorClasses()
     {
         return array(
