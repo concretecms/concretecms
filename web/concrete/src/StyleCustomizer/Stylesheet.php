@@ -13,12 +13,12 @@ class Stylesheet {
 
     protected $valueList;
 
-    public function __construct($stylesheet, $file, $sourceUriRoot, $outputDirectory, $relativeOutputDirectory) {
-        $this->stylesheet = $stylesheet;
+    public function __construct($stylesheet, $file, $sourceUriRoot, $outputDirectory, $relativeOutputDirectory, $additionalLessVariable)        $this->stylesheet = $stylesheet;
         $this->file = $file;
         $this->sourceUriRoot = $sourceUriRoot;
         $this->outputDirectory = $outputDirectory;
         $this->relativeOutputDirectory = $relativeOutputDirectory;
+        $this->additionalLessVariable = $additionalLessVariable;
     }
 
     public function setValueList(\Concrete\Core\StyleCustomizer\Style\ValueList $valueList) {
@@ -39,6 +39,13 @@ class Stylesheet {
             }
             $parser->ModifyVars($variables);
         }
+        if (count($this->additionalLessVariable)) {
+            $variables = array();
+            foreach ($this->additionalLessVariable as $key => $value) {
+                $variables = array_merge(array($key => $value), $variables);
+            }
+            $parser->ModifyVars($variables);
+        }        
         $css = $parser->getCss();
         return $css;
     }
