@@ -298,12 +298,13 @@ class Theme extends Object
         $env = Environment::get();
         $output = $this->getStylesheetCachePath() . '/' . DIRNAME_CSS . '/' . $this->getThemeHandle();
         $relative = $this->getStylesheetCacheRelativePath() . '/' . DIRNAME_CSS . '/' . $this->getThemeHandle();
+        $additionalLessVariable = $this->getAdditionalLessVariable();
         $r = $env->getRecord(
             DIRNAME_THEMES . '/' . $this->getThemeHandle() . '/' . DIRNAME_CSS . '/' . $stylesheet,
             $this->getPackageHandle()
         );
 
-        $stylesheet = new \Concrete\Core\StyleCustomizer\Stylesheet($stylesheet, $r->file, $r->url, $output, $relative);
+        $stylesheet = new \Concrete\Core\StyleCustomizer\Stylesheet($stylesheet, $r->file, $r->url, $output, $relative,$additionalLessVariable);
         return $stylesheet;
     }
 
@@ -829,5 +830,9 @@ class Theme extends Object
     {
         return 150;
     }
-
+    
+    public function getAdditionalLessVariable()
+    {
+        return array();
+    }
 }
