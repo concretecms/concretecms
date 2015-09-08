@@ -119,6 +119,7 @@ class PageView extends View
         $env = Environment::get();
         $output = Config::get('concrete.cache.directory') . '/pages/' . $this->c->getCollectionID() . '/' . DIRNAME_CSS . '/' . $this->getThemeHandle();
         $relative = REL_DIR_FILES_CACHE . '/pages/' . $this->c->getCollectionID() . '/' . DIRNAME_CSS . '/' . $this->getThemeHandle();
+        $additionalLessVariable = $this->themeObject->getAdditionalLessVariable();
         $r = $env->getRecord(
             DIRNAME_THEMES . '/' . $this->themeObject->getThemeHandle() . '/' . DIRNAME_CSS . '/' . $stylesheet,
             $this->themeObject->getPackageHandle());
@@ -128,7 +129,8 @@ class PageView extends View
                 $r->file,
                 $r->url,
                 $output,
-                $relative);
+                $relative,
+                $additionalLessVariable);
             if ($sheetObject->outputFileExists()) {
                 return $sheetObject->getOutputRelativePath();
             }
