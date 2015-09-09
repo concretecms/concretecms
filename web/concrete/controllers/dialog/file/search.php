@@ -14,10 +14,11 @@ class Search extends BackendInterfaceController
     protected function canAccess()
     {
         $cp = FilePermissions::getGlobal();
-        if (!$cp->canSearchFiles() || !$cp->canAddFile()) {
+        if ($cp->canSearchFiles() || $cp->canAddFile()) {
+            return true;
+        } else {
             return false;
         }
-        return true;
     }
 
     public function view()
