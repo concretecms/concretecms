@@ -39,15 +39,15 @@ class ImageInspector extends Inspector {
 				switch($metadata['ifd0.Orientation']) {
 					case 3:
 						$image->rotate(180);
-						$fv->updateContents($image->get());
+						$fv->updateContents($image->get($fv->getExtension()));
 						break;
 					case 6:
 						$image->rotate(90);
-						$fv->updateContents($image->get());
+						$fv->updateContents($image->get($fv->getExtension()));
 						break;
 					case 8:
 						$image->rotate(-90);
-						$fv->updateContents($image->get());
+						$fv->updateContents($image->get($fv->getExtension()));
 						break;
 				}
 			}
