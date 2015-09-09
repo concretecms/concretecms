@@ -11,7 +11,7 @@ class AllType extends Type
     public function configurePageTypePublishTarget(PageType $pt, $post)
     {
         $configuredTarget = new AllConfiguration($this);
-        $configuredTarget->setSelectorFormFactor($post['selectorFormFactorAll']);
+        $configuredTarget->setSelectorFormFactor(isset($post['selectorFormFactorAll']) ? $post['selectorFormFactorAll'] : null);
         return $configuredTarget;
     }
 
