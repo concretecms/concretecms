@@ -1,17 +1,17 @@
 <?php
+
 namespace Concrete\Core\Page\Type\PublishTarget\Type;
 
-use Loader;
 use Concrete\Core\Page\Type\Type as PageType;
-use \Concrete\Core\Page\Type\PublishTarget\Configuration\AllConfiguration;
+use Concrete\Core\Page\Type\PublishTarget\Configuration\AllConfiguration;
 
 class AllType extends Type
 {
-
     public function configurePageTypePublishTarget(PageType $pt, $post)
     {
         $configuredTarget = new AllConfiguration($this);
         $configuredTarget->setSelectorFormFactor(isset($post['selectorFormFactorAll']) ? $post['selectorFormFactorAll'] : null);
+
         return $configuredTarget;
     }
 
@@ -22,10 +22,7 @@ class AllType extends Type
         if ($formFactor) {
             $configuration->setSelectorFormFactor($formFactor);
         }
+
         return $configuration;
     }
-
-
-
-
 }
