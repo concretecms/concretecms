@@ -75,9 +75,7 @@ class User extends Object
     public static function isLoggedIn()
     {
         $session = Core::make('session');
-
-        return $session->has('uID') && $session->get('uID') > 0 && $session->has('uName')
-            && $session->get('uName') != '' && $session->has('uLastPasswordChange');
+        return $session->has('uID') && $session->get('uID') > 0;
     }
 
     public function checkLogin()
