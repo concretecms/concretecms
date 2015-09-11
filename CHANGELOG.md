@@ -1,3 +1,76 @@
+# 5.7.5.2
+
+## Feature Updates
+
+* You can now filter the Page List block by date, including pages with a public date of today, X days in the past, X days in the future, and a custom date range (thanks TimDix)
+* The File block is now available in the Composer view for a Page type (thanks TimDix)
+* You can now export the Database Query Log to CSV (thanks TimDix)
+* The Cache settings page now gives developers the ability to optionally create CSS source maps from compiled LESS files.
+* Version list now shows who approved the version (thanks Katz)
+* Added page template to advanced page search.
+*  New modes for page composer where you can choose target pages from an in-panel sitemap, rather than the popup selector.
+* Select custom attribute now uses the Select2 JavaScript library for tagging modes, leading to an improved appearance and nicer code behind the scenes.
+
+## Behavioral Improvements
+
+* Improved appearance and information display of controls on the composer form page type dashboard page (thanks TimDix)
+* Blocks added to the scrapbook will now honor the original block’s cache settings (thanks TimDix)
+* Area layouts will now be cached if all the blocks they contain are cached (thanks TimDix)
+Adds ability to cache Search Block if the block doesn't display results - useful for when placed in header/footer (thanks TimDix)
+* Performance improvements in the Assets Subsystem (thanks joe-meyer)
+* We now include the “position” property in the search index when using the testimonial block (thanks hissy)
+* Better performance when working with bulk files and file sets with a large number of file sets (thanks TimDix and jefharris23)
+* Stack blocks now check to see if the blocks within the stack can be cached – if so, they will be cached as well (thanks TimDix)
+* Resolved https://github.com/concrete5/concrete5/pull/2911 (thanks Shotster)
+* Added error messaging when adding or editing page types and not configuring the publishing settings properly.
+* Better error reporting when http:// or https:// omitted from canonical URLs (thanks mnakalay)
+* Removed “Meta Keywords” from SEO panel on new installs because it’s not actually something that most search engines like anymore (thanks Mesuva). The attribute is still available and installed.
+
+## Bug Fixes
+* Fixed bug where layouts with custom widths didn’t honor those widths (thanks kaktuspalme)
+* Fixed bug where area layouts disappear upon changing layout design changes (thanks TimDix)
+* Fixed issue installing on PHP 5.3.9 and earlier (5.7.5.1 was supposed to fix this but did not.)
+* When deleting files, some rows were left in child database tables. This has been fixed (thanks EC-Joe)
+* Block actions in edit mode (introduced in 5.7.5) now work with blocks in Composer.
+* Permission access entity types can now be provided in packages like they could in 5.6.
+* Permission keys can now be provided in packages like they could in 5.6.
+* Rich text editor toolbar was abnormally large when present in the attributes dialog window. This has been fixed.
+* Fixed bug where Image block fails on Elemental when using certain third party file storage location types with no thumbnail types installed (thanks Mnkras)
+* We now show a confirmation dialog when discarding page drafts (thanks hissy)
+* Fixed bulk SEO Updater not updating the home page.
+* Fixed editor tooltips and link edit callouts not displaying when using redactor in a dialog.
+* When setting sitewide permissions in simple permissions mode, “Edit Page Type” hadn’t been set. It also wasn’t set by default when installing concrete5. This is fixed.
+* Fixes Bug with Search Block when resultsURL specified instead of page (thanks TimDix)
+* Fixed https://github.com/concrete5/concrete5/pull/2894 (thanks skybluesofa)
+* Fixed https://github.com/concrete5/concrete5/issues/2362 (thanks TimDix)
+* Fixed Fix Cancel button action on block aliasing dialog (thanks hissy)
+* Fixed scrollbar not appearing after file upload (thanks EC-Chris)
+* Fixed exception when passing an non-number to ccm_paging_p (thanks SkyBlueSofa)
+
+## Developer Updates
+
+* Added custom file import processes for forcing JPEGs, forcing JPEG compression and forcing width/height. Added system for creating custom file import processes and calling them programmatically
+* Added the ability to try and use exif rotation data (experimental, toggle on by enabling with the config value concrete.file_manager.images.use_exif_rotation_data)
+* Translation improvements (thanks mlocati)
+* Added flash message support to page controller. Just call $this->flash(‘key’, ‘value’) and then a page redirect and the $key will be available from within the target page the same as if it had been set from that target page. (e.g. $this->flash(‘success’, ‘Thanks for your submission!’); $this->redirect(‘/to/new/page’); )
+* PageSelector::quickSelect now works again.
+* Page Type Validator framework improvements
+* Slight fixes to form labels in form block (thanks haeflimi)
+* Improvements to permissions content import XML functionality.
+* Fix potential data loss when working with packages that had both db.xml files and Doctrine entities (thanks Mainio)
+* Content block image placeholders now save all attributes placed on the images in the rich text editor (Thanks TimDix)
+* Fixed permissions error rendering “subscribe to conversation” functionality inoperable.
+* Improvements for working with PHP7 (thanks mlocati and Mnkras)
+* Added additional MIME extensions for new Office file types (thanks RGeelen)
+* on\_page\_get\_icon event now works properly (thanks ahukkanen)
+* Lots of code quality improvements (thanks joe-meyer and mlocati)
+* Fixed https://github.com/concrete5/concrete5/issues/2952 (thanks ahukkanen)
+* New console command available: Clear Cache (thanks mlocati)
+
+## Developer Backward Compatibility Notes
+
+* The signature of the \Concrete\Core\Page\Type\Validator\ValidatorInterface has changed. If you rely on this interface check your implementations. (Note: if you extend the \Concrete\Core\Page\Type\Validator\StandardValidator you should be fine.)
+
 # 5.7.5.1
 
 ## Behavioral Improvements
