@@ -886,9 +886,11 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         foreach ($existingDefaultTemplateIDs as $existingPageTemplateID) {
             if (!in_array($existingPageTemplateID, $templateIDs)) {
                 $existingPageTemplate = Template::getByID($existingPageTemplateID);
-                $c = $this->getPageTypePageTemplateDefaultPageObject($existingPageTemplate);
-                if (is_object($c)) {
-                    $c->delete();
+                if (is_object($existingPageTemplate)) {
+                    $c = $this->getPageTypePageTemplateDefaultPageObject($existingPageTemplate);
+                    if (is_object($c)) {
+                        $c->delete();
+                    }
                 }
                 $db->Execute('delete from PageTypePageTemplateDefaultPages where pTemplateID = ? and ptID = ?', array($existingPageTemplateID, $this->getPageTypeID()));
             }
@@ -954,6 +956,26 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
             }
         }
 
+        return $list;
+    }
+
+    public static function getListByDefaultPageTemplate($templateOrTemplateID)
+    {
+        $pTemplateID = is_object($templateOrTemplateID) ?
+            $templateOrTemplateID->getPageTemplateID() : $templateOrTemplateID;
+
+        $db = \Database::connection();
+        $stmt = $db->prepare("SELECT ptID FROM PageTypes WHERE ptDefaultPageTemplateID = ?");
+        $stmt->bindValue(1, $pTemplateID);
+        $stmt->execute();
+
+        $list = array();
+        while ($ptID = $stmt->fetchColumn(0)) {
+            $cm = static::getByID($ptID);
+            if (is_object($cm)) {
+                $list[] = $cm;
+            }
+        }
         return $list;
     }
 
