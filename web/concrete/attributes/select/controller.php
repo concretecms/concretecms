@@ -361,27 +361,8 @@ class Controller extends AttributeTypeController
     public function validateForm($p)
     {
         $this->load();
-        $options = $this->request('atSelectOptionID');
-        if (!is_array($options)) {
-            $options = array();
-        }
-        if ($this->akSelectAllowOtherValues) {
-            $optionsNew = array_filter((Array) $this->request('atSelectNewOption'));
-            if (is_array($optionsNew) && count($optionsNew) > 0) {
-                return true;
-            } elseif (array_shift($optionsNew) != null) {
-                return true;
-            }
-        }
-        if ($this->akSelectAllowMultipleValues) {
-            return count($options) > 0;
-        } else {
-            if ($options[0] != false) {
-                return $options[0] > 0;
-            }
-        }
-
-        return false;
+        $options = $this->request('atSelectOptionValue');
+        return $options != '';
     }
 
     public function searchForm($list)

@@ -22,9 +22,17 @@ class DescriptionCorePageProperty extends CorePageProperty
 
     public function validate()
     {
+
         $e = Core::make('helper/validation/error');
-        if (!$this->getPageTypeComposerControlDraftValue()) {
-            $e->add(t('You must specify a page description.'));
+        $val = $this->getRequestValue();
+        if ($val['description']) {
+            $description = $val['description'];
+        } else {
+            $description = $this->getPageTypeComposerControlDraftValue();
+        }
+        if (!$description) {
+            $control = $this->getPageTypeComposerFormLayoutSetControlObject();
+            $e->add(t('You haven\'t chosen a valid %s', $control->getPageTypeComposerControlLabel()));
 
             return $e;
         }
