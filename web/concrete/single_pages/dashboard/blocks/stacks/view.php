@@ -168,6 +168,11 @@ if ($controller->getTask() == 'view_details') {
                 });
             });
 
+            ConcreteEvent.on('EditModeBlockMove', function(event, data) {
+                showApprovalButton();
+                Concrete.getEditMode().scanBlocks();
+            });
+
             $('a[data-dialog=delete-stack]').on('click', function() {
                 jQuery.fn.dialog.open({
                     element: '#ccm-dialog-delete-stack',
