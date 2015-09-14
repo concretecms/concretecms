@@ -40,7 +40,6 @@ class Entities extends DashboardPageController
                 try {
                     $packages = Package::getInstalledList();
                     foreach($packages as $package) {
-                        print $package->getPackageHandle();
                         $package->installEntitiesDatabase();
                     }
 
