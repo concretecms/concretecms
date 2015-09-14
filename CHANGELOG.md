@@ -45,7 +45,7 @@ Adds ability to cache Search Block if the block doesn't display results - useful
 * Fixed https://github.com/concrete5/concrete5/issues/2362 (thanks TimDix)
 * Fixed Fix Cancel button action on block aliasing dialog (thanks hissy)
 * Fixed scrollbar not appearing after file upload (thanks EC-Chris)
-* Fixed exception when passing an non-number to ccm_paging_p (thanks SkyBlueSofa)
+* Fixed exception when passing an non-number to ccm\_paging\_p (thanks SkyBlueSofa)
 
 ## Developer Updates
 
