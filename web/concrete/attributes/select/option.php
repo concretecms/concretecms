@@ -6,12 +6,18 @@ use \Concrete\Core\Foundation\Object;
 
 class Option extends Object {
 
-	public function __construct($ID, $value, $displayOrder, $usageCount = false) {
+	public function __construct($ID, $value, $displayOrder, $usageCount = false, $akID = null) {
 		$this->ID = $ID;
 		$this->value = $value;
 		$this->th = Loader::helper('text');
 		$this->displayOrder = $displayOrder;	
-		$this->usageCount = $usageCount;	
+		$this->usageCount = $usageCount;
+		$this->akID = $akID;
+	}
+
+	public function getAttributeKeyID()
+	{
+		return $this->akID;
 	}
 	
 	public function getSelectAttributeOptionID() {return $this->ID;}
@@ -63,9 +69,9 @@ class Option extends Object {
 	
 	public static function getByID($id) {
 		$db = Loader::db();
-		$row = $db->GetRow("select ID, displayOrder, value from atSelectOptions where ID = ?", array($id));
+		$row = $db->GetRow("select ID, displayOrder, value, akID from atSelectOptions where ID = ?", array($id));
 		if (isset($row['ID'])) {
-			$obj = new Option($row['ID'], $row['value'], $row['displayOrder']);
+			$obj = new Option($row['ID'], $row['value'], $row['displayOrder'], null, $row['akID']);
 			return $obj;
 		}
 	}
@@ -73,12 +79,12 @@ class Option extends Object {
 	public static function getByValue($value, $ak = false) {
 		$db = Loader::db();
 		if (is_object($ak)) {
-			$row = $db->GetRow("select ID, displayOrder, value from atSelectOptions where value = ? and akID = ?", array($value, $ak->getAttributeKeyID()));
+			$row = $db->GetRow("select ID, displayOrder, akID, value from atSelectOptions where value = ? and akID = ?", array($value, $ak->getAttributeKeyID()));
 		} else {
-			$row = $db->GetRow("select ID, displayOrder, value from atSelectOptions where value = ?", array($value));
+			$row = $db->GetRow("select ID, displayOrder, akID, value from atSelectOptions where value = ?", array($value));
 		}
 		if (isset($row['ID'])) {
-			$obj = new Option($row['ID'], $row['value'], $row['displayOrder']);
+			$obj = new Option($row['ID'], $row['value'], $row['displayOrder'], null, $row['akID']);
 			return $obj;
 		}
 	}
