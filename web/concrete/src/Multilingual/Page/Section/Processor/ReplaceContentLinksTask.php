@@ -57,4 +57,10 @@ class ReplaceContentLinksTask implements TaskInterface
         }
     }
 
+    public function finish(TargetInterface $target)
+    {
+        return;
+    }
+
+
 }
