@@ -2,7 +2,6 @@
 
 namespace Concrete\Core\File;
 
-use Concrete\Core\File\ImportProcessor\PreProcessorInterface;
 use Concrete\Core\File\ImportProcessor\ProcessorInterface;
 use Concrete\Core\File\StorageLocation\StorageLocation;
 use Concrete\Flysystem\AdapterInterface;

@@ -1,10 +1,8 @@
 <?php
 namespace Concrete\Core\Foundation\Processor;
 
-class Action
+class Action implements ActionInterface
 {
-
-    protected $queueItem;
 
     public function __construct(TargetInterface $target, TaskInterface $task, $subject)
     {
@@ -66,13 +64,4 @@ class Action
         $this->task->execute($this->getTarget(), $this->subject);
     }
 
-    public function setQueueItem($queueItem)
-    {
-        $this->queueItem = $queueItem;
-    }
-
-    public function getQueueItem()
-    {
-        return $this->queueItem;
-    }
 }
