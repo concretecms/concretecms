@@ -48,12 +48,22 @@ class ProcessorQueue extends Processor
         return $items;
     }
 
+    public function finish()
+    {
+        $this->getQueue()->deleteQueue();
+        $tasks = $this->getTasks();
+        foreach($tasks as $task) {
+            $action = new QueueAction($this->target, $task[1]);
+            $action->finish();
+        }
+    }
+
     public function execute(ActionInterface $action)
     {
         $action->execute();
         $this->getQueue()->deleteMessage($action->getQueueItem());
         if ($this->getQueue()->count() == 0) {
-            $this->getQueue()->deleteQueue();
+            $this->finish();
         }
     }
 

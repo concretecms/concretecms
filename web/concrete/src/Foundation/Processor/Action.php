@@ -4,7 +4,7 @@ namespace Concrete\Core\Foundation\Processor;
 class Action implements ActionInterface
 {
 
-    public function __construct(TargetInterface $target, TaskInterface $task, $subject)
+    public function __construct(TargetInterface $target, TaskInterface $task, $subject = null)
     {
         $this->subject = $subject;
         $this->target = $target;
@@ -62,6 +62,11 @@ class Action implements ActionInterface
     public function execute()
     {
         $this->task->execute($this->getTarget(), $this->subject);
+    }
+
+    public function finish()
+    {
+        $this->task->finish($this->getTarget());
     }
 
 }

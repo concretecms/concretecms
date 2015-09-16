@@ -1,8 +1,6 @@
 <?php
 namespace Concrete\Core\Foundation\Processor;
 
-use Concrete\Core\User\Search\Result\Item;
-
 class Processor implements ProcessorInterface
 {
 
@@ -21,6 +19,15 @@ class Processor implements ProcessorInterface
     public function execute(ActionInterface $action)
     {
         $action->execute();
+    }
+
+    public function finish()
+    {
+        $tasks = $this->getTasks();
+        foreach($tasks as $task) {
+            $action = new Action($this->target, $task[1]);
+            $action->finish();
+        }
     }
 
     public function getTasks()
@@ -49,6 +56,7 @@ class Processor implements ProcessorInterface
                 $this->execute($action);
             }
         }
+        $this->finish();
 
     }
 
