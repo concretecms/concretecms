@@ -2650,10 +2650,15 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $systemPages = array('/login', '/register', Config::get('concrete.paths.trash'), STACKS_PAGE_PATH, Config::get('concrete.paths.drafts'), '/members', '/members/*', '/account', '/account/*', Config::get('concrete.paths.trash').'/*', STACKS_PAGE_PATH.'/*', Config::get('concrete.paths.drafts').'/*', '/download_file', '/dashboard', '/dashboard/*','/page_forbidden','/page_not_found');
         $th = Core::make('helper/text');
         $db->Execute('update Pages set cIsSystemPage = 0 where cID = ?', array($cID));
-        foreach ($systemPages as $sp) {
-            if ($th->fnmatch($sp, $newPath)) {
-                $db->Execute('update Pages set cIsSystemPage = 1 where cID = ?', array($cID));
-                $this->cIsSystemPage = true;
+        if ($this->cParentID == 0) {
+            $db->Execute('update Pages set cIsSystemPage = 1 where cID = ?', array($cID));
+            $this->cIsSystemPage = true;
+        } else {
+            foreach ($systemPages as $sp) {
+                if ($th->fnmatch($sp, $newPath)) {
+                    $db->Execute('update Pages set cIsSystemPage = 1 where cID = ?', array($cID));
+                    $this->cIsSystemPage = true;
+                }
             }
         }
     }
@@ -2667,6 +2672,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     {
         $db = Database::get();
         $db->Execute('update Pages set cParentID = 0 where cID = ?', array($this->getCollectionID()));
+        $this->cParentID = 0;
+        $this->rescanSystemPageStatus();
     }
 
     public function deactivate()
