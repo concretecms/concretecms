@@ -26,7 +26,6 @@ class Open extends DashboardPageController
                 case "enabled":
                     Config::save('concrete.user.registration.enabled', true);
                     Config::save('concrete.user.registration.validate_email', false);
-                    Config::save('concrete.user.registration.approval', false);
                     Config::save('concrete.user.registration.notification', $this->post('register_notification'));
                     Config::save(
                         'concrete.user.registration.notification_email',
@@ -37,20 +36,8 @@ class Open extends DashboardPageController
                 case "validate_email":
                     Config::save('concrete.user.registration.enabled', true);
                     Config::save('concrete.user.registration.validate_email', true);
-                    Config::save('concrete.user.registration.approval', false);
                     Config::save('concrete.user.registration.notification', $this->post('register_notification'));
                     Config::save(
-                        'concrete.user.registration.notification_email',
-                        Loader::helper('security')->sanitizeEmail(
-                            $this->post('register_notification_email')));
-                    break;
-
-                case "manual_approve":
-                    Config::save('concrete.user.registration.enabled', true);
-                    Config::save('concrete.user.registration.approval', true);
-                    Config::save('concrete.user.registration.validate_email', false);
-                   Config::save('concrete.user.registration.notification', $this->post('register_notification'));
-                   Config::save(
                         'concrete.user.registration.notification_email',
                         Loader::helper('security')->sanitizeEmail(
                             $this->post('register_notification_email')));

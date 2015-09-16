@@ -4,6 +4,53 @@
     $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
     ?>
 
+    <? if (is_array($workflowList) && count($workflowList) > 0) { ?>
+        <div id="ccm-notification-user-alert-workflow" class="ccm-notification ccm-notification-info">
+            <div class="ccm-notification-inner-wrapper">
+                <? foreach ($workflowList as $i => $wl) { ?>
+                    <? $wr = $wl->getWorkflowRequestObject();
+                    $wf = $wl->getWorkflowObject(); ?>
+
+                    <form method="post" action="<?= $wl->getWorkflowProgressFormAction() ?>"
+                          id="ccm-notification-user-alert-form-<?= $i ?>">
+                        <i class="ccm-notification-icon fa fa-info-circle"></i>
+
+                        <div class="ccm-notification-inner">
+                            <p><?= $wf->getWorkflowProgressCurrentDescription($wl) ?></p>
+                            <? $actions = $wl->getWorkflowProgressActions(false); ?>
+                            <? if (count($actions) > 0) { ?>
+                                <div class="btn-group">
+                                    <? foreach ($actions as $act) { ?>
+                                        <? if ($act->getWorkflowProgressActionURL() != '') { ?>
+                                            <a href="<?= $act->getWorkflowProgressActionURL() ?>"
+                                        <? } else { ?>
+                                            <button type="submit"
+                                                    name="action_<?= $act->getWorkflowProgressActionTask() ?>"
+                                         <? } ?>
+
+                                        <? if (count($act->getWorkflowProgressActionExtraButtonParameters()) > 0) { ?>
+                                            <? foreach ($act->getWorkflowProgressActionExtraButtonParameters() as $key => $value) { ?>
+                                                <?= $key ?>="<?= $value ?>"
+                                            <? } ?>
+                                        <? } ?>
+
+                                        class="btn btn-xs <?= $act->getWorkflowProgressActionStyleClass() ?>"><?= $act->getWorkflowProgressActionStyleInnerButtonLeftHTML() ?> <?= $act->getWorkflowProgressActionLabel() ?> <?= $act->getWorkflowProgressActionStyleInnerButtonRightHTML() ?>
+                                        <? if ($act->getWorkflowProgressActionURL() != '') { ?>
+                                            </a>
+                                        <? } else { ?>
+                                            </button>
+                                        <? } ?>
+                                    <? } ?>
+                                </div>
+                            <? } ?>
+                        </div>
+                    </form>
+                <? } ?>
+            </div>
+            <div class="ccm-notification-actions"><a href="#" data-dismiss-alert="page-alert"><?= t('Hide') ?></a></div>
+        </div>
+    <? } ?>
+
     <style type="text/css">
         div[data-container=editable-fields] section {
             margin-bottom: 30px;
@@ -26,11 +73,15 @@
 
             <? if ($canActivateUser) { ?>
                 <? if ($user->isActive()) { ?>
-                    <button type="submit" name="task" value="deactivate"
-                            class="btn btn-default"><?= t('Deactivate User') ?></button>
+                    <? if (!in_array("deactivate", $workflowRequestActions)) { ?>
+                        <button type="submit" name="task" value="deactivate"
+                                class="btn btn-default"><?= t('Deactivate User') ?></button>
+                    <? } ?>
                 <? } else { ?>
-                    <button type="submit" name="task" value="activate"
+                    <? if ((!in_array("activate", $workflowRequestActions) && !in_array("register_activate", $workflowRequestActions))) { ?>
+                        <button type="submit" name="task" value="activate"
                             class="btn btn-default"><?= t('Activate User') ?></button>
+                    <? } ?>
                 <? } ?>
             <? } ?>
 
