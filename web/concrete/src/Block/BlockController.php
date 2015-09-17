@@ -10,6 +10,8 @@ use Concrete\Core\Controller;
 use Concrete\Core\Feature\Feature;
 use Concrete\Core\Legacy\BlockRecord;
 use Concrete\Core\Page\Controller\PageController;
+use Concrete\Core\Page\Type\Type;
+use Concrete\Core\Permission\Checker;
 use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 use Config;
 use Database;
@@ -431,6 +433,28 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     public function setPassThruBlockController(PageController $controller)
     {
         $controller->setPassThruBlockController($this->block, $this);
+    }
+
+    public function validateAddBlockPassThruAction(Checker $ap, BlockType $bt)
+    {
+        return $ap->canAddBlock($bt);
+    }
+
+    public function validateEditBlockPassThruAction(Block $b)
+    {
+        $bp = new \Permissions($b);
+        return $bp->canEditBlock();
+    }
+
+    public function validateComposerAddBlockPassThruAction(Type $type)
+    {
+        $pp = new \Permissions($type);
+        return $pp->canAddPageType();
+    }
+
+    public function validateComposerEditBlockPassThruAction(Block $b)
+    {
+        return $this->validateEditBlockPassThruAction($b);
     }
 
     public function getPassThruActionAndParameters($parameters)

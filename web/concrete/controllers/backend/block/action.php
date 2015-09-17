@@ -18,9 +18,11 @@ class Action extends AbstractController
             if (is_object($a)) {
                 $ap = new \Permissions($a);
                 $bt = \BlockType::getByID($btID);
-                if (is_object($bt) && $ap->canAddBlock($bt)) {
+                if (is_object($bt)) {
                     $controller = $bt->getController();
-                    return $this->deliverResponse($controller, $action);
+                    if ($controller->validateAddBlockPassThruAction($ap, $bt)) {
+                        return $this->deliverResponse($controller, $action);
+                    }
                 }
             }
         }
@@ -52,9 +54,8 @@ class Action extends AbstractController
         if (is_object($c) && !$c->isError()) {
             $b = \Block::getByID($bID, $c, $arHandle);
             if (is_object($b)) {
-                $bp = new \Permissions($b);
-                if ($bp->canEditBlock()) {
-                    $controller = $b->getController();
+                $controller = $b->getController();
+                if ($controller->validateEditBlockPassThruAction($b)) {
                     return $this->deliverResponse($controller, $action);
                 }
             }
@@ -72,9 +73,8 @@ class Action extends AbstractController
             if ($formControl instanceof BlockControl) {
                 $set = $setControl->getPageTypeComposerFormLayoutSetObject();
                 $type = $set->getPageTypeObject();
-                $pp = new \Permissions($type);
-                if ($pp->canAddPageType()) {
-                    $controller = $formControl->getBlockTypeObject()->getController();
+                $controller = $formControl->getBlockTypeObject()->getController();
+                if ($controller->validateComposerAddBlockPassThruAction($type)) {
                     return $this->deliverResponse($controller, $action);
                 }
             }
@@ -93,9 +93,8 @@ class Action extends AbstractController
                 if ($formControl instanceof BlockControl) {
                     $b = $formControl->getPageTypeComposerControlBlockObject($c);
                     if (is_object($b)) {
-                        $bp = new \Permissions($b);
-                        if ($bp->canEditBlock()) {
-                            $controller = $b->getController();
+                        $controller = $b->getController();
+                        if ($controller->validateComposerEditBlockPassThruAction($b)) {
                             return $this->deliverResponse($controller, $action);
                         }
                     }
