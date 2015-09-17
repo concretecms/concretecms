@@ -28,6 +28,7 @@ class ImporterTest extends \FileStorageTestCase {
             'AttributeKeys',
             'AttributeValues',
             'atNumber',
+            'Logs',
             'FileVersionLog'
         ));
         parent::setUp();
