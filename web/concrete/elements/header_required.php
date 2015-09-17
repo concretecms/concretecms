@@ -35,7 +35,15 @@ if (is_object($c)) {
 			$pageTitle = $seo->getTitle();
 		}
 	}
-	$pageDescription = (!isset($pageDescription) || !$pageDescription) ? $c->getCollectionDescription() : $pageDescription;
+
+	if (!isset($pageDescription) || !$pageDescription) {
+		// we aren't getting it dynamically.
+		$pageDescription = $c->getCollectionAttributeValue('meta_description');
+		if (!$pageDescription) {
+			$pageDescription = $c->getCollectionDescription();
+		}
+	}
+
 	$cID = $c->getCollectionID();
 	$isEditMode = ($c->isEditMode()) ? "true" : "false";
 	$isArrangeMode = ($c->isArrangeMode()) ? "true" : "false";
@@ -61,17 +69,12 @@ if (is_object($c)) {
 
 <meta http-equiv="content-type" content="text/html; charset=<?php echo APP_CHARSET?>" />
 <?php
-$akd = $c->getCollectionAttributeValue('meta_description');
 $akk = $c->getCollectionAttributeValue('meta_keywords');
 ?>
 <title><?php echo htmlspecialchars($pageTitle, ENT_COMPAT, APP_CHARSET)?></title>
-<?
-if ($akd) { ?>
-<meta name="description" content="<?=htmlspecialchars($akd, ENT_COMPAT, APP_CHARSET)?>" />
-<?php } else { ?>
 <meta name="description" content="<?=htmlspecialchars($pageDescription, ENT_COMPAT, APP_CHARSET)?>" />
-<?php }
-if ($akk) { ?>
+
+<? if ($akk) { ?>
 <meta name="keywords" content="<?=htmlspecialchars($akk, ENT_COMPAT, APP_CHARSET)?>" />
 <?php }
 if($c->getCollectionAttributeValue('exclude_search_index')) { ?>
