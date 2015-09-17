@@ -22,7 +22,6 @@ use Environment;
 use Illuminate\Container\Container;
 use Job;
 use JobSet;
-use League\Url\Components\Host;
 use Log;
 use Package;
 use Page;
