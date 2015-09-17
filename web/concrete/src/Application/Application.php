@@ -22,6 +22,7 @@ use Environment;
 use Illuminate\Container\Container;
 use Job;
 use JobSet;
+use League\Url\Components\Host;
 use Log;
 use Package;
 use Page;
@@ -305,7 +306,7 @@ class Application extends Container
         $parsedUrl = (string) Url::createFromUrl($request->getUri());
         if ($request->getPathInfo() != '/') {
             $parsedUrlWithoutQueryString = strstr($parsedUrl, '?', true) ?: $parsedUrl;
-            $requestUrl = $request->getUri();
+            $requestUrl = (string) Url::createFromUrl($request->getUri());
             $requestUrlWithoutQueryString = strstr($requestUrl, '?', true) ?: $requestUrl;
             if (urldecode($parsedUrlWithoutQueryString) != urldecode($requestUrlWithoutQueryString)) {
                 $response = new RedirectResponse($parsedUrl, 301);
