@@ -5,6 +5,7 @@ class Processor implements ProcessorInterface
 {
 
     protected $target;
+    protected $tasks = array();
 
     public function __construct(TargetInterface $target)
     {

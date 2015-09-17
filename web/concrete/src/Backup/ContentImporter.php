@@ -1026,29 +1026,35 @@ class ContentImporter
             if (isset($matches[1]) && $matches[1]) {
                 $c = Page::getByPath($matches[1]);
 
-                return $c->getCollectionID();
+                return intval($c->getCollectionID());
             }
             if (isset($matches[2]) && $matches[2]) {
                 $db = Database::connection();
                 $fID = $db->GetOne('select fID from FileVersions where fvFilename = ?', array($matches[2]));
 
-                return $fID;
+                return intval($fID);
             }
             if (isset($matches[3]) && $matches[3]) {
                 $db = Database::connection();
                 $fID = $db->GetOne('select fID from FileVersions where fvFilename = ?', array($matches[3]));
 
-                return $fID;
+                return intval($fID);
             }
             if (isset($matches[4]) && $matches[4]) {
                 $ct = PageType::getByHandle($matches[4]);
-
-                return $ct->getPageTypeID();
+                if (is_object($ct)) {
+                    return $ct->getPageTypeID();
+                } else {
+                    return 0;
+                }
             }
             if (isset($matches[5]) && $matches[5]) {
                 $pf = Feed::getByHandle($matches[5]);
-
-                return $pf->getID();
+                if (is_object($pf)) {
+                    return $pf->getID();
+                } else {
+                    return 0;
+                }
             }
         } else {
             return $value;
