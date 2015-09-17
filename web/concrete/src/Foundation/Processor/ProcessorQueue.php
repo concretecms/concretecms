@@ -36,6 +36,11 @@ class ProcessorQueue extends Processor
         return $this->queue;
     }
 
+    public function __sleep()
+    {
+        return array('itemsPerBatch', 'tasks');
+    }
+
     public function receive()
     {
         $queueItems = $this->getQueue()->receive($this->itemsPerBatch);
@@ -53,7 +58,7 @@ class ProcessorQueue extends Processor
         $this->getQueue()->deleteQueue();
         $tasks = $this->getTasks();
         foreach($tasks as $task) {
-            $action = new QueueAction($this->target, $task[1]);
+            $action = new QueueAction($this, $this->target, $task[1]);
             $action->finish();
         }
     }
@@ -82,7 +87,7 @@ class ProcessorQueue extends Processor
         $tasks = $this->getTasks();
         foreach($this->target->getItems() as $targetItem) {
             foreach($tasks as $task) {
-                $action = new QueueAction($this->target, $task[1], $targetItem);
+                $action = new QueueAction($this, $this->target, $task[1], $targetItem);
                 $queue->send(serialize($action));
             }
         }
