@@ -26,7 +26,7 @@ class Processor implements ProcessorInterface
     {
         $tasks = $this->getTasks();
         foreach($tasks as $task) {
-            $action = new Action($this->target, $task[1]);
+            $action = new Action($this, $this->target, $task[1]);
             $action->finish();
         }
     }
@@ -53,7 +53,7 @@ class Processor implements ProcessorInterface
         $tasks = $this->getTasks();
         foreach($this->target->getItems() as $targetItem) {
             foreach($tasks as $task) {
-                $action = new Action($this->target, $task[1], $targetItem);
+                $action = new Action($this, $this->target, $task[1], $targetItem);
                 $this->execute($action);
             }
         }
