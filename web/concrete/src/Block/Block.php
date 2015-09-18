@@ -6,7 +6,6 @@ use Area;
 use BlockType;
 use CacheLocal;
 use Collection;
-use Concrete\Core\Area\SubArea;
 use Concrete\Core\Backup\ContentExporter;
 use Concrete\Core\Block\View\BlockView;
 use Concrete\Core\Feature\Assignment\Assignment as FeatureAssignment;
@@ -21,6 +20,7 @@ use Page;
 
 class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
 {
+
     protected $cID;
     protected $arHandle;
     protected $c;
