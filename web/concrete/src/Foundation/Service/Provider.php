@@ -18,4 +18,14 @@ abstract class Provider {
 	 */
 	abstract public function register();
 
+	/**
+	 * Returns an array of things that this provider provides
+	 * This is used to determine what the service provider changed
+	 * @return array
+	 */
+	public function provides()
+	{
+		return array();
+	}
+
 }
