@@ -28,15 +28,9 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
     protected $proxyBlock = false;
     protected $bActionCID;
     protected $cacheSettings;
-    protected $isOriginal;
     public $a;
 
     protected $bFilename;
-
-    /**
-     * @type BlockController|null
-     */
-    protected $instance;
 
     public static function populateManually($blockInfo, $c, $a)
     {
@@ -56,41 +50,6 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         $b->c = $c;
 
         return $b;
-    }
-
-    /**
-     * Should this block be original?
-     * @param bool $bool
-     */
-    public function setIsOriginal($bool)
-    {
-        $this->isOriginal = $bool;
-    }
-
-    /**
-     * Set the area this block is in, this does not persist to the database.
-     *
-     * @param Area $area
-     */
-    public function setArea(Area $area)
-    {
-        $this->arHandle = $area->getAreaHandle();
-        $this->a = $area;
-    }
-
-    /**
-     * Set the collection this block is in, this does not persist to the database.
-     * @param Collection $collection
-     */
-    public function setCollection(Collection $collection)
-    {
-        $this->cID = $collection->getCollectionID();
-        $this->c = $collection;
-    }
-
-    public function setControllerInstance(BlockController $controller)
-    {
-        $this->instance = $controller;
     }
 
     /**
@@ -119,37 +78,76 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
     }
 
-    /**
-     * @param $block_id
-     * @param Collection|null $collection
-     * @param Area|string|null $area
-     * @return \Concrete\Core\Block\Block|null
-     * @deprecated Use \Core::make(BlockFactory::class)->withCollectionAndArea($collecton, $area)->withId($id);
-     */
-    public static function getByID($block_id, $collection = null, $area = null)
+    public static function getByID($bID, $c = null, $a = null)
     {
-        //return self::oldGetByID($bID, $c, $a);
-
-        if (is_null($collection) || is_null($area)) {
-            $collection = null;
-            $area = null;
+        if ($c == null && $a == null) {
+            $cID = 0;
+            $arHandle = "";
+            $cvID = 0;
+            $b = CacheLocal::getEntry('block', $bID);
+        } else {
+            if (is_object($a)) {
+                $arHandle = $a->getAreaHandle();
+            } else {
+                if ($a != null) {
+                    $arHandle = $a;
+                    $a = Area::getOrCreate($c, $a);
+                }
+            }
+            $cID = $c->getCollectionID();
+            $cvID = $c->getVersionID();
+            $b = CacheLocal::getEntry('block', $bID . ':' . $cID . ':' . $cvID . ':' . $arHandle);
         }
 
-        if (is_string($area)) {
-            $area = Area::getOrCreate($collection, $area);
+        if ($b instanceof self) {
+            return $b;
         }
 
-        /** @type BlockFactory $factory */
-        $factory = \Core::make(BlockFactory::class);
+        $db = Loader::db();
 
-        if (is_object($collection) && is_object($area)) {
-            $factory->withCollectionAndArea($collection, $area);
+        $b = new self();
+        if ($c == null && $a == null) {
+            // just grab really specific block stuff
+            $q = "select bID, bIsActive, BlockTypes.btID, Blocks.btCachedBlockRecord, BlockTypes.btHandle, BlockTypes.pkgID, BlockTypes.btName, bName, bDateAdded, bDateModified, bFilename, Blocks.uID from Blocks inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where bID = ?";
+            $b->isOriginal = 1;
+            $v = array($bID);
+        } else {
+            $b->arHandle = $arHandle;
+            $b->a = $a;
+            $b->cID = $cID;
+            $b->c = ($c) ? $c : '';
+
+            $vo = $c->getVersionObject();
+            $cvID = $vo->getVersionID();
+
+            $v = array($b->arHandle, $cID, $cvID, $bID);
+            $q = "select CollectionVersionBlocks.isOriginal, CollectionVersionBlocks.cbIncludeAll, Blocks.btCachedBlockRecord, BlockTypes.pkgID, CollectionVersionBlocks.cbOverrideAreaPermissions, CollectionVersionBlocks.cbOverrideBlockTypeCacheSettings,
+ CollectionVersionBlocks.cbOverrideBlockTypeContainerSettings, CollectionVersionBlocks.cbEnableBlockContainer, CollectionVersionBlocks.cbDisplayOrder, Blocks.bIsActive, Blocks.bID, Blocks.btID, bName, bDateAdded, bDateModified, bFilename, btHandle, Blocks.uID from CollectionVersionBlocks inner join Blocks on (CollectionVersionBlocks.bID = Blocks.bID) inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where CollectionVersionBlocks.arHandle = ? and CollectionVersionBlocks.cID = ? and (CollectionVersionBlocks.cvID = ? or CollectionVersionBlocks.cbIncludeAll=1) and CollectionVersionBlocks.bID = ?";
         }
 
-        try {
-            return $factory->withId($block_id);
-        } catch (\Exception $e) {
-            return null;
+        $r = $db->query($q, $v);
+        $row = $r->fetchRow();
+
+        if (is_array($row)) {
+            $b->setPropertiesFromArray($row);
+            $r->free();
+
+            $bt = BlockType::getByID($b->getBlockTypeID());
+            $class = $bt->getBlockTypeClass();
+            if ($class == false) {
+                // we can't find the class file, so we return
+                return false;
+            }
+
+            $b->instance = new $class($b);
+
+            if ($c != null || $a != null) {
+                CacheLocal::set('block', $bID . ':' . $cID . ':' . $cvID . ':' . $arHandle, $b);
+            } else {
+                CacheLocal::set('block', $bID, $b);
+            }
+
+            return $b;
         }
     }
 
@@ -1149,15 +1147,6 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
             }
         }
         */
-    }
-
-    /**
-     * This does not effect the database
-     * @param int $id The block ID
-     */
-    public function setBlockID($id)
-    {
-        $this->bID = $id;
     }
 
     public function setBlockCollectionObject($c)
