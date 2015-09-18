@@ -93,68 +93,6 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         $this->instance = $controller;
     }
 
-    public static function oldGetByID($bID, $c = null, $a = null) {
-        if ($c == null && $a == null) {
-            $cID = 0;
-            $arHandle = "";
-            $cvID = 0;
-            $b = CacheLocal::getEntry('block', $bID);
-        } else {
-            if (is_object($a)) {
-                $arHandle = $a->getAreaHandle();
-            } else {
-                if ($a != null) {
-                    $arHandle = $a;
-                    $a = Area::getOrCreate($c, $a);
-                }
-            }
-            $cID = $c->getCollectionID();
-            $cvID = $c->getVersionID();
-            $b = CacheLocal::getEntry('block', $bID . ':' . $cID . ':' . $cvID . ':' . $arHandle);
-        }
-        if ($b instanceof self) {
-            return $b;
-        }
-        $db = Loader::db();
-        $b = new self();
-        if ($c == null && $a == null) {
-            // just grab really specific block stuff
-            $q = "select bID, bIsActive, BlockTypes.btID, Blocks.btCachedBlockRecord, BlockTypes.btHandle, BlockTypes.pkgID, BlockTypes.btName, bName, bDateAdded, bDateModified, bFilename, Blocks.uID from Blocks inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where bID = ?";
-            $b->isOriginal = 1;
-            $v = array($bID);
-        } else {
-            $b->arHandle = $arHandle;
-            $b->a = $a;
-            $b->cID = $cID;
-            $b->c = ($c) ? $c : '';
-            $vo = $c->getVersionObject();
-            $cvID = $vo->getVersionID();
-            $v = array($b->arHandle, $cID, $cvID, $bID);
-            $q = "select CollectionVersionBlocks.isOriginal, CollectionVersionBlocks.cbIncludeAll, Blocks.btCachedBlockRecord, BlockTypes.pkgID, CollectionVersionBlocks.cbOverrideAreaPermissions, CollectionVersionBlocks.cbOverrideBlockTypeCacheSettings,
- CollectionVersionBlocks.cbOverrideBlockTypeContainerSettings, CollectionVersionBlocks.cbEnableBlockContainer, CollectionVersionBlocks.cbDisplayOrder, Blocks.bIsActive, Blocks.bID, Blocks.btID, bName, bDateAdded, bDateModified, bFilename, btHandle, Blocks.uID from CollectionVersionBlocks inner join Blocks on (CollectionVersionBlocks.bID = Blocks.bID) inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where CollectionVersionBlocks.arHandle = ? and CollectionVersionBlocks.cID = ? and (CollectionVersionBlocks.cvID = ? or CollectionVersionBlocks.cbIncludeAll=1) and CollectionVersionBlocks.bID = ?";
-        }
-        $r = $db->query($q, $v);
-        $row = $r->fetchRow();
-        if (is_array($row)) {
-            $b->setPropertiesFromArray($row);
-            $r->free();
-            $bt = BlockType::getByID($b->getBlockTypeID());
-            $class = $bt->getBlockTypeClass();
-            if ($class == false) {
-                // we can't find the class file, so we return
-                return false;
-            }
-            $b->instance = new $class($b);
-            if ($c != null || $a != null) {
-                CacheLocal::set('block', $bID . ':' . $cID . ':' . $cvID . ':' . $arHandle, $b);
-            } else {
-                CacheLocal::set('block', $bID, $b);
-            }
-            return $b;
-        }
-    }
-
-
     /**
      * Returns a global block.
      */
