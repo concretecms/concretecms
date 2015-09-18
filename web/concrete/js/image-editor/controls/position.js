@@ -594,17 +594,19 @@ Crop.prototype = {
     finalize: function() {
         var crop = this,
             elem = im.activeElement,
-            old_filter = im.activeElement.getFilter(),
-            old_rotation = im.activeElement.getRotationDeg(),
-            old_scale = im.activeElement.getScale(),
-            url;
+            old_filter = elem.getFilter(),
+            old_rotation = elem.getRotationDeg(),
+            old_scale = elem.getScale(),
+            old_layer_position = elem.parent.getPosition(),
+            old_stage_position = im.stage.getPosition();
 
         im.stage.setScale(1);
         im.stage.setPosition(0, 0);
-        im.activeElement.parent.setPosition(0, 0);
-        im.activeElement.setRotationDeg(0);
-        im.activeElement.setScale(1, 1);
-        im.activeElement.clearFilter();
+        elem.parent.setPosition(0, 0);
+        elem.setRotationDeg(0);
+        elem.setScale(1, 1);
+        elem.clearFilter();
+
         elem.toImage({
             x: 0,
             y: 0,
@@ -630,6 +632,9 @@ Crop.prototype = {
                 im.adjustSavers();
                 crop.destroy();
                 im.stage.draw();
+
+                elem.getLayer().setPosition(old_layer_position);
+                im.stage.setPosition(old_stage_position);
 
                 im.fire('activeElementSizeChange');
                 im.fire('sizeChanged', {
