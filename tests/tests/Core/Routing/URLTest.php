@@ -139,6 +139,18 @@ class URLTest extends PHPUnit_Framework_TestCase
     {
         $app = Core::make("app");
 
+        $request = \Concrete\Core\Http\Request::create('http://xn--mgbh0fb.xn--kgbechtv/services');
+        $response = $app->handleURLSlashes($request);
+        $this->assertNull($response);
+
+        $request = \Concrete\Core\Http\Request::create('http://xn--fsqu00a.xn--0zwm56d/services/');
+        $response = $app->handleURLSlashes($request);
+        $this->assertEquals('http://例子.测试/services', $response->getTargetUrl());
+
+        $request = \Concrete\Core\Http\Request::create('http://concrete5.dev/derp');
+        $response = $app->handleURLSlashes($request);
+        $this->assertNull($response);
+
         $request = \Concrete\Core\Http\Request::create('http://concrete5.dev/index.php?cID=1');
         $response = $app->handleURLSlashes($request);
         $this->assertNull($response);
