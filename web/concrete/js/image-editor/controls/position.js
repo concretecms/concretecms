@@ -181,7 +181,7 @@ function Crop() {
     var crop = this;
 
     im.bind('ImageEditorWillSave', function() {
-       crop.layer.hide();
+        crop.layer.hide();
     });
 
     this.active = true;
@@ -206,6 +206,7 @@ function Crop() {
     });
 
     var start_position, start_offset;
+
     this.cover = new Kinetic.Shape({
         fill: 'black',
         opacity: .4,
@@ -214,20 +215,50 @@ function Crop() {
         listening: false,
         draggable: false,
         drawFunc: function (context) {
-            var dimensions = im.stage.getTotalDimensions();
+            var dimensions = im.stage.getTotalDimensions(),
+                x = dimensions.min.x - crop.layer.getPosition().x - (1 / im.scale * im.stage.getPosition().x),
+                y = dimensions.min.y - crop.layer.getPosition().y - (1 / im.scale * im.stage.getPosition().y),
+                offset = Math.max(dimensions.visibleWidth, dimensions.visibleHeight) * 2,
+                small_rect = {
+                    position: {
+                        x: crop.offset.x,
+                        y: crop.offset.y
+                    },
+                    size: {
+                        width:  crop.width,
+                        height: crop.height
+                    }
+                },
+                large_rect = {
+                    position: {
+                        x: x - offset,
+                        y: y - offset
+                    },
+                    size: {
+                        width:  offset * 2,
+                        height: offset * 2
+                    }
+                };
+
             context.beginPath();
 
-            var x = dimensions.min.x - crop.layer.getPosition().x - (1 / im.scale * im.stage.getPosition().x),
-                y = dimensions.min.y - crop.layer.getPosition().y - (1 / im.scale * im.stage.getPosition().y),
-                offset = Math.max(dimensions.visibleWidth, dimensions.visibleHeight) * 2;
-
-            context.rect(x - offset, y - offset, offset * 2, offset * 2);
-            context.rect(crop.offset.x + crop.width, crop.offset.y, -crop.width, crop.height);
+            context.moveTo(small_rect.position.x, small_rect.position.y);
+            context.lineTo(small_rect.position.x, small_rect.position.y + small_rect.size.height);
+            context.lineTo(small_rect.position.x + small_rect.size.width, small_rect.position.y + small_rect.size.height);
+            context.lineTo(small_rect.position.x + small_rect.size.width, small_rect.position.y);
+            context.lineTo(large_rect.position.x + large_rect.size.width, small_rect.position.y);
+            context.lineTo(large_rect.position.x + large_rect.size.width, large_rect.position.y + large_rect.size.height);
+            context.lineTo(large_rect.position.x, large_rect.position.y + large_rect.size.height);
+            context.lineTo(large_rect.position.x, large_rect.position.y);
+            context.lineTo(large_rect.position.x + large_rect.size.width, large_rect.position.y);
+            context.lineTo(large_rect.position.x + large_rect.size.width, small_rect.position.y);
 
             context.closePath();
+
             context.fillStrokeShape(this);
         }
     });
+
 
     this.dragLayer = new Kinetic.Layer({
         position: crop.layer.getPosition()
@@ -429,22 +460,20 @@ Crop.prototype = {
                 draggable: true,
                 listening: true
             }).on('dragstart',function () {
-                    start_position = _.clone(this.getPosition());
-                    start_offset = _.clone(crop.offset);
-                    start_width = crop.width;
-                    start_height = crop.height;
-                }).on('dragend',function () {
-                    crop.positionDraggers();
+                start_position = _.clone(this.getPosition());
+                start_offset = _.clone(crop.offset);
+                start_width = crop.width;
+                start_height = crop.height;
+            }).on('dragend',function () {
+                crop.positionDraggers();
 
-                    im.stage.draw();
-                }).on('dragmove', function () {
-                    _.defer(function () {
-                        im.fire('cropSizeChanged', {
-                            width: crop.width,
-                            height: crop.height
-                        });
-                    });
+                im.stage.draw();
+            }).on('dragmove', function () {
+                im.fire('cropSizeChanged', {
+                    width: crop.width,
+                    height: crop.height
                 });
+            });
 
         var drawFunc = dragger.getDrawFunc();
         dragger.setDrawFunc(function () {
