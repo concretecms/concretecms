@@ -128,6 +128,10 @@ abstract class Assignment extends Object
 
     public function delete()
     {
+        $detail = $this->getFeatureDetailObject();
+        if (is_object($detail)) {
+            $detail->deleteFeatureAssignment($this);
+        }
         $db = Database::connection();
         $db->Execute('delete from FeatureAssignments where faID = ?', array($this->getFeatureAssignmentID()));
     }
