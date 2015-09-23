@@ -323,15 +323,21 @@ class BlockControl extends Control
         }
 
         // make a reference to the new block
+        $this->recordPageTypeComposerOutputBlock($b);
+    }
+
+    public function recordPageTypeComposerOutputBlock(\Concrete\Core\Block\Block $block)
+    {
         $db = Loader::db();
+        $setControl = $this->getPageTypeComposerFormLayoutSetControlObject();
         $db->Execute(
             'insert into PageTypeComposerOutputBlocks (cID, arHandle, ptComposerFormLayoutSetControlID, cbDisplayOrder, bID) values (?, ?, ?, ?, ?)',
             array(
-                $c->getCollectionID(),
-                $arHandle,
+                $block->getBlockCollectionID(),
+                $block->getAreaHandle(),
                 $setControl->getPageTypeComposerFormLayoutSetControlID(),
-                $b->getBlockDisplayOrder(),
-                $b->getBlockID()
+                $block->getBlockDisplayOrder(),
+                $block->getBlockID()
             )
         );
     }
