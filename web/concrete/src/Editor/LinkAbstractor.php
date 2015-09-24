@@ -110,15 +110,12 @@ class LinkAbstractor extends Object {
 				$fID = $picture->fid;
 				$fo = \File::getByID($fID);
 				if (is_object($fo)) {
-					/*
-					 * No idea where this $style was supposed to come from
-					if ($style) {
+					if ($picture->style) {
 						$image = new \Concrete\Core\Html\Image($fo, false);
 						$image->getTag()->width(false)->height(false);
 					} else {
 						$image = new \Concrete\Core\Html\Image($fo);
-					}*/
-					$image = new \Concrete\Core\Html\Image($fo);
+					}
 					$tag = $image->getTag();
 
 					foreach($picture->attr as $attr => $val) {
