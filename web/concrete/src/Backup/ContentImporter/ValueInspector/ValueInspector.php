@@ -13,7 +13,9 @@ class ValueInspector
 {
     protected $content;
 
-    protected $regExp = '/\<concrete-picture[^>]* file="([^"]*)"|\{ccm:export:page:(.*?)\}|\{ccm:export:file:(.*?)\}|\{ccm:export:pagetype:(.*?)\}|\{ccm:export:pagefeed:(.*?)\}/i';
+    // Note: \{ccm:export:image:(.*?)\} is for legacy c5
+
+    protected $regExp = '/\<concrete-picture[^>]* file="([^"]*)"|\{ccm:export:page:(.*?)\}|\{ccm:export:file:(.*?)\}|\{ccm:export:pagetype:(.*?)\}|\{ccm:export:pagefeed:(.*?)\}|\{ccm:export:image:(.*?)\}/i';
 
     public function __construct($content)
     {
@@ -61,6 +63,9 @@ class ValueInspector
                 break;
             case 5:
                 $o = new PageFeedItem($reference);
+                break;
+            case 6:
+                $o = new PictureItem($reference);
                 break;
         }
         return $o;
