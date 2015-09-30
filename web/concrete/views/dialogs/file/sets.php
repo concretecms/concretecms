@@ -3,7 +3,7 @@
 <form method="post" data-dialog-form="save-file-set" action="<?=$controller->action('submit')?>">
 
     <div class="ccm-ui">
-        <? Loader::element('files/add_to_sets', array(
+        <?php Loader::element('files/add_to_sets', array(
             'displayFileSet' => function($fileset) use ($f) {
                 $fp = new \Permissions($fileset);
                 if (!$fp->canAddFiles() || !$fp->canAddFileType(strtolower($f->getExtension()))) {

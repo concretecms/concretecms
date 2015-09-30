@@ -8,11 +8,11 @@ $cID = $c->getCollectionID();
 	<form method="post" data-panel-detail-form="compose">
 		<?=Loader::helper('concrete/ui/help')->display('panel', '/page/composer')?>
 
-		<? Loader::helper('concrete/composer')->display($pagetype, $c); ?>
+		<?php Loader::helper('concrete/composer')->display($pagetype, $c); ?>
 	</form>
 
 	<div class="ccm-panel-detail-form-actions dialog-buttons">
-		<? Loader::helper('concrete/composer')->displayButtons($pagetype, $c); ?>
+		<?php Loader::helper('concrete/composer')->displayButtons($pagetype, $c); ?>
 	</div>
 </section>
 

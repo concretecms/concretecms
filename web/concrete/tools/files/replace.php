@@ -74,7 +74,7 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
                     <?= $form->hidden('fID', $f->getFileID()); ?>
                     <?=$valt->output('import_incoming');?>
                 </form>
-            <? } else {
+            <?php } else {
                 if($error) { ?>
                     <div class="alert alert-danger">
                         <?php echo $error;?>

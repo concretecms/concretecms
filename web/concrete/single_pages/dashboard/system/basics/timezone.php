@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 
 // Helpers
 $h = Loader::helper('concrete/ui');
@@ -50,7 +50,7 @@ $d = Loader::helper('concrete/dashboard');
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <? print $interface->submit(t('Save'), 'user-timezone-form', 'right', 'btn-primary'); ?>
+            <?php print $interface->submit(t('Save'), 'user-timezone-form', 'right', 'btn-primary'); ?>
         </div>
     </div>
 

@@ -1,14 +1,14 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <div class="ccm-block-rss-displayer-wrapper">
 
-<? if( strlen($title)>0 ){ ?>
+<?php if( strlen($title)>0 ){ ?>
     <div class="ccm-block-rss-displayer-header">
     	<h5><?=$title?></h5>
     </div>
-<? } ?>
+<?php } ?>
 
-<? 
+<?php 
 $rssObj=$controller;
 $textHelper = Loader::helper("text");
 
@@ -23,7 +23,7 @@ if( strlen($errorMsg)>0 ){
 		
 		<div class="ccm-block-rss-displayer-item">
 			<div class="ccm-block-rss-displayer-item-title">
-				<a href="<?= $item->getLink(); ?>" <? if($rssObj->launchInNewWindow) echo 'target="_blank"' ?> >
+				<a href="<?= $item->getLink(); ?>" <?php if($rssObj->launchInNewWindow) echo 'target="_blank"' ?> >
 					<?= $item->getTitle(); ?>
 				</a>
 			</div>
@@ -37,7 +37,7 @@ if( strlen($errorMsg)>0 ){
 			</div>
 		</div>
 	
-<?  }  
+<?php  }  
 }
 ?>
 </div>

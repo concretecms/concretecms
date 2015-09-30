@@ -3,7 +3,7 @@
 use Concrete\Core\Multilingual\Page\Section\Section as MultilingualSection;
 ?>
 
-<? if (count($pages)) { ?>
+<?php if (count($pages)) { ?>
 
     <fieldset>
         <legend><?php echo t('Copy Locale Tree')?></legend>
@@ -72,11 +72,11 @@ use Concrete\Core\Multilingual\Page\Section\Section as MultilingualSection;
         </script>
 
     </form>
-    <? } else if (!$u->isSuperUser()) { ?>
+    <?php } else if (!$u->isSuperUser()) { ?>
         <p><?=t('Only the super user may copy locale trees.')?></p>
-    <? } else if ($includesHome) { ?>
+    <?php } else if ($includesHome) { ?>
         <p><?=t('Since one of your multilingual sections is the home page, you may not duplicate your site tree using this tool. You must manually assign pages using the page report.')?></p>
-    <? } ?>
+    <?php } ?>
     </fieldset>
 
     <hr/>
@@ -126,13 +126,13 @@ use Concrete\Core\Multilingual\Page\Section\Section as MultilingualSection;
                 </script>
 
             </form>
-        <? } else if (!$u->isSuperUser()) { ?>
+        <?php } else if (!$u->isSuperUser()) { ?>
             <p><?=t('Only the super user may rescan the links inside a multilingual tree.')?></p>
-        <? } else if ($includesHome) { ?>
+        <?php } else if ($includesHome) { ?>
             <p><?=t('Since one of your multilingual sections is the home page, you may not rescan the links in your site tree using this tool.')?></p>
-        <? } ?>
+        <?php } ?>
     </fieldset>
 
-<? } else { ?>
+<?php } else { ?>
     <p><?php echo t('You have not created any multilingual content sections yet.'); ?></p>
-<? } ?>
+<?php } ?>

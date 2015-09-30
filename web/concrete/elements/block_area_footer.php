@@ -45,25 +45,25 @@ $class = 'ccm-area-footer';
     }
     ?>
 
-	<? if ($showAreaDesign || $showAreaLayouts) { ?>
-		<? if ($showAreaDesign) { ?>
+	<?php if ($showAreaDesign || $showAreaLayouts) { ?>
+		<?php if ($showAreaDesign) { ?>
 			<li><a data-menu-action="edit-area-design" href="#"><?=t("Edit Area Design")?></a></li>
-		<? } ?>
-		<? if ($showAreaLayouts) {
+		<?php } ?>
+		<?php if ($showAreaLayouts) {
 			$areabt = BlockType::getByHandle(BLOCK_HANDLE_LAYOUT_PROXY);
 		 ?>
-			<? $areaLayoutBT = BlockType::getByHandle('core_area_layout'); ?>
+			<?php $areaLayoutBT = BlockType::getByHandle('core_area_layout'); ?>
 
 			<li><a dialog-title="<?=t('Add Layout')?>" data-block-type-handle="<?= $areabt->getBlockTypeHandle() ?>" data-area-grid-maximum-columns="<?=$a->getAreaGridMaximumColumns()?>" data-menu-action="add-inline" href="#" data-block-type-id="<?=$areabt->getBlockTypeID()?>"><?=t("Add Layout")?></a></li>
-		<? } ?>
-		<? if ($canEditAreaPermissions) { ?>
+		<?php } ?>
+		<?php if ($canEditAreaPermissions) { ?>
 			<li class="divider"></li>
-		<? } ?>
-	<? } ?>
+		<?php } ?>
+	<?php } ?>
 
-	<? if ($canEditAreaPermissions) { ?>
+	<?php if ($canEditAreaPermissions) { ?>
 		<li><a dialog-title="<?=t('Area Permissions')?>" class="dialog-launch" dialog-modal="false" dialog-width="425" dialog-height="430" id="menuAreaStyle<?=$a->getAreaID()?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup?cID=<?=$c->getCollectionID()?>&arHandle=<?=urlencode($a->getAreaHandle())?>&atask=groups"><?=t("Permissions")?></a></li>
-	<? } ?>
+	<?php } ?>
 
 	<?
 	if ($a instanceof SubArea) {
@@ -79,14 +79,14 @@ $class = 'ccm-area-footer';
 				<li class="divider"></li>
 				<li><a href="javascript:void(0)" data-container-layout-block-id="<?=$bx->getBlockID()?>" data-menu-action="edit-container-layout" data-area-grid-maximum-columns="<?=$a->getAreaGridMaximumColumns()?>"><?=t("Edit Container Layout")?></a></li>
 				<li><a href="javascript:void(0)" data-container-layout-block-id="<?=$bx->getBlockID()?>" data-menu-action="edit-container-layout-style"><?=t("Edit Layout Design")?></a></li>
-				<? if ($pk->validate()) {
+				<?php if ($pk->validate()) {
 					$btc = $bx->getController();
 					$arLayout = $btc->getAreaLayoutObject(); ?>
 					<li><a class="dialog-launch" href="<?=URL::to('/ccm/system/dialogs/area/layout/presets', $arLayout->getAreaLayoutID())?>" dialog-title="<?=t('Save Layout as Preset')?>" dialog-width="360" dialog-height="300" dialog-modal="true"><?=t("Save Layout as Preset")?></a></li>
                     <li><a class="dialog-launch" href="<?=URL::to('/ccm/system/dialogs/area/layout/presets/manage')?>" dialog-title="<?=t('Manage Presets')?>" dialog-width="360" dialog-height="240" dialog-modal="true"><?=t("Manage Presets")?></a></li>
-				<? } ?>
-			<? } ?>
-		<? }
+				<?php } ?>
+			<?php } ?>
+		<?php }
 	} ?>
 	</ul>
 	</div>

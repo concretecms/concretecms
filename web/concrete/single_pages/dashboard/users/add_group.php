@@ -45,13 +45,13 @@ $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
           'treeID': '<?=$tree->getTreeID()?>',
           'chooseNodeInForm': 'single',
 		  'enableDragAndDrop': false,
-          <? if ($this->controller->isPost()) { ?>
+          <?php if ($this->controller->isPost()) { ?>
              'selectNodesByKey': [<?=intval($_POST['gParentNodeID'])?>]
-          <? } else {
+          <?php } else {
           	if (is_object($rootNode)) { ?>
           		'selectNodesByKey': [<?=intval($rootNode->getTreeNodeID())?>],
-          		<? } ?>
-	      	<? } ?>
+          		<?php } ?>
+	      	<?php } ?>
 	      'removeNodesByID': ['<?=$guestGroupNode->getTreeNodeID()?>','<?=$registeredGroupNode->getTreeNodeID()?>'],
 		  'onSelect': function(select, node) {
              if (select) {
@@ -67,7 +67,7 @@ $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
 </div>
 
 </fieldset>
-<? if (Config::get('concrete.user.profiles_enabled')) { ?>
+<?php if (Config::get('concrete.user.profiles_enabled')) { ?>
 <fieldset>
 	<div class="form-group">
         <div class="checkbox">
@@ -108,7 +108,7 @@ $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
     </div>
 
 </fieldset>
-<? } ?>
+<?php } ?>
 
 <fieldset>
 	<legend><?=t('Automation')?></legend>

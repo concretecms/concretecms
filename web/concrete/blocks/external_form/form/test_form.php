@@ -3,7 +3,7 @@ $form = Loader::helper('form');
 defined('C5_EXECUTE') or die("Access Denied.");
 if (isset($response)) { ?>
 	<div class="alert alert-info"><?=$response?></div>
-<? } ?>
+<?php } ?>
 
 
 <form method="post" action="<?=$view->action('test_search')?>">

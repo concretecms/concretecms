@@ -3,7 +3,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 
 <div data-search-pages="<?=$timestamp?>" class="ccm-ui">
-<? Loader::element('pages/search', array('controller' => $searchController))?>
+<?php Loader::element('pages/search', array('controller' => $searchController))?>
 </div>
 
 <script type="text/javascript">

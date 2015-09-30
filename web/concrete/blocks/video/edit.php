@@ -47,4 +47,4 @@
             <?=$al->video('ccm-b-mp4-file', 'mp4fID', t('Choose Video File'), $mp4);?>
         </div>
 </fieldset>
-<? $this->inc('form_setup_html.php'); ?> 
+<?php $this->inc('form_setup_html.php'); ?> 

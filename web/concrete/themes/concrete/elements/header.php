@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -41,7 +41,7 @@ if (Config::get('concrete.user.profiles_enabled') && Core::isInstalled()) {
 <body>
 <div class="ccm-ui">
 
-<? if ($showLogo) { ?>
+<?php if ($showLogo) { ?>
 <div id="ccm-toolbar">
     <ul>
         <li class="ccm-logo pull-left"><span><?=Loader::helper('concrete/ui')->getToolbarLogoSRC()?></span></li>
@@ -72,4 +72,4 @@ if (Config::get('concrete.user.profiles_enabled') && Core::isInstalled()) {
         <?php } ?>
     </ul>
 </div>
-<? } ?>
+<?php } ?>

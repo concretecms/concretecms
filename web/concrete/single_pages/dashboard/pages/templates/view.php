@@ -2,7 +2,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 
-<? if (is_object($template) && ($this->controller->getTask() == 'edit' || $this->controller->getTask() == 'update')) {
+<?php if (is_object($template) && ($this->controller->getTask() == 'edit' || $this->controller->getTask() == 'update')) {
     $form = Loader::helper('form');
 ?>
       
@@ -10,7 +10,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
     <?=$this->controller->token->output('update_page_template')?>
     <input type="hidden" name="pTemplateID" value="<?=$template->getPageTemplateID()?>" />
 
-        <? $confirmMsg = t('Are you sure?'); ?>
+        <?php $confirmMsg = t('Are you sure?'); ?>
         <script type="text/javascript">
         deleteTemplate = function() {
             if(confirm('<?=$confirmMsg?>')){ 
@@ -48,8 +48,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
                      <?=$form->radio('pTemplateIcon', $ic, $ic == $template->getPageTemplateIcon())?>
                 </label>
               </div>
-              <? $i++; ?>
-            <? } ?>
+              <?php $i++; ?>
+            <?php } ?>
             </div>
         </div>
       
@@ -66,28 +66,28 @@ defined('C5_EXECUTE') or die("Access Denied.");
     </form>
     
 
-<? } else { ?>
+<?php } else { ?>
 
     <div class="ccm-dashboard-header-buttons">
         <a href="<?php echo View::url('/dashboard/pages/templates/add')?>" class="btn btn-primary"><?php echo t("Add Template")?></a>
     </div>
 
-    <? if (count($templates) == 0) { ?>
+    <?php if (count($templates) == 0) { ?>
         <br/><strong><?=t('No page types found.')?></strong><br/><br>
-    <? } else { ?>
+    <?php } else { ?>
 
         <table class="table table-striped">
 
-    <? foreach($templates as $pt) { ?>
+    <?php foreach($templates as $pt) { ?>
         <tr>
             <td><a href="<?=$view->action('edit', $pt->getPageTemplateID())?>"><?=$pt->getPageTemplateIconImage()?></a></td>
             <td style="width: 100%; vertical-align: middle"><a href="<?=$view->action('edit', $pt->getPageTemplateID())?>"><p class="lead" style="margin-bottom: 0px"><?=$pt->getPageTemplateDisplayName()?></p></a></td>
         </tr>
-    <? } ?>
+    <?php } ?>
 
 
         </table>
 
-    <? } ?>
+    <?php } ?>
 
-<? } ?>
+<?php } ?>

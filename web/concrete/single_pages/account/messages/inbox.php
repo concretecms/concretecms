@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 
 $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
 ?>
@@ -10,7 +10,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 <h1><?=t("Private Messages")?></h1>
 </div>
 
-    	<? switch($this->controller->getTask()) {
+    	<?php switch($this->controller->getTask()) {
     		case 'view_message': ?>
 
 			<?=Loader::helper('concrete/ui')->tabs(array(
@@ -37,17 +37,17 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 				<span class="caret"></span>
 				</a>
 				<ul class="dropdown-menu">
-				<? $u = new User(); ?>
-				<? if ($msg->getMessageAuthorID() != $u->getUserID()) { ?>
+				<?php $u = new User(); ?>
+				<?php if ($msg->getMessageAuthorID() != $u->getUserID()) { ?>
 					<?
 					$mui = $msg->getMessageRelevantUserObject();
 					if (is_object($mui)) {
 						if ($mui->getUserProfilePrivateMessagesEnabled()) { ?>
 							<li><a href="<?=$view->action('reply', $box, $msg->getMessageID())?>"><?=t('Reply')?></a>
 							<li class="divider"></li>
-						<? }
+						<?php }
 					}?>
-				<? } ?>
+				<?php } ?>
 				<li><a href="javascript:void(0)" onclick="if(confirm('<?=t('Delete this message?')?>')) { window.location.href='<?=$deleteURL?>'}; return false"><?=t('Delete')?></a>
 				</ul>
 				</div>
@@ -80,7 +80,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 			<table class="ccm-profile-messages-list table-striped table" border="0" cellspacing="0" cellpadding="0">
 			<thead>
 			<tr>
-				<th><? if ($mailbox == 'sent') { ?><?=t('To')?><? } else { ?><?=t('From')?><? } ?></th>
+				<th><?php if ($mailbox == 'sent') { ?><?=t('To')?><?php } else { ?><?=t('From')?><?php } ?></th>
 				<th><?=t('Subject')?></th>
 				<th><?=t('Sent At')?></th>
 				<th><?=t('Status')?></th>
@@ -105,12 +105,12 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 
 
 
-				<? } ?>
-			<? } else { ?>
+				<?php } ?>
+			<?php } else { ?>
 				<tr>
 					<Td colspan="4"><?=t('No messages found.')?></td>
 				</tr>
-			<? } ?>
+			<?php } ?>
 			</tbody>
 			</table>
 
@@ -147,7 +147,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 				<form method="post" action="<?=$view->action('send')?>">
 
 				<?=$form->hidden("uID", $recipient->getUserID())?>
-				<? if ($this->controller->getTask() == 'reply') { ?>
+				<?php if ($this->controller->getTask() == 'reply') { ?>
 					<?=$form->hidden("msgID", $msgID)?>
 					<?=$form->hidden("box", $box)?>
 				<?
@@ -184,7 +184,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 			</div>
 
 
-    		<? break;
+    		<?php break;
 
     		default:
     			// the inbox and sent box and other controls ?>

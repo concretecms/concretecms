@@ -69,4 +69,4 @@ if (!$canViewPane) {
 
 ?>
 
-<? Loader::element($toolSection, $args); ?>
+<?php Loader::element($toolSection, $args); ?>

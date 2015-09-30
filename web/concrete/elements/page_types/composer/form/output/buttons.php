@@ -45,9 +45,9 @@ $cp = new Permissions($page)
 
 
 <?php /*
-<? if (Config::get('concrete.permissions.model') != 'simple' && $cmpp->canEditPageTypePermissions($pagetype)) { ?>
+<?php if (Config::get('concrete.permissions.model') != 'simple' && $cmpp->canEditPageTypePermissions($pagetype)) { ?>
     <button type="button" data-page-type-composer-form-btn="permissions" class="btn btn-default pull-left"><?=t('Permissions')?></button>
-<? } ?>
+<?php } ?>
 */ ?>
 
 

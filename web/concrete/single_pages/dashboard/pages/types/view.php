@@ -1,6 +1,6 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<? if (($this->controller->getTask() == 'submit' || $this->controller->getTask() == 'edit') && is_object($pagetype)) { ?>
+<?php if (($this->controller->getTask() == 'submit' || $this->controller->getTask() == 'edit') && is_object($pagetype)) { ?>
 
 <form class="form-horizontal" method="post" action="<?=$view->action('submit', $pagetype->getPageTypeID())?>">
 <div class="ccm-pane-body">
@@ -15,7 +15,7 @@
 
 </form>
 
-<? } else {
+<?php } else {
 	$pk = PermissionKey::getByHandle('access_page_type_permissions');
 	 ?>
 
@@ -25,7 +25,7 @@
     </div>
 
 
-    <? if (count($pagetypes) > 0) { ?>
+    <?php if (count($pagetypes) > 0) { ?>
 
 	<table class="table table-striped">
 	<thead>
@@ -35,20 +35,20 @@
 		</tr>
 	</thead>
 	<tbody>
-		<? foreach($pagetypes as $cm) {
+		<?php foreach($pagetypes as $cm) {
             $cmp = new Permissions($cm);?>
 		<tr>
 			<td class="page-type-name"><?=$cm->getPageTypeDisplayName()?></td>
 			<td class="page-type-tasks">
-                <? if ($cmp->canEditPageType()) { ?>
+                <?php if ($cmp->canEditPageType()) { ?>
     				<a href="<?=$view->action('edit', $cm->getPageTypeID())?>" class="btn btn-default btn-xs"><?=t('Basic Details')?></a>
 	    			<a href="<?=$view->url('/dashboard/pages/types/form', $cm->getPageTypeID())?>" class="btn btn-default btn-xs"><?=t('Edit Form')?></a>
 		    		<a href="<?=$view->url('/dashboard/pages/types/output', $cm->getPageTypeID())?>" class="btn btn-default btn-xs"><?=t('Output')?></a>
                     <a href="<?=$view->url('/dashboard/pages/types/attributes', $cm->getPageTypeID())?>" class="btn btn-default btn-xs"><?=t('Attributes')?></a>
-                <? } ?>
-                <? if ($cmp->canEditPageTypePermissions()) { ?>
+                <?php } ?>
+                <?php if ($cmp->canEditPageTypePermissions()) { ?>
 					<a href="<?=$view->url('/dashboard/pages/types/permissions', $cm->getPageTypeID())?>" class="btn btn-default btn-xs"><?=t('Permissions')?></a>
-				<? } ?>
+				<?php } ?>
                 <a href="#" data-duplicate="<?=$cm->getPageTypeID()?>" class="btn btn-default btn-xs"><?=t('Copy')?></a>
                 <div style="display: none">
                     <div data-duplicate-dialog="<?=$cm->getPageTypeID()?>" class="ccm-ui">
@@ -70,9 +70,9 @@
                     </div>
                 </div>
 
-                <? if ($cmp->canDeletePageType()) { ?>
+                <?php if ($cmp->canDeletePageType()) { ?>
     				<a href="#" data-delete="<?=$cm->getPageTypeID()?>" class="btn btn-default btn-xs btn-danger"><?=t('Delete')?></a>
-                <? } ?>
+                <?php } ?>
 				<div style="display: none">
 					<div data-delete-dialog="<?=$cm->getPageTypeID()?>" class="ccm-ui">
 						<form data-delete-form="<?=$cm->getPageTypeID()?>" action="<?=$view->action('delete', $cm->getPageTypeID())?>" method="post">
@@ -83,14 +83,14 @@
 				</div>
 			</td>
 		</tr>
-		<? } ?>
+		<?php } ?>
 	</tbody>
 	</table>
 
-	<? } else { ?>
+	<?php } else { ?>
 		<p><?=t('You have not created any page types yet.')?></p>
 		<a href="<?=$view->url('/dashboard/pages/types/add')?>" class="btn btn-primary"><?=t('Add Page Type')?></a>
-	<? } ?>
+	<?php } ?>
 
 	<style type="text/css">
 	td.page-type-name {
@@ -144,4 +144,4 @@
     });
 	</script>
 
-<? } ?>
+<?php } ?>

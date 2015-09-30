@@ -31,25 +31,25 @@ if (is_object($discussion)) { ?>
 
 		<button class="pull-right btn" data-action="add-conversation" type="button"><?=t('New Topic')?></button>
 
-	<? } ?>
+	<?php } ?>
 
-		<? if ($enableOrdering) { ?>
+		<?php if ($enableOrdering) { ?>
 			<select name="orderBy" class="ccm-discussion-order-by" data-select="order">
-				<option data-sort-url="<?=Loader::helper('url')->setVariable('orderBy', 'date_last_message')?>" value="date_last_message" <? if ($reqOrderBy == 'date_last_message') { ?>selected<? } ?>><?=t('Recent Comment')?></option>
-				<option data-sort-url="<?=Loader::helper('url')->setVariable('orderBy', 'date')?>" value="date" <? if ($reqOrderBy == 'date') { ?>selected<? } ?>><?=t('Original Post')?></option>
-				<option data-sort-url="<?=Loader::helper('url')->setVariable('orderBy', 'replies')?>" value="replies" <? if ($reqOrderBy == 'replies') { ?>selected<? } ?>><?=t('Activity')?></option>
+				<option data-sort-url="<?=Loader::helper('url')->setVariable('orderBy', 'date_last_message')?>" value="date_last_message" <?php if ($reqOrderBy == 'date_last_message') { ?>selected<?php } ?>><?=t('Recent Comment')?></option>
+				<option data-sort-url="<?=Loader::helper('url')->setVariable('orderBy', 'date')?>" value="date" <?php if ($reqOrderBy == 'date') { ?>selected<?php } ?>><?=t('Original Post')?></option>
+				<option data-sort-url="<?=Loader::helper('url')->setVariable('orderBy', 'replies')?>" value="replies" <?php if ($reqOrderBy == 'replies') { ?>selected<?php } ?>><?=t('Activity')?></option>
 			</select>
-		<? } ?>
+		<?php } ?>
 
 		<h3><?=$c->getCollectionName()?></h3>
 	
-		<? if (count($topics)) { ?>
+		<?php if (count($topics)) { ?>
 
 			<?=$list->displaySummary()?>
 
 			<ul class="ccm-discussion-topics">
 
-			<? foreach($topics as $t) { 
+			<?php foreach($topics as $t) { 
 				$v = $t->getVersionObject();
 				$fa = CollectionVersionFeatureAssignment::getFeature('conversation', $v);
 				$replies = 0;
@@ -69,22 +69,22 @@ if (is_object($discussion)) { ?>
 				<div class="ccm-discussion-topic-details">
 					<h3><a href="<?=Loader::helper('navigation')->getLinkToCollection($t)?>"><?=$t->getCollectionName()?></a></h3>
 					<p><?=t('Topic Posted on %s.', $dh->formatDateTime($t->getCollectionDatePublic(), true))?>
-					<? if ($replies > 0) { ?>
+					<?php if ($replies > 0) { ?>
 						<?=t('Last Message Posted on %s.', $dh->formatDateTime($cnv->getConversationDateLastMessage(), true))?>
-					<? } ?>
+					<?php } ?>
 					</p>
 				</div>
 			</li>
-			<? } ?>
+			<?php } ?>
 
 			</ul>
 
 			<?=$list->displayPagingV2()?>
 
-		<? } else { ?>
+		<?php } else { ?>
 			<div class="well"><?=t('No topics have been posted.')?></div>
-		<? } ?>
-	<? } ?>
+		<?php } ?>
+	<?php } ?>
 
 	</div>
 

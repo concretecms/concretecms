@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 
 <?
@@ -57,7 +57,7 @@ if ($enablePostingFromGathering && is_object($composer)) { ?>
 	});
 	</script>
 
-<? } ?>
+<?php } ?>
 
 <?
   Loader::element('gathering/display', array(

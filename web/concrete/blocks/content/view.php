@@ -3,6 +3,6 @@
 	$c = Page::getCurrentPage();
 	if (!$content && is_object($c) && $c->isEditMode()) { ?>
 		<div class="ccm-edit-mode-disabled-item"><?=t('Empty Content Block.')?></div> 
-	<? } else {
+	<?php } else {
 		print $content;
 	}

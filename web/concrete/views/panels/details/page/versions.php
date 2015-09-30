@@ -30,9 +30,9 @@ foreach ($_REQUEST['cvID'] as $cvID) { ?>
 	<iframe border="0" id="v<?=time()?>" frameborder="0" height="100%" width="100%" src="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/preview_version?cvID=<?=$cvID?>&amp;cID=<?=$cID?>" />
 	</div>
 	
-	<? if ($display == 'block') {
+	<?php if ($display == 'block') {
 		$display = 'none';
 	} ?>
 
-<? } ?>
+<?php } ?>
 </div>

@@ -15,9 +15,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		foreach ($gArray as $g) {
 		?>
 
-		<div class="radio"><label><input type="checkbox" name="readGID[]" value="<?=$g->getGroupID()?>" <? if (in_array($g->getGroupID(), $viewAccess)) { ?> checked <? } ?> /> <?=$g->getGroupDisplayName(false)?></label></div>
+		<div class="radio"><label><input type="checkbox" name="readGID[]" value="<?=$g->getGroupID()?>" <?php if (in_array($g->getGroupID(), $viewAccess)) { ?> checked <?php } ?> /> <?=$g->getGroupDisplayName(false)?></label></div>
 
-		<? } ?>
+		<?php } ?>
 
 		<hr/>
 
@@ -28,9 +28,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		foreach ($gArray as $g) {
 		?>
 
-		<div class="radio"><label><input type="checkbox" name="editGID[]" value="<?=$g->getGroupID()?>" <? if (in_array($g->getGroupID(), $editAccess)) { ?> checked <? } ?> /> <?=$g->getGroupDisplayName(false)?></label></div>
+		<div class="radio"><label><input type="checkbox" name="editGID[]" value="<?=$g->getGroupID()?>" <?php if (in_array($g->getGroupID(), $editAccess)) { ?> checked <?php } ?> /> <?=$g->getGroupDisplayName(false)?></label></div>
 
-		<? } ?>
+		<?php } ?>
 
 	</form>
 	<div class="dialog-buttons ccm-panel-detail-form-actions">

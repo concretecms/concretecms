@@ -1,5 +1,5 @@
 
-<? 
+<?php 
 //Used on both page and file attributes
 $c = Page::getCurrentPage();
 
@@ -11,7 +11,7 @@ if (is_object($category) && $category->allowAttributeSets()) {
 
 
 <div class="ccm-dashboard-header-buttons">
-	<? if (count($sets) > 0) { ?>
+	<?php if (count($sets) > 0) { ?>
 		<button type="button" class="btn btn-default" data-toggle="dropdown">
 		<?=t('View')?> <span class="caret"></span>
 		</button>
@@ -19,7 +19,7 @@ if (is_object($category) && $category->allowAttributeSets()) {
 		<li><a href="<?=Loader::helper('navigation')->getLinkToCollection($c)?>?asGroupAttributes=1"><?=t('Grouped by Set')?></a></li>
 		<li><a href="<?=Loader::helper('navigation')->getLinkToCollection($c)?>?asGroupAttributes=0"><?=t('In One List')?></a></li>
 		</ul>
-	<? } ?>
+	<?php } ?>
 	<a href="<?=URL::to('/dashboard/system/attributes/sets', 'category', $category->getAttributeKeyCategoryID())?>" class="btn btn-default"><?=t('Manage Sets')?></a>
 </div>
 
@@ -45,7 +45,7 @@ if (count($attribs) > 0) { ?>
 		
 			<div class="ccm-attribute-list-wrapper"><?=t('No attributes defined.')?></div>
 		
-		<? } else { ?>
+		<?php } else { ?>
             <ul class="item-select-list ccm-sortable-attribute-set-list-wrapper" attribute-set-id="<?=$as->getAttributeSetID()?>" id="asID_<?=$as->getAttributeSetID()?>">
 			<?
 			foreach($setattribs as $ak) { ?>
@@ -56,14 +56,14 @@ if (count($attribs) > 0) { ?>
                     </a>
                     <i class="ccm-item-select-list-sort"></i>
                 </li>
-			<? } ?>
+			<?php } ?>
 			</ul>
 			
-		<? } ?>
+		<?php } ?>
 			
 		</fieldset>
 
-		<? } 
+		<?php } 
 		
 		$unsetattribs = $category->getUnassignedAttributeKeys();
 		if (count($unsetattribs) > 0) { ?>
@@ -79,7 +79,7 @@ if (count($attribs) > 0) { ?>
                             <?=$ak->getAttributeKeyDisplayName()?>
                         </a>
                     </li>
-	            <? } ?>
+	            <?php } ?>
                 </ul>
 			</fieldset>
 		
@@ -93,15 +93,15 @@ if (count($attribs) > 0) { ?>
         foreach($attribs as $ak) { ?>
             <li class="ccm-attribute" id="akID_<?=$ak->getAttributeKeyID()?>">
 			    <a href="<?=URL::to($editURL, 'edit', $ak->getAttributeKeyID())?>" title="<?php echo t('Handle')?>: <?php echo $ak->getAttributeKeyHandle(); ?>"><img class="ccm-attribute-icon" src="<?=$ak->getAttributeKeyIconSRC()?>" width="16" height="16" /> <?=$ak->getAttributeKeyDisplayName()?></a>
-                <? if($sortable) { ?><i class="ccm-item-select-list-sort"></i><? } ?>
+                <?php if($sortable) { ?><i class="ccm-item-select-list-sort"></i><?php } ?>
 		    </li>
 		
-		<? } ?>
+		<?php } ?>
 		</ul>
 	
-	<? } ?>
+	<?php } ?>
 	
-<? } else { ?>
+<?php } else { ?>
 	
 	<p>
 		<?
@@ -109,7 +109,7 @@ if (count($attribs) > 0) { ?>
 		?>
 	</p>
 	
-<? } ?>
+<?php } ?>
 
 <script type="text/javascript">
 $(function() {
@@ -129,8 +129,8 @@ $(function() {
 </script>
 
 
-<? $form = Loader::helper('form'); ?>
-<? if (isset($types) && is_array($types) && count($types) > 0) { ?>
+<?php $form = Loader::helper('form'); ?>
+<?php if (isset($types) && is_array($types) && count($types) > 0) { ?>
 <form method="get" action="<?=$view->action('select_type')?>" id="ccm-attribute-type-form">
 	<label for="atID"><?=t('Add Attribute')?></label>
 	<div class="form-inline">
@@ -140,4 +140,4 @@ $(function() {
 	<button type="submit" class="btn btn-default"><?=t('Go')?></button>
 	</div>
 </form>
-<? } ?>
+<?php } ?>

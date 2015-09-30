@@ -1,9 +1,9 @@
-<? defined('C5_EXECUTE') or die("Access Denied.");?>
-<? if (count($interfacelocales) <= 1) { ?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");?>
+<?php if (count($interfacelocales) <= 1) { ?>
 <fieldset>
 	<?=t("You don't have any interface languages installed. You must run concrete5 in English.");?>
 </fieldset>
-<? } else { ?>
+<?php } else { ?>
 
 <form method="post" class="form-horizontal" action="<?=$view->action('save_interface_language')?>">
     <fieldset>
@@ -31,4 +31,4 @@
     </div>
 </form>
 	
-<? } ?>
+<?php } ?>

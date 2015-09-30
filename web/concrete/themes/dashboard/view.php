@@ -35,11 +35,11 @@ if (isset($message)) { ?>
 	<div class="ccm-ui" id="ccm-dashboard-result-message">
 	<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">×</button><?=nl2br(Loader::helper('text')->entities($success))?></div>
 	</div>
-<? } ?>
+<?php } ?>
 
 <?=Loader::helper('concrete/ui/help')->display('dashboard', $c->getCollectionPath())?>
 
-<? print $innerContent; ?>
+<?php print $innerContent; ?>
 
 <?
 $this->inc('elements/footer.php');

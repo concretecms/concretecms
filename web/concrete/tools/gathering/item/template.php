@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 
 $nh = Loader::helper('validation/numbers');
 $form = Loader::helper('form');
@@ -74,7 +74,7 @@ if (is_object($item) && is_object($type)) {
     <?
     foreach($features as $f) { ?>
       <li><a href="#" data-tab="<?=$f->getFeatureHandle()?>"><?=$f->getFeatureName()?></a></li>
-    <? } ?> 
+    <?php } ?> 
     </ul>
 
     </div>
@@ -83,7 +83,7 @@ if (is_object($item) && is_object($type)) {
       
       <ul class="ccm-overlay-icon-item-grid-list">
 
-      <? foreach($templates as $t) {
+      <?php foreach($templates as $t) {
         if (!$item->itemSupportsGatheringItemTemplate($t)) {
           continue;
         }
@@ -98,10 +98,10 @@ if (is_object($item) && is_object($type)) {
         ?>
 
         <li data-gathering-item-template-features="<?=$sets?>">
-          <a href="javascript:void(0)" <? if ($item->getGatheringItemTemplateID($type) == $t->getGatheringItemTemplateID()) { ?>class="ccm-gathering-item-template-selected"<? } ?> onclick="$.fn.ccmgathering('updateItemTemplate', {gaiID: '<?=$gaiID?>', gatID: '<?=$t->getGatheringItemTemplateID()?>', gatTypeID: '<?=$gatTypeID?>', reloadItemTile: <? if ($reloadItemTile) { ?>true<? } else { ?>false<? } ?>, 'updateToken': '<?=Loader::helper('validation/token')->generate('edit_gathering_item_template')?>'})"><p><img src="<?=$t->getGatheringItemTemplateIconSRC()?>" /><span><?=$t->getGatheringItemTemplateName()?></span></p></a>
+          <a href="javascript:void(0)" <?php if ($item->getGatheringItemTemplateID($type) == $t->getGatheringItemTemplateID()) { ?>class="ccm-gathering-item-template-selected"<?php } ?> onclick="$.fn.ccmgathering('updateItemTemplate', {gaiID: '<?=$gaiID?>', gatID: '<?=$t->getGatheringItemTemplateID()?>', gatTypeID: '<?=$gatTypeID?>', reloadItemTile: <?php if ($reloadItemTile) { ?>true<?php } else { ?>false<?php } ?>, 'updateToken': '<?=Loader::helper('validation/token')->generate('edit_gathering_item_template')?>'})"><p><img src="<?=$t->getGatheringItemTemplateIconSRC()?>" /><span><?=$t->getGatheringItemTemplateName()?></span></p></a>
         </li>
         
-      <? } ?>
+      <?php } ?>
 
       </ul>
 
@@ -109,7 +109,7 @@ if (is_object($item) && is_object($type)) {
     </div>
 
 
-    <? }
+    <?php }
 
   }
 ?>

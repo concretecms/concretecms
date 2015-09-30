@@ -13,9 +13,9 @@ if (!$ptComposerPageTemplateID) {
 
 <div class="form-group">
 	<label class="control-label"><?=$label?></label>
-	<? if($description): ?>
+	<?php if($description): ?>
 	<i class="fa fa-question-circle launch-tooltip" title="" data-original-title="<?=$description?>"></i>
-	<? endif; ?>
+	<?php endif; ?>
 	<div data-composer-field="page_template">
 		<?=$form->select('ptComposerPageTemplateID', $templates, $ptComposerPageTemplateID)?>
 	</div>

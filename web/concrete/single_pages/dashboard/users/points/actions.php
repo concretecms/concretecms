@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 
     //$interface = Loader::helper('interface');
 ?>
@@ -22,7 +22,7 @@
         	<div class="form-group">
         	    <?=$form->label('upaHandle', t('Action Handle'));?>
         		<div class="input">
-            		<? 
+            		<?php 
                 		$args = array();
                 		if ($upaHasCustomClass) { 
                 			$args['disabled'] = 'disabled';
@@ -54,7 +54,7 @@
         		</div>
         	</div>
 
-            <? 
+            <?php 
             $label = t('Add Action');
             if ($upaID > 0) {
             	$label = t('Update Action');
@@ -97,7 +97,7 @@
         		foreach($actions as $upa) { 
                 ?>
         		<tr class="">
-        			<td style="text-align: center"><? if ($upa['upaIsActive']) { ?><i class="fa fa-check"></i><? } ?></td>
+        			<td style="text-align: center"><?php if ($upa['upaIsActive']) { ?><i class="fa fa-check"></i><?php } ?></td>
         			<td><?=h($upa['upaName'])?></td>
         			<td><?=h($upa['upaHandle'])?></td>
         			<td><?=number_format($upa['upaDefaultPoints'])?></td>
@@ -115,14 +115,14 @@
         		</tr>
         		<?php } ?>
 		</table>
-		<? } else { ?>
+		<?php } else { ?>
 			<p><?=t('No Actions found.')?></p>
-		<? } ?>
+		<?php } ?>
 	
 <div class="ccm-pane-footer">
 <?=$actionList->displayPagingV2(); ?>
 </div>
 
-<? } ?>
+<?php } ?>
 
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false)?>

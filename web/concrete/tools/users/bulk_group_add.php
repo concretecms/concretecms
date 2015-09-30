@@ -56,7 +56,7 @@ if ($_POST['task'] == 'group_add') {
 
 if (!isset($_REQUEST['reload'])) { ?>
 	<div id="ccm-user-bulk-group-add-wrapper">
-<? } ?>
+<?php } ?>
 
 	<div id="ccm-user-activate" class="ccm-ui">
 		<form method="post" id="ccm-user-bulk-group-add" action="<?php echo REL_DIR_FILES_TOOLS_REQUIRED ?>/users/bulk_group_add">
@@ -71,13 +71,13 @@ if (!isset($_REQUEST['reload'])) { ?>
 				<?=$form->label('groupIDs', t('Add the users below to Group(s)'))?>
 				<div class="input">
 					<select multiple name="groupIDs[]" class="select2-select" data-placeholder="<?php echo t('Select Group(s)');?>" >
-						<? foreach($g1 as $gRow) {
+						<?php foreach($g1 as $gRow) {
 							$g = Group::getByID($gRow['gID']); 
 							$gp = new Permissions($g);
 							if ($gp->canAssignGroup()) {
 						?>
-							<option value="<?=$g->getGroupID()?>"  <? if (is_array($_REQUEST['groupIDs']) && in_array($g->getGroupID(), $_REQUEST['groupIDs'])) { ?> selected="selected" <? } ?>><?=$g->getGroupDisplayName()?></option>
-						<? } 
+							<option value="<?=$g->getGroupID()?>"  <?php if (is_array($_REQUEST['groupIDs']) && in_array($g->getGroupID(), $_REQUEST['groupIDs'])) { ?> selected="selected" <?php } ?>><?=$g->getGroupDisplayName()?></option>
+						<?php } 
 						
 						}?>
 					</select>
@@ -98,7 +98,7 @@ if (!isset($_REQUEST['reload'])) { ?>
 <?
 if (!isset($_REQUEST['reload'])) { ?>
 </div>
-<? } ?>
+<?php } ?>
 
 <script type="text/javascript">
 ccm_userBulkGroupAdd = function() { 

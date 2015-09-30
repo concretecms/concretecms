@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <div class="row">
 <div class="span10 offset1">
@@ -16,11 +16,11 @@
 </div>
 </div>
 
-<? if ($total == 0) { ?>
+<?php if ($total == 0) { ?>
 
 		<div><?=t('No users found.')?></div>
 
-	<? } else { ?>
+	<?php } else { ?>
 
 		<table class="table table-striped" id="ccm-members-directory">
 
@@ -39,18 +39,18 @@
 				<td>
 					<?=$user->getAttribute($ak, 'displaySanitized', 'display'); ?>
 				</td>
-			<? } ?>
+			<?php } ?>
 		</tr>
 
-		<? } ?>
+		<?php } ?>
 
 		</table>
 
-        <? if ($pagination->haveToPaginate()) { ?>
+        <?php if ($pagination->haveToPaginate()) { ?>
 
             <?=$pagination->renderDefaultView();?>
 
-        <? } ?>
+        <?php } ?>
 
 	<?
 

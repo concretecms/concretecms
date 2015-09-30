@@ -57,7 +57,7 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
             </div>
         </div>
         <div class="row login-row">
-            <div <? if (count($activeAuths) < 2) { ?>style="display: none" <? } ?> class="types col-sm-4 hidden-xs">
+            <div <?php if (count($activeAuths) < 2) { ?>style="display: none" <?php } ?> class="types col-sm-4 hidden-xs">
                 <ul class="auth-types">
                     <?php
                     if ($attribute_mode) {
@@ -81,7 +81,7 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
                     ?>
                 </ul>
             </div>
-            <div class="controls <? if (count($activeAuths) < 2) { ?>col-sm-12<? } else { ?>col-sm-8<? } ?> col-xs-12">
+            <div class="controls <?php if (count($activeAuths) < 2) { ?>col-sm-12<?php } else { ?>col-sm-8<?php } ?> col-xs-12">
                 <?php
                 if ($attribute_mode) {
                     $attribute_helper = new Concrete\Core\Form\Service\Widget\Attribute();

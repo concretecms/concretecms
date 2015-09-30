@@ -1,21 +1,21 @@
-<? defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 $h = Loader::helper('concrete/dashboard');
 $ih = Loader::helper('concrete/ui');
 $form = Loader::helper('form');
 ?>
 <form id="permissions-form" action="<?php echo $view->action('enable_advanced_permissions')?>" method="post">
 <?php echo Loader::helper('validation/token')->output('enable_advanced_permissions')?>
-<? if (Config::get('concrete.permissions.model') != 'simple') { ?>
+<?php if (Config::get('concrete.permissions.model') != 'simple') { ?>
     <p><?=t('Advanced permissions are turned on.')?></p>
-<? } else { ?>
+<?php } else { ?>
     <p><?=t('Advanced permissions are turned off. Enable them below.')?></p>
     <br/>
     <div class="alert alert-warning">
     <?=t('<strong>Note:</strong> Once enabled, advanced permissions cannot be turned off.')?>
     </div>
-<? } ?>
+<?php } ?>
 
-<? if (Config::get('concrete.permissions.model') == 'simple') { ?>
+<?php if (Config::get('concrete.permissions.model') == 'simple') { ?>
 <div class="ccm-dashboard-form-actions-wrapper">
     <div class="ccm-dashboard-form-actions">
 <?php
@@ -25,5 +25,5 @@ $form = Loader::helper('form');
 </div>
 </div>
 
-<? } ?>
+<?php } ?>
 </form>

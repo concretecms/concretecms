@@ -7,5 +7,5 @@ if (is_object($c) && !$c->isError()) {
 
 		<iframe id="ccm-page-preview-frame" name="ccm-page-preview-frame"></iframe>
 
-	<? }
+	<?php }
 }

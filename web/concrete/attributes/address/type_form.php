@@ -27,10 +27,10 @@ if (isset($_POST['akHasCustomCountries'])) {
 </div>
 <div class="form-group">
 	<select id="akCustomCountries" name="akCustomCountries[]" multiple size="7" disabled="disabled" class="form-control">
-		<? foreach ($countries as $key=>$val) { ?>
-			<? if (empty($key) || empty($val)) continue; ?>
+		<?php foreach ($countries as $key=>$val) { ?>
+			<?php if (empty($key) || empty($val)) continue; ?>
 			<option <?=(in_array($key, $akCustomCountries) || $akHasCustomCountries == 0 ?'selected ':'')?>value="<?=$key?>"><?=$val?></option>
-		<? } ?>
+		<?php } ?>
 	</select>
 </div>
 

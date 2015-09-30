@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <form method="post" class="form-horizontal" id="favicon-form" action="<?=$view->action('update_favicon')?>" >
     <?=$this->controller->token->output('update_favicon')?>

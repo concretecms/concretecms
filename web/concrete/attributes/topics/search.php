@@ -1,4 +1,4 @@
-<? if (is_object($tree)) { ?>
+<?php if (is_object($tree)) { ?>
 
     <script type="text/javascript">
         $(function() {
@@ -26,4 +26,4 @@
     <input type="hidden" data-topic-search-field="<?=$attributeKey->getAttributeKeyID()?>"
            name="<?=$view->field('treeNodeID')?>" value="">
 
-<? } ?>
+<?php } ?>

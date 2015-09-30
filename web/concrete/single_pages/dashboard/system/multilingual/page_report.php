@@ -33,7 +33,7 @@ $nav = Loader::helper('navigation');
             <div class="form-group">
                 <label class="control-label"><?=t('Choose Targets')?></label>
                 <div class="ccm-search-field-content">
-                <? foreach($sectionList as $sc) { ?>
+                <?php foreach($sectionList as $sc) { ?>
                     <?php $args = array('style' => 'vertical-align: middle');
                     if ($sectionID == $sc->getCollectionID()) {
                         $args['disabled'] = 'disabled';
@@ -46,7 +46,7 @@ $nav = Loader::helper('navigation');
                             <?php echo $sc->getLanguageText(). " (".$sc->getLocale().")"; ?>
                         </label>
                     </div>
-                <? } ?>
+                <?php } ?>
                 </div>
             </div>
         </div>
@@ -73,7 +73,7 @@ $nav = Loader::helper('navigation');
 
     </form>
 
-    <? if (count($sections) > 0) {
+    <?php if (count($sections) > 0) {
         $width = 100 / count($sections);
     } else {
         $width = '100';
@@ -88,7 +88,7 @@ $nav = Loader::helper('navigation');
                     print t('%s (%s)', $sourceMS->getLanguageText(), $sourceMS->getLocale());
                     ?>
                 </span></th>
-                <? foreach($targetList as $sc) { ?>
+                <?php foreach($targetList as $sc) { ?>
                     <?php if ($section->getCollectionID() != $sc->getCollectionID()) { ?>
                         <th style="width:<?=$width?>%"><span><?
                             print $fh->getSectionFlagIcon($sc);
@@ -96,28 +96,28 @@ $nav = Loader::helper('navigation');
                             print t('%s (%s)', $sc->getLanguageText(), $sc->getLocale());
                             ?>
                         </span></th>
-                    <? } ?>
-                <? } ?>
+                    <?php } ?>
+                <?php } ?>
             </tr>
             </thead>
             <tbody>
-            <? if (count($pages) > 0) { ?>
-                <? foreach($pages as $pc) { ?>
+            <?php if (count($pages) > 0) { ?>
+                <?php foreach($pages as $pc) { ?>
                     <tr>
                     <td>
                         <a href="<?php echo $pc->getCollectionLink()?>"><?=$pc->getCollectionName()?></a>
                         <div><small><?=$pc->getCollectionPath()?></small></div>
                     </td>
-                    <? foreach($targetList as $sc) {
+                    <?php foreach($targetList as $sc) {
 
                         $multilingualController = Core::make('\Concrete\Controller\Backend\Page\Multilingual');
                         $multilingualController->setPageObject($pc);
                         ?>
-                        <? if ($section->getCollectionID() != $sc->getCollectionID()) { ?>
+                        <?php if ($section->getCollectionID() != $sc->getCollectionID()) { ?>
                             <td><div data-multilingual-page-section="<?=$sc->getCollectionID()?>" data-multilingual-page-source="<?=$pc->getCollectionID()?>">
 
                                     <div data-wrapper="page">
-                                    <? 						$cID = $sc->getTranslatedPageID($pc);
+                                    <?php 						$cID = $sc->getTranslatedPageID($pc);
                                 if ($cID) {
                                     $p = \Page::getByID($cID);
                                     print '<a href="' . $nav->getLinkToCollection($p) . '">' . $p->getCollectionName() . '</a>';
@@ -177,12 +177,12 @@ $nav = Loader::helper('navigation');
                             </td>
                         <?php } ?>
                     <?php } ?>
-                <? } ?>
-            <? } else {?>
+                <?php } ?>
+            <?php } else {?>
                 <tr>
                     <td colspan="4"><?php echo t('No pages found.')?></td>
                 </tr>
-            <? } ?>
+            <?php } ?>
             </tbody>
         </table>
     </div>
@@ -293,13 +293,13 @@ $nav = Loader::helper('navigation');
     </script>
 
     <div class="ccm-search-results-pagination">
-        <? if ($pagination->haveToPaginate()) { ?>
+        <?php if ($pagination->haveToPaginate()) { ?>
             <?=$pagination->renderView('dashboard');?>
-        <? } ?>
+        <?php } ?>
     </div>
 </div>
 
 
-<? } else { ?>
+<?php } else { ?>
 	<p><?php echo t('You have not defined any multilingual sections for your site yet.')?></p>
-<? } ?>
+<?php } ?>

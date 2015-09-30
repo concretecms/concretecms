@@ -38,18 +38,18 @@ if ($cp->canViewPage()) {
 
 	<div class="ccm-tab-content" id="ccm-tab-content-<?=$t->getPageTypeComposerControlTypeHandle()?>">
 	<ul data-list="page-type-composer-control-type" class="item-select-list">
-		<? 
+		<?php 
 		$controls = $t->getPageTypeComposerControlObjects();
 		foreach($controls as $cnt) { ?>
 			<li><a href="#" data-control-type-id="<?=$t->getPageTypeComposerControlTypeID()?>" data-control-identifier="<?=$cnt->getPageTypeComposerControlIdentifier()?>">
                     <img src="<?=$cnt->getPageTypeComposerControlIconSRC()?>" />
                     <?=$cnt->getPageTypeComposerControlDisplayName()?></a></li>
-		<? } ?>
+		<?php } ?>
 	</ul>
 	</div>
 
 
-	<? } ?>
+	<?php } ?>
 
 	</div>
 

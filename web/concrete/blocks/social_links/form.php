@@ -6,23 +6,23 @@
     <?
     if (count($links) == 0) { ?>
         <p><?=t('You have not added any social links.')?></p>
-    <? }
+    <?php }
 
     foreach($links as $link) {
         $service = $link->getServiceObject();
         ?>
         <div class="checkbox">
             <label><input type="checkbox" name="slID[]"
-               <? if (is_array($selectedLinks) && in_array($link, $selectedLinks)) { ?>
+               <?php if (is_array($selectedLinks) && in_array($link, $selectedLinks)) { ?>
                  checked
-                <? } ?>
+                <?php } ?>
             value="<?=$link->getID()?>" />
             <?=$service->getName()?>
             </label>
 
             <i class="pull-right fa fa-arrows"></i>
         </div>
-    <? } ?>
+    <?php } ?>
     </div>
 </div>
 

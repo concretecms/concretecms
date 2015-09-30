@@ -6,30 +6,30 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 <h1><?=t('Download File')?></h1>
 
-<? if (!isset($filename)) { ?>
+<?php if (!isset($filename)) { ?>
 
 	<p><?=t("Invalid File.");?></p>
 
-<? } else { ?>
+<?php } else { ?>
 	
 	<p><?=t('This file requires a password to download.')?></p>
 	
-	<? if (isset($error)) {  ?>
+	<?php if (isset($error)) {  ?>
 		<div class="ccm-error-response"><?=$error?></div>
-	<? } ?>
+	<?php } ?>
 	
 	<form action="<?= View::url('/download_file', 'submit_password', $fID) ?>" method="post">
-		<? if(isset($force)) { ?>
+		<?php if(isset($force)) { ?>
 			<input type="hidden" value="<?= $force ?>" name="force" />
-		<? } ?>
+		<?php } ?>
 		<input type="hidden" value="<?= $rcID ?>" name="rcID"/>
 		<label for="password"><?=t('Password')?>: <input type="password" name="password" /></label>
 		<br /><br />
 		<button type="submit"><?=t('Download')?></button>
 	</form>
 
-<? } ?>
+<?php } ?>
 
-<? if (is_object($rc)) { ?>
+<?php if (is_object($rc)) { ?>
 <p><a href="<?=Loader::helper('navigation')->getLinkToCollection($rc)?>">&lt; <?=t('Back')?></a></p>
-<? } ?>
+<?php } ?>

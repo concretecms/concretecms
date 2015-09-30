@@ -55,14 +55,14 @@ if ($cp->canViewPage()) {
 			<?=$form->text('ptComposerFormLayoutSetControlDescription', $control->getPageTypeComposerFormLayoutSetControlDescription())?>
 		</div>
 
-		<? if ($object->pageTypeComposerFormControlSupportsValidation()) { ?>
+		<?php if ($object->pageTypeComposerFormControlSupportsValidation()) { ?>
 		<div class="form-group">
 			<?=$form->label('ptComposerFormLayoutSetControlRequired', t('Required'))?>
 			<div class="checkbox">
 			<label><?=$form->checkbox('ptComposerFormLayoutSetControlRequired', 1, $control->isPageTypeComposerFormLayoutSetControlRequired())?> <?=t('Yes, require this form element')?></label>
 			</div>
 		</div>
-		<? } ?>
+		<?php } ?>
 
 		<?=Loader::helper('validation/token')->output('update_set_control')?>
 		</form>
