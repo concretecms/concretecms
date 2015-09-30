@@ -623,7 +623,7 @@ return array(
             'cookie_lifetime' => 0,
             'cookie_domain'   => false,
             'cookie_secure'   => false,
-            'cookie_httponly' => false
+            'cookie_httponly' => true
         )
     ),
 
