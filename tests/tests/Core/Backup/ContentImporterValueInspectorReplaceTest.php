@@ -1,6 +1,6 @@
 <?php
 
-class ContentImporterValueInspectorTest extends PageTestCase
+class ContentImporterValueInspectorReplaceTest extends PageTestCase
 {
 
     protected function setUp()
