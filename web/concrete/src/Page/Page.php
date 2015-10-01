@@ -562,6 +562,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             $pkHandles[] = 'view_page_versions';
             $pkHandles[] = 'edit_page_properties';
             $pkHandles[] = 'edit_page_contents';
+            $pkHandles[] = 'edit_page_multilingual_settings';
             $pkHandles[] = 'approve_page_versions';
             $pkHandles[] = 'move_or_copy_page';
             $pkHandles[] = 'preview_page_as_user';
