@@ -165,6 +165,8 @@ class Install extends Controller
         if (!isset($_COOKIE['CONCRETE5_INSTALL_TEST'])) {
             setcookie('CONCRETE5_INSTALL_TEST', '1', 0, DIR_REL . '/');
         }
+
+        $this->set('pageTitle', t('Install concrete5'));
     }
 
     private function setRequiredItems()
