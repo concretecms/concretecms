@@ -80,7 +80,8 @@ class ActivateUserRequest extends UserRequest
         return $wpr;
     }
 
-    public function sendActivationEmail(UserInfo $ui) {
+    public function sendActivationEmail(UserInfo $ui)
+    {
         $mh = Loader::helper('mail');
         $mh->to($ui->getUserEmail());
         if (Config::get('concrete.user.registration.notification_email')) {

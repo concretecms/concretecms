@@ -276,7 +276,8 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
      *
      * @return boolean
      */
-    public function triggerDelete() {
+    public function triggerDelete()
+    {
         global $u;
 
         $db = Database::get();
@@ -835,7 +836,8 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         }
     }
 
-    function triggerActivate($action=null, $requesterUID=null) {
+    function triggerActivate($action=null, $requesterUID=null)
+    {
         if ($requesterUID === null) {
             global $u;
             $requesterUID = $u->getUserID();
@@ -868,7 +870,8 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         Events::dispatch('on_user_activate', $ue);
     }
 
-    function triggerDeactivate() {
+    function triggerDeactivate()
+    {
         global $u;
 
         $db = Database::connection();
