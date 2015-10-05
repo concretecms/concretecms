@@ -41,7 +41,8 @@ class UserList extends DatabaseItemList
      */
     protected $includeUnvalidatedUsers = false;
 
-    protected function setBaseQuery() {
+    protected function setBaseQuery()
+    {
         $sql = '';
         if ($this->sortUserStatus) {
             // When uStatus column is selected, we also get the "status" column for
@@ -144,7 +145,8 @@ class UserList extends DatabaseItemList
         $this->query->setParameter('uIsActive', $isActive);
     }
 
-    public function sortByStatus($dir="asc") {
+    public function sortByStatus($dir="asc")
+    {
         $this->sortUserStatus = 1;
         parent::sortBy('uStatus', $dir);
     }
