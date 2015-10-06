@@ -69,11 +69,15 @@ class Controller extends BlockController
 
     public function registerViewAssets($outputContent = '')
     {
+        $al = \Concrete\Core\Asset\AssetList::getInstance();
+
         $this->requireAsset('javascript', 'jquery');
 
-        $al = \Concrete\Core\Asset\AssetList::getInstance();
         $al->register('javascript', 'responsiveslides', 'blocks/image_slider/responsiveslides.js');
         $this->requireAsset('javascript', 'responsiveslides');
+
+        $al->register('css', 'responsiveslides', 'blocks/image_slider/responsiveslides.css');
+        $this->requireAsset('css', 'responsiveslides');
     }
 
     public function getEntries()
