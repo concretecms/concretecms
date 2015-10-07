@@ -106,16 +106,16 @@ class ValueInspector
      */
     public function getReplacedContent()
     {
+        $inspector = $this;
         $text = preg_replace_callback(
             $this->regExp,
-            function ($matches) {
+            function ($matches) use ($inspector) {
                 for ($i = 1; $i < count($matches); $i++ ) {
                     if ($matches[$i]) {
-                        $o = $this->getItemObjectFromIndex($i, $matches[$i]);
+                        $o = $inspector->getItemObjectFromIndex($i, $matches[$i]);
                         return $o->getContentValue();
                     }
                 }
-
             },
             $this->content
         );
