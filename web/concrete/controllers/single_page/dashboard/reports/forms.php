@@ -38,6 +38,9 @@ class Forms extends DashboardPageController
         $questions = $this->get('questions');
         $surveys = $this->get('surveys');
 
+        $escapeCharacter = "'";
+        $charactersToEscape = array('-','+', '=');
+
         $fileName = $textHelper->filterNonAlphaNum($surveys[$questionSet]['surveyName']);
 
         header("Content-Type: text/csv");
@@ -102,7 +105,13 @@ class Forms extends DashboardPageController
                         $row[] = t('File not found');
                     }
                 } else {
-                    $row[] = $answerSet['answers'][$questionId]['answer'] . $answerSet['answers'][$questionId]['answerLong'];
+                    $answer = $answerSet['answers'][$questionId]['answer'] . $answerSet['answers'][$questionId]['answerLong'];
+
+                    if(in_array(substr($answer, 0, 1), $charactersToEscape)) {
+                        $row[] = $escapeCharacter . $answer;
+                    } else {
+                        $row[] = $answer;
+                    }
                 }
             }
 
