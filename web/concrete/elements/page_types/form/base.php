@@ -75,7 +75,7 @@ if (is_object($pagetype)) {
 
 	<div class="form-group">
 		<?=$form->label('ptPublishTargetTypeID', t('Publish Method'))?>
-        <? for ($i = 0; $i < count($targetTypes); $i++) {
+        <?php for ($i = 0; $i < count($targetTypes); $i++) {
             $t = $targetTypes[$i];
             if (!is_object($pagetype)) {
                 $selected = ($i == 0);
@@ -84,18 +84,18 @@ if (is_object($pagetype)) {
             }
             ?>
             <div class="radio"><label><?=$form->radio('ptPublishTargetTypeID', $t->getPageTypePublishTargetTypeID(), $selected)?><?=$t->getPageTypePublishTargetTypeDisplayName()?></label></div>
-        <? } ?>
+        <?php } ?>
 	</div>
 
-	<? foreach($targetTypes as $t) { 
+	<?php foreach($targetTypes as $t) { 
 		if ($t->hasOptionsForm()) {
 		?>
 
 		<div style="display: none" data-page-type-publish-target-type-id="<?=$t->getPageTypePublishTargetTypeID()?>">
-			<? $t->includeOptionsForm($pagetype);?>
+			<?php $t->includeOptionsForm($pagetype);?>
 		</div>
 
-	<? }
+	<?php }
 
 	} ?>
 

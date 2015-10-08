@@ -8,7 +8,7 @@ $form = Loader::helper('form');
 <form id="site-permissions-form" action="<?=$view->action('')?>" method="post" role="form">
 	<?php echo $this->controller->token->output('site_permissions_code')?>
 	
-    <? if(Config::get('concrete.permissions.model') != 'simple'):?>
+    <?php if(Config::get('concrete.permissions.model') != 'simple'):?>
     <div>
         <p>
             <?=t('Your concrete5 site does not use the simple permissions model. You must change your permissions for each specific page and content area.')?>

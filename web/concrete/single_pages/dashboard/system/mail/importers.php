@@ -1,6 +1,6 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<? $ih = Loader::helper('concrete/ui'); ?>
+<?php $ih = Loader::helper('concrete/ui'); ?>
 <?
 $enabledVals = array('0' => t('No'), '1' => t('Yes'));
 $secureVals = array('' => t('None'), 'SSL' => 'SSL', 'TLS' => 'TLS');
@@ -8,7 +8,7 @@ $form = Loader::helper('form');
 ?>
 
 
-<? if ($this->controller->getTask() == 'edit_importer') { ?>
+<?php if ($this->controller->getTask() == 'edit_importer') { ?>
 
 <form method="post" id="mail-importer-form" action="<?=$view->url('/dashboard/system/mail/importers', 'save_importer')?>">
     <div class="row">
@@ -47,7 +47,7 @@ $form = Loader::helper('form');
                     <?=$form->label('miEncryption',t('Encryption'));?>
                     <?=$form->select('miEncryption', $secureVals, $mi->getMailImporterEncryption())?>
                 </div>
-                <? $port = $mi->getMailImporterPort() == 0 ? '' : $mi->getMailImporterPort(); ?>
+                <?php $port = $mi->getMailImporterPort() == 0 ? '' : $mi->getMailImporterPort(); ?>
 
                 <div class="form-group">
                     <?=$form->label('miPort',t('Port (Leave blank for default)'));?>
@@ -67,10 +67,10 @@ $form = Loader::helper('form');
         </div>
     </div>
 </form>
-<? } else { ?>
-	<? if (count($importers) == 0) { ?>
+<?php } else { ?>
+	<?php if (count($importers) == 0) { ?>
 		<p><?=t('There are no mail importers. Mail importers poll email accounts for new messages and run actions on those messages.')?></p>
-	<? } else { ?>
+	<?php } else { ?>
 	
 	<table class="table table-striped" border="0" cellspacing="1" cellpadding="0">
 	<tr>
@@ -80,7 +80,7 @@ $form = Loader::helper('form');
 		<td class="header"><?=t('Enabled')?></td>
 		<td class="header">&nbsp;</td>
 	</tr>
-	<? foreach($importers as $mi) { ?>
+	<?php foreach($importers as $mi) { ?>
 		<tr>
 			<td><?=$mi->getMailImporterName()?></td>
 			<td><?=$mi->getMailImporterServer()?></td>
@@ -90,7 +90,7 @@ $form = Loader::helper('form');
 				print $ih->button(t('Edit'), $view->url('/dashboard/system/mail/importers', 'edit_importer', $mi->getMailImporterID()), 'left', 'btn-xs');
 			?></td>
 		</tr>
-	<? } ?>
+	<?php } ?>
 	</table>
-	<? } ?>
-<? } ?>
+	<?php } ?>
+<?php } ?>

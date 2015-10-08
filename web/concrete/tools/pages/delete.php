@@ -78,9 +78,9 @@ foreach($pages as $c) {
 ?>
 <div class="ccm-ui">
 
-<? if ($pcnt == 0) { ?>
+<?php if ($pcnt == 0) { ?>
 	<?=t("You do not have permission to delete any of the selected pages."); ?>
-<? } else { ?>
+<?php } else { ?>
 
 	<?=t('Are you sure you want to delete the following pages?')?><br/><br/>
 
@@ -94,7 +94,7 @@ foreach($pages as $c) {
 		<th><?=t('Author')?></th>
 	</tr>
 
-	<? foreach($pages as $c) {
+	<?php foreach($pages as $c) {
 		$cp = new Permissions($c);
 		$c->loadVersionObject();
 		if ($cp->canDeletePage() && $c->getCollectionID() > 1) { ?>
@@ -114,7 +114,7 @@ foreach($pages as $c) {
 
 		</tr>
 
-		<? }  ?>
+		<?php }  ?>
 	</table>
 	</form>
 
@@ -136,7 +136,7 @@ foreach($pages as $c) {
     </script>
 
 	<div class="dialog-buttons">
-	<? $ih = Loader::helper('concrete/ui')?>
+	<?php $ih = Loader::helper('concrete/ui')?>
 	<?=$ih->button_js(t('Cancel'), 'jQuery.fn.dialog.closeTop()', 'left', 'btn')?>
 	<?=$ih->button_js(t('Delete'), 'ccm_sitemapDeletePages()', 'right', 'btn btn-danger')?>
 	</div>

@@ -18,7 +18,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 <label class="control-label"><?=t('Code for your .htaccess file')?></label>
                 <textarea rows="8" class="form-control" onclick="this.select()"><?=$strRules?></textarea>
             </div>
-        <? } ?>
+        <?php } ?>
     </fieldset>
 
     <fieldset>

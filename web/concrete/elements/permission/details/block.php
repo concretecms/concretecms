@@ -6,7 +6,7 @@ $pk = PermissionKey::getByID($_REQUEST['pkID']);
 $pk->setPermissionObject($b);
 ?>
 
-<? Loader::element("permission/detail", array('permissionKey' => $pk)); ?>
+<?php Loader::element("permission/detail", array('permissionKey' => $pk)); ?>
 
 
 <script type="text/javascript">

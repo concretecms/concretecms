@@ -1,11 +1,11 @@
-<? defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 $navigationTypeText = ($navigationType == 0) ? 'arrows' : 'pages';
 $c = Page::getCurrentPage();
 if ($c->isEditMode()) { ?>
-    <div class="ccm-edit-mode-disabled-item" style="width: <? echo $width; ?>; height: <? echo $height; ?>">
-        <div style="padding: 40px 0px 40px 0px"><? echo t('Image Slider disabled in edit mode.')?></div>
+    <div class="ccm-edit-mode-disabled-item" style="width: <?php echo $width; ?>; height: <?php echo $height; ?>">
+        <div style="padding: 40px 0px 40px 0px"><?php echo t('Image Slider disabled in edit mode.')?></div>
     </div>
-<?  } else { ?>
+<?php  } else { ?>
 <script>
 $(document).ready(function(){
     $(function () {

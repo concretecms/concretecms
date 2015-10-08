@@ -15,15 +15,15 @@ $displayThirdColumn = $blocks > 0 || $c->isEditMode();
                 $a->display();
                 ?>
             </div>
-            <div class="<? if ($displayThirdColumn) { ?>col-sm-5 col-xs-6<? } else { ?>col-sm-8 col-xs-6<? } ?>">
+            <div class="<?php if ($displayThirdColumn) { ?>col-sm-5 col-xs-6<?php } else { ?>col-sm-8 col-xs-6<?php } ?>">
                 <?
                 $a = new GlobalArea('Header Navigation');
                 $a->display();
                 ?>
             </div>
-            <? if ($displayThirdColumn) { ?>
-                <div class="col-sm-3 col-xs-12"><? $as->display(); ?></div>
-            <? } ?>
+            <?php if ($displayThirdColumn) { ?>
+                <div class="col-sm-3 col-xs-12"><?php $as->display(); ?></div>
+            <?php } ?>
         </div>
     </div>
 </header>

@@ -1,5 +1,5 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
-<? $ih = Loader::helper('concrete/ui'); ?>
+<?php $ih = Loader::helper('concrete/ui'); ?>
 
     <form method="post" class="form-horizontal" id="file-sets-add" action="<?=$view->url('/dashboard/files/add_set', 'do_add')?>">
 	<div class="ccm-pane-body">

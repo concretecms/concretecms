@@ -10,7 +10,7 @@ $bt = BlockType::getByHandle('form');
 $addSelected = true;
 ?>
 <p>
-<? print Loader::helper('concrete/ui')->tabs(array(
+<?php print Loader::helper('concrete/ui')->tabs(array(
 	array('form-add', t('Add'), $addSelected),
 	array('form-edit', t('Edit')),
 	array('form-preview', t('Preview')),
@@ -19,7 +19,7 @@ $addSelected = true;
 </p>
 
 <input type="hidden" name="miniSurveyServices" value="<?php echo $uh->getBlockTypeToolsURL($bt)?>/services" />
-<? /* these question ids have been deleted, or edited, and so shouldn't be duplicated for block versioning */ ?>
+<?php /* these question ids have been deleted, or edited, and so shouldn't be duplicated for block versioning */ ?>
 <input type="hidden" id="ccm-ignoreQuestionIDs" name="ignoreQuestionIDs" value="" />
 <input type="hidden" id="ccm-pendingDeleteIDs" name="pendingDeleteIDs" value="" />
 <input type="hidden" id="qsID" name="qsID" type="text" value="<?php echo intval($miniSurveyInfo['questionSetId'])?>" />

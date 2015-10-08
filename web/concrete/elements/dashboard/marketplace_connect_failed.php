@@ -4,7 +4,7 @@ $mi = Marketplace::getInstance();
 if ($mi->hasConnectionError() && $mi->getConnectionError() == Marketplace::E_MARKETPLACE_SUPPORT_MANUALLY_DISABLED) { ?>
 	<p><?=t('Marketplace integration disabled in configuration file.')?></p>
 
-<? } else {
+<?php } else {
 
 	$h = Loader::helper('concrete/ui');
 	?>
@@ -52,8 +52,8 @@ if ($mi->hasConnectionError() && $mi->getConnectionError() == Marketplace::E_MAR
 		<p><?=t('It only takes a moment and you don\'t even have to leave your site.')?></p>
 		
 	
-	<? } ?>
+	<?php } ?>
 	
 	
-	<? print $h->button(t('Re-connect to Community'), View::url('/dashboard/extend/connect'), '', 'primary')?>
-<? } ?>
+	<?php print $h->button(t('Re-connect to Community'), View::url('/dashboard/extend/connect'), '', 'primary')?>
+<?php } ?>

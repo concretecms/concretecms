@@ -8,15 +8,15 @@ if (is_object($tree)) {
         $node->populateDirectChildrenOnly(); ?>
         <ol class="breadcrumb">
             <li><a href="<?=$view->controller->getTopicLink()?>"
-                <? if (!$selectedTopicID) { ?>class="ccm-block-topic-list-topic-selected active"<? } ?>><?=t('All')?></a></li>
+                <?php if (!$selectedTopicID) { ?>class="ccm-block-topic-list-topic-selected active"<?php } ?>><?=t('All')?></a></li>
 
-        <? foreach($node->getChildNodes() as $child) { ?>
+        <?php foreach($node->getChildNodes() as $child) { ?>
             <li><a href="<?=$view->controller->getTopicLink($child)?>"
-                    <? if (isset($selectedTopicID) && $selectedTopicID == $child->getTreeNodeID()) { ?>
+                    <?php if (isset($selectedTopicID) && $selectedTopicID == $child->getTreeNodeID()) { ?>
                         class="ccm-block-topic-list-topic-selected active"
-                    <? } ?> ><?=$child->getTreeNodeDisplayName()?></a></li>
-        <? } ?>
+                    <?php } ?> ><?=$child->getTreeNodeDisplayName()?></a></li>
+        <?php } ?>
         </ol>
-    <? } ?>
+    <?php } ?>
     </div>
-<? } ?>
+<?php } ?>

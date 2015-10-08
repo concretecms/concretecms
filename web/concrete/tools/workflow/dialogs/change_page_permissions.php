@@ -12,7 +12,7 @@ if (is_object($wp)) {
 <div class="ccm-ui">
 <table class="ccm-permission-grid table table-striped">
 
-<? 
+<?php 
 $ps = $req->getPagePermissionSet();
 foreach($ps->getPermissionAssignments() as $pkID => $paID) { 
 	$pk = PermissionKey::getByID($pkID);
@@ -21,11 +21,11 @@ foreach($ps->getPermissionAssignments() as $pkID => $paID) {
 <tr>
 	<td class="ccm-permission-grid-name"><strong><?=$pk->getPermissionKeyDisplayName()?></strong></td>
 	<td>
-	<? $pa = PermissionAccess::getByID($paID, $pk); 
+	<?php $pa = PermissionAccess::getByID($paID, $pk); 
 	Loader::element('permission/labels', array('pa' => $pa, 'pk' => $pk))?>
 	</td>
 </tr>
-<? } ?>
+<?php } ?>
 </table>
 </div>
 		

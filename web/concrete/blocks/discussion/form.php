@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>  
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>  
 <?
 if ($controller->getTask() == 'add') {
 	$enableNewTopics = 1;

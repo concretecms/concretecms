@@ -1,5 +1,5 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
-<? 
+<?php 
 $form = Loader::helper('form'); 
 $ih = Loader::helper("concrete/ui");
 $valt = Loader::helper('validation/token');
@@ -21,7 +21,7 @@ $type = $workflow->getWorkflowTypeObject();
 </div>
 </fieldset>
 
-<? 
+<?php 
 if ($type->getPackageID() > 0) { 
 	@Loader::packageElement('workflow/types/' . $type->getWorkflowTypeHandle()  . '/edit_type_form', $type->getPackageHandle(), array('type' => $type, 'workflow' => $workflow));
 } else {

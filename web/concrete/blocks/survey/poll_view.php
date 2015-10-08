@@ -19,4 +19,4 @@ if (count($aBlocks) > 0)  {
 	?>	
 	</div>
 </div>
-<? } ?>
+<?php } ?>

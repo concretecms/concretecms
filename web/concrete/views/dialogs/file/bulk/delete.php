@@ -4,16 +4,16 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 <div class="ccm-ui">
     <br/>
-<? if ($fcnt == 0) { ?>
+<?php if ($fcnt == 0) { ?>
 <p><?=t("You do not have permission to delete any of the selected files."); ?><p>
-        <? } else { ?>
+        <?php } else { ?>
 
     <div class="alert alert-warning"><?=t('Are you sure you want to delete the following files?')?></div>
 
     <form data-dialog-form="delete-file" method="post" action="<?php echo $controller->action('delete_files')?>">
         <table border="0" cellspacing="0" cellpadding="0" width="100%" class="table table-striped">
 
-            <? foreach($files as $f) {
+            <?php foreach($files as $f) {
                 $fp = new Permissions($f);
                 if ($fp->canDeleteFile()) {
                     $fv = $f->getApprovedVersion();
@@ -29,7 +29,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                             <td><?=$fv->getAuthorName()?></td>
                         </tr>
 
-                    <? }
+                    <?php }
                 }
 
             } ?>

@@ -9,7 +9,7 @@ if (is_object($key)) {
 	$uakIsActive = $key->isAttributeKeyActive();
 }
 ?>
-<? $form = Loader::helper('form'); ?>
+<?php $form = Loader::helper('form'); ?>
 <fieldset>
     <legend><?=t('User Attribute Options')?></legend>
     <div class="form-group">

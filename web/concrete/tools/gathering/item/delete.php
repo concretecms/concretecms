@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 
 $nh = Loader::helper('validation/numbers');
 $form = Loader::helper('form');
@@ -28,7 +28,7 @@ if (is_object($item)) {
     <button class="btn pull-right btn-danger" onclick="$.fn.ccmgathering('deleteItem', {gaiID: '<?=$gaiID?>', 'deleteToken': '<?=Loader::helper('validation/token')->generate('delete_gathering_item')?>'})"><?=t('Delete')?></button>
     </div>
 
-    <? }
+    <?php }
 
   }
 ?>

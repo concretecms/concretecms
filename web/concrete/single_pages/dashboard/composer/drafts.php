@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 
 $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
 
@@ -6,7 +6,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Page Drafts'))?>
 
-<? 
+<?php 
 if (count($drafts) > 0) { ?>
 
 <table class="table table-striped">
@@ -37,17 +37,17 @@ foreach($drafts as $dr) {
 		</td>
 		<td><?=$dr->getPageTypeName()?></td>
 		<td><?=$dh->formatPrettyDateTime($dr->getCollectionDateLastModified());?></td>
-	<? } ?>
+	<?php } ?>
 
-<? } ?>
+<?php } ?>
 </table>
 
-<? } 
+<?php } 
 
 if ($num == 0) { ?>
 	
 	<p><?=t('There are no drafts. <a href="%s">Visit Composer &gt;</a>', $view->url('/dashboard/composer/write'))?></p>
 
-<? } ?>
+<?php } ?>
 
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper();?>

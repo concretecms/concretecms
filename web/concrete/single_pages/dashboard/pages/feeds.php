@@ -1,6 +1,6 @@
-<? defined('C5_EXECUTE') or die("Access Denied.");?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");?>
 
-<? if ($controller->getTask() == 'add'
+<?php if ($controller->getTask() == 'add'
     || $controller->getTask() == 'add_feed'
     || $controller->getTask() == 'edit'
     || $controller->getTask() == 'edit_feed'
@@ -50,7 +50,7 @@
         <button data-dialog="delete-feed" class="btn btn-danger"><?php echo t("Delete Feed")?></button>
     </div>
 
-    <? if (is_object($feed)) { ?>
+    <?php if (is_object($feed)) { ?>
 
         <div style="display: none">
             <div id="ccm-dialog-delete-feed" class="ccm-ui">
@@ -66,7 +66,7 @@
             </div>
         </div>
 
-    <? } ?>
+    <?php } ?>
 
     <script type="text/javascript">
         $(function() {
@@ -114,11 +114,11 @@
             <?=$form->label('customTopicAttributeKeyHandle', t('Filter By Topic'))?>
             <select class="form-control" name="customTopicAttributeKeyHandle" id="customTopicAttributeKeyHandle">
                 <option value=""><?=t('** No Filtering')?></option>
-                <? foreach($topicAttributes as $attributeKey) {
+                <?php foreach($topicAttributes as $attributeKey) {
                     $attributeController = $attributeKey->getController();
                     ?>
-                    <option data-topic-tree-id="<?=$attributeController->getTopicTreeID()?>" value="<?=$attributeKey->getAttributeKeyHandle()?>" <? if ($attributeKey->getAttributeKeyHandle() == $customTopicAttributeKeyHandle) { ?>selected<? } ?>><?=$attributeKey->getAttributeKeyDisplayName()?></option>
-                <? } ?>
+                    <option data-topic-tree-id="<?=$attributeController->getTopicTreeID()?>" value="<?=$attributeKey->getAttributeKeyHandle()?>" <?php if ($attributeKey->getAttributeKeyHandle() == $customTopicAttributeKeyHandle) { ?>selected<?php } ?>><?=$attributeKey->getAttributeKeyDisplayName()?></option>
+                <?php } ?>
             </select>
             <div class="tree-view-container" style="margin-top: 20px">
                 <div class="tree-view-template">
@@ -237,7 +237,7 @@
 
     </script>
 
-<? } else { ?>
+<?php } else { ?>
 
 
     <div class="ccm-dashboard-header-buttons">
@@ -245,14 +245,14 @@
     </div>
 
 
-    <? if (count($feeds) > 0) { ?>
+    <?php if (count($feeds) > 0) { ?>
         <ul class="item-select-list">
-            <? foreach($feeds as $feed) { ?>
+            <?php foreach($feeds as $feed) { ?>
                 <li><a href="<?=$view->action('edit', $feed->getID())?>"><i class="fa fa-rss"></i> <?=$feed->getTitle()?></a></li>
-            <? } ?>
+            <?php } ?>
         </ul>
-    <? } else { ?>
+    <?php } else { ?>
         <p><?=t("You have not added any feeds.")?></p>
-    <? } ?>
+    <?php } ?>
 
-<? } ?>
+<?php } ?>

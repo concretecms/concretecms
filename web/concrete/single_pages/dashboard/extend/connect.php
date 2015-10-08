@@ -1,10 +1,10 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <?
 	$mi = Marketplace::getInstance();
 	if ($mi->hasConnectionError() && $mi->getConnectionError() == Marketplace::E_MARKETPLACE_SUPPORT_MANUALLY_DISABLED) { ?>
 		<p><?=t("External marketplace support has been disabled for this website.")?></p>
-	<? } else { ?>
+	<?php } else { ?>
 		<style type="text/css">
 		div.ccm-pane-body {padding-top: 0px; padding-right: 0px; padding-left: 0px}
 		div.ccm-pane-body div.ccm-error { padding:15px 20px; };

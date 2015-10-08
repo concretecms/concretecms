@@ -65,7 +65,7 @@ $db = Loader::db();
     }
 
 </style>
-<? if (!isset($questionSet)): { ?>
+<?php if (!isset($questionSet)): { ?>
     <?= $h->getDashboardPaneHeaderWrapper(t('Form Results')); ?>
     <?
     $showTable = false;
@@ -132,7 +132,7 @@ $db = Loader::db();
                                 </button>
                             </div>
                         </form>
-                        <? if (!$in_use): { ?>
+                        <?php if (!$in_use): { ?>
                             <form method="post" action="" style="display: inline">
                                 <input type="hidden" name="bID" value="<?= intval($survey['bID']) ?>"/>
                                 <input type="hidden" name="qsID" value="<?= intval($qsid) ?>"/>
@@ -140,7 +140,7 @@ $db = Loader::db();
                                 <?php $valt->output('deleteForm') ?>
                                 <?= $ih->submit(t('Delete'), false, 'left', 'small error delete-form') ?>
                             </form>
-                        <? }endif ?>
+                        <?php }endif ?>
                     </td>
                 </tr>
             <?php
@@ -178,7 +178,7 @@ $db = Loader::db();
                             'left',
                             'small error delete-form-answers') ?>
                     </form>
-                    <? if (!$in_use): { ?>
+                    <?php if (!$in_use): { ?>
                         <form method="post" action="" style="display: inline">
                             <input type="hidden" name="bID" value="<?= intval($survey['bID']) ?>"/>
                             <input type="hidden" name="qsID" value="<?= intval($qsid) ?>"/>
@@ -186,28 +186,28 @@ $db = Loader::db();
                             <?php $valt->output('deleteForm') ?>
                             <?= $ih->submit(t('Delete'), false, 'left', 'small error delete-form') ?>
                         </form>
-                    <? }endif ?>
+                    <?php }endif ?>
                 </td>
             </tr>
-        <? }endforeach ?>
+        <?php }endforeach ?>
         </tbody>
         </table>
-    <? } */
+    <?php } */
 else {
         ?>
         <p><?= t('There are no available forms in your site.') ?></p>
-    <? } ?>
+    <?php } ?>
     <?= $h->getDashboardPaneFooterWrapper(); ?>
-<? } else: { ?>
+<?php } else: { ?>
     <?= $h->getDashboardPaneHeaderWrapper(
         t('Responses to %s', $surveys[$questionSet]['surveyName']),
         false,
         false,
         false); ?>
-<div class="ccm-pane-body <? if (!$paginator || !strlen($paginator->getPages()) > 0) { ?> ccm-pane-body-footer <? } ?>">
-    <? if (count($answerSets) == 0): { ?>
+<div class="ccm-pane-body <?php if (!$paginator || !strlen($paginator->getPages()) > 0) { ?> ccm-pane-body-footer <?php } ?>">
+    <?php if (count($answerSets) == 0): { ?>
         <div><?= t('No one has yet submitted this form.') ?></div>
-    <? } else: { ?>
+    <?php } else: { ?>
 
         <div class="ccm-dashboard-header-buttons">
             <a id="ccm-export-results" class="btn btn-success" href="<?= $view->action('csv')?>?qsid=<?=$questionSet ?>">
@@ -227,25 +227,25 @@ else {
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <? if ($_REQUEST['sortBy'] == 'chrono') { ?>
+                    <?php if ($_REQUEST['sortBy'] == 'chrono') { ?>
                     <th class="header headerSortDown">
                         <a href="<?= $text->entities($urlhelper->unsetVariable('sortBy')) ?>">
-                            <? } else { ?>
+                            <?php } else { ?>
                             <th class="header headerSortUp">
                                 <a href="<?= $text->entities($urlhelper->setVariable('sortBy', 'chrono')) ?>">
-                                    <? } ?>
+                                    <?php } ?>
                                     <?= t('Date') ?>
                                 </a>
                             </th>
                             <th><?= t('User') ?></th>
-                            <? foreach ($questions as $question): { ?>
+                            <?php foreach ($questions as $question): { ?>
                                 <th><?= $question['question'] ?></th>
-                            <? }endforeach ?>
+                            <?php }endforeach ?>
                             <th></th>
                 </tr>
                 </thead>
                 <tbody>
-                <? foreach ($answerSets as $answerSetId => $answerSet): { ?>
+                <?php foreach ($answerSets as $answerSetId => $answerSet): { ?>
                     <tr>
                         <td><?= $dh->formatCustom($dh::DB_FORMAT, $answerSet['created']) ?></td>
                         <td><?
@@ -290,23 +290,23 @@ else {
                             </form>
                         </td>
                     </tr>
-                <? }endforeach ?>
+                <?php }endforeach ?>
                 </tbody>
             </table>
         </div>
         </div>
-        <? if ($paginator && strlen($paginator->getPages()) > 0) { ?>
+        <?php if ($paginator && strlen($paginator->getPages()) > 0) { ?>
             <div class="ccm-search-results-pagination">
                 <ul class="pagination">
                     <li class="prev"><?= $paginator->getPrevious() ?></li>
 
-                    <? // Call to pagination helper's 'getPages' method with new $wrapper var ?>
+                    <?php // Call to pagination helper's 'getPages' method with new $wrapper var ?>
                     <?= $paginator->getPages('li') ?>
 
                     <li class="next"><?= $paginator->getNext() ?></li>
                 </ul>
             </div>
-        <? } ?>
-    <? }endif ?>
+        <?php } ?>
+    <?php }endif ?>
     <?= $h->getDashboardPaneFooterWrapper(false); ?>
-<? }endif ?>
+<?php }endif ?>

@@ -15,15 +15,15 @@ ob_start();
 <?= t('User Name') ?>: <b><?= $uName ?></b><br />
 <?= t('Email Address') ?>: <b><?= $uEmail ?></b><br />
 <br />
-<? if($attribs): ?>
+<?php if($attribs): ?>
 	<ul>
-	<? foreach($attribs as $item): ?>
+	<?php foreach($attribs as $item): ?>
 		<li><?= $item ?></li>
-	<? endforeach ?>
+	<?php endforeach ?>
 	</ul>
-<? endif ?>
+<?php endif ?>
 <br />
-<? t('This account may be managed directly at') ?><br />
+<?php t('This account may be managed directly at') ?><br />
 <a href="<?= View::url('/dashboard/users/search', 'view', $uID) ?>"><?= View::url('/dashboard/users/search', 'view', $uID) ?></a>
 <?
 
@@ -46,14 +46,14 @@ ob_start();
 
 <?= t('Email Address') ?>: <?= $uEmail ?>
 
-<? if($attribs): ?>
-	<? foreach($attribs as $item): ?>
+<?php if($attribs): ?>
+	<?php foreach($attribs as $item): ?>
 		<?= $item ?>
 
-	<? endforeach ?>
-<? endif ?>
+	<?php endforeach ?>
+<?php endif ?>
 
-<? t('This account may be managed directly at') ?>
+<?php t('This account may be managed directly at') ?>
 
 <?= View::url('/dashboard/users/search', 'view', $uID) ?>
 <?

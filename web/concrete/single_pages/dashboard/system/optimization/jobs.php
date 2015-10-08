@@ -40,11 +40,11 @@ $dh = Core::make('helper/date');
 	array($view->action('view_sets'), t('Job Sets'), $jobSetsSelected)
 ), false);?>
 
-<? if (in_array($this->controller->getTask(), array('view', 'install', 'uninstall', 'job_installed', 'job_uninstalled', 'reset', 'reset_complete', 'job_scheduled'))) { ?>
+<?php if (in_array($this->controller->getTask(), array('view', 'install', 'uninstall', 'job_installed', 'job_uninstalled', 'reset', 'reset_complete', 'job_scheduled'))) { ?>
 
 <div id="ccm-tab-content-list">
 
-<? if (count($installedJobs) > 0) { ?>
+<?php if (count($installedJobs) > 0) { ?>
 
 <table class="table table-stripped" id="ccm-jobs-list">
 	<thead>
@@ -59,8 +59,8 @@ $dh = Core::make('helper/date');
 	</thead>
 	
 	<tbody>
-    	<? foreach($installedJobs as $j) { ?>
-    		<tr class="<? if ($j->didFail()) { ?>error<? } ?> <? if ($j->getJobStatus() == 'RUNNING') {?>running<? } ?>">
+    	<?php foreach($installedJobs as $j) { ?>
+    		<tr class="<?php if ($j->didFail()) { ?>error<?php } ?> <?php if ($j->getJobStatus() == 'RUNNING') {?>running<?php } ?>">
     			<td>
     			    <?=$j->getJobID()?>
                 </td>
@@ -93,18 +93,18 @@ $dh = Core::make('helper/date');
     			
     			<td style="width: 50px">
     				<a href="javascript:void(0)" class="ccm-automate-job-instructions icon-link launch-tooltip" data-jSupportsQueue="<?=$j->supportsQueue()?>" data-jID="<?=$j->getJobID()?>" title="<?=t('Automate this Job')?>"><i class="fa fa-clock-o"></i></a>
-    				<? if ($j->canUninstall()) { ?>
+    				<?php if ($j->canUninstall()) { ?>
     					<a href="<?=$view->action('uninstall', $j->getJobID())?>" class="icon-link launch-tooltip" title="<?=t('Remove this Job')?>"><i class="fa fa-trash-o"></i></a>
-    				<? } ?>
+    				<?php } ?>
     			</td>
     			
     		</tr>
-    	<? } ?>
+    	<?php } ?>
 	</tbody>
 </table>
 
 <div style="display: none" id="ccm-jobs-automation-dialogs">
-    <? foreach($installedJobs as $j) { ?>
+    <?php foreach($installedJobs as $j) { ?>
     	<div id="jd<?=$j->getJobID()?>" class="ccm-ui">
     		<form action="<?=$view->action('update_job_schedule')?>" method="post" data-schedule-form="<?=$j->getJobID()?>">
     			<?=$form->hidden('jID', $j->getJobID());?>
@@ -145,7 +145,7 @@ $dh = Core::make('helper/date');
     			
     			<fieldset class="ccm-jobs-automation-schedule-cron" <?=($j->isScheduled?'style="display: none;"':'')?>>
     				<div class="well">
-    					<? if ($j->supportsQueue()) { ?>
+    					<?php if ($j->supportsQueue()) { ?>
     						<p><?=t('The "%s" job supports queueing, meaning it can be run in a couple different ways:', $j->getJobName())?></p>
     						
     						<h4><?=t('No Queueing')?></h4>
@@ -176,12 +176,12 @@ $dh = Core::make('helper/date');
     						    <?=t('The first URL starts the process - the second ensures that it completes in batches.')?>
                             </div>
     			
-    					<? } else { ?>
+    					<?php } else { ?>
     						<p><?=t('To run the "%s" job, automate the following URL using cron or a similar system:', $j->getJobName())?></p><br/>
     						<div>
     						    <textarea rows="2" class="ccm-default-jobs-url form-control"><?=URL::to('/ccm/system/jobs/run_single?auth=' . $auth . '&jID=' . $j->getJobID())?></textarea>
                             </div>
-    					<? } ?>	
+    					<?php } ?>	
     				</div>
     			</fieldset>
     			
@@ -192,14 +192,14 @@ $dh = Core::make('helper/date');
                 </div>
     		</form>
     	</div>
-    <? } ?>
+    <?php } ?>
 </div>
 
-<? } else { ?>
+<?php } else { ?>
 	<p><?=t('You have no jobs installed.')?></p>
-<? } ?>
+<?php } ?>
 
-<? if (count($availableJobs) > 0) { ?>
+<?php if (count($availableJobs) > 0) { ?>
 	<h4><?=t('Awaiting Installation')?></h4>
 	<table class="table table-striped">
 	<thead>
@@ -221,8 +221,8 @@ $dh = Core::make('helper/date');
 		<?endforeach?>
 	</tbody>
 	</table>
-<? } ?>
-<? 
+<?php } ?>
+<?php 
 $djs = JobSet::getDefault();
 if (is_object($djs)) { ?>
 <div class="well">
@@ -232,11 +232,11 @@ if (is_object($djs)) { ?>
         <input type="text" style="width: 700px" class="ccm-default-jobs-url" value="<?=$view->url('/ccm/system/jobs?auth=' . $auth)?>" />
     </div>
 </div>
-<? } ?>
+<?php } ?>
 
 </div>
 
-<? } else { ?>
+<?php } else { ?>
 
 <div id="ccm-tab-content-sets">
 
@@ -269,7 +269,7 @@ if (is_object($djs)) { ?>
         		</fieldset>
             </form>
 
-    		<? if ($set->canDelete()) { ?>
+    		<?php if ($set->canDelete()) { ?>
     
         		<form method="post" action="<?php echo $view->action('delete_set')?>" class="form-vertical">
             		<fieldset>
@@ -287,7 +287,7 @@ if (is_object($djs)) { ?>
             			</div>
             		</fieldset>
         		</form>
-    		<? } ?>
+    		<?php } ?>
         </div>
 
         <div class="col-md-6">
@@ -383,7 +383,7 @@ if (is_object($djs)) { ?>
         </div>
 	</div>
 
-<? } else { ?>
+<?php } else { ?>
 
 <div class="row">
     <div class="col-md-12">
@@ -434,9 +434,9 @@ if (is_object($djs)) { ?>
     </div>
 </div>
 
-	<? } ?>
+	<?php } ?>
 </div>
-<? } ?>
+<?php } ?>
 
 
 <script type="text/javascript">

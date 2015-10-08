@@ -6,15 +6,15 @@ if (\Request::getInstance()->get('_ccm_dashboard_external')) {
 </div>
 </div>
 
-<? Loader::element('footer_required', array('disableTrackingCode' => true)); ?>
+<?php Loader::element('footer_required', array('disableTrackingCode' => true)); ?>
 <script type="text/javascript">
 	ConcretePanelManager.register({'overlay': false, 'identifier': 'dashboard', 'position': 'right', url: '<?=URL::to("/ccm/system/panels/dashboard")?>'});
 	ConcretePanelManager.register({'identifier': 'sitemap', 'position': 'right', url: '<?=URL::to("/ccm/system/panels/sitemap")?>'});
-    <? if (!$hideDashboardPanel) { ?>
+    <?php if (!$hideDashboardPanel) { ?>
         var panel = ConcretePanelManager.getByIdentifier('dashboard');
         panel.isOpen = true;
         panel.onPanelLoad();
-    <? } ?>
+    <?php } ?>
 
     $(function() {
         $('a[data-launch-panel=dashboard]').on('click', function() {

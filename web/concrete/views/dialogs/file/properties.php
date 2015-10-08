@@ -20,24 +20,24 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
     }
     ?>
 
-    <? if (!$previewMode) { ?>
+    <?php if (!$previewMode) { ?>
     <div class="ccm-tab-content" id="ccm-tab-content-details" data-container="editable-fields">
-        <? } else { ?>
+        <?php } else { ?>
         <div class="container">
-            <? } ?>
+            <?php } ?>
 
             <section>
 
-                <? if (!$previewMode && $fp->canEditFileContents()) { ?>
+                <?php if (!$previewMode && $fp->canEditFileContents()) { ?>
                     <a href="#" class="btn pull-right btn-default btn-xs" data-action="rescan"><?= t('Rescan') ?></a>
-                <? } ?>
+                <?php } ?>
 
                 <h4><?= t('Basic Properties') ?></h4>
 
-                <? if ($previewMode) {
+                <?php if ($previewMode) {
                     $mode = 'preview';
                 } ?>
-                <? Loader::element('files/properties', array('fv' => $fv, 'mode' => $mode))?>
+                <?php Loader::element('files/properties', array('fv' => $fv, 'mode' => $mode))?>
 
             </section>
 
@@ -50,7 +50,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 
                     <h4><?= t('Attributes') ?></h4>
 
-                    <? Loader::element(
+                    <?php Loader::element(
                         'attribute/editable_list',
                         array(
                             'attributes'           => $attribs,
@@ -65,7 +65,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 
                 </section>
 
-            <? } ?>
+            <?php } ?>
 
             <section>
 
@@ -79,7 +79,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 
         </div>
 
-        <? if (!$previewMode) { ?>
+        <?php if (!$previewMode) { ?>
 
             <div class="ccm-tab-content" id="ccm-tab-content-versions">
 
@@ -93,18 +93,18 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                         <th><?= t('Comments') ?></th>
                         <th><?= t('Creator') ?></th>
                         <th><?= t('Added On') ?></th>
-                        <? if ($fp->canEditFileContents()) { ?>
+                        <?php if ($fp->canEditFileContents()) { ?>
                             <th>&nbsp;</th>
-                        <? } ?>
+                        <?php } ?>
                     </tr>
                     <?
                     $versions = $f->getVersionList();
                     foreach ($versions as $fvv) { ?>
-                        <tr <? if ($fvv->getFileVersionID() == $fv->getFileVersionID()) { ?> class="success" <? } ?>
+                        <tr <?php if ($fvv->getFileVersionID() == $fv->getFileVersionID()) { ?> class="success" <?php } ?>
                             data-file-version-id="<?= $fvv->getFileVersionID() ?>">
                             <td style="text-align: center">
                                 <input type="radio" name="fvID" value="<?= $fvv->getFileVersionID() ?>"
-                                       <? if ($fvv->getFileVersionID() == $fv->getFileVersionID()) { ?>checked<? } ?> />
+                                       <?php if ($fvv->getFileVersionID() == $fv->getFileVersionID()) { ?>checked<?php } ?> />
                             </td>
                             <td width="100">
                                 <div style="width: 150px; word-wrap: break-word">
@@ -139,14 +139,14 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                             </td>
                             <td><?= $fvv->getAuthorName() ?></td>
                             <td><?= $dh->formatDateTime($fvv->getDateAdded(), true) ?></td>
-                            <? if ($fp->canEditFileContents()) { ?>
+                            <?php if ($fp->canEditFileContents()) { ?>
                                 <td><a data-action="delete-version"
                                        data-file-version-id="<?= $fvv->getFileVersionID() ?>" href="javascript:void(0)"><i
                                             class="fa fa-trash-o"></i></a></td>
-                            <? } ?>
+                            <?php } ?>
                         </tr>
 
-                    <? } ?>
+                    <?php } ?>
 
                 </table>
 
@@ -200,11 +200,11 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                                 <td><?= $dh->formatDateTime($download['timestamp'], true) ?></td>
                                 <td><?= intval($download['fvID']) ?></td>
                             </tr>
-                        <? } ?>
+                        <?php } ?>
                     </table>
                 </section>
             </div>
-        <? } ?>
+        <?php } ?>
 
     </div>
     <style type="text/css">
@@ -319,9 +319,9 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 
         }
 
-        <? if (!$previewMode) { ?>
+        <?php if (!$previewMode) { ?>
         $(function () {
             var dialog = new ConcreteFilePropertiesDialog();
         });
-        <? } ?>
+        <?php } ?>
     </script>

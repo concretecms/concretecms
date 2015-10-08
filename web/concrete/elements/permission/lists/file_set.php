@@ -1,6 +1,6 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<? $cat = PermissionKeyCategory::getByHandle('file_set');?>
+<?php $cat = PermissionKeyCategory::getByHandle('file_set');?>
 
 <table class="ccm-permission-grid table table-striped">
 <?
@@ -13,7 +13,7 @@ foreach($permissions as $pk) {
 	<td class="ccm-permission-grid-name" id="ccm-permission-grid-name-<?=$pk->getPermissionKeyID()?>"><strong><a dialog-title="<?=$pk->getPermissionKeyDisplayName()?>" data-pkID="<?=$pk->getPermissionKeyID()?>" data-paID="<?=$pk->getPermissionAccessID()?>" onclick="ccm_permissionLaunchDialog(this)" href="javascript:void(0)"><?=$pk->getPermissionKeyDisplayName()?></a></strong></td>
 	<td id="ccm-permission-grid-cell-<?=$pk->getPermissionKeyID()?>" class="ccm-permission-grid-cell"><?=Loader::element('permission/labels', array('pk' => $pk))?></td>
 </tr>
-<? } ?>
+<?php } ?>
 <tr>
 	<td class="ccm-permission-grid-name" ></td>
 	<td>

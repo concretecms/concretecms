@@ -10,24 +10,24 @@ defined('C5_EXECUTE') or die("Access Denied.");
         <nav>
             <span></span>
             <ul class="ccm-panel-header-accordion-dropdown">
-                <li><a data-panel-accordion-tab="blocks" <? if (!in_array(
+                <li><a data-panel-accordion-tab="blocks" <?php if (!in_array(
                         $tab,
                         array(
                             'clipboard',
                             'stacks',
                             'tiles'))) {
-                    ?>data-panel-accordion-tab-selected="true" <? } ?>><?= t('Blocks') ?></a></li>
+                    ?>data-panel-accordion-tab-selected="true" <?php } ?>><?= t('Blocks') ?></a></li>
                 <li><a data-panel-accordion-tab="clipboard"
-                       <? if ($tab == 'clipboard') { ?>data-panel-accordion-tab-selected="true" <? } ?>><?=
+                       <?php if ($tab == 'clipboard') { ?>data-panel-accordion-tab-selected="true" <?php } ?>><?=
                         t(
                             'Clipboard') ?></a></li>
                 <li><a data-panel-accordion-tab="stacks"
-                       <? if ($tab == 'stacks') { ?>data-panel-accordion-tab-selected="true" <? } ?>><?=
+                       <?php if ($tab == 'stacks') { ?>data-panel-accordion-tab-selected="true" <?php } ?>><?=
                         t(
                             'Stacks') ?></a></li>
-                <? /*
+                <?php /*
                 <li><a data-panel-accordion-tab="tiles"
-                       <? if ($tab == 'tiles') { ?>data-panel-accordion-tab-selected="true" <? } ?>><?=
+                       <?php if ($tab == 'tiles') { ?>data-panel-accordion-tab-selected="true" <?php } ?>><?=
                         t(
                             'Gathering Tiles') ?></a></li> */?>
             </ul>
@@ -287,7 +287,7 @@ switch ($tab) {
                         <header><?= $set->getBlockTypeSetDisplayName() ?></header>
                         <ul>
 
-                            <? $blocktypes = $types[$set->getBlockTypeSetName()];
+                            <?php $blocktypes = $types[$set->getBlockTypeSetName()];
                             if (!$blocktypes) {
                                 $blocktypes = array();
                             }
@@ -324,21 +324,21 @@ switch ($tab) {
                                         </a>
                                     </li>
 
-                                <? } ?>
-                            <? } else { ?>
+                                <?php } ?>
+                            <?php } else { ?>
                                 <p><?=t('No block types available.')?></p>
-                            <? } ?>
+                            <?php } ?>
                         </ul>
                     </div>
 
-                <? } ?>
+                <?php } ?>
 
-                <? if (is_array($types['Other'])) { ?>
+                <?php if (is_array($types['Other'])) { ?>
 
                     <div class="ccm-panel-add-block-set">
                         <header><?= t('Other') ?></header>
                         <ul>
-                            <? $blocktypes = $types['Other'];
+                            <?php $blocktypes = $types['Other'];
                             foreach ($blocktypes as $bt) {
                                 $btIcon = $ci->getBlockTypeIconURL($bt);
                                 ?>
@@ -364,21 +364,21 @@ switch ($tab) {
                                         ><p><img src="<?= $btIcon ?>"/><span><?= t($bt->getBlockTypeName()) ?></span></p></a>
                                 </li>
 
-                            <? } ?>
+                            <?php } ?>
                         </ul>
 
                     </div>
 
-                <? } ?>
+                <?php } ?>
 
-            <? if (Config::get('concrete.marketplace.enabled')) { ?>
+            <?php if (Config::get('concrete.marketplace.enabled')) { ?>
                 <div class="ccm-marketplace-btn-wrapper">
                 <button type="button" onclick="window.location.href='<?=URL::to('/dashboard/extend/addons')?>'" class="btn-info btn-block btn btn-large"><?=t("Get More Blocks")?></button>
                 </div>
-            <? } ?>
+            <?php } ?>
 
             </div>
 
             </section>
 
-        <? } ?>
+        <?php } ?>

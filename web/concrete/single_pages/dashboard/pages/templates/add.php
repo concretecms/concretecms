@@ -36,8 +36,8 @@ $form = Loader::helper('form');
                  <?=$form->radio('pTemplateIcon', $ic, $i == 0)?>
             </label>
           </div>
-          <? $i++; ?>
-        <? } ?>
+          <?php $i++; ?>
+        <?php } ?>
         </div>
     </div>
 

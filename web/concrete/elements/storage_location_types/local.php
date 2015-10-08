@@ -5,7 +5,7 @@ if (is_object($configuration)) {
     $relativePath = $configuration->getWebRootRelativePath();
 }
 ?>
-<? $form = Loader::helper('form'); ?>
+<?php $form = Loader::helper('form'); ?>
 <div class="form-group">
     <label for="path"><?=t('Root Path')?></label>
     <div class="input-group">

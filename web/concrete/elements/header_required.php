@@ -74,7 +74,7 @@ $akk = $c->getCollectionAttributeValue('meta_keywords');
 <title><?php echo htmlspecialchars($pageTitle, ENT_COMPAT, APP_CHARSET)?></title>
 <meta name="description" content="<?=htmlspecialchars($pageDescription, ENT_COMPAT, APP_CHARSET)?>" />
 
-<? if ($akk) { ?>
+<?php if ($akk) { ?>
 <meta name="keywords" content="<?=htmlspecialchars($akk, ENT_COMPAT, APP_CHARSET)?>" />
 <?php }
 if($c->getCollectionAttributeValue('exclude_search_index')) { ?>
@@ -108,11 +108,11 @@ var CCM_REL = "<?php echo \Core::getApplicationRelativePath()?>";
 
 </script>
 
-<? if (isset($scc) && is_object($scc)) { ?>
+<?php if (isset($scc) && is_object($scc)) { ?>
     <style type="text/css">
-        <? print $scc->getValue();?>
+        <?php print $scc->getValue();?>
     </style>
-<? } ?>
+<?php } ?>
 
 <?php
 

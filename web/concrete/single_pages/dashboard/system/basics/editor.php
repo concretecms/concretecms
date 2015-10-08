@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die("Access Denied.");?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");?>
 <form method="post" class="ccm-dashboard-content-form" action="<?=$view->action('submit')?>">
 	<?=$this->controller->token->output('submit')?>
 	<fieldset>
@@ -16,13 +16,13 @@
 	</fieldset>
 	<fieldset>
 		<p class="lead"><?=t('Redactor Plugins')?></p>
-		<? foreach($plugins as $key => $plugin) { ?>
+		<?php foreach($plugins as $key => $plugin) { ?>
 		<div class="checkbox">
 			<label>
 				<?=$form->checkbox('plugin[]', $key, $manager->isSelected($key))?> <?=$plugin->getName()?>
 			</label>
 		</div>
-		<? } ?>
+		<?php } ?>
 	</fieldset>
 	<div class="ccm-dashboard-form-actions-wrapper">
 		<div class="ccm-dashboard-form-actions">

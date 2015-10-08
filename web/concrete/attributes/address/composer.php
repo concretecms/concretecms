@@ -1,6 +1,6 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
-<? $f = Loader::helper('form'); ?>
-<? $co = Loader::helper('lists/countries'); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php $f = Loader::helper('form'); ?>
+<?php $co = Loader::helper('lists/countries'); ?>
 
 <div class="ccm-attribute-address-composer-wrapper ccm-attribute-address-<?=$key->getAttributeKeyID()?>">
 

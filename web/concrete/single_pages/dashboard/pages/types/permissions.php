@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <p class="lead"><?php echo $pagetype->getPageTypeDisplayName(); ?></p>
 
@@ -7,21 +7,21 @@
     <input type="hidden" name="ptID" value="<?=$pagetype->getPageTypeID()?>" />
     <fieldset>
         <legend><?=t('Permissions for This Page Type')?></legend>
-        <? Loader::element('permission/lists/page_type', array(
+        <?php Loader::element('permission/lists/page_type', array(
             'pagetype' => $pagetype
         ))?>
     </fieldset>
 
     <fieldset>
         <legend><?=t('Permissions for All Pages Created Of This Type')?></legend>
-        <? if (Config::get('concrete.permissions.model') == 'advanced') { ?>
-            <? Loader::element('permission/lists/page', array(
+        <?php if (Config::get('concrete.permissions.model') == 'advanced') { ?>
+            <?php Loader::element('permission/lists/page', array(
                 'page' => $defaultPage,
                 'editPermissions' => true
             ))?>
-        <? } else { ?>
+        <?php } else { ?>
             <div class="alert alert-info"><?=t('You must <a href="%s">enable advanced permissions</a> to set permissions for pages created of a certain type.', URL::to('/dashboard/system/permissions/advanced'))?></div>
-        <? } ?>
+        <?php } ?>
     </fieldset>
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">

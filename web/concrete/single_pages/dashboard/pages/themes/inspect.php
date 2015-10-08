@@ -38,7 +38,7 @@ $ci = Loader::helper('concrete/ui');
                                 <?=t('There are no templates in this file.')?>
                             </td>
                         </tr>
-                        <? }
+                        <?php }
                     
                         foreach ($files as $f) { ?>
                         <tr class="inputs-list">
@@ -90,7 +90,7 @@ $ci = Loader::helper('concrete/ui');
                             ?></td>
                         </tr>
                         
-                        <? } // END FOREACH ?>
+                        <?php } // END FOREACH ?>
                     
                     </tbody>
                 </table>        
@@ -105,7 +105,7 @@ $ci = Loader::helper('concrete/ui');
         print $ci->button(t('Return to Themes'), $view->url('/dashboard/pages/themes'), 'left');
         if ($pf > 0) { 
             print $ci->submit(t('Ok'), 'ccm-inspect-form', 'right', 'btn-primary'); ?>
-        <? }?>
+        <?php }?>
         </div>
     </div>
 

@@ -16,7 +16,7 @@ if (isset($group)) { ?>
 	$delConfirmJS = t('Are you sure you want to permanently remove this group?');
 	if($u->isSuperUser() == false){ ?>
 		<?=t('You must be logged in as %s to remove groups.', USER_SUPER)?>
-	<? }else{ ?>
+	<?php }else{ ?>
 
 	<script type="text/javascript">
 	deleteGroup = function() {
@@ -26,7 +26,7 @@ if (isset($group)) { ?>
 	}
 	</script>
 
-	<? } ?>
+	<?php } ?>
 
     <fieldset>
 	    <legend><?=t('Group Details')?></legend>
@@ -41,7 +41,7 @@ if (isset($group)) { ?>
 	    </div>
     </fieldset>
 
-	<? if (Config::get('concrete.user.profiles_enabled')) { ?>
+	<?php if (Config::get('concrete.user.profiles_enabled')) { ?>
 
 	<fieldset>
         <div class="form-group">
@@ -75,7 +75,7 @@ if (isset($group)) { ?>
             </div>
 		</div>
 	</fieldset>
-	<? } ?>
+	<?php } ?>
 
 	<fieldset>
 		<legend><?=t('Automation')?></legend>
@@ -251,16 +251,16 @@ $(function() {
 
 });
 </script>
-<? } else { ?>
+<?php } else { ?>
 
-	<? if ($canAddGroup) { ?>
+	<?php if ($canAddGroup) { ?>
 	<div class="ccm-dashboard-header-buttons">
 		<a href="<?php echo View::url('/dashboard/users/add_group')?>" class="btn btn-primary"><?php echo t("Add Group")?></a>
 	</div>
-	<? } ?>
+	<?php } ?>
 
 
-<? Loader::element('group/search', array('controller' => $searchController, 'selectMode' => false))?>
+<?php Loader::element('group/search', array('controller' => $searchController, 'selectMode' => false))?>
 
 
-<? } ?>
+<?php } ?>

@@ -110,19 +110,19 @@ if ($tp->canBackup()) {
                         <td style="white-space: nowrap">
                             <?= $interface->button_js(t('Download'), 'window.location.href=\'' . $view->action('download', $arr_bkupInf['file']) . '\'', 'left', 'small'); ?>
 
-                            <? print $interface->button_js(t("Restore"), "confirmRestore('" . $arr_bkupInf['file'] . "')", 'left','small'); ?>
+                            <?php print $interface->button_js(t("Restore"), "confirmRestore('" . $arr_bkupInf['file'] . "')", 'left','small'); ?>
 
-                            <? print $interface->button_js(t("Delete"), "confirmDelete('" . $arr_bkupInf['file'] . "')",'left','small'); ?>
+                            <?php print $interface->button_js(t("Delete"), "confirmDelete('" . $arr_bkupInf['file'] . "')",'left','small'); ?>
                         </td>
                     </tr>
-                <? } ?>
+                <?php } ?>
             </tbody>
         </table>
 
 
     <?php } else { ?>
         <p><?= t('You have no backups available.') ?></p>
-    <? } ?>
+    <?php } ?>
 
         <?
             $crypt = Loader::helper('encryption');
@@ -133,13 +133,13 @@ if ($tp->canBackup()) {
                     <?php echo $this->controller->token->output('run_backup'); ?>
                     <div class="control-group">
                         <div class="checkbox">
-                            <? if ($crypt->isAvailable()) { ?>
+                            <?php if ($crypt->isAvailable()) { ?>
                                 <label><input type="checkbox" name="useEncryption" id="useEncryption" value="1" />
                                 <span><?= t('Use Encryption') ?></span></label>
-                            <? } else { ?>
+                            <?php } else { ?>
                                 <label><input type="checkbox" value="0" disabled />
                                 <span><?= t('Use Encryption') ?></span></label>
-                            <? } ?>
+                            <?php } ?>
                         </div>
                     </div>
                     <div class="control-group">
@@ -152,6 +152,6 @@ if ($tp->canBackup()) {
 
             <p class="bg-warning"><?= t('Running a backup will create a database export file and store it on your server. Encryption is only advised if you plan on storing the backup on the server indefinitely. This is <strong>not recommended</strong>. After running backup, download the file and make sure that the entire database was saved correctly. If any error messages appear during the backup process, do <b>not</b> attempt to restore from that backup.') ?></p>
 
-<? } else { ?>
+<?php } else { ?>
 	<p><?= t('You do not have permission to create or administer backups.') ?></p>
-<? } ?>
+<?php } ?>

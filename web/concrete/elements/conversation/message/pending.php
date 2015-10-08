@@ -9,7 +9,7 @@ $cnvMessageID = $message->getConversationMessageID();
 <div data-conversation-message-id="<?=$message->getConversationMessageID()?>" data-conversation-message-level="<?=$message->getConversationMessageLevel()?>" class="<?=$class?>">
 	<a id="cnv<?=$cnvID?>Message<?=$cnvMessageID?>"></a>
 	<div class="ccm-conversation-message-user">
-		<div class="ccm-conversation-avatar"><? print Loader::helper('concrete/avatar')->outputUserAvatar($ui)?></div>
+		<div class="ccm-conversation-avatar"><?php print Loader::helper('concrete/avatar')->outputUserAvatar($ui)?></div>
 		<div class="ccm-conversation-message-byline">
 				<span class="ccm-conversation-message-username"><?
 					$author = $message->getConversationMessageAuthorObject();

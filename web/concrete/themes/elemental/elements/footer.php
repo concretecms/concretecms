@@ -9,7 +9,7 @@ $displayFirstSection = $footerSiteTitleBlocks > 0 || $footerSocialBlocks > 0 || 
 ?>
 
 <footer id="footer-theme">
-    <? if ($displayFirstSection) { ?>
+    <?php if ($displayFirstSection) { ?>
     <section>
     <div class="container">
         <div class="row">
@@ -28,7 +28,7 @@ $displayFirstSection = $footerSiteTitleBlocks > 0 || $footerSocialBlocks > 0 || 
         </div>
     </div>
     </section>
-    <? } ?>
+    <?php } ?>
     <section>
     <div class="container">
         <div class="row">
@@ -69,4 +69,4 @@ $displayFirstSection = $footerSiteTitleBlocks > 0 || $footerSocialBlocks > 0 || 
 </footer>
 
 
-<? $this->inc('elements/footer_bottom.php');?>
+<?php $this->inc('elements/footer_bottom.php');?>

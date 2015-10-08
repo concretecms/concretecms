@@ -1,10 +1,10 @@
-<? defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 if (\Request::getInstance()->get('_ccm_dashboard_external')) {
         return;
 }
 $html = Loader::helper('html');
 ?><!DOCTYPE html>
-<html <? if (!$hideDashboardPanel) { ?>class="ccm-panel-open ccm-panel-right"<? } ?>>
+<html <?php if (!$hideDashboardPanel) { ?>class="ccm-panel-open ccm-panel-right"<?php } ?>>
 <head>
     <link rel="stylesheet" type="text/css" href="<?=$this->getThemePath()?>/main.css" />
 <?
@@ -73,7 +73,7 @@ $large_font = !!Config::get('concrete.accessibility.toolbar_large_font');
         </li>
         <li class="pull-right hidden-xs hidden-sm">
             <a href="<?=URL::to('/dashboard')?>"
-                data-launch-panel="dashboard" <? if (!$hideDashboardPanel) { ?>class="ccm-launch-panel-active" <? } ?>
+                data-launch-panel="dashboard" <?php if (!$hideDashboardPanel) { ?>class="ccm-launch-panel-active" <?php } ?>
                 data-panel-url="<?=URL::to('/system/panels/dashboard')?>">
                 <i class="fa fa-sliders"></i>
                 <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-site-settings">
@@ -123,6 +123,6 @@ Loader::element('panels/dashboard', array(
 </div></div>
 </div>
 
-<? } ?>
+<?php } ?>
 
 <div id="ccm-dashboard-content" class="container-fluid">
