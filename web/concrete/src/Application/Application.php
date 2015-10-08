@@ -253,15 +253,16 @@ class Application extends Container
         foreach($this->packages as $pkg) {
             // handle updates
             if (Config::get('concrete.updates.enable_auto_update_packages')) {
-                $pkgInstalledVersion = $pkg->getPackageVersion();
+                $dbPkg = \Package::getByHandle($pkg->getPackageHandle());
+                $pkgInstalledVersion = $dbPkg->getPackageVersion();
                 $pkgFileVersion = $pkg->getPackageVersion();
                 if (version_compare($pkgFileVersion, $pkgInstalledVersion, '>')) {
                     $currentLocale = Localization::activeLocale();
                     if ($currentLocale != 'en_US') {
                         Localization::changeLocale('en_US');
                     }
-                    $pkg->upgradeCoreData();
-                    $pkg->upgrade();
+                    $dbPkg->upgradeCoreData();
+                    $dbPkg->upgrade();
                     if ($currentLocale != 'en_US') {
                         Localization::changeLocale($currentLocale);
                     }
