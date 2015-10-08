@@ -588,7 +588,7 @@
 
         var breaks = [],
             sw = 0,
-            tw = this.$slider.width(),
+            tw = Math.floor(this.$slider.width()),
             $columns = this.$element.find('.ccm-layout-column'),
             i;
 
