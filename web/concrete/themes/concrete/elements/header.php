@@ -18,9 +18,12 @@ if (is_object($c)) {
         $showLogo = false;
     }
 
-     Loader::element('header_required');
+     Loader::element('header_required', array('pageTitle' => isset($pageTitle) ? $pageTitle : ''));
 } else { 
     $this->markHeaderAssetPosition();
+    if (isset($pageTitle)) {
+        echo '<title>' . h($pageTitle) . '</title>';
+    }
 }
 
 $showAccount = false;
