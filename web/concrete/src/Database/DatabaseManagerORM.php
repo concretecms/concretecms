@@ -73,6 +73,7 @@ class DatabaseManagerORM
         if (!isset($this->entityManagers[$name])) {
             $this->entityManagers[$name] = static::makeEntityManager(Database::connection($connectionName), $context);
         }
+
         return $this->entityManagers[$name];
     }
 
@@ -91,20 +92,23 @@ class DatabaseManagerORM
      */
     public static function makeEntityManager(Connection $connection, $context = null)
     {
-        $config = Setup::createConfiguration(
-            Config::get('concrete.cache.doctrine_dev_mode'),
-            Config::get('database.proxy_classes'),
-            new DoctrineCacheDriver('cache/expensive')
-        );
-
         $path = DIR_APPLICATION . '/' . DIRNAME_CLASSES;
+        $proxyLocation = 'application';
         if ($context instanceof Package) {
             $path = $context->getPackageEntitiesPath();
+            $proxyLocation = $context->getPackageHandle();
         } elseif ($context === 'core') {
             $path = DIR_BASE_CORE . '/' . DIRNAME_CLASSES;
+            $proxyLocation = 'concrete';
         } elseif (is_object($context) && method_exists($context, 'getEntitiesPath')) {
             $path = $context->getEntitiesPath();
         }
+
+        $config = Setup::createConfiguration(
+            Config::get('concrete.cache.doctrine_dev_mode'),
+            Config::get('database.proxy_classes') . '/' . $proxyLocation,
+            new DoctrineCacheDriver('cache/expensive')
+        );
 
         $driverImpl = $config->newDefaultAnnotationDriver($path);
         $driverImpl->addExcludePaths(Config::get('database.proxy_exclusions', array()));
@@ -114,10 +118,12 @@ class DatabaseManagerORM
         $event->setArgument('connection', $connection);
         $event->setArgument('context', $context);
         $event->setArgument('configuration', $config);
+        $event->setArgument('eventManager', $connection->getEventManager());
         Events::dispatch('on_entity_manager_configure', $event);
         $config = $event->getArgument('configuration');
+        $eventManager = $event->getArgument('eventManager');
 
-        return EntityManager::create($connection, $config);
+        return EntityManager::create($connection, $config, $eventManager);
     }
 
 }
