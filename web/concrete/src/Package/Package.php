@@ -15,6 +15,8 @@ use Concrete\Core\Captcha\Library as SystemCaptchaLibrary;
 use Concrete\Core\Config\Repository\Liaison;
 use Concrete\Core\Conversation\Editor\Editor as ConversationEditor;
 use Concrete\Core\Conversation\Rating\Type as ConversationRatingType;
+use Concrete\Core\Database\EntityManagerFactory;
+use Concrete\Core\Database\EntityManagerFactoryInterface;
 use Concrete\Core\Database\Schema\Schema;
 use Concrete\Core\Editor\Snippet as SystemContentEditorSnippet;
 use Concrete\Core\Feature\Category\Category as FeatureCategory;
@@ -814,6 +816,14 @@ class Package extends Object
             $this->databaseStructureManager = Core::make('database/structure', $this->getEntityManager());
         }
         return $this->databaseStructureManager;
+    }
+
+    /**
+     * @return EntityManagerFactoryInterface
+     */
+    public function getEntityManagerFactory()
+    {
+        return new EntityManagerFactory($this->getPackageEntitiesPath());
     }
 
     /**
