@@ -46,7 +46,7 @@ class ValueInspector
         }
     }
 
-    protected function getItemObjectFromIndex($i, $reference)
+    public function getItemObjectFromIndex($i, $reference)
     {
         switch($i) {
             case 1:
