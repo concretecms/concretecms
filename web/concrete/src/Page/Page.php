@@ -1766,7 +1766,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         return $scc;
     }
 
-    public function getPageWrapperClass()
+    public function getPageWrapperClass($class = array())
     {
         $pt = $this->getPageTypeObject();
         
@@ -1784,6 +1784,12 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         if (is_object($ptm)) {
             $classes[] = 'page-template-'.str_replace('_', '-', $ptm->getPageTemplateHandle());
         }
+
+        if (is_string($class)) {
+            $class = explode(' ', $class);
+        }
+
+        $classes = array_merge($classes, $class);
 
         return implode(' ', $classes);
     }
