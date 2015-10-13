@@ -130,8 +130,10 @@ class File extends Controller
             throw new Exception(t("Unable to add files."));
         }
 
-        if (\Loader::helper('number')->getBytes(ini_get('post_max_size')) < $_SERVER['CONTENT_LENGTH']) {
-            throw new Exception(FileImporter::getErrorMessage(Importer::E_FILE_EXCEEDS_POST_MAX_FILE_SIZE));
+        if ($post_max_size = \Loader::helper('number')->getBytes(ini_get('post_max_size'))) {
+            if ($post_max_size < $_SERVER['CONTENT_LENGTH']) {
+                throw new Exception(FileImporter::getErrorMessage(Importer::E_FILE_EXCEEDS_POST_MAX_FILE_SIZE));
+            }
         }
 
         if (!Loader::helper('validation/token')->validate()) {
