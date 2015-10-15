@@ -387,6 +387,7 @@ class Controller extends AttributeTypeController
         }
 
         $i = 0;
+        $multiString = '';
         foreach ($optionQuery as $val) {
             $val = $db->quote('%||' . $val . '||%');
             $multiString .= 'REPLACE(ak_' . $this->attributeKey->getAttributeKeyHandle() . ', "\n", "||") like ' . $val . ' ';
