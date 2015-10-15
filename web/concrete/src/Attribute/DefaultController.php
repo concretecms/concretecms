@@ -23,6 +23,7 @@ class DefaultController extends AttributeTypeController
 
     public function form()
     {
+        $value = '';
         if (is_object($this->attributeValue)) {
             $value = Core::make('helper/text')->entities($this->getAttributeValue()->getValue());
         }
