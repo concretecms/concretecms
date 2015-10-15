@@ -341,7 +341,7 @@ abstract class Template extends Object
 
     public function getGatheringItemTemplateData(Item $item)
     {
-        $assignments = \Concrete\Core\Gathering\Feature\Assignment::getList($item);
+        $assignments = GatheringItemAssignment::getList($item);
         $data = array();
         foreach ($assignments as $as) {
             $fd = $as->getFeatureDetailObject();

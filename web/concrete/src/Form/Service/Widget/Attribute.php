@@ -30,6 +30,7 @@ class Attribute {
 			return false;
 		}
 
+        $value = null;
 		if (is_object($this->obj)) {
 			$value = $this->obj->getAttributeValueObject($obj);
 		}

@@ -41,7 +41,7 @@ class AddFileFileSetKey extends FileSetKey  {
 	
 	public function validate($extension = false) {
 		$extensions = $this->getAllowedFileExtensions();
-		if ($ext != false) {
+		if ($extension != false) {
 			return in_array($extension, $extensions);
 		} else {
 			return count($extensions) > 0;
