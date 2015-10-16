@@ -185,8 +185,10 @@ class Controller extends BlockController
             $as->load($page);
             $column->setAreaID($as->getAreaID());
             $area = $column->getAreaObject();
-            $set = StyleSet::import($columnNode->style);
-            $page->setCustomStyleSet($area, $set);               
+            if ($columnNode->style) {
+                $set = StyleSet::import($columnNode->style);
+                $page->setCustomStyleSet($area, $set);
+            }
             foreach ($columnNode->block as $bx) {
                 $bt = \BlockType::getByHandle($bx['type']);
                 if (!is_object($bt)) {
