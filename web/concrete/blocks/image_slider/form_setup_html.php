@@ -174,7 +174,7 @@ $tp = new TaskPermission();
         background: #dedede;
         border: 1px solid #cdcdcd;
         text-align: center;
-        vertical-align: center;
+        vertical-align: middle;
     }
 
     .ccm-pick-slide-image img {
