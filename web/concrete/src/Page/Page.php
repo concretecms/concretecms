@@ -1770,7 +1770,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     {
         $pt = $this->getPageTypeObject();
         
-        $view = $this->getController()->getViewObject();
+        $view = $this->getPageController()->getViewObject();
         if($view) {
             $ptm = $view->getPageTemplate();
         } else {
