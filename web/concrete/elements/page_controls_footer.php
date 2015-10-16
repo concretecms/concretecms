@@ -180,6 +180,9 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                     </ul>
                 </li>
                 <? } ?>
+                <li>
+                    <i class="fa fa-sign-out mobile-leading-icon"></i><a href="<?= URL::to('/login', 'logout', Loader::helper('validation/token')->generate('logout')); ?>"><?= t('Sign Out'); ?></a>
+                </li>
             </ul>
         </div>
     </div>
