@@ -41,7 +41,7 @@ class Color
 
         print "<input type=\"text\" name=\"{$inputName}\" value=\"{$value}\" id=\"ccm-colorpicker-{$inputName}\" />";
         print "<script type=\"text/javascript\">";
-        print "$(function () { $('#ccm-colorpicker-{$inputName}').spectrum({$strOptions}); })";
+        print "$(function () { var colorPickerSelector = '#ccm-colorpicker-{$inputName}'.replace( /(:|\\.|\\[|\\]|,)/g, \"\\\\$1\" ); $(colorPickerSelector).spectrum({$strOptions}); })";
         print "</script>";
     }
 
