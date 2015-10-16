@@ -118,7 +118,7 @@ $tp = new TaskPermission();
             var newSlide = $('.ccm-image-slider-entry').last();
             thisModal.scrollTop(newSlide.offset().top);
             newSlide.find('.redactor-content').redactor({
-                minHeight: '200',
+                minHeight: 200,
                 'concrete5': {
                     filemanager: <?=$fp->canAccessFileManager()?>,
                     sitemap: <?=$tp->canAccessSitemap()?>,
@@ -140,7 +140,7 @@ $tp = new TaskPermission();
         attachFileManagerLaunch($('.ccm-pick-slide-image'));
         $(function() {  // activate redactors
             $('.redactor-content').redactor({
-                minHeight: '200',
+                minHeight: 200,
                 'concrete5': {
                     filemanager: <?=$fp->canAccessFileManager()?>,
                     sitemap: <?=$tp->canAccessSitemap()?>,
