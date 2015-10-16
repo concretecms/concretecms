@@ -333,10 +333,9 @@ class Theme extends Object
     public function getStylesheet($stylesheet)
     {
         $stylesheet = $this->getStylesheetObject($stylesheet);
-        $style = $this->getThemeCustomStyleObject();
-        if (is_object($style)) {
-            $scl = $style->getValueList();
-            $stylesheet->setValueList($scl);
+        $styleValues = $this->getThemeCustomStyleObjectValues();
+        if (!is_null($styleValues)) {
+            $stylesheet->setValueList($styleValues);
         }
         if (!$this->isThemePreviewRequest()) {
             if (!$stylesheet->outputFileExists() || !Config::get('concrete.cache.theme_css')) {
@@ -367,6 +366,19 @@ class Theme extends Object
 
             return $o;
         }
+    }
+
+    /**
+     * Returns the value list of the custom style object if one exists.
+     * @return ValueList
+     */
+    public function getThemeCustomStyleObjectValues()
+    {
+        $style = $this->getThemeCustomStyleObject();
+        if (is_object($style)) {
+            return $style->getValueList();
+        }
+        return null;
     }
 
     public function setCustomStyleObject(
