@@ -13,6 +13,7 @@ use Concrete\Core\Area\Layout\Layout as AreaLayout;
 use Concrete\Core\Area\Layout\Preset\Preset as AreaLayoutPreset;
 use Concrete\Core\Area\Layout\CustomLayout as CustomAreaLayout;
 use Concrete\Core\Area\Layout\ThemeGridLayout as ThemeGridAreaLayout;
+use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 use Concrete\Core\Asset\CssAsset;
 use URL;
 use Page;
@@ -184,6 +185,8 @@ class Controller extends BlockController
             $as->load($page);
             $column->setAreaID($as->getAreaID());
             $area = $column->getAreaObject();
+            $set = StyleSet::import($columnNode->style);
+            $page->setCustomStyleSet($area, $set);               
             foreach ($columnNode->block as $bx) {
                 $bt = \BlockType::getByHandle($bx['type']);
                 if (!is_object($bt)) {
