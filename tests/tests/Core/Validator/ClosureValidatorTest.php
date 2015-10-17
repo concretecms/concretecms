@@ -6,6 +6,8 @@ class ClosureValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function testIsValid()
     {
+        $obj = $this;
+
         $error_mock = $this->getMock('Concrete\Core\Error\Error');
         $test_value = 'test';
         $ran = false;
@@ -13,10 +15,10 @@ class ClosureValidatorTest extends \PHPUnit_Framework_TestCase
         $closure_validator = null;
         $closure_validator = new \Concrete\Core\Validator\ClosureValidator(function(){}, function(){});
 
-        $closure_validator->setValidatorClosure(function($validator, $mixed, $error) use (&$closure_validator, $test_value, $error_mock, &$ran) {
-            $this->assertEquals($error_mock, $error);
-            $this->assertEquals($test_value, $mixed);
-            $this->assertEquals($validator, $closure_validator);
+        $closure_validator->setValidatorClosure(function($validator, $mixed, $error) use (&$closure_validator, $test_value, $error_mock, &$ran, $obj) {
+            $obj->assertEquals($error_mock, $error);
+            $obj->assertEquals($test_value, $mixed);
+            $obj->assertEquals($validator, $closure_validator);
 
             $ran = true;
             return true;
@@ -28,13 +30,14 @@ class ClosureValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function testRequirements()
     {
+        $obj = $this;
         $ran = false;
 
         $closure_validator = null;
         $closure_validator = new \Concrete\Core\Validator\ClosureValidator(function(){}, function(){});
 
-        $closure_validator->setRequirementsClosure(function($validator) use (&$closure_validator, &$ran) {
-            $this->assertEquals($validator, $closure_validator);
+        $closure_validator->setRequirementsClosure(function($validator) use (&$closure_validator, &$ran, $obj) {
+            $obj->assertEquals($validator, $closure_validator);
 
             $ran = true;
             return array('test');
