@@ -4,91 +4,62 @@ namespace tests\Core\Validator;
 class AbstractTranslatableValidatorTest extends \PHPUnit_Framework_TestCase
 {
 
-    protected function getMockValidator(\Closure $validation_closure)
-    {
-        // Mock the abstract translatable validator
-        $mock = $this->getMockForAbstractClass('\Concrete\Core\Validator\AbstractTranslatableValidator');
-
-        // Rebind closure to $mock's context
-        $closure = $validation_closure->bindTo($mock, $mock);
-
-        // Stub method
-        $mock->method('isValid')->will($this->returnCallback($closure));
-
-        return $mock;
-    }
-
     public function testClosureMessage()
     {
+        $obj = $this;
+
         $test_code = 5;
         $test_string = 'test';
 
-        $called = false;
-
-        $obj = $this;
-
-        $mock = $this->getMockValidator(function ($mixed) use ($obj) {
-            $obj->assertEquals('CLOSURE', $this->getErrorString(5, $mixed));
-            $obj->assertEquals('default', $this->getErrorString(1, $mixed, 'default'));
-        });
+        $mock = $this->getMockForAbstractClass('\Concrete\Core\Validator\AbstractTranslatableValidator');
+        $method = new \ReflectionMethod($mock, 'getErrorString');
+        $method->setAccessible(true);
 
         /** @type \Concrete\Core\Validator\AbstractTranslatableValidator $mock */
-        $mock->setErrorString(5, function ($validator, $code, $passed) use ($mock, $test_code, $test_string, &$called) {
-            $this->assertEquals($mock, $validator);
-            $this->assertEquals($code, $test_code);
-            $this->assertEquals($passed, $test_string);
-
-            $called = true;
+        $mock->setErrorString(5, function ($validator, $code, $passed) use ($mock, $test_code, $test_string, $obj) {
+            $obj->assertEquals($mock, $validator);
+            $obj->assertEquals($code, $test_code);
+            $obj->assertEquals($passed, $test_string);
 
             return 'CLOSURE';
         });
 
-        $mock->isValid($test_string);
-        $this->assertTrue($called);
+        $this->assertEquals('CLOSURE', $method->invokeArgs($mock, array(5, $test_string)));
     }
 
     public function testStringMessage()
     {
-        $obj = $this;
-        $called = false;
-        $mock = $this->getMockValidator(function($mixed) use ($obj, &$called) {
-            $obj->assertEquals('ERROR', $this->getErrorString(5, $mixed));
-            $called = true;
-        });
+        $mock = $this->getMockForAbstractClass('\Concrete\Core\Validator\AbstractTranslatableValidator');
+        $method = new \ReflectionMethod($mock, 'getErrorString');
+        $method->setAccessible(true);
 
         /** @type \Concrete\Core\Validator\AbstractTranslatableValidator $mock */
         $mock->setErrorString(5, 'ERROR');
 
-        $mock->isValid('false');
-        $this->assertTrue($called);
+        $this->assertEquals('ERROR',  $method->invokeArgs($mock, array(5, '')));
+        $this->assertEquals('default',  $method->invokeArgs($mock, array(1, '', 'default')));
     }
 
     public function testClosureRequirement()
     {
+        $obj = $this;
         $test_code = 5;
-        $called = false;
-
-        $mock = $this->getMockValidator(function() {
-
-        });
+        $mock = $this->getMockForAbstractClass('\Concrete\Core\Validator\AbstractTranslatableValidator');
 
         /** @type \Concrete\Core\Validator\AbstractTranslatableValidator $mock */
-        $mock->setRequirementString(5, function ($validator, $code) use ($mock, $test_code, &$called) {
-            $this->assertEquals($mock, $validator);
-            $this->assertEquals($code, $test_code);
-
-            $called = true;
+        $mock->setRequirementString(5, function ($validator, $code) use ($mock, $test_code, $obj) {
+            $obj->assertEquals($mock, $validator);
+            $obj->assertEquals($code, $test_code);
 
             return 'REQUIREMENT';
         });
 
         $this->assertEquals(array(5 => 'REQUIREMENT'), $mock->getRequirementStrings());
-        $this->assertTrue($called);
     }
 
     public function testStringRequirement()
     {
-        $mock = $this->getMockValidator(function(){});
+        $mock = $this->getMockForAbstractClass('\Concrete\Core\Validator\AbstractTranslatableValidator');
 
         /** @type \Concrete\Core\Validator\AbstractTranslatableValidator $mock */
         $mock->setRequirementString(5, 'REQUIREMENT');
@@ -100,7 +71,7 @@ class AbstractTranslatableValidatorTest extends \PHPUnit_Framework_TestCase
      */
     public function testInvalidErrorStringExpression()
     {
-        $mock = $this->getMockValidator(function(){});
+        $mock = $this->getMockForAbstractClass('\Concrete\Core\Validator\AbstractTranslatableValidator');
         $mock->setErrorString(5, $mock);
     }
 
@@ -109,8 +80,8 @@ class AbstractTranslatableValidatorTest extends \PHPUnit_Framework_TestCase
      */
     public function testInvalidRequirementStringExpression()
     {
-        $mock = $this->getMockValidator(function(){});
-        $mock->setErrorString(5, $mock);
+        $mock = $this->getMockForAbstractClass('\Concrete\Core\Validator\AbstractTranslatableValidator');
+        $mock->setRequirementString(5, $mock);
     }
 
 }
