@@ -25,7 +25,7 @@ for ($i = 0; $i < count($sets); $i++) {
 <section>
     <legend><?= $set->getBlockTypeSetDisplayName() ?></legend>
     <ul class="item-select-list">
-        <? $blockTypes = $types[$set->getBlockTypeSetName()];
+        <?php $blockTypes = isset($types[$set->getBlockTypeSetName()]) ? $types[$set->getBlockTypeSetName()] : array();
         foreach ($blockTypes as $bt) {
             $btIcon = $ci->getBlockTypeIconURL($bt);
             ?>
