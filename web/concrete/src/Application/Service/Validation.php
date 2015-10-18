@@ -47,11 +47,11 @@ class Validation
      * Returns true if this is a valid password.
      * @param string $pass
      * @return bool
+     * @deprecated Use `\Core::make('validator/password')->isValid($pass, $error);`
      */
     public function password($pass)
     {
-        $hu = \Core::make('helper/concrete/user');
-        return $hu->validNewPassword($pass);
+        return \Core::make('validator/password')->isValid($pass);
     }
 
     /**
