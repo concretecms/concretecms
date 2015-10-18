@@ -20,10 +20,9 @@ class MaximumLengthValidatorTest extends \PHPUnit_Framework_TestCase
     public function testErrorAdded()
     {
         $validator = new \Concrete\Core\Validator\String\MaximumLengthValidator(5);
-        $error = $this->getMock('Concrete\Core\Error\Error');
-        $error->expects($this->once())->method('add');
 
-        $this->assertFalse($validator->isValid('123456', $error));
+        $this->assertFalse($validator->isValid('123456', $error = new \ArrayObject));
+        $this->assertNotEmpty($error);
     }
 
     public function testInvalidInput()
