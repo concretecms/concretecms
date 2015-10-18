@@ -26,18 +26,42 @@ class PasswordValidatorServiceProvider extends Provider
             $minimum_length = $config->get('concrete.user.password.minimum', 5);
             $maximum_length = $config->get('concrete.user.password.maximum');
 
+            /** @type MinimumLengthValidator $minimum */
+            $minimum = null;
+            /** @type MaximumLengthValidator $maximum */
+            $maximum = null;
+
+            $error_closure = function($validator, $code, $password) use (&$minimum, &$maximum) {
+                if ($minimum && $maximum) {
+                    return t('A password must be between %s and %s characters long.',
+                        $minimum->getMinimumLength(),
+                        $maximum->getMaximumLength());
+                } elseif ($minimum) {
+                    return t('A password must be at least %s characters long.', $minimum->getMinimumLength());
+                } elseif ($maximum) {
+                    return t('A password can be at most %s characters long.', $maximum->getMaximumLength());
+                }
+
+                return t('Invalid password.');
+            };
+
+            $requirement_closure = function($validator, $code) use (&$minimum, &$maximum) {
+                if ($minimum && $maximum) {
+                    return t('Must be between %s and %s characters long.',
+                        $minimum->getMinimumLength(),
+                        $maximum->getMaximumLength());
+                } elseif ($minimum) {
+                    return t('Must be at least %s characters long.', $minimum->getMinimumLength());
+                } elseif ($maximum) {
+                    return t('Must be at most %s characters long.', $maximum->getMaximumLength());
+                }
+            };
+
             if ($minimum_length) {
                 $minimum = new MinimumLengthValidator($minimum_length);
 
-                // Set the requirement string
-                $minimum->setRequirementString($minimum::E_TOO_SHORT, function(MinimumLengthValidator $validator, $code) {
-                    return t('Password must be at least %s characters long.', $validator->getMinimumLength());
-                });
-
-                // Set the error string
-                $minimum->setErrorString($minimum::E_TOO_SHORT, function(MinimumLengthValidator $validator, $code, $passed) {
-                    return t('Password too short. Must be at least %s characters long.', $validator->getMinimumLength());
-                });
+                $minimum->setRequirementString($minimum::E_TOO_SHORT, $requirement_closure);
+                $minimum->setErrorString($minimum::E_TOO_SHORT, $error_closure);
 
                 $manager->setValidator('minimum_length', $minimum);
             }
@@ -45,15 +69,8 @@ class PasswordValidatorServiceProvider extends Provider
             if ($maximum_length) {
                 $maximum = new MaximumLengthValidator($maximum_length);
 
-                // Set the requirement string
-                $maximum->setRequirementString($maximum::E_TOO_LONG, function(MaximumLengthValidator $validator, $code) {
-                    return t('Password must be at most %s characters long.', $validator->getMaximumLength());
-                });
-
-                // Set the error string
-                $maximum->setErrorString($maximum::E_TOO_LONG, function(MaximumLengthValidator $validator, $code, $passed) {
-                    return t('Password too long. Must be at most %s characters long.', $validator->getMaximumLength());
-                });
+                $maximum->setRequirementString($maximum::E_TOO_LONG, $requirement_closure);
+                $maximum->setErrorString($maximum::E_TOO_LONG, $error_closure);
 
                 $manager->setValidator('maximum_length', $maximum);
             }
