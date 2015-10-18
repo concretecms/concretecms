@@ -28,7 +28,6 @@ class Register extends PageController {
 	}
 
 	public function do_register() {
-		$userHelper = Loader::helper('concrete/user');
 		$e = Loader::helper('validation/error');
 		$ip = Loader::helper('validation/ip');
 		$txt = Loader::helper('text');
@@ -42,7 +41,7 @@ class Register extends PageController {
 		// clean the username
 		$username = trim($username);
 		$username = preg_replace("/ +/", " ", $username);
-		
+
 		if ($ip->isBanned()) {
 			$e->add($ip->getErrorMessage());
 		}
@@ -89,17 +88,7 @@ class Register extends PageController {
 			$e->add(t('Invalid Username'));
 		}
 
-		/*
-		if ((strlen($password) < Config::get('concrete.user.password.minimum')) || (strlen($password) >  Config::get('concrete.user.password.maximum'))) {
-			$e->add(t('A password must be between %s and %s characters', Config::get('concrete.user.password.minimum'),  Config::get('concrete.user.password.maximum')));
-		}
-
-		if (strlen($password) >= Config::get('concrete.user.password.minimum') && !$valc->password($password)) {
-			$e->add(t('A password may not contain ", \', >, <, or any spaces.'));
-		}
-		*/
-
-		$userHelper->validNewPassword($password,$e);
+		\Core::make('validator/password')->isValid($password, $e);
 
 		if ($password) {
 			if ($password != $passwordConfirm) {
@@ -221,7 +210,7 @@ class Register extends PageController {
 					$mh->to($_POST['uEmail']);
 					$mh->load('user_register_approval_required_to_user');
 					$mh->sendMail();
-					
+
 					//$this->redirect('/register', 'register_pending', $rcID);
 					$redirectMethod='register_pending';
 					$this->set('message', $this->getRegisterPendingMsg());
@@ -243,7 +232,7 @@ class Register extends PageController {
 			$ip->logSignupRequest();
 			if ($ip->signupRequestThreshholdReached()) {
 				$ip->createIPBan();
-			}		
+			}
 			$this->set('error', $e);
 		}
 	}
