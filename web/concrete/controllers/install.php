@@ -316,8 +316,7 @@ class Install extends Controller
             $password = $_POST['uPassword'];
             $passwordConfirm = $_POST['uPasswordConfirm'];
 
-            $uh = Core::make('helper/concrete/user');
-            $uh->validNewPassword($password, $error);
+            Core::make('validator/password')->isValid($password, $error);
 
             if ($password) {
                 if ($password != $passwordConfirm) {
