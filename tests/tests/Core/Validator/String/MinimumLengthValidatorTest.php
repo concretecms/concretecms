@@ -20,10 +20,9 @@ class MinimumLengthValidatorTest extends \PHPUnit_Framework_TestCase
     public function testErrorAdded()
     {
         $validator = new \Concrete\Core\Validator\String\MinimumLengthValidator(5);
-        $error = $this->getMock('Concrete\Core\Error\Error');
-        $error->expects($this->once())->method('add');
 
-        $this->assertFalse($validator->isValid('1234', $error));
+        $this->assertFalse($validator->isValid('1234', $error = new \ArrayObject));
+        $this->assertNotEmpty($error);
     }
 
     public function testInvalidInput()

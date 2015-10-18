@@ -8,7 +8,7 @@ class ClosureValidatorTest extends \PHPUnit_Framework_TestCase
     {
         $obj = $this;
 
-        $error_mock = $this->getMock('Concrete\Core\Error\Error');
+        $error_mock = new \ArrayObject();
         $test_value = 'test';
         $ran = false;
 

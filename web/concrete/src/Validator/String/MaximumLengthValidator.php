@@ -63,7 +63,7 @@ class MaximumLengthValidator extends AbstractTranslatableValidator
     /**
      * Is this mixed value valid
      *
-     * @param mixed $mixed Can be any value
+     * @param mixed             $mixed Can be any value
      * @param \ArrayAccess|null $error
      * @return bool
      * @throws \InvalidArgumentException Invalid mixed value type passed.

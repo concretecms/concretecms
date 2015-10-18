@@ -39,7 +39,7 @@ interface ValidatorManagerInterface extends ValidatorInterface
     /**
      * Is this mixed value valid based on the added validators
      *
-     * @param mixed                           $mixed Can be any value
+     * @param mixed             $mixed Can be any value
      * @param \ArrayAccess|null $error The error object that will contain the error strings
      * @return bool
      * @throws \InvalidArgumentException Invalid mixed value type passed.
