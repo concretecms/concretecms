@@ -28,13 +28,13 @@ class MaximumLengthValidator extends AbstractTranslatableValidator
         $this->setRequirementString(self::E_TOO_LONG, function(MaximumLengthValidator$validator, $code) {
 
             return sprintf(
-                'Must be at most %i characters long.',
+                'Must be at most %s characters long.',
                 $validator->getMaximumLength());
         });
 
         $this->setErrorString(self::E_TOO_LONG, function(MaximumLengthValidator $validator, $code, $mixed) {
             return sprintf(
-                'String \"%s\" must be at most %i characters long.',
+                'String \"%s\" must be at most %s characters long.',
                 $mixed,
                 $validator->getMaximumLength());
         });
@@ -64,11 +64,11 @@ class MaximumLengthValidator extends AbstractTranslatableValidator
      * Is this mixed value valid
      *
      * @param mixed $mixed Can be any value
-     * @param \Concrete\Core\Error\Error|null $error
+     * @param \ArrayAccess|null $error
      * @return bool
      * @throws \InvalidArgumentException Invalid mixed value type passed.
      */
-    public function isValid($mixed, \Concrete\Core\Error\Error $error = null)
+    public function isValid($mixed, \ArrayAccess $error = null)
     {
         if (!is_string($mixed)) {
             throw new \InvalidArgumentException('Invalid type supplied to validator.');
@@ -76,7 +76,7 @@ class MaximumLengthValidator extends AbstractTranslatableValidator
 
         if ($this->getMaximumLength() < strlen($mixed)) {
             if ($error && $message = $this->getErrorString(self::E_TOO_LONG, $mixed)) {
-                $error->add($message);
+                $error[] = $message;
             }
 
             return false;

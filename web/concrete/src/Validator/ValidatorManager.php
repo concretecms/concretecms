@@ -65,11 +65,11 @@ class ValidatorManager implements ValidatorManagerInterface
      * Is this mixed value valid based on the added validators
      *
      * @param mixed $mixed Can be any value
-     * @param \Concrete\Core\Error\Error|null $error The error object that will contain the error strings
+     * @param \ArrayAccess|null $error The error object that will contain the error strings
      * @return bool
      * @throws \InvalidArgumentException Invalid mixed value type passed.
      */
-    public function isValid($mixed, \Concrete\Core\Error\Error $error = null)
+    public function isValid($mixed, \ArrayAccess $error = null)
     {
         $valid = true;
         foreach ($this->getValidators() as $validator) {
