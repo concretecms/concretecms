@@ -326,7 +326,9 @@ class Install extends Controller
             }
 
             if (is_object($this->fileWriteErrors)) {
-                $error = $this->fileWriteErrors;
+                foreach($this->fileWriteErrors->getList() as $msg) {
+                    $error->add($msg);
+                }
             }
 
             $error = $this->validateDatabase($error);
