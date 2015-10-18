@@ -28,13 +28,13 @@ class MinimumLengthValidator extends AbstractTranslatableValidator
         $this->setRequirementString(self::E_TOO_SHORT, function(MinimumLengthValidator$validator, $code) {
 
             return sprintf(
-                'Must be at least %i characters long.',
+                'Must be at least %s characters long.',
                 $validator->getMinimumLength());
         });
 
         $this->setErrorString(self::E_TOO_SHORT, function(MinimumLengthValidator $validator, $code, $mixed) {
             return sprintf(
-                'String \"%s\" must be at least %i characters long.',
+                'String \"%s\" must be at least %s characters long.',
                 $mixed,
                 $validator->getMinimumLength());
         });
@@ -63,12 +63,12 @@ class MinimumLengthValidator extends AbstractTranslatableValidator
     /**
      * Is this mixed value valid
      *
-     * @param mixed $mixed Can be any value
-     * @param \Concrete\Core\Error\Error|null $error
+     * @param mixed             $mixed Can be any value
+     * @param \ArrayAccess|null $error
      * @return bool
      * @throws \InvalidArgumentException Invalid mixed value type passed.
      */
-    public function isValid($mixed, \Concrete\Core\Error\Error $error = null)
+    public function isValid($mixed, \ArrayAccess $error = null)
     {
         if (!is_string($mixed)) {
             throw new \InvalidArgumentException('Invalid type supplied to validator.');
@@ -76,7 +76,7 @@ class MinimumLengthValidator extends AbstractTranslatableValidator
 
         if ($this->getMinimumLength() > strlen($mixed)) {
             if ($error && $message = $this->getErrorString(self::E_TOO_SHORT, $mixed)) {
-                $error->add($message);
+                $error[] = $message;
             }
 
             return false;

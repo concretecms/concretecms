@@ -47,13 +47,13 @@ class RegexValidator extends AbstractTranslatableValidator
     /**
      * Is this mixed value valid
      *
-     * @param mixed $mixed Can be any value
-     * @param \Concrete\Core\Error\Error|null $error
+     * @param mixed             $mixed Can be any value
+     * @param \ArrayAccess|null $error
      * @return bool
      * @throws \InvalidArgumentException Invalid mixed value type passed.
      * @throws \RuntimeException         Invalid regex pattern.
      */
-    public function isValid($mixed, \Concrete\Core\Error\Error $error = null)
+    public function isValid($mixed, \ArrayAccess $error = null)
     {
         if (!is_string($mixed)) {
             throw new \InvalidArgumentException('\Concrete\Core\Validator\String\TooShortValidator only validates string length');
@@ -66,7 +66,7 @@ class RegexValidator extends AbstractTranslatableValidator
 
         if (!$result) {
             if ($error && $message = $this->getErrorString(self::E_DOES_NOT_MATCH, $mixed)) {
-                $error->add($message);
+                $error[] = $message;
             }
 
             return false;
