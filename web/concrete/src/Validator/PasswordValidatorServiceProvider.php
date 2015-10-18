@@ -58,7 +58,7 @@ class PasswordValidatorServiceProvider extends Provider
             };
 
             if ($minimum_length) {
-                $minimum = new MinimumLengthValidator($minimum_length);
+                $minimum = $app->make('\Concrete\Core\Validator\String\MinimumLengthValidator', array($minimum_length));
 
                 $minimum->setRequirementString($minimum::E_TOO_SHORT, $requirement_closure);
                 $minimum->setErrorString($minimum::E_TOO_SHORT, $error_closure);
@@ -67,7 +67,7 @@ class PasswordValidatorServiceProvider extends Provider
             }
 
             if ($maximum_length) {
-                $maximum = new MaximumLengthValidator($maximum_length);
+                $maximum = $app->make('\Concrete\Core\Validator\String\MaximumLengthValidator', array($maximum_length));
 
                 $maximum->setRequirementString($maximum::E_TOO_LONG, $requirement_closure);
                 $maximum->setErrorString($maximum::E_TOO_LONG, $error_closure);
