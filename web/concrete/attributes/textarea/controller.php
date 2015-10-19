@@ -42,7 +42,6 @@ class Controller extends DefaultController
     {
         $this->load();
         $this->requireAsset('jquery/ui');
-        $this->requireAsset('redactor');
 
         if (is_object($this->attributeValue)) {
             $value = $this->getAttributeValue()->getValue();
