@@ -20,11 +20,11 @@ class RequestTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public static function  setUpBeforeClass() {
-		//clear the _SERVER variables so there are no weird bugs when testing
-		unset($_SERVER['ORIG_PATH_INFO']);
-		unset($_SERVER['PATH_INFO']);
-		unset($_SERVER['SCRIPT_NAME']);
-		unset($_SERVER['REDIRECT_URL']);
+		// do NOT clear the _SERVER variables so there are no weird bugs when testing
+		//unset($_SERVER['ORIG_PATH_INFO']);
+		//unset($_SERVER['PATH_INFO']);
+		//unset($_SERVER['SCRIPT_NAME']);
+		//unset($_SERVER['REDIRECT_URL']);
 	}
 
 	/**
