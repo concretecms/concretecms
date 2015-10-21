@@ -10,7 +10,7 @@ abstract class Type extends Object
 {
     abstract public function getPageTypeComposerControlObjects();
     abstract public function getPageTypeComposerControlByIdentifier($identifier);
-    abstract public function configureFromImport($node);
+    abstract public function configureFromImportHandle($handle);
 
     public function controlTypeSupportsOutputControl() {return false;}
     public function getPageTypeComposerControlTypeName() {return $this->ptComposerControlTypeName;}
