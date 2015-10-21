@@ -534,6 +534,10 @@ return array(
         'picturefill'              => array(
             array('javascript', 'js/picturefill.js', array('minify' => false))
         ),
+        'responsive-slides'              => array(
+            array('javascript', 'js/responsive-slides.js', array('minify' => false)),
+            array('css', 'css/responsive-slides.css', array('minify' => false))
+        ),
         'html5-shiv'              => array(
             array('javascript-conditional', 'js/ie/html5-shiv.js',
                 array('conditional' => 'lt IE 9')
@@ -748,6 +752,12 @@ return array(
                 array('javascript', 'dropzone'),
                 array('javascript-localized', 'dropzone'),
                 array('css', 'dropzone')
+            )
+        ),
+        'responsive-slides'                  => array(
+            array(
+                array('javascript', 'responsive-slides'),
+                array('css', 'responsive-slides')
             )
         ),
         'ace'         => array(
