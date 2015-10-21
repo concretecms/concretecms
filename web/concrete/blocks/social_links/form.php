@@ -17,7 +17,7 @@
                  checked
                 <? } ?>
             value="<?=$link->getID()?>" />
-            <?=$service->getName()?>
+            <?=$service->getDisplayName()?>
             </label>
 
             <i class="pull-right fa fa-arrows"></i>
