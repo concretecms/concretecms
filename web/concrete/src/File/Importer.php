@@ -207,9 +207,9 @@ class Importer
             $copied = false;
         }
         if (!$copied) {
-            $storage->write(
+            $storage->writeStream(
                 $cf->prefix($prefix, $sanitizedFilename),
-                $storage->read(REL_DIR_FILES_INCOMING . '/' . $filename)
+                $storage->readStream(REL_DIR_FILES_INCOMING . '/' . $filename)
             );
         }
 
