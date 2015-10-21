@@ -318,7 +318,7 @@ class Form
         if (is_string($requestValue)) {
             $value = $requestValue;
         }
-        $value = str_replace('"', '&#34;', $value);
+        $value = h($value);
 
         return "<input type=\"$type\" id=\"$key\" name=\"$key\" value=\"$value\"" . $this->parseMiscFields("form-control ccm-input-$type", $miscFields) . ' />';
     }
