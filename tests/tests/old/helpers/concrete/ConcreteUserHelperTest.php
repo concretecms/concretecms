@@ -23,7 +23,7 @@ class ConcreteUserHelperTest extends PHPUnit_Framework_TestCase {
      * This method is called after a test is executed.
      */
     protected function tearDown() {
-        
+
     }
 
 	 public function testObjectClass() {
@@ -34,17 +34,6 @@ class ConcreteUserHelperTest extends PHPUnit_Framework_TestCase {
      * @todo   Implement testGetOnlineNow().
      */
     public function testGetOnlineNow() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers ConcreteUserHelper::validNewPassword
-     * @todo   Implement testValidNewPassword().
-     */
-    public function testValidNewPassword() {
         // Remove the following lines when you implement this test.
         $this->markTestIncomplete(
                 'This test has not been implemented yet.'

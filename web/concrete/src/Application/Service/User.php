@@ -40,28 +40,11 @@ class User
      * @param string $password
      * @param null|\Concrete\Core\Error\Error $errorObj
      * @return bool
+     * @deprecated Use `\Core::make('validator/password')->isValid($password, $error);`
      */
     public function validNewPassword($password, $errorObj = null)
     {
-        $invalid = false;
-        if ((strlen($password) < Config::get('concrete.user.password.minimum')) || (strlen($password) >  Config::get('concrete.user.password.maximum'))) {
-            if ($errorObj) {
-                $errorObj->add(
-                    t(
-                        'A password must be between %s and %s characters',
-                        Config::get('concrete.user.password.minimum'),
-                        Config::get('concrete.user.password.maximum')
-                    )
-                );
-            }
-            $invalid=1;
-        }
-
-        if ($invalid) {
-            return false;
-        }
-
-        return true;
+        return \Core::make('validator/password')->isValid($password, $errorObj);
     }
 
     /**
