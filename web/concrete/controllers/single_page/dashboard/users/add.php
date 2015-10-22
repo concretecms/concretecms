@@ -78,14 +78,7 @@ class Add extends DashboardPageController {
 			$this->error->add(t('Invalid Username'));
 		}
 
-
-		if ((strlen($password) < Config::get('concrete.user.password.minimum')) || (strlen($password) >  Config::get('concrete.user.password.maximum'))) {
-			$this->error->add(t('A password must be between %s and %s characters',Config::get('concrete.user.password.minimum'), Config::get('concrete.user.password.maximum')));
-		}
-
-		if (strlen($password) >= Config::get('concrete.user.password.minimum') && !$valc->password($password)) {
-			$this->error->add(t('A password may not contain ", \', >, <, or any spaces.'));
-		}
+		\Core::make('validator/password')->isValid($password, $this->error);
 
 		if (!$valt->validate('submit')) {
 			$this->error->add($valt->getErrorMessage());
