@@ -57,7 +57,7 @@ class File extends Controller
                             $successCount);
                         break;
                 }
-            } catch (\Concrete\Flysystem\FileNotFoundException $e) {
+            } catch (\League\Flysystem\FileNotFoundException $e) {
                 $errorMessage .= t('File %s could not be found.', $fv->getFilename()) . '<br/>';
             }
         }

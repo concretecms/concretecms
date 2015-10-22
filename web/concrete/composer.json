@@ -5,17 +5,13 @@
     {
       "type": "vcs",
       "url": "https://github.com/mlocati/zendframework2-i18n-v3"
-    },
-    {
-      "type": "vcs",
-      "url": "https://github.com/concrete5/flysystem"
     }
   ],
   "config": {
     "optimize-autoloader": true
   },
   "require": {
-    "php": ">=5.3.3",
+    "php": ">=5.4.0",
     "doctrine/dbal": "2.5.*",
     "symfony/class-loader": "2.5.*",
     "symfony/http-foundation": "2.5.*",
@@ -23,7 +19,7 @@
     "symfony/http-kernel": "2.5.*",
     "doctrine/orm": "2.4.*",
     "doctrine/migrations": "v1.0.0-alpha3",
-    "concrete5/flysystem": "0.4.*",
+    "league/flysystem": "1.0.*",
     "symfony/event-dispatcher": "2.5.*",
     "symfony/serializer": "2.5.*",
     "illuminate/container": "4.1.*",
@@ -56,7 +52,7 @@
     "egulias/email-validator": "1.2.0",
     "punic/punic": "1.6.3",
     "tedivm/stash": "0.12.1",
-    "lusitanian/oauth": "~0.3",
+    "lusitanian/oauth": "0.8.*",
     "oryzone/oauth-user-data": "~1.0@dev",
     "mlocati/concrete5-translation-library": "1.4.2",
     "league/url": "3.3.*",

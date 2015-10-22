@@ -41,7 +41,7 @@ class StorageLocation
     {
         return $this->fslName;
     }
-    
+
     /** Returns the display name for this storage location (localized and escaped accordingly to $format)
     * @param string $format = 'html'
     *    Escape the result in html format (if $format is 'html').
@@ -152,12 +152,12 @@ class StorageLocation
     /**
      * Returns the proper file system object for the current storage location, by mapping
      * it through Flysystem
-     * @return \Concrete\Flysystem\Filesystem
+     * @return \League\Flysystem\Filesystem
      */
     public function getFileSystemObject()
     {
         $adapter = $this->fslConfiguration->getAdapter();
-        $filesystem = new \Concrete\Flysystem\Filesystem($adapter);
+        $filesystem = new \League\Flysystem\Filesystem($adapter);
         return $filesystem;
     }
 
