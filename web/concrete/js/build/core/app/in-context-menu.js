@@ -109,7 +109,7 @@
                 menuLauncherHoverClass = my.options.menuLauncherHoverClass,
                 $clickProxy = global.$clickProxy;
 
-            if (!global.enabled || global.activeMenu) {
+            if (!global.enabled || global.activeMenu || !ConcreteToolbar.isEnabled()) {
                 return false;
             }
 
