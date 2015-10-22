@@ -41,6 +41,20 @@ class UserList extends DatabaseItemList
      */
     protected $includeUnvalidatedUsers = false;
 
+    protected function setBaseQuery()
+    {
+        $sql = '';
+        if ($this->sortUserStatus) {
+            // When uStatus column is selected, we also get the "status" column for
+            // multilingual sorting purposes.
+            $sql =
+                ", CASE WHEN u.uIsActive = 1 THEN '" . t("Active") . "' " .
+                "WHEN u.uIsValidated = 1 AND u.uIsActive = 0 THEN '". t("Inactive") . "' " .
+                "ELSE '". t("Unvalidated") . "' END AS uStatus";
+        }
+        $this->setQuery('SELECT DISTINCT u.uID, u.uName' . $sql . ' FROM Users u ');
+    }
+
     /**
      * The total results of the query
      * @return int
@@ -129,6 +143,12 @@ class UserList extends DatabaseItemList
         $this->includeInactiveUsers();
         $this->query->andWhere('u.uIsActive = :uIsActive');
         $this->query->setParameter('uIsActive', $isActive);
+    }
+
+    public function sortByStatus($dir="asc")
+    {
+        $this->sortUserStatus = 1;
+        parent::sortBy('uStatus', $dir);
     }
 
     /**

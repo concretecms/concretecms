@@ -12,7 +12,6 @@ class Me extends DashboardPageController {
 	
 	public function on_start() {
 		parent::on_start();
-		$this->addHeaderItem("<script type=\"text/javascript\">$(function() { $('.dialog-launch').dialog();});</script>");
 		$this->categories = WorkflowProgressCategory::getList();
 		foreach($this->categories as $cat) {
 			$this->categoryHandles[] = $cat->getWorkflowProgressCategoryHandle();
@@ -43,11 +42,12 @@ class Me extends DashboardPageController {
 			$tabs[] = array(View::url('/dashboard/workflow/me/', 'view', $cat->getWorkflowProgressCategoryHandle()), $tabName, $active);
 		}
 		$this->set('tabs', $tabs);
+		$this->set('pageTitle', t('Waiting for Me'));
 	}
 	
 	public function view($wpCategoryHandle = false) {
 		if (in_array($wpCategoryHandle, $this->categoryHandles)) {
-			$this->wpCategoryHandleActive = $wpCategoryHandle;		
+			$this->wpCategoryHandleActive = $wpCategoryHandle;
 		}
 	}
 		
