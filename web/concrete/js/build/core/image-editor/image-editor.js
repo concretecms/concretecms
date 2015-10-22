@@ -794,6 +794,7 @@ im.fit = function (wh, scale) {
 if (settings.src) {
     im.showLoader(ccmi18n_imageeditor.loadingImage);
     var img = new Image(), controlSetsLoaded = false;
+    img.crossOrigin = 'anonymous';
     im.bind('ControlSetsLoaded', function () {
         controlSetsLoaded = true;
     });
