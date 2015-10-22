@@ -8,7 +8,7 @@ use Concrete\Core\User\Event\AddUser;
 use Concrete\Core\User\PrivateMessage\Limit;
 use Concrete\Core\User\PrivateMessage\Mailbox as UserPrivateMessageMailbox;
 use Imagine\Image\ImageInterface;
-use Concrete\Flysystem\AdapterInterface;
+use League\Flysystem\AdapterInterface;
 use Concrete\Core\Mail\Importer\MailImporter;
 use View;
 use Config;

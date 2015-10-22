@@ -4,7 +4,7 @@ namespace Concrete\Core\File;
 
 use Concrete\Core\File\ImportProcessor\ProcessorInterface;
 use Concrete\Core\File\StorageLocation\StorageLocation;
-use Concrete\Flysystem\AdapterInterface;
+use League\Flysystem\AdapterInterface;
 use Loader;
 use File as ConcreteFile;
 use Core;

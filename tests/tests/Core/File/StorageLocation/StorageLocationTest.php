@@ -54,7 +54,7 @@ class StorageLocationTest extends \FileStorageTestCase {
     {
         $location = $this->getStorageLocation();
         $filesystem = $location->getFileSystemObject();
-        $this->assertInstanceOf('\Concrete\Flysystem\Filesystem', $filesystem);
+        $this->assertInstanceOf('\League\Flysystem\Filesystem', $filesystem);
     }
 
     /**
