@@ -205,7 +205,6 @@ class Register extends PageController {
 					// Email to the user when he/she registered but needs approval
 					$mh = Loader::helper('mail');
 					$mh->addParameter('uEmail', $_POST['uEmail']);
-					$mh->addParameter('uHash', $uHash);
 					$mh->addParameter('site', Config::get('concrete.site'));
 					$mh->to($_POST['uEmail']);
 					$mh->load('user_register_approval_required_to_user');
@@ -229,10 +228,6 @@ class Register extends PageController {
 					$this->redirect('/register', $redirectMethod, $rcID);
 			}
 		} else {
-			$ip->logSignupRequest();
-			if ($ip->signupRequestThreshholdReached()) {
-				$ip->createIPBan();
-			}
 			$this->set('error', $e);
 		}
 	}
