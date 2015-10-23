@@ -170,7 +170,14 @@ class LinkAbstractor extends Object {
 	 * and expands them to urls suitable for the rich text editor.
 	 */
 	public static function translateFromEditMode($text) {
-		$app = \Core::make('app');
+        $text = preg_replace(
+            array(
+                '/{CCM:BASE_URL}/i'
+            ),
+            array(
+                \Core::getApplicationURL(),
+            ),
+            $text);
 
 		//page links...
 		$text = preg_replace(
