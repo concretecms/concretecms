@@ -109,6 +109,43 @@ class Controller extends AttributeTypeController
         }
     }
 
+    public function setAllowedMultipleValues($allow)
+    {
+        $db = Database::get();
+        $this->akSelectAllowMultipleValues = $allow;
+        $db->Replace('atSelectSettings', array(
+            'akID' => $this->attributeKey->getAttributeKeyID(),
+            'akSelectAllowMultipleValues' => intval($allow)
+        ), array('akID'), true);
+    }
+
+    public function setAllowOtherValues($allow)
+    {
+        $db = Database::get();
+        $this->akSelectAllowOtherValues = $allow;
+        $db->Replace('atSelectSettings', array(
+            'akID' => $this->attributeKey->getAttributeKeyID(),
+            'akSelectAllowOtherValues' => intval($allow)
+        ), array('akID'), true);
+    }
+
+    public function setOptionDisplayOrder($order)
+    {
+        $db = Database::get();
+        $this->akSelectOptionDisplayOrder = $order;
+        $db->Replace('atSelectSettings', array(
+            'akID' => $this->attributeKey->getAttributeKeyID(),
+            'akSelectOptionDisplayOrder' => $order
+        ), array('akID'), true);
+    }
+
+    public function setOptions($options)
+    {
+        foreach ($options as $option) {
+            Option::add($this->attributeKey, $option, 0);
+        }
+    }
+
     public function importKey($akey)
     {
         if (isset($akey->type)) {
