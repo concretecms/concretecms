@@ -45,6 +45,10 @@ PatchworkUTF8::initAll();
 $cms = require DIR_APPLICATION . '/bootstrap/start.php';
 $cms->instance('app', $cms);
 
+// Bind fully application qualified class names
+$cms->instance('Concrete\Core\Application\Application', $cms);
+$cms->instance('Illuminate\Container\Container', $cms);
+
 /**
  * ----------------------------------------------------------------------------
  * Bind the IOC container to our facades
