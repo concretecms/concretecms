@@ -216,7 +216,7 @@ class Key extends Object
         if (strcasecmp($name, 'getList') === 0) {
             return call_user_func_array("self::get", $arguments);
         }
-        trigger_error("Call to undefined method ".__CLASS__."::$name()");
+        trigger_error("Call to undefined method ".__CLASS__."::$name()", E_USER_ERROR);
     }
 
     /**
