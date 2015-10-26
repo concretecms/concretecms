@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Workflow\Request;
 
+use Concrete\Core\Workflow\Workflow;
 use Page;
 use PermissionKey;
 use Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
@@ -35,7 +36,7 @@ abstract class PageRequest extends Request
         $this->cvID = $cvID;
     }
 
-    public function addWorkflowProgress(\Workflow $wf)
+    public function addWorkflowProgress(Workflow $wf)
     {
         $pwp = PageWorkflowProgress::add($wf, $this);
         $r = $pwp->start();
