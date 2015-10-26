@@ -655,7 +655,7 @@ class StyleSet
     /**
      * @param $issID
      *
-     * @return \Concrete\Core\Page\Style\Set
+     * @return \Concrete\Core\StyleCustomizer\Set
      */
     public static function getByID($issID)
     {
