@@ -107,21 +107,21 @@ class FileKey extends Key
 
     public static function getList()
     {
-        return parent::getList('file');
+        return parent::get('file');
     }
 
     public static function getSearchableList()
     {
-        return parent::getList('file', array('akIsSearchable' => 1));
+        return parent::get('file', array('akIsSearchable' => 1));
     }
     public static function getSearchableIndexedList()
     {
-        return parent::getList('file', array('akIsSearchableIndexed' => 1));
+        return parent::get('file', array('akIsSearchableIndexed' => 1));
     }
 
     public static function getImporterList($fv = false)
     {
-        $list = parent::getList('file', array('akIsAutoCreated' => 1));
+        $list = parent::get('file', array('akIsAutoCreated' => 1));
         if ($fv == false) {
             return $list;
         }
@@ -139,7 +139,7 @@ class FileKey extends Key
 
     public static function getUserAddedList()
     {
-        return parent::getList('file', array('akIsAutoCreated' => 0));
+        return parent::get('file', array('akIsAutoCreated' => 0));
     }
 
     /**
@@ -181,7 +181,7 @@ class FileKey extends Key
 
     public static function getColumnHeaderList()
     {
-        return parent::getList('file', array('akIsColumnHeader' => 1));
+        return parent::get('file', array('akIsColumnHeader' => 1));
     }
 
     public function delete()

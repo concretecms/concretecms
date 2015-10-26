@@ -211,10 +211,18 @@ class Key extends Object
         return $this->getAttributeType();
     }
 
+    public static function __callstatic($name , $arguments)
+    {
+        if (strcasecmp($name, 'getList') === 0) {
+            return call_user_func_array("self::get", $arguments);
+        }
+        trigger_error("Call to undefined method ".__CLASS__."::$name()");
+    }
+
     /**
      * Returns a list of all attributes of this category.
      */
-    public static function getList($akCategoryHandle, $filters = array())
+    public static function get($akCategoryHandle, $filters = array())
     {
         $db = Database::connection();
         $pkgHandle = $db->fetchColumn(
@@ -271,7 +279,7 @@ class Key extends Object
         $categories = AttributeKeyCategory::getList();
         $axml = $xml->addChild('attributekeys');
         foreach ($categories as $cat) {
-            $attributes = static::getList($cat->getAttributeKeyCategoryHandle());
+            $attributes = static::get($cat->getAttributeKeyCategoryHandle());
             foreach ($attributes as $at) {
                 $at->export($axml);
             }

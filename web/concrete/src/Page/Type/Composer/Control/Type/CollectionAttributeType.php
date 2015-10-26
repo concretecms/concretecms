@@ -13,7 +13,7 @@ class CollectionAttributeType extends Type
     public function getPageTypeComposerControlObjects()
     {
         $objects = array();
-        $keys = AttributeKey::getList('collection');
+        $keys = AttributeKey::get('collection');
 
         foreach ($keys as $ak) {
             $ac = new CollectionAttributeControl();
