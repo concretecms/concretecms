@@ -62,23 +62,10 @@
             <div class="col-md-4">
                 <div class="controls">
 
-                    <input type="text" name="modernThumbBG" value="<?=$modernThumbBG?>" id="favicon-bgcolor" />
-                    <script type="text/javascript">
-                    $(function() {
-                        $('#favicon-bgcolor').spectrum({
-                            showInput: true,
-                            showInitial: true,
-                            preferredFormat: 'rgb',
-                            allowEmpty: true,
-                            className: 'ccm-widget-colorpicker',
-                            showAlpha: true,
-                            value: <?= $json->encode($modernThumbBG)?>,
-                            cancelText: <?= $json->encode(t('Cancel')) ?>,
-                            chooseText: <?= $json->encode(t('Choose')) ?>,
-                            clearText: <?=$json->encode(t('Clear Color Selection')) ?>
-                        });
-                    });
-                    </script>
+                    <?
+                    $widget = Core::make('helper/form/color');
+                    print $widget->output('modernThumbBG', $modernThumbBG);
+                    ?>
 
                 </div>
             </div>
