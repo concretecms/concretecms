@@ -1,26 +1,25 @@
 <?php
+
 namespace Concrete\Core\Attribute\Key;
 
-use \Concrete\Core\Foundation\Object;
-use \Concrete\Core\Attribute\Type as AttributeType;
-use \Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
-use \Concrete\Core\Database\Schema\Schema;
+use Concrete\Core\Foundation\Object;
+use Concrete\Core\Attribute\Type as AttributeType;
+use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
+use Concrete\Core\Database\Schema\Schema;
 use Gettext\Translations;
 use Loader;
 use Package;
-use CacheLocal;
 use Core;
 use User;
 use Database;
 use AttributeSet;
-use \Concrete\Core\Attribute\Value\Value as AttributeValue;
-use \Concrete\Core\Package\PackageList;
+use Concrete\Core\Attribute\Value\Value as AttributeValue;
+use Concrete\Core\Package\PackageList;
 use Concrete\Core\Attribute\Value\CollectionValue;
 use Whoops\Exception\ErrorException;
 
 class Key extends Object
 {
-
     protected $akID;
 
     public function getIndexedSearchTable()
@@ -34,7 +33,7 @@ class Key extends Object
     }
 
     /**
-     * Returns the name for this attribute key
+     * Returns the name for this attribute key.
      */
     public function getAttributeKeyName()
     {
@@ -45,6 +44,7 @@ class Key extends Object
      * @param string $format = 'html'
      *    Escape the result in html format (if $format is 'html').
      *    If $format is 'text' or any other value, the display name won't be escaped.
+     *
      * @return string
      */
     public function getAttributeKeyDisplayName($format = 'html')
@@ -60,7 +60,7 @@ class Key extends Object
     }
 
     /**
-     * Returns the handle for this attribute key
+     * Returns the handle for this attribute key.
      */
     public function getAttributeKeyHandle()
     {
@@ -68,16 +68,15 @@ class Key extends Object
     }
 
     /**
-     * Deprecated. Going to be replaced by front end display name
+     * Deprecated. Going to be replaced by front end display name.
      */
     public function getAttributeKeyDisplayHandle()
     {
         return Loader::helper('text')->unhandle($this->akHandle);
     }
 
-
     /**
-     * Returns the ID for this attribute key
+     * Returns the ID for this attribute key.
      */
     public function getAttributeKeyID()
     {
@@ -90,7 +89,7 @@ class Key extends Object
     }
 
     /**
-     * Returns whether the attribute key is searchable
+     * Returns whether the attribute key is searchable.
      */
     public function isAttributeKeySearchable()
     {
@@ -98,7 +97,7 @@ class Key extends Object
     }
 
     /**
-     * Returns whether the attribute key is internal
+     * Returns whether the attribute key is internal.
      */
     public function isAttributeKeyInternal()
     {
@@ -141,11 +140,12 @@ class Key extends Object
     {
         $class = explode('\\', get_class($this));
         $start = Loader::helper('text')->uncamelcase($class[count($class) - 1]);
+
         return substr($start, 0, strpos($start, '_key'));
     }
 
     /**
-     * Loads the required attribute fields for this instantiated attribute
+     * Loads the required attribute fields for this instantiated attribute.
      */
     protected function load($akIdentifier, $loadBy = 'akID')
     {
@@ -191,7 +191,7 @@ class Key extends Object
     }
 
     /**
-     * Returns an attribute type object
+     * Returns an attribute type object.
      */
     public function getAttributeType()
     {
@@ -199,7 +199,7 @@ class Key extends Object
     }
 
     /**
-     * Returns the attribute type handle
+     * Returns the attribute type handle.
      */
     public function getAttributeTypeHandle()
     {
@@ -213,7 +213,7 @@ class Key extends Object
     }
 
     /**
-     * Returns a list of all attributes of this category
+     * Returns a list of all attributes of this category.
      */
     public static function getList($akCategoryHandle, $filters = array())
     {
@@ -348,7 +348,7 @@ class Key extends Object
                     'akIsInternal' => $akIsInternal,
                     'akIsSearchableIndexed' => $ak['indexed'],
                     'akIsAutoCreated' => 1,
-                    'akIsSearchable' => $ak['searchable']
+                    'akIsSearchable' => $ak['searchable'],
                 ),
                 $pkg
             );
@@ -361,7 +361,6 @@ class Key extends Object
      */
     protected static function add($akCategoryHandle, $type, $args, $pkg = false)
     {
-
         $vn = Loader::helper('validation/numbers');
         $txt = Loader::helper('text');
         if (!is_object($type)) {
@@ -389,7 +388,6 @@ class Key extends Object
         if (!isset($akName)) {
             throw new ErrorException('No Attribute Key name set.');
         }
-
 
         if (isset($akIsSearchable) && $akIsSearchable != 0) {
             $_akIsSearchable = 1;
@@ -422,7 +420,7 @@ class Key extends Object
             $_akIsEditable,
             $atID,
             $akCategoryID,
-            $pkgID
+            $pkgID,
         );
         $r = $db->query(
             "insert into AttributeKeys (akHandle, akName, akIsSearchable, akIsSearchableIndexed, akIsInternal, akIsAutoCreated, akIsEditable, atID, akCategoryID, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
@@ -463,7 +461,6 @@ class Key extends Object
 
     public function refreshCache()
     {
-
     }
 
     /**
@@ -530,7 +527,7 @@ class Key extends Object
     }
 
     /**
-     * Duplicates an attribute key
+     * Duplicates an attribute key.
      */
     public function duplicate($args = array())
     {
@@ -644,7 +641,7 @@ class Key extends Object
                 $fields[] = array(
                     'name' => 'ak_' . $this->akHandle,
                     'type' => $definition['type'],
-                    'options' => $definition['options']
+                    'options' => $definition['options'],
                 );
             }
         } else {
@@ -653,7 +650,7 @@ class Key extends Object
                     $fields[] = array(
                         'name' => 'ak_' . $this->akHandle . '_' . $name,
                         'type' => $column['type'],
-                        'options' => $column['options']
+                        'options' => $column['options'],
                     );
                 }
             }
@@ -693,7 +690,6 @@ class Key extends Object
         $db->Execute('delete from AttributeSetKeys where akID = ?', array($this->getAttributeKeyID()));
 
         if ($this->getIndexedSearchTable()) {
-
             $definition = $cnt->getSearchIndexFieldDefinition();
             $prefix = $this->akHandle;
             $sm = $db->getSchemaManager();
@@ -724,7 +720,6 @@ class Key extends Object
                 }
             }
         }
-
     }
 
     public function getAttributeValueIDList()
@@ -741,7 +736,7 @@ class Key extends Object
     }
 
     /**
-     * Adds a generic attribute record (with this type) to the AttributeValues table
+     * Adds a generic attribute record (with this type) to the AttributeValues table.
      */
     public function addAttributeValue()
     {
@@ -795,7 +790,7 @@ class Key extends Object
      * NOTE: this code is screwy because all code ever written that EXTENDS this code creates an attribute value object and passes it in, like
      * this code implies. But if you call this code directly it passes the object that you're messing with (Page, User, etc...) in as the $attributeValue
      * object, which is obviously not right. So we're going to do a little procedural if/then checks in this to ensure we're passing the right
-     * stuff
+     * stuff.
      *
      * @param CollectionValue|mixed $mixed
      * @param mixed $passedValue
@@ -826,11 +821,11 @@ class Key extends Object
 
     public function __destruct()
     {
-
     }
 
     /**
      * Validates the request object to see if the current request fulfills the "requirement" portion of an attribute.
+     *
      * @return bool|\Concrete\Core\Error\Error
      */
     public function validateAttributeForm()
@@ -918,7 +913,7 @@ class Key extends Object
     }
 
     /**
-     * Returns the handle for this attribute key
+     * Returns the handle for this attribute key.
      */
     public function getKeyHandle()
     {
@@ -926,7 +921,7 @@ class Key extends Object
     }
 
     /**
-     * Returns the ID for this attribute key
+     * Returns the ID for this attribute key.
      */
     public function getKeyID()
     {
@@ -942,7 +937,7 @@ class Key extends Object
             $key = static::getInstanceByID($row['akID']);
             $translations->insert('AttributeKeyName', $key->getAttributeKeyName());
         }
+
         return $translations;
     }
-
 }
