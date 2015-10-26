@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Attribute\Key;
 
-use Loader;
+use Database;
 use CacheLocal;
 use Concrete\Core\Attribute\Value\ValueList as AttributeValueList;
 use Concrete\Core\Attribute\Value\CollectionValue as CollectionAttributeValue;
@@ -29,8 +29,8 @@ class CollectionKey extends Key
      */
     public static function getAttributes($cID, $cvID, $method = 'getValue')
     {
-        $db = Loader::db();
-        $values = $db->GetAll("select akID, avID from CollectionAttributeValues where cID = ? and cvID = ?", array($cID, $cvID));
+        $db = Database::connection();
+        $values = $db->fetchAll("select akID, avID from CollectionAttributeValues where cID = ? and cvID = ?", array($cID, $cvID));
         $avl = new AttributeValueList();
         foreach ($values as $val) {
             $ak = static::getByID($val['akID']);
@@ -115,7 +115,7 @@ class CollectionKey extends Key
         // otherwise generate new IDs
         $av = $nvc->getAttributeValueObject($this, true);
         parent::saveAttribute($av, $value);
-        $db = Loader::db();
+        $db = Database::connection();
         $v = array($nvc->getCollectionID(), $nvc->getVersionID(), $this->getAttributeKeyID(), $av->getAttributeValueID());
         $db->Replace('CollectionAttributeValues', array(
             'cID' => $nvc->getCollectionID(),
@@ -147,11 +147,11 @@ class CollectionKey extends Key
     public function delete()
     {
         parent::delete();
-        $db = Loader::db();
-        $r = $db->Execute('select avID from CollectionAttributeValues where akID = ?', array($this->getAttributeKeyID()));
+        $db = Database::connection();
+        $r = $db->executeQuery('select avID from CollectionAttributeValues where akID = ?', array($this->getAttributeKeyID()));
         while ($row = $r->FetchRow()) {
-            $db->Execute('delete from AttributeValues where avID = ?', array($row['avID']));
+            $db->executeQuery('delete from AttributeValues where avID = ?', array($row['avID']));
         }
-        $db->Execute('delete from CollectionAttributeValues where akID = ?', array($this->getAttributeKeyID()));
+        $db->executeQuery('delete from CollectionAttributeValues where akID = ?', array($this->getAttributeKeyID()));
     }
 }
