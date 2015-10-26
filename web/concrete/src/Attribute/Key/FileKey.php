@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Attribute\Key;
 
-use Loader;
+use Database;
 use CacheLocal;
 use Concrete\Core\Attribute\Value\ValueList as AttributeValueList;
 use Concrete\Core\Attribute\Value\FileValue as FileAttributeValue;
@@ -33,8 +33,8 @@ class FileKey extends Key
      */
     public static function getAttributes($fID, $fvID, $method = 'getValue')
     {
-        $db = Loader::db();
-        $values = $db->GetAll("select akID, avID from FileAttributeValues where fID = ? and fvID = ?", array($fID, $fvID));
+        $db = Database::connection();
+        $values = $db->fetchAll("select akID, avID from FileAttributeValues where fID = ? and fvID = ?", array($fID, $fvID));
         $avl = new AttributeValueList();
         foreach ($values as $val) {
             $ak = static::getByID($val['akID']);
@@ -67,9 +67,9 @@ class FileKey extends Key
         }
 
         $ak = -1;
-        $db = Loader::db();
+        $db = Database::connection();
         $q = "SELECT ak.akID FROM AttributeKeys ak INNER JOIN AttributeKeyCategories akc ON ak.akCategoryID = akc.akCategoryID  WHERE ak.akHandle = ? AND akc.akCategoryHandle = 'file'";
-        $akID = $db->GetOne($q, array($akHandle));
+        $akID = $db->fetchColumn($q, array($akHandle));
         if ($akID > 0) {
             $ak = self::getByID($akID);
         } else {
@@ -126,9 +126,9 @@ class FileKey extends Key
             return $list;
         }
         $list2 = array();
-        $db = Loader::db();
+        $db = Database::connection();
         foreach ($list as $l) {
-            $r = $db->GetOne('select count(akID) from FileAttributeValues where fID = ? and fvID = ? and akID = ?', array($fv->getFileID(), $fv->getFileVersionID(), $l->getAttributeKeyID()));
+            $r = $db->fetchColumn('select count(akID) from FileAttributeValues where fID = ? and fvID = ? and akID = ?', array($fv->getFileID(), $fv->getFileVersionID(), $l->getAttributeKeyID()));
             if ($r > 0) {
                 $list2[] = $l;
             }
@@ -156,7 +156,7 @@ class FileKey extends Key
         // otherwise generate new IDs
         $av = $f->getAttributeValueObject($this, true);
         parent::saveAttribute($av, $value);
-        $db = Loader::db();
+        $db = Database::connection();
         $db->Replace('FileAttributeValues', array(
             'fID' => $f->getFileID(),
             'fvID' => $f->getFileVersionID(),
@@ -187,11 +187,11 @@ class FileKey extends Key
     public function delete()
     {
         parent::delete();
-        $db = Loader::db();
-        $r = $db->Execute('select avID from FileAttributeValues where akID = ?', array($this->getAttributeKeyID()));
+        $db = Database::connection();
+        $r = $db->executeQuery('select avID from FileAttributeValues where akID = ?', array($this->getAttributeKeyID()));
         while ($row = $r->FetchRow()) {
-            $db->Execute('delete from AttributeValues where avID = ?', array($row['avID']));
+            $db->executeQuery('delete from AttributeValues where avID = ?', array($row['avID']));
         }
-        $db->Execute('delete from FileAttributeValues where akID = ?', array($this->getAttributeKeyID()));
+        $db->executeQuery('delete from FileAttributeValues where akID = ?', array($this->getAttributeKeyID()));
     }
 }

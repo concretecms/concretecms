@@ -385,11 +385,12 @@ class Category extends Object
         if (is_object($pkg)) {
             $pkgID = $pkg->getPackageID();
         }
-        Database::connection()->executeQuery(
+        $db = Database::connection();
+        $db->executeQuery(
             'INSERT INTO AttributeKeyCategories (akCategoryHandle, akCategoryAllowSets, pkgID) values (?, ?, ?)',
             array($akCategoryHandle, $akCategoryAllowSets, $pkgID)
         );
-        $id = Database::connection()->lastInsertId();
+        $id = $db->lastInsertId();
         $txt = Core::make('helper/text');
         $prefix = ($pkgID > 0) ? $pkg->getPackageHandle() : false;
         $class = core_class('Core\\Attribute\\Key\\' . $txt->camelcase($akCategoryHandle) . 'Key', $prefix);

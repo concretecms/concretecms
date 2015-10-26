@@ -26,7 +26,7 @@ class UserKey extends Key
     public static function getAttributes($uID, $method = 'getValue')
     {
         $db = Database::connection();
-        $values = $db->GetAll("select avID, akID from UserAttributeValues where uID = ?", array($uID));
+        $values = $db->fetchAll("select avID, akID from UserAttributeValues where uID = ?", array($uID));
         $avl = new AttributeValueList();
         foreach ($values as $val) {
             $ak = static::getByID($val['akID']);
@@ -87,7 +87,7 @@ class UserKey extends Key
 			INNER JOIN AttributeKeyCategories akc ON ak.akCategoryID = akc.akCategoryID
 			WHERE ak.akHandle = ?
 			AND akc.akCategoryHandle = 'user'";
-        $akID = $db->GetOne($q, array($akHandle));
+        $akID = $db->fetchColumn($q, array($akHandle));
         if ($akID > 0) {
             $ak = static::getByID($akID);
         }
@@ -175,14 +175,14 @@ class UserKey extends Key
     {
         $db = Database::connection();
         $this->refreshCache();
-        $db->Execute('update UserAttributeKeys set uakIsActive = 1 where akID = ?', array($this->akID));
+        $db->executeQuery('update UserAttributeKeys set uakIsActive = 1 where akID = ?', array($this->akID));
     }
 
     public function deactivate()
     {
         $db = Database::connection();
         $this->refreshCache();
-        $db->Execute('update UserAttributeKeys set uakIsActive = 0 where akID = ?', array($this->akID));
+        $db->executeQuery('update UserAttributeKeys set uakIsActive = 0 where akID = ?', array($this->akID));
     }
 
     public static function getList()
@@ -252,13 +252,13 @@ class UserKey extends Key
         }
 
         $db = Database::connection();
-        $displayOrder = $db->GetOne('select max(displayOrder) from UserAttributeKeys');
+        $displayOrder = $db->fetchColumn('select max(displayOrder) from UserAttributeKeys');
         if (!$displayOrder) {
             $displayOrder = 0;
         }
         ++$displayOrder;
         $v = array($ak->getAttributeKeyID(), $uakProfileDisplay, $uakMemberListDisplay, $uakProfileEdit, $uakProfileEditRequired, $uakRegisterEdit, $uakRegisterEditRequired, $displayOrder, $uakIsActive);
-        $db->Execute('insert into UserAttributeKeys (akID, uakProfileDisplay, uakMemberListDisplay, uakProfileEdit, uakProfileEditRequired, uakRegisterEdit, uakRegisterEditRequired, displayOrder, uakIsActive) values (?, ?, ?, ?, ?, ?, ?, ?, ?)', $v);
+        $db->executeQuery('insert into UserAttributeKeys (akID, uakProfileDisplay, uakMemberListDisplay, uakProfileEdit, uakProfileEditRequired, uakRegisterEdit, uakRegisterEditRequired, displayOrder, uakIsActive) values (?, ?, ?, ?, ?, ?, ?, ?, ?)', $v);
 
         $nak = new static();
         $nak->load($ak->getAttributeKeyID());
@@ -292,19 +292,19 @@ class UserKey extends Key
         }
         $db = Database::connection();
         $v = array($uakProfileDisplay, $uakMemberListDisplay, $uakProfileEdit, $uakProfileEditRequired, $uakRegisterEdit, $uakRegisterEditRequired, $ak->getAttributeKeyID());
-        $db->Execute('update UserAttributeKeys set uakProfileDisplay = ?, uakMemberListDisplay = ?, uakProfileEdit= ?, uakProfileEditRequired = ?, uakRegisterEdit = ?, uakRegisterEditRequired = ? where akID = ?', $v);
+        $db->executeQuery('update UserAttributeKeys set uakProfileDisplay = ?, uakMemberListDisplay = ?, uakProfileEdit= ?, uakProfileEditRequired = ?, uakRegisterEdit = ?, uakRegisterEditRequired = ? where akID = ?', $v);
     }
 
     public function delete()
     {
         parent::delete();
         $db = Database::connection();
-        $db->Execute('delete from UserAttributeKeys where akID = ?', array($this->getAttributeKeyID()));
-        $r = $db->Execute('select avID from UserAttributeValues where akID = ?', array($this->getAttributeKeyID()));
+        $db->executeQuery('delete from UserAttributeKeys where akID = ?', array($this->getAttributeKeyID()));
+        $r = $db->executeQuery('select avID from UserAttributeValues where akID = ?', array($this->getAttributeKeyID()));
         while ($row = $r->FetchRow()) {
-            $db->Execute('delete from AttributeValues where avID = ?', array($row['avID']));
+            $db->executeQuery('delete from AttributeValues where avID = ?', array($row['avID']));
         }
-        $db->Execute('delete from UserAttributeValues where akID = ?', array($this->getAttributeKeyID()));
+        $db->executeQuery('delete from UserAttributeValues where akID = ?', array($this->getAttributeKeyID()));
     }
 
     public static function getColumnHeaderList()
@@ -404,7 +404,7 @@ class UserKey extends Key
             $uak = static::getByID($uats[$i]);
             $uak->refreshCache();
             $v = array($uats[$i]);
-            $db->query("update UserAttributeKeys set displayOrder = {$i} where akID = ?", $v);
+            $db->executeQuery("update UserAttributeKeys set displayOrder = {$i} where akID = ?", $v);
         }
     }
 }
