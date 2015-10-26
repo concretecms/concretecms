@@ -18,6 +18,10 @@ if (isset($blockClasses[$b->getBlockTypeHandle()])) {
     $customClasses = $blockClasses[$b->getBlockTypeHandle()];
 }
 
+if(isset($blockClasses['*'])) {
+    $customClasses = array_unique(array_merge($customClasses, $blockClasses['*']));
+}
+
 $enableBlockContainer = -1;
 if ($pt->supportsGridFramework() && $b->overrideBlockTypeContainerSettings()) {
     $enableBlockContainer = $b->enableBlockContainer();
