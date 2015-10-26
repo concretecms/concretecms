@@ -45,16 +45,16 @@ class CollectionKey extends Key
 
     public static function getColumnHeaderList()
     {
-        return parent::getList('collection', array('akIsColumnHeader' => 1));
+        return parent::get('collection', array('akIsColumnHeader' => 1));
     }
     public static function getSearchableIndexedList()
     {
-        return parent::getList('collection', array('akIsSearchableIndexed' => 1));
+        return parent::get('collection', array('akIsSearchableIndexed' => 1));
     }
 
     public static function getSearchableList()
     {
-        return parent::getList('collection', array('akIsSearchable' => 1));
+        return parent::get('collection', array('akIsSearchable' => 1));
     }
 
     public function getAttributeValue($avID, $method = 'getValue')
@@ -105,7 +105,7 @@ class CollectionKey extends Key
 
     public static function getList()
     {
-        return parent::getList('collection');
+        return parent::get('collection');
     }
 
     protected function saveAttribute($nvc, $value = false)
