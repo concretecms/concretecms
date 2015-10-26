@@ -66,7 +66,7 @@ EOL;
 		$form = Loader::helper('form');
 		$valt = Loader::helper('validation/token');
 		$token = $valt->generate('quick_user_select_' . $key);
-		$html .= "
+		$html = "
 		<style type=\"text/css\">
 		ul.ui-autocomplete {position:absolute; list-style:none; }
 		ul.ui-autocomplete li.ui-menu-item { margin-left:0; padding:2px;}

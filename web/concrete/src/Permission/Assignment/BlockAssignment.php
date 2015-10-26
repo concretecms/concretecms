@@ -77,9 +77,8 @@ class BlockAssignment extends Assignment
         $db = Database::connection();
         if ($this->permissionObjectToCheck instanceof Block) {
             $co = $this->permissionObjectToCheck->getBlockCollectionObject();
-            $arHandle = $this->permissionObjectToCheck->getAreaHandle();
             $paID = $db->GetOne(
-                'select paID from BlockPermissionAssignments where cID = ? and cvID = ? and bID = ? and pkID = ? ' . $filterString,
+                'select paID from BlockPermissionAssignments where cID = ? and cvID = ? and bID = ? and pkID = ? ',
                 array(
                     $co->getCollectionID(),
                     $co->getVersionID(),

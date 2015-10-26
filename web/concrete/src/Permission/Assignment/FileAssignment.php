@@ -40,7 +40,7 @@ class FileAssignment extends Assignment
             }
             $inheritedPKID = $db->GetOne('select pkID from PermissionKeys where pkHandle = ?', array($this->inheritedPermissions[$this->pk->getPermissionKeyHandle()]));
             $r = $db->GetCol(
-                'select distinct paID from FileSetPermissionAssignments where fsID in (' . implode(',', $sets) . ') and pkID = ? ' . $filterString,
+                'select distinct paID from FileSetPermissionAssignments where fsID in (' . implode(',', $sets) . ') and pkID = ? ',
                 array(
                     $inheritedPKID,
                 )

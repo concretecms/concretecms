@@ -32,12 +32,12 @@ class ItemList {
 		return $this->queryStringSortDirectionVariable;
 	}
 
-	protected function getStickySearchNameSpace() {
+	protected function getStickySearchNameSpace($namespace = '') {
 		return get_class($this) . $namespace . 'SearchFields';
 	}
 
 	public function resetSearchRequest($namespace = '') {
-		Session::set($this->getStickySearchNameSpace(), array());
+		Session::set($this->getStickySearchNameSpace($namespace), array());
 	}
 
 	public function addToSearchRequest($key, $value) {
@@ -227,6 +227,7 @@ class ItemList {
 		$summary = $this->getSummary();
 		$paginator = $this->getPagination($script, $additionalVars);
 		if ($summary->pages > 1) {
+            $html = '';
 			$html .= '<div class="ccm-search-results-pagination"><ul class="pagination">';
 			$prevClass = 'prev';
 			$nextClass = 'next';
