@@ -1,15 +1,15 @@
 <?php
+
 namespace Concrete\Core\Attribute\Key;
 
 use Core;
-use \Concrete\Core\Foundation\Object;
-use \Concrete\Core\Attribute\Set as AttributeSet;
-use \Concrete\Core\Package\PackageList;
+use Concrete\Core\Foundation\Object;
+use Concrete\Core\Attribute\Set as AttributeSet;
+use Concrete\Core\Package\PackageList;
 use Database;
 
 class Category extends Object
 {
-
     protected $akCategoryID;
     protected $akCategoryHandle;
     protected $akCategoryAllowSets;
@@ -18,7 +18,6 @@ class Category extends Object
     const ASET_ALLOW_NONE = 0;
     const ASET_ALLOW_SINGLE = 1;
     const ASET_ALLOW_MULTIPLE = 2;
-
 
     /**
      * @return int The attribute category unique numeric identifier
@@ -63,6 +62,7 @@ class Category extends Object
 
     /**
      * @param int $akCategoryID
+     *
      * @return self|null Returns an AttributeKeyCategory object for the given ID or null if no category exists with that ID
      */
     public static function getByID($akCategoryID)
@@ -78,13 +78,16 @@ class Category extends Object
             /** @var self $akc */
             $akc = new static();
             $akc->setPropertiesFromArray($row);
+
             return $akc;
         }
+
         return null;
     }
 
     /**
      * @param string $akCategoryHandle
+     *
      * @return self|null Returns an AttributeKeyCategory object for the given category handle or null if no category exists with that handle
      */
     public static function getByHandle($akCategoryHandle)
@@ -100,18 +103,22 @@ class Category extends Object
             /** @var self $akc */
             $akc = new static();
             $akc->setPropertiesFromArray($row);
+
             return $akc;
         }
+
         return null;
     }
 
     /**
      * @param string $akHandle
+     *
      * @return bool Returns true if the handle already is in use for the category, false if is not yet in use
      */
     public function handleExists($akHandle)
     {
         $db = Database::connection();
+
         return $db->fetchColumn(
             'select count(akID) from AttributeKeys where akHandle = ? and akCategoryID = ?',
             array($akHandle, $this->akCategoryID)
@@ -119,7 +126,7 @@ class Category extends Object
     }
 
     /**
-     * This function appends a list of attribute categories to the supplied SimpleXMLElement node
+     * This function appends a list of attribute categories to the supplied SimpleXMLElement node.
      *
      * @param \SimpleXMLElement $xml
      */
@@ -137,6 +144,7 @@ class Category extends Object
 
     /**
      * @param string $akHandle
+     *
      * @return Key|false Returns an attribute key for the matching handle,
      * false if no key exists for the category with the given handle
      */
@@ -149,16 +157,17 @@ class Category extends Object
         $ak = call_user_func(
             array(
                 $className,
-                'getByHandle'
+                'getByHandle',
             ),
             $akHandle
         );
+
         return $ak;
     }
 
-
     /**
      * @param int $akID
+     *
      * @return Key|false Returns an attribute key for the matching ID,
      * false if no key exists for the category with the given ID
      */
@@ -171,10 +180,11 @@ class Category extends Object
         $ak = call_user_func(
             array(
                 $className,
-                'getByID'
+                'getByID',
             ),
             $akID
         );
+
         return $ak;
     }
 
@@ -194,14 +204,16 @@ class Category extends Object
             WHERE asID IS NULL AND akIsInternal = 0 AND akCategoryID = ?',
             array($this->akCategoryID)
         );
-        foreach($unassignedAttributeKeys AS $row) {
+        foreach ($unassignedAttributeKeys as $row) {
             $keys[] = $cat->getAttributeKeyByID($row['akID']);
         }
+
         return $keys;
     }
 
     /**
      * @param \Package $pkg A Concrete5 Package object
+     *
      * @return array
      */
     public static function getListByPackage($pkg)
@@ -214,14 +226,15 @@ class Category extends Object
             ORDER BY akCategoryID ASC',
             array($pkg->getPackageID())
         );
-        foreach($categories AS $cat) {
+        foreach ($categories as $cat) {
             $list[] = static::getByID($cat['akCategoryID']);
         }
+
         return $list;
     }
 
     /**
-     * This function will set the setting which determines if the category allows for sets or not
+     * This function will set the setting which determines if the category allows for sets or not.
      *
      * @param int $val This value should be one of the Category::ASET_ALLOW_* constants
      */
@@ -249,24 +262,27 @@ class Category extends Object
             array($this->akCategoryID)
         );
         $attributeSets = array();
-        foreach($sets AS $set) {
-
+        foreach ($sets as $set) {
             $attributeSets[] = AttributeSet::getByID($set['asID']);
         }
+
         return $attributeSets;
     }
-	
-	/**
-     * @param string $asHandle
-     * @return AttributeSet Returns an AttributeSet object for the current category or null if no set exists with that handle
-     */
-	public function getAttributeSetByHandle($asHandle) {
-		$attributeSet = AttributeSet::getByHandle($asHandle, $this->akCategoryID);
-		return $attributeSet;
-	}
 
     /**
-     * Sets the Attribute Key Column Headers to false for all Attribute Keys in the category
+     * @param string $asHandle
+     *
+     * @return AttributeSet Returns an AttributeSet object for the current category or null if no set exists with that handle
+     */
+    public function getAttributeSetByHandle($asHandle)
+    {
+        $attributeSet = AttributeSet::getByHandle($asHandle, $this->akCategoryID);
+
+        return $attributeSet;
+    }
+
+    /**
+     * Sets the Attribute Key Column Headers to false for all Attribute Keys in the category.
      */
     public function clearAttributeKeyCategoryColumnHeaders()
     {
@@ -279,7 +295,7 @@ class Category extends Object
     }
 
     /**
-     * Associates the given attribute type with the current attribute category
+     * Associates the given attribute type with the current attribute category.
      *
      * @param \Concrete\Core\Attribute\Type $at
      */
@@ -295,6 +311,7 @@ class Category extends Object
 
     /**
      * @param \Concrete\Core\Attribute\Type $at An attribute type object
+     *
      * @return bool True if the attribute type is associated with the current attribute category, false if not
      */
     public function hasAttributeKeyTypeAssociated($at)
@@ -305,11 +322,12 @@ class Category extends Object
             WHERE atID = ? AND akCategoryID = ?',
             array($at->getAttributeTypeID(), $this->akCategoryID)
         );
+
         return $atCount > 0;
     }
 
     /**
-     * Removes all associated attribute types from the current category
+     * Removes all associated attribute types from the current category.
      */
     public function clearAttributeKeyCategoryTypes()
     {
@@ -322,7 +340,7 @@ class Category extends Object
     /**
      * Removes the attribute category and the association records for category types. Additionally, this will
      * unset any Category Column Headers from attribute keys where these were set for this category and will rescan
-     * the set display order
+     * the set display order.
      *
      * This function will not remove attribute types or keys, only the associations to these.
      */
@@ -347,9 +365,10 @@ class Category extends Object
             'SELECT akCategoryID
             FROM AttributeKeyCategories
             ORDER BY akCategoryID ASC');
-        foreach($categoryIDs AS $catID) {
+        foreach ($categoryIDs as $catID) {
             $cats[] = static::getByID($catID['akCategoryID']);
         }
+
         return $cats;
     }
 
@@ -357,6 +376,7 @@ class Category extends Object
      * @param string $akCategoryHandle The handle string for the category
      * @param int $akCategoryAllowSets This should be an attribute Category::ASET_ALLOW_* constant
      * @param bool|\Package $pkg The package object that the category belongs to, false if it does not belong to a package
+     *
      * @return self|null Returns the category object if it was added successfully, or null if it failed to be added
      */
     public static function add($akCategoryHandle, $akCategoryAllowSets = 0, $pkg = false)
@@ -374,7 +394,7 @@ class Category extends Object
         $prefix = ($pkgID > 0) ? $pkg->getPackageHandle() : false;
         $class = core_class('Core\\Attribute\\Key\\' . $txt->camelcase($akCategoryHandle) . 'Key', $prefix);
         /** @var \Concrete\Core\Attribute\Key\Key $obj This is really a specific category key object*/
-        $obj = new $class;
+        $obj = new $class();
         $obj->createIndexedSearchTable();
 
         return static::getByID($id);
@@ -385,6 +405,7 @@ class Category extends Object
      * @param string $asName The attribute set name
      * @param bool|\Package $pkg The package object to associate the set with or false if it does not belong to a package
      * @param int $asIsLocked
+     *
      * @return null|AttributeSet Returns the AttribueSet object if it was created successfully, null if it could not be
      * created (usually due to the category not allowing sets)
      */
@@ -407,7 +428,7 @@ class Category extends Object
                     'SELECt MAX(asDisplayOrder) FROM AttributeSets WHERE akCategoryID = ?',
                     array($this->akCategoryID)
                 );
-                $asDisplayOrder++;
+                ++$asDisplayOrder;
             }
 
             $db->executeQuery(
@@ -419,8 +440,10 @@ class Category extends Object
             $id = $db->lastInsertId();
 
             $as = AttributeSet::getByID($id);
+
             return $as;
         }
+
         return null;
     }
 
@@ -439,30 +462,29 @@ class Category extends Object
             array($this->getAttributeKeyCategoryID())
         );
         $displayOrder = 0;
-        foreach($categoryAttributeSetIDs AS $setID) {
+        foreach ($categoryAttributeSetIDs as $setID) {
             $db->executeQuery(
                 'UPDATE AttributeSetKeys SET displayOrder = ? WHERE asID = ?',
                 array($displayOrder, $setID['asID'])
             );
-            $displayOrder++;
+            ++$displayOrder;
         }
     }
 
     /**
      * This takes in array of attribute set ID's and reorders those ID's starting from 0 based on the order of the
-     * array provided
+     * array provided.
      *
      * @param array $asIDs An array of Attribute Set ID's to be re-ordered starting at
      */
     public function updateAttributeSetDisplayOrder($asIDs)
     {
         $db = Database::connection();
-        for ($i = 0; $i < count($asIDs); $i++) {
+        for ($i = 0; $i < count($asIDs); ++$i) {
             $db->executeQuery(
                 "UPDATE AttributeSets SET asDisplayOrder = {$i} WHERE akCategoryID = ? AND asID = ?",
                 array($this->getAttributeKeyCategoryID(), $asIDs[$i])
             );
         }
     }
-
 }
