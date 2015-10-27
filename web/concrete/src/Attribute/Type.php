@@ -125,7 +125,6 @@ class Type extends Object
         if (method_exists($this->controller, 'deleteType')) {
             $this->controller->deleteType();
         }
-
         $db->Execute("delete from AttributeTypes where atID = ?", array($this->atID));
         $db->Execute("delete from AttributeTypeCategories where atID = ?", array($this->atID));
     }
@@ -169,7 +168,6 @@ class Type extends Object
 
     public static function getByHandle($atHandle)
     {
-
         // Handle legacy handles
         switch ($atHandle) {
             case 'date':
