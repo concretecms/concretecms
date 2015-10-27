@@ -187,7 +187,7 @@ class UserKey extends Key
 
     public static function getList()
     {
-        $list = parent::get('user');
+        $list = parent::getAttributeKeyList('user');
         usort($list, function ($a, $b) {
             if ($a->getAttributeKeyDisplayOrder() == $b->getAttributeKeyDisplayOrder()) {
                 return 0;
@@ -309,27 +309,27 @@ class UserKey extends Key
 
     public static function getColumnHeaderList()
     {
-        return parent::get('user', array('akIsColumnHeader' => 1));
+        return parent::getAttributeKeyList('user', array('akIsColumnHeader' => 1));
     }
 
     public static function getEditableList()
     {
-        return parent::get('user', array('akIsEditable' => 1));
+        return parent::getAttributeKeyList('user', array('akIsEditable' => 1));
     }
 
     public static function getSearchableList()
     {
-        return parent::get('user', array('akIsSearchable' => 1));
+        return parent::getAttributeKeyList('user', array('akIsSearchable' => 1));
     }
 
     public static function getSearchableIndexedList()
     {
-        return parent::get('user', array('akIsSearchableIndexed' => 1));
+        return parent::getAttributeKeyList('user', array('akIsSearchableIndexed' => 1));
     }
 
     public static function getImporterList()
     {
-        return parent::get('user', array('akIsAutoCreated' => 1));
+        return parent::getAttributeKeyList('user', array('akIsAutoCreated' => 1));
     }
 
     public static function getPublicProfileList()
@@ -394,7 +394,7 @@ class UserKey extends Key
 
     public static function getUserAddedList()
     {
-        return parent::get('user', array('akIsAutoCreated' => 0));
+        return parent::getAttributeKeyList('user', array('akIsAutoCreated' => 0));
     }
 
     public static function updateAttributesDisplayOrder($uats)
