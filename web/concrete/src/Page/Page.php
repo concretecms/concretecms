@@ -380,8 +380,11 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         }
 
         $update_query .= ' '.implode(' ', $when_statements).' END WHERE bID in ('.
-            implode(',', array_pad(array(), count($block_order), '?')).')';
-        $db->execute($update_query, array_merge($update_values, $block_order));
+            implode(',', array_pad(array(), count($block_order), '?')).') AND cID = ? AND cvID = ?';
+        $values = array_merge($update_values, $block_order);
+        $values = array_merge($values, array($this->getCollectionID(), $this->getVersionID()));
+
+        $db->execute($update_query, $values);
     }
 
     /**
