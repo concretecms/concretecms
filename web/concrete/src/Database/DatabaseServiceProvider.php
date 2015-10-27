@@ -29,7 +29,9 @@ class DatabaseServiceProvider extends ServiceProvider
         $this->app->bind('database/orm', 'Concrete\Core\Database\DatabaseManagerORM');
 
         // Bind the structure manager
-        $this->app->bind('database/structure', 'Concrete\Core\Database\DatabaseStructureManager');
+        $this->app->bind('database/structure', function($app, $em) {
+            return $app->make('Concrete\Core\Database\DatabaseStructureManager', (array)$em);
+        });
 
         // Set the EntityManagerInterface to the default entitymanger
         $this->app->bind('Doctrine\ORM\EntityManagerInterface', function(Application $app) {
