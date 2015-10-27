@@ -2,14 +2,15 @@
 
 namespace Concrete\Core\Attribute;
 
-use Loader;
+use Core;
+use Database;
 
 class PendingType extends Type
 {
 
     public static function getList()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $atHandles = $db->GetCol("select atHandle from AttributeTypes");
 
         $dh = Loader::helper('file');
@@ -28,7 +29,7 @@ class PendingType extends Type
 
     public static function getByHandle($atHandle)
     {
-        $th = Loader::helper('text');
+        $th = Core::make('helper/text');
         if (file_exists(DIR_APPLICATION . '/' . DIRNAME_ATTRIBUTES . '/' .  $atHandle)) {
             $at = new static();
             $at->atID = 0;
