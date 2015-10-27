@@ -76,12 +76,14 @@
                 },
                 start: function() {
                     errors = [];
-                    $('#ccm-file-upload-progress-wrapper').remove();
                     $('<div />', {'id': 'ccm-file-upload-progress-wrapper'}).html(my._templateFileProgress({'progress': 100})).appendTo(document.body);
                     $.fn.dialog.open({
                         title: ccmi18n_filemanager.uploadProgress,
                         width: 400,
                         height: 50,
+                        onClose: function($dialog) {
+                            $dialog.jqdialog('destroy').remove();
+                        },
                         element: $('#ccm-file-upload-progress-wrapper'),
                         modal: true
                     });
