@@ -181,7 +181,7 @@ class Key extends Object
     public static function getInstanceByID($akID)
     {
         $db = Database::connection();
-        $akCategoryID = $db->fetchColumn('select akCategoryID from AttributeKeys where akID = ?', (array)$akID);
+        $akCategoryID = $db->fetchColumn('select akCategoryID from AttributeKeys where akID = ?', (array) $akID);
         if ($akCategoryID > 0) {
             $akc = AttributeKeyCategory::getByID($akCategoryID);
 
@@ -211,10 +211,10 @@ class Key extends Object
         return $this->getAttributeType();
     }
 
-    public static function __callstatic($name , $arguments)
+    public static function __callstatic($name, $arguments)
     {
         if (strcasecmp($name, 'getList') === 0) {
-            return call_user_func_array("self::get", $arguments);
+            return call_user_func_array('self::getAttributeKeyList', $arguments);
         }
         trigger_error("Call to undefined method ".__CLASS__."::$name()", E_USER_ERROR);
     }
@@ -222,7 +222,7 @@ class Key extends Object
     /**
      * Returns a list of all attributes of this category.
      */
-    public static function get($akCategoryHandle, $filters = array())
+    public static function getAttributeKeyList($akCategoryHandle, $filters = array())
     {
         $db = Database::connection();
         $pkgHandle = $db->fetchColumn(
@@ -279,7 +279,7 @@ class Key extends Object
         $categories = AttributeKeyCategory::getList();
         $axml = $xml->addChild('attributekeys');
         foreach ($categories as $cat) {
-            $attributes = static::get($cat->getAttributeKeyCategoryHandle());
+            $attributes = static::getAttributeKeyList($cat->getAttributeKeyCategoryHandle());
             foreach ($attributes as $at) {
                 $at->export($axml);
             }
@@ -938,7 +938,7 @@ class Key extends Object
     public static function exportTranslations()
     {
         $translations = new Translations();
-        $db = \Database::get();
+        $db = Database::get();
         $r = $db->executeQuery('select akID from AttributeKeys order by akID asc', array());
         while ($row = $r->FetchRow()) {
             $key = static::getInstanceByID($row['akID']);
