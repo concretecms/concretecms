@@ -21,6 +21,7 @@ use Whoops\Exception\ErrorException;
  * Base class for attribute keys.
  * 
  * @method static Key[] getList(string $akCategoryHandle, $filters = array()) Deprecated method. Use Key::getAttributeKeyList instead.
+ * @method static Key|null add(string $akCategoryHandle, AttributeType|string$type, array $args, \Concrete\Core\Package\Package|false $pkg = false) Deprecated method. Use Key::addAttributeKey instead.
  */
 class Key extends Object
 {
@@ -221,6 +222,9 @@ class Key extends Object
         if (strcasecmp($name, 'getList') === 0) {
             return call_user_func_array('self::getAttributeKeyList', $arguments);
         }
+        if (strcasecmp($name, 'add') === 0) {
+            return call_user_func_array('self::addAttributeKey', $arguments);
+        }
         trigger_error("Call to undefined method ".__CLASS__."::$name()", E_USER_ERROR);
     }
 
@@ -351,7 +355,7 @@ class Key extends Object
             array($ak['handle'], $akc->getAttributeKeyCategoryID()));
 
         if (!$akID) {
-            $akn = self::add(
+            $akn = self::addAttributeKey(
                 $akCategoryHandle,
                 $type,
                 array(
@@ -371,7 +375,7 @@ class Key extends Object
     /**
      * Adds an attribute key.
      */
-    protected static function add($akCategoryHandle, $type, $args, $pkg = false)
+    protected static function addAttributeKey($akCategoryHandle, $type, $args, $pkg = false)
     {
         $vn = Core::make('helper/validation/numbers');
         $txt = Core::make('helper/text');
