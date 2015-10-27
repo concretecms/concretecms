@@ -537,9 +537,9 @@ class Controller extends AttributeTypeController
             $column = 'ak_' . $this->attributeKey->getAttributeKeyHandle();
             $qb = $list->getQueryObject();
             $qb->andWhere(
-                $qb->expr()->like($column, ':optionValue')
+	            $qb->expr()->like($column, ':optionValue_' . $this->attributeKey->getAttributeKeyID())
             );
-            $qb->setParameter('optionValue', "%\n" . $option->getSelectAttributeOptionValue() . "\n%");
+	        $qb->setParameter('optionValue_' . $this->attributeKey->getAttributeKeyID(), "%\n" . $option->getSelectAttributeOptionValue() . "\n%");
         }
     }
 
