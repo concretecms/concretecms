@@ -179,7 +179,7 @@ class Update
         $cms->clearCaches();
 
         $em = ORM::entityManager('core');
-        $dbm = Core::make('database/structure', $em);
+        $dbm = Core::make('database/structure', array($em));
         $dbm->destroyProxyClasses('ConcreteCore');
         $dbm->generateProxyClasses();
 
