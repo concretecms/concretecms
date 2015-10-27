@@ -17,6 +17,11 @@ use Concrete\Core\Package\PackageList;
 use Concrete\Core\Attribute\Value\CollectionValue;
 use Whoops\Exception\ErrorException;
 
+/**
+ * Base class for attribute keys.
+ * 
+ * @method static Key[] getList(string $akCategoryHandle, $filters = array()) Deprecated method. Use Key::getAttributeKeyList instead.
+ */
 class Key extends Object
 {
     protected $akID;
@@ -211,7 +216,7 @@ class Key extends Object
         return $this->getAttributeType();
     }
 
-    public static function __callstatic($name, $arguments)
+    public static function __callStatic($name, $arguments)
     {
         if (strcasecmp($name, 'getList') === 0) {
             return call_user_func_array('self::getAttributeKeyList', $arguments);
