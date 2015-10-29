@@ -500,7 +500,8 @@ return array(
     'file_manager' => array(
 
         'images' => array(
-            'use_exim_data_to_rotate_images' => false
+            'use_exim_data_to_rotate_images' => false,
+            'use_imagick_if_available' => true
         )
 
     ),
