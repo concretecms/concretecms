@@ -7,7 +7,8 @@ class Image extends Facade
     public static function getFacadeAccessor()
     {
 
-        if (class_exists('Imagick')) {
+        $use_imagick = \Config::get('concrete.file_manager.images.use_imagick_if_available');
+        if (class_exists('Imagick') && $use_imagick) {
             try {
                 $imagick = new \Imagick();
                 $v = $imagick->getVersion();
