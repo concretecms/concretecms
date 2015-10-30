@@ -24,8 +24,6 @@ class Controller extends BlockController
     protected $btSupportsInlineEdit = true;
     protected $btTable = 'btCoreAreaLayout';
     protected $btIsInternal = true;
-    protected $btCacheBlockRecord = true;
-    protected $btCacheSettingsInitialized = false;
 
     public function getBlockTypeDescription()
     {
@@ -326,73 +324,6 @@ class Controller extends BlockController
         $this->set('maxColumns', $maxColumns);
         $this->requireAsset('core/style-customizer');
     }
-    protected function setupCacheSettings()
-    {
-        if ($this->btCacheSettingsInitialized || Page::getCurrentPage()->isEditMode()) {
-            return;
-        }
 
-        $this->btCacheSettingsInitialized = true;
 
-        //Block cache settings are only as good as the weakest cached item inside. So loop through and check.
-        $btCacheBlockOutput = true;
-        $btCacheBlockOutputOnPost = true;
-        $btCacheBlockOutputLifetime = 0;
-
-        $b = $this->getBlockObject();
-        $a = $b->getBlockAreaObject();
-        $this->arLayout = $this->getAreaLayoutObject();
-
-        if (is_object($this->arLayout)) {
-            $this->arLayout->setAreaObject($a);
-            $columns = $this->arLayout->getAreaLayoutColumns();
-
-            foreach ($columns as $column) {
-                $sa = $column->getSubAreaObject();
-                $blocks = $sa->getAreaBlocksArray();
-
-                foreach ($blocks as $b) {
-                    $btCacheBlockOutput = $btCacheBlockOutput && $b->cacheBlockOutput();
-
-                    //As soon as we find something which cannot be cached, entire area cannot be cached, so stop checking.
-                    if (!$btCacheBlockOutput) {
-                        return;
-                    }
-
-                    $btCacheBlockOutputOnPost = $btCacheBlockOutputOnPost && $b->cacheBlockOutputOnPost();
-
-                    if ($expires = $b->getBlockOutputCacheLifetime()) {
-                        if ($expires && $btCacheBlockOutputLifetime < $expires) {
-                            $btCacheBlockOutputLifetime = $expires;
-                        }
-                    }
-                }
-            }
-        }
-
-        $this->btCacheBlockOutput = $btCacheBlockOutput;
-        $this->btCacheBlockOutputOnPost = $btCacheBlockOutputOnPost;
-        $this->btCacheBlockOutputLifetime = $btCacheBlockOutputLifetime;
-    }
-
-    public function cacheBlockOutput()
-    {
-        $this->setupCacheSettings();
-
-        return $this->btCacheBlockOutput;
-    }
-
-    public function cacheBlockOutputOnPost()
-    {
-        $this->setupCacheSettings();
-
-        return $this->btCacheBlockOutputOnPost;
-    }
-
-    public function getBlockTypeCacheOutputLifetime()
-    {
-        $this->setupCacheSettings();
-
-        return $this->btCacheBlockOutputLifetime;
-    }
 }
