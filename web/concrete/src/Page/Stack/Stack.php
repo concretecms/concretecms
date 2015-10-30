@@ -77,14 +77,7 @@ class Stack extends Page
                 $ms = false;
                 $detector = Core::make('multilingual/detector');
                 if ($detector->isEnabled()) {
-                    if ($multilingualContentSource == self::MULTILINGUAL_CONTENT_SOURCE_DEFAULT) {
-                        $ms = Section::getDefaultSection();
-                    } else {
-                        $ms = Section::getBySectionOfSite($c);
-                        if (!is_object($ms)) {
-                            $ms = $detector->getPreferredSection();
-                        }
-                    }
+                    $ms = Stack::getMultilingualSectionFromType($multilingualContentSource);
                 }
 
                 if (is_object($ms)) {
@@ -128,20 +121,12 @@ class Stack extends Page
         return $stack->getPageTypeHandle() == STACKS_PAGE_TYPE;
     }
 
-    /**
-     * @param string $stackName
-     * @param int    $type
-     *
-     * @return Page
-     */
-    public static function addStack($stackName, $type = 0)
+
+    private function addStackToCategory(\Concrete\Core\Page\Page $parent, $name, $type = 0)
     {
         $data = array();
-
-        $parent = Page::getByPath(STACKS_PAGE_PATH);
-        $data = array();
-        $data['name'] = $stackName;
-        if (!$stackName) {
+        $data['name'] = $name;
+        if (!$name) {
             $data['name'] = t('No Name');
         }
         $pagetype = PageType::getByHandle(STACKS_PAGE_TYPE);
@@ -153,27 +138,60 @@ class Stack extends Page
         // finally we add the row to the stacks table
         $db = Database::connection();
         $stackCID = $page->getCollectionID();
-        $v = array($stackName, $stackCID, $type);
+        $v = array($name, $stackCID, $type);
         $db->Execute('insert into Stacks (stName, cID, stType) values (?, ?, ?)', $v);
 
         $stack = static::getByID($stackCID);
+        return $stack;
+    }
 
-        // If the multilingual add-on is enabled, we need to take this stack and copy it into all non-default stack categories.
+    protected function getMultilingualSectionFromType($type)
+    {
+        $detector = Core::make('multilingual/detector');
+        if ($type == self::MULTILINGUAL_CONTENT_SOURCE_DEFAULT) {
+            $ms = Section::getDefaultSection();
+        } else {
+            $c = \Page::getCurrentPage();
+            $ms = Section::getBySectionOfSite($c);
+            if (!is_object($ms)) {
+                $ms = $detector->getPreferredSection();
+            }
+        }
+        return $ms;
+    }
+
+    /**
+     * @param string $stackName
+     * @param int    $type
+     *
+     * @return Page
+     */
+    public static function addStack($stackName, $type = 0, $multilingualStackToReturn = self::MULTILINGUAL_CONTENT_SOURCE_CURRENT)
+    {
+        $return = false;
+        $db = \Database::connection();
         if (Core::make('multilingual/detector')->isEnabled()) {
+            $returnFromSection = Stack::getMultilingualSectionFromType($multilingualStackToReturn);
             $list = Section::getList();
             foreach ($list as $section) {
-                if (!$section->isDefaultMultilingualSection()) {
+                $cID = $db->GetOne('select cID from Stacks where stName = ? and stMultilingualSection = ?', array($stackName, $section->getCollectionID()));
+                if (!$cID) {
                     $category = StackCategory::getCategoryFromMultilingualSection($section);
                     if (!is_object($category)) {
                         $category = StackCategory::createFromMultilingualSection($section);
                     }
-                    $stack->duplicate($category->getPage());
+                    $stack = Stack::addStackToCategory($category->getPage(), $stackName, $type);
+                    if (is_object($returnFromSection) && $returnFromSection->getCollectionID() == $section->getCollectionID()) {
+                        $return = $stack;
+                    }
                 }
             }
             StackList::rescanMultilingualStacks();
+        } else {
+            $parent = \Page::getByPath(STACKS_PAGE_PATH);
+            $return = Stack::addStackToCategory($parent, $stackName, $type);
         }
-
-        return $stack;
+        return $return;
     }
 
     /**
