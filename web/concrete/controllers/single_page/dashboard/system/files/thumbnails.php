@@ -38,14 +38,19 @@ class Thumbnails extends DashboardPageController {
     protected function validateThumbnailRequest()
     {
         $request = \Request::getInstance();
-        $val = Loader::helper('validation/strings');
+        $valStrings = Loader::helper('validation/strings');
+        $valNumbers = Loader::helper('validation/numbers');
 
-        if (!$val->notempty($request->request->get('ftTypeName'))) {
+        if (!$valStrings->notempty($request->request->get('ftTypeName'))) {
             $this->error->add(t('Your thumbnail type must have a name.'));
         }
 
-        if (!$val->handle($request->request->get('ftTypeHandle'))) {
+        if (!$valStrings->handle($request->request->get('ftTypeHandle'))) {
             $this->error->add(t('Your thumbnail type handle must only contain lowercase letters and underscores.'));
+        }
+
+        if (!$valNumbers->integer($request->request->get('ftTypeWidth'))) {
+            $this->error->add(t('Width can only be an integer, with no units.'));
         }
 
         $width = intval($request->request->get('ftTypeWidth'));
@@ -53,6 +58,17 @@ class Thumbnails extends DashboardPageController {
             $this->error->add(t('Width must be greater than zero.'));
         }
 
+        if ($valStrings->notempty($request->request->get('ftTypeHeight'))) {
+            if (!$valNumbers->integer($request->request->get('ftTypeHeight'))) {
+                $this->error->add(t('If used, height can only be an integer, with no units.'));
+            } else {
+                $height = intval($request->request->get('ftTypeHeight'));
+                if ($height < 1) {
+                    $this->error->add(t('If used, height must be greater than zero.'));
+                }
+            }
+
+        }
         return $request;
     }
 
