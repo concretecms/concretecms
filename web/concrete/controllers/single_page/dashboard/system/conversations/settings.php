@@ -1,38 +1,40 @@
 <?php
 
 namespace Concrete\Controller\SinglePage\Dashboard\System\Conversations;
-use \Concrete\Core\Page\Controller\DashboardPageController;
-use Config;
-use Loader;
-use \Concrete\Core\Conversation\Conversation;
 
-class Settings extends DashboardPageController {
+use Concrete\Core\Conversation\Conversation;
+use Concrete\Core\Page\Controller\DashboardPageController;
+use Core;
 
-	public function view() {
-		$helperFile = Loader::helper('concrete/file');
-		$fileAccessFileTypes = Config::get('conversations.files.allowed_types');
-		//is nothing's been defined, display the constant value
-		if (!$fileAccessFileTypes) {
-			$fileAccessFileTypes = $helperFile->unserializeUploadFileExtensions(Config::get('concrete.upload.extensions'));
-		}
-		else {
-			$fileAccessFileTypes = $helperFile->unserializeUploadFileExtensions($fileAccessFileTypes);
-		}
-		$this->set('file_access_file_types', $fileAccessFileTypes);
-		$this->set('maxFileSizeGuest', Config::get('conversations.files.guest.max_size'));
-		$this->set('maxFileSizeRegistered', Config::get('conversations.files.registered.max_size'));
-		$this->set('maxFilesGuest', Config::get('conversations.files.guest.max'));
-		$this->set('maxFilesRegistered', Config::get('conversations.files.registered.max'));
-		$this->set('fileExtensions', implode(',', $fileAccessFileTypes));
-        $this->set('attachmentsEnabled', intval(Config::get('conversations.attachments_enabled')));
+class Settings extends DashboardPageController
+{
+
+    public function view()
+    {
+        $config = Core::make('config');
+        $helperFile = Core::make('helper/concrete/file');
+        $fileAccessFileTypes = $config->get('conversations.files.allowed_types');
+        //is nothing's been defined, display the constant value
+        if (!$fileAccessFileTypes) {
+            $fileAccessFileTypes = $helperFile->unserializeUploadFileExtensions($config->get('concrete.upload.extensions'));
+        } else {
+            $fileAccessFileTypes = $helperFile->unserializeUploadFileExtensions($fileAccessFileTypes);
+        }
+        $this->set('file_access_file_types', $fileAccessFileTypes);
+        $this->set('maxFileSizeGuest', $config->get('conversations.files.guest.max_size'));
+        $this->set('maxFileSizeRegistered', $config->get('conversations.files.registered.max_size'));
+        $this->set('maxFilesGuest', $config->get('conversations.files.guest.max'));
+        $this->set('maxFilesRegistered', $config->get('conversations.files.registered.max'));
+        $this->set('fileExtensions', implode(',', $fileAccessFileTypes));
+        $this->set('attachmentsEnabled', intval($config->get('conversations.attachments_enabled')));
         $this->loadEditors();
         $this->set('notificationUsers', Conversation::getDefaultSubscribedUsers());
-        $this->set('subscriptionEnabled', intval(Config::get('conversations.subscription_enabled')));
-	}
+        $this->set('subscriptionEnabled', intval($config->get('conversations.subscription_enabled')));
+    }
 
     protected function loadEditors()
     {
-        $db = Loader::db();
+        $db = Core::make('Concrete\Core\Database\Connection\Connection');
         $q = $db->executeQuery('SELECT * FROM ConversationEditors');
         $editors = array();
         $active = false;
@@ -55,7 +57,7 @@ class Settings extends DashboardPageController {
     {
         $this->loadEditors();
         $active = $this->post('activeEditor');
-        $db = Loader::db();
+        $db = Core::make('Concrete\Core\Database\Connection\Connection');
         if (!isset($this->editors[$active])) {
             $this->redirect('/dashboard/system/conversations/editor/error');
             return;
@@ -64,20 +66,23 @@ class Settings extends DashboardPageController {
         $db->executeQuery('UPDATE ConversationEditors SET cnvEditorIsActive=1 WHERE cnvEditorHandle=?', array($active));
     }
 
-    public function success() {
-		$this->view();
-		$this->set('message', t('Updated conversations settings.'));
-	}
+    public function success()
+    {
+        $this->view();
+        $this->set('message', t('Updated conversations settings.'));
+    }
 
-	public function save() {
-        if (\Core::make('token')->validate('conversations.settings.save')) {
-            $helper_file = Loader::helper('concrete/file');
-            Config::save('conversations.files.guest.max_size', intval($this->post('maxFileSizeGuest')));
-            Config::save('conversations.files.registered.max_size', intval($this->post('maxFileSizeRegistered')));
-            Config::save('conversations.files.guest.max', intval($this->post('maxFilesGuest')));
-            Config::save('conversations.files.registered.max', intval($this->post('maxFilesRegistered')));
-            Config::save('conversations.attachments_enabled', !!$this->post('attachmentsEnabled'));
-            Config::save('conversations.subscription_enabled', !!$this->post('subscriptionEnabled'));
+    public function save()
+    {
+        $config = Core::make('config');
+        if (Core::make('token')->validate('conversations.settings.save')) {
+            $helper_file = Core::make('helper/concrete/file');
+            $config->save('conversations.files.guest.max_size', intval($this->post('maxFileSizeGuest')));
+            $config->save('conversations.files.registered.max_size', intval($this->post('maxFileSizeRegistered')));
+            $config->save('conversations.files.guest.max', intval($this->post('maxFilesGuest')));
+            $config->save('conversations.files.registered.max', intval($this->post('maxFilesRegistered')));
+            $config->save('conversations.attachments_enabled', !!$this->post('attachmentsEnabled'));
+            $config->save('conversations.subscription_enabled', !!$this->post('subscriptionEnabled'));
             $users = array();
             if (is_array($this->post('defaultUsers'))) {
                 foreach ($this->post('defaultUsers') as $uID) {
@@ -91,7 +96,7 @@ class Settings extends DashboardPageController {
             if ($this->post('fileExtensions')) {
                 $types = preg_split('{,}', $this->post('fileExtensions'), null, PREG_SPLIT_NO_EMPTY);
                 $types = $helper_file->serializeUploadFileExtensions($types);
-                Config::save('conversations.files.allowed_types', $types);
+                $config->save('conversations.files.allowed_types', $types);
             }
             $this->saveEditors();
             $this->success();
@@ -99,6 +104,6 @@ class Settings extends DashboardPageController {
             $this->error->add('Invalid Token.');
             $this->view();
         }
-	}
+    }
 
 }
