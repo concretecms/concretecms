@@ -373,6 +373,14 @@ class Application extends Container
         // want to replace legacy "tools" URLs with the new MVC, and the tools paths are so greedy they don't
         // work unless they come at the end.
         $this->registerLegacyRoutes();
+
+
+        $path = $request->getPathInfo();
+
+        if (substr($path, 0, 3) == '../' || substr($path, -3) == '/..' ||  strpos($path, '/../')) {
+            throw new \RuntimeException(t('Invalid path traversal. Please make this request with a valid HTTP client.'));
+        }
+
         if ($this->installed) {
             $response = $this->getEarlyDispatchResponse();
         }
