@@ -1,9 +1,14 @@
 <?php  defined('C5_EXECUTE') or die("Access Denied.");
-$form = Loader::helper('form');
-$file = Loader::helper('file');
+
+$form = \Core::make('helper/form');
+$file = \Core::make('helper/file');
+$token = \Core::make('token');
+
 echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Conversations Settings'), false, 'span8 offset2', false);
 ?>
 <form action="<?=$view->action('save')?>" method='post'>
+	<?php $token->output('conversations.settings.save') ?>
+
 		<fieldset>
 			<legend><?php echo t('Attachment Settings'); ?></legend>
 			<p style="margin-bottom: 25px; color: #aaa; display: block;" class="small"><?php echo t('Note: These settings can be overridden in the block edit form for individual conversations.') ?></p>
