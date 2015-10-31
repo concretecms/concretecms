@@ -134,7 +134,7 @@
                                         data-source="<?= $view->action('get_languages') ?>"
                                         data-url="<?= $view->action('update_language', $user->getUserID()) ?>"
                                         data-type="select"
-                                        data-name="uDefaultLanguage"<? } ?>><?= $user->getUserDefaultLanguage(); ?></span>
+                                        data-name="uDefaultLanguage"<? } ?>><?= h($user->getUserDefaultLanguage()); ?></span>
                                 </p></div>
                         </div>
                     <? } ?>
