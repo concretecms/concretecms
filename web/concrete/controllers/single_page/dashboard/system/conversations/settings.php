@@ -70,30 +70,35 @@ class Settings extends DashboardPageController {
 	}
 
 	public function save() {
-		$helper_file = Loader::helper('concrete/file');
-        Config::save('conversations.files.guest.max_size', intval($this->post('maxFileSizeGuest')));
-        Config::save('conversations.files.registered.max_size', intval($this->post('maxFileSizeRegistered')));
-        Config::save('conversations.files.guest.max', intval($this->post('maxFilesGuest')));
-        Config::save('conversations.files.registered.max', intval($this->post('maxFilesRegistered')));
-        Config::save('conversations.attachments_enabled', !!$this->post('attachmentsEnabled'));
-        Config::save('conversations.subscription_enabled', !!$this->post('subscriptionEnabled'));
-        $users = array();
-        if (is_array($this->post('defaultUsers'))) {
-            foreach($this->post('defaultUsers') as $uID) {
-                $ui = \UserInfo::getByID($uID);
-                if (is_object($ui)) {
-                    $users[] = $ui;
+        if (\Core::make('token')->validate('conversations.settings.save')) {
+            $helper_file = Loader::helper('concrete/file');
+            Config::save('conversations.files.guest.max_size', intval($this->post('maxFileSizeGuest')));
+            Config::save('conversations.files.registered.max_size', intval($this->post('maxFileSizeRegistered')));
+            Config::save('conversations.files.guest.max', intval($this->post('maxFilesGuest')));
+            Config::save('conversations.files.registered.max', intval($this->post('maxFilesRegistered')));
+            Config::save('conversations.attachments_enabled', !!$this->post('attachmentsEnabled'));
+            Config::save('conversations.subscription_enabled', !!$this->post('subscriptionEnabled'));
+            $users = array();
+            if (is_array($this->post('defaultUsers'))) {
+                foreach ($this->post('defaultUsers') as $uID) {
+                    $ui = \UserInfo::getByID($uID);
+                    if (is_object($ui)) {
+                        $users[] = $ui;
+                    }
                 }
             }
+            Conversation::setDefaultSubscribedUsers($users);
+            if ($this->post('fileExtensions')) {
+                $types = preg_split('{,}', $this->post('fileExtensions'), null, PREG_SPLIT_NO_EMPTY);
+                $types = $helper_file->serializeUploadFileExtensions($types);
+                Config::save('conversations.files.allowed_types', $types);
+            }
+            $this->saveEditors();
+            $this->success();
+        } else {
+            $this->error->add('Invalid Token.');
+            $this->view();
         }
-        Conversation::setDefaultSubscribedUsers($users);
-		if ($this->post('fileExtensions')){
-			$types = preg_split('{,}',$this->post('fileExtensions'),null,PREG_SPLIT_NO_EMPTY);
-			$types = $helper_file->serializeUploadFileExtensions($types);
-			Config::save('conversations.files.allowed_types',$types);
-		}
-        $this->saveEditors();
-		$this->success();
 	}
 
 }
