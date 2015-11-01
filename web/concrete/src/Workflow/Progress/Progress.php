@@ -16,7 +16,6 @@ abstract class Progress extends Object
     protected $response;
     protected $wpDateLastAction;
 
-
     /**
      * Gets the Workflow object attached to this WorkflowProgress object
      * @return Workflow
@@ -58,7 +57,7 @@ abstract class Progress extends Object
     public function getWorkflowProgressID() {return $this->wpID;}
 
     /**
-     * Gets the ID of the progress object
+     * Gets the handle of the progress object
      */
     public function getWorkflowProgressCategoryHandle() {return $this->wpCategoryHandle;}
 
@@ -95,18 +94,38 @@ abstract class Progress extends Object
 
     /**
      * Creates a WorkflowProgress object (which will be assigned to a Page, File, etc... in our system.
+     *
+     * @deprecated @param string $wpCategoryHandle
+     * @param Workflow $wf
+     * @param WorkflowRequest $wr
+     * @return Progress
      */
-    public static function add($wpCategoryHandle, Workflow $wf, WorkflowRequest $wr)
+    public static function add($wf, $wr)
     {
-        $db = Loader::db();
-        $wpDateAdded = Loader::helper('date')->getOverridableNow();
-        $wpCategoryID = $db->GetOne('select wpCategoryID from WorkflowProgressCategories where wpCategoryHandle = ?', array($wpCategoryHandle));
-        $db->Execute('insert into WorkflowProgress (wfID, wrID, wpDateAdded, wpCategoryID) values (?, ?, ?, ?)', array(
-            $wf->getWorkflowID(), $wr->getWorkflowRequestID(), $wpDateAdded, $wpCategoryID
-        ));
-        $wp = self::getByID($db->Insert_ID());
-        $wp->addWorkflowProgressHistoryObject($wr);
-        return $wp;
+        // @deprecated Legacy check for wpCategoryHandle
+        if (func_num_args() === 3) {
+            list($wpCategoryHandle, $wf, $wr) = func_get_args();
+        } else {
+            $wpCategoryHandle = static::getWorkflowProgressCategoryHandle();
+        }
+
+        // @deprecated Checking types directly; should be type-hints
+        if ($wf instanceof Workflow && $wr instanceof WorkflowRequest) {
+            $db = Loader::db();
+            $wpDateAdded = Loader::helper('date')->getOverridableNow();
+            $wpCategoryID = $db->GetOne('select wpCategoryID from WorkflowProgressCategories where wpCategoryHandle = ?', array($wpCategoryHandle));
+            $db->Execute('insert into WorkflowProgress (wfID, wrID, wpDateAdded, wpCategoryID) values (?, ?, ?, ?)', array(
+                $wf->getWorkflowID(), $wr->getWorkflowRequestID(), $wpDateAdded, $wpCategoryID
+            ));
+            $wp = self::getByID($db->Insert_ID());
+            $wp->addWorkflowProgressHistoryObject($wr);
+            return $wp;
+        } else {
+            throw new InvalidArgumentException(
+                'Arguments passed to ' . __METHOD__ .
+                ' must be (\Concrete\Core\Workflow\Workflow, \Concrete\Core\Workflow\Request\Request).'
+            );
+        }
     }
 
     public function delete()

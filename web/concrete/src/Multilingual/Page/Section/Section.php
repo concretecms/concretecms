@@ -9,8 +9,6 @@ use Gettext\Translations;
 use Punic\Language;
 use Config;
 
-defined('C5_EXECUTE') or die("Access Denied.");
-
 class Section extends Page
 {
     public function getPermissionResponseClassName()

@@ -23,9 +23,14 @@ class Key extends Object
 
     protected $akID;
 
-    public function getIndexedSearchTable()
+    public static function getIndexedSearchTable()
     {
-        return false;
+        return null;
+    }
+
+    public static function getCategoryTypeName()
+    {
+        return null;
     }
 
     public function getSearchIndexFieldDefinition()
@@ -215,8 +220,16 @@ class Key extends Object
     /**
      * Returns a list of all attributes of this category
      */
-    public static function getList($akCategoryHandle, $filters = array())
+    public static function getList($filters = array())
     {
+        // Deprecated legacy arguments
+        if (is_string($filters)) {
+            list($akCategoryHandle, $filters) = func_get_args();
+            $filters = $filters ?: array();
+        } else {
+            $akCategoryHandle = static::getCategoryTypeName();
+        }
+
         $db = Loader::db();
         $pkgHandle = $db->GetOne(
             'select pkgHandle from AttributeKeyCategories inner join Packages on Packages.pkgID = AttributeKeyCategories.pkgID where akCategoryHandle = ?',
@@ -339,7 +352,7 @@ class Key extends Object
             array($ak['handle'], $akc->getAttributeKeyCategoryID()));
 
         if (!$akID) {
-            $akn = self::add(
+            $akn = self::addToCategory(
                 $akCategoryHandle,
                 $type,
                 array(
@@ -357,11 +370,18 @@ class Key extends Object
     }
 
     /**
-     * Adds an attribute key.
+     * Adds an attribute key of this key's category
      */
-    protected static function add($akCategoryHandle, $type, $args, $pkg = false)
+    public static function add($type, $args, $pkg = false)
     {
+        return static::addToCategory(static::getCategoryTypeName(), $type, $args, $pkg);
+    }
 
+    /**
+     * Adds an attribute key to a specific category
+     */
+    protected static function addToCategory($akCategoryHandle, $type, $args, $pkg = false)
+    {
         $vn = Loader::helper('validation/numbers');
         $txt = Loader::helper('text');
         if (!is_object($type)) {
@@ -386,23 +406,27 @@ class Key extends Object
         if (!isset($akHandle)) {
             throw new ErrorException('No attribute key handle set.');
         }
+
         if (!isset($akName)) {
             throw new ErrorException('No Attribute Key name set.');
         }
 
-
         if (isset($akIsSearchable) && $akIsSearchable != 0) {
             $_akIsSearchable = 1;
         }
+
         if (isset($akIsInternal) && $akIsInternal != 0) {
             $_akIsInternal = 1;
         }
+
         if (isset($akIsSearchableIndexed) && $akIsSearchableIndexed != 0) {
             $_akIsSearchableIndexed = 1;
         }
+
         if (isset($akIsAutoCreated) && $akIsAutoCreated != 0) {
             $_akIsAutoCreated = 1;
         }
+
         if (isset($akIsEditable) && $akIsEditable == 0) {
             $_akIsEditable = 0;
         }

@@ -11,17 +11,22 @@ use Concrete\Core\Attribute\Value\UserValue as UserAttributeValue;
 
 class UserKey extends Key
 {
-    public function getIndexedSearchTable()
-    {
-        return 'UserSearchIndexAttributes';
-    }
-
     protected $searchIndexFieldDefinition = array(
         'columns' => array(
             array('name' => 'uID', 'type' => 'integer', 'options' => array('unsigned' => true, 'default' => 0, 'notnull' => true)),
         ),
         'primary' => array('uID'),
     );
+
+    public static function getIndexedSearchTable()
+    {
+        return 'UserSearchIndexAttributes';
+    }
+
+    public static function getCategoryTypeName()
+    {
+        return 'user';
+    }
 
     public static function getAttributes($uID, $method = 'getValue')
     {
@@ -83,10 +88,10 @@ class UserKey extends Key
         $db = Database::connection();
 
         $q = "SELECT ak.akID
-			FROM AttributeKeys ak
-			INNER JOIN AttributeKeyCategories akc ON ak.akCategoryID = akc.akCategoryID
-			WHERE ak.akHandle = ?
-			AND akc.akCategoryHandle = 'user'";
+            FROM AttributeKeys ak
+            INNER JOIN AttributeKeyCategories akc ON ak.akCategoryID = akc.akCategoryID
+            WHERE ak.akHandle = ?
+            AND akc.akCategoryHandle = 'user'";
         $akID = $db->GetOne($q, array($akHandle));
         if ($akID > 0) {
             $ak = static::getByID($akID);
@@ -185,9 +190,14 @@ class UserKey extends Key
         $db->Execute('update UserAttributeKeys set uakIsActive = 0 where akID = ?', array($this->akID));
     }
 
-    public static function getList()
+    /**
+     * Get list of attributes for user category
+     * @param array $filters Hashmap of columns to filter on
+     * @return array
+     */
+    public static function getList($filters = array())
     {
-        $list = parent::getList('user');
+        $list = parent::getList($filters);
         usort($list, function ($a, $b) {
             if ($a->getAttributeKeyDisplayOrder() == $b->getAttributeKeyDisplayOrder()) {
                 return 0;
@@ -222,7 +232,7 @@ class UserKey extends Key
     {
         CacheLocal::delete('user_attribute_key_by_handle', $args['akHandle']);
 
-        $ak = parent::add('user', $type, $args, $pkg);
+        $ak = parent::add($type, $args, $pkg);
 
         extract($args);
 
@@ -309,27 +319,27 @@ class UserKey extends Key
 
     public static function getColumnHeaderList()
     {
-        return parent::getList('user', array('akIsColumnHeader' => 1));
+        return parent::getList(array('akIsColumnHeader' => 1));
     }
 
     public static function getEditableList()
     {
-        return parent::getList('user', array('akIsEditable' => 1));
+        return parent::getList(array('akIsEditable' => 1));
     }
 
     public static function getSearchableList()
     {
-        return parent::getList('user', array('akIsSearchable' => 1));
+        return parent::getList(array('akIsSearchable' => 1));
     }
 
     public static function getSearchableIndexedList()
     {
-        return parent::getList('user', array('akIsSearchableIndexed' => 1));
+        return parent::getList(array('akIsSearchableIndexed' => 1));
     }
 
     public static function getImporterList()
     {
-        return parent::getList('user', array('akIsAutoCreated' => 1));
+        return parent::getList(array('akIsAutoCreated' => 1));
     }
 
     public static function getPublicProfileList()
@@ -394,7 +404,7 @@ class UserKey extends Key
 
     public static function getUserAddedList()
     {
-        return parent::getList('user', array('akIsAutoCreated' => 0));
+        return parent::getList(array('akIsAutoCreated' => 0));
     }
 
     public static function updateAttributesDisplayOrder($uats)

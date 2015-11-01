@@ -11,16 +11,20 @@ use File;
 use FileVersion;
 class FileKey extends Key {
 
-	public function getIndexedSearchTable() {
-		return 'FileSearchIndexAttributes';
-	}
-
 	protected $searchIndexFieldDefinition = array(
 		'columns' => array(
 			array('name' => 'fID', 'type' => 'integer', 'options' => array('unsigned' => true, 'default' => 0, 'notnull' => true))
 		),
 		'primary' => array('fID')
 	);
+
+	public static function getIndexedSearchTable() {
+		return 'FileSearchIndexAttributes';
+	}
+
+	public static function getCategoryTypeName() {
+		return 'file';
+	}
 
 	/**
 	 * Returns an attribute value list of attributes and values (duh) which a collection version can store
@@ -64,11 +68,11 @@ class FileKey extends Key {
 		if ($akID > 0) {
 			$ak = self::getByID($akID);
 		} else {
-			 // else we check to see if it's listed in the initial registry
-			 $ia = FileTypeList::getImporterAttribute($akHandle);
-			 if (is_object($ia)) {
-			 	// we create this attribute and return it.
-			 	$at = AttributeType::getByHandle($ia->akType);
+			// else we check to see if it's listed in the initial registry
+			$ia = FileTypeList::getImporterAttribute($akHandle);
+			if (is_object($ia)) {
+				// we create this attribute and return it.
+				$at = AttributeType::getByHandle($ia->akType);
 				$args = array(
 					'akHandle' => $akHandle,
 					'akName' => $ia->akName,
@@ -76,8 +80,8 @@ class FileKey extends Key {
 					'akIsAutoCreated' => 1,
 					'akIsEditable' => $ia->akIsEditable
 				);
-			 	$ak = static::add($at, $args);
-			 }
+				$ak = static::add($at, $args);
+			}
 		}
 		CacheLocal::set('file_attribute_key_by_handle', $akHandle, $ak);
 		if ($ak === -1) {
@@ -94,20 +98,16 @@ class FileKey extends Key {
 		}
 	}
 
-
-	public static function getList() {
-		return parent::getList('file');
-	}
-
 	public static function getSearchableList() {
-		return parent::getList('file', array('akIsSearchable' => 1));
+		return self::getList(array('akIsSearchable' => 1));
 	}
+
 	public static function getSearchableIndexedList() {
-		return parent::getList('file', array('akIsSearchableIndexed' => 1));
+		return self::getList(array('akIsSearchableIndexed' => 1));
 	}
 
 	public static function getImporterList($fv = false) {
-		$list = parent::getList('file', array('akIsAutoCreated' => 1));
+		$list = self::getList(array('akIsAutoCreated' => 1));
 		if ($fv == false) {
 			return $list;
 		}
@@ -123,7 +123,7 @@ class FileKey extends Key {
 	}
 
 	public static function getUserAddedList() {
-		return parent::getList('file', array('akIsAutoCreated' => 0));
+		return self::getList(array('akIsAutoCreated' => 0));
 	}
 
 	/**
@@ -156,12 +156,12 @@ class FileKey extends Key {
 
 	public static function add($at, $args, $pkg = false) {
 		CacheLocal::delete('file_attribute_key_by_handle', $args['akHandle']);
-		$ak = parent::add('file', $at, $args, $pkg);
+		$ak = parent::add($at, $args, $pkg);
 		return $ak;
 	}
 
 	public static function getColumnHeaderList() {
-		return parent::getList('file', array('akIsColumnHeader' => 1));
+		return self::getList(array('akIsColumnHeader' => 1));
 	}
 
 
