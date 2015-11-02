@@ -47,11 +47,14 @@ class FileManager
             $filters = json_encode($filterArgs['filters']);
         }
 
-        $chooseText = json_encode($chooseText);
+        if (!empty($chooseText)) {
+            $chooseText = json_encode($chooseText);
+            $chooseText = "'chooseText': $chooseText";
+        }
         if ($fileID) {
             $args = "{'inputName': '{$postname}', 'fID': {$fileID}, 'filters': $filters }";
         } else {
-            $args = "{'inputName': '{$postname}', 'filters': $filters, 'chooseText': $chooseText }";
+            $args = "{'inputName': '{$postname}', 'filters': $filters, $chooseText }";
         }
 
 
