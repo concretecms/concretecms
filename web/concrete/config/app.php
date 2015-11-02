@@ -607,6 +607,9 @@ return array(
         'jquery/fileupload'        => array(
             array('javascript', 'js/jquery-fileupload.js')
         ),
+        'jquery/textcounter'        => array(
+            array('javascript', 'js/textcounter.js')
+        ),
         'swfobject'                => array(
             array('javascript', 'js/swfobject.js')
         ),
