@@ -241,6 +241,15 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                 $(this).css({'background' : 'white'});
                 $(this).next('.help-inline').hide();
             })
+
+            $('.seo-page-edit input, .seo-page-edit textarea').textcounter({
+                type: "character",
+                max: -1,
+                countSpaces: true,
+                stopInputAtMaximum: false,
+                counterText: '<?php echo t('characters'); ?>: ',
+                countContainerClass: 'help-block'
+            });
         });
         </script>
     </div>
