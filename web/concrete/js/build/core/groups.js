@@ -95,7 +95,7 @@
 					my.reloadNode(node);
 				},
                 onSelect: options.onSelect,
-				selectMode: 1,
+				selectMode: options.chooseNodeInForm === 'multiple' ? 3 : 1, // allow multi-select for checkboxes
 				checkbox: checkbox,
 				classNames: classNames,
 				minExpandLevel: options.minimumExpandLevel,
