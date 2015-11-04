@@ -8,7 +8,7 @@ use Concrete\Core\Permission\Access\Entity\UserEntity as UserPermissionAccessEnt
 use Concrete\Core\Permission\Key\FileSetKey as FileSetPermissionKey;
 use Events;
 use File as ConcreteFile;
-use Loader;
+use Database;
 use PermissionAccess;
 use PermissionKey;
 use Permissions;
@@ -74,12 +74,13 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
         if ($u === false) {
             $u = new User();
         }
-        $db = Loader::db();
+        $db = Database::connection();
         $sets = array();
-        $r = $db->Execute(
+        $r = $db->executeQuery(
             'SELECT * FROM FileSets WHERE fsType = ? OR (fsType IN (?, ?) AND uID = ?) ORDER BY fsName ASC',
-            array(self::TYPE_PUBLIC, self::TYPE_STARRED, self::TYPE_PRIVATE, $u->getUserID()));
-        while ($row = $r->FetchRow()) {
+            array(self::TYPE_PUBLIC, self::TYPE_STARRED, self::TYPE_PRIVATE, $u->getUserID())
+        );
+        while ($row = $r->fetch()) {
             $fs = new static();
             $fs = array_to_object($fs, $row);
             $fsp = new Permissions($fs);
@@ -112,9 +113,9 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
             $fs_uid = $u->uID;
         }
 
-        $db = Loader::db();
+        $db = Database::connection();
         $criteria = array($fs_name, $fs_type, $fs_uid);
-        $fsID = $db->GetOne('SELECT fsID FROM FileSets WHERE fsName=? AND fsType=? AND uID=?', $criteria);
+        $fsID = $db->fetchColumn('SELECT fsID FROM FileSets WHERE fsName=? AND fsType=? AND uID=?', $criteria);
         if ($fsID > 0) {
             return static::getByID($fsID);
         } else {
@@ -133,8 +134,8 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
      */
     public static function getByID($fsID)
     {
-        $db = Loader::db();
-        $row = $db->GetRow('SELECT * FROM FileSets WHERE fsID = ?', array($fsID));
+        $db = Database::connection();
+        $row = $db->fetchAssoc('SELECT * FROM FileSets WHERE fsID = ?', array($fsID));
         if (is_array($row)) {
             $fs = new static();
             $fs = array_to_object($fs, $row);
@@ -172,7 +173,7 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
             }
         }
 
-        $db = Loader::db();
+        $db = Database::connection();
         $db->insert(
             "FileSets",
             array(
@@ -236,11 +237,11 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
      */
     public static function getByName($fsName, $uID = false)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         if ($uID !== false) {
-            $row = $db->GetRow('SELECT * FROM FileSets WHERE fsName = ? AND uID = ?', array($fsName, $uID));
+            $row = $db->fetchAssoc('SELECT * FROM FileSets WHERE fsName = ? AND uID = ?', array($fsName, $uID));
         } else {
-            $row = $db->GetRow('SELECT * FROM FileSets WHERE fsName = ?', array($fsName));
+            $row = $db->fetchAssoc('SELECT * FROM FileSets WHERE fsName = ?', array($fsName));
         }
         if (is_array($row) && count($row)) {
             $fs = new static();
@@ -296,13 +297,14 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
 
     public function getSavedSearches()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $sets = array();
         $u = new User();
-        $r = $db->Execute(
+        $r = $db->executeQuery(
             'SELECT * FROM FileSets WHERE fsType = ? AND uID = ? ORDER BY fsName ASC',
-            array(self::TYPE_SAVED_SEARCH, $u->getUserID()));
-        while ($row = $r->FetchRow()) {
+            array(self::TYPE_SAVED_SEARCH, $u->getUserID())
+        );
+        while ($row = $r->fetch()) {
             $fs = new static();
             $fs = array_to_object($fs, $row);
             $sets[] = $fs;
@@ -351,14 +353,15 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
      */
     public function updateFileSetDisplayOrder($files)
     {
-        $db = Loader::db();
-        $db->Execute('UPDATE FileSetFiles SET fsDisplayOrder = 0 WHERE fsID = ?', $this->getFileSetID());
+        $db = Database::connection();
+        $db->executeQuery('UPDATE FileSetFiles SET fsDisplayOrder = 0 WHERE fsID = ?', array($this->getFileSetID()));
         $i = 0;
         if (is_array($files)) {
             foreach ($files as $fID) {
-                $db->Execute(
+                $db->executeQuery(
                     'UPDATE FileSetFiles SET fsDisplayOrder = ? WHERE fsID = ? AND fID = ?',
-                    array($i, $this->getFileSetID(), $fID));
+                    array($i, $this->getFileSetID(), $fID)
+                );
                 ++$i;
             }
         }
@@ -406,7 +409,7 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
      */
     public function update($setName, $fsOverrideGlobalPermissions = 0)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $db->update(
             'FileSets',
             array('fsName' => $setName, 'fsOverrideGlobalPermissions' => $fsOverrideGlobalPermissions),
@@ -456,13 +459,11 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
 
         $file_set_file = File::createAndGetFile($f_id, $this->fsID);
 
-        $db = Loader::db();
-        $db->Execute(
-            'DELETE FROM FileSetFiles
-		WHERE fID = ?
-		AND   fsID = ?',
-            array($f_id, $this->getFileSetID()));
-
+        $db = Database::connection();
+        $db->executeQuery(
+            'DELETE FROM FileSetFiles WHERE fID = ? AND fsID = ?',
+            array($f_id, $this->getFileSetID())
+        );
         $fe = new \Concrete\Core\File\Event\FileSetFile($file_set_file);
         Events::dispatch('on_file_removed_from_set', $fe);
     }
@@ -481,30 +482,30 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
 
     public function delete()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $db->delete('FileSets', array('fsID' => $this->fsID));
-        $db->Execute('DELETE FROM FileSetSavedSearches WHERE fsID = ?', array($this->fsID));
+        $db->executeQuery('DELETE FROM FileSetSavedSearches WHERE fsID = ?', array($this->fsID));
     }
 
     public function acquireBaseFileSetPermissions()
     {
         $this->resetPermissions();
 
-        $db = Loader::db();
+        $db = Database::connection();
 
         $q = "SELECT fsID, paID, pkID FROM FileSetPermissionAssignments WHERE fsID = 0";
         $r = $db->query($q);
-        while ($row = $r->fetchRow()) {
+        while ($row = $r->fetch()) {
             $v = array($this->fsID, $row['paID'], $row['pkID']);
             $q = "INSERT INTO FileSetPermissionAssignments (fsID, paID, pkID) VALUES (?, ?, ?)";
-            $db->query($q, $v);
+            $db->executeQuery($q, $v);
         }
     }
 
     public function resetPermissions()
     {
-        $db = Loader::db();
-        $db->Execute('DELETE FROM FileSetPermissionAssignments WHERE fsID = ?', array($this->fsID));
+        $db = Database::connection();
+        $db->executeQuery('DELETE FROM FileSetPermissionAssignments WHERE fsID = ?', array($this->fsID));
     }
 
     public function assignPermissions(
@@ -512,9 +513,9 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
         $permissions = array(),
         $accessType = FileSetPermissionKey::ACCESS_TYPE_INCLUDE
     ) {
-        $db = Loader::db();
+        $db = Database::connection();
         if ($this->fsID > 0) {
-            $db->Execute("UPDATE FileSets SET fsOverrideGlobalPermissions = 1 WHERE fsID = ?", array($this->fsID));
+            $db->executeQuery("UPDATE FileSets SET fsOverrideGlobalPermissions = 1 WHERE fsID = ?", array($this->fsID));
             $this->fsOverrideGlobalPermissions = true;
         }
 
