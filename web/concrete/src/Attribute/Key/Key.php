@@ -220,10 +220,10 @@ class Key extends Object
     public static function __callStatic($name, $arguments)
     {
         if (strcasecmp($name, 'getList') === 0) {
-            return call_user_func_array('self::getAttributeKeyList', $arguments);
+            return call_user_func_array('static::getAttributeKeyList', $arguments);
         }
         if (strcasecmp($name, 'add') === 0) {
-            return call_user_func_array('self::addAttributeKey', $arguments);
+            return call_user_func_array('static::addAttributeKey', $arguments);
         }
         trigger_error("Call to undefined method ".__CLASS__."::$name()", E_USER_ERROR);
     }
