@@ -595,7 +595,11 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
             if (isset($data['uName'])) {
                 $uName = $data['uName'];
             }
+            $emailChanged = false;
             if (isset($data['uEmail'])) {
+                if ($uEmail != $data['uEmail']) {
+                    $emailChanged = true;
+                }
                 $uEmail = $data['uEmail'];
             }
             if (isset($data['uHasAvatar'])) {
@@ -630,6 +634,10 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
                 $v = array($uName, $uEmail, $uHasAvatar, $uTimezone, $uDefaultLanguage, $this->uID);
                 $r = $db->prepare("update Users set uName = ?, uEmail = ?, uHasAvatar = ?, uTimezone = ?, uDefaultLanguage = ? where uID = ?");
                 $res = $db->execute($r, $v);
+            }
+
+            if ($emailChanged) {
+                $db->query("DELETE FROM UserValidationHashes WHERE uID = ?", array(intval($this->uID)));
             }
 
             // now we check to see if the user is updated his or her own logged in record
