@@ -59,7 +59,8 @@ class Stack extends Page
     /**
      * @param string $stackName
      * @param string $cvID
-     * @param integer $multilingualContentSource
+     * @param int $multilingualContentSource
+     *
      * @return Page
      */
     public static function getByName($stackName, $cvID = 'RECENT', $multilingualContentSource = self::MULTILINGUAL_CONTENT_SOURCE_CURRENT)
@@ -77,7 +78,7 @@ class Stack extends Page
                 $ms = false;
                 $detector = Core::make('multilingual/detector');
                 if ($detector->isEnabled()) {
-                    $ms = Stack::getMultilingualSectionFromType($multilingualContentSource);
+                    $ms = self::getMultilingualSectionFromType($multilingualContentSource);
                 }
 
                 if (is_object($ms)) {
@@ -121,8 +122,7 @@ class Stack extends Page
         return $stack->getPageTypeHandle() == STACKS_PAGE_TYPE;
     }
 
-
-    private function addStackToCategory(\Concrete\Core\Page\Page $parent, $name, $type = 0)
+    private static function addStackToCategory(\Concrete\Core\Page\Page $parent, $name, $type = 0)
     {
         $data = array();
         $data['name'] = $name;
@@ -142,6 +142,7 @@ class Stack extends Page
         $db->Execute('insert into Stacks (stName, cID, stType) values (?, ?, ?)', $v);
 
         $stack = static::getByID($stackCID);
+
         return $stack;
     }
 
@@ -157,6 +158,7 @@ class Stack extends Page
                 $ms = $detector->getPreferredSection();
             }
         }
+
         return $ms;
     }
 
@@ -171,7 +173,7 @@ class Stack extends Page
         $return = false;
         $db = \Database::connection();
         if (Core::make('multilingual/detector')->isEnabled()) {
-            $returnFromSection = Stack::getMultilingualSectionFromType($multilingualStackToReturn);
+            $returnFromSection = self::getMultilingualSectionFromType($multilingualStackToReturn);
             $list = Section::getList();
             foreach ($list as $section) {
                 $cID = $db->GetOne('select cID from Stacks where stName = ? and stMultilingualSection = ?', array($stackName, $section->getCollectionID()));
@@ -180,7 +182,7 @@ class Stack extends Page
                     if (!is_object($category)) {
                         $category = StackCategory::createFromMultilingualSection($section);
                     }
-                    $stack = Stack::addStackToCategory($category->getPage(), $stackName, $type);
+                    $stack = self::addStackToCategory($category->getPage(), $stackName, $type);
                     if (is_object($returnFromSection) && $returnFromSection->getCollectionID() == $section->getCollectionID()) {
                         $return = $stack;
                     }
@@ -189,8 +191,9 @@ class Stack extends Page
             StackList::rescanMultilingualStacks();
         } else {
             $parent = \Page::getByPath(STACKS_PAGE_PATH);
-            $return = Stack::addStackToCategory($parent, $stackName, $type);
+            $return = self::addStackToCategory($parent, $stackName, $type);
         }
+
         return $return;
     }
 
