@@ -14,6 +14,11 @@ use PermissionKey;
 use Permissions;
 use User;
 
+/**
+ * Represents a file set.
+ *
+ * @method static Set add(string $setName, int $fsOverrideGlobalPermissions = 0, bool|\User $u = false, int $type = self::TYPE_PUBLIC) Deprecated method. Use Set::create instead.
+ */
 class Set implements \Concrete\Core\Permission\ObjectInterface
 {
     const TYPE_PRIVATE = 0;
@@ -119,7 +124,7 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
         if ($fsID > 0) {
             return static::getByID($fsID);
         } else {
-            $fs = static::add($fs_name, 0, $fs_uid, $fs_type);
+            $fs = static::create($fs_name, 0, $fs_uid, $fs_type);
 
             return $fs;
         }
@@ -151,6 +156,14 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
         }
     }
 
+    public static function __callStatic($name, $arguments)
+    {
+        if (strcasecmp($name, 'add') === 0) {
+            return call_user_func_array('self::create', $arguments);
+        }
+        trigger_error("Call to undefined method ".__CLASS__."::$name()", E_USER_ERROR);
+    }
+
     /**
      * Adds a File set.
      *
@@ -161,7 +174,7 @@ class Set implements \Concrete\Core\Permission\ObjectInterface
      *
      * @return Set
      */
-    public static function add($setName, $fsOverrideGlobalPermissions = 0, $u = false, $type = self::TYPE_PUBLIC)
+    public static function create($setName, $fsOverrideGlobalPermissions = 0, $u = false, $type = self::TYPE_PUBLIC)
     {
         if (is_object($u) && $u->isRegistered()) {
             $uID = $u->getUserID();
