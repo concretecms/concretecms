@@ -48,25 +48,25 @@
                 arEnableGridContainer: arEnableGridContainer,
                 placeholder: ''
             }, function (r) {
-
-                var block;
+                var block, edit_mode = Concrete.getEditMode(), local_area = area.inEditMode(edit_mode);
 
                 ConcreteToolbar.disableDirectExit();
                 jQuery.fn.dialog.hideLoader();
 
                 if (my.options.task == 'add') {
-                    var $area = area.getElem(), $elem = $(r);
-
+                    var $area = local_area.getElem(), $elem = $(r);
 
                     if (!$elem.hasClass('ccm-block-edit')) {
                         var found = $elem.find('.ccm-block-edit');
                         if (found.length) {
-                            block = new Concrete.Block(found, Concrete.getEditMode());
+                            block = new Concrete.Block(found, edit_mode);
+                            block.setArea(local_area);
                         }
                     }
 
                     if (!block) {
-                        block = new Concrete.Block($elem, Concrete.getEditMode());
+                        block = new Concrete.Block($elem, edit_mode);
+                        block.setArea(local_area);
                     }
 
                     if (my.options.btHandle === 'core_area_layout') {
@@ -99,7 +99,7 @@
 
                 } else {
                     // remove old block from area
-                    block = area.getBlockByID(my.options.bID);
+                    block = local_area.getBlockByID(my.options.bID);
                     var newBlock = block.replace(r);
                     ConcreteAlert.notify({
                         'message': ccmi18n.updateBlockMsg,

@@ -375,6 +375,8 @@
                         blocks: []
                     };
 
+                targetArea = targetArea.inEditMode(targetArea.getEditMode());
+
                 _(targetArea.getBlocks()).each(function (block, key) {
                     send.blocks.push(block.getId());
                 });
