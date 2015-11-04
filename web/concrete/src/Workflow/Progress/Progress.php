@@ -11,6 +11,11 @@ use Concrete\Core\Package\PackageList;
 use Database;
 use Core;
 
+/**
+ * Base class for workflow progresses.
+ *
+ * @method static Progress add(string $wpCategoryHandle, Workflow $wf, WorkflowRequest $wr) Deprecated method. Use Progress::create instead.
+ */
 abstract class Progress extends Object
 {
     protected $wpID;
@@ -112,10 +117,24 @@ abstract class Progress extends Object
         }
     }
 
+    public static function __callStatic($name, $arguments)
+    {
+        if (strcasecmp($name, 'add') === 0) {
+            return call_user_func_array('self::create', $arguments);
+        }
+        trigger_error("Call to undefined method ".__CLASS__."::$name()", E_USER_ERROR);
+    }
+
     /**
      * Creates a WorkflowProgress object (which will be assigned to a Page, File, etc... in our system.
+     *
+     * @param string $wpCategoryHandle
+     * @param Workflow $wf
+     * @param WorkflowRequest $wr
+     *
+     * @return self
      */
-    public static function add($wpCategoryHandle, Workflow $wf, WorkflowRequest $wr)
+    public static function create($wpCategoryHandle, Workflow $wf, WorkflowRequest $wr)
     {
         $db = Database::connection();
         $wpDateAdded = Core::make('helper/date')->getOverridableNow();

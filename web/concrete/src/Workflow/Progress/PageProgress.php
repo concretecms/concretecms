@@ -14,7 +14,7 @@ class PageProgress extends Progress
 
     public static function add(Workflow $wf, PageWorkflowRequest $wr)
     {
-        $wp = parent::add('page', $wf, $wr);
+        $wp = parent::create('page', $wf, $wr);
         $db = Database::connection();
         $db->Replace('PageWorkflowProgress', array('cID' => $wr->getRequestedPageID(), 'wpID' => $wp->getWorkflowProgressID()), array('cID', 'wpID'), true);
         $wp->cID = $wr->getRequestedPageID();
