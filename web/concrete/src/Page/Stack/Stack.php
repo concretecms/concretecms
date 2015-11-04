@@ -122,7 +122,7 @@ class Stack extends Page
         return $stack->getPageTypeHandle() == STACKS_PAGE_TYPE;
     }
 
-    private function addStackToCategory(\Concrete\Core\Page\Page $parent, $name, $type = 0)
+    private static function addStackToCategory(\Concrete\Core\Page\Page $parent, $name, $type = 0)
     {
         $data = array();
         $data['name'] = $name;
