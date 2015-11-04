@@ -38,6 +38,9 @@ class ValueInspector
         $this->content = $content;
     }
 
+    /**
+     * @return Item\ItemInterface
+     */
     public function getMatchedItem()
     {
         $items = $this->getMatchedItems();
@@ -120,5 +123,14 @@ class ValueInspector
             $this->content
         );
         return $text;
+    }
+
+    public function getReplacedValue()
+    {
+        $item = $this->getMatchedItem();
+        if (is_object($item)) {
+            return $item->getFieldValue();
+        }
+        return $this->content;
     }
 }
