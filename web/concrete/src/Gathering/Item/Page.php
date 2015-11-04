@@ -2,7 +2,8 @@
 
 namespace Concrete\Core\Gathering\Item;
 
-use Loader;
+use Core;
+use Database;
 use Concrete\Core\Gathering\DataSource\DataSource as GatheringDataSource;
 use Exception;
 use Permissions;
@@ -36,11 +37,14 @@ class Page extends Item
         }
 
         if (is_object($item)) {
-            $db = Loader::db();
-            $db->Execute('insert into gaPage (gaiID, cID) values (?, ?)', array(
-                $item->getGatheringItemID(),
-                $c->getCollectionID(),
-            ));
+            $db = Database::connection();
+            $db->executeQuery(
+                'insert into gaPage (gaiID, cID) values (?, ?)',
+                array(
+                    $item->getGatheringItemID(),
+                    $c->getCollectionID(),
+                )
+            );
             $item->assignFeatureAssignments($c);
             $item->setAutomaticGatheringItemTemplate();
 
@@ -52,7 +56,7 @@ class Page extends Item
     {
         $this->addFeatureAssignment('title', $c->getCollectionName());
         $this->addFeatureAssignment('date_time', $c->getCollectionDatePublic());
-        $this->addFeatureAssignment('link', Loader::helper('navigation')->getLinkToCollection($c));
+        $this->addFeatureAssignment('link', Core::make('helper/navigation')->getLinkToCollection($c));
         if ($c->getCollectionDescription() != '') {
             $this->addFeatureAssignment('description', $c->getCollectionDescription());
         }
@@ -68,11 +72,18 @@ class Page extends Item
     public function duplicate(Gathering $gathering)
     {
         $item = parent::duplicate($gathering);
-        $db = Loader::db();
-        $db->Execute('delete from gaPage where gaiID = ?', array($item->getGatheringItemID()));
-        $db->Execute('insert into gaPage (gaiID, cID) values (?, ?)', array(
-            $item->getGatheringItemID(), $this->page->getCollectionID(),
-        ));
+        $db = Database::connection();
+        $db->executeQuery(
+            'delete from gaPage where gaiID = ?',
+            array($item->getGatheringItemID())
+        );
+        $db->executeQuery(
+            'insert into gaPage (gaiID, cID) values (?, ?)',
+            array(
+                $item->getGatheringItemID(),
+                $this->page->getCollectionID(),
+            )
+        );
 
         return $item;
     }
@@ -80,13 +91,13 @@ class Page extends Item
     public function delete()
     {
         parent::delete();
-        $db = Loader::db();
-        $db->Execute('delete from gaPage where gaiID = ?', array($this->getGatheringItemID()));
+        $db = Database::connection();
+        $db->executeQuery('delete from gaPage where gaiID = ?', array($this->getGatheringItemID()));
     }
 
     public function loadDetails()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $row = $db->GetRow('select cID from gaPage where gaiID = ?', array($this->getGatheringItemID()));
         $this->setPropertiesFromArray($row);
         $this->page = self::getByID($row['cID'], 'ACTIVE');
