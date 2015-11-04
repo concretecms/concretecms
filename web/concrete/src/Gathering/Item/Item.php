@@ -9,6 +9,11 @@ use Concrete\Core\Foundation\Object;
 use Concrete\Core\Gathering\DataSource\DataSource as GatheringDataSource;
 use RuntimeException;
 
+/**
+ * Base class for gathering items.
+ *
+ * @method static Key[] add(Gathering $ag, GatheringDataSource $ags, string $gaiPublicDateTime, string $gaiTitle, string $gaiKey, int $gaiSlotWidth = 1, int $gaiSlotHeight = 1) Deprecated method. Use Item::create instead.
+ */
 abstract class Item extends Object
 {
     abstract public function loadDetails();
@@ -241,7 +246,15 @@ abstract class Item extends Object
         return $items;
     }
 
-    public static function add(
+    public static function __callStatic($name, $arguments)
+    {
+        if (strcasecmp($name, 'add') === 0) {
+            return call_user_func_array('self::create', $arguments);
+        }
+        trigger_error("Call to undefined method ".__CLASS__."::$name()", E_USER_ERROR);
+    }
+
+    public static function create(
         Gathering $ag,
         GatheringDataSource $ags,
         $gaiPublicDateTime,
