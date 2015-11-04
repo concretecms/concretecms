@@ -8,7 +8,7 @@ use Concrete\Core\Workflow\Request\Request as WorkflowRequest;
 use Concrete\Core\Workflow\EmptyWorkflow;
 use Concrete\Core\Workflow\Progress\Category as WorkflowProgressCategory;
 use Concrete\Core\Package\PackageList;
-use Loader;
+use Database;
 use Core;
 
 abstract class Progress extends Object
@@ -100,7 +100,7 @@ abstract class Progress extends Object
         if ($this->wrID > 0) {
             $cat = WorkflowProgressCategory::getByID($this->wpCategoryID);
             $handle = $cat->getWorkflowProgressCategoryHandle();
-            $class = '\\Core\\Workflow\\Request\\' . Loader::helper('text')->camelcase($handle) . 'Request';
+            $class = '\\Core\\Workflow\\Request\\' . Core::make('helper/text')->camelcase($handle) . 'Request';
             $pkHandle = $cat->getPackageHandle();
             $class = core_class($class, $pkHandle);
             $wr = $class::getByID($this->wrID);
@@ -117,13 +117,13 @@ abstract class Progress extends Object
      */
     public static function add($wpCategoryHandle, Workflow $wf, WorkflowRequest $wr)
     {
-        $db = Loader::db();
-        $wpDateAdded = Loader::helper('date')->getOverridableNow();
-        $wpCategoryID = $db->GetOne('select wpCategoryID from WorkflowProgressCategories where wpCategoryHandle = ?', array($wpCategoryHandle));
-        $db->Execute('insert into WorkflowProgress (wfID, wrID, wpDateAdded, wpCategoryID) values (?, ?, ?, ?)', array(
+        $db = Database::connection();
+        $wpDateAdded = Core::make('helper/date')->getOverridableNow();
+        $wpCategoryID = $db->fetchColumn('select wpCategoryID from WorkflowProgressCategories where wpCategoryHandle = ?', array($wpCategoryHandle));
+        $db->executeQuery('insert into WorkflowProgress (wfID, wrID, wpDateAdded, wpCategoryID) values (?, ?, ?, ?)', array(
             $wf->getWorkflowID(), $wr->getWorkflowRequestID(), $wpDateAdded, $wpCategoryID,
         ));
-        $wp = self::getByID($db->Insert_ID());
+        $wp = self::getByID($db->lastInsertId());
         $wp->addWorkflowProgressHistoryObject($wr);
 
         return $wp;
@@ -131,11 +131,11 @@ abstract class Progress extends Object
 
     public function delete()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $wr = $this->getWorkflowRequestObject();
-        $db->Execute('delete from WorkflowProgress where wpID = ?', array($this->wpID));
+        $db->executeQuery('delete from WorkflowProgress where wpID = ?', array($this->wpID));
         // now we clean up any WorkflowRequests that aren't in use any longer
-        $cnt = $db->GetOne('select count(wpID) from WorkflowProgress where wrID = ?', array($this->wrID));
+        $cnt = $db->fetchColumn('select count(wpID) from WorkflowProgress where wrID = ?', array($this->wrID));
         if ($cnt == 0) {
             $wr->delete();
         }
@@ -143,8 +143,8 @@ abstract class Progress extends Object
 
     public static function getByID($wpID)
     {
-        $db = Loader::db();
-        $r = $db->GetRow('select WorkflowProgress.*, WorkflowProgressCategories.wpCategoryHandle, WorkflowProgressCategories.pkgID from WorkflowProgress inner join WorkflowProgressCategories on WorkflowProgress.wpCategoryID = WorkflowProgressCategories.wpCategoryID where wpID  = ?', array($wpID));
+        $db = Database::connection();
+        $r = $db->fetchAssoc('select WorkflowProgress.*, WorkflowProgressCategories.wpCategoryHandle, WorkflowProgressCategories.pkgID from WorkflowProgress inner join WorkflowProgressCategories on WorkflowProgress.wpCategoryID = WorkflowProgressCategories.wpCategoryID where wpID  = ?', array($wpID));
         if (!is_array($r) || (!$r['wpID'])) {
             return false;
         }
@@ -187,10 +187,10 @@ abstract class Progress extends Object
 
     public function updateOnAction(Workflow $wf)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $num = $wf->getWorkflowProgressCurrentStatusNum($this);
-        $time = Loader::helper('date')->getOverridableNow();
-        $db->Execute('update WorkflowProgress set wpDateLastAction = ?, wpCurrentStatus = ? where wpID = ?', array($time, $num, $this->wpID));
+        $time = Core::make('helper/date')->getOverridableNow();
+        $db->executeQuery('update WorkflowProgress set wpDateLastAction = ?, wpCurrentStatus = ? where wpID = ?', array($time, $num, $this->wpID));
     }
 
     /**
@@ -229,8 +229,8 @@ abstract class Progress extends Object
     public function getWorkflowProgressHistoryObjectByID($wphID)
     {
         $class = '\\Concrete\\Core\\Workflow\\Progress\\' . camelcase($this->getWorkflowProgressCategoryHandle()) . 'History';
-        $db = Loader::db();
-        $row = $db->GetRow('select * from WorkflowProgressHistory where wphID = ?', array($wphID));
+        $db = Database::connection();
+        $row = $db->fetchAssoc('select * from WorkflowProgressHistory where wphID = ?', array($wphID));
         if (is_array($row) && ($row['wphID'])) {
             $obj = new $class();
             $obj->setPropertiesFromArray($row);
@@ -242,14 +242,14 @@ abstract class Progress extends Object
 
     public function addWorkflowProgressHistoryObject($obj)
     {
-        $db = Loader::db();
-        $db->Execute('insert into WorkflowProgressHistory (wpID, object) values (?, ?)', array($this->wpID, serialize($obj)));
+        $db = Database::connection();
+        $db->executeQuery('insert into WorkflowProgressHistory (wpID, object) values (?, ?)', array($this->wpID, serialize($obj)));
     }
 
     public function markCompleted()
     {
-        $db = Loader::db();
-        $db->Execute('update WorkflowProgress set wpIsCompleted = 1 where wpID = ?', array($this->wpID));
+        $db = Database::connection();
+        $db->executeQuery('update WorkflowProgress set wpIsCompleted = 1 where wpID = ?', array($this->wpID));
     }
 
     abstract public function getPendingWorkflowProgressList();

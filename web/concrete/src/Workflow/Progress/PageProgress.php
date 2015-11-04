@@ -2,7 +2,8 @@
 
 namespace Concrete\Core\Workflow\Progress;
 
-use Loader;
+use Core;
+use Database;
 use Page;
 use Concrete\Core\Workflow\Workflow;
 use Concrete\Core\Workflow\Request\PageRequest as PageWorkflowRequest;
@@ -14,7 +15,7 @@ class PageProgress extends Progress
     public static function add(Workflow $wf, PageWorkflowRequest $wr)
     {
         $wp = parent::add('page', $wf, $wr);
-        $db = Loader::db();
+        $db = Database::connection();
         $db->Replace('PageWorkflowProgress', array('cID' => $wr->getRequestedPageID(), 'wpID' => $wp->getWorkflowProgressID()), array('cID', 'wpID'), true);
         $wp->cID = $wr->getRequestedPageID();
 
@@ -23,7 +24,7 @@ class PageProgress extends Progress
 
     public function loadDetails()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $row = $db->GetRow('select cID from PageWorkflowProgress where wpID = ?', array($this->wpID));
         $this->setPropertiesFromArray($row);
     }
@@ -31,13 +32,13 @@ class PageProgress extends Progress
     public function delete()
     {
         parent::delete();
-        $db = Loader::db();
+        $db = Database::connection();
         $db->Execute('delete from PageWorkflowProgress where wpID = ?', array($this->wpID));
     }
 
     public static function getList(Page $c, $filters = array('wpIsCompleted' => 0), $sortBy = 'wpDateAdded asc')
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $filter = '';
         foreach ($filters as $key => $value) {
             $filter .= ' and ' . $key . ' = ' . $value . ' ';
@@ -57,7 +58,7 @@ class PageProgress extends Progress
 
     public function getWorkflowProgressFormAction()
     {
-        return REL_DIR_FILES_TOOLS_REQUIRED . '/' . DIRNAME_WORKFLOW . '/categories/page?task=save_workflow_progress&cID=' . $this->cID . '&wpID=' . $this->getWorkflowProgressID() . '&' . Loader::helper('validation/token')->getParameter('save_workflow_progress');
+        return REL_DIR_FILES_TOOLS_REQUIRED . '/' . DIRNAME_WORKFLOW . '/categories/page?task=save_workflow_progress&cID=' . $this->cID . '&wpID=' . $this->getWorkflowProgressID() . '&' . Core::make('helper/validation/token')->getParameter('save_workflow_progress');
     }
 
     public function getPendingWorkflowProgressList()
