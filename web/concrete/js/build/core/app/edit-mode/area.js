@@ -43,6 +43,15 @@
         },
 
         /**
+         * Get this area in the passed edit mode context
+         * @param Concrete.EditMode edit_mode
+         * @returns Concrete.Area|null
+         */
+        inEditMode: function areaInEditMode(edit_mode) {
+            return edit_mode.getAreaByID(this.getId());
+        },
+
+        /**
          * Handle unbinding.
          */
         destroy: function areaDestroy() {
@@ -93,7 +102,9 @@
                     type = Concrete.Block;
                 }
 
-                block = new type(me, my);
+                block = new type(me, my.getEditMode());
+                block.setArea(my);
+
                 my.addBlock(block);
             });
         },
