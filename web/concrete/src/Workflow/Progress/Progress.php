@@ -1,13 +1,16 @@
 <?php
+
 namespace Concrete\Core\Workflow\Progress;
-use \Concrete\Core\Foundation\Object;
-use \Concrete\Core\Workflow\Workflow;
-use \Concrete\Core\Workflow\Request\Request as WorkflowRequest;
-use \Concrete\Core\Workflow\EmptyWorkflow;
-use \Concrete\Core\Workflow\Progress\Category as WorkflowProgressCategory;
-use \Concrete\Core\Package\PackageList;
+
+use Concrete\Core\Foundation\Object;
+use Concrete\Core\Workflow\Workflow;
+use Concrete\Core\Workflow\Request\Request as WorkflowRequest;
+use Concrete\Core\Workflow\EmptyWorkflow;
+use Concrete\Core\Workflow\Progress\Category as WorkflowProgressCategory;
+use Concrete\Core\Package\PackageList;
 use Loader;
 use Core;
+
 abstract class Progress extends Object
 {
     protected $wpID;
@@ -16,9 +19,9 @@ abstract class Progress extends Object
     protected $response;
     protected $wpDateLastAction;
 
-
     /**
-     * Gets the Workflow object attached to this WorkflowProgress object
+     * Gets the Workflow object attached to this WorkflowProgress object.
+     *
      * @return Workflow
      */
     public function getWorkflowObject()
@@ -28,11 +31,12 @@ abstract class Progress extends Object
         } else {
             $wf = new EmptyWorkflow();
         }
+
         return $wf;
     }
 
     /**
-     * Gets an optional WorkflowResponse object. This is set in some cases
+     * Gets an optional WorkflowResponse object. This is set in some cases.
      */
     public function getWorkflowProgressResponseObject()
     {
@@ -45,7 +49,7 @@ abstract class Progress extends Object
     }
 
     /**
-     * Gets the date of the last action
+     * Gets the date of the last action.
      */
     public function getWorkflowProgressDateLastAction()
     {
@@ -53,28 +57,42 @@ abstract class Progress extends Object
     }
 
     /**
-     * Gets the ID of the progress object
+     * Gets the ID of the progress object.
      */
-    public function getWorkflowProgressID() {return $this->wpID;}
+    public function getWorkflowProgressID()
+    {
+        return $this->wpID;
+    }
 
     /**
-     * Gets the ID of the progress object
+     * Gets the ID of the progress object.
      */
-    public function getWorkflowProgressCategoryHandle() {return $this->wpCategoryHandle;}
+    public function getWorkflowProgressCategoryHandle()
+    {
+        return $this->wpCategoryHandle;
+    }
 
     /**
-     * Get the category ID
+     * Get the category ID.
      */
-    public function getWorkflowProgressCategoryID() {return $this->wpCategoryID;}
+    public function getWorkflowProgressCategoryID()
+    {
+        return $this->wpCategoryID;
+    }
 
     /**
-     * Gets the date the WorkflowProgress object was added
+     * Gets the date the WorkflowProgress object was added.
+     *
      * @return datetime
      */
-    public function getWorkflowProgressDateAdded() {return $this->wpDateAdded;}
+    public function getWorkflowProgressDateAdded()
+    {
+        return $this->wpDateAdded;
+    }
 
     /**
-     * Get the WorkflowRequest object for the current WorkflowProgress object
+     * Get the WorkflowRequest object for the current WorkflowProgress object.
+     *
      * @return WorkflowRequest
      */
     public function getWorkflowRequestObject()
@@ -88,6 +106,7 @@ abstract class Progress extends Object
             $wr = $class::getByID($this->wrID);
             if (is_object($wr)) {
                 $wr->setCurrentWorkflowProgressObject($this);
+
                 return $wr;
             }
         }
@@ -102,10 +121,11 @@ abstract class Progress extends Object
         $wpDateAdded = Loader::helper('date')->getOverridableNow();
         $wpCategoryID = $db->GetOne('select wpCategoryID from WorkflowProgressCategories where wpCategoryHandle = ?', array($wpCategoryHandle));
         $db->Execute('insert into WorkflowProgress (wfID, wrID, wpDateAdded, wpCategoryID) values (?, ?, ?, ?)', array(
-            $wf->getWorkflowID(), $wr->getWorkflowRequestID(), $wpDateAdded, $wpCategoryID
+            $wf->getWorkflowID(), $wr->getWorkflowRequestID(), $wpDateAdded, $wpCategoryID,
         ));
         $wp = self::getByID($db->Insert_ID());
         $wp->addWorkflowProgressHistoryObject($wr);
+
         return $wp;
     }
 
@@ -137,13 +157,14 @@ abstract class Progress extends Object
         $wp = Core::make($class);
         $wp->setPropertiesFromArray($r);
         $wp->loadDetails();
+
         return $wp;
     }
 
     public static function getRequestedTask()
     {
         $task = '';
-        foreach($_POST as $key => $value) {
+        foreach ($_POST as $key => $value) {
             if (strpos($key, 'action_') > -1) {
                 return substr($key, 7);
             }
@@ -151,7 +172,7 @@ abstract class Progress extends Object
     }
 
     /**
-     * The function that is automatically run when a workflowprogress object is started
+     * The function that is automatically run when a workflowprogress object is started.
      */
     public function start()
     {
@@ -160,6 +181,7 @@ abstract class Progress extends Object
             $r = $wf->start($this);
             $this->updateOnAction($wf);
         }
+
         return $r;
     }
 
@@ -173,7 +195,8 @@ abstract class Progress extends Object
 
     /**
      * Attempts to run a workflow task on the bound WorkflowRequest object first, then if that doesn't exist, attempts to run
-     * it on the current WorkflowProgress object
+     * it on the current WorkflowProgress object.
+     *
      * @return WorkflowProgressResponse
      */
     public function runTask($task, $args = array())
@@ -186,6 +209,7 @@ abstract class Progress extends Object
         if (!($wpr instanceof Response)) {
             $wpr = new Response();
         }
+
         return $wpr;
     }
 
@@ -195,6 +219,7 @@ abstract class Progress extends Object
         $req = $this->getWorkflowRequestObject();
         $actions = $req->getWorkflowRequestAdditionalActions($this);
         $actions = array_merge($actions, $w->getWorkflowProgressActions($this));
+
         return $actions;
     }
 
@@ -210,10 +235,10 @@ abstract class Progress extends Object
             $obj = new $class();
             $obj->setPropertiesFromArray($row);
             $obj->object = @unserialize($row['object']);
+
             return $obj;
         }
     }
-
 
     public function addWorkflowProgressHistoryObject($obj)
     {
@@ -228,5 +253,4 @@ abstract class Progress extends Object
     }
 
     abstract public function getPendingWorkflowProgressList();
-
 }
