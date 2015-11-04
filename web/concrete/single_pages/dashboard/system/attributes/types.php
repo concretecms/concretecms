@@ -2,7 +2,7 @@
 use \Concrete\Core\Attribute\Type as AttributeType;
 use \Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
 use \Concrete\Core\Attribute\PendingType as PendingAttributeType;
-$types = AttributeType::getList();
+$types = AttributeType::getAttributeTypeList();
 $categories = AttributeKeyCategory::getList();
 $txt = Loader::helper('text');
 $form = Loader::helper('form');
