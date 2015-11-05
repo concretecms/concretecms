@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Page\Type\Composer\Control\CorePageProperty;
 
-use Loader;
+use Core;
 use UserInfo;
 use Concrete\Core\Page\Page;
 
@@ -17,7 +17,7 @@ class UserCorePageProperty extends CorePageProperty
 
     public function publishToPage(Page $c, $data, $controls)
     {
-        if (Loader::helper('validation/numbers')->integer($data['user'])) {
+        if (Core::make('helper/validation/numbers')->integer($data['user'])) {
             $this->addPageTypeComposerControlRequestValue('uID', $data['user']);
         }
         parent::publishToPage($c, $data, $controls);
@@ -27,7 +27,7 @@ class UserCorePageProperty extends CorePageProperty
     {
         $uID = $this->getPageTypeComposerControlDraftValue();
         $ux = UserInfo::getByID($uID);
-        $e = Loader::helper('validation/error');
+        $e = Core::make('helper/validation/error');
         if (!is_object($ux)) {
             $control = $this->getPageTypeComposerFormLayoutSetControlObject();
             $e->add(t('You haven\'t chosen a valid %s', $control->getPageTypeComposerControlLabel()));
