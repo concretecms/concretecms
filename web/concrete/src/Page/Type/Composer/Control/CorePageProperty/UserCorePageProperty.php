@@ -4,7 +4,7 @@ namespace Concrete\Core\Page\Type\Composer\Control\CorePageProperty;
 
 use Core;
 use UserInfo;
-use Concrete\Core\Page\Page;
+use Page;
 
 class UserCorePageProperty extends CorePageProperty
 {
