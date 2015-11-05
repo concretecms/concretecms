@@ -113,6 +113,20 @@ class LinkAbstractor extends Object
             $text
         );
 
+        // now we add in support for the links
+        $text = preg_replace_callback(
+            '/{CCM:FID_([0-9]+)}/i',
+            function ($matches) {
+                $fID = $matches[1];
+                if ($fID > 0) {
+                    $f = File::getByID($fID);
+                    return $f->getURL();
+                }
+            },
+            $text
+        );
+
+
         // now we add in support for the files that we view inline
         $dom = new HtmlDomParser();
         $r = $dom->str_get_html($text, true, true, DEFAULT_TARGET_CHARSET, false);
@@ -278,6 +292,17 @@ class LinkAbstractor extends Object
                 $db = Loader::db();
                 $fID = $db->GetOne('select fID from FileVersions where fvFilename = ?', array($filename));
                 return '{CCM:FID_DL_' . $fID . '}';
+            },
+            $text
+        );
+
+        $text = preg_replace_callback(
+            '/\{ccm:export:image:(.*?)\}/i',
+            function ($matches) {
+                $filename = $matches[1];
+                $db = Loader::db();
+                $fID = $db->GetOne('select fID from FileVersions where fvFilename = ?', array($filename));
+                return '{CCM:FID_' . $fID . '}';
             },
             $text
         );

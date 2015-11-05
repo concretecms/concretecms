@@ -13,7 +13,7 @@ class PictureItem extends FileItem
     public function getContentValue()
     {
         if ($o = $this->getContentObject()) {
-            return sprintf('<concrete-picture fID="%s" />', $o->getFileID());
+            return '<concrete-picture fID="' . $o->getFileID() . '" />';
         }
     }
 
