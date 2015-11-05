@@ -2,21 +2,28 @@
 
 class ContentImporterValueInspectorTest extends PHPUnit_Framework_TestCase
 {
-    public function testMatchedSimpleValues()
+
+    public function providerMatchedSimpleValues()
     {
-        foreach (array(
+        return array(
             array('{ccm:export:page:/ok/here/we-go}', '/ok/here/we-go', '\Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PageItem'),
             array('{ccm:export:file:house.jpg}', 'house.jpg', '\Concrete\Core\Backup\ContentImporter\ValueInspector\Item\FileItem'),
             array('{ccm:export:pagetype:blog}', 'blog', '\Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PageTypeItem'),
             array('{ccm:export:pagefeed:rss}', 'rss', '\Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PageFeedItem'),
-                    array('{ccm:export:image:my_cool_pic.jpg}', 'my_cool_pic.jpg', '\Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PictureItem'),
-                    array('<concrete-picture file="avatar.jpg"></concrete-picture>', 'avatar.jpg', '\Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PictureItem'), )
-            as $test) {
-            $inspector = new \Concrete\Core\Backup\ContentImporter\ValueInspector\ValueInspector($test[0]);
-            $item = $inspector->getMatchedItem();
-            $this->assertEquals($test[1], $item->getReference());
-            $this->assertInstanceOf($test[2], $item);
-        }
+            array('{ccm:export:image:my_cool_pic.jpg}', 'my_cool_pic.jpg', '\Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PictureItem'),
+            array('<concrete-picture file="avatar.jpg"></concrete-picture>', 'avatar.jpg', '\Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PictureItem'),
+        );
+    }
+
+    /**
+     * @dataProvider providerMatchedSimpleValues
+     */
+    public function testMatchedSimpleValues($content, $reference, $itemClass)
+    {
+        $inspector = new \Concrete\Core\Backup\ContentImporter\ValueInspector\ValueInspector($content);
+        $item = $inspector->getMatchedItem();
+        $this->assertEquals($reference, $item->getReference());
+        $this->assertInstanceOf($itemClass, $item);
     }
 
     public function testMatchedContentPageAndImage()
