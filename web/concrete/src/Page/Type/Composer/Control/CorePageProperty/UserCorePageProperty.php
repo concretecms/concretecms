@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Page\Type\Composer\Control\CorePageProperty;
 
 use Loader;
@@ -30,6 +31,7 @@ class UserCorePageProperty extends CorePageProperty
         if (!is_object($ux)) {
             $control = $this->getPageTypeComposerFormLayoutSetControlObject();
             $e->add(t('You haven\'t chosen a valid %s', $control->getPageTypeComposerControlLabel()));
+
             return $e;
         }
     }
@@ -42,5 +44,4 @@ class UserCorePageProperty extends CorePageProperty
             return $c->getCollectionUserID();
         }
     }
-
 }
