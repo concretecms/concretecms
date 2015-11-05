@@ -2,19 +2,16 @@
 
 class ContentImporterValueInspectorTest extends PHPUnit_Framework_TestCase
 {
-
     public function testMatchedSimpleValues()
     {
-
-        foreach(array(
+        foreach (array(
             array('{ccm:export:page:/ok/here/we-go}', '/ok/here/we-go', '\Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PageItem'),
             array('{ccm:export:file:house.jpg}', 'house.jpg', '\Concrete\Core\Backup\ContentImporter\ValueInspector\Item\FileItem'),
             array('{ccm:export:pagetype:blog}', 'blog', '\Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PageTypeItem'),
             array('{ccm:export:pagefeed:rss}', 'rss', '\Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PageFeedItem'),
                     array('{ccm:export:image:my_cool_pic.jpg}', 'my_cool_pic.jpg', '\Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PictureItem'),
-                    array('<concrete-picture file="avatar.jpg"></concrete-picture>', 'avatar.jpg', '\Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PictureItem'))
+                    array('<concrete-picture file="avatar.jpg"></concrete-picture>', 'avatar.jpg', '\Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PictureItem'), )
             as $test) {
-
             $inspector = new \Concrete\Core\Backup\ContentImporter\ValueInspector\ValueInspector($test[0]);
             $item = $inspector->getMatchedItem();
             $this->assertEquals($test[1], $item->getReference());
@@ -24,7 +21,6 @@ class ContentImporterValueInspectorTest extends PHPUnit_Framework_TestCase
 
     public function testMatchedContentPageAndImage()
     {
-
         $content = <<<EOL
         <p>This is a content block. It is amazing. <a href="{ccm:export:page:/path/to/page}">Link 1</a>.
         Don't forget a second <a href="{ccm:export:page:/about}">link.</a>. Also, we're going to embed a picture
@@ -48,7 +44,6 @@ EOL;
 
     public function testMatchedContentFilePageTypePageFeed()
     {
-
         $content = <<<EOL
         <p>Here is a link to an <a href="{ccm:export:pagefeed:blog}">rss feed</a>. We're also linking to a
         <a href="{ccm:export:file:filename1.jpg}">couple</a> of <A href="{ccm:export:file:filename2.JPG}">files.</a>.
@@ -67,5 +62,4 @@ EOL;
         $this->assertInstanceOf('\Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PageTypeItem', $items[2]);
         $this->assertInstanceOf('\Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PageFeedItem', $items[3]);
     }
-
 }
