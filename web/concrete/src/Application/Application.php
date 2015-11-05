@@ -250,6 +250,8 @@ class Application extends Container
      */
     public function setupPackages()
     {
+        $checkAfterStart = false;
+
         foreach($this->packages as $pkg) {
             // handle updates
             if (Config::get('concrete.updates.enable_auto_update_packages')) {
@@ -272,8 +274,19 @@ class Application extends Container
             if (method_exists($pkg, 'on_start')) {
                 $pkg->on_start();
             }
+            if (method_exists($pkg, 'on_after_packages_start')) {
+                $checkAfterStart = true;
+            }
         }
         Config::set('app.bootstrap.packages_loaded', true);
+
+        if ($checkAfterStart) {
+            foreach($this->packages as $pkg) {
+                if (method_exists($pkg, 'on_after_packages_start')) {
+                    $pkg->on_after_packages_start();
+                }
+            }
+        }
     }
 
     /**
