@@ -8,6 +8,7 @@ use Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PageFeedItem;
 use Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PageItem;
 use Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PageTypeItem;
 use Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PictureItem;
+use Concrete\Core\Backup\ContentImporter\ValueInspector\Item\ImageItem;
 
 class ValueInspector
 {
@@ -68,7 +69,7 @@ class ValueInspector
                 $o = new PageFeedItem($reference);
                 break;
             case 6:
-                $o = new PictureItem($reference);
+                $o = new ImageItem($reference);
                 break;
         }
         return $o;

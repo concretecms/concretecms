@@ -42,7 +42,7 @@ EOL;
         $inspector = new \Concrete\Core\Backup\ContentImporter\ValueInspector\ValueInspector($content);
         $content = trim($inspector->getReplacedContent());
 
-        $this->assertEquals('<p>This is a content block. Here is a feed. <a href="http://www.dummyco.com/path/to/server/index.php/rss/blog">Feed</a>. It is amazing. <a href="CCM:CID_7">Link 1</a>. Don\'t forget a second <a href="CCM:CID_5">link.</a>. It\'s a pretty good one. <a href="thumbs_up.html">Thumbs up!</a> Excellent! <a href="CCM:CID_1">See you later!</a>', $content);
+        $this->assertEquals('<p>This is a content block. Here is a feed. <a href="http://www.dummyco.com/path/to/server/index.php/rss/blog">Feed</a>. It is amazing. <a href="{CCM:CID_7}">Link 1</a>. Don\'t forget a second <a href="{CCM:CID_5}">link.</a>. It\'s a pretty good one. <a href="thumbs_up.html">Thumbs up!</a> Excellent! <a href="{CCM:CID_1}">See you later!</a>', $content);
     }
 
     public function testMatchedObjects()

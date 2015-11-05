@@ -27,7 +27,7 @@ class PageItem extends AbstractItem
     public function getContentValue()
     {
         if ($o = $this->getContentObject()) {
-            return sprintf("CCM:CID_%s", $o->getCollectionID());
+            return sprintf("{CCM:CID_%s}", $o->getCollectionID());
         }
     }
 
