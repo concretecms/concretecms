@@ -52,6 +52,7 @@ return array(
         'GroupTreeNode'                        => '\Concrete\Core\Tree\Node\Type\Group',
         'Job'                                  => '\Concrete\Core\Job\Job',
         'JobSet'                               => '\Concrete\Core\Job\Set',
+        'LinkAbstractor'                       => '\Concrete\Core\Editor\LinkAbstractor',
         'Loader'                               => '\Concrete\Core\Legacy\Loader',
         'Localization'                         => '\Concrete\Core\Localization\Localization',
         'Marketplace'                          => '\Concrete\Core\Marketplace\Marketplace',

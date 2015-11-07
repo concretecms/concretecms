@@ -5,7 +5,7 @@ namespace Concrete\Block\ImageSlider;
 use Concrete\Core\Block\BlockController;
 use Database;
 use Page;
-use Concrete\Core\Editor\LinkAbstractor;
+use LinkAbstractor;
 
 class Controller extends BlockController
 {
