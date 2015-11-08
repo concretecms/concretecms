@@ -218,6 +218,7 @@ class DispatcherRouteCallback extends RouteCallback
                 $mobileTheme = Theme::getByID(Config::get('concrete.misc.mobile_theme_id'));
                 if ($mobileTheme instanceof Theme) {
                     $view->setViewTheme($mobileTheme);
+                    $controller->setTheme($mobileTheme);
                 }
             }
         }
