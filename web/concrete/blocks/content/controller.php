@@ -3,7 +3,7 @@
 namespace Concrete\Block\Content;
 
 use Concrete\Core\Block\BlockController;
-use Concrete\Core\Editor\LinkAbstractor;
+use LinkAbstractor;
 
 /**
  * The controller for the content block.
