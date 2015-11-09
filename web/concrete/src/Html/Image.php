@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Html;
 
+use PageTheme;
+
 class Image
 {
 
@@ -13,7 +15,7 @@ class Image
     {
         $c = \Page::getCurrentPage();
         if (is_object($c)) {
-            $th = $c->getCollectionThemeObject();
+            $th = PageTheme::getByHandle($c->getPageController()->getTheme());
             if (is_object($th)) {
                 $this->theme = $th;
                 $this->usePictureTag = count($th->getThemeResponsiveImageMap()) > 0;
