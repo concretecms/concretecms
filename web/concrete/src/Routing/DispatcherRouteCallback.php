@@ -6,7 +6,6 @@ use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Url\Url;
 use PermissionKey;
 use Request;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use User;
 use Events;
 use Loader;
