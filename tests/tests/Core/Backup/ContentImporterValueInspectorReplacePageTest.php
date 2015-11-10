@@ -47,13 +47,13 @@ class ContentImporterValueInspectorReplacePageTest extends PageTestCase
         $this->createData();
 
         $content = <<<EOL
-        <p>This is a content block. Here is a feed. <a href="{ccm:export:pagefeed:blog}">Feed</a>. It is amazing. <a href="{ccm:export:page:/page-2/subpage-b}">Link 1</a>. Here's another. <a href="{ccm:export:page:/page-2/subpage-b}">Link 2</a>. Don't forget a second <a href="{ccm:export:page:/page-4}">link.</a>. It's a pretty good one. <a href="thumbs_up.html">Thumbs up!</a> Excellent! <a href="{ccm:export:page:/}">See you later!</a>
+        <p>This is a content block. Here is a feed. <a href="{ccm:export:pagefeed:blog}">Feed</a>. It is amazing. <a href="{ccm:export:page:/page-2/subpage-b}">Link 1</a>. <a href="{ccm:export:page:}">Home</a>. Here's another. <a href="{ccm:export:page:/page-2/subpage-b}">Link 2</a>. Don't forget a second <a href="{ccm:export:page:/page-4}">link.</a>. It's a pretty good one. <a href="thumbs_up.html">Thumbs up!</a> Excellent! <a href="{ccm:export:page:/}">See you later!</a>
 EOL;
 
         $inspector = Core::make('import/value_inspector');
         $result = $inspector->inspect($content);
         $content = trim($result->getReplacedContent());
-        $this->assertEquals('<p>This is a content block. Here is a feed. <a href="http://www.dummyco.com/path/to/server/index.php/rss/blog">Feed</a>. It is amazing. <a href="{CCM:CID_7}">Link 1</a>. Here\'s another. <a href="{CCM:CID_7}">Link 2</a>. Don\'t forget a second <a href="{CCM:CID_5}">link.</a>. It\'s a pretty good one. <a href="thumbs_up.html">Thumbs up!</a> Excellent! <a href="{CCM:CID_1}">See you later!</a>', $content);
+        $this->assertEquals('<p>This is a content block. Here is a feed. <a href="http://www.dummyco.com/path/to/server/index.php/rss/blog">Feed</a>. It is amazing. <a href="{CCM:CID_7}">Link 1</a>. <a href="{CCM:CID_1}">Home</a>. Here\'s another. <a href="{CCM:CID_7}">Link 2</a>. Don\'t forget a second <a href="{CCM:CID_5}">link.</a>. It\'s a pretty good one. <a href="thumbs_up.html">Thumbs up!</a> Excellent! <a href="{CCM:CID_1}">See you later!</a>', $content);
     }
 
     public function testCustomReplaceContent()

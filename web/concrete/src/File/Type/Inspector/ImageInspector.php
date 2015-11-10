@@ -30,10 +30,8 @@ class ImageInspector extends Inspector {
 		$fv->setAttribute($at2, $data->getHeight());
 
 		// Set image aspect ratio if we can.
-		\Log::info('Image Inspector');
 		if (\Config::get('concrete.file_manager.images.use_exim_data_to_rotate_images')) {
 			$metadata = $image->metadata();
-			\Log::info('Checking EXIF Metadata');
 			if (isset($metadata['ifd0.Orientation'])) {
 				\Log::info('EXIF data found: '. $metadata['ifd0.Orientation']);
 				switch($metadata['ifd0.Orientation']) {

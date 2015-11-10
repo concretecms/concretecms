@@ -29,7 +29,7 @@ abstract class AbstractRegularExpressionRoutine implements RoutineInterface
             $content = preg_replace_callback(
                 $this->getRegularExpression(),
                 function ($matches) {
-                    if ($matches[1]) {
+                    if (isset($matches[1])) {
                         $identifier = $matches[1];
                         $item = $this->getItem($identifier);
                         return $item->getContentValue();

@@ -244,57 +244,9 @@ class LinkAbstractor extends Object
 	 */
 	public static function import($text)
 	{
-		$dom = new HtmlDomParser();
-		$r = $dom->str_get_html($text);
-		if (is_object($r)) {
-			foreach ($r->find('concrete-picture') as $picture) {
-				$filename = $picture->file;
-				$db = Loader::db();
-				$fID = $db->GetOne('select fID from FileVersions where fvFilename = ?', array($filename));
-				$picture->fID = $fID;
-				$picture->file = false;
-			}
-			$text = (string)$r;
-		}
-
-		$text = preg_replace_callback(
-			'/\{ccm:export:page:(.*?)\}/i',
-			function ($matches) {
-				$cPath = $matches[1];
-				if ($cPath) {
-					$pc = Page::getByPath($cPath);
-					return '{CCM:CID_' . $pc->getCollectionID() . '}';
-				} else {
-					return '{CCM:CID_1}';
-				}
-			},
-			$text
-		);
-
-		$text = preg_replace_callback(
-			'/\{ccm:export:file:(.*?)\}/i',
-			function ($matches) {
-				$filename = $matches[1];
-				$db = Loader::db();
-				$fID = $db->GetOne('select fID from FileVersions where fvFilename = ?', array($filename));
-				return '{CCM:FID_DL_' . $fID . '}';
-			},
-			$text
-		);
-
-		$text = preg_replace_callback(
-			'/\{ccm:export:define:(.*?)\}/i',
-			function ($matches) {
-				$define = $matches[1];
-				if (defined($define)) {
-					$r = get_defined_constants();
-					return $r[$define];
-				}
-			},
-			$text
-		);
-
-		return $text;
+		$inspector = \Core::make('import/value_inspector');
+		$result = $inspector->inspect((string) $text);
+		return $result->getReplacedContent();
 	}
 
 	/**
