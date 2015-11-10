@@ -11,10 +11,12 @@ abstract class AbstractRegularExpressionRoutine implements RoutineInterface
     public function match($content)
     {
         $items = array();
-        if (preg_match_all($this->getRegularExpression(), $content, $matches)) {
-            if ($matches[1]) {
-                foreach($matches[1] as $identifier) {
-                    $items[] = $this->getItem($identifier);
+        if (is_scalar($content)) {
+            if (preg_match_all($this->getRegularExpression(), $content, $matches)) {
+                if ($matches[1]) {
+                    foreach($matches[1] as $identifier) {
+                        $items[] = $this->getItem($identifier);
+                    }
                 }
             }
         }
@@ -23,17 +25,19 @@ abstract class AbstractRegularExpressionRoutine implements RoutineInterface
 
     public function replaceContent($content)
     {
-        $content = preg_replace_callback(
-            $this->getRegularExpression(),
-            function ($matches) {
-                if ($matches[1]) {
-                    $identifier = $matches[1];
-                    $item = $this->getItem($identifier);
-                    return $item->getContentValue();
-                }
-            },
-            $content
-        );
+        if (is_scalar($content)) {
+            $content = preg_replace_callback(
+                $this->getRegularExpression(),
+                function ($matches) {
+                    if ($matches[1]) {
+                        $identifier = $matches[1];
+                        $item = $this->getItem($identifier);
+                        return $item->getContentValue();
+                    }
+                },
+                $content
+            );
+        }
         return $content;
     }
 
