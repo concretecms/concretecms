@@ -94,7 +94,8 @@ class Install extends Controller
                     'user' => $_POST['DB_USERNAME'],
                     'password' => $_POST['DB_PASSWORD'],
                     'database' => $_POST['DB_DATABASE'],
-                ));
+                )
+            );
 
             $DB_SERVER = $_POST['DB_SERVER'];
             $DB_DATABASE = $_POST['DB_DATABASE'];
@@ -114,7 +115,7 @@ class Install extends Controller
                     try {
                         $support = $db->GetAll('show engines');
                         $supported = false;
-                        foreach($support as $engine) {
+                        foreach ($support as $engine) {
                             $engine = array_change_key_case($engine, CASE_LOWER);
                             if (isset($engine['engine']) && strtolower($engine['engine']) == 'innodb') {
                                 $supported = true;
@@ -123,7 +124,7 @@ class Install extends Controller
                         if (!$supported) {
                             $e->add(t('Your MySQL database does not support InnoDB database tables. These are required.'));
                         }
-                    } catch(\Exception $exception) {
+                    } catch (\Exception $exception) {
                         // we're going to just proceed and hope for the best.
                     }
                 }
@@ -325,7 +326,7 @@ class Install extends Controller
             }
 
             if (is_object($this->fileWriteErrors)) {
-                foreach($this->fileWriteErrors->getList() as $msg) {
+                foreach ($this->fileWriteErrors->getList() as $msg) {
                     $error->add($msg);
                 }
             }
