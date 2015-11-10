@@ -25,13 +25,14 @@ abstract class AbstractRegularExpressionRoutine implements RoutineInterface
 
     public function replaceContent($content)
     {
+        $routine = $this;
         if (is_scalar($content)) {
             $content = preg_replace_callback(
                 $this->getRegularExpression(),
-                function ($matches) {
+                function ($matches) use ($routine) {
                     if (isset($matches[1])) {
                         $identifier = $matches[1];
-                        $item = $this->getItem($identifier);
+                        $item = $routine->getItem($identifier);
                         return $item->getContentValue();
                     }
                 },
