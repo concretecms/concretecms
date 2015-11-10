@@ -56,7 +56,7 @@ class Controller extends BlockController
 
     public function view()
     {
-        if (!$this->formatting) {
+        if (!(isset($this->formatting) && $this->formatting)) {
             $this->set('formatting', 'h1');
         }
         $this->set('title', $this->getTitleText());
