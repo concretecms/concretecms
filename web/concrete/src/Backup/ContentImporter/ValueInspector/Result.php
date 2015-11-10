@@ -25,6 +25,23 @@ class Result implements ResultInterface
         $this->routines[$routine->getHandle()] = $routine;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getOriginalContent()
+    {
+        return $this->originalContent;
+    }
+
+    /**
+     * @param mixed $originalContent
+     */
+    public function setOriginalContent($originalContent)
+    {
+        $this->originalContent = $originalContent;
+    }
+
+
     public function __construct($originalContent)
     {
         $this->originalContent = $originalContent;
