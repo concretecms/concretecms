@@ -1,6 +1,6 @@
 <?php
 
-class ContentImporterValueInspectorReplaceTest extends PageTestCase
+class ContentImporterValueInspectorReplacePageTest extends PageTestCase
 {
 
     protected function setUp()
@@ -39,24 +39,31 @@ class ContentImporterValueInspectorReplaceTest extends PageTestCase
         <p>This is a content block. Here is a feed. <a href="{ccm:export:pagefeed:blog}">Feed</a>. It is amazing. <a href="{ccm:export:page:/page-2/subpage-b}">Link 1</a>. Don't forget a second <a href="{ccm:export:page:/page-4}">link.</a>. It's a pretty good one. <a href="thumbs_up.html">Thumbs up!</a> Excellent! <a href="{ccm:export:page:/}">See you later!</a>
 EOL;
 
-        $inspector = new \Concrete\Core\Backup\ContentImporter\ValueInspector\ValueInspector($content);
-        $content = trim($inspector->getReplacedContent());
-
+        $inspector = Core::make('import/value_inspector');
+        $result = $inspector->inspect($content);
+        $content = trim($result->getReplacedContent());
         $this->assertEquals('<p>This is a content block. Here is a feed. <a href="http://www.dummyco.com/path/to/server/index.php/rss/blog">Feed</a>. It is amazing. <a href="{CCM:CID_7}">Link 1</a>. Don\'t forget a second <a href="{CCM:CID_5}">link.</a>. It\'s a pretty good one. <a href="thumbs_up.html">Thumbs up!</a> Excellent! <a href="{CCM:CID_1}">See you later!</a>', $content);
     }
 
     public function testMatchedObjects()
     {
         $this->createData();
-        $inspector = new \Concrete\Core\Backup\ContentImporter\ValueInspector\ValueInspector('{ccm:export:page:/page-3}');
-        $o = $inspector->getMatchedItem();
+        $inspector = Core::make('import/value_inspector');
+        $content = '{ccm:export:page:/page-3}';
+        $result = $inspector->inspect($content);
+        $items = $result->getMatchedItems();
+        $o = $items[0];
         $this->assertInstanceOf('\Concrete\Core\Page\Page', $o->getContentObject());
         $this->assertEquals('Page 3', $o->getContentObject()->getCollectionName());
-        $inspector = new \Concrete\Core\Backup\ContentImporter\ValueInspector\ValueInspector('{ccm:export:pagefeed:blog}');
-        $o = $inspector->getMatchedItem();
+        $this->assertEquals(4, $result->getReplacedValue());
+
+        $result = $inspector->inspect('{ccm:export:pagefeed:blog}');
+        $items = $result->getMatchedItems();
+        $o = $items[0];
         $this->assertInstanceOf('\Concrete\Core\Page\Feed', $o->getContentObject());
         $this->assertEquals(1, $o->getContentObject()->getID());
         $this->assertEquals('blog', $o->getContentObject()->getHandle());
+        $this->assertEquals(1, $result->getReplacedValue());
 
     }
 

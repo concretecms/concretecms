@@ -102,6 +102,7 @@ return array(
         'core_mail'                   => '\Concrete\Core\Mail\MailServiceProvider',
         'core_application'            => '\Concrete\Core\Application\ApplicationServiceProvider',
         'core_utility'                => '\Concrete\Core\Utility\UtilityServiceProvider',
+        'core_content_importer'       => '\Concrete\Core\Backup\ContentImporter\ContentImporterServiceProvider',
         'core_manager_grid_framework' => '\Concrete\Core\Page\Theme\GridFramework\ManagerServiceProvider',
         'core_manager_pagination_view' => '\Concrete\Core\Search\Pagination\View\ManagerServiceProvider',
         'core_manager_page_type_validator' => '\Concrete\Core\Page\Type\Validator\ManagerServiceProvider',
