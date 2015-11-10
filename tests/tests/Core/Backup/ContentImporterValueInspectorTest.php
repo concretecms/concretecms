@@ -3,6 +3,26 @@
 class ContentImporterValueInspectorTest extends PHPUnit_Framework_TestCase
 {
 
+
+    public function testMake()
+    {
+        $inspector = Core::make('import/value_inspector/core');
+        $this->assertInstanceOf('\Concrete\Core\Backup\ContentImporter\ValueInspector\ValueInspectorInterface', $inspector);
+    }
+
+    public function testRegister()
+    {
+        $inspector = Core::make('import/value_inspector/core');
+        $inspector->registerInspectionRoutine(new \Concrete\Core\Backup\ContentImporter\ValueInspector\InspectionRoutine\PageRoutine());
+        $this->assertEquals(1, count($inspector->getInspectionRoutines()));
+    }
+
+    public function testMakeCore()
+    {
+        $inspector = Core::make('import/value_inspector');
+        $this->assertEquals(6, count($inspector->getInspectionRoutines()));
+    }
+
     public function providerMatchedSimpleValues()
     {
         return array(
@@ -20,8 +40,12 @@ class ContentImporterValueInspectorTest extends PHPUnit_Framework_TestCase
      */
     public function testMatchedSimpleValues($content, $reference, $itemClass)
     {
-        $inspector = new \Concrete\Core\Backup\ContentImporter\ValueInspector\ValueInspector($content);
-        $item = $inspector->getMatchedItem();
+        $inspector = Core::make('import/value_inspector');
+        $result = $inspector->inspect($content, false);
+        $items = $result->getMatchedItems();
+        $this->assertEquals(1, count($items));
+        $item = $items[0];
+        $this->assertInstanceOf('\Concrete\Core\Backup\ContentImporter\ValueInspector\Item\ItemInterface', $item);
         $this->assertEquals($reference, $item->getReference());
         $this->assertInstanceOf($itemClass, $item);
     }
@@ -36,17 +60,18 @@ class ContentImporterValueInspectorTest extends PHPUnit_Framework_TestCase
         Excellent! <a href="{ccm:export:page:/}">See you later!</a>
 EOL;
 
-        $inspector = new \Concrete\Core\Backup\ContentImporter\ValueInspector\ValueInspector($content);
-        $items = $inspector->getMatchedItems();
+        $inspector = Core::make('import/value_inspector');
+        $result = $inspector->inspect($content);
+        $items = $result->getMatchedItems();
         $this->assertEquals(4, count($items));
-        $this->assertEquals($items[0]->getReference(), 'cats.jpg');
-        $this->assertEquals($items[1]->getReference(), '/path/to/page');
-        $this->assertEquals($items[2]->getReference(), '/about');
-        $this->assertEquals($items[3]->getReference(), '/');
-        $this->assertInstanceOf('\Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PictureItem', $items[0]);
+        $this->assertEquals($items[0]->getReference(), '/path/to/page');
+        $this->assertEquals($items[1]->getReference(), '/about');
+        $this->assertEquals($items[2]->getReference(), '/');
+        $this->assertEquals($items[3]->getReference(), 'cats.jpg');
+        $this->assertInstanceOf('\Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PageItem', $items[0]);
         $this->assertInstanceOf('\Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PageItem', $items[1]);
         $this->assertInstanceOf('\Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PageItem', $items[2]);
-        $this->assertInstanceOf('\Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PageItem', $items[3]);
+        $this->assertInstanceOf('\Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PictureItem', $items[3]);
     }
 
     public function testMatchedContentFilePageTypePageFeed()
@@ -57,16 +82,19 @@ EOL;
         Finally, we're also going to link to a pagetype here: {ccm:export:pagetype:blog_entry}.
 EOL;
 
-        $inspector = new \Concrete\Core\Backup\ContentImporter\ValueInspector\ValueInspector($content);
-        $items = $inspector->getMatchedItems();
+        $inspector = Core::make('import/value_inspector');
+        $result = $inspector->inspect($content);
+        $items = $result->getMatchedItems();
         $this->assertEquals(4, count($items));
         $this->assertEquals($items[0]->getReference(), 'filename1.jpg');
         $this->assertEquals($items[1]->getReference(), 'filename2.JPG');
-        $this->assertEquals($items[2]->getReference(), 'blog_entry');
-        $this->assertEquals($items[3]->getReference(), 'blog');
+        $this->assertEquals($items[2]->getReference(), 'blog');
+        $this->assertEquals($items[3]->getReference(), 'blog_entry');
         $this->assertInstanceOf('\Concrete\Core\Backup\ContentImporter\ValueInspector\Item\FileItem', $items[0]);
         $this->assertInstanceOf('\Concrete\Core\Backup\ContentImporter\ValueInspector\Item\FileItem', $items[1]);
-        $this->assertInstanceOf('\Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PageTypeItem', $items[2]);
-        $this->assertInstanceOf('\Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PageFeedItem', $items[3]);
+        $this->assertInstanceOf('\Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PageFeedItem', $items[2]);
+        $this->assertInstanceOf('\Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PageTypeItem', $items[3]);
     }
+
+
 }
