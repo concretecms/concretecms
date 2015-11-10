@@ -77,6 +77,7 @@ class Controller extends BlockController
         }
 
         $today = date('Y-m-d');
+        $end = $start = null;
 
         switch ($this->filterDateOption) {
             case 'now':
