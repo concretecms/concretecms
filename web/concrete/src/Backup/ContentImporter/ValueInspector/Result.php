@@ -72,6 +72,8 @@ class Result implements ResultInterface
     {
         if (isset($this->items[0])) {
             return $this->items[0]->getFieldValue();
+        } else {
+            return $this->originalContent;
         }
     }
 
