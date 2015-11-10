@@ -38,7 +38,7 @@ class LinkAbstractor extends Object
 		$imgmatch = '/' . $imgmatch . '\/([0-9]+)/i';
 
 		$dom = new HtmlDomParser();
-		$r = $dom->str_get_html($text, true, true, DEFAULT_TARGET_CHARSET, false);
+		$r = $dom->str_get_html($text);
 		if ($r) {
 			foreach ($r->find('img') as $img) {
 
@@ -54,7 +54,7 @@ class LinkAbstractor extends Object
 				}
 			}
 
-			$text = (string)$r->restore_noise($r);
+			$text = (string)$r;
 		}
 
 		$appUrl = Core::getApplicationURL();
@@ -113,23 +113,9 @@ class LinkAbstractor extends Object
 			$text
 		);
 
-		// now we add in support for the links
-		$text = preg_replace_callback(
-			'/{CCM:FID_([0-9]+)}/i',
-			function ($matches) {
-				$fID = $matches[1];
-				if ($fID > 0) {
-					$f = File::getByID($fID);
-					return $f->getURL();
-				}
-			},
-			$text
-		);
-
-
 		// now we add in support for the files that we view inline
 		$dom = new HtmlDomParser();
-		$r = $dom->str_get_html($text, true, true, DEFAULT_TARGET_CHARSET, false);
+		$r = $dom->str_get_html($text);
 		if (is_object($r)) {
 			foreach ($r->find('concrete-picture') as $picture) {
 				$fID = $picture->fid;
@@ -163,7 +149,7 @@ class LinkAbstractor extends Object
 				}
 			}
 
-			$text = (string)$r->restore_noise($r);
+			$text = (string)$r;
 		}
 
 		// now files we download
@@ -216,7 +202,7 @@ class LinkAbstractor extends Object
 
 		//images...
 		$dom = new HtmlDomParser();
-		$r = $dom->str_get_html($text, true, true, DEFAULT_TARGET_CHARSET, false);
+		$r = $dom->str_get_html($text);
 		if (is_object($r)) {
 			foreach ($r->find('concrete-picture') as $picture) {
 				$fID = $picture->fid;
@@ -235,7 +221,7 @@ class LinkAbstractor extends Object
 					) . '" ' . $attrString . '/>';
 			}
 
-			$text = (string)$r->restore_noise($r);
+			$text = (string)$r;
 		}
 
 		//file downloads...
@@ -259,7 +245,7 @@ class LinkAbstractor extends Object
 	public static function import($text)
 	{
 		$dom = new HtmlDomParser();
-		$r = $dom->str_get_html($text, true, true, DEFAULT_TARGET_CHARSET, false);
+		$r = $dom->str_get_html($text);
 		if (is_object($r)) {
 			foreach ($r->find('concrete-picture') as $picture) {
 				$filename = $picture->file;
@@ -268,7 +254,7 @@ class LinkAbstractor extends Object
 				$picture->fID = $fID;
 				$picture->file = false;
 			}
-			$text = (string)$r->restore_noise($r);
+			$text = (string)$r;
 		}
 
 		$text = preg_replace_callback(
@@ -297,17 +283,6 @@ class LinkAbstractor extends Object
 		);
 
 		$text = preg_replace_callback(
-			'/\{ccm:export:image:(.*?)\}/i',
-			function ($matches) {
-				$filename = $matches[1];
-				$db = Loader::db();
-				$fID = $db->GetOne('select fID from FileVersions where fvFilename = ?', array($filename));
-				return '{CCM:FID_' . $fID . '}';
-			},
-			$text
-		);
-
-		$text = preg_replace_callback(
 			'/\{ccm:export:define:(.*?)\}/i',
 			function ($matches) {
 				$define = $matches[1];
@@ -328,17 +303,19 @@ class LinkAbstractor extends Object
 	public static function export($text)
 	{
 		$dom = new HtmlDomParser();
-		$r = $dom->str_get_html($text, true, true, DEFAULT_TARGET_CHARSET, false);
+		$r = $dom->str_get_html($text);
 		if (is_object($r)) {
 			foreach ($r->find('concrete-picture') as $picture) {
 				$fID = $picture->fid;
 				$f = \File::getByID($fID);
 				if (is_object($f)) {
+					$alt = $picture->alt;
+					$style = $picture->style;
 					$picture->fid = false;
 					$picture->file = $f->getFilename();
 				}
 			}
-			$text = (string)$r->restore_noise($r);
+			$text = (string)$r;
 		}
 
 		$text = preg_replace_callback(
