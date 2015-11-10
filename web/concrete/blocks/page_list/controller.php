@@ -398,6 +398,7 @@ class Controller extends BlockController
             'rss' => 0,
             'pfID' => 0,
             'filterDateOption' => '',
+            'cParentID' => null,
         );
 
         $args['num'] = ($args['num'] > 0) ? $args['num'] : 0;
