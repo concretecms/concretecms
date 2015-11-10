@@ -393,12 +393,14 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     protected function getImportData($blockNode, $page)
     {
         $args = array();
+        $inspector = \Core::make('import/value_inspector');
         if (isset($blockNode->data)) {
             foreach ($blockNode->data as $data) {
                 if ($data['table'] == $this->getBlockTypeDatabaseTable()) {
                     if (isset($data->record)) {
                         foreach ($data->record->children() as $node) {
-                            $args[$node->getName()] = ContentImporter::getValue((string) $node);
+                            $result = $inspector->inspect((string) $node);
+                            $args[$node->getName()] = $result->getReplacedValue();
                         }
                     }
                 }
@@ -410,6 +412,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
 
     protected function importAdditionalData($b, $blockNode)
     {
+        $inspector = \Core::make('import/value_inspector');
         if (isset($blockNode->data)) {
             foreach ($blockNode->data as $data) {
                 if (strtoupper($data['table']) != strtoupper($this->getBlockTypeDatabaseTable())) {
@@ -420,7 +423,8 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
                             $aar->bID = $b->getBlockID();
                             foreach ($record->children() as $node) {
                                 $nodeName = $node->getName();
-                                $aar->{$nodeName} = ContentImporter::getValue((string) $node);
+                                $result = $inspector->inspect((string) $node);
+                                $aar->{$nodeName} = $result->getReplacedValue();
                             }
                             $aar->Save();
                         }

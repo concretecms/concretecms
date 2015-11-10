@@ -68,7 +68,9 @@ class Controller extends AttributeTypeController
     {
         if (isset($akv->value->fID)) {
             $fIDVal = (string) $akv->value->fID;
-            $fID = ContentImporter::getValue($fIDVal);
+            $inspector = \Core::make('import/value_inspector');
+            $result = $inspector->inspect($fIDVal);
+            $fID = $result->getReplacedValue();
             if ($fID) {
                 return File::getByID($fID);
             }

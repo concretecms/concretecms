@@ -596,11 +596,14 @@ class ContentImporter
         if (isset($sx->pagefeeds)) {
             foreach ($sx->pagefeeds->feed as $f) {
                 $feed = Feed::getByHandle((string) $f->handle);
+                $inspector = \Core::make('import/value_inspector');
                 if (!is_object($feed)) {
                     $feed = new Feed();
                 }
                 if ($f->parent) {
-                    $feed->setParentID(self::getValue((string) $f->parent));
+                    $result = $inspector->inspect((string) $f->parent);
+                    $parent = $result->getReplacedValue();
+                    $feed->setParentID($parent);
                 }
                 $feed->setTitle((string) $f->title);
                 $feed->setDescription((string) $f->description);
@@ -615,7 +618,9 @@ class ContentImporter
                     $feed->setDisplayFeaturedOnly(true);
                 }
                 if ($f->pagetype) {
-                    $feed->setPageTypeID(self::getValue((string) $f->pagetype));
+                    $result = $inspector->inspect((string) $f->pagetype);
+                    $pagetype = $result->getReplacedValue();
+                    $feed->setPageTypeID($pagetype);
                 }
                 $contentType = $f->contenttype;
                 $type = (string) $contentType['type'];
@@ -1008,56 +1013,6 @@ class ContentImporter
                     }
                 }
             }
-        }
-    }
-
-    public static function getValue($value)
-    {
-        if (preg_match(
-            '/\{ccm:export:page:(.*?)\}|' .
-            '\{ccm:export:file:(.*?)\}|' .
-            '\{ccm:export:image:(.*?)\}|' .
-            '\{ccm:export:pagetype:(.*?)\}|' .
-            '\{ccm:export:pagefeed:(.*?)\}/i',
-            $value,
-            $matches
-        )
-        ) {
-            if (isset($matches[1]) && $matches[1]) {
-                $c = Page::getByPath($matches[1]);
-
-                return intval($c->getCollectionID());
-            }
-            if (isset($matches[2]) && $matches[2]) {
-                $db = Database::connection();
-                $fID = $db->GetOne('select fID from FileVersions where fvFilename = ?', array($matches[2]));
-
-                return intval($fID);
-            }
-            if (isset($matches[3]) && $matches[3]) {
-                $db = Database::connection();
-                $fID = $db->GetOne('select fID from FileVersions where fvFilename = ?', array($matches[3]));
-
-                return intval($fID);
-            }
-            if (isset($matches[4]) && $matches[4]) {
-                $ct = PageType::getByHandle($matches[4]);
-                if (is_object($ct)) {
-                    return $ct->getPageTypeID();
-                } else {
-                    return 0;
-                }
-            }
-            if (isset($matches[5]) && $matches[5]) {
-                $pf = Feed::getByHandle($matches[5]);
-                if (is_object($pf)) {
-                    return $pf->getID();
-                } else {
-                    return 0;
-                }
-            }
-        } else {
-            return $value;
         }
     }
 
