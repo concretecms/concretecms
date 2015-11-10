@@ -40,7 +40,7 @@ class ServiceList
         $services = static::getServices();
         $return = array();
         foreach ($services as $serviceArray) {
-            $o = new Service($serviceArray[0], $serviceArray[1], $serviceArray[2], $serviceArray[3]);
+            $o = new Service($serviceArray[0], $serviceArray[1], $serviceArray[2], isset($serviceArray[3]) ? $serviceArray[3] : null);
             $return[] = $o;
         }
 
