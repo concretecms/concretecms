@@ -11,6 +11,7 @@ class PageTypeConfiguration extends Configuration
 
     protected $ptID;
     protected $selectorFormFactor;
+    protected $startingPointPage;
 
     public function setPageTypeID($ptID)
     {
@@ -30,6 +31,22 @@ class PageTypeConfiguration extends Configuration
     public function setSelectorFormFactor($selectorFormFactor)
     {
         $this->selectorFormFactor = $selectorFormFactor;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStartingPointPageID()
+    {
+        return $this->startingPointPage;
+    }
+
+    /**
+     * @param mixed $startingPointPage
+     */
+    public function setStartingPointPageID($startingPointPage)
+    {
+        $this->startingPointPage = $startingPointPage;
     }
 
     public function export($cxml)

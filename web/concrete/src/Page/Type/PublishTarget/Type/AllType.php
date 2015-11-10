@@ -11,6 +11,7 @@ class AllType extends Type
     {
         $configuredTarget = new AllConfiguration($this);
         $configuredTarget->setSelectorFormFactor(isset($post['selectorFormFactorAll']) ? $post['selectorFormFactorAll'] : null);
+        $configuredTarget->setStartingPointPageID(isset($post['startingPointPageIDAll']) ? $post['startingPointPageIDAll'] : null);
 
         return $configuredTarget;
     }

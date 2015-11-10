@@ -173,6 +173,7 @@ EOL;
         $args->identifier = $identifier;
         $args->selected = $selected;
         $args->inputName = $field;
+        $args->startingPoint = $startingPoint;
         $args->token = Core::make('token')->generate('select_sitemap');
         if (count($filters)) {
             $args->filters = $filters;

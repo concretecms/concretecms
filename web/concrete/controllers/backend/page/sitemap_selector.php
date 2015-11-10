@@ -58,7 +58,7 @@ class SitemapSelector extends UserInterface
             }
             return $node;
         };
-        $nodes = $dh->getSubNodes($this->request->query->get('cParentID'), $callback);
+        $nodes = $dh->getNode($this->request->query->get('startingPoint'));
         return new JsonResponse($nodes);
     }
 
