@@ -169,13 +169,13 @@ if ($showMenu) {
 
                         <? if ($b->getBlockTypeHandle() != BLOCK_HANDLE_LAYOUT_PROXY) { ?>
 
-                            <? if ($canDesign || $canEditCustomTemplate || $canEditBlockName || $canEditCacheSettings) { ?>
+                            <? if ($canDesign || $canEditCustomTemplate || $canEditName || $canEditCacheSettings) { ?>
                                 <li class="divider"></li>
 
                                 <? if ($canDesign || $canEditCustomTemplate) { ?>
                                     <li><a href="#" data-menu-action="block_design"><?=t("Design &amp; Custom Template")?></a></li>
                                 <? } ?>
-                                <? if ($b->getBlockTypeHandle() != BLOCK_HANDLE_PAGE_TYPE_OUTPUT_PROXY && ($canEditBlockName || $canEditCacheSettings)) { ?>
+                                <? if ($b->getBlockTypeHandle() != BLOCK_HANDLE_PAGE_TYPE_OUTPUT_PROXY && ($canEditName || $canEditCacheSettings)) { ?>
                                     <li><a dialog-title="<?=t('Advanced Block Settings')?>" dialog-modal="false" dialog-width="500" dialog-height="320" data-menu-action="block_dialog" data-menu-href="<?=URL::to('/ccm/system/dialogs/block/cache')?>" ><?=t("Advanced")?></a></li>
                                 <? } ?>
                             <? } ?>
