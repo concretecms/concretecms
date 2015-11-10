@@ -2166,12 +2166,22 @@
 					html = html.replace(new RegExp('<br\\s?/?></li>', 'gi'), '</li>');
 					html = html.replace(new RegExp('</li><br\\s?/?>', 'gi'), '</li>');
 
+
+					/**
+					 * concrete5 start
+					 * This is commented out because it adds strange `"=""` strings to image tags in some cases.
+					 */
+					/*
 					// remove empty attributes
 					html = html.replace(/<(.*?)rel="\s*?"(.*?[^>]?)>/gi, '<$1$2">');
 					html = html.replace(/<(.*?)style="\s*?"(.*?[^>]?)>/gi, '<$1$2">');
 					html = html.replace(/="">/gi, '>');
 					html = html.replace(/""">/gi, '">');
 					html = html.replace(/"">/gi, '">');
+					*/
+					/**
+					 * concrete5 end
+					 */
 
 					// remove verified
 					html = html.replace(/<div(.*?[^>]) data-tagblock="redactor"(.*?[^>])>/gi, '<div$1$2>');

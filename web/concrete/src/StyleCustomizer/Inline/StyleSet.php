@@ -752,29 +752,6 @@ class StyleSet
         $node->addChild('hideOnLargeDevice', $this->getHideOnLargeDevice());
     }
 
-    public function getClass($theme = null)
-    {
-        $class = '';
-        if ($this->getCustomClass()) {
-            $class .= $this->getCustomClass();
-        }
-        if (is_object($theme) && ($gf = $theme->getThemeGridFrameworkObject())) {
-            if ($this->getHideOnExtraSmallDevice()) {
-                $class .= ' ' . $gf->getPageThemeGridFrameworkHideOnExtraSmallDeviceClass();
-            }
-            if ($this->getHideOnSmallDevice()) {
-                $class .= ' ' . $gf->getPageThemeGridFrameworkHideOnSmallDeviceClass();
-            }
-            if ($this->getHideOnMediumDevice()) {
-                $class .= ' ' . $gf->getPageThemeGridFrameworkHideOnMediumDeviceClass();
-            }
-            if ($this->getHideOnLargeDevice()) {
-                $class .= ' ' . $gf->getPageThemeGridFrameworkHideOnLargeDeviceClass();
-            }
-        }
-        return $class;
-    }
-
     /**
      * If the request contains any fields that are valid to save as a style set, we return the style set object
      * pre-save. If it's not (e.g. there's a background repeat but no actual background image, empty strings, etc...)

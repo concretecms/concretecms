@@ -694,8 +694,7 @@ class Collection extends Object
         $areaHandle = $area->getAreaHandle();
         if ($force || isset($styles[$areaHandle])) {
             $pss = isset($styles[$areaHandle]) ? StyleSet::getByID($styles[$areaHandle]) : null;
-            $a = new Area($areaHandle);
-            $result = new AreaCustomStyle($pss, $a, $this->getCollectionThemeObject());
+            $result = new AreaCustomStyle($pss, $area, $this->getCollectionThemeObject());
         }
 
         return $result;
