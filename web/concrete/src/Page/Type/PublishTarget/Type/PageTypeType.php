@@ -15,6 +15,7 @@ class PageTypeType extends Type
         $configuration = new PageTypeConfiguration($this);
         $configuration->setPageTypeID($post['ptID']);
         $configuration->setSelectorFormFactor($post['selectorFormFactorPageType']);
+        $configuration->setStartingPointPageID(isset($post['startingPointPageIDPageType']) ? $post['startingPointPageIDPageType'] : null);
         return $configuration;
     }
 

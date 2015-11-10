@@ -6,6 +6,7 @@ use Concrete\Core\Page\Type\Type;
 class AllConfiguration extends Configuration {
 
     protected $selectorFormFactor;
+    protected $startingPointPageID;
 
     public function canPublishPageTypeBeneathTarget(Type $pagetype, Page $page)
     {
@@ -21,5 +22,23 @@ class AllConfiguration extends Configuration {
     {
         $this->selectorFormFactor = $selectorFormFactor;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getStartingPointPageID()
+    {
+        return $this->startingPointPage;
+    }
+
+    /**
+     * @param mixed $startingPointPage
+     */
+    public function setStartingPointPageID($startingPointPage)
+    {
+        $this->startingPointPage = $startingPointPage;
+    }
+
+
 
 }
