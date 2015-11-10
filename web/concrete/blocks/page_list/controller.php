@@ -6,7 +6,7 @@ use BlockType;
 use CollectionAttributeKey;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Page\Feed;
-use Loader;
+use Database;
 use Page;
 use Core;
 use PageList;
@@ -156,7 +156,7 @@ class Controller extends BlockController
             $this->list->filterByTopic(intval($this->customTopicTreeNodeID));
         }
 
-        $db = Loader::db();
+        $db = Database::connection();
         $columns = $db->MetaColumnNames(CollectionAttributeKey::getIndexedSearchTable());
         if (in_array('ak_exclude_page_list', $columns)) {
             $this->list->filter(false, '(ak_exclude_page_list = 0 or ak_exclude_page_list is null)');
@@ -177,7 +177,7 @@ class Controller extends BlockController
     public function view()
     {
         $list = $this->list;
-        $nh = Loader::helper('navigation');
+        $nh = Core::make('helper/navigation');
         $this->set('nh', $nh);
 
         if ($this->pfID) {
@@ -221,7 +221,7 @@ class Controller extends BlockController
     {
         $this->requireAsset('core/topics');
         $c = Page::getCurrentPage();
-        $uh = Loader::helper('concrete/urls');
+        $uh = Core::make('helper/concrete/urls');
         $this->set('c', $c);
         $this->set('uh', $uh);
         $this->set('includeDescription', true);
@@ -250,7 +250,7 @@ class Controller extends BlockController
                 $this->set('rssFeed', $feed);
             }
         }
-        $uh = Loader::helper('concrete/urls');
+        $uh = Core::make('helper/concrete/urls');
         $this->set('uh', $uh);
         $this->set('bt', BlockType::getByHandle('page_list'));
         $this->set('featuredAttribute', CollectionAttributeKey::getByHandle('is_featured'));
@@ -351,7 +351,7 @@ class Controller extends BlockController
         } elseif ($parameters[0] == 'tag') {
             $method = 'action_filter_by_tag';
             $parameters = array_slice($parameters, 1);
-        } elseif (Loader::helper("validation/numbers")->integer($parameters[0])) {
+        } elseif (Core::make('helper/validation/numbers')->integer($parameters[0])) {
             // then we're going to treat this as a year.
             $method = 'action_filter_by_date';
             $parameters[0] = intval($parameters[0]);
@@ -377,7 +377,7 @@ class Controller extends BlockController
         // If we've gotten to the process() function for this class, we assume that we're in
         // the clear, as far as permissions are concerned (since we check permissions at several
         // points within the dispatcher)
-        $db = Loader::db();
+        $db = Database::connection();
 
         $bID = $this->bID;
         $c = $this->getCollectionObject();
@@ -453,7 +453,7 @@ class Controller extends BlockController
             $args['pfID'] = $pf->getID();
         } elseif (isset($this->pfID) && $this->pfID && !$args['rss']) {
             // let's make sure this isn't in use elsewhere.
-            $cnt = $db->GetOne('select count(pfID) from btPageList where pfID = ?', array($this->pfID));
+            $cnt = $db->fetchColumn('select count(pfID) from btPageList where pfID = ?', array($this->pfID));
             if ($cnt == 1) { // this is the last one, so we delete
                 $pf = Feed::getByID($this->pfID);
                 if (is_object($pf)) {
