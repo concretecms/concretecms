@@ -11,7 +11,7 @@ class ServiceList
             array('reddit', 'Reddit', 'reddit'),
             array('pinterest', 'Pinterest', 'pinterest'),
             array('google_plus', 'Google Plus', 'google-plus'),
-            array('email', 'Email', 'envelope')
+            array('email', t('Email'), 'envelope')
         );
     }
 
