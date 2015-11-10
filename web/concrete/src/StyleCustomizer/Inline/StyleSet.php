@@ -679,7 +679,9 @@ class StyleSet
         $o->setBackgroundColor((string) $node->backgroundColor);
         $filename = (string) $node->backgroundImage;
         if ($filename) {
-            $fID = ContentImporter::getValue($filename);
+            $inspector = \Core::make('import/value_inspector');
+            $result = $inspector->inspect($filename);
+            $fID = $result->getReplacedValue();
             if ($fID) {
                 $o->setBackgroundImageFileID($fID);
             }
