@@ -120,11 +120,11 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
     }
     if ($tp->canInstallPackages()) {
         foreach (Package::getAvailablePackages() as $_pkg) {
+            if (empty($pkgAvailableArray)) {
+                Localization::clearCache();                
+            }
             $_pkg->setupPackageLocalization();
             $pkgAvailableArray[] = $_pkg;
-        }
-        if(count($pkgAvailableArray) > 0) {
-            Localization::clearCache();
         }
     }
 
