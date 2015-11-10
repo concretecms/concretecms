@@ -84,7 +84,7 @@ class Type extends Object
     public static function __callStatic($name, $arguments)
     {
         if (strcasecmp($name, 'getList') === 0) {
-            return call_user_func_array('self::getAttributeTypeList', $arguments);
+            return call_user_func_array('static::getAttributeTypeList', $arguments);
         }
         trigger_error("Call to undefined method ".__CLASS__."::$name()", E_USER_ERROR);
     }

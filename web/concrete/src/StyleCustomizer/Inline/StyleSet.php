@@ -677,7 +677,7 @@ class StyleSet
     {
         $o = new self();
         $o->setBackgroundColor((string) $node->backgroundColor);
-        $filename = (string) $node['backgroundImage'];
+        $filename = (string) $node->backgroundImage;
         if ($filename) {
             $fID = ContentImporter::getValue($filename);
             if ($fID) {

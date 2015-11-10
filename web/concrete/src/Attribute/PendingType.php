@@ -13,7 +13,7 @@ class PendingType extends Type
         $db = Database::connection();
         $atHandles = $db->GetCol("select atHandle from AttributeTypes");
 
-        $dh = Loader::helper('file');
+        $dh = Core::make('helper/file');
         $available = array();
         if (is_dir(DIR_APPLICATION . '/' . DIRNAME_ATTRIBUTES)) {
             $contents = $dh->getDirectoryContents(DIR_APPLICATION . '/' . DIRNAME_ATTRIBUTES);

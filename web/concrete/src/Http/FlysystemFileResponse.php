@@ -147,7 +147,7 @@ class FlysystemFileResponse extends Response
     /**
      * {@inheritdoc}
      */
-    public function prepare(Request $request)
+    public function prepare(\Symfony\Component\HttpFoundation\Request $request)
     {
         $this->headers->set('Content-Length', $this->file->getSize());
 
