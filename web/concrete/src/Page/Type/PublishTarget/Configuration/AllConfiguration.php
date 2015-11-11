@@ -31,6 +31,18 @@ class AllConfiguration extends Configuration {
         return $this->startingPointPage;
     }
 
+    public function export($cxml)
+    {
+        $target = parent::export($cxml);
+        if ($this->getStartingPointPageID()) {
+            $c = Page::getByID($this->getStartingPointPageID(), 'ACTIVE');
+            if (is_object($c) && !$c->isError()) {
+                $target->addAttribute('path', $c->getCollectionPath());
+            }
+        }
+        $target->addAttribute('form-factor', $this->getSelectorFormFactor());
+    }
+
     /**
      * @param mixed $startingPointPage
      */

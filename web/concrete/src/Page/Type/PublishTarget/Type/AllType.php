@@ -23,7 +23,11 @@ class AllType extends Type
         if ($formFactor) {
             $configuration->setSelectorFormFactor($formFactor);
         }
-
+        $path = (string) $txml['path'];
+        if ($path) {
+            $c = \Page::getByPath($path);
+            $configuration->setStartingPointPageID($c->getCollectionID());
+        }
         return $configuration;
     }
 }
