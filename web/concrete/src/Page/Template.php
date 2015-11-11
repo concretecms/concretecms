@@ -35,13 +35,18 @@ class Template
         $nxml = $xml->addChild('pagetemplates');
         $list = static::getList();
         foreach ($list as $pt) {
-            $type = $nxml->addChild('pagetemplate');
-            $type->addAttribute('icon', $pt->getPageTemplateIcon());
-            $type->addAttribute('name', Core::make('helper/text')->entities($pt->getPageTemplateName()));
-            $type->addAttribute('handle', $pt->getPageTemplateHandle());
-            $type->addAttribute('package', $pt->getPackageHandle());
-            $type->addAttribute('internal', $pt->isPageTemplateInternal());
+            $pt->export($nxml);
         }
+    }
+
+    public function export($node)
+    {
+        $type = $node->addChild('pagetemplate');
+        $type->addAttribute('icon', $this->getPageTemplateIcon());
+        $type->addAttribute('name', Core::make('helper/text')->entities($this->getPageTemplateName()));
+        $type->addAttribute('handle', $this->getPageTemplateHandle());
+        $type->addAttribute('package', $this->getPackageHandle());
+        $type->addAttribute('internal', $this->isPageTemplateInternal());
     }
 
     public function getPageTemplateID()

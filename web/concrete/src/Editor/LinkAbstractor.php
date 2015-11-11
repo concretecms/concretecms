@@ -152,6 +152,20 @@ class LinkAbstractor extends Object
 			$text = (string)$r;
 		}
 
+		// now we add in support for the links
+		$text = preg_replace_callback(
+			'/{CCM:FID_([0-9]+)}/i',
+			function ($matches) {
+				$fID = $matches[1];
+				if ($fID > 0) {
+					$f = File::getByID($fID);
+					return $f->getURL();
+				}
+			},
+			$text
+		);
+
+
 		// now files we download
 		$text = preg_replace_callback(
 			'/{CCM:FID_DL_([0-9]+)}/i',
@@ -223,6 +237,20 @@ class LinkAbstractor extends Object
 
 			$text = (string)$r;
 		}
+
+		// now we add in support for the links
+		$text = preg_replace_callback(
+			'/{CCM:FID_([0-9]+)}/i',
+			function ($matches) {
+				$fID = $matches[1];
+				if ($fID > 0) {
+					return URL::to('/download_file', 'view_inline', $fID);
+				}
+			},
+			$text
+		);
+
+
 
 		//file downloads...
 		$text = preg_replace_callback(
