@@ -29,6 +29,11 @@ class Key extends Object
 
     public function getIndexedSearchTable()
     {
+        return static::getDefaultIndexedSearchTable();
+    }
+
+    public static function getDefaultIndexedSearchTable()
+    {
         return false;
     }
 
