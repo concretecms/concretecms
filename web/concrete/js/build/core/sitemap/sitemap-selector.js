@@ -19,6 +19,7 @@
 
         my.$element.concreteSitemap({
             selectMode: my.options.mode,
+            minExpandLevel: 0,
             dataSource: CCM_DISPATCHER_FILENAME + '/ccm/system/page/select_sitemap',
             ajaxData: {
                 'startingPoint': my.options.startingPoint,
