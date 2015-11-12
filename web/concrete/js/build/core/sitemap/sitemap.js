@@ -14,6 +14,7 @@
 			cookieId: 'ConcreteSitemap',
 			includeSystemPages: false,
             displaySingleLevel: false,
+			minExpandLevel: false,
 			dataSource: CCM_TOOLS_PATH + '/dashboard/sitemap_data',
 			ajaxData: {},
 			selectMode: false, // 1 - single, 2 = multi - has NOTHING to do with clicks. If you enable select mode you CANNOT use a click handler.
@@ -59,21 +60,25 @@
 				doPersist = false;
 			}
 
-			if (my.options.displaySingleLevel) {
-				if (my.options.cParentID == 1) {
-					minExpandLevel = 2;
-				} else {
-					minExpandLevel = 3;
-				}
-				doPersist = false;
+			if (my.options.minExpandLevel !== false) {
+				minExpandLevel = my.options.minExpandLevel;
 			} else {
-				if (my.options.selectMode) {
-					minExpandLevel = 2;
+				if (my.options.displaySingleLevel) {
+					if (my.options.cParentID == 1) {
+						minExpandLevel = 2;
+					} else {
+						minExpandLevel = 3;
+					}
+					doPersist = false;
 				} else {
-					minExpandLevel = 1;
+					if (my.options.selectMode) {
+						minExpandLevel = 2;
+					} else {
+						minExpandLevel = 1;
+					}
 				}
 			}
-
+			
 			var ajaxData = $.extend({
 				'displayNodePagination': my.options.displayNodePagination ? 1 : 0,
 				'cParentID': my.options.cParentID,

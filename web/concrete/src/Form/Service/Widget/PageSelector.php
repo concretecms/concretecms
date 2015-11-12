@@ -136,6 +136,7 @@ EOL;
         $args->mode = 'multiple';
         $args->token = Core::make('token')->generate('select_sitemap');
         $args->inputName = $field;
+        $args->startingPoint = $startingPoint;
         if (count($filters)) {
             $args->filters = $filters;
         }
