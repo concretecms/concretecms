@@ -78,7 +78,7 @@
 					}
 				}
 			}
-			
+
 			var ajaxData = $.extend({
 				'displayNodePagination': my.options.displayNodePagination ? 1 : 0,
 				'cParentID': my.options.cParentID,
