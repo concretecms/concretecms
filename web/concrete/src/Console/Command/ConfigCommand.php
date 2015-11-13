@@ -12,6 +12,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Config;
+use Core;
 use Exception;
 
 class ConfigCommand extends Command
@@ -69,8 +70,22 @@ EOT
                     if (!isset($value)) {
                         throw new Exception('Missing new configuration value');
                     }
-
-                    $this->repository->save($item, $this->unserialize($value));
+                    $realValue = $this->unserialize($value);
+                    switch ($item) {
+                        case 'concrete.seo.url_rewriting':
+                            $realValue = (bool) $realValue;
+                            $h = Core::make('helper/url/pretty');
+                            /** @var \Concrete\Core\Url\Service\PrettyUrl $h */
+                            if ($h->updateHtaccessContents($realValue)) {
+                                $output->writeln('.htaccess has been correctly updated');
+                            } else {
+                                $output->writeln('Unable to automatically update .htaccess');
+                                $output->writeln($realValue ? 'Add these lines to the .htaccess file:' : 'Remove these lines from .htaccess file:');
+                                $output->writeln($h->getRewriteRules());
+                            }
+                            break;
+                    }
+                    $this->repository->save($item, $realValue);
                     break;
 
                 default:
