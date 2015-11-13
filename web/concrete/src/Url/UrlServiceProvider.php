@@ -64,5 +64,10 @@ class UrlServiceProvider extends Provider
                 return $manager;
             }
         );
+
+        $this->app->singleton(
+            'helper/url/pretty',
+            '\Concrete\Core\Url\Service\PrettyUrl'
+        );
     }
 }
