@@ -9,7 +9,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	<? endif; ?>
 	<div class="controls">
 		<?
-		print Core::make('editor')->outputPageComposerEditor($view->field('content'), $controller->getContentEditMode());
+		$content = $controller->getContentEditMode();
+		if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$data = $view->getRequestValue();
+			$content = $data['content'];
+		}
+		print Core::make('editor')->outputPageComposerEditor($view->field('content'), $content);
 		?>
 	</div>
 </div>
