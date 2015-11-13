@@ -33,7 +33,8 @@ class ApprovePageRequest extends PageRequest {
 		$d = new WorkflowDescription();
 		$c = Page::getByID($this->cID, 'RECENT');
 		$link = Loader::helper('navigation')->getLinkToCollection($c, true);
-		$d->setEmailDescription(t("\"%s\" has pending changes and needs to be approved. View the page here: %s.", $c->getCollectionName(), $link));
+		$comments = $c->getVersionObject()->getVersionComments();
+		$d->setEmailDescription(t("\"%s\" has pending changes and needs to be approved.\n\nVersion Comments: %s\n\nView the page here: %s.", $c->getCollectionName(), $comments, $link));
 		$d->setDescription(t("Version %s of Page <a href=\"%s\">%s</a> submitted for Approval.", $this->cvID, $link, $c->getCollectionName()));
 		$d->setInContextDescription(t("Page Version %s Submitted for Approval.", $this->cvID));
 		$d->setShortStatus(t("Pending Approval"));
