@@ -63,7 +63,11 @@ class Composer extends BackendInterfacePageController {
 			$c = $this->page;
 			$e = $ptr->error;
 			$validator = $pagetype->getPageTypeValidatorObject();
-			$target = \Page::getByID($this->page->getPageDraftTargetParentPageID());
+			if ($this->page->isPageDraft()) {
+				$target = \Page::getByID($this->page->getPageDraftTargetParentPageID());
+			} else {
+				$target = \Page::getByID($this->page->getCollectionParentID());
+			}
 			$e->add($validator->validatePublishLocationRequest($target));
 			$e->add($validator->validatePublishDraftRequest($c));
 

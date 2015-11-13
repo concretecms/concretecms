@@ -28,4 +28,12 @@ class PublishTargetCorePageProperty extends CorePageProperty
         }
     }
 
+    public function render($label, $customTemplate, $description) {
+        {
+            if (!is_object($this->page) || $this->page->isPageDraft()) {
+                parent::render($label, $customTemplate, $description);
+            }
+        }
+    }
+
 }
