@@ -81,11 +81,11 @@ class Controller extends AttributeTypeController
                 break;
             case 'date':
                 $this->requireAsset('jquery/ui');
-                print $dt->date($this->field('value'), $caValue);
+                print $dt->date($this->field('value'), $caValue == null ? '' : $caValue);
                 break;
             default:
                 $this->requireAsset('jquery/ui');
-                print $dt->datetime($this->field('value'), $caValue);
+                print $dt->datetime($this->field('value'), $caValue == null ? '' : $caValue);
                 break;
         }
     }
