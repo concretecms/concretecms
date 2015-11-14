@@ -87,7 +87,7 @@ class DateTime
                 $timeHour = 12;
             }
         }
-        if ($value === '') {
+        if ($value == '') {
             $defaultDateJs = '""';
         } else {
             $defaultDateJs = "new Date($dateYear, $dateMonth - 1, $dateDay)";
@@ -219,7 +219,7 @@ EOS;
             $timestamp = empty($_REQUEST[$field]) ? false : @strtotime($_REQUEST[$field]);
         } elseif ($value) {
             $timestamp = @strtotime($value);
-        } elseif ($value === '') {
+        } elseif ($value == '') {
             $timestamp = false;
         } else {
             // Today (in the user's timezone)
