@@ -764,6 +764,13 @@ return array(
      * ------------------------------------------------------------------------
      */
     'security'          => array(
+        'session' => array(
+
+            'invalidate_on_user_agent_mismatch' => true,
+
+            'invalidate_on_ip_mismatch' => true
+
+        ),
         'ban'   => array(
             'ip' => array(
 

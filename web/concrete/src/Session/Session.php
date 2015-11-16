@@ -54,11 +54,19 @@ class Session
         $ip = $session->get('CLIENT_REMOTE_ADDR');
         $agent = $session->get('CLIENT_HTTP_USER_AGENT');
         $currentUserAgent = $_SERVER['HTTP_USER_AGENT'];
-        if ($ip && $ip != $currentIp->getIp(IPAddress::FORMAT_IP_STRING) || $agent && $agent != $currentUserAgent) {
-            \Log::warning(t('Session Invalidated. Session IP %s, provided IP %s. Session Agent %s, provided IP %s',
-                $ip, $currentIp->getIp(IPAddress::FORMAT_IP_STRING), $agent, $_SERVER['HTTP_USER_AGENT']));
+
+        if (\Config::get('concrete.security.session.invalidate_on_ip_mismatch') && $ip && $ip != $currentIp->getIp(IPAddress::FORMAT_IP_STRING)) {
+            \Log::warning(t('Session Invalidated. Session IP %s did not match provided IP %s.', $ip, $currentIp->getIp(IPAddress::FORMAT_IP_STRING)));
             $session->invalidate();
+            return;
         }
+
+        if (\Config::get('concrete.security.session.invalidate_on_user_agent_mismatch') && $agent && $agent != $currentUserAgent) {
+            \Log::warning(t('Session Invalidated. Session user agent %s did not match provided agent %s', $agent, $currentUserAgent));
+            $session->invalidate();
+            return;
+        }
+
         if (!$ip && $currentIp !== false) {
             $session->set('CLIENT_REMOTE_ADDR', $currentIp->getIp(IPAddress::FORMAT_IP_STRING));
         }
