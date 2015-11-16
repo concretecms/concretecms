@@ -86,6 +86,8 @@ class User extends Object
             User::refreshUserGroups();
         }
 
+        \Concrete\Core\Session\Session::testSessionFixation($session);
+
         if ($session->get('uID') > 0) {
             $db = Loader::db();
             $row = $db->GetRow("select uID, uIsActive, uLastPasswordChange from Users where uID = ? and uName = ?", array($session->get('uID'), $session->get('uName')));
