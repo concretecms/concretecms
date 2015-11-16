@@ -44,18 +44,19 @@ class Session
 
         $session = new SymfonySession($storage);
         $session->setName(Config::get('concrete.session.name'));
-
-        static::testSessionFixation($session);
         return $session;
     }
 
-    protected static function testSessionFixation(SymfonySession $session)
+    public static function testSessionFixation(SymfonySession $session)
     {
         $iph = Core::make('helper/validation/ip');
         $currentIp = $iph->getRequestIP();
         $ip = $session->get('CLIENT_REMOTE_ADDR');
         $agent = $session->get('CLIENT_HTTP_USER_AGENT');
-        if ($ip && $ip != $currentIp->getIp(IPAddress::FORMAT_IP_STRING) || $agent && $agent != $_SERVER['HTTP_USER_AGENT']) {
+        $currentUserAgent = $_SERVER['HTTP_USER_AGENT'];
+        if ($ip && $ip != $currentIp->getIp(IPAddress::FORMAT_IP_STRING) || $agent && $agent != $currentUserAgent) {
+            \Log::warning(t('Session Invalidated. Session IP %s, provided IP %s. Session Agent %s, provided IP %s',
+                $ip, $currentIp->getIp(IPAddress::FORMAT_IP_STRING), $agent, $_SERVER['HTTP_USER_AGENT']));
             $session->invalidate();
         }
         if (!$ip && $currentIp !== false) {
