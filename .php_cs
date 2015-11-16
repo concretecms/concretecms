@@ -14,6 +14,8 @@ return Symfony\CS\Config\Config::create()
         '-phpdoc_no_package',
         // Allow 'return null'
         '-empty_return',
+        // Don't force an empty line before namespace declaration
+        '-single_blank_line_before_namespace',
     ))
     ->finder(
         Symfony\CS\Finder\DefaultFinder::create()
