@@ -8,7 +8,6 @@ var ConcreteToolbar = function() {
 	var $searchInput = $('#ccm-nav-intelligent-search');
 	var $searchResults = $('#ccm-intelligent-search-results');
 	var remotesearchquery, ajaxtimer;
-	var enabled = true;
 
     if ($searchInput.length) {
         $searchResults.css('right', $(window).width() - $searchInput.offset().left - $searchResults.width() - 1);
@@ -298,7 +297,6 @@ var ConcreteToolbar = function() {
 		},
 
 		disable: function() {
-			enabled = false;
 			$('#ccm-toolbar-disabled').remove();
 			$('<div />', {'id': 'ccm-toolbar-disabled'}).appendTo(document.body);
 			setTimeout(function() {
@@ -307,12 +305,7 @@ var ConcreteToolbar = function() {
 		},
 
 		enable: function() {
-			enabled = true;
 			$('#ccm-toolbar-disabled').remove();
-		},
-
-		isEnabled: function() {
-			return enabled;
 		},
 
 		disableDirectExit: function() {
