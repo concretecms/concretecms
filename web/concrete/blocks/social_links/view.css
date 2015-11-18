@@ -1,10 +1,10 @@
-ul.list-inline {
+.ccm-block-social-links ul.list-inline {
     display: inline-block;
     margin: 0px;
     padding: 0px;
 }
 
-ul.list-inline li {
+.ccm-block-social-links ul.list-inline li {
     padding: 0px;
     list-style-type: none;
     margin-right: 10px;
