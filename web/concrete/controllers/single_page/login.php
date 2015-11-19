@@ -278,7 +278,7 @@ class Login extends PageController
 
                 //redirect to user profile
                 if ($login_redirect_mode == 'PROFILE' && Config::get('concrete.user.profiles_enabled')) {
-                    $rUrl = View::url('/members/profile/', $u->getUserID());
+                    $rUrl = $u->getUserInfoObject()->getUserPublicProfileUrl();
                     break;
                 }
 

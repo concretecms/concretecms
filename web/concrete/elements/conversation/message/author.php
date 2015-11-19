@@ -2,7 +2,8 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 $u = new User();
 ?>
-<? if ($u->isRegistered()) { ?>
+<? if ($u->isRegistered()) {
+	$ui = $u->getUserInfoObject();?>
 	<div class="ccm-conversation-avatar"><?=$ui->getUserAvatar()->output()?></div>
 <? } else {
 	// non-logged-in posting. ?>
