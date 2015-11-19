@@ -21,9 +21,17 @@ use Hautelook\Phpass\PasswordHash;
 use Session;
 use Core;
 use Database;
+use Concrete\Core\User\Avatar\AvatarServiceInterface;
 
 class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterface
 {
+
+    protected $avatarService;
+
+    public function __construct(AvatarServiceInterface $avatarService)
+    {
+        $this->avatarService = $avatarService;
+    }
     /**
      * @return string
      */
@@ -284,7 +292,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 
             $testChange = false;
 
-            if ($data['uPassword'] != null) {
+            if (isset($data['uPassword']) && $data['uPassword'] != null) {
                 if ($data['uPassword'] == $data['uPasswordConfirm']) {
                     $dh = Core::make('helper/date');
                     $dateTime = $dh->getOverridableNow();
@@ -497,12 +505,17 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         }
     }
 
+    public function getUserAvatar()
+    {
+        return $this->avatarService->getAvatar($this);
+    }
+
     /**
      * @return bool
      */
     public function hasAvatar()
     {
-        return $this->uHasAvatar;
+        return $this->avatarService->userHasAvatar($this);
     }
 
     /**
@@ -805,7 +818,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     /**
      * @deprecated
      */
-    public function add($data)
+    public static function add($data)
     {
         return Core::make('user.registration')->create($data);
     }
@@ -813,7 +826,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     /**
      * @deprecated
      */
-    public function addSuperUser($uPasswordEncrypted, $uEmail)
+    public static function addSuperUser($uPasswordEncrypted, $uEmail)
     {
         return Core::make('user.registration')->createSuperUser($uPasswordEncrypted, $uEmail);
     }
@@ -821,9 +834,41 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     /**
      * @deprecated
      */
-    public function register($data)
+    public static function register($data)
     {
         return Core::make('user.registration')->createFromPublicRegistration($data);
+    }
+
+    /**
+     * @deprecated
+     */
+    public static function getByID($uID)
+    {
+        return Core::make('Concrete\Core\User\UserInfoFactory')->getByID($uID);
+    }
+
+    /**
+     * @deprecated
+     */
+    public static function getByName($uName)
+    {
+        return Core::make('Concrete\Core\User\UserInfoFactory')->getByName($uName);
+    }
+
+    /**
+     * @deprecated
+     */
+    public static function getByEmail($uEmail)
+    {
+        return Core::make('Concrete\Core\User\UserInfoFactory')->getByEmail($uEmail);
+    }
+
+    /**
+     * @deprecated
+     */
+    public static function getByValidationHash($uHash, $unredeemedHashesOnly = true)
+    {
+        return Core::make('Concrete\Core\User\UserInfoFactory')->getByValidationHash($uHash, $unredeemedHashesOnly);
     }
 
 }

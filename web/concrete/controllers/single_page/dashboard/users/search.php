@@ -52,7 +52,8 @@ class Search extends DashboardPageController
         $sr = new UserEditResponse();
         $sr->setUser($this->user);
         $sr->setMessage(t('Avatar saved successfully.'));
-        $html = $av->outputUserAvatar($ui);
+        $av = $this->user->getUserAvatar();
+        $html = $av->output();
         $sr->setAdditionalDataAttribute('imageHTML', $html);
         $sr->outputJSON();
     }

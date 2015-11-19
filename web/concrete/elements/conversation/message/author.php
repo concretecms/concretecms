@@ -3,7 +3,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $u = new User();
 ?>
 <? if ($u->isRegistered()) { ?>
-	<div class="ccm-conversation-avatar"><? print Loader::helper('concrete/avatar')->outputUserAvatar($ui)?></div>
+	<div class="ccm-conversation-avatar"><?=$ui->getUserAvatar()->output()?></div>
 <? } else {
 	// non-logged-in posting. ?>
 	<div class="form-group">
