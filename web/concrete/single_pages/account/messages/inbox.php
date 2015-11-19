@@ -20,8 +20,8 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 
     		<div id="ccm-private-message-detail">
 			<? if (\Config::get('concrete.user.profiles_enabled')) { ?>
-				<a href="<?=$view->url('/members/profile', 'view', $msg->getMessageRelevantUserID())?>"><?=$msg->getMessageRelevantUserObject()->getUserAvatar()->output()?></a>
-				<a href="<?=$view->url('/members/profile', 'view', $msg->getMessageRelevantUserID())?>"><?=$msg->getMessageRelevantUserName()?></a>
+				<a href="<?=$msg->getMessageRelevantUserObject()->getUserPublicProfileURL()?>"><?=$msg->getMessageRelevantUserObject()->getUserAvatar()->output()?></a>
+				<a href="<?=$msg->getMessageRelevantUserObject()->getUserPublicProfileURL()?>"><?=$msg->getMessageRelevantUserName()?></a>
 			<? } else { ?>
 				<?=$msg->getMessageRelevantUserObject()->getUserAvatar()->output()?>
 				<?=$msg->getMessageRelevantUserName()?>
@@ -100,8 +100,8 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 
 					<tr>
 						<td class="ccm-profile-message-from">
-						<a href="<?=$view->url('/members/profile', 'view', $msg->getMessageRelevantUserID())?>"><?=$msg->getMessageRelevantUserObject()->getUserAvatar()->output()?></a>
-						<a href="<?=$view->url('/members/profile', 'view', $msg->getMessageRelevantUserID())?>"><?=$msg->getMessageRelevantUserName()?></a>
+						<a href="<?=$msg->getMessageRelevantUserObject()->getUserPublicProfileURL()?>"><?=$msg->getMessageRelevantUserObject()->getUserAvatar()->output()?></a>
+						<a href="<?=$msg->getMessageRelevantUserObject()->getUserPublicProfileURL()?>"><?=$msg->getMessageRelevantUserName()?></a>
 						</td>
 						<td class="ccm-profile-messages-item-name"><a href="<?=$view->url('/account/messages/inbox', 'view_message', $mailbox, $msg->getMessageID())?>"><?=$msg->getFormattedMessageSubject()?></a></td>
 						<td style="white-space: nowrap"><?=$dh->formatDateTime($msg->getMessageDateAdded(), true)?></td>
@@ -134,7 +134,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
     		case 'send_complete': ?>
 
     		<div class="alert alert-success"><?=t('Message Sent.')?></div>
-    		<a href="<?=$view->url('/members/profile', 'view', $recipient->getUserID())?>" class="btn btn-default"><?=t('Back to Profile')?></a>
+    		<a href="<?=$recipient->getUserPublicProfileURL()?>" class="btn btn-default"><?=t('Back to Profile')?></a>
 
     		<?
     			break;

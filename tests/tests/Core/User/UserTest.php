@@ -119,6 +119,22 @@ class UserTest extends \UserTestCase
         $this->assertFalse($ui->hasAvatar());
     }
 
+    public function testPublicProfileLink()
+    {
+        \Config::set('concrete.user.profiles_enabled', false);
+
+        $service = Core::make('user.registration');
+        $ui = $service->create(array('uName' => 'andrew', 'uEmail' => 'andrew@concrete5.org'));
+        $this->assertEquals(null, $ui->getUserPublicProfileUrl());
+
+        \Config::set('concrete.user.profiles_enabled', true);
+        $this->assertInstanceOf('Concrete\Core\Url\UrlInterface', $ui->getUserPublicProfileUrl());
+        $url = (string) $ui->getUserPublicProfileUrl();
+        $this->assertEquals('http://www.dummyco.com/path/to/server/index.php/members/profile/view/1', $url);
+
+        \Config::clear('concrete.user.profiles_enabled');
+
+    }
 
 }
  

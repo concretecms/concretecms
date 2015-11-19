@@ -269,11 +269,7 @@ abstract class Editor extends Object
             $haystack = array();
             foreach ($users as $user) {
                 $needle[] = "@" . $user->getUserName();
-                $haystack[] = "<a href='" . View::url(
-                        '/members/profile',
-                        'view',
-                        $user->getUserID()
-                    ) . "'>@" . $user->getUserName() . "</a>";
+                $haystack[] = "<a href='" . $user->getUserPublicProfileURL() . "'>'@" . $user->getUserName() . "</a>";
             }
 
             return str_ireplace($needle, $haystack, $lawed);

@@ -2,8 +2,10 @@
 
 namespace Concrete\Core\User;
 
+use Concrete\Core\Application\Application;
 use Concrete\Core\File\StorageLocation\StorageLocation;
 use Concrete\Core\Foundation\Object;
+use Concrete\Core\Url\UrlInterface;
 use Concrete\Core\User\Event\AddUser;
 use Concrete\Core\User\PrivateMessage\Limit;
 use Concrete\Core\User\PrivateMessage\Mailbox as UserPrivateMessageMailbox;
@@ -27,10 +29,12 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 {
 
     protected $avatarService;
+    protected $application;
 
-    public function __construct(AvatarServiceInterface $avatarService)
+    public function __construct(Application $application, AvatarServiceInterface $avatarService)
     {
         $this->avatarService = $avatarService;
+        $this->application = $application;
     }
     /**
      * @return string
@@ -221,7 +225,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
             $mh->addParameter('msgBody', $text);
             $mh->addParameter('msgAuthor', $this->getUserName());
             $mh->addParameter('msgDateCreated', $msgDateCreated);
-            $mh->addParameter('profileURL', View::url('/members/profile', 'view', $this->getUserID()));
+            $mh->addParameter('profileURL', $this->getUserPublicProfileUrl());
             $mh->addParameter('profilePreferencesURL', View::url('/account/profile/edit'));
             $mh->to($recipient->getUserEmail());
             $mh->addParameter('siteName', Config::get('concrete.site'));
@@ -508,6 +512,23 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     public function getUserAvatar()
     {
         return $this->avatarService->getAvatar($this);
+    }
+
+    /**
+     * @return null|Concrete\Core\Url\UrlInterface
+     */
+    public function getUserPublicProfileUrl()
+    {
+        if (!$this->application['config']->get('concrete.user.profiles_enabled')) {
+            return null;
+        }
+        $url = $this->application->make('url/manager');
+        return $url->resolve(array(
+            '/members/profile',
+            'view',
+            $this->getUserID()
+            )
+        );
     }
 
     /**

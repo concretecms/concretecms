@@ -26,7 +26,9 @@ class AuthorFormatter
         } else {
             $name = t('Anonymous');
         }
-        if ($this->author->getWebsite()) {
+        if (is_object($ui) && \Config::get('concrete.user.profiles_enabled')) {
+            return sprintf('<a href="%s">%s</a>', $ui->getUserPublicProfileUrl(), h($name));
+        } else if ($this->author->getWebsite()) {
             return sprintf('<a href="%s">%s</a>', h($this->author->getWebsite()), h($name));
         } else {
             return h($name);
