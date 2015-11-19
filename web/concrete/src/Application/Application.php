@@ -250,6 +250,8 @@ class Application extends Container
      */
     public function setupPackages()
     {
+        $checkAfterStart = false;
+
         foreach($this->packages as $pkg) {
             // handle updates
             if (Config::get('concrete.updates.enable_auto_update_packages')) {
@@ -272,8 +274,19 @@ class Application extends Container
             if (method_exists($pkg, 'on_start')) {
                 $pkg->on_start();
             }
+            if (method_exists($pkg, 'on_after_packages_start')) {
+                $checkAfterStart = true;
+            }
         }
         Config::set('app.bootstrap.packages_loaded', true);
+
+        if ($checkAfterStart) {
+            foreach($this->packages as $pkg) {
+                if (method_exists($pkg, 'on_after_packages_start')) {
+                    $pkg->on_after_packages_start();
+                }
+            }
+        }
     }
 
     /**
@@ -373,6 +386,14 @@ class Application extends Container
         // want to replace legacy "tools" URLs with the new MVC, and the tools paths are so greedy they don't
         // work unless they come at the end.
         $this->registerLegacyRoutes();
+
+
+        $path = $request->getPathInfo();
+
+        if (substr($path, 0, 3) == '../' || substr($path, -3) == '/..' ||  strpos($path, '/../')) {
+            throw new \RuntimeException(t('Invalid path traversal. Please make this request with a valid HTTP client.'));
+        }
+
         if ($this->installed) {
             $response = $this->getEarlyDispatchResponse();
         }

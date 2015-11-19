@@ -15,6 +15,7 @@ class PageTypeType extends Type
         $configuration = new PageTypeConfiguration($this);
         $configuration->setPageTypeID($post['ptID']);
         $configuration->setSelectorFormFactor($post['selectorFormFactorPageType']);
+        $configuration->setStartingPointPageID(isset($post['startingPointPageIDPageType']) ? $post['startingPointPageIDPageType'] : null);
         return $configuration;
     }
 
@@ -26,6 +27,11 @@ class PageTypeType extends Type
         $configuration->setPageTypeID($ct->getPageTypeID());
         if ($formFactor) {
             $configuration->setSelectorFormFactor($formFactor);
+        }
+        $path = (string) $txml['path'];
+        if ($path) {
+            $c = \Page::getByPath($path);
+            $configuration->setStartingPointPageID($c->getCollectionID());
         }
         return $configuration;
     }

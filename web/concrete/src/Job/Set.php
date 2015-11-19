@@ -3,7 +3,6 @@ namespace Concrete\Core\Job;
 use Gettext\Translations;
 use Loader;
 use JobSet;
-use Environment;
 use \Concrete\Core\Foundation\Object;
 class Set extends Object {
 
@@ -55,7 +54,7 @@ class Set extends Object {
 		$list = array();
 		$r = $db->Execute('select jsID from JobSets where pkgID = ? order by jsID asc', array($pkg->getPackageID()));
 		while ($row = $r->FetchRow()) {
-			$list[] = JobSets::getByID($row['jsID']);
+			$list[] = JobSet::getByID($row['jsID']);
 		}
 		$r->Close();
 		return $list;
@@ -141,7 +140,7 @@ class Set extends Object {
 		$db = Loader::db();
 		$timestamp=date('Y-m-d H:i:s');
 		$this->jDateLastRun = $timestamp;
-		$rs = $db->query( "UPDATE JobSets SET jDateLastRun=? WHERE jsID=?", array( $timestamp, $this->getJobSetID() ) );
+		$db->query( "UPDATE JobSets SET jDateLastRun=? WHERE jsID=?", array( $timestamp, $this->getJobSetID() ) );
 	}
 
 

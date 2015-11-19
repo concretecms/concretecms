@@ -16,11 +16,10 @@ class Controller extends BlockController
     protected $btInterfaceHeight = "400";
     protected $btExportTables = array('btSurvey', 'btSurveyOptions', 'btSurveyResults');
 
-    public function __construct($obj = null)
+    public function on_start()
     {
         $this->cID = null;
-        $this->bID = null;
-        parent::__construct($obj);
+
         $c = Page::getCurrentPage();
 
         if (is_object($c)) {

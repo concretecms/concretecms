@@ -2,33 +2,10 @@
 namespace Concrete\Core\Job;
 use Config;
 use \Job as AbstractJob;
-use Loader;
-use Environment;
 use Queue;
 use \ZendQueue\Queue as ZendQueue;
 use \ZendQueue\Message as ZendQueueMessage;
 
-/**
-*
-* Contains the job class.
-* @package Utilities
-* @author Andrew Embler <andrew@concrete5.org>
-* @author Tony Trupp <tony@concrete5.org>
-* @link http://www.concrete5.org
-* @license http://www.opensource.org/licenses/mit-license.php MIT
-*
-*/
-
-/**
-*
-* The job class is essentially sub-dispatcher for certain maintenance tasks that need to be run at specified intervals. Examples include indexing a search engine or generating a sitemap page.
-* @package Utilities
-* @author Andrew Embler <andrew@concrete5.org>
-* @author Tony Trupp <tony@concrete5.org>
-* @link http://www.concrete5.org
-* @license http://www.opensource.org/licenses/mit-license.php MIT
-*
-*/
 abstract class QueueableJob extends AbstractJob {
 
 	// optional queue functions
@@ -76,13 +53,13 @@ abstract class QueueableJob extends AbstractJob {
 		$this->start($q);
 		try {
 			$messages = $q->receive(PHP_INT_MAX);
-			foreach($messages as $key => $p) {
+			foreach($messages as $p) {
 				$this->processQueueItem($p);
 				$q->deleteMessage($p);
 			}
 			$result = $this->finish($q);
 			$obj = $this->markCompleted(0, $result);
-		} catch(Exception $e) {
+		} catch(\Exception $e) {
 			$obj = $this->markCompleted(Job::JOB_ERROR_EXCEPTION_GENERAL, $e->getMessage());
 			$obj->message = $obj->result; // needed for progressive library.
 		}

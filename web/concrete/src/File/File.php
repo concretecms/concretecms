@@ -385,8 +385,11 @@ class File implements \Concrete\Core\Permission\ObjectInterface
             if ($version->isApproved()) {
                 $cloneVersion = clone $version;
                 $cloneVersion->setFile($nf);
-                $prefix = $importer->generatePrefix();
-                $filesystem->write($cf->prefix($prefix, $version->getFilename()), $version->getFileResource()->read(), array(
+                do {
+                    $prefix = $importer->generatePrefix();
+                    $path = $cf->prefix($prefix, $version->getFilename());
+                } while($filesystem->has($path));
+                $filesystem->write($path, $version->getFileResource()->read(), array(
                     'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
                     'mimetype' => Core::make('helper/mime')->mimeFromExtension($fi->getExtension($version->getFilename()))
                 ));

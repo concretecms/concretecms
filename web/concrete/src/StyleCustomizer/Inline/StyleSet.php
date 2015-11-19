@@ -655,7 +655,7 @@ class StyleSet
     /**
      * @param $issID
      *
-     * @return \Concrete\Core\Page\Style\Set
+     * @return \Concrete\Core\StyleCustomizer\Set
      */
     public static function getByID($issID)
     {
@@ -677,9 +677,11 @@ class StyleSet
     {
         $o = new self();
         $o->setBackgroundColor((string) $node->backgroundColor);
-        $filename = (string) $node['backgroundImage'];
+        $filename = (string) $node->backgroundImage;
         if ($filename) {
-            $fID = ContentImporter::getValue($filename);
+            $inspector = \Core::make('import/value_inspector');
+            $result = $inspector->inspect($filename);
+            $fID = $result->getReplacedValue();
             if ($fID) {
                 $o->setBackgroundImageFileID($fID);
             }
@@ -750,29 +752,6 @@ class StyleSet
         $node->addChild('hideOnSmallDevice', $this->getHideOnSmallDevice());
         $node->addChild('hideOnMediumDevice', $this->getHideOnMediumDevice());
         $node->addChild('hideOnLargeDevice', $this->getHideOnLargeDevice());
-    }
-
-    public function getClass($theme = null)
-    {
-        $class = '';
-        if ($this->getCustomClass()) {
-            $class .= $this->getCustomClass();
-        }
-        if (is_object($theme) && ($gf = $theme->getThemeGridFrameworkObject())) {
-            if ($this->getHideOnExtraSmallDevice()) {
-                $class .= ' ' . $gf->getPageThemeGridFrameworkHideOnExtraSmallDeviceClass();
-            }
-            if ($this->getHideOnSmallDevice()) {
-                $class .= ' ' . $gf->getPageThemeGridFrameworkHideOnSmallDeviceClass();
-            }
-            if ($this->getHideOnMediumDevice()) {
-                $class .= ' ' . $gf->getPageThemeGridFrameworkHideOnMediumDeviceClass();
-            }
-            if ($this->getHideOnLargeDevice()) {
-                $class .= ' ' . $gf->getPageThemeGridFrameworkHideOnLargeDeviceClass();
-            }
-        }
-        return $class;
     }
 
     /**

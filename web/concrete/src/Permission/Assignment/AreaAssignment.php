@@ -79,7 +79,7 @@ class AreaAssignment extends Assignment
 
         if ($this->permissionObjectToCheck instanceof Area) {
             $r = $db->GetOne(
-                'select paID from AreaPermissionAssignments where cID = ? and arHandle = ? and pkID = ? ' . $filterString,
+                'select paID from AreaPermissionAssignments where cID = ? and arHandle = ? and pkID = ? ',
                 array(
                     $this->permissionObjectToCheck->getCollectionID(),
                     $this->permissionObjectToCheck->getAreaHandle(),

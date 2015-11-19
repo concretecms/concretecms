@@ -11,6 +11,7 @@ class AllType extends Type
     {
         $configuredTarget = new AllConfiguration($this);
         $configuredTarget->setSelectorFormFactor(isset($post['selectorFormFactorAll']) ? $post['selectorFormFactorAll'] : null);
+        $configuredTarget->setStartingPointPageID(isset($post['startingPointPageIDAll']) ? $post['startingPointPageIDAll'] : null);
 
         return $configuredTarget;
     }
@@ -22,7 +23,11 @@ class AllType extends Type
         if ($formFactor) {
             $configuration->setSelectorFormFactor($formFactor);
         }
-
+        $path = (string) $txml['path'];
+        if ($path) {
+            $c = \Page::getByPath($path);
+            $configuration->setStartingPointPageID($c->getCollectionID());
+        }
         return $configuration;
     }
 }

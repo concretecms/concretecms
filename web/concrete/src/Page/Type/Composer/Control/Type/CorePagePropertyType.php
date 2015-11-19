@@ -21,6 +21,7 @@ class CorePagePropertyType extends Type
 
     public function getPageTypeComposerControlObjects()
     {
+		$objects = array();
         foreach ($this->corePageProperties as $propertyHandle) {
             $objects[] = $this->getPageTypeComposerControlByIdentifier($propertyHandle);
         }

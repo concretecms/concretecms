@@ -2,6 +2,7 @@
 
 namespace Concrete\Block\Feature;
 
+use Concrete\Core\Editor\LinkAbstractor;
 use Page;
 use Concrete\Core\Block\BlockController;
 use Less_Parser;
@@ -67,6 +68,7 @@ class Controller extends BlockController
 
     public function view()
     {
+        $this->set('paragraph', LinkAbstractor::translateFrom($this->paragraph));
         $this->set('linkURL', $this->getLinkURL());
     }
 
@@ -125,6 +127,7 @@ class Controller extends BlockController
                 $args['internalLinkCID'] = 0;
                 break;
         }
+        $args['paragraph'] = LinkAbstractor::translateTo($args['paragraph']);
         unset($args['linkType']);
         parent::save($args);
     }

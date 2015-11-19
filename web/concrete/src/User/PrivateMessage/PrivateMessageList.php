@@ -21,6 +21,7 @@ class PrivateMessageList extends DatabaseItemList {
 	}
 
 	public function get($itemsToGet = 0, $offset = 0) {
+        $messages = array();
 		$r = parent::get($itemsToGet, $offset);
 		foreach($r as $row) {
 			$messages[] = UserPrivateMessage::getByID($row['msgID'], $this->mailbox);

@@ -107,7 +107,13 @@ class ArrangeBlocks extends Page
         }
 
         if (!$e->has()) {
-            $nvc->processArrangement($_POST['area'], $_POST['block'], $_POST['blocks']);
+
+            $request = \Request::getInstance();
+            $area_id = $request->post('area', 0);
+            $block_id = $request->post('block', 0);
+            $block_ids = $request->post('blocks', array());
+
+            $nvc->processArrangement($area_id, $block_id, $block_ids);
         }
 
         $pc->setError($e);

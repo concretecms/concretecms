@@ -58,9 +58,7 @@ class Controller extends BlockController
 
     public function getDateLabel($dateArray)
     {
-        $date = strtotime($dateArray['year'] . '-' . $dateArray['month'] . '-01');
-        $srv = Core::make('helper/date');
-        return $srv->date('F Y', $date);
+        return \Punic\Calendar::getMonthName($dateArray['month']).' '.$dateArray['year'];
     }
 
     public function getPassThruActionAndParameters($parameters)

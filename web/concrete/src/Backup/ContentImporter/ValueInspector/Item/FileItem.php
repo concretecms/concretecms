@@ -25,7 +25,7 @@ class FileItem extends AbstractItem
     public function getContentValue()
     {
         if ($o = $this->getContentObject()) {
-            return sprintf("CCM:FID_DL_%s", $o->getFileID());
+            return sprintf("{CCM:FID_DL_%s}", $o->getFileID());
         }
     }
 

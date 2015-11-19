@@ -46,7 +46,7 @@
 			var flashvars = {
 				width: '<?php echo Config::get('concrete.icons.user_avatar.width') ?>',
 				height: '<?php echo Config::get('concrete.icons.user_avatar.height') ?>',
-				image: '<?php echo $av->getImagePath($profile)?>',
+				image: '<?php echo $profile->getUserAvatar()->getPath()?>',
 				save: "<?php echo $view->action('save_thumb')?>"
 			};
 			swfobject.embedSWF ("<?php echo ASSETS_URL_JAVASCRIPT?>/thumbnail-editor-3.swf", "profile-avatar", "500", "400", "10,0,0,0", "includes/expressInstall.swf", flashvars, params);
