@@ -12,8 +12,12 @@ class NameCorePageProperty extends CorePageProperty
     public function __construct()
     {
         $this->setCorePagePropertyHandle('name');
-        $this->setPageTypeComposerControlName(tc('PageTypeComposerControlName', 'Page Name'));
         $this->setPageTypeComposerControlIconSRC(ASSETS_URL . '/attributes/text/icon.png');
+    }
+
+    public function getPageTypeComposerControlName()
+    {
+        return tc('PageTypeComposerControlName', 'Page Name');
     }
 
     public function publishToPage(Page $c, $data, $controls)
