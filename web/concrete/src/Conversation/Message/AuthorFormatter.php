@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Conversation\Message;
 
+use Concrete\Core\User\Avatar\EmptyAvatar;
 use Concrete\Core\User\UserInfo;
 
 class AuthorFormatter
@@ -26,8 +27,8 @@ class AuthorFormatter
         } else {
             $name = t('Anonymous');
         }
-        if (is_object($ui) && \Config::get('concrete.user.profiles_enabled')) {
-            return sprintf('<a href="%s">%s</a>', $ui->getUserPublicProfileUrl(), h($name));
+        if (is_object($ui) && ($profileURL = $ui->getUserPublicProfileUrl())) {
+            return sprintf('<a href="%s">%s</a>', $profileURL, h($name));
         } else if ($this->author->getWebsite()) {
             return sprintf('<a href="%s">%s</a>', h($this->author->getWebsite()), h($name));
         } else {
@@ -60,6 +61,10 @@ class AuthorFormatter
     public function getAvatar()
     {
         $ui = $this->author->getUser();
-        return $ui->getUserAvatar()->output();
+        if (is_object($ui)) {
+            return $ui->getUserAvatar()->output();
+        } else {
+            return \Core::make('Concrete\Core\User\Avatar\EmptyAvatar')->output();
+        }
     }
 }
