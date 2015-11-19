@@ -5,7 +5,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 <div id="ccm-profile-header">
 
 <div id="ccm-profile-avatar">
-<? print Loader::helper('concrete/avatar')->outputUserAvatar($profile); ?>
+<? print $profile->getUserAvatar()->output(); ?>
 </div>
 
 <h1><?=$profile->getUserName()?></h1>

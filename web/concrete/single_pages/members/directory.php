@@ -32,7 +32,7 @@
 		foreach($users as $user) { 	?>
 
 		<tr>
-			<td class="ccm-members-directory-avatar"><a href="<?=$view->url('/members/profile','view', $user->getUserID())?>"><?=$av->outputUserAvatar($user)?></a></td>
+			<td class="ccm-members-directory-avatar"><a href="<?=$view->url('/members/profile','view', $user->getUserID())?>"><?=$user->getUserAvatar()->output()?></a></td>
 			<td class="ccm-members-directory-name"><a href="<?=$view->url('/members/profile','view', $user->getUserID())?>"><?=ucfirst($user->getUserName())?></a></td>
 			<?
 			foreach($attribs as $ak) { ?>

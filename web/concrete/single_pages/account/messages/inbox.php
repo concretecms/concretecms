@@ -20,10 +20,10 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 
     		<div id="ccm-private-message-detail">
 			<? if (\Config::get('concrete.user.profiles_enabled')) { ?>
-				<a href="<?=$view->url('/members/profile', 'view', $msg->getMessageRelevantUserID())?>"><?=$av->outputUserAvatar($msg->getMessageRelevantUserObject())?></a>
+				<a href="<?=$view->url('/members/profile', 'view', $msg->getMessageRelevantUserID())?>"><?=$msg->getMessageRelevantUserObject()->getUserAvatar()->output()?></a>
 				<a href="<?=$view->url('/members/profile', 'view', $msg->getMessageRelevantUserID())?>"><?=$msg->getMessageRelevantUserName()?></a>
 			<? } else { ?>
-				<?=$av->outputUserAvatar($msg->getMessageRelevantUserObject())?>
+				<?=$msg->getMessageRelevantUserObject()->getUserAvatar()->output()?>
 				<?=$msg->getMessageRelevantUserName()?>
 			<? } ?>
 
@@ -100,7 +100,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 
 					<tr>
 						<td class="ccm-profile-message-from">
-						<a href="<?=$view->url('/members/profile', 'view', $msg->getMessageRelevantUserID())?>"><?=$av->outputUserAvatar($msg->getMessageRelevantUserObject())?></a>
+						<a href="<?=$view->url('/members/profile', 'view', $msg->getMessageRelevantUserID())?>"><?=$msg->getMessageRelevantUserObject()->getUserAvatar()->output()?></a>
 						<a href="<?=$view->url('/members/profile', 'view', $msg->getMessageRelevantUserID())?>"><?=$msg->getMessageRelevantUserName()?></a>
 						</td>
 						<td class="ccm-profile-messages-item-name"><a href="<?=$view->url('/account/messages/inbox', 'view_message', $mailbox, $msg->getMessageID())?>"><?=$msg->getFormattedMessageSubject()?></a></td>

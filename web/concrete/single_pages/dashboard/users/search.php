@@ -88,7 +88,7 @@
 	                <span class="editable-image-wrapper">
 	                    <input type="file" id="file-avatar" name="avatar"/>
 	                    <div
-                            class="editable-image-display"><?= Loader::helper('concrete/avatar')->outputUserAvatar($user) ?></div>
+                            class="editable-image-display"><?=$user->getUserAvatar()->output() ?></div>
 					</span>
                             </div>
                             </p>
