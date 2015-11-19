@@ -3,6 +3,7 @@
 namespace Concrete\Core\User;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Database\DatabaseManager;
 use Concrete\Core\File\StorageLocation\StorageLocation;
 use Concrete\Core\Foundation\Object;
 use Concrete\Core\Url\UrlInterface;
@@ -30,11 +31,13 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 
     protected $avatarService;
     protected $application;
+    protected $connection;
 
-    public function __construct(Application $application, AvatarServiceInterface $avatarService)
+    public function __construct(DatabaseManager $manager, Application $application, AvatarServiceInterface $avatarService)
     {
         $this->avatarService = $avatarService;
         $this->application = $application;
+        $this->connection = $manager->connection();
     }
     /**
      * @return string

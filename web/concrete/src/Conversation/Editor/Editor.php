@@ -263,7 +263,7 @@ abstract class Editor extends Object
         } else {
             $lawed = $cnvMessageBody;
         }
-        if ($config['mention'] !== false && Config::get('concrete.user.profiles_enabled')) {
+        if ($config['mention'] !== false) {
             $users = $cnv->getConversationMessageUsers();
             $needle = array();
             $haystack = array();
