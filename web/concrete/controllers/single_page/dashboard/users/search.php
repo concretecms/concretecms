@@ -52,7 +52,8 @@ class Search extends DashboardPageController
         $sr = new UserEditResponse();
         $sr->setUser($this->user);
         $sr->setMessage(t('Avatar saved successfully.'));
-        $html = $av->outputUserAvatar($ui);
+        $av = $this->user->getUserAvatar();
+        $html = $av->output();
         $sr->setAdditionalDataAttribute('imageHTML', $html);
         $sr->outputJSON();
     }
@@ -354,28 +355,12 @@ class Search extends DashboardPageController
         if ($this->canEditPassword) {
             $password = $this->post('uPassword');
             $passwordConfirm = $this->post('uPasswordConfirm');
-            if ((strlen($password) < Config::get('concrete.user.password.minimum')) || (strlen($password) > Config::get(
-                        'concrete.user.password.maximum'
-                    ))
-            ) {
-                $this->error->add(
-                    t(
-                        'A password must be between %s and %s characters',
-                        Config::get('concrete.user.password.minimum'),
-                        Config::get('concrete.user.password.maximum')
-                    )
-                );
-            }
+
+            \Core::make('validator/password')->isValid($password, $this->error);
+
             if (!Loader::helper('validation/token')->validate('change_password')) {
                 $this->error->add(Loader::helper('validation/token')->getErrorMessage());
             }
-            if (strlen($password) >= Config::get('concrete.user.password.minimum') && !Loader::helper(
-                    'concrete/validation'
-                )->password($password)
-            ) {
-                $this->error->add(t('A password may not contain ", \', >, <, or any spaces.'));
-            }
-
             if ($password != $passwordConfirm) {
                 $this->error->add(t('The two passwords provided do not match.'));
             }

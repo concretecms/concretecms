@@ -39,9 +39,12 @@ class Color
         $defaults['appendTo'] = '.ui-dialog';
         $strOptions = json_encode(array_merge($defaults, $options));
 
-        print "<input type=\"text\" name=\"{$inputName}\" value=\"{$value}\" id=\"ccm-colorpicker-{$inputName}\" />";
+        $identifier = new \Concrete\Core\Utility\Service\Identifier();
+        $identifier = $identifier->getString(32);
+
+        print "<input type=\"text\" data-color-picker=\"{$identifier}\" name=\"{$inputName}\" value=\"{$value}\" id=\"ccm-colorpicker-{$inputName}\" />";
         print "<script type=\"text/javascript\">";
-        print "$(function () { $('#ccm-colorpicker-{$inputName}').spectrum({$strOptions}); })";
+        print "$(function () { $('[data-color-picker={$identifier}]').spectrum({$strOptions}); })";
         print "</script>";
     }
 

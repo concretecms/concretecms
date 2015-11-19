@@ -99,9 +99,6 @@ class Pages extends Controller
                             $this->pageList->filter('pThemeID', $req['pThemeID']);
                             break;
                         case 'parent':
-                            if (isset($req['_cParentAll'])) {
-                                $req['cParentAll'] = $req['_cParentAll'];
-                            }
                             if ($req['cParentIDSearchField'] > 0) {
                                 if ($req['cParentAll'] == 1) {
                                     $pc = \Page::getByID($req['cParentIDSearchField']);
@@ -264,7 +261,7 @@ class Pages extends Controller
                 break;
             case 'parent':
                 $ps = Loader::helper("form/page_selector");
-                $html .= $ps->selectPage('cParentIDSearchField');
+                $html .= $ps->selectPage('cParentIDSearchField', $searchRequest['cParentIDSearchField']);
                 $html .= '<div class="form-group">';
                     $html .= '<label class="control-label">' . t('Search All Children?') . '</label>';
                     $html .= '<div class="radio"><label>' . $form->radio('cParentAll', 0, false) . ' ' . t('No') . '</label></div>';

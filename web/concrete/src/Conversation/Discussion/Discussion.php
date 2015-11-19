@@ -8,9 +8,6 @@ class Discussion extends Object {
 
 	public static function add(Page $c) {
 		$db = Loader::db();
-		if (!$ptID) {
-			$ptID = 0;
-		}
 		$cID = $c->getCollectionID();
 		$date = Loader::helper('date')->getOverridableNow();
 		$r = $db->Execute('insert into ConversationDiscussions (cnvDiscussionDateCreated, cID) values (?, ?)', array($date, $cID));

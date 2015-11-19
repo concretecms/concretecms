@@ -64,7 +64,8 @@ class ContentTranslateTest extends ConcreteDatabaseTestCase {
             array('Simple', 'Simple'),
             array('<p><a href="http://www.dummyco.com/path/to/server/index.php?cID=50">Test</a></p>', '<p><a href="{CCM:CID_50}">Test</a></p>'),
             array('Test<img src="http://www.dummyco.com/path/to/server/index.php/download_file/view_inline/1" alt="Woohoo" style="display: block" />', 'Test<concrete-picture fID="1" alt="Woohoo" style="display: block" />'),
-            array('<a href="http://www.dummyco.com/path/to/server/index.php/download_file/view/1">Test</a>', '<a href="{CCM:FID_DL_1}">Test</a>')
+            array('<a href="http://www.dummyco.com/path/to/server/index.php/download_file/view/1">Test</a>', '<a href="{CCM:FID_DL_1}">Test</a>'),
+            array('<p><a href="http://www.dummyco.com/path/to/server">Test</a></p>', '<p><a href="{CCM:BASE_URL}">Test</a></p>')
         );
     }
 

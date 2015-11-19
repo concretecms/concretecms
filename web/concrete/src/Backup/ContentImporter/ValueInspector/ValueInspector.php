@@ -3,122 +3,40 @@
 namespace Concrete\Core\Backup\ContentImporter\ValueInspector;
 
 
+use Concrete\Core\Backup\ContentImporter\ValueInspector\InspectionRoutine\RoutineInterface;
 use Concrete\Core\Backup\ContentImporter\ValueInspector\Item\FileItem;
 use Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PageFeedItem;
 use Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PageItem;
 use Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PageTypeItem;
 use Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PictureItem;
+use Concrete\Core\Backup\ContentImporter\ValueInspector\Item\ImageItem;
 
-class ValueInspector
+class ValueInspector implements ValueInspectorInterface
 {
-    protected $content;
 
-    // Note: \{ccm:export:image:(.*?)\} is for legacy c5
+    protected $routines = array();
 
-    protected $regExp = '/\<concrete-picture[^>]* file="([^"]*)"|\{ccm:export:page:(.*?)\}|\{ccm:export:file:(.*?)\}|\{ccm:export:pagetype:(.*?)\}|\{ccm:export:pagefeed:(.*?)\}|\{ccm:export:image:(.*?)\}/i';
-
-    public function __construct($content)
+    public function registerInspectionRoutine(RoutineInterface $routine)
     {
-        $this->content = $content;
+        $this->routines[$routine->getHandle()] = $routine;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getContent()
+    public function getInspectionRoutines()
     {
-        return $this->content;
+        return $this->routines;
     }
 
-    /**
-     * @param mixed $content
-     */
-    public function setContent($content)
+    public function inspect($content)
     {
-        $this->content = $content;
-    }
-
-    public function getMatchedItem()
-    {
-        $items = $this->getMatchedItems();
-        if (isset($items[0])) {
-            return $items[0];
-        }
-    }
-
-    public function getItemObjectFromIndex($i, $reference)
-    {
-        switch($i) {
-            case 1:
-                $o = new PictureItem($reference);
-                break;
-            case 2:
-                $o = new PageItem($reference);
-                break;
-            case 3:
-                $o = new FileItem($reference);
-                break;
-            case 4:
-                $o = new PageTypeItem($reference);
-                break;
-            case 5:
-                $o = new PageFeedItem($reference);
-                break;
-            case 6:
-                $o = new PictureItem($reference);
-                break;
-        }
-        return $o;
-    }
-
-    /**
-     * Iterates through the $content in the class, and returns an array of matched ItemInterface objects
-     * @return \Concrete\Core\Backup\ContentImporter\ValueInspector\Item\ItemInterface[]
-     */
-    public function getMatchedItems()
-    {
-        $items = array();
-        if (preg_match_all(
-            $this->regExp,
-            $this->content,
-            $matches
-        )
-        ) {
-            if (count($matches)) {
-                for ($i = 1; $i < count($matches); $i++ ) {
-                    $results = $matches[$i];
-                    foreach($results as $reference) {
-                        if ($reference) {
-                            $o = $this->getItemObjectFromIndex($i, $reference);
-                            $items[] = $o;
-                        }
-                    }
-                }
+        $result = new Result($content);
+        foreach($this->getInspectionRoutines() as $routine) {
+            $result->addInspectionRoutine($routine);
+            $items = $routine->match($content);
+            foreach($items as $item) {
+                $result->addMatchedItem($item);
             }
         }
-        return $items;
+        return $result;
     }
 
-    /**
-     * Replaces the content with the matched content items' content value. Content value is the value that the matched
-     * content item places when in a block of HTML/rich text content. This is separate from the value that is
-     * returned when importing into a field.
-     */
-    public function getReplacedContent()
-    {
-        $inspector = $this;
-        $text = preg_replace_callback(
-            $this->regExp,
-            function ($matches) use ($inspector) {
-                for ($i = 1; $i < count($matches); $i++ ) {
-                    if ($matches[$i]) {
-                        $o = $inspector->getItemObjectFromIndex($i, $matches[$i]);
-                        return $o->getContentValue();
-                    }
-                }
-            },
-            $this->content
-        );
-        return $text;
-    }
 }

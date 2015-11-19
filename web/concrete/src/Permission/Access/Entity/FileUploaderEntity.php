@@ -23,10 +23,10 @@ class FileUploaderEntity extends Entity {
 		}
 		if ($pae instanceof FilePermissionAccess) {
 			$f = $pae->getPermissionObject();
-		}
-		if (is_object($f)) {
-			$u = new User();
-			return $u->getUserID() == $f->getUserID();
+            if (is_object($f)) {
+                $u = new User();
+                return $u->getUserID() == $f->getUserID();
+            }
 		}
 
 		return false;
@@ -64,7 +64,6 @@ class FileUploaderEntity extends Entity {
 	}
 
 	public function load() {
-		$db = Loader::db();
 		$this->label = t('File Uploader');
 	}
 

@@ -263,17 +263,13 @@ abstract class Editor extends Object
         } else {
             $lawed = $cnvMessageBody;
         }
-        if ($config['mention'] !== false && Config::get('concrete.user.profiles_enabled')) {
+        if ($config['mention'] !== false) {
             $users = $cnv->getConversationMessageUsers();
             $needle = array();
             $haystack = array();
             foreach ($users as $user) {
                 $needle[] = "@" . $user->getUserName();
-                $haystack[] = "<a href='" . View::url(
-                        '/members/profile',
-                        'view',
-                        $user->getUserID()
-                    ) . "'>@" . $user->getUserName() . "</a>";
+                $haystack[] = "<a href='" . $user->getUserPublicProfileURL() . "'>'@" . $user->getUserName() . "</a>";
             }
 
             return str_ireplace($needle, $haystack, $lawed);

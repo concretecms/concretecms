@@ -46,7 +46,7 @@ class Attributes extends DashboardPageController {
 	public function on_start() {
 		parent::on_start();
 		$this->set('category', AttributeKeyCategory::getByHandle('file'));
-		$otypes = AttributeType::getList('file');
+		$otypes = AttributeType::getAttributeTypeList('file');
 		$types = array();
 		foreach($otypes as $at) {
 			$types[$at->getAttributeTypeID()] = $at->getAttributeTypeDisplayName();

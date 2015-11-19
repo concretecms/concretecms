@@ -1,39 +1,50 @@
 <?php
 namespace Concrete\Core\Workflow;
+
 use \Concrete\Core\Foundation\Object;
-class Description extends Object {
 
-	public function getDescription() {
-		return $this->text;
-	}
+class Description extends Object
+{
 
-	public function setDescription($text) {
-		$this->text = $text;
-	}
+    public function getDescription()
+    {
+        return $this->text;
+    }
 
-	public function getEmailDescription() {
-		return $this->emailtext;
-	}
+    public function setDescription($text)
+    {
+        $this->text = $text;
+    }
 
-	public function setEmailDescription($text) {
-		$this->emailtext = $text;
-	}
+    public function getEmailDescription()
+    {
+        return $this->emailtext;
+    }
 
-	public function setInContextDescription($html) {
-		$this->incontext = $html;
-	}
+    public function setEmailDescription($text)
+    {
+        $this->emailtext = $text;
+    }
 
-	public function getInContextDescription() {
-		return $this->incontext;
-	}
+    public function setInContextDescription($html)
+    {
+        $this->incontext = $html;
+    }
 
-	public function setShortStatus($status) {
-		$this->status = $status;
-	}
+    public function getInContextDescription()
+    {
+        return $this->incontext;
+    }
 
-	public function getShortStatus() {
-		return $this->status;
-	}
+    public function setShortStatus($status)
+    {
+        $this->status = $status;
+    }
+
+    public function getShortStatus()
+    {
+        return $this->status;
+    }
 
 
 }

@@ -333,10 +333,9 @@ class Theme extends Object
     public function getStylesheet($stylesheet)
     {
         $stylesheet = $this->getStylesheetObject($stylesheet);
-        $style = $this->getThemeCustomStyleObject();
-        if (is_object($style)) {
-            $scl = $style->getValueList();
-            $stylesheet->setValueList($scl);
+        $styleValues = $this->getThemeCustomStyleObjectValues();
+        if (!is_null($styleValues)) {
+            $stylesheet->setValueList($styleValues);
         }
         if (!$this->isThemePreviewRequest()) {
             if (!$stylesheet->outputFileExists() || !Config::get('concrete.cache.theme_css')) {
@@ -367,6 +366,19 @@ class Theme extends Object
 
             return $o;
         }
+    }
+
+    /**
+     * Returns the value list of the custom style object if one exists.
+     * @return ValueList
+     */
+    public function getThemeCustomStyleObjectValues()
+    {
+        $style = $this->getThemeCustomStyleObject();
+        if (is_object($style)) {
+            return $style->getValueList();
+        }
+        return null;
     }
 
     public function setCustomStyleObject(
@@ -620,21 +632,25 @@ class Theme extends Object
         return $res;
     }
 
+    public function export($node)
+    {
+        $pst = static::getSiteTheme();
+        $activated = 0;
+        if ($pst->getThemeID() == $this->getThemeID()) {
+            $activated = 1;
+        }
+        $type = $node->addChild('theme');
+        $type->addAttribute('handle', $this->getThemeHandle());
+        $type->addAttribute('package', $this->getPackageHandle());
+        $type->addAttribute('activated', $activated);
+    }
+
     public static function exportList($xml)
     {
         $nxml = $xml->addChild('themes');
         $list = static::getList();
-        $pst = static::getSiteTheme();
-
         foreach ($list as $pt) {
-            $activated = 0;
-            if ($pst->getThemeID() == $pt->getThemeID()) {
-                $activated = 1;
-            }
-            $type = $nxml->addChild('theme');
-            $type->addAttribute('handle', $pt->getThemeHandle());
-            $type->addAttribute('package', $pt->getPackageHandle());
-            $type->addAttribute('activated', $activated);
+            $pt->export($nxml);
         }
     }
 

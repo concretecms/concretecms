@@ -81,7 +81,6 @@ return array(
         'TaskPermission'                       => '\Concrete\Core\Legacy\TaskPermission',
         'User'                                 => '\Concrete\Core\User\User',
         'UserAttributeKey'                     => '\Concrete\Core\Attribute\Key\UserKey',
-        'UserInfo'                             => '\Concrete\Core\User\UserInfo',
         'UserList'                             => '\Concrete\Core\User\UserList',
         'View'                                 => '\Concrete\Core\View\View',
         'Workflow'                             => '\Concrete\Core\Workflow\Workflow'
@@ -102,6 +101,7 @@ return array(
         'core_mail'                   => '\Concrete\Core\Mail\MailServiceProvider',
         'core_application'            => '\Concrete\Core\Application\ApplicationServiceProvider',
         'core_utility'                => '\Concrete\Core\Utility\UtilityServiceProvider',
+        'core_content_importer'       => '\Concrete\Core\Backup\ContentImporter\ContentImporterServiceProvider',
         'core_manager_grid_framework' => '\Concrete\Core\Page\Theme\GridFramework\ManagerServiceProvider',
         'core_manager_pagination_view' => '\Concrete\Core\Search\Pagination\View\ManagerServiceProvider',
         'core_manager_page_type_validator' => '\Concrete\Core\Page\Type\Validator\ManagerServiceProvider',
@@ -118,13 +118,18 @@ return array(
         'core_url'          => '\Concrete\Core\Url\UrlServiceProvider',
         'core_devices'      => '\Concrete\Core\Device\DeviceServiceProvider',
         'core_imageeditor'  => '\Concrete\Core\ImageEditor\EditorServiceProvider',
+        'core_user'  => '\Concrete\Core\User\UserServiceProvider',
 
         // Authentication
         'core_oauth'          => '\Concrete\Core\Authentication\Type\OAuth\ServiceProvider',
         'core_auth_community' => '\Concrete\Core\Authentication\Type\Community\ServiceProvider',
         'core_auth_facebook'  => '\Concrete\Core\Authentication\Type\Facebook\ServiceProvider',
         'core_auth_google'    => '\Concrete\Core\Authentication\Type\Google\ServiceProvider',
-        'core_auth_twitter'   => '\Concrete\Core\Authentication\Type\Twitter\ServiceProvider'
+        'core_auth_twitter'   => '\Concrete\Core\Authentication\Type\Twitter\ServiceProvider',
+
+        // Validator
+        'core_validator'          => '\Concrete\Core\Validator\ValidatorServiceProvider',
+        'core_validator_password' => '\Concrete\Core\Validator\PasswordValidatorServiceProvider'
     ),
 
     /**
@@ -138,6 +143,7 @@ return array(
         'ORM'      => '\Concrete\Core\Support\Facade\DatabaseORM',
         'Events'   => '\Concrete\Core\Support\Facade\Events',
         'Route'    => '\Concrete\Core\Support\Facade\Route',
+        'UserInfo' => '\Concrete\Core\Support\Facade\UserInfoFactory',
         'Log'      => '\Concrete\Core\Support\Facade\Log',
         'Image'    => '\Concrete\Core\Support\Facade\Image',
         'Config'   => '\Concrete\Core\Support\Facade\Config',

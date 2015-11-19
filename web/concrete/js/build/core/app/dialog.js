@@ -165,7 +165,7 @@ jQuery.fn.dialog.open = function(options) {
             }
             if (typeof options.onClose != "undefined") {
                 if ((typeof options.onClose) == 'function') {
-                    options.onClose();
+                    options.onClose($(this));
                 } else {
                     eval(options.onClose);
                 }

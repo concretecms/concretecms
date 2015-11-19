@@ -76,14 +76,14 @@ class EditPageThemePageAccess extends PageAccess
             if (is_array($prow) && $prow['permission']) {
                 $l->setThemesAllowedPermission($prow['permission']);
                 $permission = $prow['permission'];
+                if ($permission == 'C') {
+                    $pThemeIDs = $db->GetCol('select pThemeID from PagePermissionThemeAccessListCustom where peID = ? and paID = ?', array($pe->getAccessEntityID(), $l->getPermissionAccessID()));
+                    $l->setThemesAllowedArray($pThemeIDs);
+                }
             } elseif ($l->getAccessType() == PagePermissionKey::ACCESS_TYPE_INCLUDE) {
                 $l->setThemesAllowedPermission('A');
             } else {
                 $l->setThemesAllowedPermission('N');
-            }
-            if ($permission == 'C') {
-                $pThemeIDs = $db->GetCol('select pThemeID from PagePermissionThemeAccessListCustom where peID = ? and paID = ?', array($pe->getAccessEntityID(), $l->getPermissionAccessID()));
-                $l->setThemesAllowedArray($pThemeIDs);
             }
         }
 

@@ -11,6 +11,7 @@ class PageTypeConfiguration extends Configuration
 
     protected $ptID;
     protected $selectorFormFactor;
+    protected $startingPointPage;
 
     public function setPageTypeID($ptID)
     {
@@ -32,13 +33,36 @@ class PageTypeConfiguration extends Configuration
         $this->selectorFormFactor = $selectorFormFactor;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getStartingPointPageID()
+    {
+        return $this->startingPointPage;
+    }
+
+    /**
+     * @param mixed $startingPointPage
+     */
+    public function setStartingPointPageID($startingPointPage)
+    {
+        $this->startingPointPage = $startingPointPage;
+    }
+
     public function export($cxml)
     {
         $target = parent::export($cxml);
+        if ($this->getStartingPointPageID()) {
+            $c = Page::getByID($this->getStartingPointPageID(), 'ACTIVE');
+            if (is_object($c) && !$c->isError()) {
+                $target->addAttribute('path', $c->getCollectionPath());
+            }
+        }
         $ct = PageType::getByID($this->ptID);
         if (is_object($ct)) {
             $target->addAttribute('pagetype', $ct->getPageTypeHandle());
         }
+        $target->addAttribute('form-factor', $this->getSelectorFormFactor());
     }
 
     public function canPublishPageTypeBeneathTarget(Type $pagetype, Page $page)

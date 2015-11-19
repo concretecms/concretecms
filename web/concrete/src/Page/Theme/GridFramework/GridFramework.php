@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Page\Theme\GridFramework;
 
+use Concrete\Core\Page\Page;
+use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 use Loader;
 use Core;
 
@@ -95,6 +97,26 @@ abstract class GridFramework
             $classes .= ' '.$this->getPageThemeGridFrameworkColumnOffsetAdditionalClasses();
         }
 
+        return $classes;
+    }
+
+    public function getPageThemeGridFrameworkSelectedDeviceHideClassesForDisplay(StyleSet $set, Page $page)
+    {
+        $classes = array();
+        if (!$page->isEditMode()) {
+            if ($set->getHideOnExtraSmallDevice()) {
+                $classes[] = $this->getPageThemeGridFrameworkHideOnExtraSmallDeviceClass();
+            }
+            if ($set->getHideOnSmallDevice()) {
+                $classes[] = $this->getPageThemeGridFrameworkHideOnSmallDeviceClass();
+            }
+            if ($set->getHideOnMediumDevice()) {
+                $classes[] = $this->getPageThemeGridFrameworkHideOnMediumDeviceClass();
+            }
+            if ($set->getHideOnLargeDevice()) {
+                $classes[] = $this->getPageThemeGridFrameworkHideOnLargeDeviceClass();
+            }
+        }
         return $classes;
     }
 

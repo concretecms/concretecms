@@ -8,6 +8,7 @@ use Concrete\Core\File\Image\Thumbnail\Thumbnail;
 use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use Concrete\Core\File\Image\Thumbnail\Type\Version as ThumbnailTypeVersion;
 use Concrete\Core\File\Type\TypeList as FileTypeList;
+use Concrete\Core\Http\FlysystemFileResponse;
 use League\Flysystem\AdapterInterface;
 use League\Flysystem\FileNotFoundException;
 use Core;
@@ -19,6 +20,8 @@ use Loader;
 use Page;
 use Permissions;
 use stdClass;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use User;
 use View;
 
@@ -654,24 +657,16 @@ class Version
     {
         session_write_close();
         $fre = $this->getFileResource();
-        ob_clean();
-        header('Content-type: application/octet-stream');
-        header("Content-Disposition: attachment; filename=\"" . $this->getFilename() . "\"");
-        header('Content-Length: ' . $fre->getSize());
-        header("Pragma: public");
-        header("Expires: 0");
-        header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-        header("Cache-Control: private", false);
-        header("Content-Transfer-Encoding: binary");
-        header("Content-Encoding: plainbinary");
 
         $fs = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
+        $response = new FlysystemFileResponse($fre->getPath(), $fs);
 
-        $stream = $fs->readStream($fre->getPath());
-        $contents = stream_get_contents($stream);
-        fclose($stream);
+        $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT);
+        $response->prepare(\Request::getInstance());
 
-        print $contents;
+        ob_end_clean();
+        $response->send();
+        \Core::shutdown();
         exit;
     }
 

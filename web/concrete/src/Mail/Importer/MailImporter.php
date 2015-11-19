@@ -396,7 +396,7 @@ class MailImportedMessage
      */
     public function getProcessedBody()
     {
-        $r = preg_split(MailImporter::getMessageBodyHashRegularExpression(), $this->body, $matches);
+        $r = preg_split(MailImporter::getMessageBodyHashRegularExpression(), $this->body);
         $message = $r[0];
         $r = preg_replace(array(
             '/^On (.*) at (.*), (.*) wrote:/sm',

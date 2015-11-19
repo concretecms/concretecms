@@ -328,13 +328,13 @@ class Controller extends AttributeTypeController
     public function validateValue()
     {
         $val = $this->getValue();
-
-        return is_object($val);
+        return is_array($val) && count($val) > 0;
     }
 
-    public function validateForm($data)
+    public function validateForm($p)
     {
-        // TODO: form validation
+        $topicsArray = $_POST['topics_' . $this->attributeKey->getAttributeKeyID()];
+        return is_array($topicsArray) && count($topicsArray) > 0;
     }
 
     public function getTopicParentNode()
