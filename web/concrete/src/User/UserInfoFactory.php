@@ -36,7 +36,7 @@ class UserInfoFactory
      *
      * @return UserInfo|null
      */
-    public function getByUserName($uName)
+    public function getByName($uName)
     {
         return $this->get('where uName = ?', $uName);
     }

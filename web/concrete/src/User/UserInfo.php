@@ -874,7 +874,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     /**
      * @deprecated
      */
-    public static function getByName($uName)
+    public static function getByUserName($uName)
     {
         return Core::make('Concrete\Core\User\UserInfoFactory')->getByName($uName);
     }
