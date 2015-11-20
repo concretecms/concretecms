@@ -9,7 +9,7 @@ use Concrete\Core\Attribute\Value\CollectionValue as CollectionAttributeValue;
 
 class CollectionKey extends Key
 {
-    public function getIndexedSearchTable()
+    public static function getDefaultIndexedSearchTable()
     {
         return 'CollectionSearchIndexAttributes';
     }
