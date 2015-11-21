@@ -111,11 +111,13 @@ class Controller extends AbstractController
     /**
      * @param \Concrete\Core\Attribute\Type $attributeType
      */
-    public function __construct($attributeType)
+    public function __construct($attributeType = null)
     {
-        $this->identifier = $attributeType->getAttributeTypeID();
-        $this->attributeType = $attributeType;
-        $this->set('controller', $this);
+        if ($attributeType) {
+            $this->identifier = $attributeType->getAttributeTypeID();
+            $this->attributeType = $attributeType;
+            $this->set('controller', $this);
+        }
     }
 
     public function post($field = false, $defaultValue = null)
