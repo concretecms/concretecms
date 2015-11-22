@@ -176,7 +176,7 @@ class Single {
 		}
 		$env = Environment::get();
 		$env->clearOverrideCache();
-		return $newC;
+		return $parent;
 
 	}
 
