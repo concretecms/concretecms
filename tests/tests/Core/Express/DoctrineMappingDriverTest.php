@@ -23,8 +23,8 @@ class DoctrineMappingDriverTest extends PHPUnit_Framework_TestCase
         $driver->setNamespace('Express');
         $classNames = $driver->getAllClassNames();
         $this->assertEquals(2, count($classNames));
-        $this->assertEquals('\Express\Student', $classNames[0]);
-        $this->assertEquals('\Express\Teacher', $classNames[1]);
+        $this->assertEquals('Express\Student', $classNames[0]);
+        $this->assertEquals('Express\Teacher', $classNames[1]);
     }
 
     public function testIsTransient()
@@ -38,8 +38,8 @@ class DoctrineMappingDriverTest extends PHPUnit_Framework_TestCase
     public function testLoadMetadataForClass()
     {
         $driver = new DoctrineMappingDriver(Core::make('app'), $this->getMockEntityManager());
-        $metadata1 = new \Doctrine\ORM\Mapping\ClassMetadata('Student');
-        $metadata2 = new \Doctrine\ORM\Mapping\ClassMetadata('Teacher');
+        $metadata1 = new \Doctrine\ORM\Mapping\ClassMetadata('\Student');
+        $metadata2 = new \Doctrine\ORM\Mapping\ClassMetadata('\Teacher');
         $driver->loadMetadataForClass('Student', $metadata1);
         $driver->loadMetadataForClass('Teacher', $metadata2);
 

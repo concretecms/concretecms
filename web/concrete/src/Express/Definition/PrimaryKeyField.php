@@ -9,7 +9,7 @@ class PrimaryKeyField extends Field
 {
 
     protected $name = 'id';
-    protected $options = array('autoincrement');
+    protected $options = array('auto');
     protected $type = 'integer';
 
 

@@ -89,9 +89,6 @@ class EntityWriter
             throw new InvalidClassLocationDefinedException();
         }
 
-        $driver = new \Concrete\Core\Express\DoctrineMappingDriver($this->application, $this->getEntityManager());
-        $driver->setNamespace($this->getNamespace());
-
         $generator = new EntityGenerator();
         $generator->setGenerateAnnotations(true);
         $generator->setGenerateStubMethods(true);
@@ -100,17 +97,13 @@ class EntityWriter
         $generator->setNumSpaces(4);
 
         // Create a new entity manager that contains entities generated from the root.
-        $config = Setup::createConfiguration(
-            $this->application['config']->get('concrete.cache.doctrine_dev_mode'),
-            $this->application['config']->get('database.proxy_classes'),
-            new DoctrineCacheDriver('cache/expensive')
-        );
-        $config->setMetadataDriverImpl($driver);
-        $config->setClassMetadataFactoryName('Doctrine\ORM\Tools\DisconnectedClassMetadataFactory');
+        $driver = new \Concrete\Core\Express\DoctrineMappingDriver($this->application, $this->getEntityManager());
+        $driver->setNamespace($this->getNamespace());
+        $factory = new BackendEntityManagerFactory($this->application, $this->getEntityManager(), $driver);
         $connection = $this->application['database']->connection();
-        $em = EntityManager::create($connection, $config);
+        $em = $factory->create($connection);
 
-        $metadata = $em->getClassMetadata($this->getClassName($entity));
+        $metadata = $em->getClassMetadata($factory->getClassName($entity));
         $generator->generate(array($metadata), $this->outputPath);
 
     }
