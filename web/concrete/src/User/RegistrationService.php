@@ -3,6 +3,7 @@
 namespace Concrete\Core\User;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Database\DatabaseManager;
 use Concrete\Core\User\Event\AddUser;
 use Concrete\Core\User\Event\UserInfoWithPassword;
@@ -15,10 +16,10 @@ class RegistrationService implements RegistrationServiceInterface
     protected $application;
     protected $userInfoFactory;
 
-    public function __construct(Application $application, DatabaseManager $manager, UserInfoFactory $userInfoFactory)
+    public function __construct(Application $application, Connection $connection, UserInfoFactory $userInfoFactory)
     {
         $this->application = $application;
-        $this->connection = $manager->connection();
+        $this->connection = $connection;
         $this->userInfoFactory = $userInfoFactory;
     }
 
