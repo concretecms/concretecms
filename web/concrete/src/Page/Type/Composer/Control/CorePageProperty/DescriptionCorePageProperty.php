@@ -10,8 +10,12 @@ class DescriptionCorePageProperty extends CorePageProperty
     public function __construct()
     {
         $this->setCorePagePropertyHandle('description');
-        $this->setPageTypeComposerControlName(tc('PageTypeComposerControlName', 'Description'));
         $this->setPageTypeComposerControlIconSRC(ASSETS_URL . '/attributes/textarea/icon.png');
+    }
+
+    public function getPageTypeComposerControlName()
+    {
+        return tc('PageTypeComposerControlName', 'Description');
     }
 
     public function publishToPage(Page $c, $data, $controls)

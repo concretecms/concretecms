@@ -9,8 +9,12 @@ class DateTimeCorePageProperty extends CorePageProperty
     public function __construct()
     {
         $this->setCorePagePropertyHandle('date_time');
-        $this->setPageTypeComposerControlName(tc('PageTypeComposerControlName', 'Public Date/Time'));
         $this->setPageTypeComposerControlIconSRC(ASSETS_URL . '/attributes/date_time/icon.png');
+    }
+
+    public function getPageTypeComposerControlName()
+    {
+        return tc('PageTypeComposerControlName', 'Public Date/Time');
     }
 
     public function publishToPage(Page $c, $data, $controls)
