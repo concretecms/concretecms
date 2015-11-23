@@ -601,7 +601,7 @@ class Controller extends AttributeTypeController
             $qb->andWhere(
 	            $qb->expr()->like($column, ':optionValue_' . $this->attributeKey->getAttributeKeyID())
             );
-	        $qb->setParameter('optionValue_' . $this->attributeKey->getAttributeKeyID(), "%\n" . $option->getSelectAttributeOptionValue() . "\n%");
+	        $qb->setParameter('optionValue_' . $this->attributeKey->getAttributeKeyID(), "%\n" . $option->getSelectAttributeOptionValue(false) . "\n%");
         }
     }
 
