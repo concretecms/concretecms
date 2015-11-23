@@ -11,6 +11,7 @@ class EntityWriterTest extends PHPUnit_Framework_TestCase
     public function tearDown()
     {
         parent::tearDown();
+        return;
         if (file_exists(__DIR__ . '/Testing/Student.php')) {
             unlink(__DIR__ . '/Testing/Student.php');
         }
@@ -23,14 +24,14 @@ class EntityWriterTest extends PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('\Concrete\Core\Express\Exception\NoNamespaceDefinedException');
         $entity = new \Concrete\Core\Entity\Express\Entity();
-        $writer = new \Concrete\Core\Express\EntityWriter(Core::make('app'));
+        $writer = new \Concrete\Core\Express\EntityWriter($this->getMockEntityManager(), Core::make('app'));
         $writer->createClass($entity);
     }
     public function testOutputClassNoLocationDefined()
     {
         $this->setExpectedException('\Concrete\Core\Express\Exception\InvalidClassLocationDefinedException');
         $entity = new \Concrete\Core\Entity\Express\Entity();
-        $writer = new \Concrete\Core\Express\EntityWriter(Core::make('app'));
+        $writer = new \Concrete\Core\Express\EntityWriter($this->getMockEntityManager(), Core::make('app'));
         $writer->setNamespace('Express');
         $writer->createClass($entity);
     }
@@ -46,8 +47,8 @@ class EntityWriterTest extends PHPUnit_Framework_TestCase
     {
 
         $writer = Core::make('express.writer');
-        $writer->setEntityManager($this->getMockEntityManager());
         $writer->setNamespace('Testing');
+        $writer->setEntityManager($this->getMockEntityManager());
         $writer->setOutputPath(__DIR__);
 
         $entity = new \Concrete\Core\Entity\Express\Entity();
