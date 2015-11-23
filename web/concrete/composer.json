@@ -17,7 +17,7 @@
     "symfony/http-foundation": "2.5.*",
     "symfony/routing": "2.5.*",
     "symfony/http-kernel": "2.5.*",
-    "doctrine/orm": "2.5.*",
+    "doctrine/orm": "2.4.*",
     "doctrine/migrations": "v1.0.0-alpha3",
     "league/flysystem": "1.0.*",
     "symfony/event-dispatcher": "2.5.*",
