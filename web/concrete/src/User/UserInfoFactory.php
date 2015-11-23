@@ -3,18 +3,34 @@
 namespace Concrete\Core\User;
 
 use Concrete\Core\Application\Application;
-use Concrete\Core\Database\DatabaseManager;
+use Database;
 
 class UserInfoFactory
 {
 
+    /**
+     * @var \Concrete\Core\Database\Connection\Connection
+     */
     protected $connection;
+
+    /**
+     * @var Application
+     */
     protected $application;
 
-    public function __construct(Application $application, DatabaseManager $manager)
+    public function __construct(Application $application, $connectionName = null)
     {
         $this->application = $application;
-        $this->connection = $manager->connection();
+        $this->connection = Database::connection($connectionName);
+    }
+
+    /**
+     * @return \Concrete\Core\Database\Connection\Connection
+     * @internal
+     */
+    public function getConnection()
+    {
+        return $this->connection;
     }
 
     /**

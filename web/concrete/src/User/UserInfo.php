@@ -3,7 +3,6 @@
 namespace Concrete\Core\User;
 
 use Concrete\Core\Application\Application;
-use Concrete\Core\Database\DatabaseManager;
 use Concrete\Core\File\StorageLocation\StorageLocation;
 use Concrete\Core\Foundation\Object;
 use Concrete\Core\Url\UrlInterface;
@@ -29,15 +28,26 @@ use Concrete\Core\User\Avatar\AvatarServiceInterface;
 class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterface
 {
 
+    /**
+     * @var AvatarServiceInterface
+     */
     protected $avatarService;
+
+    /**
+     * @var Application
+     */
     protected $application;
+
+    /**
+     * @var \Concrete\Core\Database\Connection\Connection
+     */
     protected $connection;
 
-    public function __construct(DatabaseManager $manager, Application $application, AvatarServiceInterface $avatarService)
+    public function __construct(Application $application, AvatarServiceInterface $avatarService, $connectionName = null)
     {
         $this->avatarService = $avatarService;
         $this->application = $application;
-        $this->connection = $manager->connection();
+        $this->connection = Database::connection($connectionName);
     }
     /**
      * @return string
@@ -84,7 +94,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function getUserBadges()
     {
-        $db = Database::get();
+        $db = $this->connection;
         $groups = array();
         $r = $db->Execute('select g.gID from Groups g inner join UserGroups ug on g.gID = ug.gID where g.gIsBadge = 1 and ug.uID = ? order by ugEntered desc', array($this->getUserID()));
         while ($row = $r->FetchRow()) {
@@ -113,7 +123,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
             return false;
         }
 
-        $db = Database::get();
+        $db = $this->connection;
 
         $r = $db->Execute('select avID, akID from UserAttributeValues where uID = ?', array($this->uID));
         while ($row = $r->FetchRow()) {
@@ -167,7 +177,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
             )
         );
 
-        $db = Database::get();
+        $db = $this->connection;
         $db->query("update Users set uHasAvatar = 1 where uID = ?", array($this->getUserID()));
 
         // run any internal event we have for user update
@@ -200,7 +210,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         }
 
         $subject = ($subject == '') ? t('(No Subject)') : $subject;
-        $db = Database::get();
+        $db = $this->connection;
         $dt = Core::make('helper/date');
         $msgDateCreated = $dt->getOverridableNow();
         $v = array($this->getUserID(), $msgDateCreated, $subject, $text, $recipient->getUserID());
@@ -269,7 +279,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function update($data)
     {
-        $db = Database::get();
+        $db = $this->connection;
         if ($this->uID) {
             $ux = $this->getUserObject();
             $uName = $this->getUserName();
@@ -352,7 +362,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function updateGroups($groupArray)
     {
-        $db = Database::get();
+        $db = $this->connection;
         $q = "select gID from UserGroups where uID = '{$this->uID}'";
         $r = $db->query($q);
         if ($r) {
@@ -408,7 +418,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function setupValidation()
     {
-        $db = Database::get();
+        $db = $this->connection;
         $hash = $db->GetOne("select uHash from UserValidationHashes where uID = ? order by uDateGenerated desc", array($this->uID));
         if ($hash) {
             return $hash;
@@ -426,7 +436,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function markValidated()
     {
-        $db = Database::get();
+        $db = $this->connection;
         $v = array($this->uID);
         $db->query("update Users set uIsValidated = 1, uIsFullRecord = 1 where uID = ?", $v);
         $db->query("update UserValidationHashes set uDateRedeemed = " . time() . " where uID = ?", $v);
@@ -444,7 +454,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function changePassword($newPassword)
     {
-        $db = Database::get();
+        $db = $this->connection;
         if ($this->uID) {
             $dh = Core::make('helper/date');
             $dateTime = $dh->getOverridableNow();
@@ -476,7 +486,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function activate()
     {
-        $db = Database::get();
+        $db = $this->connection;
         $q = "update Users set uIsActive = 1 where uID = '{$this->uID}'";
         $db->query($q);
         $ue = new \Concrete\Core\User\Event\UserInfo($this);
@@ -487,7 +497,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function deactivate()
     {
-        $db = Database::get();
+        $db = $this->connection;
         $q = "update Users set uIsActive = 0 where uID = '{$this->uID}'";
         $db->query($q);
         $ue = new \Concrete\Core\User\Event\UserInfo($this);
@@ -732,7 +742,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
             $this->getUserID(),
             'getSearchIndexValue'
         );
-        $db = Database::get();
+        $db = $this->connection;
 
         $db->Execute('delete from UserSearchIndexAttributes where uID = ?', array($this->getUserID()));
         $searchableAttributes = array('uID' => $this->getUserID());
@@ -789,7 +799,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function getAttributeValueObject($ak, $createIfNotFound = false)
     {
-        $db = Database::get();
+        $db = $this->connection;
         $av = false;
         if (!is_object($ak)) {
             $ak = UserAttributeKey::getByHandle($ak);
