@@ -3,7 +3,6 @@
 namespace Concrete\Core\User;
 
 use Concrete\Core\Application\Application;
-use Concrete\Core\Database\DatabaseManager;
 use Concrete\Core\User\Event\AddUser;
 use Concrete\Core\User\Event\UserInfoWithPassword;
 use Hautelook\Phpass\PasswordHash;
@@ -11,14 +10,25 @@ use Hautelook\Phpass\PasswordHash;
 class RegistrationService implements RegistrationServiceInterface
 {
 
+    /**
+     * @var \Concrete\Core\Database\Connection\Connection
+     */
     protected $connection;
+
+    /**
+     * @var Application
+     */
     protected $application;
+
+    /**
+     * @var UserInfoFactory
+     */
     protected $userInfoFactory;
 
-    public function __construct(Application $application, DatabaseManager $manager, UserInfoFactory $userInfoFactory)
+    public function __construct(Application $application, UserInfoFactory $userInfoFactory)
     {
         $this->application = $application;
-        $this->connection = $manager->connection();
+        $this->connection = $userInfoFactory->getConnection();
         $this->userInfoFactory = $userInfoFactory;
     }
 

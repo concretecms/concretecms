@@ -2,18 +2,25 @@
 namespace Concrete\Core\User\Avatar;
 
 use Concrete\Core\Application\Application;
-use Concrete\Core\Database\DatabaseManager;
+use Database;
 use Concrete\Core\User\UserInfo;
 
 class AvatarService implements AvatarServiceInterface
 {
 
+    /*
+     * @var \Concrete\Core\Database\Connection\Connection
+     */
     protected $connection;
+
+    /*
+     * @var Application
+     */
     protected $application;
 
-    public function __construct(Application $application, DatabaseManager $manager)
+    public function __construct(Application $application, $connectionName = null)
     {
-        $this->connection = $manager->connection();
+        $this->connection = Database::connection($connectionName);
         $this->application = $application;
     }
 
