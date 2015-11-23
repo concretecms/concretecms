@@ -133,6 +133,10 @@ return array(
         // Validator
         'core_validator'          => '\Concrete\Core\Validator\ValidatorServiceProvider',
         'core_validator_password' => '\Concrete\Core\Validator\PasswordValidatorServiceProvider',
+
+        // Express
+        'core_attribute' => '\Concrete\Core\Attribute\AttributeServiceProvider',
+        'core_express' => '\Concrete\Core\Express\ExpressServiceProvider'
     ),
 
     /**
