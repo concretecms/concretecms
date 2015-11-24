@@ -157,14 +157,5 @@ abstract class AttributeKey
      */
     abstract public function getFieldMappingDefinition();
 
-    /**
-     * @return \Concrete\Core\Express\Definition\Field[]
-     */
-    public function getDefinitionFields()
-    {
-        $factory = new Factory($this->getHandle());
-        $fields = $factory->buildFromArray($this->getFieldMappingDefinition());
-        return $fields;
-    }
 
 }
