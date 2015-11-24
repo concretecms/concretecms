@@ -28,7 +28,6 @@ class SchemaToolTest extends PHPUnit_Framework_TestCase
         $this->assertContains('id', $create[0]);
         $this->assertContains('first_name', $create[0]);
         $this->assertContains('auto_increment', $create[0], '', true);
-
     }
 
 }

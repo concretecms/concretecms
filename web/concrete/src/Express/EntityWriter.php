@@ -93,6 +93,7 @@ class EntityWriter
         $generator->setGenerateAnnotations(true);
         $generator->setGenerateStubMethods(true);
         $generator->setRegenerateEntityIfExists(true);
+        $generator->setClassToExtend('\Concrete\Core\Express\BaseEntity');
         $generator->setUpdateEntityIfExists(true);
         $generator->setNumSpaces(4);
 

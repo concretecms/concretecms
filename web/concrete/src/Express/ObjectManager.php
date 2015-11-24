@@ -19,17 +19,48 @@ class ObjectManager
 {
 
     protected $application;
+    protected $entityManager;
+    protected $namespace;
 
-    public function __construct(Application $application)
+    public function __construct(EntityManager $entityManager, Application $application)
     {
+        $this->entityManager = $entityManager;
         $this->application = $application;
+        $this->namespace = $application['config']->get('express.entity_classes.namespace');
     }
+
+    /**
+     * @return mixed
+     */
+    public function getNamespace()
+    {
+        return $this->namespace;
+    }
+
+    /**
+     * @param mixed $namespace
+     */
+    public function setNamespace($namespace)
+    {
+        $this->namespace = $namespace;
+    }
+
 
     public function create($entityName)
     {
-        $manager = $this->application->make('express.backend');
-        $entity = $manager->find($entityName);
-        var_dump_safe($entity);
+        $class = '\\' . $this->getNamespace() . '\\' . $entityName;
+        $entity = new $class();
+        return $entity;
     }
 
+    public function set(BaseEntity $entity, $field, $value)
+    {
+        $entity->setProperty($field, $value);
+    }
+
+    public function save(BaseEntity $entity)
+    {
+        $this->entityManager->persist($entity);
+        $this->entityManager->flush();
+    }
 }
