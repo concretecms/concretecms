@@ -1,3 +1,68 @@
+# 5.7.5.3
+
+## Behavioral Improvements
+
+* Added an “Add Content” guide that goes through the process of adding content to the page, and explains the Add Content panel.
+* Improved contrast in the Add Content and Dashboard panels.
+* Fixed https://github.com/concrete5/concrete5/issues/2980
+* Improvements to image editing experience when using the concrete5 image editor.
+* Account private messages no longer assumes profiles are enabled (thanks ounziw)
+* Escaped input in form submissions so prevent Excel macros from being embedded in fields (thanks TimDix)
+* Links in image slider description will automatically substitute the proper URLs even when changing servers (thanks hissy)
+* Added logout link to mobile menu (thanks ojalehto)
+* Device visibility classes (hide on desktop, hide on laptop,, etc…) are now disabled when a page is in edit mode.
+* Additional page URLs preserve query strings on redirecting to canonical URLs.
+* Imported area layouts now support custom styles (thanks myconcretelab)
+* Parallax custom template on area design now works with multiple parallax areas on a page (thanks myconcretelab)
+
+## Bug Fixes
+
+* Fixed infinite redirect loop with Internationalized Domain Names (thanks EC-Joe)
+* Fixed bug where multilingual global areas would sometimes duplicate themselves needlessly, leading to empty global areas
+* Fixed hard-to-reproduce duplicate key error in ConversationFeatureDetailAssignments table when using the conversation block throughout your site
+* Fixed out of memory errors when uploading large files from the incoming directory (thanks EC-Joe)
+* Fixed “When using inline blocks, I can edit other inline blocks” (thanks TimDix)
+* Fixed errors with blocks that have assets not having their assets included if those blocks were within a layout. Fixed error with google maps block specifically.
+* Fixed error with scrollbar not appearing after file uploaded on the front-end (actually fixed this time.)
+* Fixed Adding and Moving a Block in One Step Causes JS Error
+* Resolved: Rich text editor adds in random "=" symbols sometimes
+* Resolved: Rich text editor wraps selection in undefined when choosing a custom style
+* Fixed but where Downloading a file that exceeds the available memory today causes an out of memory issue
+* Fixed occasionally bug that resulted in error “"Argument 1 passed to Concrete\Core\Permission\Access\Access::create() must be an instance of PermissionKey, Concrete\Core\Permission\Key\AdminKey given."
+* Fixed bug when moving blocks in certain situations (thanks Remo)
+* Fixed: Topics attributes marked as required on pages weren’t being properly validated.
+* Fixed some minor XSS potential issues with social links (thanks EC-Chris)
+* Fixed bug: Internal Links in Feature Blocks Store Absolute URL in Database
+* Fixed: config value “concrete.updates.auto\_update\_packages” now works again
+* Fixed fatal error when enabling package auto updates (thanks EC-Joe)
+* Fixed error autoloading packages when working with the command line (thanks EC-Joe)
+* Approve changes now shows up when moving blocks in stacks (thanks WillemAnchor)
+* Fixed bug where editing permissions in simple permissions mode wouldn’t apply multilingual settings administration to the appropriate groups (Thanks Remo)
+* Fixed possible CSRF security issue in Conversations settings dashboard page.
+* Fixed free-form layouts that on occasion would break into two rows as widths wouldn’t match properly (thanks wstoettinger)
+* Color picker JavaScript now properly escaped so it can be used with PHP array syntax.
+* Fixed: If you added a BlockTypeSet but didn't add anything to them it would cause the foreach to error on a null value (thanks joe-meyer)
+* Fixed inability to filter lists by multiple select values (thanks markbennett)
+* Fixed http://www.concrete5.org/developers/bugs/5-7-5-2/date-attributes-search-method-doesnt-work/ (thanks haeflimi)
+* IP Blacklist no longer bans on failed registrations (thanks joemeyer)
+* Fixed https://github.com/concrete5/concrete5/issues/3048 (thanks joemeyer)
+
+## Developer Updates
+
+* We now default to the “GD” image processing library for image manipulation. Imagick must be opted into by  setting the config value “concrete.file_manager.images.manipulation_library” to “imagick”.
+* Adds ability to specify wildcard page theme classes by creating an array key with “*” as its key (thanks TimDix)
+* Database Entities dashboard page now refreshes package-specific entities as well as 
+application-specific entities.
+* Implemented new Validation framework and some useful constraints. Used within password validation.
+* API improvements to the Processor class to allow it to be used without a queue.      
+* Select attribute option API improvements
+* Edge case page list sorting fix when adding to the query with addSelect and attempting to sort by the new field, and use pagination as well.
+
+## Backward Compatibility Notes
+
+
+* If you were relying on Imagick image manipulation, you will now be using GD image manipulation unless you manually set “concrete.file_manager.images.manipulation_library” to “imagick” within a custom config file.
+
 # 5.7.5.2
 
 ## Feature Updates
