@@ -198,6 +198,7 @@ class ClassLoader
         $symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Controller\\PageType', DIR_BASE_CORE . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES);
         $symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Controller', DIR_BASE_CORE . '/' . DIRNAME_CONTROLLERS);
         $symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Job', DIR_BASE_CORE . '/' . DIRNAME_JOBS);
+        $symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Express', DIR_APPLICATION . '/config/express/Concrete/Express');
 
 
         $namespace = 'Application';

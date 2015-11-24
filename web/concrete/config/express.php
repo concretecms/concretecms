@@ -10,7 +10,7 @@ return array(
 
     'entity_classes' => array(
         'output_directory' => DIR_APPLICATION . '/config/express/Entity',
-        'namespace' => 'Express'
+        'namespace' => 'Concrete\Express'
     ),
 
     'database' => array(
