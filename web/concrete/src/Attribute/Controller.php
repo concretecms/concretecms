@@ -67,6 +67,10 @@ class Controller extends AbstractController
             $val = (string) $val;
         }
 
+        if (is_array($val)) {
+            $val = json_encode($val);
+        }
+
         $cnode = $akv->addChild('value');
         $node = dom_import_simplexml($cnode);
         $no = $node->ownerDocument;
