@@ -11,7 +11,6 @@ class EntityWriterTest extends PHPUnit_Framework_TestCase
     public function tearDown()
     {
         parent::tearDown();
-        return;
         if (file_exists(__DIR__ . '/Testing/Student.php')) {
             unlink(__DIR__ . '/Testing/Student.php');
         }
@@ -61,8 +60,8 @@ class EntityWriterTest extends PHPUnit_Framework_TestCase
 
         $this->assertTrue(class_exists('\Testing\Student', false));
         $class = new ReflectionClass('\Testing\Student');
+        $this->assertTrue($class->isSubclassOf('\Concrete\Core\Express\BaseEntity'));
         $this->assertTrue($class->hasMethod('getId'));
-        $this->assertTrue($class->hasMethod('setId'));
         $this->assertTrue($class->hasMethod('getFirstName'));
         $this->assertTrue($class->hasMethod('setFirstName'));
     }
