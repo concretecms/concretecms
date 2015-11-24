@@ -303,16 +303,18 @@ class Application extends Container
      */
     public function handleURLSlashes(SymfonyRequest $request)
     {
-        $request_path = $request->getRequestUri();
-        $parsed_url = Url::createFromUrl($request->getUri());
+        if ($request->getPathInfo() != '/') {
+            $request_path = $request->getRequestUri();
+            $parsed_url = Url::createFromUrl($request->getUri());
 
-        $url_path = ltrim(parse_url($request_path, PHP_URL_PATH), '/');
+            $url_path = ltrim(parse_url($request_path, PHP_URL_PATH), '/');
 
-        if ($url_path != (string) $parsed_url->getPath()) {
-            $response = new RedirectResponse($parsed_url, 301);
-            $response->setRequest($request);
+            if ($url_path != (string) $parsed_url->getPath()) {
+                $response = new RedirectResponse($parsed_url, 301);
+                $response->setRequest($request);
 
-            return $response;
+                return $response;
+            }
         }
     }
 
