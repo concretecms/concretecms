@@ -2,8 +2,9 @@
 
 namespace Concrete\Core\Express;
 
+use Concrete\Core\Attribute\AttributeKeyMappingFieldBuilder;
 use Concrete\Core\Entity\Express\Entity;
-use Concrete\Core\Express\Definition\PrimaryKeyField;
+use Concrete\Core\Express\FieldBuilder\PrimaryKeyFieldBuilder;
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
 
@@ -41,19 +42,14 @@ class MetadataPopulator
         $table = $this->getTablePrefix() . $this->entity->getTableName();
         $builder = new ClassMetadataBuilder($this->metadata);
         $builder->setTable($table);
-        $columns = array(new PrimaryKeyField());
+        $primaryKey = new PrimaryKeyFieldBuilder();
+        $primaryKey->buildField($builder);
         $attributes = $this->entity->getAttributes();
         foreach($attributes as $attribute) {
             /** @var $key \Concrete\Core\Entity\AttributeKey\AttributeKey */
             $key = $attribute->getAttribute();
-            $fields = $key->getDefinitionFields();
-            foreach($fields as $field) {
-                $columns[] = $field;
-            }
-        }
-
-        foreach($columns as $field) {
-            $builder->addField($field->getName(), $field->getType(), $field->getOptions());
+            $fieldBuilder = new AttributeKeyMappingFieldBuilder($key);
+            $fieldBuilder->buildField($builder);
         }
     }
 
