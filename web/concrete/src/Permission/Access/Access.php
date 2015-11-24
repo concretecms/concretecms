@@ -4,7 +4,7 @@ namespace Concrete\Core\Permission\Access;
 
 use Concrete\Core\Foundation\Object;
 use CacheLocal;
-use PermissionKey;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
 use User;
 use Core;
 use Database;

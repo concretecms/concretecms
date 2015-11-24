@@ -37,7 +37,7 @@ if (is_object($f)) {
 
 <? } ?>
 
-<?php if(is_object($foS)) { ?>
+<?php if(isset($foS) && is_object($foS)) { ?>
 <script>
 $(function() {
     $('.bID-<?php print $bID;?>')

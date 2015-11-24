@@ -3,6 +3,7 @@
 namespace Concrete\Core\User;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Database\DatabaseManager;
 
 class UserInfoFactory
@@ -11,10 +12,10 @@ class UserInfoFactory
     protected $connection;
     protected $application;
 
-    public function __construct(Application $application, DatabaseManager $manager)
+    public function __construct(Application $application, Connection $connection)
     {
         $this->application = $application;
-        $this->connection = $manager->connection();
+        $this->connection = $connection;
     }
 
     /**
@@ -39,6 +40,14 @@ class UserInfoFactory
     public function getByName($uName)
     {
         return $this->get('where uName = ?', $uName);
+    }
+
+    /**
+     * @deprecated
+     */
+    public function getByUserName($uName)
+    {
+        return $this->getByName($uName);
     }
 
     /**
