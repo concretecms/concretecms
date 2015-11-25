@@ -29,7 +29,7 @@ class ColorValue extends Value {
     public function getGreen() {return $this->g;}
     public function getBlue() {return $this->b;}
     public function getAlpha() {return $this->a;}
-    public function hasAlpha() {return $this->a != false;}
+    public function hasAlpha() {return $this->a !== false;}
 
     public function toStyleString()
     {
