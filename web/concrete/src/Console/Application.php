@@ -20,6 +20,8 @@ class Application extends \Symfony\Component\Console\Application
         $this->add(new Command\InstallCommand());
         $this->add(new Command\ClearCacheCommand());
         $this->add(new Command\GenerateIDESymbolsCommand());
+        $this->add(new Command\InstallPackageCommand());
+        $this->add(new Command\UninstallPackageCommand());
         $this->setupRestrictedCommands();
         $this->setupDoctrineCommands();
     }
