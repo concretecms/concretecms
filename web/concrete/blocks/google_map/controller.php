@@ -57,7 +57,7 @@ class Controller extends BlockController
     {
         $this->requireAsset('javascript', 'jquery');
         $this->addFooterItem(
-            '<script async defer src="https://maps.googleapis.com/maps/api/js"></script>'
+            '<script defer src="https://maps.googleapis.com/maps/api/js"></script>'
         );
     }
 
