@@ -14,42 +14,67 @@ class UpdatePackageCommand extends Command
     {
         $this
             ->setName('c5:package-update')
-            ->addArgument('package', InputArgument::REQUIRED, 'The handle of the package to be updated')
+            ->addArgument('package', InputArgument::OPTIONAL, 'The handle of the package to be updated. If omitted then all the packages will be updated')
             ->setDescription('Update a concrete5 package')
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $rc = 0;
         try {
             $pkgHandle = $input->getArgument('package');
-
-            $output->write("Looking for updatable package '$pkgHandle'... ");
-            $pkg = null;
-            foreach (Package::getInstalledList() as $installed) {
-                if ($installed->getPackageHandle() === $pkgHandle) {
-                    $pkg = $installed;
-                    break;
+            if ($pkgHandle === null) {
+                $updatablePackages = Package::getLocalUpgradeablePackages();
+                if (empty($updatablePackaeges)) {
+                    $output->writeln("No package needs to be updated.");
+                } else {
+                    foreach ($updatablePackages as $pkg) {
+                        try {
+                            $this->updatePackage($pkg->getPackageHandle(), $output);
+                        } catch (Exception $x) {
+                            $output->writeln($x->getMessage());
+                            $rc = 1;
+                        }
+                    }
                 }
+            } else {
+                $this->updatePackage($pkgHandle, $output);
             }
-            if ($pkg === null) {
-                throw new Exception(sprintf("No package with handle '%s' is installed", $pkgHandle));
-            }
-            $output->writeln(sprintf('found (%s).', $pkg->getPackageName()));
+        } catch (Exception $x) {
+            $output->writeln($x->getMessage());
+            $rc = 1;
+        }
 
-            $output->write('Checking preconditions... ');
-            $upPkg = null;
-            foreach (Package::getLocalUpgradeablePackages() as $updatable) {
-                if ($updatable->getPackageHandle() === $pkgHandle) {
-                    $upPkg = $updatable;
-                    break;
-                }
-            }
-            if ($upPkg === null) {
-                $output->writeln(sprintf("the package is already up-to-date (v%s)", $pkg->getPackageVersion()));
+        return $rc;
+    }
 
-                return;
+    protected function updatePackage($pkgHandle, OutputInterface $output)
+    {
+        $output->write("Looking for updatable package '$pkgHandle'... ");
+        $pkg = null;
+        foreach (Package::getInstalledList() as $installed) {
+            if ($installed->getPackageHandle() === $pkgHandle) {
+                $pkg = $installed;
+                break;
             }
+        }
+        if ($pkg === null) {
+            throw new Exception(sprintf("No package with handle '%s' is installed", $pkgHandle));
+        }
+        $output->writeln(sprintf('found (%s).', $pkg->getPackageName()));
+
+        $output->write('Checking preconditions... ');
+        $upPkg = null;
+        foreach (Package::getLocalUpgradeablePackages() as $updatable) {
+            if ($updatable->getPackageHandle() === $pkgHandle) {
+                $upPkg = $updatable;
+                break;
+            }
+        }
+        if ($upPkg === null) {
+            $output->writeln(sprintf("the package is already up-to-date (v%s)", $pkg->getPackageVersion()));
+        } else {
             $test = Package::testForInstall($pkgHandle, false);
             if ($test !== true) {
                 throw new Exception(implode("\n", Package::mapError($r)));
@@ -60,10 +85,6 @@ class UpdatePackageCommand extends Command
             $pkg->upgradeCoreData();
             $pkg->upgrade();
             $output->writeln('done.');
-        } catch (Exception $x) {
-            $output->writeln($x->getMessage());
-
-            return 1;
         }
     }
 }
