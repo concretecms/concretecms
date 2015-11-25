@@ -1,7 +1,7 @@
 # Development branch
 
 ## Feature Updates
-* Added two new console commands to install and remove packages (thanks mlocati)
+* Added new console commands to install, update and remove packages (thanks mlocati)
 
 
 # 5.7.5.3

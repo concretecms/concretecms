@@ -22,6 +22,7 @@ class Application extends \Symfony\Component\Console\Application
         $this->add(new Command\GenerateIDESymbolsCommand());
         $this->add(new Command\InstallPackageCommand());
         $this->add(new Command\UninstallPackageCommand());
+        $this->add(new Command\UpdatePackageCommand());
         $this->setupRestrictedCommands();
         $this->setupDoctrineCommands();
     }
