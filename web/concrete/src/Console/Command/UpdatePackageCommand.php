@@ -3,6 +3,7 @@ namespace Concrete\Core\Console\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Output\OutputInterface;
 use Package;
@@ -14,7 +15,8 @@ class UpdatePackageCommand extends Command
     {
         $this
             ->setName('c5:package-update')
-            ->addArgument('package', InputArgument::OPTIONAL, 'The handle of the package to be updated. If omitted then all the packages will be updated')
+            ->addOption('all', null, InputOption::VALUE_NONE, 'Update all the installed packages')
+            ->addArgument('package', InputArgument::OPTIONAL, 'The handle of the package to be updated')
             ->setDescription('Update a concrete5 package')
         ;
     }
@@ -24,7 +26,10 @@ class UpdatePackageCommand extends Command
         $rc = 0;
         try {
             $pkgHandle = $input->getArgument('package');
-            if ($pkgHandle === null) {
+            if ($input->getOption('all')) {
+                if ($pkgHandle !== null) {
+                    throw new Exception('If you use the --all option you can\'t specify a package handle.');
+                }
                 $updatablePackages = Package::getLocalUpgradeablePackages();
                 if (empty($updatablePackaeges)) {
                     $output->writeln("No package needs to be updated.");
@@ -38,6 +43,8 @@ class UpdatePackageCommand extends Command
                         }
                     }
                 }
+            } elseif ($pkgHandle === null) {
+                throw new Exception('No package handle specified and the --all option has not been specified.');
             } else {
                 $this->updatePackage($pkgHandle, $output);
             }
