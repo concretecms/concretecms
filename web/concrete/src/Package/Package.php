@@ -950,21 +950,25 @@ class Package extends Object
      *
      * @return array
      */
-    public function mapError($testResults)
+    public static function mapError($testResults)
     {
-        $errorText[self::E_PACKAGE_INSTALLED] = t("You've already installed that package.");
-        $errorText[self::E_PACKAGE_NOT_FOUND] = t("Invalid Package.");
-        $errorText[self::E_PACKAGE_VERSION] = t("This package requires concrete5 version %s or greater.");
-        $errorText[self::E_PACKAGE_DOWNLOAD] = t("An error occurred while downloading the package.");
-        $errorText[self::E_PACKAGE_SAVE] = t("concrete5 was not able to save the package after download.");
-        $errorText[self::E_PACKAGE_UNZIP] = t('An error occurred while trying to unzip the package.');
-        $errorText[self::E_PACKAGE_INSTALL] = t('An error occurred while trying to install the package.');
-        $errorText[self::E_PACKAGE_MIGRATE_BACKUP] = t(
-            'Unable to backup old package directory to %s',
-            \Config::get('concrete.misc.package_backup_directory')
+        $errorText = array(
+            self::E_PACKAGE_INSTALLED => t("You've already installed that package."),
+            self::E_PACKAGE_NOT_FOUND => t("Invalid Package."),
+            self::E_PACKAGE_VERSION => t("This package requires concrete5 version %s or greater."),
+            self::E_PACKAGE_DOWNLOAD => t("An error occurred while downloading the package."),
+            self::E_PACKAGE_SAVE => t("concrete5 was not able to save the package after download."),
+            self::E_PACKAGE_UNZIP => t('An error occurred while trying to unzip the package.'),
+            self::E_PACKAGE_INSTALL => t('An error occurred while trying to install the package.'),
+            self::E_PACKAGE_MIGRATE_BACKUP => t(
+                'Unable to backup old package directory to %s',
+                \Config::get('concrete.misc.package_backup_directory')
+            ),
+            self::E_PACKAGE_INVALID_APP_VERSION => t(
+                'This package isn\'t currently available for this version of concrete5. Please contact the maintainer of this package for assistance.'
+            ),
+            self::E_PACKAGE_THEME_ACTIVE => t('This package contains the active site theme, please change the theme before uninstalling.'),
         );
-        $errorText[self::E_PACKAGE_INVALID_APP_VERSION] = t(
-            'This package isn\'t currently available for this version of concrete5. Please contact the maintainer of this package for assistance.');
 
         $testResultsText = array();
         foreach ($testResults as $result) {
