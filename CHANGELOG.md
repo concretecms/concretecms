@@ -1,3 +1,9 @@
+# Development branch
+
+## Feature Updates
+* Added new console commands to install, update and remove packages (thanks mlocati)
+
+
 # 5.7.5.3
 
 ## Behavioral Improvements
