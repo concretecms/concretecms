@@ -10,7 +10,6 @@
       <autoincrement />
       <key />
     </field>
-    <field name="testColumn" type="string" size="255" />
     <field name="newColumn" type="string" size="255" />
   </table>
 </schema>

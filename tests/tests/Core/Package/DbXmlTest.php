@@ -38,11 +38,14 @@ class DbXmlTest extends \PHPUnit_Framework_TestCase
         Package::installDB(__DIR__ . '/fixtures/db-2.xml');
 
         // Make sure the column exists in the updated database that is added in
-        // db-2.xml. This is what we actually want to test here.
+        // db-2.xml. Also make sure that the column we drop in db-2.xml no
+        // longer exists in the table. This is what we actually want to test
+        // here.
         $schema = $db->getSchemaManager()->createSchema();
 
         $tbl = $schema->getTable('TestPackageTable');
         $this->assertTrue($tbl->hasColumn('newColumn'));
+        $this->assertFalse($tbl->hasColumn('testColumn'));
     }
 
 }
