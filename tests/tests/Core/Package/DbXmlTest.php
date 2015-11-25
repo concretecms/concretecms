@@ -21,18 +21,22 @@ class DbXmlTest extends \PHPUnit_Framework_TestCase
         // to cover here.
         $db = Database::get();
 
+        // Make sure the DB is in the initial state
+        $schema = $db->getSchemaManager()->createSchema();
+        $this->assertFalse($schema->hasTable('TestPackageTable'));
+
         // Create the table initially.
         Package::installDB(__DIR__ . '/fixtures/db-1.xml');
 
-        // Make sure the table was properly created and it does NOT contain the
-        // column we are about to add. We are not interested here whether the
-        // table otherwise follows the defined schema, so no need to test
-        // anything else here.
+        // Make sure the table was properly created and it contains the column
+        // we are about to remove does NOT contain the column we are about to
+        // add.
         $schema = $db->getSchemaManager()->createSchema();
         $this->assertTrue($schema->hasTable('TestPackageTable'));
 
         $tbl = $schema->getTable('TestPackageTable');
         $this->assertFalse($tbl->hasColumn('newColumn'));
+        $this->assertTrue($tbl->hasColumn('testColumn'));
 
         // db-2.xml modifies the already existing table.
         Package::installDB(__DIR__ . '/fixtures/db-2.xml');
