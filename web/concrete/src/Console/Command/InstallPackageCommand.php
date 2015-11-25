@@ -30,13 +30,23 @@ class InstallPackageCommand extends Command
             foreach ($input->getArgument('package-options') as $keyValuePair) {
                 list($key, $value) = explode('=', $keyValuePair, 2);
                 $key = trim($key);
+                if (substr($key, -2) === '[]') {
+                    $isArray = true;
+                    $key = rtrim(substr($key, 0, -2));
+                } else {
+                    $isArray = false;
+                }
                 if ($key === '' || !isset($value)) {
                     throw new Exception(sprintf("Unable to parse the package option '%s': it must be in the form of key=value", $keyValuePair));
                 }
                 if (isset($packageOptions[$key])) {
-                    throw new Exception(sprintf("Duplicated package option '%s'", $key));
+                    if (!($isArray && is_array($packageOptions[$key]))) {
+                        throw new Exception(sprintf("Duplicated package option '%s'", $key));
+                    }
+                    $packageOptions[$key][] = $value;
+                } else {
+                    $packageOptions[$key] = $isArray ? ((array) $value) : $value;
                 }
-                $packageOptions[$key] = $value;
             }
 
             $output->write("Looking for package '$pkgHandle'... ");
