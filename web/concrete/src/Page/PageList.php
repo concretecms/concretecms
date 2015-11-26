@@ -151,7 +151,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     public function getTotalResults()
     {
         $u = new \User();
-        if ($this->permissionsChecker == -1) {
+        if ($this->permissionsChecker === -1) {
             $query = $this->deliverQueryObject();
             // We add a custom order by here because otherwise, if we've added
             // items to the select parts, and we're ordering by them, we get a SQL error
@@ -165,7 +165,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     protected function createPaginationObject()
     {
         $u = new \User();
-        if ($this->permissionsChecker == -1) {
+        if ($this->permissionsChecker === -1) {
             $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
                 // We add a custom order by here because otherwise, if we've added
                 // items to the select parts, and we're ordering by them, we get a SQL error
@@ -191,7 +191,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
         if (is_object($c) && $this->checkPermissions($c)) {
             if ($this->pageVersionToRetrieve == self::PAGE_VERSION_RECENT) {
                 $cp = new \Permissions($c);
-                if ($cp->canViewPageVersions() || $this->permissionsChecker == -1) {
+                if ($cp->canViewPageVersions() || $this->permissionsChecker === -1) {
                     $c->loadVersionObject('RECENT');
                 }
             }
