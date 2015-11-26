@@ -2,7 +2,7 @@
 $navigationTypeText = ($navigationType == 0) ? 'arrows' : 'pages';
 $c = Page::getCurrentPage();
 if ($c->isEditMode()) { ?>
-    <div class="ccm-edit-mode-disabled-item" style="width: <? echo $width; ?>; height: <? echo $height; ?>">
+    <div class="ccm-edit-mode-disabled-item" style="<? echo isset($width) ? "width: $width;" : '' ?><? echo isset($height) ? "height: $height;" : '' ?>">
         <div style="padding: 40px 0px 40px 0px"><? echo t('Image Slider disabled in edit mode.')?></div>
     </div>
 <?  } else { ?>
