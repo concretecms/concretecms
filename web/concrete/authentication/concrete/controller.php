@@ -11,7 +11,6 @@ use View;
 
 class Controller extends AuthenticationTypeController
 {
-
     public $apiMethods = array('forgot_password', 'v', 'change_password', 'password_changed', 'email_validated', 'invalid_token');
 
     public function getHandle()
@@ -50,6 +49,7 @@ class Controller extends AuthenticationTypeController
             $newTime = strtotime('+2 weeks');
             $db->execute('UPDATE authTypeConcreteCookieMap SET validThrough=?', array($newTime));
         }
+
         return $bool;
     }
 
@@ -76,6 +76,7 @@ class Controller extends AuthenticationTypeController
             // HOLY CRAP.. SERIOUSLY?
             $this->buildHash($u, ++$test);
         }
+
         return $token;
     }
 
@@ -84,7 +85,7 @@ class Controller extends AuthenticationTypeController
         if (function_exists('mcrypt_create_iv')) {
             // Use /dev/urandom if available, otherwise fall back to PHP's rand.
             // http://php.net/manual/en/function.mcrypt-create-iv.php#117047
-            return bin2hex(mcrypt_create_iv($a, MCRYPT_DEV_URANDOM|MCRYPT_RAND));
+            return bin2hex(mcrypt_create_iv($a, MCRYPT_DEV_URANDOM | MCRYPT_RAND));
         } elseif (function_exists('openssl_random_pseudo_bytes')) {
             return bin2hex(openssl_random_pseudo_bytes($a));
         }
@@ -94,6 +95,7 @@ class Controller extends AuthenticationTypeController
         while ($a--) {
             $o .= substr($chars, rand(0, $l), 1);
         }
+
         return md5($o);
     }
 
@@ -137,7 +139,7 @@ class Controller extends AuthenticationTypeController
                 $mh->to($oUser->getUserEmail());
 
                 //generate hash that'll be used to authenticate user, allowing them to change their password
-                $h = new \Concrete\Core\User\ValidationHash;
+                $h = new \Concrete\Core\User\ValidationHash();
                 $uHash = $h->add($oUser->uID, intval(UVTYPE_CHANGE_PASSWORD), true);
                 $changePassURL = View::url(
                         '/login',
@@ -168,7 +170,6 @@ class Controller extends AuthenticationTypeController
                 $mh->addParameter('siteName', Config::get('concrete.site'));
                 $mh->load('forgot_password');
                 @$mh->sendMail();
-
             } catch (\Exception $e) {
                 $error->add($e);
             }
@@ -194,9 +195,7 @@ class Controller extends AuthenticationTypeController
                     t(
                         'Key Expired. Please visit the forgot password page again to have a new key generated.'));
             } else {
-
                 if (strlen($_POST['uPassword'])) {
-
                     \Core::make('validator/password')->isValid($_POST['uPassword'], $e);
 
                     if (strlen($_POST['uPassword']) && $_POST['uPasswordConfirm'] != $_POST['uPassword']) {
@@ -254,7 +253,7 @@ class Controller extends AuthenticationTypeController
         $uName = $post['uName'];
         $uPassword = $post['uPassword'];
 
-        /** @type \Concrete\Core\Permission\IPService $ip_service */
+        /** @var \Concrete\Core\Permission\IPService $ip_service */
         $ip_service = \Core::make('ip');
         if ($ip_service->isBanned()) {
             throw new \Exception($ip_service->getErrorMessage());
@@ -308,5 +307,4 @@ class Controller extends AuthenticationTypeController
         }
         $this->redirect('/login/callback/concrete', 'invalid_token');
     }
-
 }
