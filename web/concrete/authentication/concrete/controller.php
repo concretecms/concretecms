@@ -4,7 +4,8 @@ namespace Concrete\Authentication\Concrete;
 use Concrete\Core\Authentication\AuthenticationTypeController;
 use Config;
 use Exception;
-use Loader;
+use Database;
+use Core;
 use User;
 use UserInfo;
 use View;
@@ -24,8 +25,8 @@ class Controller extends AuthenticationTypeController
         if ($cookie) {
             list($uID, $authType, $hash) = explode(':', $cookie);
             if ($authType == 'concrete') {
-                $db = Loader::db();
-                $db->execute('DELETE FROM authTypeConcreteCookieMap WHERE uID=? AND token=?', array($uID, $hash));
+                $db = Database::connection();
+                $db->executeQuery('DELETE FROM authTypeConcreteCookieMap WHERE uID=? AND token=?', array($uID, $hash));
             }
         }
     }
@@ -38,16 +39,17 @@ class Controller extends AuthenticationTypeController
     public function verifyHash(User $u, $hash)
     {
         $uID = $u->getUserID();
-        $db = Loader::db();
-        $q = $db->getOne(
+        $db = Database::connection();
+        $q = $db->fetchColumn(
             'SELECT validThrough FROM authTypeConcreteCookieMap WHERE uID=? AND token=?',
-            array($uID, $hash));
+            array($uID, $hash)
+        );
         $bool = time() < $q;
         if (!$bool) {
-            $db->execute('DELETE FROM authTypeConcreteCookieMap WHERE uID=? AND token=?', array($uID, $hash));
+            $db->executeQuery('DELETE FROM authTypeConcreteCookieMap WHERE uID=? AND token=?', array($uID, $hash));
         } else {
             $newTime = strtotime('+2 weeks');
-            $db->execute('UPDATE authTypeConcreteCookieMap SET validThrough=?', array($newTime));
+            $db->executeQuery('UPDATE authTypeConcreteCookieMap SET validThrough=?', array($newTime));
         }
 
         return $bool;
@@ -64,14 +66,15 @@ class Controller extends AuthenticationTypeController
             // we end up pulling 10 hashes that already exist. the chances of this are very very low.
             throw new \Exception(t('There was a database error, try again.'));
         }
-        $db = Loader::db();
+        $db = Database::connection();
 
         $validThrough = strtotime('+2 weeks');
         $token = $this->genString();
         try {
-            $db->execute(
+            $db->executeQuery(
                 'INSERT INTO authTypeConcreteCookieMap (token, uID, validThrough) VALUES (?,?,?)',
-                array($token, $u->getUserID(), $validThrough));
+                array($token, $u->getUserID(), $validThrough)
+            );
         } catch (\Exception $e) {
             // HOLY CRAP.. SERIOUSLY?
             $this->buildHash($u, ++$test);
@@ -114,8 +117,8 @@ class Controller extends AuthenticationTypeController
     public function forgot_password()
     {
         $loginData['success'] = 0;
-        $error = Loader::helper('validation/error');
-        $vs = Loader::helper('validation/strings');
+        $error = Core::make('helper/validation/error');
+        $vs = Core::make('helper/validation/strings');
         $em = $this->post('uEmail');
 
         if ($em) {
@@ -129,7 +132,7 @@ class Controller extends AuthenticationTypeController
                     throw new \Exception(t('We have no record of that email address.'));
                 }
 
-                $mh = Loader::helper('mail');
+                $mh = Core::make('helper/mail');
                 //$mh->addParameter('uPassword', $oUser->resetUserPassword());
                 if (Config::get('concrete.user.registration.email_registration')) {
                     $mh->addParameter('uName', $oUser->getUserEmail());
@@ -183,12 +186,12 @@ class Controller extends AuthenticationTypeController
     public function change_password($uHash = '')
     {
         $this->set('authType', $this->getAuthenticationType());
-        $db = Loader::db();
-        $h = Loader::helper('validation/identifier');
-        $e = Loader::helper('validation/error');
+        $db = Database::connection();
+        $h = Core::make('helper/validation/identifier');
+        $e = Core::make('helper/validation/error');
         $ui = UserInfo::getByValidationHash($uHash);
         if (is_object($ui)) {
-            $hashCreated = $db->GetOne("SELECT uDateGenerated FROM UserValidationHashes WHERE uHash=?", array($uHash));
+            $hashCreated = $db->fetchColumn("SELECT uDateGenerated FROM UserValidationHashes WHERE uHash=?", array($uHash));
             if ($hashCreated < (time() - (USER_CHANGE_PASSWORD_URL_LIFETIME))) {
                 $h->deleteKey('UserValidationHashes', 'uHash', $uHash);
                 throw new \Exception(
