@@ -25,20 +25,19 @@ class ValidationHash
      */
     protected static function removeExpired($type)
     {
-        $lifetime = '5184000'; // 60 days
-        do {
-            if ($type == UVTYPE_CHANGE_PASSWORD) {
+        switch ($type) {
+            case UVTYPE_CHANGE_PASSWORD:
                 $lifetime = USER_CHANGE_PASSWORD_URL_LIFETIME;
                 break;
-            }
-            if ($type == UVTYPE_LOGIN_FOREVER) {
+            case UVTYPE_LOGIN_FOREVER:
                 $lifetime = USER_FOREVER_COOKIE_LIFETIME;
                 break;
-            }
-            break;
-        } while (false);
+            default:
+                $lifetime = 5184000; // 60 days
+                break;
+        }
         $db = Database::connection();
-        $db->executeQuery('DELETE FROM UserValidationHashes WHERE type = ? AND uDateGenerated <= ?', array($type, $lifetime));
+        $db->executeQuery('DELETE FROM UserValidationHashes WHERE type = ? AND uDateGenerated <= ?', array($type, time() - $lifetime));
     }
 
     /**
