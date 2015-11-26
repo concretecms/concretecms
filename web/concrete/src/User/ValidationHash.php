@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Core\User;
 
-use Loader;
 use Core;
 use Database;
 
@@ -24,7 +23,7 @@ class ValidationHash
      *
      * @param int $type
      */
-    protected function removeExpired($type)
+    protected static function removeExpired($type)
     {
         $lifetime = '5184000'; // 60 days
         do {
