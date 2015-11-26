@@ -60,13 +60,12 @@ use SinglePage;
  * @property string $pkgName Installed name of package
  * @property string $pkgHandle Installed handle of package. This should be provided by the ending package.
  * @property string $pkgDescription Installed description of package
- * @property boolean $pkgIsInstalled True if package is installed
+ * @property bool $pkgIsInstalled True if package is installed
  * @property string $pkgVersion Version of package installed
  * @property string $pkgAvailableVersion
  */
 class Package extends Object
 {
-
     const E_PACKAGE_NOT_FOUND = 1;
     const E_PACKAGE_INSTALLED = 2;
     const E_PACKAGE_VERSION = 3;
@@ -104,6 +103,7 @@ class Package extends Object
     /** Returns the display name of a category of package items (localized and escaped accordingly to $format)
      * @param string $categoryHandle The category handle
      * @param string $format         = 'html' Escape the result in html format (if $format is 'html'). If $format is 'text' or any other value, the display name won't be escaped.
+     *
      * @return string
      */
     public static function getPackageItemsCategoryDisplayName($categoryHandle, $format = 'html')
@@ -180,8 +180,10 @@ class Package extends Object
     }
 
     /**
-     * Returns the name of an object belonging to a package
-     * @param $item
+     * Returns the name of an object belonging to a package.
+     *
+     * @param mixed $item
+     *
      * @return string
      */
     public static function getItemName($item)
@@ -266,9 +268,11 @@ class Package extends Object
 
     /**
      * This is the pre-test routine that packages run through before they are installed. Any errors that come here are
-     * to be returned in the form of an array so we can show the user. If it's all good we return true
+     * to be returned in the form of an array so we can show the user. If it's all good we return true.
+     *
      * @param string $package Package handle
      * @param bool $testForAlreadyInstalled
+     *
      * @return array|bool Returns an array of errors or true if the package can be installed
      */
     public static function testForInstall($package, $testForAlreadyInstalled = true)
@@ -284,23 +288,23 @@ class Package extends Object
         if ((!is_dir(DIR_PACKAGES . '/' . $package) && (!is_dir(
                     DIR_PACKAGES_CORE . '/' . $package))) || $package == ''
         ) {
-            $errors[] = Package::E_PACKAGE_NOT_FOUND;
+            $errors[] = self::E_PACKAGE_NOT_FOUND;
         } elseif ($pkg instanceof BrokenPackage) {
-            $errors[] = Package::E_PACKAGE_NOT_FOUND;
+            $errors[] = self::E_PACKAGE_NOT_FOUND;
         }
 
         // Step 2 - check to see if the user has already installed a package w/this handle
         if ($testForAlreadyInstalled) {
             $cnt = $db->getOne("SELECT count(*) FROM Packages WHERE pkgHandle = ?", array($package));
             if ($cnt > 0) {
-                $errors[] = Package::E_PACKAGE_INSTALLED;
+                $errors[] = self::E_PACKAGE_INSTALLED;
             }
         }
 
         if (count($errors) == 0) {
             // test minimum application version requirement
             if (version_compare(APP_VERSION, $pkg->getApplicationVersionRequired(), '<')) {
-                $errors[] = array(Package::E_PACKAGE_VERSION, $pkg->getApplicationVersionRequired());
+                $errors[] = array(self::E_PACKAGE_VERSION, $pkg->getApplicationVersionRequired());
             }
         }
 
@@ -312,8 +316,10 @@ class Package extends Object
     }
 
     /**
-     * Returns a package's class
+     * Returns a package's class.
+     *
      * @param string $pkgHandle Handle of package
+     *
      * @return Package
      */
     public static function getClass($pkgHandle)
@@ -341,7 +347,8 @@ class Package extends Object
     }
 
     /**
-     * Returns the version of concrete5 required by the package
+     * Returns the version of concrete5 required by the package.
+     *
      * @return string
      */
     public function getApplicationVersionRequired()
@@ -350,9 +357,10 @@ class Package extends Object
     }
 
     /**
-     * returns a Package object for the given package handle, null if not found
+     * Returns a Package object for the given package handle, null if not found.
      *
      * @param string $pkgHandle
+     *
      * @return Package
      */
     public static function getByHandle($pkgHandle)
@@ -361,7 +369,7 @@ class Package extends Object
         $row = $db->GetRow("SELECT * FROM Packages WHERE pkgHandle = ?", array($pkgHandle));
         if ($row) {
             $pkg = static::getClass($row['pkgHandle']);
-            if ($pkg instanceof Package) {
+            if ($pkg instanceof self) {
                 $pkg->setPropertiesFromArray($row);
             }
 
@@ -373,12 +381,13 @@ class Package extends Object
 
     /**
      * Returns an array of packages that have newer versions in the local packages directory
-     * than those which are in the Packages table. This means they're ready to be upgraded
+     * than those which are in the Packages table. This means they're ready to be upgraded.
+     *
      * @return Package[]
      */
     public static function getLocalUpgradeablePackages()
     {
-        $packages = Package::getAvailablePackages(false);
+        $packages = self::getAvailablePackages(false);
         $upgradeables = array();
         $db = Database::getActiveConnection();
         foreach ($packages as $p) {
@@ -397,8 +406,10 @@ class Package extends Object
     }
 
     /**
-     * Returns all available packages
+     * Returns all available packages.
+     *
      * @param bool $filterInstalled True to only return installed packages
+     *
      * @return Package[]
      */
     public static function getAvailablePackages($filterInstalled = true)
@@ -437,7 +448,8 @@ class Package extends Object
     }
 
     /**
-     * Returns all installed package handles
+     * Returns all installed package handles.
+     *
      * @return string[]
      */
     public static function getInstalledHandles()
@@ -448,12 +460,13 @@ class Package extends Object
     }
 
     /**
-     * Finds all packages that have an upgraded version available in the marketplace
+     * Finds all packages that have an upgraded version available in the marketplace.
+     *
      * @return Package[]
      */
     public static function getRemotelyUpgradeablePackages()
     {
-        $packages = Package::getInstalledList();
+        $packages = self::getInstalledList();
         $upgradeables = array();
         $db = Database::getActiveConnection();
         foreach ($packages as $p) {
@@ -466,7 +479,8 @@ class Package extends Object
     }
 
     /**
-     * Returns an array of all installed packages
+     * Returns an array of all installed packages.
+     *
      * @return Package[]
      */
     public static function getInstalledList()
@@ -475,7 +489,7 @@ class Package extends Object
         $r = $db->query("SELECT * FROM Packages WHERE pkgIsInstalled = 1 ORDER BY pkgDateInstalled ASC");
         $pkgArray = array();
         while ($row = $r->fetchRow()) {
-            $pkg = new Package();
+            $pkg = new self();
             $pkg->setPropertiesFromArray($row);
 
             $pkgArray[] = $pkg;
@@ -485,7 +499,8 @@ class Package extends Object
     }
 
     /**
-     * Returns the path to the package's folder, relative to the install path
+     * Returns the path to the package's folder, relative to the install path.
+     *
      * @return string
      */
     public function getRelativePath()
@@ -497,7 +512,8 @@ class Package extends Object
     }
 
     /**
-     * Returns the package handle
+     * Returns the package handle.
+     *
      * @return string
      */
     public function getPackageHandle()
@@ -506,7 +522,7 @@ class Package extends Object
     }
 
     /**
-     * Gets the date the package was added to the system,
+     * Gets the date the package was added to the system.
      *
      * @return string date formatted like: 2009-01-01 00:00:00
      */
@@ -521,8 +537,9 @@ class Package extends Object
     }
 
     /**
-     * Returns true if the package is installed, false if not
-     * @return boolean
+     * Returns true if the package is installed, false if not.
+     *
+     * @return bool
      */
     public function isPackageInstalled()
     {
@@ -531,6 +548,7 @@ class Package extends Object
 
     /**
      * Gets the contents of the package's CHANGELOG file. If no changelog is available an empty string is returned.
+     *
      * @return string
      */
     public function getChangelogContents()
@@ -556,6 +574,7 @@ class Package extends Object
     /**
      * Returns the currently installed package version.
      * NOTE: This function only returns a value if getLocalUpgradeablePackages() has been called first!
+     *
      * @return string
      */
     public function getPackageCurrentlyInstalledVersion()
@@ -572,7 +591,8 @@ class Package extends Object
     }
 
     /**
-     * Returns custom autoloader prefixes registered by the class loader
+     * Returns custom autoloader prefixes registered by the class loader.
+     *
      * @return array Keys represent the namespace, not relative to the package's namespace. Values are the path, and are relative to the package directory.
      */
     public function getPackageAutoloaderRegistries()
@@ -581,7 +601,8 @@ class Package extends Object
     }
 
     /**
-     * Returns true if the package has a post install screen
+     * Returns true if the package has a post install screen.
+     *
      * @return bool
      */
     public function hasInstallPostScreen()
@@ -591,7 +612,8 @@ class Package extends Object
     }
 
     /**
-     * Returns true if the package has an install options screen
+     * Returns true if the package has an install options screen.
+     *
      * @return bool
      */
     public function showInstallOptionsScreen()
@@ -610,7 +632,7 @@ class Package extends Object
     }
 
     /**
-     * Loads package translation files into zend translate
+     * Loads package translation files into zend translate.
      *
      * @param string                                  $locale    = null The identifier of the locale to activate (used to build the language file path). If empty we'll use currently active locale.
      * @param \Zend\I18n\Translator\Translator|string $translate = 'current' The Zend Translator instance that holds the translations (set to 'current' to use the current one)
@@ -742,7 +764,8 @@ class Package extends Object
     }
 
     /**
-     * Returns an array of package items (e.g. blocks, themes)
+     * Returns an array of package items (e.g. blocks, themes).
+     *
      * @return array
      */
     public function getPackageItems()
@@ -793,7 +816,7 @@ class Package extends Object
     /**
      * Destroys all the existing proxy classes for this package.
      *
-     * @return boolean
+     * @return bool
      */
     protected function destroyProxyClasses()
     {
@@ -802,6 +825,7 @@ class Package extends Object
         if (is_object($cache = $config->getMetadataCacheImpl())) {
             $cache->flushAll();
         }
+
         return $dbm->destroyProxyClasses('ConcretePackage' . camelcase($this->getPackageHandle()) . 'Src');
     }
 
@@ -815,6 +839,7 @@ class Package extends Object
         if (!isset($this->databaseStructureManager)) {
             $this->databaseStructureManager = Core::make('database/structure', $this->getEntityManager());
         }
+
         return $this->databaseStructureManager;
     }
 
@@ -837,7 +862,8 @@ class Package extends Object
     }
 
     /**
-     * Removes any existing pages, files, stacks, block and page types and installs content from the package
+     * Removes any existing pages, files, stacks, block and page types and installs content from the package.
+     *
      * @param $options
      */
     public function swapContent($options)
@@ -876,7 +902,6 @@ class Package extends Object
 
             // now we add in any files that this package has
             if (is_dir($this->getPackagePath() . '/content_files')) {
-
                 $ch = new ContentImporter();
                 $computeThumbnails = true;
                 if ($this->contentProvidesFileThumbnails()) {
@@ -910,7 +935,7 @@ class Package extends Object
 
     /**
      * Returns a path to where the packages files are located.
-     * @access public
+     *
      * @return string $path
      */
     public function contentProvidesFileThumbnails()
@@ -919,24 +944,26 @@ class Package extends Object
     }
 
     /**
-     * Converts package install test errors to human-readable strings
+     * Converts package install test errors to human-readable strings.
+     *
      * @param $testResults Package install test errors
+     *
      * @return array
      */
     public function mapError($testResults)
     {
-        $errorText[Package::E_PACKAGE_INSTALLED] = t("You've already installed that package.");
-        $errorText[Package::E_PACKAGE_NOT_FOUND] = t("Invalid Package.");
-        $errorText[Package::E_PACKAGE_VERSION] = t("This package requires concrete5 version %s or greater.");
-        $errorText[Package::E_PACKAGE_DOWNLOAD] = t("An error occurred while downloading the package.");
-        $errorText[Package::E_PACKAGE_SAVE] = t("concrete5 was not able to save the package after download.");
-        $errorText[Package::E_PACKAGE_UNZIP] = t('An error occurred while trying to unzip the package.');
-        $errorText[Package::E_PACKAGE_INSTALL] = t('An error occurred while trying to install the package.');
-        $errorText[Package::E_PACKAGE_MIGRATE_BACKUP] = t(
+        $errorText[self::E_PACKAGE_INSTALLED] = t("You've already installed that package.");
+        $errorText[self::E_PACKAGE_NOT_FOUND] = t("Invalid Package.");
+        $errorText[self::E_PACKAGE_VERSION] = t("This package requires concrete5 version %s or greater.");
+        $errorText[self::E_PACKAGE_DOWNLOAD] = t("An error occurred while downloading the package.");
+        $errorText[self::E_PACKAGE_SAVE] = t("concrete5 was not able to save the package after download.");
+        $errorText[self::E_PACKAGE_UNZIP] = t('An error occurred while trying to unzip the package.');
+        $errorText[self::E_PACKAGE_INSTALL] = t('An error occurred while trying to install the package.');
+        $errorText[self::E_PACKAGE_MIGRATE_BACKUP] = t(
             'Unable to backup old package directory to %s',
             \Config::get('concrete.misc.package_backup_directory')
         );
-        $errorText[Package::E_PACKAGE_INVALID_APP_VERSION] = t(
+        $errorText[self::E_PACKAGE_INVALID_APP_VERSION] = t(
             'This package isn\'t currently available for this version of concrete5. Please contact the maintainer of this package for assistance.');
 
         $testResultsText = array();
@@ -956,7 +983,8 @@ class Package extends Object
     }
 
     /**
-     * Returns the directory containing package entities
+     * Returns the directory containing package entities.
+     *
      * @return string
      */
     public function getPackageEntitiesPath()
@@ -965,7 +993,7 @@ class Package extends Object
     }
 
     /**
-     * Called to enable package specific configuration
+     * Called to enable package specific configuration.
      */
     public function registerConfigNamespace()
     {
@@ -973,7 +1001,7 @@ class Package extends Object
     }
 
     /**
-     * Get the standard database config liaison
+     * Get the standard database config liaison.
      *
      * @return \Concrete\Core\Config\Repository\Liaison
      */
@@ -983,7 +1011,8 @@ class Package extends Object
     }
 
     /**
-     * Get the standard database config liaison
+     * Get the standard database config liaison.
+     *
      * @return \Concrete\Core\Config\Repository\Liaison
      */
     public function getDatabaseConfig()
@@ -996,7 +1025,8 @@ class Package extends Object
     }
 
     /**
-     * Get the standard filesystem config liaison
+     * Get the standard filesystem config liaison.
+     *
      * @return \Concrete\Core\Config\Repository\Liaison
      */
     public function getFileConfig()
@@ -1011,6 +1041,7 @@ class Package extends Object
     /**
      * Installs the package info row and installs the database. Packages installing additional content should override this method, call the parent method,
      * and use the resulting package object for further installs.
+     *
      * @return Package
      */
     public function install()
@@ -1024,12 +1055,13 @@ class Package extends Object
             $this->getPackageVersion(),
             $this->getPackageHandle(),
             1,
-            $dh->getOverridableNow());
+            $dh->getOverridableNow(),
+        );
         $db->query(
             "INSERT INTO Packages (pkgName, pkgDescription, pkgVersion, pkgHandle, pkgIsInstalled, pkgDateInstalled) VALUES (?, ?, ?, ?, ?, ?)",
             $v);
 
-        $pkg = Package::getByID($db->lastInsertId());
+        $pkg = self::getByID($db->lastInsertId());
         ClassLoader::getInstance()->registerPackage($pkg);
         $pkg->installDatabase();
 
@@ -1041,7 +1073,8 @@ class Package extends Object
     }
 
     /**
-     * Returns the translated name of the package
+     * Returns the translated name of the package.
+     *
      * @return string
      */
     public function getPackageName()
@@ -1050,7 +1083,8 @@ class Package extends Object
     }
 
     /**
-     * Returns the translated package description
+     * Returns the translated package description.
+     *
      * @return string
      */
     public function getPackageDescription()
@@ -1059,7 +1093,8 @@ class Package extends Object
     }
 
     /**
-     * Returns the installed package version
+     * Returns the installed package version.
+     *
      * @return string
      */
     public function getPackageVersion()
@@ -1068,8 +1103,10 @@ class Package extends Object
     }
 
     /**
-     * returns a Package object for the given package id, null if not found
+     * Returns a Package object for the given package id, null if not found.
+     *
      * @param int $pkgID
+     *
      * @return Package
      */
     public static function getByID($pkgID)
@@ -1078,7 +1115,7 @@ class Package extends Object
         $row = $db->GetRow("SELECT * FROM Packages WHERE pkgID = ?", array($pkgID));
         if ($row) {
             $pkg = static::getClass($row['pkgHandle']);
-            if ($pkg instanceof Package) {
+            if ($pkg instanceof self) {
                 $pkg->setPropertiesFromArray($row);
 
                 return $pkg;
@@ -1091,8 +1128,6 @@ class Package extends Object
     /**
      * Installs the packages database through doctrine entities and db.xml
      * database definitions.
-     *
-     * @return void
      */
     public function installDatabase()
     {
@@ -1112,9 +1147,12 @@ class Package extends Object
     }
 
     /**
-     * Installs a package's database from an XML file
+     * Installs a package's database from an XML file.
+     *
      * @param string $xmlFile Path to the database XML file
+     *
      * @return bool|\stdClass Returns false if the XML file could not be found
+     *
      * @throws \Doctrine\DBAL\ConnectionException
      */
     public static function installDB($xmlFile)
@@ -1143,11 +1181,13 @@ class Package extends Object
 
         $result = new \stdClass();
         $result->result = false;
+
         return $result;
     }
 
     /**
-     * Updates the available package number in the database
+     * Updates the available package number in the database.
+     *
      * @param string $vNum New version number
      */
     public function updateAvailableVersionNumber($vNum)
@@ -1158,8 +1198,9 @@ class Package extends Object
     }
 
     /**
-     * Returns the package ID
-     * @return integer
+     * Returns the package ID.
+     *
+     * @return int
      */
     public function getPackageID()
     {
@@ -1167,18 +1208,19 @@ class Package extends Object
     }
 
     /**
-     * Updates a package's name, description, version and ID using the current class properties
+     * Updates a package's name, description, version and ID using the current class properties.
      */
     public function upgradeCoreData()
     {
         $db = Database::getActiveConnection();
         $p1 = static::getClass($this->getPackageHandle());
-        if ($p1 instanceof Package) {
+        if ($p1 instanceof self) {
             $v = array(
                 $p1->getPackageName(),
                 $p1->getPackageDescription(),
                 $p1->getPackageVersion(),
-                $this->getPackageID());
+                $this->getPackageID(),
+            );
             $db->query("update Packages set pkgName = ?, pkgDescription = ?, pkgVersion = ? where pkgID = ?", $v);
         }
     }
@@ -1201,7 +1243,8 @@ class Package extends Object
     }
 
     /**
-     * Updates a package's database using entities and a db.xml
+     * Updates a package's database using entities and a db.xml.
+     *
      * @throws \Doctrine\DBAL\ConnectionException
      * @throws \Exception
      */
@@ -1214,7 +1257,7 @@ class Package extends Object
     }
 
     /**
-     * moves the current package's directory to the trash directory renamed with the package handle and a date code.
+     * Moves the current package's directory to the trash directory renamed with the package handle and a date code.
      */
     public function backup()
     {
@@ -1228,7 +1271,7 @@ class Package extends Object
             $trashName = $trash . '/' . $this->pkgHandle . '_' . date('YmdHis');
             $ret = rename(DIR_PACKAGES . '/' . $this->pkgHandle, $trashName);
             if (!$ret) {
-                return array(Package::E_PACKAGE_MIGRATE_BACKUP);
+                return array(self::E_PACKAGE_MIGRATE_BACKUP);
             } else {
                 $this->backedUpFname = $trashName;
             }
@@ -1236,8 +1279,8 @@ class Package extends Object
     }
 
     /**
-     * if a package was just backed up by this instance of the package object and the packages/package handle directory doesn't exist, this will restore the
-     * package from the trash
+     * If a package was just backed up by this instance of the package object and the packages/package handle directory doesn't exist, this will restore the
+     * package from the trash.
      */
     public function restore()
     {
