@@ -274,7 +274,7 @@ class User extends Object
 
     public function getLastOnline()
     {
-        return $this->uLastOnline;
+        return isset($this->uLastOnline) ? $this->uLastOnline : null;
     }
 
     public function getUserName()
