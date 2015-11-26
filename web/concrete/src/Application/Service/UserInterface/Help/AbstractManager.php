@@ -32,7 +32,7 @@ class AbstractManager implements ManagerInterface, RegistryInterface
 
     public function getMessage($identifier)
     {
-        return $this->messages[$identifier];
+        return isset($this->messages[$identifier]) ? $this->messages[$identifier] : null;
     }
 
     public function getFormatter(Message $message)
