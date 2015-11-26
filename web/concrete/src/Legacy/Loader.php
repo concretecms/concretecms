@@ -16,7 +16,7 @@ class Loader
      */
     public static function db()
     {
-        return Database::getActiveConnection();
+        return Database::connection();
     }
 
     public static function helper($service, $pkgHandle = false)
