@@ -483,7 +483,7 @@ class Controller extends BlockController
     public function isBlockEmpty()
     {
         $pages = $this->get('pages');
-        if ($this->pageListTitle) {
+        if (isset($this->pageListTitle) && $this->pageListTitle) {
             return false;
         }
         if (count($pages) == 0) {
