@@ -275,7 +275,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function isArrangeMode()
     {
-        return ($this->isCheckedOutByMe() && ($_REQUEST['btask'] == 'arrange'));
+        return $this->isCheckedOutByMe() && isset($_REQUEST['btask']) && $_REQUEST['btask'] === 'arrange';
     }
 
     /**
