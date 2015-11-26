@@ -288,7 +288,7 @@ class Controller extends AuthenticationTypeController
                     break;
             }
         }
-        if ($post['uMaintainLogin']) {
+        if (isset($post['uMaintainLogin']) && $post['uMaintainLogin']) {
             $user->setAuthTypeCookie('concrete');
         }
 
