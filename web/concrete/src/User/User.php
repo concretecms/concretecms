@@ -220,7 +220,7 @@ class User extends Object
                 $this->uTimezone = null;
             }
             $this->uGroups = $this->_getUserGroups();
-            if (!$disableLogin && !$req->hasCustomRequestUser()) {
+            if (!isset($args[2]) && !$req->hasCustomRequestUser()) {
                 Session::set('uGroups', $this->uGroups);
             }
         }
