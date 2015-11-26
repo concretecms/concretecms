@@ -1,6 +1,4 @@
-<?php defined('C5_EXECUTE') or die('Access denied.');
-$form = Core::make('helper/form');
-?>
+<?php defined('C5_EXECUTE') or die('Access denied.'); ?>
 
 <div class="forgotPassword">
 	<form method="post" action="<?= URL::to('/login', 'callback', $authType->getAuthenticationTypeHandle(), 'forgot_password') ?>">
