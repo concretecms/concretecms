@@ -3,7 +3,6 @@ namespace Concrete\Controller\SinglePage;
 
 use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Core\Authentication\AuthenticationTypeFailureException;
-use Concrete\Core\Authentication\LoginException;
 use Concrete\Core\Routing\RedirectResponse;
 use Config;
 use Events;
@@ -20,7 +19,6 @@ use View;
 
 class Login extends PageController
 {
-
     public $helpers = array('form');
     protected $locales = array();
 
@@ -47,7 +45,7 @@ class Login extends PageController
     /**
      * Concrete5_Controller_Login::callback
      * Call an AuthenticationTypeController method throw a uri.
-     * Use: /login/TYPE/METHOD/PARAM1/.../PARAM10
+     * Use: /login/TYPE/METHOD/PARAM1/.../PARAM10.
      *
      * @param string $type
      * @param string $method
@@ -61,10 +59,11 @@ class Login extends PageController
      * @param null   $h
      * @param null   $i
      * @param null   $j
+     *
      * @throws \Concrete\Core\Authentication\AuthenticationTypeFailureException
      * @throws \Exception
      */
-    public function callback($type=null, $method = 'callback', $a = null, $b = null, $c = null, $d = null, $e = null, $f = null, $g = null, $h = null, $i = null, $j = null)
+    public function callback($type = null, $method = 'callback', $a = null, $b = null, $c = null, $d = null, $e = null, $f = null, $g = null, $h = null, $i = null, $j = null)
     {
         if (!$type) {
             return $this->view();
@@ -130,12 +129,12 @@ class Login extends PageController
 
     /**
      * @param AuthenticationType $type Required
+     *
      * @throws \Exception
      */
     public function finishAuthentication(/* AuthenticationType */
         $type = null
-    )
-    {
+    ) {
         if (!$type || !($type instanceof AuthenticationType)) {
             return $this->view();
         }
@@ -266,7 +265,7 @@ class Login extends PageController
                 //should administrator be redirected to dashboard?  defaults to yes if not set.
                 $adminToDash = intval(Config::get('concrete.misc.login_admin_to_dashboard'));
                 if ($dbp->canRead() && $adminToDash) {
-                    if(!$rc instanceof Page || $rc->isError()){
+                    if (!$rc instanceof Page || $rc->isError()) {
                         $rc = $dash;
                     }
                     $rUrl = $navigation->getLinkToCollection($rc);
@@ -336,7 +335,7 @@ class Login extends PageController
             }
             User::loginByUserID(Session::get('uRequiredAttributeUser'));
             Session::remove('uRequiredAttributeUser');
-            $u = new User;
+            $u = new User();
             $at = AuthenticationType::getByHandle(Session::get('uRequiredAttributeUserAuthenticationType'));
             Session::remove('uRequiredAttributeUserAuthenticationType');
             if (!$at) {
@@ -391,5 +390,4 @@ class Login extends PageController
             Session::set('rcID', intval($cID));
         }
     }
-
 }
