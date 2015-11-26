@@ -356,15 +356,27 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 
     <?
     print $dh->getIntelligentSearchMenu();
-    ?>
 
-    <? if ($pageInUseBySomeoneElse) { ?>
+   	$upg = new \Permissions();
+	if (\Config::get('concrete.version') !== \Config::get('concrete.version_installed') && $upg->canUpgrade()) {
+        echo \Core::make('helper/concrete/ui')->notify(
+            array(
+                'title'   => t('Upgrade Required!'),
+                'message' => t('Your site has a required upgrade available.') .
+                    '<p>' . t('Click below to begin the upgrade.') . '</p>',
+                'type'    => 'danger',
+                'icon'    => 'exclamation',
+                'buttons' => array(sprintf('<a class="btn btn-primary" href="%s">%s</a>', URL::to('/ccm/system/upgrade'), t('Upgrade')))
+            ));
+	}
+
+   if ($pageInUseBySomeoneElse) { ?>
         <?= Loader::helper('concrete/ui')->notify(
             array(
                 'title'   => t('Editing Unavailable.'),
                 'message' => t("%s is currently editing this page.", $c->getCollectionCheckedOutUserName()),
                 'type'    => 'info',
-                'icon'    => 'exclamation-sign'
+                'icon'    => 'exclamation'
             )) ?>
     <? } else { ?>
 
