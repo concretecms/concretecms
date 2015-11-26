@@ -8,7 +8,7 @@ class ColumnSet extends Set
 {
     protected $attributeClass = 'CollectionAttributeKey';
 
-    public function getCurrent()
+    public static function getCurrent()
     {
         $u = new User();
         $fldc = $u->config('PAGE_LIST_DEFAULT_COLUMNS');

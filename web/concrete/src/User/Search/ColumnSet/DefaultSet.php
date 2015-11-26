@@ -9,12 +9,12 @@ class DefaultSet extends Set
 {
     protected $attributeClass = 'UserAttributeKey';
 
-    public function getUserName($ui)
+    public static function getUserName($ui)
     {
         return '<a data-user-name="' . $ui->getUserDisplayName() . '" data-user-email="' . $ui->getUserEmail() . '" data-user-id="' . $ui->getUserID() . '" href="#">' . $ui->getUserName() . '</a>';
     }
 
-    public function getUserEmail($ui)
+    public static function getUserEmail($ui)
     {
         return '<a href="mailto:' . $ui->getUserEmail() . '">' . $ui->getUserEmail() . '</a>';
     }
