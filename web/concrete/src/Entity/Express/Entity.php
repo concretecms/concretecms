@@ -28,13 +28,20 @@ class Entity
     protected $table_name;
 
     /**
-     * @OneToMany(targetEntity="Attribute", mappedBy="object", cascade={"persist", "remove"})
+     * @OneToMany(targetEntity="Attribute", mappedBy="entity", cascade={"persist", "remove"})
      **/
     protected $attributes;
+
+    /**
+     * @OneToMany(targetEntity="Association", mappedBy="entity", cascade={"persist", "remove"})
+     **/
+    protected $associations;
+
 
     public function __construct()
     {
         $this->attributes = new ArrayCollection();
+        $this->associations = new ArrayCollection();
     }
 
     /**
@@ -96,6 +103,22 @@ class Entity
     public function setTableName($table_name)
     {
         $this->table_name = $table_name;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAssociations()
+    {
+        return $this->associations;
+    }
+
+    /**
+     * @param mixed $associations
+     */
+    public function setAssociations($associations)
+    {
+        $this->associations = $associations;
     }
 
 
