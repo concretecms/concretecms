@@ -919,18 +919,28 @@ class Package extends Object
         }
     }
 
+    /**
+     * @param array $options
+     *
+     * @return bool
+     */
     protected function validateClearSiteContents($options)
     {
-        $u = new \User();
-        if ($u->isSuperUser()) {
-            // this can ONLY be used through the post. We will use the token to ensure that
-            $valt = Core::make('helper/validation/token');
-            if ($valt->validate('install_options_selected', $options['ccm_token'])) {
-                return true;
+        if (Core::make('application')->isRunThroughCommandLineInterface()) {
+            $result = true;
+        } else {
+            $result = false;
+            $u = new \User();
+            if ($u->isSuperUser()) {
+                // this can ONLY be used through the post. We will use the token to ensure that
+                $valt = Core::make('helper/validation/token');
+                if ($valt->validate('install_options_selected', $options['ccm_token'])) {
+                    $result = true;
+                }
             }
         }
 
-        return false;
+        return $result;
     }
 
     /**
