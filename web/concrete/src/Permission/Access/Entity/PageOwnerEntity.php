@@ -2,7 +2,7 @@
 namespace Concrete\Core\Permission\Access\Entity;
 
 use Concrete\Core\Page\Page;
-use Loader;
+use Database;
 use PermissionAccess;
 use Config;
 use UserInfo;
@@ -59,10 +59,10 @@ class PageOwnerEntity extends Entity
     public static function getAccessEntitiesForUser($user)
     {
         $entities = array();
-        $db = Loader::db();
         if ($user->isRegistered()) {
+            $db = Database::connection();
             $pae = static::getOrCreate();
-            $r = $db->GetOne('select cID from Pages where uID = ?', array($user->getUserID()));
+            $r = $db->fetchColumn('select cID from Pages where uID = ?', array($user->getUserID()));
             if ($r > 0) {
                 $entities[] = $pae;
             }
@@ -73,13 +73,12 @@ class PageOwnerEntity extends Entity
 
     public static function getOrCreate()
     {
-        $db = Loader::db();
-        $petID = $db->GetOne('select petID from PermissionAccessEntityTypes where petHandle = \'page_owner\'');
-        $peID = $db->GetOne('select peID from PermissionAccessEntities where petID = ?',
-            array($petID));
+        $db = Database::connection();
+        $petID = $db->fetchColumn('select petID from PermissionAccessEntityTypes where petHandle = \'page_owner\'');
+        $peID = $db->fetchColumn('select peID from PermissionAccessEntities where petID = ?', array($petID));
         if (!$peID) {
-            $db->Execute("insert into PermissionAccessEntities (petID) values(?)", array($petID));
-            $peID = $db->Insert_ID();
+            $db->executeQuery("insert into PermissionAccessEntities (petID) values(?)", array($petID));
+            $peID = $db->lastInsertId();
             Config::save('concrete.misc.access_entity_updated', time());
         }
 
