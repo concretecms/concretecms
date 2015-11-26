@@ -31,7 +31,7 @@ class UpdatePackageCommand extends Command
                     throw new Exception('If you use the --all option you can\'t specify a package handle.');
                 }
                 $updatablePackages = Package::getLocalUpgradeablePackages();
-                if (empty($updatablePackaeges)) {
+                if (empty($updatablePackages)) {
                     $output->writeln("No package needs to be updated.");
                 } else {
                     foreach ($updatablePackages as $pkg) {
