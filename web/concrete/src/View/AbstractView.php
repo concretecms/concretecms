@@ -5,7 +5,7 @@ namespace Concrete\Core\View;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Request;
 use URL;
-use Loader;
+use Core;
 
 abstract class AbstractView
 {
@@ -197,7 +197,7 @@ abstract class AbstractView
 
     public function renderError($title, $error, $errorObj = null)
     {
-        Loader::helper('concrete/ui')->renderError($title, $error);
+        Core::make('helper/concrete/ui')->renderError($title, $error);
     }
 
     /**
