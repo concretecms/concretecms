@@ -6,7 +6,7 @@ $form = Core::make('helper/form');
 <form method="post" action="<?= URL::to('/login', 'authenticate', $this->getAuthenticationTypeHandle()) ?>">
 
 	<div class="form-group">
-		<input name="uName" class="form-control col-sm-12" placeholder="<?=Config::get('concrete.user.registration.email_registration') ? t('Email Address') : t('Username')?>" />
+		<input name="uName" class="form-control col-sm-12" placeholder="<?=Config::get('concrete.user.registration.email_registration') ? t('Email Address') : t('Username')?>" autofocus="autofocus" />
 	</div>
 
 	<div class="form-group">
@@ -32,10 +32,6 @@ $form = Core::make('helper/form');
 		<button class="btn btn-primary"><?= t('Log in') ?></button>
 		<a href="<?= URL::to('/login', 'concrete', 'forgot_password')?>" class="btn pull-right"><?= t('Forgot Password') ?></a>
 	</div>
-
-	<script type="text/javascript">
-		document.querySelector('input[name=uName]').focus();
-	</script>
 
 	<?php Core::make('helper/validation/token')->output('login_' . $this->getAuthenticationTypeHandle()); ?>
 
