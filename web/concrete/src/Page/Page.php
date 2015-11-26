@@ -1441,7 +1441,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      *
      * @return int
      */
-    public function getCollectionParentIDFromChildID($cID)
+    public static function getCollectionParentIDFromChildID($cID)
     {
         $db = Database::get();
         $q = 'select cParentID from Pages where cID = ?';
