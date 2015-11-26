@@ -6,7 +6,7 @@ use Concrete\Core\Authentication\AuthenticationTypeFailureException;
 use Concrete\Core\Routing\RedirectResponse;
 use Config;
 use Events;
-use Loader;
+use Core;
 use Localization;
 use Page;
 use PageController;
@@ -105,7 +105,7 @@ class Login extends PageController
      */
     public function authenticate($type = '')
     {
-        $valt = Loader::helper('validation/token');
+        $valt = Core::make('helper/validation/token');
         if (!$valt->validate('login_' . $type)) {
             $this->error->add($valt->getErrorMessage());
         } else {
@@ -195,15 +195,15 @@ class Login extends PageController
 
     public function on_start()
     {
-        $this->error = Loader::helper('validation/error');
-        $this->set('valt', Loader::helper('validation/token'));
+        $this->error = Core::make('helper/validation/error');
+        $this->set('valt', Core::make('helper/validation/token'));
         if (Config::get('concrete.user.registration.email_registration')) {
             $this->set('uNameLabel', t('Email Address'));
         } else {
             $this->set('uNameLabel', t('Username'));
         }
 
-        $txt = Loader::helper('text');
+        $txt = Core::make('helper/text');
         if (strlen(
             $_GET['uName'])
         ) { // pre-populate the username if supplied, if its an email address with special characters the email needs to be urlencoded first,
@@ -231,11 +231,11 @@ class Login extends PageController
     public function chooseRedirect()
     {
         if (!$this->error) {
-            $this->error = Loader::helper('validation/error');
+            $this->error = Core::make('helper/validation/error');
         }
 
-        $nh = Loader::helper('validation/numbers');
-        $navigation = Loader::helper('navigation');
+        $nh = Core::make('helper/validation/numbers');
+        $navigation = Core::make('helper/navigation');
         $rUrl = false;
 
         $u = new User(); // added for the required registration attribute change above. We recalc the user and make sure they're still logged in
@@ -375,7 +375,7 @@ class Login extends PageController
 
     public function logout($token = false)
     {
-        if (Loader::helper('validation/token')->validate('logout', $token)) {
+        if (Core::make('helper/validation/token')->validate('logout', $token)) {
             $u = new User();
             $u->logout();
             $this->redirect('/');
@@ -384,7 +384,7 @@ class Login extends PageController
 
     public function forward($cID = 0)
     {
-        $nh = Loader::helper('validation/numbers');
+        $nh = Core::make('helper/validation/numbers');
         if ($nh->integer($cID) && intval($cID) > 0) {
             $this->set('rcID', intval($cID));
             Session::set('rcID', intval($cID));
