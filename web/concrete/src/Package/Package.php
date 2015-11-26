@@ -279,7 +279,7 @@ class Package extends Object
     {
         // this is the pre-test routine that packages run through before they are installed. Any errors that come here
         // are to be returned in the form of an array so we can show the user. If it's all good we return true
-        $db = Database::getActiveConnection();
+        $db = Database::connection();
         $errors = array();
 
         $pkg = static::getClass($package);
@@ -295,7 +295,7 @@ class Package extends Object
 
         // Step 2 - check to see if the user has already installed a package w/this handle
         if ($testForAlreadyInstalled) {
-            $cnt = $db->getOne("SELECT count(*) FROM Packages WHERE pkgHandle = ?", array($package));
+            $cnt = $db->fetchColumn("SELECT count(*) FROM Packages WHERE pkgHandle = ?", array($package));
             if ($cnt > 0) {
                 $errors[] = self::E_PACKAGE_INSTALLED;
             }
@@ -365,8 +365,8 @@ class Package extends Object
      */
     public static function getByHandle($pkgHandle)
     {
-        $db = Database::getActiveConnection();
-        $row = $db->GetRow("SELECT * FROM Packages WHERE pkgHandle = ?", array($pkgHandle));
+        $db = Database::connection();
+        $row = $db->fetchAssoc("SELECT * FROM Packages WHERE pkgHandle = ?", array($pkgHandle));
         if ($row) {
             $pkg = static::getClass($row['pkgHandle']);
             if ($pkg instanceof self) {
@@ -389,12 +389,13 @@ class Package extends Object
     {
         $packages = self::getAvailablePackages(false);
         $upgradeables = array();
-        $db = Database::getActiveConnection();
+        $db = Database::connection();
         foreach ($packages as $p) {
-            $row = $db->GetRow(
+            $row = $db->fetchAssoc(
                 "SELECT pkgID, pkgVersion FROM Packages WHERE pkgHandle = ? AND pkgIsInstalled = 1",
-                array($p->getPackageHandle()));
-            if ($row['pkgID'] > 0) {
+                array($p->getPackageHandle())
+            );
+            if ($row) {
                 if (version_compare($p->getPackageVersion(), $row['pkgVersion'], '>')) {
                     $p->pkgCurrentVersion = $row['pkgVersion'];
                     $upgradeables[] = $p;
@@ -454,7 +455,7 @@ class Package extends Object
      */
     public static function getInstalledHandles()
     {
-        $db = Database::getActiveConnection();
+        $db = Database::connection();
 
         return $db->GetCol("SELECT pkgHandle FROM Packages");
     }
@@ -468,7 +469,6 @@ class Package extends Object
     {
         $packages = self::getInstalledList();
         $upgradeables = array();
-        $db = Database::getActiveConnection();
         foreach ($packages as $p) {
             if (version_compare($p->getPackageVersion(), $p->getPackageVersionUpdateAvailable(), '<')) {
                 $upgradeables[] = $p;
@@ -485,7 +485,7 @@ class Package extends Object
      */
     public static function getInstalledList()
     {
-        $db = Database::getActiveConnection();
+        $db = Database::connection();
         $r = $db->query("SELECT * FROM Packages WHERE pkgIsInstalled = 1 ORDER BY pkgDateInstalled ASC");
         $pkgArray = array();
         while ($row = $r->fetchRow()) {
@@ -681,7 +681,7 @@ class Package extends Object
      */
     public function uninstall()
     {
-        $db = Database::getActiveConnection();
+        $db = Database::connection();
 
         $items = $this->getPackageItems();
 
@@ -759,7 +759,7 @@ class Package extends Object
 
         $this->destroyProxyClasses();
 
-        $db->Execute("DELETE FROM Packages WHERE pkgID = ?", array($this->pkgID));
+        $db->executeQuery("DELETE FROM Packages WHERE pkgID = ?", array($this->pkgID));
         Localization::clearCache();
     }
 
@@ -1061,7 +1061,7 @@ class Package extends Object
     public function install()
     {
         PackageList::refreshCache();
-        $db = Database::getActiveConnection();
+        $db = Database::connection();
         $dh = Core::make('helper/date');
         $v = array(
             $this->getPackageName(),
@@ -1073,7 +1073,8 @@ class Package extends Object
         );
         $db->query(
             "INSERT INTO Packages (pkgName, pkgDescription, pkgVersion, pkgHandle, pkgIsInstalled, pkgDateInstalled) VALUES (?, ?, ?, ?, ?, ?)",
-            $v);
+            $v
+        );
 
         $pkg = self::getByID($db->lastInsertId());
         ClassLoader::getInstance()->registerPackage($pkg);
@@ -1125,8 +1126,8 @@ class Package extends Object
      */
     public static function getByID($pkgID)
     {
-        $db = Database::getActiveConnection();
-        $row = $db->GetRow("SELECT * FROM Packages WHERE pkgID = ?", array($pkgID));
+        $db = Database::connection();
+        $row = $db->fetchAssoc("SELECT * FROM Packages WHERE pkgID = ?", array($pkgID));
         if ($row) {
             $pkg = static::getClass($row['pkgHandle']);
             if ($pkg instanceof self) {
@@ -1175,7 +1176,7 @@ class Package extends Object
             return false;
         }
 
-        $db = Database::get();
+        $db = Database::connection();
         $db->beginTransaction();
 
         $parser = Schema::getSchemaParser(simplexml_load_file($xmlFile));
@@ -1206,7 +1207,7 @@ class Package extends Object
      */
     public function updateAvailableVersionNumber($vNum)
     {
-        $db = Database::getActiveConnection();
+        $db = Database::connection();
         $v = array($vNum, $this->getPackageID());
         $db->query("update Packages set pkgAvailableVersion = ? where pkgID = ?", $v);
     }
@@ -1226,7 +1227,7 @@ class Package extends Object
      */
     public function upgradeCoreData()
     {
-        $db = Database::getActiveConnection();
+        $db = Database::connection();
         $p1 = static::getClass($this->getPackageHandle());
         if ($p1 instanceof self) {
             $v = array(
