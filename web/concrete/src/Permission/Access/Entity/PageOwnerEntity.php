@@ -14,6 +14,7 @@ class PageOwnerEntity extends Entity
 {
     public function getAccessEntityUsers(PermissionAccess $pae)
     {
+        $c = null;
         if ($pae instanceof PagePermissionAccess) {
             $c = $pae->getPermissionObject();
         } else {
