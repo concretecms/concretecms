@@ -2,6 +2,8 @@
 namespace Concrete\Core\User;
 
 use Loader;
+use Core;
+use Database;
 
 class ValidationHash
 {
@@ -14,7 +16,7 @@ class ValidationHash
      */
     protected static function generate($len = 64)
     {
-        return Loader::helper('validation/identifier')->getString($len);
+        return Core::make('helper/validation/identifier')->getString($len);
     }
 
     /**
@@ -36,8 +38,8 @@ class ValidationHash
             }
             break;
         } while (false);
-        $db = loader::db();
-        $db->query('DELETE FROM UserValidationHashes WHERE type = ? AND uDateGenerated <= ?', array($type, $lifetime));
+        $db = Database::connection();
+        $db->executeQuery('DELETE FROM UserValidationHashes WHERE type = ? AND uDateGenerated <= ?', array($type, $lifetime));
     }
 
     /**
@@ -54,11 +56,11 @@ class ValidationHash
     {
         self::removeExpired($type);
         $hash = self::generate($hashLength);
-        $db = Loader::db();
+        $db = Database::connection();
         if ($singeHashAllowed) {
-            $db->Execute("DELETE FROM UserValidationHashes WHERE uID = ? AND type = ?", array($uID, $type));
+            $db->executeQuery("DELETE FROM UserValidationHashes WHERE uID = ? AND type = ?", array($uID, $type));
         }
-        $db->Execute("insert into UserValidationHashes (uID, uHash, uDateGenerated, type) values (?, ?, ?, ?)", array($uID, $hash, time(), intval($type)));
+        $db->executeQuery("insert into UserValidationHashes (uID, uHash, uDateGenerated, type) values (?, ?, ?, ?)", array($uID, $hash, time(), intval($type)));
 
         return $hash;
     }
@@ -74,8 +76,8 @@ class ValidationHash
     public static function getUserID($hash, $type)
     {
         self::removeExpired($type);
-        $db = Loader::db();
-        $uID = $db->getOne("SELECT uID FROM UserValidationHashes WHERE uHash = ? AND type = ?", array($hash, $type));
+        $db = Database::connection();
+        $uID = $db->fetchColumn("SELECT uID FROM UserValidationHashes WHERE uHash = ? AND type = ?", array($hash, $type));
         if (is_numeric($uID) && $uID > 0) {
             return $uID;
         } else {
