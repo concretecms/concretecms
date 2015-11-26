@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Area;
 
 use Loader;
@@ -319,7 +318,7 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
         if (is_array($arHandles) && count($arHandles) > 0) {
             $v = array($c->getCollectionID(), $c->getVersionID());
             $q = 'select count(bID) from CollectionVersionBlocks where cID = ? and cvID = ? and arHandle in (';
-            for ($i = 0; $i < count($arHandles); $i++) {
+            for ($i = 0; $i < count($arHandles); ++$i) {
                 $arHandle = $arHandles[$i];
                 $v[] = $arHandle;
                 $q .= '?';
@@ -461,7 +460,7 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
                             $arParentHandle = self::getAreaHandleFromID($arRow['arParentID']);
                             $obj = new SubArea($arHandle, $arParentHandle, $arRow['arParentID']);
                         } else {
-                            $obj = new Area($arHandle);
+                            $obj = new self($arHandle);
                         }
                     }
                     $obj->setPropertiesFromArray($arRow);
@@ -579,7 +578,7 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
             $r = $db->Execute('select arHandle from Areas where cID = ?', array($c->getCollectionID()));
             $areas = array();
             while ($row = $r->FetchRow()) {
-                $area = Area::get($c, $row['arHandle']);
+                $area = self::get($c, $row['arHandle']);
                 if (is_object($area)) {
                     $areas[] = $area;
                 }
@@ -767,9 +766,9 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
      */
     public static function getOrCreate($c, $arHandle)
     {
-        $area = Area::get($c, $arHandle);
+        $area = self::get($c, $arHandle);
         if (!is_object($area)) {
-            $a = new Area($arHandle);
+            $a = new self($arHandle);
             $area = $a->create($c, $arHandle);
         }
 
