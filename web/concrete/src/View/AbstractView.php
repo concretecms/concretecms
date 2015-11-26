@@ -180,7 +180,7 @@ abstract class AbstractView
      *
      * @return string $url
      */
-    public function url($action, $task = null)
+    public static function url($action, $task = null)
     {
         $args = func_get_args();
 
