@@ -1,8 +1,8 @@
 <?php
 namespace Concrete\Core\Page\Search\ColumnSet;
 
-use \Concrete\Core\Search\Column\Column;
-use \Concrete\Core\Search\Column\Set;
+use Concrete\Core\Search\Column\Column;
+use Concrete\Core\Search\Column\Set;
 use UserInfo;
 use Core;
 
