@@ -1,34 +1,21 @@
 <?php
 use Concrete\Core\Express\ObjectBuilder;
 
+require_once __DIR__ . "/ObjectBuilderTestTrait.php";
+
 class ObjectBuilderTest extends PHPUnit_Framework_TestCase
 {
 
-    protected function getBuilder()
-    {
-        /**
-         * @var $builder \Concrete\Core\Express\ObjectBuilder;
-         */
-        $builder = Core::make('express.builder');
-        $builder->createObject('Student')
-            ->addAttribute('text', 'First Name')
-            ->addAttribute('text', 'Last Name');
-        $builder->createAttribute('text_area', 'Bio')
-            ->setMode('rich_text')
-            ->setIsIndexed(true)
-            ->build();
-        $builder->addAttribute('text', 'Password');
-        return $builder;
+    use \ObjectBuilderTestTrait;
 
-    }
     public function testCreateDataObject()
     {
-        $builder = $this->getBuilder();
+        $builder = $this->getObjectBuilder();
 
         /**
          * @var $object \Concrete\Core\Entity\Express\Entity
          */
-        $object = $builder->getObject();
+        $object = $builder->buildObject();
         $this->assertInstanceOf('\Concrete\Core\Entity\Express\Entity', $object);
         $this->assertEquals(4, count($object->getAttributes()));
         $attributes = $object->getAttributes();
