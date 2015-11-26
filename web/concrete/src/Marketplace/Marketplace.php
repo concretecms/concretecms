@@ -271,7 +271,7 @@ class Marketplace
         return $token;
     }
 
-    public function getSiteToken()
+    public static function getSiteToken()
     {
         $dbConfig = Core::make('config/database');
         $token = $dbConfig->get('concrete.marketplace.token');
