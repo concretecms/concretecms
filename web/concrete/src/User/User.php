@@ -2,7 +2,6 @@
 namespace Concrete\Core\User;
 
 use Concrete\Core\Foundation\Object;
-use Loader;
 use Config;
 use Database;
 use UserInfo as CoreUserInfo;
@@ -88,7 +87,7 @@ class User extends Object
         \Concrete\Core\Session\Session::testSessionFixation($session);
 
         if ($session->get('uID') > 0) {
-            $db = Loader::db();
+            $db = Database::connection();
             $row = $db->GetRow("select uID, uIsActive, uLastPasswordChange from Users where uID = ? and uName = ?", array($session->get('uID'), $session->get('uName')));
             $checkUID = (isset($row['uID'])) ? ($row['uID']) : (false);
 
@@ -105,7 +104,7 @@ class User extends Object
 
                 $session->set('uOnlineCheck', time());
                 if (($session->get('uOnlineCheck') - $session->get('uLastOnline') > (ONLINE_NOW_TIMEOUT / 2))) {
-                    $db = Loader::db();
+                    $db = Database::connection();
                     $db->query("update Users set uLastOnline = ? where uID = ?", array($session->get('uOnlineCheck'), $this->uID));
                     $session->set('uLastOnline', $session->get('uOnlineCheck'));
                 }
@@ -143,7 +142,7 @@ class User extends Object
             } else {
                 $q = "select uID, uName, uIsActive, uIsValidated, uTimezone, uDefaultLanguage, uPassword, uLastPasswordChange from Users where uName = ?";
             }
-            $db = Loader::db();
+            $db = Database::connection();
             $r = $db->query($q, $v);
             if ($r) {
                 $row = $r->fetchRow();
@@ -231,7 +230,7 @@ class User extends Object
 
     public function recordLogin()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $uLastLogin = $db->getOne("select uLastLogin from Users where uID = ?", array($this->uID));
 
         /** @var \Concrete\Core\Permission\IPService $iph */
@@ -242,7 +241,7 @@ class User extends Object
 
     public function recordView($c)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $uID = ($this->uID > 0) ? $this->uID : 0;
         $cID = $c->getCollectionID();
         $v = array($cID, $uID);
@@ -320,13 +319,13 @@ class User extends Object
 
     public function setLastAuthType(AuthenticationType $at)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $db->Execute('UPDATE Users SET uLastAuthTypeID=? WHERE uID=?', array($at->getAuthenticationTypeID(), $this->getUserID()));
     }
 
     public function getLastAuthType()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $id = $db->getOne('SELECT uLastAuthTypeID FROM Users WHERE uID=?', array($this->getUserID()));
 
         return intval($id);
@@ -400,7 +399,7 @@ class User extends Object
      */
     public function setUserDefaultLanguage($lang)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $this->uDefaultLanguage = $lang;
         Session::set('uDefaultLanguage', $lang);
         $db->Execute('update Users set uDefaultLanguage = ? where uID = ?', array($lang, $this->getUserID()));
@@ -471,7 +470,7 @@ class User extends Object
         if ((Session::has('uGroups')) && (!$disableLogin) && (!$req->hasCustomRequestUser())) {
             $ug = Session::get('uGroups');
         } else {
-            $db = Loader::db();
+            $db = Database::connection();
             if ($this->uID) {
                 $ug[REGISTERED_GROUP_ID] = REGISTERED_GROUP_ID;
 
@@ -499,12 +498,12 @@ class User extends Object
     public function enterGroup($g)
     {
         // takes a group object, and, if the user is not already in the group, it puts them into it
-        $dt = Loader::helper('date');
+        $dt = Core::make('helper/date');
 
         if (is_object($g)) {
             if (!$this->inGroup($g)) {
                 $gID = $g->getGroupID();
-                $db = Loader::db();
+                $db = Database::connection();
                 $db->Replace('UserGroups', array(
                     'uID' => $this->getUserID(),
                     'gID' => $g->getGroupID(),
@@ -541,7 +540,7 @@ class User extends Object
         // takes a group object, and, if the user is in the group, they exit the group
         if (is_object($g)) {
             $gID = $g->getGroupID();
-            $db = Loader::db();
+            $db = Database::connection();
 
             $ue = new \Concrete\Core\User\Event\UserGroup($this);
             $ue->setGroupObject($g);
@@ -554,7 +553,7 @@ class User extends Object
 
     public function inGroup($g)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $v = array($this->uID, $g->getGroupID());
         $cnt = $db->GetOne("select gID from UserGroups where uID = ? and gID = ?", $v);
 
@@ -578,7 +577,7 @@ class User extends Object
             return false;
         }
 
-        $db = Loader::db();
+        $db = Database::connection();
         $cID = $c->getCollectionID();
         // first, we check to see if we have a collection in edit mode. If we do, we relinquish it
         $this->unloadCollectionEdit(false);
@@ -590,7 +589,7 @@ class User extends Object
             if (!$row['cIsCheckedOut']) {
                 Session::set('editCID', $cID);
                 $uID = $this->getUserID();
-                $dh = Loader::helper('date');
+                $dh = Core::make('helper/date');
                 $datetime = $dh->getOverridableNow();
                 $q2 = "update Pages set cIsCheckedOut = 1, cCheckedOutUID = '{$uID}', cCheckedOutDatetime = '{$datetime}', cCheckedOutDatetimeLastEdit = '{$datetime}' where cID = '{$cID}'";
                 $r2 = $db->query($q2);
@@ -606,7 +605,7 @@ class User extends Object
     public function unloadCollectionEdit($removeCache = true)
     {
         // first we remove the cached versions of all of these pages
-        $db = Loader::db();
+        $db = Database::connection();
         if ($this->getUserID() > 0) {
             $col = $db->GetCol("select cID from Pages where cCheckedOutUID = " . $this->getUserID());
             foreach ($col as $cID) {
@@ -624,7 +623,7 @@ class User extends Object
     public function config($cfKey)
     {
         if ($this->isRegistered()) {
-            $db = Loader::db();
+            $db = Database::connection();
             $val = $db->GetOne("select cfValue from ConfigStore where uID = ? and cfKey = ?", array($this->getUserID(), $cfKey));
 
             return $val;
@@ -643,17 +642,17 @@ class User extends Object
 
     public function saveConfig($cfKey, $cfValue)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $db->Replace('ConfigStore', array('cfKey' => $cfKey, 'cfValue' => $cfValue, 'uID' => $this->getUserID()), array('cfKey', 'uID'), true);
     }
 
     public function refreshCollectionEdit(&$c)
     {
         if ($this->isLoggedIn() && $c->getCollectionCheckedOutUserID() == $this->getUserID()) {
-            $db = Loader::db();
+            $db = Database::connection();
             $cID = $c->getCollectionID();
 
-            $dh = Loader::helper('date');
+            $dh = Core::make('helper/date');
             $datetime = $dh->getOverridableNow();
 
             $q = "update Pages set cCheckedOutDatetimeLastEdit = '{$datetime}' where cID = '{$cID}'";
@@ -666,7 +665,7 @@ class User extends Object
     public function forceCollectionCheckInAll()
     {
         // This function forces checkin to take place
-        $db = Loader::db();
+        $db = Database::connection();
         $q = "update Pages set cIsCheckedOut = 0, cCheckedOutUID = null, cCheckedOutDatetime = null, cCheckedOutDatetimeLastEdit = null";
         $r = $db->query($q);
 
@@ -709,7 +708,7 @@ class User extends Object
         $session->set('uLastPasswordChange', $this->getLastPasswordChange());
 
         if ($cache_interface) {
-            Loader::helper('concrete/ui')->cacheInterfaceItems();
+            Core::make('helper/concrete/ui')->cacheInterfaceItems();
         }
     }
 
