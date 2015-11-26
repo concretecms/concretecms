@@ -132,7 +132,8 @@ class User extends Object
 
             $username = $args[0];
             $password = $args[1];
-            if (!$args[2]) {
+            $disableLogin = isset($args[2]) ? (bool) $args[2] : false;
+            if (!$disableLogin) {
                 Session::remove('uGroups');
                 Session::remove('accessEntities');
             }
@@ -157,14 +158,14 @@ class User extends Object
                     $this->uTimezone = $row['uTimezone'];
                     $this->uDefaultLanguage = $row['uDefaultLanguage'];
                     $this->uLastPasswordChange = $row['uLastPasswordChange'];
-                    $this->uGroups = $this->_getUserGroups($args[2]);
+                    $this->uGroups = $this->_getUserGroups($disableLogin);
                     if ($row['uID'] == USER_SUPER_ID) {
                         $this->superUser = true;
                     } else {
                         $this->superUser = false;
                     }
                     $this->recordLogin();
-                    if (!$args[2]) {
+                    if (!$disableLogin) {
                         $this->persist();
                     }
                 } elseif ($row['uID'] && !$row['uIsActive']) {
@@ -220,7 +221,7 @@ class User extends Object
                 $this->uTimezone = null;
             }
             $this->uGroups = $this->_getUserGroups();
-            if (!isset($args[2]) && !$req->hasCustomRequestUser()) {
+            if (!$disableLogin && !$req->hasCustomRequestUser()) {
                 Session::set('uGroups', $this->uGroups);
             }
         }
