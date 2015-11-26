@@ -1,8 +1,8 @@
 <?php
 namespace Concrete\Core\User\Search\ColumnSet;
 
-use \Concrete\Core\Search\Column\Column;
-use \Concrete\Core\Search\Column\Set;
+use Concrete\Core\Search\Column\Column;
+use Concrete\Core\Search\Column\Set;
 use Core;
 
 class DefaultSet extends Set
