@@ -5,15 +5,13 @@ use Concrete\Core\Page\Page;
 use Loader;
 use PermissionAccess;
 use Config;
-use URL;
 use UserInfo;
-use \Concrete\Core\Permission\Access\PageAccess as PagePermissionAccess;
-use \Concrete\Core\Permission\Access\AreaAccess as AreaPermissionAccess;
-use \Concrete\Core\Permission\Access\BlockAccess as BlockPermissionAccess;
+use Concrete\Core\Permission\Access\PageAccess as PagePermissionAccess;
+use Concrete\Core\Permission\Access\AreaAccess as AreaPermissionAccess;
+use Concrete\Core\Permission\Access\BlockAccess as BlockPermissionAccess;
 
 class PageOwnerEntity extends Entity
 {
-
     public function getAccessEntityUsers(PermissionAccess $pae)
     {
         if ($pae instanceof PagePermissionAccess) {
@@ -31,6 +29,7 @@ class PageOwnerEntity extends Entity
         if (is_object($c) && ($c instanceof Page)) {
             $ui = UserInfo::getByID($c->getCollectionUserID());
             $users = array($ui);
+
             return $users;
         }
     }
@@ -43,6 +42,7 @@ class PageOwnerEntity extends Entity
         } else {
             if (is_object($users[0])) {
                 $u = new \User();
+
                 return $users[0]->getUserID() == $u->getUserID();
             }
         }
@@ -52,6 +52,7 @@ class PageOwnerEntity extends Entity
     {
         $html = '<a href="javascript:void(0)" onclick="ccm_choosePermissionAccessEntityPageOwner()">' . tc('PermissionAccessEntityTypeName',
                 'Page Owner') . '</a>';
+
         return $html;
     }
 
@@ -66,6 +67,7 @@ class PageOwnerEntity extends Entity
                 $entities[] = $pae;
             }
         }
+
         return $entities;
     }
 
@@ -80,6 +82,7 @@ class PageOwnerEntity extends Entity
             $peID = $db->Insert_ID();
             Config::save('concrete.misc.access_entity_updated', time());
         }
+
         return \Concrete\Core\Permission\Access\Entity\Entity::getByID($peID);
     }
 
@@ -87,5 +90,4 @@ class PageOwnerEntity extends Entity
     {
         $this->label = t('Page Owner');
     }
-
 }
