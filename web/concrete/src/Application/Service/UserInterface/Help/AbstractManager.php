@@ -3,12 +3,11 @@ namespace Concrete\Core\Application\Service\UserInterface\Help;
 
 class AbstractManager implements ManagerInterface, RegistryInterface
 {
-
     protected $messages;
 
     public function registerMessages($messages)
     {
-        foreach($messages as $identifier => $message) {
+        foreach ($messages as $identifier => $message) {
             $this->registerMessageString($identifier, $message);
         }
     }
@@ -40,6 +39,4 @@ class AbstractManager implements ManagerInterface, RegistryInterface
     {
         return new Formatter();
     }
-
-
 }
