@@ -566,7 +566,7 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
      *
      * @return Area[]
      */
-    public function getListOnPage(Page $c)
+    public static function getListOnPage(Page $c)
     {
         $identifier = sprintf('/page/area/list/%s', $c->getCollectionID());
         $cache = \Core::make('cache/request');
