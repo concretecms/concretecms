@@ -1,6 +1,4 @@
-<?php defined('C5_EXECUTE') or die('Access denied.');
-$form = Core::make('helper/form');
-?>
+<?php defined('C5_EXECUTE') or die('Access denied.'); ?>
 
 <h4><?= t('Reset Password') ?></h4>
 <div class="help-block"><?= t('Enter your new password below.') ?></div>
