@@ -87,7 +87,7 @@ class Token
     public function validate($action = '', $token = null)
     {
         if ($token == null) {
-            $token = $_REQUEST['ccm_token'];
+            $token = isset($_REQUEST['ccm_token']) ? $_REQUEST['ccm_token'] : '';
         }
         $parts = explode(':', $token);
         if ($parts[0]) {
