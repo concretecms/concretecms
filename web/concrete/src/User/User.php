@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\User;
 
 use Concrete\Core\Foundation\Object;
@@ -17,8 +16,7 @@ use Hautelook\Phpass\PasswordHash;
 use Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
 use Core;
 use Group;
-use \Concrete\Core\User\Point\Action\Action as UserPointAction;
-use View;
+use Concrete\Core\User\Point\Action\Action as UserPointAction;
 
 class User extends Object
 {
@@ -49,7 +47,7 @@ class User extends Object
         $row = $r ? $r->FetchRow() : null;
         $nu = null;
         if ($row) {
-            $nu = new User();
+            $nu = new self();
             $nu->setPropertiesFromArray($row);
             $nu->uGroups = $nu->_getUserGroups(true);
             $nu->superUser = ($nu->getUserID() == USER_SUPER_ID);
@@ -69,12 +67,13 @@ class User extends Object
      */
     public function loginByUserID($uID)
     {
-        return User::getByUserID($uID, true);
+        return self::getByUserID($uID, true);
     }
 
     public static function isLoggedIn()
     {
         $session = Core::make('session');
+
         return $session->has('uID') && $session->get('uID') > 0;
     }
 
@@ -83,7 +82,7 @@ class User extends Object
         $session = Core::make('session');
         $aeu = Config::get('concrete.misc.access_entity_updated');
         if ($aeu && $aeu > $session->get('accessEntitiesUpdated')) {
-            User::refreshUserGroups();
+            self::refreshUserGroups();
         }
 
         \Concrete\Core\Session\Session::testSessionFixation($session);
@@ -147,7 +146,7 @@ class User extends Object
             $r = $db->query($q, $v);
             if ($r) {
                 $row = $r->fetchRow();
-                $pw_is_valid_legacy = (Config::get('concrete.user.password.legacy_salt') && User::legacyEncryptPassword($password) == $row['uPassword']);
+                $pw_is_valid_legacy = (Config::get('concrete.user.password.legacy_salt') && self::legacyEncryptPassword($password) == $row['uPassword']);
                 $pw_is_valid = $pw_is_valid_legacy || $this->getUserPasswordHasher()->checkPassword($password, $row['uPassword']);
                 if ($row['uID'] && $row['uIsValidated'] === '0' && Config::get('concrete.user.registration.validate_email')) {
                     $this->loadError(USER_NON_VALIDATED);
@@ -372,12 +371,12 @@ class User extends Object
         if ($cookie = array_get($_COOKIE, 'ccmAuthUserHash')) {
             list($_uID, $authType, $uHash) = explode(':', $cookie);
             $at = AuthenticationType::getByHandle($authType);
-            $u = User::getByUserID($_uID);
+            $u = self::getByUserID($_uID);
             if ((!is_object($u)) || $u->isError()) {
                 return;
             }
             if ($at->controller->verifyHash($u, $uHash)) {
-                User::loginByUserID($_uID);
+                self::loginByUserID($_uID);
             }
         }
     }
