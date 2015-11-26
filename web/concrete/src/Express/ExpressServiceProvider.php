@@ -9,8 +9,11 @@ class ExpressServiceProvider extends ServiceProvider
     public function register()
     {
         $app = $this->app;
-        $this->app->bindShared('express.builder', function() use ($app) {
+        $this->app->bindShared('express.builder.object', function() use ($app) {
             return $app->make('Concrete\Core\Express\ObjectBuilder');
+        });
+        $this->app->bindShared('express.builder.association', function() use ($app) {
+            return $app->make('Concrete\Core\Express\ObjectAssociationBuilder');
         });
         $this->app->bindShared('express.writer', function() use ($app) {
             $writer = $app->make('Concrete\Core\Express\EntityWriter');

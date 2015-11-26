@@ -56,12 +56,19 @@ class ObjectBuilder
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
     public function getObject()
     {
         return $this->entity;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function buildObject()
+    {
+        $entity = $this->getObject();
+        $this->entity = null;
+        return $entity;
     }
 
 
