@@ -6,7 +6,7 @@ use URL;
 
 class GroupSearchColumnSet extends \Concrete\Core\Search\Column\Set
 {
-    public function getGroupName($g)
+    public static function getGroupName($g)
     {
         return '<a data-group-name="' . $g->getGroupDisplayName() . '" href="' . URL::to('/dashboard/users/groups', 'edit', $g->getGroupID()) . '" data-group-id="' . $g->getGroupID() . '" href="#">' . $g->getGroupDisplayName() . '</a>';
     }

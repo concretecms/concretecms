@@ -8,7 +8,7 @@ class ColumnSet extends DatabaseItemListColumnSet
 {
     protected $attributeClass = 'FileAttributeKey';
 
-    public function getCurrent()
+    public static function getCurrent()
     {
         $u = new User();
         $fldc = $u->config('FILE_LIST_DEFAULT_COLUMNS');
