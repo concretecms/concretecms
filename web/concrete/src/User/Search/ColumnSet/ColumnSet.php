@@ -28,7 +28,7 @@ class ColumnSet extends Set
         return $columns;
     }
 
-    public function getCurrent()
+    public static function getCurrent()
     {
         $u = new User();
         $fldc = $u->config('USER_LIST_DEFAULT_COLUMNS');
