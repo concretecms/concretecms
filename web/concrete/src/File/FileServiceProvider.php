@@ -12,6 +12,7 @@ class FileServiceProvider extends ServiceProvider
             'helper/concrete/file' => '\Concrete\Core\File\Service\Application',
             'helper/image' => '\Concrete\Core\File\Image\BasicThumbnailer',
             'helper/mime' => '\Concrete\Core\File\Service\Mime',
+            'helper/file/htaccess' => '\Concrete\Core\File\Service\HTAccess',
         );
 
         foreach ($singletons as $key => $value) {

@@ -3,6 +3,7 @@ namespace Concrete\Core\Config\Repository;
 
 use Concrete\Core\Config\LoaderInterface;
 use Concrete\Core\Config\SaverInterface;
+use Core;
 
 class Repository extends \Illuminate\Config\Repository
 {
@@ -56,6 +57,11 @@ class Repository extends \Illuminate\Config\Repository
         if ($this->saver->save($item, $value, $this->environment, $group, $namespace)) {
             $this->load($group, $namespace, $this->getCollection($group, $namespace));
 
+            switch ($key) {
+                case 'concrete.seo.url_rewriting':
+                    Core::make('helper/file/htaccess')->setCurrentRewriteRules((bool) $value);
+                    break;
+            }
             return true;
         }
         return false;

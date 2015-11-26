@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Console\Command;
 
 use Concrete\Core\Config\DirectFileSaver;
@@ -12,6 +11,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Config;
+use Core;
 use Exception;
 
 class ConfigCommand extends Command
@@ -69,8 +69,23 @@ EOT
                     if (!isset($value)) {
                         throw new Exception('Missing new configuration value');
                     }
+                    $value = $this->unserialize($value);
 
-                    $this->repository->save($item, $this->unserialize($value));
+                    $this->repository->save($item, $value);
+
+                    switch ($item) {
+                        case 'concrete.seo.url_rewriting':
+                            $hh = Core::make('helper/file/htaccess');
+                            /** @var \Concrete\Core\File\Service\HTAccess $hh */
+                            if ($hh->hasRewriteRules() === (bool) $value) {
+                                $output->writeln('.htaccess has been correctly updated');
+                            } else {
+                                $output->writeln('Unable to automatically update .htaccess');
+                                $output->writeln($value ? 'Add these lines to the .htaccess file:' : 'Remove these lines from .htaccess file:');
+                                $output->writeln($hh->getRewriteRules(false));
+                            }
+                            break;
+                    }
                     break;
 
                 default:
