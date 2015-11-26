@@ -198,8 +198,8 @@ class Controller extends AuthenticationTypeController
                     t(
                         'Key Expired. Please visit the forgot password page again to have a new key generated.'));
             } else {
-                if (strlen($_POST['uPassword'])) {
-                    \Core::make('validator/password')->isValid($_POST['uPassword'], $e);
+                if (isset($_POST['uPassword']) && strlen($_POST['uPassword'])) {
+                    Core::make('validator/password')->isValid($_POST['uPassword'], $e);
 
                     if (strlen($_POST['uPassword']) && $_POST['uPasswordConfirm'] != $_POST['uPassword']) {
                         $e->add(t('The two passwords provided do not match.'));
@@ -257,7 +257,7 @@ class Controller extends AuthenticationTypeController
         $uPassword = $post['uPassword'];
 
         /** @var \Concrete\Core\Permission\IPService $ip_service */
-        $ip_service = \Core::make('ip');
+        $ip_service = Core::make('ip');
         if ($ip_service->isBanned()) {
             throw new \Exception($ip_service->getErrorMessage());
         }
