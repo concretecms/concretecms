@@ -31,10 +31,6 @@ trait ExpressEntityManagerTestCaseTrait
             ->method('findAll')
             ->will($this->returnValue(array($student, $teacher)));
 
-        $entityRepository->expects($this->any())
-            ->method('findOneBy')
-            ->will($this->returnValue(array($student, $teacher)));
-
         // Last, mock the EntityManager to return the mock of the repository
         $entityManager = $this
             ->getMockBuilder('\Doctrine\ORM\EntityManager')

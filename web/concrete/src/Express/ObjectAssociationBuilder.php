@@ -2,6 +2,8 @@
 namespace Concrete\Core\Express;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Entity\Express\Association;
+use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\ManyToManyAssociation;
 use Concrete\Core\Entity\Express\ManyToOneAssociation;
 use Concrete\Core\Entity\Express\OneToManyAssociation;
@@ -12,70 +14,43 @@ class ObjectAssociationBuilder
 {
 
     protected $application;
-    protected $entityManager;
-    protected $subjectEntity;
 
-    public function __construct(EntityManagerInterface $entityManager, Application $application)
+    public function __construct(Application $application)
     {
         $this->application = $application;
-        $this->entityManager = $entityManager;
-    }
-
-    /**
-     * @return EntityManagerInterface
-     */
-    public function getEntityManager()
-    {
-        return $this->entityManager;
-    }
-
-    /**
-     * @param EntityManagerInterface $entityManager
-     */
-    public function setEntityManager($entityManager)
-    {
-        $this->entityManager = $entityManager;
     }
 
 
-    protected function getSubjectEntity($entityName)
+    protected function addAssociation(Association $association, Entity $subject, Entity $target, $property = null)
     {
-        if (!isset($this->subjectEntity)) {
-            $repository = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity');
-            $this->subjectEntity = $repository->findOneByName($entityName);
-        }
-        return $this->subjectEntity;
+        $association->setSourceEntity($subject);
+        $association->setTargetEntity($target);
+        $association->setPropertyName($property);
+        $subject->getAssociations()->add($association);
     }
 
-    protected function addRelation($relation, $subjectEntity, $targetEntity, $property = null)
+    public function addManyToOne(Entity $subject, Entity $target, $property = null)
     {
-        $subjectEntity = $this->getSubjectEntity($subjectEntity);
-        var_dump_safe($subjectEntity);
-        exit;
+        $this->addAssociation(new ManyToOneAssociation(),
+            $subject, $target, $property);
     }
 
-    public function addManyToOne($subjectEntity, $targetEntity, $property = null)
+    public function addOneToMany(Entity $subject, Entity $target, $property = null)
     {
-        $this->addRelation(new ManyToOneAssociation(),
-            $subjectEntity, $targetEntity, $property);
+        $this->addAssociation(new OneToManyAssociation(),
+            $subject, $target, $property);
     }
 
-    public function addOneToMany($subjectEntity, $targetEntity, $property = null)
+    public function addManyToMany(Entity $subject, Entity $target, $property = null)
     {
-        $this->addRelation(new OneToManyAssociation(),
-            $subjectEntity, $targetEntity, $property);
+        $this->addAssociation(new ManyToManyAssociation(),
+            $subject, $target, $property);
     }
 
-    public function addManyToMany($subjectEntity, $targetEntity, $property = null)
+    public function addOneToOne(Entity $subject, Entity $target, $property = null)
     {
-        $this->addRelation(new ManyToManyAssociation(),
-            $subjectEntity, $targetEntity, $property);
-    }
-
-    public function addOneToOne($subjectEntity, $targetEntity, $property = null)
-    {
-        $this->addRelation(new OneToOneAssociation(),
-            $subjectEntity, $targetEntity, $property);
+        $this->addAssociation(new OneToOneAssociation(),
+            $subject, $target, $property);
     }
 
 
