@@ -24,12 +24,18 @@ abstract class Association
     /**
      * @ManyToOne(targetEntity="Entity")
      **/
-    protected $entity;
+    protected $source_entity;
+
+    /**
+     * @OneToOne(targetEntity="Entity")
+     **/
+    protected $target_entity;
+
 
     /**
      * @Column(type="string")
      */
-    protected $name;
+    protected $property_name;
 
     /**
      * @return mixed
@@ -50,18 +56,61 @@ abstract class Association
     /**
      * @return mixed
      */
-    public function getName()
+    public function getPropertyName()
     {
-        return $this->name;
+        return $this->property_name;
     }
 
     /**
      * @param mixed $name
      */
-    public function setName($name)
+    public function setPropertyName($property_name)
     {
-        $this->name = $name;
+        $this->property_name = $property_name;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getSourceEntity()
+    {
+        return $this->source_entity;
+    }
+
+    /**
+     * @param mixed $source_entity
+     */
+    public function setSourceEntity($source_entity)
+    {
+        $this->source_entity = $source_entity;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTargetEntity()
+    {
+        return $this->target_entity;
+    }
+
+    /**
+     * @param mixed $target_entity
+     */
+    public function setTargetEntity($target_entity)
+    {
+        $this->target_entity = $target_entity;
+    }
+
+    public function getComputedPropertyName()
+    {
+        if (isset($this->property_name) && $this->property_name) {
+            return $this->property_name;
+        } else {
+            return uncamelcase($this->getTargetEntity()->getName());
+        }
+    }
+
+
 
 
 
