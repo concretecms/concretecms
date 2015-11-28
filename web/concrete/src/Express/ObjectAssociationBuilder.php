@@ -21,11 +21,12 @@ class ObjectAssociationBuilder
     }
 
 
-    protected function addAssociation(Association $association, Entity $subject, Entity $target, $property = null)
+    protected function addAssociation(Association $association, Entity $subject, Entity $target, $target_property = null, $inversed_by = null)
     {
         $association->setSourceEntity($subject);
         $association->setTargetEntity($target);
-        $association->setPropertyName($property);
+        $association->setTargetPropertyName($target_property);
+        $association->setInversedByPropertyName($inversed_by);
         $subject->getAssociations()->add($association);
     }
 

@@ -43,13 +43,18 @@ class MetadataPopulator
         $builder = new ClassMetadataBuilder($this->metadata);
         $builder->setTable($table);
         $primaryKey = new PrimaryKeyFieldBuilder();
-        $primaryKey->buildField($builder);
+        $primaryKey->build($builder);
         $attributes = $this->entity->getAttributes();
         foreach($attributes as $attribute) {
             /** @var $key \Concrete\Core\Entity\AttributeKey\AttributeKey */
             $key = $attribute->getAttribute();
             $fieldBuilder = new AttributeKeyMappingFieldBuilder($key);
-            $fieldBuilder->buildField($builder);
+            $fieldBuilder->build($builder);
+        }
+        $associations = $this->entity->getAssociations();
+        foreach($associations as $association) {
+            $associationBuilder = $association->getAssociationBuilder();
+            $associationBuilder->build($builder);
         }
     }
 
