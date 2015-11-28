@@ -2,16 +2,17 @@
 
 namespace Concrete\Core\Entity\Express;
 
+use Concrete\Core\Express\AssociationBuilder\ManyToManyAssociationBuilder;
+
 /**
  * @Entity
  */
 class ManyToManyAssociation extends Association
 {
 
-    public function getAnnotation()
+    public function getAssociationBuilder()
     {
-        return 'ManyToMany';
+        return new ManyToManyAssociationBuilder($this);
     }
-
 
 }

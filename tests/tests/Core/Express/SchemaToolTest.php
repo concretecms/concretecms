@@ -8,18 +8,17 @@ class SchemaToolTest extends PHPUnit_Framework_TestCase
 
     use ExpressEntityManagerTestCaseTrait;
 
+
     public function testSchemaCreate()
     {
         $factory = new \Concrete\Core\Express\BackendEntityManagerFactory(
             Core::make('app'),
             $this->getMockEntityManager()
         );
-        $em = $factory->create(\Database::connection());
-        $tool = new \Doctrine\ORM\Tools\SchemaTool($em);
+        $manager = new \Concrete\Core\Express\SchemaManager($factory);
         $entity = new \Concrete\Core\Entity\Express\Entity();
         $entity->setName('Student');
-        $metadata = $em->getClassMetadata($factory->getClassName($entity));
-        $create = $tool->getCreateSchemaSql(array($metadata));
+        $create = $manager->getCreateSql($entity);
 
         $this->assertTrue(is_array($create));
         $this->assertEquals(1, count($create));
@@ -30,4 +29,17 @@ class SchemaToolTest extends PHPUnit_Framework_TestCase
         $this->assertContains('auto_increment', $create[0], '', true);
     }
 
+
+    public function testSchemaWithRelationsCreate()
+    {
+        $factory = new \Concrete\Core\Express\BackendEntityManagerFactory(
+            Core::make('app'),
+            $this->getMockEntityManagerWithRelations()
+        );
+        $manager = new \Concrete\Core\Express\SchemaManager($factory);
+        $entity = new \Concrete\Core\Entity\Express\Entity();
+        $entity->setName('Student');
+        $create = $manager->getCreateSql($entity);
+        print_r($create);
+    }
 }

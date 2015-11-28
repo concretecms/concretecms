@@ -47,7 +47,7 @@ class EntityWriterTest extends PHPUnit_Framework_TestCase
 
         $writer = Core::make('express.writer');
         $writer->setNamespace('Testing');
-        $writer->setEntityManager($this->getMockEntityManager());
+        $writer->setEntityManager($this->getMockEntityManagerWithRelations());
         $writer->setOutputPath(__DIR__);
 
         $entity = new \Concrete\Core\Entity\Express\Entity();
@@ -64,6 +64,9 @@ class EntityWriterTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($class->hasMethod('getId'));
         $this->assertTrue($class->hasMethod('getFirstName'));
         $this->assertTrue($class->hasMethod('setFirstName'));
+        $this->assertTrue($class->hasProperty('teacher'));
+        $this->assertTrue($class->hasMethod('getTeacher'));
     }
+
 
 }
