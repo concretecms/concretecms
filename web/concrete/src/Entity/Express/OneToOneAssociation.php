@@ -2,16 +2,19 @@
 
 namespace Concrete\Core\Entity\Express;
 
+use Concrete\Core\Express\AssociationBuilder\OneToOneAssociationBuilder;
+
 /**
  * @Entity
  */
 class OneToOneAssociation extends Association
 {
 
-    public function getAnnotation()
+    public function getAssociationBuilder()
     {
-        return 'OneToOne';
+        return new OneToOneAssociationBuilder($this);
     }
+
 
 
 }

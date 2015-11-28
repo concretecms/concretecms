@@ -19,18 +19,19 @@ class SchemaManager
 {
 
     protected $tool;
-    protected $manager;
+    protected $factory;
 
-    public function __construct(EntityManagerInterface $manager)
+    public function __construct(BackendEntityManagerFactory $factory)
     {
-        $this->manager = $manager;
-        $this->tool = new SchemaTool($manager);
+        $this->factory = $factory;
+        $this->entityManager = $factory->create(\Database::connection());
+        $this->tool = new SchemaTool($this->entityManager);
     }
 
     public function getCreateSql(Entity $entity)
     {
-        $metadata = $this->manager->getClassMetadata($this->getClassName($entity));
-        $generator->generate(array($metadata), $this->outputPath);
+        $metadata = $this->entityManager->getClassMetadata($this->factory->getClassName($entity));
+        return $this->tool->getCreateSchemaSql(array($metadata));
 
     }
 

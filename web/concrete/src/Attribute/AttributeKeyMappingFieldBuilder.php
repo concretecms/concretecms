@@ -3,12 +3,12 @@ namespace Concrete\Core\Attribute;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Attribute\AttributeKeyFactoryInterface;
-use Concrete\Core\Database\Schema\FieldBuilderInterface;
+use Concrete\Core\Database\Schema\BuilderInterface;
 use Concrete\Core\Entity\AttributeKey\AttributeKey;
 use \Concrete\Core\Entity\Express\Entity;
 use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
 
-class AttributeKeyMappingFieldBuilder implements FieldBuilderInterface
+class AttributeKeyMappingFieldBuilder implements BuilderInterface
 {
 
     protected $key;
@@ -18,7 +18,7 @@ class AttributeKeyMappingFieldBuilder implements FieldBuilderInterface
     }
 
 
-    public function buildField(ClassMetadataBuilder $builder)
+    public function build(ClassMetadataBuilder $builder)
     {
         $definition = $this->key->getFieldMappingDefinition();
         $fields = array();

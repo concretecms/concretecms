@@ -3,10 +3,10 @@ namespace Concrete\Core\Database\Schema;
 
 use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
 
-interface FieldBuilderInterface
+interface BuilderInterface
 {
 
-    public function buildField(ClassMetadataBuilder $builder);
+    public function build(ClassMetadataBuilder $builder);
 
 
 }

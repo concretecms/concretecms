@@ -115,16 +115,4 @@ class ObjectAssociationBuilderTest extends PHPUnit_Framework_TestCase
 
 
 
-
-
-    /*
-
-    $builder->addOneToOne('Student', 'Student', 'mentor');
-    // one to one with mentor as the self referencing field.
-    $relation5 = $builder->buildRelation();
-    */
-
-
-
-
 }

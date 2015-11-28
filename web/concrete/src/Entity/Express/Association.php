@@ -13,7 +13,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 abstract class Association
 {
 
-    abstract public function getAnnotation();
+    abstract public function getAssociationBuilder();
 
     /**
      * @Id @Column(type="integer")
@@ -35,7 +35,12 @@ abstract class Association
     /**
      * @Column(type="string")
      */
-    protected $property_name;
+    protected $target_property_name;
+
+    /**
+     * @Column(type="string")
+     */
+    protected $inversed_by_property_name;
 
     /**
      * @return mixed
@@ -56,17 +61,33 @@ abstract class Association
     /**
      * @return mixed
      */
-    public function getPropertyName()
+    public function getTargetPropertyName()
     {
-        return $this->property_name;
+        return $this->target_property_name;
     }
 
     /**
      * @param mixed $name
      */
-    public function setPropertyName($property_name)
+    public function setTargetPropertyName($target_property_name)
     {
-        $this->property_name = $property_name;
+        $this->target_property_name = $target_property_name;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInversedByPropertyName()
+    {
+        return $this->inversed_by_property_name;
+    }
+
+    /**
+     * @param mixed $inversed_by_property_name
+     */
+    public function setInversedByPropertyName($inversed_by_property_name)
+    {
+        $this->inversed_by_property_name = $inversed_by_property_name;
     }
 
     /**
@@ -101,14 +122,24 @@ abstract class Association
         $this->target_entity = $target_entity;
     }
 
-    public function getComputedPropertyName()
+    public function getComputedTargetPropertyName()
     {
-        if (isset($this->property_name) && $this->property_name) {
-            return $this->property_name;
+        if ($this->getTargetPropertyName()) {
+            return $this->getTargetPropertyName();
         } else {
             return uncamelcase($this->getTargetEntity()->getName());
         }
     }
+
+    public function getComputedInversedByPropertyName()
+    {
+        if ($this->getInversedByPropertyName()) {
+            return $this->getInversedByPropertyName();
+        } else {
+            return uncamelcase($this->getSourceEntity()->getName());
+        }
+    }
+
 
 
 
