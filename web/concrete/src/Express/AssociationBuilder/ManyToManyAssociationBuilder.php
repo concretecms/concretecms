@@ -10,6 +10,17 @@ class ManyToManyAssociationBuilder extends AbstractAssociationBuilder
     public function build(ClassMetadataBuilder $builder)
     {
 
+        $builder->addOwningManyToMany(
+            $this->association->getComputedTargetPropertyName(),
+            $this->association->getSourceEntity()->getName()
+        );
+        $builder->addInverseManyToMany(
+            $this->association->getComputedTargetPropertyName(),
+            $this->association->getSourceEntity()->getName(),
+            $this->association->getComputedInversedByPropertyName()
+        );
+
+
     }
 
 }
