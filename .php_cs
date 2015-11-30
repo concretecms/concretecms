@@ -16,6 +16,7 @@ return Symfony\CS\Config\Config::create()
         '-empty_return',
         // Don't force an empty line before namespace declaration
         '-single_blank_line_before_namespace',
+        'no_blank_lines_before_namespace',
     ))
     ->finder(
         Symfony\CS\Finder\DefaultFinder::create()
