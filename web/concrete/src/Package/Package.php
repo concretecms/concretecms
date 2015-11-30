@@ -1098,7 +1098,7 @@ class Package extends Object
     {
         $this->installEntitiesDatabase();
 
-        Package::installDB($this->getPackagePath() . '/' . FILENAME_PACKAGE_DB);
+        static::installDB($this->getPackagePath() . '/' . FILENAME_PACKAGE_DB);
     }
 
     public function installEntitiesDatabase()
@@ -1122,38 +1122,25 @@ class Package extends Object
         if (!file_exists($xmlFile)) {
             return false;
         }
-        // currently this is just done from xml
+
         $db = Database::get();
         $db->beginTransaction();
-        $schema = Schema::loadFromXMLFile($xmlFile, $db);
-        $platform = $db->getDatabasePlatform();
-        $queries = $schema->toSql($platform);
-        foreach ($queries as $query) {
+
+        $parser = Schema::getSchemaParser(simplexml_load_file($xmlFile));
+        $parser->setIgnoreExistingTables(false);
+        $toSchema = $parser->parse($db);
+
+        $fromSchema = $db->getSchemaManager()->createSchema();
+        $comparator = new \Doctrine\DBAL\Schema\Comparator();
+        $schemaDiff = $comparator->compare($fromSchema, $toSchema);
+        $saveQueries = $schemaDiff->toSaveSql($db->getDatabasePlatform());
+
+        foreach ($saveQueries as $query) {
             $db->query($query);
         }
 
         $db->commit();
-        unset($schema);
-        unset($platform);
-        /*
-		$schema = Database::getADOSChema();
-		$sql = $schema->ParseSchema($xmlFile);
-		$db->IgnoreErrors($handler);
-		if (!$sql) {
-			$result->message = $db->ErrorMsg();
-			return $result;
-		}
-		$r = $schema->ExecuteSchema();
-		if ($dbLayerErrorMessage != '') {
-			$result->message = $dbLayerErrorMessage;
-			return $result;
-		} if (!$r) {
-			$result->message = $db->ErrorMsg();
-			return $result;
-		}
-		$result->result = true;
-		$db->CacheFlush();
-		*/
+
         $result = new \stdClass();
         $result->result = false;
         return $result;
@@ -1223,27 +1210,7 @@ class Package extends Object
         $this->destroyProxyClasses();
         $this->installEntitiesDatabase();
 
-        if (file_exists($this->getPackagePath() . '/' . FILENAME_PACKAGE_DB)) {
-            // Legacy db.xml
-            // currently this is just done from xml
-            $db = Database::get();
-            $db->beginTransaction();
-
-            $parser = Schema::getSchemaParser(simplexml_load_file($this->getPackagePath() . '/' . FILENAME_PACKAGE_DB));
-            $parser->setIgnoreExistingTables(false);
-            $toSchema = $parser->parse($db);
-
-            $fromSchema = $db->getSchemaManager()->createSchema();
-            $comparator = new \Doctrine\DBAL\Schema\Comparator();
-            $schemaDiff = $comparator->compare($fromSchema, $toSchema);
-            $saveQueries = $schemaDiff->toSaveSql($db->getDatabasePlatform());
-
-            foreach ($saveQueries as $query) {
-                $db->query($query);
-            }
-
-            $db->commit();
-        }
+        static::installDB($this->getPackagePath() . '/' . FILENAME_PACKAGE_DB);
     }
 
     /**
