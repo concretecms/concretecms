@@ -375,7 +375,8 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
             $buttons[] = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID() . '" class="btn btn-default btn-xs">' . t(
                     'View/Edit Original') . '</a>';
             if ($canApprovePageVersions) {
-                $buttons[] = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionPointerOriginalID() . '&ctask=remove-alias' . $token . '" class="btn btn-xs btn-danger">' . t(
+                $url = URL::to('/ccm/system/dialogs/page/delete_alias?cID=' . $c->getCollectionPointerOriginalID());
+                $buttons[] = '<a href="' . $url . '" dialog-title="' . t('Remove Alias') . '" class="dialog-launch btn btn-xs btn-danger">' . t(
                         'Remove Alias') . '</a>';
             }
 
@@ -467,11 +468,22 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                             $pk = \Concrete\Core\Permission\Key\PageKey::getByHandle('approve_page_versions');
                             $pk->setPermissionObject($c);
                             $pa = $pk->getPermissionAccessObject();
+
+                            $workflows = array();
+                            $canApproveWorkflow = true;
                             if (is_object($pa)) {
-                                if (count($pa->getWorkflows()) > 0) {
-                                    $appLabel = t('Submit for Approval');
+                                $workflows = $pa->getWorkflows();
+                            }
+                            foreach($workflows as $wf) {
+                                if (!$wf->canApproveWorkflow()) {
+                                    $canApproveWorkflow = false;
                                 }
                             }
+
+                            if (count($workflows) > 0 && !$canApproveWorkflow) {
+                                $appLabel = t('Submit to Workflow');
+                            }
+
                             if (!isset($appLabel) || !$appLabel) {
                                 $appLabel = t('Approve Version');
                             }
