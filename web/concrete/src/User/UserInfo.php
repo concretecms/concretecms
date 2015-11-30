@@ -125,6 +125,8 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
             }
         }
 
+        $r = $db->query("DELETE FROM OauthUserMap WHERE user_id = ?", array(intval($this->uID)));
+        
         $r = $db->query("DELETE FROM UserSearchIndexAttributes WHERE uID = ?", array(intval($this->uID)));
 
         $r = $db->query("DELETE FROM UserGroups WHERE uID = ?", array(intval($this->uID)));
