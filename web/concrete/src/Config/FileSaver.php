@@ -6,7 +6,6 @@ use Concrete\Core\Cache\OpCache;
 
 class FileSaver implements SaverInterface
 {
-
     /**
      * The filesystem instance.
      *
@@ -92,9 +91,8 @@ class FileSaver implements SaverInterface
             " * @namespace {$ns_string}",
             " * -----------------------------------------------------------------------------",
             " */",
-            "return "
+            "return ",
         );
-
 
         $rendered = $renderer->render(PHP_EOL, '    ', implode(PHP_EOL, $header));
         $result = $this->files->put($file, $rendered) !== false;
@@ -104,5 +102,4 @@ class FileSaver implements SaverInterface
 
         return $result;
     }
-
 }
