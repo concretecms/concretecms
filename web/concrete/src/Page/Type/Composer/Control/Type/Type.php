@@ -109,17 +109,21 @@ abstract class Type extends Object
         return $types;
     }
 
+    public function export($xml)
+    {
+        $type = $xml->addChild('type');
+        $type->addAttribute('handle', $this->getPageTypeComposerControlTypeHandle());
+        $type->addAttribute('name', $this->getPageTypeComposerControlTypeName());
+        $type->addAttribute('package', $this->getPackageHandle());
+    }
+
     public static function exportList($xml)
     {
         $list = self::getList();
-        $nxml = $xml->addChild('composercontroltypes');
+        $nxml = $xml->addChild('pagetypecomposercontroltypes');
 
         foreach ($list as $sc) {
-            $activated = 0;
-            $type = $nxml->addChild('type');
-            $type->addAttribute('handle', $sc->getPageTypeComposerControlTypeHandle());
-            $type->addAttribute('name', $sc->getPageTypeComposerControlTypeName());
-            $type->addAttribute('package', $sc->getPackageHandle());
+            $sc->export($nxml);
         }
     }
 
