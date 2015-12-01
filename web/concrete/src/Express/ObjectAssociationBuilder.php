@@ -42,17 +42,54 @@ class ObjectAssociationBuilder
             $subject, $target, $property);
     }
 
-    public function addManyToMany(Entity $subject, Entity $target, $property = null)
+    public function addManyToMany(Entity $subject, Entity $target, $subject_property = null, $target_property = null)
     {
-        $this->addAssociation(new ManyToManyAssociation(),
-            $subject, $target, $property);
+        $association = new ManyToManyAssociation();
+        $association->setAssociationType(ManyToManyAssociation::TYPE_OWNING);
+        $association->setSourceEntity($subject);
+        $association->setTargetEntity($target);
+        $association->setTargetPropertyName($target_property);
+        $association->setInversedByPropertyName($subject_property);
+        $subject->getAssociations()->add($association);
+
+        $association = new ManyToManyAssociation();
+        $association->setAssociationType(ManyToManyAssociation::TYPE_INVERSE);
+        $association->setSourceEntity($target);
+        $association->setTargetEntity($subject);
+        $association->setTargetPropertyName($subject_property);
+        $association->setInversedByPropertyName($target_property);
+        $target->getAssociations()->add($association);
     }
 
-    public function addOneToOne(Entity $subject, Entity $target, $property = null)
+    public function addOneToOneUnidirectional(Entity $subject, Entity $target, $subject_property = null)
     {
-        $this->addAssociation(new OneToOneAssociation(),
-            $subject, $target, $property);
+        $association = new OneToOneAssociation();
+        $association->setAssociationType(ManyToManyAssociation::TYPE_OWNING);
+        $association->setSourceEntity($subject);
+        $association->setTargetEntity($target);
+        $association->setTargetPropertyName($subject_property);
+        $subject->getAssociations()->add($association);
     }
+
+    public function addOneToOne(Entity $subject, Entity $target, $subject_property = null, $target_property = null)
+    {
+        $association = new OneToOneAssociation();
+        $association->setAssociationType(ManyToManyAssociation::TYPE_OWNING);
+        $association->setSourceEntity($subject);
+        $association->setTargetEntity($target);
+        $association->setTargetPropertyName($target_property);
+        $association->setInversedByPropertyName($subject_property);
+        $subject->getAssociations()->add($association);
+
+        $association = new OneToOneAssociation();
+        $association->setAssociationType(ManyToManyAssociation::TYPE_INVERSE);
+        $association->setSourceEntity($target);
+        $association->setTargetEntity($subject);
+        $association->setTargetPropertyName($subject_property);
+        $association->setInversedByPropertyName($target_property);
+        $target->getAssociations()->add($association);
+    }
+
 
 
 

@@ -35,8 +35,8 @@ class ObjectAssociationBuilderTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\Concrete\Core\Entity\Express\ManyToOneAssociation', $studentAssociation);
         $this->assertEquals('Student', $studentAssociation->getSourceEntity()->getName());
         $this->assertEquals('Teacher', $studentAssociation->getTargetEntity()->getName());
-        $this->assertNull($studentAssociation->getPropertyName());
-        $this->assertEquals('teacher', $studentAssociation->getComputedPropertyName());
+        $this->assertNull($studentAssociation->getTargetPropertyName());
+        $this->assertEquals('teacher', $studentAssociation->getComputedTargetPropertyName());
     }
 
     public function testOneToManyBi()
@@ -52,19 +52,19 @@ class ObjectAssociationBuilderTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\Concrete\Core\Entity\Express\ManyToOneAssociation', $studentAssociation);
         $this->assertEquals('Student', $studentAssociation->getSourceEntity()->getName());
         $this->assertEquals('Teacher', $studentAssociation->getTargetEntity()->getName());
-        $this->assertEquals('teacher', $studentAssociation->getComputedPropertyName());
-        $this->assertNull($studentAssociation->getPropertyName());
+        $this->assertEquals('teacher', $studentAssociation->getComputedTargetPropertyName());
+        $this->assertNull($studentAssociation->getTargetPropertyName());
 
         $this->assertInstanceOf('\Concrete\Core\Entity\Express\OneToManyAssociation', $teacherAssociation);
         $this->assertEquals('Teacher', $teacherAssociation->getSourceEntity()->getName());
         $this->assertEquals('Student', $teacherAssociation->getTargetEntity()->getName());
-        $this->assertEquals('student', $teacherAssociation->getComputedPropertyName());
-        $this->assertNull($teacherAssociation->getPropertyName());
+        $this->assertEquals('student', $teacherAssociation->getComputedTargetPropertyName());
+        $this->assertNull($teacherAssociation->getTargetPropertyName());
     }
 
     public function testOneToOneUni()
     {
-        $this->builder->addOneToOne($this->getData()[0], $this->getData()[1]);
+        $this->builder->addOneToOneUnidirectional($this->getData()[0], $this->getData()[1]);
         $studentAssociations = $this->getData()[0]->getAssociations();
         $teacherAssociations = $this->getData()[1]->getAssociations();
         $this->assertEquals(1, count($studentAssociations));
@@ -73,14 +73,13 @@ class ObjectAssociationBuilderTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\Concrete\Core\Entity\Express\OneToOneAssociation', $studentAssociation);
         $this->assertEquals('Student', $studentAssociation->getSourceEntity()->getName());
         $this->assertEquals('Teacher', $studentAssociation->getTargetEntity()->getName());
-        $this->assertEquals('teacher', $studentAssociation->getComputedPropertyName());
-        $this->assertNull($studentAssociation->getPropertyName());
+        $this->assertEquals('teacher', $studentAssociation->getComputedTargetPropertyName());
+        $this->assertNull($studentAssociation->getTargetPropertyName());
     }
 
     public function testOneToOneBi()
     {
         $this->builder->addOneToOne($this->getData()[0], $this->getData()[1]);
-        $this->builder->addOneToOne($this->getData()[1], $this->getData()[0]);
         $studentAssociations = $this->getData()[0]->getAssociations();
         $teacherAssociations = $this->getData()[1]->getAssociations();
         $this->assertEquals(1, count($studentAssociations));
@@ -90,27 +89,27 @@ class ObjectAssociationBuilderTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\Concrete\Core\Entity\Express\OneToOneAssociation', $studentAssociation);
         $this->assertEquals('Student', $studentAssociation->getSourceEntity()->getName());
         $this->assertEquals('Teacher', $studentAssociation->getTargetEntity()->getName());
-        $this->assertEquals('teacher', $studentAssociation->getComputedPropertyName());
-        $this->assertNull($studentAssociation->getPropertyName());
+        $this->assertEquals('teacher', $studentAssociation->getComputedTargetPropertyName());
+        $this->assertNull($studentAssociation->getTargetPropertyName());
 
         $this->assertInstanceOf('\Concrete\Core\Entity\Express\OneToOneAssociation', $teacherAssociation);
         $this->assertEquals('Teacher', $teacherAssociation->getSourceEntity()->getName());
         $this->assertEquals('Student', $teacherAssociation->getTargetEntity()->getName());
-        $this->assertEquals('student', $teacherAssociation->getComputedPropertyName());
-        $this->assertNull($teacherAssociation->getPropertyName());
+        $this->assertEquals('student', $teacherAssociation->getComputedTargetPropertyName());
+        $this->assertNull($teacherAssociation->getTargetPropertyName());
     }
 
     public function testOneToOneSelf()
     {
-        $this->builder->addOneToOne($this->getData()[0], $this->getData()[0], 'mentor');
+        $this->builder->addOneToOneUnidirectional($this->getData()[0], $this->getData()[0], 'mentor');
         $studentAssociations = $this->getData()[0]->getAssociations();
         $this->assertEquals(1, count($studentAssociations));
         $studentAssociation = $studentAssociations[0];
         $this->assertInstanceOf('\Concrete\Core\Entity\Express\OneToOneAssociation', $studentAssociation);
         $this->assertEquals('Student', $studentAssociation->getSourceEntity()->getName());
         $this->assertEquals('Student', $studentAssociation->getTargetEntity()->getName());
-        $this->assertEquals('mentor', $studentAssociation->getComputedPropertyName());
-        $this->assertEquals('mentor', $studentAssociation->getPropertyName());
+        $this->assertEquals('mentor', $studentAssociation->getComputedTargetPropertyName());
+        $this->assertEquals('mentor', $studentAssociation->getTargetPropertyName());
     }
 
 
