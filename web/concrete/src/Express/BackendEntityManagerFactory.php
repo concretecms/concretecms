@@ -50,6 +50,10 @@ class BackendEntityManagerFactory implements EntityManagerFactoryInterface
             $this->application['config']->get('database.proxy_classes'),
             new DoctrineCacheDriver('cache/expensive')
         );
+        $strategy = new NamingStrategy($this->rootEntityManager);
+        $strategy->setTablePrefix($this->application['config']->get('express.database.table_prefix'));
+
+        $config->setNamingStrategy($strategy);
         $config->setMetadataDriverImpl($this->getDriver());
         $config->setClassMetadataFactoryName('Doctrine\ORM\Tools\DisconnectedClassMetadataFactory');
         return EntityManager::create($connection, $config);

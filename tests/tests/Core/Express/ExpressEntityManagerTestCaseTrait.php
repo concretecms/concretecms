@@ -22,10 +22,10 @@ trait ExpressEntityManagerTestCaseTrait
 
         $student->getAttributes()->add($attribute);
 
-        return $this->deliverTeachersAndStudents($student, $teacher);
+        return $this->deliverEntityManager(array($student, $teacher));
     }
 
-    protected function deliverTeachersAndStudents($student, $teacher)
+    protected function deliverEntityManager($entities)
     {
 
         // Now, mock the repository so it returns the mock of the employee
@@ -35,7 +35,17 @@ trait ExpressEntityManagerTestCaseTrait
             ->getMock();
         $entityRepository->expects($this->any())
             ->method('findAll')
-            ->will($this->returnValue(array($student, $teacher)));
+            ->will($this->returnValue($entities));
+
+        $entityRepository->expects($this->any())
+            ->method('findOneBy')
+            ->will($this->returnCallback(function($args) use ($entities) {
+                foreach($entities as $entity) {
+                    if ($entity->getName() == $args['name']) {
+                        return $entity;
+                    }
+                }
+            }));
 
         // Last, mock the EntityManager to return the mock of the repository
         $entityManager = $this
@@ -73,7 +83,7 @@ trait ExpressEntityManagerTestCaseTrait
         $builder->addOneToMany($teacher, $student);
         $builder->addManyToOne($student, $teacher);
 
-        return $this->deliverTeachersAndStudents($student, $teacher);
+        return $this->deliverEntityManager(array($student, $teacher));
     }
 
 }

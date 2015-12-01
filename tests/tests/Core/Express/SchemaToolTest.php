@@ -30,16 +30,4 @@ class SchemaToolTest extends PHPUnit_Framework_TestCase
     }
 
 
-    public function testSchemaWithRelationsCreate()
-    {
-        $factory = new \Concrete\Core\Express\BackendEntityManagerFactory(
-            Core::make('app'),
-            $this->getMockEntityManagerWithRelations()
-        );
-        $manager = new \Concrete\Core\Express\SchemaManager($factory);
-        $entity = new \Concrete\Core\Entity\Express\Entity();
-        $entity->setName('Student');
-        $create = $manager->getCreateSql($entity);
-        print_r($create);
-    }
 }
