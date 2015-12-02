@@ -8,13 +8,17 @@ $r = ResponseAssetGroup::get();
 $r->requireAsset('javascript', 'underscore');
 $r->requireAsset('javascript', 'core/events');
 
-$activeAuths = AuthenticationType::getList(true, true);
 $form = Loader::helper('form');
 
-$active = null;
-if ($authType) {
+if (isset($authType) && $authType) {
     $active = $authType;
     $activeAuths = array($authType);
+} else {
+    $active = null;
+    $activeAuths = AuthenticationType::getList(true, true);
+}
+if (!isset($authTypeElement)) {
+    $authTypeElement = null;
 }
 $image = date('Ymd') . '.jpg';
 
