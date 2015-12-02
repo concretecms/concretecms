@@ -31,7 +31,7 @@ In order to don't generate the locale files but only the master translations fil
 Examples:
     concrete5 c5:package-translate package_handle
     concrete5 c5:package-translate package_handle --locale=it_IT --locale=de_DE
-    concrete5 c5:package-translate package_handle --l it_IT -l de_DE
+    concrete5 c5:package-translate package_handle -l it_IT -l de_DE
     concrete5 c5:package-translate package_handle --locale=-
     concrete5 c5:package-translate path/to/a/package/directory -l-
 
