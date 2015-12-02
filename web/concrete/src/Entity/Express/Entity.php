@@ -37,10 +37,16 @@ class Entity
      **/
     protected $associations;
 
+    /**
+     * @OneToMany(targetEntity="Form", mappedBy="entity", cascade={"persist", "remove"})
+     **/
+    protected $forms;
+
 
     public function __construct()
     {
         $this->attributes = new ArrayCollection();
+        $this->forms = new ArrayCollection();
         $this->associations = new ArrayCollection();
     }
 
@@ -120,6 +126,24 @@ class Entity
     {
         $this->associations = $associations;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getForms()
+    {
+        return $this->forms;
+    }
+
+    /**
+     * @param mixed $forms
+     */
+    public function setForms($forms)
+    {
+        $this->forms = $forms;
+    }
+
+
 
 
 
