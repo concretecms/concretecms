@@ -26,7 +26,9 @@ class ThemeFormatter implements FormatterInterface
 
             if (is_object($node)) {
                 $element = new Element($node->tag);
-                $element->class($node->class);
+                foreach($node->getAllAttributes() as $key => $value) {
+                    $element->setAttribute($key, $value);
+                }
             }
         }
 
