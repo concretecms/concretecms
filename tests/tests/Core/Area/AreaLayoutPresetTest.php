@@ -115,8 +115,8 @@ class TestThemeClass implements \Concrete\Core\Area\Layout\Preset\Provider\Theme
                 'name' => 'Test Layout',
                 'container' => '<div class="row" data-testing="top-row"></div>',
                 'columns' => array(
-                    '<div class="col-md-2 col-sm-3"></div>',
-                    '<div class="col-md-10 col-sm-9"></div>'
+                    '<div data-foo="foo" class="col-md-2 col-sm-3"></div>',
+                    '<div data-bar="bar" class="col-md-10 col-sm-9"></div>'
                 ),
             )
 
@@ -188,7 +188,6 @@ class AreaLayoutPresetTest extends PageTestCase
 
         $columns = $presets[1]->getColumns();
         $this->assertEquals('<div class="ccm-layout-column" id="ccm-layout-column-4"><div class="ccm-layout-column-inner"></div></div>', (string) $columns[0]->getColumnHtmlObject());
-
 
     }
 
@@ -279,6 +278,12 @@ class AreaLayoutPresetTest extends PageTestCase
         $formatter = $custom->getFormatter();
         $this->assertInstanceOf('\Concrete\Core\Area\Layout\Preset\Formatter\ThemeFormatter', $formatter);
         $this->assertEquals('<div class="row" data-testing="top-row"></div>', (string) $formatter->getPresetContainerHtmlObject());
+
+        $columns = $custom->getColumns();
+        $this->assertEquals(2, count($columns));
+        $this->assertEquals('<div data-foo="foo" class="col-md-2 col-sm-3"></div>', (string) $columns[0]->getColumnHtmlObject());
+        $this->assertEquals('<div data-bar="bar" class="col-md-10 col-sm-9"></div>', (string) $columns[1]->getColumnHtmlObject());
+
         $manager->unregister($provider);
     }
 
