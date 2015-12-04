@@ -2,6 +2,8 @@
 
 namespace Concrete\Core\Entity\Express\Control;
 
+use Concrete\Core\Foundation\Environment;
+
 /**
  * @Entity
  * @Table(name="ExpressFormFieldSetAttributeKeyControls")
@@ -29,7 +31,10 @@ class AttributeKeyControl extends Control
         $this->attribute_key = $attribute_key;
     }
 
+    public function getFormRenderer()
+    {
 
+    }
 
 
 }

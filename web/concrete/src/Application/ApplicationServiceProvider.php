@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\Application;
+use Concrete\Core\Foundation\Environment;
 use \Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 
 class ApplicationServiceProvider extends ServiceProvider {
@@ -33,6 +34,11 @@ class ApplicationServiceProvider extends ServiceProvider {
 		}
 
         $this->app->bind('error', 'Concrete\Core\Error\Error');
+
+		$this->app->bindShared('environment', function($app) {
+			$env = Environment::get();
+			return $env;
+		});
 
 		/**
 		 * @deprecated
