@@ -2,21 +2,68 @@
 
 namespace Concrete\Core\Express\Form;
 
+use Concrete\Core\Application\Application;
+use Concrete\Core\Entity\Express\FieldSet;
 use Concrete\Core\Entity\Express\Form;
+use Concrete\Core\Foundation\Environment;
+use Doctrine\ORM\EntityManagerInterface;
 
 class Renderer implements RendererInterface
 {
 
-    protected $form;
+    protected $entityManager;
+    protected $application;
 
-    public function __construct(Form $form)
+    public function __construct(Application $application, EntityManagerInterface $entityManager)
     {
-        $this->form = $form;
+        $this->entityManager = $entityManager;
+        $this->application = $application;
     }
 
-    public function render()
+    protected function getFormOpenTag()
     {
+        return '<div class="ccm-express-form">';
+    }
 
+    protected function getFormCloseTag()
+    {
+        return '</div>';
+    }
+
+    protected function getFieldSetOpenTag()
+    {
+        return '<fieldset class="ccm-express-form-field-set">';
+    }
+
+    protected function getFieldSetCloseTag()
+    {
+        return '</fieldset>';
+    }
+
+    protected function renderFieldSet(FieldSet $fieldSet)
+    {
+        $html = $this->getFieldSetOpenTag();
+        foreach($fieldSet->getControls() as $control) {
+            $factory = new RendererFactory($control, $this->application, $this->entityManager);
+            $renderer = $factory->getRenderer();
+            if (is_object($renderer)) {
+                $html .= $renderer->render();
+            }
+        }
+        $html .= $this->getFieldSetCloseTag();
+        return $html;
+    }
+
+    public function render(Form $form)
+    {
+        $html = $this->getFormOpenTag();
+
+        foreach($form->getFieldSets() as $fieldSet) {
+            $html .= $this->renderFieldSet($fieldSet);
+        }
+
+        $html .= $this->getFormCloseTag();
+        return $html;
 
     }
 

@@ -2,6 +2,9 @@
 
 namespace Concrete\Core\Entity\Express\Control;
 
+use Concrete\Core\Express\Form\Control\AssociationControlRenderer;
+use Concrete\Core\Foundation\Environment;
+
 /**
  * @Entity
  * @Table(name="ExpressFormFieldSetAssociationControls")
@@ -9,7 +12,8 @@ namespace Concrete\Core\Entity\Express\Control;
 class AssociationControl extends Control
 {
     /**
-     * @ManyToOne(targetEntity="\Concrete\Core\Entity\Association"}))
+     * @var \Concrete\Core\Entity\Express\Association
+     * @ManyToOne(targetEntity="\Concrete\Core\Entity\Express\Association"}))
      */
     protected $association;
 
@@ -30,8 +34,12 @@ class AssociationControl extends Control
     }
 
 
+    public function getFormRenderer()
+    {
+        return new AssociationControlRenderer();
+    }
 
-    
+
 
 
 }
