@@ -50,6 +50,7 @@
         var my = this,
             $fileUploaders = $('.ccm-file-manager-upload'),
             $fileUploader = $fileUploaders.filter('#ccm-file-manager-upload-prompt'),
+            $imageResize = $fileUploader.data('image-resize') == '1',
             errors = [],
             files = [],
             error_template = _.template(
@@ -60,6 +61,8 @@
                 url: CCM_DISPATCHER_FILENAME + '/ccm/system/file/upload',
                 dataType: 'json',
                 formData: {'ccm_token': CCM_SECURITY_TOKEN},
+                disableImageResize: !$imageResize,
+                imageQuality: 85,
                 error: function(r) {
                     var message = r.responseText;
                     try {
