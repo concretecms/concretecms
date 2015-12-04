@@ -73,7 +73,7 @@ $class = 'ccm-area-footer';
 		}
 		$ax = $a->getSubAreaParentPermissionsObject();
 		$axp = new Permissions($ax);
-		if ($axp->canAddBlockToArea($bt)) {
+		if ($axp->canAddBlockToArea()) {
 			$bx = $a->getSubAreaBlockObject();
 			if (is_object($bx) && !$bx->isError()) { ?>
 				<li class="divider"></li>
