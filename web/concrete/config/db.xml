@@ -2452,6 +2452,8 @@
     <field name="backgroundColor" type="string" size="255"/>
     <field name="backgroundImageFileID" type="integer"/>
     <field name="backgroundRepeat" type="string" size="255"/>
+    <field name="backgroundSize" type="string" size="255"/>
+    <field name="backgroundPosition" type="string" size="255"/>
     <field name="borderWidth" type="string" size="255"/>
     <field name="borderColor" type="string" size="255"/>
     <field name="borderStyle" type="string" size="255"/>
@@ -3737,7 +3739,7 @@
       <col>pkgID</col>
     </index>
   </table>
-    
+
   <table name="Packages">
     <field name="pkgID" type="integer" size="10">
       <unsigned/>

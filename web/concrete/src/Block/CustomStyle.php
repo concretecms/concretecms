@@ -39,6 +39,8 @@ class CustomStyle extends AbstractCustomStyle
         if (is_object($f)) {
             $groups[''][] = 'background-image: url(' . $f->getRelativePath() . ')';
             $groups[''][] = 'background-repeat: ' . $set->getBackgroundRepeat();
+            $groups[''][] = 'background-size: ' . $set->getBackgroundSize();
+            $groups[''][] = 'background-position: ' . $set->getBackgroundPosition();
         }
         if ($set->getBaseFontSize()) {
             $groups[''][] = 'font-size:' . $set->getBaseFontSize();
