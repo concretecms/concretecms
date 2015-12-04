@@ -13,6 +13,11 @@ use PortlandLabs\Concrete5\MigrationTool\Publisher\AttributeKey\TextAreaPublishe
 class TextAreaAttributeKey extends AttributeKey
 {
 
+    public function getType()
+    {
+        return 'textarea';
+    }
+
     public function getFieldMappingDefinition()
     {
         return array('type' => 'text', 'options' => array('length' => 4294967295, 'default' => null, 'notnull' => false));
