@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Entity\Express\Control;
 
+use Concrete\Core\Foundation\Environment;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -78,7 +79,10 @@ abstract class Control
         $this->position = $position;
     }
 
-
+    /**
+     * @return \Concrete\Core\Express\Form\Control\RendererInterface
+     */
+    abstract public function getFormRenderer();
 
 
 

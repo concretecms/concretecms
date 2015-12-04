@@ -2,6 +2,9 @@
 
 namespace Concrete\Core\Entity\Express\Control;
 
+use Concrete\Core\Express\Form\Control\TextEntityPropertyControlRenderer;
+use Concrete\Core\Foundation\Environment;
+
 /**
  * @Entity
  * @Table(name="ExpressFormFieldSetTextControls")
@@ -30,6 +33,9 @@ class TextControl extends Control
     }
 
 
-
+    public function getFormRenderer()
+    {
+        return new TextEntityPropertyControlRenderer();
+    }
 
 }
