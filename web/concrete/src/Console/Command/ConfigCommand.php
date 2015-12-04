@@ -55,7 +55,7 @@ EOT
 
         $file_system = new Filesystem();
         $file_loader = new FileLoader($file_system);
-        if ($input->hasOption('generated-override')) {
+        if ($input->getOption('generated-overrides')) {
             $file_saver = new FileSaver($file_system, $environment == $default_environment ? null : $environment);
         } else {
             $file_saver = new DirectFileSaver($file_system, $environment == $default_environment ? null : $environment);
