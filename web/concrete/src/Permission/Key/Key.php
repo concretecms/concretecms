@@ -135,7 +135,7 @@ abstract class Key extends Object
 
     public function getPermissionObjectToCheck()
     {
-        if (is_object($this->permissionObjectToCheck)) {
+        if (isset($this->permissionObjectToCheck) && is_object($this->permissionObjectToCheck)) {
             return $this->permissionObjectToCheck;
         } else {
             return $this->permissionObject;
