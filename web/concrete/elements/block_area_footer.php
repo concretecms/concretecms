@@ -68,12 +68,9 @@ $class = 'ccm-area-footer';
 	<?
 	if ($a instanceof SubArea) {
 		$pk = PermissionKey::getByHandle('manage_layout_presets');
-		if (!is_object($areabt)) {
-			$areabt = BlockType::getByHandle(BLOCK_HANDLE_LAYOUT_PROXY);
-		}
 		$ax = $a->getSubAreaParentPermissionsObject();
 		$axp = new Permissions($ax);
-		if ($axp->canAddBlockToArea()) {
+		if ($axp->canAddLayout()) {
 			$bx = $a->getSubAreaBlockObject();
 			if (is_object($bx) && !$bx->isError()) { ?>
 				<li class="divider"></li>
