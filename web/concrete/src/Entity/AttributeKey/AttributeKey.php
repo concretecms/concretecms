@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Entity\AttributeKey;
 
+use Concrete\Core\Attribute\Type;
 use Concrete\Core\Entity\PackageTrait;
 use Concrete\Core\Express\Definition\Factory;
 use Concrete\Core\Express\Field\DefinitionFactory;
@@ -120,6 +121,11 @@ abstract class AttributeKey
         $this->name = $name;
     }
 
+    public function getDisplayName()
+    {
+        return $this->getName();
+    }
+
     /**
      * @return mixed
      */
@@ -156,6 +162,22 @@ abstract class AttributeKey
      * @return
      */
     abstract public function getFieldMappingDefinition();
+
+    abstract public function getType();
+
+    /**
+     * @deprecated
+     */
+    public function render($view = 'view', $value = false, $return = false)
+    {
+        $at = Type::getByHandle($this->getType());
+        $resp = $at->render($view, $this, $value, $return);
+        if ($return) {
+            return $resp;
+        } else {
+            print $resp;
+        }
+    }
 
 
 }

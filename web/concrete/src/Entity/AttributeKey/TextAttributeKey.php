@@ -10,6 +10,11 @@ namespace Concrete\Core\Entity\AttributeKey;
 class TextAttributeKey extends AttributeKey
 {
 
+    public function getType()
+    {
+        return 'text';
+    }
+
     public function getFieldMappingDefinition()
     {
         return array('type' => 'text', 'options' => array('length' => 4294967295, 'default' => null, 'notnull' => false));
