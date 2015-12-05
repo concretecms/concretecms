@@ -50,7 +50,10 @@
         var my = this,
             $fileUploaders = $('.ccm-file-manager-upload'),
             $fileUploader = $fileUploaders.filter('#ccm-file-manager-upload-prompt'),
-            $imageResize = $fileUploader.data('image-resize') == '1',
+            $maxWidth = $fileUploaders.data('image-max-width'),
+            $maxHeight = $fileUploaders.data('image-max-height'),
+            $imageResize = ($maxWidth > 0 && $maxHeight>0),
+            $quality = $fileUploaders.data('image-quality'),
             errors = [],
             files = [],
             error_template = _.template(
@@ -62,7 +65,9 @@
                 dataType: 'json',
                 formData: {'ccm_token': CCM_SECURITY_TOKEN},
                 disableImageResize: !$imageResize,
-                imageQuality: 85,
+                imageQuality: ($quality > 0 ? $quality : 85),
+                imageMaxWidth:($maxWidth > 0 ? $maxWidth : 1920),
+                imageMaxHeight:($maxHeight > 0 ? $maxHeight : 1080),
                 error: function(r) {
                     var message = r.responseText;
                     try {
