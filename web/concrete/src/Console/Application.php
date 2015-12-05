@@ -18,8 +18,8 @@ class Application extends \Symfony\Component\Console\Application
         $this->add(new Command\InstallCommand());
         $this->add(new Command\TranslatePackageCommand());
         $this->add(new Command\GenerateIDESymbolsCommand());
+        $this->add(new Command\ConfigCommand());
         if (Core::make('app')->isInstalled()) {
-            $this->add(new Command\ConfigCommand());
             $this->add(new Command\ClearCacheCommand());
             $this->add(new Command\InstallPackageCommand());
             $this->add(new Command\UninstallPackageCommand());
