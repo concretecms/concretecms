@@ -44,5 +44,10 @@ class TextAreaAttributeKey extends AttributeKey
         $this->mode = $mode;
     }
 
+    public function getController()
+    {
+        return new \Concrete\Attribute\Textarea\Controller($this->getAttributeType());
+    }
+
 
 }

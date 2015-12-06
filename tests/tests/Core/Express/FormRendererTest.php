@@ -3,10 +3,15 @@ use Concrete\Core\Express\ObjectBuilder;
 
 require_once __DIR__ . "/ObjectBuilderTestTrait.php";
 
-class FormRendererTest extends PHPUnit_Framework_TestCase
+class FormRendererTest extends ConcreteDatabaseTestCase
 {
 
     use \ObjectBuilderTestTrait;
+
+    protected $tables = array(
+        'AttributeTypes',
+        'atTextareaSettings'
+    );
 
     protected function getMockEntityManager()
     {
@@ -38,6 +43,9 @@ class FormRendererTest extends PHPUnit_Framework_TestCase
 
     public function testRenderForm()
     {
+        \Concrete\Core\Attribute\Type::add('text', 'Text');
+        \Concrete\Core\Attribute\Type::add('textarea', 'textarea');
+
         $builder = $this->getObjectBuilder();
         /**
          * @var $student \Concrete\Core\Entity\Express\Entity
@@ -85,7 +93,18 @@ class FormRendererTest extends PHPUnit_Framework_TestCase
         $renderer = Core::make('Concrete\Core\Express\Form\Renderer', array(Core::make('app'), $this->getMockEntityManager()));
         $html = $renderer->render($form);
 
-        print Core::make('helper/text')->formatXML($html);
+        preg_match_all('/ccm_express\[name\]/', $html, $matches);
+        $this->assertEquals(3, count($matches[0]));
+        preg_match_all('/class="ccm-express-form-field-set"/', $html, $matches);
+        $this->assertEquals(2, count($matches[0]));
+        preg_match_all('/<fieldset/', $html, $matches);
+        $this->assertEquals(2, count($matches[0]));
+
+        preg_match_all('/<input type="text"/', $html, $matches);
+        $this->assertEquals(4, count($matches[0]));
+
+        preg_match_all('/<textarea/', $html, $matches);
+        $this->assertEquals(1, count($matches[0]));
     }
 
 }

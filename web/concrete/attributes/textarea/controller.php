@@ -10,6 +10,8 @@ class Controller extends DefaultController
 {
     protected $searchIndexFieldDefinition = array('type' => 'text', 'options' => array('length' => 4294967295, 'default' => null, 'notnull' => false));
 
+    protected $akTextareaDisplayMode;
+    protected $akTextareaDisplayModeCustomOptions;
     public $helpers = array('form');
 
     public function saveKey($data)
@@ -43,6 +45,7 @@ class Controller extends DefaultController
         $this->load();
         $this->requireAsset('jquery/ui');
 
+        $value = null;
         if (is_object($this->attributeValue)) {
             $value = $this->getAttributeValue()->getValue();
         }
@@ -121,10 +124,12 @@ class Controller extends DefaultController
 
         $db = Database::connection();
         $row = $db->GetRow('select akTextareaDisplayMode, akTextareaDisplayModeCustomOptions from atTextareaSettings where akID = ?', array($ak->getAttributeKeyID()));
-        $this->akTextareaDisplayMode = $row['akTextareaDisplayMode'];
         $this->akTextareaDisplayModeCustomOptions = array();
-        if ($row['akTextareaDisplayMode'] == 'rich_text_custom') {
-            $this->akTextareaDisplayModeCustomOptions = unserialize($row['akTextareaDisplayModeCustomOptions']);
+        if (isset($row['akTextareaDisplayMode'])) {
+            $this->akTextareaDisplayMode = $row['akTextareaDisplayMode'];
+            if ($row['akTextareaDisplayMode'] == 'rich_text_custom') {
+                $this->akTextareaDisplayModeCustomOptions = unserialize($row['akTextareaDisplayModeCustomOptions']);
+            }
         }
         $this->set('akTextareaDisplayMode', $this->akTextareaDisplayMode);
         $this->set('akTextareaDisplayModeCustomOptions', $this->akTextareaDisplayModeCustomOptions);
