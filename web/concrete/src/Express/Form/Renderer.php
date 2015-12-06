@@ -40,6 +40,11 @@ class Renderer implements RendererInterface
         return '</fieldset>';
     }
 
+    protected function getCsrfTokenField()
+    {
+        return $this->application->make('token')->output('express_form', true);
+    }
+
     protected function renderFieldSet(FieldSet $fieldSet)
     {
         $html = $this->getFieldSetOpenTag();
@@ -57,7 +62,7 @@ class Renderer implements RendererInterface
     public function render(Form $form)
     {
         $html = $this->getFormOpenTag();
-
+        $html .= $this->getCsrfTokenField();
         foreach($form->getFieldSets() as $fieldSet) {
             $html .= $this->renderFieldSet($fieldSet);
         }
