@@ -15,6 +15,7 @@ class Controller extends DefaultController  {
 	}
 	
 	public function composer() {
+		$value = null;
 		if (is_object($this->attributeValue)) {
 			$value = Loader::helper('text')->entities($this->getAttributeValue()->getValue());
 		}

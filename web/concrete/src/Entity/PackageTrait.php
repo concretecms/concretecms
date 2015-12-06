@@ -26,5 +26,19 @@ trait PackageTrait
         $this->package = $package;
     }
 
+    public function getPackageID()
+    {
+        if (is_object($this->package)) {
+            return $this->package->getPackageID();
+        }
+    }
+
+
+    public function getPackageHandle()
+    {
+        if (is_object($this->package)) {
+            return $this->package->getPackageHandle();
+        }
+    }
 
 }
