@@ -10,7 +10,8 @@ class FormRendererTest extends ConcreteDatabaseTestCase
 
     protected $tables = array(
         'AttributeTypes',
-        'atTextareaSettings'
+        'atTextareaSettings',
+        'Config'
     );
 
     protected function getMockEntityManager()
@@ -41,7 +42,7 @@ class FormRendererTest extends ConcreteDatabaseTestCase
         return $entityManager;
     }
 
-    public function testRenderForm()
+    protected function getForm()
     {
         \Concrete\Core\Attribute\Type::add('text', 'Text');
         \Concrete\Core\Attribute\Type::add('textarea', 'textarea');
@@ -88,10 +89,19 @@ class FormRendererTest extends ConcreteDatabaseTestCase
         $form->getFieldSets()->add($fieldSet2);
         $form->setEntity($student);
 
+        return $form;
+    }
+
+    public function testRenderForm()
+    {
+        $form = $this->getForm();
         // Render the form
         //$environment = $this->getMock('\Concrete\Core\Foundation\Environment');
         $renderer = Core::make('Concrete\Core\Express\Form\Renderer', array(Core::make('app'), $this->getMockEntityManager()));
         $html = $renderer->render($form);
+
+        preg_match_all('/ccm_token/', $html, $matches);
+        $this->assertEquals(1, count($matches[0]));
 
         preg_match_all('/ccm_express\[name\]/', $html, $matches);
         $this->assertEquals(3, count($matches[0]));
@@ -106,5 +116,6 @@ class FormRendererTest extends ConcreteDatabaseTestCase
         preg_match_all('/<textarea/', $html, $matches);
         $this->assertEquals(1, count($matches[0]));
     }
+
 
 }
