@@ -20,4 +20,9 @@ class TextAttributeKey extends AttributeKey
         return array('type' => 'text', 'options' => array('length' => 4294967295, 'default' => null, 'notnull' => false));
     }
 
+    public function getController()
+    {
+        return new \Concrete\Attribute\Text\Controller($this->getAttributeType());
+    }
+
 }

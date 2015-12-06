@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Entity\AttributeKey;
 
+use Concrete\Core\Attribute\AttributeKeyInterface;
 use Concrete\Core\Attribute\Type;
 use Concrete\Core\Entity\PackageTrait;
 use Concrete\Core\Express\Definition\Factory;
@@ -20,7 +21,7 @@ use PortlandLabs\Concrete5\MigrationTool\Publisher\Validator\AttributeKeyValidat
  * @DiscriminatorColumn(name="type", type="string")
  * @Table(name="AttributeKeys")
  */
-abstract class AttributeKey
+abstract class AttributeKey implements AttributeKeyInterface
 {
 
     use PackageTrait;
@@ -163,6 +164,8 @@ abstract class AttributeKey
      */
     abstract public function getFieldMappingDefinition();
 
+    abstract public function getController();
+
     abstract public function getType();
 
     /**
@@ -170,6 +173,7 @@ abstract class AttributeKey
      */
     public function render($view = 'view', $value = false, $return = false)
     {
+        $at = $this->getType();
         $at = Type::getByHandle($this->getType());
         $resp = $at->render($view, $this, $value, $return);
         if ($return) {
@@ -177,6 +181,21 @@ abstract class AttributeKey
         } else {
             print $resp;
         }
+    }
+
+    public function getAttributeKeyHandle()
+    {
+        return $this->getHandle();
+    }
+
+    public function getAttributeKeyID()
+    {
+        return $this->getID();
+    }
+
+    public function getAttributeType()
+    {
+        return Type::getByHandle($this->getType());
     }
 
 

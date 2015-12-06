@@ -35,7 +35,7 @@ class View extends AbstractView
             $this->attributeKey = $mixed->getAttributeKey();
             $this->attributeType = $mixed->getAttributeTypeObject();
         } else {
-            if ($mixed instanceof AttributeKey) {
+            if ($mixed instanceof AttributeKeyInterface) {
                 $this->attributeKey = $mixed;
                 $this->attributeType = $this->attributeKey->getAttributeType();
             } else {
