@@ -8,7 +8,7 @@
         <fieldset>
             <div class="row">
                 <div class="col-md-12">
-                    <legend>Image Resizing</legend>
+                    <legend><?=t('Image Resizing')?></legend>
                  </div>
 
                 <div class="col-md-5">
