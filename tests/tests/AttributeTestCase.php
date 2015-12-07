@@ -16,6 +16,7 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase {
         'atBoolean',
         'atDefault',
         'atTextarea',
+        'atNumber',
         'atTextareaSettings'
     );
     protected $object;
@@ -42,6 +43,7 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase {
         $this->installAttributeCategoryAndObject();
         AttributeType::add('boolean', 'Boolean');
         AttributeType::add('textarea', 'Textarea');
+        AttributeType::add('number', 'number');
         AttributeType::add('text', 'text');
         foreach($this->keys as $akHandle => $args) {
             $args['akHandle'] = $akHandle;
@@ -72,7 +74,9 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase {
         $object->setAttribute($handle,$second);
         $object = $this->getAttributeObjectForGet();
         $object->reindex();
-        $object->refreshCache();
+        if (method_exists($object, 'refreshCache')) {
+            $object->refreshCache();
+        }
         $attribute = $this->getAttributeObjectForGet()->getAttribute($handle);
         if($secondStatic != null){
             $this->assertSame($attribute,$secondStatic);
