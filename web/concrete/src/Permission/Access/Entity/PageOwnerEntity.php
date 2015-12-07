@@ -2,20 +2,19 @@
 namespace Concrete\Core\Permission\Access\Entity;
 
 use Concrete\Core\Page\Page;
-use Loader;
+use Database;
 use PermissionAccess;
 use Config;
-use URL;
 use UserInfo;
-use \Concrete\Core\Permission\Access\PageAccess as PagePermissionAccess;
-use \Concrete\Core\Permission\Access\AreaAccess as AreaPermissionAccess;
-use \Concrete\Core\Permission\Access\BlockAccess as BlockPermissionAccess;
+use Concrete\Core\Permission\Access\PageAccess as PagePermissionAccess;
+use Concrete\Core\Permission\Access\AreaAccess as AreaPermissionAccess;
+use Concrete\Core\Permission\Access\BlockAccess as BlockPermissionAccess;
 
 class PageOwnerEntity extends Entity
 {
-
     public function getAccessEntityUsers(PermissionAccess $pae)
     {
+        $c = null;
         if ($pae instanceof PagePermissionAccess) {
             $c = $pae->getPermissionObject();
         } else {
@@ -31,6 +30,7 @@ class PageOwnerEntity extends Entity
         if (is_object($c) && ($c instanceof Page)) {
             $ui = UserInfo::getByID($c->getCollectionUserID());
             $users = array($ui);
+
             return $users;
         }
     }
@@ -43,6 +43,7 @@ class PageOwnerEntity extends Entity
         } else {
             if (is_object($users[0])) {
                 $u = new \User();
+
                 return $users[0]->getUserID() == $u->getUserID();
             }
         }
@@ -52,34 +53,36 @@ class PageOwnerEntity extends Entity
     {
         $html = '<a href="javascript:void(0)" onclick="ccm_choosePermissionAccessEntityPageOwner()">' . tc('PermissionAccessEntityTypeName',
                 'Page Owner') . '</a>';
+
         return $html;
     }
 
     public static function getAccessEntitiesForUser($user)
     {
         $entities = array();
-        $db = Loader::db();
         if ($user->isRegistered()) {
+            $db = Database::connection();
             $pae = static::getOrCreate();
-            $r = $db->GetOne('select cID from Pages where uID = ?', array($user->getUserID()));
+            $r = $db->fetchColumn('select cID from Pages where uID = ?', array($user->getUserID()));
             if ($r > 0) {
                 $entities[] = $pae;
             }
         }
+
         return $entities;
     }
 
     public static function getOrCreate()
     {
-        $db = Loader::db();
-        $petID = $db->GetOne('select petID from PermissionAccessEntityTypes where petHandle = \'page_owner\'');
-        $peID = $db->GetOne('select peID from PermissionAccessEntities where petID = ?',
-            array($petID));
+        $db = Database::connection();
+        $petID = $db->fetchColumn('select petID from PermissionAccessEntityTypes where petHandle = \'page_owner\'');
+        $peID = $db->fetchColumn('select peID from PermissionAccessEntities where petID = ?', array($petID));
         if (!$peID) {
-            $db->Execute("insert into PermissionAccessEntities (petID) values(?)", array($petID));
-            $peID = $db->Insert_ID();
+            $db->executeQuery("insert into PermissionAccessEntities (petID) values(?)", array($petID));
+            $peID = $db->lastInsertId();
             Config::save('concrete.misc.access_entity_updated', time());
         }
+
         return \Concrete\Core\Permission\Access\Entity\Entity::getByID($peID);
     }
 
@@ -87,5 +90,4 @@ class PageOwnerEntity extends Entity
     {
         $this->label = t('Page Owner');
     }
-
 }

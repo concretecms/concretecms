@@ -78,7 +78,7 @@ class ColorStyle extends Style {
         $cv = new \Primal\Color\Parser($color['color']);
         $result = $cv->getResult();
         $alpha = false;
-        if ($result->alpha && $result->alpha < 1) {
+        if (is_numeric($result->alpha) && $result->alpha >= 0 && $result->alpha < 1) {
             $alpha = $result->alpha;
         }
         $cv = new ColorValue($this->getVariable());
