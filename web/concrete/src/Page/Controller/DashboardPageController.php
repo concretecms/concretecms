@@ -15,6 +15,8 @@ class DashboardPageController extends PageController
     public $token;
     protected $helpers = array('form');
 
+    protected $entityManager;
+
     public function enableNativeMobile()
     {
         $md = new \Mobile_Detect();
@@ -29,6 +31,8 @@ class DashboardPageController extends PageController
         $this->error = Loader::helper('validation/error');
         $this->set('interface', Loader::helper('concrete/ui'));
         $this->set('dashboard', Loader::helper('concrete/dashboard'));
+
+        $this->entityManager = \Database::connection()->getEntityManager();
 
         $hideDashboardPanel = false;
         if (\Cookie::has('dashboardPanelStatus') && \Cookie::get('dashboardPanelStatus') == 'closed') {

@@ -23,6 +23,11 @@ class Entity
     protected $name;
 
     /**
+     * @Column(type="text")
+     */
+    protected $description;
+
+    /**
      * @Column(type="string")
      */
     protected $table_name;
@@ -42,13 +47,51 @@ class Entity
      **/
     protected $forms;
 
+    /**
+     * @Column(type="datetime")
+     */
+    protected $created_date;
 
     public function __construct()
     {
+        $this->created_date = new \DateTime();
         $this->attributes = new ArrayCollection();
         $this->forms = new ArrayCollection();
         $this->associations = new ArrayCollection();
     }
+
+    /**
+     * @return mixed
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param mixed $description
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCreatedDate()
+    {
+        return $this->created_date;
+    }
+
+    /**
+     * @param mixed $created_date
+     */
+    public function setCreatedDate($created_date)
+    {
+        $this->created_date = $created_date;
+    }
+
 
     /**
      * @return mixed
