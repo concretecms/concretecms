@@ -25,7 +25,7 @@
 
                             <div class="input-group">
                                 <input class="form-control" type="number" name="restrict_max_width" placeholder="1920" value="<?=$restrict_max_width?>">
-                                <div class="input-group-addon">px</div>
+                                <div class="input-group-addon"><?= t(/* i18n: short for pixels */ 'px') ?></div>
                             </div>
                         </div>
 
@@ -34,7 +34,7 @@
 
                             <div class="input-group">
                                 <input class="form-control" type="number" name="restrict_max_height" placeholder="1080" value="<?=$restrict_max_height?>">
-                                <div class="input-group-addon">px</div>
+                                <div class="input-group-addon"><?= t(/* i18n: short for pixels */ 'px') ?></div>
                             </div>
                         </div>
 
