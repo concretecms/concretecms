@@ -170,6 +170,11 @@ class Version
         return "\n" . join("\n", $cleanTags) . "\n";
     }
 
+    public function setFilename($filename)
+    {
+        $this->fvFilename = $filename;
+    }
+
     public function getPrefix()
     {
         return $this->fvPrefix;
