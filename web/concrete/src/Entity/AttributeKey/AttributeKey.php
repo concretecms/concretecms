@@ -19,7 +19,7 @@ use PortlandLabs\Concrete5\MigrationTool\Publisher\Validator\AttributeKeyValidat
  * @Entity
  * @InheritanceType("JOINED")
  * @DiscriminatorColumn(name="type", type="string")
- * @Table(name="AttributeKeys")
+ * @Table(name="AttributeKeyEntities")
  */
 abstract class AttributeKey implements AttributeKeyInterface
 {
@@ -27,35 +27,40 @@ abstract class AttributeKey implements AttributeKeyInterface
     use PackageTrait;
 
     /**
-     * @Id @Column(type="integer")
+     * @Id @Column(type="integer", options={"unsigned":true})
      * @GeneratedValue(strategy="AUTO")
      */
-    protected $id;
+    protected $akID;
 
     /**
      * @Column(type="string")
      */
-    protected $handle;
+    protected $akHandle;
 
     /**
      * @Column(type="string")
      */
-    protected $name;
+    protected $akName;
 
     /**
      * @Column(type="boolean")
      */
-    protected $is_searchable = true;
+    protected $akIsSearchable = true;
 
     /**
      * @Column(type="boolean")
      */
-    protected $is_internal = false;
+    protected $akIsInternal = false;
 
     /**
      * @Column(type="boolean")
      */
-    protected $is_indexed = false;
+    protected $akIsSearchableIndexed = false;
+
+    /**
+     * @Column(type="boolean")
+     */
+    protected $akIsColumnHeader = true;
 
 
     /**
@@ -63,15 +68,15 @@ abstract class AttributeKey implements AttributeKeyInterface
      */
     public function getId()
     {
-        return $this->id;
+        return $this->akID;
     }
 
     /**
-     * @param mixed $id
+     * @param mixed $akID
      */
-    public function setId($id)
+    public function setId($akID)
     {
-        $this->id = $id;
+        $this->akID = $akID;
     }
 
     /**
@@ -79,15 +84,15 @@ abstract class AttributeKey implements AttributeKeyInterface
      */
     public function getHandle()
     {
-        return $this->handle;
+        return $this->akHandle;
     }
 
     /**
      * @param mixed $handle
      */
-    public function setHandle($handle)
+    public function setHandle($akHandle)
     {
-        $this->handle = $handle;
+        $this->akHandle = $akHandle;
     }
 
     /**
@@ -95,15 +100,15 @@ abstract class AttributeKey implements AttributeKeyInterface
      */
     public function getIsInternal()
     {
-        return $this->is_internal;
+        return $this->akIsInternal;
     }
 
     /**
      * @param mixed $is_internal
      */
-    public function setIsInternal($is_internal)
+    public function setIsInternal($akIsInternal)
     {
-        $this->is_internal = $is_internal;
+        $this->akIsInternal = $akIsInternal;
     }
 
     /**
@@ -111,15 +116,15 @@ abstract class AttributeKey implements AttributeKeyInterface
      */
     public function getName()
     {
-        return $this->name;
+        return $this->akName;
     }
 
     /**
      * @param mixed $name
      */
-    public function setName($name)
+    public function setName($akName)
     {
-        $this->name = $name;
+        $this->akName = $akName;
     }
 
     public function getDisplayName()
@@ -132,15 +137,15 @@ abstract class AttributeKey implements AttributeKeyInterface
      */
     public function getIsSearchable()
     {
-        return $this->is_searchable;
+        return $this->akIsSearchable;
     }
 
     /**
      * @param mixed $is_searchable
      */
-    public function setIsSearchable($is_searchable)
+    public function setIsSearchable($akIsSearchable)
     {
-        $this->is_searchable = $is_searchable;
+        $this->akIsSearchable = $akIsSearchable;
     }
 
     /**
@@ -148,16 +153,33 @@ abstract class AttributeKey implements AttributeKeyInterface
      */
     public function getIsIndexed()
     {
-        return $this->is_indexed;
+        return $this->akIsSearchableIndexed;
     }
 
     /**
      * @param mixed $is_indexed
      */
-    public function setIsIndexed($is_indexed)
+    public function setIsIndexed($akIsSearchableIndexed)
     {
-        $this->is_indexed = $is_indexed;
+        $this->akIsSearchableIndexed = $akIsSearchableIndexed;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getIsColumnHeader()
+    {
+        return $this->akIsColumnHeader;
+    }
+
+    /**
+     * @param mixed $akIsColumnHeader
+     */
+    public function setIsColumnHeader($akIsColumnHeader)
+    {
+        $this->akIsColumnHeader = $akIsColumnHeader;
+    }
+
 
     /**
      * @return

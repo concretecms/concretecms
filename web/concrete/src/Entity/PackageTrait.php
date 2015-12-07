@@ -7,6 +7,7 @@ trait PackageTrait
 
     /**
      * @ManyToOne(targetEntity="\Concrete\Core\Entity\Package")
+     * @JoinColumn(name="pkgID", referencedColumnName="pkgID")
      */
     protected $package = null;
 
