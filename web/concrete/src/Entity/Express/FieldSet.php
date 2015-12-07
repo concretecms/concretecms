@@ -34,7 +34,7 @@ class FieldSet
 
 
     /**
-     * @OneToMany(targetEntity="Control\Control", mappedBy="control", cascade={"persist", "remove"})
+     * @OneToMany(targetEntity="\Concrete\Core\Entity\Express\Control\Control", mappedBy="control", cascade={"persist", "remove"})
      **/
     protected $controls;
 
