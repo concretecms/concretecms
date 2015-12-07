@@ -13,6 +13,7 @@ class AttributeKeyControl extends Control
 {
     /**
      * @ManyToOne(targetEntity="\Concrete\Core\Entity\AttributeKey\AttributeKey")
+     * @JoinColumn(name="akID", referencedColumnName="akID")
      */
     protected $attribute_key;
 

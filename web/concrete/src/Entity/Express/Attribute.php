@@ -22,6 +22,7 @@ class Attribute
 
     /**
      * @OneToOne(targetEntity="\Concrete\Core\Entity\AttributeKey\AttributeKey", cascade={"persist", "remove"})
+     * @JoinColumn(name="akID", referencedColumnName="akID")
      **/
     protected $attribute;
 

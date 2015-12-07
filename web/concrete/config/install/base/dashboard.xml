@@ -163,6 +163,13 @@
             </attributes>
         </page>
 
+        <page name="Data Objects" path="/dashboard/express" filename="/dashboard/express/view.php" pagetype=""
+              description="Express Data Objects" package=""/>
+        <page name="View Objects" path="/dashboard/express/entities" filename="/dashboard/express/entities.php" pagetype=""
+              description="" package="">
+        </page>
+
+
         <page name="Reports" path="/dashboard/reports" filename="/dashboard/reports.php" pagetype=""
               description="Get data from forms and logs." package="">
             <attributes>
