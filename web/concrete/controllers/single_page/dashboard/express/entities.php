@@ -77,4 +77,32 @@ class Entities extends DashboardPageController
         }
     }
 
+    public function attributes($id = null)
+    {
+        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity');
+        $entity = $r->findOneById($id);
+        if (is_object($entity)) {
+            $this->set('entity', $entity);
+            $this->set('pageTitle', t('Attributes'));
+            $this->render('/dashboard/express/entities/attributes');
+        } else {
+            $this->view();
+        }
+    }
+
+    public function associations($id = null)
+    {
+        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity');
+        $entity = $r->findOneById($id);
+        if (is_object($entity)) {
+            $this->set('entity', $entity);
+            $this->set('pageTitle', t('Associations'));
+            $this->render('/dashboard/express/entities/associations');
+        } else {
+            $this->view();
+        }
+    }
+
+
+
 }
