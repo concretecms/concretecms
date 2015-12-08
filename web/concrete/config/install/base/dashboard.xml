@@ -169,6 +169,25 @@
               description="" package="">
         </page>
 
+        <page name="Attributes" path="/dashboard/express/entities/attributes"
+              filename="/dashboard/express/entities/attributes.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+
+        <page name="Associations" path="/dashboard/express/entities/associations"
+              filename="/dashboard/express/entities/associations.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+
+
 
         <page name="Reports" path="/dashboard/reports" filename="/dashboard/reports.php" pagetype=""
               description="Get data from forms and logs." package="">

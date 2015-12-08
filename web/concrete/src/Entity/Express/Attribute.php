@@ -2,11 +2,13 @@
 
 namespace Concrete\Core\Entity\Express;
 
+use Concrete\Core\Attribute\AttributeKeyInterface;
+
 /**
  * @Entity
  * @Table(name="ExpressEntityAttributes")
  */
-class Attribute
+class Attribute implements AttributeKeyInterface
 {
 
     /**
@@ -72,6 +74,21 @@ class Attribute
     public function setAttribute($attribute)
     {
         $this->attribute = $attribute;
+    }
+
+    public function getAttributeKeyID()
+    {
+        return $this->attribute->getAttributeKeyID();
+    }
+
+    public function getAttributeType()
+    {
+        return $this->attribute->getAttributeType();
+    }
+
+    public function getAttributeKeyHandle()
+    {
+        return $this->attribute->getAttributeKeyHandle();
     }
 
 }
