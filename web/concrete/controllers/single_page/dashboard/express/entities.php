@@ -1,6 +1,8 @@
 <?
 namespace Concrete\Controller\SinglePage\Dashboard\Express;
 
+use Concrete\Controller\Element\Attribute\TypeList;
+use Concrete\Core\Attribute\Type;
 use Concrete\Core\Entity\Express\Entity;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 
@@ -34,6 +36,7 @@ class Entities extends DashboardPageController
         $this->render('/dashboard/express/entities/add');
     }
 
+    /*
     public function delete_batch()
     {
         if (!$this->token->validate('delete_batch')) {
@@ -57,6 +60,7 @@ class Entities extends DashboardPageController
         $this->view();
     }
 
+    */
     public function view()
     {
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity');
@@ -72,32 +76,6 @@ class Entities extends DashboardPageController
             $this->set('entity', $entity);
             $this->set('pageTitle', t('Object Details'));
             $this->render('/dashboard/express/entities/view_details');
-        } else {
-            $this->view();
-        }
-    }
-
-    public function attributes($id = null)
-    {
-        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity');
-        $entity = $r->findOneById($id);
-        if (is_object($entity)) {
-            $this->set('entity', $entity);
-            $this->set('pageTitle', t('Attributes'));
-            $this->render('/dashboard/express/entities/attributes');
-        } else {
-            $this->view();
-        }
-    }
-
-    public function associations($id = null)
-    {
-        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity');
-        $entity = $r->findOneById($id);
-        if (is_object($entity)) {
-            $this->set('entity', $entity);
-            $this->set('pageTitle', t('Associations'));
-            $this->render('/dashboard/express/entities/associations');
         } else {
             $this->view();
         }
