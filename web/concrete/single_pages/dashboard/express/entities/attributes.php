@@ -4,6 +4,8 @@
 <div class="row">
     <? View::element('dashboard/express/detail_navigation', array('entity' => $entity))?>
     <div class="col-md-8">
-        Attributes
+        <?php
+        $list->render();
+        ?>
     </div>
 </div>

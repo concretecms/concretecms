@@ -270,4 +270,9 @@ class Controller extends AbstractController
 
         return $error;
     }
+
+    public function getIconFormatter()
+    {
+        return new LegacyIconFormatter($this);
+    }
 }
