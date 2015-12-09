@@ -1,7 +1,8 @@
 <?php
 namespace Concrete\Block\Form;
 
-use Loader;
+use Core;
+use Database;
 
 class MiniSurvey
 {
@@ -12,11 +13,10 @@ class MiniSurvey
 
     public $lastSavedMsqID = 0;
     public $lastSavedqID = 0;
-
+    
     public function __construct()
     {
-        $db = Loader::db();
-        $this->db = $db;
+        $this->db = Database::connection();
     }
 
     public function addEditQuestion($values, $withOutput = 1)
@@ -42,11 +42,11 @@ class MiniSurvey
                 $jsonVals['mode'] = '"Edit"';
 
                 //questions that are edited are given a placeholder row in btFormQuestions with bID=0, until a bID is assign on block update
-                $pendingEditExists = $this->db->getOne("select count(*) as total from btFormQuestions where bID=0 AND msqID=".intval($values['msqID']));
+                $pendingEditExists = $this->db->fetchColumn("select count(*) as total from btFormQuestions where bID=0 AND msqID=".intval($values['msqID']));
 
                 //hideQID tells the interface to hide the old version of the question in the meantime
                 $vals = array(intval($values['msqID']));
-                $jsonVals['hideQID'] = intval($this->db->GetOne("SELECT MAX(qID) FROM btFormQuestions WHERE bID!=0 AND msqID=?", $vals));
+                $jsonVals['hideQID'] = intval($this->db->fetchColumn("SELECT MAX(qID) FROM btFormQuestions WHERE bID!=0 AND msqID=?", $vals));
             } else {
                 $jsonVals['mode'] = '"Add"';
             }
@@ -85,7 +85,7 @@ class MiniSurvey
                     $values['position'] = 1000;
                 }
                 if (!intval($values['msqID'])) {
-                    $values['msqID'] = intval($this->db->GetOne("SELECT MAX(msqID) FROM btFormQuestions") + 1);
+                    $values['msqID'] = intval($this->db->fetchColumn("SELECT MAX(msqID) FROM btFormQuestions") + 1);
                 }
                 $dataValues = array(
                     $values['msqID'],
@@ -101,9 +101,9 @@ class MiniSurvey
                 );
                 $sql = 'INSERT INTO btFormQuestions (msqID,questionSetId,question,inputType,options,position,width,height,required,defaultDate) VALUES (?,?,?,?,?,?,?,?,?,?)';
             }
-            $result = $this->db->query($sql, $dataValues);
+            $result = $this->db->executeQuery($sql, $dataValues);
             $this->lastSavedMsqID = intval($values['msqID']);
-            $this->lastSavedqID = intval($this->db->GetOne("SELECT MAX(qID) FROM btFormQuestions WHERE bID=0 AND msqID=?", array($values['msqID'])));
+            $this->lastSavedqID = intval($this->db->fetchColumn("SELECT MAX(qID) FROM btFormQuestions WHERE bID=0 AND msqID=?", array($values['msqID'])));
             $jsonVals['qID'] = $this->lastSavedqID;
             $jsonVals['success'] = 1;
         }
@@ -122,8 +122,8 @@ class MiniSurvey
 
     public function getQuestionInfo($qsID, $qID)
     {
-        $questionRS = $this->db->query('SELECT * FROM btFormQuestions WHERE questionSetId='.intval($qsID).' AND qID='.intval($qID).' LIMIT 1');
-        $questionRow = $questionRS->fetchRow();
+        $questionRS = $this->db->executeQuery('SELECT * FROM btFormQuestions WHERE questionSetId='.intval($qsID).' AND qID='.intval($qID).' LIMIT 1');
+        $questionRow = $questionRS->fetch();
         $jsonPairs = array();
         foreach ($questionRow as $key => $val) {
             if ($key == 'options') {
@@ -146,12 +146,12 @@ class MiniSurvey
     public function deleteQuestion($qsID, $msqID)
     {
         $sql = 'DELETE FROM btFormQuestions WHERE questionSetId='.intval($qsID).' AND msqID='.intval($msqID).' AND bID=0';
-        $this->db->query($sql);
+        $this->db->executeQuery($sql);
     }
 
     public function loadQuestions($qsID, $bID = 0, $showPending = 0)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         if (intval($bID)) {
             $bIDClause = ' AND ( bID='.intval($bID).' ';
             if ($showPending) {
@@ -161,14 +161,14 @@ class MiniSurvey
             }
         }
 
-        return $db->query('SELECT * FROM btFormQuestions WHERE questionSetId='.intval($qsID).' '.$bIDClause.' ORDER BY position, msqID');
+        return $db->executeQuery('SELECT * FROM btFormQuestions WHERE questionSetId='.intval($qsID).' '.$bIDClause.' ORDER BY position, msqID');
     }
 
     public static function getAnswerCount($qsID)
     {
-        $db = Loader::db();
+        $db = Database::connection();
 
-        return $db->getOne('SELECT count(*) FROM btFormAnswerSet WHERE questionSetId='.intval($qsID));
+        return $db->fetchColumn('SELECT count(*) FROM btFormAnswerSet WHERE questionSetId='.intval($qsID));
     }
 
     public function loadSurvey($qsID, $showEdit = false, $bID = 0, $hideQIDs = array(), $showPending = 0, $editmode = 0)
@@ -178,7 +178,7 @@ class MiniSurvey
 
         if (!$showEdit) {
             echo '<div>';
-            while ($questionRow = $questionsRS->fetchRow()) {
+            while ($questionRow = $questionsRS->fetch()) {
                 if (in_array($questionRow['qID'], $hideQIDs)) {
                     continue;
                 }
@@ -218,7 +218,7 @@ class MiniSurvey
             echo '</div>';
         } else {
             echo '<div id="miniSurveyTableWrap"><ul id="miniSurveyPreviewTable" class="list-group">';
-            while ($questionRow = $questionsRS->fetchRow()) {
+            while ($questionRow = $questionsRS->fetch()) {
                 if (in_array($questionRow['qID'], $hideQIDs)) {
                     continue;
                 }
@@ -247,7 +247,7 @@ class MiniSurvey
         $options = explode('%%', $questionData['options']);
         $defaultDate = $questionData['defaultDate'];
         $msqID = intval($questionData['msqID']);
-        $datetime = loader::helper('form/date_time');
+        $datetime = Core::make('helper/form/date_time');
         $html = '';
         switch ($questionData['inputType']) {
             case 'checkboxlist':
@@ -300,7 +300,7 @@ class MiniSurvey
                 return $html;
 
             case 'text':
-                $val = ($_REQUEST['Question'.$msqID]) ? Loader::helper('text')->entities($_REQUEST['Question'.$msqID]) : '';
+                $val = ($_REQUEST['Question'.$msqID]) ? Core::make('helper/text')->entities($_REQUEST['Question'.$msqID]) : '';
 
                 return '<textarea name="Question'.$msqID.'" class="form-control" id="Question'.$msqID.'" cols="'.$questionData['width'].'" rows="'.$questionData['height'].'">'.$val.'</textarea>';
             case 'url':
@@ -341,9 +341,9 @@ class MiniSurvey
 
     public function getMiniSurveyBlockInfo($bID)
     {
-        $rs = $this->db->query('SELECT * FROM btForm WHERE bID='.intval($bID).' LIMIT 1');
+        $rs = $this->db->executeQuery('SELECT * FROM btForm WHERE bID='.intval($bID).' LIMIT 1');
 
-        return $rs->fetchRow();
+        return $rs->fetch();
     }
 
     public function getMiniSurveyBlockInfoByQuestionId($qsID, $bID = 0)
@@ -353,9 +353,9 @@ class MiniSurvey
             $sql .= ' AND bID='.$bID;
         }
         $sql .= ' LIMIT 1';
-        $rs = $this->db->query($sql);
+        $rs = $this->db->executeQuery($sql);
 
-        return $rs->fetchRow();
+        return $rs->fetch();
     }
 
     public function reorderQuestions($qsID = 0, $qIDs)
@@ -368,7 +368,7 @@ class MiniSurvey
         foreach ($qIDs as $qID) {
             $vals = array($positionNum,intval($qID), intval($qsID));
             $sql = 'UPDATE btFormQuestions SET position=? WHERE msqID=? AND questionSetId=?';
-            $rs = $this->db->query($sql, $vals);
+            $rs = $this->db->executeQuery($sql, $vals);
             ++$positionNum;
         }
     }
@@ -384,22 +384,22 @@ class MiniSurvey
     //Run on Form block edit
     public static function questionCleanup($qsID = 0, $bID = 0)
     {
-        $db = Loader::db();
+        $db = Database::connection();
 
         //First make sure that the bID column has been set for this questionSetId (for backwards compatibility)
         $vals = array(intval($qsID));
-        $questionsWithBIDs = $db->getOne('SELECT count(*) FROM btFormQuestions WHERE bID!=0 AND questionSetId=? ', $vals);
+        $questionsWithBIDs = $db->fetchColumn('SELECT count(*) FROM btFormQuestions WHERE bID!=0 AND questionSetId=? ', $vals);
 
         //form block was just upgraded, so set the bID column
         if (!$questionsWithBIDs) {
             $vals = array(intval($bID), intval($qsID));
-            $rs = $db->query('UPDATE btFormQuestions SET bID=? WHERE bID=0 AND questionSetId=?', $vals);
+            $rs = $db->executeQuery('UPDATE btFormQuestions SET bID=? WHERE bID=0 AND questionSetId=?', $vals);
 
             return;
         }
 
         //Then remove all temp/placeholder questions for this questionSetId that haven't been assigned to a block
         $vals = array(intval($qsID));
-        $rs = $db->query('DELETE FROM btFormQuestions WHERE bID=0 AND questionSetId=?', $vals);
+        $rs = $db->executeQuery('DELETE FROM btFormQuestions WHERE bID=0 AND questionSetId=?', $vals);
     }
 }
