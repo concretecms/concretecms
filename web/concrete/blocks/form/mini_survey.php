@@ -3,6 +3,7 @@ namespace Concrete\Block\Form;
 
 use Core;
 use Database;
+use Request;
 
 class MiniSurvey
 {
@@ -255,7 +256,7 @@ class MiniSurvey
                 /*
                 if (count($options) == 1) {
                     if(strlen(trim($options[0]))==0) continue;
-                    $checked=($_REQUEST['Question'.$msqID.'_0']==trim($options[0]))?'checked':'';
+                    $checked=(Request::request('Question'.$msqID.'_0')==trim($options[0]))?'checked':'';
                     $html.= '<input name="Question'.$msqID.'_0" type="checkbox" value="'.trim($options[0]).'" '.$checked.' />';
                 } else {
                 */
@@ -264,7 +265,7 @@ class MiniSurvey
                     if (strlen(trim($options[$i])) == 0) {
                         continue;
                     }
-                    $checked = ($_REQUEST['Question'.$msqID.'_'.$i] == trim($options[$i])) ? 'checked' : '';
+                    $checked = (Request::request('Question'.$msqID.'_'.$i) == trim($options[$i])) ? 'checked' : '';
                     $html .= '  <div class="checkbox"><label><input name="Question'.$msqID.'_'.$i.'" type="checkbox" value="'.trim($options[$i]).'" '.$checked.' /> <span>'.$options[$i].'</span></label></div>'."\r\n";
                 }
                 $html .= '</div>';
@@ -273,11 +274,11 @@ class MiniSurvey
 
             case 'select':
                 if ($this->frontEndMode) {
-                    $selected = (!$_REQUEST['Question'.$msqID]) ? 'selected="selected"' : '';
+                    $selected = (!Request::request('Question'.$msqID)) ? 'selected="selected"' : '';
                     $html .= '<option value="" '.$selected.'>----</option>';
                 }
                 foreach ($options as $option) {
-                    $checked = ($_REQUEST['Question'.$msqID] == trim($option)) ? 'selected="selected"' : '';
+                    $checked = (Request::request('Question'.$msqID) == trim($option)) ? 'selected="selected"' : '';
                     $html .= '<option '.$checked.'>'.trim($option).'</option>';
                 }
 
@@ -288,7 +289,7 @@ class MiniSurvey
                     if (strlen(trim($option)) == 0) {
                         continue;
                     }
-                    $checked = ($_REQUEST['Question'.$msqID] == trim($option)) ? 'checked' : '';
+                    $checked = (Request::request('Question'.$msqID) == trim($option)) ? 'checked' : '';
                     $html .= '<div class="radio"><label><input name="Question'.$msqID.'" type="radio" value="'.trim($option).'" '.$checked.' /> <span>'.$option.'</span></label></div>';
                 }
 
@@ -300,40 +301,43 @@ class MiniSurvey
                 return $html;
 
             case 'text':
-                $val = ($_REQUEST['Question'.$msqID]) ? Core::make('helper/text')->entities($_REQUEST['Question'.$msqID]) : '';
+                $val = (Request::request('Question'.$msqID)) ? Core::make('helper/text')->entities(Request::request('Question'.$msqID)) : '';
 
                 return '<textarea name="Question'.$msqID.'" class="form-control" id="Question'.$msqID.'" cols="'.$questionData['width'].'" rows="'.$questionData['height'].'">'.$val.'</textarea>';
             case 'url':
-                $val = ($_REQUEST['Question'.$msqID]) ? $_REQUEST['Question'.$msqID] : '';
+                $val = (Request::request('Question'.$msqID)) ? Request::request('Question'.$msqID) : '';
 
                 return '<input name="Question'.$msqID.'" id="Question'.$msqID.'" class="form-control" type="url" value="'.stripslashes(htmlspecialchars($val)).'" />';
             case 'telephone':
-                $val = ($_REQUEST['Question'.$msqID]) ? $_REQUEST['Question'.$msqID] : '';
+                $val = (Request::request('Question'.$msqID)) ? Request::request('Question'.$msqID) : '';
 
                 return '<input name="Question'.$msqID.'" id="Question'.$msqID.'" class="form-control" type="tel" value="'.stripslashes(htmlspecialchars($val)).'" />';
             case 'email':
-                $val = ($_REQUEST['Question'.$msqID]) ? $_REQUEST['Question'.$msqID] : '';
+                $val = (Request::request('Question'.$msqID)) ? Request::request('Question'.$msqID) : '';
 
                 return '<input name="Question'.$msqID.'" id="Question'.$msqID.'" class="form-control" type="email" value="'.stripslashes(htmlspecialchars($val)).'" />';
             case 'date':
-                $val = ($_REQUEST['Question'.$msqID]) ? $_REQUEST['Question'.$msqID] : $defaultDate;
+                $val = (Request::request('Question'.$msqID)) ? Request::request('Question'.$msqID) : $defaultDate;
 
                 return $datetime->date('Question'.$msqID, $val);
             case 'datetime':
-                if (isset($_REQUEST['Question'.$msqID])) {
-                    $val = $_REQUEST['Question'.$msqID];
-                } elseif ($_REQUEST['Question'.$msqID.'_dt'] && $_REQUEST['Question'.$msqID.'_h']
-                    && $_REQUEST['Question'.$msqID.'_m'] && $_REQUEST['Question'.$msqID.'_a']) {
-                    $val = $_REQUEST['Question'.$msqID.'_dt'] . ' ' . $_REQUEST['Question'.$msqID.'_h']
-                        . ':' . $_REQUEST['Question'.$msqID.'_m'] . ' ' . $_REQUEST['Question'.$msqID.'_a'];
-                } else {
-                    $val = $defaultDate;
+                $val = Request::request('Question'.$msqID);
+                if (!isset($val)) {
+                    if (
+                        Request::request('Question'.$msqID.'_dt') && Request::request('Question'.$msqID.'_h')
+                        && Request::request('Question'.$msqID.'_m') && Request::request('Question'.$msqID.'_a')
+                    ) {
+                        $val = Request::request('Question'.$msqID.'_dt') . ' ' . Request::request('Question'.$msqID.'_h')
+                            . ':' . Request::request('Question'.$msqID.'_m') . ' ' . Request::request('Question'.$msqID.'_a');
+                    } else {
+                        $val = $defaultDate;
+                    }
                 }
 
                 return $datetime->datetime('Question'.$msqID, $val);
             case 'field':
             default:
-                $val = ($_REQUEST['Question'.$msqID]) ? $_REQUEST['Question'.$msqID] : '';
+                $val = (Request::request('Question'.$msqID)) ? Request::request('Question'.$msqID) : '';
 
                 return '<input name="Question'.$msqID.'" id="Question'.$msqID.'" class="form-control" type="text" value="'.stripslashes(htmlspecialchars($val)).'" />';
         }
