@@ -2,7 +2,7 @@
 namespace Concrete\Controller\SinglePage;
 
 use PageController;
-use Loader;
+use Core;
 use Page;
 use Permissions;
 use File;
@@ -14,10 +14,10 @@ class DownloadFile extends PageController
     public function view($fID = 0, $rcID = null)
     {
         // get the block
-        if ($fID > 0 && Loader::helper('validation/numbers')->integer($fID)) {
+        if ($fID > 0 && Core::make('helper/validation/numbers')->integer($fID)) {
             $file = File::getByID($fID);
             if ($file instanceof File && $file->getFileID() > 0) {
-                $rcID = Loader::helper('security')->sanitizeInt($rcID);
+                $rcID = Core::make('helper/security')->sanitizeInt($rcID);
                 if ($rcID > 0) {
                     $rc = Page::getByID($rcID, 'ACTIVE');
                     if (is_object($rc) && !$rc->isError()) {
@@ -60,7 +60,7 @@ class DownloadFile extends PageController
 
     public function view_inline($fID = 0)
     {
-        if ($fID > 0 && Loader::helper('validation/numbers')->integer($fID)) {
+        if ($fID > 0 && Core::make('helper/validation/numbers')->integer($fID)) {
             $file = File::getByID($fID);
             $fp = new Permissions($file);
             if (!$fp->canViewFile()) {
@@ -78,11 +78,11 @@ class DownloadFile extends PageController
 
     public function submit_password($fID = 0)
     {
-        if ($fID > 0 && Loader::helper('validation/numbers')->integer($fID)) {
+        if ($fID > 0 && Core::make('helper/validation/numbers')->integer($fID)) {
             $f = File::getByID($fID);
 
             $rcID = ($this->post('rcID') ? $this->post('rcID') : null);
-            $rcID = Loader::helper('security')->sanitizeInt($rcID);
+            $rcID = Core::make('helper/security')->sanitizeInt($rcID);
 
             if ($f->getPassword() == $this->post('password')) {
                 if ($this->post('force')) {
@@ -104,7 +104,6 @@ class DownloadFile extends PageController
     {
         $filename = $file->getFilename();
         $file->trackDownload($rcID);
-        $ci = Loader::helper('file');
         $fsl = $file->getFileStorageLocationObject();
         $configuration = $fsl->getConfigurationObject();
         $fv = $file->getVersion();
@@ -118,7 +117,6 @@ class DownloadFile extends PageController
     protected function force_download($file, $rcID = null)
     {
         $file->trackDownload($rcID);
-        $ci = Loader::helper('file');
 
         return $file->forceDownload();
     }
