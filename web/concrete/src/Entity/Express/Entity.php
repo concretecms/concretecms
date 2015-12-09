@@ -2,13 +2,15 @@
 
 namespace Concrete\Core\Entity\Express;
 
+use Concrete\Core\Attribute\Category\ExpressCategory;
+use Concrete\Core\Attribute\EntityInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @Entity
  * @Table(name="ExpressEntities")
  */
-class Entity
+class Entity implements EntityInterface
 {
 
     /**
@@ -38,7 +40,7 @@ class Entity
     protected $attributes;
 
     /**
-     * @OneToMany(targetEntity="Association", mappedBy="entity", cascade={"persist", "remove"})
+     * @OneToMany(targetEntity="Association", mappedBy="source_entity", cascade={"persist", "remove"})
      **/
     protected $associations;
 
@@ -186,6 +188,10 @@ class Entity
         $this->forms = $forms;
     }
 
+    public function getAttributeKeyCategory()
+    {
+        return \Core::make('\Concrete\Core\Attribute\Category\ExpressCategory');
+    }
 
 
 

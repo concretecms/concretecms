@@ -1,11 +1,8 @@
 <?php
 namespace Concrete\Core\Attribute;
 
-use Concrete\Core\Application\Application;
-use Concrete\Core\Attribute\AttributeKeyFactoryInterface;
 use Concrete\Core\Database\Schema\BuilderInterface;
 use Concrete\Core\Entity\AttributeKey\AttributeKey;
-use \Concrete\Core\Entity\Express\Entity;
 use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
 
 class AttributeKeyMappingFieldBuilder implements BuilderInterface

@@ -1,8 +1,9 @@
-<? 
+<?
+defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
 $c = Page::getCurrentPage();
 
-$form = Loader::helper('form'); 
+$form = Loader::helper('form');
 $ih = Loader::helper("concrete/ui");
 $valt = Loader::helper('validation/token');
 $akName = '';
@@ -32,8 +33,8 @@ if (is_object($key)) {
 	?>
 	<script type="text/javascript">
 	deleteAttribute = function() {
-		if (confirm('<?=$delConfirmJS?>')) { 
-			location.href = "<?=$view->action('delete', $key->getAttributeKeyID(), $valt->generate('delete_attribute'))?>";				
+		if (confirm('<?=$delConfirmJS?>')) {
+			location.href = "<?=$view->action('delete', $key->getAttributeKeyID(), $valt->generate('delete_attribute'))?>";
 		}
 	}
 	</script>
@@ -65,7 +66,7 @@ if (is_object($key)) {
 	</div>
 </div>
 
-<? if ($category->allowAttributeSets() == AttributeKeyCategory::ASET_ALLOW_SINGLE) { ?>
+<? if ($category && $category->allowAttributeSets() == AttributeKeyCategory::ASET_ALLOW_SINGLE) { ?>
 <div class="form-group">
 <?=$form->label('asID', t('Set'))?>
 <div class="controls">
@@ -85,6 +86,10 @@ if (is_object($key)) {
 <label class="control-label"><?=t('Searchable')?></label>
 
 <?php
+$keyword_label = t('Content included in search index.');
+$advanced_label = t('Field available in advanced search.');
+
+if (is_object($category)) {
 	$category_handle = $category->getAttributeKeyCategoryHandle();
 	$keyword_label = t('Content included in "Keyword Search".');
 	$advanced_label = t('Field available in "Advanced Search".');
@@ -95,13 +100,14 @@ if (is_object($key)) {
 			break;
 		case 'file':
 			$keyword_label = t('Content included in file search index.');
-			$advanced_label = t('Field available in File Manager Search.');			
+			$advanced_label = t('Field available in File Manager Search.');
 			break;
 		case 'user':
 			$keyword_label = t('Content included in user keyword search.');
 			$advanced_label = t('Field available in Dashboard User Search.');
 			break;
 	}
+}
 	?>
 	<div class="checkbox"><label><?=$form->checkbox('akIsSearchableIndexed', 1, $akIsSearchableIndexed)?> <?=$keyword_label?></label></div>
 	<div class="checkbox"><label><?=$form->checkbox('akIsSearchable', 1, $akIsSearchable)?> <?=$advanced_label?></label></div>
@@ -110,22 +116,31 @@ if (is_object($key)) {
 </fieldset>
 
 <?=$form->hidden('atID', $type->getAttributeTypeID())?>
-<?=$form->hidden('akCategoryID', $category->getAttributeKeyCategoryID()); ?>
+<? if ($category) { ?>
+	<?=$form->hidden('akCategoryID', $category->getAttributeKeyCategoryID()); ?>
+
+<?
+
+	if ($category->getPackageID() > 0) {
+		@Loader::packageElement('attribute/categories/' . $category->getAttributeKeyCategoryHandle(), $category->getPackageHandle(), array('key' => $key));
+	} else {
+		@Loader::element('attribute/categories/' . $category->getAttributeKeyCategoryHandle(), array('key' => $key));
+	}
+	?>
+
+<? } ?>
+
 <?=$valt->output('add_or_update_attribute')?>
-<? 
-if ($category->getPackageID() > 0) { 
-	@Loader::packageElement('attribute/categories/' . $category->getAttributeKeyCategoryHandle(), $category->getPackageHandle(), array('key' => $key));
-} else {
-	@Loader::element('attribute/categories/' . $category->getAttributeKeyCategoryHandle(), array('key' => $key));
+<? $type->render('type_form', $key); ?>
+
+<? if (!isset($back)) {
+	$back = URL::page($c);
 }
 ?>
 
-<? $type->render('type_form', $key); ?>
-
-
 <div class="ccm-dashboard-form-actions-wrapper">
 <div class="ccm-dashboard-form-actions">
-	<a href="<?=URL::page($c)?>" class="btn pull-left btn-default"><?=t('Back')?></a>
+	<a href="<?=$back?>" class="btn pull-left btn-default"><?=t('Back')?></a>
 <? if (is_object($key)) { ?>
 	<button type="submit" class="btn btn-primary pull-right"><?=t('Save')?></button>
 <? } else { ?>

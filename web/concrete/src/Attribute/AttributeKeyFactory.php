@@ -4,7 +4,7 @@ namespace Concrete\Core\Attribute;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 
-class AttributeKeyFactory implements AttributeKeyFactoryInterface
+class AttributeKeyFactory
 {
 
 	protected $application;

@@ -5,14 +5,6 @@ namespace Concrete\Core\Entity\AttributeKey;
 use Concrete\Core\Attribute\AttributeKeyInterface;
 use Concrete\Core\Attribute\Type;
 use Concrete\Core\Entity\PackageTrait;
-use Concrete\Core\Express\Definition\Factory;
-use Concrete\Core\Express\Field\DefinitionFactory;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Persistence\Mapping\ClassMetadata;
-use PortlandLabs\Concrete5\MigrationTool\Batch\Formatter\AttributeKey\BlankFormatter;
-use PortlandLabs\Concrete5\MigrationTool\Entity\Import\Batch;
-use PortlandLabs\Concrete5\MigrationTool\Publisher\PublishableInterface;
-use PortlandLabs\Concrete5\MigrationTool\Publisher\Validator\AttributeKeyValidator;
 
 
 /**
@@ -188,15 +180,14 @@ abstract class AttributeKey implements AttributeKeyInterface
 
     abstract public function getController();
 
-    abstract public function getType();
+    abstract public function getTypeHandle();
 
     /**
      * @deprecated
      */
     public function render($view = 'view', $value = false, $return = false)
     {
-        $at = $this->getType();
-        $at = Type::getByHandle($this->getType());
+        $at = Type::getByHandle($this->getTypeHandle());
         $resp = $at->render($view, $this, $value, $return);
         if ($return) {
             return $resp;
@@ -217,7 +208,7 @@ abstract class AttributeKey implements AttributeKeyInterface
 
     public function getAttributeType()
     {
-        return Type::getByHandle($this->getType());
+        return Type::getByHandle($this->getTypeHandle());
     }
 
 
