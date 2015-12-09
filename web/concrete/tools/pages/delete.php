@@ -129,7 +129,7 @@ foreach($pages as $c) {
                 function() {
                     jQuery.fn.dialog.closeAll();
                     ConcreteEvent.publish('SitemapDeleteRequestComplete');
-                    ConcreteAlert.notify({message: '<?=t('Pages deleted successfully.')?>'});
+                    ConcreteAlert.notify({message: <?=json_encode(t('Pages deleted successfully.'))?>});
                 }
             );
         }
