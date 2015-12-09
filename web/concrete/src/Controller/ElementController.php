@@ -18,11 +18,6 @@ abstract class ElementController extends AbstractController
 
     abstract public function getElement();
 
-    public function setViewObject(\Concrete\Core\View\AbstractView $view)
-    {
-        $this->view = $view;
-    }
-
     public function getViewObject()
     {
         return $this->view;

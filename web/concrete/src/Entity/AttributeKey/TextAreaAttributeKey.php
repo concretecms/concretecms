@@ -8,12 +8,12 @@ use PortlandLabs\Concrete5\MigrationTool\Publisher\AttributeKey\TextAreaPublishe
 
 /**
  * @Entity
- * @Table(name="TextAreaAttributeKeys")
+ * @Table(name="TextareaAttributeKeys")
  */
-class TextAreaAttributeKey extends AttributeKey
+class TextareaAttributeKey extends AttributeKey
 {
 
-    public function getType()
+    public function getTypeHandle()
     {
         return 'textarea';
     }
