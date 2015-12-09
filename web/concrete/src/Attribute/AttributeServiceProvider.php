@@ -9,17 +9,13 @@ class AttributeServiceProvider extends ServiceProvider
 	public function register()
 	{
 		$app = $this->app;
-		$this->app->bindShared('attribute.factory', function() use ($app) {
-			/** @var $factory \Concrete\Core\Attribute\AttributeKeyFactoryInterface */
-			$factory = $app->make('Concrete\Core\Attribute\AttributeKeyFactory');
+		$this->app->bindShared('Concrete\Core\Attribute\AttributeKeyFactory', function() use ($app) {
+			/** @var $factory \Concrete\Core\Attribute\AttributeKeyFactory */
+			$factory = new AttributeKeyFactory($app);
 			$factory->bind('text', 'Concrete\Core\Entity\AttributeKey\TextAttributeKey');
-			$factory->bind('text_area', 'Concrete\Core\Entity\AttributeKey\TextAreaAttributeKey');
+			$factory->bind('text_area', 'Concrete\Core\Entity\AttributeKey\TextareaAttributeKey');
 			return $factory;
 		});
-		$this->app->bind('Concrete\Core\Attribute\AttributeKeyFactoryInterface', function() use ($app) {
-			return $app->make('attribute.factory');
-		});
-
 	}
 
 }

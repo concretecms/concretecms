@@ -2,6 +2,7 @@
 namespace Concrete\Core\Express;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Attribute\AttributeKeyFactory;
 use Concrete\Core\Attribute\AttributeKeyFactoryInterface;
 use \Concrete\Core\Entity\Express\Entity;
 
@@ -12,14 +13,14 @@ class ObjectBuilder
     protected $entity;
 
     /**
-     * @return AttributeKeyFactoryInterface
+     * @return AttributeKeyFactory
      */
     public function getAttributeKeyFactory()
     {
         return $this->attributeKeyFactory;
     }
 
-    public function __construct(AttributeKeyFactoryInterface $attributeKeyFactory)
+    public function __construct(AttributeKeyFactory $attributeKeyFactory)
     {
         $this->attributeKeyFactory = $attributeKeyFactory;
     }

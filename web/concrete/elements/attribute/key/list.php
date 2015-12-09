@@ -1,5 +1,5 @@
 <?php
-
+defined('C5_EXECUTE') or die("Access Denied.");
 /**
  * @var $attributes \Concrete\Core\Attribute\AttributeKeyInterface[]
  */
@@ -21,7 +21,7 @@
                  * @var $formatter \Concrete\Core\Attribute\IconFormatterInterface
                  */
                 $formatter = $controller->getIconFormatter(); ?>
-                <li><a href="<?=$view->controller->getSelectTypeURL($type)?>"><?=$formatter->getListIconElement()?> <?=$type->getAttributeTypeDisplayName()?></a></li>
+                <li><a href="<?=$view->controller->getSelectTypeForAddURL($type)?>"><?=$formatter->getListIconElement()?> <?=$type->getAttributeTypeDisplayName()?></a></li>
             <? } ?>
         </ul>
     </div>

@@ -10,7 +10,7 @@ namespace Concrete\Core\Entity\AttributeKey;
 class TextAttributeKey extends AttributeKey
 {
 
-    public function getType()
+    public function getTypeHandle()
     {
         return 'text';
     }
