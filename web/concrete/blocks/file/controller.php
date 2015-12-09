@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Block\File;
 
-use Loader;
+use Core;
 use File;
 use Concrete\Core\Block\BlockController;
 
@@ -69,7 +69,7 @@ class Controller extends BlockController
 
     public function validate($args)
     {
-        $e = Loader::helper('validation/error');
+        $e = Core::make('helper/validation/error');
         if ($args['fID'] < 1) {
             $e->add(t('You must select a file.'));
         }
