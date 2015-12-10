@@ -158,7 +158,6 @@ class InstallCommand extends Command
             );
             $output->writeln('done.');
         }
-        Config::save('concrete.misc.seen_introduction', true);
         $output->writeln('Installation Complete!');
     }
 }
