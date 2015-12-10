@@ -86,6 +86,7 @@ class Sitemap
 
         if ($cID == 1) {
             $results = $pl->getResults();
+            $pagination = null;
         } else {
             $pl->setItemsPerPage(Config::get('concrete.limits.sitemap_pages'));
             $pagination = $pl->getPagination();
