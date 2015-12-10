@@ -1,7 +1,7 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 
-$dh = Loader::helper('concrete/dashboard/sitemap');
+$dh = Core::make('helper/concrete/dashboard/sitemap');
 if (!$dh->canRead()) {
     die(t("Access Denied."));
 }
@@ -61,4 +61,4 @@ if ($_REQUEST['displaySingleLevel']) {
     }
     $nodes = $dh->getSubNodes($cParentID);
 }
-print Loader::helper('json')->encode($nodes);
+print Core::make('helper/json')->encode($nodes);
