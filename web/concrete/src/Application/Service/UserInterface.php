@@ -223,13 +223,23 @@ class UserInterface
         return false;
     }
 
+    /**
+     * Shall we show the introductive help overlay?
+     *
+     * @return bool
+     */
     public function showHelpOverlay()
     {
-        $u = new ConcreteUser();
-        $timestamp = $u->config('MAIN_HELP_LAST_VIEWED');
-        if (!$timestamp) {
-            return true;
+        $result = false;
+        if (Config::get('concrete.misc.help_overlay')) {
+            $u = new ConcreteUser();
+            $timestamp = $u->config('MAIN_HELP_LAST_VIEWED');
+            if (!$timestamp) {
+                $result = true;
+            }
         }
+
+        return $result;
     }
 
     public function trackHelpOverlayDisplayed()
