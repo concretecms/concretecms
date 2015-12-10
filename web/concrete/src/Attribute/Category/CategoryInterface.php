@@ -12,6 +12,7 @@ interface CategoryInterface
 
     public function setEntity(EntityInterface $entity);
     public function addFromRequest(Type $type, Request $request);
+    public function updateFromRequest(AttributeKey $key, Request $request);
     public function delete(AttributeKey $key);
 
 }

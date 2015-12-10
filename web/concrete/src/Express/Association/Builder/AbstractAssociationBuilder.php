@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Core\Express\AssociationBuilder;
+namespace Concrete\Core\Express\Association\Builder;
 
 use Concrete\Core\Database\Schema\BuilderInterface;
 use Concrete\Core\Entity\Express\Association;

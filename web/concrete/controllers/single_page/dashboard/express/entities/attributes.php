@@ -32,6 +32,18 @@ class Attributes extends DashboardAttributesPageController
         );
     }
 
+    public function update($id = null, $akID = null)
+    {
+        $this->edit($id, $akID);
+        $entity = $this->getEntity($id);
+        $this->set('entity', $entity);
+        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\AttributeKey\AttributeKey');
+        $key = $r->findOneBy(array('akID' => $akID));
+        $this->executeUpdate($entity, $key,
+            \URL::to('/dashboard/express/entities/attributes', 'view', $id)
+        );
+    }
+
     public function select_type($id = null, $type = null)
     {
         $this->set('entity', $this->getEntity($id));

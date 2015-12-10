@@ -2,7 +2,8 @@
 
 namespace Concrete\Core\Entity\Express;
 
-use Concrete\Core\Express\AssociationBuilder\ManyToManyAssociationBuilder;
+use Concrete\Core\Express\Association\Builder\ManyToManyAssociationBuilder;
+use Concrete\Core\Express\Association\Formatter\ManyToManyFormatter;
 
 /**
  * @Entity
@@ -39,6 +40,11 @@ class ManyToManyAssociation extends Association
     public function getAssociationBuilder()
     {
         return new ManyToManyAssociationBuilder($this);
+    }
+
+    public function getFormatter()
+    {
+        return new ManyToManyFormatter($this);
     }
 
 }

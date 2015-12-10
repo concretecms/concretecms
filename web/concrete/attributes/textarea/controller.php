@@ -122,17 +122,9 @@ class Controller extends DefaultController
             return false;
         }
 
-        $db = Database::connection();
-        $row = $db->GetRow('select akTextareaDisplayMode, akTextareaDisplayModeCustomOptions from atTextareaSettings where akID = ?', array($ak->getAttributeKeyID()));
-        $this->akTextareaDisplayModeCustomOptions = array();
-        if (isset($row['akTextareaDisplayMode'])) {
-            $this->akTextareaDisplayMode = $row['akTextareaDisplayMode'];
-            if ($row['akTextareaDisplayMode'] == 'rich_text_custom') {
-                $this->akTextareaDisplayModeCustomOptions = unserialize($row['akTextareaDisplayModeCustomOptions']);
-            }
-        }
-        $this->set('akTextareaDisplayMode', $this->akTextareaDisplayMode);
-        $this->set('akTextareaDisplayModeCustomOptions', $this->akTextareaDisplayModeCustomOptions);
+        $this->akTextareaDisplayMode = $ak->getMode();
+        $this->set('akTextareaDisplayMode', $ak->getMode());
+
     }
 
     public function exportKey($akey)

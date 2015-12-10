@@ -2,7 +2,8 @@
 
 namespace Concrete\Core\Entity\Express;
 
-use Concrete\Core\Express\AssociationBuilder\ManyToOneAssociationBuilder;
+use Concrete\Core\Express\Association\Formatter\ManyToOneFormatter;
+use Concrete\Core\Express\Association\Builder\ManyToOneAssociationBuilder;
 use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
 
 /**
@@ -16,4 +17,8 @@ class ManyToOneAssociation extends Association
         return new ManyToOneAssociationBuilder($this);
     }
 
+    public function getFormatter()
+    {
+        return new ManyToOneFormatter($this);
+    }
 }

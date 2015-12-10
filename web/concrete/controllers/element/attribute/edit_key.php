@@ -10,6 +10,8 @@ class EditKey extends Form
 
     protected $key;
 
+    protected $dashboard_page_submit_action = 'update';
+
     public function __construct(AttributeKey $key)
     {
         $this->key = $key;
