@@ -1,4 +1,5 @@
 <?php
+
 defined('C5_EXECUTE') or die("Access Denied.");
 
 $dh = Core::make('helper/concrete/dashboard/sitemap');
@@ -37,7 +38,7 @@ if ($_GET['includeSystemPages']) {
 }
 
 $cParentID = (isset($_REQUEST['cParentID'])) ? $_REQUEST['cParentID'] : 0;
-if ($_REQUEST['displaySingleLevel']) {
+if (isset($_REQUEST['displaySingleLevel']) && $_REQUEST['displaySingleLevel']) {
     $c = Page::getByID($cParentID);
     $parent = Page::getByID($c->getCollectionParentID());
     if (is_object($parent) && !$parent->isError()) {
@@ -55,9 +56,11 @@ if ($_REQUEST['displaySingleLevel']) {
     }
     $nodes[] = $n;
 } else {
-    $openNodeArray = explode(',', str_replace('_', '', $_COOKIE['ConcreteSitemap-expand']));
-    if (is_array($openNodeArray)) {
-        $dh->setExpandedNodes($openNodeArray);
+    if (isset($_COOKIE['ConcreteSitemap-expand'])) {
+        $openNodeArray = explode(',', str_replace('_', '', $_COOKIE['ConcreteSitemap-expand']));
+        if (is_array($openNodeArray)) {
+            $dh->setExpandedNodes($openNodeArray);
+        }
     }
     $nodes = $dh->getSubNodes($cParentID);
 }
