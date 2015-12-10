@@ -7,30 +7,32 @@ use Loader;
 use Page;
 use Config;
 use Session;
-use \Concrete\Core\View\ErrorView;
+use Concrete\Core\View\ErrorView;
 use stdClass;
 
 /**
- * Useful functions for generating elements on the Concrete interface
+ * Useful functions for generating elements on the Concrete interface.
+ *
  * @subpackage Concrete
  * @package Helpers
+ *
  * @author Andrew Embler <andrew@concrete5.org>
  * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
  * @license    http://www.concrete5.org/license/     MIT License
  */
-
 class UserInterface
 {
-
     public static $menuItems = array();
 
     /**
-     * Generates a submit button in the Concrete style
+     * Generates a submit button in the Concrete style.
+     *
      * @param string $text The text of the button
      * @param bool|string $formID The form this button will submit
      * @param string $buttonAlign
      * @param string $innerClass
      * @param array $args Extra args passed to the link
+     *
      * @return string
      */
     public function submit($text, $formID = false, $buttonAlign = 'right', $innerClass = null, $args = array())
@@ -45,19 +47,22 @@ class UserInterface
             $formID = 'button';
         }
         $argsstr = '';
-        foreach($args as $k => $v) {
+        foreach ($args as $k => $v) {
             $argsstr .= $k . '="' . $v . '" ';
         }
+
         return '<input type="submit" class="btn ' . $innerClass . '" value="' . $text . '" id="ccm-submit-' . $formID . '" name="ccm-submit-' . $formID . '" ' . $argsstr . ' />';
     }
 
     /**
-     * Generates a simple link button in the Concrete style
+     * Generates a simple link button in the Concrete style.
+     *
      * @param string $text The text of the button
      * @param string $href
      * @param string $buttonAlign
      * @param string $innerClass
      * @param array $args Extra args passed to the link
+     *
      * @return string
      */
     public function button($text, $href, $buttonAlign = 'right', $innerClass = null, $args = array())
@@ -71,16 +76,19 @@ class UserInterface
         foreach ($args as $k => $v) {
             $argsstr .= $k . '="' . $v . '" ';
         }
+
         return '<a href="'.$href.'" class="btn btn-default '.$innerClass.'" '.$argsstr.'>'.$text.'</a>';
     }
 
     /**
-     * Generates a JavaScript function button in the Concrete style
+     * Generates a JavaScript function button in the Concrete style.
+     *
      * @param string $text The text of the button
      * @param string $onclick
      * @param string $buttonAlign
      * @param string $innerClass - no longer used
      * @param array $args Extra args passed to the link
+     *
      * @return string
      */
     public function buttonJs($text, $onclick, $buttonAlign = 'right', $innerClass = null, $args = array())
@@ -94,6 +102,7 @@ class UserInterface
         foreach ($args as $k => $v) {
             $argsstr .= $k . '="' . $v . '" ';
         }
+
         return '<input type="button" class="btn btn-default ' . $innerClass . '" value="' . $text . '" onclick="' . $onclick . '" ' . $buttonAlign . ' ' . $argsstr . ' />';
     }
 
@@ -110,7 +119,9 @@ class UserInterface
      * <code>
      *    $bh->buttons($myButton1, $myButton2, $myButton3);
      * </code>
+     *
      * @param string $buttons
+     *
      * @return string
      */
     public function buttons($buttons = null)
@@ -123,11 +134,13 @@ class UserInterface
             $html .= $_html . ' ';
         }
         $html .= '</div>';
+
         return $html;
     }
 
     /**
      * @param \Concrete\Core\Page\Page $c
+     *
      * @return string
      */
     public function getQuickNavigationLinkHTML($c)
@@ -176,6 +189,7 @@ class UserInterface
                 $dimensions = 'width="23" height="23"';
             }
         }
+
         return '<img id="ccm-logo" src="' . $src . '" ' . $dimensions . ' alt="' . $alt . '" title="' . $alt . '" />';
     }
 
@@ -187,7 +201,7 @@ class UserInterface
         $tp = new \TaskPermission();
         $c = Page::getCurrentPage();
         if (Config::get('concrete.external.news_overlay') && $tp->canViewNewsflow() && $c->getCollectionPath() != '/dashboard/news') {
-            $u = new ConcreteUser;
+            $u = new ConcreteUser();
             $nf = $u->config('NEWSFLOW_LAST_VIEWED');
             if ($nf == 'FIRSTRUN') {
                 return false;
@@ -210,7 +224,7 @@ class UserInterface
 
     public function showHelpOverlay()
     {
-        $u = new ConcreteUser;
+        $u = new ConcreteUser();
         $timestamp = $u->config('MAIN_HELP_LAST_VIEWED');
         if (!$timestamp) {
             return true;
@@ -219,12 +233,12 @@ class UserInterface
 
     public function trackHelpOverlayDisplayed()
     {
-        $u = new ConcreteUser;
+        $u = new ConcreteUser();
         $u->saveConfig('MAIN_HELP_LAST_VIEWED', time());
     }
 
     /**
-     * Clears the Interface Items Cache (clears the session)
+     * Clears the Interface Items Cache (clears the session).
      */
     public function clearInterfaceItemsCache()
     {
@@ -235,7 +249,7 @@ class UserInterface
     }
 
     /**
-     * Cache the interface items
+     * Cache the interface items.
      */
     public function cacheInterfaceItems()
     {
@@ -247,6 +261,7 @@ class UserInterface
 
     /**
      * @param \Concrete\Core\Page\Page[] $tabs
+     *
      * @return string
      */
     public function pagetabs($tabs)
@@ -272,6 +287,7 @@ class UserInterface
             $html .= '<li class="' . (($active) ? 'active' : ''). '"><a href="' . $href . '">' . $name . '</a></li>';
         }
         $html .= '</ul>';
+
         return $html;
     }
 
@@ -279,6 +295,7 @@ class UserInterface
      * @param \Concrete\Core\Page\Page[] $tabs
      * @param bool $jstabs
      * @param string $callback
+     *
      * @return string
      */
     public function tabs($tabs, $jstabs = true, $callback = 'ccm_activateTabBar')
@@ -299,6 +316,7 @@ class UserInterface
         if ($jstabs) {
             $html .= '<script type="text/javascript">$(function() { ' . $callback . '($(\'#ccm-tabs-' . $tcn . '\'));});</script>';
         }
+
         return $html;
     }
 
@@ -309,7 +327,7 @@ class UserInterface
      */
     public function renderError($title, $error, $exception = false)
     {
-        $o = new stdClass;
+        $o = new stdClass();
         $o->title = $title;
         $o->content = $error;
         if ($exception) {
@@ -323,6 +341,7 @@ class UserInterface
 
     /**
      * @param array $arguments
+     *
      * @return string
      */
     public function notify($arguments)
@@ -332,7 +351,7 @@ class UserInterface
             'icon' => 'ok',
             'title' => false,
             'message' => false,
-            'buttons' => array()
+            'buttons' => array(),
         );
 
         // overwrite all the defaults with the arguments
@@ -355,8 +374,7 @@ class UserInterface
         $content = '<div id="ccm-notification-page-alert" class="ccm-ui ccm-notification ccm-notification-' . $arguments['type'] . '">';
         $content .= '<i class="ccm-notification-icon fa fa-' . $arguments['icon'] . '"></i><div class="ccm-notification-inner">' . $messageText . '</div>';
         $content .= '<div class="ccm-notification-actions"><a href="#" data-dismiss-alert="page-alert">' . t('Hide') . '</a></div></div>';
+
         return $content;
-
     }
-
 }
