@@ -1332,13 +1332,12 @@ class Package extends Object
      */
     public function cacheBlockClearOn() {
         // do cache flush stuff here
+        $db = Loader::db();
         $customList = array('autonav','page_list');
         for($start = 0; $start < count($customList); $start++){
             $bt = BlockType::getByHandle($customList[$start]);
-            $db = Loader::db();
             //Get collection version ID, collection version block Handle, collection ID
             $bRows=$db->getAll('select cvb.cID, cvb.cvID, cvb.arHandle, cvb.bID FROM CollectionVersionBlocksOutputCache cvb inner join blocks bks on bks.bID = cvb.bID where cvb.btCachedBlockOutputExpires !=0 AND bks.btID='.$bt->getBlockTypeID().'');
-
             foreach($bRows as $row){
                 $cIDs[] = $row['cID'];
                 //if current version is greater than cache version update expiration date for all blocks
