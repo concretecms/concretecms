@@ -91,4 +91,11 @@ class Attribute implements AttributeKeyInterface
         return $this->attribute->getAttributeKeyHandle();
     }
 
+    public function __call($nm, $args)
+    {
+        if (method_exists($this->attribute, $nm)) {
+            return call_user_func_array(array($this->attribute, $nm), $args);
+        }
+    }
+
 }

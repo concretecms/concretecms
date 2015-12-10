@@ -19,7 +19,7 @@ class ObjectAttributeBuilder
     {
         $this->builder = $builder;
         $this->attribute = $builder->getAttributeKeyFactory()->make($type);
-        $this->attribute->setName($name);
+        $this->attribute->setAttributeKeyName($name);
     }
 
     public function __call($method, $args)

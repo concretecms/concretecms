@@ -22,34 +22,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
         $akName = $key->getAttributeKeyName();
         $akIsSearchable = $key->isAttributeKeySearchable();
         $akIsSearchableIndexed = $key->isAttributeKeyContentIndexed();
-        $sets = $key->getAttributeSets();
+        /*$sets = $key->getAttributeSets();
         if (count($sets) == 1) {
             $asID = $sets[0]->getAttributeSetID();
-        }
+        }*/
+
         print $form->hidden('akID', $key->getAttributeKeyID());
     }
     ?>
-
-    <? if (is_object($key)) { ?>
-        <?
-        $valt = Loader::helper('validation/token');
-        $ih = Loader::helper('concrete/ui');
-        $delConfirmJS = t('Are you sure you want to remove this attribute?');
-        ?>
-        <script type="text/javascript">
-            deleteAttribute = function () {
-                if (confirm('<?=$delConfirmJS?>')) {
-                    location.href = "<?=$view->action('delete', $key->getAttributeKeyID(), $valt->generate('delete_attribute'))?>";
-                }
-            }
-        </script>
-
-        <div class="ccm-dashboard-header-buttons">
-            <button type="button" class="btn btn-danger"
-                    onclick="deleteAttribute()"><?= t('Delete Attribute') ?></button>
-        </div>
-
-    <? } ?>
 
 
     <fieldset>

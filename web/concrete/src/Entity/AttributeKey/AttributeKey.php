@@ -3,6 +3,7 @@
 namespace Concrete\Core\Entity\AttributeKey;
 
 use Concrete\Core\Attribute\AttributeKeyInterface;
+use Concrete\Core\Attribute\Key\RequestLoader\StandardRequestLoader;
 use Concrete\Core\Attribute\Type;
 use Concrete\Core\Entity\PackageTrait;
 
@@ -58,23 +59,16 @@ abstract class AttributeKey implements AttributeKeyInterface
     /**
      * @return mixed
      */
-    public function getId()
+    public function getAttributeKeyID()
     {
         return $this->akID;
     }
 
-    /**
-     * @param mixed $akID
-     */
-    public function setId($akID)
-    {
-        $this->akID = $akID;
-    }
 
     /**
      * @return mixed
      */
-    public function getHandle()
+    public function getAttributeKeyHandle()
     {
         return $this->akHandle;
     }
@@ -82,7 +76,7 @@ abstract class AttributeKey implements AttributeKeyInterface
     /**
      * @param mixed $handle
      */
-    public function setHandle($akHandle)
+    public function setAttributeKeyHandle($akHandle)
     {
         $this->akHandle = $akHandle;
     }
@@ -90,7 +84,7 @@ abstract class AttributeKey implements AttributeKeyInterface
     /**
      * @return mixed
      */
-    public function getIsInternal()
+    public function isAttributeKeyInternal()
     {
         return $this->akIsInternal;
     }
@@ -98,7 +92,7 @@ abstract class AttributeKey implements AttributeKeyInterface
     /**
      * @param mixed $is_internal
      */
-    public function setIsInternal($akIsInternal)
+    public function setIsAttributeKeyInternal($akIsInternal)
     {
         $this->akIsInternal = $akIsInternal;
     }
@@ -106,7 +100,7 @@ abstract class AttributeKey implements AttributeKeyInterface
     /**
      * @return mixed
      */
-    public function getName()
+    public function getAttributeKeyName()
     {
         return $this->akName;
     }
@@ -114,20 +108,15 @@ abstract class AttributeKey implements AttributeKeyInterface
     /**
      * @param mixed $name
      */
-    public function setName($akName)
+    public function setAttributeKeyName($akName)
     {
         $this->akName = $akName;
-    }
-
-    public function getDisplayName()
-    {
-        return $this->getName();
     }
 
     /**
      * @return mixed
      */
-    public function getIsSearchable()
+    public function isAttributeKeySearchable()
     {
         return $this->akIsSearchable;
     }
@@ -135,7 +124,7 @@ abstract class AttributeKey implements AttributeKeyInterface
     /**
      * @param mixed $is_searchable
      */
-    public function setIsSearchable($akIsSearchable)
+    public function setIsAttributeKeySearchable($akIsSearchable)
     {
         $this->akIsSearchable = $akIsSearchable;
     }
@@ -143,7 +132,7 @@ abstract class AttributeKey implements AttributeKeyInterface
     /**
      * @return mixed
      */
-    public function getIsIndexed()
+    public function isAttributeKeyContentIndexed()
     {
         return $this->akIsSearchableIndexed;
     }
@@ -151,7 +140,7 @@ abstract class AttributeKey implements AttributeKeyInterface
     /**
      * @param mixed $is_indexed
      */
-    public function setIsIndexed($akIsSearchableIndexed)
+    public function setIsAttributeKeyContentIndexed($akIsSearchableIndexed)
     {
         $this->akIsSearchableIndexed = $akIsSearchableIndexed;
     }
@@ -159,7 +148,7 @@ abstract class AttributeKey implements AttributeKeyInterface
     /**
      * @return mixed
      */
-    public function getIsColumnHeader()
+    public function isAttributeKeyColumnHeader()
     {
         return $this->akIsColumnHeader;
     }
@@ -167,7 +156,7 @@ abstract class AttributeKey implements AttributeKeyInterface
     /**
      * @param mixed $akIsColumnHeader
      */
-    public function setIsColumnHeader($akIsColumnHeader)
+    public function setIsAttributeKeyColumnHeader($akIsColumnHeader)
     {
         $this->akIsColumnHeader = $akIsColumnHeader;
     }
@@ -196,19 +185,27 @@ abstract class AttributeKey implements AttributeKeyInterface
         }
     }
 
-    public function getAttributeKeyHandle()
+    public function getAttributeKeyDisplayName($format = 'html')
     {
-        return $this->getHandle();
+        $value = tc('AttributeKeyName', $this->getAttributeKeyName());
+        switch ($format) {
+            case 'html':
+                return h($value);
+            case 'text':
+            default:
+                return $value;
+        }
     }
 
-    public function getAttributeKeyID()
-    {
-        return $this->getID();
-    }
 
     public function getAttributeType()
     {
         return Type::getByHandle($this->getTypeHandle());
+    }
+
+    public function getRequestLoader()
+    {
+        return new StandardRequestLoader();
     }
 
 

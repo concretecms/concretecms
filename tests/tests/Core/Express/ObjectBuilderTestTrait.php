@@ -13,9 +13,9 @@ trait ObjectBuilderTestTrait
         $builder->createObject('Student')
             ->addAttribute('text', 'First Name')
             ->addAttribute('text', 'Last Name');
-        $builder->createAttribute('text_area', 'Bio')
+        $builder->createAttribute('textarea', 'Bio')
             ->setMode('rich_text')
-            ->setIsIndexed(true)
+            ->setIsAttributeKeyContentIndexed(true)
             ->build();
         $builder->addAttribute('text', 'Password');
         return $builder;

@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Attribute\Category;
 
+use Concrete\Core\Attribute\AttributeKeyFactory;
 use Concrete\Core\Attribute\EntityInterface;
 use Concrete\Core\Attribute\Key\Factory;
 use Concrete\Core\Attribute\Type;
@@ -16,10 +17,20 @@ abstract class AbstractCategory implements CategoryInterface
 
     protected $entityManager;
     protected $entity;
+    protected $attributeKeyFactory;
 
-    public function __construct(EntityManager $entityManager)
+    public function __construct(AttributeKeyFactory $attributeKeyFactory, EntityManager $entityManager)
     {
+        $this->attributeKeyFactory = $attributeKeyFactory;
         $this->entityManager = $entityManager;
+    }
+
+    public function addFromRequest(Type $type, Request $request)
+    {
+        $key = $this->attributeKeyFactory->make($type->getAttributeTypeHandle());
+        $loader = $key->getRequestLoader();
+        $loader->load($key, $request);
+        return $key;
     }
 
     public function setEntity(EntityInterface $entity)
@@ -35,4 +46,4 @@ abstract class AbstractCategory implements CategoryInterface
         return $this->entity;
     }
 
-    }
+}

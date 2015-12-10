@@ -25,15 +25,15 @@ class ObjectBuilderTest extends PHPUnit_Framework_TestCase
 
         /** @var $first \Concrete\Core\Entity\AttributeKey\TextAttributeKey */
         $first = $attributes[0];
-        $this->assertEquals('First Name', $first->getName());
-        $this->assertEquals(false, $first->getIsIndexed());
-        $this->assertEquals(true, $first->getIsSearchable());
+        $this->assertEquals('First Name', $first->getAttributeKeyName());
+        $this->assertEquals(false, $first->isAttributeKeyContentIndexed());
+        $this->assertEquals(true, $first->isAttributeKeySearchable());
 
         /** @var $bio \Concrete\Core\Entity\AttributeKey\TextAreaAttributeKey */
         $bio = $attributes[2];
         $this->assertEquals('rich_text', $bio->getMode());
-        $this->assertEquals(true, $bio->getIsIndexed());
-        $this->assertEquals(true, $bio->getIsSearchable());
+        $this->assertEquals(true, $bio->isAttributeKeyContentIndexed());
+        $this->assertEquals(true, $bio->isAttributeKeySearchable());
     }
 
 

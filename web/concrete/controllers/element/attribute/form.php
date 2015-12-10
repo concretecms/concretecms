@@ -4,11 +4,11 @@ namespace Concrete\Controller\Element\Attribute;
 use Concrete\Core\Attribute\Type;
 use Concrete\Core\Controller\ElementController;
 
-class AddKey extends ElementController
+class Form extends ElementController
 {
 
-    protected $type;
     protected $back_button_url;
+    protected $type;
     protected $dashboard_page_submit_action = 'add';
     protected $dashboard_page_parameters = array();
 

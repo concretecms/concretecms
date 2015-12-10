@@ -52,7 +52,7 @@ class ObjectBuilder
     {
         /** @var $attribute \Concrete\Core\Entity\AttributeKey\AttributeKey */
         $attribute = $this->attributeKeyFactory->make($type);
-        $attribute->setName($name);
+        $attribute->setAttributeKeyName($name);
         $this->entity->getAttributes()->add($attribute);
         return $this;
     }

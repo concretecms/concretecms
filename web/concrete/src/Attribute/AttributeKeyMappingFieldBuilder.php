@@ -21,14 +21,14 @@ class AttributeKeyMappingFieldBuilder implements BuilderInterface
         $fields = array();
         if (isset($definition['type'])) {
             $fields[] = array(
-                'name' => $this->key->getHandle(),
+                'name' => $this->key->getAttributeKeyHandle(),
                 'type' => $definition['type'],
                 'options' => $definition['options'],
             );
         } else {
             foreach ($definition as $name => $column) {
                 $fields[] = array(
-                    'name' => $this->key->getHandle() . '_' . $name,
+                    'name' => $this->key->getAttributeKeyHandle() . '_' . $name,
                     'type' => $column['type'],
                     'options' => $column['options'],
                 );
