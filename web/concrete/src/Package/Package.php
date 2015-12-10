@@ -51,6 +51,8 @@ use PageType;
 use PermissionKey;
 use PermissionKeyCategory;
 use SinglePage;
+use Events;
+use Loader;
 
 /**
  * A package can contains related components that customize concrete5. They can br easily
@@ -178,6 +180,24 @@ class Package extends Object
                 return $value;
         }
     }
+
+    /*
+     * To Refresh autonav and page list cache on sitemap change
+     * setup event listener for different event
+     */
+    public function on_start(){
+        //Event handler to handle cache
+        Events::addListener('on_page_delete', array($this, 'CacheBlockClearOn'));
+        Events::addListener('on_page_update', array($this, 'CacheBlockClearOn'));
+        Events::addListener('on_page_add', array($this, 'CacheBlockClearOn'));
+        Events::addListener('on_page_duplicate', array($this, 'CacheBlockClearOn'));
+        Events::addListener('on_page_move_to_trash', array($this, 'CacheBlockClearOn'));
+        Events::addListener('on_page_move', array($this, 'CacheBlockClearOn'));
+
+        Events::addListener('on_page_version_add', array($this, 'CacheBlockClearOn'));
+        Events::addListener('on_page_version_approve', array($this, 'cacheBlockClearOn'));
+    }
+
 
     /**
      * Returns the name of an object belonging to a package.
@@ -1304,5 +1324,30 @@ class Package extends Object
         }
 
         return false;
+    }
+
+    /*
+     * if event listener execute this function call
+     * Set expiration time to 0 in CollectionVersionBlocksOutputCache where block is used
+     */
+    public function cacheBlockClearOn() {
+        // do cache flush stuff here
+        $customList = array('autonav','page_list');
+        for($start = 0; $start < count($customList); $start++){
+            $bt = BlockType::getByHandle($customList[$start]);
+            $db = Loader::db();
+            //Get collection version ID, collection version block Handle, collection ID
+            $bRows=$db->getAll('select cvb.cID, cvb.cvID, cvb.arHandle, cvb.bID FROM CollectionVersionBlocksOutputCache cvb inner join blocks bks on bks.bID = cvb.bID where cvb.btCachedBlockOutputExpires !=0 AND bks.btID='.$bt->getBlockTypeID().'');
+
+            foreach($bRows as $row){
+                $cIDs[] = $row['cID'];
+                //if current version is greater than cache version update expiration date for all blocks
+                $v = array( $row['arHandle'], $row['bID']);
+                $db->Execute(
+                    'update CollectionVersionBlocksOutputCache set btCachedBlockOutputExpires = 0 where cID IN ('.implode(',', $cIDs).')  and arHandle = ? and bID = ?',
+                    $v
+                );
+            }
+        }
     }
 }
