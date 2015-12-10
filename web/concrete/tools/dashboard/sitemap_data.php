@@ -1,6 +1,6 @@
-<?
-
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
+
 $dh = Loader::helper('concrete/dashboard/sitemap');
 if (!$dh->canRead()) {
     die(t("Access Denied."));
@@ -8,21 +8,20 @@ if (!$dh->canRead()) {
 
 /*
 if (isset($_REQUEST['selectedPageID'])) {
-	if (strstr($_REQUEST['selectedPageID'], ',')) {
-		$sanitizedPageID = preg_replace('/[^0-9,]/', '', $_REQUEST['selectedPageID']);
-		$sanitizedPageID = preg_replace('/\s/', '', $sanitizedPageID);
-	} else {
-		$sanitizedPageID = intval($_REQUEST['selectedPageID']);
-	}
-	$dh->setSelectedPageID($sanitizedPageID);
+    if (strstr($_REQUEST['selectedPageID'], ',')) {
+        $sanitizedPageID = preg_replace('/[^0-9,]/', '', $_REQUEST['selectedPageID']);
+        $sanitizedPageID = preg_replace('/\s/', '', $sanitizedPageID);
+    } else {
+        $sanitizedPageID = intval($_REQUEST['selectedPageID']);
+    }
+    $dh->setSelectedPageID($sanitizedPageID);
 }
 
 if (isset($_REQUEST['task']) && $_REQUEST['task'] == 'save_sitemap_display_mode') {
-	$u = new User();
-	$u->saveConfig('SITEMAP_OVERLAY_DISPLAY_MODE', $_REQUEST['display_mode']);
-	exit;
+    $u = new User();
+    $u->saveConfig('SITEMAP_OVERLAY_DISPLAY_MODE', $_REQUEST['display_mode']);
+    exit;
 }
-
 */
 
 if ($_REQUEST['displayNodePagination']) {
