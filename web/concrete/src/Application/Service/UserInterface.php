@@ -4,6 +4,7 @@ namespace Concrete\Core\Application\Service;
 use PermissionKey;
 use User as ConcreteUser;
 use Loader;
+use Core;
 use Page;
 use Config;
 use Session;
@@ -149,7 +150,7 @@ class UserInterface
         if (method_exists($cnt, 'getQuickNavigationLinkHTML')) {
             return $cnt->getQuickNavigationLinkHTML();
         } else {
-            return '<a href="' . Loader::helper('navigation')->getLinkToCollection($c) . '">' . $c->getCollectionName() . '</a>';
+            return '<a href="' . Core::make('helper/navigation')->getLinkToCollection($c) . '">' . $c->getCollectionName() . '</a>';
         }
     }
 
@@ -255,7 +256,7 @@ class UserInterface
     {
         $u = new ConcreteUser();
         if ($u->isRegistered()) {
-            Loader::helper('concrete/dashboard')->getIntelligentSearchMenu();
+            Core::make('helper/concrete/dashboard')->getIntelligentSearchMenu();
         }
     }
 
@@ -279,7 +280,7 @@ class UserInterface
                 $name = $t->getCollectionName();
             }
 
-            $href = Loader::helper('navigation')->getLinkToCollection($_c);
+            $href = Core::make('helper/navigation')->getLinkToCollection($_c);
             $active = false;
             if (is_object($c) && $c->getCollectionID() == $_c->getCollectionID()) {
                 $active = true;
