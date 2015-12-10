@@ -67,8 +67,6 @@ class EntityWriterTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($class->hasProperty('teacher'));
         $this->assertTrue($class->hasMethod('getTeacher'));
 
-        $this->assertFileExists(__DIR__ . '/Testing/StudentAttribute.php');
-
     }
 
 

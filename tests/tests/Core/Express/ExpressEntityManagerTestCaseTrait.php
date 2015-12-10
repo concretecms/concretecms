@@ -11,7 +11,7 @@ trait ExpressEntityManagerTestCaseTrait
         $student->setName('Student');
 
         $first_name = new Concrete\Core\Entity\AttributeKey\TextAttributeKey();
-        $first_name->setHandle('first_name');
+        $first_name->setAttributeKeyHandle('first_name');
 
         $teacher = new \Concrete\Core\Entity\Express\Entity();
         $teacher->setTableName('Teachers');
@@ -67,7 +67,7 @@ trait ExpressEntityManagerTestCaseTrait
         $student->setName('Student');
 
         $first_name = new Concrete\Core\Entity\AttributeKey\TextAttributeKey();
-        $first_name->setHandle('first_name');
+        $first_name->setAttributeKeyHandle('first_name');
 
 
         $teacher = new \Concrete\Core\Entity\Express\Entity();
