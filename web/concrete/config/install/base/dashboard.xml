@@ -187,7 +187,14 @@
             </attributes>
         </page>
 
-
+        <page name="Forms" path="/dashboard/express/entities/forms"
+              filename="/dashboard/express/entities/forms.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
 
         <page name="Reports" path="/dashboard/reports" filename="/dashboard/reports.php" pagetype=""
               description="Get data from forms and logs." package="">

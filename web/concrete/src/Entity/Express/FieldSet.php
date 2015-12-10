@@ -18,12 +18,12 @@ class FieldSet
     protected $id;
 
     /**
-     * @Column(type="string")
+     * @Column(type="string", nullable=true)
      */
     protected $title;
 
     /**
-     * @Column(type="text")
+     * @Column(type="text", nullable=true)
      */
     protected $description;
 

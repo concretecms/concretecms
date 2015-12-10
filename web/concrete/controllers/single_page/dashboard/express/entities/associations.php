@@ -79,7 +79,7 @@ class Associations extends DashboardPageController
 
             $this->render('/dashboard/express/entities/associations/add');
         } else {
-            $this->redirect('/dashboard/system/express');
+            $this->redirect('/dashboard/express/entities');
         }
     }
     public function view($id = null)
@@ -90,7 +90,7 @@ class Associations extends DashboardPageController
             $this->set('associations', $entity->getAssociations());
             $this->set('pageTitle', t('Associations'));
         } else {
-            $this->redirect('/dashboard/system/express');
+            $this->redirect('/dashboard/express/entities');
         }
     }
 
@@ -129,7 +129,7 @@ class Associations extends DashboardPageController
         }
         if (is_object($entity)) {
         } else {
-            $this->redirect('/dashboard/system/express');
+            $this->redirect('/dashboard/express/entities');
         }
     }
 

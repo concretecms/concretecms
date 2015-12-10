@@ -1,0 +1,35 @@
+<?php defined('C5_EXECUTE') or die("Access Denied.");?>
+
+<div class="ccm-dashboard-header-buttons">
+    <a href="<?=URL::to('/dashboard/express/entities/forms', 'add', $entity->getId())?>" class="btn btn-primary">
+        <?=t("Add Form")?>
+    </a>
+</div>
+
+<div class="row">
+    <? View::element('dashboard/express/detail_navigation', array('entity' => $entity))?>
+    <div class="col-md-8">
+
+        <?php if (count($forms)) {
+            ?>
+
+            <ul class="item-select-list" id="ccm-stack-list">
+                <?php foreach($forms as $form) { ?>
+                    <li>
+                        <a href="<?=URL::to('/dashboard/express/entities/forms', 'view_form_details', $form->getID())?>">
+                            <i class="fa fa-list-alt"></i> <?=$form->getName()?>
+                        </a>
+                    </li>
+                <? } ?>
+            </ul>
+
+        <?php
+        } else {
+            ?>
+            <p><?=t('You have not created any forms.')?></p>
+        <?php
+        } ?>
+
+
+    </div>
+</div>
