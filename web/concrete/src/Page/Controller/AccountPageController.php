@@ -18,7 +18,8 @@ class AccountPageController extends CorePageController
             $this->replace('/login');
         }
         $this->error = Loader::helper('validation/error');
-        $this->set('valt', Loader::helper('validation/token'));
+        $this->token = Loader::helper('validation/token');
+        $this->set('valt', $this->token);
         $this->set('av', Loader::helper('concrete/avatar'));
 
         $this->set('profile', \UserInfo::getByID($u->getUserID()));
