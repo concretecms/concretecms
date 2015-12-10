@@ -48,9 +48,11 @@ class ElementView extends AbstractView
     public function setupRender()
     {
         $env = Environment::get();
-        $this->setViewTemplate(
-            $env->getPath(DIRNAME_ELEMENTS . '/' . $this->element . '.php', $this->pkgHandle)
-        );
+        $r = $env->getRecord(DIRNAME_ELEMENTS . '/' . $this->element . '.php', $this->pkgHandle);
+        if (!$r->exists()) {
+            throw new \RuntimeException(t('Element %s does not exist', $this->element));
+        }
+        $this->setViewTemplate($r->file);
     }
 
     public function finishRender($contents)

@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Entity\AttributeKey;
 
+use Concrete\Core\Attribute\Key\RequestLoader\TextareaRequestLoader;
 use PortlandLabs\Concrete5\MigrationTool\Batch\Formatter\AttributeKey\TextAreaFormatter;
 use PortlandLabs\Concrete5\MigrationTool\Publisher\AttributeKey\TextAreaPublisher;
 
@@ -49,5 +50,9 @@ class TextareaAttributeKey extends AttributeKey
         return new \Concrete\Attribute\Textarea\Controller($this->getAttributeType());
     }
 
+    public function getRequestLoader()
+    {
+        return new TextareaRequestLoader();
+    }
 
 }

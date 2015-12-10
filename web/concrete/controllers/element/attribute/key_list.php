@@ -1,14 +1,17 @@
 <?php
 namespace Concrete\Controller\Element\Attribute;
 
+use Concrete\Core\Attribute\AttributeKeyInterface;
 use Concrete\Core\Attribute\Type;
 use Concrete\Core\Controller\ElementController;
+use Concrete\Core\Entity\AttributeKey\AttributeKey;
 
 class KeyList extends ElementController
 {
 
     protected $dashboard_page_path;
     protected $dashboard_page_add_action = 'select_type';
+    protected $dashboard_page_edit_action = 'edit';
     protected $dashboard_page_parameters = array();
 
     protected $attributes = array();
@@ -52,12 +55,20 @@ class KeyList extends ElementController
         $this->types = $types;
     }
 
-    public function getSelectTypeForAddURL(Type $type)
+    public function getAddAttributeTypeURL(Type $type)
     {
         $args = array($this->getDashboardPagePath(), $this->getDashboardPageAddAction());
         $args = array_merge($args, $this->getDashboardPageParameters(), array($type->getAttributeTypeID()));
         return call_user_func_array(array('\URL', 'to'), $args);
     }
+
+    public function getEditAttributeKeyURL(AttributeKeyInterface $key)
+    {
+        $args = array($this->getDashboardPagePath(), $this->getDashboardPageEditAction());
+        $args = array_merge($args, $this->getDashboardPageParameters(), array($key->getAttributeKeyID()));
+        return call_user_func_array(array('\URL', 'to'), $args);
+    }
+
 
     public function view()
     {
@@ -116,5 +127,22 @@ class KeyList extends ElementController
     {
         $this->dashboard_page_parameters = $dashboard_page_parameters;
     }
+
+    /**
+     * @return string
+     */
+    public function getDashboardPageEditAction()
+    {
+        return $this->dashboard_page_edit_action;
+    }
+
+    /**
+     * @param string $dashboard_page_edit_action
+     */
+    public function setDashboardPageEditAction($dashboard_page_edit_action)
+    {
+        $this->dashboard_page_edit_action = $dashboard_page_edit_action;
+    }
+
 
 }

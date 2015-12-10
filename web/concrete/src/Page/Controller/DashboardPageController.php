@@ -32,7 +32,7 @@ class DashboardPageController extends PageController
         $this->set('interface', Loader::helper('concrete/ui'));
         $this->set('dashboard', Loader::helper('concrete/dashboard'));
 
-        $this->entityManager = \Database::connection()->getEntityManager();
+        $this->entityManager = \Core::make('Doctrine\ORM\EntityManager');
 
         $hideDashboardPanel = false;
         if (\Cookie::has('dashboardPanelStatus') && \Cookie::get('dashboardPanelStatus') == 'closed') {

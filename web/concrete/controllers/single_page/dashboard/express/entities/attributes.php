@@ -22,6 +22,16 @@ class Attributes extends DashboardAttributesPageController
         $this->renderList($entity->getAttributes(), Type::getAttributeTypeList());
     }
 
+    public function edit($id = null, $akID = null)
+    {
+        $this->set('entity', $this->getEntity($id));
+        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\AttributeKey\AttributeKey');
+        $key = $r->findOneBy(array('akID' => $akID));
+        $this->renderEdit($key,
+            \URL::to('/dashboard/express/entities/attributes', 'view', $id)
+        );
+    }
+
     public function select_type($id = null, $type = null)
     {
         $this->set('entity', $this->getEntity($id));
@@ -37,7 +47,18 @@ class Attributes extends DashboardAttributesPageController
         $type = Type::getByID($type);
         $entity = $this->getEntity($id);
         $this->set('entity', $entity);
-        $this->executeAdd($entity, $type);
+        $this->executeAdd($entity, $type, \URL::to('/dashboard/express/entities/attributes', 'view', $id));
+    }
+
+    public function delete($id = null, $akID = null)
+    {
+        $entity = $this->getEntity($id);
+        $this->set('entity', $entity);
+        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\AttributeKey\AttributeKey');
+        $key = $r->findOneBy(array('akID' => $akID));
+        $this->executeDelete($entity, $key,
+            \URL::to('/dashboard/express/entities/attributes', 'view', $id)
+        );
     }
 
 

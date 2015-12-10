@@ -13,7 +13,7 @@ class AttributeServiceProvider extends ServiceProvider
 			/** @var $factory \Concrete\Core\Attribute\AttributeKeyFactory */
 			$factory = new AttributeKeyFactory($app);
 			$factory->bind('text', 'Concrete\Core\Entity\AttributeKey\TextAttributeKey');
-			$factory->bind('text_area', 'Concrete\Core\Entity\AttributeKey\TextareaAttributeKey');
+			$factory->bind('textarea', 'Concrete\Core\Entity\AttributeKey\TextareaAttributeKey');
 			return $factory;
 		});
 	}
