@@ -63,9 +63,25 @@ abstract class DashboardAttributesPageController extends DashboardPageController
             $category = $entity->getAttributeKeyCategory();
             $category->setEntity($entity);
             $category->addFromRequest($type, $this->request);
-            //$builder = \Core::make('Concrete\Core\Attribute\Key\Builder');
-            //$builder->addFromRequest($category, $type, $this->request);
             $this->flash('success', t('Attribute created successfully.'));
+            $this->redirect($successURL);
+        }
+    }
+
+    protected function executeUpdate(EntityInterface $entity, AttributeKey $key, $successURL)
+    {
+        $controller = $key->getController();
+        $e = $controller->validateKey($this->request->request->all());
+        if ($e->has()) {
+            $this->error = $e;
+        } else {
+            /**
+             * @var $category \Concrete\Core\Attribute\Category\CategoryInterface
+             */
+            $category = $entity->getAttributeKeyCategory();
+            $category->setEntity($entity);
+            $category->updateFromRequest($key, $this->request);
+            $this->flash('success', t('Attribute updated successfully.'));
             $this->redirect($successURL);
         }
     }

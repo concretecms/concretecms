@@ -28,6 +28,14 @@ class ExpressCategory extends AbstractCategory
         $this->entityManager->flush();
     }
 
+    public function updateFromRequest(AttributeKey $key, Request $request)
+    {
+        $key = parent::updateFromRequest($key, $request);
+        $this->entityManager->persist($key);
+        $this->entityManager->flush();
+    }
+
+
     public function delete(AttributeKey $key)
     {
         $query = $this->entityManager->createQuery(

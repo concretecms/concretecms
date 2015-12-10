@@ -33,6 +33,14 @@ abstract class AbstractCategory implements CategoryInterface
         return $key;
     }
 
+    public function updateFromRequest(AttributeKey $key, Request $request)
+    {
+        $loader = $key->getRequestLoader();
+        $loader->load($key, $request);
+        return $key;
+    }
+
+
     public function setEntity(EntityInterface $entity)
     {
         $this->entity = $entity;

@@ -2,7 +2,8 @@
 
 namespace Concrete\Core\Entity\Express;
 
-use Concrete\Core\Express\AssociationBuilder\OneToOneAssociationBuilder;
+use Concrete\Core\Express\Association\Builder\OneToOneAssociationBuilder;
+use Concrete\Core\Express\Association\Formatter\OneToOneFormatter;
 
 /**
  * @Entity
@@ -37,6 +38,11 @@ class OneToOneAssociation extends Association
     public function getAssociationBuilder()
     {
         return new OneToOneAssociationBuilder($this);
+    }
+
+    public function getFormatter()
+    {
+        return new OneToOneFormatter($this);
     }
 
 

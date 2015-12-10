@@ -33,12 +33,12 @@ abstract class Association
 
 
     /**
-     * @Column(type="string")
+     * @Column(type="string", nullable=true)
      */
     protected $target_property_name;
 
     /**
-     * @Column(type="string")
+     * @Column(type="string", nullable=true)
      */
     protected $inversed_by_property_name;
 
@@ -141,7 +141,7 @@ abstract class Association
     }
 
 
-
+    abstract public function getFormatter();
 
 
 
