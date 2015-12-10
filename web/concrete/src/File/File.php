@@ -6,7 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Util\Debug;
 use Doctrine\DBAL\Logging\EchoSQLLogger;
 use FileSet;
-use Concrete\Flysystem\AdapterInterface;
+use League\Flysystem\AdapterInterface;
 use Loader;
 use CacheLocal;
 use Core;
@@ -195,6 +195,11 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         $em->flush();
     }
 
+    public function setStorageLocation(StorageLocation $location)
+    {
+        $this->storageLocation = $location;
+    }
+
     public function setFileStorageLocation(StorageLocation $newLocation)
     {
         $fh = Loader::helper('concrete/file');
@@ -218,7 +223,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
             throw new \Exception($e->getMessage());
         }
 
-        $this->storageLocation = $newLocation;
+        $this->setStorageLocation($newLocation);
         $this->save();
     }
 

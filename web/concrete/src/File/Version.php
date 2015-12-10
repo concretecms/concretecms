@@ -9,8 +9,8 @@ use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use Concrete\Core\File\Image\Thumbnail\Type\Version as ThumbnailTypeVersion;
 use Concrete\Core\File\Type\TypeList as FileTypeList;
 use Concrete\Core\Http\FlysystemFileResponse;
-use Concrete\Flysystem\AdapterInterface;
-use Concrete\Flysystem\FileNotFoundException;
+use League\Flysystem\AdapterInterface;
+use League\Flysystem\FileNotFoundException;
 use Core;
 use Events;
 use FileAttributeKey;
@@ -169,6 +169,11 @@ class Version
         }
         //the leading and trailing line break char is for searching: fvTag like %\ntag\n%
         return "\n" . join("\n", $cleanTags) . "\n";
+    }
+
+    public function setFilename($filename)
+    {
+        $this->fvFilename = $filename;
     }
 
     public function getPrefix()
@@ -333,7 +338,7 @@ class Version
     /**
      * Returns an abstracted File object for the resource. NOT a concrete5 file object.
      *
-     * @return \Concrete\Flysystem\File
+     * @return \League\Flysystem\File
      */
     public function getFileResource()
     {

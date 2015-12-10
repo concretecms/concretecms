@@ -5,6 +5,7 @@ namespace Concrete\Core\Package;
 use AuthenticationType;
 use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Config\Renderer;
+use Concrete\Core\Database\EntityManagerFactory;
 use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use Concrete\Core\Mail\Importer\MailImporter;
 use Concrete\Core\Permission\Access\Entity\ConversationMessageAuthorEntity;
@@ -43,7 +44,8 @@ class StartingPointPackage extends BasePackage
                 5,
                 t('Starting installation and creating directories.')),
             new StartingPointInstallRoutine('install_database', 10, t('Creating database tables.')),
-            new StartingPointInstallRoutine('add_users', 15, t('Adding admin user.')),
+            new StartingPointInstallRoutine('install_entities', 12, t('Creating entities.')),
+            new StartingPointInstallRoutine('add_users', 18, t('Adding admin user.')),
             new StartingPointInstallRoutine('install_permissions', 20, t('Installing permissions & workflow.')),
             new StartingPointInstallRoutine('add_home_page', 23, t('Creating home page.')),
             new StartingPointInstallRoutine('install_attributes', 25, t('Installing attributes.')),
@@ -271,6 +273,21 @@ class StartingPointPackage extends BasePackage
             $version->markMigrated();
         } catch (\Exception $e) {
             throw new \Exception(t('Unable to install database: %s', $db->ErrorMsg() ? $db->ErrorMsg() : $e->getMessage()));
+        }
+    }
+
+    public function install_entities()
+    {
+        try {
+            $factory = new EntityManagerFactory(DIR_BASE_CORE .
+                '/' . DIRNAME_CLASSES . '/Entity');
+            $em = $factory->create(\Database::connection());
+            $dbm = Core::make('database/structure', $em);
+
+            $dbm->installDatabase();
+
+        } catch (\Exception $e) {
+            throw new \Exception(t('Unable to install database: %s', $e->getMessage()));
         }
     }
 

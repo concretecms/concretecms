@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Attribute;
 
+use Concrete\Core\Attribute\Key\StandardFactory;
 use Concrete\Core\Controller\AbstractController;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Core;
@@ -252,6 +253,7 @@ class Controller extends AbstractController
             $error->add(t('Attribute handles may only contain letters, numbers and underscore "_" characters'));
         }
 
+        /*
         $akc = AttributeKeyCategory::getByID($args['akCategoryID']);
         if (is_object($akc)) {
             if ($akc->handleExists($args['akHandle'])) {
@@ -267,7 +269,15 @@ class Controller extends AbstractController
         } else {
             $error->add('Invalid attribute category.');
         }
+        */
 
         return $error;
     }
+
+    public function getIconFormatter()
+    {
+        return new LegacyIconFormatter($this);
+    }
+
+
 }
