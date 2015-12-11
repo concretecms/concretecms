@@ -1340,9 +1340,9 @@ class Package extends Object
             foreach($bRows as $row){
                 if(isset($row['cID']) && !empty($row['cID'])){
                     //if current version is greater than cache version update expiration date for all blocks
-                    $v = array( $row['arHandle'], $row['bID']);
+                    $v = array($row['cID'], $row['arHandle'], $row['bID']);
                     $db->Execute(
-                        'update CollectionVersionBlocksOutputCache set btCachedBlockOutputExpires = 0 where cID IN ('.$row['cID'].')  and arHandle = ? and bID = ?',
+                        'update CollectionVersionBlocksOutputCache set btCachedBlockOutputExpires = 0 where cID=?  and arHandle = ? and bID = ?',
                         $v
                     );
                 }
