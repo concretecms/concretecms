@@ -3300,12 +3300,10 @@
     <field name="fDateAdded" type="datetime"/>
     <field name="uID" type="integer" size="10">
       <unsigned/>
-      <key/>
       <default value="0"/>
     </field>
     <field name="fslID" type="integer" size="10">
       <unsigned/>
-      <key/>
       <default value="0"/>
     </field>
     <field name="ocID" type="integer" size="10">

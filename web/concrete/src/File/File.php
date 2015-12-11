@@ -31,7 +31,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
 
     /**
      * @Id @Column(type="integer")
-     * @GeneratedValue
+     * @GeneratedValue(strategy="AUTO")
      */
     protected $fID;
 
@@ -68,7 +68,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
     protected $uID = 0;
 
     /**
-     * @ManyToOne(targetEntity="\Concrete\Core\File\StorageLocation\StorageLocation")
+     * @ManyToOne(targetEntity="\Concrete\Core\File\StorageLocation\StorageLocation", inversedBy="files")
      * @JoinColumn(name="fslID", referencedColumnName="fslID")
      **/
     protected $storageLocation;

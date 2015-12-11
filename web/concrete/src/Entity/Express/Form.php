@@ -24,7 +24,8 @@ class Form
 
     /**
      * @OneToMany(targetEntity="FieldSet", mappedBy="form", cascade={"persist", "remove"})
-     **/
+     * @OrderBy({"position" = "ASC"})
+     */
     protected $field_sets;
 
     /**

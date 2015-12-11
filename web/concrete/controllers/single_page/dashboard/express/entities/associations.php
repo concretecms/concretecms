@@ -66,6 +66,21 @@ class Associations extends DashboardPageController
                                 $entity, $targetEntity, $this->request->request->get('target_property_name')
                             );
                             break;
+                        case 'OneToOne':
+                            $builder->addOneToOne(
+                                $entity, $targetEntity, $this->request->request->get('target_property_name')
+                            );
+                            break;
+                        case 'ManyToMany':
+                            $builder->addManyToMany(
+                                $entity, $targetEntity, $this->request->request->get('target_property_name')
+                            );
+                            break;
+                        case 'OneToMany':
+                            $builder->addOneToMany(
+                                $entity, $targetEntity, $this->request->request->get('target_property_name')
+                            );
+                            break;
                     }
                     $this->entityManager->persist($entity);
                     $this->entityManager->persist($targetEntity);
@@ -124,7 +139,7 @@ class Associations extends DashboardPageController
             $this->set('association', $association);
             $this->set('formatter', $association->getFormatter());
             $this->set('pageTitle', t('Association Details'));
-            $this->render('/dashboard/express/entities/associations/view');
+            $this->render('/dashboard/express/entities/associations/view_association');
 
         }
         if (is_object($entity)) {

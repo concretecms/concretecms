@@ -18,6 +18,11 @@ class FieldSet
     protected $id;
 
     /**
+     * @Column(type="integer")
+     */
+    protected $position = 0;
+
+    /**
      * @Column(type="string", nullable=true)
      */
     protected $title;
@@ -34,7 +39,7 @@ class FieldSet
 
 
     /**
-     * @OneToMany(targetEntity="\Concrete\Core\Entity\Express\Control\Control", mappedBy="control", cascade={"persist", "remove"})
+     * @OneToMany(targetEntity="\Concrete\Core\Entity\Express\Control\Control", mappedBy="field_set", cascade={"persist", "remove"})
      **/
     protected $controls;
 
@@ -123,6 +128,24 @@ class FieldSet
     {
         $this->controls = new ArrayCollection();
     }
+
+    /**
+     * @return mixed
+     */
+    public function getPosition()
+    {
+        return $this->position;
+    }
+
+    /**
+     * @param mixed $position
+     */
+    public function setPosition($position)
+    {
+        $this->position = $position;
+    }
+
+
 
 
 }
