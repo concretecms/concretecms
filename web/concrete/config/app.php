@@ -81,7 +81,6 @@ return array(
         'TaskPermission'                       => '\Concrete\Core\Legacy\TaskPermission',
         'User'                                 => '\Concrete\Core\User\User',
         'UserAttributeKey'                     => '\Concrete\Core\Attribute\Key\UserKey',
-        'UserInfo'                             => '\Concrete\Core\User\UserInfo',
         'UserList'                             => '\Concrete\Core\User\UserList',
         'View'                                 => '\Concrete\Core\View\View',
         'Workflow'                             => '\Concrete\Core\Workflow\Workflow'
@@ -102,6 +101,7 @@ return array(
         'core_mail'                   => '\Concrete\Core\Mail\MailServiceProvider',
         'core_application'            => '\Concrete\Core\Application\ApplicationServiceProvider',
         'core_utility'                => '\Concrete\Core\Utility\UtilityServiceProvider',
+        'core_content_importer'       => '\Concrete\Core\Backup\ContentImporter\ContentImporterServiceProvider',
         'core_manager_grid_framework' => '\Concrete\Core\Page\Theme\GridFramework\ManagerServiceProvider',
         'core_manager_pagination_view' => '\Concrete\Core\Search\Pagination\View\ManagerServiceProvider',
         'core_manager_page_type_validator' => '\Concrete\Core\Page\Type\Validator\ManagerServiceProvider',
@@ -118,13 +118,18 @@ return array(
         'core_url'          => '\Concrete\Core\Url\UrlServiceProvider',
         'core_devices'      => '\Concrete\Core\Device\DeviceServiceProvider',
         'core_imageeditor'  => '\Concrete\Core\ImageEditor\EditorServiceProvider',
+        'core_user'  => '\Concrete\Core\User\UserServiceProvider',
 
         // Authentication
         'core_oauth'          => '\Concrete\Core\Authentication\Type\OAuth\ServiceProvider',
         'core_auth_community' => '\Concrete\Core\Authentication\Type\Community\ServiceProvider',
         'core_auth_facebook'  => '\Concrete\Core\Authentication\Type\Facebook\ServiceProvider',
         'core_auth_google'    => '\Concrete\Core\Authentication\Type\Google\ServiceProvider',
-        'core_auth_twitter'   => '\Concrete\Core\Authentication\Type\Twitter\ServiceProvider'
+        'core_auth_twitter'   => '\Concrete\Core\Authentication\Type\Twitter\ServiceProvider',
+
+        // Validator
+        'core_validator'          => '\Concrete\Core\Validator\ValidatorServiceProvider',
+        'core_validator_password' => '\Concrete\Core\Validator\PasswordValidatorServiceProvider'
     ),
 
     /**
@@ -138,6 +143,7 @@ return array(
         'ORM'      => '\Concrete\Core\Support\Facade\DatabaseORM',
         'Events'   => '\Concrete\Core\Support\Facade\Events',
         'Route'    => '\Concrete\Core\Support\Facade\Route',
+        'UserInfo' => '\Concrete\Core\Support\Facade\UserInfoFactory',
         'Log'      => '\Concrete\Core\Support\Facade\Log',
         'Image'    => '\Concrete\Core\Support\Facade\Image',
         'Config'   => '\Concrete\Core\Support\Facade\Config',
@@ -274,6 +280,7 @@ return array(
         "/ccm/system/page/multilingual/create_new"                                      => array('\Concrete\Controller\Backend\Page\Multilingual::create_new'),
         "/ccm/system/page/multilingual/ignore"                                          => array('\Concrete\Controller\Backend\Page\Multilingual::ignore'),
         "/ccm/system/page/multilingual/unmap"                                           => array('\Concrete\Controller\Backend\Page\Multilingual::unmap'),
+        "/ccm/system/page/select_sitemap"                                           => array('\Concrete\Controller\Backend\Page\SitemapSelector::view'),
 
         /**
          * Block actions - non UI
@@ -281,6 +288,8 @@ return array(
         "/ccm/system/block/render/"                                                     => array('\Concrete\Controller\Backend\Block::render'),
         "/ccm/system/block/action/add/{cID}/{arHandle}/{btID}/{action}"                 => array('\Concrete\Controller\Backend\Block\Action::add'),
         "/ccm/system/block/action/edit/{cID}/{arHandle}/{bID}/{action}"                 => array('\Concrete\Controller\Backend\Block\Action::edit'),
+        "/ccm/system/block/action/add_composer/{ptComposerFormLayoutSetControlID}/{action}"  => array('\Concrete\Controller\Backend\Block\Action::add_composer'),
+        "/ccm/system/block/action/edit_composer/{cID}/{arHandle}/{ptComposerFormLayoutSetControlID}/{action}"  => array('\Concrete\Controller\Backend\Block\Action::edit_composer'),
 
         /**
          * Misc
@@ -396,18 +405,6 @@ return array(
          * Special Dashboard
          */
         "/dashboard/blocks/stacks/list"                                                 => array('\Concrete\Controller\SinglePage\Dashboard\Blocks\Stacks::list_page'),
-
-        /**
-         * Tools - legacy
-         */
-        "/tools/blocks/{btHandle}/{tool}"                                               => array(
-            '\Concrete\Core\Legacy\Controller\ToolController::displayBlock',
-            'blockTool',
-            array('tool' => '[A-Za-z0-9_/.]+')),
-        "/tools/{tool}"                                                                 => array(
-            '\Concrete\Core\Legacy\Controller\ToolController::display',
-            'tool',
-            array('tool' => '[A-Za-z0-9_/.]+')),
 
         /*
          * Assets localization
@@ -542,6 +539,10 @@ return array(
         ),
         'picturefill'              => array(
             array('javascript', 'js/picturefill.js', array('minify' => false))
+        ),
+        'responsive-slides'              => array(
+            array('javascript', 'js/responsive-slides.js', array('minify' => false)),
+            array('css', 'css/responsive-slides.css', array('minify' => false))
         ),
         'html5-shiv'              => array(
             array('javascript-conditional', 'js/ie/html5-shiv.js',
@@ -757,6 +758,12 @@ return array(
                 array('javascript', 'dropzone'),
                 array('javascript-localized', 'dropzone'),
                 array('css', 'dropzone')
+            )
+        ),
+        'responsive-slides'                  => array(
+            array(
+                array('javascript', 'responsive-slides'),
+                array('css', 'responsive-slides')
             )
         ),
         'ace'         => array(
@@ -1026,6 +1033,7 @@ return array(
         )
     ),
     'curl' => array(
-        'verifyPeer' => true
+        'verifyPeer' => true,
+        'connectionTimeout' => 5
     )
 );

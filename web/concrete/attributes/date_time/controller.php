@@ -81,11 +81,11 @@ class Controller extends AttributeTypeController
                 break;
             case 'date':
                 $this->requireAsset('jquery/ui');
-                print $dt->date($this->field('value'), $caValue);
+                print $dt->date($this->field('value'), $caValue == null ? '' : $caValue);
                 break;
             default:
                 $this->requireAsset('jquery/ui');
-                print $dt->datetime($this->field('value'), $caValue);
+                print $dt->datetime($this->field('value'), $caValue == null ? '' : $caValue);
                 break;
         }
     }
@@ -149,9 +149,9 @@ class Controller extends AttributeTypeController
     public function search()
     {
         $dt = Loader::helper('form/date_time');
-        $html = $dt->date($this->field('from'), $this->request('from'), false);
+        $html = $dt->date($this->field('from'), $this->request('from'), true);
         $html .= ' ' . t('to') . ' ';
-        $html .= $dt->date($this->field('to'), $this->request('to'), false);
+        $html .= $dt->date($this->field('to'), $this->request('to'), true);
         print $html;
     }
 

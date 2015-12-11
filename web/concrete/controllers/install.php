@@ -88,16 +88,16 @@ class Install extends Controller
         if (!extension_loaded('pdo')) {
             $e->add($this->getDBErrorMsg());
         } else {
+            $DB_SERVER = isset($_POST['DB_SERVER']) ? $_POST['DB_SERVER'] : null;
+            $DB_DATABASE = isset($_POST['DB_DATABASE']) ? $_POST['DB_DATABASE'] : null;
             $db = \Database::getFactory()->createConnection(
                 array(
-                    'host' => $_POST['DB_SERVER'],
-                    'user' => $_POST['DB_USERNAME'],
-                    'password' => $_POST['DB_PASSWORD'],
-                    'database' => $_POST['DB_DATABASE'],
-                ));
-
-            $DB_SERVER = $_POST['DB_SERVER'];
-            $DB_DATABASE = $_POST['DB_DATABASE'];
+                    'host' => $DB_SERVER,
+                    'user' => isset($_POST['DB_USERNAME']) ? $_POST['DB_USERNAME'] : null,
+                    'password' => isset($_POST['DB_PASSWORD']) ? $_POST['DB_PASSWORD'] : null,
+                    'database' => $DB_DATABASE,
+                )
+            );
 
             if ($DB_SERVER && $DB_DATABASE) {
                 if (!$db) {
@@ -114,7 +114,7 @@ class Install extends Controller
                     try {
                         $support = $db->GetAll('show engines');
                         $supported = false;
-                        foreach($support as $engine) {
+                        foreach ($support as $engine) {
                             $engine = array_change_key_case($engine, CASE_LOWER);
                             if (isset($engine['engine']) && strtolower($engine['engine']) == 'innodb') {
                                 $supported = true;
@@ -123,7 +123,7 @@ class Install extends Controller
                         if (!$supported) {
                             $e->add(t('Your MySQL database does not support InnoDB database tables. These are required.'));
                         }
-                    } catch(\Exception $exception) {
+                    } catch (\Exception $exception) {
                         // we're going to just proceed and hope for the best.
                     }
                 }
@@ -165,6 +165,8 @@ class Install extends Controller
         if (!isset($_COOKIE['CONCRETE5_INSTALL_TEST'])) {
             setcookie('CONCRETE5_INSTALL_TEST', '1', 0, DIR_REL . '/');
         }
+
+        $this->set('pageTitle', t('Install concrete5'));
     }
 
     private function setRequiredItems()
@@ -314,8 +316,7 @@ class Install extends Controller
             $password = $_POST['uPassword'];
             $passwordConfirm = $_POST['uPasswordConfirm'];
 
-            $uh = Core::make('helper/concrete/user');
-            $uh->validNewPassword($password, $error);
+            Core::make('validator/password')->isValid($password, $error);
 
             if ($password) {
                 if ($password != $passwordConfirm) {
@@ -324,7 +325,9 @@ class Install extends Controller
             }
 
             if (is_object($this->fileWriteErrors)) {
-                $error = $this->fileWriteErrors;
+                foreach ($this->fileWriteErrors->getList() as $msg) {
+                    $error->add($msg);
+                }
             }
 
             $error = $this->validateDatabase($error);

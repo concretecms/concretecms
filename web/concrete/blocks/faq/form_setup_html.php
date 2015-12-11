@@ -117,7 +117,7 @@ $tp = new TaskPermission();
         });
 
         container.find('.redactor-content').redactor({
-            minHeight: '200',
+            minHeight: 200,
             'concrete5': {
                 filemanager: <?=$fp->canAccessFileManager()?>,
                 sitemap: <?=$tp->canAccessSitemap()?>,
@@ -150,7 +150,7 @@ $tp = new TaskPermission();
             var newClone = cloneTemplate.clone(true);
 
             newClone.show().find('.redactor-content').redactor({
-                minHeight: '200',
+                minHeight: 200,
                 'concrete5': {
                     filemanager: <?=$fp->canAccessFileManager()?>,
                     sitemap: <?=$tp->canAccessSitemap()?>,

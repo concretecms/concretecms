@@ -9,13 +9,10 @@ use Concrete\Core\Search\PermissionableListItemInterface;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 
 /**
- *
  * An object that allows a filtered list of pages to be returned.
- *
  */
 class PageList extends DatabaseItemList implements PermissionableListItemInterface
 {
-
     const PAGE_VERSION_ACTIVE = 1;
     const PAGE_VERSION_RECENT = 2;
 
@@ -29,12 +26,14 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
 
     /**
      * Columns in this array can be sorted via the request.
+     *
      * @var array
      */
     protected $autoSortColumns = array('cv.cvName', 'cv.cvDatePublic', 'c.cDateAdded', 'c.cDateModified');
 
     /**
      * Which version to attempt to retrieve.
+     *
      * @var int
      */
     protected $pageVersionToRetrieve = self::PAGE_VERSION_ACTIVE;
@@ -46,6 +45,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
 
     /**
      * Whether to include system pages (login, etc...) in this query.
+     *
      * @var bool
      */
     protected $includeSystemPages = false;
@@ -57,6 +57,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
 
     /**
      * Whether to include inactive (deleted) pages in the query.
+     *
      * @var bool
      */
     protected $includeInactivePages = false;
@@ -150,10 +151,12 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     public function getTotalResults()
     {
         $u = new \User();
-        if ($this->permissionsChecker == -1) {
+        if ($this->permissionsChecker === -1) {
             $query = $this->deliverQueryObject();
-
-            return $query->select('count(distinct p.cID)')->setMaxResults(1)->execute()->fetchColumn();
+            // We add a custom order by here because otherwise, if we've added
+            // items to the select parts, and we're ordering by them, we get a SQL error
+            // when we get total results, because we're resetting the select
+            return $query->select('count(distinct p.cID)')->orderBy('p.cID', 'asc')->setMaxResults(1)->execute()->fetchColumn();
         } else {
             return -1; // unknown
         }
@@ -162,9 +165,12 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     protected function createPaginationObject()
     {
         $u = new \User();
-        if ($this->permissionsChecker == -1) {
+        if ($this->permissionsChecker === -1) {
             $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
-                $query->select('count(distinct p.cID)')->setMaxResults(1);
+                // We add a custom order by here because otherwise, if we've added
+                // items to the select parts, and we're ordering by them, we get a SQL error
+                // when we get total results, because we're resetting the select
+                $query->select('count(distinct p.cID)')->orderBy('p.cID', 'asc')->setMaxResults(1);
             });
             $pagination = new Pagination($this, $adapter);
         } else {
@@ -176,6 +182,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
 
     /**
      * @param $queryRow
+     *
      * @return \Concrete\Core\File\File
      */
     public function getResult($queryRow)
@@ -184,7 +191,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
         if (is_object($c) && $this->checkPermissions($c)) {
             if ($this->pageVersionToRetrieve == self::PAGE_VERSION_RECENT) {
                 $cp = new \Permissions($c);
-                if ($cp->canViewPageVersions()) {
+                if ($cp->canViewPageVersions() || $this->permissionsChecker === -1) {
                     $c->loadVersionObject('RECENT');
                 }
             }
@@ -212,7 +219,8 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     }
 
     /**
-     * Filters by type of collection (using the handle field)
+     * Filters by type of collection (using the handle field).
+     *
      * @param mixed $ptHandle
      */
     public function filterByPageTypeHandle($ptHandle)
@@ -229,7 +237,8 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     }
 
     /**
-     * Filters by page template
+     * Filters by page template.
+     *
      * @param mixed $ptHandle
      */
     public function filterByPageTemplate(Template $template)
@@ -239,7 +248,8 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     }
 
     /**
-     * Filters by date added
+     * Filters by date added.
+     *
      * @param string $date
      */
     public function filterByDateAdded($date, $comparison = '=')
@@ -249,6 +259,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
 
     /**
      * Filter by number of children.
+     *
      * @param $number
      * @param string $comparison
      */
@@ -270,6 +281,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
 
     /**
      * Filter by last modified date.
+     *
      * @param $date
      * @param string $comparison
      */
@@ -279,7 +291,8 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     }
 
     /**
-     * Filters by public date
+     * Filters by public date.
+     *
      * @param string $date
      */
     public function filterByPublicDate($date, $comparison = '=')
@@ -288,7 +301,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     }
 
     /**
-     * Displays only those pages that have style customizations
+     * Displays only those pages that have style customizations.
      */
     public function filterByPagesWithCustomStyles()
     {
@@ -297,7 +310,8 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     }
 
     /**
-     * Filters by user ID)
+     * Filters by user ID).
+     *
      * @param mixed $uID
      */
     public function filterByUserID($uID)
@@ -307,7 +321,8 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     }
 
     /**
-     * Filters by page type ID
+     * Filters by page type ID.
+     *
      * @param array | integer $cParentID
      */
     public function filterByPageTypeID($ptID)
@@ -324,7 +339,8 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     }
 
     /**
-     * Filters by parent ID
+     * Filters by parent ID.
+     *
      * @param array | integer $cParentID
      */
     public function filterByParentID($cParentID)
@@ -342,6 +358,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
 
     /**
      * Filters a list by page name.
+     *
      * @param $name
      * @param bool $exact
      */
@@ -360,6 +377,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
 
     /**
      * Filter a list by page path.
+     *
      * @param $path
      * @param bool $includeAllChildren
      */
@@ -379,6 +397,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
 
     /**
      * Filters keyword fields by keywords (including name, description, content, and attributes.
+     *
      * @param $keywords
      */
     public function filterByKeywords($keywords)
@@ -386,7 +405,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
         $expressions = array(
             $this->query->expr()->like('psi.cName', ':keywords'),
             $this->query->expr()->like('psi.cDescription', ':keywords'),
-            $this->query->expr()->like('psi.content', ':keywords')
+            $this->query->expr()->like('psi.content', ':keywords'),
         );
 
         $keys = \CollectionAttributeKey::getSearchableIndexedList();
@@ -425,7 +444,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     }
 
     /**
-     * Sorts this list by display order
+     * Sorts this list by display order.
      */
     public function sortByDisplayOrder()
     {
@@ -433,7 +452,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     }
 
     /**
-     * Sorts this list by display order descending
+     * Sorts this list by display order descending.
      */
     public function sortByDisplayOrderDescending()
     {
@@ -449,7 +468,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     }
 
     /**
-     * Sorts this list by public date ascending order
+     * Sorts this list by public date ascending order.
      */
     public function sortByPublicDate()
     {
@@ -473,7 +492,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     }
 
     /**
-     * Sorts this list by public date descending order
+     * Sorts this list by public date descending order.
      */
     public function sortByPublicDateDescending()
     {
@@ -481,7 +500,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     }
 
     /**
-     * Sorts by fulltext relevance (requires that the query be fulltext-based
+     * Sorts by fulltext relevance (requires that the query be fulltext-based.
      */
     public function sortByRelevance()
     {
@@ -508,6 +527,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
 
     /**
      * This does nothing.
+     *
      * @deprecated
      */
     public function ignoreAliases()

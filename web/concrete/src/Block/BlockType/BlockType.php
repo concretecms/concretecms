@@ -148,7 +148,7 @@ class BlockType
         }
         $class = static::getBlockTypeMappedClass($btHandle, $pkgHandle);
         $bta = new $class;
-        $path = dirname($env->getPath(DIRNAME_BLOCKS . '/' . $btHandle . '/' . FILENAME_CONTROLLER, $pkgHandle));
+        $path = dirname($env->getPath(DIRNAME_BLOCKS . '/' . $btHandle . '/' . FILENAME_BLOCK_DB, $pkgHandle));
 
         //Attempt to run the subclass methods (install schema from db.xml, etc.)
         $r = $bta->install($path);

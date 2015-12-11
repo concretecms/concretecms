@@ -16,7 +16,7 @@ class Sitemap
     /**
      * @var bool
      */
-    protected $autoOpenNodes = true;
+    protected $expandedNodes = array();
     /**
      * @var bool
      */
@@ -29,9 +29,9 @@ class Sitemap
     /**
      * @param bool $autoOpen
      */
-    public function setAutoOpenNodes($autoOpen)
+    public function setExpandedNodes($nodes)
     {
-        $this->autoOpenNodes = $autoOpen;
+        $this->expandedNodes = $nodes;
     }
 
     /**
@@ -68,7 +68,7 @@ class Sitemap
      *
      * @return array
      */
-    public function getSubNodes($cID)
+    public function getSubNodes($cID, $onGetNode = null)
     {
         $pl = new PageList();
         $pl->setPermissionsChecker(function ($page) {
@@ -96,7 +96,7 @@ class Sitemap
 
         $nodes = array();
         foreach ($results as $c) {
-            $n = $this->getNode($c);
+            $n = $this->getNode($c, true, $onGetNode);
             if ($n != false) {
                 $nodes[] = $n;
             }
@@ -134,7 +134,7 @@ class Sitemap
      *
      * @return stdClass
      */
-    public function getNode($cItem, $includeChildren = true)
+    public function getNode($cItem, $includeChildren = true, $onGetNode = null)
     {
         if (!is_object($cItem)) {
             $cID = $cItem;
@@ -156,11 +156,8 @@ class Sitemap
         $canAddExternalLinks = $cp->canAddExternalLink();
 
         $nodeOpen = false;
-        $openNodeArray = explode(',', str_replace('_', '', $_COOKIE['ConcreteSitemap-expand']));
-        if (is_array($openNodeArray)) {
-            if (in_array($cID, $openNodeArray)) {
-                $nodeOpen = true;
-            }
+        if (in_array($cID, $this->expandedNodes)) {
+            $nodeOpen = true;
         }
 
         $numSubpages = ($c->getNumChildren()  > 0) ? $c->getNumChildren()  : '';
@@ -229,12 +226,16 @@ class Sitemap
         if ($cID == HOME_CID) {
             $node->addClass = 'ccm-page-home';
         }
+        if ($nodeOpen) {
+            $node->expand = true;
+        }
         $node->cAlias = $cAlias;
         $node->isInTrash = $isInTrash;
         $node->numSubpages = $numSubpages;
         $node->isTrash = $isTrash;
         $node->cID = $cID;
         $node->key = $cID;
+        $node->ptID = $c->getPageTypeID();
         $node->canEditPageProperties = $canEditPageProperties;
         $node->canEditPageSpeedSettings = $canEditPageSpeedSettings;
         $node->canEditPagePermissions = $canEditPagePermissions;
@@ -245,9 +246,13 @@ class Sitemap
         $node->canAddSubpages = $canAddSubpages;
         $node->canAddExternalLinks = $canAddExternalLinks;
 
-        if ($includeChildren && ($cID == 1 || ($nodeOpen && $this->autoOpenNodes))) {
+        if ($includeChildren && ($cID == 1 || $nodeOpen)) {
             // We open another level
-            $node->children = $this->getSubNodes($cID, $level, false, $autoOpenNodes);
+            $node->children = $this->getSubNodes($cID, $onGetNode);
+        }
+
+        if ($onGetNode instanceof \Closure) {
+            $node = $onGetNode($node);
         }
 
         return $node;

@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\File\Service;
 
+use Concrete\Core\File\Exception\RequestTimeoutException;
 use Config;
 use Environment;
 use Core;
@@ -300,9 +301,11 @@ class File
      * @param string $filename
      * @param string $timeout
      *
+     * @throws RequestTimeoutException Request timed out
+     *
      * @return string|bool Returns false in case of failure
      */
-    public function getContents($file, $timeout = 5)
+    public function getContents($file, $timeout = null)
     {
         $url = @parse_url($file);
         if (isset($url['scheme']) && isset($url['host'])) {
@@ -323,14 +326,26 @@ class File
                     }
                 }
 
+                if ($timeout === null) {
+                    $timeout = Config::get('app.curl.connectionTimeout');
+                }
+
                 curl_setopt($curl_handle, CURLOPT_URL, $file);
                 curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, $timeout);
                 curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
                 curl_setopt($curl_handle, CURLOPT_SSL_VERIFYPEER, Config::get('app.curl.verifyPeer'));
 
                 $contents = curl_exec($curl_handle);
+                $error = curl_errno($curl_handle);
+
+
                 $http_code = curl_getinfo($curl_handle, CURLINFO_HTTP_CODE);
                 curl_close($curl_handle);
+
+                if ($error == 28) {
+                    throw new RequestTimeoutException(t('Request timed out.'));
+                }
+
                 if ($http_code >= 400) {
                     return false;
                 }

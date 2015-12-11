@@ -11,6 +11,11 @@ use Environment;
 use Package;
 use Core;
 
+/**
+ * Base class for attribute types.
+ *
+ * @method static Type[] getList(string|false $akCategoryHandle) Deprecated method. Use Key::getAttributeTypeList instead.
+ */
 class Type extends Object
 {
     /** @var  \Concrete\Core\Attribute\Controller */
@@ -76,7 +81,15 @@ class Type extends Object
         unset($this->controller);
     }
 
-    public static function getList($akCategoryHandle = false)
+    public static function __callStatic($name, $arguments)
+    {
+        if (strcasecmp($name, 'getList') === 0) {
+            return call_user_func_array('static::getAttributeTypeList', $arguments);
+        }
+        trigger_error("Call to undefined method ".__CLASS__."::$name()", E_USER_ERROR);
+    }
+
+    public static function getAttributeTypeList($akCategoryHandle = false)
     {
         $db = Database::get();
         $list = array();
@@ -97,25 +110,31 @@ class Type extends Object
         return $list;
     }
 
+    public function export($xml)
+    {
+        $db = Database::get();
+        $atype = $xml->addChild('attributetype');
+        $atype->addAttribute('handle', $this->getAttributeTypeHandle());
+        $atype->addAttribute('package', $this->getPackageHandle());
+        $categories = $db->GetCol(
+            'select akCategoryHandle from AttributeKeyCategories inner join AttributeTypeCategories where AttributeKeyCategories.akCategoryID = AttributeTypeCategories.akCategoryID and AttributeTypeCategories.atID = ?',
+            array($this->getAttributeTypeID())
+        );
+        if (count($categories) > 0) {
+            $cat = $atype->addChild('categories');
+            foreach ($categories as $catHandle) {
+                $cat->addChild('category')->addAttribute('handle', $catHandle);
+            }
+        }
+    }
+
     public static function exportList($xml)
     {
-        $attribs = static::getList();
+        $attribs = static::getAttributeTypeList();
         $db = Database::get();
         $axml = $xml->addChild('attributetypes');
         foreach ($attribs as $at) {
-            $atype = $axml->addChild('attributetype');
-            $atype->addAttribute('handle', $at->getAttributeTypeHandle());
-            $atype->addAttribute('package', $at->getPackageHandle());
-            $categories = $db->GetCol(
-                'select akCategoryHandle from AttributeKeyCategories inner join AttributeTypeCategories where AttributeKeyCategories.akCategoryID = AttributeTypeCategories.akCategoryID and AttributeTypeCategories.atID = ?',
-                array($at->getAttributeTypeID())
-            );
-            if (count($categories) > 0) {
-                $cat = $atype->addChild('categories');
-                foreach ($categories as $catHandle) {
-                    $cat->addChild('category')->addAttribute('handle', $catHandle);
-                }
-            }
+            $at->export($axml);
         }
     }
 
@@ -125,7 +144,6 @@ class Type extends Object
         if (method_exists($this->controller, 'deleteType')) {
             $this->controller->deleteType();
         }
-
         $db->Execute("delete from AttributeTypes where atID = ?", array($this->atID));
         $db->Execute("delete from AttributeTypeCategories where atID = ?", array($this->atID));
     }
@@ -169,7 +187,6 @@ class Type extends Object
 
     public static function getByHandle($atHandle)
     {
-
         // Handle legacy handles
         switch ($atHandle) {
             case 'date':
@@ -291,7 +308,7 @@ class Type extends Object
     public static function exportTranslations()
     {
         $translations = new Translations();
-        $attribs = static::getList();
+        $attribs = static::getAttributeTypeList();
         foreach ($attribs as $type) {
             $translations->insert('AttributeTypeName', $type->getAttributeTypeName());
         }

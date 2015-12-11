@@ -39,6 +39,7 @@ class Application extends Container
 {
     protected $installed = null;
     protected $environment = null;
+    protected $packages = array();
 
     /**
      * Turns off the lights.
@@ -225,9 +226,9 @@ class Application extends Container
     }
 
     /**
-     * Run startup and localization events on any installed packages.
+     * Register package autoloaders. Has to come BEFORE session calls.
      */
-    public function setupPackages()
+    public function setupPackageAutoloaders()
     {
         $pla = \Concrete\Core\Package\PackageList::get();
         $pl = $pla->getPackages();
@@ -239,30 +240,53 @@ class Application extends Container
                 $pkg = Package::getClass($p->getPackageHandle());
                 if (is_object($pkg) && (!$pkg instanceof \Concrete\Core\Package\BrokenPackage)) {
                     $cl->registerPackage($pkg);
-                    // handle updates
-                    if (Config::get('concrete.updates.enable_auto_update_packages')) {
-                        $pkgInstalledVersion = $p->getPackageVersion();
-                        $pkgFileVersion = $pkg->getPackageVersion();
-                        if (version_compare($pkgFileVersion, $pkgInstalledVersion, '>')) {
-                            $currentLocale = Localization::activeLocale();
-                            if ($currentLocale != 'en_US') {
-                                Localization::changeLocale('en_US');
-                            }
-                            $p->upgradeCoreData();
-                            $p->upgrade();
-                            if ($currentLocale != 'en_US') {
-                                Localization::changeLocale($currentLocale);
-                            }
-                        }
-                    }
-                    $pkg->setupPackageLocalization();
-                    if (method_exists($pkg, 'on_start')) {
-                        $pkg->on_start();
-                    }
+                    $this->packages[] = $pkg;
                 }
             }
         }
+    }
+    /**
+     * Run startup and localization events on any installed packages.
+     */
+    public function setupPackages()
+    {
+        $checkAfterStart = false;
+
+        foreach($this->packages as $pkg) {
+            // handle updates
+            if (Config::get('concrete.updates.enable_auto_update_packages')) {
+                $dbPkg = \Package::getByHandle($pkg->getPackageHandle());
+                $pkgInstalledVersion = $dbPkg->getPackageVersion();
+                $pkgFileVersion = $pkg->getPackageVersion();
+                if (version_compare($pkgFileVersion, $pkgInstalledVersion, '>')) {
+                    $currentLocale = Localization::activeLocale();
+                    if ($currentLocale != 'en_US') {
+                        Localization::changeLocale('en_US');
+                    }
+                    $dbPkg->upgradeCoreData();
+                    $dbPkg->upgrade();
+                    if ($currentLocale != 'en_US') {
+                        Localization::changeLocale($currentLocale);
+                    }
+                }
+            }
+            $pkg->setupPackageLocalization();
+            if (method_exists($pkg, 'on_start')) {
+                $pkg->on_start();
+            }
+            if (method_exists($pkg, 'on_after_packages_start')) {
+                $checkAfterStart = true;
+            }
+        }
         Config::set('app.bootstrap.packages_loaded', true);
+
+        if ($checkAfterStart) {
+            foreach($this->packages as $pkg) {
+                if (method_exists($pkg, 'on_after_packages_start')) {
+                    $pkg->on_after_packages_start();
+                }
+            }
+        }
     }
 
     /**
@@ -292,13 +316,14 @@ class Application extends Container
      */
     public function handleURLSlashes(SymfonyRequest $request)
     {
-        $parsedUrl = (string) Url::createFromUrl($request->getUri());
         if ($request->getPathInfo() != '/') {
-            $parsedUrlWithoutQueryString = strstr($parsedUrl, '?', true) ?: $parsedUrl;
-            $requestUrl = $request->getUri();
-            $requestUrlWithoutQueryString = strstr($requestUrl, '?', true) ?: $requestUrl;
-            if (urldecode($parsedUrlWithoutQueryString) != urldecode($requestUrlWithoutQueryString)) {
-                $response = new RedirectResponse($parsedUrl, 301);
+            $request_path = $request->getRequestUri();
+            $parsed_url = Url::createFromUrl($request->getUri());
+
+            $url_path = ltrim(parse_url($request_path, PHP_URL_PATH), '/');
+
+            if ($url_path != (string) $parsed_url->getPath()) {
+                $response = new RedirectResponse($parsed_url, 301);
                 $response->setRequest($request);
 
                 return $response;
@@ -359,6 +384,18 @@ class Application extends Container
      */
     public function dispatch(Request $request)
     {
+        // This is a crappy place for this, but it has to come AFTER the packages because sometimes packages
+        // want to replace legacy "tools" URLs with the new MVC, and the tools paths are so greedy they don't
+        // work unless they come at the end.
+        $this->registerLegacyRoutes();
+
+
+        $path = $request->getPathInfo();
+
+        if (substr($path, 0, 3) == '../' || substr($path, -3) == '/..' ||  strpos($path, '/../')) {
+            throw new \RuntimeException(t('Invalid path traversal. Please make this request with a valid HTTP client.'));
+        }
+
         if ($this->installed) {
             $response = $this->getEarlyDispatchResponse();
         }
@@ -381,6 +418,20 @@ class Application extends Container
         }
 
         return $response;
+    }
+
+    protected function registerLegacyRoutes()
+    {
+
+        \Route::register("/tools/blocks/{btHandle}/{tool}",
+            '\Concrete\Core\Legacy\Controller\ToolController::displayBlock',
+            'blockTool',
+            array('tool' => '[A-Za-z0-9_/.]+')
+        );
+        \Route::register("/tools/{tool}", '\Concrete\Core\Legacy\Controller\ToolController::display',
+        '   tool',
+            array('tool' => '[A-Za-z0-9_/.]+')
+        );
     }
 
     protected function getEarlyDispatchResponse()

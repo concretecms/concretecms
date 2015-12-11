@@ -8,6 +8,7 @@ use Concrete\Core\File\Image\Thumbnail\Thumbnail;
 use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use Concrete\Core\File\Image\Thumbnail\Type\Version as ThumbnailTypeVersion;
 use Concrete\Core\File\Type\TypeList as FileTypeList;
+use Concrete\Core\Http\FlysystemFileResponse;
 use Concrete\Flysystem\AdapterInterface;
 use Concrete\Flysystem\FileNotFoundException;
 use Core;
@@ -19,6 +20,8 @@ use Loader;
 use Page;
 use Permissions;
 use stdClass;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use User;
 use View;
 
@@ -35,6 +38,7 @@ class Version
     const UT_TAGS = 4;
     const UT_EXTENDED_ATTRIBUTE = 5;
     const UT_CONTENTS = 6;
+    const UT_RENAME = 7;
 
     /**
      * /* @Id
@@ -490,6 +494,9 @@ class Version
                 case self::UT_CONTENTS:
                     $updates[] = t('File Content');
                     break;
+                case self::UT_RENAME:
+                    $updates[] = t('File Name');
+                    break;
                 case self::UT_EXTENDED_ATTRIBUTE:
                     $val = $db->GetOne(
                         "SELECT akName FROM AttributeKeys WHERE akID = ?",
@@ -552,12 +559,38 @@ class Version
         Events::dispatch('on_file_version_update_description', $fe);
     }
 
+    public function rename($filename)
+    {
+        $cf = Core::make('helper/concrete/file');
+        $storage = $this->getFile()->getFileStorageLocationObject();
+        $oldFilename = $this->fvFilename;
+        if (is_object($storage)) {
+            $path = $cf->prefix($this->fvPrefix, $oldFilename);
+            $newPath = $cf->prefix($this->fvPrefix, $filename);
+            $filesystem = $storage->getFileSystemObject();
+            if ($filesystem->has($path)) {
+                $filesystem->rename($path, $newPath);
+            }
+            $this->fvFilename = $filename;
+            if ($this->fvTitle == $oldFilename) {
+                $this->fvTitle = $filename;
+            }
+            $this->logVersionUpdate(self::UT_RENAME);
+            $this->save();
+        }
+    }
+
     public function updateContents($contents)
     {
         $cf = Core::make('helper/concrete/file');
         $storage = $this->getFile()->getFileStorageLocationObject();
         if (is_object($storage)) {
-            $storage->getFileSystemObject()->write($cf->prefix($this->fvPrefix, $this->fvFilename), $contents);
+            $path = $cf->prefix($this->fvPrefix, $this->fvFilename);
+            $filesystem = $storage->getFileSystemObject();
+            if ($filesystem->has($path)) {
+                $filesystem->delete($path);
+            }
+            $filesystem->write($path, $contents);
             $this->logVersionUpdate(self::UT_CONTENTS);
             $fe = new \Concrete\Core\File\Event\FileVersion($this);
             Events::dispatch('on_file_version_update_contents', $fe);
@@ -624,24 +657,16 @@ class Version
     {
         session_write_close();
         $fre = $this->getFileResource();
-        ob_clean();
-        header('Content-type: application/octet-stream');
-        header("Content-Disposition: attachment; filename=\"" . $this->getFilename() . "\"");
-        header('Content-Length: ' . $fre->getSize());
-        header("Pragma: public");
-        header("Expires: 0");
-        header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-        header("Cache-Control: private", false);
-        header("Content-Transfer-Encoding: binary");
-        header("Content-Encoding: plainbinary");
 
         $fs = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
+        $response = new FlysystemFileResponse($fre->getPath(), $fs);
 
-        $stream = $fs->readStream($fre->getPath());
-        $contents = stream_get_contents($stream);
-        fclose($stream);
+        $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT);
+        $response->prepare(\Request::getInstance());
 
-        print $contents;
+        ob_end_clean();
+        $response->send();
+        \Core::shutdown();
         exit;
     }
 

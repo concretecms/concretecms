@@ -48,7 +48,7 @@ $args['instance_id'] = time();
 <script type="text/javascript">
     $(function () {
         $('.ccm-sitemap-overlay').concreteSitemap({
-            onSelectNode: function (node) {
+            onClickNode: function (node) {
                 ConcreteEvent.publish('SitemapSelectPage', {
                     cID: node.data.cID,
                     title: node.data.title,

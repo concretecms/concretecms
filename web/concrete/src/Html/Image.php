@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Html;
 
+use PageTheme;
+
 class Image
 {
 
@@ -13,7 +15,7 @@ class Image
     {
         $c = \Page::getCurrentPage();
         if (is_object($c)) {
-            $th = $c->getCollectionThemeObject();
+            $th = PageTheme::getByHandle($c->getPageController()->getTheme());
             if (is_object($th)) {
                 $this->theme = $th;
                 $this->usePictureTag = count($th->getThemeResponsiveImageMap()) > 0;
@@ -45,6 +47,9 @@ class Image
             }
             $sources = array();
             $fallbackSrc = $f->getRelativePath();
+            if(!$fallbackSrc) {
+                $fallbackSrc = $f->getURL();
+            }
             foreach($this->theme->getThemeResponsiveImageMap() as $thumbnail => $width) {
                 $type = \Concrete\Core\File\Image\Thumbnail\Type\Type::getByHandle($thumbnail);
                 if($type != NULL) {
@@ -58,7 +63,11 @@ class Image
             $this->tag = \Concrete\Core\Html\Object\Picture::create($sources, $fallbackSrc);
         } else {
             // Return a simple image tag.
-            $this->tag = \HtmlObject\Image::create($f->getRelativePath());
+            $path = $f->getRelativePath();
+            if(!$path) {
+                $path = $f->getURL();
+            }
+            $this->tag = \HtmlObject\Image::create($path);
             $this->tag->width($f->getAttribute('width'));
             $this->tag->height($f->getAttribute('height'));
         }

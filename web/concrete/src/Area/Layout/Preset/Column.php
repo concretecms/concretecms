@@ -19,7 +19,9 @@ class Column implements ColumnInterface
         $node = $nodes[0];
 
         $element = new Element($node->tag);
-        $element->class($node->class);
+        foreach($node->getAllAttributes() as $key => $value) {
+            $element->setAttribute($key, $value);
+        }
 
         $column = new static($element);
         return $column;

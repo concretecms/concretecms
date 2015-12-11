@@ -1,16 +1,25 @@
 <?php
 namespace Concrete\Core\Foundation\Processor;
 
-class Action
+class Action implements ActionInterface
 {
 
-    protected $queueItem;
-
-    public function __construct(TargetInterface $target, TaskInterface $task, $subject)
+    public function __construct(ProcessorInterface $processor, TargetInterface $target, TaskInterface $task, $subject = null)
     {
+        $this->processor = $processor;
         $this->subject = $subject;
         $this->target = $target;
         $this->task = $task;
+    }
+
+    public function getProcessor()
+    {
+        return $this->processor;
+    }
+
+    public function setProcessor($processor)
+    {
+        $this->processor = $processor;
     }
 
     /**
@@ -63,16 +72,12 @@ class Action
 
     public function execute()
     {
-        $this->task->execute($this->getTarget(), $this->subject);
+        $this->task->execute($this);
     }
 
-    public function setQueueItem($queueItem)
+    public function finish()
     {
-        $this->queueItem = $queueItem;
+        $this->task->finish($this);
     }
 
-    public function getQueueItem()
-    {
-        return $this->queueItem;
-    }
 }

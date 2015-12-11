@@ -76,7 +76,7 @@ class View extends AbstractView {
 			$this->controller = $this->attributeType->getController();
 			$this->controller->setAttributeKey($this->attributeKey);
 			$this->controller->setAttributeValue($this->attributeValue);
-			if (is_object($attributeKey)) {
+			if (is_object($this->attributeKey)) {
 				$this->controller->set('akID', $this->attributeKey->getAttributeKeyID());
 			}
 		}

@@ -125,7 +125,6 @@
         <attributeset handle="seo" name="SEO" package="" locked="0" category="collection">
             <attributekey handle="meta_title"/>
             <attributekey handle="meta_description"/>
-            <attributekey handle="meta_keywords"/>
             <attributekey handle="header_extra_content"/>
             <attributekey handle="exclude_sitemapxml"/>
         </attributeset>

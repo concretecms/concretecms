@@ -31,6 +31,7 @@ class Identifier {
 		$foundRecord = false;
 		$db = Loader::db();
 		$i = '';
+        $_string = '';
 		while ($foundRecord == false) {
 			$_string = $string . $i;
 			$cnt = $db->GetOne("select count(" . $key . ") as total from " . $table . " where " . $key . " = ?", array($_string));
@@ -46,13 +47,15 @@ class Identifier {
 		return $_string;
 	}
 
-	/**
-	 * Generates a unique identifier for an item in a database table. Used, among other places, in generating
-	 * User hashes for email validation
-	 * @param string table
-	 * @param string key
-	 * @param int length
-	 */
+    /**
+     * Generates a unique identifier for an item in a database table. Used, among other places, in generating
+     * User hashes for email validation
+     * @param string $table
+     * @param string $key
+     * @param int $length
+     * @param bool $lowercase
+     * @return string
+     */
 	public function generate($table, $key, $length = 12, $lowercase = false) {
 		$foundHash = false;
 		$db = Loader::db();

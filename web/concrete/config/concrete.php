@@ -7,8 +7,8 @@ return array(
      *
      * @var string
      */
-    'version'           => '5.7.5.2a1',
-    'version_installed' => '5.7.5.2a1',
+    'version'           => '5.7.5.4b1',
+    'version_installed' => '5.7.5.4b1',
     'version_db' => '20150731000000', // the key of the latest database migration
 
     /**
@@ -364,31 +364,42 @@ return array(
         /**
          * Enable marketplace integration
          *
-         * @var bool
+         * @var bool concrete.marketplace.enabled
          */
         'enabled'            => true,
 
         /**
+         * Time it takes for a request to timeout
+         *
+         * @var int concrete.marketplace.request_timeout
+         */
+        'request_timeout'   => 30,
+
+        /**
          * Marketplace Token
          *
-         * @var null|string
+         * @var null|string concrete.marketplace.token
          */
         'token'              => null,
 
         /**
          * Marketplace Site url Token
          *
-         * @var null|string
+         * @var null|string concrete.marketplace.site_token
          */
         'site_token'         => null,
 
         /**
          * Enable intelligent search integration
+         *
+         * @var bool concrete.marketplace.intelligent_search
          */
         'intelligent_search' => true,
 
         /**
          * Log requests
+         *
+         * @var bool concrete.marketplace.log_requests
          */
         'log_requests' => false
     ),
@@ -485,6 +496,16 @@ return array(
             'default' => ASSETS_URL_IMAGES . '/avatar_none.png'
         )
     ),
+
+    'file_manager' => array(
+
+        'images' => array(
+            'use_exim_data_to_rotate_images' => false,
+            'manipulation_library' => 'gd'
+        )
+
+    ),
+
     'sitemap_xml'       => array(
         'file'      => 'sitemap.xml',
         'frequency' => 'weekly',
@@ -603,7 +624,7 @@ return array(
             'cookie_lifetime' => 0,
             'cookie_domain'   => false,
             'cookie_secure'   => false,
-            'cookie_httponly' => false
+            'cookie_httponly' => true
         )
     ),
 
@@ -743,6 +764,13 @@ return array(
      * ------------------------------------------------------------------------
      */
     'security'          => array(
+        'session' => array(
+
+            'invalidate_on_user_agent_mismatch' => true,
+
+            'invalidate_on_ip_mismatch' => true
+
+        ),
         'ban'   => array(
             'ip' => array(
 

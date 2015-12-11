@@ -197,10 +197,7 @@
 
 	ConcreteAjaxSearch.prototype.refreshResults = function() {
 		var cs = this;
-		
-		if ($.contains(document, cs.$element)) {
-			cs.$element.find('form[data-search-form]').trigger('submit');
-		}
+		cs.$element.find('form[data-search-form]').trigger('submit');
 	}
 
 	ConcreteAjaxSearch.prototype.setupSearch = function() {

@@ -5,7 +5,8 @@ use \Concrete\Core\Logging\Event;
 use \Concrete\Core\Logging\LogEntry;
 use \Concrete\Core\Logging\GroupLogger;
 
-class LogTest extends ConcreteDatabaseTestCase {
+class LogTest extends ConcreteDatabaseTestCase
+{
 
     protected $fixtures = array();
     protected $tables = array('Logs');
@@ -21,17 +22,17 @@ class LogTest extends ConcreteDatabaseTestCase {
         // now we determine if writing occurred successfully.
         $db = Database::get();
         $r = $db->GetAll('select * from Logs');
-        $this->assertTrue($r[0]['logID'] == 1);
-        $this->assertTrue($r[0]['channel'] == 'sample-channel');
-        $this->assertTrue($r[0]['message'] == 'This is a debug line.');
-        $this->assertTrue($r[0]['level'] == Log::getLevelCode('debug'));
+        $this->assertEquals(1, $r[0]['logID']);
+        $this->assertEquals('sample-channel', $r[0]['channel']);
+        $this->assertEquals('This is a debug line.', $r[0]['message']);
+        $this->assertEquals(Log::getLevelCode('debug'), $r[0]['level']);
 
-        $this->assertTrue($r[1]['message'] == 'This is an emergency');
-        $this->assertTrue($r[1]['level'] == Log::getLevelCode('emergency'));
+        $this->assertEquals('This is an emergency', $r[1]['message']);
+        $this->assertEquals(Log::getLevelCode('emergency'), $r[1]['level']);
 
-        $this->assertTrue($r[2]['logID'] == 3);
-        $this->assertTrue($r[2]['message'] == 'Critical error found.');
-        $this->assertTrue($r[2]['level'] == Log::getLevelCode('critical'));
+        $this->assertEquals(3, $r[2]['logID']);
+        $this->assertEquals('Critical error found.', $r[2]['message']);
+        $this->assertEquals(Log::getLevelCode('critical'), $r[2]['level']);
     }
 
 
@@ -86,10 +87,11 @@ class LogTest extends ConcreteDatabaseTestCase {
         $log = new Logger('emails');
         // should only have a database handler.
         $this->assertEquals(count($log->getHandlers()), 1);
-        $this->assertEquals(count(Log::getHandlers()), 2);// this should still have the same stream handler from last test.
+        $this->assertEquals(count(Log::getHandlers()),
+            2);// this should still have the same stream handler from last test.
 
         $handler = new \Monolog\Handler\TestHandler(Logger::CRITICAL, false);
-        $listener = Events::addListener('on_logger_create', function($event) use ($handler) {
+        $listener = Events::addListener('on_logger_create', function ($event) use ($handler) {
             $logger = $event->getLogger();
             $formatter = new \Monolog\Formatter\LineFormatter();
             $handler->setFormatter($formatter);

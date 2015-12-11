@@ -93,6 +93,7 @@ class Environment
             DIR_APPLICATION.'/'.DIRNAME_PAGE_TEMPLATES,
             DIR_APPLICATION.'/'.DIRNAME_VIEWS,
             DIR_APPLICATION.'/'.DIRNAME_CLASSES,
+            DIR_APPLICATION.'/'.DIRNAME_MENU_ITEMS,
         );
         foreach ($check as $loc) {
             if (is_dir($loc)) {

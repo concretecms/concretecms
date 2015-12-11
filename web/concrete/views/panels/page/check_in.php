@@ -19,9 +19,21 @@ $v = $c->getVersionObject();
 		$pk = PermissionKey::getByHandle('approve_page_versions');
 		$pk->setPermissionObject($c);
 		$pa = $pk->getPermissionAccessObject();
-		if (is_object($pa) && count($pa->getWorkflows()) > 0) {
-			$publishTitle = t('Submit to Workflow');
-		}
+        $workflows = array();
+        $canApproveWorkflow = true;
+        if (is_object($pa)) {
+            $workflows = $pa->getWorkflows();
+        }
+        foreach($workflows as $wf) {
+            if (!$wf->canApproveWorkflow()) {
+                $canApproveWorkflow = false;
+            }
+        }
+
+        if (count($workflows) > 0 && !$canApproveWorkflow) {
+            $publishTitle = t('Submit to Workflow');
+        }
+        
 	}
 ?>
 <div class="ccm-panel-check-in-publish">
@@ -74,6 +86,11 @@ $v = $c->getVersionObject();
 $(function() {
     setTimeout("$('#ccm-check-in-comments').focus();",300);
     $('#ccm-check-in').concreteAjaxForm();
+    <?php if ($c->isPageDraft() && $cp->canDeletePage()) { ?>
+    $('button#ccm-check-in-discard').on('click', function () {
+        return confirm('<?=t('This will remove this draft and it cannot be undone. Are you sure?')?>');
+    });
+	<?php } ?>
 });
 </script>
 

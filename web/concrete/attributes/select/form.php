@@ -1,194 +1,112 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); 
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 
-$form = Loader::helper('form');
-$json = Loader::helper('json');
+/**
+ * Checkbox list.
+ */
+if ($akSelectAllowMultipleValues && !$akSelectAllowOtherValues) {
 
-// Set's helpful, accessible instruction title attribute text on our UI buttons.
-// Saves us battling with some of the convoluted JS string concatenation below
-// where the t() function is involved. Saves hitting the function multiple times too.
-// @var String
-$removeOptionText = t('Remove Option');
+	$form = Loader::helper('form');
+	$options = $controller->getOptions();
+	foreach($options as $opt) { ?>
 
-if ($akSelectAllowMultipleValues && $akSelectAllowOtherValues) { // display autocomplete form
-	$attrKeyID = $this->attributeKey->getAttributeKeyID();
-	?>
-
-	<style type="text/css">
-		.ccm-ui .ccm-attribute-type-select-autocomplete .newAttrValue,
-		.ccm-ui .ccm-attribute-type-select-autocomplete .existingAttrValue {
-			padding-top: 3px;
-			margin-right: 12px;
-			float: left;
-			line-height: 20px;
-		}
-		.ccm-ui .ccm-attribute-type-select-autocomplete h6 {
-            margin-top: 0px;
-			margin-bottom: 2px;
-		}
-		.ccm-ui .ccm-attribute-type-select-autocomplete .well {
-			margin-bottom: 5px;
-			max-width: 500px;
-		}
-		.ccm-ui .ccm-attribute-type-select-autocomplete .text-error {
-			color: #b94a48 !important;
-			font-weight: bold;
-		}
-	</style>
-
-<div class="ccm-attribute ccm-attribute-select ccm-attribute-type-select-autocomplete">
-
-	<div id="selectedAttrValueRows_<?php echo $attrKeyID;?>" class="well well-small clearfix">
-		<h6><?=t('Selected Options')?></h6>
-		<?php
-		foreach($selectedOptions as $optID) {
-			$opt = Concrete\Attribute\Select\Option::getByID($optID);
-
-			?>
-			<div class="existingAttrValue">
-				<?=$form->hidden($this->field('atSelectOptionID') . '[]', $opt->getSelectAttributeOptionID(), array('style'=>'position:relative;')); ?>
-				<span class="badge"><?=$opt->getSelectAttributeOptionValue()?></span>
-				<a class="text-error" title="<?=$removeOptionText?>" href="javascript:void(0);" onclick="$(this).parent().remove()">x</a>
-			</div>
-		<? }
-
-		// now we get items from the post
-		$vals = $this->post('atSelectNewOption');
-		if (is_array($vals)) {
-			foreach($vals as $v) { ?>
-				<div class="newAttrValue">
-					<?=$form->hidden($this->field('atSelectNewOption') . '[]', $v)?>
-					<span class="badge"><?=h($v)?></span>
-					<a class="text-error" title="<?=$removeOptionText?>" onclick="ccmAttributeTypeSelectTagHelper<?php echo $attrKeyID?>.remove(this)" href="javascript:void(0)">x</a>
-				</div>
-			<?
-			}
-		}
-
-		?>
-	</div>
-    <div class="input-group">
-        <?php
-        echo $form->text('newAttrValueRows'.$attrKeyID, array('class' => 'ccm-attribute-type-select-autocomplete-text', 'style'=>'position:relative;'));
-        ?>
-        <span class="input-group-btn">
-        <input type="button" class="btn ccm-input-button btn-default" value="<?=t('Add')?>" onclick="ccmAttributeTypeSelectTagHelper<?=$attrKeyID?>.addButtonClick(); return false" />
-        </span>
-    </div>
-</div>
-
-	<script type="text/javascript">
-	//<![CDATA[
-	$(function() {
-		var availableTags = <?=$json->encode($opt_values);?>;
-		$("#newAttrValueRows<?php echo $attrKeyID?>").autocomplete({
-			source: "<?=$view->action('load_autocomplete_values')?>",
-			select: function( event, ui ) {
-				ccmAttributeTypeSelectTagHelper<?php echo $attrKeyID?>.add(ui.item.value);
-				$(this).val('');
-				return false;
-			}
-		});
-
-		$("#newAttrValueRows<?php echo $attrKeyID?>").bind("keydown", function(e) {
-			if (e.keyCode == 13) { // comma or enter
-				if($(this).val().length > 0) {
-					ccmAttributeTypeSelectTagHelper<?php echo $attrKeyID?>.add($(this).val());
-					$(this).val('');
-					$("#newAttrValueRows<?php echo $this->attributeKey->getAttributeKeyID()?>").autocomplete( "close" );
-				}
-				return false;
-			}
-		});
-	});
-
-	var ccmAttributeTypeSelectTagHelper<?php echo $attrKeyID?>={
-			addButtonClick: function() {
-				// Get and cache our row element
-				var valrow = $("input[name=newAttrValueRows<?=$attrKeyID?>]");
-				// Get and cache our row element's value
-				var valrowval = valrow.val();
-
-				// Any text actually entered? If value passed, continue!
-				// A length check was being done on keydown (enter press) but not
-				// when button clicked (!). Fixed now. Might avoid some of those ugly, empty
-				// option rows appearing in the attribute select type options db.
-				if(valrowval.length > 0) {
-					ccmAttributeTypeSelectTagHelper<?php echo $attrKeyID?>.add(valrowval);
-					valrow.val('');
-					$("#newAttrValueRows<?php echo $this->attributeKey->getAttributeKeyID()?>").autocomplete( "close" );
-				}
-				return false;
-			},
-			add:function(value){
-				var newRow=document.createElement('div');
-				newRow.className='newAttrValue';
-				newRow.innerHTML='<input name="<?=$this->field('atSelectNewOption')?>[]" type="hidden" value="'+value+'" /> ';
-				newRow.innerHTML+='<span class="badge">'+value+'</span>';
-				newRow.innerHTML+=' <a class="text-error" title="<?=$removeOptionText?>" onclick="ccmAttributeTypeSelectTagHelper<?php echo $attrKeyID?>.remove(this)" href="javascript:void(0)">x</a>';
-				$('#selectedAttrValueRows_<?php echo $attrKeyID;?>').append(newRow);
-			},
-			remove:function(a){
-				$(a.parentNode).remove();
-			}
-		}
-	//]]>
-	</script>
-	<?php
-} else {
-	?>
-
-	<style type="text/css">
-		.ccm-ui .newAttrValueRow {
-			padding-top: 2px;
-		}
-	</style>
-
-	<?php
-
-	$options = $this->controller->getOptions();
-
-	if ($akSelectAllowMultipleValues) { ?>
-
-		<? foreach($options as $opt) { ?>
-			<div class="checkbox"><label>
-				<?=$form->checkbox($this->field('atSelectOptionID') . '[]', $opt->getSelectAttributeOptionID(), in_array($opt->getSelectAttributeOptionID(), $selectedOptions)); ?>
+		<div class="checkbox"><label>
+				<?=$form->checkbox($view->field('atSelectOptionValue') . '[]', $opt->getSelectAttributeOptionID(), in_array($opt->getSelectAttributeOptionID(), $selectedOptions)); ?>
 				<?=$opt->getSelectAttributeOptionDisplayValue()?>
-                </label>
-            </div>
-		<? } ?>
-	<? } else {
-		$opts = array('' => t('** None'));
-		foreach($options as $opt) {
-			$opts[$opt->getSelectAttributeOptionID()] = $opt->getSelectAttributeOptionDisplayValue();
-		}
-		?>
-		<?=$form->select($this->field('atSelectOptionID') . '[]', $opts, $selectedOptions[0]); ?>
+			</label>
+		</div>
+
 
 	<? }
 
-	if ($akSelectAllowOtherValues) { ?>
-		<div id="newAttrValueRows<?=$this->attributeKey->getAttributeKeyID()?>" class="newAttrValueRows"></div>
-		<div style="padding-top: 5px;">
-			<a title="<?=t('Add Another Option')?>" class="btn btn-small" href="javascript:void(0)" onclick="ccmAttributeTypeSelectHelper.add(<?=$this->attributeKey->getAttributeKeyID()?>, '<?=$this->field('atSelectNewOption')?>[]')">
-				<?=t('Add Another Option')?>
-			</a>
-		</div>
-	<? } ?>
 
-	<script type="text/javascript">
-	//<![CDATA[
-	var ccmAttributeTypeSelectHelper={
-		add:function(akID, field){
-			var newRow=document.createElement('div');
-			newRow.className='newAttrValueRow';
-			newRow.innerHTML='<input name="' + field + '" type="text" value="" /> ';
-			newRow.innerHTML+='<a title="<?=$removeOptionText?>" class="btn btn-mini btn-danger" onclick="ccmAttributeTypeSelectHelper.remove(this)" href="javascript:void(0)"><i class="icon icon-white icon-trash"></i></a>';
-			$('#newAttrValueRows'+akID).append(newRow);
-		},
-		remove:function(a){
-			$(a.parentNode).remove();
-		}
+}
+
+/**
+ * Select Menu.
+ */
+if (!$akSelectAllowMultipleValues && !$akSelectAllowOtherValues) {
+
+	$form = Loader::helper('form');
+	$options = array('' => t('** None'));
+	foreach($controller->getOptions() as $option) {
+		$options[$option->getSelectAttributeOptionID()] = $option->getSelectAttributeOptionDisplayValue();
 	}
-	//]]>
+	?>
+	<?=$form->select($view->field('atSelectOptionValue'), $options, $selectedOptions[0]); ?>
+
+
+<? }
+
+/**
+ * Select2
+ */
+if ($akSelectAllowOtherValues) {
+
+	if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+		$value = $controller->request('atSelectOptionValue');
+	} else {
+		$values = array();
+		foreach($selectedOptions as $optionID) {
+			$values[] = 'SelectAttributeOption:' . $optionID;
+		}
+		$value = implode(',', $values);
+	}
+
+
+	?>
+	<input type="hidden" data-select-and-add="<?=$akID?>" style="width: 100%" name="<?=$view->field('atSelectOptionValue')?>" value="<?=$value?>" />
+	<script type="text/javascript">
+		$(function() {
+			$('input[data-select-and-add=<?=$akID?>]').select2({
+				tags: true,
+				createSearchChoicePosition: 'bottom',
+				initSelection: function(element, callback) {
+					var data = [];
+					$.ajax({
+						'dataType': 'json',
+						'data': {value: $(element).val()},
+						'url': '<?=$view->action('load_autocomplete_selected_value')?>'
+					}).done(function(data) {
+						callback(data);
+					});
+
+					callback(data);
+				},
+				createSearchChoice: function(term, data) {
+					if ($(data).filter(function() {
+							return this.text.localeCompare(term) === 0;
+						}).length === 0) {
+						return {
+							id: term,
+							text: term
+						};
+					}
+				},
+				<? if ($akSelectAllowMultipleValues) { ?>
+					tokenSeparators: [','],
+					multiple: true,
+				<? } else { ?>
+					maximumSelectionSize: 1,
+				<? } ?>
+				minimumInputLength: 1,
+				ajax: { // instead of writing the function to execute the request we use Select2's convenient helper
+					url: "<?=$view->action('load_autocomplete_values')?>",
+					dataType: 'json',
+					quietMillis: 250,
+					data: function (term, page) {
+						return {
+							q: term, // search term
+						};
+					},
+					results: function (data, page) {
+					// parse the results into the format expected by Select2.
+						// since we are using custom formatting functions we do not need to alter the remote JSON data
+						return { results: data };
+					},
+				}
+
+			});
+		});
 	</script>
-<?php } ?>
+
+<? }

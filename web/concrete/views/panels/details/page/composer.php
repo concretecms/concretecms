@@ -56,14 +56,16 @@ ConcretePageComposerDetail = {
 	start: function() {
 		var my = this;
 	    $('button[data-page-type-composer-form-btn=discard]').on('click', function() {
-	    	my.disableAutosave();
-	    	$.concreteAjax({
-	    		'url': '<?=$controller->action('discard')?>',
-	    		'data': {cID: '<?=$cID?>'},
-	    		success: function(r) {
-					window.location.href = r.redirectURL;
-	    		}
-	    	});
+			if (confirm('<?=t('This will remove this draft and it cannot be undone. Are you sure?')?>')) {
+		    	my.disableAutosave();
+		    	$.concreteAjax({
+		    		'url': '<?=$controller->action('discard')?>',
+		    		'data': {cID: '<?=$cID?>'},
+		    		success: function(r) {
+						window.location.href = r.redirectURL;
+		    		}
+		    	});
+			}
 		});
 
 	    $('button[data-page-type-composer-form-btn=preview]').on('click', function() {

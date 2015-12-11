@@ -10,6 +10,8 @@ use Concrete\Core\Controller;
 use Concrete\Core\Feature\Feature;
 use Concrete\Core\Legacy\BlockRecord;
 use Concrete\Core\Page\Controller\PageController;
+use Concrete\Core\Page\Type\Type;
+use Concrete\Core\Permission\Checker;
 use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 use Config;
 use Database;
@@ -391,12 +393,14 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     protected function getImportData($blockNode, $page)
     {
         $args = array();
+        $inspector = \Core::make('import/value_inspector');
         if (isset($blockNode->data)) {
             foreach ($blockNode->data as $data) {
                 if ($data['table'] == $this->getBlockTypeDatabaseTable()) {
                     if (isset($data->record)) {
                         foreach ($data->record->children() as $node) {
-                            $args[$node->getName()] = ContentImporter::getValue((string) $node);
+                            $result = $inspector->inspect((string) $node);
+                            $args[$node->getName()] = $result->getReplacedValue();
                         }
                     }
                 }
@@ -408,6 +412,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
 
     protected function importAdditionalData($b, $blockNode)
     {
+        $inspector = \Core::make('import/value_inspector');
         if (isset($blockNode->data)) {
             foreach ($blockNode->data as $data) {
                 if (strtoupper($data['table']) != strtoupper($this->getBlockTypeDatabaseTable())) {
@@ -418,7 +423,8 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
                             $aar->bID = $b->getBlockID();
                             foreach ($record->children() as $node) {
                                 $nodeName = $node->getName();
-                                $aar->{$nodeName} = ContentImporter::getValue((string) $node);
+                                $result = $inspector->inspect((string) $node);
+                                $aar->{$nodeName} = $result->getReplacedValue();
                             }
                             $aar->Save();
                         }
@@ -431,6 +437,28 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     public function setPassThruBlockController(PageController $controller)
     {
         $controller->setPassThruBlockController($this->block, $this);
+    }
+
+    public function validateAddBlockPassThruAction(Checker $ap, BlockType $bt)
+    {
+        return $ap->canAddBlock($bt);
+    }
+
+    public function validateEditBlockPassThruAction(Block $b)
+    {
+        $bp = new \Permissions($b);
+        return $bp->canEditBlock();
+    }
+
+    public function validateComposerAddBlockPassThruAction(Type $type)
+    {
+        $pp = new \Permissions($type);
+        return $pp->canAddPageType();
+    }
+
+    public function validateComposerEditBlockPassThruAction(Block $b)
+    {
+        return $this->validateEditBlockPassThruAction($b);
     }
 
     public function getPassThruActionAndParameters($parameters)

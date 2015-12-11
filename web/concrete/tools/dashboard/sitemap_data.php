@@ -56,6 +56,10 @@ if ($_REQUEST['displaySingleLevel']) {
     }
     $nodes[] = $n;
 } else {
+    $openNodeArray = explode(',', str_replace('_', '', $_COOKIE['ConcreteSitemap-expand']));
+    if (is_array($openNodeArray)) {
+        $dh->setExpandedNodes($openNodeArray);
+    }
     $nodes = $dh->getSubNodes($cParentID);
 }
 print Loader::helper('json')->encode($nodes);

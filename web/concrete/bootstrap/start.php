@@ -45,6 +45,10 @@ PatchworkUTF8::initAll();
 $cms = require DIR_APPLICATION . '/bootstrap/start.php';
 $cms->instance('app', $cms);
 
+// Bind fully application qualified class names
+$cms->instance('Concrete\Core\Application\Application', $cms);
+$cms->instance('Illuminate\Container\Container', $cms);
+
 /**
  * ----------------------------------------------------------------------------
  * Bind the IOC container to our facades
@@ -86,10 +90,12 @@ $cms->detectEnvironment(function() use ($db_config, $environment, $cms) {
  * ----------------------------------------------------------------------------
  */
 if (!$cms->bound('config')) {
-    $file_system = new Filesystem();
-    $file_loader = new FileLoader($file_system);
-    $file_saver = new FileSaver($file_system);
-    $cms->instance('config', new ConfigRepository($file_loader, $file_saver, $cms->environment()));
+    $cms->bindShared('config', function(Application $cms) {
+        $file_system = new Filesystem();
+        $file_loader = new FileLoader($file_system);
+        $file_saver = new FileSaver($file_system);
+        return new ConfigRepository($file_loader, $file_saver, $cms->environment());
+    });
 }
 
 $config = $cms->make('config');
@@ -134,9 +140,11 @@ $list->registerMultiple($config->get('app.facades'));
  */
 
 if (!$cms->bound('config/database')) {
-    $database_loader = new DatabaseLoader();
-    $database_saver = new DatabaseSaver();
-    $cms->instance('config/database', new ConfigRepository($database_loader, $database_saver, $cms->environment()));
+    $cms->bindShared('config/database', function(Application $cms) {
+        $database_loader = new DatabaseLoader();
+        $database_saver = new DatabaseSaver();
+        return new ConfigRepository($database_loader, $database_saver, $cms->environment());
+    });
 }
 
 $database_config = $cms->make('config/database');
@@ -146,7 +154,13 @@ $database_config = $cms->make('config/database');
  * Setup the core service groups.
  * ----------------------------------------------------------------------------
  */
+
 $list = new ProviderList($cms);
+
+// Register events first so that they can be used by other providers.
+$list->registerProvider($config->get('app.providers.core_events'));
+
+// Register all other providers
 $list->registerProviders($config->get('app.providers'));
 
 /**
@@ -262,6 +276,13 @@ if ($response) {
 
 /**
  * ----------------------------------------------------------------------------
+ * Now we load all installed packages, and register their package autoloaders.
+ * ----------------------------------------------------------------------------
+ */
+$cms->setupPackageAutoloaders();
+
+/**
+ * ----------------------------------------------------------------------------
  * Load preprocess items
  * ----------------------------------------------------------------------------
  */
@@ -286,7 +307,8 @@ $cms->handleAutomaticUpdates();
 
 /**
  * ----------------------------------------------------------------------------
- * Now we load all installed packages, and run package events on them.
+ * Now that we have languages out of the way, we can run our package on_start
+ * methods
  * ----------------------------------------------------------------------------
  */
 $cms->setupPackages();

@@ -117,6 +117,8 @@ module.exports = function(grunt) {
                 '<%= DIR_BASE %>/concrete/js/build/core/app/help/guides/toolbar.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/help/guides/change-content.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/help/guides/change-content-edit-mode.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/app/help/guides/add-content.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/app/help/guides/add-content-edit-mode.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/help/guides/add-page.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/help/guides/personalize.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/help/guides/dashboard.js',
@@ -264,7 +266,8 @@ module.exports = function(grunt) {
                 '<%= DIR_BASE %>/concrete/js/build/core/sitemap/sitemap.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/sitemap/menu.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/sitemap/search.js',
-                '<%= DIR_BASE %>/concrete/js/build/core/sitemap/selector.js'
+                '<%= DIR_BASE %>/concrete/js/build/core/sitemap/selector.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/sitemap/sitemap-selector.js'
             ]
         },
 

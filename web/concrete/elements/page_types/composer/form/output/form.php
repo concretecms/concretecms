@@ -30,7 +30,7 @@ if (is_object($targetPage)) {
 		<? } ?>
 		<? $controls = PageTypeComposerFormLayoutSetControl::getList($cfl);
 
-		foreach($controls as $con) { 
+		foreach($controls as $con) {
 			if (is_object($page)) { // we are loading content in
 				$con->setPageObject($page);
 			}

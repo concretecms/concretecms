@@ -20,10 +20,11 @@ $ag->requireAsset('core/lightbox');
                             </ol>
                         </div>
                         <div class="ccm-dialog-help-item">
-                            <h4><?=t('Change content')?></h4>
+                            <h4><?=t('Add & Change Content')?></h4>
                             <ol class="breadcrumb">
                                 <li><a href="https://www.youtube.com/watch?v=Y1VmBVffLM0" data-lightbox="iframe"><?=t('Watch Video')?></a></li>
-                                <li class="hidden-xs"><a href="#" data-launch-guide="change-content"><?=t('Run Guide')?></a></li>
+                                <li class="hidden-xs"><a href="#" data-launch-guide="change-content"><?=t('Guide: Change Content')?></a></li>
+                                <li class="hidden-xs"><a href="#" data-launch-guide="add-content"><?=t('Guide: Add Content')?></a></li>
                             </ol>
                         </div>
                         <div class="ccm-dialog-help-item">

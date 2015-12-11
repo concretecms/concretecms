@@ -14,7 +14,13 @@ $cms = require $DIR_BASE_CORE . '/bootstrap/start.php';
 $app = new \Concrete\Core\Console\Application();
 $cms->instance('console', $app);
 if ($cms->isInstalled()) {
+    $cms->setupPackageAutoloaders();
     $cms->setupPackages();
 }
 $app->setupDefaultCommands();
+
+\Events::dispatch('on_before_console_run');
+
 $app->run();
+
+\Events::dispatch('on_after_console_run');

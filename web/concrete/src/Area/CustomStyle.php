@@ -8,10 +8,7 @@ use Core;
 class CustomStyle extends AbstractCustomStyle
 {
 
-    /**
-     * @var string
-     */
-    protected $arHandle;
+    protected $area;
 
     /**
      * @var StyleSet
@@ -22,14 +19,14 @@ class CustomStyle extends AbstractCustomStyle
 
     public function __construct(StyleSet $set = null, Area $area, $theme)
     {
-        $this->arHandle = $area->getAreaHandle();
+        $this->area = $area;
         $this->set = $set;
         $this->theme = $theme;
     }
 
     public function getStyleWrapper($css)
     {
-        $style = '<style type="text/css" data-area-style-area-handle="' . $this->arHandle . '" data-style-set="' . $this->getStyleSet()->getID() . '">' . $css . '</style>';
+        $style = '<style type="text/css" data-area-style-area-handle="' . $this->area->getAreaHandle() . '" data-style-set="' . $this->getStyleSet()->getID() . '">' . $css . '</style>';
         return $style;
     }
 
@@ -103,10 +100,18 @@ class CustomStyle extends AbstractCustomStyle
 
         $css = '';
         foreach($groups as $suffix => $styles) {
-            $css .= '.' . str_replace(' ', '.', $this->getContainerClass()) . $suffix . '{'.implode(';', $styles).'}';
+            $css .= '.' . str_replace(' ', '.', $this->getCustomStyleClass()) . $suffix . '{'.implode(';', $styles).'}';
         }
 
         return $css;
+    }
+
+    public function getCustomStyleClass()
+    {
+        $class = 'ccm-custom-style-';
+        $txt = Core::make('helper/text');
+        $class .= strtolower($txt->filterNonAlphaNum($this->area->getAreaHandle()));
+        return $class;
     }
 
     /**
@@ -114,15 +119,17 @@ class CustomStyle extends AbstractCustomStyle
      */
     public function getContainerClass()
     {
-        $class = 'ccm-custom-style-';
-        $txt = Core::make('helper/text');
-        $class .= strtolower($txt->filterNonAlphaNum($this->arHandle));
+        $classes = array($this->getCustomStyleClass());
+
         if (is_object($this->set)) {
-            $return = $this->set->getClass($this->theme);
-            if ($return) {
-                $class .= ' ' . $return;
+            if ($this->set->getCustomClass()) {
+                $classes[] = $this->set->getCustomClass();
+            }
+            if (is_object($this->theme) && ($gf = $this->theme->getThemeGridFrameworkObject())) {
+                $classes = array_merge($gf->getPageThemeGridFrameworkSelectedDeviceHideClassesForDisplay($this->set, $this->area->getAreaCollectionObject()), $classes);
             }
         }
-        return $class;
+
+        return implode(' ', $classes);
     }
 }

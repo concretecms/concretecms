@@ -108,9 +108,6 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                         <div class="checkbox">
                             <label> <?php echo $form->checkbox('noDescription', 1, $descCheck);  ?><?=t('No Meta Description'); ?></label>
                         </div>
-                        <div class="checkbox">
-                            <label> <?php echo $form->checkbox('noKeywords', 1, $keywordCheck);  ?><?=t('No Meta Keywords'); ?></label>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -162,10 +159,6 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                             echo $descInfo[style] ? '<span class="help-inline">' . t('Default value. Click to edit.') . '</span>' : '';
                             ?>
                         </div>
-                        <div class="form-group">
-                            <label><?php echo t('Meta Keywords'); ?></label>
-                            <?php echo $form->textarea('meta_keywords', $cobj->getAttribute('meta_keywords'), array('title' => $cID)); ?>
-                        </div>
                         <? if ($cobj->getCollectionID() != HOME_CID) { ?>
 
                         <div class="form-group">
@@ -181,13 +174,13 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                             ?><a class="help-inline url-path" href="<?php echo $nh->getLinkToCollection($cobj); ?>" target="_blank"><?php echo Core::getApplicationURL() . $untokens; ?></a><?php
                             ?>
                         </div>
+                        <? } ?>
                         <div class="form-group submit-changes">
                             <form id="seoForm<?php echo $cID; ?>" action="<?php echo View::url('/dashboard/system/seo/page_data/', 'saveRecord')?>" method="post" class="pageForm">
                                 <a class="btn btn-default submit-changes" data-cID="<?php echo $cobj->getCollectionID() ?>"><?php echo t('Save') ?></a>
                             </form>
                             <img style="display: none; position: absolute; top: 20px; right: 20px;" id="throbber<?php echo $cID ?>"  class="throbber" src="<?php echo ASSETS_URL_IMAGES . '/throbber_white_32.gif' ?>" />
                         </div>
-                        <? } ?>
                     </div>
             </div>
             <?php } ?>
@@ -217,7 +210,6 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                 data.cID = iterator;
                 data.meta_title = $('.ccm-seoRow-'+iterator+' input[name="meta_title"].hasChanged').val();
                 data.meta_description = $('.ccm-seoRow-'+iterator+' textarea[name="meta_description"]').val();
-                data.meta_keywords = $('.ccm-seoRow-'+iterator+' textarea[name="meta_keywords"]').val();
                 data.collection_handle = $('.ccm-seoRow-'+iterator+' input[name="collection_handle"]').val();
 
                 $.ajax({

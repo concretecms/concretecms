@@ -79,7 +79,11 @@ class Mime
         'ogv'     => 'video/ogg',
         'webm'    => 'video/webm',
         'wmv'     => 'video/x-ms-wmv',
-        'mov'     => 'video/quicktime'
+        'mov'     => 'video/quicktime',
+        'xlsx'    => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'ppsx'    => 'application/vnd.openxmlformats-officedocument.presentationml.slideshow',
+        'pptx'    => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+        'docx'    => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
     );
 
     /**

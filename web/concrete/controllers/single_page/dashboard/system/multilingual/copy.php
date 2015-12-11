@@ -2,7 +2,9 @@
 
 namespace Concrete\Controller\SinglePage\Dashboard\System\Multilingual;
 
+use Concrete\Controller\Panel\Multilingual;
 use Concrete\Core\Foundation\Queue\Queue;
+use Concrete\Core\Multilingual\Page\Section\Processor\MultilingualProcessorTarget;
 use Concrete\Core\Multilingual\Page\Section\Processor\Processor;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use \Concrete\Core\Page\Controller\DashboardPageController;
@@ -36,19 +38,20 @@ class Copy extends DashboardPageController
             if ($u->isSuperUser()) {
                 \Core::make('cache/request')->disable();
                 $section = Section::getByID($_REQUEST['locale']);
-                $processor = new Processor($section);
+                $target = new MultilingualProcessorTarget($section);
+                $processor = new Processor($target);
                 if ($_POST['process']) {
                     foreach($processor->receive() as $task) {
                         $processor->execute($task);
                     }
                     $obj = new \stdClass;
-                    $obj->totalItems = $processor->getQueue()->count();
+                    $obj->totalItems = $processor->getTotalTasks();
                     print json_encode($obj);
                     exit;
                 } else {
-                    $processor->start();
+                    $processor->process();
                 }
-                $totalItems = $processor->getQueue()->count();
+                $totalItems = $processor->getTotalTasks();
                 \View::element('progress_bar', array('totalItems' => $totalItems, 'totalItemsSummary' => t2("%d task", "%d tasks", $totalItems)));
                 /*
                                 $q = Queue::get('rescan_multilingual_section');

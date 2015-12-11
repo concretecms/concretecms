@@ -169,13 +169,13 @@ if ($showMenu) {
 
                         <? if ($b->getBlockTypeHandle() != BLOCK_HANDLE_LAYOUT_PROXY) { ?>
 
-                            <? if ($canDesign || $canEditCustomTemplate || $canEditBlockName || $canEditCacheSettings) { ?>
+                            <? if ($canDesign || $canEditCustomTemplate || $canEditName || $canEditCacheSettings) { ?>
                                 <li class="divider"></li>
 
                                 <? if ($canDesign || $canEditCustomTemplate) { ?>
                                     <li><a href="#" data-menu-action="block_design"><?=t("Design &amp; Custom Template")?></a></li>
                                 <? } ?>
-                                <? if ($b->getBlockTypeHandle() != BLOCK_HANDLE_PAGE_TYPE_OUTPUT_PROXY && ($canEditBlockName || $canEditCacheSettings)) { ?>
+                                <? if ($b->getBlockTypeHandle() != BLOCK_HANDLE_PAGE_TYPE_OUTPUT_PROXY && ($canEditName || $canEditCacheSettings)) { ?>
                                     <li><a dialog-title="<?=t('Advanced Block Settings')?>" dialog-modal="false" dialog-width="500" dialog-height="320" data-menu-action="block_dialog" data-menu-href="<?=URL::to('/ccm/system/dialogs/block/cache')?>" ><?=t("Advanced")?></a></li>
                                 <? } ?>
                             <? } ?>
@@ -183,10 +183,10 @@ if ($showMenu) {
                             <? if ($b->getBlockTypeHandle() != BLOCK_HANDLE_PAGE_TYPE_OUTPUT_PROXY && ($canModifyGroups || $canScheduleGuestAccess || $canAliasBlockOut)) { ?>
                                 <li class="divider"></li>
                                 <? if ($canModifyGroups) { ?>
-                                    <li><a dialog-title="<?=t('Block Permissions')?>" dialog-modal="false" dialog-width="350" dialog-height="420" data-menu-action="block_dialog" data-menu-href="<?=URL::to('/ccm/system/dialogs/block/permissions/list')?>" ><?=t("Permissions")?></a></li>
+                                    <li><a dialog-title="<?=t('Block Permissions')?>" dialog-modal="false" dialog-width="350" dialog-height="450" data-menu-action="block_dialog" data-menu-href="<?=URL::to('/ccm/system/dialogs/block/permissions/list')?>" ><?=t("Permissions")?></a></li>
                                 <? } ?>
                                 <? if ($canScheduleGuestAccess) { ?>
-                                    <li><a dialog-title="<?=t('Schedule Guest Access')?>" dialog-modal="false" dialog-width="500" dialog-height="220" data-menu-action="block_dialog" data-menu-href="<?=URL::to('/ccm/system/dialogs/block/permissions/guest_access')?>" ><?=t("Schedule Guest Access")?></a></li>
+                                    <li><a dialog-title="<?=t('Schedule Guest Access')?>" dialog-modal="false" dialog-width="500" dialog-height="320" data-menu-action="block_dialog" data-menu-href="<?=URL::to('/ccm/system/dialogs/block/permissions/guest_access')?>" ><?=t("Schedule Guest Access")?></a></li>
                                 <? } ?>
                                 <? if ($canAliasBlockOut) { ?>
                                     <li><a dialog-title="<?=t('Setup on Child Pages')?>" dialog-modal="false" dialog-width="550" dialog-height="450" data-menu-action="block_dialog" data-menu-href="<?=URL::to('/ccm/system/dialogs/block/aliasing')?>" ><?=t("Setup on Child Pages")?></a></li>

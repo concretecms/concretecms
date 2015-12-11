@@ -40,10 +40,15 @@ abstract class PageCache {
 	}
 
 	/**
-	 * Note: can't use the User object directly because it might query the database
+	 * Note: can't use the User object directly because it might query the database.
+	 * Also can't use the Session wrapper because it starts session which triggers
+	 * before package autoloaders and so certain access entities stored in session
+	 * will break.
 	 */
 	public function shouldCheckCache(Request $req) {
-		if (Session::get('uID') > 0) {
+		$session = \Config::get('concrete.session.name');
+		$r = \Cookie::get($session);
+		if ($r) {
 			return false;
 		}
 		return true;

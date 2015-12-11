@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Multilingual\Page\Section\Processor;
 
-use Concrete\Core\Foundation\Processor\TargetInterface;
+use Concrete\Core\Foundation\Processor\ActionInterface;
 use Concrete\Core\Foundation\Processor\TaskInterface;
 use Concrete\Core\Page\Page;
 
@@ -11,8 +11,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class ReplaceBlockPageRelationsTask implements TaskInterface
 {
 
-    public function execute(TargetInterface $target, $subject)
+    public function execute(ActionInterface $action)
     {
+        $target = $action->getTarget();
+        $subject = $action->getSubject();
+
         \Cache::disableAll();
         $c = Page::getByID($subject['cID']);
         $db = \Database::connection();
@@ -62,6 +65,11 @@ class ReplaceBlockPageRelationsTask implements TaskInterface
                 $nvc->getVersionObject()->approve();
             }
         }
+    }
+
+    public function finish(ActionInterface $action)
+    {
+        return;
     }
 
 }

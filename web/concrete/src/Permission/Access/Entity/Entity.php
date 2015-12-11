@@ -69,8 +69,9 @@ abstract class Entity extends Object
                 return false;
             }
 
-            $className = '\\Concrete\\Core\\Permission\\Access\\Entity\\' . Core::make('helper/text')->camelcase($pt->getAccessEntityTypeHandle()) . 'Entity';
-            $obj = Core::make($className);
+            $class = '\\Core\\Permission\\Access\\Entity\\' . Core::make('helper/text')->camelcase($pt->getAccessEntityTypeHandle()) . 'Entity';
+            $class = core_class($class, $pt->getPackageHandle());
+            $obj = Core::make($class);
             $r['petHandle'] = $pt->getAccessEntityTypeHandle();
             $obj->setPropertiesFromArray($r);
             $obj->load();

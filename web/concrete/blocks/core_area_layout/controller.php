@@ -13,6 +13,7 @@ use Concrete\Core\Area\Layout\Layout as AreaLayout;
 use Concrete\Core\Area\Layout\Preset\Preset as AreaLayoutPreset;
 use Concrete\Core\Area\Layout\CustomLayout as CustomAreaLayout;
 use Concrete\Core\Area\Layout\ThemeGridLayout as ThemeGridAreaLayout;
+use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 use Concrete\Core\Asset\CssAsset;
 use URL;
 use Page;
@@ -23,8 +24,6 @@ class Controller extends BlockController
     protected $btSupportsInlineEdit = true;
     protected $btTable = 'btCoreAreaLayout';
     protected $btIsInternal = true;
-    protected $btCacheBlockRecord = true;
-    protected $btCacheSettingsInitialized = false;
 
     public function getBlockTypeDescription()
     {
@@ -86,43 +85,51 @@ class Controller extends BlockController
 
     public function save($post)
     {
-        $db = Database::connection();
-        $arLayoutID = $db->GetOne('select arLayoutID from btCoreAreaLayout where bID = ?', array($this->bID));
-        if (!$arLayoutID) {
-            $arLayout = $this->addFromPost($post);
+        if (isset($post['arLayoutID'])) {
+            // we are passing it in directly –likely from import
+            $values = array('arLayoutID' => $post['arLayoutID']);
+            parent::save($values);
+            return;
         } else {
-            $arLayout = AreaLayout::getByID($arLayoutID);
-            if ($arLayout instanceof PresetLayout) {
-                return;
-            }
-            // save spacing
-            if ($arLayout->isAreaLayoutUsingThemeGridFramework()) {
-                $columns = $arLayout->getAreaLayoutColumns();
-                for ($i = 0; $i < count($columns); ++$i) {
-                    $col = $columns[$i];
-                    $span = ($post['span'][$i]) ? $post['span'][$i] : 0;
-                    $offset = ($post['offset'][$i]) ? $post['offset'][$i] : 0;
-                    $col->setAreaLayoutColumnSpan($span);
-                    $col->setAreaLayoutColumnOffset($offset);
-                }
+
+            $db = Database::connection();
+            $arLayoutID = $db->GetOne('select arLayoutID from btCoreAreaLayout where bID = ?', array($this->bID));
+            if (!$arLayoutID) {
+                $arLayout = $this->addFromPost($post);
             } else {
-                $arLayout->setAreaLayoutColumnSpacing($post['spacing']);
-                if ($post['isautomated']) {
-                    $arLayout->disableAreaLayoutCustomColumnWidths();
-                } else {
-                    $arLayout->enableAreaLayoutCustomColumnWidths();
+                $arLayout = AreaLayout::getByID($arLayoutID);
+                if ($arLayout instanceof PresetLayout) {
+                    return;
+                }
+                // save spacing
+                if ($arLayout->isAreaLayoutUsingThemeGridFramework()) {
                     $columns = $arLayout->getAreaLayoutColumns();
                     for ($i = 0; $i < count($columns); ++$i) {
                         $col = $columns[$i];
-                        $width = ($post['width'][$i]) ? $post['width'][$i] : 0;
-                        $col->setAreaLayoutColumnWidth($width);
+                        $span = ($post['span'][$i]) ? $post['span'][$i] : 0;
+                        $offset = ($post['offset'][$i]) ? $post['offset'][$i] : 0;
+                        $col->setAreaLayoutColumnSpan($span);
+                        $col->setAreaLayoutColumnOffset($offset);
+                    }
+                } else {
+                    $arLayout->setAreaLayoutColumnSpacing($post['spacing']);
+                    if ($post['isautomated']) {
+                        $arLayout->disableAreaLayoutCustomColumnWidths();
+                    } else {
+                        $arLayout->enableAreaLayoutCustomColumnWidths();
+                        $columns = $arLayout->getAreaLayoutColumns();
+                        for ($i = 0; $i < count($columns); ++$i) {
+                            $col = $columns[$i];
+                            $width = ($post['width'][$i]) ? $post['width'][$i] : 0;
+                            $col->setAreaLayoutColumnWidth($width);
+                        }
                     }
                 }
             }
-        }
 
-        $values = array('arLayoutID' => $arLayout->getAreaLayoutID());
-        parent::save($values);
+            $values = array('arLayoutID' => $arLayout->getAreaLayoutID());
+            parent::save($values);
+        }
     }
 
     public function getImportData($blockNode, $page)
@@ -184,6 +191,10 @@ class Controller extends BlockController
             $as->load($page);
             $column->setAreaID($as->getAreaID());
             $area = $column->getAreaObject();
+            if ($columnNode->style) {
+                $set = StyleSet::import($columnNode->style);
+                $page->setCustomStyleSet($area, $set);
+            }
             foreach ($columnNode->block as $bx) {
                 $bt = \BlockType::getByHandle($bx['type']);
                 if (!is_object($bt)) {
@@ -321,73 +332,6 @@ class Controller extends BlockController
         $this->set('maxColumns', $maxColumns);
         $this->requireAsset('core/style-customizer');
     }
-    protected function setupCacheSettings()
-    {
-        if ($this->btCacheSettingsInitialized || Page::getCurrentPage()->isEditMode()) {
-            return;
-        }
 
-        $this->btCacheSettingsInitialized = true;
 
-        //Block cache settings are only as good as the weakest cached item inside. So loop through and check.
-        $btCacheBlockOutput = true;
-        $btCacheBlockOutputOnPost = true;
-        $btCacheBlockOutputLifetime = 0;
-
-        $b = $this->getBlockObject();
-        $a = $b->getBlockAreaObject();
-        $this->arLayout = $this->getAreaLayoutObject();
-
-        if (is_object($this->arLayout)) {
-            $this->arLayout->setAreaObject($a);
-            $columns = $this->arLayout->getAreaLayoutColumns();
-
-            foreach ($columns as $column) {
-                $sa = $column->getSubAreaObject();
-                $blocks = $sa->getAreaBlocksArray();
-
-                foreach ($blocks as $b) {
-                    $btCacheBlockOutput = $btCacheBlockOutput && $b->cacheBlockOutput();
-
-                    //As soon as we find something which cannot be cached, entire area cannot be cached, so stop checking.
-                    if (!$btCacheBlockOutput) {
-                        return;
-                    }
-
-                    $btCacheBlockOutputOnPost = $btCacheBlockOutputOnPost && $b->cacheBlockOutputOnPost();
-
-                    if ($expires = $b->getBlockOutputCacheLifetime()) {
-                        if ($expires && $btCacheBlockOutputLifetime < $expires) {
-                            $btCacheBlockOutputLifetime = $expires;
-                        }
-                    }
-                }
-            }
-        }
-
-        $this->btCacheBlockOutput = $btCacheBlockOutput;
-        $this->btCacheBlockOutputOnPost = $btCacheBlockOutputOnPost;
-        $this->btCacheBlockOutputLifetime = $btCacheBlockOutputLifetime;
-    }
-
-    public function cacheBlockOutput()
-    {
-        $this->setupCacheSettings();
-
-        return $this->btCacheBlockOutput;
-    }
-
-    public function cacheBlockOutputOnPost()
-    {
-        $this->setupCacheSettings();
-
-        return $this->btCacheBlockOutputOnPost;
-    }
-
-    public function getBlockTypeCacheOutputLifetime()
-    {
-        $this->setupCacheSettings();
-
-        return $this->btCacheBlockOutputLifetime;
-    }
 }

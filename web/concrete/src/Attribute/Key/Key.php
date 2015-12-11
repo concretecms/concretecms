@@ -1,29 +1,38 @@
 <?php
+
 namespace Concrete\Core\Attribute\Key;
 
-use \Concrete\Core\Foundation\Object;
-use \Concrete\Core\Attribute\Type as AttributeType;
-use \Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
-use \Concrete\Core\Database\Schema\Schema;
+use Concrete\Core\Foundation\Object;
+use Concrete\Core\Attribute\Type as AttributeType;
+use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
+use Concrete\Core\Database\Schema\Schema;
 use Gettext\Translations;
-use Loader;
 use Package;
-use CacheLocal;
 use Core;
 use User;
 use Database;
 use AttributeSet;
-use \Concrete\Core\Attribute\Value\Value as AttributeValue;
-use \Concrete\Core\Package\PackageList;
+use Concrete\Core\Attribute\Value\Value as AttributeValue;
+use Concrete\Core\Package\PackageList;
 use Concrete\Core\Attribute\Value\CollectionValue;
 use Whoops\Exception\ErrorException;
 
+/**
+ * Base class for attribute keys.
+ * 
+ * @method static Key[] getList(string $akCategoryHandle, $filters = array()) Deprecated method. Use Key::getAttributeKeyList instead.
+ * @method static Key|null add(string $akCategoryHandle, AttributeType|string$type, array $args, \Concrete\Core\Package\Package|false $pkg = false) Deprecated method. Use Key::addAttributeKey instead.
+ */
 class Key extends Object
 {
-
     protected $akID;
 
     public function getIndexedSearchTable()
+    {
+        return static::getDefaultIndexedSearchTable();
+    }
+
+    public static function getDefaultIndexedSearchTable()
     {
         return false;
     }
@@ -34,7 +43,7 @@ class Key extends Object
     }
 
     /**
-     * Returns the name for this attribute key
+     * Returns the name for this attribute key.
      */
     public function getAttributeKeyName()
     {
@@ -45,6 +54,7 @@ class Key extends Object
      * @param string $format = 'html'
      *    Escape the result in html format (if $format is 'html').
      *    If $format is 'text' or any other value, the display name won't be escaped.
+     *
      * @return string
      */
     public function getAttributeKeyDisplayName($format = 'html')
@@ -60,7 +70,7 @@ class Key extends Object
     }
 
     /**
-     * Returns the handle for this attribute key
+     * Returns the handle for this attribute key.
      */
     public function getAttributeKeyHandle()
     {
@@ -68,16 +78,15 @@ class Key extends Object
     }
 
     /**
-     * Deprecated. Going to be replaced by front end display name
+     * Deprecated. Going to be replaced by front end display name.
      */
     public function getAttributeKeyDisplayHandle()
     {
-        return Loader::helper('text')->unhandle($this->akHandle);
+        return Core::make('helper/text')->unhandle($this->akHandle);
     }
 
-
     /**
-     * Returns the ID for this attribute key
+     * Returns the ID for this attribute key.
      */
     public function getAttributeKeyID()
     {
@@ -90,7 +99,7 @@ class Key extends Object
     }
 
     /**
-     * Returns whether the attribute key is searchable
+     * Returns whether the attribute key is searchable.
      */
     public function isAttributeKeySearchable()
     {
@@ -98,7 +107,7 @@ class Key extends Object
     }
 
     /**
-     * Returns whether the attribute key is internal
+     * Returns whether the attribute key is internal.
      */
     public function isAttributeKeyInternal()
     {
@@ -140,19 +149,20 @@ class Key extends Object
     public function getComputedAttributeKeyCategoryHandle()
     {
         $class = explode('\\', get_class($this));
-        $start = Loader::helper('text')->uncamelcase($class[count($class) - 1]);
+        $start = Core::make('helper/text')->uncamelcase($class[count($class) - 1]);
+
         return substr($start, 0, strpos($start, '_key'));
     }
 
     /**
-     * Loads the required attribute fields for this instantiated attribute
+     * Loads the required attribute fields for this instantiated attribute.
      */
     protected function load($akIdentifier, $loadBy = 'akID')
     {
         if (empty($akIdentifier)) {
             $row = array();
         } else {
-            $db = Loader::db();
+            $db = Database::connection();
             $akCategoryHandle = $this->getComputedAttributeKeyCategoryHandle();
             if ($akCategoryHandle != '') {
                 $row = $db->GetRow(
@@ -181,8 +191,8 @@ class Key extends Object
 
     public static function getInstanceByID($akID)
     {
-        $db = Loader::db();
-        $akCategoryID = $db->GetOne('select akCategoryID from AttributeKeys where akID = ?', $akID);
+        $db = Database::connection();
+        $akCategoryID = $db->fetchColumn('select akCategoryID from AttributeKeys where akID = ?', (array) $akID);
         if ($akCategoryID > 0) {
             $akc = AttributeKeyCategory::getByID($akCategoryID);
 
@@ -191,7 +201,7 @@ class Key extends Object
     }
 
     /**
-     * Returns an attribute type object
+     * Returns an attribute type object.
      */
     public function getAttributeType()
     {
@@ -199,7 +209,7 @@ class Key extends Object
     }
 
     /**
-     * Returns the attribute type handle
+     * Returns the attribute type handle.
      */
     public function getAttributeTypeHandle()
     {
@@ -212,13 +222,24 @@ class Key extends Object
         return $this->getAttributeType();
     }
 
-    /**
-     * Returns a list of all attributes of this category
-     */
-    public static function getList($akCategoryHandle, $filters = array())
+    public static function __callStatic($name, $arguments)
     {
-        $db = Loader::db();
-        $pkgHandle = $db->GetOne(
+        if (strcasecmp($name, 'getList') === 0) {
+            return call_user_func_array('static::getAttributeKeyList', $arguments);
+        }
+        if (strcasecmp($name, 'add') === 0) {
+            return call_user_func_array('static::addAttributeKey', $arguments);
+        }
+        trigger_error("Call to undefined method ".__CLASS__."::$name()", E_USER_ERROR);
+    }
+
+    /**
+     * Returns a list of all attributes of this category.
+     */
+    public static function getAttributeKeyList($akCategoryHandle, $filters = array())
+    {
+        $db = Database::connection();
+        $pkgHandle = $db->fetchColumn(
             'select pkgHandle from AttributeKeyCategories inner join Packages on Packages.pkgID = AttributeKeyCategories.pkgID where akCategoryHandle = ?',
             array($akCategoryHandle)
         );
@@ -230,9 +251,9 @@ class Key extends Object
             $q .= ' and ' . $key . ' = ' . $value . ' ';
         }
         $q .= ' ORDER BY (s.asID IS NULL), s.asDisplayorder, sk.displayOrder';
-        $r = $db->Execute($q, array($akCategoryHandle));
+        $r = $db->executeQuery($q, array($akCategoryHandle));
         $list = array();
-        $txt = Loader::helper('text');
+        $txt = Core::make('helper/text');
 
         $prefix = $pkgHandle;
         $className = core_class('Core\\Attribute\\Key\\' . $txt->camelcase($akCategoryHandle) . 'Key', $prefix);
@@ -272,7 +293,7 @@ class Key extends Object
         $categories = AttributeKeyCategory::getList();
         $axml = $xml->addChild('attributekeys');
         foreach ($categories as $cat) {
-            $attributes = static::getList($cat->getAttributeKeyCategoryHandle());
+            $attributes = static::getAttributeKeyList($cat->getAttributeKeyCategoryHandle());
             foreach ($attributes as $at) {
                 $at->export($axml);
             }
@@ -287,7 +308,7 @@ class Key extends Object
      */
     public static function getListByPackage($pkg)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $list = array();
         $tina[] = '-1';
         $tinb = $db->GetCol('select atID from AttributeTypes where pkgID = ?', array($pkg->getPackageID()));
@@ -306,7 +327,7 @@ class Key extends Object
         }
         $kinstr = implode(',', $kina);
 
-        $r = $db->Execute(
+        $r = $db->executeQuery(
             'select akID, akCategoryID from AttributeKeys where (pkgID = ? or atID in (' . $tinstr . ') or akCategoryID in (' . $kinstr . ')) order by akID asc',
             array($pkg->getPackageID())
         );
@@ -332,14 +353,14 @@ class Key extends Object
         if ($ak['internal']) {
             $akIsInternal = 1;
         }
-        $db = Loader::db();
+        $db = Database::connection();
 
         $akc = AttributeKeyCategory::getByHandle($akCategoryHandle);
-        $akID = $db->GetOne('select akID from AttributeKeys where akHandle = ? and akCategoryID = ?',
+        $akID = $db->fetchColumn('select akID from AttributeKeys where akHandle = ? and akCategoryID = ?',
             array($ak['handle'], $akc->getAttributeKeyCategoryID()));
 
         if (!$akID) {
-            $akn = self::add(
+            $akn = self::addAttributeKey(
                 $akCategoryHandle,
                 $type,
                 array(
@@ -348,7 +369,7 @@ class Key extends Object
                     'akIsInternal' => $akIsInternal,
                     'akIsSearchableIndexed' => $ak['indexed'],
                     'akIsAutoCreated' => 1,
-                    'akIsSearchable' => $ak['searchable']
+                    'akIsSearchable' => $ak['searchable'],
                 ),
                 $pkg
             );
@@ -359,11 +380,10 @@ class Key extends Object
     /**
      * Adds an attribute key.
      */
-    protected static function add($akCategoryHandle, $type, $args, $pkg = false)
+    protected static function addAttributeKey($akCategoryHandle, $type, $args, $pkg = false)
     {
-
-        $vn = Loader::helper('validation/numbers');
-        $txt = Loader::helper('text');
+        $vn = Core::make('helper/validation/numbers');
+        $txt = Core::make('helper/text');
         if (!is_object($type)) {
             // The passed item is not an object. It is probably something like 'DATE'
             $type = AttributeType::getByHandle(strtolower($type));
@@ -390,7 +410,6 @@ class Key extends Object
             throw new ErrorException('No Attribute Key name set.');
         }
 
-
         if (isset($akIsSearchable) && $akIsSearchable != 0) {
             $_akIsSearchable = 1;
         }
@@ -407,8 +426,8 @@ class Key extends Object
             $_akIsEditable = 0;
         }
 
-        $db = Loader::db();
-        $akCategoryID = $db->GetOne(
+        $db = Database::connection();
+        $akCategoryID = $db->fetchColumn(
             "select akCategoryID from AttributeKeyCategories where akCategoryHandle = ?",
             array($akCategoryHandle)
         );
@@ -422,9 +441,9 @@ class Key extends Object
             $_akIsEditable,
             $atID,
             $akCategoryID,
-            $pkgID
+            $pkgID,
         );
-        $r = $db->query(
+        $r = $db->executeQuery(
             "insert into AttributeKeys (akHandle, akName, akIsSearchable, akIsSearchableIndexed, akIsInternal, akIsAutoCreated, akIsEditable, atID, akCategoryID, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             $a
         );
@@ -432,7 +451,7 @@ class Key extends Object
         if ($r) {
             //getting the insert id must happen right after insertion or
             //certain adodb drivers (like mysqli) will fail and return 0
-            $akID = $db->Insert_ID();
+            $akID = $db->lastInsertId();
             $category = AttributeKeyCategory::getByID($akCategoryID);
             $pkgID = $category->getPackageID();
             $prefix = ($pkgID > 0) ? $category->getPackageHandle() : false;
@@ -463,7 +482,6 @@ class Key extends Object
 
     public function refreshCache()
     {
-
     }
 
     /**
@@ -483,15 +501,15 @@ class Key extends Object
         }
         $akIsSearchable = intval($akIsSearchable);
         $akIsSearchableIndexed = intval($akIsSearchableIndexed);
-        $db = Loader::db();
+        $db = Database::connection();
 
-        $akCategoryHandle = $db->GetOne(
+        $akCategoryHandle = $db->fetchColumn(
             "select akCategoryHandle from AttributeKeyCategories inner join AttributeKeys on AttributeKeys.akCategoryID = AttributeKeyCategories.akCategoryID where akID = ?",
-            $this->getAttributeKeyID()
+            (array) $this->getAttributeKeyID()
         );
         $a = array($akHandle, $akName, $akIsSearchable, $akIsSearchableIndexed, $this->getAttributeKeyID());
 
-        $r = $db->query(
+        $r = $db->executeQuery(
             "update AttributeKeys set akHandle = ?, akName = ?, akIsSearchable = ?, akIsSearchableIndexed = ? where akID = ?",
             $a
         );
@@ -513,7 +531,7 @@ class Key extends Object
         }
 
         if ($r) {
-            $txt = Loader::helper('text');
+            $txt = Core::make('helper/text');
             $pkgID = $category->getPackageID();
             $prefix = ($pkgID > 0) ? $category->getPackageHandle() : false;
             $className = core_class('Core\\Attribute\\Key\\' . $txt->camelcase($akCategoryHandle) . 'Key', $prefix);
@@ -530,15 +548,15 @@ class Key extends Object
     }
 
     /**
-     * Duplicates an attribute key
+     * Duplicates an attribute key.
      */
     public function duplicate($args = array())
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $r1 = $db->GetRow('select * from AttributeKeys where akID = ?', array($this->akID));
         unset($r1['akID']);
         $r2 = $db->insert('AttributeKeys', $r1);
-        $newAKID = $db->LastInsertId();
+        $newAKID = $db->lastInsertId();
 
         $ak = new AttributeKey();
         $ak->load($newAKID);
@@ -558,9 +576,9 @@ class Key extends Object
 
     public function setAttributeKeyColumnHeader($r)
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $r = ($r == true) ? 1 : 0;
-        $db->Execute(
+        $db->executeQuery(
             'update AttributeKeys set akIsColumnHeader = ? where akID = ?',
             array($r, $this->getAttributeKeyID())
         );
@@ -575,7 +593,7 @@ class Key extends Object
     public function reindex($table, $columnHeaders, $attribs, $rs = null)
     {
         /** @var \Concrete\Core\Database\Connection $db */
-        $db = Loader::db();
+        $db = Database::connection();
         $sm = $db->getSchemaManager();
 
         /** @var \Doctrine\DBAL\Schema\Column[] $columns */
@@ -624,7 +642,7 @@ class Key extends Object
         $definition = $cnt->getSearchIndexFieldDefinition();
 
         /** @var \Concrete\Core\Database\Connection $db */
-        $db = Loader::db();
+        $db = Database::connection();
         $platform = $db->getDatabasePlatform();
         $sm = $db->getSchemaManager();
         $toTable = $sm->listTableDetails($this->getIndexedSearchTable());
@@ -644,7 +662,7 @@ class Key extends Object
                 $fields[] = array(
                     'name' => 'ak_' . $this->akHandle,
                     'type' => $definition['type'],
-                    'options' => $definition['options']
+                    'options' => $definition['options'],
                 );
             }
         } else {
@@ -653,7 +671,7 @@ class Key extends Object
                     $fields[] = array(
                         'name' => 'ak_' . $this->akHandle . '_' . $name,
                         'type' => $column['type'],
-                        'options' => $column['options']
+                        'options' => $column['options'],
                     );
                 }
             }
@@ -688,12 +706,11 @@ class Key extends Object
         $at->controller->deleteKey();
         $cnt = $this->getController();
 
-        $db = Loader::db();
-        $db->Execute('delete from AttributeKeys where akID = ?', array($this->getAttributeKeyID()));
-        $db->Execute('delete from AttributeSetKeys where akID = ?', array($this->getAttributeKeyID()));
+        $db = Database::connection();
+        $db->executeQuery('delete from AttributeKeys where akID = ?', array($this->getAttributeKeyID()));
+        $db->executeQuery('delete from AttributeSetKeys where akID = ?', array($this->getAttributeKeyID()));
 
         if ($this->getIndexedSearchTable()) {
-
             $definition = $cnt->getSearchIndexFieldDefinition();
             $prefix = $this->akHandle;
             $sm = $db->getSchemaManager();
@@ -724,14 +741,13 @@ class Key extends Object
                 }
             }
         }
-
     }
 
     public function getAttributeValueIDList()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $ids = array();
-        $r = $db->Execute('select avID from AttributeValues where akID = ?', array($this->getAttributeKeyID()));
+        $r = $db->executeQuery('select avID from AttributeValues where akID = ?', array($this->getAttributeKeyID()));
         while ($row = $r->FetchRow()) {
             $ids[] = $row['avID'];
         }
@@ -741,18 +757,18 @@ class Key extends Object
     }
 
     /**
-     * Adds a generic attribute record (with this type) to the AttributeValues table
+     * Adds a generic attribute record (with this type) to the AttributeValues table.
      */
     public function addAttributeValue()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $u = new User();
-        $dh = Loader::helper('date');
+        $dh = Core::make('helper/date');
         $uID = $u->isRegistered() ? $u->getUserID() : 0;
         $avDate = $dh->getOverridableNow();
         $v = array($this->atID, $this->akID, $uID, $avDate);
-        $db->Execute('insert into AttributeValues (atID, akID,  uID, avDateAdded) values (?, ?, ?, ?)', $v);
-        $avID = $db->Insert_ID();
+        $db->executeQuery('insert into AttributeValues (atID, akID,  uID, avDateAdded) values (?, ?, ?, ?)', $v);
+        $avID = $db->lastInsertId();
 
         return AttributeValue::getByID($avID);
     }
@@ -795,7 +811,7 @@ class Key extends Object
      * NOTE: this code is screwy because all code ever written that EXTENDS this code creates an attribute value object and passes it in, like
      * this code implies. But if you call this code directly it passes the object that you're messing with (Page, User, etc...) in as the $attributeValue
      * object, which is obviously not right. So we're going to do a little procedural if/then checks in this to ensure we're passing the right
-     * stuff
+     * stuff.
      *
      * @param CollectionValue|mixed $mixed
      * @param mixed $passedValue
@@ -826,11 +842,11 @@ class Key extends Object
 
     public function __destruct()
     {
-
     }
 
     /**
      * Validates the request object to see if the current request fulfills the "requirement" portion of an attribute.
+     *
      * @return bool|\Concrete\Core\Error\Error
      */
     public function validateAttributeForm()
@@ -869,15 +885,15 @@ class Key extends Object
 
     public function clearAttributeSets()
     {
-        $db = Loader::db();
-        $db->Execute('delete from AttributeSetKeys where akID = ?', $this->akID);
+        $db = Database::connection();
+        $db->executeQuery('delete from AttributeSetKeys where akID = ?', (array) $this->akID);
     }
 
     public function getAttributeSets()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $sets = array();
-        $r = $db->Execute('select asID from AttributeSetKeys where akID = ?', $this->akID);
+        $r = $db->executeQuery('select asID from AttributeSetKeys where akID = ?', (array) $this->akID);
         while ($row = $r->FetchRow()) {
             $sets[] = AttributeSet::getByID($row['asID']);
         }
@@ -918,7 +934,7 @@ class Key extends Object
     }
 
     /**
-     * Returns the handle for this attribute key
+     * Returns the handle for this attribute key.
      */
     public function getKeyHandle()
     {
@@ -926,7 +942,7 @@ class Key extends Object
     }
 
     /**
-     * Returns the ID for this attribute key
+     * Returns the ID for this attribute key.
      */
     public function getKeyID()
     {
@@ -936,13 +952,13 @@ class Key extends Object
     public static function exportTranslations()
     {
         $translations = new Translations();
-        $db = \Database::get();
-        $r = $db->Execute('select akID from AttributeKeys order by akID asc');
+        $db = Database::get();
+        $r = $db->executeQuery('select akID from AttributeKeys order by akID asc', array());
         while ($row = $r->FetchRow()) {
             $key = static::getInstanceByID($row['akID']);
             $translations->insert('AttributeKeyName', $key->getAttributeKeyName());
         }
+
         return $translations;
     }
-
 }

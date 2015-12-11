@@ -1,17 +1,18 @@
-<?php 
+<?php
 namespace Concrete\Core\Events;
-use \Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 
-class EventsServiceProvider extends ServiceProvider {
+use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 
-	public function register() {
+class EventsServiceProvider extends ServiceProvider
+{
 
-		$this->app['director'] = $this->app->share(function($app) {
-			return new \Symfony\Component\EventDispatcher\EventDispatcher();
-		});
-
-
-	}
-
+    public function register()
+    {
+        if (!$this->app->bound('director')) {
+            $this->app->bindShared('director', function ($app) {
+                return new \Symfony\Component\EventDispatcher\EventDispatcher();
+            });
+        }
+    }
 
 }

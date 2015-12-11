@@ -1,22 +1,27 @@
 <?php
+
 namespace Concrete\Core\Page\Type\Composer\Control\CorePageProperty;
 
-use Loader;
+use Core;
 use UserInfo;
-use Concrete\Core\Page\Page;
+use Page;
 
 class UserCorePageProperty extends CorePageProperty
 {
     public function __construct()
     {
         $this->setCorePagePropertyHandle('user');
-        $this->setPageTypeComposerControlName(tc('PageTypeComposerControlName', 'User'));
         $this->setPageTypeComposerControlIconSRC(ASSETS_URL . '/attributes/text/icon.png');
+    }
+
+    public function getPageTypeComposerControlName()
+    {
+        return tc('PageTypeComposerControlName', 'User');
     }
 
     public function publishToPage(Page $c, $data, $controls)
     {
-        if (Loader::helper('validation/numbers')->integer($data['user'])) {
+        if (Core::make('helper/validation/numbers')->integer($data['user'])) {
             $this->addPageTypeComposerControlRequestValue('uID', $data['user']);
         }
         parent::publishToPage($c, $data, $controls);
@@ -26,10 +31,11 @@ class UserCorePageProperty extends CorePageProperty
     {
         $uID = $this->getPageTypeComposerControlDraftValue();
         $ux = UserInfo::getByID($uID);
-        $e = Loader::helper('validation/error');
+        $e = Core::make('helper/validation/error');
         if (!is_object($ux)) {
             $control = $this->getPageTypeComposerFormLayoutSetControlObject();
             $e->add(t('You haven\'t chosen a valid %s', $control->getPageTypeComposerControlLabel()));
+
             return $e;
         }
     }
@@ -42,5 +48,4 @@ class UserCorePageProperty extends CorePageProperty
             return $c->getCollectionUserID();
         }
     }
-
 }

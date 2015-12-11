@@ -8,7 +8,7 @@ if ($valt->validate('quick_page_select_' . $_REQUEST['key'], $_REQUEST['token'])
 	if ($_GET['term'] != '') {
 		$pl->filterByName($_GET['term']);
 	}
-	$pages = $pl->getPage();
+	$pages = $pl->getPagination();
 	$pageNames = array();
 	foreach($pages as $c) {
 		$obj = new stdClass;

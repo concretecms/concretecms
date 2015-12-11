@@ -1,3 +1,148 @@
+# Development branch
+
+## Feature Updates
+* Added new console commands to install, update and remove packages (thanks mlocati)
+* Added a new console command to generate and update package translation files (thanks mlocati)
+
+
+# 5.7.5.3
+
+## Behavioral Improvements
+
+* Added an “Add Content” guide that goes through the process of adding content to the page, and explains the Add Content panel.
+* Improved contrast in the Add Content and Dashboard panels.
+* Fixed https://github.com/concrete5/concrete5/issues/2980
+* Improvements to image editing experience when using the concrete5 image editor.
+* Account private messages no longer assumes profiles are enabled (thanks ounziw)
+* Escaped input in form submissions so prevent Excel macros from being embedded in fields (thanks TimDix)
+* Links in image slider description will automatically substitute the proper URLs even when changing servers (thanks hissy)
+* Added logout link to mobile menu (thanks ojalehto)
+* Device visibility classes (hide on desktop, hide on laptop,, etc…) are now disabled when a page is in edit mode.
+* Additional page URLs preserve query strings on redirecting to canonical URLs.
+* Imported area layouts now support custom styles (thanks myconcretelab)
+* Parallax custom template on area design now works with multiple parallax areas on a page (thanks myconcretelab)
+
+## Bug Fixes
+
+* Fixed infinite redirect loop with Internationalized Domain Names (thanks EC-Joe)
+* Fixed bug where multilingual global areas would sometimes duplicate themselves needlessly, leading to empty global areas
+* Fixed hard-to-reproduce duplicate key error in ConversationFeatureDetailAssignments table when using the conversation block throughout your site
+* Fixed out of memory errors when uploading large files from the incoming directory (thanks EC-Joe)
+* Fixed “When using inline blocks, I can edit other inline blocks” (thanks TimDix)
+* Fixed errors with blocks that have assets not having their assets included if those blocks were within a layout. Fixed error with google maps block specifically.
+* Fixed error with scrollbar not appearing after file uploaded on the front-end (actually fixed this time.)
+* Fixed Adding and Moving a Block in One Step Causes JS Error
+* Resolved: Rich text editor adds in random "=" symbols sometimes
+* Resolved: Rich text editor wraps selection in undefined when choosing a custom style
+* Fixed but where Downloading a file that exceeds the available memory today causes an out of memory issue
+* Fixed occasionally bug that resulted in error “"Argument 1 passed to Concrete\Core\Permission\Access\Access::create() must be an instance of PermissionKey, Concrete\Core\Permission\Key\AdminKey given."
+* Fixed bug when moving blocks in certain situations (thanks Remo)
+* Fixed: Topics attributes marked as required on pages weren’t being properly validated.
+* Fixed some minor XSS potential issues with social links (thanks EC-Chris)
+* Fixed bug: Internal Links in Feature Blocks Store Absolute URL in Database
+* Fixed: config value “concrete.updates.auto\_update\_packages” now works again
+* Fixed fatal error when enabling package auto updates (thanks EC-Joe)
+* Fixed error autoloading packages when working with the command line (thanks EC-Joe)
+* Approve changes now shows up when moving blocks in stacks (thanks WillemAnchor)
+* Fixed bug where editing permissions in simple permissions mode wouldn’t apply multilingual settings administration to the appropriate groups (Thanks Remo)
+* Fixed possible CSRF security issue in Conversations settings dashboard page.
+* Fixed free-form layouts that on occasion would break into two rows as widths wouldn’t match properly (thanks wstoettinger)
+* Color picker JavaScript now properly escaped so it can be used with PHP array syntax.
+* Fixed: If you added a BlockTypeSet but didn't add anything to them it would cause the foreach to error on a null value (thanks joe-meyer)
+* Fixed inability to filter lists by multiple select values (thanks markbennett)
+* Fixed http://www.concrete5.org/developers/bugs/5-7-5-2/date-attributes-search-method-doesnt-work/ (thanks haeflimi)
+* IP Blacklist no longer bans on failed registrations (thanks joemeyer)
+* Fixed https://github.com/concrete5/concrete5/issues/3048 (thanks joemeyer)
+
+## Developer Updates
+
+* We now default to the “GD” image processing library for image manipulation. Imagick must be opted into by  setting the config value “concrete.file_manager.images.manipulation_library” to “imagick”.
+* Adds ability to specify wildcard page theme classes by creating an array key with “*” as its key (thanks TimDix)
+* Database Entities dashboard page now refreshes package-specific entities as well as 
+application-specific entities.
+* Implemented new Validation framework and some useful constraints. Used within password validation.
+* API improvements to the Processor class to allow it to be used without a queue.      
+* Select attribute option API improvements
+* Edge case page list sorting fix when adding to the query with addSelect and attempting to sort by the new field, and use pagination as well.
+
+## Backward Compatibility Notes
+
+
+* If you were relying on Imagick image manipulation, you will now be using GD image manipulation unless you manually set “concrete.file_manager.images.manipulation_library” to “imagick” within a custom config file.
+
+# 5.7.5.2
+
+## Feature Updates
+
+* You can now filter the Page List block by date, including pages with a public date of today, X days in the past, X days in the future, and a custom date range (thanks TimDix)
+* The File block is now available in the Composer view for a Page type (thanks TimDix)
+* You can now export the Database Query Log to CSV (thanks TimDix)
+* The Cache settings page now gives developers the ability to optionally create CSS source maps from compiled LESS files.
+* Version list now shows who approved the version (thanks Katz)
+* Added page template to advanced page search.
+*  New modes for page composer where you can choose target pages from an in-panel sitemap, rather than the popup selector.
+* Select custom attribute now uses the Select2 JavaScript library for tagging modes, leading to an improved appearance and nicer code behind the scenes.
+
+## Behavioral Improvements
+
+* Improved appearance and information display of controls on the composer form page type dashboard page (thanks TimDix)
+* Blocks added to the scrapbook will now honor the original block’s cache settings (thanks TimDix)
+* Area layouts will now be cached if all the blocks they contain are cached (thanks TimDix)
+Adds ability to cache Search Block if the block doesn't display results - useful for when placed in header/footer (thanks TimDix)
+* Performance improvements in the Assets Subsystem (thanks joe-meyer)
+* We now include the “position” property in the search index when using the testimonial block (thanks hissy)
+* Better performance when working with bulk files and file sets with a large number of file sets (thanks TimDix and jefharris23)
+* Stack blocks now check to see if the blocks within the stack can be cached – if so, they will be cached as well (thanks TimDix)
+* Resolved https://github.com/concrete5/concrete5/pull/2911 (thanks Shotster)
+* Added error messaging when adding or editing page types and not configuring the publishing settings properly.
+* Better error reporting when http:// or https:// omitted from canonical URLs (thanks mnakalay)
+* Removed “Meta Keywords” from SEO panel on new installs because it’s not actually something that most search engines like anymore (thanks Mesuva). The attribute is still available and installed.
+
+## Bug Fixes
+* Fixed bug where layouts with custom widths didn’t honor those widths (thanks kaktuspalme)
+* Fixed bug where area layouts disappear upon changing layout design changes (thanks TimDix)
+* Fixed issue installing on PHP 5.3.9 and earlier (5.7.5.1 was supposed to fix this but did not.)
+* When deleting files, some rows were left in child database tables. This has been fixed (thanks EC-Joe)
+* Block actions in edit mode (introduced in 5.7.5) now work with blocks in Composer.
+* Permission access entity types can now be provided in packages like they could in 5.6.
+* Permission keys can now be provided in packages like they could in 5.6.
+* Rich text editor toolbar was abnormally large when present in the attributes dialog window. This has been fixed.
+* Fixed bug where Image block fails on Elemental when using certain third party file storage location types with no thumbnail types installed (thanks Mnkras)
+* We now show a confirmation dialog when discarding page drafts (thanks hissy)
+* Fixed bulk SEO Updater not updating the home page.
+* Fixed editor tooltips and link edit callouts not displaying when using redactor in a dialog.
+* When setting sitewide permissions in simple permissions mode, “Edit Page Type” hadn’t been set. It also wasn’t set by default when installing concrete5. This is fixed.
+* Fixes Bug with Search Block when resultsURL specified instead of page (thanks TimDix)
+* Fixed https://github.com/concrete5/concrete5/pull/2894 (thanks skybluesofa)
+* Fixed https://github.com/concrete5/concrete5/issues/2362 (thanks TimDix)
+* Fixed Fix Cancel button action on block aliasing dialog (thanks hissy)
+* Fixed scrollbar not appearing after file upload (thanks EC-Chris)
+* Fixed exception when passing an non-number to ccm\_paging\_p (thanks SkyBlueSofa)
+
+## Developer Updates
+
+* Added custom file import processes for forcing JPEGs, forcing JPEG compression and forcing width/height. Added system for creating custom file import processes and calling them programmatically
+* Added the ability to try and use exif rotation data (experimental, toggle on by enabling with the config value concrete.file_manager.images.use_exif_rotation_data)
+* Translation improvements (thanks mlocati)
+* Added flash message support to page controller. Just call $this->flash(‘key’, ‘value’) and then a page redirect and the $key will be available from within the target page the same as if it had been set from that target page. (e.g. $this->flash(‘success’, ‘Thanks for your submission!’); $this->redirect(‘/to/new/page’); )
+* PageSelector::quickSelect now works again.
+* Page Type Validator framework improvements
+* Slight fixes to form labels in form block (thanks haeflimi)
+* Improvements to permissions content import XML functionality.
+* Fix potential data loss when working with packages that had both db.xml files and Doctrine entities (thanks Mainio)
+* Content block image placeholders now save all attributes placed on the images in the rich text editor (Thanks TimDix)
+* Fixed permissions error rendering “subscribe to conversation” functionality inoperable.
+* Improvements for working with PHP7 (thanks mlocati and Mnkras)
+* Added additional MIME extensions for new Office file types (thanks RGeelen)
+* on\_page\_get\_icon event now works properly (thanks ahukkanen)
+* Lots of code quality improvements (thanks joe-meyer and mlocati)
+* Fixed https://github.com/concrete5/concrete5/issues/2952 (thanks ahukkanen)
+* New console command available: Clear Cache (thanks mlocati)
+
+## Developer Backward Compatibility Notes
+
+* The signature of the \Concrete\Core\Page\Type\Validator\ValidatorInterface has changed. If you rely on this interface check your implementations. (Note: if you extend the \Concrete\Core\Page\Type\Validator\StandardValidator you should be fine.)
+
 # 5.7.5.1
 
 ## Behavioral Improvements

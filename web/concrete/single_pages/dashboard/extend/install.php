@@ -53,9 +53,8 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
     </form>
 <?php
 } elseif ($this->controller->getTask() == 'uninstall' && $tp->canUninstallPackages()) {
-    $removeBTConfirm = t('This will remove all elements associated with the %s package. This cannot be undone. Are you sure?', $pkg->getPackageHandle());
     ?>
-    <form method="post" class="form-stacked" id="ccm-uninstall-form" action="<?= $view->action('do_uninstall_package'); ?>" onsubmit="<?= h('return confirm(' . json_encode($removeBTConfirm) . ')'); ?>">
+    <form method="post" class="form-stacked" id="ccm-uninstall-form" action="<?= $view->action('do_uninstall_package'); ?>">
         <?= $valt->output('uninstall'); ?>
         <input type="hidden" name="pkgID" value="<?=$pkgID ?>" />
         <fieldset>
@@ -69,6 +68,10 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
             </table>
 
             <?php @Loader::packageElement('dashboard/uninstall', $pkg->getPackageHandle()); ?>
+
+            <div class="alert alert-danger">
+                <?=t('This will remove all elements associated with the %s package. While you can reinstall the package, this may result in data loss.', $pkg->getPackageName())?>
+            </div>
 
             <div class="form-group">
                 <label class="control-label"><?= t('Move package to trash directory on server?'); ?></label>
@@ -117,11 +120,11 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
     }
     if ($tp->canInstallPackages()) {
         foreach (Package::getAvailablePackages() as $_pkg) {
+            if (empty($pkgAvailableArray)) {
+                Localization::clearCache();                
+            }
             $_pkg->setupPackageLocalization();
             $pkgAvailableArray[] = $_pkg;
-        }
-        if(count($pkgAvailableArray) > 0) {
-            Localization::clearCache();
         }
     }
 

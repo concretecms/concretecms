@@ -931,19 +931,34 @@
       }
     };
 
-    Tour.prototype.next = function() {
+    Tour.prototype.showStep = function(show_step) {
+      var currentStep, index;
+      currentStep = this._teardownCurrentStep();
+      if (currentStep) {
+          index = show_step;
+      }
+      if (index < this.options.steps.length && !isNaN(parseInt(index, 10)) && index >= 0) {
+          return this._showStep(this.options.steps[index], index);
+      } else if (index === this.options.steps.length) {
+          return this._showSuccessFinalStep();
+      } else {
+          return this._stop();
+      }
+    };
+
+    Tour.prototype.next = function () {
       var currentStep, index;
       currentStep = this._teardownCurrentStep();
       index = 0;
       if (currentStep) {
-        index = currentStep.index + 1;
+          index = currentStep.index + 1;
       }
       if (index < this.options.steps.length) {
-        return this._showStep(this.options.steps[index], index);
+          return this._showStep(this.options.steps[index], index);
       } else if (index === this.options.steps.length) {
-        return this._showSuccessFinalStep();
+          return this._showSuccessFinalStep();
       } else {
-        return this._stop();
+          return this._stop();
       }
     };
 

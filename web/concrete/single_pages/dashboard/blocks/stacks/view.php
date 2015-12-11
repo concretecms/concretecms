@@ -24,7 +24,19 @@ if ($controller->getTask() == 'view_details') {
             $pk = PermissionKey::getByHandle('approve_page_versions');
             $pk->setPermissionObject($stack);
             $pa = $pk->getPermissionAccessObject();
-            if (is_object($pa) && count($pa->getWorkflows()) > 0) {
+
+            $workflows = array();
+            $canApproveWorkflow = true;
+            if (is_object($pa)) {
+                $workflows = $pa->getWorkflows();
+            }
+            foreach($workflows as $wf) {
+                if (!$wf->canApproveWorkflow()) {
+                    $canApproveWorkflow = false;
+                }
+            }
+
+    		if (count($workflows > 0) && !$canApproveWorkflow) {
                 $publishTitle = t('Submit to Workflow');
             }
             $showApprovalButton = true;
@@ -166,6 +178,11 @@ if ($controller->getTask() == 'view_details') {
                 _.defer(function() {
                     Concrete.getEditMode().scanBlocks();
                 });
+            });
+
+            ConcreteEvent.on('EditModeBlockMove', function(event, data) {
+                showApprovalButton();
+                Concrete.getEditMode().scanBlocks();
             });
 
             $('a[data-dialog=delete-stack]').on('click', function() {

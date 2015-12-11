@@ -59,10 +59,6 @@ class Pages extends Controller
             $this->pageList->setItemsPerPage($req['numResults']);
         }
 
-        if ($req['ptID']) {
-            $this->pageList->filterByPageTypeID($req['ptID']);
-        }
-
         if (is_array($req['field'])) {
             foreach ($req['field'] as $i => $item) {
                 $this->fields[] = $this->getField($item);
@@ -82,6 +78,15 @@ class Pages extends Controller
                             }
                             $this->pageList->filterByNumberOfChildren($req['cChildren'], $symbol);
                             break;
+                        case 'type':
+                            $this->pageList->filterByPageTypeID($req['ptID']);
+                            break;
+                        case 'template':
+                            $template = \PageTemplate::getByID($req['pTemplateID']);
+                            if (is_object($template)) {
+                                $this->pageList->filterByPageTemplate($template);
+                            }
+                            break;
                         case 'owner':
                             $ui = \UserInfo::getByUserName($req['owner']);
                             if (is_object($ui)) {
@@ -94,9 +99,6 @@ class Pages extends Controller
                             $this->pageList->filter('pThemeID', $req['pThemeID']);
                             break;
                         case 'parent':
-                            if (isset($req['_cParentAll'])) {
-                                $req['cParentAll'] = $req['_cParentAll'];
-                            }
                             if ($req['cParentIDSearchField'] > 0) {
                                 if ($req['cParentAll'] == 1) {
                                     $pc = \Page::getByID($req['cParentIDSearchField']);
@@ -241,6 +243,14 @@ class Pages extends Controller
                     }
                 ), $searchRequest['ptID']);
                 break;
+            case 'template':
+                $html .= $form->select('pTemplateID', array_reduce(
+                    \PageTemplate::getList(), function($templates, $template) {
+                    $templates[$template->getPageTemplateID()] = $template->getPageTemplateDisplayName();
+                    return $templates;
+                }
+                ), $searchRequest['pTemplateID']);
+                break;
             case 'version_status':
                 $versionToRetrieve = \Concrete\Core\Page\PageList::PAGE_VERSION_RECENT;
                 if ($searchRequest['versionToRetrieve']) {
@@ -251,7 +261,7 @@ class Pages extends Controller
                 break;
             case 'parent':
                 $ps = Loader::helper("form/page_selector");
-                $html .= $ps->selectPage('cParentIDSearchField');
+                $html .= $ps->selectPage('cParentIDSearchField', $searchRequest['cParentIDSearchField']);
                 $html .= '<div class="form-group">';
                     $html .= '<label class="control-label">' . t('Search All Children?') . '</label>';
                     $html .= '<div class="radio"><label>' . $form->radio('cParentAll', 0, false) . ' ' . t('No') . '</label></div>';
@@ -312,6 +322,7 @@ class Pages extends Controller
         $r = array(
             'parent' => t('Parent Page'),
             'type' => t('Page Type'),
+            'template' => t('Page Template'),
             'keywords' => t('Full Page Index'),
             'date_added' => t('Date Added'),
             'theme' => t('Theme'),
