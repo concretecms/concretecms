@@ -59,16 +59,6 @@ class StyleSet
     /**
      * @Column(type="string")
      */
-    protected $backgroundSize = 'auto';
-
-    /**
-     * @Column(type="string")
-     */
-    protected $backgroundPosition = '0% 0%';
-
-    /**
-     * @Column(type="string")
-     */
     protected $borderColor;
 
     /**
@@ -237,43 +227,11 @@ class StyleSet
     }
 
     /**
-     * @param mixed $backgroundSize
-     */
-    public function setBackgroundSize($backgroundSize)
-    {
-        $this->backgroundSize = $backgroundSize;
-    }
-
-    /**
-     * @param mixed $backgroundPosition
-     */
-    public function setBackgroundPosition($backgroundPosition)
-    {
-        $this->backgroundPosition = $backgroundPosition;
-    }
-
-    /**
      * @return mixed
      */
     public function getBackgroundRepeat()
     {
         return $this->backgroundRepeat;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getBackgroundSize()
-    {
-        return $this->backgroundSize;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getBackgroundPosition()
-    {
-        return $this->backgroundPosition;
     }
 
     /**
@@ -730,8 +688,6 @@ class StyleSet
         }
 
         $o->setBackgroundRepeat((string) $node->backgroundRepeat);
-        $o->setBackgroundSize((string) $node->backgroundSize);
-        $o->setBackgroundPosition((string) $node->backgroundPosition);
         $o->setBorderWidth((string) $node->borderWidth);
         $o->setBorderColor((string) $node->borderColor);
         $o->setBorderStyle((string) $node->borderStyle);
@@ -769,8 +725,6 @@ class StyleSet
             $node->addChild('backgroundImage', ContentExporter::replaceFileWithPlaceHolder($fID));
         }
         $node->addChild('backgroundRepeat', $this->getBackgroundRepeat());
-        $node->addChild('backgroundSize', $this->getBackgroundSize());
-        $node->addChild('backgroundPosition', $this->getBackgroundPosition());
         $node->addChild('borderWidth', $this->getBorderWidth());
         $node->addChild('borderColor', $this->getBorderColor());
         $node->addChild('borderStyle', $this->getBorderStyle());
@@ -815,8 +769,6 @@ class StyleSet
         if (trim($r['backgroundColor']) != '') {
             $set->setBackgroundColor($r['backgroundColor']);
             $set->setBackgroundRepeat($r['backgroundRepeat']);
-            $set->setBackgroundSize($r['backgroundSize']);
-            $set->setBackgroundPosition($r['backgroundPosition']);
             $return = true;
         }
 
@@ -824,8 +776,6 @@ class StyleSet
         if ($fID > 0) {
             $set->setBackgroundImageFileID($fID);
             $set->setBackgroundRepeat($r['backgroundRepeat']);
-            $set->setBackgroundSize($r['backgroundSize']);
-            $set->setBackgroundPosition($r['backgroundPosition']);
             $return = true;
         }
 

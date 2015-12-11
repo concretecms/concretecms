@@ -9,8 +9,6 @@ $backgroundColor = '';
 $image = false;
 $baseFontSize = '';
 $backgroundRepeat = 'no-repeat';
-$backgroundSize = 'auto';
-$backgroundPosition = 'left top';
 $textColor = '';
 $linkColor = '';
 $marginTop = '';
@@ -42,8 +40,6 @@ if (is_object($set)) {
     $linkColor = $set->getLinkColor();
     $image = $set->getBackgroundImageFileObject();
     $backgroundRepeat = $set->getBackgroundRepeat();
-    $backgroundSize = $set->getBackgroundSize();
-    $backgroundPosition = $set->getBackgroundPosition();
     $baseFontSize = $set->getBaseFontSize();
     $marginTop = $set->getMarginTop();
     $marginLeft = $set->getMarginLeft();
@@ -73,30 +69,6 @@ $repeatOptions = array(
     'repeat-y' => t('Vertically'),
     'repeat' => t('Horizontally & Vertically')
 );
-
-$sizeOptions = array(
-    'auto' => t('Auto'),
-    'cover' => t('Cover'),
-    'contain' => t('Contain'),
-    '10%' => t('10%'),
-    '25%' => t('25%'),
-    '50%' => t('50%'),
-    '75%' => t('75%'),
-    '100%' => t('100%')
-);
-
-$positionOptions = array(
-    'left top' => t('Left Top'),
-    'left center' => t('Left Center'),
-    'left bottom' => t('Left Bottom'),
-    'center top' => t('Center Top'),
-    'center center' => t('Center Center'),
-    'center bottom' => t('Center Bottom'),
-    'right top' => t('Right Top'),
-    'right center' => t('Right Center'),
-    'right bottom' => t('Right Bottom')
-);
-
 $borderOptions = array(
     '' => t('None'),
     'solid' => t('Solid'),
@@ -186,14 +158,6 @@ $form = Core::make('helper/form');
             <div class="ccm-inline-select-container">
                 <?=t('Repeats')?>
                 <?=$form->select('backgroundRepeat', $repeatOptions, $backgroundRepeat);?>
-            </div>
-            <div class="ccm-inline-select-container">
-                <?php echo t('Size')?>
-                <?php echo $form->select('backgroundSize', $sizeOptions, $backgroundSize);?>
-            </div>
-            <div class="ccm-inline-select-container">
-                <?php echo t('Position')?>
-                <?php echo $form->select('backgroundPosition', $positionOptions, $backgroundPosition);?>
             </div>
         </div>
 
