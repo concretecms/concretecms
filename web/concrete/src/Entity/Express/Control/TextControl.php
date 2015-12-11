@@ -12,7 +12,7 @@ use Concrete\Core\Foundation\Environment;
 class TextControl extends Control
 {
     /**
-     * @Column(type="text")
+     * @Column(type="text", nullable=true)
      */
     protected $text;
 

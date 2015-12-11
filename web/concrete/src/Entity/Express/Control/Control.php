@@ -11,7 +11,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @DiscriminatorColumn(name="type", type="string")
  * @Table(name="ExpressFormFieldSetControls")
  */
-abstract class Control
+abstract class Control implements \JsonSerializable
 {
 
     /**
@@ -26,7 +26,7 @@ abstract class Control
     protected $position = 0;
 
     /**
-     * @Column(type="text")
+     * @Column(type="text", nullable=true)
      */
     protected $custom_label;
 
@@ -101,12 +101,17 @@ abstract class Control
     }
 
 
-
     /**
      * @return \Concrete\Core\Express\Form\Control\RendererInterface
      */
     abstract public function getFormRenderer();
 
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->getId()
+        ];
+    }
 
 
 }

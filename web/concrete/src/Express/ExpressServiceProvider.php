@@ -24,6 +24,9 @@ class ExpressServiceProvider extends ServiceProvider
         $this->app->bindShared('express', function() use ($app) {
             return $app->make('Concrete\Core\Express\ObjectManager');
         });
+        $this->app->bindShared('express.control.type.manager', function() use ($app) {
+            return $app->make('Concrete\Core\Express\Form\Control\Type\Manager');
+        });
     }
 
 }
