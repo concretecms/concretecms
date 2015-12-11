@@ -119,6 +119,12 @@ class Forms extends DashboardPageController
         }
     }
 
+    public function add_control($id = null)
+    {
+        $this->setThemeViewTemplate('dialog.php');
+        $this->render('/dashboard/express/entities/forms/add_control');
+    }
+
     public function update_set_display_order($id = null)
     {
         $form = $this->formRepository->findOneById($id);
@@ -138,6 +144,27 @@ class Forms extends DashboardPageController
         }
         exit;
     }
+
+    public function update_set($id = null)
+    {
+        $set = $this->fieldSetRepository->findOneById($this->request->request->get('field_set_id'));
+        if (!is_object($set)) {
+            $this->error->add(t('Invalid field set object.'));
+        }
+        if (!$this->token->validate('update_set')) {
+            $this->error->add($this->token->getErrorMessage());
+        }
+        if (!$this->error->has()) {
+            $set->setTitle($this->request->request->get('name'));
+            $this->entityManager->persist($set);
+            $this->entityManager->flush();
+            $this->flash('success', t('Field set updated successfully.'));
+            $this->redirect('/dashboard/express/entities/forms', 'view_form_details', $id);
+        } else {
+            $this->view_form_details($id);
+        }
+    }
+
 
     public function add_set($id = null)
     {
