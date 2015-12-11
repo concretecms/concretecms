@@ -4,6 +4,7 @@ namespace Concrete\Controller\SinglePage\Dashboard\Express\Entities;
 use Concrete\Core\Entity\Express\FieldSet;
 use Concrete\Core\Entity\Express\Form;
 use \Concrete\Core\Page\Controller\DashboardPageController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Forms extends DashboardPageController
 {
@@ -121,8 +122,44 @@ class Forms extends DashboardPageController
 
     public function add_control($id = null)
     {
-        $this->setThemeViewTemplate('dialog.php');
-        $this->render('/dashboard/express/entities/forms/add_control');
+        $set = $this->fieldSetRepository->findOneById($id);
+        $manager = \Core::make('express.control.type.manager');
+        if ($this->request->isMethod("POST")) {
+            if ($this->token->validate('add_control')) {
+
+                $current = count($set->getControls());
+                $position = 0;
+                if ($current > 0) {
+                    $position = $current;
+                }
+
+                $type = $manager->driver($this->request->request->get('type'));
+                $control = $type->createControlByIdentifier($this->request->request->get('id'));
+                $control->setFieldSet($set);
+                $control->setPosition($current);
+
+                $this->entityManager->persist($control);
+                $this->entityManager->flush();
+
+                return new JsonResponse($control);
+            }
+        } else {
+            $drivers = $manager->getDrivers();
+            $tabs = array();
+            foreach($drivers as $type => $driver) {
+                $active = false;
+                if ($type == 'entity_property') {
+                    $active = true;
+                }
+                $tabs[] = array($type, $driver->getPluralDisplayName(), $active);
+            }
+            $this->set('drivers', $drivers);
+            $this->set('set', $set);
+            $this->set('tabs', $tabs);
+            $this->set('interface', \Core::make('helper/concrete/ui'));
+            $this->setThemeViewTemplate('dialog.php');
+            $this->render('/dashboard/express/entities/forms/add_control');
+        }
     }
 
     public function update_set_display_order($id = null)

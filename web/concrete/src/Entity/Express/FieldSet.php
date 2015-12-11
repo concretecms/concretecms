@@ -40,6 +40,7 @@ class FieldSet
 
     /**
      * @OneToMany(targetEntity="\Concrete\Core\Entity\Express\Control\Control", mappedBy="field_set", cascade={"persist", "remove"})
+     * @OrderBy({"position" = "ASC"})
      **/
     protected $controls;
 

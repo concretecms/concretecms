@@ -83,12 +83,16 @@
                     <li><a href="#" data-dialog="delete-set-<?=$set->getId()?>" data-dialog-title="<?=t('Delete Set')?>"><i class="fa fa-trash-o"></i></a></li>
                 </ul>
 
-                <div data-label="field-set"><?=$set->getTitle()?></div>
+                <div><?=$set->getTitle()?></div>
 
             </div>
 
             <table class="table table-hover" style="width: 100%;">
                 <tbody>
+
+                <? foreach($set->getControls() as $control) { ?>
+                    <? var_dump_safe($control);?>
+                <? } ?>
 
                 </tbody>
             </table>
