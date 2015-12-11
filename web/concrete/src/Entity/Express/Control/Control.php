@@ -30,6 +30,11 @@ abstract class Control
      */
     protected $custom_label;
 
+    /**
+     * @ManyToOne(targetEntity="\Concrete\Core\Entity\Express\FieldSet")
+     **/
+    protected $field_set;
+
 
     /**
      * @return mixed
@@ -78,6 +83,24 @@ abstract class Control
     {
         $this->position = $position;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getFieldSet()
+    {
+        return $this->field_set;
+    }
+
+    /**
+     * @param mixed $field_set
+     */
+    public function setFieldSet($field_set)
+    {
+        $this->field_set = $field_set;
+    }
+
+
 
     /**
      * @return \Concrete\Core\Express\Form\Control\RendererInterface

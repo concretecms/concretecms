@@ -10,12 +10,14 @@ class Forms extends DashboardPageController
 
     protected $repository;
     protected $formRepository;
+    protected $fieldSetRepository;
 
     public function on_start()
     {
         parent::on_start();
         $this->repository = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity');
         $this->formRepository = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Form');
+        $this->fieldSetRepository = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\FieldSet');
     }
 
     public function save()
@@ -98,6 +100,45 @@ class Forms extends DashboardPageController
         }
     }
 
+    public function delete_set($id = null)
+    {
+        $set = $this->fieldSetRepository->findOneById($this->request->request->get('field_set_id'));
+        if (!is_object($set)) {
+            $this->error->add(t('Invalid field set object.'));
+        }
+        if (!$this->token->validate('delete_set')) {
+            $this->error->add($this->token->getErrorMessage());
+        }
+        if (!$this->error->has()) {
+            $this->entityManager->remove($set);
+            $this->entityManager->flush();
+            $this->flash('success', t('Field set deleted successfully.'));
+            $this->redirect('/dashboard/express/entities/forms', 'view_form_details', $id);
+        } else {
+            $this->view_form_details($id);
+        }
+    }
+
+    public function update_set_display_order($id = null)
+    {
+        $form = $this->formRepository->findOneById($id);
+        if (is_object($form)) {
+            if ($this->token->validate('update_set_display_order', $this->request->request->get('token'))) {
+                $position = 0;
+                foreach($this->post('set') as $setID) {
+                    $set = $this->fieldSetRepository->findOneById($setID);
+                    if (is_object($set)) {
+                        $set->setPosition($position);
+                    }
+                    $this->entityManager->persist($set);
+                    $position++;
+                }
+                $this->entityManager->flush();
+            }
+        }
+        exit;
+    }
+
     public function add_set($id = null)
     {
         $form = $this->formRepository->findOneById($id);
@@ -108,9 +149,16 @@ class Forms extends DashboardPageController
             $this->error->add($this->token->getErrorMessage());
         }
         if (!$this->error->has()) {
+            $current = count($form->getFieldSets());
+            $position = 0;
+            if ($current > 0) {
+                $position = $current;
+            }
+
             $set = new FieldSet();
             $set->setTitle($this->request->request->get('name'));
             $set->setForm($form);
+            $set->setPosition($current);
             $this->entityManager->persist($set);
             $this->entityManager->flush();
             $this->flash('success', t('Form field set added successfully.'));
@@ -145,7 +193,7 @@ class Forms extends DashboardPageController
             $this->set('fieldSets', $form->getFieldSets());
             $this->set('expressForm', $form);
             $this->set('pageTitle', t('Form Details'));
-            $this->render('/dashboard/express/entities/forms/view');
+            $this->render('/dashboard/express/entities/forms/view_form');
         } else {
             $this->redirect('/dashboard/express/entities');
         }

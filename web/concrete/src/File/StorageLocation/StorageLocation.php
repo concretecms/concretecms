@@ -28,6 +28,12 @@ class StorageLocation
     protected $fslID;
 
     /**
+     * @OneToMany(targetEntity="\Concrete\Core\File\File", mappedBy="storageLocation")
+     **/
+    protected $files;
+
+
+    /**
      * @Column(type="boolean")
      */
     protected $fslIsDefault = false;
