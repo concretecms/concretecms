@@ -27,7 +27,7 @@
 <? } ?>
 
 <?
-if ($canViewSitemap) { ?>
+if ($canViewSitemap) { ?>	
 	<h5><?=t('Sitemap')?></h5>
 	<div id="ccm-sitemap-panel-sitemap"></div>
 	<script type="text/javascript">
@@ -44,13 +44,13 @@ if ($canViewSitemap) { ?>
 <? if (count($drafts)) {?>
 	<h5><?=t('Page Drafts')?></h5>
 	<ul class="ccm-panel-sitemap-list">
-	<? foreach($drafts as $dc) {
-		?>
+	<? foreach($drafts as $dc) { 
+		?> 
 		<li><a href="<?=Loader::helper('navigation')->getLinkToCollection($dc)?>"><?
 			if ($dc->getCollectionName()) {
-                echo $dc->getCollectionName() . ' ' . Core::make('date')->formatDateTime($dc->getCollectionDateAdded(), false);
+				print $dc->getCollectionName();
 			} else {
-                echo t('(Untitled)') . ' ' . Core::make('date')->formatDateTime($dc->getCollectionDateAdded(), false);
+				print t('(Untitled)');
 			}
 		?></a></li>
 	<? } ?>
