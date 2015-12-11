@@ -55,14 +55,31 @@
                     </div>
                 </form>
             </div>
+
+            <div id="ccm-dialog-update-set-<?=$set->getID()?>" class="ccm-ui">
+                <form method="post" action="<?=$view->action('update_set', $expressForm->getID())?>">
+                    <?=Core::make("token")->output('update_set')?>
+                    <input type="hidden" name="field_set_id" value="<?=$set->getID()?>">
+                    <div class="form-group">
+                        <?=$form->label('name', tc('Name of a set', 'Set Name'))?>
+                        <?=$form->text('name', $set->getTitle())?>
+                    </div>
+                </form>
+                <div class="dialog-buttons">
+                    <button class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
+                    <button class="btn btn-primary pull-right" onclick="$('#ccm-dialog-update-set-<?=$set->getID()?> form').submit()"><?=t('Update Set')?></button>
+                </div>
+            </div>
+
         </div>
+
 
         <div class="ccm-item-set panel panel-default" data-field-set="<?=$set->getID()?>">
             <div class="panel-heading">
                 <ul class="ccm-item-set-controls">
-                    <li><a href="#" dialog-title="<?=t('Add Form Control')?>" dialog-width="640" dialog-height="400" data-command="add-form-set-control"><i class="fa fa-plus"></i></a></li>
+                    <li><a href="<?=$view->action('add_control', $set->getID())?>" class="dialog-launch" dialog-title="<?=t('Add Form Control')?>" dialog-width="640" dialog-height="400" data-command="add-form-set-control"><i class="fa fa-plus"></i></a></li>
                     <li><a href="#" data-command="move-set" style="cursor: move"><i class="fa fa-arrows"></i></a></li>
-                    <li><a href="#" data-edit-set="<?=$set->getID()?>"><i class="fa fa-pencil"></i></a></li>
+                    <li><a href="#" data-dialog="update-set-<?=$set->getId()?>" data-dialog-title="<?=t('Update Set')?>"><i class="fa fa-pencil"></i></a></li>
                     <li><a href="#" data-dialog="delete-set-<?=$set->getId()?>" data-dialog-title="<?=t('Delete Set')?>"><i class="fa fa-trash-o"></i></a></li>
                 </ul>
 
