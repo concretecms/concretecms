@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Console\Command;
 
 use Concrete\Core\Support\Symbol\ClassSymbol\ClassSymbol;
@@ -9,6 +8,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Exception;
+use Core;
 
 class GenerateIDESymbolsCommand extends Command
 {
@@ -28,8 +28,13 @@ class GenerateIDESymbolsCommand extends Command
             $what = $input->getArgument('generate-what');
             if (in_array('all', $what) || in_array('ide-classes', $what)) {
                 $output->write('Generating fake PHP classes to help IDE... ');
-                $this->generateIDEClasses();
-                $output->writeln('<info>done.</info>');
+                if (!Core::make('app')->isInstalled()) {
+                    $output->writeln('<error>failed: concrete5 is not installed.</error>');
+                    $rc = 1;
+                } else {
+                    $this->generateIDEClasses();
+                    $output->writeln('<info>done.</info>');
+                }
             }
             if (in_array('all', $what) || in_array('phpstorm', $what)) {
                 $output->write('Generating PHP metadata for PHPStorm... ');
