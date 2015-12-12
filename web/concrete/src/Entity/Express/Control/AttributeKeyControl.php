@@ -38,5 +38,15 @@ class AttributeKeyControl extends Control
         return new AttributeKeyControlRenderer();
     }
 
+    public function getControlLabel()
+    {
+        return $this->getAttributeKey()->getAttributeKeyDisplayName();
+    }
+
+    public function getType()
+    {
+        return 'attribute_key';
+    }
+
 
 }

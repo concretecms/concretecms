@@ -10,10 +10,5 @@ class TextEntityPropertyControlRenderer extends EntityPropertyControlRenderer
         return 'text';
     }
 
-    public function getControlLabel()
-    {
-        return null;
-    }
-
 
 }

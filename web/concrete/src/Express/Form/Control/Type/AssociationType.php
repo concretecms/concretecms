@@ -21,6 +21,11 @@ class AssociationType implements TypeInterface {
         return t('Associations');
     }
 
+    public function getDisplayName()
+    {
+        return t('Association');
+    }
+
     public function getItems(Entity $entity)
     {
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Association');

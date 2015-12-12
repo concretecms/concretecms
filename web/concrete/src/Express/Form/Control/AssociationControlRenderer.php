@@ -22,11 +22,6 @@ class AssociationControlRenderer implements RendererInterface
         $this->application = $factory->getApplication();
     }
 
-    public function getControlLabel()
-    {
-        return $this->factory->getControl()->getAssociation()->getTargetEntity()->getName();
-    }
-
     protected function getFormFieldElement()
     {
         $class = get_class($this->factory->getControl()->getAssociation());

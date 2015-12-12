@@ -136,12 +136,15 @@ class Forms extends DashboardPageController
                 $type = $manager->driver($this->request->request->get('type'));
                 $control = $type->createControlByIdentifier($this->request->request->get('id'));
                 $control->setFieldSet($set);
-                $control->setPosition($current);
+                $control->setPosition($position);
 
                 $this->entityManager->persist($control);
                 $this->entityManager->flush();
 
-                return new JsonResponse($control);
+                $element = new \Concrete\Controller\Element\Dashboard\Express\Control($control);
+                print $element->render();
+                exit;
+
             }
         } else {
             $drivers = $manager->getDrivers();

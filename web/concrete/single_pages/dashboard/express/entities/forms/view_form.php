@@ -90,9 +90,14 @@
             <table class="table table-hover" style="width: 100%;">
                 <tbody>
 
-                <? foreach($set->getControls() as $control) { ?>
-                    <? var_dump_safe($control);?>
-                <? } ?>
+                <?php
+
+                foreach($set->getControls() as $control) {
+                    $element = new \Concrete\Controller\Element\Dashboard\Express\Control($control);
+                    print $element->render();
+                }
+
+                ?>
 
                 </tbody>
             </table>
