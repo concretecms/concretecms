@@ -39,6 +39,15 @@ class AssociationControl extends Control
         return new AssociationControlRenderer();
     }
 
+    public function getControlLabel()
+    {
+        return $this->getAssociation()->getTargetEntity()->getName();
+    }
+
+    public function getType()
+    {
+        return 'association';
+    }
 
 
 

@@ -20,6 +20,10 @@ abstract class ElementController extends AbstractController
 
     public function getViewObject()
     {
+        if (!isset($this->view)) {
+            $this->view = new ElementView($this->getElement(), $this->getPackageHandle());
+            $this->view->setController($this);
+        }
         return $this->view;
     }
 
@@ -38,14 +42,6 @@ abstract class ElementController extends AbstractController
     {
         $this->pkgHandle = $pkgHandle;
     }
-
-
-    public function __construct()
-    {
-        $this->view = new ElementView($this->getElement(), $this->getPackageHandle());
-        $this->view->setController($this);
-    }
-
 
     public function render()
     {

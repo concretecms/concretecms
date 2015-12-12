@@ -15,6 +15,11 @@ class EntityPropertyType implements TypeInterface {
         return t('Core Properties');
     }
 
+    public function getDisplayName()
+    {
+        return t('Core Property');
+    }
+
     public function getItems(Entity $entity)
     {
         return array(

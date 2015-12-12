@@ -106,11 +106,28 @@ abstract class Control implements \JsonSerializable
      */
     abstract public function getFormRenderer();
 
+    abstract public function getControlLabel();
+
+    abstract public function getType();
+
     public function jsonSerialize()
     {
         return [
             'id' => $this->getId()
         ];
+    }
+
+    public function getDisplayLabel()
+    {
+        return $this->getCustomLabel() ?
+            $this->getCustomLabel() :
+            $this->getControlLabel();
+    }
+
+    public function getControlType()
+    {
+        $manager = \Core::make('express.control.type.manager');
+        return $manager->driver($this->getType());
     }
 
 

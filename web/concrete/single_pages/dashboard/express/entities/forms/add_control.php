@@ -43,12 +43,13 @@ $(function() {
        jQuery.fn.dialog.showLoader();
        $.ajax({
            type: 'post',
-           dataType: 'json',
            data: formData,
            url: '<?=$view->action('add_control', $set->getId())?>',
            success: function(html) {
-               jQuery.fn.dialog.hideLoader();
-               window.location.reload();
+                jQuery.fn.dialog.hideLoader();
+                jQuery.fn.dialog.closeTop();
+                $('div[data-field-set=<?=$set->getID()?>] tbody').append(html);
+                $('a.dialog-launch').dialog();
            }
        });
    });

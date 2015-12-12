@@ -3,6 +3,7 @@
 namespace Concrete\Core\Entity\Express\Control;
 
 use Concrete\Core\Express\Form\Control\TextEntityPropertyControlRenderer;
+use Concrete\Core\Express\Form\Control\Type\EntityPropertyType;
 use Concrete\Core\Foundation\Environment;
 
 /**
@@ -38,4 +39,13 @@ class TextControl extends Control
         return new TextEntityPropertyControlRenderer();
     }
 
+    public function getControlLabel()
+    {
+        return t('Text');
+    }
+
+    public function getType()
+    {
+        return 'entity_property';
+    }
 }

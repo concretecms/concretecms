@@ -21,6 +21,11 @@ class AttributeKeyType implements TypeInterface {
         return t('Attributes');
     }
 
+    public function getDisplayName()
+    {
+        return t('Attribute Key');
+    }
+
     public function getItems(Entity $entity)
     {
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Attribute');
@@ -31,7 +36,6 @@ class AttributeKeyType implements TypeInterface {
             $items[] = $item;
         }
         return $items;
-
     }
 
     public function createControlByIdentifier($id)

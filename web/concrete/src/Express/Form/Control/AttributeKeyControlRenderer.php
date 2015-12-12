@@ -25,11 +25,6 @@ class AttributeKeyControlRenderer implements RendererInterface
         return $this->factory->getControl()->getAttributeKey();
     }
 
-    public function getControlLabel()
-    {
-        return $this->getAttributeKeyObject()->getAttributeKeyDisplayName();
-    }
-
     public function render()
     {
         $ak = $this->getAttributeKeyObject();

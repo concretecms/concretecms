@@ -8,6 +8,7 @@ interface TypeInterface
 {
 
     public function getPluralDisplayName();
+    public function getDisplayName();
     public function getItems(Entity $entity);
     public function createControlByIdentifier($id);
 

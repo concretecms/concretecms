@@ -10,10 +10,5 @@ class NameEntityPropertyControlRenderer extends EntityPropertyControlRenderer
         return 'name';
     }
 
-    public function getControlLabel()
-    {
-        return t('Name');
-    }
-
 
 }
