@@ -156,6 +156,45 @@
             }
         });
 
+        $('#ccm-dashboard-content').sortable({
+            handle: 'a[data-command=move-control]',
+            items: '.ccm-item-set-item',
+            cursor: 'move',
+            axis: 'y',
+            helper: function(e, ui) { // prevent table columns from collapsing
+                ui.addClass('active');
+                ui.children().each(function () {
+                    $(this).width($(this).width());
+                });
+                return ui;
+            },
+            stop: function(e, ui) {
+                var $set = $(ui.item).closest('div[data-field-set]');
+                var formData = [{
+                    'name': 'token',
+                    'value': '<?=Loader::helper("validation/token")->generate("update_set_control_display_order")?>'
+                }, {
+                    'name': 'set',
+                    'value': $set.attr('data-field-set')
+                }];
+
+                $set.find('.ccm-item-set-item').each(function() {
+                    formData.push({'name': 'control[]', 'value': $(this).attr('data-field-set-control')});
+                });
+
+
+                $.ajax({
+                    type: 'post',
+                    data: formData,
+                    url: '<?=$view->action("update_set_control_display_order", $expressForm->getID())?>',
+                    success: function() {}
+                });
+
+            }
+        });
+
+
+
     });
 </script>
 

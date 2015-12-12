@@ -12,6 +12,7 @@ class Forms extends DashboardPageController
     protected $repository;
     protected $formRepository;
     protected $fieldSetRepository;
+    protected $controlRepository;
 
     public function on_start()
     {
@@ -19,6 +20,7 @@ class Forms extends DashboardPageController
         $this->repository = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity');
         $this->formRepository = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Form');
         $this->fieldSetRepository = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\FieldSet');
+        $this->controlRepository = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Control\Control');
     }
 
     public function save()
@@ -184,6 +186,30 @@ class Forms extends DashboardPageController
         }
         exit;
     }
+
+    public function update_set_control_display_order($id = null)
+    {
+        $form = $this->formRepository->findOneById($id);
+        if (is_object($form)) {
+            $set = $this->fieldSetRepository->findOneById($this->request->request->get('set'));
+            if (is_object($set)) {
+                if ($this->token->validate('update_set_control_display_order', $this->request->request->get('token'))) {
+                    $position = 0;
+                    foreach($this->post('control') as $controlID) {
+                        $control = $this->controlRepository->findOneById($controlID);
+                        if (is_object($control)) {
+                            $control->setPosition($position);
+                            $this->entityManager->persist($control);
+                        }
+                        $position++;
+                    }
+                    $this->entityManager->flush();
+                }
+            }
+        }
+        exit;
+    }
+
 
     public function update_set($id = null)
     {
