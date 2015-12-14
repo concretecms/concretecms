@@ -12,10 +12,16 @@
 if (is_object($expressForm)) {
     ?>
 
+    <form method="post" action="<?=$view->action('submit', $entity->getId())?>">
+
 
     <?php
         print $renderer->render($expressForm);
     ?>
+
+        <div class="form-actions">
+            <button class="pull-right btn btn-primary" type="submit"><?=t('Add %s', $entity->getName())?></button>
+        </div>
 
 
 <?php
