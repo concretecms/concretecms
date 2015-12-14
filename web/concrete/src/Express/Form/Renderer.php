@@ -49,6 +49,11 @@ class Renderer implements RendererInterface
         return $this->application->make('token')->output('express_form', true);
     }
 
+    protected function getFormField(Form $form)
+    {
+        return '<input type="hidden" name="express_form_id" value="' . $form->getId() . '">';
+    }
+
     protected function renderFieldSet(FieldSet $fieldSet)
     {
         $html = $this->getFieldSetOpenTag($fieldSet);
@@ -66,6 +71,7 @@ class Renderer implements RendererInterface
     public function render(Form $form)
     {
         $html = $this->getFormOpenTag();
+        $html .= $this->getFormField($form);
         $html .= $this->getCsrfTokenField();
         foreach($form->getFieldSets() as $fieldSet) {
             $html .= $this->renderFieldSet($fieldSet);
