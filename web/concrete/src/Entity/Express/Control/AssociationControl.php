@@ -13,7 +13,7 @@ class AssociationControl extends Control
 {
     /**
      * @var \Concrete\Core\Entity\Express\Association
-     * @ManyToOne(targetEntity="\Concrete\Core\Entity\Express\Association")
+     * @ManyToOne(targetEntity="\Concrete\Core\Entity\Express\Association", inversedBy="controls")
      */
     protected $association;
 

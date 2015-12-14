@@ -51,4 +51,9 @@ class DashboardPageController extends PageController
         $this->set('error', $this->error);
     }
 
+    public function getEntityManager()
+    {
+        return $this->entityManager;
+    }
+
 }

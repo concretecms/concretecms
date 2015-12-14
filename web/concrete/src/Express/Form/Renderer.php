@@ -30,9 +30,13 @@ class Renderer implements RendererInterface
         return '</div>';
     }
 
-    protected function getFieldSetOpenTag()
+    protected function getFieldSetOpenTag(FieldSet $set)
     {
-        return '<fieldset class="ccm-express-form-field-set">';
+        $html = '<fieldset class="ccm-express-form-field-set">';
+        if ($set->getTitle()) {
+            $html .= '<legend>' . $set->getTitle() . '</legend>';
+        }
+        return $html;
     }
 
     protected function getFieldSetCloseTag()
@@ -47,7 +51,7 @@ class Renderer implements RendererInterface
 
     protected function renderFieldSet(FieldSet $fieldSet)
     {
-        $html = $this->getFieldSetOpenTag();
+        $html = $this->getFieldSetOpenTag($fieldSet);
         foreach($fieldSet->getControls() as $control) {
             $factory = new RendererFactory($control, $this->application, $this->entityManager);
             $renderer = $factory->getRenderer();

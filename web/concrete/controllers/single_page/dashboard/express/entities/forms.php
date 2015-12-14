@@ -122,6 +122,26 @@ class Forms extends DashboardPageController
         }
     }
 
+    public function delete_set_control($id = null)
+    {
+        $control = $this->controlRepository->findOneById($this->request->request->get('field_set_control_id'));
+        if (!is_object($control)) {
+            $this->error->add(t('Invalid field set control object.'));
+        }
+        if (!$this->token->validate('delete_set_control')) {
+            $this->error->add($this->token->getErrorMessage());
+        }
+        if (!$this->error->has()) {
+            $this->entityManager->remove($control);
+            $this->entityManager->flush();
+            $this->flash('success', t('Field set control deleted successfully.'));
+            $this->redirect('/dashboard/express/entities/forms', 'view_form_details', $id);
+        } else {
+            $this->view_form_details($id);
+        }
+    }
+
+
     public function add_control($id = null)
     {
         $set = $this->fieldSetRepository->findOneById($id);

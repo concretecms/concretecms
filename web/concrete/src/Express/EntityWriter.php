@@ -79,23 +79,40 @@ class EntityWriter
         return $this->namespace . '\\' . $entity->getName();
     }
 
-    public function createClass(Entity $entity)
+    protected function ensureClassLocation()
+    {
+        if (!$this->outputPath) {
+            throw new InvalidClassLocationDefinedException();
+        }
+
+        if (!is_dir($this->outputPath)) {
+            mkdir($this->outputPath, 0777, true);
+        }
+
+        if (!is_dir($this->outputPath) || !is_writable($this->outputPath)) {
+            throw new InvalidClassLocationDefinedException();
+        }
+
+    }
+
+    public function writeClass(Entity $entity)
     {
 
         if (!$this->namespace) {
             throw new NoNamespaceDefinedException();
         }
-        if (!$this->outputPath || !is_dir($this->outputPath) || !is_writable($this->outputPath)) {
-            throw new InvalidClassLocationDefinedException();
-        }
+
+        $this->ensureClassLocation();
 
         $generator = new EntityGenerator();
         $generator->setGenerateAnnotations(true);
         $generator->setGenerateStubMethods(true);
+        $generator->setAnnotationPrefix(null);
         $generator->setRegenerateEntityIfExists(true);
         $generator->setClassToExtend('\Concrete\Core\Express\BaseEntity');
         $generator->setUpdateEntityIfExists(true);
         $generator->setNumSpaces(4);
+        $generator->setBackupExisting(false);
 
         // Create a new entity manager that contains entities generated from the root.
         $driver = new \Concrete\Core\Express\DoctrineMappingDriver($this->application, $this->getEntityManager());
@@ -106,7 +123,6 @@ class EntityWriter
 
         $metadata = $em->getClassMetadata($factory->getClassName($entity));
         $generator->generate(array($metadata), $this->outputPath);
-
     }
 
 }

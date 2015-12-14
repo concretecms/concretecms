@@ -51,12 +51,12 @@ class OneToOneUnidirectionalTest extends PHPUnit_Framework_TestCase
         $entity = new \Concrete\Core\Entity\Express\Entity();
         $entity->setName('User');
         $entity->setTableName('Users');
-        $writer->createClass($entity);
+        $writer->writeClass($entity);
 
         $entity = new \Concrete\Core\Entity\Express\Entity();
         $entity->setName('Address');
         $entity->setTableName('Addresses');
-        $writer->createClass($entity);
+        $writer->writeClass($entity);
 
         $this->assertFileExists(__DIR__ . '/Shopping/User.php');
         require_once __DIR__ . '/Shopping/User.php';

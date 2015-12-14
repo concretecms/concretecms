@@ -6,6 +6,7 @@ use Concrete\Core\Cache\Adapter\DoctrineCacheDriver;
 use Concrete\Core\Database\EntityManagerFactoryInterface;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Express\Entity;
+use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
 use Config;
@@ -48,7 +49,7 @@ class BackendEntityManagerFactory implements EntityManagerFactoryInterface
         $config = Setup::createConfiguration(
             $this->application['config']->get('concrete.cache.doctrine_dev_mode'),
             $this->application['config']->get('database.proxy_classes'),
-            new DoctrineCacheDriver('cache/expensive')
+           new ArrayCache() // we don't want to cache because we always want to get the updated information
         );
         $strategy = new NamingStrategy($this->rootEntityManager);
         $strategy->setTablePrefix($this->application['config']->get('express.database.table_prefix'));

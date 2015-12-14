@@ -4,7 +4,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $final_label = $control->getDisplayLabel();
 $original_label = $control->getControlLabel();
 $type_name = $control->getControlType()->getDisplayName();
-
+$c = Page::getCurrentPage();
 ?>
 
 <tr class="ccm-item-set-item" data-field-set-control="<?=$control->getID()?>">
@@ -21,8 +21,23 @@ $type_name = $control->getControlType()->getDisplayName();
 		<ul class="ccm-item-set-controls">
 			<li><a href="#" data-command="move-control" style="cursor: move"><i class="fa fa-arrows"></i></a></li>
 			<li><a href="#" data-dialog="update-control-<?=$control->getId()?>" data-dialog-title="<?=t('Update Control')?>"><i class="fa fa-pencil"></i></a></li>
-			<li><a href="#" data-dialog="delete-control-<?=$control->getId()?>" data-dialog-title="<?=t('Delete Control')?>"><i class="fa fa-trash-o"></i></a></li>
+			<li><a href="#" data-dialog="delete-set-control-<?=$control->getId()?>" data-dialog-title="<?=t('Delete Control')?>"><i class="fa fa-trash-o"></i></a></li>
 		</ul>
+
+		<div style="display: none">
+		<div id="ccm-dialog-delete-set-control-<?=$control->getID()?>" class="ccm-ui">
+			<form method="post" action="<?=URL::to($c, 'delete_set_control', $control->getFieldSet()->getForm()->getID())?>">
+				<?=Core::make("token")->output('delete_set_control')?>
+				<input type="hidden" name="field_set_control_id" value="<?=$control->getID()?>">
+				<p><?=t('Are you sure you want to delete this control? This cannot be undone.')?></p>
+				<div class="dialog-buttons">
+					<button class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
+					<button class="btn btn-danger pull-right" onclick="$('#ccm-dialog-delete-set-control-<?=$control->getId()?> form').submit()"><?=t('Delete Set')?></button>
+				</div>
+			</form>
+		</div>
+		</div>
+
 	</td>
 </tr>
 

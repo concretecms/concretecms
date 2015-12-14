@@ -165,8 +165,38 @@
 
         <page name="Data Objects" path="/dashboard/express" filename="/dashboard/express/view.php" pagetype=""
               description="Express Data Objects" package=""/>
-        <page name="View Objects" path="/dashboard/express/entities" filename="/dashboard/express/entities.php" pagetype=""
+
+        <page name="New Entry" path="/dashboard/express/create" filename="/dashboard/express/create.php" pagetype=""
               description="" package="">
+
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+
+        </page>
+
+        <page name="View Entries" path="/dashboard/express/entries" filename="/dashboard/express/entries.php" pagetype=""
+              description="" package="">
+
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+
+        </page>
+
+        <page name="Edit Data Types" path="/dashboard/express/entities" filename="/dashboard/express/entities.php" pagetype=""
+              description="" package="">
+
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+
         </page>
 
         <page name="Attributes" path="/dashboard/express/entities/attributes"

@@ -15,6 +15,10 @@ class ExpressServiceProvider extends ServiceProvider
         $this->app->bindShared('express.builder.association', function() use ($app) {
             return $app->make('Concrete\Core\Express\ObjectAssociationBuilder');
         });
+        $this->app->bindShared('express.publisher', function() use ($app) {
+            return $app->make('Concrete\Core\Express\ObjectPublisher');
+        });
+
         $this->app->bindShared('express.writer', function() use ($app) {
             $writer = $app->make('Concrete\Core\Express\EntityWriter');
             $writer->setNamespace($app['config']->get('express.entity_classes.namespace'));

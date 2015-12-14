@@ -83,7 +83,7 @@
                     <li><a href="#" data-dialog="delete-set-<?=$set->getId()?>" data-dialog-title="<?=t('Delete Set')?>"><i class="fa fa-trash-o"></i></a></li>
                 </ul>
 
-                <div><?=$set->getTitle()?></div>
+                <div><?=$set->getTitle() ? $set->getTitle() : t('(No Title)')?></div>
 
             </div>
 
@@ -156,7 +156,8 @@
             }
         });
 
-        $('#ccm-dashboard-content').sortable({
+
+        $('div.ccm-item-set').sortable({
             handle: 'a[data-command=move-control]',
             items: '.ccm-item-set-item',
             cursor: 'move',

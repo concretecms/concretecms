@@ -40,7 +40,11 @@ class Attributes extends DashboardAttributesPageController
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\AttributeKey\AttributeKey');
         $key = $r->findOneBy(array('akID' => $akID));
         $this->executeUpdate($entity, $key,
-            \URL::to('/dashboard/express/entities/attributes', 'view', $id)
+            \URL::to('/dashboard/express/entities/attributes', 'view', $id),
+            function() use ($entity) {
+                $publisher = \Core::make('express.publisher');
+                $publisher->publish($entity);
+            }
         );
     }
 
@@ -59,7 +63,15 @@ class Attributes extends DashboardAttributesPageController
         $type = Type::getByID($type);
         $entity = $this->getEntity($id);
         $this->set('entity', $entity);
-        $this->executeAdd($entity, $type, \URL::to('/dashboard/express/entities/attributes', 'view', $id));
+        $this->executeAdd($entity, $type, \URL::to('/dashboard/express/entities/attributes', 'view', $id),
+            function() use ($entity) {
+                $publisher = \Core::make('express.publisher');
+                $publisher->publish($entity);
+            }
+        );
+
+        $publisher = \Core::make('express.publisher');
+        $publisher->publish($entity);
     }
 
     public function delete($id = null, $akID = null)
@@ -69,8 +81,16 @@ class Attributes extends DashboardAttributesPageController
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\AttributeKey\AttributeKey');
         $key = $r->findOneBy(array('akID' => $akID));
         $this->executeDelete($entity, $key,
-            \URL::to('/dashboard/express/entities/attributes', 'view', $id)
+            \URL::to('/dashboard/express/entities/attributes', 'view', $id),
+            function() use ($entity) {
+                $publisher = \Core::make('express.publisher');
+                $publisher->publish($entity);
+            }
         );
+
+        $publisher = \Core::make('express.publisher');
+        $publisher->publish($entity);
+
     }
 
 
