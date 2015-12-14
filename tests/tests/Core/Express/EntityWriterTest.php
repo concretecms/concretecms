@@ -24,7 +24,7 @@ class EntityWriterTest extends PHPUnit_Framework_TestCase
         $this->setExpectedException('\Concrete\Core\Express\Exception\NoNamespaceDefinedException');
         $entity = new \Concrete\Core\Entity\Express\Entity();
         $writer = new \Concrete\Core\Express\EntityWriter($this->getMockEntityManager(), Core::make('app'));
-        $writer->createClass($entity);
+        $writer->writeClass($entity);
     }
     public function testOutputClassNoLocationDefined()
     {
@@ -32,7 +32,7 @@ class EntityWriterTest extends PHPUnit_Framework_TestCase
         $entity = new \Concrete\Core\Entity\Express\Entity();
         $writer = new \Concrete\Core\Express\EntityWriter($this->getMockEntityManager(), Core::make('app'));
         $writer->setNamespace('Express');
-        $writer->createClass($entity);
+        $writer->writeClass($entity);
     }
 
     public function testOutputClassStandardConfiguration()
@@ -53,7 +53,7 @@ class EntityWriterTest extends PHPUnit_Framework_TestCase
         $entity = new \Concrete\Core\Entity\Express\Entity();
         $entity->setName('Student');
         $entity->setTableName('Students');
-        $writer->createClass($entity);
+        $writer->writeClass($entity);
 
         $this->assertFileExists(__DIR__ . '/Testing/Student.php');
         require_once __DIR__ . '/Testing/Student.php';

@@ -31,6 +31,10 @@ abstract class Association
      **/
     protected $target_entity;
 
+    /**
+     * @OneToMany(targetEntity="\Concrete\Core\Entity\Express\Control\AssociationControl", mappedBy="association", cascade={"remove"})
+     */
+    protected $controls;
 
     /**
      * @Column(type="string", nullable=true)

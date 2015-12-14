@@ -15,7 +15,7 @@ use \Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayou
 				<?=$form->text('ptComposerFormLayoutSetName')?>
 			</div>
 			<div class="form-group">
-				<?=$form->label('ptComposerFormLayoutSetDescription', tc('Description of a set', 'Set Description'))?>
+				<?=$form->label('ptComposerFormLayoutSetDescription', tc('Descripmove-set-controltion of a set', 'Set Description'))?>
 				<?=$form->textarea('ptComposerFormLayoutSetDescription')?>
 			</div>
 		</form>

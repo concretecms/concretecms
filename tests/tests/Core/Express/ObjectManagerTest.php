@@ -35,7 +35,7 @@ class ObjectManagerTest extends PHPUnit_Framework_TestCase
         $entity = new \Concrete\Core\Entity\Express\Entity();
         $entity->setName('Student');
         $entity->setTableName('Students');
-        $writer->createClass($entity);
+        $writer->writeClass($entity);
     }
 
     public function testBackendCreateAPI()

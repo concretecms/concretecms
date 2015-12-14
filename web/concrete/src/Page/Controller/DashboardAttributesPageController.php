@@ -50,7 +50,7 @@ abstract class DashboardAttributesPageController extends DashboardPageController
         $this->set('attributeHeader', $header);
     }
 
-    protected function executeAdd(EntityInterface $entity, Type $type, $successURL)
+    protected function executeAdd(EntityInterface $entity, Type $type, $successURL, $onComplete = null)
     {
         $controller = $type->getController();
         $e = $controller->validateKey($this->request->request->all());
@@ -63,12 +63,15 @@ abstract class DashboardAttributesPageController extends DashboardPageController
             $category = $entity->getAttributeKeyCategory();
             $category->setEntity($entity);
             $category->addFromRequest($type, $this->request);
+            if ($onComplete instanceof \Closure) {
+                $onComplete();
+            }
             $this->flash('success', t('Attribute created successfully.'));
             $this->redirect($successURL);
         }
     }
 
-    protected function executeUpdate(EntityInterface $entity, AttributeKey $key, $successURL)
+    protected function executeUpdate(EntityInterface $entity, AttributeKey $key, $successURL, $onComplete = null)
     {
         $controller = $key->getController();
         $e = $controller->validateKey($this->request->request->all());
@@ -81,12 +84,15 @@ abstract class DashboardAttributesPageController extends DashboardPageController
             $category = $entity->getAttributeKeyCategory();
             $category->setEntity($entity);
             $category->updateFromRequest($key, $this->request);
+            if ($onComplete instanceof \Closure) {
+                $onComplete();
+            }
             $this->flash('success', t('Attribute updated successfully.'));
             $this->redirect($successURL);
         }
     }
 
-    protected function executeDelete(EntityInterface $entity, AttributeKey $key, $successURL)
+    protected function executeDelete(EntityInterface $entity, AttributeKey $key, $successURL, $onComplete = null)
     {
         try {
 
@@ -97,6 +103,10 @@ abstract class DashboardAttributesPageController extends DashboardPageController
             $category = $entity->getAttributeKeyCategory();
             $category->setEntity($entity);
             $category->delete($key);
+
+            if ($onComplete instanceof \Closure) {
+                $onComplete();
+            }
 
             $this->flash('success', t('Attribute deleted successfully.'));
             $this->redirect($successURL);

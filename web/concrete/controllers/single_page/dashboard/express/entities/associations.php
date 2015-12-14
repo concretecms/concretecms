@@ -8,6 +8,7 @@ class Associations extends DashboardPageController
 
     protected $repository;
     protected $associationRepository;
+    protected $entity;
 
     public function on_start()
     {
@@ -86,7 +87,10 @@ class Associations extends DashboardPageController
                     $this->entityManager->persist($targetEntity);
                     $this->entityManager->flush();
 
-                    $this->flash('success', t('Associations added successfully.'));
+                    $publisher = \Core::make('express.publisher');
+                    $publisher->publish($entity);
+
+                    $this->flash('success', t('Association added successfully.'));
                     $this->redirect('/dashboard/express/entities/associations', $entity->getId());
                 }
             }
@@ -101,6 +105,7 @@ class Associations extends DashboardPageController
     {
         $entity = $this->repository->findOneById($id);
         if (is_object($entity)) {
+            $this->entity = $entity;
             $this->set('entity', $entity);
             $this->set('associations', $entity->getAssociations());
             $this->set('pageTitle', t('Associations'));
@@ -122,6 +127,10 @@ class Associations extends DashboardPageController
         if (!$this->error->has()) {
             $this->entityManager->remove($association);
             $this->entityManager->flush();
+
+            $publisher = \Core::make('express.publisher');
+            $publisher->publish($this->entity);
+
             $this->flash('success', t('Association deleted successfully.'));
             $this->redirect('/dashboard/express/entities/associations', $id);
         } else {
