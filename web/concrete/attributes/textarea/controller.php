@@ -17,18 +17,7 @@ class Controller extends DefaultController
 
     public function saveKey($data)
     {
-        $data += array(
-            'akTextareaDisplayMode' => null,
-        );
-        $akTextareaDisplayMode = $data['akTextareaDisplayMode'];
-        if (!$akTextareaDisplayMode) {
-            $akTextareaDisplayMode = 'text';
-        }
-        $options = array();
-        if ($akTextareaDisplayMode == 'rich_text_custom') {
-            $options = $data['akTextareaDisplayModeCustomOptions'];
-        }
-        $this->setDisplayMode($akTextareaDisplayMode, $options);
+        $this->attributeKey->setMode($data['akTextareaDisplayMode']);
     }
 
     public function getDisplaySanitizedValue()
