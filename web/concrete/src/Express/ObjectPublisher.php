@@ -3,7 +3,9 @@ namespace Concrete\Core\Express;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Entity\Express\Entity;
+use Concrete\Core\Support\Facade\DatabaseORM;
 use Doctrine\ORM\EntityManager;
+use Concrete\Core\Database\EntityManagerFactory;
 
 class ObjectPublisher
 {
@@ -20,6 +22,18 @@ class ObjectPublisher
 
     public function publish(Entity $entity)
     {
+        $cacheDriver = $this->entityManager->getConfiguration()->getMetadataCacheImpl();
+        if ($cacheDriver) {
+            $cacheDriver->deleteAll();
+        }
+
+        $connection = $this->entityManager->getConnection();
+        $entityManager = DatabaseORM::makeEntityManager($connection, 'core');
+
+        $metadatas = $entityManager->getMetadataFactory()->getAllMetadata();
+        $destPath = $entityManager->getConfiguration()->getProxyDir();
+        $entityManager->getProxyFactory()->generateProxyClasses($metadatas, $destPath);
+
         $writer = $this->application->make('express.writer');
         $writer->writeClass($entity);
 

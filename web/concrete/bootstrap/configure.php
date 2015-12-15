@@ -145,6 +145,7 @@ define('DIRNAME_STYLE_CUSTOMIZER_TYPES', 'types');
 define('DIRNAME_STYLE_CUSTOMIZER_PRESETS', 'presets');
 define('DIRNAME_FILE_STORAGE_LOCATION_TYPES', 'storage_location_types');
 define('DIRNAME_EXPRESS', 'express');
+define('DIRNAME_EXPRESS_VIEW_CONTROLS', 'view');
 define('DIRNAME_EXPRESS_FORM_CONTROLS', 'form');
 define('DIRNAME_EXPRESS_FORM_CONTROLS_ASSOCIATION', 'association');
 define('REL_DIR_FILES_INCOMING', '/incoming');

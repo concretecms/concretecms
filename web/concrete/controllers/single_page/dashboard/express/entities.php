@@ -28,6 +28,10 @@ class Entities extends DashboardPageController
                 $entity->setDescription($this->request->request->get('description'));
                 $this->entityManager->persist($entity);
                 $this->entityManager->flush();
+
+                $publisher = \Core::make('express.publisher');
+                $publisher->publish($entity);
+
                 $this->flash('success', t('Object added successfully.'));
                 $this->redirect('/dashboard/express/entities', 'view_entity', $entity->getId());
             }

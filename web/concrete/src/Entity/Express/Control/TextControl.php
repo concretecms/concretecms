@@ -2,8 +2,10 @@
 
 namespace Concrete\Core\Entity\Express\Control;
 
-use Concrete\Core\Express\Form\Control\TextEntityPropertyControlRenderer;
+use Concrete\Core\Express\BaseEntity;
+use Concrete\Core\Express\Form\Control\Form\TextEntityPropertyControlFormRenderer;
 use Concrete\Core\Express\Form\Control\Type\EntityPropertyType;
+use Concrete\Core\Express\Form\Control\View\TextEntityPropertyControlViewRenderer;
 use Concrete\Core\Foundation\Environment;
 
 /**
@@ -34,9 +36,14 @@ class TextControl extends Control
     }
 
 
-    public function getFormRenderer()
+    public function getFormRenderer(BaseEntity $entity = null)
     {
-        return new TextEntityPropertyControlRenderer();
+        return new TextEntityPropertyControlFormRenderer($entity);
+    }
+
+    public function getViewRenderer(BaseEntity $entity)
+    {
+        return new TextEntityPropertyControlViewRenderer($entity);
     }
 
     public function getControlLabel()

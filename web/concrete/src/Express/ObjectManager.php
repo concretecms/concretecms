@@ -37,6 +37,22 @@ class ObjectManager
     }
 
     /**
+     * @return EntityManager
+     */
+    public function getEntityManager()
+    {
+        return $this->entityManager;
+    }
+
+    /**
+     * @param EntityManager $entityManager
+     */
+    public function setEntityManager($entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
+    /**
      * @return mixed
      */
     public function getNamespace()
@@ -90,5 +106,29 @@ class ObjectManager
     {
         $this->entityManager->persist($entity);
         $this->entityManager->flush();
+    }
+
+    protected function getEntityOrName($entityOrName)
+    {
+        if ($entityOrName instanceof Entity) {
+            $entity = $entityOrName;
+        } else {
+            $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity');
+            $entity = $r->findOneByName($entityOrName);
+        }
+        return $entity;
+    }
+
+    public function getList($entityOrName)
+    {
+        $entity = $this->getEntityOrName($entityOrName);
+        return new ObjectList($this, $entity);
+    }
+
+    public function getByID($entityOrName, $id)
+    {
+        $entity = $this->getEntityOrName($entityOrName);
+        $r = $this->entityManager->getRepository($this->getClassName($entity));
+        return $r->findOneById($id);
     }
 }
