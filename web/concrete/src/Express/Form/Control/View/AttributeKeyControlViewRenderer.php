@@ -1,19 +1,23 @@
 <?php
 
-namespace Concrete\Core\Express\Form\Control;
+namespace Concrete\Core\Express\Form\Control\View;
 
-use Concrete\Core\Application\Application;
-use Concrete\Core\Application\ApplicationAwareInterface;
-use Concrete\Core\Entity\Express\Control\Control;
+
+use Concrete\Core\Express\BaseEntity;
+use Concrete\Core\Express\Form\Control\EntityPropertyControlView;
 use Concrete\Core\Express\Form\Control\RendererInterface;
 use Concrete\Core\Express\Form\RendererFactory;
-use Concrete\Core\Foundation\Environment;
-use Doctrine\ORM\EntityManagerInterface;
 
-class AttributeKeyControlRenderer implements RendererInterface
+class AttributeKeyControlViewRenderer implements RendererInterface
 {
 
     protected $factory;
+    protected $entity;
+
+    public function __construct(BaseEntity $entity)
+    {
+        $this->entity = $entity;
+    }
 
     public function build(RendererFactory $factory)
     {
@@ -33,13 +37,13 @@ class AttributeKeyControlRenderer implements RendererInterface
             $template = $this->factory->getApplication()->make('environment')->getPath(
                 DIRNAME_ELEMENTS .
                 '/' . DIRNAME_EXPRESS .
-                '/' . DIRNAME_EXPRESS_FORM_CONTROLS .
+                '/' . DIRNAME_EXPRESS_VIEW_CONTROLS .
                 '/attribute_key.php'
             );
 
-
+            $av = $this->entity->getAttribute($ak->getAttributeKeyHandle());
             $view = new EntityPropertyControlView($this->factory);
-            $view->addScopeItem('key', $ak);
+            $view->addScopeItem('value', $av);
             return $view->render($template);
         }
     }

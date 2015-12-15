@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Entity\Express\Control;
 
+use Concrete\Core\Express\BaseEntity;
 use Concrete\Core\Foundation\Environment;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -104,7 +105,12 @@ abstract class Control implements \JsonSerializable
     /**
      * @return \Concrete\Core\Express\Form\Control\RendererInterface
      */
-    abstract public function getFormRenderer();
+    abstract public function getFormRenderer(BaseEntity $entity = null);
+
+    /**
+     * @return \Concrete\Core\Express\Form\Control\RendererInterface
+     */
+    abstract public function getViewRenderer(BaseEntity $entity);
 
     abstract public function getControlLabel();
 

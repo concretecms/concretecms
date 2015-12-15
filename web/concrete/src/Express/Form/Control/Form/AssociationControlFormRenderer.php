@@ -1,16 +1,12 @@
 <?php
 
-namespace Concrete\Core\Express\Form\Control;
+namespace Concrete\Core\Express\Form\Control\Form;
 
-use Concrete\Core\Application\Application;
-use Concrete\Core\Application\ApplicationAwareInterface;
-use Concrete\Core\Entity\Express\Control\Control;
+use Concrete\Core\Express\Form\Control\EntityPropertyControlView;
 use Concrete\Core\Express\Form\Control\RendererInterface;
 use Concrete\Core\Express\Form\RendererFactory;
-use Concrete\Core\Foundation\Environment;
-use Doctrine\ORM\EntityManagerInterface;
 
-class AssociationControlRenderer implements RendererInterface
+class AssociationControlFormRenderer implements RendererInterface
 {
 
     protected $application;

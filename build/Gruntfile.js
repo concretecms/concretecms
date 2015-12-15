@@ -105,6 +105,7 @@ module.exports = function(grunt) {
                 '<%= DIR_BASE %>/concrete/js/build/core/app/in-context-menu.js',
                 '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-liveupdate/quicksilver.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/remote-marketplace.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/app/search/table.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/search/base.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/progressive-operations.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/custom-style.js',

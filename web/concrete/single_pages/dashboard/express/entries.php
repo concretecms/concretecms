@@ -14,14 +14,42 @@
   </div>
 </div>
 
+<div class="spacer-row-6"></div>
+
+
 <?php
 
-if (count($entries)) { ?>
+if ($list->getTotalResults()) { ?>
 
+<div class="ccm-dashboard-content-full">
 
+  <div class="table-responsive">
+    <table class="ccm-search-results-table" data-table="express-entries">
+      <thead>
+      <tr>
+        <th><span><?=t('First Name')?></span></th>
+        <th><span><?=t('Last Name')?></span></th>
+      </tr>
+      </thead>
+      <tbody>
+      <? foreach($results as $o) { ?>
+        <tr data-search-row-url="<?=URL::to('/dashboard/express/entries', 'view_entry', $entity->getId(), $o->getId())?>">
+        <td><?php echo $o->getFirstName()?></td>
+        <td><?php echo $o->getLastName()?></td>
+        </tr>
+        <?php } ?>
+      </tbody>
+    </table>
+  </div>
+
+</div>
 
 <?php } else { ?>
 
+
     <p><?=t('None created yet.')?></p>
 
+
 <?php } ?>
+
+  </div>

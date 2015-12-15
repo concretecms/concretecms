@@ -3,6 +3,7 @@
 namespace Concrete\Attribute\Textarea;
 
 use Concrete\Core\Attribute\DefaultController;
+use Concrete\Core\Entity\AttributeKey\TextareaAttributeKey;
 use Concrete\Core\Entity\AttributeValue\TextareaAttributeValue;
 use Core;
 use Database;
@@ -17,7 +18,18 @@ class Controller extends DefaultController
 
     public function saveKey($data)
     {
-        $this->attributeKey->setMode($data['akTextareaDisplayMode']);
+        $data += array(
+            'akTextareaDisplayMode' => null,
+        );
+        $akTextareaDisplayMode = $data['akTextareaDisplayMode'];
+        if (!$akTextareaDisplayMode) {
+            $akTextareaDisplayMode = 'text';
+        }
+        $options = array();
+        if ($akTextareaDisplayMode == 'rich_text_custom') {
+            $options = $data['akTextareaDisplayModeCustomOptions'];
+        }
+        $this->setDisplayMode($akTextareaDisplayMode, $options);
     }
 
     public function getDisplaySanitizedValue()
@@ -67,17 +79,23 @@ class Controller extends DefaultController
 
     public function setDisplayMode($akTextareaDisplayMode, $akTextareaDisplayModeCustomOptions = array())
     {
-        $db = Database::connection();
-        $ak = $this->getAttributeKey();
-        $akTextareaDisplayModeCustomOptionsValue = '';
-        if (is_array($akTextareaDisplayModeCustomOptions) && count($akTextareaDisplayModeCustomOptions) > 0) {
-            $akTextareaDisplayModeCustomOptionsValue = serialize($akTextareaDisplayModeCustomOptions);
+        if ($this->attributeKey instanceof TextareaAttributeKey) {
+            $this->attributeKey->setMode($akTextareaDisplayMode);
+        } else {
+
+            //legacy support
+            $db = Database::connection();
+            $ak = $this->getAttributeKey();
+            $akTextareaDisplayModeCustomOptionsValue = '';
+            if (is_array($akTextareaDisplayModeCustomOptions) && count($akTextareaDisplayModeCustomOptions) > 0) {
+                $akTextareaDisplayModeCustomOptionsValue = serialize($akTextareaDisplayModeCustomOptions);
+            }
+            $db->Replace('atTextareaSettings', array(
+                'akID' => $ak->getAttributeKeyID(),
+                'akTextareaDisplayMode' => $akTextareaDisplayMode,
+                'akTextareaDisplayModeCustomOptions' => $akTextareaDisplayModeCustomOptionsValue,
+            ), array('akID'), true);
         }
-        $db->Replace('atTextareaSettings', array(
-            'akID' => $ak->getAttributeKeyID(),
-            'akTextareaDisplayMode' => $akTextareaDisplayMode,
-            'akTextareaDisplayModeCustomOptions' => $akTextareaDisplayModeCustomOptionsValue,
-        ), array('akID'), true);
     }
 
     // should have to delete the at thing

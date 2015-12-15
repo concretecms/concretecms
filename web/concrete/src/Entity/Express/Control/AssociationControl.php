@@ -2,8 +2,9 @@
 
 namespace Concrete\Core\Entity\Express\Control;
 
-use Concrete\Core\Express\Form\Control\AssociationControlRenderer;
-use Concrete\Core\Foundation\Environment;
+use Concrete\Core\Express\Form\Control\Form\AssociationControlFormRenderer;
+use Concrete\Core\Express\Form\Control\View\AssociationControlViewRenderer;
+use Concrete\Core\Express\BaseEntity;
 
 /**
  * @Entity
@@ -34,9 +35,14 @@ class AssociationControl extends Control
     }
 
 
-    public function getFormRenderer()
+    public function getFormRenderer(BaseEntity $entity = null)
     {
-        return new AssociationControlRenderer();
+        return new AssociationControlFormRenderer($entity);
+    }
+
+    public function getViewRenderer(BaseEntity $entity)
+    {
+        return new AssociationControlViewRenderer($entity);
     }
 
     public function getControlLabel()

@@ -6,6 +6,7 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Entity\Express\Control\Control;
 use Concrete\Core\Entity\Express\FieldSet;
 use Concrete\Core\Entity\Express\Form;
+use Concrete\Core\Express\BaseEntity;
 use Concrete\Core\Foundation\Environment;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -72,15 +73,26 @@ class RendererFactory
         $this->entityManager = $entityManager;
     }
 
-    public function getRenderer()
+    public function getViewRenderer(BaseEntity $entity)
     {
-        if (!isset($this->renderer)) {
-            $this->renderer = $this->control->getFormRenderer();
-            if (is_object($this->renderer)) {
-                $this->renderer->build($this);
+        if (!isset($this->viewRenderer)) {
+            $this->viewRenderer = $this->control->getViewRenderer($entity);
+            if (is_object($this->viewRenderer)) {
+                $this->viewRenderer->build($this);
             }
         }
-        return $this->renderer;
+        return $this->viewRenderer;
+    }
+
+    public function getFormRenderer()
+    {
+        if (!isset($this->formRenderer)) {
+            $this->formRenderer = $this->control->getFormRenderer();
+            if (is_object($this->formRenderer)) {
+                $this->formRenderer->build($this);
+            }
+        }
+        return $this->formRenderer;
     }
 
 }
