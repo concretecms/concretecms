@@ -3,6 +3,8 @@ namespace Concrete\Core\Attribute;
 
 use Concrete\Core\Database\Schema\BuilderInterface;
 use Concrete\Core\Entity\AttributeKey\AttributeKey;
+use Concrete\Core\Express\NamingStrategy;
+use Doctrine\ORM\Mapping\Builder\AssociationBuilder;
 use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
 
 class AttributeKeyMappingFieldBuilder implements BuilderInterface
@@ -17,28 +19,20 @@ class AttributeKeyMappingFieldBuilder implements BuilderInterface
 
     public function build(ClassMetadataBuilder $builder)
     {
-        $definition = $this->key->getFieldMappingDefinition();
-        $fields = array();
-        if (isset($definition['type'])) {
-            $fields[] = array(
-                'name' => $this->key->getAttributeKeyHandle(),
-                'type' => $definition['type'],
-                'options' => $definition['options'],
-            );
-        } else {
-            foreach ($definition as $name => $column) {
-                $fields[] = array(
-                    'name' => $this->key->getAttributeKeyHandle() . '_' . $name,
-                    'type' => $column['type'],
-                    'options' => $column['options'],
-                );
-            }
-        }
-
-        foreach($fields as $field) {
-            $builder->addField($field['name'], $field['type'], $field['options']);
-        }
-
+        $class = $this->key->getAttributeValueClass();
+        $namingStrategy = \Core::make('Concrete\Core\Express\NamingStrategy');
+        $associationBuilder = new AssociationBuilder($builder,
+            array(
+                'fieldName'    => $this->key->getAttributeKeyHandle(),
+                'targetEntity' => get_class($class)
+            ),
+            \Doctrine\ORM\Mapping\ClassMetadata::ONE_TO_ONE
+        );
+        $associationBuilder->addJoinColumn(
+            $namingStrategy->joinColumnName($this->key->getAttributeKeyHandle()),
+            'avID'
+        );
+        return $associationBuilder->build();
     }
 
 

@@ -2,6 +2,8 @@
 
 namespace Concrete\Core\Entity\AttributeKey;
 
+use Concrete\Core\Entity\AttributeValue\TextAttributeValue;
+
 
 /**
  * @Entity
@@ -15,9 +17,9 @@ class TextAttributeKey extends AttributeKey
         return 'text';
     }
 
-    public function getFieldMappingDefinition()
+    public function getAttributeValueClass()
     {
-        return array('type' => 'text', 'options' => array('length' => 4294967295, 'default' => null, 'notnull' => false));
+        return new TextAttributeValue();
     }
 
     public function getController()
