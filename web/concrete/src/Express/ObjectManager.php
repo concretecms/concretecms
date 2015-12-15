@@ -7,6 +7,7 @@ use Concrete\Core\Database\EntityManagerFactoryInterface;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\AttributeKey\AttributeKey;
 use Concrete\Core\Entity\AttributeValue\AttributeValue;
+use Concrete\Core\Entity\Express\Association;
 use Concrete\Core\Entity\Express\Form;
 use Concrete\Core\Express\Form\Control\SaveHandler\SaveHandlerInterface;
 use Doctrine\ORM\EntityManager;
@@ -51,10 +52,14 @@ class ObjectManager
         $this->namespace = $namespace;
     }
 
+    public function getClassName(Entity $entity)
+    {
+        return '\\' . $this->getNamespace() . '\\' . $entity->getName();
+    }
 
     public function create(Entity $entity)
     {
-        $class = '\\' . $this->getNamespace() . '\\' . $entity->getName();
+        $class = $this->getClassName($entity);
         $entity = new $class();
         return $entity;
     }
@@ -68,7 +73,7 @@ class ObjectManager
              */
             $saver = $type->getSaveHandler($control);
             if ($saver instanceof SaveHandlerInterface) {
-                $saver->saveFromRequest($this, $entity, $request);
+                $saver->saveFromRequest($this, $control, $entity, $request);
             }
         }
         $this->save($entity);
@@ -79,7 +84,6 @@ class ObjectManager
         $method = camelcase($key->getAttributeKeyHandle());
         $method = "set{$method}";
         $entity->$method($value);
-
     }
 
     public function save(BaseEntity $entity)

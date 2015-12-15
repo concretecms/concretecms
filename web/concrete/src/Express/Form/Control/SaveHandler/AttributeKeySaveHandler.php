@@ -4,6 +4,7 @@ namespace Concrete\Core\Express\Form\Control\SaveHandler;
 
 use Concrete\Core\Entity\AttributeKey\AttributeKey;
 use Concrete\Core\Entity\Express\Control\AttributeKeyControl;
+use Concrete\Core\Entity\Express\Control\Control;
 use Concrete\Core\Express\BaseEntity;
 use Concrete\Core\Express\ObjectManager;
 use Symfony\Component\HttpFoundation\Request;
@@ -11,21 +12,13 @@ use Symfony\Component\HttpFoundation\Request;
 class AttributeKeySaveHandler implements SaveHandlerInterface
 {
 
-    protected $control;
-
-    function __construct(AttributeKeyControl $control)
+    public function saveFromRequest(ObjectManager $manager, Control $control, BaseEntity $entity, Request $request)
     {
-        $this->control = $control;
-    }
-
-
-    public function saveFromRequest(ObjectManager $manager, BaseEntity $entity, Request $request)
-    {
-        $controller = $this->control->getAttributeKey()->getController();
-        $controller->setAttributeKey($this->control->getAttributeKey());
+        $controller = $control->getAttributeKey()->getController();
+        $controller->setAttributeKey($control->getAttributeKey());
         $data = $controller->post();
         $value = $controller->saveForm($data);
-        $manager->setAttribute($entity, $this->control->getAttributeKey(), $value);
+        $manager->setAttribute($entity, $control->getAttributeKey(), $value);
     }
 
 }

@@ -52,8 +52,7 @@ class AttributeKeyType implements TypeInterface {
 
     public function getSaveHandler(Control $control)
     {
-        $handler = new AttributeKeySaveHandler($control);
-        return $handler;
+        return \Core::make('\Concrete\Core\Express\Form\Control\SaveHandler\AttributeKeySaveHandler');
     }
 
 
