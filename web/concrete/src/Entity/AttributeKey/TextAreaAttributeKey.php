@@ -52,9 +52,4 @@ class TextareaAttributeKey extends AttributeKey
         return $controller;
     }
 
-    public function getRequestLoader()
-    {
-        return new TextareaRequestLoader();
-    }
-
 }

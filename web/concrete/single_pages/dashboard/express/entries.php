@@ -12,3 +12,16 @@
   <a class="btn btn-primary" href="<?=URL::to('/dashboard/express/create', $entity->getId())?>"><i class="fa fa-plus"></i> <?=t('New %s', $entity->getName())?></a>
   <a class="btn btn-default"  href="<?=URL::to('/dashboard/express/entities', 'view_entity', $entity->getId())?>"><i class="fa fa-cog"></i> <?=t('Settings')?></a>
   </div>
+</div>
+
+<?php
+
+if (count($entries)) { ?>
+
+
+
+<?php } else { ?>
+
+    <p><?=t('None created yet.')?></p>
+
+<?php } ?>
