@@ -29,14 +29,21 @@ class SchemaManager
         $this->tool = new SchemaTool($this->entityManager);
     }
 
+    public function getCreateSql(Entity $entity)
+    {
+        $metadata = $this->entityManager->getClassMetadata($this->factory->getClassName($entity));
+        return $this->tool->getCreateSchemaSql(array($metadata));
+    }
+
     public function synchronizeDatabase(Entity $entity)
     {
         $metadata = $this->entityManager->getClassMetadata($this->factory->getClassName($entity));
         $connection = $this->entityManager->getConnection();
         $manager = $connection->getSchemaManager();
-        $tool = new \Doctrine\ORM\Tools\SchemaTool($this->entityManager);
+        $tool = new \Doctrine\ORM\Tools\SchemaTool(\ORM::entityManager());
         $comparator = new \Doctrine\DBAL\Schema\Comparator();
         $fromSchema = $manager->createSchema();
+
         $newSchema = $tool->getSchemaFromMetadata(array($metadata));
         $newTables = array();
         $changedTables = array();

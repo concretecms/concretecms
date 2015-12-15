@@ -59,9 +59,11 @@ class DoctrineMappingDriver implements MappingDriver
         }
         /** @var $entity \Concrete\Core\Entity\Express\Entity */
         $entity = $this->classCache[$className];
-        $populator = new MetadataPopulator($metadata, $entity);
-        $populator->setTablePrefix($this->application['config']->get('express.database.table_prefix'));
-        $populator->populate();
+        if ($entity) {
+            $populator = new MetadataPopulator($metadata, $entity);
+            $populator->setTablePrefix($this->application['config']->get('express.database.table_prefix'));
+            $populator->populate();
+        }
     }
 
 

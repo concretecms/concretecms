@@ -44,6 +44,9 @@ class NamingStrategy implements \Doctrine\ORM\Mapping\NamingStrategy
     {
         if (strpos($className, '\\') !== false) {
             $name = substr($className, strrpos($className, '\\') + 1);
+            if (!strpos($className, 'Concrete\\Express')) {
+                return $name;
+            }
         } else {
             $name = $className;
         }

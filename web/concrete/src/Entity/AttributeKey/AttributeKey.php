@@ -165,7 +165,7 @@ abstract class AttributeKey implements AttributeKeyInterface
     /**
      * @return
      */
-    abstract public function getFieldMappingDefinition();
+    abstract public function getAttributeValueClass();
 
     abstract public function getController();
 

@@ -48,7 +48,6 @@ class DoctrineMappingDriverTest extends PHPUnit_Framework_TestCase
 
         $names = $metadata1->getColumnNames();
         $this->assertContains('id', $names);
-        $this->assertContains('first_name', $names);
     }
 
 }
