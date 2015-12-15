@@ -3,6 +3,7 @@
 namespace Concrete\Attribute\Textarea;
 
 use Concrete\Core\Attribute\DefaultController;
+use Concrete\Core\Entity\AttributeValue\TextareaAttributeValue;
 use Core;
 use Database;
 
@@ -90,13 +91,6 @@ class Controller extends DefaultController
         ), array('akID'), true);
     }
 
-    /*
-    public function saveForm($data)
-    {
-        $this->saveValue($data['value']);
-    }
-    */
-
     // should have to delete the at thing
     public function deleteKey()
     {
@@ -133,6 +127,13 @@ class Controller extends DefaultController
         $akey->addChild('type')->addAttribute('mode', $this->akTextareaDisplayMode);
 
         return $akey;
+    }
+
+    public function saveValue($value)
+    {
+        $av = new TextareaAttributeValue();
+        $av->setValue($value);
+        return $av;
     }
 
     public function importKey($akey)

@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Controller\SinglePage\Dashboard\Express;
 
+use Concrete\Core\Express\Form\Saver;
 use Concrete\Core\Express\Form\Validator;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 
@@ -31,8 +32,8 @@ class Create extends DashboardPageController
             $validator->validate($form);
             if (!$this->error->has()) {
                 $express = \Core::make('express');
-                $entity = $express->create($this->get('entity')->getName());
-                $express->save($entity);
+                $entity = $express->create($this->get('entity'));
+                $express->saveFromRequest($form, $entity, $this->request);
 
                 $this->flash('success', t('%s added successfully.', $this->get('entity')->getName()));
                 $this->redirect('/dashboard/express/entries', $this->get('entity')->getId());

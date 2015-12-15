@@ -50,6 +50,7 @@ class AssociationControlRenderer implements RendererInterface
         $entities = $repository->findAll();
         $view = new EntityPropertyControlView($this->factory);
         $view->addScopeItem('entities', $entities);
+        $view->addScopeItem('control', $this->factory->getControl());
         return $view->render($template);
     }
 

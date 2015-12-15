@@ -20,7 +20,7 @@ class TextareaAttributeKey extends AttributeKey
         return 'textarea';
     }
 
-    public function getAttributeValueClass()
+    public function getAttributeValue()
     {
         return new TextareaAttributeValue();
     }
@@ -48,7 +48,8 @@ class TextareaAttributeKey extends AttributeKey
 
     public function getController()
     {
-        return new \Concrete\Attribute\Textarea\Controller($this->getAttributeType());
+        $controller = new \Concrete\Attribute\Textarea\Controller($this->getAttributeType());
+        return $controller;
     }
 
     public function getRequestLoader()

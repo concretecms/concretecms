@@ -48,5 +48,4 @@ class AttributeKeyControl extends Control
         return 'attribute_key';
     }
 
-
 }
