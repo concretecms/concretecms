@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Attribute;
 
+use Concrete\Core\Entity\AttributeValue\TextAttributeValue;
 use Core;
 use Database;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
@@ -55,13 +56,14 @@ class DefaultController extends AttributeTypeController
     // run when we call setAttribute(), instead of saving through the UI
     public function saveValue($value)
     {
-        $db = Database::get();
-        $db->Replace('atDefault', array('avID' => $this->getAttributeValueID(), 'value' => $value), 'avID', true);
+        $av = new TextAttributeValue();
+        $av->setValue($value);
+        return $av;
     }
 
     public function saveForm($data)
     {
-        $this->saveValue(isset($data['value']) ? $data['value'] : null);
+        return $this->saveValue(isset($data['value']) ? $data['value'] : null);
     }
 
     public function deleteKey()

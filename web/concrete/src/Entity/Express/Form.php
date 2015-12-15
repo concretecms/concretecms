@@ -103,6 +103,17 @@ class Form
     }
 
 
+    public function getControls()
+    {
+        $controls = array();
+        foreach($this->getFieldSets() as $set) {
+            foreach($set->getControls() as $control) {
+                $controls[] = $control;
+            }
+        }
+        return $controls;
+    }
+
 
 
 

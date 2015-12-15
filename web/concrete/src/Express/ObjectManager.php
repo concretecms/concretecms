@@ -5,9 +5,15 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Cache\Adapter\DoctrineCacheDriver;
 use Concrete\Core\Database\EntityManagerFactoryInterface;
 use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Entity\AttributeKey\AttributeKey;
+use Concrete\Core\Entity\AttributeValue\AttributeValue;
+use Concrete\Core\Entity\Express\Form;
+use Concrete\Core\Express\Form\Control\SaveHandler\SaveHandlerInterface;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
+use Concrete\Core\Entity\Express\Entity;
 use Config;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class EntityManagerFactory
@@ -46,16 +52,34 @@ class ObjectManager
     }
 
 
-    public function create($entityName)
+    public function create(Entity $entity)
     {
-        $class = '\\' . $this->getNamespace() . '\\' . $entityName;
+        $class = '\\' . $this->getNamespace() . '\\' . $entity->getName();
         $entity = new $class();
         return $entity;
     }
 
-    public function set(BaseEntity $entity, $field, $value)
+    public function saveFromRequest(Form $form, BaseEntity $entity, Request $request)
     {
-        $entity->setProperty($field, $value);
+        foreach($form->getControls() as $control) {
+            $type = $control->getControlType();
+            /**
+             * @var $type \Concrete\Core\Express\Form\Control\Type\TypeInterface
+             */
+            $saver = $type->getSaveHandler($control);
+            if ($saver instanceof SaveHandlerInterface) {
+                $saver->saveFromRequest($this, $entity, $request);
+            }
+        }
+        $this->save($entity);
+    }
+
+    public function setAttribute(BaseEntity $entity, AttributeKey $key, AttributeValue $value)
+    {
+        $method = camelcase($key->getAttributeKeyHandle());
+        $method = "set{$method}";
+        $entity->$method($value);
+
     }
 
     public function save(BaseEntity $entity)

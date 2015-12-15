@@ -2,7 +2,6 @@
 
 namespace Concrete\Core\Entity\AttributeValue;
 
-
 /**
  * @Entity
  * @Table(name="TextareaAttributeValues")
@@ -29,6 +28,11 @@ class TextareaAttributeValue extends AttributeValue
     public function setValue($value)
     {
         $this->value = $value;
+    }
+
+    public function __toString()
+    {
+        return $this->getValue();
     }
 
 

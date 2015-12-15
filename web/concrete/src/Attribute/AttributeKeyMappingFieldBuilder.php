@@ -19,7 +19,7 @@ class AttributeKeyMappingFieldBuilder implements BuilderInterface
 
     public function build(ClassMetadataBuilder $builder)
     {
-        $class = $this->key->getAttributeValueClass();
+        $class = $this->key->getAttributeValue();
         $namingStrategy = \Core::make('Concrete\Core\Express\NamingStrategy');
         $associationBuilder = new AssociationBuilder($builder,
             array(
@@ -28,6 +28,7 @@ class AttributeKeyMappingFieldBuilder implements BuilderInterface
             ),
             \Doctrine\ORM\Mapping\ClassMetadata::ONE_TO_ONE
         );
+        $associationBuilder->cascadeAll();
         $associationBuilder->addJoinColumn(
             $namingStrategy->joinColumnName($this->key->getAttributeKeyHandle()),
             'avID'

@@ -130,5 +130,4 @@ abstract class Control implements \JsonSerializable
         return $manager->driver($this->getType());
     }
 
-
 }

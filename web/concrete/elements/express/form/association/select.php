@@ -4,9 +4,10 @@
     <label><?=$label?></label>
     <?php
     if (count($entities)) { ?>
-        <select name="form-control">
+        <select class="form-control" name="form-control">
+            <option value=""><?=t('** Choose %s', $control->getControlLabel())?></option>
         <?php foreach($entities as $entity) { ?>
-            <option value="<?=$entity->getId()?>"><?=$entity->getDisplayName()?></option>
+            <option value="<?=$entity->getId()?>"><?=$entity->getFirstName()?> <?=$entity->getlastName()?></option>
         <? } ?>
         </select>
     <?php } else { ?>

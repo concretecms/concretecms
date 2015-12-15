@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Express\Form\Control\Type;
 
+use Concrete\Core\Entity\Express\Control\Control;
 use Concrete\Core\Entity\Express\Control\EntityNameControl;
 use Concrete\Core\Entity\Express\Control\TextControl;
 use Concrete\Core\Entity\Express\Entity;
@@ -37,5 +38,12 @@ class EntityPropertyType implements TypeInterface {
                 return new TextControl();
         }
     }
+
+    public function getSaveHandler(Control $control)
+    {
+        return null;
+    }
+
+
 
 }

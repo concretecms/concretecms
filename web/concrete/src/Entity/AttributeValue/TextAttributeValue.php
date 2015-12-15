@@ -31,4 +31,9 @@ class TextAttributeValue extends AttributeValue
         $this->value = $value;
     }
 
+    public function __toString()
+    {
+        return $this->getValue();
+    }
+
 }

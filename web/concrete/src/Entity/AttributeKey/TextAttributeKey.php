@@ -17,14 +17,15 @@ class TextAttributeKey extends AttributeKey
         return 'text';
     }
 
-    public function getAttributeValueClass()
+    public function getAttributeValue()
     {
         return new TextAttributeValue();
     }
 
     public function getController()
     {
-        return new \Concrete\Attribute\Text\Controller($this->getAttributeType());
+        $controller = new \Concrete\Attribute\Text\Controller($this->getAttributeType());
+        return $controller;
     }
 
 }
