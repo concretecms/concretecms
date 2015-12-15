@@ -4,7 +4,7 @@
     <label><?=$label?></label>
     <?php
     if (count($entities)) { ?>
-        <select class="form-control" name="form-control">
+        <select class="form-control" name="express_association_<?=$control->getId()?>">
             <option value=""><?=t('** Choose %s', $control->getControlLabel())?></option>
         <?php foreach($entities as $entity) { ?>
             <option value="<?=$entity->getId()?>"><?=$entity->getFirstName()?> <?=$entity->getlastName()?></option>

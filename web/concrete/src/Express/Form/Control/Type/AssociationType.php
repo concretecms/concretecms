@@ -5,6 +5,7 @@ namespace Concrete\Core\Express\Form\Control\Type;
 use Concrete\Core\Entity\Express\Control\AssociationControl;
 use Concrete\Core\Entity\Express\Control\Control;
 use Concrete\Core\Entity\Express\Entity;
+use Concrete\Core\Express\Form\Control\SaveHandler\AssociationSaveHandler;
 use Concrete\Core\Express\Form\Control\Type\Item\AssociationItem;
 use Doctrine\ORM\EntityManager;
 
@@ -50,8 +51,7 @@ class AssociationType implements TypeInterface {
 
     public function getSaveHandler(Control $control)
     {
-//        $handler = new AttributeKeySaveHandler($control);
-  //      return $handler;
+        return \Core::make('\Concrete\Core\Express\Form\Control\SaveHandler\AssociationSaveHandler');
     }
 
 
