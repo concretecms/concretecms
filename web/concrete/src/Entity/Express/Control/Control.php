@@ -2,8 +2,10 @@
 
 namespace Concrete\Core\Entity\Express\Control;
 
+use Concrete\Controller\Element\Dashboard\Express\Control\Options;
 use Concrete\Core\Express\BaseEntity;
 use Concrete\Core\Express\Form\Control\Type\Options\OptionsRenderer;
+use Concrete\Core\Express\Form\Control\Type\SaveHandler\ControlSaveHandler;
 use Concrete\Core\Foundation\Environment;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -118,12 +120,14 @@ abstract class Control implements \JsonSerializable
      */
     abstract public function getViewRenderer(BaseEntity $entity);
 
-    /**
-     * @return \Concrete\Core\Express\Form\Control\RendererInterface
-     */
-    public function getOptionsRenderer()
+    public function getControlOptionsController()
     {
-        return new OptionsRenderer();
+        return new Options($this);
+    }
+
+    public function getControlSaveHandler()
+    {
+        return new ControlSaveHandler();
     }
 
     abstract public function getControlLabel();

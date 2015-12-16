@@ -141,7 +141,7 @@ class Forms extends DashboardPageController
         }
     }
 
-    public function update_control($controlID = null)
+    public function edit_control($controlID = null)
     {
         $control = $this->controlRepository->findOneById($controlID);
         if ($control) {
@@ -151,6 +151,21 @@ class Forms extends DashboardPageController
             $this->set('control', $control);
             $this->setThemeViewTemplate('dialog.php');
             $this->render('/dashboard/express/entities/forms/edit_control');
+        }
+    }
+
+
+    public function save_control($controlID = null)
+    {
+        $control = $this->controlRepository->findOneById($controlID);
+        if ($control) {
+            $saver = $control->getControlSaveHandler();
+            $control = $saver->saveFromRequest($control, $this->request);
+            $this->entityManager->persist($control);
+            $this->entityManager->flush();
+            $element = new \Concrete\Controller\Element\Dashboard\Express\Control($control);
+            print $element->render();
+            exit;
         }
     }
 

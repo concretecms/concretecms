@@ -40,11 +40,15 @@ class AssociationControlViewRenderer implements RendererInterface
         /**
          * @var $association \Concrete\Core\Entity\Express\Association
          */
+        $entities = array();
         $entity = $this->entity->get($association->getComputedTargetPropertyName());
-
+        if (is_object($entity)) {
+            $entity[] = $entity;
+        }
         $view = new EntityPropertyControlView($this->factory);
-        $view->addScopeItem('entities', array($entity));
+        $view->addScopeItem('entities', $entities);
         $view->addScopeItem('control', $this->factory->getControl());
+        $view->addScopeItem('formatter', $association->getFormatter());
         return $view->render($template);
     }
 

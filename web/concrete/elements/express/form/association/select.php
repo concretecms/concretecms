@@ -7,7 +7,7 @@
         <select class="form-control" name="express_association_<?=$control->getId()?>">
             <option value=""><?=t('** Choose %s', $control->getControlLabel())?></option>
         <?php foreach($entities as $entity) { ?>
-            <option value="<?=$entity->getId()?>"><?=$entity->getFirstName()?> <?=$entity->getlastName()?></option>
+            <option value="<?=$entity->getId()?>"><?=$formatter->getEntityDisplayName($control, $entity)?></option>
         <? } ?>
         </select>
     <?php } else { ?>

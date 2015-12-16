@@ -1,9 +1,9 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<form action="<?=$view->action('save_control')?>" method="post">
+<form data-form="edit-control" data-form-control="<?=$control->getID()?>" action="<?=$view->action('save_control', $control->getID())?>" method="post">
 
     <?php
-        $options = new \Concrete\Controller\Element\Dashboard\Express\Control\Options($control);
+        $options = $control->getControlOptionsController();
         if ($options->elementExists()) {
             print $options->render();
         }
@@ -25,6 +25,26 @@
     <?=Loader::helper('validation/token')->output('save_control')?>
 </form>
 <div class="dialog-buttons">
-    <button class="btn btn-default" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
-    <button class="btn btn-primary pull-right"><?=t('Save')?></button>
+    <button class="btn btn-default pull-left" data-dialog-action="cancel"><?=t('Cancel')?></button>
+    <button type="button" data-action="submit-edit-control" class="btn btn-primary pull-right"><?=t('Save')?></button>
 </div>
+
+<script type="text/javascript">
+    $(function() {
+        $('form[data-form=edit-control]').each(function() {
+            var controlID = $(this).attr('data-form-control');
+            $(this).concreteAjaxForm({
+                'dataType': 'html',
+                success: function(r) {
+                    var control = $('tr[data-field-set-control=' + controlID + ']');
+                    control.replaceWith(r);
+                    $('.dialog-launch').dialog();
+                    jQuery.fn.dialog.closeTop();
+                }
+            });
+        });
+        $('button[data-action=submit-edit-control]').on('click', function() {
+            $('form[data-form=edit-control]').trigger('submit');
+        });
+    });
+</script>

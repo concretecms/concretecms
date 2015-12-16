@@ -7,7 +7,7 @@
     <?php
     if (count($entities)) { ?>
         <?php foreach($entities as $entity) { ?>
-            <div><?=$entity->getFirstName()?> <?=$entity->getlastName()?></div>
+            <div><?=$formatter->getEntityDisplayName($control, $entity)?></div>
         <? } ?>
     <?php } ?>
 </div>

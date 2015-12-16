@@ -51,6 +51,10 @@ $(function() {
                 jQuery.fn.dialog.closeTop();
                 $('div[data-field-set=<?=$set->getID()?>] tbody').append(html);
                 $('a.dialog-launch').dialog();
+
+               // pop open the latest control so we can edit its options immediately
+               $('div[data-field-set=<?=$set->getID()?>] tr[data-field-set-control]:last-child a[data-command=edit-control]∫').trigger('click');
+
            }
        });
    });

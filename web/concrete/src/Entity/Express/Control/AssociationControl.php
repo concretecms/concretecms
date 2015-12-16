@@ -3,6 +3,7 @@
 namespace Concrete\Core\Entity\Express\Control;
 
 use Concrete\Core\Express\Form\Control\Form\AssociationControlFormRenderer;
+use Concrete\Core\Express\Form\Control\Type\SaveHandler\AssociationControlSaveHandler;
 use Concrete\Core\Express\Form\Control\View\AssociationControlViewRenderer;
 use Concrete\Core\Express\BaseEntity;
 
@@ -17,6 +18,27 @@ class AssociationControl extends Control
      * @ManyToOne(targetEntity="\Concrete\Core\Entity\Express\Association", inversedBy="controls")
      */
     protected $association;
+
+    /**
+     * @Column(type="string", nullable=true)
+     */
+    protected $association_entity_label_mask;
+
+    /**
+     * @return mixed
+     */
+    public function getAssociationEntityLabelMask()
+    {
+        return $this->association_entity_label_mask;
+    }
+
+    /**
+     * @param mixed $association_entity_label_mask
+     */
+    public function setAssociationEntityLabelMask($association_entity_label_mask)
+    {
+        $this->association_entity_label_mask = $association_entity_label_mask;
+    }
 
     /**
      * @return mixed
@@ -43,6 +65,11 @@ class AssociationControl extends Control
     public function getViewRenderer(BaseEntity $entity)
     {
         return new AssociationControlViewRenderer($entity);
+    }
+
+    public function getControlSaveHandler()
+    {
+        return new AssociationControlSaveHandler();
     }
 
     public function getControlLabel()
