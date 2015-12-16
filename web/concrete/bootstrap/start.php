@@ -100,6 +100,10 @@ if (!$cms->bound('config')) {
 
 $config = $cms->make('config');
 
+if ($config->get('concrete.debug.picky')) {
+    error_reporting(-1);
+}
+
 /*
  * ----------------------------------------------------------------------------
  * Finalize paths.
