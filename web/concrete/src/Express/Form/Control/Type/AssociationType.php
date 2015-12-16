@@ -13,6 +13,16 @@ class AssociationType implements TypeInterface {
 
     protected $entityManager;
 
+    public function getType()
+    {
+        return 'association';
+    }
+
+    public function supportsValidation()
+    {
+        return false;
+    }
+
     public function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;

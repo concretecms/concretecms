@@ -3,6 +3,7 @@
 namespace Concrete\Core\Entity\Express\Control;
 
 use Concrete\Core\Express\BaseEntity;
+use Concrete\Core\Express\Form\Control\Type\Options\OptionsRenderer;
 use Concrete\Core\Foundation\Environment;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -20,6 +21,11 @@ abstract class Control implements \JsonSerializable
      * @GeneratedValue(strategy="AUTO")
      */
     protected $id;
+
+    /**
+     * @Column(type="boolean")
+     */
+    protected $is_required = false;
 
     /**
      * @Column(type="integer")
@@ -112,6 +118,14 @@ abstract class Control implements \JsonSerializable
      */
     abstract public function getViewRenderer(BaseEntity $entity);
 
+    /**
+     * @return \Concrete\Core\Express\Form\Control\RendererInterface
+     */
+    public function getOptionsRenderer()
+    {
+        return new OptionsRenderer();
+    }
+
     abstract public function getControlLabel();
 
     abstract public function getType();
@@ -121,6 +135,22 @@ abstract class Control implements \JsonSerializable
         return [
             'id' => $this->getId()
         ];
+    }
+
+    /**
+     * @return mixed
+     */
+    public function isRequired()
+    {
+        return $this->is_required;
+    }
+
+    /**
+     * @param mixed $is_required
+     */
+    public function setIsRequired($is_required)
+    {
+        $this->is_required = $is_required;
     }
 
     public function getDisplayLabel()

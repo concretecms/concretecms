@@ -16,6 +16,16 @@ class EntityPropertyType implements TypeInterface {
         return t('Core Properties');
     }
 
+    public function getType()
+    {
+        return 'entity_property';
+    }
+
+    public function supportsValidation()
+    {
+        return false;
+    }
+
     public function getDisplayName()
     {
         return t('Core Property');
@@ -24,7 +34,6 @@ class EntityPropertyType implements TypeInterface {
     public function getItems(Entity $entity)
     {
         return array(
-            new NameEntityPropertyItem(),
             new TextEntityPropertyItem()
         );
     }
@@ -32,8 +41,6 @@ class EntityPropertyType implements TypeInterface {
     public function createControlByIdentifier($id)
     {
         switch($id) {
-            case 'name':
-                return new EntityNameControl();
             case 'text':
                 return new TextControl();
         }

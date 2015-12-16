@@ -141,6 +141,18 @@ class Forms extends DashboardPageController
         }
     }
 
+    public function update_control($controlID = null)
+    {
+        $control = $this->controlRepository->findOneById($controlID);
+        if ($control) {
+            $manager = \Core::make('express.control.type.manager');
+            $type = $manager->driver($control->getType());
+            $this->set('type', $type);
+            $this->set('control', $control);
+            $this->setThemeViewTemplate('dialog.php');
+            $this->render('/dashboard/express/entities/forms/edit_control');
+        }
+    }
 
     public function add_control($id = null)
     {

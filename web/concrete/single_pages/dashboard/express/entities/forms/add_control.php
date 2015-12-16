@@ -17,6 +17,7 @@
                        data-item-id="<?=$item->getItemIdentifier()?>">
                         <?=$item->getIcon()?> <?=$item->getDisplayName()?>
                     </a>
+
                 </li>
 
             <? } ?>
