@@ -346,13 +346,13 @@ class BlockView extends AbstractView
         return $base;
     }
 
-    public function inc($file, $args = array())
+    public function inc($fileToInclude, $args = array())
     {
         extract($args);
         extract($this->getScopeItems());
         $env = Environment::get();
         include $env->getPath(
-            DIRNAME_BLOCKS . '/' . $this->blockType->getBlockTypeHandle() . '/' . $file,
+            DIRNAME_BLOCKS . '/' . $this->blockType->getBlockTypeHandle() . '/' . $fileToInclude,
             $this->blockTypePkgHandle
         );
     }
