@@ -8,6 +8,8 @@ use Concrete\Core\Entity\Express\Entity;
 interface TypeInterface
 {
 
+    public function getType();
+    public function supportsValidation();
     public function getPluralDisplayName();
     public function getDisplayName();
     public function getItems(Entity $entity);

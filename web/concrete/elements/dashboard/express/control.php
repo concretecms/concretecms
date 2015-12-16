@@ -20,7 +20,7 @@ $c = Page::getCurrentPage();
 	<td>
 		<ul class="ccm-item-set-controls">
 			<li><a href="#" data-command="move-control" style="cursor: move"><i class="fa fa-arrows"></i></a></li>
-			<li><a href="#" data-dialog="update-control-<?=$control->getId()?>" data-dialog-title="<?=t('Update Control')?>"><i class="fa fa-pencil"></i></a></li>
+			<li><a href="<?=URL::to('/dashboard/express/entities/forms', 'update_control', $control->getId())?>" dialog-height="auto" dialog-width="600" dialog-title="<?=t('Update Control')?>" class="dialog-launch"><i class="fa fa-pencil"></i></a></li>
 			<li><a href="#" data-dialog="delete-set-control-<?=$control->getId()?>" data-dialog-title="<?=t('Delete Control')?>"><i class="fa fa-trash-o"></i></a></li>
 		</ul>
 

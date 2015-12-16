@@ -14,6 +14,16 @@ class AttributeKeyType implements TypeInterface {
 
     protected $entityManager;
 
+    public function supportsValidation()
+    {
+        return false;
+    }
+
+    public function getType()
+    {
+        return 'attribute_key';
+    }
+
     public function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;

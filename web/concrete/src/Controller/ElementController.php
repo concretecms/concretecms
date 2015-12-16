@@ -48,4 +48,11 @@ abstract class ElementController extends AbstractController
         return $this->getViewObject()->render();
     }
 
+    public function elementExists()
+    {
+        $env = \Environment::get();
+        $r = $env->getRecord(DIRNAME_ELEMENTS . '/' . $this->getElement() . '.php', $this->getPackageHandle());
+        return $r->exists();
+    }
+
 }
