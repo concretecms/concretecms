@@ -5,7 +5,7 @@
     <?php
     if (count($entities)) {
         foreach($entities as $entity) { ?>
-            <label><input type="checkbox" value="<?=$entity->getId()?>"> <?=$entity->getDisplayName()?></label>
+            <label><input type="checkbox" value="<?=$entity->getId()?>"> <?=$formatter->getEntityDisplayName($control, $entity)?></label>
         <? } ?>
     <? } else { ?>
         <p><?=t('None found.')?></p>

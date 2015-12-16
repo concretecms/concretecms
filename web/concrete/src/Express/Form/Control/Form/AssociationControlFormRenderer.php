@@ -39,7 +39,7 @@ class AssociationControlFormRenderer implements RendererInterface
             '/' . DIRNAME_EXPRESS_FORM_CONTROLS_ASSOCIATION .
             '/' . $this->getFormFieldElement() . '.php'
         );
-
+        $association = $this->factory->getControl()->getAssociation();
         $name = $this->factory->getControl()->getAssociation()->getTargetEntity()->getName();
         $className = '\\' . $this->application['config']->get('express.entity_classes.namespace') . '\\' . $name;
         $repository = $this->factory->getEntityManager()->getRepository($className);
@@ -47,6 +47,7 @@ class AssociationControlFormRenderer implements RendererInterface
         $view = new EntityPropertyControlView($this->factory);
         $view->addScopeItem('entities', $entities);
         $view->addScopeItem('control', $this->factory->getControl());
+        $view->addScopeItem('formatter', $association->getFormatter());
         return $view->render($template);
     }
 
