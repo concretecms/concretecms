@@ -6,10 +6,12 @@ use Concrete\Core\Attribute\AttributeKeyFactory;
 use Concrete\Core\Attribute\EntityInterface;
 use Concrete\Core\Attribute\Key\Factory;
 use Concrete\Core\Attribute\Type;
+use Concrete\Core\Entity\Attribute\Category;
 use Concrete\Core\Entity\AttributeKey\AttributeKey;
 use Concrete\Core\Entity\Express\Attribute;
 use Concrete\Core\Entity\Express\Entity;
 use Doctrine\ORM\EntityManager;
+use Concrete\Core\Entity\Attribute\Type as AttributeType;
 use Symfony\Component\HttpFoundation\Request;
 
 abstract class AbstractCategory implements CategoryInterface
@@ -17,6 +19,7 @@ abstract class AbstractCategory implements CategoryInterface
 
     protected $entityManager;
     protected $entity;
+    protected $categoryEntity;
     protected $attributeKeyFactory;
 
     public function __construct(AttributeKeyFactory $attributeKeyFactory, EntityManager $entityManager)
@@ -40,6 +43,21 @@ abstract class AbstractCategory implements CategoryInterface
         return $key;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getCategoryEntity()
+    {
+        return $this->categoryEntity;
+    }
+
+    /**
+     * @param mixed $categoryEntity
+     */
+    public function setCategoryEntity(Category $categoryEntity)
+    {
+        $this->categoryEntity = $categoryEntity;
+    }
 
     public function setEntity(EntityInterface $entity)
     {
@@ -52,6 +70,18 @@ abstract class AbstractCategory implements CategoryInterface
     public function getEntity()
     {
         return $this->entity;
+    }
+
+    public function delete(AttributeKey $key)
+    {
+        $this->entityManager->remove($key);
+    }
+
+    public function associateAttributeKeyType(AttributeType $type)
+    {
+        $this->getCategoryEntity()->getAttributeTypes()->add($type);
+        $this->entityManager->persist($this->getCategoryEntity());
+        $this->entityManager->flush();
     }
 
 }

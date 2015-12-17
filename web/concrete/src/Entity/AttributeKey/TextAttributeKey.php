@@ -22,7 +22,7 @@ class TextAttributeKey extends AttributeKey
         return new TextAttributeValue();
     }
 
-    public function getController()
+    public function createController()
     {
         $controller = new \Concrete\Attribute\Text\Controller($this->getAttributeType());
         return $controller;

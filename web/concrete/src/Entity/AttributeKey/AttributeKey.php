@@ -167,9 +167,16 @@ abstract class AttributeKey implements AttributeKeyInterface
      */
     abstract public function getAttributeValue();
 
-    abstract public function getController();
+    abstract public function createController();
 
     abstract public function getTypeHandle();
+
+    public function getController()
+    {
+        $controller = $this->createController();
+        $controller->setAttributeKey($this);
+        return $controller;
+    }
 
     /**
      * @deprecated

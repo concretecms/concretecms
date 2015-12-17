@@ -16,6 +16,7 @@ class AttributeServiceProvider extends ServiceProvider
 			$factory->bind('textarea', 'Concrete\Core\Entity\AttributeKey\TextareaAttributeKey');
 			return $factory;
 		});
+
 	}
 
 }

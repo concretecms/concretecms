@@ -11,6 +11,7 @@ class Entities extends DashboardPageController
 
     public function add()
     {
+        $this->set('pageTitle', t('Add Data Object'));
         if ($this->request->isMethod('POST')) {
             if (!$this->token->validate('add_entity')) {
                 $this->error->add($this->token->getErrorMessage());

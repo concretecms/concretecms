@@ -18,7 +18,7 @@ class AssociationType implements TypeInterface {
         return 'association';
     }
 
-    public function supportsValidation()
+    public function getValidator()
     {
         return false;
     }

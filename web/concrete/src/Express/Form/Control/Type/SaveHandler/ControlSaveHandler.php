@@ -11,6 +11,7 @@ class ControlSaveHandler implements SaveHandlerInterface
 
     public function saveFromRequest(Control $control, Request $request)
     {
+        $control->setIsRequired((bool) $request->request("isRequired"));
         $control->setCustomLabel($request->request("customLabel"));
         return $control;
     }

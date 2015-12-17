@@ -14,7 +14,7 @@
         <?=$form->text('customLabel', $control->getCustomLabel())?>
     </div>
 
-    <? if ($type->supportsValidation()) { ?>
+    <? if (is_object($type->getValidator())) { ?>
         <div class="form-group">
             <?=$form->label('isRequired', t('Required'))?>
             <div class="checkbox">
@@ -38,7 +38,6 @@
                 success: function(r) {
                     var control = $('tr[data-field-set-control=' + controlID + ']');
                     control.replaceWith(r);
-                    $('.dialog-launch').dialog();
                     jQuery.fn.dialog.closeTop();
                 }
             });

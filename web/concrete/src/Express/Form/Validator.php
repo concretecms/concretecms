@@ -24,6 +24,18 @@ class Validator
         if (!$token->validate('express_form', $this->request->request->get('ccm_token'))) {
             $this->error->add($token->getErrorMessage());
         }
+        foreach($form->getControls() as $control) {
+            if ($control->isRequired()) {
+                $type = $control->getControlType();
+                $validator = $type->getValidator($control);
+                if (is_object($validator)) {
+                    $e = $validator->validateRequest($control, $this->request);
+                    if (is_object($e) && $e->has()) {
+                        $this->error->add($e);
+                    }
+                }
+            }
+        }
     }
 
 

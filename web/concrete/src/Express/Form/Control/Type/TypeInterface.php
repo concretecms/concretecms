@@ -9,8 +9,8 @@ interface TypeInterface
 {
 
     public function getType();
-    public function supportsValidation();
     public function getPluralDisplayName();
+    public function getValidator();
     public function getDisplayName();
     public function getItems(Entity $entity);
     public function createControlByIdentifier($id);

@@ -8,16 +8,12 @@ use Concrete\Core\Entity\Express\Control\Control;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Express\Form\Control\SaveHandler\AttributeKeySaveHandler;
 use Concrete\Core\Express\Form\Control\Type\Item\AttributeKeyItem;
+use Concrete\Core\Express\Form\Control\Validator\AttributeKeyControlValidator;
 use Doctrine\ORM\EntityManager;
 
 class AttributeKeyType implements TypeInterface {
 
     protected $entityManager;
-
-    public function supportsValidation()
-    {
-        return false;
-    }
 
     public function getType()
     {
@@ -27,6 +23,11 @@ class AttributeKeyType implements TypeInterface {
     public function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
+    }
+
+    public function getValidator()
+    {
+        return new AttributeKeyControlValidator();
     }
 
     public function getPluralDisplayName()
