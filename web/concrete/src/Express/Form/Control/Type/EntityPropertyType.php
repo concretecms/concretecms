@@ -21,7 +21,7 @@ class EntityPropertyType implements TypeInterface {
         return 'entity_property';
     }
 
-    public function supportsValidation()
+    public function getValidator()
     {
         return false;
     }

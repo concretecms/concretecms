@@ -1,10 +1,19 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");?>
 
-<div class="ccm-dashboard-header-buttons">
+<div class="ccm-dashboard-header-buttons btn-group">
+
+
+    <?php
+    $manage = new \Concrete\Controller\Element\Dashboard\Express\Menu($entity);
+    $manage->render();
+    ?>
+
     <a href="<?=URL::to('/dashboard/express/entities/forms', 'add', $entity->getId())?>" class="btn btn-primary">
         <?=t("Add Form")?>
     </a>
+
 </div>
+
 
 <div class="row">
     <? View::element('dashboard/express/detail_navigation', array('entity' => $entity))?>

@@ -3,8 +3,20 @@
 <?php
 if (isset($attributeHeader)) {
     $attributeHeader->render();
-}
-?>
+} else { ?>
+
+<div class="ccm-dashboard-header-buttons">
+
+
+    <?php
+    $manage = new \Concrete\Controller\Element\Dashboard\Express\Menu($entity);
+    $manage->render();
+    ?>
+
+</div>
+
+<? } ?>
+
 
 <div class="row">
     <? View::element('dashboard/express/detail_navigation', array('entity' => $entity))?>

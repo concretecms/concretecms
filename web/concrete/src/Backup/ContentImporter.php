@@ -426,18 +426,18 @@ class ContentImporter
         if (isset($sx->attributetypes)) {
             foreach ($sx->attributetypes->attributetype as $at) {
                 $pkg = static::getPackageObject($at['package']);
-                $name = $at['name'];
+                $name = (string) $at['name'];
                 if (!$name) {
                     $name = Core::make('helper/text')->unhandle($at['handle']);
                 }
                 $type = AttributeType::getByHandle($at['handle']);
                 if (!is_object($type)) {
-                    $type = AttributeType::add($at['handle'], $name, $pkg);
+                    $type = AttributeType::add((string) $at['handle'], $name, $pkg);
                 }
                 if (isset($at->categories)) {
                     foreach ($at->categories->children() as $cat) {
                         $catobj = AttributeKeyCategory::getByHandle((string) $cat['handle']);
-                        $catobj->associateAttributeKeyType($type);
+                        $catobj->getController()->associateAttributeKeyType($type);
                     }
                 }
             }
@@ -888,7 +888,7 @@ class ContentImporter
                 $pkg = static::getPackageObject($akc['package']);
                 $akx = AttributeKeyCategory::getByHandle($akc['handle']);
                 if (!is_object($akx)) {
-                    $akx = AttributeKeyCategory::add($akc['handle'], $akc['allow-sets'], $pkg);
+                    $akx = AttributeKeyCategory::add((string) $akc['handle'], (string) $akc['allow-sets'], $pkg);
                 }
             }
         }
