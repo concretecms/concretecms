@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Backup;
 
+use Concrete\Core\Attribute\Type;
 use Concrete\Core\File\Importer;
 use Concrete\Core\Page\Feed;
 use Concrete\Core\Sharing\SocialNetwork\Link;
@@ -900,16 +901,11 @@ class ContentImporter
         if (isset($sx->attributekeys)) {
             foreach ($sx->attributekeys->attributekey as $ak) {
                 $akc = AttributeKeyCategory::getByHandle($ak['category']);
-                $akID = $db->GetOne('select akID from AttributeKeys where akHandle = ? and akCategoryID = ?', array($ak['handle'], $akc->getAttributeKeyCategoryID()));
-                if (!$akID) {
-                    $txt = Core::make('helper/text');
-                    $c1 = overrideable_core_class('\\Core\\Attribute\\Key\\' . $txt->camelcase(
-                            $akc->getAttributeKeyCategoryHandle()
-                        ) . 'Key', DIRNAME_CLASSES . '/Attribute/Key/' . $txt->camelcase(
-                            $akc->getAttributeKeyCategoryHandle()
-                        ) . 'Key.php', (string) $akc->getPackageHandle()
-                    );
-                    call_user_func(array($c1, 'import'), $ak);
+                $controller = $akc->getController();
+                $attribute = $controller->getByHandle((string) $ak['handle']);
+                if (!$attribute) {
+                    $type = Type::getByHandle((string) $ak['type']);
+                    $controller->import($type, $ak);
                 }
             }
         }

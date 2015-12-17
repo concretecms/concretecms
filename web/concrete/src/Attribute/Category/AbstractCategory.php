@@ -8,8 +8,6 @@ use Concrete\Core\Attribute\Key\Factory;
 use Concrete\Core\Attribute\Type;
 use Concrete\Core\Entity\Attribute\Category;
 use Concrete\Core\Entity\AttributeKey\AttributeKey;
-use Concrete\Core\Entity\Express\Attribute;
-use Concrete\Core\Entity\Express\Entity;
 use Doctrine\ORM\EntityManager;
 use Concrete\Core\Entity\Attribute\Type as AttributeType;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,12 +20,15 @@ abstract class AbstractCategory implements CategoryInterface
     protected $categoryEntity;
     protected $attributeKeyFactory;
 
+    abstract public function getByHandle($handle);
+
     public function __construct(AttributeKeyFactory $attributeKeyFactory, EntityManager $entityManager)
     {
         $this->attributeKeyFactory = $attributeKeyFactory;
         $this->entityManager = $entityManager;
     }
 
+    // Create
     public function addFromRequest(Type $type, Request $request)
     {
         $key = $this->attributeKeyFactory->make($type->getAttributeTypeHandle());
@@ -36,12 +37,23 @@ abstract class AbstractCategory implements CategoryInterface
         return $key;
     }
 
+    public function import(AttributeType $type, \SimpleXMLElement $element)
+    {
+        $key = $this->attributeKeyFactory->make($type->getAttributeTypeHandle());
+        $loader = $key->getImportLoader();
+        $loader->load($key, $element);
+        return $key;
+    }
+
+
+    // Update
     public function updateFromRequest(AttributeKey $key, Request $request)
     {
         $loader = $key->getRequestLoader();
         $loader->load($key, $request);
         return $key;
     }
+
 
     /**
      * @return mixed
