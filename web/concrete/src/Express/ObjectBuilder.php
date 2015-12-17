@@ -2,27 +2,26 @@
 namespace Concrete\Core\Express;
 
 use Concrete\Core\Application\Application;
-use Concrete\Core\Attribute\AttributeKeyFactory;
-use Concrete\Core\Attribute\AttributeKeyFactoryInterface;
+use Concrete\Core\Attribute\TypeFactory;
 use \Concrete\Core\Entity\Express\Entity;
 
 class ObjectBuilder
 {
 
-    protected $attributeKeyFactory;
+    protected $attributeTypeFactory;
     protected $entity;
 
     /**
-     * @return AttributeKeyFactory
+     * @return AttributeTypeFactory
      */
-    public function getAttributeKeyFactory()
+    public function getAttributeTypeFactory()
     {
-        return $this->attributeKeyFactory;
+        return $this->attributeTypeFactory;
     }
 
-    public function __construct(AttributeKeyFactory $attributeKeyFactory)
+    public function __construct(TypeFactory $attributeTypeFactory)
     {
-        $this->attributeKeyFactory = $attributeKeyFactory;
+        $this->attributeTypeFactory = $attributeTypeFactory;
     }
 
     public function createObject($name)
@@ -51,7 +50,7 @@ class ObjectBuilder
     public function addAttribute($type, $name)
     {
         /** @var $attribute \Concrete\Core\Entity\AttributeKey\AttributeKey */
-        $attribute = $this->attributeKeyFactory->make($type);
+        $attribute = $this->attributeTypeFactory->getByHandle($type)->getController()->createAttributeKey();
         $attribute->setAttributeKeyName($name);
         $this->entity->getAttributes()->add($attribute);
         return $this;

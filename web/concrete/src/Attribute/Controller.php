@@ -4,6 +4,7 @@ namespace Concrete\Core\Attribute;
 
 use Concrete\Core\Attribute\Key\StandardFactory;
 use Concrete\Core\Controller\AbstractController;
+use Concrete\Core\Entity\AttributeKey\TextAttributeKey;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Core;
 use Concrete\Core\Attribute\View as AttributeTypeView;
@@ -279,5 +280,9 @@ class Controller extends AbstractController
         return new LegacyIconFormatter($this);
     }
 
+    public function createAttributeKey()
+    {
+        return new TextAttributeKey();
+    }
 
 }

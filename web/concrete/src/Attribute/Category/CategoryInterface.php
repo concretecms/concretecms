@@ -13,7 +13,7 @@ interface CategoryInterface
 
     public function setCategoryEntity(Category $entity);
     public function setEntity(EntityInterface $entity);
-    public function addFromRequest(Type $type, Request $request);
+    public function addFromRequest(\Concrete\Core\Entity\Attribute\Type $type, Request $request);
     public function updateFromRequest(AttributeKey $key, Request $request);
     public function delete(AttributeKey $key);
     public function associateAttributeKeyType(\Concrete\Core\Entity\Attribute\Type $type);

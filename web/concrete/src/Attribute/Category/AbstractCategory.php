@@ -2,10 +2,10 @@
 
 namespace Concrete\Core\Attribute\Category;
 
-use Concrete\Core\Attribute\AttributeKeyFactory;
 use Concrete\Core\Attribute\EntityInterface;
 use Concrete\Core\Attribute\Key\Factory;
 use Concrete\Core\Attribute\Type;
+use Concrete\Core\Attribute\TypeFactory;
 use Concrete\Core\Entity\Attribute\Category;
 use Concrete\Core\Entity\AttributeKey\AttributeKey;
 use Doctrine\ORM\EntityManager;
@@ -18,20 +18,18 @@ abstract class AbstractCategory implements CategoryInterface
     protected $entityManager;
     protected $entity;
     protected $categoryEntity;
-    protected $attributeKeyFactory;
 
     abstract public function getByHandle($handle);
 
-    public function __construct(AttributeKeyFactory $attributeKeyFactory, EntityManager $entityManager)
+    public function __construct(EntityManager $entityManager)
     {
-        $this->attributeKeyFactory = $attributeKeyFactory;
         $this->entityManager = $entityManager;
     }
 
     // Create
-    public function addFromRequest(Type $type, Request $request)
+    public function addFromRequest(AttributeType $type, Request $request)
     {
-        $key = $this->attributeKeyFactory->make($type->getAttributeTypeHandle());
+        $key = $type->getController()->createAttributeKey();
         $loader = $key->getRequestLoader();
         $loader->load($key, $request);
         return $key;
@@ -39,7 +37,7 @@ abstract class AbstractCategory implements CategoryInterface
 
     public function import(AttributeType $type, \SimpleXMLElement $element)
     {
-        $key = $this->attributeKeyFactory->make($type->getAttributeTypeHandle());
+        $key = $type->getController()->createAttributeKey();
         $loader = $key->getImportLoader();
         $loader->load($key, $element);
         return $key;
