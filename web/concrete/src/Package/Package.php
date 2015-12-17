@@ -187,13 +187,13 @@ class Package extends Object
      */
     public function on_start(){
         //Event handler to handle cache
-        Events::addListener('on_page_delete', array($this, 'CacheBlockClearOn'));
-        Events::addListener('on_page_update', array($this, 'CacheBlockClearOn'));
-        Events::addListener('on_page_add', array($this, 'CacheBlockClearOn'));
-        Events::addListener('on_page_duplicate', array($this, 'CacheBlockClearOn'));
-        Events::addListener('on_page_move_to_trash', array($this, 'CacheBlockClearOn'));
-        Events::addListener('on_page_move', array($this, 'CacheBlockClearOn'));
-        Events::addListener('on_page_version_add', array($this, 'CacheBlockClearOn'));
+        Events::addListener('on_page_delete', array($this, 'cacheBlockClearOn'));
+        Events::addListener('on_page_update', array($this, 'cacheBlockClearOn'));
+        Events::addListener('on_page_add', array($this, 'cacheBlockClearOn'));
+        Events::addListener('on_page_duplicate', array($this, 'cacheBlockClearOn'));
+        Events::addListener('on_page_move_to_trash', array($this, 'cacheBlockClearOn'));
+        Events::addListener('on_page_move', array($this, 'cacheBlockClearOn'));
+        Events::addListener('on_page_version_add', array($this, 'cacheBlockClearOn'));
         Events::addListener('on_page_version_approve', array($this, 'cacheBlockClearOn'));
     }
 
