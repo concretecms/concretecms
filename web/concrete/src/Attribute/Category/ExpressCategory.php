@@ -3,7 +3,7 @@
 namespace Concrete\Core\Attribute\Category;
 
 use Concrete\Core\Attribute\Key\Factory;
-use Concrete\Core\Attribute\Type;
+use Concrete\Core\Entity\Attribute\Type;
 use Concrete\Core\Entity\AttributeKey\AttributeKey;
 use Concrete\Core\Entity\Express\Attribute;
 use Concrete\Core\Entity\Express\Entity;

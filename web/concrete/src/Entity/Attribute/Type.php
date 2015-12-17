@@ -14,6 +14,8 @@ class Type
 
     use PackageTrait;
 
+    protected $controller;
+
     public function __construct()
     {
         $this->categories = new ArrayCollection();
@@ -96,7 +98,18 @@ class Type
         $this->categories = $categories;
     }
 
-
+    public function getController()
+    {
+        if (!isset($this->controller)) {
+            $env = \Environment::get();
+            $r = $env->getRecord(DIRNAME_ATTRIBUTES . '/' . $this->atHandle . '/' . FILENAME_CONTROLLER);
+            $prefix = $r->override ? true : $this->getPackageHandle();
+            $atHandle = \Core::make('helper/text')->camelcase($this->atHandle);
+            $class = core_class('Attribute\\' . $atHandle . '\\Controller', $prefix);
+            $this->controller = \Core::make($class, array($this));
+        }
+        return $this->controller;
+    }
 
 
 

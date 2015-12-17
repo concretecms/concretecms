@@ -2,7 +2,6 @@
 namespace Concrete\Core\Express;
 
 use Concrete\Core\Application\Application;
-use Concrete\Core\Attribute\AttributeKeyFactoryInterface;
 use \Concrete\Core\Entity\Express\Entity;
 
 class ObjectAttributeBuilder
@@ -18,7 +17,11 @@ class ObjectAttributeBuilder
     public function __construct(ObjectBuilder $builder, $type, $name)
     {
         $this->builder = $builder;
-        $this->attribute = $builder->getAttributeKeyFactory()->make($type);
+        $this->attribute = $builder
+            ->getAttributeTypeFactory()
+            ->getByHandle($type)
+            ->getController()
+            ->createAttributeKey();
         $this->attribute->setAttributeKeyName($name);
     }
 

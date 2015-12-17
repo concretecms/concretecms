@@ -123,4 +123,10 @@ class Controller extends AttributeTypeController
         $this->set('data', $data);
         $this->set('services', ServiceList::get());
     }
+
+    public function createAttributeKey()
+    {
+        return new TextareaAttributeKey();
+    }
+
 }

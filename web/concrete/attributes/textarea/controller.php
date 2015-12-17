@@ -160,4 +160,9 @@ class Controller extends DefaultController
             'akTextareaDisplayMode' => $this->akDateDisplayMode,
         ), array('akID'), true);
     }
+
+    public function createAttributeKey()
+    {
+        return new TextareaAttributeKey();
+    }
 }
