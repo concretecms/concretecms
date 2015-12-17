@@ -3,6 +3,7 @@
 namespace Concrete\Core\Entity\AttributeKey;
 
 use Concrete\Core\Attribute\AttributeKeyInterface;
+use Concrete\Core\Attribute\Key\ImportLoader\StandardImporterLoader;
 use Concrete\Core\Attribute\Key\RequestLoader\StandardRequestLoader;
 use Concrete\Core\Attribute\Type;
 use Concrete\Core\Entity\PackageTrait;
@@ -214,6 +215,12 @@ abstract class AttributeKey implements AttributeKeyInterface
     {
         return new StandardRequestLoader();
     }
+
+    public function getImportLoader()
+    {
+        return new StandardImporterLoader();
+    }
+
 
 
 }
