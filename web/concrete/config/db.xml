@@ -1804,34 +1804,6 @@
     </index>
   </table>
 
-  <table name="CollectionAttributeValues">
-    <field name="cID" type="integer" size="10">
-      <unsigned/>
-      <key/>
-      <default value="0"/>
-    </field>
-    <field name="cvID" type="integer" size="10">
-      <unsigned/>
-      <key/>
-      <default value="0"/>
-    </field>
-    <field name="akID" type="integer" size="10">
-      <unsigned/>
-      <key/>
-      <default value="0"/>
-    </field>
-    <field name="avID" type="integer" size="10">
-      <unsigned/>
-      <default value="0"/>
-    </field>
-    <index name="akID">
-      <col>akID</col>
-    </index>
-    <index name="avID">
-      <col>avID</col>
-    </index>
-  </table>
-
   <table name="CollectionVersionRelatedEdits">
     <field name="cID" type="integer" size="10">
       <unsigned/>

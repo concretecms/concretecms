@@ -3,6 +3,7 @@
 namespace Concrete\Attribute\Boolean;
 
 use Concrete\Core\Entity\Attribute\Key\BooleanKey;
+use Concrete\Core\Entity\Attribute\Value\BooleanValue;
 use Core;
 use Database;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
@@ -131,9 +132,10 @@ class Controller extends AttributeTypeController
     // run when we call setAttribute(), instead of saving through the UI
     public function saveValue($value)
     {
-        $db = Database::get();
-        $value = ($value == false || $value == '0') ? 0 : 1;
-        $db->Replace('atBoolean', array('avID' => $this->getAttributeValueID(), 'value' => $value), 'avID', true);
+        $v = new BooleanValue();
+        $value = ($value == false || $value == '0') ? false : true;
+        $v->setValue($value);
+        return $v;
     }
 
     public function deleteKey()

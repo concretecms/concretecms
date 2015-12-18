@@ -9,6 +9,7 @@ use CollectionAttributeKey;
 use CollectionVersion;
 use Concrete\Core\Attribute\Key\Key;
 use Concrete\Core\Attribute\Value\CollectionValue as CollectionAttributeValue;
+use Concrete\Core\Entity\Page\AttributeValue;
 use Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionVersionFeatureAssignment;
 use Concrete\Core\Feature\Feature;
 use Concrete\Core\Foundation\Object as Object;
@@ -304,73 +305,6 @@ class Collection extends Object
         return array();
     }
 
-    /**
-     * Returns the value of the attribute with the handle $ak
-     * of the current object.
-     *
-     * $displayMode makes it possible to get the correct output
-     * value. When you need the raw attribute value or object, use
-     * this:
-     * <code>
-     * $c = Page::getCurrentPage();
-     * $attributeValue = $c->getAttribute('attribute_handle');
-     * </code>
-     *
-     * But if you need the formatted output supported by some
-     * attribute, use this:
-     * <code>
-     * $c = Page::getCurrentPage();
-     * $attributeValue = $c->getAttribute('attribute_handle', 'display');
-     * </code>
-     *
-     * An attribute type like "date" will then return the date in
-     * the correct format just like other attributes will show
-     * you a nicely formatted output and not just a simple value
-     * or object.
-     *
-     *
-     * @param string|object $akHandle
-     * @param bool       $displayMode
-     *
-     * @return type
-     */
-    public function getAttribute($akHandle, $displayMode = false)
-    {
-        if (is_object($this->vObj)) {
-            return $this->vObj->getAttribute($akHandle, $this, $displayMode);
-        }
-    }
-
-    public function getCollectionAttributeValue($ak)
-    {
-        if (is_object($this->vObj)) {
-            return $this->vObj->getAttribute($ak, $this);
-        }
-    }
-
-    // get's an array of collection attribute objects that are attached to this collection. Does not get values
-
-    public function clearCollectionAttributes($retainAKIDs = array())
-    {
-        $db = Loader::db();
-        if (count($retainAKIDs) > 0) {
-            $cleanAKIDs = array();
-            foreach ($retainAKIDs as $akID) {
-                $cleanAKIDs[] = intval($akID);
-            }
-            $akIDStr = implode(',', $cleanAKIDs);
-            $v2 = array($this->getCollectionID(), $this->getVersionID());
-            $db->query(
-               "delete from CollectionAttributeValues where cID = ? and cvID = ? and akID not in ({$akIDStr})",
-               $v2
-            );
-        } else {
-            $v2 = array($this->getCollectionID(), $this->getVersionID());
-            $db->query('delete from CollectionAttributeValues where cID = ? and cvID = ?', $v2);
-        }
-        $this->reindex();
-    }
-
     public function getVersionID()
     {
         // shortcut
@@ -381,6 +315,7 @@ class Collection extends Object
 
     public function reindex($index = false, $actuallyDoReindex = true)
     {
+        return;
         if ($this->isAlias() && !$this->isExternalLink()) {
             return false;
         }
@@ -430,7 +365,66 @@ class Collection extends Object
         }
     }
 
-    /* aliased content */
+    /**
+     * Returns the value of the attribute with the handle $ak
+     * of the current object.
+     *
+     * $displayMode makes it possible to get the correct output
+     * value. When you need the raw attribute value or object, use
+     * this:
+     * <code>
+     * $c = Page::getCurrentPage();
+     * $attributeValue = $c->getAttribute('attribute_handle');
+     * </code>
+     *
+     * But if you need the formatted output supported by some
+     * attribute, use this:
+     * <code>
+     * $c = Page::getCurrentPage();
+     * $attributeValue = $c->getAttribute('attribute_handle', 'display');
+     * </code>
+     *
+     * An attribute type like "date" will then return the date in
+     * the correct format just like other attributes will show
+     * you a nicely formatted output and not just a simple value
+     * or object.
+     *
+     *
+     * @param string|object $akHandle
+     * @param bool       $displayMode
+     *
+     * @return type
+     */
+    public function getAttribute($akHandle, $displayMode = false)
+    {
+        if (is_object($this->vObj)) {
+            return $this->vObj->getAttribute($akHandle, $this, $displayMode);
+        }
+    }
+
+    // get's an array of collection attribute objects that are attached to this collection. Does not get values
+
+    public function clearCollectionAttributes($retainAKIDs = array())
+    {
+        $db = Loader::db();
+        if (count($retainAKIDs) > 0) {
+            $cleanAKIDs = array();
+            foreach ($retainAKIDs as $akID) {
+                $cleanAKIDs[] = intval($akID);
+            }
+            $akIDStr = implode(',', $cleanAKIDs);
+            $v2 = array($this->getCollectionID(), $this->getVersionID());
+            $db->query(
+                "delete from CollectionAttributeValues where cID = ? and cvID = ? and akID not in ({$akIDStr})",
+                $v2
+            );
+        } else {
+            $v2 = array($this->getCollectionID(), $this->getVersionID());
+            $db->query('delete from CollectionAttributeValues where cID = ? and cvID = ?', $v2);
+        }
+        $this->reindex();
+    }
+
 
     public function clearAttribute($ak)
     {
@@ -441,8 +435,6 @@ class Collection extends Object
         }
         $this->reindex();
     }
-
-    /* basic CRUD */
 
     public function getAttributeValueObject($ak, $createIfNotFound = false)
     {
@@ -497,18 +489,29 @@ class Collection extends Object
         return $attribs;
     }
 
-    public function addAttribute($ak, $value)
-    {
-        $this->setAttribute($ak, $value);
-    }
-
     public function setAttribute($ak, $value)
     {
+        $orm = \ORM::entityManager('core');
+
         if (!is_object($ak)) {
             $ak = CollectionAttributeKey::getByHandle($ak);
         }
-        $ak->setAttribute($this, $value);
-        unset($ak);
+
+        $controller = $ak->getController();
+        $controller->setAttributeKey($ak);
+        $value = $controller->saveValue($value);
+        $orm->persist($value);
+        $orm->flush();
+
+        $av = new AttributeValue();
+        $av->setPageID($this->getCollectionID());
+        $av->setVersionID($this->getVersionID());
+        $av->setAttributeKey($ak);
+        $av->setAttributeValue($value);
+
+        $orm->persist($av);
+        $orm->flush();
+
         $this->reindex();
     }
 
