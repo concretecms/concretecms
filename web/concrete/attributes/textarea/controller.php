@@ -7,6 +7,7 @@ use Concrete\Core\Entity\Attribute\Key\TextKey;
 use Concrete\Core\Entity\Attribute\Value\TextValue;
 use Core;
 use Database;
+use DoctrineProxies\__CG__\Concrete\Core\Entity\Attribute\Value\TextareaValue;
 
 class Controller extends DefaultController
 {
@@ -122,7 +123,7 @@ class Controller extends DefaultController
 
     public function saveValue($value)
     {
-        $av = new TextValue();
+        $av = new TextareaValue();
         $av->setValue($value);
         return $av;
     }

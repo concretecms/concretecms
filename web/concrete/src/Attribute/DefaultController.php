@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Attribute;
 
+use Concrete\Core\Entity\Attribute\Value\TextValue;
 use Concrete\Core\Entity\AttributeValue\TextAttributeValue;
 use Core;
 use Database;
@@ -56,7 +57,7 @@ class DefaultController extends AttributeTypeController
     // run when we call setAttribute(), instead of saving through the UI
     public function saveValue($value)
     {
-        $av = new TextAttributeValue();
+        $av = new TextValue();
         $av->setValue($value);
         return $av;
     }
