@@ -35,7 +35,7 @@ class DatabaseServiceProvider extends ServiceProvider
 
         // Bind default entity manager resolver
         $this->app->bind('Doctrine\ORM\EntityManagerInterface', function ($app) {
-            return $app->make('Concrete\Core\Database\DatabaseManagerORM')->entityManager();
+            return $app->make('Concrete\Core\Database\DatabaseManagerORM')->entityManager('core');
         });
         $this->app->bind('Doctrine\ORM\EntityManager', 'Doctrine\ORM\EntityManagerInterface');
 

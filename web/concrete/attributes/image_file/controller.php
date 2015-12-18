@@ -2,6 +2,7 @@
 
 namespace Concrete\Attribute\ImageFile;
 
+use Concrete\Core\Entity\Attribute\Key\ImageFileKey;
 use Core;
 use Database;
 use File;
@@ -159,4 +160,10 @@ class Controller extends AttributeTypeController
         $db = Database::connection();
         $db->Execute('delete from atFile where avID = ?', array($this->getAttributeValueID()));
     }
+
+    public function createAttributeKey()
+    {
+        return new ImageFileKey();
+    }
+
 }

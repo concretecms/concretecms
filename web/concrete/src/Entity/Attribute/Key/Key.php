@@ -1,21 +1,27 @@
 <?php
 
-namespace Concrete\Core\Entity\AttributeKey;
+namespace Concrete\Core\Entity\Attribute\Key;
 
 use Concrete\Core\Attribute\AttributeKeyInterface;
 use Concrete\Core\Attribute\Key\ImportLoader\StandardImporterLoader;
 use Concrete\Core\Attribute\Key\RequestLoader\StandardRequestLoader;
 use Concrete\Core\Attribute\Type;
 use Concrete\Core\Entity\PackageTrait;
+use Doctrine\Common\Collections\ArrayCollection;
 
 
 /**
  * @Entity
  * @InheritanceType("JOINED")
  * @DiscriminatorColumn(name="type", type="string")
- * @Table(name="AttributeKeyEntities")
+ * @Table(
+ *     name="AttributeKeys",
+ *     indexes={
+ *     @Index(name="pkgID", columns={"pkgID"})
+ *     }
+ * )
  */
-abstract class AttributeKey implements AttributeKeyInterface
+abstract class Key implements AttributeKeyInterface
 {
 
     use PackageTrait;
@@ -56,6 +62,15 @@ abstract class AttributeKey implements AttributeKeyInterface
      */
     protected $akIsColumnHeader = true;
 
+    /**
+     * @ManyToMany(targetEntity="\Concrete\Core\Entity\Attribute\Set", mappedBy="keys")
+     */
+    protected $sets;
+
+    public function __construct()
+    {
+        $this->sets = new ArrayCollection();
+    }
 
     /**
      * @return mixed

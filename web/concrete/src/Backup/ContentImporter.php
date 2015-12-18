@@ -897,15 +897,14 @@ class ContentImporter
 
     protected function importAttributes(\SimpleXMLElement $sx)
     {
-        $db = Database::connection();
         if (isset($sx->attributekeys)) {
             foreach ($sx->attributekeys->attributekey as $ak) {
                 $akc = AttributeKeyCategory::getByHandle($ak['category']);
                 $controller = $akc->getController();
-                $attribute = $controller->getByHandle((string) $ak['handle']);
+                $attribute = $controller->getAttributeKeyByHandle((string) $ak['handle']);
                 if (!$attribute) {
                     $type = Type::getByHandle((string) $ak['type']);
-                    $controller->import($type, $ak);
+                    $key = $controller->import($type, $ak);
                 }
             }
         }
@@ -919,12 +918,12 @@ class ContentImporter
                 $akc = AttributeKeyCategory::getByHandle($as['category']);
                 if (!is_object($set)) {
                     $pkg = static::getPackageObject($as['package']);
-                    $set = $akc->addSet((string) $as['handle'], (string) $as['name'], $pkg, $as['locked']);
+                    $set = $akc->getController()->addSet((string) $as['handle'], (string) $as['name'], $pkg, $as['locked']);
                 }
                 foreach ($as->children() as $ask) {
-                    $ak = $akc->getAttributeKeyByHandle((string) $ask['handle']);
+                    $ak = $akc->getController()->getAttributeKeyByHandle((string) $ask['handle']);
                     if (is_object($ak)) {
-                        $set->addKey($ak);
+                        $set->getSetManager()->addKey($ak);
                     }
                 }
             }

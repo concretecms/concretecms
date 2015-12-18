@@ -1,15 +1,15 @@
 <?php
 
-namespace Concrete\Core\Entity\AttributeValue;
+namespace Concrete\Core\Entity\Attribute\Value;
 
 
 /**
  * @Entity
  * @InheritanceType("JOINED")
  * @DiscriminatorColumn(name="type", type="string")
- * @Table(name="AttributeValueEntities")
+ * @Table(name="AttributeValues")
  */
-abstract class AttributeValue
+abstract class Value
 {
 
     /**

@@ -21,16 +21,23 @@ use PermissionKey;
 
 /**
  * @Entity
- * @Table(name="Files")
+ * @Table(
+ *     name="Files",
+ *     indexes={
+ *     @Index(name="uID", columns={"uID"}),
+ *     @Index(name="fslID", columns={"fslID"}),
+ *     @Index(name="ocID", columns={"ocID"}),
+ *     @Index(name="fOverrideSetPermissions", columns={"fOverrideSetPermissions"}),
+ *     }
+ * )
  */
 class File implements \Concrete\Core\Permission\ObjectInterface
 {
 
     const CREATE_NEW_VERSION_THRESHOLD = 300;
 
-
     /**
-     * @Id @Column(type="integer")
+     * @Id @Column(type="integer", options={"unsigned": true})
      * @GeneratedValue(strategy="AUTO")
      */
     protected $fID;
@@ -58,12 +65,12 @@ class File implements \Concrete\Core\Permission\ObjectInterface
 
     /**
      * Originally placed on which page.
-     * @Column(columnDefinition="integer unsigned")
+     * @Column(type="integer", options={"unsigned": true})
      */
     protected $ocID = 0;
 
     /**
-     * @Column(columnDefinition="integer unsigned")
+     * @Column(type="integer", options={"unsigned": true})
      */
     protected $uID = 0;
 

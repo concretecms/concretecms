@@ -4,7 +4,7 @@ namespace Concrete\Core\Attribute\Category;
 
 use Concrete\Core\Attribute\Key\Factory;
 use Concrete\Core\Entity\Attribute\Type;
-use Concrete\Core\Entity\AttributeKey\AttributeKey;
+use Concrete\Core\Entity\Attribute\Key\Key as AttributeKey;
 use Concrete\Core\Entity\Express\Attribute;
 use Concrete\Core\Entity\Express\Entity;
 use Doctrine\ORM\EntityManager;
@@ -13,10 +13,10 @@ use Symfony\Component\HttpFoundation\Request;
 class ExpressCategory extends AbstractCategory
 {
 
-    public function getByHandle($handle)
+    public function getAttributeKeyByHandle($handle)
     {
         $query = 'select \Concrete\Core\Entity\Express\Attribute a join
-        \Concrete\Core\Entity\AttributeKey\AttributeKey where akHandle :handle';
+        \Concrete\Core\Entity\Key\Key where akHandle :handle';
         $query = $this->entityManager->createQuery($query);
         $query->setParameter('handle', $handle);
         return $query->getSingleResult();
@@ -30,7 +30,7 @@ class ExpressCategory extends AbstractCategory
         // category so it can be properly assigned in whatever way the category chooses to do so
 
         $attribute = new Attribute();
-        $attribute->setAttribute($key);
+        $attribute->setAttributeKey($key);
         $attribute->setEntity($this->getEntity());
         $this->entity->getAttributes()->add($attribute);
         $this->entityManager->persist($this->getEntity());
@@ -48,7 +48,7 @@ class ExpressCategory extends AbstractCategory
     public function delete(AttributeKey $key)
     {
         $query = $this->entityManager->createQuery(
-            'select a from Concrete\Core\Entity\Express\Attribute a where a.attribute = :key'
+            'select a from Concrete\Core\Entity\Express\Attribute a where a.attribute_key = :key'
         );
         $query->setParameter('key', $key);
         $attribute = $query->getSingleResult();

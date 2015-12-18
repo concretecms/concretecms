@@ -4,6 +4,7 @@ namespace Concrete\Core\Attribute;
 
 use Concrete\Core\Attribute\Key\StandardFactory;
 use Concrete\Core\Controller\AbstractController;
+use Concrete\Core\Entity\Attribute\Key\TextKey;
 use Concrete\Core\Entity\AttributeKey\TextAttributeKey;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Core;
@@ -282,7 +283,7 @@ class Controller extends AbstractController
 
     public function createAttributeKey()
     {
-        return new TextAttributeKey();
+        return new TextKey();
     }
 
 }

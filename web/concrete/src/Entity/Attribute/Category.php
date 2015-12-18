@@ -16,6 +16,7 @@ class Category
     public function __construct()
     {
         $this->types = new ArrayCollection();
+        $this->sets = new ArrayCollection();
     }
 
     use PackageTrait;
@@ -44,6 +45,12 @@ class Category
      * )
      */
     protected $types;
+
+    /**
+     * @OneToMany(targetEntity="Set", mappedBy="category")
+     * @JoinColumn(name="akCategoryID", referencedColumnName="asID")
+     */
+    protected $sets;
 
     /**
      * @return mixed

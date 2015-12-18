@@ -2,6 +2,7 @@
 
 namespace Concrete\Attribute\Boolean;
 
+use Concrete\Core\Entity\Attribute\Key\BooleanKey;
 use Core;
 use Database;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
@@ -64,11 +65,8 @@ class Controller extends AttributeTypeController
             $data = array();
             $checked = (string) $akey->type['checked'];
             if ($checked != '') {
-                $data['akCheckedByDefault'] = 1;
-            } else {
-                $data['akCheckedByDefault'] = 0;
+                $this->attributeKey->setIsCheckedByDefault(true);
             }
-            $this->saveKey($data);
         }
     }
 
@@ -171,10 +169,7 @@ class Controller extends AttributeTypeController
             $akCheckedByDefault = 1;
         }
 
-        $db->Replace('atBooleanSettings', array(
-            'akID' => $ak->getAttributeKeyID(),
-            'akCheckedByDefault' => $akCheckedByDefault,
-        ), array('akID'), true);
+        $this->attributeKey->setIsCheckedByDefault($akCheckedByDefault);
     }
 
     public function saveForm($data)
@@ -193,4 +188,10 @@ class Controller extends AttributeTypeController
         $db = Database::get();
         $db->Execute('delete from atBoolean where avID = ?', array($this->getAttributeValueID()));
     }
+
+    public function createAttributeKey()
+    {
+        return new BooleanKey();
+    }
+
 }

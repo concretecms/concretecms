@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Attribute\Number;
 
+use Concrete\Core\Entity\Attribute\Key\NumberKey;
 use Loader;
 use \Concrete\Core\Foundation\Object;
 use \Concrete\Core\Attribute\Controller as AttributeTypeController;
@@ -89,6 +90,11 @@ class Controller extends AttributeTypeController
     {
         $db = Loader::db();
         $db->Execute('delete from atNumber where avID = ?', array($this->getAttributeValueID()));
+    }
+
+    public function createAttributeKey()
+    {
+        return new NumberKey();
     }
 
 }

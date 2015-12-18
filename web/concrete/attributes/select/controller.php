@@ -2,6 +2,7 @@
 
 namespace Concrete\Attribute\Select;
 
+use Concrete\Core\Entity\Attribute\Value\SelectValueOption;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Core;
 use Database;
@@ -165,17 +166,16 @@ class Controller extends AttributeTypeController
             $akSelectAllowMultipleValues = $akey->type['allow-multiple-values'];
             $akSelectOptionDisplayOrder = $akey->type['display-order'];
             $akSelectAllowOtherValues = $akey->type['allow-other-values'];
-            $db = Database::get();
-            $db->Replace('atSelectSettings', array(
-                'akID' => $this->attributeKey->getAttributeKeyID(),
-                'akSelectAllowMultipleValues' => $akSelectAllowMultipleValues,
-                'akSelectAllowOtherValues' => $akSelectAllowOtherValues,
-                'akSelectOptionDisplayOrder' => $akSelectOptionDisplayOrder,
-            ), array('akID'), true);
+            $this->attributeKey->setAllowMultipleValues((bool) $akSelectAllowMultipleValues);
+            $this->attributeKey->setDisplayOrder($akSelectOptionDisplayOrder);
+            $this->attributeKey->setAllowOtherValues((bool) $akSelectAllowOtherValues);
 
             if (isset($akey->type->options)) {
                 foreach ($akey->type->options->children() as $option) {
-                    Option::add($this->attributeKey, $option['value'], $option['is-end-user-added']);
+                    $option = new SelectValueOption();
+                    $option->setValue((string) $option['value']);
+                    $option->setIsEndUserAdded((bool) $option['is-end-user-added']);
+                    $this->attributeKey->getOptions()->add($option);
                 }
             }
         }

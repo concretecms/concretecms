@@ -3,8 +3,8 @@
 namespace Concrete\Attribute\Textarea;
 
 use Concrete\Core\Attribute\DefaultController;
-use Concrete\Core\Entity\AttributeKey\TextareaAttributeKey;
-use Concrete\Core\Entity\AttributeValue\TextareaAttributeValue;
+use Concrete\Core\Entity\Attribute\Key\TextKey;
+use Concrete\Core\Entity\Attribute\Value\TextValue;
 use Core;
 use Database;
 
@@ -79,23 +79,7 @@ class Controller extends DefaultController
 
     public function setDisplayMode($akTextareaDisplayMode, $akTextareaDisplayModeCustomOptions = array())
     {
-        if ($this->attributeKey instanceof TextareaAttributeKey) {
-            $this->attributeKey->setMode($akTextareaDisplayMode);
-        } else {
-
-            //legacy support
-            $db = Database::connection();
-            $ak = $this->getAttributeKey();
-            $akTextareaDisplayModeCustomOptionsValue = '';
-            if (is_array($akTextareaDisplayModeCustomOptions) && count($akTextareaDisplayModeCustomOptions) > 0) {
-                $akTextareaDisplayModeCustomOptionsValue = serialize($akTextareaDisplayModeCustomOptions);
-            }
-            $db->Replace('atTextareaSettings', array(
-                'akID' => $ak->getAttributeKeyID(),
-                'akTextareaDisplayMode' => $akTextareaDisplayMode,
-                'akTextareaDisplayModeCustomOptions' => $akTextareaDisplayModeCustomOptionsValue,
-            ), array('akID'), true);
-        }
+        $this->attributeKey->setMode($akTextareaDisplayMode);
     }
 
     // should have to delete the at thing
@@ -105,7 +89,7 @@ class Controller extends DefaultController
         $arr = $this->attributeKey->getAttributeValueIDList();
         foreach ($arr as $id) {
             $db->Execute('delete from atDefault where avID = ?', array($id));
-        }
+        };
 
         $db->Execute('delete from atTextareaSettings where akID = ?', array($this->attributeKey->getAttributeKeyID()));
     }
@@ -138,7 +122,7 @@ class Controller extends DefaultController
 
     public function saveValue($value)
     {
-        $av = new TextareaAttributeValue();
+        $av = new TextValue();
         $av->setValue($value);
         return $av;
     }
@@ -163,6 +147,6 @@ class Controller extends DefaultController
 
     public function createAttributeKey()
     {
-        return new TextareaAttributeKey();
+        return new TextKey();
     }
 }
