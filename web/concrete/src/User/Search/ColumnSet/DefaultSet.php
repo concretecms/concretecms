@@ -11,12 +11,12 @@ class DefaultSet extends Set
 
     public static function getUserName($ui)
     {
-        return '<a data-user-name="' . $ui->getUserDisplayName() . '" data-user-email="' . $ui->getUserEmail() . '" data-user-id="' . $ui->getUserID() . '" href="#">' . $ui->getUserName() . '</a>';
+        return '<a data-user-name="' . h($ui->getUserDisplayName()) . '" data-user-email="' . h($ui->getUserEmail()) . '" data-user-id="' . $ui->getUserID() . '" href="#">' . h($ui->getUserName()) . '</a>';
     }
 
     public static function getUserEmail($ui)
     {
-        return '<a href="mailto:' . $ui->getUserEmail() . '">' . $ui->getUserEmail() . '</a>';
+        return '<a href="mailto:' . h($ui->getUserEmail()) . '">' . h($ui->getUserEmail()) . '</a>';
     }
 
     public static function getUserDateAdded($ui)
