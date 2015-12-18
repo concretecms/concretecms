@@ -7,7 +7,8 @@ use Concrete\Core\Attribute\Key\Factory;
 use Concrete\Core\Attribute\Type;
 use Concrete\Core\Attribute\TypeFactory;
 use Concrete\Core\Entity\Attribute\Category;
-use Concrete\Core\Entity\AttributeKey\AttributeKey;
+use Concrete\Core\Entity\Attribute\Set;
+use Concrete\Core\Entity\Attribute\Key\Key as AttributeKey;
 use Doctrine\ORM\EntityManager;
 use Concrete\Core\Entity\Attribute\Type as AttributeType;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,7 +20,7 @@ abstract class AbstractCategory implements CategoryInterface
     protected $entity;
     protected $categoryEntity;
 
-    abstract public function getByHandle($handle);
+    abstract public function getAttributeKeyByHandle($handle);
 
     public function __construct(EntityManager $entityManager)
     {
@@ -92,6 +93,17 @@ abstract class AbstractCategory implements CategoryInterface
         $this->getCategoryEntity()->getAttributeTypes()->add($type);
         $this->entityManager->persist($this->getCategoryEntity());
         $this->entityManager->flush();
+    }
+
+    public function addSet($handle, $name, $pkg = null, $locked = null)
+    {
+        $set = new Set();
+        $set->setAttributeSetHandle($handle);
+        $set->setAttributeSetName($name);
+        $set->setAttributeSetIsLocked($locked);
+        $this->entityManager->persist($set);
+        $this->entityManager->flush();
+        return $set;
     }
 
 }

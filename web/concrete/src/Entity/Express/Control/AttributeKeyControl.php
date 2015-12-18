@@ -14,7 +14,7 @@ use Concrete\Core\Foundation\Environment;
 class AttributeKeyControl extends Control
 {
     /**
-     * @ManyToOne(targetEntity="\Concrete\Core\Entity\AttributeKey\AttributeKey")
+     * @ManyToOne(targetEntity="\Concrete\Core\Entity\Attribute\Key\Key")
      * @JoinColumn(name="akID", referencedColumnName="akID")
      */
     protected $attribute_key;

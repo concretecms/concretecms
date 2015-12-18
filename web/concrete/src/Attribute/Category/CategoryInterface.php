@@ -5,7 +5,7 @@ namespace Concrete\Core\Attribute\Category;
 use Concrete\Core\Attribute\EntityInterface;
 use Concrete\Core\Attribute\Type;
 use Concrete\Core\Entity\Attribute\Category;
-use Concrete\Core\Entity\AttributeKey\AttributeKey;
+use Concrete\Core\Entity\Attribute\Key\Key as AttributeKey;
 use Symfony\Component\HttpFoundation\Request;
 
 interface CategoryInterface

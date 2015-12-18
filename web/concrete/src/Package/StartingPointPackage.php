@@ -45,7 +45,6 @@ class StartingPointPackage extends BasePackage
                 5,
                 t('Starting installation and creating directories.')),
             new StartingPointInstallRoutine('install_database', 10, t('Creating database tables.')),
-            new StartingPointInstallRoutine('install_entities', 12, t('Creating entities.')),
             new StartingPointInstallRoutine('add_users', 18, t('Adding admin user.')),
             new StartingPointInstallRoutine('install_permissions', 20, t('Installing permissions & workflow.')),
             new StartingPointInstallRoutine('add_home_page', 23, t('Creating home page.')),
@@ -277,26 +276,13 @@ class StartingPointPackage extends BasePackage
             Package::installDB($installDirectory . '/db.xml');
             $this->indexAdditionalDatabaseFields();
 
+            $dbm->installDatabase();
+
             $configuration = new Configuration();
             $version = $configuration->getVersion(Config::get('concrete.version_db'));
             $version->markMigrated();
         } catch (\Exception $e) {
             throw new \Exception(t('Unable to install database: %s', $db->ErrorMsg() ? $db->ErrorMsg() : $e->getMessage()));
-        }
-    }
-
-    public function install_entities()
-    {
-        try {
-            $factory = new EntityManagerFactory(DIR_BASE_CORE .
-                '/' . DIRNAME_CLASSES . '/Entity');
-            $em = $factory->create(\Database::connection());
-            $dbm = Core::make('database/structure', $em);
-
-            $dbm->installDatabase();
-
-        } catch (\Exception $e) {
-            throw new \Exception(t('Unable to install database: %s', $e->getMessage()));
         }
     }
 

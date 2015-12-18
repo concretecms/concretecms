@@ -1,18 +1,15 @@
 <?php
 
-namespace Concrete\Core\Entity\AttributeKey;
+namespace Concrete\Core\Entity\Attribute\Key;
 
-use Concrete\Core\Attribute\Key\RequestLoader\TextareaRequestLoader;
-use Concrete\Core\Entity\AttributeValue\TextareaAttributeValue;
-use PortlandLabs\Concrete5\MigrationTool\Batch\Formatter\AttributeKey\TextAreaFormatter;
-use PortlandLabs\Concrete5\MigrationTool\Publisher\AttributeKey\TextAreaPublisher;
+use Concrete\Core\Entity\Attribute\Value\TextareaValue;
 
 
 /**
  * @Entity
  * @Table(name="TextareaAttributeKeys")
  */
-class TextareaAttributeKey extends AttributeKey
+class TextareaKey extends Key
 {
 
     public function getTypeHandle()
@@ -22,7 +19,7 @@ class TextareaAttributeKey extends AttributeKey
 
     public function getAttributeValue()
     {
-        return new TextareaAttributeValue();
+        return new TextareaValue();
     }
 
     /**

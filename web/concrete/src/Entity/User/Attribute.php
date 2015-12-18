@@ -11,25 +11,25 @@ class Attribute
 
     /**
      * @Id
-     * @OneToOne(targetEntity="\Concrete\Core\Entity\AttributeKey\AttributeKey")
+     * @OneToOne(targetEntity="\Concrete\Core\Entity\Attribute\Key\Key")
      * @JoinColumn(name="akID", referencedColumnName="akID")
      **/
-    protected $attribute;
+    protected $attribute_key;
 
     /**
      * @return mixed
      */
-    public function getAttribute()
+    public function getAttributeKey()
     {
-        return $this->attribute;
+        return $this->attribute_key;
     }
 
     /**
      * @param mixed $attribute
      */
-    public function setAttribute($attribute)
+    public function setAttributeKey($attribute)
     {
-        $this->attribute = $attribute;
+        $this->attribute_key = $attribute;
     }
 
 

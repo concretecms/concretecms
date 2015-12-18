@@ -23,10 +23,10 @@ class Attribute implements AttributeKeyInterface
     protected $entity;
 
     /**
-     * @OneToOne(targetEntity="\Concrete\Core\Entity\AttributeKey\AttributeKey", cascade={"persist", "remove"})
+     * @OneToOne(targetEntity="\Concrete\Core\Entity\Attribute\Key\Key", cascade={"persist", "remove"})
      * @JoinColumn(name="akID", referencedColumnName="akID")
      **/
-    protected $attribute;
+    protected $attribute_key;
 
     /**
      * @return mixed
@@ -61,19 +61,19 @@ class Attribute implements AttributeKeyInterface
     }
 
     /**
-     * @return \Concrete\Core\Entity\AttributeKey\AttributeKey
+     * @return \Concrete\Core\Entity\Attribute\Key\Key
      */
-    public function getAttribute()
+    public function getAttributeKey()
     {
-        return $this->attribute;
+        return $this->attribute_key;
     }
 
     /**
      * @param mixed $attribute
      */
-    public function setAttribute($attribute)
+    public function setAttributeKey($attribute)
     {
-        $this->attribute = $attribute;
+        $this->attribute_key = $attribute;
     }
 
     public function getAttributeKeyID()

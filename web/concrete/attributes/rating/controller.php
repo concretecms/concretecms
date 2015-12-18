@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Attribute\Rating;
 
+use Concrete\Core\Entity\Attribute\Key\RatingKey;
 use Loader;
 use \Concrete\Core\Foundation\Object;
 use \Concrete\Core\Attribute\Controller as AttributeTypeController;
@@ -81,4 +82,8 @@ class Controller extends AttributeTypeController
         $db->Execute('delete from atNumber where avID = ?', array($this->getAttributeValueID()));
     }
 
+    public function createAttributeKey()
+    {
+        return new RatingKey();
+    }
 }

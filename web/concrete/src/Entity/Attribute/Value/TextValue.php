@@ -1,16 +1,17 @@
 <?php
 
-namespace Concrete\Core\Entity\AttributeValue;
+namespace Concrete\Core\Entity\Attribute\Value;
+
 
 /**
  * @Entity
- * @Table(name="TextareaAttributeValues")
+ * @Table(name="TextAttributeValues")
  */
-class TextareaAttributeValue extends AttributeValue
+class TextValue extends Value
 {
 
     /**
-     * @Column(type="text", nullable=true)
+     * @Column(type="string", nullable=true)
      */
     protected $value = '';
 
@@ -34,6 +35,5 @@ class TextareaAttributeValue extends AttributeValue
     {
         return $this->getValue();
     }
-
 
 }

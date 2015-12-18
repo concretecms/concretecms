@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Attribute\SocialLinks;
 
+use Concrete\Core\Entity\Attribute\Key\SocialLinksKey;
 use Loader;
 use Environment;
 use \Concrete\Core\Foundation\Object;
@@ -126,7 +127,7 @@ class Controller extends AttributeTypeController
 
     public function createAttributeKey()
     {
-        return new TextareaAttributeKey();
+        return new SocialLinksKey();
     }
 
 }

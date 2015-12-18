@@ -2,6 +2,7 @@
 
 namespace Concrete\Attribute\Topics;
 
+use Concrete\Core\Entity\Attribute\Key\TopicsKey;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Type\Topic as TopicTree;
@@ -19,6 +20,11 @@ class Controller extends AttributeTypeController
     );
 
     public $helpers = array('form');
+
+    public function getAttributeKey()
+    {
+        return new TopicsKey();
+    }
 
     public function filterByAttribute(AttributedItemList $list, $value, $comparison = '=')
     {
@@ -45,8 +51,7 @@ class Controller extends AttributeTypeController
         );
         $akTopicParentNodeID = $data['akTopicParentNodeID'];
         $akTopicTreeID = $data['akTopicTreeID'];
-        $this->setNodes($akTopicParentNodeID, $akTopicTreeID);
-        // trap dynatree display node / tree node here.
+        return $this->setNodes($akTopicParentNodeID, $akTopicTreeID);
     }
 
     public function getDisplayValue()
@@ -227,17 +232,8 @@ class Controller extends AttributeTypeController
     public function setNodes($akTopicParentNodeID, $akTopicTreeID)
     {
         $db = Database::get();
-        $ak = $this->getAttributeKey();
-        $db->Replace(
-            'atTopicSettings',
-            array(
-                'akID' => $ak->getAttributeKeyID(),
-                'akTopicParentNodeID' => $akTopicParentNodeID,
-                'akTopicTreeID' => $akTopicTreeID,
-            ),
-            array('akID'),
-            true
-        );
+        $this->attributeKey->setParentNodeID($akTopicParentNodeID);
+        $this->attributeKey->setTopicTreeID($akTopicTreeID);
     }
 
     public function saveForm()

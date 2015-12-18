@@ -12,7 +12,7 @@ class StorageLocation
 {
 
     /**
-     * @Column(type="text")
+     * @Column(type="string")
      */
     protected $fslName;
 
@@ -22,7 +22,7 @@ class StorageLocation
     protected $fslConfiguration;
 
     /**
-     * @Id @Column(type="integer")
+     * @Id @Column(type="integer", options={"unsigned": true})
      * @GeneratedValue
      */
     protected $fslID;

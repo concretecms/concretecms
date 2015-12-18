@@ -3,6 +3,7 @@
 namespace Concrete\Attribute\Address;
 
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
+use Concrete\Core\Entity\Attribute\Key\AddressKey;
 use Core;
 use Database;
 
@@ -285,14 +286,15 @@ class Controller extends AttributeTypeController
     public function importKey($akey)
     {
         if (isset($akey->type)) {
-            $data['akHasCustomCountries'] = $akey->type['custom-countries'];
-            $data['akDefaultCountry'] = $akey->type['default-country'];
+            $this->attributeKey->setHasCustomCountries((bool) $akey->type['custom-countries']);
+            $this->attributeKey->setDefaultCoutnry((string) $akey->type['default-country']);
             if (isset($akey->type->countries)) {
+                $countries = array();
                 foreach ($akey->type->countries->children() as $country) {
-                    $data['akCustomCountries'][] = (string) $country;
+                    $countries[] = (string) $country;
                 }
+                $this->attributeKey->setCustomCountries($countries);
             }
-            $this->saveKey($data);
         }
     }
 
@@ -311,30 +313,10 @@ class Controller extends AttributeTypeController
         if (!is_array($data['akCustomCountries'])) {
             $akCustomCountries = array();
         }
-        if (!$e->has()) {
-            $db->Replace(
-                'atAddressSettings',
-                array(
-                    'akID' => $ak->getAttributeKeyID(),
-                    'akHasCustomCountries' => $akHasCustomCountries,
-                    'akDefaultCountry' => $data['akDefaultCountry'],
-                ),
-                array('akID'),
-                true
-            );
 
-            $db->Execute('delete from atAddressCustomCountries where akID = ?', array($ak->getAttributeKeyID()));
-            if (count($akCustomCountries)) {
-                foreach ($akCustomCountries as $cnt) {
-                    $db->Execute(
-                        'insert into atAddressCustomCountries (akID, country) values (?, ?)',
-                        array($ak->getAttributeKeyID(), $cnt)
-                    );
-                }
-            }
-        } else {
-            return $e;
-        }
+        $this->attributeKey->setHasCustomCountries($akHasCustomCountries);
+        $this->attributeKey->setDefaultCoutnry($data['akDefaultCountry']);
+        $this->attributeKey->setCustomCountries($akCustomCountries);
     }
 
     protected function load()
@@ -386,5 +368,10 @@ class Controller extends AttributeTypeController
             Core::make('helper/html')->javascript($this->attributeType->getAttributeTypeFileURL('country_state.js'))
         );
         $this->set('key', $this->attributeKey);
+    }
+
+    public function createAttributeKey()
+    {
+        return new AddressKey();
     }
 }
