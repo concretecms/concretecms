@@ -9,6 +9,15 @@ class Profiles extends DashboardPageController {
 	public $helpers = array('form');
 
 	public function update_profiles() {
+
+        /** @var Token $token */
+        $token = \Core::make('token');
+
+        if (!$token->validate("update_profile")) {
+            $this->error->add('Invalid Token.');
+            return;
+        }
+
 		if ($this->isPost()) {
 			Config::save('concrete.user.profiles_enabled', ($this->post('public_profiles')?true:false));
 			Config::save('concrete.user.gravatar.enabled', ($this->post('gravatar_fallback')?true:false));
