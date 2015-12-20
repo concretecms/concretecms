@@ -3,6 +3,7 @@
 namespace Concrete\Attribute\ImageFile;
 
 use Concrete\Core\Entity\Attribute\Key\ImageFileKey;
+use Concrete\Core\Entity\Attribute\Value\ImageFileValue;
 use Core;
 use Database;
 use File;
@@ -104,10 +105,10 @@ class Controller extends AttributeTypeController
         if (!is_object($obj)) {
             $obj = File::getByID($obj);
         }
-        $db = Database::connection();
-        if (is_object($obj) && (!$obj->isError())) {
-            $db->Replace('atFile', array('avID' => $this->getAttributeValueID(), 'fID' => $obj->getFileID()), 'avID', true);
-        }
+
+        $value = new ImageFileValue();
+        $value->setFileObject($obj);
+        return $value;
     }
 
     public function deleteKey()
@@ -150,8 +151,7 @@ class Controller extends AttributeTypeController
             $f = File::getByID($data['value']);
             $this->saveValue($f);
         } else {
-            $db = Database::connection();
-            $db->Replace('atFile', array('avID' => $this->getAttributeValueID(), 'fID' => 0), 'avID', true);
+            $this->deleteValue();
         }
     }
 

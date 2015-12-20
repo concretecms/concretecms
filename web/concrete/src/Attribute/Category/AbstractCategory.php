@@ -98,6 +98,7 @@ abstract class AbstractCategory implements CategoryInterface
     public function addSet($handle, $name, $pkg = null, $locked = null)
     {
         $set = new Set();
+        $set->setAttributeKeyCategory($this->getCategoryEntity());
         $set->setAttributeSetHandle($handle);
         $set->setAttributeSetName($name);
         $set->setAttributeSetIsLocked($locked);

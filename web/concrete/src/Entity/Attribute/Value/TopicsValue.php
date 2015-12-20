@@ -1,37 +1,38 @@
 <?php
 namespace Concrete\Core\Entity\Attribute\Value;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * @Entity
- * @Table(name="TopicsAttributeValues")
+ * @Table(name="TopicAttributeValues")
  */
 class TopicsValue extends Value
 {
-    /**
-     * @Column(type="json_array")
-     */
-    protected $value;
-
-    public function getValue()
-    {
-        return $this->value;
-    }
 
     /**
-     * @param mixed $value
+     * @OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Value\SelectedTopic", mappedBy="value")
+     * @JoinColumn(name="avID", referencedColumnName="avID")
      */
-    public function setValue($value)
+    protected $topics;
+
+    /**
+     * TopicsValue constructor.
+     * @param $topics
+     */
+    public function __construct()
     {
-        $this->value = $value;
+        $this->topics = new ArrayCollection();
     }
 
-    public function getFormatter()
+
+    public function getSelectedTopics()
     {
-        return new SelectFormatter($this);
+        return $this->topics;
     }
 
-    public function getPublisher()
+    public function setSelectedTopics($topics)
     {
-        return new StandardPublisher();
+        $this->topics = $topics;
     }
 }

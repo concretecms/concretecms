@@ -2,6 +2,7 @@
 namespace Concrete\Attribute\Rating;
 
 use Concrete\Core\Entity\Attribute\Key\RatingKey;
+use Concrete\Core\Entity\Attribute\Value\RatingValue;
 use Loader;
 use \Concrete\Core\Foundation\Object;
 use \Concrete\Core\Attribute\Controller as AttributeTypeController;
@@ -46,14 +47,14 @@ class Controller extends AttributeTypeController
         return $list;
     }
 
-    // run when we call setAttribute(), instead of saving through the UI
     public function saveValue($rating)
     {
+        $value = new RatingValue();
         if ($rating == '') {
             $rating = 0;
         }
-        $db = Loader::db();
-        $db->Replace('atNumber', array('avID' => $this->getAttributeValueID(), 'value' => $rating), 'avID', true);
+        $value->setValue($rating);
+        return $value;
     }
 
     public function deleteKey()

@@ -3,6 +3,8 @@
 namespace Concrete\Attribute\Topics;
 
 use Concrete\Core\Entity\Attribute\Key\TopicsKey;
+use Concrete\Core\Entity\Attribute\Value\SelectedTopic;
+use Concrete\Core\Entity\Attribute\Value\TopicsValue;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Type\Topic as TopicTree;
@@ -238,23 +240,22 @@ class Controller extends AttributeTypeController
 
     public function saveForm()
     {
-        $db = Database::get();
         $sh = Core::make('helper/security');
-        $ak = $this->getAttributeKey();
+        $av = new TopicsValue();
         $cleanIDs = array();
-        $topicsArray = $_POST['topics_' . $ak->getAttributeKeyID()];
-        $db->Execute('delete from atSelectedTopics where avID = ?', array($this->getAttributeValueID()));
+        $topicsArray = $_POST['topics_' . $this->attributeKey->getAttributeKeyID()];
         if (is_array($topicsArray) && count($topicsArray) > 0) {
             foreach ($topicsArray as $topicID) {
                 $cleanIDs[] = $sh->sanitizeInt($topicID);
             }
             foreach ($cleanIDs as $topID) {
-                $db->execute(
-                    'INSERT INTO atSelectedTopics (avID, TopicNodeID) VALUES (?, ?)',
-                    array($this->getAttributeValueID(), $topID)
-                );
+                $topic = new SelectedTopic();
+                $topic->setAttributeValue($av);
+                $topic->setTreeNodeID($topID);
+                $av->getSelectedTopics()->add($topic);
             }
         }
+        return $av;
     }
 
     public function getValue()

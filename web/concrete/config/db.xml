@@ -2120,33 +2120,6 @@
     </index>
   </table>
 
-  <table name="FileAttributeValues">
-    <field name="fID" type="integer" size="10">
-      <unsigned/>
-      <key/>
-      <default value="0"/>
-    </field>
-    <field name="fvID" type="integer" size="10">
-      <unsigned/>
-      <key/>
-      <default value="0"/>
-    </field>
-    <field name="akID" type="integer" size="10">
-      <unsigned/>
-      <key/>
-      <default value="0"/>
-    </field>
-    <field name="avID" type="integer" size="10">
-      <unsigned/>
-      <default value="0"/>
-    </field>
-    <index name="akID">
-      <col>akID</col>
-    </index>
-    <index name="avID">
-      <col>avID</col>
-    </index>
-  </table>
 
   <table name="FilePermissionFileTypes">
     <field name="fsID" type="integer" size="10">
@@ -2870,75 +2843,6 @@
     </index>
   </table>
 
-  <table name="FileVersions">
-    <field name="fID" type="integer" size="10">
-      <unsigned/>
-      <key/>
-      <default value="0"/>
-    </field>
-    <field name="fvID" type="integer" size="10">
-      <unsigned/>
-      <key/>
-      <default value="0"/>
-    </field>
-    <field name="fvFilename" type="string" size="255">
-      <notnull/>
-    </field>
-    <field name="fvPrefix" type="string" size="12"/>
-    <field name="fvGenericType" type="smallint">
-      <unsigned/>
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <field name="fvSize" type="integer" size="20">
-      <unsigned/>
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <field name="fvTitle" type="string" size="255"/>
-    <field name="fvDescription" type="text" size="65535"/>
-    <field name="fvTags" type="string" size="255"/>
-    <field name="fvIsApproved" type="integer" size="10">
-      <unsigned/>
-      <default value="1"/>
-      <notnull/>
-    </field>
-    <field name="fvDateAdded" type="datetime"/>
-    <field name="fvApproverUID" type="integer" size="10">
-      <unsigned/>
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <field name="fvAuthorUID" type="integer" size="10">
-      <unsigned/>
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <field name="fvActivateDatetime" type="datetime"/>
-    <field name="fvHasListingThumbnail" type="boolean">
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <field name="fvHasDetailThumbnail" type="boolean">
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <field name="fvExtension" type="string" size="32"/>
-    <field name="fvType" type="integer" size="10">
-      <unsigned/>
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <index name="fvExtension">
-      <col>fvExtension</col>
-    </index>
-    <index name="fvType">
-      <col>fvType</col>
-    </index>
-    <index name="fvFilename">
-      <col>fvFilename</col>
-    </index>
-  </table>
 
   <table name="FileVersionLog">
     <field name="fvlID" type="integer" size="10">

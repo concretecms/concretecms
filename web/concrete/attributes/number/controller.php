@@ -2,6 +2,7 @@
 namespace Concrete\Attribute\Number;
 
 use Concrete\Core\Entity\Attribute\Key\NumberKey;
+use Concrete\Core\Entity\Attribute\Value\NumberValue;
 use Loader;
 use \Concrete\Core\Foundation\Object;
 use \Concrete\Core\Attribute\Controller as AttributeTypeController;
@@ -64,9 +65,10 @@ class Controller extends AttributeTypeController
     // run when we call setAttribute(), instead of saving through the UI
     public function saveValue($value)
     {
-        $db = Loader::db();
+        $av = new NumberValue();
         $value = ($value == false || $value == '0') ? 0 : $value;
-        $db->Replace('atNumber', array('avID' => $this->getAttributeValueID(), 'value' => $value), 'avID', true);
+        $av->setValue($value);
+        return $av;
     }
 
     public function deleteKey()

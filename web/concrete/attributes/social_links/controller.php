@@ -2,6 +2,8 @@
 namespace Concrete\Attribute\SocialLinks;
 
 use Concrete\Core\Entity\Attribute\Key\SocialLinksKey;
+use Concrete\Core\Entity\Attribute\Value\SelectedSocialLink;
+use Concrete\Core\Entity\Attribute\Value\SocialLinksValue;
 use Loader;
 use Environment;
 use \Concrete\Core\Foundation\Object;
@@ -29,17 +31,22 @@ class Controller extends AttributeTypeController
 
     public function saveValue($values)
     {
-        $db = Loader::db();
-        $db->Execute('delete from atSocialLinks where avID = ?', array($this->getAttributeValueID()));
+        $av = new SocialLinksValue();
+
         foreach ($values as $service => $serviceInfo) {
             if ($serviceInfo) {
                 $serviceInfo = filter_var($serviceInfo, FILTER_SANITIZE_URL);
                 $service = Loader::helper('text')->entities($service);
                 $serviceInfo = Loader::helper('text')->entities($serviceInfo);
-                $db->Execute('insert into atSocialLinks (avID, service, serviceInfo) values (?, ?, ?)',
-                    array($this->getAttributeValueID(), $service, $serviceInfo));
+                $link = new SelectedSocialLink();
+                $link->setService($service);
+                $link->setServiceInfo($serviceInfo);
+                $link->setAttributeValue($av);
+                $av->getSelectedLinks()->add($link);
             }
         }
+
+        return $av;
     }
 
     public function exportValue(\SimpleXMLElement $akn)

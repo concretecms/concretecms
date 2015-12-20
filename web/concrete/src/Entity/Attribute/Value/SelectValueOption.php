@@ -78,6 +78,16 @@ class SelectValueOption
         return $this->key;
     }
 
+    /**
+     * @param mixed $key
+     */
+    public function setAttributeKey($key)
+    {
+        $this->key = $key;
+    }
+
+
+
 
 
 
