@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Entity\Attribute\Value;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 
 /**
  * @Entity
@@ -8,22 +10,27 @@ namespace Concrete\Core\Entity\Attribute\Value;
  */
 class SocialLinksValue extends Value
 {
-    /**
-     * @Column(type="json_array")
-     */
-    protected $value;
 
-    public function getValue()
+    /**
+     * @OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Value\SelectedSocialLink", mappedBy="value")
+     * @JoinColumn(name="avID", referencedColumnName="avID")
+     */
+    protected $links;
+
+    public function __construct()
     {
-        return $this->value;
+        $this->links = new ArrayCollection();
     }
 
-    /**
-     * @param mixed $value
-     */
-    public function setValue($value)
+
+    public function getSelectedLinks()
     {
-        $this->value = $value;
+        return $this->links;
+    }
+
+    public function setSelectedLinks($links)
+    {
+        $this->links = $links;
     }
 
 }

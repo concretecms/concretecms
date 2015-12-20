@@ -28,7 +28,7 @@ class Set
 
     /**
      * @ManyToOne(targetEntity="Category", inversedBy="set")
-     * @JoinColumn(name="asID", referencedColumnName="akCategoryID")
+     * @JoinColumn(name="akCategoryID", referencedColumnName="akCategoryID")
      */
     protected $category;
 

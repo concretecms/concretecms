@@ -48,7 +48,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
     protected $fDateAdded = null;
 
     /**
-     * @Column(type="string")
+     * @Column(type="string", nullable=true)
      */
     protected $fPassword;
 
@@ -161,6 +161,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
      */
     public function reindex()
     {
+        return false;
         $attribs = FileAttributeKey::getAttributes(
             $this->getFileID(),
             $this->getFileVersionID(),

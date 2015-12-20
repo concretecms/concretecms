@@ -2,6 +2,7 @@
 
 namespace Concrete\Attribute\Select;
 
+use Concrete\Core\Entity\Attribute\Value\SelectValue;
 use Concrete\Core\Entity\Attribute\Value\SelectValueOption;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Core;
@@ -355,7 +356,7 @@ class Controller extends AttributeTypeController
         if ($value != null) {
             if (is_array($value) && $this->akSelectAllowMultipleValues) {
                 foreach ($value as $v) {
-                    if ($v instanceof Option) {
+                    if ($v instanceof SelectValueOption) {
                         $opt = $v;
                     } else {
                         $opt = Option::getByValue($v, $this->attributeKey);
@@ -383,16 +384,11 @@ class Controller extends AttributeTypeController
             }
         }
 
-        $db->Execute('delete from atSelectOptionsSelected where avID = ?', array($this->getAttributeValueID()));
-        if (count($options) > 0) {
-            foreach ($options as $opt) {
-                $db->Execute('insert into atSelectOptionsSelected (avID, atSelectOptionID) values (?, ?)',
-                    array($this->getAttributeValueID(), $opt->getSelectAttributeOptionID()));
-                if ($this->akSelectAllowMultipleValues == false) {
-                    break;
-                }
-            }
+        $av = new SelectValue();
+        foreach($options as $option) {
+            $av->getSelectedOptions()->add($option);
         }
+        return $av;
     }
 
     public function getDisplayValue()

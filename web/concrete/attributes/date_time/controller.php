@@ -2,6 +2,7 @@
 namespace Concrete\Attribute\DateTime;
 
 use Concrete\Core\Entity\Attribute\Key\DateTimeKey;
+use Concrete\Core\Entity\Attribute\Value\DateTimeValue;
 use Loader;
 use Core;
 use \Concrete\Core\Attribute\Controller as AttributeTypeController;
@@ -154,8 +155,9 @@ class Controller extends AttributeTypeController
             $value = null;
         }
 
-        $db = Loader::db();
-        $db->Replace('atDateTime', array('avID' => $this->getAttributeValueID(), 'value' => $value), 'avID', true);
+        $av = new DateTimeValue();
+        $av->setValue(new \DateTime($value));
+        return $av;
     }
 
     public function duplicateKey($newAK)

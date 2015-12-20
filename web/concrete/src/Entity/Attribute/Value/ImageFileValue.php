@@ -9,11 +9,12 @@ namespace Concrete\Core\Entity\Attribute\Value;
 class ImageFileValue extends Value
 {
     /**
-     * @Column(type="integer")
+     * @ManyToOne(targetEntity="\Concrete\Core\File\File")
+     * @JoinColumn(name="fID", referencedColumnName="fID")
      */
-    protected $fID;
+    protected $file;
 
-    public function getFileID()
+    public function getFileObject()
     {
         return $this->value;
     }
@@ -21,9 +22,9 @@ class ImageFileValue extends Value
     /**
      * @param mixed $value
      */
-    public function setFileID($value)
+    public function setFileObject($file)
     {
-        $this->value = $value;
+        $this->file = $file;
     }
 
 

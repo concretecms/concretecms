@@ -3,6 +3,7 @@ namespace Concrete\Core\File;
 
 use Carbon\Carbon;
 use Concrete\Core\Attribute\Value\FileValue as FileAttributeValue;
+use Concrete\Core\Entity\File\AttributeValue;
 use Concrete\Core\File\Exception\InvalidDimensionException;
 use Concrete\Core\File\Image\Thumbnail\Thumbnail;
 use Concrete\Core\File\Image\Thumbnail\Type\Type;
@@ -27,7 +28,14 @@ use View;
 
 /**
  * @Entity
- * @Table(name="FileVersions")
+ * @Table(
+ *     name="FileVersions",
+ *     indexes={
+ *     @Index(name="fvFilename", columns={"fvFilename"}),
+ *     @Index(name="fvExtension", columns={"fvExtension"}),
+ *     @Index(name="fvType", columns={"fvType"})
+ *     }
+ * )
  */
 class Version
 {
@@ -91,7 +99,7 @@ class Version
      */
     protected $fvDescription = null;
     /**
-     * @Column(type="string")
+     * @Column(type="string", nullable=true)
      */
     protected $fvExtension = null;
     /**
@@ -99,7 +107,7 @@ class Version
      */
     protected $fvType = 0;
     /**
-     * @Column(type="text")
+     * @Column(type="text", nullable=true)
      */
     protected $fvTags = null;
     /**
@@ -204,13 +212,28 @@ class Version
 
     public function setAttribute($ak, $value)
     {
+        $orm = \ORM::entityManager('core');
+
         if (!is_object($ak)) {
             $ak = FileAttributeKey::getByHandle($ak);
         }
-        $ak->setAttribute($this, $value);
-        $fo = $this->getFile();
-        $fo->reindex();
-        unset($ak);
+
+        $controller = $ak->getController();
+        $controller->setAttributeKey($ak);
+        $value = $controller->saveValue($value);
+        $orm->persist($value);
+        $orm->flush();
+
+        $av = new AttributeValue();
+        $av->setFileID($this->getFileID());
+        $av->setVersionID($this->getFileVersionID());
+        $av->setAttributeKey($ak);
+        $av->setAttributeValue($value);
+
+        $orm->persist($av);
+        $orm->flush();
+
+        $this->getFile()->reindex();
     }
 
     /**

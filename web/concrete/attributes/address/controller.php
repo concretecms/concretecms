@@ -4,6 +4,7 @@ namespace Concrete\Attribute\Address;
 
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Entity\Attribute\Key\AddressKey;
+use Concrete\Core\Entity\Attribute\Value\AddressValue;
 use Core;
 use Database;
 
@@ -144,25 +145,18 @@ class Controller extends AttributeTypeController
 
     public function saveValue($data)
     {
-        $db = Database::connection();
-        if ($data instanceof Value) {
-            $data = (array) $data;
+        if ($data instanceof AddressValue) {
+            return $data;
         }
         extract($data);
-        $db->Replace(
-            'atAddress',
-            array(
-                'avID' => $this->getAttributeValueID(),
-                'address1' => $address1,
-                'address2' => $address2,
-                'city' => $city,
-                'state_province' => $state_province,
-                'country' => $country,
-                'postal_code' => $postal_code,
-            ),
-            'avID',
-            true
-        );
+        $av = new AddressValue();
+        $av->setAddress1($address1);
+        $av->setAddress2($address2);
+        $av->setCity($city);
+        $av->setStateProvince($state_province);
+        $av->setCountry($country);
+        $av->setPostalCode($postal_code);
+        return $av;
     }
 
     public function getValue()
