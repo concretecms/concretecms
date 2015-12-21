@@ -448,7 +448,8 @@ return array(
         'page_search_index_lifetime'    => 259200,
         'enable_trash_can'              => true,
         'app_version_display_in_header' => true,
-        'default_jpeg_image_compression'     => 80
+        'default_jpeg_image_compression'     => 80,
+        'help_overlay'                  => true,
     ),
 
     'theme' => array(
