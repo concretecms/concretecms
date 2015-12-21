@@ -13,7 +13,7 @@ use stdClass;
 use ZipArchive;
 use Gettext\Translations;
 
-class PackPackageCommand extends Command
+final class PackPackageCommand extends Command
 {
     const PACKAGEFORMAT_LEGACY = 'legacy';
     const PACKAGEFORMAT_CURRENT = 'current';
