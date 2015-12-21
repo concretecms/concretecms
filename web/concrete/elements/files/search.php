@@ -38,8 +38,14 @@ $req = $flr->getSearchRequest();
             <li><a href="#" data-search-toggle="customize" data-search-column-customize-url="<?php echo URL::to('/ccm/system/dialogs/file/search/customize')?>"><?php echo t('Customize Results')?></a>
             <?php
             $fp = FilePermissions::getGlobal();
-            if ($fp->canAddFile()) { ?>
-                <li class="ccm-file-manager-show-dialog ccm-file-manager-upload"><a href="javascript:void"><?php echo t('Upload Files')?><input type="file" name="files[]" multiple="multiple" /></a></li>
+            if ($fp->canAddFile()) {
+            $imageresize = Config::get('concrete.file_manager.restrict_uploaded_image_sizes');
+            if ($imageresize) {
+                $datastring = ' data-image-max-width="'. (int)Config::get('concrete.file_manager.restrict_max_width') . '" ';
+                $datastring .=' data-image-max-height="'. (int) Config::get('concrete.file_manager.restrict_max_height'). '" ';
+                $datastring .= ' data-image-quality="'. (int)Config::get('concrete.file_manager.restrict_resize_quality'). '" ';
+            }  ?>
+                <li class="ccm-file-manager-show-dialog ccm-file-manager-upload" <?=$datastring?>><a href="javascript:void"><?php echo t('Upload Files')?><input type="file" name="files[]" multiple="multiple" /></a></li>
                 <li class="ccm-file-manager-show-dialog">        <a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/import"
                                class="dialog-launch"
                                dialog-width="500"

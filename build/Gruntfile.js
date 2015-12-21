@@ -203,8 +203,18 @@ module.exports = function(grunt) {
         jquery_fileupload: {
             dest: '<%= DIR_BASE %>/concrete/js/jquery-fileupload.js',
             src: [
+                '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-fileupload/load-image.js',
+                '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-fileupload/load-image-ios.js',
+                '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-fileupload/load-image-orientation.js',
+                '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-fileupload/load-image-meta.js',
+                '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-fileupload/load-image-exif.js',
+                '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-fileupload/load-image-exif-map.js',
+                '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-fileupload/javascript-canvas-to-blob.js',
+                '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-fileupload/javascript-canvas-to-blob.js',
                 '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-fileupload/jquery-iframe-transport.js',
-                '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-fileupload/jquery-fileupload.js'
+                '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-fileupload/jquery-fileupload.js',
+                '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-fileupload/jquery-fileupload-process.js',
+                '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-fileupload/jquery-fileupload-image.js'
             ]
         },
 
