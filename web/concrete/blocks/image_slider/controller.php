@@ -115,7 +115,7 @@ class Controller extends BlockController
         $q = 'select * from btImageSliderEntries where bID = ?';
         $r = $db->query($q, $v);
         while ($row = $r->FetchRow()) {
-            $db->execute('INSERT INTO btImageSliderEntries (bID, fID, linkURL, title, description, sortOrder) values(?,?,?,?,?,?)',
+            $db->execute('INSERT INTO btImageSliderEntries (bID, fID, linkURL, title, description, sortOrder, internalLinkCID) values(?,?,?,?,?,?,?)',
                 array(
                     $newBID,
                     $row['fID'],
@@ -123,6 +123,7 @@ class Controller extends BlockController
                     $row['title'],
                     $row['description'],
                     $row['sortOrder'],
+                    $row['internalLinkCID'],
                 )
             );
         }
