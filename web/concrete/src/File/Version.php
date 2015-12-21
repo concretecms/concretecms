@@ -12,11 +12,11 @@ use Concrete\Core\Http\FlysystemFileResponse;
 use Concrete\Flysystem\AdapterInterface;
 use Concrete\Flysystem\FileNotFoundException;
 use Core;
+use Database;
 use Events;
 use FileAttributeKey;
 use Imagine\Exception\InvalidArgumentException as ImagineInvalidArgumentException;
 use Imagine\Image\ImageInterface;
-use Loader;
 use Page;
 use Permissions;
 use stdClass;
@@ -129,8 +129,8 @@ class Version
         $fvTags = (isset($data['fvTags'])) ? Version::cleanTags($data['fvTags']) : '';
         $fvIsApproved = (isset($data['fvIsApproved'])) ? $data['fvIsApproved'] : '1';
 
-        $db = Loader::db();
-        $dh = Loader::helper('date');
+        $db = Database::getActiveConnection();
+        $dh = Core::make('helper/date');
         $date = new Carbon($dh->getOverridableNow());
 
         $fv = new static();
@@ -147,7 +147,7 @@ class Version
         $fv->file = $file;
         $fv->fvID = 1;
 
-        $em = Loader::db()->getEntityManager();
+        $em = Database::getActiveConnection()->getEntityManager();
         $em->persist($fv);
         $em->flush();
 
@@ -226,7 +226,7 @@ class Version
 
     public function clearAttribute($ak)
     {
-        $db = Loader::db();
+        $db = Database::getActiveConnection();
         $cav = $this->getAttributeValueObject($ak);
         if (is_object($cav)) {
             $cav->delete();
@@ -237,7 +237,7 @@ class Version
 
     public function getAttributeValueObject($ak, $createIfNotFound = false)
     {
-        $db = Loader::db();
+        $db = Database::getActiveConnection();
         $av = false;
         $v = array($this->getFileID(), $this->getFileVersionID(), $ak->getAttributeKeyID());
         $avID = $db->GetOne("SELECT avID FROM FileAttributeValues WHERE fID = ? AND fvID = ? AND akID = ?", $v);
@@ -288,7 +288,7 @@ class Version
     public function delete($deleteFilesAndThumbnails = false)
     {
 
-        $db = Loader::db();
+        $db = Database::getActiveConnection();
 
         $db->Execute("DELETE FROM FileAttributeValues WHERE fID = ? AND fvID = ?", array($this->getFileID(), $this->fvID));
         $db->Execute("DELETE FROM FileVersionLog WHERE fID = ? AND fvID = ?", array($this->getFileID(), $this->fvID));
@@ -351,7 +351,7 @@ class Version
 
     public function getSize()
     {
-        return Loader::helper('number')->formatSize($this->fvSize, 'KB');
+        return Core::make('helper/number')->formatSize($this->fvSize, 'KB');
     }
 
     public function getFullSize()
@@ -393,7 +393,7 @@ class Version
      */
     public function duplicate()
     {
-        $db = Loader::db();
+        $db = Database::getActiveConnection();
         $em = $db->getEntityManager();
         $qq = $em->createQuery('SELECT max(v.fvID) FROM \Concrete\Core\File\Version v where v.file = :file');
         $qq->setParameter('file', $this->file);
@@ -442,7 +442,7 @@ class Version
 
     protected function save($flush = true)
     {
-        $em = Loader::db()->getEntityManager();
+        $em = Database::getActiveConnection()->getEntityManager();
         $em->persist($this);
         if ($flush) {
             $em->flush();
@@ -459,7 +459,7 @@ class Version
 
     public function getTypeObject()
     {
-        $fh = Loader::helper('file');
+        $fh = Core::make('helper/file');
         $ext = $fh->getExtension($this->fvFilename);
 
         $ftl = FileTypeList::getType($ext);
@@ -472,7 +472,7 @@ class Version
     public function getVersionLogComments()
     {
         $updates = array();
-        $db = Loader::db();
+        $db = Database::getActiveConnection();
         $ga = $db->GetAll(
             'SELECT fvUpdateTypeID, fvUpdateTypeAttributeID FROM FileVersionLog WHERE fID = ? AND fvID = ? ORDER BY fvlID ASC',
             array($this->getFileID(), $this->getFileVersionID())
@@ -528,7 +528,7 @@ class Version
 
     public function logVersionUpdate($updateTypeID, $updateTypeAttributeID = 0)
     {
-        $db = Loader::db();
+        $db = Database::getActiveConnection();
         $db->Execute(
             'INSERT INTO FileVersionLog (fID, fvID, fvUpdateTypeID, fvUpdateTypeAttributeID) VALUES (?, ?, ?, ?)',
             array(
@@ -943,10 +943,10 @@ class Version
      */
     public function refreshAttributes($rescanThumbnails = true)
     {
-        $fh = Loader::helper('file');
+        $fh = Core::make('helper/file');
         $ext = $fh->getExtension($this->fvFilename);
         $ftl = FileTypeList::getType($ext);
-        $db = Loader::db();
+        $db = Database::getActiveConnection();
 
         $fsr = $this->getFileResource();
         if (!$fsr->isFile()) {
