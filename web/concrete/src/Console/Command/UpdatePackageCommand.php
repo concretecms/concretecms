@@ -15,7 +15,8 @@ class UpdatePackageCommand extends Command
     {
         $this
             ->setName('c5:package-update')
-            ->addOption('all', null, InputOption::VALUE_NONE, 'Update all the installed packages')
+            ->addOption('all', 'a', InputOption::VALUE_NONE, 'Update all the installed packages')
+            ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force update even if the package is already at last version')
             ->addArgument('package', InputArgument::OPTIONAL, 'The handle of the package to be updated')
             ->setDescription('Update a concrete5 package')
         ;
@@ -26,27 +27,39 @@ class UpdatePackageCommand extends Command
         $rc = 0;
         try {
             $pkgHandle = $input->getArgument('package');
+            $force = $input->getOption('force');
             if ($input->getOption('all')) {
                 if ($pkgHandle !== null) {
                     throw new Exception('If you use the --all option you can\'t specify a package handle.');
                 }
-                $updatablePackages = Package::getLocalUpgradeablePackages();
-                if (empty($updatablePackages)) {
-                    $output->writeln("No package needs to be updated.");
-                } else {
-                    foreach ($updatablePackages as $pkg) {
+                if ($force) {
+                    foreach (Package::getInstalledHandles() as $pkgHandle) {
                         try {
-                            $this->updatePackage($pkg->getPackageHandle(), $output);
+                            $this->updatePackage($pkgHandle, $output, $force);
                         } catch (Exception $x) {
                             $output->writeln($x->getMessage());
                             $rc = 1;
+                        }
+                    }
+                } else {
+                    $updatablePackages = Package::getLocalUpgradeablePackages();
+                    if (empty($updatablePackages)) {
+                        $output->writeln("No package needs to be updated.");
+                    } else {
+                        foreach ($updatablePackages as $pkg) {
+                            try {
+                                $this->updatePackage($pkg->getPackageHandle(), $output, $force);
+                            } catch (Exception $x) {
+                                $output->writeln($x->getMessage());
+                                $rc = 1;
+                            }
                         }
                     }
                 }
             } elseif ($pkgHandle === null) {
                 throw new Exception('No package handle specified and the --all option has not been specified.');
             } else {
-                $this->updatePackage($pkgHandle, $output);
+                $this->updatePackage($pkgHandle, $output, $force);
             }
         } catch (Exception $x) {
             $output->writeln($x->getMessage());
@@ -56,9 +69,9 @@ class UpdatePackageCommand extends Command
         return $rc;
     }
 
-    protected function updatePackage($pkgHandle, OutputInterface $output)
+    protected function updatePackage($pkgHandle, OutputInterface $output, $force)
     {
-        $output->write("Looking for updatable package '$pkgHandle'... ");
+        $output->write("Looking for package '$pkgHandle'... ");
         $pkg = null;
         foreach (Package::getInstalledList() as $installed) {
             if ($installed->getPackageHandle() === $pkgHandle) {
@@ -79,7 +92,7 @@ class UpdatePackageCommand extends Command
                 break;
             }
         }
-        if ($upPkg === null) {
+        if ($upPkg === null && $force !== true) {
             $output->writeln(sprintf("the package is already up-to-date (v%s)", $pkg->getPackageVersion()));
         } else {
             $test = Package::testForInstall($pkgHandle, false);
@@ -88,9 +101,14 @@ class UpdatePackageCommand extends Command
             }
             $output->writeln('good.');
 
-            $output->write(sprintf('Updating from v%s to v%s...', $upPkg->getPackageCurrentlyInstalledVersion(), $upPkg->getPackageVersion()));
-            $pkg->upgradeCoreData();
-            $pkg->upgrade();
+            if ($upPkg === null) {
+                $output->write(sprintf('Forcing upgrade at v%s...', $pkg->getPackageVersion()));
+                $upPkg = Package::getByHandle($pkgHandle);
+            } else {
+                $output->write(sprintf('Updating from v%s to v%s...', $upPkg->getPackageCurrentlyInstalledVersion(), $upPkg->getPackageVersion()));
+            }
+            $upPkg->upgradeCoreData();
+            $upPkg->upgrade();
             $output->writeln('done.');
         }
     }

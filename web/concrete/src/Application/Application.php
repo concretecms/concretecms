@@ -390,9 +390,10 @@ class Application extends Container
         $this->registerLegacyRoutes();
 
 
-        $path = $request->getPathInfo();
+        $path = rawurldecode($request->getPathInfo());
 
-        if (substr($path, 0, 3) == '../' || substr($path, -3) == '/..' ||  strpos($path, '/../')) {
+        if (substr($path, 0, 3) == '../' || substr($path, -3) == '/..' || strpos($path, '/../') ||
+            substr($path, 0, 3) == '..\\' || substr($path, -3) == '\\..' || strpos($path, '\\..\\')) {
             throw new \RuntimeException(t('Invalid path traversal. Please make this request with a valid HTTP client.'));
         }
 
