@@ -129,7 +129,7 @@ class Version
         $fvTags = (isset($data['fvTags'])) ? Version::cleanTags($data['fvTags']) : '';
         $fvIsApproved = (isset($data['fvIsApproved'])) ? $data['fvIsApproved'] : '1';
 
-        $db = Database::getActiveConnection();
+        $db = Database::get();
         $dh = Core::make('helper/date');
         $date = new Carbon($dh->getOverridableNow());
 
@@ -147,7 +147,7 @@ class Version
         $fv->file = $file;
         $fv->fvID = 1;
 
-        $em = Database::getActiveConnection()->getEntityManager();
+        $em = Database::get()->getEntityManager();
         $em->persist($fv);
         $em->flush();
 
@@ -226,7 +226,7 @@ class Version
 
     public function clearAttribute($ak)
     {
-        $db = Database::getActiveConnection();
+        $db = Database::get();
         $cav = $this->getAttributeValueObject($ak);
         if (is_object($cav)) {
             $cav->delete();
@@ -237,7 +237,7 @@ class Version
 
     public function getAttributeValueObject($ak, $createIfNotFound = false)
     {
-        $db = Database::getActiveConnection();
+        $db = Database::get();
         $av = false;
         $v = array($this->getFileID(), $this->getFileVersionID(), $ak->getAttributeKeyID());
         $avID = $db->GetOne("SELECT avID FROM FileAttributeValues WHERE fID = ? AND fvID = ? AND akID = ?", $v);
@@ -288,7 +288,7 @@ class Version
     public function delete($deleteFilesAndThumbnails = false)
     {
 
-        $db = Database::getActiveConnection();
+        $db = Database::get();
 
         $db->Execute("DELETE FROM FileAttributeValues WHERE fID = ? AND fvID = ?", array($this->getFileID(), $this->fvID));
         $db->Execute("DELETE FROM FileVersionLog WHERE fID = ? AND fvID = ?", array($this->getFileID(), $this->fvID));
@@ -393,7 +393,7 @@ class Version
      */
     public function duplicate()
     {
-        $db = Database::getActiveConnection();
+        $db = Database::get();
         $em = $db->getEntityManager();
         $qq = $em->createQuery('SELECT max(v.fvID) FROM \Concrete\Core\File\Version v where v.file = :file');
         $qq->setParameter('file', $this->file);
@@ -442,7 +442,7 @@ class Version
 
     protected function save($flush = true)
     {
-        $em = Database::getActiveConnection()->getEntityManager();
+        $em = Database::get()->getEntityManager();
         $em->persist($this);
         if ($flush) {
             $em->flush();
@@ -472,7 +472,7 @@ class Version
     public function getVersionLogComments()
     {
         $updates = array();
-        $db = Database::getActiveConnection();
+        $db = Database::get();
         $ga = $db->GetAll(
             'SELECT fvUpdateTypeID, fvUpdateTypeAttributeID FROM FileVersionLog WHERE fID = ? AND fvID = ? ORDER BY fvlID ASC',
             array($this->getFileID(), $this->getFileVersionID())
@@ -528,7 +528,7 @@ class Version
 
     public function logVersionUpdate($updateTypeID, $updateTypeAttributeID = 0)
     {
-        $db = Database::getActiveConnection();
+        $db = Database::get();
         $db->Execute(
             'INSERT INTO FileVersionLog (fID, fvID, fvUpdateTypeID, fvUpdateTypeAttributeID) VALUES (?, ?, ?, ?)',
             array(
@@ -946,7 +946,7 @@ class Version
         $fh = Core::make('helper/file');
         $ext = $fh->getExtension($this->fvFilename);
         $ftl = FileTypeList::getType($ext);
-        $db = Database::getActiveConnection();
+        $db = Database::get();
 
         $fsr = $this->getFileResource();
         if (!$fsr->isFile()) {
