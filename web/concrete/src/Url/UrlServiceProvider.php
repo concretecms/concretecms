@@ -2,10 +2,7 @@
 namespace Concrete\Core\Url;
 
 use Concrete\Core\Foundation\Service\Provider;
-use Concrete\Core\Url\Resolver\CanonicalUrlResolver;
 use Concrete\Core\Url\Resolver\Manager\ResolverManager;
-use Concrete\Core\Url\Resolver\PageUrlResolver;
-use Concrete\Core\Url\Resolver\PathUrlResolver;
 use Concrete\Core\Url\Resolver\RouteUrlResolver;
 
 class UrlServiceProvider extends Provider
@@ -18,48 +15,37 @@ class UrlServiceProvider extends Provider
      */
     public function register()
     {
-        $this->app->singleton(
-            'url/canonical/resolver',
-            function () {
-                return new CanonicalUrlResolver();
-            });
+        $this->app->singleton('Concrete\Core\Url\Resolver\CanonicalUrlResolver');
+        $this->app->bind('url/canonical/resolver', '\Concrete\Core\Url\Resolver\CanonicalUrlResolver');
 
-        $this->app->singleton(
-            'url/canonical',
-            function () {
-                return \Core::make('url/canonical/resolver')->resolve(array());
-            });
+        $this->app->bind('url/canonical', function ($app) {
+            return $app->make('Concrete\Core\Url\Resolver\CanonicalUrlResolver')->resolve(array());
+        });
 
-        $this->app->bindShared(
-            'url/resolver/path',
-            function () {
-                return new PathUrlResolver();
-            });
+        // Share the path url resolver
+        $this->app->singleton('Concrete\Core\Url\Resolver\PathUrlResolver');
+        $this->app->bind('url/resolver/path', 'Concrete\Core\Url\Resolver\PathUrlResolver');
 
-        $this->app->bindShared(
-            'url/resolver/page',
-            function () {
-                return new PageUrlResolver(\Core::make('url/resolver/path'));
-            });
+        // Share the Page url resolver
+        $this->app->singleton('Concrete\Core\Url\Resolver\PageUrlResolver');
+        $this->app->bind('url/resolver/page', 'Concrete\Core\Url\Resolver\PageUrlResolver');
 
-        $this->app->bindShared(
-            'url/resolver/route',
-            function () {
-                $generator = \Route::getGenerator();
-                $list = \Route::getList();
+        // Share the route url resolver
+        $this->app->singleton('Concrete\Core\Url\Resolver\RouterUrlResolver');
+        $this->app->bind('url/resolver/route', 'Concrete\Core\Url\Resolver\RouterUrlResolver');
 
-                return new RouteUrlResolver(\Core::make('url/resolver/path'), $generator, $list);
-            });
+        $this->app->bindShared('Concrete\Core\Url\Resolver\Manager\ResolverManager',
+            function($app, $default_handle= '', $default_resolver = null) {
+                $manager = new ResolverManager($default_handle ?: 'concrete.path', $default_resolver);
 
-        $this->app->bind(
-            'url/manager',
-            function () {
-                $manager = new ResolverManager('concrete.path', \Core::make('url/resolver/path'));
-                $manager->addResolver('concrete.page', \Core::make('url/resolver/page'));
-                $manager->addResolver('concrete.route', \Core::make('url/resolver/route'));
+                $manager->addResolver('concrete.path', $app->make('Concrete\Core\Url\Resolver\PathUrlResolver'));
+                $manager->addResolver('concrete.page', $app->make('Concrete\Core\Url\Resolver\PageUrlResolver'));
+                $manager->addResolver('concrete.route', $app->make('Concrete\Core\Url\Resolver\RouterUrlResolver'));
 
                 return $manager;
             });
+        $this->app->bind('Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface', 'Concrete\Core\Url\Resolver\Manager\ResolverManager');
+        $this->app->bind('url/manager', 'Concrete\Core\Url\Resolver\Manager\ResolverManager');
     }
 
 }

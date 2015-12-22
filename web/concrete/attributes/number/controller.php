@@ -35,9 +35,9 @@ class Controller extends AttributeTypeController
     public function search()
     {
         $f = Loader::helper('form');
-        $html = $f->text($this->field('from'), $this->request('from'));
+        $html = $f->number($this->field('from'), $this->request('from'));
         $html .= ' ' . t('to') . ' ';
-        $html .= $f->text($this->field('to'), $this->request('to'));
+        $html .= $f->number($this->field('to'), $this->request('to'));
         print $html;
     }
 
@@ -46,7 +46,7 @@ class Controller extends AttributeTypeController
         if (is_object($this->attributeValue)) {
             $value = $this->getAttributeValue()->getValue();
         }
-        print Loader::helper('form')->text($this->field('value'), $value, array('style' => 'width:80px'));
+        print Loader::helper('form')->number($this->field('value'), $value, array('style' => 'width:80px'));
     }
 
     public function validateForm($p)
