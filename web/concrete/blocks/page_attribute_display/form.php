@@ -1,4 +1,5 @@
-<?php   defined('C5_EXECUTE') or die(_("Access Denied."));
+<?php
+defined('C5_EXECUTE') or die('Access Denied.');
 $form = Core::make('helper/form');
 
 print Core::make('helper/concrete/ui')->tabs(array(
