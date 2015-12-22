@@ -3,6 +3,7 @@ namespace Concrete\Block\PageAttributeDisplay;
 
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Attribute\Key\CollectionKey as CollectionAttributeKey;
+use Core;
 
 defined('C5_EXECUTE') or die(_("Access Denied."));
 
@@ -65,7 +66,7 @@ class Controller extends BlockController
             default:
                 $content = $c->getAttribute($this->attributeHandle);
                 if (is_object($content) && $content instanceof \Concrete\Core\File\File) {
-                    $im = \Loader::helper('image');
+                    $im = Core::make('helper/image');
                     $thumb = $im->getThumbnail(
                         $content,
                         $this->thumbnailWidth,
