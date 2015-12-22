@@ -22,6 +22,9 @@ class Controller extends BlockController
     protected $btExportPageTypeColumns = array('ptID');
     protected $btExportPageFeedColumns = array('pfID');
     protected $btCacheBlockRecord = true;
+    protected $btCacheBlockOutput = null;
+    protected $btCacheBlockOutputOnPost = true;
+    protected $btCacheBlockOutputLifetime = 300;
     protected $list;
 
     /**
@@ -501,5 +504,18 @@ class Controller extends BlockController
                 return true;
             }
         }
+    }
+
+    public function cacheBlockOutput()
+    {
+        if ($this->btCacheBlockOutput === null) {
+            if (!$this->enableExternalFiltering && !$this->paginate) {
+                $this->btCacheBlockOutput = true;
+            } else {
+                $this->btCacheBlockOutput = false;
+            }
+        }
+
+        return  $this->btCacheBlockOutput;
     }
 }
