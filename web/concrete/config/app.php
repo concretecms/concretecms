@@ -90,6 +90,9 @@ return array(
      * Core Providers
      */
     'providers'           => array(
+        // Router service provider
+        'core_router' => 'Concrete\Core\Routing\RoutingServiceProvider',
+
         'core_file'                   => '\Concrete\Core\File\FileServiceProvider',
         'core_encryption'             => '\Concrete\Core\Encryption\EncryptionServiceProvider',
         'core_validation'             => '\Concrete\Core\Validation\ValidationServiceProvider',
@@ -129,7 +132,7 @@ return array(
 
         // Validator
         'core_validator'          => '\Concrete\Core\Validator\ValidatorServiceProvider',
-        'core_validator_password' => '\Concrete\Core\Validator\PasswordValidatorServiceProvider'
+        'core_validator_password' => '\Concrete\Core\Validator\PasswordValidatorServiceProvider',
     ),
 
     /**
