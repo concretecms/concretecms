@@ -3,7 +3,7 @@ namespace Concrete\Core\Page\Theme\GridFramework\Type;
 
 use Concrete\Core\Page\Theme\GridFramework\GridFramework;
 
-defined('C5_EXECUTE') or die(_("Access Denied."));
+defined('C5_EXECUTE') or die('Access Denied.');
 
 class Foundation extends GridFramework
 {

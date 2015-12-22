@@ -5,7 +5,7 @@ use Concrete\Core\Block\BlockController;
 use Concrete\Core\Attribute\Key\CollectionKey as CollectionAttributeKey;
 use Core;
 
-defined('C5_EXECUTE') or die(_("Access Denied."));
+defined('C5_EXECUTE') or die('Access Denied.');
 
 /**
  * @author Ryan Tyler
