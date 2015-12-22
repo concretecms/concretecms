@@ -1,5 +1,5 @@
 <?php   defined('C5_EXECUTE') or die(_("Access Denied."));
-$form = Loader::helper('form');
+$form = Core::make('helper/form');
 
 print Core::make('helper/concrete/ui')->tabs(array(
     array('add', t('Add'), true),
