@@ -181,13 +181,22 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     }
 
     /**
+     * The class that will be returned by the getResult function
+     * @return string
+     */
+    public function getPageClass()
+    {
+        return '\\Concrete\\Core\\Page\\Page';
+    }
+
+    /**
      * @param $queryRow
      *
      * @return \Concrete\Core\File\File
      */
     public function getResult($queryRow)
     {
-        $c = ConcretePage::getByID($queryRow['cID'], 'ACTIVE');
+        $c = ConcretePage::getByID($queryRow['cID'], 'ACTIVE', $this->getPageClass());
         if (is_object($c) && $this->checkPermissions($c)) {
             if ($this->pageVersionToRetrieve == self::PAGE_VERSION_RECENT) {
                 $cp = new \Permissions($c);
