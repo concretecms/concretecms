@@ -1,47 +1,40 @@
 <?php
+
 namespace Concrete\Core\Url\Resolver;
 
-use Concrete\Core\Url\Url;
-use Symfony\Component\Routing\Generator\UrlGenerator;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Routing\RouteCollection;
+use Concrete\Core\Routing\RouterInterface;
 
-/**
- * Class RouteUrlResolver
- * @package Concrete\Core\Url\Resolver
- * @deprecated Use RouterUrlResolver instead.
- */
-class RouteUrlResolver implements UrlResolverInterface
+class RouterUrlResolver implements UrlResolverInterface
 {
 
-    protected $generator;
-    protected $routeList;
+    /** @var \Concrete\Core\Routing\RouterInterface */
+    protected $router;
 
+    /** @var \Concrete\Core\Url\Resolver\PathUrlResolver */
     protected $pathUrlResolver;
 
-    public function __construct(UrlResolverInterface $path_url_resolver,
-                                UrlGeneratorInterface $generator,
-                                RouteCollection $route_list)
+    public function __construct(PathUrlResolver $path_url_resolver, RouterInterface $router)
     {
         $this->pathUrlResolver = $path_url_resolver;
-        $this->generator = $generator;
-        $this->routeList = $route_list;
+        $this->router = $router;
     }
 
     /**
+     * Get the url generator from the router
      * @return UrlGeneratorInterface
      */
     public function getGenerator()
     {
-        return $this->generator;
+        return $this->router->getGenerator();
     }
 
     /**
+     * Get the RouteCollection from the router
      * @return RouteCollection
      */
     public function getRouteList()
     {
-        return $this->routeList;
+        return $this->router->getList();
     }
 
     /**
@@ -76,20 +69,35 @@ class RouteUrlResolver implements UrlResolverInterface
             $route_handle = array_shift($arguments);
             $route_parameters = count($arguments) ? array_shift($arguments) : array();
 
+            // If param1 is a string that starts with "route/" and param2 is an array...
             if (is_string($route_handle) &&
                 strtolower(substr($route_handle, 0, 6)) == 'route/' &&
                 is_array($route_parameters)) {
 
-                $route_handle = substr($route_handle, 6);
-                if ($route = $this->getRouteList()->get($route_handle)) {
-                    if ($path = $this->getGenerator()->generate($route_handle, $route_parameters, UrlGenerator::ABSOLUTE_PATH)) {
-                        return $this->pathUrlResolver->resolve(array($path));
-                    }
-                }
+                $resolved = $this->resolveRoute(substr($route_handle, 6), $route_parameters);
             }
         }
 
         return $resolved;
+    }
+
+    /**
+     * Resolve the route
+     *
+     * @param $route_handle
+     * @param $route_parameters
+     * @return $this|\League\URL\URLInterface|mixed|null
+     */
+    private function resolveRoute($route_handle, $route_parameters)
+    {
+        $list = $this->getRouteList();
+        $generator = $this->getGenerator();
+
+        if ($route = $list->get($route_handle)) {
+            if ($path = $generator->generate($route_handle, $route_parameters, UrlGenerator::ABSOLUTE_PATH)) {
+                return $this->pathUrlResolver->resolve(array($path));
+            }
+        }
     }
 
 }
