@@ -870,7 +870,7 @@ return array(
      * ------------------------------------------------------------------------
      */
     'statistics'        => array(
-//        'track_page_views' => true
+        'track_downloads' => true
     ),
     'limits'            => array(
         'sitemap_pages'           => 100,
