@@ -629,11 +629,14 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         $fve = new \Concrete\Core\File\Event\FileAccess($fv);
         Events::dispatch('on_file_download', $fve);
 
-        $db = Loader::db();
-        $db->Execute(
-            'insert into DownloadStatistics (fID, fvID, uID, rcID) values (?, ?, ?, ?)',
-            array($this->fID, intval($fvID), $uID, $rcID)
-        );
+        $config = Core::make('config');
+        if ($config->get('concrete.statistics.track_downloads')) {
+            $db = Loader::db();
+            $db->Execute(
+                'insert into DownloadStatistics (fID, fvID, uID, rcID) values (?, ?, ?, ?)',
+                array($this->fID, intval($fvID), $uID, $rcID)
+            );
+        }
     }
 
     /**
