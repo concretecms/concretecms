@@ -10,7 +10,8 @@ class LoggingServiceProvider extends ServiceProvider
     {
         // Bind the logger singleton
         $this->app->singleton('Concrete\Core\Logging\Logger', function ($app) {
-            $app->build('Concrete\Core\Logging\Logger', array(null, null));
+            // @todo support log level
+            return $app->build('Concrete\Core\Logging\Logger', array(Logger::CHANNEL_APPLICATION));
         });
 
         // Bind the PSR-3 logger interface against the singleton
