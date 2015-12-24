@@ -311,7 +311,7 @@
 				columns: 'Columns',
 				add_head: 'Add Head',
 				delete_head: 'Delete Head',
-				title: 'Title',
+				alt: 'Alt',
 				image_position: 'Position',
 				none: 'None',
 				left: 'Left',
@@ -3926,7 +3926,7 @@
 					// hide link's tooltip
 					$('.redactor-link-tooltip').remove();
 
-					$('#redactor-image-title').val($image.attr('alt'));
+					$('#redactor-image-alt').val($image.attr('alt'));
 
 					if (!this.opts.imageLink) $('.redactor-image-link-option').hide();
 					else
@@ -3949,7 +3949,7 @@
 					}
 
 					this.modal.show();
-					$('#redactor-image-title').focus();
+					$('#redactor-image-alt').focus();
 
 				},
 				setFloating: function($image)
@@ -3986,8 +3986,8 @@
 
 					var $link = $image.closest('a', this.$editor[0]);
 
-					var title = $('#redactor-image-title').val().replace(/(<([^>]+)>)/ig,"");
-					$image.attr('alt', title);
+					var alt = $('#redactor-image-alt').val().replace(/(<([^>]+)>)/ig,"");
+					$image.attr('alt', alt);
 
 					this.image.setFloating($image);
 
@@ -6930,8 +6930,8 @@
 						imageEdit: String()
 						+ '<section id="redactor-modal-image-edit">'
     						+ '<div class="form-group">'
-							+ '<label class="control-label">' + this.lang.get('title') + '</label>'
- 							+ '<input type="text" class="form-control" id="redactor-image-title" />'
+							+ '<label class="control-label">' + this.lang.get('alt') + '</label>'
+ 							+ '<input type="text" class="form-control" id="redactor-image-alt" />'
 						    + '</div>'
 							+ '<div class="form-group">'
 						    + '<label class="control-label redactor-image-link-option">' + this.lang.get('link') + '</label>'
