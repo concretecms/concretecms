@@ -509,4 +509,24 @@ class Application extends Container
 
         return $this->environment = $detector->detect($environments, $args);
     }
+
+    /**
+     * Instantiate a concrete instance of the given type.
+     *
+     * @param  string $concrete
+     * @param  array $parameters
+     * @return mixed
+     *
+     * @throws BindingResolutionException
+     */
+    public function build($concrete, $parameters = array())
+    {
+        $object = parent::build($concrete, $parameters);
+        if (is_object($object) && $object instanceof ApplicationAwareInterface) {
+            $object->setApplication($this);
+        }
+
+        return $object;
+    }
+
 }
