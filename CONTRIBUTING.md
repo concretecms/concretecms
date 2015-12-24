@@ -10,6 +10,12 @@ We've tried to categorize our issues in ways that will make it clear how best we
 
 We have a lot of items we'd like help on: if you find an issue tagged as "accepted:ready to start" **and** either "priority:like to have" or "priority:love to have" you'll know that this is something we'd really, really like to get. We'd love the assistance.
 
+Helpful Links:
+
+* [Issues ready to be worked on](https://github.com/concrete5/concrete5/issues?q=is%3Aopen+is%3Aissue+label%3A%22accepted%3Aready+to+start%22+no%3Aassignee)
+* [New proposals](https://github.com/concrete5/concrete5/issues?q=is%3Aopen+is%3Aissue+label%3A"type%3Arfc")
+* [Things under discussion](https://github.com/concrete5/concrete5/issues?q=is%3Aopen+is%3Aissue+label%3Atype%3Adiscussion)
+
 ## Pull Requests
 
 Before submitting pull requests, please be sure to read these pages:
