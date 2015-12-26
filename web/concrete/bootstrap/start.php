@@ -16,6 +16,7 @@ if (basename($_SERVER['PHP_SELF']) == DISPATCHER_FILENAME_CORE) {
  */
 use Concrete\Core\Application\Application;
 use Concrete\Core\Asset\AssetList;
+use Concrete\Core\Config\ConfigServiceProvider;
 use Concrete\Core\Config\DatabaseLoader;
 use Concrete\Core\Config\DatabaseSaver;
 use Concrete\Core\Config\FileLoader;
@@ -85,20 +86,15 @@ $cms->detectEnvironment(function() use ($db_config, $environment, $cms) {
 });
 
 /**
- * ----------------------------------------------------------------------------
- * Enable Filesystem Config.
- * ----------------------------------------------------------------------------
+ * Enable configuration
  */
-if (!$cms->bound('config')) {
-    $cms->bindShared('config', function(Application $cms) {
-        $file_system = new Filesystem();
-        $file_loader = new FileLoader($file_system);
-        $file_saver = new FileSaver($file_system);
-        return new ConfigRepository($file_loader, $file_saver, $cms->environment());
-    });
-}
+$config_provider = $app->make('Concrete\Core\Config\ConfigServiceProvider');
+$config_provider->register();
 
-$config = $cms->make('config');
+/**
+ * @var Concrete\Core\Config\Repository\Repository $config
+ */
+$config = $app->make('config');
 
 /*
  * ----------------------------------------------------------------------------
@@ -135,18 +131,10 @@ $list->registerMultiple($config->get('app.facades'));
 
 /**
  * ----------------------------------------------------------------------------
- * Set up Database Config.
+ * Start up Database Config.
  * ----------------------------------------------------------------------------
+ * @var Concrete\Core\Config\Repository\Repository $database_config
  */
-
-if (!$cms->bound('config/database')) {
-    $cms->bindShared('config/database', function(Application $cms) {
-        $database_loader = new DatabaseLoader();
-        $database_saver = new DatabaseSaver();
-        return new ConfigRepository($database_loader, $database_saver, $cms->environment());
-    });
-}
-
 $database_config = $cms->make('config/database');
 
 /**
