@@ -1,4 +1,4 @@
-<?php
+4<?php
 namespace Concrete\Core\Config;
 
 use Concrete\Core\Foundation\Service\Provider;
@@ -15,7 +15,7 @@ class ConfigServiceProvider extends Provider
         $this->registerDatabaseConfig();
     }
 
-    public function registerFileConfig()
+    private function registerFileConfig()
     {
         // Bind abstract type
         $this->app->singleton('config', function($app) {
@@ -30,7 +30,7 @@ class ConfigServiceProvider extends Provider
         $this->app->bind('Illuminate\Config\Repository', 'Concrete\Core\Config\Repository\Repository');
     }
 
-    public function registerDatabaseConfig()
+    private function registerDatabaseConfig()
     {
         $this->app->bindShared('config/database', function($app) {
             $loader = $app->make('Concrete\Core\Config\DatabaseLoader');
