@@ -8,6 +8,7 @@ use Concrete\Core\Cache\Page\PageCacheRecord;
 use Concrete\Core\Cache\OpCache;
 use Concrete\Core\Foundation\ClassLoader;
 use Concrete\Core\Foundation\EnvironmentDetector;
+use Concrete\Core\Foundation\Runtime\RuntimeInterface;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Logging\Query\Logger;
 use Concrete\Core\Routing\DispatcherRouteCallback;
@@ -19,6 +20,7 @@ use Config;
 use Core;
 use Database;
 use Environment;
+use Concrete\Core\Support\Facade\Events;
 use Illuminate\Container\Container;
 use Job;
 use JobSet;
@@ -527,6 +529,14 @@ class Application extends Container
         }
 
         return $object;
+    }
+
+    /**
+     * @return RuntimeInterface
+     */
+    public function getRuntime()
+    {
+        return $this->make('Concrete\Core\Foundation\Runtime\DefaultRuntime');
     }
 
 }
