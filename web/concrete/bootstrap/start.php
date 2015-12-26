@@ -16,18 +16,11 @@ if (basename($_SERVER['PHP_SELF']) == DISPATCHER_FILENAME_CORE) {
  */
 use Concrete\Core\Application\Application;
 use Concrete\Core\Asset\AssetList;
-use Concrete\Core\Config\ConfigServiceProvider;
-use Concrete\Core\Config\DatabaseLoader;
-use Concrete\Core\Config\DatabaseSaver;
-use Concrete\Core\Config\FileLoader;
-use Concrete\Core\Config\FileSaver;
-use Concrete\Core\Config\Repository\Repository as ConfigRepository;
 use Concrete\Core\File\Type\TypeList;
 use Concrete\Core\Foundation\ClassAliasList;
 use Concrete\Core\Foundation\Service\ProviderList;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\Support\Facade\Facade;
-use Illuminate\Filesystem\Filesystem;
 use Patchwork\Utf8\Bootup as PatchworkUTF8;
 
 /**
@@ -64,7 +57,6 @@ Facade::setFacadeApplication($cms);
  * ----------------------------------------------------------------------------
  */
 require DIR_BASE_CORE . '/bootstrap/paths.php';
-
 
 /**
  * ----------------------------------------------------------------------------
@@ -131,18 +123,9 @@ $list->registerMultiple($config->get('app.facades'));
 
 /**
  * ----------------------------------------------------------------------------
- * Start up Database Config.
- * ----------------------------------------------------------------------------
- * @var Concrete\Core\Config\Repository\Repository $database_config
- */
-$database_config = $cms->make('config/database');
-
-/**
- * ----------------------------------------------------------------------------
  * Setup the core service groups.
  * ----------------------------------------------------------------------------
  */
-
 $list = new ProviderList($cms);
 
 // Register events first so that they can be used by other providers.
