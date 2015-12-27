@@ -535,9 +535,16 @@ class Application extends Container
      */
     public function getRuntime()
     {
-        /** @var DefaultRuntime $runtime */
-        $runtime = $this->make('Concrete\Core\Foundation\Runtime\DefaultRuntime');
+        // Set the runtime to a singleton
+        $runtime_class = 'Concrete\Core\Foundation\Runtime\DefaultRuntime';
+        if (!$this->isShared($runtime_class)) {
+            $this->singleton($runtime_class);
+        }
 
+        /** @var DefaultRuntime $runtime */
+        $runtime = $this->make($runtime_class);
+
+        // If we're in CLI, lets set the runner to the CLI runner
         if ($this->isRunThroughCommandLineInterface()) {
             $runtime->setRunClass('Concrete\Core\Foundation\Runtime\Run\CLIRunner');
         }
