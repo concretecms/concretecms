@@ -29,4 +29,7 @@ $cms->instance('app', $cms);
 $cms->instance('Concrete\Core\Application\Application', $cms);
 $cms->instance('Illuminate\Container\Container', $cms);
 
+// Boot the runtime
+$cms->getRuntime()->boot();
+
 return $cms;
