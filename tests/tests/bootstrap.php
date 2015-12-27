@@ -50,6 +50,7 @@ $r = new \Concrete\Core\Http\Request(
  * Begin concrete5 startup.
  */
 $cms = require $DIR_BASE_CORE . '/bootstrap/start.php';
+$cms->getRuntime()->boot();
 
 /**
  * Test more strictly than core settings
