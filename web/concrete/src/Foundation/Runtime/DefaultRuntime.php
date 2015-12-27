@@ -116,6 +116,8 @@ class DefaultRuntime implements RuntimeInterface, ApplicationAwareInterface
         if ($response) {
             $this->sendResponse($response);
         }
+
+        return $response;
     }
 
     /**
