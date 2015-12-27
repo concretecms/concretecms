@@ -6,7 +6,7 @@ And concrete5 is no exception, so we'd like to thank you for your help.
 
 ## What We'd Love Help On
 
-We've tried to categorize our issues in ways that will make it clear how best we can use your help. In general, if something is labelled as "accepted:ready to start" it is ready for development! If you find an issue that is labeled in this way, without a dedicated person assigned to it, post that you'd like to work on it, and go for it. When you're done submit a pull request and we'll review it right away for inclusion. 
+We've tried to categorize our issues in ways that will make it clear how best we can use your help. In general, if something is labelled as "accepted:ready to start" it is ready for development! If you find an issue that is labeled in this way, without a dedicated person assigned to it, post that you'd like to work on it, and go for it. When you're done submit a pull request and we'll review it right away for inclusion.
 
 We have a lot of items we'd like help on: if you find an issue tagged as "accepted:ready to start" **and** either "priority:like to have" or "priority:love to have" you'll know that this is something we'd really, really like to get. We'd love the assistance.
 
