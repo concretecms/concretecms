@@ -14,6 +14,7 @@
 *.yaml normalizetext
 *.scss normalizetext
 *.sass normalizetext
+*.less normalizetext
 *.html normalizetext diff=html
 *.js normalizetext
 *.md normalizetext
