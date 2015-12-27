@@ -16,7 +16,7 @@ class SelectValueOption
 
     /**
      * @ManyToOne(targetEntity="\Concrete\Core\Entity\Attribute\Key\SelectKey", inversedBy="options")
-     * @JoinColumn(name="avSelectOptionID", referencedColumnName="akID")
+     * @JoinColumn(name="akID", referencedColumnName="akID")
      */
     protected $key;
 

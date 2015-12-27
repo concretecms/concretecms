@@ -11,7 +11,7 @@ class TopicsValue extends Value
 {
 
     /**
-     * @OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Value\SelectedTopic", mappedBy="value")
+     * @OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Value\SelectedTopic", mappedBy="value", cascade={"all"})
      * @JoinColumn(name="avID", referencedColumnName="avID")
      */
     protected $topics;

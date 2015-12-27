@@ -10,6 +10,11 @@ use Symfony\Component\HttpFoundation\Request;
 class PageCategory extends AbstractCategory
 {
 
+    public function getAttributeRepository()
+    {
+        return $this->entityManager->getRepository('\Concrete\Core\Entity\Page\Attribute');
+    }
+
     /**
      * Takes an attribute key as created by the subroutine and assigns it to the page category.
      * @param Key $key
@@ -22,18 +27,6 @@ class PageCategory extends AbstractCategory
         $attribute->setAttributeKey($key);
         $this->entityManager->persist($attribute);
         $this->entityManager->flush();
-    }
-
-    public function getAttributeKeyByHandle($handle)
-    {
-        $query = 'select p from \Concrete\Core\Entity\Page\Attribute p join p.attribute_key a
-         where a.akHandle = :handle';
-        $query = $this->entityManager->createQuery($query);
-        $query->setParameter('handle', $handle);
-        $attribute = $query->getOneOrNullResult();
-        if ($attribute) {
-            return $attribute->getAttributeKey();
-        }
     }
 
     public function addFromRequest(AttributeType $type, Request $request)

@@ -23,11 +23,6 @@ class Controller extends AttributeTypeController
 
     public $helpers = array('form');
 
-    public function getAttributeKey()
-    {
-        return new TopicsKey();
-    }
-
     public function filterByAttribute(AttributedItemList $list, $value, $comparison = '=')
     {
         if ($value instanceof TreeNode) {
@@ -106,9 +101,8 @@ class Controller extends AttributeTypeController
             foreach ($akn->topics->topic as $topicPath) {
                 $selected[] = (string) $topicPath;
             }
+            return $this->saveValue($selected);
         }
-
-        return $selected;
     }
 
     public function saveValue($nodes)
@@ -123,15 +117,14 @@ class Controller extends AttributeTypeController
             }
         }
 
-        $db = Database::get();
-        $db->Execute('delete from atSelectedTopics where avID = ?', array($this->getAttributeValueID()));
-
-        foreach ($selected as $optionID) {
-            $db->execute(
-                'INSERT INTO atSelectedTopics (avID, TopicNodeID) VALUES (?, ?)',
-                array($this->getAttributeValueID(), $optionID)
-            );
+        $topicsValue = new TopicsValue();
+        foreach($selected as $treeNodeID) {
+            $topicsValueNode = new SelectedTopic();
+            $topicsValueNode->setAttributeValue($topicsValue);
+            $topicsValueNode->setTreeNodeID($treeNodeID);
+            $topicsValue->getSelectedTopics()->add($topicsValueNode);
         }
+        return $topicsValue;
     }
 
     public function exportKey($key)
@@ -233,7 +226,6 @@ class Controller extends AttributeTypeController
 
     public function setNodes($akTopicParentNodeID, $akTopicTreeID)
     {
-        $db = Database::get();
         $this->attributeKey->setParentNodeID($akTopicParentNodeID);
         $this->attributeKey->setTopicTreeID($akTopicTreeID);
     }
@@ -350,14 +342,15 @@ class Controller extends AttributeTypeController
 
     protected function load()
     {
+        /**
+         * @var $ak \Concrete\Core\Entity\Attribute\Key\TopicsKey
+         */
         $ak = $this->getAttributeKey();
         if (!is_object($ak)) {
             return false;
         }
-        $db = Database::get();
-        $row = $db->GetRow('select * from atTopicSettings where akID = ?', $ak->getAttributeKeyID());
-        $this->akTopicParentNodeID = $row['akTopicParentNodeID'];
-        $this->akTopicTreeID = $row['akTopicTreeID'];
+        $this->akTopicParentNodeID = $ak->getParentNodeID();
+        $this->akTopicTreeID = $ak->getTopicTreeID();
     }
 
     public function duplicateKey($newAK)
@@ -375,4 +368,10 @@ class Controller extends AttributeTypeController
             true
         );
     }
+
+    public function createAttributeKey()
+    {
+        return new TopicsKey();
+    }
+
 }

@@ -2,11 +2,13 @@
 
 namespace Concrete\Core\Entity\File;
 
+use Concrete\Core\Attribute\AttributeInterface;
+
 /**
  * @Entity
  * @Table(name="FileAttributeKeys")
  */
-class Attribute
+class Attribute implements AttributeInterface
 {
 
     /**
@@ -15,6 +17,31 @@ class Attribute
      * @JoinColumn(name="akID", referencedColumnName="akID")
      **/
     protected $attribute_key;
+
+    /**
+     * @ManyToOne(targetEntity="\Concrete\Core\File\Version",  inversedBy="attributes")
+     * @JoinColumns({
+     *   @JoinColumn(name="fID", referencedColumnName="fID"),
+     *   @JoinColumn(name="fvID", referencedColumnName="fvID")
+     * })
+     */
+    protected $version;
+
+    /**
+     * @return mixed
+     */
+    public function getFileVersion()
+    {
+        return $this->version;
+    }
+
+    /**
+     * @param mixed $version
+     */
+    public function setFileVersion($version)
+    {
+        $this->version = $version;
+    }
 
     /**
      * @return mixed

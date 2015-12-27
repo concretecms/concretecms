@@ -223,9 +223,11 @@ class ContentImporter
                 }
                 if (isset($px->attributes)) {
                     foreach ($px->attributes->children() as $attr) {
-                        $ak = CollectionAttributeKey::getByHandle($attr['handle']);
+                        $handle = (string) $attr['handle'];
+                        $ak = CollectionAttributeKey::getByHandle($handle);
                         if (is_object($ak)) {
-                            $page->setAttribute((string) $attr['handle'], $ak->getController()->importValue($attr));
+                            $value = $ak->getController()->importValue($attr);
+                            $page->setAttribute($handle, $value);
                         }
                     }
                 }

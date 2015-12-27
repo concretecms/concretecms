@@ -25,7 +25,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	<div class="form-group">
 		<label class="control-label"><?=t('Additional Attributes')?></label>
 
-	<?php foreach ($list as $ak) { ?>
+	<?php foreach ($list as $ak) {
+		$ak = $ak->getAttributeKey();
+		?>
 
 		<div class="checkbox"><label><?=$form->checkbox('ak_' . $ak->getAttributeKeyHandle(), 1, $fldc->contains($ak))?> <span><?=$ak->getAttributeKeyDisplayName()?></span></label></div>
 

@@ -13,13 +13,9 @@ use Symfony\Component\HttpFoundation\Request;
 class ExpressCategory extends AbstractCategory
 {
 
-    public function getAttributeKeyByHandle($handle)
+    public function getAttributeRepository()
     {
-        $query = 'select \Concrete\Core\Entity\Express\Attribute a join
-        \Concrete\Core\Entity\Key\Key where akHandle :handle';
-        $query = $this->entityManager->createQuery($query);
-        $query->setParameter('handle', $handle);
-        return $query->getSingleResult();
+        return $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Attribute');
     }
 
     public function addFromRequest(Type $type, Request $request)

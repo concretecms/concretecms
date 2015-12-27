@@ -9,6 +9,7 @@ use CollectionAttributeKey;
 use CollectionVersion;
 use Concrete\Core\Attribute\Key\Key;
 use Concrete\Core\Attribute\Value\CollectionValue as CollectionAttributeValue;
+use Concrete\Core\Entity\Attribute\Value\Value;
 use Concrete\Core\Entity\Page\AttributeValue;
 use Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionVersionFeatureAssignment;
 use Concrete\Core\Feature\Feature;
@@ -436,6 +437,10 @@ class Collection extends Object
         $this->reindex();
     }
 
+
+    /*
+
+
     public function getAttributeValueObject($ak, $createIfNotFound = false)
     {
         $db = Loader::db();
@@ -473,6 +478,7 @@ class Collection extends Object
 
         return $av;
     }
+        */
 
     public function getSetCollectionAttributes()
     {
@@ -497,9 +503,12 @@ class Collection extends Object
             $ak = CollectionAttributeKey::getByHandle($ak);
         }
 
+
         $controller = $ak->getController();
         $controller->setAttributeKey($ak);
-        $value = $controller->saveValue($value);
+        if (!($value instanceof Value)) {
+            $value = $controller->saveValue($value);
+        }
         $orm->persist($value);
         $orm->flush();
 
@@ -1159,5 +1168,16 @@ class Collection extends Object
 
             return Collection::getByID($newCID);
         }
+    }
+
+    /**
+     * @deprecated
+     * @param $ak
+     * @param null $mode
+     * @return type
+     */
+    public function getAttributeValueObject($ak, $mode = null)
+    {
+        return $this->getAttribute($ak, $mode);
     }
 }

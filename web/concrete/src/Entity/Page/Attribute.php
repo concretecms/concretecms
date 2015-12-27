@@ -2,11 +2,13 @@
 
 namespace Concrete\Core\Entity\Page;
 
+use Concrete\Core\Attribute\AttributeInterface;
+
 /**
  * @Entity
  * @Table(name="CollectionAttributeKeys")
  */
-class Attribute
+class Attribute implements AttributeInterface
 {
 
     /**

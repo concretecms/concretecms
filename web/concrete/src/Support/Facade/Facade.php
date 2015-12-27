@@ -105,7 +105,7 @@ abstract class Facade {
 		$instance = static::resolveFacadeInstance(static::getFacadeAccessor());
 
         if (!method_exists($instance, $method)) {
-            throw new \Exception('Invalid Method.');
+            throw new \Exception(t('Invalid Method on class %s: %s.', get_class($instance), $method));
         }
 		switch (count($args))
 		{

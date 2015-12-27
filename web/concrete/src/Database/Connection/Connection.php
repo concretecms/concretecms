@@ -29,7 +29,7 @@ class Connection extends \Doctrine\DBAL\Connection
      */
     public function createEntityManager()
     {
-        return ORM::makeEntityManager($this, 'core');
+        return ORM::entityManager('core');
     }
 
     /**

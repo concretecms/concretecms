@@ -14,7 +14,7 @@ class SelectKey extends Key
 {
 
     /**
-     * @OneToMany(targetEntity="Concrete\Core\Entity\Attribute\Value\SelectValueOption", mappedBy="key")
+     * @OneToMany(targetEntity="Concrete\Core\Entity\Attribute\Value\SelectValueOption", mappedBy="key", cascade={"all"})
      */
     protected $options;
 
@@ -97,9 +97,25 @@ class SelectKey extends Key
         $this->options = new ArrayCollection();
     }
 
+    /**
+     * @return mixed
+     */
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+    /**
+     * @param mixed $options
+     */
+    public function setOptions($options)
+    {
+        $this->options = $options;
+    }
+
     public function createController()
     {
-        $controller = new \Concrete\Attribute\Textarea\Controller($this->getAttributeType());
+        $controller = new \Concrete\Attribute\Select\Controller($this->getAttributeType());
         return $controller;
     }
 

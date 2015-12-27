@@ -10,27 +10,24 @@ use Symfony\Component\HttpFoundation\Request;
 class UserCategory extends AbstractCategory
 {
 
-    public function getAttributeKeyByHandle($handle)
+    public function getAttributeRepository()
     {
-        $query = 'select u from \Concrete\Core\Entity\User\Attribute u join u.attribute_key a
-         where a.akHandle = :handle';
-        $query = $this->entityManager->createQuery($query);
-        $query->setParameter('handle', $handle);
-        $attribute = $query->getOneOrNullResult();
-        if ($attribute) {
-            return $attribute->getAttributeKey();
-        }
+        return $this->entityManager->getRepository('\Concrete\Core\Entity\User\Attribute');
+    }
+
+    public function getRegistrationList()
+    {
+        return $this->getAttributeRepository()->getRegistrationList();
     }
 
     /**
-     * Takes an attribute key as created by the subroutine and assigns it to the page category.
+     * Takes an attribute key as created by the subroutine and assigns it to the category.
      * @param Key $key
      */
-    protected function assignToCategory(Key $key)
+    protected function assignToCategory(Key $key, Attribute $attribute)
     {
         $this->entityManager->persist($key);
         $this->entityManager->flush();
-        $attribute = new Attribute();
         $attribute->setAttributeKey($key);
         $this->entityManager->persist($attribute);
         $this->entityManager->flush();
@@ -39,13 +36,21 @@ class UserCategory extends AbstractCategory
     public function addFromRequest(Type $type, Request $request)
     {
         $key = parent::addFromRequest($type, $request);
-        $this->assignToCategory($key);
+        $attribute = new Attribute();
+        $this->assignToCategory($key, $attribute);
     }
 
     public function import(Type $type, \SimpleXMLElement $element)
     {
         $key = parent::import($type, $element);
-        $this->assignToCategory($key);
+        $attribute = new Attribute();
+        $attribute->setAttributeKeyDisplayedInProfile((string) $element['profile-displayed'] == 1);
+        $attribute->setAttributeKeyEditableInProfile((string) $element['profile-editable'] == 1);
+        $attribute->setAttributeKeyRequiredInProfile((string) $element['profile-required'] == 1);
+        $attribute->setAttributeKeyEditableInRegistration((string) $element['register-editable'] == 1);
+        $attribute->setAttributeKeyRequiredOnRegister((string) $element['register-required'] == 1);
+        $attribute->setAttributeKeyDisplayedInMemberList((string) $element['member-list-displayed'] == 1);
+        $this->assignToCategory($key, $attribute);
     }
 
     public function delete(Key $key)

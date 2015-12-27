@@ -66,19 +66,6 @@ class Controller extends AttributeTypeController
         return $value;
     }
 
-    public function importValue(\SimpleXMLElement $akv)
-    {
-        if (isset($akv->value->fID)) {
-            $fIDVal = (string) $akv->value->fID;
-            $inspector = \Core::make('import/value_inspector');
-            $result = $inspector->inspect($fIDVal);
-            $fID = $result->getReplacedValue();
-            if ($fID) {
-                return File::getByID($fID);
-            }
-        }
-    }
-
     public function search()
     {
         // search by file causes too many problems
@@ -97,6 +84,22 @@ class Controller extends AttributeTypeController
         $form .= $al->file('ccm-file-akID-' . $this->attributeKey->getAttributeKeyID(), $this->field('value'), t('Choose File'), $bf);
         $form .= '</div>';
         print $form;
+    }
+
+    public function importValue(\SimpleXMLElement $akv)
+    {
+        if (isset($akv->value->fID)) {
+            $fIDVal = (string) $akv->value->fID;
+            $inspector = \Core::make('import/value_inspector');
+            $result = $inspector->inspect($fIDVal);
+            $fID = $result->getReplacedValue();
+            if ($fID) {
+                $f = File::getByID($fID);
+                if (is_object($f)) {
+                    return $this->saveValue($f);
+                }
+            }
+        }
     }
 
     // run when we call setAttribute(), instead of saving through the UI

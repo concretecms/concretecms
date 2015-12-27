@@ -250,6 +250,7 @@ class Users extends Controller
         );
         $sfa = UserAttributeKey::getSearchableList();
         foreach ($sfa as $ak) {
+            $ak = $ak->getAttributeKey();
             $r[$ak->getAttributeKeyID()] = $ak->getAttributeKeyDisplayName();
         }
         natcasesort($r);

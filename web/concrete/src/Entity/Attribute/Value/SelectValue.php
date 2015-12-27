@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Entity\Attribute\Value;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * @Entity
  * @Table(name="SelectAttributeValues")
@@ -16,6 +18,11 @@ class SelectValue extends Value
      * )
      */
     protected $selectedOptions;
+
+    public function __construct()
+    {
+        $this->selectedOptions = new ArrayCollection();
+    }
 
     /**
      * @return mixed

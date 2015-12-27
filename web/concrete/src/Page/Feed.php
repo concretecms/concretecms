@@ -17,7 +17,7 @@ class Feed
     protected $checkPagePermissions = true;
 
     /**
-     * @Column(type="string")
+     * @Column(type="string", nullable=true)
      */
     protected $customTopicAttributeKeyHandle = null;
 
@@ -263,7 +263,7 @@ class Feed
     protected $pfContentToDisplay = 'S'; // short description
 
     /**
-     * @Column(type="string")
+     * @Column(type="string", nullable=true)
      */
     protected $pfAreaHandleToDisplay;
 
