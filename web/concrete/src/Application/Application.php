@@ -8,6 +8,7 @@ use Concrete\Core\Cache\Page\PageCacheRecord;
 use Concrete\Core\Cache\OpCache;
 use Concrete\Core\Foundation\ClassLoader;
 use Concrete\Core\Foundation\EnvironmentDetector;
+use Concrete\Core\Foundation\Runtime\DefaultRuntime;
 use Concrete\Core\Foundation\Runtime\RuntimeInterface;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Logging\Query\Logger;
@@ -20,11 +21,9 @@ use Config;
 use Core;
 use Database;
 use Environment;
-use Concrete\Core\Support\Facade\Events;
 use Illuminate\Container\Container;
 use Job;
 use JobSet;
-use Log;
 use Package;
 use Page;
 use Redirect;
@@ -536,7 +535,14 @@ class Application extends Container
      */
     public function getRuntime()
     {
-        return $this->make('Concrete\Core\Foundation\Runtime\DefaultRuntime');
+        /** @var DefaultRuntime $runtime */
+        $runtime = $this->make('Concrete\Core\Foundation\Runtime\DefaultRuntime');
+
+        if ($this->isRunThroughCommandLineInterface()) {
+            $runtime->setRunClass('Concrete\Core\Foundation\Runtime\Run\CLIRunner');
+        }
+
+        return $runtime;
     }
 
 }
