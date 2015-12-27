@@ -3,6 +3,7 @@ namespace Concrete\Core\Error\Run;
 
 use Exception;
 use InvalidArgumentException;
+use Symfony\Component\Debug\Exception\FatalThrowableError;
 use Whoops\Exception\ErrorException;
 use Whoops\Exception\Inspector;
 use Whoops\Handler\CallbackHandler;
@@ -22,8 +23,13 @@ class PHP7CompatibleRun
 
     public function handleException($exception)
     {
+
+        if (!$exception instanceof \Exception) {
+            $exception = new FatalThrowableError($exception);
+        }
+
         // Convert to a compatible exception
-        return $this->run->handleException(PHP7CompatibleException::fromThrowable($exception));
+        return $this->run->handleException($exception);
     }
 
     public function __call($name, $arguments)
