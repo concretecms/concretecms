@@ -126,9 +126,6 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
         if (!$this->app->isRunThroughCommandLineInterface()) {
             return $this->bootHttpSapi($config, $app);
         }
-
-        // Shim request alias potentially never loading.
-        class_exists('\Request');
     }
 
     /**
@@ -262,6 +259,9 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
         $list = ClassAliasList::getInstance();
         $list->registerMultiple($config->get('app.aliases'));
         $list->registerMultiple($config->get('app.facades'));
+
+        // Autoload some aliases to prevent typehinting errors
+        class_exists('\Request');
 
         return $list;
     }
