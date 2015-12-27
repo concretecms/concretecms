@@ -32,11 +32,20 @@ require $__DIR__ . '/bootstrap/autoload.php';
  * ----------------------------------------------------------------------------
  * Begin concrete5 startup.
  * ----------------------------------------------------------------------------
+ * @var \Concrete\Core\Application\Application $cms
  */
 $cms = require $__DIR__ . '/bootstrap/start.php';
 
+/**
+ * ----------------------------------------------------------------------------
+ * Boot the runtime
+ * ----------------------------------------------------------------------------
+ */
+$runtime = $cms->getRuntime();
+$runtime->boot();
 
-if (!$cms->isRunThroughCommandLineInterface()) {
+// Run the runtime
+if ($response = $runtime->run()) {
 
     /**
      * ----------------------------------------------------------------------------
