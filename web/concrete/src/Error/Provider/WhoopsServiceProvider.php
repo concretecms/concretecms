@@ -3,6 +3,7 @@ namespace Concrete\Core\Error\Provider;
 
 use Concrete\Core\Error\Handler\ErrorHandler;
 use Concrete\Core\Error\Handler\JsonErrorHandler;
+use Concrete\Core\Error\Run\PHP7CompatibleRun;
 use Concrete\Core\Foundation\Service\Provider;
 use Whoops\Handler\PlainTextHandler;
 use Whoops\Run;
@@ -16,7 +17,11 @@ class WhoopsServiceProvider extends Provider
             ini_set('display_errors', 0);
         }
 
+
         $run = new Run;
+        if (interface_exists('\Throwable')) {
+            $run = new PHP7CompatibleRun($run);
+        }
 
         $handler = new ErrorHandler();
         $run->pushHandler($handler);
