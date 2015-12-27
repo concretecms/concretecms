@@ -383,13 +383,13 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
     /**
      * @param \Concrete\Core\Application\Application $app
      * @param \Concrete\Core\Http\Request $request
+     * @return null|Response
      */
     private function checkCache(Application $app, Request $request)
     {
         $response = $app->checkPageCache($request);
         if ($response) {
-            $response->send();
-            $app->shutdown();
+            return $response;
         }
     }
 
