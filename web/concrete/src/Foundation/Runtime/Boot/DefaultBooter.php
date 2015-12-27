@@ -112,7 +112,6 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
          * ----------------------------------------------------------------------------
          */
         $app->setupFilesystem();
-
         /**
          * ----------------------------------------------------------------------------
          * Registries for theme paths, assets, routes and file types.
@@ -291,7 +290,7 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
         define('APP_VERSION', $config->get('concrete.version'));
         define('APP_CHARSET', $config->get('concrete.charset'));
         try {
-            define('BASE_URL', $this->app->make('url/canonical'));
+            define('BASE_URL', (string) $this->app->make('url/canonical'));
         } catch (\Exception $x) {
             echo $x->getMessage();
             die(1);
