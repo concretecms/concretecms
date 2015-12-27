@@ -19,7 +19,7 @@ if (is_object($c)) {
 
 	if (!isset($pageTitle) || !$pageTitle) {
 		// we aren't getting it dynamically.
-		$pageTitle = $c->getCollectionAttributeValue('meta_title');
+		$pageTitle = $c->getAttribute('meta_title');
 		if (!$pageTitle) {
 			$pageTitle = $c->getCollectionName();
 			if($c->isSystemPage()) {
@@ -38,7 +38,7 @@ if (is_object($c)) {
 
 	if (!isset($pageDescription) || !$pageDescription) {
 		// we aren't getting it dynamically.
-		$pageDescription = $c->getCollectionAttributeValue('meta_description');
+		$pageDescription = $c->getAttribute('meta_description');
 		if (!$pageDescription) {
 			$pageDescription = $c->getCollectionDescription();
 		}
@@ -72,7 +72,7 @@ if (is_object($c)) {
 
 <meta http-equiv="content-type" content="text/html; charset=<?php echo APP_CHARSET?>" />
 <?php
-$akk = $c->getCollectionAttributeValue('meta_keywords');
+$akk = $c->getAttribute('meta_keywords');
 ?>
 <title><?php echo htmlspecialchars($pageTitle, ENT_COMPAT, APP_CHARSET)?></title>
 <meta name="description" content="<?=htmlspecialchars($pageDescription, ENT_COMPAT, APP_CHARSET)?>" />
@@ -80,7 +80,7 @@ $akk = $c->getCollectionAttributeValue('meta_keywords');
 <? if ($akk) { ?>
 <meta name="keywords" content="<?=htmlspecialchars($akk, ENT_COMPAT, APP_CHARSET)?>" />
 <?php }
-if($c->getCollectionAttributeValue('exclude_search_index')) { ?>
+if($c->getAttribute('exclude_search_index')) { ?>
     <meta name="robots" content="noindex" />
 <?php } ?>
 <?php
@@ -185,4 +185,4 @@ $_trackingCodePosition = Config::get('concrete.seo.tracking.code_position');
 if (empty($disableTrackingCode) && $_trackingCodePosition === 'top') {
 	echo Config::get('concrete.seo.tracking.code');
 }
-echo $c->getCollectionAttributeValue('header_extra_content');
+echo $c->getAttribute('header_extra_content');

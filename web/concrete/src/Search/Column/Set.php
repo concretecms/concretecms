@@ -79,7 +79,7 @@ class Set
                 if ($_col->getColumnKey() == $col->getColumnKey()) {
                     return true;
                 }
-            } elseif (is_a($col, '\Concrete\Core\Attribute\Key\Key')) {
+            } elseif (is_a($col, '\Concrete\Core\Attribute\AttributeKeyInterface')) {
                 if ($_col->getColumnKey() == 'ak_' . $col->getAttributeKeyHandle()) {
                     return true;
                 }

@@ -2,6 +2,7 @@
 
 namespace Concrete\Attribute\Select;
 
+use Concrete\Core\Entity\Attribute\Key\SelectKey;
 use Concrete\Core\Entity\Attribute\Value\SelectValue;
 use Concrete\Core\Entity\Attribute\Value\SelectValueOption;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
@@ -40,17 +41,17 @@ class Controller extends AttributeTypeController
 
     protected function load()
     {
+        /**
+         * @var $ak \Concrete\Core\Entity\Attribute\Key\SelectKey
+         */
         $ak = $this->getAttributeKey();
         if (!is_object($ak)) {
             return false;
         }
 
-        $db = Database::get();
-        $row = $db->GetRow('select akSelectAllowMultipleValues, akSelectOptionDisplayOrder, akSelectAllowOtherValues from atSelectSettings where akID = ?',
-            array($ak->getAttributeKeyID()));
-        $this->akSelectAllowMultipleValues = $row ? $row['akSelectAllowMultipleValues'] : null;
-        $this->akSelectAllowOtherValues = $row ? $row['akSelectAllowOtherValues'] : null;
-        $this->akSelectOptionDisplayOrder = $row ? $row['akSelectOptionDisplayOrder'] : null;
+        $this->akSelectAllowMultipleValues = $ak->getAllowMultipleValues();
+        $this->akSelectAllowOtherValues = $ak->getAllowOtherValues();
+        $this->akSelectOptionDisplayOrder = $ak->getDisplayOrder();
 
         $this->set('akSelectAllowMultipleValues', $this->akSelectAllowMultipleValues);
         $this->set('akSelectAllowOtherValues', $this->akSelectAllowOtherValues);
@@ -112,18 +113,6 @@ class Controller extends AttributeTypeController
         }
     }
 
-    public function importValue(\SimpleXMLElement $akv)
-    {
-        if (isset($akv->value)) {
-            $vals = array();
-            foreach ($akv->value->children() as $ch) {
-                $vals[] = (string)$ch;
-            }
-
-            return $vals;
-        }
-    }
-
     public function setAllowedMultipleValues($allow)
     {
         $db = Database::get();
@@ -173,10 +162,11 @@ class Controller extends AttributeTypeController
 
             if (isset($akey->type->options)) {
                 foreach ($akey->type->options->children() as $option) {
-                    $option = new SelectValueOption();
-                    $option->setValue((string) $option['value']);
-                    $option->setIsEndUserAdded((bool) $option['is-end-user-added']);
-                    $this->attributeKey->getOptions()->add($option);
+                    $opt = new SelectValueOption();
+                    $opt->setValue((string) $option['value']);
+                    $opt->setIsEndUserAdded((bool) $option['is-end-user-added']);
+                    $opt->setAttributeKey($this->attributeKey);
+                    $this->attributeKey->getOptions()->add($opt);
                 }
             }
         }
@@ -338,8 +328,20 @@ class Controller extends AttributeTypeController
                 }
             }
         }
-
     }
+
+    public function importValue(\SimpleXMLElement $akv)
+    {
+        if (isset($akv->value)) {
+            $vals = array();
+            foreach ($akv->value->children() as $ch) {
+                $vals[] = (string)$ch;
+            }
+            return $this->saveValue($vals);
+        }
+    }
+
+
 
     // Sets select options for a particular attribute
     // If the $value == string, then 1 item is selected
@@ -741,4 +743,10 @@ class Controller extends AttributeTypeController
 
         return $this->akSelectOptionDisplayOrder;
     }
+
+    public function createAttributeKey()
+    {
+        return new SelectKey();
+    }
+
 }

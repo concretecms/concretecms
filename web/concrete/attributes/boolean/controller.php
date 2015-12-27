@@ -28,6 +28,7 @@ class Controller extends AttributeTypeController
 
     public function filterByAttribute(AttributedItemList $list, $boolean, $comparison = '=')
     {
+        return;
         $qb = $list->getQueryObject();
         $column = sprintf('ak_%s', $this->attributeKey->getAttributeKeyHandle());
         switch ($comparison) {

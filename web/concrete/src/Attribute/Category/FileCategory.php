@@ -10,16 +10,9 @@ use Symfony\Component\HttpFoundation\Request;
 class FileCategory extends AbstractCategory
 {
 
-    public function getAttributeKeyByHandle($handle)
+    public function getAttributeRepository()
     {
-        $query = 'select f from \Concrete\Core\Entity\File\Attribute f join f.attribute_key a
-         where a.akHandle = :handle';
-        $query = $this->entityManager->createQuery($query);
-        $query->setParameter('handle', $handle);
-        $attribute = $query->getOneOrNullResult();
-        if ($attribute) {
-            return $attribute->getAttributeKey();
-        }
+        return $this->entityManager->getRepository('\Concrete\Core\Entity\File\Attribute');
     }
 
     /**
@@ -60,8 +53,6 @@ class FileCategory extends AbstractCategory
             $this->entityManager->flush();
         }
     }
-
-
 
 
 

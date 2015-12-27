@@ -92,8 +92,8 @@ class UserList extends DatabaseItemList
     public function createQuery()
     {
         $this->query->select('u.uID')
-            ->from('Users', 'u')
-            ->leftJoin('u', 'UserSearchIndexAttributes', 'ua', 'u.uID = ua.uID');
+            ->from('Users', 'u');
+            //->leftJoin('u', 'UserSearchIndexAttributes', 'ua', 'u.uID = ua.uID');
     }
 
     public function finalizeQuery(\Doctrine\DBAL\Query\QueryBuilder $query)

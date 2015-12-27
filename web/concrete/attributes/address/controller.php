@@ -143,22 +143,6 @@ class Controller extends AttributeTypeController
         $db->Execute('delete from atAddress where avID = ?', array($this->getAttributeValueID()));
     }
 
-    public function saveValue($data)
-    {
-        if ($data instanceof AddressValue) {
-            return $data;
-        }
-        extract($data);
-        $av = new AddressValue();
-        $av->setAddress1($address1);
-        $av->setAddress2($address2);
-        $av->setCity($city);
-        $av->setStateProvince($state_province);
-        $av->setCountry($country);
-        $av->setPostalCode($postal_code);
-        return $av;
-    }
-
     public function getValue()
     {
         $val = Value::getByID($this->getAttributeValueID());
@@ -263,17 +247,35 @@ class Controller extends AttributeTypeController
         $avn->addAttribute('postal-code', $address->getPostalCode());
     }
 
+    public function saveValue($data)
+    {
+        if ($data instanceof AddressValue) {
+            return $data;
+        }
+        extract($data);
+        $av = new AddressValue();
+        $av->setAddress1($address1);
+        $av->setAddress2($address2);
+        $av->setCity($city);
+        $av->setStateProvince($state_province);
+        $av->setCountry($country);
+        $av->setPostalCode($postal_code);
+        return $av;
+    }
+
+
+
     public function importValue(\SimpleXMLElement $akv)
     {
         if (isset($akv->value)) {
-            $data['address1'] = $akv->value['address1'];
-            $data['address2'] = $akv->value['address2'];
-            $data['city'] = $akv->value['city'];
-            $data['state_province'] = $akv->value['state-province'];
-            $data['country'] = $akv->value['country'];
-            $data['postal_code'] = $akv->value['postal-code'];
-
-            return $data;
+            $av = new AddressValue();
+            $av->setAddress1((string) $akv->value['address1']);
+            $av->setAddress2((string) $akv->value['address2']);
+            $av->setCity((string) $akv->value['city']);
+            $av->setStateProvince((string) $akv->value['state-province']);
+            $av->setCountry((string) $akv->value['country']);
+            $av->setPostalCode((string) $akv->value['postal-code']);
+            return $av;
         }
     }
 
