@@ -1,8 +1,7 @@
-<?
+<?php
 namespace Concrete\Controller\SinglePage\Account;
 
-use \Concrete\Controller\SinglePage\Account\EditProfile as AccountProfileEditPageController;
-use Loader;
+use Concrete\Controller\SinglePage\Account\EditProfile as AccountProfileEditPageController;
 
 class Avatar extends AccountProfileEditPageController
 {
@@ -59,6 +58,3 @@ class Avatar extends AccountProfileEditPageController
     }
 
 }
-
-
-?>
