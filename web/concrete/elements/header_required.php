@@ -64,6 +64,9 @@ if (is_object($c)) {
 
 } else {
 	$cID = 1;
+	if (!isset($pageTitle)) {
+	    $pageTitle = null;
+	}
 }
 ?>
 

@@ -91,6 +91,25 @@ class DatabaseSaverTest extends ConcreteDatabaseTestCase
         $this->assertTrue($saved_value1 === $saved_value2 && !!$saved_value1 == true, 'Failed to save array.');
     }
 
+    public function testSavingArrayOverArray()
+    {
+        $group = md5(time() . uniqid());
+
+        $this->saver->save('test.array', array(1, 2), 'testing', $group);
+        $this->saver->save('test.array', array(1), 'testing', $group);
+
+        $db = Database::getActiveConnection();
+        $result = $db->executeQuery(
+            'SELECT configValue FROM Config WHERE configItem LIKE ? AND configGroup=?',
+            array('test.array%', $group));
+
+        $array = array_map(function($item) {
+            return $item['configValue'];
+        }, (array)$result->fetchAll());
+
+        $this->assertEquals(array(1), $array, "Saver doesn't save correctly");
+    }
+
     public function testSavingNamespacedConfig()
     {
         $group = md5(time() . uniqid());

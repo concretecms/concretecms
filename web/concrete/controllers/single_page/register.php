@@ -56,7 +56,7 @@ class Register extends PageController {
 				}
 			}
 
-			if (!$vals->email($_POST['uEmail'])) {
+			if (!$vals->email($_POST['uEmail'], false, true)) {
 				$e->add(t('Invalid email address provided.'));
 			} elseif (!$valc->isUniqueEmail($_POST['uEmail'])) {
 				$e->add(t("The email address %s is already in use. Please choose another.", $_POST['uEmail']));

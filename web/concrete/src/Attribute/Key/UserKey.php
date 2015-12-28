@@ -11,7 +11,7 @@ use Concrete\Core\Attribute\Value\UserValue as UserAttributeValue;
 
 class UserKey extends Key
 {
-    public function getIndexedSearchTable()
+    public static function getDefaultIndexedSearchTable()
     {
         return 'UserSearchIndexAttributes';
     }

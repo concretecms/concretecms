@@ -17,6 +17,21 @@ class FileSaverTest extends PHPUnit_Framework_TestCase
         $this->saver = new FileSaver($this->files = new Filesystem());
     }
 
+    public function testSavingArray()
+    {
+        $group = md5(time() . uniqid());
+
+        $this->saver->save('test.array', array(1, 2), 'testing', $group);
+        $this->saver->save('test.array', array(1), 'testing', $group);
+
+        $path = DIR_APPLICATION . "/config/generated_overrides/{$group}.php";
+        $contents = @include_once($path);
+
+        $this->files->delete($path);
+
+        $this->assertEquals(array(1), array_get($contents, 'test.array'), "Saver doesn't save correctly");
+    }
+
     public function testSavingConfig()
     {
         $group = md5(time() . uniqid());

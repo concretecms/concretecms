@@ -46,13 +46,13 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase {
 	public function testRouteController() {
 		$request = new \Concrete\Core\Http\Request();
 		$request->attributes->set('_controller', '\Concrete\Controller\Install::view');
-		$resolver = new \Concrete\Core\Controller\ControllerResolver();
+		$resolver = \Core::make('Concrete\Core\Controller\ApplicationAwareControllerResolver');
 	    $callback = $resolver->getController($request);
 		$this->assertTrue($callback[0] instanceof \Concrete\Controller\Install);
 
 		$request = new \Concrete\Core\Http\Request();
 		$request->attributes->set('_controller', '\Concrete\Controller\Panel\Page\Design::preview_contents');
-		$resolver = new \Concrete\Core\Controller\ControllerResolver();
+		$resolver = \Core::make('Concrete\Core\Controller\ApplicationAwareControllerResolver');
 	    $callback = $resolver->getController($request);
 		$this->assertTrue($callback[0] instanceof \Concrete\Controller\Panel\Page\Design);
 	}
@@ -91,7 +91,7 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase {
 
 		$request = new \Concrete\Core\Http\Request();
 		$request->attributes->set('_controller', '\Concrete\Controller\Panel\Page\Design::preview_contents');
-		$resolver = new \Concrete\Core\Controller\ControllerResolver();
+		$resolver = \Core::make('Concrete\Core\Controller\ApplicationAwareControllerResolver');
 	    $callback = $resolver->getController($request);
 
 		unlink($root . '/application/controllers/panel/page/design.php');

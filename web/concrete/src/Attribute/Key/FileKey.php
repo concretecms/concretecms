@@ -13,7 +13,7 @@ use FileVersion;
 
 class FileKey extends Key
 {
-    public function getIndexedSearchTable()
+    public static function getDefaultIndexedSearchTable()
     {
         return 'FileSearchIndexAttributes';
     }

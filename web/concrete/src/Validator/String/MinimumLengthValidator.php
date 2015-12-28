@@ -70,7 +70,7 @@ class MinimumLengthValidator extends AbstractTranslatableValidator
      */
     public function isValid($mixed, \ArrayAccess $error = null)
     {
-        if (!is_string($mixed)) {
+        if (!is_string($mixed) && !is_null($mixed)) {
             throw new \InvalidArgumentException('Invalid type supplied to validator.');
         }
 

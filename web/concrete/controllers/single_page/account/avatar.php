@@ -1,8 +1,7 @@
-<?
+<?php
 namespace Concrete\Controller\SinglePage\Account;
 
-use \Concrete\Controller\SinglePage\Account\EditProfile as AccountProfileEditPageController;
-use Loader;
+use Concrete\Controller\SinglePage\Account\EditProfile as AccountProfileEditPageController;
 
 class Avatar extends AccountProfileEditPageController
 {
@@ -16,6 +15,13 @@ class Avatar extends AccountProfileEditPageController
     public function save_thumb()
     {
         $this->view();
+        $token = $this->app->make('token');
+
+        if (!$token->validate('avatar/save_thumb')) {
+            return false;
+        }
+
+
         $profile = $this->get('profile');
         if (!is_object($profile) || $profile->getUserID() < 1) {
             return false;
@@ -45,15 +51,17 @@ class Avatar extends AccountProfileEditPageController
     public function delete()
     {
         $this->view();
-        $profile = $this->get('profile');
-        $av = $this->get('av');
+        if (!$this->token->validate('delete_avatar')) {
+            $this->error->add($this->token->getErrorMessage());
+        }
+        if (!$this->error->has()) {
+            $profile = $this->get('profile');
+            $av = $this->get('av');
 
-        $service = Core::make('user.avatar');
-        $service->removeAvatar($profile);
-        $this->redirect('/account/avatar', 'deleted');
+            $service = \Core::make('user.avatar');
+            $service->removeAvatar($profile);
+            $this->redirect('/account/avatar', 'deleted');
+        }
     }
 
 }
-
-
-?>

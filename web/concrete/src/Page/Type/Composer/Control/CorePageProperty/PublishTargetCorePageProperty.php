@@ -6,8 +6,12 @@ class PublishTargetCorePageProperty extends CorePageProperty
     public function __construct()
     {
         $this->setCorePagePropertyHandle('publish_target');
-        $this->setPageTypeComposerControlName(tc('PageTypeComposerControlName', 'Page Location'));
         $this->setPageTypeComposerControlIconSRC(ASSETS_URL . '/attributes/image_file/icon.png');
+    }
+
+    public function getPageTypeComposerControlName()
+    {
+        return tc('PageTypeComposerControlName', 'Page Location');
     }
 
     public function pageTypeComposerFormControlSupportsValidation()

@@ -38,6 +38,8 @@ class Service extends SocialNetworkService
                     return "https://plus.google.com/share?url=$url";
                 case 'reddit':
                     return "https://www.reddit.com/submit?url={$url}";
+                case 'print':
+                    return "javascript:window.print();";
                 case 'email':
                     $body = rawurlencode(t("Check out this article on %s:\n\n%s\n%s", Config::get('concrete.site'), $c->getCollectionName(), urldecode($url)));
                     $subject = rawurlencode(t('Thought you\'d enjoy this article.'));
