@@ -35,7 +35,7 @@ class PathUrlResolver implements UrlResolverInterface
         return null;
     }
 
-    public function handlePath(UrlInterface $url, $path, $args)
+    protected function handlePath(UrlInterface $url, $path, $args)
     {
         $path_object = $this->basePath($url, $path, $args);
 
@@ -80,7 +80,7 @@ class PathUrlResolver implements UrlResolverInterface
         return $url->setPath($url_path);
     }
 
-    public function basePath($url, $path, $args)
+    protected function basePath($url, $path, $args)
     {
         $path_object = new Path('');
 

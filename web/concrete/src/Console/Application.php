@@ -19,6 +19,7 @@ class Application extends \Symfony\Component\Console\Application
         $this->add(new Command\TranslatePackageCommand());
         $this->add(new Command\GenerateIDESymbolsCommand());
         $this->add(new Command\ConfigCommand());
+        $this->add(new Command\PackPackageCommand());
         if (Core::make('app')->isInstalled()) {
             $this->add(new Command\ClearCacheCommand());
             $this->add(new Command\InstallPackageCommand());

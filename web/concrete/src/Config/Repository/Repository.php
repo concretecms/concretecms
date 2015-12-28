@@ -99,6 +99,16 @@ class Repository extends \Illuminate\Config\Repository
         return $this->saver;
     }
 
+    /**
+     * Set the saver instance
+     *
+     * @param \Concrete\Core\Config\SaverInterface $saver
+     */
+    public function setSaver(SaverInterface $saver)
+    {
+        $this->saver = $saver;
+    }
+
     protected function parsePackageSegments($key, $namespace, $item)
     {
         list($namespace, $item) = explode('::', $key);

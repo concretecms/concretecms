@@ -43,7 +43,6 @@
     "hautelook/phpass": "dev-master",
     "voku/urlify": "1.0.1-stable",
     "dapphp/securimage": "3.5.*",
-    "kertz/twitteroauth": "dev-master",
     "anahkiasen/html-object": "1.4.0",
     "primal/color": "1.0.*@dev",
     "zendframework/zend-queue": "dev-master",

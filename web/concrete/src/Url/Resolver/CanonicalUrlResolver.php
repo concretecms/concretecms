@@ -2,12 +2,27 @@
 
 namespace Concrete\Core\Url\Resolver;
 
+use Concrete\Core\Application\Application;
+use Concrete\Core\Http\Request;
+use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\Url\Url;
 use Concrete\Core\Url\UrlImmutable;
-use Request;
 
 class CanonicalUrlResolver implements UrlResolverInterface
 {
+
+    /** @var Request */
+    protected $request;
+
+    /** @var Application */
+    protected $app;
+
+    public function __construct(Application $app, Request $request)
+    {
+        $this->app = $app;
+        $this->request = $request;
+    }
+
    /**
     * Resolve url's from any type of input.
     *
@@ -26,20 +41,27 @@ class CanonicalUrlResolver implements UrlResolverInterface
        $url->setHost(null);
        $url->setScheme(null);
 
-       if (\Config::get('concrete.seo.canonical_url')) {
-           $canonical = UrlImmutable::createFromUrl(\Config::get('concrete.seo.canonical_url'));
 
-           $url->getHost()->set($canonical->getHost());
-           $url->getScheme()->set($canonical->getScheme());
+       if (\Config::get('concrete.seo.canonical_url')) {
+           $canonical = UrlImmutable::createFromUrl(Config::get('concrete.seo.canonical_url'));
+
+           // If the request is over https and the canonical url is http, lets just say https for the canonical url.
+           if (strtolower($canonical->getScheme()) == 'http' && strtolower($this->request->getScheme()) == 'https') {
+               $url->setScheme('https');
+           } else {
+               $url->setScheme($canonical->getScheme());
+           }
+
+           $url->setHost($canonical->getHost());
+
            if (intval($canonical->getPort()->get()) > 0) {
-               $url->getPort()->set($canonical->getPort());
+               $url->setPort($canonical->getPort());
            }
        } else {
-           $scheme = Request::getInstance()->getScheme();
-           $host = Request::getInstance()->getHost();
+           $host = $this->request->getHost();
+           $scheme = $this->request->getScheme();
            if ($scheme && $host) {
-               $url
-                   ->setScheme($scheme)
+               $url->setScheme($scheme)
                    ->setHost($host)
                    ->setPortIfNecessary(Request::getInstance()->getPort());
            }
