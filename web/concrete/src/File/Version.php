@@ -31,7 +31,6 @@ use View;
  */
 class Version
 {
-
     const UT_REPLACE_FILE = 1;
     const UT_TITLE = 2;
     const UT_DESCRIPTION = 3;
@@ -287,7 +286,6 @@ class Version
      */
     public function delete($deleteFilesAndThumbnails = false)
     {
-
         $db = Database::get();
 
         $db->Execute("DELETE FROM FileAttributeValues WHERE fID = ? AND fvID = ?", array($this->getFileID(), $this->fvID));
@@ -378,7 +376,7 @@ class Version
      *
      * @return string date formated like: 2009-01-01 00:00:00
      */
-    function getDateAdded()
+    public function getDateAdded()
     {
         return $this->fvDateAdded;
     }
@@ -623,7 +621,6 @@ class Version
         $fo->reindex();
 
         \Core::make('cache/request')->delete('file/version/approved/' . $this->getFileID());
-
     }
 
     /**
@@ -819,7 +816,6 @@ class Version
 
                 unset($thumbnail);
                 unset($filesystem);
-
             }
         } catch (ImagineInvalidArgumentException $e) {
             return false;
