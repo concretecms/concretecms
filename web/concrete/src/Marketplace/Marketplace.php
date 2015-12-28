@@ -181,6 +181,9 @@ class Marketplace
             if (!$this->isConnected()) {
                 if (!$completeURL) {
                     $completeURL = URL::to('/dashboard/extend/connect', 'connect_complete');
+                    $completeURL = $completeURL->setQuery(array(
+                        'ccm_token' => Core::make('token')->generate('marketplace/connect')
+                    ));
                 }
                 $csReferrer = urlencode($completeURL);
                 $csiURL = urlencode(Core::getApplicationURL());
