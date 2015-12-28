@@ -3,7 +3,8 @@
 ## Feature Updates
 * Added new console commands to install, update and remove packages (thanks mlocati)
 * Added a new console command to generate and update package translation files (thanks mlocati)
-
+* Added a new console command to batch process packages (remove short tags, compile translations and icons, create zip files) (thanks mlocati)
+* Made single page controllers have access to the Application instance via `$controller->app`
 
 # 5.7.5.3
 
@@ -58,10 +59,10 @@
 
 * We now default to the “GD” image processing library for image manipulation. Imagick must be opted into by  setting the config value “concrete.file_manager.images.manipulation_library” to “imagick”.
 * Adds ability to specify wildcard page theme classes by creating an array key with “*” as its key (thanks TimDix)
-* Database Entities dashboard page now refreshes package-specific entities as well as 
+* Database Entities dashboard page now refreshes package-specific entities as well as
 application-specific entities.
 * Implemented new Validation framework and some useful constraints. Used within password validation.
-* API improvements to the Processor class to allow it to be used without a queue.      
+* API improvements to the Processor class to allow it to be used without a queue.
 * Select attribute option API improvements
 * Edge case page list sorting fix when adding to the query with addSelect and attempting to sort by the new field, and use pagination as well.
 
@@ -193,7 +194,7 @@ Adds ability to cache Search Block if the block doesn't display results - useful
 * Next/Previous Block now supports reverse ordering options (thanks UziTech)
 * You can now run concrete5 jobs from the command line using concrete/bin/concrete5 c5:job (thanks ChrisHougard!)
 * You can now choose the background image for full-image background pages with the  'concrete.white\_label.background_url' config option (thanks myconcretelab)
-* Redactor rich text editor has been updated to version 10.2.2,. fixing many bugs and adding some small features. 
+* Redactor rich text editor has been updated to version 10.2.2,. fixing many bugs and adding some small features.
 * Adds support to adjust trusted proxy ips and settings through Config values (thanks timdix)
 
 
@@ -256,7 +257,7 @@ Adds ability to cache Search Block if the block doesn't display results - useful
 * Fixed overrride permissions for user groups not working
 * Fixed https://github.com/concrete5/concrete5/issues/2451 (thanks mlocati)
 * Style customizer for theme should be easier to use on options that have colors but no fonts available
-* Fixed If you create a Checkbox page attribute and select The checkbox will be checked by default. When adding the attribute to pages the box is not checked 
+* Fixed If you create a Checkbox page attribute and select The checkbox will be checked by default. When adding the attribute to pages the box is not checked
 * Fixed https://www.concrete5.org/developers/bugs/5-7-4-2/cannot-reset-theme-customization-for-this-page/
 * Fixed If you does not have access to group search, you'll get a JSON error message (thanks hissy)
 * Fixed filtering by log status levels on Dashboard page
@@ -305,7 +306,7 @@ Adds ability to cache Search Block if the block doesn't display results - useful
 * Feature block now contains an instance of the rich text editor (thanks MrKarlDilkington)
 * Improvements to new update functionality when site can't connect to concrete5.org
 * Improvements to new update functionality to make it more resilient with failures, but error messaging.
-* Adding attributes to a page will ask for it be checked back/approved when clicking the green icon. 
+* Adding attributes to a page will ask for it be checked back/approved when clicking the green icon.
 * Theme name and description can now be translated (thanks mlocati)
 * Added an error notice when deleting a page type that’s in use in your site.
 
@@ -347,7 +348,7 @@ Adds ability to cache Search Block if the block doesn't display results - useful
 * Fixed malformed URL in "Load More" in dashboard sitemap (thanks mlocati)
 * Fix unquoted SQL input in permission assignment method (thanks mnkras)
 
-# 5.7.4 
+# 5.7.4
 
 ## Help System Updates
 
@@ -372,7 +373,7 @@ Adds ability to cache Search Block if the block doesn't display results - useful
 * Lightbox can now have its width and height specified for web page links.
 * Better handling of URLs loading in lightbox (now loads them in an iframe)
 * Can now open links in a new tab.
-* Editors can be more easily called programmatically, through the editor service. 
+* Editors can be more easily called programmatically, through the editor service.
 * Rich text editor plugins can be added through marketplace add-ons and custom packages.
 
 ## Mobile Editing Feature Updates (thanks Hissy!)
@@ -554,7 +555,7 @@ Instead of defaulting to the current time/date, form block date/datetime have th
 ## Code & Developer Updates
 
 * Refactored Jobs to work in the new routing system rather than the legacy tools system (thanks Mnkras)
-* Updated jQuery to 1.11.2 and jQuery UI to 1.11.4	
+* Updated jQuery to 1.11.2 and jQuery UI to 1.11.4
 * Lots of code cleanup (thanks Mnkras)
 * jQuery Visualize JavaScript library updated and included in the new Asset System properly (thanks goutnet)
 * Custom page type validator class, including a manager with the ability to register custom validators for page types.

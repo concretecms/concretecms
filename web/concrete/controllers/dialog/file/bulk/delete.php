@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Controller\Dialog\File\Bulk;
 use \Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
+use Concrete\Core\Validation\CSRF\Token;
 use FilePermissions;
 use \Concrete\Core\Http\ResponseAssetGroup;
 use \Concrete\Core\File\EditResponse as FileEditResponse;
@@ -72,6 +73,13 @@ class Delete extends BackendInterfaceController {
 	}
 
 	public function deleteFiles() {
+        /** @var Token $token */
+        $token = $this->app->make('token');
+
+        if (!$token->validate('files/bulk_delete')) {
+            throw new \Exception($token->getErrorMessage());
+        }
+
         $fr = new FileEditResponse();
         $files = array();
         if (is_array($_POST['fID'])) {

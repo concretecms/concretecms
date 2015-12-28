@@ -2,7 +2,7 @@
 
 use Concrete\Core\File\Exception\InvalidDimensionException;
 use Concrete\Core\File\StorageLocation as FileStorageLocation;
-
+$token = \Core::make('token');
 $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
 ?>
 
@@ -141,8 +141,9 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                             <td><?= $dh->formatDateTime($fvv->getDateAdded(), true) ?></td>
                             <? if ($fp->canEditFileContents()) { ?>
                                 <td><a data-action="delete-version"
-                                       data-file-version-id="<?= $fvv->getFileVersionID() ?>" href="javascript:void(0)"><i
-                                            class="fa fa-trash-o"></i></a></td>
+                                       data-file-version-id="<?= $fvv->getFileVersionID() ?>"
+                                       data-token="<?= $token->generate('version/delete/' . $fvv->getFileID() . "/" . $fvv->getFileVersionId()) ?>"
+                                       href="javascript:void(0)"><i class="fa fa-trash-o"></i></a></td>
                             <? } ?>
                         </tr>
 
@@ -299,7 +300,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                     var fvID = $(this).attr('data-file-version-id');
                     $.concreteAjax({
                         url: '<?=URL::to('/ccm/system/file/delete_version')?>',
-                        data: {'fID': '<?=$f->getFileID()?>', 'fvID': fvID},
+                        data: {'fID': '<?=$f->getFileID()?>', 'fvID': fvID, ccm_token: $(this).data('token')},
                         success: function (r) {
                             my.handleAjaxResponse(r, function () {
                                 var $row = $versions.find('tr[data-file-version-id=' + fvID + ']');

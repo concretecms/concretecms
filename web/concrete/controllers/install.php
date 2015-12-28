@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Controller;
 
 use Concrete\Core\Cache\Cache;
@@ -78,7 +77,9 @@ class Install extends Controller
                     'successMessage',
                     t(
                         'Congratulations. concrete5 has been installed. You have been logged in as <b>%s</b> with the password you chose. If you wish to change this password, you may do so from the users area of the dashboard.',
-                        USER_SUPER));
+                        USER_SUPER
+                    )
+                );
             }
         }
     }
@@ -108,7 +109,9 @@ class Install extends Controller
                         $e->add(
                             t(
                                 'There are already %s tables in this database. concrete5 must be installed in an empty database.',
-                                count($num)));
+                                count($num)
+                            )
+                        );
                     }
 
                     try {
@@ -367,13 +370,12 @@ class Install extends Controller
                 if ($this->fpu) {
                     $hasher = new PasswordHash(Config::get('concrete.user.password.hash_cost_log2'), Config::get('concrete.user.password.hash_portable'));
                     $configuration = "<?php\n";
-                    $configuration .= "define('INSTALL_USER_EMAIL', '" . $_POST['uEmail'] . "');\n";
-                    $configuration .= "define('INSTALL_USER_PASSWORD_HASH', '" . $hasher->HashPassword(
-                            $_POST['uPassword']) . "');\n";
-                    $configuration .= "define('INSTALL_STARTING_POINT', '" . $this->post('SAMPLE_CONTENT') . "');\n";
-                    $configuration .= "define('SITE', '" . addslashes($_POST['SITE']) . "');\n";
+                    $configuration .= "define('INSTALL_USER_EMAIL', " . var_export((string) $_POST['uEmail'], true) . ");\n";
+                    $configuration .= "define('INSTALL_USER_PASSWORD_HASH', " . var_export((string) $hasher->HashPassword($_POST['uPassword']), true) . ");\n";
+                    $configuration .= "define('INSTALL_STARTING_POINT', " . var_export((string) $this->post('SAMPLE_CONTENT'), true) . ");\n";
+                    $configuration .= "define('SITE', " . var_export((string) $_POST['SITE'], true) . ");\n";
                     if (Localization::activeLocale() != '' && Localization::activeLocale() != 'en_US') {
-                        $configuration .= "define('SITE_INSTALL_LOCALE', '" . Localization::activeLocale() . "');\n";
+                        $configuration .= "define('SITE_INSTALL_LOCALE', " . var_export((string) Localization::activeLocale(), true) . ");\n";
                     }
                     $res = fwrite($this->fpu, $configuration);
                     fclose($this->fpu);

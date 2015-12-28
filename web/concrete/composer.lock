@@ -1,10 +1,11 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "cca37fea328cc3d8a0bf9ff0c1bf5466",
+    "hash": "4b8250132cdca0d5c051d3ba93baa817",
+    "content-hash": "458b94337cdda16a836a7dd820a669af",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -1364,33 +1365,6 @@
             "time": "2014-11-11 11:36:02"
         },
         {
-            "name": "kertz/twitteroauth",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/kertz/twitteroauth.git",
-                "reference": "97b677ca030e7de7dcade797aabb4af8a3aa463f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/kertz/twitteroauth/zipball/97b677ca030e7de7dcade797aabb4af8a3aa463f",
-                "reference": "97b677ca030e7de7dcade797aabb4af8a3aa463f",
-                "shasum": ""
-            },
-            "require": {
-                "ext-curl": "*",
-                "php": ">=5.3.0"
-            },
-            "type": "library",
-            "autoload": {
-                "classmap": [
-                    "twitteroauth"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "time": "2014-02-23 11:27:58"
-        },
-        {
             "name": "league/url",
             "version": "3.3.5",
             "source": {
@@ -1747,7 +1721,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/natxet/CssMin/zipball/4026975145f645a77e087a26e7b0a1c9209b0191",
+                "url": "https://api.github.com/repos/natxet/CssMin/zipball/0b2170454eed9024c7e26b036fbccf2d7f6f2c53",
                 "reference": "4026975145f645a77e087a26e7b0a1c9209b0191",
                 "shasum": ""
             },
@@ -2023,7 +1997,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tchwork/utf8/zipball/38047e4a8f64e1974f46ae6bec56aaa0357bb98d",
+                "url": "https://api.github.com/repos/tchwork/utf8/zipball/84da29ef77c422d83126534cb5bb03ba6e20f319",
                 "reference": "38047e4a8f64e1974f46ae6bec56aaa0357bb98d",
                 "shasum": ""
             },
@@ -2074,7 +2048,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrimalPHP/Color/zipball/d95e2258deecb2ac27b78c3d8c776ac802d0ab68",
+                "url": "https://api.github.com/repos/PrimalPHP/Color/zipball/877e2f7bbf1d27214e8c71ca4b70fdbe19ce4552",
                 "reference": "d95e2258deecb2ac27b78c3d8c776ac802d0ab68",
                 "shasum": ""
             },
@@ -2262,12 +2236,12 @@
             "target-dir": "Symfony/Component/ClassLoader",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/ClassLoader.git",
+                "url": "https://github.com/symfony/class-loader.git",
                 "reference": "abad64f8379f65a24f64eb2478ec012d3d6ddcb4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ClassLoader/zipball/abad64f8379f65a24f64eb2478ec012d3d6ddcb4",
+                "url": "https://api.github.com/repos/symfony/class-loader/zipball/abad64f8379f65a24f64eb2478ec012d3d6ddcb4",
                 "reference": "abad64f8379f65a24f64eb2478ec012d3d6ddcb4",
                 "shasum": ""
             },
@@ -2311,12 +2285,12 @@
             "version": "v2.7.3",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/Console.git",
+                "url": "https://github.com/symfony/console.git",
                 "reference": "d6cf02fe73634c96677e428f840704bfbcaec29e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Console/zipball/d6cf02fe73634c96677e428f840704bfbcaec29e",
+                "url": "https://api.github.com/repos/symfony/console/zipball/d6cf02fe73634c96677e428f840704bfbcaec29e",
                 "reference": "d6cf02fe73634c96677e428f840704bfbcaec29e",
                 "shasum": ""
             },
@@ -2368,12 +2342,12 @@
             "version": "v2.7.3",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/Debug.git",
+                "url": "https://github.com/symfony/debug.git",
                 "reference": "9daa1bf9f7e615fa2fba30357e479a90141222e3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Debug/zipball/9daa1bf9f7e615fa2fba30357e479a90141222e3",
+                "url": "https://api.github.com/repos/symfony/debug/zipball/9daa1bf9f7e615fa2fba30357e479a90141222e3",
                 "reference": "9daa1bf9f7e615fa2fba30357e479a90141222e3",
                 "shasum": ""
             },
@@ -2429,12 +2403,12 @@
             "target-dir": "Symfony/Component/EventDispatcher",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/EventDispatcher.git",
+                "url": "https://github.com/symfony/event-dispatcher.git",
                 "reference": "af6eb6a9a1a3b411facfd8e7e3f82a6be7919c04"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/af6eb6a9a1a3b411facfd8e7e3f82a6be7919c04",
+                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/af6eb6a9a1a3b411facfd8e7e3f82a6be7919c04",
                 "reference": "af6eb6a9a1a3b411facfd8e7e3f82a6be7919c04",
                 "shasum": ""
             },
@@ -2533,12 +2507,12 @@
             "target-dir": "Symfony/Component/HttpFoundation",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/HttpFoundation.git",
+                "url": "https://github.com/symfony/http-foundation.git",
                 "reference": "08e783861dd9579bac4092814bbfb0cae6666b65"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/HttpFoundation/zipball/08e783861dd9579bac4092814bbfb0cae6666b65",
+                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/08e783861dd9579bac4092814bbfb0cae6666b65",
                 "reference": "08e783861dd9579bac4092814bbfb0cae6666b65",
                 "shasum": ""
             },
@@ -2586,12 +2560,12 @@
             "target-dir": "Symfony/Component/HttpKernel",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/HttpKernel.git",
+                "url": "https://github.com/symfony/http-kernel.git",
                 "reference": "31652385d94eafc2103a98435d6d5bd7eea61736"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/HttpKernel/zipball/31652385d94eafc2103a98435d6d5bd7eea61736",
+                "url": "https://api.github.com/repos/symfony/http-kernel/zipball/31652385d94eafc2103a98435d6d5bd7eea61736",
                 "reference": "31652385d94eafc2103a98435d6d5bd7eea61736",
                 "shasum": ""
             },
@@ -4017,7 +3991,6 @@
         "michelf/php-markdown": 20,
         "htmlawed/htmlawed": 20,
         "hautelook/phpass": 20,
-        "kertz/twitteroauth": 20,
         "primal/color": 20,
         "zendframework/zend-queue": 20,
         "oryzone/oauth-user-data": 20,

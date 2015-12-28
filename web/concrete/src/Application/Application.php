@@ -322,7 +322,10 @@ class Application extends Container
 
             $url_path = ltrim(parse_url($request_path, PHP_URL_PATH), '/');
 
-            if ($url_path != (string) $parsed_url->getPath()) {
+            // We need to apply urldecode before comparing URLs since
+            // the URLs may be urldecoded when we use mod_rewrite.
+            // See. "6.2.2.2.  Percent-Encoding Normalization" at https://www.ietf.org/rfc/rfc3986.txt
+            if (urldecode($url_path) != urldecode((string) $parsed_url->getPath())) {
                 $response = new RedirectResponse($parsed_url, 301);
                 $response->setRequest($request);
 
@@ -506,4 +509,24 @@ class Application extends Container
 
         return $this->environment = $detector->detect($environments, $args);
     }
+
+    /**
+     * Instantiate a concrete instance of the given type.
+     *
+     * @param  string $concrete
+     * @param  array $parameters
+     * @return mixed
+     *
+     * @throws BindingResolutionException
+     */
+    public function build($concrete, $parameters = array())
+    {
+        $object = parent::build($concrete, $parameters);
+        if (is_object($object) && $object instanceof ApplicationAwareInterface) {
+            $object->setApplication($this);
+        }
+
+        return $object;
+    }
+
 }

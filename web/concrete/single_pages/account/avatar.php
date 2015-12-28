@@ -1,4 +1,10 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+
+$save_url = \Concrete\Core\Url\Url::createFromUrl($view->action('save_thumb'));
+$save_url = $save_url->setQuery(array(
+	'ccm_token' => \Core::make('token')->generate('avatar/save_thumb')
+));
+?>
 
 <div class="row">
 <div class="col-sm-8 col-sm-offset-2">
@@ -49,7 +55,7 @@
 				width: '<?php echo Config::get('concrete.icons.user_avatar.width') ?>',
 				height: '<?php echo Config::get('concrete.icons.user_avatar.height') ?>',
 				image: '<?php echo $profile->getUserAvatar()->getPath()?>',
-				save: "<?php echo $view->action('save_thumb')?>"
+				save: "<?php echo $save_url ?>"
 			};
 			swfobject.embedSWF ("<?php echo ASSETS_URL_JAVASCRIPT?>/thumbnail-editor-3.swf", "profile-avatar", "500", "400", "10,0,0,0", "includes/expressInstall.swf", flashvars, params);
 
