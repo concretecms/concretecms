@@ -1,13 +1,12 @@
 <?php
 namespace Concrete\Core\User;
-use UserInfo as ConcreteUserInfo;
 use stdclass;
 
 class EditResponse extends \Concrete\Core\Application\EditResponse {
 
 	protected $users = array();
 
-	public function setUser(ConcreteUserInfo $user) {
+	public function setUser(UserInfo $user) {
 		$this->users[] = $user;
 	}
 
