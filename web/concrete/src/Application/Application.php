@@ -8,6 +8,8 @@ use Concrete\Core\Cache\Page\PageCacheRecord;
 use Concrete\Core\Cache\OpCache;
 use Concrete\Core\Foundation\ClassLoader;
 use Concrete\Core\Foundation\EnvironmentDetector;
+use Concrete\Core\Foundation\Runtime\DefaultRuntime;
+use Concrete\Core\Foundation\Runtime\RuntimeInterface;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Logging\Query\Logger;
 use Concrete\Core\Routing\DispatcherRouteCallback;
@@ -22,7 +24,6 @@ use Environment;
 use Illuminate\Container\Container;
 use Job;
 use JobSet;
-use Log;
 use Package;
 use Page;
 use Redirect;
@@ -527,6 +528,28 @@ class Application extends Container
         }
 
         return $object;
+    }
+
+    /**
+     * @return RuntimeInterface
+     */
+    public function getRuntime()
+    {
+        // Set the runtime to a singleton
+        $runtime_class = 'Concrete\Core\Foundation\Runtime\DefaultRuntime';
+        if (!$this->isShared($runtime_class)) {
+            $this->singleton($runtime_class);
+        }
+
+        /** @var DefaultRuntime $runtime */
+        $runtime = $this->make($runtime_class);
+
+        // If we're in CLI, lets set the runner to the CLI runner
+        if ($this->isRunThroughCommandLineInterface()) {
+            $runtime->setRunClass('Concrete\Core\Foundation\Runtime\Run\CLIRunner');
+        }
+
+        return $runtime;
     }
 
 }
