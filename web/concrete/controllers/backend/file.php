@@ -2,6 +2,7 @@
 namespace Concrete\Controller\Backend;
 
 use Concrete\Core\File\Importer;
+use Concrete\Core\Validation\CSRF\Token;
 use Controller;
 use FileSet;
 use File as ConcreteFile;
@@ -87,11 +88,18 @@ class File extends Controller
 
     public function deleteVersion()
     {
+        /** @var Token $token */
+        $token = $this->app->make('token');
+        if (!$token->validate('delete-version'))
+
         $files = $this->getRequestFiles('canEditFileContents');
         $r = new FileEditResponse();
         $r->setFiles($files);
         $fv = $files[0]->getVersion(Loader::helper('security')->sanitizeInt($_REQUEST['fvID']));
         if (is_object($fv) && !$fv->isApproved()) {
+            if (!$token->validate('version/delete/' . $fv->getFileID() . "/" . $fv->getFileVersionId())) {
+                throw new Exception($token->getErrorMessage());
+            }
             $fv->delete();
         } else {
             throw new Exception(t('Invalid file version.'));

@@ -7,7 +7,7 @@ class PageUrlResolver implements UrlResolverInterface
     /** @var UrlResolverInterface */
     protected $pathUrlResolver;
 
-    public function __construct(UrlResolverInterface $path_url_resolver)
+    public function __construct(PathUrlResolver $path_url_resolver)
     {
         $this->pathUrlResolver = $path_url_resolver;
     }

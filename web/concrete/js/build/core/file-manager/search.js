@@ -50,6 +50,10 @@
         var my = this,
             $fileUploaders = $('.ccm-file-manager-upload'),
             $fileUploader = $fileUploaders.filter('#ccm-file-manager-upload-prompt'),
+            $maxWidth = $fileUploaders.data('image-max-width'),
+            $maxHeight = $fileUploaders.data('image-max-height'),
+            $imageResize = ($maxWidth > 0 && $maxHeight>0),
+            $quality = $fileUploaders.data('image-quality'),
             errors = [],
             files = [],
             error_template = _.template(
@@ -60,6 +64,10 @@
                 url: CCM_DISPATCHER_FILENAME + '/ccm/system/file/upload',
                 dataType: 'json',
                 formData: {'ccm_token': CCM_SECURITY_TOKEN},
+                disableImageResize: !$imageResize,
+                imageQuality: ($quality > 0 ? $quality : 85),
+                imageMaxWidth:($maxWidth > 0 ? $maxWidth : 1920),
+                imageMaxHeight:($maxHeight > 0 ? $maxHeight : 1080),
                 error: function(r) {
                     var message = r.responseText;
                     try {
@@ -304,6 +312,7 @@
                 '<% } %>' +
                 '<% if (item.canEditFile && item.canEditFileContents) { %>' +
                     '<li><a class="dialog-launch" dialog-modal="true" dialog-width="90%" dialog-height="70%" dialog-title="' + ccmi18n_filemanager.edit + '" href="' + CCM_TOOLS_PATH + '/files/edit?fID=<%=item.fID%>">' + ccmi18n_filemanager.edit + '</a></li>' +
+                    '<li><a class="dialog-launch" dialog-modal="true" dialog-width="90%" dialog-height="70%" dialog-title="' + ccmi18n_filemanager.thumbnailImages + '" href="' + CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/file/thumbnails?fID=<%=item.fID%>">' + ccmi18n_filemanager.thumbnailImages + '</a></li>' +
                 '<% } %>' +
                 '<li><a class="dialog-launch" dialog-modal="true" dialog-width="850" dialog-height="450" dialog-title="' + ccmi18n_filemanager.properties + '" href="' + CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/file/properties?fID=<%=item.fID%>">' + ccmi18n_filemanager.properties + '</a></li>' +
                 '<% if (item.canReplaceFile) { %>' +

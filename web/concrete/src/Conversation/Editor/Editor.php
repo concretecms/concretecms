@@ -374,6 +374,15 @@ abstract class Editor extends Object
         return static::getList($pkg->getPackageID());
     }
 
+    public function export($xml)
+    {
+        $type = $xml->addChild('editor');
+        $type->addAttribute('handle', $this->getConversationEditorHandle());
+        $type->addAttribute('name', $this->getConversationEditorName());
+        $type->addAttribute('package', $this->getPackageHandle());
+        $type->addAttribute('activated', $this->isConversationEditorActive());
+    }
+
     /**
      * Adds a ConversationEditors node and all Editor records to the provided SimleXMLElement object provided.
      *
@@ -385,11 +394,7 @@ abstract class Editor extends Object
         $nxml = $xml->addChild('conversationeditors');
 
         foreach ($list as $sc) {
-            $type = $nxml->addChild('editor');
-            $type->addAttribute('handle', $sc->getConversationEditorHandle());
-            $type->addAttribute('name', $sc->getConversationEditorName());
-            $type->addAttribute('package', $sc->getPackageHandle());
-            $type->addAttribute('activated', $sc->isConversationEditorActive());
+            $sc->export($nxml);
         }
     }
 

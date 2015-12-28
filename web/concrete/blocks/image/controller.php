@@ -128,7 +128,7 @@ class Controller extends BlockController
 
     public function getTitle()
     {
-        return $this->title;
+        return isset($this->title) ? $this->title : null;
     }
 
     public function getExternalLink()

@@ -1,18 +1,17 @@
 <?php
 namespace Concrete\Block\PageAttributeDisplay;
-use Concrete\Core\Block\BlockController;
-use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
-use Concrete\Core\Attribute\Key\CollectionKey as CollectionAttributeKey;
 
-defined('C5_EXECUTE') or die(_("Access Denied."));
+use Concrete\Core\Block\BlockController;
+use Concrete\Core\Attribute\Key\CollectionKey as CollectionAttributeKey;
+use Core;
+
+defined('C5_EXECUTE') or die('Access Denied.');
 
 /**
  * @author Ryan Tyler
- *
  */
 class Controller extends BlockController
 {
-
     protected $btTable = 'btPageAttributeDisplay';
     protected $btInterfaceWidth = "500";
     protected $btInterfaceHeight = "365";
@@ -22,12 +21,12 @@ class Controller extends BlockController
     protected $btCacheBlockOutputForRegisteredUsers = false;
 
     /**
-     * @var integer thumbnail height
+     * @var int thumbnail height
      */
     public $thumbnailHeight = 250;
 
     /**
-     * @var integer thumbnail width
+     * @var int thumbnail width
      */
     public $thumbnailWidth = 250;
 
@@ -67,7 +66,7 @@ class Controller extends BlockController
             default:
                 $content = $c->getAttribute($this->attributeHandle);
                 if (is_object($content) && $content instanceof \Concrete\Core\File\File) {
-                    $im = \Loader::helper('image');
+                    $im = Core::make('helper/image');
                     $thumb = $im->getThumbnail(
                         $content,
                         $this->thumbnailWidth,
@@ -78,7 +77,6 @@ class Controller extends BlockController
                     if (!is_scalar($content) && (!is_object($content) || !method_exists($content, '__toString'))) {
                         $content = $c->getAttribute($this->attributeHandle, 'displaySanitized');
                     }
-
                 }
                 break;
         }
@@ -87,12 +85,15 @@ class Controller extends BlockController
         if (!strlen(trim(strip_tags($content))) && ($c->isMasterCollection() || $is_stack)) {
             $content = $this->getPlaceHolderText($this->attributeHandle);
         }
+
         return $content;
     }
 
     /**
-     * returns a place holder for pages that are new or when editing default page types
+     * Returns a place holder for pages that are new or when editing default page types.
+     *
      * @param string $handle
+     *
      * @return string
      */
     public function getPlaceHolderText($handle)
@@ -106,11 +107,13 @@ class Controller extends BlockController
                 $placeHolder = $attributeKey->getAttributeKeyName();
             }
         }
+
         return "[" . $placeHolder . "]";
     }
 
     /**
-     * returns the title text to display in front of the valie
+     * Returns the title text to display in front of the value.
+     *
      * @return string
      */
     public function getTitle()
@@ -151,11 +154,13 @@ class Controller extends BlockController
                 $templateHandle = $attributeType->getAttributeTypeHandle();
             }
         }
+
         return $templateHandle;
     }
 
     /**
-     * returns opening html tag
+     * Returns opening html tag.
+     *
      * @return string
      */
     public function getOpenTag()
@@ -164,11 +169,13 @@ class Controller extends BlockController
         if (strlen($this->displayTag)) {
             $tag = "<" . $this->displayTag . " class=\"ccm-block-page-attribute-display-wrapper\">";
         }
+
         return $tag;
     }
 
     /**
-     * returns closing html tag
+     * Returns closing html tag.
+     *
      * @return string
      */
     public function getCloseTag()
@@ -177,6 +184,7 @@ class Controller extends BlockController
         if (strlen($this->displayTag)) {
             $tag = "</" . $this->displayTag . ">";
         }
+
         return $tag;
     }
 
@@ -188,5 +196,3 @@ class Controller extends BlockController
         }
     }
 }
-
-?>

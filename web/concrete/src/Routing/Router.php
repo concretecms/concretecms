@@ -7,7 +7,8 @@ use \Symfony\Component\Routing\RouteCollection as SymfonyRouteCollection;
 use Request;
 use Loader;
 
-class Router {
+class Router implements RouterInterface
+{
 
     /**
      * @var UrlGeneratorInterface|null

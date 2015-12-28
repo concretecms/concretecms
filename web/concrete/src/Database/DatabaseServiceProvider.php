@@ -9,6 +9,10 @@ class DatabaseServiceProvider extends ServiceProvider
 
     public function register()
     {
+        // Make both managers singletons
+        $this->app->singleton('Concrete\Core\Database\DatabaseManager');
+        $this->app->singleton('Concrete\Core\Database\DatabaseManagerORM');
+
         // Bind both `database` and `database/orm` to their respective classes
         $this->app->bind('database', 'Concrete\Core\Database\DatabaseManager');
         $this->app->bind('database/orm', 'Concrete\Core\Database\DatabaseManagerORM');
