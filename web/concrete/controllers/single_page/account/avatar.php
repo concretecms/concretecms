@@ -15,6 +15,13 @@ class Avatar extends AccountProfileEditPageController
     public function save_thumb()
     {
         $this->view();
+        $token = $this->app->make('token');
+
+        if (!$token->validate('avatar/save_thumb')) {
+            return false;
+        }
+
+
         $profile = $this->get('profile');
         if (!is_object($profile) || $profile->getUserID() < 1) {
             return false;
