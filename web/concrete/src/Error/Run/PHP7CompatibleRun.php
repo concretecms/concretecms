@@ -35,7 +35,7 @@ class PHP7CompatibleRun
             $callable = array($this, $name);
         }
 
-        call_user_func_array($callable, $arguments);
+        return call_user_func_array($callable, $arguments);
     }
 
     /**
