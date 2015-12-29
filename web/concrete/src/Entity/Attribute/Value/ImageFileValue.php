@@ -14,6 +14,14 @@ class ImageFileValue extends Value
      */
     protected $file;
 
+    public function getFileID()
+    {
+        if (is_object($this->file)) {
+            return $this->file->getFileID();
+        }
+        return 0;
+    }
+
     public function getFileObject()
     {
         return $this->file;

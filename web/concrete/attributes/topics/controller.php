@@ -53,10 +53,10 @@ class Controller extends AttributeTypeController
 
     public function getDisplayValue()
     {
-        $list = $this->getSelectedOptions();
+        $list = $this->attributeValue->getSelectedTopics();
         $topics = array();
         foreach ($list as $node) {
-            $topic = Node::getByID($node);
+            $topic = Node::getByID($node->getTreeNodeID());
             if (is_object($topic)) {
                 $topics[] = $topic->getTreeNodeDisplayName();
             }
@@ -70,24 +70,20 @@ class Controller extends AttributeTypeController
         return $this->getDisplayValue();
     }
 
+    /**
+     * @deprecated
+     */
     public function getSelectedOptions()
     {
-        $avID = $this->getAttributeValueID();
-        $db = Database::get();
-        $optionIDs = $db->GetCol(
-            'select TopicNodeID from atSelectedTopics where avID=?',
-            array($avID)
-        );
-
-        return $optionIDs;
+        return $this->attributeValue->getSelectedTopics();
     }
 
     public function exportValue(\SimpleXMLElement $akn)
     {
         $avn = $akn->addChild('topics');
-        $nodes = $this->getSelectedOptions();
+        $nodes = $this->attributeValue->getSelectedTopics();
         foreach ($nodes as $node) {
-            $topic = Node::getByID($node);
+            $topic = Node::getByID($node->getTreeNodeID());
             if (is_object($topic)) {
                 $avn->addChild('topic', $topic->getTreeNodeDisplayPath());
             }
@@ -158,9 +154,9 @@ class Controller extends AttributeTypeController
         }
         if ($this->getAttributeValueID()) {
             $valueIDs = array();
-            foreach ($this->getSelectedOptions() as $valueID) {
+            foreach ($this->attributeValue->getSelectedTopics() as $value) {
                 $withinParentScope = false;
-                $nodeObj = TreeNode::getByID($valueID);
+                $nodeObj = TreeNode::getByID($value->getTreeNodeID());
                 if (is_object($nodeObj)) {
                     $parentNodeArray = $nodeObj->getTreeNodeParentArray();
                     // check to see if selected node is still within parent scope, in case it has been changed.
@@ -195,9 +191,9 @@ class Controller extends AttributeTypeController
     public function getSearchIndexValue()
     {
         $str = "||";
-        $nodeKeys = $this->getSelectedOptions();
+        $nodeKeys = $this->attributeValue->getSelectedTopics();
         foreach ($nodeKeys as $nodeKey) {
-            $nodeObj = TreeNode::getByID($nodeKey);
+            $nodeObj = TreeNode::getByID($nodeKey->getTreeNodeID());
             if (is_object($nodeObj)) {
                 $str .= $nodeObj->getTreeNodeDisplayPath() . "||";
             }
@@ -248,20 +244,6 @@ class Controller extends AttributeTypeController
             }
         }
         return $av;
-    }
-
-    public function getValue()
-    {
-        $nodes = $this->getSelectedOptions();
-        $topics = array();
-        foreach ($nodes as $node) {
-            $topic = Node::getByID($node);
-            if (is_object($topic)) {
-                $topics[] = $topic;
-            }
-        }
-
-        return $topics;
     }
 
     public function deleteKey()

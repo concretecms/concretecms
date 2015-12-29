@@ -59,18 +59,6 @@ class Controller extends AttributeTypeController
         }
     }
 
-    public function getValue()
-    {
-        $db = Loader::db();
-        $services = array();
-        $r = $db->Execute('select service, serviceInfo from atSocialLinks where avID = ? order by avsID asc',
-            array($this->getAttributeValueID()));
-        while ($row = $r->FetchRow()) {
-            $services[$row['service']] = $row['serviceInfo'];
-        }
-        return $services;
-    }
-
     public function deleteKey()
     {
         $db = Loader::db();

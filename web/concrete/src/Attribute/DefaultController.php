@@ -15,14 +15,6 @@ class DefaultController extends AttributeTypeController
         'options' => array('default' => null, 'notnull' => false),
     );
 
-    public function getValue()
-    {
-        $db = Database::get();
-        $value = $db->GetOne("select value from atDefault where avID = ?", array($this->getAttributeValueID()));
-
-        return $value;
-    }
-
     public function form()
     {
         $value = '';

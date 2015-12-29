@@ -2,6 +2,8 @@
 
 namespace Concrete\Core\Entity\Page;
 
+use Concrete\Core\Entity\Attribute\AbstractAttributeValue;
+
 /**
  * @Entity
  * @Table(
@@ -12,15 +14,8 @@ namespace Concrete\Core\Entity\Page;
  *     }
  * )
  */
-class AttributeValue
+class AttributeValue extends AbstractAttributeValue
 {
-
-    /**
-     * @Id
-     * @ManyToOne(targetEntity="\Concrete\Core\Entity\Attribute\Key\Key")
-     * @JoinColumn(name="akID", referencedColumnName="akID")
-     **/
-    protected $attribute_key;
 
     /**
      * @Id
@@ -34,28 +29,6 @@ class AttributeValue
      **/
     protected $cvID;
 
-    /**
-     * @Id
-     * @OneToOne(targetEntity="\Concrete\Core\Entity\Attribute\Value\Value")
-     * @JoinColumn(name="avID", referencedColumnName="avID")
-     **/
-    protected $attribute_value;
-
-    /**
-     * @return mixed
-     */
-    public function getAttributeKey()
-    {
-        return $this->attribute_key;
-    }
-
-    /**
-     * @param mixed $attribute_key
-     */
-    public function setAttributeKey($attribute_key)
-    {
-        $this->attribute_key = $attribute_key;
-    }
 
     /**
      * @return mixed
@@ -88,28 +61,6 @@ class AttributeValue
     {
         $this->cvID = $cvID;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getAttributeValue()
-    {
-        return $this->attribute_value;
-    }
-
-    /**
-     * @param mixed $attribute_value
-     */
-    public function setAttributeValue($attribute_value)
-    {
-        $this->attribute_value = $attribute_value;
-    }
-
-
-
-
-
-
 
 
 

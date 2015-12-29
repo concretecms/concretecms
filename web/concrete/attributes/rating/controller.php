@@ -15,14 +15,6 @@ class Controller extends AttributeTypeController
         'options' => array('precision' => 14, 'scale' => 4, 'default' => 0, 'notnull' => false)
     );
 
-    public function getValue()
-    {
-        $db = Loader::db();
-        $value = $db->GetOne("select value from atNumber where avID = ?", array($this->getAttributeValueID()));
-        return round($value);
-    }
-
-
     public function getDisplayValue()
     {
         $value = $this->getValue() / 20;

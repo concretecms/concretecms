@@ -87,9 +87,10 @@ class SelectValueOption
     }
 
 
-
-
-
+    public function __toString()
+    {
+        return (string) $this->getValue();
+    }
 
 
 }

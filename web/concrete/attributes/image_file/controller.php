@@ -15,17 +15,6 @@ class Controller extends AttributeTypeController
 {
     protected $searchIndexFieldDefinition = array('type' => 'integer', 'options' => array('default' => 0, 'notnull' => false));
 
-    public function getValue()
-    {
-        $db = Database::connection();
-        $value = $db->GetOne("select fID from atFile where avID = ?", array($this->getAttributeValueID()));
-        if ($value > 0) {
-            $f = File::getByID($value);
-
-            return $f;
-        }
-    }
-
     public function getDisplayValue()
     {
         $f = $this->getValue();
@@ -60,10 +49,7 @@ class Controller extends AttributeTypeController
 
     public function getSearchIndexValue()
     {
-        $db = Database::connection();
-        $value = $db->GetOne("select fID from atFile where avID = ?", array($this->getAttributeValueID()));
-
-        return $value;
+        return $this->attributeValue->getFileID();
     }
 
     public function search()

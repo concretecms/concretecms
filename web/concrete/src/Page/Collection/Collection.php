@@ -7,6 +7,7 @@ use Block;
 use CacheLocal;
 use CollectionAttributeKey;
 use CollectionVersion;
+use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Attribute\Key\Key;
 use Concrete\Core\Attribute\Value\CollectionValue as CollectionAttributeValue;
 use Concrete\Core\Entity\Attribute\Value\Value;
@@ -316,27 +317,23 @@ class Collection extends Object
 
     public function reindex($index = false, $actuallyDoReindex = true)
     {
-        return;
         if ($this->isAlias() && !$this->isExternalLink()) {
             return false;
         }
         if ($actuallyDoReindex || Config::get('concrete.page.search.always_reindex') == true) {
-            $db = Loader::db();
-            $attribs = CollectionAttributeKey::getAttributes(
-                $this->getCollectionID(),
-                $this->getVersionID(),
-                'getSearchIndexValue'
-            );
-            $db->Execute('delete from CollectionSearchIndexAttributes where cID = ?', array($this->getCollectionID()));
-            $searchableAttributes = array('cID' => $this->getCollectionID());
-            $key = new Key();
-            $key->reindex('CollectionSearchIndexAttributes', $searchableAttributes, $attribs);
+
+            // Retrieve the attribute values for the current page
+            $category = \Core::make('Concrete\Core\Attribute\Category\PageCategory');
+            $indexer = $category->getSearchIndexer();
+            $indexer->indexEntry($category, $this);
 
             if ($index == false) {
                 $index = new IndexedSearch();
             }
 
             $index->reindexPage($this);
+
+            $db = \Database::connection();
             $db->Replace(
                'PageSearchIndex',
                array('cID' => $this->getCollectionID(), 'cRequiresReindex' => 0),

@@ -54,5 +54,15 @@ class ExpressCategory extends AbstractCategory
         }
     }
 
+    public function getAttributeValues($mixed)
+    {
+        // TODO: Implement getAttributeValues() method.
+    }
+
+    public function getSearchIndexer()
+    {
+        // TODO: Implement getSearchIndexer() method.
+    }
+
 
 }

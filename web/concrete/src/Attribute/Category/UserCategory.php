@@ -2,13 +2,39 @@
 
 namespace Concrete\Core\Attribute\Category;
 
+use Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexerInterface;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Type;
 use Concrete\Core\Entity\User\Attribute;
 use Symfony\Component\HttpFoundation\Request;
 
-class UserCategory extends AbstractCategory
+class UserCategory extends AbstractCategory implements StandardSearchIndexerInterface
 {
+
+    public function getIndexedSearchTable()
+    {
+        return 'UserSearchIndexAttributes';
+    }
+
+    public function getIndexedSearchPrimaryKeyValue($mixed)
+    {
+        return $mixed->getUserID();
+    }
+
+
+    public function getSearchIndexFieldDefinition()
+    {
+        return array(
+            'columns' => array(
+                array(
+                    'name' => 'uID',
+                    'type' => 'integer',
+                    'options' => array('unsigned' => true, 'default' => 0, 'notnull' => true)
+                )
+            ),
+            'primary' => array('uID')
+        );
+    }
 
     public function getAttributeRepository()
     {
@@ -65,6 +91,17 @@ class UserCategory extends AbstractCategory
             $this->entityManager->flush();
         }
     }
+
+    public function getAttributeValues($user)
+    {
+        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\User\AttributeValue');
+        $values = $r->findBy(array(
+            'uID' => $user->getUserID()
+        ));
+        return $values;
+    }
+
+
 
 
 }
