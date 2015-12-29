@@ -3,6 +3,7 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Registration;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use Config;
 use Loader;
+use Database;
 
 class Profiles extends DashboardPageController {
 
@@ -25,6 +26,13 @@ class Profiles extends DashboardPageController {
 			Config::save('concrete.user.gravatar.image_set', Loader::helper('security')->sanitizeString($this->post('gravatar_image_set')));
 			// $message = ($this->post('public_profiles')?t('Public profiles have been enabled'):t('Public profiles have been disabled.'));
             if($this->post('public_profiles')) {
+                if (Config::get('concrete.misc.member_is_systempage') == false) {
+                    $db = Database::connection();
+                    $cPath = array('/member', '/member/*');
+                    $cID = $db->fetchColumn('select cID from PagePaths where cPath = ? and ppIsCanonical = 1', $cPath);
+                    $db->executeQuery('update Pages set cIsSystemPage = 0 where cID = ?', array($cID));
+                }
+                
 			    $this->redirect('/dashboard/system/registration/profiles/profiles_enabled');
             } else {
                 $this->redirect('/dashboard/system/registration/profiles/profiles_disabled');
