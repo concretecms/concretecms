@@ -1,6 +1,8 @@
 <?php 
 namespace Concrete\Core\Http;
 use Cookie;
+use Config;
+use Core;
 
 class Response extends \Symfony\Component\HttpFoundation\Response {
 
@@ -13,6 +15,12 @@ class Response extends \Symfony\Component\HttpFoundation\Response {
 		foreach($cookies as $cookie) {
 			$this->headers->setCookie($cookie);
 		}
+		
+		$x_frame_options = Config::get('concrete.security.misc.x_frame_options');
+		if (Core::make('helper/validation/strings')->notempty($x_frame_options)) {
+			$this->headers->set('X-Frame-Options', $x_frame_options);
+		}
+		
 		parent::send();
 	}
 }
