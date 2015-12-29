@@ -92,8 +92,8 @@ class UserList extends DatabaseItemList
     public function createQuery()
     {
         $this->query->select('u.uID')
-            ->from('Users', 'u');
-            //->leftJoin('u', 'UserSearchIndexAttributes', 'ua', 'u.uID = ua.uID');
+            ->from('Users', 'u')
+            ->leftJoin('u', 'UserSearchIndexAttributes', 'ua', 'u.uID = ua.uID');
     }
 
     public function finalizeQuery(\Doctrine\DBAL\Query\QueryBuilder $query)
@@ -166,7 +166,7 @@ class UserList extends DatabaseItemList
 
         $keys = \Concrete\Core\Attribute\Key\UserKey::getSearchableIndexedList();
         foreach ($keys as $ak) {
-            $cnt = $ak->getController();
+            $cnt = $ak->getAttributeKey()->getController();
             $expressions[] = $cnt->searchKeywords($keywords, $this->query);
         }
         $expr = $this->query->expr();

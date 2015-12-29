@@ -116,7 +116,7 @@ class Controller extends AttributeTypeController
 
     public function getSearchIndexValue()
     {
-        $v = $this->getValue();
+        $v = $this->attributeValue;
         $args = array();
         $args['address1'] = $v->getAddress1();
         $args['address2'] = $v->getAddress2();
@@ -141,13 +141,6 @@ class Controller extends AttributeTypeController
     {
         $db = Database::connection();
         $db->Execute('delete from atAddress where avID = ?', array($this->getAttributeValueID()));
-    }
-
-    public function getValue()
-    {
-        $val = Value::getByID($this->getAttributeValueID());
-
-        return $val;
     }
 
     public function getDisplayValue()

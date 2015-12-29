@@ -11,8 +11,14 @@ class StandardImporterLoader implements ImportLoaderInterface
     {
         $key->setAttributeKeyName((string) $element['name']);
         $key->setAttributeKeyHandle((string) $element['handle']);
-        $key->setIsAttributeKeyContentIndexed((bool) $element['indexed']);
-        $key->setIsAttributeKeySearchable((bool) $element['searchable']);
+        $indexed = (string) $element['indexed'];
+        $searchable = (string) $element['searchable'];
+        if ($indexed === '1') {
+            $key->setIsAttributeKeyContentIndexed(true);
+        }
+        if ($searchable === '1') {
+            $key->setIsAttributeKeySearchable(true);
+        }
         $controller = $key->getController();
         $controller->setAttributeKey($key);
         $controller->importKey($element);

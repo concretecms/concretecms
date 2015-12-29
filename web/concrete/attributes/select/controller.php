@@ -457,31 +457,24 @@ class Controller extends AttributeTypeController
         return $list;
     }
 
-    public function getValue()
-    {
-        $list = $this->getSelectedOptions();
-
-        return $list;
-    }
-
     public function getSearchIndexValue()
     {
         $str = "\n";
-        $list = $this->getSelectedOptions();
+        $list = $this->attributeValue->getSelectedOptions();
         foreach ($list as $l) {
-            $l = (is_object($l) && method_exists($l, '__toString')) ? $l->__toString() : $l;
             $str .= $l . "\n";
         }
         // remove line break for empty list
         if ($str == "\n") {
             return '';
         }
-
         return $str;
     }
 
     public function getSelectedOptions()
     {
+        return $this->attributeValue->getSelectedOptions();
+        /*
         if (!isset($this->akSelectOptionDisplayOrder)) {
             $this->load();
         }
@@ -513,6 +506,8 @@ class Controller extends AttributeTypeController
         }
 
         return $list;
+        */
+
     }
 
     /**

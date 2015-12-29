@@ -33,5 +33,10 @@ class CategoryFactory
         }
         $this->entityManager->persist($category);
         $this->entityManager->flush();
+
+        $indexer = $category->getController()->getSearchIndexer();
+        if (is_object($indexer)) {
+            $indexer->createTable($category->getController());
+        }
     }
 }

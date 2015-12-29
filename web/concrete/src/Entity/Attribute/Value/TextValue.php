@@ -33,7 +33,7 @@ class TextValue extends Value
 
     public function __toString()
     {
-        return $this->getValue();
+        return (string) $this->getValue();
     }
 
 }

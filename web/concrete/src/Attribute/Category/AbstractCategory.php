@@ -2,6 +2,8 @@
 
 namespace Concrete\Core\Attribute\Category;
 
+use Concrete\Core\Application\Application;
+use Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexerInterface;
 use Concrete\Core\Attribute\EntityInterface;
 use Concrete\Core\Attribute\Key\Factory;
 use Concrete\Core\Attribute\Type;
@@ -20,14 +22,16 @@ abstract class AbstractCategory implements CategoryInterface
     protected $entityManager;
     protected $entity;
     protected $categoryEntity;
+    protected $application;
 
     /**
      * @return EntityRepository
      */
     abstract public function getAttributeRepository();
 
-    public function __construct(EntityManager $entityManager)
+    public function __construct(Application $application, EntityManager $entityManager)
     {
+        $this->application = $application;
         $this->entityManager = $entityManager;
     }
 
@@ -39,14 +43,16 @@ abstract class AbstractCategory implements CategoryInterface
     public function getSearchableList()
     {
         $query = $this->getAttributeRepository()->createQueryBuilder('a');
-        $query->join('a.attribute_key', 'ta', 'ta.akIsSearchable = true');
+        $query->join('a.attribute_key', 'ta');
+        $query->andWhere('ta.akIsSearchable = true');
         return $query->getQuery()->getResult();
     }
 
     public function getSearchableIndexedList()
     {
         $query = $this->getAttributeRepository()->createQueryBuilder('a');
-        $query->join('a.attribute_key', 'ta', 'ta.akIsSearchableIndexed = true');
+        $query->join('a.attribute_key', 'ta');
+        $query->andWhere('ta.akIsSearchable = true');
         return $query->getQuery()->getResult();
     }
 
@@ -80,6 +86,12 @@ abstract class AbstractCategory implements CategoryInterface
         $key = $type->getController()->createAttributeKey();
         $loader = $key->getRequestLoader();
         $loader->load($key, $request);
+
+        // Modify the category's search indexer.
+        $indexer = $this->getCategoryEntity()
+            ->getController()->getSearchIndexer();
+        $indexer->updateTable($this, $key);
+
         return $key;
     }
 
@@ -88,6 +100,12 @@ abstract class AbstractCategory implements CategoryInterface
         $key = $type->getController()->createAttributeKey();
         $loader = $key->getImportLoader();
         $loader->load($key, $element);
+
+        // Modify the category's search indexer.
+        $indexer = $this->getCategoryEntity()
+            ->getController()->getSearchIndexer();
+        $indexer->updateTable($this, $key);
+
         return $key;
     }
 
@@ -153,5 +171,13 @@ abstract class AbstractCategory implements CategoryInterface
         $this->entityManager->flush();
         return $set;
     }
+
+    public function getSearchIndexer()
+    {
+        $indexer = $this->application->make('Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexer');
+        return $indexer;
+    }
+
+
 
 }

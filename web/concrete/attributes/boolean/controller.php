@@ -44,14 +44,6 @@ class Controller extends AttributeTypeController
         }
     }
 
-    public function getValue()
-    {
-        $db = Database::get();
-        $value = $db->GetOne("select value from atBoolean where avID = ?", array($this->getAttributeValueID()));
-
-        return $value;
-    }
-
     public function exportKey($akey)
     {
         $this->load();
@@ -155,6 +147,11 @@ class Controller extends AttributeTypeController
 		$v = $this->getValue();
 		return $v == 1;
 	}
+
+    public function getSearchIndexValue()
+    {
+        return $this->attributeValue->getValue() ? 1 : 0;
+    }
 
 	public function duplicateKey($newAK)
     {

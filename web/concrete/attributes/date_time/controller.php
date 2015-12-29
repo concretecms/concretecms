@@ -130,14 +130,6 @@ class Controller extends AttributeTypeController
         }
     }
 
-    public function getValue()
-    {
-        $db = Loader::db();
-        $value = $db->GetOne("select value from atDateTime where avID = ?", array($this->getAttributeValueID()));
-
-        return $value;
-    }
-
     public function search()
     {
         $dt = Loader::helper('form/date_time');

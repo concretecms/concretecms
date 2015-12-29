@@ -15,12 +15,6 @@ class Controller extends AttributeTypeController
         'options' => array('precision' => 14, 'scale' => 4, 'default' => 0, 'notnull' => false)
     );
 
-    public function getValue()
-    {
-        $db = Loader::db();
-        return (float)$db->GetOne("select value from atNumber where avID = ?", array($this->getAttributeValueID()));
-    }
-
     public function searchForm($list)
     {
         $numFrom = intval($this->request('from'));
