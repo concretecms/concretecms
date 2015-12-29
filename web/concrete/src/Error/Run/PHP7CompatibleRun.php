@@ -2,13 +2,9 @@
 namespace Concrete\Core\Error\Run;
 
 use Exception;
-use InvalidArgumentException;
 use Symfony\Component\Debug\Exception\FatalThrowableError;
 use Whoops\Exception\ErrorException;
 use Whoops\Exception\Inspector;
-use Whoops\Handler\CallbackHandler;
-use Whoops\Handler\Handler;
-use Whoops\Handler\HandlerInterface;
 use Whoops\Run;
 
 class PHP7CompatibleRun
@@ -34,11 +30,12 @@ class PHP7CompatibleRun
 
     public function __call($name, $arguments)
     {
+        $callable = array($this->run, $name);
         if (method_exists($this, $name)) {
-            $this->{$name}(...$arguments);
-        } else {
-            $this->run->{$name}(...$arguments);
+            $callable = array($this, $name);
         }
+
+        call_user_func_array($callable, $arguments);
     }
 
     /**
