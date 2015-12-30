@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Entity\Attribute;
 
+use Concrete\Core\Attribute\View;
 use Concrete\Core\Entity\PackageTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -98,6 +99,18 @@ class Type
         $this->categories = $categories;
     }
 
+    public function getAttributeTypeDisplayName($format = 'html')
+    {
+        $value = tc('AttributeTypeName', $this->getAttributeTypeName());
+        switch ($format) {
+            case 'html':
+                return h($value);
+            case 'text':
+            default:
+                return $value;
+        }
+    }
+
     public function getController()
     {
         if (!isset($this->controller)) {
@@ -110,6 +123,33 @@ class Type
         }
         return $this->controller;
     }
+
+    /**
+     * @deprecated
+     */
+    public function render($view, $ak = false, $value = false, $return = false)
+    {
+        // local scope
+        if ($value) {
+            $av = new View($value);
+        } else {
+            if ($ak) {
+                $av = new View($ak);
+            } else {
+                $av = new View($this);
+            }
+        }
+        ob_start();
+        $av->render($view);
+        $contents = ob_get_contents();
+        ob_end_clean();
+        if ($return) {
+            return $contents;
+        } else {
+            print $contents;
+        }
+    }
+
 
 
 

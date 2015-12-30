@@ -1,152 +1,89 @@
-<?php
+<?
 namespace Concrete\Controller\SinglePage\Dashboard\Users;
-use \Concrete\Core\Page\Controller\DashboardPageController;
-use UserAttributeKey;
-use Loader;
-use Exception;
-use \Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
-use \Concrete\Core\Attribute\Type as AttributeType;
 
-class Attributes extends DashboardPageController {
-	
-	public $helpers = array('form');
+use Concrete\Core\Attribute\Key\UserKey;
+use Concrete\Core\Attribute\Type;
+use Concrete\Core\Page\Controller\DashboardAttributesPageController;
 
-	public function delete($akID, $token = null){
-		try {
-			$ak = UserAttributeKey::getByID($akID); 
-				
-			if(!($ak instanceof UserAttributeKey)) {
-				throw new Exception(t('Invalid attribute ID.'));
-			}
-	
-			$valt = Loader::helper('validation/token');
-			if (!$valt->validate('delete_attribute', $token)) {
-				throw new Exception($valt->getErrorMessage());
-			}
-			
-			$ak->delete();
-			
-			$this->redirect("/dashboard/users/attributes", 'attribute_deleted');
-		} catch (Exception $e) {
-			$this->set('error', $e);
-		}
-	}
-	
-	public function on_start() {
-        parent::on_start();
-        $this->set('category', AttributeKeyCategory::getByHandle('user'));
-		$otypes = AttributeType::getAttributeTypeList('user');
-		$types = array();
-		foreach($otypes as $at) {
-			$types[$at->getAttributeTypeID()] = $at->getAttributeTypeDisplayName();
-		}
-		$this->set('types', $types);
+class Attributes extends DashboardAttributesPageController
+{
 
-	}
-	
-	public function activate($akID, $token = null) {
-		try {
-			$ak = UserAttributeKey::getByID($akID); 
-				
-			if(!($ak instanceof UserAttributeKey)) {
-				throw new Exception(t('Invalid attribute ID.'));
-			}
-	
-			$valt = Loader::helper('validation/token');
-			if (!$valt->validate('attribute_activate', $token)) {
-				throw new Exception($valt->getErrorMessage());
-			}
-			
-			$ak->activate();
-			
-			$this->redirect("/dashboard/users/attributes", 'edit', $akID);
-			
-		} catch (Exception $e) {
-			$this->set('error', $e);
-		}
-	}
-	
-	public function deactivate($akID, $token = null) {
-			$ak = UserAttributeKey::getByID($akID); 
-				
-			if(!($ak instanceof UserAttributeKey)) {
-				throw new Exception(t('Invalid attribute ID.'));
-			}
-	
-			$valt = Loader::helper('validation/token');
-			if (!$valt->validate('attribute_deactivate', $token)) {
-				throw new Exception($valt->getErrorMessage());
-			}
-			
-			$ak->deactivate();
-			
-			$this->redirect("/dashboard/users/attributes", 'edit', $akID);
-	}
-	
-	public function select_type() {
-		$atID = $this->request('atID');
-		$at = AttributeType::getByID($atID);
-		if(is_object($at) && $at->getAttributeTypeID() > 0) {
-			$this->set('type', $at);
-		} else {
-			throw new Exception(t('Invalid Attribute Type.'));
-		}
-	}
-	
-	public function view() {
-		$attribs = UserAttributeKey::getList();
-		$this->set('attribs', $attribs);
-	}
-	
-	public function add() {
-		$this->select_type();
-		$type = $this->get('type');
-		$cnt = $type->getController();
-		$e = $cnt->validateKey($this->post());
-		if ($e->has()) {
-			$this->error = $e;
-		} else {
-			$type = AttributeType::getByID($this->post('atID'));
-			$ak = UserAttributeKey::add($type, $this->post());
-			$this->redirect('/dashboard/users/attributes/', 'attribute_created');
-		}
+	public function view()
+	{
+		$this->renderList(UserKey::getList(), Type::getAttributeTypeList());
 	}
 
-	public function attribute_deleted() {
-		$this->set('message', t('User Attribute Deleted.'));
-	}
-	
-	public function attribute_created() {
-		$this->set('message', t('User Attribute Created.'));
+	public function edit($id = null, $akID = null)
+	{
+		$this->set('entity', $this->getEntity($id));
+		$r = $this->entityManager->getRepository('\Concrete\Core\Entity\AttributeKey\AttributeKey');
+		$key = $r->findOneBy(array('akID' => $akID));
+		$this->renderEdit($key,
+			\URL::to('/dashboard/express/entities/attributes', 'view', $id)
+		);
 	}
 
-	public function attribute_updated() {
-		$this->set('message', t('User Attribute Updated.'));
-	}
-	
-	public function edit($akID = 0) {
-		if ($this->post('akID')) {
-			$akID = $this->post('akID');
-		}
-		$key = UserAttributeKey::getByID($akID);
-		if (!is_object($key) || $key->isAttributeKeyInternal()) {
-			$this->redirect('/dashboard/users/attributes');
-		}
-		$type = $key->getAttributeType();
-		$this->set('key', $key);
-		$this->set('type', $type);
-		
-		if ($this->isPost()) {
-			$cnt = $type->getController();
-			$cnt->setAttributeKey($key);
-			$e = $cnt->validateKey($this->post());
-			if ($e->has()) {
-				$this->error = $e;
-			} else {
-				$key->update($this->post());
-				$this->redirect('/dashboard/users/attributes', 'attribute_updated');
+	public function update($id = null, $akID = null)
+	{
+		$this->edit($id, $akID);
+		$entity = $this->getEntity($id);
+		$this->set('entity', $entity);
+		$r = $this->entityManager->getRepository('\Concrete\Core\Entity\AttributeKey\AttributeKey');
+		$key = $r->findOneBy(array('akID' => $akID));
+		$this->executeUpdate($entity, $key,
+			\URL::to('/dashboard/express/entities/attributes', 'view', $id),
+			function() use ($entity) {
+				$publisher = \Core::make('express.publisher');
+				$publisher->publish($entity);
 			}
-		}
+		);
 	}
-	
+
+	public function select_type($id = null, $type = null)
+	{
+		$this->set('entity', $this->getEntity($id));
+		$type = Type::getByID($type);
+		$this->renderAdd($type,
+			\URL::to('/dashboard/express/entities/attributes', 'view', $id)
+		);
+	}
+
+	public function add($id = null, $type = null)
+	{
+		$this->select_type($id, $type);
+		$type = Type::getByID($type);
+		$entity = $this->getEntity($id);
+		$this->set('entity', $entity);
+		$this->executeAdd($entity, $type, \URL::to('/dashboard/express/entities/attributes', 'view', $id),
+			function() use ($entity) {
+				$publisher = \Core::make('express.publisher');
+				$publisher->publish($entity);
+			}
+		);
+
+		$publisher = \Core::make('express.publisher');
+		$publisher->publish($entity);
+	}
+
+	public function delete($id = null, $akID = null)
+	{
+		$entity = $this->getEntity($id);
+		$this->set('entity', $entity);
+		$r = $this->entityManager->getRepository('\Concrete\Core\Entity\AttributeKey\AttributeKey');
+		$key = $r->findOneBy(array('akID' => $akID));
+		$this->executeDelete($entity, $key,
+			\URL::to('/dashboard/express/entities/attributes', 'view', $id),
+			function() use ($entity) {
+				$publisher = \Core::make('express.publisher');
+				$publisher->publish($entity);
+			}
+		);
+
+		$publisher = \Core::make('express.publisher');
+		$publisher->publish($entity);
+
+	}
+
+
+
 }

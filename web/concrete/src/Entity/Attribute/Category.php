@@ -55,7 +55,7 @@ class Category
     /**
      * @return mixed
      */
-    public function getAttributeCategoryID()
+    public function getAttributeKeyCategoryID()
     {
         return $this->akCategoryID;
     }
@@ -79,7 +79,7 @@ class Category
     /**
      * @return mixed
      */
-    public function getAttributeCategoryAllowSets()
+    public function allowAttributeSets()
     {
         return $this->akCategoryAllowSets;
     }
@@ -87,7 +87,7 @@ class Category
     /**
      * @param mixed $akCategoryAllowSets
      */
-    public function setAttributeCategoryAllowSets($akCategoryAllowSets)
+    public function setAllowAttributeSets($akCategoryAllowSets)
     {
         $this->akCategoryAllowSets = $akCategoryAllowSets;
     }
@@ -98,6 +98,14 @@ class Category
         $controller = $manager->driver($this->getAttributeCategoryHandle());
         $controller->setCategoryEntity($this);
         return $controller;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAttributeSets()
+    {
+        return $this->sets;
     }
 
     /**

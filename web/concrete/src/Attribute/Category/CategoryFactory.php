@@ -27,7 +27,7 @@ class CategoryFactory
     {
         $category = new Category();
         $category->setAttributeCategoryHandle($akCategoryHandle);
-        $category->setAttributeCategoryAllowSets($allowSets);
+        $category->setAllowAttributeSets($allowSets);
         if ($pkg) {
             $category->setPackage($pkg);
         }

@@ -29,6 +29,11 @@ abstract class AbstractCategory implements CategoryInterface
      */
     abstract public function getAttributeRepository();
 
+    public function getByID($akID)
+    {
+        return $this->getAttributeKeyByID($akID);
+    }
+
     public function __construct(Application $application, EntityManager $entityManager)
     {
         $this->application = $application;
@@ -52,7 +57,7 @@ abstract class AbstractCategory implements CategoryInterface
     {
         $query = $this->getAttributeRepository()->createQueryBuilder('a');
         $query->join('a.attribute_key', 'ta');
-        $query->andWhere('ta.akIsSearchable = true');
+        $query->andWhere('ta.akIsSearchableIndexed = true');
         return $query->getQuery()->getResult();
     }
 

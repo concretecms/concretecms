@@ -9,14 +9,15 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 <ul class="item-select-list ccm-attribute-list-wrapper">
     <?php
-    foreach($attributes as $ak) {
-        $controller = $ak->getController();
+    foreach($attributes as $attribute) {
+        $key = $attribute->getAttributeKey();
+        $controller = $key->getController();
         $formatter = $controller->getIconFormatter(); ?>
 
-        <li class="ccm-attribute" id="akID_<?=$ak->getAttributeKeyID()?>">
-            <a href="<?=$view->controller->getEditAttributeKeyURL($ak)?>" title="<?php echo t('Handle')?>: <?php echo $ak->getAttributeKeyHandle(); ?>">
+        <li class="ccm-attribute" id="akID_<?=$key->getAttributeKeyID()?>">
+            <a href="<?=$view->controller->getEditAttributeKeyURL($key)?>" title="<?php echo t('Handle')?>: <?php echo $key->getAttributeKeyHandle(); ?>">
                 <?=$formatter->getListIconElement()?>
-                <?=$ak->getAttributeKeyDisplayName()?>
+                <?=$key->getAttributeKeyDisplayName()?>
             </a>
         </li>
 
