@@ -21,9 +21,16 @@ class LegacyIconFormatter implements IconFormatterInterface
 
     public function getListIconElement()
     {
+        $env = \Environment::get();
+        $type = $this->controller->getAttributeType();
+        $url = $env->getURL(
+            implode('/', array(DIRNAME_ATTRIBUTES . '/' . $type->getAttributeTypeHandle() . '/' . FILENAME_BLOCK_ICON)),
+            $type->getPackageHandle()
+        );
+
         $img = new Element('img');
         $img->addClass('ccm-attribute-icon')
-            ->src($this->controller->getAttributeType()->getAttributeTypeIconSRC())
+            ->src($url)
             ->width(16)
             ->height(16);
         return $img;

@@ -2,9 +2,8 @@
 namespace Concrete\Controller\Element\Attribute;
 
 use Concrete\Core\Attribute\AttributeKeyInterface;
-use Concrete\Core\Attribute\Type;
+use Concrete\Core\Entity\Attribute\Type;
 use Concrete\Core\Controller\ElementController;
-use Concrete\Core\Entity\AttributeKey\AttributeKey;
 
 class KeyList extends ElementController
 {

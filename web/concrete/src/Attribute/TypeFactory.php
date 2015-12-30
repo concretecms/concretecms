@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Attribute;
 
+use Concrete\Core\Attribute\Key\Category;
 use Doctrine\ORM\EntityManager;
 use Concrete\Core\Entity\Attribute\Type as AttributeType;
 
@@ -37,4 +38,22 @@ class TypeFactory
         return $type;
     }
 
+    public function getList($akCategoryHandle = false)
+    {
+        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Type');
+        if ($akCategoryHandle == false) {
+            return $r->findAll();
+        } else {
+            $category = Category::getByHandle($akCategoryHandle);
+            return $category->getAttributeTypes();
+        }
+    }
+
+    /**
+     * @deprecated
+     */
+    public function getAttributeTypeList($akCategoryHandle = false)
+    {
+        return $this->getList($akCategoryHandle);
+    }
 }
