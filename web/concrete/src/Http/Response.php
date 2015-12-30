@@ -16,9 +16,11 @@ class Response extends \Symfony\Component\HttpFoundation\Response {
 			$this->headers->setCookie($cookie);
 		}
 		
-		$x_frame_options = Config::get('concrete.security.misc.x_frame_options');
-		if (Core::make('helper/validation/strings')->notempty($x_frame_options)) {
-			$this->headers->set('X-Frame-Options', $x_frame_options);
+		if ($this->headers->has('X-Frame-Options') === false) {
+			$x_frame_options = Config::get('concrete.security.misc.x_frame_options');
+			if (Core::make('helper/validation/strings')->notempty($x_frame_options)) {
+				$this->headers->set('X-Frame-Options', $x_frame_options);
+			}
 		}
 		
 		parent::send();
