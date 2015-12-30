@@ -25,16 +25,22 @@ class Profiles extends DashboardPageController {
 			Config::save('concrete.user.gravatar.max_level', Loader::helper('security')->sanitizeString($this->post('gravatar_max_level')));
 			Config::save('concrete.user.gravatar.image_set', Loader::helper('security')->sanitizeString($this->post('gravatar_image_set')));
 			// $message = ($this->post('public_profiles')?t('Public profiles have been enabled'):t('Public profiles have been disabled.'));
+            $db = Database::connection();
+            $cPath = '/members%';			
             if($this->post('public_profiles')) {
                 if (Config::get('concrete.misc.member_is_systempage') == false) {
-                    $db = Database::connection();
-                    $cPath = array('/member', '/member/*');
-                    $cID = $db->fetchColumn('select cID from PagePaths where cPath = ? and ppIsCanonical = 1', $cPath);
-                    $db->executeQuery('update Pages set cIsSystemPage = 0 where cID = ?', array($cID));
+                    $cIDs = $db->fetchAll('select cID from PagePaths where cPath like ? and ppIsCanonical = 1', array($cPath));
+                    foreach ($cIDs as $cID) {
+                        $db->executeQuery('update Pages set cIsSystemPage = 0 where cID = ?', array($cID['cID']));
+                    }
                 }
                 
 			    $this->redirect('/dashboard/system/registration/profiles/profiles_enabled');
             } else {
+                $cIDs = $db->fetchAll('select cID from PagePaths where cPath like ? and ppIsCanonical = 1', array($cPath));
+                foreach ($cIDs as $cID) {
+                    $db->executeQuery('update Pages set cIsSystemPage = 1 where cID = ?', array($cID['cID']));
+                }
                 $this->redirect('/dashboard/system/registration/profiles/profiles_disabled');
             }
 		}
