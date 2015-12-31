@@ -2,13 +2,13 @@
 
 namespace Concrete\Core\Attribute\Key\RequestLoader;
 
-use Concrete\Core\Entity\AttributeKey\AttributeKey;
+use Concrete\Core\Entity\Attribute\Key\Key;
 use Symfony\Component\HttpFoundation\Request;
 
 class StandardRequestLoader implements RequestLoaderInterface
 {
 
-    public function load(AttributeKey $key, Request $request)
+    public function load(Key $key, Request $request)
     {
         $key->setAttributeKeyName($request->request->get('akName'));
         $key->setAttributeKeyHandle($request->request->get('akHandle'));

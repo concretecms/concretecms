@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Entity\Attribute;
 
+use Concrete\Core\Attribute\EntityInterface;
 use Concrete\Core\Entity\PackageTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -10,7 +11,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @Table(name="AttributeKeyCategories", indexes={@Index(name="pkgID", columns={"pkgID", "akCategoryID"}),
  * @Index(name="akCategoryHandle", columns={"akCategoryHandle"})})
  */
-class Category
+class Category implements EntityInterface
 {
 
     public function __construct()
@@ -98,6 +99,11 @@ class Category
         $controller = $manager->driver($this->getAttributeCategoryHandle());
         $controller->setCategoryEntity($this);
         return $controller;
+    }
+
+    public function getAttributeKeyCategory()
+    {
+        return $this->getController();
     }
 
     /**

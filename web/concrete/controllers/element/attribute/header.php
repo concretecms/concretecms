@@ -3,7 +3,7 @@ namespace Concrete\Controller\Element\Attribute;
 
 use Concrete\Core\Attribute\Type;
 use Concrete\Core\Controller\ElementController;
-use Concrete\Core\Entity\AttributeKey\AttributeKey;
+use Concrete\Core\Entity\Attribute\Key\Key;
 
 class Header extends ElementController
 {
@@ -12,7 +12,7 @@ class Header extends ElementController
     protected $dashboard_page_delete_action = 'delete';
     protected $dashboard_page_parameters;
 
-    public function __construct(AttributeKey $key)
+    public function __construct(Key $key)
     {
         $this->key = $key;
         parent::__construct();

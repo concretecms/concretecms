@@ -66,8 +66,8 @@ class View extends AbstractView
 
     public function startRender()
     {
-        $js = $this->attributeType->getAttributeTypeFileURL($this->viewToRender . '.js');
-        $css = $this->attributeType->getAttributeTypeFileURL($this->viewToRender . '.css');
+        $js = $this->controller->getAttributeTypeFileURL($this->viewToRender . '.js');
+        $css = $this->controller->getAttributeTypeFileURL($this->viewToRender . '.css');
         $html = Loader::helper('html');
         if ($js != false) {
             $this->addOutputAsset($html->javascript($js));
