@@ -24,6 +24,7 @@ use Environment;
 use Illuminate\Container\Container;
 use Job;
 use JobSet;
+use Log;
 use Package;
 use Page;
 use Redirect;
@@ -520,7 +521,7 @@ class Application extends Container
      *
      * @throws BindingResolutionException
      */
-    public function build($concrete, $parameters = array())
+    public function build($concrete, array $parameters = array())
     {
         $object = parent::build($concrete, $parameters);
         if (is_object($object) && $object instanceof ApplicationAwareInterface) {
@@ -550,6 +551,16 @@ class Application extends Container
         }
 
         return $runtime;
+    }
+
+    /**
+     * @deprecated Use the singleton method
+     * @param $abstract
+     * @param $concrete
+     */
+    public function bindShared($abstract, $concrete)
+    {
+        return $this->singleton($abstract, $concrete);
     }
 
 }
