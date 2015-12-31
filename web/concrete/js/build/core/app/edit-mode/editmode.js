@@ -252,13 +252,13 @@
             });
 
             Concrete.event.bind('EditModeBlockAddToClipboard', function (event, data) {
-                var block = data.block, area = block.getArea();
+                var block = data.block, area = block.getArea(), token = data.token;
                 ConcreteToolbar.disableDirectExit();
                 // got to grab the message too, eventually
                 $.ajax({
                     type: 'POST',
                     url: CCM_TOOLS_PATH + '/pile_manager',
-                    data: 'cID=' + block.getCID() + '&bID=' + block.getId() + '&arHandle=' + encodeURIComponent(area.getHandle()) + '&btask=add&scrapbookName=userScrapbook',
+                    data: 'cID=' + block.getCID() + '&bID=' + block.getId() + '&arHandle=' + encodeURIComponent(area.getHandle()) + '&btask=add&scrapbookName=userScrapbook&ccm_token=' + encodeURIComponent(token),
                     success: function (resp) {
                         ConcreteAlert.notify({
                             'message': ccmi18n.copyBlockToScrapbookMsg,
