@@ -1,6 +1,6 @@
 <?php defined('C5_EXECUTE') or die('Access denied.'); ?>
 
-<div class="alert alert-sucess">
+<div class="alert alert-success">
 	<?= t('Successfully changed password'); ?>
 </div>
 <div>
