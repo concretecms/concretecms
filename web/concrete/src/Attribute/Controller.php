@@ -209,6 +209,19 @@ class Controller extends AbstractController
         }
     }
 
+    public function getAttributeTypeFileURL($_file)
+    {
+        $env = \Environment::get();
+        $r = $env->getRecord(
+            implode('/', array(DIRNAME_ATTRIBUTES . '/' . $this->attributeType->getAttributeTypeHandle() . '/' . $_file)),
+            $this->attributeType->getPackageHandle()
+        );
+        if ($r->exists()) {
+            return $r->url;
+        }
+    }
+
+
     public function saveKey($data)
     {
     }

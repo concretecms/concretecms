@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Controller\SinglePage\Dashboard\Users;
 
+use Concrete\Core\Attribute\Key\Category;
 use Concrete\Core\Attribute\Key\UserKey;
 use Concrete\Core\Attribute\Type;
 use Concrete\Core\Page\Controller\DashboardAttributesPageController;
@@ -13,75 +14,47 @@ class Attributes extends DashboardAttributesPageController
 		$this->renderList(UserKey::getList(), Type::getAttributeTypeList());
 	}
 
-	public function edit($id = null, $akID = null)
+	public function edit($akID = null)
 	{
-		$this->set('entity', $this->getEntity($id));
-		$r = $this->entityManager->getRepository('\Concrete\Core\Entity\AttributeKey\AttributeKey');
-		$key = $r->findOneBy(array('akID' => $akID));
+		$key = UserKey::getByID($akID);
 		$this->renderEdit($key,
-			\URL::to('/dashboard/express/entities/attributes', 'view', $id)
+			\URL::to('/dashboard/users/attributes', 'view')
 		);
 	}
 
-	public function update($id = null, $akID = null)
+	public function update($akID = null)
 	{
-		$this->edit($id, $akID);
-		$entity = $this->getEntity($id);
-		$this->set('entity', $entity);
-		$r = $this->entityManager->getRepository('\Concrete\Core\Entity\AttributeKey\AttributeKey');
-		$key = $r->findOneBy(array('akID' => $akID));
-		$this->executeUpdate($entity, $key,
-			\URL::to('/dashboard/express/entities/attributes', 'view', $id),
-			function() use ($entity) {
-				$publisher = \Core::make('express.publisher');
-				$publisher->publish($entity);
-			}
+		$this->edit($akID);
+		$key = UserKey::getByID($akID);
+		$category = Category::getByHandle('user');
+		$this->executeUpdate($category, $key,
+			\URL::to('/dashboard/users/attributes', 'view')
 		);
 	}
 
-	public function select_type($id = null, $type = null)
+	public function select_type($type = null)
 	{
-		$this->set('entity', $this->getEntity($id));
 		$type = Type::getByID($type);
 		$this->renderAdd($type,
-			\URL::to('/dashboard/express/entities/attributes', 'view', $id)
+			\URL::to('/dashboard/users/attributes', 'view', $id)
 		);
 	}
 
-	public function add($id = null, $type = null)
+	public function add($type = null)
 	{
-		$this->select_type($id, $type);
+		$this->select_type($type);
 		$type = Type::getByID($type);
-		$entity = $this->getEntity($id);
-		$this->set('entity', $entity);
-		$this->executeAdd($entity, $type, \URL::to('/dashboard/express/entities/attributes', 'view', $id),
-			function() use ($entity) {
-				$publisher = \Core::make('express.publisher');
-				$publisher->publish($entity);
-			}
-		);
-
-		$publisher = \Core::make('express.publisher');
-		$publisher->publish($entity);
+		$category = Category::getByHandle('user');
+		$this->executeAdd($category, $type, \URL::to('/dashboard/users/attributes', 'view'));
 	}
 
-	public function delete($id = null, $akID = null)
+	public function delete($akID = null)
 	{
-		$entity = $this->getEntity($id);
-		$this->set('entity', $entity);
-		$r = $this->entityManager->getRepository('\Concrete\Core\Entity\AttributeKey\AttributeKey');
-		$key = $r->findOneBy(array('akID' => $akID));
-		$this->executeDelete($entity, $key,
-			\URL::to('/dashboard/express/entities/attributes', 'view', $id),
-			function() use ($entity) {
-				$publisher = \Core::make('express.publisher');
-				$publisher->publish($entity);
-			}
+		$key = UserKey::getByID($akID);
+		$category = Category::getByHandle('user');
+		$this->executeDelete($category, $key,
+			\URL::to('/dashboard/users/attributes', 'view')
 		);
-
-		$publisher = \Core::make('express.publisher');
-		$publisher->publish($entity);
-
 	}
 
 

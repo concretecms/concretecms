@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Controller\Element\Attribute;
 
-use Concrete\Core\Attribute\Type;
+use \Concrete\Core\Entity\Attribute\Type;
 use Concrete\Core\Controller\ElementController;
 
 class Form extends ElementController

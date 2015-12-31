@@ -25,6 +25,12 @@ class TypeFactory
         return $r->findOneBy(array('atHandle' => $atHandle));
     }
 
+    public function getByID($atID)
+    {
+        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Type');
+        return $r->findOneBy(array('atID' => $atID));
+    }
+
     public function add($atHandle, $atName, $pkg = null)
     {
         $type = new AttributeType();

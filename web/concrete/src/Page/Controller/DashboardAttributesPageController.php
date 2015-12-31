@@ -7,9 +7,9 @@ use Concrete\Controller\Element\Attribute\Form;
 use Concrete\Controller\Element\Attribute\Header;
 use Concrete\Controller\Element\Attribute\KeyList;
 use Concrete\Core\Attribute\EntityInterface;
-use Concrete\Core\Attribute\Type;
+use Concrete\Core\Entity\Attribute\Key\Key;
+use Concrete\Core\Entity\Attribute\Type;
 use Concrete\Core\Controller\ElementController;
-use Concrete\Core\Entity\AttributeKey\AttributeKey;
 use Concrete\Core\Error\Error;
 use Concrete\Core\Validation\CSRF\Token;
 use Loader;
@@ -71,7 +71,7 @@ abstract class DashboardAttributesPageController extends DashboardPageController
         }
     }
 
-    protected function executeUpdate(EntityInterface $entity, AttributeKey $key, $successURL, $onComplete = null)
+    protected function executeUpdate(EntityInterface $entity, Key $key, $successURL, $onComplete = null)
     {
         $controller = $key->getController();
         $e = $controller->validateKey($this->request->request->all());
@@ -92,7 +92,7 @@ abstract class DashboardAttributesPageController extends DashboardPageController
         }
     }
 
-    protected function executeDelete(EntityInterface $entity, AttributeKey $key, $successURL, $onComplete = null)
+    protected function executeDelete(EntityInterface $entity, Key $key, $successURL, $onComplete = null)
     {
         try {
 

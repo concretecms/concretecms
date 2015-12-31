@@ -354,7 +354,7 @@ class Controller extends AttributeTypeController
         }
         $this->addFooterItem(Core::make('helper/html')->javascript($this->getView()->action('load_provinces_js')));
         $this->addFooterItem(
-            Core::make('helper/html')->javascript($this->attributeType->getAttributeTypeFileURL('country_state.js'))
+            Core::make('helper/html')->javascript($this->getAttributeTypeFileURL('country_state.js'))
         );
         $this->set('key', $this->attributeKey);
     }
