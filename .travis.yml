@@ -16,7 +16,7 @@ before_script:
   - phpunit --version
 
 script:
-  - ./web/concrete/vendor/bin/phpcs --standard=psr2 web/index.php `git diff --name-only HEAD`
+  - ./web/concrete/vendor/bin/phpcs --standard=psr2 web/concrete/dispatcher.php `git diff --name-only HEAD`
   - cd tests && phpunit
 
 cache:
