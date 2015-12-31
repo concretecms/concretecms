@@ -792,6 +792,15 @@ return array(
                  */
                 'length'   => 10
             )
+        ),
+        'misc' => array(
+            
+            /**
+             * Defence Click Jacking.
+             *
+             * @var bool|string DENY, SAMEORIGIN, ALLOW-FROM uri
+             */
+            'x_frame_options' => 'SAMEORIGIN'
         )
     ),
 
