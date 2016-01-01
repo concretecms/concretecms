@@ -2,6 +2,11 @@
 
 $fp = FilePermissions::getGlobal();
 $tp = new TaskPermission();
+
+echo Core::make('helper/concrete/ui')->tabs(array(
+    array('slides', t('Slides'), true),
+    array('options', t('Options'))
+));
 ?>
 <script>
     var CCM_EDITOR_SECURITY_TOKEN = "<?=Loader::helper('validation/token')->generate('editor')?>";
@@ -95,7 +100,7 @@ $tp = new TaskPermission();
                 sort_order: '<?php echo $row['sortOrder'] ?>'
             }));
             sliderEntriesContainer.find('.ccm-image-slider-entry:last-child div[data-field=entry-link-page-selector]').concretePageSelector({
-                'inputName': 'internalLinkCID[]', 'cID': <? if ($linkType == 1) { ?><?=intval($row['internalLinkCID'])?><? } else { ?>false<? } ?>
+                'inputName': 'internalLinkCID[]', 'cID': <?php if ($linkType == 1) { ?><?=intval($row['internalLinkCID'])?><?php } else { ?>false<?php } ?>
             });
         <?php }
         }?>
@@ -205,24 +210,50 @@ $tp = new TaskPermission();
         right: 10px;
     }
 </style>
-<div class="ccm-image-slider-block-container">
-    <label class="control-label"><?php echo t('Navigation') ?></label>
-    <div class="form-group">
-        <div class="radio">
-            <label><input type="radio" name="<?=$view->field('navigationType')?>" value="0" <?php echo $navigationType > 0 ? '' : 'checked' ?> /><?php echo t('Arrows') ?></label>
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="radio">
-            <label><input type="radio" name="<?=$view->field('navigationType')?>" value="1" <?php echo $navigationType > 0 ? 'checked' : '' ?> /><?php echo t('Bullets') ?></label>
-        </div>
-    </div>
 
-    <span class="btn btn-success ccm-add-image-slider-entry"><?php echo t('Add Entry') ?></span>
-    <div class="ccm-image-slider-entries">
+<div id="ccm-tab-content-slides" class="ccm-tab-content">
+    <div class="ccm-image-slider-block-container">
+        <span class="btn btn-success ccm-add-image-slider-entry"><?php echo t('Add Entry'); ?></span>
+        <div class="ccm-image-slider-entries">
 
+        </div>
     </div>
 </div>
+
+<div id="ccm-tab-content-options" class="ccm-tab-content">
+    <label class="control-label"><?php echo t('Navigation'); ?></label>
+    <div class="form-group">
+        <div class="radio">
+            <label><input type="radio" name="<?php echo $view->field('navigationType'); ?>" value="0" <?php echo $navigationType > 0 ? '' : 'checked'; ?> /><?php echo t('Arrows'); ?></label>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="radio">
+            <label><input type="radio" name="<?php echo $view->field('navigationType'); ?>" value="1" <?php echo $navigationType > 0 ? 'checked' : ''; ?> /><?php echo t('Bullets'); ?></label>
+        </div>
+    </div>
+    <div class="form-group">
+        <?php echo $form->label('timeout', t('Slide Duration')); ?>
+        <div class="input-group" style="width: 150px">
+        <?php echo $form->text('timeout', $timeout ? $timeout : 4000, array('maxlength' => '5'))?><span class="input-group-addon"><?php echo t('ms'); ?></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <?php echo $form->label('speed', t('Slide Transition Speed')); ?>
+        <div class="input-group" style="width: 150px">
+        <?php echo $form->text('speed', $speed ? $speed : 500, array('maxlength' => '5'))?><span class="input-group-addon"><?php echo t('ms'); ?></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <?php echo $form->label('noAnimate', t('Disable Automatic Slideshow')); ?>
+        <?php echo $form->checkbox('noAnimate', $noAnimate, $noAnimate ? 'checked' : ''); ?>
+    </div>
+    <div class="form-group">
+        <?php echo $form->label('pause', t('Pause Slideshow on Hover')); ?>
+        <?php echo $form->checkbox('pause', $pause, $pause ? 'checked' : ''); ?>
+    </div>
+</div>
+
 <script type="text/template" id="imageTemplate">
     <div class="ccm-image-slider-entry well">
         <i class="fa fa-sort-desc"></i>
