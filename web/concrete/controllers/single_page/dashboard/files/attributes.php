@@ -1,107 +1,62 @@
-<?php
+<?
 namespace Concrete\Controller\SinglePage\Dashboard\Files;
-use \Concrete\Core\Page\Controller\DashboardPageController;
-use \Concrete\Core\Attribute\Type as AttributeType;
-use \Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
-use FileAttributeKey;
-use Exception;
-use Loader;
 
-class Attributes extends DashboardPageController {
-	
-	public $helpers = array('form');
+use Concrete\Core\Attribute\Key\Category;
+use Concrete\Core\Attribute\Key\FileKey;
+use Concrete\Core\Attribute\Type;
+use Concrete\Core\Page\Controller\DashboardAttributesPageController;
 
-	public function delete($akID, $token = null){
-		try {
-			$ak = FileAttributeKey::getByID($akID); 
-				
-			if(!($ak instanceof FileAttributeKey)) {
-				throw new Exception(t('Invalid attribute ID.'));
-			}
-	
-			$valt = Loader::helper('validation/token');
-			if (!$valt->validate('delete_attribute', $token)) {
-				throw new Exception($valt->getErrorMessage());
-			}
-			
-			$ak->delete();
-			
-			$this->redirect("/dashboard/files/attributes", 'attribute_deleted');
-		} catch (Exception $e) {
-			$this->set('error', $e);
-		}
-	}
-	
-	public function select_type() {
-		$atID = $this->request('atID');
-		$at = AttributeType::getByID($atID);
-		$this->set('type', $at);
-	}
-	
-	public function view() {
-		$attribs = FileAttributeKey::getList();
-		$this->set('attribs', $attribs);
-	}
-	
-	public function on_start() {
-		parent::on_start();
-		$this->set('category', AttributeKeyCategory::getByHandle('file'));
-		$otypes = AttributeType::getAttributeTypeList('file');
-		$types = array();
-		foreach($otypes as $at) {
-			$types[$at->getAttributeTypeID()] = $at->getAttributeTypeDisplayName();
-		}
-		$this->set('types', $types);
-	}
-	
-	public function add() {
-		$this->select_type();
-		$type = $this->get('type');
-		$cnt = $type->getController();
-		$this->error = $cnt->validateKey($this->post());
-		if (!$this->error->has()) {
-			$type = AttributeType::getByID($this->post('atID'));
-			$ak = FileAttributeKey::add($type, $this->post());
-			$this->redirect('/dashboard/files/attributes/', 'attribute_created');
-		}
+class Attributes extends DashboardAttributesPageController
+{
+
+	public function view()
+	{
+		$this->renderList(FileKey::getList(), Type::getAttributeTypeList('file'));
 	}
 
-	public function attribute_deleted() {
-		$this->set('message', t('File Attribute Deleted.'));
-	}
-	
-	public function attribute_created() {
-		$this->set('message', t('File Attribute Created.'));
+	public function edit($akID = null)
+	{
+		$key = FileKey::getByID($akID);
+		$this->renderEdit($key,
+			\URL::to('/dashboard/files/attributes', 'view')
+		);
 	}
 
-	public function attribute_updated() {
-		$this->set('message', t('File Attribute Updated.'));
+	public function update($akID = null)
+	{
+		$this->edit($akID);
+		$key = FileKey::getByID($akID);
+		$category = Category::getByHandle('file');
+		$this->executeUpdate($category, $key,
+			\URL::to('/dashboard/files/attributes', 'view')
+		);
 	}
-	
-	public function edit($akID = 0) {
-		if ($this->post('akID')) {
-			$akID = $this->post('akID');
-		}
-		$key = FileAttributeKey::getByID($akID);
-		if (!is_object($key) || $key->isAttributeKeyInternal()) {
-			$this->redirect('/dashboard/files/attributes');
-		}
-		$type = $key->getAttributeType();
-		$this->set('key', $key);
-		$this->set('type', $type);
-		
-		if ($this->isPost()) {
-			$cnt = $type->getController();
-			$cnt->setAttributeKey($key);
-			$e = $cnt->validateKey($this->post());
-			if ($e->has()) {
-				$this->set('error', $e);
-			} else {
-				$type = AttributeType::getByID($this->post('atID'));
-				$key->update($this->post());
-				$this->redirect('/dashboard/files/attributes', 'attribute_updated');
-			}
-		}
+
+	public function select_type($type = null)
+	{
+		$type = Type::getByID($type);
+		$this->renderAdd($type,
+			\URL::to('/dashboard/files/attributes', 'view')
+		);
 	}
-	
+
+	public function add($type = null)
+	{
+		$this->select_type($type);
+		$type = Type::getByID($type);
+		$category = Category::getByHandle('file');
+		$this->executeAdd($category, $type, \URL::to('/dashboard/files/attributes', 'view'));
+	}
+
+	public function delete($akID = null)
+	{
+		$key = FileKey::getByID($akID);
+		$category = Category::getByHandle('file');
+		$this->executeDelete($category, $key,
+			\URL::to('/dashboard/files/attributes', 'view')
+		);
+	}
+
+
+
 }

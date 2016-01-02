@@ -64,7 +64,7 @@ class Category implements EntityInterface
     /**
      * @return mixed
      */
-    public function getAttributeCategoryHandle()
+    public function getAttributeKeyCategoryHandle()
     {
         return $this->akCategoryHandle;
     }
@@ -72,7 +72,7 @@ class Category implements EntityInterface
     /**
      * @param mixed $akCategoryHandle
      */
-    public function setAttributeCategoryHandle($akCategoryHandle)
+    public function setAttributeKeyCategoryHandle($akCategoryHandle)
     {
         $this->akCategoryHandle = $akCategoryHandle;
     }
@@ -99,6 +99,16 @@ class Category implements EntityInterface
         $controller = $manager->driver($this->getAttributeCategoryHandle());
         $controller->setCategoryEntity($this);
         return $controller;
+    }
+
+    public function clearAttributeKeyCategoryTypes()
+    {
+        $this->types = new ArrayCollection();
+    }
+
+    public function associateAttributeKeyType(Type $type)
+    {
+        $this->types->add($type);
     }
 
     public function getAttributeKeyCategory()
