@@ -23,10 +23,16 @@ class CategoryFactory
         return $r->findOneBy(array('akCategoryHandle' => $akCategoryHandle));
     }
 
+    public function getList()
+    {
+        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Category');
+        return $r->findAll();
+    }
+
     public function add($akCategoryHandle, $allowSets, $pkg = null)
     {
         $category = new Category();
-        $category->setAttributeCategoryHandle($akCategoryHandle);
+        $category->setAttributeKeyCategoryHandle($akCategoryHandle);
         $category->setAllowAttributeSets($allowSets);
         if ($pkg) {
             $category->setPackage($pkg);

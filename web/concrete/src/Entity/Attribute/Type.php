@@ -99,6 +99,11 @@ class Type
         $this->categories = $categories;
     }
 
+    public function isAssociatedWithCategory(Category $category)
+    {
+        return $this->categories->contains($category);
+    }
+
     public function getAttributeTypeDisplayName($format = 'html')
     {
         $value = tc('AttributeTypeName', $this->getAttributeTypeName());
