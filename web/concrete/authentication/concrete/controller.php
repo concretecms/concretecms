@@ -85,13 +85,34 @@ class Controller extends AuthenticationTypeController
 
     private function genString($a = 16)
     {
-        if (function_exists('mcrypt_create_iv')) {
-            // Use /dev/urandom if available, otherwise fall back to PHP's rand.
-            // http://php.net/manual/en/function.mcrypt-create-iv.php#117047
-            return bin2hex(mcrypt_create_iv($a, MCRYPT_DEV_URANDOM | MCRYPT_RAND));
-        } elseif (function_exists('openssl_random_pseudo_bytes')) {
-            return bin2hex(openssl_random_pseudo_bytes($a));
+        if (function_exists('random_bytes')) { // PHP7+
+            return bin2hex(random_bytes($a));
         }
+        if (function_exists('mcrypt_create_iv')) {
+            // Use /dev/urandom if available, otherwise fall back to PHP's rand (below)
+            // Don't use (MCRYPT_DEV_URANDOM|MCRYPT_RAND) here, because we prefer
+            // openssl first.
+            $iv = mcrypt_create_iv($a, MCRYPT_DEV_URANDOM);
+            if ($iv !== false) {
+                return bin2hex($iv);
+            }
+        }
+        // don't use elseif, we need the fallthrough here.
+        if (function_exists('openssl_random_pseudo_bytes')) {
+            $iv = openssl_random_pseudo_bytes($a, $crypto_strong);
+            if ($iv !== false && $crypto_strong) {
+                return bin2hex($iv);
+            }
+        }
+        // this means we've not yet returned, so MCRYPT_DEV_URANDOM isn't available.
+        if (function_exists('mcrypt_create_iv')) {
+            // terrible, but still better than what we're doing below
+            $iv = mcrypt_create_iv($a, MCRYPT_RAND);
+            if ($iv !== false) {
+                return bin2hex($iv);
+            }
+        }
+        // This really is a last resort.
         $o = '';
         $chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+{}|":<>?\'\\';
         $l = strlen($chars);
