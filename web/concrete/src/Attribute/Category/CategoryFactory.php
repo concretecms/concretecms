@@ -23,6 +23,13 @@ class CategoryFactory
         return $r->findOneBy(array('akCategoryHandle' => $akCategoryHandle));
     }
 
+    public function getByID($akCategoryID)
+    {
+        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Category');
+        return $r->findOneBy(array('akCategoryID' => $akCategoryID));
+    }
+
+
     public function getList()
     {
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Category');

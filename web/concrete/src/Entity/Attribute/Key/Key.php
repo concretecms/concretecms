@@ -6,6 +6,7 @@ use Concrete\Core\Attribute\AttributeKeyInterface;
 use Concrete\Core\Attribute\Key\ImportLoader\StandardImporterLoader;
 use Concrete\Core\Attribute\Key\RequestLoader\StandardRequestLoader;
 use Concrete\Core\Attribute\Type;
+use Concrete\Core\Entity\Attribute\Set;
 use Concrete\Core\Entity\PackageTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -229,6 +230,11 @@ abstract class Key implements AttributeKeyInterface
         return new StandardImporterLoader();
     }
 
+    public function inAttributeSet(Set $set)
+    {
+        $sets = $this->getAttributeSets();
+        return in_array($set, $sets);
+    }
 
 
 }
