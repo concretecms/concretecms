@@ -5,7 +5,7 @@ use Concrete\Core\Attribute\Type;
 use Concrete\Core\Controller\ElementController;
 use Concrete\Core\Entity\Attribute\Key\Key;
 
-class Header extends ElementController
+class KeyHeader extends ElementController
 {
 
     protected $key;

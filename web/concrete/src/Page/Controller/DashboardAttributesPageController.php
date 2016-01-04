@@ -5,8 +5,11 @@ use Concrete\Controller\Element\Attribute\AddKey;
 use Concrete\Controller\Element\Attribute\EditKey;
 use Concrete\Controller\Element\Attribute\Form;
 use Concrete\Controller\Element\Attribute\Header;
+use Concrete\Controller\Element\Attribute\KeyHeader;
 use Concrete\Controller\Element\Attribute\KeyList;
+use Concrete\Core\Attribute\Category\CategoryInterface;
 use Concrete\Core\Attribute\EntityInterface;
+use Concrete\Core\Entity\Attribute\Category;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Type;
 use Concrete\Core\Controller\ElementController;
@@ -17,14 +20,14 @@ use Loader;
 abstract class DashboardAttributesPageController extends DashboardPageController
 {
 
-    public function renderList($keys, $types)
+    public function renderList(EntityInterface $category, $keys, $types)
     {
-        $list = new KeyList();
-        $list->setAttributes($keys);
-        $list->setAttributeTypes($types);
-        $list->setDashboardPagePath($this->getPageObject()->getcollectionPath());
-        $list->setDashboardPageParameters($this->getRequestActionParameters());
+        $list = $category->getAttributeKeyCategory()->getAttributeListController();
         $this->set('attributeView', $list);
+
+        $header = $category->getAttributeKeyCategory()->getAttributeHeaderController();
+        $this->set('attributeHeader', $header);
+
         $this->set('pageTitle', t('Attributes'));
     }
 
@@ -45,7 +48,7 @@ abstract class DashboardAttributesPageController extends DashboardPageController
         $this->set('attributeView', $add);
         $this->set('pageTitle', t('Add Attribute'));
 
-        $header = new Header($key);
+        $header = new KeyHeader($key);
         $header->setDashboardPageParameters($this->getRequestActionParameters());
         $this->set('attributeHeader', $header);
     }
