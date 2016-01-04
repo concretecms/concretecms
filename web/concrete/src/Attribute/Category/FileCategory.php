@@ -53,33 +53,19 @@ class FileCategory extends AbstractCategory implements StandardSearchIndexerInte
         $attribute->setAttributeKey($key);
         $this->entityManager->persist($attribute);
         $this->entityManager->flush();
+        return $attribute;
     }
 
     public function addFromRequest(Type $type, Request $request)
     {
         $key = parent::addFromRequest($type, $request);
-        $this->assignToCategory($key);
+        return $this->assignToCategory($key);
     }
 
     public function import(Type $type, \SimpleXMLElement $element)
     {
         $key = parent::import($type, $element);
-        $this->assignToCategory($key);
-    }
-
-    public function delete(Key $key)
-    {
-        parent::delete($key);
-
-        $query = $this->entityManager->createQuery(
-            'select a from Concrete\Core\Entity\File\Attribute a where a.attribute_key = :key'
-        );
-        $query->setParameter('key', $key);
-        $attribute = $query->getSingleResult();
-        if (is_object($attribute)) {
-            $this->entityManager->remove($attribute);
-            $this->entityManager->flush();
-        }
+        return $this->assignToCategory($key);
     }
 
     public function getAttributeValues($file)

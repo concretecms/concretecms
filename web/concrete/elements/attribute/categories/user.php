@@ -6,7 +6,6 @@ if (is_object($key)) {
 	$uakRegisterEdit = $key->isAttributeKeyEditableOnRegister();
 	$uakRegisterEditRequired = $key->isAttributeKeyRequiredOnRegister();
 	$uakMemberListDisplay = $key->isAttributeKeyDisplayedOnMemberList();
-	$uakIsActive = $key->isAttributeKeyActive();
 }
 ?>
 <? $form = Loader::helper('form'); ?>

@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Attribute\Category;
 
+use Concrete\Core\Attribute\AttributeInterface;
 use Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexerInterface;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Type;
@@ -57,40 +58,42 @@ class UserCategory extends AbstractCategory implements StandardSearchIndexerInte
         $attribute->setAttributeKey($key);
         $this->entityManager->persist($attribute);
         $this->entityManager->flush();
+        return $attribute;
     }
 
     public function addFromRequest(Type $type, Request $request)
     {
         $key = parent::addFromRequest($type, $request);
         $attribute = new Attribute();
-        $this->assignToCategory($key, $attribute);
+        return $this->assignToCategory($key, $attribute);
+    }
+
+    public function updateFromRequest(AttributeInterface $attribute, Request $request)
+    {
+        /**
+         * @var $attribute Attribute
+         */
+        $attribute = parent::updateFromRequest($attribute, $request);
+        $attribute->setAttributeKeyDisplayedOnProfile((string) $request->request->get('uakProfileDisplay') == 1);
+        $attribute->setAttributeKeyEditableOnProfile((string) $request->request->get('uakProfileEdit') == 1);
+        $attribute->setAttributeKeyRequiredOnProfile((string) $request->request->get('uakProfileEditRequired') == 1);
+        $attribute->setAttributeKeyEditableOnRegister((string) $request->request->get('uakRegisterEdit') == 1);
+        $attribute->setAttributeKeyRequiredOnRegister((string) $request->request->get('uakRegisterEditRequired') == 1);
+        $attribute->setAttributeKeyDisplayedOnMemberList((string) $request->request->get('uakMemberListDisplay') == 1);
+        return $attribute;
     }
 
     public function import(Type $type, \SimpleXMLElement $element)
     {
         $key = parent::import($type, $element);
         $attribute = new Attribute();
-        $attribute->setAttributeKeyDisplayedInProfile((string) $element['profile-displayed'] == 1);
-        $attribute->setAttributeKeyEditableInProfile((string) $element['profile-editable'] == 1);
-        $attribute->setAttributeKeyRequiredInProfile((string) $element['profile-required'] == 1);
-        $attribute->setAttributeKeyEditableInRegistration((string) $element['register-editable'] == 1);
+        $attribute->setAttributeKeyDisplayedOnProfile((string) $element['profile-displayed'] == 1);
+        $attribute->setAttributeKeyEditableOnProfile((string) $element['profile-editable'] == 1);
+        $attribute->setAttributeKeyRequiredOnProfile((string) $element['profile-required'] == 1);
+        $attribute->setAttributeKeyEditableOnRegister((string) $element['register-editable'] == 1);
         $attribute->setAttributeKeyRequiredOnRegister((string) $element['register-required'] == 1);
-        $attribute->setAttributeKeyDisplayedInMemberList((string) $element['member-list-displayed'] == 1);
-        $this->assignToCategory($key, $attribute);
-    }
-
-    public function delete(Key $key)
-    {
-        parent::delete($key);
-        $query = $this->entityManager->createQuery(
-            'select a from Concrete\Core\Entity\User\Attribute a where a.attribute_key = :key'
-        );
-        $query->setParameter('key', $key);
-        $attribute = $query->getSingleResult();
-        if (is_object($attribute)) {
-            $this->entityManager->remove($attribute);
-            $this->entityManager->flush();
-        }
+        $attribute->setAttributeKeyDisplayedOnMemberList((string) $element['member-list-displayed'] == 1);
+        return $this->assignToCategory($key, $attribute);
     }
 
     public function getAttributeValues($user)

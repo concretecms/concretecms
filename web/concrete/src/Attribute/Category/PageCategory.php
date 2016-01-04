@@ -54,7 +54,7 @@ class PageCategory extends AbstractCategory implements StandardSearchIndexerInte
         $attribute->setAttributeKey($key);
         $this->entityManager->persist($attribute);
         $this->entityManager->flush();
-        return $key;
+        return $attribute;
     }
 
     public function addFromRequest(AttributeType $type, Request $request)
@@ -67,20 +67,6 @@ class PageCategory extends AbstractCategory implements StandardSearchIndexerInte
     {
         $key = parent::import($type, $element);
         return $this->assignToCategory($key);
-    }
-
-    public function delete(Key $key)
-    {
-        parent::delete($key);
-        $query = $this->entityManager->createQuery(
-            'select a from Concrete\Core\Entity\Page\Attribute a where a.attribute_key = :key'
-        );
-        $query->setParameter('key', $key);
-        $attribute = $query->getSingleResult();
-        if (is_object($attribute)) {
-            $this->entityManager->remove($attribute);
-            $this->entityManager->flush();
-        }
     }
 
     public function getAttributeValues($page)

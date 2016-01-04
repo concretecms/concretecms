@@ -1,9 +1,9 @@
 <?php
 namespace Concrete\Controller\Element\Attribute;
 
+use Concrete\Core\Attribute\AttributeKeyInterface;
 use Concrete\Core\Attribute\Type;
 use Concrete\Core\Controller\ElementController;
-use Concrete\Core\Entity\Attribute\Key\Key;
 
 class KeyHeader extends ElementController
 {
@@ -12,7 +12,7 @@ class KeyHeader extends ElementController
     protected $dashboard_page_delete_action = 'delete';
     protected $dashboard_page_parameters;
 
-    public function __construct(Key $key)
+    public function __construct(AttributeKeyInterface $key)
     {
         $this->key = $key;
         parent::__construct();
