@@ -69,6 +69,8 @@ class FileCategory extends AbstractCategory implements StandardSearchIndexerInte
 
     public function delete(Key $key)
     {
+        parent::delete($key);
+
         $query = $this->entityManager->createQuery(
             'select a from Concrete\Core\Entity\File\Attribute a where a.attribute_key = :key'
         );

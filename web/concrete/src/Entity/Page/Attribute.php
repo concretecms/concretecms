@@ -13,7 +13,7 @@ class Attribute implements AttributeInterface
 
     /**
      * @Id
-     * @OneToOne(targetEntity="\Concrete\Core\Entity\Attribute\Key\Key")
+     * @OneToOne(targetEntity="\Concrete\Core\Entity\Attribute\Key\Key", cascade={"persist", "remove"})
      * @JoinColumn(name="akID", referencedColumnName="akID")
      **/
     protected $attribute_key;

@@ -209,6 +209,10 @@ abstract class Key implements AttributeKeyInterface
         }
     }
 
+    public function getAttributeSets()
+    {
+        return \Concrete\Core\Attribute\Set::getByAttributeKey($this);
+    }
 
     public function getAttributeType()
     {

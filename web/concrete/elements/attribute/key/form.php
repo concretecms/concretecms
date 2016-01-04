@@ -22,7 +22,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
         $akName = $key->getAttributeKeyName();
         $akIsSearchable = $key->isAttributeKeySearchable();
         $akIsSearchableIndexed = $key->isAttributeKeyContentIndexed();
-        $sets = $category->getAttributeSets();
+        $sets = $key->getAttributeSets();
         if (count($sets) == 1) {
             $asID = $sets[0]->getAttributeSetID();
         }
