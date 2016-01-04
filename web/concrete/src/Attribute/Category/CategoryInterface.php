@@ -25,4 +25,7 @@ interface CategoryInterface
     public function getSearchIndexer();
     public function getAttributeValues($mixed);
 
+    public function getAttributeHeaderController();
+    public function getAttributeListController();
+
 }

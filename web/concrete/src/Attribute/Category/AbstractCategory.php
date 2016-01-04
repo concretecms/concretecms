@@ -2,6 +2,9 @@
 
 namespace Concrete\Core\Attribute\Category;
 
+use Concrete\Controller\Element\Attribute\Header;
+use Concrete\Controller\Element\Attribute\KeyList;
+use Concrete\Controller\Element\Attribute\StandardListHeader;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexerInterface;
 use Concrete\Core\Attribute\EntityInterface;
@@ -183,6 +186,21 @@ abstract class AbstractCategory implements CategoryInterface
         return $indexer;
     }
 
+    public function getAttributeHeaderController()
+    {
+        $header = new StandardListHeader($this);
+        return $header;
+    }
+
+    public function getAttributeListController()
+    {
+        $list = new KeyList();
+        $list->setAttributes($keys);
+        $list->setAttributeTypes($types);
+        $list->setDashboardPagePath($this->getPageObject()->getcollectionPath());
+        $list->setDashboardPageParameters($this->getRequestActionParameters());
+        return $list;
+    }
 
 
 }

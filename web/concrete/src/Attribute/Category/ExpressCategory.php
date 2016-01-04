@@ -64,5 +64,14 @@ class ExpressCategory extends AbstractCategory
         // TODO: Implement getSearchIndexer() method.
     }
 
+    public function getAttributeHeaderController()
+    {
+        return false;
+    }
+
+    public function getAttributeListController()
+    {
+        return false;
+    }
 
 }
