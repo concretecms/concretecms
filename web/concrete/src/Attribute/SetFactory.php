@@ -2,7 +2,9 @@
 
 namespace Concrete\Core\Attribute;
 
+use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Package\Package;
+use Doctrine\DBAL\Logging\EchoSQLLogger;
 use Doctrine\ORM\EntityManager;
 use Concrete\Core\Entity\Attribute\Set as AttributeSet;
 
@@ -29,6 +31,20 @@ class SetFactory
     {
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Set');
         return $r->findOneBy(array('asID' => $asID));
+    }
+
+    public function getByAttributeKey(Key $key)
+    {
+        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\SetKey');
+        $query = $r->createQueryBuilder('sk')
+            ->where('sk.attribute_key = :attribute_key');
+        $query->setParameter('attribute_key', $key);
+        $results = $query->getQuery()->getResult();
+        $sets = array();
+        foreach($results as $result) {
+            $sets[] = $result->getAttributeSet();
+        }
+        return array_unique($sets);
     }
 
     public function add($atHandle, $atName, $pkg = null)

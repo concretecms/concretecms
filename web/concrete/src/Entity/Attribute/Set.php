@@ -181,6 +181,18 @@ class Set
         return $manager;
     }
 
+    public function getAttributeSetDisplayName($format = 'html')
+    {
+        $value = tc('AttributeSetName', $this->getAttributeSetName());
+        switch ($format) {
+            case 'html':
+                return h($value);
+            case 'text':
+            default:
+                return $value;
+        }
+    }
+
 
 
 

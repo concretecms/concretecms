@@ -9,11 +9,13 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexerInterface;
 use Concrete\Core\Attribute\EntityInterface;
 use Concrete\Core\Attribute\Key\Factory;
+use Concrete\Core\Attribute\SetFactory;
 use Concrete\Core\Attribute\Type;
 use Concrete\Core\Attribute\TypeFactory;
 use Concrete\Core\Entity\Attribute\Category;
 use Concrete\Core\Entity\Attribute\Set;
 use Concrete\Core\Entity\Attribute\Key\Key as AttributeKey;
+use Concrete\Core\Entity\Attribute\SetKey;
 use Doctrine\ORM\EntityManager;
 use Concrete\Core\Entity\Attribute\Type as AttributeType;
 use Doctrine\ORM\EntityRepository;
@@ -99,7 +101,6 @@ abstract class AbstractCategory implements CategoryInterface
         $indexer = $this->getCategoryEntity()
             ->getController()->getSearchIndexer();
         $indexer->updateTable($this, $key);
-
         return $key;
     }
 
@@ -158,6 +159,12 @@ abstract class AbstractCategory implements CategoryInterface
 
     public function delete(AttributeKey $key)
     {
+        // Delete from any attribute sets
+        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\SetKey');
+        $setKeys = $r->findBy(array('attribute_key' => $key));
+        foreach($setKeys as $setKey) {
+            $this->entityManager->remove($setKey);
+        }
         $this->entityManager->remove($key);
     }
 
