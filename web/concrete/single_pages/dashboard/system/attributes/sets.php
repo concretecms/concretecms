@@ -1,6 +1,5 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
-use Concrete\Core\Attribute\Key\Key as AttributeKey;
 $form = Loader::helper('form');
 $txt = Loader::helper('text');?>
 <?php if (in_array($this->controller->getTask(), array('update_set', 'update_set_attributes', 'edit', 'delete_set'))) { ?>
@@ -74,23 +73,26 @@ $txt = Loader::helper('text');?>
 
                     <?php
                     $cat = AttributeKeyCategory::getByID($set->getAttributeSetKeyCategoryID());
-                    $list = AttributeKey::getAttributeKeyList($cat->getAttributeKeyCategoryHandle());
-                    $unassigned = $cat->getUnassignedAttributeKeys();
+                    $cat = $cat->getAttributeKeyCategory();
+                    $list = $cat->getList();
+                    $unassigned = $cat->getUngroupedAttributes();
                     if (count($list) > 0) { ?>
 
                         <div class="form-group">
                             <?php foreach($list as $ak) {
+                                $key = $ak->getAttributeKey();
+                                $keySets = \Concrete\Core\Attribute\Set::getByAttributeKey($key);
 
                                 $disabled = '';
-                                if (!in_array($ak, $unassigned) && (!$ak->inAttributeSet($set))) {
+                                if (!$key->inAttributeSet($set) && count($keySets)) {
                                     $disabled = array('disabled' => 'disabled');
                                 }
                                 ?>
                                 <div class="checkbox">
                                     <label>
-                                        <?php echo $form->checkbox('akID[]', $ak->getAttributeKeyID(), $ak->inAttributeSet($set), $disabled)?>
-                                        <span><?php echo $ak->getAttributeKeyDisplayName()?></span>
-                                        <span class="help-inline"><?php echo $ak->getAttributeKeyHandle()?></span>
+                                        <?php echo $form->checkbox('akID[]', $key->getAttributeKeyID(), $key->inAttributeSet($set), $disabled)?>
+                                        <span><?php echo $key->getAttributeKeyDisplayName()?></span>
+                                        <span class="help-inline"><?php echo $key->getAttributeKeyHandle()?></span>
                                     </label>
                                 </div>
                             <?php } ?>

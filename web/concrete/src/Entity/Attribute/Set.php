@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Entity\Attribute;
 
+use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\PackageTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -151,6 +152,14 @@ class Set
     }
 
     /**
+     * @return mixed
+     */
+    public function getAttributeSetKeyCategoryID()
+    {
+        return $this->category->getAttributeKeyCategoryID();
+    }
+
+    /**
      * @param mixed $asDisplayOrder
      */
     public function setAttributeSetDisplayOrder($asDisplayOrder)
@@ -194,6 +203,14 @@ class Set
     }
 
 
+    public function addKey(Key $key)
+    {
+        $setKey = new SetKey();
+        $setKey->setAttributeKey($key);
+        $setKey->setAttributeSet($this);
+        $setKey->setDisplayOrder(count($this->keys));
+        $this->keys->add($setKey);
+    }
 
 
 
