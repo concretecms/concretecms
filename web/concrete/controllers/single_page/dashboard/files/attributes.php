@@ -9,6 +9,11 @@ use Concrete\Core\Page\Controller\DashboardAttributesPageController;
 class Attributes extends DashboardAttributesPageController
 {
 
+	protected function getCategoryEntityObject()
+	{
+		return Category::getByHandle('file');
+	}
+
 	public function view()
 	{
 		$this->renderList(FileKey::getList(), Type::getAttributeTypeList('file'));
@@ -26,8 +31,7 @@ class Attributes extends DashboardAttributesPageController
 	{
 		$this->edit($akID);
 		$key = FileKey::getByID($akID);
-		$category = Category::getByHandle('file');
-		$this->executeUpdate($category, $key,
+		$this->executeUpdate($key,
 			\URL::to('/dashboard/files/attributes', 'view')
 		);
 	}
@@ -44,15 +48,13 @@ class Attributes extends DashboardAttributesPageController
 	{
 		$this->select_type($type);
 		$type = Type::getByID($type);
-		$category = Category::getByHandle('file');
-		$this->executeAdd($category, $type, \URL::to('/dashboard/files/attributes', 'view'));
+		$this->executeAdd($type, \URL::to('/dashboard/files/attributes', 'view'));
 	}
 
 	public function delete($akID = null)
 	{
 		$key = FileKey::getByID($akID);
-		$category = Category::getByHandle('file');
-		$this->executeDelete($category, $key,
+		$this->executeDelete($key,
 			\URL::to('/dashboard/files/attributes', 'view')
 		);
 	}

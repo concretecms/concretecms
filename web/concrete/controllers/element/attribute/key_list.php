@@ -2,6 +2,7 @@
 namespace Concrete\Controller\Element\Attribute;
 
 use Concrete\Core\Attribute\AttributeKeyInterface;
+use Concrete\Core\Attribute\Category\CategoryInterface;
 use Concrete\Core\Entity\Attribute\Type;
 use Concrete\Core\Controller\ElementController;
 
@@ -11,26 +12,80 @@ class KeyList extends ElementController
     protected $dashboard_page_path;
     protected $dashboard_page_add_action = 'select_type';
     protected $dashboard_page_edit_action = 'edit';
+    protected $dashboard_page_sort_action = 'sort_attribute_set';
     protected $dashboard_page_parameters = array();
+    protected $enable_sorting = true;
+    protected $attribute_sets = array();
+    protected $ungrouped_attributes = array();
+    protected $category;
 
-    protected $attributes = array();
     protected $types = array();
+
+    /**
+     * @return boolean
+     */
+    public function enableSorting()
+    {
+        return $this->enable_sorting;
+    }
+
+    /**
+     * @param boolean $enable_sorting
+     */
+    public function setEnableSorting($enable_sorting)
+    {
+        $this->enable_sorting = $enable_sorting;
+    }
 
     /**
      * @return array
      */
-    public function getAttributes()
+    public function getAttributeSets()
     {
-        return $this->attributes;
+        return $this->attribute_sets;
     }
 
     /**
-     * @param array $attributes
+     * @param array $attribute_sets
      */
-    public function setAttributes($attributes)
+    public function setAttributeSets($attribute_sets)
     {
-        $this->attributes = $attributes;
+        $this->attribute_sets = $attribute_sets;
     }
+
+    /**
+     * @return array
+     */
+    public function getUngroupedAttributes()
+    {
+        return $this->ungrouped_attributes;
+    }
+
+    /**
+     * @param array $ungrouped_attributes
+     */
+    public function setUngroupedAttributes($ungrouped_attributes)
+    {
+        $this->ungrouped_attributes = $ungrouped_attributes;
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function getCategory()
+    {
+        return $this->category;
+    }
+
+    /**
+     * @param mixed $category
+     */
+    public function setCategory(CategoryInterface $category)
+    {
+        $this->category = $category;
+    }
+
 
     public function getElement()
     {
@@ -54,6 +109,13 @@ class KeyList extends ElementController
         $this->types = $types;
     }
 
+    public function getSortAttributeCategoryURL()
+    {
+        $args = array($this->getDashboardPagePath(), $this->getDashboardPageSortAction());
+        return call_user_func_array(array('\URL', 'to'), $args);
+    }
+
+
     public function getAddAttributeTypeURL(Type $type)
     {
         $args = array($this->getDashboardPagePath(), $this->getDashboardPageAddAction());
@@ -76,7 +138,9 @@ class KeyList extends ElementController
             $types[$type->getAttributeTypeID()] = $type;
         }
         $this->set('types', $types);
-        $this->set('attributes', $this->getAttributes());
+        $this->set('enableSorting', $this->enableSorting());
+        $this->set('sortable_sets', $this->getAttributeSets());
+        $this->set('ungrouped', $this->getUngroupedAttributes());
     }
 
     /**
@@ -93,6 +157,14 @@ class KeyList extends ElementController
     public function setDashboardPagePath($dashboard_page_path)
     {
         $this->dashboard_page_path = $dashboard_page_path;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDashboardPageSortAction()
+    {
+        return $this->dashboard_page_sort_action;
     }
 
     /**
