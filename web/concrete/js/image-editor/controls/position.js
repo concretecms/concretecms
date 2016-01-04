@@ -12,6 +12,42 @@ im.bind('changeActiveElement', function () {
     resetScale();
 });
 
+function FitImage(im, me) {
+
+    function resetThumbnail() {
+        if (im.settings.saveWidth && !im.settings.saveHeight) {
+            $(width_input).val(im.settings.saveWidth).keyup();
+        } else if (im.settings.saveWidth && im.settings.saveHeight) {
+            if (ratio > 1 || ratio === 1) {
+                if (im.settings.saveWidth > im.settings.saveHeight) {
+                    $(width_input).val(im.settings.saveWidth).keyup();
+                } else {
+                    $(height_input).val(im.settings.saveHeight).keyup();
+                }
+            } else if (ratio < 1) {
+                if (im.settings.saveWidth < im.settings.saveHeight) {
+                    $(height_input).val(im.settings.saveHeight).keyup();
+                } else {
+                    $(width_input).val(im.settings.saveWidth).keyup();
+                }
+            }
+        }
+    }
+
+    function centerImage() {
+        im.activeElement.setPosition(0, 0);
+        im.activeElement.parent.draw();
+    }
+
+    $('button.reset', me).on('click', function() {
+        resetThumbnail();
+        centerImage();
+    });
+
+}
+
+new FitImage(im, me);
+
 function Rotation(im, me) {
     var my = this,
         RotationFlipModeVertical = 0,
