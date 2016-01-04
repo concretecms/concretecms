@@ -2,37 +2,14 @@
 
 namespace Concrete\Core\Entity\Page;
 
-use Concrete\Core\Attribute\AttributeInterface;
+use Concrete\Core\Entity\Attribute\AbstractAttribute;
 
 /**
  * @Entity
  * @Table(name="CollectionAttributeKeys")
  */
-class Attribute implements AttributeInterface
+class Attribute extends AbstractAttribute
 {
-
-    /**
-     * @Id
-     * @OneToOne(targetEntity="\Concrete\Core\Entity\Attribute\Key\Key", cascade={"persist", "remove"})
-     * @JoinColumn(name="akID", referencedColumnName="akID")
-     **/
-    protected $attribute_key;
-
-    /**
-     * @return mixed
-     */
-    public function getAttributeKey()
-    {
-        return $this->attribute_key;
-    }
-
-    /**
-     * @param mixed $attribute
-     */
-    public function setAttributeKey($attribute)
-    {
-        $this->attribute_key = $attribute;
-    }
 
 
 

@@ -8,11 +8,12 @@ use Concrete\Controller\Element\Attribute\Header;
 use Concrete\Controller\Element\Attribute\KeyHeader;
 use Concrete\Controller\Element\Attribute\KeyList;
 use Concrete\Controller\Element\Attribute\StandardListHeader;
+use Concrete\Core\Attribute\AttributeInterface;
+use Concrete\Core\Attribute\AttributeKeyInterface;
 use Concrete\Core\Attribute\Category\CategoryInterface;
 use Concrete\Core\Attribute\EntityInterface;
 use Concrete\Core\Attribute\Set;
 use Concrete\Core\Entity\Attribute\Category;
-use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\SetKey;
 use Concrete\Core\Entity\Attribute\Type;
 use Concrete\Core\Controller\ElementController;
@@ -29,20 +30,21 @@ abstract class DashboardAttributesPageController extends DashboardPageController
      */
     abstract protected function getCategoryEntityObject();
 
-    public function renderList($keys, $types)
+    public function renderList()
     {
-        $category = $this->getCategoryEntityObject();
+        $entity = $this->getCategoryEntityObject();
+        $category = $entity->getAttributeKeyCategory();
         $list = new KeyList();
-        $list->setAttributeSets($this->getCategoryEntityObject()->getAttributeSets());
-        $list->setUngroupedAttributes($this->getCategoryEntityObject()->getAttributeKeyCategory()->getUngroupedAttributes());
-        $list->setAttributeTypes($types);
+        $list->setAttributeSets($entity->getAttributeSets());
+        $list->setUngroupedAttributes($category->getUngroupedAttributes());
+        $list->setAttributeTypes($category->getAttributeTypes());
         $list->setDashboardPagePath($this->getPageObject()->getCollectionPath());
         $list->setDashboardPageParameters($this->getRequestActionParameters());
-        if (!$category->allowAttributeSets()) {
+        if (!$entity->allowAttributeSets()) {
             $list->setEnableSorting(false);
         }
 
-        $header = new StandardListHeader($category->getAttributeKeyCategory());
+        $header = new StandardListHeader($category);
         $this->set('attributeHeader', $header);
 
         $this->set('attributeView', $list);
@@ -97,10 +99,11 @@ abstract class DashboardAttributesPageController extends DashboardPageController
         }
     }
 
-    protected function assignToSetFromRequest(Key $key)
+    protected function assignToSetFromRequest(AttributeInterface $key)
     {
         $request = $this->request;
         $category = $this->getCategoryEntityObject();
+        $key = $key->getAttributeKey();
         if ($category->allowAttributeSets()) {
             $set = Set::getByID($request->request->get('asID'));
             $setKeys = Set::getByAttributeKey($key);
@@ -141,7 +144,7 @@ abstract class DashboardAttributesPageController extends DashboardPageController
     }
 
 
-    protected function executeUpdate(Key $key, $successURL, $onComplete = null)
+    protected function executeUpdate(AttributeKeyInterface $key, $successURL, $onComplete = null)
     {
         $controller = $key->getController();
         $entity = $this->getCategoryEntityObject();
@@ -164,7 +167,7 @@ abstract class DashboardAttributesPageController extends DashboardPageController
         }
     }
 
-    protected function executeDelete(Key $key, $successURL, $onComplete = null)
+    protected function executeDelete(AttributeKeyInterface $key, $successURL, $onComplete = null)
     {
         $entity = $this->getCategoryEntityObject();
         try {
@@ -199,6 +202,9 @@ abstract class DashboardAttributesPageController extends DashboardPageController
             $category = $entity->getAttributeKeyCategory();
             $keys = array();
             foreach((array) $this->request->request->get('akID') as $akID) {
+                /**
+                 * @var $key AttributeInterface
+                 */
                 $key = $category->getAttributeKeyByID($akID);
                 if (is_object($key)) {
                     $keys[] = $key;
@@ -218,7 +224,7 @@ abstract class DashboardAttributesPageController extends DashboardPageController
                     $i = 0;
                     foreach($keys as $key) {
                         $setKey = new SetKey();
-                        $setKey->setAttributeKey($key);
+                        $setKey->setAttributeKey($key->getAttributeKey());
                         $setKey->setAttributeSet($set);
                         $setKey->setDisplayOrder($i);
                         $set->getAttributeKeys()->add($setKey);

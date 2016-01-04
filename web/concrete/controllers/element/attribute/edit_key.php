@@ -1,9 +1,7 @@
 <?php
 namespace Concrete\Controller\Element\Attribute;
 
-use Concrete\Core\Attribute\Type;
-use Concrete\Core\Controller\ElementController;
-use Concrete\Core\Entity\Attribute\Key\Key;
+use Concrete\Core\Attribute\AttributeKeyInterface;
 
 class EditKey extends Form
 {
@@ -12,10 +10,10 @@ class EditKey extends Form
 
     protected $dashboard_page_submit_action = 'update';
 
-    public function __construct(Key $key)
+    public function __construct(AttributeKeyInterface $key)
     {
         $this->key = $key;
-        parent::__construct($key->getAttributeType());
+        parent::__construct($key->getAttributeKey()->getAttributeType());
     }
 
     public function view()

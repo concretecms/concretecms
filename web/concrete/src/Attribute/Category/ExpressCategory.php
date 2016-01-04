@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Attribute\Category;
 
+use Concrete\Core\Attribute\AttributeInterface;
 use Concrete\Core\Attribute\Key\Factory;
 use Concrete\Core\Entity\Attribute\Type;
 use Concrete\Core\Entity\Attribute\Key\Key as AttributeKey;
@@ -33,26 +34,13 @@ class ExpressCategory extends AbstractCategory
         $this->entityManager->flush();
     }
 
-    public function updateFromRequest(AttributeKey $key, Request $request)
+    public function updateFromRequest(AttributeInterface $attribute, Request $request)
     {
-        $key = parent::updateFromRequest($key, $request);
+        $key = parent::updateFromRequest($attribute, $request);
         $this->entityManager->persist($key);
         $this->entityManager->flush();
     }
 
-
-    public function delete(AttributeKey $key)
-    {
-        $query = $this->entityManager->createQuery(
-            'select a from Concrete\Core\Entity\Express\Attribute a where a.attribute_key = :key'
-        );
-        $query->setParameter('key', $key);
-        $attribute = $query->getSingleResult();
-        if (is_object($attribute)) {
-            $this->entityManager->remove($attribute);
-            $this->entityManager->flush();
-        }
-    }
 
     public function getAttributeValues($mixed)
     {

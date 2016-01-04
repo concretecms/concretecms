@@ -16,7 +16,7 @@ class Attributes extends DashboardAttributesPageController
 
 	public function view()
 	{
-		$this->renderList(CollectionKey::getList(), Type::getAttributeTypeList('collection'));
+		$this->renderList();
 	}
 
 	public function edit($akID = null)

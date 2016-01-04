@@ -2,21 +2,14 @@
 
 namespace Concrete\Core\Entity\User;
 
-use Concrete\Core\Attribute\AttributeInterface;
+use Concrete\Core\Entity\Attribute\AbstractAttribute;
 
 /**
  * @Entity(repositoryClass="\Concrete\Core\Entity\User\AttributeRepository")
  * @Table(name="UserAttributeKeys")
  */
-class Attribute implements AttributeInterface
+class Attribute extends AbstractAttribute
 {
-
-    /**
-     * @Id
-     * @OneToOne(targetEntity="\Concrete\Core\Entity\Attribute\Key\Key")
-     * @JoinColumn(name="akID", referencedColumnName="akID")
-     **/
-    protected $attribute_key;
 
     /**
      * @Column(type="boolean")
@@ -47,26 +40,12 @@ class Attribute implements AttributeInterface
      * @Column(type="boolean")
      */
     protected $uakMemberListDisplay = false;
-    /**
-     * @return mixed
-     */
-    public function getAttributeKey()
-    {
-        return $this->attribute_key;
-    }
 
-    /**
-     * @param mixed $attribute
-     */
-    public function setAttributeKey($attribute)
-    {
-        $this->attribute_key = $attribute;
-    }
 
     /**
      * @return mixed
      */
-    public function isAttributeKeyDisplayedInProfile()
+    public function isAttributeKeyDisplayedOnProfile()
     {
         return $this->uakProfileDisplay;
     }
@@ -74,7 +53,7 @@ class Attribute implements AttributeInterface
     /**
      * @param mixed $uakProfileDisplay
      */
-    public function setAttributeKeyDisplayedInProfile($uakProfileDisplay)
+    public function setAttributeKeyDisplayedOnProfile($uakProfileDisplay)
     {
         $this->uakProfileDisplay = $uakProfileDisplay;
     }
@@ -82,7 +61,7 @@ class Attribute implements AttributeInterface
     /**
      * @return mixed
      */
-    public function isAttributeKeyEditableInProfile()
+    public function isAttributeKeyEditableOnProfile()
     {
         return $this->uakProfileEdit;
     }
@@ -90,7 +69,7 @@ class Attribute implements AttributeInterface
     /**
      * @param mixed $uakProfileEdit
      */
-    public function setAttributeKeyEditableInProfile($uakProfileEdit)
+    public function setAttributeKeyEditableOnProfile($uakProfileEdit)
     {
         $this->uakProfileEdit = $uakProfileEdit;
     }
@@ -98,7 +77,7 @@ class Attribute implements AttributeInterface
     /**
      * @return mixed
      */
-    public function isAttributeKeyRequiredInProfile()
+    public function isAttributeKeyRequiredOnProfile()
     {
         return $this->uakProfileEditRequired;
     }
@@ -106,7 +85,7 @@ class Attribute implements AttributeInterface
     /**
      * @param mixed $uakProfileEditRequired
      */
-    public function setAttributeKeyRequiredInProfile($uakProfileEditRequired)
+    public function setAttributeKeyRequiredOnProfile($uakProfileEditRequired)
     {
         $this->uakProfileEditRequired = $uakProfileEditRequired;
     }
@@ -114,7 +93,7 @@ class Attribute implements AttributeInterface
     /**
      * @return mixed
      */
-    public function isAttributeKeyEditableInRegistration()
+    public function isAttributeKeyEditableOnRegister()
     {
         return $this->uakRegisterEdit;
     }
@@ -122,7 +101,7 @@ class Attribute implements AttributeInterface
     /**
      * @param mixed $uakRegisterEdit
      */
-    public function setAttributeKeyEditableInRegistration($uakRegisterEdit)
+    public function setAttributeKeyEditableOnRegister($uakRegisterEdit)
     {
         $this->uakRegisterEdit = $uakRegisterEdit;
     }
@@ -146,7 +125,7 @@ class Attribute implements AttributeInterface
     /**
      * @return mixed
      */
-    public function isDisplayedInMemberList()
+    public function isAttributeKeyDisplayedOnMemberList()
     {
         return $this->uakMemberListDisplay;
     }
@@ -154,7 +133,7 @@ class Attribute implements AttributeInterface
     /**
      * @param mixed $uakMemberListDisplay
      */
-    public function setAttributeKeyDisplayedInMemberList($uakMemberListDisplay)
+    public function setAttributeKeyDisplayedOnMemberList($uakMemberListDisplay)
     {
         $this->uakMemberListDisplay = $uakMemberListDisplay;
     }

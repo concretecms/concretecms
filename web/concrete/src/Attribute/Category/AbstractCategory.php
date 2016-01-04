@@ -6,6 +6,7 @@ use Concrete\Controller\Element\Attribute\Header;
 use Concrete\Controller\Element\Attribute\KeyList;
 use Concrete\Controller\Element\Attribute\StandardListHeader;
 use Concrete\Core\Application\Application;
+use Concrete\Core\Attribute\AttributeInterface;
 use Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexerInterface;
 use Concrete\Core\Attribute\EntityInterface;
 use Concrete\Core\Attribute\Key\Factory;
@@ -45,6 +46,11 @@ abstract class AbstractCategory implements CategoryInterface
         $this->entityManager = $entityManager;
     }
 
+    public function getAttributeTypes()
+    {
+        return $this->getCategoryEntity()->getAttributeTypes();
+    }
+
     public function getList()
     {
         return $this->getAttributeRepository()->findAll();
@@ -72,10 +78,7 @@ abstract class AbstractCategory implements CategoryInterface
         $query->join('a.attribute_key', 'ta');
         $query->andWhere('ta.akHandle = :akHandle');
         $query->setParameter('akHandle', $handle);
-        $attribute = $query->getQuery()->getOneOrNullResult();
-        if ($attribute) {
-            return $attribute->getAttributeKey();
-        }
+        return $query->getQuery()->getOneOrNullResult();
     }
 
     public function getAttributeKeyByID($akID)
@@ -84,10 +87,7 @@ abstract class AbstractCategory implements CategoryInterface
         $query->join('a.attribute_key', 'ta');
         $query->andWhere('ta.akID = :akID');
         $query->setParameter('akID', $akID);
-        $attribute = $query->getQuery()->getOneOrNullResult();
-        if ($attribute) {
-            return $attribute->getAttributeKey();
-        }
+        return $query->getQuery()->getOneOrNullResult();
     }
 
     // Create
@@ -101,6 +101,7 @@ abstract class AbstractCategory implements CategoryInterface
         $indexer = $this->getCategoryEntity()
             ->getController()->getSearchIndexer();
         $indexer->updateTable($this, $key);
+
         return $key;
     }
 
@@ -120,11 +121,13 @@ abstract class AbstractCategory implements CategoryInterface
 
 
     // Update
-    public function updateFromRequest(AttributeKey $key, Request $request)
+    public function updateFromRequest(AttributeInterface $attribute, Request $request)
     {
+        $key = $attribute->getAttributeKey();
         $loader = $key->getRequestLoader();
         $loader->load($key, $request);
-        return $key;
+        $attribute->setAttributeKey($key);
+        return $attribute;
     }
 
 
@@ -157,15 +160,19 @@ abstract class AbstractCategory implements CategoryInterface
         return $this->entity;
     }
 
-    public function delete(AttributeKey $key)
+    public function delete(AttributeInterface $attribute)
     {
         // Delete from any attribute sets
+        $key = $attribute->getAttributeKey();
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\SetKey');
         $setKeys = $r->findBy(array('attribute_key' => $key));
         foreach($setKeys as $setKey) {
             $this->entityManager->remove($setKey);
         }
         $this->entityManager->remove($key);
+
+        $this->entityManager->remove($attribute);
+        $this->entityManager->flush();
     }
 
     public function associateAttributeKeyType(AttributeType $type)
