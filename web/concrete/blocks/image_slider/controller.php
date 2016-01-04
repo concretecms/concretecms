@@ -1,11 +1,11 @@
 <?php
-
 namespace Concrete\Block\ImageSlider;
 
 use Concrete\Core\Block\BlockController;
 use Database;
 use Page;
 use Concrete\Core\Editor\LinkAbstractor;
+use Core;
 
 class Controller extends BlockController
 {
@@ -136,8 +136,33 @@ class Controller extends BlockController
         parent::delete();
     }
 
+    public function validate($args)
+    {
+        $error = Core::make('helper/validation/error');
+        $timeout = intval($args['timeout']);
+        $speed = intval($args['speed']);
+
+        if (!$timeout) {
+            $error->add(t('Slide Duration must be greater than 0.'));
+        }
+        if (!$speed) {
+            $error->add(t('Slide Transition Speed must be greater than 0.'));
+        }
+        // https://github.com/viljamis/ResponsiveSlides.js/issues/132#issuecomment-12543345
+        // "The 'timeout' (amount of time spent on one slide) has to be at least 100 bigger than 'speed', otherwise the function simply returns."
+        if(($timeout - $speed) < 100) {
+            $error->add(t('Slide Duration must be at least 100 ms greater than the Slide Transition Speed.'));
+        }
+        return $error;
+    }
+
     public function save($args)
     {
+        $args['timeout'] = intval($args['timeout']);
+        $args['speed'] = intval($args['speed']);
+        $args['noAnimate'] = isset($args['noAnimate']) ? 1 : 0;
+        $args['pause'] = isset($args['pause']) ? 1 : 0;
+
         $db = Database::get();
         $db->execute('DELETE from btImageSliderEntries WHERE bID = ?', array($this->bID));
         parent::save($args);
