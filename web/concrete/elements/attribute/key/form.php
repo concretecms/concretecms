@@ -22,11 +22,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
         $akName = $key->getAttributeKeyName();
         $akIsSearchable = $key->isAttributeKeySearchable();
         $akIsSearchableIndexed = $key->isAttributeKeyContentIndexed();
-        /*$sets = $key->getAttributeSets();
+        $sets = $category->getAttributeSets();
         if (count($sets) == 1) {
             $asID = $sets[0]->getAttributeSetID();
-        }*/
-
+        }
         print $form->hidden('akID', $key->getAttributeKeyID());
     }
     ?>
@@ -52,7 +51,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
             </div>
         </div>
 
-        <? if ($category && $category->allowAttributeSets() == AttributeKeyCategory::ASET_ALLOW_SINGLE) { ?>
+        <? if ($category && $category->allowAttributeSets() == \Concrete\Core\Attribute\EntityInterface::ASET_ALLOW_SINGLE) { ?>
             <div class="form-group">
                 <?= $form->label('asID', t('Set')) ?>
                 <div class="controls">

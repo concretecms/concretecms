@@ -11,6 +11,7 @@ class Form extends ElementController
     protected $type;
     protected $dashboard_page_submit_action = 'add';
     protected $dashboard_page_parameters = array();
+    protected $category;
 
     public function __construct(Type $type)
     {
@@ -38,6 +39,23 @@ class Form extends ElementController
     {
         return 'attribute/key/form';
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCategory()
+    {
+        return $this->category;
+    }
+
+    /**
+     * @param mixed $category
+     */
+    public function setCategory($category)
+    {
+        $this->category = $category;
+    }
+
 
     /**
      * @return array
@@ -73,6 +91,7 @@ class Form extends ElementController
 
     public function view()
     {
+        $this->set('category', $this->category);
         $this->set('type', $this->type);
         $this->set('back', $this->getBackButtonUrl());
         $this->set('action', $this->getViewObject()->action($this->getDashboardPageSubmitAction(),

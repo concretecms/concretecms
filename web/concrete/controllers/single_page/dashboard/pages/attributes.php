@@ -9,10 +9,14 @@ use Concrete\Core\Page\Controller\DashboardAttributesPageController;
 class Attributes extends DashboardAttributesPageController
 {
 
+	protected function getCategoryEntityObject()
+	{
+		return Category::getByHandle('collection');
+	}
+
 	public function view()
 	{
-		$category = Category::getByHandle('collection');
-		$this->renderList($category, CollectionKey::getList(), Type::getAttributeTypeList('collection'));
+		$this->renderList(CollectionKey::getList(), Type::getAttributeTypeList('collection'));
 	}
 
 	public function edit($akID = null)
@@ -28,7 +32,7 @@ class Attributes extends DashboardAttributesPageController
 		$this->edit($akID);
 		$key = CollectionKey::getByID($akID);
 		$category = Category::getByHandle('collection');
-		$this->executeUpdate($category, $key,
+		$this->executeUpdate($key,
 			\URL::to('/dashboard/pages/attributes', 'view')
 		);
 	}
@@ -45,18 +49,17 @@ class Attributes extends DashboardAttributesPageController
 	{
 		$this->select_type($type);
 		$type = Type::getByID($type);
-		$category = Category::getByHandle('collection');
-		$this->executeAdd($category, $type, \URL::to('/dashboard/pages/attributes', 'view'));
+		$this->executeAdd($type, \URL::to('/dashboard/pages/attributes', 'view'));
 	}
 
 	public function delete($akID = null)
 	{
 		$key = CollectionKey::getByID($akID);
-		$category = Category::getByHandle('collection');
-		$this->executeDelete($category, $key,
+		$this->executeDelete($key,
 			\URL::to('/dashboard/pages/attributes', 'view')
 		);
 	}
+
 
 
 

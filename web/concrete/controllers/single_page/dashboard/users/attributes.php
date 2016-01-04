@@ -9,6 +9,11 @@ use Concrete\Core\Page\Controller\DashboardAttributesPageController;
 class Attributes extends DashboardAttributesPageController
 {
 
+	protected function getCategoryEntityObject()
+	{
+		return Category::getByHandle('user');
+	}
+
 	public function view()
 	{
 		$this->renderList(UserKey::getList(), Type::getAttributeTypeList('user'));
@@ -26,8 +31,7 @@ class Attributes extends DashboardAttributesPageController
 	{
 		$this->edit($akID);
 		$key = UserKey::getByID($akID);
-		$category = Category::getByHandle('user');
-		$this->executeUpdate($category, $key,
+		$this->executeUpdate($key,
 			\URL::to('/dashboard/users/attributes', 'view')
 		);
 	}
@@ -44,15 +48,13 @@ class Attributes extends DashboardAttributesPageController
 	{
 		$this->select_type($type);
 		$type = Type::getByID($type);
-		$category = Category::getByHandle('user');
-		$this->executeAdd($category, $type, \URL::to('/dashboard/users/attributes', 'view'));
+		$this->executeAdd($type, \URL::to('/dashboard/users/attributes', 'view'));
 	}
 
 	public function delete($akID = null)
 	{
 		$key = UserKey::getByID($akID);
-		$category = Category::getByHandle('user');
-		$this->executeDelete($category, $key,
+		$this->executeDelete($key,
 			\URL::to('/dashboard/users/attributes', 'view')
 		);
 	}

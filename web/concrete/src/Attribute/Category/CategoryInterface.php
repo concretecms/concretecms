@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Request;
 interface CategoryInterface
 {
 
+    public function getAttributeKeyByID($akID);
+
     public function setCategoryEntity(Category $entity);
 
     /**
@@ -25,7 +27,6 @@ interface CategoryInterface
     public function getSearchIndexer();
     public function getAttributeValues($mixed);
 
-    public function getAttributeHeaderController();
-    public function getAttributeListController();
+    public function getUngroupedAttributes();
 
 }

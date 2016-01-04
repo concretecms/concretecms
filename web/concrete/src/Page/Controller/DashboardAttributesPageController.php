@@ -7,27 +7,44 @@ use Concrete\Controller\Element\Attribute\Form;
 use Concrete\Controller\Element\Attribute\Header;
 use Concrete\Controller\Element\Attribute\KeyHeader;
 use Concrete\Controller\Element\Attribute\KeyList;
+use Concrete\Controller\Element\Attribute\StandardListHeader;
 use Concrete\Core\Attribute\Category\CategoryInterface;
 use Concrete\Core\Attribute\EntityInterface;
 use Concrete\Core\Entity\Attribute\Category;
 use Concrete\Core\Entity\Attribute\Key\Key;
+use Concrete\Core\Entity\Attribute\SetKey;
 use Concrete\Core\Entity\Attribute\Type;
 use Concrete\Core\Controller\ElementController;
 use Concrete\Core\Error\Error;
 use Concrete\Core\Validation\CSRF\Token;
 use Loader;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 abstract class DashboardAttributesPageController extends DashboardPageController
 {
 
-    public function renderList(EntityInterface $category, $keys, $types)
-    {
-        $list = $category->getAttributeKeyCategory()->getAttributeListController();
-        $this->set('attributeView', $list);
+    /**
+     * @return EntityInterface
+     */
+    abstract protected function getCategoryEntityObject();
 
-        $header = $category->getAttributeKeyCategory()->getAttributeHeaderController();
+    public function renderList($keys, $types)
+    {
+        $category = $this->getCategoryEntityObject();
+        $list = new KeyList();
+        $list->setAttributeSets($this->getCategoryEntityObject()->getAttributeSets());
+        $list->setUngroupedAttributes($this->getCategoryEntityObject()->getAttributeKeyCategory()->getUngroupedAttributes());
+        $list->setAttributeTypes($types);
+        $list->setDashboardPagePath($this->getPageObject()->getCollectionPath());
+        $list->setDashboardPageParameters($this->getRequestActionParameters());
+        if (!$category->allowAttributeSets()) {
+            $list->setEnableSorting(false);
+        }
+
+        $header = new StandardListHeader($category->getAttributeKeyCategory());
         $this->set('attributeHeader', $header);
 
+        $this->set('attributeView', $list);
         $this->set('pageTitle', t('Attributes'));
     }
 
@@ -35,6 +52,7 @@ abstract class DashboardAttributesPageController extends DashboardPageController
     {
         $add = new Form($type);
         $add->setBackButtonURL($backURL);
+        $add->setCategory($this->getCategoryEntityObject());
         $add->setDashboardPageParameters($this->getRequestActionParameters());
         $this->set('attributeView', $add);
         $this->set('pageTitle', t('Add Attribute'));
@@ -53,7 +71,7 @@ abstract class DashboardAttributesPageController extends DashboardPageController
         $this->set('attributeHeader', $header);
     }
 
-    protected function executeAdd(EntityInterface $entity, Type $type, $successURL, $onComplete = null)
+    protected function executeAdd(Type $type, $successURL, $onComplete = null)
     {
         $controller = $type->getController();
         $e = $controller->validateKey($this->request->request->all());
@@ -63,6 +81,7 @@ abstract class DashboardAttributesPageController extends DashboardPageController
             /**
              * @var $category \Concrete\Core\Attribute\Category\CategoryInterface
              */
+            $entity = $this->getCategoryEntityObject();
             $category = $entity->getAttributeKeyCategory();
             $category->setEntity($entity);
             $category->addFromRequest($type, $this->request);
@@ -74,9 +93,10 @@ abstract class DashboardAttributesPageController extends DashboardPageController
         }
     }
 
-    protected function executeUpdate(EntityInterface $entity, Key $key, $successURL, $onComplete = null)
+    protected function executeUpdate(Key $key, $successURL, $onComplete = null)
     {
         $controller = $key->getController();
+        $entity = $this->getCategoryEntityObject();
         $e = $controller->validateKey($this->request->request->all());
         if ($e->has()) {
             $this->error = $e;
@@ -95,8 +115,9 @@ abstract class DashboardAttributesPageController extends DashboardPageController
         }
     }
 
-    protected function executeDelete(EntityInterface $entity, Key $key, $successURL, $onComplete = null)
+    protected function executeDelete(Key $key, $successURL, $onComplete = null)
     {
+        $entity = $this->getCategoryEntityObject();
         try {
 
             if (!$this->token->validate('delete_attribute')) {
@@ -117,6 +138,52 @@ abstract class DashboardAttributesPageController extends DashboardPageController
         } catch (Exception $e) {
             $this->error = $e;
         }
+    }
+
+    public function sort_attribute_set()
+    {
+        $entity = $this->getCategoryEntityObject();
+        if ($entity->allowAttributeSets()) {
+            /**
+             * @var $category CategoryInterface
+             */
+            $category = $entity->getAttributeKeyCategory();
+            $keys = array();
+            foreach((array) $this->request->request->get('akID') as $akID) {
+                $key = $category->getAttributeKeyByID($akID);
+                if (is_object($key)) {
+                    $keys[] = $key;
+                }
+            }
+
+
+            foreach($entity->getAttributeSets() as $set) {
+                if ($set->getAttributeSetID() == $this->request->request->get('asID') && count($keys)) {
+
+                    // Clear the keys
+                    foreach($set->getAttributeKeys() as $setKey) {
+                        $this->entityManager->remove($setKey);
+                    }
+                    $this->entityManager->flush();
+
+                    $i = 0;
+                    foreach($keys as $key) {
+                        $setKey = new SetKey();
+                        $setKey->setAttributeKey($key);
+                        $setKey->setAttributeSet($set);
+                        $setKey->setDisplayOrder($i);
+                        $set->getAttributeKeys()->add($setKey);
+                        $i++;
+                    }
+                    break;
+                }
+            }
+
+            $this->entityManager->persist($set);
+            $this->entityManager->flush();
+            return new JsonResponse($set);
+        }
+
     }
 
 

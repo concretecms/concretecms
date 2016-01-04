@@ -63,16 +63,6 @@ abstract class Key implements AttributeKeyInterface
     protected $akIsColumnHeader = true;
 
     /**
-     * @ManyToMany(targetEntity="\Concrete\Core\Entity\Attribute\Set", mappedBy="keys")
-     */
-    protected $sets;
-
-    public function __construct()
-    {
-        $this->sets = new ArrayCollection();
-    }
-
-    /**
      * @return mixed
      */
     public function getAttributeKeyID()
@@ -176,7 +166,6 @@ abstract class Key implements AttributeKeyInterface
     {
         $this->akIsColumnHeader = $akIsColumnHeader;
     }
-
 
     /**
      * @return

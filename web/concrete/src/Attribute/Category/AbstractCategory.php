@@ -186,20 +186,21 @@ abstract class AbstractCategory implements CategoryInterface
         return $indexer;
     }
 
-    public function getAttributeHeaderController()
+    public function getUngroupedAttributes()
     {
-        $header = new StandardListHeader($this);
-        return $header;
-    }
-
-    public function getAttributeListController()
-    {
-        $list = new KeyList();
-        $list->setAttributes($keys);
-        $list->setAttributeTypes($types);
-        $list->setDashboardPagePath($this->getPageObject()->getcollectionPath());
-        $list->setDashboardPageParameters($this->getRequestActionParameters());
-        return $list;
+        $attributes = array();
+        foreach($this->getList() as $attribute) {
+            $key = $attribute->getAttributeKey();
+            $query = $this->entityManager->createQuery(
+                'select sk from \Concrete\Core\Entity\Attribute\SetKey sk where sk.attribute_key = :key'
+            );
+            $query->setParameter('key', $key);
+            $r = $query->getOneOrNullResult();
+            if (!is_object($r)) {
+                $attributes[] = $attribute;
+            }
+        }
+        return $attributes;
     }
 
 

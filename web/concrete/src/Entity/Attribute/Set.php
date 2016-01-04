@@ -21,7 +21,7 @@ class Set
     use PackageTrait;
 
     /**
-     * @OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\SetKey", mappedBy="set")
+     * @OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\SetKey", mappedBy="set", cascade={"all"})
      * @OrderBy({"asDisplayOrder" = "ASC"})
      */
     protected $keys;
@@ -78,6 +78,11 @@ class Set
     public function setAttributeKeys($keys)
     {
         $this->keys = $keys;
+    }
+
+    public function clearAttributeKeys()
+    {
+        $this->keys = new ArrayCollection();
     }
 
     /**

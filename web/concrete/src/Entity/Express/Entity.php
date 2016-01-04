@@ -193,7 +193,13 @@ class Entity implements EntityInterface
         return \Core::make('\Concrete\Core\Attribute\Category\ExpressCategory');
     }
 
+    public function allowAttributeSets()
+    {
+        return false;
+    }
 
-
-
+    public function getAttributeSets()
+    {
+        return false;
+    }
 }
