@@ -316,16 +316,19 @@ class Application extends Container
      */
     public function handleURLSlashes(SymfonyRequest $request)
     {
-        if ($request->getPathInfo() != '/') {
-            $request_path = $request->getRequestUri();
-            $parsed_url = Url::createFromUrl($request->getUri());
+        $trailing_slashes = $this['config']['concrete.seo.trailing_slash'];
+            $path = $request->getPathInfo();
 
-            $url_path = ltrim(parse_url($request_path, PHP_URL_PATH), '/');
+        // If this isn't the homepage
+        if ($path && $path != '/') {
 
-            // We need to apply urldecode before comparing URLs since
-            // the URLs may be urldecoded when we use mod_rewrite.
-            // See. "6.2.2.2.  Percent-Encoding Normalization" at https://www.ietf.org/rfc/rfc3986.txt
-            if (urldecode($url_path) != urldecode((string) $parsed_url->getPath())) {
+            // If the trailing slash doesn't match the config, return a redirect response
+            if (($trailing_slashes && substr($path, -1) != '/') ||
+                (!$trailing_slashes && substr($path, -1) == '/')) {
+
+                $parsed_url = Url::createFromUrl($request->getUri(),
+                    $trailing_slashes ? Url::TRAILING_SLASHES_ENABLED : Url::TRAILING_SLASHES_DISABLED);
+
                 $response = new RedirectResponse($parsed_url, 301);
                 $response->setRequest($request);
 
