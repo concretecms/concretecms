@@ -43,7 +43,9 @@ interface ValidatorManagerInterface extends ValidatorInterface
      * @param \ArrayAccess|null $error The error object that will contain the error strings
      * @return bool
      * @throws \InvalidArgumentException Invalid mixed value type passed.
-     */
+     * @todo Move out of this comment so that we can properly hint
+     *
     public function isValid($mixed, \ArrayAccess $error = null);
+     */
 
 }
