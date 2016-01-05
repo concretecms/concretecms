@@ -5,6 +5,7 @@ namespace Concrete\Core\Attribute;
 use Concrete\Core\Attribute\Key\StandardFactory;
 use Concrete\Core\Controller\AbstractController;
 use Concrete\Core\Entity\Attribute\Key\TextKey;
+use Concrete\Core\Entity\Attribute\Key\Type\TextType;
 use Concrete\Core\Entity\AttributeKey\TextAttributeKey;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Core;
@@ -63,6 +64,11 @@ class Controller extends AbstractController
         }
     }
 
+    public function getDisplayValue()
+    {
+        return $this->attributeValue->getValue();
+    }
+
     public function exportValue(\SimpleXMLElement $akv)
     {
         $val = $this->attributeValue->getValue();
@@ -80,10 +86,6 @@ class Controller extends AbstractController
         $node->appendChild($no->createCDataSection($val));
 
         return $cnode;
-    }
-
-    public function importKey($akn)
-    {
     }
 
     protected function getAttributeValueID()
@@ -292,11 +294,6 @@ class Controller extends AbstractController
     public function getIconFormatter()
     {
         return new LegacyIconFormatter($this);
-    }
-
-    public function createAttributeKey()
-    {
-        return new TextKey();
     }
 
 }

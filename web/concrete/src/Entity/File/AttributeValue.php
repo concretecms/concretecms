@@ -18,49 +18,31 @@ class AttributeValue extends AbstractAttributeValue
 {
 
     /**
-     * @Id
-     * @Column(type="integer", options={"unsigned": true})
-     **/
-    protected $fID;
-
-    /**
-     * @Id
-     * @Column(type="integer", options={"unsigned": true})
-     **/
-    protected $fvID;
-
+     * @ManyToOne(targetEntity="\Concrete\Core\File\Version")
+@JoinColumns({
+     *   @JoinColumn(name="fID", referencedColumnName="fID"),
+     *   @JoinColumn(name="fvID", referencedColumnName="fvID")
+     * })
+     */
+    protected $version;
 
     /**
      * @return mixed
      */
-    public function getFileID()
+    public function getVersion()
     {
-        return $this->fID;
+        return $this->version;
     }
 
     /**
-     * @param mixed $fID
+     * @param mixed $version
      */
-    public function setFileID($fID)
+    public function setVersion($version)
     {
-        $this->fID = $fID;
+        $this->version = $version;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getVersionID()
-    {
-        return $this->fvID;
-    }
 
-    /**
-     * @param mixed $fvID
-     */
-    public function setVersionID($fvID)
-    {
-        $this->fvID = $fvID;
-    }
 
 
 }

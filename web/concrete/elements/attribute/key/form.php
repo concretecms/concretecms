@@ -109,10 +109,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
         <?
 
         if ($category->getPackageID() > 0) {
-            Loader::packageElement('attribute/categories/' . $category->getAttributeKeyCategoryHandle(),
+            @Loader::packageElement('attribute/categories/' . $category->getAttributeKeyCategoryHandle(),
                 $category->getPackageHandle(), array('key' => $key));
         } else {
-            Loader::element('attribute/categories/' . $category->getAttributeKeyCategoryHandle(),
+            @Loader::element('attribute/categories/' . $category->getAttributeKeyCategoryHandle(),
                 array('key' => $key));
         }
         ?>

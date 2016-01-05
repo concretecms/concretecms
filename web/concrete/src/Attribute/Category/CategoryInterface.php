@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Attribute\Category;
 
-use Concrete\Core\Attribute\AttributeInterface;
+use Concrete\Core\Attribute\AttributeKeyInterface;
 use Concrete\Core\Attribute\EntityInterface;
 use Concrete\Core\Attribute\Type;
 use Concrete\Core\Entity\Attribute\Category;
@@ -14,6 +14,8 @@ interface CategoryInterface
 
     public function getAttributeKeyByID($akID);
 
+    public function createAttributeKey();
+
     public function setCategoryEntity(Category $entity);
 
     public function getAttributeTypes();
@@ -24,8 +26,8 @@ interface CategoryInterface
     public function getCategoryEntity();
     public function setEntity(EntityInterface $entity);
     public function addFromRequest(\Concrete\Core\Entity\Attribute\Type $type, Request $request);
-    public function updateFromRequest(AttributeInterface $attribute, Request $request);
-    public function delete(AttributeInterface $attribute);
+    public function updateFromRequest(AttributeKeyInterface $attribute, Request $request);
+    public function delete(AttributeKeyInterface $attribute);
     public function associateAttributeKeyType(\Concrete\Core\Entity\Attribute\Type $type);
     public function getSearchIndexer();
     public function getAttributeValues($mixed);

@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Core\Entity\Attribute\Key;
+namespace Concrete\Core\Entity\Attribute\Key\Type;
 
 use Concrete\Core\Entity\Attribute\Value\SelectValue;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -8,20 +8,15 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @Entity
- * @Table(name="SelectAttributeKeys")
+ * @Table(name="SelectAttributeKeyTypes")
  */
-class SelectKey extends Key
+class SelectType extends Type
 {
 
     /**
      * @OneToMany(targetEntity="Concrete\Core\Entity\Attribute\Value\SelectValueOption", mappedBy="key", cascade={"all"})
      */
     protected $options;
-
-    public function getTypeHandle()
-    {
-        return 'select';
-    }
 
     public function getAttributeValue()
     {

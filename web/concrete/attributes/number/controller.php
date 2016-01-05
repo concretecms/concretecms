@@ -2,6 +2,7 @@
 namespace Concrete\Attribute\Number;
 
 use Concrete\Core\Entity\Attribute\Key\NumberKey;
+use Concrete\Core\Entity\Attribute\Key\Type\NumberType;
 use Concrete\Core\Entity\Attribute\Value\NumberValue;
 use Loader;
 use \Concrete\Core\Foundation\Object;
@@ -14,6 +15,18 @@ class Controller extends AttributeTypeController
         'type' => 'decimal',
         'options' => array('precision' => 14, 'scale' => 4, 'default' => 0, 'notnull' => false)
     );
+
+    public function importKey($akey)
+    {
+        $type = new NumberType();
+        return $type;
+    }
+
+    public function saveKey($data)
+    {
+        $type = new NumberType();
+        return $type;
+    }
 
     public function searchForm($list)
     {
@@ -88,9 +101,9 @@ class Controller extends AttributeTypeController
         $db->Execute('delete from atNumber where avID = ?', array($this->getAttributeValueID()));
     }
 
-    public function createAttributeKey()
+    public function createAttributeKeyType()
     {
-        return new NumberKey();
+        return new NumberType();
     }
 
 }

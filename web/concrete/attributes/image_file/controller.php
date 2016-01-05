@@ -3,6 +3,7 @@
 namespace Concrete\Attribute\ImageFile;
 
 use Concrete\Core\Entity\Attribute\Key\ImageFileKey;
+use Concrete\Core\Entity\Attribute\Key\Type\ImageFileType;
 use Concrete\Core\Entity\Attribute\Value\ImageFileValue;
 use Core;
 use Database;
@@ -144,15 +145,27 @@ class Controller extends AttributeTypeController
         }
     }
 
+    public function importKey($akey)
+    {
+        $type = new ImageFileType();
+        return $type;
+    }
+
+    public function saveKey($data)
+    {
+        $type = new ImageFileType();
+        return $type;
+    }
+
     public function deleteValue()
     {
         $db = Database::connection();
         $db->Execute('delete from atFile where avID = ?', array($this->getAttributeValueID()));
     }
 
-    public function createAttributeKey()
+    public function createAttributeKeyType()
     {
-        return new ImageFileKey();
+        return new ImageFileType();
     }
 
 }

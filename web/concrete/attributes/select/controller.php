@@ -2,7 +2,7 @@
 
 namespace Concrete\Attribute\Select;
 
-use Concrete\Core\Entity\Attribute\Key\SelectKey;
+use Concrete\Core\Entity\Attribute\Key\Type\SelectType;
 use Concrete\Core\Entity\Attribute\Value\SelectValue;
 use Concrete\Core\Entity\Attribute\Value\SelectValueOption;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
@@ -49,9 +49,14 @@ class Controller extends AttributeTypeController
             return false;
         }
 
-        $this->akSelectAllowMultipleValues = $ak->getAllowMultipleValues();
-        $this->akSelectAllowOtherValues = $ak->getAllowOtherValues();
-        $this->akSelectOptionDisplayOrder = $ak->getDisplayOrder();
+        /**
+         * @var $type SelectType
+         */
+        $type = $ak->getAttributeKeyType();
+
+        $this->akSelectAllowMultipleValues = $type->getAllowMultipleValues();
+        $this->akSelectAllowOtherValues = $type->getAllowOtherValues();
+        $this->akSelectOptionDisplayOrder = $type->getDisplayOrder();
 
         $this->set('akSelectAllowMultipleValues', $this->akSelectAllowMultipleValues);
         $this->set('akSelectAllowOtherValues', $this->akSelectAllowOtherValues);
@@ -152,13 +157,14 @@ class Controller extends AttributeTypeController
 
     public function importKey($akey)
     {
+        $type = new SelectType();
         if (isset($akey->type)) {
             $akSelectAllowMultipleValues = $akey->type['allow-multiple-values'];
             $akSelectOptionDisplayOrder = $akey->type['display-order'];
             $akSelectAllowOtherValues = $akey->type['allow-other-values'];
-            $this->attributeKey->setAllowMultipleValues((bool) $akSelectAllowMultipleValues);
-            $this->attributeKey->setDisplayOrder($akSelectOptionDisplayOrder);
-            $this->attributeKey->setAllowOtherValues((bool) $akSelectAllowOtherValues);
+            $type->setAllowMultipleValues((bool) $akSelectAllowMultipleValues);
+            $type->setDisplayOrder($akSelectOptionDisplayOrder);
+            $type->setAllowOtherValues((bool) $akSelectAllowOtherValues);
 
             if (isset($akey->type->options)) {
                 foreach ($akey->type->options->children() as $option) {
@@ -166,10 +172,11 @@ class Controller extends AttributeTypeController
                     $opt->setValue((string) $option['value']);
                     $opt->setIsEndUserAdded((bool) $option['is-end-user-added']);
                     $opt->setAttributeKey($this->attributeKey);
-                    $this->attributeKey->getOptions()->add($opt);
+                    $type->getOptions()->add($opt);
                 }
             }
         }
+        return $type;
     }
 
     private function getSelectValuesFromPost()
@@ -739,9 +746,9 @@ class Controller extends AttributeTypeController
         return $this->akSelectOptionDisplayOrder;
     }
 
-    public function createAttributeKey()
+    public function createAttributeKeyType()
     {
-        return new SelectKey();
+        return new SelectType();
     }
 
 }

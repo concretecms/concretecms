@@ -1,21 +1,16 @@
 <?php
 
-namespace Concrete\Core\Entity\Attribute\Key;
+namespace Concrete\Core\Entity\Attribute\Key\Type;
 
 use Concrete\Core\Entity\Attribute\Value\TextValue;
 
 
 /**
  * @Entity
- * @Table(name="TextAttributeKeys")
+ * @Table(name="TextAttributeKeyTypes")
  */
-class TextKey extends Key
+class TextType extends Type
 {
-
-    public function getTypeHandle()
-    {
-        return 'text';
-    }
 
     public function getAttributeValue()
     {

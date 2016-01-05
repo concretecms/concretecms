@@ -1,15 +1,15 @@
 <?php
 
-namespace Concrete\Core\Entity\Attribute\Key;
+namespace Concrete\Core\Entity\Attribute\Key\Type;
 
 use Concrete\Core\Entity\Attribute\Value\TopicsValue;
 
 
 /**
  * @Entity
- * @Table(name="TopicAttributeKeys")
+ * @Table(name="TopicsAttributeKeyTypes")
  */
-class TopicsKey extends Key
+class TopicsType extends Type
 {
 
     /**
@@ -21,11 +21,6 @@ class TopicsKey extends Key
      * @Column(type="integer")
      */
     protected $topicTreeID = '';
-
-    public function getTypeHandle()
-    {
-        return 'topics';
-    }
 
     /**
      * @return mixed

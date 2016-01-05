@@ -8,13 +8,12 @@ use Concrete\Core\Attribute\Key\RequestLoader\StandardRequestLoader;
 use Concrete\Core\Attribute\Type;
 use Concrete\Core\Entity\Attribute\Set;
 use Concrete\Core\Entity\PackageTrait;
-use Doctrine\Common\Collections\ArrayCollection;
 
 
 /**
  * @Entity
  * @InheritanceType("JOINED")
- * @DiscriminatorColumn(name="type", type="string")
+ * @DiscriminatorColumn(name="akCategory", type="string")
  * @Table(
  *     name="AttributeKeys",
  *     indexes={
@@ -37,7 +36,7 @@ abstract class Key implements AttributeKeyInterface
      * @Column(type="string")
      */
     protected $akHandle;
-
+    
     /**
      * @Column(type="string")
      */
@@ -62,6 +61,13 @@ abstract class Key implements AttributeKeyInterface
      * @Column(type="boolean")
      */
     protected $akIsColumnHeader = true;
+
+    /**
+     * Technically this is a one to one but doctrine can't used a composite/derived
+     * primary key from entity in an abstract class. Sigh.
+     * @OneToOne(targetEntity="\Concrete\Core\Entity\Attribute\Key\Type\Type", mappedBy="key", cascade={"persist", "remove"})
+     */
+    protected $key_type;
 
     /**
      * @return mixed
@@ -169,17 +175,29 @@ abstract class Key implements AttributeKeyInterface
     }
 
     /**
-     * @return
+     * @return mixed
      */
-    abstract public function getAttributeValue();
+    public function getAttributeKeyType()
+    {
+        return $this->key_type;
+    }
 
-    abstract public function createController();
+    /**
+     * @param mixed $type
+     */
+    public function setAttributeKeyType($key_type)
+    {
+        $this->key_type = $key_type;
+    }
 
-    abstract public function getTypeHandle();
+    public function getAttributeType()
+    {
+        return $this->getAttributeKeyType()->getAttributeType();
+    }
 
     public function getController()
     {
-        $controller = $this->createController();
+        $controller = $this->getAttributeKeyType()->getAttributeType()->getController();
         $controller->setAttributeKey($this);
         return $controller;
     }
@@ -189,8 +207,7 @@ abstract class Key implements AttributeKeyInterface
      */
     public function render($view = 'view', $value = false, $return = false)
     {
-        $at = Type::getByHandle($this->getTypeHandle());
-        $resp = $at->render($view, $this, $value, $return);
+        $resp = $this->getAttributeType()->render($view, $this, $value, $return);
         if ($return) {
             return $resp;
         } else {
@@ -215,25 +232,19 @@ abstract class Key implements AttributeKeyInterface
         return \Concrete\Core\Attribute\Set::getByAttributeKey($this);
     }
 
-    public function getAttributeType()
-    {
-        return Type::getByHandle($this->getTypeHandle());
-    }
-
-    public function getRequestLoader()
-    {
-        return new StandardRequestLoader();
-    }
-
-    public function getImportLoader()
-    {
-        return new StandardImporterLoader();
-    }
-
     public function inAttributeSet(Set $set)
     {
         $sets = $this->getAttributeSets();
         return in_array($set, $sets);
+    }
+
+    /**
+     * Doctrine requires this for certain queries.
+     * @return mixed
+     */
+    public function __toString()
+    {
+        return (string) $this->getAttributeKeyID();
     }
 
 

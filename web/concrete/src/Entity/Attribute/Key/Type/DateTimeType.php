@@ -1,25 +1,20 @@
 <?php
 
-namespace Concrete\Core\Entity\Attribute\Key;
+namespace Concrete\Core\Entity\Attribute\Key\Type;
 
-use Concrete\Core\Entity\Attribute\Value\TextareaValue;
+use Concrete\Core\Entity\Attribute\Value\DateTimeValue;
 
 
 /**
  * @Entity
- * @Table(name="TextareaAttributeKeys")
+ * @Table(name="DateTimeAttributeKeyTypes")
  */
-class TextareaKey extends Key
+class DateTimeType extends Type
 {
-
-    public function getTypeHandle()
-    {
-        return 'textarea';
-    }
 
     public function getAttributeValue()
     {
-        return new TextareaValue();
+        return new DateTimeValue();
     }
 
     /**
@@ -45,7 +40,7 @@ class TextareaKey extends Key
 
     public function createController()
     {
-        $controller = new \Concrete\Attribute\Textarea\Controller($this->getAttributeType());
+        $controller = new \Concrete\Attribute\DateTime\Controller($this->getAttributeType());
         return $controller;
     }
 

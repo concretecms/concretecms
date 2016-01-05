@@ -1,15 +1,15 @@
 <?php
 
-namespace Concrete\Core\Entity\Attribute\Key;
+namespace Concrete\Core\Entity\Attribute\Key\Type;
 
 use Concrete\Core\Entity\Attribute\Value\BooleanValue;
 
 
 /**
  * @Entity
- * @Table(name="BooleanAttributeKeys")
+ * @Table(name="BooleanAttributeKeyTypes")
  */
-class BooleanKey extends Key
+class BooleanType extends Type
 {
 
     /**
@@ -31,13 +31,6 @@ class BooleanKey extends Key
     public function setIsCheckedByDefault($isCheckedByDefault)
     {
         $this->isCheckedByDefault = $isCheckedByDefault;
-    }
-
-
-
-    public function getTypeHandle()
-    {
-        return 'boolean';
     }
 
     public function getAttributeValue()

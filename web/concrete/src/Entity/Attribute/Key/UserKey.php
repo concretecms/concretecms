@@ -1,14 +1,14 @@
 <?php
 
-namespace Concrete\Core\Entity\User;
+namespace Concrete\Core\Entity\Attribute\Key;
 
-use Concrete\Core\Entity\Attribute\AbstractAttribute;
+use Concrete\Core\Entity\Attribute\Key\Key;
 
 /**
  * @Entity(repositoryClass="\Concrete\Core\Entity\User\AttributeRepository")
  * @Table(name="UserAttributeKeys")
  */
-class Attribute extends AbstractAttribute
+class UserKey extends Key
 {
 
     /**

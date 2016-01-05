@@ -18,13 +18,11 @@ class AttributeValue extends AbstractAttributeValue
 {
 
     /**
-     * @Id
      * @Column(type="integer", options={"unsigned": true})
      **/
     protected $cID;
 
     /**
-     * @Id
      * @Column(type="integer", options={"unsigned": true})
      **/
     protected $cvID;

@@ -5,6 +5,7 @@ namespace Concrete\Attribute\Textarea;
 use Concrete\Core\Attribute\DefaultController;
 use Concrete\Core\Entity\Attribute\Key\TextareaKey;
 use Concrete\Core\Entity\Attribute\Key\TextKey;
+use Concrete\Core\Entity\Attribute\Key\Type\TextareaType;
 use Concrete\Core\Entity\Attribute\Value\TextValue;
 use Core;
 use Database;
@@ -20,6 +21,7 @@ class Controller extends DefaultController
 
     public function saveKey($data)
     {
+        $type = new TextareaType();
         $data += array(
             'akTextareaDisplayMode' => null,
         );
@@ -31,8 +33,11 @@ class Controller extends DefaultController
         if ($akTextareaDisplayMode == 'rich_text_custom') {
             $options = $data['akTextareaDisplayModeCustomOptions'];
         }
-        $this->setDisplayMode($akTextareaDisplayMode, $options);
+
+        $type->setMode($akTextareaDisplayMode);
+        return $type;
     }
+
 
     public function getDisplaySanitizedValue()
     {
@@ -79,11 +84,6 @@ class Controller extends DefaultController
         print $f->text($this->field('value'), $this->request('value'));
     }
 
-    public function setDisplayMode($akTextareaDisplayMode, $akTextareaDisplayModeCustomOptions = array())
-    {
-        $this->attributeKey->setMode($akTextareaDisplayMode);
-    }
-
     // should have to delete the at thing
     public function deleteKey()
     {
@@ -109,7 +109,12 @@ class Controller extends DefaultController
             return false;
         }
 
-        $this->akTextareaDisplayMode = $ak->getMode();
+        $type = $ak->getAttributeKeyType();
+        /**
+         * @var $type TextareaType
+         */
+
+        $this->akTextareaDisplayMode = $type->getMode();
         $this->set('akTextareaDisplayMode', $ak->getMode());
 
     }
@@ -131,10 +136,12 @@ class Controller extends DefaultController
 
     public function importKey($akey)
     {
+        $type = new TextareaType();
         if (isset($akey->type)) {
             $data['akTextareaDisplayMode'] = $akey->type['mode'];
-            $this->saveKey($data);
+            $type->setMode((string) $akey->type['mode']);
         }
+        return $type;
     }
 
     public function duplicateKey($newAK)
@@ -147,8 +154,8 @@ class Controller extends DefaultController
         ), array('akID'), true);
     }
 
-    public function createAttributeKey()
+    public function createAttributeKeyType()
     {
-        return new TextareaKey();
+        return new TextareaType();
     }
 }

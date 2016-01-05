@@ -3,6 +3,7 @@
 namespace Concrete\Attribute\Boolean;
 
 use Concrete\Core\Entity\Attribute\Key\BooleanKey;
+use Concrete\Core\Entity\Attribute\Key\Type\BooleanType;
 use Concrete\Core\Entity\Attribute\Value\BooleanValue;
 use Core;
 use Database;
@@ -55,13 +56,14 @@ class Controller extends AttributeTypeController
 
     public function importKey($akey)
     {
+        $type = new BooleanType();
         if (isset($akey->type)) {
-            $data = array();
             $checked = (string) $akey->type['checked'];
             if ($checked != '') {
-                $this->attributeKey->setIsCheckedByDefault(true);
+                $type->setIsCheckedByDefault(true);
             }
         }
+        return $type;
     }
 
     public function getDisplayValue()
@@ -78,9 +80,8 @@ class Controller extends AttributeTypeController
             return false;
         }
 
-        $db = Database::get();
-        $row = $db->GetRow('select akCheckedByDefault from atBooleanSettings where akID = ?', array($ak->getAttributeKeyID()));
-        $this->akCheckedByDefault = $row['akCheckedByDefault'];
+        $this->akCheckedByDefault = $ak
+            ->getAttributeKeyType()->isCheckedByDefault();
         $this->set('akCheckedByDefault', $this->akCheckedByDefault);
     }
 
@@ -162,14 +163,13 @@ class Controller extends AttributeTypeController
 
     public function saveKey($data)
     {
-        $ak = $this->getAttributeKey();
-        $db = Database::get();
         $akCheckedByDefault = 0;
         if (isset($data['akCheckedByDefault']) && $data['akCheckedByDefault']) {
             $akCheckedByDefault = 1;
         }
-
-        $this->attributeKey->setIsCheckedByDefault($akCheckedByDefault);
+        $type = new BooleanType();
+        $type->setIsCheckedByDefault($akCheckedByDefault);
+        return $type;
     }
 
     public function saveForm($data)
@@ -189,9 +189,9 @@ class Controller extends AttributeTypeController
         $db->Execute('delete from atBoolean where avID = ?', array($this->getAttributeValueID()));
     }
 
-    public function createAttributeKey()
+    public function createAttributeKeyType()
     {
-        return new BooleanKey();
+        return new BooleanType();
     }
 
 }

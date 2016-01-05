@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Attribute;
 
+use Concrete\Core\Entity\Attribute\Key\Type\TextType;
 use Concrete\Core\Entity\Attribute\Value\TextValue;
 use Concrete\Core\Entity\AttributeValue\TextAttributeValue;
 use Core;
@@ -52,6 +53,18 @@ class DefaultController extends AttributeTypeController
         $av = new TextValue();
         $av->setValue($value);
         return $av;
+    }
+
+    public function importKey($akey)
+    {
+        $type = new TextType();
+        return $type;
+    }
+
+    public function saveKey($data)
+    {
+        $type = new TextType();
+        return $type;
     }
 
     public function saveForm($data)

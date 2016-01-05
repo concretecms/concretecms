@@ -68,8 +68,8 @@ class Image
                 $path = $f->getURL();
             }
             $this->tag = \HtmlObject\Image::create($path);
-            $this->tag->width($f->getAttribute('width'));
-            $this->tag->height($f->getAttribute('height'));
+            $this->tag->width((string) $f->getAttribute('width'));
+            $this->tag->height((string) $f->getAttribute('height'));
         }
     }
 

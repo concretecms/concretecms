@@ -11,7 +11,7 @@ class SelectValue extends Value
 {
 
     /**
-     * @ManyToMany(targetEntity="SelectValueOption", inversedBy="categories")
+     * @ManyToMany(targetEntity="SelectValueOption", inversedBy="categories", cascade={"persist", "remove"})
      * @JoinTable(name="SelectAttributeValueSelectedOptions",
      * joinColumns={@JoinColumn(name="avID", referencedColumnName="avID")},
      * inverseJoinColumns={@JoinColumn(name="avSelectOptionID", referencedColumnName="avSelectOptionID")}

@@ -3,6 +3,7 @@
 namespace Concrete\Core\Attribute\Category;
 
 use Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexerInterface;
+use Concrete\Core\Entity\Attribute\Key\FileKey;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Type;
 use Concrete\Core\Entity\File\Attribute;
@@ -10,6 +11,11 @@ use Symfony\Component\HttpFoundation\Request;
 
 class FileCategory extends AbstractCategory implements StandardSearchIndexerInterface
 {
+
+    public function createAttributeKey()
+    {
+        return new FileKey();
+    }
 
     public function getIndexedSearchTable()
     {
@@ -38,34 +44,7 @@ class FileCategory extends AbstractCategory implements StandardSearchIndexerInte
 
     public function getAttributeRepository()
     {
-        return $this->entityManager->getRepository('\Concrete\Core\Entity\File\Attribute');
-    }
-
-    /**
-     * Takes an attribute key as created by the subroutine and assigns it to the page category.
-     * @param Key $key
-     */
-    protected function assignToCategory(Key $key)
-    {
-        $this->entityManager->persist($key);
-        $this->entityManager->flush();
-        $attribute = new Attribute();
-        $attribute->setAttributeKey($key);
-        $this->entityManager->persist($attribute);
-        $this->entityManager->flush();
-        return $attribute;
-    }
-
-    public function addFromRequest(Type $type, Request $request)
-    {
-        $key = parent::addFromRequest($type, $request);
-        return $this->assignToCategory($key);
-    }
-
-    public function import(Type $type, \SimpleXMLElement $element)
-    {
-        $key = parent::import($type, $element);
-        return $this->assignToCategory($key);
+        return $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Key\FileKey');
     }
 
     public function getAttributeValues($file)

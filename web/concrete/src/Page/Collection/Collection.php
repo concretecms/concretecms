@@ -500,7 +500,6 @@ class Collection extends Object
             $ak = CollectionAttributeKey::getByHandle($ak);
         }
 
-
         $controller = $ak->getController();
         $controller->setAttributeKey($ak);
         if (!($value instanceof Value)) {
