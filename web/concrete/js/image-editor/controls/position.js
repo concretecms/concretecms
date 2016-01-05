@@ -39,10 +39,14 @@ function FitImage(im, me) {
         im.activeElement.parent.draw();
     }
 
-    $('button.reset', me).on('click', function() {
-        resetThumbnail();
-        centerImage();
-    });
+    if (im.settings.saveWidth || im.settings.saveHeight) {
+        $('button.reset', me).on('click', function() {
+            resetThumbnail();
+            centerImage();
+        });
+    } else {
+        $('button.reset', me).hide();
+    }
 
 }
 
