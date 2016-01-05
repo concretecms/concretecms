@@ -54,43 +54,38 @@ class UserCategory extends AbstractCategory implements StandardSearchIndexerInte
     }
 
     /**
-     * Takes an attribute key as created by the subroutine and assigns it to the category.
-     * @param Key $key
+     * @param UserKey $key
+     * @param Request $request
+     * @return Key
      */
-    protected function assignToCategory(Key $key, Attribute $attribute)
+    protected function saveFromRequest(Key $key, Request $request)
     {
-        $this->entityManager->persist($key);
-        $this->entityManager->flush();
-        $attribute->setAttributeKey($key);
-        $this->entityManager->persist($attribute);
-        $this->entityManager->flush();
-        return $attribute;
+        $key->setAttributeKeyDisplayedOnProfile((string) $request->request->get('uakProfileDisplay') == 1);
+        $key->setAttributeKeyEditableOnProfile((string) $request->request->get('uakProfileEdit') == 1);
+        $key->setAttributeKeyRequiredOnProfile((string) $request->request->get('uakProfileEditRequired') == 1);
+        $key->setAttributeKeyEditableOnRegister((string) $request->request->get('uakRegisterEdit') == 1);
+        $key->setAttributeKeyRequiredOnRegister((string) $request->request->get('uakRegisterEditRequired') == 1);
+        $key->setAttributeKeyDisplayedOnMemberList((string) $request->request->get('uakMemberListDisplay') == 1);
+        return $key;
     }
 
     public function addFromRequest(Type $type, Request $request)
     {
         $key = parent::addFromRequest($type, $request);
-        $attribute = new Attribute();
-        return $this->assignToCategory($key, $attribute);
+        return $this->saveFromRequest($key, $request);
     }
 
-    public function updateFromRequest(AttributeKeyInterface $attribute, Request $request)
+    public function updateFromRequest(Key $key, Request $request)
     {
-        /**
-         * @var $attribute Attribute
-         */
-        $attribute = parent::updateFromRequest($attribute, $request);
-        $attribute->setAttributeKeyDisplayedOnProfile((string) $request->request->get('uakProfileDisplay') == 1);
-        $attribute->setAttributeKeyEditableOnProfile((string) $request->request->get('uakProfileEdit') == 1);
-        $attribute->setAttributeKeyRequiredOnProfile((string) $request->request->get('uakProfileEditRequired') == 1);
-        $attribute->setAttributeKeyEditableOnRegister((string) $request->request->get('uakRegisterEdit') == 1);
-        $attribute->setAttributeKeyRequiredOnRegister((string) $request->request->get('uakRegisterEditRequired') == 1);
-        $attribute->setAttributeKeyDisplayedOnMemberList((string) $request->request->get('uakMemberListDisplay') == 1);
-        return $attribute;
+        $key = parent::updateFromRequest($key, $request);
+        return $this->saveFromRequest($key, $request);
     }
 
     public function import(Type $type, \SimpleXMLElement $element)
     {
+        /**
+         * @var $key UserKey
+         */
         $key = parent::import($type, $element);
         $key->setAttributeKeyDisplayedOnProfile((string) $element['profile-displayed'] == 1);
         $key->setAttributeKeyEditableOnProfile((string) $element['profile-editable'] == 1);

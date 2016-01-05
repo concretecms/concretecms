@@ -47,27 +47,6 @@ class PageCategory extends AbstractCategory implements StandardSearchIndexerInte
         return $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Key\PageKey');
     }
 
-    /**
-     * Takes an attribute key as created by the subroutine and assigns it to the page category.
-     * @param Key $key
-     */
-    protected function assignToCategory(Key $key)
-    {
-        $this->entityManager->persist($key);
-        $this->entityManager->flush();
-        $attribute = new Attribute();
-        $attribute->setAttributeKey($key);
-        $this->entityManager->persist($attribute);
-        $this->entityManager->flush();
-        return $attribute;
-    }
-
-    public function addFromRequest(AttributeType $type, Request $request)
-    {
-        $key = parent::addFromRequest($type, $request);
-        return $this->assignToCategory($key);
-    }
-    
     public function getAttributeValues($page)
     {
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Page\AttributeValue');

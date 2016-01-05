@@ -5,10 +5,10 @@ function getAttributeOptionHTML($v){
 		$akSelectValueID = 'TEMPLATE_CLEAN';
 		$akSelectValue = 'TEMPLATE';
 	} else {
-		if ($v->getSelectAttributeOptionTemporaryID() != false) {
-			$akSelectValueID = $v->getSelectAttributeOptionTemporaryID();
-		} else {
+		if ($v->getSelectAttributeOptionID() != false) {
 			$akSelectValueID = $v->getSelectAttributeOptionID();
+		} else {
+			$akSelectValueID = uniqid();
 		}
 		$akSelectValue = $v->getSelectAttributeOptionValue();
 	}
@@ -23,7 +23,7 @@ function getAttributeOptionHTML($v){
 		<div id="akSelectValueEdit_<?=$akSelectValueID?>" style="display:none">
 			<span class="leftCol">
 				<input name="akSelectValueOriginal_<?=$akSelectValueID?>" type="hidden" value="<?=$akSelectValue?>" />
-				<? if (is_object($v) && $v->getSelectAttributeOptionTemporaryID() == false) { ?>
+				<? if (is_object($v) && $v->getSelectAttributeOptionID()) { ?>
 					<input id="akSelectValueExistingOption_<?=$akSelectValueID?>" name="akSelectValueExistingOption_<?=$akSelectValueID?>" type="hidden" value="<?=$akSelectValueID?>" />
 				<? } else { ?>
 					<input id="akSelectValueNewOption_<?=$akSelectValueID?>" name="akSelectValueNewOption_<?=$akSelectValueID?>" type="hidden" value="<?=$akSelectValueID?>" />
@@ -80,10 +80,10 @@ function getAttributeOptionHTML($v){
 	<?
 	Loader::helper('text');
 	foreach($akSelectValues as $v) { 
-		if ($v->getSelectAttributeOptionTemporaryID() != false) {
-			$akSelectValueID = $v->getSelectAttributeOptionTemporaryID();
-		} else {
+		if ($v->getSelectAttributeOptionID() != false) {
 			$akSelectValueID = $v->getSelectAttributeOptionID();
+		} else {
+			$akSelectValueID = uniqid();
 		}
 		?>
 		<div id="akSelectValueWrap_<?=$akSelectValueID?>" class="akSelectValueWrap akSelectValueWrapSortable">

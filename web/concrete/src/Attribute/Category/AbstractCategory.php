@@ -16,6 +16,7 @@ use Concrete\Core\Attribute\SetFactory;
 use Concrete\Core\Attribute\Type;
 use Concrete\Core\Attribute\TypeFactory;
 use Concrete\Core\Entity\Attribute\Category;
+use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Set;
 use Concrete\Core\Entity\Attribute\Key\Key as AttributeKey;
 use Concrete\Core\Entity\Attribute\SetKey;
@@ -133,13 +134,20 @@ abstract class AbstractCategory implements CategoryInterface
 
 
     // Update
-    public function updateFromRequest(AttributeKeyInterface $attribute, Request $request)
+    public function updateFromRequest(Key $key, Request $request)
     {
-        $key = $attribute->getAttributeKey();
-        $loader = $key->getRequestLoader();
+        $loader = $this->getRequestLoader();
         $loader->load($key, $request);
-        $attribute->setAttributeKey($key);
-        return $attribute;
+
+        $key_type = $key->getController()->saveKey($request->request->all());
+        $key_type->setAttributeKey($key);
+        $key_type->setAttributeType($key->getAttributeType());
+        $key->setAttributeKeyType($key_type);
+
+        $this->entityManager->persist($key);
+        $this->entityManager->flush();
+
+        return $key;
     }
 
 
@@ -172,10 +180,9 @@ abstract class AbstractCategory implements CategoryInterface
         return $this->entity;
     }
 
-    public function delete(AttributeKeyInterface $attribute)
+    public function delete(Key $key)
     {
         // Delete from any attribute sets
-        $key = $attribute->getAttributeKey();
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\SetKey');
         $setKeys = $r->findBy(array('attribute_key' => $key));
         foreach($setKeys as $setKey) {
@@ -183,7 +190,7 @@ abstract class AbstractCategory implements CategoryInterface
         }
         $this->entityManager->remove($key);
 
-        $this->entityManager->remove($attribute);
+        $this->entityManager->remove($key);
         $this->entityManager->flush();
     }
 
