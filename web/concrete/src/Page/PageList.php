@@ -390,7 +390,9 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
             $this->query->andWhere(
                 $this->query->expr()->like('pp.cPath', ':cPath')
             );
+            $this->query->orWhere('pp.cPath = :parentPath'); //add parent page to list
             $this->query->setParameter('cPath', $path . '/%');
+            $this->query->setParameter('parentPath', $path);
         }
         $this->query->andWhere('pp.ppIsCanonical = 1');
     }
