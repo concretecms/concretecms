@@ -6,7 +6,6 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Controller\ControllerResolver;
 
 class ApplicationAwareControllerResolver extends ControllerResolver implements ApplicationAwareInterface
 {
