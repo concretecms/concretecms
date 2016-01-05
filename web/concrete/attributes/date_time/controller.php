@@ -2,6 +2,7 @@
 namespace Concrete\Attribute\DateTime;
 
 use Concrete\Core\Entity\Attribute\Key\DateTimeKey;
+use Concrete\Core\Entity\Attribute\Key\Type\DateTimeType;
 use Concrete\Core\Entity\Attribute\Value\DateTimeValue;
 use Loader;
 use Core;
@@ -15,12 +16,9 @@ class Controller extends AttributeTypeController
 
     public function saveKey($data)
     {
-        $this->setDisplayMode($akDateDisplayMode);
-    }
-
-    public function setDisplayMode($akDateDisplayMode)
-    {
-        $this->attributeKey->setMode($akDateDisplayMode);
+        $type = new DateTimeType();
+        $type->setMode($data['akDateDisplayMode']);
+        return $type;
     }
 
     public function type_form()
@@ -94,9 +92,11 @@ class Controller extends AttributeTypeController
 
     public function importKey($akey)
     {
+        $type = new DateTimeType();
         if (isset($akey->type)) {
-            $this->setDisplayMode((string) $akey->type['mode']);
+            $type->setDisplayMode((string) $akey->type['mode']);
         }
+        return $type;
     }
 
     public function validateValue()
@@ -182,10 +182,12 @@ class Controller extends AttributeTypeController
             return false;
         }
 
-        $db = Loader::db();
-        $row = $db->GetRow('select akDateDisplayMode from atDateTimeSettings where akID = ?', $ak->getAttributeKeyID());
-        $this->akDateDisplayMode = $row['akDateDisplayMode'];
+        $type = $ak->getAttributeKeyType();
+        /**
+         * @var $type DateTimeType
+         */
 
+        $this->akDateDisplayMode = $type->getMode();
         $this->set('akDateDisplayMode', $this->akDateDisplayMode);
     }
 
@@ -203,9 +205,9 @@ class Controller extends AttributeTypeController
         $db->Execute('delete from atDateTime where avID = ?', array($this->getAttributeValueID()));
     }
 
-    public function createAttributeKey()
+    public function createAttributeKeyType()
     {
-        return new DateTimeKey();
+        return new DateTimeType();
     }
 
 

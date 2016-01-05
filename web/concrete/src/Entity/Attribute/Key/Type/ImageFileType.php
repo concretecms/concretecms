@@ -1,21 +1,16 @@
 <?php
 
-namespace Concrete\Core\Entity\Attribute\Key;
+namespace Concrete\Core\Entity\Attribute\Key\Type;
 
 use Concrete\Core\Entity\Attribute\Value\ImageFileValue;
 
 
 /**
  * @Entity
- * @Table(name="ImageFileAttributeKeys")
+ * @Table(name="ImageFileAttributeKeyTypes")
  */
-class ImageFileKey extends Key
+class ImageFileType extends Type
 {
-
-    public function getTypeHandle()
-    {
-        return 'image_file';
-    }
 
     public function getAttributeValue()
     {

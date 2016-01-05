@@ -6,10 +6,12 @@ use Concrete\Controller\Element\Attribute\Header;
 use Concrete\Controller\Element\Attribute\KeyList;
 use Concrete\Controller\Element\Attribute\StandardListHeader;
 use Concrete\Core\Application\Application;
-use Concrete\Core\Attribute\AttributeInterface;
+use Concrete\Core\Attribute\AttributeKeyInterface;
 use Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexerInterface;
 use Concrete\Core\Attribute\EntityInterface;
 use Concrete\Core\Attribute\Key\Factory;
+use Concrete\Core\Attribute\Key\ImportLoader\StandardImporterLoader;
+use Concrete\Core\Attribute\Key\RequestLoader\StandardRequestLoader;
 use Concrete\Core\Attribute\SetFactory;
 use Concrete\Core\Attribute\Type;
 use Concrete\Core\Attribute\TypeFactory;
@@ -58,70 +60,80 @@ abstract class AbstractCategory implements CategoryInterface
 
     public function getSearchableList()
     {
-        $query = $this->getAttributeRepository()->createQueryBuilder('a');
-        $query->join('a.attribute_key', 'ta');
-        $query->andWhere('ta.akIsSearchable = true');
-        return $query->getQuery()->getResult();
+        return $this->getAttributeRepository()->findBy(array(
+            'akIsSearchable' => true
+        ));
     }
 
     public function getSearchableIndexedList()
     {
-        $query = $this->getAttributeRepository()->createQueryBuilder('a');
-        $query->join('a.attribute_key', 'ta');
-        $query->andWhere('ta.akIsSearchableIndexed = true');
-        return $query->getQuery()->getResult();
+        return $this->getAttributeRepository()->findBy(array(
+            'akIsSearchableIndexed' => true
+        ));
     }
 
     public function getAttributeKeyByHandle($handle)
     {
-        $query = $this->getAttributeRepository()->createQueryBuilder('a');
-        $query->join('a.attribute_key', 'ta');
-        $query->andWhere('ta.akHandle = :akHandle');
-        $query->setParameter('akHandle', $handle);
-        return $query->getQuery()->getOneOrNullResult();
+        return $this->getAttributeRepository()->findOneBy(array(
+            'akHandle' => $handle
+        ));
     }
 
     public function getAttributeKeyByID($akID)
     {
-        $query = $this->getAttributeRepository()->createQueryBuilder('a');
-        $query->join('a.attribute_key', 'ta');
-        $query->andWhere('ta.akID = :akID');
-        $query->setParameter('akID', $akID);
-        return $query->getQuery()->getOneOrNullResult();
+        return $this->getAttributeRepository()->findOneBy(array(
+            'akID' => $akID
+        ));
     }
 
     // Create
     public function addFromRequest(AttributeType $type, Request $request)
     {
-        $key = $type->getController()->createAttributeKey();
-        $loader = $key->getRequestLoader();
+        $key = $this->createAttributeKey();
+        $loader = $this->getRequestLoader();
         $loader->load($key, $request);
+
+        $key_type = $type->getController()->saveKey($request->request->all());
+        $key_type->setAttributeKey($key);
+        $key_type->setAttributeType($type);
+        $key->setAttributeKeyType($key_type);
 
         // Modify the category's search indexer.
         $indexer = $this->getCategoryEntity()
             ->getController()->getSearchIndexer();
         $indexer->updateTable($this, $key);
+
+        $this->entityManager->persist($key);
+        $this->entityManager->flush();
 
         return $key;
     }
 
     public function import(AttributeType $type, \SimpleXMLElement $element)
     {
-        $key = $type->getController()->createAttributeKey();
-        $loader = $key->getImportLoader();
+        $key = $this->createAttributeKey();
+        $loader = $this->getImportLoader();
         $loader->load($key, $element);
+
+        $key_type = $type->getController()->importKey($element);
+        $key_type->setAttributeKey($key);
+        $key_type->setAttributeType($type);
+        $key->setAttributeKeyType($key_type);
 
         // Modify the category's search indexer.
         $indexer = $this->getCategoryEntity()
             ->getController()->getSearchIndexer();
         $indexer->updateTable($this, $key);
 
+        $this->entityManager->persist($key);
+        $this->entityManager->flush();
+
         return $key;
     }
 
 
     // Update
-    public function updateFromRequest(AttributeInterface $attribute, Request $request)
+    public function updateFromRequest(AttributeKeyInterface $attribute, Request $request)
     {
         $key = $attribute->getAttributeKey();
         $loader = $key->getRequestLoader();
@@ -160,7 +172,7 @@ abstract class AbstractCategory implements CategoryInterface
         return $this->entity;
     }
 
-    public function delete(AttributeInterface $attribute)
+    public function delete(AttributeKeyInterface $attribute)
     {
         // Delete from any attribute sets
         $key = $attribute->getAttributeKey();
@@ -203,19 +215,29 @@ abstract class AbstractCategory implements CategoryInterface
     public function getUngroupedAttributes()
     {
         $attributes = array();
-        foreach($this->getList() as $attribute) {
-            $key = $attribute->getAttributeKey();
+        foreach($this->getList() as $key) {
             $query = $this->entityManager->createQuery(
                 'select sk from \Concrete\Core\Entity\Attribute\SetKey sk where sk.attribute_key = :key'
             );
             $query->setParameter('key', $key);
             $r = $query->getOneOrNullResult();
             if (!is_object($r)) {
-                $attributes[] = $attribute;
+                $attributes[] = $key;
             }
         }
         return $attributes;
     }
+
+    public function getRequestLoader()
+    {
+        return new StandardRequestLoader();
+    }
+
+    public function getImportLoader()
+    {
+        return new StandardImporterLoader();
+    }
+
 
 
 }

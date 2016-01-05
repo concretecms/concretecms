@@ -2,6 +2,7 @@
 namespace Concrete\Attribute\Rating;
 
 use Concrete\Core\Entity\Attribute\Key\RatingKey;
+use Concrete\Core\Entity\Attribute\Key\Type\RatingType;
 use Concrete\Core\Entity\Attribute\Value\RatingValue;
 use Loader;
 use \Concrete\Core\Foundation\Object;
@@ -20,6 +21,18 @@ class Controller extends AttributeTypeController
         $value = $this->getValue() / 20;
         $rt = Loader::helper('rating');
         return $rt->output($this->attributeKey->getAttributeKeyHandle() . time(), $value);
+    }
+
+    public function importKey($akey)
+    {
+        $type = new RatingType();
+        return $type;
+    }
+
+    public function saveKey($data)
+    {
+        $type = new RatingType();
+        return $type;
     }
 
     public function form()
@@ -75,8 +88,8 @@ class Controller extends AttributeTypeController
         $db->Execute('delete from atNumber where avID = ?', array($this->getAttributeValueID()));
     }
 
-    public function createAttributeKey()
+    public function createAttributeKeyType()
     {
-        return new RatingKey();
+        return new RatingType();
     }
 }

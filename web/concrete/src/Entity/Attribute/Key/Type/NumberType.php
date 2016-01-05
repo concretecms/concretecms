@@ -1,21 +1,16 @@
 <?php
 
-namespace Concrete\Core\Entity\Attribute\Key;
+namespace Concrete\Core\Entity\Attribute\Key\Type;
 
 use Concrete\Core\Entity\Attribute\Value\NumberValue;
 
 
 /**
  * @Entity
- * @Table(name="NumberAttributeKeys")
+ * @Table(name="NumberAttributeKeyTypes")
  */
-class NumberKey extends Key
+class NumberType extends Type
 {
-
-    public function getTypeHandle()
-    {
-        return 'number';
-    }
 
     public function getAttributeValue()
     {

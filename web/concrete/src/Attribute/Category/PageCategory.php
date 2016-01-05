@@ -5,13 +5,18 @@ namespace Concrete\Core\Attribute\Category;
 use Concrete\Core\Attribute\Category\SearchIndexer\PageSearchIndexer;
 use Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexerInterface;
 use Concrete\Core\Entity\Attribute\Key\Key;
+use Concrete\Core\Entity\Attribute\Key\PageKey;
 use Concrete\Core\Entity\Attribute\Type as AttributeType;
-use Concrete\Core\Entity\Page\Attribute;
 use Concrete\Core\Page\Page;
 use Symfony\Component\HttpFoundation\Request;
 
 class PageCategory extends AbstractCategory implements StandardSearchIndexerInterface
 {
+
+    public function createAttributeKey()
+    {
+        return new PageKey();
+    }
 
     public function getIndexedSearchTable()
     {
@@ -39,7 +44,7 @@ class PageCategory extends AbstractCategory implements StandardSearchIndexerInte
 
     public function getAttributeRepository()
     {
-        return $this->entityManager->getRepository('\Concrete\Core\Entity\Page\Attribute');
+        return $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Key\PageKey');
     }
 
     /**
@@ -62,13 +67,7 @@ class PageCategory extends AbstractCategory implements StandardSearchIndexerInte
         $key = parent::addFromRequest($type, $request);
         return $this->assignToCategory($key);
     }
-
-    public function import(AttributeType $type, \SimpleXMLElement $element)
-    {
-        $key = parent::import($type, $element);
-        return $this->assignToCategory($key);
-    }
-
+    
     public function getAttributeValues($page)
     {
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Page\AttributeValue');

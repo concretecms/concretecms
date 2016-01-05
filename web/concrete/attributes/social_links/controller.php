@@ -2,6 +2,7 @@
 namespace Concrete\Attribute\SocialLinks;
 
 use Concrete\Core\Entity\Attribute\Key\SocialLinksKey;
+use Concrete\Core\Entity\Attribute\Key\Type\SocialLinksType;
 use Concrete\Core\Entity\Attribute\Value\SelectedSocialLink;
 use Concrete\Core\Entity\Attribute\Value\SocialLinksValue;
 use Loader;
@@ -47,6 +48,18 @@ class Controller extends AttributeTypeController
         }
 
         return $av;
+    }
+
+    public function importKey($akey)
+    {
+        $type = new SocialLinksType();
+        return $type;
+    }
+
+    public function saveKey($data)
+    {
+        $type = new SocialLinksType();
+        return $type;
     }
 
     public function exportValue(\SimpleXMLElement $akn)
@@ -120,9 +133,9 @@ class Controller extends AttributeTypeController
         $this->set('services', ServiceList::get());
     }
 
-    public function createAttributeKey()
+    public function createAttributeKeyType()
     {
-        return new SocialLinksKey();
+        return new SocialLinksType();
     }
 
 }

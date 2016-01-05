@@ -1,21 +1,16 @@
 <?php
 
-namespace Concrete\Core\Entity\Attribute\Key;
+namespace Concrete\Core\Entity\Attribute\Key\Type;
 
 use Concrete\Core\Entity\Attribute\Value\RatingValue;
 
 
 /**
  * @Entity
- * @Table(name="RatingAttributeKeys")
+ * @Table(name="RatingAttributeKeyTypes")
  */
-class RatingKey extends Key
+class RatingType extends Type
 {
-
-    public function getTypeHandle()
-    {
-        return 'rating';
-    }
 
     public function getAttributeValue()
     {

@@ -79,8 +79,7 @@ $txt = Loader::helper('text');?>
                     if (count($list) > 0) { ?>
 
                         <div class="form-group">
-                            <?php foreach($list as $ak) {
-                                $key = $ak->getAttributeKey();
+                            <?php foreach($list as $key) {
                                 $keySets = \Concrete\Core\Attribute\Set::getByAttributeKey($key);
 
                                 $disabled = '';

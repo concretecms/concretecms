@@ -48,8 +48,7 @@ if (count($attribs) > 0) { ?>
 		<? } else { ?>
             <ul class="item-select-list ccm-sortable-attribute-set-list-wrapper" attribute-set-id="<?=$as->getAttributeSetID()?>" id="asID_<?=$as->getAttributeSetID()?>">
 			<?
-			foreach($setattribs as $ak) {
-				$ak = $ak->getAttributeKey(); ?>
+			foreach($setattribs as $ak) { ?>
                 <li class="ccm-attribute" id="akID_<?=$ak->getAttributeKeyID()?>">
                     <a href="<?=URL::to($editURL, 'edit', $ak->getAttributeKeyID())?>" title="<?php echo t('Handle')?>: <?php echo $ak->getAttributeKeyHandle(); ?>">
                         <img class="ccm-attribute-icon" src="<?=$ak->getAttributeKeyIconSRC()?>" width="16" height="16" />
@@ -91,8 +90,7 @@ if (count($attribs) > 0) { ?>
 	} else { ?>
 		<ul class="item-select-list <?=($sortable?'ccm-sortable-attribute-list-wrapper':'ccm-attribute-list-wrapper');?>">
 		<?
-        foreach($attribs as $ak) {
-			$ak = $ak->getAttributeKey(); ?>
+        foreach($attribs as $ak) { ?>
             <li class="ccm-attribute" id="akID_<?=$ak->getAttributeKeyID()?>">
 			    <a href="<?=URL::to($editURL, 'edit', $ak->getAttributeKeyID())?>" title="<?php echo t('Handle')?>: <?php echo $ak->getAttributeKeyHandle(); ?>"><img class="ccm-attribute-icon" src="<?=$ak->getAttributeKeyIconSRC()?>" width="16" height="16" /> <?=$ak->getAttributeKeyDisplayName()?></a>
                 <? if($sortable) { ?><i class="ccm-item-select-list-sort"></i><? } ?>

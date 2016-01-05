@@ -8,7 +8,6 @@ use Concrete\Controller\Element\Attribute\Header;
 use Concrete\Controller\Element\Attribute\KeyHeader;
 use Concrete\Controller\Element\Attribute\KeyList;
 use Concrete\Controller\Element\Attribute\StandardListHeader;
-use Concrete\Core\Attribute\AttributeInterface;
 use Concrete\Core\Attribute\AttributeKeyInterface;
 use Concrete\Core\Attribute\Category\CategoryInterface;
 use Concrete\Core\Attribute\EntityInterface;
@@ -99,11 +98,10 @@ abstract class DashboardAttributesPageController extends DashboardPageController
         }
     }
 
-    protected function assignToSetFromRequest(AttributeInterface $key)
+    protected function assignToSetFromRequest(AttributeKeyInterface $key)
     {
         $request = $this->request;
         $category = $this->getCategoryEntityObject();
-        $key = $key->getAttributeKey();
         if ($category->allowAttributeSets()) {
             $set = Set::getByID($request->request->get('asID'));
             $setKeys = Set::getByAttributeKey($key);
@@ -224,7 +222,7 @@ abstract class DashboardAttributesPageController extends DashboardPageController
                     $i = 0;
                     foreach($keys as $key) {
                         $setKey = new SetKey();
-                        $setKey->setAttributeKey($key->getAttributeKey());
+                        $setKey->setAttributeKey($key);
                         $setKey->setAttributeSet($set);
                         $setKey->setDisplayOrder($i);
                         $set->getAttributeKeys()->add($setKey);

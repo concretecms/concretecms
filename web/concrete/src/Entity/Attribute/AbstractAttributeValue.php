@@ -9,14 +9,18 @@ abstract class AbstractAttributeValue
 {
 
     /**
-     * @Id
+     * @Id @Column(type="integer", options={"unsigned":true})
+     * @GeneratedValue(strategy="AUTO")
+     */
+    protected $avrID;
+
+    /**
      * @ManyToOne(targetEntity="\Concrete\Core\Entity\Attribute\Key\Key")
      * @JoinColumn(name="akID", referencedColumnName="akID")
      **/
     protected $attribute_key;
 
     /**
-     * @Id
      * @OneToOne(targetEntity="\Concrete\Core\Entity\Attribute\Value\Value")
      * @JoinColumn(name="avID", referencedColumnName="avID")
      **/

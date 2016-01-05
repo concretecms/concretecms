@@ -56,7 +56,7 @@ abstract class  AttributedItemList extends ItemList
             if (is_callable(array($this->getAttributeKeyClassName(), 'getList'))) {
                 $l = call_user_func(array($this->getAttributeKeyClassName(), 'getList'));
                 foreach($l as $ak) {
-                    $this->autoSortColumns[] = 'ak_' . $ak->getAttributeKey()->getAttributeKeyHandle();
+                    $this->autoSortColumns[] = 'ak_' . $ak->getAttributeKeyHandle();
                 }
             }
 

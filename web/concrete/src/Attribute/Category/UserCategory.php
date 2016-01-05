@@ -2,15 +2,21 @@
 
 namespace Concrete\Core\Attribute\Category;
 
-use Concrete\Core\Attribute\AttributeInterface;
+use Concrete\Core\Attribute\AttributeKeyInterface;
 use Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexerInterface;
 use Concrete\Core\Entity\Attribute\Key\Key;
+use Concrete\Core\Entity\Attribute\Key\UserKey;
 use Concrete\Core\Entity\Attribute\Type;
 use Concrete\Core\Entity\User\Attribute;
 use Symfony\Component\HttpFoundation\Request;
 
 class UserCategory extends AbstractCategory implements StandardSearchIndexerInterface
 {
+
+    public function createAttributeKey()
+    {
+        return new UserKey();
+    }
 
     public function getIndexedSearchTable()
     {
@@ -39,7 +45,7 @@ class UserCategory extends AbstractCategory implements StandardSearchIndexerInte
 
     public function getAttributeRepository()
     {
-        return $this->entityManager->getRepository('\Concrete\Core\Entity\User\Attribute');
+        return $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Key\UserKey');
     }
 
     public function getRegistrationList()
@@ -68,7 +74,7 @@ class UserCategory extends AbstractCategory implements StandardSearchIndexerInte
         return $this->assignToCategory($key, $attribute);
     }
 
-    public function updateFromRequest(AttributeInterface $attribute, Request $request)
+    public function updateFromRequest(AttributeKeyInterface $attribute, Request $request)
     {
         /**
          * @var $attribute Attribute
@@ -86,14 +92,13 @@ class UserCategory extends AbstractCategory implements StandardSearchIndexerInte
     public function import(Type $type, \SimpleXMLElement $element)
     {
         $key = parent::import($type, $element);
-        $attribute = new Attribute();
-        $attribute->setAttributeKeyDisplayedOnProfile((string) $element['profile-displayed'] == 1);
-        $attribute->setAttributeKeyEditableOnProfile((string) $element['profile-editable'] == 1);
-        $attribute->setAttributeKeyRequiredOnProfile((string) $element['profile-required'] == 1);
-        $attribute->setAttributeKeyEditableOnRegister((string) $element['register-editable'] == 1);
-        $attribute->setAttributeKeyRequiredOnRegister((string) $element['register-required'] == 1);
-        $attribute->setAttributeKeyDisplayedOnMemberList((string) $element['member-list-displayed'] == 1);
-        return $this->assignToCategory($key, $attribute);
+        $key->setAttributeKeyDisplayedOnProfile((string) $element['profile-displayed'] == 1);
+        $key->setAttributeKeyEditableOnProfile((string) $element['profile-editable'] == 1);
+        $key->setAttributeKeyRequiredOnProfile((string) $element['profile-required'] == 1);
+        $key->setAttributeKeyEditableOnRegister((string) $element['register-editable'] == 1);
+        $key->setAttributeKeyRequiredOnRegister((string) $element['register-required'] == 1);
+        $key->setAttributeKeyDisplayedOnMemberList((string) $element['member-list-displayed'] == 1);
+        return $key;
     }
 
     public function getAttributeValues($user)

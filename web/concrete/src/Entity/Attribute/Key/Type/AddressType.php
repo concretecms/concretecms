@@ -1,21 +1,16 @@
 <?php
 
-namespace Concrete\Core\Entity\Attribute\Key;
+namespace Concrete\Core\Entity\Attribute\Key\Type;
 
 use Concrete\Core\Entity\Attribute\Value\AddressValue;
 
 
 /**
  * @Entity
- * @Table(name="AddressAttributeKeys")
+ * @Table(name="AddressAttributeKeyTypes")
  */
-class AddressKey extends Key
+class AddressType extends Type
 {
-
-    public function getTypeHandle()
-    {
-        return 'address';
-    }
 
     public function getAttributeValue()
     {

@@ -156,7 +156,6 @@ class Sets extends DashboardPageController
 
                 if (is_array($this->post('akID'))) {
                     foreach ($unassigned as $ak) {
-                        $ak = $ak->getAttributeKey();
                         if (in_array($ak->getAttributeKeyID(), $this->post('akID'))) {
                             $as->addKey($ak);
                         }

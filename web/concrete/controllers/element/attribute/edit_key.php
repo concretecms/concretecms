@@ -13,7 +13,7 @@ class EditKey extends Form
     public function __construct(AttributeKeyInterface $key)
     {
         $this->key = $key;
-        parent::__construct($key->getAttributeKey()->getAttributeType());
+        parent::__construct($key->getAttributeType());
     }
 
     public function view()

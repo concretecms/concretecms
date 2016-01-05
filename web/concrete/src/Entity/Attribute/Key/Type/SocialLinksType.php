@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Core\Entity\Attribute\Key;
+namespace Concrete\Core\Entity\Attribute\Key\Type;
 
 use Concrete\Core\Entity\Attribute\Value\SocialLinksValue;
 use PortlandLabs\Concrete5\MigrationTool\Batch\Formatter\Attribute\SocialLinksFormatter;
@@ -7,14 +7,10 @@ use PortlandLabs\Concrete5\MigrationTool\Publisher\Attribute\SocialLinksPublishe
 
 /**
  * @Entity
- * @Table(name="SocialLinkAttributeKeys")
+ * @Table(name="SocialLinkAttributeKeyTypes")
  */
-class SocialLinksKey extends Key
+class SocialLinksType extends Type
 {
-    public function getTypeHandle()
-    {
-        return 'social_links';
-    }
 
     public function getAttributeValue()
     {

@@ -19,10 +19,7 @@ class StandardImporterLoader implements ImportLoaderInterface
         if ($searchable === '1') {
             $key->setIsAttributeKeySearchable(true);
         }
-        $controller = $key->getController();
-        $controller->setAttributeKey($key);
-        $controller->importKey($element);
-        return $controller->getAttributeKey();
+        return $key;
     }
 
 }
