@@ -115,17 +115,21 @@ class Controller extends AttributeTypeController
 
     public function form()
     {
+        $data = array();
         if ($this->isPost()) {
             $data['service'] = $this->post('service');
             $data['serviceInfo'] = $this->post('serviceInfo');
         } else {
-            $d = $this->getValue();
-            foreach ($d as $k => $v) {
-                $data['service'][] = $k;
-                $data['serviceInfo'][] = $v;
+            $d = $this->attributeValue;
+            if (is_object($this->attributeValue)) {
+                $d = $this->attributeValue->getSelectedLinks();
+                foreach ($d as $k => $v) {
+                    $data['service'][] = $k;
+                    $data['serviceInfo'][] = $v;
+                }
             }
         }
-        if (!is_array($data['service'])) {
+        if (!isset($data['service'])) {
             $data['service'][] = 'facebook';
             $data['serviceInfo'][] = '';
         }

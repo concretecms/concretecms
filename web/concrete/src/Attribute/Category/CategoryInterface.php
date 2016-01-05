@@ -7,6 +7,7 @@ use Concrete\Core\Attribute\EntityInterface;
 use Concrete\Core\Attribute\Type;
 use Concrete\Core\Entity\Attribute\Category;
 use Concrete\Core\Entity\Attribute\Key\Key as AttributeKey;
+use Concrete\Core\Entity\Attribute\Key\Key;
 use Symfony\Component\HttpFoundation\Request;
 
 interface CategoryInterface
@@ -26,8 +27,8 @@ interface CategoryInterface
     public function getCategoryEntity();
     public function setEntity(EntityInterface $entity);
     public function addFromRequest(\Concrete\Core\Entity\Attribute\Type $type, Request $request);
-    public function updateFromRequest(AttributeKeyInterface $attribute, Request $request);
-    public function delete(AttributeKeyInterface $attribute);
+    public function updateFromRequest(Key $key, Request $request);
+    public function delete(Key $key);
     public function associateAttributeKeyType(\Concrete\Core\Entity\Attribute\Type $type);
     public function getSearchIndexer();
     public function getAttributeValues($mixed);

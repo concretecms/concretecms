@@ -15,10 +15,15 @@ class SelectValueOption
     protected $avSelectOptionID;
 
     /**
-     * @ManyToOne(targetEntity="\Concrete\Core\Entity\Attribute\Key\Key", inversedBy="options")
-     * @JoinColumn(name="akID", referencedColumnName="akID")
+     * @ManyToOne(targetEntity="SelectValueOptionList", inversedBy="options")
+     * @JoinColumn(name="avSelectOptionListID", referencedColumnName="avSelectOptionListID")
      */
-    protected $key;
+    protected $list;
+
+    /**
+     * @ManyToMany(targetEntity="SelectValue", mappedBy="selectedOptions", cascade={"remove"})
+     */
+    protected $values;
 
     /**
      * @Column(type="boolean")
@@ -26,9 +31,46 @@ class SelectValueOption
     protected $isEndUserAdded = false;
 
     /**
+     * @Column(type="integer")
+     */
+    protected $displayOrder = 0;
+
+    /**
      * @Column(type="string")
      */
     protected $value = '';
+
+    /**
+     * @return mixed
+     */
+    public function getOptionList()
+    {
+        return $this->list;
+    }
+
+    /**
+     * @param mixed $list
+     */
+    public function setOptionList($list)
+    {
+        $this->list = $list;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSelectAttributeOptionID()
+    {
+        return $this->avSelectOptionID;
+    }
+
+    /**
+     * @param mixed $avSelectOptionID
+     */
+    public function setSelectAttributeOptionID($avSelectOptionID)
+    {
+        $this->avSelectOptionID = $avSelectOptionID;
+    }
 
     /**
      * @return mixed
@@ -49,7 +91,7 @@ class SelectValueOption
     /**
      * @return mixed
      */
-    public function getValue()
+    public function getSelectAttributeOptionValue()
     {
         return $this->value;
     }
@@ -57,7 +99,7 @@ class SelectValueOption
     /**
      * @param mixed $value
      */
-    public function setValue($value)
+    public function setSelectAttributeOptionValue($value)
     {
         $this->value = $value;
     }
@@ -65,32 +107,24 @@ class SelectValueOption
     /**
      * @return mixed
      */
-    public function getOptionID()
+    public function getDisplayOrder()
     {
-        return $this->avSelectOptionID;
+        return $this->displayOrder;
     }
 
     /**
-     * @return mixed
+     * @param mixed $displayOrder
      */
-    public function getAttributeKey()
+    public function setDisplayOrder($displayOrder)
     {
-        return $this->key;
+        $this->displayOrder = $displayOrder;
     }
-
-    /**
-     * @param mixed $key
-     */
-    public function setAttributeKey($key)
-    {
-        $this->key = $key;
-    }
-
 
     public function __toString()
     {
-        return (string) $this->getValue();
+        return (string) $this->getSelectAttributeOptionValue();
     }
+
 
 
 }

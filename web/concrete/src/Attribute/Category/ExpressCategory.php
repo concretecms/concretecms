@@ -4,6 +4,7 @@ namespace Concrete\Core\Attribute\Category;
 
 use Concrete\Core\Attribute\AttributeKeyInterface;
 use Concrete\Core\Attribute\Key\Factory;
+use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Type;
 use Concrete\Core\Entity\Attribute\Key\Key as AttributeKey;
 use Concrete\Core\Entity\Express\Attribute;
@@ -36,13 +37,6 @@ class ExpressCategory extends AbstractCategory
         $attribute->setEntity($this->getEntity());
         $this->entity->getAttributes()->add($attribute);
         $this->entityManager->persist($this->getEntity());
-        $this->entityManager->flush();
-    }
-
-    public function updateFromRequest(AttributeKeyInterface $attribute, Request $request)
-    {
-        $key = parent::updateFromRequest($attribute, $request);
-        $this->entityManager->persist($key);
         $this->entityManager->flush();
     }
 

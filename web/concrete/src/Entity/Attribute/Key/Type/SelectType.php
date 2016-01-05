@@ -3,6 +3,7 @@
 namespace Concrete\Core\Entity\Attribute\Key\Type;
 
 use Concrete\Core\Entity\Attribute\Value\SelectValue;
+use Concrete\Core\Entity\Attribute\Value\SelectValueOption;
 use Doctrine\Common\Collections\ArrayCollection;
 
 
@@ -14,9 +15,26 @@ class SelectType extends Type
 {
 
     /**
-     * @OneToMany(targetEntity="Concrete\Core\Entity\Attribute\Value\SelectValueOption", mappedBy="key", cascade={"all"})
+     * @OneToOne(targetEntity="Concrete\Core\Entity\Attribute\Value\SelectValueOptionList", cascade={"all"})
+     * @JoinColumn(name="avSelectOptionListID", referencedColumnName="avSelectOptionListID")
      */
-    protected $options;
+    protected $list;
+
+    /**
+     * @return mixed
+     */
+    public function getOptionList()
+    {
+        return $this->list;
+    }
+
+    /**
+     * @param mixed $list
+     */
+    public function setOptionList($list)
+    {
+        $this->list = $list;
+    }
 
     public function getAttributeValue()
     {
@@ -87,31 +105,11 @@ class SelectType extends Type
         $this->displayOrder = $displayOrder;
     }
 
-    public function __construct()
-    {
-        $this->options = new ArrayCollection();
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getOptions()
-    {
-        return $this->options;
-    }
-
-    /**
-     * @param mixed $options
-     */
-    public function setOptions($options)
-    {
-        $this->options = $options;
-    }
-
     public function createController()
     {
         $controller = new \Concrete\Attribute\Select\Controller($this->getAttributeType());
         return $controller;
     }
+
 
 }
