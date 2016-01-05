@@ -51,6 +51,7 @@
             <i class="fa fa-arrows-h"></i>
         </button>
     </div>
+    <button class="reset btn btn-default"><?php echo t('Fit Image'); ?></button>
 </div>
 
 <div class="form-group crop">
