@@ -1,18 +1,66 @@
 <?php
 namespace Concrete\Core\Url\Resolver;
 
+use Concrete\Core\Application\Application;
+use Concrete\Core\Application\ApplicationAwareInterface;
+use Concrete\Core\Application\Service\Dashboard;
+use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Url\Components\Path;
 use Concrete\Core\Url\UrlInterface;
 use League\Url\Url;
 
-class PathUrlResolver implements UrlResolverInterface
+class PathUrlResolver implements UrlResolverInterface, ApplicationAwareInterface
 {
+
+    /**
+     * @var Application
+     */
+    protected $app;
+
+    /**
+     * @var \Concrete\Core\Config\Repository\Repository
+     */
+    protected $config;
+
+    /**
+     * @var \Concrete\Core\Url\Resolver\CanonicalUrlResolver
+     */
+    protected $canonical;
+
+    /**
+     * @var Dashboard
+     */
+    protected $dashboard;
+
+    /**
+     * PathUrlResolver constructor.
+     * @param \Concrete\Core\Config\Repository\Repository $repository
+     * @param \Concrete\Core\Url\Resolver\CanonicalUrlResolver $canonical_resolver
+     * @param \Concrete\Core\Application\Service\Dashboard $dashboard
+     */
+    public function __construct(Repository $repository, CanonicalUrlResolver $canonical_resolver, Dashboard $dashboard)
+    {
+        $this->config = $repository;
+        $this->canonical = $canonical_resolver;
+        $this->dashboard = $dashboard;
+    }
+
+    /**
+     * Set the application object
+     *
+     * @param \Concrete\Core\Application\Application $application
+     */
+    public function setApplication(Application $application)
+    {
+        $this->app = $application;
+    }
 
     /**
      * {@inheritdoc}
      */
     public function resolve(array $arguments, $resolved = null)
     {
+
         if ($resolved) {
             // We don't need to do any post processing on urls.
             return $resolved;
@@ -26,7 +74,7 @@ class PathUrlResolver implements UrlResolverInterface
         ) {
             $path = rtrim($path, '/');
 
-            $url = \Core::make('url/canonical');
+            $url = $this->canonical->resolve(array());
             $url = $this->handlePath($url, $path, $args);
 
             return $url;
@@ -82,11 +130,12 @@ class PathUrlResolver implements UrlResolverInterface
 
     protected function basePath($url, $path, $args)
     {
+        $config = $this->config;
         $path_object = new Path('');
 
-        $rewriting = \Config::get('concrete.seo.url_rewriting');
-        $rewrite_all = \Config::get('concrete.seo.url_rewriting_all');
-        $in_dashboard = \Core::make('helper/concrete/dashboard')->inDashboard($path);
+        $rewriting = $config->get('concrete.seo.url_rewriting');
+        $rewrite_all = $config->get('concrete.seo.url_rewriting_all');
+        $in_dashboard = $this->dashboard->inDashboard($path);
 
         // If rewriting is disabled, or all_rewriting is disabled and we're
         // in the dashboard, add the dispatcher.

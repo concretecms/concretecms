@@ -42,7 +42,7 @@ class URLTest extends PHPUnit_Framework_TestCase
 
     public function tearDown()
     {
-        \Core::forgetInstance('url/canonical');
+        $this->clearCanonicalUrl();
         parent::tearDown();
     }
 
@@ -66,6 +66,8 @@ class URLTest extends PHPUnit_Framework_TestCase
         $app = Core::make("app");
         $app['app_relative_path'] = '';
         $app->instance('app', $app);
+
+        $app->make('Concrete\Core\Url\Resolver\CanonicalUrlResolver')->clearCached();
 
         $this->assertEquals('http://www.dummyco.com/index.php/path/to/my/page', (string) $this->page->getCollectionLink());
         $this->assertEquals('http://www.dummyco.com/index.php/path/to/my/page',
@@ -254,7 +256,8 @@ class URLTest extends PHPUnit_Framework_TestCase
     public function testCanonicalUrl()
     {
         Config::set('concrete.seo.canonical_url', 'http://www.derpco.com');
-        \Core::forgetInstance('url/canonical');
+        $this->clearCanonicalUrl();
+
         $this->assertEquals('http://www.derpco.com/path/to/server/index.php/dashboard/my/awesome/page', (string) URL::to('/dashboard/my/awesome/page'));
         $this->assertEquals('http://www.derpco.com/path/to/server/index.php/dashboard/my/awesome/page', (string) URL::page($this->dashboard));
         Config::set('concrete.seo.canonical_url', null);
@@ -263,7 +266,7 @@ class URLTest extends PHPUnit_Framework_TestCase
     public function testCanonicalUrlWithPort()
     {
         Config::set('concrete.seo.canonical_url', 'http://www.derpco.com:8080');
-        \Core::forgetInstance('url/canonical');
+        $this->clearCanonicalUrl();
         $this->assertEquals('http://www.derpco.com:8080/path/to/server/index.php/dashboard/my/awesome/page', (string) URL::to('/dashboard/my/awesome/page'));
         $this->assertEquals('http://www.derpco.com:8080/path/to/server/index.php/dashboard/my/awesome/page', (string) URL::page($this->dashboard));
         Config::set('concrete.seo.canonical_url', null);
@@ -272,11 +275,22 @@ class URLTest extends PHPUnit_Framework_TestCase
     public function testURLFunctionWithCanonicalURL()
     {
         Config::set('concrete.seo.canonical_url', 'http://concrete5');
-        \Core::forgetInstance('url/canonical');
+
+        $this->clearCanonicalUrl();
+
         $url = URL::to('/dashboard/system/test', 'outstanding');
         $this->assertEquals('http://concrete5/path/to/server/index.php/dashboard/system/test/outstanding', (string) $url);
         Config::set('concrete.seo.canonical_url', null);
     }
+
+
+    private function clearCanonicalUrl()
+    {
+        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+        $app->make('Concrete\Core\Url\Resolver\CanonicalUrlResolver')->clearCached();
+    }
+
+
     /*
     public function testPage()
     {
