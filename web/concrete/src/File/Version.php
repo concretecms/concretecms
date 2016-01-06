@@ -2,8 +2,10 @@
 namespace Concrete\Core\File;
 
 use Carbon\Carbon;
+use Concrete\Core\Attribute\AttributeValueInterface;
 use Concrete\Core\Attribute\Value\FileValue as FileAttributeValue;
-use Concrete\Core\Entity\File\AttributeValue;
+use Concrete\Core\Entity\Attribute\Value\FileValue;
+use Concrete\Core\Entity\Attribute\Value\Value\Value;
 use Concrete\Core\File\Exception\InvalidDimensionException;
 use Concrete\Core\File\Image\Thumbnail\Thumbnail;
 use Concrete\Core\File\Image\Thumbnail\Type\Type;
@@ -111,7 +113,7 @@ class Version
     protected $fvExtension = null;
 
     /**
-     * @OneToMany(targetEntity="\Concrete\Core\Entity\File\AttributeValue",  mappedBy="version")
+     * @OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Value\FileValue",  mappedBy="version")
      * @JoinColumns({
      *   @JoinColumn(name="fID", referencedColumnName="fID"),
      *   @JoinColumn(name="fvID", referencedColumnName="fvID")
@@ -233,23 +235,29 @@ class Version
             $ak = FileAttributeKey::getByHandle($ak);
         }
 
+        $attributeValue = $this->getAttribute($ak);
+        if (!is_object($attributeValue)) {
+            $attributeValue = new FileValue();
+        }
+
+        $attributeValue->setVersion($this);
+        $attributeValue->setAttributeKey($ak);
+        $attributeValue->setValue($value);
+
         $controller = $ak->getController();
-        $controller->setAttributeKey($ak);
-        if (!($value instanceof Vaklue)) {
+        if (!($value instanceof Value)) {
             $value = $controller->saveValue($value);
         }
-        $orm->persist($value);
-        $orm->flush();
 
-        $av = new AttributeValue();
-        $av->setVersion($this);
-        $av->setAttributeKey($ak);
-        $av->setAttributeValue($value);
+        $value->setAttributeValue($attributeValue);
+        $attributeValue->setValue($value);
 
-        $orm->persist($av);
+        $orm->persist($attributeValue);
         $orm->flush();
 
         $this->getFile()->reindex();
+
+        return $attributeValue;
     }
 
     /**
@@ -270,50 +278,25 @@ class Version
     public function clearAttribute($ak)
     {
         $db = Database::get();
+        $orm = $db->getEntityManager();
         $cav = $this->getAttributeValueObject($ak);
         if (is_object($cav)) {
-            $cav->delete();
+            $orm->remove($cav);
+            $orm->flush();
         }
         $fo = $this->getFile();
         $fo->reindex();
     }
 
-    /*
-    public function getAttributeValueObject($ak, $createIfNotFound = false)
+    /**
+     * @deprecated
+     * @param $ak
+     * @return mixed
+     */
+    public function getAttributeValueObject($ak)
     {
-        $db = Database::get();
-        $av = false;
-        $v = array($this->getFileID(), $this->getFileVersionID(), $ak->getAttributeKeyID());
-        $avID = $db->GetOne("SELECT avID FROM FileAttributeValues WHERE fID = ? AND fvID = ? AND akID = ?", $v);
-        if ($avID > 0) {
-            $av = FileAttributeValue::getByID($avID);
-            if (is_object($av)) {
-                $av->setFile($this->getFile());
-                $av->setAttributeKey($ak);
-            }
-        }
-
-        if ($createIfNotFound) {
-            $cnt = 0;
-
-            // Is this avID in use ?
-            if (is_object($av)) {
-                $cnt = $db->GetOne(
-                    "SELECT count(avID) FROM FileAttributeValues WHERE avID = ?",
-                    $av->getAttributeValueID()
-                );
-            }
-
-            if ((!is_object($av)) || ($cnt > 1)) {
-                $newAV = $ak->addAttributeValue();
-                $av = FileAttributeValue::getByID($newAV->getAttributeValueID());
-                $av->setFile($this->getFile());
-            }
-        }
-
-        return $av;
+        return $this->getAttribute($ak);
     }
-    */
 
     public function getFileID()
     {
@@ -450,25 +433,18 @@ class Version
         $fv->fvDateAdded = new \DateTime();
 
         $em->persist($fv);
-        $em->flush();
 
         $this->deny();
 
-        $r = $db->Execute(
-            'SELECT fvID, akID, avID FROM FileAttributeValues WHERE fID = ? AND fvID = ?',
-            array($this->getFileID(), $this->fvID)
-        );
-        while ($row = $r->fetchRow()) {
-            $db->Execute(
-                "INSERT INTO FileAttributeValues (fID, fvID, akID, avID) VALUES (?, ?, ?, ?)",
-                array(
-                    $this->getFileID(),
-                    $fvID,
-                    $row['akID'],
-                    $row['avID']
-                )
-            );
+        foreach($this->attributes as $value) {
+            /**
+             * @var $value AttributeValue
+             */
+            $value->setVersion($fv);
+            $em->persist($value);
         }
+
+        $em->flush();
 
         $fe = new \Concrete\Core\File\Event\FileVersion($fv);
         Events::dispatch('on_file_version_duplicate', $fe);
@@ -771,7 +747,7 @@ class Version
         }
         foreach($this->attributes as $value) {
             if ($value->getAttributeKey()->getAttributeKeyHandle() == $handle) {
-                return $value->getAttributeValue();
+                return $value;
             }
         }
     }

@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Entity\Attribute\Key\Type;
 
-use Concrete\Core\Entity\Attribute\Value\NumberValue;
+use Concrete\Core\Entity\Attribute\Value\Value\NumberValue;
 
 
 /**

@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Core\Entity\Attribute\Value;
+namespace Concrete\Core\Entity\Attribute\Value\Value;
 
 use Doctrine\Common\Collections\ArrayCollection;
 

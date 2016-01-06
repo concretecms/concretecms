@@ -4,8 +4,8 @@ namespace Concrete\Attribute\Topics;
 
 use Concrete\Core\Entity\Attribute\Key\TopicsKey;
 use Concrete\Core\Entity\Attribute\Key\Type\TopicsType;
-use Concrete\Core\Entity\Attribute\Value\SelectedTopic;
-use Concrete\Core\Entity\Attribute\Value\TopicsValue;
+use Concrete\Core\Entity\Attribute\Value\Value\SelectedTopic;
+use Concrete\Core\Entity\Attribute\Value\Value\TopicsValue;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Type\Topic as TopicTree;

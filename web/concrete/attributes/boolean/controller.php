@@ -4,7 +4,7 @@ namespace Concrete\Attribute\Boolean;
 
 use Concrete\Core\Entity\Attribute\Key\BooleanKey;
 use Concrete\Core\Entity\Attribute\Key\Type\BooleanType;
-use Concrete\Core\Entity\Attribute\Value\BooleanValue;
+use Concrete\Core\Entity\Attribute\Value\Value\BooleanValue;
 use Core;
 use Database;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;

@@ -52,7 +52,7 @@ class StandardSearchIndexer implements SearchIndexerInterface
             $columns = $this->connection->getSchemaManager()->listTableColumns($category->getIndexedSearchTable());
 
             foreach($values as $value) {
-                $attributeValue = $value->getAttributeValue()->getSearchIndexValue();
+                $attributeValue = $value->getValue()->getSearchIndexValue();
                 if (is_array($attributeValue)) {
                     foreach ($attributeValue as $key => $value) {
                         $col = $this->getIndexEntryColumn($value->getAttributeKey(), $key);

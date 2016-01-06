@@ -1,19 +1,18 @@
 <?php
 
-namespace Concrete\Core\Entity\Attribute\Value;
-
+namespace Concrete\Core\Entity\Attribute\Value\Value;
 
 /**
  * @Entity
- * @Table(name="TextAttributeValues")
+ * @Table(name="BooleanAttributeValues")
  */
-class TextValue extends Value
+class BooleanValue extends Value
 {
 
     /**
-     * @Column(type="string", nullable=true)
+     * @Column(type="boolean")
      */
-    protected $value = '';
+    protected $value = false;
 
     /**
      * @return mixed
@@ -31,9 +30,6 @@ class TextValue extends Value
         $this->value = $value;
     }
 
-    public function __toString()
-    {
-        return (string) $this->getValue();
-    }
+
 
 }

@@ -64,9 +64,11 @@ class Controller extends AbstractController
         }
     }
 
-    public function getDisplayValue()
+    public function getValue()
     {
-        return $this->attributeValue->getValue();
+        if (is_object($this->attributeValue)) {
+            return $this->attributeValue->getValue();
+        }
     }
 
     public function exportValue(\SimpleXMLElement $akv)
@@ -230,6 +232,12 @@ class Controller extends AbstractController
 
     public function duplicateKey($newAK)
     {
+    }
+
+    // Called in place of deprecated saveAttributeForm() method
+    public function getAttributeValueFromRequest()
+    {
+        return $this->saveForm($this->post());
     }
 
     public function searchKeywords($keywords, $queryBuilder)

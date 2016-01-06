@@ -6,10 +6,10 @@ use Concrete\Core\Attribute\DefaultController;
 use Concrete\Core\Entity\Attribute\Key\TextareaKey;
 use Concrete\Core\Entity\Attribute\Key\TextKey;
 use Concrete\Core\Entity\Attribute\Key\Type\TextareaType;
-use Concrete\Core\Entity\Attribute\Value\TextValue;
+use Concrete\Core\Entity\Attribute\Value\Value\TextValue;
 use Core;
 use Database;
-use Concrete\Core\Entity\Attribute\Value\TextareaValue;
+use Concrete\Core\Entity\Attribute\Value\Value\TextareaValue;
 
 class Controller extends DefaultController
 {

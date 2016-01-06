@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Core\Entity\Attribute\Value;
+namespace Concrete\Core\Entity\Attribute\Value\Value;
 
 /**
  * @Entity
@@ -15,7 +15,7 @@ class SelectedTopic
     protected $avTreeTopicNodeID;
 
     /**
-     * @ManyToOne(targetEntity="\Concrete\Core\Entity\Attribute\Value\Value")
+     * @ManyToOne(targetEntity="TopicsValue")
      * @JoinColumn(name="avID", referencedColumnName="avID")
      */
     protected $value;

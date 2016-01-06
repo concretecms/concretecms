@@ -49,7 +49,7 @@ class PageCategory extends AbstractCategory implements StandardSearchIndexerInte
 
     public function getAttributeValues($page)
     {
-        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Page\AttributeValue');
+        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Value\PageValue');
         $values = $r->findBy(array(
             'cID' => $page->getCollectionID(),
             'cvID' => $page->getVersionID()

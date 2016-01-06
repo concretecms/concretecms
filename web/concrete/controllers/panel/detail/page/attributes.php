@@ -110,7 +110,9 @@ class Attributes extends BackendInterfacePageController
                 if (in_array($ak->getAttributeKeyID(), $asl->getAttributesAllowedArray())) {
                     // Is this item in the selectedAKIDs array? If so then it is being saved
                     if (in_array($ak->getAttributeKeyID(), $selected)) {
-                        $ak->saveAttributeForm($nvc);
+                        $controller = $ak->getController();
+                        $value = $controller->getAttributeValueFromRequest();
+                        $nvc->setAttribute($ak, $value);
                     } else {
                         // it is being removed
                         $nvc->clearAttribute($ak);
@@ -122,7 +124,9 @@ class Attributes extends BackendInterfacePageController
             foreach ($newAttributes as $akID) {
                 if ($akID > 0 && in_array($akID, $asl->getAttributesAllowedArray())) {
                     $ak = CollectionAttributeKey::getByID($akID);
-                    $ak->saveAttributeForm($nvc);
+                    $controller = $ak->getController();
+                    $value = $controller->getAttributeValueFromRequest();
+                    $nvc->setAttribute($ak, $value);
                 }
             }
 

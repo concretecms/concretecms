@@ -205,6 +205,17 @@ abstract class Key implements AttributeKeyInterface
     /**
      * @deprecated
      */
+    public function saveAttributeForm($mixed)
+    {
+        $controller = $this->getController();
+        $value = $controller->getAttributeValueFromRequest();
+        $mixed->setAttribute($this, $value);
+        return $value;
+    }
+
+    /**
+     * @deprecated
+     */
     public function render($view = 'view', $value = false, $return = false)
     {
         $resp = $this->getAttributeType()->render($view, $this, $value, $return);

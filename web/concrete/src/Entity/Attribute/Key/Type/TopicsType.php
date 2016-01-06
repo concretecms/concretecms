@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Entity\Attribute\Key\Type;
 
-use Concrete\Core\Entity\Attribute\Value\TopicsValue;
+use Concrete\Core\Entity\Attribute\Value\Value\TopicsValue;
 
 
 /**

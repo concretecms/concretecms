@@ -4,7 +4,7 @@ namespace Concrete\Attribute\ImageFile;
 
 use Concrete\Core\Entity\Attribute\Key\ImageFileKey;
 use Concrete\Core\Entity\Attribute\Key\Type\ImageFileType;
-use Concrete\Core\Entity\Attribute\Value\ImageFileValue;
+use Concrete\Core\Entity\Attribute\Value\Value\ImageFileValue;
 use Core;
 use Database;
 use File;

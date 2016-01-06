@@ -51,7 +51,9 @@ class Seo extends BackendInterfacePageController {
 			$as = AttributeSet::getByHandle('seo');
 			$attributes = $as->getAttributeKeys();
 			foreach($attributes as $ak) {
-				$ak->saveAttributeForm($nvc);
+				$controller = $ak->getController();
+				$value = $controller->getAttributeValueFromRequest();
+				$nvc->setAttribute($ak, $value);
 			}
 
             if ($this->request->request->get('sitemap')
