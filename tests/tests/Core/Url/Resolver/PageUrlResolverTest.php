@@ -7,8 +7,8 @@ class PageUrlResolverTest extends ResolverTestCase
 
     protected function setUp()
     {
-        $path_resolver = new \Concrete\Core\Url\Resolver\PathUrlResolver();
-        $this->urlResolver = new \Concrete\Core\Url\Resolver\PageUrlResolver($path_resolver);
+        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+        $this->urlResolver = $app->make('Concrete\Core\Url\Resolver\PageUrlResolver');
     }
 
     public function testWithPage()
