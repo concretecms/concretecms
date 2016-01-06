@@ -67,6 +67,12 @@ class BlockType
      * @Column(type="boolean")
      */
     protected $btSupportsInlineAdd = false;
+
+    /**
+     * @Column(type="integer")
+     */
+    protected $btDisplayOrder = 0;
+
     /**
      * @Column(type="integer")
      */
