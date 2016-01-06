@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Core\Entity\Attribute\Value;
+namespace Concrete\Core\Entity\Attribute\Value\Value;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -12,7 +12,7 @@ class SocialLinksValue extends Value
 {
 
     /**
-     * @OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Value\SelectedSocialLink", mappedBy="value")
+     * @OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Value\Value\SelectedSocialLink", mappedBy="value")
      * @JoinColumn(name="avID", referencedColumnName="avID")
      */
     protected $links;

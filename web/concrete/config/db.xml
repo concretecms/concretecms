@@ -3784,68 +3784,6 @@
     </index>
   </table>
 
-  <table name="UserAttributeKeys">
-    <field name="akID" type="integer" size="10">
-      <unsigned/>
-      <key/>
-    </field>
-    <field name="uakProfileDisplay" type="boolean">
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <field name="uakMemberListDisplay" type="boolean">
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <field name="uakProfileEdit" type="boolean">
-      <default value="1"/>
-      <notnull/>
-    </field>
-    <field name="uakProfileEditRequired" type="boolean">
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <field name="uakRegisterEdit" type="boolean">
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <field name="uakRegisterEditRequired" type="boolean">
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <field name="displayOrder" type="integer" size="10">
-      <unsigned/>
-      <default value="0"/>
-    </field>
-    <field name="uakIsActive" type="boolean">
-      <default value="1"/>
-      <notnull/>
-    </field>
-  </table>
-
-  <table name="UserAttributeValues">
-    <field name="uID" type="integer" size="10">
-      <unsigned/>
-      <key/>
-      <default value="0"/>
-    </field>
-    <field name="akID" type="integer" size="10">
-      <unsigned/>
-      <key/>
-      <default value="0"/>
-    </field>
-    <field name="avID" type="integer" size="10">
-      <unsigned/>
-      <default value="0"/>
-    </field>
-    <index name="akID">
-      <col>akID</col>
-    </index>
-    <index name="avID">
-      <col>avID</col>
-    </index>
-  </table>
-
   <table name="UserPrivateMessages">
     <field name="msgID" type="integer" size="10">
       <unsigned/>

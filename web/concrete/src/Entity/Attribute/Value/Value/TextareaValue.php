@@ -1,16 +1,16 @@
 <?php
 
-namespace Concrete\Core\Entity\Attribute\Value;
+namespace Concrete\Core\Entity\Attribute\Value\Value;
 
 /**
  * @Entity
- * @Table(name="NumberAttributeValues")
+ * @Table(name="TextareaAttributeValues")
  */
-class NumberValue extends Value
+class TextareaValue extends Value
 {
 
     /**
-     * @Column(type="decimal", precision=14, scale=4, nullable=true)
+     * @Column(type="text", nullable=true)
      */
     protected $value = '';
 
@@ -30,6 +30,10 @@ class NumberValue extends Value
         $this->value = $value;
     }
 
+    public function __toString()
+    {
+        return $this->getValue();
+    }
 
 
 }

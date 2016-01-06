@@ -46,7 +46,7 @@ class Properties extends BackendInterfaceFileController
             if ($fp->canEditFileProperties()) {
                 $fv = $this->file->getVersionToModify();
 
-                $ak = FileAttributeKey::get($_REQUEST['akID']);
+                $ak = FileAttributeKey::getByID($_REQUEST['akID']);
                 $fv->clearAttribute($ak);
 
                 $sr = new FileEditResponse();
@@ -67,16 +67,15 @@ class Properties extends BackendInterfaceFileController
             if ($fp->canEditFileProperties()) {
                 $fv = $this->file->getVersionToModify();
 
-                $ak = FileAttributeKey::get($_REQUEST['name']);
-                $ak->saveAttributeForm($fv);
-
-                $file = File::getByID($this->file->getFileID());
-                $val = $file->getAttributeValueObject($ak); // ugh this is some kind of race condition or cache issue.
+                $ak = FileAttributeKey::getByID($_REQUEST['name']);
+                $controller = $ak->getController();
+                $value = $controller->getAttributeValueFromRequest();
+                $value = $fv->setAttribute($ak, $value);
 
                 $sr = new FileEditResponse();
                 $sr->setFile($this->file);
                 $sr->setMessage(t('Attribute saved successfully.'));
-                $sr->setAdditionalDataAttribute('value', $val->getValue('displaySanitized', 'display'));
+                $sr->setAdditionalDataAttribute('value', $value->getValue('displaySanitized', 'display'));
                 $sr->outputJSON();
             }
         }

@@ -10,8 +10,8 @@ use CollectionVersion;
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Attribute\Key\Key;
 use Concrete\Core\Attribute\Value\CollectionValue as CollectionAttributeValue;
-use Concrete\Core\Entity\Attribute\Value\Value;
-use Concrete\Core\Entity\Page\AttributeValue;
+use Concrete\Core\Entity\Attribute\Value\PageValue;
+use Concrete\Core\Entity\Attribute\Value\Value\Value;
 use Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionVersionFeatureAssignment;
 use Concrete\Core\Feature\Feature;
 use Concrete\Core\Foundation\Object as Object;
@@ -500,24 +500,25 @@ class Collection extends Object
             $ak = CollectionAttributeKey::getByHandle($ak);
         }
 
+        $av = new PageValue();
+        $av->setPageID($this->getCollectionID());
+        $av->setVersionID($this->getVersionID());
+        $av->setAttributeKey($ak);
+
         $controller = $ak->getController();
         $controller->setAttributeKey($ak);
         if (!($value instanceof Value)) {
             $value = $controller->saveValue($value);
         }
-        $orm->persist($value);
-        $orm->flush();
-
-        $av = new AttributeValue();
-        $av->setPageID($this->getCollectionID());
-        $av->setVersionID($this->getVersionID());
-        $av->setAttributeKey($ak);
-        $av->setAttributeValue($value);
+        $value->setAttributeValue($av);
+        $av->setValue($value);
 
         $orm->persist($av);
         $orm->flush();
 
         $this->reindex();
+
+        return $av;
     }
 
     /**

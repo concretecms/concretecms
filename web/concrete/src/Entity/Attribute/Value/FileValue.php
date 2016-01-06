@@ -1,20 +1,14 @@
 <?php
 
-namespace Concrete\Core\Entity\File;
-
-use Concrete\Core\Entity\Attribute\AbstractAttributeValue;
+namespace Concrete\Core\Entity\Attribute\Value;
 
 /**
  * @Entity
  * @Table(
- *     name="FileAttributeValues",
- *     indexes={
- *      @Index(name="akID", columns={"akID"}),
- *      @Index(name="avID", columns={"avID"})
- *     }
+ *     name="FileAttributeValues"
  * )
  */
-class AttributeValue extends AbstractAttributeValue
+class FileValue extends Value
 {
 
     /**

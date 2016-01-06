@@ -3,9 +3,9 @@
 namespace Concrete\Attribute\Select;
 
 use Concrete\Core\Entity\Attribute\Key\Type\SelectType;
-use Concrete\Core\Entity\Attribute\Value\SelectValue;
-use Concrete\Core\Entity\Attribute\Value\SelectValueOption;
-use Concrete\Core\Entity\Attribute\Value\SelectValueOptionList;
+use Concrete\Core\Entity\Attribute\Value\Value\SelectValue;
+use Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption;
+use Concrete\Core\Entity\Attribute\Value\Value\SelectValueOptionList;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Core;
 use Database;
@@ -360,7 +360,7 @@ class Controller extends AttributeTypeController
     public function getOptionByValue($value, $attributeKey = false)
     {
         $orm = \Database::connection()->getEntityManager();
-        $repository = $orm->getRepository('\Concrete\Core\Entity\Attribute\Value\SelectValueOption');
+        $repository = $orm->getRepository('\Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption');
         if ($attributeKey) {
             $existingList = $attributeKey->getAttributeKeyType()->getOptionList();
         }

@@ -3,8 +3,8 @@ namespace Concrete\Attribute\SocialLinks;
 
 use Concrete\Core\Entity\Attribute\Key\SocialLinksKey;
 use Concrete\Core\Entity\Attribute\Key\Type\SocialLinksType;
-use Concrete\Core\Entity\Attribute\Value\SelectedSocialLink;
-use Concrete\Core\Entity\Attribute\Value\SocialLinksValue;
+use Concrete\Core\Entity\Attribute\Value\Value\SelectedSocialLink;
+use Concrete\Core\Entity\Attribute\Value\Value\SocialLinksValue;
 use Loader;
 use Environment;
 use \Concrete\Core\Foundation\Object;

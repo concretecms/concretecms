@@ -3,7 +3,7 @@ namespace Concrete\Attribute\Number;
 
 use Concrete\Core\Entity\Attribute\Key\NumberKey;
 use Concrete\Core\Entity\Attribute\Key\Type\NumberType;
-use Concrete\Core\Entity\Attribute\Value\NumberValue;
+use Concrete\Core\Entity\Attribute\Value\Value\NumberValue;
 use Loader;
 use \Concrete\Core\Foundation\Object;
 use \Concrete\Core\Attribute\Controller as AttributeTypeController;
@@ -15,6 +15,11 @@ class Controller extends AttributeTypeController
         'type' => 'decimal',
         'options' => array('precision' => 14, 'scale' => 4, 'default' => 0, 'notnull' => false)
     );
+
+    public function getDisplayValue()
+    {
+        return floatval($this->attributeValue->getValue());
+    }
 
     public function importKey($akey)
     {

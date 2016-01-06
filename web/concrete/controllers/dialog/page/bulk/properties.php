@@ -61,7 +61,9 @@ class Properties extends BackendInterfaceController {
 			$this->populatePages();
 			if ($this->canEdit) {
 				foreach($this->pages as $c) {
-					$ak->saveAttributeForm($c);
+					$controller = $ak->getController();
+					$value = $controller->getAttributeValueFromRequest();
+					$c->setAttribute($ak, $value);
 					$c->reindex();
 				}
 

@@ -2,64 +2,85 @@
 
 namespace Concrete\Core\Entity\Attribute\Value;
 
-use Concrete\Core\Entity\Attribute\Key\Key;
-
+use Concrete\Core\Attribute\AttributeValueInterface;
 
 /**
  * @Entity
  * @InheritanceType("JOINED")
  * @DiscriminatorColumn(name="type", type="string")
- * @Table(name="AttributeValues")
  */
-abstract class Value
+abstract class Value implements AttributeValueInterface
 {
 
     /**
      * @Id @Column(type="integer", options={"unsigned":true})
      * @GeneratedValue(strategy="AUTO")
      */
-    protected $avID;
+    protected $avrID;
 
+    /**
+     * @ManyToOne(targetEntity="\Concrete\Core\Entity\Attribute\Key\Key")
+     * @JoinColumn(name="akID", referencedColumnName="akID")
+     **/
     protected $attribute_key;
 
-    public function setAttributeKey(Key $key)
+    /**
+     * @OneToOne(targetEntity="\Concrete\Core\Entity\Attribute\Value\Value\Value", cascade={"persist", "remove"}, mappedBy="attribute_value")
+     * @JoinColumn(name="avID", referencedColumnName="avID")
+     **/
+    protected $value;
+
+    /**
+     * @return mixed
+     */
+    public function getAttributeKey()
     {
-        $this->attribute_key = $key;
+        return $this->attribute_key;
     }
 
-    public function getDisplaySanitizedValue()
+    /**
+     * @param mixed $attribute_key
+     */
+    public function setAttributeKey($attribute_key)
     {
-        $controller = $this->attribute_key->getController();
-        if (method_exists($controller, 'getDisplaySanitizedValue')) {
-            $controller->setAttributeValue($this);
-            return $controller->getDisplaySanitizedValue();
-        }
-        return $this;
+        $this->attribute_key = $attribute_key;
     }
 
-    public function getDisplayValue()
+    public function getAttributeTypeObject()
     {
-        $controller = $this->attribute_key->getController();
-        if (method_exists($controller, 'getDisplayValue')) {
-            $controller->setAttributeValue($this);
-            return $controller->getDisplayValue();
-        }
-        return $this;
+        return $this->getAttributeKey()->getAttributeType();
     }
 
-    public function getSearchIndexValue()
+    public function getValue($mode = false)
     {
-        $controller = $this->attribute_key->getController();
-        if (method_exists($controller, 'getSearchIndexValue')) {
-            $controller->setAttributeValue($this);
-            return $controller->getSearchIndexValue();
+        $value = $this->value;
+        if (is_object($value)) {
+            if ($mode != false) {
+                $controller = $this->getAttributeKey()->getController();
+                $modes = func_get_args();
+                foreach ($modes as $mode) {
+                    $method = 'get' . camelcase($mode) . 'Value';
+                    if (method_exists($controller, $method)) {
+                        $controller->setAttributeValue($value);
+                        return $controller->{$method}();
+                    }
+                }
+            }
         }
-        return $this;
+        return $value;
+    }
+
+    /**
+     * @param mixed $value
+     */
+    public function setValue($value)
+    {
+        $this->value = $value;
     }
 
     public function __toString()
     {
-        return $this->getDisplayValue();
+        return (string) $this->getValue()->getDisplayValue();
     }
 
 }

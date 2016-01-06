@@ -687,7 +687,9 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     public function saveUserAttributesForm($attributes)
     {
         foreach ($attributes as $uak) {
-            $uak->saveAttributeForm($this);
+            $controller = $uak->getController();
+            $value = $controller->getAttributeValueFromRequest();
+            $this->setAttribute($ak, $value);
         }
 
         $ue = new \Concrete\Core\User\Event\UserInfoWithAttributes($this);

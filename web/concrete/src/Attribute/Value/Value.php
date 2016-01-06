@@ -2,10 +2,11 @@
 
 namespace Concrete\Core\Attribute\Value;
 
+use Concrete\Core\Attribute\AttributeValueInterface;
 use Concrete\Core\Foundation\Object;
 use Loader;
 
-class Value extends Object
+class Value extends Object implements AttributeValueInterface
 {
     protected $attributeType;
     protected $attributeKey;

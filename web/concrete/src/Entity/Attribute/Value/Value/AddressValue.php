@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Core\Entity\Attribute\Value;
+namespace Concrete\Core\Entity\Attribute\Value\Value;
 
 /**
  * @Entity

@@ -128,7 +128,9 @@ class CollectionAttributeControl extends Control
         // the data for this actually doesn't come from $data. Attributes have their own way of gettin data.
         $ak = $this->getAttributeKeyObject();
         if (is_object($ak)) {
-            $ak->saveAttributeForm($c);
+            $controller = $ak->getController();
+            $value = $controller->getAttributeValueFromRequest();
+            $c->setAttribute($ak, $value);
         }
     }
 

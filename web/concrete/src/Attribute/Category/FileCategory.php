@@ -49,7 +49,7 @@ class FileCategory extends AbstractCategory implements StandardSearchIndexerInte
 
     public function getAttributeValues($file)
     {
-        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\File\AttributeValue');
+        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Value\FileValue');
         $values = $r->findBy(array(
             'version' => $file->getVersion()
         ));

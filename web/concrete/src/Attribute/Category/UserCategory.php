@@ -98,7 +98,7 @@ class UserCategory extends AbstractCategory implements StandardSearchIndexerInte
 
     public function getAttributeValues($user)
     {
-        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\User\AttributeValue');
+        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Value\UserValue');
         $values = $r->findBy(array(
             'uID' => $user->getUserID()
         ));

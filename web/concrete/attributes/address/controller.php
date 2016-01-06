@@ -5,7 +5,7 @@ namespace Concrete\Attribute\Address;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Entity\Attribute\Key\AddressKey;
 use Concrete\Core\Entity\Attribute\Key\Type\AddressType;
-use Concrete\Core\Entity\Attribute\Value\AddressValue;
+use Concrete\Core\Entity\Attribute\Value\Value\AddressValue;
 use Core;
 use Database;
 

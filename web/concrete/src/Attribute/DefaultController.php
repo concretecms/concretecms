@@ -3,8 +3,7 @@
 namespace Concrete\Core\Attribute;
 
 use Concrete\Core\Entity\Attribute\Key\Type\TextType;
-use Concrete\Core\Entity\Attribute\Value\TextValue;
-use Concrete\Core\Entity\AttributeValue\TextAttributeValue;
+use Concrete\Core\Entity\Attribute\Value\Value\TextValue;
 use Core;
 use Database;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;

@@ -1,20 +1,14 @@
 <?php
 
-namespace Concrete\Core\Entity\Page;
-
-use Concrete\Core\Entity\Attribute\AbstractAttributeValue;
+namespace Concrete\Core\Entity\Attribute\Value;
 
 /**
  * @Entity
  * @Table(
- *     name="CollectionAttributeValues",
- *     indexes={
- *      @Index(name="akID", columns={"akID"}),
- *      @Index(name="avID", columns={"avID"})
- *     }
+ *     name="CollectionAttributeValues"
  * )
  */
-class AttributeValue extends AbstractAttributeValue
+class PageValue extends Value
 {
 
     /**

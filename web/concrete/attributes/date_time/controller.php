@@ -3,7 +3,7 @@ namespace Concrete\Attribute\DateTime;
 
 use Concrete\Core\Entity\Attribute\Key\DateTimeKey;
 use Concrete\Core\Entity\Attribute\Key\Type\DateTimeType;
-use Concrete\Core\Entity\Attribute\Value\DateTimeValue;
+use Concrete\Core\Entity\Attribute\Value\Value\DateTimeValue;
 use Loader;
 use Core;
 use \Concrete\Core\Attribute\Controller as AttributeTypeController;
@@ -165,12 +165,12 @@ class Controller extends AttributeTypeController
         $dt = Loader::helper('form/date_time');
         switch ($this->akDateDisplayMode) {
             case 'text':
-                $this->saveValue($data['value']);
+                return $this->saveValue($data['value']);
                 break;
             case 'date':
             case 'date_time':
                 $value = $dt->translate('value', $data);
-                $this->saveValue($value);
+                return $this->saveValue($value);
                 break;
         }
     }

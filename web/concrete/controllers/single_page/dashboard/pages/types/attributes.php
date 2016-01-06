@@ -43,8 +43,9 @@ class Attributes extends DashboardPageController
         if (Loader::helper('validation/token')->validate()) {
             $ak = CollectionKey::getByID(Loader::helper('security')->sanitizeInt($_REQUEST['name']));
             if (is_object($ak)) {
-                $ak->saveAttributeForm($this->defaultPage);
-                $val = $this->defaultPage->getAttributeValueObject($ak);
+                $controller = $ak->getController();
+                $val = $controller->getAttributeValueFromRequest();
+                $this->defaultPage->setAttribute($ak, $val);
             }
         } else {
             $this->error->add(Loader::helper('validation/token')->getErrorMessage());

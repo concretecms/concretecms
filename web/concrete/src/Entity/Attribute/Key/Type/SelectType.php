@@ -2,8 +2,8 @@
 
 namespace Concrete\Core\Entity\Attribute\Key\Type;
 
-use Concrete\Core\Entity\Attribute\Value\SelectValue;
-use Concrete\Core\Entity\Attribute\Value\SelectValueOption;
+use Concrete\Core\Entity\Attribute\Value\Value\SelectValue;
+use Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption;
 use Doctrine\Common\Collections\ArrayCollection;
 
 
@@ -15,7 +15,7 @@ class SelectType extends Type
 {
 
     /**
-     * @OneToOne(targetEntity="Concrete\Core\Entity\Attribute\Value\SelectValueOptionList", cascade={"all"})
+     * @OneToOne(targetEntity="Concrete\Core\Entity\Attribute\Value\Value\SelectValueOptionList", cascade={"all"})
      * @JoinColumn(name="avSelectOptionListID", referencedColumnName="avSelectOptionListID")
      */
     protected $list;

@@ -1,18 +1,18 @@
 <?php
 
-namespace Concrete\Core\Entity\Attribute\Value;
+namespace Concrete\Core\Entity\Attribute\Value\Value;
 
 /**
  * @Entity
- * @Table(name="BooleanAttributeValues")
+ * @Table(name="NumberAttributeValues")
  */
-class BooleanValue extends Value
+class NumberValue extends Value
 {
 
     /**
-     * @Column(type="boolean")
+     * @Column(type="decimal", precision=14, scale=4, nullable=true)
      */
-    protected $value = false;
+    protected $value = '';
 
     /**
      * @return mixed

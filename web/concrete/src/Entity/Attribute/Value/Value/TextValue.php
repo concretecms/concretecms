@@ -1,16 +1,17 @@
 <?php
 
-namespace Concrete\Core\Entity\Attribute\Value;
+namespace Concrete\Core\Entity\Attribute\Value\Value;
+
 
 /**
  * @Entity
- * @Table(name="DateTimeAttributeValues")
+ * @Table(name="TextAttributeValues")
  */
-class DateTimeValue extends Value
+class TextValue extends Value
 {
 
     /**
-     * @Column(type="datetime", nullable=true)
+     * @Column(type="string", nullable=true)
      */
     protected $value = '';
 
@@ -30,6 +31,9 @@ class DateTimeValue extends Value
         $this->value = $value;
     }
 
-
+    public function __toString()
+    {
+        return (string) $this->getValue();
+    }
 
 }
