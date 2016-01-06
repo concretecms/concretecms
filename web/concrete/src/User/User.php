@@ -2,10 +2,11 @@
 namespace Concrete\Core\User;
 
 use Concrete\Core\Foundation\Object;
+use Concrete\Core\Http\Request;
+use Concrete\Core\Support\Facade\Application;
 use Config;
 use Database;
 use UserInfo as CoreUserInfo;
-use Request;
 use Concrete\Core\Authentication\AuthenticationType;
 use Events;
 use Page;
@@ -123,7 +124,11 @@ class User extends Object
 
     public function __construct()
     {
+        $app = Application::getFacadeApplication();
         $args = func_get_args();
+        $session = $app['session'];
+        $config = $app['config'];
+
 
         if (isset($args[1])) {
             // first, we check to see if the username and password match the admin username and password
@@ -133,22 +138,23 @@ class User extends Object
             $password = $args[1];
             $disableLogin = isset($args[2]) ? (bool) $args[2] : false;
             if (!$disableLogin) {
-                Session::remove('uGroups');
-                Session::remove('accessEntities');
+                $session->remove('uGroups');
+                $session->remove('accessEntities');
             }
             $v = array($username);
-            if (Config::get('concrete.user.registration.email_registration')) {
+            if ($config->get('concrete.user.registration.email_registration')) {
                 $q = "select uID, uName, uIsActive, uIsValidated, uTimezone, uDefaultLanguage, uPassword, uLastPasswordChange from Users where uEmail = ?";
             } else {
                 $q = "select uID, uName, uIsActive, uIsValidated, uTimezone, uDefaultLanguage, uPassword, uLastPasswordChange from Users where uName = ?";
             }
-            $db = Database::connection();
+
+            $db = $app->make('Concrete\Core\Database\Connection\Connection');
             $r = $db->query($q, $v);
             if ($r) {
                 $row = $r->fetchRow();
                 $pw_is_valid_legacy = (Config::get('concrete.user.password.legacy_salt') && self::legacyEncryptPassword($password) == $row['uPassword']);
                 $pw_is_valid = $pw_is_valid_legacy || $this->getUserPasswordHasher()->checkPassword($password, $row['uPassword']);
-                if ($row['uID'] && $row['uIsValidated'] === '0' && Config::get('concrete.user.registration.validate_email')) {
+                if ($row['uID'] && $row['uIsValidated'] === '0' && $config->get('concrete.user.registration.validate_email')) {
                     $this->loadError(USER_NON_VALIDATED);
                 } elseif ($row['uID'] && $row['uIsActive'] && $pw_is_valid) {
                     $this->uID = $row['uID'];
@@ -204,14 +210,14 @@ class User extends Object
                     }
                     $this->uTimezone = $ux->getUserTimezone();
                 }
-            } elseif (Session::has('uID')) {
-                $this->uID = Session::get('uID');
-                $this->uName = Session::get('uName');
-                $this->uTimezone = Session::get('uTimezone');
-                if (Session::has('uDefaultLanguage')) {
-                    $this->uDefaultLanguage = Session::get('uDefaultLanguage');
+            } elseif ($session->has('uID')) {
+                $this->uID = $session->get('uID');
+                $this->uName = $session->get('uName');
+                $this->uTimezone = $session->get('uTimezone');
+                if ($session->has('uDefaultLanguage')) {
+                    $this->uDefaultLanguage = $session->get('uDefaultLanguage');
                 }
-                $this->superUser = (Session::get('uID') == USER_SUPER_ID) ? true : false;
+                $this->superUser = ($session->get('uID') == USER_SUPER_ID) ? true : false;
             } else {
                 $this->uID = null;
                 $this->uName = null;
@@ -221,7 +227,7 @@ class User extends Object
             }
             $this->uGroups = $this->_getUserGroups();
             if (!isset($args[2]) && !$req->hasCustomRequestUser()) {
-                Session::set('uGroups', $this->uGroups);
+                $session->set('uGroups', $this->uGroups);
             }
         }
 
