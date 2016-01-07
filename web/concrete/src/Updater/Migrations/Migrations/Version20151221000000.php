@@ -24,6 +24,12 @@ class Version20151221000000 extends AbstractMigration
             'StyleCustomizerInlineStyleSets',
         ));
 
+        $bt = \BlockType::getByHandle('image_slider');
+        if (is_object($bt)) {
+            $bt->refresh();
+        }
+
+
     }
 
     public function down(Schema $schema)

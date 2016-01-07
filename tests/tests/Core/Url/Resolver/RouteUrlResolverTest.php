@@ -12,12 +12,16 @@ class RouteUrlResolverTest extends ResolverTestCase
 
     protected function setUp()
     {
-        $path_url_resolver = new \Concrete\Core\Url\Resolver\PathUrlResolver();
-        $routes = new \Symfony\Component\Routing\RouteCollection();
-        $context = new \Symfony\Component\Routing\RequestContext();
-        $generator = new \Symfony\Component\Routing\Generator\UrlGenerator($routes, $context);
+        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
-        $this->urlResolver = new \Concrete\Core\Url\Resolver\RouteUrlResolver($path_url_resolver, $generator, $routes);
+        $path_url_resolver = $app->make('Concrete\Core\Url\Resolver\PathUrlResolver');
+        $routes = $app->make('Symfony\Component\Routing\RouteCollection');
+        $context = $app->make('Symfony\Component\Routing\RequestContext');
+        $generator = $app->make('Symfony\Component\Routing\Generator\UrlGenerator', array($routes, $context));
+
+        $this->urlResolver = $app->make('Concrete\Core\Url\Resolver\RouteUrlResolver',
+            array($path_url_resolver, $generator, $routes));
+
         $this->routeList = $routes;
     }
 
