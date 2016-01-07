@@ -49,13 +49,22 @@ class FileCategory extends AbstractCategory implements StandardSearchIndexerInte
 
     public function getAttributeValues($file)
     {
-        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Value\FileValue');
-        $values = $r->findBy(array(
-            'version' => $file->getVersion()
-        ));
-        return $values;
+        $query = $this->entityManager->createQuery('select fav from Concrete\Core\Entity\Attribute\Value\FileValue fav
+          inner join fav.version fv inner join fv.file f where fv.fvID = :fvID and f.fID = :fID');
+        $query->setParameter('fID', $file->getFileID());
+        $query->setParameter('fvID', $file->getVersion()->getFileVersionID());
+        return $query->getResult();
     }
 
+    public function getAttributeValue(Key $key, $file)
+    {
+        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Value\FileValue');
+        $value = $r->findOneBy(array(
+            'version' => $file->getVersion(),
+            'attribute_key' => $key
+        ));
+        return $value;
+    }
 
 
 }

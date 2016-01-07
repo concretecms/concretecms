@@ -94,9 +94,8 @@ class Controller extends AttributeTypeController
 
     public function saveForm($data)
     {
-        $db = Loader::db();
         if (isset($data['value'])) {
-            $this->saveValue($data['value']);
+            return $this->saveValue($data['value']);
         }
     }
 

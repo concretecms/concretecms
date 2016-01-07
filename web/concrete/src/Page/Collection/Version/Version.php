@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Page\Collection\Version;
 
+use Concrete\Core\Attribute\Key\CollectionKey;
+use Concrete\Core\Entity\Attribute\Key\PageKey;
 use Loader;
 use \Concrete\Core\Foundation\Object;
 use Block;
@@ -86,29 +88,15 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
         return $cv;
     }
 
-    public function getAttribute($ak, $c, $displayMode = false)
+    public function getAttribute($ak, $c, $mode = false)
     {
+        if (!is_object($ak)) {
+            $ak = CollectionKey::getByHandle($ak);
+        }
         if (is_object($ak)) {
-            $akHandle = $ak->getAttributeKeyHandle();
-        } else {
-            $akHandle = $ak;
-            $ak = null;
+            return \Core::make('\Concrete\Core\Attribute\Category\PageCategory')
+                ->getAttributeValue($ak, $this);
         }
-        $akHash = $akHandle . ':' . $displayMode;
-
-        if (! isset($this->attributes[$akHash])) {
-            $this->attributes[$akHash] = false;
-            if (! $ak) {
-                $ak = CollectionAttributeKey::getByHandle($akHandle);
-            }
-            if (is_object($ak)) {
-                $av = $c->getAttributeValueObject($ak);
-                if (is_object($av)) {
-                    $this->attributes[$akHash] = $av->getValue($displayMode);
-                }
-            }
-        }
-        return $this->attributes[$akHash];
     }
 
     function isApproved()

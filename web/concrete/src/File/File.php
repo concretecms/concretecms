@@ -161,19 +161,9 @@ class File implements \Concrete\Core\Permission\ObjectInterface
      */
     public function reindex()
     {
-        return false;
-        $attribs = FileAttributeKey::getAttributes(
-            $this->getFileID(),
-            $this->getFileVersionID(),
-            'getSearchIndexValue'
-        );
-        $db = Loader::db();
-
-        $db->Execute('delete from FileSearchIndexAttributes where fID = ?', array($this->getFileID()));
-        $searchableAttributes = array('fID' => $this->getFileID());
-
-        $key = new FileAttributeKey();
-        $key->reindex('FileSearchIndexAttributes', $searchableAttributes, $attribs);
+        $category = \Core::make('Concrete\Core\Attribute\Category\FileCategory');
+        $indexer = $category->getSearchIndexer();
+        $indexer->indexEntry($category, $this);
     }
 
     public static function getRelativePathFromID($fID)

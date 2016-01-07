@@ -510,7 +510,7 @@ class Collection extends Object
         if (!($value instanceof Value)) {
             $value = $controller->saveValue($value);
         }
-        $value->setAttributeValue($av);
+        $value->setAttributeKey($ak);
         $av->setValue($value);
 
         $orm->persist($av);

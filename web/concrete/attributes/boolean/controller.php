@@ -68,8 +68,7 @@ class Controller extends AttributeTypeController
 
     public function getDisplayValue()
     {
-        $v = $this->getValue();
-
+        $v = $this->attributeValue->getValue();
         return ($v == 1) ? t('Yes') : t('No');
     }
 
@@ -174,7 +173,7 @@ class Controller extends AttributeTypeController
 
     public function saveForm($data)
     {
-        $this->saveValue(isset($data['value']) ? $data['value'] : false);
+        return $this->saveValue(isset($data['value']) ? $data['value'] : false);
     }
 
     // if this gets run we assume we need it to be validated/checked

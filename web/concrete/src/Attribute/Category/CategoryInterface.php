@@ -2,11 +2,8 @@
 
 namespace Concrete\Core\Attribute\Category;
 
-use Concrete\Core\Attribute\AttributeKeyInterface;
 use Concrete\Core\Attribute\EntityInterface;
-use Concrete\Core\Attribute\Type;
 use Concrete\Core\Entity\Attribute\Category;
-use Concrete\Core\Entity\Attribute\Key\Key as AttributeKey;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -32,6 +29,7 @@ interface CategoryInterface
     public function associateAttributeKeyType(\Concrete\Core\Entity\Attribute\Type $type);
     public function getSearchIndexer();
     public function getAttributeValues($mixed);
+    public function getAttributeValue(Key $key, $mixed);
 
     public function getUngroupedAttributes();
 
