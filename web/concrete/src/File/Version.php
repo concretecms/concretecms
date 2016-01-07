@@ -235,11 +235,7 @@ class Version
             $ak = FileAttributeKey::getByHandle($ak);
         }
 
-        $attributeValue = $this->getAttribute($ak);
-        if (!is_object($attributeValue)) {
-            $attributeValue = new FileValue();
-        }
-
+        $attributeValue = new FileValue();
         $attributeValue->setVersion($this);
         $attributeValue->setAttributeKey($ak);
         $attributeValue->setValue($value);
@@ -249,7 +245,7 @@ class Version
             $value = $controller->saveValue($value);
         }
 
-        $value->setAttributeValue($attributeValue);
+        $value->setAttributeKey($ak);
         $attributeValue->setValue($value);
 
         $orm->persist($attributeValue);

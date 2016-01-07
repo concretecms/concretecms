@@ -8,6 +8,7 @@ use Concrete\Core\Attribute\AttributeValueInterface;
  * @Entity
  * @InheritanceType("JOINED")
  * @DiscriminatorColumn(name="type", type="string")
+ * @Table(name="AttributeValues")
  */
 abstract class Value implements AttributeValueInterface
 {
@@ -25,7 +26,7 @@ abstract class Value implements AttributeValueInterface
     protected $attribute_key;
 
     /**
-     * @OneToOne(targetEntity="\Concrete\Core\Entity\Attribute\Value\Value\Value", cascade={"persist", "remove"}, mappedBy="attribute_value")
+     * @ManyToOne(targetEntity="\Concrete\Core\Entity\Attribute\Value\Value\Value", cascade={"persist", "remove"})
      * @JoinColumn(name="avID", referencedColumnName="avID")
      **/
     protected $value;

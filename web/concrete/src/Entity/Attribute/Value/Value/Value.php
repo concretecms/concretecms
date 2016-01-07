@@ -7,7 +7,7 @@ namespace Concrete\Core\Entity\Attribute\Value\Value;
  * @Entity
  * @InheritanceType("JOINED")
  * @DiscriminatorColumn(name="type", type="string")
- * @Table(name="AttributeValues")
+ * @Table(name="AttributeValueValues")
  */
 abstract class Value
 {
@@ -19,31 +19,33 @@ abstract class Value
     protected $avID;
 
     /**
-     * @OneToOne(targetEntity="\Concrete\Core\Entity\Attribute\Value\Value", inversedBy="value")
-     * @JoinColumn(name="avrID", referencedColumnName="avrID")
+     * We don't go back to attribute value because multiple object attribute values
+     * can map to the same attribute value value – so instead we just duplicate the attribute
+     * key in this table so it's easy for us to know which controller we should use.
+     * @ManyToOne(targetEntity="\Concrete\Core\Entity\Attribute\Key\Key")
+     * @JoinColumn(name="akID", referencedColumnName="akID")
      **/
-    protected $attribute_value;
+    protected $attribute_key;
 
     /**
      * @return mixed
      */
-    public function getAttributeValue()
+    public function getAttributeKey()
     {
-        return $this->attribute_value;
+        return $this->attribute_key;
     }
 
     /**
-     * @param mixed $attribute_value
+     * @param mixed $attribute_key
      */
-    public function setAttributeValue($attribute_value)
+    public function setAttributeKey($attribute_key)
     {
-        $this->attribute_value = $attribute_value;
+        $this->attribute_key = $attribute_key;
     }
-
 
     public function getDisplaySanitizedValue()
     {
-        $controller = $this->getAttributeValue()->getAttributeKey()->getController();
+        $controller = $this->getAttributeKey()->getController();
         if (method_exists($controller, 'getDisplaySanitizedValue')) {
             $controller->setAttributeValue($this);
             return $controller->getDisplaySanitizedValue();
@@ -53,7 +55,7 @@ abstract class Value
 
     public function getDisplayValue()
     {
-        $controller = $this->getAttributeValue()->getAttributeKey()->getController();
+        $controller = $this->getAttributeKey()->getController();
         if (method_exists($controller, 'getDisplayValue')) {
             $controller->setAttributeValue($this);
             return $controller->getDisplayValue();
@@ -63,7 +65,7 @@ abstract class Value
 
     public function getSearchIndexValue()
     {
-        $controller = $this->getAttributeValue()->getAttributeKey()->getController();
+        $controller = $this->getAttributeKey()->getController();
         if (method_exists($controller, 'getSearchIndexValue')) {
             $controller->setAttributeValue($this);
             return $controller->getSearchIndexValue();

@@ -3,8 +3,11 @@
 namespace Concrete\Core\User;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Attribute\Key\UserKey;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Database\DatabaseManager;
+use Concrete\Core\Entity\Attribute\Value\UserValue;
+use Concrete\Core\Entity\Attribute\Value\Value\Value;
 use Concrete\Core\File\StorageLocation\StorageLocation;
 use Concrete\Core\Foundation\Object;
 use Concrete\Core\Url\UrlInterface;
@@ -18,8 +21,6 @@ use View;
 use Config;
 use Events;
 use User as ConcreteUser;
-use UserAttributeKey;
-use Concrete\Core\Attribute\Value\UserValue as UserAttributeValue;
 use Group;
 use Hautelook\Phpass\PasswordHash;
 use Session;
@@ -689,7 +690,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         foreach ($attributes as $uak) {
             $controller = $uak->getController();
             $value = $controller->getAttributeValueFromRequest();
-            $this->setAttribute($ak, $value);
+            $this->setAttribute($uak, $value);
         }
 
         $ue = new \Concrete\Core\User\Event\UserInfoWithAttributes($this);
@@ -706,11 +707,36 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function setAttribute($ak, $value)
     {
+        $orm = \ORM::entityManager('core');
+
         if (!is_object($ak)) {
-            $ak = UserAttributeKey::getByHandle($ak);
+            $ak = UserKey::getByHandle($ak);
         }
-        $ak->setAttribute($this, $value);
+
+        $attributeValue = $this->getAttribute($ak);
+        if (is_object($attributeValue)) {
+            $orm->remove($attributeValue);
+        }
+
+        $attributeValue = new UserValue();
+        $attributeValue->serUserID($this->getUserID());
+        $attributeValue->setAttributeKey($ak);
+        $attributeValue->setValue($value);
+
+        $controller = $ak->getController();
+        if (!($value instanceof Value)) {
+            $value = $controller->saveValue($value);
+        }
+
+        $value->setAttributeKey($ak);
+        $attributeValue->setValue($value);
+
+        $orm->persist($attributeValue);
+        $orm->flush();
+
         $this->reindex();
+
+        return $attributeValue;
     }
 
     /**
@@ -718,113 +744,57 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function clearAttribute($ak)
     {
-        if (!is_object($ak)) {
-            $ak = UserAttributeKey::getByHandle($ak);
-        }
-        $cav = $this->getAttributeValueObject($ak);
-        if (is_object($cav)) {
-            $cav->delete();
+        $db = Loader::db();
+        $orm = $db->getEntityManager();
+        $av = $this->getAttributeValueObject($ak);
+        if (is_object($av)) {
+            $orm->remove($av);
+            $orm->flush();
         }
         $this->reindex();
     }
 
     /**
-     * Reindex the attributes on this file.
+     * Reindex the attributes on this user.
      */
     public function reindex()
     {
-        $attribs = UserAttributeKey::getAttributes(
-            $this->getUserID(),
-            'getSearchIndexValue'
-        );
-        $db = $this->connection;
-
-        $db->Execute('delete from UserSearchIndexAttributes where uID = ?', array($this->getUserID()));
-        $searchableAttributes = array('uID' => $this->getUserID());
-
-        $key = new UserAttributeKey();
-        $key->reindex('UserSearchIndexAttributes', $searchableAttributes, $attribs);
+        $category = \Core::make('Concrete\Core\Attribute\Category\UserCategory');
+        $indexer = $category->getSearchIndexer();
+        $indexer->indexEntry($category, $this);
     }
 
-    /**
-     * Gets the value of the attribute for the user.
-     *
-     * @param UserAttributeKey|string $ak
-     * @param string|false $displayMode
-     *
-     * @return mixed|null
-     */
-    public function getAttribute($ak, $displayMode = false)
+    public function getAttribute($ak, $mode = false)
     {
         if (!is_object($ak)) {
-            $ak = UserAttributeKey::getByHandle($ak);
+            $ak = UserKey::getByHandle($ak);
         }
         if (is_object($ak)) {
-            $av = $this->getAttributeValueObject($ak);
-            if (is_object($av)) {
-                if (func_num_args() > 2) {
-                    $args = func_get_args();
-                    array_shift($args);
-
-                    return call_user_func_array(array($av, 'getValue'), $args);
-                } else {
-                    return $av->getValue($displayMode);
-                }
-            }
+            return $this->application->make('\Concrete\Core\Attribute\Category\UserCategory')
+                ->getAttributeValue($ak, $this);
         }
     }
 
     /**
-     * @param UserAttributeKey|string $ak
+     * @deprecated
+     * @param $ak
+     * @return mixed
+     */
+    public function getAttributeValueObject($ak)
+    {
+        return $this->getAttribute($ak);
+    }
+
+    /**
+     * @param UserKey|string $ak
      */
     public function getAttributeField($ak)
     {
         if (!is_object($ak)) {
-            $ak = UserAttributeKey::getByHandle($ak);
+            $ak = UserKey::getByHandle($ak);
         }
         $value = $this->getAttributeValueObject($ak);
         $ak->render('form', $value);
-    }
-
-    /**
-     * @param UserAttributeKey|string $ak
-     * @param bool $createIfNotFound
-     *
-     * @return \Concrete\Core\Attribute\Value\UserValue|false
-     */
-    public function getAttributeValueObject($ak, $createIfNotFound = false)
-    {
-        $db = $this->connection;
-        $av = false;
-        if (!is_object($ak)) {
-            $ak = UserAttributeKey::getByHandle($ak);
-        }
-        $v = array($this->getUserID(), $ak->getAttributeKeyID());
-        $avID = $db->GetOne("select avID from UserAttributeValues where uID = ? and akID = ?", $v);
-        if ($avID > 0) {
-            $av = UserAttributeValue::getByID($avID);
-            if (is_object($av)) {
-                $av->setUser($this);
-                $av->setAttributeKey($ak);
-            }
-        }
-
-        if ($createIfNotFound) {
-            $cnt = 0;
-
-            // Is this avID in use ?
-            if (is_object($av)) {
-                $cnt = $db->GetOne("select count(avID) from UserAttributeValues where avID = ?", $av->getAttributeValueID());
-            }
-
-            if ((!is_object($av)) || ($cnt > 1)) {
-                $newAV = $ak->addAttributeValue();
-                $av = UserAttributeValue::getByID($newAV->getAttributeValueID());
-                $av->setUser($this);
-            }
-        }
-
-        return $av;
     }
 
     /**

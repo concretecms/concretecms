@@ -51,4 +51,9 @@ class ExpressCategory extends AbstractCategory
         // TODO: Implement getSearchIndexer() method.
     }
 
+    public function getAttributeValue(Key $key, $mixed)
+    {
+        // TODO: Implement getAttributeValue() method.
+    }
+
 }
