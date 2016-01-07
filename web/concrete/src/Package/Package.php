@@ -837,7 +837,7 @@ class Package extends Object
     public function getDatabaseStructureManager()
     {
         if (!isset($this->databaseStructureManager)) {
-            $this->databaseStructureManager = Core::make('database/structure', $this->getEntityManager());
+            $this->databaseStructureManager = Core::make('database/structure', array($this->getEntityManager()));
         }
 
         return $this->databaseStructureManager;
