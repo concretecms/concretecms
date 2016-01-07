@@ -30,7 +30,7 @@ class DatabaseServiceProvider extends ServiceProvider
                 $em = array($em);
             }
 
-            return $app->make('Concrete\Core\Database\DatabaseStructureManager', $em);
+            return $app->make('Concrete\Core\Database\DatabaseStructureManager', array($em));
         });
 
         // Bind default entity manager resolver
