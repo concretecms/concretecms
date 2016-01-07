@@ -92,7 +92,9 @@ class Controller extends AuthenticationTypeController
             // Use /dev/urandom if available, otherwise fall back to PHP's rand (below)
             // Don't use (MCRYPT_DEV_URANDOM|MCRYPT_RAND) here, because we prefer
             // openssl first.
-            $iv = mcrypt_create_iv($a, MCRYPT_DEV_URANDOM);
+            // Use @ here because otherwise mcrypt throws a noisy warning if
+            // /dev/urandom is missing.
+            $iv = @mcrypt_create_iv($a, MCRYPT_DEV_URANDOM);
             if ($iv !== false) {
                 return bin2hex($iv);
             }
