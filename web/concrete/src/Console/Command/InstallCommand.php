@@ -2,6 +2,8 @@
 
 namespace Concrete\Core\Console\Command;
 
+use Concrete\Core\Package\Routine\AttachModeCompatibleRoutineInterface;
+use Doctrine\DBAL\Connection;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -32,8 +34,10 @@ class InstallCommand extends Command
             ->addOption('demo-email', null, InputOption::VALUE_REQUIRED, 'Additional user email', 'demo@example.com')
             ->addOption('default-locale', null, InputOption::VALUE_REQUIRED, 'The default site locale (eg en_US)')
             ->addOption('config', null, InputOption::VALUE_REQUIRED, 'Use configuration file for installation')
+            ->addOption('attach', null, InputOption::VALUE_NONE, 'Attach if database contains an existing concrete5 instance')
         ;
     }
+
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $options = $input->getOptions();
@@ -92,6 +96,9 @@ class InstallCommand extends Command
         Config::set('database.connections.install', array());
 
         $cnt = new \Concrete\Controller\Install();
+
+        $cnt->setAutoAttach(!!$input->getOption('attach'));
+
         $cnt->on_start();
         $fileWriteErrors = clone $cnt->fileWriteErrors;
         $e = Core::make('helper/validation/error');
@@ -125,12 +132,29 @@ class InstallCommand extends Command
         if ($e->has()) {
             throw new Exception(implode("\n", $e->getList()));
         }
+
         try {
             $spl = StartingPointPackage::getClass($options['starting-point']);
+            $attach_mode = false;
+            if ($cnt->isAutoAttachEnabled()) {
+                /** @var Connection $db */
+                $db = \Core::make('database')->connection();
+
+                if ($db->query('show tables')->rowCount()) {
+                    $attach_mode = true;
+                }
+            }
+
             require DIR_CONFIG_SITE . '/site_install.php';
             require DIR_CONFIG_SITE . '/site_install_user.php';
             $routines = $spl->getInstallRoutines();
             foreach ($routines as $r) {
+                // If we're
+                if ($attach_mode && !$r instanceof AttachModeCompatibleRoutineInterface) {
+                    $output->writeln("{$r->getProgress()}%: {$r->getText()} (Skipped)");
+                    continue;
+                }
+
                 $output->writeln($r->getProgress() . '%: ' . $r->getText());
                 call_user_func(array($spl, $r->getMethod()));
             }

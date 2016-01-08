@@ -3,6 +3,7 @@ namespace Concrete\Controller;
 
 use Concrete\Core\Cache\Cache;
 use Concrete\Core\Config\Renderer;
+use Concrete\Core\Error\Error;
 use Concrete\Core\Localization\Localization as Localization;
 use Controller;
 use Config;
@@ -27,6 +28,13 @@ class Install extends Controller
      * @var int
      */
     protected $docCommentCanary = 1;
+
+    /**
+     * If the database already exists and is valid, lets just attach to it rather than installing over it.
+     *
+     * @var bool
+     */
+    protected $auto_attach = false;
 
     protected $fp;
     protected $fpu;
@@ -84,7 +92,7 @@ class Install extends Controller
         }
     }
 
-    protected function validateDatabase($e)
+    protected function validateDatabase(Error $e)
     {
         if (!extension_loaded('pdo')) {
             $e->add($this->getDBErrorMsg());
@@ -103,7 +111,7 @@ class Install extends Controller
             if ($DB_SERVER && $DB_DATABASE) {
                 if (!$db) {
                     $e->add(t('Unable to connect to database.'));
-                } else {
+                } elseif (!$this->isAutoAttachEnabled()) {
                     $num = $db->GetCol("show tables");
                     if (count($num) > 0) {
                         $e->add(
@@ -418,4 +426,22 @@ class Install extends Controller
     {
         return '5.3.3';
     }
+
+    /**
+     * @return boolean
+     */
+    public function isAutoAttachEnabled()
+    {
+        return $this->auto_attach;
+    }
+
+    /**
+     * @param boolean $auto_attach
+     */
+    public function setAutoAttach($auto_attach)
+    {
+        $this->auto_attach = $auto_attach;
+    }
+
+
 }
