@@ -23,38 +23,38 @@ if ($playListID) {
 	$params[] = 'list=' . $playListID;
 }
 
-if (isset($autoplay)) {
-	$params[] = 'autoplay=' . ($autoplay ? '1' : '0');
+if (isset($autoplay) && $autoplay) {
+	$params[] = 'autoplay=1';
 }
 
-if (isset($color)) {
+if (isset($color) && $color) {
 	$params[] = 'color=' . $color;
 }
 
-if (isset($controls)) {
+if (isset($controls) && $controls != '') {
 	$params[] = 'controls=' . $controls;
 }
 
 $params[] = 'hl=' . Localization::activeLanguage();
 
-if (isset($iv_load_policy)) {
+if (isset($iv_load_policy) && $iv_load_policy > 0) {
 	$params[] = 'iv_load_policy=' . $iv_load_policy;
 }
 
-if (isset($loop)) {
-	$params[] = 'loop=' . ($loop ? '1' : '0');
+if (isset($loop) && $loop) {
+	$params[] = 'loop=1';
 }
 
-if (isset($modestbranding)) {
-	$params[] = 'modestbranding=' . ($modestbranding ? '1' : '0');
+if (isset($modestbranding) && $modestbranding) {
+	$params[] = 'modestbranding=1';
 }
 
-if (isset($rel)) {
-	$params[] = 'rel=' . ($rel ? '1' : '0');
+if (isset($rel) && $rel) {
+	$params[] = 'rel=1';
 }
 
-if (isset($showinfo)) {
-	$params[] = 'showinfo=' . ($showinfo ? '1' : '0');
+if (isset($showinfo) && $showinfo) {
+	$params[] = 'showinfo=1';
 }
 
 $paramstring = '?' . implode('&', $params);
