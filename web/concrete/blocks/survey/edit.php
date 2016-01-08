@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 <style type="text/css">
     div.survey-block-option {
         position: relative;
@@ -24,14 +24,14 @@
     <div class="radio">
         <label>
             <input id="requiresRegistration" type="radio" value="0" name="requiresRegistration"
-                   style="vertical-align: middle" <? if (!$controller->requiresRegistration()) { ?> checked <? } ?> />&nbsp;<?= t(
+                   style="vertical-align: middle" <?php if (!$controller->requiresRegistration()) { ?> checked <?php } ?> />&nbsp;<?= t(
                 'Public') ?>
         </label>
     </div>
     <div class="radio">
         <label>
             <input type="radio" value="1" name="requiresRegistration"
-                   style="vertical-align: middle" <? if ($controller->requiresRegistration()) { ?> checked <? } ?> />&nbsp;<?= t(
+                   style="vertical-align: middle" <?php if ($controller->requiresRegistration()) { ?> checked <?php } ?> />&nbsp;<?= t(
                 'Only Registered Users') ?>
         </label>
     </div>
@@ -40,7 +40,7 @@
 
     <div class="form-group">
         <div class="poll-options">
-            <?
+            <?php
             $options = $controller->getPollOptions();
             if (count($options) == 0) {
                 ?>
@@ -59,7 +59,7 @@
                         <input type="hidden" name="survivingOptionNames[]"
                                value="<?= h($opt->getOptionName()) ?>"/>
                     </div>
-                <?
+                <?php
                 }
             } ?>
         </div>

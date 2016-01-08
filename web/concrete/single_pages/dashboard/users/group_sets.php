@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <?php if (in_array($this->controller->getTask(), array('update_set', 'update_set_groups', 'edit', 'delete_set'))) { ?>
 
@@ -74,10 +74,10 @@
             </div>
 		</div>
 
-<? } else { ?>
+<?php } else { ?>
     <div class="row">
         <div class="col-md-12">
-        <? if (Config::get('concrete.permissions.model') == 'advanced') { ?>
+        <?php if (Config::get('concrete.permissions.model') == 'advanced') { ?>
             <div>
                 <?php if (count($groupSets) > 0) { ?>
 
@@ -88,7 +88,7 @@
                                     <i class="fa fa-users"></i> <?php echo $gs->getGroupSetDisplayName()?>
                                 </a>
                             </li>
-                        <? } ?>
+                        <?php } ?>
                     </ul>
 
                 <?php } else { ?>
@@ -111,11 +111,11 @@
 
                     <div class="control-group" style="margin-top: 10px;">
                         <label><?=t('Groups')?></label>
-                        <? foreach($groups as $g) { ?>
+                        <?php foreach($groups as $g) { ?>
                             <div class="checkbox">
                                 <label><?=$form->checkbox('gID[]', $g->getGroupID())?> <span><?=$g->getGroupDisplayName()?></span></label>
                             </div>
-                        <? } ?>
+                        <?php } ?>
                     </div>
 
                     <div class="control-group">
@@ -123,9 +123,9 @@
                     </div>
                 </fieldset>
             </form>
-        <? } else { ?>
+        <?php } else { ?>
             <p><?=t('You must enable <a href="%s">advanced permissions</a> to use group sets.', $view->url('/dashboard/system/permissions/advanced'))?></p>
-        <? } ?>
+        <?php } ?>
             </div>
         </div>
-<? } ?>
+<?php } ?>

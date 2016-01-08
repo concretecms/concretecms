@@ -1,4 +1,4 @@
-<?
+<?php
 
 function getAttributeOptionHTML($v){ 
 	if ($v == 'TEMPLATE') {
@@ -23,11 +23,11 @@ function getAttributeOptionHTML($v){
 		<div id="akSelectValueEdit_<?=$akSelectValueID?>" style="display:none">
 			<span class="leftCol">
 				<input name="akSelectValueOriginal_<?=$akSelectValueID?>" type="hidden" value="<?=$akSelectValue?>" />
-				<? if (is_object($v) && $v->getSelectAttributeOptionTemporaryID() == false) { ?>
+				<?php if (is_object($v) && $v->getSelectAttributeOptionTemporaryID() == false) { ?>
 					<input id="akSelectValueExistingOption_<?=$akSelectValueID?>" name="akSelectValueExistingOption_<?=$akSelectValueID?>" type="hidden" value="<?=$akSelectValueID?>" />
-				<? } else { ?>
+				<?php } else { ?>
 					<input id="akSelectValueNewOption_<?=$akSelectValueID?>" name="akSelectValueNewOption_<?=$akSelectValueID?>" type="hidden" value="<?=$akSelectValueID?>" />
-				<? } ?>
+				<?php } ?>
 				<input id="akSelectValueField_<?php echo $akSelectValueID?>" onkeypress="ccmAttributesHelper.keydownHandler(event);" class="akSelectValueField form-control" data-select-value-id="<?php echo $akSelectValueID; ?>" name="akSelectValue_<?php echo $akSelectValueID?>" type="text" value="<?php echo $akSelectValue?>" size="40" />
 			</span>		
 			<div class="rightCol">
@@ -36,7 +36,7 @@ function getAttributeOptionHTML($v){
 			</div>		
 		</div>	
 		<div class="ccm-spacer">&nbsp;</div>
-<? } ?>
+<?php } ?>
 
 <fieldset class="ccm-attribute ccm-attribute-select">
 <legend><?=t('Select Options')?></legend>
@@ -61,7 +61,7 @@ function getAttributeOptionHTML($v){
 
 <div class="form-group">
 <label for="akSelectOptionDisplayOrder"><?=t("Option Order")?></label>
-	<?
+	<?php
 	$displayOrderOptions = array(
 		'display_asc' => t('Display Order'),
 		'alpha_asc' => t('Alphabetical'),
@@ -77,7 +77,7 @@ function getAttributeOptionHTML($v){
 <div class="input">
 	<div id="attributeValuesInterface">
 	<div id="attributeValuesWrap">
-	<?
+	<?php
 	Loader::helper('text');
 	foreach($akSelectValues as $v) { 
 		if ($v->getSelectAttributeOptionTemporaryID() != false) {
@@ -89,7 +89,7 @@ function getAttributeOptionHTML($v){
 		<div id="akSelectValueWrap_<?=$akSelectValueID?>" class="akSelectValueWrap akSelectValueWrapSortable">
 			<?=getAttributeOptionHTML( $v )?>
 		</div>
-	<? } ?>
+	<?php } ?>
 	</div>
 	
 	<div id="akSelectValueWrapTemplate" class="akSelectValueWrap" style="display:none">

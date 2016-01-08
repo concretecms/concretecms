@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $valt = Loader::helper('validation/token');
 $token = '&' . $valt->getParameter();
@@ -12,13 +12,13 @@ if (isset($cp)) {
 <style type="text/css">div.ccm-page {padding-top: 49px !important;} </style>
 
 <script type="text/javascript">
-<?
+<?php
 $valt = Loader::helper('validation/token');
 print "var CCM_SECURITY_TOKEN = '" . $valt->generate() . "';";
 ?>
 </script>
 
-<?
+<?php
 $dh = Loader::helper('concrete/dashboard');
 $v = View::getInstance();
 $request = \Request::getInstance();

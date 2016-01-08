@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Controller\Dialog\User\Search;
 use \Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use User;

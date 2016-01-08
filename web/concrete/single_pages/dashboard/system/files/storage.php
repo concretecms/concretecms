@@ -1,12 +1,12 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<? if ($this->controller->getTask() == 'select_type'
+<?php if ($this->controller->getTask() == 'select_type'
     || $this->controller->getTask() == 'add'
     || $this->controller->getTask() == 'edit'
     || $this->controller->getTask() == 'update'
     || $this->controller->getTask() == 'delete') { ?>
 
-    <?
+    <?php
     if (is_object($location)) {
         $fslName = $location->getName();
         $fslIsDefault = $location->isDefault();
@@ -22,7 +22,7 @@
             </form>
         </div>
 
-        <?
+        <?php
         }
 
     } else {
@@ -32,9 +32,9 @@
     <form method="post" action="<?=$view->action($method)?>" id="ccm-attribute-key-form">
         <?=Loader::helper('validation/token')->output($method);?>
         <input type="hidden" name="fslTypeID" value="<?=$type->getID()?>" />
-        <? if (is_object($location)) { ?>
+        <?php if (is_object($location)) { ?>
             <input type="hidden" name="fslID" value="<?=$location->getID()?>" />
-        <? } ?>
+        <?php } ?>
         <fieldset>
             <legend><?=t('Basics')?></legend>
             <div class="form-group">
@@ -44,7 +44,7 @@
                     <span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
                 </div>
             </div>
-            <? if ($fslIsDefault) {
+            <?php if ($fslIsDefault) {
                 $args = array('disabled' => 'disabled');
             } else {
                 $args = array();
@@ -65,21 +65,21 @@
             </div>
 
         </fieldset>
-        <? if ($type->hasOptionsForm()) {
+        <?php if ($type->hasOptionsForm()) {
         ?>
         <fieldset>
             <legend><?=t('Options %s Storage Type', $type->getName())?></legend>
-            <? $type->includeOptionsForm($location);?>
+            <?php $type->includeOptionsForm($location);?>
         </fieldset>
-        <? } ?>
+        <?php } ?>
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
                 <a href="<?=URL::page($c)?>" class="btn pull-left btn-default"><?=t('Back')?></a>
-                <? if (is_object($location)) { ?>
+                <?php if (is_object($location)) { ?>
                     <button type="submit" class="btn btn-primary pull-right"><?=t('Save')?></button>
-                <? } else { ?>
+                <?php } else { ?>
                     <button type="submit" class="btn btn-primary pull-right"><?=t('Add')?></button>
-                <? } ?>
+                <?php } ?>
             </div>
         </div>
     </form>
@@ -94,13 +94,13 @@
         });
     })
     </script>
-<? } else { ?>
+<?php } else { ?>
 
     <h3><?=t('Storage Locations')?></h3>
     <ul class="item-select-list">
-    <? foreach($locations as $location) { ?>
+    <?php foreach($locations as $location) { ?>
         <li><a href="<?=$this->action('edit', $location->getID())?>"><i class="fa fa-hdd-o"></i> <?=$location->getDisplayName()?></a></li>
-    <? } ?>
+    <?php } ?>
     </ul>
 
     <form method="get" action="<?=$view->action('select_type')?>" id="ccm-file-storage-location-type-form">
@@ -117,4 +117,4 @@
         </fieldset>
     </form>
 
-<? } ?>
+<?php } ?>

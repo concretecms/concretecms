@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Controller\Dialog\Page\Design;
 use \Concrete\Core\StyleCustomizer\CustomCssRecord;
 use Core;

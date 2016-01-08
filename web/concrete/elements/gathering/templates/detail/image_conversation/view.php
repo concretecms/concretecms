@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 $nh = Loader::helper('navigation');
 if (is_array($image)) {
 $image = $image[0];

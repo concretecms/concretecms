@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $tp = new TaskPermission();
 use \Concrete\Core\Permission\Access\Entity\Type as PermissionAccessEntityType;
@@ -7,7 +7,7 @@ if (!$tp->canAccessGroupSearch()) {
 	die(t("You do not have group search permissions."));
 }
 ?>
-<?
+<?php
 $type = PermissionAccessEntityType::getByHandle('group_combination');
 $url = $type->getAccessEntityTypeToolsURL(); ?>
 
@@ -21,9 +21,9 @@ $url = $type->getAccessEntityTypeToolsURL(); ?>
 <tr>
 	<th><div style="width: 16px"></div></th>
 	<th width="100%"><?=t("Name")?></th>
-	<? if (!is_object($pae)) { ?>
+	<?php if (!is_object($pae)) { ?>
 		<th><div style="width: 16px"></div></th>
-	<? } ?>
+	<?php } ?>
 </tr>
 <tr>
 	<td colspan="3" id="ccm-permissions-access-entity-combination-groups-none"><?=t("No users or groups added.")?></td>
@@ -44,7 +44,7 @@ ConcreteEvent.subscribe('SelectGroup', function(e, data) {
         jQuery.fn.dialog.closeTop();
 		$("#ccm-permissions-access-entity-combination-groups-none").hide();
 		var tbl = $("#ccm-permissions-access-entity-combination-groups");
-		html = '<tr><td><input type="hidden" class="combogID" name="gID[]" value="' + gID + '" /><img src="<?=ASSETS_URL_IMAGES?>/icons/group.png" /></td><td>' + gName + '</td><? if (!is_object($pae)) { ?><td><a href="javascript:void(0)" onclick="ccm_removeCombinationGroup(this)"><img src="<?=ASSETS_URL_IMAGES?>/icons/remove.png" /></a></td><? } ?>';
+		html = '<tr><td><input type="hidden" class="combogID" name="gID[]" value="' + gID + '" /><img src="<?=ASSETS_URL_IMAGES?>/icons/group.png" /></td><td>' + gName + '</td><?php if (!is_object($pae)) { ?><td><a href="javascript:void(0)" onclick="ccm_removeCombinationGroup(this)"><img src="<?=ASSETS_URL_IMAGES?>/icons/remove.png" /></a></td><?php } ?>';
 		tbl.append(html);
 	}
 });

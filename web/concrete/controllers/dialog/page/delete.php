@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Controller\Dialog\Page;
 use \Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
 use \Concrete\Core\Workflow\Request\DeletePageRequest as DeletePagePageWorkflowRequest;

@@ -1,5 +1,5 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
-<? $ih = Loader::helper('concrete/ui'); ?>
+<?php $ih = Loader::helper('concrete/ui'); ?>
 
     <form method="post" class="form-horizontal" action="<?=$view->action('submit')?>">
 		<fieldset>
@@ -41,49 +41,49 @@
 				</div>
 			</div>
 
-			<? if (count($locales)) { // "> 1" because en_US is always available ?>
+			<?php if (count($locales)) { // "> 1" because en_US is always available ?>
 		
 			<div class="row">
 				<div class="form-group">
 					<label for="uEmail" class="control-label col-sm-3"><?=t('Language')?></label>
 					<div class="col-sm-7">
-					<? print $form->select('uDefaultLanguage', $locales, Localization::activeLocale()); ?>
+					<?php print $form->select('uDefaultLanguage', $locales, Localization::activeLocale()); ?>
 					</div>
 				</div>
 			</div>
 
 
-			<? } ?>
+			<?php } ?>
     	</fieldset>
 
-	   	<? if (count($attribs) > 0) { ?>
+	   	<?php if (count($attribs) > 0) { ?>
 
 	   		<fieldset>
 	   			<legend><?=t('Registration Data')?></legend>
 
-				<? foreach($attribs as $ak) {
+				<?php foreach($attribs as $ak) {
 					if (in_array($ak->getAttributeKeyID(), $assignment->getAttributesAllowedArray())) {
 					?>
 					<div class="row">
 	                	<div class="form-group">
 	                    	<label class="control-label col-sm-3"><?=$ak->getAttributeKeyDisplayName()?></label>
 	                    	<div class="col-sm-7">
-		                        <? $ak->render('form', null, false)?>
+		                        <?php $ak->render('form', null, false)?>
 		                    </div>
 		                </div>
 		            </div>
-	                <? } ?>
-	            <? } ?>
+	                <?php } ?>
+	            <?php } ?>
 
 
 	   		</fieldset>
 
-		<? } ?>
+		<?php } ?>
 
 
 		<fieldset>
 			<legend><?=t('Groups')?></legend>
-			<? foreach ($gArray as $g) {
+			<?php foreach ($gArray as $g) {
 				$gp = new Permissions($g);
 				if ($gp->canAssignGroup()) {
 				?>
@@ -92,13 +92,13 @@
 				<div class="col-sm-7">
 					<div class="checkbox">
 					<label>
-						<input type="checkbox" name="gID[]" value="<?=$g->getGroupID()?>" <? if (isset($_POST['gID']) && is_array($_POST['gID']) && in_array($g->getGroupID(), $_POST['gID'])) { ?> checked <? } ?>>
+						<input type="checkbox" name="gID[]" value="<?=$g->getGroupID()?>" <?php if (isset($_POST['gID']) && is_array($_POST['gID']) && in_array($g->getGroupID(), $_POST['gID'])) { ?> checked <?php } ?>>
 						<?=$g->getGroupDisplayName()?>
 					</label>
 					</div>
 				</div>
 				</div>
-	        <? }
+	        <?php }
 
 	       } ?>
         </fieldset>

@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Controller\Dialog\File\Bulk;
 use \Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Concrete\Core\Validation\CSRF\Token;

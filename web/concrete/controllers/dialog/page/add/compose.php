@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Controller\Dialog\Page\Add;
 use \Concrete\Core\Controller\Controller;
 use Concrete\Core\Page\EditResponse;

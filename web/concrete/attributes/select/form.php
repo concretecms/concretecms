@@ -16,7 +16,7 @@ if ($akSelectAllowMultipleValues && !$akSelectAllowOtherValues) {
 		</div>
 
 
-	<? }
+	<?php }
 
 
 }
@@ -35,7 +35,7 @@ if (!$akSelectAllowMultipleValues && !$akSelectAllowOtherValues) {
 	<?=$form->select($view->field('atSelectOptionValue'), $options, $selectedOptions[0]); ?>
 
 
-<? }
+<?php }
 
 /**
  * Select2
@@ -82,12 +82,12 @@ if ($akSelectAllowOtherValues) {
 						};
 					}
 				},
-				<? if ($akSelectAllowMultipleValues) { ?>
+				<?php if ($akSelectAllowMultipleValues) { ?>
 					tokenSeparators: [','],
 					multiple: true,
-				<? } else { ?>
+				<?php } else { ?>
 					maximumSelectionSize: 1,
-				<? } ?>
+				<?php } ?>
 				minimumInputLength: 1,
 				ajax: { // instead of writing the function to execute the request we use Select2's convenient helper
 					url: "<?=$view->action('load_autocomplete_values')?>",
@@ -109,4 +109,4 @@ if ($akSelectAllowOtherValues) {
 		});
 	</script>
 
-<? }
+<?php }

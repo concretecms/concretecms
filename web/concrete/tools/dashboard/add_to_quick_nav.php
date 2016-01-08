@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $ih = Loader::helper('validation/numbers');
 $dh = Loader::helper('concrete/dashboard');

@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $c = Page::getByID(Loader::helper('security')->sanitizeInt($_REQUEST['cID']));
 if (is_object($c) && !$c->isError()) {
@@ -7,5 +7,5 @@ if (is_object($c) && !$c->isError()) {
 
 		<iframe id="ccm-page-preview-frame" name="ccm-page-preview-frame"></iframe>
 
-	<? }
+	<?php }
 }

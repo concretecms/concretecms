@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Controller\SinglePage\Dashboard\System\Optimization;
 use Concrete\Core\Legacy\Loader;
 use Concrete\Core\Logging\Query\Logger;

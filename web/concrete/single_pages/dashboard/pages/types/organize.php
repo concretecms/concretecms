@@ -1,21 +1,21 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <div class="ccm-pane-body">
 <fieldset>
     <legend><?=t('Frequently Used')?></legend>
     <ul class="item-select-list" data-sort="frequently-used">
-    <? foreach($frequent as $pt) { ?>
+    <?php foreach($frequent as $pt) { ?>
         <li data-page-type-id="<?=$pt->getPageTypeID()?>"><span><?=$pt->getPageTypeDisplayName()?> <i class="fa fa-arrow-v ccm-item-select-list-sort"></i></span></li>
-    <? } ?>
+    <?php } ?>
     </ul>
 </fieldset>
 
 <fieldset>
     <legend><?=t('Others')?></legend>
     <ul class="item-select-list" data-sort="other">
-        <? foreach($infrequent as $pt) { ?>
+        <?php foreach($infrequent as $pt) { ?>
             <li data-page-type-id="<?=$pt->getPageTypeID()?>"><span><?=$pt->getPageTypeDisplayName()?> <i class="fa fa-arrow-v ccm-item-select-list-sort"></i></span></li>
-        <? } ?>
+        <?php } ?>
     </ul>
 </fieldset>
 </div>

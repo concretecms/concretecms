@@ -13,7 +13,7 @@ if ($canUpgrade) { ?>
     </div>
 
 
-   <? if (is_object($update)) { ?>
+   <?php if (is_object($update)) { ?>
 
         <div class="ccm-dashboard-update-details-wrapper">
 
@@ -54,12 +54,12 @@ if ($canUpgrade) { ?>
                     <a name="addons"></a>
                     <a href="<?=URL::to('/dashboard/extend/update')?>" class="btn btn-default pull-right btn-xs "><?=t('Update Add-Ons')?></a>
                     <h3><?=t('Add-On Compatibility')?></h3>
-                    <? $list = \Package::getInstalledList();
+                    <?php $list = \Package::getInstalledList();
                     $ci = Core::make('helper/concrete/urls');
                     if (count($list) == 0) { ?>
                         <p><?=t('No add-ons installed.')?></p>
 
-                    <? }
+                    <?php }
                     foreach($list as $pkg) { ?>
 
                         <div class="media" data-addon="<?=$pkg->getPackageHandle()?>">
@@ -71,7 +71,7 @@ if ($canUpgrade) { ?>
                             </div>
                         </div>
 
-                    <? } ?>
+                    <?php } ?>
 
                     <div class="spacer-row-5"></div>
 
@@ -215,10 +215,10 @@ if ($canUpgrade) { ?>
         </script>
 
 
-    <? } else { ?>
+    <?php } else { ?>
 
 
-        <? if ($downloadableUpgradeAvailable) { ?>
+        <?php if ($downloadableUpgradeAvailable) { ?>
 
             <h2><?= t('Available Update for Download') ?></h2>
             <form method="post" action="<?= $view->action('download_update') ?>" id="ccm-download-update-form">
@@ -245,13 +245,13 @@ if ($canUpgrade) { ?>
                 $('header.ccm-dashboard-page-header').children().text(<?=json_encode(t('Currently Running %s', config::get('concrete.version'))) ?>);
             </script>
 
-        <?
+        <?php
 
             }
         ?>
 
             <h2><?= t('Apply Downloaded Update') ?></h2>
-        <? if (count($updates)) {
+        <?php if (count($updates)) {
             ?>
             <div class="alert alert-warning">
                 <i class="fa fa-warning"></i> <?= t(
@@ -288,13 +288,13 @@ if ($canUpgrade) { ?>
             </form>
             </div>
             <div class="clearfix">&nbsp;</div>
-        <?
+        <?php
         } else { ?>
             <p><?=t('No updates are ready to be installed.')?></p>
 
-        <? } ?>
-    <? } ?>
+        <?php } ?>
+    <?php } ?>
 
-<? } else { ?>
+<?php } else { ?>
     <p><?=t('You do not have permission to upgrade this installation of concrete5.')?></p>
-<? } ?>
+<?php } ?>

@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 <section id="ccm-panel-page-design">
@@ -12,76 +12,76 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
     <div class="ccm-panel-content-inner">
 
-    <? if ($cp->canEditPageTemplate() && !$c->isGeneratedCollection()) { ?>
+    <?php if ($cp->canEditPageTemplate() && !$c->isGeneratedCollection()) { ?>
         <div class="list-group" id="ccm-panel-page-design-page-templates" data-panel-menu-id="page-templates" data-panel-menu="collapsible-list-group">
             <div class="list-group-item list-group-item-header"><?=t('Page Template')?></div>
-            <?
+            <?php
             foreach($templates as $tmp) {
                 $selected = false;
                 if (is_object($selectedTemplate) && $tmp->getPageTemplateID() == $selectedTemplate->getPageTemplateID()) {
                     $selected = true;
                 }
                 ?>
-                <label class="list-group-item clearfix"><input type="radio" class="ccm-flat-radio" value="<?=$tmp->getPageTemplateID()?>" name="pTemplateID" <? if ($selected) { ?>checked<? } ?> /> <?=$tmp->getPageTemplateDisplayName()?>
+                <label class="list-group-item clearfix"><input type="radio" class="ccm-flat-radio" value="<?=$tmp->getPageTemplateID()?>" name="pTemplateID" <?php if ($selected) { ?>checked<?php } ?> /> <?=$tmp->getPageTemplateDisplayName()?>
                     <?=$tmp->getPageTemplateIconImage()?>
                 </label>
-                <? if ($selected) { ?>
+                <?php if ($selected) { ?>
                     <div class="list-group-item-collapse-wrapper">
-                <? } ?>
-            <? } ?>
+                <?php } ?>
+            <?php } ?>
 
-            <? if ($selectedTemplate) { ?>
+            <?php if ($selectedTemplate) { ?>
                 </div>
-            <? } ?>
+            <?php } ?>
             <a class="list-group-item list-group-item-collapse" href="#"><span><?=t('Expand')?></span></a>
         </div>
-    <? } ?>
+    <?php } ?>
 
-    <? if ($cp->canEditPageTheme()) { ?>
+    <?php if ($cp->canEditPageTheme()) { ?>
         <div id="ccm-panel-page-design-themes" class="list-group" data-panel-menu-id="themes" data-panel-menu="collapsible-list-group">
             <input type="hidden" name="pThemeID" value="<?=$selectedTheme->getThemeID()?>" />
 
             <div class="list-group-item list-group-item-header"><?=t('Theme')?></div>
-            <?
+            <?php
             foreach($themes as $th) {
                 $selected = false;
                 if (is_object($selectedTheme) && $th->getThemeID() == $selectedTheme->getThemeID()) {
                     $selected = true;
                 }
                 ?>
-                <div data-theme-id="<?=$th->getThemeID()?>" class="list-group-item ccm-page-design-theme-thumbnail <? if ($selected) { ?>ccm-page-design-theme-thumbnail-selected<? } ?> ">
+                <div data-theme-id="<?=$th->getThemeID()?>" class="list-group-item ccm-page-design-theme-thumbnail <?php if ($selected) { ?>ccm-page-design-theme-thumbnail-selected<?php } ?> ">
                     <span><i><?=$th->getThemeThumbnail()?>
-                        <? if ($th->isThemeCustomizable()) { ?>
+                        <?php if ($th->isThemeCustomizable()) { ?>
                         <span class="ccm-page-design-theme-customize">
                             <a href="#" data-launch-panel-detail="page-design-customize" data-panel-detail-url="<?=URL::to('/ccm/system/panels/details/page/preview')?>" data-launch-sub-panel-url="<?=URL::to('/ccm/system/panels/page/design/customize', $th->getThemeID())?>">
                                 <?=t('Customize')?>
                                 <i class="fa fa-share"></i>
                             </a>
                         </span>
-                        <? } ?>
+                        <?php } ?>
                     </i>
                     <div class="ccm-panel-page-design-theme-description"><h4><?=$th->getThemeName()?></h4></div>
 
                     </span>
                 </div>
-                <? if ($selected) { ?>
+                <?php if ($selected) { ?>
                     <div class="list-group-item-collapse-wrapper">
-                <? } ?>
-            <? } ?>
+                <?php } ?>
+            <?php } ?>
 
-            <? if ($selectedTheme) { ?>
+            <?php if ($selectedTheme) { ?>
                 </div>
-            <? } ?>
+            <?php } ?>
             <a class="list-group-item list-group-item-collapse" href="#"><span><?=t('Expand')?></span></a>
         </div>
 
-        <? if (Config::get('concrete.marketplace.enabled')) { ?>
+        <?php if (Config::get('concrete.marketplace.enabled')) { ?>
             <div class="ccm-marketplace-btn-wrapper">
             <button type="button" onclick="window.location.href='<?=URL::to('/dashboard/extend/themes')?>'" class="btn-info btn-block btn btn-large"><?=t("Get More Themes")?></button>
             </div>
-        <? } ?>
+        <?php } ?>
 
-    <? } ?>
+    <?php } ?>
 
     </div>
 </form>

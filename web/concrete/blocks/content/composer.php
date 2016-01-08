@@ -1,13 +1,13 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 
 <div class="form-group">
 	<label><?=$label?></label>
-	<? if($description): ?>
+	<?php if($description): ?>
 	<i class="fa fa-question-circle launch-tooltip" title="" data-original-title="<?=$description?>"></i>
-	<? endif; ?>
-	<?
+	<?php endif; ?>
+	<?php
 	$content = $controller->getContentEditMode();
 	if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$data = $view->getRequestValue();

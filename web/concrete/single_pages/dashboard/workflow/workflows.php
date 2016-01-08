@@ -1,15 +1,15 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
-<? $c = Page::getCurrentPage(); ?>
+<?php $c = Page::getCurrentPage(); ?>
 
-<? if (isset($wf)) { ?>
+<?php if (isset($wf)) { ?>
 
-<? if ($this->controller->getTask() == 'edit_details') { ?>
+<?php if ($this->controller->getTask() == 'edit_details') { ?>
 
 <form method="post" action="<?=$view->action('save_workflow_details')?>" method="post">
 <input type="hidden" name="wfID" value="<?=$wf->getWorkflowID()?>" />
 <?=Loader::helper('validation/token')->output('save_workflow_details')?>
 
-<? Loader::element("workflow/edit_type_form_required", array('workflow' => $wf)); ?>
+<?php Loader::element("workflow/edit_type_form_required", array('workflow' => $wf)); ?>
 
 <div class="ccm-dashboard-form-actions-wrapper">
 <div class="ccm-dashboard-form-actions">
@@ -19,15 +19,15 @@
 </div>
 </form>
 
-<? } else { ?>
+<?php } else { ?>
 
-	<? Loader::element("workflow/type_form_required", array('workflow' => $wf)); ?>
+	<?php Loader::element("workflow/type_form_required", array('workflow' => $wf)); ?>
 
-<? } ?>
+<?php } ?>
 
 
 
-<? } else if ($this->controller->getTask() == 'add' || $this->controller->getTask() == 'submit_add') { ?>
+<?php } else if ($this->controller->getTask() == 'add' || $this->controller->getTask() == 'submit_add') { ?>
 
 	<form method="post" action="<?=$view->action('submit_add')?>">
 	<?=Loader::helper('validation/token')->output('add_workflow')?>
@@ -50,10 +50,10 @@
 				</div>
 			</div>
 
-			<? foreach($typeObjects as $type) { ?>
+			<?php foreach($typeObjects as $type) { ?>
 				
 				<div style="display: none" class="form-group ccm-workflow-type-form" id="ccm-workflow-type-<?=$type->getWorkflowTypeID()?>">
-					<? 
+					<?php 
 					if ($type->getPackageID() > 0) { 
 						@Loader::packageElement('workflow/types/' . $type->getWorkflowTypeHandle()  . '/add_type_form', $type->getPackageHandle(), array('type' => $type));
 					} else {
@@ -61,7 +61,7 @@
 					}
 					?>
 				</div>
-			<? } ?>
+			<?php } ?>
 		</fieldset>
 		
 		<div class="ccm-dashboard-form-actions-wrapper">
@@ -83,7 +83,7 @@
 	});
 	</script>
 
-<? } else { ?>
+<?php } else { ?>
 
 	<div class="ccm-dashboard-header-buttons">
 		<a href="<?=URL::to('/dashboard/workflow/workflows', 'add')?>" class="btn btn-primary"><?=t('Add Workflow')?></a>
@@ -92,9 +92,9 @@
 	<h4><?=t2('%d Workflow', '%d Workflows', count($workflows))?></h4>
 	
 	<ul class="item-select-list">
-	<? foreach($workflows as $workflow) { ?>
+	<?php foreach($workflows as $workflow) { ?>
 		<li><a href="<?=$view->url('/dashboard/workflow/workflows', 'view_detail', $workflow->getWorkflowID())?>"><i class="fa fa-exchange"></i> <?=$workflow->getWorkflowDisplayName()?></a></li>
-	<? } ?>
+	<?php } ?>
 	</ul>
 
-<? } ?>
+<?php } ?>

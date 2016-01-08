@@ -1,11 +1,11 @@
-<? defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 
 $set = $b->getCustomStyle();
 if (is_object($set)) { ?>
     <script type="text/javascript">
         $('head').append('<style type="text/css"><?=addslashes($styleHeader)?></style>');
     </script>
-<?
+<?php
 }
 
 $ag = \Concrete\Core\Http\ResponseAssetGroup::get();

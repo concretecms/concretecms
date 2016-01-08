@@ -1,4 +1,4 @@
-<?
+<?php
 
 namespace Concrete\Controller\SinglePage\Dashboard\System\Basics;
 use Concrete\Core\Editor\RedactorEditor;

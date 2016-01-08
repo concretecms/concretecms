@@ -1,5 +1,5 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");?>
-<?
+<?php
 use Concrete\Core\Multilingual\Page\Section\Section as MultilingualSection;
 ?>
 <script type="text/javascript">
@@ -232,7 +232,7 @@ ccm_multilingualPopulateIcons = function(country) {
                 echo $form->select('defaultSourceLanguage', array_merge(array('' => t('*** Unknown or mixed language')), $languages), $defaultSourceLanguage);
                 ?>
 
-                    <?
+                    <?php
                 echo $form->select('defaultSourceCountry', array_merge(array('' => t('*** Undetermined country')), $countries), $defaultSourceCountry);
                 ?>
                 </div>

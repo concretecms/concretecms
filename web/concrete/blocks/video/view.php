@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 
 // now that we're in the specialized content file for this block type,
@@ -8,7 +8,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 <div style="text-align:center; margin-top: 20px; margin-bottom: 20px;">
 
-<?
+<?php
 $c = Page::getCurrentPage();
 $vWidth=intval($controller->width);
 $vHeight=intval($controller->height);
@@ -18,7 +18,7 @@ if ($c->isEditMode()) { ?>
 	<div class="ccm-edit-mode-disabled-item" style="width:<?=$vWidth?>px; height:<?=$vHeight?>px;  max-width: 100%; ">
 		<div style="padding:8px 0px; padding-top: <?=round($vHeight/2)-10?>px;"><?=t('Content disabled in edit mode.')?></div>
 	</div>
-<? }else if (!$webmURL && !$oggURL && !$mp4URL) { ?>
+<?php }else if (!$webmURL && !$oggURL && !$mp4URL) { ?>
     <div class="ccm-edit-mode-disabled-item" style="width:<?=$vWidth?>px; height:<?=$vHeight?>px; max-width: 100%; ">
 		<div style="padding:8px 0px; padding-top: <?=round($vHeight/2)-10?>px;"><?=t('No Video Files Selected.')?></div>
     </div>
@@ -41,6 +41,6 @@ if ($c->isEditMode()) { ?>
 			<embed src="<?=$mp4URL?>" width="<?=$controller->width?>" height="<?=$controller->height?>" autoplay="true" loop="false" controller="true" pluginspage="http://www.apple.com/quicktime/"></embed>
 		</object>
         <?php } ?>
-<? } ?>
+<?php } ?>
    </video>
 </div>

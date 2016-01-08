@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Controller\SinglePage\Dashboard\System\Registration;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use Config;

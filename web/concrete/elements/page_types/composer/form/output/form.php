@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayoutSet;
 use \Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFormLayoutSetControl;
@@ -20,15 +20,15 @@ if (is_object($targetPage)) {
 
     <input type="hidden" name="ptID" value="<?=$pagetype->getPageTypeID()?>" />
 
-<? foreach($fieldsets as $cfl) { ?>
+<?php foreach($fieldsets as $cfl) { ?>
 	<fieldset>
-		<? if ($cfl->getPageTypeComposerFormLayoutSetDisplayName()) { ?>
+		<?php if ($cfl->getPageTypeComposerFormLayoutSetDisplayName()) { ?>
 			<legend><?=$cfl->getPageTypeComposerFormLayoutSetDisplayName()?></legend>
-		<? } ?>
-		<? if ($cfl->getPageTypeComposerFormLayoutSetDisplayDescription()) { ?>
+		<?php } ?>
+		<?php if ($cfl->getPageTypeComposerFormLayoutSetDisplayDescription()) { ?>
 			<span class="help-block"><?=$cfl->getPageTypeComposerFormLayoutSetDisplayDescription()?></span>
-		<? } ?>
-		<? $controls = PageTypeComposerFormLayoutSetControl::getList($cfl);
+		<?php } ?>
+		<?php $controls = PageTypeComposerFormLayoutSetControl::getList($cfl);
 
 		foreach($controls as $con) {
 			if (is_object($page)) { // we are loading content in
@@ -36,11 +36,11 @@ if (is_object($targetPage)) {
 			}
             $con->setTargetParentPageID($targetParentPageID);
             ?>
-			<? $con->render(); ?>
-		<? } ?>
+			<?php $con->render(); ?>
+		<?php } ?>
 
 	</fieldset>
 
-<? } ?>
+<?php } ?>
 
 </div>

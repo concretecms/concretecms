@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Block\DashboardAppStatus;
 use Loader;
 use Package;

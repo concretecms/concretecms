@@ -1,13 +1,13 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");?>
-<?
+<?php
 use Concrete\Core\Multilingual\Page\Section\Section as MultilingualSection;
 ?>
 
-<? if (count($pages)) { ?>
+<?php if (count($pages)) { ?>
 
     <fieldset>
         <legend><?php echo t('Copy Locale Tree')?></legend>
-    <?
+    <?php
     $u = new User();
     $copyLocales = array();
     $includesHome = false;
@@ -72,18 +72,18 @@ use Concrete\Core\Multilingual\Page\Section\Section as MultilingualSection;
         </script>
 
     </form>
-    <? } else if (!$u->isSuperUser()) { ?>
+    <?php } else if (!$u->isSuperUser()) { ?>
         <p><?=t('Only the super user may copy locale trees.')?></p>
-    <? } else if ($includesHome) { ?>
+    <?php } else if ($includesHome) { ?>
         <p><?=t('Since one of your multilingual sections is the home page, you may not duplicate your site tree using this tool. You must manually assign pages using the page report.')?></p>
-    <? } ?>
+    <?php } ?>
     </fieldset>
 
     <hr/>
 
     <fieldset>
         <legend><?php echo t('Rescan Multilingual Tree')?></legend>
-        <?
+        <?php
         if ($u->isSuperUser() && !$includesHome) { ?>
             <form method="post" id="ccm-internationalization-rescan-tree" action="#">
                 <?php if (count($pages) > 1) {
@@ -126,13 +126,13 @@ use Concrete\Core\Multilingual\Page\Section\Section as MultilingualSection;
                 </script>
 
             </form>
-        <? } else if (!$u->isSuperUser()) { ?>
+        <?php } else if (!$u->isSuperUser()) { ?>
             <p><?=t('Only the super user may rescan the links inside a multilingual tree.')?></p>
-        <? } else if ($includesHome) { ?>
+        <?php } else if ($includesHome) { ?>
             <p><?=t('Since one of your multilingual sections is the home page, you may not rescan the links in your site tree using this tool.')?></p>
-        <? } ?>
+        <?php } ?>
     </fieldset>
 
-<? } else { ?>
+<?php } else { ?>
     <p><?php echo t('You have not created any multilingual content sections yet.'); ?></p>
-<? } ?>
+<?php } ?>

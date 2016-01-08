@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $section = 'groups';
 
@@ -45,13 +45,13 @@ $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
           'treeID': '<?=$tree->getTreeID()?>',
           'chooseNodeInForm': 'single',
 		  'enableDragAndDrop': false,
-          <? if ($this->controller->isPost()) { ?>
+          <?php if ($this->controller->isPost()) { ?>
              'selectNodesByKey': [<?=intval($_POST['gParentNodeID'])?>]
-          <? } else {
+          <?php } else {
           	if (is_object($rootNode)) { ?>
           		'selectNodesByKey': [<?=intval($rootNode->getTreeNodeID())?>],
-          		<? } ?>
-	      	<? } ?>
+          		<?php } ?>
+	      	<?php } ?>
 	      'removeNodesByID': ['<?=$guestGroupNode->getTreeNodeID()?>','<?=$registeredGroupNode->getTreeNodeID()?>'],
 		  'onSelect': function(select, node) {
              if (select) {
@@ -67,7 +67,7 @@ $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
 </div>
 
 </fieldset>
-<? if (Config::get('concrete.user.profiles_enabled')) { ?>
+<?php if (Config::get('concrete.user.profiles_enabled')) { ?>
 <fieldset>
 	<div class="form-group">
         <div class="checkbox">
@@ -82,7 +82,7 @@ $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
         <div class="form-group">
             <label class="control-label"><?=t('Image')?></label>
             <div class="controls">
-                <?
+                <?php
 
                 $af = Loader::helper('concrete/asset_library');
                 print $af->image('gBadgeFID', 'gBadgeFID', t('Choose Badge Image'), $badgeImage);
@@ -108,7 +108,7 @@ $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
     </div>
 
 </fieldset>
-<? } ?>
+<?php } ?>
 
 <fieldset>
 	<legend><?=t('Automation')?></legend>
@@ -143,7 +143,7 @@ $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
             </label>
         </div>
         <div class="alert alert-info">
-            <?
+            <?php
             print t('For custom automated group actions, make sure an automation group controller exists.');
             ?>
         </div>

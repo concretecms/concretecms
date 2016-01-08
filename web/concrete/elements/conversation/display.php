@@ -1,6 +1,6 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<?
+<?php
 if (!is_array($messages)) {
 	$messages = array();
 }
@@ -13,7 +13,7 @@ $val = Loader::helper('validation/token');
 $form = Loader::helper('form');
 ?>
 
-<? Loader::element('conversation/message/add_form', array(
+<?php Loader::element('conversation/message/add_form', array(
 	'blockAreaHandle' => $blockAreaHandle,
 	'cID' => $cID,
 	'bID' => $bID,
@@ -40,38 +40,38 @@ $form = Loader::helper('form');
 	</div>
 
 	<div class="ccm-conversation-messages-header">
-		<? if ($enableOrdering) { ?>
+		<?php if ($enableOrdering) { ?>
 		<select class="form-control pull-right ccm-sort-conversations" data-sort="conversation-message-list">
-			<option value="date_asc" <? if ($orderBy == 'date_asc') { ?>selected="selected"<? } ?>><?=t('Earliest First')?></option>
-			<option value="date_desc" <? if ($orderBy == 'date_desc') { ?>selected="selected"<? } ?>><?=t('Most Recent First')?></option>
-			<option value="rating" <? if ($orderBy == 'rating') { ?>selected="selected"<? } ?>><?=t('Highest Rated')?></option>
+			<option value="date_asc" <?php if ($orderBy == 'date_asc') { ?>selected="selected"<?php } ?>><?=t('Earliest First')?></option>
+			<option value="date_desc" <?php if ($orderBy == 'date_desc') { ?>selected="selected"<?php } ?>><?=t('Most Recent First')?></option>
+			<option value="rating" <?php if ($orderBy == 'rating') { ?>selected="selected"<?php } ?>><?=t('Highest Rated')?></option>
 		</select>
-		<? } ?>
+		<?php } ?>
 
-		<? Loader::element('conversation/count_header', array('conversation' => $conversation))?>
+		<?php Loader::element('conversation/count_header', array('conversation' => $conversation))?>
 	</div>
 
 
-	<div class="ccm-conversation-no-messages well well-small" <? if (count($messages) > 0) { ?>style="display: none" <? } ?>><?=t('No messages in this conversation.')?></div>
+	<div class="ccm-conversation-no-messages well well-small" <?php if (count($messages) > 0) { ?>style="display: none" <?php } ?>><?=t('No messages in this conversation.')?></div>
 
 	<div class="ccm-conversation-messages">
 
-	<? foreach($messages as $m) {
+	<?php foreach($messages as $m) {
 		Loader::element('conversation/message', array('cID' => $cID, 'message' => $m, 'bID' => $bID, 'page' => $page, 'blockAreaHandle' => $blockAreaHandle, 'enablePosting' => $enablePosting, 'displayMode' => $displayMode, 'enableCommentRating' => $enableCommentRating, 'dateFormat' => $dateFormat, 'customDateFormat' => $customDateFormat));
 	} ?>
 
 	</div>
 
-	<? if ($totalPages > $currentPage) { ?>
+	<?php if ($totalPages > $currentPage) { ?>
 	<div class="ccm-conversation-load-more-messages">
 		<button class="btn btn-large" type="button" data-load-page="conversation-message-list" data-total-pages="<?=$totalPages?>" data-next-page="<?=$currentPage + 1?>" ><?=t('Load More')?></button>
 	</div>
-	<? } ?>
+	<?php } ?>
 
 
 </div>
 
-<? Loader::element('conversation/message/add_form', array(
+<?php Loader::element('conversation/message/add_form', array(
 	'blockAreaHandle' => $blockAreaHandle,
 	'cID' => $cID,
 	'bID' => $bID,

@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $u = new User();
 $form = Loader::helper('form');
@@ -77,19 +77,19 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 ?>
 <div class="ccm-ui">
 
-<? if ($pcnt == 0) { ?>
+<?php if ($pcnt == 0) { ?>
 	<?=t("You do not have permission to modify speed settings on any of the selected pages."); ?>
-<? } else { ?>
+<?php } else { ?>
 
 	<form id="ccm-<?=$searchInstance?>-speed-settings-form" method="post" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/speed_settings">
 	<?=$form->hidden('task', 'edit_speed_settings')?>
-	<? foreach($pages as $c) { ?>
+	<?php foreach($pages as $c) { ?>
 		<?=$form->hidden('cID[]', $c->getCollectionID())?>
-	<? } ?>
+	<?php } ?>
 	<div id="ccm-properties-cache-tab">
 
-		<? $form = Loader::helper('form');?>
-		<?
+		<?php $form = Loader::helper('form');?>
+		<?php
 		switch(Config::get('concrete.cache.pages')) {
 			case 'blocks':
 				$globalSetting = t('cache page if all blocks support it.');
@@ -146,7 +146,7 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 
 		<div class="ccm-properties-cache-lifetime input">
 		<ul class="inputs-list">
-			<? $val = ($cCacheFullPageContentLifetimeCustomValue > 0 && $cCacheFullPageContentOverrideLifetime) ? $cCacheFullPageContentLifetimeCustomValue : ''; ?>
+			<?php $val = ($cCacheFullPageContentLifetimeCustomValue > 0 && $cCacheFullPageContentOverrideLifetime) ? $cCacheFullPageContentLifetimeCustomValue : ''; ?>
 			<li><label><?=$form->radio('cCacheFullPageContentOverrideLifetime', -1, $cCacheFullPageContentOverrideLifetime)?>
 			<span><?=t('Multiple values')?></span>
 			</label></li>
@@ -172,12 +172,12 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 	</div>
 	</form>
 	<div class="dialog-buttons">
-	<? $ih = Loader::helper('concrete/ui')?>
+	<?php $ih = Loader::helper('concrete/ui')?>
 	<?=$ih->button_js(t('Cancel'), 'jQuery.fn.dialog.closeTop()', 'left', 'btn')?>
 	<?=$ih->button_js(t('Update'), "$('#ccm-" . $searchInstance . "-speed-settings-form').submit()", 'right', 'btn primary')?>
 	</div>
 
-	<?
+	<?php
 
 }
 ?>

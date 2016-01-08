@@ -35,7 +35,7 @@ if (is_object($f)) {
 
     <div class="ccm-edit-mode-disabled-item"><?=t('Empty Image Block.')?></div>
 
-<? } ?>
+<?php } ?>
 
 <?php if(isset($foS) && is_object($foS)) { ?>
 <script>

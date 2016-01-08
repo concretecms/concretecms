@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 
 if (isset($displayBlockContainerSettings)) {
@@ -223,10 +223,10 @@ $form = Core::make('helper/form');
         </div>
     </li>
     <li class="ccm-inline-toolbar-icon-cell"><a href="#" data-toggle="dropdown" title="<?=t('Margin and Padding')?>"><i class="fa fa-arrows-h"></i></a>
-        <div class="ccm-inline-design-dropdown-menu <? if ($style instanceof \Concrete\Core\Block\CustomStyle) { ?>ccm-inline-design-dropdown-menu-doubled<? } ?> dropdown-menu">
+        <div class="ccm-inline-design-dropdown-menu <?php if ($style instanceof \Concrete\Core\Block\CustomStyle) { ?>ccm-inline-design-dropdown-menu-doubled<?php } ?> dropdown-menu">
 
         <div class="row">
-            <div class="<? if ($style instanceof \Concrete\Core\Block\CustomStyle) { ?>col-sm-6<? } else { ?>col-sm-12<? } ?>">
+            <div class="<?php if ($style instanceof \Concrete\Core\Block\CustomStyle) { ?>col-sm-6<?php } else { ?>col-sm-12<?php } ?>">
             <h3><?=t('Padding')?></h3>
             <div>
                 <span class="ccm-inline-style-slider-heading"><?=t('Top')?></span>
@@ -258,7 +258,7 @@ $form = Core::make('helper/form');
             </div>
             </div>
 
-            <? if ($style instanceof \Concrete\Core\Block\CustomStyle) { ?>
+            <?php if ($style instanceof \Concrete\Core\Block\CustomStyle) { ?>
             <div class="col-sm-6">
                 <h3><?=t('Margin')?></h3>
                 <div>
@@ -290,7 +290,7 @@ $form = Core::make('helper/form');
                     </span>
                 </div>
             </div>
-            <? } ?>
+            <?php } ?>
             </div>
             </div>
 
@@ -352,19 +352,19 @@ $form = Core::make('helper/form');
                     </div>
                 </div>
                 <div class="col-sm-6">
-                    <? if (count($deviceHideClasses)) { ?>
+                    <?php if (count($deviceHideClasses)) { ?>
                     <h3><?=t('Device Visibility')?> <i class="fa fa-question-circle launch-tooltip" title="<?=t('Hide the current content on a particular type of device. Un-check a device below to hide the content.')?>"></i></h3>
                     <div class="btn-group">
-                        <? foreach($deviceHideClasses as $class) {
+                        <?php foreach($deviceHideClasses as $class) {
                             $hidden = false;
                             if (is_object($set)) {
                                 $hidden = $set->isHiddenOnDevice($class);
                             }
                             ?>
-                        <button type="button" data-hide-on-device="<?=$class?>" class="btn btn-default <? if (!$hidden) { ?>active<? } ?>"><i class="<?=$gf->getDeviceHideClassIconClass($class)?>"></i></button>
-                        <? } ?>
+                        <button type="button" data-hide-on-device="<?=$class?>" class="btn btn-default <?php if (!$hidden) { ?>active<?php } ?>"><i class="<?=$gf->getDeviceHideClassIconClass($class)?>"></i></button>
+                        <?php } ?>
                     </div>
-                        <? foreach($deviceHideClasses as $class) {
+                        <?php foreach($deviceHideClasses as $class) {
 
                             $hidden = false;
                             if (is_object($set)) {
@@ -372,9 +372,9 @@ $form = Core::make('helper/form');
                             }
 
                             ?>
-                            <input data-hide-on-device-input="<?=$class?>" type="hidden" name="hideOnDevice[<?=$class?>]" value="<? if ($hidden) { ?>1<? } else { ?>0<? } ?>" />
-                        <? } ?>
-                    <? } ?>
+                            <input data-hide-on-device-input="<?=$class?>" type="hidden" name="hideOnDevice[<?=$class?>]" value="<?php if ($hidden) { ?>1<?php } else { ?>0<?php } ?>" />
+                        <?php } ?>
+                    <?php } ?>
                 </div>
             </div>
         </div>
@@ -390,35 +390,35 @@ $form = Core::make('helper/form');
             </div>
             <hr/>
 
-            <? if ($style instanceof \Concrete\Core\Block\CustomStyle && $canEditCustomTemplate) { ?>
+            <?php if ($style instanceof \Concrete\Core\Block\CustomStyle && $canEditCustomTemplate) { ?>
                 <div class="ccm-inline-select-container">
                     <?=t('Custom Template')?>
                     <select id="bFilename" name="bFilename" class="form-control">
                         <option value="">(<?=t('None selected')?>)</option>
-                        <?
+                        <?php
                         foreach($templates as $tpl) {
-                            ?><option value="<?=$tpl->getTemplateFileFilename()?>" <? if ($bFilename == $tpl->getTemplateFileFilename()) { ?> selected <? } ?>><?=$tpl->getTemplateFileDisplayName()?></option><?
+                            ?><option value="<?=$tpl->getTemplateFileFilename()?>" <?php if ($bFilename == $tpl->getTemplateFileFilename()) { ?> selected <?php } ?>><?=$tpl->getTemplateFileDisplayName()?></option><?php
                         }
                         ?>
                     </select>
                  </div>
                 <hr/>
 
-            <? } ?>
+            <?php } ?>
 
 
-            <? if ($displayBlockContainerSettings) { ?>
+            <?php if ($displayBlockContainerSettings) { ?>
                 <div class="ccm-inline-select-container">
                     <?=t('Block Container Class')?>
                     <select id="enableBlockContainer" name="enableBlockContainer" class="form-control">
-                        <option value="-1" <? if ($enableBlockContainer == -1) { ?>selected<? } ?>><?=t('Default Setting')?></option>
-                        <option value="0"<? if ($enableBlockContainer == 0) { ?>selected<? } ?>><?=t('Disable Grid Container')?></option>
-                        <option value="1" <? if ($enableBlockContainer == 1) { ?>selected<? } ?>><?=t('Enable Grid Container')?></option>
+                        <option value="-1" <?php if ($enableBlockContainer == -1) { ?>selected<?php } ?>><?=t('Default Setting')?></option>
+                        <option value="0"<?php if ($enableBlockContainer == 0) { ?>selected<?php } ?>><?=t('Disable Grid Container')?></option>
+                        <option value="1" <?php if ($enableBlockContainer == 1) { ?>selected<?php } ?>><?=t('Enable Grid Container')?></option>
                     </select>
                 </div>
                 <hr/>
 
-            <? } ?>
+            <?php } ?>
 
             <div>
                 <button data-reset-action="<?=$resetAction?>" data-action="reset-design" type="button" class="btn-block btn btn-danger"><?=t("Clear Styles")?></button>

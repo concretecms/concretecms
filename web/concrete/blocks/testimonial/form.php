@@ -12,7 +12,7 @@ if ($fID > 0) {
 
 <div class="form-group">
     <?php echo $form->label('fID', t('Picture'));?>
-    <?
+    <?php
     $al = Loader::helper('concrete/asset_library');
     print $al->file('ccm-b-file', 'fID', t('Choose File'), $fo);
     ?>

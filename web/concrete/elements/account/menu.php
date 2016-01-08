@@ -28,7 +28,7 @@ do {
 	<span class="caret"></span>
   </button>
   <ul class="dropdown-menu pull-right" role="menu">
-  <?
+  <?php
   	$categories = array();
 	$children = $account->getCollectionChildrenArray(true);
 	foreach($children as $cID) {
@@ -40,7 +40,7 @@ do {
 	}
 
 	foreach($categories as $cc) { ?>
-		<li><a href="<?=Core::make('helper/navigation')->getLinkToCollection($cc)?>"><?=h(t($cc->getCollectionName()))?></a></li><?
+		<li><a href="<?=Core::make('helper/navigation')->getLinkToCollection($cc)?>"><?=h(t($cc->getCollectionName()))?></a></li><?php
 	}
 	?>
 	<li class="divider"></li>
@@ -50,5 +50,5 @@ do {
 </div>
 </div>
 
-<?
+<?php
 } while(false);

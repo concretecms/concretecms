@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 
 $subject = $siteName.' '.t("Registration - Approval Required");
@@ -15,7 +15,7 @@ ob_start()
 <?= t('Email') ?>: <b><?= $uEmail ?></b><br />
 <br />
 
-<?
+<?php
 
 $bodyHTML = ob_get_clean();
 /**
@@ -35,7 +35,7 @@ ob_start();
 <?= t('User Name') ?>: <?= $uName ?>
 <?= t('Email') ?>: <?= $uEmail ?>
 
-<?
+<?php
 
 $body = ob_get_clean();
 /**

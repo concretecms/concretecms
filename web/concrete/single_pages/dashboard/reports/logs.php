@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $valt = Loader::helper('validation/token');
 $th = Loader::helper('text');
@@ -37,11 +37,11 @@ $th = Loader::helper('text');
                 <?=$form->label('channel', t('Channel'))?>
                 <div class="ccm-search-field-content">
                     <?=$form->select('channel', $channels)?>
-                    <? if ($selectedChannel) { ?>
+                    <?php if ($selectedChannel) { ?>
                         <a href="<?=$controller->action('clear', $valt->generate(), $selectedChannel)?>" class="btn btn-default btn-sm"><?=tc('%s is a channel', 'Clear all in %s', Log::getChannelDisplayName($selectedChannel))?></a>
-                    <? } else { ?>
+                    <?php } else { ?>
                         <a href="<?=$controller->action('clear', $valt->generate())?>" class="btn btn-default btn-sm"><?=t('Clear all')?></a>
-                     <? } ?>
+                     <?php } ?>
                 </div>
             </div>
         </div>
@@ -73,7 +73,7 @@ $th = Loader::helper('text');
                 </tr>
             </thead>
             <tbody>
-                <? foreach($entries as $ent) { ?>
+                <?php foreach($entries as $ent) { ?>
                 <tr>
                     <td valign="top" style="white-space: nowrap" class="active"><?php
                         print $ent->getDisplayTimestamp();
@@ -96,7 +96,7 @@ $th = Loader::helper('text');
                     ?></strong></td>
                     <td style="width: 100%"><?=$th->makenice($ent->getMessage())?></td>
                 </tr>
-                <? } ?>
+                <?php } ?>
             </tbody>
         </table>
     </div>

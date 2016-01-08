@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Block\CoreConversationMessage;
 use Loader;
 use \Concrete\Core\Block\BlockController;

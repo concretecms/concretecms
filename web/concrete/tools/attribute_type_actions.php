@@ -1,4 +1,4 @@
-<?
+<?php
 	defined('C5_EXECUTE') or die("Access Denied.");
 	use \Concrete\Core\Attribute\Key\Key as AttributeKey;
 	use \Concrete\Core\Attribute\Type as AttributeType;

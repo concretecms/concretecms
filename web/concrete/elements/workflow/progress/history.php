@@ -10,4 +10,4 @@ foreach($records as $r) { ?>
 		<?=$r->getWorkflowProgressHistoryDescription();?>
 	</div>	
 	
-<? } ?>
+<?php } ?>

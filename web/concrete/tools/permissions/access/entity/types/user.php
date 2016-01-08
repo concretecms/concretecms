@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Core\Permission\Access\Entity\UserEntity as UserPermissionAccessEntity;
 

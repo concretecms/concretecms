@@ -26,7 +26,7 @@ $form = Core::make('helper/form');
 			<label for="USER_LOCALE" class="control-label"><?= t('Language') ?></label>
 			<?= $form->select('USER_LOCALE', $locales) ?>
 		</div>
-	<? } ?>
+	<?php } ?>
 
 	<div class="form-group">
 		<button class="btn btn-primary"><?= t('Log in') ?></button>
@@ -35,10 +35,10 @@ $form = Core::make('helper/form');
 
 	<?php Core::make('helper/validation/token')->output('login_' . $this->getAuthenticationTypeHandle()); ?>
 
-	<? if (Config::get('concrete.user.registration.enabled')) { ?>
+	<?php if (Config::get('concrete.user.registration.enabled')) { ?>
 		<br/>
 		<hr/>
 		<a href="<?=URL::to('/register')?>" class="btn btn-block btn-success"><?=t('Not a member? Register')?></a>
-	<? } ?>
+	<?php } ?>
 
 </form>

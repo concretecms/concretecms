@@ -1,10 +1,10 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); 
+<?php defined('C5_EXECUTE') or die("Access Denied."); 
 
 use \Concrete\Core\Tree\Node\Node as TreeNode;
 
 ?>
 <div id="topics-tree-node-permissions">
-<?
+<?php
 $handle = $node->getPermissionObjectKeyCategoryHandle();
 $enablePermissions = false;
 if (!$node->overrideParentTreeNodePermissions()) { 
@@ -16,58 +16,58 @@ if (!$node->overrideParentTreeNodePermissions()) {
 	<a href="javascript:void(0)" class="btn btn-sm btn-warning" onclick="TopicsPermissions.setTreeNodePermissionsToOverride()"><?=t('Override Permissions')?></a>
 	</div>
 	
-<? } else { 
+<?php } else { 
 	$enablePermissions = true;
 	?>
 
 	<div class="alert alert-info">
 	<?=t("Permissions for this node currently override its parents' permissions.")?>
-	<? if ($node->getTreeNodeParentID() > 0) { ?>
+	<?php if ($node->getTreeNodeParentID() > 0) { ?>
 	<br/><br/>
 		<a href="javascript:void(0)" class="btn btn-sm btn-warning" onclick="TopicsPermissions.setTreeNodePermissionsToInherit()"><?=t('Revert to Parent Permisisons')?></a>
-	<? } ?>
+	<?php } ?>
 </div>
 
-<? } ?>
+<?php } ?>
 
 
 <?=Loader::element('permission/help');?>
 
-<? $cat = PermissionKeyCategory::getByHandle($handle);?>
+<?php $cat = PermissionKeyCategory::getByHandle($handle);?>
 
 <form method="post" id="ccm-permission-list-form" action="<?=$cat->getToolsURL("save_permission_assignments")?>&amp;treeNodeID=<?=$node->getTreeNodeID()?>">
 
 <table class="ccm-permission-grid table table-striped">
-<?
+<?php
 $permissions = PermissionKey::getList($handle);
 foreach($permissions as $pk) { 
 	$pk->setPermissionObject($node);
 	?>
 	<tr>
-	<td class="ccm-permission-grid-name" id="ccm-permission-grid-name-<?=$pk->getPermissionKeyID()?>"><strong><? if ($enablePermissions) { ?><a dialog-title="<?=$pk->getPermissionKeyDisplayName()?>" data-pkID="<?=$pk->getPermissionKeyID()?>" data-paID="<?=$pk->getPermissionAccessID()?>" onclick="ccm_permissionLaunchDialog(this)" href="javascript:void(0)"><? } ?><?=$pk->getPermissionKeyDisplayName()?><? if ($enablePermissions) { ?></a><? } ?></strong></td>
-	<td id="ccm-permission-grid-cell-<?=$pk->getPermissionKeyID()?>" <? if ($enablePermissions) { ?>class="ccm-permission-grid-cell"<? } ?>><?=Loader::element('permission/labels', array('pk' => $pk))?></td>
+	<td class="ccm-permission-grid-name" id="ccm-permission-grid-name-<?=$pk->getPermissionKeyID()?>"><strong><?php if ($enablePermissions) { ?><a dialog-title="<?=$pk->getPermissionKeyDisplayName()?>" data-pkID="<?=$pk->getPermissionKeyID()?>" data-paID="<?=$pk->getPermissionAccessID()?>" onclick="ccm_permissionLaunchDialog(this)" href="javascript:void(0)"><?php } ?><?=$pk->getPermissionKeyDisplayName()?><?php if ($enablePermissions) { ?></a><?php } ?></strong></td>
+	<td id="ccm-permission-grid-cell-<?=$pk->getPermissionKeyID()?>" <?php if ($enablePermissions) { ?>class="ccm-permission-grid-cell"<?php } ?>><?=Loader::element('permission/labels', array('pk' => $pk))?></td>
 </tr>
-<? } ?>
-<? if ($enablePermissions) { ?>
+<?php } ?>
+<?php if ($enablePermissions) { ?>
 <tr>
 	<td class="ccm-permission-grid-name" ></td>
 	<td>
 	<?=Loader::element('permission/clipboard', array('pkCategory' => $cat))?>
 	</td>
 </tr>
-<? } ?>
+<?php } ?>
 
 </table>
 </form>
 
-<? if ($enablePermissions) { ?>
+<?php if ($enablePermissions) { ?>
 <div id="topics-tree-node-permissions-buttons" class="dialog-buttons">
 	<a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeTop()" class="btn btn-default pull-left"><?=t('Cancel')?></a>
 	<button onclick="$('#ccm-permission-list-form').submit()" class="btn btn-primary pull-right"><?=t('Save')?> <i class="icon-ok-sign icon-white"></i></button>
 </div>
-<? } else { ?>
+<?php } else { ?>
 	<div class="dialog-buttons"></div>
-<? } ?>
+<?php } ?>
 
 </div>
 

@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $form = Loader::helper('form');
 ?>
@@ -27,7 +27,7 @@ $form = Loader::helper('form');
         <label for="pTemplateHandle" class="col-md-2 control-label"><?=t('Icon')?></label>
         <div class="col-md-10">
 
-        <?
+        <?php
         $i = 0;
         foreach($icons as $ic) { ?>
           <div class="col-sm-2">
@@ -36,8 +36,8 @@ $form = Loader::helper('form');
                  <?=$form->radio('pTemplateIcon', $ic, $i == 0)?>
             </label>
           </div>
-          <? $i++; ?>
-        <? } ?>
+          <?php $i++; ?>
+        <?php } ?>
         </div>
     </div>
 

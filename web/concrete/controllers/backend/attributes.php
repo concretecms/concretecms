@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Controller\Backend;
 
 use Controller;

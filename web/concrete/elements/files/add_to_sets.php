@@ -1,5 +1,5 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
-<?
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php
 
 $sets = FileSet::getMySets();
 ?>
@@ -12,18 +12,18 @@ $sets = FileSet::getMySets();
 
 
 <div class="form-group" id="ccm-file-set-list">
-	<? if (count($sets)) { ?>
-		<? foreach($sets as $fs) {
+	<?php if (count($sets)) { ?>
+		<?php foreach($sets as $fs) {
 			if ($displayFileSet($fs)) {	?>
 			<div class="checkbox li">
 				<label>
-				<? print $getCheckbox($fs);?>
+				<?php print $getCheckbox($fs);?>
 				<span data-label="file-set-name"><?=$fs->getFileSetName()?></span>
 				</label>
 			</div>
-			<? } ?>
-		<? } ?>
-	<? } ?>
+			<?php } ?>
+		<?php } ?>
+	<?php } ?>
 </div>
 
 <button type="button" class="btn-sm btn btn-default" data-action="add-file-set"><?=t('Add Set')?> <i class="fa fa-plus-circle"></i></button>

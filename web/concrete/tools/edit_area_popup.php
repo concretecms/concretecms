@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Core\Page\Style;
 
@@ -69,4 +69,4 @@ if (!$canViewPane) {
 
 ?>
 
-<? Loader::element($toolSection, $args); ?>
+<?php Loader::element($toolSection, $args); ?>

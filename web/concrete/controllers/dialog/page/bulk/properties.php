@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Controller\Dialog\Page\Bulk;
 use \Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Permissions;

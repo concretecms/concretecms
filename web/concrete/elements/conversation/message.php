@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $im = Loader::helper('image');
 
@@ -32,9 +32,9 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
 	<div data-conversation-message-id="<?=$message->getConversationMessageID()?>" data-conversation-message-level="<?=$message->getConversationMessageLevel()?>" class="<?=$class?>">
 		<a id="cnv<?=$cnvID?>Message<?=$cnvMessageID?>"></a>
 		<div class="ccm-conversation-message-user">
-			<div class="ccm-conversation-avatar"><? print $formatter->getAvatar(); ?></div>
+			<div class="ccm-conversation-avatar"><?php print $formatter->getAvatar(); ?></div>
 			<div class="ccm-conversation-message-byline">
-				<span class="ccm-conversation-message-username"><?
+				<span class="ccm-conversation-message-username"><?php
 					print $formatter->getDisplayName();
 					?></span>
 				<span class="ccm-conversation-message-divider">|</span>
@@ -42,15 +42,15 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
 
                 <?php if($canDeleteMessage || $canFlagMessage) { ?>
                     <span class="ccm-conversation-message-admin-control ccm-conversation-message-divider">|</span>
-                    <? if ($canEditMessage) { ?>
+                    <?php if ($canEditMessage) { ?>
                         <span class="ccm-conversation-message-admin-control ccm-conversation-message-divider"><a href="javascript:void(0)" class="admin-edit" data-conversation-message-id="<?=$message->getConversationMessageID()?>" data-load="edit-conversation-message"><?php echo t('Edit') ?></a></span>
-                    <? } ?>
-                    <? if ($canDeleteMessage) { ?>
+                    <?php } ?>
+                    <?php if ($canDeleteMessage) { ?>
                         <span class="ccm-conversation-message-admin-control ccm-conversation-message-divider"><a href="#" class="admin-delete" data-submit="delete-conversation-message" data-conversation-message-id="<?=$message->getConversationMessageID()?>"><?=t('Delete')?></a></span>
-                    <? } ?>
-                    <? if ($canFlagMessage) { ?>
+                    <?php } ?>
+                    <?php if ($canFlagMessage) { ?>
                         <span class="ccm-conversation-message-admin-control ccm-conversation-message-divider"><a href="#" class="admin-flag" data-submit="flag-conversation-message" data-conversation-message-id="<?=$message->getConversationMessageID()?>"><?=t('Flag As Spam')?></a></span>
-                    <? } ?>
+                    <?php } ?>
                 <?php } ?>
 
 
@@ -81,7 +81,7 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
 						  </div>
 						 <?php } ?>
 							<p class="<?php echo $paragraphPadding ?> filename" rel="<?php echo $attachment['cnvMessageAttachmentID'];?>"><a href="<?php echo $file->getDownloadURL() ?>"><?php echo $file->getFileName() ?></a>
-                            <?
+                            <?php
                             if (!$message->isConversationMessageDeleted() && $canEditMessage) { ?>
                                 <a rel="<?php echo $attachment['cnvMessageAttachmentID'];?>" class="attachment-delete ccm-conversation-message-control-icon ccm-conversation-message-admin-control" href="#"><i class="fa fa-trash-o"></i></a>
                             <?php } ?>
@@ -92,20 +92,20 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
 					}
 				} ?>
 			</div>
-			<? if (!$message->isConversationMessageDeleted() && $message->isConversationMessageApproved()) { ?>
+			<?php if (!$message->isConversationMessageDeleted() && $message->isConversationMessageApproved()) { ?>
 			<ul>
-				<? if ($enablePosting == Conversation::POSTING_ENABLED && $displayMode == 'threaded') { ?>
+				<?php if ($enablePosting == Conversation::POSTING_ENABLED && $displayMode == 'threaded') { ?>
 					<li><a href="#" data-toggle="conversation-reply" data-post-parent-id="<?=$message->getConversationMessageID()?>"><?=t('Reply')?></a></li>
-				<? } ?>
-                <? if ($enableCommentRating && $canRateMessage) { ?>
+				<?php } ?>
+                <?php if ($enableCommentRating && $canRateMessage) { ?>
                     <li><span class="ccm-conversation-message-divider">|</span></li>
-                    <?
+                    <?php
                     $ratingTypes = ConversationRatingType::getList();
                     foreach($ratingTypes as $ratingType) { ?>
-                        <li><? echo $ratingType->outputRatingTypeHTML();?></li>
-                    <? } ?>
+                        <li><?php echo $ratingType->outputRatingTypeHTML();?></li>
+                    <?php } ?>
                     <li><span class="ccm-conversation-message-rating-score" data-message-rating="<?=$message->getConversationMessageID()?>"><?=$message->getConversationMessageTotalRatingScore();?></span></li>
-              <? } ?>
+              <?php } ?>
               <li class="ccm-conversation-social-share"><span class="ccm-conversation-message-divider">|</span></li>
               <li class="ccm-conversation-social-share">
                   <a class="ccm-conversation-message-control-icon share-popup" href="http://twitter.com/intent/tweet?url=<?php echo $cnvMessageURL?>" title="<?=t('Share message URL on Twitter.')?>"><i class="fa fa-twitter"></i></a>
@@ -118,8 +118,8 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
               </li>
 
             </ul>
-			<? } ?>
+			<?php } ?>
 
 		</div>
 	</div>
-<? } ?>
+<?php } ?>
