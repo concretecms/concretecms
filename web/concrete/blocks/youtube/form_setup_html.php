@@ -1,10 +1,10 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 <?php
 if (!$vWidth) {
-    $vWidth=640;
+    $vWidth=854;
 }
 if (!$vHeight) {
-    $vHeight=385;
+    $vHeight=480;
 }
 
 if (!$sizing) {
