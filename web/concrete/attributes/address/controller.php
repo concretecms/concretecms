@@ -129,21 +129,6 @@ class Controller extends AttributeTypeController
         return $args;
     }
 
-    public function deleteKey()
-    {
-        $db = Database::connection();
-        $arr = $this->attributeKey->getAttributeValueIDList();
-        foreach ($arr as $id) {
-            $db->Execute('delete from atAddress where avID = ?', array($id));
-        }
-    }
-
-    public function deleteValue()
-    {
-        $db = Database::connection();
-        $db->Execute('delete from atAddress where avID = ?', array($this->getAttributeValueID()));
-    }
-
     public function getDisplayValue()
     {
         $v = Core::make('helper/text')->entities($this->getValue());

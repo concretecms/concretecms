@@ -27,7 +27,7 @@ class UserValue extends Value
     /**
      * @param mixed $cID
      */
-    public function serUserID($uID)
+    public function setUserID($uID)
     {
         $this->uID = $uID;
     }

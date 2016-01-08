@@ -3,6 +3,7 @@ namespace Concrete\Core\File;
 
 use Carbon\Carbon;
 use Concrete\Core\Attribute\AttributeValueInterface;
+use Concrete\Core\Attribute\ObjectTrait;
 use Concrete\Core\Attribute\Value\FileValue as FileAttributeValue;
 use Concrete\Core\Entity\Attribute\Value\FileValue;
 use Concrete\Core\Entity\Attribute\Value\Value\Value;
@@ -43,6 +44,8 @@ use View;
  */
 class Version
 {
+    use ObjectTrait;
+
     const UT_REPLACE_FILE = 1;
     const UT_TITLE = 2;
     const UT_DESCRIPTION = 3;
@@ -227,35 +230,6 @@ class Version
         return $this->fvTags;
     }
 
-    public function setAttribute($ak, $value)
-    {
-        $orm = \ORM::entityManager('core');
-
-        if (!is_object($ak)) {
-            $ak = FileAttributeKey::getByHandle($ak);
-        }
-
-        $attributeValue = new FileValue();
-        $attributeValue->setVersion($this);
-        $attributeValue->setAttributeKey($ak);
-        $attributeValue->setValue($value);
-
-        $controller = $ak->getController();
-        if (!($value instanceof Value)) {
-            $value = $controller->saveValue($value);
-        }
-
-        $value->setAttributeKey($ak);
-        $attributeValue->setValue($value);
-
-        $orm->persist($attributeValue);
-        $orm->flush();
-
-        $this->getFile()->reindex();
-
-        return $attributeValue;
-    }
-
     /**
      * returns the File object associated with this FileVersion object
      *
@@ -269,29 +243,6 @@ class Version
     public function setFile(\Concrete\Core\File\File $file)
     {
         $this->file = $file;
-    }
-
-    public function clearAttribute($ak)
-    {
-        $db = Database::get();
-        $orm = $db->getEntityManager();
-        $cav = $this->getAttributeValueObject($ak);
-        if (is_object($cav)) {
-            $orm->remove($cav);
-            $orm->flush();
-        }
-        $fo = $this->getFile();
-        $fo->reindex();
-    }
-
-    /**
-     * @deprecated
-     * @param $ak
-     * @return mixed
-     */
-    public function getAttributeValueObject($ak)
-    {
-        return $this->getAttribute($ak);
     }
 
     public function getFileID()
@@ -311,9 +262,18 @@ class Version
      */
     public function delete($deleteFilesAndThumbnails = false)
     {
-        $db = Database::get();
 
-        $db->Execute("DELETE FROM FileAttributeValues WHERE fID = ? AND fvID = ?", array($this->getFileID(), $this->fvID));
+        $db = Database::get();
+        $em = $db->getEntityManager();
+
+        $values = array();
+
+        $category = \Core::make('Concrete\Core\Attribute\Category\FileCategory');
+
+        foreach($this->attributes as $attribute) {
+            $category->deleteValue($attribute);
+        }
+
         $db->Execute("DELETE FROM FileVersionLog WHERE fID = ? AND fvID = ?", array($this->getFileID(), $this->fvID));
 
         $types = Type::getVersionList();
@@ -333,7 +293,6 @@ class Version
             }
         }
 
-        $em = $db->getEntityManager();
         $em->remove($this);
         $em->flush();
     }
@@ -433,6 +392,7 @@ class Version
         $this->deny();
 
         foreach($this->attributes as $value) {
+            $value = clone $value;
             /**
              * @var $value AttributeValue
              */
@@ -730,12 +690,19 @@ class Version
         return $thumbnails;
     }
 
-    /**
-     * Gets an attribute for the file. If "nice mode" is set, we display it nicely
-     * for use in the file attributes table
-     */
+    public function getObjectAttributeCategory()
+    {
+        return \Core::make('\Concrete\Core\Attribute\Category\FileCategory');
+    }
 
-    public function getAttribute($ak, $mode = false)
+    /**
+     * Necessary because getAttribute() returns the Value Value object, and this returns the
+     * File Attribute Value object.
+     * @param $ak
+     * @param $createIfNotExists bool
+     * @return mixed
+     */
+    public function getAttributeValueObject($ak, $createIfNotExists = false)
     {
         $handle = $ak;
         if (is_object($ak)) {
@@ -746,7 +713,15 @@ class Version
                 return $value;
             }
         }
+
+        if ($createIfNotExists) {
+            $attributeValue = new FileValue();
+            $attributeValue->setVersion($this);
+            $attributeValue->setAttributeKey($ak);
+            return $attributeValue;
+        }
     }
+
 
     public function rescanThumbnails()
     {

@@ -152,7 +152,7 @@ class Sets extends DashboardPageController
                 $this->entityManager->flush();
                 $cat = AttributeKeyCategory::getByID($as->getAttributeSetKeyCategoryID());
                 $category = $cat->getAttributeKeyCategory();
-                $unassigned = $category->getUngroupedAttributes();
+                $unassigned = $category->getUnassignedAttributeKeys();
 
                 if (is_array($this->post('akID'))) {
                     foreach ($unassigned as $ak) {

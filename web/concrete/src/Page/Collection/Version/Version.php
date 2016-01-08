@@ -2,7 +2,9 @@
 namespace Concrete\Core\Page\Collection\Version;
 
 use Concrete\Core\Attribute\Key\CollectionKey;
+use Concrete\Core\Attribute\ObjectTrait;
 use Concrete\Core\Entity\Attribute\Key\PageKey;
+use Concrete\Core\Entity\Attribute\Value\PageValue;
 use Loader;
 use \Concrete\Core\Foundation\Object;
 use Block;
@@ -18,6 +20,8 @@ use \Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionV
 
 class Version extends Object implements \Concrete\Core\Permission\ObjectInterface
 {
+
+    use ObjectTrait;
 
     var $cvIsApproved;
 
@@ -88,14 +92,29 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
         return $cv;
     }
 
-    public function getAttribute($ak, $c, $mode = false)
+    public function getObjectAttributeCategory()
+    {
+        return \Core::make('\Concrete\Core\Attribute\Category\PageCategory');
+    }
+
+    public function getAttributeValueObject($ak, $createIfNotExists = false)
     {
         if (!is_object($ak)) {
             $ak = CollectionKey::getByHandle($ak);
         }
+        $value = false;
         if (is_object($ak)) {
-            return \Core::make('\Concrete\Core\Attribute\Category\PageCategory')
-                ->getAttributeValue($ak, $this);
+            $value = $this->getObjectAttributeCategory()->getAttributeValue($ak, $this);
+        }
+
+        if ($value) {
+            return $value;
+        } else if ($createIfNotExists) {
+            $attributeValue = new PageValue();
+            $attributeValue->setPageID($this->getCollectionID());
+            $attributeValue->setVersionID($this->getVersionID());
+            $attributeValue->setAttributeKey($ak);
+            return $attributeValue;
         }
     }
 

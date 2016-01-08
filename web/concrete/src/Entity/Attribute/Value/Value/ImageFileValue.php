@@ -22,6 +22,11 @@ class ImageFileValue extends Value
         return 0;
     }
 
+    public function getValue()
+    {
+        return $this->file;
+    }
+
     public function getFileObject()
     {
         return $this->file;

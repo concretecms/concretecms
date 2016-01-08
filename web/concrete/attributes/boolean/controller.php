@@ -131,17 +131,6 @@ class Controller extends AttributeTypeController
         return $v;
     }
 
-    public function deleteKey()
-    {
-        $db = Database::get();
-        $db->Execute('delete from atBooleanSettings where akID = ?', array($this->getAttributeKey()->getAttributeKeyID()));
-
-        $arr = $this->attributeKey->getAttributeValueIDList();
-        foreach ($arr as $id) {
-            $db->Execute('delete from atBoolean where avID = ?', array($id));
-        }
-    }
-
 	public function validateValue()
 	{
 		$v = $this->getValue();
@@ -180,12 +169,6 @@ class Controller extends AttributeTypeController
     public function validateForm($data)
     {
         return $data['value'] == 1;
-    }
-
-    public function deleteValue()
-    {
-        $db = Database::get();
-        $db->Execute('delete from atBoolean where avID = ?', array($this->getAttributeValueID()));
     }
 
     public function createAttributeKeyType()

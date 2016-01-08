@@ -84,18 +84,6 @@ class Controller extends DefaultController
         print $f->text($this->field('value'), $this->request('value'));
     }
 
-    // should have to delete the at thing
-    public function deleteKey()
-    {
-        $db = Database::connection();
-        $arr = $this->attributeKey->getAttributeValueIDList();
-        foreach ($arr as $id) {
-            $db->Execute('delete from atDefault where avID = ?', array($id));
-        };
-
-        $db->Execute('delete from atTextareaSettings where akID = ?', array($this->attributeKey->getAttributeKeyID()));
-    }
-
     public function type_form()
     {
         $this->set('akTextareaDisplayModeCustomOptions', array());

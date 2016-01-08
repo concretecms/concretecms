@@ -62,15 +62,6 @@ class Controller extends AttributeTypeController
         return $value;
     }
 
-    public function deleteKey()
-    {
-        $db = Loader::db();
-        $arr = $this->attributeKey->getAttributeValueIDList();
-        foreach ($arr as $id) {
-            $db->Execute('delete from atNumber where avID = ?', array($id));
-        }
-    }
-
     public function saveForm($data)
     {
         $this->saveValue($data['value'] * 20);
@@ -80,12 +71,6 @@ class Controller extends AttributeTypeController
     {
         $rt = Loader::helper('form/rating');
         print $rt->rating($this->field('value'), $this->request('value'));
-    }
-
-    public function deleteValue()
-    {
-        $db = Loader::db();
-        $db->Execute('delete from atNumber where avID = ?', array($this->getAttributeValueID()));
     }
 
     public function createAttributeKeyType()

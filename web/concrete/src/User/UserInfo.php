@@ -4,6 +4,7 @@ namespace Concrete\Core\User;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Attribute\Key\UserKey;
+use Concrete\Core\Attribute\ObjectTrait;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Database\DatabaseManager;
 use Concrete\Core\Entity\Attribute\Value\UserValue;
@@ -30,6 +31,8 @@ use Concrete\Core\User\Avatar\AvatarServiceInterface;
 
 class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterface
 {
+
+    use ObjectTrait;
 
     protected $avatarService;
     protected $application;
@@ -698,91 +701,29 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         Events::dispatch('on_user_attributes_saved', $ue);
     }
 
-
-    /**
-     * Sets the attribute of a user info object to the specified value, and saves it in the database.
-     *
-     * @param UserAttributeKey|string $ak
-     * @param mixed $value
-     */
-    public function setAttribute($ak, $value)
+    public function getObjectAttributeCategory()
     {
-        $orm = \ORM::entityManager('core');
-
-        if (!is_object($ak)) {
-            $ak = UserKey::getByHandle($ak);
-        }
-
-        $attributeValue = $this->getAttribute($ak);
-        if (is_object($attributeValue)) {
-            $orm->remove($attributeValue);
-        }
-
-        $attributeValue = new UserValue();
-        $attributeValue->serUserID($this->getUserID());
-        $attributeValue->setAttributeKey($ak);
-        $attributeValue->setValue($value);
-
-        $controller = $ak->getController();
-        if (!($value instanceof Value)) {
-            $value = $controller->saveValue($value);
-        }
-
-        $value->setAttributeKey($ak);
-        $attributeValue->setValue($value);
-
-        $orm->persist($attributeValue);
-        $orm->flush();
-
-        $this->reindex();
-
-        return $attributeValue;
+        return $this->application->make('\Concrete\Core\Attribute\Category\UserCategory');
     }
 
-    /**
-     * @param UserAttributeKey|string $ak
-     */
-    public function clearAttribute($ak)
-    {
-        $db = Loader::db();
-        $orm = $db->getEntityManager();
-        $av = $this->getAttributeValueObject($ak);
-        if (is_object($av)) {
-            $orm->remove($av);
-            $orm->flush();
-        }
-        $this->reindex();
-    }
-
-    /**
-     * Reindex the attributes on this user.
-     */
-    public function reindex()
-    {
-        $category = \Core::make('Concrete\Core\Attribute\Category\UserCategory');
-        $indexer = $category->getSearchIndexer();
-        $indexer->indexEntry($category, $this);
-    }
-
-    public function getAttribute($ak, $mode = false)
+    public function getAttributeValueObject($ak, $createIfNotExists = false)
     {
         if (!is_object($ak)) {
             $ak = UserKey::getByHandle($ak);
         }
+        $value = false;
         if (is_object($ak)) {
-            return $this->application->make('\Concrete\Core\Attribute\Category\UserCategory')
-                ->getAttributeValue($ak, $this);
+            $value = $this->getObjectAttributeCategory()->getAttributeValue($ak, $this);
         }
-    }
 
-    /**
-     * @deprecated
-     * @param $ak
-     * @return mixed
-     */
-    public function getAttributeValueObject($ak)
-    {
-        return $this->getAttribute($ak);
+        if ($value) {
+            return $value;
+        } else if ($createIfNotExists) {
+            $attributeValue = new UserValue();
+            $attributeValue->setUserID($this);
+            $attributeValue->setAttributeKey($ak);
+            return $attributeValue;
+        }
     }
 
     /**

@@ -28,13 +28,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
     </ul>
 <? } ?>
 
-<? if (count($ungrouped)) { ?>
+<? if (count($unassigned)) { ?>
     <? if (count($sortable_sets)) { ?>
         <h4><?=t('Other')?></h4>
     <? } ?>
     <ul class="item-select-list ccm-attribute-list-wrapper">
         <?php
-        foreach($ungrouped as $key) {
+        foreach($unassigned as $key) {
             $controller = $key->getController();
             $formatter = $controller->getIconFormatter(); ?>
 

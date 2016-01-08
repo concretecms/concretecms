@@ -525,6 +525,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
     {
         // first, we remove all files from the drive
         $db = Loader::db();
+        $em = $db->getEntityManager();
 
         // fire an on_page_delete event
         $fve = new \Concrete\Core\File\Event\DeleteFile($this);
@@ -543,8 +544,18 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         $db->Execute("delete from DownloadStatistics where fID = ?", array($this->fID));
         $db->Execute("delete from FilePermissionAssignments where fID = ?", array($this->fID));
 
+        $query = $em->createQuery('select fav from Concrete\Core\Entity\Attribute\Value\Value\ImageFileValue fav inner join fav.file f where f.fID = :fID');
+        $query->setParameter('fID', $this->getFileID());
+        $values = $query->getResult();
+        foreach($values as $value) {
+            $attributeValues = $value->getAttributeValues();
+            foreach($attributeValues as $attributeValue) {
+                $em->remove($attributeValue);
+            }
+            $em->remove($value);
+        }
+
         // now from the DB
-        $em = $db->getEntityManager();
         $em->remove($this);
         $em->flush();
     }

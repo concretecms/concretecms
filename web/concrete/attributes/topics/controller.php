@@ -247,17 +247,6 @@ class Controller extends AttributeTypeController
         return $av;
     }
 
-    public function deleteKey()
-    {
-        $db = Database::get();
-        $arr = $this->attributeKey->getAttributeValueIDList();
-        foreach ($arr as $id) {
-            $db->Execute('delete from atDefault where avID = ?', array($id));
-        }
-
-        $db->Execute('delete from atTopicSettings where akID = ?', array($this->attributeKey->getAttributeKeyID()));
-    }
-
     public function type_form()
     {
         $this->requireAsset('core/topics');

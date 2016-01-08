@@ -26,8 +26,9 @@ class Attributes extends BackendInterfacePageController
         $allowed = $assignment->getAttributesAllowedArray();
 
         $category = AttributeKeyCategory::getByHandle('collection');
+        $controller = $category->getController();
         $sets = $category->getAttributeSets();
-        $leftovers = $category->getUnassignedAttributeKeys();
+        $leftovers = $controller->getUnassignedAttributeKeys();
 
         $selectedAttributes = $this->page->getSetCollectionAttributes();
         $selectedAttributeIDs = array();
@@ -41,6 +42,7 @@ class Attributes extends BackendInterfacePageController
             $obj->title = $set->getAttributeSetDisplayName();
             $obj->attributes = array();
             foreach ($set->getAttributeKeys() as $ak) {
+                $ak = $ak->getAttributeKey();
                 if (in_array($ak->getAttributeKeyID(), $allowed)) {
                     $obj->attributes[] = $ak;
                 }
@@ -64,7 +66,7 @@ class Attributes extends BackendInterfacePageController
         }
 
         $this->set('selectedAttributeIDs', $selectedAttributeIDs);
-        $this->set('assignment', $asl);
+        $this->set('assignment', $assignment);
         $this->set('attributes', $data);
     }
 

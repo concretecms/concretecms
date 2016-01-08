@@ -8,7 +8,9 @@ use Concrete\Core\Attribute\AttributeValueInterface;
  * @Entity
  * @InheritanceType("JOINED")
  * @DiscriminatorColumn(name="type", type="string")
- * @Table(name="AttributeValues")
+ * @Table(
+ *     name="AttributeValues"
+ * )
  */
 abstract class Value implements AttributeValueInterface
 {
@@ -26,7 +28,7 @@ abstract class Value implements AttributeValueInterface
     protected $attribute_key;
 
     /**
-     * @ManyToOne(targetEntity="\Concrete\Core\Entity\Attribute\Value\Value\Value", cascade={"persist", "remove"})
+     * @ManyToOne(targetEntity="\Concrete\Core\Entity\Attribute\Value\Value\Value", cascade={"persist"}, inversedBy="attribute_values")
      * @JoinColumn(name="avID", referencedColumnName="avID")
      **/
     protected $value;
@@ -52,23 +54,34 @@ abstract class Value implements AttributeValueInterface
         return $this->getAttributeKey()->getAttributeType();
     }
 
+    public function getController()
+    {
+        $controller = $this->getAttributeKey()->getController();
+        $controller->setAttributeValue($this->value);
+        return $controller;
+    }
+
+    final public function getValueObject()
+    {
+        return $this->value;
+    }
+
     public function getValue($mode = false)
     {
         $value = $this->value;
         if (is_object($value)) {
             if ($mode != false) {
-                $controller = $this->getAttributeKey()->getController();
+                $controller = $this->getController();
                 $modes = func_get_args();
                 foreach ($modes as $mode) {
                     $method = 'get' . camelcase($mode) . 'Value';
                     if (method_exists($controller, $method)) {
-                        $controller->setAttributeValue($value);
                         return $controller->{$method}();
                     }
                 }
             }
         }
-        return $value;
+        return $value->getValue();
     }
 
     /**

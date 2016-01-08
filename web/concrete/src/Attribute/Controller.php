@@ -64,6 +64,16 @@ class Controller extends AbstractController
         }
     }
 
+    public function deleteKey()
+    {
+
+    }
+
+    public function deleteValue()
+    {
+
+    }
+
     public function getValue()
     {
         if (is_object($this->attributeValue)) {

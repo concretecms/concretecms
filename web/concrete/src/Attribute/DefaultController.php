@@ -71,15 +71,6 @@ class DefaultController extends AttributeTypeController
         return $this->saveValue(isset($data['value']) ? $data['value'] : null);
     }
 
-    public function deleteKey()
-    {
-        $db = Database::get();
-        $arr = $this->attributeKey->getAttributeValueIDList();
-        foreach ($arr as $id) {
-            $db->Execute('delete from atDefault where avID = ?', array($id));
-        }
-    }
-
     public function validateValue()
     {
         return $this->getValue() != '';
@@ -88,11 +79,5 @@ class DefaultController extends AttributeTypeController
     public function validateForm($data)
     {
         return $data['value'] != '';
-    }
-
-    public function deleteValue()
-    {
-        $db = Database::get();
-        $db->Execute('delete from atDefault where avID = ?', array($this->getAttributeValueID()));
     }
 }

@@ -19,13 +19,16 @@ abstract class Value
     protected $avID;
 
     /**
-     * We don't go back to attribute value because multiple object attribute values
-     * can map to the same attribute value value – so instead we just duplicate the attribute
-     * key in this table so it's easy for us to know which controller we should use.
      * @ManyToOne(targetEntity="\Concrete\Core\Entity\Attribute\Key\Key")
      * @JoinColumn(name="akID", referencedColumnName="akID")
      **/
     protected $attribute_key;
+
+    /**
+     * @OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Value\Value", mappedBy="value")
+     * @JoinColumn(name="avID", referencedColumnName="avID")
+     **/
+    protected $attribute_values;
 
     /**
      * @return mixed
@@ -41,6 +44,19 @@ abstract class Value
     public function setAttributeKey($attribute_key)
     {
         $this->attribute_key = $attribute_key;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAttributeValues()
+    {
+        return $this->attribute_values;
+    }
+
+    public function getValue()
+    {
+        return $this;
     }
 
     public function getDisplaySanitizedValue()

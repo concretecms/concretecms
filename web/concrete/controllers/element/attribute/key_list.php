@@ -16,7 +16,7 @@ class KeyList extends ElementController
     protected $dashboard_page_parameters = array();
     protected $enable_sorting = true;
     protected $attribute_sets = array();
-    protected $ungrouped_attributes = array();
+    protected $unassigned_attribute_keys = array();
     protected $category;
 
     protected $types = array();
@@ -56,17 +56,17 @@ class KeyList extends ElementController
     /**
      * @return array
      */
-    public function getUngroupedAttributes()
+    public function getUnassignedAttributeKeys()
     {
-        return $this->ungrouped_attributes;
+        return $this->unassigned_attribute_keys;
     }
 
     /**
-     * @param array $ungrouped_attributes
+     * @param array $unassigned_attribute_keys
      */
-    public function setUngroupedAttributes($ungrouped_attributes)
+    public function setUnassignedAttributeKeys($unassigned_attribute_keys)
     {
-        $this->ungrouped_attributes = $ungrouped_attributes;
+        $this->unassigned_attribute_keys = $unassigned_attribute_keys;
     }
 
 
@@ -140,7 +140,7 @@ class KeyList extends ElementController
         $this->set('types', $types);
         $this->set('enableSorting', $this->enableSorting());
         $this->set('sortable_sets', $this->getAttributeSets());
-        $this->set('ungrouped', $this->getUngroupedAttributes());
+        $this->set('unassigned', $this->getUnassignedAttributeKeys());
     }
 
     /**

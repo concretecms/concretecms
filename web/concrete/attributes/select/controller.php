@@ -242,24 +242,6 @@ class Controller extends AttributeTypeController
         $this->set('selectedOptions', $selectedOptions);
     }
 
-    public function deleteValue()
-    {
-        $db = Database::get();
-        $db->Execute('delete from atSelectOptionsSelected where avID = ?', array($this->getAttributeValueID()));
-    }
-
-    public function deleteKey()
-    {
-        $db = Database::get();
-        $db->Execute('delete from atSelectSettings where akID = ?', array($this->attributeKey->getAttributeKeyID()));
-        $r = $db->Execute('select ID from atSelectOptions where akID = ?',
-            array($this->attributeKey->getAttributeKeyID()));
-        while ($row = $r->FetchRow()) {
-            $db->Execute('delete from atSelectOptionsSelected where atSelectOptionID = ?', array($row['ID']));
-        }
-        $db->Execute('delete from atSelectOptions where akID = ?', array($this->attributeKey->getAttributeKeyID()));
-    }
-
     public function saveForm($data)
     {
         $this->load();

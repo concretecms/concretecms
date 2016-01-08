@@ -54,7 +54,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                         'attribute/editable_list',
                         array(
                             'attributes'           => $attribs,
-                            'object'               => $f,
+                            'object'               => $fv,
                             'saveAction'           => $controller->action('update_attribute'),
                             'clearAction'          => $controller->action('clear_attribute'),
                             'permissionsArguments' => $fp->canEditFileProperties(),
