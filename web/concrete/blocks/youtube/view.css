@@ -1,0 +1,29 @@
+.youtubeBlockResponsive16by9,.youtubeBlockResponsive4by3 {
+    position: relative;
+    height: 0;
+}
+.youtubeBlockResponsive16by9 iframe, .youtubeBlockResponsive4by3 iframe{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.youtubeBlockResponsive16by9 {
+    padding-bottom: 56.25%
+}
+
+.youtubeBlockResponsive4by3{
+    padding-bottom: 75%;
+}
+
+.ccm-edit-mode-disabled-item.youtubeBlockResponsive16by9  {
+    padding-top: 28.125%;
+    padding-bottom:  28.125%
+}
+
+.ccm-edit-mode-disabled-item.youtubeBlockResponsive4by3  {
+    padding-top: 37.5%;
+    padding-bottom: 37.5%
+}

@@ -1,41 +1,70 @@
-<?
-defined('C5_EXECUTE') or die("Access Denied.");
+<? defined('C5_EXECUTE') or die("Access Denied.");
 
-$url       = parse_url($videoURL);
-$pathParts = explode('/', rtrim($url['path'], '/'));
-$videoID   = end($pathParts);
+$responsiveClass  = 'youtubeBlockResponsive16by9';
+$sizeDisabled = '';
 
-if (isset($url['query'])) {
-	parse_str($url['query'], $query);
-	$videoID = (isset($query['v'])) ? $query['v'] : $videoID;
+if ($vWidth && $vHeight) {
+	$sizeargs = 'width="' . $vWidth . '" height="' . $vHeight . '"';
+	$sizeDisabled = 'style="width:' . $vWidth . 'px; height:' . $vHeight . 'px"';
+	$responsiveClass = '';
+} elseif ($sizing == '4:3') {
+	$responsiveClass  = 'youtubeBlockResponsive4by3';
 }
 
-$vWidth  = ($vWidth)  ? $vWidth  : 425;
-$vHeight = ($vHeight) ? $vHeight : 344;
+$params = array();
+
+if (isset($playlist)) {
+	$params[] = 'playlist='. $playlist;
+	$videoID = '';
+}
+
+if ($playListID) {
+	$params[] = 'listType=playlist';
+	$params[] = 'list=' . $playListID;
+}
+
+if (isset($autoplay)) {
+	$params[] = 'autoplay=' . ($autoplay ? '1' : '0');
+}
+
+if (isset($color)) {
+	$params[] = 'color=' . $color;
+}
+
+if (isset($controls)) {
+	$params[] = 'controls=' . $controls;
+}
+
+$params[] = 'hl=' . Localization::activeLanguage();
+
+if (isset($iv_load_policy)) {
+	$params[] = 'iv_load_policy=' . ($iv_load_policy ? '1' : '0');
+}
+
+if (isset($loop)) {
+	$params[] = 'loop=' . ($loop ? '1' : '0');
+}
+
+if (isset($modestbranding)) {
+	$params[] = 'modestbranding=' . ($modestbranding ? '1' : '0');
+}
+
+if (isset($rel)) {
+	$params[] = 'rel=' . ($rel ? '1' : '0');
+}
+
+if (isset($showinfo)) {
+	$params[] = 'showinfo=' . ($showinfo ? '1' : '0');
+}
+
+$paramstring = '?' . implode('&', $params);
 
 if (Page::getCurrentPage()->isEditMode()) { ?>
-
-	<div class="ccm-edit-mode-disabled-item" style="width: <?= $vWidth; ?>px; height: <?= $vHeight; ?>px;">
-		<div style="padding:8px 0px; padding-top: <?= round($vHeight/2)-10; ?>px;"><?= t('YouTube Video disabled in edit mode.'); ?></div>
+	<div class="ccm-edit-mode-disabled-item youtubeBlock <?php echo $responsiveClass; ?>" <?php echo $sizeDisabled; ?>>
+		<div><?= t('YouTube Video disabled in edit mode.'); ?></div>
 	</div>
-	
-<? } elseif ($vPlayer == 1) { ?>
-
-	<div id="youtube<?= $bID; ?>" class="youtubeBlock">
-		<iframe class="youtube-player" width="<?= $vWidth; ?>" height="<?= $vHeight; ?>" src="//www.youtube.com/embed/<?= $videoID; ?>?wmode=transparent" frameborder="0" allowfullscreen></iframe>
-	</div>
-	
 <? } else { ?>
-
-	<div id="youtube<?= $bID; ?>" class="youtubeBlock"><div id="youtube<?= $bID; ?>_video"><?= t('You must install Adobe Flash to view this content.'); ?></div></div>
-	<script type="text/javascript">
-	//<![CDATA[
-	params = {
-		wmode: "transparent"
-	};
-	flashvars = {};
-	swfobject.embedSWF('//www.youtube.com/v/<?= $videoID; ?>', 'youtube<?= $bID; ?>_video', '<?= $vWidth; ?>', '<?= $vHeight; ?>', '8.0.0', false, flashvars, params);
-	//]]>
-	</script>
-	
+	<div id="youtube<?= $bID; ?>" class="youtubeBlock <?php echo $responsiveClass; ?>">
+		<iframe class="youtube-player" <?php echo $sizeargs; ?> src="//www.youtube.com/embed/<?= $videoID; ?><?= $paramstring;?>" frameborder="0" allowfullscreen></iframe>
+	</div>
 <? } ?>
