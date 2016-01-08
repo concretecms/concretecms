@@ -26,7 +26,6 @@ echo Core::make('helper/concrete/ui')->tabs(array(
             <?php echo $form->text('videoURL', $videoURL, array('required'=>'required'));?>
         </div>
     </fieldset>
-
     <fieldset>
         <legend><?php echo t('Size'); ?></legend>
         <div class="radio">
@@ -76,8 +75,8 @@ echo Core::make('helper/concrete/ui')->tabs(array(
                         <?php echo t("Show video information")?>
                     </label>
                 </div>
-                <div class="form-group">
-                    <?php  echo $form->label('color', t('Color Scheme'))?>
+                <div class="form-group controls-only <?php echo (isset($controls) && $controls == 0 ? 'hidden' : '');?>">
+                    <?php  echo $form->label('color', t('Progress Bar Color'))?>
                     <?php  echo $form->select('color', array('red'=>t('Red'), 'white'=>t('White')), $color)?>
                 </div>
             </div>
@@ -89,7 +88,7 @@ echo Core::make('helper/concrete/ui')->tabs(array(
                         <?php echo t("Show controls")?>
                     </label>
                 </div>
-                <div class="form-group">
+                <div class="form-group controls-only <?php echo (isset($controls) && $controls == 0 ? 'hidden' : '');?>">
                     <label>
                         <?php
                         $disabledattr = array();
@@ -103,28 +102,10 @@ echo Core::make('helper/concrete/ui')->tabs(array(
             </div>
         </div>
     </fieldset>
-
     <fieldset>
         <legend><?php echo t('Playback Options'); ?></legend>
         <div class="row">
-            <div class="col-xs-6">
-                    <div class="form-group">
-                        <label>
-                            <?php echo $form->checkbox('autoplay', 1, $autoplay); ?>
-                            <?php echo t("Automatically play")?>
-                        </label>
-                    </div>
-             </div>
-            <div class="col-xs-6">
-                <div class="form-group">
-                    <label>
-                        <?php echo $form->checkbox('loopEnd', 1, $loopEnd); ?>
-                        <?php echo t("Loop video")?>
-                    </label>
-                </div>
-            </div>
-
-            <div class="form-group col-xs-12">
+            <div class="col-xs-12">
                 <div class="form-group">
                     <label>
                         <?php echo $form->checkbox('rel', 1, $rel); ?>
@@ -133,15 +114,30 @@ echo Core::make('helper/concrete/ui')->tabs(array(
                 </div>
                 <div class="form-group">
                     <label>
-                        <?php echo $form->checkbox('iv_load_policy', 1, $iv_load_policy); ?>
-                        <?php echo t("Show annotations by default")?>
+                        <?php echo $form->checkbox('iv_load_policy', 1, ($iv_load_policy == 3)); ?>
+                        <?php echo t("Hide annotations by default")?>
                     </label>
                 </div>
              </div>
+            <div class="col-xs-6">
+                <div class="form-group">
+                    <label>
+                        <?php echo $form->checkbox('autoplay', 1, $autoplay); ?>
+                        <?php echo t("Automatically play")?>
+                    </label>
+                </div>
+            </div>
+            <div class="col-xs-6">
+                <div class="form-group">
+                    <label>
+                        <?php echo $form->checkbox('loopEnd', 1, $loopEnd); ?>
+                        <?php echo t("Loop video")?>
+                    </label>
+                </div>
+            </div>
         </div>
     </fieldset>
 </div>
-
 
 <script>
     $(document).ready(function() {
@@ -150,6 +146,14 @@ echo Core::make('helper/concrete/ui')->tabs(array(
                 $('#fixedsizes').removeClass('hidden');
             } else {
                 $('#fixedsizes').addClass('hidden');
+            }
+        });
+
+        $('#controls').change(function(){
+            if ($('#controls').is(':checked')) {
+                $('.controls-only').removeClass('hidden');
+            } else {
+                $('.controls-only').addClass('hidden');
             }
         });
 
