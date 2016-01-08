@@ -22,6 +22,7 @@ class Controller extends BlockController
     public $title = "";
     public $buttonText = ">";
     public $baseSearchPath = "";
+    public $isFulltextSearch = 0; 
     public $resultsURL = "";
     public $postTo_cID = "";
 
@@ -126,6 +127,7 @@ class Controller extends BlockController
         $this->set('buttonText', $this->buttonText);
         $this->set('baseSearchPath', $this->baseSearchPath);
         $this->set('postTo_cID', $this->postTo_cID);
+        $this->set('isFulltextSearch', $this->isFulltextSearch);
 
         $resultsURL = $c->getCollectionPath();
 
@@ -154,6 +156,7 @@ class Controller extends BlockController
             'title' => '',
             'buttonText' => '',
             'baseSearchPath' => '',
+            'isFulltextSearch' => 0,
             'searchUnderCID' => 0,
             'postTo_cID' => 0,
             'externalTarget' => 0,
@@ -163,6 +166,8 @@ class Controller extends BlockController
         $args['title'] = $data['title'];
         $args['buttonText'] = $data['buttonText'];
         $args['baseSearchPath'] = $data['baseSearchPath'];
+        $args['isFulltextSearch'] = $data['isFulltextSearch'];
+
         if ($args['baseSearchPath'] == 'OTHER' && intval($data['searchUnderCID']) > 0) {
             $customPathC = Page::getByID(intval($data['searchUnderCID']));
             if (!$customPathC) {
@@ -233,7 +238,11 @@ class Controller extends BlockController
         }
 
         if (isset($_REQUEST['query'])) {
+          if($this->isFulltextSearch == 1) {
+            $ipl->filterByFulltextKeywords($_q);
+          } else {
             $ipl->filterByKeywords($_q);
+          }
         }
 
         if (is_array($_REQUEST['search_paths'])) {

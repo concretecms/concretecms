@@ -11,6 +11,7 @@
     <field name="title" type="string" size="255"/>
     <field name="buttonText" type="string" size="128"/>
     <field name="baseSearchPath" type="string" size="255"/>
+    <field name="isFulltextSearch" type="integer"/>
     <field name="postTo_cID" type="string" size="255"/>
     <field name="resultsURL" type="string" size="255"/>
   </table>
