@@ -191,20 +191,6 @@ class Controller extends AttributeTypeController
         $this->set('akDateDisplayMode', $this->akDateDisplayMode);
     }
 
-    public function deleteKey()
-    {
-        $db = Loader::db();
-        $arr = $this->attributeKey->getAttributeValueIDList();
-        foreach ($arr as $id) {
-            $db->Execute('delete from atDateTime where avID = ?', array($id));
-        }
-    }
-    public function deleteValue()
-    {
-        $db = Loader::db();
-        $db->Execute('delete from atDateTime where avID = ?', array($this->getAttributeValueID()));
-    }
-
     public function createAttributeKeyType()
     {
         return new DateTimeType();

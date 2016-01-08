@@ -75,7 +75,7 @@ $txt = Loader::helper('text');?>
                     $cat = AttributeKeyCategory::getByID($set->getAttributeSetKeyCategoryID());
                     $cat = $cat->getAttributeKeyCategory();
                     $list = $cat->getList();
-                    $unassigned = $cat->getUngroupedAttributes();
+                    $unassigned = $cat->getUnassignedAttributeKeys();
                     if (count($list) > 0) { ?>
 
                         <div class="form-group">

@@ -35,7 +35,7 @@ abstract class DashboardAttributesPageController extends DashboardPageController
         $category = $entity->getAttributeKeyCategory();
         $list = new KeyList();
         $list->setAttributeSets($entity->getAttributeSets());
-        $list->setUngroupedAttributes($category->getUngroupedAttributes());
+        $list->setUnassignedAttributeKeys($category->getUnassignedAttributeKeys());
         $list->setAttributeTypes($category->getAttributeTypes());
         $list->setDashboardPagePath($this->getPageObject()->getCollectionPath());
         $list->setDashboardPageParameters($this->getRequestActionParameters());
@@ -176,7 +176,7 @@ abstract class DashboardAttributesPageController extends DashboardPageController
 
             $category = $entity->getAttributeKeyCategory();
             $category->setEntity($entity);
-            $category->delete($key);
+            $category->deleteKey($key);
 
             if ($onComplete instanceof \Closure) {
                 $onComplete();

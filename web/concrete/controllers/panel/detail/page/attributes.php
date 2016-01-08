@@ -11,6 +11,7 @@ use Loader;
 use User;
 use Concrete\Core\Page\Collection\Version\Version;
 use CollectionAttributeKey;
+use Concrete\Core\Entity\Attribute\Key\PageKey;
 use \Concrete\Core\Attribute\View as AttributeTypeView;
 
 class Attributes extends BackendInterfacePageController
@@ -33,7 +34,7 @@ class Attributes extends BackendInterfacePageController
         $this->assignment = $pk->getMyAssignment();
     }
 
-    protected function getAttributeJSONRepresentation(CollectionAttributeKey $ak, $mode = 'edit')
+    protected function getAttributeJSONRepresentation(PageKey $ak, $mode = 'edit')
     {
         ob_start();
         $av = new AttributeTypeView($ak);

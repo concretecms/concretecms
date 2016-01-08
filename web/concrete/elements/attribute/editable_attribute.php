@@ -27,7 +27,7 @@ if (isset($objects)) {
 } else {
     $value = $object->getAttributeValueObject($ak);
     if (is_object($value)) {
-        $display = $value->getValue()->getDisplaySanitizedValue();
+        $display = $value->getValueObject()->getDisplaySanitizedValue();
     } else {
         $display = '';
     }

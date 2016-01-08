@@ -101,15 +101,6 @@ class Controller extends AttributeTypeController
         return $value;
     }
 
-    public function deleteKey()
-    {
-        $db = Database::connection();
-        $arr = $this->attributeKey->getAttributeValueIDList();
-        foreach ($arr as $id) {
-            $db->Execute('delete from atFile where avID = ?', array($id));
-        }
-    }
-
     public function validateValue()
     {
         $f = $this->getValue();
@@ -140,8 +131,6 @@ class Controller extends AttributeTypeController
         if ($data['value'] > 0) {
             $f = File::getByID($data['value']);
             $this->saveValue($f);
-        } else {
-            $this->deleteValue();
         }
     }
 
@@ -155,12 +144,6 @@ class Controller extends AttributeTypeController
     {
         $type = new ImageFileType();
         return $type;
-    }
-
-    public function deleteValue()
-    {
-        $db = Database::connection();
-        $db->Execute('delete from atFile where avID = ?', array($this->getAttributeValueID()));
     }
 
     public function createAttributeKeyType()

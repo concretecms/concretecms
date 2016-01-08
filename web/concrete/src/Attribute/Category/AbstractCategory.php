@@ -7,6 +7,7 @@ use Concrete\Controller\Element\Attribute\KeyList;
 use Concrete\Controller\Element\Attribute\StandardListHeader;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Attribute\AttributeKeyInterface;
+use Concrete\Core\Attribute\AttributeValueInterface;
 use Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexerInterface;
 use Concrete\Core\Attribute\EntityInterface;
 use Concrete\Core\Attribute\Key\Factory;
@@ -20,6 +21,7 @@ use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Set;
 use Concrete\Core\Entity\Attribute\Key\Key as AttributeKey;
 use Concrete\Core\Entity\Attribute\SetKey;
+use Concrete\Core\Entity\Attribute\Value\Value\Value;
 use Doctrine\ORM\EntityManager;
 use Concrete\Core\Entity\Attribute\Type as AttributeType;
 use Doctrine\ORM\EntityRepository;
@@ -180,8 +182,11 @@ abstract class AbstractCategory implements CategoryInterface
         return $this->entity;
     }
 
-    public function delete(Key $key)
+    public function deleteKey(Key $key)
     {
+        $controller = $key->getController();
+        $controller->deleteKey();
+
         // Delete from any attribute sets
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\SetKey');
         $setKeys = $r->findBy(array('attribute_key' => $key));
@@ -219,7 +224,7 @@ abstract class AbstractCategory implements CategoryInterface
         return $indexer;
     }
 
-    public function getUngroupedAttributes()
+    public function getUnassignedAttributeKeys()
     {
         $attributes = array();
         foreach($this->getList() as $key) {
@@ -233,6 +238,25 @@ abstract class AbstractCategory implements CategoryInterface
             }
         }
         return $attributes;
+    }
+
+    public function deleteValue(AttributeValueInterface $attribute)
+    {
+        $controller = $attribute->getAttributeKey()->getController();
+        $controller->deleteValue();
+
+        /**
+         * @var $value Value
+         */
+        $value = $attribute->getValueObject();
+        $this->entityManager->remove($attribute);
+
+        $this->entityManager->flush();
+
+        $this->entityManager->refresh($value);
+        if (count($value->getAttributeValues()) < 1) {
+            $this->entityManager->remove($value);
+        }
     }
 
     public function getRequestLoader()

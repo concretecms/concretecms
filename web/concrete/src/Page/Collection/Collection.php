@@ -396,7 +396,7 @@ class Collection extends Object
     public function getAttribute($akHandle, $displayMode = false)
     {
         if (is_object($this->vObj)) {
-            return $this->vObj->getAttribute($akHandle, $this, $displayMode);
+            return $this->vObj->getAttribute($akHandle, $displayMode);
         }
     }
 
@@ -494,31 +494,7 @@ class Collection extends Object
 
     public function setAttribute($ak, $value)
     {
-        $orm = \ORM::entityManager('core');
-
-        if (!is_object($ak)) {
-            $ak = CollectionAttributeKey::getByHandle($ak);
-        }
-
-        $av = new PageValue();
-        $av->setPageID($this->getCollectionID());
-        $av->setVersionID($this->getVersionID());
-        $av->setAttributeKey($ak);
-
-        $controller = $ak->getController();
-        $controller->setAttributeKey($ak);
-        if (!($value instanceof Value)) {
-            $value = $controller->saveValue($value);
-        }
-        $value->setAttributeKey($ak);
-        $av->setValue($value);
-
-        $orm->persist($av);
-        $orm->flush();
-
-        $this->reindex();
-
-        return $av;
+        return $this->vObj->setAttribute($ak, $value);
     }
 
     /**
@@ -1167,14 +1143,8 @@ class Collection extends Object
         }
     }
 
-    /**
-     * @deprecated
-     * @param $ak
-     * @param null $mode
-     * @return type
-     */
-    public function getAttributeValueObject($ak, $mode = null)
+    public function getAttributeValueObject($ak)
     {
-        return $this->getAttribute($ak, $mode);
+        return $this->vObj->getAttributeValueObject($ak);
     }
 }

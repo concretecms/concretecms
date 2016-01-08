@@ -72,21 +72,6 @@ class Controller extends AttributeTypeController
         }
     }
 
-    public function deleteKey()
-    {
-        $db = Loader::db();
-        $arr = $this->attributeKey->getAttributeValueIDList();
-        foreach ($arr as $id) {
-            $db->Execute('delete from atSocialLinks where avID = ?', array($id));
-        }
-    }
-
-    public function deleteValue()
-    {
-        $db = Loader::db();
-        $db->Execute('delete from atSocialLinks where avID = ?', array($this->getAttributeValueID()));
-    }
-
     public function getDisplayValue()
     {
         $html = '';
