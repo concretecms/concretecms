@@ -22,8 +22,18 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
         position: relative;
     }
 
+    .seo-page-edit .form-group {
+        position: relative;
+    }
+
     .seo-page-edit, .seo-page-details {
         margin-bottom: 20px;
+    }
+
+    .seo-page-edit .help-block {
+        position: absolute;
+        top: -5px;
+        right: 0;
     }
 
     .ccm-ui .form-inline .radio input[type="radio"], .ccm-ui .form-inline .checkbox input[type="checkbox"] {
@@ -43,13 +53,10 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
         margin-right: 15px;
     }
 
-    .ccm-seo-rows input[type="text"], .ccm-seo-rows textarea {
-        max-width: 300px;
-    }
-
     .ccm-ui .container-fluid.ccm-search-results-table {
         margin-left: 80px;
     }
+
 </style>
 <div class="ccm-dashboard-content-full">
     <div data-search-element="wrapper">
@@ -126,7 +133,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                 ?>
             <div class="row page-title"><legend><?php echo $cobj->getCollectionName() ?></legend></div>
             <div class="ccm-seoRow-<?php echo $cID; ?> ccm-seo-rows <?php echo $i % 2 == 0 ? 'even' : '' ?> row">
-                    <div class="col-md-2 seo-page-details">
+                    <div class="col-md-3 seo-page-details">
                         <strong><?php echo t('Page Name'); ?></strong><br/>
                         <?php echo $cobj-> getCollectionName() ? $cobj->getCollectionName() : ''; ?><br/><br/>
                         <strong><?php echo t('Page Type'); ?></strong><br/>
@@ -134,7 +141,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                         <strong><?php echo t('Modified'); ?></strong><br/>
                         <?php echo $cobj->getCollectionDateLastModified() ? $dh->formatDateTime($cobj->getCollectionDateLastModified()) : ''; ?>
                     </div>
-                    <div class="col-md-9 col-md-offset-1 seo-page-edit">
+                    <div class="col-md-7 col-md-offset-1 seo-page-edit">
                         <div class="form-group">
                             <label><?php echo t('Meta Title'); ?></label>
                             <?php $seoPageTitle = $cobj->getCollectionName();
@@ -243,6 +250,15 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                 $(this).css({'background' : 'white'});
                 $(this).next('.help-inline').hide();
             })
+
+            $('.seo-page-edit input, .seo-page-edit textarea').textcounter({
+                type: "character",
+                max: -1,
+                countSpaces: true,
+                stopInputAtMaximum: false,
+                counterText: '<?php echo t('characters'); ?>: ',
+                countContainerClass: 'help-block'
+            });
         });
         </script>
     </div>
