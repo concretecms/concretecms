@@ -13,14 +13,7 @@ class Controller extends BlockController
     protected $btCacheBlockOutput = true;
     protected $btCacheBlockOutputOnPost = true;
     protected $btCacheBlockOutputForRegisteredUsers = false;
-
-    public $title = '';
-    public $videoURL = "";
-    public $vHeight = "370";
-    public $vWidth = "425";
-    public $vPlayer = '1';
-    public $mode = "youtube";
-
+    
     /**
      * Used for localization. If we want to localize the name/description we have to include this.
      */
@@ -32,19 +25,6 @@ class Controller extends BlockController
     public function getBlockTypeName()
     {
         return t("YouTube Video");
-    }
-
-    public function __construct($obj = null)
-    {
-        parent::__construct($obj);
-        if (!$this->title) {
-            $this->title = t("My Video");
-        }
-    }
-
-    public function registerViewAssets($outputContent = '')
-    {
-        $this->requireAsset('swfobject');
     }
 
     public function edit()
