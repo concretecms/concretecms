@@ -165,7 +165,9 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                             <label><?php echo t('Slug'); ?></label>
                             <?php echo $form->text('collection_handle', $cobj->getCollectionHandle(), array('title' => $cID, 'class' => 'collectionHandle')); ?>
                             <?php
-                            Page::rescanCollectionPath($cID);
+                            if ($page = Page::getByID($cID)) {
+                                $page->rescanCollectionPath();
+                            }
                             $path = $cobj->getCollectionPath();
                             $tokens = explode('/', $path);
                             $lastkey = array_pop(array_keys($tokens));
