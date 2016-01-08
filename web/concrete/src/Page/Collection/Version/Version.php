@@ -273,22 +273,17 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
         $r = $db->prepare($q);
         $res = $db->execute($r, $v);
 
-        $q2 = "select akID, avID from CollectionAttributeValues where cID = ? and cvID = ?";
-        $v2 = array(
-            $c->getCollectionID(),
-            $this->getVersionID()
-        );
-        $r2 = $db->query($q2, $v2);
-        while ($row2 = $r2->fetchRow()) {
-            $v3 = array(
-                intval($c->getCollectionID()),
-                $newVID,
-                $row2['akID'],
-                $row2['avID']
-            );
-            $recordExists = intval($db->getOne('SELECT count(*) FROM CollectionAttributeValues WHERE cID=? AND cvID=? AND akID=? AND avID=?', $v3)) ? 1 : 0;
-            if (! $recordExists)
-                $db->query("insert into CollectionAttributeValues (cID, cvID, akID, avID) values (?, ?, ?, ?)", $v3);
+        $category = $this->getObjectAttributeCategory();
+        $values = $category->getAttributeValues($this);
+        $em =  $db->getEntityManager();
+
+        foreach($values as $value) {
+            $value = clone $value;
+            /**
+             * @var $value PageValue
+             */
+            $value->setVersionID($this->getVersionID());
+            $em->persist($value);
         }
 
         $q3 = "select faID from CollectionVersionFeatureAssignments where cID = ? and cvID = ?";

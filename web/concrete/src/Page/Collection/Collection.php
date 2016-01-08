@@ -426,67 +426,17 @@ class Collection extends Object
 
     public function clearAttribute($ak)
     {
-        $db = Loader::db();
-        $cav = $this->getAttributeValueObject($ak);
-        if (is_object($cav)) {
-            $cav->delete();
-        }
-        $this->reindex();
+        $this->vObj->clearAttribute($ak);
     }
-
-
-    /*
-
-
-    public function getAttributeValueObject($ak, $createIfNotFound = false)
-    {
-        $db = Loader::db();
-        $av = false;
-        if (is_string($ak)) {
-            $ak = CollectionAttributeKey::getByHandle($ak);
-        }
-        $v = array($this->getCollectionID(), $this->getVersionID(), $ak->getAttributeKeyID());
-        $avID = $db->GetOne('select avID from CollectionAttributeValues where cID = ? and cvID = ? and akID = ?', $v);
-        if ($avID > 0) {
-            $av = CollectionAttributeValue::getByID($avID);
-            if (is_object($av)) {
-                $av->setCollection($this);
-                $av->setAttributeKey($ak);
-            }
-        }
-
-        if ($createIfNotFound) {
-            $cnt = 0;
-
-            // Is this avID in use ?
-            if (is_object($av)) {
-                $cnt = $db->GetOne(
-                          'select count(avID) from CollectionAttributeValues where avID = ?',
-                          $av->getAttributeValueID()
-                );
-            }
-
-            if ((!is_object($av)) || ($cnt > 1)) {
-                $newAV = $ak->addAttributeValue();
-                $av = CollectionAttributeValue::getByID($newAV->getAttributeValueID());
-                $av->setCollection($this);
-            }
-        }
-
-        return $av;
-    }
-        */
 
     public function getSetCollectionAttributes()
     {
-        $db = Loader::db();
-        $akIDs = $db->GetCol(
-                    'select akID from CollectionAttributeValues where cID = ? and cvID = ?',
-                    array($this->getCollectionID(), $this->getVersionID())
-        );
+        $category = $this->vObj->getObjectAttributeCategory();
+        $values = $category->getAttributeValues($this->vObj);
+
         $attribs = array();
-        foreach ($akIDs as $akID) {
-            $attribs[] = CollectionAttributeKey::getByID($akID);
+        foreach($values as $value) {
+            $attribs[] = $value->getAttributeKey();
         }
 
         return $attribs;
