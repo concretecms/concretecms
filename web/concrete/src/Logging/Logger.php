@@ -7,15 +7,18 @@ use \Monolog\Formatter\LineFormatter;
 use Database;
 use Events;
 use Core;
+use Monolog\Processor\PsrLogMessageProcessor;
 
 class Logger extends MonologLogger
 {
 
     const CHANNEL_APPLICATION = 'application';
 
-    public function __construct($channel = self::CHANNEL_APPLICATION, $logLevel = MonologLogger::DEBUG) {
+    public function __construct($channel = self::CHANNEL_APPLICATION, $logLevel = MonologLogger::DEBUG)
+    {
         parent::__construct($channel);
         $this->addDatabaseHandler($logLevel);
+        $this->pushProcessor(new PsrLogMessageProcessor());
 
         $le = new Event($this);
         Events::dispatch('on_logger_create', $le);
@@ -117,6 +120,7 @@ class Logger extends MonologLogger
         }
         return tc(/*i18n: Urgent alert */ 'Log level', ucfirst(strtolower($level)));
     }
+
     public static function getChannelDisplayName($channel)
     {
         switch ($channel) {
@@ -130,4 +134,6 @@ class Logger extends MonologLogger
                 return tc('Log channel', Core::make('helper/text')->unhandle($channel));
         }
     }
+
+
 }
