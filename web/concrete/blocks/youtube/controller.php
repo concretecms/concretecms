@@ -92,11 +92,10 @@ class Controller extends BlockController
         $args['autoplay'] = $data['autoplay'] ? 1 : 0;
         $args['loopEnd'] = $data['loopEnd'] ? 1 : 0;
         $args['modestbranding'] = $data['modestbranding'] ? 1 : 0;
-        $args['iv_load_policy'] = $data['iv_load_policy'] ? 1 : 3;
+        $args['iv_load_policy'] = $data['iv_load_policy'] ? 3 : 1;
         $args['color'] = $data['color'];
         $args['sizing'] = $data['sizing'];
-        $args['iv_load_policy'] = $data['iv_load_policy'];
-        $args['controls'] = $data['controls'];
+        $args['controls'] = $data['controls'] ? 1 : 0;
 
         if ($data['sizing'] !='fixed') {
             $args['vHeight'] = '';

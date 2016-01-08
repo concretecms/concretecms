@@ -38,7 +38,7 @@ if (isset($controls)) {
 $params[] = 'hl=' . Localization::activeLanguage();
 
 if (isset($iv_load_policy)) {
-	$params[] = 'iv_load_policy=' . ($iv_load_policy ? '1' : '0');
+	$params[] = 'iv_load_policy=' . $iv_load_policy;
 }
 
 if (isset($loop)) {
