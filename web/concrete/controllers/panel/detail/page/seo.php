@@ -26,6 +26,7 @@ class Seo extends BackendInterfacePageController {
 	}
 
 	public function view() {
+		$this->requireAsset('javascript','jquery/textcounter');
 		$as = AttributeSet::getByHandle('seo');
 		$attributes = $as->getAttributeKeys();
 		$this->set('attributes', $attributes);
