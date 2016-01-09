@@ -7,9 +7,9 @@ module.exports = {
 	// config.DIR_REL = '/c5subfolder';
 	DIR_REL: '',
 	// The path to the web folder, relative to this Gruntfile
-	DIR_BASE: '../web',
+	DIR_BASE: '../',
 	// The path to the cli folder, relative to this Gruntfile
-	DIR_CLI: '../cli',
+	DIR_CLI: '../concrete/vendor/bin',
 
 	// Your Transifex login.
 	// It's needed only if you have to run tasks that interact with Transifex.

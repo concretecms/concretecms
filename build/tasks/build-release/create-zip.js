@@ -20,7 +20,7 @@ module.exports = function(grunt, config, parameters, done) {
 			shell = require('shelljs'),
 			c5fs = require('../../libraries/fs');
 		process.stdout.write('Determining concrete5 version... ');
-		var str = fs.readFileSync(path.join(workFolder, 'web/concrete/config/concrete.php'), 'utf8');
+		var str = fs.readFileSync(path.join(workFolder, 'concrete/config/concrete.php'), 'utf8');
 		// Remove comments and new lines
 		str = str.replace(/\/\/.*?($|\r|\n)/g, '').replace(/[\r\n]/g, ' ').replace(/\/\*.*?\*\//g, '');
 		var version = str.match(/["']version["']\s*=>\s*['"](.*?)['"]/);

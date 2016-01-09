@@ -15,20 +15,20 @@ $a = Area::get($c, 'Main');
 $ap = new Permissions($a);
 
 class ShowPasses extends HtmlReporter {
-    
+
     function ShowPasses() {
         $this->HtmlReporter();
     }
-    
+
     function paintPass($message) {
         parent::paintPass($message);
         print "<span class=\"pass\">Pass</span>: ";
         print " $message<br />\n";
     }
-    
+
 }
 
 $t = new TestSuite('All Tests');
-$t->addFile($_SERVER['DOCUMENT_ROOT'] . '/web/tests/template_tests.php');	
-$t->addFile($_SERVER['DOCUMENT_ROOT'] . '/web/tests/block_override_tests.php');	
+$t->addFile($_SERVER['DOCUMENT_ROOT'] . '/tests/template_tests.php');
+$t->addFile($_SERVER['DOCUMENT_ROOT'] . '/tests/block_override_tests.php');
 $t->run(new ShowPasses());
