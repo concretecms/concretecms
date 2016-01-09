@@ -5,16 +5,15 @@ use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 
 class SessionServiceProvider extends ServiceProvider
 {
-
     public function register()
     {
+        $this->app->bind('Concrete\Core\Session\SessionValidatorInterface', 'Concrete\Core\Session\SessionValidator');
+        $this->app->bind('Concrete\Core\Session\SessionFactoryInterface', 'Concrete\Core\Session\SessionFactory');
 
-        $this->app->singleton(
-            'session',
-            function () {
-                return Session::start();
-            });
-
+        $this->app->singleton('session', function ($app) {
+            return $app->make('Concrete\Core\Session\SessionFactoryInterface')->createSession();
+        });
+        $this->app->bind('Symfony\Component\HttpFoundation\Session\Session', 'session');
     }
 
 }
