@@ -26,8 +26,8 @@ require_once('AttributeTestCase.php');
 require_once('FileStorageTestCase.php');
 require_once('UserTestCase.php');
 
-define('DIR_BASE', realpath(dirname(__FILE__) . '/../../web'));
-$DIR_BASE_CORE = realpath(dirname(__FILE__) . '/../../web/concrete');
+define('DIR_BASE', realpath(__DIR__ . '/../../'));
+$DIR_BASE_CORE = realpath(DIR_BASE . '/concrete');
 
 require $DIR_BASE_CORE . '/bootstrap/configure.php';
 

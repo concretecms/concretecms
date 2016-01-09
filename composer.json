@@ -1,6 +1,15 @@
 {
+  "name": "concrete5/concrete5",
+  "description": "Open source CMS",
+  "type": "project",
+  "license": "MIT",
   "minimum-stability": "beta",
   "prefer-stable": true,
+  "support": {
+    "irc": "irc://irc.freenode.org/concrete5",
+    "docs": "https://documentation.concrete5.org/",
+    "forum": "https://www.concrete5.org/community/forums"
+  },
   "repositories": [
     {
       "type": "vcs",
@@ -12,7 +21,8 @@
     }
   ],
   "config": {
-    "optimize-autoloader": true
+    "optimize-autoloader": true,
+    "vendor-dir": "concrete/vendor"
   },
   "require": {
     "php": ">=5.3.3",
