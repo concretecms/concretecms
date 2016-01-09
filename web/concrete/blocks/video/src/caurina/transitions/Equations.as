@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Equations
  * Main equations for the Tweener class
  *

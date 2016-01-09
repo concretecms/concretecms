@@ -3,6 +3,7 @@ namespace Concrete\Core\User;
 
 use Concrete\Core\Foundation\Object;
 use Concrete\Core\Http\Request;
+use Concrete\Core\Session\SessionValidatorInterface;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\Group\Group;
 use Concrete\Core\Authentication\AuthenticationType;
@@ -85,7 +86,7 @@ class User extends Object
             self::refreshUserGroups();
         }
 
-        \Concrete\Core\Session\Session::testSessionFixation($session);
+        $app->make('Concrete\Core\Session\SessionValidatorInterface')->handleSessionValidation($session);
 
         if ($session->get('uID') > 0) {
             $db = $app['database']->connection();
