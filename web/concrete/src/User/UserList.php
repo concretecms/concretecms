@@ -231,5 +231,10 @@ class UserList extends DatabaseItemList
         $this->query->orderBy('u.uName', 'asc');
     }
 
+    public function sortByDateAdded()
+    {
+        $this->query->orderBy('u.uDateAdded', 'desc');
+    }
+
 
 }
