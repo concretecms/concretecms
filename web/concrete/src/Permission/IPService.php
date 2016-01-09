@@ -29,7 +29,7 @@ class IPService
 			OR
 			(ipFrom <= ? AND ipTo >= ?)
 		)
-		AND (expires = '0000-00-00 00:00:00' OR expires > ?)
+		AND (expires = '1000-01-01 00:00:00' OR expires > ?)
 		";
 
         if ($extraParamString !== false) {
@@ -50,7 +50,7 @@ class IPService
      */
     protected function existsManualPermBan(IPAddress $ip)
     {
-        return $this->isBanned($ip, ' AND isManual = ? AND expires = ? ', Array(1, '0000-00-00 00:00:00'));
+        return $this->isBanned($ip, ' AND isManual = ? AND expires = ? ', Array(1, '1000-01-01 00:00:00'));
     }
 
     /** Returns an IPAddress object if one was found, or false if not
@@ -127,7 +127,7 @@ class IPService
                     $banUntil->modify('+' . $timeOffset . ' minutes');
                     $banUntil = $banUntil->format('Y-m-d H:i:s');
                 } else {
-                    $banUntil = '0000-00-00 00:00:00';
+                    $banUntil = '1000-01-01 00:00:00';
                 }
 
                 $q = 'INSERT INTO UserBannedIPs (ipFrom,ipTo,banCode,expires,isManual) VALUES (?,?,?,?,?)';

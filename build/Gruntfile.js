@@ -348,6 +348,10 @@ module.exports = function(grunt) {
         ccm_translator: {
             dest: '<%= DIR_BASE %>/concrete/js/translator.js',
             src: '<%= DIR_BASE %>/concrete/js/build/core/translator.js'
+        },
+        jquery_text_counter: {
+            dest: '<%= DIR_BASE %>/concrete/js/textcounter.js',
+            src: '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-text-counter/textcounter.js'
         }
     };
 
