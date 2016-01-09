@@ -6,7 +6,7 @@ use \Concrete\Core\Page\Search\IndexedSearch; ?>
 			<fieldset>
 			<legend><?=t('Indexing Method')?></legend>
 			<div class="form-group">
-			<? $methods = array(
+			<?php $methods = array(
 				'whitelist' => t('Whitelist: Selected areas are only areas indexed.'),
 				'blacklist' => t('Blacklist: Every area but the selected areas are indexed.')
 			);
@@ -18,11 +18,11 @@ use \Concrete\Core\Page\Search\IndexedSearch; ?>
 			<legend><?=t('Areas')?></legend>
 			<div class="form-group">
 
-			<? foreach($areas as $a) { ?>
+			<?php foreach($areas as $a) { ?>
                 <div class="checkbox">
 				    <label><?=$form->checkbox('arHandle[]', h($a), in_array($a, $selectedAreas))?> <?=h($a)?></label>
                 </div>
-			<? } ?>
+			<?php } ?>
 			</div>
 			</fieldset>
 

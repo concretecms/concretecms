@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $valt = Loader::helper('validation/token');
 $th = Loader::helper('text');
@@ -89,44 +89,44 @@ $ip = Loader::helper('validation/ip'); ?>
                                 <div class="ccm-popover ccm-conversation-message-popover popover fade" data-menu="<?=$msg->getConversationMessageID()?>">
                                     <div class="arrow"></div><div class="popover-inner">
                                         <ul class="dropdown-menu">
-                                            <? if (is_object($page)) { ?>
+                                            <?php if (is_object($page)) { ?>
                                                 <li><a href="<?=$page->getCollectionLink()?>#cnv<?=$cnv->getConversationID()?>Message<?=$msg->getConversationMessageID()?>"><?=t('View Conversation')?></a></li>
-                                                <? if ($displayFlagOption || $displayApproveOption || $displayDeleteOption || $displayUnflagOption || $displayUndeleteOption) { ?>
+                                                <?php if ($displayFlagOption || $displayApproveOption || $displayDeleteOption || $displayUnflagOption || $displayUndeleteOption) { ?>
                                                     <li class="divider"></li>
-                                                <? } ?>
-                                            <? } ?>
-                                            <?
+                                                <?php } ?>
+                                            <?php } ?>
+                                            <?php
                                             if ($displayApproveOption) { ?>
                                                 <li><a href="#" data-message-action="approve" data-message-id="<?=$msg->getConversationMessageID()?>"><?=t('Approve')?></a></li>
-                                            <? } ?>
-                                            <?
+                                            <?php } ?>
+                                            <?php
                                             if ($displayFlagOption) { ?>
                                                 <li><a href="#" data-message-action="flag" data-message-id="<?=$msg->getConversationMessageID()?>"><?=t('Flag as Spam')?></a></li>
-                                            <? } ?>
-                                            <?
+                                            <?php } ?>
+                                            <?php
                                             if ($displayDeleteOption) { ?>
                                                 <li><a href="#" data-message-action="delete" data-message-id="<?=$msg->getConversationMessageID()?>"><?=t('Delete')?></a></li>
-                                            <? } ?>
-                                            <?
+                                            <?php } ?>
+                                            <?php
                                             if ($displayUnflagOption) { ?>
                                                 <li><a href="#" data-message-action="unflag" data-message-id="<?=$msg->getConversationMessageID()?>"><?=t('Un-Flag As Spam')?></a></li>
-                                            <? } ?>
-                                            <?
+                                            <?php } ?>
+                                            <?php
                                             if ($displayUndeleteOption) { ?>
                                                 <li><a href="#" data-message-action="undelete" data-message-id="<?=$msg->getConversationMessageID()?>"><?=t('Un-Delete Message')?></a></li>
-                                            <? } ?>
+                                            <?php } ?>
                                         </ul>
                                     </div>
                                 </div>
 
-                                <p><span class="ccm-conversation-display-author-name"><?
+                                <p><span class="ccm-conversation-display-author-name"><?php
                                     echo tc(/*i18n: %s is the name of the author */ 'Authored', 'By %s', $formatter->getLinkedAdministrativeDisplayName());
                                     ?></span></p>
-                                <?
+                                <?php
 
                                 if (is_object($page)) { ?>
                                     <div><?=$page->getCollectionPath()?></div>
-                                <? } ?>
+                                <?php } ?>
                             </td>
                             <td class="message-cell" style="width: 33%">
                                 <div class="ccm-conversation-message-summary">
@@ -136,24 +136,24 @@ $ip = Loader::helper('validation/ip'); ?>
                                 </div>
                             </td>
                             <td style="text-align: center">
-                                <?
+                                <?php
                                 if (!$msg->isConversationMessageApproved() && !$msg->isConversationMessageDeleted()) { ?>
                                     <i class="fa fa-warning text-warning launch-tooltip" title="<?php echo t('Message has not been approved.')?>"></i>
-                                <? }
+                                <?php }
 
                                 if ($msg->isConversationMessageDeleted()) { ?>
                                     <i class="fa fa-trash launch-tooltip" title="<?php echo t('Message is deleted.')?>"></i>
-                                <? }
+                                <?php }
 
                                 if($msg->isConversationMessageFlagged()) { ?>
                                     <i class="fa fa-flag text-danger launch-tooltip" title="<?php echo t('Message is flagged as spam.')?>"></i>
-                                <? }
+                                <?php }
 
                                 if ($msg->isConversationMessageApproved() && !$msg->isConversationMessageDeleted()) { ?>
                                     <i class="fa fa-thumbs-up launch-tooltip" title="<?php echo t('Message is approved.')?>"></i>
-                                <? } ?>
+                                <?php } ?>
                             </td>
-                            <? /*
+                            <?php /*
                             <td class="hidden-actions">
                                 <div class="message-actions message-actions<?php echo $msgID ?>" data-id="<?php echo $msgID ?>">
                                     <ul>
@@ -200,7 +200,7 @@ $ip = Loader::helper('validation/ip'); ?>
                             </td>*/ ?>
 
                         </tr>
-                    <? }
+                    <?php }
                 }?>
                 </tbody>
             </table>

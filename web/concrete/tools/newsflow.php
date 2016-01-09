@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 
 $newsflow = new Concrete\Core\Activity\Newsflow();

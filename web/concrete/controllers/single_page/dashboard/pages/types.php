@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Controller\SinglePage\Dashboard\Pages;
 
 use Concrete\Core\Error\Error;

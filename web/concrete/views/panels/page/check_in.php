@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $v = $c->getVersionObject();
 ?>
@@ -11,7 +11,7 @@ $v = $c->getVersionObject();
 
 <div class="ccm-panel-check-in-comments"><textarea name="comments" id="ccm-check-in-comments" /></textarea></div>
 
-<? if ($cp->canApprovePageVersions()) {
+<?php if ($cp->canApprovePageVersions()) {
 	if ($c->isPageDraft()) {
 		$publishTitle = t('Publish Page');
 	} else {
@@ -38,25 +38,25 @@ $v = $c->getVersionObject();
 ?>
 <div class="ccm-panel-check-in-publish">
 
-	<? /*
+	<?php /*
     <div class="btn-group">
 		<button id="ccm-check-in-publish" type="submit" name="action" value="publish" class="btn btn-primary"><?=$publishTitle?></button>
 		<button id="ccm-check-in-publish-time" type="button" class="btn btn-primary"><i class="fa fa-clock-o fa-inverse"></i></button>
 	</div>
     */?>
 
-    <button <? if (is_object($publishErrors) && $publishErrors->has()) { ?>disabled<? } ?>
+    <button <?php if (is_object($publishErrors) && $publishErrors->has()) { ?>disabled<?php } ?>
             id="ccm-check-in-publish" type="submit" name="action" value="publish" class="btn-block btn btn-primary"><?=$publishTitle?></button>
     <br/>
-    <? if (is_object($publishErrors) && $publishErrors->has()) { ?>
+    <?php if (is_object($publishErrors) && $publishErrors->has()) { ?>
         <div class="small">
-        <? foreach($publishErrors->getList() as $error) { ?>
+        <?php foreach($publishErrors->getList() as $error) { ?>
             <div class="text-warning"><strong><i class="fa fa-warning"></i> <?=$error?></strong></div>
             <br/>
-        <? } ?>
+        <?php } ?>
         </div>
 
-        <?
+        <?php
         $pagetype = PageType::getByID($c->getPageTypeID());
         if (is_object($pagetype)) { ?>
             <div class="small">
@@ -65,19 +65,19 @@ $v = $c->getVersionObject();
             </strong></div>
             <br/>
             </div>
-        <? } ?>
-    <? } ?>
+        <?php } ?>
+    <?php } ?>
 </div>
 
-<? } ?>
+<?php } ?>
 
 	<button id="ccm-check-in-preview" type="submit" name="action" value="save" class="btn-block btn-success btn"><?=t('Save Changes')?></button>
 
-    <? if ($c->isPageDraft() && $cp->canDeletePage()) { ?>
+    <?php if ($c->isPageDraft() && $cp->canDeletePage()) { ?>
 		<button id="ccm-check-in-discard" type="submit" name="action" value="discard" class="btn-block btn-danger btn"><?=t('Discard Draft')?></button>
-	<? } else if ($v->canDiscard()) { ?>
+	<?php } else if ($v->canDiscard()) { ?>
 		<button id="ccm-check-in-discard" type="submit" name="action" value="discard" class="btn-block btn-danger btn"><?=t('Discard Changes')?></button>
-	<? } ?>
+	<?php } ?>
 	<input type="hidden" name="approve" value="PREVIEW" id="ccm-approve-field" />
 
 </form>

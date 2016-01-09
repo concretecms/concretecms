@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Controller\Panel\Page\Design;
 
 use \Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;

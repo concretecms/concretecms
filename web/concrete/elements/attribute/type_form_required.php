@@ -1,4 +1,4 @@
-<? 
+<?php 
 use \Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
 $c = Page::getCurrentPage();
 
@@ -24,8 +24,8 @@ if (is_object($key)) {
 }
 ?>
 
-<? if (is_object($key)) { ?>
-	<?
+<?php if (is_object($key)) { ?>
+	<?php
 	$valt = Loader::helper('validation/token');
 	$ih = Loader::helper('concrete/ui');
 	$delConfirmJS = t('Are you sure you want to remove this attribute?');
@@ -42,7 +42,7 @@ if (is_object($key)) {
 	<button type="button" class="btn btn-danger" onclick="deleteAttribute()"><?=t('Delete Attribute')?></button>
 </div>
 
-<? } ?>
+<?php } ?>
 
 
 <fieldset>
@@ -65,11 +65,11 @@ if (is_object($key)) {
 	</div>
 </div>
 
-<? if ($category->allowAttributeSets() == AttributeKeyCategory::ASET_ALLOW_SINGLE) { ?>
+<?php if ($category->allowAttributeSets() == AttributeKeyCategory::ASET_ALLOW_SINGLE) { ?>
 <div class="form-group">
 <?=$form->label('asID', t('Set'))?>
 <div class="controls">
-	<?
+	<?php
 		$sel = array('0' => t('** None'));
 		$sets = $category->getAttributeSets();
 		foreach($sets as $as) {
@@ -79,7 +79,7 @@ if (is_object($key)) {
 		?>
 </div>
 </div>
-<? } ?>
+<?php } ?>
 
 <div class="form-group">
 <label class="control-label"><?=t('Searchable')?></label>
@@ -112,7 +112,7 @@ if (is_object($key)) {
 <?=$form->hidden('atID', $type->getAttributeTypeID())?>
 <?=$form->hidden('akCategoryID', $category->getAttributeKeyCategoryID()); ?>
 <?=$valt->output('add_or_update_attribute')?>
-<? 
+<?php 
 if ($category->getPackageID() > 0) { 
 	@Loader::packageElement('attribute/categories/' . $category->getAttributeKeyCategoryHandle(), $category->getPackageHandle(), array('key' => $key));
 } else {
@@ -120,17 +120,17 @@ if ($category->getPackageID() > 0) {
 }
 ?>
 
-<? $type->render('type_form', $key); ?>
+<?php $type->render('type_form', $key); ?>
 
 
 <div class="ccm-dashboard-form-actions-wrapper">
 <div class="ccm-dashboard-form-actions">
 	<a href="<?=URL::page($c)?>" class="btn pull-left btn-default"><?=t('Back')?></a>
-<? if (is_object($key)) { ?>
+<?php if (is_object($key)) { ?>
 	<button type="submit" class="btn btn-primary pull-right"><?=t('Save')?></button>
-<? } else { ?>
+<?php } else { ?>
 	<button type="submit" class="btn btn-primary pull-right"><?=t('Add')?></button>
-<? } ?>
+<?php } ?>
 </div>
 </div>
 

@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Controller\Frontend;
 use Concrete\Core\Area\Layout\CustomLayout;
 use Concrete\Core\Area\Layout\Layout;

@@ -1,22 +1,22 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <div class="ccm-ui">
 
 
-<? if (count($presets) > 0) { ?>
+<?php if (count($presets) > 0) { ?>
     <div class="alert alert-info"><?=t("Deleting a preset will not affect any layouts that have used that preset in the past.")?></div>
 
     <ul class="item-select-list">
-    <? foreach($presets as $preset) { ?>
+    <?php foreach($presets as $preset) { ?>
         <li data-preset-row="<?=$preset->getAreaLayoutPresetID()?>"><span><?=$preset->getAreaLayoutPresetName()?>
         <a href="javascript:void(0)" class="pull-right icon-link delete-area-layout-preset" data-action="delete-area-layout-preset"><i class="fa fa-trash-o"></i></a>
         </span></li>
-    <? } ?>
+    <?php } ?>
     </ul>
 
-<? } else { ?>
+<?php } else { ?>
     <p><?=t('You have no presets.')?></p>
-<? } ?>
+<?php } ?>
 
 
 </div>

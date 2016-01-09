@@ -29,7 +29,7 @@ if ($cID > 0 && $bID > 0) {
 				<input type="hidden" name="processBlock" value="1" />
 				<input type="hidden" name="update" value="1" />
 
-			<?
+			<?php
 
 			switch($_REQUEST['tab']) {
 				case 'sources':
@@ -75,7 +75,7 @@ if ($cID > 0 && $bID > 0) {
 			});
 			</script>
 
-			<?
+			<?php
 		}
 	}
 }

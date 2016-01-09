@@ -1,4 +1,4 @@
-<?
+<?php
 	defined('C5_EXECUTE') or die("Access Denied.");
 
 	$this->inc('form.php', array('b' => $b, 'a' => $a));
@@ -10,16 +10,16 @@
 
 <div id="ccm-layouts-edit-mode" class="ccm-layouts-edit-mode-edit">
 
-<? foreach($columns as $col) { ?>
-	<? $i = $col->getAreaLayoutColumnIndex(); ?>
-	<div class="<?=$col->getAreaLayoutColumnClass()?>" id="ccm-edit-layout-column-<?=$i?>" <? if ($iscustom) { ?>data-width="<?=$col->getAreaLayoutColumnWidth()?>" <? } ?>>
+<?php foreach($columns as $col) { ?>
+	<?php $i = $col->getAreaLayoutColumnIndex(); ?>
+	<div class="<?=$col->getAreaLayoutColumnClass()?>" id="ccm-edit-layout-column-<?=$i?>" <?php if ($iscustom) { ?>data-width="<?=$col->getAreaLayoutColumnWidth()?>" <?php } ?>>
 		<div class="ccm-layout-column-inner ccm-layout-column-highlight">
 			<input type="hidden" name="width[<?=$i?>]" value="" id="ccm-edit-layout-column-width-<?=$i?>" />
-			<? 
+			<?php 
 			$col->display(true);
 			?>
 		</div>
 	</div>
-<? } ?>
+<?php } ?>
 
 </div>

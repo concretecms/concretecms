@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 
 $valt = Loader::helper('validation/token');
@@ -10,13 +10,13 @@ if (isset($group)) { ?>
 
 <form method="post" id="update-group-form" class="form-stacked" action="<?=$view->url('/dashboard/users/groups/', 'update_group')?>" role="form">
     <?=$valt->output('add_or_update_group')?>
-	<?
+	<?php
 	    $u = new User();
 
 	$delConfirmJS = t('Are you sure you want to permanently remove this group?');
 	if($u->isSuperUser() == false){ ?>
 		<?=t('You must be logged in as %s to remove groups.', USER_SUPER)?>
-	<? }else{ ?>
+	<?php }else{ ?>
 
 	<script type="text/javascript">
 	deleteGroup = function() {
@@ -26,7 +26,7 @@ if (isset($group)) { ?>
 	}
 	</script>
 
-	<? } ?>
+	<?php } ?>
 
     <fieldset>
 	    <legend><?=t('Group Details')?></legend>
@@ -41,7 +41,7 @@ if (isset($group)) { ?>
 	    </div>
     </fieldset>
 
-	<? if (Config::get('concrete.user.profiles_enabled')) { ?>
+	<?php if (Config::get('concrete.user.profiles_enabled')) { ?>
 
 	<fieldset>
         <div class="form-group">
@@ -57,7 +57,7 @@ if (isset($group)) { ?>
 		    <div class="form-group">
 			    <label for="gBadgeFID"><?=t('Image')?></label>
 
-                    <?
+                    <?php
                         $af = Loader::helper('concrete/asset_library');
         				print $af->image('gBadgeFID', 'gBadgeFID', t('Choose Badge Image'), $group->getGroupBadgeImageObject());
                     ?>
@@ -75,7 +75,7 @@ if (isset($group)) { ?>
             </div>
 		</div>
 	</fieldset>
-	<? } ?>
+	<?php } ?>
 
 	<fieldset>
 		<legend><?=t('Automation')?></legend>
@@ -116,7 +116,7 @@ if (isset($group)) { ?>
     		</div>
 
     		<div class="alert alert-info">
-    			<?
+    			<?php
     			$path = $group->getGroupAutomationControllerClass();
     			print t('For custom automated group actions, make sure an automation group controller exists at %s', $path);
     			?>
@@ -156,7 +156,7 @@ if (isset($group)) { ?>
                     	</tr>
 
                         <tr>
-                            <?
+                            <?php
                             	$days = $group->getGroupExpirationIntervalDays();
                             	$hours = $group->getGroupExpirationIntervalHours();
                             	$minutes = $group->getGroupExpirationIntervalMinutes();
@@ -251,16 +251,16 @@ $(function() {
 
 });
 </script>
-<? } else { ?>
+<?php } else { ?>
 
-	<? if ($canAddGroup) { ?>
+	<?php if ($canAddGroup) { ?>
 	<div class="ccm-dashboard-header-buttons">
 		<a href="<?php echo View::url('/dashboard/users/add_group')?>" class="btn btn-primary"><?php echo t("Add Group")?></a>
 	</div>
-	<? } ?>
+	<?php } ?>
 
 
-<? Loader::element('group/search', array('controller' => $searchController, 'selectMode' => false))?>
+<?php Loader::element('group/search', array('controller' => $searchController, 'selectMode' => false))?>
 
 
-<? } ?>
+<?php } ?>

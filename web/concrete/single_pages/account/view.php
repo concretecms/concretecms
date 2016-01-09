@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <script type="text/javascript">
 $(function() {
@@ -12,20 +12,20 @@ $(function() {
         <p><?=t('You are currently logged in as <strong>%s</strong>', $profile->getUserDisplayName())?>.</p>
 
 
-        <? foreach($pages as $p) { ?>
+        <?php foreach($pages as $p) { ?>
             <hr/>
             <div>
                 <a href="<?=$p->getCollectionLink()?>"><?=h(t($p->getCollectionName()))?></a>
-                <?
+                <?php
                 $description = $p->getCollectionDescription();
                 if ($description) { ?>
                     <p><?=h(t($description))?></p>
-                <? } ?>
+                <?php } ?>
             </div>
-        <? } ?>
+        <?php } ?>
 
 
-        <?
+        <?php
         $profileURL = $profile->getUserPublicProfileURL();
         if ($profileURL) { ?>
             <hr/>
@@ -35,7 +35,7 @@ $(function() {
             </div>
 
 
-        <? } ?>
+        <?php } ?>
 
     </div>
 </div>

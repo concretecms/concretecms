@@ -1,4 +1,4 @@
-<?
+<?php
 
 class BaseTest extends UnitTestCase {
     function BaseTest() {

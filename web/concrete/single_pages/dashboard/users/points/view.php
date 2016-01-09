@@ -19,7 +19,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
     </div>
 </form>
 <br />
-<?
+<?php
 if (!$mode) {
 	$mode = $_REQUEST['mode'];
 }
@@ -39,12 +39,12 @@ if (count($entries) > 0) { ?>
     <?php 
     foreach($entries as $up) { ?>
     	<tr>
-    		<?
+    		<?php
         		$ui = $up->getUserPointEntryUserObject();
         		$action = $up->getUserPointEntryActionObject();
     		?>
-    		<td><? if (is_object($ui)) { ?><?php echo h($ui->getUserName())?><? } ?></td>
-    		<td><? if (is_object($action)) { ?><?=h($action->getUserPointActionName())?><? } ?></td>
+    		<td><?php if (is_object($ui)) { ?><?php echo h($ui->getUserName())?><?php } ?></td>
+    		<td><?php if (is_object($action)) { ?><?=h($action->getUserPointActionName())?><?php } ?></td>
     		<td><?php echo number_format($up->getUserPointEntryValue())?></td>
     		<td><?php echo $dh->formatDateTime($up->getUserPointEntryTimestamp());?></td>
     		<td><?=h($up->getUserPointEntryDescription())?></td>
@@ -61,7 +61,7 @@ if (count($entries) > 0) { ?>
     	</tr>
     <?php } ?>
 </table>
-<? } else { ?>
+<?php } else { ?>
 	<div id="ccm-list-none"><?=t('No entries found.')?></div>
-<? } 
+<?php } 
 $upEntryList->displayPaging(); ?>

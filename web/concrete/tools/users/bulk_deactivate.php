@@ -45,7 +45,7 @@ if ($_POST['task'] == 'deactivate') {
 
 if (!isset($_REQUEST['reload'])) { ?>
 	<div id="ccm-user-bulk-deactivate-wrapper">
-<? } ?>
+<?php } ?>
 
 	<div id="ccm-user-deactivate" class="ccm-ui">
 		<form method="post" id="ccm-user-bulk-deactivate" action="<?php echo REL_DIR_FILES_TOOLS_REQUIRED ?>/users/bulk_deactivate">
@@ -68,10 +68,10 @@ if (!isset($_REQUEST['reload'])) { ?>
 		<?=$ih->button_js(t('Cancel'), 'jQuery.fn.dialog.closeTop()', 'left', 'btn')?>	
 		<?=$ih->button_js(t('Deactivate'), 'ccm_userBulkDeactivate()', 'right', 'btn primary')?>
 	</div>
-<?
+<?php
 if (!isset($_REQUEST['reload'])) { ?>
 </div>
-<? } ?>
+<?php } ?>
 
 <script type="text/javascript">
 ccm_userBulkDeactivate = function() { 

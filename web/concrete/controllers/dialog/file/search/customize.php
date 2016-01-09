@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Controller\Dialog\File\Search;
 use \Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use \Concrete\Core\File\Search\ColumnSet\ColumnSet as FileSearchColumnSet;

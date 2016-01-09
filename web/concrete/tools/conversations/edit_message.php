@@ -35,14 +35,14 @@ if (Loader::helper('validation/numbers')->integer($_POST['cnvMessageID']) && $_P
 
             <div class="ccm-conversation-edit-message" data-conversation-message-id="<?=$message->getConversationMessageID()?>">
                 <form method="post" class="aux-reply-form">
-                    <div class="ccm-conversation-avatar"><? print $ui->getUserAvatar()->output()?></div>
+                    <div class="ccm-conversation-avatar"><?php print $ui->getUserAvatar()->output()?></div>
                     <div class="ccm-conversation-message-form">
                         <div class="ccm-conversation-errors alert alert-danger"></div>
-                        <? $editor->outputConversationEditorReplyMessageForm(); ?>
+                        <?php $editor->outputConversationEditorReplyMessageForm(); ?>
                         <button type="button" data-post-message-id="<?=$message->getConversationMessageID()?>" data-submit="update-conversation-message" class="pull-right btn btn-primary btn-small"><?=t('Save')?></button>
                         <?php if ($attachmentsEnabled) { ?>
                             <button type="button" class="pull-right btn btn-default ccm-conversation-attachment-toggle" title="<?php echo t('Attach Files'); ?>"><i class="fa fa-image"></i></button>
-                        <? } ?>
+                        <?php } ?>
                         <button type="button" data-post-message-id="<?=$message->getConversationMessageID()?>" data-submit="cancel-update" class="cancel-update pull-right btn btn-small"><?=t('Cancel')?></button>
                         <?php echo $form->hidden('blockAreaHandle', $blockAreaHandle) ?>
                         <?php echo $form->hidden('cID', $cID) ?>
@@ -59,11 +59,11 @@ if (Loader::helper('validation/numbers')->integer($_POST['cnvMessageID']) && $_P
                             <?php echo $form->hidden('bID', $bID) ?>
                         </form>
                     </div>
-                <? } ?>
+                <?php } ?>
             </div>
 
 
-        <?
+        <?php
 
         }
 	}

@@ -1,4 +1,4 @@
-<?
+<?php
 
 class BlockOverrideTests extends ConcreteTestCase {
     function TemplateTests() {

@@ -1,4 +1,4 @@
-<?
+<?php
 	defined('C5_EXECUTE') or die("Access Denied.");
 	use \Concrete\Core\Page\Type\Composer\OutputControl as PageTypeComposerOutputControl;
 	use \Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFormLayoutSetControl;
@@ -10,7 +10,7 @@
 		?>
 	<div class="ccm-ui">
 		<div class="alert alert-info">
-			<? if($fls->getPageTypeComposerFormLayoutSetControlCustomLabel()) {
+			<?php if($fls->getPageTypeComposerFormLayoutSetControlCustomLabel()) {
 				$displayname = $fls->getPageTypeComposerFormLayoutSetControlCustomLabel();
 			} else {
 				$displayname = $cc->getPageTypeComposerControlDisplayName();
@@ -19,5 +19,5 @@
 			?>
 		</div>
 	</div>
-	<? } ?>
-<? } ?>
+	<?php } ?>
+<?php } ?>

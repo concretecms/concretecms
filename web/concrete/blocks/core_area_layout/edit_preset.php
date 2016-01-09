@@ -1,4 +1,4 @@
-<?
+<?php
 	defined('C5_EXECUTE') or die("Access Denied.");
 	$this->inc('form.php', array('b' => $b, 'a' => $a));
 
@@ -8,7 +8,7 @@
 
 	<div id="ccm-layouts-edit-mode" class="ccm-layouts-edit-mode-edit">
 
-	<?
+	<?php
 	$container = $formatter->getLayoutContainerHtmlObject();
 	foreach($columns as $column) {
 		$html = $column->getColumnHtmlObjectEditMode();

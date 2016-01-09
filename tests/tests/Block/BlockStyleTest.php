@@ -1,4 +1,4 @@
-<?
+<?php
 
 class BlockStyleTest extends PageTestCase {
 

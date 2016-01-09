@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Controller\SinglePage\Dashboard\Users;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use \Concrete\Controller\Search\Groups as SearchGroupsController;

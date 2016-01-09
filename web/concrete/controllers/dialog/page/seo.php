@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Controller\Dialog\Page;
 
 class Seo extends \Concrete\Controller\Panel\Detail\Page\Seo

@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $u = new User();
 $form = Loader::helper('form');
@@ -92,9 +92,9 @@ if ($_REQUEST['task'] == 'remove') {
 ?>
 <div class="ccm-ui" id="ccm-permission-detail">
 
-<? if ($pcnt == 0) { ?>
+<?php if ($pcnt == 0) { ?>
 	<?=t("You do not have permission to change permissions on any of the selected pages."); ?>
-<? } else {
+<?php } else {
 
 	if ($permissionsInherit == 'OVERRIDE') { 
 			$cat = PermissionKeyCategory::getByHandle('page');?>
@@ -103,39 +103,39 @@ if ($_REQUEST['task'] == 'remove') {
 		<form id="ccm-permissions-bulk-access-form" action="<?=$cat->getToolsURL($task)?>">
 
 
-			<? foreach($cIDs as $cID) { ?>
+			<?php foreach($cIDs as $cID) { ?>
 				<input type="hidden" name="cID[]" value="<?=$cID?>" />
-			<? } ?>
+			<?php } ?>
 
-			<? if ($task == 'bulk_remove_access') { ?>
+			<?php if ($task == 'bulk_remove_access') { ?>
 				<div class="alert alert-warning"><strong><?=t('Warning:')?></strong> <?=t("Any users or groups selected will be removed from the permissions on the selected pages.")?></div>
-			<? } ?>
+			<?php } ?>
 
-			<div class="<? if ($task == 'bulk_add_access') { ?>form-inline<? } ?>">
+			<div class="<?php if ($task == 'bulk_add_access') { ?>form-inline<?php } ?>">
 
 			<table class="ccm-permission-grid table">
 				<tr>
 				<td class="ccm-permission-grid-name" id="ccm-permission-grid-name-0">
 					<select name="pkID">
-					<?
+					<?php
 					$permissions = PermissionKey::getList('page');
 					foreach($permissions as $pk) { ?>
 						<option value="<?=$pk->getPermissionKeyID()?>"><?=$pk->getPermissionKeyDisplayName()?></option>
-					<? } ?>
+					<?php } ?>
 					</select>
 				</td>
 				<td id="ccm-permission-grid-cell-0" class="ccm-permission-grid-cell-value" style="vertical-align: middle">
-			<? if ($task == 'bulk_remove_access') { ?>
+			<?php if ($task == 'bulk_remove_access') { ?>
 				<div id="ccm-permissions-bulk-access-remove"></div>
-			<? } else { ?>
+			<?php } else { ?>
 				<div class="ccm-permission-access-line"><button class="btn" type="button" id="ccm-bulk-access-form-add-entity"><?=t('Add Access Entity')?></button></div>
-			<? } ?>
+			<?php } ?>
 			</td>
 			</tr>
 			</table>
 		</div>
 
-			<? if ($task == 'bulk_add_access') { ?>
+			<?php if ($task == 'bulk_add_access') { ?>
 			<div class="form-horizontal">
 			<div class="control-group">
 				<label class="control-label"><?=t('Permissions Should')?></label>
@@ -145,7 +145,7 @@ if ($_REQUEST['task'] == 'remove') {
 				</div>
 			</div>
 			</div>
-			<? } ?>
+			<?php } ?>
 
 				<div id="ccm-permissions-bulk-access-form-buttons" class="dialog-buttons">
 					<button class="btn" type="button" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
@@ -200,7 +200,7 @@ if ($_REQUEST['task'] == 'remove') {
 		});
 
 
-		<? if ($task == 'bulk_remove_access') { ?>
+		<?php if ($task == 'bulk_remove_access') { ?>
 			$('#ccm-permissions-bulk-access-form select').on('change', function() {
 				jQuery.fn.dialog.showLoader();
 				$('#ccm-permissions-bulk-access-remove').load('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/permissions_access?task=get_all_access_entities<?=$cIDStr?>&pkID=' + $(this).val(), function() {
@@ -217,19 +217,19 @@ if ($_REQUEST['task'] == 'remove') {
 				$('#ccm-permissions-bulk-access-form select').trigger('change');
 			});
 
-		<? } else { ?>
+		<?php } else { ?>
 			$('#ccm-permissions-bulk-access-form select').on('change', function() {
 				$('.ccm-permission-grid-cell-value').attr('id', 'ccm-permission-grid-cell-' + $(this).val());
 			}).trigger('change');
-		<? } ?>
+		<?php } ?>
 		</script>
 
 
-	<? } else { ?>
+	<?php } else { ?>
 		<br/><br/>
 
 		<p><?=t('You may only add access to these selected pages if they have all been set to override parent or page defaults permissions.')?></p>
 
-	<? } 
+	<?php } 
 
 }

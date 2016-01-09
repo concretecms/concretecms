@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 
@@ -18,51 +18,51 @@ defined('C5_EXECUTE') or die("Access Denied.");
 <section class="ccm-ui">
 	<form method="post" action="<?=$controller->action('submit')?>" data-dialog-form="attributes" data-panel-detail-form="attributes">
 
-        <? if (isset($sitemap) && $sitemap) { ?>
+        <?php if (isset($sitemap) && $sitemap) { ?>
             <input type="hidden" name="sitemap" value="1" />
-        <? } ?>
+        <?php } ?>
 
 		<span class="ccm-detail-page-attributes-id"><?=t('Page ID: %s', $c->getCollectionID())?></span>
 
 		<?=Loader::helper('concrete/ui/help')->display('panel', '/page/attributes')?>
-		<? if ($assignment->allowEditName()) { ?>
+		<?php if ($assignment->allowEditName()) { ?>
 		<div class="form-group">
 			<label for="cName" class="control-label"><?=t('Name')?></label>
 			<div>
 			<input type="text" class="form-control" id="cName" name="cName" value="<?=htmlentities( $c->getCollectionName(), ENT_QUOTES, APP_CHARSET) ?>" />
 			</div>
 		</div>
-		<? } ?>
+		<?php } ?>
 
-		<? if ($assignment->allowEditDateTime()) { ?>
+		<?php if ($assignment->allowEditDateTime()) { ?>
 		<div class="form-group">
 			<label for="cName" class="control-label"><?=t('Created Time')?></label>
 			<div>
-				<? print $dt->datetime('cDatePublic', $c->getCollectionDatePublic()); ?>
+				<?php print $dt->datetime('cDatePublic', $c->getCollectionDatePublic()); ?>
 			</div>
 		</div>
-		<? } ?>
+		<?php } ?>
 
-		<? if ($assignment->allowEditUserID()) { ?>
+		<?php if ($assignment->allowEditUserID()) { ?>
 		<div class="form-group">
 			<label for="cName" class="control-label"><?=t('Author')?></label>
 			<div>
-			<? 
+			<?php 
 			print $uh->selectUser('uID', $c->getCollectionUserID());
 			?>
 			</div>
 		</div>
-		<? } ?>
+		<?php } ?>
 		
 
-		<? if ($assignment->allowEditDescription()) { ?>
+		<?php if ($assignment->allowEditDescription()) { ?>
 		<div class="form-group">
 			<label for="cDescription" class="control-label"><?=t('Description')?></label>
 			<div>
 				<textarea id="cDescription" name="cDescription" class="form-control" rows="8"><?=$c->getCollectionDescription()?></textarea>
 			</div>
 		</div>
-		<? } ?>
+		<?php } ?>
 
 	</form>
 	<div class="ccm-panel-detail-form-actions dialog-buttons">

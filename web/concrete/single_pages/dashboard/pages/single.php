@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $ih = Loader::helper('concrete/ui');
 
@@ -57,7 +57,7 @@ echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Sing
 						<td style="width: 1">
 							<?php if($cp->canAdmin()) { ?>
                                 <a href="<?=$view->action('refresh', $p->getCollectionID(), $this->controller->token->generate('refresh'))?>" title="<?=t('Refreshes the page, rebuilding its permissions and its name.')?>" class="icon-link launch-tooltip"><i class="fa fa-refresh"></i></a>
-                            <? } ?>
+                            <?php } ?>
 						</td>
 					</tr>
 				<?php }

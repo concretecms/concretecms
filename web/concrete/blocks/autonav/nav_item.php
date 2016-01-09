@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Block\Autonav;
 use Loader;
 /**

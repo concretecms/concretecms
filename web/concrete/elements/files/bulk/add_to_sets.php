@@ -1,5 +1,5 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
-<? Loader::element('files/add_to_sets', array(
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php Loader::element('files/add_to_sets', array(
 	'displayFileSet' => function($fileset) use ($files) {
 		$fp = new \Permissions($fileset);
 		if (!$fp->canAddFiles()) {

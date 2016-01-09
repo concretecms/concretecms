@@ -1,5 +1,5 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?> 
-<?
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?> 
+<?php
 $tp = new TaskPermission();
 if (!$tp->canAccessGroupSearch()) {
 	?>
@@ -91,15 +91,15 @@ $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
 $(function() {
 	$('[data-group-tree]').concreteGroupsTree({
 		'treeID': '<?=$tree->getTreeID()?>',
-		<? if ($searchRequest['filter'] == 'assign') { ?>
+		<?php if ($searchRequest['filter'] == 'assign') { ?>
 	      'removeNodesByID': ['<?=$guestGroupNode->getTreeNodeID()?>','<?=$registeredGroupNode->getTreeNodeID()?>'],
-	      <? } ?>
-		<? if ($selectMode) { ?>
+	      <?php } ?>
+		<?php if ($selectMode) { ?>
 			onClick: function(node) {
 				ConcreteEvent.publish('SelectGroup', {'gID': node.data.gID, 'gName': node.data.title});
 			},
 		'enableDragAndDrop': false
-		<? } ?>
+		<?php } ?>
 	});
 	$('div[data-search=groups]').concreteAjaxSearch({
 		result: <?=$result?>,
@@ -121,7 +121,7 @@ $(function() {
 					handleSubmit();
 				}
 			});
-			<? if ($selectMode) { ?>
+			<?php if ($selectMode) { ?>
 			concreteSearch.$element.on('click', 'a[data-group-id]', function() {
 				ConcreteEvent.publish('SelectGroup', {
 					gID: $(this).attr('data-group-id'),
@@ -129,7 +129,7 @@ $(function() {
 				});
 				return false;
 			});
-			<? } ?>
+			<?php } ?>
 		}
 	});
 

@@ -52,7 +52,7 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
     <div id="ccm-file-add-incoming-tab" style="display: none">
         <h4><?=t('Add from Incoming Directory')?></h4>
         <div>
-            <?
+            <?php
             $contents = array();
             $con1 = array();
             $error = false;
@@ -74,7 +74,7 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
                     <?= $form->hidden('fID', $f->getFileID()); ?>
                     <?=$valt->output('import_incoming');?>
                 </form>
-            <? } else {
+            <?php } else {
                 if($error) { ?>
                     <div class="alert alert-danger">
                         <?php echo $error;?>

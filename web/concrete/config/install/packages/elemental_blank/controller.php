@@ -1,4 +1,4 @@
-<?
+<?php
 
 namespace Concrete\StartingPointPackage\ElementalBlank;
 use \Concrete\Core\Package\StartingPointPackage;

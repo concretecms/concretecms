@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $form = Loader::helper('form');
 $factors = array('' => t('Sitemap Pop-Up'), 'sitemap_in_page' => t('In-Page Sitemap'));

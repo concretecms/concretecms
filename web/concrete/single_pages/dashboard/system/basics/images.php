@@ -1,16 +1,16 @@
-<? defined('C5_EXECUTE') or die("Access Denied.");?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");?>
 <form method="post" class="form-stacked" action="<?=$view->action('save_interface_settings')?>" enctype="multipart/form-data" >
 
 <?=Loader::helper('validation/token')->output('save_interface_settings')?>
 
-<? if (!Config::get('concrete.white_label.background_image')) { ?>
+<?php if (!Config::get('concrete.white_label.background_image')) { ?>
 
 <div class="form-group">
     <label class="control-label"><?=t('Background Image')?></label>
     <div class="radio"><label><?=$form->radio('DASHBOARD_BACKGROUND_IMAGE', '', $DASHBOARD_BACKGROUND_IMAGE)?> <span><?=t('Pull a picture of the day from concrete5.org (Default)')?></span></label></div>
     <div class="radio"><label><?=$form->radio('DASHBOARD_BACKGROUND_IMAGE', 'none', $DASHBOARD_BACKGROUND_IMAGE)?> <span><?=t('None')?></span></label></div>
     <div class="radio"><label><?=$form->radio('DASHBOARD_BACKGROUND_IMAGE', 'custom', $DASHBOARD_BACKGROUND_IMAGE)?> <span><?=t('Specify Custom Image')?></span></div>
-    <div id="custom-background-image" <? if ($DASHBOARD_BACKGROUND_IMAGE != 'custom') { ?>style="display: none" <? } ?>>
+    <div id="custom-background-image" <?php if ($DASHBOARD_BACKGROUND_IMAGE != 'custom') { ?>style="display: none" <?php } ?>>
         <br/>
         <?=Loader::helper('concrete/asset_library')->image('DASHBOARD_BACKGROUND_IMAGE_CUSTOM_FILE_ID', DASHBOARD_BACKGROUND_IMAGE_CUSTOM_FILE_ID, t('Choose Image'), $imageObject)?>
     </div>

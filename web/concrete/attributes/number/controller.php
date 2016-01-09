@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Attribute\Number;
 
 use Loader;

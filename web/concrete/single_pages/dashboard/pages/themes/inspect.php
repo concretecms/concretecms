@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Core\Page\Theme\File as PageThemeFile;
 
@@ -28,7 +28,7 @@ $ci = Loader::helper('concrete/ui');
                     </thead>
                     <tbody>
                         
-                    <?
+                    <?php
                     $txt = Loader::helper('text');
                     $pf = 0;
                     
@@ -38,12 +38,12 @@ $ci = Loader::helper('concrete/ui');
                                 <?=t('There are no templates in this file.')?>
                             </td>
                         </tr>
-                        <? }
+                        <?php }
                     
                         foreach ($files as $f) { ?>
                         <tr class="inputs-list">
                             <td><?=$f->getFilename()?></td>
-                            <td><?
+                            <td><?php
                                 switch($f->getType()) {
                                     case PageThemeFile::TFTYPE_VIEW:
                                         print t("Wrapper for static pages.");
@@ -67,7 +67,7 @@ $ci = Loader::helper('concrete/ui');
                                 // END Switch
                             ?>
                             </td>
-                            <td><?
+                            <td><?php
                                 switch($f->getType()) {
                                     case PageThemeFile::TFTYPE_VIEW:
                                         print t('None. This file will automatically be used.');
@@ -90,7 +90,7 @@ $ci = Loader::helper('concrete/ui');
                             ?></td>
                         </tr>
                         
-                        <? } // END FOREACH ?>
+                        <?php } // END FOREACH ?>
                     
                     </tbody>
                 </table>        
@@ -101,11 +101,11 @@ $ci = Loader::helper('concrete/ui');
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-        <?
+        <?php
         print $ci->button(t('Return to Themes'), $view->url('/dashboard/pages/themes'), 'left');
         if ($pf > 0) { 
             print $ci->submit(t('Ok'), 'ccm-inspect-form', 'right', 'btn-primary'); ?>
-        <? }?>
+        <?php }?>
         </div>
     </div>
 

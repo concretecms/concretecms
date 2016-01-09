@@ -12,11 +12,11 @@ $ui=UserInfo::getByID($u->uID);
 ?>
 
 <script>
-<? if (is_object($b->getProxyBlock())) { ?>
+<?php if (is_object($b->getProxyBlock())) { ?>
 	var thisbID=parseInt(<?php echo $b->getProxyBlock()->getBlockID()?>); 
-<? } else { ?>
+<?php } else { ?>
 	var thisbID=parseInt(<?php echo $b->getBlockID()?>); 
-<? } ?>
+<?php } ?>
 var thisbtID=parseInt(<?php echo $b->getBlockTypeID()?>); 
 </script>
 

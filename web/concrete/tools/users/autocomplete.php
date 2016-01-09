@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $valt = Loader::helper('validation/token');
 if ($valt->validate('quick_user_select_' . $_REQUEST['key'], $_REQUEST['token'])) {

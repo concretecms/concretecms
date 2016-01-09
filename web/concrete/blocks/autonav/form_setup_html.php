@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $form = Loader::helper('form');
 $c = Page::getCurrentPage();
@@ -55,32 +55,32 @@ $page_selector = Loader::helper('form/page_selector');
         <div class="form-group">
             <label for="displayPages"><?= t('Begin Auto Nav') ?></label>
             <select name="displayPages" onchange="toggleCustomPage(this.value);" class="form-control">
-                <option value="top"<? if ($info['displayPages'] == 'top') { ?> selected<? } ?>>
+                <option value="top"<?php if ($info['displayPages'] == 'top') { ?> selected<?php } ?>>
                     <?= t('at the top level'); ?>
                 </option>
-                <option value="second_level"<? if ($info['displayPages'] == 'second_level') { ?> selected<? } ?>>
+                <option value="second_level"<?php if ($info['displayPages'] == 'second_level') { ?> selected<?php } ?>>
                     <?= t('at the second level') ?>
                 </option>
-                <option value="third_level"<? if ($info['displayPages'] == 'third_level') { ?> selected<? } ?>>
+                <option value="third_level"<?php if ($info['displayPages'] == 'third_level') { ?> selected<?php } ?>>
                     <?= t('at the third level') ?>
                 </option>
-                <option value="above"<? if ($info['displayPages'] == 'above') { ?> selected<? } ?>>
+                <option value="above"<?php if ($info['displayPages'] == 'above') { ?> selected<?php } ?>>
                     <?= t('at the level above') ?>
                 </option>
-                <option value="current"<? if ($info['displayPages'] == 'current') { ?> selected<? } ?>>
+                <option value="current"<?php if ($info['displayPages'] == 'current') { ?> selected<?php } ?>>
                     <?= t('at the current level') ?>
                 </option>
-                <option value="below"<? if ($info['displayPages'] == 'below') { ?> selected<? } ?>>
+                <option value="below"<?php if ($info['displayPages'] == 'below') { ?> selected<?php } ?>>
                     <?= t('At the level below') ?>
                 </option>
-                <option value="custom"<? if ($info['displayPages'] == 'custom') { ?> selected<? } ?>>
+                <option value="custom"<?php if ($info['displayPages'] == 'custom') { ?> selected<?php } ?>>
                     <?= t('Beneath a particular page') ?>
                 </option>
             </select>
         </div>
 
         <div class="form-group"
-             id="ccm-autonav-page-selector"<? if ($info['displayPages'] != 'custom') { ?> style="display: none"<? } ?>>
+             id="ccm-autonav-page-selector"<?php if ($info['displayPages'] != 'custom') { ?> style="display: none"<?php } ?>>
             <?= $page_selector->selectPage('displayPagesCID', $info['displayPagesCID']); ?>
         </div>
 
@@ -88,17 +88,17 @@ $page_selector = Loader::helper('form/page_selector');
             <label for="displaySubPages"><?= t('Child Pages') ?></label>
 
             <select class='form-control' name="displaySubPages" onchange="toggleSubPageLevels(this.value);">
-                <option value="none"<? if ($info['displaySubPages'] == 'none') { ?> selected<? } ?>>
+                <option value="none"<?php if ($info['displaySubPages'] == 'none') { ?> selected<?php } ?>>
                     <?= t('None') ?>
                 </option>
-                <option value="relevant"<? if ($info['displaySubPages'] == 'relevant') { ?> selected<? } ?>>
+                <option value="relevant"<?php if ($info['displaySubPages'] == 'relevant') { ?> selected<?php } ?>>
                     <?= t('Relevant sub pages.') ?>
                 </option>
                 <option
-                    value="relevant_breadcrumb"<? if ($info['displaySubPages'] == 'relevant_breadcrumb') { ?> selected<? } ?>>
+                    value="relevant_breadcrumb"<?php if ($info['displaySubPages'] == 'relevant_breadcrumb') { ?> selected<?php } ?>>
                     <?= t('Display breadcrumb trail.') ?>
                 </option>
-                <option value="all"<? if ($info['displaySubPages'] == 'all') { ?> selected<? } ?>>
+                <option value="all"<?php if ($info['displaySubPages'] == 'all') { ?> selected<?php } ?>>
                     <?= t('Display all.') ?>
                 </option>
             </select>
@@ -109,23 +109,23 @@ $page_selector = Loader::helper('form/page_selector');
             <label for="displaySubPageLevels"><?= t('Page Levels') ?></label>
 
             <select class="form-control" id="displaySubPageLevels"
-                    name="displaySubPageLevels" <? if ($info['displaySubPages'] == 'none') { ?> disabled <? } ?>
+                    name="displaySubPageLevels" <?php if ($info['displaySubPages'] == 'none') { ?> disabled <?php } ?>
                     onchange="toggleSubPageLevelsNum(this.value);">
-                <option value="enough"<? if ($info['displaySubPageLevels'] == 'enough') { ?> selected<? } ?>>
+                <option value="enough"<?php if ($info['displaySubPageLevels'] == 'enough') { ?> selected<?php } ?>>
                     <?= t('Display sub pages to current.') ?></option>
                 <option
-                    value="enough_plus1"<? if ($info['displaySubPageLevels'] == 'enough_plus1') { ?> selected<? } ?>>
+                    value="enough_plus1"<?php if ($info['displaySubPageLevels'] == 'enough_plus1') { ?> selected<?php } ?>>
                     <?= t('Display sub pages to current +1.') ?></option>
-                <option value="all"<? if ($info['displaySubPageLevels'] == 'all') { ?> selected<? } ?>>
+                <option value="all"<?php if ($info['displaySubPageLevels'] == 'all') { ?> selected<?php } ?>>
                     <?= t('Display all.') ?></option>
-                <option value="custom"<? if ($info['displaySubPageLevels'] == 'custom') { ?> selected<? } ?>>
+                <option value="custom"<?php if ($info['displaySubPageLevels'] == 'custom') { ?> selected<?php } ?>>
                     <?= t('Display a custom amount.') ?></option>
             </select>
 
         </div>
 
         <div class="form-group"
-             id="divSubPageLevelsNum"<? if ($info['displaySubPageLevels'] != 'custom') { ?> style="display: none"<? } ?>>
+             id="divSubPageLevelsNum"<?php if ($info['displaySubPageLevels'] != 'custom') { ?> style="display: none"<?php } ?>>
             <div class="input-group">
                 <input type="text" name="displaySubPageLevelsNum" value="<?= $info['displaySubPageLevelsNum'] ?>"
                        class="form-control">

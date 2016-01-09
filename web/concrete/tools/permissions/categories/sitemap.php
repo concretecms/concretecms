@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $p = new Permissions();
 use \Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;

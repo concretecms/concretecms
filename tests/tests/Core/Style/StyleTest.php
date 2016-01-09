@@ -1,4 +1,4 @@
-<?
+<?php
 
 class StyleTest extends \PHPUnit_Framework_TestCase {
 

@@ -42,7 +42,7 @@ if ($this->controller->getTask() == 'viewDetail') {
                             <td><?= $detail['date'] ?></td>
                             <td><?= $detail['user'] ?></td>
                         </tr>
-                    <? } ?>
+                    <?php } ?>
                 </tbody>
             </table>
 
@@ -63,15 +63,15 @@ if ($this->controller->getTask() == 'viewDetail') {
 
     <?= Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false) ?>
 
-<? } else { ?>
+<?php } else { ?>
 
     <?= Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Surveys'), false, false); ?>
 
-    <? if (count($surveys) == 0) { ?>
+    <?php if (count($surveys) == 0) { ?>
         <p>
             <?= t('You have not created any surveys.') ?>
         </p>
-    <? } else { ?>
+    <?php } else { ?>
 
         <div class="ccm-dashboard-content-full">
             <table class="ccm-search-results-table">
@@ -138,4 +138,4 @@ if ($this->controller->getTask() == 'viewDetail') {
 
     <?= Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper() ?>
 
-<? } ?>
+<?php } ?>

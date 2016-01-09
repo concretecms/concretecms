@@ -166,7 +166,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                             echo $descInfo[style] ? '<span class="help-inline">' . t('Default value. Click to edit.') . '</span>' : '';
                             ?>
                         </div>
-                        <? if ($cobj->getCollectionID() != HOME_CID) { ?>
+                        <?php if ($cobj->getCollectionID() != HOME_CID) { ?>
 
                         <div class="form-group">
                             <label><?php echo t('Slug'); ?></label>
@@ -183,7 +183,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                             ?><a class="help-inline url-path" href="<?php echo $nh->getLinkToCollection($cobj); ?>" target="_blank"><?php echo Core::getApplicationURL() . $untokens; ?></a><?php
                             ?>
                         </div>
-                        <? } ?>
+                        <?php } ?>
                         <div class="form-group submit-changes">
                             <form id="seoForm<?php echo $cID; ?>" action="<?php echo View::url('/dashboard/system/seo/page_data/', 'saveRecord')?>" method="post" class="pageForm">
                                 <a class="btn btn-default submit-changes" data-cID="<?php echo $cobj->getCollectionID() ?>"><?php echo t('Save') ?></a>
@@ -262,9 +262,9 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
         });
         </script>
     </div>
-    <? if ($pagination) { ?>
+    <?php if ($pagination) { ?>
     <div style="text-align: center">
         <?=$pagination?>
     </div>
-    <? } ?>
+    <?php } ?>
 </div>

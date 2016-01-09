@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Controller\SinglePage\Dashboard\System\Mail\Method;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use Config;

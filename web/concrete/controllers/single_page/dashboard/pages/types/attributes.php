@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Controller\SinglePage\Dashboard\Pages\Types;
 use Concrete\Core\Application\EditResponse;
 use Concrete\Core\Attribute\Key\CollectionKey;
