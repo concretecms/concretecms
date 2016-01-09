@@ -187,7 +187,13 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
     <ul class="ccm-toolbar-item-list">
         <li class="ccm-logo pull-left"><span><?= Core::make('helper/concrete/ui')->getToolbarLogoSRC() ?></span></li>
         <? if ($c->isMasterCollection()) { ?>
-        <li class="pull-left"><a href="<?= URL::to('/dashboard/pages/types') ?>"><i class="fa fa-arrow-left"></i></a>
+        <li class="pull-left">
+            <a href="<?php echo URL::to('/dashboard/pages/types/output', $c->getPageTypeID()); ?>">
+                <i class="fa fa-arrow-left"></i>
+                <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-edit-mode">
+                    <?php echo tc('toolbar', 'Exit Edit Defaults'); ?>
+                </span>
+            </a>
             <? } ?>
             <? if (!$pageInUseBySomeoneElse && $c->getCollectionPointerID() == 0) { ?>
 
