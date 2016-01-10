@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Session;
 
-use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Session as SymfonySession;
 
 /**
  * Interface FactoryInterface
@@ -16,7 +16,7 @@ interface SessionFactoryInterface
      * Create a new symfony session object
      * This method MUST NOT start the session
      *
-     * @return Session
+     * @return SymfonySession
      */
     public function createSession();
 
