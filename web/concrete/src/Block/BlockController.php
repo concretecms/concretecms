@@ -56,6 +56,9 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     protected $identifier;
     protected $btTable = null;
 
+    /** @var Application */
+    protected $app;
+
     public function getBlockTypeExportPageColumns()
     {
         return $this->btExportPageColumns;
@@ -154,7 +157,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
                 }
             }
             $this->record->Replace();
-            if ($this->cacheBlockRecord() && Config::get('concrete.cache.blocks')) {
+            if ($this->cacheBlockRecord() && $this->app['config']->get('concrete.cache.blocks')) {
                 $record = base64_encode(serialize($this->record));
                 $db = Database::connection();
                 $db->Execute('update Blocks set btCachedBlockRecord = ? where bID = ?', array($record, $this->bID));
@@ -224,6 +227,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     public function __construct($obj = null)
     {
         parent::__construct();
+        $this->app = clone \Concrete\Core\Support\Facade\Application::getFacadeApplication();
         if ($obj instanceof BlockType) {
             $this->identifier = 'BLOCKTYPE_' . $obj->getBlockTypeID();
             $this->btHandle = $obj->getBlockTypeHandle();
@@ -255,13 +259,13 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     protected function load()
     {
         if ($this->btTable) {
-            if ($this->btCacheBlockRecord && $this->btCachedBlockRecord && Config::get('concrete.cache.blocks')) {
+            if ($this->btCacheBlockRecord && $this->btCachedBlockRecord && $this->app['config']->get('concrete.cache.blocks')) {
                 $this->record = unserialize(base64_decode($this->btCachedBlockRecord));
             } else {
                 $this->record = new BlockRecord($this->btTable);
                 $this->record->bID = $this->bID;
                 $this->record->Load('bID=' . $this->bID);
-                if ($this->btCacheBlockRecord && Config::get('concrete.cache.blocks')) {
+                if ($this->btCacheBlockRecord && $this->app['config']->get('concrete.cache.blocks')) {
                     // this is the first time we're loading
                     $record = base64_encode(serialize($this->record));
                     $db = Database::connection();
