@@ -15,13 +15,12 @@ class Session
     /**
      * Class Session
      * @package Concrete\Core\Session
-     * @deprecated Create the session using \Concrete\Core\Session\SessionFactory
+     * @deprecated Create the session using $app->make('session');
      */
     public static function start()
     {
         /** @var FactoryInterface $factory */
-        $factory = Application::make('Concrete\Core\Session\SessionFactoryInterface');
-        return $factory->createSession();
+        return Application::make('session');
     }
 
     /**
