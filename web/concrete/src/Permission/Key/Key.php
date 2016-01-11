@@ -318,6 +318,8 @@ abstract class Key extends Object
         $pkn = self::add($pkCategoryHandle, $pk['handle'], $pk['name'], $pk['description'], $pkCanTriggerWorkflow,
             $pkHasCustomClass, $pkg);
 
+        static::clearCache();
+
         return $pkn;
     }
 
@@ -368,6 +370,8 @@ abstract class Key extends Object
         $a = array($pkHandle, $pkName, $pkDescription, $pkCategoryID, $pkCanTriggerWorkflow, $pkHasCustomClass, $pkgID);
         $r = $db->query("insert into PermissionKeys (pkHandle, pkName, pkDescription, pkCategoryID, pkCanTriggerWorkflow, pkHasCustomClass, pkgID) values (?, ?, ?, ?, ?, ?, ?)",
             $a);
+
+        static::clearCache();
 
         if ($r) {
             $pkID = $db->Insert_ID();
@@ -431,7 +435,7 @@ abstract class Key extends Object
     {
         $db = Database::connection();
         $db->Execute('delete from PermissionKeys where pkID = ?', array($this->getPermissionKeyID()));
-        self::loadAll();
+        static::clearCache();
     }
 
     /**
@@ -497,5 +501,11 @@ abstract class Key extends Object
         }
 
         return $translations;
+    }
+
+    public static function clearCache()
+    {
+        $cache = Core::make('cache/expensive');
+        $cache->getItem('permission_keys')->clear();
     }
 }
