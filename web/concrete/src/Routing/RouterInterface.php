@@ -32,7 +32,30 @@ interface RouterInterface
 
     public function setRequest(Request $req);
 
-    public function register($rtPath, $callback, $rtHandle = null, $additionalAttributes = array());
+    /**
+     * Register a symfony route with as little as a path and a callback.
+     *
+     * @param string $path The full path for the route
+     * @param \Closure|string $callback `\Closure` or "dispatcher" or "\Namespace\Controller::action_method"
+     * @param string|null $handle The route handle, if one is not provided the handle is generated from the path "/" => "_"
+     * @param array $requirements The Parameter requirements, see Symfony Route constructor
+     * @param array $options The route options, see Symfony Route constructor
+     * @param string $host The host pattern this route requires, see Symfony Route constructor
+     * @param array|string $schemes The schemes or scheme this route requires, see Symfony Route constructor
+     * @param array|string $methods The HTTP methods this route requires, see see Symfony Route constructor
+     * @param string $condition see Symfony Route constructor
+     * @return \Symfony\Component\Routing\Route
+     */
+    public function register(
+        $path,
+        $callback,
+        $handle = null,
+        array $requirements = array(),
+        array $options = array(),
+        $host = '',
+        $schemes = array(),
+        $methods = array(),
+        $condition = null);
 
     public function registerMultiple(array $routes);
 
