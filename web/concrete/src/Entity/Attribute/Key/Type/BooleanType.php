@@ -1,9 +1,7 @@
 <?php
-
 namespace Concrete\Core\Entity\Attribute\Key\Type;
 
 use Concrete\Core\Entity\Attribute\Value\Value\BooleanValue;
-
 
 /**
  * @Entity
@@ -11,7 +9,6 @@ use Concrete\Core\Entity\Attribute\Value\Value\BooleanValue;
  */
 class BooleanType extends Type
 {
-
     /**
      * @Column(type="boolean")
      */
@@ -41,7 +38,7 @@ class BooleanType extends Type
     public function createController()
     {
         $controller = new \Concrete\Attribute\Boolean\Controller($this->getAttributeType());
+
         return $controller;
     }
-
 }

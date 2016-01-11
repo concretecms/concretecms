@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Block\CoreGathering;
 
 use Concrete\Core\Gathering\Gathering;

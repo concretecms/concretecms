@@ -6,7 +6,6 @@ use Config;
 
 class Debug extends DashboardPageController
 {
-
     public function view()
     {
         $enabled = Config::get('concrete.debug.display_errors');
@@ -21,7 +20,7 @@ class Debug extends DashboardPageController
         if ($this->token->validate("update_debug")) {
             if ($this->isPost()) {
                 Config::save('concrete.debug.detail', $this->post('debug_detail'));
-                Config::save('concrete.debug.display_errors', !!$this->post('debug_enabled'));
+                Config::save('concrete.debug.display_errors', (bool) $this->post('debug_enabled'));
                 $this->redirect('/dashboard/system/environment/debug', 'debug_saved');
             }
         } else {
@@ -65,10 +64,8 @@ class Debug extends DashboardPageController
 
         throw new ExampleException('Sample Disabled Output!');
     }
-
 }
 
 class ExampleException extends \Exception
 {
-
 }

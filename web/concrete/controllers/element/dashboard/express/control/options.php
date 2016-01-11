@@ -5,7 +5,6 @@ use Concrete\Core\Controller\ElementController;
 
 class Options extends ElementController
 {
-
     protected $control;
 
     public function __construct(\Concrete\Core\Entity\Express\Control\Control $control)
@@ -24,5 +23,4 @@ class Options extends ElementController
         $this->set('form', \Core::make('helper/form'));
         $this->set('control', $this->control);
     }
-
 }

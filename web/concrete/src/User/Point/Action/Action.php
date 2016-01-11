@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\User\Point\Action;
 
 use Database;

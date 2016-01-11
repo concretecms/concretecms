@@ -41,6 +41,7 @@
                 <?= $group->getGroupDisplayName(false) ?>
             </option>
         <?php
+
         }
         ?>
     </select>

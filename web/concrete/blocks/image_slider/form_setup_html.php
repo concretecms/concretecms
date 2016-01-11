@@ -5,7 +5,7 @@ $tp = new TaskPermission();
 
 echo Core::make('helper/concrete/ui')->tabs(array(
     array('slides', t('Slides'), true),
-    array('options', t('Options'))
+    array('options', t('Options')),
 ));
 ?>
 <script>
@@ -78,21 +78,28 @@ echo Core::make('helper/concrete/ui')->tabs(array(
             }
         });
 
-       <?php if($rows) {
-           foreach ($rows as $row) {
-            $linkType = 0;
-            if ($row['linkURL']) {
-                $linkType = 2;
-            } else if ($row['internalLinkCID']) {
-                $linkType = 1;
-           } ?>
+       <?php if ($rows) {
+    foreach ($rows as $row) {
+        $linkType = 0;
+        if ($row['linkURL']) {
+            $linkType = 2;
+        } elseif ($row['internalLinkCID']) {
+            $linkType = 1;
+        }
+        ?>
            sliderEntriesContainer.append(_templateSlide({
                 fID: '<?php echo $row['fID'] ?>',
-                <?php if(File::getByID($row['fID'])) { ?>
-                image_url: '<?php echo File::getByID($row['fID'])->getThumbnailURL('file_manager_listing');?>',
-                <?php } else { ?>
+                <?php if (File::getByID($row['fID'])) {
+    ?>
+                image_url: '<?php echo File::getByID($row['fID'])->getThumbnailURL('file_manager_listing');
+    ?>',
+                <?php 
+} else {
+    ?>
                 image_url: '',
-               <?php } ?>
+               <?php 
+}
+        ?>
                 link_url: '<?php echo $row['linkURL'] ?>',
                 link_type: '<?php echo $linkType?>',
                 title: '<?php echo addslashes(h($row['title'])) ?>',
@@ -100,10 +107,16 @@ echo Core::make('helper/concrete/ui')->tabs(array(
                 sort_order: '<?php echo $row['sortOrder'] ?>'
             }));
             sliderEntriesContainer.find('.ccm-image-slider-entry:last-child div[data-field=entry-link-page-selector]').concretePageSelector({
-                'inputName': 'internalLinkCID[]', 'cID': <?php if ($linkType == 1) { ?><?=intval($row['internalLinkCID'])?><?php } else { ?>false<?php } ?>
+                'inputName': 'internalLinkCID[]', 'cID': <?php if ($linkType == 1) {
+    ?><?=intval($row['internalLinkCID'])?><?php 
+} else {
+    ?>false<?php 
+}
+        ?>
             });
-        <?php }
-        }?>
+        <?php 
+    }
+}?>
 
         doSortCount();
         sliderEntriesContainer.find('select[data-field=entry-link-select]').trigger('change');

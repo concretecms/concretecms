@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Backup;
 
 use Concrete\Core\Attribute\Type;
@@ -244,7 +243,7 @@ class ContentImporter
             foreach ($sx->pages->page as $p) {
                 $p->originalPos = $i;
                 $nodes[] = $p;
-                $i++;
+                ++$i;
             }
             usort($nodes, array('static', 'setupPageNodeOrder'));
             $home = Page::getByID(HOME_CID, 'RECENT');
@@ -850,7 +849,7 @@ class ContentImporter
 
                 if (count($assignments)) {
                     $pa = PermissionAccess::create($pkx);
-                    foreach($assignments as $pae) {
+                    foreach ($assignments as $pae) {
                         $pa->addListItem($pae);
                     }
                     $pt = $pkx->getPermissionAssignmentObject();

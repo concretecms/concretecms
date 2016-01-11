@@ -1,13 +1,9 @@
 <?php
-
 namespace Concrete\Core\Entity\Express\Control;
 
 use Concrete\Controller\Element\Dashboard\Express\Control\Options;
 use Concrete\Core\Express\BaseEntity;
-use Concrete\Core\Express\Form\Control\Type\Options\OptionsRenderer;
 use Concrete\Core\Express\Form\Control\Type\SaveHandler\ControlSaveHandler;
-use Concrete\Core\Foundation\Environment;
-use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @Entity
@@ -17,7 +13,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 abstract class Control implements \JsonSerializable
 {
-
     /**
      * @Id @Column(type="integer")
      * @GeneratedValue(strategy="AUTO")
@@ -43,7 +38,6 @@ abstract class Control implements \JsonSerializable
      * @ManyToOne(targetEntity="\Concrete\Core\Entity\Express\FieldSet")
      **/
     protected $field_set;
-
 
     /**
      * @return mixed
@@ -109,7 +103,6 @@ abstract class Control implements \JsonSerializable
         $this->field_set = $field_set;
     }
 
-
     /**
      * @return \Concrete\Core\Express\Form\Control\RendererInterface
      */
@@ -137,7 +130,7 @@ abstract class Control implements \JsonSerializable
     public function jsonSerialize()
     {
         return [
-            'id' => $this->getId()
+            'id' => $this->getId(),
         ];
     }
 
@@ -167,7 +160,7 @@ abstract class Control implements \JsonSerializable
     public function getControlType()
     {
         $manager = \Core::make('express.control.type.manager');
+
         return $manager->driver($this->getType());
     }
-
 }

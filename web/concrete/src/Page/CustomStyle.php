@@ -1,15 +1,12 @@
 <?php
 namespace Concrete\Core\Page;
 
-use \Concrete\Core\StyleCustomizer\Style\ValueList;
-use \Concrete\Core\StyleCustomizer\CustomCssRecord;
-use \Concrete\Core\Page\Theme\Theme;
-
-use Database;
+use Concrete\Core\StyleCustomizer\Style\ValueList;
+use Concrete\Core\StyleCustomizer\CustomCssRecord;
+use Concrete\Core\Page\Theme\Theme;
 
 class CustomStyle
 {
-
     protected $pThemeID;
     protected $valueListID;
     protected $presetHandle;
@@ -49,18 +46,16 @@ class CustomStyle
     {
         if ($this->pThemeID > 0) {
             $theme = Theme::getByID($this->pThemeID);
+
             return $theme;
         }
-
     }
     public function getCustomCssRecord()
     {
         if ($this->sccRecordID > 0) {
             $css = CustomCssRecord::getByID($this->sccRecordID);
+
             return $css;
         }
     }
-
-
-
 }

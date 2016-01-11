@@ -3,7 +3,6 @@ namespace Concrete\Controller\Backend;
 
 class GetRemoteHelp extends UserInterface
 {
-
     protected function canAccess()
     {
         return true;

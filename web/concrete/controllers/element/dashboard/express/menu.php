@@ -3,11 +3,9 @@ namespace Concrete\Controller\Element\Dashboard\Express;
 
 use Concrete\Core\Controller\ElementController;
 use Concrete\Core\Entity\Express\Entity;
-use Concrete\Core\Page\Page;
 
 class Menu extends ElementController
 {
-
     protected $currentEntity;
 
     public function __construct(Entity $entity)
@@ -27,6 +25,4 @@ class Menu extends ElementController
         $this->set('types', $entities);
         $this->set('currentType', $this->currentEntity);
     }
-
-
 }

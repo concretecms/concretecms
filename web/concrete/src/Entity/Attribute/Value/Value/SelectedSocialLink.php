@@ -7,7 +7,6 @@ namespace Concrete\Core\Entity\Attribute\Value\Value;
  */
 class SelectedSocialLink
 {
-
     /**
      * @Id @Column(type="integer", options={"unsigned":true})
      * @GeneratedValue(strategy="AUTO")
@@ -20,12 +19,10 @@ class SelectedSocialLink
      */
     protected $value;
 
-
     /**
      * @Column(type="string")
      */
     protected $service;
-
 
     /**
      * @Column(type="string", nullable=true)
@@ -64,7 +61,6 @@ class SelectedSocialLink
         $this->serviceInfo = $serviceInfo;
     }
 
-
     /**
      * @return mixed
      */
@@ -80,7 +76,4 @@ class SelectedSocialLink
     {
         $this->value = $value;
     }
-
-
-
 }

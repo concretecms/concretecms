@@ -30,6 +30,7 @@ class UrlSlugCorePageProperty extends CorePageProperty
         if (!$handle) {
             $control = $this->getPageTypeComposerFormLayoutSetControlObject();
             $e->add(t('You haven\'t chosen a valid %s', $control->getPageTypeComposerControlLabel()));
+
             return $e;
         }
     }
@@ -42,5 +43,4 @@ class UrlSlugCorePageProperty extends CorePageProperty
             return $c->getCollectionHandle();
         }
     }
-
 }

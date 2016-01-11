@@ -1,12 +1,8 @@
 <?php
 namespace Concrete\Core\Express;
 
-use Concrete\Core\Application\Application;
-use \Concrete\Core\Entity\Express\Entity;
-
 class ObjectAttributeBuilder
 {
-
     /**
      * @var \Concrete\Core\Entity\AttributeKey\AttributeKey
      */
@@ -29,7 +25,8 @@ class ObjectAttributeBuilder
     {
         call_user_func_array(array(
             $this->attribute,
-            $method), $args);
+            $method, ), $args);
+
         return $this;
     }
 
@@ -37,7 +34,4 @@ class ObjectAttributeBuilder
     {
         $this->builder->getObject()->getAttributes()->add($this->attribute);
     }
-
-
-
 }

@@ -1,21 +1,25 @@
 <?php
 namespace Concrete\Core\Page;
-use \Symfony\Component\EventDispatcher\Event as AbstractEvent;
 
-class PagePathEvent extends AbstractEvent {
+use Symfony\Component\EventDispatcher\Event as AbstractEvent;
 
-	protected $page;
+class PagePathEvent extends AbstractEvent
+{
+    protected $page;
     protected $path;
 
-	public function __construct(Page $c) {
-		$this->page = $c;
-	}
+    public function __construct(Page $c)
+    {
+        $this->page = $c;
+    }
 
-    public function setPagePath($path) {
+    public function setPagePath($path)
+    {
         $this->path = $path;
     }
 
-    public function getPageObject() {
+    public function getPageObject()
+    {
         return $this->page;
     }
 

@@ -8,18 +8,15 @@ use Concrete\Core\Entity\Express\ManyToManyAssociation;
 use Concrete\Core\Entity\Express\ManyToOneAssociation;
 use Concrete\Core\Entity\Express\OneToManyAssociation;
 use Concrete\Core\Entity\Express\OneToOneAssociation;
-use Doctrine\ORM\EntityManagerInterface;
 
 class ObjectAssociationBuilder
 {
-
     protected $application;
 
     public function __construct(Application $application)
     {
         $this->application = $application;
     }
-
 
     protected function addAssociation(Association $association, Entity $subject, Entity $target, $target_property = null, $inversed_by = null)
     {
@@ -89,12 +86,4 @@ class ObjectAssociationBuilder
         $association->setInversedByPropertyName($target_property);
         $target->getAssociations()->add($association);
     }
-
-
-
-
-
-
-
-
 }

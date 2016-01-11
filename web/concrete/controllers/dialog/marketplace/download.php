@@ -6,7 +6,6 @@ use Concrete\Core\Package\Package;
 
 class Download extends MarketplaceItem
 {
-
     protected $viewPath = '/dialogs/marketplace/download';
 
     public function view()
@@ -16,7 +15,7 @@ class Download extends MarketplaceItem
         if ($r != false) {
             if (is_array($r)) {
                 $errors = Package::mapError($r);
-                foreach($errors as $e) {
+                foreach ($errors as $e) {
                     $error->add($e);
                 }
             } else {
@@ -28,14 +27,14 @@ class Download extends MarketplaceItem
             $tests = Package::testForInstall($this->item->getHandle());
             if (is_array($tests)) {
                 $results = Package::mapError($tests);
-                foreach($results as $te) {
+                foreach ($results as $te) {
                     $error->add($te);
                 }
             } else {
                 $p = Package::getClass($this->item->getHandle());
                 try {
                     $p->install();
-                } catch(\Exception $e) {
+                } catch (\Exception $e) {
                     $error->add($e->getMessage());
                 }
             }
@@ -44,5 +43,4 @@ class Download extends MarketplaceItem
         $this->set('error', $error);
         $this->set('mri', $this->item);
     }
-
 }

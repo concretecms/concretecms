@@ -1,12 +1,10 @@
 <?php
-
 namespace Concrete\Core\Url\Resolver;
 
 use Concrete\Core\Routing\RouterInterface;
 
 class RouterUrlResolver implements UrlResolverInterface
 {
-
     /** @var \Concrete\Core\Routing\RouterInterface */
     protected $router;
 
@@ -20,7 +18,8 @@ class RouterUrlResolver implements UrlResolverInterface
     }
 
     /**
-     * Get the url generator from the router
+     * Get the url generator from the router.
+     *
      * @return UrlGeneratorInterface
      */
     public function getGenerator()
@@ -29,7 +28,8 @@ class RouterUrlResolver implements UrlResolverInterface
     }
 
     /**
-     * Get the RouteCollection from the router
+     * Get the RouteCollection from the router.
+     *
      * @return RouteCollection
      */
     public function getRouteList()
@@ -38,7 +38,7 @@ class RouterUrlResolver implements UrlResolverInterface
     }
 
     /**
-     * Resolve urls from the list of registered routes takes a string
+     * Resolve urls from the list of registered routes takes a string.
      *
      * [code]
      * $url = \URL::to('route/user_route', array('id' => 1));
@@ -61,6 +61,7 @@ class RouterUrlResolver implements UrlResolverInterface
      *                         The first parameter MUST be prepended with
      *                         "route/" for it to be tested.
      * @param \League\URL\URLInterface $resolved
+     *
      * @return \League\URL\URLInterface
      */
     public function resolve(array $arguments, $resolved = null)
@@ -73,7 +74,6 @@ class RouterUrlResolver implements UrlResolverInterface
             if (is_string($route_handle) &&
                 strtolower(substr($route_handle, 0, 6)) == 'route/' &&
                 is_array($route_parameters)) {
-
                 $resolved = $this->resolveRoute(substr($route_handle, 6), $route_parameters);
             }
         }
@@ -82,10 +82,11 @@ class RouterUrlResolver implements UrlResolverInterface
     }
 
     /**
-     * Resolve the route
+     * Resolve the route.
      *
      * @param $route_handle
      * @param $route_parameters
+     *
      * @return $this|\League\URL\URLInterface|mixed|null
      */
     private function resolveRoute($route_handle, $route_parameters)
@@ -99,5 +100,4 @@ class RouterUrlResolver implements UrlResolverInterface
             }
         }
     }
-
 }

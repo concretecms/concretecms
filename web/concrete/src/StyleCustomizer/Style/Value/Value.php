@@ -1,7 +1,8 @@
 <?php
 namespace Concrete\Core\StyleCustomizer\Style\Value;
-abstract class Value {
 
+abstract class Value
+{
     abstract public function toStyleString();
     abstract public function toLessVariablesArray();
 
@@ -9,7 +10,8 @@ abstract class Value {
     protected $scvID;
     protected $scvlID;
 
-    public function __construct($variable = false) {
+    public function __construct($variable = false)
+    {
         $this->variable = $variable;
     }
 

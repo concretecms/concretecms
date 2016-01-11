@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Entity\Attribute\Value;
 
 use Concrete\Core\Attribute\AttributeValueInterface;
@@ -14,7 +13,6 @@ use Concrete\Core\Attribute\AttributeValueInterface;
  */
 abstract class Value implements AttributeValueInterface
 {
-
     /**
      * @Id @Column(type="integer", options={"unsigned":true})
      * @GeneratedValue(strategy="AUTO")
@@ -58,6 +56,7 @@ abstract class Value implements AttributeValueInterface
     {
         $controller = $this->getAttributeKey()->getController();
         $controller->setAttributeValue($this->value);
+
         return $controller;
     }
 
@@ -81,6 +80,7 @@ abstract class Value implements AttributeValueInterface
                 }
             }
         }
+
         return $value->getValue();
     }
 
@@ -96,5 +96,4 @@ abstract class Value implements AttributeValueInterface
     {
         return (string) $this->getValue()->getDisplayValue();
     }
-
 }

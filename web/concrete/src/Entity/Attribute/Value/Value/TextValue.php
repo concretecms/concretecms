@@ -1,7 +1,5 @@
 <?php
-
 namespace Concrete\Core\Entity\Attribute\Value\Value;
-
 
 /**
  * @Entity
@@ -9,7 +7,6 @@ namespace Concrete\Core\Entity\Attribute\Value\Value;
  */
 class TextValue extends Value
 {
-
     /**
      * @Column(type="string", nullable=true)
      */
@@ -35,5 +32,4 @@ class TextValue extends Value
     {
         return (string) $this->getValue();
     }
-
 }

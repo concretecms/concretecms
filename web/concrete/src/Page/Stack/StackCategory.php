@@ -3,13 +3,11 @@ namespace Concrete\Core\Page\Stack;
 
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Type\Type;
-use \Config;
-use \Core;
-use \Page;
+use Core;
+use Page;
 
 class StackCategory
 {
-
     protected $page;
 
     public function __construct($page)
@@ -35,6 +33,7 @@ class StackCategory
 
     /**
      * @param Section $section
+     *
      * @return StackCategory
      */
     public static function getCategoryFromMultilingualSection(Section $section)
@@ -49,9 +48,10 @@ class StackCategory
             $path = STACKS_PAGE_PATH . '/' . $locale;
             $page = \Page::getByPath($path);
             if (is_object($page) && !$page->isError()) {
-                $sc = new StackCategory($page);
+                $sc = new self($page);
             }
         }
+
         return $sc;
     }
 
@@ -60,7 +60,8 @@ class StackCategory
      */
     public static function getFromDefaultMultilingualSection()
     {
-        $sc = new StackCategory(Page::getByPath(STACKS_PAGE_PATH));
+        $sc = new self(Page::getByPath(STACKS_PAGE_PATH));
+
         return $sc;
     }
 
@@ -69,13 +70,14 @@ class StackCategory
         $list = new StackList();
         $list->filterByStackCategory($this);
         $stacks = $list->get();
-        foreach($stacks as $stack) {
+        foreach ($stacks as $stack) {
             $stack->duplicate($category->getPage());
         }
     }
 
     /**
      * @param Section $section
+     *
      * @return StackCategory
      */
     public static function createFromMultilingualSection(Section $section)
@@ -87,8 +89,8 @@ class StackCategory
         $type = Type::getByHandle(STACK_CATEGORY_PAGE_TYPE);
         $page = $parent->add($type, $data);
 
-        $sc = new StackCategory($page);
+        $sc = new self($page);
+
         return $sc;
     }
-
 }

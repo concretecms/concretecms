@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Controller;
 
 use Concrete\Core\Application\Application;
@@ -11,7 +10,6 @@ use View;
 
 abstract class AbstractController implements ApplicationAwareInterface
 {
-
     protected $helpers = array();
     protected $sets = array();
     protected $action;
@@ -34,12 +32,10 @@ abstract class AbstractController implements ApplicationAwareInterface
     }
 
     /**
-     * Adds an item to the view's header. This item will then be automatically printed out before the <body> section of the page
+     * Adds an item to the view's header. This item will then be automatically printed out before the <body> section of the page.
      *
      * @param string $item
-     * @return void
      */
-
     public function addHeaderItem($item)
     {
         $v = View::getInstance();
@@ -47,10 +43,9 @@ abstract class AbstractController implements ApplicationAwareInterface
     }
 
     /**
-     * Adds an item to the view's footer. This item will then be automatically printed out before the </body> section of the page
+     * Adds an item to the view's footer. This item will then be automatically printed out before the </body> section of the page.
      *
      * @param string $item
-     * @return void
      */
     public function addFooterItem($item)
     {
@@ -81,6 +76,7 @@ abstract class AbstractController implements ApplicationAwareInterface
             $h = Core::make('helper/' . $handle);
             $helpers[(str_replace('/', '_', $handle))] = $h;
         }
+
         return $helpers;
     }
 
@@ -99,8 +95,8 @@ abstract class AbstractController implements ApplicationAwareInterface
         }
 
         $val = $this->request->get($key, $defaultValue);
-        return $val;
 
+        return $val;
     }
 
     public function getTask()
@@ -169,7 +165,7 @@ abstract class AbstractController implements ApplicationAwareInterface
     }
 
     /**
-     * Set the application object
+     * Set the application object.
      *
      * @param \Concrete\Core\Application\Application $application
      */
@@ -177,5 +173,4 @@ abstract class AbstractController implements ApplicationAwareInterface
     {
         $this->app = $application;
     }
-
 }

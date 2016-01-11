@@ -1,18 +1,13 @@
 <?php
-
 namespace Concrete\Core\Express\Form;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Entity\Express\Control\Control;
-use Concrete\Core\Entity\Express\FieldSet;
-use Concrete\Core\Entity\Express\Form;
 use Concrete\Core\Express\BaseEntity;
-use Concrete\Core\Foundation\Environment;
 use Doctrine\ORM\EntityManagerInterface;
 
 class RendererFactory
 {
-
     protected $control;
     protected $application;
     protected $entityManager;
@@ -81,6 +76,7 @@ class RendererFactory
                 $this->viewRenderer->build($this);
             }
         }
+
         return $this->viewRenderer;
     }
 
@@ -92,7 +88,7 @@ class RendererFactory
                 $this->formRenderer->build($this);
             }
         }
+
         return $this->formRenderer;
     }
-
 }

@@ -5,7 +5,7 @@
     <?php
         $options = $control->getControlOptionsController();
         if ($options->elementExists()) {
-            print $options->render();
+            echo $options->render();
         }
     ?>
 
@@ -14,14 +14,16 @@
         <?=$form->text('customLabel', $control->getCustomLabel())?>
     </div>
 
-    <? if (is_object($type->getValidator())) { ?>
+    <?php if (is_object($type->getValidator())) {
+    ?>
         <div class="form-group">
             <?=$form->label('isRequired', t('Required'))?>
             <div class="checkbox">
                 <label><?=$form->checkbox('isRequired', 1, $control->isRequired())?> <?=t('Yes, require this form element')?></label>
             </div>
         </div>
-    <? } ?>
+    <?php 
+} ?>
     <?=Loader::helper('validation/token')->output('save_control')?>
 </form>
 <div class="dialog-buttons">

@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Permission\Access\Entity;
 
 use Concrete\Core\Foundation\Object;

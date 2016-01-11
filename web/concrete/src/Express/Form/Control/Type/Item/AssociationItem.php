@@ -1,13 +1,10 @@
 <?php
-
 namespace Concrete\Core\Express\Form\Control\Type\Item;
 
-use Concrete\Core\Entity\AttributeKey\AttributeKey;
 use Concrete\Core\Entity\Express\Association;
 
 class AssociationItem implements ItemInterface
 {
-
     protected $association;
 
     public function __construct(Association $association)
@@ -29,7 +26,4 @@ class AssociationItem implements ItemInterface
     {
         return $this->association->getId();
     }
-
-
-
 }

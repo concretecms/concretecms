@@ -1,10 +1,8 @@
 <?php
 namespace Concrete\Core\Database;
 
-use Concrete\Core\Application\Application;
 use Concrete\Core\Cache\Adapter\DoctrineCacheDriver;
 use Concrete\Core\Database\Connection\Connection;
-use Concrete\Core\Package\Package;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
 use Config;
@@ -13,7 +11,6 @@ use Events;
 
 class EntityManagerFactory implements EntityManagerFactoryInterface
 {
-
     protected $entitiesPath;
     protected $context;
 
@@ -44,5 +41,4 @@ class EntityManagerFactory implements EntityManagerFactoryInterface
 
         return EntityManager::create($connection, $config);
     }
-
 }

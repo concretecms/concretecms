@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Console\Command;
 
 use Symfony\Component\Console\Command\Command;
@@ -27,7 +26,7 @@ class ResetCommand extends Command
             'This will delete files and empty the database! (y/n)',
             false
         );
-        if (!$input->getOption('force') && !$this->getHelper('question')->ask($input, $output, $confirmQuestion) ) {
+        if (!$input->getOption('force') && !$this->getHelper('question')->ask($input, $output, $confirmQuestion)) {
             die();
         }
 

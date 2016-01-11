@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Entity\Attribute;
 
 use Concrete\Core\Entity\Attribute\Key\Key;
@@ -18,7 +17,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Set
 {
-
     use PackageTrait;
 
     /**
@@ -32,7 +30,6 @@ class Set
      * @JoinColumn(name="akCategoryID", referencedColumnName="akCategoryID")
      */
     protected $category;
-
 
     public function __construct()
     {
@@ -110,7 +107,6 @@ class Set
         return $this->asID;
     }
 
-
     /**
      * @return mixed
      */
@@ -187,6 +183,7 @@ class Set
     {
         $manager = \Core::make('Concrete\Core\Attribute\SetManager');
         $manager->setAttributeSet($this);
+
         return $manager;
     }
 
@@ -202,7 +199,6 @@ class Set
         }
     }
 
-
     public function addKey(Key $key)
     {
         $setKey = new SetKey();
@@ -211,8 +207,4 @@ class Set
         $setKey->setDisplayOrder(count($this->keys));
         $this->keys->add($setKey);
     }
-
-
-
 }
-

@@ -1,7 +1,8 @@
 <?php
 namespace Concrete\Core\StyleCustomizer\Style\Value;
-class ImageValue extends Value {
 
+class ImageValue extends Value
+{
     protected $imageUrl;
     protected $fID;
 
@@ -34,5 +35,4 @@ class ImageValue extends Value {
     {
         return array($this->getVariable() . '-image' => '\'' . $this->getUrl() . '\'');
     }
-
 }

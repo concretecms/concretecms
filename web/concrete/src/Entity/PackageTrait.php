@@ -1,10 +1,8 @@
 <?php
-
 namespace Concrete\Core\Entity;
 
 trait PackageTrait
 {
-
     /**
      * @ManyToOne(targetEntity="\Concrete\Core\Entity\Package")
      * @JoinColumn(name="pkgID", referencedColumnName="pkgID")
@@ -34,12 +32,10 @@ trait PackageTrait
         }
     }
 
-
     public function getPackageHandle()
     {
         if (is_object($this->package)) {
             return $this->package->getPackageHandle();
         }
     }
-
 }

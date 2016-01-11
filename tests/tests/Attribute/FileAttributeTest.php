@@ -1,14 +1,14 @@
 <?php
+
 use Concrete\Core\Attribute\Key\Category;
 
 class FileAttributeTest extends \AttributeTestCase
 {
-
     protected $fixtures = array();
     protected $category;
     protected $keys = array(
         'width' => array('akName' => 'Width', 'type' => 'number'),
-        'height' => array('akName' => 'Height', 'type' => 'number')
+        'height' => array('akName' => 'Height', 'type' => 'number'),
     );
 
     protected $indexQuery = 'select * from FileSearchIndexAttributes where fID = 1';
@@ -32,7 +32,7 @@ class FileAttributeTest extends \AttributeTestCase
                 'FileStorageLocationTypes',
                 'FileVersionLog',
                 'FileStorageLocations',
-                'FileVersions'
+                'FileVersions',
             )
         );
         parent::setUp();
@@ -74,15 +74,15 @@ class FileAttributeTest extends \AttributeTestCase
                 200,
                 0.0,
                 200.0,
-                0.0
+                0.0,
             ),
             array(
                 'height',
                 500,
                 0.0,
                 500.0,
-                0.0
-            )
+                0.0,
+            ),
         );
     }
 
@@ -93,9 +93,9 @@ class FileAttributeTest extends \AttributeTestCase
                 'width',
                 200,
                 array(
-                    'ak_width' => 200.0000
-                )
-            )
+                    'ak_width' => 200.0000,
+                ),
+            ),
         );
     }
 
@@ -103,8 +103,7 @@ class FileAttributeTest extends \AttributeTestCase
     {
         return array(
             array('width'),
-            array('height')
+            array('height'),
         );
     }
-
 }

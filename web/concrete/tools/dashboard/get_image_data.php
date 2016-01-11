@@ -21,7 +21,7 @@ if (Config::get('concrete.urls.background_info')) {
             $imageData = $imageDataCache->get();
         }
         if ($imageData !== false) {
-            print $imageData;
+            echo $imageData;
         }
     }
 }

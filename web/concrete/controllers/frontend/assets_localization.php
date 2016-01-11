@@ -4,7 +4,6 @@ namespace Concrete\Controller\Frontend;
 use Controller;
 use Concrete\Core\File\Type\Type as FileType;
 use Concrete\Core\Localization\Localization;
-use Core;
 use Environment;
 
 class AssetsLocalization extends Controller

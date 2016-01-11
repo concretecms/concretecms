@@ -1,12 +1,8 @@
 <?php
-
 namespace Concrete\Attribute\Textarea;
 
 use Concrete\Core\Attribute\DefaultController;
-use Concrete\Core\Entity\Attribute\Key\TextareaKey;
-use Concrete\Core\Entity\Attribute\Key\TextKey;
 use Concrete\Core\Entity\Attribute\Key\Type\TextareaType;
-use Concrete\Core\Entity\Attribute\Value\Value\TextValue;
 use Core;
 use Database;
 use Concrete\Core\Entity\Attribute\Value\Value\TextareaValue;
@@ -35,9 +31,9 @@ class Controller extends DefaultController
         }
 
         $type->setMode($akTextareaDisplayMode);
+
         return $type;
     }
-
 
     public function getDisplaySanitizedValue()
     {
@@ -60,9 +56,9 @@ class Controller extends DefaultController
         }
         // switch display type here
         if ($this->akTextareaDisplayMode == 'text' || $this->akTextareaDisplayMode == '') {
-            print Core::make('helper/form')->textarea($this->field('value'), $value, array('class' => $additionalClass, 'rows' => 5));
+            echo Core::make('helper/form')->textarea($this->field('value'), $value, array('class' => $additionalClass, 'rows' => 5));
         } else {
-            print Core::make('editor')->outputStandardEditor($this->field('value'), $value);
+            echo Core::make('editor')->outputStandardEditor($this->field('value'), $value);
         }
     }
 
@@ -81,7 +77,7 @@ class Controller extends DefaultController
     public function search()
     {
         $f = Core::make('helper/form');
-        print $f->text($this->field('value'), $this->request('value'));
+        echo $f->text($this->field('value'), $this->request('value'));
     }
 
     public function type_form()
@@ -98,13 +94,12 @@ class Controller extends DefaultController
         }
 
         $type = $ak->getAttributeKeyType();
-        /**
+        /*
          * @var $type TextareaType
          */
 
         $this->akTextareaDisplayMode = $type->getMode();
         $this->set('akTextareaDisplayMode', $type->getMode());
-
     }
 
     public function exportKey($akey)
@@ -119,6 +114,7 @@ class Controller extends DefaultController
     {
         $av = new TextareaValue();
         $av->setValue($value);
+
         return $av;
     }
 
@@ -129,6 +125,7 @@ class Controller extends DefaultController
             $data['akTextareaDisplayMode'] = $akey->type['mode'];
             $type->setMode((string) $akey->type['mode']);
         }
+
         return $type;
     }
 

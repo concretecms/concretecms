@@ -1,5 +1,5 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
-<? $view->inc('elements/header.php'); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php $view->inc('elements/header.php'); ?>
 
 <div class="container">
 <div class="row">
@@ -18,9 +18,9 @@ View::element(
 </div>
 </div>
 
-<?php print $innerContent ?>
+<?php echo $innerContent ?>
 
 </div>
 </div>
 
-<? $view->inc('elements/footer.php'); ?>
+<?php $view->inc('elements/footer.php'); ?>

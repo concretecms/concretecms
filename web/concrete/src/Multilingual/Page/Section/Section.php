@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Multilingual\Page\Section;
 
 use Concrete\Core\Page\Page;

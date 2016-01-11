@@ -1,11 +1,10 @@
 <?php
-use Concrete\Core\Express\ObjectBuilder;
+
 
 require_once "ExpressEntityManagerTestCaseTrait.php";
 
 class EntityWriterTest extends PHPUnit_Framework_TestCase
 {
-
     use ExpressEntityManagerTestCaseTrait;
 
     public function tearDown()
@@ -44,7 +43,6 @@ class EntityWriterTest extends PHPUnit_Framework_TestCase
 
     public function testOutputClassWritingAndNamespace()
     {
-
         $writer = Core::make('express.writer');
         $writer->setNamespace('Testing');
         $writer->setEntityManager($this->getMockEntityManagerWithRelations());
@@ -66,8 +64,5 @@ class EntityWriterTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($class->hasMethod('setFirstName'));
         $this->assertTrue($class->hasProperty('teacher'));
         $this->assertTrue($class->hasMethod('getTeacher'));
-
     }
-
-
 }

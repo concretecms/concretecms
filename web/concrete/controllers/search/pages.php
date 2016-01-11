@@ -5,10 +5,9 @@ use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\Search\StickyRequest;
 use Controller;
 use PageList;
-use \Concrete\Core\Page\Search\ColumnSet\ColumnSet as PageSearchColumnSet;
-use \Concrete\Core\Page\Search\Result\Result as PageSearchResult;
+use Concrete\Core\Page\Search\ColumnSet\ColumnSet as PageSearchColumnSet;
+use Concrete\Core\Page\Search\Result\Result as PageSearchResult;
 use CollectionAttributeKey;
-use Permissions;
 use Loader;
 use stdClass;
 use PageTheme;
@@ -112,7 +111,7 @@ class Pages extends Controller
                         case 'version_status':
                             if (in_array($req['versionToRetrieve'], array(
                                 \Concrete\Core\Page\PageList::PAGE_VERSION_RECENT,
-                                \Concrete\Core\Page\PageList::PAGE_VERSION_ACTIVE
+                                \Concrete\Core\Page\PageList::PAGE_VERSION_ACTIVE,
                             ))) {
                                 $this->pageList->setPageVersionToRetrieve($req['versionToRetrieve']);
                             }
@@ -237,16 +236,18 @@ class Pages extends Controller
                 break;
             case 'type':
                 $html .= $form->select('ptID', array_reduce(
-                    \PageType::getList(), function($types, $type) {
+                    \PageType::getList(), function ($types, $type) {
                         $types[$type->getPageTypeID()] = $type->getPageTypeDisplayName();
+
                         return $types;
                     }
                 ), $searchRequest['ptID']);
                 break;
             case 'template':
                 $html .= $form->select('pTemplateID', array_reduce(
-                    \PageTemplate::getList(), function($templates, $template) {
+                    \PageTemplate::getList(), function ($templates, $template) {
                     $templates[$template->getPageTemplateID()] = $template->getPageTemplateDisplayName();
+
                     return $templates;
                 }
                 ), $searchRequest['pTemplateID']);
@@ -302,6 +303,7 @@ class Pages extends Controller
                 }
             }
         }
+
         return $r;
     }
 
@@ -330,7 +332,7 @@ class Pages extends Controller
             'date_public' => t('Public Date'),
             'owner' => t('Page Owner'),
             'num_children' => t('# Children'),
-            'version_status' => t('Approved Version')
+            'version_status' => t('Approved Version'),
         );
         $sfa = CollectionAttributeKey::getSearchableList();
         foreach ($sfa as $ak) {
@@ -340,5 +342,4 @@ class Pages extends Controller
 
         return $r;
     }
-
 }

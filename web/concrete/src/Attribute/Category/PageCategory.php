@@ -1,18 +1,12 @@
 <?php
-
 namespace Concrete\Core\Attribute\Category;
 
-use Concrete\Core\Attribute\Category\SearchIndexer\PageSearchIndexer;
 use Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexerInterface;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Key\PageKey;
-use Concrete\Core\Entity\Attribute\Type as AttributeType;
-use Concrete\Core\Page\Page;
-use Symfony\Component\HttpFoundation\Request;
 
 class PageCategory extends AbstractCategory implements StandardSearchIndexerInterface
 {
-
     public function createAttributeKey()
     {
         return new PageKey();
@@ -35,10 +29,10 @@ class PageCategory extends AbstractCategory implements StandardSearchIndexerInte
                 array(
                     'name' => 'cID',
                     'type' => 'integer',
-                    'options' => array('unsigned' => true, 'default' => 0, 'notnull' => true)
-                )
+                    'options' => array('unsigned' => true, 'default' => 0, 'notnull' => true),
+                ),
             ),
-            'primary' => array('cID')
+            'primary' => array('cID'),
         );
     }
 
@@ -52,8 +46,9 @@ class PageCategory extends AbstractCategory implements StandardSearchIndexerInte
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Value\PageValue');
         $values = $r->findBy(array(
             'cID' => $page->getCollectionID(),
-            'cvID' => $page->getVersionID()
+            'cvID' => $page->getVersionID(),
         ));
+
         return $values;
     }
 
@@ -63,10 +58,9 @@ class PageCategory extends AbstractCategory implements StandardSearchIndexerInte
         $value = $r->findOneBy(array(
             'cID' => $page->getCollectionID(),
             'cvID' => $page->getVersionID(),
-            'attribute_key' => $key
+            'attribute_key' => $key,
         ));
+
         return $value;
     }
-
-
 }

@@ -1,11 +1,10 @@
-<?
+<?php
 namespace Concrete\Controller\SinglePage\Dashboard\Express\Entities;
 
-use \Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Controller\DashboardPageController;
 
 class Associations extends DashboardPageController
 {
-
     protected $repository;
     protected $associationRepository;
     protected $entity;
@@ -21,10 +20,9 @@ class Associations extends DashboardPageController
     {
         $entity = $this->repository->findOneById($id);
         if (is_object($entity)) {
-
             $this->set('entity', $entity);
             $entities = array();
-            foreach($this->repository->findAll() as $targetEntity) {
+            foreach ($this->repository->findAll() as $targetEntity) {
                 if ($targetEntity->getID() != $entity->getId()) {
                     $entities[$targetEntity->getID()] = $targetEntity->getName();
                 }
@@ -34,7 +32,7 @@ class Associations extends DashboardPageController
                 'ManyToOne' => t('Many to One'),
                 'OneToMany' => t('One to Many'),
                 'OneToOne' => t('One to One'),
-                'ManyToMany' => t('Many to Many')
+                'ManyToMany' => t('Many to Many'),
             ];
             $types += $validTypes;
             $this->set('entities', $entities);
@@ -58,10 +56,10 @@ class Associations extends DashboardPageController
                 if (!$this->error->has()) {
                     $builder = \Core::make('express.builder.association');
                     $targetEntity = $this->repository->findOneById($this->request->request->get('target_entity'));
-                    /**
+                    /*
                      * @var $builder \Concrete\Core\Express\ObjectAssociationBuilder
                      */
-                    switch($this->request->request->get('type')) {
+                    switch ($this->request->request->get('type')) {
                         case 'ManyToOne':
                             $builder->addManyToOne(
                                 $entity, $targetEntity, $this->request->request->get('target_property_name')
@@ -94,7 +92,6 @@ class Associations extends DashboardPageController
                     $this->redirect('/dashboard/express/entities/associations', $entity->getId());
                 }
             }
-
 
             $this->render('/dashboard/express/entities/associations/add');
         } else {
@@ -138,7 +135,6 @@ class Associations extends DashboardPageController
         }
     }
 
-
     public function view_association_details($id = null)
     {
         $association = $this->associationRepository->findOneById($id);
@@ -149,15 +145,10 @@ class Associations extends DashboardPageController
             $this->set('formatter', $association->getFormatter());
             $this->set('pageTitle', t('Association Details'));
             $this->render('/dashboard/express/entities/associations/view_association');
-
         }
         if (is_object($entity)) {
         } else {
             $this->redirect('/dashboard/express/entities');
         }
     }
-
-
-
-
 }

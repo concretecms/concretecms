@@ -1,16 +1,16 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>  
-<?
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>  
+<?php
 if ($controller->getTask() == 'add') {
-	$enableNewTopics = 1;
-	$orderBy = 'date_last_message';
-	$enableOrdering = 1;
-	$itemsPerPage = 20;
+    $enableNewTopics = 1;
+    $orderBy = 'date_last_message';
+    $enableOrdering = 1;
+    $itemsPerPage = 20;
 }
 
 $pagetypes = PageType::getList();
 $types = array();
-foreach($pagetypes as $pt) {
-	$types[$pt->getPageTypeID()] = $pt->getPageTypeName();
+foreach ($pagetypes as $pt) {
+    $types[$pt->getPageTypeID()] = $pt->getPageTypeName();
 }
 
 ?>

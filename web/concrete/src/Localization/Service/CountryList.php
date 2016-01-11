@@ -31,8 +31,8 @@ class CountryList
     }
 
     /** Returns an array of countries with their short name as the key and their full name as the value
-    * @return array Keys are the country codes, values are the county names
-    */
+     * @return array Keys are the country codes, values are the county names
+     */
     public function getCountries()
     {
         if (!array_key_exists(Localization::activeLocale(), $this->countries)) {
@@ -43,9 +43,10 @@ class CountryList
     }
 
     /** Gets a country full name given its code
-    * @param string $code The country code
-    * @return string
-    */
+     * @param string $code The country code
+     *
+     * @return string
+     */
     public function getCountryName($code)
     {
         $countries = $this->getCountries(true);
@@ -55,7 +56,9 @@ class CountryList
 
     /**
      * Return a list of territory codes where a specific language is spoken, sorted by the total number of people speaking that language.
+     *
      * @param string $languageCode The language code (eg. 'en')
+     *
      * @return array Returns a list of country codes
      */
     public function getCountriesForLanguage($languageCode)

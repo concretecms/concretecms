@@ -1,11 +1,10 @@
-<?
+<?php
 namespace Concrete\Controller\SinglePage\Dashboard;
 
-use \Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Controller\DashboardPageController;
 
 class Express extends DashboardPageController
 {
-
     public function view()
     {
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity');
@@ -16,6 +15,4 @@ class Express extends DashboardPageController
             $this->redirect('/dashboard/express/entities');
         }
     }
-
-
 }

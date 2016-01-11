@@ -1,16 +1,10 @@
 <?php
-
 namespace Concrete\Core\Page\Collection;
 
 use Area;
 use Block;
 use CacheLocal;
-use CollectionAttributeKey;
 use CollectionVersion;
-use Concrete\Core\Attribute\Key\CollectionKey;
-use Concrete\Core\Attribute\Key\Key;
-use Concrete\Core\Attribute\Value\CollectionValue as CollectionAttributeValue;
-use Concrete\Core\Entity\Attribute\Value\PageValue;
 use Concrete\Core\Entity\Attribute\Value\Value\Value;
 use Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionVersionFeatureAssignment;
 use Concrete\Core\Feature\Feature;
@@ -49,7 +43,7 @@ class Collection extends Object
         while ($row = $r->FetchRow()) {
             $pc = Page::getByID($row['cID']);
             $pc->reindex(false, true);
-            $num++;
+            ++$num;
         }
         Config::save('concrete.misc.do_page_reindex_check', false);
 
@@ -79,7 +73,7 @@ class Collection extends Object
             if ($row['cID'] > 0 && $row['pcID'] == null) {
 
                 // there is a collection, but it is not a page. so we grab it
-                $cObj = Collection::getByID($row['cID']);
+                $cObj = self::getByID($row['cID']);
             }
         }
 
@@ -173,7 +167,7 @@ class Collection extends Object
             $res2 = $db->execute($r2, $v2);
         }
 
-        $nc = Collection::getByID($newCID);
+        $nc = self::getByID($newCID);
 
         return $nc;
     }
@@ -190,7 +184,7 @@ class Collection extends Object
         $q = 'select Collections.cDateAdded, Collections.cDateModified, Collections.cID from Collections where cID = ?';
         $row = $db->getRow($q, array($cID));
 
-        $c = new Collection();
+        $c = new self();
         $c->setPropertiesFromArray($row);
 
         if ($version != false) {
@@ -423,7 +417,6 @@ class Collection extends Object
         $this->reindex();
     }
 
-
     public function clearAttribute($ak)
     {
         $this->vObj->clearAttribute($ak);
@@ -435,7 +428,7 @@ class Collection extends Object
         $values = $category->getAttributeValues($this->vObj);
 
         $attribs = array();
-        foreach($values as $value) {
+        foreach ($values as $value) {
             $attribs[] = $value->getAttributeKey();
         }
 
@@ -654,10 +647,10 @@ class Collection extends Object
         $db->Replace(
            'CollectionVersionAreaStyles',
            array(
-               'cID'      => $this->getCollectionID(),
-               'cvID'     => $this->getVersionID(),
+               'cID' => $this->getCollectionID(),
+               'cvID' => $this->getVersionID(),
                'arHandle' => $area->getAreaHandle(),
-               'issID'    => $set->getID(),
+               'issID' => $set->getID(),
            ),
            array('cID', 'cvID', 'arHandle'),
            true
@@ -722,7 +715,7 @@ class Collection extends Object
                 $args = array($displayOrder, $cID, $cvID, $arHandle, $row['bID']);
                 $q = "update CollectionVersionBlocks set cbDisplayOrder = ? where cID = ? and cvID = ? and arHandle = ? and bID = ?";
                 $db->query($q, $args);
-                $displayOrder++;
+                ++$displayOrder;
             }
             $r->free();
         }
@@ -911,7 +904,7 @@ class Collection extends Object
                 if (is_null($displayOrder)) {
                     return 0;
                 }
-                $displayOrder++;
+                ++$displayOrder;
 
                 return $displayOrder;
             } else {
@@ -1066,9 +1059,9 @@ class Collection extends Object
                         $db->Replace(
                            'BlockPermissionAssignments',
                            array(
-                               'cID'  => $newCID,
+                               'cID' => $newCID,
                                'cvID' => $row['cvID'],
-                               'bID'  => $row['bID'],
+                               'bID' => $row['bID'],
                                'paID' => $row2['paID'],
                                'pkID' => $row2['pkID'],
                            ),
@@ -1089,7 +1082,7 @@ class Collection extends Object
                 $db->query('insert into CollectionAttributeValues (akID, cvID, avID, cID) values (?, ?, ?, ?)', $v2);
             }
 
-            return Collection::getByID($newCID);
+            return self::getByID($newCID);
         }
     }
 

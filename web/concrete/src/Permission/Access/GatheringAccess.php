@@ -1,3 +1,6 @@
 <?php
 namespace Concrete\Core\Permission\Access;
-class GatheringAccess extends Access {}
+
+class GatheringAccess extends Access
+{
+}

@@ -1,14 +1,10 @@
 <?php
-
 namespace Concrete\Core\Entity\Attribute\Key;
 
 use Concrete\Core\Attribute\AttributeKeyInterface;
-use Concrete\Core\Attribute\Key\ImportLoader\StandardImporterLoader;
-use Concrete\Core\Attribute\Key\RequestLoader\StandardRequestLoader;
 use Concrete\Core\Attribute\Type;
 use Concrete\Core\Entity\Attribute\Set;
 use Concrete\Core\Entity\PackageTrait;
-
 
 /**
  * @Entity
@@ -23,7 +19,6 @@ use Concrete\Core\Entity\PackageTrait;
  */
 abstract class Key implements AttributeKeyInterface
 {
-
     use PackageTrait;
 
     /**
@@ -36,7 +31,7 @@ abstract class Key implements AttributeKeyInterface
      * @Column(type="string")
      */
     protected $akHandle;
-    
+
     /**
      * @Column(type="string")
      */
@@ -65,6 +60,7 @@ abstract class Key implements AttributeKeyInterface
     /**
      * Technically this is a one to one but doctrine can't used a composite/derived
      * primary key from entity in an abstract class. Sigh.
+     *
      * @OneToOne(targetEntity="\Concrete\Core\Entity\Attribute\Key\Type\Type", mappedBy="key", cascade={"persist", "remove"})
      */
     protected $key_type;
@@ -76,7 +72,6 @@ abstract class Key implements AttributeKeyInterface
     {
         return $this->akID;
     }
-
 
     /**
      * @return mixed
@@ -199,6 +194,7 @@ abstract class Key implements AttributeKeyInterface
     {
         $controller = $this->getAttributeKeyType()->getAttributeType()->getController();
         $controller->setAttributeKey($this);
+
         return $controller;
     }
 
@@ -210,6 +206,7 @@ abstract class Key implements AttributeKeyInterface
         $controller = $this->getController();
         $value = $controller->getAttributeValueFromRequest();
         $mixed->setAttribute($this, $value);
+
         return $value;
     }
 
@@ -222,7 +219,7 @@ abstract class Key implements AttributeKeyInterface
         if ($return) {
             return $resp;
         } else {
-            print $resp;
+            echo $resp;
         }
     }
 
@@ -246,17 +243,17 @@ abstract class Key implements AttributeKeyInterface
     public function inAttributeSet(Set $set)
     {
         $sets = $this->getAttributeSets();
+
         return in_array($set, $sets);
     }
 
     /**
      * Doctrine requires this for certain queries.
+     *
      * @return mixed
      */
     public function __toString()
     {
         return (string) $this->getAttributeKeyID();
     }
-
-
 }

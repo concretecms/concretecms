@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\View;
 
 use Concrete\Core\Asset\Asset;
@@ -43,7 +42,6 @@ class View extends AbstractView
     /**
      * gets the relative theme path for use in templates.
      *
-     * @access public
      *
      * @return string $themePath
      */
@@ -104,7 +102,6 @@ class View extends AbstractView
             $this->themeObject = null;
             $this->loadViewThemeObject();
         }
-
     }
 
     /**
@@ -208,22 +205,18 @@ class View extends AbstractView
 
     /**
      * Function responsible for outputting header items.
-     *
-     * @access private
      */
     public function markHeaderAssetPosition()
     {
-        print '<!--ccm:assets:'.Asset::ASSET_POSITION_HEADER.'//-->';
+        echo '<!--ccm:assets:'.Asset::ASSET_POSITION_HEADER.'//-->';
     }
 
     /**
      * Function responsible for outputting footer items.
-     *
-     * @access private
      */
     public function markFooterAssetPosition()
     {
-        print '<!--ccm:assets:'.Asset::ASSET_POSITION_FOOTER.'//-->';
+        echo '<!--ccm:assets:'.Asset::ASSET_POSITION_FOOTER.'//-->';
     }
 
     protected function getAssetsToOutput()
@@ -260,23 +253,23 @@ class View extends AbstractView
         // goes through all assets in this list, creating new URLs and post-processing them where possible.
         $segment = 0;
         $groupedAssets = array();
-        for ($i = 0; $i < count($assets); $i++) {
+        for ($i = 0; $i < count($assets); ++$i) {
             $asset = $assets[$i];
             $nextasset = isset($assets[$i + 1]) ? $assets[$i + 1] : null;
 
             $groupedAssets[$segment][] = $asset;
             if (!($asset instanceof Asset) || !($nextasset instanceof Asset)) {
-                $segment++;
+                ++$segment;
                 continue;
             }
 
             if ($asset->getOutputAssetType() != $nextasset->getOutputAssetType()) {
-                $segment++;
+                ++$segment;
                 continue;
             }
 
             if (!$asset->assetSupportsCombination() || !$nextasset->assetSupportsCombination()) {
-                $segment++;
+                ++$segment;
                 continue;
             }
         }

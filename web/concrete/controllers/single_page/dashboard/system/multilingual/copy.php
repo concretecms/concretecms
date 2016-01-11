@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Controller\SinglePage\Dashboard\System\Multilingual;
 
 use Concrete\Controller\Panel\Multilingual;
@@ -7,13 +6,12 @@ use Concrete\Core\Foundation\Queue\Queue;
 use Concrete\Core\Multilingual\Page\Section\Processor\MultilingualProcessorTarget;
 use Concrete\Core\Multilingual\Page\Section\Processor\Processor;
 use Concrete\Core\Multilingual\Page\Section\Section;
-use \Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Controller\DashboardPageController;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
 class Copy extends DashboardPageController
 {
-
     public function view()
     {
         $this->set('pages', Section::getList());
@@ -41,12 +39,12 @@ class Copy extends DashboardPageController
                 $target = new MultilingualProcessorTarget($section);
                 $processor = new Processor($target);
                 if ($_POST['process']) {
-                    foreach($processor->receive() as $task) {
+                    foreach ($processor->receive() as $task) {
                         $processor->execute($task);
                     }
-                    $obj = new \stdClass;
+                    $obj = new \stdClass();
                     $obj->totalItems = $processor->getTotalTasks();
-                    print json_encode($obj);
+                    echo json_encode($obj);
                     exit;
                 } else {
                     $processor->process();
@@ -88,5 +86,4 @@ class Copy extends DashboardPageController
             }
         }
     }
-
 }

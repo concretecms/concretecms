@@ -8,7 +8,8 @@ use Symfony\Component\Routing\RequestContext;
 interface RouterInterface
 {
     /**
-     * Get the context that the router is running in
+     * Get the context that the router is running in.
+     *
      * @return RequestContext
      */
     public function getContext();
@@ -44,6 +45,7 @@ interface RouterInterface
      * @param array|string $schemes The schemes or scheme this route requires, see Symfony Route constructor
      * @param array|string $methods The HTTP methods this route requires, see see Symfony Route constructor
      * @param string $condition see Symfony Route constructor
+     *
      * @return \Symfony\Component\Routing\Route
      */
     public function register(
@@ -62,20 +64,21 @@ interface RouterInterface
     public function execute(Route $route, $parameters);
 
     /**
-     * Used by the theme_paths and site_theme_paths files in config/ to hard coded certain paths to various themes
-     * @access public
+     * Used by the theme_paths and site_theme_paths files in config/ to hard coded certain paths to various themes.
+     *
      * @param $path string
      * @param $theme object, if null site theme is default
-     * @return void
      */
     public function setThemeByRoute($path, $theme = null, $wrapper = FILENAME_THEMES_VIEW);
 
     public function setThemesbyRoutes(array $routes);
 
     /**
-     * This grabs the theme for a particular path, if one exists in the themePaths array
+     * This grabs the theme for a particular path, if one exists in the themePaths array.
+     *
      * @param string $path
-     * @return string|boolean
+     *
+     * @return string|bool
      */
     public function getThemeByRoute($path);
 

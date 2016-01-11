@@ -1,14 +1,11 @@
 <?php
-
 namespace Concrete\Core\User;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Database\Connection\Connection;
-use Concrete\Core\Database\DatabaseManager;
 
 class UserInfoFactory
 {
-
     protected $connection;
     protected $application;
 
@@ -78,6 +75,7 @@ class UserInfoFactory
         }
         if ($uID) {
             $ui = self::getByID($uID);
+
             return $ui;
         }
     }
@@ -91,10 +89,8 @@ class UserInfoFactory
             $r->free();
             $ui = $this->application->make('Concrete\Core\User\UserInfo');
             $ui = array_to_object($ui, $row);
+
             return $ui;
         }
     }
-
-
-
 }

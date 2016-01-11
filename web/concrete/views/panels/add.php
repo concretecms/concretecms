@@ -10,22 +10,27 @@ defined('C5_EXECUTE') or die("Access Denied.");
         <nav>
             <span></span>
             <ul class="ccm-panel-header-accordion-dropdown">
-                <li><a data-panel-accordion-tab="blocks" <? if (!in_array(
+                <li><a data-panel-accordion-tab="blocks" <?php if (!in_array(
                         $tab,
                         array(
                             'clipboard',
                             'stacks',
-                            'tiles'))) {
-                    ?>data-panel-accordion-tab-selected="true" <? } ?>><?= t('Blocks') ?></a></li>
+                            'tiles', ))) {
+    ?>data-panel-accordion-tab-selected="true" <?php 
+} ?>><?= t('Blocks') ?></a></li>
                 <li><a data-panel-accordion-tab="clipboard"
-                       <? if ($tab == 'clipboard') { ?>data-panel-accordion-tab-selected="true" <? } ?>><?=
+                       <?php if ($tab == 'clipboard') {
+    ?>data-panel-accordion-tab-selected="true" <?php 
+} ?>><?=
                         t(
                             'Clipboard') ?></a></li>
                 <li><a data-panel-accordion-tab="stacks"
-                       <? if ($tab == 'stacks') { ?>data-panel-accordion-tab-selected="true" <? } ?>><?=
+                       <?php if ($tab == 'stacks') {
+    ?>data-panel-accordion-tab-selected="true" <?php 
+} ?>><?=
                         t(
                             'Stacks') ?></a></li>
-                <? /*
+                <?php /*
                 <li><a data-panel-accordion-tab="tiles"
                        <? if ($tab == 'tiles') { ?>data-panel-accordion-tab-selected="true" <? } ?>><?=
                         t(
@@ -45,13 +50,11 @@ switch ($tab) {
         <?php
         break;
 
-
     case 'stacks':
         ?>
         <div id="ccm-panel-add-block-stack-list">
             <?php
             /** @var Stack[] $stacks */
-
             foreach ($stacks as $stack) {
                 if (!$stack) {
                     continue;
@@ -109,17 +112,19 @@ switch ($tab) {
                                 <div class="block-content">
                                     <?php
                                     $bv = new \Concrete\Core\Block\View\BlockView($block);
-                                    $bv->render('scrapbook');
-                                    ?>
+                            $bv->render('scrapbook');
+                            ?>
                                 </div>
                                 <div class="block-handle"></div>
                             </div>
                         <?php
+
                         }
-                        ?>
+                ?>
                     </div>
                 </div>
             <?php
+
             }
             ?>
         </div>
@@ -169,7 +174,6 @@ switch ($tab) {
         <?php
         break;
 
-
     case 'clipboard':
         ?>
 
@@ -180,7 +184,9 @@ switch ($tab) {
             foreach ($contents as $pile_content) {
                 $block = Block::getByID($pile_content->getItemID());
 
-                if (!$block || !is_object($block) || $block->isError()) continue;
+                if (!$block || !is_object($block) || $block->isError()) {
+                    continue;
+                }
 
                 $type = $block->getBlockTypeObject();
                 $icon = $ci->getBlockTypeIconURL($type);
@@ -216,8 +222,8 @@ switch ($tab) {
                                 <div class="block-content">
                                     <?php
                                     $bv = new \Concrete\Core\Block\View\BlockView($block);
-                                    $bv->render('scrapbook');
-                                    ?>
+                $bv->render('scrapbook');
+                ?>
                                 </div>
                                 <div class="block-handle"></div>
                             </div>
@@ -230,6 +236,7 @@ switch ($tab) {
                     </div>
                 </div>
             <?php
+
             }
             ?>
             <script>
@@ -282,7 +289,7 @@ switch ($tab) {
                     }
                 }
 
-                for ($i = 0; $i < count($sets); $i++) {
+                for ($i = 0; $i < count($sets); ++$i) {
                     $set = $sets[$i];
 
                     ?>
@@ -290,19 +297,17 @@ switch ($tab) {
                         <header><?= $set->getBlockTypeSetDisplayName() ?></header>
                         <ul>
 
-                            <? $blocktypes = $types[$set->getBlockTypeSetName()];
-                            if (!$blocktypes) {
-                                $blocktypes = array();
-                            }
-                            if (count($blocktypes)) {
+                            <?php $blocktypes = $types[$set->getBlockTypeSetName()];
+                    if (!$blocktypes) {
+                        $blocktypes = array();
+                    }
+                    if (count($blocktypes)) {
+                        usort($blocktypes, function ($bt_a, $bt_b) use ($set) {return ($set->displayOrder($bt_a) > $set->displayOrder($bt_b)) ? 1 : -1;});
 
-                                usort ( $blocktypes, function($bt_a, $bt_b) use($set){return ($set->displayOrder($bt_a) > $set->displayOrder($bt_b))?1:-1;});
+                        foreach ($blocktypes as $bt) {
+                            $btIcon = $ci->getBlockTypeIconURL($bt);
 
-                                foreach ($blocktypes as $bt) {
-
-                                    $btIcon = $ci->getBlockTypeIconURL($bt);
-
-                                    ?>
+                            ?>
 
                                     <li>
                                         <a
@@ -327,24 +332,32 @@ switch ($tab) {
                                         </a>
                                     </li>
 
-                                <? } ?>
-                            <? } else { ?>
+                                <?php 
+                        }
+                        ?>
+                            <?php 
+                    } else {
+                        ?>
                                 <p><?=t('No block types available.')?></p>
-                            <? } ?>
+                            <?php 
+                    }
+                    ?>
                         </ul>
                     </div>
 
-                <? } ?>
+                <?php 
+                } ?>
 
-                <? if (is_array($types['Other'])) { ?>
+                <?php if (is_array($types['Other'])) {
+    ?>
 
                     <div class="ccm-panel-add-block-set">
                         <header><?= t('Other') ?></header>
                         <ul>
-                            <? $blocktypes = $types['Other'];
-                            foreach ($blocktypes as $bt) {
-                                $btIcon = $ci->getBlockTypeIconURL($bt);
-                                ?>
+                            <?php $blocktypes = $types['Other'];
+    foreach ($blocktypes as $bt) {
+        $btIcon = $ci->getBlockTypeIconURL($bt);
+        ?>
 
                                 <li data-block-type-sets="<?= $sets ?>">
                                     <a
@@ -367,21 +380,26 @@ switch ($tab) {
                                         ><p><img src="<?= $btIcon ?>"/><span><?= t($bt->getBlockTypeName()) ?></span></p></a>
                                 </li>
 
-                            <? } ?>
+                            <?php 
+    }
+    ?>
                         </ul>
 
                     </div>
 
-                <? } ?>
+                <?php 
+} ?>
 
-            <? if (Config::get('concrete.marketplace.enabled')) { ?>
+            <?php if (Config::get('concrete.marketplace.enabled')) {
+    ?>
                 <div class="ccm-marketplace-btn-wrapper">
                 <button type="button" onclick="window.location.href='<?=URL::to('/dashboard/extend/addons')?>'" class="btn-info btn-block btn btn-large"><?=t("Get More Blocks")?></button>
                 </div>
-            <? } ?>
+            <?php 
+} ?>
 
             </div>
 
             </section>
 
-        <? } ?>
+        <?php } ?>

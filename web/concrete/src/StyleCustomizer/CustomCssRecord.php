@@ -9,7 +9,6 @@ use Database;
  */
 class CustomCssRecord
 {
-
     /**
      * @Column(type="text")
      */
@@ -49,7 +48,7 @@ class CustomCssRecord
         $db = Database::get();
         $em = $db->getEntityManager();
         $r = $em->find('\Concrete\Core\StyleCustomizer\CustomCssRecord', $id);
+
         return $r;
     }
-
 }

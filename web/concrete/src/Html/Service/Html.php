@@ -7,7 +7,9 @@ use View;
 
 /**
  * @package Helpers
+ *
  * @category Concrete
+ *
  * @author Andrew Embler <andrew@concrete5.org>
  * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
  * @license    http://www.concrete5.org/license/     MIT License
@@ -15,15 +17,17 @@ use View;
 
 /**
  * Functions to help with using HTML. Does not include form elements - those have their own helper.
+ *
  * @package Helpers
+ *
  * @category Concrete
+ *
  * @author Andrew Embler <andrew@concrete5.org>
  * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
  * @license    http://www.concrete5.org/license/     MIT License
  */
 class Html
 {
-
     public function css($file, $pkgHandle = null)
     {
         $asset = new CssAsset();
@@ -84,6 +88,7 @@ class Html
             $asset->setAssetURL(ASSETS_URL_CSS . '/' . $file);
             $asset->setAssetPath(DIR_BASE_CORE . '/' . DIRNAME_CSS . '/' . $file);
         }
+
         return $asset;
     }
 
@@ -139,12 +144,15 @@ class Html
             $asset->setAssetURL(ASSETS_URL_JAVASCRIPT . '/' . $file);
             $asset->setAssetPath(DIR_BASE_CORE . '/' . DIRNAME_JAVASCRIPT . '/' . $file);
         }
+
         return $asset;
     }
 
     /**
-     * Takes in a string, and adds rel="nofollow" to any a tags that contain an href attribute
+     * Takes in a string, and adds rel="nofollow" to any a tags that contain an href attribute.
+     *
      * @param string $input
+     *
      * @return string
      */
     public function noFollowHref($input)
@@ -163,5 +171,4 @@ class Html
             $input
         );
     }
-
 }

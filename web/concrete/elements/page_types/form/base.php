@@ -1,13 +1,14 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Core\Page\Type\PublishTarget\Type\Type as PageTypePublishTargetType;
+
 $form = Loader::helper('form');
 $templates = array();
 $ag = \Concrete\Core\Http\ResponseAssetGroup::get();
 $ag->requireAsset('select2');
 $pagetemplates = PageTemplate::getList();
-foreach($pagetemplates as $pt) {
-	$templates[$pt->getPageTemplateID()] = $pt->getPageTemplateDisplayName();
+foreach ($pagetemplates as $pt) {
+    $templates[$pt->getPageTemplateID()] = $pt->getPageTemplateDisplayName();
 }
 $targetTypes = PageTypePublishTargetType::getList();
 
@@ -20,17 +21,17 @@ $ptLaunchInComposer = 0;
 $ptIsFrequentlyAdded = 1;
 $token = 'add_page_type';
 if (is_object($pagetype)) {
-	$token = 'update_page_type';
-	$ptName = $pagetype->getPageTypeName();
-	$ptHandle = $pagetype->getPageTypeHandle();
-	$ptLaunchInComposer = $pagetype->doesPageTypeLaunchInComposer();
-	$ptDefaultPageTemplateID = $pagetype->getPageTypeDefaultPageTemplateID();
-	$ptAllowedPageTemplates = $pagetype->getPageTypeAllowedPageTemplates();
+    $token = 'update_page_type';
+    $ptName = $pagetype->getPageTypeName();
+    $ptHandle = $pagetype->getPageTypeHandle();
+    $ptLaunchInComposer = $pagetype->doesPageTypeLaunchInComposer();
+    $ptDefaultPageTemplateID = $pagetype->getPageTypeDefaultPageTemplateID();
+    $ptAllowedPageTemplates = $pagetype->getPageTypeAllowedPageTemplates();
     $ptIsFrequentlyAdded = $pagetype->isPageTypeFrequentlyAdded();
-	$selectedtemplates = $pagetype->getPageTypeSelectedPageTemplateObjects();
-	foreach($selectedtemplates as $pt) {
-		$ptPageTemplateID[] = $pt->getPageTemplateID();
-	}
+    $selectedtemplates = $pagetype->getPageTypeSelectedPageTemplateObjects();
+    foreach ($selectedtemplates as $pt) {
+        $ptPageTemplateID[] = $pt->getPageTemplateID();
+    }
 }
 ?>
 
@@ -75,29 +76,31 @@ if (is_object($pagetype)) {
 
 	<div class="form-group">
 		<?=$form->label('ptPublishTargetTypeID', t('Publish Method'))?>
-        <? for ($i = 0; $i < count($targetTypes); $i++) {
-            $t = $targetTypes[$i];
-            if (!is_object($pagetype)) {
-                $selected = ($i == 0);
-            } else {
-                $selected = $pagetype->getPageTypePublishTargetTypeID();
-            }
-            ?>
+        <?php for ($i = 0; $i < count($targetTypes); ++$i) {
+    $t = $targetTypes[$i];
+    if (!is_object($pagetype)) {
+        $selected = ($i == 0);
+    } else {
+        $selected = $pagetype->getPageTypePublishTargetTypeID();
+    }
+    ?>
             <div class="radio"><label><?=$form->radio('ptPublishTargetTypeID', $t->getPageTypePublishTargetTypeID(), $selected)?><?=$t->getPageTypePublishTargetTypeDisplayName()?></label></div>
-        <? } ?>
+        <?php 
+} ?>
 	</div>
 
-	<? foreach($targetTypes as $t) { 
-		if ($t->hasOptionsForm()) {
-		?>
+	<?php foreach ($targetTypes as $t) {
+    if ($t->hasOptionsForm()) {
+        ?>
 
 		<div style="display: none" data-page-type-publish-target-type-id="<?=$t->getPageTypePublishTargetTypeID()?>">
-			<? $t->includeOptionsForm($pagetype);?>
+			<?php $t->includeOptionsForm($pagetype);
+        ?>
 		</div>
 
-	<? }
-
-	} ?>
+	<?php 
+    }
+} ?>
 
 <script type="text/javascript">
 $(function() {

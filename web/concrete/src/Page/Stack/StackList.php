@@ -4,12 +4,10 @@ namespace Concrete\Core\Page\Stack;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Loader;
 use Concrete\Core\Legacy\PageList;
-use Page;
-use \Concrete\Core\Legacy\DatabaseItemList;
+use Concrete\Core\Legacy\DatabaseItemList;
 
 class StackList extends PageList
 {
-
     public function __construct()
     {
         $this->ignoreAliases = true;
@@ -44,14 +42,12 @@ class StackList extends PageList
         if (is_object($ms)) {
             $this->filterByLanguageSection($ms);
         }
-
     }
 
     public function filterByLanguageSection(Section $ms)
     {
         $this->filter('stMultilingualSection', $ms->getCollectionID());
     }
-
 
     public static function export(\SimpleXMLElement $x)
     {
@@ -80,6 +76,7 @@ class StackList extends PageList
             $s = Stack::getByID($row['cID'], 'RECENT');
             $stacks[] = $s;
         }
+
         return $stacks;
     }
 
@@ -87,7 +84,7 @@ class StackList extends PageList
     {
         $sl = new static();
         $stacks = $sl->get();
-        foreach($stacks as $stack) {
+        foreach ($stacks as $stack) {
             $section = $stack->getMultilingualSection();
             if (!$section) {
                 $section = false;
@@ -95,7 +92,7 @@ class StackList extends PageList
                 if ($parent->getCollectionPath() == STACKS_PAGE_PATH) {
                     // this is the default
                     $section = Section::getDefaultSection();
-                } else if ($parent->getPageTypeHandle() == STACK_CATEGORY_PAGE_TYPE) {
+                } elseif ($parent->getPageTypeHandle() == STACK_CATEGORY_PAGE_TYPE) {
                     $locale = $parent->getCollectionHandle();
                     $section = Section::getByLocale($locale);
                 }
@@ -105,7 +102,5 @@ class StackList extends PageList
                 }
             }
         }
-
     }
-
 }

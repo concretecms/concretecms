@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 <div class="ccm-ui">
 
     <form class="form-stacked" data-dialog-form="add-external-link" method="post" action="<?=$controller->action('submit')?>">
@@ -15,7 +15,9 @@
 
         <div class="form-group">
             <div class="checkbox">
-                <label><input type="checkbox" <? if ($openInNewWindow) { ?>checked<? } ?> name="openInNewWindow" value="1"  />
+                <label><input type="checkbox" <?php if ($openInNewWindow) {
+    ?>checked<?php 
+} ?> name="openInNewWindow" value="1"  />
                     <?=t('Open Link in New Window')?></label>
         </div>
 

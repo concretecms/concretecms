@@ -20,12 +20,13 @@ class Set
      * @param string $format = 'html'
      *   Escape the result in html format (if $format is 'html').
      *   If $format is 'text' or any other value, the display name won't be escaped.
+     *
      * @return string
      */
     public function getDisplayName($format = 'html')
     {
         $value = tc('StyleSetName', $this->getName());
-        switch($format) {
+        switch ($format) {
             case 'html':
                 return h($value);
             case 'text':

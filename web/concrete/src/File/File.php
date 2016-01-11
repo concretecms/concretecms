@@ -3,8 +3,6 @@ namespace Concrete\Core\File;
 
 use Carbon\Carbon;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Util\Debug;
-use Doctrine\DBAL\Logging\EchoSQLLogger;
 use FileSet;
 use League\Flysystem\AdapterInterface;
 use Loader;
@@ -14,9 +12,7 @@ use User;
 use Events;
 use Page;
 use Database;
-use \Concrete\Core\Attribute\Key as AttributeKey;
-use \Concrete\Core\File\StorageLocation\StorageLocation;
-use FileAttributeKey;
+use Concrete\Core\File\StorageLocation\StorageLocation;
 use PermissionKey;
 
 /**
@@ -33,7 +29,6 @@ use PermissionKey;
  */
 class File implements \Concrete\Core\Permission\ObjectInterface
 {
-
     const CREATE_NEW_VERSION_THRESHOLD = 300;
 
     /**
@@ -65,6 +60,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
 
     /**
      * Originally placed on which page.
+     *
      * @Column(type="integer", options={"unsigned": true})
      */
     protected $ocID = 0;
@@ -86,26 +82,30 @@ class File implements \Concrete\Core\Permission\ObjectInterface
     }
 
     /**
-     * returns a file object for the given file ID
+     * returns a file object for the given file ID.
+     *
      * @param int $fID
+     *
      * @return File
      */
     public static function getByID($fID)
     {
         $db = Database::get();
         $em = $db->getEntityManager();
+
         return $em->find('\Concrete\Core\File\File', $fID);
     }
 
     /**
-     * For all methods that file does not implement, we pass through to the currently active file version object
+     * For all methods that file does not implement, we pass through to the currently active file version object.
      */
     public function __call($nm, $a)
     {
         $fv = $this->getApprovedVersion();
-        if(is_null($fv)) {
+        if (is_null($fv)) {
             return null;
         }
+
         return call_user_func_array(array($fv, $nm), $a);
     }
 
@@ -157,7 +157,6 @@ class File implements \Concrete\Core\Permission\ObjectInterface
 
     /**
      * Reindex the attributes on this file.
-     * @return void
      */
     public function reindex()
     {
@@ -179,12 +178,12 @@ class File implements \Concrete\Core\Permission\ObjectInterface
             $path = $f->getRelativePath();
 
             CacheLocal::set('file_relative_path', $fID, $path);
+
             return $path;
         }
 
         return false;
     }
-
 
     protected function save()
     {
@@ -217,7 +216,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
                 $newFileSystem->put($fh->prefix($fv->getPrefix(), $fv->getFilename()), $contents);
                 $currentFilesystem->delete($fh->prefix($fv->getPrefix(), $fv->getFilename()));
             }
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }
 
@@ -227,7 +226,6 @@ class File implements \Concrete\Core\Permission\ObjectInterface
 
     public function setPassword($pw)
     {
-
         $fe = new \Concrete\Core\File\Event\FileWithPassword($this);
         $fe->setFilePassword($pw);
         Events::dispatch('on_file_set_password', $fe);
@@ -271,10 +269,9 @@ class File implements \Concrete\Core\Permission\ObjectInterface
                 $pk->copyFromFileSetToFile();
             }
         }
-        $this->fOverrideSetPermissions = (bool)$fOverrideSetPermissions;
+        $this->fOverrideSetPermissions = (bool) $fOverrideSetPermissions;
         $this->save();
     }
-
 
     public function getUserID()
     {
@@ -295,6 +292,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         while ($row = $fsIDs->FetchRow()) {
             $filesets[] = FileSet::getByID($row['fsID']);
         }
+
         return $filesets;
     }
 
@@ -308,6 +306,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
             "select fsfID from FileSetFiles fsf inner join FileSets fs on fs.fsID = fsf.fsID where fsf.fID = ? and fs.uID = ? and fs.fsType = ?",
             array($this->getFileID(), $u->getUserID(), FileSet::TYPE_STARRED)
         );
+
         return $r > 0;
     }
 
@@ -317,7 +316,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
     }
 
     /**
-     * Returns a file version object that is to be written to. Computes whether we can use the current most recent version, OR a new one should be created
+     * Returns a file version object that is to be written to. Computes whether we can use the current most recent version, OR a new one should be created.
      */
     public function getVersionToModify($forceCreateNew = false)
     {
@@ -334,7 +333,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
 
         // second test. If the date the version was added is older than File::CREATE_NEW_VERSION_THRESHOLD, we create new
         $diff = time() - $fv->getDateAdded()->getTimestamp();
-        if ($diff > File::CREATE_NEW_VERSION_THRESHOLD) {
+        if ($diff > self::CREATE_NEW_VERSION_THRESHOLD) {
             $createNew = true;
         }
 
@@ -349,6 +348,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
             if ($fv->getFileVersionID() == $fav->getFileVersionID()) {
                 $fv2->approve();
             }
+
             return $fv2;
         } else {
             return $fv;
@@ -362,7 +362,6 @@ class File implements \Concrete\Core\Permission\ObjectInterface
 
     public function duplicate()
     {
-
         $db = Loader::db();
         $em = $db->getEntityManager();
 
@@ -384,17 +383,17 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         $cf = Core::make('helper/concrete/file');
         $importer = new Importer();
         $filesystem = $this->getFileStorageLocationObject()->getFileSystemObject();
-        foreach($versions as $version) {
+        foreach ($versions as $version) {
             if ($version->isApproved()) {
                 $cloneVersion = clone $version;
                 $cloneVersion->setFile($nf);
                 do {
                     $prefix = $importer->generatePrefix();
                     $path = $cf->prefix($prefix, $version->getFilename());
-                } while($filesystem->has($path));
+                } while ($filesystem->has($path));
                 $filesystem->write($path, $version->getFileResource()->read(), array(
                     'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
-                    'mimetype' => Core::make('helper/mime')->mimeFromExtension($fi->getExtension($version->getFilename()))
+                    'mimetype' => Core::make('helper/mime')->mimeFromExtension($fi->getExtension($version->getFilename())),
                 ));
                 $cloneVersion->updateFile($version->getFilename(), $prefix);
                 $nf->versions->add($cloneVersion);
@@ -404,7 +403,6 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         $em->persist($nf);
         $em->flush();
 
-
         $r = $db->Execute('select fvID, akID, avID from FileAttributeValues where fID = ?', array($this->getFileID()));
         while ($row = $r->fetchRow()) {
             $db->Execute(
@@ -413,7 +411,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
                     $nf->getFileID(),
                     $row['fvID'],
                     $row['akID'],
-                    $row['avID']
+                    $row['avID'],
                 )
             );
         }
@@ -427,7 +425,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
             $db->query($q, $v);
         }
 
-        foreach($nf->getVersionList() as $v) {
+        foreach ($nf->getVersionList() as $v) {
             $v->refreshAttributes();
         }
 
@@ -458,7 +456,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
             }
         }
 
-        $f = new self;
+        $f = new self();
         $f->uID = $uID;
         $f->storageLocation = $fsl;
         $f->fDateAdded = new Carbon($date);
@@ -515,11 +513,12 @@ class File implements \Concrete\Core\Permission\ObjectInterface
             "select fsfID from FileSetFiles where fID = ? and fsID = ?",
             array($this->getFileID(), $fs->getFileSetID())
         );
+
         return $r > 0;
     }
 
     /**
-     * Removes a file, including all of its versions
+     * Removes a file, including all of its versions.
      */
     public function delete()
     {
@@ -547,9 +546,9 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         $query = $em->createQuery('select fav from Concrete\Core\Entity\Attribute\Value\Value\ImageFileValue fav inner join fav.file f where f.fID = :fID');
         $query->setParameter('fID', $this->getFileID());
         $values = $query->getResult();
-        foreach($values as $value) {
+        foreach ($values as $value) {
             $attributeValues = $value->getAttributeValues();
-            foreach($attributeValues as $attributeValue) {
+            foreach ($attributeValues as $attributeValue) {
                 $em->remove($attributeValue);
             }
             $em->remove($value);
@@ -561,7 +560,8 @@ class File implements \Concrete\Core\Permission\ObjectInterface
     }
 
     /**
-     * returns the most recent FileVersion object
+     * returns the most recent FileVersion object.
+     *
      * @return Version
      */
     public function getRecentVersion()
@@ -569,6 +569,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         $db = Loader::db();
         $em = $db->getEntityManager();
         $r = $em->getRepository('\Concrete\Core\File\Version');
+
         return $r->findOneBy(
             array('file' => $this),
             array('fvID' => 'desc')
@@ -577,8 +578,10 @@ class File implements \Concrete\Core\Permission\ObjectInterface
 
     /**
      * returns the FileVersion object for the provided fvID
-     * if none provided returns the approved version
+     * if none provided returns the approved version.
+     *
      * @param int $fvID
+     *
      * @return Version
      */
     public function getVersion($fvID = null)
@@ -590,11 +593,12 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         $db = Loader::db();
         $em = $db->getEntityManager();
         $r = $em->getRepository('\Concrete\Core\File\Version');
+
         return $r->findOneBy(array('file' => $this, 'fvID' => $fvID));
     }
 
     /**
-     * Returns an array of all FileVersion objects owned by this file
+     * Returns an array of all FileVersion objects owned by this file.
      */
     public function getVersionList()
     {
@@ -604,6 +608,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
     public function getTotalDownloads()
     {
         $db = Loader::db();
+
         return $db->GetOne('select count(*) from DownloadStatistics where fID = ?', array($this->getFileID()));
     }
 
@@ -615,7 +620,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
             $limitString = 'limit ' . intval($limit);
         }
 
-        if (is_object($this) && $this instanceof File) {
+        if (is_object($this) && $this instanceof self) {
             return $db->getAll(
                 "SELECT * FROM DownloadStatistics WHERE fID = ? ORDER BY timestamp desc {$limitString}",
                 array($this->getFileID())
@@ -626,9 +631,9 @@ class File implements \Concrete\Core\Permission\ObjectInterface
     }
 
     /**
-     * Tracks File Download, takes the cID of the page that the file was downloaded from
+     * Tracks File Download, takes the cID of the page that the file was downloaded from.
+     *
      * @param int $rcID
-     * @return void
      */
     public function trackDownload($rcID = null)
     {

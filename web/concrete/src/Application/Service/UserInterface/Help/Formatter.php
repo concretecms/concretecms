@@ -6,11 +6,12 @@ class Formatter implements FormatterInterface
     public function getLauncherHtml(Message $message)
     {
         $identifier = $message->getIdentifier();
-        $html =<<<EOT
+        $html = <<<EOT
         <div class="ccm-notification-help-launcher">
             <a href="#" data-help-notification-toggle="{$identifier}"><i class="fa fa-question-circle"></i></a>
         </div>
 EOT;
+
         return $html;
     }
 
@@ -20,7 +21,7 @@ EOT;
         $content = $message->getContent();
         $ok = t('Ok');
         $hideAll = t('Hide All');
-        $html =<<<EOT
+        $html = <<<EOT
         <div class="ccm-notification-help ccm-notification" data-help-notification="{$identifier}">
             <i class="ccm-notification-icon fa fa-info-circle"></i>
             <div class="ccm-notification-inner dialog-help">{$content}</div>
@@ -30,6 +31,7 @@ EOT;
             </div>
         </div>
 EOT;
+
         return $html;
     }
 }

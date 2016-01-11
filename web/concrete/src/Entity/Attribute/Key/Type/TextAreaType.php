@@ -1,9 +1,7 @@
 <?php
-
 namespace Concrete\Core\Entity\Attribute\Key\Type;
 
 use Concrete\Core\Entity\Attribute\Value\Value\TextareaValue;
-
 
 /**
  * @Entity
@@ -11,7 +9,6 @@ use Concrete\Core\Entity\Attribute\Value\Value\TextareaValue;
  */
 class TextareaType extends Type
 {
-
     public function getAttributeValue()
     {
         return new TextareaValue();
@@ -41,7 +38,7 @@ class TextareaType extends Type
     public function createController()
     {
         $controller = new \Concrete\Attribute\Textarea\Controller($this->getAttributeType());
+
         return $controller;
     }
-
 }

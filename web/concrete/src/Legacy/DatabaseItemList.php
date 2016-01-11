@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Legacy;
 
 class DatabaseItemList extends ItemList
@@ -84,7 +83,7 @@ class DatabaseItemList extends ItemList
                                 break;
                         }
                         $q .= 'and ' . $column . ' ' . $comp . ' (';
-                        for ($i = 0; $i < count($value); $i++) {
+                        for ($i = 0; $i < count($value); ++$i) {
                             if ($i > 0) {
                                 $q .= ',';
                             }

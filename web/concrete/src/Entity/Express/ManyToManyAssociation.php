@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Entity\Express;
 
 use Concrete\Core\Express\Association\Builder\ManyToManyAssociationBuilder;
@@ -10,7 +9,6 @@ use Concrete\Core\Express\Association\Formatter\ManyToManyFormatter;
  */
 class ManyToManyAssociation extends Association
 {
-
     const TYPE_OWNING = 'owning';
     const TYPE_INVERSE = 'inverse';
 
@@ -35,8 +33,6 @@ class ManyToManyAssociation extends Association
         $this->association_type = $association_type;
     }
 
-
-
     public function getAssociationBuilder()
     {
         return new ManyToManyAssociationBuilder($this);
@@ -46,5 +42,4 @@ class ManyToManyAssociation extends Association
     {
         return new ManyToManyFormatter($this);
     }
-
 }

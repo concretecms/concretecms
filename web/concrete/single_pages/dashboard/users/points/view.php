@@ -11,7 +11,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
     <div class="ccm-pane-options">
         <div class="ccm-pane-options-permanent-search">
             <?=$form->label('uName', t('User'))?>
-            <?php echo $form_user_selector->quickSelect('uName',$_GET['uName'],array('form-control'));?>
+            <?php echo $form_user_selector->quickSelect('uName', $_GET['uName'], array('form-control'));?>
             <input type="submit" value="<?=t('Search')?>" class="btn" />
 
 
@@ -19,14 +19,15 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
     </div>
 </form>
 <br />
-<?
+<?php
 if (!$mode) {
-	$mode = $_REQUEST['mode'];
+    $mode = $_REQUEST['mode'];
 }
 $txt = Loader::helper('text');
 $keywords = $_REQUEST['keywords'];
 
-if (count($entries) > 0) { ?>	
+if (count($entries) > 0) {
+    ?>	
 	<table border="0" cellspacing="0" cellpadding="0" id="ccm-product-list" class="table table-striped">
 	<tr>
 		<th class="<?=$upEntryList->getSearchResultsClass('uName')?>"><a href="<?=$upEntryList->getSortByURL('uName', 'asc')?>"><?=t('User')?></a></th>
@@ -37,31 +38,44 @@ if (count($entries) > 0) { ?>
 		<th></th>
 	</tr>
     <?php 
-    foreach($entries as $up) { ?>
+    foreach ($entries as $up) {
+        ?>
     	<tr>
-    		<?
-        		$ui = $up->getUserPointEntryUserObject();
-        		$action = $up->getUserPointEntryActionObject();
-    		?>
-    		<td><? if (is_object($ui)) { ?><?php echo h($ui->getUserName())?><? } ?></td>
-    		<td><? if (is_object($action)) { ?><?=h($action->getUserPointActionName())?><? } ?></td>
+    		<?php
+                $ui = $up->getUserPointEntryUserObject();
+        $action = $up->getUserPointEntryActionObject();
+        ?>
+    		<td><?php if (is_object($ui)) {
+    ?><?php echo h($ui->getUserName())?><?php 
+}
+        ?></td>
+    		<td><?php if (is_object($action)) {
+    ?><?=h($action->getUserPointActionName())?><?php 
+}
+        ?></td>
     		<td><?php echo number_format($up->getUserPointEntryValue())?></td>
-    		<td><?php echo $dh->formatDateTime($up->getUserPointEntryTimestamp());?></td>
+    		<td><?php echo $dh->formatDateTime($up->getUserPointEntryTimestamp());
+        ?></td>
     		<td><?=h($up->getUserPointEntryDescription())?></td>
     		<td style="Text-align: right">
                 <?php
                 $delete = \Concrete\Core\Url\Url::createFromUrl($view->action('deleteEntry', $up->getUserPointEntryID()));
 
-                $delete->setQuery(array(
-                    'ccm_token' => \Core::make('helper/validation/token')->generate('delete_community_points')
+        $delete->setQuery(array(
+                    'ccm_token' => \Core::make('helper/validation/token')->generate('delete_community_points'),
                 ));
-                ?>
+        ?>
     		    <a href="<?=$delete?>" class="btn btn-sm btn-danger"><?=t('Delete')?></a>
     		</td>
     	</tr>
-    <?php } ?>
+    <?php 
+    }
+    ?>
 </table>
-<? } else { ?>
+<?php 
+} else {
+    ?>
 	<div id="ccm-list-none"><?=t('No entries found.')?></div>
-<? } 
+<?php 
+}
 $upEntryList->displayPaging(); ?>

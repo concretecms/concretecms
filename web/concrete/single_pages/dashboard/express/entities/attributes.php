@@ -3,7 +3,8 @@
 <?php
 if (isset($attributeHeader)) {
     $attributeHeader->render();
-} else { ?>
+} else {
+    ?>
 
 <div class="ccm-dashboard-header-buttons">
 
@@ -15,11 +16,12 @@ if (isset($attributeHeader)) {
 
 </div>
 
-<? } ?>
+<?php 
+} ?>
 
 
 <div class="row">
-    <? View::element('dashboard/express/detail_navigation', array('entity' => $entity))?>
+    <?php View::element('dashboard/express/detail_navigation', array('entity' => $entity))?>
     <div class="col-md-8">
         <?php
         $attributeView->render();

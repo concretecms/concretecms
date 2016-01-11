@@ -1,26 +1,14 @@
 <?php
-
 namespace Concrete\Core\Attribute\Category;
 
-use Concrete\Controller\Element\Attribute\Header;
-use Concrete\Controller\Element\Attribute\KeyList;
-use Concrete\Controller\Element\Attribute\StandardListHeader;
 use Concrete\Core\Application\Application;
-use Concrete\Core\Attribute\AttributeKeyInterface;
 use Concrete\Core\Attribute\AttributeValueInterface;
-use Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexerInterface;
 use Concrete\Core\Attribute\EntityInterface;
-use Concrete\Core\Attribute\Key\Factory;
 use Concrete\Core\Attribute\Key\ImportLoader\StandardImporterLoader;
 use Concrete\Core\Attribute\Key\RequestLoader\StandardRequestLoader;
-use Concrete\Core\Attribute\SetFactory;
-use Concrete\Core\Attribute\Type;
-use Concrete\Core\Attribute\TypeFactory;
 use Concrete\Core\Entity\Attribute\Category;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Set;
-use Concrete\Core\Entity\Attribute\Key\Key as AttributeKey;
-use Concrete\Core\Entity\Attribute\SetKey;
 use Concrete\Core\Entity\Attribute\Value\Value\Value;
 use Doctrine\ORM\EntityManager;
 use Concrete\Core\Entity\Attribute\Type as AttributeType;
@@ -29,7 +17,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 abstract class AbstractCategory implements CategoryInterface
 {
-
     protected $entityManager;
     protected $entity;
     protected $categoryEntity;
@@ -64,28 +51,28 @@ abstract class AbstractCategory implements CategoryInterface
     public function getSearchableList()
     {
         return $this->getAttributeRepository()->findBy(array(
-            'akIsSearchable' => true
+            'akIsSearchable' => true,
         ));
     }
 
     public function getSearchableIndexedList()
     {
         return $this->getAttributeRepository()->findBy(array(
-            'akIsSearchableIndexed' => true
+            'akIsSearchableIndexed' => true,
         ));
     }
 
     public function getAttributeKeyByHandle($handle)
     {
         return $this->getAttributeRepository()->findOneBy(array(
-            'akHandle' => $handle
+            'akHandle' => $handle,
         ));
     }
 
     public function getAttributeKeyByID($akID)
     {
         return $this->getAttributeRepository()->findOneBy(array(
-            'akID' => $akID
+            'akID' => $akID,
         ));
     }
 
@@ -134,7 +121,6 @@ abstract class AbstractCategory implements CategoryInterface
         return $key;
     }
 
-
     // Update
     public function updateFromRequest(Key $key, Request $request)
     {
@@ -151,7 +137,6 @@ abstract class AbstractCategory implements CategoryInterface
 
         return $key;
     }
-
 
     /**
      * @return mixed
@@ -190,7 +175,7 @@ abstract class AbstractCategory implements CategoryInterface
         // Delete from any attribute sets
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\SetKey');
         $setKeys = $r->findBy(array('attribute_key' => $key));
-        foreach($setKeys as $setKey) {
+        foreach ($setKeys as $setKey) {
             $this->entityManager->remove($setKey);
         }
         $this->entityManager->remove($key);
@@ -215,19 +200,21 @@ abstract class AbstractCategory implements CategoryInterface
         $set->setAttributeSetIsLocked($locked);
         $this->entityManager->persist($set);
         $this->entityManager->flush();
+
         return $set;
     }
 
     public function getSearchIndexer()
     {
         $indexer = $this->application->make('Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexer');
+
         return $indexer;
     }
 
     public function getUnassignedAttributeKeys()
     {
         $attributes = array();
-        foreach($this->getList() as $key) {
+        foreach ($this->getList() as $key) {
             $query = $this->entityManager->createQuery(
                 'select sk from \Concrete\Core\Entity\Attribute\SetKey sk where sk.attribute_key = :key'
             );
@@ -237,6 +224,7 @@ abstract class AbstractCategory implements CategoryInterface
                 $attributes[] = $key;
             }
         }
+
         return $attributes;
     }
 
@@ -245,8 +233,8 @@ abstract class AbstractCategory implements CategoryInterface
         $controller = $attribute->getAttributeKey()->getController();
         $controller->deleteValue();
 
-        /**
-         * @var $value Value
+        /*
+         * @var Value
          */
         $value = $attribute->getValueObject();
         $this->entityManager->remove($attribute);
@@ -268,7 +256,4 @@ abstract class AbstractCategory implements CategoryInterface
     {
         return new StandardImporterLoader();
     }
-
-
-
 }

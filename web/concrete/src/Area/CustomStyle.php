@@ -7,7 +7,6 @@ use Core;
 
 class CustomStyle extends AbstractCustomStyle
 {
-
     protected $area;
 
     /**
@@ -27,6 +26,7 @@ class CustomStyle extends AbstractCustomStyle
     public function getStyleWrapper($css)
     {
         $style = '<style type="text/css" data-area-style-area-handle="' . $this->area->getAreaHandle() . '" data-style-set="' . $this->getStyleSet()->getID() . '">' . $css . '</style>';
+
         return $style;
     }
 
@@ -99,7 +99,7 @@ class CustomStyle extends AbstractCustomStyle
         }
 
         $css = '';
-        foreach($groups as $suffix => $styles) {
+        foreach ($groups as $suffix => $styles) {
             $css .= '.' . str_replace(' ', '.', $this->getCustomStyleClass()) . $suffix . '{'.implode(';', $styles).'}';
         }
 
@@ -111,6 +111,7 @@ class CustomStyle extends AbstractCustomStyle
         $class = 'ccm-custom-style-';
         $txt = Core::make('helper/text');
         $class .= strtolower($txt->filterNonAlphaNum($this->area->getAreaHandle()));
+
         return $class;
     }
 

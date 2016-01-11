@@ -3,12 +3,9 @@ namespace Concrete\Core\Page\Theme\GridFramework;
 
 use Concrete\Core\Page\Page;
 use Concrete\Core\StyleCustomizer\Inline\StyleSet;
-use Loader;
-use Core;
 
 abstract class GridFramework
 {
-
     const DEVICE_CLASSES_HIDE_ON_EXTRA_SMALL = 10;
     const DEVICE_CLASSES_HIDE_ON_SMALL = 20;
     const DEVICE_CLASSES_HIDE_ON_MEDIUM = 30;
@@ -47,12 +44,14 @@ abstract class GridFramework
     public function getPageThemeGridFrameworkNumColumns()
     {
         $classes = $this->getPageThemeGridFrameworkColumnClasses();
+
         return count($classes);
     }
 
     public function hasPageThemeGridFrameworkOffsetClasses()
     {
         $classes = $this->getPageThemeGridFrameworkColumnOffsetClasses();
+
         return count($classes) > 0;
     }
 
@@ -68,6 +67,7 @@ abstract class GridFramework
     {
         $span = $span - 1;
         $classes = $this->getPageThemeGridFrameworkColumnClasses();
+
         return $classes[$span];
     }
 
@@ -75,6 +75,7 @@ abstract class GridFramework
     {
         $offset = $offset - 1;
         $classes = $this->getPageThemeGridFrameworkColumnOffsetClasses();
+
         return $classes[$offset];
     }
 
@@ -117,6 +118,7 @@ abstract class GridFramework
                 $classes[] = $this->getPageThemeGridFrameworkHideOnLargeDeviceClass();
             }
         }
+
         return $classes;
     }
 
@@ -135,12 +137,13 @@ abstract class GridFramework
         if ($this->getPageThemeGridFrameworkHideOnLargeDeviceClass()) {
             $classes[] = self::DEVICE_CLASSES_HIDE_ON_LARGE;
         }
+
         return $classes;
     }
 
     public function getDeviceHideClassIconClass($class)
     {
-        switch($class) {
+        switch ($class) {
             case self::DEVICE_CLASSES_HIDE_ON_EXTRA_SMALL:
                 return 'fa fa-mobile-phone';
             case self::DEVICE_CLASSES_HIDE_ON_SMALL:
@@ -156,5 +159,4 @@ abstract class GridFramework
     {
         return false;
     }
-
 }

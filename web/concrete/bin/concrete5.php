@@ -1,4 +1,5 @@
 <?php
+
 $DIR_BASE_CORE = dirname(__DIR__);
 
 foreach (array('PHP_SELF', 'SCRIPT_NAME', 'SCRIPT_FILENAME', 'PATH_TRANSLATED') as $key) {

@@ -1,11 +1,10 @@
-<? defined('C5_EXECUTE') or die("Access Denied.");?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");?>
 
-<? if ($controller->getTask() == 'add'
+<?php if ($controller->getTask() == 'add'
     || $controller->getTask() == 'add_link'
     || $controller->getTask() == 'edit'
     || $controller->getTask() == 'edit_link'
     || $controller->getTask() == 'delete_link') {
-
     $url = '';
     $ssHandle = '';
     $action = $view->action('add_link');
@@ -20,7 +19,8 @@
     }
     ?>
 
-    <? if (is_object($link)) { ?>
+    <?php if (is_object($link)) {
+    ?>
         <div class="ccm-dashboard-header-buttons">
             <button data-dialog="delete-link" class="btn btn-danger"><?php echo t("Delete Link")?></button>
         </div>
@@ -39,7 +39,9 @@
         </div>
     </div>
 
-    <? } ?>
+    <?php 
+}
+    ?>
 
     <script type="text/javascript">
         $(function() {
@@ -80,7 +82,9 @@
         </div>
 
     </form>
-<? } else { ?>
+<?php 
+} else {
+    ?>
 
 
     <div class="ccm-dashboard-header-buttons">
@@ -88,23 +92,32 @@
     </div>
 
 
-    <? if (count($links) > 0) { ?>
+    <?php if (count($links) > 0) {
+    ?>
         <div class="col-md-8">
         <table class="table table-striped">
-        <? foreach($links as $link) {
-            $service = $link->getServiceObject(); ?>
+        <?php foreach ($links as $link) {
+    $service = $link->getServiceObject();
+    ?>
         <tr>
             <td style="width: 48px"><?=$service->getServiceIconHTML()?></td>
             <td><a href="<?=$view->action('edit', $link->getID())?>"><?= $service->getDisplayName() ?></a></td>
             <td><?= h($link->getURL()) ?></td>
         </tr>
-        <? } ?>
+        <?php 
+}
+    ?>
         </table>
         </div>
 
-    <? } else { ?>
+    <?php 
+} else {
+    ?>
         <p><?=t("You have not added any social links.")?></p>
-    <? } ?>
+    <?php 
+}
+    ?>
 
 
-<? } ?>
+<?php 
+} ?>

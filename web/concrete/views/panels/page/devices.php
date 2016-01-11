@@ -29,11 +29,11 @@ use Concrete\Core\Device\Device;
 
             if ($type == Device::UNKNOWN) {
                 $organized[Device::UNKNOWN][] = $device;
-            } else if ($type & Device::MOBILE) {
+            } elseif ($type & Device::MOBILE) {
                 $organized[Device::MOBILE][] = $device;
-            } else if ($type & Device::TABLET) {
+            } elseif ($type & Device::TABLET) {
                 $organized[Device::TABLET][] = $device;
-            } else if ($type & Device::DESKTOP) {
+            } elseif ($type & Device::DESKTOP) {
                 $organized[Device::DESKTOP][] = $device;
             }
         }
@@ -42,10 +42,10 @@ use Concrete\Core\Device\Device;
             Device::UNKNOWN => t('General'),
             Device::MOBILE => t('Phone'),
             Device::TABLET => t('Tablet'),
-            Device::DESKTOP => t('Desktop'));
+            Device::DESKTOP => t('Desktop'), );
 
         /**
-         * @var int $type
+         * @var int
          * @var Device[] $device_list
          */
         foreach ($organized as $type => $device_list) {
@@ -56,12 +56,12 @@ use Concrete\Core\Device\Device;
                 <ul>
                     <?php
                     $page = \Page::getCurrentPage();
-                    foreach ($device_list as $device) {
-                        $device_preview_url = $preview_url->setQuery(array(
+            foreach ($device_list as $device) {
+                $device_preview_url = $preview_url->setQuery(array(
                             'cID' => $page->getCollectionID(),
                             'cvID' => $page->getVersionID(),
-                            'device' => $device->getHandle()));
-                        ?>
+                            'device' => $device->getHandle(), ));
+                ?>
                         <li class="ccm-panel-devicelist-device"
                             data-device-brand="<?= h($device->getBrand()) ?>"
                             data-device-name="<?= h($device->getName()) ?>"
@@ -87,22 +87,24 @@ use Concrete\Core\Device\Device;
                                 <div class="ccm-panel-device-resolution">
                                     <?php
                                     $deviceWidth = h($device->getWidth());
-                                    $deviceHeight = h($device->getHeight());
-                                    $pixelRatio = h($device->getPixelRatio());
-                                    $displayedWidth = floor($device->getWidth() / $device->getPixelRatio());
-                                    $displayedHeight = floor($device->getHeight() / $device->getPixelRatio());
+                $deviceHeight = h($device->getHeight());
+                $pixelRatio = h($device->getPixelRatio());
+                $displayedWidth = floor($device->getWidth() / $device->getPixelRatio());
+                $displayedHeight = floor($device->getHeight() / $device->getPixelRatio());
 
-                                    echo "$deviceWidth x  $deviceHeight @{$pixelRatio}x ($displayedWidth x $displayedHeight)";
-                                    ?>
+                echo "$deviceWidth x  $deviceHeight @{$pixelRatio}x ($displayedWidth x $displayedHeight)";
+                ?>
                                 </div>
                             </a>
                         </li>
                     <?php
-                    }
-                    ?>
+
+            }
+            ?>
                 </ul>
             </div>
         <?php
+
         }
         ?>
     </div>

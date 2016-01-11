@@ -6,9 +6,11 @@ use Core;
 class DateTime
 {
     /**
-     * Takes a "field" and grabs all the corresponding disparate fields from $_POST and translates into a timestamp
+     * Takes a "field" and grabs all the corresponding disparate fields from $_POST and translates into a timestamp.
+     *
      * @param string $field The name of the field to translate
      * @param array $arr = null The array containing the value. If null (default) we'll use $_POST
+     *
      * @return string|false $dateTime In case of success returns the timestamp (in the format 'Y-m-d H:i:s' or 'Y-m-d'), otherwise returns false ($field value is not in the array) or '' (if $field value is empty).
      * If $field has both date and time, the resulting value will be converted fro user timezone to system timezone.
      * If $field has only date and not time, no timezone conversion will occur.
@@ -50,15 +52,16 @@ class DateTime
     }
 
     /**
-	 * Creates form fields and JavaScript calendar includes for a particular item
-	 * <code>
-	 *     $dh->datetime('yourStartDate', '2008-07-12 3:00:00');
-	 * </code>
-	 * @param string $prefix
-	 * @param string $value
-	 * @param bool $includeActivation
-	 * @param bool $calendarAutoStart
-	 */
+     * Creates form fields and JavaScript calendar includes for a particular item
+     * <code>
+     *     $dh->datetime('yourStartDate', '2008-07-12 3:00:00');
+     * </code>.
+     *
+     * @param string $prefix
+     * @param string $value
+     * @param bool $includeActivation
+     * @param bool $calendarAutoStart
+     */
     public function datetime($prefix, $value = null, $includeActivation = false, $calendarAutoStart = true)
     {
         if (substr($prefix, -1) == ']') {
@@ -80,7 +83,7 @@ class DateTime
         $timeFormat = $dh->getTimeFormat();
         list($dateYear, $dateMonth, $dateDay, $timeHour, $timeMinute) = explode(',', $dh->formatCustom('Y,n,j,G,i', $value ? $value : 'now'));
         $timeMinute = intval($timeMinute);
-        if($timeFormat == 12) {
+        if ($timeFormat == 12) {
             $timeAMPM = ($timeHour < 12) ? 'AM' : 'PM';
             $timeHour = ($timeHour % 12);
             if ($timeHour == 0) {
@@ -112,7 +115,7 @@ class DateTime
 
         $hourStart = ($timeFormat == 12) ? 1 : 0;
         $hourEnd = ($timeFormat == 12) ? 12 : 23;
-        for ($i = $hourStart; $i <= $hourEnd; $i++) {
+        for ($i = $hourStart; $i <= $hourEnd; ++$i) {
             if ($i == $timeHour) {
                 $selected = 'selected';
             } else {
@@ -122,7 +125,7 @@ class DateTime
         }
         $html .= '</select>:';
         $html .= '<select class="form-control"  id="' . $id . '_m" name="' . $_m . '" ' . $disabled . '>';
-        for ($i = 0; $i <= 59; $i++) {
+        for ($i = 0; $i <= 59; ++$i) {
             if ($i == $timeMinute) {
                 $selected = 'selected';
             } else {
@@ -174,7 +177,7 @@ class DateTime
         // first we add a calendar input
 
         if ($includeActivation) {
-            $html .=<<<EOS
+            $html .= <<<EOS
 			<script type="text/javascript">$("#{$id}_activate").click(function () {
 				if ($(this).get(0).checked) {
 					$("#{$id}_dw input").each(function () {
@@ -194,23 +197,22 @@ class DateTime
 			});
 			</script>
 EOS;
-
         }
 
         return $html;
-
     }
 
     /**
-	 * Creates form fields and JavaScript calendar includes for a particular item but includes only calendar controls (no time.)
-	 * <code>
-	 *     $dh->date('yourStartDate', '2008-07-12 3:00:00');
-	 * </code>
-	 * @param string $prefix
-	 * @param string $value
-	 * @param bool $includeActivation
-	 * @param bool $calendarAutoStart
-	 */
+     * Creates form fields and JavaScript calendar includes for a particular item but includes only calendar controls (no time.)
+     * <code>
+     *     $dh->date('yourStartDate', '2008-07-12 3:00:00');
+     * </code>.
+     *
+     * @param string $prefix
+     * @param string $value
+     * @param bool $includeActivation
+     * @param bool $calendarAutoStart
+     */
     public function date($field, $value = null, $calendarAutoStart = true)
     {
         $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
@@ -253,7 +255,5 @@ EOS;
         }
 
         return $html;
-
     }
-
 }

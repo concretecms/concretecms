@@ -1,19 +1,14 @@
 <?php
-
 namespace Concrete\Controller\SinglePage\Dashboard\System\Attributes;
 
-use Concrete\Core\Attribute\Category\CategoryInterface;
 use Concrete\Core\Attribute\EntityInterface;
-use \Concrete\Core\Page\Controller\DashboardPageController;
-use Config;
+use Concrete\Core\Page\Controller\DashboardPageController;
 use Loader;
 use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
 use AttributeSet;
 
-
 class Sets extends DashboardPageController
 {
-
     public $category;
 
     public function view()
@@ -92,7 +87,6 @@ class Sets extends DashboardPageController
                 $this->redirect('dashboard/system/attributes/sets', 'category',
                     $this->category->getAttributeKeyCategoryID(), 'set_added');
             }
-
         } else {
             $this->error->add($this->token->getErrorMessage());
         }
@@ -129,7 +123,6 @@ class Sets extends DashboardPageController
                 $this->redirect('dashboard/system/attributes/sets', 'category', $as->getAttributeSetKeyCategoryID(),
                     'set_updated');
             }
-
         } else {
             $this->error->add($this->token->getErrorMessage());
         }
@@ -145,7 +138,7 @@ class Sets extends DashboardPageController
 
             if (!$this->error->has()) {
                 // go through and add all the attributes that aren't in another set
-                foreach($as->getAttributeKeys() as $setKey) {
+                foreach ($as->getAttributeKeys() as $setKey) {
                     $this->entityManager->remove($setKey);
                 }
 
@@ -166,7 +159,6 @@ class Sets extends DashboardPageController
                 $this->redirect('dashboard/system/attributes/sets', 'category', $cat->getAttributeKeyCategoryID(),
                     'set_updated');
             }
-
         } else {
             $this->error->add($this->token->getErrorMessage());
         }
@@ -197,7 +189,6 @@ class Sets extends DashboardPageController
         $this->view();
     }
 
-
     public function edit($asID = false)
     {
         $as = AttributeSet::getByID($asID);
@@ -207,5 +198,4 @@ class Sets extends DashboardPageController
             $this->redirect('/dashboard/system/attributes/sets');
         }
     }
-
 }

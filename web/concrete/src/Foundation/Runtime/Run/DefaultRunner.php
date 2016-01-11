@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Foundation\Runtime\Run;
 
 use Concrete\Core\Application\Application;
@@ -11,7 +10,6 @@ use Concrete\Core\Support\Facade\Events;
 
 class DefaultRunner implements RunInterface, ApplicationAwareInterface
 {
-
     /** @var Application */
     protected $app;
 
@@ -27,7 +25,7 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
     }
 
     /**
-     * Begin the runtime
+     * Begin the runtime.
      */
     public function run()
     {
@@ -37,7 +35,7 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
         include DIR_APPLICATION . '/bootstrap/app.php';
 
         if ($this->app->isInstalled()) {
-            /**
+            /*
              * ----------------------------------------------------------------------------
              * Now that we have languages out of the way, we can run our package on_start
              * methods
@@ -45,7 +43,7 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
              */
             $app->setupPackages();
 
-            /**
+            /*
              * ----------------------------------------------------------------------------
              * Load all permission keys into our local cache.
              * ----------------------------------------------------------------------------
@@ -53,14 +51,14 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
             Key::loadAll();
         }
 
-        /**
+        /*
          * ----------------------------------------------------------------------------
          * Fire an event for intercepting the dispatch
          * ----------------------------------------------------------------------------
          */
         Events::dispatch('on_before_dispatch');
 
-        /**
+        /*
          * ----------------------------------------------------------------------------
          * Get the response to the current request
          * ----------------------------------------------------------------------------
@@ -69,7 +67,7 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
     }
 
     /**
-     * Set the application object
+     * Set the application object.
      *
      * @param \Concrete\Core\Application\Application $application
      */

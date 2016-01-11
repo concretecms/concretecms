@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Support\Symbol;
 
 use Core;
@@ -13,7 +12,7 @@ class MetadataGenerator
         $legacyHelpers = array();
         $bindings = Core::getBindings();
         foreach ($bindings as $name => $binding) {
-            /** @var \Closure $binding */
+            /* @var \Closure $binding */
             $reflection = new \ReflectionFunction($binding['concrete']);
             $static = $reflection->getStaticVariables();
             $className = null;
@@ -24,7 +23,8 @@ class MetadataGenerator
                     if (is_object($class)) {
                         $className = get_class($class);
                     }
-                } catch (\Exception $e) {}
+                } catch (\Exception $e) {
+                }
             } else {
                 $className = $static['concrete'];
             }
@@ -61,7 +61,7 @@ class MetadataGenerator
         $file .= '), \Package::getByHandle(\'\') => array(';
         $packages = \Package::getAvailablePackages(false);
         foreach ($packages as $package) {
-            /** @var \Package $package */
+            /* @var \Package $package */
             $file .= '\'' . $package->getPackageHandle() . '\' instanceof \\' . get_class($package) . ',' . PHP_EOL;
         }
 

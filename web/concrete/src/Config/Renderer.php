@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Config;
 
 class Renderer

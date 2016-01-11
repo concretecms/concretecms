@@ -5,7 +5,6 @@ use Loader;
 
 class CustomLayout extends Layout
 {
-
     /**
      * @var string
      */
@@ -73,6 +72,7 @@ class CustomLayout extends Layout
             foreach ($columns as $col) {
                 $col->duplicate($newAreaLayout);
             }
+
             return $newAreaLayout;
         }
     }
@@ -91,7 +91,7 @@ class CustomLayout extends Layout
     }
 
     /**
-     * Enable custom column widths on layouts
+     * Enable custom column widths on layouts.
      */
     public function enableAreaLayoutCustomColumnWidths()
     {
@@ -101,7 +101,7 @@ class CustomLayout extends Layout
     }
 
     /**
-     * Disable custom column widths on layouts
+     * Disable custom column widths on layouts.
      */
     public function disableAreaLayoutCustomColumnWidths()
     {
@@ -110,10 +110,10 @@ class CustomLayout extends Layout
         $this->arLayoutIsCustom = false;
     }
 
-
     /**
      * @param int $spacing
      * @param bool $iscustom
+     *
      * @return CustomLayout|ThemeGridLayout|null
      */
     public static function add($spacing = 0, $iscustom = false)
@@ -132,6 +132,7 @@ class CustomLayout extends Layout
         $arLayoutID = $db->Insert_ID();
         if ($arLayoutID) {
             $ar = static::getByID($arLayoutID);
+
             return $ar;
         }
     }
@@ -144,7 +145,7 @@ class CustomLayout extends Layout
         $columnID = parent::addLayoutColumn();
         $db = Loader::db();
         $db->Execute('insert into AreaLayoutCustomColumns (arLayoutColumnID, arLayoutColumnWidth) values (?, 0)', array($columnID));
+
         return CustomColumn::getByID($columnID);
     }
-
 }

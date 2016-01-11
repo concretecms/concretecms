@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $section = 'groups';
 
@@ -28,7 +28,7 @@ $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
 <div class="form-group">
 <?=$form->label('gDescription', t('Description'))?>
 <div class="controls">
-	<?=$form->textarea('gDescription', array('rows' => 6, 'class' =>'span6'))?>
+	<?=$form->textarea('gDescription', array('rows' => 6, 'class' => 'span6'))?>
 </div>
 </div>
 
@@ -45,13 +45,19 @@ $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
           'treeID': '<?=$tree->getTreeID()?>',
           'chooseNodeInForm': 'single',
 		  'enableDragAndDrop': false,
-          <? if ($this->controller->isPost()) { ?>
+          <?php if ($this->controller->isPost()) {
+    ?>
              'selectNodesByKey': [<?=intval($_POST['gParentNodeID'])?>]
-          <? } else {
-          	if (is_object($rootNode)) { ?>
+          <?php 
+} else {
+    if (is_object($rootNode)) {
+        ?>
           		'selectNodesByKey': [<?=intval($rootNode->getTreeNodeID())?>],
-          		<? } ?>
-	      	<? } ?>
+          		<?php 
+    }
+    ?>
+	      	<?php 
+} ?>
 	      'removeNodesByID': ['<?=$guestGroupNode->getTreeNodeID()?>','<?=$registeredGroupNode->getTreeNodeID()?>'],
 		  'onSelect': function(select, node) {
              if (select) {
@@ -67,7 +73,8 @@ $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
 </div>
 
 </fieldset>
-<? if (Config::get('concrete.user.profiles_enabled')) { ?>
+<?php if (Config::get('concrete.user.profiles_enabled')) {
+    ?>
 <fieldset>
 	<div class="form-group">
         <div class="checkbox">
@@ -82,11 +89,11 @@ $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
         <div class="form-group">
             <label class="control-label"><?=t('Image')?></label>
             <div class="controls">
-                <?
+                <?php
 
                 $af = Loader::helper('concrete/asset_library');
-                print $af->image('gBadgeFID', 'gBadgeFID', t('Choose Badge Image'), $badgeImage);
-                ?>
+    echo $af->image('gBadgeFID', 'gBadgeFID', t('Choose Badge Image'), $badgeImage);
+    ?>
 
             </div>
         </div>
@@ -94,7 +101,7 @@ $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
         <div class="form-group">
             <?=$form->label('gBadgeDescription', t('Badge Description'))?>
             <div class="controls">
-                <?=$form->textarea('gBadgeDescription', array('rows' => 6, 'class' =>'span6'))?>
+                <?=$form->textarea('gBadgeDescription', array('rows' => 6, 'class' => 'span6'))?>
             </div>
         </div>
 
@@ -108,7 +115,8 @@ $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
     </div>
 
 </fieldset>
-<? } ?>
+<?php 
+} ?>
 
 <fieldset>
 	<legend><?=t('Automation')?></legend>
@@ -143,8 +151,8 @@ $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
             </label>
         </div>
         <div class="alert alert-info">
-            <?
-            print t('For custom automated group actions, make sure an automation group controller exists.');
+            <?php
+            echo t('For custom automated group actions, make sure an automation group controller exists.');
             ?>
         </div>
 	</div>
@@ -161,10 +169,10 @@ $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
 
 	<div class="controls" style="">
 	<?=$form->select("gUserExpirationMethod", array(
-		'SET_TIME' => t('at a specific date and time'),
-			'INTERVAL' => t('once a certain amount of time has passed')
+        'SET_TIME' => t('at a specific date and time'),
+            'INTERVAL' => t('once a certain amount of time has passed'),
 
-	), array('disabled' => true, 'class'=>'form-control'));?>
+    ), array('disabled' => true, 'class' => 'form-control'));?>
 	</div>
 </div>
 
@@ -206,8 +214,8 @@ $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
 <div class="controls">
 <?=$form->select("gUserExpirationAction", array(
 'REMOVE' => t('Remove the user from this group'),
-	'DEACTIVATE' => t('Deactivate the user account'),
-	'REMOVE_DEACTIVATE' => t('Remove the user from the group and deactivate the account')
+    'DEACTIVATE' => t('Deactivate the user account'),
+    'REMOVE_DEACTIVATE' => t('Remove the user from the group and deactivate the account'),
 
 ));?>
 </div>

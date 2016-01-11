@@ -1,4 +1,5 @@
 <?php
+
 defined('C5_EXECUTE') or die("Access Denied.");
 use Concrete\Core\Page\Stack\Pile\PileContent;
 
@@ -82,7 +83,7 @@ if (isset($_GET['atask']) && $_GET['atask'] && $valt->validate()) {
                 $cx = Stack::getByName($_REQUEST['arHandle']);
                 $ax = Area::get($cx, STACKS_AREA_NAME);
             }
-            $obj = new stdClass;
+            $obj = new stdClass();
 
             $ap = new Permissions($ax);
             $stack = Stack::getByID($_REQUEST['stID']);
@@ -128,7 +129,7 @@ if (isset($_GET['atask']) && $_GET['atask'] && $valt->validate()) {
                 $obj->response = array(t('Invalid stack.'));
             }
 
-            print Loader::helper('json')->encode($obj);
+            echo Loader::helper('json')->encode($obj);
             exit;
 
             break;
@@ -137,7 +138,6 @@ if (isset($_GET['atask']) && $_GET['atask'] && $valt->validate()) {
 }
 
 if (isset($_REQUEST['ctask']) && $_REQUEST['ctask'] && $valt->validate()) {
-
     switch ($_REQUEST['ctask']) {
         case 'check-out-add-block':
         case 'check-out':
@@ -210,7 +210,6 @@ if (isset($_REQUEST['ptask']) && $_REQUEST['ptask'] && $valt->validate()) {
 }
 
 if (isset($_REQUEST['processBlock']) && $_REQUEST['processBlock'] && $valt->validate()) {
-
     if ($_REQUEST['add'] || $_REQUEST['_add']) {
         // the user is attempting to add a block of content of some kind
         $a = Area::get($c, $_REQUEST['arHandle']);
@@ -254,7 +253,6 @@ if (isset($_REQUEST['processBlock']) && $_REQUEST['processBlock'] && $valt->vali
                     }
                 } else {
                     if (isset($_REQUEST['bID'])) {
-
                         $b = Block::getByID($_REQUEST['bID']);
                         $b->setBlockAreaObject($ax);
                         $bt = BlockType::getByHandle($b->getBlockTypeHandle());
@@ -272,7 +270,7 @@ if (isset($_REQUEST['processBlock']) && $_REQUEST['processBlock'] && $valt->vali
                     }
                 }
 
-                $obj = new stdClass;
+                $obj = new stdClass();
                 if (is_object($nb)) {
                     if ($_REQUEST['dragAreaBlockID'] > 0 && Loader::helper('validation/numbers')
                                                                   ->integer(
@@ -302,7 +300,7 @@ if (isset($_REQUEST['processBlock']) && $_REQUEST['processBlock'] && $valt->vali
                     $obj->error = true;
                     $obj->response = $e->getList();
                 }
-                print Loader::helper('json')->encode($obj);
+                echo Loader::helper('json')->encode($obj);
                 exit;
             }
         }

@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Session\Storage\Handler;
 
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeSessionHandler;
@@ -17,7 +16,6 @@ use Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeSessionHandle
  */
 class NativeFileSessionHandler extends NativeSessionHandler
 {
-
     /**
      * Constructor.
      *
@@ -49,13 +47,11 @@ class NativeFileSessionHandler extends NativeSessionHandler
         ini_set('session.save_handler', 'files');
 
         try {
-
             if ($baseDir && !is_dir($baseDir)) {
                 mkdir($baseDir, 0777, true);
             }
 
             ini_set('session.save_path', $savePath);
-
         } catch (\Exception $e) {
             /*
              * Catch any exceptions caused by open_basedir restrictions and ignore them.
@@ -71,5 +67,4 @@ class NativeFileSessionHandler extends NativeSessionHandler
             }
         }
     }
-
 }

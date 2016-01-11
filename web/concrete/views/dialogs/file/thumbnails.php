@@ -27,7 +27,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
         <h4>
             <?= $type->getDisplayName() ?>
             <small><?= t('%s x %s dimensions', $width, $height) ?></small>
-            <?php if ($fp->canEditFileContents() && $hasFile) { ?>
+            <?php if ($fp->canEditFileContents() && $hasFile) {
+    ?>
                 <a href="<?= $url . '?' . $query ?>"
                    dialog-width="90%"
                    dialog-height="70%"
@@ -35,7 +36,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
                    dialog-title="<?= t('Edit Thumbnail Images') ?>">
                     <?= t('Edit Thumbnail') ?>
                 </a>
-            <?php } ?>
+            <?php 
+}
+        ?>
         </h4>
         <hr/>
         <div class="ccm-file-manager-image-thumbnail">
@@ -49,15 +52,17 @@ defined('C5_EXECUTE') or die("Access Denied.");
                      style="max-width: 100%"
                      src="<?= $configuration->getPublicURLToFile($thumbnailPath) ?>"/>
                 <?php
+
             } else {
                 echo t(
                     'No thumbnail found. Usually this is because the ' .
                     'source file is smaller than this thumbnail configuration.');
             }
-            ?>
+        ?>
         </div>
 
-    <?php } ?>
+    <?php 
+    } ?>
 
     <script>
         (function() {

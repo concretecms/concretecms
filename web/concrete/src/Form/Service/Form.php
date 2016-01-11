@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Form\Service;
 
 use Core;
@@ -9,7 +8,9 @@ use View;
  * Helpful functions for working with forms. Includes HTML input tags and the like.
  *
  * @package Helpers
+ *
  * @category Concrete
+ *
  * @author Andrew Embler <andrew@concrete5.org>
  * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
  * @license    http://www.concrete5.org/license/     MIT License
@@ -245,7 +246,7 @@ class Form
             $str .= ' checked="checked"';
         }
         $str .= ' />';
-        $this->radioIndex++;
+        ++$this->radioIndex;
 
         return $str;
     }
@@ -310,7 +311,6 @@ class Form
      * @param array $miscFields (used if $valueOrMiscFields is not an array) Additional fields appended to the element (a hash array of attributes name => value), possibly including 'class'.
      *
      * @return string
-
      */
     protected function inputType($key, $type, $valueOrMiscFields, $miscFields)
     {
@@ -442,7 +442,7 @@ class Form
             $selectedValue = (string) $requestValue[0];
         } elseif ($requestValue !== false) {
             if (!is_array($requestValue)) {
-                $selectedValue = (string)$requestValue;
+                $selectedValue = (string) $requestValue;
             } else {
                 $selectedValue = '';
             }
@@ -450,7 +450,7 @@ class Form
         if (substr($key, -2) == '[]') {
             $_key = substr($key, 0, -2);
             $id = $_key . $this->selectIndex;
-            $this->selectIndex++;
+            ++$this->selectIndex;
         } else {
             $id = $key;
         }

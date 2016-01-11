@@ -1,7 +1,5 @@
 <?php
-
 namespace Concrete\Core\Entity;
-
 
 /**
  * @Entity
@@ -9,13 +7,11 @@ namespace Concrete\Core\Entity;
  */
 class Package
 {
-
     /**
      * @Id @Column(type="integer")
      * @GeneratedValue(strategy="AUTO")
      */
     protected $pkgID;
-
 
     /**
      * @Column(type="string")
@@ -45,7 +41,4 @@ class Package
     {
         return $this->pkgID;
     }
-
-
-
 }

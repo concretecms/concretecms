@@ -1,8 +1,5 @@
 <?php
-
 namespace Concrete\Core\Entity\Attribute\Key;
-
-use Concrete\Core\Entity\Attribute\Key\Key;
 
 /**
  * @Entity(repositoryClass="\Concrete\Core\Entity\User\AttributeRepository")
@@ -10,7 +7,6 @@ use Concrete\Core\Entity\Attribute\Key\Key;
  */
 class UserKey extends Key
 {
-
     /**
      * @Column(type="boolean")
      */
@@ -40,7 +36,6 @@ class UserKey extends Key
      * @Column(type="boolean")
      */
     protected $uakMemberListDisplay = false;
-
 
     /**
      * @return mixed
@@ -137,6 +132,4 @@ class UserKey extends Key
     {
         $this->uakMemberListDisplay = $uakMemberListDisplay;
     }
-
-
 }

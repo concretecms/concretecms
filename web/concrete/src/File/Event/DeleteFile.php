@@ -3,7 +3,6 @@ namespace Concrete\Core\File\Event;
 
 class DeleteFile extends File
 {
-
     protected $proceed = true;
 
     public function cancelDelete()
@@ -15,5 +14,4 @@ class DeleteFile extends File
     {
         return $this->proceed;
     }
-
 }

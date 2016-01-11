@@ -1,3 +1,6 @@
 <?php
 namespace Concrete\Core\Permission\Key;
-class GroupTreeNodeKey extends TreeNodeKey {}
+
+class GroupTreeNodeKey extends TreeNodeKey
+{
+}

@@ -1,19 +1,16 @@
-<?
+<?php
 namespace Concrete\Attribute\Number;
 
-use Concrete\Core\Entity\Attribute\Key\NumberKey;
 use Concrete\Core\Entity\Attribute\Key\Type\NumberType;
 use Concrete\Core\Entity\Attribute\Value\Value\NumberValue;
 use Loader;
-use \Concrete\Core\Foundation\Object;
-use \Concrete\Core\Attribute\Controller as AttributeTypeController;
+use Concrete\Core\Attribute\Controller as AttributeTypeController;
 
 class Controller extends AttributeTypeController
 {
-
     protected $searchIndexFieldDefinition = array(
         'type' => 'decimal',
-        'options' => array('precision' => 14, 'scale' => 4, 'default' => 0, 'notnull' => false)
+        'options' => array('precision' => 14, 'scale' => 4, 'default' => 0, 'notnull' => false),
     );
 
     public function getDisplayValue()
@@ -24,12 +21,14 @@ class Controller extends AttributeTypeController
     public function importKey($akey)
     {
         $type = new NumberType();
+
         return $type;
     }
 
     public function saveKey($data)
     {
         $type = new NumberType();
+
         return $type;
     }
 
@@ -43,6 +42,7 @@ class Controller extends AttributeTypeController
         if ($numTo) {
             $list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), $numTo, '<=');
         }
+
         return $list;
     }
 
@@ -52,7 +52,7 @@ class Controller extends AttributeTypeController
         $html = $f->number($this->field('from'), $this->request('from'));
         $html .= ' ' . t('to') . ' ';
         $html .= $f->number($this->field('to'), $this->request('to'));
-        print $html;
+        echo $html;
     }
 
     public function form()
@@ -60,7 +60,7 @@ class Controller extends AttributeTypeController
         if (is_object($this->attributeValue)) {
             $value = $this->getAttributeValue()->getValue();
         }
-        print Loader::helper('form')->number($this->field('value'), $value, array('style' => 'width:80px'));
+        echo Loader::helper('form')->number($this->field('value'), $value, array('style' => 'width:80px'));
     }
 
     public function validateForm($p)
@@ -71,6 +71,7 @@ class Controller extends AttributeTypeController
     public function validateValue()
     {
         $val = $this->getValue();
+
         return $val !== null && $val !== false;
     }
 
@@ -80,6 +81,7 @@ class Controller extends AttributeTypeController
         $av = new NumberValue();
         $value = ($value == false || $value == '0') ? 0 : $value;
         $av->setValue($value);
+
         return $av;
     }
 
@@ -94,5 +96,4 @@ class Controller extends AttributeTypeController
     {
         return new NumberType();
     }
-
 }

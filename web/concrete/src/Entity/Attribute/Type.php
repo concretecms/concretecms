@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Entity\Attribute;
 
 use Concrete\Core\Attribute\View;
@@ -12,7 +11,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Type
 {
-
     use PackageTrait;
 
     protected $controller;
@@ -126,6 +124,7 @@ class Type
             $class = core_class('Attribute\\' . $atHandle . '\\Controller', $prefix);
             $this->controller = \Core::make($class, array($this));
         }
+
         return $this->controller;
     }
 
@@ -151,12 +150,7 @@ class Type
         if ($return) {
             return $contents;
         } else {
-            print $contents;
+            echo $contents;
         }
     }
-
-
-
-
 }
-

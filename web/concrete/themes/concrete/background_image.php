@@ -1,5 +1,5 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
-<? $view->inc('elements/header.php'); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php $view->inc('elements/header.php'); ?>
 
 <div class="container">
 <div class="row">
@@ -24,7 +24,7 @@ View::element(
     }
 </style>
 
-<?php print $innerContent ?>
+<?php echo $innerContent ?>
 
 <div class="ccm-page-background-credit" style="display:none">
     <?= t('Photo Credit:') ?>
@@ -55,7 +55,8 @@ $(function() {
             .fadeIn();
     }, 0);
 
-     <?php if(Config::get('concrete.white_label.background_image') !== 'none' && !Config::get('concrete.white_label.background_url')) { ?>
+     <?php if (Config::get('concrete.white_label.background_image') !== 'none' && !Config::get('concrete.white_label.background_url')) {
+    ?>
     $(function () {
         var shown = false, info;
         $.getJSON('<?= Core::getApplicationURL() . '/' . DISPATCHER_FILENAME . '/tools/required/dashboard/get_image_data' ?>', { image: '<?= $image ?>' }, function (data) {
@@ -77,12 +78,15 @@ $(function() {
             fade: 500
         });
     });
-    <?php } elseif (Config::get('concrete.white_label.background_url')) { ?>
+    <?php 
+} elseif (Config::get('concrete.white_label.background_url')) {
+    ?>
         $.backstretch("<?= Config::get('concrete.urls.background_url') ?>", {
             fade: 500
         });
-    <?php } ?>
+    <?php 
+} ?>
 });
 </script>
 
-<? $view->inc('elements/footer.php'); ?>
+<?php $view->inc('elements/footer.php'); ?>

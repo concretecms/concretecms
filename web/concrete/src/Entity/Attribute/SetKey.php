@@ -1,9 +1,5 @@
 <?php
-
 namespace Concrete\Core\Entity\Attribute;
-
-use Concrete\Core\Entity\PackageTrait;
-use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @Entity
@@ -13,7 +9,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class SetKey
 {
-
     /**
      * @Id @OneToOne(targetEntity="\Concrete\Core\Entity\Attribute\Key\Key")
      * @JoinColumn(name="akID", referencedColumnName="akID")
@@ -78,6 +73,4 @@ class SetKey
     {
         $this->asDisplayOrder = $asDisplayOrder;
     }
-
 }
-

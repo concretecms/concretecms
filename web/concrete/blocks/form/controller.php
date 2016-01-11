@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Block\Form;
 
 use Concrete\Core\Block\BlockController;
@@ -306,13 +305,13 @@ class Controller extends BlockController
 
             //duplicate survey block record
             //with a new Block ID and a new Question
-            $v = array($newQuestionSetId,$row['surveyName'],$row['submitText'], $newBID,$row['thankyouMsg'],intval($row['notifyMeOnSubmission']),$row['recipientEmail'],$row['displayCaptcha'], $row['addFilesToSet']);
+            $v = array($newQuestionSetId, $row['surveyName'], $row['submitText'], $newBID, $row['thankyouMsg'], intval($row['notifyMeOnSubmission']), $row['recipientEmail'], $row['displayCaptcha'], $row['addFilesToSet']);
             $q = "insert into {$this->btTable} ( questionSetId, surveyName, submitText, bID,thankyouMsg,notifyMeOnSubmission,recipientEmail,displayCaptcha,addFilesToSet) values (?, ?, ?, ?, ?, ?, ?, ?,?)";
             $result = $db->Execute($q, $v);
 
             $rs = $db->query("SELECT * FROM {$this->btQuestionsTablename} WHERE questionSetId=$oldQuestionSetId AND bID=".intval($this->bID));
             while ($row = $rs->fetchRow()) {
-                $v = array($newQuestionSetId,intval($row['msqID']), intval($newBID), $row['question'],$row['inputType'],$row['options'],$row['position'],$row['width'],$row['height'],$row['required'],$row['defaultDate']);
+                $v = array($newQuestionSetId, intval($row['msqID']), intval($newBID), $row['question'], $row['inputType'], $row['options'], $row['position'], $row['width'], $row['height'], $row['required'], $row['defaultDate']);
                 $sql = "INSERT INTO {$this->btQuestionsTablename} (questionSetId,msqID,bID,question,inputType,options,position,width,height,required,defaultDate) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
                 $db->Execute($sql, $v);
             }
@@ -531,7 +530,7 @@ class Controller extends BlockController
                 $questionAnswerPairs[$row['msqID']]['answer'] = $txt->sanitize($answer.$answerLong);
                 $questionAnswerPairs[$row['msqID']]['answerDisplay'] = strlen($answerDisplay) ? $answerDisplay : $questionAnswerPairs[$row['msqID']]['answer'];
 
-                $v = array($row['msqID'],$answerSetID,$answer,$answerLong);
+                $v = array($row['msqID'], $answerSetID, $answer, $answerLong);
                 $q = "insert into {$this->btAnswersTablename} (msqID,asID,answer,answerLong) values (?,?,?,?)";
                 $db->query($q, $v);
             }

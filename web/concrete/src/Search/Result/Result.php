@@ -1,8 +1,8 @@
 <?php
 namespace Concrete\Core\Search\Result;
 
-use \Concrete\Core\Search\Column\Set;
-use \Concrete\Core\Search\ItemList\ItemList;
+use Concrete\Core\Search\Column\Set;
+use Concrete\Core\Search\ItemList\ItemList;
 use Pagerfanta\View\TwitterBootstrap3View;
 use stdClass;
 
@@ -19,7 +19,10 @@ class Result
     protected $fields;
     protected $columns;
 
-    public function getItemListObject() {return $this->list;}
+    public function getItemListObject()
+    {
+        return $this->list;
+    }
 
     public function setBaseURL($url)
     {
@@ -105,7 +108,7 @@ class Result
                 array(
                     'prev_message' => tc('Pagination', '&larr; Previous'),
                     'next_message' => tc('Pagination', 'Next &rarr;'),
-                    'active_suffix' => '<span class="sr-only">' . tc('Pagination', '(current)') . '</span>'
+                    'active_suffix' => '<span class="sr-only">' . tc('Pagination', '(current)') . '</span>',
                 )
             );
         }
@@ -114,5 +117,4 @@ class Result
 
         return $obj;
     }
-
 }

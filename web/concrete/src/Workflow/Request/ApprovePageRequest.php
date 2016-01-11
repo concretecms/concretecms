@@ -4,18 +4,17 @@ namespace Concrete\Core\Workflow\Request;
 use Workflow;
 use Loader;
 use Page;
-use \Concrete\Core\Workflow\Description as WorkflowDescription;
+use Concrete\Core\Workflow\Description as WorkflowDescription;
 use Permissions;
 use PermissionKey;
-use \Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
+use Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
 use CollectionVersion;
 use Events;
-use \Concrete\Core\Workflow\Progress\Action\Action as WorkflowProgressAction;
-use \Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
+use Concrete\Core\Workflow\Progress\Action\Action as WorkflowProgressAction;
+use Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
 
 class ApprovePageRequest extends PageRequest
 {
-
     protected $wrStatusNum = 30;
 
     public function __construct()
@@ -46,6 +45,7 @@ class ApprovePageRequest extends PageRequest
             $c->getCollectionName()));
         $d->setInContextDescription(t("Page Version %s Submitted for Approval.", $this->cvID));
         $d->setShortStatus(t("Pending Approval"));
+
         return $d;
     }
 
@@ -72,12 +72,12 @@ class ApprovePageRequest extends PageRequest
     public function trigger()
     {
         $page = Page::getByID($this->cID, $this->cvID);
+
         return parent::trigger();
     }
 
     public function getWorkflowRequestAdditionalActions(WorkflowProgress $wp)
     {
-
         $buttons = array();
         $c = Page::getByID($this->cID, 'ACTIVE');
         $cp = new Permissions($c);
@@ -94,6 +94,7 @@ class ApprovePageRequest extends PageRequest
             $button->setWorkflowProgressActionStyleClass('btn-default dialog-launch');
             $buttons[] = $button;
         }
+
         return $buttons;
     }
 
@@ -121,8 +122,7 @@ class ApprovePageRequest extends PageRequest
 
         $wpr = new WorkflowProgressResponse();
         $wpr->setWorkflowProgressResponseURL(\URL::to($c));
+
         return $wpr;
     }
-
-
 }

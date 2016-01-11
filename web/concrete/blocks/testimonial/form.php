@@ -4,7 +4,7 @@
 <?php
 if ($fID > 0) {
     $fo = File::getByID($fID);
-   if (!is_object($fo)) {
+    if (!is_object($fo)) {
         unset($fo);
     }
 }
@@ -12,33 +12,33 @@ if ($fID > 0) {
 
 <div class="form-group">
     <?php echo $form->label('fID', t('Picture'));?>
-    <?
+    <?php
     $al = Loader::helper('concrete/asset_library');
-    print $al->file('ccm-b-file', 'fID', t('Choose File'), $fo);
+    echo $al->file('ccm-b-file', 'fID', t('Choose File'), $fo);
     ?>
 </div>
 
 <div class="form-group">
     <?php echo $form->label('name', t('Name'));?>
-    <?php print $form->text('name', $name)?>
+    <?php echo $form->text('name', $name)?>
 </div>
 
 <div class="form-group">
     <?php echo $form->label('position', t('Position'));?>
-    <?php print $form->text('position', $position)?>
+    <?php echo $form->text('position', $position)?>
 </div>
 
 <div class="form-group">
     <?php echo $form->label('company', t('Company'));?>
-    <?php print $form->text('company', $company)?>
+    <?php echo $form->text('company', $company)?>
 </div>
 
 <div class="form-group">
     <?php echo $form->label('companyURL', t('Company URL'));?>
-    <?php print $form->text('companyURL', $companyURL)?>
+    <?php echo $form->text('companyURL', $companyURL)?>
 </div>
 
 <div class="form-group">
     <?php echo $form->label('paragraph', t('Bio/Quote')) ?>
-    <?php print $form->textarea('paragraph', $paragraph, array('rows' => 5))?>
+    <?php echo $form->textarea('paragraph', $paragraph, array('rows' => 5))?>
 </div>

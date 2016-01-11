@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Application;
 
 use Concrete\Core\Block\BlockType\BlockType;
@@ -254,7 +253,7 @@ class Application extends Container
     {
         $checkAfterStart = false;
 
-        foreach($this->packages as $pkg) {
+        foreach ($this->packages as $pkg) {
             // handle updates
             if (Config::get('concrete.updates.enable_auto_update_packages')) {
                 $dbPkg = \Package::getByHandle($pkg->getPackageHandle());
@@ -283,7 +282,7 @@ class Application extends Container
         Config::set('app.bootstrap.packages_loaded', true);
 
         if ($checkAfterStart) {
-            foreach($this->packages as $pkg) {
+            foreach ($this->packages as $pkg) {
                 if (method_exists($pkg, 'on_after_packages_start')) {
                     $pkg->on_after_packages_start();
                 }
@@ -319,7 +318,7 @@ class Application extends Container
     public function handleURLSlashes(SymfonyRequest $request)
     {
         $trailing_slashes = $this['config']['concrete.seo.trailing_slash'];
-            $path = $request->getPathInfo();
+        $path = $request->getPathInfo();
 
         // If this isn't the homepage
         if ($path && $path != '/') {
@@ -327,7 +326,6 @@ class Application extends Container
             // If the trailing slash doesn't match the config, return a redirect response
             if (($trailing_slashes && substr($path, -1) != '/') ||
                 (!$trailing_slashes && substr($path, -1) == '/')) {
-
                 $parsed_url = Url::createFromUrl($request->getUri(),
                     $trailing_slashes ? Url::TRAILING_SLASHES_ENABLED : Url::TRAILING_SLASHES_DISABLED);
 
@@ -397,7 +395,6 @@ class Application extends Container
         // work unless they come at the end.
         $this->registerLegacyRoutes();
 
-
         $path = rawurldecode($request->getPathInfo());
 
         if (substr($path, 0, 3) == '../' || substr($path, -3) == '/..' || strpos($path, '/../') ||
@@ -431,7 +428,6 @@ class Application extends Container
 
     protected function registerLegacyRoutes()
     {
-
         \Route::register("/tools/blocks/{btHandle}/{tool}",
             '\Concrete\Core\Legacy\Controller\ToolController::displayBlock',
             'blockTool',
@@ -493,7 +489,7 @@ class Application extends Container
     /**
      * Detect the application's current environment.
      *
-     * @param  array|string|Callable  $environments
+     * @param  array|string|callable  $environments
      *
      * @return string
      */
@@ -520,6 +516,7 @@ class Application extends Container
      *
      * @param  string $concrete
      * @param  array $parameters
+     *
      * @return mixed
      *
      * @throws BindingResolutionException
@@ -558,6 +555,7 @@ class Application extends Container
 
     /**
      * @deprecated Use the singleton method
+     *
      * @param $abstract
      * @param $concrete
      */
@@ -565,5 +563,4 @@ class Application extends Container
     {
         return $this->singleton($abstract, $concrete);
     }
-
 }

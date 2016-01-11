@@ -3,7 +3,6 @@ namespace Concrete\Core\Application\Service\UserInterface\Help;
 
 class BlockTypeManager extends AbstractManager
 {
-
     public function __construct()
     {
         $this->registerMessages(array(
@@ -26,13 +25,13 @@ class BlockTypeManager extends AbstractManager
             'survey' => array(t('Add questions and specify whether or not unregistered users will be allowed to submit responses. Enter each response as its own option under Add Option. Results can be viewed by visiting Dashboard > Reports > Surveys. '), 'http://documentation.concrete5.org/editors/in-page-editing/block-areas/add-block/survey'),
             'tags' => array(t('Create a tag cloud that displays all the "Tag" custom attributes set on the current page, or on all pages throughout your site. Enter values into the "Tags" field to automatically add tags to the current page. Link the tags to a specific page by clicking the Advanced tab and using the page picker to select a page.'), 'http://documentation.concrete5.org/editors/in-page-editing/block-areas/add-block/tags'),
             'video' => array(t('Select a video file from the File Manager and specify a width and height at which to display it on your page. AVI, WMV, QuickTime/MPEG4 and FLV formats are supported.'), 'http://documentation.concrete5.org/editors/in-page-editing/block-areas/add-block/video-player'),
-            'youtube' => array(t('Paste a short or long-form YouTube link into the YouTube URL field and concrete5 will embed the video on your page. Playlist URLs and comma seperated lists of video IDs are also supported.'), 'http://documentation.concrete5.org/editors/in-page-editing/block-areas/add-block/youtube-video')
+            'youtube' => array(t('Paste a short or long-form YouTube link into the YouTube URL field and concrete5 will embed the video on your page. Playlist URLs and comma seperated lists of video IDs are also supported.'), 'http://documentation.concrete5.org/editors/in-page-editing/block-areas/add-block/youtube-video'),
         ));
     }
 
     public function registerMessages($messages)
     {
-        foreach($messages as $identifier => $message) {
+        foreach ($messages as $identifier => $message) {
             $m = new Message();
             $m->setIdentifier($identifier);
             $m->setMessageContent($message[0]);
@@ -42,7 +41,5 @@ class BlockTypeManager extends AbstractManager
 
             $this->messages[$identifier] = $m;
         }
-
     }
-
 }

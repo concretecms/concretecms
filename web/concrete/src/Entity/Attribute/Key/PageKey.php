@@ -1,8 +1,5 @@
 <?php
-
 namespace Concrete\Core\Entity\Attribute\Key;
-
-use Concrete\Core\Entity\Attribute\Key\Key;
 
 /**
  * @Entity
@@ -10,6 +7,4 @@ use Concrete\Core\Entity\Attribute\Key\Key;
  */
 class PageKey extends Key
 {
-
-
 }

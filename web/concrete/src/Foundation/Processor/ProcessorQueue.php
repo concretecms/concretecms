@@ -1,11 +1,8 @@
 <?php
 namespace Concrete\Core\Foundation\Processor;
 
-use Concrete\Core\User\Search\Result\Item;
-
 class ProcessorQueue extends Processor
 {
-
     protected $itemsPerBatch = 20;
     protected $tasks = array();
     protected $queue;
@@ -45,11 +42,12 @@ class ProcessorQueue extends Processor
     {
         $queueItems = $this->getQueue()->receive($this->itemsPerBatch);
         $items = array();
-        foreach($queueItems as $queueItem) {
+        foreach ($queueItems as $queueItem) {
             $action = unserialize($queueItem->body);
             $action->setQueueItem($queueItem);
             $items[] = $action;
         }
+
         return $items;
     }
 
@@ -57,7 +55,7 @@ class ProcessorQueue extends Processor
     {
         $this->getQueue()->deleteQueue();
         $tasks = $this->getTasks();
-        foreach($tasks as $task) {
+        foreach ($tasks as $task) {
             $action = new QueueAction($this, $this->target, $task[1]);
             $action->finish();
         }
@@ -85,12 +83,11 @@ class ProcessorQueue extends Processor
     {
         $queue = $this->getQueue();
         $tasks = $this->getTasks();
-        foreach($this->target->getItems() as $targetItem) {
-            foreach($tasks as $task) {
+        foreach ($this->target->getItems() as $targetItem) {
+            foreach ($tasks as $task) {
                 $action = new QueueAction($this, $this->target, $task[1], $targetItem);
                 $queue->send(serialize($action));
             }
         }
     }
-
 }

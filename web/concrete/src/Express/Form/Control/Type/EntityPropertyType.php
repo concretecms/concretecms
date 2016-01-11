@@ -1,16 +1,13 @@
 <?php
-
 namespace Concrete\Core\Express\Form\Control\Type;
 
 use Concrete\Core\Entity\Express\Control\Control;
-use Concrete\Core\Entity\Express\Control\EntityNameControl;
 use Concrete\Core\Entity\Express\Control\TextControl;
 use Concrete\Core\Entity\Express\Entity;
-use Concrete\Core\Express\Form\Control\Type\Item\NameEntityPropertyItem;
 use Concrete\Core\Express\Form\Control\Type\Item\TextEntityPropertyItem;
 
-class EntityPropertyType implements TypeInterface {
-
+class EntityPropertyType implements TypeInterface
+{
     public function getPluralDisplayName()
     {
         return t('Core Properties');
@@ -34,13 +31,13 @@ class EntityPropertyType implements TypeInterface {
     public function getItems(Entity $entity)
     {
         return array(
-            new TextEntityPropertyItem()
+            new TextEntityPropertyItem(),
         );
     }
 
     public function createControlByIdentifier($id)
     {
-        switch($id) {
+        switch ($id) {
             case 'text':
                 return new TextControl();
         }
@@ -50,7 +47,4 @@ class EntityPropertyType implements TypeInterface {
     {
         return null;
     }
-
-
-
 }

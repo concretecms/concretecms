@@ -2,12 +2,11 @@
 namespace Concrete\Job;
 
 use Concrete\Core\Cache\Cache;
-use \Job as AbstractJob;
-use \Concrete\Core\Page\Search\IndexedSearch;
+use Job as AbstractJob;
+use Concrete\Core\Page\Search\IndexedSearch;
 
 class IndexSearch extends AbstractJob
 {
-
     public $jNotUninstallable = 1;
 
     public function getJobName()
@@ -42,7 +41,7 @@ class IndexSearch extends AbstractJob
 
         if ($result->count == 0) {
             return t('Indexing complete. Index is up to date');
-        } else if ($result->count == $is->searchBatchSize) {
+        } elseif ($result->count == $is->searchBatchSize) {
             return t(
                 'Index partially updated. %s pages indexed (maximum number.) Re-run this job to continue this process.',
                 $result->count

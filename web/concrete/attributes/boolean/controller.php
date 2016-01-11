@@ -1,8 +1,6 @@
 <?php
-
 namespace Concrete\Attribute\Boolean;
 
-use Concrete\Core\Entity\Attribute\Key\BooleanKey;
 use Concrete\Core\Entity\Attribute\Key\Type\BooleanType;
 use Concrete\Core\Entity\Attribute\Value\Value\BooleanValue;
 use Core;
@@ -63,12 +61,14 @@ class Controller extends AttributeTypeController
                 $type->setIsCheckedByDefault(true);
             }
         }
+
         return $type;
     }
 
     public function getDisplayValue()
     {
         $v = $this->attributeValue->getValue();
+
         return ($v == 1) ? t('Yes') : t('No');
     }
 
@@ -101,19 +101,19 @@ class Controller extends AttributeTypeController
         }
 
         $cb = Core::make('helper/form')->checkbox($this->field('value'), 1, $checked);
-        print $cb . ' <span>' . $this->attributeKey->getAttributeKeyDisplayName() .  '</span>';
+        echo $cb . ' <span>' . $this->attributeKey->getAttributeKeyDisplayName() .  '</span>';
     }
 
     public function composer()
     {
-        print '<div class="ccm-attribute ccm-attribute-boolean checkbox"><label>';
+        echo '<div class="ccm-attribute ccm-attribute-boolean checkbox"><label>';
         $this->form();
-        print '</label></div>';
+        echo '</label></div>';
     }
 
     public function search()
     {
-        print '<div class="ccm-attribute ccm-attribute-boolean checkbox"><label>' . Core::make('helper/form')->checkbox($this->field('value'), 1, $this->request('value') == 1) . ' ' . $this->attributeKey->getAttributeKeyDisplayName() . '</label></div>';
+        echo '<div class="ccm-attribute ccm-attribute-boolean checkbox"><label>' . Core::make('helper/form')->checkbox($this->field('value'), 1, $this->request('value') == 1) . ' ' . $this->attributeKey->getAttributeKeyDisplayName() . '</label></div>';
     }
 
     public function type_form()
@@ -128,21 +128,23 @@ class Controller extends AttributeTypeController
         $v = new BooleanValue();
         $value = ($value == false || $value == '0') ? false : true;
         $v->setValue($value);
+
         return $v;
     }
 
-	public function validateValue()
-	{
-		$v = $this->getValue();
-		return $v == 1;
-	}
+    public function validateValue()
+    {
+        $v = $this->getValue();
+
+        return $v == 1;
+    }
 
     public function getSearchIndexValue()
     {
         return $this->attributeValue->getValue() ? 1 : 0;
     }
 
-	public function duplicateKey($newAK)
+    public function duplicateKey($newAK)
     {
         $this->load();
         $db = Database::get();
@@ -157,6 +159,7 @@ class Controller extends AttributeTypeController
         }
         $type = new BooleanType();
         $type->setIsCheckedByDefault($akCheckedByDefault);
+
         return $type;
     }
 
@@ -175,5 +178,4 @@ class Controller extends AttributeTypeController
     {
         return new BooleanType();
     }
-
 }

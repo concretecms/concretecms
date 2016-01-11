@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Multilingual\Page;
 
 use Concrete\Core\Page\PageList as CorePageList;
@@ -20,7 +19,7 @@ class PageList extends CorePageList
         $relation = Database::get()->createQueryBuilder();
         $relation->select('mpRelationID')->from('MultilingualPageRelations', 'mppr')->where('cID = p.cID')->setMaxResults(1);
         $query->addSelect('(' . $relation . ') as mpr');
-        foreach($mslist as $ms) {
+        foreach ($mslist as $ms) {
             $section = Database::get()->createQueryBuilder();
             $section
                 ->select('count(mpRelationID)')
@@ -31,13 +30,14 @@ class PageList extends CorePageList
                 );
             $query->addSelect('(' . $section . ') as relationCount' . $ms->getCollectionID());
         }
+
         return $query;
     }
 
     public function filterByMissingTargets($targets)
     {
         if (count($targets)) {
-            for ($i = 0; $i < count($targets); $i++) {
+            for ($i = 0; $i < count($targets); ++$i) {
                 $having = Database::get()->createQueryBuilder();
                 $t = $targets[$i];
                 $this->query->having(

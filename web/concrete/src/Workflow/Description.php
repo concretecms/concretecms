@@ -1,11 +1,10 @@
 <?php
 namespace Concrete\Core\Workflow;
 
-use \Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\Object;
 
 class Description extends Object
 {
-
     public function getDescription()
     {
         return $this->text;
@@ -45,6 +44,4 @@ class Description extends Object
     {
         return $this->status;
     }
-
-
 }

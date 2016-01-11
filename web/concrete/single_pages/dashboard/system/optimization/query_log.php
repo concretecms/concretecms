@@ -1,25 +1,32 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $valt = Loader::helper('validation/token');
 $th = Loader::helper('text');
 ?>
 
-<? if ($controller->getTask() == 'inspect') { ?>
+<?php if ($controller->getTask() == 'inspect') {
+    ?>
 
     <div class="ccm-ui">
     <div class="alert alert-info"><?=$query?></div>
     <table class="table">
-    <? foreach($parameters as $params) { ?>
+    <?php foreach ($parameters as $params) {
+    ?>
         <tr>
             <td><?=$params?></td>
         </tr>
-    <? } ?>
+    <?php 
+}
+    ?>
     </table>
     </div>
 
-<? } else { ?>
+<?php 
+} else {
+    ?>
 
-    <? if (count($entries)) { ?>
+    <?php if (count($entries)) {
+    ?>
 
         <p class="lead"><?=t('Total Logged: %s', $total)?></p>
 
@@ -36,20 +43,24 @@ $th = Loader::helper('text');
                         </tr>
                     </thead>
                     <tbody>
-                        <? foreach($entries as $ent) { ?>
+                        <?php foreach ($entries as $ent) {
+    ?>
                         <tr>
                             <td valign="top"><?=$ent['queryTotal']?></td>
                             <td valign="top"><?=$ent['query']?></td>
                             <td><a href="<?=$view->action('inspect', rawurlencode($ent['query']))?>" dialog-width="600" dialog-title="<?=t('Query Details')?>" dialog-modal="true" dialog-height="400" class="dialog-launch icon-link"><i class="fa fa-search"></i></a></td>
                         </tr>
-                        <? } ?>
+                        <?php 
+}
+    ?>
                     </tbody>
                 </table>
             </div>
         </div>
 
         <div class="ccm-search-results-pagination">
-            <? print $pagination->renderView('dashboard');?>
+            <?php echo $pagination->renderView('dashboard');
+    ?>
         </div>
 
     </div>
@@ -67,11 +78,16 @@ $th = Loader::helper('text');
 
     </div>
 
-    <? } else { ?>
+    <?php 
+} else {
+    ?>
 
     <p><?=t("The database query log is empty.")?></p>
 
-    <? } ?>
+    <?php 
+}
+    ?>
 
 
-<? } ?>
+<?php 
+} ?>

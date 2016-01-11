@@ -1,22 +1,22 @@
 <?php
 namespace Concrete\Core\Permission\Response;
 
-use \Exception;
+use Exception;
 use User;
 use PermissionKeyCategory;
 use Core;
 
 class Response
 {
-
     /** @var \Concrete\Core\Permission\ObjectInterface */
     protected $object;
     /** @var PermissionKeyCategory */
     protected $category;
-    static $cache = array();
+    public static $cache = array();
 
     /**
-     * Sets the current permission object to the object provided, this object should implement the Permission ObjectInterface
+     * Sets the current permission object to the object provided, this object should implement the Permission ObjectInterface.
+     *
      * @param \Concrete\Core\Permission\ObjectInterface $object
      */
     public function setPermissionObject($object)
@@ -25,7 +25,7 @@ class Response
     }
 
     /**
-     * Retrieves the current permission object
+     * Retrieves the current permission object.
      */
     public function getPermissionObject()
     {
@@ -33,7 +33,8 @@ class Response
     }
 
     /**
-     * Sets the current Permission Category object to an appropriate PermissionKeyCategory
+     * Sets the current Permission Category object to an appropriate PermissionKeyCategory.
+     *
      * @param PermissionKeyCategory $category
      */
     public function setPermissionCategoryObject($category)
@@ -43,6 +44,7 @@ class Response
 
     /**
      * Returns an error constant if an error is present, false if there are no errors.
+     *
      * @return bool|int
      */
     public function testForErrors()
@@ -52,7 +54,9 @@ class Response
 
     /**
      * Passing in any object that implements the ObjectInterface, retrieve the Permission Response object.
+     *
      * @param \Concrete\Core\Permission\ObjectInterface $object
+     *
      * @return \Concrete\Core\Permission\Response\Response
      */
     public static function getResponse($object)
@@ -73,14 +77,18 @@ class Response
         }
         $pr->setPermissionObject($object);
         $item->set($pr);
+
         return $pr;
     }
 
     /**
      * This function returns true if the user has permission to the object, or false if they do not have access.
+     *
      * @param string $permissionHandle A Permission Key Handle
      * @param array $args Arguments to pass to the PermissionKey object's validate function
+     *
      * @return bool
+     *
      * @throws Exception
      */
     public function validate($permissionHandle, $args = array())
@@ -97,6 +105,7 @@ class Response
             throw new Exception(t('Unable to get permission key for %s', $permissionHandle));
         }
         $pk->setPermissionObject($this->object);
+
         return call_user_func_array(array($pk, 'validate'), $args);
     }
 
@@ -106,8 +115,7 @@ class Response
         /** @var \Concrete\Core\Utility\Service\Text $textHelper */
         $textHelper = Core::make('helper/text');
         $permission = $textHelper->uncamelcase($permission);
+
         return $this->validate($permission, $a);
     }
-
-
 }

@@ -1,18 +1,14 @@
 <?php
 namespace Concrete\Core\Express;
 
-use Concrete\Core\Application\Application;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Search\ItemList\EntityItemList;
 use Concrete\Core\Search\Pagination\Pagination;
-use Concrete\Core\Search\Pagination\PermissionablePagination;
 use Doctrine\DBAL\Logging\EchoSQLLogger;
-use Doctrine\ORM\EntityManager;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 
 class ObjectList extends EntityItemList
 {
-
     protected $entity;
     protected $objectManager;
 
@@ -36,7 +32,7 @@ class ObjectList extends EntityItemList
 
     protected function executeSortBy($column, $direction = 'asc')
     {
-        if (in_array(strtolower($direction), array('asc','desc'))) {
+        if (in_array(strtolower($direction), array('asc', 'desc'))) {
             $this->query->orderBy($column, $direction);
         } else {
             throw new \Exception(t('Invalid SQL in order by'));
@@ -46,6 +42,7 @@ class ObjectList extends EntityItemList
     public function executeGetResults()
     {
         $result = $this->query->getQuery()->getResult();
+
         return $result;
     }
 
@@ -90,9 +87,7 @@ class ObjectList extends EntityItemList
             $query->select('count(distinct o.id)')->setMaxResults(1);
         });
         $pagination = new Pagination($this, $adapter);
+
         return $pagination;
     }
-
-
-
 }

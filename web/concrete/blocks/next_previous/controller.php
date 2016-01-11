@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Block\NextPrevious;
 
 use Database;

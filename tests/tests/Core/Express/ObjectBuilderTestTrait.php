@@ -2,12 +2,11 @@
 
 trait ObjectBuilderTestTrait
 {
-
     protected function getObjectBuilder()
     {
 
-        /**
-         * @var $builder \Concrete\Core\Express\ObjectBuilder;
+        /*
+         * @var \Concrete\Core\Express\ObjectBuilder;
          */
         $builder = Core::make('express.builder.object');
         $builder->createObject('Student')
@@ -18,8 +17,7 @@ trait ObjectBuilderTestTrait
             ->setIsAttributeKeyContentIndexed(true)
             ->build();
         $builder->addAttribute('text', 'Password');
+
         return $builder;
-
     }
-
 }

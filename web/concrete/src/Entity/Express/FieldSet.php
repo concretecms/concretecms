@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Entity\Express;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -10,7 +9,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class FieldSet
 {
-
     /**
      * @Id @Column(type="integer")
      * @GeneratedValue(strategy="AUTO")
@@ -36,7 +34,6 @@ class FieldSet
      * @ManyToOne(targetEntity="Form")
      **/
     protected $form;
-
 
     /**
      * @OneToMany(targetEntity="\Concrete\Core\Entity\Express\Control\Control", mappedBy="field_set", cascade={"persist", "remove"})
@@ -124,7 +121,6 @@ class FieldSet
         $this->controls = $controls;
     }
 
-
     public function __construct()
     {
         $this->controls = new ArrayCollection();
@@ -145,8 +141,4 @@ class FieldSet
     {
         $this->position = $position;
     }
-
-
-
-
 }

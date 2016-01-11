@@ -15,7 +15,6 @@ use Config;
 
 class PageView extends View
 {
-
     protected $c; // page
     protected $cp;
     protected $pTemplateID;
@@ -26,23 +25,25 @@ class PageView extends View
         $items = parent::getScopeItems();
         $items['c'] = $this->c;
         $items['theme'] = $this->themeObject;
+
         return $items;
     }
 
     /**
-     * Called from previewing functions, this lets us override the page's template with one of our own choosing
+     * Called from previewing functions, this lets us override the page's template with one of our own choosing.
      */
     public function setCustomPageTemplate(PageTemplate $pt)
     {
         $this->pTemplateID = $pt->getPageTemplateID();
     }
 
-    public function getPageTemplate() {
+    public function getPageTemplate()
+    {
         return PageTemplate::getByID($this->pTemplateID);
     }
 
     /**
-     * Called from previewing functions, this lets us override the page's theme with one of our own choosing
+     * Called from previewing functions, this lets us override the page's theme with one of our own choosing.
      */
     public function setCustomPageTheme(PageTheme $pt)
     {
@@ -88,7 +89,7 @@ class PageView extends View
             );
         }
     }
-    
+
     public function setupRender()
     {
         $this->loadViewThemeObject();
@@ -99,7 +100,6 @@ class PageView extends View
             // from within a controller. So we don't reset it.
             return false;
         }
-
 
         if ($this->c->getPageTypeID() == 0 && $this->c->getCollectionFilename()) {
             $this->renderSinglePageByFilename($this->c->getCollectionFilename());
@@ -175,7 +175,7 @@ class PageView extends View
             return $this->themeObject->getStylesheet($stylesheet);
         }
 
-        /**
+        /*
          * deprecated - but this is for backward compatibility. If we don't have a stylesheet in the css/
          * directory we just pass through and return the passed file in the current directory.
          */
@@ -218,6 +218,7 @@ class PageView extends View
         if ($shouldAddToCache) {
             $cache->set($this->c, $contents);
         }
+
         return $contents;
     }
 
@@ -259,5 +260,4 @@ class PageView extends View
             $this->pThemeID = $this->c->getPageTemplateID();
         }
     }
-
 }

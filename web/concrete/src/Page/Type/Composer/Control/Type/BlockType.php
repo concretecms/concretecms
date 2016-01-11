@@ -2,15 +2,13 @@
 namespace Concrete\Core\Page\Type\Composer\Control\Type;
 
 use Loader;
-use \Concrete\Core\Foundation\Object;
 use BlockType as ConcreteBlockType;
 use BlockTypeList;
 use Environment;
-use \Concrete\Core\Page\Type\Composer\Control\BlockControl;
+use Concrete\Core\Page\Type\Composer\Control\BlockControl;
 
 class BlockType extends Type
 {
-
     public function getPageTypeComposerControlObjects()
     {
         $objects = array();
@@ -31,6 +29,7 @@ class BlockType extends Type
                 $objects[] = $bx;
             }
         }
+
         return $objects;
     }
 
@@ -42,6 +41,7 @@ class BlockType extends Type
         $bx->setBlockTypeID($bt->getBlockTypeID());
         $bx->setPageTypeComposerControlIconSRC($ci->getBlockTypeIconURL($bt));
         $bx->setPageTypeComposerControlName(t($bt->getBlockTypeName()));
+
         return $bx;
     }
 
@@ -53,8 +53,7 @@ class BlockType extends Type
     public function configureFromImportHandle($handle)
     {
         $bt = ConcreteBlockType::getByHandle($handle);
+
         return static::getPageTypeComposerControlByIdentifier($bt->getBlockTypeID());
     }
-
-
 }

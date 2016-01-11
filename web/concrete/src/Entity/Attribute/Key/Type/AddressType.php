@@ -1,9 +1,7 @@
 <?php
-
 namespace Concrete\Core\Entity\Attribute\Key\Type;
 
 use Concrete\Core\Entity\Attribute\Value\Value\AddressValue;
-
 
 /**
  * @Entity
@@ -11,7 +9,6 @@ use Concrete\Core\Entity\Attribute\Value\Value\AddressValue;
  */
 class AddressType extends Type
 {
-
     public function getAttributeValue()
     {
         return new AddressValue();
@@ -21,7 +18,6 @@ class AddressType extends Type
      * @Column(type="string")
      */
     protected $defaultCountry = '';
-
 
     /**
      * @Column(type="boolean")
@@ -84,7 +80,7 @@ class AddressType extends Type
     public function createController()
     {
         $controller = new \Concrete\Attribute\Address\Controller($this->getAttributeType());
+
         return $controller;
     }
-
 }

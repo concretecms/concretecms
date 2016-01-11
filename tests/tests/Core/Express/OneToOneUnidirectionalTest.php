@@ -1,12 +1,11 @@
 <?php
-use Concrete\Core\Express\ObjectBuilder;
+
 
 require_once __DIR__ . "/ObjectBuilderTestTrait.php";
 require_once __DIR__ . "/ExpressEntityManagerTestCaseTrait.php";
 
 class OneToOneUnidirectionalTest extends PHPUnit_Framework_TestCase
 {
-
     use \ExpressEntityManagerTestCaseTrait;
 
     protected function getEntityManager()
@@ -23,7 +22,6 @@ class OneToOneUnidirectionalTest extends PHPUnit_Framework_TestCase
         $builder->addOneToOneUnidirectional($user, $address, 'shipping_address');
 
         return $this->deliverEntityManager(array($user, $address));
-
     }
     public function tearDown()
     {
@@ -39,10 +37,8 @@ class OneToOneUnidirectionalTest extends PHPUnit_Framework_TestCase
         }
     }
 
-
     public function testOutputClassWritingAndNamespace()
     {
-
         $writer = Core::make('express.writer');
         $writer->setNamespace('Shopping');
         $writer->setEntityManager($this->getEntityManager());
@@ -68,7 +64,6 @@ class OneToOneUnidirectionalTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($class->hasProperty('shipping_address'));
         $this->assertTrue($class->hasMethod('getShippingAddress'));
 
-
         $this->assertFileExists(__DIR__ . '/Shopping/Address.php');
         require_once __DIR__ . '/Shopping/Address.php';
 
@@ -78,13 +73,10 @@ class OneToOneUnidirectionalTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($class->hasMethod('getId'));
         $this->assertFalse($class->hasProperty('user'));
         $this->assertFalse($class->hasMethod('getUsers'));
-
-
     }
 
     public function testCreateDatabase()
     {
-
         $em = $this->getEntityManager();
         $factory = new \Concrete\Core\Express\BackendEntityManagerFactory(
             Core::make('app'),
@@ -115,8 +107,5 @@ class OneToOneUnidirectionalTest extends PHPUnit_Framework_TestCase
         $this->assertContains('ExpressAddresses', $create[0]);
         $this->assertContains('id', $create[0]);
         $this->assertNotContains('unique index', $create[0], '', true);
-
     }
-
-
 }

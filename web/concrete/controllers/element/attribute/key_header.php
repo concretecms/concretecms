@@ -2,12 +2,10 @@
 namespace Concrete\Controller\Element\Attribute;
 
 use Concrete\Core\Attribute\AttributeKeyInterface;
-use Concrete\Core\Attribute\Type;
 use Concrete\Core\Controller\ElementController;
 
 class KeyHeader extends ElementController
 {
-
     protected $key;
     protected $dashboard_page_delete_action = 'delete';
     protected $dashboard_page_parameters;
@@ -59,7 +57,4 @@ class KeyHeader extends ElementController
         ));
         $this->set('key', $this->key);
     }
-
-
-
 }

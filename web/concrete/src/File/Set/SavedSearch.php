@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\File\Set;
 
 use Database;

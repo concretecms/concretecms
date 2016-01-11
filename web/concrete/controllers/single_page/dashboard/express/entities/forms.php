@@ -1,14 +1,12 @@
-<?
+<?php
 namespace Concrete\Controller\SinglePage\Dashboard\Express\Entities;
 
 use Concrete\Core\Entity\Express\FieldSet;
 use Concrete\Core\Entity\Express\Form;
-use \Concrete\Core\Page\Controller\DashboardPageController;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Concrete\Core\Page\Controller\DashboardPageController;
 
 class Forms extends DashboardPageController
 {
-
     protected $repository;
     protected $formRepository;
     protected $fieldSetRepository;
@@ -50,11 +48,9 @@ class Forms extends DashboardPageController
                     $this->flash('success', t('Form added successfully.'));
                 }
                 $this->redirect('/dashboard/express/entities/forms', 'view_form_details', $form->getId());
-
             } else {
                 $this->add($entity->getId());
             }
-
         } else {
             $this->redirect('/dashboard/express/entities');
         }
@@ -154,7 +150,6 @@ class Forms extends DashboardPageController
         }
     }
 
-
     public function save_control($controlID = null)
     {
         $control = $this->controlRepository->findOneById($controlID);
@@ -164,7 +159,7 @@ class Forms extends DashboardPageController
             $this->entityManager->persist($control);
             $this->entityManager->flush();
             $element = new \Concrete\Controller\Element\Dashboard\Express\Control($control);
-            print $element->render();
+            echo $element->render();
             exit;
         }
     }
@@ -175,7 +170,6 @@ class Forms extends DashboardPageController
         $manager = \Core::make('express.control.type.manager');
         if ($this->request->isMethod("POST")) {
             if ($this->token->validate('add_control')) {
-
                 $current = count($set->getControls());
                 $position = 0;
                 if ($current > 0) {
@@ -191,14 +185,13 @@ class Forms extends DashboardPageController
                 $this->entityManager->flush();
 
                 $element = new \Concrete\Controller\Element\Dashboard\Express\Control($control);
-                print $element->render();
+                echo $element->render();
                 exit;
-
             }
         } else {
             $drivers = $manager->getDrivers();
             $tabs = array();
-            foreach($drivers as $type => $driver) {
+            foreach ($drivers as $type => $driver) {
                 $active = false;
                 if ($type == 'entity_property') {
                     $active = true;
@@ -220,13 +213,13 @@ class Forms extends DashboardPageController
         if (is_object($form)) {
             if ($this->token->validate('update_set_display_order', $this->request->request->get('token'))) {
                 $position = 0;
-                foreach($this->post('set') as $setID) {
+                foreach ($this->post('set') as $setID) {
                     $set = $this->fieldSetRepository->findOneById($setID);
                     if (is_object($set)) {
                         $set->setPosition($position);
                     }
                     $this->entityManager->persist($set);
-                    $position++;
+                    ++$position;
                 }
                 $this->entityManager->flush();
             }
@@ -242,13 +235,13 @@ class Forms extends DashboardPageController
             if (is_object($set)) {
                 if ($this->token->validate('update_set_control_display_order', $this->request->request->get('token'))) {
                     $position = 0;
-                    foreach($this->post('control') as $controlID) {
+                    foreach ($this->post('control') as $controlID) {
                         $control = $this->controlRepository->findOneById($controlID);
                         if (is_object($control)) {
                             $control->setPosition($position);
                             $this->entityManager->persist($control);
                         }
-                        $position++;
+                        ++$position;
                     }
                     $this->entityManager->flush();
                 }
@@ -256,7 +249,6 @@ class Forms extends DashboardPageController
         }
         exit;
     }
-
 
     public function update_set($id = null)
     {
@@ -277,7 +269,6 @@ class Forms extends DashboardPageController
             $this->view_form_details($id);
         }
     }
-
 
     public function add_set($id = null)
     {
@@ -323,7 +314,6 @@ class Forms extends DashboardPageController
         }
     }
 
-
     public function view_form_details($id = null)
     {
         $form = $this->formRepository->findOneById($id);
@@ -338,8 +328,4 @@ class Forms extends DashboardPageController
             $this->redirect('/dashboard/express/entities');
         }
     }
-
-
-
-
 }

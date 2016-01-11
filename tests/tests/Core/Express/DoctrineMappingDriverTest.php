@@ -1,11 +1,11 @@
 <?php
 
 use Concrete\Core\Express\DoctrineMappingDriver;
+
 require_once __DIR__ . '/ExpressEntityManagerTestCaseTrait.php';
 
 class DoctrineMappingDriverTest extends PHPUnit_Framework_TestCase
 {
-
     use \ExpressEntityManagerTestCaseTrait;
 
     public function testGetAllClassNames()
@@ -49,5 +49,4 @@ class DoctrineMappingDriverTest extends PHPUnit_Framework_TestCase
         $names = $metadata1->getColumnNames();
         $this->assertContains('id', $names);
     }
-
 }

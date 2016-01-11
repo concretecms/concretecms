@@ -4,16 +4,16 @@ namespace Concrete\Core\Validator\String;
 use Concrete\Core\Validator\AbstractTranslatableValidator;
 
 /**
- * Validate the length of a string
+ * Validate the length of a string.
+ *
  * @package Concrete\Core\Validator\String
  */
 class MaximumLengthValidator extends AbstractTranslatableValidator
 {
-
     /** Too long */
     const E_TOO_LONG = 1;
 
-    /** @type int The maximum length */
+    /** @var int The maximum length */
     protected $maximum_length;
 
     /**
@@ -25,14 +25,14 @@ class MaximumLengthValidator extends AbstractTranslatableValidator
     {
         $this->maximum_length = $maximum_length;
 
-        $this->setRequirementString(self::E_TOO_LONG, function(MaximumLengthValidator$validator, $code) {
+        $this->setRequirementString(self::E_TOO_LONG, function (MaximumLengthValidator $validator, $code) {
 
             return sprintf(
                 'Must be at most %s characters long.',
                 $validator->getMaximumLength());
         });
 
-        $this->setErrorString(self::E_TOO_LONG, function(MaximumLengthValidator $validator, $code, $mixed) {
+        $this->setErrorString(self::E_TOO_LONG, function (MaximumLengthValidator $validator, $code, $mixed) {
             return sprintf(
                 'String \"%s\" must be at most %s characters long.',
                 $mixed,
@@ -41,7 +41,7 @@ class MaximumLengthValidator extends AbstractTranslatableValidator
     }
 
     /**
-     * Get the maximum length allowed
+     * Get the maximum length allowed.
      *
      * @return int
      */
@@ -51,7 +51,7 @@ class MaximumLengthValidator extends AbstractTranslatableValidator
     }
 
     /**
-     * Set the maximum length
+     * Set the maximum length.
      *
      * @param int $maximum_length
      */
@@ -61,11 +61,13 @@ class MaximumLengthValidator extends AbstractTranslatableValidator
     }
 
     /**
-     * Is this mixed value valid
+     * Is this mixed value valid.
      *
      * @param mixed             $mixed Can be any value
      * @param \ArrayAccess|null $error
+     *
      * @return bool
+     *
      * @throws \InvalidArgumentException Invalid mixed value type passed.
      */
     public function isValid($mixed, \ArrayAccess $error = null)
@@ -84,5 +86,4 @@ class MaximumLengthValidator extends AbstractTranslatableValidator
 
         return true;
     }
-
 }

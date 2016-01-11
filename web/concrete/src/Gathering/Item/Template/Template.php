@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Gathering\Item\Template;
 
 use Concrete\Core\Feature\Assignment\GatheringItemAssignment;

@@ -1,11 +1,10 @@
 <?php
-use Concrete\Core\Express\ObjectBuilder;
+
 
 require __DIR__ . '/ExpressEntityManagerTestCaseTrait.php';
 
 class ObjectAssociationBuilderTest extends PHPUnit_Framework_TestCase
 {
-
     use \ExpressEntityManagerTestCaseTrait;
     protected $builder;
     protected $entities;
@@ -21,6 +20,7 @@ class ObjectAssociationBuilderTest extends PHPUnit_Framework_TestCase
             $em = $this->getMockEntityManager();
             $this->entities = $em->getRepository('Concrete\Core\Entity\Express\Entity')->findAll();
         }
+
         return $this->entities;
     }
 
@@ -111,7 +111,4 @@ class ObjectAssociationBuilderTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('mentor', $studentAssociation->getComputedTargetPropertyName());
         $this->assertEquals('mentor', $studentAssociation->getTargetPropertyName());
     }
-
-
-
 }

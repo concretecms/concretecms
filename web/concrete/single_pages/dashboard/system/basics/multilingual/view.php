@@ -1,9 +1,13 @@
-<? defined('C5_EXECUTE') or die("Access Denied.");?>
-<? if (count($interfacelocales) <= 1) { ?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");?>
+<?php if (count($interfacelocales) <= 1) {
+    ?>
 <fieldset>
-	<?=t("You don't have any interface languages installed. You must run concrete5 in English.");?>
+	<?=t("You don't have any interface languages installed. You must run concrete5 in English.");
+    ?>
 </fieldset>
-<? } else { ?>
+<?php 
+} else {
+    ?>
 
 <form method="post" class="form-horizontal" action="<?=$view->action('save_interface_language')?>">
     <fieldset>
@@ -17,7 +21,8 @@
         <div class="form-group">
             <?=$form->label('SITE_LOCALE', t('Default Language'))?>
             <div class="checkbox">
-                <?=$form->select('SITE_LOCALE', $interfacelocales, $SITE_LOCALE);?>
+                <?=$form->select('SITE_LOCALE', $interfacelocales, $SITE_LOCALE);
+    ?>
             </div>
         </div>
 
@@ -31,4 +36,5 @@
     </div>
 </form>
 	
-<? } ?>
+<?php 
+} ?>

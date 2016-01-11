@@ -13,6 +13,7 @@ class GroupTreeNodeResponse extends TreeNodeResponse
     public function canViewTreeNode()
     {
         $tp = new TaskPermission();
+
         return $tp->canAccessGroupSearch();
     }
 

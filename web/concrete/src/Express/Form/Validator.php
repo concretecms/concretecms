@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Express\Form;
 
 use Concrete\Core\Entity\Express\Form;
@@ -8,7 +7,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 class Validator
 {
-
     protected $request;
     protected $error;
 
@@ -24,7 +22,7 @@ class Validator
         if (!$token->validate('express_form', $this->request->request->get('ccm_token'))) {
             $this->error->add($token->getErrorMessage());
         }
-        foreach($form->getControls() as $control) {
+        foreach ($form->getControls() as $control) {
             if ($control->isRequired()) {
                 $type = $control->getControlType();
                 $validator = $type->getValidator($control);
@@ -37,6 +35,4 @@ class Validator
             }
         }
     }
-
-
 }

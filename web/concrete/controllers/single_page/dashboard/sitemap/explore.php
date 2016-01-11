@@ -7,7 +7,6 @@ use Page;
 
 class Explore extends DashboardPageController
 {
-
     public function view($nodeID = 1, $auxMessage = false)
     {
         $this->requireAsset('core/sitemap');
@@ -38,5 +37,4 @@ class Explore extends DashboardPageController
         }
         $this->set('dh', $dh);
     }
-
 }

@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Mail\Importer;
 
 use Concrete\Core\Foundation\Object;
@@ -283,7 +282,7 @@ class MailImporter extends Object
         foreach ($mail as $m) {
             $mim = new MailImportedMessage($mail, $m, $i);
             $messages[] = $mim;
-            $i++;
+            ++$i;
         }
 
         return $messages;

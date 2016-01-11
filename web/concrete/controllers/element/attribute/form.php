@@ -1,12 +1,11 @@
 <?php
 namespace Concrete\Controller\Element\Attribute;
 
-use \Concrete\Core\Entity\Attribute\Type;
+use Concrete\Core\Entity\Attribute\Type;
 use Concrete\Core\Controller\ElementController;
 
 class Form extends ElementController
 {
-
     protected $back_button_url;
     protected $type;
     protected $dashboard_page_submit_action = 'add';
@@ -56,7 +55,6 @@ class Form extends ElementController
         $this->category = $category;
     }
 
-
     /**
      * @return array
      */
@@ -98,7 +96,4 @@ class Form extends ElementController
             $this->getDashboardPageParameters()
         ));
     }
-
-
-
 }

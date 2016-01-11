@@ -7,7 +7,6 @@ namespace Concrete\Core\Entity\Attribute\Value\Value;
  */
 class SelectedTopic
 {
-
     /**
      * @Id @Column(type="integer", options={"unsigned":true})
      * @GeneratedValue(strategy="AUTO")
@@ -19,7 +18,6 @@ class SelectedTopic
      * @JoinColumn(name="avID", referencedColumnName="avID")
      */
     protected $value;
-
 
     /**
      * @Column(type="integer", options={"unsigned":true})
@@ -57,13 +55,4 @@ class SelectedTopic
     {
         $this->value = $value;
     }
-
-
-
-
-
-
-
-
-
 }

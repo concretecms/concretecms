@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Entity\Attribute\Value;
 
 /**
@@ -10,7 +9,6 @@ namespace Concrete\Core\Entity\Attribute\Value;
  */
 class UserValue extends Value
 {
-
     /**
      * @Column(type="integer", options={"unsigned": true})
      **/
@@ -31,9 +29,4 @@ class UserValue extends Value
     {
         $this->uID = $uID;
     }
-
-
-
-
-
 }

@@ -7,7 +7,6 @@ use Loader;
 
 class DashboardPageController extends PageController
 {
-
     /** @var Error */
     protected $error;
 
@@ -55,5 +54,4 @@ class DashboardPageController extends PageController
     {
         return $this->entityManager;
     }
-
 }

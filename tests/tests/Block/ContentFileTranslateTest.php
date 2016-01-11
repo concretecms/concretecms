@@ -1,11 +1,12 @@
 <?php
+
 use Concrete\Core\Cache\CacheLocal;
 use \Concrete\Core\Attribute\Type as AttributeType;
 use \Concrete\Core\Attribute\Key\FileKey;
 use \Concrete\Core\Attribute\Key\Category;
 
-class ContentFileTranslateTest extends FileStorageTestCase {
-
+class ContentFileTranslateTest extends FileStorageTestCase
+{
     protected $fixtures = array();
 
     protected function setUp()
@@ -25,7 +26,7 @@ class ContentFileTranslateTest extends FileStorageTestCase {
             'SystemContentEditorSnippets',
             'AttributeValues',
             'atNumber',
-            'FileVersionLog'
+            'FileVersionLog',
         ));
         parent::setUp();
         \Config::set('concrete.upload.extensions', '*.txt;*.jpg;*.jpeg;*.png');
@@ -65,5 +66,4 @@ class ContentFileTranslateTest extends FileStorageTestCase {
         $content = (string) $sx->data->record->content;
         $this->assertEquals('<p>This is really nice.</p><concrete-picture alt="Happy Cat" file="background-slider-blue-sky.png" />', $content);
     }
-
 }

@@ -14,13 +14,13 @@ if (is_object($style)) {
 ?>
 
 <div data-stripe-wrapper="parallax" data-background-image="<?= $background ?>">
-    <?
+    <?php
     foreach ($columns as $column) {
         $html = $column->getColumnHtmlObject();
         $container->appendChild($html);
     }
 
-    print $container;
+    echo $container;
     ?>
 </div>
 

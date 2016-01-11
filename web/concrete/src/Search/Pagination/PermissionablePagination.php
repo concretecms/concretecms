@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Search\Pagination;
 
 use Concrete\Core\Search\ItemList\ItemList;
@@ -8,7 +7,6 @@ use Pagerfanta\Pagerfanta;
 
 class PermissionablePagination extends Pagination
 {
-
     protected $maxResultsToProcessAtOnce = 1000;
 
     public function __construct(ItemList $itemList)
@@ -17,6 +15,7 @@ class PermissionablePagination extends Pagination
         $results = $itemList->getResults();
         $adapter = new ArrayAdapter($results);
         $this->list = $itemList;
+
         return Pagerfanta::__construct($adapter);
     }
 
@@ -24,6 +23,4 @@ class PermissionablePagination extends Pagination
     {
         return Pagerfanta::getCurrentPageResults();
     }
-
-
-} 
+}

@@ -9,7 +9,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class TopicsValue extends Value
 {
-
     /**
      * @OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Value\Value\SelectedTopic", mappedBy="value", cascade={"all"})
      * @JoinColumn(name="avID", referencedColumnName="avID")
@@ -18,13 +17,13 @@ class TopicsValue extends Value
 
     /**
      * TopicsValue constructor.
+     *
      * @param $topics
      */
     public function __construct()
     {
         $this->topics = new ArrayCollection();
     }
-
 
     public function getSelectedTopics()
     {

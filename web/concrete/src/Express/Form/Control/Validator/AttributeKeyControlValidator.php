@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Express\Form\Control\Validator;
 
 use Concrete\Core\Entity\Express\Control\Control;
@@ -8,7 +7,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 class AttributeKeyControlValidator implements ValidatorInterface
 {
-
     public function validateRequest(Control $control, Request $request)
     {
         $key = $control->getAttributeKey();
@@ -17,10 +15,10 @@ class AttributeKeyControlValidator implements ValidatorInterface
         if ($response === false) {
             $e = \Core::make('error');
             $e->add(t('The field %s is required', $control->getControlLabel()));
+
             return $e;
-        } else if ($response instanceof \Concrete\Core\Error\Error) {
+        } elseif ($response instanceof \Concrete\Core\Error\Error) {
             return $response;
         }
-
     }
 }

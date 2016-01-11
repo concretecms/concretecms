@@ -1,14 +1,11 @@
-<?
+<?php
 namespace Concrete\Controller\SinglePage\Dashboard\Express;
 
-use Concrete\Controller\Element\Attribute\TypeList;
-use Concrete\Core\Attribute\Type;
 use Concrete\Core\Entity\Express\Entity;
-use \Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Controller\DashboardPageController;
 
 class Entities extends DashboardPageController
 {
-
     public function add()
     {
         $this->set('pageTitle', t('Add Data Object'));
@@ -85,7 +82,4 @@ class Entities extends DashboardPageController
             $this->view();
         }
     }
-
-
-
 }

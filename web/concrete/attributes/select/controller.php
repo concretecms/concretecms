@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Attribute\Select;
 
 use Concrete\Core\Entity\Attribute\Key\Type\SelectType;
@@ -19,7 +18,7 @@ class Controller extends AttributeTypeController
 
     protected $searchIndexFieldDefinition = array(
         'type' => 'string',
-        'options' => array('default' => null, 'notnull' => false)
+        'options' => array('default' => null, 'notnull' => false),
     );
 
     public function type_form()
@@ -42,16 +41,16 @@ class Controller extends AttributeTypeController
 
     protected function load()
     {
-        /**
-         * @var $ak \Concrete\Core\Entity\Attribute\Key\SelectKey
+        /*
+         * @var \Concrete\Core\Entity\Attribute\Key\SelectKey
          */
         $ak = $this->getAttributeKey();
         if (!is_object($ak)) {
             return false;
         }
 
-        /**
-         * @var $type SelectType
+        /*
+         * @var SelectType
          */
         $type = $ak->getAttributeKeyType();
 
@@ -73,7 +72,7 @@ class Controller extends AttributeTypeController
                 $newAK->getAttributeKeyID(),
                 $this->akSelectAllowMultipleValues,
                 $this->akSelectOptionDisplayOrder,
-                $this->akSelectAllowOtherValues
+                $this->akSelectAllowOtherValues,
             ));
         $r = $db->Execute('select value, displayOrder, isEndUserAdded from atSelectOptions where akID = ?',
             $this->getAttributeKey()->getAttributeKeyID());
@@ -114,7 +113,7 @@ class Controller extends AttributeTypeController
         if ($list->count() > 0) {
             $av = $akn->addChild('value');
             foreach ($list as $l) {
-                $av->addChild('option', (string)$l);
+                $av->addChild('option', (string) $l);
             }
         }
     }
@@ -125,7 +124,7 @@ class Controller extends AttributeTypeController
         $this->akSelectAllowMultipleValues = $allow;
         $db->Replace('atSelectSettings', array(
             'akID' => $this->attributeKey->getAttributeKeyID(),
-            'akSelectAllowMultipleValues' => intval($allow)
+            'akSelectAllowMultipleValues' => intval($allow),
         ), array('akID'), true);
     }
 
@@ -135,7 +134,7 @@ class Controller extends AttributeTypeController
         $this->akSelectAllowOtherValues = $allow;
         $db->Replace('atSelectSettings', array(
             'akID' => $this->attributeKey->getAttributeKeyID(),
-            'akSelectAllowOtherValues' => intval($allow)
+            'akSelectAllowOtherValues' => intval($allow),
         ), array('akID'), true);
     }
 
@@ -145,7 +144,7 @@ class Controller extends AttributeTypeController
         $this->akSelectOptionDisplayOrder = $order;
         $db->Replace('atSelectSettings', array(
             'akID' => $this->attributeKey->getAttributeKeyID(),
-            'akSelectOptionDisplayOrder' => $order
+            'akSelectOptionDisplayOrder' => $order,
         ), array('akID'), true);
     }
 
@@ -176,11 +175,12 @@ class Controller extends AttributeTypeController
                     $opt->setOptionList($list);
                     $opt->setDisplayOrder($displayOrder);
                     $list->getOptions()->add($opt);
-                    $displayOrder++;
+                    ++$displayOrder;
                 }
             }
             $type->setOptionList($list);
         }
+
         return $type;
     }
 
@@ -210,7 +210,7 @@ class Controller extends AttributeTypeController
 
             if (is_object($opt)) {
                 $options[] = $opt;
-                $displayOrder++;
+                ++$displayOrder;
             }
         }
 
@@ -256,7 +256,6 @@ class Controller extends AttributeTypeController
             } else {
                 $this->saveValue(null);
             }
-
         } else {
             if ($akSelectAllowMultipleValues && !$akSelectAllowOtherValues) {
                 // checkbox list.  No new options.
@@ -270,7 +269,6 @@ class Controller extends AttributeTypeController
                     }
                 }
                 $this->saveValue($options);
-
             } else {
                 if (!$akSelectAllowMultipleValues && $akSelectAllowOtherValues) {
 
@@ -293,7 +291,6 @@ class Controller extends AttributeTypeController
                     } else {
                         $this->saveValue(null);
                     }
-
                 } else {
                     if ($akSelectAllowMultipleValues && $akSelectAllowOtherValues) {
 
@@ -333,8 +330,9 @@ class Controller extends AttributeTypeController
         if (isset($akv->value)) {
             $vals = array();
             foreach ($akv->value->children() as $ch) {
-                $vals[] = (string)$ch;
+                $vals[] = (string) $ch;
             }
+
             return $this->saveValue($vals);
         }
     }
@@ -349,14 +347,14 @@ class Controller extends AttributeTypeController
         if (isset($existingList) && is_object($existingList)) {
             $option = $repository->findOneBy(array(
                 'list' => $existingList,
-                'value' => $value
+                'value' => $value,
             ));
         } else {
             $option = $repository->findOneByValue($value);
         }
+
         return $option;
     }
-
 
     // Sets select options for a particular attribute
     // If the $value == string, then 1 item is selected
@@ -389,7 +387,6 @@ class Controller extends AttributeTypeController
                     if (is_object($option)) {
                         $options[] = $option;
                     }
-
                 }
             } else {
                 if (is_array($value)) {
@@ -410,6 +407,7 @@ class Controller extends AttributeTypeController
 
         $av = new SelectValue();
         $av->setSelectedOptions($options);
+
         return $av;
     }
 
@@ -431,13 +429,14 @@ class Controller extends AttributeTypeController
 
     public function validateValue()
     {
-        return is_object($value = $this->getValue()) && ((string)$value != '');
+        return is_object($value = $this->getValue()) && ((string) $value != '');
     }
 
     public function validateForm($p)
     {
         $this->load();
         $options = $this->request('atSelectOptionValue');
+
         return $options != '';
     }
 
@@ -470,7 +469,7 @@ class Controller extends AttributeTypeController
             if (($i + 1) < count($optionQuery)) {
                 $multiString .= 'OR ';
             }
-            $i++;
+            ++$i;
         }
         $list->filter(false, '(' . $multiString . ')');
 
@@ -488,6 +487,7 @@ class Controller extends AttributeTypeController
         if ($str == "\n") {
             return '';
         }
+
         return $str;
     }
 
@@ -527,12 +527,11 @@ class Controller extends AttributeTypeController
 
         return $list;
         */
-
     }
 
     /**
      * Used by select2. Automatically takes a value request and converts it into tag/text key value pairs.
-     * New options are just text/tag, whereas existing ones are SelectAttributeOption:ID/text
+     * New options are just text/tag, whereas existing ones are SelectAttributeOption:ID/text.
      */
     public function action_load_autocomplete_selected_value()
     {
@@ -542,7 +541,7 @@ class Controller extends AttributeTypeController
         $response = array();
         foreach ($values as $value) {
             $value = trim($value);
-            $o = new \stdClass;
+            $o = new \stdClass();
             if (strpos($value, 'SelectAttributeOption:') === 0) {
                 $optionID = substr($value, 22);
                 $option = Option::getByID($optionID);
@@ -558,7 +557,7 @@ class Controller extends AttributeTypeController
             $response[] = $o;
         }
 
-        print json_encode($response);
+        echo json_encode($response);
         \Core::shutdown();
     }
 
@@ -570,13 +569,13 @@ class Controller extends AttributeTypeController
         if ($this->akSelectAllowOtherValues) {
             $options = $this->getOptions($_GET['q'] . '%');
             foreach ($options as $opt) {
-                $o = new \stdClass;
+                $o = new \stdClass();
                 $o->id = 'SelectAttributeOption:' . $opt->getSelectAttributeOptionID();
                 $o->text = $opt->getSelectAttributeOptionValue(false);
                 $values[] = $o;
             }
         }
-        print json_encode($values);
+        echo json_encode($values);
     }
 
     public function getOptionUsageArray($parentPage = false, $limit = 9999)
@@ -595,7 +594,7 @@ class Controller extends AttributeTypeController
         while ($row = $r->FetchRow()) {
             $opt = new Option($row['atSelectOptionID'], $row['value'], $i, $row['total']);
             $list->add($opt);
-            $i++;
+            ++$i;
         }
 
         return $list;
@@ -612,9 +611,9 @@ class Controller extends AttributeTypeController
             $column = 'ak_' . $this->attributeKey->getAttributeKeyHandle();
             $qb = $list->getQueryObject();
             $qb->andWhere(
-	            $qb->expr()->like($column, ':optionValue_' . $this->attributeKey->getAttributeKeyID())
+                $qb->expr()->like($column, ':optionValue_' . $this->attributeKey->getAttributeKeyID())
             );
-	        $qb->setParameter('optionValue_' . $this->attributeKey->getAttributeKeyID(), "%\n" . $option->getSelectAttributeOptionValue(false) . "\n%");
+            $qb->setParameter('optionValue_' . $this->attributeKey->getAttributeKeyID(), "%\n" . $option->getSelectAttributeOptionValue(false) . "\n%");
         }
     }
 
@@ -622,7 +621,6 @@ class Controller extends AttributeTypeController
      * Returns a list of available options optionally filtered by an sql $like statement ex: startswith%.
      *
      * @param string $like
-     *
      */
     public function getOptions($like = null)
     {
@@ -636,6 +634,7 @@ class Controller extends AttributeTypeController
 
         $type = $this->attributeKey->getAttributeKeyType();
         $options = $type->getOptionList()->getOptions();
+
         return $options;
         /*
         $db = Database::get();
@@ -643,13 +642,13 @@ class Controller extends AttributeTypeController
             case 'popularity_desc':
                 if (isset($like) && strlen($like)) {
                     $r = $db->Execute('select ID, value, displayOrder, count(atSelectOptionsSelected.atSelectOptionID) as total
-						from atSelectOptions left join atSelectOptionsSelected on (atSelectOptions.ID = atSelectOptionsSelected.atSelectOptionID)
-						where akID = ? AND atSelectOptions.value LIKE ? group by ID order by total desc, value asc',
+                        from atSelectOptions left join atSelectOptionsSelected on (atSelectOptions.ID = atSelectOptionsSelected.atSelectOptionID)
+                        where akID = ? AND atSelectOptions.value LIKE ? group by ID order by total desc, value asc',
                         array($this->attributeKey->getAttributeKeyID(), $like));
                 } else {
                     $r = $db->Execute('select ID, value, displayOrder, count(atSelectOptionsSelected.atSelectOptionID) as total
-						from atSelectOptions left join atSelectOptionsSelected on (atSelectOptions.ID = atSelectOptionsSelected.atSelectOptionID)
-						where akID = ? group by ID order by total desc, value asc',
+                        from atSelectOptions left join atSelectOptionsSelected on (atSelectOptions.ID = atSelectOptionsSelected.atSelectOptionID)
+                        where akID = ? group by ID order by total desc, value asc',
                         array($this->attributeKey->getAttributeKeyID()));
                 }
                 break;
@@ -722,7 +721,7 @@ class Controller extends AttributeTypeController
         // Now we add the options
 
         foreach ($selectedPostValues as $option) {
-            /**
+            /*
              * @var $option SelectValueOption
              */
             $option->setOptionList($newOption);
@@ -738,10 +737,9 @@ class Controller extends AttributeTypeController
         }
 
         $type->setOptionList($newOptionSet);
+
         return $type;
     }
-
-
 
     /**
      * Convenience methods to retrieve a select attribute key's settings.
@@ -777,5 +775,4 @@ class Controller extends AttributeTypeController
     {
         return new SelectType();
     }
-
 }

@@ -5,7 +5,6 @@ use Concrete\Core\Attribute\AttributeKeyInterface;
 
 class EditKey extends Form
 {
-
     protected $key;
 
     protected $dashboard_page_submit_action = 'update';
@@ -21,7 +20,4 @@ class EditKey extends Form
         $this->set('key', $this->key);
         parent::view();
     }
-
-
-
 }

@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Attribute\Category\SearchIndexer;
 
 use Concrete\Core\Attribute\AttributeKeyInterface;
@@ -9,7 +8,6 @@ use Doctrine\DBAL\Schema\Schema;
 
 class StandardSearchIndexer implements SearchIndexerInterface
 {
-
     protected $connection;
 
     public function __construct(Connection $connection)
@@ -22,6 +20,7 @@ class StandardSearchIndexer implements SearchIndexerInterface
         if (!($category instanceof StandardSearchIndexerInterface)) {
             throw new \Exception(t('Category %s must implement StandardSearchIndexerInterface.'), $category->getCategoryEntity()->getAttributeCategoryHandle());
         }
+
         return true;
     }
 
@@ -32,6 +31,7 @@ class StandardSearchIndexer implements SearchIndexerInterface
         } else {
             $column = sprintf('ak_%s', $key->getAttributeKeyHandle());
         }
+
         return $column;
     }
 
@@ -41,7 +41,7 @@ class StandardSearchIndexer implements SearchIndexerInterface
             // Clear the entry
             $details = $category->getSearchIndexFieldDefinition();
             $columnHeaders = array(
-                $details['primary'][0] => $category->getIndexedSearchPrimaryKeyValue($mixed)
+                $details['primary'][0] => $category->getIndexedSearchPrimaryKeyValue($mixed),
             );
             $this->connection->delete($category->getIndexedSearchTable(), $columnHeaders);
 
@@ -51,7 +51,7 @@ class StandardSearchIndexer implements SearchIndexerInterface
             /** @var \Doctrine\DBAL\Schema\Column[] $columns */
             $columns = $this->connection->getSchemaManager()->listTableColumns($category->getIndexedSearchTable());
 
-            foreach($values as $value) {
+            foreach ($values as $value) {
                 $attributeValue = $value->getValueObject()->getSearchIndexValue();
                 if (is_array($attributeValue)) {
                     foreach ($attributeValue as $key => $value) {
@@ -66,7 +66,6 @@ class StandardSearchIndexer implements SearchIndexerInterface
                         $columnHeaders[$col] = $attributeValue;
                     }
                 }
-
             }
 
             $this->connection->insert($category->getIndexedSearchTable(), $columnHeaders);
@@ -168,5 +167,4 @@ class StandardSearchIndexer implements SearchIndexerInterface
             }
         }
     }
-
 }

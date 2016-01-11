@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Multilingual\Page\Section\Processor;
 
 use Concrete\Core\Foundation\Processor\TargetInterface;
@@ -28,7 +27,7 @@ class MultilingualProcessorTarget implements TargetInterface
     public function getItems()
     {
         $pages = $this->section->populateRecursivePages(array(), array(
-            'cID' => $this->section->getCollectionID()),
+            'cID' => $this->section->getCollectionID(), ),
             $this->section->getCollectionParentID(), 0, false
         );
 
@@ -36,10 +35,10 @@ class MultilingualProcessorTarget implements TargetInterface
         $list = new StackList();
         $list->filterByLanguageSection($this->getSection());
         $results = $list->get();
-        foreach($results as $result) {
+        foreach ($results as $result) {
             $pages[] = array('cID' => $result->getCollectionID());
         }
+
         return $pages;
     }
-
 }

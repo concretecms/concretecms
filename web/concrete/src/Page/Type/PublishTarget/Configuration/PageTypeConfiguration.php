@@ -3,12 +3,10 @@ namespace Concrete\Core\Page\Type\PublishTarget\Configuration;
 
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Type\Type;
-use Loader;
 use PageType;
 
 class PageTypeConfiguration extends Configuration
 {
-
     protected $ptID;
     protected $selectorFormFactor;
     protected $startingPointPage;
@@ -69,5 +67,4 @@ class PageTypeConfiguration extends Configuration
     {
         return $page->getPageTypeID() == $this->getPageTypeID();
     }
-
 }

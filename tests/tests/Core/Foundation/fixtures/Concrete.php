@@ -1,5 +1,6 @@
 <?php
 namespace Application\Theme;
-class Concrete extends \Concrete\Core\Page\Theme\PageTheme {
 
+class Concrete extends \Concrete\Core\Page\Theme\PageTheme
+{
 }

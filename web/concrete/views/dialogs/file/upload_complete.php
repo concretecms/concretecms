@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 
@@ -10,13 +10,17 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	</div>
 	<fieldset>
 		<legend><?=t('Properties')?></legend>
-		<? if (count($files) > 1) { ?>
+		<?php if (count($files) > 1) {
+    ?>
 			<p><?=t('Properties like name, description and tags are unavailable when uploading multiple files.')?></p>
-		<? } else { ?>
+		<?php 
+} else {
+    ?>
 			<div data-container="editable-core-properties">
-				<? Loader::element('files/properties', array('fv' =>  $files[0]->getVersion(), 'mode' => 'bulk'))?>
+				<?php Loader::element('files/properties', array('fv' => $files[0]->getVersion(), 'mode' => 'bulk'))?>
 			</div>
-		<? } ?>
+		<?php 
+} ?>
 	</fieldset>
 	<fieldset>
 		<legend><?=t('Sets')?>
@@ -29,16 +33,16 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	<fieldset data-container="editable-attributes">
 		<legend><?=t('Custom Attributes')?></legend>
 		<section>
-			<?
-			Loader::element('attribute/editable_list', array(
-				'attributes' => $attributes,
-				'objects' => $files,
-				'saveAction' => $bulkPropertiesController->action('update_attribute'),
-				'clearAction' => $bulkPropertiesController->action('clear_attribute'),
-				'permissionsCallback' => function($ak, $permissionsArguments) {
-					return true; // this is fine because you can't even access this interface without being able to edit every file.
-				}
-			));?>
+			<?php
+            Loader::element('attribute/editable_list', array(
+                'attributes' => $attributes,
+                'objects' => $files,
+                'saveAction' => $bulkPropertiesController->action('update_attribute'),
+                'clearAction' => $bulkPropertiesController->action('clear_attribute'),
+                'permissionsCallback' => function ($ak, $permissionsArguments) {
+                    return true; // this is fine because you can't even access this interface without being able to edit every file.
+                },
+            ));?>
 		</section>
 
 	</fieldset>
@@ -61,35 +65,42 @@ $(function() {
 	var filesets = <?=json_encode($filesets)?>;
 	var fID = <?=json_encode($fileIDs)?>;
 
-	<? if (count($files) == 1) { ?>
+	<?php if (count($files) == 1) {
+    ?>
 		$('[data-container=editable-core-properties]').concreteEditableFieldContainer({
 			data: [
-				<? foreach($files as $f) { ?>
+				<?php foreach ($files as $f) {
+    ?>
 				{'name': 'fID[]', 'value': '<?=$f->getFileID()?>'},
-				<? } ?>
+				<?php 
+}
+    ?>
 			],
 			url: '<?=$propertiesController->action('save')?>'
 		});
-	<? } ?>
+	<?php 
+} ?>
 	$('[data-container=editable-attributes]').concreteEditableFieldContainer({
 		data: [
-			<? foreach($files as $f) { ?>
+			<?php foreach ($files as $f) {
+    ?>
 			{'name': 'fID[]', 'value': '<?=$f->getFileID()?>'},
-			<? } ?>
+			<?php 
+} ?>
 		]
 	});
 
 	$('button[data-action=manage-file-sets]').on('click', function() {
-		<?
-		$data = '';
-		for ($i = 0; $i < count($files); $i++) {
-			$f = $files[$i];
-			$data .= 'fID[]=' . $f->getFileID();
-			if ($i + 1 < count($files)) {
-				$data .= '&';
-			}
-		}
-		?>
+		<?php
+        $data = '';
+        for ($i = 0; $i < count($files); ++$i) {
+            $f = $files[$i];
+            $data .= 'fID[]=' . $f->getFileID();
+            if ($i + 1 < count($files)) {
+                $data .= '&';
+            }
+        }
+        ?>
 		$.fn.dialog.open({
 			width: '500',
 			height: '400',

@@ -2,7 +2,7 @@
 
 <?php
 if (isset($attributeHeader)) {
-	$attributeHeader->render();
+    $attributeHeader->render();
 } ?>
 
 <?php

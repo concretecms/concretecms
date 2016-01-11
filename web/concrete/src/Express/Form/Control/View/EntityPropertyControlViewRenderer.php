@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Express\Form\Control\View;
 
 use Concrete\Core\Express\Form\Control\EntityPropertyControlView;
@@ -8,7 +7,6 @@ use Concrete\Core\Express\Form\RendererFactory;
 
 abstract class EntityPropertyControlViewRenderer implements RendererInterface
 {
-
     protected $factory;
 
     abstract public function getControlHandle();
@@ -27,8 +25,7 @@ abstract class EntityPropertyControlViewRenderer implements RendererInterface
             '/' . $this->getControlHandle() . '.php'
         );
         $view = new EntityPropertyControlView($this->factory);
+
         return $view->render($template);
     }
-
-
 }

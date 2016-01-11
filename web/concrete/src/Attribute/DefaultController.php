@@ -1,11 +1,9 @@
 <?php
-
 namespace Concrete\Core\Attribute;
 
 use Concrete\Core\Entity\Attribute\Key\Type\TextType;
 use Concrete\Core\Entity\Attribute\Value\Value\TextValue;
 use Core;
-use Database;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 
 class DefaultController extends AttributeTypeController
@@ -21,7 +19,7 @@ class DefaultController extends AttributeTypeController
         if (is_object($this->attributeValue)) {
             $value = Core::make('helper/text')->entities($this->getAttributeValue()->getValue());
         }
-        print Core::make('helper/form')->textarea($this->field('value'), $value);
+        echo Core::make('helper/form')->textarea($this->field('value'), $value);
     }
 
     public function searchForm($list)
@@ -43,7 +41,7 @@ class DefaultController extends AttributeTypeController
     public function search()
     {
         $f = Core::make('helper/form');
-        print $f->text($this->field('value'), $this->request('value'));
+        echo $f->text($this->field('value'), $this->request('value'));
     }
 
     // run when we call setAttribute(), instead of saving through the UI
@@ -51,18 +49,21 @@ class DefaultController extends AttributeTypeController
     {
         $av = new TextValue();
         $av->setValue($value);
+
         return $av;
     }
 
     public function importKey($akey)
     {
         $type = new TextType();
+
         return $type;
     }
 
     public function saveKey($data)
     {
         $type = new TextType();
+
         return $type;
     }
 

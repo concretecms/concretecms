@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Permission;
 
 use Core;
@@ -80,6 +79,7 @@ class Category extends Object
             . Core::make("helper/text")->camelcase($this->pkCategoryHandle) . 'Key',
             $this->getPackageHandle()
         );
+
         return $className;
     }
 
@@ -93,6 +93,7 @@ class Category extends Object
     public function getPermissionKeyByID($pkID)
     {
         $ak = call_user_func(array($this->getPermissionKeyClass(), 'getByID'), $pkID);
+
         return $ak;
     }
 

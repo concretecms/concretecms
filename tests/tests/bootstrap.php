@@ -19,12 +19,12 @@ PHPUnit_Framework_Error_Notice::$enabled = false;
 
 set_include_path(get_include_path() . PATH_SEPARATOR . realpath(dirname(__FILE__)));
 
-require_once('ConcreteDatabaseTestCase.php');
-require_once('BlockTypeTestCase.php');
-require_once('PageTestCase.php');
-require_once('AttributeTestCase.php');
-require_once('FileStorageTestCase.php');
-require_once('UserTestCase.php');
+require_once 'ConcreteDatabaseTestCase.php';
+require_once 'BlockTypeTestCase.php';
+require_once 'PageTestCase.php';
+require_once 'AttributeTestCase.php';
+require_once 'FileStorageTestCase.php';
+require_once 'UserTestCase.php';
 
 define('DIR_BASE', realpath(dirname(__FILE__) . '/../../web'));
 $DIR_BASE_CORE = realpath(dirname(__FILE__) . '/../../web/concrete');
@@ -32,7 +32,7 @@ $DIR_BASE_CORE = realpath(dirname(__FILE__) . '/../../web/concrete');
 require $DIR_BASE_CORE . '/bootstrap/configure.php';
 
 /**
- * Include all autoloaders
+ * Include all autoloaders.
  */
 require $DIR_BASE_CORE . '/bootstrap/autoload.php';
 
@@ -46,24 +46,22 @@ $r = new \Concrete\Core\Http\Request(
 );
 \Concrete\Core\Http\Request::setInstance($r);
 
-/**
+/*
  * Begin concrete5 startup.
  */
 $cms = require $DIR_BASE_CORE . '/bootstrap/start.php';
 
-/**
+/*
  * Test more strictly than core settings
  */
 error_reporting(E_ALL & ~E_STRICT & ~E_DEPRECATED);
 
-
-class TestConfigRepository extends Repository {
-
+class TestConfigRepository extends Repository
+{
     public function save($key, $value)
     {
         return true;
     }
-
 }
 
 $old_config = $cms->make('config');
@@ -82,7 +80,7 @@ $config->set(
         'database' => 'concrete5_tests',
         'username' => 'travis',
         'password' => '',
-        'charset' => 'utf8'
+        'charset' => 'utf8',
     )
 );
 $config->set(
@@ -92,7 +90,7 @@ $config->set(
         'server' => 'localhost',
         'username' => 'travis',
         'password' => '',
-        'charset' => 'utf8'
+        'charset' => 'utf8',
     )
 );
 
@@ -112,7 +110,7 @@ $cn->query('DROP DATABASE IF EXISTS concrete5_tests');
 $cn->query('CREATE DATABASE concrete5_tests');
 $cn->close();
 
-/**
+/*
  * Kill this because it plays hell with phpunit.
  */
 unset($cms);

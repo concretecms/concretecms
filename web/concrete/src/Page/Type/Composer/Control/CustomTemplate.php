@@ -1,20 +1,25 @@
-<?php 
+<?php
 namespace Concrete\Core\Page\Type\Composer\Control;
-use Loader;
-use \Concrete\Core\Foundation\Object;
 
-class CustomTemplate extends Object {
+use Concrete\Core\Foundation\Object;
 
-	protected $ptComposerControlCustomTemplateFilename;
-	protected $ptComposerControlCustomTemplateName;
+class CustomTemplate extends Object
+{
+    protected $ptComposerControlCustomTemplateFilename;
+    protected $ptComposerControlCustomTemplateName;
 
-	public function __construct($ptComposerControlCustomTemplateFilename, $ptComposerControlCustomTemplateName) {
-		$this->ptComposerControlCustomTemplateFilename = $ptComposerControlCustomTemplateFilename;
-		$this->ptComposerControlCustomTemplateName = $ptComposerControlCustomTemplateName;
-	}
+    public function __construct($ptComposerControlCustomTemplateFilename, $ptComposerControlCustomTemplateName)
+    {
+        $this->ptComposerControlCustomTemplateFilename = $ptComposerControlCustomTemplateFilename;
+        $this->ptComposerControlCustomTemplateName = $ptComposerControlCustomTemplateName;
+    }
 
-	public function getPageTypeComposerControlCustomTemplateFilename() {return $this->ptComposerControlCustomTemplateFilename;}
-	public function getPageTypeComposerControlCustomTemplateName() {return $this->ptComposerControlCustomTemplateName;}
-	
-	
+    public function getPageTypeComposerControlCustomTemplateFilename()
+    {
+        return $this->ptComposerControlCustomTemplateFilename;
+    }
+    public function getPageTypeComposerControlCustomTemplateName()
+    {
+        return $this->ptComposerControlCustomTemplateName;
+    }
 }

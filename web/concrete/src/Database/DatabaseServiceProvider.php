@@ -6,7 +6,6 @@ use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 
 class DatabaseServiceProvider extends ServiceProvider
 {
-
     public function register()
     {
         // Make both managers singletons
@@ -21,6 +20,7 @@ class DatabaseServiceProvider extends ServiceProvider
         $this->app->bind('Concrete\Core\Database\Driver\DriverManager', function ($app) {
             $manager = new DriverManager($app);
             $manager->configExtensions($app->make('config')->get('database.drivers'));
+
             return $manager;
         });
 
@@ -47,7 +47,7 @@ class DatabaseServiceProvider extends ServiceProvider
     }
 
     /**
-     * A list of things that this service provider provides
+     * A list of things that this service provider provides.
      *
      * @return array
      */
@@ -61,8 +61,7 @@ class DatabaseServiceProvider extends ServiceProvider
             'Doctrine\ORM\EntityManager',
             'Doctrine\ORM\EntityManagerInterface',
             'Concrete\Core\Database\Connection\Connection',
-            'Doctrine\DBAL\Connection'
+            'Doctrine\DBAL\Connection',
         );
     }
-
 }

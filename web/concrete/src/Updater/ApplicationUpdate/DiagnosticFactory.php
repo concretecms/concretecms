@@ -1,10 +1,8 @@
 <?php
-
 namespace Concrete\Core\Updater\ApplicationUpdate;
 
 class DiagnosticFactory
 {
-
     public static function getFromJSON($json)
     {
         $o = json_decode($json);
@@ -19,7 +17,7 @@ class DiagnosticFactory
         }
 
         if ($o->marketplace_item_status) {
-            foreach($o->marketplace_item_status as $status) {
+            foreach ($o->marketplace_item_status as $status) {
                 $s = new MarketplaceItemStatus();
                 $s->setMarketplaceItemHandle($status->mpHandle);
                 $s->setMarketplaceItemID($status->mpID);
@@ -30,7 +28,7 @@ class DiagnosticFactory
         }
 
         if ($o->notices) {
-            foreach($o->notices as $status) {
+            foreach ($o->notices as $status) {
                 $s = new Status();
                 $s->setSafety($status->safety);
                 $s->setStatus($status->status);
@@ -47,5 +45,4 @@ class DiagnosticFactory
 
         return $diagnostic;
     }
-
 }

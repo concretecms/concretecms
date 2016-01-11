@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\Users;
 
-use \Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Controller\DashboardPageController;
 use Config;
 use Imagine\Image\Box;
 use Loader;
@@ -15,8 +15,8 @@ use Permissions;
 use PermissionKey;
 use UserAttributeKey;
 use Localization;
-use \Concrete\Controller\Search\Users as SearchUsersController;
-use \Concrete\Core\User\EditResponse as UserEditResponse;
+use Concrete\Controller\Search\Users as SearchUsersController;
+use Concrete\Core\User\EditResponse as UserEditResponse;
 
 class Search extends DashboardPageController
 {
@@ -504,5 +504,4 @@ class Search extends DashboardPageController
             }
         }
     }
-
 }

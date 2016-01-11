@@ -12,7 +12,6 @@ use Stack;
 
 class ArrangeBlocks extends Page
 {
-
     public function canAccess()
     {
         return $this->permissions->canEditPageContents();
@@ -20,7 +19,6 @@ class ArrangeBlocks extends Page
 
     public function arrange()
     {
-
         $pc = new PageEditResponse();
         $pc->setPage($this->page);
         $e = Loader::helper('validation/error');
@@ -107,7 +105,6 @@ class ArrangeBlocks extends Page
         }
 
         if (!$e->has()) {
-
             $request = \Request::getInstance();
             $area_id = $request->post('area', 0);
             $block_id = $request->post('block', 0);
@@ -121,4 +118,3 @@ class ArrangeBlocks extends Page
         exit;
     }
 }
-

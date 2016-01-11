@@ -118,7 +118,7 @@ class Controller extends BlockController
      */
     public function getTitle()
     {
-        return (strlen($this->attributeTitleText) ? $this->attributeTitleText . " " : "");
+        return strlen($this->attributeTitleText) ? $this->attributeTitleText . " " : "";
     }
 
     public function getAvailablePageValues()

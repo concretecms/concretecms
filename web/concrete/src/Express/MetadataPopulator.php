@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Express;
 
 use Concrete\Core\Attribute\AttributeKeyMappingFieldBuilder;
@@ -10,7 +9,6 @@ use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
 
 class MetadataPopulator
 {
-
     protected $metadata;
     protected $entity;
     protected $table_prefix;
@@ -45,18 +43,16 @@ class MetadataPopulator
         $primaryKey = new PrimaryKeyFieldBuilder();
         $primaryKey->build($builder);
         $attributes = $this->entity->getAttributes();
-        foreach($attributes as $attribute) {
+        foreach ($attributes as $attribute) {
             /** @var $key \Concrete\Core\Entity\AttributeKey\AttributeKey */
             $key = $attribute->getAttribute();
             $fieldBuilder = new AttributeKeyMappingFieldBuilder($key);
             $fieldBuilder->build($builder);
         }
         $associations = $this->entity->getAssociations();
-        foreach($associations as $association) {
+        foreach ($associations as $association) {
             $associationBuilder = $association->getAssociationBuilder();
             $associationBuilder->build($builder);
         }
     }
-
-
 }

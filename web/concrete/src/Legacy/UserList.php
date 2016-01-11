@@ -1,8 +1,6 @@
 <?php
-
 namespace Concrete\Core\Legacy;
 
-use Concrete\Core\Legacy\DatabaseItemList;
 use UserAttributeKey;
 use UserInfo;
 use Core;
@@ -11,9 +9,13 @@ use Group;
 
 /**
  * An object that allows a filtered list of users to be returned.
+ *
  * @package Files
+ *
  * @author Tony Trupp <tony@concrete5.org>
+ *
  * @category Concrete
+ *
  * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
  * @license    http://www.concrete5.org/license/     MIT License
  */

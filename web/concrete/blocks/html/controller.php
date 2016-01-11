@@ -1,8 +1,7 @@
 <?php
 namespace Concrete\Block\Html;
 
-use Loader;
-use \Concrete\Core\Block\BlockController;
+use Concrete\Core\Block\BlockController;
 
 class Controller extends BlockController
 {

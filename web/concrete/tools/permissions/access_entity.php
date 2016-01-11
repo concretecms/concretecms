@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $form = Loader::helper("form");
 use \Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
@@ -9,46 +9,46 @@ $tp = new TaskPermission();
 $tu = Loader::helper('concrete/user');
 $dt = Loader::helper('form/date_time');
 if (!$tu->canAccessUserSearchInterface() && !$tp->canAccessGroupSearch()) {
-	die(t("You do not have user search or group search permissions."));
+    die(t("You do not have user search or group search permissions."));
 }
 $pae = false;
 if ($_REQUEST['peID']) {
-	$pae = PermissionAccessEntity::getByID($_REQUEST['peID']);
+    $pae = PermissionAccessEntity::getByID($_REQUEST['peID']);
 }
 if (!is_object($pae)) {
-	$pae = false;
+    $pae = false;
 }
 
 $pd = false;
 if ($_REQUEST['pdID']) {
-	$pd = PermissionDuration::getByID($_REQUEST['pdID']);
+    $pd = PermissionDuration::getByID($_REQUEST['pdID']);
 }
 if (!is_object($pd)) {
-	$pd = false;
+    $pd = false;
 }
 
 if ($_POST['task'] == 'save_permissions') {
-	$js = Loader::helper('json');
-	$r = new stdClass;
+    $js = Loader::helper('json');
+    $r = new stdClass();
 
-	if (is_object($pae)) {
-		$pd = PermissionDuration::createFromRequest();
-	} else {
-		$r->error = true;
-		$r->message = t('You must choose who this permission is for.');
-	}
+    if (is_object($pae)) {
+        $pd = PermissionDuration::createFromRequest();
+    } else {
+        $r->error = true;
+        $r->message = t('You must choose who this permission is for.');
+    }
 
-	if (!$r->error) {
-		$r->peID = $pae->getAccessEntityID();
-		if (is_object($pd)) {
-			$r->pdID = $pd->getPermissionDurationID();
-		} else {
-			$r->pdID = 0;
-		}
-	}
+    if (!$r->error) {
+        $r->peID = $pae->getAccessEntityID();
+        if (is_object($pd)) {
+            $r->pdID = $pd->getPermissionDurationID();
+        } else {
+            $r->pdID = 0;
+        }
+    }
 
-	print $js->encode($r);
-	exit;
+    echo $js->encode($r);
+    exit;
 }
 
 ?>
@@ -64,9 +64,14 @@ if ($_POST['task'] == 'save_permissions') {
 
 <p><?=t('Who gets access to this permission?')?></p>
 
-<div id="ccm-permissions-access-entity-label"><? if (is_object($pae)) { ?><div class="alert alert-info"><?=$pae->getAccessEntityLabel()?></div><? } else { ?><div class="alert alert-warning"><?=t('None Selected')?></div><? } ?></div>
+<div id="ccm-permissions-access-entity-label"><?php if (is_object($pae)) {
+    ?><div class="alert alert-info"><?=$pae->getAccessEntityLabel()?></div><?php 
+} else {
+    ?><div class="alert alert-warning"><?=t('None Selected')?></div><?php 
+} ?></div>
 
-<? if (!is_object($pae)) { ?>
+<?php if (!is_object($pae)) {
+    ?>
 
 <div class="btn-group">
 	<a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
@@ -74,39 +79,56 @@ if ($_POST['task'] == 'save_permissions') {
 	<span class="caret"></span>
 		</a>
 	<ul class="dropdown-menu">
-	<?
-	$category = PermissionKeyCategory::getByHandle($_REQUEST['pkCategoryHandle']);
-	$entitytypes = PermissionAccessEntityType::getList($category);
-	foreach($entitytypes as $type) { ?>
+	<?php
+    $category = PermissionKeyCategory::getByHandle($_REQUEST['pkCategoryHandle']);
+    $entitytypes = PermissionAccessEntityType::getList($category);
+    foreach ($entitytypes as $type) {
+        ?>
 		<li><?=$type->getAccessEntityTypeLinkHTML()?></li>
-	<? } ?>
+	<?php 
+    }
+    ?>
 	</ul>
 </div>
 <br/><br/>
 
-<? foreach($entitytypes as $type) { ?>
+<?php foreach ($entitytypes as $type) {
+    ?>
 
-<? if ($type->getPackageID() > 0) { ?>
-	<? Loader::packageElement('permission/access/entity/types/' . $type->getAccessEntityTypeHandle(), $type->getPackageHandle(), array('type' => $type)); ?>
-<? } else { ?>
-	<? Loader::element('permission/access/entity/types/' . $type->getAccessEntityTypeHandle(), array('type' => $type)); ?>
-<? } ?>
+<?php if ($type->getPackageID() > 0) {
+    ?>
+	<?php Loader::packageElement('permission/access/entity/types/' . $type->getAccessEntityTypeHandle(), $type->getPackageHandle(), array('type' => $type));
+    ?>
+<?php 
+} else {
+    ?>
+	<?php Loader::element('permission/access/entity/types/' . $type->getAccessEntityTypeHandle(), array('type' => $type));
+    ?>
+<?php 
+}
+    ?>
 
 
-<? } ?>
+<?php 
+}
+    ?>
 
-<? } ?>
+<?php 
+} ?>
 
 
-<? if (!isset($_REQUEST['disableDuration'])) { ?>
+<?php if (!isset($_REQUEST['disableDuration'])) {
+    ?>
 
 <h4><?=t('Time Settings')?></h4>
 
 <p><?=t('How long will this permission be valid for?')?></p>
 
-<?=Loader::element('permission/duration', array('pd' => $pd)); ?>
+<?=Loader::element('permission/duration', array('pd' => $pd));
+    ?>
 
-<? } ?>
+<?php 
+} ?>
 
 <div class="dialog-buttons">
 	<input type="button" onclick="jQuery.fn.dialog.closeTop()" value="<?=t('Cancel')?>" class="btn btn-default pull-left" />

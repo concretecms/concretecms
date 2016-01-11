@@ -5,7 +5,6 @@ use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 
 class EventsServiceProvider extends ServiceProvider
 {
-
     public function register()
     {
         if (!$this->app->bound('director')) {
@@ -14,5 +13,4 @@ class EventsServiceProvider extends ServiceProvider
             });
         }
     }
-
 }

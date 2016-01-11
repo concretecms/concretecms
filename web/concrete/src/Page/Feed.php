@@ -1,18 +1,18 @@
 <?php
-
 namespace Concrete\Core\Page;
+
 use Concrete\Core\Backup\ContentExporter;
 use Concrete\Core\Block\View\BlockView;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Permission\Access\Entity\GroupEntity;
 use Database;
+
 /**
  * @Entity
  * @Table(name="PageFeeds")
  */
 class Feed
 {
-
     protected $itemsPerFeed = 20;
     protected $checkPagePermissions = true;
 
@@ -20,7 +20,6 @@ class Feed
      * @Column(type="string", nullable=true)
      */
     protected $customTopicAttributeKeyHandle = null;
-
 
     /**
      * @Column(columnDefinition="integer unsigned")
@@ -302,6 +301,7 @@ class Feed
     {
         $db = Database::get();
         $em = $db->getEntityManager();
+
         return $em->getRepository('\Concrete\Core\Page\Feed')->findBy(array(), array('pfTitle' => 'asc'));
     }
 
@@ -317,7 +317,7 @@ class Feed
     {
         $child = $node->addChild('pagefeeds');
         $list = static::getList();
-        foreach($list as $feed) {
+        foreach ($list as $feed) {
             $feedNode = $child->addChild('feed');
             if ($feed->getParentID()) {
                 $feedNode->addChild('parent', ContentExporter::replacePageWithPlaceHolder($feed->getParentID()));
@@ -360,6 +360,7 @@ class Feed
         $db = Database::get();
         $em = $db->getEntityManager();
         $r = $em->find('\Concrete\Core\Page\Feed', $id);
+
         return $r;
     }
 
@@ -367,6 +368,7 @@ class Feed
     {
         $db = Database::get();
         $em = $db->getEntityManager();
+
         return $em->getRepository('\Concrete\Core\Page\Feed')->findOneBy(
             array('pfHandle' => $pfHandle)
         );
@@ -393,12 +395,13 @@ class Feed
             $access = GroupEntity::getOrCreate($guest);
             // we set page permissions to be Guest group only, because
             // authentication won't work with RSS feeds
-            $pl->setPermissionsChecker(function($page) use ($vp, $access) {
+            $pl->setPermissionsChecker(function ($page) use ($vp, $access) {
                 $vp->setPermissionObject($page);
                 $pa = $vp->getPermissionAccessObject($page);
                 if (!is_object($pa)) {
                     return false;
                 }
+
                 return $pa->validateAccessEntities(array($access));
             });
         }
@@ -424,13 +427,14 @@ class Feed
         if ($this->pfDisplayFeaturedOnly) {
             $pl->filterByAttribute('is_featured', true);
         }
+
         return $pl;
     }
 
     protected function getPageFeedContent(Page $p)
     {
         $content = false;
-        switch($this->pfContentToDisplay) {
+        switch ($this->pfContentToDisplay) {
             case 'S':
                 $content = $p->getCollectionDescription();
                 break;
@@ -440,7 +444,7 @@ class Feed
                 $r = Request::getInstance();
                 $r->setCurrentPage($p);
                 ob_start();
-                foreach($blocks as $b) {
+                foreach ($blocks as $b) {
                     $bv = new BlockView($b);
                     $bv->render('view');
                 }
@@ -453,6 +457,7 @@ class Feed
         if (is_object($f)) {
             $content = '<p><img src="' . $f->getURL() . '" /></p>' . $content;
         }
+
         return $content;
     }
 
@@ -477,14 +482,14 @@ class Feed
                     $data = array(
                         'uri' => $f->getURL(),
                         'title' => $f->getTitle(),
-                        'link' => (string) $link
+                        'link' => (string) $link,
                     );
                     $writer->setImage($data);
                 }
             }
             $writer->setLink((string) $link);
 
-            foreach($pagination->getCurrentPageResults() as $p) {
+            foreach ($pagination->getCurrentPageResults() as $p) {
                 $entry = $writer->createEntry();
                 $entry->setTitle($p->getCollectionName());
                 $entry->setDateCreated(strtotime($p->getCollectionDatePublic()));
@@ -512,5 +517,4 @@ class Feed
             return $writer->export('rss');
         }
     }
-
 }

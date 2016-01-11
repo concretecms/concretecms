@@ -1,37 +1,37 @@
 <?php
 namespace Concrete\Attribute\Rating;
 
-use Concrete\Core\Entity\Attribute\Key\RatingKey;
 use Concrete\Core\Entity\Attribute\Key\Type\RatingType;
 use Concrete\Core\Entity\Attribute\Value\RatingValue;
 use Loader;
-use \Concrete\Core\Foundation\Object;
-use \Concrete\Core\Attribute\Controller as AttributeTypeController;
+use Concrete\Core\Attribute\Controller as AttributeTypeController;
 
 class Controller extends AttributeTypeController
 {
-
     protected $searchIndexFieldDefinition = array(
         'type' => 'decimal',
-        'options' => array('precision' => 14, 'scale' => 4, 'default' => 0, 'notnull' => false)
+        'options' => array('precision' => 14, 'scale' => 4, 'default' => 0, 'notnull' => false),
     );
 
     public function getDisplayValue()
     {
         $value = $this->getValue() / 20;
         $rt = Loader::helper('rating');
+
         return $rt->output($this->attributeKey->getAttributeKeyHandle() . time(), $value);
     }
 
     public function importKey($akey)
     {
         $type = new RatingType();
+
         return $type;
     }
 
     public function saveKey($data)
     {
         $type = new RatingType();
+
         return $type;
     }
 
@@ -42,13 +42,14 @@ class Controller extends AttributeTypeController
             $caValue = $this->getValue() / 20;
         }
         $rt = Loader::helper('form/rating');
-        print $rt->rating($this->field('value'), $caValue);
+        echo $rt->rating($this->field('value'), $caValue);
     }
 
     public function searchForm($list)
     {
         $minRating = $this->request('value');
         $list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), $minRating, '>=');
+
         return $list;
     }
 
@@ -59,6 +60,7 @@ class Controller extends AttributeTypeController
             $rating = 0;
         }
         $value->setValue($rating);
+
         return $value;
     }
 
@@ -70,7 +72,7 @@ class Controller extends AttributeTypeController
     public function search()
     {
         $rt = Loader::helper('form/rating');
-        print $rt->rating($this->field('value'), $this->request('value'));
+        echo $rt->rating($this->field('value'), $this->request('value'));
     }
 
     public function createAttributeKeyType()

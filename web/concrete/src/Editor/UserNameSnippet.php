@@ -1,14 +1,14 @@
 <?php
 namespace Concrete\Core\Editor;
-use Loader;
+
 use User;
-class UserNameSnippet extends Snippet {
 
+class UserNameSnippet extends Snippet
+{
+    public function replace()
+    {
+        $u = new User();
 
-	public function replace() {
-		$u = new User();
-		return $u->getUserName();
-	}
-
-
+        return $u->getUserName();
+    }
 }

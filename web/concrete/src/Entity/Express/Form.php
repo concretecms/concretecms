@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Entity\Express;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -10,7 +9,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Form
 {
-
     /**
      * @Id @Column(type="integer")
      * @GeneratedValue(strategy="AUTO")
@@ -102,20 +100,15 @@ class Form
         $this->entity = $entity;
     }
 
-
     public function getControls()
     {
         $controls = array();
-        foreach($this->getFieldSets() as $set) {
-            foreach($set->getControls() as $control) {
+        foreach ($this->getFieldSets() as $set) {
+            foreach ($set->getControls() as $control) {
                 $controls[] = $control;
             }
         }
+
         return $controls;
     }
-
-
-
-
-
 }

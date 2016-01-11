@@ -16,28 +16,33 @@
 
 
 <div class="row">
-    <? View::element('dashboard/express/detail_navigation', array('entity' => $entity))?>
+    <?php View::element('dashboard/express/detail_navigation', array('entity' => $entity))?>
     <div class="col-md-8">
 
         <?php if (count($forms)) {
-            ?>
+    ?>
 
             <ul class="item-select-list" id="ccm-stack-list">
-                <?php foreach($forms as $form) { ?>
+                <?php foreach ($forms as $form) {
+    ?>
                     <li>
                         <a href="<?=URL::to('/dashboard/express/entities/forms', 'view_form_details', $form->getID())?>">
                             <i class="fa fa-list-alt"></i> <?=$form->getName()?>
                         </a>
                     </li>
-                <? } ?>
+                <?php 
+}
+    ?>
             </ul>
 
         <?php
-        } else {
-            ?>
+
+} else {
+    ?>
             <p><?=t('You have not created any forms.')?></p>
         <?php
-        } ?>
+
+} ?>
 
 
     </div>

@@ -1,13 +1,11 @@
-<?
+<?php
 namespace Concrete\Controller\SinglePage\Dashboard\Express;
 
-use Concrete\Core\Express\Form\Saver;
 use Concrete\Core\Express\Form\Validator;
-use \Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Controller\DashboardPageController;
 
 class Create extends DashboardPageController
 {
-
     public function view($id = null)
     {
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity');
@@ -42,7 +40,4 @@ class Create extends DashboardPageController
             throw new \Exception(t('Invalid form.'));
         }
     }
-
-
-
 }

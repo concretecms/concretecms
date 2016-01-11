@@ -7,11 +7,8 @@ use OAuth\ServiceFactory;
 
 class ServiceProvider extends \Concrete\Core\Foundation\Service\Provider
 {
-
     /**
      * Register the service provider.
-     *
-     * @return void
      */
     public function register()
     {
@@ -20,6 +17,7 @@ class ServiceProvider extends \Concrete\Core\Foundation\Service\Provider
             function ($app, $callback = '/ccm/system/authentication/oauth2/twitter/callback/') {
                 /** @var ServiceFactory $factory */
                 $factory = $app->make('oauth/factory/service');
+
                 return $factory->createService(
                     'twitter',
                     new Credentials(
@@ -31,5 +29,4 @@ class ServiceProvider extends \Concrete\Core\Foundation\Service\Provider
             }
         );
     }
-
 }

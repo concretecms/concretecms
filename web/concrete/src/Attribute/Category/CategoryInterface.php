@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Attribute\Category;
 
 use Concrete\Core\Attribute\AttributeValueInterface;
@@ -11,7 +10,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 interface CategoryInterface
 {
-
     /**
      * @return Category
      */
@@ -40,6 +38,4 @@ interface CategoryInterface
 
     public function deleteKey(Key $key);
     public function deleteValue(AttributeValueInterface $value);
-
-
 }

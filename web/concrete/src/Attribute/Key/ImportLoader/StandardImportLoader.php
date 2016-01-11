@@ -1,12 +1,10 @@
 <?php
-
 namespace Concrete\Core\Attribute\Key\ImportLoader;
 
 use Concrete\Core\Entity\Attribute\Key\Key;
 
 class StandardImporterLoader implements ImportLoaderInterface
 {
-
     public function load(Key $key, \SimpleXMLElement $element)
     {
         $key->setAttributeKeyName((string) $element['name']);
@@ -19,7 +17,7 @@ class StandardImporterLoader implements ImportLoaderInterface
         if ($searchable === '1') {
             $key->setIsAttributeKeySearchable(true);
         }
+
         return $key;
     }
-
 }

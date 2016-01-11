@@ -1,15 +1,15 @@
-<?
+<?php
 namespace Concrete\Controller\SinglePage\Dashboard\Pages\Types;
+
 use Concrete\Core\Application\EditResponse;
 use Concrete\Core\Attribute\Key\CollectionKey;
-use \Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
-use \Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
+use Concrete\Core\Page\Controller\DashboardPageController;
 use PageType;
 use Loader;
 
 class Attributes extends DashboardPageController
 {
-
     protected $pagetype;
     protected $defaultPage;
 
@@ -54,7 +54,7 @@ class Attributes extends DashboardPageController
             $sr->setError($this->error);
         } else {
             $sr->setMessage(t('Attribute saved successfully.'));
-            $sr->setAdditionalDataAttribute('value',  $val->getValue('displaySanitized','display'));
+            $sr->setAdditionalDataAttribute('value',  $val->getValue('displaySanitized', 'display'));
         }
         $sr->outputJSON();
     }
@@ -78,5 +78,4 @@ class Attributes extends DashboardPageController
         }
         $sr->outputJSON();
     }
-
 }

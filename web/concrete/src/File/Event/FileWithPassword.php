@@ -3,7 +3,6 @@ namespace Concrete\Core\File\Event;
 
 class FileWithPassword extends File
 {
-
     protected $password;
 
     public function setFilePassword($password)
@@ -15,5 +14,4 @@ class FileWithPassword extends File
     {
         return $this->password;
     }
-
 }

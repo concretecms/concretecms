@@ -10,7 +10,6 @@ use OAuth\OAuth2\Token\StdOAuth2Token;
 
 class Community extends AbstractService
 {
-
     /**
      * Parses the access token response and returns a TokenInterface.
      *
@@ -24,7 +23,7 @@ class Community extends AbstractService
     protected function parseAccessTokenResponse($responseBody)
     {
         $request = \Request::getInstance();
-        if ($request->get('error')){
+        if ($request->get('error')) {
             $reason = $request->get('error_description');
             throw new TokenResponseException($reason);
         }
@@ -80,5 +79,4 @@ class Community extends AbstractService
     {
         return self::AUTHORIZATION_METHOD_HEADER_BEARER;
     }
-
 }

@@ -1,8 +1,6 @@
 <?php
-
 namespace Concrete\Core\Entity\Express;
 
-use Concrete\Core\Attribute\Category\ExpressCategory;
 use Concrete\Core\Attribute\EntityInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -12,7 +10,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Entity implements EntityInterface
 {
-
     /**
      * @Id @Column(type="integer")
      * @GeneratedValue(strategy="AUTO")
@@ -93,7 +90,6 @@ class Entity implements EntityInterface
     {
         $this->created_date = $created_date;
     }
-
 
     /**
      * @return mixed

@@ -1,6 +1,7 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");?>
-<?
+<?php
 use Concrete\Core\Multilingual\Page\Section\Section as MultilingualSection;
+
 ?>
 <script type="text/javascript">
 var ccmCountryForLanguageLister = (function() {
@@ -104,7 +105,8 @@ var ccmCountryForLanguageLister = (function() {
     <legend><?php echo t('Content Sections')?></legend>
     <?php
     $nav = Loader::helper('navigation');
-    if (count($pages) > 0) { ?>
+    if (count($pages) > 0) {
+        ?>
         <table class="table table-striped">
         <tr>
             <th>&nbsp;</th>
@@ -113,21 +115,28 @@ var ccmCountryForLanguageLister = (function() {
             <th style="width: 30%"><?php echo t('Path')?></th>
             <th>&nbsp;</th>
         </tr>
-        <?php foreach($pages as $pc) {
-            $pcl = MultilingualSection::getByID($pc->getCollectionID()); ?>
+        <?php foreach ($pages as $pc) {
+    $pcl = MultilingualSection::getByID($pc->getCollectionID());
+    ?>
             <tr>
                 <td><?php echo $ch->getSectionFlagIcon($pc)?></td>
                 <td><a href="<?php echo $nav->getLinkToCollection($pc)?>"><?php echo $pc->getCollectionName()?></a></td>
-                <td><?php echo $pcl->getLanguageText()?> (<?php echo $pcl->getLocale();?>)</td>
+                <td><?php echo $pcl->getLanguageText()?> (<?php echo $pcl->getLocale();
+    ?>)</td>
                 <td><?php echo $pc->getCollectionPath()?></td>
                 <td><a href="<?php echo $this->action('remove_locale_section', $pc->getCollectionID(), Loader::helper('validation/token')->generate())?>" class="icon-link"><i class="fa fa-trash"></i></a></td>
             </tr>
-        <?php } ?>
+        <?php 
+}
+        ?>
         </table>
 
-    <?php } else { ?>
+    <?php 
+    } else {
+        ?>
         <p><?php echo t('You have not created any multilingual content sections yet.')?></p>
-    <?php } ?>
+    <?php 
+    } ?>
     <form method="post" action="<?php echo $this->action('add_content_section')?>">
         <h4><?php echo t('Add a Locale')?></h4>
         <div class="form-group">
@@ -178,19 +187,21 @@ ccm_multilingualPopulateIcons = function(country) {
 
 <hr/>
 <?php if (count($pages) > 0) {
-	$defaultLocales = array('' => t('** None Set'));
-	foreach($pages as $pc) {
-		$pcl = MultilingualSection::getByID($pc->getCollectionID());
-		$defaultLocales[$pcl->getLocale()] = tc(/*i18n: %1$s is a page name, %2$s is a language name, %3$s is a locale identifier (eg en_US)*/'PageWithLocale', '%1$s (%2$s, %3$s)', $pc->getCollectionName(), $pcl->getLanguageText(), $pcl->getLocale());
-	}
-	$defaultLocalesSelect = $form->select('defaultLocale', $defaultLocales, $defaultLocale, array('required' => 'required'));
-	?>
+    $defaultLocales = array('' => t('** None Set'));
+    foreach ($pages as $pc) {
+        $pcl = MultilingualSection::getByID($pc->getCollectionID());
+        $defaultLocales[$pcl->getLocale()] = tc(/*i18n: %1$s is a page name, %2$s is a language name, %3$s is a locale identifier (eg en_US)*/'PageWithLocale', '%1$s (%2$s, %3$s)', $pc->getCollectionName(), $pcl->getLanguageText(), $pcl->getLocale());
+    }
+    $defaultLocalesSelect = $form->select('defaultLocale', $defaultLocales, $defaultLocale, array('required' => 'required'));
+    ?>
    <legend><?php echo t('Multilingual Settings')?></legend>
 	<fieldset>
         <form method="post" action="<?php echo $this->action('set_default')?>">
             <div class="form-group">
-                <label class="control-label"><?php echo t('Default Locale');?></label>
-                <?php print $defaultLocalesSelect; ?>
+                <label class="control-label"><?php echo t('Default Locale');
+    ?></label>
+                <?php echo $defaultLocalesSelect;
+    ?>
             </div>
 
             <div class="form-group">
@@ -209,32 +220,39 @@ ccm_multilingualPopulateIcons = function(country) {
             </div>
 
             <div class="form-group">
-                <label class="control-label"><?php echo t('Registered Users Language Preferences'); ?></label>
-                <p><?php echo t('Load Interface Language from:'); ?></p>
+                <label class="control-label"><?php echo t('Registered Users Language Preferences');
+    ?></label>
+                <p><?php echo t('Load Interface Language from:');
+    ?></p>
                 <div class="radio">
                     <label>
-                        <?php echo $form->radio('keepUsersLocale', 0, $keepUsersLocale); ?>
-                        <span><?php echo t('Page (if it exists)'); ?></span>
+                        <?php echo $form->radio('keepUsersLocale', 0, $keepUsersLocale);
+    ?>
+                        <span><?php echo t('Page (if it exists)');
+    ?></span>
                     </label>
                 </div>
                 <div class="radio">
                     <label>
-                        <?php echo $form->radio('keepUsersLocale', 1, $keepUsersLocale); ?>
-                        <span><?php echo t("User Profile"); ?></span>
+                        <?php echo $form->radio('keepUsersLocale', 1, $keepUsersLocale);
+    ?>
+                        <span><?php echo t("User Profile");
+    ?></span>
                     </label>
                 </div>
             </div>
 
             <div class="form-group">
-                <label class="control-label"><?php echo t('Site interface source locale');?></label>
+                <label class="control-label"><?php echo t('Site interface source locale');
+    ?></label>
                 <div class="form-inline">
                 <?php
                 echo $form->select('defaultSourceLanguage', array_merge(array('' => t('*** Unknown or mixed language')), $languages), $defaultSourceLanguage);
-                ?>
+    ?>
 
-                    <?
+                    <?php
                 echo $form->select('defaultSourceCountry', array_merge(array('' => t('*** Undetermined country')), $countries), $defaultSourceCountry);
-                ?>
+    ?>
                 </div>
                 <script>
                 $(document).ready(function() {
@@ -250,5 +268,5 @@ ccm_multilingualPopulateIcons = function(country) {
         </form>
     </fieldset>
     <?php
-}
 
+}

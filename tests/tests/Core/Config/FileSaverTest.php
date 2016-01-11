@@ -5,7 +5,6 @@ use Illuminate\Filesystem\Filesystem;
 
 class FileSaverTest extends PHPUnit_Framework_TestCase
 {
-
     /** @var FileSaver */
     protected $saver;
 
@@ -25,7 +24,7 @@ class FileSaverTest extends PHPUnit_Framework_TestCase
         $this->saver->save('test.array', array(1), 'testing', $group);
 
         $path = DIR_APPLICATION . "/config/generated_overrides/{$group}.php";
-        $contents = @include_once($path);
+        $contents = @include_once $path;
 
         $this->files->delete($path);
 
@@ -74,5 +73,4 @@ class FileSaverTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($exists, 'Failed to save file');
         $this->assertEquals($value, array_get($array, $item), 'Failed to save correct value.');
     }
-
 }

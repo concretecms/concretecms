@@ -40,12 +40,13 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow
     }
 
     /**
-    +	 * Returns true if the logged-in user can approve the current workflow
-    +	 */
+     +	 * Returns true if the logged-in user can approve the current workflow.
+     +	 */
     public function canApproveWorkflow()
     {
         $pk = Key::getByHandle('approve_basic_workflow_action');
         $pk->setPermissionObject($this);
+
         return $pk->validate();
     }
 
@@ -74,9 +75,7 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow
             // In that case, we transparently approve it, and skip the entry notification step.
             $wpr = $req->approve($wp);
             $wp->delete();
-
         } else {
-
             $ui = UserInfo::getByID($req->getRequesterUserID());
 
             // let's get all the people who are set to be notified on entry
@@ -87,7 +86,6 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow
                 $req->getWorkflowRequestDescriptionObject()->getEmailDescription());
             $this->notify($wp, $message, 'notify_on_basic_workflow_entry');
         }
-
     }
 
     protected function notify(
@@ -143,7 +141,6 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow
     public function cancel(WorkflowProgress $wp)
     {
         if ($this->canApproveWorkflowProgressObject($wp)) {
-
             $req = $wp->getWorkflowRequestObject();
             $bdw = new BasicWorkflowProgressData($wp);
             $u = new User();
@@ -231,5 +228,4 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow
 
         return $buttons;
     }
-
 }

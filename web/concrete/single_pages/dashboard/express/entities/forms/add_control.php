@@ -4,11 +4,13 @@
 <?=$interface->tabs($tabs)?>
 </div>
 
-<? foreach($drivers as $type => $driver) { ?>
+<?php foreach ($drivers as $type => $driver) {
+    ?>
 
     <div class="ccm-tab-content" id="ccm-tab-content-<?=$type?>">
         <ul class="item-select-list" id="ccm-stack-list">
-            <?php foreach($driver->getItems($set->getForm()->getEntity()) as $item) { ?>
+            <?php foreach ($driver->getItems($set->getForm()->getEntity()) as $item) {
+    ?>
 
                 <li>
                     <a href="#"
@@ -20,11 +22,14 @@
 
                 </li>
 
-            <? } ?>
+            <?php 
+}
+    ?>
         </ul>
     </div>
 
-<? } ?>
+<?php 
+} ?>
 
 <script type="text/javascript">
 $(function() {

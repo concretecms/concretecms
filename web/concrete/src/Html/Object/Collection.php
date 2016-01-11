@@ -5,7 +5,6 @@ use HtmlObject\Element;
 
 class Collection implements \ArrayAccess, \Iterator
 {
-
     protected $elements = array();
 
     public function offsetExists($offset)
@@ -66,12 +65,10 @@ class Collection implements \ArrayAccess, \Iterator
     public function __toString()
     {
         $output = '';
-        foreach($this->elements as $element) {
+        foreach ($this->elements as $element) {
             $output .= (string) $element;
         }
+
         return $output;
     }
-
 }
-
-

@@ -3,16 +3,16 @@
  * Created by PhpStorm.
  * User: andrew
  * Date: 6/28/14
- * Time: 10:30 AM
+ * Time: 10:30 AM.
  */
-
 namespace Concrete\Tests\Core\User;
+
 use Concrete\Core\User\Group\Group;
 use Concrete\Core\User\UserInfo;
 use Concrete\Core\User\UserList;
 
-class UserListTest extends \UserTestCase {
-
+class UserListTest extends \UserTestCase
+{
     /**
      * @var \Concrete\Core\User\UserList
      */
@@ -23,11 +23,11 @@ class UserListTest extends \UserTestCase {
             'testuser', 'testuser@concrete5.org',
         ),
         array(
-            'testuser2', 'testuser2@concrete5.org'
+            'testuser2', 'testuser2@concrete5.org',
         ),
         array(
-            'andrew', 'andrew@concrete5.org'
-        )
+            'andrew', 'andrew@concrete5.org',
+        ),
 
     );
 
@@ -35,7 +35,7 @@ class UserListTest extends \UserTestCase {
     {
         parent::setUp();
 
-        foreach($this->userData as $data) {
+        foreach ($this->userData as $data) {
             $ui = call_user_func_array(array($this, 'createUser'), $data);
             $ui->reindex();
         }
@@ -112,8 +112,5 @@ class UserListTest extends \UserTestCase {
         $this->assertEquals(3, $this->list->getTotalResults());
         $this->list->filterByIsActive(0);
         $this->assertEquals(1, $this->list->getTotalResults());
-
-
     }
 }
- 

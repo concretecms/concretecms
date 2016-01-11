@@ -1,12 +1,11 @@
 <?php
-use Concrete\Core\Express\ObjectBuilder;
+
 
 require_once __DIR__ . "/ObjectBuilderTestTrait.php";
 require_once __DIR__ . "/ExpressEntityManagerTestCaseTrait.php";
 
 class OneToOneTest extends PHPUnit_Framework_TestCase
 {
-
     use \ExpressEntityManagerTestCaseTrait;
 
     protected function getEntityManager()
@@ -23,7 +22,6 @@ class OneToOneTest extends PHPUnit_Framework_TestCase
         $builder->addOneToOne($user, $collection);
 
         return $this->deliverEntityManager(array($user, $collection));
-
     }
     public function tearDown()
     {
@@ -39,10 +37,8 @@ class OneToOneTest extends PHPUnit_Framework_TestCase
         }
     }
 
-
     public function testOutputClassWritingAndNamespace()
     {
-
         $writer = Core::make('express.writer');
         $writer->setNamespace('Testing');
         $writer->setEntityManager($this->getEntityManager());
@@ -77,13 +73,10 @@ class OneToOneTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($class->hasMethod('getId'));
         $this->assertTrue($class->hasProperty('user'));
         $this->assertTrue($class->hasMethod('getUser'));
-
-
     }
 
     public function testCreateDatabase()
     {
-
         $em = $this->getEntityManager();
         $factory = new \Concrete\Core\Express\BackendEntityManagerFactory(
             Core::make('app'),
@@ -114,8 +107,5 @@ class OneToOneTest extends PHPUnit_Framework_TestCase
         $this->assertContains('ExpressUserFavoriteCollections', $create[0]);
         $this->assertContains('id', $create[0]);
         $this->assertNotContains('unique index', $create[0], '', true);
-
     }
-
-
 }

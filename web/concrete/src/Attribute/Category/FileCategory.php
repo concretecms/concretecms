@@ -1,17 +1,13 @@
 <?php
-
 namespace Concrete\Core\Attribute\Category;
 
 use Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexerInterface;
 use Concrete\Core\Entity\Attribute\Key\FileKey;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Type;
-use Concrete\Core\Entity\File\Attribute;
-use Symfony\Component\HttpFoundation\Request;
 
 class FileCategory extends AbstractCategory implements StandardSearchIndexerInterface
 {
-
     public function createAttributeKey()
     {
         return new FileKey();
@@ -27,7 +23,6 @@ class FileCategory extends AbstractCategory implements StandardSearchIndexerInte
         return $mixed->getFileID();
     }
 
-
     public function getSearchIndexFieldDefinition()
     {
         return array(
@@ -35,10 +30,10 @@ class FileCategory extends AbstractCategory implements StandardSearchIndexerInte
                 array(
                     'name' => 'fID',
                     'type' => 'integer',
-                    'options' => array('unsigned' => true, 'default' => 0, 'notnull' => true)
-                )
+                    'options' => array('unsigned' => true, 'default' => 0, 'notnull' => true),
+                ),
             ),
-            'primary' => array('fID')
+            'primary' => array('fID'),
         );
     }
 
@@ -53,6 +48,7 @@ class FileCategory extends AbstractCategory implements StandardSearchIndexerInte
           inner join fav.version fv inner join fv.file f where fv.fvID = :fvID and f.fID = :fID');
         $query->setParameter('fID', $version->getFile()->getFileID());
         $query->setParameter('fvID', $version->getFileVersionID());
+
         return $query->getResult();
     }
 
@@ -61,10 +57,9 @@ class FileCategory extends AbstractCategory implements StandardSearchIndexerInte
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Value\FileValue');
         $value = $r->findOneBy(array(
             'version' => $file->getVersion(),
-            'attribute_key' => $key
+            'attribute_key' => $key,
         ));
+
         return $value;
     }
-
-
 }

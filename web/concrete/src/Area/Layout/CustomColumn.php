@@ -6,7 +6,6 @@ use Loader;
 
 class CustomColumn extends Column
 {
-
     /**
      * @var int;
      */
@@ -14,6 +13,7 @@ class CustomColumn extends Column
 
     /**
      * @param int $arLayoutColumnID
+     *
      * @return static
      */
     public static function getByID($arLayoutColumnID)
@@ -24,12 +24,14 @@ class CustomColumn extends Column
             $al = new static();
             $al->loadBasicInformation($arLayoutColumnID);
             $al->setPropertiesFromArray($row);
+
             return $al;
         }
     }
 
     /**
      * @param Column $newAreaLayout
+     *
      * @return CustomColumn
      */
     public function duplicate($newAreaLayout)
@@ -38,7 +40,8 @@ class CustomColumn extends Column
         $db = Loader::db();
         $v = array($areaLayoutColumnID, $this->arLayoutColumnWidth);
         $db->Execute('insert into AreaLayoutCustomColumns (arLayoutColumnID, arLayoutColumnWidth) values (?, ?)', $v);
-        $newAreaLayoutColumn = CustomColumn::getByID($areaLayoutColumnID);
+        $newAreaLayoutColumn = self::getByID($areaLayoutColumnID);
+
         return $newAreaLayoutColumn;
     }
 
@@ -63,18 +66,21 @@ class CustomColumn extends Column
         $inner->addClass('ccm-layout-column-inner');
         $inner->setValue($contents);
         $element->appendChild($inner);
+
         return $element;
     }
 
     public function getColumnHtmlObject()
     {
         $contents = $this->getContents();
+
         return $this->getColumnElement($contents);
     }
 
     public function getColumnHtmlObjectEditMode()
     {
         $contents = $this->getContents(true);
+
         return $this->getColumnElement($contents);
     }
 
@@ -102,5 +108,4 @@ class CustomColumn extends Column
         $db->Execute("delete from AreaLayoutCustomColumns where arLayoutColumnID = ?", array($this->arLayoutColumnID));
         parent::delete();
     }
-
 }

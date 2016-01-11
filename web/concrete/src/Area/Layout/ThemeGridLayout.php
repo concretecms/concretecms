@@ -6,7 +6,6 @@ use Page;
 
 class ThemeGridLayout extends Layout
 {
-
     /**
      * @var string
      */
@@ -111,6 +110,7 @@ class ThemeGridLayout extends Layout
             foreach ($columns as $col) {
                 $col->duplicate($newAreaLayout);
             }
+
             return $newAreaLayout;
         }
     }
@@ -144,6 +144,7 @@ class ThemeGridLayout extends Layout
         $columnID = parent::addLayoutColumn();
         $db = Loader::db();
         $db->Execute('insert into AreaLayoutThemeGridColumns (arLayoutColumnID) values (?)', array($columnID));
+
         return ThemeGridColumn::getByID($columnID);
     }
 
@@ -157,8 +158,8 @@ class ThemeGridLayout extends Layout
         $arLayoutID = $db->Insert_ID();
         if ($arLayoutID) {
             $ar = static::getByID($arLayoutID);
+
             return $ar;
         }
     }
-
 }

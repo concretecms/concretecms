@@ -2,16 +2,16 @@
 namespace Concrete\Core\Permission\Key;
 
 use Loader;
-use \Concrete\Core\Permission\Duration as PermissionDuration;
+use Concrete\Core\Permission\Duration as PermissionDuration;
 use User;
 
 class EditPagePropertiesPageKey extends PageKey
 {
-
     protected function getAllAttributeKeyIDs()
     {
         $db = Loader::db();
         $allAKIDs = $db->GetCol('select akID from CollectionAttributeKeys');
+
         return $allAKIDs;
     }
 
@@ -19,7 +19,6 @@ class EditPagePropertiesPageKey extends PageKey
     {
         $u = new User();
         $asl = new \Concrete\Core\Permission\Access\ListItem\EditPagePropertiesPageListItem();
-
 
         if ($u->isSuperUser()) {
             $asl->setAllowEditName(1);
@@ -29,6 +28,7 @@ class EditPagePropertiesPageKey extends PageKey
             $asl->setAllowEditPaths(1);
             $asl->setAttributesAllowedArray($this->getAllAttributeKeyIDs());
             $asl->setAttributesAllowedPermission('A');
+
             return $asl;
         }
 
@@ -50,7 +50,6 @@ class EditPagePropertiesPageKey extends PageKey
             $allAKIDs = $this->getAllAttributeKeyIDs();
         }
         foreach ($list as $l) {
-
             if ($l->allowEditName() && (!in_array('name', $excluded))) {
                 $asl->setAllowEditName(1);
             }
@@ -109,9 +108,9 @@ class EditPagePropertiesPageKey extends PageKey
         }
 
         $asl->setAttributesAllowedArray($akIDs);
+
         return $asl;
     }
-
 
     public function validate($obj = false)
     {
@@ -148,6 +147,4 @@ class EditPagePropertiesPageKey extends PageKey
             return false;
         }
     }
-
-
 }

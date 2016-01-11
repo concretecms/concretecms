@@ -41,7 +41,8 @@
 <?php if (count($fieldSets)) {
     ?>
 
-    <?php foreach($fieldSets as $set) { ?>
+    <?php foreach ($fieldSets as $set) {
+    ?>
 
         <div style="display: none">
             <div id="ccm-dialog-delete-set-<?=$set->getID()?>" class="ccm-ui">
@@ -92,25 +93,29 @@
 
                 <?php
 
-                foreach($set->getControls() as $control) {
+                foreach ($set->getControls() as $control) {
                     $element = new \Concrete\Controller\Element\Dashboard\Express\Control($control);
-                    print $element->render();
+                    echo $element->render();
                 }
 
-                ?>
+    ?>
 
                 </tbody>
             </table>
 
         </div>
 
-    <? } ?>
+    <?php 
+}
+    ?>
 
 <?php
+
 } else {
     ?>
     <p><?=t('You have not created any field sets.')?></p>
 <?php
+
 } ?>
 
 

@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\File\ImportProcessor;
 
 use Concrete\Core\File\Type\Type;
@@ -9,7 +8,6 @@ use Imagine\Image\ImageInterface;
 
 class ConstrainImageProcessor implements ProcessorInterface
 {
-
     protected $maxWidth;
     protected $maxHeight;
     protected $constraintMode = ImageInterface::THUMBNAIL_INSET;
@@ -115,5 +113,4 @@ class ConstrainImageProcessor implements ProcessorInterface
 
         $version->updateContents($thumbnail->get($thumbnailType, $thumbnailOptions));
     }
-
 }

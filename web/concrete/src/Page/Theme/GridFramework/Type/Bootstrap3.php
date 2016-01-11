@@ -1,12 +1,10 @@
 <?php
 namespace Concrete\Core\Page\Theme\GridFramework\Type;
 
-use Loader;
 use Concrete\Core\Page\Theme\GridFramework\GridFramework;
 
 class Bootstrap3 extends GridFramework
 {
-
     public function supportsNesting()
     {
         return true;
@@ -51,8 +49,9 @@ class Bootstrap3 extends GridFramework
             'col-sm-9',
             'col-sm-10',
             'col-sm-11',
-            'col-sm-12'
+            'col-sm-12',
         );
+
         return $columns;
     }
 
@@ -70,8 +69,9 @@ class Bootstrap3 extends GridFramework
             'col-sm-offset-9',
             'col-sm-offset-10',
             'col-sm-offset-11',
-            'col-sm-offset-12'
+            'col-sm-offset-12',
         );
+
         return $offsets;
     }
 
@@ -104,6 +104,4 @@ class Bootstrap3 extends GridFramework
     {
         return 'hidden-lg';
     }
-
-
 }

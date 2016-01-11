@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Updater\Migrations;
 
 use Doctrine\DBAL\Migrations\Configuration\Configuration as DoctrineMigrationConfiguration;

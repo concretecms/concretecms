@@ -1,9 +1,7 @@
 <?php
-
 namespace Concrete\Core\StyleCustomizer\Inline;
 
 use Concrete\Core\Backup\ContentExporter;
-use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Page\Theme\GridFramework\GridFramework;
 use Database;
 use Symfony\Component\HttpFoundation\Request;
@@ -804,13 +802,14 @@ class StyleSet
      * If the request contains any fields that are valid to save as a style set, we return the style set object
      * pre-save. If it's not (e.g. there's a background repeat but no actual background image, empty strings, etc...)
      * then we return null.
-     * return \Concrete\Core\StyleCustomizer\Inline\StyleSet|null
+     * return \Concrete\Core\StyleCustomizer\Inline\StyleSet|null.
+     *
      * @param Request $request
      */
     public static function populateFromRequest(Request $request)
     {
         $r = $request->request->all();
-        $set = new StyleSet();
+        $set = new self();
         $return = false;
         if (trim($r['backgroundColor']) != '') {
             $set->setBackgroundColor($r['backgroundColor']);
@@ -944,7 +943,7 @@ class StyleSet
 
     public function isHiddenOnDevice($class)
     {
-        switch($class) {
+        switch ($class) {
             case GridFramework::DEVICE_CLASSES_HIDE_ON_EXTRA_SMALL:
                 return $this->getHideOnExtraSmallDevice();
             case GridFramework::DEVICE_CLASSES_HIDE_ON_SMALL:

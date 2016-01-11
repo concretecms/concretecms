@@ -10,15 +10,13 @@ use Whoops\Run;
 
 class WhoopsServiceProvider extends Provider
 {
-
     public function register()
     {
         if (function_exists('ini_set')) {
             ini_set('display_errors', 0);
         }
 
-
-        $run = new Run;
+        $run = new Run();
         if (interface_exists('\Throwable')) {
             $run = new PHP7CompatibleRun($run);
         }
@@ -37,5 +35,4 @@ class WhoopsServiceProvider extends Provider
 
         $run->register();
     }
-
 }

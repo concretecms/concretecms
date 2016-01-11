@@ -1,10 +1,5 @@
 <?php
-
 namespace Concrete\Core\Entity\Attribute\Key\Type;
-
-use Concrete\Core\Attribute\Key\ImportLoader\StandardImporterLoader;
-use Concrete\Core\Attribute\Key\RequestLoader\StandardRequestLoader;
-
 
 /**
  * @Entity
@@ -50,8 +45,6 @@ abstract class Type
         $this->key = $key;
     }
 
-
-
     /**
      * @return mixed
      */
@@ -73,7 +66,7 @@ abstract class Type
     public function getController()
     {
         $controller = $this->createController();
+
         return $controller;
     }
-
 }

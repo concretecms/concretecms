@@ -3,19 +3,16 @@ namespace Concrete\Core\Attribute;
 
 use Concrete\Core\Database\Schema\BuilderInterface;
 use Concrete\Core\Entity\AttributeKey\AttributeKey;
-use Concrete\Core\Express\NamingStrategy;
 use Doctrine\ORM\Mapping\Builder\AssociationBuilder;
 use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
 
 class AttributeKeyMappingFieldBuilder implements BuilderInterface
 {
-
     protected $key;
     public function __construct(AttributeKey $key)
     {
         $this->key = $key;
     }
-
 
     public function build(ClassMetadataBuilder $builder)
     {
@@ -23,8 +20,8 @@ class AttributeKeyMappingFieldBuilder implements BuilderInterface
         $namingStrategy = \Core::make('Concrete\Core\Express\NamingStrategy');
         $associationBuilder = new AssociationBuilder($builder,
             array(
-                'fieldName'    => $this->key->getAttributeKeyHandle(),
-                'targetEntity' => get_class($class)
+                'fieldName' => $this->key->getAttributeKeyHandle(),
+                'targetEntity' => get_class($class),
             ),
             \Doctrine\ORM\Mapping\ClassMetadata::ONE_TO_ONE
         );
@@ -33,8 +30,7 @@ class AttributeKeyMappingFieldBuilder implements BuilderInterface
             $namingStrategy->joinColumnName($this->key->getAttributeKeyHandle()),
             'avID'
         );
+
         return $associationBuilder->build();
     }
-
-
 }

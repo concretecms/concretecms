@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Block\Discussion;
 
 use Concrete\Core\Block\BlockController;

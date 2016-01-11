@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\Permission\Access;
-class BasicWorkflowAccess extends WorkflowAccess {
 
+class BasicWorkflowAccess extends WorkflowAccess
+{
 }

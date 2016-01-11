@@ -3,9 +3,8 @@
  * Created by PhpStorm.
  * User: andrewembler
  * Date: 1/27/15
- * Time: 6:24 AM
+ * Time: 6:24 AM.
  */
-
 class URLTest extends PHPUnit_Framework_TestCase
 {
     /**
@@ -20,7 +19,6 @@ class URLTest extends PHPUnit_Framework_TestCase
      * This should be the case whether something is being called via URL::to, URL::page,
      * or Page::getCollectionLink or \Concrete\Core\Html\Service\Navigation::getLinkToCollection
      */
-
     public function setUp()
     {
         $service = Core::make('helper/navigation');
@@ -202,8 +200,8 @@ class URLTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('http://www.dummyco.com/path/to/server/index.php/dashboard/my/awesome/page',
                             (string) $this->service->getLinkToCollection($this->dashboard)
         );
-        $this->assertEquals('http://www.dummyco.com/path/to/server/index.php/dashboard/my/awesome/page',(string)  URL::to('/dashboard/my/awesome/page'));
-        $this->assertEquals('http://www.dummyco.com/path/to/server/index.php/dashboard/my/awesome/page',(string)  URL::page($this->dashboard));
+        $this->assertEquals('http://www.dummyco.com/path/to/server/index.php/dashboard/my/awesome/page', (string) URL::to('/dashboard/my/awesome/page'));
+        $this->assertEquals('http://www.dummyco.com/path/to/server/index.php/dashboard/my/awesome/page', (string) URL::page($this->dashboard));
     }
 
     public function testPagesWithNoPaths()
@@ -211,9 +209,6 @@ class URLTest extends PHPUnit_Framework_TestCase
         $home = new Page();
         $home->cID = 1;
         $home->cPath = '';
-
-
-
 
         $url = \URL::to($home);
         $this->assertEquals('http://www.dummyco.com/path/to/server/index.php', (string) $url);
@@ -227,7 +222,6 @@ class URLTest extends PHPUnit_Framework_TestCase
 
         $url = \URL::to($page);
         $this->assertEquals('http://www.dummyco.com/path/to/server/index.php?cID=777', (string) $url);
-
     }
 
     public function testUrlRewritingDashboard()
@@ -283,13 +277,11 @@ class URLTest extends PHPUnit_Framework_TestCase
         Config::set('concrete.seo.canonical_url', null);
     }
 
-
     private function clearCanonicalUrl()
     {
         $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
         $app->make('Concrete\Core\Url\Resolver\CanonicalUrlResolver')->clearCached();
     }
-
 
     /*
     public function testPage()

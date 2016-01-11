@@ -1,4 +1,4 @@
-<?
+<?php
 
 defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Core\Permission\Access\Entity\Type as PermissionAccessEntityType;
@@ -7,16 +7,16 @@ $type = PermissionAccessEntityType::getByHandle('group_set');
 $url = $type->getAccessEntityTypeToolsURL();
 
 $tp = new TaskPermission();
-if (!$tp->canAccessGroupSearch()) { 
-	echo(t("You have no access to groups."));
-} else { 	
-	$gl = new GroupSetList();
-	?>
+if (!$tp->canAccessGroupSearch()) {
+    echo t("You have no access to groups.");
+} else {
+    $gl = new GroupSetList();
+    ?>
 	<div id="ccm-list-wrapper">
 	
-	<? if ($gl->getTotal() > 0) { 
-	
-		foreach ($gl->get() as $gs) { ?>
+	<?php if ($gl->getTotal() > 0) {
+    foreach ($gl->get() as $gs) {
+        ?>
 	
 		<div class="ccm-group">
 			<div style="background-image: url(<?=ASSETS_URL_IMAGES?>/icons/group.png)" class="ccm-group-inner-indiv">
@@ -24,15 +24,20 @@ if (!$tp->canAccessGroupSearch()) {
 			</div>
 		</div>
 	
-	<? } ?>
+	<?php 
+    }
+    ?>
 	
-	<?
-	
-	} else { ?>
+	<?php
+
+} else {
+    ?>
 	
 		<p><?=t('No group sets found.')?></p>
 		
-	<? } ?>
+	<?php 
+}
+    ?>
 	
 	</div>
 	
@@ -49,4 +54,5 @@ if (!$tp->canAccessGroupSearch()) {
 		});
 	}	
 	</script>
-<? } ?>
+<?php 
+} ?>

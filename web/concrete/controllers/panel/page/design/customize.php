@@ -1,23 +1,19 @@
-<?
+<?php
 namespace Concrete\Controller\Panel\Page\Design;
 
-use \Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
+use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
 use Concrete\Core\Page\PageList;
 use Permissions;
 use Page;
-use stdClass;
 use PermissionKey;
 use PageTheme;
 use PageEditResponse;
 use Request;
-use Loader;
-use User;
 use Response;
 use Core;
 
 class Customize extends BackendInterfacePageController
 {
-
     protected $viewPath = '/panels/page/design/customize';
     protected $controllerActionPath = '/ccm/system/panels/page/design/customize';
     protected $helpers = array('form');
@@ -32,7 +28,6 @@ class Customize extends BackendInterfacePageController
         $this->requireAsset('core/style-customizer');
         $pt = PageTheme::getByID($pThemeID);
         if (is_object($pt) && $pt->isThemeCustomizable()) {
-
             $presets = $pt->getThemeCustomizableStylePresets();
             foreach ($presets as $preset) {
                 if ($preset->isDefaultPreset()) {
@@ -105,6 +100,7 @@ class Customize extends BackendInterfacePageController
         $pt = PageTheme::getByID($pThemeID);
         $styles = $pt->getThemeCustomizableStyleList();
         $vl = \Concrete\Core\StyleCustomizer\Style\ValueList::loadFromRequest($this->request->request, $styles);
+
         return $vl;
     }
 
@@ -132,6 +128,7 @@ class Customize extends BackendInterfacePageController
         $response = new Response();
         $content = $view->render();
         $response->setContent($content);
+
         return $response;
     }
 
@@ -173,7 +170,6 @@ class Customize extends BackendInterfacePageController
             $r->outputJSON();
         }
     }
-
 
     public function apply_to_page($pThemeID)
     {

@@ -3,10 +3,8 @@ namespace Concrete\Core\Application\UserInterface\Menu\Item;
 
 interface ItemInterface
 {
-
     /**
      * @param ControllerInterface $controller
-     * @return void
      */
     public function setController(ControllerInterface $controller);
 
@@ -19,5 +17,4 @@ interface ItemInterface
      * @return bool
      */
     public function getPosition();
-
 }

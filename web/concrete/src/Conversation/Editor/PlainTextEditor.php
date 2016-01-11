@@ -5,7 +5,6 @@ use Core;
 
 class PlainTextEditor extends Editor
 {
-
     public function getConversationEditorAssetPointers()
     {
         return array();
@@ -21,6 +20,7 @@ class PlainTextEditor extends Editor
         /** @var \Concrete\Core\Utility\Service\Text $text */
         $text = Core::make('helper/text');
         $formatted = nl2br($text->entities($cnvMessageBody));
+
         return parent::formatConversationMessageBody($cnv, $formatted, $config);
     }
 }

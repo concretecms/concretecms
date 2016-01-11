@@ -1,12 +1,11 @@
 <?php
 namespace Concrete\Job;
 
-use \Job as AbstractJob;
-use \Concrete\Core\Gathering\Gathering;
+use Job as AbstractJob;
+use Concrete\Core\Gathering\Gathering;
 
 class UpdateGatherings extends AbstractJob
 {
-
     public function getJobName()
     {
         return t("Update Gatherings");

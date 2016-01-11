@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Attribute;
 
 use Concrete\Core\Attribute\Key\Category;
@@ -11,7 +10,6 @@ use Concrete\Core\Entity\Attribute\Type as AttributeType;
  */
 class TypeFactory
 {
-
     protected $entityManager;
 
     public function __construct(EntityManager $entityManager)
@@ -22,12 +20,14 @@ class TypeFactory
     public function getByHandle($atHandle)
     {
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Type');
+
         return $r->findOneBy(array('atHandle' => $atHandle));
     }
 
     public function getByID($atID)
     {
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Type');
+
         return $r->findOneBy(array('atID' => $atID));
     }
 
@@ -41,6 +41,7 @@ class TypeFactory
         }
         $this->entityManager->persist($type);
         $this->entityManager->flush();
+
         return $type;
     }
 
@@ -51,6 +52,7 @@ class TypeFactory
             return $r->findAll();
         } else {
             $category = Category::getByHandle($akCategoryHandle);
+
             return $category->getAttributeTypes();
         }
     }

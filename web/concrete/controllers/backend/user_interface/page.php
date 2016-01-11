@@ -1,13 +1,11 @@
 <?php
 namespace Concrete\Controller\Backend\UserInterface;
 
-use Exception;
 use Page as ConcretePage;
 use Permissions;
 
 abstract class Page extends \Concrete\Controller\Backend\UserInterface
 {
-
     /** @var ConcretePage A page object */
     protected $page;
 
@@ -46,7 +44,7 @@ abstract class Page extends \Concrete\Controller\Backend\UserInterface
         }
         $url = call_user_func_array('parent::action', func_get_args());
         $url .= '&cID=' . $cID;
+
         return $url;
     }
-
 }

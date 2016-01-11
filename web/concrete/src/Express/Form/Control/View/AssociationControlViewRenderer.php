@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Express\Form\Control\View;
 
 use Concrete\Core\Express\BaseEntity;
@@ -9,7 +8,6 @@ use Concrete\Core\Express\Form\RendererFactory;
 
 class AssociationControlViewRenderer implements RendererInterface
 {
-
     protected $application;
     protected $entity;
     protected $factory;
@@ -27,7 +25,6 @@ class AssociationControlViewRenderer implements RendererInterface
 
     public function render()
     {
-
         $template = $this->application->make('environment')->getPath(
             DIRNAME_ELEMENTS .
             '/' . DIRNAME_EXPRESS .
@@ -37,7 +34,7 @@ class AssociationControlViewRenderer implements RendererInterface
         );
 
         $association = $this->factory->getControl()->getAssociation();
-        /**
+        /*
          * @var $association \Concrete\Core\Entity\Express\Association
          */
         $entities = array();
@@ -49,8 +46,7 @@ class AssociationControlViewRenderer implements RendererInterface
         $view->addScopeItem('entities', $entities);
         $view->addScopeItem('control', $this->factory->getControl());
         $view->addScopeItem('formatter', $association->getFormatter());
+
         return $view->render($template);
     }
-
-
 }

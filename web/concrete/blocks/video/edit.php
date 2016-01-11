@@ -1,8 +1,8 @@
-<?
-	defined('C5_EXECUTE') or die("Access Denied.");
-	$bObj=$controller;
-	$al = Loader::helper('concrete/asset_library');
-	$bf = null;
+<?php
+    defined('C5_EXECUTE') or die("Access Denied.");
+    $bObj = $controller;
+    $al = Loader::helper('concrete/asset_library');
+    $bf = null;
     if ($controller->getWebmFileID() > 0) {
         $webm = $controller->getWebMFileObject();
     }
@@ -47,4 +47,4 @@
             <?=$al->video('ccm-b-mp4-file', 'mp4fID', t('Choose Video File'), $mp4);?>
         </div>
 </fieldset>
-<? $this->inc('form_setup_html.php'); ?> 
+<?php $this->inc('form_setup_html.php'); ?> 

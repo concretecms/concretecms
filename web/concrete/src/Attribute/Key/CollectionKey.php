@@ -1,12 +1,10 @@
 <?php
-
 namespace Concrete\Core\Attribute\Key;
 
 use Concrete\Core\Support\Facade\Facade;
 
 class CollectionKey extends Facade
 {
-
     public static function getFacadeAccessor()
     {
         return 'Concrete\Core\Attribute\Category\PageCategory';
@@ -21,6 +19,4 @@ class CollectionKey extends Facade
     {
         return static::getFacadeRoot()->getAttributeKeyByID($akID);
     }
-
-
 }

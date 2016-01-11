@@ -1,11 +1,9 @@
 <?php
-
 namespace Concrete\Core\Package;
 
 use AuthenticationType;
 use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Config\Renderer;
-use Concrete\Core\Database\EntityManagerFactory;
 use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use Concrete\Core\Mail\Importer\MailImporter;
 use Concrete\Core\Package\Routine\AttachModeInstallRoutine;
@@ -104,6 +102,7 @@ class StartingPointPackage extends BasePackage
 
     /**
      * @param string $pkgHandle
+     *
      * @return static
      */
     public static function getClass($pkgHandle)

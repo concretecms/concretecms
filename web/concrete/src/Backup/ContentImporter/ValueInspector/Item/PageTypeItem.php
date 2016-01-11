@@ -1,12 +1,10 @@
 <?php
-
 namespace Concrete\Core\Backup\ContentImporter\ValueInspector\Item;
 
 use Concrete\Core\Page\Type\Type;
 
 class PageTypeItem extends AbstractItem
 {
-
     public function getDisplayName()
     {
         return t('Page Type');
@@ -23,6 +21,4 @@ class PageTypeItem extends AbstractItem
             return $o->getPageTypeID();
         }
     }
-
-
 }

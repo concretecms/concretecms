@@ -1,9 +1,7 @@
 <?php
-
 namespace Concrete\Core\Entity\Attribute\Key\Type;
 
 use Concrete\Core\Entity\Attribute\Value\Value\DateTimeValue;
-
 
 /**
  * @Entity
@@ -11,7 +9,6 @@ use Concrete\Core\Entity\Attribute\Value\Value\DateTimeValue;
  */
 class DateTimeType extends Type
 {
-
     public function getAttributeValue()
     {
         return new DateTimeValue();
@@ -41,7 +38,7 @@ class DateTimeType extends Type
     public function createController()
     {
         $controller = new \Concrete\Attribute\DateTime\Controller($this->getAttributeType());
+
         return $controller;
     }
-
 }

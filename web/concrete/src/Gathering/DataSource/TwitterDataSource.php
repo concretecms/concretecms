@@ -5,18 +5,17 @@ use Concrete\Core\Gathering\DataSource\Configuration\Configuration as GatheringD
 use Concrete\Core\Url\Url;
 use OAuth\Common\Consumer\Credentials;
 use OAuth\Common\Storage\Memory;
-use OAuth\Common\Storage\SymfonySession;
 use OAuth\OAuth1\Token\StdOAuth1Token;
 
 class TwitterDataSource extends DataSource
 {
-
     const TWITTER_SEARCH_URL = 'http://api.flickr.com/services/feeds/photos_public.gne';
 
     public function createConfigurationObject(Gathering $ag, $post)
     {
         $o = new TwitterGatheringDataSourceConfiguration();
         $o->setTwitterUsername($post['twitterUsername']);
+
         return $o;
     }
 
@@ -50,7 +49,7 @@ class TwitterDataSource extends DataSource
         $url->setPath('/statuses/user_timeline.json');
         $url->setQuery(array(
             'screen_name' => $configuration->getTwitterUsername(),
-            'count' => 50
+            'count' => 50,
         ));
 
         $tweets = json_decode($twitter->request($url));
@@ -72,7 +71,7 @@ class TwitterDataSource extends DataSource
                 $items[] = $item;
             }
         }
+
         return $items;
     }
-
 }

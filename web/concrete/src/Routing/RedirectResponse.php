@@ -5,7 +5,6 @@ use Concrete\Core\Http\Request;
 
 class RedirectResponse extends \Symfony\Component\HttpFoundation\RedirectResponse
 {
-
     protected $request;
 
     public function __construct($url, $status = 302, $headers = array())
@@ -32,5 +31,4 @@ class RedirectResponse extends \Symfony\Component\HttpFoundation\RedirectRespons
         }
         parent::send();
     }
-
 }

@@ -7,7 +7,6 @@ use Doctrine\DBAL\DBALException;
 
 class ConnectionFactory
 {
-
     /** @var Application */
     protected $app;
 
@@ -49,7 +48,9 @@ class ConnectionFactory
     /**
      * @param $config
      * @param $name
+     *
      * @return \Doctrine\DBAL\Connection
+     *
      * @throws DBALException
      */
     public function make($config, $name)
@@ -64,5 +65,4 @@ class ConnectionFactory
     {
         return $this->driver_manager;
     }
-
 }

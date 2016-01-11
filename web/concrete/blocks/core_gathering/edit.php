@@ -18,10 +18,10 @@ $(function() {
 });
 </script>
 
-<?
+<?php
 Loader::element('gathering/display', array(
-	'gathering' => $gathering,
-	'list' => $itemList,
-	'itemsPerPage' => $itemsPerPage,
-	'showTileControls' => true
+    'gathering' => $gathering,
+    'list' => $itemList,
+    'itemsPerPage' => $itemsPerPage,
+    'showTileControls' => true,
 ));

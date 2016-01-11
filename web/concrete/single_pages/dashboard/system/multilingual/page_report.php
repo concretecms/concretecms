@@ -2,7 +2,8 @@
 $nav = Loader::helper('navigation');
 ?>
 
-<?php if (count($sections) > 0) { ?>
+<?php if (count($sections) > 0) {
+    ?>
 
 <div class="ccm-dashboard-content-full">
 
@@ -33,20 +34,24 @@ $nav = Loader::helper('navigation');
             <div class="form-group">
                 <label class="control-label"><?=t('Choose Targets')?></label>
                 <div class="ccm-search-field-content">
-                <? foreach($sectionList as $sc) { ?>
+                <?php foreach ($sectionList as $sc) {
+    ?>
                     <?php $args = array('style' => 'vertical-align: middle');
-                    if ($sectionID == $sc->getCollectionID()) {
-                        $args['disabled'] = 'disabled';
-                    }
-                    ?>
+    if ($sectionID == $sc->getCollectionID()) {
+        $args['disabled'] = 'disabled';
+    }
+    ?>
                     <div>
                         <label class="checkbox-inline">
                             <?php echo $form->checkbox('targets[' . $sc->getCollectionID() . ']', $sc->getCollectionID(), in_array($sc->getCollectionID(), $targets), $args)?>
                             <?php echo $fh->getSectionFlagIcon($sc)?>
-                            <?php echo $sc->getLanguageText(). " (".$sc->getLocale().")"; ?>
+                            <?php echo $sc->getLanguageText(). " (".$sc->getLocale().")";
+    ?>
                         </label>
                     </div>
-                <? } ?>
+                <?php 
+}
+    ?>
                 </div>
             </div>
         </div>
@@ -73,116 +78,147 @@ $nav = Loader::helper('navigation');
 
     </form>
 
-    <? if (count($sections) > 0) {
-        $width = 100 / count($sections);
-    } else {
-        $width = '100';
-    }?>
+    <?php if (count($sections) > 0) {
+    $width = 100 / count($sections);
+} else {
+    $width = '100';
+}
+    ?>
 
     <div class="table-responsive">
         <table class="ccm-search-results-table">
             <thead>
             <tr>
-                <th style="width: <?=$width?>%"><span><?
+                <th style="width: <?=$width?>%"><span><?php
                     $sourceMS = \Concrete\Core\Multilingual\Page\Section\Section::getByID($sectionID);
-                    print t('%s (%s)', $sourceMS->getLanguageText(), $sourceMS->getLocale());
-                    ?>
+    echo t('%s (%s)', $sourceMS->getLanguageText(), $sourceMS->getLocale());
+    ?>
                 </span></th>
-                <? foreach($targetList as $sc) { ?>
-                    <?php if ($section->getCollectionID() != $sc->getCollectionID()) { ?>
-                        <th style="width:<?=$width?>%"><span><?
-                            print $fh->getSectionFlagIcon($sc);
-                            print '&nbsp;';
-                            print t('%s (%s)', $sc->getLanguageText(), $sc->getLocale());
-                            ?>
+                <?php foreach ($targetList as $sc) {
+    ?>
+                    <?php if ($section->getCollectionID() != $sc->getCollectionID()) {
+    ?>
+                        <th style="width:<?=$width?>%"><span><?php
+                            echo $fh->getSectionFlagIcon($sc);
+    echo '&nbsp;';
+    echo t('%s (%s)', $sc->getLanguageText(), $sc->getLocale());
+    ?>
                         </span></th>
-                    <? } ?>
-                <? } ?>
+                    <?php 
+}
+    ?>
+                <?php 
+}
+    ?>
             </tr>
             </thead>
             <tbody>
-            <? if (count($pages) > 0) { ?>
-                <? foreach($pages as $pc) { ?>
+            <?php if (count($pages) > 0) {
+    ?>
+                <?php foreach ($pages as $pc) {
+    ?>
                     <tr>
                     <td>
                         <a href="<?php echo $pc->getCollectionLink()?>"><?=$pc->getCollectionName()?></a>
                         <div><small><?=$pc->getCollectionPath()?></small></div>
                     </td>
-                    <? foreach($targetList as $sc) {
-
-                        $multilingualController = Core::make('\Concrete\Controller\Backend\Page\Multilingual');
-                        $multilingualController->setPageObject($pc);
-                        ?>
-                        <? if ($section->getCollectionID() != $sc->getCollectionID()) { ?>
+                    <?php foreach ($targetList as $sc) {
+    $multilingualController = Core::make('\Concrete\Controller\Backend\Page\Multilingual');
+    $multilingualController->setPageObject($pc);
+    ?>
+                        <?php if ($section->getCollectionID() != $sc->getCollectionID()) {
+    ?>
                             <td><div data-multilingual-page-section="<?=$sc->getCollectionID()?>" data-multilingual-page-source="<?=$pc->getCollectionID()?>">
 
                                     <div data-wrapper="page">
-                                    <? 						$cID = $sc->getTranslatedPageID($pc);
-                                if ($cID) {
-                                    $p = \Page::getByID($cID);
-                                    print '<a href="' . $nav->getLinkToCollection($p) . '">' . $p->getCollectionName() . '</a>';
-                                } else if ($cID === '0') {
-                                    print t('Ignored');
-
-                                } ?>
+                                    <?php                        $cID = $sc->getTranslatedPageID($pc);
+    if ($cID) {
+        $p = \Page::getByID($cID);
+        echo '<a href="' . $nav->getLinkToCollection($p) . '">' . $p->getCollectionName() . '</a>';
+    } elseif ($cID === '0') {
+        echo t('Ignored');
+    }
+    ?>
                                     </div>
                                     <div data-wrapper="buttons">
-                                    <?
+                                    <?php
 
                                     $cParentID = $pc->getCollectionParentID();
-                                    $cParent = Page::getByID($cParentID);
-                                    $cParentRelatedID = $sc->getTranslatedPageID($cParent);
-                                    if ($cParentRelatedID) {
-
-                                        $assignLang = t('Re-Map');
-                                        if (!$cID) {
-                                            $assignLang = t('Map');
-                                        }
-                                        ?>
-                                        <?php if (!$cID) { ?>
+    $cParent = Page::getByID($cParentID);
+    $cParentRelatedID = $sc->getTranslatedPageID($cParent);
+    if ($cParentRelatedID) {
+        $assignLang = t('Re-Map');
+        if (!$cID) {
+            $assignLang = t('Map');
+        }
+        ?>
+                                        <?php if (!$cID) {
+    ?>
                                             <button class="btn btn-success btn-xs" type="button"
                                                     data-btn-action="create"
                                                     data-btn-url="<?=$multilingualController->action('create_new')?>"
                                                     data-btn-multilingual-page-source="<?php echo $pc->getCollectionID()?>"
                                                     data-btn-multilingual-section="<?php echo $sc->getCollectionID()?>"
                                             ><?=t('Create Page')?></button>
-                                        <?php } ?>
+                                        <?php 
+}
+        ?>
                                         <button class="btn btn-info btn-xs" type="button"
                                                 data-btn-action="map"
                                                 data-btn-url="<?=$multilingualController->action('assign')?>"
                                                 data-btn-multilingual-page-source="<?php echo $pc->getCollectionID()?>"
                                                 data-btn-multilingual-section="<?php echo $sc->getCollectionID()?>"
                                             ><?php echo $assignLang?></button>
-                                        <?php if ($cID !== '0' && !$cID) { ?>
+                                        <?php if ($cID !== '0' && !$cID) {
+    ?>
                                            <button class="btn btn-warning btn-xs" type="button"
                                                data-btn-action="ignore"
                                                data-btn-url="<?=$multilingualController->action('ignore')?>"
                                                data-btn-multilingual-page-source="<?php echo $pc->getCollectionID()?>"
                                                data-btn-multilingual-section="<?php echo $sc->getCollectionID()?>"
                                            ><?=t('Ignore')?></button>
-                                        <?php } ?>
-                                        <?php if ($cID) { ?>
+                                        <?php 
+}
+        ?>
+                                        <?php if ($cID) {
+    ?>
                                             <button class="btn btn-danger btn-xs" type="button"
                                                     data-btn-action="unmap"
                                                     data-btn-url="<?=$multilingualController->action('unmap')?>"
                                                     data-btn-multilingual-page-source="<?php echo $pc->getCollectionID()?>"
                                                 ><?=t('Un-Map')?></button>
-                                        <?php } ?>
+                                        <?php 
+}
+        ?>
 
-                                    <?php } else { ?>
+                                    <?php 
+    } else {
+        ?>
                                         <div class="ccm-note"><?php echo t("Create the parent page first.")?></div>
-                                    <?php } ?>
+                                    <?php 
+    }
+    ?>
                                     </div>
                                 </div>
                             </td>
-                        <?php } ?>
-                    <?php } ?>
-                <? } ?>
-            <? } else {?>
+                        <?php 
+}
+    ?>
+                    <?php 
+}
+    ?>
+                <?php 
+}
+    ?>
+            <?php 
+} else {
+    ?>
                 <tr>
                     <td colspan="4"><?php echo t('No pages found.')?></td>
                 </tr>
-            <? } ?>
+            <?php 
+}
+    ?>
             </tbody>
         </table>
     </div>
@@ -293,13 +329,20 @@ $nav = Loader::helper('navigation');
     </script>
 
     <div class="ccm-search-results-pagination">
-        <? if ($pagination->haveToPaginate()) { ?>
-            <?=$pagination->renderView('dashboard');?>
-        <? } ?>
+        <?php if ($pagination->haveToPaginate()) {
+    ?>
+            <?=$pagination->renderView('dashboard');
+    ?>
+        <?php 
+}
+    ?>
     </div>
 </div>
 
 
-<? } else { ?>
+<?php 
+} else {
+    ?>
 	<p><?php echo t('You have not defined any multilingual sections for your site yet.')?></p>
-<? } ?>
+<?php 
+} ?>

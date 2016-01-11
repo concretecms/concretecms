@@ -1,12 +1,11 @@
 <?php
 namespace Concrete\Core\Area\Layout\Preset\Provider;
+
 use Concrete\Core\Area\Layout\Preset\InvalidPresetException;
 use Concrete\Core\Area\Layout\Preset\PresetInterface;
-use Concrete\Core\Page\Page;
 
 class Manager
 {
-
     protected $providers = array();
 
     public function register(ProviderInterface $provider)
@@ -33,23 +32,25 @@ class Manager
     public function getPresets()
     {
         $presets = array();
-        foreach($this->providers as $provider) {
+        foreach ($this->providers as $provider) {
             $presets = array_merge($presets, $provider->getPresets());
         }
-        array_map(function($preset) {
+        array_map(function ($preset) {
             if (!($preset instanceof PresetInterface)) {
                 throw new InvalidPresetException(t('Items returned by getPresets() must implement the PresetInterface'));
             }
         }, $presets);
+
         return $presets;
     }
 
     public function getPresetByIdentifier($identifier)
     {
-        $results = array_filter($this->getPresets(), function($preset) use ($identifier) {
+        $results = array_filter($this->getPresets(), function ($preset) use ($identifier) {
             return $preset->getIdentifier() == $identifier;
         });
         $results = array_values($results);
+
         return $results[0];
     }
 }

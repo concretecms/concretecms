@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Session;
 
 use Concrete\Core\Application\Application;
@@ -13,12 +12,12 @@ use Symfony\Component\HttpFoundation\Session\Session as SymfonySession;
 
 /**
  * Class SessionFactory
- * Base concrete5 session factory
+ * Base concrete5 session factory.
+ *
  * @package Concrete\Core\Session
  */
 class SessionFactory implements SessionFactoryInterface
 {
-
     /** @var \Concrete\Core\Application\Application */
     private $app;
 
@@ -33,7 +32,7 @@ class SessionFactory implements SessionFactoryInterface
 
     /**
      * Create a new symfony session object
-     * This method MUST NOT start the session
+     * This method MUST NOT start the session.
      *
      * @return \Symfony\Component\HttpFoundation\Session\Session
      */
@@ -45,7 +44,7 @@ class SessionFactory implements SessionFactoryInterface
         $session = new SymfonySession($storage);
         $session->setName($config->get('concrete.session.name'));
 
-        /**
+        /*
          * @todo Move this to somewhere else
          */
         $this->request->setSession($session);
@@ -55,6 +54,7 @@ class SessionFactory implements SessionFactoryInterface
 
     /**
      * @param \Illuminate\Config\Repository $config
+     *
      * @return \Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface
      */
     private function getSessionStorage(Repository $config)
@@ -81,6 +81,7 @@ class SessionFactory implements SessionFactoryInterface
 
     /**
      * @param \Illuminate\Config\Repository $config
+     *
      * @return \SessionHandlerInterface
      */
     private function getSessionHandler(Repository $config)
@@ -92,7 +93,7 @@ class SessionFactory implements SessionFactoryInterface
                 'db_id_col' => 'sessionID',
                 'db_data_col' => 'sessionValue',
                 'db_time_col' => 'sessionTime',
-                'db_lifetime_col' => 'sessionLifeTime'
+                'db_lifetime_col' => 'sessionLifeTime',
             ));
         } else {
             $savePath = $config->get('concrete.session.save_path') ?: null;
@@ -101,5 +102,4 @@ class SessionFactory implements SessionFactoryInterface
 
         return $handler;
     }
-
 }

@@ -8,7 +8,6 @@ use Permissions;
 
 class Single extends DashboardPageController
 {
-
     public function single_page_added()
     {
         $this->set('message', t('Page Successfully Added.'));

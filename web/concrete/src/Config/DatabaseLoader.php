@@ -6,13 +6,13 @@ use Database;
 
 class DatabaseLoader implements LoaderInterface
 {
-
     /**
      * Load the given configuration group. Because it's the database, we ignore the environment.
      *
      * @param  string $environment
      * @param  string $group
      * @param  string $namespace
+     *
      * @return array
      */
     public function load($environment, $group, $namespace = null)
@@ -48,6 +48,7 @@ class DatabaseLoader implements LoaderInterface
      *
      * @param  string $group
      * @param  string $namespace
+     *
      * @return bool
      */
     public function exists($group, $namespace = null)
@@ -69,7 +70,8 @@ class DatabaseLoader implements LoaderInterface
         }
         $row = $query->execute()->fetch();
         $count = array_shift($row);
-        return !!$count;
+
+        return (bool) $count;
     }
 
     /**
@@ -77,7 +79,6 @@ class DatabaseLoader implements LoaderInterface
      *
      * @param  string $namespace
      * @param  string $hint
-     * @return void
      */
     public function addNamespace($namespace, $hint)
     {
@@ -112,6 +113,7 @@ class DatabaseLoader implements LoaderInterface
      * @param  string $package
      * @param  string $group
      * @param  array  $items
+     *
      * @return array
      */
     public function cascadePackage($environment, $package, $group, $items)
@@ -128,8 +130,6 @@ class DatabaseLoader implements LoaderInterface
             $query
                 ->delete('Config', 'c')
                 ->where($query->expr()->comparison('configNamespace', '=', $query->expr()->literal($namespace)));
-
         }
     }
-
 }

@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Entity\Express;
 
 use Concrete\Core\Attribute\AttributeKeyInterface;
@@ -10,7 +9,6 @@ use Concrete\Core\Attribute\AttributeKeyInterface;
  */
 class Attribute implements AttributeKeyInterface
 {
-
     /**
      * @Id @Column(type="integer")
      * @GeneratedValue(strategy="AUTO")
@@ -107,5 +105,4 @@ class Attribute implements AttributeKeyInterface
             return call_user_func_array(array($this->attribute, $nm), $args);
         }
     }
-
 }

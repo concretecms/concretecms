@@ -1,13 +1,11 @@
 <?php
-use Concrete\Core\Express\ObjectBuilder;
+
 
 require_once "ExpressEntityManagerTestCaseTrait.php";
 
 class SchemaToolTest extends PHPUnit_Framework_TestCase
 {
-
     use ExpressEntityManagerTestCaseTrait;
-
 
     public function testSchemaCreate()
     {
@@ -28,6 +26,4 @@ class SchemaToolTest extends PHPUnit_Framework_TestCase
         $this->assertContains('first_name', $create[0]);
         $this->assertContains('auto_increment', $create[0], '', true);
     }
-
-
 }

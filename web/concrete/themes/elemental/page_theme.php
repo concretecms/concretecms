@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Theme\Elemental;
 
 use Concrete\Core\Area\Layout\Preset\Provider\ThemeProviderInterface;
@@ -79,7 +78,7 @@ class PageTheme extends \Concrete\Core\Page\Theme\Theme implements ThemeProvider
     public function getThemeDefaultBlockTemplates()
     {
         return array(
-            'calendar' => 'bootstrap_calendar.php'
+            'calendar' => 'bootstrap_calendar.php',
         );
     }
 
@@ -114,7 +113,7 @@ class PageTheme extends \Concrete\Core\Page\Theme\Theme implements ThemeProvider
                 'container' => '<div class="row"></div>',
                 'columns' => array(
                     '<div class="col-sm-4"></div>',
-                    '<div class="col-sm-8"></div>'
+                    '<div class="col-sm-8"></div>',
                 ),
             ),
             array(
@@ -123,10 +122,11 @@ class PageTheme extends \Concrete\Core\Page\Theme\Theme implements ThemeProvider
                 'container' => '<div class="row"></div>',
                 'columns' => array(
                     '<div class="col-sm-8"></div>',
-                    '<div class="col-sm-4"></div>'
+                    '<div class="col-sm-4"></div>',
                 ),
-            )
+            ),
         );
+
         return $presets;
     }
 }

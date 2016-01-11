@@ -82,7 +82,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                             '25' => '25',
                             '50' => '50',
                             '100' => '100',
-                            '500' => '500'
+                            '500' => '500',
                         ), Loader::helper('text')->specialchars($searchRequest['numResults']))?>
                     </div>
                 </div>
@@ -123,85 +123,108 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
     </div>
     <div data-search-element="results">
     <?php
-    if (count($pages) > 0) { ?>
+    if (count($pages) > 0) {
+        ?>
         <div class="ccm-search-results-table container-fluid">
         <?php $i = 0;
-            foreach($pages as $cobj) {
-                $cpobj = new Permissions($cobj);
-                $i++;
-                $cID = $cobj->getCollectionID();
-                ?>
+        foreach ($pages as $cobj) {
+            $cpobj = new Permissions($cobj);
+            ++$i;
+            $cID = $cobj->getCollectionID();
+            ?>
             <div class="row page-title"><legend><?php echo $cobj->getCollectionName() ?></legend></div>
-            <div class="ccm-seoRow-<?php echo $cID; ?> ccm-seo-rows <?php echo $i % 2 == 0 ? 'even' : '' ?> row">
+            <div class="ccm-seoRow-<?php echo $cID;
+            ?> ccm-seo-rows <?php echo $i % 2 == 0 ? 'even' : '' ?> row">
                     <div class="col-md-3 seo-page-details">
-                        <strong><?php echo t('Page Name'); ?></strong><br/>
-                        <?php echo $cobj-> getCollectionName() ? $cobj->getCollectionName() : ''; ?><br/><br/>
-                        <strong><?php echo t('Page Type'); ?></strong><br/>
-                        <?php echo $cobj->getPageTypeName() ? $cobj->getPageTypeName() : t('Single Page'); ?><br/><br/>
-                        <strong><?php echo t('Modified'); ?></strong><br/>
-                        <?php echo $cobj->getCollectionDateLastModified() ? $dh->formatDateTime($cobj->getCollectionDateLastModified()) : ''; ?>
+                        <strong><?php echo t('Page Name');
+            ?></strong><br/>
+                        <?php echo $cobj->getCollectionName() ? $cobj->getCollectionName() : '';
+            ?><br/><br/>
+                        <strong><?php echo t('Page Type');
+            ?></strong><br/>
+                        <?php echo $cobj->getPageTypeName() ? $cobj->getPageTypeName() : t('Single Page');
+            ?><br/><br/>
+                        <strong><?php echo t('Modified');
+            ?></strong><br/>
+                        <?php echo $cobj->getCollectionDateLastModified() ? $dh->formatDateTime($cobj->getCollectionDateLastModified()) : '';
+            ?>
                     </div>
                     <div class="col-md-7 col-md-offset-1 seo-page-edit">
                         <div class="form-group">
-                            <label><?php echo t('Meta Title'); ?></label>
+                            <label><?php echo t('Meta Title');
+            ?></label>
                             <?php $seoPageTitle = $cobj->getCollectionName();
-                            $seoPageTitle = htmlspecialchars($seoPageTitle, ENT_COMPAT, APP_CHARSET);
-                            $autoTitle = sprintf(Config::get('concrete.seo.title_format'), $siteName, $seoPageTitle);
-                            $titleInfo = array('title' => $cID);
-                            if(strlen($cobj->getAttribute('meta_title')) <= 0) {
-                                $titleInfo[style] = 'background: whiteSmoke';
-                            }
-                            echo $form->text('meta_title', $cobj->getAttribute('meta_title') ? $cobj->getAttribute('meta_title') : $autoTitle, $titleInfo);
-                            echo $titleInfo[style] ? '<span class="help-inline">' . t('Default value. Click to edit.') . '</span>' : '' ?>
+            $seoPageTitle = htmlspecialchars($seoPageTitle, ENT_COMPAT, APP_CHARSET);
+            $autoTitle = sprintf(Config::get('concrete.seo.title_format'), $siteName, $seoPageTitle);
+            $titleInfo = array('title' => $cID);
+            if (strlen($cobj->getAttribute('meta_title')) <= 0) {
+                $titleInfo[style] = 'background: whiteSmoke';
+            }
+            echo $form->text('meta_title', $cobj->getAttribute('meta_title') ? $cobj->getAttribute('meta_title') : $autoTitle, $titleInfo);
+            echo $titleInfo[style] ? '<span class="help-inline">' . t('Default value. Click to edit.') . '</span>' : '' ?>
                         </div>
                         <div class="form-group">
-                            <label><?php echo t('Meta Description'); ?></label>
+                            <label><?php echo t('Meta Description');
+            ?></label>
                             <?php $pageDescription = $cobj->getCollectionDescription();
-                            $autoDesc = htmlspecialchars($pageDescription, ENT_COMPAT, APP_CHARSET);
-                            $descInfo = array('title' => $cID);
-                            if(strlen($cobj -> getAttribute('meta_description')) <= 0) {
-                                $descInfo[style] = 'background: whiteSmoke';
-                            }
-                            echo $form->textarea('meta_description', $cobj->getAttribute('meta_description') ? $cobj->getAttribute('meta_description') : $autoDesc, $descInfo);
-                            echo $descInfo[style] ? '<span class="help-inline">' . t('Default value. Click to edit.') . '</span>' : '';
-                            ?>
+            $autoDesc = htmlspecialchars($pageDescription, ENT_COMPAT, APP_CHARSET);
+            $descInfo = array('title' => $cID);
+            if (strlen($cobj->getAttribute('meta_description')) <= 0) {
+                $descInfo[style] = 'background: whiteSmoke';
+            }
+            echo $form->textarea('meta_description', $cobj->getAttribute('meta_description') ? $cobj->getAttribute('meta_description') : $autoDesc, $descInfo);
+            echo $descInfo[style] ? '<span class="help-inline">' . t('Default value. Click to edit.') . '</span>' : '';
+            ?>
                         </div>
-                        <? if ($cobj->getCollectionID() != HOME_CID) { ?>
+                        <?php if ($cobj->getCollectionID() != HOME_CID) {
+    ?>
 
                         <div class="form-group">
-                            <label><?php echo t('Slug'); ?></label>
-                            <?php echo $form->text('collection_handle', $cobj->getCollectionHandle(), array('title' => $cID, 'class' => 'collectionHandle')); ?>
+                            <label><?php echo t('Slug');
+    ?></label>
+                            <?php echo $form->text('collection_handle', $cobj->getCollectionHandle(), array('title' => $cID, 'class' => 'collectionHandle'));
+    ?>
                             <?php
                             if ($page = Page::getByID($cID)) {
                                 $page->rescanCollectionPath();
                             }
-                            $path = $cobj->getCollectionPath();
-                            $tokens = explode('/', $path);
-                            $lastkey = array_pop(array_keys($tokens));
-                            $tokens[$lastkey] = '<strong class="collectionPath">' . $tokens[$lastkey] . '</strong>';
-                            $untokens = implode('/', $tokens);
-                            ?><a class="help-inline url-path" href="<?php echo $nh->getLinkToCollection($cobj); ?>" target="_blank"><?php echo Core::getApplicationURL() . $untokens; ?></a><?php
+    $path = $cobj->getCollectionPath();
+    $tokens = explode('/', $path);
+    $lastkey = array_pop(array_keys($tokens));
+    $tokens[$lastkey] = '<strong class="collectionPath">' . $tokens[$lastkey] . '</strong>';
+    $untokens = implode('/', $tokens);
+    ?><a class="help-inline url-path" href="<?php echo $nh->getLinkToCollection($cobj);
+    ?>" target="_blank"><?php echo Core::getApplicationURL() . $untokens;
+    ?></a><?php
                             ?>
                         </div>
-                        <? } ?>
+                        <?php 
+}
+            ?>
                         <div class="form-group submit-changes">
-                            <form id="seoForm<?php echo $cID; ?>" action="<?php echo View::url('/dashboard/system/seo/page_data/', 'saveRecord')?>" method="post" class="pageForm">
+                            <form id="seoForm<?php echo $cID;
+            ?>" action="<?php echo View::url('/dashboard/system/seo/page_data/', 'saveRecord')?>" method="post" class="pageForm">
                                 <a class="btn btn-default submit-changes" data-cID="<?php echo $cobj->getCollectionID() ?>"><?php echo t('Save') ?></a>
                             </form>
                             <img style="display: none; position: absolute; top: 20px; right: 20px;" id="throbber<?php echo $cID ?>"  class="throbber" src="<?php echo ASSETS_URL_IMAGES . '/throbber_white_32.gif' ?>" />
                         </div>
                     </div>
             </div>
-            <?php } ?>
+            <?php 
+        }
+        ?>
         </div>
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
                 <button id="allSeoSubmit" class="btn pull-right btn-success"><?php echo t('Save All') ?></button>
             </div>
         </div>
-        <?php } else { ?>
+        <?php 
+    } else {
+        ?>
         <div class="ccm-results-list-none"><?php echo t('No pages found.')?></div>
-        <?php  } ?>
+        <?php 
+    } ?>
         <script type="text/javascript">
         $(document).ready(function() {
             $('.ccm-seo-rows').each(function(){
@@ -262,9 +285,11 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
         });
         </script>
     </div>
-    <? if ($pagination) { ?>
+    <?php if ($pagination) {
+    ?>
     <div style="text-align: center">
         <?=$pagination?>
     </div>
-    <? } ?>
+    <?php 
+} ?>
 </div>

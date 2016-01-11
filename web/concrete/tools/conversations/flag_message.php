@@ -1,4 +1,6 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
+<?php
+
+defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Core\Conversation\Message\Message as ConversationMessage;
 use \Concrete\Core\Conversation\FlagType\FlagType as ConversationFlagType;
 
@@ -33,8 +35,6 @@ if (Loader::helper('validation/numbers')->integer($_POST['cnvMessageID']) && $_P
             } else {
                 Loader::element('conversation/message', array('message' => $message));
             }
-
-
         }
     }
 }

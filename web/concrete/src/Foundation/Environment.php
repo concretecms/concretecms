@@ -1,12 +1,13 @@
 <?php
-
 namespace Concrete\Core\Foundation;
 
 use Config;
 
 /**
  * Useful functions for getting paths for concrete5 items.
+ *
  * @package Core
+ *
  * @author Andrew Embler <andrew@concrete5.org>
  * @copyright  Copyright (c) 2003-2012 Concrete5. (http://www.concrete5.org)
  * @license    http://www.concrete5.org/license/     MIT License
@@ -28,7 +29,7 @@ class Environment
                 $r = @file_get_contents(Config::get('concrete.cache.directory').'/'.Config::get('concrete.cache.environment.file'));
                 if ($r) {
                     $en = @unserialize($r);
-                    if ($en instanceof Environment) {
+                    if ($en instanceof self) {
                         $env = $en;
                         $env->autoLoaded = true;
 
@@ -36,7 +37,7 @@ class Environment
                     }
                 }
             }
-            $env = new Environment();
+            $env = new self();
         }
 
         return $env;
@@ -45,7 +46,7 @@ class Environment
     public static function saveCachedEnvironmentObject()
     {
         if (!file_exists(Config::get('concrete.cache.directory').'/'.Config::get('concrete.cache.environment.file'))) {
-            $env = new Environment();
+            $env = new self();
             $env->getOverrides();
             @file_put_contents(Config::get('concrete.cache.directory').'/'.Config::get('concrete.cache.environment.file'), serialize($env));
         }
@@ -62,7 +63,6 @@ class Environment
     }
 
     /**
-     * @access private
      */
     protected $ignoreFiles = array('__MACOSX');
 
@@ -258,6 +258,7 @@ class Environment
     public function getOverrideList()
     {
         $this->getOverrides();
+
         return $this->coreOverrides;
     }
 }

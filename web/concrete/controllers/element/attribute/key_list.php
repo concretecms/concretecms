@@ -8,7 +8,6 @@ use Concrete\Core\Controller\ElementController;
 
 class KeyList extends ElementController
 {
-
     protected $dashboard_page_path;
     protected $dashboard_page_add_action = 'select_type';
     protected $dashboard_page_edit_action = 'edit';
@@ -22,7 +21,7 @@ class KeyList extends ElementController
     protected $types = array();
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function enableSorting()
     {
@@ -30,7 +29,7 @@ class KeyList extends ElementController
     }
 
     /**
-     * @param boolean $enable_sorting
+     * @param bool $enable_sorting
      */
     public function setEnableSorting($enable_sorting)
     {
@@ -69,7 +68,6 @@ class KeyList extends ElementController
         $this->unassigned_attribute_keys = $unassigned_attribute_keys;
     }
 
-
     /**
      * @return mixed
      */
@@ -86,12 +84,10 @@ class KeyList extends ElementController
         $this->category = $category;
     }
 
-
     public function getElement()
     {
         return 'attribute/key/list';
     }
-
 
     /**
      * @return array
@@ -112,14 +108,15 @@ class KeyList extends ElementController
     public function getSortAttributeCategoryURL()
     {
         $args = array($this->getDashboardPagePath(), $this->getDashboardPageSortAction());
+
         return call_user_func_array(array('\URL', 'to'), $args);
     }
-
 
     public function getAddAttributeTypeURL(Type $type)
     {
         $args = array($this->getDashboardPagePath(), $this->getDashboardPageAddAction());
         $args = array_merge($args, $this->getDashboardPageParameters(), array($type->getAttributeTypeID()));
+
         return call_user_func_array(array('\URL', 'to'), $args);
     }
 
@@ -127,14 +124,14 @@ class KeyList extends ElementController
     {
         $args = array($this->getDashboardPagePath(), $this->getDashboardPageEditAction());
         $args = array_merge($args, $this->getDashboardPageParameters(), array($key->getAttributeKeyID()));
+
         return call_user_func_array(array('\URL', 'to'), $args);
     }
-
 
     public function view()
     {
         $types = array();
-        foreach($this->getAttributeTypes() as $type) {
+        foreach ($this->getAttributeTypes() as $type) {
             $types[$type->getAttributeTypeID()] = $type;
         }
         $this->set('types', $types);
@@ -214,6 +211,4 @@ class KeyList extends ElementController
     {
         $this->dashboard_page_edit_action = $dashboard_page_edit_action;
     }
-
-
 }

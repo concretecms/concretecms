@@ -7,7 +7,6 @@ namespace Concrete\Core\Entity\Attribute\Value\Value;
  */
 class SelectValueOption
 {
-
     /**
      * @Id @Column(type="integer", options={"unsigned":true})
      * @GeneratedValue(strategy="AUTO")
@@ -124,7 +123,4 @@ class SelectValueOption
     {
         return (string) $this->getSelectAttributeOptionValue();
     }
-
-
-
 }

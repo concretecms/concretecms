@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 /* @var $h ConcreteDashboardHelper */
 $h = Loader::helper('concrete/dashboard');?>
 <form method="post" id="ipblacklist-form" action="<?php echo $view->action('update_ipblacklist')?>">
@@ -9,15 +9,15 @@ $h = Loader::helper('concrete/dashboard');?>
 			<div class="form-group form-inline">
 				<?php echo $form->checkbox('ip_ban_lock_ip_enable', 1, $ip_ban_enable_lock_ip_after)?> <?php echo t('Lock IP after')?>
 				
-				<?php echo $form->text('ip_ban_lock_ip_attempts', $ip_ban_lock_ip_after_attempts, array('style'=>'width:60px'))?>
+				<?php echo $form->text('ip_ban_lock_ip_attempts', $ip_ban_lock_ip_after_attempts, array('style' => 'width:60px'))?>
 				<?php echo t('failed login attempts');?>		
 				<?php echo t('in');?>		
-				<?php echo $form->text('ip_ban_lock_ip_time', $ip_ban_lock_ip_after_time, array('style'=>'width:60px'))?>
+				<?php echo $form->text('ip_ban_lock_ip_time', $ip_ban_lock_ip_after_time, array('style' => 'width:60px'))?>
 				<?php echo t('seconds');?>				
 			</div>	
 			<div class="form-inline form-group">
 				<?php echo $form->radio('ip_ban_lock_ip_how_long_type', $ip_ban_lock_ip_how_long_type_timed, $ip_ban_lock_ip_how_long_type)?> <?php echo t('Ban IP For')?>	
-				<?php echo $form->text('ip_ban_lock_ip_how_long_min', $ip_ban_lock_ip_how_long_min, array('style'=>'width:60px'))?>
+				<?php echo $form->text('ip_ban_lock_ip_how_long_min', $ip_ban_lock_ip_how_long_min, array('style' => 'width:60px'))?>
 				<?php echo t('minutes');?>
 				<?php echo $form->radio('ip_ban_lock_ip_how_long_type', $ip_ban_lock_ip_how_long_type_forever, $ip_ban_lock_ip_how_long_type)?> <?php echo t('Forever')?>					
 			</div>
@@ -25,7 +25,7 @@ $h = Loader::helper('concrete/dashboard');?>
 			<table id="ip-blacklist" class="ccm-results-list table table-condensed table-striped" width="100%" cellspacing="1" cellpadding="0" border="0">
 				<thead>
 				<tr>
-					<th><?php echo $form->checkbox('ip_ban_select_all',1,false)?> <?php echo t('IP')?></th>
+					<th><?php echo $form->checkbox('ip_ban_select_all', 1, false)?> <?php echo t('IP')?></th>
 					<th><?php echo t('Reason For Ban')?></th>
 					<th><?php echo t('Expires In')?></th>
 					<th> 
@@ -38,20 +38,27 @@ $h = Loader::helper('concrete/dashboard');?>
 				</tr>
 				</thead>
 				<tbody>
-				<?php  if (count($user_banned_limited_ips) == 0) {?>
+				<?php  if (count($user_banned_limited_ips) == 0) {
+     ?>
 				<tr>
 					<td colspan="4"><?php  echo t('None')?></td>
 				</tr>
-				<?php  } else { ?>
-					<?php  foreach ($user_banned_limited_ips as $user_banned_ip) { ?>
+				<?php 
+ } else {
+     ?>
+					<?php  foreach ($user_banned_limited_ips as $user_banned_ip) {
+     ?>
 						<tr>
-							<td><label><?php echo $form->checkbox('ip_ban_changes[]',$user_banned_ip->getUniqueID(),false)?> <?php echo $user_banned_ip->getIPRangeForDisplay()?></label></td>
+							<td><label><?php echo $form->checkbox('ip_ban_changes[]', $user_banned_ip->getUniqueID(), false)?> <?php echo $user_banned_ip->getIPRangeForDisplay()?></label></td>
 							<td><?php echo $user_banned_ip->getReason()?></td>
-							<td><?php echo ($this->controller->formatTimestampAsMinutesSeconds($user_banned_ip->expires))?></td>			
+							<td><?php echo $this->controller->formatTimestampAsMinutesSeconds($user_banned_ip->expires)?></td>			
 							<td>&nbsp;</td>
 						</tr>		
-					<?php  } ?>
-				<?php  } ?>
+					<?php 
+ }
+     ?>
+				<?php 
+ } ?>
 				</tbody>
 			</table>	
 			<legend><?php echo t('Permanent IP Ban')?></legend>
@@ -63,9 +70,9 @@ $h = Loader::helper('concrete/dashboard');?>
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
 
-		<?php 	
-		print $interface->button_js(t('Save'), 'saveIpBlacklist()', 'right', 'btn-primary');
-		?>
+		<?php 
+        echo $interface->button_js(t('Save'), 'saveIpBlacklist()', 'right', 'btn-primary');
+        ?>
 	    </div>
 	</div>
 </form>

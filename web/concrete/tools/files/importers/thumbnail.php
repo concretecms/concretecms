@@ -39,7 +39,7 @@ foreach ($thumbnails as $thumb) {
 if ($thumbnail) {
     $fsl = $f->getFileStorageLocationObject();
 
-    /**
+    /*
      * Clear out the old image, and replace it with this data. This is destructive and not versioned, it definitely needs to
      * be revised.
      */

@@ -1,12 +1,10 @@
 <?php
-
 namespace Concrete\Core\Backup\ContentImporter\ValueInspector\InspectionRoutine;
 
 use Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PageItem;
 
 class PageRoutine extends AbstractRegularExpressionRoutine
 {
-
     public function getHandle()
     {
         return 'page';
@@ -21,6 +19,4 @@ class PageRoutine extends AbstractRegularExpressionRoutine
     {
         return new PageItem($identifier);
     }
-
-
 }
