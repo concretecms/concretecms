@@ -5,7 +5,6 @@ namespace Concrete\Core\Permission\Key;
 use Concrete\Core\Foundation\Object;
 use Gettext\Translations;
 use Database;
-use CacheLocal;
 use Package;
 use Concrete\Core\Package\PackageList;
 use Concrete\Core\Permission\Assignment\Assignment as PermissionAssignment;
@@ -149,7 +148,12 @@ abstract class Key extends Object
 
     public static function loadAll()
     {
+        $cache = Core::make('cache/expensive');
         $db = Database::connection();
+        $permissionkeys = $cache->getItem('permission_keys')->get();
+        if (is_array($permissionkeys)) {
+            return $permissionkeys;
+        }
         $permissionkeys = array();
         $txt = Core::make('helper/text');
         $e = $db->Execute('select pkID, pkName, pkDescription, pkHandle, pkCategoryHandle, pkCanTriggerWorkflow, pkHasCustomClass, PermissionKeys.pkCategoryID, PermissionKeyCategories.pkgID from PermissionKeys inner join PermissionKeyCategories on PermissionKeyCategories.pkCategoryID = PermissionKeys.pkCategoryID');
@@ -169,7 +173,7 @@ abstract class Key extends Object
             $permissionkeys[$r['pkHandle']] = $pk;
             $permissionkeys[$r['pkID']] = $pk;
         }
-        CacheLocal::set('permission_keys', false, $permissionkeys);
+        $cache->getItem('permission_keys')->set($permissionkeys);
 
         return $permissionkeys;
     }
@@ -319,21 +323,13 @@ abstract class Key extends Object
 
     public static function getByID($pkID)
     {
-        $keys = CacheLocal::getEntry('permission_keys', false);
-        if (!is_array($keys)) {
-            $keys = self::loadAll();
-        }
-
+        $keys = static::loadAll();
         return $keys[$pkID];
     }
 
     public static function getByHandle($pkHandle)
     {
-        $keys = CacheLocal::getEntry('permission_keys', false);
-        if (!is_array($keys)) {
-            $keys = self::loadAll();
-        }
-
+        $keys = static::loadAll();
         return isset($keys[$pkHandle]) ? $keys[$pkHandle] : null;
     }
 
