@@ -256,7 +256,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                 max: -1,
                 countSpaces: true,
                 stopInputAtMaximum: false,
-                counterText: '<?php echo t('characters'); ?>: ',
+                counterText: '<?php echo t('Characters'); ?>: ',
                 countContainerClass: 'help-block'
             });
         });
