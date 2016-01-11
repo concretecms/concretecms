@@ -38,7 +38,7 @@ class Controller extends AttributeTypeController
     public function form()
     {
         $caValue = 0;
-        if ($this->getAttributeValueID() > 0) {
+        if (is_object($this->attributeValue)) {
             $caValue = $this->getValue() / 20;
         }
         $rt = Loader::helper('form/rating');

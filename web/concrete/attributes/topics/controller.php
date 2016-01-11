@@ -161,9 +161,10 @@ class Controller extends AttributeTypeController
         if (is_object($this->attributeValue)) {
             $value = $this->getAttributeValue()->getValue();
         }
-        if ($this->getAttributeValueID()) {
+        if (is_object($this->attributeValue)) {
             $valueIDs = array();
             foreach ($this->attributeValue->getSelectedTopics() as $value) {
+                $valueID = $value->getTreeNodeID();
                 $withinParentScope = false;
                 $nodeObj = TreeNode::getByID($value->getTreeNodeID());
                 if (is_object($nodeObj)) {
@@ -187,7 +188,6 @@ class Controller extends AttributeTypeController
         $this->set('akID', $ak->getAttributeKeyID());
         $this->set('parentNode', $this->akTopicParentNodeID);
         $this->set('treeID', $this->akTopicTreeID);
-        $this->set('avID', $this->getAttributeValueID());
     }
 
     public function searchForm($list)
