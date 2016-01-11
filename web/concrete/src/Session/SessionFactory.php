@@ -91,7 +91,8 @@ class SessionFactory implements SessionFactoryInterface
                 'db_table' => 'Sessions',
                 'db_id_col' => 'sessionID',
                 'db_data_col' => 'sessionValue',
-                'db_time_col' => 'sessionTime'
+                'db_time_col' => 'sessionTime',
+                'db_lifetime_col' => 'sessionLifeTime'
             ));
         } else {
             $savePath = $config->get('concrete.session.save_path') ?: null;
