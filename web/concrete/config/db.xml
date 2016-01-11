@@ -4969,6 +4969,10 @@
       <unsigned/>
       <notnull/>
     </field>
+    <field name="sessionLifeTime" type="integer" size="11">
+      <unsigned/>
+      <notnull/>
+    </field>
   </table>
 
 </schema>
