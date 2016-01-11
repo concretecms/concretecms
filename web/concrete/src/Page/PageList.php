@@ -4,8 +4,8 @@ namespace Concrete\Core\Page;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList as DatabaseItemList;
 use Concrete\Core\Search\Pagination\Pagination;
 use Concrete\Core\Search\Pagination\PermissionablePagination;
-use Page as ConcretePage;
 use Concrete\Core\Search\PermissionableListItemInterface;
+use Page as ConcretePage;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 
 /**
@@ -423,6 +423,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
         $this->isFulltextSearch = true;
         $this->autoSortColumns[] = 'cIndexScore';
         $this->query->where('match(psi.cName, psi.cDescription, psi.content) against (:fulltext)');
+        $this->query->orderBy('cIndexScore', 'desc');
         $this->query->setParameter('fulltext', $keywords);
     }
 
