@@ -35,6 +35,11 @@ class NamingStrategy implements \Doctrine\ORM\Mapping\NamingStrategy
         $this->table_prefix = $table_prefix;
     }
 
+    public function embeddedFieldToColumnName($propertyName, $embeddedColumnName, $className = null, $embeddedClassName = null)
+    {
+        return lcfirst(camelcase($propertyName)) . camelcase($embeddedColumnName);
+    }
+
     public function referenceColumnName()
     {
         return 'id';
