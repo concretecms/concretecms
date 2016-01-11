@@ -93,13 +93,6 @@ class Controller extends AbstractController
         return $cnode;
     }
 
-    protected function getAttributeValueID()
-    {
-        if (is_object($this->attributeValue)) {
-            return $this->attributeValue->getAttributeValueID();
-        }
-    }
-
     public function filterByAttribute(AttributedItemList $list, $value, $comparison = '=')
     {
         $list->filter('ak_' . $this->attributeKey->getAttributeKeyHandle(), $value, $comparison);

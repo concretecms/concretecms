@@ -29,7 +29,7 @@ class View extends AbstractView
     protected function constructView($mixed)
     {
         if ($mixed instanceof AttributeValueInterface) {
-            $this->attributeValue = $mixed;
+            $this->attributeValue = $mixed->getValueObject();
             $this->attributeKey = $mixed->getAttributeKey();
             $this->attributeType = $mixed->getAttributeTypeObject();
         } else {

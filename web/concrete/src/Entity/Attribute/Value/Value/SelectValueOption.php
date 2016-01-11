@@ -121,6 +121,19 @@ class SelectValueOption
 
     public function __toString()
     {
-        return (string) $this->getSelectAttributeOptionValue();
+        return (string)$this->getSelectAttributeOptionValue();
     }
+
+    public function getSelectAttributeOptionDisplayValue($format = 'html')
+    {
+        $value = tc('SelectAttributeValue', $this->getSelectAttributeOptionValue(false));
+        switch ($format) {
+            case 'html':
+                return h($value);
+            case 'text':
+            default:
+                return $value;
+        }
+    }
+
 }

@@ -59,7 +59,7 @@ class Controller extends AttributeTypeController
     public function form()
     {
         $bf = false;
-        if ($this->getAttributeValueID() > 0) {
+        if (is_object($this->attributeValue)) {
             $bf = $this->getValue();
         }
         $al = Core::make('helper/concrete/asset_library');
