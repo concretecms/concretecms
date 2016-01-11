@@ -89,7 +89,7 @@ class Theme extends Object
         return $db->GetCol('select pThemeHandle from PageThemes');
     }
 
-    public function providesAsset($assetType, $assetHandle)
+    public function providesAsset($assetType, $assetHandle = null)
     {
         $r = ResponseAssetGroup::get();
         $r->markAssetAsIncluded($assetType, $assetHandle);
