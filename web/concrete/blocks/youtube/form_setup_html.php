@@ -70,71 +70,68 @@ echo Core::make('helper/concrete/ui')->tabs(array(
         <div class="row">
             <div class="col-xs-6">
                 <div class="form-group">
+                    <div class="checkbox">
                     <label>
                         <?php echo $form->checkbox('showinfo', 1, (isset($showinfo) ? $showinfo : true)); ?>
                         <?php echo t("Show video information")?>
                     </label>
-                </div>
-                <div class="form-group controls-only <?php echo (isset($controls) && $controls == 0 ? 'hidden' : '');?>">
-                    <?php  echo $form->label('color', t('Progress Bar Color'))?>
-                    <?php  echo $form->select('color', array('red'=>t('Red'), 'white'=>t('White')), $color)?>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <?php echo $form->checkbox('controls', 1, (isset($controls) ? $controls : true)); ?>
+                            <?php echo t("Show controls")?>
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <?php
+                            $disabledattr = array();
+                            if ($color == 'white') {
+                                $disabledattr['disabled'] = 'disabled';
+                            }
+                            echo $form->checkbox('modestbranding', 1,  (isset($modestbranding) ? $modestbranding : true),$disabledattr); ?>
+                            <?php echo t("Hide YouTube Logo")?>
+                        </label>
+                    </div>
                 </div>
             </div>
 
             <div class="col-xs-6">
-                <div class="form-group">
-                    <label>
-                        <?php echo $form->checkbox('controls', 1, (isset($controls) ? $controls : true)); ?>
-                        <?php echo t("Show controls")?>
-                    </label>
-                </div>
                 <div class="form-group controls-only <?php echo (isset($controls) && $controls == 0 ? 'hidden' : '');?>">
-                    <label>
-                        <?php
-                        $disabledattr = array();
-                        if ($color == 'white') {
-                            $disabledattr['disabled'] = 'disabled';
-                        }
-                        echo $form->checkbox('modestbranding', 1,  (isset($modestbranding) ? $modestbranding : true),$disabledattr); ?>
-                        <?php echo t("Hide YouTube Logo")?>
-                    </label>
+                    <?php  echo $form->label('color', t('Progress Bar Color'))?>
+                    <?php  echo $form->select('color', array('red'=>t('Red'), 'white'=>t('White')), $color)?>
                 </div>
             </div>
         </div>
     </fieldset>
     <fieldset>
         <legend><?php echo t('Playback Options'); ?></legend>
-        <div class="row">
-            <div class="col-xs-12">
-                <div class="form-group">
-                    <label>
-                        <?php echo $form->checkbox('rel', 1, $rel); ?>
-                        <?php echo t("Show related videos when playback ends")?>
-                    </label>
-                </div>
-                <div class="form-group">
-                    <label>
-                        <?php echo $form->checkbox('iv_load_policy', 1, ($iv_load_policy == 3)); ?>
-                        <?php echo t("Hide annotations by default")?>
-                    </label>
-                </div>
-             </div>
-            <div class="col-xs-6">
-                <div class="form-group">
-                    <label>
-                        <?php echo $form->checkbox('autoplay', 1, $autoplay); ?>
-                        <?php echo t("Automatically play")?>
-                    </label>
-                </div>
+        <div class="form-group">
+            <div class="checkbox">
+                <label>
+                    <?php echo $form->checkbox('rel', 1, $rel); ?>
+                    <?php echo t("Show related videos when playback ends") ?>
+                </label>
             </div>
-            <div class="col-xs-6">
-                <div class="form-group">
-                    <label>
-                        <?php echo $form->checkbox('loopEnd', 1, $loopEnd); ?>
-                        <?php echo t("Loop video")?>
-                    </label>
-                </div>
+            <div class="checkbox">
+                <label>
+                    <?php echo $form->checkbox('iv_load_policy', 1, ($iv_load_policy == 3)); ?>
+                    <?php echo t("Hide annotations by default") ?>
+                </label>
             </div>
+            <div class="checkbox">
+                <label>
+                    <?php echo $form->checkbox('autoplay', 1, $autoplay); ?>
+                    <?php echo t("Automatically play") ?>
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <?php echo $form->checkbox('loopEnd', 1, $loopEnd); ?>
+                    <?php echo t("Loop video") ?>
+                </label>
+            </div>
+
         </div>
     </fieldset>
 </div>
