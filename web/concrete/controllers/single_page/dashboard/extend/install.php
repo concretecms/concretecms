@@ -2,19 +2,18 @@
 namespace Concrete\Controller\SinglePage\Dashboard\Extend;
 
 use Concrete\Core\Package\BrokenPackage;
-use \Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Controller\DashboardPageController;
 use Loader;
 use TaskPermission;
 use Package;
 use Localization;
 use Marketplace;
-use \Concrete\Core\Marketplace\RemoteItem as MarketplaceRemoteItem;
+use Concrete\Core\Marketplace\RemoteItem as MarketplaceRemoteItem;
 use Exception;
 use User;
 
 class Install extends DashboardPageController
 {
-
     public function on_start()
     {
         parent::on_start();
@@ -89,7 +88,6 @@ class Install extends DashboardPageController
         }
 
         $this->inspect_package($pkgID);
-
     }
 
     public function inspect_package($pkgID = 0)
@@ -117,7 +115,7 @@ class Install extends DashboardPageController
             $p = Package::getClass($package);
             if ($p instanceof BrokenPackage) {
                 $this->error->add($p->getInstallErrorMessage());
-            } else if (is_object($p)) {
+            } elseif (is_object($p)) {
                 if (
                     (!$p->showInstallOptionsScreen()) ||
                     Loader::helper('validation/token')->validate('install_options_selected')
@@ -174,7 +172,7 @@ class Install extends DashboardPageController
         $this->set('installedPKG', Package::getByID($pkgID));
     }
 
-    public function download($remoteMPID=null)
+    public function download($remoteMPID = null)
     {
         $tp = new TaskPermission();
         if ($tp->canInstallPackages()) {
@@ -182,6 +180,7 @@ class Install extends DashboardPageController
 
             if (!is_object($mri)) {
                 $this->error->add(t('Invalid marketplace item ID.'));
+
                 return;
             }
 
@@ -191,7 +190,7 @@ class Install extends DashboardPageController
                     $this->error->add($r);
                 } else {
                     $errors = Package::mapError($r);
-                    foreach($errors as $error) {
+                    foreach ($errors as $error) {
                         $this->error->add($error);
                     }
                 }
@@ -202,5 +201,4 @@ class Install extends DashboardPageController
             $this->error->add(t('You do not have permission to download add-ons.'));
         }
     }
-
 }

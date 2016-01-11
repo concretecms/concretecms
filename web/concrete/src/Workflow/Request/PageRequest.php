@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Workflow\Request;
 
 use Concrete\Core\Workflow\Workflow;

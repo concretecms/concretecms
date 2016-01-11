@@ -1,17 +1,15 @@
-<?
+<?php
 namespace Concrete\Controller\SinglePage\Dashboard\Express\Entities;
 
-use Concrete\Controller\Element\Attribute\KeyList;
 use Concrete\Core\Attribute\Type;
 use Concrete\Core\Page\Controller\DashboardAttributesPageController;
-use \Concrete\Core\Page\Controller\DashboardPageController;
 
 class Attributes extends DashboardAttributesPageController
 {
-
     protected function getEntity($id)
     {
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity');
+
         return $r->findOneById($id);
     }
 
@@ -41,7 +39,7 @@ class Attributes extends DashboardAttributesPageController
         $key = $r->findOneBy(array('akID' => $akID));
         $this->executeUpdate($entity, $key,
             \URL::to('/dashboard/express/entities/attributes', 'view', $id),
-            function() use ($entity) {
+            function () use ($entity) {
                 $publisher = \Core::make('express.publisher');
                 $publisher->publish($entity);
             }
@@ -64,7 +62,7 @@ class Attributes extends DashboardAttributesPageController
         $entity = $this->getEntity($id);
         $this->set('entity', $entity);
         $this->executeAdd($entity, $type, \URL::to('/dashboard/express/entities/attributes', 'view', $id),
-            function() use ($entity) {
+            function () use ($entity) {
                 $publisher = \Core::make('express.publisher');
                 $publisher->publish($entity);
             }
@@ -82,7 +80,7 @@ class Attributes extends DashboardAttributesPageController
         $key = $r->findOneBy(array('akID' => $akID));
         $this->executeDelete($entity, $key,
             \URL::to('/dashboard/express/entities/attributes', 'view', $id),
-            function() use ($entity) {
+            function () use ($entity) {
                 $publisher = \Core::make('express.publisher');
                 $publisher->publish($entity);
             }
@@ -90,9 +88,5 @@ class Attributes extends DashboardAttributesPageController
 
         $publisher = \Core::make('express.publisher');
         $publisher->publish($entity);
-
     }
-
-
-
 }

@@ -2,8 +2,6 @@
 
 class ContentImporterValueInspectorTest extends PHPUnit_Framework_TestCase
 {
-
-
     public function testMake()
     {
         $inspector = Core::make('import/value_inspector/core');
@@ -95,6 +93,4 @@ EOL;
         $this->assertInstanceOf('\Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PageFeedItem', $items[2]);
         $this->assertInstanceOf('\Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PageTypeItem', $items[3]);
     }
-
-
 }

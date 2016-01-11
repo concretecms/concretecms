@@ -1,12 +1,13 @@
-<?
+<?php
 namespace Concrete\Controller\Dialog\Area;
+
 use Concrete\Core\Area\CustomStyle;
 use Concrete\Core\Page\EditResponse;
 use Concrete\Core\StyleCustomizer\Inline\StyleSet;
-use Concrete\Controller\Backend\UserInterface\Page as BackendPageController;;
+use Concrete\Controller\Backend\UserInterface\Page as BackendPageController;
 
-class Design extends BackendPageController {
-
+class Design extends BackendPageController
+{
     protected $viewPath = '/dialogs/area/design';
 
     public function on_start()
@@ -37,7 +38,6 @@ class Design extends BackendPageController {
     public function submit()
     {
         if ($this->validateAction() && $this->canAccess()) {
-
             $a = $this->area;
             $oldStyle = $this->page->getAreaCustomStyle($a);
             if (is_object($oldStyle)) {
@@ -50,7 +50,7 @@ class Design extends BackendPageController {
             if (is_object($set)) {
                 $set->save();
                 $nvc->setCustomStyleSet($a, $set);
-            } else if ($oldStyleSet) {
+            } elseif ($oldStyleSet) {
                 $nvc->resetAreaCustomStyle($this->area);
             }
 
@@ -78,15 +78,15 @@ class Design extends BackendPageController {
         }
     }
 
-    public function action() {
+    public function action()
+    {
         $url = call_user_func_array('parent::action', func_get_args());
         $url .= '&arHandle=' . h($this->area->getAreaHandle());
+
         return $url;
     }
 
-    public function view() {
-
-	}
-
+    public function view()
+    {
+    }
 }
-

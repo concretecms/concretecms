@@ -39,8 +39,8 @@ class DateTimeCorePageProperty extends CorePageProperty
     {
         if (is_object($this->page)) {
             $c = $this->page;
+
             return $c->getCollectionDatePublic();
         }
     }
-
 }

@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Entity\Attribute\Value\Value;
 
 /**
@@ -8,7 +7,6 @@ namespace Concrete\Core\Entity\Attribute\Value\Value;
  */
 class BooleanValue extends Value
 {
-
     /**
      * @Column(type="boolean")
      */
@@ -29,7 +27,4 @@ class BooleanValue extends Value
     {
         $this->value = $value;
     }
-
-
-
 }

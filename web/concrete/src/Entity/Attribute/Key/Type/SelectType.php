@@ -1,11 +1,7 @@
 <?php
-
 namespace Concrete\Core\Entity\Attribute\Key\Type;
 
 use Concrete\Core\Entity\Attribute\Value\Value\SelectValue;
-use Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption;
-use Doctrine\Common\Collections\ArrayCollection;
-
 
 /**
  * @Entity
@@ -13,7 +9,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class SelectType extends Type
 {
-
     /**
      * @OneToOne(targetEntity="Concrete\Core\Entity\Attribute\Value\Value\SelectValueOptionList", cascade={"all"})
      * @JoinColumn(name="avSelectOptionListID", referencedColumnName="avSelectOptionListID")
@@ -50,7 +45,6 @@ class SelectType extends Type
      * @Column(type="boolean")
      */
     protected $allowOtherValues = false;
-
 
     /**
      * @Column(type="string")
@@ -108,8 +102,7 @@ class SelectType extends Type
     public function createController()
     {
         $controller = new \Concrete\Attribute\Select\Controller($this->getAttributeType());
+
         return $controller;
     }
-
-
 }

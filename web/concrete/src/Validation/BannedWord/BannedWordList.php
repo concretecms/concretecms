@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Validation\BannedWord;
 
 use Concrete\Core\Legacy\DatabaseItemList;

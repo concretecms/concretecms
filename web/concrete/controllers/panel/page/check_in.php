@@ -1,23 +1,17 @@
-<?
+<?php
 namespace Concrete\Controller\Panel\Page;
 
-use \Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
+use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
 use Permissions;
 use CollectionVersion;
 use Loader;
 use Page;
 use User;
-use Response;
-use \Concrete\Core\Error\Error as ValidationErrorHelper;
-use Redirect;
-use \Concrete\Core\Workflow\Request\ApprovePageRequest as ApprovePagePageWorkflowRequest;
-use \Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
+use Concrete\Core\Workflow\Request\ApprovePageRequest as ApprovePagePageWorkflowRequest;
 use PageEditResponse;
-use \Concrete\Core\Page\Type\Composer\Control\Control as PageTypeComposerControl;
 
 class CheckIn extends BackendInterfacePageController
 {
-
     protected $viewPath = '/panels/page/check_in';
 
     public function canAccess()
@@ -67,6 +61,7 @@ class CheckIn extends BackendInterfacePageController
                 }
             }
         }
+
         return $e;
     }
 
@@ -128,4 +123,3 @@ class CheckIn extends BackendInterfacePageController
         }
     }
 }
-

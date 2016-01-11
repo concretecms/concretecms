@@ -1,11 +1,10 @@
 <?php
-use Concrete\Core\Express\ObjectBuilder;
+
 
 require_once __DIR__ . "/ObjectBuilderTestTrait.php";
 
 class EntityInstanceCreateTest extends ConcreteDatabaseTestCase
 {
-
     /*
     use \ObjectBuilderTestTrait;
 
@@ -45,7 +44,5 @@ class EntityInstanceCreateTest extends ConcreteDatabaseTestCase
 
     public function testCreateFromRequest()
     {
-
     }
-
 }

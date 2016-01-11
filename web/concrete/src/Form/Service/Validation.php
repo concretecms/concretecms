@@ -4,9 +4,9 @@ namespace Concrete\Core\Form\Service;
 use Loader;
 
 /**
- *
  * @package    Helpers
  * @subpackage Validation
+ *
  * @author     Andrew Embler <andrew@concrete5.org>
  * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
  * @license    http://www.concrete5.org/license/     MIT License
@@ -17,15 +17,14 @@ use Loader;
  *
  * @package    Helpers
  * @subpackage Validation
+ *
  * @author     Andrew Embler <andrew@concrete5.org>
  * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
  * @license    http://www.concrete5.org/license/     MIT License
  */
 class Validation
 {
-
     /**
-     * @access private
      */
     const VALID_NOT_EMPTY = 1;
     const VALID_EMAIL = 2;
@@ -54,7 +53,6 @@ class Validation
      * @param string $field
      * @param string $errorMsg
      * @param bool   $emptyIsOk Tells whether this can be submitted as empty (e.g. the validation tests only run if someone is actually submitted in the post.)
-     * @return void
      */
     public function addUploadedImage($field, $errorMsg = null, $emptyIsOk = true)
     {
@@ -64,16 +62,15 @@ class Validation
 
     /**
      * Adds a required field to the form helper object. This will then be typically used in conjunction with the test() method to see
-     * if the test is passed
+     * if the test is passed.
      *
      * @param string $field
      * @param string $errorMsg
      * @param string $validate test to validate against
-     * @return void
      */
     public function addRequired($field, $errorMsg = null, $validate = self::VALID_NOT_EMPTY)
     {
-        $obj = new \stdClass;
+        $obj = new \stdClass();
         $obj->message = ($errorMsg == null) ? 'Field "' . $field . '" is invalid' : $errorMsg;
         $obj->field = $field;
         $obj->validate = $validate;
@@ -86,7 +83,6 @@ class Validation
      * @param string $field
      * @param string $errorMsg
      * @param bool   $emptyIsOk Tells whether this can be submitted as empty (e.g. the validation tests only run if someone is actually submitted in the post.)
-     * @return void
      */
     public function addUploadedFile($field, $errorMsg = null, $emptyIsOk = true)
     {
@@ -95,12 +91,11 @@ class Validation
     }
 
     /**
-     * Adds a required field and tests that it is integer only
+     * Adds a required field and tests that it is integer only.
      *
      * @param string $field
      * @param string $errorMsg
      * @param bool   $emptyIsOk Tells whether this can be submitted as empty (e.g. the validation tests only run if someone is actually submitted in the post.)
-     * @return void
      */
     public function addInteger($field, $errorMsg = null, $emptyIsOk = true)
     {
@@ -110,7 +105,7 @@ class Validation
 
     public function addRequiredToken($value, $errorMsg = null)
     {
-        $obj = new \stdClass;
+        $obj = new \stdClass();
         $vt = Loader::helper('validation/token');
         $obj->message = ($errorMsg == null) ? $vt->getErrorMessage() : $errorMsg;
         $obj->value = $value;
@@ -123,7 +118,6 @@ class Validation
      *
      * @param string $field
      * @param string $errorMsg
-     * @return void
      */
     public function addRequiredEmail($field, $errorMsg = null)
     {
@@ -131,7 +125,7 @@ class Validation
     }
 
     /**
-     * Sets the data files array
+     * Sets the data files array.
      */
     public function setFiles()
     {
@@ -139,10 +133,9 @@ class Validation
     }
 
     /**
-     * An associative array that we setup to validate against. Typical usage is $val->setData($_POST);
+     * An associative array that we setup to validate against. Typical usage is $val->setData($_POST);.
      *
      * @param array $data
-     * @return void
      */
     public function setData($data)
     {
@@ -151,14 +144,14 @@ class Validation
 
     public function invalidate($message)
     {
-        $f = new \stdClass;
+        $f = new \stdClass();
         $f->message = $message;
         $this->fieldsInvalid[] = $f;
     }
 
     /**
      * After the validation error helper has been setup, the test() method ensures that all fields that require validation
-     * pass. Returns the number of invalid fields (0 = success)
+     * pass. Returns the number of invalid fields (0 = success).
      *
      * @return int
      */
@@ -224,11 +217,11 @@ class Validation
         }
 
         $this->setErrorsFromInvalidFields();
+
         return count($this->fieldsInvalid) == 0;
     }
 
     /**
-     * @access private
      */
     protected function setErrorsFromInvalidFields()
     {
@@ -243,7 +236,7 @@ class Validation
      *     if ($val->test() > 0) {
      *         $e = $val->getError();
      *     }
-     * </code>
+     * </code>.
      *
      * @return \Concrete\Core\Error\Error
      */
@@ -251,5 +244,4 @@ class Validation
     {
         return $this->error;
     }
-
 }

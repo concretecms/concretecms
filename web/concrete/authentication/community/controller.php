@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Authentication\Community;
 
 use Concrete\Core\Authentication\Type\Community\Service\Community;
@@ -46,7 +45,7 @@ class Controller extends GenericOauth2TypeController
     {
         \Config::save('auth.community.appid', $args['apikey']);
         \Config::save('auth.community.secret', $args['apisecret']);
-        \Config::save('auth.community.registration.enabled', !!$args['registration_enabled']);
+        \Config::save('auth.community.registration.enabled', (bool) $args['registration_enabled']);
         \Config::save('auth.community.registration.group', intval($args['registration_group'], 10));
     }
 
@@ -62,7 +61,7 @@ class Controller extends GenericOauth2TypeController
     }
 
     /**
-     * @return Array
+     * @return array
      */
     public function getAdditionalRequestParameters()
     {

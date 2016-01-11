@@ -1,8 +1,6 @@
 <?php
-
 namespace Concrete\Attribute\Topics;
 
-use Concrete\Core\Entity\Attribute\Key\TopicsKey;
 use Concrete\Core\Entity\Attribute\Key\Type\TopicsType;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectedTopic;
 use Concrete\Core\Entity\Attribute\Value\Value\TopicsValue;
@@ -52,6 +50,7 @@ class Controller extends AttributeTypeController
         $akTopicTreeID = $data['akTopicTreeID'];
         $type->setParentNodeID($akTopicParentNodeID);
         $type->setTopicTreeID($akTopicTreeID);
+
         return $type;
     }
 
@@ -101,6 +100,7 @@ class Controller extends AttributeTypeController
             foreach ($akn->topics->topic as $topicPath) {
                 $selected[] = (string) $topicPath;
             }
+
             return $this->saveValue($selected);
         }
     }
@@ -118,12 +118,13 @@ class Controller extends AttributeTypeController
         }
 
         $topicsValue = new TopicsValue();
-        foreach($selected as $treeNodeID) {
+        foreach ($selected as $treeNodeID) {
             $topicsValueNode = new SelectedTopic();
             $topicsValueNode->setAttributeValue($topicsValue);
             $topicsValueNode->setTreeNodeID($treeNodeID);
             $topicsValue->getSelectedTopics()->add($topicsValueNode);
         }
+
         return $topicsValue;
     }
 
@@ -148,6 +149,7 @@ class Controller extends AttributeTypeController
         $node = $tree->getNodeByDisplayPath((string) $key->tree['path']);
         $type->setTopicTreeID($tree->getTreeID());
         $type->setParentNodeID($node->getTreeNodeID());
+
         return $type;
     }
 
@@ -244,6 +246,7 @@ class Controller extends AttributeTypeController
                 $av->getSelectedTopics()->add($topic);
             }
         }
+
         return $av;
     }
 
@@ -289,12 +292,14 @@ class Controller extends AttributeTypeController
     public function validateValue()
     {
         $val = $this->getValue();
+
         return is_array($val) && count($val) > 0;
     }
 
     public function validateForm($p)
     {
         $topicsArray = $_POST['topics_' . $this->attributeKey->getAttributeKeyID()];
+
         return is_array($topicsArray) && count($topicsArray) > 0;
     }
 
@@ -317,6 +322,7 @@ class Controller extends AttributeTypeController
         $ak = $this->getAttributeKey();
         if (!is_object($ak)) {
             var_dump_safe($this);
+
             return false;
         }
         $this->akTopicParentNodeID = $ak->getAttributeKeyType()->getParentNodeID();
@@ -343,5 +349,4 @@ class Controller extends AttributeTypeController
     {
         return new TopicsType();
     }
-
 }

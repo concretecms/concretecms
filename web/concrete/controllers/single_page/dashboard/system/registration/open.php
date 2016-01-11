@@ -7,7 +7,6 @@ use Loader;
 
 class Open extends DashboardPageController
 {
-
     public $helpers = array('form');
 
     public function update_registration_type()
@@ -71,15 +70,14 @@ class Open extends DashboardPageController
         if ($updated) {
             $this->set('message', t('Registration settings have been saved.'));
         }
-        $type =  Config::get('concrete.user.registration.type');
-		if (!$type) {
-			$type = 'disabled';
-		}
+        $type = Config::get('concrete.user.registration.type');
+        if (!$type) {
+            $type = 'disabled';
+        }
         $this->set('email_as_username', Config::get('concrete.user.registration.email_registration'));
         $this->set('registration_type', $type);
         $this->set('enable_registration_captcha', Config::get('concrete.user.registration.captcha'));
-        $this->set('register_notification', !!Config::get('concrete.user.registration.notification'));
+        $this->set('register_notification', (bool) Config::get('concrete.user.registration.notification'));
         $this->set('register_notification_email', Config::get('concrete.user.registration.notification_email'));
     }
-
 }

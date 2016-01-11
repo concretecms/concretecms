@@ -3,7 +3,6 @@ namespace Concrete\Core\Device;
 
 class DeviceServiceProvider extends \Concrete\Core\Foundation\Service\Provider
 {
-
     public function register()
     {
         \Core::bindShared('device/manager', function () {
@@ -31,5 +30,4 @@ class DeviceServiceProvider extends \Concrete\Core\Foundation\Service\Provider
             return $device_manager;
         });
     }
-
 }

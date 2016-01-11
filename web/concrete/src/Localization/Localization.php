@@ -27,21 +27,23 @@ class Localization
 
     public static function changeLocale($locale)
     {
-        $loc = Localization::getInstance();
+        $loc = self::getInstance();
         $loc->setLocale($locale);
     }
     /** Returns the currently active locale
      * @return string
+     *
      * @example 'en_US'
      */
     public static function activeLocale()
     {
-        $loc = Localization::getInstance();
+        $loc = self::getInstance();
 
         return $loc->getLocale();
     }
     /** Returns the language for the currently active locale
      * @return string
+     *
      * @example 'en'
      */
     public static function activeLanguage()
@@ -108,7 +110,7 @@ class Localization
 
     public static function getTranslate()
     {
-        $loc = Localization::getInstance();
+        $loc = self::getInstance();
 
         return $loc->getActiveTranslateObject();
     }
@@ -144,12 +146,14 @@ class Localization
      *   "en_US" => "English (United States)",
      *   "fr_FR" => "Francais (France)"]
      * The result will be sorted by the key.
-     * If the $displayLocale is set, the language- and region-names will be returned in that language
+     * If the $displayLocale is set, the language- and region-names will be returned in that language.
+     *
      * @param string|null $displayLocale Language of the description.
      *                    Set to null to get each locale name in its own language,
      *                    set to '' to use the current locale,
      *                    set to a specific locale to get the names in that language
-     * @return Array An associative Array with locale as the key and description as content
+     *
+     * @return array An associative Array with locale as the key and description as content
      */
     public static function getAvailableInterfaceLanguageDescriptions($displayLocale = '')
     {
@@ -168,12 +172,14 @@ class Localization
 
     /**
      * Get the description of a locale consisting of language and region description
-     * e.g. "French (France)"
+     * e.g. "French (France)".
+     *
      * @param string $locale Locale that should be described
      * @param string|null $displayLocale Language of the description.
      *                    Set to null to get each locale name in its own language,
      *                    set to '' to use the current locale,
      *                    set to a specific locale to get the names in that language
+     *
      * @return string Description of a language
      */
     public static function getLanguageDescription($locale, $displayLocale = '')
@@ -194,7 +200,7 @@ class Localization
     }
 
     /**
-     * Clear the translations cache
+     * Clear the translations cache.
      */
     public static function clearCache()
     {

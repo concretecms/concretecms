@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Core\Entity\Attribute\Value\Value;
 
-
 /**
  * @Entity
  * @Table(name="ImageFileAttributeValues")
@@ -19,6 +18,7 @@ class ImageFileValue extends Value
         if (is_object($this->file)) {
             return $this->file->getFileID();
         }
+
         return 0;
     }
 
@@ -39,6 +39,4 @@ class ImageFileValue extends Value
     {
         $this->file = $file;
     }
-
-
 }

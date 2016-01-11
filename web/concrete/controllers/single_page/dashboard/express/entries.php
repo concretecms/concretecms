@@ -1,13 +1,10 @@
-<?
+<?php
 namespace Concrete\Controller\SinglePage\Dashboard\Express;
 
-use Concrete\Core\Express\Form\ViewRenderer;
-use Concrete\Core\Express\ObjectList;
-use \Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Controller\DashboardPageController;
 
 class Entries extends DashboardPageController
 {
-
     public function view($id = null)
     {
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity');
@@ -50,7 +47,4 @@ class Entries extends DashboardPageController
         $this->set('renderer', $renderer);
         $this->render('/dashboard/express/entries/view_entry');
     }
-
-
-
 }

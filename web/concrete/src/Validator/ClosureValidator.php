@@ -1,18 +1,17 @@
 <?php
-
 namespace Concrete\Core\Validator;
 
 class ClosureValidator implements ValidatorInterface
 {
-
-    /** @type \Closure */
+    /** @var \Closure */
     protected $validator_closure;
 
-    /** @type \Closure */
+    /** @var \Closure */
     protected $requirements_closure;
 
     /**
      * ClosureValidator constructor.
+     *
      * @param \Closure $validator_closure function(ClosureValidator $validator,
      *                                             mixed $passed,
      *                                             \Concrete\Core\Error $error = null): bool
@@ -26,7 +25,8 @@ class ClosureValidator implements ValidatorInterface
 
     /**
      * Set the closure that handls validation
-     * function(ClosureValidator $validator, mixed $passed, \Concrete\Core\Error $error = null): bool
+     * function(ClosureValidator $validator, mixed $passed, \Concrete\Core\Error $error = null): bool.
+     *
      * @param \Closure $validator_closure
      */
     public function setValidatorClosure(\Closure $validator_closure)
@@ -35,7 +35,8 @@ class ClosureValidator implements ValidatorInterface
     }
 
     /**
-     * Set the closure that returns requirements
+     * Set the closure that returns requirements.
+     *
      * @param \Closure $requirements_closure function(ClosureValidator $validator): array
      */
     public function setRequirementsClosure(\Closure $requirements_closure)
@@ -44,7 +45,7 @@ class ClosureValidator implements ValidatorInterface
     }
 
     /**
-     * Get the validator requirements in the form of an array keyed by it's respective error code
+     * Get the validator requirements in the form of an array keyed by it's respective error code.
      *
      * Example:
      *    [ self::E_TOO_SHORT => 'Must be at least 10 characters' ]
@@ -54,21 +55,24 @@ class ClosureValidator implements ValidatorInterface
     public function getRequirementStrings()
     {
         $closure = $this->requirements_closure;
+
         return $closure($this);
     }
 
     /**
-     * Is this mixed value valid
+     * Is this mixed value valid.
      *
      * @param mixed             $mixed Can be any value
      * @param \ArrayAccess|null $error
+     *
      * @return bool
+     *
      * @throws \InvalidArgumentException Invalid mixed value type passed.
      */
     public function isValid($mixed, \ArrayAccess $error = null)
     {
         $closure = $this->validator_closure;
+
         return $closure($this, $mixed, $error);
     }
-
 }

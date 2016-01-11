@@ -2,18 +2,13 @@
 namespace Concrete\Core\Database;
 
 use Concrete\Core\Application\Application;
-use Concrete\Core\Cache\Adapter\DoctrineCacheDriver;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Package\Package;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Tools\Setup;
-use Config;
 use Database;
-use Events;
 
 class DatabaseManagerORM
 {
-
     /**
      * The application instance.
      *
@@ -55,6 +50,7 @@ class DatabaseManagerORM
      * 
      * @param  mixed $context
      * @param  string $connectionName
+     *
      * @return \Doctrine\ORM\EntityManager
      */
     public function entityManager($context = null, $connectionName = null)
@@ -73,6 +69,7 @@ class DatabaseManagerORM
         if (!isset($this->entityManagers[$name])) {
             $this->entityManagers[$name] = static::makeEntityManager(Database::connection($connectionName), $context);
         }
+
         return $this->entityManagers[$name];
     }
 
@@ -83,15 +80,15 @@ class DatabaseManagerORM
      * - A package object, results in a package specific entity manager
      * - The string 'core', results in a core specific entity manager
      * - Null or omitted context, results in an application specific entity
-     *   manager
+     *   manager.
      * 
      * @param  Connection $connection
      * @param  mixed      $context
+     *
      * @return \Doctrine\ORM\EntityManager
      */
     public static function makeEntityManager(Connection $connection, $context = null)
     {
-
         if (is_object($context) && $context instanceof Package) {
             $factory = $context->getEntityManagerFactory();
         } else {
@@ -105,5 +102,4 @@ class DatabaseManagerORM
 
         return $factory->create($connection);
     }
-
 }

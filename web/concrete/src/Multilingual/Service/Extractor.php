@@ -14,7 +14,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class Extractor
 {
     /**
-     * return \GetText\Translations $translations;
+     * return \GetText\Translations $translations;.
      */
     public function extractTranslatableSiteStrings()
     {
@@ -204,7 +204,7 @@ class Extractor
             }
             $flags = $translation->getFlags();
             if (!empty($flags)) {
-                $data['flags'] =  implode("\n", $flags);
+                $data['flags'] = implode("\n", $flags);
             }
             $db->insert('MultilingualTranslations', $data);
         }

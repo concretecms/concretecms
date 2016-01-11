@@ -5,7 +5,6 @@ use PageTheme;
 
 class Image
 {
-
     protected $usePictureTag = false;
     protected $tag;
 
@@ -40,19 +39,18 @@ class Image
         }
 
         if ($this->usePictureTag) {
-
             if (!isset($this->theme)) {
                 $c = \Page::getCurrentPage();
                 $this->theme = $c->getCollectionThemeObject();
             }
             $sources = array();
             $fallbackSrc = $f->getRelativePath();
-            if(!$fallbackSrc) {
+            if (!$fallbackSrc) {
                 $fallbackSrc = $f->getURL();
             }
-            foreach($this->theme->getThemeResponsiveImageMap() as $thumbnail => $width) {
+            foreach ($this->theme->getThemeResponsiveImageMap() as $thumbnail => $width) {
                 $type = \Concrete\Core\File\Image\Thumbnail\Type\Type::getByHandle($thumbnail);
-                if($type != NULL) {
+                if ($type != null) {
                     $src = $f->getThumbnailURL($type->getBaseVersion());
                     $sources[] = array('src' => $src, 'width' => $width);
                     if ($width == 0) {
@@ -64,7 +62,7 @@ class Image
         } else {
             // Return a simple image tag.
             $path = $f->getRelativePath();
-            if(!$path) {
+            if (!$path) {
                 $path = $f->getURL();
             }
             $this->tag = \HtmlObject\Image::create($path);
@@ -80,5 +78,4 @@ class Image
     {
         return $this->tag;
     }
-
 }

@@ -7,7 +7,6 @@ use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
 
 class OneToOneAssociationBuilder implements BuilderInterface
 {
-
     protected $association;
 
     public function __construct(OneToOneAssociation $association)
@@ -17,7 +16,6 @@ class OneToOneAssociationBuilder implements BuilderInterface
 
     public function build(ClassMetadataBuilder $builder)
     {
-
         if ($this->association->getAssociationType() == OneToOneAssociation::TYPE_OWNING) {
             $builder->addOwningOneToOne(
                 $this->association->getComputedTargetPropertyName(),
@@ -31,7 +29,5 @@ class OneToOneAssociationBuilder implements BuilderInterface
                 $this->association->getComputedInversedByPropertyName()
             );
         }
-
     }
-
 }

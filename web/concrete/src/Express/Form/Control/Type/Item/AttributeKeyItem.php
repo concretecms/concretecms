@@ -1,12 +1,10 @@
 <?php
-
 namespace Concrete\Core\Express\Form\Control\Type\Item;
 
 use Concrete\Core\Entity\AttributeKey\AttributeKey;
 
 class AttributeKeyItem implements ItemInterface
 {
-
     protected $key;
 
     public function __construct(AttributeKey $key)
@@ -23,6 +21,7 @@ class AttributeKeyItem implements ItemInterface
     {
         $controller = $this->key->getController();
         $formatter = $controller->getIconFormatter();
+
         return $formatter->getListIconElement();
     }
 
@@ -30,7 +29,4 @@ class AttributeKeyItem implements ItemInterface
     {
         return $this->key->getAttributeKeyID();
     }
-
-
-
 }

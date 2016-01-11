@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Error;
 
 use Exception;
@@ -8,20 +7,23 @@ use stdClass;
 
 class Error implements \ArrayAccess
 {
-
     protected $error = array();
     public $helperAlwaysCreateNewInstance = true;
 
     /**
-     * Whether a offset exists
+     * Whether a offset exists.
+     *
      * @link http://php.net/manual/en/arrayaccess.offsetexists.php
+     *
      * @param mixed $offset <p>
      * An offset to check for.
      * </p>
-     * @return boolean true on success or false on failure.
+     *
+     * @return bool true on success or false on failure.
      * </p>
      * <p>
      * The return value will be casted to boolean if non-boolean was returned.
+     *
      * @since 5.0.0
      */
     public function offsetExists($offset)
@@ -30,12 +32,16 @@ class Error implements \ArrayAccess
     }
 
     /**
-     * Offset to retrieve
+     * Offset to retrieve.
+     *
      * @link http://php.net/manual/en/arrayaccess.offsetget.php
+     *
      * @param mixed $offset <p>
      * The offset to retrieve.
      * </p>
+     *
      * @return mixed Can return all value types.
+     *
      * @since 5.0.0
      */
     public function offsetGet($offset)
@@ -44,15 +50,17 @@ class Error implements \ArrayAccess
     }
 
     /**
-     * Offset to set
+     * Offset to set.
+     *
      * @link http://php.net/manual/en/arrayaccess.offsetset.php
+     *
      * @param mixed $offset <p>
      * The offset to assign the value to.
      * </p>
      * @param mixed $value <p>
      * The value to set.
      * </p>
-     * @return void
+     *
      * @since 5.0.0
      */
     public function offsetSet($offset, $value)
@@ -65,12 +73,14 @@ class Error implements \ArrayAccess
     }
 
     /**
-     * Offset to unset
+     * Offset to unset.
+     *
      * @link http://php.net/manual/en/arrayaccess.offsetunset.php
+     *
      * @param mixed $offset <p>
      * The offset to unset.
      * </p>
-     * @return void
+     *
      * @since 5.0.0
      */
     public function offsetUnset($offset)
@@ -79,17 +89,17 @@ class Error implements \ArrayAccess
     }
 
     /**
-     * Adds an error object or exception to the internal error array
+     * Adds an error object or exception to the internal error array.
+     *
      * @param Exception | string $e
-     * @return void
      */
     public function add($e)
     {
-        if ($e instanceof Error) {
+        if ($e instanceof self) {
             foreach ($e->getList() as $errorString) {
                 $this->add($errorString);
             }
-        } else if (is_object($e) && ($e instanceof Exception)) {
+        } elseif (is_object($e) && ($e instanceof Exception)) {
             $this->error[] = $e->getMessage();
         } else {
             $this->error[] = $e;
@@ -97,7 +107,8 @@ class Error implements \ArrayAccess
     }
 
     /**
-     * Returns a list of errors in the error helper
+     * Returns a list of errors in the error helper.
+     *
      * @return array
      */
     public function getList()
@@ -107,11 +118,12 @@ class Error implements \ArrayAccess
 
     /**
      * Returns whether or not this error helper has more than one error registered within it.
+     *
      * @return bool
      */
     public function has()
     {
-        return (count($this->error) > 0);
+        return count($this->error) > 0;
     }
 
     /**
@@ -120,11 +132,11 @@ class Error implements \ArrayAccess
     public function output()
     {
         if ($this->has()) {
-            print '<ul class="ccm-error">';
+            echo '<ul class="ccm-error">';
             foreach ($this->getList() as $error) {
-                print '<li>' . $error . '</li>';
+                echo '<li>' . $error . '</li>';
             }
-            print '</ul>';
+            echo '</ul>';
         }
     }
 
@@ -135,14 +147,13 @@ class Error implements \ArrayAccess
     {
         if ($this->has()) {
             $js = Loader::helper('json');
-            $obj = new stdClass;
+            $obj = new stdClass();
             $obj->error = true;
             $obj->errors = array();
             foreach ($this->getList() as $error) {
                 $obj->errors[] = $error;
             }
-            print $js->encode($obj);
+            echo $js->encode($obj);
         }
     }
-
 }

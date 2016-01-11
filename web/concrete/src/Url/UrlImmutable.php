@@ -5,7 +5,6 @@ use RuntimeException;
 
 class UrlImmutable extends \League\Url\UrlImmutable implements UrlInterface
 {
-
     public function setPortIfNecessary($port)
     {
         $clone = clone $this;
@@ -21,8 +20,8 @@ class UrlImmutable extends \League\Url\UrlImmutable implements UrlInterface
         }
 
         $clone->port->set($port);
-        return $clone;
 
+        return $clone;
     }
 
     public static function createFromUrl($url, $trailing_slashes = self::TRAILING_SLASHES_AUTO)
@@ -33,7 +32,7 @@ class UrlImmutable extends \League\Url\UrlImmutable implements UrlInterface
 
         $trailing_slashes = (bool) $trailing_slashes;
 
-        $url = (string)$url;
+        $url = (string) $url;
         $url = trim($url);
         $original_url = $url;
         $url = self::sanitizeUrl($url);
@@ -79,5 +78,4 @@ class UrlImmutable extends \League\Url\UrlImmutable implements UrlInterface
             new    \League\Url\Components\Fragment($components['fragment'])
         );
     }
-
 }

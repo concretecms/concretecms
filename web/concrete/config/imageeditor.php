@@ -8,7 +8,7 @@ return array(
         # Controls
         ##
 
-        /**
+        /*
          * Extension that provides image placement and other default core functionality
          *
          * @var array imageeditor.extensions.core/position
@@ -20,11 +20,11 @@ return array(
             'src' => 'core/imageeditor/control/position',
             'view' => 'image-editor/controls/position',
             'assets' => array(
-                'core/imageeditor/control/position' => array('css')
-            )
+                'core/imageeditor/control/position' => array('css'),
+            ),
         ),
 
-        /**
+        /*
          * Extension for adding filter management and slideout
          *
          * @var array imageeditor.extensions.core/filter
@@ -36,15 +36,15 @@ return array(
             'src' => 'core/imageeditor/control/filter',
             'view' => 'image-editor/controls/filter',
             'assets' => array(
-                'core/imageeditor/control/filter' => array('css')
-            )
+                'core/imageeditor/control/filter' => array('css'),
+            ),
         ),
 
         ##
         # Filters
         ##
 
-        /**
+        /*
          * Gaussian blur filter
          *
          * @var array imageeditor.extensions.core/filter/gaussian_blur
@@ -56,11 +56,11 @@ return array(
             'src' => 'core/imageeditor/filter/gaussian_blur',
             'view' => 'image-editor/filters/gaussian_blur',
             'assets' => array(
-                'core/imageeditor/filter/gaussian_blur' => array('css')
-            )
+                'core/imageeditor/filter/gaussian_blur' => array('css'),
+            ),
         ),
 
-        /**
+        /*
          * Grayscale filter
          *
          * @var array imageeditor.extensions.core/filter/grayscale
@@ -72,11 +72,11 @@ return array(
             'src' => 'core/imageeditor/filter/grayscale',
             'view' => 'image-editor/filters/grayscale',
             'assets' => array(
-                'core/imageeditor/filter/grayscale' => array('css')
-            )
+                'core/imageeditor/filter/grayscale' => array('css'),
+            ),
         ),
 
-        /**
+        /*
          * No filter
          *
          * @var array imageeditor.extensions.core/filter/none
@@ -88,11 +88,11 @@ return array(
             'src' => 'core/imageeditor/filter/none',
             'view' => 'image-editor/filters/none',
             'assets' => array(
-                'core/imageeditor/filter/none' => array('css')
-            )
+                'core/imageeditor/filter/none' => array('css'),
+            ),
         ),
 
-        /**
+        /*
          * Sepia filter
          *
          * @var array imageeditor.extensions.core/filter/sepia
@@ -104,11 +104,11 @@ return array(
             'src' => 'core/imageeditor/filter/sepia',
             'view' => 'image-editor/filters/sepia',
             'assets' => array(
-                'core/imageeditor/filter/sepia' => array('css')
-            )
+                'core/imageeditor/filter/sepia' => array('css'),
+            ),
         ),
 
-        /**
+        /*
          * Vignette filter
          *
          * @var array imageeditor.extensions.core/filter/vignette
@@ -121,8 +121,8 @@ return array(
             'src' => 'core/imageeditor/filter/vignette',
             'view' => 'image-editor/filters/vignette',
             'assets' => array(
-                'core/imageeditor/filter/vignette' => array('css')
-            )
+                'core/imageeditor/filter/vignette' => array('css'),
+            ),
         ),
-    )
+    ),
 );

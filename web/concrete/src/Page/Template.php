@@ -3,7 +3,7 @@ namespace Concrete\Core\Page;
 
 use PageType;
 use Concrete\Core\Support\Facade\Database;
-use \Concrete\Core\Package\PackageList;
+use Concrete\Core\Package\PackageList;
 use Core;
 
 /**
@@ -88,6 +88,7 @@ class Template
      * @param string $format = 'html'
      *   Escape the result in html format (if $format is 'html').
      *   If $format is 'text' or any other value, the display name won't be escaped.
+     *
      * @return string
      */
     public function getPageTemplateDisplayName($format = 'html')
@@ -106,6 +107,7 @@ class Template
     {
         $db = Database::get();
         $em = $db->getEntityManager();
+
         return $em->getRepository('\Concrete\Core\Page\Template')
             ->findOneBy(
                 array('pTemplateHandle' => $pTemplateHandle)
@@ -117,6 +119,7 @@ class Template
         if ($pTemplateID) {
             $db = Database::get();
             $em = $db->getEntityManager();
+
             return $em->find('\Concrete\Core\Page\Template', $pTemplateID);
         }
     }
@@ -137,6 +140,7 @@ class Template
                 return strcasecmp($a->getPageTemplateDisplayName('text'), $b->getPageTemplateDisplayName('text'));
             }
         );
+
         return $list;
     }
 
@@ -149,6 +153,7 @@ class Template
                 array('pkgID' => $pkg->getPackageID())
             );
         $list = self::sort($list);
+
         return $list;
     }
 
@@ -161,6 +166,7 @@ class Template
             $args, array('pTemplateID' => 'asc')
         );
         $list = self::sort($list);
+
         return $list;
     }
 
@@ -208,6 +214,7 @@ class Template
     public function getIcons()
     {
         $f = Core::make('helper/file');
+
         return $f->getDirectoryContents(DIR_FILES_PAGE_TEMPLATE_ICONS);
     }
 
@@ -216,6 +223,7 @@ class Template
         $src = REL_DIR_FILES_PAGE_TEMPLATE_ICONS . '/' . $this->pTemplateIcon;
         $iconImg = '<img src="' . $src . '" height="' . \Config::get('concrete.icons.page_template.height') . '" width="' . \Config::get('concrete.icons.page_template.width') . '" alt="' . $this->getPageTemplateDisplayName(
             ) . '" title="' . $this->getPageTemplateDisplayName() . '" />';
+
         return $iconImg;
     }
 }

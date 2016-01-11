@@ -1,14 +1,10 @@
-<?
-
+<?php
 namespace Concrete\Controller\SinglePage\Dashboard\Extend;
-use \Concrete\Core\Page\Controller\MarketplaceDashboardPageController;
-use TaskPermission;
-use Marketplace;
-use \Concrete\Core\Marketplace\RemoteItemList as MarketplaceRemoteItemList;
-use Loader;
 
-class Addons extends MarketplaceDashboardPageController {
+use Concrete\Core\Page\Controller\MarketplaceDashboardPageController;
 
+class Addons extends MarketplaceDashboardPageController
+{
     public function getMarketplaceType()
     {
         return 'addons';
@@ -18,6 +14,4 @@ class Addons extends MarketplaceDashboardPageController {
     {
         return t('Add-Ons');
     }
-
-
 }

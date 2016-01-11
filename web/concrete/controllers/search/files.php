@@ -4,11 +4,10 @@ namespace Concrete\Controller\Search;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Controller;
 use FileList;
-use \Concrete\Core\Search\StickyRequest;
-use \Concrete\Core\File\Search\ColumnSet\ColumnSet as FileSearchColumnSet;
-use \Concrete\Core\File\Search\Result\Result as FileSearchResult;
+use Concrete\Core\Search\StickyRequest;
+use Concrete\Core\File\Search\ColumnSet\ColumnSet as FileSearchColumnSet;
+use Concrete\Core\File\Search\Result\Result as FileSearchResult;
 use FileAttributeKey;
-use Permissions;
 use Loader;
 use FileSet;
 use URL;
@@ -33,7 +32,6 @@ class Files extends Controller
     {
         $cp = FilePermissions::getGlobal();
         if ($cp->canSearchFiles() || $cp->canAddFile()) {
-
             if ($_REQUEST['submitSearch']) {
                 $this->searchRequest->resetSearchRequest();
             }
@@ -140,8 +138,9 @@ class Files extends Controller
                 $this->fileList->setItemsPerPage(intval($req['numResults']));
             }
 
-            $this->fileList->setPermissionsChecker(function($file) {
+            $this->fileList->setPermissionsChecker(function ($file) {
                 $cp = new \Permissions($file);
+
                 return $cp->canViewFileInFileManager();
             });
 
@@ -227,6 +226,7 @@ class Files extends Controller
                 }
             }
         }
+
         return $r;
     }
 
@@ -241,7 +241,6 @@ class Files extends Controller
         return $this->fields;
     }
 
-
     const FILTER_BY_TYPE = 'type';                  //!< @javascript-exported
     const FILTER_BY_SIZE = 'size';                  //!< @javascript-exported
     const FILTER_BY_EXTENSION = 'extension';        //!< @javascript-exported
@@ -253,11 +252,11 @@ class Files extends Controller
         // Warning:
         // concrete/js/build/core/file-manager/search.js uses those array keys too 
         $r = array(
-            self::FILTER_BY_SIZE          => t('Size'),
-            self::FILTER_BY_TYPE          => t('Type'),
-            self::FILTER_BY_EXTENSION     => t('Extension'),
-            self::FILTER_BY_ADDED_DATE    => t('Added Between'),
-            self::FILTER_BY_ADDED_TO_PAGE => t('Added to Page')
+            self::FILTER_BY_SIZE => t('Size'),
+            self::FILTER_BY_TYPE => t('Type'),
+            self::FILTER_BY_EXTENSION => t('Extension'),
+            self::FILTER_BY_ADDED_DATE => t('Added Between'),
+            self::FILTER_BY_ADDED_TO_PAGE => t('Added to Page'),
         );
         $sfa = FileAttributeKey::getSearchableList();
         foreach ($sfa as $ak) {
@@ -267,5 +266,4 @@ class Files extends Controller
 
         return $r;
     }
-
 }

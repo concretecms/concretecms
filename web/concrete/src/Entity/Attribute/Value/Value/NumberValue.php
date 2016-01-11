@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Entity\Attribute\Value\Value;
 
 /**
@@ -8,7 +7,6 @@ namespace Concrete\Core\Entity\Attribute\Value\Value;
  */
 class NumberValue extends Value
 {
-
     /**
      * @Column(type="decimal", precision=14, scale=4, nullable=true)
      */
@@ -29,7 +27,4 @@ class NumberValue extends Value
     {
         $this->value = $value;
     }
-
-
-
 }

@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <script type="text/javascript">
 $(function() {
@@ -13,75 +13,81 @@ $(function() {
 
 	<form method="post" action="<?php echo $view->action('save')?>" enctype="multipart/form-data">
 	<?php  $attribs = UserAttributeKey::getEditableInProfileList();
-	$valt->output('profile_edit');
-	?>
+    $valt->output('profile_edit');
+    ?>
 	<fieldset>
 	<legend><?=t('Basic Information')?></legend>
 	<div class="form-group">
 		<?php echo $form->label('uEmail', t('Email'))?>
-		<?php echo $form->text('uEmail',$profile->getUserEmail())?>
+		<?php echo $form->text('uEmail', $profile->getUserEmail())?>
 	</div>
-	<?php  if (Config::get('concrete.misc.user_timezones')) { ?>
+	<?php  if (Config::get('concrete.misc.user_timezones')) {
+     ?>
 		<div class="form-group">
 			<?php echo  $form->label('uTimezone', t('Time Zone'))?>
 			<?php echo  $form->select('uTimezone',
-				Core::make('helper/date')->getTimezones(),
-				($profile->getUserTimezone()?$profile->getUserTimezone():date_default_timezone_get())
-		); ?>
+                Core::make('helper/date')->getTimezones(),
+                ($profile->getUserTimezone() ? $profile->getUserTimezone() : date_default_timezone_get())
+        );
+     ?>
 		</div>
-	<?php  } ?>
-	<?php  if (is_array($locales) && count($locales)) { ?>
+	<?php 
+ } ?>
+	<?php  if (is_array($locales) && count($locales)) {
+     ?>
 		<div class="form-group">
 			<?php echo $form->label('uDefaultLanguage', t('Language'))?>
 			<?php echo $form->select('uDefaultLanguage', $locales, Localization::activeLocale())?>
 		</div>
-	<?php  } ?>
+	<?php 
+ } ?>
 	<?php
-	if(is_array($attribs) && count($attribs)) {
-		$af = Loader::helper('form/attribute');
-		$af->setAttributeObject($profile);
-		foreach($attribs as $ak) {
-			print '<div class="ccm-profile-attribute">';
-			print $af->display($ak, $ak->isAttributeKeyRequiredOnProfile());
-			print '</div>';
-		}
-	}
-	?>
+    if (is_array($attribs) && count($attribs)) {
+        $af = Loader::helper('form/attribute');
+        $af->setAttributeObject($profile);
+        foreach ($attribs as $ak) {
+            echo '<div class="ccm-profile-attribute">';
+            echo $af->display($ak, $ak->isAttributeKeyRequiredOnProfile());
+            echo '</div>';
+        }
+    }
+    ?>
 	</fieldset>
 	<?php
-	$ats = AuthenticationType::getList(true, true);
+    $ats = AuthenticationType::getList(true, true);
 
-    $ats = array_filter($ats, function(AuthenticationType $type) {
+    $ats = array_filter($ats, function (AuthenticationType $type) {
         return $type->hasHook();
     });
 
-	$count = count($ats);
-	if ($count) {
-		?>
+    $count = count($ats);
+    if ($count) {
+        ?>
 		<fieldset>
 			<legend><?=t('Authentication Types')?></legend>
 			<?php
-			foreach ($ats as $at) {
-				$at->renderHook();
-			}
-			?>
+            foreach ($ats as $at) {
+                $at->renderHook();
+            }
+        ?>
 		</fieldset>
 		<?php
-	}
-	?>
+
+    }
+    ?>
         <br/>
 	<fieldset>
     	<legend><?=t('Change Password')?></legend>
         <div class="form-group">
             <?php echo $form->label('uPasswordNew', t('New Password'))?>
-            <?php echo $form->password('uPasswordNew',array('autocomplete' => 'off'))?>
+            <?php echo $form->password('uPasswordNew', array('autocomplete' => 'off'))?>
             <a href="javascript:void(0)" title="<?=t("Leave blank to keep current password.")?>"><i class="icon-question-sign"></i></a>
 		</div>
 
         <div class="form-group">
             <?php echo $form->label('uPasswordNewConfirm', t('Confirm New Password'))?>
             <div class="controls">
-                <?php echo $form->password('uPasswordNewConfirm',array('autocomplete' => 'off'))?>
+                <?php echo $form->password('uPasswordNewConfirm', array('autocomplete' => 'off'))?>
             </div>
         </div>
 

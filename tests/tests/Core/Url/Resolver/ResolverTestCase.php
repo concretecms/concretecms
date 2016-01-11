@@ -2,7 +2,6 @@
 
 abstract class ResolverTestCase extends PHPUnit_Framework_TestCase
 {
-
     /**
      * @var \Concrete\Core\Url\UrlImmutable
      */
@@ -29,7 +28,6 @@ abstract class ResolverTestCase extends PHPUnit_Framework_TestCase
     protected function canonicalUrlWithPath($path, $dispatcher = null)
     {
         if (is_null($dispatcher)) {
-
             $rewriting = \Config::get('concrete.seo.url_rewriting');
             $rewrite_all = \Config::get('concrete.seo.url_rewriting_all');
             $in_dashboard = \Core::make('helper/concrete/dashboard')->inDashboard($path);
@@ -48,5 +46,4 @@ abstract class ResolverTestCase extends PHPUnit_Framework_TestCase
 
         return $this->canonicalUrl->setPath($canonical_path);
     }
-
 }

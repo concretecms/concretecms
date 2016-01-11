@@ -7,7 +7,6 @@ use Concrete\Core\Foundation\Service\Provider;
 
 class EditorServiceProvider extends Provider
 {
-
     public function register()
     {
         $obj = $this->app;
@@ -40,5 +39,4 @@ class EditorServiceProvider extends Provider
             return $editor;
         });
     }
-
 }

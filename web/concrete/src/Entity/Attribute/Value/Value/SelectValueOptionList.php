@@ -9,7 +9,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class SelectValueOptionList
 {
-
     /**
      * @Id @Column(type="integer", options={"unsigned":true})
      * @GeneratedValue(strategy="AUTO")
@@ -24,6 +23,7 @@ class SelectValueOptionList
 
     /**
      * SelectValueOptionList constructor.
+     *
      * @param $options
      */
     public function __construct()
@@ -50,9 +50,9 @@ class SelectValueOptionList
     public function contains(SelectValueOption $option)
     {
         $id = $option->getSelectAttributeOptionID();
-        return count(array_filter($this->getOptions()->toArray(), function($option) use ($id) {
+
+        return count(array_filter($this->getOptions()->toArray(), function ($option) use ($id) {
             return $option->getSelectAttributeOptionID() == $id;
         })) > 0;
     }
-
 }

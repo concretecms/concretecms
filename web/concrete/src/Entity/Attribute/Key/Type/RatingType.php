@@ -1,9 +1,7 @@
 <?php
-
 namespace Concrete\Core\Entity\Attribute\Key\Type;
 
 use Concrete\Core\Entity\Attribute\Value\RatingValue;
-
 
 /**
  * @Entity
@@ -11,7 +9,6 @@ use Concrete\Core\Entity\Attribute\Value\RatingValue;
  */
 class RatingType extends Type
 {
-
     public function getAttributeValue()
     {
         return new RatingValue();
@@ -20,7 +17,7 @@ class RatingType extends Type
     public function createController()
     {
         $controller = new \Concrete\Attribute\Rating\Controller($this->getAttributeType());
+
         return $controller;
     }
-
 }

@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Legacy\Controller;
 
 use Controller;

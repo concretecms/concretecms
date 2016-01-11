@@ -1,11 +1,13 @@
 <?php
 namespace Concrete\Core\StyleCustomizer\Style;
-use \Concrete\Core\StyleCustomizer\Style\Value\SizeValue;
+
+use Concrete\Core\StyleCustomizer\Style\Value\SizeValue;
 use Less_Tree_Dimension;
 
-class SizeStyle extends Style {
-
-    public function render($value = false) {
+class SizeStyle extends Style
+{
+    public function render($value = false)
+    {
         $r = \Concrete\Core\Http\ResponseAssetGroup::get();
         $r->requireAsset('core/style-customizer');
 
@@ -17,10 +19,10 @@ class SizeStyle extends Style {
         }
         $options['inputName'] = $this->getVariable();
         $strOptions = json_encode($options);
-        print '<span class="ccm-style-customizer-display-swatch-wrapper" data-size-selector="' . $this->getVariable() . '"></span>';
-        print "<script type=\"text/javascript\">";
-        print "$(function() { $('span[data-size-selector=" . $this->getVariable() . "]').concreteSizeSelector({$strOptions}); });";
-        print "</script>";
+        echo '<span class="ccm-style-customizer-display-swatch-wrapper" data-size-selector="' . $this->getVariable() . '"></span>';
+        echo "<script type=\"text/javascript\">";
+        echo "$(function() { $('span[data-size-selector=" . $this->getVariable() . "]').concreteSizeSelector({$strOptions}); });";
+        echo "</script>";
     }
 
     public function getValueFromRequest(\Symfony\Component\HttpFoundation\ParameterBag $request)
@@ -29,10 +31,12 @@ class SizeStyle extends Style {
         $sv = new SizeValue($this->getVariable());
         $sv->setSize($size['size']);
         $sv->setUnit($size['unit']);
+
         return $sv;
     }
 
-    public static function parse($value, $variable = false) {
+    public static function parse($value, $variable = false)
+    {
         if ($value instanceof Less_Tree_Dimension) {
             $unit = 'px';
             if (isset($value->unit->numerator[0])) {
@@ -42,12 +46,14 @@ class SizeStyle extends Style {
             $sv->setSize($value->value);
             $sv->setUnit($unit);
         }
+
         return $sv;
     }
 
-    public function getValuesFromVariables($rules = array()) {
+    public function getValuesFromVariables($rules = array())
+    {
         $values = array();
-        foreach($rules as $rule) {
+        foreach ($rules as $rule) {
             if (preg_match('/@(.+)\-size/i',  isset($rule->name) ? $rule->name : '', $matches)) {
                 $value = $rule->value->value[0]->value[0];
                 $sv = static::parse($value, $matches[1]);
@@ -56,9 +62,7 @@ class SizeStyle extends Style {
                 }
             }
         }
+
         return $values;
     }
-
-
 }
-

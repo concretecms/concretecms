@@ -1,12 +1,9 @@
 <?php
-
 namespace Concrete\Core\Express;
 
 use Concrete\Core\Application\Application;
-use Concrete\Core\Entity\Express\Entity;
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
 
 class DoctrineMappingDriver implements MappingDriver
 {
@@ -25,7 +22,7 @@ class DoctrineMappingDriver implements MappingDriver
     {
         $r = $this->rootEntityManager->getRepository('Concrete\Core\Entity\Express\Entity');
         $entities = $r->findAll();
-        foreach($entities as $entity) {
+        foreach ($entities as $entity) {
             $className = '';
             if (isset($this->namespace)) {
                 $className .= trim($this->namespace, '\\') . '\\';
@@ -51,7 +48,6 @@ class DoctrineMappingDriver implements MappingDriver
         $this->namespace = $namespace;
     }
 
-
     public function loadMetadataForClass($className, \Doctrine\Common\Persistence\Mapping\ClassMetadata $metadata)
     {
         if (!isset($this->classCache)) {
@@ -65,7 +61,6 @@ class DoctrineMappingDriver implements MappingDriver
             $populator->populate();
         }
     }
-
 
     public function getAllClassNames()
     {
@@ -88,6 +83,4 @@ class DoctrineMappingDriver implements MappingDriver
 
         return false;
     }
-
-
 }

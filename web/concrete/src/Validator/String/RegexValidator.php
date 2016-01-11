@@ -5,15 +5,15 @@ use Concrete\Core\Validator\AbstractTranslatableValidator;
 
 class RegexValidator extends AbstractTranslatableValidator
 {
-
     /** Passed string doesn't match */
     const E_DOES_NOT_MATCH = 1;
 
-    /** @type string Regex pattern */
+    /** @var string Regex pattern */
     protected $pattern;
 
     /**
      * RegexValidator constructor.
+     *
      * @param string $pattern
      */
     public function __construct($pattern)
@@ -21,7 +21,7 @@ class RegexValidator extends AbstractTranslatableValidator
         $this->pattern = $pattern;
 
         $this->setRequirementString(self::E_DOES_NOT_MATCH, 'Must match pattern.');
-        $this->setErrorString(self::E_DOES_NOT_MATCH, function($validator, $code, $mixed) {
+        $this->setErrorString(self::E_DOES_NOT_MATCH, function ($validator, $code, $mixed) {
             return sprintf(
                 'RegexError: String \"%s\" does not match expected pattern.',
                 $mixed);
@@ -45,11 +45,13 @@ class RegexValidator extends AbstractTranslatableValidator
     }
 
     /**
-     * Is this mixed value valid
+     * Is this mixed value valid.
      *
      * @param mixed             $mixed Can be any value
      * @param \ArrayAccess|null $error
+     *
      * @return bool
+     *
      * @throws \InvalidArgumentException Invalid mixed value type passed.
      * @throws \RuntimeException         Invalid regex pattern.
      */
@@ -74,5 +76,4 @@ class RegexValidator extends AbstractTranslatableValidator
 
         return true;
     }
-
 }

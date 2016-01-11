@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Entity\Express;
 
 use Concrete\Core\Express\Association\Builder\OneToManyAssociationBuilder;
@@ -10,7 +9,6 @@ use Concrete\Core\Express\Association\Formatter\OneToManyFormatter;
  */
 class OneToManyAssociation extends Association
 {
-
     public function getAssociationBuilder()
     {
         return new OneToManyAssociationBuilder($this);
@@ -20,5 +18,4 @@ class OneToManyAssociation extends Association
     {
         return new OneToManyFormatter($this);
     }
-
 }

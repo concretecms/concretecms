@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Marketplace;
 
 use Core;

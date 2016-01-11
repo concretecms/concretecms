@@ -2,7 +2,6 @@
 namespace Concrete\Core\Asset;
 
 use Concrete\Core\Foundation\Object as Object;
-use Concrete\Core\Package\Package;
 
 class AssetList
 {
@@ -40,8 +39,9 @@ class AssetList
     public static function getInstance()
     {
         if (null === self::$loc) {
-            self::$loc = new self;
+            self::$loc = new self();
         }
+
         return self::$loc;
     }
 
@@ -51,6 +51,7 @@ class AssetList
      * @param string $filename
      * @param array $args
      * @param bool $pkg
+     *
      * @return Asset
      */
     public function register($assetType, $assetHandle, $filename, $args = array(), $pkg = false)
@@ -60,7 +61,7 @@ class AssetList
             'local' => true,
             'version' => false,
             'combine' => -1,
-            'minify' => -1 // use the asset default
+            'minify' => -1, // use the asset default
         );
         // overwrite all the defaults with the arguments
         $args = array_merge($defaults, $args);
@@ -69,6 +70,7 @@ class AssetList
         $o = new $class($assetHandle);
         $o->register($filename, $args, $pkg);
         $this->registerAsset($o);
+
         return $o;
     }
 
@@ -138,6 +140,7 @@ class AssetList
     /**
      * @param string $assetType
      * @param string $assetHandle
+     *
      * @return Asset
      */
     public function getAsset($assetType, $assetHandle)
@@ -147,6 +150,7 @@ class AssetList
 
     /**
      * @param string $assetGroupHandle
+     *
      * @return \Concrete\Core\Asset\AssetGroup
      */
     public function getAssetGroup($assetGroupHandle)

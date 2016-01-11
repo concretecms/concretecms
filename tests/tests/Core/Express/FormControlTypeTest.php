@@ -2,7 +2,6 @@
 
 class FormControlTypeTest extends ConcreteDatabaseTestCase
 {
-
     public function testList()
     {
         $manager = \Core::make('express.control.type.manager');
@@ -15,11 +14,9 @@ class FormControlTypeTest extends ConcreteDatabaseTestCase
         $this->assertInstanceOf('\Concrete\Core\Express\Form\Control\Type\AssociationType', $drivers['association']);
         $expected = array('entity_property', 'attribute_key', 'association');
         $i = 0;
-        foreach($drivers as $key => $driver) {
+        foreach ($drivers as $key => $driver) {
             $this->assertEquals($expected[$i], $key);
-            $i++;
+            ++$i;
         }
     }
-
-
 }

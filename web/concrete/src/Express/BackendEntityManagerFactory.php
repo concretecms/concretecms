@@ -2,7 +2,6 @@
 namespace Concrete\Core\Express;
 
 use Concrete\Core\Application\Application;
-use Concrete\Core\Cache\Adapter\DoctrineCacheDriver;
 use Concrete\Core\Database\EntityManagerFactoryInterface;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Express\Entity;
@@ -12,7 +11,8 @@ use Doctrine\ORM\Tools\Setup;
 use Config;
 
 /**
- * Class EntityManagerFactory
+ * Class EntityManagerFactory.
+ *
  * @package Concrete\Core\Express
  * The backend entity manager hooks into Doctrine and is called by the front-end
  * object manager, which is what users actually engage with.
@@ -36,6 +36,7 @@ class BackendEntityManagerFactory implements EntityManagerFactoryInterface
             $this->driver = new \Concrete\Core\Express\DoctrineMappingDriver($this->application, $this->rootEntityManager);
             $this->driver->setNamespace($this->application['config']->get('express.entity_classes.namespace'));
         }
+
         return $this->driver;
     }
 
@@ -57,7 +58,7 @@ class BackendEntityManagerFactory implements EntityManagerFactoryInterface
         $config->setNamingStrategy($strategy);
         $config->setMetadataDriverImpl($this->getDriver());
         $config->setClassMetadataFactoryName('Doctrine\ORM\Tools\DisconnectedClassMetadataFactory');
+
         return EntityManager::create($connection, $config);
     }
-
 }

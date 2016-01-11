@@ -6,7 +6,6 @@ use Concrete\Core\Controller\ElementController;
 
 class StandardListHeader extends ElementController
 {
-
     protected $category;
 
     public function __construct(CategoryInterface $category)
@@ -26,7 +25,4 @@ class StandardListHeader extends ElementController
         $this->set('category', $entity);
         $this->set('sets', $entity->getAttributeSets());
     }
-
-
-
 }

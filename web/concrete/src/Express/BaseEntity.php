@@ -3,11 +3,11 @@ namespace Concrete\Core\Express;
 
 class BaseEntity
 {
-
     public function get($property)
     {
         $property = camelcase($property);
         $method = "get{$property}";
+
         return $this->$method();
     }
 
@@ -15,7 +15,4 @@ class BaseEntity
     {
         return $this->get($handle);
     }
-
-
-
 }

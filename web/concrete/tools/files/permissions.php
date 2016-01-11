@@ -1,15 +1,15 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Core\File\EditResponse as FileEditResponse;
 use \Concrete\Core\File\StorageLocation\StorageLocation as FileStorageLocation;
 
 $u = new User();
 $form = Loader::helper('form');
-$ih = Loader::helper('concrete/ui'); 
+$ih = Loader::helper('concrete/ui');
 $f = File::getByID($_REQUEST['fID']);
 $cp = new Permissions($f);
 if (!$cp->canAdmin()) {
-	die(t("Access Denied."));
+    die(t("Access Denied."));
 }
 $form = Loader::helper('form');
 
@@ -17,29 +17,26 @@ $r = new FileEditResponse();
 $r->setFile($f);
 
 if ($_POST['task'] == 'set_password') {
-	$f->setPassword($_POST['fPassword']);
-	$r->setMessage(t('File password saved successfully.'));
-	$r->outputJSON();
+    $f->setPassword($_POST['fPassword']);
+    $r->setMessage(t('File password saved successfully.'));
+    $r->outputJSON();
 }
-
-
 
 if ($_POST['task'] == 'set_location') {
     $fsl = FileStorageLocation::getByID($_POST['fslID']);
     if (is_object($fsl)) {
         try {
             $f->setFileStorageLocation($fsl);
-        } catch(\Exception $e) {
-            $json = new \Concrete\Core\Application\EditResponse;
-            $err = new \Concrete\Core\Error\Error;
+        } catch (\Exception $e) {
+            $json = new \Concrete\Core\Application\EditResponse();
+            $err = new \Concrete\Core\Error\Error();
             $err->add($e->getMessage());
             $json->setError($err);
             $json->outputJSON();
         }
     }
-	$r->setMessage(t('File storage location saved successfully.'));
-	$r->outputJSON();
-
+    $r->setMessage(t('File storage location saved successfully.'));
+    $r->outputJSON();
 }
 
 ?>
@@ -47,25 +44,34 @@ if ($_POST['task'] == 'set_location') {
 <div class="ccm-ui" id="ccm-file-permissions-dialog-wrapper">
 
 <ul class="nav nav-tabs" id="ccm-file-permissions-tabs">
-	<? if (Config::get('concrete.permissions.model') != 'simple') { ?>
+	<?php if (Config::get('concrete.permissions.model') != 'simple') {
+    ?>
 		<li class="active"><a href="javascript:void(0)" id="ccm-file-permissions-advanced"><?=t('Permissions')?></a></li>
-	<? } ?>
-	<li <? if (Config::get('concrete.permissions.model') == 'simple') { ?> class="active" <? } ?>><a href="javascript:void(0)" id="ccm-file-password"><?=t('Protect with Password')?></a></li>
+	<?php 
+} ?>
+	<li <?php if (Config::get('concrete.permissions.model') == 'simple') {
+    ?> class="active" <?php 
+} ?>><a href="javascript:void(0)" id="ccm-file-password"><?=t('Protect with Password')?></a></li>
 	<li><a href="javascript:void(0)" id="ccm-file-storage"><?=t('Storage Location')?></a></li>
 </ul>
 
 <div class="clearfix"></div>
 
-<? if (Config::get('concrete.permissions.model') != 'simple') { ?>
+<?php if (Config::get('concrete.permissions.model') != 'simple') {
+    ?>
 
 <div id="ccm-file-permissions-advanced-tab">
 
-	<? Loader::element('permission/lists/file', array('f' => $f)); ?>
+	<?php Loader::element('permission/lists/file', array('f' => $f));
+    ?>
 
 </div>
-<? } ?>
+<?php 
+} ?>
 
-<div id="ccm-file-password-tab" <? if (Config::get('concrete.permissions.model') != 'simple') { ?> style="display: none" <? } ?>>
+<div id="ccm-file-password-tab" <?php if (Config::get('concrete.permissions.model') != 'simple') {
+    ?> style="display: none" <?php 
+} ?>>
 <br/>
 
 <h4><?=t('Requires Password to Access')?></h4>
@@ -99,11 +105,13 @@ if ($_POST['task'] == 'set_location') {
 
 <?=$form->hidden('task', 'set_location')?>
 <?=$form->hidden('fID', $f->getFileID())?>
-<?
+<?php
 $locations = FileStorageLocation::getList();
-foreach($locations as $fsl) { ?>
+foreach ($locations as $fsl) {
+    ?>
     <div class="radio"><label><?=$form->radio('fslID', $fsl->getID(), $f->getStorageLocationID() == $fsl->getID()) ?> <?=$fsl->getDisplayName()?></label></div>
-<? } ?>
+<?php 
+} ?>
 </form>
 
 <div id="ccm-file-storage-buttons" style="display: none">
@@ -145,11 +153,15 @@ ccm_filePermissionsSetupButtons = function() {
 var ccm_fpActiveTab;
 
 $(function() {
-<? if (Config::get('concrete.permissions.model') == 'simple') { ?>
+<?php if (Config::get('concrete.permissions.model') == 'simple') {
+    ?>
 	ccm_fpActiveTab = "ccm-file-password";
-<? } else { ?>
+<?php 
+} else {
+    ?>
 	ccm_fpActiveTab = "ccm-file-permissions-advanced";
-<? } ?>
+<?php 
+} ?>
 
 	ccm_filePermissionsSetupButtons();
 	//$('form[data-dialog-form=file-storage],form[data-dialog-form=file-password]').concreteAjaxForm();

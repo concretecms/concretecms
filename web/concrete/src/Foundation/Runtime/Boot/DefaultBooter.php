@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Foundation\Runtime\Boot;
 
 use Concrete\Core\Application\Application;
@@ -19,7 +18,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class DefaultBooter implements BootInterface, ApplicationAwareInterface
 {
-
     /** @var Application */
     protected $app;
 
@@ -41,7 +39,7 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
     {
         $app = $this->app;
 
-        /**
+        /*
          * ----------------------------------------------------------------------------
          * Bind the IOC container to our facades
          * Completely indebted to Taylor Otwell & Laravel for this.
@@ -52,18 +50,18 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
         /**
          * ----------------------------------------------------------------------------
          * Load path detection for relative assets, URL and path to home.
-         * ----------------------------------------------------------------------------
+         * ----------------------------------------------------------------------------.
          */
         require_once DIR_BASE_CORE . '/bootstrap/paths.php';
 
-        /**
+        /*
          * ----------------------------------------------------------------------------
          * Add install environment detection
          * ----------------------------------------------------------------------------
          */
         $this->initializeEnvironmentDetection($app);
 
-        /**
+        /*
          * ----------------------------------------------------------------------------
          * Enable Configuration
          * ----------------------------------------------------------------------------
@@ -77,42 +75,42 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
          */
         require DIR_BASE_CORE . '/bootstrap/paths_configured.php';
 
-        /**
+        /*
          * ----------------------------------------------------------------------------
          * Timezone Config
          * ----------------------------------------------------------------------------
          */
         $this->initializeTimezone($config);
 
-        /**
+        /*
          * ----------------------------------------------------------------------------
          * Setup core classes aliases.
          * ----------------------------------------------------------------------------
          */
         $this->initializeClassAliases($config);
 
-        /**
+        /*
          * ----------------------------------------------------------------------------
          * Setup the core service groups.
          * ----------------------------------------------------------------------------
          */
         $this->initializeServiceProviders($app, $config);
 
-        /**
+        /*
          * ----------------------------------------------------------------------------
          * Legacy Definitions
          * ----------------------------------------------------------------------------
          */
         $this->initializeLegacyDefinitions($config, $app);
 
-        /**
+        /*
          * ----------------------------------------------------------------------------
          * Setup file cache directories. Has to come after we define services
          * because we use the file service.
          * ----------------------------------------------------------------------------
          */
         $app->setupFilesystem();
-        /**
+        /*
          * ----------------------------------------------------------------------------
          * Registries for theme paths, assets, routes and file types.
          * ----------------------------------------------------------------------------
@@ -130,18 +128,19 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
     /**
      * @param $config
      * @param $app
+     *
      * @return null|Response
      */
     private function bootHttpSapi($config, $app)
     {
-        /**
+        /*
          * ----------------------------------------------------------------------------
          * Initialize the request
          * ----------------------------------------------------------------------------
          */
         $request = $this->initializeRequest($config);
 
-        /**
+        /*
          * ----------------------------------------------------------------------------
          * If we haven't installed, then we need to reroute. If we have, and we're
          * on the install page, and we haven't installed, then we need to dispatch
@@ -153,7 +152,7 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
         }
 
         if ($this->app->isInstalled()) {
-            /**
+            /*
              * ----------------------------------------------------------------------------
              * Check the page cache in case we need to return a result early.
              * ----------------------------------------------------------------------------
@@ -162,7 +161,7 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
                 return $response;
             }
 
-            /**
+            /*
              * ----------------------------------------------------------------------------
              * Now we load all installed packages, and register their package autoloaders.
              * ----------------------------------------------------------------------------
@@ -172,11 +171,11 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
             /**
              * ----------------------------------------------------------------------------
              * Load preprocess items
-             * ----------------------------------------------------------------------------
+             * ----------------------------------------------------------------------------.
              */
             require DIR_BASE_CORE . '/bootstrap/preprocess.php';
 
-            /**
+            /*
              * ----------------------------------------------------------------------------
              * Set the active language for the site, based either on the site locale, or the
              * current user record. This can be changed later as well, during runtime.
@@ -185,7 +184,7 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
              */
             $this->initializeLocalization();
 
-            /**
+            /*
              * Handle automatic updating
              */
             $app->handleAutomaticUpdates();
@@ -193,9 +192,10 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
     }
 
     /**
-     * Enable configuration
+     * Enable configuration.
      *
      * @param Application $app
+     *
      * @return Repository
      */
     private function initializeConfig(Application $app)
@@ -203,10 +203,11 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
         $config_provider = $app->make('Concrete\Core\Config\ConfigServiceProvider');
         $config_provider->register();
 
-        /**
-         * @var \Concrete\Core\Config\Repository\Repository $config
+        /*
+         * @var \Concrete\Core\Config\Repository\Repository
          */
         $config = $app->make('config');
+
         return $config;
     }
 
@@ -223,6 +224,7 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
         $app->detectEnvironment(function () use ($db_config, $environment, $app) {
             try {
                 $installed = $app->isInstalled();
+
                 return $installed;
             } catch (\Exception $e) {
             }
@@ -251,6 +253,7 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
 
     /**
      * @param Repository $config
+     *
      * @return ClassAliasList
      */
     private function initializeClassAliases(Repository $config)
@@ -301,7 +304,7 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
     /**
      * @param Repository $config
      */
-    private function initializeAssets(Repository$config)
+    private function initializeAssets(Repository $config)
     {
         $asset_list = AssetList::getInstance();
 
@@ -330,11 +333,12 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
 
     /**
      * @param \Illuminate\Config\Repository $config
+     *
      * @return Request
      */
     private function initializeRequest(Repository $config)
     {
-        /**
+        /*
          * ----------------------------------------------------------------------------
          * Set trusted proxies and headers for the request
          * ----------------------------------------------------------------------------
@@ -349,7 +353,7 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
             Request::setTrustedProxies($trustedProxiesIps);
         }
 
-        /**
+        /*
          * ----------------------------------------------------------------------------
          * Obtain the Request object.
          * ----------------------------------------------------------------------------
@@ -364,6 +368,7 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
      *
      * @param Application $app
      * @param Request $request
+     *
      * @return null|Response
      */
     private function checkInstall(Application $app, Request $request)
@@ -371,7 +376,6 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
         if (!$app->isInstalled()) {
             if (!$request->matches('/install/*') &&
                 $request->getPath() != '/install') {
-
                 $manager = $app->make('Concrete\Core\Url\Resolver\Manager\ResolverManager');
                 $response = new RedirectResponse($manager->resolve(array('install')));
 
@@ -383,6 +387,7 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
     /**
      * @param \Concrete\Core\Application\Application $app
      * @param \Concrete\Core\Http\Request $request
+     *
      * @return null|Response
      */
     private function checkCache(Application $app, Request $request)
@@ -402,7 +407,7 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
     }
 
     /**
-     * Initialize localization
+     * Initialize localization.
      */
     private function initializeLocalization()
     {
@@ -411,5 +416,4 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
         $loc = Localization::getInstance();
         $loc->setLocale($lan);
     }
-
 }

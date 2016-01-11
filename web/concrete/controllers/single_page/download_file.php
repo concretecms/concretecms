@@ -71,7 +71,7 @@ class DownloadFile extends PageController
             $fsl = $file->getFileStorageLocationObject()->getFileSystemObject();
             $mimeType = $file->getMimeType();
             header("Content-type: $mimeType");
-            print $file->getFileContents();
+            echo $file->getFileContents();
             exit;
         }
     }

@@ -7,7 +7,6 @@ use Core;
 
 class LogEntry
 {
-
     public function getLevel()
     {
         return $this->level;
@@ -100,5 +99,4 @@ class LogEntry
             return $obj;
         }
     }
-
 }

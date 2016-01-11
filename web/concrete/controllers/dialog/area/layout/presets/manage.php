@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Controller\Dialog\Area\Layout\Presets;
 
 use Concrete\Controller\Dialog\Area\Layout\Presets;
@@ -9,7 +9,6 @@ use Exception;
 
 class Manage extends Presets
 {
-
     protected $viewPath = '/dialogs/area/layout/presets/manage';
 
     public function view()
@@ -31,6 +30,4 @@ class Manage extends Presets
             $pr->outputJSON();
         }
     }
-
 }
-

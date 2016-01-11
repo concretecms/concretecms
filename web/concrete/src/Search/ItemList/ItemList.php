@@ -72,7 +72,7 @@ abstract class ItemList
 
         $this->debugStop();
 
-        foreach($executeResults as $result) {
+        foreach ($executeResults as $result) {
             $r = $this->getResult($result);
             if ($r != null) {
                 $results[] = $r;
@@ -108,6 +108,7 @@ abstract class ItemList
                 $class .= 'asc';
             }
         }
+
         return $class;
     }
 
@@ -120,16 +121,16 @@ abstract class ItemList
 
         $args = array(
             $this->getQuerySortColumnParameter() => $column,
-            $this->getQuerySortDirectionParameter() => $dir
+            $this->getQuerySortDirectionParameter() => $dir,
         );
 
         $url = $uh->setVariable($args, false, $url);
+
         return strip_tags($url);
     }
 
     /** @var \Concrete\Core\Search\Pagination\Pagination  */
     protected $pagination;
-
 
     public function getActiveSortDirection()
     {
@@ -158,6 +159,7 @@ abstract class ItemList
 
     /**
      * Returns the total results in this item list.
+     *
      * @return int
      */
     abstract public function getTotalResults();
@@ -182,11 +184,11 @@ abstract class ItemList
                 $pagination->setCurrentPage(1);
             }
         }
+
         return $pagination;
     }
 
     /**
-     *
      * @param StickyRequest $request
      */
     public function setupAutomaticSorting(StickyRequest $request = null)

@@ -43,7 +43,7 @@ if ($c->isMasterCollection()) {
     $handles .= BLOCK_HANDLE_PAGE_TYPE_OUTPUT_PROXY . ' ';
 }
 
-/** @var Page $c */
+/* @var Page $c */
 $pt = $c->getCollectionThemeObject();
 $gf = $pt->getThemeGridFrameworkObject();
 ?>
@@ -59,7 +59,7 @@ $gf = $pt->getThemeGridFrameworkObject();
      data-area-custom-templates='<?=json_encode($a->getAreaCustomTemplates(), ENT_QUOTES)?>'
      class="<?= $class ?>">
 
-    <? unset($class); ?>
+    <?php unset($class); ?>
     <script type="text/template" role="area-block-wrapper">
         <?php
         if ($pt->supportsGridFramework() && $a->isGridContainerEnabled()) {
@@ -78,6 +78,7 @@ $gf = $pt->getThemeGridFrameworkObject();
             ?>
             <div class='block'></div>
             <?php
+
         }
         ?>
     </script>

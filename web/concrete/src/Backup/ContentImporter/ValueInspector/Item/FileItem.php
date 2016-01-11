@@ -1,12 +1,10 @@
 <?php
-
 namespace Concrete\Core\Backup\ContentImporter\ValueInspector\Item;
 
 use Concrete\Core\File\File;
 
 class FileItem extends AbstractItem
 {
-
     public function getDisplayName()
     {
         return t('File');
@@ -18,6 +16,7 @@ class FileItem extends AbstractItem
         $fID = $db->GetOne('select fID from FileVersions where fvFilename = ?', array($this->getReference()));
         if ($fID) {
             $f = File::getByID($fID);
+
             return $f;
         }
     }
@@ -35,6 +34,4 @@ class FileItem extends AbstractItem
             return $o->getFileID();
         }
     }
-
-
 }

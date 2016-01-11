@@ -3,7 +3,6 @@ namespace Concrete\Core\Permission\Access\ListItem;
 
 class AddConversationMessageConversationListItem extends ListItem
 {
-
     protected $cnvNewMessageApprovalStatus = 'A'; // approved by default. Could also be U
 
     public function setNewConversationMessageApprovalStatus($cnvNewMessageApprovalStatus)
@@ -20,5 +19,4 @@ class AddConversationMessageConversationListItem extends ListItem
     {
         return $this->cnvNewMessageApprovalStatus == 'A';
     }
-
 }

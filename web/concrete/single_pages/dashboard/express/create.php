@@ -16,7 +16,7 @@ if (is_object($expressForm)) {
 
 
     <?php
-        print $renderer->render($expressForm);
+        echo $renderer->render($expressForm);
     ?>
 
         <div class="form-actions">
@@ -26,6 +26,8 @@ if (is_object($expressForm)) {
 
 <?php
 
-} else { ?>
+} else {
+    ?>
     <p><?=t('You have not created any forms for this data type.')?></p>
-<?php } ?>
+<?php 
+} ?>

@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\Routing;
+
 use Symfony\Component\HttpKernel;
 use Response;
 use Request;
@@ -11,7 +12,7 @@ class ClosureRouteCallback extends RouteCallback
         $resolver = new HttpKernel\Controller\ControllerResolver();
         $arguments = $resolver->getArguments($request, $this->callback);
         $callback_response = call_user_func_array($this->callback, $arguments);
-        
+
         if ($callback_response instanceof \Concrete\Core\Http\Response) {
             return $callback_response;
         }
@@ -33,5 +34,4 @@ class ClosureRouteCallback extends RouteCallback
 
         return array('callback' => $callback);
     }
-
 }

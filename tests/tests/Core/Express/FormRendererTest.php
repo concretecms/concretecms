@@ -1,17 +1,16 @@
 <?php
-use Concrete\Core\Express\ObjectBuilder;
+
 
 require_once __DIR__ . "/ObjectBuilderTestTrait.php";
 
 class FormRendererTest extends ConcreteDatabaseTestCase
 {
-
     use \ObjectBuilderTestTrait;
 
     protected $tables = array(
         'AttributeTypes',
         'atTextareaSettings',
-        'Config'
+        'Config',
     );
 
     protected function getMockEntityManager()
@@ -24,7 +23,6 @@ class FormRendererTest extends ConcreteDatabaseTestCase
             ->method('findAll')
             ->will($this->returnValue(array()));
 
-
         // Last, mock the EntityManager to return the mock of the repository
         $entityManager = $this
             ->getMockBuilder('\Doctrine\ORM\EntityManager')
@@ -32,12 +30,11 @@ class FormRendererTest extends ConcreteDatabaseTestCase
             ->getMock();
         $entityManager->expects($this->any())
             ->method('getRepository')
-            ->will($this->returnCallback(function($args) use ($entityRepository) {
+            ->will($this->returnCallback(function ($args) use ($entityRepository) {
                 if ($args == '\Concrete\Express\Teacher') {
                     return $entityRepository;
                 }
             }));
-
 
         return $entityManager;
     }
@@ -48,8 +45,8 @@ class FormRendererTest extends ConcreteDatabaseTestCase
         \Concrete\Core\Attribute\Type::add('textarea', 'textarea');
 
         $builder = $this->getObjectBuilder();
-        /**
-         * @var $student \Concrete\Core\Entity\Express\Entity
+        /*
+         * @var \Concrete\Core\Entity\Express\Entity
          */
         $student = $builder->buildObject();
         $form = new \Concrete\Core\Entity\Express\Form();
@@ -78,7 +75,7 @@ class FormRendererTest extends ConcreteDatabaseTestCase
         $fieldSet1->getControls()->add($associationControl);
 
         // Attribute controls
-        foreach($student->getAttributes() as $attribute) {
+        foreach ($student->getAttributes() as $attribute) {
             $attributeControl = new \Concrete\Core\Entity\Express\Control\AttributeKeyControl();
             $attributeControl->setAttributeKey($attribute);
             $fieldSet2->getControls()->add($attributeControl);
@@ -116,6 +113,4 @@ class FormRendererTest extends ConcreteDatabaseTestCase
         preg_match_all('/<textarea/', $html, $matches);
         $this->assertEquals(1, count($matches[0]));
     }
-
-
 }

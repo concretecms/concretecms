@@ -1,10 +1,8 @@
 <?php
 namespace Concrete\Core\Application\Service\UserInterface\Help;
 
-
 interface MessageInterface
 {
-
     /**
      * @return \HtmlObject\Element
      */
@@ -14,6 +12,4 @@ interface MessageInterface
      * @return string
      */
     public function getIdentifier();
-
-
 }

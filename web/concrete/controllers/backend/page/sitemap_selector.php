@@ -8,7 +8,6 @@ use Page;
 
 class SitemapSelector extends UserInterface
 {
-
     public function getViewObject()
     {
         return null;
@@ -23,11 +22,12 @@ class SitemapSelector extends UserInterface
     {
         $nav = Core::make('helper/navigation');
         $pages = $nav->getTrailToCollection($page);
-        foreach($pages as $c) {
+        foreach ($pages as $c) {
             if (!in_array($c->getCollectionID(), $expanded)) {
                 $expanded[] = $c->getCollectionID();
             }
         }
+
         return $expanded;
     }
 
@@ -38,24 +38,25 @@ class SitemapSelector extends UserInterface
         // set expanded nodes based on all the selected nodes.
         $expanded = array(1);
         if (is_array($this->request->query->get('selected'))) {
-            foreach($this->request->query->get('selected') as $cID) {
+            foreach ($this->request->query->get('selected') as $cID) {
                 $page = Page::getByID(intval($cID));
                 $expanded = $this->addParentsTo($expanded, $page);
             }
-        } else if ($this->request->query->has('selected') && $this->request->query->get('selected') > 0) {
+        } elseif ($this->request->query->has('selected') && $this->request->query->get('selected') > 0) {
             $page = Page::getByID(intval($this->request->query->get('selected')));
             $expanded = $this->addParentsTo($expanded, $page);
         }
         $dh->setExpandedNodes($expanded);
         $request = $this->request->query->all();
-        $callback = function($node) use ($request) {
+        $callback = function ($node) use ($request) {
             if (isset($request['filters']) && is_array($request['filters'])) {
-                foreach($request['filters'] as $key => $filter) {
+                foreach ($request['filters'] as $key => $filter) {
                     if ($key == 'ptID' && $filter != $node->ptID) {
                         $node->hideCheckbox = true;
                     }
                 }
             }
+
             return $node;
         };
         if ($this->request->query->get('cParentID') > 0) {
@@ -64,8 +65,7 @@ class SitemapSelector extends UserInterface
         } else {
             $nodes = $dh->getNode($this->request->query->get('startingPoint'), true, $callback);
         }
+
         return new JsonResponse($nodes);
     }
-
 }
-

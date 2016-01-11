@@ -1,10 +1,12 @@
-<? defined('C5_EXECUTE') or die("Access Denied.");?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");?>
 <form method="post" class="ccm-dashboard-content-form" action="<?=$view->action('save')?>">
     <input type="hidden" name="entity_id" value="<?=$entity->getID()?>">
 
-    <? if (isset($expressForm)) { ?>
+    <?php if (isset($expressForm)) {
+    ?>
         <input type="hidden" name="form_id" value="<?=$expressForm->getID()?>">
-    <? } ?>
+    <?php 
+} ?>
 
     <?=$token->output()?>
 

@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Express\Form\Control\Type;
 
 use Concrete\Core\Support\Manager as CoreManager;
@@ -9,7 +8,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class Manager extends CoreManager
 {
-
     protected $entityManager;
 
     public function createEntityPropertyDriver()
@@ -26,7 +24,6 @@ class Manager extends CoreManager
     {
         return new AssociationType($this->entityManager);
     }
-
 
     public function __construct(EntityManager $entityManager)
     {

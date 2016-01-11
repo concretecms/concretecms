@@ -6,13 +6,12 @@ use Concrete\Core\Validation\CSRF\Token;
 use Controller;
 use FileSet;
 use File as ConcreteFile;
-use \Concrete\Core\File\EditResponse as FileEditResponse;
+use Concrete\Core\File\EditResponse as FileEditResponse;
 use Loader;
 use FileImporter;
 use Exception;
 use Permissions as ConcretePermissions;
 use FilePermissions;
-use FileVersion;
 use Core;
 
 class File extends Controller
@@ -63,7 +62,7 @@ class File extends Controller
             }
         }
         if ($errorMessage && !$successMessage) {
-            $e = new \Concrete\Core\Error\Error;
+            $e = new \Concrete\Core\Error\Error();
             $e->add($errorMessage);
             $r->setError($e);
         } else {
@@ -90,9 +89,9 @@ class File extends Controller
     {
         /** @var Token $token */
         $token = $this->app->make('token');
-        if (!$token->validate('delete-version'))
-
-        $files = $this->getRequestFiles('canEditFileContents');
+        if (!$token->validate('delete-version')) {
+            $files = $this->getRequestFiles('canEditFileContents');
+        }
         $r = new FileEditResponse();
         $r->setFiles($files);
         $fv = $files[0]->getVersion(Loader::helper('security')->sanitizeInt($_REQUEST['fvID']));
@@ -149,7 +148,7 @@ class File extends Controller
         }
         $files = array();
         if (isset($_FILES['files']) && (is_uploaded_file($_FILES['files']['tmp_name'][0]))) {
-            for ($i = 0; $i < count($_FILES['files']['tmp_name']); $i++) {
+            for ($i = 0; $i < count($_FILES['files']['tmp_name']); ++$i) {
                 if (!$fp->canAddFileType($cf->getExtension($_FILES['files']['name'][$i]))) {
                     throw new Exception(FileImporter::getErrorMessage(FileImporter::E_FILE_INVALID_EXTENSION));
                 } else {

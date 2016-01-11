@@ -2,14 +2,12 @@
 namespace Concrete\Block\Tags;
 
 use Concrete\Attribute\Select\Option;
-use Loader;
-use \Concrete\Core\Block\BlockController;
+use Concrete\Core\Block\BlockController;
 use CollectionAttributeKey;
 use Page;
 
 class Controller extends BlockController
 {
-
     protected $btTable = 'btTags';
     protected $btInterfaceWidth = "450";
     protected $btInterfaceHeight = "439";
@@ -28,7 +26,7 @@ class Controller extends BlockController
     public $helpers = array('navigation');
 
     /**
-     * Used for localization. If we want to localize the name/description we have to include this
+     * Used for localization. If we want to localize the name/description we have to include this.
      */
     public function getBlockTypeDescription()
     {
@@ -53,6 +51,7 @@ class Controller extends BlockController
     protected function loadAttribute()
     {
         $ak = CollectionAttributeKey::getByHandle($this->attributeHandle);
+
         return $ak;
     }
 
@@ -81,7 +80,7 @@ class Controller extends BlockController
                     if ($i >= $this->cloudCount) {
                         break;
                     }
-                    $i++;
+                    ++$i;
                 }
             } else {
                 $options = $items;

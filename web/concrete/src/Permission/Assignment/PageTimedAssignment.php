@@ -3,7 +3,6 @@ namespace Concrete\Core\Permission\Assignment;
 
 class PageTimedAssignment
 {
-
     protected $permissionKey;
     protected $durationObject;
     protected $accessEntity;
@@ -37,5 +36,4 @@ class PageTimedAssignment
     {
         $this->accessEntity = $accessEntity;
     }
-
 }

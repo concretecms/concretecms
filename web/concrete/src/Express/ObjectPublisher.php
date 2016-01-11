@@ -5,12 +5,9 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Support\Facade\DatabaseORM;
 use Doctrine\ORM\EntityManager;
-use Concrete\Core\Database\EntityManagerFactory;
 
 class ObjectPublisher
 {
-
-
     protected $application;
     protected $entityManager;
 
@@ -41,5 +38,4 @@ class ObjectPublisher
         $manager = new \Concrete\Core\Express\SchemaManager($factory);
         $manager->synchronizeDatabase($entity);
     }
-
 }

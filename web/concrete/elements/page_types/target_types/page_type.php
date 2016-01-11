@@ -1,20 +1,20 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $form = Loader::helper('form');
 $ctArray = PageType::getList();
 $pageSelector = Core::make('helper/form/page_selector');
 $types = array('' => t('** Choose a page type'));
-foreach($ctArray as $cta) {
+foreach ($ctArray as $cta) {
     $types[$cta->getPageTypeID()] = $cta->getPageTypeDisplayName();
 }
 $ptID = 0;
 $factors = array('' => t('Select Menu'), 'sitemap_in_page' => t('In-Page Sitemap'));
 
 if (is_object($pagetype) && $pagetype->getPageTypePublishTargetTypeID() == $type->getPageTypePublishTargetTypeID()) {
-	$configuredTarget = $pagetype->getPageTypePublishTargetObject();
-	$ptID = $configuredTarget->getPageTypeID();
-	$startingPointPageID = $configuredTarget->getStartingPointPageID();
-	$selectorFormFactor = $configuredTarget->getSelectorFormFactor();
+    $configuredTarget = $pagetype->getPageTypePublishTargetObject();
+    $ptID = $configuredTarget->getPageTypeID();
+    $startingPointPageID = $configuredTarget->getStartingPointPageID();
+    $selectorFormFactor = $configuredTarget->getSelectorFormFactor();
 }
 ?>
 <div class="control-group">

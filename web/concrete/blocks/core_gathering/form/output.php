@@ -1,7 +1,7 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
-if ($controller->getTask() == 'add') { 
-	$itemsPerPage = 20;
+if ($controller->getTask() == 'add') {
+    $itemsPerPage = 20;
 }
 
 ?>

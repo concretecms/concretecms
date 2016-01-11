@@ -1,10 +1,8 @@
 <?php
-
 namespace Concrete\Core\Backup\ContentImporter\ValueInspector\InspectionRoutine;
 
 abstract class AbstractRegularExpressionRoutine implements RoutineInterface
 {
-
     abstract public function getRegularExpression();
     abstract public function getItem($identifier);
 
@@ -14,12 +12,13 @@ abstract class AbstractRegularExpressionRoutine implements RoutineInterface
         if (is_scalar($content)) {
             if (preg_match_all($this->getRegularExpression(), $content, $matches)) {
                 if ($matches[1]) {
-                    foreach($matches[1] as $identifier) {
+                    foreach ($matches[1] as $identifier) {
                         $items[] = $this->getItem($identifier);
                     }
                 }
             }
         }
+
         return $items;
     }
 
@@ -33,14 +32,14 @@ abstract class AbstractRegularExpressionRoutine implements RoutineInterface
                     if (isset($matches[1])) {
                         $identifier = $matches[1];
                         $item = $routine->getItem($identifier);
+
                         return $item->getContentValue();
                     }
                 },
                 $content
             );
         }
+
         return $content;
     }
-
-
 }

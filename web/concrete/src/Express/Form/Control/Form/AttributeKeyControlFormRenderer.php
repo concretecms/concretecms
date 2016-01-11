@@ -1,7 +1,5 @@
 <?php
-
 namespace Concrete\Core\Express\Form\Control\Form;
-
 
 use Concrete\Core\Express\Form\Control\EntityPropertyControlView;
 use Concrete\Core\Express\Form\Control\RendererInterface;
@@ -9,7 +7,6 @@ use Concrete\Core\Express\Form\RendererFactory;
 
 class AttributeKeyControlFormRenderer implements RendererInterface
 {
-
     protected $factory;
 
     public function build(RendererFactory $factory)
@@ -26,7 +23,6 @@ class AttributeKeyControlFormRenderer implements RendererInterface
     {
         $ak = $this->getAttributeKeyObject();
         if (is_object($ak)) {
-
             $template = $this->factory->getApplication()->make('environment')->getPath(
                 DIRNAME_ELEMENTS .
                 '/' . DIRNAME_EXPRESS .
@@ -34,12 +30,10 @@ class AttributeKeyControlFormRenderer implements RendererInterface
                 '/attribute_key.php'
             );
 
-
             $view = new EntityPropertyControlView($this->factory);
             $view->addScopeItem('key', $ak);
+
             return $view->render($template);
         }
     }
-
-
 }

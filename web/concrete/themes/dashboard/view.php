@@ -21,9 +21,11 @@ if (isset($error)) {
 if (!empty($_error)) {
     ?>
 	<div class="ccm-ui"  id="ccm-dashboard-result-message">
-		<?php View::element('system_errors', array('format' => 'block', 'error' => $_error)); ?>
+		<?php View::element('system_errors', array('format' => 'block', 'error' => $_error));
+    ?>
 	</div>
 	<?php
+
 }
 
 if (isset($message)) {
@@ -32,6 +34,7 @@ if (isset($message)) {
 		<div class="alert alert-info"><button type="button" class="close" data-dismiss="alert">×</button><?=nl2br(h($message))?></div>
 	</div>
 	<?php
+
 } elseif (isset($success)) {
     ?>
 	<div class="ccm-ui" id="ccm-dashboard-result-message">

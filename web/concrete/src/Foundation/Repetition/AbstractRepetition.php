@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Foundation\Repetition;
 
 /**
@@ -65,7 +64,7 @@ abstract class AbstractRepetition implements RepetitionInterface
      */
     public function isStartDateAllDay()
     {
-        return !!$this->startDateAllDay;
+        return (bool) $this->startDateAllDay;
     }
 
     /**
@@ -83,7 +82,7 @@ abstract class AbstractRepetition implements RepetitionInterface
      */
     public function isEndDateAllDay()
     {
-        return !!$this->endDateAllDay;
+        return (bool) $this->endDateAllDay;
     }
 
     /**
@@ -103,7 +102,7 @@ abstract class AbstractRepetition implements RepetitionInterface
      */
     public function isActive($now = null)
     {
-        return !!$this->getActiveRange($now);
+        return (bool) $this->getActiveRange($now);
     }
 
     /**
@@ -324,7 +323,7 @@ abstract class AbstractRepetition implements RepetitionInterface
      */
     public function repeats()
     {
-        return ($this->getRepeatPeriod() !== self::REPEAT_NONE);
+        return $this->getRepeatPeriod() !== self::REPEAT_NONE;
     }
 
     /**

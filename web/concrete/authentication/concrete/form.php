@@ -1,6 +1,6 @@
 <?php defined('C5_EXECUTE') or die('Access denied.');
 $form = Core::make('helper/form');
-/** @var Concrete\Core\Form\Service\Form $form */
+/* @var Concrete\Core\Form\Service\Form $form */
 ?>
 
 <form method="post" action="<?= URL::to('/login', 'authenticate', $this->getAuthenticationTypeHandle()) ?>">
@@ -21,12 +21,14 @@ $form = Core::make('helper/form');
 		</label>
 	</div>
 
-	<?php if (isset($locales) && is_array($locales) && count($locales) > 0) { ?>
+	<?php if (isset($locales) && is_array($locales) && count($locales) > 0) {
+    ?>
 		<div class="form-group">
 			<label for="USER_LOCALE" class="control-label"><?= t('Language') ?></label>
 			<?= $form->select('USER_LOCALE', $locales) ?>
 		</div>
-	<? } ?>
+	<?php 
+} ?>
 
 	<div class="form-group">
 		<button class="btn btn-primary"><?= t('Log in') ?></button>
@@ -35,10 +37,12 @@ $form = Core::make('helper/form');
 
 	<?php Core::make('helper/validation/token')->output('login_' . $this->getAuthenticationTypeHandle()); ?>
 
-	<? if (Config::get('concrete.user.registration.enabled')) { ?>
+	<?php if (Config::get('concrete.user.registration.enabled')) {
+    ?>
 		<br/>
 		<hr/>
 		<a href="<?=URL::to('/register')?>" class="btn btn-block btn-success"><?=t('Not a member? Register')?></a>
-	<? } ?>
+	<?php 
+} ?>
 
 </form>

@@ -1,8 +1,9 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 
-<?
-if ($enablePostingFromGathering && is_object($composer)) { ?>
+<?php
+if ($enablePostingFromGathering && is_object($composer)) {
+    ?>
 
 	<div data-gathering-block-id="<?=$b->getBlockID()?>">
 
@@ -57,13 +58,14 @@ if ($enablePostingFromGathering && is_object($composer)) { ?>
 	});
 	</script>
 
-<? } ?>
+<?php 
+} ?>
 
-<?
+<?php
   Loader::element('gathering/display', array(
-  	'gathering' => $gathering,
-  	'list' => $itemList,
-  	'itemsPerPage' => $itemsPerPage
+    'gathering' => $gathering,
+    'list' => $itemList,
+    'itemsPerPage' => $itemsPerPage,
   ));
 ?>
 

@@ -1,9 +1,7 @@
 <?php
-
 namespace Concrete\Core\Entity\Attribute\Key\Type;
 
 use Concrete\Core\Entity\Attribute\Value\Value\NumberValue;
-
 
 /**
  * @Entity
@@ -11,7 +9,6 @@ use Concrete\Core\Entity\Attribute\Value\Value\NumberValue;
  */
 class NumberType extends Type
 {
-
     public function getAttributeValue()
     {
         return new NumberValue();
@@ -20,7 +17,7 @@ class NumberType extends Type
     public function createController()
     {
         $controller = new \Concrete\Attribute\Number\Controller($this->getAttributeType());
+
         return $controller;
     }
-
 }

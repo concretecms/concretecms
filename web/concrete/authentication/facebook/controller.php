@@ -8,7 +8,6 @@ use OAuth\OAuth2\Service\Facebook;
 
 class Controller extends GenericOauth2TypeController
 {
-
     public function registrationGroupID()
     {
         return \Config::get('auth.facebook.registration.group');
@@ -37,6 +36,7 @@ class Controller extends GenericOauth2TypeController
         if (!$this->service) {
             $this->service = \Core::make('authentication/facebook');
         }
+
         return $this->service;
     }
 
@@ -44,7 +44,7 @@ class Controller extends GenericOauth2TypeController
     {
         \Config::save('auth.facebook.appid', $args['apikey']);
         \Config::save('auth.facebook.secret', $args['apisecret']);
-        \Config::save('auth.facebook.registration.enabled', !!$args['registration_enabled']);
+        \Config::save('auth.facebook.registration.enabled', (bool) $args['registration_enabled']);
         \Config::save('auth.facebook.registration.group', intval($args['registration_group'], 10));
     }
 
@@ -58,5 +58,4 @@ class Controller extends GenericOauth2TypeController
         $list->includeAllGroups();
         $this->set('groups', $list->getResults());
     }
-
 }

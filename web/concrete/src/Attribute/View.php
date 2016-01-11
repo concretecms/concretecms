@@ -1,16 +1,14 @@
 <?php
 namespace Concrete\Core\Attribute;
 
-use View as ConcreteView;
 use Loader;
-use \Concrete\Core\Attribute\Value\Value as AttributeValue;
-use \Concrete\Core\Attribute\Key\Key as AttributeKey;
+use Concrete\Core\Attribute\Value\Value as AttributeValue;
+use Concrete\Core\Attribute\Key\Key as AttributeKey;
 use Environment;
-use \Concrete\Core\View\AbstractView;
+use Concrete\Core\View\AbstractView;
 
 class View extends AbstractView
 {
-
     protected $attributeValue;
     protected $attributeKey;
     protected $attributeType;
@@ -116,7 +114,7 @@ class View extends AbstractView
         $uh = Loader::helper('concrete/urls');
         $a = func_get_args();
         $args = '';
-        for ($i = 1; $i < count($a); $i++) {
+        for ($i = 1; $i < count($a); ++$i) {
             $args .= '&args[]=' . $a[$i];
         }
         $url = $uh->getToolsURL('attribute_type_actions') . '?atID=' . $this->controller->attributeType->getAttributeTypeID();
@@ -124,12 +122,13 @@ class View extends AbstractView
             $url .= '&akID=' . $this->attributeKey->getAttributeKeyID();
         }
         $url .= '&action=' . $action . $args;
+
         return $url;
     }
 
     public function finishRender($contents)
     {
-        print $contents;
+        echo $contents;
     }
 
     protected function onBeforeGetContents()
@@ -146,6 +145,4 @@ class View extends AbstractView
     {
         return $this->controller->field($fieldName);
     }
-
-
 }

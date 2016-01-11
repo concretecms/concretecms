@@ -127,7 +127,7 @@ class Controller extends AuthenticationTypeController
 
     public function isAuthenticated(User $u)
     {
-        return ($u->isLoggedIn());
+        return $u->isLoggedIn();
     }
 
     public function saveAuthenticationType($values)

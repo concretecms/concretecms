@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Attribute;
 
 use Core;
@@ -7,7 +6,6 @@ use Database;
 
 class PendingType extends Type
 {
-
     public static function getList()
     {
         $db = Database::connection();
@@ -44,5 +42,4 @@ class PendingType extends Type
     {
         parent::add($this->atHandle, $this->atName);
     }
-
 }

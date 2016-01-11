@@ -1,8 +1,6 @@
 <?php
-
 namespace Concrete\Core\Logging\Handler;
 
-use Monolog\Logger;
 use Monolog\Handler\AbstractProcessingHandler;
 use Database;
 use User;
@@ -27,7 +25,7 @@ class DatabaseHandler extends AbstractProcessingHandler
                 'level' => $record['level'],
                 'message' => $record['formatted'],
                 'time' => $record['datetime']->format('U'),
-                'uID' => $uID
+                'uID' => $uID,
             )
         );
     }

@@ -1,3 +1,6 @@
 <?php
 namespace Concrete\Core\Permission\Access;
-class TopicCategoryTreeNodeAccess extends TreeNodeAccess {}
+
+class TopicCategoryTreeNodeAccess extends TreeNodeAccess
+{
+}

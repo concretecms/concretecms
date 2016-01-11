@@ -3,8 +3,8 @@
 <form method="post" data-dialog-form="save-file-set" action="<?=$controller->action('submit')?>">
 
     <div class="ccm-ui">
-        <? Loader::element('files/add_to_sets', array(
-            'displayFileSet' => function($fileset) use ($f) {
+        <?php Loader::element('files/add_to_sets', array(
+            'displayFileSet' => function ($fileset) use ($f) {
                 $fp = new \Permissions($fileset);
                 if (!$fp->canAddFiles() || !$fp->canAddFileType(strtolower($f->getExtension()))) {
                     return false;
@@ -12,13 +12,14 @@
                     return true;
                 }
             },
-            'getCheckbox' => function($fileset) use ($f) {
+            'getCheckbox' => function ($fileset) use ($f) {
                 $checkbox = id(new HtmlObject\Input('checkbox', 'fsID[]'))->value($fileset->getFileSetID());
                 if ($f->inFileSet($fileset)) {
                     $checkbox->checked(true);
                 }
+
                 return $checkbox;
-            }
+            },
         ));?>
     </div>
 

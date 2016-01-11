@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Foundation\Runtime\Run;
 
 use Concrete\Core\Application\Application;
@@ -8,7 +7,6 @@ use Concrete\Core\Console\Application as ConsoleApplication;
 
 class CLIRunner implements RunInterface, ApplicationAwareInterface
 {
-
     /** @var Application */
     protected $app;
 
@@ -21,7 +19,8 @@ class CLIRunner implements RunInterface, ApplicationAwareInterface
     }
 
     /**
-     * Run the runtime
+     * Run the runtime.
+     *
      * @return mixed
      */
     public function run()
@@ -44,7 +43,7 @@ class CLIRunner implements RunInterface, ApplicationAwareInterface
     }
 
     /**
-     * Set the application object
+     * Set the application object.
      *
      * @param \Concrete\Core\Application\Application $application
      */
@@ -52,5 +51,4 @@ class CLIRunner implements RunInterface, ApplicationAwareInterface
     {
         $this->app = $application;
     }
-
 }

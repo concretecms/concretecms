@@ -1,13 +1,11 @@
 <?php
 namespace Concrete\Core\Express;
 
-use Concrete\Core\Application\Application;
 use Concrete\Core\Attribute\TypeFactory;
-use \Concrete\Core\Entity\Express\Entity;
+use Concrete\Core\Entity\Express\Entity;
 
 class ObjectBuilder
 {
-
     protected $attributeTypeFactory;
     protected $entity;
 
@@ -28,6 +26,7 @@ class ObjectBuilder
     {
         $this->entity = new Entity();
         $this->entity->setName($name);
+
         return $this;
     }
 
@@ -44,6 +43,7 @@ class ObjectBuilder
     public function setName($name)
     {
         $this->entity->setName($name);
+
         return $this;
     }
 
@@ -53,6 +53,7 @@ class ObjectBuilder
         $attribute = $this->attributeTypeFactory->getByHandle($type)->getController()->createAttributeKey();
         $attribute->setAttributeKeyName($name);
         $this->entity->getAttributes()->add($attribute);
+
         return $this;
     }
 
@@ -68,8 +69,7 @@ class ObjectBuilder
     {
         $entity = $this->getObject();
         $this->entity = null;
+
         return $entity;
     }
-
-
 }

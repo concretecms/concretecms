@@ -5,7 +5,6 @@ use Illuminate\Filesystem\Filesystem;
 
 class FileLoader extends \Illuminate\Config\FileLoader implements LoaderInterface
 {
-
     public function __construct(Filesystem $files)
     {
         parent::__construct($files, DIR_APPLICATION . '/config');
@@ -17,7 +16,7 @@ class FileLoader extends \Illuminate\Config\FileLoader implements LoaderInterfac
      *   /concrete/config/group.php
      *   /application/config/generated_overrides/group.php
      *   /application/config/group.php
-     *   /application/config/environment.group.php
+     *   /application/config/environment.group.php.
      *
      * Namespaced order:
      *   /path/to/namespace/group.php
@@ -29,6 +28,7 @@ class FileLoader extends \Illuminate\Config\FileLoader implements LoaderInterfac
      * @param string $environment
      * @param string $group
      * @param null   $namespace
+     *
      * @return array
      */
     public function load($environment, $group, $namespace = null)
@@ -52,14 +52,14 @@ class FileLoader extends \Illuminate\Config\FileLoader implements LoaderInterfac
             $paths = array(
                 "{$path}/generated_overrides/{$group}.php",
                 "{$path}/{$group}.php",
-                "{$path}/{$environment}.{$group}.php");
+                "{$path}/{$environment}.{$group}.php", );
         } else {
             $paths = array(
                 "{$path}/{$group}.php",
                 "{$path}/{$environment}.{$group}.php",
                 "{$this->defaultPath}/generated_overrides/{$namespace}/{$group}.php",
                 "{$this->defaultPath}/{$namespace}/{$group}.php",
-                "{$this->defaultPath}/{$namespace}/{$environment}.{$group}.php");
+                "{$this->defaultPath}/{$namespace}/{$environment}.{$group}.php", );
         }
 
         foreach ($paths as $file) {
@@ -77,6 +77,7 @@ class FileLoader extends \Illuminate\Config\FileLoader implements LoaderInterfac
         if (!$path) {
             $path = "{$this->defaultPath}/{$namespace}";
         }
+
         return $path;
     }
 
@@ -87,5 +88,4 @@ class FileLoader extends \Illuminate\Config\FileLoader implements LoaderInterfac
             $this->files->deleteDirectory($path);
         }
     }
-
 }

@@ -1,12 +1,10 @@
 <?php
-
 namespace Concrete\Core\Attribute;
 
 use HtmlObject\Element;
 
 class FontAwesomeIconFormatter implements IconFormatterInterface
 {
-
     protected $icon;
 
     public function __construct($icon)
@@ -18,7 +16,7 @@ class FontAwesomeIconFormatter implements IconFormatterInterface
     {
         $span = new Element('span');
         $span->addClass('fa fa-' . $this->icon);
+
         return $span;
     }
-
 }

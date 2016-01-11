@@ -27,7 +27,6 @@ class Column
     public function getColumnDefaultSortDirection()
     {
         return $this->defaultSortDirection;
-        
     }
 
     public function isColumnSortable()

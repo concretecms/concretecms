@@ -1,7 +1,8 @@
 <?php
 namespace Concrete\Core\StyleCustomizer\Style\Value;
-class SizeValue extends Value {
 
+class SizeValue extends Value
+{
     protected $size;
     protected $unit = 'px';
 
@@ -15,11 +16,21 @@ class SizeValue extends Value {
         $this->unit = $unit;
     }
 
-    public function getSize() {return $this->size;}
-    public function getUnit() {return $this->unit;}
-    public function getUnits() {return $this->getUnit();}
+    public function getSize()
+    {
+        return $this->size;
+    }
+    public function getUnit()
+    {
+        return $this->unit;
+    }
+    public function getUnits()
+    {
+        return $this->getUnit();
+    }
 
-    public function toStyleString() {
+    public function toStyleString()
+    {
         return $this->size . $this->unit;
     }
 
@@ -27,5 +38,4 @@ class SizeValue extends Value {
     {
         return array($this->getVariable() . '-size' => $this->toStyleString());
     }
-
 }

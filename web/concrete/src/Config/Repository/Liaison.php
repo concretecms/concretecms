@@ -2,13 +2,12 @@
 namespace Concrete\Core\Config\Repository;
 
 /**
- * Class Liaison
+ * Class Liaison.
  *
  * @package Concrete\Core\Config\Repository
  */
 class Liaison
 {
-
     /**
      * @var \Concrete\Core\Config\Repository\Repository
      */
@@ -33,6 +32,7 @@ class Liaison
 
     /**
      * @param $key
+     *
      * @return string
      */
     protected function transformKey($key)
@@ -52,6 +52,7 @@ class Liaison
 
     /**
      * @param $key
+     *
      * @return bool
      */
     public function has($key)
@@ -62,6 +63,7 @@ class Liaison
     /**
      * @param      $key
      * @param null $default
+     *
      * @return mixed
      */
     public function get($key, $default = null)
@@ -72,6 +74,7 @@ class Liaison
     /**
      * @param $key
      * @param $value
+     *
      * @return bool
      */
     public function save($key, $value)
@@ -127,5 +130,4 @@ class Liaison
     {
         $this->default_namespace = $default_namespace;
     }
-
 }

@@ -1,16 +1,14 @@
 <?php
-
 namespace Concrete\Core\Express\Form\Control\Type;
 
 use Concrete\Core\Entity\Express\Control\AssociationControl;
 use Concrete\Core\Entity\Express\Control\Control;
 use Concrete\Core\Entity\Express\Entity;
-use Concrete\Core\Express\Form\Control\SaveHandler\AssociationSaveHandler;
 use Concrete\Core\Express\Form\Control\Type\Item\AssociationItem;
 use Doctrine\ORM\EntityManager;
 
-class AssociationType implements TypeInterface {
-
+class AssociationType implements TypeInterface
+{
     protected $entityManager;
 
     public function getType()
@@ -43,10 +41,11 @@ class AssociationType implements TypeInterface {
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Association');
         $associations = $r->findBy(array('source_entity' => $entity), array('id' => 'asc'));
         $items = array();
-        foreach($associations as $association) {
+        foreach ($associations as $association) {
             $item = new AssociationItem($association);
             $items[] = $item;
         }
+
         return $items;
     }
 
@@ -56,6 +55,7 @@ class AssociationType implements TypeInterface {
         $association = $r->findOneById($id);
         $control = new AssociationControl();
         $control->setAssociation($association);
+
         return $control;
     }
 
@@ -63,8 +63,4 @@ class AssociationType implements TypeInterface {
     {
         return \Core::make('\Concrete\Core\Express\Form\Control\SaveHandler\AssociationSaveHandler');
     }
-
-
-
-
 }

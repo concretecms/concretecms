@@ -4,27 +4,59 @@ namespace Concrete\Core\Page\Type\Composer;
 use Loader;
 use Concrete\Core\Backup\ContentExporter;
 use PageTemplate;
-use \Concrete\Core\Foundation\Object;
-use \Concrete\Core\Page\Type\Composer\OutputControl as PageTypeComposerOutputControl;
-use \Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayoutSet;
-use \Concrete\Core\Page\Type\Composer\Control\Type\Type as PageTypeComposerControlType;
+use Concrete\Core\Foundation\Object;
+use Concrete\Core\Page\Type\Composer\OutputControl as PageTypeComposerOutputControl;
+use Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayoutSet;
+use Concrete\Core\Page\Type\Composer\Control\Type\Type as PageTypeComposerControlType;
 
 class FormLayoutSetControl extends Object
 {
-
     protected $ptTargetParentPageID = 0;
 
-    public function getPageTypeComposerFormLayoutSetControlID() {return $this->ptComposerFormLayoutSetControlID;}
-    public function getPageTypeComposerFormLayoutSetID() {return $this->ptComposerFormLayoutSetID;}
-    public function getPageTypeComposerControlTypeID() {return $this->ptComposerControlTypeID;}
-    public function getPageTypeComposerControlObject() {return $this->ptComposerControlObject;}
-    public function getPageTypeComposerFormLayoutSetControlDisplayOrder() {return $this->ptComposerFormLayoutSetControlDisplayOrder;}
-    public function getPageTypeComposerControlTypeObject() {return PageTypeComposerControlType::getByID($this->ptComposerControlTypeID);}
-    public function getPageTypeComposerFormLayoutSetObject() {return PageTypeComposerFormLayoutSet::getByID($this->ptComposerFormLayoutSetID);}
-    public function getPageTypeComposerFormLayoutSetControlCustomLabel() {return $this->ptComposerFormLayoutSetControlCustomLabel;}
-    public function getPageTypeComposerFormLayoutSetControlCustomTemplate() {return $this->ptComposerFormLayoutSetControlCustomTemplate;}
-    public function getPageTypeComposerFormLayoutSetControlDescription() {return $this->ptComposerFormLayoutSetControlDescription;}
-    public function isPageTypeComposerFormLayoutSetControlRequired() {return $this->ptComposerFormLayoutSetControlRequired;}
+    public function getPageTypeComposerFormLayoutSetControlID()
+    {
+        return $this->ptComposerFormLayoutSetControlID;
+    }
+    public function getPageTypeComposerFormLayoutSetID()
+    {
+        return $this->ptComposerFormLayoutSetID;
+    }
+    public function getPageTypeComposerControlTypeID()
+    {
+        return $this->ptComposerControlTypeID;
+    }
+    public function getPageTypeComposerControlObject()
+    {
+        return $this->ptComposerControlObject;
+    }
+    public function getPageTypeComposerFormLayoutSetControlDisplayOrder()
+    {
+        return $this->ptComposerFormLayoutSetControlDisplayOrder;
+    }
+    public function getPageTypeComposerControlTypeObject()
+    {
+        return PageTypeComposerControlType::getByID($this->ptComposerControlTypeID);
+    }
+    public function getPageTypeComposerFormLayoutSetObject()
+    {
+        return PageTypeComposerFormLayoutSet::getByID($this->ptComposerFormLayoutSetID);
+    }
+    public function getPageTypeComposerFormLayoutSetControlCustomLabel()
+    {
+        return $this->ptComposerFormLayoutSetControlCustomLabel;
+    }
+    public function getPageTypeComposerFormLayoutSetControlCustomTemplate()
+    {
+        return $this->ptComposerFormLayoutSetControlCustomTemplate;
+    }
+    public function getPageTypeComposerFormLayoutSetControlDescription()
+    {
+        return $this->ptComposerFormLayoutSetControlDescription;
+    }
+    public function isPageTypeComposerFormLayoutSetControlRequired()
+    {
+        return $this->ptComposerFormLayoutSetControlRequired;
+    }
 
     public function getPageTypeComposerFormLayoutSetControlCustomDisplayLabel($format = 'html')
     {
@@ -148,12 +180,14 @@ class FormLayoutSetControl extends Object
             $control = new static();
             $control->setPropertiesFromArray($r);
             $control->ptComposerControlObject = unserialize($r['ptComposerControlObject']);
-            if(!$control->ptComposerControlObject->objectExists()) {
+            if (!$control->ptComposerControlObject->objectExists()) {
                 $control->delete();
+
                 return null;
             } else {
                 $control->ptComposerControlObject->setPageTypeComposerFormLayoutSetControlObject($control);
             }
+
             return $control;
         }
     }
@@ -162,7 +196,7 @@ class FormLayoutSetControl extends Object
     {
         $db = Loader::db();
         $db->Execute('update PageTypeComposerFormLayoutSetControls set ptComposerFormLayoutSetControlDisplayOrder = ? where ptComposerFormLayoutSetControlID = ?', array(
-            $displayOrder, $this->ptComposerFormLayoutSetControlID
+            $displayOrder, $this->ptComposerFormLayoutSetControlID,
         ));
         $this->ptComposerFormLayoutSetControlDisplayOrder = $displayOrder;
     }
@@ -171,7 +205,7 @@ class FormLayoutSetControl extends Object
     {
         $db = Loader::db();
         $db->Execute('update PageTypeComposerFormLayoutSetControls set ptComposerFormLayoutSetControlCustomLabel = ? where ptComposerFormLayoutSetControlID = ?', array(
-            $label, $this->ptComposerFormLayoutSetControlID
+            $label, $this->ptComposerFormLayoutSetControlID,
         ));
         $this->ptComposerFormLayoutSetControlCustomLabel = $label;
     }
@@ -180,7 +214,7 @@ class FormLayoutSetControl extends Object
     {
         $db = Loader::db();
         $db->Execute('update PageTypeComposerFormLayoutSetControls set ptComposerFormLayoutSetControlRequired = ? where ptComposerFormLayoutSetControlID = ?', array(
-            intval($required), $this->ptComposerFormLayoutSetControlID
+            intval($required), $this->ptComposerFormLayoutSetControlID,
         ));
         $this->ptComposerFormLayoutSetControlRequired = $required;
     }
@@ -189,7 +223,7 @@ class FormLayoutSetControl extends Object
     {
         $db = Loader::db();
         $db->Execute('update PageTypeComposerFormLayoutSetControls set ptComposerFormLayoutSetControlCustomTemplate = ? where ptComposerFormLayoutSetControlID = ?', array(
-            $template, $this->ptComposerFormLayoutSetControlID
+            $template, $this->ptComposerFormLayoutSetControlID,
         ));
         $this->ptComposerFormLayoutSetControlCustomTemplate = $template;
     }
@@ -198,7 +232,7 @@ class FormLayoutSetControl extends Object
     {
         $db = Loader::db();
         $db->Execute('update PageTypeComposerFormLayoutSetControls set ptComposerFormLayoutSetControlDescription = ? where ptComposerFormLayoutSetControlID = ?', array(
-            $description, $this->ptComposerFormLayoutSetControlID
+            $description, $this->ptComposerFormLayoutSetControlID,
         ));
         $this->ptComposerFormLayoutSetControlDescription = $description;
     }
@@ -233,6 +267,7 @@ class FormLayoutSetControl extends Object
         $new->updateFormLayoutSetControlDescription($this->getPageTypeComposerFormLayoutSetControlDescription());
         $new->updateFormLayoutSetControlCustomTemplate($this->getPageTypeComposerFormLayoutSetControlCustomTemplate());
         $new->updateFormLayoutSetControlCustomLabel($this->getPageTypeComposerFormLayoutSetControlCustomLabel());
+
         return $new;
     }
 }

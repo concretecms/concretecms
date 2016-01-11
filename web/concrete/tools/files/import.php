@@ -1,6 +1,7 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 use Concrete\Core\File\StorageLocation\StorageLocation;
+
 $u = new User();
 /** @var Concrete\Core\File\Service\Application $ch */
 $ch = Loader::helper('concrete/file');
@@ -9,13 +10,13 @@ $form = Loader::helper('form');
 
 $fp = FilePermissions::getGlobal();
 if (!$fp->canAddFiles()) {
-	die(t("Unable to add files."));
+    die(t("Unable to add files."));
 }
 
 $types = $fp->getAllowedFileExtensions();
 $ocID = 0;
 if (Loader::helper('validation/numbers')->integer($_REQUEST['ocID'])) {
-	$ocID = $_REQUEST['ocID'];
+    $ocID = $_REQUEST['ocID'];
 }
 
 $types = $ch->serializeUploadFileExtensions($types);
@@ -65,20 +66,21 @@ ConcreteFileImportDialog = {
 </script>
 
 <?php
-	$valt = Loader::helper('validation/token');
-	$fh = Loader::helper('validation/file');
+    $valt = Loader::helper('validation/token');
+    $fh = Loader::helper('validation/file');
     $error = false;
 
-	try {
+    try {
         $incoming_contents = $ch->getIncomingDirectoryContents();
-    } catch(\Exception $e) {
+    } catch (\Exception $e) {
         $error = t('Unable to get contents of incoming/ directory');
         $error .= '<br>';
         $error .= $e->getMessage();
     }
 ?>
 <div id="ccm-file-add-incoming-tab">
-<?php if(!empty($incoming_contents) && is_array($incoming_contents)) { ?>
+<?php if (!empty($incoming_contents) && is_array($incoming_contents)) {
+    ?>
     <br/>
 <form id="ccm-file-add-incoming-form" method="post" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/importers/incoming">
     <input type="hidden" name="ocID" value="<?=$ocID?>" />
@@ -91,20 +93,25 @@ ConcreteFileImportDialog = {
 				<th width="45%" valign="middle" class="theader"><?=t('Filename')?></th>
 				<th width="25%" valign="middle" class="center theader"><?=t('Size')?></th>
 			</tr>
-		<?php foreach($incoming_contents as $i => $file) {
-				$ft = \Concrete\Core\File\Type\TypeList::getType($file['basename']);
-		?>
+		<?php foreach ($incoming_contents as $i => $file) {
+    $ft = \Concrete\Core\File\Type\TypeList::getType($file['basename']);
+    ?>
 			<tr>
 				<td width="10%" style="vertical-align: middle" class="center">
-					<?php if($fh->extension($file['basename'])) { ?>
+					<?php if ($fh->extension($file['basename'])) {
+    ?>
 						<input type="checkbox" name="send_file<?=$i?>" class="ccm-file-select-incoming" value="<?=$file['basename']?>" />
-					<?php } ?>
+					<?php 
+}
+    ?>
 				</td>
 				<td width="20%" style="vertical-align: middle" class="center"><?=$ft->getThumbnail()?></td>
 				<td width="45%" style="vertical-align: middle"><?=$file['basename']?></td>
 				<td width="25%" style="vertical-align: middle" class="center"><?=Loader::helper('number')->formatSize($file['size'], 'KB')?></td>
 			</tr>
-		<?php } ?>
+		<?php 
+}
+    ?>
             <tr>
                 <td><input type="checkbox" name="removeFilesAfterPost" value="1" /></td>
                 <td colspan="2"><?=t('Remove files from incoming/ directory.')?></td>
@@ -113,18 +120,24 @@ ConcreteFileImportDialog = {
 
 
 
-	<?=$valt->output('import_incoming');?>
+	<?=$valt->output('import_incoming');
+    ?>
 
 </form>
-<?php } else { ?>
+<?php 
+} else {
+    ?>
     <br/><br/>
-    <?php if($error) { ?>
+    <?php if ($error) {
+    ?>
         <div class="alert alert-danger">
-            <?php echo $error;?>
+            <?php echo $error;
+    ?>
         </div>
-    <?php } else {
-        echo t('No files found in %s for the storage location "%s".', REL_DIR_FILES_INCOMING, StorageLocation::getDefault()->getName());
-    }
+    <?php 
+} else {
+    echo t('No files found in %s for the storage location "%s".', REL_DIR_FILES_INCOMING, StorageLocation::getDefault()->getName());
+}
 } ?>
 </div>
 

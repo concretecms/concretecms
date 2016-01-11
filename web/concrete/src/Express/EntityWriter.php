@@ -2,18 +2,14 @@
 namespace Concrete\Core\Express;
 
 use Concrete\Core\Application\Application;
-use Concrete\Core\Cache\Adapter\DoctrineCacheDriver;
-use \Concrete\Core\Entity\Express\Entity;
+use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Express\Exception\InvalidClassLocationDefinedException;
 use Concrete\Core\Express\Exception\NoNamespaceDefinedException;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Mapping\Driver\DatabaseDriver;
 use Doctrine\ORM\Tools\EntityGenerator;
-use Doctrine\ORM\Tools\Setup;
 
 class EntityWriter
 {
-
     protected $application;
     protected $namespace;
     protected $outputPath;
@@ -40,7 +36,6 @@ class EntityWriter
     {
         $this->rootEntityManager = $entityManager;
     }
-
 
     /**
      * @return mixed
@@ -92,12 +87,10 @@ class EntityWriter
         if (!is_dir($this->outputPath) || !is_writable($this->outputPath)) {
             throw new InvalidClassLocationDefinedException();
         }
-
     }
 
     public function writeClass(Entity $entity)
     {
-
         if (!$this->namespace) {
             throw new NoNamespaceDefinedException();
         }
@@ -124,5 +117,4 @@ class EntityWriter
         $metadata = $em->getClassMetadata($factory->getClassName($entity));
         $generator->generate(array($metadata), $this->outputPath);
     }
-
 }

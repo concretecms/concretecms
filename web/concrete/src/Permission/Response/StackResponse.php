@@ -1,6 +1,6 @@
 <?php
 namespace Concrete\Core\Permission\Response;
-class StackResponse extends PageResponse {
 
-
+class StackResponse extends PageResponse
+{
 }

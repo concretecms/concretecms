@@ -1,17 +1,14 @@
 <?php
-
 namespace Concrete\Core\Express\Form;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Entity\Express\FieldSet;
 use Concrete\Core\Entity\Express\Form;
 use Concrete\Core\Express\BaseEntity;
-use Concrete\Core\Foundation\Environment;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ViewRenderer implements RendererInterface
 {
-
     protected $entityManager;
     protected $application;
 
@@ -37,6 +34,7 @@ class ViewRenderer implements RendererInterface
         if ($set->getTitle()) {
             $html .= '<legend>' . $set->getTitle() . '</legend>';
         }
+
         return $html;
     }
 
@@ -48,7 +46,7 @@ class ViewRenderer implements RendererInterface
     protected function renderFieldSet(FieldSet $fieldSet, BaseEntity $entity)
     {
         $html = $this->getFieldSetOpenTag($fieldSet);
-        foreach($fieldSet->getControls() as $control) {
+        foreach ($fieldSet->getControls() as $control) {
             $factory = new RendererFactory($control, $this->application, $this->entityManager);
             $renderer = $factory->getViewRenderer($entity);
             if (is_object($renderer)) {
@@ -56,20 +54,19 @@ class ViewRenderer implements RendererInterface
             }
         }
         $html .= $this->getFieldSetCloseTag();
+
         return $html;
     }
-
 
     public function render(Form $form, BaseEntity $entity = null)
     {
         $html = $this->getFormOpenTag();
-        foreach($form->getFieldSets() as $fieldSet) {
+        foreach ($form->getFieldSets() as $fieldSet) {
             $html .= $this->renderFieldSet($fieldSet, $entity);
         }
 
         $html .= $this->getFormCloseTag();
+
         return $html;
-
     }
-
 }

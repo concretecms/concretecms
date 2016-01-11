@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Block\CoreScrapbookDisplay;
 
 use Concrete\Core\Block\BlockController;

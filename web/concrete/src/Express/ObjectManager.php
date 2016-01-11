@@ -2,29 +2,24 @@
 namespace Concrete\Core\Express;
 
 use Concrete\Core\Application\Application;
-use Concrete\Core\Cache\Adapter\DoctrineCacheDriver;
-use Concrete\Core\Database\EntityManagerFactoryInterface;
-use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\AttributeKey\AttributeKey;
 use Concrete\Core\Entity\AttributeValue\AttributeValue;
-use Concrete\Core\Entity\Express\Association;
 use Concrete\Core\Entity\Express\Form;
 use Concrete\Core\Express\Form\Control\SaveHandler\SaveHandlerInterface;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Tools\Setup;
 use Concrete\Core\Entity\Express\Entity;
 use Config;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Class EntityManagerFactory
+ * Class EntityManagerFactory.
+ *
  * @package Concrete\Core\Express
  * The backend entity manager hooks into Doctrine and is called by the front-end
  * entity manager.
  */
 class ObjectManager
 {
-
     protected $application;
     protected $entityManager;
     protected $namespace;
@@ -77,14 +72,15 @@ class ObjectManager
     {
         $class = $this->getClassName($entity);
         $entity = new $class();
+
         return $entity;
     }
 
     public function saveFromRequest(Form $form, BaseEntity $entity, Request $request)
     {
-        foreach($form->getControls() as $control) {
+        foreach ($form->getControls() as $control) {
             $type = $control->getControlType();
-            /**
+            /*
              * @var $type \Concrete\Core\Express\Form\Control\Type\TypeInterface
              */
             $saver = $type->getSaveHandler($control);
@@ -116,12 +112,14 @@ class ObjectManager
             $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity');
             $entity = $r->findOneByName($entityOrName);
         }
+
         return $entity;
     }
 
     public function getList($entityOrName)
     {
         $entity = $this->getEntityOrName($entityOrName);
+
         return new ObjectList($this, $entity);
     }
 
@@ -129,6 +127,7 @@ class ObjectManager
     {
         $entity = $this->getEntityOrName($entityOrName);
         $r = $this->entityManager->getRepository($this->getClassName($entity));
+
         return $r->findOneById($id);
     }
 }

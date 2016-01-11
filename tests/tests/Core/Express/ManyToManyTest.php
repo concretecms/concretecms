@@ -1,12 +1,11 @@
 <?php
-use Concrete\Core\Express\ObjectBuilder;
+
 
 require_once __DIR__ . "/ObjectBuilderTestTrait.php";
 require_once __DIR__ . "/ExpressEntityManagerTestCaseTrait.php";
 
 class ManyToManyTest extends PHPUnit_Framework_TestCase
 {
-
     use \ExpressEntityManagerTestCaseTrait;
 
     protected function getEntityManager()
@@ -23,7 +22,6 @@ class ManyToManyTest extends PHPUnit_Framework_TestCase
         $builder->addManyToMany($user, $group, 'users', 'groups');
 
         return $this->deliverEntityManager(array($user, $group));
-
     }
     public function tearDown()
     {
@@ -39,10 +37,8 @@ class ManyToManyTest extends PHPUnit_Framework_TestCase
         }
     }
 
-
     public function testOutputClassWritingAndNamespace()
     {
-
         $writer = Core::make('express.writer');
         $writer->setNamespace('Testing');
         $writer->setEntityManager($this->getEntityManager());
@@ -68,7 +64,6 @@ class ManyToManyTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($class->hasProperty('groups'));
         $this->assertTrue($class->hasMethod('getGroups'));
 
-
         $this->assertFileExists(__DIR__ . '/Testing/Group.php');
         require_once __DIR__ . '/Testing/Group.php';
 
@@ -78,13 +73,10 @@ class ManyToManyTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($class->hasMethod('getId'));
         $this->assertTrue($class->hasProperty('users'));
         $this->assertTrue($class->hasMethod('getUsers'));
-
-
     }
 
     public function testCreateDatabase()
     {
-
         $em = $this->getEntityManager();
         $factory = new \Concrete\Core\Express\BackendEntityManagerFactory(
             Core::make('app'),
@@ -109,7 +101,6 @@ class ManyToManyTest extends PHPUnit_Framework_TestCase
         $this->assertContains('alter table', $create[2], '', true);
         $this->assertContains('ExpressUsersGroups', $create[2]);
 
-
         $manager = new \Concrete\Core\Express\SchemaManager($factory);
         $entity = new \Concrete\Core\Entity\Express\Entity();
         $entity->setName('Group');
@@ -120,8 +111,5 @@ class ManyToManyTest extends PHPUnit_Framework_TestCase
         $this->assertContains('create table', $create[0], '', true);
         $this->assertContains('ExpressGroups', $create[0]);
         $this->assertContains('id', $create[0]);
-
     }
-
-
 }

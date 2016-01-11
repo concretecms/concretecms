@@ -7,7 +7,6 @@ use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
 
 class ManyToManyAssociationBuilder implements BuilderInterface
 {
-
     protected $association;
 
     public function __construct(ManyToManyAssociation $association)
@@ -17,7 +16,6 @@ class ManyToManyAssociationBuilder implements BuilderInterface
 
     public function build(ClassMetadataBuilder $builder)
     {
-
         if ($this->association->getAssociationType() == ManyToManyAssociation::TYPE_OWNING) {
             $builder->addOwningManyToMany(
                 $this->association->getComputedTargetPropertyName(),
@@ -31,7 +29,5 @@ class ManyToManyAssociationBuilder implements BuilderInterface
                 $this->association->getComputedInversedByPropertyName()
             );
         }
-
     }
-
 }

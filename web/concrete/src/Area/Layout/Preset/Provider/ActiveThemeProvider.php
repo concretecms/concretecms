@@ -5,7 +5,6 @@ use Page;
 
 class ActiveThemeProvider implements ProviderInterface
 {
-
     protected $presets = array();
 
     public function __construct()
@@ -32,6 +31,4 @@ class ActiveThemeProvider implements ProviderInterface
     {
         return $this->presets;
     }
-
-
 }

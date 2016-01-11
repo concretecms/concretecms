@@ -5,7 +5,6 @@ use HtmlObject\Element;
 
 class JavascriptConditionalAsset extends Asset
 {
-
     protected $conditional = null;
 
     /**
@@ -64,5 +63,4 @@ class JavascriptConditionalAsset extends Asset
         parent::register($filename, $args, $pkg);
         $this->conditional = $args['conditional'];
     }
-
 }

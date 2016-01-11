@@ -1,18 +1,15 @@
 <?php
-
 namespace Concrete\Core\Express\Form\Control\Type;
 
-use Concrete\Core\Entity\AttributeKey\AttributeKey;
 use Concrete\Core\Entity\Express\Control\AttributeKeyControl;
 use Concrete\Core\Entity\Express\Control\Control;
 use Concrete\Core\Entity\Express\Entity;
-use Concrete\Core\Express\Form\Control\SaveHandler\AttributeKeySaveHandler;
 use Concrete\Core\Express\Form\Control\Type\Item\AttributeKeyItem;
 use Concrete\Core\Express\Form\Control\Validator\AttributeKeyControlValidator;
 use Doctrine\ORM\EntityManager;
 
-class AttributeKeyType implements TypeInterface {
-
+class AttributeKeyType implements TypeInterface
+{
     protected $entityManager;
 
     public function getType()
@@ -45,10 +42,11 @@ class AttributeKeyType implements TypeInterface {
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Attribute');
         $keys = $r->findByEntity($entity, array('id' => 'asc'));
         $items = array();
-        foreach($keys as $attribute) {
+        foreach ($keys as $attribute) {
             $item = new AttributeKeyItem($attribute->getAttribute());
             $items[] = $item;
         }
+
         return $items;
     }
 
@@ -58,6 +56,7 @@ class AttributeKeyType implements TypeInterface {
         $key = $r->findOneBy(array('akID' => $id));
         $control = new AttributeKeyControl();
         $control->setAttributeKey($key);
+
         return $control;
     }
 
@@ -65,6 +64,4 @@ class AttributeKeyType implements TypeInterface {
     {
         return \Core::make('\Concrete\Core\Express\Form\Control\SaveHandler\AttributeKeySaveHandler');
     }
-
-
 }

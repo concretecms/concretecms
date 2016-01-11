@@ -4,16 +4,14 @@ if (version_compare(phpversion(), '5.3.3') < 0) {
     die("concrete5 requires PHP 5.3.3+ to run.\n");
 }
 
-/**
+/*
  * ----------------------------------------------------------------------------
  * Ensure that all subsequent procedural pages are running inside concrete5.
  * ----------------------------------------------------------------------------
  */
 defined('C5_EXECUTE') or define('C5_EXECUTE', md5(uniqid()));
 
-
-
-/**
+/*
  * ----------------------------------------------------------------------------
  * The following constants need to load very early, because they're used
  * if we determine that we have an updated core, and they're also used to
@@ -32,7 +30,7 @@ defined('DIR_BASE') or define('DIR_BASE', dirname($_SERVER['SCRIPT_FILENAME']));
 defined('DIR_APPLICATION') or define('DIR_APPLICATION', DIR_BASE . '/' . DIRNAME_APPLICATION);
 defined('DIR_CONFIG_SITE') or define('DIR_CONFIG_SITE', DIR_APPLICATION . '/config');
 
-/**
+/*
  * ----------------------------------------------------------------------------
  * Now that we've had the opportunity to load our config file, we know if we
  * have a DIRNAME_CORE_UPDATED constant, which lives in that file, and which
@@ -49,18 +47,16 @@ if (file_exists($update_file)) {
 if (!defined('APP_UPDATED_PASSTHRU') && isset($updates['core'])) {
     define('APP_UPDATED_PASSTHRU', true);
     if (is_dir(DIR_BASE . '/' . DIRNAME_UPDATES . '/' . $updates['core'])) {
-        require(DIR_BASE . '/' . DIRNAME_UPDATES . '/' . $updates['core'] . '/' . DIRNAME_CORE . '/' . 'dispatcher.php');
-    } else if(file_exists(DIRNAME_UPDATES . '/' . $updates['core'] . '/' . DIRNAME_CORE . '/' . 'dispatcher.php')){
-        require(DIRNAME_UPDATES . '/' . $updates['core'] . '/' . DIRNAME_CORE . '/' . 'dispatcher.php');
+        require DIR_BASE . '/' . DIRNAME_UPDATES . '/' . $updates['core'] . '/' . DIRNAME_CORE . '/' . 'dispatcher.php';
+    } elseif (file_exists(DIRNAME_UPDATES . '/' . $updates['core'] . '/' . DIRNAME_CORE . '/' . 'dispatcher.php')) {
+        require DIRNAME_UPDATES . '/' . $updates['core'] . '/' . DIRNAME_CORE . '/' . 'dispatcher.php';
     } else {
-        die(sprintf('Invalid "%s" defined. Please remove it from %s.','update.core', $update_file));
+        die(sprintf('Invalid "%s" defined. Please remove it from %s.', 'update.core', $update_file));
     }
     exit;
 }
 
-
-
-/**
+/*
  * ----------------------------------------------------------------------------
  * ## If we're still here, we're proceeding through this concrete directory,
  * and it's time to load the rest of our hard-coded configuration options –
@@ -71,9 +67,7 @@ if (!defined('APP_UPDATED_PASSTHRU') && isset($updates['core'])) {
  */
 define('NAMESPACE_SEGMENT_VENDOR', 'Concrete');
 
-
-
-/**
+/*
  * ----------------------------------------------------------------------------
  * Directory names
  * ----------------------------------------------------------------------------
@@ -152,10 +146,7 @@ define('DIRNAME_EXPRESS_FORM_CONTROLS_ASSOCIATION', 'association');
 define('REL_DIR_FILES_INCOMING', '/incoming');
 define('REL_DIR_FILES_THUMBNAILS', '/thumbnails');
 
-
-
-
-/**
+/*
  * ----------------------------------------------------------------------------
  * File names
  * ----------------------------------------------------------------------------
@@ -201,8 +192,7 @@ define('FILENAME_CONVERSATION_EDITOR_FORM_REPLY', 'reply.php');
 define('FILENAME_STYLE_CUSTOMIZER_STYLES', 'styles.xml');
 define('FILENAME_STYLE_CUSTOMIZER_DEFAULT_PRESET_NAME', 'defaults.less');
 
-
-/**
+/*
  * ----------------------------------------------------------------------------
  * Directory constants
  * ----------------------------------------------------------------------------
@@ -242,9 +232,7 @@ define('DIR_FILES_BACKUPS', DIR_FILES_UPLOADED_STANDARD . '/backups');
 define('DIR_AL_ICONS', DIR_BASE_CORE . '/images/icons/filetypes');
 define('DIR_LANGUAGES_SITE_INTERFACE', DIR_LANGUAGES . '/' . DIRNAME_LANGUAGES_SITE_INTERFACE);
 
-
-
-/**
+/*
  * ----------------------------------------------------------------------------
  * Internal proxy block types
  * ----------------------------------------------------------------------------
@@ -259,9 +247,7 @@ define('BLOCK_HANDLE_GATHERING_PROXY', 'core_gathering_display');
 define('BLOCK_HANDLE_CONVERSATION', 'core_conversation');
 define('BLOCK_HANDLE_CONVERSATION_MESSAGE', 'core_conversation_message');
 
-
-
-/**
+/*
  * ----------------------------------------------------------------------------
  * Stack Defaults
  * ----------------------------------------------------------------------------
@@ -272,8 +258,7 @@ define('STACKS_AREA_NAME', 'Main');
 define('STACKS_PAGE_TYPE', 'core_stack');
 define('STACK_CATEGORY_PAGE_TYPE', 'core_stack_category');
 
-
-/**
+/*
  * ----------------------------------------------------------------------------
  * Configuration values that cannot be overridden
  * ----------------------------------------------------------------------------
@@ -324,17 +309,14 @@ define('DEBUG_DISPLAY_ERRORS_SQL', 2); // not used
 define('LOG_TYPE_EMAILS', 'sent_emails');
 define('LOG_TYPE_EXCEPTIONS', 'exceptions');
 
-
-
-/**
+/*
  * ----------------------------------------------------------------------------
  * concrete5 depends on some more forgiving error handling.
  * ----------------------------------------------------------------------------
  */
 error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
 
-
-/**
+/*
  * ----------------------------------------------------------------------------
  * Define computed permissions for files and directories
  * ----------------------------------------------------------------------------
@@ -343,7 +325,7 @@ error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
 // Set directory permissions to that of DIR_FILES_UPLOADED_STANDARD. Or if that can't be found, 0775.
 $DIRECTORY_PERMISSIONS_MODE = (($p = @fileperms(DIR_FILES_UPLOADED_STANDARD) & 0777) > 0) ? $p : 0775;
 $FILE_PERMISSIONS_MODE = '';
-foreach(str_split(decoct($DIRECTORY_PERMISSIONS_MODE), 1) as $p) {
+foreach (str_split(decoct($DIRECTORY_PERMISSIONS_MODE), 1) as $p) {
     if (intval($p) % 2 == 0) {
         $FILE_PERMISSIONS_MODE .= $p;
         continue;
@@ -354,18 +336,16 @@ $FILE_PERMISSIONS_MODE = octdec($FILE_PERMISSIONS_MODE);
 define('DIRECTORY_PERMISSIONS_MODE_COMPUTED', $DIRECTORY_PERMISSIONS_MODE);
 define('FILE_PERMISSIONS_MODE_COMPUTED', $FILE_PERMISSIONS_MODE);
 
-
-/**
+/*
  * ----------------------------------------------------------------------------
  * We need our include path to be set here for libraries like Zend Framework
  * ----------------------------------------------------------------------------
  */
 ini_set('include_path', DIR_BASE_CORE . DIRECTORY_SEPARATOR . DIRNAME_VENDOR . PATH_SEPARATOR . get_include_path());
 
-
 /**
  * ----------------------------------------------------------------------------
  * Load some helper functions
- * ----------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------.
  */
 require dirname(__FILE__) . '/helpers.php';

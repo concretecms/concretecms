@@ -1,15 +1,11 @@
 <?php
-
 namespace Concrete\Attribute\ImageFile;
 
-use Concrete\Core\Entity\Attribute\Key\ImageFileKey;
 use Concrete\Core\Entity\Attribute\Key\Type\ImageFileType;
 use Concrete\Core\Entity\Attribute\Value\Value\ImageFileValue;
 use Core;
-use Database;
 use File;
 use Concrete\Core\Backup\ContentExporter;
-use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 
 class Controller extends AttributeTypeController
@@ -70,7 +66,7 @@ class Controller extends AttributeTypeController
         $form = '<div class="ccm-attribute ccm-attribute-image-file">';
         $form .= $al->file('ccm-file-akID-' . $this->attributeKey->getAttributeKeyID(), $this->field('value'), t('Choose File'), $bf);
         $form .= '</div>';
-        print $form;
+        echo $form;
     }
 
     public function importValue(\SimpleXMLElement $akv)
@@ -98,6 +94,7 @@ class Controller extends AttributeTypeController
 
         $value = new ImageFileValue();
         $value->setFileObject($obj);
+
         return $value;
     }
 
@@ -137,12 +134,14 @@ class Controller extends AttributeTypeController
     public function importKey($akey)
     {
         $type = new ImageFileType();
+
         return $type;
     }
 
     public function saveKey($data)
     {
         $type = new ImageFileType();
+
         return $type;
     }
 
@@ -150,5 +149,4 @@ class Controller extends AttributeTypeController
     {
         return new ImageFileType();
     }
-
 }

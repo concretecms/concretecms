@@ -1,9 +1,7 @@
 <?php
-
 namespace Concrete\Attribute\Address;
 
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
-use Concrete\Core\Entity\Attribute\Key\AddressKey;
 use Concrete\Core\Entity\Attribute\Key\Type\AddressType;
 use Concrete\Core\Entity\Attribute\Value\Value\AddressValue;
 use Core;
@@ -86,7 +84,7 @@ class Controller extends AttributeTypeController
     public function search()
     {
         $this->load();
-        print $this->form();
+        echo $this->form();
         $v = $this->getView();
         $this->set('search', true);
         $v->render('form');
@@ -99,7 +97,7 @@ class Controller extends AttributeTypeController
 
     public function validateForm($data)
     {
-        return ($data['address1'] != '' && $data['city'] != '' && $data['state_province'] != '' && $data['country'] != '' && $data['postal_code'] != '');
+        return $data['address1'] != '' && $data['city'] != '' && $data['state_province'] != '' && $data['country'] != '' && $data['postal_code'] != '';
     }
 
     public function validateValue()
@@ -140,14 +138,14 @@ class Controller extends AttributeTypeController
     public function action_load_provinces_js()
     {
         $h = Core::make('helper/lists/states_provinces');
-        print "var ccm_attributeTypeAddressStatesTextList = '\\\n";
+        echo "var ccm_attributeTypeAddressStatesTextList = '\\\n";
         $all = $h->getAll();
         foreach ($all as $country => $countries) {
             foreach ($countries as $value => $text) {
-                print addslashes($country) . ':' . addslashes($value) . ':' . addslashes($text) . "|\\\n";
+                echo addslashes($country) . ':' . addslashes($value) . ':' . addslashes($text) . "|\\\n";
             }
         }
-        print "'";
+        echo "'";
     }
 
     public function validateKey($data = false)
@@ -239,10 +237,9 @@ class Controller extends AttributeTypeController
         $av->setStateProvince($state_province);
         $av->setCountry($country);
         $av->setPostalCode($postal_code);
+
         return $av;
     }
-
-
 
     public function importValue(\SimpleXMLElement $akv)
     {
@@ -254,6 +251,7 @@ class Controller extends AttributeTypeController
             $av->setStateProvince((string) $akv->value['state-province']);
             $av->setCountry((string) $akv->value['country']);
             $av->setPostalCode((string) $akv->value['postal-code']);
+
             return $av;
         }
     }
@@ -272,6 +270,7 @@ class Controller extends AttributeTypeController
                 $type->setCustomCountries($countries);
             }
         }
+
         return $type;
     }
 
@@ -291,6 +290,7 @@ class Controller extends AttributeTypeController
         $type->setCustomCountries($akCustomCountries);
         $type->setHasCustomCountries($akHasCustomCountries);
         $type->setDefaultCountry($data['akDefaultCountry']);
+
         return $type;
     }
 
@@ -302,7 +302,7 @@ class Controller extends AttributeTypeController
         }
 
         $type = $ak->getAttributeKeyType();
-        /**
+        /*
          * @var $type AddressType
          */
         $this->akHasCustomCountries = $type->hasCustomCountries();

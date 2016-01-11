@@ -1,17 +1,17 @@
 <?php
 namespace Concrete\Tests\Core\File;
+
 use Concrete\Core\Cache\CacheLocal;
-use \Concrete\Core\File\StorageLocation\Type\Type;
-use \Concrete\Core\File\StorageLocation\StorageLocation;
-use \Concrete\Core\File\Importer;
-use \Concrete\Core\Attribute\Type as AttributeType;
-use \Concrete\Core\Attribute\Key\FileKey;
+use Concrete\Core\File\StorageLocation\StorageLocation;
+use Concrete\Core\File\Importer;
+use Concrete\Core\Attribute\Type as AttributeType;
+use Concrete\Core\Attribute\Key\FileKey;
 use Config;
 use Core;
-use \Concrete\Core\Attribute\Key\Category;
+use Concrete\Core\Attribute\Key\Category;
 
-class ImporterTest extends \FileStorageTestCase {
-
+class ImporterTest extends \FileStorageTestCase
+{
     protected function setUp()
     {
         $this->tables = array_merge($this->tables, array(
@@ -29,7 +29,7 @@ class ImporterTest extends \FileStorageTestCase {
             'AttributeValues',
             'atNumber',
             'Logs',
-            'FileVersionLog'
+            'FileVersionLog',
         ));
         parent::setUp();
         Config::set('concrete.upload.extensions', '*.txt;*.jpg;*.jpeg;*.png');
@@ -102,7 +102,6 @@ class ImporterTest extends \FileStorageTestCase {
         $this->assertEquals('/application/files/' . $apr[0] . '/' . $apr[1] . '/' . $apr[2] . '/test.txt',
             $r->getRelativePath()
         );
-
     }
 
     public function testFileVersions()
@@ -119,7 +118,6 @@ class ImporterTest extends \FileStorageTestCase {
         $f = \File::getByID(1);
         $versions = $f->getFileVersions();
         $this->assertEquals(1, count($versions));
-
     }
 
     public function testImageImportSize()
@@ -216,7 +214,6 @@ class ImporterTest extends \FileStorageTestCase {
 
         $fv2 = $f->getVersion(1);
         $this->assertNull($fv2);
-
     }
 
     public function testImporterMimeType()
@@ -273,7 +270,6 @@ class ImporterTest extends \FileStorageTestCase {
         $fv2 = $fv->duplicate();
         $this->assertEquals(2, $fv2->getFileVersionID());
         $this->assertEquals(false, $fv->isApproved());
-
     }
 
     public function testFileReplace()
@@ -333,7 +329,5 @@ class ImporterTest extends \FileStorageTestCase {
         $this->assertEquals(false, $fv1->isApproved());
         $fva = $f->getApprovedVersion();
         $this->assertEquals($fva, $fv3);
-
-
     }
 }

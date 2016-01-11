@@ -1,11 +1,9 @@
 <?php
-
 namespace Concrete\Core\Entity\Express\Control;
 
 use Concrete\Core\Express\BaseEntity;
 use Concrete\Core\Express\Form\Control\Form\AttributeKeyControlFormRenderer;
 use Concrete\Core\Express\Form\Control\View\AttributeKeyControlViewRenderer;
-use Concrete\Core\Foundation\Environment;
 
 /**
  * @Entity
@@ -54,5 +52,4 @@ class AttributeKeyControl extends Control
     {
         return 'attribute_key';
     }
-
 }

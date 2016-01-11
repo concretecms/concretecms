@@ -1,4 +1,6 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
+<?php
+
+defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Core\Conversation\Message\MessageList as ConversationMessageList;
 use \Concrete\Core\Conversation\Message\ThreadedList as ConversationMessageThreadedList;
 
@@ -7,14 +9,14 @@ if (is_object($cnv)) {
     $enablePosting = ($_POST['enablePosting'] == 1) ? true : false;
     $enableOrdering = ($_POST['enableOrdering'] == 1) ? true : false;
     $currentPage = (Loader::helper('validation/numbers')->integer($_POST['page'])) ? $_POST['page'] : 1;
-    
+
     if (in_array($_POST['displayMode'], array('flat'))) {
         $displayMode = $_POST['displayMode'];
     } else {
         $displayMode = 'threaded';
     }
-    
-    switch($displayMode) {
+
+    switch ($displayMode) {
         case 'flat':
             $ml = new ConversationMessageList();
             $ml->filterByConversation($cnv);
@@ -24,7 +26,7 @@ if (is_object($cnv)) {
             break;
     }
 
-    switch($_POST['orderBy']) {
+    switch ($_POST['orderBy']) {
         case 'date_desc':
             $ml->sortByDateDescending();
             break;
@@ -41,8 +43,7 @@ if (is_object($cnv)) {
     $summary = $ml->getSummary();
     $totalPages = $summary->pages;
 
-    foreach($ml->getPage($currentPage) as $message) {
+    foreach ($ml->getPage($currentPage) as $message) {
         Loader::element('conversation/message', array('message' => $message, 'enablePosting' => $enablePosting, 'displayMode' => $displayMode));
     }
-
 }

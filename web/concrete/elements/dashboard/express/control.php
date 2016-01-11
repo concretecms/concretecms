@@ -13,9 +13,11 @@ $c = Page::getCurrentPage();
 		<span class="text-muted"><?= $type_name ?></span>
 		<?php
 
-		if ($final_label != $original_label) { ?>
+        if ($final_label != $original_label) {
+            ?>
 			<span class="text-muted">(<?= $original_label ?>)</span>
-		<?php } ?>
+		<?php 
+        } ?>
 	</td>
 	<td>
 		<ul class="ccm-item-set-controls">

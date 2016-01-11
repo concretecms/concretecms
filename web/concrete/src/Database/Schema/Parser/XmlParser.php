@@ -3,7 +3,6 @@ namespace Concrete\Core\Database\Schema\Parser;
 
 abstract class XmlParser
 {
-
     protected $rawXML;
     protected $ignoreExistingTables = true;
 
@@ -18,5 +17,4 @@ abstract class XmlParser
     }
 
     abstract public function parse(\Concrete\Core\Database\Connection\Connection $db);
-
 }

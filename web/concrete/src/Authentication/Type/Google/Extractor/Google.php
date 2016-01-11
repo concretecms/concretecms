@@ -6,7 +6,6 @@ use OAuth\UserData\Extractor\LazyExtractor;
 
 class Google extends LazyExtractor
 {
-
     public function __construct()
     {
         parent::__construct(
@@ -18,14 +17,14 @@ class Google extends LazyExtractor
     protected function getNormalizersMap()
     {
         return array(
-            self::FIELD_EMAIL          => 'email',
-            self::FIELD_FIRST_NAME     => 'firstName',
-            self::FIELD_LAST_NAME      => 'lastName',
-            self::FIELD_UNIQUE_ID      => 'id',
-            self::FIELD_USERNAME       => 'email',
-            self::FIELD_IMAGE_URL      => 'image',
+            self::FIELD_EMAIL => 'email',
+            self::FIELD_FIRST_NAME => 'firstName',
+            self::FIELD_LAST_NAME => 'lastName',
+            self::FIELD_UNIQUE_ID => 'id',
+            self::FIELD_USERNAME => 'email',
+            self::FIELD_IMAGE_URL => 'image',
             self::FIELD_VERIFIED_EMAIL => 'emailVerified',
-            self::FIELD_EXTRA          => 'extras');
+            self::FIELD_EXTRA => 'extras', );
     }
 
     public function getSupports()
@@ -38,7 +37,7 @@ class Google extends LazyExtractor
             self::FIELD_USERNAME,
             self::FIELD_IMAGE_URL,
             self::FIELD_VERIFIED_EMAIL,
-            self::FIELD_EXTRA);
+            self::FIELD_EXTRA, );
     }
 
     public function extrasNormalizer($data)
@@ -53,6 +52,7 @@ class Google extends LazyExtractor
                 $hd = null;
             }
         }
+
         return array('domain' => $hd);
     }
 
@@ -89,7 +89,7 @@ class Google extends LazyExtractor
     public function profileLoader()
     {
         $url = new Uri('https://www.googleapis.com/oauth2/v1/userinfo');
+
         return json_decode($this->service->request($url), true);
     }
-
 }

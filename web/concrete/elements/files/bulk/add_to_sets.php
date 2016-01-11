@@ -1,48 +1,49 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
-<? Loader::element('files/add_to_sets', array(
-	'displayFileSet' => function($fileset) use ($files) {
-		$fp = new \Permissions($fileset);
-		if (!$fp->canAddFiles()) {
-			return false;
-		} else {
-			foreach($files as $f) {
-				if (!$fp->canAddFileType(strtolower($f->getExtension()))) {
-					return false;
-				}
-			}
-		}
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php Loader::element('files/add_to_sets', array(
+    'displayFileSet' => function ($fileset) use ($files) {
+        $fp = new \Permissions($fileset);
+        if (!$fp->canAddFiles()) {
+            return false;
+        } else {
+            foreach ($files as $f) {
+                if (!$fp->canAddFileType(strtolower($f->getExtension()))) {
+                    return false;
+                }
+            }
+        }
 
-		return true;
-	},
-	'getCheckbox' => function($fileset) use ($files) {
-		$checkbox = new HtmlObject\Input('checkbox');
-		$checkbox->setAttribute('data-set', $fileset->getFileSetID());
+        return true;
+    },
+    'getCheckbox' => function ($fileset) use ($files) {
+        $checkbox = new HtmlObject\Input('checkbox');
+        $checkbox->setAttribute('data-set', $fileset->getFileSetID());
 
-		$input = new HtmlObject\Input('hidden', 'fsID:' . $fileset->getFileSetID(), 0);
-		$input->setAttribute('data-set-input', $fileset->getFileSetID());
+        $input = new HtmlObject\Input('hidden', 'fsID:' . $fileset->getFileSetID(), 0);
+        $input->setAttribute('data-set-input', $fileset->getFileSetID());
 
-		$found = 0;
-		foreach($files as $f) {
-			if ($f->inFileSet($fileset)) {
-				$found++;
-			}
-		}
+        $found = 0;
+        foreach ($files as $f) {
+            if ($f->inFileSet($fileset)) {
+                ++$found;
+            }
+        }
 
-		if ($found == 0) {
-			// nothing
-		} else if ($found == count($files)) {
-			$checkbox->checked('checked');
-			$input->value(2);
-		} else {
-			$checkbox->indeterminate(1);
-			$checkbox->class('tristate');
-			$input->value(1);
-		}
+        if ($found == 0) {
+            // nothing
+        } elseif ($found == count($files)) {
+            $checkbox->checked('checked');
+            $input->value(2);
+        } else {
+            $checkbox->indeterminate(1);
+            $checkbox->class('tristate');
+            $input->value(1);
+        }
 
-		$span = new HtmlObject\Element('span');
-		$span->appendChild($checkbox)->appendChild($input);
-		return $span;
-	}
+        $span = new HtmlObject\Element('span');
+        $span->appendChild($checkbox)->appendChild($input);
+
+        return $span;
+    },
 ));
 ?>
 

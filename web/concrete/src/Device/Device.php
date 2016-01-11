@@ -3,13 +3,12 @@ namespace Concrete\Core\Device;
 
 /**
  * Class Device
- * A representation of a device
+ * A representation of a device.
  *
  * @package Concrete\Core\Device
  */
 class Device implements DeviceInterface
 {
-
     /**
      * @var string
      */
@@ -78,7 +77,8 @@ class Device implements DeviceInterface
     }
 
     /**
-     * Get the device handle
+     * Get the device handle.
+     *
      * @return string
      */
     public function getHandle()
@@ -87,7 +87,8 @@ class Device implements DeviceInterface
     }
 
     /**
-     * Get the device name
+     * Get the device name.
+     *
      * @return string
      */
     public function getName()
@@ -96,7 +97,8 @@ class Device implements DeviceInterface
     }
 
     /**
-     * Get the device brand
+     * Get the device brand.
+     *
      * @return string
      */
     public function getBrand()
@@ -105,7 +107,7 @@ class Device implements DeviceInterface
     }
 
     /**
-     * Get the device user agent
+     * Get the device user agent.
      *
      * @return string
      */
@@ -116,7 +118,7 @@ class Device implements DeviceInterface
 
     /**
      * Get the screen width of the device in pixels
-     * Be sure to adjust this by the device pixel ratio
+     * Be sure to adjust this by the device pixel ratio.
      *
      * @return int
      */
@@ -127,7 +129,7 @@ class Device implements DeviceInterface
 
     /**
      * Get the screen height of the device in pixels
-     * Be sure to adjust this by the device pixel ratio
+     * Be sure to adjust this by the device pixel ratio.
      *
      * @return int
      */
@@ -140,7 +142,7 @@ class Device implements DeviceInterface
      * Get the devices type
      * this is an int that maps to a constant on this class, UNKNOWN MOBILE TABLET or DESKTOP
      * If testing against a device and not against "UNKNOWN", do not test this directly against a device type, instead
-     * use bitwise AND to test for the enum you'd like to test:
+     * use bitwise AND to test for the enum you'd like to test:.
      *
      *     // Check if the type is known, if so is it mobile?
      *     if ($device->getType() == Device::UNKNOWN) {
@@ -157,7 +159,7 @@ class Device implements DeviceInterface
     }
 
     /**
-     * Get the device pixel ratio
+     * Get the device pixel ratio.
      *
      * @return int
      */
@@ -167,7 +169,8 @@ class Device implements DeviceInterface
     }
 
     /**
-     * Get the HTML for this device's viewport
+     * Get the HTML for this device's viewport.
+     *
      * @return string
      */
     public function getViewportHTML()
@@ -179,7 +182,7 @@ class Device implements DeviceInterface
             'width',
             'height',
             'ratio',
-            'agent');
+            'agent', );
 
         $datas = array();
         foreach ($added_data as $key) {
@@ -220,7 +223,7 @@ class Device implements DeviceInterface
      */
     public function isMobile()
     {
-        return !!($this->getType() & self::MOBILE);
+        return (bool) ($this->getType() & self::MOBILE);
     }
 
     /**
@@ -228,7 +231,7 @@ class Device implements DeviceInterface
      */
     public function isTablet()
     {
-        return !!($this->getType() & self::TABLET);
+        return (bool) ($this->getType() & self::TABLET);
     }
 
     /**
@@ -236,11 +239,11 @@ class Device implements DeviceInterface
      */
     public function isDesktop()
     {
-        return !!($this->getType() & self::DESKTOP);
+        return (bool) ($this->getType() & self::DESKTOP);
     }
 
     /**
-     * Get the device's default orientation
+     * Get the device's default orientation.
      *
      * @return string ["landscape"|"portrait"]
      */
@@ -279,5 +282,4 @@ class Device implements DeviceInterface
 
         return $device;
     }
-
 }

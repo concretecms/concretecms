@@ -1,9 +1,9 @@
 <?php
 
-use \Concrete\Core\Block\View\BlockView;
 use Concrete\Core\Attribute\Key\Category;
-abstract class PageTestCase extends ConcreteDatabaseTestCase {
 
+abstract class PageTestCase extends ConcreteDatabaseTestCase
+{
     protected $fixtures = array();
     protected $tables = array('Pages', 'PageThemes', 'PagePaths', 'PermissionKeys', 'PermissionKeyCategories', 'PageTypes',
         'PageTemplates', 'Collections', 'CollectionVersions', 'CollectionVersionFeatureAssignments',
@@ -11,16 +11,17 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase {
         'CollectionVersionRelatedEdits', 'CollectionVersionAreaStyles', 'MultilingualSections', 'MultilingualPageRelations',
         'PagePermissionAssignments', 'CollectionVersionBlocks', 'Areas', 'PageSearchIndex', 'ConfigStore',
         'GatheringDataSources', 'Logs', 'PageTypePublishTargetTypes', 'AttributeKeyCategories',
-        'PageTypeComposerOutputBlocks'); // so brutal
+        'PageTypeComposerOutputBlocks', ); // so brutal
 
-    protected function setUp() {
+    protected function setUp()
+    {
         parent::setUp();
         Category::add('collection');
         Page::addHomePage();
         PageTemplate::add('full', 'Full');
         PageType::add(array(
                 'handle' => 'basic',
-                'name' => 'Basic'
+                'name' => 'Basic',
             ));
     }
 
@@ -28,7 +29,7 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase {
     {
         if ($parent === false) {
             $parent = Page::getByID(HOME_CID);
-        } else if (is_string($parent)) {
+        } elseif (is_string($parent)) {
             $parent = Page::getByPath($parent);
         }
 
@@ -53,10 +54,10 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase {
         }
 
         $page = $parent->add($pt, array(
-            'cName'=> $name,
-            'pTemplateID' => $template->getPageTemplateID()
+            'cName' => $name,
+            'pTemplateID' => $template->getPageTemplateID(),
         ));
+
         return $page;
     }
-
 }

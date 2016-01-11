@@ -1,14 +1,15 @@
 <?php
+
 use \Concrete\Core\File\StorageLocation\Type\Type;
 use \Concrete\Core\File\StorageLocation\StorageLocation;
 
-abstract class FileStorageTestCase extends ConcreteDatabaseTestCase {
-
+abstract class FileStorageTestCase extends ConcreteDatabaseTestCase
+{
     protected $fixtures = array();
     protected $tables = array(
         'FileStorageLocationTypes',
         'FileStorageLocations',
-        'FileImageThumbnailTypes'
+        'FileImageThumbnailTypes',
     );
 
     protected function getStorageDirectory()
@@ -42,6 +43,7 @@ abstract class FileStorageTestCase extends ConcreteDatabaseTestCase {
         $configuration = $type->getConfigurationObject();
         $configuration->setRootPath($this->getStorageDirectory());
         $configuration->setWebRootRelativePath('/application/files');
+
         return StorageLocation::add($configuration, 'Default', true);
     }
 
@@ -72,5 +74,4 @@ abstract class FileStorageTestCase extends ConcreteDatabaseTestCase {
         parent::tearDown();
         $this->cleanup();
     }
-
 }

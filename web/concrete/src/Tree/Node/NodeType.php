@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Tree\Node;
 
 use Concrete\Core\Foundation\Object;

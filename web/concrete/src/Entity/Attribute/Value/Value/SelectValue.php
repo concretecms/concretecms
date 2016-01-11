@@ -9,7 +9,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class SelectValue extends Value
 {
-
     /**
      * @ManyToMany(targetEntity="SelectValueOption", inversedBy="values", cascade={"persist"})
      * @JoinTable(name="SelectAttributeValueSelectedOptions",
@@ -39,8 +38,4 @@ class SelectValue extends Value
     {
         $this->selectedOptions = $selectedOptions;
     }
-
-
-
-
 }

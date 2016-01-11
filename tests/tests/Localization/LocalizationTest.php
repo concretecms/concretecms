@@ -63,5 +63,4 @@ class LocalizationTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(0, $rc, "msgfmt output:\n" . implode("\n", $output));
         $this->assertFileExists($moFile);
     }
-
 }

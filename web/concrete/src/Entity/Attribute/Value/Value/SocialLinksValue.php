@@ -3,14 +3,12 @@ namespace Concrete\Core\Entity\Attribute\Value\Value;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
-
 /**
  * @Entity
  * @Table(name="SocialLinkAttributeValues")
  */
 class SocialLinksValue extends Value
 {
-
     /**
      * @OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Value\Value\SelectedSocialLink", mappedBy="value")
      * @JoinColumn(name="avID", referencedColumnName="avID")
@@ -22,7 +20,6 @@ class SocialLinksValue extends Value
         $this->links = new ArrayCollection();
     }
 
-
     public function getSelectedLinks()
     {
         return $this->links;
@@ -32,5 +29,4 @@ class SocialLinksValue extends Value
     {
         $this->links = $links;
     }
-
 }

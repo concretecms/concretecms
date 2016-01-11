@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Http;
 
 use Concrete\Flysystem\File;
@@ -20,10 +19,10 @@ class FlysystemFileResponse extends Response
 {
     protected static $trustXSendfileTypeHeader = false;
 
-    /** @type File */
+    /** @var File */
     protected $file;
 
-    /** @type FilesystemInterface */
+    /** @var FilesystemInterface */
     protected $filesystem;
 
     protected $offset;
@@ -222,7 +221,6 @@ class FlysystemFileResponse extends Response
         $out = fopen('php://output', 'wb');
         $file = $this->filesystem->readStream($this->file->getPath());
         stream_copy_to_stream($file, $out, $this->maxlen, $this->offset);
-
 
         fclose($out);
         fclose($file);

@@ -15,30 +15,35 @@
 </div>
 
 <div class="row">
-    <? View::element('dashboard/express/detail_navigation', array('entity' => $entity))?>
+    <?php View::element('dashboard/express/detail_navigation', array('entity' => $entity))?>
     <div class="col-md-8">
 
         <?php if (count($associations)) {
-            ?>
+    ?>
 
             <ul class="item-select-list" id="ccm-stack-list">
-                <?php foreach($associations as $association) {
-                    $formatter = $association->getFormatter(); ?>
+                <?php foreach ($associations as $association) {
+    $formatter = $association->getFormatter();
+    ?>
 
                     <li>
                         <a href="<?=URL::to('/dashboard/express/entities/associations', 'view_association_details', $association->getID())?>">
                             <?=$formatter->getIcon()?> <?=$formatter->getDisplayName()?>
                         </a>
                     </li>
-                <? } ?>
+                <?php 
+}
+    ?>
             </ul>
 
         <?php
-        } else {
-            ?>
+
+} else {
+    ?>
             <p><?=t('You have not created any associations.')?></p>
         <?php
-        } ?>
+
+} ?>
 
 
     </div>

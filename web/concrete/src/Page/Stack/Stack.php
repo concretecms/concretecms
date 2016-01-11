@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Page\Stack;
 
 use Area;

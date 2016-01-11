@@ -1,10 +1,8 @@
 <?php
-
 namespace Concrete\Core\Backup\ContentImporter\ValueInspector\Item;
 
 class ImageItem extends FileItem
 {
-
     public function getDisplayName()
     {
         return t('Image');
@@ -16,5 +14,4 @@ class ImageItem extends FileItem
             return sprintf("{CCM:FID_%s}", $o->getFileID());
         }
     }
-
 }

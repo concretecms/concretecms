@@ -1,11 +1,12 @@
 <?php
 namespace Concrete\Core\StyleCustomizer;
+
 use Less_Parser;
 use Less_Tree_Call;
-use \Concrete\Core\StyleCustomizer\Style\ColorStyle;
-class Preset {
+use Concrete\Core\StyleCustomizer\Style\ColorStyle;
 
-
+class Preset
+{
     protected $filename;
     protected $name;
     const PRESET_RULE_NAME = '@preset-name';
@@ -16,7 +17,8 @@ class Preset {
     /**
      * @return Preset
      */
-    public static function getFromFile($lessFile, $urlroot) {
+    public static function getFromFile($lessFile, $urlroot)
+    {
         $o = new static();
         $o->file = $lessFile;
         $o->urlroot = $urlroot;
@@ -26,7 +28,7 @@ class Preset {
         $l = new Less_Parser();
         $parser = $l->parseFile($lessFile, false, true);
         $rules = $parser->rules;
-        foreach($rules as $rule) {
+        foreach ($rules as $rule) {
             if ($rule->name == static::PRESET_RULE_NAME) {
                 $o->name = $rule->value->value[0]->value[0]->value;
             }
@@ -48,6 +50,7 @@ class Preset {
 
     /**
      * Gets the style value list object for this preset.
+     *
      * @return \Concrete\Core\StyleCustomizer\Style\ValueList
      */
     public function getStyleValueList()
@@ -55,6 +58,7 @@ class Preset {
         if (!isset($this->styleValueList)) {
             $this->styleValueList = \Concrete\Core\StyleCustomizer\Style\ValueList::loadFromLessFile($this->file, $this->urlroot);
         }
+
         return $this->styleValueList;
     }
 
@@ -72,11 +76,13 @@ class Preset {
      * @param string $format = 'html'
      *   Escape the result in html format (if $format is 'html').
      *   If $format is 'text' or any other value, the display name won't be escaped.
+     *
      * @return string
      */
-    public function getPresetDisplayName($format = 'html') {
+    public function getPresetDisplayName($format = 'html')
+    {
         $value = tc('PresetName', $this->getPresetName());
-        switch($format) {
+        switch ($format) {
             case 'html':
                 return h($value);
             case 'text':
@@ -117,6 +123,7 @@ class Preset {
         $html .= '<li style="background-color: ' . $this->getPresetColor2()->toStyleString() . '"></li>';
         $html .= '<li style="background-color: ' . $this->getPresetColor3()->toStyleString() . '"></li>';
         $html .= '</ul>';
+
         return $html;
     }
 }

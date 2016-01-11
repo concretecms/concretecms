@@ -8,11 +8,8 @@ use OAuth\UserData\ExtractorFactory;
 
 class ServiceProvider extends \Concrete\Core\Foundation\Service\Provider
 {
-
     /**
      * Register the service provider.
-     *
-     * @return void
      */
     public function register()
     {
@@ -40,5 +37,4 @@ class ServiceProvider extends \Concrete\Core\Foundation\Service\Provider
             }
         );
     }
-
 }

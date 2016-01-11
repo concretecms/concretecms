@@ -5,7 +5,6 @@ use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 
 class LoggingServiceProvider extends ServiceProvider
 {
-
     public function register()
     {
         // Bind the logger singleton
@@ -18,5 +17,4 @@ class LoggingServiceProvider extends ServiceProvider
         $this->app->bind('Psr\Log\LoggerInterface', 'Concrete\Core\Logging\Logger');
         $this->app->bind('log', 'Concrete\Core\Logging\Logger');
     }
-
 }

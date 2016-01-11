@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Attribute\Category;
 
 use Concrete\Core\Application\Application;
@@ -9,7 +8,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class Manager extends CoreManager
 {
-
     public function createPageDriver()
     {
         return $this->createCollectionDriver();

@@ -9,11 +9,11 @@ use Request;
 
 class IPService
 {
-
     /**
      * @param bool|IPAddress $ip
      * @param bool $extraParamString
      * @param array $extraParamValues
+     *
      * @return bool
      */
     public function isBanned($ip = false, $extraParamString = false, $extraParamValues = array())
@@ -46,11 +46,12 @@ class IPService
 
     /**
      * @param IPAddress $ip
+     *
      * @return bool
      */
     protected function existsManualPermBan(IPAddress $ip)
     {
-        return $this->isBanned($ip, ' AND isManual = ? AND expires = ? ', Array(1, '1000-01-01 00:00:00'));
+        return $this->isBanned($ip, ' AND isManual = ? AND expires = ? ', array(1, '1000-01-01 00:00:00'));
     }
 
     /** Returns an IPAddress object if one was found, or false if not
@@ -88,7 +89,7 @@ class IPService
 			FROM SignupRequests
 			WHERE ipFrom = ?
 			AND date_access > DATE_SUB(?, INTERVAL ? SECOND)';
-            $v = Array($ip->getIp(), date('Y-m-d H:i:s'), $threshhold_seconds);
+            $v = array($ip->getIp(), date('Y-m-d H:i:s'), $threshhold_seconds);
 
             $row = $db->fetchAssoc($q, $v);
             if ($row['count'] >= $threshold_attempts) {
@@ -97,6 +98,7 @@ class IPService
                 return false;
             }
         }
+
         return false;
     }
 
@@ -115,9 +117,8 @@ class IPService
             if (!$this->existsManualPermBan($ip)) {
                 $db->beginTransaction();
                 $q = 'DELETE FROM UserBannedIPs WHERE ipFrom = ? AND ipTo = ? AND isManual = ?';
-                $v = Array($ip->getIp(), 0, 0);
+                $v = array($ip->getIp(), 0, 0);
                 $db->executeQuery($q, $v);
-
 
                 //IP_BAN_LOCK_IP_HOW_LONG_MIN of 0 or undefined  means forever
                 $timeOffset = Config::get('concrete.security.ban.ip.length');
@@ -138,5 +139,4 @@ class IPService
             }
         }
     }
-
 }

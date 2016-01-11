@@ -1,17 +1,20 @@
 <?php
-use Concrete\Core\Attribute\Key\Category;
-abstract class UserTestCase extends ConcreteDatabaseTestCase {
 
+use Concrete\Core\Attribute\Key\Category;
+
+abstract class UserTestCase extends ConcreteDatabaseTestCase
+{
     protected $fixtures = array();
     protected $tables = array(
         'Users', 'UserGroups', 'Groups', 'AttributeKeyCategories',
         'TreeTypes', 'TreeNodes', 'TreeNodePermissionAssignments',
         'Packages', 'AttributeKeys', 'AttributeSetKeys', 'AttributeSets',
         'PermissionKeyCategories', 'PermissionKeys', 'TreeNodeTypes', 'Trees',
-        'TreeGroupNodes', 'UserAttributeValues'
+        'TreeGroupNodes', 'UserAttributeValues',
     ); // so brutal
 
-    protected function setUp() {
+    protected function setUp()
+    {
         parent::setUp();
         Category::add('user');
     }
@@ -21,7 +24,7 @@ abstract class UserTestCase extends ConcreteDatabaseTestCase {
         $user = \Concrete\Core\User\UserInfo::add(
             array('uName' => $uName, 'uEmail' => $uEmail)
         );
+
         return $user;
     }
-
 }

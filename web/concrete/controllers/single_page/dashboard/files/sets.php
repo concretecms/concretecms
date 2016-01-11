@@ -1,8 +1,8 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\Files;
 
-use \Concrete\Core\Page\Controller\DashboardPageController;
-use \Concrete\Core\File\Set\SetList as FileSetList;
+use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\File\Set\SetList as FileSetList;
 use FileSet;
 use Permissions;
 use PermissionKey;
@@ -16,7 +16,6 @@ class Sets extends DashboardPageController
 
     public function view()
     {
-
         $fsl = new FileSetList();
         if (isset($_REQUEST['fsKeywords'])) {
             $fsl->filterByKeywords($_REQUEST['fsKeywords']);
@@ -47,9 +46,7 @@ class Sets extends DashboardPageController
 
     public function delete($fsID, $token = '')
     {
-
         $fs = FileSet::getByID($fsID);
-
 
         $valt = Loader::helper('validation/token');
         if (!$valt->validate('delete_file_set', $token)) {
@@ -67,7 +64,6 @@ class Sets extends DashboardPageController
 
     public function view_detail($fsID, $action = false)
     {
-
         $fs = FileSet::getByID($fsID);
         $this->set('fs', $fs);
         if ($action == 'file_set_updated') {
@@ -133,7 +129,4 @@ class Sets extends DashboardPageController
             $this->view();
         }
     }
-
 }
-
-?>

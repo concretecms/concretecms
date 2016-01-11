@@ -6,7 +6,6 @@ use Loader;
 
 class Service
 {
-
     public function outputDisplay($value)
     {
         $v = View::getInstance();
@@ -56,12 +55,12 @@ class Service
         $html .= '<div class="fa ' . $star4 . '"><a href="javascript:void(0)"></a></div>';
         $html .= '<div class="fa ' . $star5 . '"><a href="javascript:void(0)"></a></div>';
         $html .= '</div>';
+
         return $html;
     }
 
     public function output($field, $value)
     {
-
         $v = View::getInstance();
         $v->requireAsset('core/rating');
 
@@ -79,6 +78,7 @@ class Service
                     'name': \"{$field}\"
                 });
             });</script>";
+
         return $html;
 
         /*
@@ -91,24 +91,20 @@ class Service
 
 
         $html .= "<div class=\"ccm-rating\" id=\"ccm-rating-{$field}\">
-			<input name=\"{$field}\" type=\"radio\" value=\"20\" {$checked1} {$disabled}/>
-			<input name=\"{$field}\" type=\"radio\" value=\"40\" {$checked2} {$disabled}/>
-			<input name=\"{$field}\" type=\"radio\" value=\"60\" {$checked3} {$disabled} />
-			<input name=\"{$field}\" type=\"radio\" value=\"80\" {$checked4} {$disabled}/>
-			<input name=\"{$field}\" type=\"radio\" value=\"100\" {$checked5} {$disabled}/>
-		</div>";
+            <input name=\"{$field}\" type=\"radio\" value=\"20\" {$checked1} {$disabled}/>
+            <input name=\"{$field}\" type=\"radio\" value=\"40\" {$checked2} {$disabled}/>
+            <input name=\"{$field}\" type=\"radio\" value=\"60\" {$checked3} {$disabled} />
+            <input name=\"{$field}\" type=\"radio\" value=\"80\" {$checked4} {$disabled}/>
+            <input name=\"{$field}\" type=\"radio\" value=\"100\" {$checked5} {$disabled}/>
+        </div>";
         if ($includeJS) {
             $html .= "<script type=\"text/javascript\">
-				$(function() {
-					$('input[name=\"{$field}\"]').rating();
-				});
-				</script>";
+                $(function() {
+                    $('input[name=\"{$field}\"]').rating();
+                });
+                </script>";
         }
         return $html;
         */
-
-
     }
-
-
 }

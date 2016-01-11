@@ -1,12 +1,11 @@
 <?php
 namespace Concrete\Attribute\DateTime;
 
-use Concrete\Core\Entity\Attribute\Key\DateTimeKey;
 use Concrete\Core\Entity\Attribute\Key\Type\DateTimeType;
 use Concrete\Core\Entity\Attribute\Value\Value\DateTimeValue;
 use Loader;
 use Core;
-use \Concrete\Core\Attribute\Controller as AttributeTypeController;
+use Concrete\Core\Attribute\Controller as AttributeTypeController;
 
 class Controller extends AttributeTypeController
 {
@@ -18,6 +17,7 @@ class Controller extends AttributeTypeController
     {
         $type = new DateTimeType();
         $type->setMode($data['akDateDisplayMode']);
+
         return $type;
     }
 
@@ -30,15 +30,14 @@ class Controller extends AttributeTypeController
     {
         $this->load();
         $v = $this->getValue();
-        if(empty($v)) {
+        if (empty($v)) {
             return '';
         }
         $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
         if ($this->akDateDisplayMode == 'date') {
             // Don't use user's timezone to avoid showing wrong dates
             return $dh->formatDate($v, false, 'system');
-        }
-        else {
+        } else {
             return $dh->formatDateTime($v);
         }
     }
@@ -68,15 +67,15 @@ class Controller extends AttributeTypeController
         switch ($this->akDateDisplayMode) {
             case 'text':
                 $form = Loader::helper('form');
-                print $form->text($this->field('value'), $this->getDisplayValue());
+                echo $form->text($this->field('value'), $this->getDisplayValue());
                 break;
             case 'date':
                 $this->requireAsset('jquery/ui');
-                print $dt->date($this->field('value'), $caValue == null ? '' : $caValue);
+                echo $dt->date($this->field('value'), $caValue == null ? '' : $caValue);
                 break;
             default:
                 $this->requireAsset('jquery/ui');
-                print $dt->datetime($this->field('value'), $caValue == null ? '' : $caValue);
+                echo $dt->datetime($this->field('value'), $caValue == null ? '' : $caValue);
                 break;
         }
     }
@@ -96,12 +95,14 @@ class Controller extends AttributeTypeController
         if (isset($akey->type)) {
             $type->setDisplayMode((string) $akey->type['mode']);
         }
+
         return $type;
     }
 
     public function validateValue()
     {
         $v = $this->getValue();
+
         return $v != false;
     }
 
@@ -136,7 +137,7 @@ class Controller extends AttributeTypeController
         $html = $dt->date($this->field('from'), $this->request('from'), true);
         $html .= ' ' . t('to') . ' ';
         $html .= $dt->date($this->field('to'), $this->request('to'), true);
-        print $html;
+        echo $html;
     }
 
     public function saveValue($value)
@@ -149,6 +150,7 @@ class Controller extends AttributeTypeController
 
         $av = new DateTimeValue();
         $av->setValue(new \DateTime($value));
+
         return $av;
     }
 
@@ -170,6 +172,7 @@ class Controller extends AttributeTypeController
             case 'date':
             case 'date_time':
                 $value = $dt->translate('value', $data);
+
                 return $this->saveValue($value);
                 break;
         }
@@ -183,7 +186,7 @@ class Controller extends AttributeTypeController
         }
 
         $type = $ak->getAttributeKeyType();
-        /**
+        /*
          * @var $type DateTimeType
          */
 
@@ -195,6 +198,4 @@ class Controller extends AttributeTypeController
     {
         return new DateTimeType();
     }
-
-
 }

@@ -1,7 +1,5 @@
 <?php
-
 namespace Concrete\Core\Entity\Attribute\Value\Value;
-
 
 /**
  * @Entity
@@ -11,7 +9,6 @@ namespace Concrete\Core\Entity\Attribute\Value\Value;
  */
 abstract class Value
 {
-
     /**
      * @Id @Column(type="integer", options={"unsigned":true})
      * @GeneratedValue(strategy="AUTO")
@@ -64,8 +61,10 @@ abstract class Value
         $controller = $this->getAttributeKey()->getController();
         if (method_exists($controller, 'getDisplaySanitizedValue')) {
             $controller->setAttributeValue($this);
+
             return $controller->getDisplaySanitizedValue();
         }
+
         return $this->getDisplayValue();
     }
 
@@ -74,8 +73,10 @@ abstract class Value
         $controller = $this->getAttributeKey()->getController();
         if (method_exists($controller, 'getDisplayValue')) {
             $controller->setAttributeValue($this);
+
             return $controller->getDisplayValue();
         }
+
         return $this;
     }
 
@@ -84,8 +85,10 @@ abstract class Value
         $controller = $this->getAttributeKey()->getController();
         if (method_exists($controller, 'getSearchIndexValue')) {
             $controller->setAttributeValue($this);
+
             return $controller->getSearchIndexValue();
         }
+
         return $this;
     }
 
@@ -93,5 +96,4 @@ abstract class Value
     {
         return (string) $this->getDisplayValue();
     }
-
 }

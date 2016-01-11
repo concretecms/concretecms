@@ -1,22 +1,22 @@
-<?
+<?php
 namespace Concrete\Controller\Frontend;
+
 use Concrete\Core\Area\Layout\CustomLayout;
 use Concrete\Core\Area\Layout\Layout;
 use Controller;
 use Page;
 use Permissions;
-use Block;
-use Area;
 use Response;
-class Stylesheet extends Controller {
 
-	public function page_version($cID, $stylesheet, $cvID)
+class Stylesheet extends Controller
+{
+    public function page_version($cID, $stylesheet, $cvID)
     {
-		$c = Page::getByID($cID);
-		if (is_object($c) && !$c->isError()) {
-			$cp = new Permissions($c);
-			if ($cp->canViewPageVersions()) {
-				$c->loadVersionObject($cvID);
+        $c = Page::getByID($cID);
+        if (is_object($c) && !$c->isError()) {
+            $cp = new Permissions($c);
+            if ($cp->canViewPageVersions()) {
+                $c->loadVersionObject($cvID);
 
                 $theme = $c->getCollectionThemeObject();
                 $stylesheet = $theme->getStylesheetObject($stylesheet);
@@ -25,20 +25,21 @@ class Stylesheet extends Controller {
                     $scl = $style->getValueList();
                     $stylesheet->setValueList($scl);
                 }
-				$response = new Response();
-				$response->headers->set('Content-Type', 'text/css');
-				$response->setContent($stylesheet->getCss());
-				return $response;
-			}
-		}
-	}
+                $response = new Response();
+                $response->headers->set('Content-Type', 'text/css');
+                $response->setContent($stylesheet->getCss());
+
+                return $response;
+            }
+        }
+    }
 
     public function page($cID, $stylesheet)
     {
-		$c = Page::getByID($cID, 'ACTIVE');
-		if (is_object($c) && !$c->isError()) {
-			$cp = new Permissions($c);
-			if ($cp->canViewPage()) {
+        $c = Page::getByID($cID, 'ACTIVE');
+        if (is_object($c) && !$c->isError()) {
+            $cp = new Permissions($c);
+            if ($cp->canViewPage()) {
                 $theme = $c->getCollectionThemeObject();
                 $stylesheet = $theme->getStylesheetObject($stylesheet);
                 $style = $c->getCustomStyleObject();
@@ -46,19 +47,20 @@ class Stylesheet extends Controller {
                     $scl = $style->getValueList();
                     $stylesheet->setValueList($scl);
                 }
-				$response = new Response();
-				$response->headers->set('Content-Type', 'text/css');
-				$response->setContent($stylesheet->getCss());
-				return $response;
-			}
-		}
+                $response = new Response();
+                $response->headers->set('Content-Type', 'text/css');
+                $response->setContent($stylesheet->getCss());
+
+                return $response;
+            }
+        }
     }
 
-	public function layout($arLayoutID) {
-		$arLayout = Layout::getByID($arLayoutID);
-		if (is_object($arLayout) && $arLayout instanceof CustomLayout) {
-
-			$css = <<<EOL
+    public function layout($arLayoutID)
+    {
+        $arLayout = Layout::getByID($arLayoutID);
+        if (is_object($arLayout) && $arLayout instanceof CustomLayout) {
+            $css = <<<EOL
 	div.ccm-layout-column {
 			float: left;
 		}
@@ -70,33 +72,31 @@ class Stylesheet extends Controller {
 		div.ccm-layout-column-wrapper:after {clear:both;}
 
 EOL;
-			$wrapper = 'ccm-layout-column-wrapper-' . $arLayout->getAreaLayoutID();
-			$columns = $arLayout->getAreaLayoutColumns();
-			if (count($columns) > 0) {
-				$margin = ($arLayout->getAreaLayoutSpacing() / 2);
-				if ($arLayout->hasAreaLayoutCustomColumnWidths()) {
-					foreach($columns as $col) {
-						$arLayoutColumnID = $col->getAreaLayoutColumnID();
-						$width = $col->getAreaLayoutColumnWidth();
-						if ($width) {
-							$width .= 'px';
-						}
+            $wrapper = 'ccm-layout-column-wrapper-' . $arLayout->getAreaLayoutID();
+            $columns = $arLayout->getAreaLayoutColumns();
+            if (count($columns) > 0) {
+                $margin = ($arLayout->getAreaLayoutSpacing() / 2);
+                if ($arLayout->hasAreaLayoutCustomColumnWidths()) {
+                    foreach ($columns as $col) {
+                        $arLayoutColumnID = $col->getAreaLayoutColumnID();
+                        $width = $col->getAreaLayoutColumnWidth();
+                        if ($width) {
+                            $width .= 'px';
+                        }
 
-						$css .= "#{$wrapper} div#ccm-layout-column-{$arLayoutColumnID} { width: {$width}; }\n";
-					}
-
-				} else {
-					$width = (100 / count($columns));
-					$css .= <<<EOL
+                        $css .= "#{$wrapper} div#ccm-layout-column-{$arLayoutColumnID} { width: {$width}; }\n";
+                    }
+                } else {
+                    $width = (100 / count($columns));
+                    $css .= <<<EOL
 
 	#{$wrapper} div.ccm-layout-column {
 	width: {$width}%;
 	}
 EOL;
+                }
 
-				}
-
-				$css .= <<<EOL
+                $css .= <<<EOL
 
 	#{$wrapper} div.ccm-layout-column-inner {
 	margin-right: {$margin}px;
@@ -112,12 +112,12 @@ EOL;
 	}
 EOL;
 
-				$response = new Response();
-				$response->setContent($css);
-				$response->headers->set('Content-Type', 'text/css');
-				return $response;
-			}
-		}
-	}
-}
+                $response = new Response();
+                $response->setContent($css);
+                $response->headers->set('Content-Type', 'text/css');
 
+                return $response;
+            }
+        }
+    }
+}

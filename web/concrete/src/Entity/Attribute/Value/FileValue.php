@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Entity\Attribute\Value;
 
 /**
@@ -10,10 +9,9 @@ namespace Concrete\Core\Entity\Attribute\Value;
  */
 class FileValue extends Value
 {
-
     /**
      * @ManyToOne(targetEntity="\Concrete\Core\File\Version")
-@JoinColumns({
+     @JoinColumns({
      *   @JoinColumn(name="fID", referencedColumnName="fID"),
      *   @JoinColumn(name="fvID", referencedColumnName="fvID")
      * })
@@ -35,8 +33,4 @@ class FileValue extends Value
     {
         $this->version = $version;
     }
-
-
-
-
 }

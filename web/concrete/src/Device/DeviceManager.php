@@ -3,11 +3,11 @@ namespace Concrete\Core\Device;
 
 class DeviceManager implements DeviceManagerInterface
 {
-
     protected $container = array();
 
     /**
      * @param $handle
+     *
      * @return DeviceInterface
      */
     public function get($handle)
@@ -35,5 +35,4 @@ class DeviceManager implements DeviceManagerInterface
     {
         $this->container[$device->getHandle()] = $device;
     }
-
 }

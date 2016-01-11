@@ -2,12 +2,10 @@
 
 class EcommerceProductKey extends \Concrete\Core\Attribute\Key\Key
 {
-
 }
 
 class AttributeKeyTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testGetComputedAttributeKeyCategoryHandle()
     {
         $ak1 = new \Concrete\Core\Attribute\Key\CollectionKey();

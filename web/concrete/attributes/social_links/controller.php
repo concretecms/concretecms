@@ -1,21 +1,17 @@
-<?
+<?php
 namespace Concrete\Attribute\SocialLinks;
 
-use Concrete\Core\Entity\Attribute\Key\SocialLinksKey;
 use Concrete\Core\Entity\Attribute\Key\Type\SocialLinksType;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectedSocialLink;
 use Concrete\Core\Entity\Attribute\Value\Value\SocialLinksValue;
 use Loader;
 use Environment;
-use \Concrete\Core\Foundation\Object;
-use \Concrete\Core\Sharing\SocialNetwork\ServiceList as ServiceList;
-use \Concrete\Core\Sharing\SocialNetwork\Service as Service;
-use \Concrete\Core\Attribute\Controller as AttributeTypeController;
+use Concrete\Core\Sharing\SocialNetwork\ServiceList as ServiceList;
+use Concrete\Core\Sharing\SocialNetwork\Service as Service;
+use Concrete\Core\Attribute\Controller as AttributeTypeController;
 
 class Controller extends AttributeTypeController
 {
-
-
     public function saveForm($data)
     {
         if (!is_array($data['service'])) {
@@ -24,7 +20,7 @@ class Controller extends AttributeTypeController
         if (!is_array($data['serviceInfo'])) {
             $data['serviceInfo'] = array();
         }
-        for ($i = 0; $i < count($data['service']); $i++) {
+        for ($i = 0; $i < count($data['service']); ++$i) {
             $values[$data['service'][$i]] = $data['serviceInfo'][$i];
         }
         $this->saveValue($values);
@@ -53,12 +49,14 @@ class Controller extends AttributeTypeController
     public function importKey($akey)
     {
         $type = new SocialLinksType();
+
         return $type;
     }
 
     public function saveKey($data)
     {
         $type = new SocialLinksType();
+
         return $type;
     }
 
@@ -95,6 +93,7 @@ class Controller extends AttributeTypeController
             }
             $html .= '</span>';
         }
+
         return $html;
     }
 
@@ -126,5 +125,4 @@ class Controller extends AttributeTypeController
     {
         return new SocialLinksType();
     }
-
 }

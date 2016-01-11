@@ -7,14 +7,14 @@ $previousLinkText = is_object($previousCollection) ? $previousCollection->getCol
 $nextLinkText = is_object($nextCollection) ? $nextCollection->getCollectionName() : '';
 ?>
 
-<? if ($previousLinkURL || $nextLinkURL || $parentLinkText): ?>
+<?php if ($previousLinkURL || $nextLinkURL || $parentLinkText): ?>
 
 <div class="ccm-block-next-previous-wrapper">
-    <? if ($previousLabel && $previousLinkURL != ''): ?>
+    <?php if ($previousLabel && $previousLinkURL != ''): ?>
     <div class="ccm-block-next-previous-header">
         <h5><?=$previousLabel?></h5>
     </div>
-    <? endif; ?>
+    <?php endif; ?>
 
     <?php if ($previousLinkText): ?>
 	<p class="ccm-block-next-previous-previous-link">
@@ -22,11 +22,11 @@ $nextLinkText = is_object($nextCollection) ? $nextCollection->getCollectionName(
  	</p>
 	<?php endif; ?>
 
-    <? if ($nextLabel && $nextLinkURL != ''): ?>
+    <?php if ($nextLabel && $nextLinkURL != ''): ?>
         <div class="ccm-block-next-previous-header">
             <h5><?=$nextLabel?></h5>
         </div>
-    <? endif; ?>
+    <?php endif; ?>
 
     <?php if ($nextLinkText): ?>
         <p class="ccm-block-next-previous-next-link">
@@ -42,4 +42,4 @@ $nextLinkText = is_object($nextCollection) ? $nextCollection->getCollectionName(
 
 </div>
 
-<? endif; ?>
+<?php endif; ?>

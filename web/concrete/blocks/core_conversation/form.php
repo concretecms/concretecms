@@ -1,24 +1,23 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
-<?
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php
 
 $helperFile = Loader::helper('concrete/file');
 if ($controller->getTask() == 'add') {
-	$enablePosting = 1;
-	$paginate = 1;
-	$itemsPerPage = 50;
-	$displayMode = 'threaded';
-	$enableOrdering = 1;
-	$enableCommentRating = 1;
-	$displayPostingForm = 'top';
-	$addMessageLabel = t('Add Message');
+    $enablePosting = 1;
+    $paginate = 1;
+    $itemsPerPage = 50;
+    $displayMode = 'threaded';
+    $enableOrdering = 1;
+    $enableCommentRating = 1;
+    $displayPostingForm = 'top';
+    $addMessageLabel = t('Add Message');
     $attachmentOverridesEnabled = 0;
     $attachmentsEnabled = 1;
     $fileAccessFileTypes = Config::get('conversations.files.allowed_types');
     //is nothing's been defined, display the constant value
     if (!$fileAccessFileTypes) {
         $fileAccessFileTypes = $helperFile->unserializeUploadFileExtensions(Config::get('concrete.upload.extensions'));
-    }
-    else {
+    } else {
         $fileAccessFileTypes = $helperFile->unserializeUploadFileExtensions($fileAccessFileTypes);
     }
     $maxFileSizeGuest = Config::get('conversations.files.guest.max_size');
@@ -27,12 +26,12 @@ if ($controller->getTask() == 'add') {
     $maxFilesRegistered = Config::get('conversations.files.registered.max');
     $fileExtensions = implode(',', $fileAccessFileTypes);
     $attachmentsEnabled = intval(Config::get('conversations.attachments_enabled'));
-	$notificationUsers = Conversation::getDefaultSubscribedUsers();
-	$subscriptionEnabled = intval(Config::get('conversations.subscription_enabled'));
+    $notificationUsers = Conversation::getDefaultSubscribedUsers();
+    $subscriptionEnabled = intval(Config::get('conversations.subscription_enabled'));
 }
 
-if(!$dateFormat) {
-	$dateFormat = 'default';
+if (!$dateFormat) {
+    $dateFormat = 'default';
 }
 ?>
 

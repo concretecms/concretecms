@@ -1,16 +1,14 @@
 <?php
-
 namespace Concrete\Block\DateNavigation;
+
 defined('C5_EXECUTE') or die("Access Denied.");
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Page\PageList;
 use Concrete\Core\Page\Type\Type;
-use Core;
 use Loader;
 
 class Controller extends BlockController
 {
-
     public $helpers = array('form');
 
     protected $btInterfaceWidth = 400;
@@ -71,6 +69,7 @@ class Controller extends BlockController
                 $parameters[1] = intval($parameters[1]);
             }
         }
+
         return array($method, $parameters);
     }
 
@@ -86,7 +85,6 @@ class Controller extends BlockController
         if (isset($this->selectedYear) && isset($this->selectedMonth)) {
             return $dateArray['year'] == $this->selectedYear && $dateArray['month'] == $this->selectedMonth;
         }
-
     }
 
     public function view()

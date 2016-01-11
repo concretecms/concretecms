@@ -1,14 +1,7 @@
 <?php
-
 namespace Concrete\Core\View;
 
-use Concrete\Core\Asset\Asset;
-use Concrete\Core\Http\ResponseAssetGroup;
 use Environment;
-use Events;
-use PageTheme;
-use Page;
-use Config;
 
 class ElementView extends AbstractView
 {
@@ -42,6 +35,7 @@ class ElementView extends AbstractView
         $a = func_get_args();
         $c = \Page::getCurrentPage();
         array_unshift($a, $c);
+
         return call_user_func_array(array('\URL', 'to'), $a);
     }
 
@@ -57,8 +51,6 @@ class ElementView extends AbstractView
 
     public function finishRender($contents)
     {
-        print $contents;
+        echo $contents;
     }
-
-
 }

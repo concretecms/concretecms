@@ -2,10 +2,8 @@
 
 trait ExpressEntityManagerTestCaseTrait
 {
-
     protected function getMockEntityManager()
     {
-
         $student = new \Concrete\Core\Entity\Express\Entity();
         $student->setTableName('Students');
         $student->setName('Student');
@@ -39,8 +37,8 @@ trait ExpressEntityManagerTestCaseTrait
 
         $entityRepository->expects($this->any())
             ->method('findOneBy')
-            ->will($this->returnCallback(function($args) use ($entities) {
-                foreach($entities as $entity) {
+            ->will($this->returnCallback(function ($args) use ($entities) {
+                foreach ($entities as $entity) {
                     if ($entity->getName() == $args['name']) {
                         return $entity;
                     }
@@ -61,14 +59,12 @@ trait ExpressEntityManagerTestCaseTrait
 
     protected function getMockEntityManagerWithRelations()
     {
-
         $student = new \Concrete\Core\Entity\Express\Entity();
         $student->setTableName('Students');
         $student->setName('Student');
 
         $first_name = new Concrete\Core\Entity\AttributeKey\TextAttributeKey();
         $first_name->setAttributeKeyHandle('first_name');
-
 
         $teacher = new \Concrete\Core\Entity\Express\Entity();
         $teacher->setTableName('Teachers');
@@ -85,5 +81,4 @@ trait ExpressEntityManagerTestCaseTrait
 
         return $this->deliverEntityManager(array($student, $teacher));
     }
-
 }

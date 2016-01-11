@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Controller\SinglePage\Dashboard\System\Optimization;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
@@ -29,12 +28,12 @@ class Cache extends DashboardPageController
                 $cms = Core::make('app');
                 $cms->clearCaches();
 
-                Config::save('concrete.cache.blocks', !!$eca);
-                Config::save('concrete.cache.assets', !!$eac);
-                Config::save('concrete.cache.theme_css', !!$tcc);
-                Config::save('concrete.theme.compress_preprocessor_output', !!$ctc);
-                Config::save('concrete.theme.generate_less_sourcemap', !!$this->post('GENERATE_LESS_SOURCEMAP'));
-                Config::save('concrete.cache.overrides', !!$eoc);
+                Config::save('concrete.cache.blocks', (bool) $eca);
+                Config::save('concrete.cache.assets', (bool) $eac);
+                Config::save('concrete.cache.theme_css', (bool) $tcc);
+                Config::save('concrete.theme.compress_preprocessor_output', (bool) $ctc);
+                Config::save('concrete.theme.generate_less_sourcemap', (bool) $this->post('GENERATE_LESS_SOURCEMAP'));
+                Config::save('concrete.cache.overrides', (bool) $eoc);
                 Config::save('concrete.cache.pages', $this->post('FULL_PAGE_CACHE_GLOBAL'));
                 Config::save('concrete.cache.full_page_lifetime', $this->post('FULL_PAGE_CACHE_LIFETIME'));
                 Config::save('concrete.cache.full_page_lifetime_value', $this->post('FULL_PAGE_CACHE_LIFETIME_CUSTOM'));

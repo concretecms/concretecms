@@ -1,9 +1,7 @@
 <?php
-
 namespace Concrete\Core\Entity\Attribute\Key\Type;
 
 use Concrete\Core\Entity\Attribute\Value\Value\TopicsValue;
-
 
 /**
  * @Entity
@@ -11,7 +9,6 @@ use Concrete\Core\Entity\Attribute\Value\Value\TopicsValue;
  */
 class TopicsType extends Type
 {
-
     /**
      * @Column(type="integer")
      */
@@ -54,7 +51,6 @@ class TopicsType extends Type
         $this->parentNodeID = $parentNodeID;
     }
 
-
     public function getAttributeValue()
     {
         return new TopicsValue();
@@ -63,7 +59,7 @@ class TopicsType extends Type
     public function createController()
     {
         $controller = new \Concrete\Attribute\Topics\Controller($this->getAttributeType());
+
         return $controller;
     }
-
 }

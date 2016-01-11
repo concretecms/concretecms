@@ -2,7 +2,7 @@
 defined('C5_EXECUTE') or die('Access Denied.');
 $form = Core::make('helper/form');
 
-print Core::make('helper/concrete/ui')->tabs(array(
+echo Core::make('helper/concrete/ui')->tabs(array(
     array('add', t('Add'), true),
     array('options', t('Options')),
 ));
@@ -12,15 +12,15 @@ print Core::make('helper/concrete/ui')->tabs(array(
         <label class="control-label"><?php  echo t('Display property with formatting')?></label>
         <select name="displayTag" class="form-control">
             <option value="">- none -</option>
-            <option value="h1" <?php echo($this->controller->displayTag == "h1" ? "selected" : "")?>>H1 (Heading 1)</option>
-            <option value="h2" <?php echo($this->controller->displayTag == "h2" ? "selected" : "")?>>H2 (Heading 2)</option>
-            <option value="h3" <?php echo($this->controller->displayTag == "h3" ? "selected" : "")?>>H3 (Heading 3)</option>
-            <option value="p" <?php echo($this->controller->displayTag == "p" ? "selected" : "")?>>p (paragraph)</option>
-            <option value="b" <?php echo($this->controller->displayTag == "b" ? "selected" : "")?>>b (bold)</option>
-            <option value="address" <?php echo($this->controller->displayTag == "address" ? "selected" : "")?>>address</option>
-            <option value="pre" <?php echo($this->controller->displayTag == "pre" ? "selected" : "")?>>pre (preformatted)</option>
-            <option value="blockquote" <?php echo($this->controller->displayTag == "blockquote" ? "selected" : "")?>>blockquote</option>
-            <option value="div" <?php echo($this->controller->displayTag == "div" ? "selected" : "")?>>div</option>
+            <option value="h1" <?php echo $this->controller->displayTag == "h1" ? "selected" : ""?>>H1 (Heading 1)</option>
+            <option value="h2" <?php echo $this->controller->displayTag == "h2" ? "selected" : ""?>>H2 (Heading 2)</option>
+            <option value="h3" <?php echo $this->controller->displayTag == "h3" ? "selected" : ""?>>H3 (Heading 3)</option>
+            <option value="p" <?php echo $this->controller->displayTag == "p" ? "selected" : ""?>>p (paragraph)</option>
+            <option value="b" <?php echo $this->controller->displayTag == "b" ? "selected" : ""?>>b (bold)</option>
+            <option value="address" <?php echo $this->controller->displayTag == "address" ? "selected" : ""?>>address</option>
+            <option value="pre" <?php echo $this->controller->displayTag == "pre" ? "selected" : ""?>>pre (preformatted)</option>
+            <option value="blockquote" <?php echo $this->controller->displayTag == "blockquote" ? "selected" : ""?>>blockquote</option>
+            <option value="div" <?php echo $this->controller->displayTag == "div" ? "selected" : ""?>>div</option>
         </select>
     </div>
     <div class="form-group">

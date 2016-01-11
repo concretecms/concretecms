@@ -1,12 +1,7 @@
 <?php
-
 namespace Concrete\Core\Attribute;
 
-use Concrete\Core\Attribute\Key\StandardFactory;
 use Concrete\Core\Controller\AbstractController;
-use Concrete\Core\Entity\Attribute\Key\TextKey;
-use Concrete\Core\Entity\Attribute\Key\Type\TextType;
-use Concrete\Core\Entity\AttributeKey\TextAttributeKey;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Core;
 use Concrete\Core\Attribute\View as AttributeTypeView;
@@ -66,12 +61,10 @@ class Controller extends AbstractController
 
     public function deleteKey()
     {
-
     }
 
     public function deleteValue()
     {
-
     }
 
     public function getValue()
@@ -126,7 +119,7 @@ class Controller extends AbstractController
         }
         /** @var \Concrete\Core\Form\Service\Form $form */
         $form = Core::make('helper/form');
-        print $form->label($this->field('value'), $text);
+        echo $form->label($this->field('value'), $text);
     }
 
     /**
@@ -161,6 +154,7 @@ class Controller extends AbstractController
         if (is_object($this->attributeKey) && is_array($req['akID'])) {
             return true;
         }
+
         return false;
     }
 
@@ -234,7 +228,6 @@ class Controller extends AbstractController
             return $r->url;
         }
     }
-
 
     public function saveKey($data)
     {
@@ -313,5 +306,4 @@ class Controller extends AbstractController
     {
         return new LegacyIconFormatter($this);
     }
-
 }

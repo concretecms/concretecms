@@ -7,7 +7,6 @@ use Loader;
 
 class File
 {
-
     public static function getFileSetFiles(Set $fs)
     {
         $db = Loader::db();
@@ -19,6 +18,7 @@ class File
                 $files[] = $fsf;
             }
         }
+
         return $files;
     }
 
@@ -27,8 +27,9 @@ class File
         $db = Loader::db();
         $r = $db->GetRow('SELECT * FROM FileSetFiles WHERE fsfID = ?', array($fsfID));
         if (is_array($r) && $r['fsfID']) {
-            $fsf = new static;
+            $fsf = new static();
             $fsf = array_to_object($fsf, $r);
+
             return $fsf;
         }
     }
@@ -43,6 +44,7 @@ class File
             $fs = FileSet::getByID($fs_id);
             $f = ConcreteFile::getByID($f_id);
             $fsf = static::add($f, $fs);
+
             return $fsf;
         }
     }
@@ -54,12 +56,12 @@ class File
         $db->insert(
             'FileSetFiles',
             array(
-                'fsID'           => $fs->getFileSetID(),
-                'timestamp'      => date('Y-m-d H:i:s'),
-                'fID'            => $f->getFileID(),
-                'fsDisplayOrder' => $fsDisplayOrder));
+                'fsID' => $fs->getFileSetID(),
+                'timestamp' => date('Y-m-d H:i:s'),
+                'fID' => $f->getFileID(),
+                'fsDisplayOrder' => $fsDisplayOrder, ));
         $fsfID = $db->lastInsertId();
-        return File::getByID($fsfID);
-    }
 
+        return self::getByID($fsfID);
+    }
 }

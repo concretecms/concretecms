@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Entity\Attribute\Value;
 
 /**
@@ -10,7 +9,6 @@ namespace Concrete\Core\Entity\Attribute\Value;
  */
 class PageValue extends Value
 {
-
     /**
      * @Column(type="integer", options={"unsigned": true})
      **/
@@ -20,7 +18,6 @@ class PageValue extends Value
      * @Column(type="integer", options={"unsigned": true})
      **/
     protected $cvID;
-
 
     /**
      * @return mixed
@@ -53,7 +50,4 @@ class PageValue extends Value
     {
         $this->cvID = $cvID;
     }
-
-
-
 }

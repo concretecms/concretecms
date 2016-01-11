@@ -3,7 +3,6 @@ namespace Concrete\Core\Package;
 
 class BrokenPackage extends Package
 {
-
     public function __construct($pkgHandle)
     {
         $this->pkgHandle = $pkgHandle;
@@ -21,5 +20,4 @@ class BrokenPackage extends Package
     {
         return t('Unable to install %s. Please check that this package has been updated for 5.7.', $this->pkgHandle);
     }
-
 }

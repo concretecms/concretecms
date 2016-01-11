@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Tests\Core\Html\Service;
 
 class SeoTest extends \PHPUnit_Framework_TestCase

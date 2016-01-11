@@ -4,16 +4,16 @@ namespace Concrete\Core\Validator\String;
 use Concrete\Core\Validator\AbstractTranslatableValidator;
 
 /**
- * Validate the length of a string
+ * Validate the length of a string.
+ *
  * @package Concrete\Core\Validator\String
  */
 class MinimumLengthValidator extends AbstractTranslatableValidator
 {
-
     /** Too short */
     const E_TOO_SHORT = 1;
 
-    /** @type int The minimum length */
+    /** @var int The minimum length */
     protected $minimum_length;
 
     /**
@@ -25,14 +25,14 @@ class MinimumLengthValidator extends AbstractTranslatableValidator
     {
         $this->minimum_length = $minimum_length;
 
-        $this->setRequirementString(self::E_TOO_SHORT, function(MinimumLengthValidator$validator, $code) {
+        $this->setRequirementString(self::E_TOO_SHORT, function (MinimumLengthValidator $validator, $code) {
 
             return sprintf(
                 'Must be at least %s characters long.',
                 $validator->getMinimumLength());
         });
 
-        $this->setErrorString(self::E_TOO_SHORT, function(MinimumLengthValidator $validator, $code, $mixed) {
+        $this->setErrorString(self::E_TOO_SHORT, function (MinimumLengthValidator $validator, $code, $mixed) {
             return sprintf(
                 'String \"%s\" must be at least %s characters long.',
                 $mixed,
@@ -41,7 +41,7 @@ class MinimumLengthValidator extends AbstractTranslatableValidator
     }
 
     /**
-     * Get the minimum length allowed
+     * Get the minimum length allowed.
      *
      * @return int
      */
@@ -51,7 +51,7 @@ class MinimumLengthValidator extends AbstractTranslatableValidator
     }
 
     /**
-     * Set the minimum length
+     * Set the minimum length.
      *
      * @param int $minimum_length
      */
@@ -61,11 +61,13 @@ class MinimumLengthValidator extends AbstractTranslatableValidator
     }
 
     /**
-     * Is this mixed value valid
+     * Is this mixed value valid.
      *
      * @param mixed             $mixed Can be any value
      * @param \ArrayAccess|null $error
+     *
      * @return bool
+     *
      * @throws \InvalidArgumentException Invalid mixed value type passed.
      */
     public function isValid($mixed, \ArrayAccess $error = null)
@@ -84,5 +86,4 @@ class MinimumLengthValidator extends AbstractTranslatableValidator
 
         return true;
     }
-
 }

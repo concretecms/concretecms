@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Block\SwitchLanguage;
+
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Routing\Redirect;
@@ -10,7 +11,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class Controller extends BlockController
 {
-
     protected $btInterfaceWidth = "500";
     protected $btInterfaceHeight = "150";
     protected $btTable = 'btSwitchLanguage';
@@ -50,9 +50,7 @@ class Controller extends BlockController
 
     public function action_set_current_language()
     {
-
         if ($this->post('language')) {
-
             $section = Section::getByID($this->post('language'));
             if (is_object($section)) {
                 Session::set('multilingual_default_locale', $section->getLocale());
@@ -62,7 +60,6 @@ class Controller extends BlockController
                     Cookie::clear('multilingual_default_locale');
                 }
             }
-
         }
 
         $this->action_switch_language($this->post('rcID'), $this->post('language'));
@@ -97,5 +94,4 @@ class Controller extends BlockController
         $this->set('locale', $locale);
         $this->set('cID', $c->getCollectionID());
     }
-
 }

@@ -1,10 +1,11 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
-$ih = Core::make('helper/concrete/ui'); 
+$ih = Core::make('helper/concrete/ui');
 $dh = Core::make('helper/date');
 
 ?>
-<?php if ($this->controller->getTask() == 'view_detail') { ?>
+<?php if ($this->controller->getTask() == 'view_detail') {
+    ?>
 
 	<script type="text/javascript">
 		deleteFileSet = function() {
@@ -15,29 +16,36 @@ $dh = Core::make('helper/date');
 	</script>
 
 	<?php
-	$fsp = new Permissions($fs);
-	if ($fsp->canDeleteFileSet()) { ?>
+    $fsp = new Permissions($fs);
+    if ($fsp->canDeleteFileSet()) {
+        ?>
 	<div class="ccm-dashboard-header-buttons">
 		<button class="btn btn-danger" onclick="deleteFileSet()"><?=t('Delete Set')?></button>
 	</div>
-	<?php } ?>
+	<?php 
+    }
+    ?>
 
 	<form method="post" class="form-horizontal" id="file_sets_edit" action="<?=$view->url('/dashboard/files/sets', 'file_sets_edit')?>">
-		<?=$validation_token->output('file_sets_edit');?>
+		<?=$validation_token->output('file_sets_edit');
+    ?>
 
 		<?= $ih->tabs(array(
-			array('details', t('Details'), true),
-			array('files', t('Files in Set'))
-		));?>
+            array('details', t('Details'), true),
+            array('files', t('Files in Set')),
+        ));
+    ?>
 
 		<div id="ccm-tab-content-details" class="ccm-tab-content">
 
 			<div class="form-group">
                 <?=$form->label('file_set_name', t('Name'))?>
-                <?=$form->text('file_set_name',$fs->fsName, array('class' => 'span5'));?>
+                <?=$form->text('file_set_name', $fs->fsName, array('class' => 'span5'));
+    ?>
 			</div>
 
-            <?php if (Config::get('concrete.permissions.model') != 'simple' && $fsp->canEditFileSetPermissions()) { ?>
+            <?php if (Config::get('concrete.permissions.model') != 'simple' && $fsp->canEditFileSetPermissions()) {
+    ?>
 			
                 <div class="form-group">
                     <div class="checkbox">
@@ -46,21 +54,25 @@ $dh = Core::make('helper/date');
                 </div>
 
                 <div id="ccm-permission-list-form" <?= !$fs->overrideGlobalPermissions() ? 'style="display: none"' : ''?> >
-                    <?php Loader::element('permission/lists/file_set', array("fs" => $fs)); ?>
+                    <?php Loader::element('permission/lists/file_set', array("fs" => $fs));
+    ?>
                 </div>
-            <?php } ?>
+            <?php 
+}
+    ?>
 			
-			<?= $form->hidden('fsID',$fs->getFileSetID()); ?>
+			<?= $form->hidden('fsID', $fs->getFileSetID());
+    ?>
 			
 		</div>
 
 		<div class="ccm-tab-content" id="ccm-tab-content-files">
 		<?php
-		$fl = new FileList();
-		$fl->filterBySet($fs);
-		$fl->sortByFileSetDisplayOrder();
-		$files = $fl->get();
-        if (count($files) > 0) { 
+        $fl = new FileList();
+    $fl->filterBySet($fs);
+    $fl->sortByFileSetDisplayOrder();
+    $files = $fl->get();
+    if (count($files) > 0) {
         ?>
 
             <span class="help-block"><?=t('Click and drag to reorder the files in this set. New files added to this set will automatically be appended to the end.')?></span>
@@ -80,7 +92,8 @@ $dh = Core::make('helper/date');
 
                 <tbody class="ccm-file-set-file-list">
 
-                    <?php foreach($files as $f) { ?>
+                    <?php foreach ($files as $f) {
+    ?>
                         <tr id="fID_<?=$f->getFileID()?>" class="">
                             <td><i class="fa fa-arrows-v"></i></td>
                             <td class="ccm-file-manager-search-results-thumbnail"><?=$f->getListingThumbnailImage()?><input type="hidden" name="fsDisplayOrder[]" value="<?=$f->getFileID()?>" /></td>
@@ -89,12 +102,18 @@ $dh = Core::make('helper/date');
                             <td data-key="filename"><?=$f->getFileName()?></td>
                             <td data-key="added" data-sort="<?=$f->getDateAdded()->getTimestamp()?>" ><?=$dh->formatDateTime($f->getDateAdded()->getTimestamp())?></td>
                         </tr>
-                    <?php } ?>
+                    <?php 
+}
+        ?>
                 </tbody>
             </table>
-		<?php } else { ?>
+		<?php 
+    } else {
+        ?>
 			<div class="alert alert-info"><?=t('There are no files in this set.')?></div>
-		<?php } ?>
+		<?php 
+    }
+    ?>
 		</div>
 		<div class="ccm-dashboard-form-actions-wrapper">
 		<div class="ccm-dashboard-form-actions">
@@ -185,7 +204,9 @@ $dh = Core::make('helper/date');
         .ccm-file-set-file-list td.ccm-file-manager-search-results-thumbnail img {max-height: 60px}
 	</style>
 
-<?php } else { ?>
+<?php 
+} else {
+    ?>
 
 <div class="ccm-dashboard-content-full">
     <div data-search-element="wrapper">
@@ -207,8 +228,14 @@ $dh = Core::make('helper/date');
                     <?=$form->label('fsType', t('Type'))?>
                     <div class="ccm-search-field-content">
                         <select id="fsType" class="form-control" name="fsType" style="width: 200px; float: right">
-                        <option value="<?=FileSet::TYPE_PUBLIC?>" <?php if ($fsType != FileSet::TYPE_PRIVATE) { ?> selected <?php } ?>><?=t('Public Sets')?></option>
-                        <option value="<?=FileSet::TYPE_PRIVATE?>" <?php if ($fsType == FileSet::TYPE_PRIVATE) { ?> selected <?php } ?>><?=t('My Sets')?></option>
+                        <option value="<?=FileSet::TYPE_PUBLIC?>" <?php if ($fsType != FileSet::TYPE_PRIVATE) {
+    ?> selected <?php 
+}
+    ?>><?=t('Public Sets')?></option>
+                        <option value="<?=FileSet::TYPE_PRIVATE?>" <?php if ($fsType == FileSet::TYPE_PRIVATE) {
+    ?> selected <?php 
+}
+    ?>><?=t('My Sets')?></option>
                         </select>
                     </div>
                 </div>
@@ -232,30 +259,39 @@ $dh = Core::make('helper/date');
 	</style>
 
     <section style="margin-right: 20px">
-	<?php if (count($fileSets) > 0) { ?>
+	<?php if (count($fileSets) > 0) {
+    ?>
 		
 
-		<?php foreach ($fileSets as $fs) { ?>
+		<?php foreach ($fileSets as $fs) {
+    ?>
 		
 			<div class="ccm-group">
 				<a class="ccm-group-inner" href="<?=$view->url('/dashboard/files/sets/', 'view_detail', $fs->getFileSetID())?>"><i class="fa fa-cubes"></i> <?=$fs->getFileSetDisplayName()?></a>
 			</div>
 		
-		<?php }
-		
-		
-	} else { ?>
+		<?php 
+}
+} else {
+    ?>
 	
 		<p><?=t('No file sets found.')?></p>
 	
-	<?php } ?>
+	<?php 
+}
+    ?>
 
 
-	<?php if ($fsl->requiresPaging()) { ?>
-		<?php $fsl->displayPagingV2(); ?>
-	<?php } ?>
+	<?php if ($fsl->requiresPaging()) {
+    ?>
+		<?php $fsl->displayPagingV2();
+    ?>
+	<?php 
+}
+    ?>
 
         </section>
 
 	</div>
-<?php } ?>	
+<?php 
+} ?>	

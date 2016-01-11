@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Foundation\Runtime;
 
 use Concrete\Core\Application\Application;
@@ -10,7 +9,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class DefaultRuntime implements RuntimeInterface, ApplicationAwareInterface
 {
-
     const STATUS_INACTIVE = 0;
     const STATUS_ACTIVE = 1;
     const STATUS_ENDED = 2;
@@ -29,19 +27,20 @@ class DefaultRuntime implements RuntimeInterface, ApplicationAwareInterface
 
     /**
      * DefaultRuntime constructor.
+     *
      * @param string $boot_class The class to use for the booter
      * @param string $run_class The class to use for the runner
      */
     public function __construct(
-        $boot_class='Concrete\Core\Foundation\Runtime\Boot\DefaultBooter',
-        $run_class='Concrete\Core\Foundation\Runtime\Run\DefaultRunner')
+        $boot_class = 'Concrete\Core\Foundation\Runtime\Boot\DefaultBooter',
+        $run_class = 'Concrete\Core\Foundation\Runtime\Run\DefaultRunner')
     {
         $this->boot_class = $boot_class;
         $this->run_class = $run_class;
     }
 
     /**
-     * Set the application object
+     * Set the application object.
      *
      * @param \Concrete\Core\Application\Application $application
      */
@@ -83,7 +82,7 @@ class DefaultRuntime implements RuntimeInterface, ApplicationAwareInterface
     }
 
     /**
-     * Initialize the environment and prepare for running
+     * Initialize the environment and prepare for running.
      */
     public function boot()
     {
@@ -97,7 +96,7 @@ class DefaultRuntime implements RuntimeInterface, ApplicationAwareInterface
     }
 
     /**
-     * Begin the runtime
+     * Begin the runtime.
      */
     public function run()
     {
@@ -121,7 +120,8 @@ class DefaultRuntime implements RuntimeInterface, ApplicationAwareInterface
     }
 
     /**
-     * The method that handles properly sending a response
+     * The method that handles properly sending a response.
+     *
      * @param \Symfony\Component\HttpFoundation\Response $response
      */
     protected function sendResponse(Response $response)
@@ -131,5 +131,4 @@ class DefaultRuntime implements RuntimeInterface, ApplicationAwareInterface
         // Set the status to ended
         $this->status = self::STATUS_ENDED;
     }
-
 }

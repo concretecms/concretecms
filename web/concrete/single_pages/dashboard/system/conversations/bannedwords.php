@@ -4,15 +4,15 @@ $token = Core::make('token');
 ?>
 <form action="<?=$view->action('save')?>" method='POST'>
 	<?php
-	$token->output('update_banned_words');
-	?>
+    $token->output('update_banned_words');
+    ?>
     <div class="ccm-dashboard-header-buttons">
         <a class='add_word btn btn-primary' href='#'><?=t('Add Word')?></a>
     </div>
 
     <div class="checkbox">
         <label>
-		    <input value=1 name='banned_list_enabled' <?=$bannedListEnabled?'checked ':''?>type='checkbox'> <?=t('Disallow posts that include banned words?')?>
+		    <input value=1 name='banned_list_enabled' <?=$bannedListEnabled ? 'checked ' : ''?>type='checkbox'> <?=t('Disallow posts that include banned words?')?>
         </label>
     </div>
 
@@ -35,9 +35,11 @@ $token = Core::make('token');
 			</thead>
 			<tbody>
 				<?php
-				foreach ($bannedWords as $word) {
-					if (!is_object($word)) continue;
-					?>
+                foreach ($bannedWords as $word) {
+                    if (!is_object($word)) {
+                        continue;
+                    }
+                    ?>
 					<tr>
 						<th class='id'><?=$word->getID()?></th>
 						<td class='word'><span><?=h($word->getWord())?></span><input style='display:none' name='banned_word[]' value='<?=h($word->getWord())?>'></td>
@@ -49,8 +51,9 @@ $token = Core::make('token');
 						 </td>
 					</tr>
 					<?php
-				}
-				?>
+
+                }
+                ?>
 			</tbody>
 		</table>
 	</div>

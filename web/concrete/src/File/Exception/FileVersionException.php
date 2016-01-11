@@ -3,7 +3,6 @@ namespace Concrete\Core\File\Exception;
 
 class FileVersionException extends FileException
 {
-
     protected $fileVersionObject;
 
     /**
@@ -31,5 +30,4 @@ class FileVersionException extends FileException
     {
         return $this->$fileVersionObject;
     }
-
 }

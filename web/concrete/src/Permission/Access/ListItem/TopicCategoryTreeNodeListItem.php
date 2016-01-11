@@ -1,3 +1,6 @@
 <?php
 namespace Concrete\Core\Permission\Access\ListItem;
-class TopicCategoryTreeNodeListItem extends TreeNodeListItem {}
+
+class TopicCategoryTreeNodeListItem extends TreeNodeListItem
+{
+}

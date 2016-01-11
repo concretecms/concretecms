@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Entity\Express\Control;
 
 use Concrete\Core\Express\Form\Control\Form\AssociationControlFormRenderer;
@@ -56,7 +55,6 @@ class AssociationControl extends Control
         $this->association = $association;
     }
 
-
     public function getFormRenderer(BaseEntity $entity = null)
     {
         return new AssociationControlFormRenderer($entity);
@@ -81,7 +79,4 @@ class AssociationControl extends Control
     {
         return 'association';
     }
-
-
-
 }

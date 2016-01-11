@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Entity\Attribute\Value\Value;
 
 /**
@@ -8,8 +7,4 @@ namespace Concrete\Core\Entity\Attribute\Value\Value;
  */
 class RatingValue extends NumberValue
 {
-
-
-
-
 }

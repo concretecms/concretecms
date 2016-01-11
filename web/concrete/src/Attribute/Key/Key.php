@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Attribute\Key;
 
 use Concrete\Core\Foundation\Object;
@@ -802,7 +801,7 @@ class Key extends Object
         if ($return) {
             return $resp;
         } else {
-            print $resp;
+            echo $resp;
         }
     }
 

@@ -1,10 +1,8 @@
 <?php
 namespace Concrete\Core\Page\Controller;
 
-use Concrete\Controller\Element\Attribute\AddKey;
 use Concrete\Controller\Element\Attribute\EditKey;
 use Concrete\Controller\Element\Attribute\Form;
-use Concrete\Controller\Element\Attribute\Header;
 use Concrete\Controller\Element\Attribute\KeyHeader;
 use Concrete\Controller\Element\Attribute\KeyList;
 use Concrete\Controller\Element\Attribute\StandardListHeader;
@@ -12,18 +10,14 @@ use Concrete\Core\Attribute\AttributeKeyInterface;
 use Concrete\Core\Attribute\Category\CategoryInterface;
 use Concrete\Core\Attribute\EntityInterface;
 use Concrete\Core\Attribute\Set;
-use Concrete\Core\Entity\Attribute\Category;
 use Concrete\Core\Entity\Attribute\SetKey;
 use Concrete\Core\Entity\Attribute\Type;
-use Concrete\Core\Controller\ElementController;
 use Concrete\Core\Error\Error;
 use Concrete\Core\Validation\CSRF\Token;
-use Loader;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 abstract class DashboardAttributesPageController extends DashboardPageController
 {
-
     /**
      * @return EntityInterface
      */
@@ -81,7 +75,7 @@ abstract class DashboardAttributesPageController extends DashboardPageController
         if ($e->has()) {
             $this->error = $e;
         } else {
-            /**
+            /*
              * @var $category \Concrete\Core\Attribute\Category\CategoryInterface
              */
             $entity = $this->getCategoryEntityObject();
@@ -118,15 +112,14 @@ abstract class DashboardAttributesPageController extends DashboardPageController
             }
 
             if (is_object($set)) {
-
                 $this->entityManager->refresh($set);
 
                 // Refresh display order just in case.
                 $displayOrder = 0;
-                foreach($set->getAttributeKeys() as $setKey) {
+                foreach ($set->getAttributeKeys() as $setKey) {
                     $setKey->setDisplayOrder($displayOrder);
                     $this->entityManager->persist($setKey);
-                    $displayOrder++;
+                    ++$displayOrder;
                 }
 
                 $setKey = new SetKey();
@@ -138,9 +131,7 @@ abstract class DashboardAttributesPageController extends DashboardPageController
         }
 
         $this->entityManager->flush();
-
     }
-
 
     protected function executeUpdate(AttributeKeyInterface $key, $successURL, $onComplete = null)
     {
@@ -150,8 +141,8 @@ abstract class DashboardAttributesPageController extends DashboardPageController
         if ($e->has()) {
             $this->error = $e;
         } else {
-            /**
-             * @var $category \Concrete\Core\Attribute\Category\CategoryInterface
+            /*
+             * @var \Concrete\Core\Attribute\Category\CategoryInterface
              */
             $category = $entity->getAttributeKeyCategory();
             $category->setEntity($entity);
@@ -169,7 +160,6 @@ abstract class DashboardAttributesPageController extends DashboardPageController
     {
         $entity = $this->getCategoryEntityObject();
         try {
-
             if (!$this->token->validate('delete_attribute')) {
                 throw new \Exception($this->token->getErrorMessage());
             }
@@ -184,7 +174,6 @@ abstract class DashboardAttributesPageController extends DashboardPageController
 
             $this->flash('success', t('Attribute deleted successfully.'));
             $this->redirect($successURL);
-
         } catch (Exception $e) {
             $this->error = $e;
         }
@@ -194,14 +183,14 @@ abstract class DashboardAttributesPageController extends DashboardPageController
     {
         $entity = $this->getCategoryEntityObject();
         if ($entity->allowAttributeSets()) {
-            /**
-             * @var $category CategoryInterface
+            /*
+             * @var CategoryInterface
              */
             $category = $entity->getAttributeKeyCategory();
             $keys = array();
-            foreach((array) $this->request->request->get('akID') as $akID) {
-                /**
-                 * @var $key AttributeInterface
+            foreach ((array) $this->request->request->get('akID') as $akID) {
+                /*
+                 * @var AttributeInterface
                  */
                 $key = $category->getAttributeKeyByID($akID);
                 if (is_object($key)) {
@@ -209,24 +198,23 @@ abstract class DashboardAttributesPageController extends DashboardPageController
                 }
             }
 
-
-            foreach($entity->getAttributeSets() as $set) {
+            foreach ($entity->getAttributeSets() as $set) {
                 if ($set->getAttributeSetID() == $this->request->request->get('asID') && count($keys)) {
 
                     // Clear the keys
-                    foreach($set->getAttributeKeys() as $setKey) {
+                    foreach ($set->getAttributeKeys() as $setKey) {
                         $this->entityManager->remove($setKey);
                     }
                     $this->entityManager->flush();
 
                     $i = 0;
-                    foreach($keys as $key) {
+                    foreach ($keys as $key) {
                         $setKey = new SetKey();
                         $setKey->setAttributeKey($key);
                         $setKey->setAttributeSet($set);
                         $setKey->setDisplayOrder($i);
                         $set->getAttributeKeys()->add($setKey);
-                        $i++;
+                        ++$i;
                     }
                     break;
                 }
@@ -234,11 +222,8 @@ abstract class DashboardAttributesPageController extends DashboardPageController
 
             $this->entityManager->persist($set);
             $this->entityManager->flush();
+
             return new JsonResponse($set);
         }
-
     }
-
-
-
 }

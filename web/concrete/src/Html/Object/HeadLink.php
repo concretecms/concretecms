@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Html\Object;
 
 use HtmlObject\Element;

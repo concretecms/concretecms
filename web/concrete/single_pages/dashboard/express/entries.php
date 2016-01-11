@@ -19,7 +19,8 @@
 
 <?php
 
-if ($list->getTotalResults()) { ?>
+if ($list->getTotalResults()) {
+    ?>
 
 <div class="ccm-dashboard-content-full">
 
@@ -32,24 +33,30 @@ if ($list->getTotalResults()) { ?>
       </tr>
       </thead>
       <tbody>
-      <? foreach($results as $o) { ?>
+      <?php foreach ($results as $o) {
+    ?>
         <tr data-search-row-url="<?=URL::to('/dashboard/express/entries', 'view_entry', $entity->getId(), $o->getId())?>">
         <td><?php echo $o->getFirstName()?></td>
         <td><?php echo $o->getLastName()?></td>
         </tr>
-        <?php } ?>
+        <?php 
+}
+    ?>
       </tbody>
     </table>
   </div>
 
 </div>
 
-<?php } else { ?>
+<?php 
+} else {
+    ?>
 
 
     <p><?=t('None created yet.')?></p>
 
 
-<?php } ?>
+<?php 
+} ?>
 
   </div>

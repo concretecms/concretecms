@@ -6,25 +6,35 @@
         <h5><?=h($title)?></h5>
     </div>
 
-    <?
+    <?php
     if ($mode == 'S' && is_object($tree)):
         $node = $tree->getRootTreeNodeObject();
         $node->populateChildren();
         if (is_object($node)) {
-            $walk = function($node) use (&$walk, &$view, $selectedTopicID) {
-                print '<ul class="ccm-block-topic-list-list">';
-                foreach($node->getChildNodes() as $topic) {
-                    if ($topic instanceof \Concrete\Core\Tree\Node\Type\TopicCategory) { ?>
+            $walk = function ($node) use (&$walk, &$view, $selectedTopicID) {
+                echo '<ul class="ccm-block-topic-list-list">';
+                foreach ($node->getChildNodes() as $topic) {
+                    if ($topic instanceof \Concrete\Core\Tree\Node\Type\TopicCategory) {
+                        ?>
                         <li><?=$topic->getTreeNodeDisplayName()?></li>
-                    <? } else { ?>
+                    <?php 
+                    } else {
+                        ?>
                         <li><a href="<?=$view->controller->getTopicLink($topic)?>"
-                                <? if (isset($selectedTopicID) && $selectedTopicID == $topic->getTreeNodeID()) { ?>
+                                <?php if (isset($selectedTopicID) && $selectedTopicID == $topic->getTreeNodeID()) {
+    ?>
                                     class="ccm-block-topic-list-topic-selected"
-                                <? } ?> ><?=$topic->getTreeNodeDisplayName()?></a></li>
-                    <? } ?>
-                    <? $walk($topic); ?>
-                <? }
-                print '</ul>';
+                                <?php 
+}
+                        ?> ><?=$topic->getTreeNodeDisplayName()?></a></li>
+                    <?php 
+                    }
+                    ?>
+                    <?php $walk($topic);
+                    ?>
+                <?php 
+                }
+                echo '</ul>';
             };
             $walk($node);
         }
@@ -33,17 +43,24 @@
 
     if ($mode == 'P'): ?>
 
-        <? if (count($topics)) { ?>
+        <?php if (count($topics)) {
+    ?>
             <ul class="ccm-block-topic-list-page-topics">
-            <? foreach($topics as $topic) { ?>
+            <?php foreach ($topics as $topic) {
+    ?>
                 <li><a href="<?=$view->controller->getTopicLink($topic)?>"><?=$topic->getTreeNodeDisplayName()?></a></li>
-            <? } ?>
+            <?php 
+}
+    ?>
             </ul>
-        <? } else { ?>
+        <?php 
+} else {
+    ?>
             <?=t('No topics.')?>
-        <? } ?>
+        <?php 
+} ?>
 
-    <? endif; ?>
+    <?php endif; ?>
 
 </div>
 

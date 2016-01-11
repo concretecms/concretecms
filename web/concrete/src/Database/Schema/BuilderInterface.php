@@ -5,8 +5,5 @@ use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
 
 interface BuilderInterface
 {
-
     public function build(ClassMetadataBuilder $builder);
-
-
 }

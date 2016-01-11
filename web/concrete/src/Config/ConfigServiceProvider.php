@@ -6,8 +6,7 @@ use Concrete\Core\Foundation\Service\Provider;
 class ConfigServiceProvider extends Provider
 {
     /**
-     * Configuration repositories
-     * @return void
+     * Configuration repositories.
      */
     public function register()
     {
@@ -20,11 +19,11 @@ class ConfigServiceProvider extends Provider
     }
 
     /**
-     * Create a file config repository
+     * Create a file config repository.
      */
     private function registerFileConfig()
     {
-        $this->app->singleton('config', function($app) {
+        $this->app->singleton('config', function ($app) {
             $loader = $app->make('Concrete\Core\Config\FileLoader');
             $saver = $app->make('Concrete\Core\Config\FileSaver');
 
@@ -33,16 +32,15 @@ class ConfigServiceProvider extends Provider
     }
 
     /**
-     * Create a database config repository
+     * Create a database config repository.
      */
     private function registerDatabaseConfig()
     {
-        $this->app->bindShared('config/database', function($app) {
+        $this->app->bindShared('config/database', function ($app) {
             $loader = $app->make('Concrete\Core\Config\DatabaseLoader');
             $saver = $app->make('Concrete\Core\Config\DatabaseSaver');
 
             return $app->build('Concrete\Core\Config\Repository\Repository', array($loader, $saver, $app->environment()));
         });
     }
-
 }

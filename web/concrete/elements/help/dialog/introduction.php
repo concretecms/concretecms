@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $ag = \Concrete\Core\Http\ResponseAssetGroup::get();
 $ag->requireAsset('core/lightbox');

@@ -22,7 +22,6 @@ use User;
  */
 class BlockType
 {
-
     public $controller;
 
     /**
@@ -87,7 +86,7 @@ class BlockType
     protected $pkgID = 0;
 
     /**
-     * Retrieves a BlockType object based on its btHandle
+     * Retrieves a BlockType object based on its btHandle.
      *
      * @return BlockType
      */
@@ -97,6 +96,7 @@ class BlockType
         $bt = $em->getRepository('\Concrete\Core\Block\BlockType\BlockType')->findOneBy(array('btHandle' => $btHandle));
         if (is_object($bt)) {
             $bt->loadController();
+
             return $bt;
         }
     }
@@ -110,7 +110,6 @@ class BlockType
         $r = $db->MetaTables();
 
         if (in_array('config', array_map('strtolower', $r))) {
-
             if (in_array('btcachedblockrecord', array_map('strtolower', $db->MetaColumnNames('Blocks')))) {
                 $db->Execute('update Blocks set btCachedBlockRecord = null');
             }
@@ -121,7 +120,7 @@ class BlockType
     }
 
     /**
-     * Retrieves a BlockType object based on its btID
+     * Retrieves a BlockType object based on its btID.
      *
      * @return BlockType
      */
@@ -130,6 +129,7 @@ class BlockType
         $em = DB::get()->getEntityManager();
         $bt = $em->getRepository('\Concrete\Core\Block\BlockType\BlockType')->find($btID);
         $bt->loadController();
+
         return $bt;
     }
 
@@ -144,7 +144,6 @@ class BlockType
     /**
      * Installs a BlockType that is passed via a btHandle string. The core or override directories are parsed.
      */
-
     public static function installBlockType($btHandle, $pkg = false)
     {
         $env = Environment::get();
@@ -153,7 +152,7 @@ class BlockType
             $pkgHandle = $pkg->getPackageHandle();
         }
         $class = static::getBlockTypeMappedClass($btHandle, $pkgHandle);
-        $bta = new $class;
+        $bta = new $class();
         $path = dirname($env->getPath(DIRNAME_BLOCKS . '/' . $btHandle . '/' . FILENAME_BLOCK_DB, $pkgHandle));
 
         //Attempt to run the subclass methods (install schema from db.xml, etc.)
@@ -193,7 +192,7 @@ class BlockType
     }
 
     /**
-     * Return the class file that this BlockType uses
+     * Return the class file that this BlockType uses.
      *
      * @return string
      */
@@ -208,11 +207,12 @@ class BlockType
 
         $prefix = $r->override ? true : $pkgHandle;
         $class = core_class('Block\\' . $txt->camelcase($btHandle) . '\\Controller', $prefix);
+
         return $class;
     }
-    
+
     /**
-     * Sets the Ignore Page Theme Gride Framework Container 
+     * Sets the Ignore Page Theme Gride Framework Container.
      */
     public function setBlockTypeIgnorePageThemeGridFrameworkContainer($btIgnorePageThemeGridFrameworkContainer)
     {
@@ -220,7 +220,7 @@ class BlockType
     }
 
     /**
-     * Sets the block type handle
+     * Sets the block type handle.
      */
     public function setBlockTypeName($btName)
     {
@@ -228,7 +228,7 @@ class BlockType
     }
 
     /**
-     * Sets the block type description
+     * Sets the block type description.
      */
     public function setBlockTypeDescription($btDescription)
     {
@@ -236,7 +236,7 @@ class BlockType
     }
 
     /**
-     * Sets the block type handle
+     * Sets the block type handle.
      */
     public function setBlockTypeHandle($btHandle)
     {
@@ -244,9 +244,9 @@ class BlockType
     }
 
     /**
-     * Determines if the block type has templates available
+     * Determines if the block type has templates available.
      *
-     * @return boolean
+     * @return bool
      */
     public function hasAddTemplate()
     {
@@ -255,16 +255,17 @@ class BlockType
         if (file_exists($path . '/' . FILENAME_BLOCK_ADD)) {
             return true;
         }
+
         return false;
     }
 
     /**
      * gets the available composer templates
-     * used for editing instances of the BlockType while in the composer ui in the dashboard
+     * used for editing instances of the BlockType while in the composer ui in the dashboard.
      *
      * @return TemplateFile[]
      */
-    function getBlockTypeComposerTemplates()
+    public function getBlockTypeComposerTemplates()
     {
         $btHandle = $this->getBlockTypeHandle();
         $files = array();
@@ -281,6 +282,7 @@ class BlockType
         foreach (array_unique($files) as $file) {
             $templates[] = new TemplateFile($this, $file);
         }
+
         return TemplateFile::sortTemplateFileList($templates);
     }
 
@@ -293,9 +295,9 @@ class BlockType
     }
 
     /**
-     * if a the current BlockType supports inline edit or not
+     * if a the current BlockType supports inline edit or not.
      *
-     * @return boolean
+     * @return bool
      */
     public function supportsInlineEdit()
     {
@@ -303,9 +305,9 @@ class BlockType
     }
 
     /**
-     * if a the current BlockType supports inline add or not
+     * if a the current BlockType supports inline add or not.
      *
-     * @return boolean
+     * @return bool
      */
     public function supportsInlineAdd()
     {
@@ -313,9 +315,9 @@ class BlockType
     }
 
     /**
-     * Returns true if the block type is internal (and therefore cannot be removed) a core block
+     * Returns true if the block type is internal (and therefore cannot be removed) a core block.
      *
-     * @return boolean
+     * @return bool
      */
     public function isInternalBlockType()
     {
@@ -323,7 +325,7 @@ class BlockType
     }
 
     /**
-     * returns the width in pixels that the block type's editing dialog will open in
+     * returns the width in pixels that the block type's editing dialog will open in.
      *
      * @return int
      */
@@ -333,7 +335,7 @@ class BlockType
     }
 
     /**
-     * returns the height in pixels that the block type's editing dialog will open in
+     * returns the height in pixels that the block type's editing dialog will open in.
      *
      * @return int
      */
@@ -345,6 +347,7 @@ class BlockType
     /**
      * If true, container classes will not be wrapped around this block type in edit mode (if the
      * theme in question supports a grid framework.
+     *
      * @return bool
      */
     public function ignorePageThemeGridFrameworkContainer()
@@ -353,7 +356,7 @@ class BlockType
     }
 
     /**
-     * returns the id of the BlockType's package if it's in a package
+     * returns the id of the BlockType's package if it's in a package.
      *
      * @return int
      */
@@ -363,7 +366,7 @@ class BlockType
     }
 
     /**
-     * gets the BlockTypes description text
+     * gets the BlockTypes description text.
      *
      * @return string
      */
@@ -381,7 +384,7 @@ class BlockType
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isCopiedWhenPropagated()
     {
@@ -391,7 +394,7 @@ class BlockType
     /**
      * If true, this block is not versioned on a page – it is included as is on all versions of the page, even when updated.
      *
-     * @return boolean
+     * @return bool
      */
     public function includeAll()
     {
@@ -415,7 +418,7 @@ class BlockType
     }
 
     /**
-     * returns the handle of the BlockType's package if it's in a package
+     * returns the handle of the BlockType's package if it's in a package.
      *
      * @return string
      */
@@ -425,7 +428,7 @@ class BlockType
     }
 
     /**
-     * Returns an array of all BlockTypeSet objects that this block is in
+     * Returns an array of all BlockTypeSet objects that this block is in.
      */
     public function getBlockTypeSets()
     {
@@ -438,6 +441,7 @@ class BlockType
             $list[] = BlockTypeSet::getByID($row['btsID']);
         }
         $r->Close();
+
         return $list;
     }
 
@@ -451,9 +455,10 @@ class BlockType
 
     /**
      * Returns the number of unique instances of this block throughout the entire site
-     * note - this count could include blocks in areas that are no longer rendered by the theme
+     * note - this count could include blocks in areas that are no longer rendered by the theme.
      *
-     * @param boolean specify true if you only want to see the number of blocks in active pages
+     * @param bool specify true if you only want to see the number of blocks in active pages
+     *
      * @return int
      */
     public function getCount($ignoreUnapprovedVersions = false)
@@ -472,35 +477,34 @@ class BlockType
         } else {
             $count = $db->GetOne("SELECT count(btID) FROM Blocks WHERE btID = ?", array($this->btID));
         }
+
         return $count;
     }
 
     /**
      * Not a permissions call. Actually checks to see whether this block is not an internal one.
      *
-     * @return boolean
+     * @return bool
      */
     public function canUnInstall()
     {
-        return (!$this->isBlockTypeInternal());
+        return !$this->isBlockTypeInternal();
     }
 
     /**
-     * if a the current BlockType is Internal or not - meaning one of the core built-in concrete5 blocks
+     * if a the current BlockType is Internal or not - meaning one of the core built-in concrete5 blocks.
      *
-     * @access private
-     * @return boolean
+     * @return bool
      */
-    function isBlockTypeInternal()
+    public function isBlockTypeInternal()
     {
         return $this->btIsInternal;
     }
 
     /**
-     * Renders a particular view of a block type, using the public $controller variable as the block type's controller
+     * Renders a particular view of a block type, using the public $controller variable as the block type's controller.
      *
      * @param string template 'view' for the default
-     * @return void
      */
     public function render($view = 'view')
     {
@@ -509,7 +513,7 @@ class BlockType
     }
 
     /**
-     * get's the block type controller
+     * get's the block type controller.
      *
      * @return BlockTypeController
      */
@@ -519,11 +523,11 @@ class BlockType
     }
 
     /**
-     * Gets the custom templates available for the current BlockType
+     * Gets the custom templates available for the current BlockType.
      *
      * @return TemplateFile[]
      */
-    function getBlockTypeCustomTemplates()
+    public function getBlockTypeCustomTemplates()
     {
         $btHandle = $this->getBlockTypeHandle();
         $fh = Loader::helper('file');
@@ -549,13 +553,14 @@ class BlockType
         foreach (array_unique($files) as $file) {
             $templates[] = new TemplateFile($this, $file);
         }
+
         return TemplateFile::sortTemplateFileList($templates);
     }
 
     /**
      * @private
      */
-    function setBlockTypeDisplayOrder($displayOrder)
+    public function setBlockTypeDisplayOrder($displayOrder)
     {
         $db = Loader::db();
 
@@ -582,9 +587,7 @@ class BlockType
     }
 
     /**
-     * refreshes the BlockType's database schema throws an Exception if error
-     *
-     * @return void
+     * refreshes the BlockType's database schema throws an Exception if error.
      */
     public function refresh()
     {
@@ -595,7 +598,7 @@ class BlockType
         }
 
         $class = static::getBlockTypeMappedClass($this->btHandle, $pkgHandle);
-        $bta = new $class;
+        $bta = new $class();
 
         $this->loadFromController($bta);
 
@@ -614,7 +617,7 @@ class BlockType
             $comparator = new \Doctrine\DBAL\Schema\Comparator();
             $schemaDiff = $comparator->compare($fromSchema, $toSchema);
             $saveQueries = $schemaDiff->toSaveSql($db->getDatabasePlatform());
-            foreach($saveQueries as $query) {
+            foreach ($saveQueries as $query) {
                 $db->query($query);
             }
         }
@@ -678,6 +681,7 @@ class BlockType
      * @param mixed            $data
      * @param bool|\Collection $c
      * @param bool|\Area       $a
+     *
      * @return bool|\Concrete\Core\Block\Block
      */
     public function add($data, $c = false, $a = false)
@@ -724,19 +728,17 @@ class BlockType
             }
             $bc = new $class($nb);
             $bc->save($data);
+
             return Block::getByID($bIDnew);
-
         }
-
     }
 
     /**
-     * Loads controller
+     * Loads controller.
      */
     protected function loadController()
     {
         $class = static::getBlockTypeMappedClass($this->getBlockTypeHandle(), $this->getPackageHandle());
         $this->controller = new $class($this);
     }
-
 }

@@ -1,8 +1,5 @@
 <?php
-
 namespace Concrete\Core\Entity\Express;
-
-use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @Entity
@@ -12,7 +9,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 abstract class Association
 {
-
     abstract public function getAssociationBuilder();
 
     /**
@@ -144,9 +140,5 @@ abstract class Association
         }
     }
 
-
     abstract public function getFormatter();
-
-
-
 }

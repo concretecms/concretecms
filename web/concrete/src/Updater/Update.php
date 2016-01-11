@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Updater;
 
 use Concrete\Core\Cache\Cache;
@@ -133,9 +132,9 @@ class Update
             $body = @curl_exec($curl_handle);
 
             $update = RemoteApplicationUpdateFactory::getFromJSON($body);
+
             return $update;
         }
-
     }
 
     /**

@@ -1,16 +1,11 @@
 <?php
 namespace Concrete\Core\Express;
 
-
-
-use Concrete\Core\Application\Application;
 use Doctrine\ORM\EntityManagerInterface;
 
 class NamingStrategy implements \Doctrine\ORM\Mapping\NamingStrategy
 {
-
     protected $rootEntityManager;
-
 
     protected $table_prefix;
 
@@ -58,6 +53,7 @@ class NamingStrategy implements \Doctrine\ORM\Mapping\NamingStrategy
 
         $repository = $this->rootEntityManager->getRepository('Concrete\Core\Entity\Express\Entity');
         $entity = $repository->findOneBy(array('name' => $name));
+
         return $entity->getTableName();
     }
 
@@ -77,6 +73,4 @@ class NamingStrategy implements \Doctrine\ORM\Mapping\NamingStrategy
     {
         return lcfirst($this->classToTableName($entityName)) . strtoupper(($referencedColumnName ?: $this->referenceColumnName()));
     }
-
-
 }

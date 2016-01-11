@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Attribute;
 
 use Concrete\Core\Entity\Attribute\Key\Key;
@@ -7,14 +6,11 @@ use Concrete\Core\Entity\Attribute\Set as AttributeSet;
 use Concrete\Core\Entity\Attribute\SetKey;
 use Doctrine\ORM\EntityManager;
 
-
 /**
- * Handles adding and removing keys from attribute sets
- *
+ * Handles adding and removing keys from attribute sets.
  */
 class SetManager
 {
-
     protected $entityManager;
     protected $set;
 
@@ -27,7 +23,6 @@ class SetManager
     {
         $this->set = $set;
     }
-
 
     public function addKey(Key $key)
     {
@@ -45,5 +40,4 @@ class SetManager
         $this->entityManager->persist($setKey);
         $this->entityManager->flush();
     }
-
 }

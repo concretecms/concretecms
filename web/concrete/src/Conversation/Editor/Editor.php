@@ -1,8 +1,6 @@
 <?php
-
 namespace Concrete\Core\Conversation\Editor;
 
-use Config;
 use Conversation;
 use Core;
 use Database;
@@ -11,7 +9,6 @@ use Concrete\Core\Conversation\Message\Message;
 use Concrete\Core\Foundation\Object;
 use Package;
 use Concrete\Core\Package\PackageList;
-use View;
 
 abstract class Editor extends Object
 {

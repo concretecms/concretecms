@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Entity\Express;
 
 use Concrete\Core\Express\Association\Builder\OneToOneAssociationBuilder;
@@ -10,7 +9,6 @@ use Concrete\Core\Express\Association\Formatter\OneToOneFormatter;
  */
 class OneToOneAssociation extends Association
 {
-
     const TYPE_OWNING = 'owning';
     const TYPE_INVERSE = 'inverse';
 
@@ -44,7 +42,4 @@ class OneToOneAssociation extends Association
     {
         return new OneToOneFormatter($this);
     }
-
-
-
 }

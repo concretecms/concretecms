@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Block\CorePageTypeComposerControlOutput;
 
 use Concrete\Core\Block\BlockController;

@@ -6,12 +6,11 @@ use Loader;
 use QueueableJob;
 use Group;
 use User;
-use \ZendQueue\Queue as ZendQueue;
-use \ZendQueue\Message as ZendQueueMessage;
+use ZendQueue\Queue as ZendQueue;
+use ZendQueue\Message as ZendQueueMessage;
 
 class CheckAutomatedGroups extends QueueableJob
 {
-
     public $jSupportsQueue = true;
 
     public function getJobName()

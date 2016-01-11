@@ -1,10 +1,10 @@
 <?php
 namespace Concrete\Tests\Core\File\StorageLocation;
-use \Concrete\Core\File\StorageLocation\Type\Type;
-use \Concrete\Core\File\StorageLocation\StorageLocation;
 
-class ConfigurationTest extends \ConcreteDatabaseTestCase {
+use Concrete\Core\File\StorageLocation\Type\Type;
 
+class ConfigurationTest extends \ConcreteDatabaseTestCase
+{
     protected $fixtures = array();
     protected $tables = array(
         'FileStorageLocationTypes',
@@ -23,7 +23,7 @@ class ConfigurationTest extends \ConcreteDatabaseTestCase {
         $this->assertInstanceOf('\Concrete\Core\File\StorageLocation\Configuration\LocalConfiguration', $configuration);
         $this->assertEquals($this->getStorageDirectory(), $configuration->getRootPath());
 
-        $req = new \Concrete\Core\Http\Request;
+        $req = new \Concrete\Core\Http\Request();
         $req->setMethod('POST');
         $data = array();
         $data['path'] = '/foo/bar/path';
@@ -32,6 +32,4 @@ class ConfigurationTest extends \ConcreteDatabaseTestCase {
 
         $this->assertEquals('/foo/bar/path', $configuration->getRootPath());
     }
-
 }
- 

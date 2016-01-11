@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Updater;
 
 use Concrete\Core\Config\Renderer;
@@ -8,7 +7,7 @@ use Concrete\Core\Marketplace\Marketplace;
 use Concrete\Core\Package\Package;
 use Concrete\Core\Updater\ApplicationUpdate\DiagnosticFactory;
 use Zend\Http\Client;
-use \Config;
+use Config;
 use Zend\Http\Request;
 
 class ApplicationUpdate
@@ -107,9 +106,10 @@ class ApplicationUpdate
 
         $concrete = @include $version_file;
         if ($concrete['version'] != false) {
-            $obj = new ApplicationUpdate();
+            $obj = new self();
             $obj->version = $concrete['version'];
             $obj->identifier = $dir;
+
             return $obj;
         }
     }
@@ -125,12 +125,12 @@ class ApplicationUpdate
     }
 
     /**
-     * Given the current update object, sends information to concrete5.org to determine updatability
+     * Given the current update object, sends information to concrete5.org to determine updatability.
+     *
      * @return \Concrete\Core\Updater\ApplicationUpdateDiagnostic
      */
     public function getDiagnosticObject()
     {
-
         $request = new Request();
         $request->setUri(Config::get('concrete.updates.services.inspect_update'));
         $request->setMethod('POST');
@@ -144,7 +144,7 @@ class ApplicationUpdate
             $request->getPost()->set('marketplace_token', $config->get('concrete.marketplace.token'));
             $list = Package::getInstalledList();
             $packages = array();
-            foreach($list as $pkg) {
+            foreach ($list as $pkg) {
                 $packages[] = array('version' => $pkg->getPackageVersion(), 'handle' => $pkg->getPackageHandle());
             }
             $request->getPost()->set('packages', $packages);
@@ -158,7 +158,7 @@ class ApplicationUpdate
         $body = $response->getBody();
 
         $diagnostic = DiagnosticFactory::getFromJSON($body);
+
         return $diagnostic;
     }
-
 }

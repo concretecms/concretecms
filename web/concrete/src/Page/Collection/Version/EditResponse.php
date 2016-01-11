@@ -3,7 +3,6 @@ namespace Concrete\Core\Page\Collection\Version;
 
 use Core;
 use PageEditResponse;
-use Loader;
 use Page;
 use Permissions;
 use stdClass;
@@ -40,11 +39,11 @@ class EditResponse extends PageEditResponse
 
         $versions = array();
         foreach ($this->versions as $v) {
-            $obj = new stdClass;
+            $obj = new stdClass();
             $obj->cvID = $v->getVersionID();
             $obj->cvIsApproved = $v->isApproved();
             $obj->cpCanDeletePageVersions = $cpCanDeletePageVersions;
-            $obj->cvDateVersionCreated = $dateHelper->formatDateTime($v->getVersionDateCreated()); 
+            $obj->cvDateVersionCreated = $dateHelper->formatDateTime($v->getVersionDateCreated());
             $obj->cvAuthorUserName = $v->getVersionAuthorUserName();
             $obj->cvApproverUserName = $v->getVersionApproverUserName();
             $obj->cvComments = $v->getVersionComments();
@@ -62,5 +61,4 @@ class EditResponse extends PageEditResponse
 
         return $o;
     }
-
 }

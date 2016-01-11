@@ -26,7 +26,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
         if (count($sets) == 1) {
             $asID = $sets[0]->getAttributeSetID();
         }
-        print $form->hidden('akID', $key->getAttributeKeyID());
+        echo $form->hidden('akID', $key->getAttributeKeyID());
     }
     ?>
 
@@ -51,21 +51,23 @@ defined('C5_EXECUTE') or die("Access Denied.");
             </div>
         </div>
 
-        <? if ($category && $category->allowAttributeSets() == \Concrete\Core\Attribute\EntityInterface::ASET_ALLOW_SINGLE) { ?>
+        <?php if ($category && $category->allowAttributeSets() == \Concrete\Core\Attribute\EntityInterface::ASET_ALLOW_SINGLE) {
+    ?>
             <div class="form-group">
                 <?= $form->label('asID', t('Set')) ?>
                 <div class="controls">
-                    <?
+                    <?php
                     $sel = array('0' => t('** None'));
-                    $sets = $category->getAttributeSets();
-                    foreach ($sets as $as) {
-                        $sel[$as->getAttributeSetID()] = $as->getAttributeSetDisplayName();
-                    }
-                    print $form->select('asID', $sel, $asID);
-                    ?>
+    $sets = $category->getAttributeSets();
+    foreach ($sets as $as) {
+        $sel[$as->getAttributeSetID()] = $as->getAttributeSetDisplayName();
+    }
+    echo $form->select('asID', $sel, $asID);
+    ?>
                 </div>
             </div>
-        <? } ?>
+        <?php 
+} ?>
 
         <div class="form-group">
             <label class="control-label"><?= t('Searchable') ?></label>
@@ -103,10 +105,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
     </fieldset>
 
     <?= $form->hidden('atID', $type->getAttributeTypeID()) ?>
-    <? if ($category) { ?>
-        <?= $form->hidden('akCategoryID', $category->getAttributeKeyCategoryID()); ?>
+    <?php if ($category) {
+    ?>
+        <?= $form->hidden('akCategoryID', $category->getAttributeKeyCategoryID());
+    ?>
 
-        <?
+        <?php
 
         if ($category->getPackageID() > 0) {
             @Loader::packageElement('attribute/categories/' . $category->getAttributeKeyCategoryHandle(),
@@ -115,26 +119,31 @@ defined('C5_EXECUTE') or die("Access Denied.");
             @Loader::element('attribute/categories/' . $category->getAttributeKeyCategoryHandle(),
                 array('key' => $key));
         }
-        ?>
+    ?>
 
-    <? } ?>
+    <?php 
+} ?>
 
     <?= $valt->output('add_or_update_attribute') ?>
-    <? $type->render('type_form', $key); ?>
+    <?php $type->render('type_form', $key); ?>
 
-    <? if (!isset($back)) {
-        $back = URL::page($c);
-    }
+    <?php if (!isset($back)) {
+    $back = URL::page($c);
+}
     ?>
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
             <a href="<?= $back ?>" class="btn pull-left btn-default"><?= t('Back') ?></a>
-            <? if (is_object($key)) { ?>
+            <?php if (is_object($key)) {
+    ?>
                 <button type="submit" class="btn btn-primary pull-right"><?= t('Save') ?></button>
-            <? } else { ?>
+            <?php 
+} else {
+    ?>
                 <button type="submit" class="btn btn-primary pull-right"><?= t('Add') ?></button>
-            <? } ?>
+            <?php 
+} ?>
         </div>
     </div>
 

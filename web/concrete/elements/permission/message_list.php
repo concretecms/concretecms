@@ -1,24 +1,35 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <div class="clearfix">
 
-<? if (isset($_REQUEST['message'])) { ?>
+<?php if (isset($_REQUEST['message'])) {
+    ?>
 
 
 <div class="alert alert-success" id="ccm-permissions-message-list">
-<?
-if ($_REQUEST['message'] == 'custom_options_saved') { ?>
+<?php
+if ($_REQUEST['message'] == 'custom_options_saved') {
+    ?>
 	<?=t('Custom Options saved.')?>
-<? } else if ($_REQUEST['message'] == 'workflows_saved') { ?>
+<?php 
+} elseif ($_REQUEST['message'] == 'workflows_saved') {
+    ?>
 	<?=t('Workflow Options saved.')?>
-<? } else if ($_REQUEST['message'] == 'entity_removed') { ?>
+<?php 
+} elseif ($_REQUEST['message'] == 'entity_removed') {
+    ?>
 	<?=t('User/Group Removed')?>
-<? } else if ($_REQUEST['message'] == 'entity_added') { ?>
+<?php 
+} elseif ($_REQUEST['message'] == 'entity_added') {
+    ?>
 	<?=t('User/Group Added')?>
-<? } ?>
+<?php 
+}
+    ?>
 </div>
 
-<? } ?>
+<?php 
+} ?>
 </div>
 <script type="text/javascript">
 $(function() {

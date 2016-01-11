@@ -1,13 +1,10 @@
 <?php
-
 namespace Concrete\Core\Express\Form\Control;
 
-use Concrete\Core\Application\Application;
 use Concrete\Core\Express\Form\RendererFactory;
 
 class EntityPropertyControlView implements ControlViewInterface
 {
-
     protected $factory;
     protected $scopeItems = array();
 
@@ -36,12 +33,8 @@ class EntityPropertyControlView implements ControlViewInterface
         $label = $control->getDisplayLabel();
 
         ob_start();
-        include($template);
+        include $template;
+
         return ob_get_clean();
     }
-
-
-
-
-
 }

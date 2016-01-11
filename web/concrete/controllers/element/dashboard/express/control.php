@@ -5,7 +5,6 @@ use Concrete\Core\Controller\ElementController;
 
 class Control extends ElementController
 {
-
     protected $control;
 
     public function __construct(\Concrete\Core\Entity\Express\Control\Control $control)
@@ -22,6 +21,4 @@ class Control extends ElementController
     {
         $this->set('control', $this->control);
     }
-
-
 }

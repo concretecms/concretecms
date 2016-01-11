@@ -5,7 +5,8 @@ use Page;
 use Permissions;
 
 /**
- * Class CollectionVersionResponse
+ * Class CollectionVersionResponse.
+ *
  * @package Concrete\Core\Permission\Response
  */
 class CollectionVersionResponse extends Response
@@ -26,7 +27,7 @@ class CollectionVersionResponse extends Response
         } elseif (!$this->object->isMostRecent()) {
             return VERSION_NOT_RECENT;
         }
+
         return parent::testForErrors();
     }
-
 }

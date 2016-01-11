@@ -1,8 +1,8 @@
-<?
+<?php
 
-class BlockStyleTest extends PageTestCase {
-
-     public function setUp()
+class BlockStyleTest extends PageTestCase
+{
+    public function setUp()
     {
         $this->tables = array_merge($this->tables,
            array('StyleCustomizerInlineStyleSets', 'BlockTypes', 'Blocks', 'AttributeKeyCategories')
@@ -23,7 +23,6 @@ class BlockStyleTest extends PageTestCase {
 
     public function testPageStylesBlock()
     {
-
         $ps = new \Concrete\Core\StyleCustomizer\Inline\StyleSet();
         $ps->setBackgroundColor('#aaa');
         $ps->save();

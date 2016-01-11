@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Entity\Attribute;
 
 use Concrete\Core\Attribute\EntityInterface;
@@ -13,7 +12,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Category implements EntityInterface
 {
-
     public function __construct()
     {
         $this->types = new ArrayCollection();
@@ -98,6 +96,7 @@ class Category implements EntityInterface
         $manager = \Core::make('Concrete\Core\Attribute\Category\Manager');
         $controller = $manager->driver($this->getAttributeKeyCategoryHandle());
         $controller->setCategoryEntity($this);
+
         return $controller;
     }
 
@@ -139,10 +138,4 @@ class Category implements EntityInterface
     {
         $this->types = $types;
     }
-
-
-
-
-
 }
-

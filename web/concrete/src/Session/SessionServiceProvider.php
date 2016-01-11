@@ -15,5 +15,4 @@ class SessionServiceProvider extends ServiceProvider
         });
         $this->app->bind('Symfony\Component\HttpFoundation\Session\Session', 'session');
     }
-
 }

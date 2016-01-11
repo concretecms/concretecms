@@ -4,7 +4,6 @@ require_once __DIR__ . '/ExpressEntityManagerTestCaseTrait.php';
 
 class ObjectManagerTest extends PHPUnit_Framework_TestCase
 {
-
     use ExpressEntityManagerTestCaseTrait;
 
     public function tearDown()
@@ -41,7 +40,7 @@ class ObjectManagerTest extends PHPUnit_Framework_TestCase
     public function testBackendCreateAPI()
     {
         $em = $this->getMockEntityManager();
-        Core::bind('Doctrine\ORM\EntityManager', function() use ($em) {
+        Core::bind('Doctrine\ORM\EntityManager', function () use ($em) {
             return $em;
         });
 
@@ -54,5 +53,4 @@ class ObjectManagerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($student->getFirstName(), 'Andrew');
         $this->assertEquals($student->getProperty('first_name'), 'Andrew');
     }
-
 }

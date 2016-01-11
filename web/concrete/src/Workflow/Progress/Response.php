@@ -1,16 +1,19 @@
 <?php
 namespace Concrete\Core\Workflow\Progress;
-use \Concrete\Core\Foundation\Object;
-class Response extends Object {
 
-	protected $wprURL = '';
+use Concrete\Core\Foundation\Object;
 
-	public function setWorkflowProgressResponseURL($wprURL) {
-		$this->wprURL = $wprURL;
-	}
+class Response extends Object
+{
+    protected $wprURL = '';
 
-	public function getWorkflowProgressResponseURL() {
-		return $this->wprURL;
-	}
+    public function setWorkflowProgressResponseURL($wprURL)
+    {
+        $this->wprURL = $wprURL;
+    }
 
+    public function getWorkflowProgressResponseURL()
+    {
+        return $this->wprURL;
+    }
 }

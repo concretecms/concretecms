@@ -16,8 +16,9 @@ foreach ($filters as $filter) {
             echo "<h3>", t('Failed to render filter view.'), "</h3>";
             echo "<pre>", $e->getMessage(), "</pre>";
         }
-        ?>
+    ?>
     </div>
     <?php
+
 }
 ?>

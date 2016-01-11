@@ -1,19 +1,18 @@
 <?php
-use Concrete\Core\Express\ObjectBuilder;
+
 
 require_once __DIR__ . "/ObjectBuilderTestTrait.php";
 
 class ObjectBuilderTest extends PHPUnit_Framework_TestCase
 {
-
     use \ObjectBuilderTestTrait;
 
     public function testCreateDataObject()
     {
         $builder = $this->getObjectBuilder();
 
-        /**
-         * @var $object \Concrete\Core\Entity\Express\Entity
+        /*
+         * @var \Concrete\Core\Entity\Express\Entity
          */
         $object = $builder->buildObject();
         $this->assertInstanceOf('\Concrete\Core\Entity\Express\Entity', $object);
@@ -35,6 +34,4 @@ class ObjectBuilderTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(true, $bio->isAttributeKeyContentIndexed());
         $this->assertEquals(true, $bio->isAttributeKeySearchable());
     }
-
-
 }

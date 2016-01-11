@@ -1,7 +1,8 @@
 <?php
+
 defined('C5_EXECUTE') or define('C5_EXECUTE', md5(uniqid()));
 
-/**
+/*
  * ----------------------------------------------------------------------------
  * Assets (Images, JS, etc....) URLs
  * ----------------------------------------------------------------------------
@@ -17,9 +18,7 @@ define('ASSETS_URL_CSS', $ap . '/css');
 define('ASSETS_URL_JAVASCRIPT', $ap . '/js');
 define('ASSETS_URL_IMAGES', $ap . '/images');
 
-
-
-/**
+/*
  * ----------------------------------------------------------------------------
  * Relative paths to certain directories and assets. Actually accesses file
  * system
@@ -40,9 +39,7 @@ define('PACKAGE_GENERIC_ICON', ASSETS_URL_IMAGES . '/icons/icon_package_generic.
 define('ASSETS_URL_THEMES_NO_THUMBNAIL', ASSETS_URL_IMAGES . '/spacer.gif');
 define('AL_ICON_DEFAULT', ASSETS_URL_IMAGES . '/icons/filetypes/default.png');
 
-
-
-/**
+/*
  * ----------------------------------------------------------------------------
  * Relative paths to tools. Passes through concrete5.
  * ----------------------------------------------------------------------------

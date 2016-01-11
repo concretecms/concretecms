@@ -1,10 +1,8 @@
 <?php
-
 namespace Concrete\Core\Updater\ApplicationUpdate;
 
 class Version
 {
-
     protected $version;
     protected $releaseNotes;
     protected $releaseNotesUrl;
@@ -56,5 +54,4 @@ class Version
     {
         $this->version = $version;
     }
-
 }

@@ -10,7 +10,6 @@ use Permissions;
 
 class GroupList extends DatabaseItemList
 {
-
     protected $includeAllGroups = false;
 
     protected $autoSortColumns = array('gName', 'gID');
@@ -22,13 +21,14 @@ class GroupList extends DatabaseItemList
 
     /**
      * Filters keyword fields by keywords (including name and description).
+     *
      * @param $keywords
      */
     public function filterByKeywords($keywords)
     {
         $expressions = array(
             $this->query->expr()->like('g.gName', ':keywords'),
-            $this->query->expr()->like('g.gDescription', ':keywords')
+            $this->query->expr()->like('g.gDescription', ':keywords'),
         );
 
         $expr = $this->query->expr();
@@ -84,21 +84,25 @@ class GroupList extends DatabaseItemList
             $query->andWhere('g.gID > :minGroupID');
             $query->setParameter('minGroupID', REGISTERED_GROUP_ID);
         }
+
         return $query;
     }
 
     /**
-     * The total results of the query
+     * The total results of the query.
+     *
      * @return int
      */
     public function getTotalResults()
     {
         $query = $this->deliverQueryObject();
+
         return $query->select('count(g.gID)')->setMaxResults(1)->execute()->fetchColumn();
     }
 
     /**
      * Gets the pagination object for the query.
+     *
      * @return Pagination
      */
     protected function createPaginationObject()
@@ -107,18 +111,19 @@ class GroupList extends DatabaseItemList
             $query->select('count(g.gID)')->setMaxResults(1);
         });
         $pagination = new Pagination($this, $adapter);
+
         return $pagination;
     }
 
     /**
      * @param $queryRow
+     *
      * @return \Concrete\Core\User\Group\Group
      */
     public function getResult($queryRow)
     {
         $g = Group::getByID($queryRow['gID']);
+
         return $g;
     }
-
-
 }

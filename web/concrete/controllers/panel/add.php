@@ -11,7 +11,6 @@ use StackList;
 
 class Add extends BackendInterfacePageController
 {
-
     protected $viewPath = '/panels/add';
     protected $pagetypes = array();
 
@@ -56,6 +55,4 @@ class Add extends BackendInterfacePageController
     {
         return $this->permissions->canEditPageContents();
     }
-
 }
-

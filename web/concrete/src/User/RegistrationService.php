@@ -1,17 +1,14 @@
 <?php
-
 namespace Concrete\Core\User;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Database\Connection\Connection;
-use Concrete\Core\Database\DatabaseManager;
 use Concrete\Core\User\Event\AddUser;
 use Concrete\Core\User\Event\UserInfoWithPassword;
 use Hautelook\Phpass\PasswordHash;
 
 class RegistrationService implements RegistrationServiceInterface
 {
-
     protected $connection;
     protected $application;
     protected $userInfoFactory;
@@ -26,6 +23,7 @@ class RegistrationService implements RegistrationServiceInterface
     /**
      * @param string $uPasswordEncrypted
      * @param string $uEmail
+     *
      * @return UserInfo|null
      */
     public function createSuperUser($uPasswordEncrypted, $uEmail)
@@ -38,12 +36,14 @@ class RegistrationService implements RegistrationServiceInterface
         $res = $r->execute($v);
         if ($res) {
             $newUID = $this->connection->lastInsertId();
+
             return $this->userInfoFactory->getByID($newUID);
         }
     }
 
     /**
      * @param array $data
+     *
      * @return UserInfo|false|null
      */
     public function create($data)
@@ -120,8 +120,7 @@ class RegistrationService implements RegistrationServiceInterface
             $data['uIsValidated'] = 0;
         }
         $ui = $this->create($data);
+
         return $ui;
     }
-
-
 }

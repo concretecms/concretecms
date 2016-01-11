@@ -1,18 +1,17 @@
 <?php
 namespace Concrete\Controller\Dialog\File;
 
-use \Concrete\Controller\Backend\UserInterface\File as BackendInterfaceFileController;
-use \Concrete\Core\Http\ResponseAssetGroup;
+use Concrete\Controller\Backend\UserInterface\File as BackendInterfaceFileController;
+use Concrete\Core\Http\ResponseAssetGroup;
 use Permissions;
 use File;
 use FileAttributeKey;
-use \Concrete\Core\File\EditResponse as FileEditResponse;
+use Concrete\Core\File\EditResponse as FileEditResponse;
 use Loader;
 use Exception;
 
 class Properties extends BackendInterfaceFileController
 {
-
     protected $viewPath = '/dialogs/file/properties';
     protected $controllerActionPath = '/ccm/system/dialogs/file/properties';
 
@@ -57,7 +56,6 @@ class Properties extends BackendInterfaceFileController
         }
 
         throw new Exception(t('Access Denied'));
-
     }
 
     public function update_attribute()
@@ -81,7 +79,6 @@ class Properties extends BackendInterfaceFileController
         }
 
         throw new Exception(t('Access Denied'));
-
     }
 
     public function save()
@@ -108,8 +105,6 @@ class Properties extends BackendInterfaceFileController
                 $sr->setMessage(t('File updated successfully.'));
                 $sr->setAdditionalDataAttribute('value', $value);
                 $sr->outputJSON();
-
-
             } else {
                 throw new Exception(t('Access Denied.'));
             }
@@ -117,6 +112,4 @@ class Properties extends BackendInterfaceFileController
             throw new Exception(t('Access Denied.'));
         }
     }
-
 }
-

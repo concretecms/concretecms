@@ -1,5 +1,7 @@
 <?php
+
 use Concrete\Block\PageList\Controller;
+
 $request = Request::getInstance();
 $request->setCurrentPage(Page::getByID($_REQUEST['current_page']));
 $previewMode = true;
@@ -10,14 +12,14 @@ $_REQUEST['num'] = ($_REQUEST['num'] > 0) ? $_REQUEST['num'] : 0;
 $_REQUEST['cThis'] = ($_REQUEST['cParentID'] == $_REQUEST['current_page']) ? '1' : '0';
 $_REQUEST['cParentID'] = ($_REQUEST['cParentID'] == 'OTHER') ? $_REQUEST['cParentIDValue'] : $_REQUEST['cParentID'];
 
-if($_REQUEST['filterDateOption'] != 'between') {
+if ($_REQUEST['filterDateOption'] != 'between') {
     $_REQUEST['filterDateStart'] = null;
     $_REQUEST['filterDateEnd'] = null;
 }
 
 if ($_REQUEST['filterDateOption'] == 'past') {
     $_REQUEST['filterDateDays'] = $_REQUEST['filterDatePast'];
-} else if ($_REQUEST['filterDateOption'] == 'future') {
+} elseif ($_REQUEST['filterDateOption'] == 'future') {
     $_REQUEST['filterDateDays'] = $_REQUEST['filterDateFuture'];
 } else {
     $_REQUEST['filterDateDays'] = null;
@@ -31,7 +33,7 @@ $controller->ptID = $_REQUEST['ptID'];
 $controller->rss = $_REQUEST['rss'];
 $controller->displayFeaturedOnly = $_REQUEST['displayFeaturedOnly'];
 $controller->displayAliases = $_REQUEST['displayAliases'];
-$controller->paginate = !!$_REQUEST['paginate'];
+$controller->paginate = (bool) $_REQUEST['paginate'];
 $controller->enableExternalFiltering = $_REQUEST['enableExternalFiltering'];
 $controller->filterByRelated = $_REQUEST['filterByRelated'];
 $controller->relatedTopicAttributeKeyHandle = $_REQUEST['relatedTopicAttributeKeyHandle'];
@@ -52,5 +54,5 @@ $pages = $controller->get('pages');
 
 extract($controller->getSets());
 
-require(dirname(__FILE__) . '/../view.php');
+require dirname(__FILE__) . '/../view.php';
 exit;

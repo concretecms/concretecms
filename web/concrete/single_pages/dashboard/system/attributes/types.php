@@ -1,7 +1,8 @@
-<? defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Core\Attribute\Type as AttributeType;
 use \Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
 use \Concrete\Core\Attribute\PendingType as PendingAttributeType;
+
 $types = AttributeType::getAttributeTypeList();
 $categories = AttributeKeyCategory::getList();
 $txt = Loader::helper('text');
@@ -13,45 +14,56 @@ echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Attr
 	<table border="0" cellspacing="1" cellpadding="0" border="0" class="table">
 		<tr>
 			<th><?=t('Name')?></th>
-			<? foreach($categories as $cat) { ?>
+			<?php foreach ($categories as $cat) {
+    ?>
 				<th><?=$txt->unhandle($cat->getAttributeKeyCategoryHandle())?></th>
-			<? } ?>
+			<?php 
+} ?>
 		</tr>
-		<?php foreach($types as $at) { ?>
+		<?php foreach ($types as $at) {
+    ?>
 
 			<tr>
 				<td><?=$at->getAttributeTypeDisplayName()?></td>
-				<? foreach($categories as $cat) { ?>
+				<?php foreach ($categories as $cat) {
+    ?>
 					<td style="width: 1px; text-align: center"><?=$form->checkbox($cat->getAttributeKeyCategoryHandle() . '[]', $at->getAttributeTypeID(), $at->isAssociatedWithCategory($cat))?></td>
-				<? } ?>
+				<?php 
+}
+    ?>
 			</tr>
 
-		<? } ?>
+		<?php 
+} ?>
 
 	</table>
 	<div class="well clearfix">
-	<?
-	$b1 = $interface->submit(t('Save'), 'attribute_type_associations_form', 'right', 'btn-primary');
-	print $b1;
-	?>
+	<?php
+    $b1 = $interface->submit(t('Save'), 'attribute_type_associations_form', 'right', 'btn-primary');
+    echo $b1;
+    ?>
 	</div>
 </form>
 
 <h4><?=t('Custom Attribute Types')?></h4>
-<?
+<?php
 $ch = Loader::helper('concrete/ui');
 $types = PendingAttributeType::getList(); ?>
-<? if (count($types) == 0) { ?>
+<?php if (count($types) == 0) {
+    ?>
 	<?=t('There are no available attribute types awaiting installation.')?>
-<? } else { ?>
+<?php 
+} else {
+    ?>
 	<ul class="item-select-list">
-		<? foreach($types as $at) { ?>
+		<?php foreach ($types as $at) {
+    ?>
 			<li>
 					<span>
 		        		<form id="attribute_type_install_form_<?=$at->getAttributeTypeHandle()?>" style="margin: 0px" method="post" action="<?=$view->action('add_attribute_type')?>">
-                            <?
-                            print $form->hidden("atHandle", $at->getAttributeTypeHandle());
-                            ?>
+                            <?php
+                            echo $form->hidden("atHandle", $at->getAttributeTypeHandle());
+    ?>
                         <img src="<?=$at->getAttributeTypeIconSRC()?>" />
 
                         <?=$at->getAttributeTypeDisplayName()?>
@@ -61,9 +73,12 @@ $types = PendingAttributeType::getList(); ?>
 
                     </span>
 			</li>
-		<? } ?>
+		<?php 
+}
+    ?>
 	</ul>
 
-<? } ?>
+<?php 
+} ?>
 
 <?php echo Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false);

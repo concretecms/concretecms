@@ -27,10 +27,11 @@ if (is_object($expressForm)) {
 
 
     <?php
-        print $renderer->render($expressForm, $entry);
+        echo $renderer->render($expressForm, $entry);
     ?>
 
-<?php } ?>
+<?php 
+} ?>
 
 <script type="text/javascript">
     $(function() {

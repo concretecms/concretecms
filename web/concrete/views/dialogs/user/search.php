@@ -1,9 +1,9 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 
 <div data-search="users" class="ccm-ui">
-    <? Loader::element('users/search', array('controller' => $searchController)) ?>
+    <?php Loader::element('users/search', array('controller' => $searchController)) ?>
 </div>
 
 <script type="text/javascript">

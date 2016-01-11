@@ -1,21 +1,21 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\System\Permissions;
 
-use \Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Controller\DashboardPageController;
 use Config;
 use Loader;
-use \Concrete\Core\User\UserBannedIp;
+use Concrete\Core\User\UserBannedIp;
 use Exception;
 
 class Blacklist extends DashboardPageController
 {
-
     public function formatTimestampAsMinutesSeconds($seconds)
     {
         if ($seconds == 0) {
             return t('Never');
         } else {
             $seconds = $seconds - time();
+
             return floor($seconds / 60) . 'm' . $seconds % 60 . 's';
         }
     }
@@ -24,19 +24,19 @@ class Blacklist extends DashboardPageController
     private function parseIPBlacklistIntoRanges()
     {
         $ips = preg_split('{[\r\n]+}', $this->post('ip_ban_manual'), null, PREG_SPLIT_NO_EMPTY);
-        $ip_ranges = Array();
+        $ip_ranges = array();
         foreach ($ips as $ip) {
             if (strpos($ip, '*') === false) {
                 $ip = long2ip(ip2long($ip)); // ensures a valid ip
-                $ip_ranges[] = Array(
+                $ip_ranges[] = array(
                     'ipFrom' => $ip,
-                    'ipTo' => 0
+                    'ipTo' => 0,
                 );
             } else {
                 $aOctets = preg_split('{\.}', $ip);
                 $ipFrom = '';
                 $ipTo = '';
-                for ($i = 0; $i < 4; $i ++) {
+                for ($i = 0; $i < 4; ++$i) {
                     if (is_numeric($aOctets[$i])) {
                         $ipFrom .= $aOctets[$i] . '.';
                         $ipTo .= $aOctets[$i] . '.';
@@ -51,9 +51,9 @@ class Blacklist extends DashboardPageController
                 $ipFrom = long2ip(ip2long($ipFrom)); // ensures a valid ip
                 $ipTo = long2ip(ip2long($ipTo)); // ensures a valid ip
 
-                $ip_ranges[] = Array(
+                $ip_ranges[] = array(
                     'ipFrom' => $ipFrom,
-                    'ipTo' => $ipTo
+                    'ipTo' => $ipTo,
                 );
             }
         }
@@ -141,7 +141,7 @@ class Blacklist extends DashboardPageController
             $this->redirect('/dashboard/system/permissions/blacklist', 'saved');
         } else {
             $this->set('error', array(
-                $this->token->getErrorMessage()
+                $this->token->getErrorMessage(),
             ));
         }
     }
@@ -160,7 +160,7 @@ class Blacklist extends DashboardPageController
         $ip_ban_lock_ip_after_attempts = Config::get('concrete.security.ban.ip.attempts');
         $ip_ban_lock_ip_after_time = Config::get('concrete.security.ban.ip.time');
         $ip_ban_lock_ip_how_long_min = Config::get('concrete.security.ban.ip.length', '');
-        if (! $ip_ban_lock_ip_how_long_min) {
+        if (!$ip_ban_lock_ip_how_long_min) {
             $ip_ban_lock_ip_how_long_type = self::IP_BAN_LOCK_IP_HOW_LONG_TYPE_FOREVER;
         } else {
             $ip_ban_lock_ip_how_long_type = self::IP_BAN_LOCK_IP_HOW_LONG_TYPE_TIMED;
@@ -169,18 +169,17 @@ class Blacklist extends DashboardPageController
         $user_banned_ip = new UserBannedIp();
         // pull all once filter various lists using code
         $user_banned_ips = $user_banned_ip->Find('1=1');
-        $user_banned_manual_ips = Array();
-        $user_banned_limited_ips = Array();
+        $user_banned_manual_ips = array();
+        $user_banned_limited_ips = array();
 
         foreach ($user_banned_ips as $user_banned_ip) {
             if ($user_banned_ip->isManual == 1) {
                 $user_banned_manual_ips[] = $user_banned_ip->getIPRangeForDisplay();
-            } else
-                if ($user_banned_ip->expires - time() > 0 || $user_banned_ip->expires == 0) {
-                    $user_banned_limited_ips[] = $user_banned_ip;
-                }
+            } elseif ($user_banned_ip->expires - time() > 0 || $user_banned_ip->expires == 0) {
+                $user_banned_limited_ips[] = $user_banned_ip;
+            }
         }
-        $user_banned_manual_ips = join($user_banned_manual_ips, "\n");
+        $user_banned_manual_ips = implode($user_banned_manual_ips, "\n");
         $this->set('user_banned_manual_ips', $user_banned_manual_ips);
         $this->set('user_banned_limited_ips', $user_banned_limited_ips);
         $this->set('ip_ban_enable_lock_ip_after', $ip_ban_enable_lock_ip_after);

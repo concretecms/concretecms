@@ -1,1 +1,1 @@
-<?= t('Apply a sepia tone') ?>
+<?= t('Apply a sepia tone');

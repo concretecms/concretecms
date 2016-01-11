@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Entity\Attribute\Value\Value;
 
 /**
@@ -154,5 +153,4 @@ class AddressValue extends Value
     {
         $this->postal_code = $postal_code;
     }
-
 }

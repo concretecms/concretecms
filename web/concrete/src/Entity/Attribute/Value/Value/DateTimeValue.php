@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Entity\Attribute\Value\Value;
 
 /**
@@ -8,7 +7,6 @@ namespace Concrete\Core\Entity\Attribute\Value\Value;
  */
 class DateTimeValue extends Value
 {
-
     /**
      * @Column(type="datetime", nullable=true)
      */
@@ -29,7 +27,4 @@ class DateTimeValue extends Value
     {
         $this->value = $value;
     }
-
-
-
 }

@@ -4,12 +4,12 @@ namespace Concrete\Core\Activity;
 use Concrete\Core\Http\Service\Json;
 
 /**
- * Class NewsflowItem
+ * Class NewsflowItem.
+ *
  * @package Concrete\Core\Activity
  */
 class NewsflowItem
 {
-
     protected $id;
     protected $title;
     protected $content;
@@ -41,7 +41,8 @@ class NewsflowItem
     }
 
     /**
-     * todo: determine return type
+     * todo: determine return type.
+     *
      * @return mixed
      */
     public function getDate()
@@ -84,7 +85,9 @@ class NewsflowItem
      *  'description': value
      * }
      * </code>
+     *
      * @return NewsflowItem Returns a new NewsflowItem if one could be created from the response, otherwise throws an exception
+     *
      * @throws \Exception
      */
     public function parseResponse($response)
@@ -95,7 +98,7 @@ class NewsflowItem
             if (is_object($obj) && isset($obj->id) && isset($obj->title) && isset($obj->content)
                 && isset($obj->date) && isset($obj->description)
             ) {
-                return new NewsflowItem(
+                return new self(
                     $obj->id,
                     $obj->title,
                     $obj->content,
@@ -109,5 +112,4 @@ class NewsflowItem
             throw new \Exception(t('Unable to parse news response.'));
         }
     }
-
 }

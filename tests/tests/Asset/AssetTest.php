@@ -1,12 +1,11 @@
 <?php
+
 use Concrete\Core\Asset\Asset;
 
 class AssetTest extends PHPUnit_Framework_TestCase
 {
-
     public function testPackageAssetURLs()
     {
-
         $al = AssetList::getInstance();
         $al->register(
             'css', 'test-css', 'css/awesome.css'
@@ -34,7 +33,5 @@ class AssetTest extends PHPUnit_Framework_TestCase
         $al->register('javascript', 'jquery', '//ajax.googleapis.com/ajax/libs/jquery/2.0/jquery.min.js', array('local' => false, 'version' => '2.0'));
         $asset3 = $al->getAsset('javascript', 'jquery');
         $this->assertEquals('//ajax.googleapis.com/ajax/libs/jquery/2.0/jquery.min.js', $asset3->getAssetURL());
-
     }
-
 }

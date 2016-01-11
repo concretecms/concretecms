@@ -1,10 +1,11 @@
 <?php
 namespace Concrete\Core\Page\Type\PublishTarget\Configuration;
+
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Type\Type;
 
-class AllConfiguration extends Configuration {
-
+class AllConfiguration extends Configuration
+{
     protected $selectorFormFactor;
     protected $startingPointPageID;
 
@@ -50,7 +51,4 @@ class AllConfiguration extends Configuration {
     {
         $this->startingPointPage = $startingPointPage;
     }
-
-
-
 }

@@ -1,14 +1,11 @@
 <?php
 namespace Concrete\Core\Page\Controller;
 
-use \PageController as CorePageController;
-use Loader;
-use Page;
+use PageController as CorePageController;
 use Config;
 
 class PublicProfilePageController extends CorePageController
 {
-
     public function on_start()
     {
         parent::on_start();
@@ -17,6 +14,4 @@ class PublicProfilePageController extends CorePageController
             $this->replace('/page_not_found');
         }
     }
-
-
 }

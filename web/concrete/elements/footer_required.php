@@ -1,4 +1,5 @@
-<?
+<?php
+
 defined('C5_EXECUTE') or die("Access Denied.");
 
 $c = Page::getCurrentPage();
@@ -9,7 +10,7 @@ if (is_object($c)) {
 
 $_trackingCodePosition = Config::get('concrete.seo.tracking.code_position');
 if (empty($disableTrackingCode) && (empty($_trackingCodePosition) || $_trackingCodePosition === 'bottom')) {
-	echo Config::get('concrete.seo.tracking.code');
+    echo Config::get('concrete.seo.tracking.code');
 }
 
 View::getInstance()->markFooterAssetPosition();
