@@ -52,6 +52,8 @@ class Application extends Container
     {
         \Events::dispatch('on_shutdown');
 
+        $config = $this['config'];
+
         if ($this->isInstalled()) {
             if (!isset($options['jobs']) || $options['jobs'] == false) {
                 $this->handleScheduledJobs();
@@ -60,7 +62,7 @@ class Application extends Container
             $logger = new Logger();
             $r = Request::getInstance();
 
-            if (Config::get('concrete.log.queries.log') &&
+            if ($config->get('concrete.log.queries.log') &&
                 (!isset($options['log_queries']) || $options['log_queries'] == false)) {
                 $connection = Database::getActiveConnection();
                 if ($logger->shouldLogQueries($r)) {
@@ -68,7 +70,7 @@ class Application extends Container
                     $configuration = $connection->getConfiguration();
                     $loggers[] = $configuration->getSQLLogger();
                     $configuration->setSQLLogger(null);
-                    if (Config::get('concrete.log.queries.clear_on_reload')) {
+                    if ($config->get('concrete.log.queries.clear_on_reload')) {
                         $logger->clearQueryLog();
                     }
 
@@ -80,7 +82,7 @@ class Application extends Container
                 $connection->close();
             }
         }
-        if (Config::get('concrete.cache.overrides')) {
+        if ($config->get('concrete.cache.overrides')) {
             Environment::saveCachedEnvironmentObject();
         } else {
             $env = Environment::get();
@@ -99,8 +101,10 @@ class Application extends Container
         Core::make('cache')->flush();
         Core::make('cache/expensive')->flush();
 
+        $config = $this['config'];
+
         // Delete and re-create the cache directory
-        $cacheDir = Config::get('concrete.cache.directory');
+        $cacheDir = $config->get('concrete.cache.directory');
         if (is_dir($cacheDir)) {
             $fh = Core::make('helper/file');
             $fh->removeAll($cacheDir, true);
@@ -131,7 +135,9 @@ class Application extends Container
      */
     protected function handleScheduledJobs()
     {
-        if (Config::get('concrete.jobs.enable_scheduling')) {
+        $config = $this['config'];
+
+        if ($config->get('concrete.jobs.enable_scheduling')) {
             $c = Page::getCurrentPage();
             if ($c instanceof Page && !$c->isAdminArea()) {
                 // check for non dashboard page
@@ -173,7 +179,7 @@ class Application extends Container
                     curl_setopt($ch, CURLOPT_HEADER, 0);
                     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 1);
                     curl_setopt($ch, CURLOPT_TIMEOUT, 1);
-                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, Config::get('app.curl.verifyPeer'));
+                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $config->get('app.curl.verifyPeer'));
                     $res = curl_exec($ch);
                 }
             }
@@ -216,9 +222,11 @@ class Application extends Container
 
     public function handleAutomaticUpdates()
     {
-        if (Config::get('concrete.updates.enable_auto_update_core')) {
-            $installed = Config::get('concrete.version_installed');
-            $core = Config::get('concrete.version');
+        $config = $this['config'];
+
+        if ($config->get('concrete.updates.enable_auto_update_core')) {
+            $installed = $config->get('concrete.version_installed');
+            $core = $config->get('concrete.version');
             if ($core && $installed && version_compare($installed, $core, '<')) {
                 Update::updateToCurrentVersion();
             }
@@ -252,9 +260,11 @@ class Application extends Container
     {
         $checkAfterStart = false;
 
+        $config = $this['config'];
+
         foreach($this->packages as $pkg) {
             // handle updates
-            if (Config::get('concrete.updates.enable_auto_update_packages')) {
+            if ($config->get('concrete.updates.enable_auto_update_packages')) {
                 $dbPkg = \Package::getByHandle($pkg->getPackageHandle());
                 $pkgInstalledVersion = $dbPkg->getPackageVersion();
                 $pkgFileVersion = $pkg->getPackageVersion();
@@ -278,7 +288,7 @@ class Application extends Container
                 $checkAfterStart = true;
             }
         }
-        Config::set('app.bootstrap.packages_loaded', true);
+        $config->set('app.bootstrap.packages_loaded', true);
 
         if ($checkAfterStart) {
             foreach($this->packages as $pkg) {
@@ -294,9 +304,11 @@ class Application extends Container
      */
     public function setupFilesystem()
     {
-        if (!is_dir(Config::get('concrete.cache.directory'))) {
-            @mkdir(Config::get('concrete.cache.directory'), Config::get('concrete.filesystem.permissions.directory'));
-            @touch(Config::get('concrete.cache.directory') . '/index.html', Config::get('concrete.filesystem.permissions.file'));
+        $config = $this['config'];
+
+        if (!is_dir($config->get('concrete.cache.directory'))) {
+            @mkdir($config->get('concrete.cache.directory'), $config->get('concrete.filesystem.permissions.directory'));
+            @touch($config->get('concrete.cache.directory') . '/index.html', $config->get('concrete.filesystem.permissions.file'));
         }
     }
 
@@ -317,7 +329,7 @@ class Application extends Container
     public function handleURLSlashes(SymfonyRequest $request)
     {
         $trailing_slashes = $this['config']['concrete.seo.trailing_slash'];
-            $path = $request->getPathInfo();
+        $path = $request->getPathInfo();
 
         // If this isn't the homepage
         if ($path && $path != '/') {
@@ -327,7 +339,7 @@ class Application extends Container
                 (!$trailing_slashes && substr($path, -1) == '/')) {
 
                 $parsed_url = Url::createFromUrl($request->getUri(),
-                    $trailing_slashes ? Url::TRAILING_SLASHES_ENABLED : Url::TRAILING_SLASHES_DISABLED);
+                $trailing_slashes ? Url::TRAILING_SLASHES_ENABLED : Url::TRAILING_SLASHES_DISABLED);
 
                 $response = new RedirectResponse($parsed_url, 301);
                 $response->setRequest($request);
@@ -344,11 +356,13 @@ class Application extends Container
      */
     public function handleCanonicalURLRedirection(SymfonyRequest $r)
     {
-        if (Config::get('concrete.seo.redirect_to_canonical_url') && Config::get('concrete.seo.canonical_url')) {
+        $config = $this['config'];
+
+        if ($config->get('concrete.seo.redirect_to_canonical_url') && $config->get('concrete.seo.canonical_url')) {
             $url = UrlImmutable::createFromUrl($r->getUri());
 
-            $canonical = UrlImmutable::createFromUrl(\Config::get('concrete.seo.canonical_url'),
-                (bool) \Config::get('concrete.seo.trailing_slash')
+            $canonical = UrlImmutable::createFromUrl($config->get('concrete.seo.canonical_url'),
+                (bool) $config->get('concrete.seo.trailing_slash')
             );
 
             // Set the parts of the current URL that are specified in the canonical URL, including host,
@@ -365,8 +379,8 @@ class Application extends Container
 
             // Uh oh, it didn't match. before we redirect to the canonical URL, let's check to see if we have an SSL
             // URL
-            if (\Config::get('concrete.seo.canonical_ssl_url')) {
-                $ssl = UrlImmutable::createFromUrl(\Config::get('concrete.seo.canonical_ssl_url'));
+            if ($config->get('concrete.seo.canonical_ssl_url')) {
+                $ssl = UrlImmutable::createFromUrl($config->get('concrete.seo.canonical_ssl_url'));
 
                 $new = $url->setScheme($ssl->getScheme()->get());
                 $new = $new->setHost($ssl->getHost()->get());
