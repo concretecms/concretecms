@@ -102,6 +102,7 @@ __IDE_SYMBOLS__.php
 /web/concrete/js/lightbox.js
 /web/concrete/js/select2.js
 /web/concrete/js/translator.js
+/web/concrete/js/textcounter.js
 
 # CSS
 /web/concrete/css/select2.css

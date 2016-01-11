@@ -61,7 +61,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			max: -1,
 			countSpaces: true,
 			stopInputAtMaximum: false,
-			counterText: '<?php echo t('characters'); ?>: ',
+			counterText: '<?php echo t('Characters'); ?>: ',
 			countContainerClass: 'help-block'
 		});
     });
