@@ -34,6 +34,12 @@ class Version20151221000000 extends AbstractMigration
             $bt->refresh();
         }
 
+        $bt = \BlockType::getByHandle('autonav');
+        if (is_object($bt)) {
+            $bt->refresh();
+        }
+
+
 
 
     }
