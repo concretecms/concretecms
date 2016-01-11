@@ -26,6 +26,9 @@ class User extends Object
     protected $hasher;
     protected $uLastPasswordChange;
 
+    /** @var Application */
+    protected $app;
+
     /** Return an User instance given its id (or null if it's not found)
      * @param int $uID The id of the user
      * @param bool $login = false Set to true to make the user the current one
@@ -77,16 +80,15 @@ class User extends Object
 
     public function checkLogin()
     {
-        $app = Application::getFacadeApplication();
-        $session = $app['session'];
-        $config = $app['config'];
+        $session = $this->app['session'];
+        $config = $this->app['config'];
 
         $aeu = $config->get('concrete.misc.access_entity_updated');
         if ($aeu && $aeu > $session->get('accessEntitiesUpdated')) {
             self::refreshUserGroups();
         }
 
-        $app->make('Concrete\Core\Session\SessionValidatorInterface')->handleSessionValidation($session);
+        $this->app->make('Concrete\Core\Session\SessionValidatorInterface')->handleSessionValidation($session);
 
         if ($session->get('uID') > 0) {
             $db = $app['database']->connection();
@@ -125,10 +127,10 @@ class User extends Object
 
     public function __construct()
     {
-        $app = Application::getFacadeApplication();
+        $this->app = Application::getFacadeApplication();
         $args = func_get_args();
-        $session = $app['session'];
-        $config = $app['config'];
+        $session = $this->app['session'];
+        $config = $this->app['config'];
 
 
         if (isset($args[1])) {
@@ -149,7 +151,7 @@ class User extends Object
                 $q = "select uID, uName, uIsActive, uIsValidated, uTimezone, uDefaultLanguage, uPassword, uLastPasswordChange from Users where uName = ?";
             }
 
-            $db = $app->make('Concrete\Core\Database\Connection\Connection');
+            $db = $this->app->make('Concrete\Core\Database\Connection\Connection');
             $r = $db->query($q, $v);
             if ($r) {
                 $row = $r->fetchRow();
@@ -194,7 +196,7 @@ class User extends Object
                 $this->loadError(USER_INVALID);
             }
         } else {
-            $req = Request::getInstance();
+            $req = $this->app['request']->getInstance();
             if ($req->hasCustomRequestUser()) {
                 $this->uID = null;
                 $this->uName = null;
@@ -237,20 +239,18 @@ class User extends Object
 
     public function recordLogin()
     {
-        $app = Application::getFacadeApplication();
-        $db = $app['database']->connection();
+        $db = $this->app['database']->connection();
         $uLastLogin = $db->getOne("select uLastLogin from Users where uID = ?", array($this->uID));
 
         /** @var \Concrete\Core\Permission\IPService $iph */
-        $iph = $app->make('helper/validation/ip');
+        $iph = $this->app->make('helper/validation/ip');
         $ip = $iph->getRequestIP();
         $db->query("update Users set uLastIP = ?, uLastLogin = ?, uPreviousLogin = ?, uNumLogins = uNumLogins + 1 where uID = ?", array(($ip === false) ? ('') : ($ip->getIp()), time(), $uLastLogin, $this->uID));
     }
 
     public function recordView($c)
     {
-        $app = Application::getFacadeApplication();
-        $db = $app['database']->connection();
+        $db = $this->app['database']->connection();
 
         $uID = ($this->uID > 0) ? $this->uID : 0;
         $cID = $c->getCollectionID();
@@ -268,9 +268,7 @@ class User extends Object
     // Use only for checking password hashes, not generating new ones to store.
     public function legacyEncryptPassword($uPassword)
     {
-        $app = Application::getFacadeApplication();
-
-        return md5($uPassword . ':' . $app['config']->get('concrete.user.password.legacy_salt'));
+        return md5($uPassword . ':' . $this->app['config']->get('concrete.user.password.legacy_salt'));
     }
 
     public function isActive()
@@ -315,8 +313,7 @@ class User extends Object
 
     public function setAuthTypeCookie($authType)
     {
-        $app = Application::getFacadeApplication();
-        $config = $app['config'];
+        $config = $this->app['config'];
 
         $cookie = array($this->getUserID(),$authType);
         $at = AuthenticationType::getByHandle($authType);
@@ -334,15 +331,13 @@ class User extends Object
 
     public function setLastAuthType(AuthenticationType $at)
     {
-        $app = Application::getFacadeApplication();
-        $db = $app['database']->connection();
+        $db = $this->app['database']->connection();
         $db->Execute('UPDATE Users SET uLastAuthTypeID=? WHERE uID=?', array($at->getAuthenticationTypeID(), $this->getUserID()));
     }
 
     public function getLastAuthType()
     {
-        $app = Application::getFacadeApplication();
-        $db = $app['database']->connection();
+        $db = $this->app['database']->connection();
         $id = $db->getOne('SELECT uLastAuthTypeID FROM Users WHERE uID=?', array($this->getUserID()));
 
         return intval($id);
@@ -358,8 +353,7 @@ class User extends Object
 
     public function logout($hard = true)
     {
-        $app = Application::getFacadeApplication();
-        $events = $app['director'];
+        $events = $this->app['director'];
 
         // First, we check to see if we have any collection in edit mode
         $this->unloadCollectionEdit();
@@ -371,8 +365,7 @@ class User extends Object
 
     public function invalidateSession($hard = true)
     {
-        $app = Application::getFacadeApplication();
-        $session = $app['session'];
+        $session = $this->app['session'];
 
         // @todo remove this hard option if `Session::clear()` does what we need.
         if (!$hard) {
@@ -382,7 +375,7 @@ class User extends Object
         }
 
         if (isset($_COOKIE['ccmAuthUserHash']) && $_COOKIE['ccmAuthUserHash']) {
-            $config = $app['config'];
+            $config = $this->app['config'];
             setcookie("ccmAuthUserHash", "", 315532800, DIR_REL . '/',
                       $config->get('concrete.session.cookie.cookie_domain'),
                       $config->get('concrete.session.cookie.cookie_secure'),
@@ -423,9 +416,8 @@ class User extends Object
      */
     public function setUserDefaultLanguage($lang)
     {
-        $app = Application::getFacadeApplication();
-        $db = $app['database']->connection();
-        $session = $app['session'];
+        $db = $this->app['database']->connection();
+        $session = $this->app['session'];
 
         $this->uDefaultLanguage = $lang;
         $session->set('uDefaultLanguage', $lang);
@@ -454,7 +446,6 @@ class User extends Object
      */
     public function getUserLanguageToDisplay()
     {
-
         if ($this->getUserDefaultLanguage() != '') {
             return $this->getUserDefaultLanguage();
         } else {
@@ -467,8 +458,7 @@ class User extends Object
 
     public function refreshUserGroups()
     {
-        $app = Application::getFacadeApplication();
-        $session = $app['session'];
+        $session = $this->app['session'];
 
         $session->remove('uGroups');
         $session->remove('accessEntities');
@@ -479,9 +469,8 @@ class User extends Object
 
     public function getUserAccessEntityObjects()
     {
-        $app = Application::getFacadeApplication();
         $req = Request::getInstance();
-        $session = $app['session'];
+        $session = $this->app['session'];
 
         if ($req->hasCustomRequestUser()) {
             // we bypass session-saving performance
@@ -502,14 +491,13 @@ class User extends Object
 
     public function _getUserGroups($disableLogin = false)
     {
-        $app = Application::getFacadeApplication();
         $req = Request::getInstance();
-        $session = $app['session'];
+        $session = $this->app['session'];
 
         if (($session->has('uGroups')) && (!$disableLogin) && (!$req->hasCustomRequestUser())) {
             $ug = $session->get('uGroups');
         } else {
-            $db = $app['database']->connection();
+            $db = $this->app['database']->connection();
             if ($this->uID) {
                 $ug[REGISTERED_GROUP_ID] = REGISTERED_GROUP_ID;
 
@@ -536,14 +524,13 @@ class User extends Object
 
     public function enterGroup($g)
     {
-        $app = Application::getFacadeApplication();
         // takes a group object, and, if the user is not already in the group, it puts them into it
-        $dt = $app->make('helper/date');
+        $dt = $this->app->make('helper/date');
 
         if (is_object($g)) {
             if (!$this->inGroup($g)) {
                 $gID = $g->getGroupID();
-                $db = $app['database']->connection();
+                $db = $this->app['database']->connection();
 
                 $db->Replace('UserGroups', array(
                     'uID' => $this->getUserID(),
@@ -558,12 +545,12 @@ class User extends Object
                         $action->addDetailedEntry($this, $g);
                     }
 
-                    $mh = $app->make('mail');
+                    $mh = $this->app->make('mail');
                     $ui = UserInfo::getByID($this->getUserID());
                     $mh->addParameter('badgeName', $g->getGroupDisplayName(false));
                     $mh->addParameter('uDisplayName', $ui->getUserDisplayName());
                     $mh->addParameter('uProfileURL', (string) $ui->getUserPublicProfileURL());
-                    $mh->addParameter('siteName', $app['config']->get('concrete.site'));
+                    $mh->addParameter('siteName', $this->app['config']->get('concrete.site'));
                     $mh->to($ui->getUserEmail());
                     $mh->load('won_badge');
                     $mh->sendMail();
@@ -572,7 +559,7 @@ class User extends Object
                 $ue = new \Concrete\Core\User\Event\UserGroup($this);
                 $ue->setGroupObject($g);
 
-                $app['director']->dispatch('on_user_enter_group', $ue);
+                $this->app['director']->dispatch('on_user_enter_group', $ue);
             }
         }
     }
@@ -582,24 +569,22 @@ class User extends Object
 
         // takes a group object, and, if the user is in the group, they exit the group
         if (is_object($g)) {
-            $app = Application::getFacadeApplication();
-            $db = $app['database']->connection();
+            $db = $this->app['database']->connection();
 
             $gID = $g->getGroupID();
 
             $ue = new \Concrete\Core\User\Event\UserGroup($this);
             $ue->setGroupObject($g);
-            $app['director']->dispatch('on_user_exit_group', $ue);
+            $this->app['director']->dispatch('on_user_exit_group', $ue);
 
             $q = "delete from UserGroups where uID = '{$this->uID}' and gID = '{$gID}'";
-            $r = $db->query($q);
+            $db->query($q);
         }
     }
 
     public function inGroup($g)
     {
-        $app = Application::getFacadeApplication();
-        $db = $app['database']->connection();
+        $db = $this->app['database']->connection();
 
         $v = array($this->uID, $g->getGroupID());
         $cnt = $db->GetOne("select gID from UserGroups where uID = ? and gID = ?", $v);
@@ -609,8 +594,7 @@ class User extends Object
 
     public function loadMasterCollectionEdit($mcID, $ocID)
     {
-        $app = Application::getFacadeApplication();
-        $session = $app['session'];
+        $session = $this->app['session'];
         // basically, this function loads the master collection ID you're working on into session
         // so you can work on it without the system failing because you're editing a template
         $session->set('mcEditID', $mcID);
@@ -626,8 +610,7 @@ class User extends Object
             return false;
         }
 
-        $app = Application::getFacadeApplication();
-        $db = $app['database']->connection();
+        $db = $this->app['database']->connection();
 
         $cID = $c->getCollectionID();
         // first, we check to see if we have a collection in edit mode. If we do, we relinquish it
@@ -638,12 +621,12 @@ class User extends Object
         if ($r) {
             $row = $r->fetchRow();
             if (!$row['cIsCheckedOut']) {
-                $app['session']->set('editCID', $cID);
+                $this->app['session']->set('editCID', $cID);
                 $uID = $this->getUserID();
-                $dh = $app->make('helper/date');
+                $dh = $this->app->make('helper/date');
                 $datetime = $dh->getOverridableNow();
                 $q2 = "update Pages set cIsCheckedOut = 1, cCheckedOutUID = '{$uID}', cCheckedOutDatetime = '{$datetime}', cCheckedOutDatetimeLastEdit = '{$datetime}' where cID = '{$cID}'";
-                $r2 = $db->query($q2);
+                $db->query($q2);
 
                 $c->cIsCheckedOut = 1;
                 $c->cCheckedOutUID = $uID;
@@ -655,8 +638,7 @@ class User extends Object
 
     public function unloadCollectionEdit($removeCache = true)
     {
-        $app = Application::getFacadeApplication();
-        $db = $app['database']->connection();
+        $db = $this->app['database']->connection();
 
         if ($this->getUserID() > 0) {
             $col = $db->GetCol("select cID from Pages where cCheckedOutUID = " . $this->getUserID());
@@ -675,8 +657,7 @@ class User extends Object
     public function config($cfKey)
     {
         if ($this->isRegistered()) {
-            $app = Application::getFacadeApplication();
-            $db = $app['database']->connection();
+            $db = $this->app['database']->connection();
 
             $val = $db->GetOne("select cfValue from ConfigStore where uID = ? and cfKey = ?", array($this->getUserID(), $cfKey));
 
@@ -686,35 +667,30 @@ class User extends Object
 
     public function markPreviousFrontendPage(Page $c)
     {
-        $app = Application::getFacadeApplication();
-        $app['session']->set('frontendPreviousPageID', $c->getCollectionID());
+        $this->app['session']->set('frontendPreviousPageID', $c->getCollectionID());
     }
 
     public function getPreviousFrontendPageID()
     {
-        $app = Application::getFacadeApplication();
-        return $app['session']->get('frontendPreviousPageID');
+        return $this->app['session']->get('frontendPreviousPageID');
     }
 
     public function saveConfig($cfKey, $cfValue)
     {
-        $app = Application::getFacadeApplication();
-        $app['database']->connection()->Replace('ConfigStore', array('cfKey' => $cfKey, 'cfValue' => $cfValue, 'uID' => $this->getUserID()), array('cfKey', 'uID'), true);
+        $this->app['database']->connection()->Replace('ConfigStore', array('cfKey' => $cfKey, 'cfValue' => $cfValue, 'uID' => $this->getUserID()), array('cfKey', 'uID'), true);
     }
 
     public function refreshCollectionEdit(&$c)
     {
         if ($this->isLoggedIn() && $c->getCollectionCheckedOutUserID() == $this->getUserID()) {
-
-            $app = Application::getFacadeApplication();
-            $db = $app['database']->connection();
+            $db = $this->app['database']->connection();
             $cID = $c->getCollectionID();
 
-            $dh = $app->make('helper/date');
+            $dh = $this->app->make('helper/date');
             $datetime = $dh->getOverridableNow();
 
             $q = "update Pages set cCheckedOutDatetimeLastEdit = '{$datetime}' where cID = '{$cID}'";
-            $r = $db->query($q);
+            $db->query($q);
 
             $c->cCheckedOutDatetimeLastEdit = $datetime;
         }
@@ -723,8 +699,7 @@ class User extends Object
     public function forceCollectionCheckInAll()
     {
         // This function forces checkin to take place
-        $app = Application::getFacadeApplication();
-        $db = $app['database']->connection();
+        $db = $this->app['database']->connection();
 
         $q = "update Pages set cIsCheckedOut = 0, cCheckedOutUID = null, cCheckedOutDatetime = null, cCheckedOutDatetimeLastEdit = null";
         $r = $db->query($q);
@@ -739,8 +714,7 @@ class User extends Object
      */
     public function getUserPasswordHasher()
     {
-        $app = Application::getFacadeApplication();
-        $config = $app['config'];
+        $config = $this->app['config'];
         if (isset($this->hasher)) {
             return $this->hasher;
         }
@@ -758,13 +732,10 @@ class User extends Object
      */
     public function persist($cache_interface = true)
     {
-
         $this->refreshUserGroups();
 
-        $app = Application::getFacadeApplication();
-
         /** @var \Symfony\Component\HttpFoundation\Session\Session $session */
-        $session = $app['session'];
+        $session = $this->app['session'];
         $session->set('uID', $this->getUserID());
         $session->set('uName', $this->getUserName());
         $session->set('uBlockTypesSet', false);
@@ -775,7 +746,7 @@ class User extends Object
         $session->set('uLastPasswordChange', $this->getLastPasswordChange());
 
         if ($cache_interface) {
-            $app->make('helper/concrete/ui')->cacheInterfaceItems();
+            $this->app->make('helper/concrete/ui')->cacheInterfaceItems();
         }
     }
 
