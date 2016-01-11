@@ -98,8 +98,8 @@ class Application extends Container
     {
         \Events::dispatch('on_cache_flush');
 
-        Core::make('cache')->flush();
-        Core::make('cache/expensive')->flush();
+        $this['cache']->flush();
+        $this['cache/expensive']->flush();
 
         $config = $this['config'];
 
