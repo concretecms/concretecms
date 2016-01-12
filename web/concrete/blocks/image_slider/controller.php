@@ -13,7 +13,7 @@ class Controller extends BlockController
     protected $btExportTables = array('btImageSlider', 'btImageSliderEntries');
     protected $btInterfaceWidth = "600";
     protected $btWrapperClass = 'ccm-ui';
-    protected $btInterfaceHeight = "465";
+    protected $btInterfaceHeight = "550";
     protected $btCacheBlockRecord = true;
     protected $btExportFileColumns = array('fID');
     protected $btCacheBlockOutput = true;
