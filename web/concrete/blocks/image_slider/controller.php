@@ -158,6 +158,10 @@ class Controller extends BlockController
 
     public function save($args)
     {
+        $args += array(
+            'timeout' => 4000,
+            'speed' => 500,
+        );
         $args['timeout'] = intval($args['timeout']);
         $args['speed'] = intval($args['speed']);
         $args['noAnimate'] = isset($args['noAnimate']) ? 1 : 0;
