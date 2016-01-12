@@ -91,5 +91,10 @@ if (is_object($basePostPage) && $basePostPage->isError()) {
             <?=$form->text('resultsURL',$searchObj->resultsURL);?>
         </div>
     </div>
+    <div class='form-group'>
+        <label for='buttonText'><?=t('Fulltext Search')?>:</label>
+        <br>
+        <?=$form->checkbox('isFulltextSearch', 1, $searchObj->isFulltextSearch);?> Enable
+    </div>
 
 </fieldset>
