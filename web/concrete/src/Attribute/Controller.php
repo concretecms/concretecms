@@ -120,6 +120,7 @@ class Controller extends AbstractController
      */
     public function __construct($attributeType)
     {
+        parent::__construct();
         $this->identifier = $attributeType->getAttributeTypeID();
         $this->attributeType = $attributeType;
         $this->set('controller', $this);
