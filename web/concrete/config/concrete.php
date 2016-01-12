@@ -450,6 +450,7 @@ return array(
         'app_version_display_in_header' => true,
         'default_jpeg_image_compression'     => 80,
         'help_overlay'                  => true,
+        'member_is_systempage'          => true,
     ),
 
     'theme' => array(
