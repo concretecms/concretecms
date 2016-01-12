@@ -137,7 +137,7 @@ class StandardSearchIndexer implements SearchIndexerInterface
                 foreach ($definition as $name => $column) {
                     if (!$toTable->hasColumn('ak_' . $key->getAttributeKeyHandle() . '_' . $name)) {
                         $fields[] = array(
-                            'name' => 'ak_' . $this->$key->getAttributeKeyHandle() . '_' . $name,
+                            'name' => 'ak_' . $key->getAttributeKeyHandle() . '_' . $name,
                             'type' => $column['type'],
                             'options' => $column['options'],
                         );

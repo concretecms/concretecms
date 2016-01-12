@@ -324,8 +324,11 @@ return array(
         /*
          * General Attribute
          */
-        "/ccm/system/attribute/attribute_sort/set" => array('\Concrete\Controller\Backend\Attributes::sortInSet'),
-        "/ccm/system/attribute/attribute_sort/user" => array('\Concrete\Controller\Backend\Attributes::sortUser'),
+        "/ccm/system/attribute/action/{action}"
+        => array('\Concrete\Controller\Backend\Attribute\Action::dispatch', 'attribute_action', array(
+            'action' => ".+"
+        )),
+
 
         /*
          * Marketplace

@@ -111,19 +111,19 @@ class View extends AbstractView
 
     public function action($action)
     {
-        $uh = Loader::helper('concrete/urls');
-        $a = func_get_args();
-        $args = '';
-        for ($i = 1; $i < count($a); ++$i) {
-            $args .= '&args[]=' . $a[$i];
+        $arguments = array();
+        if (count(func_get_args()) > 1) {
+            $arguments = array_unshift(func_get_args());
         }
-        $url = $uh->getToolsURL('attribute_type_actions') . '?atID=' . $this->controller->attributeType->getAttributeTypeID();
         if (is_object($this->attributeKey)) {
-            $url .= '&akID=' . $this->attributeKey->getAttributeKeyID();
+            return (string)
+            \URL::to('/ccm/system/attribute/action/key', $this->attributeKey->getAttributeKeyID(), $action,
+                $arguments);
+        } else {
+            return (string)
+            \URL::to('/ccm/system/attribute/action/type', $this->controller->attributeType->getAttributeTypeID(),
+                $action, $arguments);
         }
-        $url .= '&action=' . $action . $args;
-
-        return $url;
     }
 
     public function finishRender($contents)

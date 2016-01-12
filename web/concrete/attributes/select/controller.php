@@ -9,6 +9,7 @@ use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Core;
 use Database;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Controller extends AttributeTypeController
 {
@@ -493,40 +494,10 @@ class Controller extends AttributeTypeController
 
     public function getSelectedOptions()
     {
-        return $this->attributeValue->getSelectedOptions();
-        /*
-        if (!isset($this->akSelectOptionDisplayOrder)) {
-            $this->load();
+        if (is_object($this->attributeValue)) {
+            return $this->attributeValue->getSelectedOptions();
         }
-        $db = Database::get();
-        $sortByDisplayName = false;
-        switch ($this->akSelectOptionDisplayOrder) {
-            case 'popularity_desc':
-                $options = $db->GetAll("select ID, value, displayOrder, (select count(s2.atSelectOptionID) from atSelectOptionsSelected s2 where s2.atSelectOptionID = ID) as total from atSelectOptionsSelected inner join atSelectOptions on atSelectOptionsSelected.atSelectOptionID = atSelectOptions.ID where avID = ? order by total desc, value asc",
-                    array($this->getAttributeValueID()));
-                break;
-            case 'alpha_asc':
-                $options = $db->GetAll("select ID, value, displayOrder from atSelectOptionsSelected inner join atSelectOptions on atSelectOptionsSelected.atSelectOptionID = atSelectOptions.ID where avID = ?",
-                    array($this->getAttributeValueID()));
-                $sortByDisplayName = true;
-                break;
-            default:
-                $options = $db->GetAll("select ID, value, displayOrder from atSelectOptionsSelected inner join atSelectOptions on atSelectOptionsSelected.atSelectOptionID = atSelectOptions.ID where avID = ? order by displayOrder asc",
-                    array($this->getAttributeValueID()));
-                break;
-        }
-        $db = Database::get();
-        $list = new OptionList();
-        foreach ($options as $row) {
-            $opt = new Option($row['ID'], $row['value'], $row['displayOrder']);
-            $list->add($opt);
-        }
-        if ($sortByDisplayName) {
-            $list->sortByDisplayName();
-        }
-
-        return $list;
-        */
+        return array();
     }
 
     /**
@@ -535,8 +506,7 @@ class Controller extends AttributeTypeController
      */
     public function action_load_autocomplete_selected_value()
     {
-        $r = \Request::getInstance();
-        $value = $r->query->get('value');
+        $value = $this->request->query->get('value');
         $values = explode(',', $value);
         $response = array();
         foreach ($values as $value) {
@@ -557,8 +527,7 @@ class Controller extends AttributeTypeController
             $response[] = $o;
         }
 
-        echo json_encode($response);
-        \Core::shutdown();
+        return new JsonResponse($response);
     }
 
     public function action_load_autocomplete_values()
@@ -567,7 +536,7 @@ class Controller extends AttributeTypeController
         $values = array();
         // now, if the current instance of the attribute key allows us to do autocomplete, we return all the values
         if ($this->akSelectAllowOtherValues) {
-            $options = $this->getOptions($_GET['q'] . '%');
+            $options = $this->getOptions($_GET['q']);
             foreach ($options as $opt) {
                 $o = new \stdClass();
                 $o->id = 'SelectAttributeOption:' . $opt->getSelectAttributeOptionID();
@@ -575,7 +544,7 @@ class Controller extends AttributeTypeController
                 $values[] = $o;
             }
         }
-        echo json_encode($values);
+        return new JsonResponse($values);
     }
 
     public function getOptionUsageArray($parentPage = false, $limit = 9999)
@@ -622,7 +591,7 @@ class Controller extends AttributeTypeController
      *
      * @param string $like
      */
-    public function getOptions($like = null)
+    public function getOptions($keywords = null)
     {
         if (!isset($this->attributeKey)) {
             return array();
@@ -633,52 +602,32 @@ class Controller extends AttributeTypeController
         }
 
         $type = $this->attributeKey->getAttributeKeyType();
-        $options = $type->getOptionList()->getOptions();
 
-        return $options;
-        /*
-        $db = Database::get();
+        $em = \Database::get()->getEntityManager();
+        $r = $em->getRepository('\Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption');
+        $builder = $r->createQueryBuilder('v');
+        $builder->where('v.list = :list');
+        if ($keywords) {
+            $builder->andWhere($builder->expr()->like('v.value', ':value'));
+            $builder->setParameter('value', $keywords  . '%');
+        }
         switch ($this->akSelectOptionDisplayOrder) {
             case 'popularity_desc':
-                if (isset($like) && strlen($like)) {
-                    $r = $db->Execute('select ID, value, displayOrder, count(atSelectOptionsSelected.atSelectOptionID) as total
-                        from atSelectOptions left join atSelectOptionsSelected on (atSelectOptions.ID = atSelectOptionsSelected.atSelectOptionID)
-                        where akID = ? AND atSelectOptions.value LIKE ? group by ID order by total desc, value asc',
-                        array($this->attributeKey->getAttributeKeyID(), $like));
-                } else {
-                    $r = $db->Execute('select ID, value, displayOrder, count(atSelectOptionsSelected.atSelectOptionID) as total
-                        from atSelectOptions left join atSelectOptionsSelected on (atSelectOptions.ID = atSelectOptionsSelected.atSelectOptionID)
-                        where akID = ? group by ID order by total desc, value asc',
-                        array($this->attributeKey->getAttributeKeyID()));
-                }
+                /**
+                 * @TODO make this work again - there is currently no field.
+                 * @TODO It used to be done with a group by on the selected options table.
+                 */
+                $builder->orderBy('v.popularity', 'asc');
                 break;
             case 'alpha_asc':
-                if (isset($like) && strlen($like)) {
-                    $r = $db->Execute('select ID, value, displayOrder from atSelectOptions where akID = ? AND atSelectOptions.value LIKE ? order by value asc',
-                        array($this->attributeKey->getAttributeKeyID(), $like));
-                } else {
-                    $r = $db->Execute('select ID, value, displayOrder from atSelectOptions where akID = ? order by value asc',
-                        array($this->attributeKey->getAttributeKeyID()));
-                }
+                $builder->orderBy('v.value', 'asc');
                 break;
             default:
-                if (isset($like) && strlen($like)) {
-                    $r = $db->Execute('select ID, value, displayOrder from atSelectOptions where akID = ? AND atSelectOptions.value LIKE ? order by displayOrder asc',
-                        array($this->attributeKey->getAttributeKeyID(), $like));
-                } else {
-                    $r = $db->Execute('select ID, value, displayOrder from atSelectOptions where akID = ? order by displayOrder asc',
-                        array($this->attributeKey->getAttributeKeyID()));
-                }
+                $builder->orderBy('v.displayOrder', 'asc');
                 break;
         }
-        $options = new OptionList();
-        while ($row = $r->FetchRow()) {
-            $opt = new Option($row['ID'], $row['value'], $row['displayOrder']);
-            $options->add($opt);
-        }
-        */
-
-        return $options;
+        $builder->setParameter('list', $type->getOptionList());
+        return $builder->getQuery()->getResult();
     }
 
     public function saveKey($data)
@@ -724,7 +673,7 @@ class Controller extends AttributeTypeController
             /*
              * @var $option SelectValueOption
              */
-            $option->setOptionList($newOption);
+            $option->setOptionList($newOptionSet);
             $newOptionSet->getOptions()->add($option);
         }
 
