@@ -14,7 +14,7 @@ class PictureRoutine extends AbstractRegularExpressionRoutine
 
     public function getRegularExpression()
     {
-        return '/\<concrete-picture[^>]* file="([^"]*)/i';
+        return '/\<concrete-picture\s[^>]*?file\s*=\s*[\'"]([^\'"]*?)[\'"][^>]*?>/i';
     }
 
     public function getItem($identifier)
