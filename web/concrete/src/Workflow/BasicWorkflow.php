@@ -106,6 +106,9 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow
             $adminUser = UserInfo::getByID(USER_SUPER_ID);
             $mh->from($adminUser->getUserEmail(), t('Basic Workflow'));
             $mh->addParameter('message', $message);
+            $cat = WorkflowProgressCategory::getByID($wp->getWorkflowProgressCategoryID());
+            $catHandle = $cat->getWorkflowProgressCategoryHandle();
+            $mh->addParameter('wpCategory', $catHandle);
             foreach ($parameters as $key => $value) {
                 $mh->addParameter($key, $value);
             }

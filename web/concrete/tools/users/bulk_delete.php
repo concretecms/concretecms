@@ -33,19 +33,50 @@ if (is_array($_REQUEST['uID'])) {
 }
 
 if ($_POST['task'] == 'delete') {
-    foreach ($users as $ui) {
-        if (!(in_array($ui->getUserID(), $excluded_user_ids))) {
-            $ui->delete();
-        }
-    }
-    echo Loader::helper('json')->encode(array('error' => false));
-    exit;
+
+	// check if workflow is attached to this request
+	$workflowAttached = false;
+	$pk = PermissionKey::getByHandle('delete_user');
+	$pa = $pk->getPermissionAccessObject();
+	$workflows = $pa->getWorkflows();
+	$workflowAttached = count($workflows);
+
+	if($workflowAttached) {
+		// workflow is attached
+		$hudMessage = t('User Settings saved. You must complete the workflow before this change is active.');
+	} else {
+		// workflow is not attached
+		$hudMessage = t('User Settings saved.');
+	}
+
+	foreach($users as $ui) {
+		$workflowRequestActions = array();
+
+		// Fetch triggered workflow request actions of current user when workflow is attached to this request
+		// so that same request action won't trigger twice.
+		if($workflowAttached) {
+			$workflowList = UserWorkflowProgress::getList($ui->getUserID());
+
+			if (count($workflowList) > 0) {
+				foreach($workflowList as $wp) {
+					$wr = $wp->getWorkflowRequestObject();
+					$workflowRequestActions[] = $wr->getRequestAction();
+				}
+			}
+		}
+
+		if(!(in_array($ui->getUserID(),$excluded_user_ids)) && !in_array('delete',$workflowRequestActions)) {
+			$ui->triggerDelete();
+		}
+	}
+	echo Loader::helper('json')->encode(array('error'=>false, 'hudMessage' => $hudMessage));
+	exit;
 }
 
 if (!isset($_REQUEST['reload'])) {
     ?>
 	<div id="ccm-user-bulk-delete-wrapper">
-<?php 
+<?php
 } ?>
 
 	<div id="ccm-user-delete" class="ccm-ui">
@@ -61,7 +92,7 @@ if (!isset($_REQUEST['reload'])) {
 					<?php echo t("Users you don't have permission to bulk-delete have been removed from this list.");
                 ?>
 				</div>
-			<?php 
+			<?php
             } ?>
 			<?php echo t('Are you sure you would like to delete the following users?');?><br/><br/>
 			<?php Loader::element('users/confirm_list', array('users' => $users)); ?>
@@ -75,7 +106,7 @@ if (!isset($_REQUEST['reload'])) {
 if (!isset($_REQUEST['reload'])) {
     ?>
 </div>
-<?php 
+<?php
 } ?>
 
 <script type="text/javascript">
@@ -86,10 +117,7 @@ ccm_userBulkActivate = function() {
 		jQuery.fn.dialog.hideLoader();
 		ccm_deactivateSearchResults('<?=$searchInstance?>');
 
-		ConcreteAlert.notify({
-		'message': ccmi18n.saveUserSettingsMsg,
-		'title': ccmi18n.user_delete
-		});
+		ccmAlert.hud(respObj.hudMessage, 2000, 'success', ccmi18n.user_delete);
 
 		$("#ccm-<?=$searchInstance?>-advanced-search").ajaxSubmit(function(r) {
 		       ccm_parseAdvancedSearchResponse(r, '<?=$searchInstance?>');

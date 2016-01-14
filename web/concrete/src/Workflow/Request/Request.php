@@ -2,11 +2,13 @@
 namespace Concrete\Core\Workflow\Request;
 
 use Concrete\Core\Foundation\Object;
+use Symfony\Component\EventDispatcher\GenericEvent;
 use Workflow;
 use Concrete\Core\Workflow\EmptyWorkflow;
 use Database;
 use Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
 use PermissionKey;
+use Events;
 
 abstract class Request extends Object
 {
@@ -113,8 +115,12 @@ abstract class Request extends Object
             $workflows = $pa->getWorkflows();
             foreach ($workflows as $wf) {
                 if ($wf->validateTrigger($this)) {
-                    $this->addWorkflowProgress($wf);
+                    $wp = $this->addWorkflowProgress($wf);
                     ++$workflowsStarted;
+
+                    $event = new GenericEvent();
+                    $event->setArgument('progress', $wp);
+                    Events::dispatch('workflow_triggered', $event);
                 }
             }
         }
@@ -122,6 +128,10 @@ abstract class Request extends Object
         if ($workflowsStarted == 0) {
             $defaultWorkflow = new EmptyWorkflow();
             $wp = $this->addWorkflowProgress($defaultWorkflow);
+
+            $event = new GenericEvent();
+            $event->setArgument('progress', $wp);
+            Events::dispatch('workflow_triggered', $event);
 
             return $wp->getWorkflowProgressResponseObject();
         }

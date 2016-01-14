@@ -4,6 +4,53 @@
     $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
     ?>
 
+    <? if (is_array($workflowList) && count($workflowList) > 0) { ?>
+        <div id="ccm-notification-user-alert-workflow" class="ccm-notification ccm-notification-info">
+            <div class="ccm-notification-inner-wrapper">
+                <? foreach ($workflowList as $i => $wl) { ?>
+                    <? $wr = $wl->getWorkflowRequestObject();
+                    $wf = $wl->getWorkflowObject(); ?>
+
+                    <form method="post" action="<?= $wl->getWorkflowProgressFormAction() ?>"
+                          id="ccm-notification-user-alert-form-<?= $i ?>">
+                        <i class="ccm-notification-icon fa fa-info-circle"></i>
+
+                        <div class="ccm-notification-inner">
+                            <p><?= $wf->getWorkflowProgressCurrentDescription($wl) ?></p>
+                            <? $actions = $wl->getWorkflowProgressActions(false); ?>
+                            <? if (count($actions) > 0) { ?>
+                                <div class="btn-group">
+                                    <? foreach ($actions as $act) { ?>
+                                        <? if ($act->getWorkflowProgressActionURL() != '') { ?>
+                                            <a href="<?= $act->getWorkflowProgressActionURL() ?>"
+                                        <? } else { ?>
+                                            <button type="submit"
+                                                    name="action_<?= $act->getWorkflowProgressActionTask() ?>"
+                                         <? } ?>
+
+                                        <? if (count($act->getWorkflowProgressActionExtraButtonParameters()) > 0) { ?>
+                                            <? foreach ($act->getWorkflowProgressActionExtraButtonParameters() as $key => $value) { ?>
+                                                <?= $key ?>="<?= $value ?>"
+                                            <? } ?>
+                                        <? } ?>
+
+                                        class="btn btn-xs <?= $act->getWorkflowProgressActionStyleClass() ?>"><?= $act->getWorkflowProgressActionStyleInnerButtonLeftHTML() ?> <?= $act->getWorkflowProgressActionLabel() ?> <?= $act->getWorkflowProgressActionStyleInnerButtonRightHTML() ?>
+                                        <? if ($act->getWorkflowProgressActionURL() != '') { ?>
+                                            </a>
+                                        <? } else { ?>
+                                            </button>
+                                        <? } ?>
+                                    <? } ?>
+                                </div>
+                            <? } ?>
+                        </div>
+                    </form>
+                <? } ?>
+            </div>
+            <div class="ccm-notification-actions"><a href="#" data-dismiss-alert="page-alert"><?= t('Hide') ?></a></div>
+        </div>
+    <? } ?>
+
     <style type="text/css">
         div[data-container=editable-fields] section {
             margin-bottom: 30px;
@@ -23,42 +70,38 @@
     ?>
                     <button type="submit" name="task" value="validate"
                             class="btn btn-default"><?= t('Mark Email as Valid') ?></button>
-                <?php 
+                <?php
 }
     ?>
-            <?php 
+            <?php
 }
     ?>
 
-            <?php if ($canActivateUser) {
-    ?>
-                <?php if ($user->isActive()) {
-    ?>
-                    <button type="submit" name="task" value="deactivate"
-                            class="btn btn-default"><?= t('Deactivate User') ?></button>
-                <?php 
-} else {
-    ?>
-                    <button type="submit" name="task" value="activate"
+            <?php if ($canActivateUser) { ?>
+                <?php if ($user->isActive()) { ?>
+                    <?php if (!in_array("deactivate", $workflowRequestActions)) { ?>
+                        <button type="submit" name="task" value="deactivate"
+                                class="btn btn-default"><?= t('Deactivate User') ?></button>
+                    <?php } ?>
+                <?php } else { ?>
+                    <?php if ((!in_array("activate", $workflowRequestActions) && !in_array("register_activate", $workflowRequestActions))) { ?>
+                        <button type="submit" name="task" value="activate"
                             class="btn btn-default"><?= t('Activate User') ?></button>
-                <?php 
-}
-    ?>
-            <?php 
-}
-    ?>
+                    <?php } ?>
+                <?php } ?>
+            <?php } ?>
 
             <?php if ($canSignInAsUser) {
     ?>
                 <button type="submit" name="task" value="sudo"
                         class="btn btn-default"><?= t('Sign in As User') ?></button>
-            <?php 
+            <?php
 }
     ?>
             <?php if ($canDeleteUser) {
     ?>
                 <button type="submit" name="task" value="delete" class="btn btn-danger"><?= t('Delete') ?></button>
-            <?php 
+            <?php
 }
     ?>
         </div>
@@ -78,7 +121,7 @@
     ?>data-editable-field-type="xeditable"
                                                        data-url="<?= $view->action('update_username', $user->getUserID()) ?>"
                                                        data-type="text"
-                                                       data-name="uName" <?php 
+                                                       data-name="uName" <?php
 }
     ?>><?= h($user->getUserName()) ?></span></p>
                         </div>
@@ -89,7 +132,7 @@
     ?>data-editable-field-type="xeditable"
                                                        data-url="<?= $view->action('update_email', $user->getUserID()) ?>"
                                                        data-type="email"
-                                                       data-name="uEmail"<?php 
+                                                       data-name="uEmail"<?php
 }
     ?>><?= h($user->getUserEmail()) ?></span></p>
                         </div>
@@ -98,9 +141,9 @@
                         <div class="col-md-4"><p><?= t('Password') ?></p></div>
                         <div class="col-md-8"><p><?php if ($canEditPassword) {
     ?><a href="#" class="btn btn-xs btn-default"
-                                                                                 data-button="change-password"><?= t('Change') ?></a><?php 
+                                                                                 data-button="change-password"><?= t('Change') ?></a><?php
 } else {
-    ?>*********<?php 
+    ?>*********<?php
 }
     ?>
                             </p></div>
@@ -112,7 +155,7 @@
                             <div <?php if ($canEditAvatar) {
     ?>data-editable-field-type="image"
                                  data-editable-field-inline-commands="true"
-                                 data-url="<?= $view->action('update_avatar', $user->getUserID()) ?>"<?php 
+                                 data-url="<?= $view->action('update_avatar', $user->getUserID()) ?>"<?php
 }
     ?>>
                                 <ul class="ccm-edit-mode-inline-commands">
@@ -155,12 +198,12 @@
                                         data-source="<?= $view->action('get_timezones') ?>"
                                         data-url="<?= $view->action('update_timezone', $user->getUserID()) ?>"
                                         data-type="select2" data-name="uTimezone"
-                                        data-value="<?= h($uTimezone) ?>"<?php 
+                                        data-value="<?= h($uTimezone) ?>"<?php
 }
     ?>><?= $dh->getTimezoneDisplayName($uTimezone) ?></span>
                                 </p></div>
                         </div>
-                    <?php 
+                    <?php
 }
     ?>
                     <?php
@@ -175,13 +218,13 @@
                                         data-source="<?= $view->action('get_languages') ?>"
                                         data-url="<?= $view->action('update_language', $user->getUserID()) ?>"
                                         data-type="select"
-                                        data-name="uDefaultLanguage"<?php 
+                                        data-name="uDefaultLanguage"<?php
 }
         ?>><?= h($user->getUserDefaultLanguage());
         ?></span>
                                 </p></div>
                         </div>
-                    <?php 
+                    <?php
     }
     ?>
                     <?php if (Config::get('concrete.user.registration.validate_email')) {
@@ -206,7 +249,7 @@
                                     }
     ?></p></div>
                         </div>
-                    <?php 
+                    <?php
 }
     ?>
 
@@ -222,7 +265,7 @@
                            dialog-height="480" dialog-modal="true"
                            href="<?= URL::to('/ccm/system/dialogs/group/search') ?>?filter=assign"
                            dialog-title="<?= t('Add Groups') ?>" dialog-modal="false"><?= t('Add Group') ?></a>
-                    <?php 
+                    <?php
                     }
     ?>
                 </div>
@@ -277,7 +320,7 @@
                 </form>
             </div>
         </div>
-    <?php 
+    <?php
 }
     ?>
 
@@ -376,7 +419,7 @@
 
         });
     </script>
-<?php 
+<?php
 } else {
     $tp = Loader::helper('concrete/user');
     if ($tp->canAccessUserSearchInterface()) {
@@ -390,13 +433,13 @@
                class="btn btn-primary"><?php echo t("Add User") ?></a>
         </div>
 
-    <?php 
+    <?php
     } else {
         ?>
         <p><?= t('You do not have access to user search. This setting may be changed in the access section of the dashboard settings page.') ?></p>
-    <?php 
+    <?php
     }
     ?>
 
-<?php 
+<?php
 } ?>

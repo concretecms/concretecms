@@ -648,7 +648,7 @@ return array(
             /*
              * Registration type
              *
-             * @var string The type (disabled|enabled|validate_email|manual_approve)
+             * @var string The type (disabled|enabled|validate_email)
              */
             'type' => 'disabled',
 

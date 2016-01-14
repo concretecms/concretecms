@@ -4701,6 +4701,19 @@
     </index>
   </table>
 
+  <table name="UserWorkflowProgress">
+    <field name="uID" type="integer" size="10">
+      <unsigned/>
+      <key/>
+      <default value="0"/>
+    </field>
+    <field name="wpID" type="integer" size="10">
+      <unsigned/>
+      <key/>
+      <default value="0"/>
+    </field>
+  </table>
+
   <table name="Queues">
     <field name="queue_id" type="integer" size="10">
       <unsigned/>

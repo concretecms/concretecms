@@ -9,6 +9,8 @@ use Concrete\Core\Workflow\Progress\Category as WorkflowProgressCategory;
 use Concrete\Core\Package\PackageList;
 use Database;
 use Core;
+use Events;
+use Symfony\Component\EventDispatcher\GenericEvent;
 
 /**
  * Base class for workflow progresses.
@@ -228,14 +230,23 @@ abstract class Progress extends Object
             $wpr = new Response();
         }
 
+        $event = new GenericEvent();
+        $event->setArgument('response', $wpr);
+
+        Events::dispatch('workflow_progressed', $event);
+
         return $wpr;
     }
 
-    public function getWorkflowProgressActions()
+    public function getWorkflowProgressActions($additionalActions = true)
     {
         $w = $this->getWorkflowObject();
         $req = $this->getWorkflowRequestObject();
-        $actions = $req->getWorkflowRequestAdditionalActions($this);
+        if ($additionalActions) {
+            $actions = $req->getWorkflowRequestAdditionalActions($this);
+        } else {
+            $actions = array();
+        }
         $actions = array_merge($actions, $w->getWorkflowProgressActions($this));
 
         return $actions;
