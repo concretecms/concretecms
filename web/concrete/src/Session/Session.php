@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Session;
 
-use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Application\Application;
 use \Symfony\Component\HttpFoundation\Session\Session as SymfonySession;
 
 /**
@@ -12,15 +12,27 @@ use \Symfony\Component\HttpFoundation\Session\Session as SymfonySession;
 class Session
 {
 
+    /** @var Application */
+    protected static $app;
+
     /**
-     * Class Session
-     * @package Concrete\Core\Session
+     * DO NOT USE THIS METHOD
+     * Instead override the application bindings.
+     * This method only exists to enable legacy static methods on the real application instance
+     * @deprecated Create the session using $app->make('session');
+     */
+    public static function setApplicationObject(Application $app)
+    {
+        static::$app = $app;
+    }
+
+    /**
      * @deprecated Create the session using $app->make('session');
      */
     public static function start()
     {
         /** @var FactoryInterface $factory */
-        return Application::make('session');
+        return self::$app->make('session');
     }
 
     /**
@@ -29,7 +41,7 @@ class Session
      */
     public static function testSessionFixation(SymfonySession $session)
     {
-        $validator = Application::make('Concrete\Core\Session\SessionValidatorInterface');
+        $validator = self::$app->make('Concrete\Core\Session\SessionValidatorInterface');
         $validator->handleSessionValidation($session);
     }
 }
