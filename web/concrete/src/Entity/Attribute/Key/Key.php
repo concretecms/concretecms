@@ -58,9 +58,6 @@ abstract class Key implements AttributeKeyInterface
     protected $akIsColumnHeader = true;
 
     /**
-     * Technically this is a one to one but doctrine can't used a composite/derived
-     * primary key from entity in an abstract class. Sigh.
-     *
      * @OneToOne(targetEntity="\Concrete\Core\Entity\Attribute\Key\Type\Type", mappedBy="key", cascade={"persist", "remove"})
      */
     protected $key_type;
