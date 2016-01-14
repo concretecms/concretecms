@@ -90,7 +90,7 @@ class User extends Object
         if ($session->get('uID') > 0) {
             $db = $app['database']->connection();
 
-            $row = $db->GetRow("select uID, uIsActive, uLastPasswordChange from Users where uID = ? and uName = ?", array($session->get('uID'), $session->get('uName')));
+            $row = $db->GetRow("select uID, uIsActive, uLastPasswordChange, ulsPasswordReset from Users where uID = ? and uName = ?", array($session->get('uID'), $session->get('uName')));
             $checkUID = (isset($row['uID'])) ? ($row['uID']) : (false);
 
             if ($checkUID == $session->get('uID')) {
@@ -101,6 +101,10 @@ class User extends Object
                 if ($row['uLastPasswordChange'] > $session->get('uLastPasswordChange')) {
                     $this->loadError(USER_SESSION_EXPIRED);
 
+                    return false;
+                }
+
+                if ($row['ulsPasswordReset']) {
                     return false;
                 }
 
