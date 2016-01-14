@@ -5,6 +5,7 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Conversations;
 use Concrete\Core\Conversation\Conversation;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Core;
+use Database;
 
 class Settings extends DashboardPageController
 {
@@ -34,7 +35,7 @@ class Settings extends DashboardPageController
 
     protected function loadEditors()
     {
-        $db = Core::make('Concrete\Core\Database\Connection\Connection');
+        $db = Database::connection();
         $q = $db->executeQuery('SELECT * FROM ConversationEditors');
         $editors = array();
         $active = false;
