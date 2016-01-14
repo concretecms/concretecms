@@ -259,8 +259,14 @@ class Controller extends AuthenticationTypeController
         $this->view();
     }
 
-    public function email_validated()
+    public function email_validated($mode = false)
     {
+        if ($mode) {
+            $this->set('workflowPending', true);
+            $this->set('validated', false);
+        } else {
+            $this->set('validated', true);
+        }
         $this->view();
     }
 
@@ -323,12 +329,16 @@ class Controller extends AuthenticationTypeController
 
     public function v($hash = '')
     {
-        $ui = \UserInfo::getByValidationHash($hash);
+        $ui = UserInfo::getByValidationHash($hash);
         if (is_object($ui)) {
             $ui->markValidated();
             $this->set('uEmail', $ui->getUserEmail());
-            $this->set('validated', true);
-            $this->redirect('/login/callback/concrete', 'email_validated');
+            if ($ui->triggerActivate('register_activate', USER_SUPER_ID)) {
+                $mode = '';
+            } else {
+                $mode = 'workflow';
+            }
+            $this->redirect('/login/callback/concrete', 'email_validated', $mode);
             exit;
         }
         $this->redirect('/login/callback/concrete', 'invalid_token');

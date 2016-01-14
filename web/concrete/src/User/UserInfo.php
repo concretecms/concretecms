@@ -23,6 +23,8 @@ use Group;
 use Session;
 use Core;
 use Concrete\Core\User\Avatar\AvatarServiceInterface;
+use Concrete\Core\Workflow\Request\ActivateUserRequest as ActivateUserWorkflowRequest;
+use Concrete\Core\Workflow\Request\DeleteUserRequest as DeleteUserWorkflowRequest;
 
 class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterface
 {
@@ -69,7 +71,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function getPermissionAssignmentClassName()
     {
-        return false;
+        return '\\Concrete\\Core\\Permission\\Assignment\\UserAssignment';
     }
 
     /**
@@ -77,7 +79,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function getPermissionObjectKeyCategoryHandle()
     {
-        return false;
+        return 'user';
     }
 
     /**
@@ -93,6 +95,19 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         }
 
         return $groups;
+    }
+
+    public function triggerDelete()
+    {
+        global $u;
+
+        $db = $this->connection;
+        $v = array($this->uID);
+        $pkr = new DeleteUserWorkflowRequest();
+        $pkr->setRequestedUserID($this->uID);
+        $pkr->setRequesterUserID($u->getUserID());
+        $pkr->trigger();
+        return $db->GetOne('select count(uID) from Users where uID = ?', $v) == 0;
     }
 
     /**
@@ -429,6 +444,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         $db->query("update Users set uIsValidated = 1, uIsFullRecord = 1 where uID = ?", $v);
         $db->query("update UserValidationHashes set uDateRedeemed = " . time() . " where uID = ?", $v);
 
+        $this->uIsValidated = 1;
         $ue = new \Concrete\Core\User\Event\UserInfo($this);
         Events::dispatch('on_user_validate', $ue);
 
@@ -470,6 +486,29 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         }
     }
 
+    function triggerActivate($action=null, $requesterUID=null)
+    {
+        if ($requesterUID === null) {
+            global $u;
+            $requesterUID = $u->getUserID();
+        }
+
+        $db = $this->connection;
+        $v = array($this->uID);
+
+        $pkr = new ActivateUserWorkflowRequest();
+        // default activate action of workflow is set after workflow request is created
+        if ($action !== null) {
+            $pkr->setRequestAction($action);
+        }
+        $pkr->setRequestedUserID($this->uID);
+        $pkr->setRequesterUserID($requesterUID);
+        $pkr->trigger();
+
+        $this->uIsActive = intval($db->GetOne('select uIsActive from Users where uID = ?', $v));
+        return $this->isActive();
+    }
+
     /**
      */
     public function activate()
@@ -479,6 +518,23 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         $db->query($q);
         $ue = new \Concrete\Core\User\Event\UserInfo($this);
         Events::dispatch('on_user_activate', $ue);
+    }
+
+    function triggerDeactivate()
+    {
+        global $u;
+
+        $db = $this->connection;
+        $v = array($this->uID);
+
+        $pkr = new ActivateUserWorkflowRequest();
+        $pkr->setRequestAction('deactivate');
+        $pkr->setRequestedUserID($this->uID);
+        $pkr->setRequesterUserID($u->getUserID());
+        $pkr->trigger();
+
+        $this->uIsActive = intval($db->GetOne('select uIsActive from Users where uID = ?', $v));
+        return $this->isActive()==0;
     }
 
     /**

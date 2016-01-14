@@ -45,6 +45,7 @@ class Me extends DashboardPageController
             $tabs[] = array(View::url('/dashboard/workflow/me/', 'view', $cat->getWorkflowProgressCategoryHandle()), $tabName, $active);
         }
         $this->set('tabs', $tabs);
+        $this->set('pageTitle', t('Waiting for Me'));
     }
 
     public function view($wpCategoryHandle = false)
