@@ -17,6 +17,7 @@ class SocialLinksValue extends Value
 
     public function __construct()
     {
+        parent::__construct();
         $this->links = new ArrayCollection();
     }
 

@@ -20,6 +20,7 @@ class SelectValue extends Value
 
     public function __construct()
     {
+        parent::__construct();
         $this->selectedOptions = new ArrayCollection();
     }
 

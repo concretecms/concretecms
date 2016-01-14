@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Entity\Attribute\Value\Value;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * @Entity
  * @InheritanceType("JOINED")
@@ -16,14 +18,7 @@ abstract class Value
     protected $avID;
 
     /**
-     * @ManyToOne(targetEntity="\Concrete\Core\Entity\Attribute\Key\Key")
-     * @JoinColumn(name="akID", referencedColumnName="akID")
-     **/
-    protected $attribute_key;
-
-    /**
      * @OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Value\Value", mappedBy="value")
-     * @JoinColumn(name="avID", referencedColumnName="avID")
      **/
     protected $attribute_values;
 
@@ -32,15 +27,10 @@ abstract class Value
      */
     public function getAttributeKey()
     {
-        return $this->attribute_key;
-    }
-
-    /**
-     * @param mixed $attribute_key
-     */
-    public function setAttributeKey($attribute_key)
-    {
-        $this->attribute_key = $attribute_key;
+        $values = $this->getAttributeValues();
+        if ($values->containsKey(0)) {
+            return $values->get(0)->getAttributeKey();
+        }
     }
 
     /**
@@ -54,6 +44,11 @@ abstract class Value
     public function getValue()
     {
         return $this;
+    }
+
+    public function __construct()
+    {
+        $this->attribute_values = new ArrayCollection();
     }
 
     public function getDisplaySanitizedValue()

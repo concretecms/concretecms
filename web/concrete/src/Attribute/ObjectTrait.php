@@ -58,7 +58,7 @@ trait ObjectTrait
             $value = $controller->saveValue($value);
         }
 
-        $value->setAttributeKey($attributeValue->getAttributeKey());
+        $value->getAttributeValues()->add($attributeValue);
         $attributeValue->setValue($value);
 
         $orm = \Database::connection()->getEntityManager();
