@@ -102,7 +102,6 @@ class Add extends DashboardPageController
             // do the registration
             $data = array('uName' => $username, 'uPassword' => $password, 'uEmail' => $_POST['uEmail'], 'uDefaultLanguage' => $_POST['uDefaultLanguage']);
             $uo = UserInfo::add($data);
-
             if (is_object($uo)) {
                 $av = Loader::helper('concrete/avatar');
                 if ($assignment->allowEditAvatar()) {

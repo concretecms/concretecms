@@ -532,16 +532,10 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
             $fa->delete();
         }
 
-        $r = $db->Execute('select avID, akID from CollectionAttributeValues where cID = ? and cvID = ?', array(
-            $cID,
-            $cvID,
-        ));
-        while ($row = $r->FetchRow()) {
-            $cak = CollectionAttributeKey::getByID($row['akID']);
-            $cav = $c->getAttributeValueObject($cak);
-            if (is_object($cav)) {
-                $cav->delete();
-            }
+        $category = \Core::make('Concrete\Core\Attribute\Category\PageCategory');
+        $attributes = $category->getAttributeValues($this);
+        foreach ($attributes as $attribute) {
+            $category->deleteValue($attribute);
         }
 
         $db->Execute('delete from CollectionVersionBlockStyles where cID = ? and cvID = ?', array(
