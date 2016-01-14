@@ -2,6 +2,7 @@
 namespace Concrete\Core\User;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Attribute\Category\UserCategory;
 use Concrete\Core\Attribute\Key\UserKey;
 use Concrete\Core\Attribute\ObjectTrait;
 use Concrete\Core\Database\Connection\Connection;
@@ -30,12 +31,14 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     protected $avatarService;
     protected $application;
     protected $connection;
+    protected $attributeCategory;
 
-    public function __construct(Connection $connection, Application $application, AvatarServiceInterface $avatarService)
+    public function __construct(UserCategory $attributeCategory, Connection $connection, Application $application, AvatarServiceInterface $avatarService)
     {
         $this->avatarService = $avatarService;
         $this->application = $application;
         $this->connection = $connection;
+        $this->attributeCategory = $attributeCategory;
     }
     /**
      * @return string
@@ -112,13 +115,9 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 
         $db = $this->connection;
 
-        $r = $db->Execute('select avID, akID from UserAttributeValues where uID = ?', array($this->uID));
-        while ($row = $r->FetchRow()) {
-            $uak = UserAttributeKey::getByID($row['akID']);
-            $av = $this->getAttributeValueObject($uak);
-            if (is_object($av)) {
-                $av->delete();
-            }
+        $attributes = $this->attributeCategory->getAttributeValues($this);
+        foreach ($attributes as $attribute) {
+            $this->attributeCategory->deleteValue($attribute);
         }
 
         $r = $db->query("DELETE FROM OauthUserMap WHERE user_id = ?", array(intval($this->uID)));
@@ -713,9 +712,8 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
             return $value;
         } elseif ($createIfNotExists) {
             $attributeValue = new UserValue();
-            $attributeValue->setUserID($this);
+            $attributeValue->setUserID($this->getUserID());
             $attributeValue->setAttributeKey($ak);
-
             return $attributeValue;
         }
     }

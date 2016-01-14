@@ -506,6 +506,10 @@ class Controller extends AttributeTypeController
      */
     public function action_load_autocomplete_selected_value()
     {
+        $em = \Database::get()->getEntityManager();
+        $r = $em->getRepository('\Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption');
+        $type = $this->attributeKey->getAttributeKeyType();
+
         $value = $this->request->query->get('value');
         $values = explode(',', $value);
         $response = array();
@@ -514,7 +518,7 @@ class Controller extends AttributeTypeController
             $o = new \stdClass();
             if (strpos($value, 'SelectAttributeOption:') === 0) {
                 $optionID = substr($value, 22);
-                $option = Option::getByID($optionID);
+                $option = $r->findOneBy(array('list' => $type->getOptionList(), 'avSelectOptionID' => $optionID));
                 if (is_object($option)) {
                     $o->id = $value;
                     $o->text = $option->getSelectAttributeOptionValue();
