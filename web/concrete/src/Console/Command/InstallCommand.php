@@ -35,6 +35,7 @@ class InstallCommand extends Command
             ->addOption('default-locale', null, InputOption::VALUE_REQUIRED, 'The default site locale (eg en_US)')
             ->addOption('config', null, InputOption::VALUE_REQUIRED, 'Use configuration file for installation')
             ->addOption('attach', null, InputOption::VALUE_NONE, 'Attach if database contains an existing concrete5 instance')
+            ->addOption('force-attach', null, InputOption::VALUE_NONE, 'Always attach')
         ;
     }
 
@@ -97,7 +98,10 @@ class InstallCommand extends Command
 
         $cnt = new \Concrete\Controller\Install();
 
-        $cnt->setAutoAttach(!!$input->getOption('attach'));
+
+        $force_attach = $input->getOption('force-attach');
+        $auto_attach = $force_attach || $input->getOption('attach');
+        $cnt->setAutoAttach($auto_attach);
 
         $cnt->on_start();
         $fileWriteErrors = clone $cnt->fileWriteErrors;
@@ -135,8 +139,9 @@ class InstallCommand extends Command
 
         try {
             $spl = StartingPointPackage::getClass($options['starting-point']);
-            $attach_mode = false;
-            if ($cnt->isAutoAttachEnabled()) {
+            $attach_mode = $force_attach;
+
+            if (!$force_attach && $cnt->isAutoAttachEnabled()) {
                 /** @var Connection $db */
                 $db = \Core::make('database')->connection();
 
