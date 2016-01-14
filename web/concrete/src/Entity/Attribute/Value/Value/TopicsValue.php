@@ -22,6 +22,7 @@ class TopicsValue extends Value
      */
     public function __construct()
     {
+        parent::__construct();
         $this->topics = new ArrayCollection();
     }
 

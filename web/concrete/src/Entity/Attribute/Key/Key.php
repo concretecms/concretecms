@@ -63,6 +63,13 @@ abstract class Key implements AttributeKeyInterface
     protected $key_type;
 
     /**
+     * @OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Value\Value", mappedBy="attribute_key", cascade={"remove"})
+     * @JoinColumn(name="avID", referencedColumnName="avID")
+     **/
+    protected $attribute_values;
+
+
+    /**
      * @return mixed
      */
     public function getAttributeKeyID()
