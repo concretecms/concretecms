@@ -1,7 +1,19 @@
 <?php
 
-class ContentImporterValueInspectorTest extends PHPUnit_Framework_TestCase
+class ContentImporterValueInspectorTest extends FileStorageTestCase
 {
+
+    protected function setUp()
+    {
+        $this->tables = array_merge($this->tables, array(
+            'Files',
+            'FileVersions',
+            'Users',
+            'PermissionAccessEntityTypes',
+        ));
+        parent::setUp();
+    }
+
     public function testMake()
     {
         $inspector = Core::make('import/value_inspector/core');
@@ -93,4 +105,31 @@ EOL;
         $this->assertInstanceOf('\Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PageFeedItem', $items[2]);
         $this->assertInstanceOf('\Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PageTypeItem', $items[3]);
     }
+
+    public function testReplacedContent()
+    {
+        // create the default storage location first.
+        mkdir($this->getStorageDirectory());
+        $this->getStorageLocation();
+
+        $importer = new Concrete\Core\File\Importer;
+        $prefix = $importer->generatePrefix();
+        Concrete\Core\File\File::add('test.jpg', $prefix);
+
+        $content = <<<EOL
+        <p><concrete-picture alt="Lorem ipsum" file="test.jpg">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip <concrete-picture file="test.jpg" alt="ex ea commodo consequat." width="200" height="100" style="border: 1px solid black;" /></p>
+EOL;
+
+        $expected = <<<EOL
+        <p><concrete-picture fID="1" />Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip <concrete-picture fID="1" /></p>
+EOL;
+
+        $inspector = Core::make('import/value_inspector');
+        $result = $inspector->inspect($content);
+
+        $this->assertEquals($expected, $result->getReplacedContent());
+    }
+
 }

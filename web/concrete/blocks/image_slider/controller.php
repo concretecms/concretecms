@@ -13,7 +13,7 @@ class Controller extends BlockController
     protected $btExportTables = array('btImageSlider', 'btImageSliderEntries');
     protected $btInterfaceWidth = "600";
     protected $btWrapperClass = 'ccm-ui';
-    protected $btInterfaceHeight = "465";
+    protected $btInterfaceHeight = "550";
     protected $btCacheBlockRecord = true;
     protected $btExportFileColumns = array('fID');
     protected $btCacheBlockOutput = true;
@@ -158,6 +158,10 @@ class Controller extends BlockController
 
     public function save($args)
     {
+        $args += array(
+            'timeout' => 4000,
+            'speed' => 500,
+        );
         $args['timeout'] = intval($args['timeout']);
         $args['speed'] = intval($args['speed']);
         $args['noAnimate'] = isset($args['noAnimate']) ? 1 : 0;
