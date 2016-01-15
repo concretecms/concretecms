@@ -127,6 +127,10 @@ abstract class AbstractCategory implements CategoryInterface
         $loader = $this->getRequestLoader();
         $loader->load($key, $request);
 
+        $key_type = $key->getAttributeKeyType();
+        if (is_object($key_type)) {
+            $this->entityManager->remove($key_type);
+        }
         $key_type = $key->getController()->saveKey($request->request->all());
         $key_type->setAttributeKey($key);
         $key_type->setAttributeType($key->getAttributeType());

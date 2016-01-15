@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Attribute\DateTime;
 
+use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Entity\Attribute\Key\Type\DateTimeType;
 use Concrete\Core\Entity\Attribute\Value\Value\DateTimeValue;
 use Loader;
@@ -13,17 +14,26 @@ class Controller extends AttributeTypeController
 
     protected $searchIndexFieldDefinition = array('type' => 'datetime', 'options' => array('notnull' => false));
 
+    public function getIconFormatter()
+    {
+        return new FontAwesomeIconFormatter('calendar');
+    }
+
     public function saveKey($data)
     {
         $type = new DateTimeType();
         $type->setMode($data['akDateDisplayMode']);
-
         return $type;
     }
 
     public function type_form()
     {
         $this->load();
+    }
+
+    public function getSearchIndexValue()
+    {
+        return $this->attributeValue->getValue()->format('Y-m-d H:i:s');
     }
 
     public function getDisplayValue()
@@ -150,17 +160,9 @@ class Controller extends AttributeTypeController
 
         $av = new DateTimeValue();
         $av->setValue(new \DateTime($value));
-
         return $av;
     }
-
-    public function duplicateKey($newAK)
-    {
-        $this->load();
-        $db = Loader::db();
-        $db->Execute('insert into atDateTimeSettings (akID, akDateDisplayMode) values (?, ?)', array($newAK->getAttributeKeyID(), $this->akDateDisplayMode));
-    }
-
+    
     public function saveForm($data)
     {
         $this->load();
@@ -172,7 +174,6 @@ class Controller extends AttributeTypeController
             case 'date':
             case 'date_time':
                 $value = $dt->translate('value', $data);
-
                 return $this->saveValue($value);
                 break;
         }
