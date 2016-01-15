@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Attribute\Boolean;
 
+use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Entity\Attribute\Key\Type\BooleanType;
 use Concrete\Core\Entity\Attribute\Value\Value\BooleanValue;
 use Core;
@@ -11,6 +12,11 @@ use Concrete\Core\Attribute\Controller as AttributeTypeController;
 class Controller extends AttributeTypeController
 {
     protected $searchIndexFieldDefinition = array('type' => 'boolean', 'options' => array('default' => 0, 'notnull' => false));
+
+    public function getIconFormatter()
+    {
+        return new FontAwesomeIconFormatter('check-square');
+    }
 
     public function searchForm($list)
     {

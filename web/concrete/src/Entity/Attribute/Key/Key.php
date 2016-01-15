@@ -196,10 +196,12 @@ abstract class Key implements AttributeKeyInterface
 
     public function getController()
     {
-        $controller = $this->getAttributeKeyType()->getAttributeType()->getController();
-        $controller->setAttributeKey($this);
-
-        return $controller;
+        $type = $this->getAttributeKeyType();
+        if ($type) {
+            $controller = $type->getAttributeType()->getController();
+            $controller->setAttributeKey($this);
+            return $controller;
+        }
     }
 
     /**
