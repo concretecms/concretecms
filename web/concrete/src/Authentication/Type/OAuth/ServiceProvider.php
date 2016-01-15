@@ -29,11 +29,17 @@ class ServiceProvider extends Provider
 
         $this->app->bind(
             'oauth_extractor',
-            function ($app, $service=null) {
-                if (!$service) {
+            function ($app, $params = array()) {
+
+                if (!is_array($params)) {
+                    $params = array($params);
+                }
+
+                if (!isset($params[0])) {
                     return null;
                 }
 
+                $service = $params[0];
                 $extractor_factory = $app->make('oauth/factory/extractor');
                 return $extractor_factory->get($service);
             });
