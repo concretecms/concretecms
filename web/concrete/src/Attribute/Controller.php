@@ -298,6 +298,6 @@ class Controller extends AbstractController
 
     public function getIconFormatter()
     {
-        return new LegacyIconFormatter($this);
+        return new FileIconFormatter($this);
     }
 }

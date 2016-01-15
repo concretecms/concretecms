@@ -4,22 +4,22 @@
 
 <div class="ccm-attribute-address-composer-wrapper ccm-attribute-address-<?=$key->getAttributeKeyID()?>">
 
-    <div class="form-group">
+    <div class="ccm-attribute-address-line">
         <?=$f->label($this->field('address1'), t('Address 1'))?>
         <?=$f->text($this->field('address1'), $address1)?>
     </div>
 
-    <div class="form-group">
+    <div class="ccm-attribute-address-line">
         <?=$f->label($this->field('address2'), t('Address 2'))?>
         <?=$f->text($this->field('address2'), $address2)?>
     </div>
 
-    <div class="form-group">
+    <div class="ccm-attribute-address-line">
         <?=$f->label($this->field('city'), t('City'))?>
         <?=$f->text($this->field('city'), $city)?>
     </div>
 
-    <div class="form-group ccm-attribute-address-state-province">
+    <div class="ccm-attribute-address-line ccm-attribute-address-state-province">
         <?=$f->label($this->field('state_province'), t('State/Province'))?>
     <?php
     $spreq = $f->getRequestValue($this->field('state_province'));
@@ -55,12 +55,12 @@
     $countries = array_merge(array('' => t('Choose Country')), $countries);
     ?>
 
-    <div class="form-group ccm-attribute-address-country">
+    <div class="ccm-attribute-address-line ccm-attribute-address-country">
         <?=$f->label($this->field('country'), t('Country'))?>
         <?=$f->select($this->field('country'), $countries, $country); ?>
     </div>
 
-    <div class="form-group">
+    <div class="ccm-attribute-address-line">
         <?=$f->label($this->field('postal_code'), t('Postal Code'))?>
         <?=$f->text($this->field('postal_code'), $postal_code)?>
     </div>

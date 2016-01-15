@@ -36,7 +36,7 @@ $canEdit = $permissionsCallback($ak, $permissionsArguments); ?>
     <div class="row">
         <div class="col-md-2"><p><?= $ak->getAttributeKeyDisplayName() ?></p></div>
         <div class="col-md-10" <?php if ($canEdit) {
-    ?>data-editable-field-inline-commands="true"<?php 
+    ?>data-editable-field-inline-commands="true"<?php
 } ?>>
             <?php if ($canEdit) {
     ?>
@@ -47,7 +47,7 @@ $canEdit = $permissionsCallback($ak, $permissionsArguments); ?>
                             <i class="fa fa-trash-o"></i>
                         </a></li>
                 </ul>
-            <?php 
+            <?php
 } ?>
             <span
                     <?php if ($canEdit) {
@@ -77,5 +77,5 @@ $canEdit = $permissionsCallback($ak, $permissionsArguments); ?>
         </div>
     </div>
 
-<?php 
+<?php
 }

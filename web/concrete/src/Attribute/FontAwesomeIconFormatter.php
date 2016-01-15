@@ -14,8 +14,8 @@ class FontAwesomeIconFormatter implements IconFormatterInterface
 
     public function getListIconElement()
     {
-        $span = new Element('span');
-        $span->addClass('fa fa-' . $this->icon);
+        $span = new Element('i');
+        $span->addClass('ccm-attribute-icon fa fa-' . $this->icon);
 
         return $span;
     }

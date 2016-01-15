@@ -4,12 +4,12 @@ namespace Concrete\Core\Attribute;
 use HtmlObject\Element;
 
 /**
- * A legacy class for those attribute type that don't implement their own formatter
- * Class StandardTypeFormatter.
+ * Formerly the only way to specify an icon – lets attributes provide one as icon.png
+ * in their folder.
  *
  * @package Concrete\Core\Attribute
  */
-class LegacyIconFormatter implements IconFormatterInterface
+class FileIconFormatter implements IconFormatterInterface
 {
     protected $controller;
 

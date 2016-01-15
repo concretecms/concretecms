@@ -200,7 +200,7 @@ class UserList extends DatabaseItemList
 
         $keys = \Concrete\Core\Attribute\Key\UserKey::getSearchableIndexedList();
         foreach ($keys as $ak) {
-            $cnt = $ak->getAttributeKey()->getController();
+            $cnt = $ak->getController();
             $expressions[] = $cnt->searchKeywords($keywords, $this->query);
         }
         $expr = $this->query->expr();
