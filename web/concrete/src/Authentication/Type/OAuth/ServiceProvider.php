@@ -12,37 +12,29 @@ class ServiceProvider extends Provider
 
     public function register()
     {
-        $this->app->bind(
-            'oauth/factory/service',
-            function ($app, $params = array()) {
-                $factory = new ServiceFactory();
-                $factory->setHttpClient($client = new CurlClient());
-                $client->setCurlParameters((array) $params);
+        $this->app->bind('oauth/factory/service', function ($app, $params = array()) {
+            $factory = new ServiceFactory();
+            $factory->setHttpClient($client = new CurlClient());
+            $client->setCurlParameters((array) $params);
 
-                return $factory;
-            });
-        $this->app->bindShared(
-            'oauth/factory/extractor',
-            function () {
-                return new ExtractorFactory();
-            });
+            return $factory;
+        });
+        $this->app->bindShared('oauth/factory/extractor', function () {
+            return new ExtractorFactory();
+        });
 
-        $this->app->bind(
-            'oauth_extractor',
-            function ($app, $params = array()) {
+        $this->app->bind('oauth_extractor', function ($app, $params = array()) {
+            if (!is_array($params)) {
+                $params = array($params);
+            }
 
-                if (!is_array($params)) {
-                    $params = array($params);
-                }
+            if (!$service = head($params)) {
+                throw new \InvalidParameterException('No Service given.');
+            }
 
-                if (!isset($params[0])) {
-                    return null;
-                }
-
-                $service = $params[0];
-                $extractor_factory = $app->make('oauth/factory/extractor');
-                return $extractor_factory->get($service);
-            });
+            $extractor_factory = $app->make('oauth/factory/extractor');
+            return $extractor_factory->get($service);
+        });
 
         \Route::register(
             '/ccm/system/authentication/oauth2/{type}/{action}',
