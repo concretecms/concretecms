@@ -54,10 +54,10 @@ class StandardSearchIndexer implements SearchIndexerInterface
             foreach ($values as $value) {
                 $attributeValue = $value->getValueObject()->getSearchIndexValue();
                 if (is_array($attributeValue)) {
-                    foreach ($attributeValue as $key => $value) {
-                        $col = $this->getIndexEntryColumn($value->getAttributeKey(), $key);
+                    foreach ($attributeValue as $valueKey => $valueValue) {
+                        $col = $this->getIndexEntryColumn($value->getAttributeKey(), $valueKey);
                         if (isset($columns[strtolower($col)])) {
-                            $columnHeaders[$col] = $value;
+                            $columnHeaders[$col] = $valueValue;
                         }
                     }
                 } else {

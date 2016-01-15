@@ -8,37 +8,37 @@ namespace Concrete\Core\Entity\Attribute\Value\Value;
 class AddressValue extends Value
 {
     /**
-     * @Column(type="string")
+     * @Column(type="string", nullable=true)
      */
     protected $address1;
 
     /**
-     * @Column(type="string")
+     * @Column(type="string", nullable=true)
      */
     protected $address2;
 
     /**
-     * @Column(type="string")
+     * @Column(type="string", nullable=true)
      */
     protected $address3;
 
     /**
-     * @Column(type="string")
+     * @Column(type="string", nullable=true)
      */
     protected $city;
 
     /**
-     * @Column(type="string")
+     * @Column(type="string", nullable=true)
      */
     protected $state_province;
 
     /**
-     * @Column(type="string")
+     * @Column(type="string", nullable=true)
      */
     protected $country;
 
     /**
-     * @Column(type="string")
+     * @Column(type="string", nullable=true)
      */
     protected $postal_code;
 
@@ -153,4 +153,52 @@ class AddressValue extends Value
     {
         $this->postal_code = $postal_code;
     }
+
+    public function getFullCountry()
+    {
+        $h = \Core::make('helper/lists/countries');
+        return $h->getCountryName($this->country);
+    }
+
+    public function getFullStateProvince()
+    {
+        $h = \Core::make('helper/lists/states_provinces');
+        $val = $h->getStateProvinceName($this->state_province, $this->country);
+        if ($val == '') {
+            return $this->state_province;
+        } else {
+            return $val;
+        }
+    }
+
+    public function __toString()
+    {
+        $ret = '';
+        if ($this->address1) {
+            $ret .= $this->address1 . "\n";
+        }
+        if ($this->address2) {
+            $ret .= $this->address2 . "\n";
+        }
+        if ($this->city) {
+            $ret .= $this->city;
+        }
+        if ($this->city && $this->state_province) {
+            $ret .= ", ";
+        }
+        if ($this->state_province) {
+            $ret .= $this->getFullStateProvince();
+        }
+        if ($this->postal_code) {
+            $ret .= " " . $this->postal_code;
+        }
+        if ($this->city || $this->state_province || $this->postal_code) {
+            $ret .= "\n";
+        }
+        if ($this->country) {
+            $ret .= $this->getFullCountry();
+        }
+        return $ret;
+    }
+
 }

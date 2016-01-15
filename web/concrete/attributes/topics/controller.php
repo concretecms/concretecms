@@ -56,7 +56,7 @@ class Controller extends AttributeTypeController
 
     public function getDisplayValue()
     {
-        $list = $this->attributeValue->getSelectedTopics();
+        $list = $this->attributeValue->getValue()->getSelectedTopics();
         $topics = array();
         foreach ($list as $node) {
             $topic = Node::getByID($node->getTreeNodeID());
@@ -78,13 +78,13 @@ class Controller extends AttributeTypeController
      */
     public function getSelectedOptions()
     {
-        return $this->attributeValue->getSelectedTopics();
+        return $this->attributeValue->getValue()->getSelectedTopics();
     }
 
     public function exportValue(\SimpleXMLElement $akn)
     {
         $avn = $akn->addChild('topics');
-        $nodes = $this->attributeValue->getSelectedTopics();
+        $nodes = $this->attributeValue->getValue()->getSelectedTopics();
         foreach ($nodes as $node) {
             $topic = Node::getByID($node->getTreeNodeID());
             if (is_object($topic)) {
@@ -163,7 +163,7 @@ class Controller extends AttributeTypeController
         }
         if (is_object($this->attributeValue)) {
             $valueIDs = array();
-            foreach ($this->attributeValue->getSelectedTopics() as $value) {
+            foreach ($this->attributeValue->getValue()->getSelectedTopics() as $value) {
                 $valueID = $value->getTreeNodeID();
                 $withinParentScope = false;
                 $nodeObj = TreeNode::getByID($value->getTreeNodeID());
@@ -200,7 +200,7 @@ class Controller extends AttributeTypeController
     public function getSearchIndexValue()
     {
         $str = "||";
-        $nodeKeys = $this->attributeValue->getSelectedTopics();
+        $nodeKeys = $this->attributeValue->getValue()->getSelectedTopics();
         foreach ($nodeKeys as $nodeKey) {
             $nodeObj = TreeNode::getByID($nodeKey->getTreeNodeID());
             if (is_object($nodeObj)) {

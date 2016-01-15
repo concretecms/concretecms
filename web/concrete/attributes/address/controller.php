@@ -2,6 +2,7 @@
 namespace Concrete\Attribute\Address;
 
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
+use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Entity\Attribute\Key\Type\AddressType;
 use Concrete\Core\Entity\Attribute\Value\Value\AddressValue;
 use Core;
@@ -10,6 +11,11 @@ use Database;
 class Controller extends AttributeTypeController
 {
     public $helpers = array('form');
+
+    public function getIconFormatter()
+    {
+        return new FontAwesomeIconFormatter('map-marker');
+    }
 
     public function searchKeywords($keywords, $queryBuilder)
     {
@@ -84,7 +90,7 @@ class Controller extends AttributeTypeController
     public function search()
     {
         $this->load();
-        echo $this->form();
+        $this->form();
         $v = $this->getView();
         $this->set('search', true);
         $v->render('form');
@@ -92,7 +98,7 @@ class Controller extends AttributeTypeController
 
     public function saveForm($data)
     {
-        $this->saveValue($data);
+        return $this->saveValue($data);
     }
 
     public function validateForm($data)
@@ -129,9 +135,9 @@ class Controller extends AttributeTypeController
 
     public function getDisplayValue()
     {
-        $v = Core::make('helper/text')->entities($this->getValue());
+        $value = $this->getValue(); // Address value, convert to string
+        $v = Core::make('helper/text')->entities($value);
         $ret = nl2br($v);
-
         return $ret;
     }
 
@@ -176,24 +182,6 @@ class Controller extends AttributeTypeController
         }
 
         return $e;
-    }
-
-    public function duplicateKey($newAK)
-    {
-        $this->load();
-        $db = Database::connection();
-        $db->Execute(
-            'insert into atAddressSettings (akID, akHasCustomCountries, akDefaultCountry) values (?, ?, ?)',
-            array($newAK->getAttributeKeyID(), $this->akHasCustomCountries, $this->akDefaultCountry)
-        );
-        if ($this->akHasCustomCountries) {
-            foreach ($this->akCustomCountries as $country) {
-                $db->Execute(
-                    'insert into atAddressCustomCountries (akID, country) values (?, ?)',
-                    array($newAK->getAttributeKeyID(), $country)
-                );
-            }
-        }
     }
 
     public function exportKey($akey)

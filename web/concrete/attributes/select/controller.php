@@ -480,7 +480,7 @@ class Controller extends AttributeTypeController
     public function getSearchIndexValue()
     {
         $str = "\n";
-        $list = $this->attributeValue->getSelectedOptions();
+        $list = $this->attributeValue->getValue()->getSelectedOptions();
         foreach ($list as $l) {
             $str .= $l . "\n";
         }
@@ -495,7 +495,7 @@ class Controller extends AttributeTypeController
     public function getSelectedOptions()
     {
         if (is_object($this->attributeValue)) {
-            return $this->attributeValue->getSelectedOptions();
+            return $this->attributeValue->getValue()->getSelectedOptions();
         }
         return array();
     }
