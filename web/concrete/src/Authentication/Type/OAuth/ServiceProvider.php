@@ -12,31 +12,29 @@ class ServiceProvider extends Provider
 
     public function register()
     {
-        $this->app->bind(
-            'oauth/factory/service',
-            function ($app, $params = array()) {
-                $factory = new ServiceFactory();
-                $factory->setHttpClient($client = new CurlClient());
-                $client->setCurlParameters((array) $params);
+        $this->app->bind('oauth/factory/service', function ($app, $params = array()) {
+            $factory = new ServiceFactory();
+            $factory->setHttpClient($client = new CurlClient());
+            $client->setCurlParameters((array) $params);
 
-                return $factory;
-            });
-        $this->app->bindShared(
-            'oauth/factory/extractor',
-            function () {
-                return new ExtractorFactory();
-            });
+            return $factory;
+        });
+        $this->app->bindShared('oauth/factory/extractor', function () {
+            return new ExtractorFactory();
+        });
 
-        $this->app->bind(
-            'oauth_extractor',
-            function ($app, $service=null) {
-                if (!$service) {
-                    return null;
-                }
+        $this->app->bind('oauth_extractor', function ($app, $params = array()) {
+            if (!is_array($params)) {
+                $params = array($params);
+            }
 
-                $extractor_factory = $app->make('oauth/factory/extractor');
-                return $extractor_factory->get($service);
-            });
+            if (!$service = head($params)) {
+                throw new \InvalidParameterException('No Service given.');
+            }
+
+            $extractor_factory = $app->make('oauth/factory/extractor');
+            return $extractor_factory->get($service);
+        });
 
         \Route::register(
             '/ccm/system/authentication/oauth2/{type}/{action}',
