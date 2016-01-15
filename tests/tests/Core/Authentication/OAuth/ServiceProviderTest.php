@@ -6,8 +6,8 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Authentication\Type\OAuth\ServiceProvider;
 
 /** @TODO Set up proper autoloading for tests */
-require_once(__DIR__ . "/fixtures/ServiceFixture.php");
-require_once(__DIR__ . "/fixtures/ExtractorFixture.php");
+require_once(__DIR__ . "/Fixtures/ServiceFixture.php");
+require_once(__DIR__ . "/Fixtures/ExtractorFixture.php");
 class ServiceProviderTest extends \PHPUnit_Framework_TestCase
 {
 
