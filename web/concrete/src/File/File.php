@@ -290,7 +290,10 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         $fsIDs = $db->Execute("select fsID from FileSetFiles where fID = ?", array($this->getFileID()));
         $filesets = array();
         while ($row = $fsIDs->FetchRow()) {
-            $filesets[] = FileSet::getByID($row['fsID']);
+            $fs = FileSet::getByID($row['fsID']);
+            if (is_object($fs)) {
+                $filesets[] = $fs;
+            }
         }
         return $filesets;
     }
