@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Attribute\ImageFile;
 
+use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Entity\Attribute\Key\Type\ImageFileType;
 use Concrete\Core\Entity\Attribute\Value\Value\ImageFileValue;
 use Core;
@@ -11,6 +12,11 @@ use Concrete\Core\Attribute\Controller as AttributeTypeController;
 class Controller extends AttributeTypeController
 {
     protected $searchIndexFieldDefinition = array('type' => 'integer', 'options' => array('default' => 0, 'notnull' => false));
+
+    public function getIconFormatter()
+    {
+        return new FontAwesomeIconFormatter('download');
+    }
 
     public function getDisplayValue()
     {
@@ -127,7 +133,7 @@ class Controller extends AttributeTypeController
     {
         if ($data['value'] > 0) {
             $f = File::getByID($data['value']);
-            $this->saveValue($f);
+            return $this->saveValue($f);
         }
     }
 
