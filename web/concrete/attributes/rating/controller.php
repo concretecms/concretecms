@@ -1,8 +1,9 @@
 <?php
 namespace Concrete\Attribute\Rating;
 
+use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Entity\Attribute\Key\Type\RatingType;
-use Concrete\Core\Entity\Attribute\Value\RatingValue;
+use Concrete\Core\Entity\Attribute\Value\Value\RatingValue;
 use Loader;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 
@@ -13,12 +14,17 @@ class Controller extends AttributeTypeController
         'options' => array('precision' => 14, 'scale' => 4, 'default' => 0, 'notnull' => false),
     );
 
+    public function getIconFormatter()
+    {
+        return new FontAwesomeIconFormatter('star');
+    }
+
+
     public function getDisplayValue()
     {
-        $value = $this->getValue() / 20;
-        $rt = Loader::helper('rating');
-
-        return $rt->output($this->attributeKey->getAttributeKeyHandle() . time(), $value);
+        $value = $this->getValue();
+        $rt = $this->app->make('helper/rating');
+        return $rt->outputDisplay($value);
     }
 
     public function importKey($akey)
@@ -48,6 +54,7 @@ class Controller extends AttributeTypeController
     public function searchForm($list)
     {
         $minRating = $this->request('value');
+        $minRating = $minRating * 20;
         $list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), $minRating, '>=');
 
         return $list;
@@ -66,12 +73,12 @@ class Controller extends AttributeTypeController
 
     public function saveForm($data)
     {
-        $this->saveValue($data['value'] * 20);
+        return $this->saveValue($data['value'] * 20);
     }
 
     public function search()
     {
-        $rt = Loader::helper('form/rating');
+        $rt = $this->app->make('helper/form/rating');
         echo $rt->rating($this->field('value'), $this->request('value'));
     }
 

@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Attribute\Number;
 
+use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Entity\Attribute\Key\Type\NumberType;
 use Concrete\Core\Entity\Attribute\Value\Value\NumberValue;
 use Loader;
@@ -12,6 +13,11 @@ class Controller extends AttributeTypeController
         'type' => 'decimal',
         'options' => array('precision' => 14, 'scale' => 4, 'default' => 0, 'notnull' => false),
     );
+
+    public function getIconFormatter()
+    {
+        return new FontAwesomeIconFormatter('hashtag');
+    }
 
     public function getDisplayValue()
     {

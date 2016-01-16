@@ -183,6 +183,12 @@ class Controller extends AbstractController
         return $av;
     }
 
+    public function getSearchIndexValue()
+    {
+        return $this->attributeValue->getValue();
+    }
+
+
     public function getSearchIndexFieldDefinition()
     {
         return $this->searchIndexFieldDefinition;
