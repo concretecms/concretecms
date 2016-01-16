@@ -18,7 +18,8 @@
 
     <script type="text/javascript">
     $(function() {
-        $('a[data-sitemap=show-more]').on('click', function() {
+        $('a[data-sitemap=show-more]').on('click', function(e) {
+            e.preventDefault();
             $('li[data-page-type=other]').show();
             $(this).parent().remove();
         });
