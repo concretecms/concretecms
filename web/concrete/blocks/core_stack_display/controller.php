@@ -23,6 +23,9 @@ class Controller extends BlockController
     protected $btIsInternal = true;
     protected $btCacheSettingsInitialized = false;
 
+    /** @var int The stack ID */
+    public $stID;
+
     public function getBlockTypeDescription()
     {
         return t("Proxy block for stacks added through the UI.");
@@ -191,4 +194,10 @@ class Controller extends BlockController
 
         return $this->btCacheBlockOutputLifetime;
     }
+
+    public function getStackID()
+    {
+        return $this->stID;
+    }
+
 }
