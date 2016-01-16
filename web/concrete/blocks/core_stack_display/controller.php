@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Block\CoreStackDisplay;
 
+use Concrete\Core\Statistics\UsageTracker\TrackableInterface;
+use Concrete\Core\Support\Facade\Application;
 use Stack;
 use Permissions;
 use Page;
@@ -16,7 +18,7 @@ use Concrete\Core\Block\BlockController;
  * @copyright  Copyright (c) 2003-2012 Concrete5. (http://www.concrete5.org)
  * @license    http://www.concrete5.org/license/     MIT License
  */
-class Controller extends BlockController
+class Controller extends BlockController implements TrackableInterface
 {
     protected $btCacheBlockRecord = true;
     protected $btTable = 'btCoreStackDisplay';
@@ -198,6 +200,19 @@ class Controller extends BlockController
     public function getStackID()
     {
         return $this->stID;
+    }
+
+    public function save($args)
+    {
+        parent::save($args);
+        $this->stID = $args['stID'];
+        Application::getFacadeApplication()->make('statistics/tracker')->track($this);
+    }
+
+    public function delete()
+    {
+        Application::getFacadeApplication()->make('statistics/tracker')->forget($this);
+        parent::delete();
     }
 
 }
