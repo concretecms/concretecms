@@ -3,10 +3,12 @@ namespace Concrete\Core\Block\BlockType;
 
 use Block;
 use BlockTypeSet;
+use Concrete\Block\CoreStackDisplay\Controller;
 use Concrete\Core\Block\View\BlockView;
 use Concrete\Core\Database\Schema\Schema;
 use Concrete\Core\Filesystem\TemplateFile;
 use Concrete\Core\Package\PackageList;
+use Concrete\Core\Support\Facade\Application;
 use Core;
 use Database as DB;
 use Environment;
@@ -739,6 +741,11 @@ class BlockType
     protected function loadController()
     {
         $class = static::getBlockTypeMappedClass($this->getBlockTypeHandle(), $this->getPackageHandle());
+
+        /** @var Controller controller */
         $this->controller = new $class($this);
+
+        /** @todo Move controller construction out of BlockType */
+        $this->controller->setApplication(Application::getFacadeApplication());
     }
 }
