@@ -116,14 +116,19 @@ class Type
 
     public function getController()
     {
-        if (!isset($this->controller)) {
+        // Note, you can't cache this against the type class itself –it needs to return
+        // a new instance every time because sometimes attribute specific keys get
+        // bound to the controller and then if it caches against type the wrong controller
+        // key combination gets returned with this call.
+        //if (!isset($this->controller)) {
             $env = \Environment::get();
             $r = $env->getRecord(DIRNAME_ATTRIBUTES . '/' . $this->atHandle . '/' . FILENAME_CONTROLLER);
             $prefix = $r->override ? true : $this->getPackageHandle();
             $atHandle = \Core::make('helper/text')->camelcase($this->atHandle);
             $class = core_class('Attribute\\' . $atHandle . '\\Controller', $prefix);
-            $this->controller = \Core::make($class, array($this));
-        }
+            $this->controller = \Core::make($class);
+            $this->controller->setAttributeType($this);
+        //}
 
         return $this->controller;
     }

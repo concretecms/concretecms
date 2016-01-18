@@ -24,20 +24,6 @@ class Controller extends AttributeTypeController
         return floatval($this->attributeValue->getValue());
     }
 
-    public function importKey($akey)
-    {
-        $type = new NumberType();
-
-        return $type;
-    }
-
-    public function saveKey($data)
-    {
-        $type = new NumberType();
-
-        return $type;
-    }
-
     public function searchForm($list)
     {
         $numFrom = intval($this->request('from'));

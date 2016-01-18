@@ -83,7 +83,12 @@ abstract class AbstractCategory implements CategoryInterface
         $loader = $this->getRequestLoader();
         $loader->load($key, $request);
 
-        $key_type = $type->getController()->saveKey($request->request->all());
+        $controller = $type->getController();
+
+        $key_type = $controller->saveKey($request->request->all());
+        if (!is_object($key_type)) {
+            $key_type = $controller->getAttributeKeyType();
+        }
         $key_type->setAttributeKey($key);
         $key_type->setAttributeType($type);
         $key->setAttributeKeyType($key_type);
@@ -105,7 +110,12 @@ abstract class AbstractCategory implements CategoryInterface
         $loader = $this->getImportLoader();
         $loader->load($key, $element);
 
-        $key_type = $type->getController()->importKey($element);
+        $controller = $type->getController();
+        $key_type = $controller->importKey($element);
+        if (!is_object($key_type)) {
+            $key_type = $controller->getAttributeKeyType();
+        }
+
         $key_type->setAttributeKey($key);
         $key_type->setAttributeType($type);
         $key->setAttributeKeyType($key_type);
@@ -127,11 +137,11 @@ abstract class AbstractCategory implements CategoryInterface
         $loader = $this->getRequestLoader();
         $loader->load($key, $request);
 
-        $key_type = $key->getAttributeKeyType();
-        if (is_object($key_type)) {
-            $this->entityManager->remove($key_type);
+        $controller = $key->getController();
+        $key_type = $controller->saveKey($request->request->all());
+        if (!is_object($key_type)) {
+            $key_type = $controller->getAttributeKeyType();
         }
-        $key_type = $key->getController()->saveKey($request->request->all());
         $key_type->setAttributeKey($key);
         $key_type->setAttributeType($key->getAttributeType());
         $key->setAttributeKeyType($key_type);

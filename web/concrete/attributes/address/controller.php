@@ -264,7 +264,7 @@ class Controller extends AttributeTypeController
 
     public function saveKey($data)
     {
-        $type = new AddressType();
+        $type = $this->getAttributeKeyType();
 
         $akCustomCountries = $data['akCustomCountries'];
         $akHasCustomCountries = $data['akHasCustomCountries'];

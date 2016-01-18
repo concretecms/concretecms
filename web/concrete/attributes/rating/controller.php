@@ -27,20 +27,6 @@ class Controller extends AttributeTypeController
         return $rt->outputDisplay($value);
     }
 
-    public function importKey($akey)
-    {
-        $type = new RatingType();
-
-        return $type;
-    }
-
-    public function saveKey($data)
-    {
-        $type = new RatingType();
-
-        return $type;
-    }
-
     public function form()
     {
         $caValue = 0;

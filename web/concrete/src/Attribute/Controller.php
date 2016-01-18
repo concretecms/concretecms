@@ -2,14 +2,18 @@
 namespace Concrete\Core\Attribute;
 
 use Concrete\Core\Controller\AbstractController;
+use Concrete\Core\Entity\Attribute\Key\Type\TextType;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Core;
 use Concrete\Core\Attribute\View as AttributeTypeView;
 use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
+use Doctrine\ORM\EntityManager;
 
 class Controller extends AbstractController
 {
-    protected $identifier;
+
+    protected $entityManager;
+
     /** @var \Concrete\Core\Attribute\Key\Key */
     protected $attributeKey;
     /** @var \Concrete\Core\Attribute\Value\Value */
@@ -57,6 +61,11 @@ class Controller extends AbstractController
         if (isset($akv->value)) {
             return (string) $akv->value;
         }
+    }
+
+    public function importKey(\SimpleXMLElement $element)
+    {
+
     }
 
     public function deleteKey()
@@ -118,14 +127,17 @@ class Controller extends AbstractController
     /**
      * @param \Concrete\Core\Attribute\Type $attributeType
      */
-    public function __construct($attributeType)
+    public function __construct(EntityManager $entityManager)
     {
         parent::__construct();
-        $this->identifier = $attributeType->getAttributeTypeID();
-        $this->attributeType = $attributeType;
+        $this->entityManager = $entityManager;
         $this->set('controller', $this);
     }
 
+    public function setAttributeType($attributeType)
+    {
+        $this->attributeType = $attributeType;
+    }
     public function post($field = false, $defaultValue = null)
     {
         // the only post that matters is the one for this attribute's name space
@@ -300,6 +312,20 @@ class Controller extends AbstractController
         */
 
         return $error;
+    }
+
+    public function createAttributeKeyType()
+    {
+        return new TextType();
+    }
+
+    public function getAttributeKeyType()
+    {
+        if ($this->attributeKey) {
+            return $this->attributeKey->getAttributeKeyType();
+        } else {
+            return $this->createAttributeKeyType();
+        }
     }
 
     public function getIconFormatter()

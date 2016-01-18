@@ -137,20 +137,6 @@ class Controller extends AttributeTypeController
         }
     }
 
-    public function importKey($akey)
-    {
-        $type = new ImageFileType();
-
-        return $type;
-    }
-
-    public function saveKey($data)
-    {
-        $type = new ImageFileType();
-
-        return $type;
-    }
-
     public function createAttributeKeyType()
     {
         return new ImageFileType();

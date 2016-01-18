@@ -12,10 +12,10 @@ use \Concrete\Core\Sharing\SocialNetwork\Service as Service;
                 <?php foreach ($services as $s) {
     ?>
                     <option value="<?=$s->getHandle()?>" data-icon="<?php echo $s->getIcon() ?>" <?php if ($s->getHandle() == $data['service'][$i]) {
-    ?> selected="selected" <?php 
+    ?> selected="selected" <?php
 }
     ?>><?= $s->getDisplayName() ?></option>
-                <?php 
+                <?php
 }
     ?>
             </select>

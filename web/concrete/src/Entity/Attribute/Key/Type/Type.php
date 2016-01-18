@@ -29,6 +29,16 @@ abstract class Type
      **/
     protected $type;
 
+    public function getKeyTypeID()
+    {
+        return $this->akTypeID;
+    }
+
+    public function setKeyTypeID($akTypeID)
+    {
+        $this->akTypeID = $akTypeID;
+    }
+
     /**
      * @return mixed
      */
