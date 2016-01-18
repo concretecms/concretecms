@@ -21,7 +21,7 @@ class Controller extends AttributeTypeController
 
     public function saveKey($data)
     {
-        $type = new DateTimeType();
+        $type = $this->getAttributeKeyType();
         $type->setMode($data['akDateDisplayMode']);
         return $type;
     }

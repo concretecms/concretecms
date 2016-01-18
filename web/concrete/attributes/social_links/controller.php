@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Attribute\SocialLinks;
 
+use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Entity\Attribute\Key\Type\SocialLinksType;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectedSocialLink;
 use Concrete\Core\Entity\Attribute\Value\Value\SocialLinksValue;
@@ -12,8 +13,15 @@ use Concrete\Core\Attribute\Controller as AttributeTypeController;
 
 class Controller extends AttributeTypeController
 {
+
+    public function getIconFormatter()
+    {
+        return new FontAwesomeIconFormatter('share');
+    }
+
     public function saveForm($data)
     {
+        $values = array();
         if (!is_array($data['service'])) {
             $data['service'] = array();
         }
@@ -23,7 +31,7 @@ class Controller extends AttributeTypeController
         for ($i = 0; $i < count($data['service']); ++$i) {
             $values[$data['service'][$i]] = $data['serviceInfo'][$i];
         }
-        $this->saveValue($values);
+        return $this->saveValue($values);
     }
 
     public function saveValue($values)
@@ -33,8 +41,8 @@ class Controller extends AttributeTypeController
         foreach ($values as $service => $serviceInfo) {
             if ($serviceInfo) {
                 $serviceInfo = filter_var($serviceInfo, FILTER_SANITIZE_URL);
-                $service = Loader::helper('text')->entities($service);
-                $serviceInfo = Loader::helper('text')->entities($serviceInfo);
+                $service = $this->app->make('helper/text')->entities($service);
+                $serviceInfo = $this->app->make('helper/text')->entities($serviceInfo);
                 $link = new SelectedSocialLink();
                 $link->setService($service);
                 $link->setServiceInfo($serviceInfo);
@@ -45,21 +53,7 @@ class Controller extends AttributeTypeController
 
         return $av;
     }
-
-    public function importKey($akey)
-    {
-        $type = new SocialLinksType();
-
-        return $type;
-    }
-
-    public function saveKey($data)
-    {
-        $type = new SocialLinksType();
-
-        return $type;
-    }
-
+    
     public function exportValue(\SimpleXMLElement $akn)
     {
         $services = $this->getValue();
@@ -73,21 +67,21 @@ class Controller extends AttributeTypeController
     public function getDisplayValue()
     {
         $html = '';
-        $services = $this->getValue();
+        $services = $this->getValue()->getSelectedLinks();
         if (count($services) > 0) {
             $env = Environment::get();
             $url = $env->getURL(DIRNAME_ATTRIBUTES . '/social_links/view.css');
             $this->addHeaderItem(Loader::helper('html')->css($url));
             $html .= '<span class="ccm-social-link-attribute-display">';
-            foreach ($services as $service => $serviceInfo) {
-                $serviceObject = Service::getByHandle($service);
+            foreach ($services as $link) {
+                $serviceObject = Service::getByHandle($link->getService());
                 if (is_object($serviceObject)) {
                     $iconHtml = $serviceObject->getServiceIconHTML();
                 }
                 $html .= '<span class="ccm-social-link-service">';
-                $html .= '<span class="ccm-social-link-service-icon"><a href="' . filter_var($serviceInfo,
+                $html .= '<span class="ccm-social-link-service-icon"><a href="' . filter_var($link->getServiceInfo(),
                         FILTER_VALIDATE_URL) . '">' . $iconHtml . '</a></span>';
-                $html .= '<span class="ccm-social-link-service-info"><a href="' . filter_var($serviceInfo,
+                $html .= '<span class="ccm-social-link-service-info"><a href="' . filter_var($link->getServiceInfo(),
                         FILTER_VALIDATE_URL) . '">' . $serviceObject->getName() . '</a></span>';
                 $html .= '</span>';
             }
@@ -104,12 +98,11 @@ class Controller extends AttributeTypeController
             $data['service'] = $this->post('service');
             $data['serviceInfo'] = $this->post('serviceInfo');
         } else {
-            $d = $this->attributeValue;
             if (is_object($this->attributeValue)) {
-                $d = $this->attributeValue->getSelectedLinks();
-                foreach ($d as $k => $v) {
-                    $data['service'][] = $k;
-                    $data['serviceInfo'][] = $v;
+                $links = $this->attributeValue->getValue()->getSelectedLinks();
+                foreach($links as $link) {
+                    $data['service'][] = $link->getService();
+                    $data['serviceInfo'][] = $link->getServiceInfo();
                 }
             }
         }

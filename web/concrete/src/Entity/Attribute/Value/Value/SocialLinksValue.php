@@ -10,7 +10,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 class SocialLinksValue extends Value
 {
     /**
-     * @OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Value\Value\SelectedSocialLink", mappedBy="value")
+     * @OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Value\Value\SelectedSocialLink",
+     *     cascade={"persist", "remove"}, mappedBy="value")
      * @JoinColumn(name="avID", referencedColumnName="avID")
      */
     protected $links;

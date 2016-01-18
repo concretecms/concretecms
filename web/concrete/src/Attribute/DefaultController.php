@@ -53,20 +53,6 @@ class DefaultController extends AttributeTypeController
         return $av;
     }
 
-    public function importKey($akey)
-    {
-        $type = new TextType();
-
-        return $type;
-    }
-
-    public function saveKey($data)
-    {
-        $type = new TextType();
-
-        return $type;
-    }
-
     public function saveForm($data)
     {
         return $this->saveValue(isset($data['value']) ? $data['value'] : null);

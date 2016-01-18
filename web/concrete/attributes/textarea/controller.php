@@ -2,6 +2,7 @@
 namespace Concrete\Attribute\Textarea;
 
 use Concrete\Core\Attribute\DefaultController;
+use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Entity\Attribute\Key\Type\TextareaType;
 use Core;
 use Database;
@@ -11,13 +12,18 @@ class Controller extends DefaultController
 {
     protected $searchIndexFieldDefinition = array('type' => 'text', 'options' => array('length' => 4294967295, 'default' => null, 'notnull' => false));
 
+    public function getIconFormatter()
+    {
+        return new FontAwesomeIconFormatter('font');
+    }
+
     protected $akTextareaDisplayMode;
     protected $akTextareaDisplayModeCustomOptions;
     public $helpers = array('form');
 
     public function saveKey($data)
     {
-        $type = new TextareaType();
+        $type = $this->getAttributeKeyType();
         $data += array(
             'akTextareaDisplayMode' => null,
         );

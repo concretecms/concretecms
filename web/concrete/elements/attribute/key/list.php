@@ -13,6 +13,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
         foreach ($set->getAttributeKeys() as $set_key) {
             $key = $set_key->getAttributeKey();
             $controller = $key->getController();
+            if (!$controller) {
+                var_dump_safe($key);exit;
+            }
             $formatter = $controller->getIconFormatter();
             ?>
 

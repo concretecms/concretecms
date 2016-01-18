@@ -167,7 +167,7 @@ class Pages extends Controller
                         default:
                             $akID = $item;
                             $fak = CollectionAttributeKey::getByID($akID);
-                            if (!is_object($fak) || (!($fak instanceof CollectionAttributeKey))) {
+                            if (!is_object($fak)) {
                                 break;
                             }
 

@@ -139,11 +139,13 @@ class Controller extends AttributeTypeController
 
     public function saveKey($data)
     {
+        $type = $this->getAttributeKeyType();
+
         $akCheckedByDefault = 0;
         if (isset($data['akCheckedByDefault']) && $data['akCheckedByDefault']) {
             $akCheckedByDefault = 1;
         }
-        $type = new BooleanType();
+
         $type->setIsCheckedByDefault($akCheckedByDefault);
         return $type;
     }

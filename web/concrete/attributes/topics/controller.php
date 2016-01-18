@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Attribute\Topics;
 
+use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Entity\Attribute\Key\Type\TopicsType;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectedTopic;
 use Concrete\Core\Entity\Attribute\Value\Value\TopicsValue;
@@ -22,6 +23,11 @@ class Controller extends AttributeTypeController
 
     public $helpers = array('form');
 
+    public function getIconFormatter()
+    {
+        return new FontAwesomeIconFormatter('tag');
+    }
+
     public function filterByAttribute(AttributedItemList $list, $value, $comparison = '=')
     {
         if ($value instanceof TreeNode) {
@@ -41,7 +47,7 @@ class Controller extends AttributeTypeController
 
     public function saveKey($data)
     {
-        $type = new TopicsType();
+        $type = $this->getAttributeKeyType();
         $data += array(
             'akTopicParentNodeID' => null,
             'akTopicTreeID' => null,
@@ -193,7 +199,6 @@ class Controller extends AttributeTypeController
     public function searchForm($list)
     {
         $list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), $this->request('treeNodeID'));
-
         return $list;
     }
 
