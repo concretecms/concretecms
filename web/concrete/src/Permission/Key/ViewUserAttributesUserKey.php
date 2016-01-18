@@ -4,6 +4,7 @@ use Concrete\Core\Permission\Access\ListItem\ViewUserAttributesUserListItem;
 use Loader;
 use User;
 use \Concrete\Core\Permission\Duration as PermissionDuration;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
 
 class ViewUserAttributesUserKey extends UserKey  {
 
