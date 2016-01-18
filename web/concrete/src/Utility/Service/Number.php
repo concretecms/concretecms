@@ -30,7 +30,7 @@ class Number
      */
     public function isNumber($string)
     {
-        return \Punic\Number::isNumber($string);
+        return \Punic\Number::isNumeric($string);
     }
 
     /**
