@@ -1215,11 +1215,11 @@ class Package extends Object
     /**
      * Returns the package ID.
      *
-     * @return int
+     * @return int|null
      */
     public function getPackageID()
     {
-        return $this->pkgID;
+        return isset($this->pkgID) ? $this->pkgID : null;
     }
 
     /**
