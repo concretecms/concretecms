@@ -3,7 +3,9 @@
  */
 $.widget("concrete.dialog", $.ui.dialog, {
     _allowInteraction: function(event) {
-        return !!$( event.target).closest('.ccm-interaction-dialog').length || this._super(event);
+        return !!$(event.target).closest('.ccm-interaction-dialog').length
+            || !!$(event.target).closest(".cke_dialog").length
+            || this._super(event);
     }
 });
 
