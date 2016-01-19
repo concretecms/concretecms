@@ -5,8 +5,6 @@
 
 // testing credentials
 
-use Concrete\Core\Config\Repository\Repository;
-
 define('DIR_BUILDTOOLS', dirname(dirname(__FILE__)) . '/build-tools');
 if (!is_dir(DIR_BUILDTOOLS)) {
     exec(
@@ -26,8 +24,9 @@ require_once 'AttributeTestCase.php';
 require_once 'FileStorageTestCase.php';
 require_once 'UserTestCase.php';
 
-define('DIR_BASE', realpath(dirname(__FILE__) . '/../../web'));
-$DIR_BASE_CORE = realpath(dirname(__FILE__) . '/../../web/concrete');
+define('DIR_TESTS', __DIR__ . "/../");
+define('DIR_BASE', realpath(DIR_TESTS . '/../web'));
+$DIR_BASE_CORE = realpath(DIR_TESTS . '/../web/concrete');
 
 require $DIR_BASE_CORE . '/bootstrap/configure.php';
 
@@ -56,43 +55,13 @@ $cms = require $DIR_BASE_CORE . '/bootstrap/start.php';
  */
 error_reporting(E_ALL & ~E_STRICT & ~E_DEPRECATED);
 
-class TestConfigRepository extends Repository
-{
-    public function save($key, $value)
-    {
-        return true;
-    }
-}
+$files = new \Illuminate\Filesystem\Filesystem();
+$saver = new \Concrete\Tests\Core\Config\Fixtures\TestFileSaver($files);
+$loader = new \Concrete\Tests\Core\Config\Fixtures\TestFileLoader($files);
+$config = new \Concrete\Core\Config\Repository\Repository($loader, $saver, 'travis');
 
-$old_config = $cms->make('config');
-$cms->instance('config', new TestConfigRepository($old_config->getLoader(), $old_config->getSaver(), 'travis'));
+$cms->instance('config', $config);
 \Concrete\Core\Support\Facade\Config::clearResolvedInstance('config');
-\Config::set('concrete.seo.canonical_url', null);
-
-/** @var Repository $config */
-$config = $cms->make('config');
-$config->set('database.default-connection', 'travis');
-$config->set(
-    'database.connections.travis',
-    array(
-        'driver' => 'c5_pdo_mysql',
-        'server' => 'localhost',
-        'database' => 'concrete5_tests',
-        'username' => 'travis',
-        'password' => '',
-        'charset' => 'utf8',
-    )
-);
-$config->set(
-    'database.connections.travisWithoutDB',
-    array(
-        'driver' => 'c5_pdo_mysql',
-        'server' => 'localhost',
-        'username' => 'travis',
-        'password' => '',
-        'charset' => 'utf8',
-    )
-);
 
 $config->get('concrete');
 $config->set('concrete.cache.blocks', false);
