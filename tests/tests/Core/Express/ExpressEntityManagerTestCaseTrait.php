@@ -75,8 +75,7 @@ trait ExpressEntityManagerTestCaseTrait
         $student->setTableName('Students');
         $student->setName('Student');
 
-        $first_name = new Concrete\Core\Entity\Attribute\Key\Key();
-        $first_name->setAttributeKeyHandle('first_name');
+        $first_name = $this->getAttributeKeyObject();
 
         $teacher = new \Concrete\Core\Entity\Express\Entity();
         $teacher->setTableName('Teachers');
