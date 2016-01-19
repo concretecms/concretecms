@@ -5,7 +5,7 @@ use \Concrete\Core\Foundation\Object;
 use \Concrete\Core\Attribute\DefaultController;
 class Controller extends DefaultController  {
 
-	protected $searchIndexFieldDefinition = array('type' => 'text', 'options' => array('length' => 4294967295, 'default' => null, 'notnull' => false));
+	protected $searchIndexFieldDefinition = array('type' => 'text', 'options' => array('length' => 2147483647, 'default' => null, 'notnull' => false));
 
 	public function form() {
 		if (is_object($this->attributeValue)) {
