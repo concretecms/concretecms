@@ -28,7 +28,7 @@ abstract class DashboardAttributesPageController extends DashboardPageController
         $entity = $this->getCategoryEntityObject();
         $category = $entity->getAttributeKeyCategory();
         $list = new KeyList();
-        $list->setAttributeSets($entity->getAttributeSets());
+        $list->setAttributeSets($category->getAttributeSets());
         $list->setUnassignedAttributeKeys($category->getUnassignedAttributeKeys());
         $list->setAttributeTypes($category->getAttributeTypes());
         $list->setDashboardPagePath($this->getPageObject()->getCollectionPath());

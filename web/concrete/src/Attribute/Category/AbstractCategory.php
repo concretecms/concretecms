@@ -43,6 +43,11 @@ abstract class AbstractCategory implements CategoryInterface
         return $this->getCategoryEntity()->getAttributeTypes();
     }
 
+    public function allowAttributeSets()
+    {
+        return $this->getCategoryEntity()->allowAttributeSets();
+    }
+
     public function getList()
     {
         return $this->getAttributeRepository()->findAll();
@@ -150,6 +155,11 @@ abstract class AbstractCategory implements CategoryInterface
         $this->entityManager->flush();
 
         return $key;
+    }
+
+    public function getAttributeSets()
+    {
+        return $this->categoryEntity->getAttributeSets();
     }
 
     /**

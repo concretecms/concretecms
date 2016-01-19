@@ -2,6 +2,7 @@
 namespace Concrete\Core\Express;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Attribute\Category\ExpressCategory;
 use Concrete\Core\Entity\AttributeKey\AttributeKey;
 use Concrete\Core\Entity\AttributeValue\AttributeValue;
 use Concrete\Core\Entity\Express\Form;
@@ -23,9 +24,11 @@ class ObjectManager
     protected $application;
     protected $entityManager;
     protected $namespace;
+    protected $category;
 
-    public function __construct(EntityManager $entityManager, Application $application)
+    public function __construct(ExpressCategory $category, EntityManager $entityManager, Application $application)
     {
+        $this->category = $category;
         $this->entityManager = $entityManager;
         $this->application = $application;
         $this->namespace = $application['config']->get('express.entity_classes.namespace');
@@ -91,10 +94,17 @@ class ObjectManager
         $this->save($entity);
     }
 
-    public function setAttribute(BaseEntity $entity, AttributeKey $key, AttributeValue $value)
+    public function setAttribute(BaseEntity $entity, $handleOrKey, $value)
     {
+        if (is_object($handleOrKey)) {
+            $key = $handleOrKey;
+        } else {
+            $key = $this->category->getAttributeKeyByHandle($handleOrKey);
+        }
         $method = camelcase($key->getAttributeKeyHandle());
         $method = "set{$method}";
+
+        $value = $key->getController()->saveValue($value);
         $entity->$method($value);
     }
 

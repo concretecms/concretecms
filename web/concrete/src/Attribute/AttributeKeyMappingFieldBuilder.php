@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Attribute;
 
+use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Database\Schema\BuilderInterface;
 use Doctrine\ORM\Mapping\Builder\AssociationBuilder;
 use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
@@ -8,14 +9,14 @@ use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
 class AttributeKeyMappingFieldBuilder implements BuilderInterface
 {
     protected $key;
-    public function __construct(AttributeKeyInterface $key)
+    public function __construct(Key $key)
     {
         $this->key = $key;
     }
 
     public function build(ClassMetadataBuilder $builder)
     {
-        $class = $this->key->getAttributeValue();
+        $class = $this->key->getAttributeKeyType()->getAttributeValue();
         $namingStrategy = \Core::make('Concrete\Core\Express\NamingStrategy');
         $associationBuilder = new AssociationBuilder($builder,
             array(

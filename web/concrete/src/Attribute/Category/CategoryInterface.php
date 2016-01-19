@@ -20,7 +20,9 @@ interface CategoryInterface
     public function getAttributeKeyByID($akID);
     public function createAttributeKey();
 
+    public function allowAttributeSets();
     public function getAttributeTypes();
+    public function getAttributeSets();
     public function associateAttributeKeyType(\Concrete\Core\Entity\Attribute\Type $type);
 
     public function getUnassignedAttributeKeys();

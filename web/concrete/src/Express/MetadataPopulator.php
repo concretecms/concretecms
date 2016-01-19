@@ -44,8 +44,7 @@ class MetadataPopulator
         $primaryKey->build($builder);
         $attributes = $this->entity->getAttributes();
         foreach ($attributes as $key) {
-            /** @var $key \Concrete\Core\Entity\Attribute\Key\Key */
-            $fieldBuilder = new AttributeKeyMappingFieldBuilder($key);
+            $fieldBuilder = new AttributeKeyMappingFieldBuilder($key->getAttributeKey());
             $fieldBuilder->build($builder);
         }
         $associations = $this->entity->getAssociations();

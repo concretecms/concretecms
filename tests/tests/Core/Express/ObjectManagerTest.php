@@ -44,13 +44,16 @@ class ObjectManagerTest extends PHPUnit_Framework_TestCase
             return $em;
         });
 
+        $student = new \Concrete\Core\Entity\Express\Entity();
+        $student->setName('Student');
         $express = Core::make('express');
-        $student = $express->create('Student');
-        $express->set($student, 'first_name', 'Andrew');
+        $student = $express->create($student);
+
+        $express->setAttribute($student, 'first_name', 'Andrew');
         $express->save($student);
 
         $this->assertInstanceOf('\Concrete\Express\Student', $student);
         $this->assertEquals($student->getFirstName(), 'Andrew');
-        $this->assertEquals($student->getProperty('first_name'), 'Andrew');
+        $this->assertEquals($student->get('first_name'), 'Andrew');
     }
 }

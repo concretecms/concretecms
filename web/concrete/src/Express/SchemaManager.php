@@ -25,7 +25,6 @@ class SchemaManager
     public function getCreateSql(Entity $entity)
     {
         $metadata = $this->entityManager->getClassMetadata($this->factory->getClassName($entity));
-
         return $this->tool->getCreateSchemaSql(array($metadata));
     }
 
