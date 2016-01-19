@@ -1,13 +1,13 @@
 <?php
 namespace Concrete\Core\Express\Form\Control\Type\Item;
 
-use Concrete\Core\Entity\AttributeKey\AttributeKey;
+use Concrete\Core\Entity\Attribute\Key\Key;
 
 class AttributeKeyItem implements ItemInterface
 {
     protected $key;
 
-    public function __construct(AttributeKey $key)
+    public function __construct(Key $key)
     {
         $this->key = $key;
     }

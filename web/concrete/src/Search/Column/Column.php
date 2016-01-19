@@ -46,7 +46,6 @@ class Column
 
     public function getSortClassName(Result $result)
     {
-        $class = '';
         $il = $result->getItemListObject();
 
         return $il->getSortClassName($this->getColumnKey());
@@ -56,7 +55,6 @@ class Column
     {
         $il = $result->getItemListObject();
         $dir = $this->getColumnDefaultSortDirection();
-
         return $il->getSortURL($this->getColumnKey(), $dir, $result->getBaseURL());
     }
 

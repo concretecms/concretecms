@@ -23,4 +23,17 @@ abstract class EntityItemList extends ItemList
     {
         return $this->query;
     }
+
+    public function finalizeQuery(\Doctrine\ORM\QueryBuilder $query)
+    {
+        return $query;
+    }
+
+    public function deliverQueryObject()
+    {
+        $query = clone $this->query;
+        $query = $this->finalizeQuery($query);
+        return $query;
+    }
+
 }

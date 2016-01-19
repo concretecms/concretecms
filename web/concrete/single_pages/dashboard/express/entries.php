@@ -1,4 +1,10 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+
+/**
+ * @var $entity \Concrete\Core\Entity\Express\Entity
+ */
+$set = $entity->getResultColumnSet();
+?>
 
 <div class="ccm-dashboard-header-buttons">
   <?php
@@ -28,20 +34,24 @@ if ($list->getTotalResults()) {
     <table class="ccm-search-results-table" data-table="express-entries">
       <thead>
       <tr>
-        <th><span><?=t('First Name')?></span></th>
-        <th><span><?=t('Last Name')?></span></th>
+        <?php foreach($set->getColumns() as $column) {
+          /** @var $column \Concrete\Core\Search\Column\Column */
+          if ($column->isColumnSortable()) { ?>
+            <th class="<?=$column->getSortClassName($result)?>"><a href="<?=$column->getSortURL($result)?>"><?php echo $column->getColumnName()?></a></th>
+          <?php } else { ?>
+            <th><span><?php echo $column->getColumnName()?></span></th>
+          <?php } ?>
+        <?php } ?>
       </tr>
       </thead>
       <tbody>
-      <?php foreach ($results as $o) {
-    ?>
+      <?php foreach ($results as $o) { ?>
         <tr data-search-row-url="<?=URL::to('/dashboard/express/entries', 'view_entry', $entity->getId(), $o->getId())?>">
-        <td><?php echo $o->getFirstName()?></td>
-        <td><?php echo $o->getLastName()?></td>
+        <?php foreach($set->getColumns() as $column) { ?>
+          <td><?=$column->getColumnValue($o);?></td>
+        <?php } ?>
         </tr>
-        <?php 
-}
-    ?>
+        <?php } ?>
       </tbody>
     </table>
   </div>

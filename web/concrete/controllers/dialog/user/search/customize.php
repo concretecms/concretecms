@@ -2,6 +2,8 @@
 namespace Concrete\Controller\Dialog\User\Search;
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
+use Concrete\Controller\Element\Search\CustomizeResults;
+use Concrete\Core\User\Search\SearchProvider;
 use User;
 use UserAttributeKey;
 use Loader;
@@ -21,16 +23,12 @@ class Customize extends BackendInterfaceController
 
     public function view()
     {
-        $selectedAKIDs = array();
-        $fldc = \Concrete\Core\User\Search\ColumnSet\ColumnSet::getCurrent();
-        $fldca = new \Concrete\Core\User\Search\ColumnSet\Available();
-        $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
-        $list = UserAttributeKey::getList();
-        $this->set('list', $list);
-        $this->set('form', Loader::helper('form'));
-        $this->set('fldca', $fldca);
-        $this->set('fldc', $fldc);
-        $this->set('type', 'users');
+        /**
+         * @var $provider SearchProvider
+         */
+        $provider = $this->app->make('Concrete\Core\User\Search\SearchProvider');
+        $element = new CustomizeResults($provider);
+        $this->set('customizeElement', $element);
     }
 
     public function submit()

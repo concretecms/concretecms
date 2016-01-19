@@ -3,8 +3,6 @@ namespace Concrete\Core\Express;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Attribute\Category\ExpressCategory;
-use Concrete\Core\Entity\AttributeKey\AttributeKey;
-use Concrete\Core\Entity\AttributeValue\AttributeValue;
 use Concrete\Core\Entity\Express\Form;
 use Concrete\Core\Express\Form\Control\SaveHandler\SaveHandlerInterface;
 use Doctrine\ORM\EntityManager;
@@ -129,8 +127,13 @@ class ObjectManager
     public function getList($entityOrName)
     {
         $entity = $this->getEntityOrName($entityOrName);
-
-        return new ObjectList($this, $entity);
+        $list = new ObjectList($this, $entity);
+        $set = $entity->getResultColumnSet();
+        if (is_object($set)) {
+            $sort = $set->getDefaultSortColumn();
+            $list->sanitizedSortBy($sort->getColumnKey(), $sort->getColumnDefaultSortDirection());
+        }
+        return $list;
     }
 
     public function getByID($entityOrName, $id)

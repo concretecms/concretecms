@@ -11,8 +11,11 @@ class BaseEntity
         return $this->$method();
     }
 
-    public function getAttribute($handle)
+    public function getAttributeValueObject($attribute)
     {
-        return $this->get($handle);
+        if (is_object($attribute)) {
+            $attribute = $attribute->getAttributeKeyHandle();
+        }
+        return $this->get($attribute);
     }
 }
