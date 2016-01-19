@@ -1,6 +1,6 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
-if ($category->allowAttributeSets()) {
+if ($category && $category->allowAttributeSets()) {
     ?>
 
     <div class="ccm-dashboard-header-buttons btn-group">

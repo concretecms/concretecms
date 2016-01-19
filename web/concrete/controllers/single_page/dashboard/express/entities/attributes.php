@@ -44,7 +44,7 @@ class Attributes extends DashboardAttributesPageController
         $this->set('entity', $entity);
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\AttributeKey\AttributeKey');
         $key = $r->findOneBy(array('akID' => $akID));
-        $this->executeUpdate($entity, $key,
+        $this->executeUpdate($key,
             \URL::to('/dashboard/express/entities/attributes', 'view', $id),
             function () use ($entity) {
                 $publisher = \Core::make('express.publisher');
@@ -68,7 +68,7 @@ class Attributes extends DashboardAttributesPageController
         $type = Type::getByID($type);
         $entity = $this->getEntity($id);
         $this->set('entity', $entity);
-        $this->executeAdd($entity, $type, \URL::to('/dashboard/express/entities/attributes', 'view', $id),
+        $this->executeAdd($type, \URL::to('/dashboard/express/entities/attributes', 'view', $id),
             function () use ($entity) {
                 $publisher = \Core::make('express.publisher');
                 $publisher->publish($entity);
@@ -85,7 +85,7 @@ class Attributes extends DashboardAttributesPageController
         $this->set('entity', $entity);
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\AttributeKey\AttributeKey');
         $key = $r->findOneBy(array('akID' => $akID));
-        $this->executeDelete($entity, $key,
+        $this->executeDelete($key,
             \URL::to('/dashboard/express/entities/attributes', 'view', $id),
             function () use ($entity) {
                 $publisher = \Core::make('express.publisher');

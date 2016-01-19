@@ -76,25 +76,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
             $keyword_label = t('Content included in search index.');
             $advanced_label = t('Field available in advanced search.');
 
-            if (is_object($category)) {
-                $category_handle = $category->getAttributeKeyCategoryHandle();
-                $keyword_label = t('Content included in "Keyword Search".');
-                $advanced_label = t('Field available in "Advanced Search".');
-                switch ($category_handle) {
-                    case 'collection':
-                        $keyword_label = t('Content included in sitewide page search index.');
-                        $advanced_label = t('Field available in Dashboard Page Search.');
-                        break;
-                    case 'file':
-                        $keyword_label = t('Content included in file search index.');
-                        $advanced_label = t('Field available in File Manager Search.');
-                        break;
-                    case 'user':
-                        $keyword_label = t('Content included in user keyword search.');
-                        $advanced_label = t('Field available in Dashboard User Search.');
-                        break;
-                }
-            }
             ?>
             <div class="checkbox"><label><?= $form->checkbox('akIsSearchableIndexed', 1,
                         $akIsSearchableIndexed) ?> <?= $keyword_label ?></label></div>
