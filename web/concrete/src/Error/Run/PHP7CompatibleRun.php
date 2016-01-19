@@ -3,13 +3,10 @@ namespace Concrete\Core\Error\Run;
 
 use Exception;
 use Symfony\Component\Debug\Exception\FatalThrowableError;
-use Whoops\Exception\ErrorException;
-use Whoops\Exception\Inspector;
 use Whoops\Run;
 
 class PHP7CompatibleRun
 {
-
     protected $run;
     protected $isRegistered;
 
@@ -21,7 +18,6 @@ class PHP7CompatibleRun
 
     public function handleException($exception)
     {
-
         if (!$exception instanceof \Exception) {
             $exception = new FatalThrowableError($exception);
         }
@@ -42,6 +38,7 @@ class PHP7CompatibleRun
 
     /**
      * Registers this instance as an error handler.
+     *
      * @return Run
      */
     public function register()
@@ -65,7 +62,8 @@ class PHP7CompatibleRun
     }
 
     /**
-     * Unregisters all handlers registered by this Whoops\Run instance
+     * Unregisters all handlers registered by this Whoops\Run instance.
+     *
      * @return Run
      */
     public function unregister()
@@ -79,5 +77,4 @@ class PHP7CompatibleRun
 
         return $this;
     }
-
 }
