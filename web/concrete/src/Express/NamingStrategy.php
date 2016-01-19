@@ -44,17 +44,15 @@ class NamingStrategy implements \Doctrine\ORM\Mapping\NamingStrategy
     {
         if (strpos($className, '\\') !== false) {
             $name = substr($className, strrpos($className, '\\') + 1);
-            if (!strpos($className, 'Concrete\\Express')) {
-                return $name;
-            }
         } else {
             $name = $className;
         }
 
         $repository = $this->rootEntityManager->getRepository('Concrete\Core\Entity\Express\Entity');
         $entity = $repository->findOneBy(array('name' => $name));
-
-        return $entity->getTableName();
+        if (is_object($entity)) {
+            return $entity->getTableName();
+        }
     }
 
     public function propertyToColumnName($propertyName, $className = null)
