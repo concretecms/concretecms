@@ -1,0 +1,7 @@
+.cke_panel {
+    z-index: 10050 !important;
+}
+
+.cke_editable {
+    min-height: 300px;
+}
