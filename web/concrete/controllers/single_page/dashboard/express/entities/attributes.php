@@ -6,11 +6,18 @@ use Concrete\Core\Page\Controller\DashboardAttributesPageController;
 
 class Attributes extends DashboardAttributesPageController
 {
+    protected $category;
+
     protected function getEntity($id)
     {
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity');
+        $this->category = $r->findOneById($id);
+        return $this->category;
+    }
 
-        return $r->findOneById($id);
+    protected function getCategoryEntityObject()
+    {
+        return $this->category;
     }
 
     public function view($id = null)

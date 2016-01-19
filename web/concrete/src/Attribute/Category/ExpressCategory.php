@@ -20,6 +20,24 @@ class ExpressCategory extends AbstractCategory
         // TODO: Implement createAttributeKey() method.
     }
 
+    public function getAttributeSets()
+    {
+        return array();
+    }
+
+    public function allowAttributeSets()
+    {
+        return false;
+    }
+
+    public function getAttributeTypes()
+    {
+        return $this->entityManager
+            ->getRepository('\Concrete\Core\Entity\Attribute\Type')
+            ->findAll();
+    }
+
+
     public function addFromRequest(Type $type, Request $request)
     {
         $key = parent::addFromRequest($type, $request);

@@ -2,21 +2,31 @@
 
 trait ExpressEntityManagerTestCaseTrait
 {
+    protected function getAttributeKeyObject()
+    {
+        $type = new \Concrete\Core\Entity\Attribute\Type();
+        $type->setAttributeTypeHandle('text');
+        $key_type = new \Concrete\Core\Entity\Attribute\Key\Type\TextType();
+        $key_type->setAttributeType($type);
+
+        $first_name = new Concrete\Core\Entity\Attribute\Key\Key();
+        $first_name->setAttributeKeyHandle('first_name');
+        $first_name->setAttributeKeyType($key_type);
+        return $first_name;
+    }
+
     protected function getMockEntityManager()
     {
         $student = new \Concrete\Core\Entity\Express\Entity();
         $student->setTableName('Students');
         $student->setName('Student');
 
-        $first_name = new Concrete\Core\Entity\Attribute\Key\Key();
-        $first_name->setAttributeKeyHandle('first_name');
-
         $teacher = new \Concrete\Core\Entity\Express\Entity();
         $teacher->setTableName('Teachers');
         $teacher->setName('Teacher');
 
         $attribute = new \Concrete\Core\Entity\Express\Attribute();
-        $attribute->setAttributeKey($first_name);
+        $attribute->setAttributeKey($this->getAttributeKeyObject());
 
         $student->getAttributes()->add($attribute);
 
@@ -39,8 +49,10 @@ trait ExpressEntityManagerTestCaseTrait
             ->method('findOneBy')
             ->will($this->returnCallback(function ($args) use ($entities) {
                 foreach ($entities as $entity) {
-                    if ($entity->getName() == $args['name']) {
+                    if (isset($args['name']) && $entity->getName() == $args['name']) {
                         return $entity;
+                    } else if (isset($args['akHandle']) && $args['akHandle'] == 'first_name') {
+                        return $this->getAttributeKeyObject();
                     }
                 }
             }));

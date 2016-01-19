@@ -21,8 +21,7 @@ class StandardListHeader extends ElementController
 
     public function view()
     {
-        $entity = $this->category->getCategoryEntity();
-        $this->set('category', $entity);
-        $this->set('sets', $entity->getAttributeSets());
+        $this->set('category', $this->category);
+        $this->set('sets', $this->category->getAttributeSets());
     }
 }
