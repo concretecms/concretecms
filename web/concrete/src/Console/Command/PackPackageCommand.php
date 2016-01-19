@@ -419,7 +419,7 @@ EOT
                             $iconSize = null;
                             if ($dirRel === '') {
                                 // Package icon
-                                $iconSize = ($state->packageFormat === static::PACKAGEFORMAT_CURRENT) ? array('width' => 200, 'height' => 200) : array('width' => 97, 'height' => 97);
+                                $iconSize = ($state->packageFormat === static::PACKAGEFORMAT_CURRENT) ? array('width' => 97, 'height' => 97) : array('width' => 97, 'height' => 97);
                             } elseif (preg_match('%^blocks/[^/]+$%', $dirRel)) {
                                 $iconSize = ($state->packageFormat === static::PACKAGEFORMAT_CURRENT) ? array('width' => 50, 'height' => 50) : array('width' => 16, 'height' => 16);
                             }
