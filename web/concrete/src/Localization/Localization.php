@@ -51,14 +51,12 @@ class Localization
         return current(explode('_', self::activeLocale()));
     }
 
-    protected $translate;
+    protected $translate = null;
 
     public function setLocale($locale)
     {
         if (($locale == 'en_US') && (!Config::get('concrete.misc.enable_translate_locale_en_us'))) {
-            if (isset($this->translate)) {
-                unset($this->translate);
-            }
+            $this->translate = null;
         } else {
             $this->translate = new Translator();
             $this->translate->setLocale($locale);
