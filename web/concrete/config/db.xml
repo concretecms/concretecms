@@ -1801,6 +1801,10 @@
       <default value="400"/>
       <notnull/>
     </field>
+    <field name="btCacheBlockOutputClearOnEvents" type="boolean">
+      <default value="0"/>
+      <notnull/>
+    </field>
     <field name="pkgID" type="integer" size="10">
       <unsigned/>
       <default value="0"/>
@@ -1817,6 +1821,9 @@
     </index>
     <index name="pkgID">
       <col>pkgID</col>
+    </index>
+    <index name="btCacheBlockOutputClearOnEvents">
+      <col>btCacheBlockOutputClearOnEvents</col>
     </index>
   </table>
 

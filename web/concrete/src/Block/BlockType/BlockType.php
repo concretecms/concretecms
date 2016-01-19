@@ -114,6 +114,49 @@ class BlockType
         }
     }
 
+    public static function clearCacheOnEvents()
+    {
+        $cache = Core::make('cache');
+        $db = DB::connection();
+        $sm = $db->getSchemaManager();
+
+        $qb = $db->createQueryBuilder();
+        $bTypes = $qb->select('btID, btHandle')->from('BlockTypes')
+                    ->where($qb->expr()->eq('btCacheBlockOutputClearOnEvents', ':clearOnEvent'))
+                    ->setParameter(':clearOnEvent', 1, \PDO::PARAM_INT)
+                    ->execute()->fetchAll();
+
+        $btIDs = array();
+        foreach ($bTypes as $bt){
+            $btIDs[] = $bt['btID'];
+            $cache->delete('blockTypeByID/' .$bt['btID']);
+            $cache->delete('blockTypeByHandle/' . $bt['btHandle']);
+        }
+
+        $blocksTable = $sm->listTableDetails('Blocks');
+        if ($blocksTable->hasColumn('btCachedBlockRecord')) {
+            $qb = $db->createQueryBuilder();
+            $qb->update('Blocks')->set('btCachedBlockRecord', 'null')
+                ->where($qb->expr()->comparison('btID', 'IN', '(:btIDs)'))
+                ->setParameter(':btIDs', implode(', ', $btIDs))
+                ->execute();
+        }
+        
+        if ($sm->tablesExist(array('CollectionVersionBlocksOutputCache'))) {
+            $qb = $db->createQueryBuilder();
+            $subQb = $db->createQueryBuilder();
+            $qb->delete('CollectionVersionBlocksOutputCache')
+                ->where($qb->expr()->comparison('bID', 'IN', '('.
+                    $subQb->select('b.bID')->from('Blocks','b')
+                          ->where($subQb->expr()->comparison('b.btID', 'IN', '(:btIDs)'))
+                          ->getSQL() .')'))
+                ->setParameter(':btIDs', implode(', ', $btIDs))
+                ->execute();
+        }
+        
+        $cache->delete('blockTypeList');
+    }
+
     /**
      * Retrieves a BlockType object based on its btID
      *
