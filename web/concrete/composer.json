@@ -59,5 +59,10 @@
   },
   "require-dev": {
     "concrete5/documentation_generator": "1.0-beta3"
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Concrete\\Tests\\": "../../tests/tests"
+    }
   }
 }
