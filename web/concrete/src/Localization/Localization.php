@@ -98,12 +98,14 @@ class Localization
 
     public function getLocale()
     {
-        return isset($this->translate) ? $this->translate->getLocale() : 'en_US';
+        $translate = $this->getActiveTranslateObject();
+
+        return $translate ? $translate->getLocale() : 'en_US';
     }
 
     public function getActiveTranslateObject()
     {
-        return $this->translate;
+        return isset($this->translate) ? $this->translate : null;
     }
 
     public static function getTranslate()
