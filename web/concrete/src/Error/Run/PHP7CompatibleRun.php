@@ -11,10 +11,12 @@ class PHP7CompatibleRun
 {
 
     protected $run;
+    protected $isRegistered;
 
     public function __construct(Run $run)
     {
         $this->run = $run;
+        $this->isRegistered = false;
     }
 
     public function handleException($exception)
