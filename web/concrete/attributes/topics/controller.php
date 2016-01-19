@@ -15,7 +15,7 @@ class Controller extends AttributeTypeController
 {
     protected $searchIndexFieldDefinition = array(
         'type' => 'text',
-        'options' => array('length' => 4294967295, 'default' => null, 'notnull' => false),
+        'options' => array('length' => 2147483647, 'default' => null, 'notnull' => false),
     );
 
     public $helpers = array('form');
