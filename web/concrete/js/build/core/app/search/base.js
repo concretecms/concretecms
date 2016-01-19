@@ -105,32 +105,6 @@
 				modal: true,
 				title: ccmi18n.customizeSearch,
 				onOpen: function() {
-					var $form = $('form[data-dialog-form=search-customize]'),
-						$selectDefault = $form.find('select[data-search-select-default-column]'),
-						$columns = $form.find('ul[data-search-column-list]');
-
-					$('ul[data-search-column-list]').sortable({
-						cursor: 'move',
-						opacity: 0.5
-					});
-					$form.on('click', 'input[type=checkbox]', function() {
-						var label = $(this).parent().find('span').html(),
-							id = $(this).attr('id');
-
-						if ($(this).prop('checked')) {
-							if ($form.find('li[data-field-order-column=\'' + id + '\']').length == 0) {
-								$selectDefault.append($('<option>', {'value': id, 'text': label}));
-								$selectDefault.prop('disabled', false);
-								$columns.append('<li data-field-order-column="' + id + '"><input type="hidden" name="column[]" value="' + id + '" />' + label + '<\/li>');
-							}
-						} else {
-							$columns.find('li[data-field-order-column=\'' + id + '\']').remove();
-							$selectDefault.find('option[value=\'' + id + '\']').remove();
-							if ($columns.find('li').length == 0) {
-								$selectDefault.prop('disabled', true);
-							}
-						}
-					});
 					ConcreteEvent.subscribe('AjaxFormSubmitSuccess', function(e, data) {
 						cs.updateResults(data.response.result);
 					});

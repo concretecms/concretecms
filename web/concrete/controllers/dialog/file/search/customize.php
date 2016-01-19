@@ -2,8 +2,10 @@
 namespace Concrete\Controller\Dialog\File\Search;
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
+use Concrete\Controller\Element\Search\CustomizeResults;
 use Concrete\Core\File\Search\ColumnSet\ColumnSet as FileSearchColumnSet;
 use Concrete\Core\File\Search\ColumnSet\Available as FileSearchAvailableColumnSet;
+use Concrete\Core\File\Search\SearchProvider;
 use FileAttributeKey;
 use Concrete\Core\File\Search\Result\Result as FileSearchResult;
 use Concrete\Core\Search\Response as SearchResponse;
@@ -25,16 +27,12 @@ class Customize extends BackendInterfaceController
 
     public function view()
     {
-        $selectedAKIDs = array();
-        $fldc = FileSearchColumnSet::getCurrent();
-        $fldca = new FileSearchAvailableColumnSet();
-        $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
-        $list = FileAttributeKey::getList();
-        $this->set('list', $list);
-        $this->set('form', Loader::helper('form'));
-        $this->set('fldca', $fldca);
-        $this->set('fldc', $fldc);
-        $this->set('type', 'files');
+        /**
+         * @var $provider SearchProvider
+         */
+        $provider = $this->app->make('Concrete\Core\File\Search\SearchProvider');
+        $element = new CustomizeResults($provider);
+        $this->set('customizeElement', $element);
     }
 
     public function submit()

@@ -37,7 +37,7 @@ class AttributeKeyControlViewRenderer implements RendererInterface
                 '/attribute_key.php'
             );
 
-            $av = $this->entity->getAttribute($ak->getAttributeKeyHandle());
+            $av = $this->entity->getAttributeValueObject($ak);
             $view = new EntityPropertyControlView($this->factory);
             $view->addScopeItem('value', $av);
 

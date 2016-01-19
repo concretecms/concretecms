@@ -226,6 +226,15 @@
             </attributes>
         </page>
 
+        <page name="Customize Search" path="/dashboard/express/entities/customize_search"
+              filename="/dashboard/express/entities/customize_search.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+
         <page name="Reports" path="/dashboard/reports" filename="/dashboard/reports.php" pagetype=""
               description="Get data from forms and logs." package="">
             <attributes>

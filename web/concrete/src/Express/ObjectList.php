@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Express;
 
+use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Search\ItemList\EntityItemList;
 use Concrete\Core\Search\Pagination\Pagination;
@@ -32,18 +33,25 @@ class ObjectList extends EntityItemList
 
     protected function executeSortBy($column, $direction = 'asc')
     {
-        if (in_array(strtolower($direction), array('asc', 'desc'))) {
-            $this->query->orderBy($column, $direction);
-        } else {
-            throw new \Exception(t('Invalid SQL in order by'));
-        }
+        return false; // This is handled by finalizeQuery below.
     }
 
     public function executeGetResults()
     {
-        $result = $this->query->getQuery()->getResult();
-
+        $result = $this->deliverQueryObject()->getQuery()->getResult();
         return $result;
+    }
+
+    public function finalizeQuery(\Doctrine\ORM\QueryBuilder $query)
+    {
+        if (isset($this->sortBy) && isset($this->sortByDirection)) {
+            $category = $this->entity->getAttributeKeyCategory();
+            $key = $category->getAttributeKeyByHandle(substr($this->sortBy, 3));
+            $handle = $key->getAttributeKeyHandle();
+            $query->leftJoin(sprintf('o.%s', $handle), 'sort');
+            $query->orderBy('sort.value', $this->sortByDirection);
+        }
+        return $query;
     }
 
     public function getResult($result)
@@ -74,6 +82,12 @@ class ObjectList extends EntityItemList
                 ->getConfiguration()
                 ->setSQLLogger(null);
         }
+    }
+
+    public function sortByAttribute(Key $key, $direction = 'asc')
+    {
+        $this->sortBy = $key;
+        $this->sortByDirection = $direction;
     }
 
     public function getTotalResults()

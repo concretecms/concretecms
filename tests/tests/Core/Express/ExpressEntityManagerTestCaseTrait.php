@@ -25,7 +25,7 @@ trait ExpressEntityManagerTestCaseTrait
         $teacher->setTableName('Teachers');
         $teacher->setName('Teacher');
 
-        $attribute = new \Concrete\Core\Entity\Express\Attribute();
+        $attribute = new \Concrete\Core\Entity\Attribute\Key\ExpressKey();
         $attribute->setAttributeKey($this->getAttributeKeyObject());
 
         $student->getAttributes()->add($attribute);
@@ -81,7 +81,7 @@ trait ExpressEntityManagerTestCaseTrait
         $teacher->setTableName('Teachers');
         $teacher->setName('Teacher');
 
-        $attribute = new \Concrete\Core\Entity\Express\Attribute();
+        $attribute = new \Concrete\Core\Entity\Attribute\Key\ExpressKey();
         $attribute->setAttributeKey($first_name);
 
         $student->getAttributes()->add($attribute);

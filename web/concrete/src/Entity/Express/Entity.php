@@ -2,6 +2,7 @@
 namespace Concrete\Core\Entity\Express;
 
 use Concrete\Core\Attribute\EntityInterface;
+use Concrete\Core\Express\Search\ColumnSet\ColumnSet;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -32,7 +33,12 @@ class Entity implements EntityInterface
     protected $table_name;
 
     /**
-     * @OneToMany(targetEntity="Attribute", mappedBy="entity", cascade={"persist", "remove"})
+     * @Column(type="object", nullable=true)
+     */
+    protected $result_column_set;
+
+    /**
+     * @OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Key\ExpressKey", mappedBy="entity", cascade={"persist", "remove"})
      **/
     protected $attributes;
 
@@ -90,6 +96,23 @@ class Entity implements EntityInterface
     {
         $this->created_date = $created_date;
     }
+
+    /**
+     * @return ColumnSet
+     */
+    public function getResultColumnSet()
+    {
+        return $this->result_column_set;
+    }
+
+    /**
+     * @param mixed $result_column_set
+     */
+    public function setResultColumnSet($result_column_set)
+    {
+        $this->result_column_set = $result_column_set;
+    }
+
 
     /**
      * @return mixed
@@ -186,7 +209,7 @@ class Entity implements EntityInterface
 
     public function getAttributeKeyCategory()
     {
-        return \Core::make('\Concrete\Core\Attribute\Category\ExpressCategory');
+        return \Core::make('\Concrete\Core\Attribute\Category\ExpressCategory', array($this));
     }
 
     public function allowAttributeSets()
