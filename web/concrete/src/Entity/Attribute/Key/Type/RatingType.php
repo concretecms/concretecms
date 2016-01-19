@@ -16,7 +16,8 @@ class RatingType extends Type
 
     public function createController()
     {
-        $controller = new \Concrete\Attribute\Rating\Controller($this->getAttributeType());
+        $controller = \Core::make('\Concrete\Attribute\Rating\Controller');
+        $controller->setAttributeType($this->getAttributeType());
 
         return $controller;
     }

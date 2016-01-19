@@ -135,16 +135,6 @@ class Controller extends DefaultController
         return $type;
     }
 
-    public function duplicateKey($newAK)
-    {
-        $this->load();
-        $db = Database::connection();
-        $db->Replace('atTextareaSettings', array(
-            'akID' => $newAK->getAttributeKeyID(),
-            'akTextareaDisplayMode' => $this->akDateDisplayMode,
-        ), array('akID'), true);
-    }
-
     public function createAttributeKeyType()
     {
         return new TextareaType();

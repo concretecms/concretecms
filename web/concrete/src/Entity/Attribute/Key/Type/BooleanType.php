@@ -37,7 +37,8 @@ class BooleanType extends Type
 
     public function createController()
     {
-        $controller = new \Concrete\Attribute\Boolean\Controller($this->getAttributeType());
+        $controller = \Core::make('\Concrete\Attribute\Boolean\Controller');
+        $controller->setAttributeType($this->getAttributeType());
 
         return $controller;
     }

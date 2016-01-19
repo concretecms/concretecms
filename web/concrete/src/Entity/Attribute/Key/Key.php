@@ -17,7 +17,7 @@ use Concrete\Core\Entity\PackageTrait;
  *     }
  * )
  */
-abstract class Key implements AttributeKeyInterface
+class Key implements AttributeKeyInterface
 {
     use PackageTrait;
 

@@ -112,7 +112,7 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase
     {
         $at = new \Concrete\Core\Attribute\Type();
         $at->atHandle = 'boolean';
-        $at->loadController();
+//        $at->loadController();
         $this->assertTrue(class_exists('\Concrete\Attribute\Boolean\Controller'));
     }
 

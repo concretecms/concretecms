@@ -101,7 +101,8 @@ class SelectType extends Type
 
     public function createController()
     {
-        $controller = new \Concrete\Attribute\Select\Controller($this->getAttributeType());
+        $controller = \Core::make('\Concrete\Attribute\Select\Controller');
+        $controller->setAttributeType($this->getAttributeType());
 
         return $controller;
     }

@@ -2,14 +2,13 @@
 namespace Concrete\Core\Attribute;
 
 use Concrete\Core\Database\Schema\BuilderInterface;
-use Concrete\Core\Entity\AttributeKey\AttributeKey;
 use Doctrine\ORM\Mapping\Builder\AssociationBuilder;
 use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
 
 class AttributeKeyMappingFieldBuilder implements BuilderInterface
 {
     protected $key;
-    public function __construct(AttributeKey $key)
+    public function __construct(AttributeKeyInterface $key)
     {
         $this->key = $key;
     }

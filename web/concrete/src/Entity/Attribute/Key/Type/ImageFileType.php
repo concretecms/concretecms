@@ -16,7 +16,8 @@ class ImageFileType extends Type
 
     public function createController()
     {
-        $controller = new \Concrete\Attribute\ImageFile\Controller($this->getAttributeType());
+        $controller = \Core::make('\Concrete\Attribute\ImageFile\Controller');
+        $controller->setAttributeType($this->getAttributeType());
 
         return $controller;
     }

@@ -37,7 +37,8 @@ class DateTimeType extends Type
 
     public function createController()
     {
-        $controller = new \Concrete\Attribute\DateTime\Controller($this->getAttributeType());
+        $controller = \Core::make('\Concrete\Attribute\DateTime\Controller');
+        $controller->setAttributeType($this->getAttributeType());
 
         return $controller;
     }

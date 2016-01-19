@@ -2,6 +2,7 @@
 namespace Concrete\Core\Express;
 
 use Concrete\Core\Attribute\TypeFactory;
+use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Express\Entity;
 
 class ObjectBuilder
@@ -49,10 +50,14 @@ class ObjectBuilder
 
     public function addAttribute($type, $name)
     {
-        /** @var $attribute \Concrete\Core\Entity\AttributeKey\AttributeKey */
-        $attribute = $this->attributeTypeFactory->getByHandle($type)->getController()->createAttributeKey();
-        $attribute->setAttributeKeyName($name);
-        $this->entity->getAttributes()->add($attribute);
+        /** @var $attribute \Concrete\Core\Entity\Attribute\Key\Key */
+        $key = new Key();
+        $type = $this->attributeTypeFactory->getByHandle($type);
+        $key_type = $type->getController()->createAttributeKeyType();
+        $key_type->setAttributeType($type);
+        $key->setAttributeKeyType($key_type);
+        $key->setAttributeKeyName($name);
+        $this->entity->getAttributes()->add($key);
 
         return $this;
     }
