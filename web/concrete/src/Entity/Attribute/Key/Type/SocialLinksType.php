@@ -16,7 +16,8 @@ class SocialLinksType extends Type
 
     public function createController()
     {
-        $controller = new \Concrete\Attribute\SocialLinks\Controller($this->getAttributeType());
+        $controller = \Core::make('\Concrete\Attribute\SocialLinks\Controller');
+        $controller->setAttributeType($this->getAttributeType());
 
         return $controller;
     }

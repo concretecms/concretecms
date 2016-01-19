@@ -58,8 +58,8 @@ class TopicsType extends Type
 
     public function createController()
     {
-        $controller = new \Concrete\Attribute\Topics\Controller($this->getAttributeType());
-
+        $controller = \Core::make('\Concrete\Attribute\Topics\Controller');
+        $controller->setAttributeType($this->getAttributeType());
         return $controller;
     }
 }

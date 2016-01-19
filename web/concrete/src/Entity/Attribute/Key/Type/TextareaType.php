@@ -37,8 +37,8 @@ class TextareaType extends Type
 
     public function createController()
     {
-        $controller = new \Concrete\Attribute\Textarea\Controller($this->getAttributeType());
-
+        $controller = \Core::make('\Concrete\Attribute\Textarea\Controller');
+        $controller->setAttributeType($this->getAttributeType());
         return $controller;
     }
 }

@@ -18,20 +18,34 @@ class ObjectBuilderTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\Concrete\Core\Entity\Express\Entity', $object);
         $this->assertEquals(4, count($object->getAttributes()));
         $attributes = $object->getAttributes();
-        $this->assertInstanceOf('\Concrete\Core\Entity\AttributeKey\TextAttributeKey', $attributes[0]);
-        $this->assertInstanceOf('\Concrete\Core\Entity\AttributeKey\TextAttributeKey', $attributes[1]);
-        $this->assertInstanceOf('\Concrete\Core\Entity\AttributeKey\TextAreaAttributeKey', $attributes[2]);
 
-        /** @var $first \Concrete\Core\Entity\AttributeKey\TextAttributeKey */
+        $this->assertInstanceOf('\Concrete\Core\Entity\Attribute\Key\Key', $attributes[0]);
+        $this->assertInstanceOf('\Concrete\Core\Entity\Attribute\Key\Key', $attributes[1]);
+        $this->assertInstanceOf('\Concrete\Core\Entity\Attribute\Key\Key', $attributes[2]);
+
+        $this->assertInstanceOf('\Concrete\Core\Entity\Attribute\Key\Type\TextType', $attributes[0]->getAttributeKeyType());
+        $this->assertInstanceOf('\Concrete\Core\Entity\Attribute\Key\Type\TextType', $attributes[1]->getAttributeKeyType());
+        $this->assertInstanceOf('\Concrete\Core\Entity\Attribute\Key\Type\TextareaType', $attributes[2]->getAttributeKeyType());
+
+        /** @var $first \Concrete\Core\Entity\Attribute\Key\Key */
         $first = $attributes[0];
         $this->assertEquals('First Name', $first->getAttributeKeyName());
         $this->assertEquals(false, $first->isAttributeKeyContentIndexed());
         $this->assertEquals(true, $first->isAttributeKeySearchable());
 
-        /** @var $bio \Concrete\Core\Entity\AttributeKey\TextAreaAttributeKey */
+        $type = $first->getAttributeKeyType()->getAttributeType();
+        $this->assertEquals('text', $type->getAttributeTypeHandle());
+
+        /** @var $bio \Concrete\Core\Entity\Attribute\Key\Key */
         $bio = $attributes[2];
-        $this->assertEquals('rich_text', $bio->getMode());
         $this->assertEquals(true, $bio->isAttributeKeyContentIndexed());
         $this->assertEquals(true, $bio->isAttributeKeySearchable());
+
+        $key_type = $bio->getAttributeKeyType();
+        $this->assertEquals('text', $key_type->getMode());
+
+        $type = $key_type->getAttributeType();
+        $this->assertEquals('textarea', $type->getAttributeTypeHandle());
+
     }
 }

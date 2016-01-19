@@ -16,7 +16,6 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
     protected function setUp()
     {
         parent::setUp();
-        Category::add('collection');
         Page::addHomePage();
         PageTemplate::add('full', 'Full');
         PageType::add(array(

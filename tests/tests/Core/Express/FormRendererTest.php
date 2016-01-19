@@ -8,8 +8,6 @@ class FormRendererTest extends ConcreteDatabaseTestCase
     use \ObjectBuilderTestTrait;
 
     protected $tables = array(
-        'AttributeTypes',
-        'atTextareaSettings',
         'Config',
     );
 
@@ -41,9 +39,6 @@ class FormRendererTest extends ConcreteDatabaseTestCase
 
     protected function getForm()
     {
-        \Concrete\Core\Attribute\Type::add('text', 'Text');
-        \Concrete\Core\Attribute\Type::add('textarea', 'textarea');
-
         $builder = $this->getObjectBuilder();
         /*
          * @var \Concrete\Core\Entity\Express\Entity
@@ -56,7 +51,6 @@ class FormRendererTest extends ConcreteDatabaseTestCase
         $fieldSet2 = new \Concrete\Core\Entity\Express\FieldSet();
 
         // Create our form controls
-        $name = new \Concrete\Core\Entity\Express\Control\EntityNameControl();
         $explanation = new \Concrete\Core\Entity\Express\Control\TextControl();
         $explanation->setText('This is an explanation');
 
@@ -70,7 +64,6 @@ class FormRendererTest extends ConcreteDatabaseTestCase
         $associationControl = new \Concrete\Core\Entity\Express\Control\AssociationControl();
         $associationControl->setAssociation($studentAssociations[0]);
 
-        $fieldSet1->getControls()->add($name);
         $fieldSet1->getControls()->add($explanation);
         $fieldSet1->getControls()->add($associationControl);
 
@@ -100,15 +93,13 @@ class FormRendererTest extends ConcreteDatabaseTestCase
         preg_match_all('/ccm_token/', $html, $matches);
         $this->assertEquals(1, count($matches[0]));
 
-        preg_match_all('/ccm_express\[name\]/', $html, $matches);
-        $this->assertEquals(3, count($matches[0]));
         preg_match_all('/class="ccm-express-form-field-set"/', $html, $matches);
         $this->assertEquals(2, count($matches[0]));
         preg_match_all('/<fieldset/', $html, $matches);
         $this->assertEquals(2, count($matches[0]));
 
         preg_match_all('/<input type="text"/', $html, $matches);
-        $this->assertEquals(4, count($matches[0]));
+        $this->assertEquals(3, count($matches[0]));
 
         preg_match_all('/<textarea/', $html, $matches);
         $this->assertEquals(1, count($matches[0]));

@@ -76,33 +76,33 @@ class Attribute implements AttributeKeyInterface
 
     public function getAttributeKeyID()
     {
-        return $this->attribute->getAttributeKeyID();
+        return $this->attribute_key->getAttributeKeyID();
     }
 
     public function getAttributeType()
     {
-        return $this->attribute->getAttributeType();
+        return $this->attribute_key->getAttributeType();
     }
 
     public function getController()
     {
-        return $this->attribute->getController();
+        return $this->attribute_key->getController();
     }
 
     public function getAttributeKeyHandle()
     {
-        return $this->attribute->getAttributeKeyHandle();
+        return $this->attribute_key->getAttributeKeyHandle();
     }
 
     public function isAttributeKeySearchable()
     {
-        return $this->attribute->isAttributeKeySearchable();
+        return $this->attribute_key->isAttributeKeySearchable();
     }
 
     public function __call($nm, $args)
     {
-        if (method_exists($this->attribute, $nm)) {
-            return call_user_func_array(array($this->attribute, $nm), $args);
+        if (method_exists($this->attribute_key, $nm)) {
+            return call_user_func_array(array($this->attribute_key, $nm), $args);
         }
     }
 }
