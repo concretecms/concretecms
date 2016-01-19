@@ -36,7 +36,7 @@ if (strlen($control->getPageTypeComposerFormLayoutSetControlCustomLabel())) {
 
 				<div class="dialog-buttons">
 					<button class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
-					<button class="btn btn-danger pull-right" onclick="Composer.deleteFromLayoutSetControl(<?=$control->getPageTypeComposerFormLayoutSetControlID()?>)"><?=t('Update Set')?></button>
+					<button class="btn btn-danger pull-right" onclick="Composer.deleteFromLayoutSetControl(<?=$control->getPageTypeComposerFormLayoutSetControlID()?>)"><?=t('Delete Control')?></button>
 				</div>
 
 			</div>
