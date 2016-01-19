@@ -10,14 +10,14 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ExpressCategory extends AbstractCategory
 {
+    public function createAttributeKey()
+    {
+        return new Key();
+    }
+
     public function getAttributeRepository()
     {
         return $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Attribute');
-    }
-
-    public function createAttributeKey()
-    {
-        // TODO: Implement createAttributeKey() method.
     }
 
     public function getAttributeSets()
@@ -51,6 +51,7 @@ class ExpressCategory extends AbstractCategory
         $this->entity->getAttributes()->add($attribute);
         $this->entityManager->persist($this->getEntity());
         $this->entityManager->flush();
+        return $key;
     }
 
     public function getAttributeValues($mixed)
@@ -60,7 +61,7 @@ class ExpressCategory extends AbstractCategory
 
     public function getSearchIndexer()
     {
-        // TODO: Implement getSearchIndexer() method.
+        return false;
     }
 
     public function getAttributeValue(Key $key, $mixed)

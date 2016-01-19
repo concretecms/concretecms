@@ -99,9 +99,10 @@ abstract class AbstractCategory implements CategoryInterface
         $key->setAttributeKeyType($key_type);
 
         // Modify the category's search indexer.
-        $indexer = $this->getCategoryEntity()
-            ->getController()->getSearchIndexer();
-        $indexer->updateTable($this, $key);
+        $indexer = $this->getSearchIndexer();
+        if (is_object($indexer)) {
+            $indexer->updateTable($this, $key);
+        }
 
         $this->entityManager->persist($key);
         $this->entityManager->flush();
@@ -126,9 +127,10 @@ abstract class AbstractCategory implements CategoryInterface
         $key->setAttributeKeyType($key_type);
 
         // Modify the category's search indexer.
-        $indexer = $this->getCategoryEntity()
-            ->getController()->getSearchIndexer();
-        $indexer->updateTable($this, $key);
+        $indexer = $this->getSearchIndexer();
+        if (is_object($indexer)) {
+            $indexer->updateTable($this, $key);
+        }
 
         $this->entityManager->persist($key);
         $this->entityManager->flush();
