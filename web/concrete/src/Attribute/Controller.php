@@ -260,58 +260,9 @@ class Controller extends AbstractController
         return $queryBuilder->expr()->like('ak_' . $this->attributeKey->getAttributeKeyHandle(), ':keywords');
     }
 
-    /**
-     * Automatically run when an attribute key is added or updated.
-     *
-     * @param bool|array $args
-     *
-     * @return \Concrete\Core\Error\Error
-     */
-    public function validateKey($args = false)
+    public function validateKey($data = false)
     {
-        if ($args == false) {
-            $args = $this->post();
-        }
-        /** @var \Concrete\Core\Form\Service\Validation $val */
-        $val = Core::make('helper/validation/form');
-        /** @var \Concrete\Core\Validation\CSRF\Token $valt */
-        $valt = Core::make('helper/validation/token');
-        $val->setData($args);
-        $val->addRequired("akHandle", t("Handle required."));
-        $val->addRequired("akName", t('Name required.'));
-        $val->addRequired("atID", t('Type required.'));
-        $val->test();
-        $error = $val->getError();
-
-        if (!$valt->validate('add_or_update_attribute')) {
-            $error->add($valt->getErrorMessage());
-        }
-
-        /** @var \Concrete\Core\Utility\Service\Validation\Strings $stringValidator */
-        $stringValidator = Core::make('helper/validation/strings');
-        if (!$stringValidator->handle($args['akHandle'])) {
-            $error->add(t('Attribute handles may only contain letters, numbers and underscore "_" characters'));
-        }
-
-        /*
-        $akc = AttributeKeyCategory::getByID($args['akCategoryID']);
-        if (is_object($akc)) {
-            if ($akc->handleExists($args['akHandle'])) {
-                if (is_object($this->attributeKey)) {
-                    $ak2 = $akc->getAttributeKeyByHandle($args['akHandle']);
-                    if ($ak2->getAttributeKeyID() != $this->attributeKey->getAttributeKeyID()) {
-                        $error->add(t("An attribute with the handle %s already exists.", $args['akHandle']));
-                    }
-                } else {
-                    $error->add(t("An attribute with the handle %s already exists.", $args['akHandle']));
-                }
-            }
-        } else {
-            $error->add('Invalid attribute category.');
-        }
-        */
-
-        return $error;
+        return false;
     }
 
     public function createAttributeKeyType()

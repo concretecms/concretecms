@@ -2,6 +2,7 @@
 namespace Concrete\Controller\SinglePage\Account;
 
 use Concrete\Core\Page\Controller\AccountPageController;
+use Concrete\Core\Validation\ResponseInterface;
 use Config;
 use UserInfo;
 use Exception;
@@ -113,11 +114,14 @@ class EditProfile extends AccountPageController
 
         foreach ($aks as $uak) {
             if ($uak->isAttributeKeyRequiredOnProfile()) {
-                $e1 = $uak->validateAttributeForm();
-                if ($e1 == false) {
-                    $this->error->add(t('The field "%s" is required', $uak->getAttributeKeyDisplayName()));
-                } elseif ($e1 instanceof \Concrete\Core\Error\Error) {
-                    $this->error->add($e1);
+                $validator = $uak->getAttributeType()->getValidator();
+                $response = $validator->validateSaveValueRequest($uak, $this->request);
+                /**
+                 * @var $response ResponseInterface
+                 */
+                if (!$response->isValid()) {
+                    $error = $response->getErrorObject();
+                    $this->error->add($error);
                 }
             }
         }

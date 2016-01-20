@@ -4,6 +4,7 @@ namespace Concrete\Controller\SinglePage;
 use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Core\Authentication\AuthenticationTypeFailureException;
 use Concrete\Core\Routing\RedirectResponse;
+use Concrete\Core\Validation\ResponseInterface;
 use Config;
 use Events;
 use Core;
@@ -353,13 +354,16 @@ class Login extends PageController
 
             $saveAttributes = array();
             foreach ($unfilled as $attribute) {
-                $err = $attribute->validateAttributeForm();
-                if ($err == false) {
-                    $this->error->add(t('The field "%s" is required', $attribute->getAttributeKeyDisplayName()));
-                } elseif ($err instanceof \Concrete\Core\Error\Error) {
-                    $this->error->add($err);
-                } else {
+                $validator = $attribute->getAttributeType()->getValidator();
+                $response = $validator->validateSaveValueRequest($attribute, $this->request);
+                /**
+                 * @var $response ResponseInterface
+                 */
+                if ($response->isValid()) {
                     $saveAttributes[] = $attribute;
+                } else {
+                    $error = $response->getErrorObject();
+                    $this->error->add($error);
                 }
             }
 

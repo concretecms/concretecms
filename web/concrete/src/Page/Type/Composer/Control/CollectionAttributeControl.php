@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Page\Type\Composer\Control;
 
+use Concrete\Core\Validation\ResponseInterface;
 use Controller;
 use CollectionAttributeKey;
 use Page;
@@ -149,12 +150,17 @@ class CollectionAttributeControl extends Control
         if (is_object($ak)) {
             $e = \Core::make('error');
             if ($this->isFormSubmission()) {
-                $response = $ak->validateAttributeForm();
-                if ($response === false) {
-                    $control = $this->getPageTypeComposerFormLayoutSetControlObject();
-                    $e->add(t('The field %s is required', $control->getPageTypeComposerControlLabel()));
-                } elseif ($response instanceof \Concrete\Core\Error\Error) {
-                    $e->add($response);
+                $validator = $ak->getAttributeType()->getValidator();
+                $control = $this->getPageTypeComposerFormLayoutSetControlObject();
+                $response = $validator->validateSaveValueRequest(
+                    $ak, $this->request, $control->getPageTypeComposerControlLabel()
+                );
+                /**
+                 * @var $response ResponseInterface
+                 */
+                if (!$response->isValid()) {
+                    $error = $response->getErrorObject();
+                    $e->add($error);
                 }
             } else {
                 $value = $this->getPageTypeComposerControlDraftValue();

@@ -286,7 +286,9 @@ class Controller extends AttributeTypeController
         if ($data == false) {
             $data = $this->post();
         }
-        $e = parent::validateKey($data);
+
+        $e = $this->app->make('error');
+
         if (!$data['akTopicParentNodeID'] || !$data['akTopicTreeID']) {
             $e->add(t('You must specify a valid topic tree parent node ID and topic tree ID.'));
         }
@@ -326,8 +328,6 @@ class Controller extends AttributeTypeController
     {
         $ak = $this->getAttributeKey();
         if (!is_object($ak)) {
-            var_dump_safe($this);
-
             return false;
         }
         $this->akTopicParentNodeID = $ak->getAttributeKeyType()->getParentNodeID();

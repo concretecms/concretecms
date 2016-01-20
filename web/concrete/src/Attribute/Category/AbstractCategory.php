@@ -3,6 +3,7 @@ namespace Concrete\Core\Attribute\Category;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Attribute\AttributeValueInterface;
+use Concrete\Core\Attribute\Controller;
 use Concrete\Core\Attribute\EntityInterface;
 use Concrete\Core\Attribute\Key\ImportLoader\StandardImporterLoader;
 use Concrete\Core\Attribute\Key\RequestLoader\StandardRequestLoader;
@@ -10,6 +11,7 @@ use Concrete\Core\Entity\Attribute\Category;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Set;
 use Concrete\Core\Entity\Attribute\Value\Value\Value;
+use Concrete\Core\Error\Error;
 use Doctrine\ORM\EntityManager;
 use Concrete\Core\Entity\Attribute\Type as AttributeType;
 use Doctrine\ORM\EntityRepository;

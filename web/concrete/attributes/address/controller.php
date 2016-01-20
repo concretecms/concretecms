@@ -156,8 +156,6 @@ class Controller extends AttributeTypeController
 
     public function validateKey($data = false)
     {
-        $e = parent::validateKey($data);
-
         // additional validation for select type
         $akCustomCountries = $data['akCustomCountries'];
         $akHasCustomCountries = $data['akHasCustomCountries'];
@@ -168,6 +166,8 @@ class Controller extends AttributeTypeController
         if (!is_array($data['akCustomCountries'])) {
             $akCustomCountries = array();
         }
+
+        $e = $this->app->make('error');
 
         if ($akHasCustomCountries && (count($akCustomCountries) == 0)) {
             $e->add(t('You must specify at least one country.'));
