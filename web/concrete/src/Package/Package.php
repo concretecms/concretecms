@@ -56,7 +56,6 @@ use SinglePage;
  * A package can contains related components that customize concrete5. They can br easily
  * installed and uninstall by a user.
  *
- * @property int $pkgId ID of package
  * @property string $pkgName Installed name of package
  * @property string $pkgHandle Installed handle of package. This should be provided by the ending package.
  * @property string $pkgDescription Installed description of package
@@ -81,6 +80,14 @@ class Package extends Object
     protected $REL_DIR_PACKAGES_CORE = REL_DIR_PACKAGES_CORE;
     protected $REL_DIR_PACKAGES = REL_DIR_PACKAGES;
     protected $backedUpFname = '';
+
+    /**
+     * The package ID.
+     *
+     * @var int|null
+     */
+    protected $pkgID = null;
+
     /**
      * @var \Concrete\Core\Config\Repository\Liaison
      */
@@ -1219,7 +1226,7 @@ class Package extends Object
      */
     public function getPackageID()
     {
-        return isset($this->pkgID) ? $this->pkgID : null;
+        return $this->pkgID;
     }
 
     /**
