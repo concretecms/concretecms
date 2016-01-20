@@ -8,8 +8,14 @@ class ElementView extends AbstractView
     protected $pkgHandle;
     protected $element;
 
-    protected function constructView($element)
+    public function constructView($mixed)
     {
+        return false;
+    }
+
+    public function __construct($element, $pkgHandle = null)
+    {
+        $this->pkgHandle = $pkgHandle;
         $this->element = $element;
     }
 
