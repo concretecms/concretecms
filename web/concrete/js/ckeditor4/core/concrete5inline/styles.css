@@ -5,8 +5,8 @@
 }
 
 .cke_toolgroup a.cke_button__save:hover {
-    background: #286090;
-    background-image: linear-gradient(to bottom, #336fad, #315f9b);
+    background: #286090 !important;
+    background-image: linear-gradient(to bottom, #336fad, #315f9b) !important;
 }
 
 .cke_button__save .cke_button__save_label, .cke_button__cancel .cke_button__cancel_label {
