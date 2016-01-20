@@ -55,7 +55,7 @@ if (!$ak instanceof CollectionAttributeKey) {
 
 
 	<div class="clearfix">
-	<label style="margin-bottom: 0px;"><?=t('Link Tag to Search Page')?></label>
+	<label style="margin-bottom: 0px;"><?=t('Link Tags to Filtered Page List')?></label>
 	<div class="input">
 		<?php
         $form_selector = Loader::helper('form/page_selector');
