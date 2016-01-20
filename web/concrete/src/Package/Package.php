@@ -83,10 +83,13 @@ class Package extends Object
 
     /**
      * The package ID.
+     * Don't access this directly: use Package->getPackageID and Package->setPackageID.
      *
      * @var int|null
+     *
+     * @internal
      */
-    protected $pkgID = null;
+    public $pkgID = null;
 
     /**
      * @var \Concrete\Core\Config\Repository\Liaison
@@ -1227,6 +1230,16 @@ class Package extends Object
     public function getPackageID()
     {
         return $this->pkgID;
+    }
+
+    /**
+     * Sets the package ID.
+     *
+     * @param int|null $value
+     */
+    public function setPackageID($value)
+    {
+        $this->pkgID = empty($value) ? null : (int) $value;
     }
 
     /**
