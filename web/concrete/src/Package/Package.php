@@ -636,6 +636,11 @@ class Package extends Object
         return file_exists($this->getPackagePath() . '/' . DIRNAME_ELEMENTS . '/' . DIRNAME_DASHBOARD . '/install.php');
     }
 
+    public function hasUninstallNotes()
+    {
+        return file_exists($this->getPackagePath() . '/' . DIRNAME_ELEMENTS . '/' . DIRNAME_DASHBOARD . '/uninstall.php');
+    }
+
     public function allowsFullContentSwap()
     {
         return $this->pkgAllowsFullContentSwap;
