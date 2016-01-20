@@ -9,6 +9,8 @@ if ($a->isGlobalArea()) {
     $c = $b->getBlockCollectionObject();
 }
 
+$bi = $b->getInstance();
+
 $p = new Permissions($b);
 $showMenu = false;
 if ($a->showControls() && $p->canViewEditInterface() && $view->showControls()) {
@@ -31,7 +33,7 @@ if ($showMenu) { ?>
 if (
     $pt->supportsGridFramework()
     && $a->isGridContainerEnabled()
-    && !$b->ignorePageThemeGridFrameworkContainer()
+    && !$bi->ignorePageThemeGridFrameworkContainer()
 ) {
     $gf = $pt->getThemeGridFrameworkObject();
     print $gf->getPageThemeGridFrameworkContainerStartHTML();
@@ -75,6 +77,12 @@ if ($showMenu) {
             $editInline = true;
         }
     }
+
+    if (is_object($_bo)) {
+        $bi = $_bo->getInstance();
+    } else {
+        $bi = $b->getInstance();
+    }
     $canDesign = ($p->canEditBlockDesign() && Config::get('concrete.design.enable_custom') == true);
     $canModifyGroups = ($p->canEditBlockPermissions() && Config::get('concrete.permissions.model') != 'simple' && (!$a->isGlobalArea()));
     $canEditName = $p->canEditBlockName();
@@ -104,6 +112,7 @@ if ($showMenu) {
         data-area-id="<?=$a->getAreaID()?>"
         data-block-id="<?=$b->getBlockID()?>"
         data-block-type-wraps="<?= intval(!$b->ignorePageThemeGridFrameworkContainer(), 10) ?>"
+        data-block-wraps="<?= intval(!$bi->ignorePageThemeGridFrameworkContainer(), 10) ?>"
         class="<?=$class?>"
         data-block-type-handle="<?=$btHandle?>"
         data-launch-block-menu="block-menu-b<?=$b->getBlockID()?>-<?=$a->getAreaID()?>"
@@ -129,11 +138,6 @@ if ($showMenu) {
                     <ul class="dropdown-menu">
 
                         <? if ($btOriginal->getBlockTypeHandle() == BLOCK_HANDLE_STACK_PROXY) {
-                            if (is_object($_bo)) {
-                                $bi = $_bo->getInstance();
-                            } else {
-                                $bi = $b->getInstance();
-                            }
                             $stack = Stack::getByID($bi->stID);
                             if (is_object($stack)) {
                                 $sp = new Permissions($stack);

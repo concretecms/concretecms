@@ -10,6 +10,8 @@ if ($a->isGlobalArea()) {
     $c = $b->getBlockCollectionObject();
 }
 
+$bi = $b->getInstance();
+
 $blockStyle = $b->getCustomStyle();
 ?>
 
@@ -17,7 +19,7 @@ $blockStyle = $b->getCustomStyle();
 if (
     $pt->supportsGridFramework()
     && $b->getBlockAreaObject()->isGridContainerEnabled()
-    && !$b->ignorePageThemeGridFrameworkContainer()
+    && !$bi->ignorePageThemeGridFrameworkContainer()
 ) {
     $gf = $pt->getThemeGridFrameworkObject();
     print '</div>';

@@ -26,7 +26,7 @@
                 handle: elem.data('block-type-handle'),
                 areaId: elem.data('area-id'),
                 cID: elem.data('cid'),
-                wraps: !!elem.data('block-type-wraps'),
+                wraps: !!elem.data('block-wraps'),
                 area: null,
                 elem: elem,
                 dragger: null,
