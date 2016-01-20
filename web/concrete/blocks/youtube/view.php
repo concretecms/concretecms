@@ -67,7 +67,7 @@ if (Page::getCurrentPage()->isEditMode()) {
 		<div><?= t('YouTube Video disabled in edit mode.');
     ?></div>
 	</div>
-<?php 
+<?php
 } else {
     ?>
 	<div id="youtube<?= $bID;
@@ -78,5 +78,5 @@ if (Page::getCurrentPage()->isEditMode()) {
     ?><?= $paramstring;
     ?>" frameborder="0" allowfullscreen></iframe>
 	</div>
-<?php 
+<?php
 } ?>

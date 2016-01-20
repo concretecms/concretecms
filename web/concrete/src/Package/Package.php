@@ -926,7 +926,7 @@ class Package extends Object
      */
     protected function validateClearSiteContents($options)
     {
-        if (Core::make('application')->isRunThroughCommandLineInterface()) {
+        if (Core::make('app')->isRunThroughCommandLineInterface()) {
             $result = true;
         } else {
             $result = false;

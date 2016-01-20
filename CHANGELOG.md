@@ -1,10 +1,82 @@
-# Development branch
+# 5.7.5.4
 
 ## Feature Updates
-* Added new console commands to install, update and remove packages (thanks mlocati)
-* Added a new console command to generate and update package translation files (thanks mlocati)
-* Added a new console command to batch process packages (remove short tags, compile translations and icons, create zip files) (thanks mlocati)
-* Made single page controllers have access to the Application instance via `$controller->app`
+
+* Lots of improvements to the YouTube block, including responsive and widescreen improvements, support for playlist URLs, support for more YouTube options, and code cleanup (thanks Mesuva!)
+* Added the ability to start composer page location sitemaps at a certain level in the tree.
+* Share this Page block now includes a print option (thanks ojalehto)
+* New uploading settings Dashboard page allows administrators to specify a maximum width, height and JPEG level for images uploaded to the file manager. Images will be constrained using client side JavaScript (if available) and server side as a fallback (thanks Mesuva)
+* Background size and position added to options in Background Image section of area/block design (thanks MrKarlDilkington)
+* Added the ability to set storage locations for files in bulk (thanks hissy)
+* Updates to Image Slider block: draggable and collapsible slides, choose whether to animate automatically, slider speed, time between transitions, and whether to pause on hover (thanks MrKarlDilkington)
+* Character count added to bulk SEO updater and SEO panel (thanks Mesuva)
+* Added “Fit Image” button to Image Editor (thanks MrKarlDilkington)
+
+## Behavioral Improvements
+
+* If a user has the ability to approve the workflow on a page that he or she is updating, the workflow will be skipped when submission occurs.
+* Better validation of thumbnail types created through the dashboard (thanks mnakalay)
+* Security improvement: immediate invalidation of password reset emails upon changed passwords (thanks joemeyer)
+* We now use the number form element in the number attribute (thanks Remo)
+* Added version comment to workflow email.
+* Better caching of Page List blocks (thanks TimDix)
+* CSS scope fixes and cleanup (thanks robkovacs)
+* Drafts now include the date they were created (thanks MrKarlDilkington)
+* Command line utilities will now work with a symlinked core (thanks mlocati)
+* An area name is now visible when dragging a block over it
+* Better compressed image slider sample images lead to smaller file sizes (thanks MrKarlDilkington)
+* Improvement to the Page Defaults editing experience (thanks MrKarlDilkington)
+* Added support for system pages to the AutoNav block (thanks joostrijneveld)
+* Better support for <picture> elements in content blocks (thanks EC-Joe)
+* Configuration option added to disable download statistics tracking (thanks EC-Joe)
+
+## Bug Fixes
+
+* Custom theme layout presets now honor attributes on containers and columns other than just “class” (data attributes, etc…)
+* Fixed error on user password validation on PHP 5.3.3.
+* User avatar removal now protected against CSRF attacks.
+* Allows the use of custom label text for file selectors (thanks mnakalay)
+* Miscellaneous code cleanup and minor bug fixes (thanks joemeyer)
+* Fixed infinite redirect issues with certain setups.
+* Fixed https://github.com/concrete5/concrete5/issues/3063 (thanks joemeyer)
+* Fixed errors when including job sets in packages (thanks joemeyer)
+* Fixed bug where uploading files with uppercase extensions would fail in certain situations.
+* Fixed bug where image slider block entries with links to internal page would lose those links on edit (thanks acliss19xx)
+* Fixed https://github.com/concrete5/concrete5/issues/3300
+* Fix newsflow url to Dashboard's update page (thanks concrete5 Japan)
+* Fixed: It is not possible to set the color picker to complete transparency in the theme customization options (thanks mlocati)
+* Fixed: if you add a picture to a feature paragraph area (or other abstracted string) and go to edit it it doesn't get translated back (thanks joemeyer)
+* Fixed: https://github.com/concrete5/concrete5/pull/3214 (thanks frosso)
+* Fixed inability to clear background images in page design.
+* Fixed https://www.concrete5.org/developers/bugs/5-7-5-3/remove-alias-does-not-work/
+* Bug fixes with Dashboard sitemap and page search.
+* Fixed: Package description isn't translated before installing the package (thanks mlocati)
+* Fixed: Can't vote in a survey if the block caching is turned on (thanks TimDix)
+* Fixed https://www.concrete5.org/community/forums/chat/date-navigation-timezone-problem/ (thanks mlocati and WillemAnchor)
+* Fixed https://github.com/concrete5/concrete5/issues/3098 (thanks ahukkanen)
+* Fixed bug where the Add new page dialog was missing certain translations loaded from Composer (thanks ahukkanen)
+* Fixed https://www.concrete5.org/developers/bugs/5-7-5-3/zip-file-download/ (thanks mlocati)
+* Fixed bug where filtering by select attribute option values wasn’t working when the options had special characters in them (thanks dsgraham)
+* Added X-Frame-Options header option for security purposes (thanks hissy)
+* Fixed https://hackerone.com/reports/4934 (thanks joemeyer)
+* Fixed mobile theme switcher issues: Elements are loaded from default theme instead of mobile theme, Responsive image settings of mobile theme does not respected (thanks hissy)
+* Content import now properly imports area background images (thanks myconcretelab)
+* https://github.com/concrete5/concrete5/pull/3106 (thanks mlocati)
+* Fixed typo in Password Sent email template (thanks allybee)
+
+## Developer Updates
+
+* Code improvements to facilitate concrete5 running on PHP 7 (thanks mlocati)
+* New command line installation functionality to support installs in a clustered environment (attaches to existing databases rather than requiring an empty database.)
+* New command line utilities for installing and uninstalling packages are now available (thanks mlocati)
+* New command line utilities for generating and updating package translation files (thanks mlocati)
+* Feature: Add new Conversation Message event (thanks brucewyne)
+* Page Theme classes can now provide custom value lists. For information on why you’d want to do this, see this issue: https://github.com/concrete5/concrete5/pull/3031
+* New attach mode in command line installer: When the --attach flag is supplied with a concrete5 c5:install call, if the supplied database already has rows we will attach to it rather than failing
+* Session API Improvements
+* Groups tree Javascript now supports multiple selection (thanks Shotster)
+* Package controllers can now define on\_after\_packages\_start() methods which will run after on\_start() from ALL installed packages have run. This can be helpful when a particular package requires something from another package, but the original package is executing on\_start() before the dependency.
+* Tourist tours now have access to showStep method (thanks danielgasser)
 
 # 5.7.5.3
 

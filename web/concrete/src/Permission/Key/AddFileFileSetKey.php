@@ -1,12 +1,14 @@
 <?php
 namespace Concrete\Core\Permission\Key;
 
+use Concrete\Core\File\File;
 use Loader;
 use User;
-use Concrete\Core\Permission\Duration as PermissionDuration;
+use \Concrete\Core\Permission\Duration as PermissionDuration;
 
 class AddFileFileSetKey extends FileSetKey
 {
+
     public function getAllowedFileExtensions()
     {
         $u = new User();
@@ -14,7 +16,6 @@ class AddFileFileSetKey extends FileSetKey
         $extensions = array();
         if ($u->isSuperUser()) {
             $extensions = Loader::helper('concrete/file')->getAllowedFileExtensions();
-
             return $extensions;
         }
 
@@ -41,13 +42,17 @@ class AddFileFileSetKey extends FileSetKey
         }
 
         $extensions = array_map('strtolower', $extensions);
-
         return $extensions;
     }
 
-    public function validate($extension = false)
+    public function validate($file = false)
     {
         $extensions = $this->getAllowedFileExtensions();
+        if ($file instanceof File) {
+            $extension = $file->getExtension();
+        } else {
+            $extension = $file;
+        }
         $extension = strtolower($extension);
         if ($extension != false) {
             return in_array($extension, $extensions);
@@ -55,4 +60,6 @@ class AddFileFileSetKey extends FileSetKey
             return count($extensions) > 0;
         }
     }
+
+
 }
