@@ -75,6 +75,12 @@ class BlockType
      * @Column(type="integer")
      */
     protected $btInterfaceWidth;
+
+    /**
+     * @Column(type="boolean")
+     */
+    protected $btCacheBlockOutputClearOnEvents = false;
+    
     /**
      * @Column(columnDefinition="integer unsigned")
      */
@@ -121,7 +127,7 @@ class BlockType
         $sm = $db->getSchemaManager();
 
         $qb = $db->createQueryBuilder();
-        $bTypes = $qb->select('btID, btHandle')->from('BlockTypes')
+        $bTypes = $qb->select('btID', 'btHandle')->from('BlockTypes')
                     ->where($qb->expr()->eq('btCacheBlockOutputClearOnEvents', ':clearOnEvent'))
                     ->setParameter(':clearOnEvent', 1, \PDO::PARAM_INT)
                     ->execute()->fetchAll();

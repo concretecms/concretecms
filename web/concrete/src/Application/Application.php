@@ -136,10 +136,27 @@ class Application extends Container
     public function partialClearCaches()
     {
         \Events::dispatch('on_partial_cache_flush');
+        $db = Database::connection();
 
         $pageCache = PageCache::getLibrary();
         if (is_object($pageCache)) {
-            $pageCache->flush();
+            $qb    = $db->createQueryBuilder();
+            $subQb = $db->createQueryBuilder();
+            $cIDs  = $qb->select('cvb.cID')->from('CollectionVersionBlocksOutputCache', 'cvb')
+                    ->innerJoin('cvb', 'Blocks', 'b', 'b.bID = cvb.bID')
+                    ->where($qb->expr()->comparison('b.btID', 'IN',
+                            '('.
+                            $subQb->select('bt.btID')->from('BlockTypes', 'bt')
+                            ->where($subQb->expr()->eq('bt.btCacheBlockOutputClearOnEvents',
+                                    ':clearOnEvent'))
+                            ->getSQL().')'
+                    ))
+                    ->setParameter(':clearOnEvent', 1, \PDO::PARAM_INT)
+                    ->execute()->fetchAll();
+
+            foreach ($cIDs as $cID) {
+                $pageCache->purge(Page::getByID($cID));
+            }
         }
 
         // Clear localization cache
