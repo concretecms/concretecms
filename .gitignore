@@ -42,6 +42,7 @@ error_log
 .project
 
 # ignore Eclipse-specific files
+/.externalToolBuilders/
 /.settings/
 /.buildpath
 
