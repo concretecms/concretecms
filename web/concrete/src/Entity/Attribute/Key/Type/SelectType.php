@@ -2,6 +2,7 @@
 namespace Concrete\Core\Entity\Attribute\Key\Type;
 
 use Concrete\Core\Entity\Attribute\Value\Value\SelectValue;
+use Concrete\Core\Entity\Attribute\Value\Value\SelectValueOptionList;
 
 /**
  * @Entity
@@ -9,6 +10,12 @@ use Concrete\Core\Entity\Attribute\Value\Value\SelectValue;
  */
 class SelectType extends Type
 {
+
+    public function __construct()
+    {
+        $this->list = new SelectValueOptionList();
+    }
+
     /**
      * @OneToOne(targetEntity="Concrete\Core\Entity\Attribute\Value\Value\SelectValueOptionList", cascade={"all"})
      * @JoinColumn(name="avSelectOptionListID", referencedColumnName="avSelectOptionListID")

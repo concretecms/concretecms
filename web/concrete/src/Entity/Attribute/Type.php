@@ -114,6 +114,11 @@ class Type
         }
     }
 
+    public function getValidator()
+    {
+        return \Core::make('Concrete\Core\Attribute\StandardValidator');
+    }
+
     public function getController()
     {
         // Note, you can't cache this against the type class itself –it needs to return

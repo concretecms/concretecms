@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Controller\SinglePage;
 
+use Concrete\Core\Validation\ResponseInterface;
 use PageController;
 use Config;
 use Loader;
@@ -103,11 +104,14 @@ class Register extends PageController
 
             foreach ($aks as $uak) {
                 if ($uak->isAttributeKeyRequiredOnRegister()) {
-                    $e1 = $uak->validateAttributeForm();
-                    if ($e1 == false) {
-                        $e->add(t('The field "%s" is required', $uak->getAttributeKeyDisplayName()));
-                    } elseif ($e1 instanceof \Concrete\Core\Error\Error) {
-                        $e->add($e1);
+                    $validator = $uak->getAttributeType()->getValidator();
+                    $response = $validator->validateSaveValueRequest($uak, $this->request);
+                    /**
+                     * @var $response ResponseInterface
+                     */
+                    if (!$response->isValid()) {
+                        $error = $response->getErrorObject();
+                        $e->add($error);
                     }
                 }
             }

@@ -70,16 +70,16 @@ abstract class DashboardAttributesPageController extends DashboardPageController
 
     protected function executeAdd(Type $type, $successURL, $onComplete = null)
     {
-        $controller = $type->getController();
-        $e = $controller->validateKey($this->request->request->all());
-        if ($e->has()) {
-            $this->error = $e;
+        $entity = $this->getCategoryEntityObject();
+        $category = $entity->getAttributeKeyCategory();
+        $validator = $type->getValidator();
+        $response = $validator->validateAddKeyRequest($category, $type, $this->request);
+        if (!$response->isValid()) {
+            $this->error = $response->getErrorObject();
         } else {
             /*
              * @var $category \Concrete\Core\Attribute\Category\CategoryInterface
              */
-            $entity = $this->getCategoryEntityObject();
-            $category = $entity->getAttributeKeyCategory();
             $category->setEntity($entity);
             $key = $category->addFromRequest($type, $this->request);
             $this->assignToSetFromRequest($key);
@@ -135,16 +135,17 @@ abstract class DashboardAttributesPageController extends DashboardPageController
 
     protected function executeUpdate(AttributeKeyInterface $key, $successURL, $onComplete = null)
     {
-        $controller = $key->getController();
         $entity = $this->getCategoryEntityObject();
-        $e = $controller->validateKey($this->request->request->all());
-        if ($e->has()) {
-            $this->error = $e;
+        $category = $entity->getAttributeKeyCategory();
+        $type = $key->getAttributeType();
+        $validator = $type->getValidator();
+        $response = $validator->validateUpdateKeyRequest($category, $key, $this->request);
+        if (!$response->isValid()) {
+            $this->error = $response->getErrorObject();
         } else {
             /*
              * @var \Concrete\Core\Attribute\Category\CategoryInterface
              */
-            $category = $entity->getAttributeKeyCategory();
             $category->setEntity($entity);
             $category->updateFromRequest($key, $this->request);
             $this->assignToSetFromRequest($key);
