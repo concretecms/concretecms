@@ -1,14 +1,10 @@
 <?php
-
 namespace Concrete\Core\User;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Database\Connection\Connection;
-use Concrete\Core\Database\DatabaseManager;
 use Concrete\Core\File\StorageLocation\StorageLocation;
 use Concrete\Core\Foundation\Object;
-use Concrete\Core\Url\UrlInterface;
-use Concrete\Core\User\Event\AddUser;
 use Concrete\Core\User\PrivateMessage\Limit;
 use Concrete\Core\User\PrivateMessage\Mailbox as UserPrivateMessageMailbox;
 use Imagine\Image\ImageInterface;
@@ -21,7 +17,6 @@ use User as ConcreteUser;
 use UserAttributeKey;
 use Concrete\Core\Attribute\Value\UserValue as UserAttributeValue;
 use Group;
-use Hautelook\Phpass\PasswordHash;
 use Session;
 use Core;
 use Database;
@@ -29,7 +24,6 @@ use Concrete\Core\User\Avatar\AvatarServiceInterface;
 
 class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterface
 {
-
     protected $avatarService;
     protected $application;
     protected $connection;
@@ -95,7 +89,6 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         return $groups;
     }
 
-
     /**
      * Deletes a user.
      */
@@ -126,7 +119,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         }
 
         $r = $db->query("DELETE FROM OauthUserMap WHERE user_id = ?", array(intval($this->uID)));
-        
+
         $r = $db->query("DELETE FROM UserSearchIndexAttributes WHERE uID = ?", array(intval($this->uID)));
 
         $r = $db->query("DELETE FROM UserGroups WHERE uID = ?", array(intval($this->uID)));
@@ -177,6 +170,18 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         $ui = self::getByID($this->uID);
         $ue = new \Concrete\Core\User\Event\UserInfo($ui);
         Events::dispatch('on_user_update', $ue);
+    }
+
+    /**
+     * Marks the current user as having had a password reset from the system.
+     */
+    public function markAsPasswordReset()
+    {
+        $db = $this->connection;
+        $db->query("UPDATE Users SET ulsPasswordReset = 1 WHERE uID = ?", array($this->getUserID()));
+
+        $updateEventData = new \Concrete\Core\User\Event\UserInfo($this);
+        Events::dispatch('on_user_update', $updateEventData);
     }
 
     /**
@@ -456,7 +461,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
                 $dateTime,
                 $this->uID,
             );
-            $q = "update Users set uPassword = ?, uLastPasswordChange = ?  where uID = ?";
+            $q = "update Users set uPassword = ?, uLastPasswordChange = ?, ulsPasswordReset = 0  where uID = ?";
             $r = $db->prepare($q);
             $res = $db->execute($r, $v);
 
@@ -506,7 +511,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         if ($this->uID > 0) {
             $newPassword = '';
             $chars = "abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ123456789";
-            for ($i = 0; $i < 7; $i++) {
+            for ($i = 0; $i < 7; ++$i) {
                 $newPassword .= substr($chars, rand() % strlen($chars), 1);
             }
             $this->changePassword($newPassword);
@@ -529,10 +534,11 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
             return null;
         }
         $url = $this->application->make('url/manager');
+
         return $url->resolve(array(
             '/members/profile',
             'view',
-            $this->getUserID()
+            $this->getUserID(),
             )
         );
     }
@@ -695,7 +701,6 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         Events::dispatch('on_user_attributes_saved', $ue);
     }
 
-
     /**
      * Sets the attribute of a user info object to the specified value, and saves it in the database.
      *
@@ -828,6 +833,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     /**
      * Magic method for user attributes. This is db expensive but pretty damn cool
      * so if the attrib handle is "my_attribute", then get the attribute with $ui->getUserMyAttribute(), or "uFirstName" become $ui->getUserUfirstname();.
+     *
      * @return mixed|null
      */
     public function __call($nm, $a)
@@ -840,7 +846,6 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
             return $this->getAttribute($nm);
         }
     }
-
 
     /**
      * @deprecated
@@ -897,5 +902,4 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     {
         return Core::make('Concrete\Core\User\UserInfoFactory')->getByValidationHash($uHash, $unredeemedHashesOnly);
     }
-
 }

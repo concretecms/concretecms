@@ -767,7 +767,14 @@
                 </attributekey>
             </attributes>
         </page>
-
+        <page name="Global Password Reset" path="/dashboard/system/registration/global_password_reset"
+              filename="/dashboard/system/registration/global_password_reset.php" pagetype="" description="Signs out all users, resets all passwords and forces users to choose a new one" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>global, password, reset, change password, force, sign out</value>
+                </attributekey>
+            </attributes>
+        </page>
         <page name="Email" path="/dashboard/system/mail" filename="/dashboard/system/mail/view.php" pagetype=""
               description="Control how your site send and processes mail." package="">
             <attributes>

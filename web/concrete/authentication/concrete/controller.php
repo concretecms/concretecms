@@ -1,7 +1,8 @@
 <?php
-namespace Concrete\Authentication\Concrete;
+namespace concrete\authentication\concrete;
 
 use Concrete\Core\Authentication\AuthenticationTypeController;
+use Concrete\Core\Support\Facade\Application;
 use Config;
 use Exception;
 use Database;
@@ -9,10 +10,11 @@ use Core;
 use User;
 use UserInfo;
 use View;
+use Session;
 
 class Controller extends AuthenticationTypeController
 {
-    public $apiMethods = array('forgot_password', 'v', 'change_password', 'password_changed', 'email_validated', 'invalid_token');
+    public $apiMethods = array('forgot_password', 'v', 'change_password', 'password_changed', 'email_validated', 'invalid_token', 'reset_password');
 
     public function getHandle()
     {
@@ -127,11 +129,37 @@ class Controller extends AuthenticationTypeController
 
     public function isAuthenticated(User $u)
     {
-        return ($u->isLoggedIn());
+        return $u->isLoggedIn();
     }
 
     public function saveAuthenticationType($values)
     {
+    }
+
+    /**
+     * Called when a user tries to log in after his password has been reset by "Global Password Reset".
+     */
+    public function reset_password()
+    {
+        $email = $this->post('uEmail');
+
+        if ($email) {
+            $errorValidator = Core::make('helper/validation/error');
+            $userInfo = Core::make('Concrete\Core\User\UserInfoFactory')->getByName(Session::get('uPasswordResetUserName'));
+
+            try {
+                if ($userInfo && $email != $userInfo->getUserEmail()) {
+                    throw new \Exception(t(sprintf('Invalid email address %s provided resetting a password', $email)));
+                }
+            } catch (\Exception $e) {
+                $errorValidator->add($e);
+            }
+
+            $this->forgot_password();
+        } else {
+            $this->set('authType', $this->getAuthenticationType());
+            $this->set('intro_msg', Core::make('config/database')->get('concrete.password.reset.message'));
+        }
     }
 
     /**
@@ -214,7 +242,7 @@ class Controller extends AuthenticationTypeController
         $e = Core::make('helper/validation/error');
         $ui = UserInfo::getByValidationHash($uHash);
         if (is_object($ui)) {
-            $hashCreated = $db->fetchColumn("SELECT uDateGenerated FROM UserValidationHashes WHERE uHash=?", array($uHash));
+            $hashCreated = $db->fetchColumn('SELECT uDateGenerated FROM UserValidationHashes WHERE uHash=?', array($uHash));
             if ($hashCreated < (time() - (USER_CHANGE_PASSWORD_URL_LIFETIME))) {
                 $h->deleteKey('UserValidationHashes', 'uHash', $uHash);
                 throw new \Exception(
@@ -303,6 +331,12 @@ class Controller extends AuthenticationTypeController
                         $ip_service->createIPBan();
                         throw new \Exception($ip_service->getErrorMessage());
                     }
+
+                    if ($this->isPasswordReset()) {
+                        Session::set('uPasswordResetUserName', $this->post('uName'));
+                        $this->redirect('/login/', $this->getAuthenticationType()->getAuthenticationTypeHandle(), 'reset_password');
+                    }
+
                     if (Config::get('concrete.user.registration.email_registration')) {
                         throw new \Exception(t('Invalid email address or password.'));
                     } else {
@@ -319,6 +353,14 @@ class Controller extends AuthenticationTypeController
         }
 
         return $user;
+    }
+
+    private function isPasswordReset()
+    {
+        $app = Application::getFacadeApplication();
+        $db = $app['database']->connection();
+
+        return $db->GetOne('select ulsPasswordReset from Users where uName = ?', array($this->post('uName')));
     }
 
     public function v($hash = '')
