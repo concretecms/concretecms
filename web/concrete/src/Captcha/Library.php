@@ -110,18 +110,22 @@ class Library extends Object
         return $libraries;
     }
 
+    public function export($xml)
+    {
+        $type = $xml->addChild('library');
+        $type->addAttribute('handle', $this->getSystemCaptchaLibraryHandle());
+        $type->addAttribute('name', $this->getSystemCaptchaLibraryName());
+        $type->addAttribute('package', $this->getPackageHandle());
+        $type->addAttribute('activated', $this->isSystemCaptchaLibraryActive());
+    }
+
     public static function exportList($xml)
     {
         $list = self::getList();
         $nxml = $xml->addChild('systemcaptcha');
 
         foreach ($list as $sc) {
-            $activated = 0;
-            $type = $nxml->addChild('library');
-            $type->addAttribute('handle', $sc->getSystemCaptchaLibraryHandle());
-            $type->addAttribute('name', $sc->getSystemCaptchaLibraryName());
-            $type->addAttribute('package', $sc->getPackageHandle());
-            $type->addAttribute('activated', $sc->isSystemCaptchaLibraryActive());
+            $sc->export($nxml);
         }
     }
 
