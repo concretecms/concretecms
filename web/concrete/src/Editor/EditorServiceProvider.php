@@ -2,6 +2,8 @@
 namespace Concrete\Core\Editor;
 
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
+use Concrete\Core\Legacy\FilePermissions;
+use Concrete\Core\Legacy\TaskPermission;
 
 class EditorServiceProvider extends ServiceProvider
 {
@@ -20,6 +22,19 @@ class EditorServiceProvider extends ServiceProvider
                 $this->registerCorePlugins($pluginManager);
                 $editor = new CkeditorEditor($config, $pluginManager, $styles);
                 $editor->setToken($app->make('token')->generate('editor'));
+
+
+                $filePermission = FilePermissions::getGlobal();
+                $taskPermission = new TaskPermission();
+
+                $editor->setAllowFileManager(
+                    $filePermission->canAccessFileManager()
+                    && $config->get('concrete.editor.concrete.enable_filemanager')
+                );
+                $editor->setAllowSitemap(
+                    $taskPermission->canAccessSitemap()
+                    && $config->get('concrete.editor.concrete.enable_sitemap')
+                );
                 return $editor;
             }
         );
