@@ -6,10 +6,12 @@ use Concrete\Core\Entity\Attribute\Key\Type\SelectType;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectValue;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectValueOptionList;
+use Concrete\Core\Entity\Attribute\Value\Value\SelectValueUsedOption;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Core;
 use Database;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Controller extends AttributeTypeController
@@ -566,23 +568,24 @@ class Controller extends AttributeTypeController
     public function getOptionUsageArray($parentPage = false, $limit = 9999)
     {
         $db = Database::get();
-        $q = "select atSelectOptions.value, atSelectOptionID, count(atSelectOptionID) as total from Pages inner join CollectionVersions on (Pages.cID = CollectionVersions.cID and CollectionVersions.cvIsApproved = 1) inner join CollectionAttributeValues on (CollectionVersions.cID = CollectionAttributeValues.cID and CollectionVersions.cvID = CollectionAttributeValues.cvID) inner join atSelectOptionsSelected on (atSelectOptionsSelected.avID = CollectionAttributeValues.avID) inner join atSelectOptions on atSelectOptionsSelected.atSelectOptionID = atSelectOptions.ID where Pages.cIsActive = 1 and CollectionAttributeValues.akID = ? ";
+        $q = "select SelectAttributeValueOptions.value, SelectAttributeValueOptions.avSelectOptionID, count(SelectAttributeValueOptions.avSelectOptionID) as total from Pages inner join CollectionVersions on (Pages.cID = CollectionVersions.cID and CollectionVersions.cvIsApproved = 1) inner join CollectionAttributeValues on (CollectionVersions.cID = CollectionAttributeValues.cID and CollectionVersions.cvID = CollectionAttributeValues.cvID) inner join AttributeValues on CollectionAttributeValues.avrID = AttributeValues.avrID inner join SelectAttributeValueSelectedOptions on (SelectAttributeValueSelectedOptions.avID = AttributeValues.avID) inner join SelectAttributeValueOptions on SelectAttributeValueSelectedOptions.avSelectOptionID = SelectAttributeValueOptions.avSelectOptionID where Pages.cIsActive = 1 and AttributeValues.akID = ? ";
         $v = array($this->attributeKey->getAttributeKeyID());
         if (is_object($parentPage)) {
             $v[] = $parentPage->getCollectionID();
             $q .= "and cParentID = ?";
         }
-        $q .= " group by atSelectOptionID order by total desc limit " . $limit;
+        $q .= " group by avSelectOptionID order by total desc limit " . $limit;
         $r = $db->Execute($q, $v);
-        $list = new OptionList();
-        $i = 0;
+        $options = new ArrayCollection();
         while ($row = $r->FetchRow()) {
-            $opt = new Option($row['atSelectOptionID'], $row['value'], $i, $row['total']);
-            $list->add($opt);
-            ++$i;
+            $opt = new SelectValueUsedOption();
+            $opt->setSelectAttributeOptionValue($row['value']);
+            $opt->setSelectAttributeOptionID($row['avSelectOptionID']);
+            $opt->setSelectAttributeOptionUsageCount($row['total']);
+            $options->add($opt);
         }
 
-        return $list;
+        return $options;
     }
 
     public function filterByAttribute(AttributedItemList $list, $value, $comparison = '=')
