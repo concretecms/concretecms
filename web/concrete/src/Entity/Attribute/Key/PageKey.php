@@ -7,4 +7,11 @@ namespace Concrete\Core\Entity\Attribute\Key;
  */
 class PageKey extends Key
 {
+
+    public function getAttributeKeyCategoryHandle()
+    {
+        return 'collection';
+    }
+
+
 }

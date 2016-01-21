@@ -5,6 +5,8 @@ use Concrete\Core\Attribute\AttributeKeyInterface;
 use Concrete\Core\Attribute\Type;
 use Concrete\Core\Entity\Attribute\Set;
 use Concrete\Core\Entity\PackageTrait;
+use Concrete\Core\Export\ExportableInterface;
+use Concrete\Core\Export\Item\AttributeKey;
 
 /**
  * @Entity
@@ -17,7 +19,7 @@ use Concrete\Core\Entity\PackageTrait;
  *     }
  * )
  */
-class Key implements AttributeKeyInterface
+class Key implements AttributeKeyInterface, ExportableInterface
 {
     use PackageTrait;
 
@@ -202,6 +204,16 @@ class Key implements AttributeKeyInterface
             $controller->setAttributeKey($this);
             return $controller;
         }
+    }
+
+    public function getAttributeKeyCategoryHandle()
+    {
+        return false;
+    }
+
+    public function getExporter()
+    {
+        return new AttributeKey();
     }
 
     /**
