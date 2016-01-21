@@ -41,6 +41,10 @@ For instance, with
 concrete5 %command.name% set concrete.test_item 1
 The new configuration item will have a numeric value of 1. If you want to save the string "1" you have to write
 concrete5 %command.name% set concrete.test_item '1'
+
+Returns codes:
+  0 operation completed successfully
+  1 errors occurred
 EOT
         );
     }
@@ -49,20 +53,20 @@ EOT
     {
         $rc = 0;
 
-        $default_environment = \Config::getEnvironment();
-
-        $environment = $input->getOption('environment') ?: $default_environment;
-
-        $file_system = new Filesystem();
-        $file_loader = new FileLoader($file_system);
-        if ($input->getOption('generated-overrides')) {
-            $file_saver = new FileSaver($file_system, $environment == $default_environment ? null : $environment);
-        } else {
-            $file_saver = new DirectFileSaver($file_system, $environment == $default_environment ? null : $environment);
-        }
-        $this->repository = new Repository($file_loader, $file_saver, $environment);
-
         try {
+            $default_environment = \Config::getEnvironment();
+
+            $environment = $input->getOption('environment') ?: $default_environment;
+
+            $file_system = new Filesystem();
+            $file_loader = new FileLoader($file_system);
+            if ($input->getOption('generated-overrides')) {
+                $file_saver = new FileSaver($file_system, $environment == $default_environment ? null : $environment);
+            } else {
+                $file_saver = new DirectFileSaver($file_system, $environment == $default_environment ? null : $environment);
+            }
+            $this->repository = new Repository($file_loader, $file_saver, $environment);
+
             $item = $input->getArgument('item');
             switch ($input->getArgument('operation')) {
                 case self::OPERATION_GET:
