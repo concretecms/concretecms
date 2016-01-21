@@ -139,6 +139,9 @@ class InstallCommand extends Command
 
         try {
             $spl = StartingPointPackage::getClass($options['starting-point']);
+            if ($spl === null) {
+                throw new Exception('Invalid starting-point: '.$options['starting-point']);
+            }
             $attach_mode = $force_attach;
 
             if (!$force_attach && $cnt->isAutoAttachEnabled()) {
