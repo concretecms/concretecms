@@ -29,7 +29,7 @@ class ServiceProvider extends Provider
             }
 
             if (!$service = head($params)) {
-                throw new \InvalidParameterException('No Service given.');
+                throw new \InvalidArgumentException('No Service given.');
             }
 
             $extractor_factory = $app->make('oauth/factory/extractor');
