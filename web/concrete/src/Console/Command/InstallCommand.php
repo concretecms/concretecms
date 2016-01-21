@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Console\Command;
 
 use Concrete\Core\Package\Routine\AttachModeCompatibleRoutineInterface;
@@ -98,7 +97,6 @@ class InstallCommand extends Command
 
         $cnt = new \Concrete\Controller\Install();
 
-
         $force_attach = $input->getOption('force-attach');
         $auto_attach = $force_attach || $input->getOption('attach');
         $cnt->setAutoAttach($auto_attach);
@@ -182,9 +180,9 @@ class InstallCommand extends Command
         ) {
             $output->write('Adding demo user... ');
             \UserInfo::add(array(
-                'uName'            => $options['demo-username'],
-                'uEmail'           => $options['demo-email'],
-                'uPassword'        => $options['demo-password'],
+                'uName' => $options['demo-username'],
+                'uEmail' => $options['demo-email'],
+                'uPassword' => $options['demo-password'],
             ))->getUserObject()->enterGroup(
                 \Group::getByID(ADMIN_GROUP_ID)
             );
