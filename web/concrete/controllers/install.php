@@ -273,7 +273,7 @@ class Install extends Controller
     {
         $js = Core::make('helper/json');
         $num = $num1 + $num2;
-        print $js->encode(array('response' => $num));
+        echo $js->encode(array('response' => $num));
         exit;
     }
 
@@ -297,7 +297,7 @@ class Install extends Controller
             $js->message = tc('InstallError', '%s.<br><br>Trace:<br>%s', $e->getMessage(), $e->getTraceAsString());
             $this->reset();
         }
-        print $jsx->encode($js);
+        echo $jsx->encode($js);
         exit;
     }
 
@@ -435,7 +435,7 @@ class Install extends Controller
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isAutoAttachEnabled()
     {
@@ -443,12 +443,10 @@ class Install extends Controller
     }
 
     /**
-     * @param boolean $auto_attach
+     * @param bool $auto_attach
      */
     public function setAutoAttach($auto_attach)
     {
         $this->auto_attach = $auto_attach;
     }
-
-
 }
