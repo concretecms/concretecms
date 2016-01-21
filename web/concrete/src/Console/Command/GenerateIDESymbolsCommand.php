@@ -26,7 +26,11 @@ class GenerateIDESymbolsCommand extends Command
         $rc = 0;
         try {
             $what = $input->getArgument('generate-what');
-            if (in_array('all', $what) || in_array('ide-classes', $what)) {
+            $p = array_search('ide-classes', $what);
+            if ($p !== false || in_array('all', $what)) {
+                if ($p !== false) {
+                    unset($what[$p]);
+                }
                 $output->write('Generating fake PHP classes to help IDE... ');
                 if (!Core::make('app')->isInstalled()) {
                     $output->writeln('<error>failed: concrete5 is not installed.</error>');
@@ -36,10 +40,21 @@ class GenerateIDESymbolsCommand extends Command
                     $output->writeln('<info>done.</info>');
                 }
             }
-            if (in_array('all', $what) || in_array('phpstorm', $what)) {
+            $p = array_search('phpstorm', $what);
+            if ($p !== false || in_array('all', $what)) {
+                if ($p !== false) {
+                    unset($what[$p]);
+                }
                 $output->write('Generating PHP metadata for PHPStorm... ');
                 $this->generatePHPStorm();
                 $output->writeln('<info>done.</info>');
+            }
+            $p = array_search('all', $what);
+            if ($p !== false) {
+                unset($what[$p]);
+            }
+            if (!empty($what)) {
+                throw new Exception('Unrecognized arguments: '.implode(', ', $what));
             }
         } catch (Exception $x) {
             $output->writeln('<error>'.$x->getMessage().'</error>');
