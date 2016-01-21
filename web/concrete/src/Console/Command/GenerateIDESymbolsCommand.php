@@ -18,6 +18,12 @@ class GenerateIDESymbolsCommand extends Command
             ->setName('c5:ide-symbols')
             ->setDescription('Generate IDE symbols')
             ->addArgument('generate-what', InputArgument::IS_ARRAY, 'Elements to generate [all|ide-classes|phpstorm]', array('all'))
+            ->setHelp(<<<EOT
+Returns codes:
+  0 operation completed successfully
+  1 errors occurred
+EOT
+            )
         ;
     }
 
