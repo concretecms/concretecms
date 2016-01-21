@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Package;
 
 use AuthenticationType;
@@ -95,7 +94,10 @@ class StartingPointPackage extends BasePackage
         }
         $availableList = array();
         foreach ($available as $pkgHandle) {
-            $availableList[] = static::getClass($pkgHandle);
+            $cl = static::getClass($pkgHandle);
+            if ($cl !== null) {
+                $availableList[] = $cl;
+            }
         }
 
         return $availableList;
@@ -103,7 +105,8 @@ class StartingPointPackage extends BasePackage
 
     /**
      * @param string $pkgHandle
-     * @return static
+     *
+     * @return static|null
      */
     public static function getClass($pkgHandle)
     {
@@ -112,7 +115,11 @@ class StartingPointPackage extends BasePackage
         } else {
             $class = '\\Concrete\\StartingPointPackage\\' . camelcase($pkgHandle) . '\\Controller';
         }
-        $cl = new $class();
+        if (class_exists($cl, true)) {
+            $cl = new $class();
+        } else {
+            $cl = null;
+        }
 
         return $cl;
     }
