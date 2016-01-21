@@ -132,4 +132,10 @@ class UserKey extends Key
     {
         $this->uakMemberListDisplay = $uakMemberListDisplay;
     }
+
+    public function getAttributeKeyCategoryHandle()
+    {
+        return 'user';
+    }
+
 }

@@ -3,13 +3,15 @@ namespace Concrete\Core\Entity\Attribute;
 
 use Concrete\Core\Attribute\View;
 use Concrete\Core\Entity\PackageTrait;
+use Concrete\Core\Export\ExportableInterface;
+use Concrete\Core\Export\Item\AttributeType;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @Entity
  * @Table(name="AttributeTypes", indexes={@Index(name="pkgID", columns={"pkgID", "atID"})})
  */
-class Type
+class Type implements ExportableInterface
 {
     use PackageTrait;
 
@@ -117,6 +119,11 @@ class Type
     public function getValidator()
     {
         return \Core::make('Concrete\Core\Attribute\StandardValidator');
+    }
+
+    public function getExporter()
+    {
+        return new AttributeType();
     }
 
     public function getController()

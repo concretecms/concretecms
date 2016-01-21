@@ -7,4 +7,10 @@ namespace Concrete\Core\Entity\Attribute\Key;
  */
 class FileKey extends Key
 {
+
+    public function getAttributeKeyCategoryHandle()
+    {
+        return 'file';
+    }
+
 }

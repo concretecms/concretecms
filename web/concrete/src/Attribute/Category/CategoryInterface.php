@@ -24,7 +24,7 @@ interface CategoryInterface
     public function getAttributeTypes();
     public function getAttributeSets();
     public function associateAttributeKeyType(\Concrete\Core\Entity\Attribute\Type $type);
-
+    public function getList();
     public function getUnassignedAttributeKeys();
 
     /**
