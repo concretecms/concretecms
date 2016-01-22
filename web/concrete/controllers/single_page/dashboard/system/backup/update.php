@@ -19,9 +19,9 @@ class UpdateArchive extends Archive
         $this->targetDirectory = DIR_CORE_UPDATES;
     }
 
-    public function install($file)
+    public function install($file, $inplace = true)
     {
-        parent::install($file, true);
+        parent::install($file, $inplace);
     }
 
 }
