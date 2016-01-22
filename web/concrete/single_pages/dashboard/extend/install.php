@@ -71,7 +71,11 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
                 </tr>
             </table>
 
-            <?php @Loader::packageElement('dashboard/uninstall', $pkg->getPackageHandle()); ?>
+            <?php
+            if ($pkg->hasUninstallNotes()) {
+                View::element('dashboard/uninstall', null, $pkg->getPackageHandle());
+            }
+            ?>
 
             <div class="alert alert-danger">
                 <?=t('This will remove all elements associated with the %s package. While you can reinstall the package, this may result in data loss.', $pkg->getPackageName())?>
