@@ -151,7 +151,7 @@ return array(
         'ORM' => '\Concrete\Core\Support\Facade\DatabaseORM',
         'Events' => '\Concrete\Core\Support\Facade\Events',
         'Route' => '\Concrete\Core\Support\Facade\Route',
-        'UserInfo' => '\Concrete\Core\Support\Facade\UserInfoFactory',
+        'UserInfo' => '\Concrete\Core\Support\Facade\UserInfo',
         'Log' => '\Concrete\Core\Support\Facade\Log',
         'Image' => '\Concrete\Core\Support\Facade\Image',
         'Config' => '\Concrete\Core\Support\Facade\Config',

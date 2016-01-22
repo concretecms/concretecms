@@ -1,11 +1,11 @@
 <?php
 namespace Concrete\Core\Support\Facade;
 
-class UserInfoFactory extends Facade
+class UserInfo extends Facade
 {
     public static function getFacadeAccessor()
     {
-        return 'Concrete\Core\User\UserInfoFactory';
+        return 'Concrete\Core\User\UserInfoRepository';
     }
 
     /**

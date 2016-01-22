@@ -53,11 +53,11 @@ if ($controller->getTask() == 'view_details') {
     <div class="ccm-dashboard-header-buttons">
         <?php if ($isGlobalArea) {
     ?>
-        <a href="<?=URL::to('/dashboard/blocks/stacks/view_global_areas')?>" data-dialog="add-stack" class="btn btn-default"><i class="fa fa-angle-double-left"></i> <?=t("Back to Global Areas")?></a>
+        <a href="<?=URL::to('/dashboard/blocks/stacks/view_global_areas')?>" class="btn btn-default"><i class="fa fa-angle-double-left"></i> <?=t("Back to Global Areas")?></a>
         <?php 
 } else {
     ?>
-        <a href="<?=URL::to('/dashboard/blocks/stacks')?>" data-dialog="add-stack" class="btn btn-default"><i class="fa fa-angle-double-left"></i> <?=t("Back to Stacks")?></a>
+        <a href="<?=URL::to('/dashboard/blocks/stacks')?>" class="btn btn-default"><i class="fa fa-angle-double-left"></i> <?=t("Back to Stacks")?></a>
         <?php 
 }
     ?>
@@ -266,29 +266,34 @@ if ($controller->getTask() == 'view_details') {
     </form>
 
 <?php 
-} else {
-    ?>
+} else { ?>
 
-    <?php if (count($stacks) > 0) {
-    ?>
-        <ul class="item-select-list" id="ccm-stack-list">
-        <?php foreach ($stacks as $st) {
-    $sv = CollectionVersion::get($st, 'ACTIVE');
-    ?>
+    <?php if (count($stacks) > 0) { ?>
+        <div class="ccm-dashboard-content-full">
+            <div class="table-responsive">
+                <table class="ccm-search-results-table">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th class="<?=$list->getSortClassName('cv.cvName')?>"><a href="<?=$list->getSortURL('cv.cvName')?>"><?=t('Name')?></a></th>
+                        <th class="<?=$list->getSortClassName('c.cDateAdded')?>"><a href="<?=$list->getSortURL('c.cDateAdded')?>"><?=t('Date Added')?></a></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php foreach ($stacks as $st) {
+                        $formatter = new \Concrete\Core\Page\Stack\Formatter($st);
+                    ?>
+                        <tr data-search-row-url="<?=$view->url('/dashboard/blocks/stacks', 'view_details', $st->getCollectionID())?>">
+                            <td class="ccm-search-results-icon"><?=$formatter->getIconElement()?></td>
+                            <td><?=$st->getCollectionName()?></td>
+                            <td><?=Core::make('date')->formatDateTime($st->getCollectionDateAdded())?></td>
+                        </tr>
+                    <?php } ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-            <li id="stID_<?=$st->getCollectionID()?>">
-                <?php if ($canMoveStacks) {
-    ?><i class="ccm-item-select-list-sort"></i><?php 
-}
-    ?>
-                <a href="<?=$view->url('/dashboard/blocks/stacks', 'view_details', $st->getCollectionID())?>">
-                    <i class="fa fa-bars"></i> <?=$sv->getVersionName()?>
-                </a>
-            </li>
-        <?php 
-}
-    ?>
-        </ul>
         <?php
 
 } else {
@@ -347,7 +352,10 @@ if ($controller->getTask() == 'view_details') {
         </span>
         <?php if ($controller->getTask() != 'view_global_areas') {
     ?>
-            <a href="javascript:void(0)" data-dialog="add-stack" class="btn btn-primary"><?=t("Add Stack")?></a>
+            <div class="btn-group">
+                <button data-dialog="add-stack" class="btn btn-default"><i class="fa fa-bars"></i> <?=t("New Stack")?></button>
+                <button data-dialog="add-folder" class="btn btn-default"><i class="fa fa-folder"></i> <?=t("New Folder")?></button>
+            </div>
         <?php 
 }
     ?>
@@ -367,12 +375,25 @@ if ($controller->getTask() == 'view_details') {
                 <button class="btn btn-primary pull-right" onclick="$('#ccm-dialog-add-stack form').submit()"><?=t('Add Stack')?></button>
             </div>
         </div>
+        <div id="ccm-dialog-add-folder" class="ccm-ui">
+            <form method="post" class="form-stacked" style="padding-left: 0px" action="<?=$view->action('add_folder')?>">
+                <?=Loader::helper("validation/token")->output('add_folder')?>
+                <div class="form-group">
+                    <?=Loader::helper("form")->label('folderName', t('Folder Name'))?>
+                    <?=Loader::helper('form')->text('folderName')?>
+                </div>
+            </form>
+            <div class="dialog-buttons">
+                <button class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
+                <button class="btn btn-primary pull-right" onclick="$('#ccm-dialog-add-folder form').submit()"><?=t('Add Folder')?></button>
+            </div>
+        </div>
     </div>
 
     <script type="text/javascript">
     $(function() {
 
-        $('a[data-dialog=add-stack]').on('click', function() {
+        $('button[data-dialog=add-stack]').on('click', function() {
             jQuery.fn.dialog.open({
                 element: '#ccm-dialog-add-stack',
                 modal: true,
@@ -381,7 +402,18 @@ if ($controller->getTask() == 'view_details') {
                 height: 'auto'
             });
         });
+        $('button[data-dialog=add-folder]').on('click', function() {
+            jQuery.fn.dialog.open({
+                element: '#ccm-dialog-add-folder',
+                modal: true,
+                width: 320,
+                title: '<?=t("Add Folder")?>',
+                height: 'auto'
+            });
+        });
+
         <?php if ($canMoveStacks) {
+        /*
     ?>
         $("ul#ccm-stack-list").sortable({
             handle: "i.ccm-item-select-list-sort",
@@ -402,7 +434,7 @@ if ($controller->getTask() == 'view_details') {
             }
         });
         <?php 
-}
+*/}
     ?>
 
     });
