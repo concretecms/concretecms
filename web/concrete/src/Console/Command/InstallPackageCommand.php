@@ -19,11 +19,18 @@ class InstallPackageCommand extends Command
             ->setDescription('Install a concrete5 package')
             ->addArgument('package', InputArgument::REQUIRED, 'The handle of the package to be installed')
             ->addArgument('package-options', InputArgument::IS_ARRAY, 'List of key-value pairs to pass to the package install routine (example: foo=bar baz=foo)')
+            ->setHelp(<<<EOT
+Returns codes:
+  0 operation completed successfully
+  1 errors occurred
+EOT
+            )
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $rc = 0;
         try {
             $pkgHandle = $input->getArgument('package');
             $packageOptions = array();
@@ -65,28 +72,29 @@ class InstallPackageCommand extends Command
             if ($pkg === null) {
                 throw new Exception(sprintf("No package with handle '%s' was found", $pkgHandle));
             }
-            $output->writeln(sprintf('found (%s).', $pkg->getPackageName()));
+            $output->writeln(sprintf('<info>found (%s).</info>', $pkg->getPackageName()));
 
             $output->write('Checking preconditions... ');
             $test = Package::testForInstall($pkgHandle);
             if ($test !== true) {
                 throw new Exception(implode("\n", Package::mapError($r)));
             }
-            $output->writeln('good.');
+            $output->writeln('<info>good.</info>');
 
             $output->write('Installing package... ');
             $pkgInstalled = $pkg->install($packageOptions);
-            $output->writeln('done.');
+            $output->writeln('<info>done.</info>');
 
             if ($pkg->allowsFullContentSwap() && $input->getOption('full-content-swap')) {
                 $output->write('Performing full content swap... ');
                 $pkg->swapContent(array());
-                $output->writeln('done.');
+                $output->writeln('<info>done.</info>');
             }
         } catch (Exception $x) {
-            $output->writeln($x->getMessage());
-
-            return 1;
+            $output->writeln('<error>'.$x->getMessage().'</error>');
+            $rc = 1;
         }
+
+        return $rc;
     }
 }
