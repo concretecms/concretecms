@@ -1,0 +1,35 @@
+.cke_toolgroup a.cke_button__save {
+    background-color: #337ab7;
+    background-image: linear-gradient(to bottom,#337ab7, #336fad);
+    text-shadow: none;
+}
+
+.cke_toolgroup a.cke_button__save:hover {
+    background: #286090 !important;
+    background-image: linear-gradient(to bottom, #336fad, #315f9b) !important;
+}
+
+.cke_button__save .cke_button__save_label, .cke_button__cancel .cke_button__cancel_label {
+    display: inline-block;
+    padding-left: 4px;
+    padding-right: 4px;
+}
+
+.cke_button__save .cke_button__save_label {
+    color: #fff;
+    text-shadow: none;
+}
+
+.cke_button__save .cke_button__save_icon, .cke_button__cancel .cke_button__cancel_icon {
+    display: none;
+}
+
+.cke_editable:before,
+.cke_editable:after {
+   content: "";
+   display: table;
+}
+
+.cke_editable:after {
+    clear: both;
+}
