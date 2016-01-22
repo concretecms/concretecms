@@ -2,9 +2,11 @@
 namespace Concrete\Core\Page\Stack\Folder;
 
 use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Export\ExportableInterface;
+use Concrete\Core\Export\Item\StackFolder;
 use Concrete\Core\Page\Page;
 
-class Folder
+class Folder implements ExportableInterface
 {
 
     protected $connection;
@@ -14,6 +16,11 @@ class Folder
     {
         $this->connection = $connection;
         $this->page = $page;
+    }
+
+    public function getExporter()
+    {
+        return new StackFolder();
     }
 
     /**

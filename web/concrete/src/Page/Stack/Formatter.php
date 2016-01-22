@@ -18,9 +18,19 @@ class Formatter
         switch($this->page->getCollectionTypeHandle()) {
             case STACK_CATEGORY_PAGE_TYPE:
                 return '<i class="fa fa-folder"></i>';
-            case STACKS_PAGE_TYPE:
-                return '<i class="fa fa-bars"></i>';
+            default:
+                return '<i class="fa fa-cubes"></i>';
 
+        }
+    }
+
+    public function getSearchResultsClass()
+    {
+        switch($this->page->getCollectionTypeHandle()) {
+            case STACK_CATEGORY_PAGE_TYPE:
+                return 'ccm-search-results-folder';
+            default:
+                return 'ccm-search-results-stack';
         }
     }
 

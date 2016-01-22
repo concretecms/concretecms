@@ -2,6 +2,7 @@
 namespace Concrete\Core\Page\Stack;
 
 use Area;
+use Concrete\Core\Export\ExportableInterface;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use GlobalArea;
 use Config;
@@ -15,7 +16,7 @@ use PageType;
  *
  * @package Concrete\Core\Page\Stack
  */
-class Stack extends Page
+class Stack extends Page implements ExportableInterface
 {
     const ST_TYPE_USER_ADDED = 0;
     const ST_TYPE_GLOBAL_AREA = 20;
@@ -296,26 +297,10 @@ class Stack extends Page
         return true;
     }
 
-    /**
-     * @param Page $pageNode
-     */
-    public function export($pageNode, $includePublicDate = false)
+    public function getExporter()
     {
-        $p = $pageNode->addChild('stack');
-        $p->addAttribute('name', Core::make('helper/text')->entities($this->getCollectionName()));
-        if ($this->getStackTypeExportText()) {
-            $p->addAttribute('type', $this->getStackTypeExportText());
-        }
-
-        $db = Database::connection();
-        // you shouldn't ever have a sub area in a stack but just in case.
-        $r = $db->Execute('select arHandle from Areas where cID = ? and arParentID = 0', array($this->getCollectionID()));
-        while ($row = $r->FetchRow()) {
-            $ax = Area::get($this, $row['arHandle']);
-            $ax->export($p, $this);
-        }
+        return new \Concrete\Core\Export\Item\Stack();
     }
-
     /**
      * @return bool|string
      */
