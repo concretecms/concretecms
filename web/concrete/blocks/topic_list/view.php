@@ -11,6 +11,9 @@
         $node = $tree->getRootTreeNodeObject();
         $node->populateChildren();
         if (is_object($node)) {
+            if (!isset($selectedTopicID)) {
+                $selectedTopicID = null;
+            }
             $walk = function($node) use (&$walk, &$view, $selectedTopicID) {
                 print '<ul class="ccm-block-topic-list-list">';
                 foreach($node->getChildNodes() as $topic) {
