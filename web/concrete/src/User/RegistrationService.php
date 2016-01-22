@@ -11,13 +11,13 @@ class RegistrationService implements RegistrationServiceInterface
 {
     protected $connection;
     protected $application;
-    protected $userInfoFactory;
+    protected $userInfoRepository;
 
-    public function __construct(Application $application, Connection $connection, UserInfoFactory $userInfoFactory)
+    public function __construct(Application $application, Connection $connection, UserInfoRepository $userInfoRepository)
     {
         $this->application = $application;
         $this->connection = $connection;
-        $this->userInfoFactory = $userInfoFactory;
+        $this->userInfoRepository = $userInfoRepository;
     }
 
     /**
@@ -37,7 +37,7 @@ class RegistrationService implements RegistrationServiceInterface
         if ($res) {
             $newUID = $this->connection->lastInsertId();
 
-            return $this->userInfoFactory->getByID($newUID);
+            return $this->userInfoRepository->getByID($newUID);
         }
     }
 
@@ -86,7 +86,7 @@ class RegistrationService implements RegistrationServiceInterface
         $res = $r->execute($v);
         if ($res) {
             $newUID = $db->Insert_ID();
-            $ui = $this->userInfoFactory->getByID($newUID);
+            $ui = $this->userInfoRepository->getByID($newUID);
 
             if (is_object($ui)) {
                 $uo = $ui->getUserObject();

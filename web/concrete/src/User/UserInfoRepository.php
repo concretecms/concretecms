@@ -4,7 +4,7 @@ namespace Concrete\Core\User;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Database\Connection\Connection;
 
-class UserInfoFactory
+class UserInfoRepository
 {
     protected $connection;
     protected $application;

@@ -43,8 +43,8 @@ if (isset($message)) {
 	<?php 
 }
 
-echo Core::make('helper/concrete/ui/help')->display('dashboard', $c->getCollectionPath());
-
 echo $innerContent;
+
+echo Core::make('helper/concrete/ui/help')->display('dashboard', $c->getCollectionPath());
 
 $this->inc('elements/footer.php');

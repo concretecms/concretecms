@@ -481,7 +481,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
      */
     public function sortByName()
     {
-        $this->query->orderBy('cv.cvName', 'asc');
+        $this->sortBy('cv.cvName', 'asc');
     }
 
     /**
@@ -489,7 +489,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
      */
     public function sortByNameDescending()
     {
-        $this->query->orderBy('cv.cvName', 'desc');
+        $this->sortBy('cv.cvName', 'desc');
     }
 
     /**
@@ -497,7 +497,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
      */
     public function sortByPublicDateDescending()
     {
-        $this->query->orderBy('cv.cvDatePublic', 'desc');
+        $this->sortBy('cv.cvDatePublic', 'desc');
     }
 
     /**
@@ -506,7 +506,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     public function sortByRelevance()
     {
         if ($this->isFulltextSearch) {
-            $this->query->orderBy('cIndexScore', 'desc');
+            $this->sortBy('cIndexScore', 'desc');
         }
     }
 

@@ -832,7 +832,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
      */
     public static function getByID($uID)
     {
-        return Core::make('Concrete\Core\User\UserInfoFactory')->getByID($uID);
+        return Core::make('Concrete\Core\User\UserInfoRepository')->getByID($uID);
     }
 
     /**
@@ -840,7 +840,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
      */
     public static function getByUserName($uName)
     {
-        return Core::make('Concrete\Core\User\UserInfoFactory')->getByName($uName);
+        return Core::make('Concrete\Core\User\UserInfoRepository')->getByName($uName);
     }
 
     /**
@@ -848,7 +848,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
      */
     public static function getByEmail($uEmail)
     {
-        return Core::make('Concrete\Core\User\UserInfoFactory')->getByEmail($uEmail);
+        return Core::make('Concrete\Core\User\UserInfoRepository')->getByEmail($uEmail);
     }
 
     /**
@@ -856,6 +856,6 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
      */
     public static function getByValidationHash($uHash, $unredeemedHashesOnly = true)
     {
-        return Core::make('Concrete\Core\User\UserInfoFactory')->getByValidationHash($uHash, $unredeemedHashesOnly);
+        return Core::make('Concrete\Core\User\UserInfoRepository')->getByValidationHash($uHash, $unredeemedHashesOnly);
     }
 }

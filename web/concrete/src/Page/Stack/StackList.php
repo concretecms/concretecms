@@ -3,18 +3,17 @@ namespace Concrete\Core\Page\Stack;
 
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Loader;
-use Concrete\Core\Legacy\PageList;
-use Concrete\Core\Legacy\DatabaseItemList;
+use Concrete\Core\Page\PageList;
 
 class StackList extends PageList
 {
     public function __construct()
     {
-        $this->ignoreAliases = true;
-        $this->ignorePermissions = true;
-        $this->filterByPageTypeHandle(STACKS_PAGE_TYPE);
-        $this->addToQuery('inner join Stacks on Stacks.cID = p1.cID');
-        $this->sortBy('p1.cDisplayOrder', 'asc');
+        parent::__construct();
+        $this->ignorePermissions();
+        $this->filterByPath(STACKS_PAGE_PATH);
+        $this->includeSystemPages();
+        $this->sortByName();
     }
 
     public function filterByGlobalAreas()
@@ -49,6 +48,7 @@ class StackList extends PageList
         $this->filter('stMultilingualSection', $ms->getCollectionID());
     }
 
+    /*
     public static function export(\SimpleXMLElement $x)
     {
         $db = Loader::db();
@@ -62,22 +62,6 @@ class StackList extends PageList
                 }
             }
         }
-    }
-
-    public function get($itemsToGet = 0, $offset = 0)
-    {
-        if ($this->getQuery() == '') {
-            $this->setBaseQuery();
-        }
-        $stacks = array();
-        $this->setItemsPerPage($itemsToGet);
-        $r = DatabaseItemList::get($itemsToGet, $offset);
-        foreach ($r as $row) {
-            $s = Stack::getByID($row['cID'], 'RECENT');
-            $stacks[] = $s;
-        }
-
-        return $stacks;
     }
 
     public static function rescanMultilingualStacks()
@@ -103,4 +87,5 @@ class StackList extends PageList
             }
         }
     }
+    */
 }

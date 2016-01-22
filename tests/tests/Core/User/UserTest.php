@@ -100,7 +100,7 @@ class UserTest extends \UserTestCase
 
         $ui->update(array('uHasAvatar' => true));
         // This is lame, I know.
-        $ui = Core::make('Concrete\Core\User\UserInfoFactory')->getByID(1);
+        $ui = Core::make('Concrete\Core\User\UserInfoRepository')->getByID(1);
         $this->assertTrue($ui->hasAvatar());
         $avatar = $ui->getUserAvatar();
         $this->assertEquals('http://www.dummyco.com/path/to/server/application/files/avatars/1.jpg',
@@ -113,7 +113,7 @@ class UserTest extends \UserTestCase
         $service->removeAvatar($ui);
 
         // I KNOW I KNOW This is lame
-        $ui = Core::make('Concrete\Core\User\UserInfoFactory')->getByID(1);
+        $ui = Core::make('Concrete\Core\User\UserInfoRepository')->getByID(1);
         $this->assertFalse($ui->hasAvatar());
     }
 

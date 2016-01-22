@@ -5,6 +5,7 @@ use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Collection\Version\Version;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Page\Stack\StackCategory;
+use Concrete\Core\Support\Facade\StackFolder;
 use Config;
 use Concrete\Core\Page\Stack\StackList;
 use Stack;
@@ -94,9 +95,8 @@ class Stacks extends DashboardPageController
     public function view()
     {
         $stm = new StackList();
-        $stm->filterByUserAdded();
-        $this->setupMultilingualStackList($stm);
-        $this->set('stacks', $stm->get());
+        $this->set('list', $stm);
+        $this->set('stacks', $stm->getResults());
 
         $parent = Page::getByPath(STACKS_PAGE_PATH);
         $cpc = new Permissions($parent);
@@ -120,6 +120,23 @@ class Stacks extends DashboardPageController
             $this->error->add(Loader::helper('validation/token')->getErrorMessage());
         }
     }
+
+    public function add_folder()
+    {
+        if (!$this->token->validate('add_folder')) {
+            $this->error->add($this->token->getErrorMessage());
+        }
+        if (!Loader::helper('validation/strings')->notempty($this->post('folderName'))) {
+            $this->error->add(t("You must give the folder a name."));
+        }
+        if (!$this->error->has()) {
+            $stack = StackFolder::add($this->post('folderName'));
+            $this->flash('success', t('Folder added successfully.'));
+            $this->redirect('/dashboard/blocks/stacks');
+        }
+        $this->view();
+    }
+
 
     public function stack_deleted()
     {
