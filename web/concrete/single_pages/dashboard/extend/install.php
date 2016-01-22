@@ -17,8 +17,12 @@ $nav = \Core::make('helper/navigation');
 
 $catList = AttributeCategory::getList();
 
-if (is_object($pkg)) {
-    $pkgID = $pkg->getPackageID();
+if (isset($pkg)) {
+    if (is_object($pkg)) {
+        $pkgID = $pkg->getPackageID();
+    }
+} else {
+    $pkg = null;
 }
 
 if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScreen && $tp->canInstallPackages()) { ?>
@@ -293,7 +297,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
         <?php
 
      } else {
-        if (is_object($installedPKG) && $installedPKG->hasInstallPostScreen()) {
+        if (isset($installedPKG) && is_object($installedPKG) && $installedPKG->hasInstallPostScreen()) {
             ?>
             <div style="display: none">
                 <div id="ccm-install-post-notes">

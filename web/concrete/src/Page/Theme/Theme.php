@@ -603,7 +603,7 @@ class Theme extends Object
                     }
                 }
                 if (is_null($className)) {
-                    $res->pError = t(/*i18n: %1$s is a filename, %2$s is a PHP class name */'The theme file %1$s does not defines the class %2$s', FILENAME_THEMES_CLASS, ltrim($classNames[0], '\\'));
+                    $res->pError = t(/*i18n: %1$s is a filename, %2$s is a PHP class name */'The theme file %1$s does not define the class %2$s', FILENAME_THEMES_CLASS, ltrim($classNames[0], '\\'));
                 } else {
                     $instance = new $className();
                     $extensionOf = '\\Concrete\\Core\\Page\\Theme\\Theme';
