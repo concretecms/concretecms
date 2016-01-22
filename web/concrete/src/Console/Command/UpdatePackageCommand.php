@@ -19,6 +19,12 @@ class UpdatePackageCommand extends Command
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force update even if the package is already at last version')
             ->addArgument('package', InputArgument::OPTIONAL, 'The handle of the package to be updated')
             ->setDescription('Update a concrete5 package')
+            ->setHelp(<<<EOT
+Returns codes:
+  0 operation completed successfully
+  1 errors occurred
+EOT
+            )
         ;
     }
 
@@ -37,7 +43,7 @@ class UpdatePackageCommand extends Command
                         try {
                             $this->updatePackage($pkgHandle, $output, $force);
                         } catch (Exception $x) {
-                            $output->writeln($x->getMessage());
+                            $output->writeln('<error>'.$x->getMessage().'</error>');
                             $rc = 1;
                         }
                     }
@@ -50,7 +56,7 @@ class UpdatePackageCommand extends Command
                             try {
                                 $this->updatePackage($pkg->getPackageHandle(), $output, $force);
                             } catch (Exception $x) {
-                                $output->writeln($x->getMessage());
+                                $output->writeln('<error>'.$x->getMessage().'</error>');
                                 $rc = 1;
                             }
                         }
@@ -62,7 +68,7 @@ class UpdatePackageCommand extends Command
                 $this->updatePackage($pkgHandle, $output, $force);
             }
         } catch (Exception $x) {
-            $output->writeln($x->getMessage());
+            $output->writeln('<error>'.$x->getMessage().'</error>');
             $rc = 1;
         }
 
@@ -82,7 +88,7 @@ class UpdatePackageCommand extends Command
         if ($pkg === null) {
             throw new Exception(sprintf("No package with handle '%s' is installed", $pkgHandle));
         }
-        $output->writeln(sprintf('found (%s).', $pkg->getPackageName()));
+        $output->writeln(sprintf('<info>found (%s).</info>', $pkg->getPackageName()));
 
         $output->write('Checking preconditions... ');
         $upPkg = null;
@@ -93,13 +99,13 @@ class UpdatePackageCommand extends Command
             }
         }
         if ($upPkg === null && $force !== true) {
-            $output->writeln(sprintf("the package is already up-to-date (v%s)", $pkg->getPackageVersion()));
+            $output->writeln(sprintf("<info>the package is already up-to-date (v%s)</info>", $pkg->getPackageVersion()));
         } else {
             $test = Package::testForInstall($pkgHandle, false);
             if ($test !== true) {
                 throw new Exception(implode("\n", Package::mapError($r)));
             }
-            $output->writeln('good.');
+            $output->writeln('<info>good.</info>');
 
             if ($upPkg === null) {
                 $output->write(sprintf('Forcing upgrade at v%s...', $pkg->getPackageVersion()));
@@ -109,7 +115,7 @@ class UpdatePackageCommand extends Command
             }
             $upPkg->upgradeCoreData();
             $upPkg->upgrade();
-            $output->writeln('done.');
+            $output->writeln('<info>done.</info>');
         }
     }
 }
