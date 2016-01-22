@@ -76,7 +76,7 @@ EOT
                     foreach ($jobsArg as $setName) {
                         $set = JobSet::getByName($setName);
                         if ($set) {
-                            array_merge($jobs, $set->getJobs());
+                            $jobs = array_merge($jobs, $set->getJobs());
                         } else {
                             $rc = 1;
                             if ($output->getVerbosity() >= OutputInterface::VERBOSITY_NORMAL) {
