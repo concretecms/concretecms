@@ -159,6 +159,7 @@ class Controller extends BlockController
         }
 
         //$this->list->filter(false, '(ak_exclude_page_list = 0 or ak_exclude_page_list is null)');
+        $this->list->filterByExcludePageList(false);
 
         if (intval($this->cParentID) != 0) {
             $cParentID = ($this->cThis) ? $this->cID : $this->cParentID;

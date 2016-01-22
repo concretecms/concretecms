@@ -196,6 +196,11 @@ class Key implements AttributeKeyInterface, ExportableInterface
         return $this->getAttributeKeyType()->getAttributeType();
     }
 
+    public function getAttributeTypeHandle()
+    {
+        return $this->getAttributeKeyType()->getAttributeType()->getAttributeTypeHandle();
+    }
+
     public function getController()
     {
         $type = $this->getAttributeKeyType();
