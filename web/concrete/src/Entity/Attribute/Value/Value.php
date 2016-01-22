@@ -2,6 +2,7 @@
 namespace Concrete\Core\Entity\Attribute\Value;
 
 use Concrete\Core\Attribute\AttributeValueInterface;
+use Concrete\Core\Entity\Attribute\Key\Key;
 
 /**
  * @Entity
@@ -32,7 +33,7 @@ abstract class Value implements AttributeValueInterface
     protected $value;
 
     /**
-     * @return mixed
+     * @return Key
      */
     public function getAttributeKey()
     {
@@ -60,6 +61,9 @@ abstract class Value implements AttributeValueInterface
         return $controller;
     }
 
+    /**
+     * @return \Concrete\Core\Entity\Attribute\Value\Value\Value
+     */
     final public function getValueObject()
     {
         return $this->value;

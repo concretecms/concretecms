@@ -103,7 +103,7 @@ abstract class AbstractCategory implements CategoryInterface
         // Modify the category's search indexer.
         $indexer = $this->getSearchIndexer();
         if (is_object($indexer)) {
-            $indexer->updateTable($this, $key);
+            $indexer->updateRepository($this, $key);
         }
 
         $this->entityManager->persist($key);
@@ -131,7 +131,7 @@ abstract class AbstractCategory implements CategoryInterface
         // Modify the category's search indexer.
         $indexer = $this->getSearchIndexer();
         if (is_object($indexer)) {
-            $indexer->updateTable($this, $key);
+            $indexer->updateRepository($this, $key);
         }
 
         $this->entityManager->persist($key);
@@ -143,6 +143,8 @@ abstract class AbstractCategory implements CategoryInterface
     // Update
     public function updateFromRequest(Key $key, Request $request)
     {
+        $previousHandle = $key->getAttributeKeyHandle();
+
         $loader = $this->getRequestLoader();
         $loader->load($key, $request);
 
@@ -154,6 +156,12 @@ abstract class AbstractCategory implements CategoryInterface
         $key_type->setAttributeKey($key);
         $key_type->setAttributeType($key->getAttributeType());
         $key->setAttributeKeyType($key_type);
+
+        // Modify the category's search indexer.
+        $indexer = $this->getSearchIndexer();
+        if (is_object($indexer)) {
+            $indexer->updateRepository($this, $key, $previousHandle);
+        }
 
         $this->entityManager->persist($key);
         $this->entityManager->flush();

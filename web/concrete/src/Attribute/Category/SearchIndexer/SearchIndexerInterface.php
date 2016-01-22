@@ -6,7 +6,7 @@ use Concrete\Core\Attribute\Category\CategoryInterface;
 
 interface SearchIndexerInterface
 {
-    public function createTable(CategoryInterface $category);
-    public function updateTable(CategoryInterface $category, AttributeKeyInterface $key, $previousHandle = null);
+    public function createRepository(CategoryInterface $category);
+    public function updateRepository(CategoryInterface $category, AttributeKeyInterface $key, $previousHandle = null);
     public function indexEntry(CategoryInterface $category, $mixed);
 }
