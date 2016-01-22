@@ -2,6 +2,7 @@
 namespace Concrete\Core\Entity\Attribute\Key;
 
 use Concrete\Core\Attribute\AttributeKeyInterface;
+use Concrete\Core\Attribute\Key\SearchIndexer\StandardSearchIndexer;
 use Concrete\Core\Attribute\Type;
 use Concrete\Core\Entity\Attribute\Set;
 use Concrete\Core\Entity\PackageTrait;
@@ -268,6 +269,11 @@ class Key implements AttributeKeyInterface, ExportableInterface
         $sets = $this->getAttributeSets();
 
         return in_array($set, $sets);
+    }
+
+    public function getSearchIndexer()
+    {
+        return \Core::make('Concrete\Core\Attribute\Key\SearchIndexer\StandardSearchIndexer');
     }
 
     /**

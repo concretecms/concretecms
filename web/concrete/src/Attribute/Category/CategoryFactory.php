@@ -49,7 +49,7 @@ class CategoryFactory
 
         $indexer = $category->getController()->getSearchIndexer();
         if (is_object($indexer)) {
-            $indexer->createTable($category->getController());
+            $indexer->createRepository($category->getController());
         }
     }
 }
