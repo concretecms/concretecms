@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Console\Command;
 
 use Job;
@@ -68,7 +67,7 @@ class JobCommand extends Command
                     $set = JobSet::getByName($setName);
                     if ($set) {
                         array_merge($jobs, $set->getJobs());
-                    } else if ($output->getVerbosity() >= OutputInterface::VERBOSITY_NORMAL) {
+                    } elseif ($output->getVerbosity() >= OutputInterface::VERBOSITY_NORMAL) {
                         $output->writeln(
                             '<error>' . t('A job set with name "%s" was not found', $setName) . '</error>'
                         );
@@ -79,7 +78,7 @@ class JobCommand extends Command
                     $job = Job::getByHandle($jobHandle);
                     if ($job) {
                         $jobs[] = $job;
-                    } else if ($output->getVerbosity() >= OutputInterface::VERBOSITY_NORMAL) {
+                    } elseif ($output->getVerbosity() >= OutputInterface::VERBOSITY_NORMAL) {
                         $output->writeln(
                             '<error>' . t('A job with handle "%s" was not found', $jobHandle) . '</error>'
                         );
@@ -98,6 +97,7 @@ class JobCommand extends Command
                                 )
                             );
                         }
+
                         return;
                     }
                     if ($output->getVerbosity() >= OutputInterface::VERBOSITY_NORMAL) {
