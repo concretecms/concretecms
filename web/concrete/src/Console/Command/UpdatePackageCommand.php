@@ -17,7 +17,7 @@ class UpdatePackageCommand extends Command
             ->setName('c5:package-update')
             ->addOption('all', 'a', InputOption::VALUE_NONE, 'Update all the installed packages')
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force update even if the package is already at last version')
-            ->addArgument('package', InputArgument::OPTIONAL, 'The handle of the package to be updated')
+            ->addArgument('packages', InputArgument::IS_ARRAY, 'The handle of the package to be updated (multiple values allowed)')
             ->setDescription('Update a concrete5 package')
             ->setHelp(<<<EOT
 Returns codes:
@@ -32,40 +32,40 @@ EOT
     {
         $rc = 0;
         try {
-            $pkgHandle = $input->getArgument('package');
+            $updatableHandles = array();
             $force = $input->getOption('force');
             if ($input->getOption('all')) {
-                if ($pkgHandle !== null) {
-                    throw new Exception('If you use the --all option you can\'t specify a package handle.');
+                if (count($input->getArgument('packages')) > 0) {
+                    throw new Exception('If you use the --all option you can\'t specify package handles.');
                 }
                 if ($force) {
                     foreach (Package::getInstalledHandles() as $pkgHandle) {
-                        try {
-                            $this->updatePackage($pkgHandle, $output, $force);
-                        } catch (Exception $x) {
-                            $output->writeln('<error>'.$x->getMessage().'</error>');
-                            $rc = 1;
-                        }
+                        $updatableHandles[] = $pkgHandle;
+                    }
+                    if (empty($updatableHandles)) {
+                        $output->writeln("No package has been found.");
                     }
                 } else {
-                    $updatablePackages = Package::getLocalUpgradeablePackages();
-                    if (empty($updatablePackages)) {
+                    foreach (Package::getLocalUpgradeablePackages() as $pkg) {
+                        $updatableHandles[] = $pkg->getPackageHandle();
+                    }
+                    if (empty($updatableHandles)) {
                         $output->writeln("No package needs to be updated.");
-                    } else {
-                        foreach ($updatablePackages as $pkg) {
-                            try {
-                                $this->updatePackage($pkg->getPackageHandle(), $output, $force);
-                            } catch (Exception $x) {
-                                $output->writeln('<error>'.$x->getMessage().'</error>');
-                                $rc = 1;
-                            }
-                        }
                     }
                 }
-            } elseif ($pkgHandle === null) {
-                throw new Exception('No package handle specified and the --all option has not been specified.');
             } else {
-                $this->updatePackage($pkgHandle, $output, $force);
+                $updatableHandles = $input->getArgument('packages');
+                if (empty($updatableHandles)) {
+                    throw new Exception('No package handle specified and the --all option has not been specified.');
+                }
+            }
+            foreach ($updatableHandles as $updatableHandle) {
+                try {
+                    $this->updatePackage($updatableHandle, $output, $force);
+                } catch (Exception $x) {
+                    $output->writeln('<error>'.$x->getMessage().'</error>');
+                    $rc = 1;
+                }
             }
         } catch (Exception $x) {
             $output->writeln('<error>'.$x->getMessage().'</error>');
