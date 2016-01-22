@@ -16,7 +16,6 @@ class UninstallPackageCommand extends Command
         $this
             ->setName('c5:package-uninstall')
             ->addOption('trash', null, InputOption::VALUE_NONE, 'If this option is specified the package directory will be moved to the trash directory')
-            ->addOption('full-content-swap', null, InputOption::VALUE_NONE, 'If this option is specified a full content swap will be performed (if the package supports it)')
             ->addArgument('package', InputArgument::REQUIRED, 'The handle of the package to be uninstalled')
             ->setDescription('Uninstall a concrete5 package')
             ->setHelp(<<<EOT
