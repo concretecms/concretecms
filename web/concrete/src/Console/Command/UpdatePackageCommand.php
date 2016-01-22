@@ -108,10 +108,10 @@ EOT
             $output->writeln('<info>good.</info>');
 
             if ($upPkg === null) {
-                $output->write(sprintf('Forcing upgrade at v%s...', $pkg->getPackageVersion()));
+                $output->write(sprintf('Forcing upgrade at v%s... ', $pkg->getPackageVersion()));
                 $upPkg = Package::getByHandle($pkgHandle);
             } else {
-                $output->write(sprintf('Updating from v%s to v%s...', $upPkg->getPackageCurrentlyInstalledVersion(), $upPkg->getPackageVersion()));
+                $output->write(sprintf('Updating from v%s to v%s... ', $upPkg->getPackageCurrentlyInstalledVersion(), $upPkg->getPackageVersion()));
             }
             $upPkg->upgradeCoreData();
             $upPkg->upgrade();
