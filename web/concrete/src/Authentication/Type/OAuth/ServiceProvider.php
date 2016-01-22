@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Core\Authentication\Type\OAuth;
 
-use Concrete\Core\Authentication\Type\OAuth\OAuth2\GenericOauth2TypeController;
 use Concrete\Core\Foundation\Service\Provider;
 use OAuth\Common\Http\Client\CurlClient;
 use OAuth\ServiceFactory;
@@ -9,7 +8,6 @@ use OAuth\UserData\ExtractorFactory;
 
 class ServiceProvider extends Provider
 {
-
     public function register()
     {
         $this->app->bind('oauth/factory/service', function ($app, $params = array()) {
@@ -29,23 +27,23 @@ class ServiceProvider extends Provider
             }
 
             if (!$service = head($params)) {
-                throw new \InvalidParameterException('No Service given.');
+                throw new \InvalidArgumentException('No Service given.');
             }
 
             $extractor_factory = $app->make('oauth/factory/extractor');
+
             return $extractor_factory->get($service);
         });
 
         \Route::register(
             '/ccm/system/authentication/oauth2/{type}/{action}',
-            function($type, $action) {
+            function ($type, $action) {
                 try {
                     $type = \AuthenticationType::getByHandle($type);
                     if ($type && is_object($type) && !$type->isError()) {
                         /** @var GenericOauthTypeController $controller */
                         $controller = $type->getController();
                         if ($controller instanceof GenericOauthTypeController) {
-
                             switch ($action) {
                                 case 'attempt_auth':
                                     $controller->handle_authentication_attempt();
@@ -67,5 +65,4 @@ class ServiceProvider extends Provider
                 }
             });
     }
-
 }
