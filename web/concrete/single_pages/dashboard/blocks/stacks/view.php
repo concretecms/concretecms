@@ -3,7 +3,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Core\Workflow\Progress\PageProgress as PageWorkflowProgress;
 use \Concrete\Core\Block\View\BlockView;
 
-if ($controller->getTask() == 'view_details') {
+if ($controller->getTask() == 'view_details' && $stack) {
     $cpc = new Permissions($stack);
     $showApprovalButton = false;
     $hasPendingPageApproval = false;
@@ -283,9 +283,9 @@ if ($controller->getTask() == 'view_details') {
                     <?php foreach ($stacks as $st) {
                         $formatter = new \Concrete\Core\Page\Stack\Formatter($st);
                     ?>
-                        <tr data-search-row-url="<?=$view->url('/dashboard/blocks/stacks', 'view_details', $st->getCollectionID())?>">
+                        <tr class="<?=$formatter->getSearchResultsClass()?>" data-search-row-url="<?=$view->url('/dashboard/blocks/stacks', 'view_details', $st->getCollectionID())?>">
                             <td class="ccm-search-results-icon"><?=$formatter->getIconElement()?></td>
-                            <td><?=$st->getCollectionName()?></td>
+                            <td class="ccm-search-results-name"><?=$st->getCollectionName()?></td>
                             <td><?=Core::make('date')->formatDateTime($st->getCollectionDateAdded())?></td>
                         </tr>
                     <?php } ?>
@@ -294,6 +294,25 @@ if ($controller->getTask() == 'view_details') {
             </div>
         </div>
 
+        <script type="text/javascript">
+            $(function() {
+                $('table.ccm-search-results-table tbody tr').each(function() {
+                    var className = $(this).attr('class');
+                    $(this).draggable({
+                        helper: function() {
+                            return $('<div class="' + className + ' ccm-draggable-search-item"><span>1</span></div>');
+                        },
+                        cursorAt: {
+                            left: -20,
+                            top: 5
+                        }
+                    });
+                });
+                $('table.ccm-search-results-table tbody tr.ccm-search-results-folder').droppable({
+
+                });
+            });
+        </script>
         <?php
 
 } else {

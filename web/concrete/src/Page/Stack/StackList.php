@@ -2,6 +2,7 @@
 namespace Concrete\Core\Page\Stack;
 
 use Concrete\Core\Multilingual\Page\Section\Section;
+use Concrete\Core\Page\Stack\Folder\Folder;
 use Loader;
 use Concrete\Core\Page\PageList;
 
@@ -14,6 +15,11 @@ class StackList extends PageList
         $this->filterByPath(STACKS_PAGE_PATH);
         $this->includeSystemPages();
         $this->sortByName();
+    }
+
+    public function filterByFolder(Folder $folder)
+    {
+        $this->filterByParentID($folder->getPage()->getCollectionID());
     }
 
     public function filterByGlobalAreas()

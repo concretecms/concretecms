@@ -264,7 +264,7 @@ table.ccm-search-results-table {
       }
 
       a, span {
-        padding: 10px 0px 10px 15px;
+        padding: 15px 0px 15px 15px;
         display: block;
         /* not sure why this was here, it was causing columns to not go the whole width in the sort row
           display: inline-block;
@@ -307,10 +307,10 @@ table.ccm-search-results-table {
     }
 
     td.ccm-search-results-icon {
-      color: #333;
       width: 16px;
       text-align: right;
     }
+
 
     tr.ccm-menu-item-hover, tr.ccm-menu-item-active {
       td {
@@ -327,6 +327,15 @@ table.ccm-search-results-table {
       }
     }
 
+    tr.ccm-search-results-folder {
+      td.ccm-search-results-name {
+        color: #333;
+        font-weight: bold;
+      }
+      td.ccm-search-results-icon {
+        color: #333;
+      }
+    }
   }
 }
 
@@ -414,5 +423,49 @@ div.ccm-search-results-pagination {
         display: block;
       }
     }
+  }
+}
+
+/**
+ * Draggable table row items
+ */
+div.ccm-draggable-search-item {
+
+  position: relative;
+
+  &:after {
+    font-family: FontAwesome;
+    font-style: normal;
+    text-decoration: inherit;
+    font-size: 24px;
+    color: #666;
+    display: inline-block;
+  }
+
+  &.ccm-search-results-stack {
+    &:after {
+      content: "\f1b3";
+    }
+  }
+
+  &.ccm-search-results-folder {
+    &:after {
+      content: "\f07b";
+    }
+  }
+
+  span {
+    display: inline-block;
+    background-color: #0099ff;
+    color: #fff;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    font-weight: bold;
+    .border-radius(10px);
+    top: -2px;
+    right: 18px;
+    position: absolute;
+
   }
 }

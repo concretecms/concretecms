@@ -17,6 +17,14 @@ class FolderService
         $this->application = $application;
     }
 
+    public function getByID($cID, $cvID = 'RECENT')
+    {
+        $c = \Page::getByID($cID, $cvID);
+        if ($c->getCollectionTypeHandle() == STACK_CATEGORY_PAGE_TYPE) {
+            return $this->application->make('Concrete\Core\Page\Stack\Folder\Folder', array($c));
+        }
+    }
+
     public function add($name, Folder $folder = null)
     {
         $type = Type::getByHandle(STACK_CATEGORY_PAGE_TYPE);
