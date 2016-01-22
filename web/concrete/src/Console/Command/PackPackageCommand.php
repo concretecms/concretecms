@@ -370,6 +370,7 @@ EOT
                                 } elseif ($state->zip !== null) {
                                     $store[$item] = array('kind' => 'contents', 'contents' => $newContents);
                                 }
+                                $output->writeln("Expanded short tags in: $dirRel/$item");
                             }
                         }
                         break;
