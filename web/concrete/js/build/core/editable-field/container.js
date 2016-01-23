@@ -151,14 +151,14 @@
 				data.task = 'clear';
 
 				var url = my.getAjaxURL($field);
-				return new ConcreteAjaxRequest({
+				new ConcreteAjaxRequest({
 					url: url,
 					data: data,
 					success: function(r) {
 						my[method](r, $field);
 
 					}
-				})
+				});
 				return false;
 			});
 			my.$element.on('click', '[data-editable-field-command=clear_attribute]', function() {
