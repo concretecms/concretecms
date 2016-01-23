@@ -123,7 +123,10 @@
 		updateImageField: function(r, $field) {
 			var my = this;
         	if (ConcreteAjaxRequest.validateResponse(r)) {
-	        	$field.find('.editable-image-display').html(r.imageHTML);
+	        	$field.find('.editable-image-display').html(r.imageHTML)
+	        		.find('img').attr('src', function(index, attr) {
+	        			return attr + '?' + new Date().getTime();
+	        		});
 	        	my.setupImageField($field);
 				ConcreteAlert.notify({
 				'message': r.message
