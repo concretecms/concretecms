@@ -177,13 +177,13 @@
 
 				ajaxData.push({'name': 'akID', 'value': akID});
 
-				return new ConcreteAjaxRequest({
+				new ConcreteAjaxRequest({
 					url: url,
 					data: ajaxData,
 					success: function(r) {
      					$('[data-key-id=' + akID + '][data-editable-field-type=xeditableAttribute]').editable('setValue', '');
 					}
-				})
+				});
 				return false;
 			});
 		}
