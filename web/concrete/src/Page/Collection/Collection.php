@@ -5,6 +5,8 @@ use Area;
 use Block;
 use CacheLocal;
 use CollectionVersion;
+use Concrete\Core\Attribute\Key\CollectionKey;
+use Concrete\Core\Entity\Attribute\Value\PageValue;
 use Concrete\Core\Entity\Attribute\Value\Value\Value;
 use Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionVersionFeatureAssignment;
 use Concrete\Core\Feature\Feature;
@@ -1073,14 +1075,18 @@ class Collection extends Object
             }
 
             // duplicate any attributes belonging to the collection
-
-            $v = array($this->getCollectionID());
-            $q = 'select akID, cvID, avID from CollectionAttributeValues where cID = ?';
-            $r = $db->query($q, $v);
-            while ($row = $r->fetchRow()) {
-                $v2 = array($row['akID'], $row['cvID'], $row['avID'], $newCID);
-                $db->query('insert into CollectionAttributeValues (akID, cvID, avID, cID) values (?, ?, ?, ?)', $v2);
+            $list = CollectionKey::getAttributeValues($this->vObj);
+            $em = \Database::connection()->getEntityManager();
+            foreach($list as $av) {
+                $cav = new PageValue();
+                $cav->setPageID($newCID);
+                $cav->setValue($av->getValueObject());
+                $cav->setVersionID($this->vObj->getVersionID());
+                $cav->setAttributeKey($av->getAttributeKey());
+                $em->persist($cav);
             }
+            $em->flush();
+
 
             return self::getByID($newCID);
         }
