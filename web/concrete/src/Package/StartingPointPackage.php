@@ -115,7 +115,7 @@ class StartingPointPackage extends BasePackage
         } else {
             $class = '\\Concrete\\StartingPointPackage\\' . camelcase($pkgHandle) . '\\Controller';
         }
-        if (class_exists($cl, true)) {
+        if (class_exists($class, true)) {
             $cl = new $class();
         } else {
             $cl = null;
