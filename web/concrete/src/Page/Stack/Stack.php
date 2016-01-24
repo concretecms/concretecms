@@ -8,7 +8,7 @@ use GlobalArea;
 use Config;
 use Database;
 use Core;
-use Page;
+use Concrete\Core\Page\Page;
 use PageType;
 
 /**
@@ -39,6 +39,15 @@ class Stack extends Page implements ExportableInterface
                 return static::ST_TYPE_USER_ADDED;
                 break;
         }
+    }
+
+    public static function getByPath($path, $version = 'RECENT')
+    {
+        $c = parent::getByPath($path, $version);
+        if (static::isValidStack($c)) {
+            return $c;
+        }
+        return false;
     }
 
     /**
