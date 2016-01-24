@@ -26,7 +26,7 @@ if (is_object($cnv)) {
 
     $addMessageLabel = t('Add Message');
     if (Request::post('addMessageLabel')) {
-        $addMessageLabel = Loader::helper('security')->sanitizeString(Request::post('addMessageLabel'));
+        $addMessageLabel = Core::make('helper/security')->sanitizeString(Request::post('addMessageLabel'));
     }
     switch (Request::post('task')) {
         case 'get_messages':
@@ -56,7 +56,7 @@ if (is_object($cnv)) {
             break;
     }
 
-    if ($paginate && Loader::helper('validation/numbers')->integer(Request::post('itemsPerPage'))) {
+    if ($paginate && Core::make('helper/validation/numbers')->integer(Request::post('itemsPerPage'))) {
         $ml->setItemsPerPage(Request::post('itemsPerPage'));
     } else {
         $ml->setItemsPerPage(-1);
@@ -85,5 +85,5 @@ if (is_object($cnv)) {
         'attachmentsEnabled' => Request::post('attachmentsEnabled'),
         'attachmentOverridesEnabled' => Request::post('attachmentOverridesEnabled'),
     );
-    Loader::element('conversation/display', $args);
+    View::element('conversation/display', $args);
 }
