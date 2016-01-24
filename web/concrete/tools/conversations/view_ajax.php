@@ -5,30 +5,30 @@ defined('C5_EXECUTE') or die("Access Denied.");
 use Concrete\Core\Conversation\Message\MessageList as ConversationMessageList;
 use Concrete\Core\Conversation\Message\ThreadedList as ConversationMessageThreadedList;
 
-$cnv = Conversation::getByID($_POST['cnvID']);
+$cnv = Conversation::getByID(Request::post('cnvID'));
 if (is_object($cnv)) {
     $displayForm = true;
-    $enableOrdering = ($_POST['enableOrdering'] == 1) ? true : false;
-    $enablePosting = ($_POST['enablePosting'] == 1) ? Conversation::POSTING_ENABLED : Conversation::POSTING_DISABLED_MANUALLY;
-    $paginate = ($_POST['paginate'] == 1) ? true : false;
-    $enableCommentRating = ($_POST['enableCommentRating']);
+    $enableOrdering = (Request::post('enableOrdering') == 1) ? true : false;
+    $enablePosting = (Request::post('enablePosting') == 1) ? Conversation::POSTING_ENABLED : Conversation::POSTING_DISABLED_MANUALLY;
+    $paginate = (Request::post('paginate') == 1) ? true : false;
+    $enableCommentRating = (Request::post('enableCommentRating'));
 
     $cp = new Permissions($cnv);
     if (!$cp->canAddConversationMessage()) {
         $enablePosting = Conversation::POSTING_DISABLED_PERMISSIONS;
     }
 
-    if (in_array($_POST['displayMode'], array('flat'))) {
-        $displayMode = $_POST['displayMode'];
+    if (in_array(Request::post('displayMode'), array('flat'))) {
+        $displayMode = Request::post('displayMode');
     } else {
         $displayMode = 'threaded';
     }
 
     $addMessageLabel = t('Add Message');
-    if ($_POST['addMessageLabel']) {
-        $addMessageLabel = Loader::helper('security')->sanitizeString($_POST['addMessageLabel']);
+    if (Request::post('addMessageLabel')) {
+        $addMessageLabel = Loader::helper('security')->sanitizeString(Request::post('addMessageLabel'));
     }
-    switch ($_POST['task']) {
+    switch (Request::post('task')) {
         case 'get_messages':
             $displayForm = false;
             break;
@@ -44,7 +44,7 @@ if (is_object($cnv)) {
             break;
     }
 
-    switch ($_POST['orderBy']) {
+    switch (Request::post('orderBy')) {
         case 'date_desc':
             $ml->sortByDateDescending();
             break;
@@ -56,8 +56,8 @@ if (is_object($cnv)) {
             break;
     }
 
-    if ($paginate && Loader::helper('validation/numbers')->integer($_POST['itemsPerPage'])) {
-        $ml->setItemsPerPage($_POST['itemsPerPage']);
+    if ($paginate && Loader::helper('validation/numbers')->integer(Request::post('itemsPerPage'))) {
+        $ml->setItemsPerPage(Request::post('itemsPerPage'));
     } else {
         $ml->setItemsPerPage(-1);
     }
@@ -65,8 +65,8 @@ if (is_object($cnv)) {
     $summary = $ml->getSummary();
     $totalPages = $summary->pages;
     $args = array(
-        'cID' => intval($_POST['cID']),
-        'bID' => intval($_POST['blockID']),
+        'cID' => intval(Request::post('cID')),
+        'bID' => intval(Request::post('blockID')),
         'conversation' => $cnv,
         'messages' => $ml->getPage(),
         'displayMode' => $displayMode,
@@ -75,15 +75,15 @@ if (is_object($cnv)) {
         'addMessageLabel' => $addMessageLabel,
         'currentPage' => 1,
         'totalPages' => $totalPages,
-        'orderBy' => $_POST['orderBy'],
+        'orderBy' => Request::post('orderBy'),
         'enableOrdering' => $enableOrdering,
-        'displayPostingForm' => $_POST['displayPostingForm'],
-        'enableCommentRating' => $_POST['enableCommentRating'],
-        'dateFormat' => $_POST['dateFormat'],
-        'customDateFormat' => $_POST['customDateFormat'],
-        'blockAreaHandle' => $_POST['blockAreaHandle'],
-        'attachmentsEnabled' => $_POST['attachmentsEnabled'],
-        'attachmentOverridesEnabled' => $_POST['attachmentOverridesEnabled'],
+        'displayPostingForm' => Request::post('displayPostingForm'),
+        'enableCommentRating' => Request::post('enableCommentRating'),
+        'dateFormat' => Request::post('dateFormat'),
+        'customDateFormat' => Request::post('customDateFormat'),
+        'blockAreaHandle' => Request::post('blockAreaHandle'),
+        'attachmentsEnabled' => Request::post('attachmentsEnabled'),
+        'attachmentOverridesEnabled' => Request::post('attachmentOverridesEnabled'),
     );
     Loader::element('conversation/display', $args);
 }
