@@ -403,28 +403,39 @@ function ConcretePanel(options) {
         callback = callback || $.noop;
         var element = $('#' + this.getDOMID()),
             obj = this,
+            cached = this.getCached(),
             show = function() {
                 html.addClass('ccm-panel-open');
                 element.find('.ccm-panel-content-wrapper').html('');
                 element.addClass('ccm-panel-active ccm-panel-loading');
-                $('<div/>').addClass('ccm-panel-content ccm-panel-content-visible')
-                    .appendTo(element.find('.ccm-panel-content-wrapper'))
-                    .load(obj.getURL() + '?cID=' + CCM_CID, function() {
-                        var elem = this;
-                        element.delay(1).queue(function () {
-                            $(this).removeClass('ccm-panel-loading').addClass('ccm-panel-loaded');
-                            $(this).dequeue();
-                        });
-                        obj.onPanelLoad(element);
-                        obj.isOpen = true;
-                        Concrete.event.publish('PanelOpen', {
-                            panel: obj,
-                            element: elem
-                        });
-                        if (obj.options.overlay) {
-                            ConcretePanelManager.showOverlay(obj.options.translucent);
-                        }
+
+                var onload = function() {
+                    var elem = this;
+                    element.delay(1).queue(function () {
+                        $(this).removeClass('ccm-panel-loading').addClass('ccm-panel-loaded');
+                        $(this).dequeue();
                     });
+                    obj.onPanelLoad(element);
+                    obj.isOpen = true;
+                    Concrete.event.publish('PanelOpen', {
+                        panel: obj,
+                        element: elem
+                    });
+                    if (obj.options.overlay) {
+                        ConcretePanelManager.showOverlay(obj.options.translucent);
+                    }
+                };
+
+                obj.primeCache(obj.getURL() + '?cID=' + CCM_CID, function(html) {
+                    var panel_element = $('<div/>');
+                    panel_element
+                        .addClass('ccm-panel-content ccm-panel-content-visible')
+                        .appendTo(element.find('.ccm-panel-content-wrapper'));
+
+                    panel_element.html(html);
+                    onload.call(panel_element);
+                });
+
                 html.addClass(obj.getPositionClass());
             };
 
@@ -448,6 +459,39 @@ function ConcretePanel(options) {
         $('.ccm-mobile-menu-overlay').slideUp();
     }
 
+    this.getCached = function() {
+        if (this.options.cache) {
+            return this.cached;
+        }
+
+        return null;
+    };
+
+    this.setCached = function (html) {
+        if (this.options.cache) {
+            this.cached = html;
+        }
+    };
+
+    this.primeCache = function(url, callback) {
+        var obj = this,
+            cached = obj.getCached();
+
+        if (cached) {
+            _.defer(function() {
+                return callback.call(obj, cached);
+            });
+        } else {
+            $.post(url, function (html) {
+                obj.setCached(html);
+                callback.call(obj, html);
+            });
+        }
+    };
+
+    if (this.options.primeCache) {
+        this.primeCache(this.getURL() + '?cID=' + CCM_CID, function() {});
+    }
 }
 
 var ConcretePanelManager = (function ConcretePanelManagerGenerator() {
@@ -501,7 +545,9 @@ var ConcretePanelManager = (function ConcretePanelManagerGenerator() {
                 overlay: true,
                 position: 'left',
                 primary: true,
-                transition: 'slide'
+                transition: 'slide',
+                cache: true,
+                primeCache: true
             }, overrides);
 
             var panel = new ConcretePanel(options);
