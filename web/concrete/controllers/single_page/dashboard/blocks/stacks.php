@@ -93,6 +93,7 @@ class Stacks extends DashboardPageController
         }
     }*/
 
+
     public function view_details($cID, $msg = false)
     {
         $s = Stack::getByID($cID);
@@ -110,6 +111,7 @@ class Stacks extends DashboardPageController
             $this->addHeaderItem($s->outputCustomStyleHeaderItems(true));
 
             $this->set('stack', $s);
+            $this->set('breadcrumb', $this->getBreadcrumb($s));
             $this->set('blocks', $blocks);
             switch ($msg) {
                 case 'stack_added':
@@ -133,11 +135,34 @@ class Stacks extends DashboardPageController
             if (is_object($folder)) {
                 $stm = new StackList();
                 $stm->filterByFolder($folder);
+                $this->set('breadcrumb', $this->getBreadcrumb($folder->getPage()));
+                $this->set('current', $current);
                 $this->deliverStackList($stm);
             } else {
                 throw new Exception(t('Invalid stack'));
             }
         }
+    }
+
+    protected function getBreadcrumb(\Concrete\Core\Page\Page $page)
+    {
+        $breadcrumb = array([
+            'active' => false,
+            'name' => t('Stacks'),
+            'url' => \URL::to('/dashboard/blocks/stacks')
+        ]);
+        $nav = $this->app->make('helper/navigation');
+        $pages = $nav->getTrailToCollection($page);
+        $pages[] = $page;
+        for ($i = 1; $i < count($pages); $i++) {
+            $item = $pages[$i];
+            $breadcrumb[] = [
+                'active' => $item->getCollectionID() == $page->getCollectionID(),
+                'name' => $item->getCollectionName(),
+                'url' => \URL::to('/dashboard/blocks/stacks', 'view_details', $item->getCollectionID())
+            ];
+        }
+        return $breadcrumb;
     }
 
 
