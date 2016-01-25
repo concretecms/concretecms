@@ -138,7 +138,7 @@ EOT
             } elseif (empty($localeOption)) {
                 // List the currently package locales
                 foreach ($fh->getDirectoryContents($packageLanguagesDirectory) as $item) {
-                    if (is_file("$packageLanguagesDirectory/$item/LC_MESSAGES/messages.mo") || is_file("$baseDir/$item/LC_MESSAGES/messages.po")) {
+                    if (is_file("$packageLanguagesDirectory/$item/LC_MESSAGES/messages.mo") || is_file("$packageLanguagesDirectory/$item/LC_MESSAGES/messages.po")) {
                         $locales[] = $item;
                     }
                 }
