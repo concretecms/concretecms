@@ -36,6 +36,10 @@ Examples:
     concrete5 c5:package-translate path/to/a/package/directory -l-
 
 Please remark that this command can also parse legacy (pre-5.7) packages.
+
+Returns codes:
+  0 operation completed successfully
+  1 errors occurred
 EOT
             )
         ;
@@ -43,6 +47,7 @@ EOT
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $rc = 0;
         try {
             $vsh = Core::make('helper/validation/strings');
             /* @var \Concrete\Core\Utility\Service\Validation\Strings $vsh */
@@ -180,7 +185,7 @@ EOT
                         false,
                         $input->getOption('exclude-3rdparty')
                     );
-                    $output->writeln('done.');
+                    $output->writeln('<info>done.</info>');
                 }
             }
 
@@ -196,7 +201,7 @@ EOT
             if ($pot->toPoFile($potFilename) === false) {
                 throw new Exception("Unable to save the .pot file to $potFilename");
             }
-            $output->writeln('done.');
+            $output->writeln('<info>done.</info>');
 
             // Creating/updating the locale files
             foreach ($locales as $locale) {
@@ -209,18 +214,18 @@ EOT
                 if (is_file($poFile)) {
                     $output->write("- reading current .po file... ");
                     $oldPo = Translations::fromPoFile($poFile);
-                    $output->writeln('done.');
+                    $output->writeln('<info>done.</info>');
                 } elseif (is_file($moFile)) {
                     $output->write("- decompiling current .mo file... ");
                     $oldPo = Translations::fromMoFile($poFile);
-                    $output->writeln('done.');
+                    $output->writeln('<info>done.</info>');
                 } else {
                     $oldPo = null;
                 }
                 if ($oldPo !== null) {
                     $output->write("- merging translations... ");
                     $po->mergeWith($oldPo, 0);
-                    $output->writeln('done.');
+                    $output->writeln('<info>done.</info>');
                 }
                 $output->write("- saving .po file... ");
                 if (!is_dir($poDirectory)) {
@@ -230,15 +235,16 @@ EOT
                     }
                 }
                 $po->toPoFile($poFile);
-                $output->writeln('done.');
+                $output->writeln('<info>done.</info>');
                 $output->write("- saving .mo file... ");
                 $po->toMoFile($moFile);
-                $output->writeln('done.');
+                $output->writeln('<info>done.</info>');
             }
         } catch (Exception $x) {
-            $output->writeln($x->getMessage());
-
-            return 1;
+            $output->writeln('<error>'.$x->getMessage().'</error>');
+            $rc = 1;
         }
+
+        return $rc;
     }
 }
