@@ -772,11 +772,11 @@ class Package extends Object
     {
         $items = array();
 
-        $items['attribute_categories'] = AttributeKeyCategory::getListByPackage($this);
+        //$items['attribute_categories'] = AttributeKeyCategory::getListByPackage($this);
         $items['permission_categories'] = PermissionKeyCategory::getListByPackage($this);
         $items['permission_access_entity_types'] = PermissionAccessEntityType::getListByPackage($this);
-        $items['attribute_keys'] = AttributeKey::getListByPackage($this);
-        $items['attribute_sets'] = AttributeSet::getListByPackage($this);
+        //$items['attribute_keys'] = AttributeKey::getListByPackage($this);
+        //$items['attribute_sets'] = AttributeSet::getListByPackage($this);
         $items['group_sets'] = GroupSet::getListByPackage($this);
         $items['page_types'] = PageType::getListByPackage($this);
         $items['page_templates'] = PageTemplate::getListByPackage($this);
@@ -794,7 +794,7 @@ class Package extends Object
         $items['page_themes'] = PageTheme::getListByPackage($this);
         $items['permissions'] = PermissionKey::getListByPackage($this);
         $items['single_pages'] = SinglePage::getListByPackage($this);
-        $items['attribute_types'] = AttributeType::getListByPackage($this);
+        //$items['attribute_types'] = AttributeType::getListByPackage($this);
         $items['captcha_libraries'] = SystemCaptchaLibrary::getListByPackage($this);
         $items['content_editor_snippets'] = SystemContentEditorSnippet::getListByPackage($this);
         $items['conversation_editors'] = ConversationEditor::getListByPackage($this);
