@@ -269,6 +269,7 @@ if ($controller->getTask() == 'view_details' && $stack) {
 } else { ?>
 
     <?php if (count($stacks) > 0) { ?>
+
         <div class="ccm-dashboard-content-full">
             <div class="table-responsive">
                 <table class="ccm-search-results-table">
@@ -313,7 +314,20 @@ if ($controller->getTask() == 'view_details' && $stack) {
                 });
             });
         </script>
+
         <?php
+
+        if (isset($breadcrumb)) { ?>
+
+        <div class="ccm-search-results-breadcrumb">
+            <ol class="breadcrumb">
+            <?php foreach($breadcrumb as $value) { ?>
+                <li <?php if ($value['active']) { ?>class="active"<?php } ?>><a href="<?=$value['url']?>"><?=$value['name']?></a></li>
+            <?php } ?>
+            </ol>
+        </div>
+
+        <?php }
 
 } else {
     echo '<p>';
