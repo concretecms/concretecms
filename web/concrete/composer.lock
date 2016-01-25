@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "4b8250132cdca0d5c051d3ba93baa817",
-    "content-hash": "458b94337cdda16a836a7dd820a669af",
+    "hash": "fafe1226016c716f8bf3870e75f39972",
+    "content-hash": "ae2031b480e67acdab52b7a5ad4d22a6",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -804,16 +804,16 @@
         },
         {
             "name": "egulias/email-validator",
-            "version": "1.2.0",
+            "version": "1.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/egulias/EmailValidator.git",
-                "reference": "bb530a193056992702df9f722e8814f57bdb13c2"
+                "reference": "5c3a79217cbb98c975d7d23f12749e6f0be5cace"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/egulias/EmailValidator/zipball/bb530a193056992702df9f722e8814f57bdb13c2",
-                "reference": "bb530a193056992702df9f722e8814f57bdb13c2",
+                "url": "https://api.github.com/repos/egulias/EmailValidator/zipball/5c3a79217cbb98c975d7d23f12749e6f0be5cace",
+                "reference": "5c3a79217cbb98c975d7d23f12749e6f0be5cace",
                 "shasum": ""
             },
             "require": {
@@ -826,7 +826,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.0.x-dev"
+                    "dev-master": "1.3.x-dev"
                 }
             },
             "autoload": {
@@ -850,7 +850,7 @@
                 "validation",
                 "validator"
             ],
-            "time": "2014-07-06 17:21:29"
+            "time": "2014-11-02 23:13:57"
         },
         {
             "name": "filp/whoops",
@@ -1033,7 +1033,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hautelook/phpass/zipball/f0217d804225822f9bdb0d392839029b0fcb0914",
+                "url": "https://api.github.com/repos/hautelook/phpass/zipball/f284ae644120ce2b988f128f52d5205c0534d6f1",
                 "reference": "f0217d804225822f9bdb0d392839029b0fcb0914",
                 "shasum": ""
             },
@@ -2634,12 +2634,12 @@
             "target-dir": "Symfony/Component/Routing",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/Routing.git",
+                "url": "https://github.com/symfony/routing.git",
                 "reference": "46142c34ea830f47429df6e15faec3a33292d618"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Routing/zipball/46142c34ea830f47429df6e15faec3a33292d618",
+                "url": "https://api.github.com/repos/symfony/routing/zipball/46142c34ea830f47429df6e15faec3a33292d618",
                 "reference": "46142c34ea830f47429df6e15faec3a33292d618",
                 "shasum": ""
             },
