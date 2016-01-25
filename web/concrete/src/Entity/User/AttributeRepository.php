@@ -11,4 +11,12 @@ class AttributeRepository extends EntityRepository
             array('uakRegisterEdit' => true)
         );
     }
+
+    public function getEditableInProfileList()
+    {
+        return $this->findBy(
+            array('uakProfileEdit' => true)
+        );
+    }
+
 }

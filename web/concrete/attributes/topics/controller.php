@@ -11,6 +11,7 @@ use Concrete\Core\Tree\Type\Topic as TopicTree;
 use Concrete\Core\Tree\Tree;
 use Concrete\Core\Tree\Node\Node as TreeNode;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
+use Concrete\Core\Utility\Service\Xml;
 use Core;
 use Database;
 
@@ -89,12 +90,16 @@ class Controller extends AttributeTypeController
 
     public function exportValue(\SimpleXMLElement $akn)
     {
+        /**
+         * @var $xml Xml
+         */
+        $xml = \Core::make('helper/xml');
         $avn = $akn->addChild('topics');
         $nodes = $this->attributeValue->getValue()->getSelectedTopics();
         foreach ($nodes as $node) {
             $topic = Node::getByID($node->getTreeNodeID());
             if (is_object($topic)) {
-                $avn->addChild('topic', $topic->getTreeNodeDisplayPath());
+                $xml->createCDataNode($avn, 'topic', $topic->getTreeNodeDisplayPath());
             }
         }
     }
