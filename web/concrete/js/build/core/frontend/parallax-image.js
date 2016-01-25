@@ -38,10 +38,11 @@ $.fn.parallaxize = (function (global, $) {
 
         initializeDOM: function () {
             var elem = this.config('element'),
+                image_container = $('<div/>'),
                 image = new Image(),
-                image_elem = $(image),
+                image_elem = $(image).appendTo(image_container),
                 me = this;
-            elem.prepend(image_elem);
+            elem.prepend(image_container);
             image_elem.hide();
 
             var synchronous = true;
@@ -64,6 +65,7 @@ $.fn.parallaxize = (function (global, $) {
 
             elem.addClass('parallaxic-container');
             image_elem.addClass('parallaxic-image');
+            image_container.addClass('parallax-image-container');
 
         },
 
