@@ -58,6 +58,10 @@ To include in the zip archive the files and directories starting with a dot, use
 To include in the zip archive the source files for translations (.po files) and icons (.svg files) use the "-k $keepSources" option.
 
 Please remark that this command can also parse legacy (pre-5.7) packages.
+
+Returns codes:
+  0 operation completed successfully
+  1 errors occurred
 EOT
             )
         ;
@@ -65,6 +69,7 @@ EOT
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $rc = 0;
         try {
             $state = static::parseInput($input);
             if ($state->updateSourceDirectory === false && $state->zipFilename === null) {
@@ -104,10 +109,11 @@ EOT
                 $state->zip = null;
                 @unlink($state->zipFilename);
             }
-            $output->writeln($x->getMessage());
-
-            return 1;
+            $output->writeln('<error>'.$x->getMessage().'</error>');
+            $rc = 1;
         }
+
+        return $rc;
     }
 
     /**
@@ -364,6 +370,7 @@ EOT
                                 } elseif ($state->zip !== null) {
                                     $store[$item] = array('kind' => 'contents', 'contents' => $newContents);
                                 }
+                                $output->writeln("Expanded short tags in: $dirRel/$item");
                             }
                         }
                         break;

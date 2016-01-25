@@ -667,9 +667,10 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         if ($this->overrideBlockTypeContainerSettings()) {
             return !$this->enableBlockContainer();
         }
-        $bt = $this->getBlockTypeObject();
+        /** @var \Concrete\Core\Block\BlockController $controller */
+        $controller = $this->getInstance();
 
-        return $bt->ignorePageThemeGridFrameworkContainer();
+        return $controller->ignorePageThemeGridFrameworkContainer();
     }
 
     public function overrideBlockTypeContainerSettings()

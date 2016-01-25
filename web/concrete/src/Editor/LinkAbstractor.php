@@ -111,25 +111,25 @@ class LinkAbstractor extends Object
         // now we add in support for the files that we view inline
         $dom = new HtmlDomParser();
         $r = $dom->str_get_html($text, true, true, DEFAULT_TARGET_CHARSET, false);
-        if (is_object($r)) {
-            foreach ($r->find('concrete-picture') as $picture) {
-                $fID = $picture->fid;
-                $fo = \File::getByID($fID);
-                if (is_object($fo)) {
-                    // move width px to width attribute and height px to height attribute
-                    $widthPattern = "/(?:^width|[^-]width):\\s([0-9]+)px;?/i";
-                    if (preg_match($widthPattern, $picture->style, $matches)) {
-                        $picture->style = preg_replace($widthPattern, '', $picture->style);
-                        $picture->width = $matches[1];
-                    }
-                    $heightPattern = "/(?:^height|[^-]height):\\s([0-9]+)px;?/i";
-                    if (preg_match($heightPattern, $picture->style, $matches)) {
-                        $picture->style = preg_replace($heightPattern, '', $picture->style);
-                        $picture->height = $matches[1];
-                    }
-                    $picture->style = preg_replace('/\s+/', '', $picture->style);
-                    $image = new \Concrete\Core\Html\Image($fo);
-                    $tag = $image->getTag();
+		if (is_object($r)) {
+			foreach ($r->find('concrete-picture') as $picture) {
+				$fID = $picture->fid;
+				$fo = \File::getByID($fID);
+				if (is_object($fo)) {
+					// move width px to width attribute and height px to height attribute
+					$widthPattern = "/(?:^width|[^-]width):\\s([0-9]+)px;?/i";
+					if (preg_match($widthPattern, $picture->style, $matches)) {
+						$picture->style = preg_replace($widthPattern, '', $picture->style);
+						$picture->width = $matches[1];
+					}
+					$heightPattern = "/(?:^height|[^-]height):\\s([0-9]+)px;?/i";
+					if (preg_match($heightPattern, $picture->style, $matches)) {
+						$picture->style = preg_replace($heightPattern, '', $picture->style);
+						$picture->height = $matches[1];
+					}
+					$picture->style = trim($picture->style);
+					$image = new \Concrete\Core\Html\Image($fo);
+					$tag = $image->getTag();
 
                     foreach ($picture->attr as $attr => $val) {
                         if (!in_array($attr, self::$blackListImgAttributes)) {

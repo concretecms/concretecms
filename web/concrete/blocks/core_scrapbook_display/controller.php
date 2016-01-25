@@ -27,7 +27,7 @@ class Controller extends BlockController
     {
         $bc = $this->getScrapbookBlockController();
         if (is_object($bc)) {
-            return $bc->$this->ignorePageThemeGridFrameworkContainer();
+            return $bc->ignorePageThemeGridFrameworkContainer();
         }
 
         return false;

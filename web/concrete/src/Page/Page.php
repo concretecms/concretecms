@@ -283,8 +283,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     {
         // This function forces checkin to take place
         $db = Database::connection();
-        $q = "update Pages set cIsCheckedOut = 0, cCheckedOutUID = null, cCheckedOutDatetime = null, cCheckedOutDatetimeLastEdit = null where cID = '{$this->cID}'";
-        $db->query($q);
+        $q = 'update Pages set cIsCheckedOut = 0, cCheckedOutUID = null, cCheckedOutDatetime = null, cCheckedOutDatetimeLastEdit = null where cID = ?';
+        $db->executeQuery($q, array($this->cID));
     }
 
     /**
@@ -647,11 +647,13 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $cDisplayOrder = $c->getNextSubPageDisplayOrder();
 
         $_cParentID = $c->getCollectionID();
-        $q = "select PagePaths.cPath from PagePaths where cID = '{$_cParentID}'";
+        $q = 'select PagePaths.cPath from PagePaths where cID = ?';
+        $v = array($_cParentID);
         if ($_cParentID > 1) {
-            $q .=  ' and ppIsCanonical = 1';
+            $q .=  ' and ppIsCanonical = ?';
+            $v[] = 1;
         }
-        $cPath = $db->fetchColumn($q);
+        $cPath = $db->fetchColumn($q, $v);
 
         $data = array(
             'handle' => $this->getCollectionHandle(),
@@ -1457,7 +1459,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     {
         $cIDs = array($this->cParentID);
         $db = Database::connection();
-        $aliasedParents = $db->fetchAll('SELECT cParentID FROM Pages WHERE cPointerID='.intval($this->cID).' ');
+        $aliasedParents = $db->fetchAll('SELECT cParentID FROM Pages WHERE cPointerID = ?', array($this->cID));
         foreach ($aliasedParents as $aliasedParent) {
             $cIDs[] = $aliasedParent['cParentID'];
         }
@@ -1529,7 +1531,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     {
         $db = Database::connection();
         if ($this->cID) {
-            $db->query("update Pages set cOverrideTemplatePermissions = 0 where cID = {$this->cID}");
+            $db->executeQuery('update Pages set cOverrideTemplatePermissions = 0 where cID = ?', array($this->cID));
         }
     }
 
@@ -1540,7 +1542,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     {
         $db = Database::connection();
         if ($this->cID) {
-            $db->query("update Pages set cOverrideTemplatePermissions = 1 where cID = {$this->cID}");
+            $db->executeQuery('update Pages set cOverrideTemplatePermissions = 1 where cID = ?', array($this->cID));
         }
     }
 
@@ -1969,7 +1971,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public function clearPagePermissions()
     {
         $db = Database::connection();
-        $db->executeQuery("delete from PagePermissionAssignments where cID = '{$this->cID}'");
+        $db->executeQuery('delete from PagePermissionAssignments where cID = ?', array($this->cID));
         $this->permissionAssignments = array();
     }
 
@@ -2248,8 +2250,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     {
         $db = Database::connection();
         $cID = $cParent->getCollectionID();
-        $q = "select cID from Pages where cParentID = '{$cID}' order by cDisplayOrder asc";
-        $r = $db->query($q);
+        $q = 'select cID from Pages where cParentID = ? order by cDisplayOrder asc';
+        $r = $db->executeQuery($q, array($cID));
         if ($r) {
             while ($row = $r->fetchRow()) {
                 $tc = self::getByID($row['cID']);
@@ -2329,8 +2331,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             } elseif ($this->getCollectionInheritance() == 'PARENT') {
                 // we need to clear out any lingering permissions groups (just in case), and set this collection to inherit from the parent
                 $npID = $nc->getPermissionsCollectionID();
-                $q = "update Pages set cInheritPermissionsFromCID = {$npID} where cID = {$newCID}";
-                $db->query($q);
+                $q = 'update Pages set cInheritPermissionsFromCID = ? where cID = ?';
+                $db->executeQuery($q, array($npID, $newCID));
             }
 
             $args = array();
@@ -2400,22 +2402,17 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         // Update cChildren for cParentID
         PageStatistics::decrementParents($cID);
 
-        $q = "delete from PagePermissionAssignments where cID = '{$cID}'";
-        $r = $db->query($q);
+        $db->executeQuery('delete from PagePermissionAssignments where cID = ?', array($cID));
 
-        $q = "delete from Pages where cID = '{$cID}'";
-        $r = $db->query($q);
+        $db->executeQuery('delete from Pages where cID = ?', array($cID));
 
-        $q = "delete from Pages where cPointerID = '{$cID}'";
-        $r = $db->query($q);
+        $db->executeQuery('delete from Pages where cPointerID = ?', array($cID));
 
-        $q = "delete from Areas WHERE cID = '{$cID}'";
-        $r = $db->query($q);
+        $db->executeQuery('delete from Areas WHERE cID = ?', array($cID));
 
         $db->executeQuery('delete from PageSearchIndex where cID = ?', array($cID));
 
-        $q = "select cID from Pages where cParentID = '{$cID}'";
-        $r = $db->query($q);
+        $r = $db->executeQuery('select cID from Pages where cParentID = ?', array($cID));
         if ($r) {
             while ($row = $r->fetchRow()) {
                 if ($row['cID'] > 0) {
@@ -2467,13 +2464,13 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         // this should be re-run every time a new page is added, but i don't think it is yet - AE
         //$oneLevelOnly=1;
         //$children_array = $this->getCollectionChildrenArray( $oneLevelOnly );
-        $q = 'SELECT cID FROM Pages WHERE cParentID='.intval($this->getCollectionID()).' ORDER BY cDisplayOrder';
-        $children_array = $db->getCol($q);
+        $q = 'SELECT cID FROM Pages WHERE cParentID = ? ORDER BY cDisplayOrder';
+        $children_array = $db->getCol($q, array($this->getCollectionID()));
         $current_count = 0;
         foreach ($children_array as $newcID) {
-            $q = "update Pages set cDisplayOrder='$current_count' where cID='$newcID'";
-            $db->query($q);
-            ++$current_count;
+            $q = 'update Pages set cDisplayOrder = ? where cID = ?';
+            $db->executeQuery($q, array($current_count, $newcID));
+            $current_count++;
         }
     }
 

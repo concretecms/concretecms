@@ -36,15 +36,11 @@ $th = Loader::helper('text');
                 <?=$form->label('channel', t('Channel'))?>
                 <div class="ccm-search-field-content">
                     <?=$form->select('channel', $channels)?>
-                    <?php if ($selectedChannel) {
-    ?>
-                        <a href="<?=$controller->action('clear', $valt->generate(), $selectedChannel)?>" class="btn btn-default btn-sm"><?=tc('%s is a channel', 'Clear all in %s', Log::getChannelDisplayName($selectedChannel))?></a>
-                    <?php 
-} else {
-    ?>
-                        <a href="<?=$controller->action('clear', $valt->generate())?>" class="btn btn-default btn-sm"><?=t('Clear all')?></a>
-                     <?php 
-} ?>
+                    <? if ($selectedChannel) { ?>
+                        <a href="<?=$controller->action('clear', $valt->generate(), $selectedChannel)?>" class="btn btn-default btn-danger"><?=tc('%s is a channel', 'Clear all in %s', Log::getChannelDisplayName($selectedChannel))?></a>
+                    <? } else { ?>
+                        <a href="<?=$controller->action('clear', $valt->generate())?>" class="btn btn-default btn-danger"><?=t('Clear all')?></a>
+                     <? } ?>
                 </div>
             </div>
         </div>
@@ -99,7 +95,7 @@ $th = Loader::helper('text');
     ?></strong></td>
                     <td style="width: 100%"><?=$th->makenice($ent->getMessage())?></td>
                 </tr>
-                <?php 
+                <?php
 } ?>
             </tbody>
         </table>

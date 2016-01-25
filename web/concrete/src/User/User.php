@@ -588,8 +588,8 @@ class User extends Object
             $ue->setGroupObject($g);
             $app['director']->dispatch('on_user_exit_group', $ue);
 
-            $q = "delete from UserGroups where uID = '{$this->uID}' and gID = '{$gID}'";
-            $r = $db->query($q);
+            $q = 'delete from UserGroups where uID = ? and gID = ?';
+            $r = $db->executeQuery($q, array($this->uID, $gID));
         }
     }
 
@@ -630,8 +630,8 @@ class User extends Object
         // first, we check to see if we have a collection in edit mode. If we do, we relinquish it
         $this->unloadCollectionEdit(false);
 
-        $q = "select cIsCheckedOut, cCheckedOutDatetime from Pages where cID = '{$cID}'";
-        $r = $db->query($q);
+        $q = 'select cIsCheckedOut, cCheckedOutDatetime from Pages where cID = ?';
+        $r = $db->executeQuery($q, array($cID));
         if ($r) {
             $row = $r->fetchRow();
             if (!$row['cIsCheckedOut']) {
@@ -639,8 +639,8 @@ class User extends Object
                 $uID = $this->getUserID();
                 $dh = $app->make('helper/date');
                 $datetime = $dh->getOverridableNow();
-                $q2 = "update Pages set cIsCheckedOut = 1, cCheckedOutUID = '{$uID}', cCheckedOutDatetime = '{$datetime}', cCheckedOutDatetimeLastEdit = '{$datetime}' where cID = '{$cID}'";
-                $r2 = $db->query($q2);
+                $q2 = 'update Pages set cIsCheckedOut = ?, cCheckedOutUID = ?, cCheckedOutDatetime = ?, cCheckedOutDatetimeLastEdit = ? where cID = ?';
+                $r2 = $db->executeQuery($q2, array(1, $uID, $datetime, $datetime, $cID));
 
                 $c->cIsCheckedOut = 1;
                 $c->cCheckedOutUID = $uID;
@@ -656,7 +656,7 @@ class User extends Object
         $db = $app['database']->connection();
 
         if ($this->getUserID() > 0) {
-            $col = $db->GetCol("select cID from Pages where cCheckedOutUID = " . $this->getUserID());
+            $col = $db->GetCol('select cID from Pages where cCheckedOutUID = ?', array($this->getUserID()));
             foreach ($col as $cID) {
                 $p = Page::getByID($cID);
                 if ($removeCache) {
@@ -710,8 +710,8 @@ class User extends Object
             $dh = $app->make('helper/date');
             $datetime = $dh->getOverridableNow();
 
-            $q = "update Pages set cCheckedOutDatetimeLastEdit = '{$datetime}' where cID = '{$cID}'";
-            $r = $db->query($q);
+            $q = 'update Pages set cCheckedOutDatetimeLastEdit = ? where cID = ?';
+            $r = $db->executeQuery($q, array($datetime, $cID));
 
             $c->cCheckedOutDatetimeLastEdit = $datetime;
         }

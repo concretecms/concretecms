@@ -71,14 +71,18 @@ class Install extends Controller
             }
             $e = Core::make('helper/validation/error');
             $e = $this->validateDatabase($e);
+            if (defined('INSTALL_STARTING_POINT') && INSTALL_STARTING_POINT) {
+                $spName = INSTALL_STARTING_POINT;
+            } else {
+                $spName = 'elemental_full';
+            }
+            $spl = StartingPointPackage::getClass($spName);
+            if ($spl === null) {
+                $e->add(t('Invalid starting point: %s', $spName));
+            }
             if ($e->has()) {
                 $this->set('error', $e);
             } else {
-                if (defined('INSTALL_STARTING_POINT') && INSTALL_STARTING_POINT) {
-                    $spl = StartingPointPackage::getClass(INSTALL_STARTING_POINT);
-                } else {
-                    $spl = StartingPointPackage::getClass('elemental_full');
-                }
                 $this->set('installPackage', $spl->getPackageHandle());
                 $this->set('installRoutines', $spl->getInstallRoutines());
                 $this->set(
@@ -283,6 +287,9 @@ class Install extends Controller
         $js = new \stdClass();
 
         try {
+            if ($spl === null) {
+                throw new Exception(t('Invalid starting point: %s', $pkgHandle));
+            }
             call_user_func(array($spl, $routine));
             $js->error = false;
         } catch (Exception $e) {
@@ -415,7 +422,7 @@ class Install extends Controller
     {
         $pkg = StartingPointPackage::getClass($this->post('SAMPLE_CONTENT'));
 
-        if (!is_object($pkg)) {
+        if ($pkg === null) {
             $e->add(t("You must select a valid sample content starting point."));
         }
 
