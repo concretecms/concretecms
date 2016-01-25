@@ -11,6 +11,7 @@ class StackList extends PageList
     public function __construct()
     {
         parent::__construct();
+        $this->query->leftJoin('p', 'Stacks', 's', 's.cID = p.cID');
         $this->ignorePermissions();
         $this->filterByPath(STACKS_PAGE_PATH);
         $this->includeSystemPages();
