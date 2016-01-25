@@ -52,7 +52,7 @@
     "zendframework/zend-feed": "2.2.*",
     "zendframework/zend-i18n": "2.2.*",
     "nesbot/carbon": "1.11.*",
-    "egulias/email-validator": "1.2.0",
+    "egulias/email-validator": "1.2.4",
     "punic/punic": "1.6.3",
     "tedivm/stash": "0.12.1",
     "lusitanian/oauth": "~0.3",
