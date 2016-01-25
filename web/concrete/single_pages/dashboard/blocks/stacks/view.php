@@ -315,19 +315,7 @@ if ($controller->getTask() == 'view_details' && $stack) {
             });
         </script>
 
-        <?php
-
-        if (isset($breadcrumb)) { ?>
-
-        <div class="ccm-search-results-breadcrumb">
-            <ol class="breadcrumb">
-            <?php foreach($breadcrumb as $value) { ?>
-                <li <?php if ($value['active']) { ?>class="active"<?php } ?>><a href="<?=$value['url']?>"><?=$value['name']?></a></li>
-            <?php } ?>
-            </ol>
-        </div>
-
-        <?php }
+<?php
 
 } else {
     echo '<p>';
@@ -475,3 +463,18 @@ if ($controller->getTask() == 'view_details' && $stack) {
 
 <?php 
 } ?>
+
+    <?php
+
+    if (isset($breadcrumb)) { ?>
+
+    <div class="ccm-search-results-breadcrumb">
+        <ol class="breadcrumb">
+        <?php foreach($breadcrumb as $value) { ?>
+            <li <?php if ($value['active']) { ?>class="active"<?php } ?>><a href="<?=$value['url']?>"><?=$value['name']?></a></li>
+        <?php } ?>
+        </ol>
+    </div>
+
+    <?php }
+

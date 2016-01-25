@@ -152,7 +152,7 @@ class Stacks extends DashboardPageController
             'url' => \URL::to('/dashboard/blocks/stacks')
         ]);
         $nav = $this->app->make('helper/navigation');
-        $pages = $nav->getTrailToCollection($page);
+        $pages = array_reverse($nav->getTrailToCollection($page));
         $pages[] = $page;
         for ($i = 1; $i < count($pages); $i++) {
             $item = $pages[$i];
