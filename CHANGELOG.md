@@ -1,3 +1,28 @@
+# 5.7.5.5
+
+## Behavioral Improvements
+
+* You can no longer deactivate or delete your own user account in the Dashboard
+* Social Links block opens links in new tabs (thanks MrKarlDilkington)
+
+## Bug Fixes
+
+* Fixed inability to clear site contents when installing themes that swap the site’s contents with their own.
+* Responsive flag images in multilingual sites (thanks seebaermichi)
+* Fixed issue where pasted blocks weren’t using proper grid container settings.
+* Fixed inability to bulk delete files.
+* Fixed Form block's questions are ordered incorrectly after ordering some of them and creating a new question. (thanks ojalehto)
+* Fixed: An error was thrown e.g. when trying to change user's password in dashboard while MYSQL is used in STRICT_TRANS_TABLES mode (thanks ojalehto)
+* Fixed error when adding files to sets and not logged in as admin.
+* Fixed inability to login with Oauth-based authentication types, including concrete5.org community and others (thanks Fabian Vogler)
+* Fixed bug: Layout column widths are no longer editable after being saved the first time
+* Fixed http://www.concrete5.org/developers/bugs/5-7-5-4/member-avatar/
+* Minor fixes to certain command line commands (thanks mlocati)
+* Fixed https://github.com/concrete5/concrete5/pull/3363 (thanks ojalehto)
+* Fixed https://github.com/concrete5/concrete5/issues/2959 (thanks seebaermichi)
+* Fixed https://github.com/concrete5/concrete5/pull/3368 (jaromirdalecky)
+* Fixed https://github.com/concrete5/concrete5/issues/3365 (thanks Ruudt)
+
 # 5.7.5.4
 
 ## Feature Updates

@@ -1,11 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "78d1f451b72662fe82a524d061bb5ab6",
-    "content-hash": "c4034bd9686cf6952f744874ebcca138",
+    "hash": "9549899f883a970719a5bb15e7753a16",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -788,16 +787,16 @@
         },
         {
             "name": "egulias/email-validator",
-            "version": "1.2.0",
+            "version": "1.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/egulias/EmailValidator.git",
-                "reference": "bb530a193056992702df9f722e8814f57bdb13c2"
+                "reference": "5c3a79217cbb98c975d7d23f12749e6f0be5cace"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/egulias/EmailValidator/zipball/bb530a193056992702df9f722e8814f57bdb13c2",
-                "reference": "bb530a193056992702df9f722e8814f57bdb13c2",
+                "url": "https://api.github.com/repos/egulias/EmailValidator/zipball/5c3a79217cbb98c975d7d23f12749e6f0be5cace",
+                "reference": "5c3a79217cbb98c975d7d23f12749e6f0be5cace",
                 "shasum": ""
             },
             "require": {
@@ -810,7 +809,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.0.x-dev"
+                    "dev-master": "1.3.x-dev"
                 }
             },
             "autoload": {
@@ -834,7 +833,7 @@
                 "validation",
                 "validator"
             ],
-            "time": "2014-07-06 17:21:29"
+            "time": "2014-11-02 23:13:57"
         },
         {
             "name": "filp/whoops",
@@ -1009,7 +1008,7 @@
         },
         {
             "name": "hautelook/phpass",
-            "version": "dev-master",
+            "version": "0.3.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hautelook/phpass.git",
@@ -1049,7 +1048,7 @@
                 "password",
                 "security"
             ],
-            "time": "2015-05-12 10:04:16"
+            "time": "2012-08-31 00:00:00"
         },
         {
             "name": "htmlawed/htmlawed",
@@ -2758,16 +2757,16 @@
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.0.1",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
-                "reference": "49ff736bd5d41f45240cec77b44967d76e0c3d25"
+                "reference": "1289d16209491b584839022f29257ad859b8532d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/49ff736bd5d41f45240cec77b44967d76e0c3d25",
-                "reference": "49ff736bd5d41f45240cec77b44967d76e0c3d25",
+                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/1289d16209491b584839022f29257ad859b8532d",
+                "reference": "1289d16209491b584839022f29257ad859b8532d",
                 "shasum": ""
             },
             "require": {
@@ -2779,7 +2778,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.0-dev"
+                    "dev-master": "1.1-dev"
                 }
             },
             "autoload": {
@@ -2813,7 +2812,7 @@
                 "portable",
                 "shim"
             ],
-            "time": "2015-11-20 09:19:13"
+            "time": "2016-01-20 09:13:37"
         },
         {
             "name": "symfony/routing",
@@ -4199,7 +4198,6 @@
         "natxet/cssmin": 20,
         "michelf/php-markdown": 20,
         "htmlawed/htmlawed": 20,
-        "hautelook/phpass": 20,
         "primal/color": 20,
         "zendframework/zend-queue": 20,
         "oryzone/oauth-user-data": 20,

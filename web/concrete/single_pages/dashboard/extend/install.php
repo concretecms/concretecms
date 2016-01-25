@@ -17,8 +17,12 @@ $nav = \Core::make('helper/navigation');
 
 $catList = AttributeCategory::getList();
 
-if (is_object($pkg)) {
-    $pkgID = $pkg->getPackageID();
+if (isset($pkg)) {
+    if (is_object($pkg)) {
+        $pkgID = $pkg->getPackageID();
+    }
+} else {
+    $pkg = null;
 }
 
 if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScreen && $tp->canInstallPackages()) {
@@ -36,12 +40,12 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
     $disabled = '';
     ?>
         <div class="alert-message warning"><p><?=t('This will clear your home page, uploaded files and any content pages out of your site completely. It will completely reset your site and any content you have added will be lost.')?></p></div>
-        <?php 
+        <?php
 } else {
     $disabled = 'disabled';
     ?>
         <div class="alert-message info"><p><?=t('Only the %s user may reset the site\'s content.', USER_SUPER)?></p></div>
-        <?php 
+        <?php
 }
     ?>
         <div class="form-group">
@@ -49,7 +53,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
             <div class="radio"><label><input type="radio" name="pkgDoFullContentSwap" value="0" checked="checked" <?=$disabled?> /> <?=t('No. Do <strong>not</strong> remove any content or files from this website.')?></label></div>
             <div class="radio"><label><input type="radio" name="pkgDoFullContentSwap" value="1" <?=$disabled?> /> <?=t('Yes. Reset site content with the content found in this package')?></label></div>
         </div>
-    <?php 
+    <?php
 }
     ?>
 
@@ -85,8 +89,11 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
                 </tr>
             </table>
 
-            <?php @Loader::packageElement('dashboard/uninstall', $pkg->getPackageHandle());
-    ?>
+            <?php
+            if ($pkg->hasUninstallNotes()) {
+                View::element('dashboard/uninstall', null, $pkg->getPackageHandle());
+            }
+            ?>
 
             <div class="alert alert-danger">
                 <?=t('This will remove all elements associated with the %s package. While you can reinstall the package, this may result in data loss.', $pkg->getPackageName())?>
@@ -211,12 +218,12 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
             <?php foreach ($items['block_type_sets'] as $bset) {
     ?>
                 <li><?=ucfirst($bset->getBlockTypeSetName())?></li>
-            <?php 
+            <?php
 }
     ?>
             </ul>
         </div>
-        <?php 
+        <?php
 }
         unset($items['block_type_sets']);
         ?>
@@ -237,11 +244,11 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
                 ?></a>
                 </li>
 
-            <?php 
+            <?php
             }
     unset($items['block_types']) ?>
         </ul>
-        <?php 
+        <?php
 }
         ?>
 
@@ -263,17 +270,17 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
                         }
                         ?>
                     <span class="badge"><?=$txt->unhandle($cat->getAttributeKeyCategoryHandle())?></span>
-                    <?php 
+                    <?php
                     }
     ?>
                 </dd>
 
-                <?php 
+                <?php
 }
     ?>
             </dl>
         </div>
-        <?php 
+        <?php
 }
         unset($items['attribute_types']);
         ?>
@@ -287,13 +294,13 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
     ?>
                 <li><?= $item->getAttributeKeyDisplayName();
     ?></li>
-            <?php 
+            <?php
 }
     ?>
             </ul>
             <?php unset($items['attribute_keys']);
     ?>
-        <?php 
+        <?php
 }
         ?>
 
@@ -310,12 +317,12 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
                     <div> <?= $theme->getThemeDisplayDescription();
     ?> </div>
                 </li>
-            <?php 
+            <?php
 }
     ?>
             </ul>
         </div>
-        <?php 
+        <?php
 }
         unset($items['page_themes']);
         ?>
@@ -333,12 +340,12 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
                     <span class="col-sm-3"><code><?=$page->getCollectionPath()?></code></span>
                     <span class="col-sm-5"><?=$page->getCollectionDescription()?></span>
                 </li>
-            <?php 
+            <?php
 }
     ?>
             </ul>
         </div>
-        <?php 
+        <?php
 }
         unset($items['single_pages']);
         ?>
@@ -358,11 +365,11 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
     ?>
                 <li><?= $pkg->getItemName($item);
     ?></li>
-            <?php 
+            <?php
 }
             ?>
             </ul>
-        <?php 
+        <?php
         }
         ?>
 
@@ -381,8 +388,8 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
         </div>
         <?php
 
-    } else {
-        if (is_object($installedPKG) && $installedPKG->hasInstallPostScreen()) {
+     } else {
+        if (isset($installedPKG) && is_object($installedPKG) && $installedPKG->hasInstallPostScreen()) {
             ?>
             <div style="display: none">
                 <div id="ccm-install-post-notes">
@@ -515,13 +522,13 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
                                     <button type="button" disabled="disabled" class="btn btn-sm btn-default"><i class="fa fa-exclamation-circle"></i> <?= t('Can\'t Install!');
     ?></button>
                                 </div>
-                            <?php 
+                            <?php
 } else {
     ?>
                                 <a href="<?= URL::to('/dashboard/extend/install', 'install_package', $obj->getPackageHandle());
     ?>" class="btn pull-right btn-sm btn-default"><?= t('Install');
     ?></a>
-                            <?php 
+                            <?php
 }
                     ?>
                             <h4 class="media-heading"><?= $obj->getPackageName();

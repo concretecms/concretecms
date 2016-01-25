@@ -115,7 +115,7 @@ class PageControllerTest extends PageTestCase
     {
         $pkg = new Package();
         $pkg->pkgHandle = 'awesome_package';
-        $pkg->pkgID = 1;
+        $pkg->setPackageID(1);
         $loader = \Concrete\Core\Foundation\ClassLoader::getInstance();
         $loader->registerPackage($pkg);
 
@@ -148,7 +148,7 @@ class PageControllerTest extends PageTestCase
     {
         $pkg = new Package();
         $pkg->pkgHandle = 'awesome_package';
-        $pkg->pkgID = 1;
+        $pkg->setPackageID(1);
         $loader = \Concrete\Core\Foundation\ClassLoader::getInstance();
         $loader->registerPackage($pkg);
 

@@ -185,6 +185,9 @@ $addSelected = true;
 		</div>
 		
 	</fieldset> 
+
+	<input type="hidden" id="position" name="position" value="1000" />
+
 </div> 
 		
 <div class="ccm-tab-content" id="ccm-tab-content-form-edit">

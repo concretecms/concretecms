@@ -328,12 +328,12 @@ class Stacks extends DashboardPageController
         }
     }
 
-    public function stack_renamed($cID)
+	public function stack_renamed($cID)
     {
-        $this->set('message', t('Stack renamed successfully'));
-        $this->view_details($cID);
-        $this->task = 'view_details';
-    }
+		$this->set('message', t('Stack renamed successfully'));
+		$this->view_details($cID);
+		$this->action = 'view_details';
+	}
 
     public function duplicate($cID)
     {

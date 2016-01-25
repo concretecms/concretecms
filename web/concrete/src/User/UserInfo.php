@@ -316,7 +316,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
                 if ($data['uPassword'] == $data['uPasswordConfirm']) {
                     $dh = Core::make('helper/date');
                     $dateTime = $dh->getOverridableNow();
-                    $v = array($uName, $uEmail, $this->getUserObject()->getUserPasswordHasher()->HashPassword($data['uPassword']), $uHasAvatar, $uTimezone, $uDefaultLanguage, $dateTime, $this->uID);
+                    $v = array($uName, $uEmail, $this->getUserObject()->getUserPasswordHasher()->HashPassword($data['uPassword']), $uHasAvatar ? 1 : 0, $uTimezone, $uDefaultLanguage, $dateTime, $this->uID);
                     $r = $db->prepare("update Users set uName = ?, uEmail = ?, uPassword = ?, uHasAvatar = ?, uTimezone = ?, uDefaultLanguage = ?, uLastPasswordChange = ? where uID = ?");
                     $res = $db->execute($r, $v);
 
@@ -329,7 +329,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
                     }
                 }
             } else {
-                $v = array($uName, $uEmail, $uHasAvatar, $uTimezone, $uDefaultLanguage, $this->uID);
+                $v = array($uName, $uEmail, $uHasAvatar ? 1 : 0, $uTimezone, $uDefaultLanguage, $this->uID);
                 $r = $db->prepare("update Users set uName = ?, uEmail = ?, uHasAvatar = ?, uTimezone = ?, uDefaultLanguage = ? where uID = ?");
                 $res = $db->execute($r, $v);
             }

@@ -16,14 +16,20 @@ class UninstallPackageCommand extends Command
         $this
             ->setName('c5:package-uninstall')
             ->addOption('trash', null, InputOption::VALUE_NONE, 'If this option is specified the package directory will be moved to the trash directory')
-            ->addOption('full-content-swap', null, InputOption::VALUE_NONE, 'If this option is specified a full content swap will be performed (if the package supports it)')
             ->addArgument('package', InputArgument::REQUIRED, 'The handle of the package to be uninstalled')
             ->setDescription('Uninstall a concrete5 package')
+            ->setHelp(<<<EOT
+Returns codes:
+  0 operation completed successfully
+  1 errors occurred
+EOT
+            )
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $rc = 0;
         try {
             $pkgHandle = $input->getArgument('package');
 
@@ -38,18 +44,18 @@ class UninstallPackageCommand extends Command
             if ($pkg === null) {
                 throw new Exception(sprintf("No package with handle '%s' is installed", $pkgHandle));
             }
-            $output->writeln(sprintf('found (%s).', $pkg->getPackageName()));
+            $output->writeln(sprintf('<info>found (%s).</info>', $pkg->getPackageName()));
 
             $output->write('Checking preconditions... ');
             $test = $pkg->testForUninstall();
             if ($test !== true) {
                 throw new Exception(implode("\n", Package::mapError($test)));
             }
-            $output->writeln('good.');
+            $output->writeln('<info>good.</info>');
 
             $output->write('Uninstalling package... ');
             $pkg->uninstall();
-            $output->writeln('done.');
+            $output->writeln('<info>done.</info>');
 
             if ($input->getOption('trash')) {
                 $output->write('Moving package to trash... ');
@@ -57,12 +63,13 @@ class UninstallPackageCommand extends Command
                 if (is_array($r)) {
                     throw new Exception(implode("\n", Package::mapError($r)));
                 }
-                $output->writeln('done.');
+                $output->writeln('<info>done.</info>');
             }
         } catch (Exception $x) {
             $output->writeln($x->getMessage());
-
-            return 1;
+            $rc = 1;
         }
+
+        return $rc;
     }
 }

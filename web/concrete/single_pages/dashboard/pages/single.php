@@ -5,11 +5,11 @@ $ih = Loader::helper('concrete/ui');
 echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Single Pages'), false);?>
 	<div class="clearfix">
 		<h4><?php echo t('Add Single Page')?></h4>
-		<?php if (Config::get('concrete.seo.url_rewriting')) {
-    $base = Core::getApplicationURL();
-} else {
-    $base = Core::getApplicationURL() . DISPATCHER_FILENAME;
-}?>
+		<?php if(Config::get('concrete.seo.url_rewriting')) {
+			$base = Core::getApplicationURL();
+		} else {
+			$base = Core::getApplicationURL() . '/' . DISPATCHER_FILENAME;
+		}?>
 		<form class="form-inline" method="post" id="add_static_page_form" action="<?php echo $view->url('/dashboard/pages/single')?>">
 			<?php echo $this->controller->token->output('add_single_page')?>
             <div class="form-group">
@@ -38,7 +38,7 @@ echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Sing
 						<?php echo t('No pages found.')?>
 					</td>
 				</tr>
-			<?php 
+			<?php
 } else {
     ?>
 
@@ -63,12 +63,12 @@ echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Sing
 							<?php if ($cp->canAdmin()) {
     ?>
                                 <a href="<?=$view->action('refresh', $p->getCollectionID(), $this->controller->token->generate('refresh'))?>" title="<?=t('Refreshes the page, rebuilding its permissions and its name.')?>" class="icon-link launch-tooltip"><i class="fa fa-refresh"></i></a>
-                            <?php 
+                            <?php
 }
     ?>
 						</td>
 					</tr>
-				<?php 
+				<?php
 }
 } ?>
 		</table>
