@@ -1,3 +1,26 @@
+# 5.7.5.6
+
+## Behavioral Improvements
+
+* Minor improvements to command line utilities (thanks mlocati)
+* Default behavior on certain javascript links prevented (thanks ojalehto)
+* Fixed: User's avatar's url doesn't change when you change the image (thanks ojalehto)
+* Fixed: https://github.com/concrete5/concrete5/pull/3420 (thanks ojalehto)
+* Remove New Page link from stacks version history (thanks ojalehto)
+* Adjust clear log button to indicate dangerousness of the action (thanks ojalehto)
+
+## Bug Fixes
+
+* Fixed inability to publicly register new accounts (received invalid email address errors on valid email addresses.) (thanks JeRoNZ)
+* Fixed http://www.concrete5.org/developers/bugs/5-7-5-5/file-manager-broken-after-deleting-a-file-set./ (thanks ojalehto)
+* Parallax custom template causes layout design to not be accessible
+* Fixed bug in next/previous block where exclude system pages was always set to true (thanks ojalehto)
+* Prevent error while adding a new feed without a page type filter (thanks ojalehto)
+* Fix incorrect action after renaming a stack (thanks ojalehto)
+* PHP7 bug fixes (thanks JeRoNZ)
+* Fixed multilingual flag layout(thanks ojalehto)
+* Strict error bug fixes (thanks mlocati)
+
 # 5.7.5.5
 
 ## Behavioral Improvements
