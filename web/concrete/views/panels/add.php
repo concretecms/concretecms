@@ -16,17 +16,17 @@ defined('C5_EXECUTE') or die("Access Denied.");
                             'clipboard',
                             'stacks',
                             'tiles', ))) {
-    ?>data-panel-accordion-tab-selected="true" <?php 
+    ?>data-panel-accordion-tab-selected="true" <?php
 } ?>><?= t('Blocks') ?></a></li>
                 <li><a data-panel-accordion-tab="clipboard"
                        <?php if ($tab == 'clipboard') {
-    ?>data-panel-accordion-tab-selected="true" <?php 
+    ?>data-panel-accordion-tab-selected="true" <?php
 } ?>><?=
                         t(
                             'Clipboard') ?></a></li>
                 <li><a data-panel-accordion-tab="stacks"
                        <?php if ($tab == 'stacks') {
-    ?>data-panel-accordion-tab-selected="true" <?php 
+    ?>data-panel-accordion-tab-selected="true" <?php
 } ?>><?=
                         t(
                             'Stacks') ?></a></li>
@@ -332,20 +332,20 @@ switch ($tab) {
                                         </a>
                                     </li>
 
-                                <?php 
+                                <?php
                         }
                         ?>
-                            <?php 
+                            <?php
                     } else {
                         ?>
                                 <p><?=t('No block types available.')?></p>
-                            <?php 
+                            <?php
                     }
                     ?>
                         </ul>
                     </div>
 
-                <?php 
+                <?php
                 } ?>
 
                 <?php if (is_array($types['Other'])) {
@@ -380,14 +380,14 @@ switch ($tab) {
                                         ><p><img src="<?= $btIcon ?>"/><span><?= t($bt->getBlockTypeName()) ?></span></p></a>
                                 </li>
 
-                            <?php 
+                            <?php
     }
     ?>
                         </ul>
 
                     </div>
 
-                <?php 
+                <?php
 } ?>
 
             <?php if (Config::get('concrete.marketplace.enabled')) {
@@ -395,7 +395,7 @@ switch ($tab) {
                 <div class="ccm-marketplace-btn-wrapper">
                 <button type="button" onclick="window.location.href='<?=URL::to('/dashboard/extend/addons')?>'" class="btn-info btn-block btn btn-large"><?=t("Get More Blocks")?></button>
                 </div>
-            <?php 
+            <?php
 } ?>
 
             </div>

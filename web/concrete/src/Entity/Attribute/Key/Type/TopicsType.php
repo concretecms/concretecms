@@ -2,6 +2,7 @@
 namespace Concrete\Core\Entity\Attribute\Key\Type;
 
 use Concrete\Core\Entity\Attribute\Value\Value\TopicsValue;
+use Concrete\Core\Tree\Tree;
 
 /**
  * @Entity
@@ -61,5 +62,10 @@ class TopicsType extends Type
         $controller = \Core::make('\Concrete\Attribute\Topics\Controller');
         $controller->setAttributeType($this->getAttributeType());
         return $controller;
+    }
+
+    public function getTopicTreeObject()
+    {
+        return Tree::getByID($this->topicTreeID);
     }
 }
