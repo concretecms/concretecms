@@ -73,12 +73,16 @@ class Files extends Controller
                 if (is_array($req['fsID'])) {
                     foreach ($req['fsID'] as $fsID) {
                         $fs = FileSet::getByID($fsID);
-                        $this->fileList->filterBySet($fs);
+                        if (is_object($fs)) {
+                            $this->fileList->filterBySet($fs);
+                        }
                     }
                 } elseif (isset($req['fsID']) && $req['fsID'] != '' && $req['fsID'] > 0) {
                     $set = $req['fsID'];
                     $fs = FileSet::getByID($set);
-                    $this->fileList->filterBySet($fs);
+                    if (is_object($fs)) {
+                        $this->fileList->filterBySet($fs);
+                    }
                 }
             }
 
