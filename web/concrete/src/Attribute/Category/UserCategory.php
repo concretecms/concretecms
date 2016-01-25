@@ -48,6 +48,11 @@ class UserCategory extends AbstractCategory implements StandardSearchIndexerInte
         return $this->getAttributeRepository()->getRegistrationList();
     }
 
+    public function getEditableInProfileList()
+    {
+        return $this->getAttributeRepository()->getEditableInProfileList();
+    }
+
     /**
      * @param UserKey $key
      * @param Request $request
