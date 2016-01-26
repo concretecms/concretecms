@@ -1,4 +1,5 @@
 (function (window, $) {
+    "use strict";
 
     /**
      * Parallax class
@@ -51,11 +52,11 @@
             image.onload = function () {
                 my.image = image;
                 my.$image = $(image).addClass('parallaxic-image');
-
-                my.handleResize();
                 outer.append(my.$image);
 
                 my.bindListeners();
+                my.handleResize();
+                my.render();
             };
 
             image.src = this.$element.data('background-image');
@@ -70,8 +71,10 @@
             var obj = this;
             this.$window.on('resize', function (e) {
                 obj.handleResize();
+                obj.render();
             }).on('scroll', function (e) {
                 obj.handleScroll();
+                obj.render();
             });
         },
 
@@ -82,35 +85,40 @@
             var frame = this.getFrame();
             frame.determineScale(this);
             frame.determineOffsetLeft(this);
-
-            this.render();
+            this.handleScroll();
         },
 
         /**
          * Handle the browser scroll
          */
         handleScroll: function () {
+            var frame;
+            if (this.isVisible()) {
+                frame = this.getFrame();
+
+                frame.determineOffsetTop(this);
+                frame.determineParallax(this);
+            }
+        },
+
+        /**
+         * Is this parallax visible
+         * @returns {boolean}
+         */
+        isVisible: function () {
             var window_top = this.$window.scrollTop(),
                 window_height = this.$window.height(),
                 container_top = this.$element.offset().top,
                 container_height = this.$element.height();
 
-            // Only render if this container is within the viewable window
-            if (window_top + window_height > container_top &&
-                window_top < container_top + container_height) {
-                this.render();
-            }
+            return (window_top + window_height > container_top && window_top < container_top + container_height);
         },
 
         /**
          * Render the parallax
          */
         render: function () {
-            var frame = this.getFrame();
-
-            frame.determineOffsetTop(this);
-            frame.determineParallax(this);
-            frame.render(this);
+            this.getFrame().render(this);
         },
 
         /**
@@ -145,10 +153,11 @@
         determineScale: function (parallax) {
             var image_height = parallax.image.height,
                 image_width = parallax.image.width,
+                window_height = parallax.$window.height(),
                 container_height = parallax.$element.height(),
                 container_width = parallax.$element.width(),
                 speed = parallax.settings.speed,
-                required_padding = speed * image_height,
+                required_padding = speed * (window_height + container_height),
                 padded_container_height = container_height + required_padding,
                 ratio;
 
@@ -162,7 +171,7 @@
                     this.scale = ratio;
                 } else {
                     // Since we weren't tall enough, scale by the height ratio
-                    this.scale = padded_container_height / image_height / 2;
+                    this.scale = padded_container_height / image_height;
                 }
             } else {
                 // We're too wide and not tall enough, lets just scale by the height ratio
@@ -179,8 +188,9 @@
          */
         determineOffsetLeft: function (parallax) {
             var image_width = parallax.image.width,
+                container_width = parallax.$element.width(),
                 scaled_width = image_width * this.scale,
-                width_difference = scaled_width - image_width;
+                width_difference = (scaled_width - image_width) + (container_width - scaled_width);
 
             this.offset.x = width_difference / 2;
         },
