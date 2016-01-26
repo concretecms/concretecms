@@ -8,6 +8,9 @@ $flr = new \Concrete\Core\Search\StickyRequest('files');
 $req = $flr->getSearchRequest();
 
 ?>
+<style type="text/css">
+    .ccm-file-manager-search-results-thumbnail img { max-height: <?=Concrete\Core\File\Image\Thumbnail\Type\Version::getByHandle('file_manager_listing')->getHeight();?>px; }
+</style>
 
 <script type="text/template" data-template="search-form">
 <form role="form" data-search-form="files" action="<?php echo URL::to('/ccm/system/search/files/submit')?>" class="ccm-search-fields">

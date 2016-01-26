@@ -182,6 +182,7 @@ $dh = Core::make('helper/date');
 	    .ccm-file-set-file-list:hover {cursor: move}
         .ccm-file-set-file-placeholder { background-color: #ffd !important;  }
         .ccm-file-set-file-placeholder td { background:transparent !important; }
+        .ccm-file-set-file-list td.ccm-file-manager-search-results-thumbnail img {max-height: <?=Concrete\Core\File\Image\Thumbnail\Type\Version::getByHandle('file_manager_listing')->getHeight();?>px}
 	</style>
 
 <?php } else { ?>
