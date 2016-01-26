@@ -15,10 +15,10 @@ class StackFolder implements ItemInterface
      */
     public function export(ExportableInterface $folder, \SimpleXMLElement $xml)
     {
-        $db = \Database::connection();
         $page = $folder->getPage();
         $node = $xml->addChild('folder');
         $node->addAttribute('name', \Core::make('helper/text')->entities($page->getCollectionName()));
+        $node->addAttribute('path', substr($page->getCollectionPath(), strlen(STACKS_PAGE_PATH)));
 
         return $node;
     }
