@@ -5,7 +5,7 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Attribute\AttributeValueInterface;
 use Concrete\Core\Attribute\Controller;
 use Concrete\Core\Attribute\EntityInterface;
-use Concrete\Core\Attribute\Key\ImportLoader\StandardImporterLoader;
+use Concrete\Core\Attribute\Key\ImportLoader\StandardImportLoader;
 use Concrete\Core\Attribute\Key\RequestLoader\StandardRequestLoader;
 use Concrete\Core\Entity\Attribute\Category;
 use Concrete\Core\Entity\Attribute\Key\Key;
@@ -290,6 +290,6 @@ abstract class AbstractCategory implements CategoryInterface
 
     public function getImportLoader()
     {
-        return new StandardImporterLoader();
+        return new StandardImportLoader();
     }
 }

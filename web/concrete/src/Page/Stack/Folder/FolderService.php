@@ -17,9 +17,17 @@ class FolderService
         $this->application = $application;
     }
 
-    public function getByID($cID, $cvID = 'RECENT')
+    public function getByPath($path)
     {
-        $c = \Page::getByID($cID, $cvID);
+        $c = \Page::getByPath(STACKS_PAGE_PATH . '/' . trim($path, '/'));
+        if ($c->getCollectionTypeHandle() == STACK_CATEGORY_PAGE_TYPE) {
+            return $this->application->make('Concrete\Core\Page\Stack\Folder\Folder', array($c));
+        }
+    }
+
+    public function getByID($cID)
+    {
+        $c = \Page::getByID($cID);
         if ($c->getCollectionTypeHandle() == STACK_CATEGORY_PAGE_TYPE) {
             return $this->application->make('Concrete\Core\Page\Stack\Folder\Folder', array($c));
         }

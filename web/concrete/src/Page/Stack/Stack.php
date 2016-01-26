@@ -4,6 +4,7 @@ namespace Concrete\Core\Page\Stack;
 use Area;
 use Concrete\Core\Export\ExportableInterface;
 use Concrete\Core\Multilingual\Page\Section\Section;
+use Concrete\Core\Page\Stack\Folder\Folder;
 use GlobalArea;
 use Config;
 use Database;
@@ -43,7 +44,7 @@ class Stack extends Page implements ExportableInterface
 
     public static function getByPath($path, $version = 'RECENT')
     {
-        $c = parent::getByPath($path, $version);
+        $c = parent::getByPath(STACKS_PAGE_PATH . '/' . trim($path, '/'), $version);
         if (static::isValidStack($c)) {
             return $c;
         }
@@ -59,7 +60,7 @@ class Stack extends Page implements ExportableInterface
     {
         $stack = static::getByName($stackName);
         if (!$stack) {
-            $stack = static::addStack($stackName, static::ST_TYPE_GLOBAL_AREA);
+            $stack = static::addGlobalArea($stackName);
         }
 
         return $stack;
@@ -177,6 +178,7 @@ class Stack extends Page implements ExportableInterface
      *
      * @return Page
      */
+    /*
     public static function addStack($stackName, $type = 0, $multilingualStackToReturn = self::MULTILINGUAL_CONTENT_SOURCE_CURRENT)
     {
         $return = false;
@@ -205,6 +207,24 @@ class Stack extends Page implements ExportableInterface
 
         return $return;
     }
+    */
+
+    public static function addGlobalArea($area)
+    {
+        $parent = \Page::getByPath(STACKS_PAGE_PATH);
+        return self::addStackToCategory($parent, $area, static::ST_TYPE_GLOBAL_AREA);
+    }
+
+
+    public static function addStack($stack, Folder $folder = null)
+    {
+        $parent = \Page::getByPath(STACKS_PAGE_PATH);
+        if ($folder) {
+            $parent = $folder->getPage();
+        }
+        return self::addStackToCategory($parent, $stack, static::ST_TYPE_USER_ADDED);
+    }
+
 
     /**
      * @param |\Concrete\Core\Page\Collection $nc

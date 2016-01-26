@@ -21,6 +21,7 @@ class Stack implements ItemInterface
         if ($stack->getStackTypeExportText()) {
             $node->addAttribute('type', $stack->getStackTypeExportText());
         }
+        $node->addAttribute('path', substr($stack->getCollectionPath(), strlen(STACKS_PAGE_PATH)));
 
         // you shouldn't ever have a sub area in a stack but just in case.
         $r = $db->Execute('select arHandle from Areas where cID = ? and arParentID = 0', array($stack->getCollectionID()));

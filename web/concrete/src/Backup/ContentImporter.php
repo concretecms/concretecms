@@ -5,6 +5,7 @@ use Concrete\Core\Attribute\Type;
 use Concrete\Core\File\Importer;
 use Concrete\Core\Page\Feed;
 use Concrete\Core\Sharing\SocialNetwork\Link;
+use Concrete\Core\Support\Facade\StackFolder;
 use Concrete\Core\Tree\Tree;
 use Page;
 use Package;
@@ -126,12 +127,53 @@ class ContentImporter
     protected function importStacksStructure(\SimpleXMLElement $sx)
     {
         if (isset($sx->stacks)) {
-            foreach ($sx->stacks->stack as $p) {
-                if (isset($p['type'])) {
-                    $type = Stack::mapImportTextToType($p['type']);
-                    Stack::addStack($p['name'], $type);
+
+            $nodes = array();
+            $i = 0;
+            foreach ($sx->stacks->children() as $p) {
+                $p->originalPos = $i;
+                $nodes[] = $p;
+                ++$i;
+            }
+            usort($nodes, array('static', 'setupPageNodeOrder'));
+
+            foreach ($nodes as $p) {
+
+                $parent = null;
+                $path = (string) $p['path'];
+                if ($p->getName() == 'folder') {
+                    $type = 'folder';
                 } else {
-                    Stack::addStack($p['name']);
+                    $type = (string) $p['type'];
+                }
+                $name = (string) $p['name'];
+                if ($path) {
+                    $lastSlash = strrpos($path, '/');
+                    $parentPath = substr($path, 0, $lastSlash);
+                    if ($parentPath) {
+                        $parent = StackFolder::getByPath($parentPath);
+                    }
+                }
+
+                switch($type) {
+                    case 'folder':
+                        $folder = StackFolder::getByPath($path);
+                        if (!is_object($folder)) {
+                            StackFolder::add($name, $parent);
+                        }
+                        break;
+                    case 'global_area':
+                        $s = Stack::getByName($name);
+                        if (!is_object($s)) {
+                            Stack::addGlobalArea($name);
+                        }
+                        break;
+                    default:
+                        //stack
+                        $s = Stack::getByPath($path);
+                        if (!is_object($s)) {
+                            Stack::addStack($name, $parent);
+                        }
                 }
             }
         }
@@ -141,7 +183,12 @@ class ContentImporter
     {
         if (isset($sx->stacks)) {
             foreach ($sx->stacks->stack as $p) {
-                $stack = Stack::getByName($p['name']);
+                $path = (string) $p['path'];
+                if ($path) {
+                    $stack = Stack::getByPath($path);
+                } else {
+                    $stack = Stack::getByName((string) $p['name']);
+                }
                 if (isset($p->area)) {
                     $this->importPageAreas($stack, $p);
                 }
@@ -676,7 +723,10 @@ class ContentImporter
         if (isset($sx->systemcaptcha)) {
             foreach ($sx->systemcaptcha->library as $th) {
                 $pkg = static::getPackageObject($th['package']);
-                $scl = SystemCaptchaLibrary::add($th['handle'], $th['name'], $pkg);
+                $scl = SystemCaptchaLibrary::getByHandle((string) $th['handle']);
+                if (!is_object($scl)) {
+                    $scl = SystemCaptchaLibrary::add($th['handle'], $th['name'], $pkg);
+                }
                 if ($th['activated'] == '1') {
                     $scl->activate();
                 }

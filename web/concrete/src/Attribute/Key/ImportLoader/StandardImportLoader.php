@@ -3,7 +3,7 @@ namespace Concrete\Core\Attribute\Key\ImportLoader;
 
 use Concrete\Core\Entity\Attribute\Key\Key;
 
-class StandardImporterLoader implements ImportLoaderInterface
+class StandardImportLoader implements ImportLoaderInterface
 {
     public function load(Key $key, \SimpleXMLElement $element)
     {
