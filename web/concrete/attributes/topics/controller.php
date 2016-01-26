@@ -13,10 +13,7 @@ use Database;
 
 class Controller extends AttributeTypeController
 {
-    protected $searchIndexFieldDefinition = array(
-        'type' => 'text',
-        'options' => array('length' => 4294967295, 'default' => null, 'notnull' => false),
-    );
+    protected $searchIndexFieldDefinition = array('type' => 'text', 'options' => array('default' => null, 'notnull' => false));
 
     public $helpers = array('form');
 
