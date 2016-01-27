@@ -10,6 +10,7 @@ interface UrlInterface extends \League\Url\UrlInterface
 
     /**
      * @param integer $port
+     * @deprecated Use `->setPort($port)`
      */
     public function setPortIfNecessary($port);
 
