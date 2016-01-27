@@ -7,7 +7,9 @@ class UrlImmutable extends \League\Url\UrlImmutable implements UrlInterface
 {
 
     /**
-     * {@inheritdoc}
+     * @param integer $port
+     * @deprecated Use `->setPort($port)`
+     * @return UrlInterface
      */
     public function setPortIfNecessary($port)
     {
