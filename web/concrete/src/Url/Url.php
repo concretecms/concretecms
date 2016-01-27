@@ -8,7 +8,9 @@ class Url extends \League\Url\Url implements UrlInterface
 {
 
     /**
-     * {@inheritdoc}
+     * @param integer $port
+     * @deprecated Use `->setPort($port)`
+     * @return UrlInterface
      */
     public function setPortIfNecessary($port)
     {
