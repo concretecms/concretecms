@@ -101,6 +101,16 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
     }
 
+    public function export($node)
+    {
+        $group = $node->addChild('group');
+        $group->addAttribute('name', $this->getGroupName());
+        $group->addAttribute('description', $this->getGroupDescription());
+        $group->addAttribute('path', $this->getGroupPath());
+        $group->addAttribute('package', $this->getPackageHandle());
+    }
+
+
     public function getGroupMembers()
     {
         $user_list = new UserList();
