@@ -22,15 +22,14 @@ class CanonicalUrlResolver implements UrlResolverInterface
     protected $cached;
 
     /**
-     * @var \Concrete\Core\Config\Repository\Repository
+     * CanonicalUrlResolver constructor.
+     * @param \Concrete\Core\Application\Application $app
+     * @param \Concrete\Core\Http\Request $request
      */
-    protected $config;
-
-    public function __construct(Application $app, Request $request, Repository $config)
+    public function __construct(Application $app, Request $request)
     {
         $this->app = $app;
         $this->request = $request;
-        $this->config = $config;
     }
 
     /**
@@ -50,16 +49,18 @@ class CanonicalUrlResolver implements UrlResolverInterface
             return $this->cached;
         }
 
+        $config = $this->app['config'];
+
         // Determine trailing slash setting
-        $trailing_slashes = $this->config->get('concrete.seo.trailing_slash') ? Url::TRAILING_SLASHES_ENABLED : Url::TRAILING_SLASHES_DISABLED;
+        $trailing_slashes = $config->get('concrete.seo.trailing_slash') ? Url::TRAILING_SLASHES_ENABLED : Url::TRAILING_SLASHES_DISABLED;
 
         $url = Url::createFromUrl('', $trailing_slashes);
 
         $url->setHost(null);
         $url->setScheme(null);
 
-        if ($this->config->get('concrete.seo.canonical_url')) {
-            $canonical = UrlImmutable::createFromUrl($this->config->get('concrete.seo.canonical_url'), $trailing_slashes);
+        if ($config->get('concrete.seo.canonical_url')) {
+            $canonical = UrlImmutable::createFromUrl($config->get('concrete.seo.canonical_url'), $trailing_slashes);
 
             // If the request is over https and the canonical url is http, lets just say https for the canonical url.
             if (strtolower($canonical->getScheme()) == 'http' && strtolower($this->request->getScheme()) == 'https') {
