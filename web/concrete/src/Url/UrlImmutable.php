@@ -6,23 +6,35 @@ use RuntimeException;
 class UrlImmutable extends \League\Url\UrlImmutable implements UrlInterface
 {
 
+    /**
+     * {@inheritdoc}
+     */
     public function setPortIfNecessary($port)
     {
-        $clone = clone $this;
+        return $this->setPort($port);
+    }
 
-        if (!$port) {
-            return $clone;
+    /**
+     * {@inheritdoc}
+     */
+    public function getAuthority()
+    {
+        $user = $this->getUserInfo();
+        $host = $this->host->getUriComponent();
+        $port = $this->port->getUriComponent();
+
+        $authority = $user . $host;
+        $scheme = strtolower($this->getScheme());
+        $port_map = array(
+            'http' => ':80',
+            'https' => ':443'
+        );
+
+        if (!isset($port_map[$scheme]) || $port_map[$scheme] != $port) {
+            $authority .= $port;
         }
 
-        if (
-            ($this->getScheme()->get() == 'http' && $port == '80') ||
-            ($this->getScheme()->get() == 'https' && $port == '443')) {
-            return $clone;
-        }
-
-        $clone->port->set($port);
-        return $clone;
-
+        return $authority;
     }
 
     public static function createFromUrl($url, $trailing_slashes = self::TRAILING_SLASHES_AUTO)
