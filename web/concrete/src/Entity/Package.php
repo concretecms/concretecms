@@ -19,9 +19,18 @@ class Package
     protected $handle;
 
     /**
+     * @param mixed $pkgID
+     */
+    public function setPackageID($pkgID)
+    {
+        $this->pkgID = $pkgID;
+    }
+
+
+    /**
      * @return mixed
      */
-    public function getHandle()
+    public function getPackageHandle()
     {
         return $this->handle;
     }
@@ -29,7 +38,7 @@ class Package
     /**
      * @param mixed $handle
      */
-    public function setHandle($handle)
+    public function setPackageHandle($handle)
     {
         $this->handle = $handle;
     }
