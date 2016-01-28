@@ -36,7 +36,7 @@ class FolderService
     public function add($name, Folder $folder = null)
     {
         $type = Type::getByHandle(STACK_CATEGORY_PAGE_TYPE);
-        $parent = $folder ? $folder->getPageObject() : \Page::getByPath(STACKS_PAGE_PATH);
+        $parent = $folder ? $folder->getPage() : \Page::getByPath(STACKS_PAGE_PATH);
         $data = array();
         $data['name'] = $name;
         $page = $parent->add($type, $data);
