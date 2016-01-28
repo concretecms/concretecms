@@ -5,17 +5,51 @@ use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Stack\Folder\Folder;
 use Loader;
 use Concrete\Core\Page\PageList;
+use Concrete\Core\Search\StickyRequest;
 
 class StackList extends PageList
 {
+    protected $foldersFirst;
+
     public function __construct()
     {
         parent::__construct();
+        $this->foldersFirst = false;
         $this->query->leftJoin('p', 'Stacks', 's', 's.cID = p.cID');
         $this->ignorePermissions();
         $this->filterByPath(STACKS_PAGE_PATH);
         $this->includeSystemPages();
         $this->sortByName();
+    }
+
+    public function setupAutomaticSorting(StickyRequest $request = null)
+    {
+        parent::setupAutomaticSorting($request);
+        if ($this->foldersFirst) {
+            $previousOrderBy = $this->query->getQueryPart('orderBy');
+            $this->query->orderBy('pt.ptHandle', 'desc');
+            $this->query->add('orderBy', $previousOrderBy, true);
+        }
+    }
+
+    /**
+     * Should we list stack folders first?
+     *
+     * @param bool $value
+     */
+    public function setFoldersFirst($value)
+    {
+        $this->foldersFirst = (bool) $value;
+    }
+
+    /**
+     * Should we list stack folders first?
+     *
+     * @return bool
+     */
+    public function getFoldersFirst()
+    {
+        return $this->foldersFirst;
     }
 
     public function filterByFolder(Folder $folder)
