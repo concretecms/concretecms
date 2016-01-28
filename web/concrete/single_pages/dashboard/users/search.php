@@ -4,11 +4,11 @@
     $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
     ?>
 
-    <? if (is_array($workflowList) && count($workflowList) > 0) { ?>
+    <?php if (is_array($workflowList) && count($workflowList) > 0) { ?>
         <div id="ccm-notification-user-alert-workflow" class="ccm-notification ccm-notification-info">
             <div class="ccm-notification-inner-wrapper">
-                <? foreach ($workflowList as $i => $wl) { ?>
-                    <? $wr = $wl->getWorkflowRequestObject();
+                <?php foreach ($workflowList as $i => $wl) { ?>
+                    <?php $wr = $wl->getWorkflowRequestObject();
                     $wf = $wl->getWorkflowObject(); ?>
 
                     <form method="post" action="<?= $wl->getWorkflowProgressFormAction() ?>"
@@ -17,39 +17,39 @@
 
                         <div class="ccm-notification-inner">
                             <p><?= $wf->getWorkflowProgressCurrentDescription($wl) ?></p>
-                            <? $actions = $wl->getWorkflowProgressActions(false); ?>
-                            <? if (count($actions) > 0) { ?>
+                            <?php $actions = $wl->getWorkflowProgressActions(false); ?>
+                            <?php if (count($actions) > 0) { ?>
                                 <div class="btn-group">
-                                    <? foreach ($actions as $act) { ?>
-                                        <? if ($act->getWorkflowProgressActionURL() != '') { ?>
+                                    <?php foreach ($actions as $act) { ?>
+                                        <?php if ($act->getWorkflowProgressActionURL() != '') { ?>
                                             <a href="<?= $act->getWorkflowProgressActionURL() ?>"
-                                        <? } else { ?>
+                                        <?php } else { ?>
                                             <button type="submit"
                                                     name="action_<?= $act->getWorkflowProgressActionTask() ?>"
-                                         <? } ?>
+                                         <?php } ?>
 
-                                        <? if (count($act->getWorkflowProgressActionExtraButtonParameters()) > 0) { ?>
-                                            <? foreach ($act->getWorkflowProgressActionExtraButtonParameters() as $key => $value) { ?>
+                                        <?php if (count($act->getWorkflowProgressActionExtraButtonParameters()) > 0) { ?>
+                                            <?php foreach ($act->getWorkflowProgressActionExtraButtonParameters() as $key => $value) { ?>
                                                 <?= $key ?>="<?= $value ?>"
-                                            <? } ?>
-                                        <? } ?>
+                                            <?php } ?>
+                                        <?php } ?>
 
                                         class="btn btn-xs <?= $act->getWorkflowProgressActionStyleClass() ?>"><?= $act->getWorkflowProgressActionStyleInnerButtonLeftHTML() ?> <?= $act->getWorkflowProgressActionLabel() ?> <?= $act->getWorkflowProgressActionStyleInnerButtonRightHTML() ?>
-                                        <? if ($act->getWorkflowProgressActionURL() != '') { ?>
+                                        <?php if ($act->getWorkflowProgressActionURL() != '') { ?>
                                             </a>
-                                        <? } else { ?>
+                                        <?php } else { ?>
                                             </button>
-                                        <? } ?>
-                                    <? } ?>
+                                        <?php } ?>
+                                    <?php } ?>
                                 </div>
-                            <? } ?>
+                            <?php } ?>
                         </div>
                     </form>
-                <? } ?>
+                <?php } ?>
             </div>
             <div class="ccm-notification-actions"><a href="#" data-dismiss-alert="page-alert"><?= t('Hide') ?></a></div>
         </div>
-    <? } ?>
+    <?php } ?>
 
     <style type="text/css">
         div[data-container=editable-fields] section {
