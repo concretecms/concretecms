@@ -492,7 +492,7 @@ class Feed
                 if (!$content) {
                     $content = t('No Content.');
                 }
-                $entry->setDescription($content);
+                $entry->setContent($content);
                 $entry->setLink((string) $p->getCollectionLink(true));
                 $writer->addEntry($entry);
             }
