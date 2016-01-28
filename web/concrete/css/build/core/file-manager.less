@@ -179,16 +179,39 @@ div.ccm-file-selector {
 /**
  *Thumbnail listing
  */
-div.ccm-file-manager-image-thumbnail {
-  margin-bottom: 50px;
-  padding: 20px;
-  text-align: center;
-  background-color: #efefef;
-  font-size: 18px;
-  font-weight: 300;
-  color: #999;
+.ccm-ui {
+  .ccm-image-thumbnail-card {
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  .ccm-file-manager-image-thumbnail {
+    margin-bottom: 0px;
+    padding: 20px;
+    text-align: center;
+    background-color: #efefef;
+    font-size: 18px;
+    font-weight: 300;
+    color: #999;
+  }
+  .ccm-image-thumbnail-display-name {
+    min-height: 40px;
+  }
+  .ccm-image-thumbnail-display-name h4 {
+    margin-top: 0px;
+  }
+  .ccm-image-thumbnail-dimensions {
+    display: block;
+    margin-bottom: 10px;
+    color: #999;
+    font-size: 13.5px;
+  }
+  .ccm-image-thumbnail-divider {
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
 }
-
 
 @media (max-width: @screen-xs-max) {
   div#ccm-file-manager-upload-prompt {
