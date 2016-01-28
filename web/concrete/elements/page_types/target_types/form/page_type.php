@@ -25,7 +25,10 @@ if (is_object($pagetype) && $pagetype->getPageTypePublishTargetTypeID() == $conf
         if (count($pages) > 1) {
             $options = array();
             foreach ($pages as $p) {
-                $options[$p->getCollectionID()] = $p->getCollectionName();
+                $pp = new Permissions($p);
+                if ($pp->canAddSubCollection($pagetype)) {
+                    $options[$p->getCollectionID()] = $p->getCollectionName();
+                }
             }
             echo $form->select('cParentID', $options, $cParentID);
         } elseif (count($pages) == 1) {
