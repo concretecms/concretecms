@@ -52,11 +52,16 @@
             image.onload = function () {
                 my.image = image;
                 my.$image = $(image).addClass('parallaxic-image');
-                outer.append(my.$image);
 
                 my.bindListeners();
-                my.handleResize();
-                my.render();
+
+                window.setTimeout(function() {
+                    // defer because some browsers fire the event before populating the image attributes
+                    my.handleResize();
+                    my.render();
+
+                    outer.append(my.$image.hide().fadeIn());
+                }, 0);
             };
 
             image.src = this.$element.data('background-image');
