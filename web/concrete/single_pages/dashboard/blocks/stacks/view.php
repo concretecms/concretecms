@@ -305,7 +305,7 @@ $(function() {
                 }
             )
             .on('click', function() {
-                $this.toggleClass('ccm-menu-item-active');
+                $this.toggleClass('ccm-search-selected');
             })
             .on('dblclick', function() {
                 window.location.href = $this.data('details-url');
