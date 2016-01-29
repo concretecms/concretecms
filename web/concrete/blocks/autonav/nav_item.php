@@ -1,15 +1,8 @@
 <?php
 namespace Concrete\Block\Autonav;
 
-/**
+    /**
      * An object used by the Autonav Block to display navigation items in a tree.
-     *
-     * @package Blocks
-     * @subpackage Auto-Nav
-     *
-     * @author Andrew Embler <andrew@concrete5.org>
-     * @copyright  Copyright (c) 2003-2012 Concrete5. (http://www.concrete5.org)
-     * @license    http://www.concrete5.org/license/     MIT License
      */
     class NavItem
     {
@@ -17,6 +10,12 @@ namespace Concrete\Block\Autonav;
         protected $isActive = false;
         protected $_c;
         public $hasChildren = false;
+        public $cID;
+        public $cPath;
+        public $cPointerExternalLink;
+        public $cPointerExternalLinkNewWindow;
+        public $cvDescription;
+        public $cvName;
 
         /**
          * Instantiates an Autonav Block Item.
