@@ -5,29 +5,25 @@ defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 
 <section>
-
     <div data-panel-menu="accordion" class="ccm-panel-header-accordion">
         <nav>
             <span></span>
             <ul class="ccm-panel-header-accordion-dropdown">
-                <li><a data-panel-accordion-tab="blocks" <?php if (!in_array(
-                        $tab,
-                        array(
-                            'clipboard',
-                            'stacks',
-                            'tiles', ))) {
-    ?>data-panel-accordion-tab-selected="true" <?php
-} ?>><?= t('Blocks') ?></a></li>
+                <li><a data-panel-accordion-tab="blocks"
+                        <?php
+                        if (!in_array($tab, ['clipboard', 'stacks', 'tiles'])) { ?>
+                            data-panel-accordion-tab-selected="true"
+                        <?php } ?>
+                    ><?= t('Blocks') ?></a>
+                </li>
                 <li><a data-panel-accordion-tab="clipboard"
-                       <?php if ($tab == 'clipboard') {
-    ?>data-panel-accordion-tab-selected="true" <?php
-} ?>><?=
-                        t('Clipboard') ?></a></li>
+                        <?php if ($tab == 'clipboard') { ?>data-panel-accordion-tab-selected="true" <?php } ?>
+                    ><?= t('Clipboard') ?></a>
+                </li>
                 <li><a data-panel-accordion-tab="stacks"
-                       <?php if ($tab == 'stacks') {
-    ?>data-panel-accordion-tab-selected="true" <?php
-} ?>><?=
-                        t('Stacks') ?></a></li>
+                        <?php if ($tab == 'stacks') { ?>data-panel-accordion-tab-selected="true" <?php } ?>
+                    ><?= t('Stacks') ?></a>
+                </li>
             </ul>
         </nav>
     </div>
@@ -37,9 +33,7 @@ switch ($tab) {
 
     case 'tiles':
         ?>
-
         Gathering tiles
-
         <?php
         break;
 
@@ -80,9 +74,8 @@ switch ($tab) {
                             $type = $block->getBlockTypeObject();
                             $icon = $ci->getBlockTypeIconURL($type);
                             ?>
-                            <div class="block"
+                            <div class="block ccm-panel-add-block-draggable-block-type"
                                  data-panel-add-block-drag-item="block"
-                                 class="ccm-panel-add-block-draggable-block-type"
                                  data-cID="<?= $stack->getCollectionID() ?>"
                                  data-block-type-handle="<?= $type->getBlockTypeHandle() ?>"
                                  data-dialog-title="<?= t('Add %s', t($type->getBlockTypeName())) ?>"
@@ -105,19 +98,17 @@ switch ($tab) {
                                 <div class="block-content">
                                     <?php
                                     $bv = new \Concrete\Core\Block\View\BlockView($block);
-                            $bv->render('scrapbook');
-                            ?>
+                                    $bv->render('scrapbook');
+                                    ?>
                                 </div>
                                 <div class="block-handle"></div>
                             </div>
                         <?php
-
                         }
                 ?>
                     </div>
                 </div>
             <?php
-
             }
             ?>
         </div>
@@ -208,15 +199,13 @@ switch ($tab) {
                             <span class="handle"><?= h(t($type->getBlockTypeName())) ?></span>
                         </div>
                         <div class="blocks">
-                            <div class="block"
-                                 class="ccm-panel-add-block-draggable-block-type"
+                            <div class="block ccm-panel-add-block-draggable-block-type"
                                  title="<?= t($type->getBlockTypeName()) ?>">
-
                                 <div class="block-content">
                                     <?php
                                     $bv = new \Concrete\Core\Block\View\BlockView($block);
-                $bv->render('scrapbook');
-                ?>
+                                    $bv->render('scrapbook');
+                                    ?>
                                 </div>
                                 <div class="block-handle"></div>
                             </div>
@@ -229,7 +218,6 @@ switch ($tab) {
                     </div>
                 </div>
             <?php
-
             }
             ?>
             <script>
@@ -246,7 +234,7 @@ switch ($tab) {
                     }, function() {
                         item.remove();
                     }).fail(function(data) {
-                        alert("<?= t('An error occured while deleting this item:') ?>\n" + data.responseJSON.errors.join("\n"));
+                        alert("<?= t('An error occurred while deleting this item:') ?>\n" + data.responseJSON.errors.join("\n"));
                     });
                     return false;
                 });
