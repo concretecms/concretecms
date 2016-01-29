@@ -279,7 +279,7 @@ $(function() {
                         <?php foreach ($stacks as $st) {
                             $formatter = new Concrete\Core\Page\Stack\Formatter($st);
                             ?>
-                            <tr class="<?=$formatter->getSearchResultsClass()?>" data-search-row-url="<?=$view->url('/dashboard/blocks/stacks', 'view_details', $st->getCollectionID())?>" data-collection-id="<?=$st->getCollectionID()?>">
+                            <tr class="<?=$formatter->getSearchResultsClass()?>" data-details-url="<?=$view->url('/dashboard/blocks/stacks', 'view_details', $st->getCollectionID())?>" data-collection-id="<?=$st->getCollectionID()?>">
                                 <td class="ccm-search-results-icon"><?=$formatter->getIconElement()?></td>
                                 <td class="ccm-search-results-name"><?=h($st->getCollectionName())?></td>
                                 <td><?=$dh->formatDateTime($st->getCollectionDateAdded())?></td>
@@ -295,57 +295,72 @@ $(function() {
 $(function() {
     $('table.ccm-search-results-table tbody tr').each(function() {
         var $this = $(this), className = $this.attr('class');
-  	    $this.draggable({
-			start: function() {
-				$('.ccm-undroppable-search-item').css('opacity', '0.4');
-			},
-			stop: function() {
-				$('.ccm-undroppable-search-item').css('opacity', '');
-			},
-			revert: 'invalid',
-			helper: function() {
-				return $('<div class="' + className + ' ccm-draggable-search-item"><span>1</span></div>');
-            },
-            cursorAt: {
-            	left: -20,
-                top: 5
-            }
-        });
+        $this
+            .hover(
+                function() {
+                    $this.addClass('ccm-search-select-hover');
+                },
+                function() {
+                    $this.removeClass('ccm-search-select-hover');
+                }
+            )
+            .on('click', function() {
+                $this.toggleClass('ccm-menu-item-active');
+            })
+            .on('dblclick', function() {
+                window.location.href = $this.data('details-url');
+            })
+            .draggable({
+                start: function() {
+                    $('.ccm-undroppable-search-item').css('opacity', '0.4');
+                },
+                stop: function() {
+                    $('.ccm-undroppable-search-item').css('opacity', '');
+                },
+                revert: 'invalid',
+                helper: function() {
+                    return $('<div class="' + className + ' ccm-draggable-search-item"><span>1</span></div>');
+                },
+                cursorAt: {
+                    left: -20,
+                    top: 5
+                }
+            })
+        ;
     });
     $('.ccm-droppable-search-item').droppable({
-		accept: '.ccm-search-results-folder, .ccm-search-results-stack',
-		//activeClass: 'ui-state-highlight',
-		hoverClass: 'ui-state-highlight',
-		drop: function(event, ui) {
-			var $sourceItem = ui.draggable,
-				sourceID = $sourceItem.data('collection-id'),
-				destinationID = $(this).data('collection-id')
-			;
-			$sourceItem.hide();
-			new ConcreteAjaxRequest({
-				url: <?=json_encode($view->action('move_to_folder'))?>,
-				data: {
-					ccm_token:<?=json_encode($token->generate('move_to_folder'))?>,
-					sourceID: sourceID,
-					destinationID: destinationID
-				},
-				success: function(msg) {
-					$sourceItem.remove();
-					ConcreteAlert.notify({
-						message: msg
-					});
-				},
-				error: function(xhr) {
-					$sourceItem.show();
-					debugger;
-					var msg = xhr.responseText;
-					if (xhr.responseJSON && xhr.responseJSON.errors) {
-						msg = xhr.responseJSON.errors.join("<br/>");
-					}
-					ConcreteAlert.dialog(<?=json_encode(t('Error'))?>, msg);
-				}
-			});
-		}
+        accept: '.ccm-search-results-folder, .ccm-search-results-stack',
+        //activeClass: 'ui-state-highlight',
+        hoverClass: 'ui-state-highlight',
+        drop: function(event, ui) {
+            var $sourceItem = ui.draggable,
+                sourceID = $sourceItem.data('collection-id'),
+                destinationID = $(this).data('collection-id')
+            ;
+            $sourceItem.hide();
+            new ConcreteAjaxRequest({
+                url: <?=json_encode($view->action('move_to_folder'))?>,
+                data: {
+                    ccm_token:<?=json_encode($token->generate('move_to_folder'))?>,
+                    sourceID: sourceID,
+                    destinationID: destinationID
+                },
+                success: function(msg) {
+                    $sourceItem.remove();
+                    ConcreteAlert.notify({
+                        message: msg
+                    });
+                },
+                error: function(xhr) {
+                    $sourceItem.show();
+                    var msg = xhr.responseText;
+                    if (xhr.responseJSON && xhr.responseJSON.errors) {
+                        msg = xhr.responseJSON.errors.join("<br/>");
+                    }
+                    ConcreteAlert.dialog(<?=json_encode(t('Error'))?>, msg);
+                }
+            });
+        }
     });
 });
         </script>
