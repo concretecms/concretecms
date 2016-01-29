@@ -429,6 +429,8 @@ class BlockType
 
     /**
      * Returns an array of all BlockTypeSet objects that this block is in.
+     *
+     * @return BlockTypeSet[]
      */
     public function getBlockTypeSets()
     {

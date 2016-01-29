@@ -55,6 +55,9 @@ class Set extends Object
         return $list;
     }
 
+    /**
+     * @return static[]
+     */
     public static function getList()
     {
         $db = Loader::db();
