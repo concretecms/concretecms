@@ -293,7 +293,8 @@ $(function() {
         </div>
         <script type="text/javascript">
 $(function() {
-    $('table.ccm-search-results-table tbody tr').each(function() {
+    var $tbody = $('table.ccm-search-results-table tbody');
+    $tbody.find('>tr').each(function() {
         var $this = $(this), className = $this.attr('class');
         $this
             .hover(
@@ -313,6 +314,7 @@ $(function() {
             .draggable({
                 delay: 300,
                 start: function() {
+                    $this.addClass('ccm-search-selected');
                     $('.ccm-undroppable-search-item').css('opacity', '0.4');
                 },
                 stop: function() {
@@ -320,7 +322,8 @@ $(function() {
                 },
                 revert: 'invalid',
                 helper: function() {
-                    return $('<div class="' + className + ' ccm-draggable-search-item"><span>1</span></div>');
+                    var $selected = $this.add($tbody.find('.ccm-search-selected'));
+                    return $('<div class="' + className + ' ccm-draggable-search-item"><span>' + $selected.length + '</span></div>').data('$selected', $selected);
                 },
                 cursorAt: {
                     left: -20,
@@ -334,26 +337,38 @@ $(function() {
         //activeClass: 'ui-state-highlight',
         hoverClass: 'ui-state-highlight',
         drop: function(event, ui) {
-            var $sourceItem = ui.draggable,
-                sourceID = $sourceItem.data('collection-id'),
+            var $sourceItems = ui.helper.data('$selected'),
+                sourceIDs = [],
                 destinationID = $(this).data('collection-id')
             ;
-            $sourceItem.hide();
+            $sourceItems.each(function() {
+                var $sourceItem = $(this);
+                var sourceID = $sourceItem.data('collection-id');
+                if (sourceID == destinationID) {
+                    $sourceItems = $sourceItems.not(this);
+                } else {
+                	sourceIDs.push($(this).data('collection-id'));
+                }
+            });
+            if (sourceIDs.length === 0) {
+                return;
+            }
+            $sourceItems.hide();
             new ConcreteAjaxRequest({
                 url: <?=json_encode($view->action('move_to_folder'))?>,
                 data: {
                     ccm_token:<?=json_encode($token->generate('move_to_folder'))?>,
-                    sourceID: sourceID,
+                    sourceIDs: sourceIDs,
                     destinationID: destinationID
                 },
                 success: function(msg) {
-                    $sourceItem.remove();
+                    $sourceItems.remove();
                     ConcreteAlert.notify({
                         message: msg
                     });
                 },
                 error: function(xhr) {
-                    $sourceItem.show();
+                    $sourceItems.show();
                     var msg = xhr.responseText;
                     if (xhr.responseJSON && xhr.responseJSON.errors) {
                         msg = xhr.responseJSON.errors.join("<br/>");
