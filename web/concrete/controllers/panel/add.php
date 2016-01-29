@@ -4,7 +4,6 @@ namespace Concrete\Controller\Panel;
 use BlockType;
 use BlockTypeList;
 use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
-use Concrete\Core\Http\Request;
 use Concrete\Core\Page\Stack\Pile\Pile;
 use StackList;
 
@@ -27,9 +26,8 @@ class Add extends BackendInterfacePageController
             $bt = BlockType::getByHandle(BLOCK_HANDLE_PAGE_TYPE_OUTPUT_PROXY);
             $blockTypes[] = $bt;
         }
-        $request = Request::getInstance();
-        $requestTab = $request->get('tab');
 
+        $requestTab = $this->request('tab');
         $session = $this->app->make('session');
         if ($requestTab) {
 
