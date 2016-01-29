@@ -22,19 +22,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
                        <?php if ($tab == 'clipboard') {
     ?>data-panel-accordion-tab-selected="true" <?php
 } ?>><?=
-                        t(
-                            'Clipboard') ?></a></li>
+                        t('Clipboard') ?></a></li>
                 <li><a data-panel-accordion-tab="stacks"
                        <?php if ($tab == 'stacks') {
     ?>data-panel-accordion-tab-selected="true" <?php
 } ?>><?=
-                        t(
-                            'Stacks') ?></a></li>
-                <?php /*
-                <li><a data-panel-accordion-tab="tiles"
-                       <? if ($tab == 'tiles') { ?>data-panel-accordion-tab-selected="true" <? } ?>><?=
-                        t(
-                            'Gathering Tiles') ?></a></li> */?>
+                        t('Stacks') ?></a></li>
             </ul>
         </nav>
     </div>
@@ -348,7 +341,7 @@ switch ($tab) {
                 <?php
                 } ?>
 
-                <?php if (is_array($types['Other'])) {
+                <?php if (isset($types['Other']) && is_array($types['Other'])) {
     ?>
 
                     <div class="ccm-panel-add-block-set">
