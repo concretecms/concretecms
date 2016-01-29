@@ -347,7 +347,7 @@ $(function() {
                 if (sourceID == destinationID) {
                     $sourceItems = $sourceItems.not(this);
                 } else {
-                	sourceIDs.push($(this).data('collection-id'));
+                    sourceIDs.push($(this).data('collection-id'));
                 }
             });
             if (sourceIDs.length === 0) {
