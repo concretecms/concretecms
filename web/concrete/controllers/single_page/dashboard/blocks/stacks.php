@@ -374,9 +374,37 @@ class Stacks extends DashboardPageController
         }
         $valn = $this->app->make('helper/validation/numbers');
         /* @var \Concrete\Core\Utility\Service\Validation\Numbers $valn */
-        $sourceID = $this->post('sourceID');
-        if (!$valn->integer($sourceID)) {
-            throw new Exception(t("Bad parameter: %s", 'sourceID'));
+        $receivedSourceIDs = $this->post('sourceIDs');
+        if (!is_array($receivedSourceIDs)) {
+            throw new Exception(t("Bad parameter: %s", 'sourceIDs'));
+        }
+        $sourceIDs = array();
+        foreach ($receivedSourceIDs as $receivedSourceID) {
+            if (!$valn->integer($receivedSourceID)) {
+                throw new Exception(t("Bad parameter: %s", 'sourceIDs'));
+            }
+            $receivedSourceID = (int) $receivedSourceID;
+            if (!in_array($receivedSourceID, $sourceIDs, true)) {
+                $sourceIDs[] = $receivedSourceID;
+            }
+        }
+        if (empty($sourceIDs)) {
+            throw new Exception(t("Bad parameter: %s", 'sourceIDs'));
+        }
+        $moveStacks = array();
+        $moveFolders = array();
+        foreach ($sourceIDs as $sourceID) {
+            $item = Stack::getByID($sourceID);
+            if (is_object($item)) {
+                $moveStacks[] = $item;
+            } else {
+                $item = StackFolder::getByID($sourceID);
+                if (is_object($item)) {
+                    $moveFolders[] = $item;
+                } else {
+                    throw new Exception(t("Unable to find the specified stack or folder"));
+                }
+            }
         }
         $destinationID = $this->post('destinationID');
         if ($destinationID === '') {
@@ -391,23 +419,16 @@ class Stacks extends DashboardPageController
             }
             $destinationPage = $destinationFolder->getPage();
         }
-        $moveStack = Stack::getByID($sourceID);
-        if (is_object($moveStack)) {
+        foreach ($moveStacks as $moveStack) {
             $moveStack->move($destinationPage);
-            JsonResponse::create(
-                t('The specified stack has been moved under the folder %s!', h($destinationPage->getCollectionName()))
-            )->send();
-            exit;
         }
-        $moveFolder = StackFolder::getByID($sourceID);
-        if (is_object($moveFolder)) {
+        foreach ($moveFolders as $moveFolder) {
             $moveFolder->getPage()->move($destinationPage);
-            JsonResponse::create(
-                t('The specified folder has been moved under the folder %s!', h($destinationPage->getCollectionName()))
-            )->send();
-            exit;
         }
-        throw new Exception(t("Unable to find the specified stack or folder"));
+        JsonResponse::create(
+            t2('%d item has been moved under the folder %s!', '%d items have been moved under the folder %s!', count($sourceIDs), count($sourceIDs), h($destinationPage->getCollectionName()))
+        )->send();
+        exit;
     }
 
     public function duplicate($cID)
