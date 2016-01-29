@@ -311,6 +311,7 @@ $(function() {
                 window.location.href = $this.data('details-url');
             })
             .draggable({
+                delay: 300,
                 start: function() {
                     $('.ccm-undroppable-search-item').css('opacity', '0.4');
                 },
