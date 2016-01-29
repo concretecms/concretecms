@@ -65,11 +65,11 @@ if ($controller->getTask() == 'view_details' && isset($stack) && $stack) {
         <?php if ($isGlobalArea) { ?>
             <a href="<?=URL::to('/dashboard/blocks/stacks/view_global_areas')?>" class="btn btn-default"><i class="fa fa-angle-double-left"></i> <?=t("Back to Global Areas")?></a>
         <?php } else { ?>
-            <a href="<?=URL::to('/dashboard/blocks/stacks')?>" class="btn btn-default"><i class="fa fa-angle-double-left"></i> <?=t("Back to Stacks")?></a>
+            <a href="<?=$view->action('view_details', $stack->getCollectionParentID())?>" class="btn btn-default"><i class="fa fa-angle-double-left"></i> <?=t("Back to Stacks")?></a>
         <?php } ?>
     </div>
 
-    <p class="lead"><?php echo $stack->getCollectionName()?></p>
+    <p class="lead"><?=h($stack->getCollectionName())?></p>
 
     <nav class="navbar navbar-default">
         <div class="container-fluid">
@@ -82,17 +82,17 @@ if ($controller->getTask() == 'view_details' && isset($stack) && $stack) {
                     </ul>
                 </li>
                 <li><a dialog-width="640" dialog-height="340" class="dialog-launch" id="stackVersions" dialog-title="<?=t('Version History')?>" href="<?=URL::to('/ccm/system/panels/page/versions')?>?cID=<?=$stack->getCollectionID()?>"><?=t('Version History')?></a></li>
-                <?php if ($cpc->canEditPageProperties() && $stack->getStackType() != \Concrete\Core\Page\Stack\Stack::ST_TYPE_GLOBAL_AREA) { ?>
+                <?php if ($cpc->canEditPageProperties() && $stack->getStackType() != Concrete\Core\Page\Stack\Stack::ST_TYPE_GLOBAL_AREA) { ?>
                     <li><a href="<?=$view->action('rename', $stack->getCollectionID())?>"><?=t('Rename')?></a></li>
                 <?php } ?>
                 <?php if ($cpc->canEditPagePermissions() && Config::get('concrete.permissions.model') == 'advanced') { ?>
                     <li><a dialog-width="580" class="dialog-launch" dialog-append-buttons="true" dialog-height="420" dialog-title="<?=t('Stack Permissions')?>" id="stackPermissions" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup?cID=<?=$stack->getCollectionID()?>&arHandle=<?=STACKS_AREA_NAME?>&atask=groups"><?=t('Permissions')?></a></li>
                 <?php } ?>
-                <?php if ($cpc->canMoveOrCopyPage() && $stack->getStackType() != \Concrete\Core\Page\Stack\Stack::ST_TYPE_GLOBAL_AREA) { ?>
+                <?php if ($cpc->canMoveOrCopyPage() && $stack->getStackType() != Concrete\Core\Page\Stack\Stack::ST_TYPE_GLOBAL_AREA) { ?>
                     <li><a href="<?=$view->action('duplicate', $stack->getCollectionID())?>" style="margin-right: 4px;"><?=t('Duplicate Stack')?></a></li>
                 <?php } ?>
                 <?php if ($cpc->canDeletePage()) { ?>
-                    <?php if ($stack->getStackType() == \Concrete\Core\Page\Stack\Stack::ST_TYPE_GLOBAL_AREA) { ?>
+                    <?php if ($stack->getStackType() == Concrete\Core\Page\Stack\Stack::ST_TYPE_GLOBAL_AREA) { ?>
                         <li><a href="javascript:void(0)" data-dialog="delete-stack"><span class="text-danger"><?=t('Clear Global Area')?></span></a></li>
                     <?php } else { ?>
                         <li><a href="javascript:void(0)" data-dialog="delete-stack"><span class="text-danger"><?=t('Delete Stack')?></span></a></li>
@@ -128,7 +128,7 @@ if ($controller->getTask() == 'view_details' && isset($stack) && $stack) {
     <div style="display: none">
         <div id="ccm-dialog-delete-stack" class="ccm-ui">
             <form method="post" class="form-stacked" style="padding-left: 0px" action="<?=$view->action('delete_stack')?>">
-                <?=Loader::helper("validation/token")->output('delete_stack')?>
+                <?=$token->output('delete_stack')?>
                 <input type="hidden" name="stackID" value="<?=$stack->getCollectionID()?>" />
                 <p><?=t('Are you sure? This action cannot be undone.')?></p>
             </form>
@@ -205,7 +205,7 @@ $(function() {
     $sv = CollectionVersion::get($stack, 'ACTIVE');
     ?>
     <form name="duplicate_form" action="<?=$view->action('duplicate', $stack->getCollectionID())?>" method="POST">
-        <?=Loader::helper("validation/token")->output('duplicate_stack')?>
+        <?=$token->output('duplicate_stack')?>
         <legend><?=t('Duplicate Stack')?></legend>
         <div class="form-group">
             <?=$form->label('stackName', t("Name"))?>
@@ -224,7 +224,7 @@ $(function() {
     ?>
     <form action="<?=$view->action('rename', $stack->getCollectionID())?>" method="POST">
         <legend><?=t('Rename Stack')?></legend>
-        <?=Loader::helper("validation/token")->output('rename_stack')?>
+        <?=$token->output('rename_stack')?>
         <div class="form-group">
             <?=$form->label('stackName', t("Name"))?>
             <?=$form->text('stackName', $stack->getStackName())?>
@@ -238,9 +238,32 @@ $(function() {
     </form>
     <?php
 } else {
+    if (isset($breadcrumb)) {
+        ?>
+        <div class="ccm-search-results-breadcrumb">
+            <ol class="breadcrumb">
+                <?php
+                foreach ($breadcrumb as $value) {
+                    ?><li class="<?=$value['active'] ? 'ccm-undroppable-search-item active"' : 'ccm-droppable-search-item'?>" data-collection-id="<?=$value['id']?>"><?php
+                    if (!$value['active']) {
+                        ?><a href="<?=$value['url']?>"><?php
+                    }
+                    echo h($value['name']);
+                    if (!$value['active']) {
+                        ?></a><?php
+                    }
+                    ?></li><?php
+                }
+                ?>
+            </ol>
+        </div>
+        <?php
+    }
     /* @var Concrete\Core\Page\Stack\StackList $list */
     /* @var Concrete\Core\Page\Page[] $stacks */
     if (!empty($stacks)) {
+        $dh = Core::make('date');
+        /* @var Concrete\Core\Localization\Service\Date $dh */
         ?>
         <div class="ccm-dashboard-content-full">
             <div class="table-responsive">
@@ -254,12 +277,12 @@ $(function() {
                     </thead>
                     <tbody>
                         <?php foreach ($stacks as $st) {
-                            $formatter = new \Concrete\Core\Page\Stack\Formatter($st);
+                            $formatter = new Concrete\Core\Page\Stack\Formatter($st);
                             ?>
-                            <tr class="<?=$formatter->getSearchResultsClass()?>" data-search-row-url="<?=$view->url('/dashboard/blocks/stacks', 'view_details', $st->getCollectionID())?>">
+                            <tr class="<?=$formatter->getSearchResultsClass()?>" data-search-row-url="<?=$view->url('/dashboard/blocks/stacks', 'view_details', $st->getCollectionID())?>" data-collection-id="<?=$st->getCollectionID()?>">
                                 <td class="ccm-search-results-icon"><?=$formatter->getIconElement()?></td>
-                                <td class="ccm-search-results-name"><?=$st->getCollectionName()?></td>
-                                <td><?=Core::make('date')->formatDateTime($st->getCollectionDateAdded())?></td>
+                                <td class="ccm-search-results-name"><?=h($st->getCollectionName())?></td>
+                                <td><?=$dh->formatDateTime($st->getCollectionDateAdded())?></td>
                             </tr>
                             <?php
                         }
@@ -271,18 +294,58 @@ $(function() {
         <script type="text/javascript">
 $(function() {
     $('table.ccm-search-results-table tbody tr').each(function() {
-        var className = $(this).attr('class');
-        $(this).draggable({
-            helper: function() {
-                return $('<div class="' + className + ' ccm-draggable-search-item"><span>1</span></div>');
+        var $this = $(this), className = $this.attr('class');
+  	    $this.draggable({
+			start: function() {
+				$('.ccm-undroppable-search-item').css('opacity', '0.4');
+			},
+			stop: function() {
+				$('.ccm-undroppable-search-item').css('opacity', '');
+			},
+			revert: 'invalid',
+			helper: function() {
+				return $('<div class="' + className + ' ccm-draggable-search-item"><span>1</span></div>');
             },
             cursorAt: {
-                left: -20,
+            	left: -20,
                 top: 5
             }
         });
     });
-    $('table.ccm-search-results-table tbody tr.ccm-search-results-folder').droppable({
+    $('.ccm-droppable-search-item').droppable({
+		accept: '.ccm-search-results-folder, .ccm-search-results-stack',
+		//activeClass: 'ui-state-highlight',
+		hoverClass: 'ui-state-highlight',
+		drop: function(event, ui) {
+			var $sourceItem = ui.draggable,
+				sourceID = $sourceItem.data('collection-id'),
+				destinationID = $(this).data('collection-id')
+			;
+			$sourceItem.hide();
+			new ConcreteAjaxRequest({
+				url: <?=json_encode($view->action('move_to_folder'))?>,
+				data: {
+					ccm_token:<?=json_encode($token->generate('move_to_folder'))?>,
+					sourceID: sourceID,
+					destinationID: destinationID
+				},
+				success: function(msg) {
+					$sourceItem.remove();
+					ConcreteAlert.notify({
+						message: msg
+					});
+				},
+				error: function(xhr) {
+					$sourceItem.show();
+					debugger;
+					var msg = xhr.responseText;
+					if (xhr.responseJSON && xhr.responseJSON.errors) {
+						msg = xhr.responseJSON.errors.join("<br/>");
+					}
+					ConcreteAlert.dialog(<?=json_encode(t('Error'))?>, msg);
+				}
+			});
+		}
     });
 });
         </script>
@@ -299,12 +362,12 @@ $(function() {
     ?>
     <div class="ccm-dashboard-header-buttons">
         <?php
-        if (\Core::make('multilingual/detector')->isEnabled() && $defaultLanguage) {
+        if (Core::make('multilingual/detector')->isEnabled() && $defaultLanguage) {
             $ch = Core::make('multilingual/interface/flag');
             ?>
             <span class="dropdown">
                 <button type="button" class="btn btn-default" data-toggle="dropdown">
-                    <?=$ch->getSectionFlagIcon($defaultLanguage)?> <?php echo $defaultLanguage->getLanguageText()?> <span class="text-muted"><?php echo $defaultLanguage->getLocale(); ?>
+                    <?=$ch->getSectionFlagIcon($defaultLanguage)?> <?=$defaultLanguage->getLanguageText()?> <span class="text-muted"><?=$defaultLanguage->getLocale(); ?>
                 </button>
             </span>
             <span class="caret"></span>
@@ -312,7 +375,7 @@ $(function() {
                 <?php
                 foreach ($multilingualSections as $section) {
                     ?>
-                    <li><a href="<?=$view->action('set_default_language', $section->getCollectionID(), $controller->getTask())?>"><?=$ch->getSectionFlagIcon($section)?> <?php echo $section->getLanguageText()?> <span class="text-muted"><?php echo $section->getLocale(); ?></span></a></li>
+                    <li><a href="<?=$view->action('set_default_language', $section->getCollectionID(), $controller->getTask())?>"><?=$ch->getSectionFlagIcon($section)?> <?=$section->getLanguageText()?> <span class="text-muted"><?=$section->getLocale(); ?></span></a></li>
                     <?php
                 }
                 ?>
@@ -351,10 +414,11 @@ $(function() {
     <div style="display: none">
         <div id="ccm-dialog-add-stack" class="ccm-ui">
             <form method="post" class="form-stacked" style="padding-left: 0px" action="<?=$view->action('add_stack')?>">
-                <?=Loader::helper("validation/token")->output('add_stack')?>
+                <?=$token->output('add_stack')?>
+                <?=$form->hidden('stackFolderID', isset($currentStackFolderID) ? $currentStackFolderID : '');?>
                 <div class="form-group">
-                    <?=Loader::helper("form")->label('stackName', t('Stack Name'))?>
-                    <?=Loader::helper('form')->text('stackName')?>
+                    <?=$form->label('stackName', t('Stack Name'))?>
+                    <?=$form->text('stackName')?>
                 </div>
             </form>
             <div class="dialog-buttons">
@@ -364,10 +428,11 @@ $(function() {
         </div>
         <div id="ccm-dialog-add-folder" class="ccm-ui">
             <form method="post" class="form-stacked" style="padding-left: 0px" action="<?=$view->action('add_folder')?>">
-                <?=Loader::helper("validation/token")->output('add_folder')?>
+                <?=$token->output('add_folder')?>
+                <?=$form->hidden('stackFolderID', isset($currentStackFolderID) ? $currentStackFolderID : '');?>
                 <div class="form-group">
-                    <?=Loader::helper("form")->label('folderName', t('Folder Name'))?>
-                    <?=Loader::helper('form')->text('folderName')?>
+                    <?=$form->label('folderName', t('Folder Name'))?>
+                    <?=$form->text('folderName')?>
                 </div>
             </form>
             <div class="dialog-buttons">
@@ -426,21 +491,5 @@ $(function() {
     ?>
 });
     </script>
-    <?php
-}
-
-if (isset($breadcrumb)) {
-    ?>
-    <div class="ccm-search-results-breadcrumb">
-        <ol class="breadcrumb">
-            <?php
-            foreach ($breadcrumb as $value) {
-               ?>
-               <li<?php if ($value['active']) { ?> class="active"<?php } ?>><a href="<?=$value['url']?>"><?=$value['name']?></a></li>
-               <?php
-            }
-            ?>
-        </ol>
-    </div>
     <?php
 }
