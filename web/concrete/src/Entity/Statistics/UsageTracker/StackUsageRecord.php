@@ -6,7 +6,12 @@ namespace Concrete\Core\Entity\Statistics\UsageTracker;
  * Class StackUsageRecord
  * @package Concrete\Core\Entity\Statistics\UsageTracker
  * @Entity
- * @Table(name="StackUsageRecord")
+ * @Table(name="StackUsageRecord",
+ *   indexes={
+ *     @Index(name="block", columns={"block_id"}),
+ *     @Index(name="collection_version", columns={"collection_id","collection_version_id"})
+ *   }
+ * )
  */
 class StackUsageRecord
 {
