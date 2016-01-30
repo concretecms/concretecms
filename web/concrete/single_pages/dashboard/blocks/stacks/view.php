@@ -60,6 +60,43 @@ if ($controller->getTask() == 'view_details' && isset($stack) && $stack) {
         $isGlobalArea = true;
     }
 
+    if (isset($breadcrumb)) {
+        ?>
+        <div class="ccm-search-results-breadcrumb">
+            <ol class="breadcrumb">
+                <?php
+                foreach ($breadcrumb as $value) {
+                    ?><li class="<?=$value['active'] ? 'active"' : ''?>"><?php
+                    if (isset($value['children'])) {
+                        ?><span class="dropdown">
+                            <button type="button" class="btn btn-default btn-xs" data-toggle="dropdown">
+                                <?=$value['name']?>
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <?php
+                                foreach ($value['children'] as $child) {
+                                    ?><li><a href="<?=h($child['url'])?>"><?=$child['name']?></a></li><?php
+                                }
+                                ?>
+                            </ul>
+                        </span><?php
+                    } else {
+                        if (!$value['active']) {
+                            ?><a href="<?=h($value['url'])?>"><?php
+                        }
+                        echo $value['name'];
+                        if (!$value['active']) {
+                            ?></a><?php
+                        }
+                    }
+                    ?></li><?php
+                }
+                ?>
+            </ol>
+        </div>
+        <?php
+    }
     ?>
     <div class="ccm-dashboard-header-buttons">
         <?php if ($isGlobalArea) { ?>
@@ -248,7 +285,7 @@ $(function() {
                     if (!$value['active']) {
                         ?><a href="<?=$value['url']?>"><?php
                     }
-                    echo h($value['name']);
+                    echo $value['name'];
                     if (!$value['active']) {
                         ?></a><?php
                     }
