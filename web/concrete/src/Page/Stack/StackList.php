@@ -18,6 +18,7 @@ class StackList extends PageList
         $this->query->leftJoin('p', 'Stacks', 's', 's.cID = p.cID');
         $this->ignorePermissions();
         $this->filterByPath(STACKS_PAGE_PATH);
+        $this->filter(false, 'stNeutralStack is null');
         $this->includeSystemPages();
         $this->sortByName();
     }
