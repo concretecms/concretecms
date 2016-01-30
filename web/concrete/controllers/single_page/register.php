@@ -1,20 +1,22 @@
 <?
 namespace Concrete\Controller\SinglePage;
-use \PageController;
+
+use PageController;
 use Config;
-use Loader;
+use Core;
 use User;
 use UserInfo;
 use UserAttributeKey;
 
-class Register extends PageController {
-
+class Register extends PageController
+{
 	public $helpers = array('form', 'html');
 
 	protected $displayUserName = true;
 
-	public function on_start() {
-		if(!in_array(Config::get('concrete.user.registration.type'), array('validate_email', 'enabled', 'manual_approve'))) {
+	public function on_start()
+    {
+		if (!in_array(Config::get('concrete.user.registration.type'), array('validate_email', 'enabled', 'manual_approve'))) {
             $this->replace('/page_not_found');
  		}
 		$u = new User();
@@ -23,23 +25,24 @@ class Register extends PageController {
 		$this->requireAsset('css', 'core/frontend/captcha');
 	}
 
-	public function forward($cID = 0) {
-		$this->set('rcID', Loader::helper('security')->sanitizeInt($cID));
+	public function forward($cID = 0)
+    {
+		$this->set('rcID', Core::make('helper/security')->sanitizeInt($cID));
 	}
 
-	public function do_register() {
-		$e = Loader::helper('validation/error');
-		$ip = Loader::helper('validation/ip');
-		$txt = Loader::helper('text');
-		$vals = Loader::helper('validation/strings');
-		$valc = Loader::helper('concrete/validation');
-		$token = \Core::make('Concrete\Core\Validation\CSRF\Token');
+	public function do_register()
+    {
+		$e = Core::make('helper/validation/error');
+		$ip = Core::make('helper/validation/ip');
+		$vals = Core::make('helper/validation/strings');
+		$valc = Core::make('helper/concrete/validation');
+		$token = Core::make('Concrete\Core\Validation\CSRF\Token');
 
 		if ($token->validate('register.do_register')) {
 
-			$username = $_POST['uName'];
-			$password = $_POST['uPassword'];
-			$passwordConfirm = $_POST['uPasswordConfirm'];
+			$username = $this->post('uName');
+			$password = $this->post('uPassword');
+			$passwordConfirm = $this->post('uPasswordConfirm');
 
 			// clean the username
 			$username = trim($username);
@@ -50,16 +53,16 @@ class Register extends PageController {
 			}
 
 			if (Config::get('concrete.user.registration.captcha')) {
-				$captcha = Loader::helper('validation/captcha');
+				$captcha = Core::make('helper/validation/captcha');
 				if (!$captcha->check()) {
 					$e->add(t("Incorrect image validation code. Please check the image and re-enter the letters or numbers as necessary."));
 				}
 			}
 
-			if (!$vals->email($_POST['uEmail'])) {
+			if (!$vals->email($this->post('uEmail'))) {
 				$e->add(t('Invalid email address provided.'));
-			} elseif (!$valc->isUniqueEmail($_POST['uEmail'])) {
-				$e->add(t("The email address %s is already in use. Please choose another.", $_POST['uEmail']));
+			} elseif (!$valc->isUniqueEmail($this->post('uEmail'))) {
+				$e->add(t("The email address %s is already in use. Please choose another.", $this->post('uEmail')));
 			}
 
 			if ($this->displayUserName) {
@@ -119,19 +122,19 @@ class Register extends PageController {
 		if (!$e->has()) {
 
 			// do the registration
-			$data = $_POST;
+			$data = $this->post();
 			$data['uName'] = $username;
 			$data['uPassword'] = $password;
 			$data['uPasswordConfirm'] = $passwordConfirm;
 
-			$process = UserInfo::register($data);
+			$process = Core::make('user.registration')->createFromPublicRegistration($data);
 			if (is_object($process)) {
 
                 $process->saveUserAttributesForm($aks);
 
 				if (Config::get('concrete.user.registration.notification')) { //do we notify someone if a new user is added?
-					$mh = Loader::helper('mail');
-					if(Config::get('concrete.user.registration.notification_email')) {
+					$mh = Core::make('helper/mail');
+					if (Config::get('concrete.user.registration.notification_email')) {
 						$mh->to(Config::get('concrete.user.registration.notification_email'));
 					} else {
 						$adminUser = UserInfo::getByID(USER_SUPER_ID);
@@ -146,7 +149,7 @@ class Register extends PageController {
 					$mh->addParameter('uEmail', $process->getUserEmail());
 					$attribs = UserAttributeKey::getRegistrationList();
 					$attribValues = array();
-					foreach($attribs as $ak) {
+					foreach ($attribs as $ak) {
 						$attribValues[] = $ak->getAttributeKeyDisplayName('text') . ': ' . $process->getAttribute($ak->getAttributeKeyHandle(), 'display');
 					}
 					$mh->addParameter('attribs', $attribValues);
@@ -160,7 +163,7 @@ class Register extends PageController {
 							$mh->from($adminUser->getUserEmail(),  t('Website Registration Notification'));
 						}
 					}
-					if(Config::get('concrete.user.registration.type') == 'manual_approve') {
+					if (Config::get('concrete.user.registration.type') == 'manual_approve') {
 						$mh->load('user_register_approval_required');
 					} else {
 						$mh->load('user_register');
@@ -170,23 +173,25 @@ class Register extends PageController {
 
 				// now we log the user in
 				if (Config::get('concrete.user.registration.email_registration')) {
-					$u = new User($_POST['uEmail'], $_POST['uPassword']);
+					$u = new User($this->post('uEmail'), $this->post('uPassword'));
 				} else {
-					$u = new User($_POST['uName'], $_POST['uPassword']);
+					$u = new User($this->post('uName'), $this->post('uPassword'));
 				}
 				// if this is successful, uID is loaded into session for this user
 
 				$rcID = $this->post('rcID');
-				$nh = Loader::helper('validation/numbers');
+				$nh = Core::make('helper/validation/numbers');
 				if (!$nh->integer($rcID)) {
 					$rcID = 0;
 				}
+
+				$redirectMethod = '';
 
 				// now we check whether we need to validate this user's email address
 				if (Config::get('concrete.user.registration.validate_email')) {
                     $uHash = $process->setupValidation();
 
-                    $mh = Loader::helper('mail');
+                    $mh = Core::make('helper/mail');
                     $fromEmail = (string) Config::get('concrete.email.validate_registration.address');
                     if (strpos($fromEmail, '@')) {
                         $fromName = (string) Config::get('concrete.email.validate_registration.name');
@@ -195,82 +200,86 @@ class Register extends PageController {
                         }
                         $mh->from($fromEmail,  $fromName);
                     }
-                    $mh->addParameter('uEmail', $_POST['uEmail']);
+                    $mh->addParameter('uEmail', $this->post('uEmail'));
                     $mh->addParameter('uHash', $uHash);
                     $mh->addParameter('site', Config::get('concrete.site'));
-                    $mh->to($_POST['uEmail']);
+                    $mh->to($this->post('uEmail'));
                     $mh->load('validate_user_email');
                     $mh->sendMail();
 
                     //$this->redirect('/register', 'register_success_validate', $rcID);
-                    $redirectMethod='register_success_validate';
+                    $redirectMethod = 'register_success_validate';
                     $u->logout();
 
-				} else if(Config::get('concrete.user.registration.approval')) {
+				} elseif (Config::get('concrete.user.registration.approval')) {
 					$ui = UserInfo::getByID($u->getUserID());
 					$ui->deactivate();
 					// Email to the user when he/she registered but needs approval
-					$mh = Loader::helper('mail');
-					$mh->addParameter('uEmail', $_POST['uEmail']);
+					$mh = Core::make('helper/mail');
+					$mh->addParameter('uEmail', $this->post('uEmail'));
 					$mh->addParameter('site', Config::get('concrete.site'));
-					$mh->to($_POST['uEmail']);
+					$mh->to($this->post('uEmail'));
 					$mh->load('user_register_approval_required_to_user');
 					$mh->sendMail();
 
 					//$this->redirect('/register', 'register_pending', $rcID);
-					$redirectMethod='register_pending';
+					$redirectMethod = 'register_pending';
 					$this->set('message', $this->getRegisterPendingMsg());
 					$u->logout();
 				}
 
 				if (!$u->isError()) {
 					//$this->redirect('/register', 'register_success', $rcID);
-					if(!$redirectMethod){
-						$redirectMethod='register_success';
+					if (!$redirectMethod) {
+						$redirectMethod = 'register_success';
 					}
 				}
 
-
-				if($_REQUEST['format']!='JSON')
+				if ($_REQUEST['format'] != 'JSON') {
 					$this->redirect('/register', $redirectMethod, $rcID);
+				}
 			}
 		} else {
 			$this->set('error', $e);
 		}
 	}
 
-	public function register_success_validate($rcID = 0) {
+	public function register_success_validate($rcID = 0)
+    {
 		$this->set('rcID', $rcID);
 		$this->set('registerSuccess', 'validate');
 		$this->set('successMsg', $this->getRegisterSuccessValidateMsgs() );
 	}
 
-	public function register_success($rcID = 0) {
+	public function register_success($rcID = 0)
+    {
 		$this->set('rcID', $rcID);
 		$this->set('registerSuccess', 'registered');
 		$this->set('successMsg', $this->getRegisterSuccessMsg() );
 	}
 
-	public function register_pending($rcID = 0) {
+	public function register_pending($rcID = 0)
+    {
 		$this->set('rcID', $rcID);
 		$this->set('registerSuccess', 'pending');
 		$this->set('successMsg', $this->getRegisterPendingMsg() );
 	}
 
-	public function getRegisterSuccessMsg(){
+	public function getRegisterSuccessMsg()
+    {
 		return t('Your account has been created, and you are now logged in.');
 	}
 
-	public function getRegisterSuccessValidateMsgs(){
-		$msgs=array();
-		$msgs[]= t('You are registered but you need to validate your email address. Some or all functionality on this site will be limited until you do so.');
-		$msgs[]= t('An email has been sent to your email address. Click on the URL contained in the email to validate your email address.');
+	public function getRegisterSuccessValidateMsgs()
+    {
+		$msgs = array();
+		$msgs[] = t('You are registered but you need to validate your email address. Some or all functionality on this site will be limited until you do so.');
+		$msgs[] = t('An email has been sent to your email address. Click on the URL contained in the email to validate your email address.');
 		return $msgs;
 	}
 
-	public function getRegisterPendingMsg(){
+	public function getRegisterPendingMsg()
+    {
 		return t('You are registered but a site administrator must review your account, you will not be able to login until your account has been approved.');
 	}
 }
-
-?>
