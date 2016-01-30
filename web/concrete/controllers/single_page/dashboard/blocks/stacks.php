@@ -104,7 +104,11 @@ class Stacks extends DashboardPageController
                 $result[$section->getLocale()] = $section;
             }
             uasort($result, function (Section $a, Section $b) {
-                return strcasecmp($a->getLanguageText(), $a->getLanguageText());
+                $r = strcasecmp($a->getLanguageText(), $a->getLanguageText());
+                if ($r === 0) {
+                    $r = strcasecmp($a->getLocale(), $b->getLocale());
+                }
+                return $r;
             });
         }
 
@@ -115,28 +119,40 @@ class Stacks extends DashboardPageController
     {
         $s = Stack::getByID($cID);
         if (is_object($s)) {
+            if ($s->isNeutralStack()) {
+                $neutralStack = $s;
+                $stackToEdit = $s;
+            } else {
+                $neutralStack = $s->getNeutralStack();
+                $stackToEdit = $s;
+            }
             $sections = $this->getMultilingualSections();
-            $breadcrumb = $this->getBreadcrumb($s);
+            $breadcrumb = $this->getBreadcrumb($neutralStack);
             if (!empty($sections)) {
                 if (!isset($sections[$locale])) {
                     $locale = '';
                 }
+                if ($locale !== '') {
+                    $this->set('localeCode', $locale);
+                    $this->set('localeName', $sections[$locale]->getLanguageText());
+                    $stackToEdit = $neutralStack->getLocalizedStack($sections[$locale]);
+                }
                 $localeCrumbs = array();
                 $localeCrumbs[] = array(
-                    'id' => $s->getCollectionID(),
+                    'id' => $neutralStack->getCollectionID(),
                     'active' => $locale === '',
                     'name' => h(tc('Locale', 'default')),
-                    'url' => \URL::to('/dashboard/blocks/stacks', 'view_details', $s->getCollectionID()),
+                    'url' => \URL::to('/dashboard/blocks/stacks', 'view_details', $neutralStack->getCollectionID()),
                 );
                 $mif = $this->app->make('multilingual/interface/flag');
                 /* @var \Concrete\Core\Multilingual\Service\UserInterface\Flag $mif */
                 foreach ($sections as $sectionLocale => $section) {
                     /* @var Section $section */
                     $localeCrumbs[] = array(
-                        'id' => $s->getCollectionID().'@'.$sectionLocale,
+                        'id' => $neutralStack->getCollectionID().'@'.$sectionLocale,
                         'active' => $locale === $sectionLocale,
                         'name' => $mif->getSectionFlagIcon($section).' '.h($section->getLanguageText()).' <span class="text-muted">'.h($sectionLocale).'</span>',
-                        'url' => \URL::to('/dashboard/blocks/stacks', 'view_details', $s->getCollectionID(), '_', $sectionLocale),
+                        'url' => \URL::to('/dashboard/blocks/stacks', 'view_details', $neutralStack->getCollectionID(), '_', $sectionLocale),
                     );
                 }
                 foreach ($localeCrumbs as $localeCrumb) {
@@ -149,24 +165,29 @@ class Stacks extends DashboardPageController
                     }
                 }
             }
-            $blocks = $s->getBlocks('Main');
-            $view = View::getInstance();
-            foreach ($blocks as $b1) {
-                $btc = $b1->getInstance();
-                // now we inject any custom template CSS and JavaScript into the header
-                if ($btc instanceof \Concrete\Core\Block\BlockController) {
-                    $btc->outputAutoHeaderItems();
+            if ($stackToEdit !== null) {
+                $blocks = $stackToEdit->getBlocks('Main');
+                $view = View::getInstance();
+                foreach ($blocks as $b1) {
+                    $btc = $b1->getInstance();
+                    // now we inject any custom template CSS and JavaScript into the header
+                    if ($btc instanceof \Concrete\Core\Block\BlockController) {
+                        $btc->outputAutoHeaderItems();
+                    }
+                    $btc->runTask('on_page_view', array($view));
                 }
-                $btc->runTask('on_page_view', array($view));
+                $this->addHeaderItem($stackToEdit->outputCustomStyleHeaderItems(true));
+                $this->set('blocks', $blocks);
             }
-            $this->addHeaderItem($s->outputCustomStyleHeaderItems(true));
-
-            $this->set('stack', $s);
+            $this->set('neutralStack', $neutralStack);
+            $this->set('stackToEdit', $stackToEdit);
             $this->set('breadcrumb', $breadcrumb);
-            $this->set('blocks', $blocks);
             switch ($msg) {
                 case 'stack_added':
                     $this->set('message', t('Stack added successfully.'));
+                    break;
+                case 'localized_stack_added':
+                    $this->set('message', t('Localized version of stack added successfully.'));
                     break;
                 case 'stack_approved':
                     $this->set('message', t('Stack approved successfully'));
@@ -268,6 +289,30 @@ class Stacks extends DashboardPageController
             }
         } else {
             $this->error->add($this->app->make('helper/validation/token')->getErrorMessage());
+        }
+    }
+
+    public function add_localized_stack()
+    {
+        $token = $this->app->make('helper/validation/token');
+        /* @var \Concrete\Core\Validation\CSRF\Token $token */
+        if ($token->validate('add_localized_stack')) {
+            $neutralStack = Stack::getByID($this->post('stackID'));
+            if (!$neutralStack) {
+                $this->error->add(t('Unable to find the specified stack'));
+            }
+            $section = Section::getByLocale($this->post('locale'));
+            if (!$section) {
+                $this->error->add(t('Unable to find the specified language'));
+            }
+            if (!$this->error->has()) {
+                $localizedStack = $neutralStack->addLocalizedStack($section);
+                $this->redirect('/dashboard/blocks/stacks', 'view_details', $neutralStack->getCollectionID(), 'localized_stack_added', $section->getLocale());
+            } else {
+                $this->error->add(t("You must give your stack a name."));
+            }
+        } else {
+            $this->error->add($token->getErrorMessage());
         }
     }
 

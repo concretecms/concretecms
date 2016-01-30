@@ -3,6 +3,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 use Concrete\Core\Workflow\Progress\PageProgress as PageWorkflowProgress;
 use Concrete\Core\Block\View\BlockView;
+use Concrete\Core\Page\Stack\Stack;
 
 /* @var Concrete\Core\Html\Service\Html $html */
 /* @var Concrete\Core\Application\Service\UserInterface $interface */
@@ -15,168 +16,185 @@ use Concrete\Core\Block\View\BlockView;
 /* @var Concrete\Core\Page\Page $c */
 
 
-if ($controller->getTask() == 'view_details' && isset($stack) && $stack) {
-    $cpc = new Permissions($stack);
-    $showApprovalButton = false;
-    $hasPendingPageApproval = false;
-    $workflowList = PageWorkflowProgress::getList($stack);
-    foreach ($workflowList as $wl) {
-        $wr = $wl->getWorkflowRequestObject();
-        $wrk = $wr->getWorkflowRequestPermissionKeyObject();
-        if ($wrk->getPermissionKeyHandle() == 'approve_page_versions') {
-            $hasPendingPageApproval = true;
-            break;
-        }
-    }
-
-    if (!$hasPendingPageApproval) {
-        $vo = $stack->getVersionObject();
-        if ($cpc->canApprovePageVersions()) {
-            $publishTitle = t('Approve Changes');
-            $pk = PermissionKey::getByHandle('approve_page_versions');
-            $pk->setPermissionObject($stack);
-            $pa = $pk->getPermissionAccessObject();
-
-            $workflows = array();
-            $canApproveWorkflow = true;
-            if (is_object($pa)) {
-                $workflows = $pa->getWorkflows();
-            }
-            foreach ($workflows as $wf) {
-                if (!$wf->canApproveWorkflow()) {
-                    $canApproveWorkflow = false;
-                }
-            }
-
-            if (count($workflows > 0) && !$canApproveWorkflow) {
-                $publishTitle = t('Submit to Workflow');
-            }
-            $showApprovalButton = true;
-        }
-    }
-
-    $isGlobalArea = false;
-    if ($stack->getStackType() == Stack::ST_TYPE_GLOBAL_AREA) {
-        $isGlobalArea = true;
-    }
-
-    if (isset($breadcrumb)) {
-        ?>
-        <div class="ccm-search-results-breadcrumb">
-            <ol class="breadcrumb">
-                <?php
-                foreach ($breadcrumb as $value) {
-                    ?><li class="<?=$value['active'] ? 'active"' : ''?>"><?php
-                    if (isset($value['children'])) {
-                        ?><span class="dropdown">
-                            <button type="button" class="btn btn-default btn-xs" data-toggle="dropdown">
-                                <?=$value['name']?>
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" role="menu">
-                                <?php
-                                foreach ($value['children'] as $child) {
-                                    ?><li><a href="<?=h($child['url'])?>"><?=$child['name']?></a></li><?php
-                                }
-                                ?>
-                            </ul>
-                        </span><?php
-                    } else {
-                        if (!$value['active']) {
-                            ?><a href="<?=h($value['url'])?>"><?php
-                        }
-                        echo $value['name'];
-                        if (!$value['active']) {
-                            ?></a><?php
-                        }
+if ($controller->getTask() == 'view_details' && isset($neutralStack) && $neutralStack) {
+    /* @var Stack $neutralStack */
+    /* @var Stack|null $stackToEdit */
+    ?>
+    <div class="ccm-search-results-breadcrumb">
+        <ol class="breadcrumb">
+            <?php
+            foreach ($breadcrumb as $value) {
+                ?><li class="<?=$value['active'] ? 'active"' : ''?>"><?php
+                if (isset($value['children'])) {
+                    ?><span class="dropdown">
+                        <button type="button" class="btn btn-default btn-xs" data-toggle="dropdown">
+                            <?=$value['name']?>
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <?php
+                            foreach ($value['children'] as $child) {
+                                ?><li><a href="<?=h($child['url'])?>"><?=$child['name']?></a></li><?php
+                            }
+                            ?>
+                        </ul>
+                    </span><?php
+                } else {
+                    if (!$value['active']) {
+                        ?><a href="<?=h($value['url'])?>"><?php
                     }
-                    ?></li><?php
+                    echo $value['name'];
+                    if (!$value['active']) {
+                        ?></a><?php
+                    }
                 }
-                ?>
-            </ol>
-        </div>
-        <?php
+                ?></li><?php
+            }
+            ?>
+        </ol>
+    </div>
+    <?php
+    $isGlobalArea = false;
+    if ($neutralStack->getStackType() == Stack::ST_TYPE_GLOBAL_AREA) {
+        $isGlobalArea = true;
     }
     ?>
     <div class="ccm-dashboard-header-buttons">
         <?php if ($isGlobalArea) { ?>
             <a href="<?=URL::to('/dashboard/blocks/stacks/view_global_areas')?>" class="btn btn-default"><i class="fa fa-angle-double-left"></i> <?=t("Back to Global Areas")?></a>
         <?php } else { ?>
-            <a href="<?=$view->action('view_details', $stack->getCollectionParentID())?>" class="btn btn-default"><i class="fa fa-angle-double-left"></i> <?=t("Back to Stacks")?></a>
+            <a href="<?=$view->action('view_details', $neutralStack->getCollectionParentID())?>" class="btn btn-default"><i class="fa fa-angle-double-left"></i> <?=t("Back to Stacks")?></a>
         <?php } ?>
     </div>
-
-    <p class="lead"><?=h($stack->getCollectionName())?></p>
-
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <ul class="nav navbar-nav">
-                <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#"><?=t('Add Block')?></a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dialog-launch" dialog-modal="false" dialog-width="550" dialog-height="380" dialog-title="<?=t('Add Block')?>" href="<?=URL::to('/ccm/system/dialogs/page/add_block_list')?>?cID=<?=$stack->getCollectionID()?>&arHandle=<?=STACKS_AREA_NAME?>"><?=t('Add Block')?></a></li>
-                        <li><a class="dialog-launch" dialog-modal="false" dialog-width="550" dialog-height="380" dialog-title="<?=t('Paste From Clipboard')?>" href="<?=URL::to('/ccm/system/dialogs/page/clipboard')?>?cID=<?=$stack->getCollectionID()?>&arHandle=<?=STACKS_AREA_NAME?>"><?=t('Paste From Clipboard')?></a></li>
-                    </ul>
-                </li>
-                <li><a dialog-width="640" dialog-height="340" class="dialog-launch" id="stackVersions" dialog-title="<?=t('Version History')?>" href="<?=URL::to('/ccm/system/panels/page/versions')?>?cID=<?=$stack->getCollectionID()?>"><?=t('Version History')?></a></li>
-                <?php if ($cpc->canEditPageProperties() && $stack->getStackType() != Concrete\Core\Page\Stack\Stack::ST_TYPE_GLOBAL_AREA) { ?>
-                    <li><a href="<?=$view->action('rename', $stack->getCollectionID())?>"><?=t('Rename')?></a></li>
-                <?php } ?>
-                <?php if ($cpc->canEditPagePermissions() && Config::get('concrete.permissions.model') == 'advanced') { ?>
-                    <li><a dialog-width="580" class="dialog-launch" dialog-append-buttons="true" dialog-height="420" dialog-title="<?=t('Stack Permissions')?>" id="stackPermissions" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup?cID=<?=$stack->getCollectionID()?>&arHandle=<?=STACKS_AREA_NAME?>&atask=groups"><?=t('Permissions')?></a></li>
-                <?php } ?>
-                <?php if ($cpc->canMoveOrCopyPage() && $stack->getStackType() != Concrete\Core\Page\Stack\Stack::ST_TYPE_GLOBAL_AREA) { ?>
-                    <li><a href="<?=$view->action('duplicate', $stack->getCollectionID())?>" style="margin-right: 4px;"><?=t('Duplicate Stack')?></a></li>
-                <?php } ?>
-                <?php if ($cpc->canDeletePage()) { ?>
-                    <?php if ($stack->getStackType() == Concrete\Core\Page\Stack\Stack::ST_TYPE_GLOBAL_AREA) { ?>
-                        <li><a href="javascript:void(0)" data-dialog="delete-stack"><span class="text-danger"><?=t('Clear Global Area')?></span></a></li>
-                    <?php } else { ?>
-                        <li><a href="javascript:void(0)" data-dialog="delete-stack"><span class="text-danger"><?=t('Delete Stack')?></span></a></li>
-                    <?php } ?>
-                <?php } ?>
-            </ul>
-            <?php if ($showApprovalButton) { ?>
-                <ul class="nav navbar-nav navbar-right">
-                    <li id="ccm-stack-list-approve-button" class="navbar-form" <?php if ($vo->isApproved()) { ?> style="display: none;" <?php } ?>>
-                        <button class="btn btn-success" onclick="window.location.href='<?=URL::to('/dashboard/blocks/stacks', 'approve_stack', $stack->getCollectionID(), $token->generate('approve_stack'))?>'"><?=$publishTitle?></button>
-                    </li>
-                </ul>
-            <?php } ?>
-        </div>
-    </nav>
-
-    <div id="ccm-stack-container">
+    <p class="lead"><?=h($neutralStack->getCollectionName())?></p>
+	<?php        
+    if ($stackToEdit === null) {
+        ?>
+        <form method="post" action="<?=$view->action('add_localized_stack')?>">
+			<?=$token->output('add_localized_stack')?>
+            <?=$form->hidden('stackID', $neutralStack->getCollectionID());?>
+            <?=$form->hidden('locale', $localeCode);?>
+            <div class="alert alert-info">
+                <p>
+                	<?=t(/*i18n: %1$s is a language name, %2$s is a language code*/'This stack is not defined for %1$s (%2$s): the default version will be used.', $localeName, $localeCode); ?>
+                </p>
+            	<p>
+            		<button class="btn btn-primary" type="submit"><?=t('Create localized stack version')?></button><br />
+	            </p>
+            </div>
+        </form>
         <?php
-        $a = Area::get($stack, STACKS_AREA_NAME);
-        $a->forceControlsToDisplay();
-        View::element('block_area_header', array('a' => $a));
-        foreach ($blocks as $b) {
-            $bv = new BlockView($b);
-            $bv->setAreaObject($a);
-            $p = new Permissions($b);
-            if ($p->canViewBlock()) {
-                $bv->render('view');
+    } else {
+        $cpc = new Permissions($stackToEdit);
+        $showApprovalButton = false;
+        $hasPendingPageApproval = false;
+        $workflowList = PageWorkflowProgress::getList($stackToEdit);
+        foreach ($workflowList as $wl) {
+            $wr = $wl->getWorkflowRequestObject();
+            $wrk = $wr->getWorkflowRequestPermissionKeyObject();
+            if ($wrk->getPermissionKeyHandle() == 'approve_page_versions') {
+                $hasPendingPageApproval = true;
+                break;
+            }
+        }
+
+        if (!$hasPendingPageApproval) {
+            $vo = $stackToEdit->getVersionObject();
+            if ($cpc->canApprovePageVersions()) {
+                $publishTitle = t('Approve Changes');
+                $pk = PermissionKey::getByHandle('approve_page_versions');
+                $pk->setPermissionObject($stackToEdit);
+                $pa = $pk->getPermissionAccessObject();
+    
+                $workflows = array();
+                $canApproveWorkflow = true;
+                if (is_object($pa)) {
+                    $workflows = $pa->getWorkflows();
+                }
+                foreach ($workflows as $wf) {
+                    if (!$wf->canApproveWorkflow()) {
+                        $canApproveWorkflow = false;
+                    }
+                }
+    
+                if (count($workflows > 0) && !$canApproveWorkflow) {
+                    $publishTitle = t('Submit to Workflow');
+                }
+                $showApprovalButton = true;
             }
         }
         ?>
-    </div>
-
-    <div style="display: none">
-        <div id="ccm-dialog-delete-stack" class="ccm-ui">
-            <form method="post" class="form-stacked" style="padding-left: 0px" action="<?=$view->action('delete_stack')?>">
-                <?=$token->output('delete_stack')?>
-                <input type="hidden" name="stackID" value="<?=$stack->getCollectionID()?>" />
-                <p><?=t('Are you sure? This action cannot be undone.')?></p>
-            </form>
-            <div class="dialog-buttons">
-                <button class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
-                <button class="btn btn-danger pull-right" onclick="$('#ccm-dialog-delete-stack form').submit()"><?=t('Delete Stack')?></button>
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <ul class="nav navbar-nav">
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><?=t('Add Block')?></a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dialog-launch" dialog-modal="false" dialog-width="550" dialog-height="380" dialog-title="<?=t('Add Block')?>" href="<?=URL::to('/ccm/system/dialogs/page/add_block_list')?>?cID=<?=$stackToEdit->getCollectionID()?>&arHandle=<?=STACKS_AREA_NAME?>"><?=t('Add Block')?></a></li>
+                            <li><a class="dialog-launch" dialog-modal="false" dialog-width="550" dialog-height="380" dialog-title="<?=t('Paste From Clipboard')?>" href="<?=URL::to('/ccm/system/dialogs/page/clipboard')?>?cID=<?=$stackToEdit->getCollectionID()?>&arHandle=<?=STACKS_AREA_NAME?>"><?=t('Paste From Clipboard')?></a></li>
+                        </ul>
+                    </li>
+                    <li><a dialog-width="640" dialog-height="340" class="dialog-launch" id="stackVersions" dialog-title="<?=t('Version History')?>" href="<?=URL::to('/ccm/system/panels/page/versions')?>?cID=<?=$stackToEdit->getCollectionID()?>"><?=t('Version History')?></a></li>
+                    <?php if ($cpc->canEditPageProperties() && !$isGlobalArea) { ?>
+                        <li><a href="<?=$view->action('rename', $stackToEdit->getCollectionID())?>"><?=t('Rename')?></a></li>
+                    <?php } ?>
+                    <?php if ($cpc->canEditPagePermissions() && Config::get('concrete.permissions.model') == 'advanced') { ?>
+                        <li><a dialog-width="580" class="dialog-launch" dialog-append-buttons="true" dialog-height="420" dialog-title="<?=t('Stack Permissions')?>" id="stackPermissions" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup?cID=<?=$stackToEdit->getCollectionID()?>&arHandle=<?=STACKS_AREA_NAME?>&atask=groups"><?=t('Permissions')?></a></li>
+                    <?php } ?>
+                    <?php if ($cpc->canMoveOrCopyPage() && !$isGlobalArea) { ?>
+                        <li><a href="<?=$view->action('duplicate', $stackToEdit->getCollectionID())?>" style="margin-right: 4px;"><?=t('Duplicate Stack')?></a></li>
+                    <?php } ?>
+                    <?php if ($cpc->canDeletePage()) { ?>
+                        <?php if ($isGlobalArea) { ?>
+                            <li><a href="javascript:void(0)" data-dialog="delete-stack"><span class="text-danger"><?=t('Clear Global Area')?></span></a></li>
+                        <?php } elseif ($stackToEdit !== $neutralStack) { ?>
+                            <li><a href="javascript:void(0)" data-dialog="delete-stack"><span class="text-danger"><?=t('Delete Localized Stack')?></span></a></li>
+                        <?php } else { ?>
+                            <li><a href="javascript:void(0)" data-dialog="delete-stack"><span class="text-danger"><?=t('Delete Stack')?></span></a></li>
+                        <?php } ?>
+                    <?php } ?>
+                </ul>
+                <?php if ($showApprovalButton) { ?>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li id="ccm-stack-list-approve-button" class="navbar-form" <?php if ($vo->isApproved()) { ?> style="display: none;" <?php } ?>>
+                            <button class="btn btn-success" onclick="window.location.href='<?=URL::to('/dashboard/blocks/stacks', 'approve_stack', $stackToEdit->getCollectionID(), $token->generate('approve_stack'))?>'"><?=$publishTitle?></button>
+                        </li>
+                    </ul>
+                <?php } ?>
+            </div>
+        </nav>
+    
+        <div id="ccm-stack-container">
+            <?php
+            $a = Area::get($stackToEdit, STACKS_AREA_NAME);
+            $a->forceControlsToDisplay();
+            View::element('block_area_header', array('a' => $a));
+            foreach ($blocks as $b) {
+                $bv = new BlockView($b);
+                $bv->setAreaObject($a);
+                $p = new Permissions($b);
+                if ($p->canViewBlock()) {
+                    $bv->render('view');
+                }
+            }
+            ?>
+        </div>
+    
+        <div style="display: none">
+            <div id="ccm-dialog-delete-stack" class="ccm-ui">
+                <form method="post" class="form-stacked" style="padding-left: 0px" action="<?=$view->action('delete_stack')?>">
+                    <?=$token->output('delete_stack')?>
+                    <input type="hidden" name="stackID" value="<?=$stackToEdit->getCollectionID()?>" />
+                    <p><?=t('Are you sure? This action cannot be undone.')?></p>
+                </form>
+                <div class="dialog-buttons">
+                    <button class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
+                    <button class="btn btn-danger pull-right" onclick="$('#ccm-dialog-delete-stack form').submit()"><?=t('Delete Stack')?></button>
+                </div>
             </div>
         </div>
-    </div>
-
-    <script type="text/javascript">
+    
+        <script type="text/javascript">
 var showApprovalButton = function() {
     $('#ccm-stack-list-approve-button').show().addClass("animated fadeIn");
 };
@@ -230,14 +248,14 @@ $(function() {
             element: '#ccm-dialog-delete-stack',
             modal: true,
             width: 320,
-            title: '<?=t("Delete Stack")?>',
+            title: <?=json_encode(t("Delete Stack"))?>,
             height: 'auto'
         });
     });
 });
-    </script>
-
-    <?php
+        </script>
+        <?php
+    }
 } elseif ($this->controller->getTask() == 'duplicate') {
     $sv = CollectionVersion::get($stack, 'ACTIVE');
     ?>
@@ -518,7 +536,7 @@ $(function() {
             element: '#ccm-dialog-add-stack',
             modal: true,
             width: 320,
-            title: '<?=t("Add Stack")?>',
+            title: <?=json_encode(t("Add Stack"))?>,
             height: 'auto'
         });
     });
@@ -527,7 +545,7 @@ $(function() {
             element: '#ccm-dialog-add-folder',
             modal: true,
             width: 320,
-            title: '<?=t("Add Folder")?>',
+            title: <?=json_encode(t("Add Folder"))?>,
             height: 'auto'
         });
     });
