@@ -92,10 +92,63 @@ class Stacks extends DashboardPageController
         }
     }*/
 
-    public function view_details($cID, $msg = false)
+    /**
+     * @return Section[]
+     */
+    protected function getMultilingualSections()
+    {
+        $result = array();
+        if ($this->app->make('multilingual/detector')->isEnabled()) {
+            foreach (Section::getList() as $section) {
+                /* @var Section $section */
+                $result[$section->getLocale()] = $section;
+            }
+            uasort($result, function (Section $a, Section $b) {
+                return strcasecmp($a->getLanguageText(), $a->getLanguageText());
+            });
+        }
+
+        return $result;
+    }
+
+    public function view_details($cID, $msg = false, $locale = '')
     {
         $s = Stack::getByID($cID);
         if (is_object($s)) {
+            $sections = $this->getMultilingualSections();
+            $breadcrumb = $this->getBreadcrumb($s);
+            if (!empty($sections)) {
+                if (!isset($sections[$locale])) {
+                    $locale = '';
+                }
+                $localeCrumbs = array();
+                $localeCrumbs[] = array(
+                    'id' => $s->getCollectionID(),
+                    'active' => $locale === '',
+                    'name' => h(tc('Locale', 'default')),
+                    'url' => \URL::to('/dashboard/blocks/stacks', 'view_details', $s->getCollectionID()),
+                );
+                $mif = $this->app->make('multilingual/interface/flag');
+                /* @var \Concrete\Core\Multilingual\Service\UserInterface\Flag $mif */
+                foreach ($sections as $sectionLocale => $section) {
+                    /* @var Section $section */
+                    $localeCrumbs[] = array(
+                        'id' => $s->getCollectionID().'@'.$sectionLocale,
+                        'active' => $locale === $sectionLocale,
+                        'name' => $mif->getSectionFlagIcon($section).' '.h($section->getLanguageText()).' <span class="text-muted">'.h($sectionLocale).'</span>',
+                        'url' => \URL::to('/dashboard/blocks/stacks', 'view_details', $s->getCollectionID(), '_', $sectionLocale),
+                    );
+                }
+                foreach ($localeCrumbs as $localeCrumb) {
+                    if ($localeCrumb['active']) {
+                        $localeCrumb['children'] = array_filter($localeCrumbs, function ($child) {
+                           return !$child['active'];
+                        });
+                        $breadcrumb[] = $localeCrumb;
+                        break;
+                    }
+                }
+            }
             $blocks = $s->getBlocks('Main');
             $view = View::getInstance();
             foreach ($blocks as $b1) {
@@ -109,7 +162,7 @@ class Stacks extends DashboardPageController
             $this->addHeaderItem($s->outputCustomStyleHeaderItems(true));
 
             $this->set('stack', $s);
-            $this->set('breadcrumb', $this->getBreadcrumb($s));
+            $this->set('breadcrumb', $breadcrumb);
             $this->set('blocks', $blocks);
             switch ($msg) {
                 case 'stack_added':

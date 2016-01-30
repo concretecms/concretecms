@@ -447,7 +447,7 @@ div.ccm-search-results-breadcrumb {
     padding: 0px;
     position: relative;
 
-    li a {
+    > li a {
       color: #999;
       text-decoration: none;
 
@@ -456,11 +456,11 @@ div.ccm-search-results-breadcrumb {
       }
     }
 
-    li.active a {
+    > li.active a {
       color: #333;
     }
 
-    li + li:before {
+    > li + li:before {
       content: ">";
       font-size: 11px;
       color: #999;
