@@ -201,6 +201,12 @@ class Stacks extends DashboardPageController
                 case 'rename_saved':
                     $this->set('message', t('Rename request saved. You must complete the approval workflow before the name of the stack will be updated.'));
                     break;
+                case 'stack_deleted':
+                    $this->set('message', t('Stack deleted successfully'));
+                    break;
+                case 'localized_stack_deleted':
+                    $this->set('message', t('Localized version of stack deleted successfully'));
+                    break;
             }
         } else {
             $folder = StackFolder::getByID($cID);
@@ -347,17 +353,21 @@ class Stacks extends DashboardPageController
         $this->view();
     }
 
-    public function stack_deleted()
-    {
-        $this->set('message', t('Stack deleted successfully'));
-        $this->view();
-    }
-
     public function delete_stack()
     {
         if ($this->app->make('helper/validation/token')->validate('delete_stack')) {
             $s = Stack::getByID($_REQUEST['stackID']);
             if (is_object($s)) {
+                $neutralStack = $s->getNeutralStack();
+                $locale = '';
+                if ($neutralStack === null) {
+                    $nextID = $s->getCollectionParentID();
+                    $msg = 'stack_deleted';
+                } else {
+                    $nextID = $neutralStack->getCollectionID();
+                    $msg = 'localized_stack_deleted';
+                    $locale = $s->getMultilingualSection()->getLocale();
+                }
                 $sps = new Permissions($s);
                 if ($sps->canDeletePage()) {
                     $u = new User();
@@ -367,7 +377,7 @@ class Stacks extends DashboardPageController
                     $response = $pkr->trigger();
                     if ($response instanceof \Concrete\Core\Workflow\Progress\Response) {
                         // we only get this response if we have skipped workflows and jumped straight in to an approve() step.
-                        $this->redirect('/dashboard/blocks/stacks', 'stack_deleted');
+                        $this->redirect('/dashboard/blocks/stacks', 'view_details', $nextID, $msg, $locale);
                     } else {
                         $this->redirect('/dashboard/blocks/stacks', 'view_details', $s->cID, 'delete_saved');
                     }
