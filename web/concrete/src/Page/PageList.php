@@ -183,7 +183,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     /**
      * @param $queryRow
      *
-     * @return \Concrete\Core\File\File
+     * @return \Concrete\Core\Page\Page
      */
     public function getResult($queryRow)
     {
