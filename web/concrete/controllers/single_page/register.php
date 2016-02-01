@@ -40,9 +40,9 @@ class Register extends PageController
         $token = \Core::make('Concrete\Core\Validation\CSRF\Token');
 
         if ($token->validate('register.do_register')) {
-            $username = $_POST['uName'];
-            $password = $_POST['uPassword'];
-            $passwordConfirm = $_POST['uPasswordConfirm'];
+            $username = $this->post('uName');
+            $password = $this->post('uPassword');
+            $passwordConfirm = $this->post('uPasswordConfirm');
 
             // clean the username
             $username = trim($username);
@@ -59,10 +59,10 @@ class Register extends PageController
                 }
             }
 
-            if (!$vals->email($_POST['uEmail'])) {
+            if (!$vals->email($this->post('uEmail'))) {
                 $e->add(t('Invalid email address provided.'));
-            } elseif (!$valc->isUniqueEmail($_POST['uEmail'])) {
-                $e->add(t("The email address %s is already in use. Please choose another.", $_POST['uEmail']));
+            } elseif (!$valc->isUniqueEmail($this->post('uEmail'))) {
+                $e->add(t("The email address %s is already in use. Please choose another.", $this->post('uEmail')));
             }
 
             if ($this->displayUserName) {
@@ -119,7 +119,7 @@ class Register extends PageController
         if (!$e->has()) {
 
             // do the registration
-            $data = $_POST;
+            $data = $this->post();
             $data['uName'] = $username;
             $data['uPassword'] = $password;
             $data['uPasswordConfirm'] = $passwordConfirm;
@@ -169,9 +169,9 @@ class Register extends PageController
 
                 // now we log the user in
                 if (Config::get('concrete.user.registration.email_registration')) {
-                    $u = new User($_POST['uEmail'], $_POST['uPassword']);
+                    $u = new User($this->post('uEmail'), $this->post('uPassword'));
                 } else {
-                    $u = new User($_POST['uName'], $_POST['uPassword']);
+                    $u = new User($this->post('uName'), $this->post('uPassword'));
                 }
                 // if this is successful, uID is loaded into session for this user
 
@@ -194,10 +194,10 @@ class Register extends PageController
                         }
                         $mh->from($fromEmail,  $fromName);
                     }
-                    $mh->addParameter('uEmail', $_POST['uEmail']);
+                    $mh->addParameter('uEmail', $this->post('uEmail'));
                     $mh->addParameter('uHash', $uHash);
                     $mh->addParameter('site', Config::get('concrete.site'));
-                    $mh->to($_POST['uEmail']);
+                    $mh->to($this->post('uEmail'));
                     $mh->load('validate_user_email');
                     $mh->sendMail();
 
@@ -209,9 +209,9 @@ class Register extends PageController
                     $ui->deactivate();
                     // Email to the user when he/she registered but needs approval
                     $mh = Loader::helper('mail');
-                    $mh->addParameter('uEmail', $_POST['uEmail']);
+                    $mh->addParameter('uEmail', $this->post('uEmail'));
                     $mh->addParameter('site', Config::get('concrete.site'));
-                    $mh->to($_POST['uEmail']);
+                    $mh->to($this->post('uEmail'));
                     $mh->load('user_register_approval_required_to_user');
                     $mh->sendMail();
 
