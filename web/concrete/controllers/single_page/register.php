@@ -90,7 +90,7 @@ class Register extends PageController
                 $e->add(t('Invalid Username'));
             }
 
-            \Core::make('validator/password')->isValid($password, $e);
+            $this->app->make('validator/password')->isValid($password, $e);
 
             if ($password) {
                 if ($password != $passwordConfirm) {
