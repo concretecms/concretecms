@@ -3,7 +3,6 @@ namespace Concrete\Controller\SinglePage;
 
 use PageController;
 use Config;
-use Loader;
 use User;
 use UserInfo;
 use UserAttributeKey;
@@ -27,15 +26,15 @@ class Register extends PageController
 
     public function forward($cID = 0)
     {
-        $this->set('rcID', Loader::helper('security')->sanitizeInt($cID));
+        $this->set('rcID', $this->app->make('helper/security')->sanitizeInt($cID));
     }
 
     public function do_register()
     {
-        $e = Loader::helper('validation/error');
-        $ip = Loader::helper('validation/ip');
-        $vals = Loader::helper('validation/strings');
-        $valc = Loader::helper('concrete/validation');
+        $e = $this->app->make('error');
+        $ip = $this->app->make('helper/validation/ip');
+        $vals = $this->app->make('helper/validation/strings');
+        $valc = $this->app->make('helper/concrete/validation');
         $token = \Core::make('Concrete\Core\Validation\CSRF\Token');
 
         if ($token->validate('register.do_register')) {
@@ -52,7 +51,7 @@ class Register extends PageController
             }
 
             if (Config::get('concrete.user.registration.captcha')) {
-                $captcha = Loader::helper('validation/captcha');
+                $captcha = $this->app->make('helper/validation/captcha');
                 if (!$captcha->check()) {
                     $e->add(t("Incorrect image validation code. Please check the image and re-enter the letters or numbers as necessary."));
                 }
@@ -128,7 +127,7 @@ class Register extends PageController
                 $process->saveUserAttributesForm($aks);
 
                 if (Config::get('concrete.user.registration.notification')) { //do we notify someone if a new user is added?
-                    $mh = Loader::helper('mail');
+                    $mh = $this->app->make('mail');
                     if (Config::get('concrete.user.registration.notification_email')) {
                         $mh->to(Config::get('concrete.user.registration.notification_email'));
                     } else {
@@ -175,7 +174,7 @@ class Register extends PageController
                 // if this is successful, uID is loaded into session for this user
 
                 $rcID = $this->post('rcID');
-                $nh = Loader::helper('validation/numbers');
+                $nh = $this->app->make('helper/validation/numbers');
                 if (!$nh->integer($rcID)) {
                     $rcID = 0;
                 }
@@ -184,7 +183,7 @@ class Register extends PageController
                 if (Config::get('concrete.user.registration.validate_email')) {
                     $uHash = $process->setupValidation();
 
-                    $mh = Loader::helper('mail');
+                    $mh = $this->app->make('mail');
                     $fromEmail = (string) Config::get('concrete.email.validate_registration.address');
                     if (strpos($fromEmail, '@')) {
                         $fromName = (string) Config::get('concrete.email.validate_registration.name');
@@ -207,7 +206,7 @@ class Register extends PageController
                     $ui = UserInfo::getByID($u->getUserID());
                     $ui->deactivate();
                     // Email to the user when he/she registered but needs approval
-                    $mh = Loader::helper('mail');
+                    $mh = $this->app->make('mail');
                     $mh->addParameter('uEmail', $this->post('uEmail'));
                     $mh->addParameter('site', Config::get('concrete.site'));
                     $mh->to($this->post('uEmail'));
