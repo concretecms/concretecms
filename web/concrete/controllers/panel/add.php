@@ -38,12 +38,12 @@ class Add extends BackendInterfacePageController
         $contents = $sp->getPileContentObjects('date_desc');
 
         $stacks = new StackList();
-        if (\Core::make('multilingual/detector')->isEnabled()) {
-            $stacks->filterByPageLanguage($this->page);
-        }
+        //if (\Core::make('multilingual/detector')->isEnabled()) {
+        //    $stacks->filterByPageLanguage($this->page);
+        //}
         $stacks->filterByUserAdded();
 
-        $this->set('stacks', $stacks->get());
+        $this->set('stacks', $stacks->getResults());
         $this->set('contents', $contents);
         $this->set('tab', $tab);
         $this->set('blockTypes', $blockTypes);
