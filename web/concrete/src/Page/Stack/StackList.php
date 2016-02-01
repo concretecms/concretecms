@@ -85,6 +85,7 @@ class StackList extends PageList
         return $stack ?: parent::getResult($queryRow);
     }
 
+    /*
     public function filterByPageLanguage(\Concrete\Core\Page\Page $page)
     {
         $ms = Section::getBySectionOfSite($page);
@@ -101,6 +102,7 @@ class StackList extends PageList
     {
         $this->filter('stMultilingualSection', $ms->getCollectionID());
     }
+    */
 
     /*
     public static function export(\SimpleXMLElement $x)
