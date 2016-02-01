@@ -179,7 +179,7 @@ class Register extends PageController
                     $rcID = 0;
                 }
 
-				$redirectMethod = '';
+                $redirectMethod = '';
 
                 // now we check whether we need to validate this user's email address
                 if (Config::get('concrete.user.registration.validate_email')) {
