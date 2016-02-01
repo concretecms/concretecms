@@ -35,7 +35,7 @@ class Register extends PageController
         $ip = $this->app->make('helper/validation/ip');
         $vals = $this->app->make('helper/validation/strings');
         $valc = $this->app->make('helper/concrete/validation');
-        $token = \Core::make('Concrete\Core\Validation\CSRF\Token');
+        $token = $this->app->make('token');
 
         if ($token->validate('register.do_register')) {
             $username = $this->post('uName');
