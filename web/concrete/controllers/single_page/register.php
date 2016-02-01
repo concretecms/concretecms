@@ -34,7 +34,6 @@ class Register extends PageController
     {
         $e = Loader::helper('validation/error');
         $ip = Loader::helper('validation/ip');
-        $txt = Loader::helper('text');
         $vals = Loader::helper('validation/strings');
         $valc = Loader::helper('concrete/validation');
         $token = \Core::make('Concrete\Core\Validation\CSRF\Token');
