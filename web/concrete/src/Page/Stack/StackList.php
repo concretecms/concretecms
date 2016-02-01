@@ -73,6 +73,18 @@ class StackList extends PageList
         $this->filterByParentID($category->getPage()->getCollectionID());
     }
 
+    /**
+     * @param $queryRow
+     *
+     * @return \Stack
+     */
+    public function getResult($queryRow)
+    {
+        $stack = Stack::getByID($queryRow['cID'], 'ACTIVE');
+
+        return $stack ?: parent::getResult($queryRow);
+    }
+
     public function filterByPageLanguage(\Concrete\Core\Page\Page $page)
     {
         $ms = Section::getBySectionOfSite($page);
