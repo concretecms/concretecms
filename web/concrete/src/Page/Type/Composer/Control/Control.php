@@ -3,7 +3,6 @@
 namespace Concrete\Core\Page\Type\Composer\Control;
 
 use Concrete\Core\Page\Type\Type;
-use Loader;
 use Concrete\Core\Foundation\Object;
 use Page;
 use Controller;
@@ -140,7 +139,7 @@ abstract class Control extends Object
     public function getRequestValue($args = false)
     {
         if (!$args) {
-            $args = $_POST;
+            $args = \Core::make('Concrete\Core\Http\Request')->post();
         }
 
         return $args['ptComposer'][$this->ptComposerFormLayoutSetControlObject->getPageTypeComposerFormLayoutSetControlID()];
@@ -153,8 +152,8 @@ abstract class Control extends Object
      */
     public function addToPageTypeComposerFormLayoutSet(PageTypeComposerFormLayoutSet $set)
     {
-        $db = Loader::db();
-        $displayOrder = $db->GetOne('select count(ptComposerFormLayoutSetControlID) from PageTypeComposerFormLayoutSetControls where ptComposerFormLayoutSetID = ?', array($set->getPageTypeComposerFormLayoutSetID()));
+        $db = \Core::make('database')->connection();
+        $displayOrder = $db->fetchColumn('select count(ptComposerFormLayoutSetControlID) from PageTypeComposerFormLayoutSetControls where ptComposerFormLayoutSetID = ?', array($set->getPageTypeComposerFormLayoutSetID()));
         if (!$displayOrder) {
             $displayOrder = 0;
         }
@@ -163,11 +162,11 @@ abstract class Control extends Object
             $ptComposerFormLayoutSetControlRequired = 1;
         }
         $controlType = $this->getPageTypeComposerControlTypeObject();
-        $db->Execute('insert into PageTypeComposerFormLayoutSetControls (ptComposerFormLayoutSetID, ptComposerControlTypeID, ptComposerControlObject, ptComposerFormLayoutSetControlDisplayOrder, ptComposerFormLayoutSetControlRequired) values (?, ?, ?, ?, ?)', array(
+        $db->executeQuery('insert into PageTypeComposerFormLayoutSetControls (ptComposerFormLayoutSetID, ptComposerControlTypeID, ptComposerControlObject, ptComposerFormLayoutSetControlDisplayOrder, ptComposerFormLayoutSetControlRequired) values (?, ?, ?, ?, ?)', array(
             $set->getPageTypeComposerFormLayoutSetID(), $controlType->getPageTypeComposerControlTypeID(), serialize($this), $displayOrder, $ptComposerFormLayoutSetControlRequired,
         ));
 
-        return PageTypeComposerFormLayoutSetControl::getByID($db->Insert_ID());
+        return PageTypeComposerFormLayoutSetControl::getByID($db->lastInsertId());
     }
 
     public function canPageTypeComposerControlSetPageName()
