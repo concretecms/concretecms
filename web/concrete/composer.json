@@ -32,7 +32,7 @@
     "oyejorge/less.php": "v1.7.0.1",
     "imagine/imagine": "0.6.*@dev",
     "natxet/cssmin": "dev-master",
-    "tedivm/jshrink": "0.5.*",
+    "tedivm/jshrink": "1.1.*",
     "michelf/php-markdown": "1.4.*@dev",
     "filp/whoops": "1.*",
     "pagerfanta/pagerfanta": "1.0.2",
