@@ -19,20 +19,29 @@ abstract class Control extends Object
     protected $ptComposerControlRequiredByDefault = false;
     protected $ptComposerControlRequiredOnThisRequest = false;
     protected $ptComposerControlTypeHandle;
-    /** @var PageTypeComposerFormLayoutSetControl  */
+    /** @var PageTypeComposerFormLayoutSetControl */
     protected $ptComposerFormLayoutSetControlObject;
     protected $ptTargetParentPageID;
     protected $page;
 
     abstract public function getPageTypeComposerControlCustomTemplates();
+
     abstract public function render($label, $customTemplate, $description);
+
     abstract public function publishToPage(Page $c, $data, $controls);
+
     abstract public function validate();
+
     abstract public function getPageTypeComposerControlDraftValue();
+
     abstract public function addAssetsToRequest(Controller $cnt);
+
     abstract public function export($node);
+
     abstract public function shouldPageTypeComposerControlStripEmptyValuesFromPage();
+
     abstract public function isPageTypeComposerControlValueEmpty();
+
     abstract public function removePageTypeComposerControlFromPage();
 
     public function pageTypeComposerFormControlSupportsValidation()
@@ -79,6 +88,7 @@ abstract class Control extends Object
     {
         return $this->ptComposerControlName;
     }
+
     public function getPageTypeComposerControlDisplayName($format = 'html')
     {
         $value = $this->getPageTypeComposerControlName();
@@ -133,7 +143,8 @@ abstract class Control extends Object
 
     public function field($key)
     {
-        return 'ptComposer[' . $this->ptComposerFormLayoutSetControlObject->getPageTypeComposerFormLayoutSetControlID(). '][' . $key . ']';
+        $controlSetLayoutId = $this->ptComposerFormLayoutSetControlObject->getPageTypeComposerFormLayoutSetControlID();
+        return 'ptComposer[' . $controlSetLayoutId . '][' . $key . ']';
     }
 
     public function getRequestValue($args = false)
@@ -142,7 +153,8 @@ abstract class Control extends Object
             $args = \Core::make('Concrete\Core\Http\Request')->post();
         }
 
-        return $args['ptComposer'][$this->ptComposerFormLayoutSetControlObject->getPageTypeComposerFormLayoutSetControlID()];
+        $controlSetLayoutId = $this->ptComposerFormLayoutSetControlObject->getPageTypeComposerFormLayoutSetControlID();
+        return $args['ptComposer'][$controlSetLayoutId];
     }
 
     /**
@@ -153,7 +165,12 @@ abstract class Control extends Object
     public function addToPageTypeComposerFormLayoutSet(PageTypeComposerFormLayoutSet $set)
     {
         $db = \Core::make('database')->connection();
-        $displayOrder = $db->fetchColumn('select count(ptComposerFormLayoutSetControlID) from PageTypeComposerFormLayoutSetControls where ptComposerFormLayoutSetID = ?', array($set->getPageTypeComposerFormLayoutSetID()));
+        $displayOrder = $db->fetchColumn(
+            'select count(ptComposerFormLayoutSetControlID)
+              from PageTypeComposerFormLayoutSetControls
+              where ptComposerFormLayoutSetID = ?',
+            array($set->getPageTypeComposerFormLayoutSetID())
+        );
         if (!$displayOrder) {
             $displayOrder = 0;
         }
@@ -162,9 +179,23 @@ abstract class Control extends Object
             $ptComposerFormLayoutSetControlRequired = 1;
         }
         $controlType = $this->getPageTypeComposerControlTypeObject();
-        $db->executeQuery('insert into PageTypeComposerFormLayoutSetControls (ptComposerFormLayoutSetID, ptComposerControlTypeID, ptComposerControlObject, ptComposerFormLayoutSetControlDisplayOrder, ptComposerFormLayoutSetControlRequired) values (?, ?, ?, ?, ?)', array(
-            $set->getPageTypeComposerFormLayoutSetID(), $controlType->getPageTypeComposerControlTypeID(), serialize($this), $displayOrder, $ptComposerFormLayoutSetControlRequired,
-        ));
+        $db->executeQuery(
+            'insert into PageTypeComposerFormLayoutSetControls
+            (
+              ptComposerFormLayoutSetID,
+              ptComposerControlTypeID,
+              ptComposerControlObject,
+              ptComposerFormLayoutSetControlDisplayOrder,
+              ptComposerFormLayoutSetControlRequired
+            ) values (?, ?, ?, ?, ?)',
+            array(
+                $set->getPageTypeComposerFormLayoutSetID(),
+                $controlType->getPageTypeComposerControlTypeID(),
+                serialize($this),
+                $displayOrder,
+                $ptComposerFormLayoutSetControlRequired,
+            )
+        );
 
         return PageTypeComposerFormLayoutSetControl::getByID($db->lastInsertId());
     }
