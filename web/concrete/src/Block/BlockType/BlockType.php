@@ -87,7 +87,7 @@ class BlockType
      */
     public static function getByHandle($btHandle)
     {
-        $em = DB::get()->getEntityManager();
+        $em = \ORM::entityManager('core');
         $bt = $em->getRepository('\Concrete\Core\Block\BlockType\BlockType')->findOneBy(array('btHandle' => $btHandle));
         if (is_object($bt)) {
             $bt->loadController();
@@ -121,7 +121,7 @@ class BlockType
      */
     public static function getByID($btID)
     {
-        $em = DB::get()->getEntityManager();
+        $em = \ORM::entityManager('core');
         $bt = $em->getRepository('\Concrete\Core\Block\BlockType\BlockType')->find($btID);
         $bt->loadController();
         return $bt;
@@ -172,7 +172,7 @@ class BlockType
             Localization::changeLocale($currentLocale);
         }
 
-        $em = DB::get()->getEntityManager();
+        $em = \ORM::entityManager('core');
         $em->persist($bt);
         $em->flush();
 
@@ -204,9 +204,9 @@ class BlockType
         $class = core_class('Block\\' . $txt->camelcase($btHandle) . '\\Controller', $prefix);
         return $class;
     }
-    
+
     /**
-     * Sets the Ignore Page Theme Gride Framework Container 
+     * Sets the Ignore Page Theme Gride Framework Container
      */
     public function setBlockTypeIgnorePageThemeGridFrameworkContainer($btIgnorePageThemeGridFrameworkContainer)
     {
@@ -593,7 +593,7 @@ class BlockType
 
         $this->loadFromController($bta);
 
-        $em = $db->getEntityManager();
+        $em = \ORM::entityManager('core');
         $em->persist($this);
         $em->flush();
 
@@ -657,7 +657,7 @@ class BlockType
             }
         }
 
-        $em = $db->getEntityManager();
+        $em = \ORM::entityManager('core');
         $em->remove($this);
         $em->flush();
 
