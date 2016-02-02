@@ -2836,6 +2836,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             $pkgID = 0;
         }
 
+        $data['name'] = null;
         if (isset($data['cName'])) {
             $data['name'] = $data['cName'];
         }

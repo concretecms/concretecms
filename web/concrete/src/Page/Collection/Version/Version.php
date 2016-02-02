@@ -77,7 +77,7 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
         $row = $db->GetRow($q, $v);
         $cv = new static();
 
-        if (is_array($row) && $row['cvID']) {
+        if (is_array($row) && isset($row['cvID']) && $row['cvID']) {
             $cv->setPropertiesFromArray($row);
         }
 

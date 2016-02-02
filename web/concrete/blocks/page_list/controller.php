@@ -361,6 +361,8 @@ class Controller extends BlockController
             if (isset($parameters[1])) {
                 $parameters[1] = intval($parameters[1]);
             }
+        } else {
+            $method = null;
         }
 
         return array($method, $parameters);

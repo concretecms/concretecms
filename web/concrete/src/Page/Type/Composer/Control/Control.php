@@ -19,6 +19,11 @@ abstract class Control extends Object
     protected $ptComposerControl;
     protected $ptComposerControlRequiredByDefault = false;
     protected $ptComposerControlRequiredOnThisRequest = false;
+    protected $ptComposerControlTypeHandle;
+    /** @var PageTypeComposerFormLayoutSetControl  */
+    protected $ptComposerFormLayoutSetControlObject;
+    protected $ptTargetParentPageID;
+    protected $page;
 
     abstract public function getPageTypeComposerControlCustomTemplates();
     abstract public function render($label, $customTemplate, $description);
