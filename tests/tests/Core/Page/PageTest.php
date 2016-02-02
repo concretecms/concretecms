@@ -388,9 +388,9 @@ class PageTest extends PageTestCase
 
         $c->clearPagePaths();
 
-        $db = Loader::db();
-        $db->getEntityManager()->persist($p);
-        $db->getEntityManager()->flush();
+        $em = \ORM::entityManager('core');
+        $em->persist($p);
+        $em->flush();
 
         $c = Page::getByID(3);
         $this->assertEquals('/contact', $c->getCollectionPath());

@@ -2,20 +2,22 @@
 
 class CustomPageRoutine extends \Concrete\Core\Backup\ContentImporter\ValueInspector\InspectionRoutine\PageRoutine
 {
+
     public function getItem($identifier)
     {
         $identifier = '/page-2' . $identifier;
-
         return new \Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PageItem($identifier);
     }
+
 }
 
 class ContentImporterValueInspectorReplacePageTest extends PageTestCase
 {
+
     protected function setUp()
     {
         $this->tables = array_merge($this->tables, array(
-            'PageFeeds',
+            'PageFeeds'
         ));
         parent::setUp();
     }
@@ -34,12 +36,14 @@ class ContentImporterValueInspectorReplacePageTest extends PageTestCase
         $feed = new \Concrete\Core\Page\Feed();
         $feed->setHandle('blog');
         $feed->setParentID(1);
-        \Database::connection()->getEntityManager()->persist($feed);
-        \Database::connection()->getEntityManager()->flush();
+        \ORM::entityManager('core')->persist($feed);
+        \ORM::entityManager('core')->flush();
+
     }
 
     public function testReplaceContent()
     {
+
         $this->createData();
 
         $content = <<<EOL
@@ -54,6 +58,7 @@ EOL;
 
     public function testCustomReplaceContent()
     {
+
         $this->createData();
 
         $content = <<<EOL
@@ -88,5 +93,7 @@ EOL;
         $this->assertEquals(1, $o->getContentObject()->getID());
         $this->assertEquals('blog', $o->getContentObject()->getHandle());
         $this->assertEquals(1, $result->getReplacedValue());
+
     }
+
 }
