@@ -84,7 +84,7 @@ class Location extends BackendInterfacePageController {
 					throw new Exception('You cannot add a page beneath itself.');
 				}
 
-				if ($oc->isPageDraft()) { 
+				if ($oc->isPageDraft()) {
 					$oc->setPageDraftTargetParentPageID($dc->getCollectionID());
 				} else {
                     $u = new User();
@@ -116,11 +116,11 @@ class Location extends BackendInterfacePageController {
 					if ($canonical == $i) {
 						$p->setPagePathIsCanonical(true);
 					}
-					Database::get()->getEntityManager()->persist($p);
+					\ORM::entityManager('core')->persist($p);
 				}
 			}
 
-            Database::get()->getEntityManager()->flush();
+            \ORM::entityManager('core')->flush();
 
 			$r->setTitle(t('Page Updated'));
 			$r->setMessage(t('Page location information saved successfully.'));

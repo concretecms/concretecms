@@ -85,8 +85,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
      */
     public static function getByID($fID)
     {
-        $db = Database::get();
-        $em = $db->getEntityManager();
+        $em = \ORM::entityManager('core');
         return $em->find('\Concrete\Core\File\File', $fID);
     }
 
@@ -190,7 +189,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
 
     protected function save()
     {
-        $em = Database::get()->getEntityManager();
+        $em = \ORM::entityManager('core');
         $em->persist($this);
         $em->flush();
     }
@@ -364,7 +363,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
     {
 
         $db = Loader::db();
-        $em = $db->getEntityManager();
+        $em = \ORM::entityManager('core');
 
         $versions = $this->versions;
 
@@ -462,7 +461,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         $f->uID = $uID;
         $f->storageLocation = $fsl;
         $f->fDateAdded = new Carbon($date);
-        $em = $db->getEntityManager();
+        $em = \ORM::entityManager('core');
         $em->persist($f);
         $em->flush();
 
@@ -498,8 +497,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
             return $item->get();
         }
 
-        $db = Loader::db();
-        $em = $db->getEntityManager();
+        $em = \ORM::entityManager('core');
         $r = $em->getRepository('\Concrete\Core\File\Version');
         $fv = $r->findOneBy(array('file' => $this, 'fvIsApproved' => true));
 
@@ -544,7 +542,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         $db->Execute("delete from FilePermissionAssignments where fID = ?", array($this->fID));
 
         // now from the DB
-        $em = $db->getEntityManager();
+        $em = \ORM::entityManager('core');
         $em->remove($this);
         $em->flush();
     }
@@ -555,8 +553,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
      */
     public function getRecentVersion()
     {
-        $db = Loader::db();
-        $em = $db->getEntityManager();
+        $em = \ORM::entityManager('core');
         $r = $em->getRepository('\Concrete\Core\File\Version');
         return $r->findOneBy(
             array('file' => $this),
@@ -576,8 +573,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
             return $this->getApprovedVersion();
         }
 
-        $db = Loader::db();
-        $em = $db->getEntityManager();
+        $em = \ORM::entityManager('core');
         $r = $em->getRepository('\Concrete\Core\File\Version');
         return $r->findOneBy(array('file' => $this, 'fvID' => $fvID));
     }
