@@ -144,8 +144,7 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
             $pdo->exec("DROP TABLE IF EXISTS `$table`;");
         }
 
-        $db = Loader::db();
-        $db->getEntityManager()->clear();
+        \ORM::entityManager('core')->clear();
 
         $sm = \Core::make('Concrete\Core\Database\DatabaseStructureManager');
         $metadatas = $this->getMetaDatas();

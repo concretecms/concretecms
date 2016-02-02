@@ -86,9 +86,9 @@ class Location extends BackendInterfacePageController
                     throw new Exception('You cannot add a page beneath itself.');
                 }
 
-                if ($oc->isPageDraft()) {
-                    $oc->setPageDraftTargetParentPageID($dc->getCollectionID());
-                } else {
+				if ($oc->isPageDraft()) {
+					$oc->setPageDraftTargetParentPageID($dc->getCollectionID());
+				} else {
                     $u = new User();
                     $pkr = new MovePagePageWorkflowRequest();
                     $pkr->setRequestedPage($oc);
@@ -108,21 +108,21 @@ class Location extends BackendInterfacePageController
             $req = Request::getInstance();
             $oc->clearPagePaths();
 
-            $canonical = $req->request->get('canonical');
-            $pathArray = $req->request->get('path');
-            if (is_array($pathArray)) {
-                foreach ($pathArray as $i => $path) {
-                    $p = new PagePath();
-                    $p->setPagePath($path);
-                    $p->setPageObject($this->page);
-                    if ($canonical == $i) {
-                        $p->setPagePathIsCanonical(true);
-                    }
-                    Database::get()->getEntityManager()->persist($p);
-                }
-            }
+			$canonical = $req->request->get('canonical');
+			$pathArray = $req->request->get('path');
+			if (is_array($pathArray)) {
+				foreach($pathArray as $i => $path) {
+					$p = new PagePath();
+					$p->setPagePath($path);
+					$p->setPageObject($this->page);
+					if ($canonical == $i) {
+						$p->setPagePathIsCanonical(true);
+					}
+					\ORM::entityManager('core')->persist($p);
+				}
+			}
 
-            Database::get()->getEntityManager()->flush();
+            \ORM::entityManager('core')->flush();
 
             $r->setTitle(t('Page Updated'));
             $r->setMessage(t('Page location information saved successfully.'));

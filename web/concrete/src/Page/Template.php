@@ -105,9 +105,7 @@ class Template
 
     public static function getByHandle($pTemplateHandle)
     {
-        $db = Database::get();
-        $em = $db->getEntityManager();
-
+        $em = \ORM::entityManager('core');
         return $em->getRepository('\Concrete\Core\Page\Template')
             ->findOneBy(
                 array('pTemplateHandle' => $pTemplateHandle)
@@ -117,17 +115,14 @@ class Template
     public static function getByID($pTemplateID)
     {
         if ($pTemplateID) {
-            $db = Database::get();
-            $em = $db->getEntityManager();
-
+            $em = \ORM::entityManager('core');
             return $em->find('\Concrete\Core\Page\Template', $pTemplateID);
         }
     }
 
     public function delete()
     {
-        $db = Database::get();
-        $em = $db->getEntityManager();
+        $em = \ORM::entityManager('core');
         $em->remove($this);
         $em->flush();
     }
@@ -146,8 +141,7 @@ class Template
 
     public static function getListByPackage($pkg)
     {
-        $db = Database::get();
-        $em = $db->getEntityManager();
+        $em = \ORM::entityManager('core');
         $list = $em->getRepository('\Concrete\Core\Page\Template')
             ->findBy(
                 array('pkgID' => $pkg->getPackageID())
@@ -159,8 +153,7 @@ class Template
 
     public static function getList($includeInternal = false)
     {
-        $db = Database::get();
-        $em = $db->getEntityManager();
+        $em = \ORM::entityManager('core');
         $args = array('pTemplateIsInternal' => $includeInternal);
         $list = $em->getRepository('\Concrete\Core\Page\Template')->findBy(
             $args, array('pTemplateID' => 'asc')
@@ -186,7 +179,7 @@ class Template
         $template->pkgID = $pkgID;
         $template->pTemplateIsInternal = (bool) $pTemplateIsInternal;
 
-        $em = Database::get()->getEntityManager();
+        $em = \ORM::entityManager('core');
         $em->persist($template);
         $em->flush();
 
@@ -206,7 +199,7 @@ class Template
         $this->pTemplateName = $pTemplateName;
         $this->pTemplateIcon = $pTemplateIcon;
 
-        $em = Database::get()->getEntityManager();
+        $em = \ORM::entityManager('core');
         $em->persist($this);
         $em->flush();
     }

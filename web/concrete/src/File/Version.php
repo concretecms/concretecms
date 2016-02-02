@@ -182,7 +182,7 @@ class Version
         $fv->file = $file;
         $fv->fvID = 1;
 
-        $em = Database::get()->getEntityManager();
+        $em = \ORM::entityManager('core');
         $em->persist($fv);
         $em->flush();
 
@@ -301,6 +301,7 @@ class Version
             }
         }
 
+        $em = \ORM::entityManager('core');
         $em->remove($this);
         $em->flush();
     }
@@ -387,7 +388,7 @@ class Version
     public function duplicate()
     {
         $db = Database::get();
-        $em = $db->getEntityManager();
+        $em = \ORM::entityManager('core');
         $qq = $em->createQuery('SELECT max(v.fvID) FROM \Concrete\Core\File\Version v where v.file = :file');
         $qq->setParameter('file', $this->file);
         $fvID = $qq->getSingleScalarResult();
@@ -429,7 +430,7 @@ class Version
 
     protected function save($flush = true)
     {
-        $em = Database::get()->getEntityManager();
+        $em = \ORM::entityManager('core');
         $em->persist($this);
         if ($flush) {
             $em->flush();
