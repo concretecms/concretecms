@@ -29,7 +29,7 @@ if (is_object($c)) {
 			if (!$seo->hasCustomTitle()) {
 				$seo->addTitleSegmentBefore($pageTitle);
 			}
-			$seo->setSiteName(Config::get('concrete.site'));
+			$seo->setSiteName(tc('SiteName', Config::get('concrete.site')));
 			$seo->setTitleFormat(Config::get('concrete.seo.title_format'));
 			$seo->setTitleSegmentSeparator(Config::get('concrete.seo.title_segment_separator'));
 			$pageTitle = $seo->getTitle();

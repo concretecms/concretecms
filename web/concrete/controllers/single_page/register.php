@@ -147,7 +147,7 @@ class Register extends PageController
                         $attribValues[] = $ak->getAttributeKeyDisplayName('text') . ': ' . $process->getAttribute($ak->getAttributeKeyHandle(), 'display');
                     }
                     $mh->addParameter('attribs', $attribValues);
-                    $mh->addParameter('siteName', Config::get('concrete.site'));
+                    $mh->addParameter('siteName', tc('SiteName', Config::get('concrete.site')));
 
                     if (Config::get('concrete.user.registration.notification_email')) {
                         $mh->from(Config::get('concrete.user.registration.notification_email'),  t('Website Registration Notification'));
@@ -196,7 +196,7 @@ class Register extends PageController
                     }
                     $mh->addParameter('uEmail', $this->post('uEmail'));
                     $mh->addParameter('uHash', $uHash);
-                    $mh->addParameter('site', Config::get('concrete.site'));
+                    $mh->addParameter('site', tc('SiteName', Config::get('concrete.site')));
                     $mh->to($this->post('uEmail'));
                     $mh->load('validate_user_email');
                     $mh->sendMail();
@@ -210,7 +210,7 @@ class Register extends PageController
                     // Email to the user when he/she registered but needs approval
                     $mh = $this->app->make('mail');
                     $mh->addParameter('uEmail', $this->post('uEmail'));
-                    $mh->addParameter('site', Config::get('concrete.site'));
+                    $mh->addParameter('site', tc('SiteName', Config::get('concrete.site')));
                     $mh->to($this->post('uEmail'));
                     $mh->load('user_register_approval_required_to_user');
                     $mh->sendMail();

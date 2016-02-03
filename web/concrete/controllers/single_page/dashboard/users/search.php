@@ -122,7 +122,7 @@ class Search extends DashboardPageController
                     $mh->addParameter('user', $this->user);
                     $mh->addParameter('uName', $this->user->getUserName());
                     $mh->addParameter('uEmail', $this->user->getUserEmail());
-                    $mh->addParameter('siteName', Config::get('concrete.site'));
+                    $mh->addParameter('siteName', tc('SiteName', Config::get('concrete.site')));
                     $mh->load('user_registered_approval_complete');
                     $mh->sendMail();
                     $this->redirect('/dashboard/users/search', 'view', $this->user->getUserID(), 'activated');

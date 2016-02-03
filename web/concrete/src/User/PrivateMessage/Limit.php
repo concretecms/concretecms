@@ -55,7 +55,7 @@ class Limit {
 		$mh->addParameter('profilePreferencesURL', View::url('/profile/edit'));
 
 		$mh->to($admin->getUserEmail());
-		$mh->addParameter('siteName', Config::get('concrete.site'));
+		$mh->addParameter('siteName', tc('SiteName', Config::get('concrete.site')));
 		$mh->load('private_message_admin_warning');
 		$mh->sendMail();
 	}
