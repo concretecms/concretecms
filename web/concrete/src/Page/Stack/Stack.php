@@ -86,16 +86,19 @@ class Stack extends Page implements ExportableInterface
             } else {
                 $item->lock();
                 $db = Database::connection();
-                $ms = false;
-                $detector = Core::make('multilingual/detector');
-                if ($detector->isEnabled()) {
-                    $ms = self::getMultilingualSectionFromType($multilingualContentSource);
-                }
-
-                if (is_object($ms)) {
-                    $cID = $db->GetOne('select cID from Stacks where stName = ? and stMultilingualSection = ?', array($stackName, $ms->getCollectionID()));
-                } else {
-                    $cID = $db->GetOne('select cID from Stacks where stName = ?', array($stackName));
+                $cID = $db->fetchColumn('select cID from Stacks where stName = ? and stMultilingualSection = 0', array($stackName));
+                if ($cID) {
+                    $detector = Core::make('multilingual/detector');
+                    /* @var \Concrete\Core\Multilingual\Service\Detector $detector */
+                    if ($detector->isEnabled()) {
+                        $ms = self::getMultilingualSectionFromType($multilingualContentSource);
+                        if ($ms) {
+                            $cIDLocalized = $db->fetchAssoc('select cID from Stacks where stMultilingualSection = ? and stNeutralStack = ?', array($ms->getCollectionID(), $cID));
+                            if ($cIDLocalized) {
+                                $cID = $cIDLocalized;
+                            }
+                        }
+                    }
                 }
                 $item->set($cID);
             }
