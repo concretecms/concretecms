@@ -65,7 +65,8 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow
         $db = Core::make('database')->connection();
         $db->executeQuery(
             'INSERT INTO BasicWorkflowProgressData (wpID, uIDStarted) VALUES (?, ?)',
-            array($wp->getWorkflowProgressID(), $req->getRequesterUserID()));
+            array($wp->getWorkflowProgressID(), $req->getRequesterUserID())
+        );
 
         if ($this->canApproveWorkflow()) {
             // Then that means we have the ability to approve the workflow we just started.
@@ -82,7 +83,8 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow
                 'On %s, user %s submitted the following request: %s',
                 Core::make('helper/date')->formatDateTime($wp->getWorkflowProgressDateAdded(), true),
                 $ui->getUserName(),
-                $req->getWorkflowRequestDescriptionObject()->getEmailDescription());
+                $req->getWorkflowRequestDescriptionObject()->getEmailDescription()
+            );
             $this->notify($wp, $message, 'notify_on_basic_workflow_entry');
         }
 
@@ -93,7 +95,8 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow
         $message,
         $permission = 'notify_on_basic_workflow_entry',
         $parameters = array()
-    ) {
+    )
+    {
         $nk = PermissionKey::getByHandle($permission);
         $nk->setPermissionObject($this);
         $users = $nk->getCurrentlyActiveUsers($wp);
@@ -152,7 +155,8 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow
                 "On %s, user %s cancelled the following request: \n\n---\n%s\n---\n\n",
                 Core::make('helper/date')->formatDateTime($bdw->getDateCompleted(), true),
                 $ux->getUserName(),
-                $req->getWorkflowRequestDescriptionObject()->getEmailDescription());
+                $req->getWorkflowRequestDescriptionObject()->getEmailDescription()
+            );
             $this->notify($wp, $message, 'notify_on_basic_workflow_deny');
 
             $hist = new BasicWorkflowHistoryEntry();
@@ -190,7 +194,8 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow
                 "On %s, user %s approved the following request: \n\n---\n%s\n---\n\n",
                 Core::make('helper/date')->formatDateTime($bdw->getDateCompleted(), true),
                 $ux->getUserName(),
-                $req->getWorkflowRequestDescriptionObject()->getEmailDescription());
+                $req->getWorkflowRequestDescriptionObject()->getEmailDescription()
+            );
             $this->notify($wp, $message, 'notify_on_basic_workflow_approve');
 
             $wpr = $req->runTask('approve', $wp);
@@ -221,7 +226,8 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow
             $button2 = new WorkflowProgressApprovalAction();
             $button2->setWorkflowProgressActionStyleClass($req->getWorkflowRequestApproveButtonClass());
             $button2->setWorkflowProgressActionStyleInnerButtonRightHTML(
-                $req->getWorkflowRequestApproveButtonInnerButtonRightHTML());
+                $req->getWorkflowRequestApproveButtonInnerButtonRightHTML()
+            );
             $button2->setWorkflowProgressActionLabel($req->getWorkflowRequestApproveButtonText());
 
             $buttons[] = $button1;
