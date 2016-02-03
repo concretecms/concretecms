@@ -145,7 +145,7 @@ class Controller extends AuthenticationTypeController
 
         if ($email) {
             $errorValidator = Core::make('helper/validation/error');
-            $userInfo = Core::make('Concrete\Core\User\UserInfoFactory')->getByName(Session::get('uPasswordResetUserName'));
+            $userInfo = Core::make('Concrete\Core\User\UserInfoRepository')->getByName(Session::get('uPasswordResetUserName'));
 
             try {
                 if ($userInfo && $email != $userInfo->getUserEmail()) {
