@@ -5,8 +5,6 @@ use BlockType;
 use BlockTypeList;
 use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
 use Concrete\Core\Page\Stack\Pile\Pile;
-use Loader;
-use Session;
 use StackList;
 
 class Add extends BackendInterfacePageController
@@ -18,7 +16,7 @@ class Add extends BackendInterfacePageController
     {
         $btl = new BlockTypeList();
         $blockTypes = $btl->get();
-        $dsh = Loader::helper('concrete/dashboard');
+        $dsh = $this->app->make('helper/concrete/dashboard');
         $dashboardBlockTypes = array();
         if ($dsh->inDashboard()) {
             $dashboardBlockTypes = BlockTypeList::getDashboardBlockTypes();
@@ -28,27 +26,32 @@ class Add extends BackendInterfacePageController
             $bt = BlockType::getByHandle(BLOCK_HANDLE_PAGE_TYPE_OUTPUT_PROXY);
             $blockTypes[] = $bt;
         }
-        if ($_REQUEST['tab']) {
-            Session::set('panels_page_add_block_tab', $_REQUEST['tab']);
-            $tab = $_REQUEST['tab'];
+
+        $requestTab = $this->request('tab');
+        $session = $this->app->make('session');
+        if ($requestTab) {
+
+            $session->set('panels_page_add_block_tab', $requestTab);
+            $tab = $requestTab;
         } else {
-            $tab = Session::get('panels_page_add_block_tab');
+            $tab = $session->get('panels_page_add_block_tab');
         }
-        $sp = Pile::getDefault();
+
+        $sp = (new Pile())->getDefault();
         $contents = $sp->getPileContentObjects('date_desc');
 
         $stacks = new StackList();
-        if (\Core::make('multilingual/detector')->isEnabled()) {
+        if ($this->app->make('multilingual/detector')->isEnabled()) {
             $stacks->filterByPageLanguage($this->page);
         }
         $stacks->filterByUserAdded();
 
-        $this->set('stacks', $stacks->get());
+        $this->set('stacks', $stacks->getResults());
         $this->set('contents', $contents);
         $this->set('tab', $tab);
         $this->set('blockTypes', $blockTypes);
-        $this->set('ih', Loader::helper('concrete/ui'));
-        $this->set('ci', Loader::helper('concrete/urls'));
+        $this->set('ih', $this->app->make('helper/concrete/ui'));
+        $this->set('ci',$this->app->make('helper/concrete/urls'));
     }
 
     protected function canAccess()

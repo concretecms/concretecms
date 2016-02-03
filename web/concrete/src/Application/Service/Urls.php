@@ -67,7 +67,7 @@ class Urls
     /**
      * Gets a full URL to an icon for a particular block type.
      *
-     * @param \BlockType $bt
+     * @param \Concrete\Core\Block\BlockType\BlockType $bt
      *
      * @return string
      */
@@ -84,7 +84,7 @@ class Urls
     /**
      * Gets a full URL to the directory containing all of a block's items, including JavaScript, tools, icons, etc...
      *
-     * @param \BlockType $bt
+     * @param \Concrete\Core\Block\BlockType\BlockType $bt
      * @param bool|string $file If provided will get the assets url for a file in a block
      *
      * @return string $url
