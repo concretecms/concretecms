@@ -79,7 +79,7 @@ class Version
     {
         $value = tc('ThumbnailTypeName', $this->getName());
         if ($this->isDoubledVersion) {
-            $value = t('%s (Retina Version)', $value);
+            $value = t('%s (Retina)', $value);
         }
         switch ($format) {
             case 'html':
