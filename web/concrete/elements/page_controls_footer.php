@@ -237,6 +237,9 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                title="<?= t('Page Design, Location, Attributes and Settings') ?>">
                 <i class="fa fa-cog"></i>
                 <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-settings">
+                    <? if (is_object($pagetype) && $cp->canEditPageContents()) { ?>
+                    <?= tc('toolbar', 'Composer') ?> /
+                    <? } ?>
                     <?= tc('toolbar', 'Page Settings') ?>
                 </span>
             </a>
