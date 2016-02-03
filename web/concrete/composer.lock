@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "fafe1226016c716f8bf3870e75f39972",
-    "content-hash": "ae2031b480e67acdab52b7a5ad4d22a6",
+    "hash": "6c9612fd2a54f04f6a5b058f2c1e9c05",
+    "content-hash": "3de3cae1d81aee14b8db7f77f6ca9ec8",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -1033,7 +1033,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hautelook/phpass/zipball/f284ae644120ce2b988f128f52d5205c0534d6f1",
+                "url": "https://api.github.com/repos/hautelook/phpass/zipball/b013515950e2cf6535e027aeb831aae00e7f728f",
                 "reference": "f0217d804225822f9bdb0d392839029b0fcb0914",
                 "shasum": ""
             },
@@ -2745,20 +2745,25 @@
         },
         {
             "name": "tedivm/jshrink",
-            "version": "v0.5.2",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tedious/JShrink.git",
-                "reference": "4b48e3d051cf0ab145db9df20d3292d91485bb60"
+                "reference": "688527a2e854d7935f24f24c7d5eb1b604742bf9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tedious/JShrink/zipball/4b48e3d051cf0ab145db9df20d3292d91485bb60",
-                "reference": "4b48e3d051cf0ab145db9df20d3292d91485bb60",
+                "url": "https://api.github.com/repos/tedious/JShrink/zipball/688527a2e854d7935f24f24c7d5eb1b604742bf9",
+                "reference": "688527a2e854d7935f24f24c7d5eb1b604742bf9",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "fabpot/php-cs-fixer": "0.4.0",
+                "phpunit/phpunit": "4.0.*",
+                "satooshi/php-coveralls": "dev-master"
             },
             "type": "library",
             "autoload": {
@@ -2777,12 +2782,12 @@
                 }
             ],
             "description": "Javascript Minifier built in PHP",
-            "homepage": "http://github.com/tedivm/JShrink",
+            "homepage": "http://github.com/tedious/JShrink",
             "keywords": [
                 "javascript",
                 "minifier"
             ],
-            "time": "2014-01-14 22:23:53"
+            "time": "2015-07-04 07:35:09"
         },
         {
             "name": "tedivm/stash",
