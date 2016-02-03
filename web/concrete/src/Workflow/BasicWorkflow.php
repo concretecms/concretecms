@@ -40,8 +40,8 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow
     }
 
     /**
-    +	 * Returns true if the logged-in user can approve the current workflow
-    +	 */
+     * Returns true if the logged-in user can approve the current workflow
+     */
     public function canApproveWorkflow()
     {
         $pk = Key::getByHandle('approve_basic_workflow_action');
