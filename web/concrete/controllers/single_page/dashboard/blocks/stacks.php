@@ -129,6 +129,12 @@ class Stacks extends DashboardPageController
             $sections = $this->getMultilingualSections();
             $breadcrumb = $this->getBreadcrumb($neutralStack);
             if (!empty($sections)) {
+                if ($stackToEdit !== $neutralStack) {
+                    $section = $stackToEdit->getMultilingualSection();
+                    if ($section !== null) {
+                        $locale = $section->getLocale();
+                    }
+                }
                 if (!isset($sections[$locale])) {
                     $locale = '';
                 }
