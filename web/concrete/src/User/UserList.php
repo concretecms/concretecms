@@ -188,7 +188,7 @@ class UserList extends DatabaseItemList
         }
 
         $table = 'ug' . $group->getGroupID();
-        $this->query->leftJoin('u', 'UserGroups', $table, 'u.uID = ' . $table . '.uID');
+        $this->query->leftJoin('u', 'UserGroups', $table, 'u.uID = ' . $table . '.uID AND ' . $table . '.gID = ' . $group->getGroupID());
         if ($inGroup) {
             $this->query->andWhere($table . '.gID = :gID' . $group->getGroupID());
             $this->query->setParameter('gID' . $group->getGroupID(), $group->getGroupID());
