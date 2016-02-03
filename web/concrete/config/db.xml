@@ -4118,6 +4118,10 @@
     </field>
     <field name="uTimezone" type="string" size="255"/>
     <field name="uDefaultLanguage" type="string" size="32"/>
+    <field name="ulsPasswordReset" type="boolean">
+      <default value="0"/>
+      <notnull/>
+    </field>
     <index name="uName">
       <unique/>
       <col>uName</col>
