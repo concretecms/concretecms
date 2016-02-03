@@ -230,14 +230,19 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                 $permissions->canEditPageTheme() ||
                 $permissions->canEditPageTemplate() ||
                 $permissions->canDeletePage() ||
-                $permissions->canEditPagePermissions())) { ?>
+                $permissions->canEditPagePermissions())) {
+                $hasComposer = is_object($pagetype) && $cp->canEditPageContents(); ?>
         <li data-guide-toolbar-action="page-settings" class="pull-left hidden-xs">
             <a href="#" data-launch-panel="page"
                data-panel-url="<?= URL::to('/ccm/system/panels/page') ?>"
+               <? if ($hasComposer) { ?>}
+               title="<?= t('Composer, Page Design, Location, Attributes and Settings') ?>">
+               <? } else { ?>
                title="<?= t('Page Design, Location, Attributes and Settings') ?>">
+               <? } ?>
                 <i class="fa fa-cog"></i>
                 <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-settings">
-                    <? if (is_object($pagetype) && $cp->canEditPageContents()) { ?>
+                    <? if ($hasComposer) { ?>
                     <?= tc('toolbar', 'Composer') ?> /
                     <? } ?>
                     <?= tc('toolbar', 'Page Settings') ?>
