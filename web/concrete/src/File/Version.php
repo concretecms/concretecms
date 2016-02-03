@@ -1042,8 +1042,9 @@ class Version
             $type = Type::getByHandle(\Config::get('concrete.icons.file_manager_listing.handle'));
             $baseSrc = $this->getThumbnailURL($type->getBaseVersion());
             $doubledSrc = $this->getThumbnailURL($type->getDoubledVersion());
-
-            return '<img src="' . $baseSrc . '" data-at2x="' . $doubledSrc . '" />';
+            $width = $type->getWidth();
+            $height = $type->getHeight();
+            return sprintf('<img width="%s" height="%s" src="%s" data-at2x="%s">', $width, $height, $baseSrc, $doubledSrc);
         } else {
             return $this->getTypeObject()->getThumbnail();
         }

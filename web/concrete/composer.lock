@@ -2953,20 +2953,25 @@
         },
         {
             "name": "tedivm/jshrink",
-            "version": "v0.5.2",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tedious/JShrink.git",
-                "reference": "4b48e3d051cf0ab145db9df20d3292d91485bb60"
+                "reference": "688527a2e854d7935f24f24c7d5eb1b604742bf9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tedious/JShrink/zipball/4b48e3d051cf0ab145db9df20d3292d91485bb60",
-                "reference": "4b48e3d051cf0ab145db9df20d3292d91485bb60",
+                "url": "https://api.github.com/repos/tedious/JShrink/zipball/688527a2e854d7935f24f24c7d5eb1b604742bf9",
+                "reference": "688527a2e854d7935f24f24c7d5eb1b604742bf9",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "fabpot/php-cs-fixer": "0.4.0",
+                "phpunit/phpunit": "4.0.*",
+                "satooshi/php-coveralls": "dev-master"
             },
             "type": "library",
             "autoload": {
@@ -2985,12 +2990,12 @@
                 }
             ],
             "description": "Javascript Minifier built in PHP",
-            "homepage": "http://github.com/tedivm/JShrink",
+            "homepage": "http://github.com/tedious/JShrink",
             "keywords": [
                 "javascript",
                 "minifier"
             ],
-            "time": "2014-01-14 22:23:53"
+            "time": "2015-07-04 07:35:09"
         },
         {
             "name": "tedivm/stash",

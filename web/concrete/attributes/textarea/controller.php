@@ -10,7 +10,7 @@ use Concrete\Core\Entity\Attribute\Value\Value\TextareaValue;
 
 class Controller extends DefaultController
 {
-    protected $searchIndexFieldDefinition = array('type' => 'text', 'options' => array('length' => 4294967295, 'default' => null, 'notnull' => false));
+    protected $searchIndexFieldDefinition = array('type' => 'text', 'options' => array('default' => null, 'notnull' => false));
 
     public function getIconFormatter()
     {

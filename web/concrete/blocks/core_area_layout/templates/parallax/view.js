@@ -15,7 +15,7 @@ $(function () {
         $inner.addClass('parallax-stripe-inner');
 
         $wrapper.parallaxize({
-            variation: $wrapper.height()
+            speed: 0.2
         });
 
     });
