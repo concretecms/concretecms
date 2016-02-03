@@ -2,11 +2,13 @@
 namespace Concrete\Controller\Panel\Page;
 
 use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
+use Concrete\Core\Form\Service\Widget\DateTime;
+use Concrete\Core\Support\Facade\Config;
+use Concrete\Core\User\User;
 use Permissions;
 use CollectionVersion;
 use Loader;
 use Page;
-use User;
 use Concrete\Core\Workflow\Request\ApprovePageRequest as ApprovePagePageWorkflowRequest;
 use PageEditResponse;
 
@@ -23,8 +25,24 @@ class CheckIn extends BackendInterfacePageController
     {
         parent::on_start();
         if ($this->page) {
+            $v = CollectionVersion::get($this->page, "RECENT");
+
+            $this->set('publishDate', $v->getPublishDate());
             $this->set('publishErrors', $this->checkForPublishing());
+            $this->set('timezone', $this->getTimezone());
         }
+    }
+
+    private function getTimezone()
+    {
+        if (Config::get('concrete.misc.user_timezones')) {
+            $user = new User();
+            $userInfo = $user->getUserInfoObject();
+
+            return $userInfo->getUserTimezone();
+        }
+
+        return Config::get('app.timezone');
     }
 
     protected function checkForPublishing()
@@ -73,10 +91,22 @@ class CheckIn extends BackendInterfacePageController
             $v = CollectionVersion::get($c, "RECENT");
             $v->setComment($_REQUEST['comments']);
             $pr = new PageEditResponse();
-            if ($this->request->request->get('action') == 'publish' && $this->permissions->canApprovePageVersions()) {
+            if (($this->request->request->get('action') == 'publish'
+                    || $this->request->request->get('action') == 'schedule')
+                && $this->permissions->canApprovePageVersions()
+            ) {
                 $e = $this->checkForPublishing();
                 $pr->setError($e);
                 if (!$e->has()) {
+                    if ($this->request->request->get('action') == 'schedule') {
+                        $dateTime = new DateTime();
+                        $publishDateTime = $dateTime->translate('check-in-scheduler');
+
+                        $v->setPublishDate($publishDateTime);
+                    } else {
+                        $v->setPublishDate(null);
+                    }
+
                     $pkr = new ApprovePagePageWorkflowRequest();
                     $pkr->setRequestedPage($c);
                     $pkr->setRequestedVersionID($v->getVersionID());

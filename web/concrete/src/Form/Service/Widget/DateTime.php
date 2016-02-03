@@ -62,7 +62,8 @@ class DateTime
      * @param bool $includeActivation
      * @param bool $calendarAutoStart
      */
-    public function datetime($prefix, $value = null, $includeActivation = false, $calendarAutoStart = true)
+    public function datetime($prefix, $value = null, $includeActivation = false, $calendarAutoStart = true,
+                             $classes = null)
     {
         if (substr($prefix, -1) == ']') {
             $prefix = substr($prefix, 0, strlen($prefix) - 1);
@@ -123,7 +124,7 @@ class DateTime
             }
             $html .= '<option value="' . $i . '" ' . $selected . '>' . $i . '</option>';
         }
-        $html .= '</select>:';
+        $html .= '</select><span class="separator">:</span>';
         $html .= '<select class="form-control"  id="' . $id . '_m" name="' . $_m . '" ' . $disabled . '>';
         for ($i = 0; $i <= 59; ++$i) {
             if ($i == $timeMinute) {
@@ -155,6 +156,16 @@ class DateTime
             $html .= '</select>';
         }
         $html .= '</span></div>';
+
+        $beforeShow = '';
+        if ($classes) {
+            $beforeShow = <<<EOT
+                beforeShow: function(input, inst) {
+                    $('#ui-datepicker-div').addClass("$classes");
+                },
+EOT;
+        }
+
         $jh = Core::make('helper/json'); /* @var $jh \Concrete\Core\Http\Service\Json */
         if ($calendarAutoStart) {
             $html .= '<script type="text/javascript">$(function () {
@@ -164,6 +175,7 @@ class DateTime
                     altField: "#' . $id . '_dt",
                     changeYear: true,
                     showAnim: \'fadeIn\',
+                    ' . $beforeShow . '
                     onClose: function(dateText, inst) {
                         if(dateText == "") {
                             var altField = $(inst.settings["altField"]);

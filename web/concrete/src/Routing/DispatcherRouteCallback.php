@@ -132,6 +132,10 @@ class DispatcherRouteCallback extends RouteCallback
             return $this->sendPageNotFound($request);
         }
 
+        if (!$c->canBePublished()) {
+            return $this->sendPageNotFound($request);
+        }
+
         if ($cp->canEditPageContents() || $cp->canEditPageProperties() || $cp->canViewPageVersions()) {
             $c->loadVersionObject('RECENT');
         }
