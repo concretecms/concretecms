@@ -370,7 +370,7 @@ class Application extends Container
             // port, scheme. Set scheme first so that our port can use the magic "set if necessary" method.
             $new = $url->setScheme($canonical->getScheme()->get());
             $new = $new->setHost($canonical->getHost()->get());
-            $new = $new->setPortIfNecessary($canonical->getPort()->get());
+            $new = $new->setPort($canonical->getPort()->get());
 
             // Now we have our current url, swapped out with the important parts of the canonical URL.
             // If it matches, we're good.
@@ -385,7 +385,7 @@ class Application extends Container
 
                 $new = $url->setScheme($ssl->getScheme()->get());
                 $new = $new->setHost($ssl->getHost()->get());
-                $new = $new->setPortIfNecessary($ssl->getPort()->get());
+                $new = $new->setPort($ssl->getPort()->get());
 
                 // Now we have our current url, swapped out with the important parts of the canonical URL.
                 // If it matches, we're good.

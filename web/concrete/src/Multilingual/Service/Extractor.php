@@ -127,7 +127,7 @@ class Extractor
             /* @var $package \Concrete\Core\Package\Package */
             $baseDir = $package->getPackagePath() . '/' . DIRNAME_LANGUAGES . '/' . $section->getLocale() . '/LC_MESSAGES';
             $poFile = $baseDir . '/messages.po';
-            $moFile = $baseDir . '/messages.po';
+            $moFile = $baseDir . '/messages.mo';
             $packageTranslations = null;
             if (is_file($poFile)) {
                 $packageTranslations = PoExtractor::fromFile($poFile);
