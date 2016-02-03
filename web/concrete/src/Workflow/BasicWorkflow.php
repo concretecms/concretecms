@@ -111,7 +111,7 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow
             foreach ($parameters as $key => $value) {
                 $mh->addParameter($key, $value);
             }
-            $mh->addParameter('siteName', Config::get('concrete.site'));
+            $mh->addParameter('siteName', tc('SiteName', Config::get('concrete.site')));
             $mh->load('basic_workflow_notification');
             $mh->sendMail();
             unset($mh);

@@ -33,7 +33,7 @@ class Bulk extends DashboardPageController {
         $success = t('success');
         $cID = $this->post('cID');
         $c = Page::getByID($cID);
-        if (trim(sprintf(Config::get('concrete.seo.title_format'), Config::get('concrete.site'), $c->getCollectionName())) != trim($this->post('meta_title')) && $this->post('meta_title')) {
+        if (trim(sprintf(Config::get('concrete.seo.title_format'), tc('SiteName', Config::get('concrete.site')), $c->getCollectionName())) != trim($this->post('meta_title')) && $this->post('meta_title')) {
         	 $c->setAttribute('meta_title',trim($this->post('meta_title')));
 		}
 
