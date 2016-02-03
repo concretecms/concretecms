@@ -4,6 +4,7 @@ $html = Core::make('helper/html');
 $dh = Core::make('helper/concrete/dashboard');
 $ihm = Core::make('helper/concrete/ui/menu');
 $valt = Core::make('helper/validation/token');
+$dateHelper = Core::make('helper/date');
 $token = '&' . $valt->getParameter();
 $logouttoken = $valt->generate('logout');
 $cID = $c->getCollectionID();
@@ -55,6 +56,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                         <li class="ccm-toolbar-page-edit-mode-active ccm-toolbar-page-edit"><i
                                 class="fa fa-pencil mobile-leading-icon"></i><a <?php if ($c->isMasterCollection()) {
     ?>data-disable-panel="check-in"<?php
+
 }
     ?> data-toolbar-action="check-in"
                                                                                 <?php if ($vo->isNew() && !$c->isMasterCollection()) {
@@ -73,17 +75,20 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 }
     ?></a></li>
                     <?php
+
 } elseif ($permissions->canEditPageContents()) {
     ?>
                         <li class="ccm-toolbar-page-edit"><i class="fa fa-pencil mobile-leading-icon"></i><a
                                 <?php if ($c->isMasterCollection()) {
     ?>data-disable-panel="check-in"<?php
+
 }
     ?>
                                 data-toolbar-action="check-out"
                                 href="<?= DIR_REL ?>/<?= DISPATCHER_FILENAME ?>?cID=<?= $c->getCollectionID() ?>&ctask=check-out<?= $token ?>"><?php echo t(
                                     'Edit this Page') ?></a></li>
                     <?php
+
 }
     ?>
                     <li class="parent-ul"><i class="fa fa-cog mobile-leading-icon"></i><a href="#"><?php echo t(
@@ -123,6 +128,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                                                 'Location');
             ?></a></li>
                                 <?php
+
         }
         ?>
                                 <li><a class="dialog-launch" dialog-width="90%" dialog-height="70%"
@@ -176,11 +182,13 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                                         '/ccm/system/dialogs/page/delete') ?>?cID=<?= $cID ?>"><?php echo t(
                                             'Delete') ?></a></li>
                             <?php
+
     }
     ?>
                         </ul>
                     </li>
                 <?php
+
 }
     ?>
                 <?php if ($dh->canRead()) {
@@ -219,6 +227,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                     </ul>
                 </li>
                 <?php
+
 }
     ?>
                 <li>
@@ -243,6 +252,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                 </span>
             </a>
             <?php
+
 }
     ?>
             <?php if (!$pageInUseBySomeoneElse && $c->getCollectionPointerID() == 0) {
@@ -253,15 +263,18 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
         <li data-guide-toolbar-action="check-in"  class="ccm-toolbar-page-edit-mode-active ccm-toolbar-page-edit pull-left hidden-xs">
             <a <?php if ($c->isMasterCollection()) {
     ?>data-disable-panel="check-in"<?php
+
 }
     ?> data-toolbar-action="check-in" <?php if ($vo->isNew() || $c->isPageDraft()) {
     ?>href="javascript:void(0)"
                data-launch-panel="check-in" <?php
+
 } else {
     ?>href="<?= URL::to(
                 '/ccm/system/page/check_in',
                 $c->getCollectionID(),
                 $valt->generate()) ?>"<?php
+
 }
     ?>
                data-panel-url="<?= URL::to('/ccm/system/panels/page/check_in') ?>"
@@ -273,11 +286,13 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
             </a>
         </li>
     <?php
+
 } elseif ($permissions->canEditPageContents()) {
     ?>
         <li data-guide-toolbar-action="edit-page" class="ccm-toolbar-page-edit pull-left hidden-xs">
             <a <?php if ($c->isMasterCollection()) {
     ?>data-disable-panel="check-in"<?php
+
 }
     ?> data-toolbar-action="check-out"
                href="<?= DIR_REL ?>/<?= DISPATCHER_FILENAME ?>?cID=<?= $c->getCollectionID() ?>&ctask=check-out<?= $token ?>"
@@ -289,6 +304,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
             </a>
         </li>
     <?php
+
 }
     ?>
 
@@ -298,25 +314,35 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                 $permissions->canEditPageTemplate() ||
                 $permissions->canDeletePage() ||
                 $permissions->canEditPagePermissions())) {
-                $hasComposer = is_object($pagetype) && $cp->canEditPageContents(); ?>
+    $hasComposer = is_object($pagetype) && $cp->canEditPageContents();
+    ?>
         <li data-guide-toolbar-action="page-settings" class="pull-left hidden-xs">
             <a href="#" data-launch-panel="page"
                data-panel-url="<?= URL::to('/ccm/system/panels/page') ?>"
-               <?php if ($hasComposer) { ?>}
+               <?php if ($hasComposer) {
+    ?>}
                title="<?= t('Composer, Page Design, Location, Attributes and Settings') ?>">
-               <?php } else { ?>
+               <?php 
+} else {
+    ?>
                title="<?= t('Page Design, Location, Attributes and Settings') ?>">
-               <?php } ?>
+               <?php 
+}
+    ?>
                 <i class="fa fa-cog"></i>
                 <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-settings">
-                    <? if ($hasComposer) { ?>
+                    <?php if ($hasComposer) {
+    ?>
                     <?= tc('toolbar', 'Composer') ?> /
-                    <? } ?>
+                    <?php 
+}
+    ?>
                     <?= tc('toolbar', 'Page Settings') ?>
                 </span>
             </a>
         </li>
         <?php
+
 }
     ?>
     <?php
@@ -336,6 +362,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                     </span>
                 </a>
             <?php
+
 } else {
     ?>
                 <a href="<?= DIR_REL ?>/<?= DISPATCHER_FILENAME ?>?cID=<?= $cID ?>&ctask=check-out-add-block<?= $token ?>"
@@ -346,6 +373,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                     </span>
                 </a>
             <?php
+
 }
         ?>
         </li>
@@ -371,11 +399,13 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                 'Powered by <a href="%s">concrete5</a>.',
                 Config::get('concrete.urls.concrete5')) ?></li>
     <?php
+
     }
     ?>
         <li class="pull-right ccm-toolbar-mobile-menu-button visible-xs hidden-sm hidden-md hidden-lg
             <?php if ($c->isEditMode()) {
     ?> ccm-toolbar-mobile-menu-button-active<?php
+
 }
     ?>">
             <i class="fa fa-bars fa-2"></i>
@@ -393,6 +423,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
             </a>
         </li>
         <?php
+
 } else {
     ?>
             <li class="pull-right hidden-xs ">
@@ -403,6 +434,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                 </a>
             </li>
         <?php
+
 }
     ?>
         <li data-guide-toolbar-action="sitemap" class="pull-right hidden-xs">
@@ -432,9 +464,11 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                 </a>
                 </li>
             <?php
+
     }
     ?>
         <?php
+
 }
     ?>
         <li data-guide-toolbar-action="intelligent-search" class="ccm-toolbar-search pull-right hidden-xs"><i class="fa fa-search"></i> <input type="search"
@@ -473,6 +507,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                 'icon' => 'exclamation-sign',
             )) ?>
     <?php
+
 } else {
     ?>
 
@@ -533,11 +568,13 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
     ?>
                                                     <a href="<?= $act->getWorkflowProgressActionURL() ?>"
 							<?php
+
 } else {
     ?>
                                                     <button type="submit"
                                                             name="action_<?= $act->getWorkflowProgressActionTask() ?>"
 							<?php
+
 }
     ?>
 
@@ -549,9 +586,11 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
     ?>
                                                         <?= $key ?>="<?= $value ?>"
                                                     <?php
+
 }
     ?>
                                                 <?php
+
 }
     ?>
 
@@ -560,22 +599,27 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
     ?>
                                                     </a>
                                                 <?php
+
 } else {
     ?>
                                                     </button>
                                                 <?php
+
 }
     ?>
                                             <?php
+
 }
     ?>
                                         </div>
                                     <?php
+
 }
     ?>
                                 </div>
                             </form>
                         <?php
+
 }
     ?>
                     </div>
@@ -584,6 +628,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                 </div>
                 </div>
             <?php
+
 }
         ?>
         <?php
@@ -640,6 +685,27 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                             ))?>
 
                 <?php
+
+                }
+            } else {
+                $publishDate = $vo->getPublishDate();
+                if ($publishDate) {
+                    $date = $dateHelper->formatDate($publishDate);
+                    $time = $dateHelper->formatTime($publishDate);
+                    $message = t('This version of the page is scheduled to be published on %1$s at %2$s.',
+                        $date, $time);
+                    $button = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID() .
+                        '&ctask=publish-now' . $token . '" class="btn btn-primary btn-xs">Publish Now</a>';
+
+                    echo Core::make('helper/concrete/ui')->notify(
+                        array(
+                            'title' => t('Publish Pending.'),
+                            'message' => $message,
+                            'type' => 'info',
+                            'icon' => 'cog',
+                            'buttons' => array($button),
+                        )
+                    );
                 }
             }
         }
@@ -647,6 +713,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
     ?>
 
     <?php
+
 }
     ?>
     </div>

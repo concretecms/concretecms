@@ -14,7 +14,6 @@ use Permissions;
 use User;
 use Events;
 use CacheLocal;
-use CollectionAttributeKey;
 use Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionVersionFeatureAssignment;
 
 class Version extends Object implements \Concrete\Core\Permission\ObjectInterface
@@ -68,7 +67,10 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
             );
         }
 
-        $q = "select cvID, cvIsApproved, cvIsNew, cvHandle, cvName, cvDescription, cvDateCreated, cvDatePublic, pTemplateID, cvAuthorUID, cvApproverUID, cvComments, pThemeID from CollectionVersions where cID = ?";
+        $q = "select cvID, cvIsApproved, cvIsNew, cvHandle, cvName, cvDescription, cvDateCreated, cvDatePublic, " .
+             "pTemplateID, cvAuthorUID, cvApproverUID, cvComments, pThemeID, cvPublishDate from CollectionVersions " .
+             "where cID = ?";
+
         if ($cvID == 'ACTIVE') {
             $q .= ' and cvIsApproved = 1';
         } elseif ($cvID == 'RECENT') {
@@ -121,6 +123,11 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
     public function isApproved()
     {
         return $this->cvIsApproved;
+    }
+
+    public function getPublishDate()
+    {
+        return $this->cvPublishDate;
     }
 
     public function isMostRecent()
@@ -241,6 +248,21 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
         $this->versionComments = $comment;
     }
 
+    public function setPublishDate($publishDate)
+    {
+        $thisCVID = $this->getVersionID();
+        $v = array(
+            $publishDate,
+            $thisCVID,
+            $this->cID,
+        );
+
+        $db = Loader::db();
+        $q = "update CollectionVersions set cvPublishDate = ? where cvID = ? and cID = ?";
+
+        $db->query($q, $v);
+    }
+
     public function createNew($versionComments)
     {
         $db = Loader::db();
@@ -270,9 +292,11 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
             $cvIsNew,
             $this->pThemeID,
             $this->pTemplateID,
+            $this->cvPublishDate,
         );
-        $q = "insert into CollectionVersions (cID, cvID, cvName, cvHandle, cvDescription, cvDatePublic, cvDateCreated, cvComments, cvAuthorUID, cvIsNew, pThemeID, pTemplateID)
-			values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $q = "insert into CollectionVersions (cID, cvID, cvName, cvHandle, cvDescription, cvDatePublic, " .
+             "cvDateCreated, cvComments, cvAuthorUID, cvIsNew, pThemeID, pTemplateID, cvPublishDate) " .
+			 "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         $r = $db->prepare($q);
         $res = $db->execute($r, $v);

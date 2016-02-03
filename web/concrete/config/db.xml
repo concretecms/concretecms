@@ -1984,6 +1984,7 @@
       <notnull/>
     </field>
     <field name="cvActivateDatetime" type="datetime"/>
+    <field name="cvPublishDate" type="datetime"/>
     <index name="cvIsApproved">
       <col>cvIsApproved</col>
     </index>
