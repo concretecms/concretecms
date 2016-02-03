@@ -7,13 +7,11 @@ use Concrete\Core\Workflow\Progress\Action\ApprovalAction as WorkflowProgressApp
 use Concrete\Core\Workflow\Progress\Action\CancelAction as WorkflowProgressCancelAction;
 use Concrete\Core\Workflow\Progress\BasicData as BasicWorkflowProgressData;
 use Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
-use Loader;
 use Core;
 use PermissionAccess;
 use PermissionKey;
 use User;
 use UserInfo;
-use Config;
 
 class BasicWorkflow extends \Concrete\Core\Workflow\Workflow
 {
@@ -40,8 +38,8 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow
     }
 
     /**
-    +	 * Returns true if the logged-in user can approve the current workflow
-    +	 */
+     * Returns true if the logged-in user can approve the current workflow
+     */
     public function canApproveWorkflow()
     {
         $pk = Key::getByHandle('approve_basic_workflow_action');
@@ -55,8 +53,8 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow
 
     public function delete()
     {
-        $db = Loader::db();
-        $db->Execute('DELETE FROM BasicWorkflowPermissionAssignments WHERE wfID = ?', array($this->wfID));
+        $db = Core::make('database')->connection();
+        $db->executeQuery('DELETE FROM BasicWorkflowPermissionAssignments WHERE wfID = ?', array($this->wfID));
         parent::delete();
     }
 
@@ -64,15 +62,15 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow
     {
         // lets save the basic data associated with this workflow.
         $req = $wp->getWorkflowRequestObject();
-        $db = Loader::db();
-        $db->Execute(
+        $db = Core::make('database')->connection();
+        $db->executeQuery(
             'INSERT INTO BasicWorkflowProgressData (wpID, uIDStarted) VALUES (?, ?)',
             array($wp->getWorkflowProgressID(), $req->getRequesterUserID()));
 
         if ($this->canApproveWorkflow()) {
             // Then that means we have the ability to approve the workflow we just started.
             // In that case, we transparently approve it, and skip the entry notification step.
-            $wpr = $req->approve($wp);
+            $req->approve($wp);
             $wp->delete();
 
         } else {
@@ -99,10 +97,9 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow
         $nk = PermissionKey::getByHandle($permission);
         $nk->setPermissionObject($this);
         $users = $nk->getCurrentlyActiveUsers($wp);
-        $req = $wp->getWorkflowRequestObject();
 
         foreach ($users as $ui) {
-            $mh = Loader::helper('mail');
+            $mh = Core::make('helper/mail');
             $mh->addParameter('uName', $ui->getUserName());
             $mh->to($ui->getUserEmail());
             $adminUser = UserInfo::getByID(USER_SUPER_ID);
@@ -111,7 +108,7 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow
             foreach ($parameters as $key => $value) {
                 $mh->addParameter($key, $value);
             }
-            $mh->addParameter('siteName', Config::get('concrete.site'));
+            $mh->addParameter('siteName', Core::make('config')->get('concrete.site'));
             $mh->load('basic_workflow_notification');
             $mh->sendMail();
             unset($mh);
@@ -171,6 +168,7 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow
 
             return $wpr;
         }
+        return null;
     }
 
     public function canApproveWorkflowProgressObject(WorkflowProgress $wp)
@@ -208,6 +206,7 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow
 
             return $wpr;
         }
+        return null;
     }
 
     public function getWorkflowProgressActions(WorkflowProgress $wp)
