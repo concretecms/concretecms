@@ -695,13 +695,13 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
     public static function add($data, $pkg = false)
     {
         $data = $data + array(
-            'defaultTemplate' => null,
-            'allowedTemplates' => null,
-            'templates' => null,
-            'internal' => null,
-            'ptLaunchInComposer' => null,
-            'ptIsFrequentlyAdded' => null,
-        );
+                'defaultTemplate' => null,
+                'allowedTemplates' => null,
+                'templates' => null,
+                'internal' => null,
+                'ptLaunchInComposer' => null,
+                'ptIsFrequentlyAdded' => null,
+            );
         $ptHandle = $data['handle'];
         $ptName = $data['name'];
         $ptDefaultPageTemplateID = 0;
@@ -1102,19 +1102,14 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
     }
 
-    public function createDraft(PageTemplate $pt, $u = false)
+    public function createDraft(PageTemplate $pt)
     {
-        if (!is_object($u)) {
-            $u = new User();
-        }
-        $db = Loader::db();
-        $ptID = $this->getPageTypeID();
         $parent = Page::getByPath(Config::get('concrete.paths.drafts'));
         $data = array('cvIsApproved' => 0);
         $p = $parent->add($this, $data, $pt);
         $p->deactivate();
 
-        // now we setup in the initial configurated page target
+        // now we setup in the initial configured page target
         $target = $this->getPageTypePublishTargetObject();
         $cParentID = $target->getDefaultParentPageID();
         if ($cParentID > 0) {
@@ -1123,14 +1118,9 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
 
         // we have to publish the controls to the page. i'm not sure why
         $controls = PageTypeComposerControl::getList($this);
-        $outputControls = array();
         foreach ($controls as $cn) {
-            $cn->publishToPage($p, array(), $controls);
+            $cn->publishToPage($p, array('name' => null, 'description' => null,'url_slug' => null), $controls);
         }
-
-        // now we need to clear out the processed controls in case we
-        // save again in the same request
-        CorePagePropertyPageTypeComposerControl::clearComposerRequestProcessControls();
 
         return $p;
     }

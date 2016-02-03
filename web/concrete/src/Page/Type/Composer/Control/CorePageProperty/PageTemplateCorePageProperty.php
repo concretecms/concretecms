@@ -23,7 +23,8 @@ class PageTemplateCorePageProperty extends CorePageProperty
 
     public function publishToPage(Page $c, $data, $controls)
     {
-        $this->addPageTypeComposerControlRequestValue('pTemplateID', $_POST['ptComposerPageTemplateID']);
+        $templateId = \Core::make('Concrete\Core\Http\Request')->post('ptComposerPageTemplateID');
+        $this->addPageTypeComposerControlRequestValue('pTemplateID', $templateId);
         parent::publishToPage($c, $data, $controls);
     }
 
