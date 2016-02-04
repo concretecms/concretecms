@@ -86,24 +86,29 @@ class Stack extends Page implements ExportableInterface
             } else {
                 $item->lock();
                 $db = Database::connection();
-                $cID = $db->fetchColumn('select cID from Stacks where stName = ? and stMultilingualSection = 0', array($stackName));
-                if ($cID) {
-                    $detector = Core::make('multilingual/detector');
-                    /* @var \Concrete\Core\Multilingual\Service\Detector $detector */
-                    if ($detector->isEnabled()) {
-                        $ms = self::getMultilingualSectionFromType($multilingualContentSource);
-                        if ($ms) {
-                            $cIDLocalized = $db->fetchAssoc('select cID from Stacks where stMultilingualSection = ? and stNeutralStack = ?', array($ms->getCollectionID(), $cID));
-                            if ($cIDLocalized) {
-                                $cID = $cIDLocalized;
-                            }
-                        }
-                    }
+                $ms = false;
+                $detector = Core::make('multilingual/detector');
+                if ($detector->isEnabled()) {
+                    $ms = self::getMultilingualSectionFromType($multilingualContentSource);
                 }
+                $sql = 'select cID from Stacks where stName = ?';
+                $q = array($stackName);
+                if ($ms) {
+                    $sql .= ' and (stMultilingualSection = ? or stMultilingualSection = 0) order by stMultilingualSection desc';
+                    $q[] = $ms->getCollectionID();
+                } else {
+                    $sql .= ' and stMultilingualSection = 0';
+                }
+                $sql .= ' limit 1';
+                $cID = $db->fetchColumn($sql, $q);
                 $item->set($cID);
             }
         } else {
-            $cID = Database::connection()->GetOne('select cID from Stacks where stName = ?', array($stackName));
+            $db = Database::connection();
+            $cID = $db->fetchColumn(
+                'select cID from Stacks where stName = ? and stMultilingualSection = 0',
+                array($stackName)
+            );
         }
 
         return $cID ? static::getByID($cID, $cvID) : false;
@@ -357,6 +362,24 @@ class Stack extends Page implements ExportableInterface
         }
     }
 
+    private $multilingualSectionID;
+
+    /**
+     * Returns the ID of the multilingual section associated to this stack (or 0 if it's the language-neutral version).
+     *
+     * @return int
+     */
+    protected function getMultilingualSectionID()
+    {
+        if (!isset($this->multilingualSectionID)) {
+            $db = Database::connection();
+            $cID = $db->GetOne('select stMultilingualSection from Stacks where cID = ?', array($this->getCollectionID()));
+            $this->multilingualSectionID = $cID ? (int) $cID : 0;
+        }
+
+        return $this->multilingualSectionID;
+    }
+
     /**
      * Returns the multilingual section associated to this stack (or null if it's the language-neutral version).
      *
@@ -365,9 +388,8 @@ class Stack extends Page implements ExportableInterface
     public function getMultilingualSection()
     {
         $result = null;
-        $db = Database::connection();
-        $cID = $db->GetOne('select stMultilingualSection from Stacks where cID = ?', array($this->getCollectionID()));
-        if ($cID) {
+        $msID = $this->getMultilingualSectionID();
+        if ($msID !== 0) {
             $s = Section::getByID($cID);
             if ($s) {
                 $result = $s;
