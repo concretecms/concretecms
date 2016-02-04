@@ -16,6 +16,16 @@ abstract class AbstractItem implements ItemInterface
         return count($this->getItems($package)) > 0;
     }
 
+    public function removeItems(Package $package)
+    {
+        foreach($this->getItems($package) as $item) {
+            if (method_exists($item, 'delete')) {
+                $item->delete();
+            } elseif (method_exists($item, 'uninstall')) {
+                $item->uninstall();
+            }
+        }
+    }
 
     public function getItems(Package $package)
     {

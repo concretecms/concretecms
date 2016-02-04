@@ -12,6 +12,7 @@ interface ItemInterface
     function getItems(Package $package);
     function getItemName($mixed);
     function getItemCategoryDisplayName();
+    function removeItems(Package $package);
     function renderList(Package $package);
 
 }

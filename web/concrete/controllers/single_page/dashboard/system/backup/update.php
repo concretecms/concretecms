@@ -68,19 +68,9 @@ class Update extends DashboardPageController
             if (is_object($remote)) {
                 // try to download
                 $r = \Marketplace::downloadRemoteFile($remote->getDirectDownloadURL());
-                if (empty($r) || $r == \Package::E_PACKAGE_DOWNLOAD) {
-                    $response = array(\Package::E_PACKAGE_DOWNLOAD);
-                } else {
-                    if ($r == \Package::E_PACKAGE_SAVE) {
-                        $response = array($r);
-                    }
-                }
-
-                if (isset($response)) {
-                    $errors = \Package::mapError($response);
-                    foreach ($errors as $e) {
-                        $this->error->add($e);
-                    }
+                if (is_object($r)) {
+                    // error object
+                    $this->error->add($r);
                 }
 
                 if (!$this->error->has()) {

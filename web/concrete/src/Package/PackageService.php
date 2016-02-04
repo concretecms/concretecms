@@ -2,8 +2,9 @@
 namespace Concrete\Core\Package;
 
 use Concrete\Core\Application\Application;
-use Concrete\Core\Entity\Package;
-use Concrete\Core\Package\Package as PackageController;
+use Concrete\Core\Package\Item\Manager\ItemInterface;
+use Concrete\Core\Package\Item\Manager\Manager;
+use Concrete\Core\Page\Theme\Theme;
 use Doctrine\ORM\EntityManagerInterface;
 
 class PackageService

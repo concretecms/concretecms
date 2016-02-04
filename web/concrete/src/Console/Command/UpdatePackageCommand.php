@@ -101,9 +101,12 @@ EOT
         if ($upPkg === null && $force !== true) {
             $output->writeln(sprintf("<info>the package is already up-to-date (v%s)</info>", $pkg->getPackageVersion()));
         } else {
-            $test = Package::testForInstall($pkgHandle, false);
-            if ($test !== true) {
-                throw new Exception(implode("\n", Package::mapError($r)));
+            $test = $pkg->testForInstall(false);
+            if (is_object($test)) {
+                /**
+                 * @var $test Error
+                 */
+                throw new Exception(implode("\n", $test->getList()));
             }
             $output->writeln('<info>good.</info>');
 

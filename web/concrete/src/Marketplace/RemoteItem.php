@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Marketplace;
 
+use Concrete\Core\Error\Error;
 use Concrete\Core\Package\Package;
 use Concrete\Core\Package\PackageArchive;
 use Loader;
@@ -221,14 +222,12 @@ class RemoteItem extends Object
         }
 
         $file = Marketplace::downloadRemoteFile($this->getRemoteFileURL());
-        if (empty($file) || $file == Package::E_PACKAGE_DOWNLOAD) {
-            return array(Package::E_PACKAGE_DOWNLOAD);
-        } elseif ($file == Package::E_PACKAGE_SAVE) {
-            return array($file);
+        if (is_object($file)) {
+            return $file; // error
         }
 
         $r = $pkg->backup();
-        if (is_array($r)) {
+        if (is_object($r)) {
             return $r;
         }
 
@@ -237,27 +236,26 @@ class RemoteItem extends Object
             $am->install($file, true);
         } catch (Exception $e) {
             $pkg->restore();
-
-            return array($e->getMessage());
+            $error = \Core::make('error');
+            $error->add($e);
+            return $error;
         }
     }
 
     public function download()
     {
         $file = Marketplace::downloadRemoteFile($this->getRemoteFileURL());
-        if (empty($file) || $file == Package::E_PACKAGE_DOWNLOAD) {
-            return array(Package::E_PACKAGE_DOWNLOAD);
-        } elseif ($file == Package::E_PACKAGE_SAVE) {
-            return array($file);
-        } elseif ($file == Package::E_PACKAGE_INVALID_APP_VERSION) {
-            return array($file);
-        }
-
-        try {
-            $am = new PackageArchive($this->getHandle());
-            $am->install($file, true);
-        } catch (Exception $e) {
-            return array($e->getMessage());
+        if ($file instanceof Error) {
+            return $file;
+        } else {
+            try {
+                $am = new PackageArchive($this->getHandle());
+                $am->install($file, true);
+            } catch (Exception $e) {
+                $error = \Core::make('error');
+                $error->add($e);
+                return $e;
+            }
         }
     }
 

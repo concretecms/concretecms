@@ -30,7 +30,9 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
     <form method="post" action="<?=$this->action('install_package', $pkg->getPackageHandle())?>">
     <?=Loader::helper('validation/token')->output('install_options_selected')?>
     <?=Loader::packageElement('dashboard/install', $pkg->getPackageHandle())?>
-    <?php if ($pkg->allowsFullContentSwap()) {
+    <?php
+    $swapper = new \Concrete\Core\Package\ContentSwapper();
+    if ($swapper->allowsFullContentSwap($pkg)) {
     ?>
         <h4><?=t('Clear this Site?')?></h4>
         <p><?=t('%s can fully clear your website of all existing content and install its own custom content in its place. If you\'re installing a theme for the first time you may want to do this. Clear all site content?', $pkg->getPackageName())?></p>
