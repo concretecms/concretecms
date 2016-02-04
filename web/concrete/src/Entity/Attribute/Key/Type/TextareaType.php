@@ -14,6 +14,11 @@ class TextareaType extends Type
         return new TextareaValue();
     }
 
+    public function getAttributeTypeHandle()
+    {
+        return 'textarea';
+    }
+
     /**
      * @Column(type="string")
      */

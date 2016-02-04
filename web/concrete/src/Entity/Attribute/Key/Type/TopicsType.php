@@ -13,12 +13,12 @@ class TopicsType extends Type
     /**
      * @Column(type="integer")
      */
-    protected $parentNodeID = '';
+    protected $parentNodeID = 0;
 
     /**
      * @Column(type="integer")
      */
-    protected $topicTreeID = '';
+    protected $topicTreeID = 0;
 
     /**
      * @return mixed
@@ -62,6 +62,11 @@ class TopicsType extends Type
         $controller = \Core::make('\Concrete\Attribute\Topics\Controller');
         $controller->setAttributeType($this->getAttributeType());
         return $controller;
+    }
+
+    public function getAttributeTypeHandle()
+    {
+        return 'topics';
     }
 
     public function getTopicTreeObject()

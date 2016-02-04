@@ -2,8 +2,8 @@
 namespace Concrete\Core\Package;
 
 use Concrete\Core\Application\Application;
-use Concrete\Core\Package\Item\Manager\ItemInterface;
-use Concrete\Core\Package\Item\Manager\Manager;
+use Concrete\Core\Package\ItemCategory\ItemInterface;
+use Concrete\Core\Package\ItemCategory\Manager;
 use Concrete\Core\Page\Theme\Theme;
 use Doctrine\ORM\EntityManagerInterface;
 

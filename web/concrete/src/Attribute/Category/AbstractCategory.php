@@ -9,6 +9,7 @@ use Concrete\Core\Attribute\Key\ImportLoader\StandardImportLoader;
 use Concrete\Core\Attribute\Key\RequestLoader\StandardRequestLoader;
 use Concrete\Core\Entity\Attribute\Category;
 use Concrete\Core\Entity\Attribute\Key\Key;
+use Concrete\Core\Entity\Attribute\Key\Type\Type;
 use Concrete\Core\Entity\Attribute\Set;
 use Concrete\Core\Entity\Attribute\Value\Value\Value;
 use Concrete\Core\Error\Error;
@@ -32,6 +33,11 @@ abstract class AbstractCategory implements CategoryInterface
     public function getByID($akID)
     {
         return $this->getAttributeKeyByID($akID);
+    }
+
+    public function getByHandle($akHandle)
+    {
+        return $this->getAttributeKeyByHandle($akHandle);
     }
 
     public function __construct(Application $application, EntityManager $entityManager)
@@ -83,21 +89,22 @@ abstract class AbstractCategory implements CategoryInterface
         ));
     }
 
-    // Create
-    public function addFromRequest(AttributeType $type, Request $request)
+    public function delete()
     {
-        $key = $this->createAttributeKey();
-        $loader = $this->getRequestLoader();
-        $loader->load($key, $request);
-
-        $controller = $type->getController();
-
-        $key_type = $controller->saveKey($request->request->all());
-        if (!is_object($key_type)) {
-            $key_type = $controller->getAttributeKeyType();
+        $keys = $this->getList();
+        foreach($keys as $key) {
+            $this->entityManager->remove($key);
         }
+        $this->entityManager->flush();
+
+        $this->entityManager->remove($this->getCategoryEntity());
+        $this->entityManager->flush();
+
+    }
+
+    public function add(Type $key_type, Key $key, $pkg = null)
+    {
         $key_type->setAttributeKey($key);
-        $key_type->setAttributeType($type);
         $key->setAttributeKeyType($key_type);
 
         // Modify the category's search indexer.
@@ -112,6 +119,22 @@ abstract class AbstractCategory implements CategoryInterface
         return $key;
     }
 
+    public function addFromRequest(AttributeType $type, Request $request)
+    {
+        $key = $this->createAttributeKey();
+        $loader = $this->getRequestLoader();
+        $loader->load($key, $request);
+
+        $controller = $type->getController();
+
+        $key_type = $controller->saveKey($request->request->all());
+        if (!is_object($key_type)) {
+            $key_type = $controller->getAttributeKeyType();
+        }
+
+        return $this->add($key_type, $key);
+    }
+
     public function import(AttributeType $type, \SimpleXMLElement $element)
     {
         $key = $this->createAttributeKey();
@@ -124,20 +147,7 @@ abstract class AbstractCategory implements CategoryInterface
             $key_type = $controller->getAttributeKeyType();
         }
 
-        $key_type->setAttributeKey($key);
-        $key_type->setAttributeType($type);
-        $key->setAttributeKeyType($key_type);
-
-        // Modify the category's search indexer.
-        $indexer = $this->getSearchIndexer();
-        if (is_object($indexer)) {
-            $indexer->updateRepository($this, $key);
-        }
-
-        $this->entityManager->persist($key);
-        $this->entityManager->flush();
-
-        return $key;
+        return $this->add($key_type, $key);
     }
 
     // Update
@@ -154,7 +164,6 @@ abstract class AbstractCategory implements CategoryInterface
             $key_type = $controller->getAttributeKeyType();
         }
         $key_type->setAttributeKey($key);
-        $key_type->setAttributeType($key->getAttributeType());
         $key->setAttributeKeyType($key_type);
 
         // Modify the category's search indexer.

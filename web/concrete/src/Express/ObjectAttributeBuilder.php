@@ -23,8 +23,6 @@ class ObjectAttributeBuilder
         $key_type = $type->getController()
             ->createAttributeKeyType();
 
-        $key_type->setAttributeType($type);
-
         $key = new Key();
         $key->setAttributeKeyType($key_type);
         $this->attribute = $key;

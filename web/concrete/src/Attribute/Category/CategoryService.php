@@ -60,5 +60,7 @@ class CategoryService
         if (is_object($indexer)) {
             $indexer->createRepository($category->getController());
         }
+
+        return $category->getController();
     }
 }

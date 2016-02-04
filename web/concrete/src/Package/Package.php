@@ -6,13 +6,18 @@ use Concrete\Core\Config\Repository\Liaison;
 use Concrete\Core\Database\EntityManagerFactory;
 use Concrete\Core\Database\Schema\Schema;
 use Concrete\Core\Foundation\ClassLoader;
-use Concrete\Core\Package\Item\Manager\ItemInterface;
-use Concrete\Core\Package\Item\Manager\Manager;
+use Concrete\Core\Package\ItemCategory\ItemInterface;
+use Concrete\Core\Package\ItemCategory\Manager;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Support\Facade\DatabaseORM;
 
 abstract class Package implements LocalizablePackageInterface
 {
+
+    protected $DIR_PACKAGES_CORE = DIR_PACKAGES_CORE;
+    protected $DIR_PACKAGES = DIR_PACKAGES;
+    protected $REL_DIR_PACKAGES_CORE = REL_DIR_PACKAGES_CORE;
+    protected $REL_DIR_PACKAGES = REL_DIR_PACKAGES;
 
     /**
      * @var Application
@@ -216,7 +221,7 @@ abstract class Package implements LocalizablePackageInterface
     public function getPackagePath()
     {
         $dirp = (is_dir(
-            DIR_PACKAGES . '/' . $this->getPackageHandle())) ? DIR_PACKAGES : DIR_PACKAGES_CORE;
+            $this->DIR_PACKAGES . '/' . $this->getPackageHandle())) ? $this->DIR_PACKAGES : $this->DIR_PACKAGES_CORE;
         $path = $dirp . '/' . $this->getPackageHandle();
 
         return $path;
@@ -230,7 +235,7 @@ abstract class Package implements LocalizablePackageInterface
     public function getRelativePath()
     {
         $dirp = (is_dir(
-            DIR_PACKAGES . '/' . $this->getPackageHandle())) ? REL_DIR_PACKAGES : REL_DIR_PACKAGES_CORE;
+            $this->DIR_PACKAGES . '/' . $this->getPackageHandle())) ? $this->REL_DIR_PACKAGES : $this->REL_DIR_PACKAGES_CORE;
 
         return $dirp . '/' . $this->pkgHandle;
     }
@@ -328,6 +333,16 @@ abstract class Package implements LocalizablePackageInterface
         // this should go through the facade instead
         return \Concrete\Core\Support\Facade\Package::getInstalledList();
     }
+
+    /**
+     * @deprecated
+     */
+    public static function getByHandle($pkgHandle)
+    {
+        // this should go through the facade instead
+        return \Concrete\Core\Support\Facade\Package::getByHandle($pkgHandle);
+    }
+
 
     /**
      * @deprecated

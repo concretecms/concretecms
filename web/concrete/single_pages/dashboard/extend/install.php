@@ -213,7 +213,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 
         foreach ($categories as $category) {
             /**
-             * @var $category \Concrete\Core\Package\Item\Manager\ItemInterface
+             * @var $category \Concrete\Core\Package\ItemCategory\ItemInterface
              */
             if ($category->hasItems($pkg)) {
                 $category->renderList($pkg);

@@ -45,6 +45,11 @@ class AddressType extends Type
         $this->defaultCountry = $defaultCountry;
     }
 
+    public function getAttributeTypeHandle()
+    {
+        return 'address';
+    }
+
     /**
      * @return mixed
      */

@@ -10,8 +10,7 @@ use Concrete\Core\Package\LocalizablePackageInterface;
 class Package implements LocalizablePackageInterface
 {
     /**
-     * @Id
-     * @Column(columnDefinition="integer unsigned")
+     * @Id @Column(type="integer", options={"unsigned":true})
      * @GeneratedValue(strategy="AUTO")
      */
     protected $pkgID;

@@ -14,6 +14,11 @@ class TextType extends Type
         return new TextValue();
     }
 
+    public function getAttributeTypeHandle()
+    {
+        return 'text';
+    }
+
     public function createController()
     {
 
