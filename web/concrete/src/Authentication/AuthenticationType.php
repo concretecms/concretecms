@@ -116,7 +116,7 @@ class AuthenticationType extends Object
      *
      * @return AuthenticationType[]
      */
-    public static function getListByPackage(Package $pkg)
+    public static function getListByPackage($pkg)
     {
         $db = Loader::db();
         $list = array();

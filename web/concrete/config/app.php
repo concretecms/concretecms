@@ -159,6 +159,37 @@ return array(
         'URL' => '\Concrete\Core\Support\Facade\Url',
     ),
 
+    'package_items' => array(
+        'antispam_library',
+        'attribute_key',
+        'attribute_key_category',
+        'attribute_set',
+        'attribute_type',
+        'authentication_type',
+        'block_type',
+        'block_type_set',
+        'captcha_library',
+        'content_editor_snippet',
+        'conversation_rating_type',
+        'group_set',
+        'job',
+        'mail_importer',
+        'permission_access_entity_type',
+        'permission_key_category',
+        'permission_key',
+        'page',
+        'page_template',
+        'page_type',
+        'page_type_composer_control_type',
+        'page_type_publish_target_type',
+        'single_page',
+        'storage_location_type',
+        'theme',
+        'user_point_action',
+        'workflow_progress_category',
+        'workflow_type',
+    ),
+
     /*
      * Core Routes
      */

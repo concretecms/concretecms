@@ -1,57 +1,6 @@
 <?php
 namespace Concrete\Core\Package;
 
-use BlockType;
-use BlockTypeList;
-use Concrete\Core\Antispam\Library as SystemAntispamLibrary;
-use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
-use Concrete\Core\Attribute\Key\Key as AttributeKey;
-use Concrete\Core\Attribute\Set as AttributeSet;
-use Concrete\Core\Attribute\Type as AttributeType;
-use Concrete\Core\Authentication\AuthenticationType as AuthenticationType;
-use Concrete\Core\Backup\ContentImporter;
-use Concrete\Core\Block\BlockType\Set as BlockTypeSet;
-use Concrete\Core\Captcha\Library as SystemCaptchaLibrary;
-use Concrete\Core\Config\Repository\Liaison;
-use Concrete\Core\Conversation\Editor\Editor as ConversationEditor;
-use Concrete\Core\Conversation\Rating\Type as ConversationRatingType;
-use Concrete\Core\Database\EntityManagerFactory;
-use Concrete\Core\Database\EntityManagerFactoryInterface;
-use Concrete\Core\Database\Schema\Schema;
-use Concrete\Core\Editor\Snippet as SystemContentEditorSnippet;
-use Concrete\Core\Feature\Category\Category as FeatureCategory;
-use Concrete\Core\Feature\Feature;
-use Concrete\Core\File\FileList;
-use Concrete\Core\File\StorageLocation\Type\Type as StorageLocation;
-use Concrete\Core\Foundation\ClassLoader;
-use Concrete\Core\Foundation\Object;
-use Concrete\Core\Gathering\DataSource\DataSource as GatheringDataSource;
-use Concrete\Core\Gathering\Item\Template\Template as GatheringItemTemplate;
-use Concrete\Core\Gathering\Item\Template\Type as GatheringItemTemplateType;
-use Concrete\Core\Mail\Importer\MailImporter;
-use Concrete\Core\Page\PageList;
-use Concrete\Core\Page\Stack\StackList;
-use Concrete\Core\Page\Type\Composer\Control\Type\Type as PageTypeComposerControlType;
-use Concrete\Core\Page\Type\PublishTarget\Type\Type as PageTypePublishTargetType;
-use Concrete\Core\Permission\Access\Entity\Type as PermissionAccessEntityType;
-use Concrete\Core\User\Point\Action\Action as UserPointAction;
-use Concrete\Core\Workflow\Progress\Category as WorkflowProgressCategory;
-use Concrete\Core\Workflow\Type as WorkflowType;
-use Core;
-use Database;
-use Environment;
-use GroupSet;
-use Job;
-use Localization;
-use ORM;
-use Page;
-use PageTemplate;
-use PageTheme;
-use PageType;
-use PermissionKey;
-use PermissionKeyCategory;
-use SinglePage;
-
 /**
  * A package can contains related components that customize concrete5. They can br easily
  * installed and uninstall by a user.
@@ -89,171 +38,6 @@ class Packagederp extends Object
     protected $pkgAllowsFullContentSwap = false;
     protected $pkgContentProvidesFileThumbnails = false;
 
-    /** Returns the display name of a category of package items (localized and escaped accordingly to $format)
-     * @param string $categoryHandle The category handle
-     * @param string $format         = 'html' Escape the result in html format (if $format is 'html'). If $format is 'text' or any other value, the display name won't be escaped.
-     *
-     * @return string
-     */
-    public static function getPackageItemsCategoryDisplayName($categoryHandle, $format = 'html')
-    {
-        switch ($categoryHandle) {
-            case 'attribute_categories':
-                $value = t('Attribute categories');
-                break;
-            case 'permission_categories':
-                $value = t('Permission categories');
-                break;
-            case 'permission_access_entity_types':
-                $value = t('Permission access entity types');
-                break;
-            case 'attribute_keys':
-                $value = t('Attribute keys');
-                break;
-            case 'attribute_sets':
-                $value = t('Attribute sets');
-                break;
-            case 'group_sets':
-                $value = t('Group sets');
-                break;
-            case 'page_types':
-                $value = t('Page types');
-                break;
-            case 'mail_importers':
-                $value = t('Mail importers');
-                break;
-            case 'block_types':
-                $value = t('Block types');
-                break;
-            case 'page_themes':
-                $value = t('Page themes');
-                break;
-            case 'permissions':
-                $value = t('Permissions');
-                break;
-            case 'single_pages':
-                $value = t('Single pages');
-                break;
-            case 'attribute_types':
-                $value = t('Attribute types');
-                break;
-            case 'captcha_libraries':
-                $value = t('Captcha libraries');
-                break;
-            case 'antispam_libraries':
-                $value = t('Antispam libraries');
-                break;
-            case 'jobs':
-                $value = t('Jobs');
-                break;
-            case 'workflow_types':
-                $value = t('Workflow types');
-                break;
-            case 'workflow_progress_categories':
-                $value = t('Workflow progress categories');
-                break;
-            case 'storage_locations':
-                $value = t('Storage Locations');
-                break;
-            default:
-                $value = t(Core::make('helper/text')->unhandle($categoryHandle));
-                break;
-        }
-        switch ($format) {
-            case 'html':
-                return h($value);
-            case 'text':
-            default:
-                return $value;
-        }
-    }
-
-    /**
-     * Returns the name of an object belonging to a package.
-     *
-     * @param mixed $item
-     *
-     * @return string
-     */
-    public static function getItemName($item)
-    {
-        $txt = Core::make('helper/text');
-        if ($item instanceof BlockType) {
-            return t($item->getBlockTypeName());
-        } elseif ($item instanceof PageTheme) {
-            return $item->getThemeDisplayName();
-        } elseif ($item instanceof Feature) {
-            return $item->getFeatureName();
-        } elseif ($item instanceof FeatureCategory) {
-            return $item->getFeatureCategoryName();
-        } elseif ($item instanceof GatheringDataSource) {
-            return $item->getGatheringDataSourceName();
-        } elseif ($item instanceof GatheringItemTemplateType) {
-            return $txt->unhandle($item->getGatheringItemTemplateTypeHandle());
-        } elseif ($item instanceof GatheringItemTemplate) {
-            return $item->getGatheringItemTemplateName();
-        } elseif ($item instanceof BlockTypeSet) {
-            return $item->getBlockTypeSetDisplayName();
-        } elseif ($item instanceof PageTypeComposerControlType) {
-            return $item->getPageTypeComposerControlTypeDisplayName();
-        } elseif ($item instanceof PageTypePublishTargetType) {
-            return $item->getPageTypePublishTargetTypeDisplayName();
-        } elseif ($item instanceof PageType) {
-            return $item->getPageTypeName();
-        } elseif ($item instanceof PageTemplate) {
-            return $item->getPageTemplateDisplayName();
-        } elseif ($item instanceof MailImporter) {
-            return $item->getMailImporterName();
-        } elseif ($item instanceof Page) {
-            return $item->getCollectionPath();
-        } elseif ($item instanceof AttributeType) {
-            return $item->getAttributeTypeDisplayName();
-        } elseif ($item instanceof PermissionAccessEntityType) {
-            return $item->getAccessEntityTypeDisplayName();
-        } elseif ($item instanceof PermissionKeyCategory) {
-            return $txt->unhandle($item->getPermissionKeyCategoryHandle());
-        } elseif ($item instanceof WorkflowProgressCategory) {
-            return $txt->unhandle($item->getWorkflowProgressCategoryHandle());
-        } elseif ($item instanceof AttributeKeyCategory) {
-            return $txt->unhandle($item->getAttributeKeyCategoryHandle());
-        } elseif ($item instanceof AttributeSet) {
-            $at = AttributeKeyCategory::getByID($item->getAttributeSetKeyCategoryID());
-
-            return t(
-                '%s (%s)',
-                $item->getAttributeSetDisplayName(),
-                $txt->unhandle($at->getAttributeKeyCategoryHandle()));
-        } elseif ($item instanceof GroupSet) {
-            return $item->getGroupSetDisplayName();
-        } elseif ($item instanceof AttributeKey) {
-            $akc = AttributeKeyCategory::getByID($item->getAttributeKeyCategoryID());
-
-            return t(
-                ' %s (%s)',
-                $txt->unhandle($item->getAttributeKeyHandle()),
-                $txt->unhandle($akc->getAttributeKeyCategoryHandle()));
-        } elseif ($item instanceof UserPointAction) {
-            return $item->getUserPointActionName();
-        } elseif ($item instanceof SystemCaptchaLibrary) {
-            return $item->getSystemCaptchaLibraryName();
-        } elseif ($item instanceof SystemAntispamLibrary) {
-            return $item->getSystemAntispamLibraryName();
-        } elseif ($item instanceof ConversationRatingType) {
-            return $item->getConversationRatingTypeDisplayName();
-        } elseif ($item instanceof SystemContentEditorSnippet) {
-            return $item->getSystemContentEditorSnippetName();
-        } elseif ($item instanceof AuthenticationType) {
-            return $item->getAuthenticationTypeName();
-        } elseif (is_a($item, 'PermissionKey')) {
-            return $item->getPermissionKeyDisplayName();
-        } elseif (is_a($item, 'Job')) {
-            return $item->getJobName();
-        } elseif (is_a($item, 'WorkflowType')) {
-            return $item->getWorkflowTypeName();
-        } elseif ($item instanceof StorageLocation) {
-            return $item->getName();
-        }
-    }
 
     /**
      * This is the pre-test routine that packages run through before they are installed. Any errors that come here are
@@ -551,9 +335,6 @@ class Packagederp extends Object
         //$items['attribute_keys'] = AttributeKey::getListByPackage($this);
         //$items['attribute_sets'] = AttributeSet::getListByPackage($this);
         $items['group_sets'] = GroupSet::getListByPackage($this);
-        $items['page_types'] = PageType::getListByPackage($this);
-        $items['page_templates'] = PageTemplate::getListByPackage($this);
-        $items['mail_importers'] = MailImporter::getListByPackage($this);
         $items['gathering_item_template_types'] = GatheringItemTemplateType::getListByPackage($this);
         $items['gathering_item_templates'] = GatheringItemTemplate::getListByPackage($this);
         $items['gathering_data_sources'] = GatheringDataSource::getListByPackage($this);
@@ -564,7 +345,6 @@ class Packagederp extends Object
         $blocktypes = $btl->get();
         $items['block_types'] = $blocktypes;
         $items['block_type_sets'] = BlockTypeSet::getListByPackage($this);
-        $items['page_themes'] = PageTheme::getListByPackage($this);
         $items['permissions'] = PermissionKey::getListByPackage($this);
         $items['single_pages'] = SinglePage::getListByPackage($this);
         //$items['attribute_types'] = AttributeType::getListByPackage($this);
@@ -572,8 +352,6 @@ class Packagederp extends Object
         $items['content_editor_snippets'] = SystemContentEditorSnippet::getListByPackage($this);
         $items['conversation_editors'] = ConversationEditor::getListByPackage($this);
         $items['conversation_rating_types'] = ConversationRatingType::getListByPackage($this);
-        $items['page_type_publish_target_types'] = PageTypePublishTargetType::getListByPackage($this);
-        $items['page_type_composer_control_types'] = PageTypeComposerControlType::getListByPackage($this);
         $items['antispam_libraries'] = SystemAntispamLibrary::getListByPackage($this);
         $items['community_point_actions'] = UserPointAction::getListByPackage($this);
         $items['jobs'] = Job::getListByPackage($this);
