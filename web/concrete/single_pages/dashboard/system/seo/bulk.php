@@ -3,6 +3,7 @@ $pageSelector = Loader::helper('form/page_selector');
 $nh = Loader::helper('navigation');
 $th = Loader::helper('text');
 $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
+/* @var Concrete\Controller\SinglePage\Dashboard\System\Seo\Bulk $controller */
 ?>
 
 <style>
@@ -146,7 +147,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                             <label><?php echo t('Meta Title'); ?></label>
                             <?php $seoPageTitle = $cobj->getCollectionName();
                             $seoPageTitle = htmlspecialchars($seoPageTitle, ENT_COMPAT, APP_CHARSET);
-                            $autoTitle = sprintf(Config::get('concrete.seo.title_format'), $siteName, $seoPageTitle);
+                            $autoTitle = sprintf(Config::get('concrete.seo.title_format'), $controller->getSiteNameForPage($cobj), $seoPageTitle);
                             $titleInfo = array('title' => $cID);
                             if(strlen($cobj->getAttribute('meta_title')) <= 0) {
                                 $titleInfo[style] = 'background: whiteSmoke';

@@ -6,10 +6,68 @@ use Config;
 use Loader;
 use Page;
 use Concrete\Core\Page\PageList;
+use Concrete\Core\Multilingual\Page\Section\Section;
 
 class Bulk extends DashboardPageController
 {
     public $helpers = array('form', 'concrete/ui');
+
+    /**
+     * Get the localized site name.
+     *
+     * @param string $locale
+     *
+     * @return string
+     */
+    protected function getSiteNameForLocale($locale)
+    {
+        static $names = array();
+        if (!isset($names[$locale])) {
+            $prevLocale = \Localization::activeLocale();
+            if ($prevLocale !== $locale) {
+                \Localization::changeLocale($locale);
+            }
+            $names[$locale] = tc('SiteName', $this->app->make('config')->get('concrete.site'));
+            if ($prevLocale !== $locale) {
+                \Localization::changeLocale($prevLocale);
+            }
+        }
+
+        return $names[$locale];
+    }
+
+    /**
+     * Get the site name localized for a specific page.
+     *
+     * @param \Concrete\Core\Page\Page $page
+     *
+     * @return string
+     */
+    public function getSiteNameForPage(\Concrete\Core\Page\Page $page)
+    {
+        static $multilingual;
+        static $defaultLocale;
+
+        if (!isset($multilingual)) {
+            $multilingual = $this->app->make('multilingual/detector')->isEnabled();
+        }
+        if ($multilingual) {
+            if (!isset($defaultLocale)) {
+                $defaultLocale = $this->app->make('config')->get('concrete.locale') ?: 'en_US';
+            }
+            $section = Section::getBySectionOfSite($page);
+            if ($section) {
+                $locale = $section->getLocale();
+            } else {
+                $locale = $defaultLocale;
+            }
+            $siteName = $this->getSiteNameForLocale($locale);
+        } else {
+            $siteName = $this->app->make('config')->get('concrete.site');
+        }
+
+        return $siteName;
+    }
 
     public function view()
     {
@@ -21,7 +79,6 @@ class Bulk extends DashboardPageController
             $pages = $pagination->getCurrentPageResults();
             $this->set('pageList', $pageList);
             $this->set('pages', $pages);
-            $this->set('siteName', Config::get('concrete.site'));
             $paginationView = false;
             if ($pagination->haveToPaginate()) {
                 $paginationView = $pagination->renderView('dashboard');
@@ -36,7 +93,8 @@ class Bulk extends DashboardPageController
         $success = t('success');
         $cID = $this->post('cID');
         $c = Page::getByID($cID);
-        if (trim(sprintf(Config::get('concrete.seo.title_format'), tc('SiteName', Config::get('concrete.site')), $c->getCollectionName())) != trim($this->post('meta_title')) && $this->post('meta_title')) {
+        $siteName = $this->getSiteNameForPage($c);
+        if (trim(sprintf(Config::get('concrete.seo.title_format'), $siteName, $c->getCollectionName())) != trim($this->post('meta_title')) && $this->post('meta_title')) {
             $c->setAttribute('meta_title', trim($this->post('meta_title')));
         }
 
