@@ -19,6 +19,8 @@ use Concrete\Core\Page\Stack\Stack;
 if ($controller->getTask() == 'view_details' && isset($neutralStack) && $neutralStack) {
     /* @var Stack $neutralStack */
     /* @var Stack|null $stackToEdit */
+    /* @var array $breadcrumb */
+    /* @var bool $isGlobalArea */
     ?>
     <div class="ccm-search-results-breadcrumb">
         <ol class="breadcrumb">
@@ -53,34 +55,28 @@ if ($controller->getTask() == 'view_details' && isset($neutralStack) && $neutral
             ?>
         </ol>
     </div>
-    <?php
-    $isGlobalArea = false;
-    if ($neutralStack->getStackType() == Stack::ST_TYPE_GLOBAL_AREA) {
-        $isGlobalArea = true;
-    }
-    ?>
     <div class="ccm-dashboard-header-buttons">
         <?php if ($isGlobalArea) { ?>
-            <a href="<?=URL::to('/dashboard/blocks/stacks/view_global_areas')?>" class="btn btn-default"><i class="fa fa-angle-double-left"></i> <?=t("Back to Global Areas")?></a>
+            <a href="<?=URL::to('/dashboard/blocks/stacks', 'view_global_areas')?>" class="btn btn-default"><i class="fa fa-angle-double-left"></i> <?=t("Back to Global Areas")?></a>
         <?php } else { ?>
             <a href="<?=$view->action('view_details', $neutralStack->getCollectionParentID())?>" class="btn btn-default"><i class="fa fa-angle-double-left"></i> <?=t("Back to Stacks")?></a>
         <?php } ?>
     </div>
     <p class="lead"><?=h($neutralStack->getCollectionName())?></p>
-	<?php        
+    <?php        
     if ($stackToEdit === null) {
         ?>
         <form method="post" action="<?=$view->action('add_localized_stack')?>">
-			<?=$token->output('add_localized_stack')?>
+            <?=$token->output('add_localized_stack')?>
             <?=$form->hidden('stackID', $neutralStack->getCollectionID());?>
             <?=$form->hidden('locale', $localeCode);?>
             <div class="alert alert-info">
                 <p>
-                	<?=t(/*i18n: %1$s is a language name, %2$s is a language code*/'This stack is not defined for %1$s (%2$s): the default version will be used.', $localeName, $localeCode); ?>
+                    <?=t(/*i18n: %1$s is a language name, %2$s is a language code*/'This stack is not defined for %1$s (%2$s): the default version will be used.', $localeName, $localeCode); ?>
                 </p>
-            	<p>
-            		<button class="btn btn-primary" type="submit"><?=t('Create localized stack version')?></button><br />
-	            </p>
+                <p>
+                    <button class="btn btn-primary" type="submit"><?=t('Create localized stack version')?></button><br />
+                </p>
             </div>
         </form>
         <?php
@@ -315,9 +311,12 @@ $(function() {
         </div>
         <?php
     }
+    if (!isset($showGlobalAreasFolder)) {
+        $showGlobalAreasFolder = false;
+    }
     /* @var Concrete\Core\Page\Stack\StackList $list */
     /* @var Concrete\Core\Page\Page[] $stacks */
-    if (!empty($stacks)) {
+    if ($showGlobalAreasFolder || !empty($stacks)) {
         $dh = Core::make('date');
         /* @var Concrete\Core\Localization\Service\Date $dh */
         ?>
@@ -332,7 +331,17 @@ $(function() {
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($stacks as $st) {
+                        <?php
+                        if ($showGlobalAreasFolder) {
+                            ?>
+                            <tr class="ccm-search-results-folder" data-details-url="<?=$view->url('/dashboard/blocks/stacks', 'view_global_areas')?>">
+                                <td class="ccm-search-results-icon"><i class="fa fa-object-group"></i></td>
+                                <td class="ccm-search-results-name"><?=t('Global Areas')?></td>
+                                <td></td>
+                            </tr>
+                            <?php
+                        }
+                        foreach ($stacks as $st) {
                             $formatter = new Concrete\Core\Page\Stack\Formatter($st);
                             ?>
                             <tr class="<?=$formatter->getSearchResultsClass()?>" data-details-url="<?=$view->url('/dashboard/blocks/stacks', 'view_details', $st->getCollectionID())?>" data-collection-id="<?=$st->getCollectionID()?>">
@@ -438,13 +447,13 @@ $(function() {
         </script>
         <?php
     } else {
-        echo '<p>';
-        if ($controller->getTask() == 'view_global_areas') {
-            echo t('No global areas have been added.');
-        } else {
-            echo t('No stacks have been added.');
-        }
-        echo '</p>';
+        ?><div class="alert alert-info"><?php
+            if ($controller->getTask() == 'view_global_areas') {
+                echo t('No global areas have been added.');
+            } else {
+                echo t('No stacks found in this folder.');
+            }
+        ?></div><?php
     }
     ?>
     <div class="ccm-dashboard-header-buttons">
@@ -469,31 +478,13 @@ $(function() {
             </ul>
             <?php
         }
-        ?>
-        <span class="dropdown">
-            <button type="button" class="btn btn-default" data-toggle="dropdown">
-                <?php
-                if ($controller->getTask() == 'view_global_areas') {
-                    echo t('View Global Areas');
-                } else {
-                    echo t('View Stacks');
-                }
-                ?>
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu">
-                <li><a href="<?=$controller->action('view')?>"><?=t('View Stacks')?></a></li>
-                <li><a href="<?=$controller->action('view_global_areas')?>"><?=t('View Global Areas')?></a></li>
-            </ul>
-        </span>
-        <?php
         if ($controller->getTask() != 'view_global_areas') {
             ?>
             <div class="btn-group">
                 <button data-dialog="add-stack" class="btn btn-default"><i class="fa fa-bars"></i> <?=t("New Stack")?></button>
                 <button data-dialog="add-folder" class="btn btn-default"><i class="fa fa-folder"></i> <?=t("New Folder")?></button>
             </div>
-               <?php
+            <?php
         }
         ?>
     </div>

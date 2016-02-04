@@ -63,6 +63,11 @@ class StackList extends PageList
         $this->filter('stType', Stack::ST_TYPE_GLOBAL_AREA);
     }
 
+    public function excludeGlobalAreas()
+    {
+        $this->filter(false, 'stType != '.Stack::ST_TYPE_GLOBAL_AREA.' or stType is null');
+    }
+
     public function filterByUserAdded()
     {
         $this->filter('stType', Stack::ST_TYPE_USER_ADDED);

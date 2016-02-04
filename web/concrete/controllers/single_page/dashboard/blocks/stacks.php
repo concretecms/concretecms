@@ -21,76 +21,13 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Stacks extends DashboardPageController
 {
-    /*
-    protected $multilingualSections = array();
-
-    public function on_start()
-    {
-        parent::on_start();
-        if ($this->app->make('multilingual/detector')->isEnabled()) {
-            $list = array();
-            $this->multilingualSections = Section::getList();
-            $this->set('multilingualSections', $this->multilingualSections);
-            $this->set('defaultLanguage', $this->getSelectedLanguage());
-        }
-    }
-
-    protected function getSelectedLanguage()
-    {
-        $defaultLanguage = false;
-        $defaultLocale = Config::get('concrete.multilingual.default_locale');
-        if (!$defaultLocale) {
-            throw new Exception(t('You must specify a default language tree in your multilingual settings.'));
-        }
-        foreach ($this->multilingualSections as $section) {
-            if ($section->getLocale() == $defaultLocale) {
-                $defaultLanguage = $section;
-            }
-        }
-        $session = $this->app->make('session');
-        if ($session->has('stacksDefaultLanguageID')) {
-            $section = Section::getByID($session->get('stacksDefaultLanguageID'));
-            if (is_object($section)) {
-                $defaultLanguage = $section;
-            }
-        }
-
-        return $defaultLanguage;
-    }
-
-    public function set_default_language($language = null, $action = null)
-    {
-        $session = $this->app->make('session');
-        $session->set('stacksDefaultLanguageID', $language);
-        if ($action == 'view_global_areas') {
-            $this->redirect('/dashboard/blocks/stacks', 'view_global_areas');
-        } else {
-            $this->redirect('/dashboard/blocks/stacks');
-        }
-    }
-
     public function view_global_areas()
     {
         $stm = new StackList();
         $stm->filterByGlobalAreas();
-        $this->setupMultilingualStackList($stm);
-        $this->set('stacks', $stm->get());
+        $this->deliverStackList($stm);
+        $this->set('breadcrumb', $this->getBreadcrumb());
     }
-
-    protected function setupMultilingualStackList(StackList $list)
-    {
-        if ($this->app->make('multilingual/detector')->isEnabled()) {
-            $category = StackCategory::getCategoryFromMultilingualSection($this->getSelectedLanguage());
-            if (!is_object($category)) {
-                // we have to create the category
-                $category = StackCategory::createFromMultilingualSection($this->getSelectedLanguage());
-                // now we copy all the stacks into it
-                $default = StackCategory::getFromDefaultMultilingualSection();
-                $default->copyToTargetCategory($category);
-            }
-            $list->filterByStackCategory($category);
-        }
-    }*/
 
     /**
      * @return Section[]
@@ -124,14 +61,15 @@ class Stacks extends DashboardPageController
         }
         $s = Stack::getByID($cID);
         if (is_object($s)) {
-            if ($s->isNeutralStack()) {
+            $isGlobalArea = $s->getStackType() == Stack::ST_TYPE_GLOBAL_AREA;
+            if ($isGlobalArea || $s->isNeutralStack()) {
                 $neutralStack = $s;
                 $stackToEdit = $s;
             } else {
                 $neutralStack = $s->getNeutralStack();
                 $stackToEdit = $s;
             }
-            $sections = $this->getMultilingualSections();
+            $sections = $isGlobalArea ? array() : $this->getMultilingualSections();
             $breadcrumb = $this->getBreadcrumb($neutralStack);
             if (!empty($sections)) {
                 if ($stackToEdit !== $neutralStack) {
@@ -193,6 +131,7 @@ class Stacks extends DashboardPageController
             $this->set('neutralStack', $neutralStack);
             $this->set('stackToEdit', $stackToEdit);
             $this->set('breadcrumb', $breadcrumb);
+            $this->set('isGlobalArea', $isGlobalArea);
             switch ($msg) {
                 case 'stack_added':
                     $this->set('message', t('Stack added successfully.'));
@@ -240,24 +179,33 @@ class Stacks extends DashboardPageController
         }
     }
 
-    protected function getBreadcrumb(\Concrete\Core\Page\Page $page)
+    protected function getBreadcrumb(\Concrete\Core\Page\Page $page = null)
     {
-        $breadcrumb = array([
+        $breadcrumb = [[
             'active' => false,
             'name' => t('Stacks'),
             'url' => \URL::to('/dashboard/blocks/stacks'),
-        ]);
+        ]];
         $nav = $this->app->make('helper/navigation');
-        $pages = array_reverse($nav->getTrailToCollection($page));
-        $pages[] = $page;
-        for ($i = 1; $i < count($pages); ++$i) {
-            $item = $pages[$i];
+        if ($page === null) {
             $breadcrumb[] = [
-                'id' => $item->getCollectionID(),
-                'active' => $item->getCollectionID() == $page->getCollectionID(),
-                'name' => $item->getCollectionName(),
-                'url' => \URL::to('/dashboard/blocks/stacks', 'view_details', $item->getCollectionID()),
+                'id' => '',
+                'active' => true,
+                'name' => t('Global Areas'),
+                'url' => \URL::to('/dashboard/blocks/stacks', 'view_global_areas'),
             ];
+        } else {
+            $pages = array_reverse($nav->getTrailToCollection($page));
+            $pages[] = $page;
+            for ($i = 1; $i < count($pages); ++$i) {
+                $item = $pages[$i];
+                $breadcrumb[] = [
+                    'id' => $item->getCollectionID(),
+                    'active' => $item->getCollectionID() == $page->getCollectionID(),
+                    'name' => $item->getCollectionName(),
+                    'url' => \URL::to('/dashboard/blocks/stacks', 'view_details', $item->getCollectionID()),
+                ];
+            }
         }
 
         return $breadcrumb;
@@ -274,10 +222,12 @@ class Stacks extends DashboardPageController
     {
         $parent = Page::getByPath(STACKS_PAGE_PATH);
         $stm = new StackList();
+        $stm->excludeGlobalAreas();
         $stm->filterByParentID($parent->getCollectionID());
         $this->deliverStackList($stm);
         $cpc = new Permissions($parent);
         $this->set('canMoveStacks', $cpc->canMoveOrCopyPage());
+        $this->set('showGlobalAreasFolder', true);
     }
 
     public function add_stack()
