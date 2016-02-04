@@ -211,7 +211,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                   $(this).closest('.ccm-seo-rows').find('.btn').addClass('btn-success');
                });
             });
-            $('.submit-changes').click(function(event) {
+            $('a.submit-changes').click(function(event) {
                 event.preventDefault();
                 var iterator = $(this).attr('data-cID');
                 var throbber = $('.ccm-seoRow-'+iterator+' .throbber');
