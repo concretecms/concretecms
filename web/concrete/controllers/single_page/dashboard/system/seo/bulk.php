@@ -168,7 +168,7 @@ class Bulk extends DashboardPageController
         }
 
         if ($this->request('noDescription') == 1) {
-            $pageList->filter('csi.ak_meta_description', null, '=');
+            $pageList->filter(false, "csi.ak_meta_description is null or csi.ak_meta_description = ''");
             $this->set('descCheck', true);
             $parentDialogOpen = 1;
         } else {
