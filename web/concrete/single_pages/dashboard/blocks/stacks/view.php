@@ -24,7 +24,7 @@ if ($controller->getTask() == 'view_details' && isset($neutralStack) && $neutral
         <ol class="breadcrumb">
             <?php
             foreach ($breadcrumb as $value) {
-                ?><li class="<?=$value['active'] ? 'active"' : ''?>"><?php
+                ?><li class="<?=$value['active'] ? 'active' : ''?>"><?php
                 if (isset($value['children'])) {
                     ?><span class="dropdown">
                         <button type="button" class="btn btn-default btn-xs" data-toggle="dropdown">
@@ -177,6 +177,7 @@ if ($controller->getTask() == 'view_details' && isset($neutralStack) && $neutral
                     $bv->render('view');
                 }
             }
+            View::element('block_area_footer', array('a' => $a));
             ?>
         </div>
     
@@ -299,7 +300,7 @@ $(function() {
             <ol class="breadcrumb">
                 <?php
                 foreach ($breadcrumb as $value) {
-                    ?><li class="<?=$value['active'] ? 'ccm-undroppable-search-item active"' : 'ccm-droppable-search-item'?>" data-collection-id="<?=$value['id']?>"><?php
+                    ?><li class="<?=$value['active'] ? 'ccm-undroppable-search-item active' : 'ccm-droppable-search-item'?>" data-collection-id="<?=$value['id']?>"><?php
                     if (!$value['active']) {
                         ?><a href="<?=$value['url']?>"><?php
                     }
