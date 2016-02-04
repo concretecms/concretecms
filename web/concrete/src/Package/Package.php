@@ -146,7 +146,7 @@ abstract class Package implements LocalizablePackageInterface
     public function getRelativePath()
     {
         $dirp = (is_dir(
-            $this->DIR_PACKAGES . '/' . $this->getPackageHandle())) ? REL_DIR_PACKAGES : REL_DIR_PACKAGES_CORE;
+            DIR_PACKAGES . '/' . $this->getPackageHandle())) ? REL_DIR_PACKAGES : REL_DIR_PACKAGES_CORE;
 
         return $dirp . '/' . $this->pkgHandle;
     }
@@ -194,5 +194,15 @@ abstract class Package implements LocalizablePackageInterface
         // this should go through the facade instead
         return \Concrete\Core\Support\Facade\Package::getAvailablePackages();
     }
+
+    /**
+     * @deprecated
+     */
+    public static function getByID($pkgID)
+    {
+        // this should go through the facade instead
+        return \Concrete\Core\Support\Facade\Package::getByID($pkgID);
+    }
+
 
 }

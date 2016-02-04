@@ -24,6 +24,13 @@ class PackageService
         return $r->findOneBy(array('pkgHandle' => $pkgHandle));
     }
 
+    public function getByID($pkgID)
+    {
+        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Package');
+        return $r->findOneBy(array('pkgID' => $pkgID));
+    }
+
+
     /**
      * Returns an array of all installed packages.
      *

@@ -193,7 +193,6 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
     }
 
     if (is_object($pkg)) {
-        $items = $pkg->getPackageItems();
 
         ?>
 
@@ -208,187 +207,35 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
             </tr>
         </table>
 
-
-        <?php if (count($items['block_types']) > 0) {
-    ?>
-        <div class="form-group">
-            <legend><?= $pkg->getPackageItemsCategoryDisplayName('block_types_sets');
-    ?></legend>
-            <ul class="list-unstyled">
-            <?php foreach ($items['block_type_sets'] as $bset) {
-    ?>
-                <li><?=ucfirst($bset->getBlockTypeSetName())?></li>
-            <?php
-}
-    ?>
-            </ul>
-        </div>
         <?php
-}
-        unset($items['block_type_sets']);
-        ?>
 
-        <?php if (count($items['block_types']) > 0) {
-    ?>
-        <legend><?= $pkg->getPackageItemsCategoryDisplayName('block_types');
-    ?></legend>
-        <ul id="ccm-block-type-package-list" class="item-select-list ccm-block-type-sortable-list">
-            <?php
-            foreach ($items['block_types'] as $bt) {
-                $btID = $bt->getBlockTypeID;
-                ?>
-
-                <li id="btID_<?=$btID?>"  data-btid="<?=$btID?>">
-                    <a href="<?= $view->url('/dashboard/blocks/types', 'inspect', $bt->getBlockTypeID());
-                ?>"><img src="<?=$ci->getBlockTypeIconURL($bt)?>" /> <?=t($bt->getBlockTypeName());
-                ?></a>
-                </li>
-
-            <?php
+        foreach ($categories as $category) {
+            /**
+             * @var $category \Concrete\Core\Package\Item\Manager\ItemInterface
+             */
+            if ($category->hasItems($pkg)) {
+                $category->renderList($pkg);
             }
-    unset($items['block_types']) ?>
-        </ul>
-        <?php
-}
-        ?>
 
-        <?php if (count($items['attribute_types']) > 0) {
-    ?>
-        <div class="form-group">
-            <legend><?= $pkg->getPackageItemsCategoryDisplayName('attribute_types');
-    ?></legend>
-            <dl class="dl-horizontal">
-                <?php foreach ($items['attribute_types'] as $at) {
-    ?>
-                <dt><img src="<?=$at->getAttributeTypeIconSRC()?>" alt="<?=t('attribute type icon')?>"/></dt>
-                <dd>
-                    <?=$at->getAttributeTypeName()?>
-                    <?php
-                    foreach ($catList as $cat) {
-                        if (!$at->isAssociatedWithCategory($cat)) {
-                            continue;
-                        }
-                        ?>
-                    <span class="badge"><?=$txt->unhandle($cat->getAttributeKeyCategoryHandle())?></span>
-                    <?php
-                    }
-    ?>
-                </dd>
-
-                <?php
-}
-    ?>
-            </dl>
-        </div>
-        <?php
-}
-        unset($items['attribute_types']);
-        ?>
-
-        <?php if (count($items['attribute_keys'])) {
-    ?>
-            <legend><?= $pkg->getPackageItemsCategoryDisplayName('attribute_keys');
-    ?></legend>
-            <ul class="list-unstyled">
-            <?php foreach ($items['attribute_keys'] as $item) {
-    ?>
-                <li><?= $item->getAttributeKeyDisplayName();
-    ?></li>
-            <?php
-}
-    ?>
-            </ul>
-            <?php unset($items['attribute_keys']);
-    ?>
-        <?php
-}
-        ?>
-
-        <?php if (count($items['page_themes']) > 0) {
-    ?>
-        <div class="form-group">
-            <legend><?= $pkg->getPackageItemsCategoryDisplayName('page_themes');
-    ?></legend>
-            <ul class="list-unstyled">
-            <?php foreach ($items['page_themes'] as $theme) {
-    ?>
-                <li>
-                    <div><a href="<?=$view->url('/dashboard/pages/themes/inspect', $theme->getThemeID())?>"><?=$theme->getThemeDisplayName()?></a></div>
-                    <div> <?= $theme->getThemeDisplayDescription();
-    ?> </div>
-                </li>
-            <?php
-}
-    ?>
-            </ul>
-        </div>
-        <?php
-}
-        unset($items['page_themes']);
-        ?>
-
-        <?php if (count($items['single_pages']) > 0) {
-    ?>
-        <div class="form-group">
-            <legend><?= $pkg->getPackageItemsCategoryDisplayName('single_pages');
-    ?></legend>
-            <ul class="list-unstyled">
-            <?php foreach ($items['single_pages'] as $page) {
-    ?>
-                <li class="clearfix row">
-                    <span class="col-sm-2"><a href="<?=$nav->getLinkToCollection($page)?>"><?=$page->getCollectionName()?></a></span>
-                    <span class="col-sm-3"><code><?=$page->getCollectionPath()?></code></span>
-                    <span class="col-sm-5"><?=$page->getCollectionDescription()?></span>
-                </li>
-            <?php
-}
-    ?>
-            </ul>
-        </div>
-        <?php
-}
-        unset($items['single_pages']);
-        ?>
-
-        <!-- Show all remaining items that we don't have a better formatting for !-->
-
-        <?php
-        foreach ($items as $key => $itemArray) {
-            if (!count($itemArray)) {
-                continue;
-            }
-            ?>
-            <legend><?= $pkg->getPackageItemsCategoryDisplayName($key);
-            ?></legend>
-            <ul class="list-unstyled">
-            <?php foreach ($itemArray as $item) {
-    ?>
-                <li><?= $pkg->getItemName($item);
-    ?></li>
-            <?php
-}
-            ?>
-            </ul>
-        <?php
-        }
-        ?>
+        } ?>
 
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
-            <?php
-            $tp = new TaskPermission();
-        if ($tp->canUninstallPackages()) {
-            echo $ch->button(t('Uninstall Package'), $view->url('/dashboard/extend/install', 'uninstall', $pkg->getPackageID()), 'right', 'btn-danger');
-        }
-        ?>
-            <a href="<?= $view->url('/dashboard/extend/install');
-        ?>" class=" btn btn-default"><?= t('Back to Add Functionality');
-        ?></a>
+                <?php
+                $tp = new TaskPermission();
+                if ($tp->canUninstallPackages()) {
+                    echo $ch->button(t('Uninstall Package'), $view->url('/dashboard/extend/install', 'uninstall', $pkg->getPackageID()), 'right', 'btn-danger');
+                }
+                ?>
+                <a href="<?= $view->url('/dashboard/extend/install');
+                ?>" class=" btn btn-default"><?= t('Back to Add Functionality');
+                    ?></a>
+            </div>
         </div>
-        </div>
+
         <?php
 
-     } else {
+        } else {
         if (isset($installedPKG) && is_object($installedPKG) && $installedPKG->hasInstallPostScreen()) {
             ?>
             <div style="display: none">

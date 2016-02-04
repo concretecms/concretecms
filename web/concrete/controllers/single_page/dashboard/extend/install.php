@@ -2,10 +2,12 @@
 namespace Concrete\Controller\SinglePage\Dashboard\Extend;
 
 use Concrete\Core\Package\BrokenPackage;
+use Concrete\Core\Package\Item\Manager\Manager;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Loader;
 use TaskPermission;
-use Package;
+use Concrete\Core\Support\Facade\Package;
+use Concrete\Core\Entity\Package as PackageEntity;
 use Localization;
 use Marketplace;
 use Concrete\Core\Marketplace\RemoteItem as MarketplaceRemoteItem;
@@ -31,9 +33,10 @@ class Install extends DashboardPageController
         if (!is_object($pkg)) {
             $this->redirect("/dashboard/extend/install");
         }
+        $manager = new Manager($this->app);
         $this->set('text', Loader::helper('text'));
         $this->set('pkg', $pkg);
-        $this->set('items', $pkg->getPackageItems());
+        $this->set('categories', $manager->getPackageItemCategories());
     }
 
     public function do_uninstall_package()
@@ -96,7 +99,9 @@ class Install extends DashboardPageController
             $pkg = Package::getByID($pkgID);
         }
 
-        if (isset($pkg) && ($pkg instanceof Package)) {
+        if (isset($pkg) && ($pkg instanceof PackageEntity)) {
+            $manager = new Manager($this->app);
+            $this->set('categories', $manager->getPackageItemCategories());
             $this->set('pkg', $pkg);
         } else {
             $this->redirect('/dashboard/extend/install');

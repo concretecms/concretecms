@@ -2,6 +2,7 @@
 namespace Concrete\Core\Attribute;
 
 use Concrete\Core\Entity\Attribute\Key\Key;
+use Concrete\Core\Entity\Package;
 use Doctrine\ORM\EntityManager;
 
 /**
@@ -22,6 +23,14 @@ class SetFactory
 
         return $r->findOneBy(array('asHandle' => $atHandle));
     }
+
+    public function getListByPackage(Package $package)
+    {
+        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Set');
+
+        return $r->findByPackage($package);
+    }
+
 
     public function getByID($asID)
     {

@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Attribute\Category;
 
+use Concrete\Core\Entity\Package;
 use Doctrine\ORM\EntityManager;
 use Concrete\Core\Entity\Attribute\Category;
 
@@ -35,6 +36,14 @@ class CategoryService
 
         return $r->findAll();
     }
+
+    public function getListByPackage(Package $pkg)
+    {
+        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Category');
+
+        return $r->findByPackage($pkg);
+    }
+
 
     public function add($akCategoryHandle, $allowSets, $pkg = null)
     {

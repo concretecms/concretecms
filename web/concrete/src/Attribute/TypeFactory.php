@@ -2,6 +2,7 @@
 namespace Concrete\Core\Attribute;
 
 use Concrete\Core\Attribute\Key\Category;
+use Concrete\Core\Entity\Package;
 use Doctrine\ORM\EntityManager;
 use Concrete\Core\Entity\Attribute\Type as AttributeType;
 
@@ -22,6 +23,13 @@ class TypeFactory
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Type');
 
         return $r->findOneBy(array('atHandle' => $atHandle));
+    }
+
+    public function getListByPackage(Package $package)
+    {
+        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Type');
+
+        return $r->findByPackage($package);
     }
 
     public function getByID($atID)
