@@ -115,8 +115,13 @@ class Stacks extends DashboardPageController
         return $result;
     }
 
-    public function view_details($cID, $msg = false, $locale = '')
+    public function view_details($cID, $msg = false)
     {
+        if (strpos($cID, '@') !== false) {
+            list($cID, $locale) = explode('@', $cID, 2);
+        } else {
+            $locale = '';
+        }
         $s = Stack::getByID($cID);
         if (is_object($s)) {
             if ($s->isNeutralStack()) {
@@ -158,7 +163,7 @@ class Stacks extends DashboardPageController
                         'id' => $neutralStack->getCollectionID().'@'.$sectionLocale,
                         'active' => $locale === $sectionLocale,
                         'name' => $mif->getSectionFlagIcon($section).' '.h($section->getLanguageText()).' <span class="text-muted">'.h($sectionLocale).'</span>',
-                        'url' => \URL::to('/dashboard/blocks/stacks', 'view_details', $neutralStack->getCollectionID(), '_', $sectionLocale),
+                        'url' => \URL::to('/dashboard/blocks/stacks', 'view_details', $neutralStack->getCollectionID().rawurlencode('@'.$sectionLocale)),
                     );
                 }
                 foreach ($localeCrumbs as $localeCrumb) {
@@ -319,7 +324,7 @@ class Stacks extends DashboardPageController
             }
             if (!$this->error->has()) {
                 $localizedStack = $neutralStack->addLocalizedStack($section);
-                $this->redirect('/dashboard/blocks/stacks', 'view_details', $neutralStack->getCollectionID(), 'localized_stack_added', $section->getLocale());
+                $this->redirect('/dashboard/blocks/stacks', 'view_details', $neutralStack->getCollectionID().rawurlencode('@'.$section->getLocale()), 'localized_stack_added');
             } else {
                 $this->error->add(t("You must give your stack a name."));
             }
@@ -386,7 +391,7 @@ class Stacks extends DashboardPageController
                     $response = $pkr->trigger();
                     if ($response instanceof \Concrete\Core\Workflow\Progress\Response) {
                         // we only get this response if we have skipped workflows and jumped straight in to an approve() step.
-                        $this->redirect('/dashboard/blocks/stacks', 'view_details', $nextID, $msg, $locale);
+                        $this->redirect('/dashboard/blocks/stacks', 'view_details', $nextID.rawurlencode('@'.$locale), $msg);
                     } else {
                         $this->redirect('/dashboard/blocks/stacks', 'view_details', $s->cID, 'delete_saved');
                     }
