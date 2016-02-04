@@ -167,8 +167,7 @@ class Stacks extends DashboardPageController
                 $this->set('breadcrumb', $this->getBreadcrumb($folder->getPage()));
                 $this->set('current', $current);
                 $this->deliverStackList($stm);
-                $cpc = new Permissions($folder->getPage());
-                $this->set('canMoveStacks', $cpc->canMoveOrCopyPage());
+                $this->set('canMoveStacks', $this->canMoveStacks($folder));
             } else {
                 $root = Page::getByPath(STACKS_PAGE_PATH);
                 if ($root->getCollectionID() != $cID) {
@@ -177,6 +176,20 @@ class Stacks extends DashboardPageController
                 $this->view();
             }
         }
+    }
+
+    /**
+     * Check if stacks in a Page or StackFolder can be moved.
+     *
+     * @param Page|StackFolder $parent
+     *
+     * @return bool
+     */
+    protected function canMoveStacks($parent)
+    {
+        $page = ($parent instanceof \Concrete\Core\Page\Page) ? $parent : $parent->getPage();
+        $cpc = new Permissions($page);
+        return (bool) $cpc->canMoveOrCopyPage();
     }
 
     protected function getBreadcrumb(\Concrete\Core\Page\Page $page = null)
@@ -225,8 +238,7 @@ class Stacks extends DashboardPageController
         $stm->excludeGlobalAreas();
         $stm->filterByParentID($parent->getCollectionID());
         $this->deliverStackList($stm);
-        $cpc = new Permissions($parent);
-        $this->set('canMoveStacks', $cpc->canMoveOrCopyPage());
+        $this->set('canMoveStacks', $this->canMoveStacks($parent));
         $this->set('showGlobalAreasFolder', true);
     }
 
@@ -461,17 +473,28 @@ class Stacks extends DashboardPageController
         }
         $moveStacks = array();
         $moveFolders = array();
+        $checkedParents = array();
         foreach ($sourceIDs as $sourceID) {
+            $parentID = null;
             $item = Stack::getByID($sourceID);
-            if (is_object($item)) {
+            if ($item) {
+                $parentID = $item->getCollectionParentID();
                 $moveStacks[] = $item;
             } else {
                 $item = StackFolder::getByID($sourceID);
                 if (is_object($item)) {
+                    $parentID = $item->getPage()->getCollectionParentID();
                     $moveFolders[] = $item;
                 } else {
                     throw new Exception(t("Unable to find the specified stack or folder"));
                 }
+            }
+            if ($parentID && !isset($checkedParents[$parentID])) {
+                $parent = Page::getByID($parentID);
+                if ($parent && !$parent->isError() && !$this->canMoveStacks($parent)) {
+                    throw new Exception(t('Access denied'));
+                }
+                $checkedParents[$parentID] = true;
             }
         }
         $destinationID = $this->post('destinationID');
