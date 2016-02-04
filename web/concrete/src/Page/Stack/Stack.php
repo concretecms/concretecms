@@ -390,7 +390,7 @@ class Stack extends Page implements ExportableInterface
         $result = null;
         $msID = $this->getMultilingualSectionID();
         if ($msID !== 0) {
-            $s = Section::getByID($cID);
+            $s = Section::getByID($msID);
             if ($s) {
                 $result = $s;
             }
@@ -414,17 +414,7 @@ class Stack extends Page implements ExportableInterface
      */
     protected function getNeutralStackID()
     {
-        $result = null;
-        $db = Database::connection();
-        $stNeutralStackID = $db->GetOne(
-            'select stNeutralStack from Stacks where cID = ?',
-            array($this->getCollectionID())
-        );
-        if ($stNeutralStackID) {
-            $result = (int) $stNeutralStackID;
-        }
-
-        return $result;
+        return ($this->getMultilingualSectionID() === 0) ? null : (int) $this->getCollectionParentID();
     }
 
     /**
@@ -434,7 +424,7 @@ class Stack extends Page implements ExportableInterface
      */
     public function isNeutralStack()
     {
-        return $this->getNeutralStackID() === null;
+        return $this->getMultilingualSectionID() === 0;
     }
 
     /**
@@ -466,19 +456,30 @@ class Stack extends Page implements ExportableInterface
     public function getLocalizedStack(Section $section, $cvID = 'RECENT')
     {
         $result = null;
-        $neutralID = $this->getNeutralStackID();
-        if ($neutralID === null) {
-            $neutralID = $this->getCollectionID();
-        }
-        $db = Database::connection();
-        $cID = $db->GetOne(
-            'select cID from Stacks where stNeutralStack = ? and stMultilingualSection = ?',
-            array($neutralID, $section->getCollectionID())
-        );
-        if ($cID) {
-            $localized = static::getByID($cID, $cvID);
-            if ($localized) {
-                $result = $localized;
+        $mySectionID = $this->getMultilingualSectionID();
+        if ($mySectionID !== 0 && $section->getCollectionID() == $mySectionID) {
+            $result = $this;
+        } else {
+            $neutralID = ($mySectionID === 0) ? $this->getCollectionID() : $this->getNeutralStackID();
+            $db = Database::connection();
+            $localizedID = $db->fetchColumn(
+                '
+                    select
+    	               Stacks.cID
+                    from
+    	               Stacks
+    	               inner join Pages on Stacks.cID = Pages.cID
+                    where
+    	               Pages.cParentID = ? and Stacks.stMultilingualSection = ?
+                    limit 1
+                ',
+                array($neutralID, $section->getCollectionID())
+            );
+            if ($localizedID) {
+                $localized = static::getByID($localizedID, $cvID);
+                if ($localized) {
+                    $result = $localized;
+                }
             }
         }
 
@@ -507,9 +508,9 @@ class Stack extends Page implements ExportableInterface
         $db = Database::connection();
         $v = array($name, $localizedStackCID, $type);
         $db->Execute(
-            'insert into Stacks (stName, cID, stType, stMultilingualSection, stNeutralStack) values (?, ?, ?, ?, ?)',
-            array($name, $localizedStackCID, 0, $section->getCollectionID(), $neutralStack->getCollectionID())
-            );
+            'insert into Stacks (stName, cID, stType, stMultilingualSection) values (?, ?, ?, ?)',
+            array($name, $localizedStackCID, 0, $section->getCollectionID())
+        );
         $localizedStack = static::getByID($localizedStackCID);
 
         return $localizedStack;

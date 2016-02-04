@@ -4258,9 +4258,6 @@
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="stNeutralStack" type="integer" size="10">
-      <unsigned/>
-    </field>
     <index name="stType">
       <col>stType</col>
     </index>
@@ -4270,9 +4267,6 @@
     <index name="cID">
       <col>cID</col>
     </index>
-    <references table="Stacks" ondelete="cascade" onupdate="cascade">
-    	<column local="stNeutralStack" foreign="cID" />
-    </references>
   </table>
 
   <table name="WorkflowProgressCategories">
