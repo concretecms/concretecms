@@ -314,6 +314,9 @@ $(function() {
     if (!isset($showGlobalAreasFolder)) {
         $showGlobalAreasFolder = false;
     }
+    if (!isset($canMoveStacks)) {
+        $canMoveStacks = false;
+    }
     /* @var Concrete\Core\Page\Stack\StackList $list */
     /* @var Concrete\Core\Page\Page[] $stacks */
     if ($showGlobalAreasFolder || !empty($stacks)) {
@@ -376,73 +379,77 @@ $(function() {
             .on('dblclick', function() {
                 window.location.href = $this.data('details-url');
             })
-            .draggable({
-                delay: 300,
-                start: function() {
-                    $this.addClass('ccm-search-selected');
-                    $('.ccm-undroppable-search-item').css('opacity', '0.4');
-                },
-                stop: function() {
-                    $('.ccm-undroppable-search-item').css('opacity', '');
-                },
-                revert: 'invalid',
-                helper: function() {
-                    var $selected = $this.add($tbody.find('.ccm-search-selected'));
-                    return $('<div class="' + className + ' ccm-draggable-search-item"><span>' + $selected.length + '</span></div>').data('$selected', $selected);
-                },
-                cursorAt: {
-                    left: -20,
-                    top: 5
-                }
-            })
+            <?php if ($canMoveStacks) { ?>
+                .draggable({
+                    delay: 300,
+                    start: function() {
+                        $this.addClass('ccm-search-selected');
+                        $('.ccm-undroppable-search-item').css('opacity', '0.4');
+                    },
+                    stop: function() {
+                        $('.ccm-undroppable-search-item').css('opacity', '');
+                    },
+                    revert: 'invalid',
+                    helper: function() {
+                        var $selected = $this.add($tbody.find('.ccm-search-selected'));
+                        return $('<div class="' + className + ' ccm-draggable-search-item"><span>' + $selected.length + '</span></div>').data('$selected', $selected);
+                    },
+                    cursorAt: {
+                        left: -20,
+                        top: 5
+                    }
+                })
+            <?php } ?>
         ;
     });
-    $('.ccm-droppable-search-item').droppable({
-        accept: '.ccm-search-results-folder, .ccm-search-results-stack',
-        //activeClass: 'ui-state-highlight',
-        hoverClass: 'ui-state-highlight',
-        drop: function(event, ui) {
-            var $sourceItems = ui.helper.data('$selected'),
-                sourceIDs = [],
-                destinationID = $(this).data('collection-id')
-            ;
-            $sourceItems.each(function() {
-                var $sourceItem = $(this);
-                var sourceID = $sourceItem.data('collection-id');
-                if (sourceID == destinationID) {
-                    $sourceItems = $sourceItems.not(this);
-                } else {
-                    sourceIDs.push($(this).data('collection-id'));
-                }
-            });
-            if (sourceIDs.length === 0) {
-                return;
-            }
-            $sourceItems.hide();
-            new ConcreteAjaxRequest({
-                url: <?=json_encode($view->action('move_to_folder'))?>,
-                data: {
-                    ccm_token:<?=json_encode($token->generate('move_to_folder'))?>,
-                    sourceIDs: sourceIDs,
-                    destinationID: destinationID
-                },
-                success: function(msg) {
-                    $sourceItems.remove();
-                    ConcreteAlert.notify({
-                        message: msg
-                    });
-                },
-                error: function(xhr) {
-                    $sourceItems.show();
-                    var msg = xhr.responseText;
-                    if (xhr.responseJSON && xhr.responseJSON.errors) {
-                        msg = xhr.responseJSON.errors.join("<br/>");
+    <?php if ($canMoveStacks) { ?>
+        $('.ccm-droppable-search-item').droppable({
+            accept: '.ccm-search-results-folder, .ccm-search-results-stack',
+            //activeClass: 'ui-state-highlight',
+            hoverClass: 'ui-state-highlight',
+            drop: function(event, ui) {
+                var $sourceItems = ui.helper.data('$selected'),
+                    sourceIDs = [],
+                    destinationID = $(this).data('collection-id')
+                ;
+                $sourceItems.each(function() {
+                    var $sourceItem = $(this);
+                    var sourceID = $sourceItem.data('collection-id');
+                    if (sourceID == destinationID) {
+                        $sourceItems = $sourceItems.not(this);
+                    } else {
+                        sourceIDs.push($(this).data('collection-id'));
                     }
-                    ConcreteAlert.dialog(<?=json_encode(t('Error'))?>, msg);
+                });
+                if (sourceIDs.length === 0) {
+                    return;
                 }
-            });
-        }
-    });
+                $sourceItems.hide();
+                new ConcreteAjaxRequest({
+                    url: <?=json_encode($view->action('move_to_folder'))?>,
+                    data: {
+                        ccm_token:<?=json_encode($token->generate('move_to_folder'))?>,
+                        sourceIDs: sourceIDs,
+                        destinationID: destinationID
+                    },
+                    success: function(msg) {
+                        $sourceItems.remove();
+                        ConcreteAlert.notify({
+                            message: msg
+                        });
+                    },
+                    error: function(xhr) {
+                        $sourceItems.show();
+                        var msg = xhr.responseText;
+                        if (xhr.responseJSON && xhr.responseJSON.errors) {
+                            msg = xhr.responseJSON.errors.join("<br/>");
+                        }
+                        ConcreteAlert.dialog(<?=json_encode(t('Error'))?>, msg);
+                    }
+                });
+            }
+        });
+    <?php } ?>
 });
         </script>
         <?php
