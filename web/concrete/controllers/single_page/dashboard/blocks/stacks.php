@@ -228,6 +228,8 @@ class Stacks extends DashboardPageController
                 $this->set('breadcrumb', $this->getBreadcrumb($folder->getPage()));
                 $this->set('current', $current);
                 $this->deliverStackList($stm);
+                $cpc = new Permissions($folder->getPage());
+                $this->set('canMoveStacks', $cpc->canMoveOrCopyPage());
             } else {
                 $root = Page::getByPath(STACKS_PAGE_PATH);
                 if ($root->getCollectionID() != $cID) {
@@ -274,13 +276,8 @@ class Stacks extends DashboardPageController
         $stm = new StackList();
         $stm->filterByParentID($parent->getCollectionID());
         $this->deliverStackList($stm);
-        /*$cpc = new Permissions($parent);
-        if ($cpc->canMoveOrCopyPage()) {
-            $this->set('canMoveStacks', true);
-            $sortUrl = View::url('/dashboard/blocks/stacks', 'update_order');
-            $this->set('sortURL', $sortUrl);
-        }
-        */
+        $cpc = new Permissions($parent);
+        $this->set('canMoveStacks', $cpc->canMoveOrCopyPage());
     }
 
     public function add_stack()
