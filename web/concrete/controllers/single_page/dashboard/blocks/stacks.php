@@ -372,7 +372,10 @@ class Stacks extends DashboardPageController
                 } else {
                     $nextID = $neutralStack->getCollectionID();
                     $msg = 'localized_stack_deleted';
-                    $locale = $s->getMultilingualSection()->getLocale();
+                    $section = $s->getMultilingualSection();
+                    if ($section) {
+                        $locale = $section->getLocale();
+                    }
                 }
                 $sps = new Permissions($s);
                 if ($sps->canDeletePage()) {
