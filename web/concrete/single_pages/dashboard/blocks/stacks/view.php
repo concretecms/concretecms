@@ -142,7 +142,7 @@ if ($controller->getTask() == 'view_details' && isset($neutralStack) && $neutral
                         <li><a dialog-width="580" class="dialog-launch" dialog-append-buttons="true" dialog-height="420" dialog-title="<?=t('Stack Permissions')?>" id="stackPermissions" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup?cID=<?=$stackToEdit->getCollectionID()?>&arHandle=<?=STACKS_AREA_NAME?>&atask=groups"><?=t('Permissions')?></a></li>
                     <?php } ?>
                     <?php if ($cpc->canMoveOrCopyPage() && !$isGlobalArea) { ?>
-                        <li><a href="<?=$view->action('duplicate', $stackToEdit->getCollectionID())?>" style="margin-right: 4px;"><?=t('Duplicate Stack')?></a></li>
+                        <li><a href="<?=$view->action('duplicate', $neutralStack->getCollectionID())?>" style="margin-right: 4px;"><?=t('Duplicate Stack')?></a></li>
                     <?php } ?>
                     <?php if ($cpc->canDeletePage()) { ?>
                         <?php if ($isGlobalArea) { ?>
