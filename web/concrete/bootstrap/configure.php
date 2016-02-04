@@ -101,6 +101,7 @@ define('DIRNAME_DASHBOARD_MODULES', 'modules');
 define('DIRNAME_MAIL_TEMPLATES', 'mail');
 define('DIRNAME_THEMES', 'themes');
 define('DIRNAME_THEMES_CORE', 'core');
+define('DIRNAME_CONFIG', 'config');
 define('DIRNAME_TOOLS', 'tools');
 define('DIRNAME_BLOCK_TOOLS', 'tools');
 define('DIRNAME_BLOCK_TEMPLATES', 'templates');

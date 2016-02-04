@@ -24,7 +24,7 @@ use Illuminate\Container\Container;
 use Job;
 use JobSet;
 use Log;
-use Package;
+use Concrete\Core\Support\Facade\Package;
 use Page;
 use Redirect;
 use Concrete\Core\Http\Request;
@@ -244,12 +244,12 @@ class Application extends Container
         $cl = ClassLoader::getInstance();
         /** @var \Package[] $pl */
         foreach ($pl as $p) {
-            $p->registerConfigNamespace();
+            \Config::package($p);
             if ($p->isPackageInstalled()) {
-                $pkg = Package::getClass($p->getPackageHandle());
+                $pkg = $this->make('Concrete\Core\Package\PackageService')->getClass($p->getPackageHandle());
                 if (is_object($pkg) && (!$pkg instanceof \Concrete\Core\Package\BrokenPackage)) {
                     $cl->registerPackage($pkg);
-                    $this->packages[] = $pkg;
+                    $this->packages[] = $p;
                 }
             }
         }
@@ -281,7 +281,7 @@ class Application extends Container
                     }
                 }
             }
-            $pkg->setupPackageLocalization();
+            $this->make('Concrete\Core\Package\PackageService')->setupLocalization($pkg);
             if (method_exists($pkg, 'on_start')) {
                 $pkg->on_start();
             }

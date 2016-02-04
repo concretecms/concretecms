@@ -6,7 +6,7 @@ use Concrete\Core\Entity\Attribute\Category;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class CategoryFactory
+class CategoryService
 {
     protected $entityManager;
 
