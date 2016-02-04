@@ -167,7 +167,7 @@ class BlockType
         //Install the block
         $bt = new static();
         $bt->loadFromController($bta);
-        if ($pkg instanceof Package) {
+        if (is_object($pkg)) {
             $bt->pkgID = $pkg->getPackageID();
         } else {
             $bt->pkgID = 0;

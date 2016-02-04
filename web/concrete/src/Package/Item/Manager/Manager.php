@@ -149,6 +149,18 @@ class Manager extends CoreManager
         return new Theme();
     }
 
+    public function getPackageItems(Package $package)
+    {
+        $items = array();
+        foreach($this->getPackageItemCategories() as $category) {
+            /**
+             * @var $category ItemInterface
+             */
+            $items = array_merge($items, $category->getItems($package));
+        }
+        return $items;
+    }
+
     public function getPackageItemCategories()
     {
         $return = array();

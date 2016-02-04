@@ -2,6 +2,7 @@
 namespace Concrete\Controller\SinglePage\Dashboard\Extend;
 
 use Concrete\Core\Package\BrokenPackage;
+use Concrete\Core\Package\ContentSwapper;
 use Concrete\Core\Package\Item\Manager\Manager;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Loader;
@@ -65,28 +66,19 @@ class Install extends DashboardPageController
         if (!$this->error->has()) {
             $test = $pkg->testForUninstall();
 
-            if ($test === true) {
+            if (!is_object($test)) {
                 $pkg->uninstall();
                 if ($this->post('pkgMoveToTrash')) {
                     $r = $pkg->backup();
-                    if (is_array($r)) {
-                        $pe = Package::mapError($r);
-                        foreach ($pe as $ei) {
-                            $this->error->add($ei);
-                        }
+                    if (is_object($r)) {
+                        $this->error->add($r);
                     }
                 }
                 if (!$this->error->has()) {
                     $this->redirect('/dashboard/extend/install', 'package_uninstalled');
                 }
             } else {
-                foreach ($test as $error_code) {
-                    switch ($error_code) {
-                        case $pkg::E_PACKAGE_THEME_ACTIVE:
-                            $this->error->add(new Exception(
-                                t('This package contains the active site theme, please change the theme before uninstalling.')));
-                    }
-                }
+                $this->error->add($test);
             }
         }
 
@@ -125,12 +117,9 @@ class Install extends DashboardPageController
                     (!$p->showInstallOptionsScreen()) ||
                     Loader::helper('validation/token')->validate('install_options_selected')
                 ) {
-                    $tests = Package::testForInstall($package);
-                    if (is_array($tests)) {
-                        $tests = Package::mapError($tests);
-                        foreach ($tests as $test) {
-                            $this->error->add($test);
-                        }
+                    $tests = $p->testForInstall();
+                    if (is_object($tests)) {
+                        $this->error->add($tests);
                     } else {
                         $currentLocale = Localization::activeLocale();
                         if ($currentLocale != 'en_US') {
@@ -139,9 +128,10 @@ class Install extends DashboardPageController
                         }
                         try {
                             $u = new User();
+                            $swapper = new ContentSwapper();
                             $pkg = $p->install($this->post());
-                            if ($u->isSuperUser() && $p->allowsFullContentSwap() && $this->post('pkgDoFullContentSwap')) {
-                                $p->swapContent($this->post());
+                            if ($u->isSuperUser() && $swapper->allowsFullContentSwap($p) && $this->post('pkgDoFullContentSwap')) {
+                                $p->swapContent($p, $this->post());
                             }
                             if ($currentLocale != 'en_US') {
                                 Localization::changeLocale($currentLocale);
@@ -191,14 +181,7 @@ class Install extends DashboardPageController
 
             $r = $mri->download();
             if ($r != false) {
-                if (!is_array($r)) {
-                    $this->error->add($r);
-                } else {
-                    $errors = Package::mapError($r);
-                    foreach ($errors as $error) {
-                        $this->error->add($error);
-                    }
-                }
+                $this->error->add($r);
             } else {
                 $this->set('message', t('Marketplace item %s downloaded successfully.', $mri->getName()));
             }
