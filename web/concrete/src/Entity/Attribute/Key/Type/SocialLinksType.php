@@ -14,6 +14,11 @@ class SocialLinksType extends Type
         return new SocialLinksValue();
     }
 
+    public function getAttributeTypeHandle()
+    {
+        return 'social_links';
+    }
+
     public function createController()
     {
         $controller = \Core::make('\Concrete\Attribute\SocialLinks\Controller');

@@ -249,7 +249,7 @@ class Application extends Container
                 $pkg = $this->make('Concrete\Core\Package\PackageService')->getClass($p->getPackageHandle());
                 if (is_object($pkg) && (!$pkg instanceof \Concrete\Core\Package\BrokenPackage)) {
                     $cl->registerPackage($pkg);
-                    $this->packages[] = $p;
+                    $this->packages[] = $pkg;
                 }
             }
         }

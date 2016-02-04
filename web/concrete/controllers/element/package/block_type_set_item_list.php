@@ -3,7 +3,7 @@ namespace Concrete\Controller\Element\Package;
 
 use Concrete\Core\Controller\ElementController;
 use Concrete\Core\Entity\Package;
-use Concrete\Core\Package\Item\Manager\ItemInterface;
+use Concrete\Core\Package\ItemCategory\ItemInterface;
 
 class BlockTypeSetItemList extends ItemList
 {
