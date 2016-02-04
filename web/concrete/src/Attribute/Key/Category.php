@@ -12,6 +12,6 @@ class Category extends Facade
 {
     public static function getFacadeAccessor()
     {
-        return 'Concrete\Core\Attribute\Category\CategoryFactory';
+        return 'Concrete\Core\Attribute\Category\CategoryService';
     }
 }

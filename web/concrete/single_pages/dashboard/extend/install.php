@@ -154,7 +154,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
             if (empty($pkgAvailableArray)) {
                 Localization::clearCache();
             }
-            $_pkg->setupPackageLocalization();
+            \Concrete\Core\Support\Facade\Package::setupLocalization($_pkg);
             $pkgAvailableArray[] = $_pkg;
         }
     }

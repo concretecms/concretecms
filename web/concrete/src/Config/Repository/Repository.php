@@ -69,16 +69,17 @@ class Repository extends \Illuminate\Config\Repository
      * @param  string $hint
      * @param  string $namespace
      */
-    public function package($package, $hint, $namespace = null)
+    public function package($package, $hint = null, $namespace = null)
     {
         $namespace = $this->getPackageNamespace($package, $namespace);
-
+        $hint = $hint ? $hint : $package->getPackagePath() . '/' . DIRNAME_CONFIG;
         $this->packages[] = $namespace;
         $this->addNamespace($namespace, $hint);
     }
 
     protected function getPackageNamespace($package, $namespace)
     {
+        $package = is_object($package) ? $package->getPackageHandle() : $package;
         return $namespace ?: $package;
     }
 
