@@ -230,11 +230,10 @@ class Stacks extends DashboardPageController
                 $this->deliverStackList($stm);
             } else {
                 $root = Page::getByPath(STACKS_PAGE_PATH);
-                if ($root->getCollectionID() == $cID) {
-                    $this->view();
-                } else {
-                    throw new Exception(t('Invalid stack'));
+                if ($root->getCollectionID() != $cID) {
+                    $this->error->add(t('Invalid stack'));
                 }
+                $this->view();
             }
         }
     }
