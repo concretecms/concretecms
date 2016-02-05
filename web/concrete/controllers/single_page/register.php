@@ -31,6 +31,7 @@ class Register extends PageController
 
     public function do_register()
     {
+        $config = $this->app->make('config');
         $e = $this->app->make('error');
         $ip = $this->app->make('helper/validation/ip');
         $vals = $this->app->make('helper/validation/strings');
@@ -50,7 +51,7 @@ class Register extends PageController
                 $e->add($ip->getErrorMessage());
             }
 
-            if (Config::get('concrete.user.registration.captcha')) {
+            if ($config->get('concrete.user.registration.captcha')) {
                 $captcha = $this->app->make('helper/validation/captcha');
                 if (!$captcha->check()) {
                     $e->add(t("Incorrect image validation code. Please check the image and re-enter the letters or numbers as necessary."));
@@ -64,18 +65,18 @@ class Register extends PageController
             }
 
             if ($this->displayUserName) {
-                if (strlen($username) < Config::get('concrete.user.username.minimum')) {
+                if (strlen($username) < $config->get('concrete.user.username.minimum')) {
                     $e->add(t('A username must be at least %s characters long.',
-                        Config::get('concrete.user.username.minimum')));
+                        $config->get('concrete.user.username.minimum')));
                 }
 
-                if (strlen($username) > Config::get('concrete.user.username.maximum')) {
+                if (strlen($username) > $config->get('concrete.user.username.maximum')) {
                     $e->add(t('A username cannot be more than %s characters long.',
-                        Config::get('concrete.user.username.maximum')));
+                        $config->get('concrete.user.username.maximum')));
                 }
 
-                if (strlen($username) >= Config::get('concrete.user.username.minimum') && strlen($username) <= Config::get('concrete.user.username.maximum') && !$valc->username($username)) {
-                    if (Config::get('concrete.user.username.allow_spaces')) {
+                if (strlen($username) >= $config->get('concrete.user.username.minimum') && strlen($username) <= $config->get('concrete.user.username.maximum') && !$valc->username($username)) {
+                    if ($config->get('concrete.user.username.allow_spaces')) {
                         $e->add(t('A username may only contain letters, numbers, spaces (not at the beginning/end), dots (not at the beginning/end), underscores (not at the beginning/end).'));
                     } else {
                         $e->add(t('A username may only contain letters, numbers, dots (not at the beginning/end), underscores (not at the beginning/end).'));
@@ -126,10 +127,10 @@ class Register extends PageController
             if (is_object($process)) {
                 $process->saveUserAttributesForm($aks);
 
-                if (Config::get('concrete.user.registration.notification')) { //do we notify someone if a new user is added?
+                if ($config->get('concrete.user.registration.notification')) { //do we notify someone if a new user is added?
                     $mh = $this->app->make('mail');
-                    if (Config::get('concrete.user.registration.notification_email')) {
-                        $mh->to(Config::get('concrete.user.registration.notification_email'));
+                    if ($config->get('concrete.user.registration.notification_email')) {
+                        $mh->to($config->get('concrete.user.registration.notification_email'));
                     } else {
                         $adminUser = UserInfo::getByID(USER_SUPER_ID);
                         if (is_object($adminUser)) {
@@ -147,17 +148,17 @@ class Register extends PageController
                         $attribValues[] = $ak->getAttributeKeyDisplayName('text') . ': ' . $process->getAttribute($ak->getAttributeKeyHandle(), 'display');
                     }
                     $mh->addParameter('attribs', $attribValues);
-                    $mh->addParameter('siteName', Config::get('concrete.site'));
+                    $mh->addParameter('siteName', $config->get('concrete.site'));
 
-                    if (Config::get('concrete.user.registration.notification_email')) {
-                        $mh->from(Config::get('concrete.user.registration.notification_email'),  t('Website Registration Notification'));
+                    if ($config->get('concrete.user.registration.notification_email')) {
+                        $mh->from($config->get('concrete.user.registration.notification_email'),  t('Website Registration Notification'));
                     } else {
                         $adminUser = UserInfo::getByID(USER_SUPER_ID);
                         if (is_object($adminUser)) {
                             $mh->from($adminUser->getUserEmail(),  t('Website Registration Notification'));
                         }
                     }
-                    if (Config::get('concrete.user.registration.type') == 'manual_approve') {
+                    if ($config->get('concrete.user.registration.type') == 'manual_approve') {
                         $mh->load('user_register_approval_required');
                     } else {
                         $mh->load('user_register');
@@ -166,7 +167,7 @@ class Register extends PageController
                 }
 
                 // now we log the user in
-                if (Config::get('concrete.user.registration.email_registration')) {
+                if ($config->get('concrete.user.registration.email_registration')) {
                     $u = new User($this->post('uEmail'), $this->post('uPassword'));
                 } else {
                     $u = new User($this->post('uName'), $this->post('uPassword'));
@@ -182,13 +183,13 @@ class Register extends PageController
                 $redirectMethod = '';
 
                 // now we check whether we need to validate this user's email address
-                if (Config::get('concrete.user.registration.validate_email')) {
+                if ($config->get('concrete.user.registration.validate_email')) {
                     $uHash = $process->setupValidation();
 
                     $mh = $this->app->make('mail');
-                    $fromEmail = (string) Config::get('concrete.email.validate_registration.address');
+                    $fromEmail = (string) $config->get('concrete.email.validate_registration.address');
                     if (strpos($fromEmail, '@')) {
-                        $fromName = (string) Config::get('concrete.email.validate_registration.name');
+                        $fromName = (string) $config->get('concrete.email.validate_registration.name');
                         if ($fromName === '') {
                             $fromName = t('Validate Email Address');
                         }
@@ -196,7 +197,7 @@ class Register extends PageController
                     }
                     $mh->addParameter('uEmail', $this->post('uEmail'));
                     $mh->addParameter('uHash', $uHash);
-                    $mh->addParameter('site', Config::get('concrete.site'));
+                    $mh->addParameter('site', $config->get('concrete.site'));
                     $mh->to($this->post('uEmail'));
                     $mh->load('validate_user_email');
                     $mh->sendMail();
@@ -204,13 +205,13 @@ class Register extends PageController
                     //$this->redirect('/register', 'register_success_validate', $rcID);
                     $redirectMethod = 'register_success_validate';
                     $u->logout();
-                } elseif (Config::get('concrete.user.registration.approval')) {
+                } elseif ($config->get('concrete.user.registration.approval')) {
                     $ui = UserInfo::getByID($u->getUserID());
                     $ui->deactivate();
                     // Email to the user when he/she registered but needs approval
                     $mh = $this->app->make('mail');
                     $mh->addParameter('uEmail', $this->post('uEmail'));
-                    $mh->addParameter('site', Config::get('concrete.site'));
+                    $mh->addParameter('site', $config->get('concrete.site'));
                     $mh->to($this->post('uEmail'));
                     $mh->load('user_register_approval_required_to_user');
                     $mh->sendMail();
