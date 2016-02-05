@@ -99,7 +99,7 @@ if (isset($neutralStack)) {
                     </li>
                     <li><a dialog-width="640" dialog-height="340" class="dialog-launch" id="stackVersions" dialog-title="<?=t('Version History')?>" href="<?=URL::to('/ccm/system/panels/page/versions')?>?cID=<?=$stackToEdit->getCollectionID()?>"><?=t('Version History')?></a></li>
                     <?php if (!$isGlobalArea && $cpc->canEditPageProperties()) { ?>
-                        <li><a href="<?=$view->action('rename', $stackToEdit->getCollectionID())?>"><?=t('Rename')?></a></li>
+                        <li><a href="<?=$view->action('rename', $neutralStack->getCollectionID())?>"><?=t('Rename')?></a></li>
                     <?php } ?>
                     <?php if (!$isGlobalArea && $cpc->canEditPagePermissions() && Config::get('concrete.permissions.model') == 'advanced') { ?>
                         <li><a dialog-width="580" class="dialog-launch" dialog-append-buttons="true" dialog-height="420" dialog-title="<?=t('Stack Permissions')?>" id="stackPermissions" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup?cID=<?=$stackToEdit->getCollectionID()?>&arHandle=<?=STACKS_AREA_NAME?>&atask=groups"><?=t('Permissions')?></a></li>
@@ -269,19 +269,20 @@ $(function() {
         </div>
     </form>
     <?php
-} elseif ($this->controller->getTask() == 'rename') {
-    $sv = CollectionVersion::get($stack, 'ACTIVE');
+} elseif (isset($renameStack)) {
+    /* @var Stack $renameStack */
+    $sv = CollectionVersion::get($renameStack, 'ACTIVE');
     ?>
-    <form action="<?=$view->action('rename', $stack->getCollectionID())?>" method="POST">
+    <form action="<?=$view->action('rename', $renameStack->getCollectionID())?>" method="POST">
         <legend><?=t('Rename Stack')?></legend>
         <?=$token->output('rename_stack')?>
         <div class="form-group">
             <?=$form->label('stackName', t("Name"))?>
-            <?=$form->text('stackName', $stack->getStackName())?>
+            <?=$form->text('stackName', $renameStack->getStackName())?>
         </div>
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
-                <a href="<?=$view->action('view_details', $stack->getCollectionID())?>" class="btn btn-default"><?=t('Cancel')?></a>
+                <a href="<?=$view->action('view_details', $renameStack->getCollectionID())?>" class="btn btn-default"><?=t('Cancel')?></a>
                 <button type="submit" class="btn pull-right btn-primary"><?=t('Rename')?></button>
             </div>
         </div>

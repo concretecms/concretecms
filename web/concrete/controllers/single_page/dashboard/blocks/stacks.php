@@ -4,7 +4,6 @@ namespace Concrete\Controller\SinglePage\Dashboard\Blocks;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Collection\Version\Version;
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Concrete\Core\Page\Stack\StackCategory;
 use Concrete\Core\Support\Facade\StackFolder;
 use Config;
 use Concrete\Core\Page\Stack\StackList;
@@ -45,6 +44,7 @@ class Stacks extends DashboardPageController
                 if ($r === 0) {
                     $r = strcasecmp($a->getLocale(), $b->getLocale());
                 }
+
                 return $r;
             });
         }
@@ -193,6 +193,9 @@ class Stacks extends DashboardPageController
             case 'stack_duplicated':
                 $this->set('message', t('Stack duplicated successfully'));
                 break;
+            case 'stack_renamed':
+                $this->set('message', t('Stack renamed successfully'));
+                break;
         }
     }
 
@@ -207,6 +210,7 @@ class Stacks extends DashboardPageController
     {
         $page = ($parent instanceof \Concrete\Core\Page\Page) ? $parent : $parent->getPage();
         $cpc = new Permissions($page);
+
         return (bool) $cpc->canMoveOrCopyPage();
     }
 
@@ -442,43 +446,53 @@ class Stacks extends DashboardPageController
     public function rename($cID)
     {
         $s = Stack::getByID($cID);
-        if (is_object($s)) {
-            $this->set('stack', $s);
+        if (!$s) {
+            $this->error->add(t('Invalid stack'));
+            $this->view();
+        } elseif ($s->getStackType() == Stack::ST_TYPE_GLOBAL_AREA) {
+            $this->error->add(t("You can't rename global areas"));
+            $this->view_details($cID);
         } else {
-            throw new Exception(t('Invalid stack'));
-        }
-        $sps = new Permissions($s);
-        if (!$sps->canEditPageProperties()) {
-            $this->redirect('/dashboard/blocks/stacks', 'view_details', $cID);
-        }
-
-        if ($this->isPost()) {
-            if ($this->app->make('helper/validation/token')->validate('rename_stack')) {
-                if ($this->app->make('helper/validation/strings')->notempty($stackName = trim($this->post('stackName')))) {
-                    $txt = $this->app->make('helper/text');
-                    $v = $s->getVersionToModify();
-                    $v->update(array(
-                        'cName' => $stackName,
-                        'cHandle' => str_replace('-', Config::get('concrete.seo.page_path_separator'), $txt->urlify($stackName)),
-                    ));
-
-                    $u = new User();
-                    $pkr = new ApproveStackRequest();
-                    $pkr->setRequestedPage($s);
-                    $pkr->setRequestedVersionID($v->getVersionID());
-                    $pkr->setRequesterUserID($u->getUserID());
-                    $response = $pkr->trigger();
-                    if ($response instanceof \Concrete\Core\Workflow\Progress\Response) {
-                        // we only get this response if we have skipped workflows and jumped straight in to an approve() step.
-                        $this->redirect('/dashboard/blocks/stacks', 'stack_renamed', $cID);
-                    } else {
-                        $this->redirect('/dashboard/blocks/stacks', 'view_details', $cID, 'rename_saved');
-                    }
-                } else {
-                    $this->error->add(t("The stack name cannot be empty."));
-                }
+            $ns = $s->getNeutralStack();
+            if ($ns !== null) {
+                $this->redirect('/dashboard/blocks/stacks', 'rename', $ns->getCollectionID());
+            }
+            $sps = new Permissions($s);
+            if (!$sps->canEditPageProperties()) {
+                $this->error->add(t("You don't have the permission to rename this stack"));
+                $this->view_details($cID);
             } else {
-                $this->error->add($this->app->make('helper/validation/token')->getErrorMessage());
+                $this->set('renameStack', $s);
+                if ($this->isPost()) {
+                    $valt = $this->app->make('helper/validation/token');
+                    if (!$valt->validate('rename_stack')) {
+                        $this->error->add($valt->getErrorMessage());
+                    } else {
+                        $stackName = $this->post('stackName');
+                        if (!$this->app->make('helper/validation/strings')->notempty($stackName)) {
+                            $this->error->add(t("The stack name cannot be empty."));
+                        } else {
+                            $txt = $this->app->make('helper/text');
+                            $v = $s->getVersionToModify();
+                            $v->update(array(
+                                'cName' => $stackName,
+                                'cHandle' => str_replace('-', Config::get('concrete.seo.page_path_separator'), $txt->urlify($stackName)),
+                            ));
+                            $u = new User();
+                            $pkr = new ApproveStackRequest();
+                            $pkr->setRequestedPage($s);
+                            $pkr->setRequestedVersionID($v->getVersionID());
+                            $pkr->setRequesterUserID($u->getUserID());
+                            $response = $pkr->trigger();
+                            if ($response instanceof \Concrete\Core\Workflow\Progress\Response) {
+                                // we only get this response if we have skipped workflows and jumped straight in to an approve() step.
+                                $this->redirect('/dashboard/blocks/stacks', 'view_details', $cID, 'stack_renamed');
+                            } else {
+                                $this->redirect('/dashboard/blocks/stacks', 'view_details', $cID, 'rename_saved');
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -579,7 +593,6 @@ class Stacks extends DashboardPageController
             $ns = $s->getNeutralStack();
             if ($ns !== null) {
                 $this->redirect('/dashboard/blocks/stacks', 'duplicate', $ns->getCollectionID());
-                exit;
             }
             $sps = new Permissions($s);
             if (!$sps->canMoveOrCopyPage()) {
