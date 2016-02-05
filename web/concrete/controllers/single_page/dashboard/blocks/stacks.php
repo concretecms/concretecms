@@ -132,47 +132,6 @@ class Stacks extends DashboardPageController
             $this->set('stackToEdit', $stackToEdit);
             $this->set('breadcrumb', $breadcrumb);
             $this->set('isGlobalArea', $isGlobalArea);
-            switch ($msg) {
-                case 'stack_added':
-                    $this->set('message', t('Stack added successfully.'));
-                    break;
-                case 'localized_stack_added':
-                    $this->set('message', t('Localized version of stack added successfully.'));
-                    break;
-                case 'localized_global_area_added':
-                    $this->set('message', t('Localized version of global area added successfully.'));
-                    break;
-                case 'stack_approved':
-                    $this->set('message', t('Stack approved successfully'));
-                    break;
-                case 'global_area_approved':
-                    $this->set('message', t('Global area approved successfully'));
-                    break;
-                case 'approve_saved':
-                    $this->set('message', t('Approve request saved. You must complete the approval workflow before these changes are publicly accessible.'));
-                    break;
-                case 'stack_delete_saved':
-                    $this->set('message', t('Delete request saved. You must complete the delete workflow before this stack can be deleted.'));
-                    break;
-                case 'global_area_delete_saved':
-                    $this->set('message', t('Delete request saved. You must complete the delete workflow before this version of the global area can be deleted.'));
-                    break;
-                case 'rename_saved':
-                    $this->set('message', t('Rename request saved. You must complete the approval workflow before the name of the stack will be updated.'));
-                    break;
-                case 'stack_deleted':
-                    $this->set('message', t('Stack deleted successfully'));
-                    break;
-                case 'global_area_cleared':
-                    $this->set('message', t('Global area cleared successfully'));
-                    break;
-                case 'localized_stack_deleted':
-                    $this->set('message', t('Localized version of stack deleted successfully'));
-                    break;
-                case 'localized_global_area_deleted':
-                    $this->set('message', t('Localized version of global area deleted successfully'));
-                    break;
-            }
         } else {
             $folder = StackFolder::getByID($cID);
             if (is_object($folder)) {
@@ -190,6 +149,50 @@ class Stacks extends DashboardPageController
                 }
                 $this->view();
             }
+        }
+        switch ($msg) {
+            case 'stack_added':
+                $this->set('message', t('Stack added successfully.'));
+                break;
+            case 'localized_stack_added':
+                $this->set('message', t('Localized version of stack added successfully.'));
+                break;
+            case 'localized_global_area_added':
+                $this->set('message', t('Localized version of global area added successfully.'));
+                break;
+            case 'stack_approved':
+                $this->set('message', t('Stack approved successfully'));
+                break;
+            case 'global_area_approved':
+                $this->set('message', t('Global area approved successfully'));
+                break;
+            case 'approve_saved':
+                $this->set('message', t('Approve request saved. You must complete the approval workflow before these changes are publicly accessible.'));
+                break;
+            case 'stack_delete_saved':
+                $this->set('message', t('Delete request saved. You must complete the delete workflow before this stack can be deleted.'));
+                break;
+            case 'global_area_delete_saved':
+                $this->set('message', t('Delete request saved. You must complete the delete workflow before this version of the global area can be deleted.'));
+                break;
+            case 'rename_saved':
+                $this->set('message', t('Rename request saved. You must complete the approval workflow before the name of the stack will be updated.'));
+                break;
+            case 'stack_deleted':
+                $this->set('message', t('Stack deleted successfully'));
+                break;
+            case 'global_area_cleared':
+                $this->set('message', t('Global area cleared successfully'));
+                break;
+            case 'localized_stack_deleted':
+                $this->set('message', t('Localized version of stack deleted successfully'));
+                break;
+            case 'localized_global_area_deleted':
+                $this->set('message', t('Localized version of global area deleted successfully'));
+                break;
+            case 'stack_duplicated':
+                $this->set('message', t('Stack duplicated successfully'));
+                break;
         }
     }
 
@@ -566,31 +569,40 @@ class Stacks extends DashboardPageController
     public function duplicate($cID)
     {
         $s = Stack::getByID($cID);
-        if (is_object($s)) {
-            $this->set('stack', $s);
+        if (!$s) {
+            $this->error->add(t('Invalid stack'));
+            $this->view();
+        } elseif ($s->getStackType() == Stack::ST_TYPE_GLOBAL_AREA) {
+            $this->error->add(t("You can't duplicate global areas"));
+            $this->view_details($cID);
+        } elseif ($s->getNeutralStack() !== null) {
+            $this->error->add(t("You can't duplicate a localized version of a stacks"));
+            $this->view_details($cID);
         } else {
-            throw new Exception(t('Invalid stack'));
-        }
-        $sps = new Permissions($s);
-        if (!$sps->canMoveOrCopyPage()) {
-            $this->redirect('/dashboard/blocks/stacks', 'view_details', $cID);
-        }
-
-        if ($this->isPost()) {
-            if ($this->app->make('helper/validation/token')->validate('duplicate_stack')) {
-                if ($this->app->make('helper/validation/strings')->notempty($stackName = trim($this->post('stackName')))) {
-                    $ns = $s->duplicate();
-                    $ns->update(array(
-                        'stackName' => $stackName,
-                    ));
-                    $this->redirect('/dashboard/blocks/stacks', 'stack_duplicated');
-                } else {
-                    $this->error->add(t("You must give your stack a name."));
-                }
+            $sps = new Permissions($s);
+            if (!$sps->canMoveOrCopyPage()) {
+                $this->error->add(t("You don't have the permission to clone this stack"));
+                $this->view_details($cID);
             } else {
-                $this->error->add($this->app->make('helper/validation/token')->getErrorMessage());
+                $this->set('duplicateStack', $s);
+                if ($this->isPost()) {
+                    $valt = $this->app->make('helper/validation/token');
+                    if (!$valt->validate('duplicate_stack')) {
+                        $this->error->add($valt->getErrorMessage());
+                    } else {
+                        $stackName = $this->post('stackName');
+                        if (!$this->app->make('helper/validation/strings')->notempty($stackName)) {
+                            $this->error->add(t("You must give your stack a name."));
+                        } else {
+                            $ns = $s->duplicate();
+                            $ns->update(array(
+                                'stackName' => $stackName,
+                            ));
+                            $this->redirect('/dashboard/blocks/stacks', 'view_details', $s->getCollectionParentID(), 'stack_duplicated');
+                        }
+                    }
+                }
             }
-            $name = trim($this->post('name'));
         }
     }
 

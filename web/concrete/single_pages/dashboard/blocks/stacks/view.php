@@ -16,7 +16,7 @@ use Concrete\Core\Page\Stack\Stack;
 /* @var Concrete\Core\Page\Page $c */
 
 
-if ($controller->getTask() == 'view_details' && isset($neutralStack) && $neutralStack) {
+if (isset($neutralStack)) {
     /* @var Stack $neutralStack */
     /* @var Stack|null $stackToEdit */
     /* @var bool $isGlobalArea */
@@ -250,19 +250,20 @@ $(function() {
         </script>
         <?php
     }
-} elseif ($this->controller->getTask() == 'duplicate') {
-    $sv = CollectionVersion::get($stack, 'ACTIVE');
+} elseif (isset($duplicateStack)) {
+    /* @var Stack $duplicateStack */
+    $sv = CollectionVersion::get($duplicateStack, 'ACTIVE');
     ?>
-    <form name="duplicate_form" action="<?=$view->action('duplicate', $stack->getCollectionID())?>" method="POST">
+    <form name="duplicate_form" action="<?=$view->action('duplicate', $duplicateStack->getCollectionID())?>" method="POST">
         <?=$token->output('duplicate_stack')?>
         <legend><?=t('Duplicate Stack')?></legend>
         <div class="form-group">
             <?=$form->label('stackName', t("Name"))?>
-            <?=$form->text('stackName', $stack->getStackName())?>
+            <?=$form->text('stackName', $duplicateStack->getStackName())?>
         </div>
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
-                <a href="<?=$view->action('view_details', $stack->getCollectionID())?>" class="btn btn-default"><?=t('Cancel')?></a>
+                <a href="<?=$view->action('view_details', $duplicateStack->getCollectionID())?>" class="btn btn-default"><?=t('Cancel')?></a>
                 <button type="submit" class="btn pull-right btn-primary"><?=t('Duplicate')?></button>
             </div>
         </div>
@@ -441,26 +442,6 @@ $(function() {
     ?>
     <div class="ccm-dashboard-header-buttons">
         <?php
-        if (Core::make('multilingual/detector')->isEnabled() && $defaultLanguage) {
-            $ch = Core::make('multilingual/interface/flag');
-            ?>
-            <span class="dropdown">
-                <button type="button" class="btn btn-default" data-toggle="dropdown">
-                    <?=$ch->getSectionFlagIcon($defaultLanguage)?> <?=$defaultLanguage->getLanguageText()?> <span class="text-muted"><?=$defaultLanguage->getLocale(); ?>
-                </button>
-            </span>
-            <span class="caret"></span>
-            <ul class="dropdown-menu" role="menu">
-                <?php
-                foreach ($multilingualSections as $section) {
-                    ?>
-                    <li><a href="<?=$view->action('set_default_language', $section->getCollectionID(), $controller->getTask())?>"><?=$ch->getSectionFlagIcon($section)?> <?=$section->getLanguageText()?> <span class="text-muted"><?=$section->getLocale(); ?></span></a></li>
-                    <?php
-                }
-                ?>
-            </ul>
-            <?php
-        }
         if ($controller->getTask() != 'view_global_areas') {
             ?>
             <div class="btn-group">

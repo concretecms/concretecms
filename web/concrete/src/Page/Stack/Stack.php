@@ -244,22 +244,36 @@ class Stack extends Page implements ExportableInterface
     public function duplicate($nc = null, $preserveUserID = false)
     {
         if (!is_object($nc)) {
-            // There is not necessarily need to provide the parent
-            // page for the duplicate since for stacks, that is
-            // always the same page.
-            $nc = Page::getByPath(STACKS_PAGE_PATH);
+            $nc = Page::getByID($this->getCollectionParentID());
         }
-        $page = parent::duplicate($nc, $preserveUserID);
+        $newPage = parent::duplicate($nc, $preserveUserID);
 
         // we have to do this because we need the area to exist before we try and add something to it.
-        Area::getOrCreate($page, STACKS_AREA_NAME);
+        Area::getOrCreate($newPage, STACKS_AREA_NAME);
 
         $db = Database::connection();
-        $v = array($page->getCollectionName(), $page->getCollectionID(), $this->getStackType());
-        $db->Execute('insert into Stacks (stName, cID, stType) values (?, ?, ?)', $v);
+        $db->executeQuery(
+            'insert into Stacks (stName, cID, stType, stMultilingualSection) values (?, ?, ?, ?)',
+            [
+                $newPage->getCollectionName(),
+                $newPage->getCollectionID(),
+                $this->getStackType(),
+                $this->getMultilingualSectionID(),
+            ]
+        );
 
-        // Make sure we return an up-to-date record
-        return static::getByID($page->getCollectionID());
+        $newStack = static::getByID($newPage->getCollectionID());
+
+        if ($this->isNeutralStack()) {
+            foreach (Section::getList() as $section) {
+                $localized = $this->getLocalizedStack($section);
+                if ($localized !== null) {
+                    $localized->duplicate($newStack, $preserveUserID);
+                }
+            }
+        }
+
+        return $newStack;
     }
 
     /**
