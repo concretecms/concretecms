@@ -501,7 +501,7 @@ class Stack extends Page implements ExportableInterface
         $neutralStackPage = Page::getByID($neutralStack->getCollectionID());
         $localizedStackPage = $neutralStackPage->duplicate($neutralStackPage);
         $localizedStackPage->update([
-            'name' => $name,
+            'cName' => $name,
         ]);
         // we have to do this because we need the area to exist before we try and add something to it.
         Area::getOrCreate($localizedStackPage, STACKS_AREA_NAME);
