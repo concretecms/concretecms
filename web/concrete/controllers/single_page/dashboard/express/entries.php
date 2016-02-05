@@ -33,7 +33,10 @@ class Entries extends DashboardPageController
             }
         }
 
-        $result = new Result($entity->getResultColumnSet(), $list, \URL::to('/dashboard/express/entries/', $id));
+        $set = $entity->getResultColumnSet();
+        if ($set) {
+            $result = new Result($entity->getResultColumnSet(), $list, \URL::to('/dashboard/express/entries/', $id));
+        }
         $this->set('list', $list);
         $this->set('result', $result);
         $this->set('results', $list->getResults());

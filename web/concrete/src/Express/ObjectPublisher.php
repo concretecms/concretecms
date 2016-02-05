@@ -2,6 +2,7 @@
 namespace Concrete\Core\Express;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Database\EntityManagerFactory;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Support\Facade\DatabaseORM;
 use Doctrine\ORM\EntityManager;
@@ -24,8 +25,9 @@ class ObjectPublisher
             $cacheDriver->deleteAll();
         }
 
+        $factory = new EntityManagerFactory();
         $connection = $this->entityManager->getConnection();
-        $entityManager = DatabaseORM::makeEntityManager($connection, 'core');
+        $entityManager = $factory->create($connection);
 
         $metadatas = $entityManager->getMetadataFactory()->getAllMetadata();
         $destPath = $entityManager->getConfiguration()->getProxyDir();

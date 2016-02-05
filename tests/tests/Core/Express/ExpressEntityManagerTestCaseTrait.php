@@ -9,7 +9,7 @@ trait ExpressEntityManagerTestCaseTrait
         $key_type = new \Concrete\Core\Entity\Attribute\Key\Type\TextType();
         $key_type->setAttributeType($type);
 
-        $first_name = new Concrete\Core\Entity\Attribute\Key\Key();
+        $first_name = new \Concrete\Core\Entity\Attribute\Key\ExpressKey();
         $first_name->setAttributeKeyHandle('first_name');
         $first_name->setAttributeKeyType($key_type);
         return $first_name;
@@ -25,10 +25,7 @@ trait ExpressEntityManagerTestCaseTrait
         $teacher->setTableName('Teachers');
         $teacher->setName('Teacher');
 
-        $attribute = new \Concrete\Core\Entity\Attribute\Key\ExpressKey();
-        $attribute->setAttributeKey($this->getAttributeKeyObject());
-
-        $student->getAttributes()->add($attribute);
+        $student->getAttributes()->add($this->getAttributeKeyObject());
 
         return $this->deliverEntityManager(array($student, $teacher));
     }
