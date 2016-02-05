@@ -128,18 +128,15 @@ class DatabaseStructureManager
      * @throws \Exception Throws an exception if the given prefix is invalid or 
      *         if one of the proxy files cannot be deleted.
      */
-    public function destroyProxyClasses($prefix)
+    public function destroyProxyClasses($prefix = null)
     {
-        if (!is_string($prefix) || strlen($prefix) < 1) {
-            throw new \Exception(t("The given prefix needs to be a string."));
-        }
         $proxyDir = $this->getProxyDir();
         if (is_dir($proxyDir)) {
             $fh = Core::make('helper/file');
             $prefix = \Doctrine\Common\Proxy\Proxy::MARKER . $prefix;
             $filesMatched = 0;
             foreach ($fh->getDirectoryContents($proxyDir) as $file) {
-                if (strpos($file, $prefix) === 0) {
+                if (strpos($file, $prefix) === 0 || !$prefix) {
                     if (!@unlink($proxyDir . '/' . $file)) {
                         throw new \Exception(t(
                             "Could not delete a proxy file. Please check the " .

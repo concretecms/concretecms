@@ -177,7 +177,6 @@ return array(
         'permission_access_entity_type',
         'permission_key_category',
         'permission_key',
-        'page',
         'page_template',
         'page_type',
         'page_type_composer_control_type',

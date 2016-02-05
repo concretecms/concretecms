@@ -3,6 +3,7 @@ namespace Concrete\Core\Database;
 
 use Concrete\Core\Cache\Adapter\DoctrineCacheDriver;
 use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Package\PackageList;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
 use Config;
@@ -11,14 +12,6 @@ use Events;
 
 class EntityManagerFactory implements EntityManagerFactoryInterface
 {
-    protected $entitiesPath;
-    protected $context;
-
-    public function __construct($entitiesPath, $context = null)
-    {
-        $this->entitiesPath = $entitiesPath;
-        $this->context = null;
-    }
 
     public function create(Connection $connection)
     {
@@ -28,7 +21,9 @@ class EntityManagerFactory implements EntityManagerFactoryInterface
             new DoctrineCacheDriver('cache/expensive')
         );
 
-        $driverImpl = $config->newDefaultAnnotationDriver($this->entitiesPath);
+        $driverImpl = $config->newDefaultAnnotationDriver(array(
+            DIR_BASE_CORE . '/' . DIRNAME_CLASSES,
+        ));
         $driverImpl->addExcludePaths(Config::get('database.proxy_exclusions', array()));
         $config->setMetadataDriverImpl($driverImpl);
 
