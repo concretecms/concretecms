@@ -503,6 +503,8 @@ class Stack extends Page implements ExportableInterface
         $localizedStackPage->update([
             'name' => $name,
         ]);
+        // we have to do this because we need the area to exist before we try and add something to it.
+        Area::getOrCreate($localizedStackPage, STACKS_AREA_NAME);
         $localizedStackCID = $localizedStackPage->getCollectionID();
         $db = Database::connection();
         $db->executeQuery('
