@@ -5,11 +5,25 @@ use Concrete\Controller\Element\Package\AttributeTypeItemList;
 use Concrete\Core\Attribute\Type;
 use Concrete\Core\Entity\Package;
 use Concrete\Controller\Element\Package\ThemeItemList;
+use Doctrine\ORM\EntityManagerInterface;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
 class AttributeType extends AbstractCategory
 {
+
+    protected $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
+    public function removeItem($type)
+    {
+        $this->entityManager->remove($type);
+        $this->entityManager->flush();
+    }
 
     public function getItemCategoryDisplayName()
     {

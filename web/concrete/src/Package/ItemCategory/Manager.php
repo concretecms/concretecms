@@ -121,7 +121,7 @@ class Manager extends CoreManager
 
     public function createAttributeTypeDriver()
     {
-        return new AttributeType();
+        return $this->app->make('Concrete\Core\Package\ItemCategory\AttributeType');
     }
 
     public function createAttributeKeyDriver()
