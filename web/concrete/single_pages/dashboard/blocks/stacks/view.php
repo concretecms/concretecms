@@ -29,7 +29,7 @@ if ($controller->getTask() == 'view_details' && isset($neutralStack) && $neutral
         <?php } ?>
     </div>
     <p class="lead"><?=h($neutralStack->getCollectionName())?></p>
-    <?php        
+    <?php
     if ($stackToEdit === null) {
         ?>
         <form method="post" action="<?=$view->action('add_localized_stack')?>">
@@ -67,7 +67,7 @@ if ($controller->getTask() == 'view_details' && isset($neutralStack) && $neutral
                 $pk = PermissionKey::getByHandle('approve_page_versions');
                 $pk->setPermissionObject($stackToEdit);
                 $pa = $pk->getPermissionAccessObject();
-    
+
                 $workflows = array();
                 $canApproveWorkflow = true;
                 if (is_object($pa)) {
@@ -78,13 +78,14 @@ if ($controller->getTask() == 'view_details' && isset($neutralStack) && $neutral
                         $canApproveWorkflow = false;
                     }
                 }
-    
+
                 if (count($workflows > 0) && !$canApproveWorkflow) {
                     $publishTitle = t('Submit to Workflow');
                 }
                 $showApprovalButton = true;
             }
         }
+        $deleteLabels = null;
         ?>
         <nav class="navbar navbar-default">
             <div class="container-fluid">
@@ -106,15 +107,27 @@ if ($controller->getTask() == 'view_details' && isset($neutralStack) && $neutral
                     <?php if ($cpc->canMoveOrCopyPage() && !$isGlobalArea) { ?>
                         <li><a href="<?=$view->action('duplicate', $neutralStack->getCollectionID())?>" style="margin-right: 4px;"><?=t('Duplicate Stack')?></a></li>
                     <?php } ?>
-                    <?php if ($cpc->canDeletePage()) { ?>
-                        <?php if ($isGlobalArea) { ?>
-                            <li><a href="javascript:void(0)" data-dialog="delete-stack"><span class="text-danger"><?=t('Clear Global Area')?></span></a></li>
-                        <?php } elseif ($stackToEdit !== $neutralStack) { ?>
-                            <li><a href="javascript:void(0)" data-dialog="delete-stack"><span class="text-danger"><?=t('Delete Localized Stack')?></span></a></li>
-                        <?php } else { ?>
-                            <li><a href="javascript:void(0)" data-dialog="delete-stack"><span class="text-danger"><?=t('Delete Stack')?></span></a></li>
-                        <?php } ?>
-                    <?php } ?>
+                    <?php
+                    if ($cpc->canDeletePage()) {
+                        if ($isGlobalArea) {
+                            if ($stackToEdit !== $neutralStack) {
+                                $deleteLabels = ['title' => t('Delete localized version'), 'button' => t('Delete')];
+                                ?><li><a href="javascript:void(0)" data-dialog="delete-stack"><span class="text-danger"><?=t('Delete localized Global Area')?></span></a></li><?php
+                            } else {
+                                $deleteLabels = ['title' => t('Clear Global Area contents'), 'button' => t('Clear area')];
+                                ?><li><a href="javascript:void(0)" data-dialog="delete-stack"><span class="text-danger"><?=t('Clear Global Area')?></span></a></li><?php
+                            }
+                        } else {
+                            if ($stackToEdit !== $neutralStack) {
+                                $deleteLabels = ['title' => t('Delete localized version'), 'button' => t('Delete')];
+                                ?><li><a href="javascript:void(0)" data-dialog="delete-stack"><span class="text-danger"><?=t('Delete localized Stack')?></span></a></li><?php
+                            } else {
+                                $deleteLabels = ['title' => t('Delete Stack'), 'button' => t('Delete')];
+                                ?><li><a href="javascript:void(0)" data-dialog="delete-stack"><span class="text-danger"><?=t('Delete Stack')?></span></a></li><?php
+                            }
+                        }
+                    }
+                    ?>
                 </ul>
                 <?php if ($showApprovalButton) { ?>
                     <ul class="nav navbar-nav navbar-right">
@@ -125,7 +138,7 @@ if ($controller->getTask() == 'view_details' && isset($neutralStack) && $neutral
                 <?php } ?>
             </div>
         </nav>
-    
+
         <div id="ccm-stack-container">
             <?php
             $a = Area::get($stackToEdit, STACKS_AREA_NAME);
@@ -142,21 +155,27 @@ if ($controller->getTask() == 'view_details' && isset($neutralStack) && $neutral
             View::element('block_area_footer', array('a' => $a));
             ?>
         </div>
-    
-        <div style="display: none">
-            <div id="ccm-dialog-delete-stack" class="ccm-ui">
-                <form method="post" class="form-stacked" style="padding-left: 0px" action="<?=$view->action('delete_stack')?>">
-                    <?=$token->output('delete_stack')?>
-                    <input type="hidden" name="stackID" value="<?=$stackToEdit->getCollectionID()?>" />
-                    <p><?=t('Are you sure? This action cannot be undone.')?></p>
-                </form>
-                <div class="dialog-buttons">
-                    <button class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
-                    <button class="btn btn-danger pull-right" onclick="$('#ccm-dialog-delete-stack form').submit()"><?=t('Delete Stack')?></button>
+
+        <?php
+        if ($deleteLabels !== null) {
+            ?>
+            <div style="display: none">
+                <div id="ccm-dialog-delete-stack" class="ccm-ui">
+                    <form method="post" class="form-stacked" style="padding-left: 0px" action="<?=$view->action('delete_stack')?>">
+                        <?=$token->output('delete_stack')?>
+                        <input type="hidden" name="stackID" value="<?=$stackToEdit->getCollectionID()?>" />
+                        <p><?=t('Are you sure? This action cannot be undone.')?></p>
+                    </form>
+                    <div class="dialog-buttons">
+                        <button class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
+                        <button class="btn btn-danger pull-right" onclick="$('#ccm-dialog-delete-stack form').submit()"><?=$deleteLabels['button']?></button>
+                    </div>
                 </div>
             </div>
-        </div>
-    
+            <?php
+        }
+        ?>
+
         <script type="text/javascript">
 var showApprovalButton = function() {
     $('#ccm-stack-list-approve-button').show().addClass("animated fadeIn");
@@ -206,15 +225,21 @@ $(function() {
         Concrete.getEditMode().scanBlocks();
     });
 
-    $('a[data-dialog=delete-stack]').on('click', function() {
-        jQuery.fn.dialog.open({
-            element: '#ccm-dialog-delete-stack',
-            modal: true,
-            width: 320,
-            title: <?=json_encode(t("Delete Stack"))?>,
-            height: 'auto'
+    <?php
+    if ($deleteLabels !== null) {
+        ?>
+        $('a[data-dialog=delete-stack]').on('click', function() {
+            jQuery.fn.dialog.open({
+               element: '#ccm-dialog-delete-stack',
+               modal: true,
+               width: 320,
+               title: <?=json_encode($deleteLabels['title'])?>,
+               height: 'auto'
+            });
         });
-    });
+        <?php
+    }
+    ?>
 });
         </script>
         <?php

@@ -163,6 +163,9 @@ class Stacks extends DashboardPageController
                 case 'stack_deleted':
                     $this->set('message', t('Stack deleted successfully'));
                     break;
+                case 'global_area_cleared':
+                    $this->set('message', t('Global area cleared successfully'));
+                    break;
                 case 'localized_stack_deleted':
                     $this->set('message', t('Localized version of stack deleted successfully'));
                     break;
@@ -349,24 +352,26 @@ class Stacks extends DashboardPageController
     public function delete_stack()
     {
         if ($this->app->make('helper/validation/token')->validate('delete_stack')) {
-            $s = Stack::getByID($_REQUEST['stackID']);
+            $s = Stack::getByID($this->request('stackID'));
             if (is_object($s)) {
                 $isGlobalArea = $s->getStackType() == Stack::ST_TYPE_GLOBAL_AREA;
                 $neutralStack = $s->getNeutralStack();
                 $locale = '';
+                $justClearContents = false;
                 if ($neutralStack === null) {
                     if ($isGlobalArea) {
-                        $this->error->add(t("It's not possible to delete global areas."));
+                        $msg = 'global_area_cleared';
+                        $nextID = $s->getCollectionID();
                     } else {
                         $nextID = $s->getCollectionParentID();
                         $msg = 'stack_deleted';
                     }
                 } else {
-                    $nextID = $neutralStack->getCollectionID();
                     $msg = $isGlobalArea ? 'localized_global_area_deleted' : 'localized_stack_deleted';
+                    $nextID = $neutralStack->getCollectionID();
                     $section = $s->getMultilingualSection();
                     if ($section) {
-                        $locale = $section->getLocale();
+                        $nextID .= '@'.$section->getLocale();
                     }
                 }
                 if (!$this->error->has()) {
@@ -379,12 +384,16 @@ class Stacks extends DashboardPageController
                         $response = $pkr->trigger();
                         if ($response instanceof \Concrete\Core\Workflow\Progress\Response) {
                             // we only get this response if we have skipped workflows and jumped straight in to an approve() step.
-                            $this->redirect('/dashboard/blocks/stacks', 'view_details', $nextID.rawurlencode('@'.$locale), $msg);
+                            $this->redirect('/dashboard/blocks/stacks', 'view_details', rawurlencode($nextID), $msg);
                         } else {
                             $this->redirect('/dashboard/blocks/stacks', 'view_details', $s->cID, $isGlobalArea ? 'global_area_delete_saved' : 'stack_delete_saved');
                         }
                     } else {
-                        $this->error->add(t('You do not have access to delete this stack.'));
+                        if ($isGlobalArea) {
+                            $this->error->add(t('You do not have access to delete this stack.'));
+                        } else {
+                            $this->error->add(t('You do not have access to delete this global area.'));
+                        }
                     }
                 }
             } else {
