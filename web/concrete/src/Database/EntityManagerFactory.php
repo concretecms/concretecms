@@ -30,7 +30,6 @@ class EntityManagerFactory implements EntityManagerFactoryInterface
         $event = new \Symfony\Component\EventDispatcher\GenericEvent();
         $event->setArgument('connection', $connection);
         $event->setArgument('configuration', $config);
-        $event->setArgument('context', $this->context);
         Events::dispatch('on_entity_manager_configure', $event);
         $config = $event->getArgument('configuration');
 
