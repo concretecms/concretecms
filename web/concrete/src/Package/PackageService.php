@@ -2,6 +2,7 @@
 namespace Concrete\Core\Package;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Localization\Localization;
 use Concrete\Core\Package\ItemCategory\ItemInterface;
 use Concrete\Core\Package\ItemCategory\Manager;
 use Concrete\Core\Page\Theme\Theme;
@@ -12,10 +13,12 @@ class PackageService
 
     protected $entityManager;
     protected $application;
+    protected $localization;
 
-    public function __construct(Application $application, EntityManagerInterface $entityManager)
+    public function __construct(Localization $localization, Application $application, EntityManagerInterface $entityManager)
     {
         $this->application = $application;
+        $this->localization = $localization;
         $this->entityManager = $entityManager;
     }
 
@@ -143,35 +146,6 @@ class PackageService
     }
 
 
-    /**
-     * Returns a package's class.
-     * @param string $pkgHandle Handle of package
-     * @return Package
-     */
-    public function getClass($pkgHandle)
-    {
-        $cache = $this->application->make('cache/request');
-        $item = $cache->getItem('package/class/' . $pkgHandle);
-        $cl = $item->get();
-        if ($item->isMiss()) {
-            $item->lock();
-            // loads and instantiates the object
-
-            $cl = \Concrete\Core\Foundation\ClassLoader::getInstance();
-            $cl->registerPackageController($pkgHandle);
-
-            $class = '\\Concrete\\Package\\' . camelcase($pkgHandle) . '\\Controller';
-            try {
-                $cl = $this->application->make($class);
-            } catch (\Exception $ex) {
-                $cl = $this->application->make('Concrete\Core\Package\BrokenPackage', array($pkgHandle));
-            }
-            $item->set($cl);
-        }
-
-        return clone $cl;
-    }
-
     public function setupLocalization(LocalizablePackageInterface $package, $locale = null, $translate = 'current')
     {
         if ($translate === 'current') {
@@ -186,7 +160,86 @@ class PackageService
                 $translate->addTranslationFile('gettext', $languageFile);
             }
         }
+    }
+
+    protected function clearEntityManagerMetadataCache()
+    {
 
     }
+    public function uninstall(Package $p)
+    {
+        $p->uninstall();
+        $config = $this->entityManager->getConfiguration();
+        $cache = $config->getMetadataCacheImpl();
+        $cache->flushAll();
+    }
+
+    public function install(Package $p, $data)
+    {
+        $currentLocale = $this->localization->activeLocale();
+        if ($currentLocale != 'en_US') {
+            // Prevent the database records being stored in wrong language
+            $this->localization->changeLocale('en_US');
+        }
+        try {
+
+            $config = $this->entityManager->getConfiguration();
+            $driver = $config->getMetadataDriverImpl();
+            $driver->addPaths($p->getPackageEntityPaths());
+            $cache = $config->getMetadataCacheImpl();
+            $cache->flushAll();
+
+            $u = new \User();
+            $swapper = new ContentSwapper();
+            $p->install($data);
+            if ($u->isSuperUser() && $swapper->allowsFullContentSwap($p) && $data['pkgDoFullContentSwap']) {
+                $swapper->swapContent($p, $data);
+            }
+            if ($currentLocale != 'en_US') {
+                Localization::changeLocale($currentLocale);
+            }
+            $pkg = $this->getByHandle($p->getPackageHandle());
+            return $pkg;
+        } catch (\Exception $e) {
+            if ($currentLocale != 'en_US') {
+                $this->localization->changeLocale($currentLocale);
+            }
+            $error = $this->application->make('error');
+            $error->add($e);
+            return $error;
+        }
+    }
+
+    /**
+     * Returns a package's class. Must be run statically because we can't use the injected entity manager
+     * @param string $pkgHandle Handle of package
+     * @return Package
+     */
+    public static function getClass($pkgHandle)
+    {
+        $app = \Core::make('app');
+        $cache = $app->make('cache/request');
+        $item = $cache->getItem('package/class/' . $pkgHandle);
+        $cl = $item->get();
+        if ($item->isMiss()) {
+            $item->lock();
+            // loads and instantiates the object
+
+            $cl = \Concrete\Core\Foundation\ClassLoader::getInstance();
+            $cl->registerPackageController($pkgHandle);
+
+            $class = '\\Concrete\\Package\\' . camelcase($pkgHandle) . '\\Controller';
+            try {
+                $cl = $app->make($class);
+            } catch (\Exception $ex) {
+                $cl = $app->make('Concrete\Core\Package\BrokenPackage', array($pkgHandle));
+            }
+            $item->set($cl);
+        }
+
+        return clone $cl;
+    }
+
+
 
 }

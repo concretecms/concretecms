@@ -3,6 +3,7 @@ namespace Concrete\Core\Package;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Config\Repository\Liaison;
+use Concrete\Core\Database\DatabaseStructureManager;
 use Concrete\Core\Database\EntityManagerFactory;
 use Concrete\Core\Database\Schema\Schema;
 use Concrete\Core\Foundation\ClassLoader;
@@ -10,6 +11,8 @@ use Concrete\Core\Package\ItemCategory\ItemInterface;
 use Concrete\Core\Package\ItemCategory\Manager;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Support\Facade\DatabaseORM;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Tools\Setup;
 
 abstract class Package implements LocalizablePackageInterface
 {
@@ -301,7 +304,7 @@ abstract class Package implements LocalizablePackageInterface
         \Config::clearNamespace($this->getPackageHandle());
         $this->app->make('config/database')->clearNamespace($this->getPackageHandle());
 
-        $this->destroyProxyClasses();
+//        $this->destroyProxyClasses();
 
         $manager = \ORM::entityManager('core');
         $manager->remove($package);
@@ -535,61 +538,13 @@ abstract class Package implements LocalizablePackageInterface
     }
 
     /**
-     * Destroys all the existing proxy classes for this package.
-     *
-     * @return bool
-     */
-    protected function destroyProxyClasses()
-    {
-        $dbm = $this->getDatabaseStructureManager();
-        $config = $dbm->getEntityManager()->getConfiguration();
-        if (is_object($cache = $config->getMetadataCacheImpl())) {
-            $cache->flushAll();
-        }
-
-        return $dbm->destroyProxyClasses('ConcretePackage' . camelcase($this->getPackageHandle()) . 'Src');
-    }
-
-    /**
-     * Gets a package specific entity manager.
-     *
-     * @return \Concrete\Core\Database\DatabaseStructureManager
-     */
-    public function getDatabaseStructureManager()
-    {
-        if (!isset($this->databaseStructureManager)) {
-            $this->databaseStructureManager = $this->app->make('database/structure', array($this->getEntityManager()));
-        }
-
-        return $this->databaseStructureManager;
-    }
-
-    /**
-     * @return EntityManagerFactoryInterface
-     */
-    public function getEntityManagerFactory()
-    {
-        return new EntityManagerFactory($this->getPackageEntitiesPath());
-    }
-
-    /**
-     * Gets a package specific entity manager.
-     *
-     * @return \Doctrine\ORM\EntityManager
-     */
-    public function getEntityManager()
-    {
-        return DatabaseORM::entityManager($this);
-    }
-
-    /**
-     * Returns the directory containing package entities.
+     * Returns an array of paths directory containing package entities.
      *
      * @return string
      */
-    public function getPackageEntitiesPath()
+    public function getPackageEntityPaths()
     {
-        return $this->getPackagePath() . '/' . DIRNAME_CLASSES;
+        return array($this->getPackagePath() . '/' . DIRNAME_CLASSES);
     }
 
     /**
@@ -605,12 +560,15 @@ abstract class Package implements LocalizablePackageInterface
 
     public function installEntitiesDatabase()
     {
-        $dbm = $this->getDatabaseStructureManager();
+        // Create a custom entity manager for this package, in order to
+        // extract entities
+        $config = Setup::createConfiguration();
+        $driverImpl = $config->newDefaultAnnotationDriver($this->getPackageEntityPaths());
+        $config->setMetadataDriverImpl($driverImpl);
+        $manager = EntityManager::create(\Database::connection(), $config);
 
-        if ($dbm->hasEntities()) {
-            $dbm->generateProxyClasses();
-            $dbm->installDatabase();
-        }
+        $structure = new DatabaseStructureManager($manager);
+        $structure->installDatabase();
     }
 
     /**
@@ -693,7 +651,7 @@ abstract class Package implements LocalizablePackageInterface
      */
     public function upgradeDatabase()
     {
-        $this->destroyProxyClasses();
+//        $this->destroyProxyClasses();
         $this->installEntitiesDatabase();
 
         static::installDB($this->getPackagePath() . '/' . FILENAME_PACKAGE_DB);

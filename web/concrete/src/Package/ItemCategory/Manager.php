@@ -74,11 +74,6 @@ class Manager extends CoreManager
         return new AttributeKeyCategory();
     }
 
-    public function createPageDriver()
-    {
-        return new Page();
-    }
-
     public function createPermissionAccessEntityTypeDriver()
     {
         return new PermissionAccessEntityType();

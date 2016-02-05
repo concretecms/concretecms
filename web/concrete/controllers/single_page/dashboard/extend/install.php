@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\Extend;
 
+use Concrete\Core\Error\Error;
 use Concrete\Core\Package\BrokenPackage;
 use Concrete\Core\Package\ContentSwapper;
 use Concrete\Core\Package\ItemCategory\Manager;
@@ -64,10 +65,11 @@ class Install extends DashboardPageController
         }
 
         if (!$this->error->has()) {
-            $test = $pkg->testForUninstall();
+            $p = $pkg->getController();
+            $test = $p->testForUninstall();
 
             if (!is_object($test)) {
-                $pkg->uninstall();
+                $r = Package::uninstall($p);
                 if ($this->post('pkgMoveToTrash')) {
                     $r = $pkg->backup();
                     if (is_object($r)) {
@@ -121,32 +123,15 @@ class Install extends DashboardPageController
                     if (is_object($tests)) {
                         $this->error->add($tests);
                     } else {
-                        $currentLocale = Localization::activeLocale();
-                        if ($currentLocale != 'en_US') {
-                            // Prevent the database records being stored in wrong language
-                            Localization::changeLocale('en_US');
-                        }
-                        try {
-                            $u = new User();
-                            $swapper = new ContentSwapper();
-                            $pkg = $p->install($this->post());
-                            if ($u->isSuperUser() && $swapper->allowsFullContentSwap($p) && $this->post('pkgDoFullContentSwap')) {
-                                $swapper->swapContent($p, $this->post());
-                            }
-                            if ($currentLocale != 'en_US') {
-                                Localization::changeLocale($currentLocale);
-                            }
-                            $pkg = Package::getByHandle($p->getPackageHandle());
-                            $this->redirect('/dashboard/extend/install', 'package_installed', $pkg->getPackageID());
-                        } catch (\Exception $e) {
-                            if ($currentLocale != 'en_US') {
-                                Localization::changeLocale($currentLocale);
-                            }
+                        $r = Package::install($p, $this->post());
+                        if ($r instanceof Error) {
+                            $this->error->add($r);
                             if ($p->showInstallOptionsScreen()) {
                                 $this->set('showInstallOptionsScreen', true);
                                 $this->set('pkg', $p);
                             }
-                            $this->error = $e;
+                        } else {
+                            $this->redirect('/dashboard/extend/install', 'package_installed', $r->getPackageID());
                         }
                     }
                 } else {

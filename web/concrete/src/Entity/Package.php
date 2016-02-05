@@ -2,6 +2,7 @@
 namespace Concrete\Core\Entity;
 
 use Concrete\Core\Package\LocalizablePackageInterface;
+use Concrete\Core\Package\PackageService;
 
 /**
  * @Entity
@@ -178,9 +179,7 @@ class Package implements LocalizablePackageInterface
 
     public function getController()
     {
-        return \Core::make('Concrete\Core\Package\PackageService')->getClass(
-            $this->getPackageHandle()
-        );
+        return PackageService::getClass($this->getPackageHandle());
     }
 
     public function __call($method, $arguments)
