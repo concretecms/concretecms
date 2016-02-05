@@ -131,7 +131,7 @@ class Install extends DashboardPageController
                             $swapper = new ContentSwapper();
                             $pkg = $p->install($this->post());
                             if ($u->isSuperUser() && $swapper->allowsFullContentSwap($p) && $this->post('pkgDoFullContentSwap')) {
-                                $p->swapContent($p, $this->post());
+                                $swapper->swapContent($p, $this->post());
                             }
                             if ($currentLocale != 'en_US') {
                                 Localization::changeLocale($currentLocale);

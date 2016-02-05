@@ -302,11 +302,11 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
         <li data-guide-toolbar-action="page-settings" class="pull-left hidden-xs">
             <a href="#" data-launch-panel="page"
                data-panel-url="<?= URL::to('/ccm/system/panels/page') ?>"
-               <? if ($hasComposer) { ?>}
+               <?php if ($hasComposer) { ?>}
                title="<?= t('Composer, Page Design, Location, Attributes and Settings') ?>">
-               <? } else { ?>
+               <?php } else { ?>
                title="<?= t('Page Design, Location, Attributes and Settings') ?>">
-               <? } ?>
+               <?php } ?>
                 <i class="fa fa-cog"></i>
                 <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-settings">
                     <? if ($hasComposer) { ?>

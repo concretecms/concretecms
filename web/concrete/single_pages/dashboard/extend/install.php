@@ -17,13 +17,6 @@ $nav = \Core::make('helper/navigation');
 
 $catList = AttributeCategory::getList();
 
-if (isset($pkg)) {
-    if (is_object($pkg)) {
-        $pkgID = $pkg->getPackageID();
-    }
-} else {
-    $pkg = null;
-}
 
 if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScreen && $tp->canInstallPackages()) {
     ?>
@@ -70,6 +63,15 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 <?php
 
 } elseif ($this->controller->getTask() == 'uninstall' && $tp->canUninstallPackages()) {
+
+    if (isset($pkg)) {
+        if (is_object($pkg)) {
+            $pkgID = $pkg->getPackageID();
+        }
+    } else {
+        $pkg = null;
+    }
+
     ?>
     <form method="post" class="form-stacked" id="ccm-uninstall-form" action="<?= $view->action('do_uninstall_package');
     ?>">
