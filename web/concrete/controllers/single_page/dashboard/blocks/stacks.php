@@ -62,14 +62,14 @@ class Stacks extends DashboardPageController
         $s = Stack::getByID($cID);
         if (is_object($s)) {
             $isGlobalArea = $s->getStackType() == Stack::ST_TYPE_GLOBAL_AREA;
-            if ($isGlobalArea || $s->isNeutralStack()) {
+            if ($s->isNeutralStack()) {
                 $neutralStack = $s;
                 $stackToEdit = $s;
             } else {
                 $neutralStack = $s->getNeutralStack();
                 $stackToEdit = $s;
             }
-            $sections = $isGlobalArea ? array() : $this->getMultilingualSections();
+            $sections = $this->getMultilingualSections();
             $breadcrumb = $this->getBreadcrumb($neutralStack);
             if (!empty($sections)) {
                 if ($stackToEdit !== $neutralStack) {
@@ -196,7 +196,7 @@ class Stacks extends DashboardPageController
     {
         $breadcrumb = [[
             'active' => false,
-            'name' => t('Stacks'),
+            'name' => t('Stacks & Global Areas'),
             'url' => \URL::to('/dashboard/blocks/stacks'),
         ]];
         $nav = $this->app->make('helper/navigation');
