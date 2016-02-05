@@ -23,7 +23,6 @@ class AttributeKey extends AbstractCategory
         $this->entityManager->flush();
     }
 
-
     public function getItemCategoryDisplayName()
     {
         return t('Attribute Keys');

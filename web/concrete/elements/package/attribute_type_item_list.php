@@ -6,8 +6,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 <dl class="dl-horizontal">
     <?php foreach ($category->getItems($package) as $at) {
+        $controller = $at->getController();
+        $formatter = $controller->getIconFormatter();
         ?>
-        <dt><img src="<?=$at->getAttributeTypeIconSRC()?>" alt="<?=t('attribute type icon')?>"/></dt>
+        <dt><?=$formatter->getListIconElement()?></dt>
         <dd>
             <?=$at->getAttributeTypeName()?>
             <?php

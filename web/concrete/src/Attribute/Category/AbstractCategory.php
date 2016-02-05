@@ -14,6 +14,7 @@ use Concrete\Core\Entity\Attribute\Set;
 use Concrete\Core\Entity\Attribute\Value\Value\Value;
 use Concrete\Core\Entity\Package;
 use Concrete\Core\Error\Error;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Concrete\Core\Entity\Attribute\Type as AttributeType;
 use Doctrine\ORM\EntityRepository;
@@ -235,7 +236,13 @@ abstract class AbstractCategory implements CategoryInterface
 
     public function associateAttributeKeyType(AttributeType $type)
     {
-        $this->getCategoryEntity()->getAttributeTypes()->add($type);
+        /**
+         * @var $types ArrayCollection
+         */
+        $types = $this->getCategoryEntity()->getAttributeTypes();
+        if (!$types->contains($type)) {
+            $types->add($type);
+        }
         $this->entityManager->persist($this->getCategoryEntity());
         $this->entityManager->flush();
     }
