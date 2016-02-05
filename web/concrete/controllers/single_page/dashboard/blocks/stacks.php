@@ -575,10 +575,12 @@ class Stacks extends DashboardPageController
         } elseif ($s->getStackType() == Stack::ST_TYPE_GLOBAL_AREA) {
             $this->error->add(t("You can't duplicate global areas"));
             $this->view_details($cID);
-        } elseif ($s->getNeutralStack() !== null) {
-            $this->error->add(t("You can't duplicate a localized version of a stacks"));
-            $this->view_details($cID);
         } else {
+            $ns = $s->getNeutralStack();
+            if ($ns !== null) {
+                $this->redirect('/dashboard/blocks/stacks', 'duplicate', $ns->getCollectionID());
+                exit;
+            }
             $sps = new Permissions($s);
             if (!$sps->canMoveOrCopyPage()) {
                 $this->error->add(t("You don't have the permission to clone this stack"));
