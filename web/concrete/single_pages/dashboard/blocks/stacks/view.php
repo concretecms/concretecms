@@ -41,7 +41,7 @@ if ($controller->getTask() == 'view_details' && isset($neutralStack) && $neutral
                     <?=t(/*i18n: %1$s is a language name, %2$s is a language code*/'This stack is not defined for %1$s (%2$s): the default version will be used.', $localeName, $localeCode); ?>
                 </p>
                 <p>
-                    <button class="btn btn-primary" type="submit"><?=t('Create localized stack version')?></button><br />
+                    <button class="btn btn-primary" type="submit"><?=$isGlobalArea ? t('Create localized global area version') : t('Create localized stack version')?></button><br />
                 </p>
             </div>
         </form>
