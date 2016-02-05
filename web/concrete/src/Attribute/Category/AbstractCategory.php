@@ -12,6 +12,7 @@ use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Key\Type\Type;
 use Concrete\Core\Entity\Attribute\Set;
 use Concrete\Core\Entity\Attribute\Value\Value\Value;
+use Concrete\Core\Entity\Package;
 use Concrete\Core\Error\Error;
 use Doctrine\ORM\EntityManager;
 use Concrete\Core\Entity\Attribute\Type as AttributeType;
@@ -102,11 +103,14 @@ abstract class AbstractCategory implements CategoryInterface
 
     }
 
-    public function add(Type $key_type, Key $key, $pkg = null)
+    public function add(Type $key_type, Key $key, Package $pkg = null)
     {
         $key_type->setAttributeKey($key);
         $key->setAttributeKeyType($key_type);
 
+        if (is_object($pkg)) {
+            $key->setPackage($pkg);
+        }
         // Modify the category's search indexer.
         $indexer = $this->getSearchIndexer();
         if (is_object($indexer)) {
@@ -135,7 +139,7 @@ abstract class AbstractCategory implements CategoryInterface
         return $this->add($key_type, $key);
     }
 
-    public function import(AttributeType $type, \SimpleXMLElement $element)
+    public function import(AttributeType $type, \SimpleXMLElement $element, Package $package = null)
     {
         $key = $this->createAttributeKey();
         $loader = $this->getImportLoader();
@@ -147,7 +151,7 @@ abstract class AbstractCategory implements CategoryInterface
             $key_type = $controller->getAttributeKeyType();
         }
 
-        return $this->add($key_type, $key);
+        return $this->add($key_type, $key, $package);
     }
 
     // Update
