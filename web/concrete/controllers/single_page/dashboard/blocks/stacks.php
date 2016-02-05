@@ -139,14 +139,23 @@ class Stacks extends DashboardPageController
                 case 'localized_stack_added':
                     $this->set('message', t('Localized version of stack added successfully.'));
                     break;
+                case 'localized_global_area_added':
+                    $this->set('message', t('Localized version of global area added successfully.'));
+                    break;
                 case 'stack_approved':
                     $this->set('message', t('Stack approved successfully'));
+                    break;
+                case 'global_area_approved':
+                    $this->set('message', t('Global area approved successfully'));
                     break;
                 case 'approve_saved':
                     $this->set('message', t('Approve request saved. You must complete the approval workflow before these changes are publicly accessible.'));
                     break;
-                case 'delete_saved':
+                case 'stack_delete_saved':
                     $this->set('message', t('Delete request saved. You must complete the delete workflow before this stack can be deleted.'));
+                    break;
+                case 'global_area_delete_saved':
+                    $this->set('message', t('Delete request saved. You must complete the delete workflow before this version of the global area can be deleted.'));
                     break;
                 case 'rename_saved':
                     $this->set('message', t('Rename request saved. You must complete the approval workflow before the name of the stack will be updated.'));
@@ -156,6 +165,9 @@ class Stacks extends DashboardPageController
                     break;
                 case 'localized_stack_deleted':
                     $this->set('message', t('Localized version of stack deleted successfully'));
+                    break;
+                case 'localized_global_area_deleted':
+                    $this->set('message', t('Localized version of global area deleted successfully'));
                     break;
             }
         } else {
@@ -273,18 +285,30 @@ class Stacks extends DashboardPageController
         /* @var \Concrete\Core\Validation\CSRF\Token $token */
         if ($token->validate('add_localized_stack')) {
             $neutralStack = Stack::getByID($this->post('stackID'));
+            $isGlobalArea = false;
             if (!$neutralStack) {
                 $this->error->add(t('Unable to find the specified stack'));
+            } elseif ($neutralStack->getStackType() == Stack::ST_TYPE_GLOBAL_AREA) {
+                $isGlobalArea = true;
             }
             $section = Section::getByLocale($this->post('locale'));
             if (!$section) {
                 $this->error->add(t('Unable to find the specified language'));
+            } elseif ($neutralStack->getLocalizedStack($section) !== null) {
+                if ($isGlobalArea) {
+                    $this->error->add(t(/*i18n %s is a language name*/ "There's already a version of this global area in %s", $section->getLanguageText()).' ('.$section->getLocale().')');
+                } else {
+                    $this->error->add(t(/*i18n %s is a language name*/ "There's already a version of this stack in %s", $section->getLanguageText()).' ('.$section->getLocale().')');
+                }
             }
             if (!$this->error->has()) {
                 $localizedStack = $neutralStack->addLocalizedStack($section);
-                $this->redirect('/dashboard/blocks/stacks', 'view_details', $neutralStack->getCollectionID().rawurlencode('@'.$section->getLocale()), 'localized_stack_added');
-            } else {
-                $this->error->add(t("You must give your stack a name."));
+                $this->redirect(
+                    '/dashboard/blocks/stacks',
+                    'view_details',
+                    $neutralStack->getCollectionID().rawurlencode('@'.$section->getLocale()),
+                    $isGlobalArea ? 'localized_global_area_added' : 'localized_stack_added'
+                );
             }
         } else {
             $this->error->add($token->getErrorMessage());
@@ -327,34 +351,41 @@ class Stacks extends DashboardPageController
         if ($this->app->make('helper/validation/token')->validate('delete_stack')) {
             $s = Stack::getByID($_REQUEST['stackID']);
             if (is_object($s)) {
+                $isGlobalArea = $s->getStackType() == Stack::ST_TYPE_GLOBAL_AREA;
                 $neutralStack = $s->getNeutralStack();
                 $locale = '';
                 if ($neutralStack === null) {
-                    $nextID = $s->getCollectionParentID();
-                    $msg = 'stack_deleted';
+                    if ($isGlobalArea) {
+                        $this->error->add(t("It's not possible to delete global areas."));
+                    } else {
+                        $nextID = $s->getCollectionParentID();
+                        $msg = 'stack_deleted';
+                    }
                 } else {
                     $nextID = $neutralStack->getCollectionID();
-                    $msg = 'localized_stack_deleted';
+                    $msg = $isGlobalArea ? 'localized_global_area_deleted' : 'localized_stack_deleted';
                     $section = $s->getMultilingualSection();
                     if ($section) {
                         $locale = $section->getLocale();
                     }
                 }
-                $sps = new Permissions($s);
-                if ($sps->canDeletePage()) {
-                    $u = new User();
-                    $pkr = new DeletePageRequest();
-                    $pkr->setRequestedPage($s);
-                    $pkr->setRequesterUserID($u->getUserID());
-                    $response = $pkr->trigger();
-                    if ($response instanceof \Concrete\Core\Workflow\Progress\Response) {
-                        // we only get this response if we have skipped workflows and jumped straight in to an approve() step.
-                        $this->redirect('/dashboard/blocks/stacks', 'view_details', $nextID.rawurlencode('@'.$locale), $msg);
+                if (!$this->error->has()) {
+                    $sps = new Permissions($s);
+                    if ($sps->canDeletePage()) {
+                        $u = new User();
+                        $pkr = new DeletePageRequest();
+                        $pkr->setRequestedPage($s);
+                        $pkr->setRequesterUserID($u->getUserID());
+                        $response = $pkr->trigger();
+                        if ($response instanceof \Concrete\Core\Workflow\Progress\Response) {
+                            // we only get this response if we have skipped workflows and jumped straight in to an approve() step.
+                            $this->redirect('/dashboard/blocks/stacks', 'view_details', $nextID.rawurlencode('@'.$locale), $msg);
+                        } else {
+                            $this->redirect('/dashboard/blocks/stacks', 'view_details', $s->cID, $isGlobalArea ? 'global_area_delete_saved' : 'stack_delete_saved');
+                        }
                     } else {
-                        $this->redirect('/dashboard/blocks/stacks', 'view_details', $s->cID, 'delete_saved');
+                        $this->error->add(t('You do not have access to delete this stack.'));
                     }
-                } else {
-                    $this->error->add(t('You do not have access to delete this stack.'));
                 }
             } else {
                 $this->error->add(t('Invalid stack'));
@@ -369,6 +400,7 @@ class Stacks extends DashboardPageController
         if ($this->app->make('helper/validation/token')->validate('approve_stack', $token)) {
             $s = Stack::getByID($stackID);
             if (is_object($s)) {
+                $isGlobalArea = $s->getStackType() == Stack::ST_TYPE_GLOBAL_AREA;
                 $sps = new Permissions($s);
                 if ($sps->canApprovePageVersions()) {
                     $u = new User();
@@ -380,7 +412,7 @@ class Stacks extends DashboardPageController
                     $response = $pkr->trigger();
                     if ($response instanceof \Concrete\Core\Workflow\Progress\Response) {
                         // we only get this response if we have skipped workflows and jumped straight in to an approve() step.
-                        $this->redirect('/dashboard/blocks/stacks', 'view_details', $stackID, 'stack_approved');
+                        $this->redirect('/dashboard/blocks/stacks', 'view_details', $stackID, $isGlobalArea ? 'global_area_approved' : 'stack_approved');
                     } else {
                         $this->redirect('/dashboard/blocks/stacks', 'view_details', $stackID, 'approve_saved');
                     }
@@ -517,7 +549,7 @@ class Stacks extends DashboardPageController
             $moveFolder->getPage()->move($destinationPage);
         }
         JsonResponse::create(
-            t2('%d item has been moved under the folder %s!', '%d items have been moved under the folder %s!', count($sourceIDs), count($sourceIDs), h($destinationPage->getCollectionName()))
+            t2('%d item has been moved under the folder %s', '%d items have been moved under the folder %s', count($sourceIDs), count($sourceIDs), h($destinationPage->getCollectionName()))
         )->send();
         exit;
     }
@@ -542,7 +574,6 @@ class Stacks extends DashboardPageController
                     $ns->update(array(
                         'stackName' => $stackName,
                     ));
-
                     $this->redirect('/dashboard/blocks/stacks', 'stack_duplicated');
                 } else {
                     $this->error->add(t("You must give your stack a name."));
