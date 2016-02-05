@@ -418,11 +418,11 @@
               pagetype="" description="" package="" />
         <page name="Stacks &amp; Blocks" path="/dashboard/blocks" filename="/dashboard/blocks/view.php" pagetype=""
               description="Manage sitewide content and administer block types." package=""/>
-        <page name="Stacks" path="/dashboard/blocks/stacks" filename="/dashboard/blocks/stacks/view.php" pagetype=""
+        <page name="Stacks &amp; Global Areas" path="/dashboard/blocks/stacks" filename="/dashboard/blocks/stacks/view.php" pagetype=""
               description="Share content across your site." package="">
             <attributes>
                 <attributekey handle="meta_keywords">
-                    <value>stacks, reusable content, scrapbook, copy, paste, paste block, copy block, site name, logo</value>
+                    <value>stacks, global areas, reusable content, scrapbook, copy, paste, paste block, copy block, site name, logo</value>
                 </attributekey>
             </attributes>
 
