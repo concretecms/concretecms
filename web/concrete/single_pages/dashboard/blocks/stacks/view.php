@@ -114,7 +114,7 @@ if ($controller->getTask() == 'view_details' && isset($neutralStack) && $neutral
                                 $deleteLabels = ['title' => t('Delete localized version'), 'button' => t('Delete')];
                                 ?><li><a href="javascript:void(0)" data-dialog="delete-stack"><span class="text-danger"><?=t('Delete localized Global Area')?></span></a></li><?php
                             } else {
-                                $deleteLabels = ['title' => t('Clear Global Area contents'), 'button' => t('Clear area')];
+                                $deleteLabels = ['title' => t('Clear Global Area contents'), 'button' => t('Clear area'), 'canUndo' => true];
                                 ?><li><a href="javascript:void(0)" data-dialog="delete-stack"><span class="text-danger"><?=t('Clear Global Area')?></span></a></li><?php
                             }
                         } else {
@@ -164,7 +164,13 @@ if ($controller->getTask() == 'view_details' && isset($neutralStack) && $neutral
                     <form method="post" class="form-stacked" style="padding-left: 0px" action="<?=$view->action('delete_stack')?>">
                         <?=$token->output('delete_stack')?>
                         <input type="hidden" name="stackID" value="<?=$stackToEdit->getCollectionID()?>" />
-                        <p><?=t('Are you sure? This action cannot be undone.')?></p>
+                        <p><?
+                            if (isset($deleteLabels['canUndo']) && $deleteLabels['canUndo']) {
+                                echo t('Are you sure you want to proceed?');
+                            } else {
+                                echo t('Are you sure? This action cannot be undone.');
+                            }
+                        ?></p>
                     </form>
                     <div class="dialog-buttons">
                         <button class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
