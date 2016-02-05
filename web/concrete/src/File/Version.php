@@ -989,6 +989,7 @@ class Version
         $r = new stdClass;
         $fp = new Permissions($this->getFile());
         $r->canCopyFile = $fp->canCopyFile();
+        $r->canEditFileProperties = $fp->canEditFileProperties();
         $r->canEditFilePermissions = $fp->canEditFilePermissions();
         $r->canDeleteFile = $fp->canDeleteFile();
         $r->canReplaceFile = $fp->canEditFileContents();
