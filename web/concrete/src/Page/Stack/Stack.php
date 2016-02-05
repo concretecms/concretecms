@@ -494,22 +494,25 @@ class Stack extends Page implements ExportableInterface
     public function addLocalizedStack(Section $section)
     {
         $name = $section->getLocale();
-        $data = array(
-            'name' => $name,
-        );
         $neutralStack = $this->getNeutralStack();
         if ($neutralStack === null) {
             $neutralStack = $this;
         }
-        $pagetype = PageType::getByHandle(STACKS_PAGE_TYPE);
-        $page = $neutralStack->add($pagetype, $data);
-        Area::getOrCreate($page, STACKS_AREA_NAME);
-        $localizedStackCID = $page->getCollectionID();
+        $neutralStackPage = Page::getByID($neutralStack->getCollectionID());
+        $localizedStackPage = $neutralStackPage->duplicate($neutralStackPage);
+        $localizedStackPage->update([
+            'name' => $name,
+        ]);
+        $localizedStackCID = $localizedStackPage->getCollectionID();
         $db = Database::connection();
-        $v = array($name, $localizedStackCID, $type);
-        $db->Execute(
-            'insert into Stacks (stName, cID, stType, stMultilingualSection) values (?, ?, ?, ?)',
-            array($name, $localizedStackCID, 0, $section->getCollectionID())
+        $db->executeQuery('
+            insert into Stacks (stName, cID, stType, stMultilingualSection) values (?, ?, ?, ?)',
+            [
+                $name,
+                $localizedStackCID,
+                $this->getStackType(),
+                $section->getCollectionID(),
+            ]
         );
         $localizedStack = static::getByID($localizedStackCID);
 
