@@ -606,31 +606,6 @@ class Stacks extends DashboardPageController
         }
     }
 
-    public function stack_duplicated()
-    {
-        $this->set('message', t('Stack duplicated successfully'));
-        $this->view();
-    }
-
-    public function update_order()
-    {
-        $ret = array('success' => false, 'message' => t("Error"));
-        if ($this->isPost() && is_array($stIDs = $this->post('stID'))) {
-            $parent = Page::getByPath(STACKS_PAGE_PATH);
-            $cpc = new Permissions($parent);
-            if ($cpc->canMoveOrCopyPage()) {
-                foreach ($stIDs as $displayOrder => $cID) {
-                    $c = Page::getByID($cID);
-                    $c->updateDisplayOrder($displayOrder, $cID);
-                }
-                $ret['success'] = true;
-                $ret['message'] = t("Stack order updated successfully.");
-            }
-        }
-        echo $this->app->make('helper/json')->encode($ret);
-        exit;
-    }
-
     public function list_page()
     {
         return Redirect::to('/');
