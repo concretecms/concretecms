@@ -1,7 +1,8 @@
 <?php
 namespace Concrete\Core\Express\Form\Control\View;
 
-use Concrete\Core\Express\BaseEntity;
+use Concrete\Core\Entity\Express\Entity;
+use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Express\Form\Control\EntityPropertyControlView;
 use Concrete\Core\Express\Form\Control\RendererInterface;
 use Concrete\Core\Express\Form\RendererFactory;
@@ -9,11 +10,11 @@ use Concrete\Core\Express\Form\RendererFactory;
 class AttributeKeyControlViewRenderer implements RendererInterface
 {
     protected $factory;
-    protected $entity;
+    protected $entry;
 
-    public function __construct(BaseEntity $entity)
+    public function __construct(Entry $entry)
     {
-        $this->entity = $entity;
+        $this->entry = $entry;
     }
 
     public function build(RendererFactory $factory)
@@ -37,7 +38,7 @@ class AttributeKeyControlViewRenderer implements RendererInterface
                 '/attribute_key.php'
             );
 
-            $av = $this->entity->getAttributeValueObject($ak);
+            $av = $this->entry->getAttributeValueObject($ak);
             $view = new EntityPropertyControlView($this->factory);
             $view->addScopeItem('value', $av);
 

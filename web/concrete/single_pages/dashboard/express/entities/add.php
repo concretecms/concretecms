@@ -8,8 +8,8 @@
             <?=$form->text('name')?>
         </div>
         <div class="form-group">
-            <label for="name"><?=t('Database Table Name')?></label>
-            <?=$form->text('table_name')?>
+            <label for="name"><?=t('Handle')?></label>
+            <?=$form->text('handle')?>
         </div>
         <div class="form-group">
             <label for="name"><?=t('Description')?></label>

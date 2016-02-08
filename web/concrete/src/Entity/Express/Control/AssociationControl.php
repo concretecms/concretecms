@@ -1,10 +1,11 @@
 <?php
 namespace Concrete\Core\Entity\Express\Control;
 
+use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Express\Form\Control\Form\AssociationControlFormRenderer;
 use Concrete\Core\Express\Form\Control\Type\SaveHandler\AssociationControlSaveHandler;
 use Concrete\Core\Express\Form\Control\View\AssociationControlViewRenderer;
-use Concrete\Core\Express\BaseEntity;
+use Concrete\Core\Entity\Express\Entity;
 
 /**
  * @Entity
@@ -55,14 +56,14 @@ class AssociationControl extends Control
         $this->association = $association;
     }
 
-    public function getFormRenderer(BaseEntity $entity = null)
+    public function getFormRenderer(Entity $entity = null)
     {
         return new AssociationControlFormRenderer($entity);
     }
 
-    public function getViewRenderer(BaseEntity $entity)
+    public function getViewRenderer(Entry $entry)
     {
-        return new AssociationControlViewRenderer($entity);
+        return new AssociationControlViewRenderer($entry);
     }
 
     public function getControlSaveHandler()

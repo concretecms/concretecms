@@ -2,6 +2,7 @@
 namespace Concrete\Controller\SinglePage\Dashboard\Express;
 
 use Concrete\Core\Entity\Express\Entity;
+use Concrete\Core\Express\EntryList;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Search\Result\Result;
 
@@ -18,8 +19,8 @@ class Entries extends DashboardPageController
             $this->redirect('/dashboard/express');
         }
         $this->set('entity', $entity);
-        $manager = \Core::make('express');
-        $list = $manager->getList($entity->getName());
+
+        $list = new EntryList($entity->getAttributeKeyCategory());
 
         if ($this->request->query->has($list->getQuerySortDirectionParameter())) {
             $direction = $this->request->query->get($list->getQuerySortDirectionParameter());

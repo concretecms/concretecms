@@ -3,7 +3,8 @@ namespace Concrete\Core\Express\Form;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Entity\Express\Control\Control;
-use Concrete\Core\Express\BaseEntity;
+use Concrete\Core\Entity\Express\Entity;
+use Concrete\Core\Entity\Express\Entry;
 use Doctrine\ORM\EntityManagerInterface;
 
 class RendererFactory
@@ -68,10 +69,10 @@ class RendererFactory
         $this->entityManager = $entityManager;
     }
 
-    public function getViewRenderer(BaseEntity $entity)
+    public function getViewRenderer(Entry $entry)
     {
         if (!isset($this->viewRenderer)) {
-            $this->viewRenderer = $this->control->getViewRenderer($entity);
+            $this->viewRenderer = $this->control->getViewRenderer($entry);
             if (is_object($this->viewRenderer)) {
                 $this->viewRenderer->build($this);
             }

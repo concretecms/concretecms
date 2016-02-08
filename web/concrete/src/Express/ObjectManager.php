@@ -3,6 +3,7 @@ namespace Concrete\Core\Express;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Attribute\Category\ExpressCategory;
+use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Entity\Express\Form;
 use Concrete\Core\Express\Form\Control\SaveHandler\SaveHandlerInterface;
 use Doctrine\ORM\EntityManager;
@@ -21,7 +22,6 @@ class ObjectManager
 {
     protected $application;
     protected $entityManager;
-    protected $namespace;
     protected $category;
 
     public function __construct(ExpressCategory $category, EntityManager $entityManager, Application $application)
@@ -29,7 +29,6 @@ class ObjectManager
         $this->category = $category;
         $this->entityManager = $entityManager;
         $this->application = $application;
-        $this->namespace = $application['config']->get('express.entity_classes.namespace');
     }
 
     /**
@@ -48,68 +47,23 @@ class ObjectManager
         $this->entityManager = $entityManager;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getNamespace()
-    {
-        return $this->namespace;
-    }
-
-    /**
-     * @param mixed $namespace
-     */
-    public function setNamespace($namespace)
-    {
-        $this->namespace = $namespace;
-    }
-
-    public function getClassName(Entity $entity)
-    {
-        return '\\' . $this->getNamespace() . '\\' . $entity->getName();
-    }
-
     public function create(Entity $entity)
     {
-        $class = $this->getClassName($entity);
-        $entity = new $class();
+        $entity = new Entry();
+        $entity->setEntity($entity);
 
         return $entity;
     }
 
-    public function saveFromRequest(Form $form, BaseEntity $entity, Request $request)
+    public function saveFromRequest(Form $form, Entry $entry, Request $request)
     {
         foreach ($form->getControls() as $control) {
             $type = $control->getControlType();
-            /*
-             * @var $type \Concrete\Core\Express\Form\Control\Type\TypeInterface
-             */
             $saver = $type->getSaveHandler($control);
             if ($saver instanceof SaveHandlerInterface) {
-                $saver->saveFromRequest($this, $control, $entity, $request);
+                $saver->saveFromRequest($this, $control, $entry, $request);
             }
         }
-        $this->save($entity);
-    }
-
-    public function setAttribute(BaseEntity $entity, $handleOrKey, $value)
-    {
-        if (is_object($handleOrKey)) {
-            $key = $handleOrKey;
-        } else {
-            $key = $this->category->getAttributeKeyByHandle($handleOrKey);
-        }
-        $method = camelcase($key->getAttributeKeyHandle());
-        $method = "set{$method}";
-
-        $value = $key->getController()->saveValue($value);
-        $entity->$method($value);
-    }
-
-    public function save(BaseEntity $entity)
-    {
-        $this->entityManager->persist($entity);
-        $this->entityManager->flush();
     }
 
     protected function getEntityOrName($entityOrName)
@@ -124,23 +78,64 @@ class ObjectManager
         return $entity;
     }
 
-    public function getList($entityOrName)
-    {
-        $entity = $this->getEntityOrName($entityOrName);
-        $list = new ObjectList($this, $entity);
-        $set = $entity->getResultColumnSet();
-        if (is_object($set)) {
-            $sort = $set->getDefaultSortColumn();
-            $list->sanitizedSortBy($sort->getColumnKey(), $sort->getColumnDefaultSortDirection());
-        }
-        return $list;
-    }
 
     public function getByID($entityOrName, $id)
     {
         $entity = $this->getEntityOrName($entityOrName);
-        $r = $this->entityManager->getRepository($this->getClassName($entity));
+        $r = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entry');
+
 
         return $r->findOneById($id);
     }
+
+    /*
+
+        public function create(Entity $entity)
+        {
+            $class = $this->getClassName($entity);
+            $entity = new $class();
+
+            return $entity;
+        }
+
+
+        public function setAttribute(Entity $entity, $handleOrKey, $value)
+        {
+            if (is_object($handleOrKey)) {
+                $key = $handleOrKey;
+            } else {
+                $key = $this->category->getAttributeKeyByHandle($handleOrKey);
+            }
+            $method = camelcase($key->getAttributeKeyHandle());
+            $method = "set{$method}";
+
+            $value = $key->getController()->saveValue($value);
+            $entity->$method($value);
+        }
+
+        public function save(Entity $entity)
+        {
+            $this->entityManager->persist($entity);
+            $this->entityManager->flush();
+        }
+
+        public function getList($entityOrName)
+        {
+            $entity = $this->getEntityOrName($entityOrName);
+            $list = new ObjectList($this, $entity);
+            $set = $entity->getResultColumnSet();
+            if (is_object($set)) {
+                $sort = $set->getDefaultSortColumn();
+                $list->sanitizedSortBy($sort->getColumnKey(), $sort->getColumnDefaultSortDirection());
+            }
+            return $list;
+        }
+
+        public function getByID($entityOrName, $id)
+        {
+            $entity = $this->getEntityOrName($entityOrName);
+            $r = $this->entityManager->getRepository($this->getClassName($entity));
+
+            return $r->findOneById($id);
+        }*/
 }

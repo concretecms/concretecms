@@ -2,7 +2,8 @@
 namespace Concrete\Core\Entity\Express\Control;
 
 use Concrete\Controller\Element\Dashboard\Express\Control\TextOptions;
-use Concrete\Core\Express\BaseEntity;
+use Concrete\Core\Entity\Express\Entity;
+use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Express\Form\Control\Form\TextEntityPropertyControlFormRenderer;
 use Concrete\Core\Express\Form\Control\Type\SaveHandler\TextControlSaveHandler;
 use Concrete\Core\Express\Form\Control\View\TextEntityPropertyControlViewRenderer;
@@ -39,14 +40,14 @@ class TextControl extends Control
         return new TextControlSaveHandler();
     }
 
-    public function getFormRenderer(BaseEntity $entity = null)
+    public function getFormRenderer(Entity $entity = null)
     {
         return new TextEntityPropertyControlFormRenderer($entity);
     }
 
-    public function getViewRenderer(BaseEntity $entity)
+    public function getViewRenderer(Entry $entry)
     {
-        return new TextEntityPropertyControlViewRenderer($entity);
+        return new TextEntityPropertyControlViewRenderer($entry);
     }
 
     public function getControlLabel()

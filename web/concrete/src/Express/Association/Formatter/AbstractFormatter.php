@@ -3,7 +3,7 @@ namespace Concrete\Core\Express\Association\Formatter;
 
 use Concrete\Core\Entity\Express\Association;
 use Concrete\Core\Entity\Express\Control\AssociationControl;
-use Concrete\Core\Express\BaseEntity;
+use Concrete\Core\Entity\Express\Entity;
 
 abstract class AbstractFormatter implements FormatterInterface
 {
@@ -14,7 +14,7 @@ abstract class AbstractFormatter implements FormatterInterface
         $this->association = $association;
     }
 
-    public function getEntityDisplayName(AssociationControl $control, BaseEntity $entity)
+    public function getEntityDisplayName(AssociationControl $control, Entity $entity)
     {
         // Do we have a custom display mask? If so, we try to use that
         if ($control->getAssociationEntityLabelMask()) {
