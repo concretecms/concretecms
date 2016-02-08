@@ -85,9 +85,6 @@ class Associations extends DashboardPageController
                     $this->entityManager->persist($targetEntity);
                     $this->entityManager->flush();
 
-                    $publisher = \Core::make('express.publisher');
-                    $publisher->publish($entity);
-
                     $this->flash('success', t('Association added successfully.'));
                     $this->redirect('/dashboard/express/entities/associations', $entity->getId());
                 }
@@ -124,9 +121,6 @@ class Associations extends DashboardPageController
         if (!$this->error->has()) {
             $this->entityManager->remove($association);
             $this->entityManager->flush();
-
-            $publisher = \Core::make('express.publisher');
-            $publisher->publish($this->entity);
 
             $this->flash('success', t('Association deleted successfully.'));
             $this->redirect('/dashboard/express/entities/associations', $id);

@@ -217,6 +217,22 @@ abstract class AbstractCategory implements CategoryInterface
         return $this->entity;
     }
 
+    /**
+     * @return EntityManager
+     */
+    public function getEntityManager()
+    {
+        return $this->entityManager;
+    }
+
+    /**
+     * @param EntityManager $entityManager
+     */
+    public function setEntityManager($entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
     public function deleteKey(Key $key)
     {
         $controller = $key->getController();

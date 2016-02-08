@@ -98,6 +98,6 @@ abstract class Value implements AttributeValueInterface
 
     public function __toString()
     {
-        return (string) $this->getValue()->getDisplayValue();
+        return (string) $this->getValueObject()->getDisplayValue();
     }
 }

@@ -4,7 +4,7 @@ namespace Concrete\Core\Express\Form;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Entity\Express\FieldSet;
 use Concrete\Core\Entity\Express\Form;
-use Concrete\Core\Express\BaseEntity;
+use Concrete\Core\Entity\Express\Entity;
 use Doctrine\ORM\EntityManagerInterface;
 
 class Renderer implements RendererInterface
@@ -68,7 +68,7 @@ class Renderer implements RendererInterface
         return $html;
     }
 
-    public function render(Form $form, BaseEntity $entity = null)
+    public function render(Form $form, Entity $entity = null)
     {
         $html = $this->getFormOpenTag();
         $html .= $this->getFormField($form);

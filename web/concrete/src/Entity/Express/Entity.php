@@ -23,19 +23,24 @@ class Entity implements EntityInterface
     protected $name;
 
     /**
+     * @Column(type="string", unique=true)
+     */
+    protected $handle;
+
+    /**
      * @Column(type="text")
      */
     protected $description;
 
     /**
-     * @Column(type="string")
-     */
-    protected $table_name;
-
-    /**
      * @Column(type="object", nullable=true)
      */
     protected $result_column_set;
+
+    /**
+     * @Column(type="boolean")
+     */
+    protected $include_in_public_list = true;
 
     /**
      * @OneToMany(targetEntity="\Concrete\Core\Entity\Attribute\Key\ExpressKey", mappedBy="entity", cascade={"persist", "remove"})
@@ -53,6 +58,12 @@ class Entity implements EntityInterface
     protected $forms;
 
     /**
+     * @OneToMany(targetEntity="Entry", mappedBy="entity", cascade={"persist", "remove"})
+     **/
+    protected $entries;
+
+
+    /**
      * @Column(type="datetime")
      */
     protected $created_date;
@@ -63,6 +74,55 @@ class Entity implements EntityInterface
         $this->attributes = new ArrayCollection();
         $this->forms = new ArrayCollection();
         $this->associations = new ArrayCollection();
+        $this->entries = new ArrayCollection();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEntries()
+    {
+        return $this->entries;
+    }
+
+    /**
+     * @param mixed $entries
+     */
+    public function setEntries($entries)
+    {
+        $this->entries = $entries;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHandle()
+    {
+        return $this->handle;
+    }
+
+    /**
+     * @param mixed $handle
+     */
+    public function setHandle($handle)
+    {
+        $this->handle = $handle;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIncludeInPublicList()
+    {
+        return $this->include_in_public_list;
+    }
+
+    /**
+     * @param mixed $include_in_public_list
+     */
+    public function setIncludeInPublicList($include_in_public_list)
+    {
+        $this->include_in_public_list = $include_in_public_list;
     }
 
     /**
@@ -157,22 +217,6 @@ class Entity implements EntityInterface
     public function setAttributes($attributes)
     {
         $this->attributes = $attributes;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTableName()
-    {
-        return $this->table_name;
-    }
-
-    /**
-     * @param mixed $table_name
-     */
-    public function setTableName($table_name)
-    {
-        $this->table_name = $table_name;
     }
 
     /**
