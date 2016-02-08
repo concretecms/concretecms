@@ -9,7 +9,7 @@
             <option value=""><?=t('** Choose %s', $control->getControlLabel())?></option>
         <?php foreach ($entities as $entity) {
     ?>
-            <option value="<?=$entity->getId()?>"><?=$formatter->getEntityDisplayName($control, $entity)?></option>
+            <option value="<?=$entity->getId()?>"><?=$formatter->getEntryDisplayName($control, $entity)?></option>
         <?php 
 }
         ?>

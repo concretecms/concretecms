@@ -17,6 +17,7 @@ class FormServiceProvider extends ServiceProvider
             'helper/form/page_selector' => '\Concrete\Core\Form\Service\Widget\PageSelector',
             'helper/form/rating' => '\Concrete\Core\Form\Service\Widget\Rating',
             'helper/form/user_selector' => '\Concrete\Core\Form\Service\Widget\UserSelector',
+            'form/express/entry_selector' => '\Concrete\Core\Form\Service\Widget\ExpressEntrySelector',
 
         );
 

@@ -9,7 +9,7 @@
         ?>
         <?php foreach ($entities as $entity) {
     ?>
-            <div><?=$formatter->getEntityDisplayName($control, $entity)?></div>
+            <div><?=$formatter->getEntryDisplayName($control, $entity)?></div>
         <?php 
 }
         ?>

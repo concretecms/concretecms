@@ -19,12 +19,12 @@ class AssociationSaveHandler implements SaveHandlerInterface
 
     public function saveFromRequest(Control $control, Entry $entry, Request $request)
     {
-        exit;
+        $r = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entry');
         $entityId = $request->request->get('express_association_' . $control->getId());
+        $associatedEntry = $r->findOneById($entityId);
         $target = $control->getAssociation()->getTargetEntity();
+        if (is_object($associatedEntry) && $associatedEntry->getEntity()->getID() == $target->getID()) {
 
-        $method = camelcase($control->getAssociation()->getComputedTargetPropertyName());
-        $method = "set{$method}";
-        $entry->$method($targetEntity);
+        }
     }
 }

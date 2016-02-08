@@ -6,7 +6,7 @@
     if (count($entities)) {
         foreach ($entities as $entity) {
             ?>
-            <label><input type="checkbox" value="<?=$entity->getId()?>"> <?=$formatter->getEntityDisplayName($control, $entity)?></label>
+            <label><input type="checkbox" value="<?=$entity->getId()?>"> <?=$formatter->getEntryDisplayName($control, $entity)?></label>
         <?php 
         }
         ?>

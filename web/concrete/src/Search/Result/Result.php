@@ -34,6 +34,14 @@ class Result
         return $this->baseURL;
     }
 
+    /**
+     * @return Set
+     */
+    public function getListColumns()
+    {
+        return $this->listColumns;
+    }
+
     public function __construct(Set $columns, ItemList $il, $url, $fields = array())
     {
         $this->listColumns = $columns;

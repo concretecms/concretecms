@@ -146,6 +146,15 @@ module.exports = function(grunt) {
             ]
         },
 
+        express: {
+            dest: '<%= DIR_BASE %>/concrete/js/express.js',
+            src: [
+                '<%= DIR_BASE %>/concrete/js/build/core/express/search.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/express/selector.js'
+            ]
+        },
+
+
         select2: {
             dest: '<%= DIR_BASE %>/concrete/js/select2.js',
             src: '<%= DIR_BASE %>/concrete/js/build/vendor/select2/select2.js'
@@ -387,6 +396,7 @@ module.exports = function(grunt) {
         '<%= DIR_BASE %>/concrete/css/dynatree.css': '<%= DIR_BASE %>/concrete/css/build/vendor/dynatree/dynatree.less',
         '<%= DIR_BASE %>/concrete/css/sitemap.css': '<%= DIR_BASE %>/concrete/css/build/core/sitemap.less',
         '<%= DIR_BASE %>/concrete/css/file-manager.css': '<%= DIR_BASE %>/concrete/css/build/core/file-manager.less',
+        '<%= DIR_BASE %>/concrete/css/express.css': '<%= DIR_BASE %>/concrete/css/build/core/express.less',
         '<%= DIR_BASE %>/concrete/css/conversations.css': '<%= DIR_BASE %>/concrete/css/build/core/conversations.less',
         '<%= DIR_BASE %>/concrete/css/gathering/display.css': '<%= DIR_BASE %>/concrete/css/build/core/gathering/display.less',
         '<%= DIR_BASE %>/concrete/css/gathering/base.css': '<%= DIR_BASE %>/concrete/css/build/core/gathering/base.less',

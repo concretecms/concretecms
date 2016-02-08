@@ -2,6 +2,7 @@
 namespace Concrete\Core\Express;
 
 use Concrete\Core\Attribute\Category\ExpressCategory;
+use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList as DatabaseItemList;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 use Concrete\Core\Search\Pagination\Pagination;
@@ -10,10 +11,12 @@ class EntryList extends DatabaseItemList
 {
 
     protected $category;
+    protected $entity;
 
-    public function __construct(ExpressCategory $category)
+    public function __construct(Entity $entity)
     {
-        $this->category = $category;
+        $this->category = $entity->getAttributeKeyCategory();
+        $this->entity = $entity;
         parent::__construct(null);
     }
 
@@ -21,6 +24,15 @@ class EntryList extends DatabaseItemList
     {
         return '\\Concrete\\Core\\Entity\\Key\\ExpressKey';
     }
+
+    /**
+     * @return Entity
+     */
+    public function getEntity()
+    {
+        return $this->entity;
+    }
+
 
     /**
      * The total results of the query.
