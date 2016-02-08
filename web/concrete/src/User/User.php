@@ -44,7 +44,7 @@ class User extends Object
         $row = $r ? $r->FetchRow() : null;
         $nu = null;
         if ($row) {
-            $nu = new self();
+            $nu = new static();
             $nu->setPropertiesFromArray($row);
             $nu->uGroups = $nu->_getUserGroups(true);
             $nu->superUser = ($nu->getUserID() == USER_SUPER_ID);
