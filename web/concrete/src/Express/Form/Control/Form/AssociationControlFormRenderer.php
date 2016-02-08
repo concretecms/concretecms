@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Express\Form\Control\Form;
 
+use Concrete\Core\Express\EntryList;
 use Concrete\Core\Express\Form\Control\EntityPropertyControlView;
 use Concrete\Core\Express\Form\Control\RendererInterface;
 use Concrete\Core\Express\Form\RendererFactory;
@@ -37,10 +38,9 @@ class AssociationControlFormRenderer implements RendererInterface
             '/' . $this->getFormFieldElement() . '.php'
         );
         $association = $this->factory->getControl()->getAssociation();
-        $name = $this->factory->getControl()->getAssociation()->getTargetEntity()->getName();
-        $className = '\\' . $this->application['config']->get('express.entity_classes.namespace') . '\\' . $name;
-        $repository = $this->factory->getEntityManager()->getRepository($className);
-        $entities = $repository->findAll();
+        $entity = $this->factory->getControl()->getAssociation()->getTargetEntity();
+        $list = new EntryList($entity);
+        $entities = $list->getResults();
         $view = new EntityPropertyControlView($this->factory);
         $view->addScopeItem('entities', $entities);
         $view->addScopeItem('control', $this->factory->getControl());

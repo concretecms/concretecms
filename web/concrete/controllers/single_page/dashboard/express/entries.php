@@ -20,27 +20,11 @@ class Entries extends DashboardPageController
         }
         $this->set('entity', $entity);
 
-        $list = new EntryList($entity->getAttributeKeyCategory());
+        $search = new \Concrete\Controller\Search\Express\Entries();
+        $search->search($entity);
 
-        if ($this->request->query->has($list->getQuerySortDirectionParameter())) {
-            $direction = $this->request->query->get($list->getQuerySortDirectionParameter());
-        }
-        if ($this->request->query->has($list->getQuerySortColumnParameter())) {
-            $value = $this->request->query->get($list->getQuerySortColumnParameter());
-            $column = $entity->getResultColumnSet();
-            $value = $column->getColumnByKey($value);
-            if (is_object($value)) {
-                $list->sanitizedSortBy($value->getColumnKey(), $direction);
-            }
-        }
-
-        $set = $entity->getResultColumnSet();
-        if ($set) {
-            $result = new Result($entity->getResultColumnSet(), $list, \URL::to('/dashboard/express/entries/', $id));
-        }
-        $this->set('list', $list);
-        $this->set('result', $result);
-        $this->set('results', $list->getResults());
+        $this->set('list', $search->getListObject());
+        $this->set('searchController', $search);
     }
 
     public function delete_entry($id = null)

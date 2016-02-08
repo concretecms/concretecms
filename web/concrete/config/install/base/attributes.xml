@@ -76,6 +76,13 @@
                 <category handle="user"/>
             </categories>
         </attributetype>
+        <attributetype handle="express" name="Express Entity" package="">
+            <categories>
+                <category handle="collection"/>
+                <category handle="user"/>
+                <category handle="file"/>
+            </categories>
+        </attributetype>
     </attributetypes>
     <attributekeys>
         <attributekey handle="meta_title" name="Meta Title" package="" searchable="1" indexed="0" type="text" category="collection"/>

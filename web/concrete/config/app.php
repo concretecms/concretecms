@@ -369,6 +369,13 @@ return array(
         "/ccm/system/marketplace/connect" => array('\Concrete\Controller\Backend\Marketplace\Connect::view'),
         "/ccm/system/marketplace/search" => array('\Concrete\Controller\Backend\Marketplace\Search::view'),
 
+        /**
+         * Express
+         */
+        "/ccm/system/dialogs/express/entry/search/{entityID}" => array('\Concrete\Controller\Dialog\Express\Search::entries'),
+        "/ccm/system/search/express/entries/submit/{entityID}" => array('\Concrete\Controller\Search\Express\Entries::submit'),
+        "/ccm/system/express/entry/get_json" => array('\Concrete\Controller\Backend\Express\Entry::getJSON'),
+
         /*
          * Search Routes
          */
@@ -735,6 +742,10 @@ return array(
             array('javascript', 'js/file-manager.js', array('minify' => false)),
             array('css', 'css/file-manager.css', array('minify' => false)),
         ),
+        'core/express' => array(
+            array('javascript', 'js/express.js', array('minify' => false)),
+            array('css', 'css/express.css', array('minify' => false)),
+        ),
         'core/sitemap' => array(
             array('javascript', 'js/sitemap.js', array('minify' => false)),
             array('css', 'css/sitemap.css', array('minify' => false)),
@@ -990,6 +1001,12 @@ return array(
                 array('javascript', 'core/sitemap'),
                 array('css', 'dynatree'),
                 array('css', 'core/sitemap'),
+            ),
+        ),
+        'core/express' => array(
+            array(
+                array('css', 'core/express'),
+                array('javascript', 'core/express'),
             ),
         ),
         'core/topics' => array(

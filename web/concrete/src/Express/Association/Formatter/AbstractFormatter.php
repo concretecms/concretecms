@@ -4,6 +4,7 @@ namespace Concrete\Core\Express\Association\Formatter;
 use Concrete\Core\Entity\Express\Association;
 use Concrete\Core\Entity\Express\Control\AssociationControl;
 use Concrete\Core\Entity\Express\Entity;
+use Concrete\Core\Entity\Express\Entry;
 
 abstract class AbstractFormatter implements FormatterInterface
 {
@@ -14,13 +15,13 @@ abstract class AbstractFormatter implements FormatterInterface
         $this->association = $association;
     }
 
-    public function getEntityDisplayName(AssociationControl $control, Entity $entity)
+    public function getEntryDisplayName(AssociationControl $control, Entry $entry)
     {
         // Do we have a custom display mask? If so, we try to use that
         if ($control->getAssociationEntityLabelMask()) {
             try {
-                return preg_replace_callback('/%(.*?)%/i', function ($matches) use ($entity) {
-                    return $entity->getAttribute($matches[1]);
+                return preg_replace_callback('/%(.*?)%/i', function ($matches) use ($entry) {
+                    return $entry->getAttribute($matches[1]);
                 }, $control->getAssociationEntityLabelMask());
             } catch (\Exception $e) {
             }
@@ -28,9 +29,7 @@ abstract class AbstractFormatter implements FormatterInterface
         $targetEntity = $this->association->getTargetEntity();
         $attribute = $targetEntity->getAttributes()[0];
         if (is_object($attribute)) {
-            $attribute = $attribute->getAttribute();
-
-            return $entity->getAttribute($attribute->getAttributeKeyHandle());
+            return $entry->getAttribute($attribute);
         }
     }
 

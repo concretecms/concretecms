@@ -10,7 +10,7 @@ use DoctrineProxies\__CG__\Concrete\Core\Entity\Attribute\Key\ExpressKey;
  * @Entity(repositoryClass="\Concrete\Core\Entity\Express\EntryRepository")
  * @Table(name="ExpressEntityEntries")
  */
-class Entry
+class Entry implements \JsonSerializable
 {
 
     use ObjectTrait;
@@ -116,4 +116,20 @@ class Entry
         $this->date_last_updated = new \DateTime();
     }
 
+    public function getLabel()
+    {
+        $firstAttribute = $this->getEntity()->getAttributes()[0];
+        if (is_object($firstAttribute)) {
+            return $this->getAttribute($firstAttribute);
+        }
+    }
+
+    public function jsonSerialize()
+    {
+        $data = array(
+            'exEntryID' => $this->getID(),
+            'label' => $this->getLabel()
+        );
+        return $data;
+    }
 }
