@@ -46,7 +46,7 @@ class NameCorePageProperty extends CorePageProperty
         } else {
             $name = $this->getPageTypeComposerControlDraftValue();
         }
-        if (!$name) {
+        if (Core::make('helper/validation/strings')->notempty($name)) {
             $control = $this->getPageTypeComposerFormLayoutSetControlObject();
             $e->add(t('You haven\'t chosen a valid %s', $control->getPageTypeComposerControlLabel()));
 

@@ -27,7 +27,7 @@ class UrlSlugCorePageProperty extends CorePageProperty
     {
         $e = Loader::helper('validation/error');
         $handle = $this->getPageTypeComposerControlDraftValue();
-        if (!$handle) {
+        if (Core::make('helper/validation/strings')->notempty($handle)) {
             $control = $this->getPageTypeComposerFormLayoutSetControlObject();
             $e->add(t('You haven\'t chosen a valid %s', $control->getPageTypeComposerControlLabel()));
             return $e;
