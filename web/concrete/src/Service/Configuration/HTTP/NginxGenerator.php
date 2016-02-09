@@ -5,52 +5,15 @@ use Concrete\Core\Service\Configuration\GeneratorInterface;
 use Concrete\Core\Service\Rule\Rule;
 use Concrete\Core\Service\Rule\RuleInterface;
 
-class NginxGenerator implements GeneratorInterface
+class NginxGenerator extends Generator implements GeneratorInterface
 {
-    /**
-     * @var RuleInterface[]
-     */
-    protected $rules;
-
     /**
      * Initializes the instance.
      */
     public function __construct()
     {
-        $this->rules = array();
+        parent::__construct();
         $this->addRule('pretty_urls', $this->getPrettyUrlRule());
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see GeneratorInterface::addRule()
-     */
-    public function addRule($handle, RuleInterface $rule)
-    {
-        $this->rules[$handle] = $rule;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see GeneratorInterface::getRules()
-     */
-    public function getRules()
-    {
-        return $this->rules;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see GeneratorInterface::getRule()
-     */
-    public function getRule($handle)
-    {
-        $rules = $this->getRules();
-
-        return isset($rules[$handle]) ? $rules[$handle] : null;
     }
 
     /**
