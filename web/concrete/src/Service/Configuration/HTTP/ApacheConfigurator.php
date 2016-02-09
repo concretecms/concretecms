@@ -2,6 +2,7 @@
 namespace Concrete\Core\Service\Configuration\HTTP;
 
 use Concrete\Core\Service\Configuration\ConfiguratorInterface;
+use Concrete\Core\Service\Rule\RuleInterface;
 
 class ApacheConfigurator implements ConfiguratorInterface
 {
@@ -9,30 +10,27 @@ class ApacheConfigurator implements ConfiguratorInterface
      * Gets the rule, if present in a configuration.
      *
      * @param string $configuration The whole configuration.
-     * @param array $rule {
-     *
-     *     @var string $commentBefore [optional] An optional part that *may* be present in the configuration before the rule to be checked.
-     *     @var string $code The code of the rule
-     *     @var string $commentAfter [optional] An optional part that *may* be present in the configuration after the rule to be checked.
-     * }
+     * @param RuleInterface $rule The rule to be checked.
      *
      * @return string Returns the whole rule found (or '' if not found)
      */
-    protected function getConfiguredRule($configuration, array $rule)
+    protected function getConfiguredRule($configuration, RuleInterface $rule)
     {
         $configurationNormalized = str_replace(array("\r\n", "\r"), "\n", (string) $configuration);
         $rxSearch = '/';
         // First of all we have either the start of the file or a line ending
         $rxSearch .= '(^|\n)';
-        if (isset($rule['commentBefore'])) {
+        $commentsBefore = $rule->getCommentsBefore();
+        if ($commentsBefore !== '') {
             // Then we may have the opening comment line
-            $rxSearch .= '(\s*'.preg_quote($rule['commentBefore'], '/').'\s*\n+)?';
+            $rxSearch .= '(\s*'.preg_quote($commentsBefore, '/').'\s*\n+)?';
         }
         // Then we have the rule itself
-        $rxSearch .= '\s*'.preg_replace("/\n\s*/", "\\s*\\n\\s*", preg_quote($rule['code'], '/')).'\s*';
-        if (isset($rule['commentAfter'])) {
+        $rxSearch .= '\s*'.preg_replace("/\n\s*/", "\\s*\\n\\s*", preg_quote($rule->getCode(), '/')).'\s*';
+        $commentsAfter = $rule->getCommentsAfter();
+        if ($commentsAfter !== '') {
             // Then we may have the closing comment line
-            $rxSearch .= '(\n\s*'.preg_quote($rule['commentAfter'], '/').'\s*)?';
+            $rxSearch .= '(\n\s*'.preg_quote($commentsAfter, '/').'\s*)?';
         }
         // Finally we have the end of the file or a line ending
         $rxSearch .= '(\n|$)';
@@ -46,7 +44,7 @@ class ApacheConfigurator implements ConfiguratorInterface
      *
      * @see \Concrete\Core\Service\Configuration\ConfiguratorInterface::hasRule()
      */
-    public function hasRule($configuration, array $rule)
+    public function hasRule($configuration, RuleInterface $rule)
     {
         return $this->getConfiguredRule($configuration, $rule) !== '';
     }
@@ -56,19 +54,21 @@ class ApacheConfigurator implements ConfiguratorInterface
      *
      * @see \Concrete\Core\Service\Configuration\ConfiguratorInterface::addRule()
      */
-    public function addRule($configuration, array $rule)
+    public function addRule($configuration, RuleInterface $rule)
     {
         if ($this->getConfiguredRule($configuration, $rule) === '') {
             $configuration = rtrim($configuration);
             if ($configuration !== '') {
                 $configuration .= "\n\n";
             }
-            if (isset($rule['commentBefore'])) {
-                $configuration .= $rule['commentBefore']."\n";
+            $commentsBefore = $rule->getCommentsBefore();
+            if ($commentsBefore !== '') {
+                $configuration .= $commentsBefore."\n";
             }
-            $configuration .= $rule['code']."\n";
-            if (isset($rule['commentAfter'])) {
-                $configuration .= $rule['commentAfter']."\n";
+            $configuration .= $rule->getCode()."\n";
+            $commentsAfter = $rule->getCommentsAfter();
+            if ($commentsAfter !== '') {
+                $configuration .= $commentsAfter."\n";
             }
         }
 
@@ -80,7 +80,7 @@ class ApacheConfigurator implements ConfiguratorInterface
      *
      * @see \Concrete\Core\Service\Configuration\ConfiguratorInterface::removeRule()
      */
-    public function removeRule($configuration, array $rule)
+    public function removeRule($configuration, RuleInterface $rule)
     {
         $current = $this->getConfiguredRule($configuration, $rule);
         if ($current !== '') {

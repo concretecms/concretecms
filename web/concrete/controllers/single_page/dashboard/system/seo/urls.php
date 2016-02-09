@@ -48,7 +48,7 @@ class Urls extends DashboardPageController
                             }
                             break;
                     }
-                    $this->set('configuration_code', $rule['code']);
+                    $this->set('configuration_code', $rule->getCode());
                     break;
                 case 'unrecognized':
                     $codes = array();
@@ -57,10 +57,10 @@ class Urls extends DashboardPageController
                     foreach ($manager->getAllServices() as $service) {
                         $rule = $service->getGenerator()->getRule('pretty_urls');
                         if ($rule !== null) {
-                            if (isset($codes[$rule['code']])) {
-                                $codes[$rule['code']][] = $service->getName();
+                            if (isset($codes[$rule->getCode()])) {
+                                $codes[$rule->getCode()][] = $service->getName();
                             } else {
-                                $codes[$rule['code']] = array($service->getName());
+                                $codes[$rule->getCode()] = array($service->getName());
                             }
                         }
                     }
@@ -102,7 +102,7 @@ class Urls extends DashboardPageController
                         $actionMessage .= ' '.t('Please remove this configuration section from your server configuration');
                     }
                     $this->set('configuration_action', $actionMessage);
-                    $this->set('configuration_code', $rule['code']);
+                    $this->set('configuration_code', $rule->getCode());
                     break;
             }
             $this->set('message', $message);
