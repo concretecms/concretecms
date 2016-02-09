@@ -85,6 +85,36 @@ class Controller extends BlockController
         if (!strlen(trim(strip_tags($content))) && ($c->isMasterCollection() || $is_stack)) {
             $content = $this->getPlaceHolderText($this->attributeHandle);
         }
+        
+        if(!empty($this->delimiter)) {
+            $parts = explode("\n", $content);
+            if(count($parts)>1){
+                switch ($this->delimiter) {
+                    case 'comma':
+                        $delimiter = ',';
+                        break;
+                    case 'commaSpace':
+                        $delimiter = ', ';
+                        break;
+                    case 'pipe':
+                        $delimiter = '|';
+                        break;
+                    case 'dash':
+                        $delimiter = '-';
+                        break;
+                    case 'semicolon':
+                        $delimiter = ';';
+                        break;
+                    case 'break':
+                        $delimiter = '<br />';
+                        break;
+                    default:
+                        $delimiter = ' ';
+                        break;
+                }
+                $content = implode($delimiter, $parts);
+            }
+        }
 
         return $content;
     }
