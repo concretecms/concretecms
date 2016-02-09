@@ -28,7 +28,7 @@ class Entity implements EntityInterface
     protected $handle;
 
     /**
-     * @Column(type="text")
+     * @Column(type="text", nullable=true)
      */
     protected $description;
 
