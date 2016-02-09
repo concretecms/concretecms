@@ -3,6 +3,7 @@ namespace Concrete\Core\Service\Configuration\HTTP;
 
 use Concrete\Core\Service\Configuration\StorageInterface;
 use Exception;
+use Illuminate\Filesystem\Filesystem;
 
 class ApacheStorage implements StorageInterface
 {
@@ -24,7 +25,8 @@ class ApacheStorage implements StorageInterface
     public function canRead()
     {
         $ht = $this->getHTaccessFilename();
-        if (is_file($ht)) {
+        $fs = new Filesystem();
+        if (@$fs->isFile($ht)) {
             $result = @is_readable($ht);
         } else {
             $result = @is_readable(@dirname($ht));
@@ -42,8 +44,9 @@ class ApacheStorage implements StorageInterface
     {
         $result = '';
         $ht = $this->getHTaccessFilename();
-        if (is_file($ht)) {
-            $result = @file_get_contents($ht);
+        $fs = new Filesystem();
+        if (@$fs->isFile($ht)) {
+            $result = @$fs->get($ht);
             if ($result === false) {
                 throw new Exception("Failed to read from file $ht");
             }
@@ -60,8 +63,9 @@ class ApacheStorage implements StorageInterface
     public function canWrite()
     {
         $ht = $this->getHTaccessFilename();
+        $fs = new Filesystem();
 
-        return (bool) (@is_file($ht) ? @is_writable($ht) : @is_writable(@dirname($ht)));
+        return (bool) (@$fs->isFile($ht) ? @$fs->isWritable($ht) : @$fs->isWritable(@dirname($ht)));
     }
 
     /**
@@ -72,7 +76,8 @@ class ApacheStorage implements StorageInterface
     public function write($configuration)
     {
         $ht = $this->getHTaccessFilename();
-        if (@file_put_contents($ht, $configuration) === false) {
+        $fs = new Filesystem();
+        if (@$fs->put($ht, $configuration) === false) {
             throw new Exception("Failed to write to file $ht");
         }
     }
