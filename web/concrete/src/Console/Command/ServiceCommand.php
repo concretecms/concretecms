@@ -104,6 +104,7 @@ EOT
 
     public function updateConfiguration(ServiceInterface $service, OutputInterface $output)
     {
+        // Initialize some variable
         $storage = $service->getStorage();
         if (!$storage->canRead()) {
             throw new Exception('Unable to read the current server configuration for '.$service->getFullName());
@@ -112,31 +113,46 @@ EOT
         $generator = $service->getGenerator();
         $configurator = $service->getConfigurator();
         $configurationUpdated = false;
+
+        // Let's check every defined rule
         foreach ($generator->getRules() as $ruleHandle => $rule) {
+
+            // Let's see if this rule should be present or not in the configuration
             $shouldHave = $generator->ruleShouldBeEnabled($ruleHandle);
+
             if ($shouldHave === true) {
+                // This rule should be present in the configuration
                 $output->write("Checking presence of rule $ruleHandle... ");
                 if ($configurator->hasRule($configuration, $rule)) {
+                    // The rule is already in the configuration
                     $output->writeln("<info>already present.</info>");
                 } else {
+                    // The rule is not in the configuration: let's add it
                     $output->write("not found. Adding it... ");
                     $configuration = $configurator->addRule($configuration, $rule);
                     $output->writeln("<info>done.</info>");
                     $configurationUpdated = true;
                 }
+
             } elseif ($shouldHave === false) {
+                // This rule should not be present in the configuration
                 $output->write("Checking absence of rule $ruleHandle... ");
                 if ($configurator->hasRule($configuration, $rule)) {
+                    // The rule is in the configuration: let's remove it
                     $output->write("found. Removing it... ");
                     $configuration = $configurator->removeRule($configuration, $rule);
                     $output->writeln("<info>done.</info>");
                     $configurationUpdated = true;
                 } else {
+                    // The rule is not in the configuration
                     $output->writeln("<info>already absent.</info>");
                 }
             }
+
         }
+
         if ($configurationUpdated) {
+            // Some rule has been added or removed from the configuration: let's save it
             $output->write("Persisting new configuration... ");
             if (!$storage->canWrite()) {
                 throw new Exception('Unable to write the current server configuration for '.$service->getFullName());
