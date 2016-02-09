@@ -1,25 +1,22 @@
 <?php
 namespace Concrete\Core\Service\Configuration;
 
+use Concrete\Core\Service\Rule\RuleInterface;
+
 interface GeneratorInterface
 {
     /**
      * Add a new rule to be handled.
      *
      * @param string $handle The rule handler
-     * @param string $rule The rule
-     * @param bool|callable|null $enabled Should the rule enabled (true) or disabled (false)?
+     * @param RuleInterface $rule The rule to be handled
      */
-    public function addRule($handle, $rule, $enabled);
+    public function addRule($handle, RuleInterface $rule);
 
     /**
-     * Returns all the defined rules. The keys are the rules handles, the values are the rule definitions.
-     * Each definition is an array with the following keys:
-     * - string 'commentBefore' [optional] An optional part that *may* be present in the configuration before the rule to be checked.
-     * - string 'code' The code of the rule
-     * - string 'commentAfter' [optional] An optional part that *may* be present in the configuration after the rule to be checked.
+     * Returns all the defined rules.
      *
-     * @return array[]
+     * @return RuleInterface[]
      */
     public function getRules();
 
@@ -28,21 +25,7 @@ interface GeneratorInterface
      *
      * @param string $handle
      *
-     * @return null|array {
-     *
-     *     @var string $commentBefore [optional] An optional part that *may* be present in the configuration before the rule to be checked.
-     *     @var string $code The code of the rule
-     *     @var string $commentAfter [optional] An optional part that *may* be present in the configuration after the rule to be checked.
-     * }
+     * @return null|RuleInterface
      */
     public function getRule($handle);
-
-    /**
-     * Check is a rule should be enabled or disabled.
-     *
-     * @param string $handle The rule handle
-     *
-     * @return bool|null Return true if the rule should be enabled, false if it should be disabled, null if we don't know.
-     */
-    public function ruleShouldBeEnabled($handle);
 }

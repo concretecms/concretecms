@@ -9,6 +9,9 @@ class ApacheRulesTest extends \PHPUnit_Framework_TestCase
      */
     private static $configurator;
 
+    /**
+     * @var \Concrete\Core\Service\Rule\RuleInterface
+     */
     private static $prettyUrlRule;
 
     private static function prepareClass()
@@ -117,8 +120,8 @@ EOT
         self::prepareClass();
         $DIR_REL = DIR_REL;
         $DISPATCHER_FILENAME = DISPATCHER_FILENAME;
-        $ruleWithoutComments = self::$prettyUrlRule['code'];
-        $ruleWithComments = self::$prettyUrlRule['commentBefore']."\n".$ruleWithoutComments."\n".self::$prettyUrlRule['commentAfter'];
+        $ruleWithoutComments = self::$prettyUrlRule->getCode();
+        $ruleWithComments = trim(self::$prettyUrlRule->getCommentsBefore()."\n".$ruleWithoutComments."\n".self::$prettyUrlRule->getCommentsAfter());
 
         return array(
             array("", "$ruleWithComments\n"),
@@ -149,8 +152,8 @@ EOT
         self::prepareClass();
         $DIR_REL = DIR_REL;
         $DISPATCHER_FILENAME = DISPATCHER_FILENAME;
-        $ruleWithoutComments = self::$prettyUrlRule['code'];
-        $ruleWithComments = self::$prettyUrlRule['commentBefore']."\n".$ruleWithoutComments."\n".self::$prettyUrlRule['commentAfter'];
+        $ruleWithoutComments = self::$prettyUrlRule->getCode();
+        $ruleWithComments = trim(self::$prettyUrlRule->getCommentsBefore()."\n".$ruleWithoutComments."\n".self::$prettyUrlRule->getCommentsAfter());
 
         return array(
             array("", ""),

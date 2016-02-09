@@ -2,49 +2,39 @@
 namespace Concrete\Core\Service\Configuration\HTTP;
 
 use Concrete\Core\Service\Configuration\GeneratorInterface;
+use Concrete\Core\Service\Rule\Rule;
+use Concrete\Core\Service\Rule\RuleInterface;
 
 class NginxGenerator implements GeneratorInterface
 {
     /**
-     * @var Application
-     */
-    protected $app;
-
-    /**
-     * @var array
+     * @var RuleInterface[]
      */
     protected $rules;
 
     /**
-     * @var array
-     */
-    protected $enabledRules;
-
-    /**
      * Initializes the instance.
-     *
-     * @param Application $app
      */
-    public function __construct(Application $app)
+    public function __construct()
     {
-        $DIR_REL = DIR_REL;
-        $DISPATCHER_FILENAME = DISPATCHER_FILENAME;
-        $this->app = $app;
         $this->rules = array();
-        $this->enabledRules = array();
-        $this->addRule(
-            'pretty_urls',
-            $this->getPrettyUrlRule(),
-            function (Application $app) {
-                return (bool) $app->make('config')->get('concrete.seo.url_rewriting');
-            }
-        );
+        $this->addRule('pretty_urls', $this->getPrettyUrlRule());
     }
 
     /**
      * {@inheritdoc}
      *
-     * @see \Concrete\Core\Service\Configuration\GeneratorInterface::getRules()
+     * @see GeneratorInterface::addRule()
+     */
+    public function addRule($handle, RuleInterface $rule)
+    {
+        $this->rules[$handle] = $rule;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see GeneratorInterface::getRules()
      */
     public function getRules()
     {
@@ -54,18 +44,7 @@ class NginxGenerator implements GeneratorInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Concrete\Core\Service\Configuration\GeneratorInterface::addRule()
-     */
-    public function addRule($handle, $rule, $enabled)
-    {
-        $this->rules[$handle] = $rule;
-        $this->enabledRules[$handle] = $enabled;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Concrete\Core\Service\Configuration\GeneratorInterface::getRule()
+     * @see GeneratorInterface::getRule()
      */
     public function getRule($handle)
     {
@@ -75,35 +54,15 @@ class NginxGenerator implements GeneratorInterface
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * @see \Concrete\Core\Service\Configuration\GeneratorInterface::ruleShouldBeEnabled()
-     */
-    public function ruleShouldBeEnabled($handle)
-    {
-        $result = null;
-        if (isset($this->enabledRules[$handle])) {
-            $enabled = $this->enabledRules[$handle];
-            if (is_callable($enabled)) {
-                $enabled = $enabled($this->app, $this);
-            }
-            $result = (bool) $enabled;
-        }
-
-        return $result;
-    }
-
-    /**
-     * @return array
+     * @return RuleInterface
      */
     protected function getPrettyUrlRule()
     {
         $DIR_REL = DIR_REL;
         $DISPATCHER_FILENAME = DISPATCHER_FILENAME;
 
-        return array(
-            'commentsBefore' => "# -- concrete5 urls start --",
-            'code' => <<<EOT
+        return new Rule(
+            <<<EOT
 location $DIR_REL/ {
 	set \$do_rewrite 1
 	if (-f \$request_filename) {
@@ -124,6 +83,11 @@ location $DIR_REL/ {
 }
 EOT
             ,
-            'commentsAfter' => "# -- concrete5 urls end --",
+            function () {
+                return (bool) \Config::get('concrete.seo.url_rewriting');
+            },
+            "# -- concrete5 urls start --",
+            "# -- concrete5 urls end --"
         );
     }
+}

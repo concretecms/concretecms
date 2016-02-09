@@ -3,6 +3,7 @@ namespace Concrete\Core\Service\Configuration\HTTP;
 
 use Concrete\Core\Service\Configuration\ConfiguratorInterface;
 use Exception;
+use Concrete\Core\Service\Rule\RuleInterface;
 
 class NginxConfigurator implements ConfiguratorInterface
 {
@@ -11,7 +12,7 @@ class NginxConfigurator implements ConfiguratorInterface
      *
      * @see \Concrete\Core\Service\Configuration\ConfiguratorInterface::hasRule()
      */
-    public function hasRule($configuration, array $rule)
+    public function hasRule($configuration, RuleInterface $rule)
     {
         throw new Exception(t('Managing nginx configuration is not implemented'));
     }
@@ -21,7 +22,7 @@ class NginxConfigurator implements ConfiguratorInterface
      *
      * @see \Concrete\Core\Service\Configuration\ConfiguratorInterface::addRule()
      */
-    public function addRule($configuration, array $rule)
+    public function addRule($configuration, RuleInterface $rule)
     {
         throw new Exception(t('Managing nginx configuration is not implemented'));
     }
@@ -31,7 +32,7 @@ class NginxConfigurator implements ConfiguratorInterface
      *
      * @see \Concrete\Core\Service\Configuration\ConfiguratorInterface::removeRule()
      */
-    public function removeRule($configuration, array $rule)
+    public function removeRule($configuration, RuleInterface $rule)
     {
         throw new Exception(t('Managing nginx configuration is not implemented'));
     }

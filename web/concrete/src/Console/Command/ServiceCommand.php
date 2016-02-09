@@ -79,7 +79,7 @@ EOT
         $configurator = $service->getConfigurator();
         $allOk = true;
         foreach ($generator->getRules() as $ruleHandle => $rule) {
-            $shouldHave = $generator->ruleShouldBeEnabled($ruleHandle);
+            $shouldHave = $rule->isEnabled();
             if ($shouldHave !== null) {
                 if ($shouldHave) {
                     $output->write("Checking presence of rule $ruleHandle... ");
@@ -118,7 +118,7 @@ EOT
         foreach ($generator->getRules() as $ruleHandle => $rule) {
 
             // Let's see if this rule should be present or not in the configuration
-            $shouldHave = $generator->ruleShouldBeEnabled($ruleHandle);
+            $shouldHave = $rule->isEnabled();
 
             if ($shouldHave === true) {
                 // This rule should be present in the configuration
