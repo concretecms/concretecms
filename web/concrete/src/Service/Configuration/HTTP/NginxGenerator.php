@@ -60,7 +60,7 @@ EOT
                 'commentsAfter' => "# -- concrete5 urls end --",
             ),
             function (Application $app) {
-                (bool) $app->make('config')->get('concrete.seo.url_rewriting');
+                return (bool) $app->make('config')->get('concrete.seo.url_rewriting');
             }
         );
     }
