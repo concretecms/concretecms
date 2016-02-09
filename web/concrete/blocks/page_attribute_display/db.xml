@@ -20,6 +20,7 @@
     <field name="thumbnailWidth" type="integer">
       <unsigned/>
     </field>
+	<field name="delimiter" type="string" size="255"/>
   </table>
 
 </schema>

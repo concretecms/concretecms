@@ -28,6 +28,19 @@ print Core::make('helper/concrete/ui')->tabs(array(
         <input type="text" class="form-control" name="dateFormat" value="<?php  echo $this->controller->dateFormat ?>"/>
         <div class="text-muted"><?php echo sprintf(t('See the formatting options at %s.'), '<a href="http://www.php.net/date" target="_blank">php.net/date</a>'); ?></div>
     </div>
+    <div class="form-group">
+        <label class="control-label"><?php  echo t('Delimiter for multiple items')?></label>
+        <select name="delimiter" class="form-control">
+            <option value="">- none -</option>
+            <option value="comma" <?php echo($this->controller->delimiter == "comma" ? "selected" : "")?>>Comma (",")</option>
+            <option value="commaSpace" <?php echo($this->controller->delimiter == "commaSpace" ? "selected" : "")?>>Comma With Space After (", ")</option>
+            <option value="pipe" <?php echo($this->controller->delimiter == "pipe" ? "selected" : "")?>>Pipe ("|")</option>
+            <option value="dash" <?php echo($this->controller->delimiter == "dash" ? "selected" : "")?>>Dash ("-")</option>
+            <option value="semicolon" <?php echo($this->controller->delimiter == "semicolon" ? "selected" : "")?>>Semicolon (";")</option>
+            <option value="semicolonSpace" <?php echo($this->controller->delimiter == "semicolonSpace" ? "selected" : "")?>>Semicolon With Space After ("; ")</option>
+            <option value="break" <?php echo($this->controller->delimiter == "break" ? "selected" : "")?>>Newline</option>
+        </select>
+    </div> 
     <fieldset>
         <legend><?=t('Thumbnail')?></legend>
         <div class="form-group">
