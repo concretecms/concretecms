@@ -8,9 +8,9 @@ class ServiceManagerServiceProvider extends \Concrete\Core\Foundation\Service\Pr
     public function register()
     {
         $this->app->singleton('Concrete\Core\Service\Manager\ServiceManager', function (Application $app) {
-/** @var ManagerInterface $manager */
             // Build an instance of the manager
             $manager = $app->build('Concrete\Core\Service\Manager\ServiceManager');
+            /* @var ManagerInterface $manager */
 
             // Load the services configuration
             $services = $app['config']->get('services');
