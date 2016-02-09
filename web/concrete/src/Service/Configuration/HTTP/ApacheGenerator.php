@@ -28,28 +28,13 @@ class ApacheGenerator implements GeneratorInterface
      */
     public function __construct(Application $app)
     {
-        $DIR_REL = DIR_REL;
-        $DISPATCHER_FILENAME = DISPATCHER_FILENAME;
+
         $this->app = $app;
         $this->rules = array();
         $this->enabledRules = array();
         $this->addRule(
             'pretty_urls',
-            array(
-                'commentBefore' => '# -- concrete5 urls start --',
-                'code' => <<<EOT
-<IfModule mod_rewrite.c>
-    RewriteEngine On
-    RewriteBase $DIR_REL/
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME}/index.html !-f
-    RewriteCond %{REQUEST_FILENAME}/index.php !-f
-    RewriteRule . $DISPATCHER_FILENAME [L]
-</IfModule>
-EOT
-                ,
-                'commentAfter' => "# -- concrete5 urls end --",
-            ),
+            $this->getPrettyUrlRule(),
             function (Application $app) {
                 return (bool) $app->make('config')->get('concrete.seo.url_rewriting');
             }
@@ -106,5 +91,30 @@ EOT
         }
 
         return $result;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getPrettyUrlRule()
+    {
+        $DIR_REL = DIR_REL;
+        $DISPATCHER_FILENAME = DISPATCHER_FILENAME;
+
+        return array(
+            'commentBefore' => '# -- concrete5 urls start --',
+            'code' => <<<EOT
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+	RewriteBase $DIR_REL/
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME}/index.html !-f
+	RewriteCond %{REQUEST_FILENAME}/index.php !-f
+	RewriteRule . $DISPATCHER_FILENAME [L]
+</IfModule>
+EOT
+            ,
+            'commentAfter' => "# -- concrete5 urls end --",
+        );
     }
 }

@@ -34,31 +34,7 @@ class NginxGenerator implements GeneratorInterface
         $this->enabledRules = array();
         $this->addRule(
             'pretty_urls',
-            array(
-                'commentsBefore' => "# -- concrete5 urls start --",
-                'code' => <<<EOT
-location $DIR_REL/ {
-	set \$do_rewrite 1
-	if (-f \$request_filename) {
-		set \$do_rewrite 0
-	)
-	if (-f \$request_filename/index.html) {
-		set \$do_rewrite 0
-	)
-	if (-f \$request_filename/index.php) {
-		set \$do_rewrite 0
-	)
-	if (-d \$request_filename) {
-		set \$do_rewrite 0
-	)
-	if (\$do_rewrite = "1") {
-		rewrite ^/(.*)$ /index.php/$1 last;
-	}
-}
-EOT
-                ,
-                'commentsAfter' => "# -- concrete5 urls end --",
-            ),
+            $this->getPrettyUrlRule(),
             function (Application $app) {
                 return (bool) $app->make('config')->get('concrete.seo.url_rewriting');
             }
@@ -116,4 +92,38 @@ EOT
 
         return $result;
     }
+
+    /**
+     * @return array
+     */
+    protected function getPrettyUrlRule()
+    {
+        $DIR_REL = DIR_REL;
+        $DISPATCHER_FILENAME = DISPATCHER_FILENAME;
+
+        return array(
+            'commentsBefore' => "# -- concrete5 urls start --",
+            'code' => <<<EOT
+location $DIR_REL/ {
+	set \$do_rewrite 1
+	if (-f \$request_filename) {
+		set \$do_rewrite 0
+	)
+	if (-f \$request_filename/index.html) {
+		set \$do_rewrite 0
+	)
+	if (-f \$request_filename/index.php) {
+		set \$do_rewrite 0
+	)
+	if (-d \$request_filename) {
+		set \$do_rewrite 0
+	)
+	if (\$do_rewrite = "1") {
+		rewrite ^/(.*)$ /index.php/$1 last;
+	}
 }
+EOT
+            ,
+            'commentsAfter' => "# -- concrete5 urls end --",
+        );
+    }
