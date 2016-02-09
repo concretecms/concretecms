@@ -6,7 +6,7 @@ class Rule implements RuleInterface
     /**
      * The code of the rule.
      *
-     * @var string
+     * @var string|callable
      */
     protected $code;
 
@@ -32,19 +32,27 @@ class Rule implements RuleInterface
     protected $commentsAfter;
 
     /**
+     * The rule options.
+     *
+     * @var array
+     */
+    protected $options;
+
+    /**
      * Intializes the instance.
      *
-     * @param string $code The code of the rule.
+     * @param string|callable $code The code of the rule.
      * @param bool|callable $enabled Is this rule enabled (should be present in the configuration) or disabled (should not be present in the configuration)?
      * @param string $commentsBefore Optional comments to be placed before the rule itself.
      * @param string $commentsAfter Optional comments to be placed after the rule itself.
      */
     public function __construct($code, $enabled, $commentsBefore = '', $commentsAfter = '')
     {
-        $this->code = (string) $code;
+        $this->code = $code;
         $this->enabled = $enabled;
         $this->commentsBefore = (string) $commentsBefore;
         $this->commentsAfter = (string) $commentsAfter;
+        $this->options = array();
     }
 
     /**
@@ -54,7 +62,12 @@ class Rule implements RuleInterface
      */
     public function getCode()
     {
-        return $this->code;
+        $result = $this->code;
+        if (is_callable($result)) {
+            $result = $result($this);
+        }
+
+        return (string) $result;
     }
 
     /**
@@ -65,8 +78,8 @@ class Rule implements RuleInterface
     public function isEnabled()
     {
         $result = $this->enabled;
-        if (is_callable($this->enabled)) {
-            $result = (bool) $result($this);
+        if (is_callable($result)) {
+            $result = $result($this);
         }
 
         return (bool) $result;
@@ -90,5 +103,25 @@ class Rule implements RuleInterface
     public function getCommentsAfter()
     {
         return $this->commentsAfter;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see RuleInterface::getOptions()
+     */
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see RuleInterface::setOptions()
+     */
+    public function setOptions(array $options)
+    {
+        $this->options = $options;
     }
 }
