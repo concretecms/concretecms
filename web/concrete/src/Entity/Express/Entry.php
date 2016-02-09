@@ -109,9 +109,31 @@ class Entry implements \JsonSerializable
      */
     protected $attributes;
 
+    /**
+     * @OneToMany(targetEntity="\Concrete\Core\Entity\Express\Entry\Association", mappedBy="entry", cascade={"all"})
+     */
+    protected $associations;
+
+    /**
+     * @return mixed
+     */
+    public function getAssociations()
+    {
+        return $this->associations;
+    }
+
+    /**
+     * @param mixed $associations
+     */
+    public function setAssociations($associations)
+    {
+        $this->associations = $associations;
+    }
+
     public function __construct()
     {
         $this->attributes = new ArrayCollection();
+        $this->associations = new ArrayCollection();
         $this->date_created = new \DateTime();
         $this->date_last_updated = new \DateTime();
     }

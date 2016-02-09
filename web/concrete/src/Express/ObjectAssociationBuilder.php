@@ -27,16 +27,27 @@ class ObjectAssociationBuilder
         $subject->getAssociations()->add($association);
     }
 
-    public function addManyToOne(Entity $subject, Entity $target, $property = null)
+    public function addManyToOne(Entity $subject, Entity $target, $subject_property = null, $inversed_by = null)
     {
         $this->addAssociation(new ManyToOneAssociation(),
-            $subject, $target, $property);
+            $subject, $target, $subject_property);
+
+        if ($inversed_by) {
+            $this->addAssociation(new OneToManyAssociation(),
+                $target, $subject, $inversed_by);
+
+        }
     }
 
-    public function addOneToMany(Entity $subject, Entity $target, $property = null)
+    public function addOneToMany(Entity $subject, Entity $target, $subject_property = null, $inversed_by = null)
     {
         $this->addAssociation(new OneToManyAssociation(),
-            $subject, $target, $property);
+            $subject, $target, $subject_property);
+
+        if ($inversed_by) {
+            $this->addAssociation(new ManyToOneAssociation(),
+                $target, $subject, $inversed_by);
+        }
     }
 
     public function addManyToMany(Entity $subject, Entity $target, $subject_property = null, $target_property = null)
@@ -58,7 +69,7 @@ class ObjectAssociationBuilder
         $target->getAssociations()->add($association);
     }
 
-    public function addOneToOneUnidirectional(Entity $subject, Entity $target, $subject_property = null)
+    public function addOneToOneUnidirectional(Entity $subject, Entity $target, $subject_property = null, $inversed = null)
     {
         $association = new OneToOneAssociation();
         $association->setAssociationType(ManyToManyAssociation::TYPE_OWNING);

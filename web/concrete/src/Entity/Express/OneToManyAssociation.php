@@ -18,4 +18,10 @@ class OneToManyAssociation extends Association
     {
         return new OneToManyFormatter($this);
     }
+
+    public function getSaveHandler()
+    {
+        return \Core::make('\Concrete\Core\Express\Form\Control\SaveHandler\ManyAssociationSaveHandler');
+    }
+
 }

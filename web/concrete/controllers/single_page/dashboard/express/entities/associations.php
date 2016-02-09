@@ -62,22 +62,22 @@ class Associations extends DashboardPageController
                     switch ($this->request->request->get('type')) {
                         case 'ManyToOne':
                             $builder->addManyToOne(
-                                $entity, $targetEntity, $this->request->request->get('target_property_name')
+                                $entity, $targetEntity, $this->request->request->get('target_property_name'), $this->request->request->get('inversed_property_name')
                             );
                             break;
                         case 'OneToOne':
                             $builder->addOneToOne(
-                                $entity, $targetEntity, $this->request->request->get('target_property_name')
+                                $entity, $targetEntity, $this->request->request->get('target_property_name'), $this->request->request->get('inversed_property_name')
                             );
                             break;
                         case 'ManyToMany':
                             $builder->addManyToMany(
-                                $entity, $targetEntity, $this->request->request->get('target_property_name')
+                                $entity, $targetEntity, $this->request->request->get('target_property_name'), $this->request->request->get('inversed_property_name')
                             );
                             break;
                         case 'OneToMany':
                             $builder->addOneToMany(
-                                $entity, $targetEntity, $this->request->request->get('target_property_name')
+                                $entity, $targetEntity, $this->request->request->get('target_property_name'), $this->request->request->get('inversed_property_name')
                             );
                             break;
                     }
