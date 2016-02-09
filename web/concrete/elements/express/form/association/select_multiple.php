@@ -4,9 +4,10 @@
     <label><?=$label?></label>
     <?php
     if (count($entities)) {
-        foreach ($entities as $entity) {
-            ?>
-            <label><input type="checkbox" value="<?=$entity->getId()?>"> <?=$formatter->getEntryDisplayName($control, $entity)?></label>
+        foreach ($entities as $entity) { ?>
+            <div class="checkbox">
+                <label><input type="checkbox" name="express_association_<?=$control->getId()?>[]" value="<?=$entity->getId()?>"> <?=$formatter->getEntryDisplayName($control, $entity)?></label>
+            </div>
         <?php 
         }
         ?>

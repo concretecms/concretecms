@@ -141,4 +141,5 @@ abstract class Association
     }
 
     abstract public function getFormatter();
+    abstract public function getSaveHandler();
 }

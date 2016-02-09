@@ -42,4 +42,9 @@ class OneToOneAssociation extends Association
     {
         return new OneToOneFormatter($this);
     }
+
+    public function getSaveHandler()
+    {
+        return \Core::make('\Concrete\Core\Express\Form\Control\SaveHandler\OneAssociationSaveHandler');
+    }
 }
