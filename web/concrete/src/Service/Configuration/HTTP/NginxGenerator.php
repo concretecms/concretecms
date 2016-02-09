@@ -25,7 +25,25 @@ class NginxGenerator extends Generator implements GeneratorInterface
         $DISPATCHER_FILENAME = DISPATCHER_FILENAME;
 
         return new Rule(
-            <<<EOT
+            function (RuleInterface $rule) {
+                $options = $rule->getOptions();
+                $DIR_REL = null;
+                if (isset($options['DIR_REL'])) {
+                    $DIR_REL = trim($options['DIR_REL'], '/');
+                    if ($DIR_REL !== '') {
+                        $DIR_REL = '/'.$DIR_REL;
+                    }
+                }
+                if ($DIR_REL === null) {
+                    if (\Core::make('app')->isRunThroughCommandLineInterface()) {
+                        throw new Exception(t('When executed from the command line, you need to specify the %s option', 'DIR_REL'));
+                    } else {
+                        $DIR_REL = DIR_REL;
+                    }
+                }
+                $DISPATCHER_FILENAME = DISPATCHER_FILENAME;
+
+                return <<<EOT
 location $DIR_REL/ {
 	set \$do_rewrite 1
 	if (-f \$request_filename) {
@@ -41,11 +59,12 @@ location $DIR_REL/ {
 		set \$do_rewrite 0
 	)
 	if (\$do_rewrite = "1") {
-		rewrite ^/(.*)$ /index.php/$1 last;
+		rewrite ^/(.*)$ /$DISPATCHER_FILENAME/$1 last;
 	}
 }
 EOT
-            ,
+                ;
+            },
             function () {
                 return (bool) \Config::get('concrete.seo.url_rewriting');
             },

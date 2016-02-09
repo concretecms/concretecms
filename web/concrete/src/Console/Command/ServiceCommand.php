@@ -20,6 +20,7 @@ final class ServiceCommand extends Command
             ->addOption('service-version', 'r', InputOption::VALUE_REQUIRED, 'The specific version of the web server software', '')
             ->addArgument('service', InputArgument::REQUIRED, 'The web server to use (apache|nginx)')
             ->addArgument('operation', InputArgument::REQUIRED, 'The operation to perform (check|update)')
+            ->addArgument('rule-options', InputArgument::IS_ARRAY, 'List of key-value pairs to pass to the rules (example: foo=bar baz=foo)')
             ->setHelp(<<<EOT
 Return codes for the check operation:
   0 operation completed successfully
@@ -48,14 +49,15 @@ EOT
                 throw new Exception($msg);
             }
             $operation = $input->getArgument('operation');
+            $ruleOptions = $this->parseRuleOptions($input);
             switch ($operation) {
                 case 'check':
-                    if ($this->checkConfiguration($service, $output) === false) {
+                    if ($this->checkConfiguration($service, $ruleOptions, $output) === false) {
                         $rc = 2;
                     }
                     break;
                 case 'update':
-                    $this->updateConfiguration($service, $output);
+                    $this->updateConfiguration($service, $ruleOptions, $output);
                     break;
                 default:
                     throw new Exception('Invalid value of the operation argument (valid values: check or update');
@@ -68,7 +70,7 @@ EOT
         return $rc;
     }
 
-    public function checkConfiguration(ServiceInterface $service, OutputInterface $output)
+    public function checkConfiguration(ServiceInterface $service, array $ruleOptions, OutputInterface $output)
     {
         $storage = $service->getStorage();
         if (!$storage->canRead()) {
@@ -79,6 +81,7 @@ EOT
         $configurator = $service->getConfigurator();
         $allOk = true;
         foreach ($generator->getRules() as $ruleHandle => $rule) {
+            $rule->setOptions($ruleOptions);
             $shouldHave = $rule->isEnabled();
             if ($shouldHave !== null) {
                 if ($shouldHave) {
@@ -102,7 +105,7 @@ EOT
         return $allOk;
     }
 
-    public function updateConfiguration(ServiceInterface $service, OutputInterface $output)
+    public function updateConfiguration(ServiceInterface $service, array $ruleOptions, OutputInterface $output)
     {
         // Initialize some variable
         $storage = $service->getStorage();
@@ -116,6 +119,7 @@ EOT
 
         // Let's check every defined rule
         foreach ($generator->getRules() as $ruleHandle => $rule) {
+            $rule->setOptions($ruleOptions);
 
             // Let's see if this rule should be present or not in the configuration
             $shouldHave = $rule->isEnabled();
@@ -160,5 +164,42 @@ EOT
             $storage->write($configuration);
             $output->writeln("<info>done.</info>");
         }
+    }
+
+    /**
+     * Parse the rule-options input argument.
+     *
+     * @param InputInterface $input
+     *
+     * @throws Exception
+     *
+     * @return array
+     */
+    protected function parseRuleOptions(InputInterface $input)
+    {
+        $ruleOptions = array();
+        foreach ($input->getArgument('rule-options') as $keyValuePair) {
+            list($key, $value) = explode('=', $keyValuePair, 2);
+            $key = trim($key);
+            if (substr($key, -2) === '[]') {
+                $isArray = true;
+                $key = rtrim(substr($key, 0, -2));
+            } else {
+                $isArray = false;
+            }
+            if ($key === '' || !isset($value)) {
+                throw new Exception(sprintf("Unable to parse the rule option '%s': it must be in the form of key=value", $keyValuePair));
+            }
+            if (isset($ruleOptions[$key])) {
+                if (!($isArray && is_array($ruleOptions[$key]))) {
+                    throw new Exception(sprintf("Duplicated rule option '%s'", $key));
+                }
+                $ruleOptions[$key][] = $value;
+            } else {
+                $ruleOptions[$key] = $isArray ? ((array) $value) : $value;
+            }
+        }
+
+        return $ruleOptions;
     }
 }
