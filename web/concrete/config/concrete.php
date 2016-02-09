@@ -464,7 +464,7 @@ return array(
          *
          * @var bool concrete.external.news_overlay
          */
-        'news_overlay' => true,
+        'news_overlay' => false,
 
         /*
          * Enable concrete5 news within your site
@@ -490,7 +490,7 @@ return array(
         'enable_trash_can' => true,
         'app_version_display_in_header' => true,
         'default_jpeg_image_compression' => 80,
-        'help_overlay' => true,
+        'help_overlay' => false,
     ),
 
     'theme' => array(

@@ -562,7 +562,7 @@ abstract class Package implements LocalizablePackageInterface
     {
         // Create a custom entity manager for this package, in order to
         // extract entities
-        $config = Setup::createConfiguration();
+        $config = Setup::createConfiguration(true);
         $driverImpl = $config->newDefaultAnnotationDriver($this->getPackageEntityPaths());
         $config->setMetadataDriverImpl($driverImpl);
         $manager = EntityManager::create(\Database::connection(), $config);
@@ -655,6 +655,14 @@ abstract class Package implements LocalizablePackageInterface
         $this->installEntitiesDatabase();
 
         static::installDB($this->getPackagePath() . '/' . FILENAME_PACKAGE_DB);
+    }
+
+    /**
+     * @deprecated
+     */
+    public function getEntityManager()
+    {
+        return \ORM::entityManager();
     }
 
 
