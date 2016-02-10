@@ -8,6 +8,35 @@ use Illuminate\Filesystem\Filesystem;
 class ApacheStorage implements StorageInterface
 {
     /**
+     * @var Filesystem
+     */
+    protected $filesystem = null;
+
+    /**
+     * Set the Filesystem to use.
+     *
+     * @param Filesystem $filesystem
+     */
+    public function setFilesystem(Filesystem $filesystem)
+    {
+        $this->filesystem = $filesystem;
+    }
+
+    /**
+     * Get the Filesystem to use.
+     *
+     * @return Filesystem
+     */
+    public function getFilesystem()
+    {
+        if ($this->filesystem === null) {
+            $this->filesystem = new Filesystem();
+        }
+
+        return $this->filesystem;
+    }
+
+    /**
      * Return the full path name to the .htaccess file.
      *
      * @return string
@@ -25,7 +54,7 @@ class ApacheStorage implements StorageInterface
     public function canRead()
     {
         $ht = $this->getHTaccessFilename();
-        $fs = new Filesystem();
+        $fs = $this->getFilesystem();
         if (@$fs->isFile($ht)) {
             $result = @is_readable($ht);
         } else {
@@ -44,7 +73,7 @@ class ApacheStorage implements StorageInterface
     {
         $result = '';
         $ht = $this->getHTaccessFilename();
-        $fs = new Filesystem();
+        $fs = $this->getFilesystem();
         if (@$fs->isFile($ht)) {
             $result = @$fs->get($ht);
             if ($result === false) {
@@ -63,7 +92,7 @@ class ApacheStorage implements StorageInterface
     public function canWrite()
     {
         $ht = $this->getHTaccessFilename();
-        $fs = new Filesystem();
+        $fs = $this->getFilesystem();
 
         return (bool) (@$fs->isFile($ht) ? @$fs->isWritable($ht) : @$fs->isWritable(@dirname($ht)));
     }
@@ -76,7 +105,7 @@ class ApacheStorage implements StorageInterface
     public function write($configuration)
     {
         $ht = $this->getHTaccessFilename();
-        $fs = new Filesystem();
+        $fs = $this->getFilesystem();
         if (@$fs->put($ht, $configuration) === false) {
             throw new Exception("Failed to write to file $ht");
         }
