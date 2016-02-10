@@ -152,49 +152,52 @@ class Stacks extends DashboardPageController
         }
         switch ($msg) {
             case 'stack_added':
-                $this->set('message', t('Stack added successfully.'));
+                $this->set('flashMessage', t('Stack added successfully.'));
                 break;
             case 'localized_stack_added':
-                $this->set('message', t('Localized version of stack added successfully.'));
+                $this->set('flashMessage', t('Localized version of stack added successfully.'));
                 break;
             case 'localized_global_area_added':
-                $this->set('message', t('Localized version of global area added successfully.'));
+                $this->set('flashMessage', t('Localized version of global area added successfully.'));
                 break;
             case 'stack_approved':
-                $this->set('message', t('Stack approved successfully'));
+                $this->set('flashMessage', t('Stack approved successfully'));
                 break;
             case 'global_area_approved':
-                $this->set('message', t('Global area approved successfully'));
+                $this->set('flashMessage', t('Global area approved successfully'));
                 break;
             case 'approve_saved':
-                $this->set('message', t('Approve request saved. You must complete the approval workflow before these changes are publicly accessible.'));
+                $this->set('flashMessage', t('Approve request saved. You must complete the approval workflow before these changes are publicly accessible.'));
                 break;
             case 'stack_delete_saved':
-                $this->set('message', t('Delete request saved. You must complete the delete workflow before this stack can be deleted.'));
+                $this->set('flashMessage', t('Delete request saved. You must complete the delete workflow before this stack can be deleted.'));
                 break;
             case 'global_area_delete_saved':
-                $this->set('message', t('Delete request saved. You must complete the delete workflow before this version of the global area can be deleted.'));
+                $this->set('flashMessage', t('Delete request saved. You must complete the delete workflow before this version of the global area can be deleted.'));
                 break;
             case 'rename_saved':
-                $this->set('message', t('Rename request saved. You must complete the approval workflow before the name of the stack will be updated.'));
+                $this->set('flashMessage', t('Rename request saved. You must complete the approval workflow before the name of the stack will be updated.'));
                 break;
             case 'stack_deleted':
-                $this->set('message', t('Stack deleted successfully'));
+                $this->set('flashMessage', t('Stack deleted successfully'));
                 break;
             case 'global_area_cleared':
-                $this->set('message', t('Global area cleared successfully'));
+                $this->set('flashMessage', t('Global area cleared successfully'));
                 break;
             case 'localized_stack_deleted':
-                $this->set('message', t('Localized version of stack deleted successfully'));
+                $this->set('flashMessage', t('Localized version of stack deleted successfully'));
                 break;
             case 'localized_global_area_deleted':
-                $this->set('message', t('Localized version of global area deleted successfully'));
+                $this->set('flashMessage', t('Localized version of global area deleted successfully'));
                 break;
             case 'stack_duplicated':
-                $this->set('message', t('Stack duplicated successfully'));
+                $this->set('flashMessage', t('Stack duplicated successfully'));
                 break;
             case 'stack_renamed':
-                $this->set('message', t('Stack renamed successfully'));
+                $this->set('flashMessage', t('Stack renamed successfully'));
+                break;
+            case 'folder_added':
+                $this->set('flashMessage', t('Folder added successfully.'));
                 break;
         }
     }
@@ -346,12 +349,8 @@ class Stacks extends DashboardPageController
         }
         if (!$this->error->has()) {
             StackFolder::add($folderName, $parentFolder);
-            $this->flash('success', t('Folder added successfully.'));
-            if ($stackFolderID === null) {
-                $this->redirect('/dashboard/blocks/stacks');
-            } else {
-                $this->redirect('/dashboard/blocks/stacks', 'view_details', $stackFolderID);
-            }
+            $parentID = ($stackFolderID === null) ? Page::getByPath(STACKS_PAGE_PATH)->getCollectionID() : $stackFolderID;
+            $this->redirect('/dashboard/blocks/stacks', 'view_details', $parentID, 'folder_added');
         }
         $this->view();
     }
@@ -499,7 +498,7 @@ class Stacks extends DashboardPageController
 
     public function stack_renamed($cID)
     {
-        $this->set('message', t('Stack renamed successfully'));
+        $this->set('flashMessage', t('Stack renamed successfully'));
         $this->view_details($cID);
         $this->action = 'view_details';
     }

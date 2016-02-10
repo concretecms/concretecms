@@ -506,36 +506,11 @@ $(function() {
             height: 'auto'
         });
     });
-
-    <?php
-    if ($canMoveStacks) {
-        /*
-        ?>
-        $("ul#ccm-stack-list").sortable({
-            handle: "i.ccm-item-select-list-sort",
-            cursor: "move",
-            axis: "y",
-            opacity: 0.5,
-            stop: function() {
-                var pagelist = $(this).sortable("serialize");
-                $.ajax({
-                    dataType: "json",
-                    type: "post",
-                    url: "<?=$sortURL?>",
-                    data: pagelist,
-                    success: function(r) {
-                    }
-                });
-            }
-        });
-        <?php
-        */
-    }
-    ?>
 });
     </script>
     <?php
 }
+
 if (isset($breadcrumb) && (!empty($breadcrumb))) {
     ?>
     <div class="ccm-search-results-breadcrumb">
@@ -572,4 +547,14 @@ if (isset($breadcrumb) && (!empty($breadcrumb))) {
         </ol>
     </div>
     <?php
+}
+
+if (isset($flashMessage)) {
+    ?><script>
+    $(document).ready(function() {
+        ConcreteAlert.notify({
+            message: <?=json_encode($flashMessage)?>
+        });
+    });
+    </script><?php
 }
