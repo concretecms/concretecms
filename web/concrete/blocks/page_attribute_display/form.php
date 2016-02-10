@@ -11,16 +11,16 @@ print Core::make('helper/concrete/ui')->tabs(array(
     <div class="form-group">
         <label class="control-label"><?php  echo t('Display property with formatting')?></label>
         <select name="displayTag" class="form-control">
-            <option value="">- none -</option>
-            <option value="h1" <?php echo($this->controller->displayTag == "h1" ? "selected" : "")?>>H1 (Heading 1)</option>
-            <option value="h2" <?php echo($this->controller->displayTag == "h2" ? "selected" : "")?>>H2 (Heading 2)</option>
-            <option value="h3" <?php echo($this->controller->displayTag == "h3" ? "selected" : "")?>>H3 (Heading 3)</option>
-            <option value="p" <?php echo($this->controller->displayTag == "p" ? "selected" : "")?>>p (paragraph)</option>
-            <option value="b" <?php echo($this->controller->displayTag == "b" ? "selected" : "")?>>b (bold)</option>
-            <option value="address" <?php echo($this->controller->displayTag == "address" ? "selected" : "")?>>address</option>
-            <option value="pre" <?php echo($this->controller->displayTag == "pre" ? "selected" : "")?>>pre (preformatted)</option>
-            <option value="blockquote" <?php echo($this->controller->displayTag == "blockquote" ? "selected" : "")?>>blockquote</option>
-            <option value="div" <?php echo($this->controller->displayTag == "div" ? "selected" : "")?>>div</option>
+            <option value=""><?=t('- none -')?></option>
+            <option value="h1" <?php echo($this->controller->displayTag == "h1" ? "selected" : "")?>><?=t('H1 (Heading 1)')?></option>
+            <option value="h2" <?php echo($this->controller->displayTag == "h2" ? "selected" : "")?>><?=t('H2 (Heading 2)')?></option>
+            <option value="h3" <?php echo($this->controller->displayTag == "h3" ? "selected" : "")?>><?=t('H3 (Heading 3)')?></option>
+            <option value="p" <?php echo($this->controller->displayTag == "p" ? "selected" : "")?>><?=t('p (paragraph)')?></option>
+            <option value="b" <?php echo($this->controller->displayTag == "b" ? "selected" : "")?>><?=t('b (bold)')?></option>
+            <option value="address" <?php echo($this->controller->displayTag == "address" ? "selected" : "")?>><?=t('address')?></option>
+            <option value="pre" <?php echo($this->controller->displayTag == "pre" ? "selected" : "")?>><?=t('pre (preformatted)')?></option>
+            <option value="blockquote" <?php echo($this->controller->displayTag == "blockquote" ? "selected" : "")?>><?=t('blockquote')?></option>
+            <option value="div" <?php echo($this->controller->displayTag == "div" ? "selected" : "")?>><?=t('div')?></option>
         </select>
     </div>
     <div class="form-group">
@@ -31,14 +31,14 @@ print Core::make('helper/concrete/ui')->tabs(array(
     <div class="form-group">
         <label class="control-label"><?php  echo t('Delimiter for multiple items')?></label>
         <select name="delimiter" class="form-control">
-            <option value="">- none -</option>
-            <option value="comma" <?php echo($this->controller->delimiter == "comma" ? "selected" : "")?>>Comma (",")</option>
-            <option value="commaSpace" <?php echo($this->controller->delimiter == "commaSpace" ? "selected" : "")?>>Comma With Space After (", ")</option>
-            <option value="pipe" <?php echo($this->controller->delimiter == "pipe" ? "selected" : "")?>>Pipe ("|")</option>
-            <option value="dash" <?php echo($this->controller->delimiter == "dash" ? "selected" : "")?>>Dash ("-")</option>
-            <option value="semicolon" <?php echo($this->controller->delimiter == "semicolon" ? "selected" : "")?>>Semicolon (";")</option>
-            <option value="semicolonSpace" <?php echo($this->controller->delimiter == "semicolonSpace" ? "selected" : "")?>>Semicolon With Space After ("; ")</option>
-            <option value="break" <?php echo($this->controller->delimiter == "break" ? "selected" : "")?>>Newline</option>
+            <option value=""><?=t('- none -')?></option>
+            <option value="comma" <?php echo($this->controller->delimiter == "comma" ? "selected" : "")?>><?=t('Comma (",")')?></option>
+            <option value="commaSpace" <?php echo($this->controller->delimiter == "commaSpace" ? "selected" : "")?>><?=t('Comma With Space After (", ")')?></option>
+            <option value="pipe" <?php echo($this->controller->delimiter == "pipe" ? "selected" : "")?>><?=t('Pipe ("|")')?></option>
+            <option value="dash" <?php echo($this->controller->delimiter == "dash" ? "selected" : "")?>><?=t('Dash ("-")')?></option>
+            <option value="semicolon" <?php echo($this->controller->delimiter == "semicolon" ? "selected" : "")?>><?=t('Semicolon (";")')?></option>
+            <option value="semicolonSpace" <?php echo($this->controller->delimiter == "semicolonSpace" ? "selected" : "")?>><?=t('Semicolon With Space After ("; ")')?></option>
+            <option value="break" <?php echo($this->controller->delimiter == "break" ? "selected" : "")?>><?=t('Newline')?></option>
         </select>
     </div> 
     <fieldset>
