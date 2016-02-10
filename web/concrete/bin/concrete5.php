@@ -4,6 +4,9 @@ if (!isset($DIR_BASE_CORE)) {
     // Try to detect the concrete directory starting from the current working directory
     // (useful with CLI scripts started from a common launcher)
     $dir = rtrim(str_replace(DIRECTORY_SEPARATOR, '/', getcwd()), '/');
+    if (is_dir($dir.'/web')) {
+        $dir .= '/web';
+    }
     while (@is_dir($dir)) {
         if (is_file($dir.'/index.php') && is_file($dir.'/concrete/bootstrap/configure.php')) {
             $DIR_BASE_CORE = $dir.'/concrete';
