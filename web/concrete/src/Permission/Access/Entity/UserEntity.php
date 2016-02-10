@@ -5,7 +5,7 @@ use Config;
 use Loader;
 use PermissionAccess;
 use URL;
-use UserInfo;
+use Concrete\Core\User\UserInfo;
 
 class UserEntity extends Entity
 {
