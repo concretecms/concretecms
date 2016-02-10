@@ -105,6 +105,9 @@ class Controller extends BlockController
                     case 'semicolon':
                         $delimiter = ';';
                         break;
+                    case 'semicolonSpace':
+                        $delimiter = '; ';
+                        break;
                     case 'break':
                         $delimiter = '<br />';
                         break;
