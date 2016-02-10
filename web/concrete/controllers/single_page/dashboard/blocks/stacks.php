@@ -307,7 +307,7 @@ class Stacks extends DashboardPageController
             $section = Section::getByLocale($this->post('locale'));
             if (!$section) {
                 $this->error->add(t('Unable to find the specified language'));
-            } elseif ($neutralStack->getLocalizedStack($section) !== null) {
+            } elseif ($neutralStack && $neutralStack->getLocalizedStack($section) !== null) {
                 if ($isGlobalArea) {
                     $this->error->add(t(/*i18n %s is a language name*/ "There's already a version of this global area in %s", $section->getLanguageText()).' ('.$section->getLocale().')');
                 } else {
