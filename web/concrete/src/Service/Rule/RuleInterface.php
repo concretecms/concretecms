@@ -31,18 +31,4 @@ interface RuleInterface
      * @return string
      */
     public function getCommentsAfter();
-
-    /**
-     * Return the rule options.
-     *
-     * @return array
-     */
-    public function getOptions();
-
-    /**
-     * Set the rule options.
-     *
-     * @param array $options
-     */
-    public function setOptions(array $options);
 }
