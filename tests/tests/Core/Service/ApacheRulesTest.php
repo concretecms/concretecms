@@ -10,7 +10,7 @@ class ApacheRulesTest extends \PHPUnit_Framework_TestCase
     private static $configurator;
 
     /**
-     * @var \Concrete\Core\Service\Rule\RuleInterface
+     * @var \Concrete\Core\Service\Rule\Rule;
      */
     private static $prettyUrlRule;
 
@@ -21,6 +21,7 @@ class ApacheRulesTest extends \PHPUnit_Framework_TestCase
             /* @var $apache \Concrete\Core\Service\HTTP\Apache */
             self::$configurator = $apache->getConfigurator();
             self::$prettyUrlRule = $apache->getGenerator()->getRule('pretty_urls');
+            self::$prettyUrlRule->getOption('dir_rel')->setValue(DIR_REL);
             self::$prepared = true;
         }
     }
