@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace Concrete\Core\Http;
 use \Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 
@@ -14,6 +14,9 @@ class HttpServiceProvider extends ServiceProvider {
 			$this->app->singleton($key, $value);
 		}
 
+		$this->app->bind('Concrete\Core\Http\Request', function($app) {
+			return Request::getInstance();
+		});
 	}
 
 

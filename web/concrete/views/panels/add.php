@@ -176,6 +176,7 @@ switch ($tab) {
         <div id="ccm-panel-add-clipboard-block-list">
             <?php
             /** @var PileContent[] $contents */
+            $pileToken = Core::make('token')->generate('tools/clipboard/from');
             foreach ($contents as $pile_content) {
                 $block = Block::getByID($pile_content->getItemID());
 
@@ -189,6 +190,7 @@ switch ($tab) {
                      data-panel-add-block-drag-item="clipboard-item"
                      data-name="<?= h($type->getBlockTypeName()) ?>"
                      data-cID="<?= $c->getCollectionID() ?>"
+                     data-token="<?= $pileToken ?>"
                      data-block-type-handle="<?= $type->getBlockTypeHandle() ?>"
                      data-dialog-title="<?= t('Add %s', t($type->getBlockTypeName())) ?>"
                      data-dialog-width="<?= $type->getBlockTypeInterfaceWidth() ?>"
@@ -239,7 +241,8 @@ switch ($tab) {
                     $.post(CCM_TOOLS_PATH + '/pile_manager', {
                         task: 'delete',
                         pcID: item.data('pcid'),
-                        cID: item.data('cid')
+                        cID: item.data('cid'),
+                        ccm_token: item.data('token')
                     }, function() {
                         item.remove();
                     }).fail(function(data) {

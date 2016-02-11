@@ -12,7 +12,7 @@ $view->requireAsset('javascript', 'bootstrap/transition');
 $view->addHeaderItem('<meta name="viewport" content="width=device-width, initial-scale=1">');
 
 $showLogo = true;
-if (is_object($c)) {
+if (isset($c) && is_object($c)) {
     $cp = new Permissions($c);
     if ($cp->canViewToolbar()) {
         $showLogo = false;

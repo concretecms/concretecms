@@ -1,17 +1,21 @@
 <?php
-$form = Loader::helper('form');
+$form = Core::make('helper/form');
+$token = Core::make('token');
 ?>
 <form action="<?=$view->action('save')?>" method='POST'>
+	<?php
+	$token->output('update_banned_words');
+	?>
     <div class="ccm-dashboard-header-buttons">
         <a class='add_word btn btn-primary' href='#'><?=t('Add Word')?></a>
     </div>
-    
+
     <div class="checkbox">
         <label>
 		    <input value=1 name='banned_list_enabled' <?=$bannedListEnabled?'checked ':''?>type='checkbox'> <?=t('Disallow posts that include banned words?')?>
         </label>
     </div>
-	
+
 	<script class='word_template' type="text/template" charset="utf-8">
 		<tr class='editing'>
 			<th class='id'></th>
@@ -19,7 +23,7 @@ $form = Loader::helper('form');
 			<td style='text-align:right'><a href='#' class='save_word btn btn-primary'><?=t('Save')?></a></td>
 		</tr>
 	</script>
-	
+
 	<div class='banned_words_table' style='overflow:hidden'>
 		<table class='banned_word_list table'>
 			<thead>
@@ -50,7 +54,7 @@ $form = Loader::helper('form');
 			</tbody>
 		</table>
 	</div>
-	
+
 	<div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
             <?php echo $interface->submit(t('Save'), 'bannedwords-form', 'right', 'btn-primary'); ?>
@@ -85,7 +89,7 @@ $(".add_word").on('click', function(e) {
 	var newWord = getTemplate();
 	newWord.find('th.id').text(' ');
 	newWord.appendTo(ctx.find('tbody'));
-	
+
 	ctx.find('td.word').children('input').focus();
 
 	e.preventDefault();
@@ -109,7 +113,7 @@ ctx.on('click','a.edit_word',function(e){
     tr.removeClass('editing')
         .find('td.word').children('span').text(tr.find('td.word').children('input').val()).show().end()
         .children('input').removeClass('form-control').hide().end().end().end();
-        	
+
     tr.find('td:eq(1)').empty().append(edit.clone());
 
 	e.preventDefault();
@@ -122,7 +126,7 @@ ctx.on('click','a.edit_word',function(e){
     tr.removeClass('editing')
         .find('td.word').children('span').text(tr.find('td.word').children('input').val()).show().end()
         .children('input').removeClass('form-control').hide().end().end().end();
-        	
+
     tr.find('td:eq(1)').empty().append(edit.clone());
 
 	e.preventDefault();

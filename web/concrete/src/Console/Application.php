@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Console;
 
 use Core;
@@ -16,10 +15,17 @@ class Application extends \Symfony\Component\Console\Application
 
     public function setupDefaultCommands()
     {
-        $this->add(new Command\ConfigCommand());
         $this->add(new Command\InstallCommand());
-        $this->add(new Command\ClearCacheCommand());
+        $this->add(new Command\TranslatePackageCommand());
         $this->add(new Command\GenerateIDESymbolsCommand());
+        $this->add(new Command\ConfigCommand());
+        $this->add(new Command\PackPackageCommand());
+        if (Core::make('app')->isInstalled()) {
+            $this->add(new Command\ClearCacheCommand());
+            $this->add(new Command\InstallPackageCommand());
+            $this->add(new Command\UninstallPackageCommand());
+            $this->add(new Command\UpdatePackageCommand());
+        }
         $this->setupRestrictedCommands();
         $this->setupDoctrineCommands();
     }
@@ -27,7 +33,9 @@ class Application extends \Symfony\Component\Console\Application
     public function setupRestrictedCommands()
     {
         $this->add(new Command\ResetCommand());
-        $this->add(new Command\JobCommand());
+        if (Core::make('app')->isInstalled()) {
+            $this->add(new Command\JobCommand());
+        }
     }
 
     public function setupDoctrineCommands()

@@ -621,6 +621,14 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="Image Uploading" path="/dashboard/system/files/image_uploading"
+              filename="/dashboard/system/files/image_uploading.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>uploading, upload, images, image, resizing, manager</value>
+                </attributekey>
+            </attributes>
+        </page>
         <page name="File Storage Locations" path="/dashboard/system/files/storage"
               filename="/dashboard/system/files/storage.php" pagetype="" description="" package="">
             <attributes>

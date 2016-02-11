@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Tweener
  * Transition controller for movieclips, sounds, textfields and other objects
  *

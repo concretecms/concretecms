@@ -1,6 +1,6 @@
 <?php
-defined('C5_EXECUTE') or die(_("Access Denied."));
+defined('C5_EXECUTE') or die('Access Denied.');
 echo $this->controller->getOpenTag();
 echo $this->controller->getTitle();
-echo ($this->controller->getContent()?t('Yes'):t('No'));
+echo($this->controller->getContent() ? t('Yes') : t('No'));
 echo $this->controller->getCloseTag();

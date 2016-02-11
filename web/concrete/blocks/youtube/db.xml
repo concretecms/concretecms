@@ -12,11 +12,38 @@
     <field name="videoURL" type="string" size="255"/>
     <field name="vHeight" type="string" size="255"/>
     <field name="vWidth" type="string" size="255"/>
-    <field name="vPlayer" type="boolean">
+    <field name="sizing" type="string" size="10"/>
+    <field name="autoplay" type="boolean">
+      <unsigned/>
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="color" type="string" size="10"/>
+    <field name="controls" type="integer">
+      <unsigned/>
+    </field>
+    <field name="iv_load_policy" type="integer">
+      <unsigned/>
+    </field>
+    <field name="loopEnd" type="boolean">
+      <unsigned/>
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="modestbranding" type="boolean">
+      <unsigned/>
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="rel" type="boolean">
+      <unsigned/>
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="showinfo" type="boolean">
       <unsigned/>
       <default value="0"/>
       <notnull/>
     </field>
   </table>
-
 </schema>

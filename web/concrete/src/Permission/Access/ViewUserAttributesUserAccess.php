@@ -70,7 +70,7 @@ class ViewUserAttributesUserAccess extends UserAccess
         $list = parent::getAccessListItems($accessType, $filterEntities);
         foreach ($list as $l) {
             $pe = $l->getAccessEntityObject();
-            if ($this->permissionObjectToCheck instanceof Page && $l->getAccessType() == PermissionKey::ACCESS_TYPE_INCLUDE) {
+            if (isset($this->permissionObjectToCheck) && ($this->permissionObjectToCheck instanceof Page) && ($l->getAccessType() == PermissionKey::ACCESS_TYPE_INCLUDE)) {
                 $permission = 'A';
             } else {
                 $permission = $db->fetchColumn('select permission from UserPermissionViewAttributeAccessList where paID = ? and peID = ?', array($l->getPermissionAccessID(), $pe->getAccessEntityID()));

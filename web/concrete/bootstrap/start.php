@@ -16,17 +16,11 @@ if (basename($_SERVER['PHP_SELF']) == DISPATCHER_FILENAME_CORE) {
  */
 use Concrete\Core\Application\Application;
 use Concrete\Core\Asset\AssetList;
-use Concrete\Core\Config\DatabaseLoader;
-use Concrete\Core\Config\DatabaseSaver;
-use Concrete\Core\Config\FileLoader;
-use Concrete\Core\Config\FileSaver;
-use Concrete\Core\Config\Repository\Repository as ConfigRepository;
 use Concrete\Core\File\Type\TypeList;
 use Concrete\Core\Foundation\ClassAliasList;
 use Concrete\Core\Foundation\Service\ProviderList;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\Support\Facade\Facade;
-use Illuminate\Filesystem\Filesystem;
 use Patchwork\Utf8\Bootup as PatchworkUTF8;
 
 /**
@@ -64,7 +58,6 @@ Facade::setFacadeApplication($cms);
  */
 require DIR_BASE_CORE . '/bootstrap/paths.php';
 
-
 /**
  * ----------------------------------------------------------------------------
  * Add install environment detection
@@ -85,20 +78,15 @@ $cms->detectEnvironment(function() use ($db_config, $environment, $cms) {
 });
 
 /**
- * ----------------------------------------------------------------------------
- * Enable Filesystem Config.
- * ----------------------------------------------------------------------------
+ * Enable configuration
  */
-if (!$cms->bound('config')) {
-    $cms->bindShared('config', function(Application $cms) {
-        $file_system = new Filesystem();
-        $file_loader = new FileLoader($file_system);
-        $file_saver = new FileSaver($file_system);
-        return new ConfigRepository($file_loader, $file_saver, $cms->environment());
-    });
-}
+$config_provider = $app->make('Concrete\Core\Config\ConfigServiceProvider');
+$config_provider->register();
 
-$config = $cms->make('config');
+/**
+ * @var Concrete\Core\Config\Repository\Repository $config
+ */
+$config = $app->make('config');
 
 /*
  * ----------------------------------------------------------------------------
@@ -135,26 +123,9 @@ $list->registerMultiple($config->get('app.facades'));
 
 /**
  * ----------------------------------------------------------------------------
- * Set up Database Config.
- * ----------------------------------------------------------------------------
- */
-
-if (!$cms->bound('config/database')) {
-    $cms->bindShared('config/database', function(Application $cms) {
-        $database_loader = new DatabaseLoader();
-        $database_saver = new DatabaseSaver();
-        return new ConfigRepository($database_loader, $database_saver, $cms->environment());
-    });
-}
-
-$database_config = $cms->make('config/database');
-
-/**
- * ----------------------------------------------------------------------------
  * Setup the core service groups.
  * ----------------------------------------------------------------------------
  */
-
 $list = new ProviderList($cms);
 
 // Register events first so that they can be used by other providers.

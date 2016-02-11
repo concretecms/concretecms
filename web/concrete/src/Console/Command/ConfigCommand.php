@@ -1,8 +1,8 @@
 <?php
-
 namespace Concrete\Core\Console\Command;
 
 use Concrete\Core\Config\DirectFileSaver;
+use Concrete\Core\Config\FileSaver;
 use Concrete\Core\Config\FileLoader;
 use Concrete\Core\Config\Repository\Repository;
 use Illuminate\Filesystem\Filesystem;
@@ -33,6 +33,7 @@ class ConfigCommand extends Command
             ->addArgument('item', InputArgument::REQUIRED, 'The configuration item (eg: concrete.debug.display_errors)')
             ->addArgument('value', InputArgument::OPTIONAL, 'The new value of the configuration item')
             ->addOption('environment', 'e', InputOption::VALUE_REQUIRED, 'The environment (if not specified, we\'ll work with the configuration item valid for all environments)')
+            ->addOption('generated-overrides', 'g', InputOption::VALUE_NONE, 'Set this option to save configurations to the generated_overrides folder')
         ;
         $this->setHelp(<<<EOT
 When setting values that may be evaluated as boolean (true/false), null or numbers, but you want to store them as strings, you can enclose those values in single or double quotes.
@@ -40,6 +41,10 @@ For instance, with
 concrete5 %command.name% set concrete.test_item 1
 The new configuration item will have a numeric value of 1. If you want to save the string "1" you have to write
 concrete5 %command.name% set concrete.test_item '1'
+
+Returns codes:
+  0 operation completed successfully
+  1 errors occurred
 EOT
         );
     }
@@ -48,16 +53,20 @@ EOT
     {
         $rc = 0;
 
-        $default_environment = \Config::getEnvironment();
-
-        $environment = $input->getOption('environment') ?: $default_environment;
-
-        $file_system = new Filesystem();
-        $file_loader = new FileLoader($file_system);
-        $file_saver = new DirectFileSaver($file_system, $environment == $default_environment ? null : $environment);
-        $this->repository = new Repository($file_loader, $file_saver, $environment);
-
         try {
+            $default_environment = \Config::getEnvironment();
+
+            $environment = $input->getOption('environment') ?: $default_environment;
+
+            $file_system = new Filesystem();
+            $file_loader = new FileLoader($file_system);
+            if ($input->getOption('generated-overrides')) {
+                $file_saver = new FileSaver($file_system, $environment == $default_environment ? null : $environment);
+            } else {
+                $file_saver = new DirectFileSaver($file_system, $environment == $default_environment ? null : $environment);
+            }
+            $this->repository = new Repository($file_loader, $file_saver, $environment);
+
             $item = $input->getArgument('item');
             switch ($input->getArgument('operation')) {
                 case self::OPERATION_GET:

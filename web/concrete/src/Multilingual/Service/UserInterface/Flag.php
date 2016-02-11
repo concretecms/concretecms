@@ -40,7 +40,7 @@ class Flag
                 if ($filePathOnly) {
                     return $icon;
                 } else {
-                    return '<img class="ccm-region-flag img-reponsive" id="ccm-region-flag-' . $region . '" src="' . $icon . '" alt="' . $region . '" />';
+                    return '<img class="ccm-region-flag" id="ccm-region-flag-' . $region . '" src="' . $icon . '" alt="' . $region . '" />';
                 }
             }
         }

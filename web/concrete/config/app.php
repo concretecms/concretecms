@@ -81,7 +81,6 @@ return array(
         'TaskPermission'                       => '\Concrete\Core\Legacy\TaskPermission',
         'User'                                 => '\Concrete\Core\User\User',
         'UserAttributeKey'                     => '\Concrete\Core\Attribute\Key\UserKey',
-        'UserInfo'                             => '\Concrete\Core\User\UserInfo',
         'UserList'                             => '\Concrete\Core\User\UserList',
         'View'                                 => '\Concrete\Core\View\View',
         'Workflow'                             => '\Concrete\Core\Workflow\Workflow'
@@ -91,6 +90,9 @@ return array(
      * Core Providers
      */
     'providers'           => array(
+        // Router service provider
+        'core_router' => 'Concrete\Core\Routing\RoutingServiceProvider',
+
         'core_file'                   => '\Concrete\Core\File\FileServiceProvider',
         'core_encryption'             => '\Concrete\Core\Encryption\EncryptionServiceProvider',
         'core_validation'             => '\Concrete\Core\Validation\ValidationServiceProvider',
@@ -119,6 +121,7 @@ return array(
         'core_url'          => '\Concrete\Core\Url\UrlServiceProvider',
         'core_devices'      => '\Concrete\Core\Device\DeviceServiceProvider',
         'core_imageeditor'  => '\Concrete\Core\ImageEditor\EditorServiceProvider',
+        'core_user'  => '\Concrete\Core\User\UserServiceProvider',
 
         // Authentication
         'core_oauth'          => '\Concrete\Core\Authentication\Type\OAuth\ServiceProvider',
@@ -129,7 +132,7 @@ return array(
 
         // Validator
         'core_validator'          => '\Concrete\Core\Validator\ValidatorServiceProvider',
-        'core_validator_password' => '\Concrete\Core\Validator\PasswordValidatorServiceProvider'
+        'core_validator_password' => '\Concrete\Core\Validator\PasswordValidatorServiceProvider',
     ),
 
     /**
@@ -143,6 +146,7 @@ return array(
         'ORM'      => '\Concrete\Core\Support\Facade\DatabaseORM',
         'Events'   => '\Concrete\Core\Support\Facade\Events',
         'Route'    => '\Concrete\Core\Support\Facade\Route',
+        'UserInfo' => '\Concrete\Core\Support\Facade\UserInfoFactory',
         'Log'      => '\Concrete\Core\Support\Facade\Log',
         'Image'    => '\Concrete\Core\Support\Facade\Image',
         'Config'   => '\Concrete\Core\Support\Facade\Config',
@@ -187,6 +191,8 @@ return array(
         "/ccm/system/dialogs/file/bulk/sets/submit"                                     => array('\Concrete\Controller\Dialog\File\Bulk\Sets::submit'),
         "/ccm/system/dialogs/file/bulk/properties/clear_attribute"                      => array('\Concrete\Controller\Dialog\File\Bulk\Properties::clearAttribute'),
         "/ccm/system/dialogs/file/bulk/properties/update_attribute"                     => array('\Concrete\Controller\Dialog\File\Bulk\Properties::updateAttribute'),
+        "/ccm/system/dialogs/file/bulk/storage"                                         => array('\Concrete\Controller\Dialog\File\Bulk\Storage::view'),
+        "/ccm/system/dialogs/file/bulk/storage/submit"                                  => array('\Concrete\Controller\Dialog\File\Bulk\Storage::submit'),
         "/ccm/system/dialogs/file/sets"                                                 => array('\Concrete\Controller\Dialog\File\Sets::view'),
         "/ccm/system/dialogs/file/sets/submit"                                          => array('\Concrete\Controller\Dialog\File\Sets::submit'),
         "/ccm/system/dialogs/file/properties"                                           => array('\Concrete\Controller\Dialog\File\Properties::view'),
@@ -607,6 +613,9 @@ return array(
         ),
         'jquery/fileupload'        => array(
             array('javascript', 'js/jquery-fileupload.js')
+        ),
+        'jquery/textcounter'        => array(
+            array('javascript', 'js/textcounter.js')
         ),
         'swfobject'                => array(
             array('javascript', 'js/swfobject.js')

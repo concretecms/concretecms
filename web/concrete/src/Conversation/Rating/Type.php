@@ -81,17 +81,22 @@ abstract class Type extends Object
         }
     }
 
+    public function export($xml)
+    {
+        $type = $xml->addChild('conversationratingtype');
+        $type->addAttribute('handle', $this->getConversationRatingTypeHandle());
+        $type->addAttribute('name', $this->getConversationRatingTypeName());
+        $type->addAttribute('package', $this->getPackageHandle());
+        $type->addAttribute('points', $this->getConversationRatingTypePoints());
+
+    }
+
     public static function exportList($xml)
     {
         $list = static::getList();
         $nxml = $xml->addChild('conversationratingtypes');
         foreach ($list as $sc) {
-            $activated = 0;
-            $type = $nxml->addChild('conversationratingtype');
-            $type->addAttribute('handle', $sc->getConversationRatingTypeHandle());
-            $type->addAttribute('name', $sc->getConversationRatingTypeName());
-            $type->addAttribute('package', $sc->getPackageHandle());
-            $type->addAttribute('points', $sc->getConversationRatingTypePoints());
+            $sc->export($nxml);
         }
     }
 

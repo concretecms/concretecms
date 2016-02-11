@@ -7,7 +7,8 @@ class PathUrlResolverTest extends ResolverTestCase
 
     protected function setUp()
     {
-        $this->urlResolver = new \Concrete\Core\Url\Resolver\PathUrlResolver();
+        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+        $this->urlResolver = $app->make('Concrete\Core\Url\Resolver\PathUrlResolver');
     }
 
     public function testResolveSinglePath()

@@ -198,6 +198,7 @@ var ccmi18n_filemanager = {
   duplicateFile: <?=json_encode(t('Copy File'))?>,
   clear: <?=json_encode(t('Clear'))?>,
   edit: <?=json_encode(t('Edit'))?>,
+  thumbnailImages: <?=json_encode(t('Thumbnail Images'))?>,
   replace: <?=json_encode(t('Replace'))?>,
   duplicate: <?=json_encode(t('Copy'))?>,
   chooseNew: <?=json_encode(t('Choose New File'))?>,

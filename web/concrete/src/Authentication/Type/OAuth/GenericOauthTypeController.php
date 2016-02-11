@@ -200,7 +200,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
     public function getExtractor($new = false)
     {
         if ($new || !$this->extractor) {
-            $this->extractor = \Core::make('oauth_extractor', $this->getService());
+            $this->extractor = \Core::make('oauth_extractor', array($this->getService()));
         }
 
         return $this->extractor;

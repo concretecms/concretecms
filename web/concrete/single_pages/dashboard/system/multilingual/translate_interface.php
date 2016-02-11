@@ -1,10 +1,16 @@
-<?php defined('C5_EXECUTE') or die('Access Denied.');
+<?php use Concrete\Core\Url\Url;
+
+defined('C5_EXECUTE') or die('Access Denied.');
 
 /* @var $this PageView */
 
 $valt = Loader::helper('validation/token');
 
 if ($this->controller->getTask() == 'translate_po') {
+    $url = Url::createFromUrl($this->controller->action('save_translation'));
+    $url = $url->setQuery(array(
+        'ccm_token' => $app->make('token')->generate('translate/save')
+    ));
 
     /* @var $section \Concrete\Core\Multilingual\Page\Section\Section */
     ?>
@@ -13,7 +19,7 @@ if ($this->controller->getTask() == 'translate_po') {
       ccmTranslator.initialize({
         container: '#ccm-translator-interface',
         height: $(window).height() - 300,
-        saveAction: <?php echo json_encode($this->action('save_translation')); ?>,
+        saveAction: <?php echo json_encode((string) $url); ?>,
         plurals: <?php echo json_encode($section->getPluralsCases()); ?>,
         translations: <?php echo json_encode($translations); ?>,
         approvalSupport: false
@@ -42,7 +48,7 @@ if ($this->controller->getTask() == 'translate_po') {
         })
         .always(function() {
           $btn.removeClass('disabled').css('width', 'auto').text(<?php echo json_encode(t('Save to file')); ?>);
-        }); 
+        });
       });
     });
     </script>
