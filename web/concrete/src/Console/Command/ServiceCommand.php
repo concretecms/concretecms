@@ -16,24 +16,17 @@ final class ServiceCommand extends Command
 {
     protected function configure()
     {
-        $this
-            ->setName('c5:service')
-            ->setDescription('Check or update the web server configuration')
-            ->addOption('service-version', 'r', InputOption::VALUE_REQUIRED, 'The specific version of the web server software', '')
-            ->addArgument('service', InputArgument::REQUIRED, 'The web server to use (apache|nginx)')
-            ->addArgument('operation', InputArgument::REQUIRED, 'The operation to perform (check|update)')
-            ->addArgument('rule-options', InputArgument::IS_ARRAY, 'List of key-value pairs to pass to the rules (example: foo=bar baz=foo)')
-        ;
+        $serviceHandles = array();
         $help = '';
         $manager = Core::make('Concrete\Core\Service\Manager\ServiceManager');
         /* @var \Concrete\Core\Service\Manager\ServiceManager $manager */
-        foreach ($manager->getAllServices() as $i => $service) {
-            $serviceName = $service->getName();
+        foreach ($manager->getAllServices() as $serviceHandle => $service) {
+            $serviceHandles[] = $serviceHandle;
             foreach ($service->getGenerator()->getRules() as $ruleHandle => $rule) {
                 if ($rule instanceof ConfigurableRuleInterface) {
                     /* @var ConfigurableRuleInterface $rule */
                     foreach ($rule->getOptions() as $optionHandle => $option) {
-                        $help .= "Rule option for service $serviceName, rule $ruleHandle:\n";
+                        $help .= "Rule option for service $serviceHandle, rule $ruleHandle:\n";
                         $help .= "  - $optionHandle: ".$option->getDescription();
                         if ($option->isRequired()) {
                             $help .= ' [required]';
@@ -57,7 +50,15 @@ Return codes for the update operation:
   1 errors occurred
 EOT
         ;
-        $this->setHelp(trim($help));
+        $this
+            ->setName('c5:service')
+            ->setDescription('Check or update the web server configuration')
+            ->addOption('service-version', 'r', InputOption::VALUE_REQUIRED, 'The specific version of the web server software', '')
+            ->addArgument('service', InputArgument::REQUIRED, 'The web server to use ('.implode('|', $serviceHandles).')')
+            ->addArgument('operation', InputArgument::REQUIRED, 'The operation to perform (check|update)')
+            ->addArgument('rule-options', InputArgument::IS_ARRAY, 'List of key-value pairs to pass to the rules (example: foo=bar baz=foo)')
+            ->setHelp(trim($help))
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

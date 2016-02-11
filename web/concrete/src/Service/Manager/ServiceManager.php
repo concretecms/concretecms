@@ -128,7 +128,7 @@ class ServiceManager implements ManagerInterface
     {
         $result = array();
         foreach ($this->getExtensions() as $handle) {
-            $result[] = $this->getService($handle);
+            $result[$handle] = $this->getService($handle);
         }
 
         return $result;
