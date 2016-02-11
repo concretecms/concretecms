@@ -1,7 +1,10 @@
 <?php
 namespace Concrete\Core\Service\Rule;
 
-class Rule implements RuleInterface
+/**
+ * A single rule for the web server.
+ */
+class Rule implements RuleInterface, ConfigurableRuleInterface
 {
     /**
      * The code of the rule.
@@ -34,7 +37,7 @@ class Rule implements RuleInterface
     /**
      * The rule options.
      *
-     * @var array
+     * @var Option[]
      */
     protected $options;
 
@@ -108,7 +111,17 @@ class Rule implements RuleInterface
     /**
      * {@inheritdoc}
      *
-     * @see RuleInterface::getOptions()
+     * @see \Concrete\Core\Service\Rule\ConfigurableRuleInterface::addOption()
+     */
+    public function addOption($handle, Option $option)
+    {
+        $this->options[$handle] = $option;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Service\Rule\RuleInterface::getOptions()
      */
     public function getOptions()
     {
@@ -118,10 +131,10 @@ class Rule implements RuleInterface
     /**
      * {@inheritdoc}
      *
-     * @see RuleInterface::setOptions()
+     * @see \Concrete\Core\Service\Rule\ConfigurableRuleInterface::getOption()
      */
-    public function setOptions(array $options)
+    public function getOption($handle)
     {
-        $this->options = $options;
+        return isset($this->options[$handle]) ? $this->options[$handle] : null;
     }
 }

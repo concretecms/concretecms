@@ -7,6 +7,8 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Concrete\Core\Service\ServiceInterface;
+use Concrete\Core\Service\Rule\RuleInterface;
+use Concrete\Core\Service\Rule\ConfigurableRuleInterface;
 use Core;
 use Exception;
 
@@ -21,7 +23,30 @@ final class ServiceCommand extends Command
             ->addArgument('service', InputArgument::REQUIRED, 'The web server to use (apache|nginx)')
             ->addArgument('operation', InputArgument::REQUIRED, 'The operation to perform (check|update)')
             ->addArgument('rule-options', InputArgument::IS_ARRAY, 'List of key-value pairs to pass to the rules (example: foo=bar baz=foo)')
-            ->setHelp(<<<EOT
+        ;
+        $help = '';
+        $manager = Core::make('Concrete\Core\Service\Manager\ServiceManager');
+        /* @var \Concrete\Core\Service\Manager\ServiceManager $manager */
+        foreach ($manager->getAllServices() as $i => $service) {
+            $serviceName = $service->getName();
+            foreach ($service->getGenerator()->getRules() as $ruleHandle => $rule) {
+                if ($rule instanceof ConfigurableRuleInterface) {
+                    /* @var ConfigurableRuleInterface $rule */
+                    foreach ($rule->getOptions() as $optionHandle => $option) {
+                        $help .= "Rule option for service $serviceName, rule $ruleHandle:\n";
+                        $help .= "  - $optionHandle: ".$option->getDescription();
+                        if ($option->isRequired()) {
+                            $help .= ' [required]';
+                        } else {
+                            $help .= ' [optional]';
+                        }
+                        $help .= "\n";
+                    }
+                }
+            }
+        }
+        $help .= <<<EOT
+
 Return codes for the check operation:
   0 operation completed successfully
   1 errors occurred
@@ -31,8 +56,8 @@ Return codes for the update operation:
   0 operation completed successfully
   1 errors occurred
 EOT
-            )
         ;
+        $this->setHelp(trim($help));
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -81,7 +106,7 @@ EOT
         $configurator = $service->getConfigurator();
         $allOk = true;
         foreach ($generator->getRules() as $ruleHandle => $rule) {
-            $rule->setOptions($ruleOptions);
+            $this->configureRule($rule, $ruleOptions);
             $shouldHave = $rule->isEnabled();
             if ($shouldHave !== null) {
                 if ($shouldHave) {
@@ -119,7 +144,7 @@ EOT
 
         // Let's check every defined rule
         foreach ($generator->getRules() as $ruleHandle => $rule) {
-            $rule->setOptions($ruleOptions);
+            $this->configureRule($rule, $ruleOptions);
 
             // Let's see if this rule should be present or not in the configuration
             $shouldHave = $rule->isEnabled();
@@ -137,7 +162,6 @@ EOT
                     $output->writeln("<info>done.</info>");
                     $configurationUpdated = true;
                 }
-
             } elseif ($shouldHave === false) {
                 // This rule should not be present in the configuration
                 $output->write("Checking absence of rule $ruleHandle... ");
@@ -152,7 +176,6 @@ EOT
                     $output->writeln("<info>already absent.</info>");
                 }
             }
-
         }
 
         if ($configurationUpdated) {
@@ -201,5 +224,16 @@ EOT
         }
 
         return $ruleOptions;
+    }
+
+    protected function configureRule(RuleInterface $rule, array $options)
+    {
+        if ($rule instanceof ConfigurableRuleInterface) {
+            foreach ($rule->getOptions() as $optionHandle => $optionValue) {
+                if (isset($options[$optionHandle])) {
+                    $optionValue->setValue($options[$optionHandle]);
+                }
+            }
+        }
     }
 }
