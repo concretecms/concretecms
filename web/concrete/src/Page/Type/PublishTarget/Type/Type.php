@@ -207,16 +207,21 @@ abstract class Type extends Object
         return $types;
     }
 
+    public function export($xml)
+    {
+        $type = $xml->addChild('type');
+        $type->addAttribute('handle', $this->getPageTypePublishTargetTypeHandle());
+        $type->addAttribute('name', $this->getPageTypePublishTargetTypeName());
+        $type->addAttribute('package', $this->getPackageHandle());
+    }
+
     public static function exportList($xml)
     {
         $list = self::getList();
         $nxml = $xml->addChild('pagetypepublishtargettypes');
 
         foreach ($list as $sc) {
-            $type = $nxml->addChild('type');
-            $type->addAttribute('handle', $sc->getPageTypePublishTargetTypeHandle());
-            $type->addAttribute('name', $sc->getPageTypePublishTargetTypeName());
-            $type->addAttribute('package', $sc->getPackageHandle());
+            $sc->export($nxml);
         }
     }
 

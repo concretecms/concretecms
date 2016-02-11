@@ -85,7 +85,10 @@ class Controller extends BlockController
 
     public function save($post)
     {
-        if (isset($post['arLayoutID'])) {
+        if (isset($post['arLayoutID']) && !isset($post['arLayoutEdit'])) {
+            // terribly lame, but in import we pass arLayoutID and we also pass it in the post of editing a layout
+            // We need to somehow differentiate the two. If it's JUST arLayoutID we're using the migration tool
+            // if it includes arLayoutEdit (which is included in the form) then run the standrd block save.
             // we are passing it in directly –likely from import
             $values = array('arLayoutID' => $post['arLayoutID']);
             parent::save($values);

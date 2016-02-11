@@ -1,4 +1,10 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+
+$save_url = \Concrete\Core\Url\Url::createFromUrl($view->action('save_thumb'));
+$save_url = $save_url->setQuery(array(
+	'ccm_token' => \Core::make('token')->generate('avatar/save_thumb')
+));
+?>
 
 <div class="row">
 <div class="col-sm-8 col-sm-offset-2">
@@ -12,8 +18,10 @@
 			<a href="http://www.adobe.com/shockwave/download/download.cgi?P1_Prod_Version=ShockwaveFlash">Download the Flash Player here</a>.
 		</div>
 		<? if ($profile->hasAvatar()) { ?>
-			<br/><br/>
-			<a href="<?php echo $view->action('delete')?>" class="btn btn-danger"><?php echo t('Remove your user avatar')?> <i class="icon-trash icon-white"></i></a>
+			<form method="post" action="<?php echo $view->action('delete')?>">
+				<?=Core::make('token')->output('delete_avatar')?>
+				<button type="submit" class="btn btn-danger"><?php echo t('Remove your user avatar')?> <i class="icon-trash icon-white"></i></button>
+			</form>
 		<? } ?>
 
 		<script type="text/javascript">
@@ -46,8 +54,8 @@
 			var flashvars = {
 				width: '<?php echo Config::get('concrete.icons.user_avatar.width') ?>',
 				height: '<?php echo Config::get('concrete.icons.user_avatar.height') ?>',
-				image: '<?php echo $av->getImagePath($profile)?>',
-				save: "<?php echo $view->action('save_thumb')?>"
+				image: '<?php echo $profile->getUserAvatar()->getPath()?>',
+				save: "<?php echo $save_url ?>"
 			};
 			swfobject.embedSWF ("<?php echo ASSETS_URL_JAVASCRIPT?>/thumbnail-editor-3.swf", "profile-avatar", "500", "400", "10,0,0,0", "includes/expressInstall.swf", flashvars, params);
 

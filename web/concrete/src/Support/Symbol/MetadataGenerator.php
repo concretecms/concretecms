@@ -20,7 +20,10 @@ class MetadataGenerator
             if (!isset($static['concrete'])) {
                 try {
                     $class = Core::make($name);
-                    $className = get_class($class);
+
+                    if (is_object($class)) {
+                        $className = get_class($class);
+                    }
                 } catch (\Exception $e) {}
             } else {
                 $className = $static['concrete'];

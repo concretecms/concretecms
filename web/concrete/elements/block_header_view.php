@@ -159,7 +159,7 @@ if ($showMenu) {
                         <? } ?>
 
                         <? if ($b->getBlockTypeHandle() != BLOCK_HANDLE_LAYOUT_PROXY && $b->getBlockTypeHandle() != BLOCK_HANDLE_PAGE_TYPE_OUTPUT_PROXY) { ?>
-                            <li><a href="javascript:void(0)" data-menu-action="block_scrapbook"><?=t("Copy to Clipboard")?></a></li>
+                            <li><a href="javascript:void(0)" data-menu-action="block_scrapbook" data-token="<?= Core::make('token')->generate('tools/clipboard/to'); ?>"><?=t("Copy to Clipboard")?></a></li>
                         <? } ?>
 
 

@@ -36,7 +36,7 @@ module.exports = function(grunt, config, parameters, done) {
 			fs.mkdirSync(dir, mode);
 		}
 		catch(e) {
-			if(e.errno !== 34 && e.errno !== -4058) {
+			if(e.errno !== 34 && e.errno !== -4058 && e.errno !== -2) {
 				throw e;
 			}
 			mkdir(path.dirname(dir), mode);
@@ -161,7 +161,7 @@ module.exports = function(grunt, config, parameters, done) {
 		done(false);
 		return;
 	}
-	
+
 	var txProgressLimit = parseFloat(parameters.txProgressLimit);
 	if(isNaN(txProgressLimit)) {
 		txProgressLimit = 90;
@@ -324,7 +324,7 @@ module.exports = function(grunt, config, parameters, done) {
 						}
 						process.stdout.write('done.\n');
 						parseLocale(allLocales, localeIndex + 1, callback);
-					}				
+					}
 				);
 			});
 		});

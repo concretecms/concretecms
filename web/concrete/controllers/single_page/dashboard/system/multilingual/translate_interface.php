@@ -20,6 +20,7 @@ class TranslateInterface extends DashboardPageController
     {
         $extractor = Core::make('multilingual/extractor');
         $this->set('extractor', $extractor);
+        $this->set('app', $this->app);
     }
     public function reloaded()
     {
@@ -117,6 +118,11 @@ class TranslateInterface extends DashboardPageController
     {
         $result = new EditResponse();
         try {
+            $token = $this->app->make('token');
+            if (!$token->validate('translate/save')) {
+                throw new \Exception(t('Invalid token, please refresh and try again.'));
+            }
+
             $translation = null;
             $mtID = @intval($this->post('id'));
             if ($mtID > 0) {
@@ -182,6 +188,8 @@ class TranslateInterface extends DashboardPageController
 
     public function translate_po($mtSectionID = false)
     {
+        $this->view();
+
         $mtSectionID = intval($mtSectionID);
         $section = Section::getByID(intval($mtSectionID));
         if ($section) {

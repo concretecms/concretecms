@@ -56,5 +56,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 ConcreteEvent.publish('SitemapUpdatePageRequestComplete', {'cID': data.response.cID});
             }
         });
+		$('#ccm-panel-detail-page-seo .form-control').textcounter({
+			type: "character",
+			max: -1,
+			countSpaces: true,
+			stopInputAtMaximum: false,
+			counterText: '<?php echo t('Characters'); ?>: ',
+			countContainerClass: 'help-block'
+		});
     });
 </script>

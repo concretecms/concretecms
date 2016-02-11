@@ -7,18 +7,27 @@ class ResolverManager implements ResolverManagerInterface
 {
 
     protected $priorityTree;
+
+    /**
+     * @var UrlResolverInterface
+     */
     protected $resolvers;
+
+    /**
+     * @var string
+     */
     protected $default;
 
     /**
      * @param string               $default_handle
      * @param URLResolverInterface $default_resolver
      */
-    public function __construct(
-        $default_handle,
-        URLResolverInterface $default_resolver
-    ) {
-        $this->addResolver($default_handle, $default_resolver, 1025);
+    public function __construct($default_handle = '', UrlResolverInterface $default_resolver = null)
+    {
+        if ($default_resolver) {
+            $this->addResolver($default_handle, $default_resolver);
+        }
+
         $this->default = $default_handle;
     }
 
@@ -27,7 +36,7 @@ class ResolverManager implements ResolverManagerInterface
      */
     public function addResolver(
         $handle,
-        URLResolverInterface $resolver,
+        UrlResolverInterface $resolver,
         $priority = 512
     ) {
         $priority = min(1024, max(1, intval($priority, 10)));
@@ -82,7 +91,11 @@ class ResolverManager implements ResolverManagerInterface
             }
         }
 
-        return $this->getResolver($this->default)->resolve($args, $resolved);
+        if ($default = $this->getResolver($this->default)) {
+            $resolved = $default->resolve($args, $resolved);
+        }
+
+        return $resolved;
     }
 
 }

@@ -290,7 +290,10 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         $fsIDs = $db->Execute("select fsID from FileSetFiles where fID = ?", array($this->getFileID()));
         $filesets = array();
         while ($row = $fsIDs->FetchRow()) {
-            $filesets[] = FileSet::getByID($row['fsID']);
+            $fs = FileSet::getByID($row['fsID']);
+            if (is_object($fs)) {
+                $filesets[] = $fs;
+            }
         }
         return $filesets;
     }
@@ -629,11 +632,14 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         $fve = new \Concrete\Core\File\Event\FileAccess($fv);
         Events::dispatch('on_file_download', $fve);
 
-        $db = Loader::db();
-        $db->Execute(
-            'insert into DownloadStatistics (fID, fvID, uID, rcID) values (?, ?, ?, ?)',
-            array($this->fID, intval($fvID), $uID, $rcID)
-        );
+        $config = Core::make('config');
+        if ($config->get('concrete.statistics.track_downloads')) {
+            $db = Loader::db();
+            $db->Execute(
+                'insert into DownloadStatistics (fID, fvID, uID, rcID) values (?, ?, ?, ?)',
+                array($this->fID, intval($fvID), $uID, $rcID)
+            );
+        }
     }
 
     /**

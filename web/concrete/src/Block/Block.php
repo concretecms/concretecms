@@ -53,11 +53,11 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
     }
 
     /**
-     * Returns a global block.
+     * Returns a block.
      */
-    public static function getByName($globalBlockName)
+    public static function getByName($blockName)
     {
-        if (!$globalBlockName) {
+        if (!$blockName) {
             return;
         }
         $db = Loader::db();
@@ -66,10 +66,9 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
             . ' INNER JOIN CollectionVersionBlocks AS cvb ON b.bID = cvb.bID'
             . ' INNER JOIN CollectionVersions AS cv ON cvb.cID = cv.cID AND cvb.cvID = cv.cvID'
             . ' WHERE b.bName = ? AND cv.cvIsApproved = 1'
-            . ' AND cvb.cID IN (SELECT cID FROM Stacks)'
             . ' ORDER BY cvb.cvID DESC'
             . ' LIMIT 1';
-        $vals = array($globalBlockName);
+        $vals = array($blockName);
         $row = $db->getRow($sql, $vals);
         if ($row != false && isset($row['bID']) && $row['bID'] > 0) {
             return self::getByID($row['bID'], Page::getByID($row['cID']), $row['arHandle']);
@@ -670,9 +669,10 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         if ($this->overrideBlockTypeContainerSettings()) {
             return !$this->enableBlockContainer();
         }
-        $bt = $this->getBlockTypeObject();
+        /** @var \Concrete\Core\Block\BlockController $controller */
+        $controller = $this->getInstance();
 
-        return $bt->ignorePageThemeGridFrameworkContainer();
+        return $controller->ignorePageThemeGridFrameworkContainer();
     }
 
     public function overrideBlockTypeContainerSettings()

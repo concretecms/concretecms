@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Console\Command;
 
 use Concrete\Core\Support\Symbol\ClassSymbol\ClassSymbol;
@@ -9,6 +8,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Exception;
+use Core;
 
 class GenerateIDESymbolsCommand extends Command
 {
@@ -18,6 +18,12 @@ class GenerateIDESymbolsCommand extends Command
             ->setName('c5:ide-symbols')
             ->setDescription('Generate IDE symbols')
             ->addArgument('generate-what', InputArgument::IS_ARRAY, 'Elements to generate [all|ide-classes|phpstorm]', array('all'))
+            ->setHelp(<<<EOT
+Returns codes:
+  0 operation completed successfully
+  1 errors occurred
+EOT
+            )
         ;
     }
 
@@ -26,15 +32,35 @@ class GenerateIDESymbolsCommand extends Command
         $rc = 0;
         try {
             $what = $input->getArgument('generate-what');
-            if (in_array('all', $what) || in_array('ide-classes', $what)) {
+            $p = array_search('ide-classes', $what);
+            if ($p !== false || in_array('all', $what)) {
+                if ($p !== false) {
+                    unset($what[$p]);
+                }
                 $output->write('Generating fake PHP classes to help IDE... ');
-                $this->generateIDEClasses();
-                $output->writeln('<info>done.</info>');
+                if (!Core::make('app')->isInstalled()) {
+                    $output->writeln('<error>failed: concrete5 is not installed.</error>');
+                    $rc = 1;
+                } else {
+                    $this->generateIDEClasses();
+                    $output->writeln('<info>done.</info>');
+                }
             }
-            if (in_array('all', $what) || in_array('phpstorm', $what)) {
+            $p = array_search('phpstorm', $what);
+            if ($p !== false || in_array('all', $what)) {
+                if ($p !== false) {
+                    unset($what[$p]);
+                }
                 $output->write('Generating PHP metadata for PHPStorm... ');
                 $this->generatePHPStorm();
                 $output->writeln('<info>done.</info>');
+            }
+            $p = array_search('all', $what);
+            if ($p !== false) {
+                unset($what[$p]);
+            }
+            if (!empty($what)) {
+                throw new Exception('Unrecognized arguments: '.implode(', ', $what));
             }
         } catch (Exception $x) {
             $output->writeln('<error>'.$x->getMessage().'</error>');

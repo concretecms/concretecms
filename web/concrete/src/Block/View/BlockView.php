@@ -346,13 +346,13 @@ class BlockView extends AbstractView
         return $base;
     }
 
-    public function inc($file, $args = array())
+    public function inc($fileToInclude, $args = array())
     {
         extract($args);
         extract($this->getScopeItems());
         $env = Environment::get();
         include $env->getPath(
-            DIRNAME_BLOCKS . '/' . $this->blockType->getBlockTypeHandle() . '/' . $file,
+            DIRNAME_BLOCKS . '/' . $this->blockType->getBlockTypeHandle() . '/' . $fileToInclude,
             $this->blockTypePkgHandle
         );
     }
@@ -370,8 +370,9 @@ class BlockView extends AbstractView
     protected function useBlockCache()
     {
         $u = new User();
+        $c = Page::getCurrentPage();
         if ($this->viewToRender == 'view' && Config::get('concrete.cache.blocks') && $this->block instanceof Block
-            && $this->block->cacheBlockOutput()
+            && $this->block->cacheBlockOutput() && $c->isPageDraft() === false
         ) {
             if ((!$u->isRegistered() || ($this->block->cacheBlockOutputForRegisteredUsers())) &&
                 (($_SERVER['REQUEST_METHOD'] != 'POST' || ($this->block->cacheBlockOutputOnPost() == true)))

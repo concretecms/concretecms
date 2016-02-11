@@ -26,7 +26,13 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
     <?php
 
     $includeEntryText = false;
-    if ($includeName || $includeDescription || $useButtonForLink) {
+    if (
+        (isset($includeName) && $includeName)
+        ||
+        (isset($includeDescription) && $includeDescription)
+        ||
+        (isset($useButtonForLink) && $useButtonForLink)
+    ) {
         $includeEntryText = true;
     }
 
@@ -102,9 +108,9 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
         <?php if ($includeEntryText): ?>
             <div class="ccm-block-page-list-page-entry-text">
 
-                <? if ($includeName): ?>
+                <? if (isset($includeName) && $includeName): ?>
                 <div class="ccm-block-page-list-title">
-                    <? if ($useButtonForLink) { ?>
+                    <? if (isset($useButtonForLink) && $useButtonForLink) { ?>
                         <?php echo $title; ?>
                     <? } else { ?>
                         <a href="<?php echo $url ?>" target="<?php echo $target ?>"><?php echo $title ?></a>
@@ -112,19 +118,19 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                 </div>
                 <? endif; ?>
 
-                <? if ($includeDate): ?>
+                <? if (isset($includeDate) && $includeDate): ?>
                     <div class="ccm-block-page-list-date"><?=$date?></div>
                 <? endif; ?>
 
-                <? if ($includeDescription): ?>
+                <? if (isset($includeDescription) && $includeDescription): ?>
                     <div class="ccm-block-page-list-description">
                         <?php echo $description ?>
                     </div>
                 <? endif; ?>
 
-                <? if ($useButtonForLink): ?>
+                <? if (isset($useButtonForLink) && $useButtonForLink): ?>
                 <div class="ccm-block-page-list-page-entry-read-more">
-                    <a href="<?=$url?>" class="<?=$buttonClasses?>"><?=$buttonLinkText?></a>
+                    <a href="<?=$url?>" target="<?=$target?>" class="<?=$buttonClasses?>"><?=$buttonLinkText?></a>
                 </div>
                 <? endif; ?>
 

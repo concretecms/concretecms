@@ -52,13 +52,15 @@ class Search extends DashboardPageController
         $sr = new UserEditResponse();
         $sr->setUser($this->user);
         $sr->setMessage(t('Avatar saved successfully.'));
-        $html = $av->outputUserAvatar($ui);
+        $av = $this->user->getUserAvatar();
+        $html = $av->output();
         $sr->setAdditionalDataAttribute('imageHTML', $html);
         $sr->outputJSON();
     }
 
     protected function setupUser($uID)
     {
+        $me = new User();
         $ui = UserInfo::getByID(Loader::helper('security')->sanitizeInt($uID));
         if (is_object($ui)) {
             $up = new Permissions($ui);
@@ -71,15 +73,15 @@ class Search extends DashboardPageController
             $this->assignment = $pke->getMyAssignment();
             $this->canEdit = $up->canEditUser();
             if ($this->canEdit) {
-                $this->canActivateUser = $tp->canActivateUser();
+                $this->canActivateUser = $tp->canActivateUser() && $me->getUserID() != $ui->getUserID();
                 $this->canEditAvatar = $this->assignment->allowEditAvatar();
                 $this->canEditUserName = $this->assignment->allowEditUserName();
                 $this->canEditLanguage = $this->assignment->allowEditDefaultLanguage();
                 $this->canEditTimezone = $this->assignment->allowEditTimezone();
                 $this->canEditEmail = $this->assignment->allowEditEmail();
                 $this->canEditPassword = $this->assignment->allowEditPassword();
-                $this->canSignInAsUser = $tp->canSudo();
-                $this->canDeleteUser = $tp->canDeleteUser();
+                $this->canSignInAsUser = $tp->canSudo() && $me->getUserID() != $ui->getUserID();
+                $this->canDeleteUser = $tp->canDeleteUser() && $me->getUserID() != $ui->getUserID();
                 $this->canAddGroup = $tp->canAccessGroupSearch();
                 $this->allowedEditAttributes = $this->assignment->getAttributesAllowedArray();
             }

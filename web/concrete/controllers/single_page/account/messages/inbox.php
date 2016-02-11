@@ -125,7 +125,8 @@ class Inbox extends AccountPageController
     public function write($uID)
     {
         $this->validateUser($uID);
-        $this->set('backURL', View::url('/members/profile', 'view', h($uID)));
+        $profile = $this->get('profile');
+        $this->set('backURL', $profile->getUserPublicProfileURL());
     }
 
     public function reply($boxID, $msgID)

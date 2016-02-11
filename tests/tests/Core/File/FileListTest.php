@@ -1,14 +1,13 @@
 <?php
 namespace Concrete\Tests\Core\File;
-use \Concrete\Core\File\Importer;
-use \Concrete\Core\Attribute\Type as AttributeType;
-use \Concrete\Core\Attribute\Key\FileKey;
-use Core;
-use \Concrete\Core\Attribute\Key\Category;
-use Doctrine\DBAL\Logging\EchoSQLLogger;
 
-class FileListTest extends \FileStorageTestCase {
+use Concrete\Core\File\Importer;
+use Concrete\Core\Attribute\Type as AttributeType;
+use Concrete\Core\Attribute\Key\FileKey;
+use Concrete\Core\Attribute\Key\Category;
 
+class FileListTest extends \FileStorageTestCase
+{
     /** @var \Concrete\Core\File\FileList */
     protected $list;
 
@@ -32,7 +31,7 @@ class FileListTest extends \FileStorageTestCase {
             'FileSets',
             'atNumber',
             'FileVersionLog',
-            'FileSetFiles'
+            'FileSetFiles',
         ));
         parent::setUp();
         \Config::set('concrete.upload.extensions', '*.txt;*.jpg;*.jpeg;*.png');
@@ -61,10 +60,10 @@ class FileListTest extends \FileStorageTestCase {
             'logo2.png' => $image,
             'logo3.png' => $image,
             'foobley.png' => $image,
-            'test.png' => $image
+            'test.png' => $image,
         );
 
-        foreach($files as $filename => $pointer) {
+        foreach ($files as $filename => $pointer) {
             $fi->import($pointer, $filename);
         }
 
@@ -224,15 +223,15 @@ class FileListTest extends \FileStorageTestCase {
             'funtime.txt' => $sample,
             'funtime2.txt' => $sample,
             'awesome-o' => $sample,
-            'image.png' => $image
+            'image.png' => $image,
         );
 
-        foreach($files as $filename => $pointer) {
+        foreach ($files as $filename => $pointer) {
             $fi->import($pointer, $filename);
         }
 
         $nl = new \Concrete\Core\File\FileList();
-        $nl->setPermissionsChecker(function($file) {
+        $nl->setPermissionsChecker(function ($file) {
             if ($file->getTypeObject()->getGenericType() == \Concrete\Core\File\Type\Type::T_IMAGE) {
                 return true;
             } else {
@@ -293,8 +292,5 @@ class FileListTest extends \FileStorageTestCase {
         $columns = $set->getColumns();
 
         $this->assertEquals(5, count($columns));
-
-
-
     }
 }
