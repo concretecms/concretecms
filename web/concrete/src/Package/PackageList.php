@@ -58,6 +58,11 @@ class PackageList extends Object
         CacheLocal::delete('pkgList', 0);
     }
 
+    /**
+     * @deprecated
+     * @param int $pkgIsInstalled
+     * @return static
+     */
     public static function get($pkgIsInstalled = 1)
     {
         $pkgList = CacheLocal::getEntry('pkgList', $pkgIsInstalled);
@@ -65,12 +70,11 @@ class PackageList extends Object
             return $pkgList;
         }
 
-        $db = Loader::db();
-        $r = $db->query("select pkgID, pkgName, pkgIsInstalled, pkgDescription, pkgVersion, pkgHandle, pkgDateInstalled from Packages where pkgIsInstalled = ? order by pkgID asc", array($pkgIsInstalled));
+        $em = \Database::connection()->getEntityManager();
+        $r = $em->getRepository('\Concrete\Core\Entity\Package');
+        $packages = $r->findBy(array('pkgIsInstalled' => true), array('pkgID' => 'asc'));
         $list = new static();
-        while ($row = $r->fetchRow()) {
-            $pkg = new Package();
-            $pkg->setPropertiesFromArray($row);
+        foreach($packages as $pkg) {
             $list->add($pkg);
         }
 

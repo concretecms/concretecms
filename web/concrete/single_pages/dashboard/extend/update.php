@@ -102,12 +102,13 @@ if (!$tp->canInstallPackages()) {
 }
 
     foreach ($pkgLocal as $pkg) {
+		$entity = $pkg->getPackageEntity();
         ?>
 
 				<tr>
 					<td class="ccm-marketplace-list-thumbnail" rowspan="2"><img style="max-width: 50px" src="<?=$ci->getPackageIconURL($pkg)?>" /></td>
 					<td class="ccm-addon-list-description"><h3><?=$pkg->getPackageName()?></h3><p><?=$pkg->getPackageDescription()?></p>
-					<p><strong><?=t('New Version: %s. Upgrading from: %s.', $pkg->getPackageVersion(), $pkg->getPackageCurrentlyInstalledVersion())?></strong></p>
+					<p><strong><?=t('New Version: %s. Upgrading from: %s.', $pkg->getPackageVersion(), $entity->getPackageVersion())?></strong></p>
 					</td>
 					<td class="ccm-marketplace-list-install-button"><?=$ch->button(t("Update Add-On"), View::url('/dashboard/extend/update', 'do_update', $pkg->getPackageHandle()), "", "btn-primary")?></td>
 				</tr>

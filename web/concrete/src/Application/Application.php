@@ -24,7 +24,7 @@ use Illuminate\Container\Container;
 use Job;
 use JobSet;
 use Log;
-use Package;
+use Concrete\Core\Support\Facade\Package;
 use Page;
 use Redirect;
 use Concrete\Core\Http\Request;
@@ -244,9 +244,9 @@ class Application extends Container
         $cl = ClassLoader::getInstance();
         /** @var \Package[] $pl */
         foreach ($pl as $p) {
-            $p->registerConfigNamespace();
+            \Config::package($p);
             if ($p->isPackageInstalled()) {
-                $pkg = Package::getClass($p->getPackageHandle());
+                $pkg = $this->make('Concrete\Core\Package\PackageService')->getClass($p->getPackageHandle());
                 if (is_object($pkg) && (!$pkg instanceof \Concrete\Core\Package\BrokenPackage)) {
                     $cl->registerPackage($pkg);
                     $this->packages[] = $pkg;
@@ -281,7 +281,7 @@ class Application extends Container
                     }
                 }
             }
-            $pkg->setupPackageLocalization();
+            $this->make('Concrete\Core\Package\PackageService')->setupLocalization($pkg);
             if (method_exists($pkg, 'on_start')) {
                 $pkg->on_start();
             }
@@ -370,7 +370,7 @@ class Application extends Container
             // port, scheme. Set scheme first so that our port can use the magic "set if necessary" method.
             $new = $url->setScheme($canonical->getScheme()->get());
             $new = $new->setHost($canonical->getHost()->get());
-            $new = $new->setPortIfNecessary($canonical->getPort()->get());
+            $new = $new->setPort($canonical->getPort()->get());
 
             // Now we have our current url, swapped out with the important parts of the canonical URL.
             // If it matches, we're good.
@@ -385,7 +385,7 @@ class Application extends Container
 
                 $new = $url->setScheme($ssl->getScheme()->get());
                 $new = $new->setHost($ssl->getHost()->get());
-                $new = $new->setPortIfNecessary($ssl->getPort()->get());
+                $new = $new->setPort($ssl->getPort()->get());
 
                 // Now we have our current url, swapped out with the important parts of the canonical URL.
                 // If it matches, we're good.

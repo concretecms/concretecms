@@ -5,6 +5,7 @@ use Concrete\Core\Search\ItemList\Database\AttributedItemList as DatabaseItemLis
 use Concrete\Core\Search\Pagination\Pagination;
 use Concrete\Core\Search\Pagination\PermissionablePagination;
 use Concrete\Core\Search\PermissionableListItemInterface;
+use Concrete\Core\Entity\Package;
 use Page as ConcretePage;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 
@@ -183,7 +184,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     /**
      * @param $queryRow
      *
-     * @return \Concrete\Core\File\File
+     * @return \Concrete\Core\Page\Page
      */
     public function getResult($queryRow)
     {
@@ -299,6 +300,16 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     {
         $this->query->andWhere($this->query->expr()->comparison('cv.cvDatePublic', $comparison, $this->query->createNamedParameter($date)));
     }
+
+    /**
+     * Filters by package.
+     */
+    public function filterByPackage(Package $package)
+    {
+        $this->query->andWhere('p.pkgID = :pkgID');
+        $this->query->setParameter('pkgID', $package->getPackageID());
+    }
+
 
     /**
      * Displays only those pages that have style customizations.

@@ -340,7 +340,7 @@ abstract class Asset implements AssetInterface
     public function register($filename, $args, $pkg = false)
     {
         if ($pkg != false) {
-            if (!($pkg instanceof Package)) {
+            if ($pkg !== false && is_string($pkg)) {
                 $pkg = Package::getByHandle($pkg);
             }
             $this->setPackageObject($pkg);

@@ -3,6 +3,8 @@ namespace Concrete\Core\Database;
 
 use Concrete\Core\Database\Driver\DriverManager;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
+use Concrete\Core\Package\PackageList;
+use Doctrine\ORM\EntityManagerInterface;
 
 class DatabaseServiceProvider extends ServiceProvider
 {
@@ -24,27 +26,43 @@ class DatabaseServiceProvider extends ServiceProvider
             return $manager;
         });
 
-        // Bind a closure to support \Core::make('database/structure', $em);
-        $this->app->bind('database/structure', function ($app, $em) {
-            if (!is_array($em)) {
-                $em = array($em);
-            }
-
-            return $app->make('Concrete\Core\Database\DatabaseStructureManager', $em);
-        });
-
-        // Bind default entity manager resolver
-        $this->app->bind('Doctrine\ORM\EntityManagerInterface', function ($app) {
-            return $app->make('Concrete\Core\Database\DatabaseManagerORM')->entityManager('core');
-        });
-        $this->app->bind('Doctrine\ORM\EntityManager', 'Doctrine\ORM\EntityManagerInterface');
-
         // Bind default connection resolver
         $this->app->bind('Concrete\Core\Database\Connection\Connection', function ($app) {
             return $app->make('Concrete\Core\Database\DatabaseManager')->connection();
         });
         $this->app->bind('Doctrine\DBAL\Connection', 'Concrete\Core\Database\Connection\Connection');
+
+        // Bind default entity manager resolver
+        $this->app->bindShared('Doctrine\ORM\EntityManagerInterface', function ($app) {
+            $factory = new EntityManagerFactory();
+            $entityManager = $factory->create($app->make('Concrete\Core\Database\Connection\Connection'));
+            if ($this->app->isInstalled()) {
+                $this->setupPackageEntityManagers($entityManager);
+            }
+            return $entityManager;
+        });
+        $this->app->bind('Doctrine\ORM\EntityManager', 'Doctrine\ORM\EntityManagerInterface');
+
     }
+
+
+    protected function setupPackageEntityManagers(EntityManagerInterface $entityManager)
+    {
+        $packages = $entityManager->getRepository('Concrete\Core\Entity\Package')
+            ->findAll();
+
+        $driver = $entityManager->getConfiguration()->getMetadataDriverImpl();
+
+        $paths = array();
+
+        foreach($packages as $package) {
+            $class = $package->getController();
+            $paths = array_merge($paths, $class->getPackageEntityPaths());
+        }
+
+        $driver->addPaths($paths);
+    }
+
 
     /**
      * A list of things that this service provider provides.
@@ -56,7 +74,6 @@ class DatabaseServiceProvider extends ServiceProvider
         return array(
             'database',
             'database/orm',
-            'database/structure',
             'Concrete\Core\Database\Driver\DriverManager',
             'Doctrine\ORM\EntityManager',
             'Doctrine\ORM\EntityManagerInterface',

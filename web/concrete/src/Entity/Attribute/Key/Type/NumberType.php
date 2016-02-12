@@ -14,6 +14,11 @@ class NumberType extends Type
         return new NumberValue();
     }
 
+    public function getAttributeTypeHandle()
+    {
+        return 'number';
+    }
+
     public function createController()
     {
         $controller = \Core::make('\Concrete\Attribute\Number\Controller');

@@ -30,32 +30,9 @@ if ($list->getTotalResults()) {
 
 <div class="ccm-dashboard-content-full">
 
-  <div class="table-responsive">
-    <table class="ccm-search-results-table" data-table="express-entries">
-      <thead>
-      <tr>
-        <?php foreach($set->getColumns() as $column) {
-          /** @var $column \Concrete\Core\Search\Column\Column */
-          if ($column->isColumnSortable()) { ?>
-            <th class="<?=$column->getSortClassName($result)?>"><a href="<?=$column->getSortURL($result)?>"><?php echo $column->getColumnName()?></a></th>
-          <?php } else { ?>
-            <th><span><?php echo $column->getColumnName()?></span></th>
-          <?php } ?>
-        <?php } ?>
-      </tr>
-      </thead>
-      <tbody>
-      <?php foreach ($results as $o) { ?>
-        <tr data-search-row-url="<?=URL::to('/dashboard/express/entries', 'view_entry', $entity->getId(), $o->getId())?>">
-        <?php foreach($set->getColumns() as $column) { ?>
-          <td><?=$column->getColumnValue($o);?></td>
-        <?php } ?>
-        </tr>
-        <?php } ?>
-      </tbody>
-    </table>
-  </div>
-
+    <div class="table-responsive">
+        <?php View::element('express/entries/search', array('controller' => $searchController)) ?>
+    </div>
 </div>
 
 <?php 

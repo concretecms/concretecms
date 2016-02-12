@@ -91,13 +91,11 @@ class PageController extends Controller
         $b = $path . '.php';
 
         $r = $env->getRecord(DIRNAME_PAGES . '/' . $a);
-        if ($pkgHandle) {
-            $view->setPackageHandle($pkgHandle);
-        }
+
         if ($r->exists()) {
-            $view->renderSinglePageByFilename($a);
+            $view->renderSinglePageByFilename($a, $pkgHandle);
         } else {
-            $view->renderSinglePageByFilename($b);
+            $view->renderSinglePageByFilename($b, $pkgHandle);
         }
     }
 

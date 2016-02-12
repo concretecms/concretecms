@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Express\Form\Control\View;
 
-use Concrete\Core\Express\BaseEntity;
+use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Express\Form\Control\EntityPropertyControlView;
 use Concrete\Core\Express\Form\Control\RendererInterface;
 use Concrete\Core\Express\Form\RendererFactory;
@@ -9,12 +9,12 @@ use Concrete\Core\Express\Form\RendererFactory;
 class AssociationControlViewRenderer implements RendererInterface
 {
     protected $application;
-    protected $entity;
+    protected $entry;
     protected $factory;
 
-    public function __construct(BaseEntity $entity)
+    public function __construct(Entry $entry)
     {
-        $this->entity = $entity;
+        $this->entry = $entry;
     }
 
     public function build(RendererFactory $factory)
@@ -37,13 +37,13 @@ class AssociationControlViewRenderer implements RendererInterface
         /*
          * @var $association \Concrete\Core\Entity\Express\Association
          */
-        $entities = array();
-        $entity = $this->entity->get($association->getComputedTargetPropertyName());
-        if (is_object($entity)) {
-            $entity[] = $entity;
-        }
+        $related = $this->entry->getAssociations();
         $view = new EntityPropertyControlView($this->factory);
-        $view->addScopeItem('entities', $entities);
+        foreach($related as $relatedAssociation) {
+            if ($relatedAssociation->getAssociation()->getID() == $association->getID()) {
+                $view->addScopeItem('entities', $relatedAssociation->getSelectedEntries());
+            }
+        }
         $view->addScopeItem('control', $this->factory->getControl());
         $view->addScopeItem('formatter', $association->getFormatter());
 

@@ -16,19 +16,21 @@ class Entities extends DashboardPageController
             if (!$this->request->request->get('name')) {
                 $this->error->add(t('You must give your data object a name.'));
             }
-            if (!$this->request->request->get('table_name')) {
-                $this->error->add(t('You must give your data object a database table name.'));
+            if (!$this->request->request->get('handle')) {
+                $this->error->add(t('You must create a handle for your data object. The handle must be all lowercase, and contain no spaces.'));
             }
             if (!$this->error->has()) {
                 $entity = new Entity();
                 $entity->setName($this->request->request->get('name'));
-                $entity->setTableName($this->request->request->get('table_name'));
+                $entity->setHandle($this->request->request->get('handle'));
                 $entity->setDescription($this->request->request->get('description'));
                 $this->entityManager->persist($entity);
                 $this->entityManager->flush();
 
-                $publisher = \Core::make('express.publisher');
-                $publisher->publish($entity);
+                $indexer = $entity->getAttributeKeyCategory()->getSearchIndexer();
+                if (is_object($indexer)) {
+                    $indexer->createRepository($entity->getAttributeKeyCategory());
+                }
 
                 $this->flash('success', t('Object added successfully.'));
                 $this->redirect('/dashboard/express/entities', 'view_entity', $entity->getId());

@@ -14,6 +14,11 @@ class DateTimeType extends Type
         return new DateTimeValue();
     }
 
+    public function getAttributeTypeHandle()
+    {
+        return 'date_time';
+    }
+
     /**
      * @Column(type="string")
      */

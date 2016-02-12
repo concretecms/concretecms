@@ -190,7 +190,7 @@ class Type
      *
      * @return \Concrete\Core\File\StorageLocation\Type\Type[]
      */
-    public static function getListByPackage(\Package $pkg)
+    public static function getListByPackage($pkg)
     {
         $db = Database::get();
         $em = $db->getEntityManager();

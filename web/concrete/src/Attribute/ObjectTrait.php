@@ -77,6 +77,8 @@ trait ObjectTrait
     {
         $category = $this->getObjectAttributeCategory();
         $indexer = $category->getSearchIndexer();
-        $indexer->indexEntry($category, $this);
+        if ($indexer) {
+            $indexer->indexEntry($category, $this);
+        }
     }
 }

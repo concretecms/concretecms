@@ -190,6 +190,18 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
+     * Marks the current user as having had a password reset from the system.
+     */
+    public function markAsPasswordReset()
+    {
+        $db = $this->connection;
+        $db->query("UPDATE Users SET ulsPasswordReset = 1 WHERE uID = ?", array($this->getUserID()));
+
+        $updateEventData = new \Concrete\Core\User\Event\UserInfo($this);
+        Events::dispatch('on_user_update', $updateEventData);
+    }
+
+    /**
      * @param UserInfo $recipient
      * @param string $subject
      * @param string $text
@@ -467,7 +479,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
                 $dateTime,
                 $this->uID,
             );
-            $q = "update Users set uPassword = ?, uLastPasswordChange = ?  where uID = ?";
+            $q = "update Users set uPassword = ?, uLastPasswordChange = ?, ulsPasswordReset = 0  where uID = ?";
             $r = $db->prepare($q);
             $res = $db->execute($r, $v);
 

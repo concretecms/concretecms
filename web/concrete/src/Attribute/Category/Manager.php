@@ -31,9 +31,5 @@ class Manager extends CoreManager
     public function __construct(Application $application)
     {
         parent::__construct($application);
-        $this->driver('page');
-        $this->driver('collection');
-        $this->driver('file');
-        $this->driver('user');
     }
 }

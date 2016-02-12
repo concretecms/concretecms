@@ -23,12 +23,6 @@ abstract class Type
      */
     protected $key;
 
-    /**
-     * @ManyToOne(targetEntity="\Concrete\Core\Entity\Attribute\Type")
-     * @JoinColumn(name="atID", referencedColumnName="atID")
-     **/
-    protected $type;
-
     public function getKeyTypeID()
     {
         return $this->akTypeID;
@@ -60,7 +54,8 @@ abstract class Type
      */
     public function getAttributeType()
     {
-        return $this->type;
+        $factory = \Core::make('Concrete\Core\Attribute\TypeFactory');
+        return $factory->getByHandle($this->getAttributeTypeHandle());
     }
 
     /**
@@ -72,6 +67,7 @@ abstract class Type
     }
 
     abstract public function createController();
+    abstract public function getAttributeTypeHandle();
 
     public function getController()
     {

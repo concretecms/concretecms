@@ -23,7 +23,9 @@
 
 		this.options = options;
 
-		this._templateSearchForm = _.template($element.find('script[data-template=search-form]').html());
+		if ($element.find('script[data-template=search-form]').length) {
+			this._templateSearchForm = _.template($element.find('script[data-template=search-form]').html());
+		}
 		this._templateSearchResultsTableHead = _.template($element.find('script[data-template=search-results-table-head]').html());
 		this._templateSearchResultsTableBody = _.template($element.find('script[data-template=search-results-table-body]').html());
 		this._templateSearchResultsPagination = _.template($element.find('script[data-template=search-results-pagination]').html());
@@ -177,13 +179,15 @@
 
 	ConcreteAjaxSearch.prototype.setupSearch = function() {
 		var cs = this;
-		cs.$element.find('[data-search-element=wrapper]').html(cs._templateSearchForm());
-		cs.$element.on('submit', 'form[data-search-form]', function() {
-			var data = $(this).serializeArray();
-			data.push({'name': 'submitSearch', 'value': '1'});
-			cs.ajaxUpdate($(this).attr('action'), data);
-			return false;
-		});
+		if (cs._templateSearchForm) {
+			cs.$element.find('[data-search-element=wrapper]').html(cs._templateSearchForm());
+			cs.$element.on('submit', 'form[data-search-form]', function() {
+				var data = $(this).serializeArray();
+				data.push({'name': 'submitSearch', 'value': '1'});
+				cs.ajaxUpdate($(this).attr('action'), data);
+				return false;
+			});
+		}
 	}
 
 	ConcreteAjaxSearch.prototype.handleSelectedBulkAction = function(value, type, $option, $items) {

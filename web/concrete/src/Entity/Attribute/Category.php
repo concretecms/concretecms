@@ -93,7 +93,7 @@ class Category implements EntityInterface
 
     public function getController()
     {
-        $manager = \Core::make('Concrete\Core\Attribute\Category\Manager');
+        $manager = \Core::make('manager/attribute/category');
         $controller = $manager->driver($this->getAttributeKeyCategoryHandle());
         $controller->setCategoryEntity($this);
 

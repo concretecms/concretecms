@@ -151,11 +151,42 @@ return array(
         'ORM' => '\Concrete\Core\Support\Facade\DatabaseORM',
         'Events' => '\Concrete\Core\Support\Facade\Events',
         'Route' => '\Concrete\Core\Support\Facade\Route',
+        'Route' => '\Concrete\Core\Support\Facade\Route',
         'UserInfo' => '\Concrete\Core\Support\Facade\UserInfo',
         'Log' => '\Concrete\Core\Support\Facade\Log',
         'Image' => '\Concrete\Core\Support\Facade\Image',
         'Config' => '\Concrete\Core\Support\Facade\Config',
         'URL' => '\Concrete\Core\Support\Facade\Url',
+    ),
+
+    'package_items' => array(
+        'antispam_library',
+        'attribute_key',
+        'attribute_key_category',
+        'attribute_set',
+        'attribute_type',
+        'authentication_type',
+        'block_type',
+        'block_type_set',
+        'captcha_library',
+        'content_editor_snippet',
+        'conversation_rating_type',
+        'group_set',
+        'job',
+        'mail_importer',
+        'permission_access_entity_type',
+        'permission_key_category',
+        'permission_key',
+        'page_template',
+        'page_type',
+        'page_type_composer_control_type',
+        'page_type_publish_target_type',
+        'single_page',
+        'storage_location_type',
+        'theme',
+        'user_point_action',
+        'workflow_progress_category',
+        'workflow_type',
     ),
 
     /*
@@ -337,6 +368,13 @@ return array(
         "/ccm/system/dialogs/marketplace/download" => array('\Concrete\Controller\Dialog\Marketplace\Download::view'),
         "/ccm/system/marketplace/connect" => array('\Concrete\Controller\Backend\Marketplace\Connect::view'),
         "/ccm/system/marketplace/search" => array('\Concrete\Controller\Backend\Marketplace\Search::view'),
+
+        /**
+         * Express
+         */
+        "/ccm/system/dialogs/express/entry/search/{entityID}" => array('\Concrete\Controller\Dialog\Express\Search::entries'),
+        "/ccm/system/search/express/entries/submit/{entityID}" => array('\Concrete\Controller\Search\Express\Entries::submit'),
+        "/ccm/system/express/entry/get_json" => array('\Concrete\Controller\Backend\Express\Entry::getJSON'),
 
         /*
          * Search Routes
@@ -704,6 +742,10 @@ return array(
             array('javascript', 'js/file-manager.js', array('minify' => false)),
             array('css', 'css/file-manager.css', array('minify' => false)),
         ),
+        'core/express' => array(
+            array('javascript', 'js/express.js', array('minify' => false)),
+            array('css', 'css/express.css', array('minify' => false)),
+        ),
         'core/sitemap' => array(
             array('javascript', 'js/sitemap.js', array('minify' => false)),
             array('css', 'css/sitemap.css', array('minify' => false)),
@@ -959,6 +1001,12 @@ return array(
                 array('javascript', 'core/sitemap'),
                 array('css', 'dynatree'),
                 array('css', 'core/sitemap'),
+            ),
+        ),
+        'core/express' => array(
+            array(
+                array('css', 'core/express'),
+                array('javascript', 'core/express'),
             ),
         ),
         'core/topics' => array(

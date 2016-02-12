@@ -4,6 +4,7 @@ namespace Concrete\Core\Localization;
 use Config;
 use Concrete\Core\Cache\Adapter\ZendCacheDriver;
 use Core;
+use Concrete\Core\Support\Facade\Package;
 use Events;
 use Zend\I18n\Translator\Translator;
 use Punic\Data as PunicData;
@@ -86,7 +87,7 @@ class Localization
             if (Config::get('app.bootstrap.packages_loaded') === true) {
                 $pkgList = \Concrete\Core\Package\PackageList::get();
                 foreach ($pkgList->getPackages() as $pkg) {
-                    $pkg->setupPackageLocalization($locale, $this->translate);
+                    Package::setupLocalization($pkg, $locale, $this->translate);
                 }
             }
         }

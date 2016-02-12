@@ -2,6 +2,7 @@
 namespace Concrete\Core\Url\Resolver;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\Url\Url;
@@ -18,6 +19,11 @@ class CanonicalUrlResolver implements UrlResolverInterface
     /** @var Url */
     protected $cached;
 
+    /**
+     * CanonicalUrlResolver constructor.
+     * @param \Concrete\Core\Application\Application $app
+     * @param \Concrete\Core\Http\Request $request
+     */
     public function __construct(Application $app, Request $request)
     {
         $this->app = $app;
@@ -41,13 +47,18 @@ class CanonicalUrlResolver implements UrlResolverInterface
             return $this->cached;
         }
 
-        $url = Url::createFromUrl('');
+        $config = $this->app['config'];
+
+        // Determine trailing slash setting
+        $trailing_slashes = $config->get('concrete.seo.trailing_slash') ? Url::TRAILING_SLASHES_ENABLED : Url::TRAILING_SLASHES_DISABLED;
+
+        $url = Url::createFromUrl('', $trailing_slashes);
 
         $url->setHost(null);
         $url->setScheme(null);
 
-        if (\Config::get('concrete.seo.canonical_url')) {
-            $canonical = UrlImmutable::createFromUrl(Config::get('concrete.seo.canonical_url'));
+        if ($config->get('concrete.seo.canonical_url')) {
+            $canonical = UrlImmutable::createFromUrl($config->get('concrete.seo.canonical_url'), $trailing_slashes);
 
             // If the request is over https and the canonical url is http, lets just say https for the canonical url.
             if (strtolower($canonical->getScheme()) == 'http' && strtolower($this->request->getScheme()) == 'https') {
@@ -67,15 +78,15 @@ class CanonicalUrlResolver implements UrlResolverInterface
             if ($scheme && $host) {
                 $url->setScheme($scheme)
                     ->setHost($host)
-                    ->setPortIfNecessary(Request::getInstance()->getPort());
+                    ->setPort($this->request->getPort());
             }
         }
 
-        if ($relative_path = \Core::getApplicationRelativePath()) {
+        if ($relative_path = $this->app['app_relative_path']) {
             $url = $url->setPath($relative_path);
         }
 
-        $this->cached = UrlImmutable::createFromUrl($url);
+        $this->cached = UrlImmutable::createFromUrl($url, $trailing_slashes);
 
         return $this->cached;
     }

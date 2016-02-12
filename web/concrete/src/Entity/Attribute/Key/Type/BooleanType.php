@@ -14,6 +14,11 @@ class BooleanType extends Type
      */
     protected $isCheckedByDefault = false;
 
+    public function getAttributeTypeHandle()
+    {
+        return 'boolean';
+    }
+
     /**
      * @return mixed
      */

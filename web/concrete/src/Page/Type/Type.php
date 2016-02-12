@@ -944,7 +944,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         return static::returnList($ptIDs);
     }
 
-    public static function getListByPackage(Package $pkg)
+    public static function getListByPackage($pkg)
     {
         $db = Loader::db();
         $ptIDs = $db->GetCol(
