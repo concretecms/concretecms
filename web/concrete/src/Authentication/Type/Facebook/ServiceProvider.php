@@ -16,8 +16,7 @@ class ServiceProvider extends \Concrete\Core\Foundation\Service\Provider
             'authentication/facebook',
             function ($app, $callback = '/ccm/system/authentication/oauth2/facebook/callback/') {
                 /** @var ServiceFactory $factory */
-                $factory = $app->make('oauth/factory/service');
-
+                $factory = $app->make('oauth/factory/service', array(CURLOPT_SSL_VERIFYPEER => Config::get('app.curl.verifyPeer')));
                 return $factory->createService(
                     'facebook',
                     new Credentials(

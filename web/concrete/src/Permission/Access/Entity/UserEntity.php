@@ -5,7 +5,7 @@ use Config;
 use Loader;
 use PermissionAccess;
 use URL;
-use UserInfo;
+use Concrete\Core\User\UserInfo;
 
 class UserEntity extends Entity
 {
@@ -76,7 +76,7 @@ class UserEntity extends Entity
         $db = Loader::db();
         $uID = $db->GetOne('SELECT uID FROM PermissionAccessEntityUsers WHERE peID = ?', array($this->peID));
         if ($uID) {
-            $ui = UserInfo::getByID($uID);
+            $ui = \UserInfo::getByID($uID);
             if (is_object($ui)) {
                 $this->user = $ui;
                 $this->label = $ui->getUserName();

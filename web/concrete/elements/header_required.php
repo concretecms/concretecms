@@ -17,24 +17,24 @@ if (is_object($c)) {
     // 3. It comes from getCollectionName()
     // In the case of 3, we also pass it through page title format.
 
-    if (!isset($pageTitle) || !$pageTitle) {
-        // we aren't getting it dynamically.
-        $pageTitle = $c->getAttribute('meta_title');
-        if (!$pageTitle) {
-            $pageTitle = $c->getCollectionName();
-            if ($c->isSystemPage()) {
-                $pageTitle = t($pageTitle);
-            }
-            $seo = Core::make('helper/seo');
-            if (!$seo->hasCustomTitle()) {
-                $seo->addTitleSegmentBefore($pageTitle);
-            }
-            $seo->setSiteName(Config::get('concrete.site'));
-            $seo->setTitleFormat(Config::get('concrete.seo.title_format'));
-            $seo->setTitleSegmentSeparator(Config::get('concrete.seo.title_segment_separator'));
-            $pageTitle = $seo->getTitle();
-        }
-    }
+	if (!isset($pageTitle) || !$pageTitle) {
+		// we aren't getting it dynamically.
+		$pageTitle = $c->getCollectionAttributeValue('meta_title');
+		if (!$pageTitle) {
+			$pageTitle = $c->getCollectionName();
+			if($c->isSystemPage()) {
+				$pageTitle = t($pageTitle);
+			}
+			$seo = Core::make('helper/seo');
+			if (!$seo->hasCustomTitle()) {
+				$seo->addTitleSegmentBefore($pageTitle);
+			}
+			$seo->setSiteName(tc('SiteName', Config::get('concrete.site')));
+			$seo->setTitleFormat(Config::get('concrete.seo.title_format'));
+			$seo->setTitleSegmentSeparator(Config::get('concrete.seo.title_segment_separator'));
+			$pageTitle = $seo->getTitle();
+		}
+	}
 
     if (!isset($pageDescription) || !$pageDescription) {
         // we aren't getting it dynamically.
@@ -70,20 +70,19 @@ if (is_object($c)) {
 
 <meta http-equiv="content-type" content="text/html; charset=<?php echo APP_CHARSET?>" />
 <?php
-$akk = $c->getAttribute('meta_keywords');
+if (!isset($pageMetaKeywords) || !$pageMetaKeywords) {
+    $pageMetaKeywords = $c->getCollectionAttributeValue('meta_keywords');
+}
 ?>
 <title><?php echo htmlspecialchars($pageTitle, ENT_COMPAT, APP_CHARSET)?></title>
 <meta name="description" content="<?=htmlspecialchars($pageDescription, ENT_COMPAT, APP_CHARSET)?>" />
 
-<?php if ($akk) {
-    ?>
-<meta name="keywords" content="<?=htmlspecialchars($akk, ENT_COMPAT, APP_CHARSET)?>" />
-<?php 
-}
-if ($c->getAttribute('exclude_search_index')) {
-    ?>
+<? if ($pageMetaKeywords) { ?>
+<meta name="keywords" content="<?=htmlspecialchars($pageMetaKeywords, ENT_COMPAT, APP_CHARSET)?>" />
+<?php }
+if($c->getCollectionAttributeValue('exclude_search_index')) { ?>
     <meta name="robots" content="noindex" />
-<?php 
+<?php
 } ?>
 <?php
 if (Config::get('concrete.misc.app_version_display_in_header')) {
@@ -118,7 +117,7 @@ var CCM_REL = "<?php echo \Core::getApplicationRelativePath()?>";
         <?php echo $scc->getValue();
     ?>
     </style>
-<?php 
+<?php
 } ?>
 
 <?php

@@ -66,9 +66,9 @@ class Limit
         $mh->addParameter('profileURL', View::url('/profile', 'view', $offender->getUserID()));
         $mh->addParameter('profilePreferencesURL', View::url('/profile/edit'));
 
-        $mh->to($admin->getUserEmail());
-        $mh->addParameter('siteName', Config::get('concrete.site'));
-        $mh->load('private_message_admin_warning');
-        $mh->sendMail();
-    }
+		$mh->to($admin->getUserEmail());
+		$mh->addParameter('siteName', tc('SiteName', Config::get('concrete.site')));
+		$mh->load('private_message_admin_warning');
+		$mh->sendMail();
+	}
 }

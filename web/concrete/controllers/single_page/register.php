@@ -32,12 +32,12 @@ class Register extends PageController
 
     public function do_register()
     {
-        $e = Loader::helper('validation/error');
-        $ip = Loader::helper('validation/ip');
-        $txt = Loader::helper('text');
-        $vals = Loader::helper('validation/strings');
-        $valc = Loader::helper('concrete/validation');
-        $token = \Core::make('Concrete\Core\Validation\CSRF\Token');
+        $config = $this->app->make('config');
+        $e = $this->app->make('error');
+        $ip = $this->app->make('helper/validation/ip');
+        $vals = $this->app->make('helper/validation/strings');
+        $valc = $this->app->make('helper/concrete/validation');
+        $token = $this->app->make('token');
 
         if ($token->validate('register.do_register')) {
             $username = $_POST['uName'];
@@ -52,8 +52,8 @@ class Register extends PageController
                 $e->add($ip->getErrorMessage());
             }
 
-            if (Config::get('concrete.user.registration.captcha')) {
-                $captcha = Loader::helper('validation/captcha');
+            if ($config->get('concrete.user.registration.captcha')) {
+                $captcha = $this->app->make('helper/validation/captcha');
                 if (!$captcha->check()) {
                     $e->add(t("Incorrect image validation code. Please check the image and re-enter the letters or numbers as necessary."));
                 }
@@ -66,18 +66,18 @@ class Register extends PageController
 			}
 
             if ($this->displayUserName) {
-                if (strlen($username) < Config::get('concrete.user.username.minimum')) {
+                if (strlen($username) < $config->get('concrete.user.username.minimum')) {
                     $e->add(t('A username must be at least %s characters long.',
-                            Config::get('concrete.user.username.minimum')));
+                        $config->get('concrete.user.username.minimum')));
                 }
 
-                if (strlen($username) > Config::get('concrete.user.username.maximum')) {
+                if (strlen($username) > $config->get('concrete.user.username.maximum')) {
                     $e->add(t('A username cannot be more than %s characters long.',
-                            Config::get('concrete.user.username.maximum')));
+                        $config->get('concrete.user.username.maximum')));
                 }
 
-                if (strlen($username) >= Config::get('concrete.user.username.minimum') && strlen($username) <= Config::get('concrete.user.username.maximum') && !$valc->username($username)) {
-                    if (Config::get('concrete.user.username.allow_spaces')) {
+                if (strlen($username) >= $config->get('concrete.user.username.minimum') && strlen($username) <= $config->get('concrete.user.username.maximum') && !$valc->username($username)) {
+                    if ($config->get('concrete.user.username.allow_spaces')) {
                         $e->add(t('A username may only contain letters, numbers, spaces (not at the beginning/end), dots (not at the beginning/end), underscores (not at the beginning/end).'));
                     } else {
                         $e->add(t('A username may only contain letters, numbers, dots (not at the beginning/end), underscores (not at the beginning/end).'));
@@ -131,10 +131,10 @@ class Register extends PageController
             if (is_object($process)) {
                 $process->saveUserAttributesForm($aks);
 
-                if (Config::get('concrete.user.registration.notification')) { //do we notify someone if a new user is added?
-                    $mh = Loader::helper('mail');
-                    if (Config::get('concrete.user.registration.notification_email')) {
-                        $mh->to(Config::get('concrete.user.registration.notification_email'));
+                if ($config->get('concrete.user.registration.notification')) { //do we notify someone if a new user is added?
+                    $mh = $this->app->make('mail');
+                    if ($config->get('concrete.user.registration.notification_email')) {
+                        $mh->to($config->get('concrete.user.registration.notification_email'));
                     } else {
                         $adminUser = UserInfo::getByID(USER_SUPER_ID);
                         if (is_object($adminUser)) {
@@ -152,9 +152,9 @@ class Register extends PageController
                         $attribValues[] = $ak->getAttributeKeyDisplayName('text') . ': ' . $process->getAttribute($ak->getAttributeKeyHandle(), 'display');
                     }
                     $mh->addParameter('attribs', $attribValues);
-                    $mh->addParameter('siteName', Config::get('concrete.site'));
+                    $mh->addParameter('siteName', tc('SiteName', $config->get('concrete.site')));
 
-					if (Config::get('concrete.user.registration.notification_email')) {
+					if ($config->get('concrete.user.registration.notification_email')) {
 						$mh->from(Config::get('concrete.user.registration.notification_email'),  t('Website Registration Notification'));
 					} else {
 						$adminUser = UserInfo::getByID(USER_SUPER_ID);
@@ -168,8 +168,8 @@ class Register extends PageController
 				}
 
                 // now we log the user in
-                if (Config::get('concrete.user.registration.email_registration')) {
-                    $u = new User($_POST['uEmail'], $_POST['uPassword']);
+                if ($config->get('concrete.user.registration.email_registration')) {
+                    $u = new User($this->post('uEmail'), $this->post('uPassword'));
                 } else {
                     $u = new User($_POST['uName'], $_POST['uPassword']);
                 }
@@ -187,14 +187,14 @@ class Register extends PageController
 				// we need to default the new user to inactive (uIsActive=0).
 				$process->deactivate();
 
-				// now we check whether we need to validate this user's email address
-				if (Config::get('concrete.user.registration.validate_email')) {
+                // now we check whether we need to validate this user's email address
+                if ($config->get('concrete.user.registration.validate_email')) {
                     $uHash = $process->setupValidation();
 
-                    $mh = Loader::helper('mail');
-                    $fromEmail = (string) Config::get('concrete.email.validate_registration.address');
+                    $mh = $this->app->make('mail');
+                    $fromEmail = (string) $config->get('concrete.email.validate_registration.address');
                     if (strpos($fromEmail, '@')) {
-                        $fromName = (string) Config::get('concrete.email.validate_registration.name');
+                        $fromName = (string) $config->get('concrete.email.validate_registration.name');
                         if ($fromName === '') {
                             $fromName = t('Validate Email Address');
                         }
@@ -202,8 +202,8 @@ class Register extends PageController
                     }
                     $mh->addParameter('uEmail', $_POST['uEmail']);
                     $mh->addParameter('uHash', $uHash);
-                    $mh->addParameter('site', Config::get('concrete.site'));
-                    $mh->to($_POST['uEmail']);
+                    $mh->addParameter('site', tc('SiteName', $config->get('concrete.site')));
+                    $mh->to($this->post('uEmail'));
                     $mh->load('validate_user_email');
                     $mh->sendMail();
 

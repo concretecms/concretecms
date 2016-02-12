@@ -70,18 +70,8 @@ class Localization
                     $languageFile = '';
                 }
             }
-            if (strlen($languageFile)) {
+            if ($languageFile !== '') {
                 $this->translate->addTranslationFile('gettext', $languageFile);
-            }
-            // Site language files
-            if (\Core::make('multilingual/detector')->isEnabled()) {
-                $languageFile = DIR_LANGUAGES_SITE_INTERFACE . "/$locale.mo";
-                if (!is_file($languageFile)) {
-                    $languageFile = '';
-                }
-                if (strlen($languageFile)) {
-                    $this->translate->addTranslationFile('gettext', $languageFile);
-                }
             }
             // Package language files
             if (Config::get('app.bootstrap.packages_loaded') === true) {
@@ -89,12 +79,32 @@ class Localization
                 foreach ($pkgList->getPackages() as $pkg) {
                     Package::setupLocalization($pkg, $locale, $this->translate);
                 }
+                // Site language files
+                static::setupSiteLocalization($this->translate);
             }
         }
         PunicData::setDefaultLocale($locale);
         $event = new \Symfony\Component\EventDispatcher\GenericEvent();
         $event->setArgument('locale', $locale);
         Events::dispatch('on_locale_load', $event);
+    }
+
+    /**
+     * Load the site language files (must be done after all packages called their setupPackageLocalization)
+     */
+    public static function setupSiteLocalization(Translator $translate = null)
+    {
+        if (\Core::make('multilingual/detector')->isEnabled()) {
+            if ($translate === null) {
+                $translate = static::getInstance()->getActiveTranslateObject();
+            }
+            if ($translate !== null) {
+                $languageFile = DIR_LANGUAGES_SITE_INTERFACE . "/" . $translate->getLocale() . ".mo";
+                if (is_file($languageFile)) {
+                    $translate->addTranslationFile('gettext', $languageFile);
+                }
+            }
+        }
     }
 
     public function getLocale()

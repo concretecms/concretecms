@@ -3,6 +3,7 @@ $pageSelector = Loader::helper('form/page_selector');
 $nh = Loader::helper('navigation');
 $th = Loader::helper('text');
 $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
+/* @var Concrete\Controller\SinglePage\Dashboard\System\Seo\Bulk $controller */
 ?>
 
 <style>
@@ -154,14 +155,14 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                             <label><?php echo t('Meta Title');
             ?></label>
                             <?php $seoPageTitle = $cobj->getCollectionName();
-            $seoPageTitle = htmlspecialchars($seoPageTitle, ENT_COMPAT, APP_CHARSET);
-            $autoTitle = sprintf(Config::get('concrete.seo.title_format'), $siteName, $seoPageTitle);
-            $titleInfo = array('title' => $cID);
-            if (strlen($cobj->getAttribute('meta_title')) <= 0) {
-                $titleInfo[style] = 'background: whiteSmoke';
-            }
-            echo $form->text('meta_title', $cobj->getAttribute('meta_title') ? $cobj->getAttribute('meta_title') : $autoTitle, $titleInfo);
-            echo $titleInfo[style] ? '<span class="help-inline">' . t('Default value. Click to edit.') . '</span>' : '' ?>
+                            $seoPageTitle = htmlspecialchars($seoPageTitle, ENT_COMPAT, APP_CHARSET);
+                            $autoTitle = sprintf(Config::get('concrete.seo.title_format'), $controller->getSiteNameForPage($cobj), $seoPageTitle);
+                            $titleInfo = array('title' => $cID);
+                            if(strlen($cobj->getAttribute('meta_title')) <= 0) {
+                                $titleInfo[style] = 'background: whiteSmoke';
+                            }
+                            echo $form->text('meta_title', $cobj->getAttribute('meta_title') ? $cobj->getAttribute('meta_title') : $autoTitle, $titleInfo);
+                            echo $titleInfo[style] ? '<span class="help-inline">' . t('Default value. Click to edit.') . '</span>' : '' ?>
                         </div>
                         <div class="form-group">
                             <label><?php echo t('Meta Description');
@@ -198,7 +199,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
     ?></a><?php
                             ?>
                         </div>
-                        <?php 
+                        <?php
 }
             ?>
                         <div class="form-group submit-changes">
@@ -210,7 +211,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                         </div>
                     </div>
             </div>
-            <?php 
+            <?php
         }
         ?>
         </div>
@@ -219,11 +220,11 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                 <button id="allSeoSubmit" class="btn pull-right btn-success"><?php echo t('Save All') ?></button>
             </div>
         </div>
-        <?php 
+        <?php
     } else {
         ?>
         <div class="ccm-results-list-none"><?php echo t('No pages found.')?></div>
-        <?php 
+        <?php
     } ?>
         <script type="text/javascript">
         $(document).ready(function() {
@@ -233,7 +234,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                   $(this).closest('.ccm-seo-rows').find('.btn').addClass('btn-success');
                });
             });
-            $('.submit-changes').click(function(event) {
+            $('a.submit-changes').click(function(event) {
                 event.preventDefault();
                 var iterator = $(this).attr('data-cID');
                 var throbber = $('.ccm-seoRow-'+iterator+' .throbber');
@@ -290,6 +291,6 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
     <div style="text-align: center">
         <?=$pagination?>
     </div>
-    <?php 
+    <?php
 } ?>
 </div>

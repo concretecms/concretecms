@@ -40,8 +40,8 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow
     }
 
     /**
-     +	 * Returns true if the logged-in user can approve the current workflow.
-     +	 */
+     * Returns true if the logged-in user can approve the current workflow
+     */
     public function canApproveWorkflow()
     {
         $pk = Key::getByHandle('approve_basic_workflow_action');
@@ -112,7 +112,7 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow
             foreach ($parameters as $key => $value) {
                 $mh->addParameter($key, $value);
             }
-            $mh->addParameter('siteName', Config::get('concrete.site'));
+            $mh->addParameter('siteName', tc('SiteName', Config::get('concrete.site')));
             $mh->load('basic_workflow_notification');
             $mh->sendMail();
             unset($mh);

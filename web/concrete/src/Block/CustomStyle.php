@@ -33,7 +33,11 @@ class CustomStyle extends AbstractCustomStyle
         }
         $f = $set->getBackgroundImageFileObject();
         if (is_object($f)) {
-            $groups[''][] = 'background-image: url(' . $f->getRelativePath() . ')';
+            $url = $f->getRelativePath();
+            if (!$url) {
+                $url = $f->getURL();
+            }
+            $groups[''][] = 'background-image: url(' . $url . ')';
             $groups[''][] = 'background-repeat: ' . $set->getBackgroundRepeat();
             $groups[''][] = 'background-size: ' . $set->getBackgroundSize();
             $groups[''][] = 'background-position: ' . $set->getBackgroundPosition();
