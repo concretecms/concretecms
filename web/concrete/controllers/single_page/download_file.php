@@ -11,13 +11,17 @@ class DownloadFile extends PageController
 {
     protected $force = 0;
 
+    /**
+     * @param int $fID File ID
+     * @param null|int $rcID
+     */
     public function view($fID = 0, $rcID = null)
     {
-        // get the block
-        if ($fID > 0 && Core::make('helper/validation/numbers')->integer($fID)) {
+        // get the file
+        if ($fID > 0 && $this->app->make('helper/validation/numbers')->integer($fID)) {
             $file = File::getByID($fID);
             if ($file instanceof File && $file->getFileID() > 0) {
-                $rcID = Core::make('helper/security')->sanitizeInt($rcID);
+                $rcID = $this->app->make('helper/security')->sanitizeInt($rcID);
                 if ($rcID > 0) {
                     $rc = Page::getByID($rcID, 'ACTIVE');
                     if (is_object($rc) && !$rc->isError()) {
@@ -32,7 +36,7 @@ class DownloadFile extends PageController
                     return false;
                 }
 
-                // if block password is blank download
+                // if file password is blank, download
                 if (!$file->getPassword()) {
                     if ($this->force) {
                         return $this->force_download($file, $rcID);
@@ -51,6 +55,10 @@ class DownloadFile extends PageController
         }
     }
 
+    /**
+     * @param int $fID File ID
+     * @param null|int $rcID
+     */
     public function force($fID = 0, $rcID = null)
     {
         $this->force = true;
@@ -58,9 +66,12 @@ class DownloadFile extends PageController
         return $this->view($fID, $rcID);
     }
 
+    /**
+     * @param int $fID File ID
+     */
     public function view_inline($fID = 0)
     {
-        if ($fID > 0 && Core::make('helper/validation/numbers')->integer($fID)) {
+        if ($fID > 0 && $this->app->make('helper/validation/numbers')->integer($fID)) {
             $file = File::getByID($fID);
             $fp = new Permissions($file);
             if (!$fp->canViewFile()) {
@@ -71,18 +82,21 @@ class DownloadFile extends PageController
             $fsl = $file->getFileStorageLocationObject()->getFileSystemObject();
             $mimeType = $file->getMimeType();
             header("Content-type: $mimeType");
-            print $file->getFileContents();
-            exit;
+            echo $file->getFileContents();
+            $this->app->shutdown();
         }
     }
 
+    /**
+     * @param int $fID File ID
+     */
     public function submit_password($fID = 0)
     {
-        if ($fID > 0 && Core::make('helper/validation/numbers')->integer($fID)) {
+        if ($fID > 0 && $this->app->make('helper/validation/numbers')->integer($fID)) {
             $f = File::getByID($fID);
 
-            $rcID = ($this->post('rcID') ? $this->post('rcID') : null);
-            $rcID = Core::make('helper/security')->sanitizeInt($rcID);
+            $rcID = $this->post('rcID');
+            $rcID = $this->app->make('helper/security')->sanitizeInt($rcID);
 
             if ($f->getPassword() == $this->post('password')) {
                 if ($this->post('force')) {
@@ -93,13 +107,16 @@ class DownloadFile extends PageController
             }
 
             $this->set('error', t("Password incorrect. Please try again."));
-
             $this->set('force', ($this->post('force') ? 1 : 0));
 
             $this->view($fID, $rcID);
         }
     }
 
+    /**
+     * @param \Concrete\Core\File\File $file
+     * @param null|int $rcID
+     */
     protected function download(\Concrete\Core\File\File $file, $rcID = null)
     {
         $filename = $file->getFilename();
@@ -114,10 +131,18 @@ class DownloadFile extends PageController
         }
     }
 
+    /**
+     * Forces the download of a file and shuts down.
+     * Returns null if approved version wasn't found.
+     *
+     * @param File $file
+     * @param null|int $rcID
+     */
     protected function force_download($file, $rcID = null)
     {
         $file->trackDownload($rcID);
 
+        // Magic call to approved FileVersion
         return $file->forceDownload();
     }
 }
