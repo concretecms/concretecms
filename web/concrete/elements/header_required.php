@@ -72,13 +72,15 @@ if (is_object($c)) {
 
 <meta http-equiv="content-type" content="text/html; charset=<?php echo APP_CHARSET?>" />
 <?php
-$akk = $c->getCollectionAttributeValue('meta_keywords');
+if (!isset($pageMetaKeywords) || !$pageMetaKeywords) {
+    $pageMetaKeywords = $c->getCollectionAttributeValue('meta_keywords');
+}
 ?>
 <title><?php echo htmlspecialchars($pageTitle, ENT_COMPAT, APP_CHARSET)?></title>
 <meta name="description" content="<?=htmlspecialchars($pageDescription, ENT_COMPAT, APP_CHARSET)?>" />
 
-<? if ($akk) { ?>
-<meta name="keywords" content="<?=htmlspecialchars($akk, ENT_COMPAT, APP_CHARSET)?>" />
+<? if ($pageMetaKeywords) { ?>
+<meta name="keywords" content="<?=htmlspecialchars($pageMetaKeywords, ENT_COMPAT, APP_CHARSET)?>" />
 <?php }
 if($c->getCollectionAttributeValue('exclude_search_index')) { ?>
     <meta name="robots" content="noindex" />
