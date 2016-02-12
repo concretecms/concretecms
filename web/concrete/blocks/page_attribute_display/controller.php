@@ -66,7 +66,7 @@ class Controller extends BlockController
             default:
                 $content = $c->getAttribute($this->attributeHandle);
                 if (is_object($content) && $content instanceof \Concrete\Core\File\File) {
-                    if ($this->thumbnailWidth > 0 || $this->thumbnailWidth > 0) {
+                    if ($this->thumbnailWidth > 0 || $this->thumbnailHeight > 0) {
                         $im = Core::make('helper/image');
                         $thumb = $im->getThumbnail(
                             $content,
