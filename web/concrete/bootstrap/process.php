@@ -106,13 +106,13 @@ if (isset($_GET['atask']) && $_GET['atask'] && $valt->validate()) {
                     $obj->error = false;
 
                     if ($_REQUEST['dragAreaBlockID'] > 0 && Loader::helper('validation/numbers')
-                                                                  ->integer(
-                                                                  $_REQUEST['dragAreaBlockID'])
+                            ->integer(
+                                $_REQUEST['dragAreaBlockID'])
                     ) {
                         $db = Block::getByID(
-                                   $_REQUEST['dragAreaBlockID'],
-                                   $this->pageToModify,
-                                   $this->areaToModify);
+                            $_REQUEST['dragAreaBlockID'],
+                            $this->pageToModify,
+                            $this->areaToModify);
                         if (is_object($db) && !$db->isError()) {
                             $nb->moveBlockToDisplayOrderPosition($db);
                         }
@@ -173,6 +173,17 @@ if (isset($_REQUEST['ctask']) && $_REQUEST['ctask'] && $valt->validate()) {
             }
             break;
 
+        case 'publish-now':
+            if ($cp->canApprovePageVersions()) {
+                $v = CollectionVersion::get($c, "ACTIVE");
+                $v->setPublishDate(null);
+
+                header('Location: ' . \Core::getApplicationURL() . '/' . DISPATCHER_FILENAME .
+                    '?cID=' . $c->getCollectionID() . $step);
+
+                exit;
+            }
+            break;
     }
 }
 
@@ -273,13 +284,13 @@ if (isset($_REQUEST['processBlock']) && $_REQUEST['processBlock'] && $valt->vali
                 $obj = new stdClass();
                 if (is_object($nb)) {
                     if ($_REQUEST['dragAreaBlockID'] > 0 && Loader::helper('validation/numbers')
-                                                                  ->integer(
-                                                                  $_REQUEST['dragAreaBlockID'])
+                            ->integer(
+                                $_REQUEST['dragAreaBlockID'])
                     ) {
                         $db = Block::getByID(
-                                   $_REQUEST['dragAreaBlockID'],
-                                   $this->pageToModify,
-                                   $this->areaToModify);
+                            $_REQUEST['dragAreaBlockID'],
+                            $this->pageToModify,
+                            $this->areaToModify);
                         if (is_object($db) && !$db->isError()) {
                             $nb->moveBlockToDisplayOrderPosition($db);
                         }
