@@ -1,11 +1,15 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\Extend;
 
+use Concrete\Core\Error\Error;
 use Concrete\Core\Package\BrokenPackage;
+use Concrete\Core\Package\ContentSwapper;
+use Concrete\Core\Package\ItemCategory\Manager;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Loader;
 use TaskPermission;
-use Package;
+use Concrete\Core\Support\Facade\Package;
+use Concrete\Core\Entity\Package as PackageEntity;
 use Localization;
 use Marketplace;
 use Concrete\Core\Marketplace\RemoteItem as MarketplaceRemoteItem;
@@ -31,9 +35,10 @@ class Install extends DashboardPageController
         if (!is_object($pkg)) {
             $this->redirect("/dashboard/extend/install");
         }
+        $manager = new Manager($this->app);
         $this->set('text', Loader::helper('text'));
         $this->set('pkg', $pkg);
-        $this->set('items', $pkg->getPackageItems());
+        $this->set('categories', $manager->getPackageItemCategories());
     }
 
     public function do_uninstall_package()
@@ -60,30 +65,22 @@ class Install extends DashboardPageController
         }
 
         if (!$this->error->has()) {
-            $test = $pkg->testForUninstall();
+            $p = $pkg->getController();
+            $test = $p->testForUninstall();
 
-            if ($test === true) {
-                $pkg->uninstall();
+            if (!is_object($test)) {
+                $r = Package::uninstall($p);
                 if ($this->post('pkgMoveToTrash')) {
                     $r = $pkg->backup();
-                    if (is_array($r)) {
-                        $pe = Package::mapError($r);
-                        foreach ($pe as $ei) {
-                            $this->error->add($ei);
-                        }
+                    if (is_object($r)) {
+                        $this->error->add($r);
                     }
                 }
                 if (!$this->error->has()) {
                     $this->redirect('/dashboard/extend/install', 'package_uninstalled');
                 }
             } else {
-                foreach ($test as $error_code) {
-                    switch ($error_code) {
-                        case $pkg::E_PACKAGE_THEME_ACTIVE:
-                            $this->error->add(new Exception(
-                                t('This package contains the active site theme, please change the theme before uninstalling.')));
-                    }
-                }
+                $this->error->add($test);
             }
         }
 
@@ -96,7 +93,9 @@ class Install extends DashboardPageController
             $pkg = Package::getByID($pkgID);
         }
 
-        if (isset($pkg) && ($pkg instanceof Package)) {
+        if (isset($pkg) && ($pkg instanceof PackageEntity)) {
+            $manager = new Manager($this->app);
+            $this->set('categories', $manager->getPackageItemCategories());
             $this->set('pkg', $pkg);
         } else {
             $this->redirect('/dashboard/extend/install');
@@ -120,38 +119,19 @@ class Install extends DashboardPageController
                     (!$p->showInstallOptionsScreen()) ||
                     Loader::helper('validation/token')->validate('install_options_selected')
                 ) {
-                    $tests = Package::testForInstall($package);
-                    if (is_array($tests)) {
-                        $tests = Package::mapError($tests);
-                        foreach ($tests as $test) {
-                            $this->error->add($test);
-                        }
+                    $tests = $p->testForInstall();
+                    if (is_object($tests)) {
+                        $this->error->add($tests);
                     } else {
-                        $currentLocale = Localization::activeLocale();
-                        if ($currentLocale != 'en_US') {
-                            // Prevent the database records being stored in wrong language
-                            Localization::changeLocale('en_US');
-                        }
-                        try {
-                            $u = new User();
-                            $pkg = $p->install($this->post());
-                            if ($u->isSuperUser() && $p->allowsFullContentSwap() && $this->post('pkgDoFullContentSwap')) {
-                                $p->swapContent($this->post());
-                            }
-                            if ($currentLocale != 'en_US') {
-                                Localization::changeLocale($currentLocale);
-                            }
-                            $pkg = Package::getByHandle($p->getPackageHandle());
-                            $this->redirect('/dashboard/extend/install', 'package_installed', $pkg->getPackageID());
-                        } catch (\Exception $e) {
-                            if ($currentLocale != 'en_US') {
-                                Localization::changeLocale($currentLocale);
-                            }
+                        $r = Package::install($p, $this->post());
+                        if ($r instanceof Error) {
+                            $this->error->add($r);
                             if ($p->showInstallOptionsScreen()) {
                                 $this->set('showInstallOptionsScreen', true);
                                 $this->set('pkg', $p);
                             }
-                            $this->error = $e;
+                        } else {
+                            $this->redirect('/dashboard/extend/install', 'package_installed', $r->getPackageID());
                         }
                     }
                 } else {
@@ -186,14 +166,7 @@ class Install extends DashboardPageController
 
             $r = $mri->download();
             if ($r != false) {
-                if (!is_array($r)) {
-                    $this->error->add($r);
-                } else {
-                    $errors = Package::mapError($r);
-                    foreach ($errors as $error) {
-                        $this->error->add($error);
-                    }
-                }
+                $this->error->add($r);
             } else {
                 $this->set('message', t('Marketplace item %s downloaded successfully.', $mri->getName()));
             }

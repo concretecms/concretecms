@@ -118,7 +118,7 @@ class Version
      *   @JoinColumn(name="fvID", referencedColumnName="fvID")
      * })
      */
-    protected $attributes = null;
+    protected $attributes;
 
     /**
      * @Column(type="integer")
@@ -730,6 +730,7 @@ class Version
             return false;
         }
 
+        $width = $this->getAttribute('width');
         $types = Type::getVersionList();
 
         $fr = $this->getFileResource();
@@ -742,7 +743,7 @@ class Version
                 // delete the file if it exists
                 $this->deleteThumbnail($type);
 
-                if ($this->getAttribute('width') <= $type->getWidth()) {
+                if ($width <= $type->getWidth()) {
                     continue;
                 }
 
@@ -923,6 +924,14 @@ class Version
     }
 
     /**
+     * @return mixed
+     */
+    public function getAttributes()
+    {
+        return $this->attributes;
+    }
+
+    /**
      * Responsible for taking a particular version of a file and rescanning all its attributes
      * This will run any type-based import routines, and store those attributes, generate thumbnails,
      * etc...
@@ -932,7 +941,6 @@ class Version
         $fh = Core::make('helper/file');
         $ext = $fh->getExtension($this->fvFilename);
         $ftl = FileTypeList::getType($ext);
-        $db = Database::get();
 
         $fsr = $this->getFileResource();
         if (!$fsr->isFile()) {
@@ -955,6 +963,8 @@ class Version
                 $cl->inspect($this);
             }
         }
+
+        \ORM::entityManager('core')->refresh($this);
 
         if ($rescanThumbnails) {
             $this->rescanThumbnails();
@@ -979,6 +989,7 @@ class Version
         $r = new stdClass();
         $fp = new Permissions($this->getFile());
         $r->canCopyFile = $fp->canCopyFile();
+        $r->canEditFileProperties = $fp->canEditFileProperties();
         $r->canEditFilePermissions = $fp->canEditFilePermissions();
         $r->canDeleteFile = $fp->canDeleteFile();
         $r->canReplaceFile = $fp->canEditFileContents();
@@ -1042,8 +1053,9 @@ class Version
             $type = Type::getByHandle(\Config::get('concrete.icons.file_manager_listing.handle'));
             $baseSrc = $this->getThumbnailURL($type->getBaseVersion());
             $doubledSrc = $this->getThumbnailURL($type->getDoubledVersion());
-
-            return '<img src="' . $baseSrc . '" data-at2x="' . $doubledSrc . '" />';
+            $width = $type->getWidth();
+            $height = $type->getHeight();
+            return sprintf('<img width="%s" height="%s" src="%s" data-at2x="%s">', $width, $height, $baseSrc, $doubledSrc);
         } else {
             return $this->getTypeObject()->getThumbnail();
         }

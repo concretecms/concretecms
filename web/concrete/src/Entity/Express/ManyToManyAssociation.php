@@ -42,4 +42,10 @@ class ManyToManyAssociation extends Association
     {
         return new ManyToManyFormatter($this);
     }
+
+    public function getSaveHandler()
+    {
+        return \Core::make('\Concrete\Core\Express\Form\Control\SaveHandler\ManyAssociationSaveHandler');
+    }
+
 }

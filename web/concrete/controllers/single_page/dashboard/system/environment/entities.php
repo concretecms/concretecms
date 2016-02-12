@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\System\Environment;
 
+use Concrete\Core\Database\DatabaseStructureManager;
 use Concrete\Core\Package\Package;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Core;
@@ -42,7 +43,7 @@ class Entities extends DashboardPageController
                         $package->installEntitiesDatabase();
                     }
 
-                    $dbm = Core::make('database/structure', array($em));
+                    $dbm = new DatabaseStructureManager($em);
                     $dbm->destroyProxyClasses('ApplicationSrc');
                     if ($dbm->hasEntities()) {
                         $dbm->generateProxyClasses();

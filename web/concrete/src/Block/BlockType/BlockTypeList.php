@@ -39,7 +39,7 @@ class BlockTypeList extends DatabaseItemList
         return $blocktypes;
     }
 
-    public function filterByPackage(Package $pkg)
+    public function filterByPackage($pkg)
     {
         $this->filter('pkgID', $pkg->getPackageID());
     }

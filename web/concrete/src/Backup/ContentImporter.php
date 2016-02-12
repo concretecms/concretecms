@@ -119,6 +119,7 @@ class ContentImporter
     {
         $pkg = false;
         if ($pkgHandle) {
+            $pkgHandle = (string) $pkgHandle;
             $pkg = Package::getByHandle($pkgHandle);
         }
 
@@ -996,8 +997,9 @@ class ContentImporter
                 $controller = $akc->getController();
                 $attribute = $controller->getAttributeKeyByHandle((string) $ak['handle']);
                 if (!$attribute) {
+                    $pkg = static::getPackageObject($ak['package']);
                     $type = Type::getByHandle((string) $ak['type']);
-                    $key = $controller->import($type, $ak);
+                    $key = $controller->import($type, $ak, $pkg);
                 }
             }
         }

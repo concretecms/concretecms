@@ -3336,34 +3336,6 @@
     </index>
   </table>
 
-  <table name="Packages">
-    <field name="pkgID" type="integer" size="10">
-      <unsigned/>
-      <autoincrement/>
-      <key/>
-    </field>
-    <field name="pkgName" type="string" size="255">
-      <notnull/>
-    </field>
-    <field name="pkgHandle" type="string" size="64">
-      <notnull/>
-    </field>
-    <field name="pkgDescription" type="text" size="65535"/>
-    <field name="pkgDateInstalled" type="datetime">
-      <notnull/>
-    </field>
-    <field name="pkgIsInstalled" type="boolean">
-      <default value="1"/>
-      <notnull/>
-    </field>
-    <field name="pkgVersion" type="string" size="32"/>
-    <field name="pkgAvailableVersion" type="string" size="32"/>
-    <index name="pkgHandle">
-      <unique/>
-      <col>pkgHandle</col>
-    </index>
-  </table>
-
   <table name="PageFeeds">
     <field name="pfID" type="integer" size="10">
       <unsigned/>
@@ -4118,6 +4090,10 @@
     </field>
     <field name="uTimezone" type="string" size="255"/>
     <field name="uDefaultLanguage" type="string" size="32"/>
+    <field name="ulsPasswordReset" type="boolean">
+      <default value="0"/>
+      <notnull/>
+    </field>
     <index name="uName">
       <unique/>
       <col>uName</col>

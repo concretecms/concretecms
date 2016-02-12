@@ -1,6 +1,6 @@
 <?php
 
-class FormControlTypeTest extends ConcreteDatabaseTestCase
+class FormControlTypeTest extends PHPUnit_Framework_TestCase
 {
     public function testList()
     {

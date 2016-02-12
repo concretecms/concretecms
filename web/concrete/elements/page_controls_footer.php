@@ -54,7 +54,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
     ?>
                         <li class="ccm-toolbar-page-edit-mode-active ccm-toolbar-page-edit"><i
                                 class="fa fa-pencil mobile-leading-icon"></i><a <?php if ($c->isMasterCollection()) {
-    ?>data-disable-panel="check-in"<?php 
+    ?>data-disable-panel="check-in"<?php
 }
     ?> data-toolbar-action="check-in"
                                                                                 <?php if ($vo->isNew() && !$c->isMasterCollection()) {
@@ -72,18 +72,18 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 
 }
     ?></a></li>
-                    <?php 
+                    <?php
 } elseif ($permissions->canEditPageContents()) {
     ?>
                         <li class="ccm-toolbar-page-edit"><i class="fa fa-pencil mobile-leading-icon"></i><a
                                 <?php if ($c->isMasterCollection()) {
-    ?>data-disable-panel="check-in"<?php 
+    ?>data-disable-panel="check-in"<?php
 }
     ?>
                                 data-toolbar-action="check-out"
                                 href="<?= DIR_REL ?>/<?= DISPATCHER_FILENAME ?>?cID=<?= $c->getCollectionID() ?>&ctask=check-out<?= $token ?>"><?php echo t(
                                     'Edit this Page') ?></a></li>
-                    <?php 
+                    <?php
 }
     ?>
                     <li class="parent-ul"><i class="fa fa-cog mobile-leading-icon"></i><a href="#"><?php echo t(
@@ -122,7 +122,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                                                '/ccm/system/panels/details/page/location') ?>?cID=<?= $cID ?>"><?= t(
                                                 'Location');
             ?></a></li>
-                                <?php 
+                                <?php
         }
         ?>
                                 <li><a class="dialog-launch" dialog-width="90%" dialog-height="70%"
@@ -175,12 +175,12 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                                        dialog-modal="false" dialog-title="<?= t('Delete') ?>" href="<?= URL::to(
                                         '/ccm/system/dialogs/page/delete') ?>?cID=<?= $cID ?>"><?php echo t(
                                             'Delete') ?></a></li>
-                            <?php 
+                            <?php
     }
     ?>
                         </ul>
                     </li>
-                <?php 
+                <?php
 }
     ?>
                 <?php if ($dh->canRead()) {
@@ -218,7 +218,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
     ?></a></li>
                     </ul>
                 </li>
-                <?php 
+                <?php
 }
     ?>
                 <li>
@@ -242,7 +242,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
     ?>
                 </span>
             </a>
-            <?php 
+            <?php
 }
     ?>
             <?php if (!$pageInUseBySomeoneElse && $c->getCollectionPointerID() == 0) {
@@ -252,16 +252,16 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
     ?>
         <li data-guide-toolbar-action="check-in"  class="ccm-toolbar-page-edit-mode-active ccm-toolbar-page-edit pull-left hidden-xs">
             <a <?php if ($c->isMasterCollection()) {
-    ?>data-disable-panel="check-in"<?php 
+    ?>data-disable-panel="check-in"<?php
 }
     ?> data-toolbar-action="check-in" <?php if ($vo->isNew() || $c->isPageDraft()) {
     ?>href="javascript:void(0)"
-               data-launch-panel="check-in" <?php 
+               data-launch-panel="check-in" <?php
 } else {
     ?>href="<?= URL::to(
                 '/ccm/system/page/check_in',
                 $c->getCollectionID(),
-                $valt->generate()) ?>"<?php 
+                $valt->generate()) ?>"<?php
 }
     ?>
                data-panel-url="<?= URL::to('/ccm/system/panels/page/check_in') ?>"
@@ -272,12 +272,12 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                 </span>
             </a>
         </li>
-    <?php 
+    <?php
 } elseif ($permissions->canEditPageContents()) {
     ?>
         <li data-guide-toolbar-action="edit-page" class="ccm-toolbar-page-edit pull-left hidden-xs">
             <a <?php if ($c->isMasterCollection()) {
-    ?>data-disable-panel="check-in"<?php 
+    ?>data-disable-panel="check-in"<?php
 }
     ?> data-toolbar-action="check-out"
                href="<?= DIR_REL ?>/<?= DISPATCHER_FILENAME ?>?cID=<?= $c->getCollectionID() ?>&ctask=check-out<?= $token ?>"
@@ -288,7 +288,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                 </span>
             </a>
         </li>
-    <?php 
+    <?php
 }
     ?>
 
@@ -298,18 +298,25 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                 $permissions->canEditPageTemplate() ||
                 $permissions->canDeletePage() ||
                 $permissions->canEditPagePermissions())) {
-    ?>
+                $hasComposer = is_object($pagetype) && $cp->canEditPageContents(); ?>
         <li data-guide-toolbar-action="page-settings" class="pull-left hidden-xs">
             <a href="#" data-launch-panel="page"
                data-panel-url="<?= URL::to('/ccm/system/panels/page') ?>"
+               <?php if ($hasComposer) { ?>}
+               title="<?= t('Composer, Page Design, Location, Attributes and Settings') ?>">
+               <?php } else { ?>
                title="<?= t('Page Design, Location, Attributes and Settings') ?>">
+               <?php } ?>
                 <i class="fa fa-cog"></i>
                 <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-settings">
+                    <? if ($hasComposer) { ?>
+                    <?= tc('toolbar', 'Composer') ?> /
+                    <? } ?>
                     <?= tc('toolbar', 'Page Settings') ?>
                 </span>
             </a>
         </li>
-        <?php 
+        <?php
 }
     ?>
     <?php
@@ -328,7 +335,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                         <?= tc('toolbar', 'Add Content') ?>
                     </span>
                 </a>
-            <?php 
+            <?php
 } else {
     ?>
                 <a href="<?= DIR_REL ?>/<?= DISPATCHER_FILENAME ?>?cID=<?= $cID ?>&ctask=check-out-add-block<?= $token ?>"
@@ -338,7 +345,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                         <?= tc('toolbar', 'Add Content') ?>
                     </span>
                 </a>
-            <?php 
+            <?php
 }
         ?>
         </li>
@@ -363,12 +370,12 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
         <li class="pull-left visible-xs visible-lg" id="ccm-white-label-message"><?= t(
                 'Powered by <a href="%s">concrete5</a>.',
                 Config::get('concrete.urls.concrete5')) ?></li>
-    <?php 
+    <?php
     }
     ?>
         <li class="pull-right ccm-toolbar-mobile-menu-button visible-xs hidden-sm hidden-md hidden-lg
             <?php if ($c->isEditMode()) {
-    ?> ccm-toolbar-mobile-menu-button-active<?php 
+    ?> ccm-toolbar-mobile-menu-button-active<?php
 }
     ?>">
             <i class="fa fa-bars fa-2"></i>
@@ -385,7 +392,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 
             </a>
         </li>
-        <?php 
+        <?php
 } else {
     ?>
             <li class="pull-right hidden-xs ">
@@ -395,7 +402,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                 </span>
                 </a>
             </li>
-        <?php 
+        <?php
 }
     ?>
         <li data-guide-toolbar-action="sitemap" class="pull-right hidden-xs">
@@ -424,10 +431,10 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                     </span>
                 </a>
                 </li>
-            <?php 
+            <?php
     }
     ?>
-        <?php 
+        <?php
 }
     ?>
         <li data-guide-toolbar-action="intelligent-search" class="ccm-toolbar-search pull-right hidden-xs"><i class="fa fa-search"></i> <input type="search"
@@ -465,7 +472,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                 'type' => 'info',
                 'icon' => 'exclamation-sign',
             )) ?>
-    <?php 
+    <?php
 } else {
     ?>
 
@@ -525,12 +532,12 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                                                 <?php if ($act->getWorkflowProgressActionURL() != '') {
     ?>
                                                     <a href="<?= $act->getWorkflowProgressActionURL() ?>"
-							<?php 
+							<?php
 } else {
     ?>
                                                     <button type="submit"
                                                             name="action_<?= $act->getWorkflowProgressActionTask() ?>"
-							<?php 
+							<?php
 }
     ?>
 
@@ -541,10 +548,10 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                                                     <?php foreach ($act->getWorkflowProgressActionExtraButtonParameters() as $key => $value) {
     ?>
                                                         <?= $key ?>="<?= $value ?>"
-                                                    <?php 
+                                                    <?php
 }
     ?>
-                                                <?php 
+                                                <?php
 }
     ?>
 
@@ -552,23 +559,23 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                                                 <?php if ($act->getWorkflowProgressActionURL() != '') {
     ?>
                                                     </a>
-                                                <?php 
+                                                <?php
 } else {
     ?>
                                                     </button>
-                                                <?php 
+                                                <?php
 }
     ?>
-                                            <?php 
+                                            <?php
 }
     ?>
                                         </div>
-                                    <?php 
+                                    <?php
 }
     ?>
                                 </div>
                             </form>
-                        <?php 
+                        <?php
 }
     ?>
                     </div>
@@ -576,7 +583,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                                 'Hide') ?></a></div>
                 </div>
                 </div>
-            <?php 
+            <?php
 }
         ?>
         <?php
@@ -632,14 +639,14 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                                 'buttons' => $buttons,
                             ))?>
 
-                <?php 
+                <?php
                 }
             }
         }
     }
     ?>
 
-    <?php 
+    <?php
 }
     ?>
     </div>

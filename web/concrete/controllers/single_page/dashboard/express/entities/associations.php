@@ -62,31 +62,28 @@ class Associations extends DashboardPageController
                     switch ($this->request->request->get('type')) {
                         case 'ManyToOne':
                             $builder->addManyToOne(
-                                $entity, $targetEntity, $this->request->request->get('target_property_name')
+                                $entity, $targetEntity, $this->request->request->get('target_property_name'), $this->request->request->get('inversed_property_name')
                             );
                             break;
                         case 'OneToOne':
                             $builder->addOneToOne(
-                                $entity, $targetEntity, $this->request->request->get('target_property_name')
+                                $entity, $targetEntity, $this->request->request->get('target_property_name'), $this->request->request->get('inversed_property_name')
                             );
                             break;
                         case 'ManyToMany':
                             $builder->addManyToMany(
-                                $entity, $targetEntity, $this->request->request->get('target_property_name')
+                                $entity, $targetEntity, $this->request->request->get('target_property_name'), $this->request->request->get('inversed_property_name')
                             );
                             break;
                         case 'OneToMany':
                             $builder->addOneToMany(
-                                $entity, $targetEntity, $this->request->request->get('target_property_name')
+                                $entity, $targetEntity, $this->request->request->get('target_property_name'), $this->request->request->get('inversed_property_name')
                             );
                             break;
                     }
                     $this->entityManager->persist($entity);
                     $this->entityManager->persist($targetEntity);
                     $this->entityManager->flush();
-
-                    $publisher = \Core::make('express.publisher');
-                    $publisher->publish($entity);
 
                     $this->flash('success', t('Association added successfully.'));
                     $this->redirect('/dashboard/express/entities/associations', $entity->getId());
@@ -124,9 +121,6 @@ class Associations extends DashboardPageController
         if (!$this->error->has()) {
             $this->entityManager->remove($association);
             $this->entityManager->flush();
-
-            $publisher = \Core::make('express.publisher');
-            $publisher->publish($this->entity);
 
             $this->flash('success', t('Association deleted successfully.'));
             $this->redirect('/dashboard/express/entities/associations', $id);

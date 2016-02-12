@@ -323,6 +323,7 @@ class BlockControl extends Control
         $arHandle = $b->getAreaHandle();
         $blockDisplayOrder = $b->getBlockDisplayOrder();
         $bFilename = $b->getBlockFilename();
+        $defaultStyles = $b->getCustomStyle();
         $b->deleteBlock();
         $ax = Area::getOrCreate($c, $arHandle);
         $b = $c->addBlock($bt, $ax, $data);
@@ -330,6 +331,10 @@ class BlockControl extends Control
         $b->setAbsoluteBlockDisplayOrder($blockDisplayOrder);
         if ($bFilename) {
             $b->setCustomTemplate($bFilename);
+        }
+
+        if ($defaultStyles) {
+            $b->setCustomStyleSet($defaultStyles->getStyleSet());
         }
 
         // make a reference to the new block

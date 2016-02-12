@@ -61,6 +61,6 @@ class AssociationType implements TypeInterface
 
     public function getSaveHandler(Control $control)
     {
-        return \Core::make('\Concrete\Core\Express\Form\Control\SaveHandler\AssociationSaveHandler');
+        return $control->getAssociation()->getSaveHandler();
     }
 }

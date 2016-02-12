@@ -1,7 +1,8 @@
 <?php
 namespace Concrete\Core\Entity\Express\Control;
 
-use Concrete\Core\Express\BaseEntity;
+use Concrete\Core\Entity\Express\Entity;
+use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Express\Form\Control\Form\AttributeKeyControlFormRenderer;
 use Concrete\Core\Express\Form\Control\View\AttributeKeyControlViewRenderer;
 
@@ -33,14 +34,14 @@ class AttributeKeyControl extends Control
         $this->attribute_key = $attribute_key;
     }
 
-    public function getFormRenderer(BaseEntity $entity = null)
+    public function getFormRenderer(Entity $entity = null)
     {
         return new AttributeKeyControlFormRenderer($entity);
     }
 
-    public function getViewRenderer(BaseEntity $entity)
+    public function getViewRenderer(Entry $entry)
     {
-        return new AttributeKeyControlViewRenderer($entity);
+        return new AttributeKeyControlViewRenderer($entry);
     }
 
     public function getControlLabel()

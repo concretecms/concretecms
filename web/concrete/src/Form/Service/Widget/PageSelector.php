@@ -102,7 +102,7 @@ EOL;
 					$('#ccm-quick-page-selector-value-" . $key . "').val('');
 				}
 			});
-			$('#ccm-quick-page-selector-label-" . $key . "').autocomplete('widget').addClass('ccm-page-selector-autocomplete');
+			$('#ccm-quick-page-selector-label-" . $key . "').autocomplete('widget').addClass('ccm-item-selector-autocomplete');
 		} );
 		</script>";
         $html .= '<input type="hidden" id="ccm-quick-page-selector-value-' . $key . '" name="' . $key . '" value="' . $selectedCID . '" /><span class="ccm-quick-page-selector">

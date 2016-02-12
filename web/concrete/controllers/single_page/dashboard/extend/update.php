@@ -21,10 +21,10 @@ class Update extends DashboardPageController
         $tp = new TaskPermission();
         if ($tp->canInstallPackages()) {
             if ($pkgHandle) {
-                $tests = Package::testForInstall($pkgHandle, false);
-                if (is_array($tests)) {
-                    $tests = Package::mapError($tests);
-                    $this->set('error', $tests);
+                $pkg = \Concrete\Core\Support\Facade\Package::getClass($pkgHandle);
+                $r = $pkg->testForInstall(false);
+                if (is_object($r)) {
+                    $this->error->add($r);
                 } else {
                     $p = Package::getByHandle($pkgHandle);
                     $currentLocale = Localization::activeLocale();
@@ -76,20 +76,14 @@ class Update extends DashboardPageController
 
             $local = Package::getbyHandle($mri->getHandle());
             if (!is_object($local) || $local->isPackageInstalled() == false) {
-                $this->set('error', array(Package::E_PACKAGE_NOT_FOUND));
-
+                $this->error->add(t('Package Not Found.'));
                 return;
             }
 
             $r = $mri->downloadUpdate();
 
             if ($r != false) {
-                if (!is_array($r)) {
-                    $this->set('error', array($r));
-                } else {
-                    $errors = Package::mapError($r);
-                    $this->set('error', $errors);
-                }
+                $this->error->add($r);
             } else {
                 $this->redirect('/dashboard/extend/update', 'do_update', $mri->getHandle());
             }

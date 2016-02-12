@@ -10,6 +10,7 @@
         var my = this;
         options = $.extend({
             'mode': 'menu',
+            'upload_token': '',
             'uploadElement': 'body',
             'bulkParameterName': 'fID'
         }, options);
@@ -63,7 +64,7 @@
             args = {
                 url: CCM_DISPATCHER_FILENAME + '/ccm/system/file/upload',
                 dataType: 'json',
-                formData: {'ccm_token': CCM_SECURITY_TOKEN},
+                formData: {'ccm_token': my.options.upload_token},
                 disableImageResize: !$imageResize,
                 imageQuality: ($quality > 0 ? $quality : 85),
                 imageMaxWidth:($maxWidth > 0 ? $maxWidth : 1920),
@@ -106,7 +107,17 @@
                     if (errors.length) {
                         ConcreteAlert.dialog(ccmi18n_filemanager.uploadFailed, error_template({errors: errors}));
                     } else {
-                        my._launchUploadCompleteDialog(files);
+                        var canAdd = false;
+                        _.each(files, function(file) {
+                            if (file.canEditFileProperties) {
+                                canAdd = true;
+                            }
+                        });
+                        if (canAdd) {
+                            my._launchUploadCompleteDialog(files);
+                        } else {
+                            my.refreshResults();
+                        }
                         files = [];
                     }
                 }

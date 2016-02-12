@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Attribute\Key;
 
-use Concrete\Core\Attribute\Category\CategoryFactory;
+use Concrete\Core\Attribute\Category\CategoryService;
 use Concrete\Core\Attribute\Category\CategoryInterface;
 use Doctrine\ORM\EntityManager;
 
@@ -9,11 +9,11 @@ class Factory
 {
 
     protected $entityManager;
-    protected $categoryFactory;
+    protected $categoryService;
 
-    public function __construct(CategoryFactory $categoryFactory, EntityManager $entityManager)
+    public function __construct(CategoryService $categoryService, EntityManager $entityManager)
     {
-        $this->categoryFactory = $categoryFactory;
+        $this->categoryService = $categoryService;
         $this->entityManager = $entityManager;
     }
 
@@ -37,7 +37,7 @@ class Factory
     public function getList($category)
     {
         if (!is_object($category)) {
-            $category = $this->categoryFactory->getByHandle($category);
+            $category = $this->categoryService->getByHandle($category);
             if (is_object($category)) {
                 $category = $category->getController();
             }

@@ -2,12 +2,13 @@
 namespace Concrete\Core\Express\Form;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Entity\Express\FieldSet;
 use Concrete\Core\Entity\Express\Form;
-use Concrete\Core\Express\BaseEntity;
+use Concrete\Core\Entity\Express\Entity;
 use Doctrine\ORM\EntityManagerInterface;
 
-class ViewRenderer implements RendererInterface
+class ViewRenderer implements ViewRendererInterface
 {
     protected $entityManager;
     protected $application;
@@ -43,12 +44,12 @@ class ViewRenderer implements RendererInterface
         return '</fieldset>';
     }
 
-    protected function renderFieldSet(FieldSet $fieldSet, BaseEntity $entity)
+    protected function renderFieldSet(FieldSet $fieldSet, Entry $entry)
     {
         $html = $this->getFieldSetOpenTag($fieldSet);
         foreach ($fieldSet->getControls() as $control) {
             $factory = new RendererFactory($control, $this->application, $this->entityManager);
-            $renderer = $factory->getViewRenderer($entity);
+            $renderer = $factory->getViewRenderer($entry);
             if (is_object($renderer)) {
                 $html .= $renderer->render();
             }
@@ -58,11 +59,11 @@ class ViewRenderer implements RendererInterface
         return $html;
     }
 
-    public function render(Form $form, BaseEntity $entity = null)
+    public function render(Form $form, Entry $entry = null)
     {
         $html = $this->getFormOpenTag();
         foreach ($form->getFieldSets() as $fieldSet) {
-            $html .= $this->renderFieldSet($fieldSet, $entity);
+            $html .= $this->renderFieldSet($fieldSet, $entry);
         }
 
         $html .= $this->getFormCloseTag();

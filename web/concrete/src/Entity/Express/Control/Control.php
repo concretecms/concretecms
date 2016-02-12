@@ -2,7 +2,8 @@
 namespace Concrete\Core\Entity\Express\Control;
 
 use Concrete\Controller\Element\Dashboard\Express\Control\Options;
-use Concrete\Core\Express\BaseEntity;
+use Concrete\Core\Entity\Express\Entity;
+use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Express\Form\Control\Type\SaveHandler\ControlSaveHandler;
 
 /**
@@ -106,12 +107,12 @@ abstract class Control implements \JsonSerializable
     /**
      * @return \Concrete\Core\Express\Form\Control\RendererInterface
      */
-    abstract public function getFormRenderer(BaseEntity $entity = null);
+    abstract public function getFormRenderer(Entity $entity = null);
 
     /**
      * @return \Concrete\Core\Express\Form\Control\RendererInterface
      */
-    abstract public function getViewRenderer(BaseEntity $entity);
+    abstract public function getViewRenderer(Entry $entry);
 
     public function getControlOptionsController()
     {
