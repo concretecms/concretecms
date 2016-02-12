@@ -8,6 +8,9 @@ if (is_object($style)) {
     $image = $set->getBackgroundImageFileObject();
     if (is_object($image)) {
         $background = $image->getRelativePath();
+        if (!$background) {
+            $background = $image->getURL();
+        }
     }
 }
 

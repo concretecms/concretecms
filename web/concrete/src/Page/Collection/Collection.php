@@ -396,6 +396,14 @@ class Collection extends Object
         }
     }
 
+    /**
+     * @deprecated
+     */
+    public function getCollectionAttributeValue($akHandle)
+    {
+        return $this->getAttribute($akHandle);
+    }
+
     // get's an array of collection attribute objects that are attached to this collection. Does not get values
 
     public function clearCollectionAttributes($retainAKIDs = array())

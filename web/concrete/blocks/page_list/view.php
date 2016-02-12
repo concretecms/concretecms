@@ -143,7 +143,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 
                 <?php if (isset($useButtonForLink) && $useButtonForLink): ?>
                 <div class="ccm-block-page-list-page-entry-read-more">
-                    <a href="<?=$url?>" class="<?=$buttonClasses?>"><?=$buttonLinkText?></a>
+                    <a href="<?=$url?>" target="<?=$target?>" class="<?=$buttonClasses?>"><?=$buttonLinkText?></a>
                 </div>
                 <?php endif;
     ?>

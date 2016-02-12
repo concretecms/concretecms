@@ -33,7 +33,7 @@ class UserCorePageProperty extends CorePageProperty
         $e = Core::make('helper/validation/error');
         if (!is_object($ux)) {
             $control = $this->getPageTypeComposerFormLayoutSetControlObject();
-            $e->add(t('You haven\'t chosen a valid %s', $control->getPageTypeComposerControlLabel()));
+            $e->add(t('You haven\'t chosen a valid %s', $control->getPageTypeComposerControlDisplayLabel()));
 
             return $e;
         }
