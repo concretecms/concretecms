@@ -51,7 +51,7 @@ class PageView extends View
         $this->pkgHandle = $pt->getPackageHandle();
     }
 
-    public function renderSinglePageByFilename($cFilename)
+    public function renderSinglePageByFilename($cFilename, $pkgHandle = null)
     {
         $env = Environment::get();
         $cFilename = trim($cFilename, '/');
@@ -81,10 +81,14 @@ class PageView extends View
             }
 
             // set the inner content for the theme wrapper we found
+            if (!$pkgHandle) {
+                $pkgHandle = $this->c->getPackageHandle();
+            }
+
             $this->setInnerContentFile(
                 $env->getPath(
                     DIRNAME_PAGES . '/' . $cFilename,
-                    $this->c->getPackageHandle()
+                    $pkgHandle
                 )
             );
         }
