@@ -8,6 +8,7 @@ use Gettext\Translations;
 use Gettext\Generators\Po as PoGenerator;
 use Gettext\Generators\Mo as MoGenerator;
 use Concrete\Core\Package\PackageList;
+use Config;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -19,6 +20,7 @@ class Extractor
     public function extractTranslatableSiteStrings()
     {
         $translations = new Translations();
+        $translations->insert('SiteName', Config::get('concrete.site'));
         $phpParser = new \C5TL\Parser\Php();
         $blockTemplatesParser = new \C5TL\Parser\BlockTemplates();
         $themesPresetsParser = new \C5TL\Parser\ThemePresets();
