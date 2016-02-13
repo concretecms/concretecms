@@ -328,7 +328,14 @@ function ConcretePanel(options) {
             $('button[data-panel-detail-action=cancel]').on('click', function () {
                 obj.closePanelDetail();
             });
+
             $content.find('[data-panel-detail-form]').concreteAjaxForm();
+
+            $content.find('[data-panel-detail-form="seo"],[data-panel-detail-form="attributes"]').concreteAjaxForm({complete: function(){
+                var panel = ConcretePanelManager.getByIdentifier('check-in');
+                panel.toggle();
+            }});
+
             $('button[data-panel-detail-action=submit]').on('click', function () {
                 $('[data-panel-detail-form]').submit();
             });
