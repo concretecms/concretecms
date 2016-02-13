@@ -100,7 +100,7 @@ abstract class Request extends Object
      */
     protected function triggerRequest(\PermissionKey $pk)
     {
-        if (!$this->wrID) {
+        if (!(isset($this->wrID) && $this->wrID)) {
             $this->save();
         }
 

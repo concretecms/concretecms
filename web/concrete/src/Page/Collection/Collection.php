@@ -231,7 +231,7 @@ class Collection extends Object
 
     // remove the collection attributes for this version of a page
 
-    public function cloneVersion($versionComments)
+    public function cloneVersion($versionComments, $createEmpty = false)
     {
         // first, we run the version object's createNew() command, which returns a new
         // version object, which we can combine with our collection object, so we'll have
@@ -249,35 +249,35 @@ class Collection extends Object
         $db = Loader::db();
         $cID = $this->getCollectionID();
         $cvID = $vObj->getVersionID();
-        $q = "select bID, arHandle from CollectionVersionBlocks where cID = '$cID' and cvID = '$cvID' and cbIncludeAll=0 order by cbDisplayOrder asc";
-        $r = $db->query($q);
-        if ($r) {
-            while ($row = $r->fetchRow()) {
-                // now we loop through these, create block objects for all of them, and
-                // duplicate them to our collection object (which is actually the same collection,
-                // but different version)
-                $b = Block::getByID($row['bID'], $this, $row['arHandle']);
-                if (is_object($b)) {
-                    $b->alias($nc);
+        if (!$createEmpty) {
+            $q = "select bID, arHandle from CollectionVersionBlocks where cID = '$cID' and cvID = '$cvID' and cbIncludeAll=0 order by cbDisplayOrder asc";
+            $r = $db->query($q);
+            if ($r) {
+                while ($row = $r->fetchRow()) {
+                    // now we loop through these, create block objects for all of them, and
+                    // duplicate them to our collection object (which is actually the same collection,
+                    // but different version)
+                    $b = Block::getByID($row['bID'], $this, $row['arHandle']);
+                    if (is_object($b)) {
+                        $b->alias($nc);
+                    }
                 }
             }
+            // duplicate any area styles
+            $q = "select issID, arHandle from CollectionVersionAreaStyles where cID = '$cID' and cvID = '$cvID'";
+            $r = $db->query($q);
+            while ($row = $r->FetchRow()) {
+                $db->Execute(
+                   'insert into CollectionVersionAreaStyles (cID, cvID, arHandle, issID) values (?, ?, ?, ?)',
+                   array(
+                       $this->getCollectionID(),
+                       $nvObj->getVersionID(),
+                       $row['arHandle'],
+                       $row['issID'],
+                   )
+                );
+            }
         }
-
-        // duplicate any area styles
-        $q = "select issID, arHandle from CollectionVersionAreaStyles where cID = '$cID' and cvID = '$cvID'";
-        $r = $db->query($q);
-        while ($row = $r->FetchRow()) {
-            $db->Execute(
-               'insert into CollectionVersionAreaStyles (cID, cvID, arHandle, issID) values (?, ?, ?, ?)',
-               array(
-                   $this->getCollectionID(),
-                   $nvObj->getVersionID(),
-                   $row['arHandle'],
-                   $row['issID'],
-               )
-            );
-        }
-
         return $nc;
     }
 
