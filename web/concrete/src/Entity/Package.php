@@ -76,6 +76,16 @@ class Package implements LocalizablePackageInterface
     }
 
     /**
+     * @param mixed $pkgID
+     */
+    public function setPackageID($pkgID)
+    {
+        $this->pkgID = $pkgID;
+    }
+
+
+
+    /**
      * @return mixed
      */
     public function isPackageInstalled()

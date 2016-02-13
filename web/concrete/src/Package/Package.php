@@ -23,6 +23,11 @@ abstract class Package implements LocalizablePackageInterface
     protected $REL_DIR_PACKAGES = REL_DIR_PACKAGES;
 
     /**
+     * @var \Concrete\Core\Entity\Package
+     */
+    protected $entity;
+
+    /**
      * @var Application
      */
     protected $app;
@@ -77,7 +82,15 @@ abstract class Package implements LocalizablePackageInterface
      */
     public function getPackageEntity()
     {
-        return $this->app->make('Concrete\Core\Package\PackageService')->getByHandle($this->getPackageHandle());
+        if (!isset($this->entity)) {
+            $this->entity = $this->app->make('Concrete\Core\Package\PackageService')->getByHandle($this->getPackageHandle());
+        }
+        return $this->entity;
+    }
+
+    public function setPackageEntity(\Concrete\Core\Entity\Package $entity)
+    {
+        $this->entity = $entity;
     }
 
     public function __construct(Application $app)
@@ -382,6 +395,17 @@ abstract class Package implements LocalizablePackageInterface
         // this should go through the facade instead
         return \Concrete\Core\Support\Facade\Package::getByID($pkgID);
     }
+
+    /**
+     * @deprecated
+     */
+    public static function getClass($pkgHandle)
+    {
+        // this should go through the facade instead
+        return \Concrete\Core\Support\Facade\Package::getClass($pkgHandle);
+    }
+
+
 
     /**
      * This is the pre-test routine that packages run through before they are installed. Any errors that come here are

@@ -12,21 +12,30 @@ class ContentFileTranslateTest extends FileStorageTestCase
     protected function setUp()
     {
         $this->tables = array_merge($this->tables, array(
-            'Files',
-            'FileVersions',
             'Users',
             'PermissionAccessEntityTypes',
-            'FileAttributeValues',
             'FileImageThumbnailTypes',
             'FilePermissionAssignments',
-            'AttributeKeyCategories',
-            'AttributeTypes',
             'ConfigStore',
             'AttributeKeys',
             'SystemContentEditorSnippets',
             'AttributeValues',
             'atNumber',
             'FileVersionLog',
+        ));
+        $this->metadatas = array_merge($this->metadatas, array(
+            'Concrete\Core\File\File',
+            'Concrete\Core\File\Version',
+            'Concrete\Core\Entity\Attribute\Key\FileKey',
+            'Concrete\Core\Entity\Attribute\Value\FileValue',
+            'Concrete\Core\Entity\Attribute\Key\Key',
+            'Concrete\Core\Entity\Attribute\Value\Value',
+            'Concrete\Core\Entity\Attribute\Value\Value\Value',
+            'Concrete\Core\Entity\Attribute\Value\Value\NumberValue',
+            'Concrete\Core\Entity\Attribute\Key\Type\NumberType',
+            'Concrete\Core\Entity\Attribute\Key\Type\Type',
+            'Concrete\Core\Entity\Attribute\Type',
+            'Concrete\Core\Entity\Attribute\Category',
         ));
         parent::setUp();
         \Config::set('concrete.upload.extensions', '*.txt;*.jpg;*.jpeg;*.png');

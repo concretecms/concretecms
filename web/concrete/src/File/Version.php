@@ -2,6 +2,7 @@
 namespace Concrete\Core\File;
 
 use Carbon\Carbon;
+use Concrete\Core\Attribute\Key\FileKey;
 use Concrete\Core\Attribute\ObjectTrait;
 use Concrete\Core\Entity\Attribute\Value\FileValue;
 use Concrete\Core\Entity\Attribute\Value\Value\Value;
@@ -39,7 +40,17 @@ use View;
  */
 class Version
 {
-    use ObjectTrait;
+    use ObjectTrait {
+        setAttribute as setFileVersionAttribute;
+    }
+
+    public function setAttribute($ak, $value)
+    {
+        $value = $this->setFileVersionAttribute($ak, $value);
+        if (is_object($value)) {
+            $this->attributes->add($value);
+        }
+    }
 
     const UT_REPLACE_FILE = 1;
     const UT_TITLE = 2;
@@ -52,6 +63,8 @@ class Version
     public function __construct()
     {
         $this->attributes = new ArrayCollection();
+        $this->fvDateAdded = new \DateTime();
+        $this->fvActivateDateTime = new \DateTime();
     }
 
     /**
@@ -71,7 +84,7 @@ class Version
      */
     protected $fvFilename = null;
     /**
-     * @Column(type="string")
+     * @Column(type="string", nullable=true)
      */
     protected $fvPrefix;
     /**
@@ -99,11 +112,11 @@ class Version
      */
     protected $fvApproverUID = 0;
     /**
-     * @Column(type="string")
+     * @Column(type="string", nullable=true)
      */
     protected $fvTitle = null;
     /**
-     * @Column(type="text")
+     * @Column(type="text", nullable=true)
      */
     protected $fvDescription = null;
     /**
@@ -716,6 +729,10 @@ class Version
         }
 
         if ($createIfNotExists) {
+            if (!is_object($ak)) {
+                $ak = FileKey::getByHandle($ak);
+            }
+
             $attributeValue = new FileValue();
             $attributeValue->setVersion($this);
             $attributeValue->setAttributeKey($ak);
@@ -942,6 +959,16 @@ class Version
         $ext = $fh->getExtension($this->fvFilename);
         $ftl = FileTypeList::getType($ext);
 
+        if (is_object($ftl)) {
+            if ($ftl->getCustomImporter() != false) {
+                $this->fvGenericType = $ftl->getGenericType();
+                $cl = $ftl->getCustomInspector();
+                $cl->inspect($this);
+            }
+        }
+
+        \ORM::entityManager('core')->refresh($this);
+
         $fsr = $this->getFileResource();
         if (!$fsr->isFile()) {
             return Importer::E_FILE_INVALID;
@@ -956,15 +983,7 @@ class Version
         }
         $this->fvSize = $size;
 
-        if (is_object($ftl)) {
-            if ($ftl->getCustomImporter() != false) {
-                $this->fvGenericType = $ftl->getGenericType();
-                $cl = $ftl->getCustomInspector();
-                $cl->inspect($this);
-            }
-        }
 
-        \ORM::entityManager('core')->refresh($this);
 
         if ($rescanThumbnails) {
             $this->rescanThumbnails();

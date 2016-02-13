@@ -33,9 +33,6 @@ class ObjectBuilderTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(false, $first->isAttributeKeyContentIndexed());
         $this->assertEquals(true, $first->isAttributeKeySearchable());
 
-        $type = $first->getAttributeKeyType()->getAttributeType();
-        $this->assertEquals('text', $type->getAttributeTypeHandle());
-
         /** @var $bio \Concrete\Core\Entity\Attribute\Key\Key */
         $bio = $attributes[2];
         $this->assertEquals(true, $bio->isAttributeKeyContentIndexed());
@@ -43,9 +40,6 @@ class ObjectBuilderTest extends PHPUnit_Framework_TestCase
 
         $key_type = $bio->getAttributeKeyType();
         $this->assertEquals('text', $key_type->getMode());
-
-        $type = $key_type->getAttributeType();
-        $this->assertEquals('textarea', $type->getAttributeTypeHandle());
 
     }
 }

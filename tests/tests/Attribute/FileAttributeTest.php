@@ -26,15 +26,20 @@ class FileAttributeTest extends \AttributeTestCase
     protected function setUp()
     {
         $this->tables = array_merge($this->tables, array(
-                'Files',
-                'FileAttributeValues',
-                'FileSearchIndexAttributes',
                 'FileStorageLocationTypes',
                 'FileVersionLog',
-                'FileStorageLocations',
-                'FileVersions',
             )
         );
+        $this->metadatas = array_merge($this->metadatas, array(
+            'Concrete\Core\File\Version',
+            'Concrete\Core\File\File',
+            'Concrete\Core\Entity\Attribute\Key\Type\NumberType',
+            'Concrete\Core\Entity\Attribute\Key\FileKey',
+            'Concrete\Core\Entity\Attribute\Key\Key',
+            'Concrete\Core\Entity\Attribute\Value\Value\NumberValue',
+            'Concrete\Core\Entity\Attribute\Value\FileValue',
+            'Concrete\Core\File\StorageLocation\StorageLocation',
+        ));
         parent::setUp();
     }
 
@@ -48,6 +53,7 @@ class FileAttributeTest extends \AttributeTestCase
         $em = \Database::connection()->getEntityManager();
 
         $file = new \Concrete\Core\File\File();
+        $file->setDateAdded(new \DateTime());
         $file->setStorageLocation($fsl);
         $em->persist($file);
 
@@ -72,16 +78,16 @@ class FileAttributeTest extends \AttributeTestCase
             array(
                 'width',
                 200,
-                0.0,
-                200.0,
-                0.0,
+                0,
+                200,
+                0,
             ),
             array(
                 'height',
                 500,
-                0.0,
-                500.0,
-                0.0,
+                0,
+                500,
+                0,
             ),
         );
     }

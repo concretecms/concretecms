@@ -6,12 +6,20 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
 {
     protected $fixtures = array();
     protected $tables = array('Pages', 'PageThemes', 'PagePaths', 'PermissionKeys', 'PermissionKeyCategories', 'PageTypes',
-        'PageTemplates', 'Collections', 'CollectionVersions', 'CollectionVersionFeatureAssignments',
-        'CollectionAttributeValues', 'CollectionVersionBlockStyles', 'CollectionVersionThemeCustomStyles',
+        'Collections', 'CollectionVersions', 'CollectionVersionFeatureAssignments',
+        'CollectionVersionBlockStyles', 'CollectionVersionThemeCustomStyles',
         'CollectionVersionRelatedEdits', 'CollectionVersionAreaStyles', 'MultilingualSections', 'MultilingualPageRelations',
         'PagePermissionAssignments', 'CollectionVersionBlocks', 'Areas', 'PageSearchIndex', 'ConfigStore',
         'GatheringDataSources', 'Logs', 'PageTypePublishTargetTypes', 'AttributeKeyCategories',
         'PageTypeComposerOutputBlocks', ); // so brutal
+
+    protected $metadatas = array(
+        'Concrete\Core\Page\Template',
+        'Concrete\Core\Entity\Attribute\Key\PageKey',
+        'Concrete\Core\Entity\Attribute\Value\PageValue',
+        'Concrete\Core\Entity\Attribute\Value\Value',
+        'Concrete\Core\Entity\Attribute\Key\Key',
+    );
 
     protected function setUp()
     {
@@ -22,6 +30,7 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
                 'handle' => 'basic',
                 'name' => 'Basic',
             ));
+
     }
 
     protected static function createPage($name, $parent = false, $type = false, $template = false)

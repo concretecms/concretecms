@@ -22,12 +22,12 @@ class Feed
     protected $customTopicAttributeKeyHandle = null;
 
     /**
-     * @Column(columnDefinition="integer unsigned")
+     * @Column(type="integer", options={"unsigned":true})
      */
     protected $customTopicTreeNodeID = 0;
 
     /**
-     * @Column(columnDefinition="integer unsigned")
+     * @Column(type="integer", options={"unsigned":true})
      */
     protected $iconFID = 0;
 
@@ -231,18 +231,19 @@ class Feed
     protected $pfTitle;
 
     /**
-     * @Id @Column(columnDefinition="integer unsigned")
-     * @GeneratedValue
+     * @Id @Column(type="integer", options={"unsigned":true})
+     * @GeneratedValue(strategy="AUTO")
      */
     protected $pfID;
 
     /**
-     * @Column(columnDefinition="integer unsigned")
+     * @Column(type="integer", options={"unsigned":true})
      */
+
     protected $cParentID;
 
     /**
-     * @Column(columnDefinition="integer unsigned")
+     * @Column(type="integer", options={"unsigned":true})
      */
     protected $ptID;
 

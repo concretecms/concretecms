@@ -13,6 +13,7 @@ use Concrete\Core\User\UserList;
 
 class UserListTest extends \UserTestCase
 {
+
     /**
      * @var \Concrete\Core\User\UserList
      */

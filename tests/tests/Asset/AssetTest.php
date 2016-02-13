@@ -13,8 +13,8 @@ class AssetTest extends PHPUnit_Framework_TestCase
 
         $al->register('javascript', 'jquery', '//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js', array('local' => false));
 
-        $pkg = new Package();
-        $pkg->pkgHandle = 'testing_package';
+        $pkg = new \Concrete\Core\Entity\Package();
+        $pkg->setPackageHandle('testing_package');
         $al->register(
             'javascript', 'testing/tab', 'blocks/testing_block/js/tab.js',
             array('version' => '3.2.0', 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false), $pkg
