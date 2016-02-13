@@ -19,7 +19,7 @@
         my._pageMenuTemplate = _.template(ConcretePageAjaxSearchMenu.get());
 
         my.$element.append(my._chooseTemplate);
-        my.$element.on('click', 'a[data-item-selector-link=choose]', function(e) {
+        my.$element.on('click', 'a[data-page-selector-link=choose]', function(e) {
             e.preventDefault();
             ConcretePageAjaxSearch.launchDialog(function(data) {
                 my.loadPage(data.cID);
