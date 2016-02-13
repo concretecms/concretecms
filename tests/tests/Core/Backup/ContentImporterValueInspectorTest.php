@@ -6,8 +6,6 @@ class ContentImporterValueInspectorTest extends FileStorageTestCase
     protected function setUp()
     {
         $this->tables = array_merge($this->tables, array(
-            'Files',
-            'FileVersions',
             'Users',
             'PermissionAccessEntityTypes',
         ));

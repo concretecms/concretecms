@@ -55,18 +55,16 @@ class PageListTest extends \PageTestCase
         $this->tables = array_merge($this->tables, array(
             'PermissionAccessList',
             'PageTypeComposerFormLayoutSets',
-            'AttributeSetKeys',
-            'AttributeSets',
-            'AttributeKeyCategories',
             'PermissionAccessEntityTypes',
-            'Packages',
-            'AttributeKeys',
-            'AttributeTypes',
-            'PageFeeds',
-
+        ));
+        $this->metadatas = array_merge($this->metadatas, array(
+            'Concrete\Core\Entity\Attribute\Type',
+            'Concrete\Core\Entity\Attribute\Category',
+            'Concrete\Core\Page\Feed',
         ));
 
         parent::setUp();
+        \Concrete\Core\Attribute\Key\Category::add('collection');
         \Concrete\Core\Permission\Access\Entity\Type::add('page_owner', 'Page Owner');
         \Concrete\Core\Permission\Category::add('page');
         \Concrete\Core\Permission\Key\Key::add('page', 'view_page', 'View Page', '', 0, 0);
@@ -338,6 +336,7 @@ class PageListTest extends \PageTestCase
         $pf->setTitle('RSS Feed');
         $pf->setDescription('My Description');
         $pf->save();
+
         $this->assertEquals('blog', $pf->getHandle());
         $this->assertEquals(1, $pf->getID());
 

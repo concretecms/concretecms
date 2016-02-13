@@ -107,7 +107,7 @@ class ClassLoader
      */
     public function registerPackage($pkg)
     {
-        if (!($pkg instanceof Package)) {
+        if (is_string($pkg)) {
             $pkg = \Package::getClass($pkg);
         }
 

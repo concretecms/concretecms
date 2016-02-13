@@ -104,8 +104,20 @@ abstract class AbstractCategory implements CategoryInterface
 
     }
 
-    public function add(Type $key_type, Key $key, Package $pkg = null)
+    public function add($key_type, $key, Package $pkg = null)
     {
+        /*
+         * LEGACY SUPPORT
+         */
+        if ($key_type instanceof \Concrete\Core\Entity\Attribute\Type) {
+            $key_type = $key_type->getController()->createAttributeKeyType();
+            // $key is actually an array.
+            $handle = $key['akHandle'];
+            $name = $key['akName'];
+            $key = $this->createAttributeKey();
+            $key->setAttributeKeyHandle($handle);
+            $key->setAttributeKeyName($name);
+        }
         $key_type->setAttributeKey($key);
         $key->setAttributeKeyType($key_type);
 

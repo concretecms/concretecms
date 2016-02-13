@@ -8,10 +8,16 @@ abstract class UserTestCase extends ConcreteDatabaseTestCase
     protected $tables = array(
         'Users', 'UserGroups', 'Groups', 'AttributeKeyCategories',
         'TreeTypes', 'TreeNodes', 'TreeNodePermissionAssignments',
-        'Packages', 'AttributeKeys', 'AttributeSetKeys', 'AttributeSets',
-        'PermissionKeyCategories', 'PermissionKeys', 'TreeNodeTypes', 'Trees',
+        'Packages', 'PermissionKeyCategories', 'PermissionKeys', 'TreeNodeTypes', 'Trees',
         'TreeGroupNodes', 'UserAttributeValues',
     ); // so brutal
+
+    protected $metadatas = array(
+        'Concrete\Core\Entity\Attribute\Category',
+        'Concrete\Core\Entity\Attribute\Key\Key',
+        'Concrete\Core\Entity\Attribute\Key\UserValue',
+        'Concrete\Core\Entity\Attribute\Key\UserKey',
+    );
 
     protected function setUp()
     {

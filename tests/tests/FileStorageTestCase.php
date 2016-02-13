@@ -8,8 +8,13 @@ abstract class FileStorageTestCase extends ConcreteDatabaseTestCase
     protected $fixtures = array();
     protected $tables = array(
         'FileStorageLocationTypes',
-        'FileStorageLocations',
         'FileImageThumbnailTypes',
+    );
+
+    protected $metadatas = array(
+        'Concrete\Core\File\File',
+        'Concrete\Core\File\Version',
+        'Concrete\Core\File\StorageLocation\StorageLocation'
     );
 
     protected function getStorageDirectory()

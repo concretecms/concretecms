@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Tests\Core\Foundation;
 
+use Concrete\Core\Entity\Package;
 use Concrete\Core\Foundation\ClassLoader;
 use Loader;
 use Core;
@@ -116,13 +117,6 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(class_exists('\Concrete\Attribute\Boolean\Controller'));
     }
 
-    public function testAttributeOtherClasses()
-    {
-        $this->assertTrue(class_exists('\Concrete\Attribute\Select\Option', true));
-        $this->assertTrue(class_exists('\Concrete\Attribute\Address\Value', true));
-        $this->assertTrue(class_exists('\Concrete\Attribute\Select\OptionList', true));
-    }
-
     public function testBlocks()
     {
         $bt = new \BlockType();
@@ -159,8 +153,8 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase
         $env = Environment::get();
         $env->clearOverrideCache();
 
-        $package = new \Package();
-        $package->pkgHandle = 'testing';
+        require 'fixtures/testing.php';
+        $package = new \Concrete\Package\Testing\Controller(\Core::make('app'));
         $loader = ClassLoader::getInstance();
         $loader->registerPackage($package);
 
@@ -190,7 +184,7 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase
         $env->clearOverrideCache();
 
         require 'fixtures/amazing_power.php';
-        $package = new \Concrete\Package\AmazingPower\Controller();
+        $package = new \Concrete\Package\AmazingPower\Controller(\Core::make("app"));
         $loader = ClassLoader::getInstance();
         $loader->registerPackage($package);
 

@@ -148,11 +148,12 @@ function id($mixed)
  */
 function core_class($class, $prefix = false)
 {
+    $app = \Core::make('app');
     $class = trim($class, '\\');
     if ($prefix) {
         if (substr($class, 0, 5) == "Core\\") {
             if ($prefix !== true) {
-                $x = \Package::getClass($prefix);
+                $x = $app->make('Concrete\Core\Package\PackageService')->getClass($prefix);
                 if ($x->providesCoreExtensionAutoloaderMapping()) {
                     $class = substr($class, 5);
                 } else {

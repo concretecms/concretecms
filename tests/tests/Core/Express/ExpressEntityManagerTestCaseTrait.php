@@ -18,11 +18,9 @@ trait ExpressEntityManagerTestCaseTrait
     protected function getMockEntityManager()
     {
         $student = new \Concrete\Core\Entity\Express\Entity();
-        $student->setTableName('Students');
         $student->setName('Student');
 
         $teacher = new \Concrete\Core\Entity\Express\Entity();
-        $teacher->setTableName('Teachers');
         $teacher->setName('Teacher');
 
         $student->getAttributes()->add($this->getAttributeKeyObject());

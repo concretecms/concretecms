@@ -113,9 +113,14 @@ class PageControllerTest extends PageTestCase
 
     public function testPackagedSinglePageViewPhp()
     {
-        $pkg = new Package();
+        $p = new \Concrete\Core\Entity\Package();
+        $p->setPackageHandle('awesome_package');
+        require_once dirname(__FILE__) . '/fixtures/package/awesome_package.php';
+
+        $pkg = new Concrete\Package\AwesomePackage\Controller(\Core::make('app'));
+        $pkg->setPackageEntity($p);
+
         $pkg->pkgHandle = 'awesome_package';
-        $pkg->setPackageID(1);
         $loader = \Concrete\Core\Foundation\ClassLoader::getInstance();
         $loader->registerPackage($pkg);
 
@@ -127,7 +132,8 @@ class PageControllerTest extends PageTestCase
         @copy(dirname(__FILE__) . '/fixtures/application/views/foo.php',
             $root . '/awesome_package/' . DIRNAME_PAGES . '/testerson/foo/view.php');
 
-        SinglePage::add('/testerson/foo', $pkg);
+        $p->setPackageID(1);
+        SinglePage::add('/testerson/foo', $p);
         $fooPage = Page::getByPath('/testerson/foo');
         $fooPage->pkgHandle = 'awesome_package';
         $controller = $fooPage->getPageController();
@@ -146,8 +152,8 @@ class PageControllerTest extends PageTestCase
     }
     public function testPackagedSinglePageViewNoPhp()
     {
-        $pkg = new Package();
-        $pkg->pkgHandle = 'awesome_package';
+        $pkg = new \Concrete\Core\Entity\Package();
+        $pkg->setPackageHandle('awesome_package');
         $pkg->setPackageID(1);
         $loader = \Concrete\Core\Foundation\ClassLoader::getInstance();
         $loader->registerPackage($pkg);

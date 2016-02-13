@@ -5,18 +5,23 @@ use \Concrete\Core\Attribute\Type as AttributeType;
 abstract class AttributeTestCase extends ConcreteDatabaseTestCase
 {
     protected $fixtures = array();
-    protected $tables = array(
-        'AttributeKeys',
-        'AttributeKeyCategories',
-        'AttributeTypes',
-        'AttributeValues',
-        'Packages',
-        'atBooleanSettings',
-        'atBoolean',
-        'atDefault',
-        'atTextarea',
-        'atNumber',
-        'atTextareaSettings',
+    protected $metadatas = array(
+        'Concrete\Core\Entity\Attribute\Category',
+        'Concrete\Core\Entity\Attribute\Key\Type\TextType',
+        'Concrete\Core\Entity\Attribute\Key\Type\TextareaType',
+        'Concrete\Core\Entity\Attribute\Key\Type\BooleanType',
+        'Concrete\Core\Entity\Attribute\Key\Type\Type',
+        'Concrete\Core\Entity\Attribute\Key\Key',
+        'Concrete\Core\Entity\Attribute\Key\PageKey',
+        'Concrete\Core\Entity\Attribute\Type',
+        'Concrete\Core\Entity\Attribute\Value\Value\TextareaValue',
+        'Concrete\Core\Entity\Attribute\Value\Value\TextValue',
+        'Concrete\Core\Entity\Attribute\Value\Value\BooleanValue',
+        'Concrete\Core\Entity\Attribute\Value\Value\Value',
+        'Concrete\Core\Entity\Attribute\Value\Value',
+        'Concrete\Core\Entity\Attribute\Value\PageValue',
+        'Concrete\Core\Entity\Attribute\Key\UserValue',
+        'Concrete\Core\Entity\Attribute\Key\UserKey',
     );
     protected $object;
     protected $keys = array();

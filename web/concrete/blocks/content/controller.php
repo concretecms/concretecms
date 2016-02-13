@@ -27,6 +27,8 @@ class Controller extends BlockController
     protected $btCacheBlockOutputForRegisteredUsers = false;
     protected $btCacheBlockOutputLifetime = 0; //until manually updated or cleared
 
+    public $content;
+
     public function getBlockTypeDescription()
     {
         return t("HTML/WYSIWYG Editor Content.");
