@@ -1,4 +1,7 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
+<?php
+defined('C5_EXECUTE') or die("Access Denied.");
+
+/* @var Area $a */
 
 $btl = new BlockTypeList();
 $blockTypes = $btl->get();
@@ -43,7 +46,6 @@ if ($c->isMasterCollection()) {
     $handles .= BLOCK_HANDLE_PAGE_TYPE_OUTPUT_PROXY . ' ';
 }
 
-/* @var Page $c */
 $pt = $c->getCollectionThemeObject();
 $gf = $pt->getThemeGridFrameworkObject();
 ?>
@@ -65,9 +67,10 @@ $gf = $pt->getThemeGridFrameworkObject();
         if ($pt->supportsGridFramework() && $a->isGridContainerEnabled()) {
             echo $gf->getPageThemeGridFrameworkContainerStartHTML();
             echo $gf->getPageThemeGridFrameworkRowStartHTML();
-            printf('<div class="%s">', $gf->getPageThemeGridFrameworkColumnClassesForSpan(
-                                          $gf->getPageThemeGridFrameworkNumColumns()
-            ));
+            printf(
+                '<div class="%s">',
+                $gf->getPageThemeGridFrameworkColumnClassesForSpan($gf->getPageThemeGridFrameworkNumColumns())
+            );
             ?>
             <div class='block'></div>
             </div>

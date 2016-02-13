@@ -48,6 +48,7 @@ class Stack extends Page implements ExportableInterface
         if (static::isValidStack($c)) {
             return $c;
         }
+
         return false;
     }
 
@@ -90,16 +91,24 @@ class Stack extends Page implements ExportableInterface
                 if ($detector->isEnabled()) {
                     $ms = self::getMultilingualSectionFromType($multilingualContentSource);
                 }
-
-                if (is_object($ms)) {
-                    $cID = $db->GetOne('select cID from Stacks where stName = ? and stMultilingualSection = ?', array($stackName, $ms->getCollectionID()));
+                $sql = 'select cID from Stacks where stName = ?';
+                $q = array($stackName);
+                if ($ms) {
+                    $sql .= ' and (stMultilingualSection = ? or stMultilingualSection = 0) order by stMultilingualSection desc';
+                    $q[] = $ms->getCollectionID();
                 } else {
-                    $cID = $db->GetOne('select cID from Stacks where stName = ?', array($stackName));
+                    $sql .= ' and stMultilingualSection = 0';
                 }
+                $sql .= ' limit 1';
+                $cID = $db->fetchColumn($sql, $q);
                 $item->set($cID);
             }
         } else {
-            $cID = Database::connection()->GetOne('select cID from Stacks where stName = ?', array($stackName));
+            $db = Database::connection();
+            $cID = $db->fetchColumn(
+                'select cID from Stacks where stName = ? and stMultilingualSection = 0',
+                array($stackName)
+            );
         }
 
         return $cID ? static::getByID($cID, $cvID) : false;
@@ -109,7 +118,7 @@ class Stack extends Page implements ExportableInterface
      * @param int    $cID
      * @param string $cvID
      *
-     * @return bool|Page
+     * @return Stack|false
      */
     public static function getByID($cID, $cvID = 'RECENT')
     {
@@ -212,9 +221,9 @@ class Stack extends Page implements ExportableInterface
     public static function addGlobalArea($area)
     {
         $parent = \Page::getByPath(STACKS_PAGE_PATH);
+
         return self::addStackToCategory($parent, $area, static::ST_TYPE_GLOBAL_AREA);
     }
-
 
     public static function addStack($stack, Folder $folder = null)
     {
@@ -222,9 +231,9 @@ class Stack extends Page implements ExportableInterface
         if ($folder) {
             $parent = $folder->getPage();
         }
+
         return self::addStackToCategory($parent, $stack, static::ST_TYPE_USER_ADDED);
     }
-
 
     /**
      * @param |\Concrete\Core\Page\Collection $nc
@@ -235,22 +244,36 @@ class Stack extends Page implements ExportableInterface
     public function duplicate($nc = null, $preserveUserID = false)
     {
         if (!is_object($nc)) {
-            // There is not necessarily need to provide the parent
-            // page for the duplicate since for stacks, that is
-            // always the same page.
-            $nc = Page::getByPath(STACKS_PAGE_PATH);
+            $nc = Page::getByID($this->getCollectionParentID());
         }
-        $page = parent::duplicate($nc, $preserveUserID);
+        $newPage = parent::duplicate($nc, $preserveUserID);
 
         // we have to do this because we need the area to exist before we try and add something to it.
-        Area::getOrCreate($page, STACKS_AREA_NAME);
+        Area::getOrCreate($newPage, STACKS_AREA_NAME);
 
         $db = Database::connection();
-        $v = array($page->getCollectionName(), $page->getCollectionID(), $this->getStackType());
-        $db->Execute('insert into Stacks (stName, cID, stType) values (?, ?, ?)', $v);
+        $db->executeQuery(
+            'insert into Stacks (stName, cID, stType, stMultilingualSection) values (?, ?, ?, ?)',
+            [
+                $newPage->getCollectionName(),
+                $newPage->getCollectionID(),
+                $this->getStackType(),
+                $this->getMultilingualSectionID(),
+            ]
+        );
 
-        // Make sure we return an up-to-date record
-        return static::getByID($page->getCollectionID());
+        $newStack = static::getByID($newPage->getCollectionID());
+
+        if ($this->isNeutralStack()) {
+            foreach (Section::getList() as $section) {
+                $localized = $this->getLocalizedStack($section);
+                if ($localized !== null) {
+                    $localized->duplicate($newStack, $preserveUserID);
+                }
+            }
+        }
+
+        return $newStack;
     }
 
     /**
@@ -298,6 +321,14 @@ class Stack extends Page implements ExportableInterface
             GlobalArea::deleteByName($this->getStackName());
         }
 
+        if ($this->isNeutralStack()) {
+            foreach (Section::getList() as $section) {
+                $localized = $this->getLocalizedStack($section);
+                if ($localized !== null) {
+                    $localized->delete();
+                }
+            }
+        }
         parent::delete();
         $db = Database::connection();
 
@@ -345,18 +376,162 @@ class Stack extends Page implements ExportableInterface
         }
     }
 
-    public function getMultilingualSection()
+    private $multilingualSectionID;
+
+    /**
+     * Returns the ID of the multilingual section associated to this stack (or 0 if it's the language-neutral version).
+     *
+     * @return int
+     */
+    protected function getMultilingualSectionID()
     {
-        $db = Database::connection();
-        $cID = $db->GetOne('select stMultilingualSection from Stacks where cID = ?', array($this->getCollectionID()));
-        if ($cID) {
-            return Section::getByID($cID);
+        if (!isset($this->multilingualSectionID)) {
+            $db = Database::connection();
+            $cID = $db->GetOne('select stMultilingualSection from Stacks where cID = ?', array($this->getCollectionID()));
+            $this->multilingualSectionID = $cID ? (int) $cID : 0;
         }
+
+        return $this->multilingualSectionID;
     }
 
+    /**
+     * Returns the multilingual section associated to this stack (or null if it's the language-neutral version).
+     *
+     * @return Section|null
+     */
+    public function getMultilingualSection()
+    {
+        $result = null;
+        $msID = $this->getMultilingualSectionID();
+        if ($msID !== 0) {
+            $s = Section::getByID($msID);
+            if ($s) {
+                $result = $s;
+            }
+        }
+
+        return $result;
+    }
+
+/*
     public function updateMultilingualSection(Section $section)
     {
         $db = Database::connection();
         $db->Execute('update Stacks set stMultilingualSection = ? where cID = ?', array($section->getCollectionID(), $this->getCollectionID()));
+    }
+*/
+
+    /**
+     * Returns the collection ID of the locale.neutral version of this stack (or null if this instance is already the neutral version).
+     *
+     * @return int|null
+     */
+    protected function getNeutralStackID()
+    {
+        return ($this->getMultilingualSectionID() === 0) ? null : (int) $this->getCollectionParentID();
+    }
+
+    /**
+     * Checks if this instance is the locale-neutral version of the stack.
+     *
+     * @return bool
+     */
+    public function isNeutralStack()
+    {
+        return $this->getMultilingualSectionID() === 0;
+    }
+
+    /**
+     * Returns the locale-neutral version of this stack (or null if this instance is already the neutral version).
+     *
+     * @param string|int $cvID
+     *
+     * @return Stack|null
+     */
+    public function getNeutralStack($cvID = 'RECENT')
+    {
+        $result = null;
+        $cID = $this->getNeutralStackID();
+        if ($cID !== null) {
+            $result = static::getByID($cID, $cvID);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Returns the localized version of this stack.
+     *
+     * @param Section $section
+     * @param string|int $cvID
+     *
+     * @return static|null
+     */
+    public function getLocalizedStack(Section $section, $cvID = 'RECENT')
+    {
+        $result = null;
+        $mySectionID = $this->getMultilingualSectionID();
+        if ($mySectionID !== 0 && $section->getCollectionID() == $mySectionID) {
+            $result = $this;
+        } else {
+            $neutralID = ($mySectionID === 0) ? $this->getCollectionID() : $this->getNeutralStackID();
+            $db = Database::connection();
+            $localizedID = $db->fetchColumn(
+                '
+                    select
+    	               Stacks.cID
+                    from
+    	               Stacks
+    	               inner join Pages on Stacks.cID = Pages.cID
+                    where
+    	               Pages.cParentID = ? and Stacks.stMultilingualSection = ?
+                    limit 1
+                ',
+                array($neutralID, $section->getCollectionID())
+            );
+            if ($localizedID) {
+                $localized = static::getByID($localizedID, $cvID);
+                if ($localized) {
+                    $result = $localized;
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param Section $section
+     *
+     * @return self
+     */
+    public function addLocalizedStack(Section $section)
+    {
+        $name = $section->getLocale();
+        $neutralStack = $this->getNeutralStack();
+        if ($neutralStack === null) {
+            $neutralStack = $this;
+        }
+        $neutralStackPage = Page::getByID($neutralStack->getCollectionID());
+        $localizedStackPage = $neutralStackPage->duplicate($neutralStackPage);
+        $localizedStackPage->update([
+            'cName' => $name,
+        ]);
+        // we have to do this because we need the area to exist before we try and add something to it.
+        Area::getOrCreate($localizedStackPage, STACKS_AREA_NAME);
+        $localizedStackCID = $localizedStackPage->getCollectionID();
+        $db = Database::connection();
+        $db->executeQuery('
+            insert into Stacks (stName, cID, stType, stMultilingualSection) values (?, ?, ?, ?)',
+            [
+                $name,
+                $localizedStackCID,
+                $this->getStackType(),
+                $section->getCollectionID(),
+            ]
+        );
+        $localizedStack = static::getByID($localizedStackCID);
+
+        return $localizedStack;
     }
 }
