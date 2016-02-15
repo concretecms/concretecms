@@ -49,7 +49,7 @@ class Controller extends AttributeTypeController
         return $akey;
     }
 
-    public function importKey($akey)
+    public function importKey(\SimpleXMLElement $akey)
     {
         $type = new BooleanType();
         if (isset($akey->type)) {
