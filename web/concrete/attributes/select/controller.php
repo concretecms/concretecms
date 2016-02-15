@@ -147,7 +147,7 @@ class Controller extends AttributeTypeController
         $this->entityManager->flush();
     }
 
-    public function importKey($akey)
+    public function importKey(\SimpleXMLElement $akey)
     {
         $type = new SelectType();
         if (isset($akey->type)) {

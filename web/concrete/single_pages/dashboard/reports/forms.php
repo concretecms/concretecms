@@ -273,7 +273,7 @@ else {
                                 $file = File::getByID($fID);
                                 if ($fID && $file) {
                                     $fileVersion = $file->getApprovedVersion();
-                                    echo '<td><a href="' . $fileVersion->getRelativePath() . '">' .
+                                    echo '<td><a href="' . $fileVersion->getUrl() . '">' .
                                         $text->entities($fileVersion->getFileName()) . '</a></td>';
                                 } else {
                                     echo '<td>' . t('File not found') . '</td>';

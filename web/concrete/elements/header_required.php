@@ -77,7 +77,7 @@ if (!isset($pageMetaKeywords) || !$pageMetaKeywords) {
 <title><?php echo htmlspecialchars($pageTitle, ENT_COMPAT, APP_CHARSET)?></title>
 <meta name="description" content="<?=htmlspecialchars($pageDescription, ENT_COMPAT, APP_CHARSET)?>" />
 
-<? if ($pageMetaKeywords) { ?>
+<?php if ($pageMetaKeywords) { ?>
 <meta name="keywords" content="<?=htmlspecialchars($pageMetaKeywords, ENT_COMPAT, APP_CHARSET)?>" />
 <?php }
 if($c->getCollectionAttributeValue('exclude_search_index')) { ?>

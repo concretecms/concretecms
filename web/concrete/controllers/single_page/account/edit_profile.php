@@ -70,18 +70,20 @@ class EditProfile extends AccountPageController
         $this->view();
         $ui = $this->get('profile');
 
-        $uh = Loader::helper('concrete/user');
-        $th = Loader::helper('text');
-        $vsh = Loader::helper('validation/strings');
-        $cvh = Loader::helper('concrete/validation');
-        $valt = Loader::helper('validation/token');
+        /** @var Application $app */
+        $app = $this->app;
+
+        /** @var Strings $vsh */
+        $vsh = $app->make('helper/validation/strings');
+
+        /** @var Validation $cvh */
+        $cvh = $app->make('helper/concrete/validation');
+
+        /** @var Token $valt */
+        $valt = $app->make('token');
 
         $data = $this->post();
 
-        /*
-         * Validation
-        */
-        //token
         if (!$valt->validate('profile_edit')) {
             $this->error->add($valt->getErrorMessage());
         }
@@ -90,8 +92,21 @@ class EditProfile extends AccountPageController
         $email = $this->post('uEmail');
         if (!$vsh->email($email)) {
             $this->error->add(t('Invalid email address provided.'));
-        } elseif (!$cvh->isUniqueEmail($email) && $ui->getUserEmail() != $email) {
-            $this->error->add(t("The email address '%s' is already in use. Please choose another.", $email));
+        } else {
+            if (!$cvh->isUniqueEmail($email) && $ui->getUserEmail() != $email) {
+                $this->error->add(t("The email address '%s' is already in use. Please choose another.", $email));
+            }
+        }
+
+        /**
+         * Username validation
+         */
+        if ($username = $this->post('uName')) {
+            if (!$cvh->username($username)) {
+                $this->error->add(t('Invalid username provided.'));
+            } elseif (!$cvh->isUniqueUsername($username)) {
+                $this->error->add(t("The username '%s' is already in use. Please choose another.", $username));
+            }
         }
 
         // password
