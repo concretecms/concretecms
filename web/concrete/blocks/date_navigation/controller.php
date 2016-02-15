@@ -18,6 +18,7 @@ class Controller extends BlockController
     protected $btExportPageColumns = array('cParentID', 'cTargetID');
     protected $btExportPageTypeColumns = array('ptID');
     protected $btTable = 'btDateNavigation';
+    protected $btTranslatableColumns = array('title');
 
     public function getBlockTypeDescription()
     {

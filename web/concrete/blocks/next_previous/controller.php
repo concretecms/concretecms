@@ -14,6 +14,7 @@ class Controller extends BlockController
     protected $btInterfaceHeight = "400";
     protected $btCacheBlockRecord = true;
     protected $btWrapperClass = 'ccm-ui';
+    protected $btTranslatableColumns = array('nextLabel', 'previousLabel', 'parentLabel');
     /**
      * Used for localization. If we want to localize the name/description we have to include this.
      */

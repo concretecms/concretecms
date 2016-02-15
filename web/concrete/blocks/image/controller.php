@@ -23,6 +23,7 @@ class Controller extends BlockController
     protected $btFeatures = array(
         'image',
     );
+    protected $btTranslatableColumns = array('altText', 'title');
 
     /**
      * Used for localization. If we want to localize the name/description we have to include this.

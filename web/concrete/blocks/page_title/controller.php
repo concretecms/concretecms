@@ -19,6 +19,7 @@ class Controller extends BlockController
     protected $btInterfaceHeight = 400;
     protected $btTable = 'btPageTitle';
     protected $btWrapperClass = 'ccm-ui';
+    protected $btTranslatableColumns = array('titleText');
 
     public function getBlockTypeDescription()
     {

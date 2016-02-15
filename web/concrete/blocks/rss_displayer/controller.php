@@ -21,6 +21,7 @@ class Controller extends BlockController
     protected $btWrapperClass = 'ccm-ui';
     protected $btCacheBlockOutputForRegisteredUsers = true;
     protected $btCacheBlockOutputLifetime = 3600;
+    protected $btTranslatableColumns = array('title');
 
     /**
      * Used for localization. If we want to localize the name/description we have to include this

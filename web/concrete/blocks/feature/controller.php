@@ -22,6 +22,7 @@ class Controller extends BlockController
     protected $btExportPageColumns = array('internalLinkCID');
     protected $btInterfaceHeight = 520;
     protected $btTable = 'btFeature';
+    protected $btTranslatableColumns = array('title', 'paragraph', 'externalLink');
 
     public function getBlockTypeDescription()
     {

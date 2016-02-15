@@ -15,6 +15,7 @@ class Controller extends BlockController
     protected $btCacheBlockOutput = true;
     protected $btCacheBlockOutputOnPost = true;
     protected $btCacheBlockOutputForRegisteredUsers = false;
+    protected $btTranslatableColumns = array('title', 'location');
 
     public $title = "";
     public $location = "";

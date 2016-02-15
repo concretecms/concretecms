@@ -14,6 +14,7 @@ class Controller extends BlockController
     protected $btInterfaceWidth = "500";
     protected $btInterfaceHeight = "150";
     protected $btTable = 'btSwitchLanguage';
+    protected $btTranslatableColumns = array('label');
 
     public $helpers = array('form');
 

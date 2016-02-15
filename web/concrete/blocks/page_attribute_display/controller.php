@@ -19,6 +19,7 @@ class Controller extends BlockController
     protected $btCacheBlockOutput = true;
     protected $btCacheBlockOutputOnPost = true;
     protected $btCacheBlockOutputForRegisteredUsers = false;
+    protected $btTranslatableColumns = array('attributeTitleText');
 
     /**
      * @var int thumbnail height

@@ -15,6 +15,7 @@ class Controller extends BlockController
     protected $btInterfaceWidth = "420";
     protected $btInterfaceHeight = "400";
     protected $btExportTables = array('btSurvey', 'btSurveyOptions', 'btSurveyResults');
+    protected $btTranslatableColumns = array('question', 'optionName');
 
     public function on_start()
     {

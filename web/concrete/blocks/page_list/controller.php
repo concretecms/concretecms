@@ -26,6 +26,7 @@ class Controller extends BlockController
     protected $btCacheBlockOutputOnPost = true;
     protected $btCacheBlockOutputLifetime = 300;
     protected $list;
+    protected $btTranslatableColumns = array('buttonLinkText', 'pageListTitle');
 
     /**
      * Used for localization. If we want to localize the name/description we have to include this.

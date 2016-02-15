@@ -21,6 +21,7 @@ class Controller extends BlockController
     protected $btCacheBlockOutputOnPost = false;
     protected $btCacheBlockOutputForRegisteredUsers = false;
     protected $btWrapperClass = 'ccm-ui';
+    protected $btTranslatableColumns = array('title');
 
     public $attributeHandle = 'tags';
     public $displayMode = 'page';
