@@ -714,7 +714,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
 
         if (is_object($data['defaultTemplate'])) {
             $ptDefaultPageTemplateID = $data['defaultTemplate']->getPageTemplateID();
-        } elseif(!empty($data['defaultTemplate'])) {
+        } elseif (!empty($data['defaultTemplate'])) {
             $ptDefaultPageTemplateID = PageTemplate::getByHandle($data['defaultTemplate'])->getPageTemplateID();
         }
         $ptAllowedPageTemplates = 'A';
@@ -828,7 +828,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
         if (is_object($data['defaultTemplate'])) {
             $ptDefaultPageTemplateID = $data['defaultTemplate']->getPageTemplateID();
-        } elseif(!empty($data['defaultTemplate'])) {
+        } elseif (!empty($data['defaultTemplate'])) {
             $ptDefaultPageTemplateID = PageTemplate::getByHandle($data['defaultTemplate'])->getPageTemplateID();
         }
         if ($data['allowedTemplates']) {
@@ -870,7 +870,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         $db->Execute('delete from PageTypePageTemplates where ptID = ?', array($this->ptID));
         if ($ptAllowedPageTemplates != 'A') {
             foreach ($templates as $pt) {
-                if(!is_object($pt)){
+                if (!is_object($pt)) {
                     $pt = PageTemplate::getByHandle($pt);
                 }
                 $db->Execute(
