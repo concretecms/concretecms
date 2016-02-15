@@ -74,7 +74,7 @@ class RedactorEditor implements EditorInterface
         }
         $options = json_encode($options);
         $identifier = id(new Identifier())->getString(32);
-        $html = sprintf('<textarea data-redactor-editor="%s" name="%s">%s</textarea>', $identifier, $key, $content);
+        $html = sprintf('<textarea data-redactor-editor="%s" name="%s">%s</textarea>', $identifier, $key, htmlspecialchars($content, ENT_QUOTES, APP_CHARSET));
         $html .= <<<EOL
         <script type="text/javascript">
         var CCM_EDITOR_SECURITY_TOKEN = "{$this->token}";
