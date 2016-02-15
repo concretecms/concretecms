@@ -175,8 +175,8 @@ if (isset($_REQUEST['ctask']) && $_REQUEST['ctask'] && $valt->validate()) {
 
         case 'publish-now':
             if ($cp->canApprovePageVersions()) {
-                $v = CollectionVersion::get($c, "ACTIVE");
-                $v->setPublishDate(null);
+                $v = CollectionVersion::get($c, "SCHEDULED");
+                $v->approve(false);
 
                 header('Location: ' . \Core::getApplicationURL() . '/' . DISPATCHER_FILENAME .
                     '?cID=' . $c->getCollectionID() . $step);

@@ -98,20 +98,18 @@ class CheckIn extends BackendInterfacePageController
                 $e = $this->checkForPublishing();
                 $pr->setError($e);
                 if (!$e->has()) {
-                    if ($this->request->request->get('action') == 'schedule') {
-                        $dateTime = new DateTime();
-                        $publishDateTime = $dateTime->translate('check-in-scheduler');
-
-                        $v->setPublishDate($publishDateTime);
-                    } else {
-                        $v->setPublishDate(null);
-                    }
-
                     $pkr = new ApprovePagePageWorkflowRequest();
                     $pkr->setRequestedPage($c);
                     $pkr->setRequestedVersionID($v->getVersionID());
                     $pkr->setRequesterUserID($u->getUserID());
                     $u->unloadCollectionEdit($c);
+
+                    if ($this->request->request->get('action') == 'schedule') {
+                        $dateTime = new DateTime();
+                        $publishDateTime = $dateTime->translate('check-in-scheduler');
+                        $pkr->scheduleVersion($publishDateTime);
+                    }
+
                     $response = $pkr->trigger();
 
                     if ($c->isPageDraft()) {
