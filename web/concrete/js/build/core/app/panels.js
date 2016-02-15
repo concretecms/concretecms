@@ -332,8 +332,7 @@ function ConcretePanel(options) {
             $content.find('[data-panel-detail-form]').not('[data-panel-detail-form="seo"],[data-panel-detail-form="attributes"]').concreteAjaxForm();
 
             $content.find('[data-panel-detail-form="seo"],[data-panel-detail-form="attributes"]').concreteAjaxForm({complete: function(){
-                var panel = ConcretePanelManager.getByIdentifier('check-in');
-                panel.toggle();
+                location.reload();
             }});
 
             $('button[data-panel-detail-action=submit]').on('click', function () {
