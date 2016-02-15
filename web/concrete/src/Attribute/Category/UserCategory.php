@@ -1,10 +1,12 @@
 <?php
 namespace Concrete\Core\Attribute\Category;
 
+use Concrete\Core\Attribute\Category\AttributeType;
 use Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexerInterface;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Key\UserKey;
 use Concrete\Core\Entity\Attribute\Type;
+use Concrete\Core\Entity\Package;
 use Symfony\Component\HttpFoundation\Request;
 
 class UserCategory extends AbstractCategory implements StandardSearchIndexerInterface
@@ -85,7 +87,7 @@ class UserCategory extends AbstractCategory implements StandardSearchIndexerInte
         return $this->saveFromRequest($key, $request);
     }
 
-    public function import(Type $type, \SimpleXMLElement $element)
+    public function import(Type $type, \SimpleXMLElement $element, Package $package = null)
     {
         /*
          * @var UserKey

@@ -149,7 +149,7 @@ class Controller extends AttributeTypeController
         return $key;
     }
 
-    public function importKey($key)
+    public function importKey(\SimpleXMLElement $key)
     {
         $type = new TopicsType();
         $name = (string) $key->tree['name'];

@@ -124,7 +124,7 @@ class Controller extends DefaultController
         return $av;
     }
 
-    public function importKey($akey)
+    public function importKey(\SimpleXMLElement $akey)
     {
         $type = new TextareaType();
         if (isset($akey->type)) {
