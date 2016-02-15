@@ -244,7 +244,7 @@ class Controller extends AttributeTypeController
         }
     }
 
-    public function importKey($akey)
+    public function importKey(\SimpleXMLElement $akey)
     {
         $type = new AddressType();
         if (isset($akey->type)) {

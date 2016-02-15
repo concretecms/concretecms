@@ -99,7 +99,7 @@ class Controller extends AttributeTypeController
         return $akey;
     }
 
-    public function importKey($akey)
+    public function importKey(\SimpleXMLElement $akey)
     {
         $type = new DateTimeType();
         if (isset($akey->type)) {
