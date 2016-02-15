@@ -371,10 +371,6 @@ class Controller extends BlockController
             }
         }
 
-        if ($rows) {
-            $err
-        }
-
         //checked required fields
         foreach ($rows as $row) {
             if ($row['inputType'] == 'datetime') {
