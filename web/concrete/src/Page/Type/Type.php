@@ -681,9 +681,9 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
      * @param array $data {
      *     @var string          $handle              A string which can be used to identify the page type
      *     @var string          $name                A user friendly display name
-     *     @var \PageTemplate   $defaultTemplate     The default template object
+     *     @var \PageTemplate   $defaultTemplate     The default template object or handle
      *     @var string          $allowedTemplates    (A|C|X) A for all, C for selected only, X for non-selected only
-     *     @var \PageTemplate[] $templates           Array or Iterator of selected templates, see `$allowedTemplates`
+     *     @var \PageTemplate[] $templates           Array or Iterator of selected templates, see `$allowedTemplates`, or Page Template Handles
      *     @var bool            $internal            Is this an internal only page type? Default: `false`
      *     @var bool            $ptLaunchInComposer  Does this launch in composer? Default: `false`
      *     @var bool            $ptIsFrequentlyAdded Should this always be displayed in the pages panel? Default: `false`
@@ -714,6 +714,8 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
 
         if (is_object($data['defaultTemplate'])) {
             $ptDefaultPageTemplateID = $data['defaultTemplate']->getPageTemplateID();
+        } elseif(!empty($data['defaultTemplate'])) {
+            $ptDefaultPageTemplateID = PageTemplate::getByHandle($data['defaultTemplate'])->getPageTemplateID();
         }
         $ptAllowedPageTemplates = 'A';
         if ($data['allowedTemplates']) {
@@ -760,6 +762,9 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         $ptID = $db->Insert_ID();
         if ($ptAllowedPageTemplates != 'A') {
             foreach ($templates as $pt) {
+                if(!is_object($pt)){
+                    $pt = PageTemplate::getByHandle($pt);
+                }
                 $db->Execute(
                     'insert into PageTypePageTemplates (ptID, pTemplateID) values (?, ?)',
                     array(
@@ -823,6 +828,8 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
         if (is_object($data['defaultTemplate'])) {
             $ptDefaultPageTemplateID = $data['defaultTemplate']->getPageTemplateID();
+        } elseif(!empty($data['defaultTemplate'])) {
+            $ptDefaultPageTemplateID = PageTemplate::getByHandle($data['defaultTemplate'])->getPageTemplateID();
         }
         if ($data['allowedTemplates']) {
             $ptAllowedPageTemplates = $data['allowedTemplates'];
@@ -863,6 +870,9 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         $db->Execute('delete from PageTypePageTemplates where ptID = ?', array($this->ptID));
         if ($ptAllowedPageTemplates != 'A') {
             foreach ($templates as $pt) {
+                if(!is_object($pt)){
+                    $pt = PageTemplate::getByHandle($pt);
+                }
                 $db->Execute(
                     'insert into PageTypePageTemplates (ptID, pTemplateID) values (?, ?)',
                     array(
