@@ -214,9 +214,13 @@ EOS;
     public function date($field, $value = null, $calendarAutoStart = true)
     {
         $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
+        $fh = Core::make("helper/form");
         $id = preg_replace("/[^0-9A-Za-z-]/", "_", $field);
-        if (isset($_REQUEST[$field])) {
-            $timestamp = empty($_REQUEST[$field]) ? false : @strtotime($_REQUEST[$field]);
+
+        $requestValue = $fh->getRequestValue($field);
+
+        if (isset($requestValue)) {
+            $timestamp = empty($requestValue) ? false : @strtotime($requestValue);
         } elseif ($value) {
             $timestamp = @strtotime($value);
         } elseif ($value === '') {
