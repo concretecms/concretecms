@@ -8,6 +8,7 @@
 		options = $.extend({
 			'dataType': 'json',
 			'type': 'post',
+			'loader': 'standard',
 			'error': function(r) {
 				my.error(r, my);
 			},
@@ -35,7 +36,9 @@
 		},
 
 		before: function(my) {
-			jQuery.fn.dialog.showLoader();
+			if (this.options.loader) {
+				jQuery.fn.dialog.showLoader();
+			}
 		},
 
 		error: function(r, my) {

@@ -4,6 +4,7 @@ namespace Concrete\Controller\SinglePage\Dashboard\Express\Entities;
 use Concrete\Core\Entity\Express\FieldSet;
 use Concrete\Core\Entity\Express\Form;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Doctrine\ORM\Id\UuidGenerator;
 
 class Forms extends DashboardPageController
 {
@@ -178,6 +179,7 @@ class Forms extends DashboardPageController
 
                 $type = $manager->driver($this->request->request->get('type'));
                 $control = $type->createControlByIdentifier($this->request->request->get('id'));
+                $control->setId((new UuidGenerator())->generate($this->entityManager, $control));
                 $control->setFieldSet($set);
                 $control->setPosition($position);
 

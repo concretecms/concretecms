@@ -15,8 +15,7 @@ use Concrete\Core\Express\Form\Control\Type\SaveHandler\ControlSaveHandler;
 abstract class Control implements \JsonSerializable
 {
     /**
-     * @Id @Column(type="integer")
-     * @GeneratedValue(strategy="AUTO")
+     * @Id @Column(type="guid")
      */
     protected $id;
 
@@ -132,6 +131,8 @@ abstract class Control implements \JsonSerializable
     {
         return [
             'id' => $this->getId(),
+            'displayLabel' => $this->getDisplayLabel(),
+            'isRequired' => $this->isRequired(),
         ];
     }
 
