@@ -5,7 +5,7 @@ use Exception;
 use Loader;
 use stdClass;
 
-class Error implements \ArrayAccess
+class Error implements \ArrayAccess, \JsonSerializable
 {
     protected $error = array();
     public $helperAlwaysCreateNewInstance = true;
@@ -146,14 +146,20 @@ class Error implements \ArrayAccess
     public function outputJSON()
     {
         if ($this->has()) {
-            $js = Loader::helper('json');
-            $obj = new stdClass();
-            $obj->error = true;
-            $obj->errors = array();
+            echo json_encode($this);
+        }
+    }
+
+    public function jsonSerialize()
+    {
+        if ($this->has()) {
+            $o = array();
+            $o['error'] = true;
+            $o['errors'] = array();
             foreach ($this->getList() as $error) {
-                $obj->errors[] = $error;
+                $o['errors'][] = $error;
             }
-            echo $js->encode($obj);
+            return $o;
         }
     }
 }
