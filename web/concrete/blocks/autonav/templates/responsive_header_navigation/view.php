@@ -1,6 +1,6 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<? View::getInstance()->requireAsset('javascript', 'jquery');
+<?php View::getInstance()->requireAsset('javascript', 'jquery');
 
 $navItems = $controller->getNavItems();
 
@@ -9,7 +9,7 @@ $navItems = $controller->getNavItems();
  * It is a "flattened" one-dimensional list of all nav items -- it is not hierarchical.
  * However, a nested nav menu can be constructed from this "flat" array by
  * looking at various properties of each item to determine its place in the hierarchy
- * (see below, for example $navItem->level, $navItem->subDepth, $navItem->hasSubmenu, etc.)
+ * (see below, for example $navItem->level, $navItem->subDepth, $navItem->hasSubmenu, etc.).
  *
  * Items in the array are ordered with the first top-level item first, followed by its sub-items, etc.
  *
@@ -30,9 +30,7 @@ $navItems = $controller->getNavItems();
  *	$navItem->cObj       : collection object of the page this nav item represents (use this if you need to access page properties and attributes that aren't already available in the $navItem object)
  */
 
-
 /** For extra functionality, you can add the following page attributes to your site (via Dashboard > Pages & Themes > Attributes):
- *
  * 1) Handle: exclude_nav
  *    (This is the "Exclude From Nav" attribute that comes pre-installed with concrete5, so you do not need to add it yourself.)
  *    Functionality: If a page has this checked, it will not be included in the nav menu (and neither will its children / sub-pages).
@@ -49,7 +47,6 @@ $navItems = $controller->getNavItems();
  *    Type: Text
  *    Functionality: Whatever is entered into this textbox will be outputted as an additional CSS class for that page's nav item (NOTE: you must un-comment the "$ni->attrClass" code block in the CSS section below for this to work).
  */
-
 
 /*** STEP 1 of 2: Determine all CSS classes (only 2 are enabled by default, but you can un-comment other ones or add your own) ***/
 foreach ($navItems as $ni) {
@@ -109,13 +106,11 @@ foreach ($navItems as $ni) {
     $ni->classes = implode(" ", $classes);
 }
 
-
 //*** Step 2 of 2: Output menu HTML ***/
 
 echo '<nav class="ccm-responsive-navigation original"><ul>'; //opens the top-level menu
 
 foreach ($navItems as $ni) {
-
     echo '<li class="' . $ni->classes . '">'; //opens a nav item
     $name = (isset($translate) && $translate == true) ? t($ni->name) : $ni->name;
     echo '<a href="' . $ni->url . '" target="' . $ni->target . '" class="' . $ni->classes . '">' . $name . '</a>';
@@ -130,3 +125,4 @@ foreach ($navItems as $ni) {
 
 echo '</ul></nav>'; //closes the top-level menu
 echo '<div class="ccm-responsive-menu-launch"><i></i></div>'; // empty i tag for attaching :after or :before psuedos for things like FontAwesome icons.
+

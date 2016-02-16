@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Tree\Node;
 
 use Concrete\Core\Foundation\Object;
@@ -62,6 +61,7 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
         if (!isset($this->tree)) {
             $this->tree = Tree::getByID($this->treeID);
         }
+
         return $this->tree;
     }
 
@@ -208,7 +208,7 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
     {
         $path = '/';
         $nodes = array_reverse($this->getTreeNodeParentArray());
-        for ($i = 0; $i < count($nodes); $i++) {
+        for ($i = 0; $i < count($nodes); ++$i) {
             if ($i == 0) {
                 continue;
             }
@@ -326,7 +326,7 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
         $displayOrder = 0;
         while ($row = $r->FetchRow()) {
             $db->Execute('update TreeNodes set treeNodeDisplayOrder = ? where treeNodeID = ?', array($displayOrder, $row['treeNodeID']));
-            $displayOrder++;
+            ++$displayOrder;
         }
     }
 
@@ -337,7 +337,7 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
             $displayOrder = 0;
             foreach ($orderedIDs as $treeNodeID) {
                 $db->Execute('update TreeNodes set treeNodeDisplayOrder = ? where treeNodeID = ?', array($displayOrder, $treeNodeID));
-                $displayOrder++;
+                ++$displayOrder;
             }
         }
     }

@@ -12,13 +12,16 @@ class Date
 {
     /**
      * The PHP date/time format string to be used when dealing with the database.
+     *
      * @var string
+     *
      * @see http://php.net/manual/function.date.php
      */
     const DB_FORMAT = 'Y-m-d H:i:s';
 
     /**
      * Convert any date/time representation to a string that can be used in DB queries.
+     *
      * @param string|int|\DateTime $value It can be:<ul>
      *    <li>the special value 'now' (default) to return the current date/time</li>
      *    <li>a \DateTime instance</li>
@@ -32,7 +35,7 @@ class Date
      *    <li>'app' for the app's timezone</li>
      *    <li>Other values: one of the PHP supported time zones (see http://us1.php.net/manual/en/timezones.php )</li>
      * </ul>
-    * @param string Returns the date/time representation (an empty string if $value is empty)
+     * @param string Returns the date/time representation (an empty string if $value is empty)
      */
     public function toDB($value = 'now', $fromTimezone = 'system')
     {
@@ -43,7 +46,9 @@ class Date
 
     /**
      * Return the date/time representation for now, that can be overridden by a custom request when viewing pages in a moment specified by administrators (custom request date/time).
+     *
      * @param bool $asTimestamp Set to true to retrieve the Unix timestamp, false to retrieve the string representation (eg '2000-12-31 23:59:59')
+     *
      * @return string|int
      */
     public function getOverridableNow($asTimestamp = false)
@@ -62,9 +67,12 @@ class Date
      * Subsitute for the native date() function that adds localized date support.
      * Use *ONLY* if really needed: you may want to use some of the formatDate/Time methods.
      * If you're not working with timestamps you may want to use the formatCustom method.
+     *
      * @param string $mask The PHP format mask
      * @param bool|int $timestamp Use false for the current date/time, otherwise a valid Unix timestamp.
+     *
      * @return string
+     *
      * @see http://php.net/manual/function.date.php
      */
     public function date($mask, $timestamp = false, $toTimezone = 'system')
@@ -89,8 +97,10 @@ class Date
     }
 
     /**
-     * Returns a keyed array of timezone identifiers (keys are the standard PHP timezone names, values are the localized timezone names)
+     * Returns a keyed array of timezone identifiers (keys are the standard PHP timezone names, values are the localized timezone names).
+     *
      * @return array
+     *
      * @see http://www.php.net/datetimezone.listidentifiers.php
      */
     public function getTimezones()
@@ -111,7 +121,7 @@ class Date
                 'Australia' => \Punic\Territory::getName('AU'),
                 'Europe' => \Punic\Territory::getName('150'),
                 'Indian' => t('Indian Ocean'),
-                'Pacific' => t('Pacific Ocean')
+                'Pacific' => t('Pacific Ocean'),
             );
             foreach (\DateTimeZone::listIdentifiers() as $timezoneID) {
                 switch ($timezoneID) {
@@ -156,8 +166,10 @@ class Date
     }
 
     /**
-     * Returns the display name of a timezone
+     * Returns the display name of a timezone.
+     *
      * @param string|\DateTimeZone|\DateTime $timezone The timezone for which you want the localized display name
+     *
      * @return string
      */
     public function getTimezoneDisplayName($timezone)
@@ -184,9 +196,11 @@ class Date
 
     /**
      * Describe the difference in time between now and a date/time in the past.
-     * If the date/time is in the future or if it's more than one year old, you'll get the date representation of $posttime
+     * If the date/time is in the future or if it's more than one year old, you'll get the date representation of $posttime.
+     *
      * @param int $posttime The timestamp to analyze
      * @param bool $precise = false Set to true to a more verbose and precise result, false for a more rounded result
+     *
      * @return string
      */
     public function timeSince($posttime, $precise = false)
@@ -201,8 +215,10 @@ class Date
 
     /**
      * Returns the localized representation of a time interval specified as seconds.
+     *
      * @param int $diff The time difference in seconds
      * @param bool $precise = false Set to true to a more verbose and precise result, false for a more rounded result
+     *
      * @return string
      */
     public function describeInterval($diff, $precise = false)
@@ -239,13 +255,15 @@ class Date
     }
 
     /**
-     * Returns the normalized timezone identifier
+     * Returns the normalized timezone identifier.
+     *
      * @param string $timezone The timezone to retrieve. Special values are:<ul>
      *    <li>'system' (default) for the current system timezone</li>
      *    <li>'user' for the user's timezone</li>
      *    <li>'app' for the app's timezone</li>
      *    <li>Other values: one of the PHP supported time zones (see http://us1.php.net/manual/en/timezones.php )</li>
      * </ul>
+     *
      * @return string
      */
     public function getTimezoneID($timezone)
@@ -262,8 +280,8 @@ class Date
                 if (Config::get('concrete.misc.user_timezones')) {
                     $u = null;
                     $request = null;
-                    if(!Core::make('app')->isRunThroughCommandLineInterface()) {
-                        $request =  Request::getInstance();
+                    if (!Core::make('app')->isRunThroughCommandLineInterface()) {
+                        $request = Request::getInstance();
                     }
                     if ($request && $request->hasCustomRequestUser()) {
                         $u = $request->getCustomRequestUser();
@@ -286,13 +304,15 @@ class Date
     }
 
     /**
-     * Returns a \DateTimeZone instance for a specified timezone identifier
+     * Returns a \DateTimeZone instance for a specified timezone identifier.
+     *
      * @param string $timezone The timezone to retrieve. Special values are:<ul>
      *    <li>'system' (default) for the current system timezone</li>
      *    <li>'user' for the user's timezone</li>
      *    <li>'app' for the app's timezone</li>
      *    <li>Other values: one of the PHP supported time zones (see http://us1.php.net/manual/en/timezones.php )</li>
      * </ul>
+     *
      * @return \DateTimeZone|null Returns null if $timezone is invalid or the \DateTimeZone corresponding to $timezone
      */
     public function getTimezone($timezone)
@@ -311,6 +331,7 @@ class Date
 
     /**
      * Convert a date to a \DateTime instance.
+     *
      * @param string|\DateTime|int $value It can be:<ul>
      *    <li>the special value 'now' (default) to return the current date/time</li>
      *    <li>a \DateTime instance</li>
@@ -324,6 +345,7 @@ class Date
      *    <li>Other values: one of the PHP supported time zones (see http://us1.php.net/manual/en/timezones.php )</li>
      * </ul>
      * @param string $fromTimezone The original timezone of $value (useful only if $value is a string like '2000-12-31 23:59'); it accepts the same values as $toTimezone.
+     *
      * @return \DateTime|null Returns the \DateTime instance (or null if $value couldn't be parsed)
      */
     public function toDateTime($value = 'now', $toTimezone = 'system', $fromTimezone = 'system')
@@ -333,6 +355,7 @@ class Date
 
     /**
      * Returns the difference in days between to dates.
+     *
      * @param mixed $from The start date/time representation (one of the values accepted by toDateTime)
      * @param mixed $to The end date/time representation (one of the values accepted by toDateTime)
      * @param string $timezone The timezone to set. Special values are:<ul>
@@ -341,6 +364,7 @@ class Date
      *    <li>'app' for the app's timezone</li>
      *    <li>Other values: one of the PHP supported time zones (see http://us1.php.net/manual/en/timezones.php )</li>
      * </ul>
+     *
      * @return int|null Returns the difference in days (less than zero if $dateFrom if greater than $dateTo).
      * Returns null if one of both the dates can't be parsed.
      */
@@ -363,7 +387,8 @@ class Date
     }
 
     /**
-     * Render the date part of a date/time as a localized string
+     * Render the date part of a date/time as a localized string.
+     *
      * @param mixed $value $The date/time representation (one of the values accepted by toDateTime)
      * @param bool $longDate $Set to true for the long date format (eg 'December 31, 2000'), false (default) for the short format (eg '12/31/2000')
      * @param string $toTimezone The timezone to set. Special values are:<ul>
@@ -372,6 +397,7 @@ class Date
      *     <li>'app' for the app's timezone</li>
      *     <li>Other values: one of the PHP supported time zones (see http://us1.php.net/manual/en/timezones.php )</li>
      * </ul>
+     *
      * @return string Returns an empty string if $value couldn't be parsed, the localized string otherwise
      */
     public function formatDate($value = 'now', $longDate = false, $toTimezone = 'user')
@@ -383,7 +409,8 @@ class Date
     }
 
     /**
-     * Render the time part of a date/time as a localized string
+     * Render the time part of a date/time as a localized string.
+     *
      * @param mixed $value The date/time representation (one of the values accepted by toDateTime)
      * @param bool $withSeconds Set to true to include seconds (eg '11:59:59 PM'), false (default) otherwise (eg '11:59 PM');
      * @param string $toTimezone The timezone to set. Special values are:<ul>
@@ -392,6 +419,7 @@ class Date
      *     <li>'app' for the app's timezone</li>
      *     <li>Other values: one of the PHP supported time zones (see http://us1.php.net/manual/en/timezones.php )</li>
      * </ul>
+     *
      * @return string Returns an empty string if $value couldn't be parsed, the localized string otherwise
      */
     public function formatTime($value = 'now', $withSeconds = false, $toTimezone = 'user')
@@ -403,7 +431,8 @@ class Date
     }
 
     /**
-     * Render both the date and time parts of a date/time as a localized string
+     * Render both the date and time parts of a date/time as a localized string.
+     *
      * @param mixed $value The date/time representation (one of the values accepted by toDateTime)
      * @param bool $longDate Set to true for the long date format (eg 'December 31, 2000 at ...'), false (default) for the short format (eg '12/31/2000 at ...')
      * @param bool $withSeconds Set to true to include seconds (eg '... at 11:59:59 PM'), false (default) otherwise (eg '... at 11:59 PM');
@@ -413,6 +442,7 @@ class Date
      *     <li>'app' for the app's timezone</li>
      *     <li>Other values: one of the PHP supported time zones (see http://us1.php.net/manual/en/timezones.php )</li>
      * </ul>
+     *
      * @return string Returns an empty string if $value couldn't be parsed, the localized string otherwise
      */
     public function formatDateTime($value = 'now', $longDate = false, $withSeconds = false, $toTimezone = 'user')
@@ -438,7 +468,8 @@ class Date
     }
 
     /**
-     * Render the date part of a date/time as a localized string. If the day is yesterday we'll print 'Yesterday' (the same for today, tomorrow)
+     * Render the date part of a date/time as a localized string. If the day is yesterday we'll print 'Yesterday' (the same for today, tomorrow).
+     *
      * @param mixed $value The date/time representation (one of the values accepted by toDateTime)
      * @param bool $longDate Set to true for the long date format (eg 'December 31, 2000'), false (default) for the short format (eg '12/31/2000')
      * @param string $toTimezone The timezone to set. Special values are:<ul>
@@ -447,6 +478,7 @@ class Date
      *     <li>'app' for the app's timezone</li>
      *     <li>Other values: one of the PHP supported time zones (see http://us1.php.net/manual/en/timezones.php )</li>
      * </ul>
+     *
      * @return string Returns an empty string if $value couldn't be parsed, the localized string otherwise
      */
     public function formatPrettyDate($value, $longDate = false, $toTimezone = 'user')
@@ -469,7 +501,8 @@ class Date
     }
 
     /**
-     * Render both the date and time parts of a date/time as a localized string. If the day is yesterday we'll print 'Yesterday' (the same for today, tomorrow)
+     * Render both the date and time parts of a date/time as a localized string. If the day is yesterday we'll print 'Yesterday' (the same for today, tomorrow).
+     *
      * @param mixed $value The date/time representation (one of the values accepted by toDateTime)
      * @param bool $longDate Set to true for the long date format (eg 'December 31, 2000 at ...'), false (default) for the short format (eg '12/31/2000 at ...')
      * @param bool $withSeconds Set to true to include seconds (eg '... at 11:59:59 PM'), false (default) otherwise (eg '... at 11:59 PM');
@@ -479,6 +512,7 @@ class Date
      *     <li>'app' for the app's timezone</li>
      *     <li>Other values: one of the PHP supported time zones (see http://us1.php.net/manual/en/timezones.php )</li>
      * </ul>
+     *
      * @return string Returns an empty string if $value couldn't be parsed, the localized string otherwise
      */
     public function formatPrettyDateTime($value, $longDate = false, $withSeconds = false, $timezone = 'user')
@@ -490,17 +524,17 @@ class Date
         $days = $this->getDeltaDays('now', $dtDate, $timezone);
         switch ($days) {
             case 0:
-                return t( /*i18n: %s is a time */
+                return t(/*i18n: %s is a time */
                     'Today at %s',
                     $this->formatTime($dtDate, $withSeconds, $timezone)
                 );
             case 1:
-                return t( /*i18n: %s is a time */
+                return t(/*i18n: %s is a time */
                     'Tomorrow at %s',
                     $this->formatTime($dtDate, $withSeconds, $timezone)
                 );
             case -1:
-                return t( /*i18n: %s is a time */
+                return t(/*i18n: %s is a time */
                     'Yesterday at %s',
                     $this->formatTime($dtDate, $withSeconds, $timezone)
                 );
@@ -510,7 +544,8 @@ class Date
     }
 
     /**
-     * Render a date/time as a localized string, by specifying a custom format
+     * Render a date/time as a localized string, by specifying a custom format.
+     *
      * @param string $format The custom format (see http://www.php.net/manual/en/function.date.php for applicable formats)
      * @param mixed $value The date/time representation (one of the values accepted by toDateTime)
      * @param string $toTimezone The timezone to set. Special values are:<ul>
@@ -520,6 +555,7 @@ class Date
      *     <li>Other values: one of the PHP supported time zones (see http://us1.php.net/manual/en/timezones.php )</li>
      * </ul>
      * @param string $fromTimezone The original timezone of $value (useful only if $value is a string like '2000-12-31 23:59'); it accepts the same values as $toTimezone.
+     *
      * @return string Returns an empty string if $value couldn't be parsed, the localized string otherwise
      */
     public function formatCustom($format, $value = 'now', $toTimezone = 'user', $fromTimezone = 'system')
@@ -533,13 +569,14 @@ class Date
     /** Returns the format string for the jQueryUI DatePicker widget
      * @param string $relatedPHPFormat = '' Related PHP date format that will be used to parse the format handled by the DatePicker.
      *     If not specified we'll use the same format used by formatDate(..., false)
+     *
      * @return string
      */
     public function getJQueryUIDatePickerFormat($relatedPHPFormat = '')
     {
         $phpFormat = (is_string($relatedPHPFormat) && strlen($relatedPHPFormat)) ?
             $relatedPHPFormat :
-            t( /*i18n: Short date format: see http://www.php.net/manual/en/function.date.php */
+            t(/*i18n: Short date format: see http://www.php.net/manual/en/function.date.php */
                 'n/j/Y'
             );
         // Special chars that need to be escaped in the DatePicker format string
@@ -556,11 +593,11 @@ class Date
             'M' => 'M',
             'F' => 'MM',
             'y' => 'y',
-            'Y' => 'yy'
+            'Y' => 'yy',
         );
         $datepickerFormat = '';
         $escaped = false;
-        for ($i = 0; $i < strlen($phpFormat); $i++) {
+        for ($i = 0; $i < strlen($phpFormat); ++$i) {
             $c = substr($phpFormat, $i, 1);
             if ($escaped) {
                 if (in_array($c, $datepickerSpecials)) {
@@ -587,7 +624,8 @@ class Date
     }
 
     /**
-     * Returns the time format (12 or 24)
+     * Returns the time format (12 or 24).
+     *
      * @return int
      */
     public function getTimeFormat()
@@ -692,5 +730,4 @@ class Date
             Calendar::convertPhpToIsoFormat($mask)
         );
     }
-
 }

@@ -9,7 +9,7 @@ $this->inc('elements/header.php'); ?>
 
                 <?php Loader::element('system_errors', array('format' => 'block', 'error' => $error, 'success' => $success, 'message' => $message)); ?>
 
-                <? print $innerContent; ?>
+                <?php echo $innerContent; ?>
             </div>
         </div>
     </div>

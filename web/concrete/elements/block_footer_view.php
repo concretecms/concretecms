@@ -1,4 +1,4 @@
-<?
+<?php
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -13,26 +13,33 @@ if ($a->isGlobalArea()) {
 $blockStyle = $b->getCustomStyle();
 ?>
 
-<?
+<?php
 if (
     $pt->supportsGridFramework()
     && $b->getBlockAreaObject()->isGridContainerEnabled()
     && !$b->ignorePageThemeGridFrameworkContainer()
 ) {
     $gf = $pt->getThemeGridFrameworkObject();
-    print '</div>';
-    print $gf->getPageThemeGridFrameworkRowEndHTML();
-    print $gf->getPageThemeGridFrameworkContainerEndHTML();
+    echo '</div>';
+    echo $gf->getPageThemeGridFrameworkRowEndHTML();
+    echo $gf->getPageThemeGridFrameworkContainerEndHTML();
 }
 
 $p = new Permissions($b);
 $showMenu = false;
-if ($a->showControls() && $p->canViewEditInterface() && $view->showControls()) { ?>
-<? if (is_object($blockStyle)) { ?>
+if ($a->showControls() && $p->canViewEditInterface() && $view->showControls()) {
+    ?>
+<?php if (is_object($blockStyle)) {
+    ?>
     </div>
-<? } ?>
+<?php 
+}
+    ?>
     </div>
     </div>
-<? } else if (is_object($blockStyle)) { ?>
+<?php 
+} elseif (is_object($blockStyle)) {
+    ?>
     </div>
-<? } ?>
+<?php 
+} ?>

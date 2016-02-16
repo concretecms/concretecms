@@ -1,27 +1,21 @@
 <?php
-
 namespace Concrete\Attribute\ImageFile;
 
+use Concrete\Core\Attribute\FontAwesomeIconFormatter;
+use Concrete\Core\Entity\Attribute\Key\Type\ImageFileType;
+use Concrete\Core\Entity\Attribute\Value\Value\ImageFileValue;
 use Core;
-use Database;
 use File;
 use Concrete\Core\Backup\ContentExporter;
-use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 
 class Controller extends AttributeTypeController
 {
     protected $searchIndexFieldDefinition = array('type' => 'integer', 'options' => array('default' => 0, 'notnull' => false));
 
-    public function getValue()
+    public function getIconFormatter()
     {
-        $db = Database::connection();
-        $value = $db->GetOne("select fID from atFile where avID = ?", array($this->getAttributeValueID()));
-        if ($value > 0) {
-            $f = File::getByID($value);
-
-            return $f;
-        }
+        return new FontAwesomeIconFormatter('download');
     }
 
     public function getDisplayValue()
@@ -58,23 +52,7 @@ class Controller extends AttributeTypeController
 
     public function getSearchIndexValue()
     {
-        $db = Database::connection();
-        $value = $db->GetOne("select fID from atFile where avID = ?", array($this->getAttributeValueID()));
-
-        return $value;
-    }
-
-    public function importValue(\SimpleXMLElement $akv)
-    {
-        if (isset($akv->value->fID)) {
-            $fIDVal = (string) $akv->value->fID;
-            $inspector = \Core::make('import/value_inspector');
-            $result = $inspector->inspect($fIDVal);
-            $fID = $result->getReplacedValue();
-            if ($fID) {
-                return File::getByID($fID);
-            }
-        }
+        return $this->attributeValue->getFileID();
     }
 
     public function search()
@@ -87,14 +65,30 @@ class Controller extends AttributeTypeController
     public function form()
     {
         $bf = false;
-        if ($this->getAttributeValueID() > 0) {
+        if (is_object($this->attributeValue)) {
             $bf = $this->getValue();
         }
         $al = Core::make('helper/concrete/asset_library');
         $form = '<div class="ccm-attribute ccm-attribute-image-file">';
         $form .= $al->file('ccm-file-akID-' . $this->attributeKey->getAttributeKeyID(), $this->field('value'), t('Choose File'), $bf);
         $form .= '</div>';
-        print $form;
+        echo $form;
+    }
+
+    public function importValue(\SimpleXMLElement $akv)
+    {
+        if (isset($akv->value->fID)) {
+            $fIDVal = (string) $akv->value->fID;
+            $inspector = \Core::make('import/value_inspector');
+            $result = $inspector->inspect($fIDVal);
+            $fID = $result->getReplacedValue();
+            if ($fID) {
+                $f = File::getByID($fID);
+                if (is_object($f)) {
+                    return $this->saveValue($f);
+                }
+            }
+        }
     }
 
     // run when we call setAttribute(), instead of saving through the UI
@@ -103,19 +97,11 @@ class Controller extends AttributeTypeController
         if (!is_object($obj)) {
             $obj = File::getByID($obj);
         }
-        $db = Database::connection();
-        if (is_object($obj) && (!$obj->isError())) {
-            $db->Replace('atFile', array('avID' => $this->getAttributeValueID(), 'fID' => $obj->getFileID()), 'avID', true);
-        }
-    }
 
-    public function deleteKey()
-    {
-        $db = Database::connection();
-        $arr = $this->attributeKey->getAttributeValueIDList();
-        foreach ($arr as $id) {
-            $db->Execute('delete from atFile where avID = ?', array($id));
-        }
+        $value = new ImageFileValue();
+        $value->setFileObject($obj);
+
+        return $value;
     }
 
     public function validateValue()
@@ -147,16 +133,12 @@ class Controller extends AttributeTypeController
     {
         if ($data['value'] > 0) {
             $f = File::getByID($data['value']);
-            $this->saveValue($f);
-        } else {
-            $db = Database::connection();
-            $db->Replace('atFile', array('avID' => $this->getAttributeValueID(), 'fID' => 0), 'avID', true);
+            return $this->saveValue($f);
         }
     }
 
-    public function deleteValue()
+    public function createAttributeKeyType()
     {
-        $db = Database::connection();
-        $db->Execute('delete from atFile where avID = ?', array($this->getAttributeValueID()));
+        return new ImageFileType();
     }
 }

@@ -48,8 +48,11 @@ EOT
 
             $output->write('Checking preconditions... ');
             $test = $pkg->testForUninstall();
-            if ($test !== true) {
-                throw new Exception(implode("\n", Package::mapError($test)));
+            if (is_object($test)) {
+                /**
+                 * @var $test Error
+                 */
+                throw new Exception(implode("\n", $test->getList()));
             }
             $output->writeln('<info>good.</info>');
 
@@ -60,8 +63,8 @@ EOT
             if ($input->getOption('trash')) {
                 $output->write('Moving package to trash... ');
                 $r = $pkg->backup();
-                if (is_array($r)) {
-                    throw new Exception(implode("\n", Package::mapError($r)));
+                if (is_object($r)) {
+                    throw new Exception(implode("\n", $r->getList()));
                 }
                 $output->writeln('<info>done.</info>');
             }

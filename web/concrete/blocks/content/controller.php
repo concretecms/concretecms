@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Block\Content;
 
 use Concrete\Core\Block\BlockController;
@@ -27,6 +26,8 @@ class Controller extends BlockController
     protected $btSupportsInlineAdd = true;
     protected $btCacheBlockOutputForRegisteredUsers = false;
     protected $btCacheBlockOutputLifetime = 0; //until manually updated or cleared
+
+    public $content;
 
     public function getBlockTypeDescription()
     {
@@ -97,7 +98,7 @@ class Controller extends BlockController
 
     public function save($args)
     {
-        if(isset($args['content'])) {
+        if (isset($args['content'])) {
             $args['content'] = LinkAbstractor::translateTo($args['content']);
         }
         parent::save($args);

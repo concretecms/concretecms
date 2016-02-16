@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Controller\Backend\Page;
+
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Collection\Version\Version;
 use Concrete\Core\Page\EditResponse as PageEditResponse;
@@ -10,7 +11,6 @@ use Core;
 
 class Multilingual extends Page
 {
-
     protected $controllerActionPath = '/ccm/system/page/multilingual';
 
     public function canAccess()
@@ -39,7 +39,6 @@ class Multilingual extends Page
 
     public function assign()
     {
-
         $pr = new PageEditResponse();
 
         if ($this->request->request->get('destID') == $this->page->getCollectionID()) {
@@ -116,8 +115,4 @@ class Multilingual extends Page
         }
         $pr->outputJSON();
     }
-
-
-
 }
-

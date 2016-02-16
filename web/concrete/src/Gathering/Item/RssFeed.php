@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Gathering\Item;
 
 class RssFeed extends Item

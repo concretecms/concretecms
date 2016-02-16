@@ -3,7 +3,6 @@ namespace Concrete\Core\Url\Resolver;
 
 class CallableUrlResolver implements UrlResolverInterface
 {
-
     protected $resolver;
 
     /**
@@ -11,22 +10,19 @@ class CallableUrlResolver implements UrlResolverInterface
      *                               CallableUrlResolver $resolver,
      *                               array               $arguments,
      *                               string|null         $resolved
-     *
      */
     public function __construct($resolver)
     {
         $this->setResolver($resolver);
     }
 
-
     /**
      * @param callable $resolver A Callable that receives three arguments
      *                               CallableUrlResolver $resolver,
      *                               array               $arguments,
      *                               string|null         $resolved
-     *
      */
-    public function setResolver(/** callable */ $resolver)
+    public function setResolver(/* callable */ $resolver)
     {
         if (!is_callable($resolver)) {
             throw new \InvalidArgumentException(
@@ -41,7 +37,7 @@ class CallableUrlResolver implements UrlResolverInterface
         if ($this->resolver) {
             return call_user_func($this->resolver, $this, $arguments, $resolved);
         }
+
         return null; // @codeCoverageIgnore
     }
-
 }

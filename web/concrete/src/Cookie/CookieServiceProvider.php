@@ -5,7 +5,6 @@ use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 
 class CookieServiceProvider extends ServiceProvider
 {
-
     public function register()
     {
         $this->app->singleton(
@@ -13,5 +12,4 @@ class CookieServiceProvider extends ServiceProvider
             '\Concrete\Core\Cookie\CookieJar'
         );
     }
-
 }

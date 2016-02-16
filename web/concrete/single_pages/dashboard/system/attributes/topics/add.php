@@ -1,10 +1,11 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $form = Core::make('helper/form');
 ?>
 
 <form method="post" action="<?=$view->action('submit')?>" class="form-horizontal">
-<? if (PermissionKey::getByHandle('add_topic_tree')->validate()) { ?>
+<?php if (PermissionKey::getByHandle('add_topic_tree')->validate()) {
+    ?>
 	<?=Loader::helper('validation/token')->output('submit')?>
 	<div class="control-group">
 		<?=$form->label('topicTreeName', t('Tree Name'))?>
@@ -12,9 +13,12 @@ $form = Core::make('helper/form');
 			<?=$form->text('topicTreeName', $topicTreeName, array('class' => 'span4'))?>
 		</div>
 	</div>
-<? } else { ?>
+<?php 
+} else {
+    ?>
 	<p><?=t('You may not add topic trees.')?></p>
-<? } ?>
+<?php 
+} ?>
 
 <div class="ccm-dashboard-form-actions-wrapper">
     <div class="ccm-dashboard-form-actions ">

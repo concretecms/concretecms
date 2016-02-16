@@ -1,13 +1,13 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
-<?
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php
 $ctArray = PageType::getList();
 $types = array();
-foreach($ctArray as $ct) {
-	$types[$ct->getPageTypeID()] = $ct->getPageTypeDisplayName();
+foreach ($ctArray as $ct) {
+    $types[$ct->getPageTypeID()] = $ct->getPageTypeDisplayName();
 }
 
-if (is_object($configuration)) { 
-	$ptID = $configuration->getPageTypeID();
+if (is_object($configuration)) {
+    $ptID = $configuration->getPageTypeID();
 }
 
 ?>

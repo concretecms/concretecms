@@ -47,7 +47,7 @@ class UrlImmutable extends \League\Url\UrlImmutable implements UrlInterface
 
         $trailing_slashes = (bool) $trailing_slashes;
 
-        $url = (string)$url;
+        $url = (string) $url;
         $url = trim($url);
         $original_url = $url;
         $url = self::sanitizeUrl($url);
@@ -93,5 +93,4 @@ class UrlImmutable extends \League\Url\UrlImmutable implements UrlInterface
             new    \League\Url\Components\Fragment($components['fragment'])
         );
     }
-
 }

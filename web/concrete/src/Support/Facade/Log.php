@@ -3,7 +3,6 @@ namespace Concrete\Core\Support\Facade;
 
 class Log extends Facade
 {
-
     public static function getFacadeAccessor()
     {
         return 'log';
@@ -16,5 +15,4 @@ class Log extends Facade
     {
         static::debug($entry);
     }
-
 }

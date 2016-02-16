@@ -5,8 +5,10 @@ use Concrete\Core\Application\Application;
 use \Symfony\Component\HttpFoundation\Session\Session as SymfonySession;
 
 /**
- * Class Session
+ * Class Session.
+ *
  * @package Concrete\Core\Session
+ *
  * @deprecated
  */
 class Session
@@ -37,6 +39,7 @@ class Session
 
     /**
      * @param \Symfony\Component\HttpFoundation\Session\Session $session
+     *
      * @deprecated Use \Concrete\Core\Session\SessionValidator
      */
     public static function testSessionFixation(SymfonySession $session)

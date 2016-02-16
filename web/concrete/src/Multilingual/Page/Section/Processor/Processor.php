@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Multilingual\Page\Section\Processor;
 
 use Concrete\Core\Foundation\Processor\ProcessorQueue as ProcessorQueue;
@@ -19,5 +18,4 @@ class Processor extends ProcessorQueue
         $this->registerTask(new ReplaceContentLinksTask());
         $this->registerTask(new ReplaceBlockPageRelationsTask());
     }
-
 }

@@ -29,7 +29,7 @@ class Token
         $hash = $this->generate($action);
         $token = '<input type="hidden" name="ccm_token" value="' . $hash . '" />';
         if (!$return) {
-            print $token;
+            echo $token;
         } else {
             return $token;
         }

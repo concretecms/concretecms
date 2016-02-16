@@ -4,7 +4,6 @@ require_once __DIR__ . "/ResolverTestCase.php";
 
 class PageUrlResolverTest extends ResolverTestCase
 {
-
     protected function setUp()
     {
         $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();

@@ -1,6 +1,6 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<?
+<?php
 $class = 'ccm-conversation-message ccm-conversation-message-level' . $message->getConversationMessageLevel();
 $cnvID = $message->getConversationID();
 $cnvMessageID = $message->getConversationMessageID();
@@ -11,11 +11,11 @@ $cnvMessageID = $message->getConversationMessageID();
 	<div class="ccm-conversation-message-user">
 		<div class="ccm-conversation-avatar"><?=$ui->getUserAvatar()->output()?></div>
 		<div class="ccm-conversation-message-byline">
-				<span class="ccm-conversation-message-username"><?
-					$author = $message->getConversationMessageAuthorObject();
-					$formatter = $author->getFormatter();
-					print $formatter->getDisplayName();
-					?></span>
+				<span class="ccm-conversation-message-username"><?php
+                    $author = $message->getConversationMessageAuthorObject();
+                    $formatter = $author->getFormatter();
+                    echo $formatter->getDisplayName();
+                    ?></span>
 			<span class="ccm-conversation-message-divider">|</span>
 			<span class="ccm-conversation-message-date"><?=$message->getConversationMessageDateTimeOutput($dateFormat);?></span>
 		</div>

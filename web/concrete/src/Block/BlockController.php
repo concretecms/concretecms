@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Block;
 
 use Concrete\Core\Backup\ContentExporter;
@@ -79,7 +78,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
      *     $this->doSecondSpecialInstallMethod();
      *     parent::install($path);
      * }
-     * </code>
+     * </code>.
      *
      * There are several different possible return values:
      *  Returns FALSE if $btTable is set but no db.xml file exists.
@@ -116,7 +115,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
      * public function view() { // The view() method is automatically run when a block is viewed
      *     $this->render("other_special_view"); // don't use .php
      * }
-     * </code>
+     * </code>.
      *
      * @param string $view
      */
@@ -447,12 +446,14 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     public function validateEditBlockPassThruAction(Block $b)
     {
         $bp = new \Permissions($b);
+
         return $bp->canEditBlock();
     }
 
     public function validateComposerAddBlockPassThruAction(Type $type)
     {
         $pp = new \Permissions($type);
+
         return $pp->canAddPageType();
     }
 
@@ -642,8 +643,6 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     }
 
     /**
-     * @access private
-     *
      * @todo   Make block's uninstallable
      */
     public function uninstall()
@@ -700,7 +699,6 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     }
 
     /**
-     * @access private
      */
     public function isCopiedWhenPropagated()
     {

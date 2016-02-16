@@ -2,7 +2,6 @@
 namespace Concrete\Controller\SinglePage\Dashboard\System\Backup;
 
 use Concrete\Controller\Upgrade;
-use Concrete\Core\Application\EditResponse;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Updater\ApplicationUpdate;
 use Concrete\Core\Updater\Archive;
@@ -12,7 +11,6 @@ use Loader;
 
 class UpdateArchive extends Archive
 {
-
     public function __construct()
     {
         parent::__construct();
@@ -23,7 +21,6 @@ class UpdateArchive extends Archive
     {
         parent::install($file, $inplace);
     }
-
 }
 
 if (!ini_get('safe_mode')) {
@@ -33,7 +30,6 @@ if (!ini_get('safe_mode')) {
 
 class Update extends DashboardPageController
 {
-
     public function check_for_updates()
     {
         Config::clear('concrete.misc.latest_version');
@@ -72,19 +68,9 @@ class Update extends DashboardPageController
             if (is_object($remote)) {
                 // try to download
                 $r = \Marketplace::downloadRemoteFile($remote->getDirectDownloadURL());
-                if (empty($r) || $r == \Package::E_PACKAGE_DOWNLOAD) {
-                    $response = array(\Package::E_PACKAGE_DOWNLOAD);
-                } else {
-                    if ($r == \Package::E_PACKAGE_SAVE) {
-                        $response = array($r);
-                    }
-                }
-
-                if (isset($response)) {
-                    $errors = \Package::mapError($response);
-                    foreach ($errors as $e) {
-                        $this->error->add($e);
-                    }
+                if (is_object($r)) {
+                    // error object
+                    $this->error->add($r);
                 }
 
                 if (!$this->error->has()) {
@@ -95,7 +81,6 @@ class Update extends DashboardPageController
                     } catch (Exception $e) {
                         $this->error->add($e->getMessage());
                     }
-
                 }
             } else {
                 $this->error->add(t('Unable to retrieve software from update server.'));
@@ -104,11 +89,10 @@ class Update extends DashboardPageController
         $this->view();
     }
 
-    function view()
+    public function view()
     {
         $p = new \Permissions();
         if ($p->canUpgrade()) {
-
             $upd = new \Concrete\Core\Updater\Update();
             $updates = $upd->getLocalAvailableUpdates();
             $remote = $upd->getApplicationUpdateInformation();
@@ -147,7 +131,7 @@ class Update extends DashboardPageController
                 $upd = ApplicationUpdate::getByVersionNumber($updateVersion);
                 if (is_object($upd)) {
                     $diagnostic = $upd->getDiagnosticObject();
-                    print json_encode($diagnostic->getJSONObject());
+                    echo json_encode($diagnostic->getJSONObject());
                 }
             }
         }
@@ -200,7 +184,6 @@ class Update extends DashboardPageController
 
     public function start()
     {
-
         $p = new \Permissions();
         if (!$p->canUpgrade()) {
             return false;
@@ -243,8 +226,6 @@ class Update extends DashboardPageController
             $this->set('update', $upd);
         }
 
-
         $this->view();
-
     }
 }

@@ -1,9 +1,7 @@
 <?php
-
 namespace Concrete\Core\Multilingual\Page\Section\Processor;
 
 use Concrete\Core\Foundation\Processor\ActionInterface;
-use Concrete\Core\Foundation\Processor\TargetInterface;
 use Concrete\Core\Foundation\Processor\TaskInterface;
 use Concrete\Core\Page\Page;
 
@@ -11,7 +9,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class ReplaceContentLinksTask implements TaskInterface
 {
-
     public function execute(ActionInterface $action)
     {
         $target = $action->getTarget();
@@ -23,7 +20,7 @@ class ReplaceContentLinksTask implements TaskInterface
             $blocks = $c->getBlocks();
             $nvc = $c->getVersionToModify();
             $isApproved = $c->getVersionObject()->isApproved();
-            foreach($blocks as $b) {
+            foreach ($blocks as $b) {
                 if ($b->getBlockTypeHandle() == 'content') {
                     $content = $b->getController()->content;
                     $content = preg_replace_callback(
@@ -65,6 +62,4 @@ class ReplaceContentLinksTask implements TaskInterface
     {
         return;
     }
-
-
 }

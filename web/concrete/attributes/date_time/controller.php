@@ -1,9 +1,12 @@
 <?php
 namespace Concrete\Attribute\DateTime;
 
+use Concrete\Core\Attribute\FontAwesomeIconFormatter;
+use Concrete\Core\Entity\Attribute\Key\Type\DateTimeType;
+use Concrete\Core\Entity\Attribute\Value\Value\DateTimeValue;
 use Loader;
 use Core;
-use \Concrete\Core\Attribute\Controller as AttributeTypeController;
+use Concrete\Core\Attribute\Controller as AttributeTypeController;
 
 class Controller extends AttributeTypeController
 {
@@ -11,23 +14,16 @@ class Controller extends AttributeTypeController
 
     protected $searchIndexFieldDefinition = array('type' => 'datetime', 'options' => array('notnull' => false));
 
-    public function saveKey($data)
+    public function getIconFormatter()
     {
-        $akDateDisplayMode = $data['akDateDisplayMode'];
-        if (!$akDateDisplayMode) {
-            $akDateDisplayMode = 'date_time';
-        }
-        $this->setDisplayMode($akDateDisplayMode);
+        return new FontAwesomeIconFormatter('calendar');
     }
 
-    public function setDisplayMode($akDateDisplayMode)
+    public function saveKey($data)
     {
-        $db = Loader::db();
-        $ak = $this->getAttributeKey();
-        $db->Replace('atDateTimeSettings', array(
-            'akID' => $ak->getAttributeKeyID(),
-            'akDateDisplayMode' => $akDateDisplayMode
-        ), array('akID'), true);
+        $type = $this->getAttributeKeyType();
+        $type->setMode($data['akDateDisplayMode']);
+        return $type;
     }
 
     public function type_form()
@@ -35,19 +31,23 @@ class Controller extends AttributeTypeController
         $this->load();
     }
 
+    public function getSearchIndexValue()
+    {
+        return $this->attributeValue->getValue()->format('Y-m-d H:i:s');
+    }
+
     public function getDisplayValue()
     {
         $this->load();
         $v = $this->getValue();
-        if(empty($v)) {
+        if (empty($v)) {
             return '';
         }
         $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
         if ($this->akDateDisplayMode == 'date') {
             // Don't use user's timezone to avoid showing wrong dates
             return $dh->formatDate($v, false, 'system');
-        }
-        else {
+        } else {
             return $dh->formatDateTime($v);
         }
     }
@@ -77,15 +77,15 @@ class Controller extends AttributeTypeController
         switch ($this->akDateDisplayMode) {
             case 'text':
                 $form = Loader::helper('form');
-                print $form->text($this->field('value'), $this->getDisplayValue());
+                echo $form->text($this->field('value'), $this->getDisplayValue());
                 break;
             case 'date':
                 $this->requireAsset('jquery/ui');
-                print $dt->date($this->field('value'), $caValue == null ? '' : $caValue);
+                echo $dt->date($this->field('value'), $caValue == null ? '' : $caValue);
                 break;
             default:
                 $this->requireAsset('jquery/ui');
-                print $dt->datetime($this->field('value'), $caValue == null ? '' : $caValue);
+                echo $dt->datetime($this->field('value'), $caValue == null ? '' : $caValue);
                 break;
         }
     }
@@ -99,17 +99,20 @@ class Controller extends AttributeTypeController
         return $akey;
     }
 
-    public function importKey($akey)
+    public function importKey(\SimpleXMLElement $akey)
     {
+        $type = new DateTimeType();
         if (isset($akey->type)) {
-            $data['akDateDisplayMode'] = $akey->type['mode'];
-            $this->saveKey($data);
+            $type->setDisplayMode((string) $akey->type['mode']);
         }
+
+        return $type;
     }
 
     public function validateValue()
     {
         $v = $this->getValue();
+
         return $v != false;
     }
 
@@ -138,21 +141,13 @@ class Controller extends AttributeTypeController
         }
     }
 
-    public function getValue()
-    {
-        $db = Loader::db();
-        $value = $db->GetOne("select value from atDateTime where avID = ?", array($this->getAttributeValueID()));
-
-        return $value;
-    }
-
     public function search()
     {
         $dt = Loader::helper('form/date_time');
         $html = $dt->date($this->field('from'), $this->request('from'), true);
         $html .= ' ' . t('to') . ' ';
         $html .= $dt->date($this->field('to'), $this->request('to'), true);
-        print $html;
+        echo $html;
     }
 
     public function saveValue($value)
@@ -163,15 +158,9 @@ class Controller extends AttributeTypeController
             $value = null;
         }
 
-        $db = Loader::db();
-        $db->Replace('atDateTime', array('avID' => $this->getAttributeValueID(), 'value' => $value), 'avID', true);
-    }
-
-    public function duplicateKey($newAK)
-    {
-        $this->load();
-        $db = Loader::db();
-        $db->Execute('insert into atDateTimeSettings (akID, akDateDisplayMode) values (?, ?)', array($newAK->getAttributeKeyID(), $this->akDateDisplayMode));
+        $av = new DateTimeValue();
+        $av->setValue(new \DateTime($value));
+        return $av;
     }
 
     public function saveForm($data)
@@ -180,12 +169,12 @@ class Controller extends AttributeTypeController
         $dt = Loader::helper('form/date_time');
         switch ($this->akDateDisplayMode) {
             case 'text':
-                $this->saveValue($data['value']);
+                return $this->saveValue($data['value']);
                 break;
             case 'date':
             case 'date_time':
                 $value = $dt->translate('value', $data);
-                $this->saveValue($value);
+                return $this->saveValue($value);
                 break;
         }
     }
@@ -197,25 +186,17 @@ class Controller extends AttributeTypeController
             return false;
         }
 
-        $db = Loader::db();
-        $row = $db->GetRow('select akDateDisplayMode from atDateTimeSettings where akID = ?', $ak->getAttributeKeyID());
-        $this->akDateDisplayMode = $row['akDateDisplayMode'];
+        $type = $ak->getAttributeKeyType();
+        /*
+         * @var $type DateTimeType
+         */
 
+        $this->akDateDisplayMode = $type->getMode();
         $this->set('akDateDisplayMode', $this->akDateDisplayMode);
     }
 
-    public function deleteKey()
+    public function createAttributeKeyType()
     {
-        $db = Loader::db();
-        $arr = $this->attributeKey->getAttributeValueIDList();
-        foreach ($arr as $id) {
-            $db->Execute('delete from atDateTime where avID = ?', array($id));
-        }
+        return new DateTimeType();
     }
-    public function deleteValue()
-    {
-        $db = Loader::db();
-        $db->Execute('delete from atDateTime where avID = ?', array($this->getAttributeValueID()));
-    }
-
 }

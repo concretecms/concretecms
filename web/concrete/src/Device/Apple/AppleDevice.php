@@ -7,5 +7,4 @@ class AppleDevice extends \Concrete\Core\Device\Device
     {
         return 'fa fa-apple';
     }
-
 }

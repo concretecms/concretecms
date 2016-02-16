@@ -3,7 +3,6 @@ namespace Concrete\Core\Application\Service\UserInterface\Help;
 
 class DashboardManager extends AbstractManager
 {
-
     public function __construct()
     {
         $this->registerMessages(array(
@@ -60,8 +59,6 @@ class DashboardManager extends AbstractManager
             '/dashboard/composer/edit' => t("Any attributes or block areas you have enabled to be editable in Composer for this page type are available here. Add blocks to your page type's defaults. After adding the block, click it and choose the option to make it available in Composer."),
             '/dashboard/users/attributes' => t('Store data about your users-- like site preferences, birthdays, bios and more. Control which elements are available for users to update themselves.'),
             '/dashboard/users/add' => t('Manually create new user accounts for your concrete5 site.'),
-            '/dashboard' => t('The Dashboard allows you to perform administrative tasks for your site.')        ));
+            '/dashboard' => t('The Dashboard allows you to perform administrative tasks for your site.'),        ));
     }
-
-
 }

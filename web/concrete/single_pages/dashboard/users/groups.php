@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 
 $valt = Loader::helper('validation/token');
@@ -6,27 +6,33 @@ $ih = Loader::helper('concrete/ui');
 $form = Loader::helper('form');
 $date = Loader::helper('form/date_time');
 
-if (isset($group)) { ?>
+if (isset($group)) {
+    ?>
 
 <form method="post" id="update-group-form" class="form-stacked" action="<?=$view->url('/dashboard/users/groups/', 'update_group')?>" role="form">
     <?=$valt->output('add_or_update_group')?>
-	<?
-	    $u = new User();
+	<?php
+        $u = new User();
 
-	$delConfirmJS = t('Are you sure you want to permanently remove this group?');
-	if($u->isSuperUser() == false){ ?>
+    $delConfirmJS = t('Are you sure you want to permanently remove this group?');
+    if ($u->isSuperUser() == false) {
+        ?>
 		<?=t('You must be logged in as %s to remove groups.', USER_SUPER)?>
-	<? }else{ ?>
+	<?php 
+    } else {
+        ?>
 
 	<script type="text/javascript">
 	deleteGroup = function() {
 		if (confirm('<?=$delConfirmJS?>')) {
-			location.href = "<?=$view->url('/dashboard/users/groups', 'delete', $group->getGroupID(), $valt->generate('delete_group_' . $group->getGroupID() ))?>";
+			location.href = "<?=$view->url('/dashboard/users/groups', 'delete', $group->getGroupID(), $valt->generate('delete_group_' . $group->getGroupID()))?>";
 		}
 	}
 	</script>
 
-	<? } ?>
+	<?php 
+    }
+    ?>
 
     <fieldset>
 	    <legend><?=t('Group Details')?></legend>
@@ -41,7 +47,8 @@ if (isset($group)) { ?>
 	    </div>
     </fieldset>
 
-	<? if (Config::get('concrete.user.profiles_enabled')) { ?>
+	<?php if (Config::get('concrete.user.profiles_enabled')) {
+    ?>
 
 	<fieldset>
         <div class="form-group">
@@ -57,16 +64,16 @@ if (isset($group)) { ?>
 		    <div class="form-group">
 			    <label for="gBadgeFID"><?=t('Image')?></label>
 
-                    <?
+                    <?php
                         $af = Loader::helper('concrete/asset_library');
-        				print $af->image('gBadgeFID', 'gBadgeFID', t('Choose Badge Image'), $group->getGroupBadgeImageObject());
-                    ?>
+    echo $af->image('gBadgeFID', 'gBadgeFID', t('Choose Badge Image'), $group->getGroupBadgeImageObject());
+    ?>
 
             </div>
 
             <div class="form-group">
                 <label for="gBadgeDescription"><?=t('Badge Description')?></label>
-                <?=$form->textarea('gBadgeDescription', $group->getGroupBadgeDescription(), array('rows' => 6, 'class' =>'form-control'))?>
+                <?=$form->textarea('gBadgeDescription', $group->getGroupBadgeDescription(), array('rows' => 6, 'class' => 'form-control'))?>
             </div>
 
             <div class="form-group">
@@ -75,7 +82,9 @@ if (isset($group)) { ?>
             </div>
 		</div>
 	</fieldset>
-	<? } ?>
+	<?php 
+}
+    ?>
 
 	<fieldset>
 		<legend><?=t('Automation')?></legend>
@@ -116,10 +125,10 @@ if (isset($group)) { ?>
     		</div>
 
     		<div class="alert alert-info">
-    			<?
-    			$path = $group->getGroupAutomationControllerClass();
-    			print t('For custom automated group actions, make sure an automation group controller exists at %s', $path);
-    			?>
+    			<?php
+                $path = $group->getGroupAutomationControllerClass();
+    echo t('For custom automated group actions, make sure an automation group controller exists at %s', $path);
+    ?>
     		</div>
     	</div>
 
@@ -132,9 +141,10 @@ if (isset($group)) { ?>
 
     	<div class="form-group">
     		<?=$form->select("gUserExpirationMethod", array(
-    		    'SET_TIME' => t('at a specific date and time'),
-    			'INTERVAL' => t('once a certain amount of time has passed')
-            ), $group->getGroupExpirationMethod(), array('disabled' => true, 'class' => 'form-control'));?>
+                'SET_TIME' => t('at a specific date and time'),
+                'INTERVAL' => t('once a certain amount of time has passed'),
+            ), $group->getGroupExpirationMethod(), array('disabled' => true, 'class' => 'form-control'));
+    ?>
     	</div>
 
     	<div id="gUserExpirationSetTimeOptions" style="display: none">
@@ -156,12 +166,12 @@ if (isset($group)) { ?>
                     	</tr>
 
                         <tr>
-                            <?
-                            	$days = $group->getGroupExpirationIntervalDays();
-                            	$hours = $group->getGroupExpirationIntervalHours();
-                            	$minutes = $group->getGroupExpirationIntervalMinutes();
-                            	$style = 'width: 60px';
-                        	?>
+                            <?php
+                                $days = $group->getGroupExpirationIntervalDays();
+    $hours = $group->getGroupExpirationIntervalHours();
+    $minutes = $group->getGroupExpirationIntervalMinutes();
+    $style = 'width: 60px';
+    ?>
 
                         	<td valign="top">
                         	    <?=$form->text('gUserExpirationIntervalDays', $days, array('style' => $style))?>
@@ -184,9 +194,10 @@ if (isset($group)) { ?>
                 <?=$form->select("gUserExpirationAction", array(
                         'REMOVE' => t('Remove the user from this group'),
                         'DEACTIVATE' => t('Deactivate the user account'),
-                        'REMOVE_DEACTIVATE' => t('Remove the user from the group and deactivate the account')
+                        'REMOVE_DEACTIVATE' => t('Remove the user from the group and deactivate the account'),
                 ), $group->getGroupExpirationAction(),
-                array('class' => 'form-control'));?>
+                array('class' => 'form-control'));
+    ?>
             </div>
     	</div>
 
@@ -198,9 +209,13 @@ if (isset($group)) { ?>
             <a href="<?=$view->url('/dashboard/users/groups')?>" class="btn btn-default pull-left"><?=t('Cancel')?></a>
             <button class="btn pull-right btn-primary" style="margin-left: 10px" type="submit"><?=t('Update Group')?></button>
 
-            <?php if ($u->isSuperUser()) { ?>
-                <?php print $ih->button_js(t('Delete'), "deleteGroup()", 'right', 'btn-danger');?>
-            <?php } ?>
+            <?php if ($u->isSuperUser()) {
+    ?>
+                <?php echo $ih->button_js(t('Delete'), "deleteGroup()", 'right', 'btn-danger');
+    ?>
+            <?php 
+}
+    ?>
         </div>
     </div>
 </form>
@@ -251,16 +266,22 @@ $(function() {
 
 });
 </script>
-<? } else { ?>
+<?php 
+} else {
+    ?>
 
-	<? if ($canAddGroup) { ?>
+	<?php if ($canAddGroup) {
+    ?>
 	<div class="ccm-dashboard-header-buttons">
 		<a href="<?php echo View::url('/dashboard/users/add_group')?>" class="btn btn-primary"><?php echo t("Add Group")?></a>
 	</div>
-	<? } ?>
+	<?php 
+}
+    ?>
 
 
-<? Loader::element('group/search', array('controller' => $searchController, 'selectMode' => false))?>
+<?php Loader::element('group/search', array('controller' => $searchController, 'selectMode' => false))?>
 
 
-<? } ?>
+<?php 
+} ?>

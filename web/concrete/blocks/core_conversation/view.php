@@ -10,7 +10,7 @@ if ($u->isLoggedIn()) {
     $uID = $u->getUserID();
     $maxFileSize = $maxFileSizeRegistered;
     $maxFiles = $maxFilesRegistered;
-}else{
+} else {
     $maxFileSize = $maxFileSizeGuest;
     $maxFiles = $maxFilesGuest;
     $uID = 0;
@@ -51,4 +51,5 @@ if (is_object($conversation)) {
         });
     });
     </script>
-<? } ?>
+<?php 
+} ?>

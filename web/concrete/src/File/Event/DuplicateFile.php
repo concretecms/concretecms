@@ -3,7 +3,6 @@ namespace Concrete\Core\File\Event;
 
 class DuplicateFile extends File
 {
-
     protected $newFile;
 
     public function setNewFileObject($newFile)
@@ -15,5 +14,4 @@ class DuplicateFile extends File
     {
         return $this->newFile;
     }
-
 }

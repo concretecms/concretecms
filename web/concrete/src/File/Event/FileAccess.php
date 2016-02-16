@@ -3,7 +3,6 @@ namespace Concrete\Core\File\Event;
 
 class FileAccess extends FileVersion
 {
-
     protected $u;
 
     public function setUserObject($u)
@@ -15,5 +14,4 @@ class FileAccess extends FileVersion
     {
         return $this->u;
     }
-
 }

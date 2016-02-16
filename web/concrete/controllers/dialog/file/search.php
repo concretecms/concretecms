@@ -1,14 +1,13 @@
-<?
+<?php
 namespace Concrete\Controller\Dialog\File;
 
-use \Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
+use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use FilePermissions;
 use Loader;
-use \Concrete\Controller\Search\Files as SearchFilesController;
+use Concrete\Controller\Search\Files as SearchFilesController;
 
 class Search extends BackendInterfaceController
 {
-
     protected $viewPath = '/dialogs/file/search';
 
     protected function canAccess()
@@ -30,6 +29,4 @@ class Search extends BackendInterfaceController
         $this->set('result', $result);
         $this->set('searchController', $cnt);
     }
-
 }
-

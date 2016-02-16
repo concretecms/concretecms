@@ -1,11 +1,10 @@
 <?php
-
 namespace Concrete\Core\Http;
+
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
 interface RequestEventInterface
 {
-
     /**
      * @param Request $request
      */
@@ -13,5 +12,4 @@ interface RequestEventInterface
 
     /** @return \Symfony\Component\HttpFoundation\Request */
     public function getRequest();
-
 }

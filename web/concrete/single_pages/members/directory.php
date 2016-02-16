@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <div class="row">
 <div class="span10 offset1">
@@ -16,45 +16,59 @@
 </div>
 </div>
 
-<? if ($total == 0) { ?>
+<?php if ($total == 0) {
+    ?>
 
 		<div><?=t('No users found.')?></div>
 
-	<? } else { ?>
+	<?php 
+} else {
+    ?>
 
 		<table class="table table-striped" id="ccm-members-directory">
 
 
-		<?
-		$av = Loader::helper('concrete/avatar');
-		$u = new User();
+		<?php
+        $av = Loader::helper('concrete/avatar');
+    $u = new User();
 
-		foreach($users as $user) { 	?>
+    foreach ($users as $user) {
+        ?>
 
 		<tr>
 			<td class="ccm-members-directory-avatar"><a href="<?=$user->getUserPublicProfileURL()?>"><?=$user->getUserAvatar()->output()?></a></td>
 			<td class="ccm-members-directory-name"><a href="<?=$user->getUserPublicProfileURL()?>"><?=ucfirst($user->getUserName())?></a></td>
-			<?
-			foreach($attribs as $ak) { ?>
+			<?php
+            foreach ($attribs as $ak) {
+                ?>
 				<td>
-					<?=$user->getAttribute($ak, 'displaySanitized', 'display'); ?>
+					<?=$user->getAttribute($ak, 'displaySanitized', 'display');
+                ?>
 				</td>
-			<? } ?>
+			<?php 
+            }
+        ?>
 		</tr>
 
-		<? } ?>
+		<?php 
+    }
+    ?>
 
 		</table>
 
-        <? if ($pagination->haveToPaginate()) { ?>
+        <?php if ($pagination->haveToPaginate()) {
+    ?>
 
-            <?=$pagination->renderDefaultView();?>
+            <?=$pagination->renderDefaultView();
+    ?>
 
-        <? } ?>
+        <?php 
+}
+    ?>
 
-	<?
+	<?php
 
-	} ?>
+} ?>
 
 
 </div>

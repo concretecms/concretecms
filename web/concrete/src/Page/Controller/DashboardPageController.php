@@ -7,13 +7,14 @@ use Loader;
 
 class DashboardPageController extends PageController
 {
-
     /** @var Error */
     protected $error;
 
     /** @var Token */
     public $token;
     protected $helpers = array('form');
+
+    protected $entityManager;
 
     public function enableNativeMobile()
     {
@@ -29,6 +30,8 @@ class DashboardPageController extends PageController
         $this->error = Loader::helper('validation/error');
         $this->set('interface', Loader::helper('concrete/ui'));
         $this->set('dashboard', Loader::helper('concrete/dashboard'));
+
+        $this->entityManager = \Core::make('Doctrine\ORM\EntityManager');
 
         $hideDashboardPanel = false;
         if (\Cookie::has('dashboardPanelStatus') && \Cookie::get('dashboardPanelStatus') == 'closed') {
@@ -47,4 +50,8 @@ class DashboardPageController extends PageController
         $this->set('error', $this->error);
     }
 
+    public function getEntityManager()
+    {
+        return $this->entityManager;
+    }
 }

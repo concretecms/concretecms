@@ -356,13 +356,16 @@ class Login extends PageController
 
             $saveAttributes = array();
             foreach ($unfilled as $attribute) {
-                $err = $attribute->validateAttributeForm();
-                if ($err == false) {
-                    $this->error->add(t('The field "%s" is required', $attribute->getAttributeKeyDisplayName()));
-                } elseif ($err instanceof \Concrete\Core\Error\Error) {
-                    $this->error->add($err);
-                } else {
+                $validator = $attribute->getAttributeType()->getValidator();
+                $response = $validator->validateSaveValueRequest($attribute, $this->request);
+                /**
+                 * @var $response ResponseInterface
+                 */
+                if ($response->isValid()) {
                     $saveAttributes[] = $attribute;
+                } else {
+                    $error = $response->getErrorObject();
+                    $this->error->add($error);
                 }
             }
 

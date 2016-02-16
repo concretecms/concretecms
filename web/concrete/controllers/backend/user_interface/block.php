@@ -7,7 +7,6 @@ use Permissions;
 
 abstract class Block extends Page
 {
-
     protected $page;
     protected $area;
     protected $block;
@@ -56,7 +55,6 @@ abstract class Block extends Page
             $cx = \Stack::getByName($_REQUEST['arHandle']);
         }
 
-
         $b = \Block::getByID($_REQUEST['bID'], $cx, $ax);
         $nvc = $cx->getVersionToModify();
         if ($this->area->isGlobalArea()) {
@@ -90,8 +88,7 @@ abstract class Block extends Page
             $nb = $ob->duplicate($nvc);
             $nb->setAbsoluteBlockDisplayOrder($originalDisplayOrder);
             $b->deleteBlock();
-            $b = & $nb;
-
+            $b = &$nb;
         } else {
             if ($b->isAlias()) {
 
@@ -112,8 +109,7 @@ abstract class Block extends Page
         $url = call_user_func_array('parent::action', func_get_args());
         $url .= '&arHandle=' . urlencode($this->area->getAreaHandle());
         $url .= '&bID=' . $this->block->getBlockID();
+
         return $url;
     }
-
 }
-

@@ -1,10 +1,8 @@
 <?php
-
 namespace Concrete\Core\Tree\Node\Type;
 
 use Concrete\Core\Tree\Node\Node as TreeNode;
 use Loader;
-use Core;
 
 class Topic extends TreeNode
 {
@@ -101,7 +99,7 @@ class Topic extends TreeNode
     }
 
     /**
-     * return @Concrete\Core\Tree\Node\Type\Topic | null
+     * return @Concrete\Core\Tree\Node\Type\Topic | null.
      */
     public static function getNodeByName($name)
     {

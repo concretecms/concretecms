@@ -8,7 +8,6 @@ use Stack;
 
 class GlobalArea extends Area
 {
-
     protected $ignoreCurrentMultilingualLanguageSection = false;
 
     /**
@@ -31,6 +30,7 @@ class GlobalArea extends Area
     /**
      * @param Page $c
      * @param string $arHandle
+     *
      * @return Area
      */
     public function create($c, $arHandle)
@@ -41,6 +41,7 @@ class GlobalArea extends Area
         $this->refreshCache($c);
         $area = self::get($c, $arHandle);
         $area->rescanAreaPermissionsChain();
+
         return $area;
     }
 
@@ -64,6 +65,7 @@ class GlobalArea extends Area
         if (is_object($ax)) {
             return $ax->getTotalBlocksInArea();
         }
+
         return 0;
     }
 
@@ -87,6 +89,7 @@ class GlobalArea extends Area
         } else {
             $stack = Stack::getByName($this->arHandle, 'ACTIVE', $contentSource);
         }
+
         return $stack;
     }
 
@@ -102,6 +105,7 @@ class GlobalArea extends Area
         $r = $db->GetOne('select count(b.bID) from CollectionVersionBlocks cvb inner join Blocks b on cvb.bID = b.bID inner join BlockTypes bt on b.btID = bt.btID where cID = ? and cvID = ? and arHandle = ?',
             array($stack->getCollectionID(), $stack->getVersionID(), $ax->getAreaHandle())
         );
+
         return $r;
     }
 
@@ -134,6 +138,7 @@ class GlobalArea extends Area
         }
 
         unset($blocksTmp);
+
         return $blocks;
     }
 
@@ -145,6 +150,7 @@ class GlobalArea extends Area
     /**
      * Note that this function does not delete the global area's stack.
      * You probably want to call the "delete" method of the Stack model instead.
+     *
      * @param string $arHandle
      */
     public static function deleteByName($arHandle)
@@ -153,5 +159,4 @@ class GlobalArea extends Area
         $db->Execute('select cID from Areas where arHandle = ? and arIsGlobal = 1', array($arHandle));
         $db->Execute('delete from Areas where arHandle = ? and arIsGlobal = 1', array($arHandle));
     }
-
 }

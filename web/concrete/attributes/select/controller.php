@@ -1,11 +1,18 @@
 <?php
-
 namespace Concrete\Attribute\Select;
 
+use Concrete\Core\Attribute\FontAwesomeIconFormatter;
+use Concrete\Core\Entity\Attribute\Key\Type\SelectType;
+use Concrete\Core\Entity\Attribute\Value\Value\SelectValue;
+use Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption;
+use Concrete\Core\Entity\Attribute\Value\Value\SelectValueOptionList;
+use Concrete\Core\Entity\Attribute\Value\Value\SelectValueUsedOption;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Core;
 use Database;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Controller extends AttributeTypeController
 {
@@ -15,17 +22,20 @@ class Controller extends AttributeTypeController
 
     protected $searchIndexFieldDefinition = array(
         'type' => 'string',
-        'options' => array('default' => null, 'notnull' => false)
+        'options' => array('default' => null, 'notnull' => false),
     );
+
+    public function getIconFormatter()
+    {
+        return new FontAwesomeIconFormatter('list-alt');
+    }
 
     public function type_form()
     {
         $this->set('form', Core::make('helper/form'));
         $this->load();
-        //$akSelectValues = $this->getSelectValuesFromPost();
-        //$this->set('akSelectValues', $akSelectValues);
 
-        if ($this->isPost()) {
+        if ($this->request->getMethod() == 'POST') {
             $akSelectValues = $this->getSelectValuesFromPost();
             $this->set('akSelectValues', $akSelectValues);
         } elseif (isset($this->attributeKey)) {
@@ -38,45 +48,26 @@ class Controller extends AttributeTypeController
 
     protected function load()
     {
+        /*
+         * @var \Concrete\Core\Entity\Attribute\Key\SelectKey
+         */
         $ak = $this->getAttributeKey();
         if (!is_object($ak)) {
             return false;
         }
 
-        $db = Database::get();
-        $row = $db->GetRow('select akSelectAllowMultipleValues, akSelectOptionDisplayOrder, akSelectAllowOtherValues from atSelectSettings where akID = ?',
-            array($ak->getAttributeKeyID()));
-        $this->akSelectAllowMultipleValues = $row ? $row['akSelectAllowMultipleValues'] : null;
-        $this->akSelectAllowOtherValues = $row ? $row['akSelectAllowOtherValues'] : null;
-        $this->akSelectOptionDisplayOrder = $row ? $row['akSelectOptionDisplayOrder'] : null;
+        /*
+         * @var SelectType
+         */
+        $type = $ak->getAttributeKeyType();
+
+        $this->akSelectAllowMultipleValues = $type->getAllowMultipleValues();
+        $this->akSelectAllowOtherValues = $type->getAllowOtherValues();
+        $this->akSelectOptionDisplayOrder = $type->getDisplayOrder();
 
         $this->set('akSelectAllowMultipleValues', $this->akSelectAllowMultipleValues);
         $this->set('akSelectAllowOtherValues', $this->akSelectAllowOtherValues);
         $this->set('akSelectOptionDisplayOrder', $this->akSelectOptionDisplayOrder);
-    }
-
-    public function duplicateKey($newAK)
-    {
-        $this->load();
-        $db = Database::get();
-        $db->Execute('insert into atSelectSettings (akID, akSelectAllowMultipleValues, akSelectOptionDisplayOrder, akSelectAllowOtherValues) values (?, ?, ?, ?)',
-            array(
-                $newAK->getAttributeKeyID(),
-                $this->akSelectAllowMultipleValues,
-                $this->akSelectOptionDisplayOrder,
-                $this->akSelectAllowOtherValues
-            ));
-        $r = $db->Execute('select value, displayOrder, isEndUserAdded from atSelectOptions where akID = ?',
-            $this->getAttributeKey()->getAttributeKeyID());
-        while ($row = $r->FetchRow()) {
-            $db->Execute('insert into atSelectOptions (akID, value, displayOrder, isEndUserAdded) values (?, ?, ?, ?)',
-                array(
-                    $newAK->getAttributeKeyID(),
-                    $row['value'],
-                    $row['displayOrder'],
-                    $row['isEndUserAdded'],
-                ));
-        }
     }
 
     public function exportKey($akey)
@@ -105,86 +96,90 @@ class Controller extends AttributeTypeController
         if ($list->count() > 0) {
             $av = $akn->addChild('value');
             foreach ($list as $l) {
-                $av->addChild('option', (string)$l);
+                $av->addChild('option', (string) $l);
             }
-        }
-    }
-
-    public function importValue(\SimpleXMLElement $akv)
-    {
-        if (isset($akv->value)) {
-            $vals = array();
-            foreach ($akv->value->children() as $ch) {
-                $vals[] = (string)$ch;
-            }
-
-            return $vals;
         }
     }
 
     public function setAllowedMultipleValues($allow)
     {
-        $db = Database::get();
-        $this->akSelectAllowMultipleValues = $allow;
-        $db->Replace('atSelectSettings', array(
-            'akID' => $this->attributeKey->getAttributeKeyID(),
-            'akSelectAllowMultipleValues' => intval($allow)
-        ), array('akID'), true);
+        /**
+         * @var $type SelectType
+         */
+        $type = $this->getAttributeKey()->getAttributeKeyType();
+        $type->setAllowMultipleValues($allow);
+        $this->entityManager->persist($type);
+        $this->entityManager->flush();
     }
 
     public function setAllowOtherValues($allow)
     {
-        $db = Database::get();
-        $this->akSelectAllowOtherValues = $allow;
-        $db->Replace('atSelectSettings', array(
-            'akID' => $this->attributeKey->getAttributeKeyID(),
-            'akSelectAllowOtherValues' => intval($allow)
-        ), array('akID'), true);
+        /**
+         * @var $type SelectType
+         */
+        $type = $this->getAttributeKey()->getAttributeKeyType();
+        $type->setAllowOtherValues($allow);
+        $this->entityManager->persist($type);
+        $this->entityManager->flush();
     }
 
     public function setOptionDisplayOrder($order)
     {
-        $db = Database::get();
-        $this->akSelectOptionDisplayOrder = $order;
-        $db->Replace('atSelectSettings', array(
-            'akID' => $this->attributeKey->getAttributeKeyID(),
-            'akSelectOptionDisplayOrder' => $order
-        ), array('akID'), true);
+        /**
+         * @var $type SelectType
+         */
+        $type = $this->getAttributeKey()->getAttributeKeyType();
+        $type->setDisplayOrder($order);
+        $this->entityManager->persist($type);
+        $this->entityManager->flush();
     }
 
     public function setOptions($options)
     {
-        foreach ($options as $option) {
-            Option::add($this->attributeKey, $option, 0);
-        }
+        /**
+         * @var $type SelectType
+         */
+        $type = $this->getAttributeKey()->getAttributeKeyType();
+        $list = new SelectValueOptionList();
+        $list->setOptions($options);
+        $type->setOptionList($list);
+        $this->entityManager->persist($type);
+        $this->entityManager->flush();
     }
 
-    public function importKey($akey)
+    public function importKey(\SimpleXMLElement $akey)
     {
+        $type = new SelectType();
         if (isset($akey->type)) {
             $akSelectAllowMultipleValues = $akey->type['allow-multiple-values'];
             $akSelectOptionDisplayOrder = $akey->type['display-order'];
             $akSelectAllowOtherValues = $akey->type['allow-other-values'];
-            $db = Database::get();
-            $db->Replace('atSelectSettings', array(
-                'akID' => $this->attributeKey->getAttributeKeyID(),
-                'akSelectAllowMultipleValues' => $akSelectAllowMultipleValues,
-                'akSelectAllowOtherValues' => $akSelectAllowOtherValues,
-                'akSelectOptionDisplayOrder' => $akSelectOptionDisplayOrder,
-            ), array('akID'), true);
-
+            $type->setAllowMultipleValues((bool) $akSelectAllowMultipleValues);
+            $type->setDisplayOrder($akSelectOptionDisplayOrder);
+            $type->setAllowOtherValues((bool) $akSelectAllowOtherValues);
+            $list = new SelectValueOptionList();
             if (isset($akey->type->options)) {
+                $displayOrder = 0;
                 foreach ($akey->type->options->children() as $option) {
-                    Option::add($this->attributeKey, $option['value'], $option['is-end-user-added']);
+                    $opt = new SelectValueOption();
+                    $opt->setSelectAttributeOptionValue((string) $option['value']);
+                    $opt->setIsEndUserAdded((bool) $option['is-end-user-added']);
+                    $opt->setOptionList($list);
+                    $opt->setDisplayOrder($displayOrder);
+                    $list->getOptions()->add($opt);
+                    ++$displayOrder;
                 }
             }
+            $type->setOptionList($list);
         }
+
+        return $type;
     }
 
     private function getSelectValuesFromPost()
     {
-        $options = new OptionList();
         $displayOrder = 0;
+        $options = array();
         foreach ($_POST as $key => $value) {
             if (!strstr($key, 'akSelectValue_') || $value == 'TEMPLATE') {
                 continue;
@@ -195,15 +190,18 @@ class Controller extends AttributeTypeController
             // now we determine from the post whether this is a new option
             // or an existing. New ones have this value from in the akSelectValueNewOption_ post field
             if ($_POST['akSelectValueNewOption_' . $id] == $id) {
-                $opt = new Option(0, $value, $displayOrder);
-                $opt->tempID = $id;
+                $opt = new SelectValueOption();
+                $opt->setSelectAttributeOptionValue($value);
+                $opt->setDisplayOrder($displayOrder);
             } elseif ($_POST['akSelectValueExistingOption_' . $id] == $id) {
-                $opt = new Option($id, $value, $displayOrder);
+                $opt = $this->getOptionByID($id);
+                $opt->setSelectAttributeOptionValue($value);
+                $opt->setDisplayOrder($displayOrder);
             }
 
             if (is_object($opt)) {
-                $options->add($opt);
-                $displayOrder++;
+                $options[] = $opt;
+                ++$displayOrder;
             }
         }
 
@@ -235,53 +233,35 @@ class Controller extends AttributeTypeController
         $this->set('selectedOptions', $selectedOptions);
     }
 
-    public function deleteValue()
-    {
-        $db = Database::get();
-        $db->Execute('delete from atSelectOptionsSelected where avID = ?', array($this->getAttributeValueID()));
-    }
-
-    public function deleteKey()
-    {
-        $db = Database::get();
-        $db->Execute('delete from atSelectSettings where akID = ?', array($this->attributeKey->getAttributeKeyID()));
-        $r = $db->Execute('select ID from atSelectOptions where akID = ?',
-            array($this->attributeKey->getAttributeKeyID()));
-        while ($row = $r->FetchRow()) {
-            $db->Execute('delete from atSelectOptionsSelected where atSelectOptionID = ?', array($row['ID']));
-        }
-        $db->Execute('delete from atSelectOptions where akID = ?', array($this->attributeKey->getAttributeKeyID()));
-    }
-
     public function saveForm($data)
     {
         $this->load();
 
         $akSelectAllowMultipleValues = $this->akSelectAllowMultipleValues;
         $akSelectAllowOtherValues = $this->akSelectAllowOtherValues;
+        $keyType = $this->attributeKey->getAttributeKeyType();
+        $optionList = $keyType->getOptionList();
         if (!$akSelectAllowMultipleValues && !$akSelectAllowOtherValues) {
             // select list. Only one option possible. No new options.
-            $option = Option::getByID($data['atSelectOptionValue']);
+            $option = $this->getOptionByID($data['atSelectOptionValue']);
             if (is_object($option)) {
-                $this->saveValue($option);
+                return $this->saveValue($option);
             } else {
-                $this->saveValue(null);
+                return $this->saveValue(null);
             }
-
         } else {
             if ($akSelectAllowMultipleValues && !$akSelectAllowOtherValues) {
                 // checkbox list.  No new options.
                 $options = array();
                 if (is_array($data['atSelectOptionValue'])) {
                     foreach ($data['atSelectOptionValue'] as $optionID) {
-                        $option = Option::getByID($optionID);
+                        $option = $this->getOptionByID($optionID);
                         if (is_object($option)) {
                             $options[] = $option;
                         }
                     }
                 }
-                $this->saveValue($options);
-
+                return $this->saveValue($options);
             } else {
                 if (!$akSelectAllowMultipleValues && $akSelectAllowOtherValues) {
 
@@ -291,20 +271,23 @@ class Controller extends AttributeTypeController
                     if ($data['atSelectOptionValue']) {
                         if (preg_match('/SelectAttributeOption\:(.+)/i',
                             $data['atSelectOptionValue'], $matches)) {
-                            $option = Option::getByID($matches[1]);
+                            $option = $this->getOptionByID($matches[1]);
                         } else {
-                            $option = Option::getByValue(trim($data['atSelectOptionValue']), $this->attributeKey);
+                            $option = $this->getOptionByValue(trim($data['atSelectOptionValue']), $this->attributeKey);
                             if (!is_object($option)) {
-                                $option = Option::add($this->attributeKey, trim($data['atSelectOptionValue']), true);
+                                $option = new SelectValueOption();
+                                $option->setOptionList($optionList);
+                                $option->setIsEndUserAdded(true);
+                                $option->setDisplayOrder(count($optionList));
+                                $option->setSelectAttributeOptionValue(trim($data['atSelectOptionValue']));
                             }
                         }
                     }
                     if (is_object($option)) {
-                        $this->saveValue($option);
+                        return $this->saveValue($option);
                     } else {
-                        $this->saveValue(null);
+                        return $this->saveValue(null);
                     }
-
                 } else {
                     if ($akSelectAllowMultipleValues && $akSelectAllowOtherValues) {
 
@@ -314,11 +297,15 @@ class Controller extends AttributeTypeController
                         if ($data['atSelectOptionValue']) {
                             foreach (explode(',', $data['atSelectOptionValue']) as $value) {
                                 if (preg_match('/SelectAttributeOption\:(.+)/i', $value, $matches)) {
-                                    $option = Option::getByID($matches[1]);
+                                    $option = $this->getOptionByID($matches[1]);
                                 } else {
-                                    $option = Option::getByValue(trim($value), $this->attributeKey);
+                                    $option = $this->getOptionByValue(trim($value), $this->attributeKey);
                                     if (!is_object($option)) {
-                                        $option = Option::add($this->attributeKey, trim($value), true);
+                                        $option = new SelectValueOption();
+                                        $option->setOptionList($optionList);
+                                        $option->setDisplayOrder(count($optionList));
+                                        $option->setSelectAttributeOptionValue(trim($value));
+                                        $option->setIsEndUserAdded(true);
                                     }
                                 }
 
@@ -329,41 +316,92 @@ class Controller extends AttributeTypeController
                         }
 
                         if (count($options)) {
-                            $this->saveValue($options);
+                            return $this->saveValue($options);
                         } else {
-                            $this->saveValue(null);
+                            return $this->saveValue(null);
                         }
                     }
                 }
             }
         }
-
     }
 
-    // Sets select options for a particular attribute
-    // If the $value == string, then 1 item is selected
-    // if array, then multiple, but only if the attribute in question is a select multiple
-    // Note, items CANNOT be added to the pool (even if the attribute allows it) through this process.
-    // Items should now be added to the database if they don't exist already & if the allow checkbox is checked under the attribute settings
-    // Code from this bug - http://www.concrete5.org/index.php?cID=595692
+    public function importValue(\SimpleXMLElement $akv)
+    {
+        if (isset($akv->value)) {
+            $vals = array();
+            foreach ($akv->value->children() as $ch) {
+                $vals[] = (string) $ch;
+            }
+
+            return $this->saveValue($vals);
+        }
+    }
+
+    public function getOptionByID($id)
+    {
+        $orm = $this->entityManager;
+        $repository = $orm->getRepository('\Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption');
+        $option = $repository->findOneBy(array(
+            'avSelectOptionID' => $id
+        ));
+
+        return $option;
+    }
+
+
+    public function getOptionByValue($value, $attributeKey = false)
+    {
+        $orm = \Database::connection()->getEntityManager();
+        $repository = $orm->getRepository('\Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption');
+        if ($attributeKey) {
+            $existingList = $attributeKey->getAttributeKeyType()->getOptionList();
+        }
+        if (isset($existingList) && is_object($existingList)) {
+            $option = $repository->findOneBy(array(
+                'list' => $existingList,
+                'value' => $value,
+            ));
+        } else {
+            $option = $repository->findOneByValue($value);
+        }
+
+        return $option;
+    }
+
+    /**
+     * Sets select options for a particular attribute
+     * If the $value == string, then 1 item is selected
+     * if array, then multiple, but only if the attribute in question is a select multiple
+     * Note, items CANNOT be added to the pool (even if the attribute allows it) through this process.
+     * Items should now be added to the database if they don't exist already & if the allow checkbox is
+     * checked under the attribute settings
+     * Code from this bug - http://www.concrete5.org/index.php?cID=595692
+     */
     public function saveValue($value)
     {
-        $db = Database::get();
         $this->load();
+
         $options = array();
 
         if ($value != null) {
             if (is_array($value) && $this->akSelectAllowMultipleValues) {
                 foreach ($value as $v) {
-                    if ($v instanceof Option) {
-                        $opt = $v;
+                    if ($v instanceof SelectValueOption) {
+                        $option = $v;
                     } else {
-                        $opt = Option::getByValue($v, $this->attributeKey);
+                        // Retrieve the option by value. Only get those that are assigned to this attribute key.
+                        $option = $this->getOptionByValue($v, $this->attributeKey);
                     }
-                    if (is_object($opt)) {
-                        $options[] = $opt;
-                    } elseif ($this->akSelectAllowOtherValues) {
-                        $options[] = Option::add($this->attributeKey, $v, true);
+
+                    if (!is_object($option) && $this->akSelectAllowOtherValues) {
+                        $option = new SelectValueOption();
+                        $option->setIsEndUserAdded(true);
+                        $option->setSelectAttributeOptionValue($v);
+                    }
+
+                    if (is_object($option)) {
+                        $options[] = $option;
                     }
                 }
             } else {
@@ -371,28 +409,22 @@ class Controller extends AttributeTypeController
                     $value = $value[0];
                 }
 
-                if ($value instanceof Option) {
-                    $opt = $value;
+                if ($value instanceof SelectValueOption) {
+                    $option = $value;
                 } else {
-                    $opt = Option::getByValue($value, $this->attributeKey);
+                    $option = $this->getOptionByValue($value, $this->attributeKey);
                 }
 
-                if (is_object($opt)) {
-                    $options[] = $opt;
+                if (is_object($option)) {
+                    $options[] = $option;
                 }
             }
         }
 
-        $db->Execute('delete from atSelectOptionsSelected where avID = ?', array($this->getAttributeValueID()));
-        if (count($options) > 0) {
-            foreach ($options as $opt) {
-                $db->Execute('insert into atSelectOptionsSelected (avID, atSelectOptionID) values (?, ?)',
-                    array($this->getAttributeValueID(), $opt->getSelectAttributeOptionID()));
-                if ($this->akSelectAllowMultipleValues == false) {
-                    break;
-                }
-            }
-        }
+        $av = new SelectValue();
+        $av->setSelectedOptions($options);
+
+        return $av;
     }
 
     public function getDisplayValue()
@@ -413,28 +445,28 @@ class Controller extends AttributeTypeController
 
     public function validateValue()
     {
-        return is_object($value = $this->getValue()) && ((string)$value != '');
+        return is_object($value = $this->getValue()) && ((string) $value != '');
     }
 
     public function validateForm($p)
     {
         $this->load();
         $options = $this->request('atSelectOptionValue');
+
         return $options != '';
     }
 
     public function searchForm($list)
     {
         $options = $this->request('atSelectOptionID');
-        $db = Database::get();
-        $tbl = $this->attributeKey->getIndexedSearchTable();
+        $db = $this->entityManager->getConnection();
         if (!is_array($options)) {
             return $list;
         }
         $optionQuery = array();
         foreach ($options as $id) {
             if ($id > 0) {
-                $opt = Option::getByID($id);
+                $opt = $this->getOptionByID($id);
                 if (is_object($opt)) {
                     $optionQuery[] = $opt->getSelectAttributeOptionValue(false);
                 }
@@ -452,16 +484,9 @@ class Controller extends AttributeTypeController
             if (($i + 1) < count($optionQuery)) {
                 $multiString .= 'OR ';
             }
-            $i++;
+            ++$i;
         }
         $list->filter(false, '(' . $multiString . ')');
-
-        return $list;
-    }
-
-    public function getValue()
-    {
-        $list = $this->getSelectedOptions();
 
         return $list;
     }
@@ -469,9 +494,8 @@ class Controller extends AttributeTypeController
     public function getSearchIndexValue()
     {
         $str = "\n";
-        $list = $this->getSelectedOptions();
+        $list = $this->attributeValue->getValue()->getSelectedOptions();
         foreach ($list as $l) {
-            $l = (is_object($l) && method_exists($l, '__toString')) ? $l->__toString() : $l;
             $str .= $l . "\n";
         }
         // remove line break for empty list
@@ -484,55 +508,31 @@ class Controller extends AttributeTypeController
 
     public function getSelectedOptions()
     {
-        if (!isset($this->akSelectOptionDisplayOrder)) {
-            $this->load();
+        if (is_object($this->attributeValue)) {
+            return $this->attributeValue->getValue()->getSelectedOptions();
         }
-        $db = Database::get();
-        $sortByDisplayName = false;
-        switch ($this->akSelectOptionDisplayOrder) {
-            case 'popularity_desc':
-                $options = $db->GetAll("select ID, value, displayOrder, (select count(s2.atSelectOptionID) from atSelectOptionsSelected s2 where s2.atSelectOptionID = ID) as total from atSelectOptionsSelected inner join atSelectOptions on atSelectOptionsSelected.atSelectOptionID = atSelectOptions.ID where avID = ? order by total desc, value asc",
-                    array($this->getAttributeValueID()));
-                break;
-            case 'alpha_asc':
-                $options = $db->GetAll("select ID, value, displayOrder from atSelectOptionsSelected inner join atSelectOptions on atSelectOptionsSelected.atSelectOptionID = atSelectOptions.ID where avID = ?",
-                    array($this->getAttributeValueID()));
-                $sortByDisplayName = true;
-                break;
-            default:
-                $options = $db->GetAll("select ID, value, displayOrder from atSelectOptionsSelected inner join atSelectOptions on atSelectOptionsSelected.atSelectOptionID = atSelectOptions.ID where avID = ? order by displayOrder asc",
-                    array($this->getAttributeValueID()));
-                break;
-        }
-        $db = Database::get();
-        $list = new OptionList();
-        foreach ($options as $row) {
-            $opt = new Option($row['ID'], $row['value'], $row['displayOrder']);
-            $list->add($opt);
-        }
-        if ($sortByDisplayName) {
-            $list->sortByDisplayName();
-        }
-
-        return $list;
+        return array();
     }
 
     /**
      * Used by select2. Automatically takes a value request and converts it into tag/text key value pairs.
-     * New options are just text/tag, whereas existing ones are SelectAttributeOption:ID/text
+     * New options are just text/tag, whereas existing ones are SelectAttributeOption:ID/text.
      */
     public function action_load_autocomplete_selected_value()
     {
-        $r = \Request::getInstance();
-        $value = $r->query->get('value');
+        $em = \Database::get()->getEntityManager();
+        $r = $em->getRepository('\Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption');
+        $type = $this->attributeKey->getAttributeKeyType();
+
+        $value = $this->request->query->get('value');
         $values = explode(',', $value);
         $response = array();
         foreach ($values as $value) {
             $value = trim($value);
-            $o = new \stdClass;
+            $o = new \stdClass();
             if (strpos($value, 'SelectAttributeOption:') === 0) {
                 $optionID = substr($value, 22);
-                $option = Option::getByID($optionID);
+                $option = $r->findOneBy(array('list' => $type->getOptionList(), 'avSelectOptionID' => $optionID));
                 if (is_object($option)) {
                     $o->id = $value;
                     $o->text = $option->getSelectAttributeOptionValue();
@@ -545,8 +545,7 @@ class Controller extends AttributeTypeController
             $response[] = $o;
         }
 
-        print json_encode($response);
-        \Core::shutdown();
+        return new JsonResponse($response);
     }
 
     public function action_load_autocomplete_values()
@@ -555,37 +554,38 @@ class Controller extends AttributeTypeController
         $values = array();
         // now, if the current instance of the attribute key allows us to do autocomplete, we return all the values
         if ($this->akSelectAllowOtherValues) {
-            $options = $this->getOptions($_GET['q'] . '%');
+            $options = $this->getOptions($_GET['q']);
             foreach ($options as $opt) {
-                $o = new \stdClass;
+                $o = new \stdClass();
                 $o->id = 'SelectAttributeOption:' . $opt->getSelectAttributeOptionID();
                 $o->text = $opt->getSelectAttributeOptionValue(false);
                 $values[] = $o;
             }
         }
-        print json_encode($values);
+        return new JsonResponse($values);
     }
 
     public function getOptionUsageArray($parentPage = false, $limit = 9999)
     {
         $db = Database::get();
-        $q = "select atSelectOptions.value, atSelectOptionID, count(atSelectOptionID) as total from Pages inner join CollectionVersions on (Pages.cID = CollectionVersions.cID and CollectionVersions.cvIsApproved = 1) inner join CollectionAttributeValues on (CollectionVersions.cID = CollectionAttributeValues.cID and CollectionVersions.cvID = CollectionAttributeValues.cvID) inner join atSelectOptionsSelected on (atSelectOptionsSelected.avID = CollectionAttributeValues.avID) inner join atSelectOptions on atSelectOptionsSelected.atSelectOptionID = atSelectOptions.ID where Pages.cIsActive = 1 and CollectionAttributeValues.akID = ? ";
+        $q = "select SelectAttributeValueOptions.value, SelectAttributeValueOptions.avSelectOptionID, count(SelectAttributeValueOptions.avSelectOptionID) as total from Pages inner join CollectionVersions on (Pages.cID = CollectionVersions.cID and CollectionVersions.cvIsApproved = 1) inner join CollectionAttributeValues on (CollectionVersions.cID = CollectionAttributeValues.cID and CollectionVersions.cvID = CollectionAttributeValues.cvID) inner join AttributeValues on CollectionAttributeValues.avrID = AttributeValues.avrID inner join SelectAttributeValueSelectedOptions on (SelectAttributeValueSelectedOptions.avID = AttributeValues.avID) inner join SelectAttributeValueOptions on SelectAttributeValueSelectedOptions.avSelectOptionID = SelectAttributeValueOptions.avSelectOptionID where Pages.cIsActive = 1 and AttributeValues.akID = ? ";
         $v = array($this->attributeKey->getAttributeKeyID());
         if (is_object($parentPage)) {
             $v[] = $parentPage->getCollectionID();
             $q .= "and cParentID = ?";
         }
-        $q .= " group by atSelectOptionID order by total desc limit " . $limit;
+        $q .= " group by avSelectOptionID order by total desc limit " . $limit;
         $r = $db->Execute($q, $v);
-        $list = new OptionList();
-        $i = 0;
+        $options = new ArrayCollection();
         while ($row = $r->FetchRow()) {
-            $opt = new Option($row['atSelectOptionID'], $row['value'], $i, $row['total']);
-            $list->add($opt);
-            $i++;
+            $opt = new SelectValueUsedOption();
+            $opt->setSelectAttributeOptionValue($row['value']);
+            $opt->setSelectAttributeOptionID($row['avSelectOptionID']);
+            $opt->setSelectAttributeOptionUsageCount($row['total']);
+            $options->add($opt);
         }
 
-        return $list;
+        return $options;
     }
 
     public function filterByAttribute(AttributedItemList $list, $value, $comparison = '=')
@@ -603,7 +603,7 @@ class Controller extends AttributeTypeController
                     ? $qb->expr()->notLike($column, ':optionValue_' . $this->attributeKey->getAttributeKeyID())
                     : $qb->expr()->like($column, ':optionValue_' . $this->attributeKey->getAttributeKeyID())
             );
-	        $qb->setParameter('optionValue_' . $this->attributeKey->getAttributeKeyID(), "%\n" . $option->getSelectAttributeOptionValue(false) . "\n%");
+            $qb->setParameter('optionValue_' . $this->attributeKey->getAttributeKeyID(), "%\n" . $option->getSelectAttributeOptionValue(false) . "\n%");
         }
     }
 
@@ -611,65 +611,53 @@ class Controller extends AttributeTypeController
      * Returns a list of available options optionally filtered by an sql $like statement ex: startswith%.
      *
      * @param string $like
-     *
-     * @return SelectAttributeTypeOptionList
      */
-    public function getOptions($like = null)
+    public function getOptions($keywords = null)
     {
+        if (!isset($this->attributeKey)) {
+            return array();
+        }
+
         if (!isset($this->akSelectOptionDisplayOrder)) {
             $this->load();
         }
-        $db = Database::get();
+
+        $type = $this->attributeKey->getAttributeKeyType();
+
+        $em = \Database::get()->getEntityManager();
+        $r = $em->getRepository('\Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption');
+        $builder = $r->createQueryBuilder('v');
+        $builder->where('v.list = :list');
+        if ($keywords) {
+            $builder->andWhere($builder->expr()->like('v.value', ':value'));
+            $builder->setParameter('value', $keywords  . '%');
+        }
         switch ($this->akSelectOptionDisplayOrder) {
             case 'popularity_desc':
-                if (isset($like) && strlen($like)) {
-                    $r = $db->Execute('select ID, value, displayOrder, count(atSelectOptionsSelected.atSelectOptionID) as total
-						from atSelectOptions left join atSelectOptionsSelected on (atSelectOptions.ID = atSelectOptionsSelected.atSelectOptionID)
-						where akID = ? AND atSelectOptions.value LIKE ? group by ID order by total desc, value asc',
-                        array($this->attributeKey->getAttributeKeyID(), $like));
-                } else {
-                    $r = $db->Execute('select ID, value, displayOrder, count(atSelectOptionsSelected.atSelectOptionID) as total
-						from atSelectOptions left join atSelectOptionsSelected on (atSelectOptions.ID = atSelectOptionsSelected.atSelectOptionID)
-						where akID = ? group by ID order by total desc, value asc',
-                        array($this->attributeKey->getAttributeKeyID()));
-                }
+                /**
+                 * @TODO make this work again - there is currently no field.
+                 * @TODO It used to be done with a group by on the selected options table.
+                 */
+                $builder->orderBy('v.popularity', 'asc');
                 break;
             case 'alpha_asc':
-                if (isset($like) && strlen($like)) {
-                    $r = $db->Execute('select ID, value, displayOrder from atSelectOptions where akID = ? AND atSelectOptions.value LIKE ? order by value asc',
-                        array($this->attributeKey->getAttributeKeyID(), $like));
-                } else {
-                    $r = $db->Execute('select ID, value, displayOrder from atSelectOptions where akID = ? order by value asc',
-                        array($this->attributeKey->getAttributeKeyID()));
-                }
+                $builder->orderBy('v.value', 'asc');
                 break;
             default:
-                if (isset($like) && strlen($like)) {
-                    $r = $db->Execute('select ID, value, displayOrder from atSelectOptions where akID = ? AND atSelectOptions.value LIKE ? order by displayOrder asc',
-                        array($this->attributeKey->getAttributeKeyID(), $like));
-                } else {
-                    $r = $db->Execute('select ID, value, displayOrder from atSelectOptions where akID = ? order by displayOrder asc',
-                        array($this->attributeKey->getAttributeKeyID()));
-                }
+                $builder->orderBy('v.displayOrder', 'asc');
                 break;
         }
-        $options = new OptionList();
-        while ($row = $r->FetchRow()) {
-            $opt = new Option($row['ID'], $row['value'], $row['displayOrder']);
-            $options->add($opt);
-        }
-
-        return $options;
+        $builder->setParameter('list', $type->getOptionList());
+        return $builder->getQuery()->getResult();
     }
 
     public function saveKey($data)
     {
-        $ak = $this->getAttributeKey();
 
-        $db = Database::get();
+        $type = $this->getAttributeKeyType();
+        $newOptionSet = $type->getOptionList();
 
-        $initialOptionSet = $this->getOptions();
-        $selectedPostValues = $this->getSelectValuesFromPost();
+        $orm = $this->entityManager;
 
         if (isset($data['akSelectAllowMultipleValues']) && ($data['akSelectAllowMultipleValues'] == 1)) {
             $akSelectAllowMultipleValues = 1;
@@ -689,33 +677,34 @@ class Controller extends AttributeTypeController
             $akSelectOptionDisplayOrder = 'display_asc';
         }
 
-        // now we have a collection attribute key object above.
-        $db->Replace('atSelectSettings', array(
-            'akID' => $ak->getAttributeKeyID(),
-            'akSelectAllowMultipleValues' => $akSelectAllowMultipleValues,
-            'akSelectAllowOtherValues' => $akSelectAllowOtherValues,
-            'akSelectOptionDisplayOrder' => $akSelectOptionDisplayOrder,
-        ), array('akID'), true);
+        $type->setAllowMultipleValues((bool) $akSelectAllowMultipleValues);
+        $type->setDisplayOrder($akSelectOptionDisplayOrder);
+        $type->setAllowOtherValues((bool) $akSelectAllowOtherValues);
+
+        $initialOptionSet = $this->getOptions();
+        $selectedPostValues = $this->getSelectValuesFromPost();
 
         // Now we add the options
-        $newOptionSet = new OptionList();
-        $displayOrder = 0;
+
         foreach ($selectedPostValues as $option) {
-            $opt = $option->saveOrCreate($ak);
-            if ($akSelectOptionDisplayOrder == 'display_asc') {
-                $opt->setDisplayOrder($displayOrder);
-            }
-            $newOptionSet->add($opt);
-            $displayOrder++;
+            /*
+             * @var $option SelectValueOption
+             */
+            $option->setOptionList($newOptionSet);
+            $newOptionSet->getOptions()->add($option);
         }
 
         // Now we remove all options that appear in the
         // old values list but not in the new
         foreach ($initialOptionSet as $iopt) {
             if (!$newOptionSet->contains($iopt)) {
-                $iopt->delete();
+                $orm->remove($iopt);
             }
         }
+
+        $type->setOptionList($newOptionSet);
+
+        return $type;
     }
 
     /**
@@ -746,5 +735,10 @@ class Controller extends AttributeTypeController
         }
 
         return $this->akSelectOptionDisplayOrder;
+    }
+
+    public function createAttributeKeyType()
+    {
+        return new SelectType();
     }
 }

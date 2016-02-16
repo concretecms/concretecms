@@ -7,7 +7,6 @@ use Concrete\Core\View\DialogView;
 
 class Block extends BackendInterfaceBlockController
 {
-
     public function render()
     {
         $btc = $this->block->getInstance();
@@ -25,5 +24,4 @@ class Block extends BackendInterfaceBlockController
     {
         return $this->permissions->canViewEditInterface();
     }
-
 }

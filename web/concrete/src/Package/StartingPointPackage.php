@@ -4,6 +4,7 @@ namespace Concrete\Core\Package;
 use AuthenticationType;
 use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Config\Renderer;
+use Concrete\Core\Database\DatabaseStructureManager;
 use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use Concrete\Core\Mail\Importer\MailImporter;
 use Concrete\Core\Package\Routine\AttachModeInstallRoutine;
@@ -43,7 +44,7 @@ class StartingPointPackage extends BasePackage
                 5,
                 t('Starting installation and creating directories.')),
             new StartingPointInstallRoutine('install_database', 10, t('Creating database tables.')),
-            new StartingPointInstallRoutine('add_users', 15, t('Adding admin user.')),
+            new StartingPointInstallRoutine('add_users', 18, t('Adding admin user.')),
             new StartingPointInstallRoutine('install_permissions', 20, t('Installing permissions & workflow.')),
             new StartingPointInstallRoutine('add_home_page', 23, t('Creating home page.')),
             new StartingPointInstallRoutine('install_attributes', 25, t('Installing attributes.')),
@@ -275,12 +276,15 @@ class StartingPointPackage extends BasePackage
         }
         $installDirectory = DIR_BASE_CORE . '/config';
         try {
-            $em = \ORM::entityManager('core');
-            $dbm = Core::make('database/structure', array($em));
+            $em = \ORM::entityManager();
+            $dbm = new DatabaseStructureManager($em);
+            $dbm->destroyProxyClasses();
             $dbm->generateProxyClasses();
 
             Package::installDB($installDirectory . '/db.xml');
             $this->indexAdditionalDatabaseFields();
+
+            $dbm->installDatabase();
 
             $configuration = new Configuration();
             $version = $configuration->getVersion(Config::get('concrete.version_db'));

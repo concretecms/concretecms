@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Area\Layout\Formatter;
 
 use Concrete\Core\Area\Layout\Layout;
@@ -8,7 +7,6 @@ use Sunra\PhpSimple\HtmlDomParser;
 
 class ThemeGridFormatter implements FormatterInterface
 {
-
     protected $layout;
 
     public function __construct(Layout $layout)
@@ -18,8 +16,6 @@ class ThemeGridFormatter implements FormatterInterface
 
     public function getLayoutContainerHtmlObject()
     {
-
-
         $gf = $this->layout->getThemeGridFrameworkObject();
         if (is_object($gf)) {
             $dom = new HtmlDomParser();
@@ -38,11 +34,8 @@ class ThemeGridFormatter implements FormatterInterface
             } else {
                 $element = new Element('div');
             }
-            return $element;
 
+            return $element;
         }
     }
-
-
-
 }

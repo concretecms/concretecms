@@ -3,15 +3,11 @@ namespace Concrete\Core\Url;
 
 use Concrete\Core\Foundation\Service\Provider;
 use Concrete\Core\Url\Resolver\Manager\ResolverManager;
-use Concrete\Core\Url\Resolver\RouteUrlResolver;
 
 class UrlServiceProvider extends Provider
 {
-
     /**
      * Registers the services provided by this provider.
-     *
-     * @return void
      */
     public function register()
     {
@@ -35,7 +31,7 @@ class UrlServiceProvider extends Provider
         $this->app->bind('url/resolver/route', 'Concrete\Core\Url\Resolver\RouterUrlResolver');
 
         $this->app->bindShared('Concrete\Core\Url\Resolver\Manager\ResolverManager',
-            function($app, $default_handle= '', $default_resolver = null) {
+            function ($app, $default_handle = '', $default_resolver = null) {
                 $manager = new ResolverManager($default_handle ?: 'concrete.path', $default_resolver);
 
                 $manager->addResolver('concrete.path', $app->make('Concrete\Core\Url\Resolver\PathUrlResolver'));
@@ -47,5 +43,4 @@ class UrlServiceProvider extends Provider
         $this->app->bind('Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface', 'Concrete\Core\Url\Resolver\Manager\ResolverManager');
         $this->app->bind('url/manager', 'Concrete\Core\Url\Resolver\Manager\ResolverManager');
     }
-
 }

@@ -1,13 +1,12 @@
 <?php
-
 namespace Concrete\Block\Testimonial;
+
 defined('C5_EXECUTE') or die("Access Denied.");
 use Concrete\Core\Block\BlockController;
 use Core;
 
 class Controller extends BlockController
 {
-
     public $helpers = array('form');
 
     protected $btInterfaceWidth = 450;

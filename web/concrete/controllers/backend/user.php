@@ -3,7 +3,7 @@ namespace Concrete\Controller\Backend;
 
 use Controller;
 use Group;
-use \Concrete\Core\User\EditResponse as UserEditResponse;
+use Concrete\Core\User\EditResponse as UserEditResponse;
 use Permissions;
 use UserInfo;
 use Loader;
@@ -13,7 +13,6 @@ use Exception;
 
 class User extends Controller
 {
-
     public function validate($action)
     {
         $token_validator = \Core::make('helper/validation/token');
@@ -75,7 +74,6 @@ class User extends Controller
         } else {
             throw new Exception(t('Invalid group.'));
         }
-
     }
 
     protected function getRequestUsers($permission = 'canViewUser')
@@ -108,5 +106,4 @@ class User extends Controller
         $r->setUsers($users);
         $r->outputJSON();
     }
-
 }

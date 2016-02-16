@@ -1,5 +1,4 @@
 <?php
-
 namespace tests\Core\Permission;
 
 use Concrete\Core\Permission\Duration;

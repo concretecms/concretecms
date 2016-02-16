@@ -4,13 +4,11 @@ namespace Concrete\Core\Permission\Key;
 use Concrete\Core\Permission\Access\Access;
 use Loader;
 use User;
-use \Concrete\Core\Permission\Duration as PermissionDuration;
+use Concrete\Core\Permission\Duration as PermissionDuration;
 use PermissionKey;
 
 class FileKey extends Key
 {
-
-
     public function validate()
     {
         $u = new User();
@@ -35,9 +33,9 @@ class FileKey extends Key
                 $valid = false;
             }
         }
+
         return $valid;
     }
-
 
     public function copyFromFileSetToFile()
     {
@@ -51,7 +49,7 @@ class FileKey extends Key
             // this is proceeding from a merged file set assignment (copying from multiple file sets)
             $npa = Access::create($this);
             $ids = $opa->getPermissionAccessIDList();
-            foreach($ids as $paID) {
+            foreach ($ids as $paID) {
                 $pax = Access::getByID($paID, $this);
                 $pax->duplicate($npa);
             }
@@ -64,14 +62,11 @@ class FileKey extends Key
                 array(
                     'fID' => $this->permissionObject->getFileID(),
                     'pkID' => $this->getPermissionKeyID(),
-                    'paID' => $paID
+                    'paID' => $paID,
                 ),
                 array('fID', 'paID', 'pkID'),
                 true
             );
-
         }
     }
-
-
 }

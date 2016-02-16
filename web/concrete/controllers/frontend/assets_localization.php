@@ -4,7 +4,6 @@ namespace Concrete\Controller\Frontend;
 use Controller;
 use Concrete\Core\File\Type\Type as FileType;
 use Concrete\Core\Localization\Localization;
-use Core;
 use Environment;
 
 class AssetsLocalization extends Controller
@@ -22,6 +21,7 @@ class AssetsLocalization extends Controller
         ?>
 var ccmi18n = {
   expand: <?=json_encode(t('Expand'))?>,
+  loadingText: <?=json_encode(t('Loading'))?>,
   cancel: <?=json_encode(t('Cancel'))?>,
   collapse: <?=json_encode(t('Collapse'))?>,
   error: <?=json_encode(t('Error'))?>,
@@ -126,6 +126,11 @@ var ccmi18n_editor = {
   insertLinkToFile: <?=json_encode(t('Insert Link to File'))?>,
   insertImage: <?=json_encode(t('Insert Image'))?>,
   insertLinkToPage: <?=json_encode(t('Link to Page'))?>
+};
+
+var ccmi18n_express = {
+    chooseEntry: <?=json_encode(t('Choose Entry'))?>,
+    entriesTitle: <?=json_encode(t('Entries'))?>
 };
 
 var ccmi18n_sitemap = {

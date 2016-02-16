@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\User\PrivateMessage;
+
 use Loader;
 use DateTime;
 use Config;
@@ -7,52 +8,63 @@ use UserInfo;
 use Events;
 use View;
 
-class Limit {
-	/**
-	 * checks to see if a user has exceeded their limit for sending private messages
-	 * @param int $uID
-	 * @return boolean
-	*/
-	public function isOverLimit($uID){
-		if(Config::get('concrete.user.private_messages.throttle_max') == 0) { return false; }
-		if(Config::get('concrete.user.private_messages.throttle_max_timespan') == 0) { return false; }
-		$db = Loader::db();
-		$dt = new DateTime();
-		$dt->modify('-'.Config::get('concrete.user.private_messages.throttle_max_timespan').' minutes');
-		$v = array($uID, $dt->format('Y-m-d H:i:s'));
-		$q = "SELECT COUNT(msgID) as sent_count FROM UserPrivateMessages WHERE uAuthorID = ? AND msgDateCreated >= ?";
-		$count = $db->getOne($q,$v);
+class Limit
+{
+    /**
+     * checks to see if a user has exceeded their limit for sending private messages.
+     *
+     * @param int $uID
+     *
+     * @return bool
+     */
+    public function isOverLimit($uID)
+    {
+        if (Config::get('concrete.user.private_messages.throttle_max') == 0) {
+            return false;
+        }
+        if (Config::get('concrete.user.private_messages.throttle_max_timespan') == 0) {
+            return false;
+        }
+        $db = Loader::db();
+        $dt = new DateTime();
+        $dt->modify('-'.Config::get('concrete.user.private_messages.throttle_max_timespan').' minutes');
+        $v = array($uID, $dt->format('Y-m-d H:i:s'));
+        $q = "SELECT COUNT(msgID) as sent_count FROM UserPrivateMessages WHERE uAuthorID = ? AND msgDateCreated >= ?";
+        $count = $db->getOne($q, $v);
 
-		if($count > Config::get('concrete.user.private_messages.throttle_max')) {
-			self::notifyAdmin($uID);
-			return true;
-		} else {
-			return false;
-		}
-	}
+        if ($count > Config::get('concrete.user.private_messages.throttle_max')) {
+            self::notifyAdmin($uID);
 
-	public function getErrorObject() {
-		$ve = Loader::helper('validation/error');
-		$ve->add(t('You may not send more than %s messages in %s minutes', Config::get('concrete.user.private_messages.throttle_max'), Config::get('concrete.user.private_messages.throttle_max_timespan')));
-		return $ve;
-	}
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-	protected function notifyAdmin($offenderID) {
-		$offender = UserInfo::getByID($offenderID);
+    public function getErrorObject()
+    {
+        $ve = Loader::helper('validation/error');
+        $ve->add(t('You may not send more than %s messages in %s minutes', Config::get('concrete.user.private_messages.throttle_max'), Config::get('concrete.user.private_messages.throttle_max_timespan')));
 
+        return $ve;
+    }
 
-		$ue = new \Concrete\Core\User\Event\UserInfo($offender);
-		Events::dispatch('on_private_message_over_limit', $ue);
+    protected function notifyAdmin($offenderID)
+    {
+        $offender = UserInfo::getByID($offenderID);
 
-		$admin = UserInfo::getByID(USER_SUPER_ID);
+        $ue = new \Concrete\Core\User\Event\UserInfo($offender);
+        Events::dispatch('on_private_message_over_limit', $ue);
 
-		Log::addEntry(t("User: %s has tried to send more than %s private messages within %s minutes", $offender->getUserName(), Config::get('concrete.user.private_messages.throttle_max'), Config::get('concrete.user.private_messages.throttle_max_timespan')),t('warning'));
+        $admin = UserInfo::getByID(USER_SUPER_ID);
 
-		$mh = Loader::helper('mail');
+        Log::addEntry(t("User: %s has tried to send more than %s private messages within %s minutes", $offender->getUserName(), Config::get('concrete.user.private_messages.throttle_max'), Config::get('concrete.user.private_messages.throttle_max_timespan')), t('warning'));
 
-		$mh->addParameter('offenderUname', $offender->getUserName());
-		$mh->addParameter('profileURL', View::url('/profile', 'view', $offender->getUserID()));
-		$mh->addParameter('profilePreferencesURL', View::url('/profile/edit'));
+        $mh = Loader::helper('mail');
+
+        $mh->addParameter('offenderUname', $offender->getUserName());
+        $mh->addParameter('profileURL', View::url('/profile', 'view', $offender->getUserID()));
+        $mh->addParameter('profilePreferencesURL', View::url('/profile/edit'));
 
 		$mh->to($admin->getUserEmail());
 		$mh->addParameter('siteName', tc('SiteName', Config::get('concrete.site')));

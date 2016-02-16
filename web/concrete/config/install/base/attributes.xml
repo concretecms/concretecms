@@ -76,25 +76,32 @@
                 <category handle="user"/>
             </categories>
         </attributetype>
+        <attributetype handle="express" name="Express Entity" package="">
+            <categories>
+                <category handle="collection"/>
+                <category handle="user"/>
+                <category handle="file"/>
+            </categories>
+        </attributetype>
     </attributetypes>
     <attributekeys>
-        <attributekey handle="meta_title" name="Meta Title" package="" searchable="1" indexed="1" type="text" category="collection"/>
-        <attributekey handle="meta_description" name="Meta Description" package="" searchable="1" indexed="1" type="textarea" category="collection">
+        <attributekey handle="meta_title" name="Meta Title" package="" searchable="1" indexed="0" type="text" category="collection"/>
+        <attributekey handle="meta_description" name="Meta Description" package="" searchable="1" indexed="0" type="textarea" category="collection">
             <type mode=""/>
         </attributekey>
-        <attributekey handle="meta_keywords" name="Meta Keywords" package="" searchable="1" indexed="1" type="textarea" category="collection">
+        <attributekey handle="meta_keywords" name="Meta Keywords" package="" searchable="1" indexed="0" type="textarea" category="collection">
             <type mode=""/>
         </attributekey>
         <attributekey handle="icon_dashboard" name="Dashboard Icon" package="" searchable="0" indexed="0" type="textarea" internal="1" category="collection">
             <type mode=""/>
         </attributekey>
-        <attributekey handle="exclude_nav" name="Exclude From Nav" package="" searchable="1" indexed="1" type="boolean" category="collection">
+        <attributekey handle="exclude_nav" name="Exclude From Nav" package="" searchable="1" indexed="0" type="boolean" category="collection">
             <type checked=""/>
         </attributekey>
-        <attributekey handle="exclude_page_list" name="Exclude From Page List" package="" searchable="1" indexed="1" type="boolean" category="collection">
+        <attributekey handle="exclude_page_list" name="Exclude From Page List" package="" searchable="1" indexed="0" type="boolean" category="collection">
             <type checked=""/>
         </attributekey>
-        <attributekey handle="header_extra_content" name="Header Extra Content" package="" searchable="1" indexed="1" type="textarea" category="collection">
+        <attributekey handle="header_extra_content" name="Header Extra Content" package="" searchable="1" indexed="0" type="textarea" category="collection">
             <type mode=""/>
         </attributekey>
         <attributekey handle="tags" name="Tags" package="" searchable="1" indexed="1" type="select" category="collection">
@@ -104,10 +111,10 @@
         <attributekey handle="is_featured" name="Is Featured" package="" searchable="1" indexed="0" type="boolean" category="collection">
             <type checked=""/>
         </attributekey>
-        <attributekey handle="exclude_search_index" name="Exclude From Search Index" package="" searchable="1" indexed="1" type="boolean" category="collection">
+        <attributekey handle="exclude_search_index" name="Exclude From Search Index" package="" searchable="1" indexed="0" type="boolean" category="collection">
             <type checked=""/>
         </attributekey>
-        <attributekey handle="exclude_sitemapxml" name="Exclude From sitemap.xml" package="" searchable="1" indexed="1" type="boolean" category="collection">
+        <attributekey handle="exclude_sitemapxml" name="Exclude From sitemap.xml" package="" searchable="1" indexed="0" type="boolean" category="collection">
             <type checked=""/>
         </attributekey>
         <attributekey handle="profile_private_messages_enabled" name="I would like to receive private messages." package="" searchable="1" indexed="0" type="boolean" category="user" profile-displayed="0" profile-editable="1" profile-required="0" register-editable="1" register-required="0" member-list-displayed="0">
@@ -116,10 +123,10 @@
         <attributekey handle="profile_private_messages_notification_enabled" name="Send me email notifications when I receive a private message." package="" searchable="1" indexed="0" type="boolean" category="user" profile-displayed="0" profile-editable="1" profile-required="0" register-editable="1" register-required="0" member-list-displayed="0">
             <type checked="1"/>
         </attributekey>
-        <attributekey handle="width" name="Width" package="" searchable="1" indexed="1" type="number" category="file"/>
-        <attributekey handle="height" name="Height" package="" searchable="1" indexed="1" type="number" category="file"/>
+        <attributekey handle="width" name="Width" package="" searchable="1" indexed="0" type="number" category="file"/>
+        <attributekey handle="height" name="Height" package="" searchable="1" indexed="0" type="number" category="file"/>
         <attributekey handle="account_profile_links" name="Personal Links" package="" type="social_links" category="user"/>
-        <attributekey handle="duration" name="Duration" package="" searchable="1" indexed="1" type="number" category="file"/>
+        <attributekey handle="duration" name="Duration" package="" searchable="1" indexed="0" type="number" category="file"/>
     </attributekeys>
     <attributesets>
         <attributeset handle="seo" name="SEO" package="" locked="0" category="collection">

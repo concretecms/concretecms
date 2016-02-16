@@ -10,7 +10,6 @@ use Concrete\Core\Database\Connection\PDOConnection;
  */
 class Driver extends \Doctrine\DBAL\Driver\PDOMySql\Driver
 {
-
     public function connect(array $params, $username = null, $password = null, array $driverOptions = array())
     {
         $conn = new PDOConnection(
@@ -51,5 +50,4 @@ class Driver extends \Doctrine\DBAL\Driver\PDOMySql\Driver
 
         return $dsn;
     }
-
 }

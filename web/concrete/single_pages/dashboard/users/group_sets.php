@@ -1,6 +1,7 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<?php if (in_array($this->controller->getTask(), array('update_set', 'update_set_groups', 'edit', 'delete_set'))) { ?>
+<?php if (in_array($this->controller->getTask(), array('update_set', 'update_set_groups', 'edit', 'delete_set'))) {
+    ?>
 
 		<div class="row">
             <div class="col-md-8">
@@ -29,27 +30,35 @@
                         <legend><?=t('Groups')?></legend>
                         <?php
                         $list = $set->getGroups();
-                        if (count($groups) > 0) { ?>
+    if (count($groups) > 0) {
+        ?>
 
                             <div class="control-group">
-                                <?php foreach($groups as $g) { ?>
+                                <?php foreach ($groups as $g) {
+    ?>
                                     <div class="checkbox">
                                         <label>
                                             <?php echo $form->checkbox('gID[]', $g->getGroupID(), $set->contains($g)) ?>
                                             <span><?php echo $g->getGroupDisplayName()?></span>
                                         </label>
                                     </div>
-                                <?php } ?>
+                                <?php 
+}
+        ?>
                             </div>
 
                             <div class="control-group">
                                 <?php echo $form->submit('submit', t('Update Groups'), array('class' => 'btn btn-primary'))?>
                             </div>
-                        <?php } else { ?>
+                        <?php 
+    } else {
+        ?>
                             <div class="control-group">
                                 <p><?php echo t('No groups found.')?></p>
                             </div>
-                        <?php } ?>
+                        <?php 
+    }
+    ?>
                     </fieldset>
                 </form>
 
@@ -74,26 +83,37 @@
             </div>
 		</div>
 
-<? } else { ?>
+<?php 
+} else {
+    ?>
     <div class="row">
         <div class="col-md-12">
-        <? if (Config::get('concrete.permissions.model') == 'advanced') { ?>
+        <?php if (Config::get('concrete.permissions.model') == 'advanced') {
+    ?>
             <div>
-                <?php if (count($groupSets) > 0) { ?>
+                <?php if (count($groupSets) > 0) {
+    ?>
 
                     <ul class="item-select-list" id="ccm-group-list">
-                        <?php foreach($groupSets as $gs) { ?>
+                        <?php foreach ($groupSets as $gs) {
+    ?>
                             <li>
                                 <a href="<?php echo $view->url('/dashboard/users/group_sets', 'edit', $gs->getGroupSetID())?>">
                                     <i class="fa fa-users"></i> <?php echo $gs->getGroupSetDisplayName()?>
                                 </a>
                             </li>
-                        <? } ?>
+                        <?php 
+}
+    ?>
                     </ul>
 
-                <?php } else { ?>
+                <?php 
+} else {
+    ?>
                     <p><?php echo t('You have not added any group sets.')?></p>
-                <?php } ?>
+                <?php 
+}
+    ?>
             </div>
 
             <form method="post" action="<?php echo $view->action('add_set')?>">
@@ -111,11 +131,14 @@
 
                     <div class="control-group" style="margin-top: 10px;">
                         <label><?=t('Groups')?></label>
-                        <? foreach($groups as $g) { ?>
+                        <?php foreach ($groups as $g) {
+    ?>
                             <div class="checkbox">
                                 <label><?=$form->checkbox('gID[]', $g->getGroupID())?> <span><?=$g->getGroupDisplayName()?></span></label>
                             </div>
-                        <? } ?>
+                        <?php 
+}
+    ?>
                     </div>
 
                     <div class="control-group">
@@ -123,9 +146,14 @@
                     </div>
                 </fieldset>
             </form>
-        <? } else { ?>
+        <?php 
+} else {
+    ?>
             <p><?=t('You must enable <a href="%s">advanced permissions</a> to use group sets.', $view->url('/dashboard/system/permissions/advanced'))?></p>
-        <? } ?>
+        <?php 
+}
+    ?>
             </div>
         </div>
-<? } ?>
+<?php 
+} ?>

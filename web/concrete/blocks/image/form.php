@@ -1,22 +1,21 @@
-<?php  
+<?php 
 defined('C5_EXECUTE') or die("Access Denied.");
 $al = Loader::helper('concrete/asset_library');
 $bf = null;
 $bfo = null;
 
-if ($controller->getFileID() > 0) { 
-	$bf = $controller->getFileObject();
+if ($controller->getFileID() > 0) {
+    $bf = $controller->getFileObject();
 }
-if ($controller->getFileOnstateID() > 0) { 
-	$bfo = $controller->getFileOnstateObject();
-
+if ($controller->getFileOnstateID() > 0) {
+    $bfo = $controller->getFileOnstateObject();
 }
 ?>
 
 <fieldset>
 
     <legend><?=t('Files')?></legend>
-<?
+<?php
 $args = array();
 $constrain = $maxWidth > 0 || $maxHeight > 0;
 if ($maxWidth == 0) {
@@ -59,18 +58,18 @@ if ($maxHeight == 0) {
 
 <div id="imageLinkTypeExternal" style="display: none;" class="form-group">
 	<?=$form->label('externalLink', t('URL'))?>
-	<?= $form->text('externalLink', $externalLink, array('style'=>'width: 60%;')); ?>
+	<?= $form->text('externalLink', $externalLink, array('style' => 'width: 60%;')); ?>
 </div>
 
 
 <div class="form-group">
 	<?=$form->label('altText', t('Alt. Text'))?>
-	<?= $form->text('altText', $altText, array('style'=>'width: 60%;')); ?>
+	<?= $form->text('altText', $altText, array('style' => 'width: 60%;')); ?>
 </div>
 
 <div class="form-group">
     <?=$form->label('title', t('Title'))?>
-    <?= $form->text('title', $title, array('style'=>'width: 60%;')); ?>
+    <?= $form->text('title', $title, array('style' => 'width: 60%;')); ?>
 </div>
 
 </fieldset>

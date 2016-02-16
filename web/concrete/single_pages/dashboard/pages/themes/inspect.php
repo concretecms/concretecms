@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Core\Page\Theme\File as PageThemeFile;
 
@@ -28,23 +28,26 @@ $ci = Loader::helper('concrete/ui');
                     </thead>
                     <tbody>
                         
-                    <?
+                    <?php
                     $txt = Loader::helper('text');
                     $pf = 0;
-                    
-                        if (count($files) == 0) { ?>
+
+                        if (count($files) == 0) {
+                            ?>
                         <tr>
                             <td colspan="3">
                                 <?=t('There are no templates in this file.')?>
                             </td>
                         </tr>
-                        <? }
-                    
-                        foreach ($files as $f) { ?>
+                        <?php 
+                        }
+
+                        foreach ($files as $f) {
+                            ?>
                         <tr class="inputs-list">
                             <td><?=$f->getFilename()?></td>
-                            <td><?
-                                switch($f->getType()) {
+                            <td><?php
+                                switch ($f->getType()) {
                                     case PageThemeFile::TFTYPE_VIEW:
                                         print t("Wrapper for static pages.");
                                         break;
@@ -67,8 +70,8 @@ $ci = Loader::helper('concrete/ui');
                                 // END Switch
                             ?>
                             </td>
-                            <td><?
-                                switch($f->getType()) {
+                            <td><?php
+                                switch ($f->getType()) {
                                     case PageThemeFile::TFTYPE_VIEW:
                                         print t('None. This file will automatically be used.');
                                         break;
@@ -76,21 +79,22 @@ $ci = Loader::helper('concrete/ui');
                                         print t('None. This file will automatically be used for pages without a template.');
                                         break;
                                     case PageThemeFile::TFTYPE_SINGLE_PAGE:
-                                        print t('None. This file will automatically be used by the <strong>%s</strong> page.',$txt->unhandle($f->getHandle()) );
+                                        print t('None. This file will automatically be used by the <strong>%s</strong> page.', $txt->unhandle($f->getHandle()));
                                         break;
                                     case PageThemeFile::TFTYPE_PAGE_TEMPLATE_NEW:
                                         $pf++;
-                                        print '<label><input type="checkbox" value="' . $f->getHandle() . '" name="pageTemplates[]" checked /> <span>'.t('Create page template.').'</span></label>';
+                                        echo '<label><input type="checkbox" value="' . $f->getHandle() . '" name="pageTemplates[]" checked /> <span>'.t('Create page template.').'</span></label>';
                                         break;
                                     case PageThemeFile::TFTYPE_PAGE_TEMPLATE_EXISTING:
-                                        print t('None. This file will be used by pages with the <strong>%s</strong> template.',$txt->unhandle($f->getHandle()) );
+                                        print t('None. This file will be used by pages with the <strong>%s</strong> template.', $txt->unhandle($f->getHandle()));
                                         break;
                                 }
                                 // END Switch
                             ?></td>
                         </tr>
                         
-                        <? } // END FOREACH ?>
+                        <?php 
+                        } // END FOREACH ?>
                     
                     </tbody>
                 </table>        
@@ -101,11 +105,13 @@ $ci = Loader::helper('concrete/ui');
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-        <?
-        print $ci->button(t('Return to Themes'), $view->url('/dashboard/pages/themes'), 'left');
-        if ($pf > 0) { 
-            print $ci->submit(t('Ok'), 'ccm-inspect-form', 'right', 'btn-primary'); ?>
-        <? }?>
+        <?php
+        echo $ci->button(t('Return to Themes'), $view->url('/dashboard/pages/themes'), 'left');
+        if ($pf > 0) {
+            echo $ci->submit(t('Ok'), 'ccm-inspect-form', 'right', 'btn-primary');
+            ?>
+        <?php 
+        }?>
         </div>
     </div>
 

@@ -2,7 +2,6 @@
 
 class ResolverManagerTest extends PHPUnit_Framework_TestCase
 {
-
     /**
      * @var \Concrete\Core\Url\Resolver\Manager\ResolverManager
      */
@@ -60,5 +59,4 @@ class ResolverManagerTest extends PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('test_resolver', $this->manager->getResolvers());
         $this->assertEquals($this->defaultResolver, $this->manager->getDefaultResolver());
     }
-
 }

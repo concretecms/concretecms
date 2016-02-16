@@ -1,13 +1,13 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $form = Loader::Helper('form');
 $selectedThemeID = 0;
 $selectedTemplateID = 0;
 if (is_object($selectedTheme)) {
-	$selectedThemeID = $selectedTheme->getThemeID();
+    $selectedThemeID = $selectedTheme->getThemeID();
 }
 if (is_object($selectedTemplate)) {
-	$selectedTemplateID = $selectedTemplate->getPageTemplateID();
+    $selectedTemplateID = $selectedTemplate->getPageTemplateID();
 }
 if (is_object($selectedType)) {
     $selectedTypeID = $selectedType->getPageTypeID();
@@ -20,32 +20,46 @@ if (is_object($selectedType)) {
 
     <input type="hidden" name="sitemap" value="1" />
     
-    <? if ($cp->canEditPageTemplate()) { ?>
+    <?php if ($cp->canEditPageTemplate()) {
+    ?>
         <?=$form->label('pTemplateID', t('Page Template'))?>
 
-        <? if ($c->isGeneratedCollection()) { ?>
+        <?php if ($c->isGeneratedCollection()) {
+    ?>
             <div class="alert alert-info"><?=t('This is a single page. It does not have a page template.')?></div>
-        <? } else { ?>
+        <?php 
+} else {
+    ?>
             <div class="form-group">
                 <?=$form->select('pTemplateID', $templatesSelect, $selectedTemplateID)?>
             </div>
-        <? } ?>
-    <? } ?>
+        <?php 
+}
+    ?>
+    <?php 
+} ?>
 
-    <? if ($cp->canEditPageType()) { ?>
+    <?php if ($cp->canEditPageType()) {
+    ?>
         <?=$form->label('ptID', t('Page Type'))?>
 
-        <? if ($c->isGeneratedCollection()) { ?>
+        <?php if ($c->isGeneratedCollection()) {
+    ?>
             <div class="alert alert-info"><?=t('This is a single page. It does not have a page type.')?></div>
-        <? } else { ?>
+        <?php 
+} else {
+    ?>
             <div class="form-group">
                 <?=$form->select('ptID', $typesSelect, $selectedTypeID)?>
             </div>
             <div class="alert alert-warning">
                 <?=t('Changing page types of existing pages could result in unexpected behavior.')?>
             </div>
-        <? } ?>
-    <? } ?>
+        <?php 
+}
+    ?>
+    <?php 
+} ?>
 
     <div class="form-group">
 		<?=$form->label('pThemeID', t('Theme'))?>

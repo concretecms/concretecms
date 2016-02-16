@@ -65,12 +65,13 @@ $controls = $editor->getControlList()
                                         } catch (ErrorException $e) {
                                             echo t("Invalid View: '{$e->getMessage()}''");
                                         }
-                                        ?>
+                            ?>
                                     </div>
                                 </div>
                                 <div class='border'></div>
                             </div>
                         <?php
+
                         }
                         ?>
                     </div>
@@ -98,11 +99,10 @@ foreach ($filters as $filter) {
         $req->addOutputAsset($asset);
     }
 
-
     $fnames[$filter_handle] = array(
         'src' => $extension_asset->getAssetURL(),
         'name' => h($filter->getName()),
-        "selector" => ".filter.filter-{$filter_handle}"
+        "selector" => ".filter.filter-{$filter_handle}",
     );
 }
 ?>
@@ -147,6 +147,7 @@ foreach ($filters as $filter) {
                     window.location.reload();
                 });
                 <?php
+
             }
             ?>
         });

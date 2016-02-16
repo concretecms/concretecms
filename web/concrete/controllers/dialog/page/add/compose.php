@@ -1,6 +1,7 @@
-<?
+<?php
 namespace Concrete\Controller\Dialog\Page\Add;
-use \Concrete\Core\Controller\Controller;
+
+use Concrete\Core\Controller\Controller;
 use Concrete\Core\Page\EditResponse;
 use Concrete\Core\Page\Template;
 use Concrete\Core\Page\Type\Type;
@@ -8,14 +9,13 @@ use Concrete\Core\View\DialogView;
 use Page;
 use Permissions;
 use Core;
+
 class Compose extends Controller
 {
-
     protected $controllerActionPath = '/ccm/system/dialogs/page/add/compose';
 
-	public function view($ptID, $cParentID)
+    public function view($ptID, $cParentID)
     {
-
         $pagetype = Type::getByID($ptID);
         $e = Core::make('error');
         if (is_object($pagetype)) {
@@ -45,7 +45,7 @@ class Compose extends Controller
         if (!$this->view) {
             throw new \Exception(t('Access Denied.'));
         }
-	}
+    }
 
     public function submit()
     {

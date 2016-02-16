@@ -1,44 +1,41 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
-<?
-use \Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayoutSet;
+<?php
 use \Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFormLayoutSetControl;
-use \Concrete\Core\Page\Type\Composer\Control\Type\Type as PageTypeComposerControlType;
 
 $c = Page::getByPath('/dashboard/pages/types/form');
 $cp = new Permissions($c);
 $ih = Loader::helper('concrete/ui');
 $control = PageTypeComposerFormLayoutSetControl::getByID($_REQUEST['ptComposerFormLayoutSetControlID']);
 if (!is_object($control)) {
-	die(t('Invalid control'));
+    die(t('Invalid control'));
 }
 $form = Loader::helper('form');
 
 $object = $control->getPageTypeComposerControlObject();
 $customTemplates = $object->getPageTypeComposerControlCustomTemplates();
 $templates = array('' => t('** None'));
-foreach($customTemplates as $template) {
-	$templates[(string)$template->getPageTypeComposerControlCustomTemplateFilename()] = $template->getPageTypeComposerControlCustomTemplateName();
+foreach ($customTemplates as $template) {
+    $templates[(string) $template->getPageTypeComposerControlCustomTemplateFilename()] = $template->getPageTypeComposerControlCustomTemplateName();
 }
 
-if ($cp->canViewPage()) { 
+if ($cp->canViewPage()) {
+    if ($_POST['task'] == 'edit' && Loader::helper('validation/token')->validate('update_set_control')) {
+        $sec = Loader::helper('security');
+        $label = $sec->sanitizeString($_POST['ptComposerFormLayoutSetControlCustomLabel']);
+        $template = $sec->sanitizeString($_POST['ptComposerFormLayoutSetControlCustomTemplate']);
+        $description = $sec->sanitizeString($_POST['ptComposerFormLayoutSetControlDescription']);
+        $required = $sec->sanitizeInt($_POST['ptComposerFormLayoutSetControlRequired']);
+        $control->updateFormLayoutSetControlCustomLabel($label);
+        $control->updateFormLayoutSetControlCustomTemplate($template);
+        $control->updateFormLayoutSetControlDescription($description);
+        if ($object->pageTypeComposerFormControlSupportsValidation()) {
+            $control->updateFormLayoutSetControlRequired($required);
+        }
+        Loader::element('page_types/composer/form/layout_set/control', array('control' => $control));
+        exit;
+    }
 
-	if ($_POST['task'] == 'edit' && Loader::helper('validation/token')->validate('update_set_control')) {
-		$sec = Loader::helper('security');
-		$label = $sec->sanitizeString($_POST['ptComposerFormLayoutSetControlCustomLabel']);
-		$template = $sec->sanitizeString($_POST['ptComposerFormLayoutSetControlCustomTemplate']);
-		$description = $sec->sanitizeString($_POST['ptComposerFormLayoutSetControlDescription']);
-		$required = $sec->sanitizeInt($_POST['ptComposerFormLayoutSetControlRequired']);
-		$control->updateFormLayoutSetControlCustomLabel($label);
-		$control->updateFormLayoutSetControlCustomTemplate($template);
-		$control->updateFormLayoutSetControlDescription($description);
-		if ($object->pageTypeComposerFormControlSupportsValidation()) {
-			$control->updateFormLayoutSetControlRequired($required);
-		}
-		Loader::element('page_types/composer/form/layout_set/control', array('control' => $control));
-		exit;
-	}
-
-	?>
+    ?>
 
 	<div class="ccm-ui">
 		<form data-edit-set-form-control="<?=$control->getPageTypeComposerFormLayoutSetControlID()?>" action="#" method="post">
@@ -55,14 +52,17 @@ if ($cp->canViewPage()) {
 			<?=$form->text('ptComposerFormLayoutSetControlDescription', $control->getPageTypeComposerFormLayoutSetControlDescription())?>
 		</div>
 
-		<? if ($object->pageTypeComposerFormControlSupportsValidation()) { ?>
+		<?php if ($object->pageTypeComposerFormControlSupportsValidation()) {
+    ?>
 		<div class="form-group">
 			<?=$form->label('ptComposerFormLayoutSetControlRequired', t('Required'))?>
 			<div class="checkbox">
 			<label><?=$form->checkbox('ptComposerFormLayoutSetControlRequired', 1, $control->isPageTypeComposerFormLayoutSetControlRequired())?> <?=t('Yes, require this form element')?></label>
 			</div>
 		</div>
-		<? } ?>
+		<?php 
+}
+    ?>
 
 		<?=Loader::helper('validation/token')->output('update_set_control')?>
 		</form>
@@ -109,6 +109,6 @@ $(function() {
 </script>
 
 
-<?
+<?php
 
 }

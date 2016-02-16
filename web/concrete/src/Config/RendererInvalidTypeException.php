@@ -1,6 +1,6 @@
 <?php
 namespace Concrete\Core\Config;
 
-class RendererInvalidTypeException extends RendererException {
-
+class RendererInvalidTypeException extends RendererException
+{
 }

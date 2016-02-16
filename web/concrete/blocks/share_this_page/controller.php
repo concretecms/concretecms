@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Block\ShareThisPage;
 
 use Concrete\Core\Block\BlockController;

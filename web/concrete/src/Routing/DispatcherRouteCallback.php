@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Routing;
 
 use Concrete\Core\Page\Event as PageEvent;
@@ -130,6 +129,10 @@ class DispatcherRouteCallback extends RouteCallback
         }
 
         if (!$c->isActive() && (!$cp->canViewPageVersions())) {
+            return $this->sendPageNotFound($request);
+        }
+
+        if (!$c->canBePublished()) {
             return $this->sendPageNotFound($request);
         }
 

@@ -1,9 +1,8 @@
 <?php
 namespace Concrete\Core\Page\Type\Composer\Control;
 
-use Concrete\Core\Block\View\BlockView;
 use Loader;
-use \Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\Object;
 use Controller;
 use Package;
 use Block;
@@ -12,11 +11,10 @@ use Environment;
 use Page;
 use Area;
 use PageTemplate;
-use \Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayoutSet;
+use Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayoutSet;
 
 class BlockControl extends Control
 {
-
     protected $btID;
     protected $ptComposerControlTypeHandle = 'block';
     protected $bt = false;
@@ -61,7 +59,7 @@ class BlockControl extends Control
                 array(
                     $c->getVersionID(),
                     $setControl->getPageTypeComposerFormLayoutSetControlID(),
-                    $c->getCollectionID()
+                    $c->getCollectionID(),
                 )
             );
             if (!$r['bID']) {
@@ -75,7 +73,7 @@ class BlockControl extends Control
                         'select bco.bID, cvb.arHandle from btCorePageTypeComposerControlOutput bco inner join CollectionVersionBlocks cvb on cvb.bID = bco.bID where ptComposerOutputControlID = ? and cvb.cID = ?',
                         array(
                             $outputControl->getPageTypeComposerOutputControlID(),
-                            $mc->getCollectionID()
+                            $mc->getCollectionID(),
                         )
                     );
                 }
@@ -83,9 +81,11 @@ class BlockControl extends Control
             if ($r['bID']) {
                 $b = Block::getByID($r['bID'], $c, $r['arHandle']);
                 $this->setPageTypeComposerControlBlockObject($b);
+
                 return $this->b;
             }
         }
+
         return $this->b;
     }
 
@@ -99,6 +99,7 @@ class BlockControl extends Control
         if (!is_object($this->bt)) {
             $this->bt = BlockType::getByID($this->btID);
         }
+
         return $this->bt;
     }
 
@@ -106,6 +107,7 @@ class BlockControl extends Control
     {
         if (is_object($this->b)) {
             $controller = $this->b->getController();
+
             return $controller->getPageTypeComposerControlPageNameValue();
         }
     }
@@ -117,6 +119,7 @@ class BlockControl extends Control
         if (method_exists($controller, 'getPageTypeComposerControlPageNameValue')) {
             return true;
         }
+
         return false;
     }
 
@@ -128,9 +131,11 @@ class BlockControl extends Control
             $bx = $this->getPageTypeComposerControlBlockObject($this->page);
             if (is_object($bx)) {
                 $controller = $bx->getController();
+
                 return $controller->isPageTypeComposerControlValueEmpty();
             }
         }
+
         return false;
     }
 
@@ -141,6 +146,7 @@ class BlockControl extends Control
         if (method_exists($controller, 'validate_composer')) {
             return true;
         }
+
         return false;
     }
 
@@ -150,7 +156,6 @@ class BlockControl extends Control
         $controller = $bt->getController();
         $controller->setupAndRun('composer');
     }
-
 
     public function getPageTypeComposerControlCustomTemplates()
     {
@@ -170,6 +175,7 @@ class BlockControl extends Control
                 }
             }
         }
+
         return $templates;
     }
 
@@ -178,6 +184,7 @@ class BlockControl extends Control
         $layoutSetControl = parent::addToPageTypeComposerFormLayoutSet($set, $import);
         $pagetype = $set->getPageTypeObject();
         $pagetype->rescanPageTypeComposerOutputControlObjects();
+
         return $layoutSetControl;
     }
 
@@ -187,6 +194,7 @@ class BlockControl extends Control
             $this->controller = $obj->getController();
             $this->controller->setupAndRun('composer');
         }
+
         return $this->controller;
     }
 
@@ -198,6 +206,7 @@ class BlockControl extends Control
                 // we HAVE a page, but we don't have a block object, which means something has gone wrong.
                 // we've lost the association. So we abort.
                 Loader::element('page_types/composer/controls/invalid_block');
+
                 return;
             }
             $obj = $this->getBlockTypeObject();
@@ -233,8 +242,9 @@ class BlockControl extends Control
             // we don't have a page, an area, or ANYTHING YET.
             $arguments = array('/ccm/system/block/action/add_composer',
                 $this->getPageTypeComposerFormLayoutSetControlObject()->getPageTypeComposerFormLayoutSetControlID(),
-                $task
+                $task,
             );
+
             return call_user_func_array(array('\URL', 'to'), $arguments);
         } else {
             $area = $obj->getBlockAreaObject();
@@ -243,8 +253,9 @@ class BlockControl extends Control
                 $c->getCollectionID(),
                 urlencode($area->getAreaHandle()),
                 $this->getPageTypeComposerFormLayoutSetControlObject()->getPageTypeComposerFormLayoutSetControlID(),
-                $task
+                $task,
             );
+
             return call_user_func_array(array('\URL', 'to'), $arguments);
         }
     }
@@ -266,7 +277,6 @@ class BlockControl extends Control
         $label = $this->getPageTypeComposerFormLayoutSetControlObject()->getPageTypeComposerControlDisplayLabel();
         $env = Environment::get();
 
-
         $pkg = false;
         if ($obj->getPackageID() > 0) {
             $pkg = Package::getByID($obj->getPackageID());
@@ -275,7 +285,7 @@ class BlockControl extends Control
         $view = $this;
 
         $path = $env->getPath(DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . $file, $pkg);
-        include($path);
+        include $path;
     }
 
     public function getPageTypeComposerControlDraftValue()
@@ -342,7 +352,7 @@ class BlockControl extends Control
                 $block->getAreaHandle(),
                 $setControl->getPageTypeComposerFormLayoutSetControlID(),
                 $block->getBlockDisplayOrder(),
-                $block->getBlockID()
+                $block->getBlockID(),
             )
         );
     }
@@ -360,6 +370,4 @@ class BlockControl extends Control
             }
         }
     }
-
-
 }

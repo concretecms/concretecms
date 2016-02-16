@@ -1,16 +1,13 @@
 <?php
 namespace Concrete\Core\StyleCustomizer\Style;
 
-use \Concrete\Core\StyleCustomizer\Style\Value\TypeValue;
-use \Concrete\Core\StyleCustomizer\Style\Value\ColorValue;
-use \Concrete\Core\StyleCustomizer\Style\ColorStyle;
-use \Concrete\Core\StyleCustomizer\Style\Value\SizeValue;
-use \Concrete\Core\StyleCustomizer\Style\SizeStyle;
-
+use Concrete\Core\StyleCustomizer\Style\Value\TypeValue;
+use Concrete\Core\StyleCustomizer\Style\Value\ColorValue;
+use Concrete\Core\StyleCustomizer\Style\Value\SizeValue;
 use Core;
 
-class TypeStyle extends Style {
-
+class TypeStyle extends Style
+{
     public function render($style = false)
     {
         $fh = Core::make('helper/form/font');
@@ -46,9 +43,8 @@ class TypeStyle extends Style {
                 $args['lineHeightValue'] = $lineHeight->getSize();
                 $args['lineHeightUnit'] = $lineHeight->getUnit();
             }
-
         }
-        print $fh->output($this->getVariable(), $args, array());
+        echo $fh->output($this->getVariable(), $args, array());
     }
 
     public function getValueFromRequest(\Symfony\Component\HttpFoundation\ParameterBag $request)
@@ -63,19 +59,19 @@ class TypeStyle extends Style {
         }
         if ($type['italic']) {
             $tv->setFontStyle('italic');
-        } else if (isset($type['italic'])) {
+        } elseif (isset($type['italic'])) {
             $tv->setFontStyle('none');
         }
 
         if ($type['underline']) {
             $tv->setTextDecoration('underline');
-        } else if (isset($type['underline'])) {
+        } elseif (isset($type['underline'])) {
             $tv->setTextDecoration('none');
         }
 
         if ($type['uppercase']) {
             $tv->setTextTransform('uppercase');
-        } else if (isset($type['uppercase'])) {
+        } elseif (isset($type['uppercase'])) {
             $tv->setTextTransform('none');
         }
 
@@ -128,8 +124,8 @@ class TypeStyle extends Style {
     {
         $values = array();
 
-        foreach($rules as $rule) {
-            $ruleName=  isset($rule->name) ? $rule->name : '';
+        foreach ($rules as $rule) {
+            $ruleName = isset($rule->name) ? $rule->name : '';
             if (preg_match('/@(.+)\-type-font-family/i', $ruleName, $matches)) {
                 if (!isset($values[$matches[1]])) {
                     $values[$matches[1]] = new TypeValue($matches[1]);
@@ -213,6 +209,4 @@ class TypeStyle extends Style {
 
         return $values;
     }
-
-
 }

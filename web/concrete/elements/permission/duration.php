@@ -4,21 +4,21 @@ use Concrete\Core\Permission\Duration;
 defined('C5_EXECUTE') or die("Access Denied.");
 
 $repeats = array(
-    ''        => t('** Options'),
-    'daily'   => t('Every Day'),
-    'weekly'  => t('Every Week'),
-    'monthly' => t('Every Month')
+    '' => t('** Options'),
+    'daily' => t('Every Day'),
+    'weekly' => t('Every Week'),
+    'monthly' => t('Every Month'),
 );
 $repeatDays = array();
-for ($i = 1; $i <= 30; $i++) {
+for ($i = 1; $i <= 30; ++$i) {
     $repeatDays[$i] = $i;
 }
 $repeatWeeks = array();
-for ($i = 1; $i <= 30; $i++) {
+for ($i = 1; $i <= 30; ++$i) {
     $repeatWeeks[$i] = $i;
 }
 $repeatMonths = array();
-for ($i = 1; $i <= 12; $i++) {
+for ($i = 1; $i <= 12; ++$i) {
     $repeatMonths[$i] = $i;
 }
 
@@ -199,14 +199,18 @@ $dt = Loader::helper('form/date_time');
             <div class="form-group">
                 <label class="control-label"><?= t('On') ?></label>
                 <div class="">
-                <?
+                <?php
                 foreach (\Punic\Calendar::getSortedWeekdays('wide') as $weekDay) {
                     ?>
                     <div class="checkbox"><label><input
-                                <? if (in_array($weekDay['id'], $pdRepeatPeriodWeekDays)) { ?>checked="checked" <? } ?>
+                                <?php if (in_array($weekDay['id'], $pdRepeatPeriodWeekDays)) {
+    ?>checked="checked" <?php 
+}
+                    ?>
                                 type="checkbox" name="pdRepeatPeriodWeeksDays[]" value="<?= $weekDay['id'] ?>"/> <?= h(
                                 $weekDay['name']) ?></label></div>
-                <?
+                <?php
+
                 } ?>
                 </div>
             </div>

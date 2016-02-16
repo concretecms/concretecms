@@ -8,7 +8,6 @@ use HtmlObject\Image;
 
 class StandardAvatar implements AvatarInterface
 {
-
     protected $userInfo;
     protected $application;
 
@@ -23,6 +22,7 @@ class StandardAvatar implements AvatarInterface
         $fsl = StorageLocation::getDefault();
         $configuration = $fsl->getConfigurationObject();
         $src = $configuration->getPublicURLToFile(REL_DIR_FILES_AVATARS . '/' . $this->userInfo->getUserID() . '.jpg');
+
         return $src;
     }
 
@@ -30,6 +30,7 @@ class StandardAvatar implements AvatarInterface
     {
         $img = new Image();
         $img->src($this->getPath())->class('u-avatar')->alt($this->userInfo->getUserName());
+
         return (string) $img;
     }
 }

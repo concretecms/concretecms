@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Permission\Access;
 
 use Database;

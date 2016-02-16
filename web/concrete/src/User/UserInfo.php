@@ -1,44 +1,46 @@
 <?php
-
 namespace Concrete\Core\User;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Attribute\Category\UserCategory;
+use Concrete\Core\Attribute\Key\UserKey;
+use Concrete\Core\Attribute\ObjectTrait;
 use Concrete\Core\Database\Connection\Connection;
-use Concrete\Core\Database\DatabaseManager;
+use Concrete\Core\Entity\Attribute\Value\UserValue;
+use Concrete\Core\Entity\Attribute\Value\Value\Value;
 use Concrete\Core\File\StorageLocation\StorageLocation;
 use Concrete\Core\Foundation\Object;
-use Concrete\Core\Url\UrlInterface;
-use Concrete\Core\User\Event\AddUser;
 use Concrete\Core\User\PrivateMessage\Limit;
 use Concrete\Core\User\PrivateMessage\Mailbox as UserPrivateMessageMailbox;
 use Imagine\Image\ImageInterface;
-use Concrete\Flysystem\AdapterInterface;
+use League\Flysystem\AdapterInterface;
 use Concrete\Core\Mail\Importer\MailImporter;
 use View;
 use Config;
 use Events;
 use User as ConcreteUser;
-use UserAttributeKey;
-use Concrete\Core\Attribute\Value\UserValue as UserAttributeValue;
 use Group;
-use Hautelook\Phpass\PasswordHash;
 use Session;
 use Core;
-use Database;
 use Concrete\Core\User\Avatar\AvatarServiceInterface;
+use Concrete\Core\Workflow\Request\ActivateUserRequest as ActivateUserWorkflowRequest;
+use Concrete\Core\Workflow\Request\DeleteUserRequest as DeleteUserWorkflowRequest;
 
 class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterface
 {
+    use ObjectTrait;
 
     protected $avatarService;
     protected $application;
     protected $connection;
+    protected $attributeCategory;
 
-    public function __construct(Connection $connection, Application $application, AvatarServiceInterface $avatarService)
+    public function __construct(UserCategory $attributeCategory, Connection $connection, Application $application, AvatarServiceInterface $avatarService)
     {
         $this->avatarService = $avatarService;
         $this->application = $application;
         $this->connection = $connection;
+        $this->attributeCategory = $attributeCategory;
     }
     /**
      * @return string
@@ -69,7 +71,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function getPermissionAssignmentClassName()
     {
-        return false;
+        return '\\Concrete\\Core\\Permission\\Assignment\\UserAssignment';
     }
 
     /**
@@ -77,7 +79,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function getPermissionObjectKeyCategoryHandle()
     {
-        return false;
+        return 'user';
     }
 
     /**
@@ -95,6 +97,18 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         return $groups;
     }
 
+    public function triggerDelete()
+    {
+        global $u;
+
+        $db = $this->connection;
+        $v = array($this->uID);
+        $pkr = new DeleteUserWorkflowRequest();
+        $pkr->setRequestedUserID($this->uID);
+        $pkr->setRequesterUserID($u->getUserID());
+        $pkr->trigger();
+        return $db->GetOne('select count(uID) from Users where uID = ?', $v) == 0;
+    }
 
     /**
      * Deletes a user.
@@ -116,13 +130,9 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 
         $db = $this->connection;
 
-        $r = $db->Execute('select avID, akID from UserAttributeValues where uID = ?', array($this->uID));
-        while ($row = $r->FetchRow()) {
-            $uak = UserAttributeKey::getByID($row['akID']);
-            $av = $this->getAttributeValueObject($uak);
-            if (is_object($av)) {
-                $av->delete();
-            }
+        $attributes = $this->attributeCategory->getAttributeValues($this);
+        foreach ($attributes as $attribute) {
+            $this->attributeCategory->deleteValue($attribute);
         }
 
         $r = $db->query("DELETE FROM OauthUserMap WHERE user_id = ?", array(intval($this->uID)));
@@ -177,6 +187,18 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         $ui = self::getByID($this->uID);
         $ue = new \Concrete\Core\User\Event\UserInfo($ui);
         Events::dispatch('on_user_update', $ue);
+    }
+
+    /**
+     * Marks the current user as having had a password reset from the system.
+     */
+    public function markAsPasswordReset()
+    {
+        $db = $this->connection;
+        $db->query("UPDATE Users SET ulsPasswordReset = 1 WHERE uID = ?", array($this->getUserID()));
+
+        $updateEventData = new \Concrete\Core\User\Event\UserInfo($this);
+        Events::dispatch('on_user_update', $updateEventData);
     }
 
     /**
@@ -434,6 +456,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         $db->query("update Users set uIsValidated = 1, uIsFullRecord = 1 where uID = ?", $v);
         $db->query("update UserValidationHashes set uDateRedeemed = " . time() . " where uID = ?", $v);
 
+        $this->uIsValidated = 1;
         $ue = new \Concrete\Core\User\Event\UserInfo($this);
         Events::dispatch('on_user_validate', $ue);
 
@@ -456,7 +479,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
                 $dateTime,
                 $this->uID,
             );
-            $q = "update Users set uPassword = ?, uLastPasswordChange = ?  where uID = ?";
+            $q = "update Users set uPassword = ?, uLastPasswordChange = ?, ulsPasswordReset = 0  where uID = ?";
             $r = $db->prepare($q);
             $res = $db->execute($r, $v);
 
@@ -475,6 +498,29 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         }
     }
 
+    function triggerActivate($action=null, $requesterUID=null)
+    {
+        if ($requesterUID === null) {
+            global $u;
+            $requesterUID = $u->getUserID();
+        }
+
+        $db = $this->connection;
+        $v = array($this->uID);
+
+        $pkr = new ActivateUserWorkflowRequest();
+        // default activate action of workflow is set after workflow request is created
+        if ($action !== null) {
+            $pkr->setRequestAction($action);
+        }
+        $pkr->setRequestedUserID($this->uID);
+        $pkr->setRequesterUserID($requesterUID);
+        $pkr->trigger();
+
+        $this->uIsActive = intval($db->GetOne('select uIsActive from Users where uID = ?', $v));
+        return $this->isActive();
+    }
+
     /**
      */
     public function activate()
@@ -484,6 +530,23 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         $db->query($q);
         $ue = new \Concrete\Core\User\Event\UserInfo($this);
         Events::dispatch('on_user_activate', $ue);
+    }
+
+    function triggerDeactivate()
+    {
+        global $u;
+
+        $db = $this->connection;
+        $v = array($this->uID);
+
+        $pkr = new ActivateUserWorkflowRequest();
+        $pkr->setRequestAction('deactivate');
+        $pkr->setRequestedUserID($this->uID);
+        $pkr->setRequesterUserID($u->getUserID());
+        $pkr->trigger();
+
+        $this->uIsActive = intval($db->GetOne('select uIsActive from Users where uID = ?', $v));
+        return $this->isActive()==0;
     }
 
     /**
@@ -506,7 +569,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         if ($this->uID > 0) {
             $newPassword = '';
             $chars = "abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ123456789";
-            for ($i = 0; $i < 7; $i++) {
+            for ($i = 0; $i < 7; ++$i) {
                 $newPassword .= substr($chars, rand() % strlen($chars), 1);
             }
             $this->changePassword($newPassword);
@@ -529,10 +592,11 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
             return null;
         }
         $url = $this->application->make('url/manager');
+
         return $url->resolve(array(
             '/members/profile',
             'view',
-            $this->getUserID()
+            $this->getUserID(),
             )
         );
     }
@@ -687,7 +751,9 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     public function saveUserAttributesForm($attributes)
     {
         foreach ($attributes as $uak) {
-            $uak->saveAttributeForm($this);
+            $controller = $uak->getController();
+            $value = $controller->getAttributeValueFromRequest();
+            $this->setAttribute($uak, $value);
         }
 
         $ue = new \Concrete\Core\User\Event\UserInfoWithAttributes($this);
@@ -695,139 +761,47 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         Events::dispatch('on_user_attributes_saved', $ue);
     }
 
-
-    /**
-     * Sets the attribute of a user info object to the specified value, and saves it in the database.
-     *
-     * @param UserAttributeKey|string $ak
-     * @param mixed $value
-     */
-    public function setAttribute($ak, $value)
+    public function getObjectAttributeCategory()
     {
-        if (!is_object($ak)) {
-            $ak = UserAttributeKey::getByHandle($ak);
-        }
-        $ak->setAttribute($this, $value);
-        $this->reindex();
+        return $this->application->make('\Concrete\Core\Attribute\Category\UserCategory');
     }
 
-    /**
-     * @param UserAttributeKey|string $ak
-     */
-    public function clearAttribute($ak)
+    public function getAttributeValueObject($ak, $createIfNotExists = false)
     {
         if (!is_object($ak)) {
-            $ak = UserAttributeKey::getByHandle($ak);
+            $ak = UserKey::getByHandle($ak);
         }
-        $cav = $this->getAttributeValueObject($ak);
-        if (is_object($cav)) {
-            $cav->delete();
-        }
-        $this->reindex();
-    }
-
-    /**
-     * Reindex the attributes on this file.
-     */
-    public function reindex()
-    {
-        $attribs = UserAttributeKey::getAttributes(
-            $this->getUserID(),
-            'getSearchIndexValue'
-        );
-        $db = $this->connection;
-
-        $db->Execute('delete from UserSearchIndexAttributes where uID = ?', array($this->getUserID()));
-        $searchableAttributes = array('uID' => $this->getUserID());
-
-        $key = new UserAttributeKey();
-        $key->reindex('UserSearchIndexAttributes', $searchableAttributes, $attribs);
-    }
-
-    /**
-     * Gets the value of the attribute for the user.
-     *
-     * @param UserAttributeKey|string $ak
-     * @param string|false $displayMode
-     *
-     * @return mixed|null
-     */
-    public function getAttribute($ak, $displayMode = false)
-    {
-        if (!is_object($ak)) {
-            $ak = UserAttributeKey::getByHandle($ak);
-        }
+        $value = false;
         if (is_object($ak)) {
-            $av = $this->getAttributeValueObject($ak);
-            if (is_object($av)) {
-                if (func_num_args() > 2) {
-                    $args = func_get_args();
-                    array_shift($args);
+            $value = $this->getObjectAttributeCategory()->getAttributeValue($ak, $this);
+        }
 
-                    return call_user_func_array(array($av, 'getValue'), $args);
-                } else {
-                    return $av->getValue($displayMode);
-                }
-            }
+        if ($value) {
+            return $value;
+        } elseif ($createIfNotExists) {
+            $attributeValue = new UserValue();
+            $attributeValue->setUserID($this->getUserID());
+            $attributeValue->setAttributeKey($ak);
+            return $attributeValue;
         }
     }
 
     /**
-     * @param UserAttributeKey|string $ak
+     * @param UserKey|string $ak
      */
     public function getAttributeField($ak)
     {
         if (!is_object($ak)) {
-            $ak = UserAttributeKey::getByHandle($ak);
+            $ak = UserKey::getByHandle($ak);
         }
         $value = $this->getAttributeValueObject($ak);
         $ak->render('form', $value);
     }
 
     /**
-     * @param UserAttributeKey|string $ak
-     * @param bool $createIfNotFound
-     *
-     * @return \Concrete\Core\Attribute\Value\UserValue|false
-     */
-    public function getAttributeValueObject($ak, $createIfNotFound = false)
-    {
-        $db = $this->connection;
-        $av = false;
-        if (!is_object($ak)) {
-            $ak = UserAttributeKey::getByHandle($ak);
-        }
-        $v = array($this->getUserID(), $ak->getAttributeKeyID());
-        $avID = $db->GetOne("select avID from UserAttributeValues where uID = ? and akID = ?", $v);
-        if ($avID > 0) {
-            $av = UserAttributeValue::getByID($avID);
-            if (is_object($av)) {
-                $av->setUser($this);
-                $av->setAttributeKey($ak);
-            }
-        }
-
-        if ($createIfNotFound) {
-            $cnt = 0;
-
-            // Is this avID in use ?
-            if (is_object($av)) {
-                $cnt = $db->GetOne("select count(avID) from UserAttributeValues where avID = ?", $av->getAttributeValueID());
-            }
-
-            if ((!is_object($av)) || ($cnt > 1)) {
-                $newAV = $ak->addAttributeValue();
-                $av = UserAttributeValue::getByID($newAV->getAttributeValueID());
-                $av->setUser($this);
-            }
-        }
-
-        return $av;
-    }
-
-    /**
      * Magic method for user attributes. This is db expensive but pretty damn cool
      * so if the attrib handle is "my_attribute", then get the attribute with $ui->getUserMyAttribute(), or "uFirstName" become $ui->getUserUfirstname();.
+     *
      * @return mixed|null
      */
     public function __call($nm, $a)
@@ -840,7 +814,6 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
             return $this->getAttribute($nm);
         }
     }
-
 
     /**
      * @deprecated
@@ -871,7 +844,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
      */
     public static function getByID($uID)
     {
-        return Core::make('Concrete\Core\User\UserInfoFactory')->getByID($uID);
+        return Core::make('Concrete\Core\User\UserInfoRepository')->getByID($uID);
     }
 
     /**
@@ -879,7 +852,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
      */
     public static function getByUserName($uName)
     {
-        return Core::make('Concrete\Core\User\UserInfoFactory')->getByName($uName);
+        return Core::make('Concrete\Core\User\UserInfoRepository')->getByName($uName);
     }
 
     /**
@@ -887,7 +860,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
      */
     public static function getByEmail($uEmail)
     {
-        return Core::make('Concrete\Core\User\UserInfoFactory')->getByEmail($uEmail);
+        return Core::make('Concrete\Core\User\UserInfoRepository')->getByEmail($uEmail);
     }
 
     /**
@@ -895,7 +868,6 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
      */
     public static function getByValidationHash($uHash, $unredeemedHashesOnly = true)
     {
-        return Core::make('Concrete\Core\User\UserInfoFactory')->getByValidationHash($uHash, $unredeemedHashesOnly);
+        return Core::make('Concrete\Core\User\UserInfoRepository')->getByValidationHash($uHash, $unredeemedHashesOnly);
     }
-
 }

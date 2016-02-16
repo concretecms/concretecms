@@ -1,14 +1,25 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
 $c = Page::getCurrentPage();
-if ($c->isEditMode()) { ?>
-	<div class="ccm-edit-mode-disabled-item" style="width: <?= $width; ?>; height: <?= $height; ?>">
+if ($c->isEditMode()) {
+    ?>
+	<div class="ccm-edit-mode-disabled-item" style="width: <?= $width;
+    ?>; height: <?= $height;
+    ?>">
 		<div style="padding: 80px 0px 0px 0px"><?= t('Google Map disabled in edit mode.')?></div>
 	</div>
-<?php  } else { ?>
-	<?php  if( strlen($title)>0){ ?><h3><?= $title?></h3><?php  } ?>
-	<div id="googleMapCanvas<?=$unique_identifier?>" class="googleMapCanvas" style="width: <?= $width; ?>; height: <?= $height; ?>"></div>
-<?php  } ?>
+<?php 
+} else {
+    ?>
+	<?php  if (strlen($title) > 0) {
+     ?><h3><?= $title?></h3><?php 
+ }
+    ?>
+	<div id="googleMapCanvas<?=$unique_identifier?>" class="googleMapCanvas" style="width: <?= $width;
+    ?>; height: <?= $height;
+    ?>"></div>
+<?php 
+} ?>
 
 
 
@@ -28,7 +39,7 @@ if ($c->isEditMode()) { ?>
                 center: latlng,
                 mapTypeId: google.maps.MapTypeId.ROADMAP,
                 streetViewControl: false,
-                scrollwheel: <?=!!$scrollwheel ? "true" : "false"?>,
+                scrollwheel: <?=(bool) $scrollwheel ? "true" : "false"?>,
                 mapTypeControl: false
             };
             var map = new google.maps.Map(document.getElementById('googleMapCanvas<?=$unique_identifier?>'), mapOptions);

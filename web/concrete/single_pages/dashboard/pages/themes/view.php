@@ -15,11 +15,14 @@ if (isset($activate_confirm)) {
     </div>
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <?=$bt->button(t("Ok"), $activate_confirm, 'right', 'btn btn-primary');?>
-            <?=$bt->button(t('Cancel'), $view->url('/dashboard/pages/themes/'), 'left');?>
+            <?=$bt->button(t("Ok"), $activate_confirm, 'right', 'btn btn-primary');
+    ?>
+            <?=$bt->button(t('Cancel'), $view->url('/dashboard/pages/themes/'), 'left');
+    ?>
         </div>
     </div>
     <?php
+
 } else {
     // Themes listing / Themes landing page.
     // Separate inclusion of dashboard header and footer helpers - no pane footer.
@@ -32,11 +35,15 @@ if (isset($activate_confirm)) {
                     <td><p><?=t('No themes are installed.')?></p></td>
                </tr>
             </tbody><?php
+
         } else {
             ?><tbody><?php
             foreach ($tArray as $t) {
                 ?>
-                <tr <?php if ($siteThemeID == $t->getThemeID()) { ?> class="ccm-theme-active" <? } ?>>
+                <tr <?php if ($siteThemeID == $t->getThemeID()) {
+    ?> class="ccm-theme-active" <?php 
+}
+                ?>>
                     <td>
                         <div class="ccm-themes-thumbnail" style="padding:4px;background-color:#FFF;border-radius:3px;border:1px solid #DDD;">
                             <?=$t->getThemeThumbnail()?>
@@ -47,35 +54,37 @@ if (isset($activate_confirm)) {
                             if ($siteThemeID == $t->getThemeID()) {
                                 echo $bt->buttonJs(t('Activate'), "alert('" . $alreadyActiveMessage . "')", 'left', 'primary ccm-button-inactive', array('disabled' => 'disabled'));
                             } else {
-                                echo $bt->button(t('Activate'), $view->url('/dashboard/pages/themes','activate', $t->getThemeID()), 'left', 'primary');
+                                echo $bt->button(t('Activate'), $view->url('/dashboard/pages/themes', 'activate', $t->getThemeID()), 'left', 'primary');
                             }
-                            echo $bt->button(t('Page Templates'), $view->url('/dashboard/pages/themes/inspect', $t->getThemeID()), 'left');
-                            if ($siteThemeID == $t->getThemeID()) {
-                                echo $bt->button(t('Remove'), $view->url('/dashboard/pages/themes', 'remove', $t->getThemeID(), $valt->generate('remove')), 'right', 'btn-danger', array('disabled'=>'disabled'));
-                            } else {
-                                echo $bt->button(t('Remove'), $view->url('/dashboard/pages/themes', 'remove', $t->getThemeID(), $valt->generate('remove')), 'right', 'btn-danger');
-                            }
-                        ?></div>
+                echo $bt->button(t('Page Templates'), $view->url('/dashboard/pages/themes/inspect', $t->getThemeID()), 'left');
+                if ($siteThemeID == $t->getThemeID()) {
+                    echo $bt->button(t('Remove'), $view->url('/dashboard/pages/themes', 'remove', $t->getThemeID(), $valt->generate('remove')), 'right', 'btn-danger', array('disabled' => 'disabled'));
+                } else {
+                    echo $bt->button(t('Remove'), $view->url('/dashboard/pages/themes', 'remove', $t->getThemeID(), $valt->generate('remove')), 'right', 'btn-danger');
+                }
+                ?></div>
                         <p class="ccm-themes-name"><strong><?=$t->getThemeDisplayName()?></strong></p>
                         <p class="ccm-themes-description"><em><?=$t->getThemeDisplayDescription()?></em></p>
                     </td>
                 </tr>
                 <?php
+
             }
             ?></tbody><?php
+
         }
     ?></table>
     <form method="post" action="<?=$view->action('save_mobile_theme')?>" class="form-inline">
         <h3><?=t('Mobile Theme')?></h3>
         <p><?=t('To use a separate theme for mobile browsers, specify it below.')?></p>
         <div class="control-group">
-            <?=$form->label('MOBILE_THEME_ID', t('Mobile Theme'), array('style'=>'margin-right: 10px;'))?>
+            <?=$form->label('MOBILE_THEME_ID', t('Mobile Theme'), array('style' => 'margin-right: 10px;'))?>
             <?php
             $themes[0] = t('** Same as website (default)');
-            foreach ($tArray as $pt) {
-                $themes[$pt->getThemeID()] = $pt->getThemeDisplayName();
-            }
-            ?>
+    foreach ($tArray as $pt) {
+        $themes[$pt->getThemeID()] = $pt->getThemeDisplayName();
+    }
+    ?>
             <?=$form->select('MOBILE_THEME_ID', $themes, Config::get('concrete.misc.mobile_theme_id'))?>
             <button class="btn btn-default" type="submit"><?=t('Save')?></button>
         </div>
@@ -87,7 +96,8 @@ if (isset($activate_confirm)) {
         <h3><?=t('Themes Available to Install')?></h3>
         <table class="table">
             <tbody>
-            <?php foreach ($tArray2 as $t) { ?>
+            <?php foreach ($tArray2 as $t) {
+    ?>
                 <tr>
                     <td>
                         <div class="ccm-themes-thumbnail" style="padding:4px;background-color:#FFF;border-radius:3px;border:1px solid #DDD;">
@@ -98,18 +108,23 @@ if (isset($activate_confirm)) {
                         <p class="ccm-themes-name"><strong><?=$t->getThemeDisplayName()?></strong></p>
                         <p class="ccm-themes-description"><em><?=$t->getThemeDisplayDescription()?></em></p>
                         <div class="ccm-themes-button-row clearfix"><?php
-                            if(strlen($t->error) > 0) {
-                                ?><div class="alert alert-danger" role="alert"><?php echo nl2br(h($t->error)); ?></div><?php
+                            if (strlen($t->error) > 0) {
+                                ?><div class="alert alert-danger" role="alert"><?php echo nl2br(h($t->error));
+                                ?></div><?php
+
                             } else {
                                 echo $bt->button(t('Install'), $view->url('/dashboard/pages/themes', 'install', $t->getThemeHandle()), 'left', 'primary');
                             }
-                        ?></div>
+    ?></div>
                     </td>
                 </tr>
-            <?php } ?>
+            <?php 
+}
+        ?>
             </tbody>
         </table>
         <?php
+
     }
     if (Config::get('concrete.marketplace.enabled') == true) {
         ?>
@@ -119,5 +134,6 @@ if (isset($activate_confirm)) {
             <p><a class="btn btn-success" href="<?=$view->url('/dashboard/extend/themes')?>"><?=t("Get More Themes")?></a></p>
         </div>
         <?php
+
     }
 }

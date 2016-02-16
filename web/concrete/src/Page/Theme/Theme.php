@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Page\Theme;
 
 use Concrete\Core\Http\ResponseAssetGroup;
@@ -370,6 +369,7 @@ class Theme extends Object
 
     /**
      * Returns the value list of the custom style object if one exists.
+     *
      * @return ValueList
      */
     public function getThemeCustomStyleObjectValues()
@@ -378,6 +378,7 @@ class Theme extends Object
         if (is_object($style)) {
             return $style->getValueList();
         }
+
         return null;
     }
 
@@ -851,7 +852,7 @@ class Theme extends Object
 
     public function isUninstallable()
     {
-        return ($this->pThemeDirectory != DIR_FILES_THEMES_CORE.'/'.$this->getThemeHandle());
+        return $this->pThemeDirectory != DIR_FILES_THEMES_CORE.'/'.$this->getThemeHandle();
     }
 
     public function getThemeThumbnail()

@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $form = Loader::helper('form');
 $node = \Concrete\Core\Tree\Node\Node::getByID(Loader::helper('security')->sanitizeInt($_REQUEST['treeNodeID']));
@@ -6,7 +6,8 @@ $np = new Permissions($node);
 $tree = $node->getTreeObject();
 $url = View::url('/dashboard/system/attributes/topics', 'remove_tree_node');
 
-if (is_object($node) && $np->canDeleteTreeNode() && $tree->getTreeTypeHandle() == 'topic') { ?>
+if (is_object($node) && $np->canDeleteTreeNode() && $tree->getTreeTypeHandle() == 'topic') {
+    ?>
 
 	<div class="ccm-ui">
 		<form method="post" data-topic-form="remove-tree-node" class="form-horizontal" action="<?=$url?>">
@@ -22,6 +23,6 @@ if (is_object($node) && $np->canDeleteTreeNode() && $tree->getTreeTypeHandle() =
 	</div>
 
 
-<?
-}
+<?php
 
+}

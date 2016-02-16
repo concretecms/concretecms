@@ -6,7 +6,6 @@ $valt = Loader::helper('validation/token');
 $form = Loader::helper('form');
 use Concrete\Core\File\StorageLocation\StorageLocation;
 
-
 $f = File::getByID($_REQUEST['fID']);
 $fp = new Permissions($f);
 if (!$fp->canEditFileContents()) {
@@ -52,34 +51,42 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
     <div id="ccm-file-add-incoming-tab" style="display: none">
         <h4><?=t('Add from Incoming Directory')?></h4>
         <div>
-            <?
+            <?php
             $contents = array();
             $con1 = array();
             $error = false;
             try {
                 $con1 = $ch->getIncomingDirectoryContents();
-            } catch(\Exception $e) {
+            } catch (\Exception $e) {
                 $error = t('Unable to get contents of incoming/ directory');
                 $error .= '<br>';
                 $error .= $e->getMessage();
             }
-            foreach($con1 as $con) {
+            foreach ($con1 as $con) {
                 $contents[$con['basename']] = $con['basename'];
             }
-            if (count($contents) > 0) { ?>
+            if (count($contents) > 0) {
+                ?>
                 <form method="post" id="ccm-file-manager-replace-incoming" class="form-inline" data-dialog-form="replace-file" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/importers/incoming">
-                    <?= $form->select('send_file', $contents, array('style' => 'width:195px'));?>
+                    <?= $form->select('send_file', $contents, array('style' => 'width:195px'));
+                ?>
                     &nbsp;&nbsp;
                     <button type="submit" class="btn btn-default btn-sm"><?=t('Replace')?></button>
-                    <?= $form->hidden('fID', $f->getFileID()); ?>
-                    <?=$valt->output('import_incoming');?>
+                    <?= $form->hidden('fID', $f->getFileID());
+                ?>
+                    <?=$valt->output('import_incoming');
+                ?>
                 </form>
-            <? } else {
-                if($error) { ?>
+            <?php 
+            } else {
+                if ($error) {
+                    ?>
                     <div class="alert alert-danger">
-                        <?php echo $error;?>
+                        <?php echo $error;
+                    ?>
                     </div>
-                <?php } else {
+                <?php 
+                } else {
                     echo t('No files found in %s for the storage location "%s".', REL_DIR_FILES_INCOMING, StorageLocation::getDefault()->getName());
                 }
             } ?>

@@ -1,12 +1,8 @@
 <?php
 namespace Concrete\Core\Conversation\Message;
 
-use Concrete\Core\User\Avatar\EmptyAvatar;
-use Concrete\Core\User\UserInfo;
-
 class AuthorFormatter
 {
-
     protected $author;
 
     public function __construct(Author $author)
@@ -22,14 +18,14 @@ class AuthorFormatter
         $ui = $this->author->getUser();
         if (is_object($ui)) {
             $name = $ui->getUserDisplayName();
-        } else if ($this->author->getName()) {
+        } elseif ($this->author->getName()) {
             $name = $this->author->getName();
         } else {
             $name = t('Anonymous');
         }
         if (is_object($ui) && ($profileURL = $ui->getUserPublicProfileUrl())) {
             return sprintf('<a href="%s">%s</a>', $profileURL, h($name));
-        } else if ($this->author->getWebsite()) {
+        } elseif ($this->author->getWebsite()) {
             return sprintf('<a href="%s">%s</a>', h($this->author->getWebsite()), h($name));
         } else {
             return h($name);
@@ -46,12 +42,13 @@ class AuthorFormatter
         if (is_object($ui)) {
             $link = \URL::to('/dashboard/users/search', 'view', $ui->getUserID());
             $name = $ui->getUserDisplayName();
-        } else if ($this->author->getName()) {
+        } elseif ($this->author->getName()) {
             $link = 'mailto:' . h($this->author->getEmail());
             $name = h($this->author->getName());
         } else {
             return t('Anonymous');
         }
+
         return sprintf($html, $link, $name);
     }
 

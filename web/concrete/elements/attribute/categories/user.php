@@ -1,15 +1,14 @@
-<?
+<?php
 if (is_object($key)) {
-	$uakProfileDisplay = $key->isAttributeKeyDisplayedOnProfile();
-	$uakProfileEdit = $key->isAttributeKeyEditableOnProfile();
-	$uakProfileEditRequired = $key->isAttributeKeyRequiredOnProfile();
-	$uakRegisterEdit = $key->isAttributeKeyEditableOnRegister();
-	$uakRegisterEditRequired = $key->isAttributeKeyRequiredOnRegister();
-	$uakMemberListDisplay = $key->isAttributeKeyDisplayedOnMemberList();
-	$uakIsActive = $key->isAttributeKeyActive();
+    $uakProfileDisplay = $key->isAttributeKeyDisplayedOnProfile();
+    $uakProfileEdit = $key->isAttributeKeyEditableOnProfile();
+    $uakProfileEditRequired = $key->isAttributeKeyRequiredOnProfile();
+    $uakRegisterEdit = $key->isAttributeKeyEditableOnRegister();
+    $uakRegisterEditRequired = $key->isAttributeKeyRequiredOnRegister();
+    $uakMemberListDisplay = $key->isAttributeKeyDisplayedOnMemberList();
 }
 ?>
-<? $form = Loader::helper('form'); ?>
+<?php $form = Loader::helper('form'); ?>
 <fieldset>
     <legend><?=t('User Attribute Options')?></legend>
     <div class="form-group">

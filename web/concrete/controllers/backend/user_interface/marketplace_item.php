@@ -8,7 +8,6 @@ use Concrete\Core\Marketplace\RemoteItem;
 
 abstract class MarketplaceItem extends UserInterface
 {
-
     protected $marketplace;
     protected $item;
 
@@ -22,8 +21,7 @@ abstract class MarketplaceItem extends UserInterface
     protected function canAccess()
     {
         $tp = new TaskPermission();
+
         return $this->marketplace->isConnected() && $tp->canInstallPackages() && is_object($this->item);
     }
-
 }
-

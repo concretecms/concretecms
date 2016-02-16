@@ -1,14 +1,15 @@
 <?php
+
 use Concrete\Core\Application\Application;
 
-/**
+/*
  * ----------------------------------------------------------------------------
  * Instantiate concrete5
  * ----------------------------------------------------------------------------
  */
 $app = new Application();
 
-/**
+/*
  * ----------------------------------------------------------------------------
  * Detect the environment based on the hostname of the server
  * ----------------------------------------------------------------------------
@@ -16,11 +17,11 @@ $app = new Application();
 $app->detectEnvironment(
     array(
         'local' => array(
-            'hostname'
+            'hostname',
         ),
         'production' => array(
-            'live.site'
-        )
+            'live.site',
+        ),
     ));
 
 return $app;

@@ -29,11 +29,11 @@ class NumbersTest extends PHPUnit_Framework_TestCase
     public function integerDataProvider()
     {
         return array(
-            array(true,'0'),
+            array(true, '0'),
             array(true, 0),
-            array(true,'1'),
+            array(true, '1'),
             array(true, 1),
-            array(true,'-1456789445'),
+            array(true, '-1456789445'),
             array(true, -1456789445),
             array(true, '123'),
             array(true, 123),

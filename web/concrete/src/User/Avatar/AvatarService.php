@@ -3,12 +3,10 @@ namespace Concrete\Core\User\Avatar;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Database\Connection\Connection;
-use Concrete\Core\Database\DatabaseManager;
 use Concrete\Core\User\UserInfo;
 
 class AvatarService implements AvatarServiceInterface
 {
-
     protected $connection;
     protected $application;
 
@@ -20,7 +18,7 @@ class AvatarService implements AvatarServiceInterface
 
     public function userHasAvatar(UserInfo $ui)
     {
-        return !!$this->connection->fetchColumn('select uHasAvatar from Users where uID = ?',
+        return (bool) $this->connection->fetchColumn('select uHasAvatar from Users where uID = ?',
             array($ui->getUserID()));
     }
 
@@ -33,11 +31,10 @@ class AvatarService implements AvatarServiceInterface
     {
         if ($this->userHasAvatar($ui)) {
             return $this->application->make('Concrete\Core\User\Avatar\StandardAvatar', array($ui));
-        } else if ($this->application['config']->get('concrete.user.gravatar.enabled')) {
+        } elseif ($this->application['config']->get('concrete.user.gravatar.enabled')) {
             return $this->application->make('Concrete\Core\User\Avatar\Gravatar', array($ui));
         } else {
             return $this->application->make('Concrete\Core\User\Avatar\EmptyAvatar', array($ui));
         }
     }
-
 }

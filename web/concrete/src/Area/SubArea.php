@@ -5,7 +5,6 @@ use Loader;
 
 class SubArea extends Area
 {
-
     const AREA_SUB_DELIMITER = ' : ';
 
     /**
@@ -24,6 +23,7 @@ class SubArea extends Area
     /**
      * @param \Page $c
      * @param string $arHandle
+     *
      * @return Area
      */
     public function create($c, $arHandle)
@@ -33,6 +33,7 @@ class SubArea extends Area
         $this->refreshCache($c);
         $area = self::get($c, $arHandle);
         $area->rescanAreaPermissionsChain();
+
         return $area;
     }
 
@@ -62,6 +63,7 @@ class SubArea extends Area
         }
         $a = Area::get($this->c, $row['arHandle']);
         $item->set($a);
+
         return $a;
     }
 
@@ -93,7 +95,8 @@ class SubArea extends Area
         return $this->arParentID;
     }
 
-    public function getAreaCustomTemplates($include_parent_templates=true) {
+    public function getAreaCustomTemplates($include_parent_templates = true)
+    {
         $these_templates = parent::getAreaCustomTemplates();
 
         if ($include_parent_templates && $this->parentBlock && $this->parentBlock->a) {

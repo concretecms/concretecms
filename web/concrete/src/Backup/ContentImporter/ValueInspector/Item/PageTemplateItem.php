@@ -1,12 +1,10 @@
 <?php
-
 namespace Concrete\Core\Backup\ContentImporter\ValueInspector\Item;
 
 use Concrete\Core\Page\Template;
 
 class PageTemplateItem extends AbstractItem
 {
-
     public function getDisplayName()
     {
         return t('Page Template');
@@ -23,6 +21,4 @@ class PageTemplateItem extends AbstractItem
             return $o->getPageTemplateID();
         }
     }
-
-
 }

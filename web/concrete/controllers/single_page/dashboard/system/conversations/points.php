@@ -1,8 +1,9 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\System\Conversations;
-use \Concrete\Core\Page\Controller\DashboardPageController;
+
+use Concrete\Core\Page\Controller\DashboardPageController;
 use Loader;
-use \Concrete\Core\Conversation\Rating\Type as ConversationRatingType;
+use Concrete\Core\Conversation\Rating\Type as ConversationRatingType;
 
 class Points extends DashboardPageController
 {
@@ -11,11 +12,13 @@ class Points extends DashboardPageController
         $ratingTypes = array_reverse(ConversationRatingType::getList());
         $this->set('ratingTypes', $ratingTypes);
     }
-    public function success() {
+    public function success()
+    {
         $this->view();
         $this->set('message', t('Rating types updated.'));
     }
-    public function save() {
+    public function save()
+    {
         $db = Loader::db();
         foreach (ConversationRatingType::getList() as $crt) {
             $rtID = $crt->getConversationRatingTypeID();

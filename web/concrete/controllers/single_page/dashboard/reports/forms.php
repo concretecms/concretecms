@@ -1,18 +1,16 @@
 <?php
-
 namespace Concrete\Controller\SinglePage\Dashboard\Reports;
 
 use Concrete\Core\File\File;
-use \Concrete\Core\Page\Controller\DashboardPageController;
-use Loader,
-    UserInfo,
-    Page;
-use \Concrete\Block\Form\MiniSurvey;
-use \Concrete\Block\Form\Statistics as FormBlockStatistics;
+use Concrete\Core\Page\Controller\DashboardPageController;
+use Loader;
+use UserInfo;
+use Page;
+use Concrete\Block\Form\MiniSurvey;
+use Concrete\Block\Form\Statistics as FormBlockStatistics;
 
 class Forms extends DashboardPageController
 {
-
     protected $pageSize = 10;
 
     public function view()
@@ -88,7 +86,7 @@ class Forms extends DashboardPageController
                 if ($question['inputType'] == 'checkboxlist') {
                     $options = explode('%%', $question['options']);
                     $subanswers = explode(',', $answerSet['answers'][$questionId]['answer']);
-                    for ($i = 1; $i <= count($options); $i++) {
+                    for ($i = 1; $i <= count($options); ++$i) {
                         if (in_array(trim($options[$i - 1]), $subanswers)) {
                             $row[] = 'x';
                         } else {
@@ -167,7 +165,6 @@ class Forms extends DashboardPageController
             $surveys[$survey['questionSetId']] = $survey;
         }
 
-
         //load requested survey response
         if (!empty($_REQUEST['qsid'])) {
             $questionSet = intval(preg_replace('/[^[:alnum:]]/', '', $_REQUEST['qsid']));
@@ -187,7 +184,7 @@ class Forms extends DashboardPageController
             $paginator = Loader::helper('pagination');
             $sortBy = $_REQUEST['sortBy'];
             $paginator->init(
-                (int)$_REQUEST['page'], $answerSetCount, $pageBaseSurvey . '&page=%pageNum%&sortBy=' . $sortBy,
+                (int) $_REQUEST['page'], $answerSetCount, $pageBaseSurvey . '&page=%pageNum%&sortBy=' . $sortBy,
                 $this->pageSize
             );
 
@@ -248,5 +245,4 @@ class Forms extends DashboardPageController
         $q = 'DELETE FROM Blocks WHERE bID = ?';
         $r = $db->query($q, $v);
     }
-
 }

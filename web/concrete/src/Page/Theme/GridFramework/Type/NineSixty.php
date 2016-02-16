@@ -1,12 +1,10 @@
 <?php
 namespace Concrete\Core\Page\Theme\GridFramework\Type;
 
-use Loader;
 use Concrete\Core\Page\Theme\GridFramework\GridFramework;
 
 class NineSixty extends GridFramework
 {
-
     public function getPageThemeGridFrameworkName()
     {
         return t('Nine Sixty Grid System');
@@ -58,8 +56,9 @@ class NineSixty extends GridFramework
             'grid_21',
             'grid_22',
             'grid_23',
-            'grid_24'
+            'grid_24',
         );
+
         return $columns;
     }
 
@@ -89,8 +88,9 @@ class NineSixty extends GridFramework
             'suffix_21',
             'suffix_22',
             'suffix_23',
-            'suffix_24'
+            'suffix_24',
         );
+
         return $offsets;
     }
 
@@ -118,5 +118,4 @@ class NineSixty extends GridFramework
     {
         return '';
     }
-
 }

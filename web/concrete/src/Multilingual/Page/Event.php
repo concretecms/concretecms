@@ -1,10 +1,11 @@
 <?php
 namespace Concrete\Core\Multilingual\Page;
+
 use Concrete\Core\Page\Event as PageEvent;
 
 class Event extends PageEvent
 {
-	protected $locale;
+    protected $locale;
 
     public function setLocale($locale)
     {

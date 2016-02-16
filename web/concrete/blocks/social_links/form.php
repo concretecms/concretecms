@@ -3,26 +3,32 @@
 <div class="form-group">
     <label class="control-label"><?=t('Choose Social Links to Show')?></label>
     <div id="ccm-block-social-links-list">
-    <?
-    if (count($links) == 0) { ?>
+    <?php
+    if (count($links) == 0) {
+        ?>
         <p><?=t('You have not added any social links.')?></p>
-    <? }
+    <?php 
+    }
 
-    foreach($links as $link) {
+    foreach ($links as $link) {
         $service = $link->getServiceObject();
         ?>
         <div class="checkbox">
             <label><input type="checkbox" name="slID[]"
-               <? if (is_array($selectedLinks) && in_array($link, $selectedLinks)) { ?>
+               <?php if (is_array($selectedLinks) && in_array($link, $selectedLinks)) {
+    ?>
                  checked
-                <? } ?>
+                <?php 
+}
+        ?>
             value="<?=$link->getID()?>" />
             <?=$service->getDisplayName()?>
             </label>
 
             <i class="pull-right fa fa-arrows"></i>
         </div>
-    <? } ?>
+    <?php 
+    } ?>
     </div>
 </div>
 

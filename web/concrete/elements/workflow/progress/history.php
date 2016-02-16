@@ -3,11 +3,14 @@
 $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
 
 $records = \Concrete\Core\Workflow\Progress\History::getList($wp);
-foreach($records as $r) { ?>
+foreach ($records as $r) {
+    ?>
 	
 	<div>
 		<strong><?=$dh->formatDateTime($r->getWorkflowProgressHistoryTimestamp(), true)?></strong>. 
-		<?=$r->getWorkflowProgressHistoryDescription();?>
+		<?=$r->getWorkflowProgressHistoryDescription();
+    ?>
 	</div>	
 	
-<? } ?>
+<?php 
+} ?>

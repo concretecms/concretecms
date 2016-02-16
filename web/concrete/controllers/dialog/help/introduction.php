@@ -5,7 +5,6 @@ use Concrete\Controller\Backend\UserInterface;
 
 class Introduction extends UserInterface
 {
-
     protected $viewPath = '/dialogs/help/introduction';
 
     public function view()
@@ -15,7 +14,7 @@ class Introduction extends UserInterface
     public function canAccess()
     {
         $u = new \User();
+
         return $u->isRegistered();
     }
-
 }

@@ -3,14 +3,14 @@
  * Created by PhpStorm.
  * User: andrew
  * Date: 6/3/14
- * Time: 7:12 AM
+ * Time: 7:12 AM.
  */
-
 namespace Concrete\Tests\Core\File\Service;
+
 use Core;
 
-class ImageTest extends \PHPUnit_Framework_TestCase {
-
+class ImageTest extends \PHPUnit_Framework_TestCase
+{
     protected $output1;
 
     protected function setUp()
@@ -25,14 +25,14 @@ class ImageTest extends \PHPUnit_Framework_TestCase {
     {
         return array(
             array(
-                400, 150, DIR_BASE . '/concrete/themes/elemental/images/background-slider-night-road.png', 400, 300, false
+                400, 150, DIR_BASE . '/concrete/themes/elemental/images/background-slider-night-road.png', 400, 300, false,
             ),
             array(
-                133, 50, DIR_BASE . '/concrete/themes/elemental/images/background-slider-night-road.png', 310, 50, false
+                133, 50, DIR_BASE . '/concrete/themes/elemental/images/background-slider-night-road.png', 310, 50, false,
             ),
             array(
-                90, 90, DIR_BASE . '/concrete/themes/elemental/images/background-slider-night-road.png', 90, 90, true
-            )
+                90, 90, DIR_BASE . '/concrete/themes/elemental/images/background-slider-night-road.png', 90, 90, true,
+            ),
         );
     }
     /**
@@ -53,8 +53,5 @@ class ImageTest extends \PHPUnit_Framework_TestCase {
 
     public function testStreamingImageOperations()
     {
-
     }
-
 }
- 

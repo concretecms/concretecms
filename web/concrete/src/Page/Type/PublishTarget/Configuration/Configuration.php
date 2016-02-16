@@ -4,12 +4,11 @@ namespace Concrete\Core\Page\Type\PublishTarget\Configuration;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Type\PublishTarget\Type\Type;
 use Loader;
-use \Concrete\Core\Foundation\Object;
-use \Concrete\Core\Page\Type\PublishTarget\Type\Type as PageTypePublishTargetType;
+use Concrete\Core\Foundation\Object;
+use Concrete\Core\Page\Type\PublishTarget\Type\Type as PageTypePublishTargetType;
 
 abstract class Configuration extends Object
 {
-
     abstract public function canPublishPageTypeBeneathTarget(\Concrete\Core\Page\Type\Type $pagetype, Page $page);
 
     public function getPageTypePublishTargetTypeID()
@@ -39,6 +38,7 @@ abstract class Configuration extends Object
         $target = $cxml->addChild('target');
         $target->addAttribute('handle', $this->getPageTypePublishTargetTypeHandle());
         $target->addAttribute('package', $this->pkgHandle);
+
         return $target;
     }
 
@@ -46,7 +46,6 @@ abstract class Configuration extends Object
     {
         return 0;
     }
-
 
     public function includeChooseTargetForm($pagetype = false, $target = false)
     {
@@ -62,5 +61,4 @@ abstract class Configuration extends Object
     {
         return 0;
     }
-
 }

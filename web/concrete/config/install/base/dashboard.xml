@@ -163,6 +163,78 @@
             </attributes>
         </page>
 
+        <page name="Data Objects" path="/dashboard/express" filename="/dashboard/express/view.php" pagetype=""
+              description="Express Data Objects" package=""/>
+
+        <page name="New Entry" path="/dashboard/express/create" filename="/dashboard/express/create.php" pagetype=""
+              description="" package="">
+
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+
+        </page>
+
+        <page name="View Entries" path="/dashboard/express/entries" filename="/dashboard/express/entries.php" pagetype=""
+              description="" package="">
+
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+
+        </page>
+
+        <page name="Data Objects" path="/dashboard/express/entities" filename="/dashboard/express/entities.php" pagetype=""
+              description="" package="">
+
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+
+        </page>
+
+        <page name="Attributes" path="/dashboard/express/entities/attributes"
+              filename="/dashboard/express/entities/attributes.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+
+        <page name="Associations" path="/dashboard/express/entities/associations"
+              filename="/dashboard/express/entities/associations.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+
+        <page name="Forms" path="/dashboard/express/entities/forms"
+              filename="/dashboard/express/entities/forms.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+
+        <page name="Customize Search" path="/dashboard/express/entities/customize_search"
+              filename="/dashboard/express/entities/customize_search.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+
         <page name="Reports" path="/dashboard/reports" filename="/dashboard/reports.php" pagetype=""
               description="Get data from forms and logs." package="">
             <attributes>
@@ -346,11 +418,11 @@
               pagetype="" description="" package="" />
         <page name="Stacks &amp; Blocks" path="/dashboard/blocks" filename="/dashboard/blocks/view.php" pagetype=""
               description="Manage sitewide content and administer block types." package=""/>
-        <page name="Stacks" path="/dashboard/blocks/stacks" filename="/dashboard/blocks/stacks/view.php" pagetype=""
+        <page name="Stacks &amp; Global Areas" path="/dashboard/blocks/stacks" filename="/dashboard/blocks/stacks/view.php" pagetype=""
               description="Share content across your site." package="">
             <attributes>
                 <attributekey handle="meta_keywords">
-                    <value>stacks, reusable content, scrapbook, copy, paste, paste block, copy block, site name, logo</value>
+                    <value>stacks, global areas, reusable content, scrapbook, copy, paste, paste block, copy block, site name, logo</value>
                 </attributekey>
             </attributes>
 
@@ -767,7 +839,14 @@
                 </attributekey>
             </attributes>
         </page>
-
+        <page name="Global Password Reset" path="/dashboard/system/registration/global_password_reset"
+              filename="/dashboard/system/registration/global_password_reset.php" pagetype="" description="Signs out all users, resets all passwords and forces users to choose a new one" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>global, password, reset, change password, force, sign out</value>
+                </attributekey>
+            </attributes>
+        </page>
         <page name="Email" path="/dashboard/system/mail" filename="/dashboard/system/mail/view.php" pagetype=""
               description="Control how your site send and processes mail." package="">
             <attributes>

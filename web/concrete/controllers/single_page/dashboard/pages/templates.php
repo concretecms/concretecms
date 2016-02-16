@@ -2,14 +2,13 @@
 namespace Concrete\Controller\SinglePage\Dashboard\Pages;
 
 use Core;
-use \Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Controller\DashboardPageController;
 use PageTemplate;
 use PageType;
 use Exception;
 
 class Templates extends DashboardPageController
 {
-
     public function view()
     {
         $this->set('templates', PageTemplate::getList());
@@ -28,7 +27,7 @@ class Templates extends DashboardPageController
                     $handles[] = $pt->getPageTypeHandle();
                 }
                 $this->set('message', t(
-                    "You cannot delete a template that is set as the default for any of the page types. " . 
+                    "You cannot delete a template that is set as the default for any of the page types. " .
                     "Please change the default template for the following page types first: %s.",
                     implode(", ", $handles)
                 ));
@@ -106,9 +105,8 @@ class Templates extends DashboardPageController
         if (!$this->error->has()) {
             $pt->update($pTemplateHandle, $pTemplateName, $pTemplateIcon);
             $this->redirect('/dashboard/pages/templates', 'page_template_updated');
-        }   
+        }
 
         $this->edit($this->post('pTemplateID'));
     }
-
 }

@@ -86,10 +86,10 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 <!-- End of Dialog //-->
 
 
-<?
+<?php
 $tp = new TaskPermission();
 if ($tp->canBackup()) {
-	?>
+    ?>
     <h3><?=t('Existing Backups')?></h3>
     <?php
     if (count($backups) > 0) {
@@ -103,43 +103,60 @@ if ($tp->canBackup()) {
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($backups as $arr_bkupInf) { ?>
+                <?php foreach ($backups as $arr_bkupInf) {
+    ?>
                     <tr>
                         <td width="50%" style="white-space: nowrap"><?= $dh->formatDateTime($arr_bkupInf['date'], true) ?></td>
-                        <td width="50%"><?= $arr_bkupInf['file']; ?></td>
+                        <td width="50%"><?= $arr_bkupInf['file'];
+    ?></td>
                         <td style="white-space: nowrap">
-                            <?= $interface->button_js(t('Download'), 'window.location.href=\'' . $view->action('download', $arr_bkupInf['file']) . '\'', 'left', 'small'); ?>
+                            <?= $interface->button_js(t('Download'), 'window.location.href=\'' . $view->action('download', $arr_bkupInf['file']) . '\'', 'left', 'small');
+    ?>
 
-                            <? print $interface->button_js(t("Restore"), "confirmRestore('" . $arr_bkupInf['file'] . "')", 'left','small'); ?>
+                            <?php echo $interface->button_js(t("Restore"), "confirmRestore('" . $arr_bkupInf['file'] . "')", 'left', 'small');
+    ?>
 
-                            <? print $interface->button_js(t("Delete"), "confirmDelete('" . $arr_bkupInf['file'] . "')",'left','small'); ?>
+                            <?php echo $interface->button_js(t("Delete"), "confirmDelete('" . $arr_bkupInf['file'] . "')", 'left', 'small');
+    ?>
                         </td>
                     </tr>
-                <? } ?>
+                <?php 
+}
+        ?>
             </tbody>
         </table>
 
 
-    <?php } else { ?>
-        <p><?= t('You have no backups available.') ?></p>
-    <? } ?>
-
-        <?
-            $crypt = Loader::helper('encryption');
+    <?php 
+    } else {
         ?>
+        <p><?= t('You have no backups available.') ?></p>
+    <?php 
+    }
+    ?>
+
+        <?php
+            $crypt = Loader::helper('encryption');
+    ?>
         <h3><?=t('Create new Backup')?></h3>
             <form method="post" action="<?= $view->action('run_backup') ?>">
                 <fieldset>
-                    <?php echo $this->controller->token->output('run_backup'); ?>
+                    <?php echo $this->controller->token->output('run_backup');
+    ?>
                     <div class="control-group">
                         <div class="checkbox">
-                            <? if ($crypt->isAvailable()) { ?>
+                            <?php if ($crypt->isAvailable()) {
+    ?>
                                 <label><input type="checkbox" name="useEncryption" id="useEncryption" value="1" />
                                 <span><?= t('Use Encryption') ?></span></label>
-                            <? } else { ?>
+                            <?php 
+} else {
+    ?>
                                 <label><input type="checkbox" value="0" disabled />
                                 <span><?= t('Use Encryption') ?></span></label>
-                            <? } ?>
+                            <?php 
+}
+    ?>
                         </div>
                     </div>
                     <div class="control-group">
@@ -152,6 +169,9 @@ if ($tp->canBackup()) {
 
             <p class="bg-warning"><?= t('Running a backup will create a database export file and store it on your server. Encryption is only advised if you plan on storing the backup on the server indefinitely. This is <strong>not recommended</strong>. After running backup, download the file and make sure that the entire database was saved correctly. If any error messages appear during the backup process, do <b>not</b> attempt to restore from that backup.') ?></p>
 
-<? } else { ?>
+<?php 
+} else {
+    ?>
 	<p><?= t('You do not have permission to create or administer backups.') ?></p>
-<? } ?>
+<?php 
+} ?>

@@ -3,14 +3,13 @@ namespace Concrete\Core\Application\Service;
 
 use Loader;
 use TaskPermission;
-use Config;
 
 class User
 {
-
     /**
      * @param $uo \User
      * @param bool $showSpacer
+     *
      * @return mixed
      */
     public function getOnlineNow($uo, $showSpacer = true)
@@ -32,14 +31,15 @@ class User
             if ($showSpacer) {
                 return ONLINE_NOW_SRC_OFF;
             }
-
         }
     }
 
     /**
      * @param string $password
      * @param null|\Concrete\Core\Error\Error $errorObj
+     *
      * @return bool
+     *
      * @deprecated Use `\Core::make('validator/password')->isValid($password, $error);`
      */
     public function validNewPassword($password, $errorObj = null)
@@ -53,6 +53,7 @@ class User
     public function canAccessUserSearchInterface()
     {
         $tp = new TaskPermission();
+
         return $tp->canAccessUserSearch();
     }
 }

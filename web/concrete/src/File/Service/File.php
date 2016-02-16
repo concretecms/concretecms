@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\File\Service;
 
 use Concrete\Core\File\Exception\RequestTimeoutException;
@@ -21,7 +20,9 @@ use Core;
  * </code>
  *
  * @package    Helpers
+ *
  * @category   Concrete
+ *
  * @author     Andrew Embler <andrew@concrete5.org>
  * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
  * @license    http://www.concrete5.org/license/     MIT License
@@ -234,7 +235,7 @@ class File
         }
         while (!feof($handle)) {
             $buffer = fread($handle, $chunk);
-            print $buffer;
+            echo $buffer;
         }
 
         fclose($handle);
@@ -337,7 +338,6 @@ class File
 
                 $contents = curl_exec($curl_handle);
                 $error = curl_errno($curl_handle);
-
 
                 $http_code = curl_getinfo($curl_handle, CURLINFO_HTTP_CODE);
                 curl_close($curl_handle);

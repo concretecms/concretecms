@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Url;
 
 use RuntimeException;

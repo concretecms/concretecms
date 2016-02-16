@@ -1,10 +1,11 @@
 <?php
-
 namespace Concrete\Core\Backup;
 
+use Concrete\Core\Attribute\Type;
 use Concrete\Core\File\Importer;
 use Concrete\Core\Page\Feed;
 use Concrete\Core\Sharing\SocialNetwork\Link;
+use Concrete\Core\Support\Facade\StackFolder;
 use Concrete\Core\Tree\Tree;
 use Page;
 use Package;
@@ -66,6 +67,7 @@ class ContentImporter
 
     protected function doImport($sx)
     {
+        $this->importGroups($sx);
         $this->importSinglePageStructure($sx);
         $this->importStacksStructure($sx);
         $this->importBlockTypes($sx);
@@ -117,6 +119,7 @@ class ContentImporter
     {
         $pkg = false;
         if ($pkgHandle) {
+            $pkgHandle = (string) $pkgHandle;
             $pkg = Package::getByHandle($pkgHandle);
         }
 
@@ -126,12 +129,53 @@ class ContentImporter
     protected function importStacksStructure(\SimpleXMLElement $sx)
     {
         if (isset($sx->stacks)) {
-            foreach ($sx->stacks->stack as $p) {
-                if (isset($p['type'])) {
-                    $type = Stack::mapImportTextToType($p['type']);
-                    Stack::addStack($p['name'], $type);
+
+            $nodes = array();
+            $i = 0;
+            foreach ($sx->stacks->children() as $p) {
+                $p->originalPos = $i;
+                $nodes[] = $p;
+                ++$i;
+            }
+            usort($nodes, array('static', 'setupPageNodeOrder'));
+
+            foreach ($nodes as $p) {
+
+                $parent = null;
+                $path = (string) $p['path'];
+                if ($p->getName() == 'folder') {
+                    $type = 'folder';
                 } else {
-                    Stack::addStack($p['name']);
+                    $type = (string) $p['type'];
+                }
+                $name = (string) $p['name'];
+                if ($path) {
+                    $lastSlash = strrpos($path, '/');
+                    $parentPath = substr($path, 0, $lastSlash);
+                    if ($parentPath) {
+                        $parent = StackFolder::getByPath($parentPath);
+                    }
+                }
+
+                switch($type) {
+                    case 'folder':
+                        $folder = StackFolder::getByPath($path);
+                        if (!is_object($folder)) {
+                            StackFolder::add($name, $parent);
+                        }
+                        break;
+                    case 'global_area':
+                        $s = Stack::getByName($name);
+                        if (!is_object($s)) {
+                            Stack::addGlobalArea($name);
+                        }
+                        break;
+                    default:
+                        //stack
+                        $s = Stack::getByPath($path);
+                        if (!is_object($s)) {
+                            Stack::addStack($name, $parent);
+                        }
                 }
             }
         }
@@ -141,7 +185,12 @@ class ContentImporter
     {
         if (isset($sx->stacks)) {
             foreach ($sx->stacks->stack as $p) {
-                $stack = Stack::getByName($p['name']);
+                $path = (string) $p['path'];
+                if ($path) {
+                    $stack = Stack::getByPath($path);
+                } else {
+                    $stack = Stack::getByName((string) $p['name']);
+                }
                 if (isset($p->area)) {
                     $this->importPageAreas($stack, $p);
                 }
@@ -222,9 +271,11 @@ class ContentImporter
                 }
                 if (isset($px->attributes)) {
                     foreach ($px->attributes->children() as $attr) {
-                        $ak = CollectionAttributeKey::getByHandle($attr['handle']);
+                        $handle = (string) $attr['handle'];
+                        $ak = CollectionAttributeKey::getByHandle($handle);
                         if (is_object($ak)) {
-                            $page->setAttribute((string) $attr['handle'], $ak->getController()->importValue($attr));
+                            $value = $ak->getController()->importValue($attr);
+                            $page->setAttribute($handle, $value);
                         }
                     }
                 }
@@ -241,7 +292,7 @@ class ContentImporter
             foreach ($sx->pages->page as $p) {
                 $p->originalPos = $i;
                 $nodes[] = $p;
-                $i++;
+                ++$i;
             }
             usort($nodes, array('static', 'setupPageNodeOrder'));
             $home = Page::getByID(HOME_CID, 'RECENT');
@@ -426,18 +477,18 @@ class ContentImporter
         if (isset($sx->attributetypes)) {
             foreach ($sx->attributetypes->attributetype as $at) {
                 $pkg = static::getPackageObject($at['package']);
-                $name = $at['name'];
+                $name = (string) $at['name'];
                 if (!$name) {
                     $name = Core::make('helper/text')->unhandle($at['handle']);
                 }
                 $type = AttributeType::getByHandle($at['handle']);
                 if (!is_object($type)) {
-                    $type = AttributeType::add($at['handle'], $name, $pkg);
+                    $type = AttributeType::add((string) $at['handle'], $name, $pkg);
                 }
                 if (isset($at->categories)) {
                     foreach ($at->categories->children() as $cat) {
                         $catobj = AttributeKeyCategory::getByHandle((string) $cat['handle']);
-                        $catobj->associateAttributeKeyType($type);
+                        $catobj->getController()->associateAttributeKeyType($type);
                     }
                 }
             }
@@ -496,6 +547,47 @@ class ContentImporter
             }
         }
     }
+
+    protected function importGroups(\SimpleXMLElement $sx)
+    {
+        if (isset($sx->groups)) {
+
+            $groups = array();
+            foreach ($sx->groups->group as $g) {
+                $groups[] = $g;
+            }
+
+            usort($groups, function ($a, $b) {
+                $pathA = (string) $a['path'];
+                $pathB = (string) $b['path'];
+                $numA = count(explode('/', $pathA));
+                $numB = count(explode('/', $pathB));
+                if ($numA == $numB) {
+                    return 0;
+                } else {
+                    return ($numA < $numB) ? -1 : 1;
+                }
+            });
+
+            foreach($groups as $group) {
+                $existingGroup = \Concrete\Core\User\Group\Group::getByPath((string) $group['path']);
+                if (!is_object($existingGroup)) {
+                    $parent = null;
+                    if ((string) $group['path'] != '') {
+                        $lastSlash = strrpos((string) $group['path'], '/');
+                        $parentPath = substr((string) $group['path'], 0, $lastSlash);
+                        if ($parentPath) {
+                            $parent = \Concrete\Core\User\Group\Group::getByPath($parentPath);
+                        }
+                    }
+
+                    $pkg = static::getPackageObject($g['package']);
+                    \Concrete\Core\User\Group\Group::add((string) $group['name'], (string) $group['description'], $parent, $pkg);
+                }
+            }
+        }
+    }
+
 
     protected function importPageTypePublishTargetTypes(\SimpleXMLElement $sx)
     {
@@ -674,7 +766,10 @@ class ContentImporter
         if (isset($sx->systemcaptcha)) {
             foreach ($sx->systemcaptcha->library as $th) {
                 $pkg = static::getPackageObject($th['package']);
-                $scl = SystemCaptchaLibrary::add($th['handle'], $th['name'], $pkg);
+                $scl = SystemCaptchaLibrary::getByHandle((string) $th['handle']);
+                if (!is_object($scl)) {
+                    $scl = SystemCaptchaLibrary::add($th['handle'], $th['name'], $pkg);
+                }
                 if ($th['activated'] == '1') {
                     $scl->activate();
                 }
@@ -847,7 +942,7 @@ class ContentImporter
 
                 if (count($assignments)) {
                     $pa = PermissionAccess::create($pkx);
-                    foreach($assignments as $pae) {
+                    foreach ($assignments as $pae) {
                         $pa->addListItem($pae);
                     }
                     $pt = $pkx->getPermissionAssignmentObject();
@@ -888,7 +983,7 @@ class ContentImporter
                 $pkg = static::getPackageObject($akc['package']);
                 $akx = AttributeKeyCategory::getByHandle($akc['handle']);
                 if (!is_object($akx)) {
-                    $akx = AttributeKeyCategory::add($akc['handle'], $akc['allow-sets'], $pkg);
+                    $akx = AttributeKeyCategory::add((string) $akc['handle'], (string) $akc['allow-sets'], $pkg);
                 }
             }
         }
@@ -896,20 +991,15 @@ class ContentImporter
 
     protected function importAttributes(\SimpleXMLElement $sx)
     {
-        $db = Database::connection();
         if (isset($sx->attributekeys)) {
             foreach ($sx->attributekeys->attributekey as $ak) {
                 $akc = AttributeKeyCategory::getByHandle($ak['category']);
-                $akID = $db->GetOne('select akID from AttributeKeys where akHandle = ? and akCategoryID = ?', array($ak['handle'], $akc->getAttributeKeyCategoryID()));
-                if (!$akID) {
-                    $txt = Core::make('helper/text');
-                    $c1 = overrideable_core_class('\\Core\\Attribute\\Key\\' . $txt->camelcase(
-                            $akc->getAttributeKeyCategoryHandle()
-                        ) . 'Key', DIRNAME_CLASSES . '/Attribute/Key/' . $txt->camelcase(
-                            $akc->getAttributeKeyCategoryHandle()
-                        ) . 'Key.php', (string) $akc->getPackageHandle()
-                    );
-                    call_user_func(array($c1, 'import'), $ak);
+                $controller = $akc->getController();
+                $attribute = $controller->getAttributeKeyByHandle((string) $ak['handle']);
+                if (!$attribute) {
+                    $pkg = static::getPackageObject($ak['package']);
+                    $type = Type::getByHandle((string) $ak['type']);
+                    $key = $controller->import($type, $ak, $pkg);
                 }
             }
         }
@@ -923,12 +1013,12 @@ class ContentImporter
                 $akc = AttributeKeyCategory::getByHandle($as['category']);
                 if (!is_object($set)) {
                     $pkg = static::getPackageObject($as['package']);
-                    $set = $akc->addSet((string) $as['handle'], (string) $as['name'], $pkg, $as['locked']);
+                    $set = $akc->getController()->addSet((string) $as['handle'], (string) $as['name'], $pkg, $as['locked']);
                 }
                 foreach ($as->children() as $ask) {
-                    $ak = $akc->getAttributeKeyByHandle((string) $ask['handle']);
+                    $ak = $akc->getController()->getAttributeKeyByHandle((string) $ask['handle']);
                     if (is_object($ak)) {
-                        $set->addKey($ak);
+                        $set->getSetManager()->addKey($ak);
                     }
                 }
             }

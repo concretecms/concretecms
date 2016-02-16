@@ -10,13 +10,13 @@ use User;
 
 class Controller extends GenericOauth2TypeController
 {
-
     public function supportsRegistration()
     {
         return \Config::get('auth.google.registration.enabled', false);
     }
 
-    public function registrationGroupID() {
+    public function registrationGroupID()
+    {
         return \Config::get('auth.google.registration.group');
     }
 
@@ -38,6 +38,7 @@ class Controller extends GenericOauth2TypeController
         if (!$this->service) {
             $this->service = \Core::make('authentication/google');
         }
+
         return $this->service;
     }
 
@@ -45,7 +46,7 @@ class Controller extends GenericOauth2TypeController
     {
         \Config::save('auth.google.appid', $args['apikey']);
         \Config::save('auth.google.secret', $args['apisecret']);
-        \Config::save('auth.google.registration.enabled', !!$args['registration_enabled']);
+        \Config::save('auth.google.registration.enabled', (bool) $args['registration_enabled']);
         \Config::save('auth.google.registration.group', intval($args['registration_group'], 10));
 
         $whitelist = array();
@@ -73,7 +74,7 @@ class Controller extends GenericOauth2TypeController
         $this->set('groups', $list->getResults());
 
         $this->set('whitelist', \Config::get('auth.google.email_filters.whitelist', array()));
-        $blacklist = array_map(function($entry) {
+        $blacklist = array_map(function ($entry) {
             return json_encode($entry);
         }, \Config::get('auth.google.email_filters.blacklist', array()));
 
@@ -87,9 +88,10 @@ class Controller extends GenericOauth2TypeController
             try {
                 $image = \Image::open($this->getExtractor()->getImageURL());
                 $ui->updateUserAvatar($image);
-            } catch(\Imagine\Exception\InvalidArgumentException $e) {
+            } catch (\Imagine\Exception\InvalidArgumentException $e) {
                 \Log::addNotice("Unable to fetch user images in Google Authentication Type, is allow_url_fopen disabled?");
-            } catch(\Exception $e) {}
+            } catch (\Exception $e) {
+            }
         }
 
         parent::completeAuthentication($u);
@@ -97,7 +99,7 @@ class Controller extends GenericOauth2TypeController
 
     public function isValid()
     {
-        $filters = (array)\Config::get('auth.google.email_filters', array());
+        $filters = (array) \Config::get('auth.google.email_filters', array());
         $domain = $this->getExtractor()->getExtra('domain');
 
         foreach (array_get($filters, 'whitelist', array()) as $regex) {
@@ -112,11 +114,11 @@ class Controller extends GenericOauth2TypeController
                 if (trim($error)) {
                     throw new LoginException($error);
                 }
+
                 return false;
             }
         }
 
         return true;
     }
-
 }

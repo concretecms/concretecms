@@ -1,7 +1,7 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<? $ih = Loader::helper('concrete/ui'); ?>
-<?
+<?php $ih = Loader::helper('concrete/ui'); ?>
+<?php
 $enabledVals = array('0' => t('No'), '1' => t('Yes'));
 $secureVals = array('' => t('None'), 'SSL' => 'SSL', 'TLS' => 'TLS');
 $form = Loader::helper('form');
@@ -23,24 +23,24 @@ $form = Loader::helper('form');
                 <div class="col-md-6">
                     <legend><?=t('SMTP Settings')?></legend>
                     <div class="form-group">
-                        <?=$form->label('MAIL_SEND_METHOD_SMTP_SERVER',t('Mail Server'));?>
+                        <?=$form->label('MAIL_SEND_METHOD_SMTP_SERVER', t('Mail Server'));?>
                         <?=$form->text('MAIL_SEND_METHOD_SMTP_SERVER', Config::get('concrete.mail.methods.smtp.server'))?>
                     </div>
                     <div class="form-group">
-                        <?=$form->label('MAIL_SEND_METHOD_SMTP_USERNAME',t('Username'));?>
+                        <?=$form->label('MAIL_SEND_METHOD_SMTP_USERNAME', t('Username'));?>
                         <?=$form->text('MAIL_SEND_METHOD_SMTP_USERNAME', Config::get('concrete.mail.methods.smtp.username'))?>
                     </div>
                     <div class="form-group">
-                        <?=$form->label('MAIL_SEND_METHOD_SMTP_PASSWORD',t('Password'));?>
+                        <?=$form->label('MAIL_SEND_METHOD_SMTP_PASSWORD', t('Password'));?>
                         <?=$form->password('MAIL_SEND_METHOD_SMTP_PASSWORD', Config::get('concrete.mail.methods.smtp.password'), array('autocomplete' => 'off'))?>
                     </div>
 
                     <div class="form-group">
-                        <?=$form->label('MAIL_SEND_METHOD_SMTP_ENCRYPTION',t('Encryption'));?>
+                        <?=$form->label('MAIL_SEND_METHOD_SMTP_ENCRYPTION', t('Encryption'));?>
                         <?=$form->select('MAIL_SEND_METHOD_SMTP_ENCRYPTION', $secureVals, Config::get('concrete.mail.methods.smtp.encryption'))?>
                     </div>
                     <div class="form-group">
-                        <?=$form->label('MAIL_SEND_METHOD_SMTP_PORT',t('Port (Leave blank for default)'));?>
+                        <?=$form->label('MAIL_SEND_METHOD_SMTP_PORT', t('Port (Leave blank for default)'));?>
                         <?=$form->text('MAIL_SEND_METHOD_SMTP_PORT', Config::get('concrete.mail.methods.smtp.port'))?>
                     </div>
                 </div>
@@ -49,7 +49,7 @@ $form = Loader::helper('form');
 	<div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
 		<a href="<?=$view->url('/dashboard/system/mail/method/test')?>" class="btn btn-default pull-left"><?=t('Test Settings')?></a>
-		<?=$ih->submit(t('Save'), 'mail-settings-form','right','btn-primary')?>
+		<?=$ih->submit(t('Save'), 'mail-settings-form', 'right', 'btn-primary')?>
         </div>
 	</div>
 	</form>

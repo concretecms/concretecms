@@ -2,8 +2,8 @@
 namespace Concrete\Core\Logging;
 
 use Concrete\Core\Logging\Handler\DatabaseHandler;
-use \Monolog\Logger as MonologLogger;
-use \Monolog\Formatter\LineFormatter;
+use Monolog\Logger as MonologLogger;
+use Monolog\Formatter\LineFormatter;
 use Database;
 use Events;
 use Core;
@@ -11,7 +11,6 @@ use Monolog\Processor\PsrLogMessageProcessor;
 
 class Logger extends MonologLogger
 {
-
     const CHANNEL_APPLICATION = 'application';
 
     public function __construct($channel = self::CHANNEL_APPLICATION, $logLevel = MonologLogger::DEBUG)
@@ -26,7 +25,7 @@ class Logger extends MonologLogger
 
     /**
      * Initially called - this sets up the log writer to use the concrete5
-     * Logs database table (this is the default setting.)
+     * Logs database table (this is the default setting.).
      */
     public function addDatabaseHandler($logLevel = MonologLogger::DEBUG)
     {
@@ -37,7 +36,6 @@ class Logger extends MonologLogger
         $handler->setFormatter($formatter);
         $this->pushHandler($handler);
     }
-
 
     /**
      * When given a PSR-3 standard log level, returns the
@@ -62,15 +60,15 @@ class Logger extends MonologLogger
 
     /**
      * Returns a list of channels that have been used. Requires the database
-     *  handler
+     *  handler.
      */
     public function getChannels()
     {
         $db = Database::get();
         $channels = (array) $db->GetCol('select distinct channel from Logs order by channel asc');
+
         return $channels;
     }
-
 
     /**
      * Clears all log entries. Requires the database handler.
@@ -93,7 +91,8 @@ class Logger extends MonologLogger
     /**
      * Gets the name of the logging level.
      *
-     * @param  integer $level
+     * @param  int $level
+     *
      * @return string
      */
     public static function getLevelDisplayName($level)
@@ -118,6 +117,7 @@ class Logger extends MonologLogger
                     return tc(/*i18n: Urgent alert */ 'Log level', 'Emergency');
             }
         }
+
         return tc(/*i18n: Urgent alert */ 'Log level', ucfirst(strtolower($level)));
     }
 
@@ -134,6 +134,4 @@ class Logger extends MonologLogger
                 return tc('Log channel', Core::make('helper/text')->unhandle($channel));
         }
     }
-
-
 }

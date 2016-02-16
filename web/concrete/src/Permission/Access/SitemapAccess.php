@@ -1,3 +1,6 @@
 <?php
 namespace Concrete\Core\Permission\Access;
-class SitemapAccess extends Access {}
+
+class SitemapAccess extends Access
+{
+}

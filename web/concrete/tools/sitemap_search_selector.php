@@ -1,8 +1,8 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $sh = Loader::helper('concrete/dashboard/sitemap');
 if (!$sh->canRead()) {
-	die(t('Access Denied.') . ' ' . t('You do not have access to the sitemap.'));
+    die(t('Access Denied.') . ' ' . t('You do not have access to the sitemap.'));
 }
 
 $v = View::getInstance();
@@ -14,27 +14,27 @@ $select_mode = Loader::helper('text')->entities($_REQUEST['sitemap_select_mode']
 $callback = Loader::helper('text')->entities($_REQUEST['callback']);
 
 if (Loader::helper('validation/numbers')->integer($_REQUEST['cID']) && $select_mode == 'move_copy_delete') {
-	$cID = '&cID=' . $_REQUEST['cID'];
+    $cID = '&cID=' . $_REQUEST['cID'];
 } else {
-	$cID = '';
+    $cID = '';
 }
 
 if ($callback) {
-	$callback = '&callback=' . addslashes($callback);
+    $callback = '&callback=' . addslashes($callback);
 }
 */
 
 if (isset($_REQUEST['requestID']) && Loader::helper('validation/numbers')->integer($_REQUEST['requestID'])) {
-	$requestID = $_REQUEST['requestID'];
+    $requestID = $_REQUEST['requestID'];
 }
 
 ?>
 <div class="ccm-ui" id="ccm-sitemap-search-selector">
 
 <?=Loader::helper('concrete/ui')->tabs(array(
-	array('sitemap', t('Full Sitemap')),
-	array('explore', t('Flat View')),
-	array('search', t('Search'))
+    array('sitemap', t('Full Sitemap')),
+    array('explore', t('Flat View')),
+    array('search', t('Search')),
 ));
 ?>
 
