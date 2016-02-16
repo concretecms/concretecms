@@ -184,7 +184,7 @@ class Update extends DashboardPageController
                     case ApplicationUpdate::E_UPDATE_WRITE_CONFIG:
                         $this->error->add(
                             t(
-                                'Unable to write to config/site.php. You must make config/site.php writable in order to upgrade in this manner.'));
+                                'Unable to write to config/update.php. You must make config/update.php writable in order to upgrade in this manner.'));
                         break;
                 }
             } else {
