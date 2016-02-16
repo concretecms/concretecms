@@ -762,7 +762,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         $ptID = $db->Insert_ID();
         if ($ptAllowedPageTemplates != 'A') {
             foreach ($templates as $pt) {
-                if(!is_object($pt)){
+                if (!is_object($pt)){
                     $pt = PageTemplate::getByHandle($pt);
                 }
                 $db->Execute(
