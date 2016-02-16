@@ -300,15 +300,13 @@ class Feed
 
     public static function getList()
     {
-        $db = Database::get();
-        $em = $db->getEntityManager();
+        $em = \ORM::entityManager('core');
         return $em->getRepository('\Concrete\Core\Page\Feed')->findBy(array(), array('pfTitle' => 'asc'));
     }
 
     public function save()
     {
-        $db = Database::get();
-        $em = $db->getEntityManager();
+        $em = \ORM::entityManager('core');
         $em->persist($this);
         $em->flush();
     }
@@ -350,23 +348,21 @@ class Feed
 
     public function delete()
     {
-        $em = Database::get()->getEntityManager();
+        $em = \ORM::entityManager('core');
         $em->remove($this);
         $em->flush();
     }
 
     public static function getByID($id)
     {
-        $db = Database::get();
-        $em = $db->getEntityManager();
+        $em = \ORM::entityManager('core');
         $r = $em->find('\Concrete\Core\Page\Feed', $id);
         return $r;
     }
 
     public static function getByHandle($pfHandle)
     {
-        $db = Database::get();
-        $em = $db->getEntityManager();
+        $em = \ORM::entityManager('core');
         return $em->getRepository('\Concrete\Core\Page\Feed')->findOneBy(
             array('pfHandle' => $pfHandle)
         );
