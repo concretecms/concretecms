@@ -219,7 +219,7 @@ EOS;
 
         $requestValue = $fh->getRequestValue($field);
 
-        if (isset($requestValue)) {
+        if ($requestValue !== false) {
             $timestamp = empty($requestValue) ? false : @strtotime($requestValue);
         } elseif ($value) {
             $timestamp = @strtotime($value);
