@@ -11,6 +11,10 @@ class Connection extends \Doctrine\DBAL\Connection
     protected $entityManager;
 
     /**
+     * @deprecated Please use the ORM facade instead of this method:
+     * - ORM::entityManager('core') in the core
+     * - ORM::entityManager() in the application/site code
+     * - $pkg->getEntityManager() in packages
      * @return EntityManager
      */
     public function getEntityManager()

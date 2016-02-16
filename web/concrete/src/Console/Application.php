@@ -43,8 +43,7 @@ class Application extends \Symfony\Component\Console\Application
         if (!Core::make('app')->isInstalled()) {
             return;
         }
-        $cn = Database::connection();
-        $helperSet = ConsoleRunner::createHelperSet($cn->getEntityManager());
+        $helperSet = ConsoleRunner::createHelperSet(\ORM::entityManager('core'));
         $this->setHelperSet($helperSet);
 
         $migrationsConfiguration = new MigrationsConfiguration();
