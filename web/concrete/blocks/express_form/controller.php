@@ -37,10 +37,14 @@ class Controller extends BlockController
         return t("Express Form");
     }
 
-    public function add()
+    protected function clearSessionControls()
     {
         $session = \Core::make('session');
         $session->remove('block.express_form.new');
+    }
+
+    public function add()
+    {
         $this->edit();
     }
 
@@ -57,34 +61,96 @@ class Controller extends BlockController
 
         $type = Type::getByID($post['type']);
         if (is_object($type)) {
+
+            $control = new AttributeKeyControl();
+            $control->setId((new UuidGenerator())->generate($entityManager, $control));
             $key = new ExpressKey();
             $key->setAttributeKeyName($post['question']);
             $key->setAttributeKeyHandle(sprintf('form_question_%s', count($controls) + 1));
-            $controller = $type->getController();
-            $key_type = $controller->saveKey($post);
-            if (!is_object($key_type)) {
-                $key_type = $controller->getAttributeKeyType();
-            }
-            $key_type->setAttributeKey($key);
-            $key->setAttributeKeyType($key_type);
-            $control = new AttributeKeyControl();
-            $control->setId((new UuidGenerator())->generate($entityManager, $control));
-            $control->setAttributeKey($key);
             if ($post['required']) {
                 $control->setIsRequired(true);
             }
+
+            $controller = $type->getController();
+            $key = $this->saveAttributeKeyType($controller, $key, $post);
+
+            $control->setAttributeKey($key);
+            $controls[$control->getId()]= $control;
+            $session->set('block.express_form.new', $controls);
+            return new JsonResponse($control);
+        } else {
+            $e = \Core::make('error');
+            $e->add(t('You must choose a valid field type.'));
+            return new JsonResponse($e);
         }
-        $controls[$control->getId()]= $control;
-        $session->set('block.express_form.new', $controls);
-        return new JsonResponse($control);
     }
 
+    protected function saveAttributeKeyType($controller, ExpressKey $key, $post)
+    {
+        $key_type = $controller->saveKey($post);
+        if (!is_object($key_type)) {
+            $key_type = $controller->getAttributeKeyType();
+        }
+        $key_type->setAttributeKey($key);
+        $key->setAttributeKeyType($key_type);
+        return $key;
+    }
+
+    public function action_update_control()
+    {
+        $entityManager = \Core::make('database/orm')->entityManager();
+        $post = $this->request->request->all();
+        $type = Type::getByID($post['type']);
+        $session = \Core::make('session');
+
+        $sessionControls = $session->get('block.express_form.new');
+        if (is_array($sessionControls)) {
+            foreach($sessionControls as $sessionControl) {
+                if ($sessionControl->getId() == $this->request->request->get('id')) {
+                    $control = $sessionControl;
+                    break;
+                }
+            }
+        }
+
+        if (!isset($control)) {
+            $control = $entityManager->getRepository('Concrete\Core\Entity\Express\Control\Control')
+                ->findOneById($this->request->request->get('id'));
+        }
+
+        if (is_object($type) && $control instanceof AttributeKeyControl) {
+
+            $key = $control->getAttributeKey();
+            $key->setAttributeKeyName($post['question']);
+            if ($post['requiredEdit']) {
+                $control->setIsRequired(true);
+            } else {
+                $control->setIsRequired(false);
+            }
+            $controller = $key->getController();
+            $key = $this->saveAttributeKeyType($controller, $key, $post);
+            $control->setAttributeKey($key);
+
+            $sessionControls[$control->getId()]= $control;
+            $session->set('block.express_form.new', $sessionControls);
+
+            return new JsonResponse($control);
+        } else {
+            $e = \Core::make('error');
+            $e->add(t('You must choose a valid field type.'));
+            return new JsonResponse($e);
+        }
+    }
     public function save()
     {
+        $requestControls = (array) $this->request->request->get('controlID');
+        $entityManager = \Core::make('database/orm')->entityManager();
+        $session = \Core::make('session');
+        $sessionControls = $session->get('block.express_form.new');
+
         if (!$this->exFormID) {
+
             // This is a new submission.
-            $session = \Core::make('session');
-            $entityManager = \Core::make('database/orm')->entityManager();
             $c = \Page::getCurrentPage();
             $name = is_object($c) ? $c->getCollectionName() : t('Form');
 
@@ -93,7 +159,6 @@ class Controller extends BlockController
             $entity->setHandle(sprintf('express_form_%s', $this->block->getBlockID()));
             $entityManager->persist($entity);
             $entityManager->flush();
-
 
             $form = new Form();
             $form->setName(t('Form'));
@@ -107,42 +172,103 @@ class Controller extends BlockController
             $entityManager->persist($field_set);
             $entityManager->flush();
 
-            $sessionControls = $session->get('block.express_form.new');
-            $requestControls = $this->request->request->get('controlID');
-            $i = 0;
-            if (is_array($requestControls)) {
-                foreach($requestControls as $id) {
-                    if (isset($sessionControls[$id])) {
-                        $control = $sessionControls[$id];
-                        $key = $control->getAttributeKey();
-                        $key->setEntity($entity);
-                        $control->setAttributeKey($key);
-                        $control->setFieldSet($field_set);
-                        $control->setPosition($i);
-                        $entityManager->persist($key);
+        } else {
+            // We check save the order as well as potentially deleting orphaned controls.
+            $form = $entityManager->getRepository('Concrete\Core\Entity\Express\Form')
+                ->findOneById($this->exFormID);
+
+            /**
+             * @var $form Form
+             * @var $field_set FieldSet
+             */
+            $field_set = $form->getFieldSets()[0];
+            $entity = $form->getEntity();
+        }
+
+        // First, we get the existing controls, so we can check them to see if controls should be removed later.
+        $existingControls = $form->getControls();
+        $existingControlIDs = array();
+        foreach($existingControls as $control) {
+            $existingControlIDs[] = $control->getId();
+        }
+
+        // Now, let's loop through our request controls
+        $position = 0;
+        foreach($requestControls as $id) {
+
+            if (isset($sessionControls[$id])) {
+                $control = $sessionControls[$id];
+                if (!in_array($id, $existingControlIDs)) {
+                    // Possibility 1: This is a new control.
+                    $key = $control->getAttributeKey();
+                    $key->setEntity($entity);
+                    $control->setAttributeKey($key);
+                    $control->setFieldSet($field_set);
+                    $entityManager->persist($key);
+                    $control->setPosition($position);
+                    $entityManager->persist($control);
+                } else {
+                    // Possibility 2: This is an existing control that has an updated version.
+                    foreach($existingControls as $existingControl) {
+                        if ($existingControl->getId() == $id) {
+                            $key = $existingControl->getAttributeKey();
+                            // question name
+                            $key->setAttributeKeyName($control->getAttributeKey()->getAttributeKeyName());
+
+                            // attribute type
+                            $key_type = $control->getAttributeKey()->getAttributeKeyType();
+                            $key_type->setAttributeKey($key);
+                            $key->setAttributeKeyType($key_type);
+
+                            // Required
+                            $existingControl->setIsRequired($control->isRequired());
+
+                            // save it.
+                            $entityManager->persist($existingControl);
+                        }
+                    }
+                }
+            } else {
+                // Possibility 3: This is an existing control that doesn't have a new version. But we still
+                // want to update its position.
+                foreach($existingControls as $control) {
+                    if ($control->getId() == $id) {
+                        $control->setPosition($position);
                         $entityManager->persist($control);
-                        $i++;
                     }
                 }
             }
 
-            $entityManager->flush();
-
-            $data = array(
-                'exFormID' => $form->getId()
-            );
+            $position++;
         }
 
+        // Now, we look through all existing controls to see whether they should be removed.
+        foreach($existingControls as $control) {
+            // Does this control exist in the request? If not, it gets axed
+            if (!is_array($requestControls) || !in_array($control->getId(), $requestControls)) {
+                $entityManager->remove($control);
+            }
+        }
+
+        $entityManager->flush();
+
+        $data = array(
+            'exFormID' => $form->getId()
+        );
+
+        $this->clearSessionControls();
         parent::save($data);
     }
 
     public function edit()
     {
+        $this->clearSessionControls();
         $list = Type::getList();
-        $types_select = array('' => t('** Select Type'));
+        $types_select = array();
+        $types_select[] = ['id' => '', 'displayName' => t('** Choose Type')];
 
         foreach($list as $type) {
-            $types_select[$type->getAttributeTypeID()] = $type->getAttributeTypeDisplayName();
+            $types_select[] = ['id' => $type->getAttributeTypeID(), 'displayName' => $type->getAttributeTypeDisplayName()];
         }
 
         $controls = array();
@@ -165,20 +291,67 @@ class Controller extends BlockController
 
             $obj = new \stdClass();
             $obj->content = $html;
-            $obj->assets = array();
-            $ag = ResponseAssetGroup::get();
-            foreach ($ag->getAssetsToOutput() as $position => $assets) {
-                foreach ($assets as $asset) {
-                    if (is_object($asset)) {
-                        $obj->assets[$asset->getAssetType()][] = $asset->getAssetURL();
-                    }
-                }
-            }
+            $obj->assets = $this->getAssetsDefinedDuringOutput();
 
             return new JsonResponse($obj);
         }
         \Core::make('app')->shutdown();
     }
+
+    protected function getAssetsDefinedDuringOutput()
+    {
+        $ag = ResponseAssetGroup::get();
+        $r = array();
+        foreach ($ag->getAssetsToOutput() as $position => $assets) {
+            foreach ($assets as $asset) {
+                if (is_object($asset)) {
+                    $r[$asset->getAssetType()][] = $asset->getAssetURL();
+                }
+            }
+        }
+        return $r;
+    }
+
+    public function action_get_control()
+    {
+        $entityManager = \Core::make('database/orm')->entityManager();
+        $session = \Core::make('session');
+        $sessionControls = $session->get('block.express_form.new');
+        if (is_array($sessionControls)) {
+            foreach($sessionControls as $sessionControl) {
+                if ($sessionControl->getID() == $this->request->request->get('control')) {
+                    $control = $sessionControl;
+                    break;
+                }
+            }
+        }
+
+        if (!isset($control)) {
+            $control = $entityManager->getRepository('Concrete\Core\Entity\Express\Control\Control')
+                ->findOneById($this->request->request->get('control'));
+        }
+
+        if (is_object($control) && $control instanceof AttributeKeyControl) {
+            $type = $control->getAttributeKey()->getAttributeType();
+
+            ob_start();
+            echo $type->render('type_form', $control->getAttributeKey());
+            $html = ob_get_contents();
+            ob_end_clean();
+
+            $obj = new \stdClass();
+            $obj->id = $control->getID();
+            $obj->question = $control->getDisplayLabel();
+            $obj->isRequired = $control->isRequired();
+            $obj->type = $type->getAttributeTypeID();
+            $obj->typeContent = $html;
+            $obj->assets = $this->getAssetsDefinedDuringOutput();
+
+            return new JsonResponse($obj);
+        }
+        \Core::make('app')->shutdown();
+    }
+
 
 
     protected function getFormEntity()
