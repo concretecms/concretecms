@@ -315,7 +315,7 @@ $(function() {
                         <?php
                         if ($showGlobalAreasFolder) {
                             ?>
-                            <tr class="ccm-search-results-folder" data-details-url="<?=$view->url('/dashboard/blocks/stacks', 'view_global_areas')?>">
+                            <tr class="ccm-search-results-folder ccm-search-results-globalareafolder" data-details-url="<?=$view->url('/dashboard/blocks/stacks', 'view_global_areas')?>">
                                 <td class="ccm-search-results-icon"><i class="fa fa-object-group"></i></td>
                                 <td class="ccm-search-results-name"><?=t('Global Areas')?></td>
                                 <td></td>
@@ -358,31 +358,33 @@ $(function() {
                 window.location.href = $this.data('details-url');
             })
             <?php if ($canMoveStacks) { ?>
-                .draggable({
-                    delay: 300,
-                    start: function() {
-                        $this.addClass('ccm-search-selected');
-                        $('.ccm-undroppable-search-item').css('opacity', '0.4');
-                    },
-                    stop: function() {
-                        $('.ccm-undroppable-search-item').css('opacity', '');
-                    },
-                    revert: 'invalid',
-                    helper: function() {
-                        var $selected = $this.add($tbody.find('.ccm-search-selected'));
-                        return $('<div class="' + className + ' ccm-draggable-search-item"><span>' + $selected.length + '</span></div>').data('$selected', $selected);
-                    },
-                    cursorAt: {
-                        left: -20,
-                        top: 5
-                    }
-                })
+                .not('.ccm-search-results-globalareafolder')
+                    .draggable({
+                        delay: 300,
+                        start: function() {
+                            $this.addClass('ccm-search-selected');
+                            $('.ccm-undroppable-search-item').css('opacity', '0.4');
+                        },
+                        stop: function() {
+                            $('.ccm-undroppable-search-item').css('opacity', '');
+                        },
+                        revert: 'invalid',
+                        helper: function() {
+                            var $selected = $this.add($tbody.find('.ccm-search-selected'));
+                            return $('<div class="' + className + ' ccm-draggable-search-item"><span>' + $selected.length + '</span></div>').data('$selected', $selected);
+                        },
+                        cursorAt: {
+                            left: -20,
+                            top: 5
+                        }
+                    })
+                .end()
             <?php } ?>
         ;
     });
     <?php if ($canMoveStacks) { ?>
         $('.ccm-droppable-search-item').droppable({
-            accept: '.ccm-search-results-folder, .ccm-search-results-stack',
+            accept: '.ccm-search-results-stackfolder, .ccm-search-results-stack',
             //activeClass: 'ui-state-highlight',
             hoverClass: 'ui-state-highlight',
             drop: function(event, ui) {
