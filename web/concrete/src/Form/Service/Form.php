@@ -227,7 +227,7 @@ class Form
 
         $requestValue = $this->getRequestValue($key);
 
-        if ($requestValue) {
+        if ($requestValue !== false) {
             if ($requestValue == $value) {
                 $checked = true;
             }
