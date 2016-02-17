@@ -62,7 +62,7 @@ class User extends Object
      *
      * @return User
      */
-    public function loginByUserID($uID)
+    public static function loginByUserID($uID)
     {
         return self::getByUserID($uID, true);
     }
